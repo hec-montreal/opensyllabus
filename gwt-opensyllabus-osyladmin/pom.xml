@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>base</artifactId>
+    <groupId>org.sakaiproject</groupId>
+    <version>2.5.0</version> 
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <name>Sakai Quebec OpenSyllabus AdminGWT Project</name>
+  <groupId>org.sakaiquebec.opensyllabus.admingwt</groupId>
+  <artifactId>opensyllabus-admingwt-base</artifactId>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+ 	    <phase>install</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <executable>OsylAdminEntryPoint-compile.cmd</executable>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>
