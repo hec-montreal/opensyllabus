@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="api"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="var" path="M2_REPO/commons-fileupload/commons-fileupload/1.1.1/commons-fileupload-1.1.1.jar"/>
+	<classpathentry exported="true" kind="var" path="GWT_HOME/gwt-user.jar"/>
+	<classpathentry exported="true" kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar"/>
+	<classpathentry exported="true" kind="var" path="GWT_HOME/gwt-incubator_1-4_final.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

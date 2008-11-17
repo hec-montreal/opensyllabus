@@ -1,0 +1,1 @@
+@java -cp "%~dp0\src;%~dp0\bin;%GWT_HOME%/gwt-user.jar;%GWT_HOME%/gwt-dev-windows.jar" com.google.gwt.i18n.tools.I18NSync -out "%~dp0\src" org.sakaiquebec.opensyllabus.client.OsylCoreMessages -createMessages
