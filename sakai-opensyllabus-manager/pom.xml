@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" >
-   <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.sakaiquebec.opensyllabus</groupId>
+    <artifactId>opensyllabus-masterbase</artifactId>
+    <version>2.5.0</version> 
+    <relativePath>../pom.xml</relativePath>
+  </parent>
    <name>Sakai Quebec OpenSyllabus Sakai Project</name>
    <groupId>org.sakaiquebec.opensyllabus</groupId>
    <artifactId>opensyllabus-manager</artifactId>
    <packaging>pom</packaging>
-
-   <!-- Sakai master pom is the parent -->
-   <parent>
-      <artifactId>base</artifactId>
-      <groupId>org.sakaiproject</groupId>
-      <version>2.5.0</version>
-   </parent>
-
    <modules>
-      <module>osyl-manager-api/api</module>
-      <module>osyl-manager-impl/impl</module>
-      <module>osyl-manager-impl/pack</module> 
-      <module>osyl-manager-tool/tool</module>
+    <module>osyl-manager-api/api</module>
+    <module>osyl-manager-impl/impl</module>
+    <module>osyl-manager-impl/pack</module>
+    <module>osyl-manager-tool/tool</module>
    </modules>
-
 </project>
