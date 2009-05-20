@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>org.sakaiquebec.opensyllabus</groupId>
+      <artifactId>opensyllabus-admin</artifactId>
+      <version>M2</version>
+    <relativePath>../../pom.xml</relativePath>
+   </parent>
+
+   <groupId>org.sakaiquebec.opensyllabus</groupId>
+   <artifactId>sakai-opensyllabus-admin-pack</artifactId>
+
+   <name>sakai-opensyllabus-admin-pack</name>
+   <description>OpenSyllabus Administrator components pack (special Sakai convention)</description>
+   <packaging>sakai-component</packaging>
+
+   <properties>
+      <deploy.target>components</deploy.target>
+   </properties>
+
+  <dependencies>
+    <!--  opensyllabus -->
+    <dependency>
+      <groupId>org.sakaiquebec.opensyllabus</groupId>
+      <artifactId>sakai-opensyllabus-admin-impl</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiquebec.opensyllabus</groupId>
+      <artifactId> sakai-opensyllabus-common-shared</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+</project>
