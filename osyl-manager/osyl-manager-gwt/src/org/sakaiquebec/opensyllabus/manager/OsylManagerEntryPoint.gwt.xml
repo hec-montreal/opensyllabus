@@ -1,0 +1,31 @@
+<module>
+
+      <!-- Inherit the core Web Toolkit stuff.                        -->
+      <inherits name='com.google.gwt.user.User'/>
+	
+      <!-- Inherit the default GWT style sheet.  You can change       -->
+      <!-- the theme of your GWT application by uncommenting          -->
+      <!-- any one of the following lines.                            -->
+      <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+      <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
+      <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
+
+      <extend-property name="locale" values="fr_CA"/>
+      <extend-property name="locale" values="es"/>
+
+      <!-- Other module inherits                                      -->
+
+
+      <!-- Specify the app entry point class.                         -->
+      <entry-point class='org.sakaiquebec.opensyllabus.manager.client.OsylManagerEntryPoint'/>
+      <inherits name="org.sakaiquebec.opensyllabus.manager.OsylManagerEntryPoint"/>
+    
+	  <!-- Specify the app servlet path. -->
+      <servlet path="/OsylManagerGwtService" class="org.sakaiquebec.opensyllabus.manager.server.OsylManagerGwtServiceImpl" />
+      <inherits name="org.sakaiquebec.opensyllabus.manager.OsylManagerEntryPoint"/>
+
+      <!-- Specify the application specific style sheet.              -->
+      <stylesheet src='OsylManagerEntryPoint.css' />
+      <inherits name="org.sakaiquebec.opensyllabus.manager.OsylManagerEntryPoint"/>
+	
+</module>
