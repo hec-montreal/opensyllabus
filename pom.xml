@@ -35,13 +35,10 @@
 
   <modules>
     <module>gwt-shared</module>
-    <module>../osyl-common</module>
-    <module>../osyl</module>
-    <module>../osyl-core-gwt</module>
-    <module>../osyl-admin</module>
-    <module>../osyl-admin-gwt</module>
-    <module>../osyl-manager</module>
-    <module>../osyl-manager-gwt</module>
+    <module>osyl-admin</module>
+    <module>osyl-common</module>
+    <module>osyl-editor</module>
+    <module>osyl-manager</module>
   </modules>
 
   <pluginRepositories>
