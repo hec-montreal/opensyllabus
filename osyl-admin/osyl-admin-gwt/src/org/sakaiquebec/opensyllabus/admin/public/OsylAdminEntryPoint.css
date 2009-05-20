@@ -1,0 +1,47 @@
+/** Add css rules here for your application. */
+
+
+/** Example rules used by the template application (remove for your app) */
+.pc-template-btn {
+  display: block;
+	margin: 2px;
+	padding: 2px;
+	font-size: 14pt;
+}
+
+.Osyl-ajaxSpinner {
+	background: url(img/ajaxSpinner.gif) no-repeat center;
+	margin: 2px;
+	padding: 2px;
+	border: medium;
+}
+
+.Osyl-Panel {
+	/* background: url(img/bgFadeV.gif) repeat-y; */
+	margin: 2px;
+	padding: 2px;
+	border: medium solid;
+	font-family: sans-serif, Arial, Verdana;
+	text-align: left;
+	background-color: #C3D9FF;
+}
+.Osyl-Admin-RadioButton {
+	margin: 2px;
+	padding: 2px;
+	font-size: 12pt;
+}
+.Osyl-Admin-Button {
+	margin: 2px;
+	padding: 2px;
+	padding-right: 5px;
+	padding-left: 5px;
+	font-size: 12pt;
+	background:#d5d5d5;
+	border-style:outset;
+	border-width:3px;
+}
+.Osyl-Admin-Choice-Label {
+	margin: 2px;
+	padding: 2px;
+	font-size: 14pt;
+}
