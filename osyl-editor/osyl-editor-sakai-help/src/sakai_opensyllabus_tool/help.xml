@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+   <bean id="opensyllabusOverview" class="org.sakaiproject.component.app.help.model.ResourceBean">
+      <property name="docId"><value>osyl</value></property>
+      <property name="name"><value>OpenSyllabus Overview</value></property>
+      <property name="location"><value>/sakai_opensyllabus_tool/osyl.html</value></property>
+      <property name="defaultForTool"><value>sakai.opensyllabus.tool</value></property>
+   </bean>
+ 
+    <bean id="org.sakaiproject.api.app.help.TableOfContents" 
+          class="org.sakaiproject.component.app.help.model.TableOfContentsBean">
+      <property name="name"><value>root</value></property>
+      <property name="categories">
+         <list>
+            <bean id="opensyllabusCategory" class="org.sakaiproject.component.app.help.model.CategoryBean">
+               <property name="name"><value>OpenSyllabus</value></property>
+               <property name="resources">
+                  <list>
+                     <ref bean="opensyllabusOverview"/>
+                          
+                
+                  </list>
+               </property>
+            </bean>
+           </list>
+         </property>
+       </bean>
+</beans>
