@@ -1,0 +1,148 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.sakaiquebec.opensyllabus</groupId>
+    <artifactId>opensyllabus-common</artifactId>
+    <version>M2</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+
+  <groupId>org.sakaiquebec.opensyllabus</groupId>
+  <artifactId>sakai-opensyllabus-common-impl</artifactId>
+  <packaging>jar</packaging>
+
+  <name>sakai-opensyllabus-common-impl</name>
+
+  <properties>
+    <deploy.target></deploy.target>
+  </properties>
+
+  <dependencies>
+    <!--  opensyllabus -->
+    <dependency>
+      <groupId>org.sakaiquebec.opensyllabus</groupId>
+      <artifactId>sakai-opensyllabus-common-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiquebec.opensyllabus</groupId>
+      <artifactId>sakai-opensyllabus-common-shared</artifactId>
+    </dependency>
+
+    <!--  sakai -->
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-site-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-site-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-content-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-authz-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-tool-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-util-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-entity-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-component-api</artifactId>
+    </dependency>
+
+    <!-- spring and hibernate -->
+    <dependency>
+      <groupId>${sakai.spring.groupId}</groupId>
+      <artifactId>${sakai.spring.artifactId}</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>${sakai.hibernate.groupId}</groupId>
+      <artifactId>${sakai.hibernate.artifactId}</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- misc -->
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+    </dependency>
+
+    <!-- testing dependencies -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <!-- TODO
+      <scope>test</scope> -->
+    </dependency>
+    <dependency>
+      <groupId>${sakai.spring.groupId}</groupId>
+      <artifactId>${sakai.spring.mock.artifactId}</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    
+    <!-- testing dependencies -->
+ 	<dependency>
+   		<groupId>hsqldb</groupId>
+   		<artifactId>hsqldb</artifactId>   		
+   		<scope>test</scope>
+	</dependency>
+	
+	<!-- FIXME: remove this dependency (get rid of com/google/gwt/user/client/rpc/IsSerializable dependency from common-shared!  --> 
+	<dependency>
+ 		<groupId>com.google.gwt</groupId>
+ 		<artifactId>gwt-user</artifactId> 		
+ 		<scope>test</scope>
+ 	</dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <!--  TODO -->
+      <resource>
+        <directory>${basedir}/src/java</directory>
+        <includes>
+          <include>**/*.xml</include>
+        </includes>
+        <filtering>false</filtering>
+      </resource>
+    </resources>
+
+    <testResources>
+      <testResource>
+      	<!--  
+      		FIXME: remove this band-aid please! 
+      		The IMPL package should be self-contained and not depend on a runtime component. -->
+        <directory>${basedir}/../pack/src/webapp/WEB-INF</directory>
+        <includes>
+          <include>spring-hibernate.xml</include>
+        </includes>
+      </testResource>
+      <!--  Use the IMPL hibernate settings -->      
+      <testResource>
+        <directory>${basedir}/src/test</directory>
+        <includes>        	
+          <include>**/*.xml</include>
+          <include>**/*.properties</include>
+        </includes>
+      </testResource>
+    </testResources>
+  </build>
+</project>

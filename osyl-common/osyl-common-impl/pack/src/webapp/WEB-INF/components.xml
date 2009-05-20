@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<!-- Bring in the HBM related beans  -->
+	<import resource="hibernate-hbms.xml" />
+
+	<!-- Bring in the hibernate related beans -->
+	<import resource="spring-hibernate.xml" />
+
+	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService"
+		class="org.sakaiquebec.opensyllabus.common.impl.OsylSecurityServiceImpl"
+		init-method="init" singleton="true">
+		
+		<!-- Sakai dependencies -->
+		<property name="sessionManager"
+			ref="org.sakaiproject.tool.api.SessionManager" />
+		<property name="authzGroupService"
+			ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="securityService"
+			ref="org.sakaiproject.authz.api.SecurityService" />
+		<property name="siteService"
+			ref="org.sakaiproject.site.api.SiteService" />
+		<property name="toolManager"
+			ref="org.sakaiproject.tool.api.ToolManager" />
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+
+	</bean>
+
+	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylConfigService"
+		class="org.sakaiquebec.opensyllabus.common.impl.OsylConfigServiceImpl"
+		init-method="init" singleton="true">
+		<property name="configDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
+	</bean>
+
+	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylSiteService"
+		class="org.sakaiquebec.opensyllabus.common.impl.OsylSiteServiceImpl"
+		init-method="init" singleton="true">
+		
+		<!-- Sakai dependencies -->
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+		<property name="siteService"
+			ref="org.sakaiproject.site.api.SiteService" />
+
+		<!-- Osyl dependencies -->
+		<property name="securityService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
+		<property name="configService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylConfigService" />	
+		<property name="osylRealmService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylRealmService.osylEditor" />	
+		<property name="resourceDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
+		<property name="configDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
+	</bean>
+
+	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylRealmService.osylEditor"
+		class="org.sakaiquebec.opensyllabus.common.impl.OsylRealmServiceImpl"
+		singleton="true" init-method="init">
+		<!-- let parentRealm null to create empty realm -->
+		<property name="parentRealm" value="!site.template.course"/>
+		<property name="newRealmName" value="!site.template.osylEditor"/>
+ 		<property name="rolesToRegister">
+			<list>
+				<value>General Assistant</value>
+			</list>
+		</property>
+		<property name="functionsToRegister">
+		    <list>
+		        <value>osyl.editor.publish</value>
+		        <value>osyl.editor.save</value>
+		        <value>osyl.editor.edit</value>
+		    </list>
+		</property>
+		<property name="functionsToAllow">
+		    <map>
+		        <entry key="Instructor">
+		            <list>
+		                <value>osyl.editor.publish</value>
+		                <value>osyl.editor.save</value>
+		                <value>osyl.editor.edit</value>
+		            </list>
+		        </entry>
+		        <entry key="Teaching Assistant">
+		            <list>
+		                <value>osyl.editor.edit</value>
+		            </list>
+		        </entry>
+		       	<entry key="General Assistant">
+		            <list>
+		                <value>osyl.editor.edit</value>
+		                <value>annc.read</value>
+		                <value>asn.read</value>
+		                <value>assessment.gradeAssessment.any</value>
+		                <value>assessment.gradeAssessment.own</value>
+		                <value>calendar.read</value>
+		                <value>chat.new</value>
+		                <value>chat.read</value>
+		                <value>content.hidden</value>
+		                <value>content.read</value>
+		                <value>dropbox.own</value>
+		                <value>gradebook.gradeSection</value>
+		                <value>gradebook.viewOwnGrades</value>
+		                <value>mail.read</value>
+		                <value>mailtool.admin</value>
+		                <value>mailtool.admin</value>
+		                <value>osp.matrix.scaffolding.use</value>
+		                <value>osp.presentation.comment</value>
+		                <value>osp.presentation.create</value>
+		                <value>osp.presentation.layout.create</value>
+		                <value>osp.presentation.layout.delete</value>
+		                <value>osp.presentation.layout.edit</value>
+		                <value>osp.style.create</value>
+		                <value>osp.wizard.view</value>
+		                <value>osyl.editor.edit</value>
+		                <value>poll.vote</value>
+		                <value>reports.run</value>
+		                <value>reports.share</value>
+		                <value>roster.export</value>
+		                <value>roster.viewhidden</value>
+		                <value>roster.viewofficialphoto</value>
+		                <value>roster.viewprofile</value>
+		                <value>rwiki.create</value>
+		                <value>rwiki.read</value>
+		                <value>rwiki.update</value>
+		                <value>section.role.ta</value>
+		                <value>site.upd.grp.mbrshp</value>
+		                <value>site.visit</value>
+		            </list>
+		        </entry>
+		    </map>
+		</property>
+		<property name="recreate"><value>false</value></property>
+		<property name="autoDdl"><value>${auto.ddl}</value></property>
+	</bean>
+	
+</beans>

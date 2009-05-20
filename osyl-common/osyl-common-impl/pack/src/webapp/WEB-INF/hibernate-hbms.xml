@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean
+		id="org.sakaiquebec.opensyllabus.hibernate.AdditionalHibernateMappings"
+		class="org.sakaiproject.springframework.orm.hibernate.impl.AdditionalHibernateMappingsImpl">
+		<property name="mappingResources">
+			<list>
+				<value>org/sakaiquebec/opensyllabus/common/hbm/osyl.hbm.xml</value>
+				<value>org/sakaiquebec/opensyllabus/common/hbm/COConfig.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>

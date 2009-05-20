@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <name>Sakai Quebec OpenSyllabus Sakai Project (Common)</name>
+  <parent>
+     <groupId>org.sakaiquebec.opensyllabus</groupId>
+     <artifactId>opensyllabus-parent</artifactId>
+     <version>M2</version>
+     <relativePath>../osyl-pom/pom.xml</relativePath>
+  </parent>
+  
+  <groupId>org.sakaiquebec.opensyllabus</groupId>
+  <artifactId>opensyllabus-common</artifactId>
+  <version>M2</version>
+  <packaging>pom</packaging>
+  
+  <modules>
+    <module>osyl-common-shared</module>
+    <module>osyl-common-api/api</module>
+    <module>osyl-common-impl/impl</module>
+    <module>osyl-common-impl/pack</module>
+  </modules>
+</project>

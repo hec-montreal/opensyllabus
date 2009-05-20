@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.sakaiquebec.opensyllabus</groupId>
+    <artifactId>opensyllabus-common</artifactId><!-- FIXME: CHANGE TO opensyllabus-parent -->
+    <version>M2</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+
+  <groupId>org.sakaiquebec.opensyllabus</groupId>
+  <artifactId>sakai-opensyllabus-common-api</artifactId>
+  <packaging>jar</packaging>
+
+  <name>sakai-opensyllabus-common-api</name>
+
+  <properties>
+     <deploy.target>shared</deploy.target>
+  </properties>
+
+  <dependencies>
+    <!--
+        FIXME: reverse this dependency since sakai-opensyllabus-common-shared depends on GWT,
+        thus allowing GWT to leak into this API.
+    -->
+   <dependency>
+      <groupId>org.sakaiquebec.opensyllabus</groupId>
+      <artifactId>sakai-opensyllabus-common-shared</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-util-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-site-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>

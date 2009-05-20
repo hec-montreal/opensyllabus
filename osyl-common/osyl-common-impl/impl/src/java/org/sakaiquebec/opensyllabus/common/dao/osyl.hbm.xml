@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="org.sakaiquebec.opensyllabus.shared.model.COSerialized" table="osyl_co">
+        <id name="coId" type="string">
+            <column name="CO_ID" length="99" />
+            <generator class="assigned" />
+        </id>
+       
+        <property name="lang" type="string">
+            <column name="LANG" length="45" />
+        </property>
+
+        <property name="content" type="text" >
+            <column name="CONTENT" />
+        </property>
+
+        <property name="type" type="string">
+            <column name="TYPE" length="45" />
+        </property>
+
+        <property name="security" type="string">
+            <column name="SECURITY" length="45"/>
+        </property>
+ 
+        <property name="siteId" type="string">
+            <column name="SITE_ID" length="99" not-null="true"/>
+        </property>
+
+        <property name="section" type="string">
+            <column name="SECTION" length="99" />
+        </property>
+        
+ 		<many-to-one name="osylConfig" class="org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized"
+			column="CONFIG"
+			not-null="true" lazy="false"/>
+ 
+    	<property name="published" type="boolean">
+            <column name="PUBLISHED" />
+        </property>
+
+  	</class>
+
+
+</hibernate-mapping>

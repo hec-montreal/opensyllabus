@@ -1,0 +1,8 @@
+<!-- Used to package the model inside GWT -->
+
+<module>
+
+	<inherits name='com.google.gwt.user.User'/>
+	<source path="shared" />
+
+</module>

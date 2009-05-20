@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="org.sakaiquebec.opensyllabus.hbm.pojo.CORelation" table="osyl_co_relation">
+        <composite-id>
+            <key-property name="parent" column="PARENT" length="99" />
+            <key-property name="child" column="CHILD" length="99" />
+        </composite-id>
+   	</class>
+
+</hibernate-mapping>
