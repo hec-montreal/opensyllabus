@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean
+		id="org.sakaiquebec.opensyllabus.manager.api.OsylManagerService"
+		class="org.sakaiquebec.opensyllabus.manager.impl.OsylManagerServiceImpl"
+		init-method="init" singleton="true">
+		<property name="osylManagerSiteName">
+			<value>opensyllabusManager</value>
+		</property>
+		<property name="authzGroupName">
+		    <value>/site/opensyllabusManager</value>
+		</property>
+		<property name="functionsToRegister">
+		    <list>
+		        <value>osyl.manager.import</value>
+		        <value>osyl.manager.export</value>
+		    </list>
+		</property>
+		<property name="functionsToAllow">
+		    <map>
+		        <entry key="Instructor">
+		            <list>
+		                <value>osyl.manager.import</value>
+		                <value>osyl.manager.export</value>
+		            </list>
+		        </entry>
+		        <entry key="Teaching Assistant">
+		            <list>
+		                <value>osyl.manager.import</value>
+		                <value>osyl.manager.export</value>
+		            </list>
+		        </entry>
+		    </map>
+		</property>
+		<property name="functionsToDisallow">
+		    <map>
+		        <entry key="Instructor">
+		            <list>
+		                <value>site.del</value>
+		                <value>site.upd</value>
+		            </list>
+		        </entry>
+		    </map>
+		</property>
+		<property name="sessionManager"
+			ref="org.sakaiproject.tool.api.SessionManager" />
+		<property name="siteService"
+			ref="org.sakaiproject.site.api.SiteService" />
+		<property name="osylSiteService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
+		<property name="osylSecurityService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+		<property name="serverConfigurationService"
+			ref="org.sakaiproject.component.api.ServerConfigurationService" />
+	</bean>
+
+</beans>
