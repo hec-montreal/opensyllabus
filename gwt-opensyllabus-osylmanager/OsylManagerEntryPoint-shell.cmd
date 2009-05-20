@@ -1,1 +1,0 @@
-@java -Xmx256M -cp "%~dp0\src;%~dp0\bin;%GWT_HOME%/gwt-user.jar;%GWT_HOME%/gwt-dev-windows.jar" com.google.gwt.dev.GWTShell -out "%~dp0\www" %* org.sakaiquebec.opensyllabus.manager.OsylManagerEntryPoint/OsylManagerEntryPoint.html
