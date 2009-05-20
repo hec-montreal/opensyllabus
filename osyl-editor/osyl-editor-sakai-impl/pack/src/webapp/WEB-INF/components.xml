@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean id="org.sakaiquebec.opensyllabus.api.OsylPublishService"
+		class="org.sakaiquebec.opensyllabus.impl.OsylPublishServiceImpl"
+		init-method="init" singleton="true">
+		
+		<!-- Osyl dependencies -->
+		<property name="osylSiteService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
+		<property name="resourceDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
+		<property name="configDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
+		<property name="securityService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
+		<property name="configService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylConfigService" />		
+
+		<!-- Sakai dependencies -->
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+		<!-- <property name="toolManager"
+			ref="org.sakaiproject.tool.api.ToolManager" /> -->
+	</bean>
+
+	<bean id="org.sakaiquebec.opensyllabus.api.OsylService"
+		class="org.sakaiquebec.opensyllabus.impl.OsylServiceImpl"
+		init-method="init" singleton="true">
+		
+		<!-- Sakai dependencies -->
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+		<property name="assignmentService"
+			ref="org.sakaiproject.assignment.api.AssignmentService" />
+		<property name="citationService"
+			ref="org.sakaiproject.citation.api.CitationService" />
+		
+		<!-- Osyl dependencies -->
+		<property name="securityService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
+		<property name="osylSiteService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
+	</bean>
+	
+</beans>
