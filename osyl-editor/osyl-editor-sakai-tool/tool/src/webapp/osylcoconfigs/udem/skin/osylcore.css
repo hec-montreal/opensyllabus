@@ -1,0 +1,2046 @@
+/*******************************************************************************
+ * $Id: $
+ *******************************************************************************
+ *
+ * Copyright (c) 2008 The Sakai Foundation, The Sakai Quebec Team.
+ *
+ * Licensed under the Educational Community License, Version 1.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.opensource.org/licenses/ecl1.php
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ******************************************************************************/
+
+/*
+   CSS definitions for OpenSyllabus (AKA Osyl)
+   -------------------------------------------
+   This file is (more or less) organized in sections as follows:
+      1. CSS definitions from ZoneCours (zonecours.hec.ca)
+      2. CSS definitions overriding default GWT styles
+      3. CSS definitions overriding default GWT styles (incubator widgets)
+      4. CSS definitions for new classes specific to Osyl
+
+   Some definitions (specially those from ZoneCours) may not be used by
+   OpenSyllabus yet.
+
+   To be customized to your institution needs! All comments appreciated,
+   we're no CSS experts!
+
+   WARNING: at least two versions of this file exist in the project.
+
+            The first one is located in the opensyllabus-gwt project and is only
+            used by the GWT hosted mode. Its full path is:
+            opensyllabus-gwt/src/org/sakaiquebec/opensyllabus/public/css/OsylCore.css
+
+            The second one is located in the osyl project and is deployed in the
+            web application, so this is the one everybody will see when using
+            OpenSyllabus (with its default config). its full path is:
+            opensyllabus-tool/tool/src/webapp/osylcoconfigs/default/skin/osylcore.css
+
+	    At this time there is no difference between the two files, ie: when
+	    you edit one of them, copy the file to its other location!
+	    
+	    Eventually we will remove the tool css and have our deployment script
+	    copy it from the gwt folder to the webapp. 
+
+*/
+
+/* ---- CSS definitions from ZoneCours  ---------------------------- */
+
+body {
+	border: thin groove;
+	font-size: 100%;
+	background-color: White;
+	background-image: none;
+}
+td {
+	font-size:100%;
+}
+body, td {
+	font-family:helvetica,arial,sans-serif;
+	font-weight:normal;
+}
+.fenetre {
+	background-color:white;
+	position:absolute;
+}
+#leg {
+	left:10px;
+	position:absolute;
+	top:90px;
+}
+.calc {
+	background-color:#FFFFFF;
+	border:1px solid red;
+	font-family:verdana,sans-serif;
+	font-size:18pt;
+	margin-left:0px;
+	margin-right:500px;
+}
+.calcx {
+	background-color:#FFFFFF;
+	border:1px solid red;
+	font-family:verdana,sans-serif;
+	font-size:8pt;
+	margin-left:0px;
+	margin-right:0px;
+}
+a:link, a:visited {
+	color:#063871;
+	text-decoration:none;
+}
+a:hover {
+	color:#99CC33;
+	text-decoration:none;
+}
+#mainPageNew {
+	margin-left:6%;
+}
+.tableauStructure {
+	font-size:130%;
+	vertical-align:top;
+}
+.tableauNormal {
+	font-size:130%;
+}
+.tableauNormal2 {
+	font-size:120%;
+}
+.titrePageNew {
+	color:#063871;
+	font-size:130%;
+	font-weight:bold;
+	margin-bottom:25px;
+	margin-left:10px;
+	margin-top:25px;
+}
+.titreUrl {
+	color:#063871;
+	font-size:100%;
+	font-weight:bold;
+	margin-right:5px;
+}
+a.titreUrl:hover {
+	color:#99CC33;
+	font-size:100%;
+	font-weight:bold;
+}
+.alignTextImg {
+	vertical-align:-18%;
+}
+.titreUser {
+	color:#000000;
+	font-size:130%;
+	font-weight:bold;
+	margin-bottom:5px;
+	margin-left:10px;
+	margin-top:20px;
+}
+.alignementTitre {
+	margin-left:10px;
+}
+.alignementTitre2 {
+	margin-left:15px;
+}
+.ssTitrePageNew {
+	color:#414141;
+	font-size:115%;
+	font-weight:bold;
+	margin-bottom:10px;
+	margin-left:29px;
+}
+.ssTitrePageBullet {
+	color:#414141;
+	font-size:115%;
+	font-weight:bold;
+	margin-bottom:10px;
+	margin-left:20px;
+}
+#coursNew {
+	margin-top:30px;
+}
+.titrePageNumeroCours {
+	color:#063871;
+	display:inline;
+	font-size:130%;
+	font-weight:bold;
+	margin-bottom:10px;
+margin-top:30px;
+}
+.titrePageNomCours {
+	color:#063871;
+	display:inline;
+	font-size:130%;
+	font-weight:bold;
+	margin-bottom:10px;
+	margin-top:30px;
+}
+#encadreTable {
+	background:#F9F9F9 none repeat scroll 0%;
+	border:1px solid #C1CDDB;
+	display:block;
+	float:none;
+	font-size:100%;
+	margin-bottom:25px;
+	margin-left:29px;
+	margin-top:0px;
+	padding:5px 5px 5px 10px;
+	width:494px;
+}
+#encadreTableBlanc {
+	display:block;
+	float:none;
+	font-size:100%;
+	margin-bottom:25px;
+	margin-left:10px;
+	margin-top:0px;
+	padding:5px 5px 5px 20px;
+	width:513px;
+}
+#encadreTableAnnuaireBlanc {
+	display:block;
+	float:none;
+	font-size:100%;
+	margin-bottom:25px;
+	margin-left:10px;
+	margin-top:0px;
+	padding:5px 5px 5px 20px;
+	width:100%;
+}
+.menuFiltreLangue {
+	background:#F9F9F9 none repeat scroll 0%;
+	border-bottom:1px solid #C1CDDB;
+	border-top:1px solid #C1CDDB;
+	display:block;
+	font-size:100%;
+	font-weight:bold;
+	margin-bottom:4px;
+	margin-left:10px;
+	margin-top:15px;
+	padding:2px 2px 2px 20px;
+	width:513px;
+}
+.progEtudes, .responsables {
+	background:#F0F0F0 none repeat scroll 0%;
+	border-left:1px solid #C1CDDB;
+	border-right:1px solid #C1CDDB;
+	border-top:1px solid #C1CDDB;
+	display:block;
+	font-size:105%;
+	font-weight:bold;
+	margin-bottom:0px;
+	margin-left:29px;
+	margin-top:10px;
+	padding:2px 2px 2px 10px;
+	width:483px;
+}
+.trimestre {
+	background:#F0F0F0 none repeat scroll 0%;
+	display:block;
+	font-size:105%;
+	font-weight:bold;
+	margin-bottom:0px;
+	margin-left:29px;
+	margin-top:10px;
+	padding:2px 2px 2px 10px;
+	width:494px;
+}
+.numeroCours {
+	color:#414141;
+	font-size:100%;
+	font-weight:normal;
+}
+.nomCours {
+	font-size:120%;
+	font-weight:normal;
+	margin-bottom:8px;
+}
+.numeroCoursInline {
+	color:#414141;
+	display:inline;
+	font-size:100%;
+	font-weight:normal;
+}
+.nomCoursInline {
+	display:inline;
+	font-size:100%;
+	font-weight:normal;
+	margin-bottom:8px;
+	margin-left:8px;
+}
+.itemRecherche {
+	font-size:80%;
+	font-weight:bold;
+}
+.itemRechercheMini {
+	font-size:60%;
+	font-weight:bold;
+}
+.center {
+	text-align:center;
+}
+.listeCoursTable {
+	font-size:120%;
+	font-weight:normal;
+	vertical-align:top;
+}
+.bulletCarreVert {
+	background:transparent url(img/d_carrev.gif) no-repeat scroll left center;
+	margin-left:10px;
+}
+.encadreNews-titre {
+	font-size:120%;
+	font-weight:bold;
+	margin-bottom:5px;
+}
+.encadreNews-icone {
+}
+.encadreNews-texte {
+}
+.encadreNews-texte2 {
+	margin-bottom:15px;
+	margin-left:1px;
+}
+.encadreNews-lien {
+	margin-bottom:5px;
+	margin-left:4px;
+}
+#encadreNews {
+	background:#F9F9F9 none repeat scroll 0%;
+	border:1px solid #BCBCBC;
+	display:block;
+	float:right;
+	font-size:80%;
+	margin:5px 4px 4px 6px;
+	padding:8px;
+	width:60%;
+}
+#encadreNewsAnnuaire {
+	border-left:1px solid #063871;
+	display:block;
+	float:right;
+	font-size:80%;
+	margin:5px 4px 4px 6px;
+	padding:0px 8px 8px;
+}
+#encadreRecherche {
+	background:#F9F9F9 none repeat scroll 0%;
+	border:1px solid #C1CDDB;
+	display:block;
+	float:none;
+	font-size:100%;
+	margin-bottom:4px;
+	margin-left:29px;
+	margin-top:0px;
+	padding:5px 5px 5px 10px;
+	width:492px;
+}
+#infosNew {
+	background:#F9F9F9 none repeat scroll 0%;
+	border:1px solid #BCBCBC;
+	display:block;
+	float:right;
+	font-size:88%;
+	margin-bottom:4px;
+	margin-right:1%;
+	margin-top:53px;
+	padding:5px 5px 15px 10px;
+	width:20%;
+}
+.titreInfo {
+	font-weight:bold;
+	margin-bottom:0px;
+	margin-top:15px;
+}
+.itemInfo {
+	display:block;
+}
+#annuaire {
+	margin-left:12%;
+	margin-right:5%;
+}
+#annuaire #cours {
+	color:#063871;
+	font-size:150%;
+	font-weight:700;
+	margin-bottom:20px;
+	margin-left:5px;
+	margin-top:20px;
+}
+#footer2 {
+	border-top:1px solid #063871;
+	margin-left:1%;
+	margin-top:40px;
+	padding-top:10px;
+	width:99%;
+}
+.profs {
+	float:left;
+	font-size:80%;
+}
+.service, .dateMaj, .copyright {
+	font-size:80%;
+}
+.teximusNew {
+	border-style:none;
+	float:right;
+	height:24px;
+	width:87px;
+}
+#menu {
+	background:white none repeat scroll 0%;
+	border-color:#003399 rgb(0, 51, 153) rgb(6, 56, 113) rgb(6, 56, 113);
+	border-style:solid;
+	border-width:1px 1px 2px 2px;
+	display:block;
+	float:right;
+	font-size:88%;
+	margin-bottom:4px;
+	padding:5px 5px 5px 8px;
+	width:18%;
+}
+.titreMenu {
+	font-weight:bold;
+	margin-bottom:5px;
+}
+.itemMenu {
+	display:block;
+}
+.menuon {
+	background:transparent url(img/petitPoint.gif) no-repeat scroll left center;
+	color:#063871;
+	display:block;
+	text-decoration:none;
+}
+a.menuoff2:link, a.menuoff2:visited {
+	color:#3366CC;
+	display:block;
+	text-decoration:none;
+}
+a.menuon:link, a.menuon:visited {
+	color:#063871;
+	text-decoration:none;
+}
+a.menuoff:link, a.menuoff:visited {
+	color:#3366CC;
+	text-decoration:none;
+}
+a.menuoff:hover, a.menuoff2:hover {
+	color:#063871;
+	text-decoration:none;
+}
+.menuImprimables {
+	border-bottom:1px solid gray;
+	border-top:1px solid gray;
+	margin-top:5px;
+	padding-bottom:5px;
+	padding-top:5px;
+}
+.cours-nouvelles {
+	margin-top:5px;
+}
+#contenu21 .texteNouvelles {
+	margin-left:15px;
+}
+#contenu21 .nouvelle {
+	margin-top:10px;
+}
+.texteNouvelles {
+	margin-left:5px;
+	margin-top:5px;
+}
+.dateNouvelles {
+	font-size:80%;
+	font-style:italic;
+	text-align:right;
+}
+.seance-nouvelles {
+	margin-top:5px;
+}
+.archiveMenu {
+	margin-top:10px;
+	text-align:right;
+}
+#recherche {
+	float:right;
+}
+#monAccueil {
+	float:right;
+}
+#zoom {
+	float:right;
+	font-size:10pt;
+}
+#mainPage {
+	margin-left:12%;
+	margin-right:5%;
+}
+#mainPagePlanImprimable {
+	margin-left:5%;
+	margin-right:2%;
+}
+#headerPage {
+	width:100%;
+}
+.logoHEC {
+	background:transparent url(img/Logo1.gif) no-repeat scroll left top;
+	float:left;
+	height:70px;
+	width:179px;
+}
+.logoAnglais {
+	background:transparent url(img/LogoEnglish.gif) no-repeat scroll left top;
+	height:20px;
+	width:100px;
+}
+.logoEspagnol {
+	background:transparent url(img/LogoEspanol.gif) no-repeat scroll left top;
+	height:20px;
+	width:100px;
+}
+.zoneCours {
+	background:transparent url(img/Logo2.gif) no-repeat scroll left top;
+	height:70px;
+	width:343px;
+}
+#cours {
+	color:#063871;
+	font-size:125%;
+	font-weight:700;
+	margin-left:0px;
+	margin-top:3px;
+	z-index:1;
+}
+#codeCours {
+	float:left;
+}
+#libelleCours {
+	margin-left:5px;
+}
+#session-section {
+	color:#063871;
+	font-size:100%;
+	font-weight:700;
+	margin-left:0px;
+	margin-top:3px;
+	white-space:nowrap;
+	z-index:1;
+}
+#sessionCours {
+	float:left;
+}
+#separateur-session-section {
+	float:left;
+	margin-left:5px;
+}
+#section {
+}
+#profs {
+	color:#063871;
+	font-size:100%;
+	font-weight:700;
+	margin-bottom:5px;
+	margin-left:0px;
+	margin-top:3px;
+}
+.titrePage {
+	color:black;
+	font-size:130%;
+	font-weight:bold;
+	margin-bottom:10px;
+	margin-top:10px;
+}
+#hyperliensRubriques {
+	color:#063871;
+	margin-bottom:10px;
+	margin-top:15px;
+}
+#contenu10, #contenu11, #contenu12, #contenu13, #contenu14, #contenu15 #contenu16 #contenu22 {
+	margin-bottom:20px;
+	margin-right:0px;
+	margin-top:10px;
+}
+.contenuQuestion {
+	background:#EEEEFF none repeat scroll 0%;
+	margin-left:0px;
+	margin-top:0px;
+}
+.contenuReponse {
+	margin-left:0px;
+	margin-top:0px;
+}
+#contenu17, #contenu18, #contenu19, #contenu20 {
+	border-top:1px solid #063871;
+	margin-bottom:20px;
+	margin-right:0px;
+	margin-top:20px;
+}
+.rubriqueImportant {
+	display:block;
+	margin-top:20px;
+}
+.important {
+	background:#EEEEEE none repeat scroll 0%;
+	border-bottom:2px solid #AA0000;
+	border-top:2px solid #AA0000;
+	display:block;
+	margin-top:20px;
+	padding-bottom:5px;
+	padding-top:5px;
+	width:95%;
+}
+.logoImportant {
+	background:transparent url(img/d_carrer.gif) no-repeat scroll left center;
+	float:left;
+	height:9px;
+	width:9px;
+}
+.important .ressource {
+	margin-left:17px;
+}
+.ressource {
+	margin-top:10px;
+}
+.ressource2007 {
+	margin-left:-170px;
+	margin-top:10px;
+}
+.contenuRessource {
+	margin-left:13px;
+	margin-top:0px;
+}
+.titreRessource {
+	font-weight:normal;
+	margin-left:12px;
+	text-indent:0px;
+}
+#contenu14 .titreRessource {
+	font-weight:bold;
+}
+#contenu14 .contenuRessource .titreRessource {
+	font-weight:normal;
+}
+.logoRessource {
+	background:transparent url(img/point.gif) no-repeat scroll left center;
+	float:left;
+	height:5px;
+	margin-right:0px;
+	width:5px;
+}
+.logoFAQ {
+	background:transparent url(img/point.gif) no-repeat scroll left center;
+	float:left;
+	height:5px;
+	margin-left:5px;
+	margin-right:0px;
+	width:5px;
+}
+#contenu14 .logoRessource {
+	background:transparent url(img/d_carrev.gif) no-repeat scroll left center;
+	float:left;
+	height:9px;
+	margin-right:5px;
+	width:9px;
+}
+#contenu14 .contenuRessource .logoRessource {
+	background:transparent url(img/point.gif) no-repeat scroll left center;
+	float:left;
+	height:5px;
+	margin-right:5px;
+	width:5px;
+}
+.enonce {
+	border-top:1px solid gray;
+	margin-top:10px;
+	padding-top:5px;
+}
+.enonce.titre, .solution.titre {
+	font-style:italic;
+	font-weight:bold;
+	margin-bottom:2px;
+}
+.solution {
+	border-top:1px solid gray;
+	margin-top:10px;
+	padding-top:5px;
+}
+.texte {
+	margin-top:5px;
+}
+.description-texte {
+	margin-top:5px;
+}
+.commentaire {
+	font-style:normal;
+	padding-top:5px;
+}
+.commentaire-local {
+	font-style:normal;
+	margin-top:5px;
+}
+.texte p, .commentaire-local p, .commentaire p {
+	margin-bottom:2px;
+	margin-top:3px;
+}
+ul {
+	margin-bottom:5px;
+	margin-top:5px;
+}
+ol {
+	margin-bottom:5px;
+	margin-top:5px;
+}
+.rouge {
+	color:red;
+}
+li {
+	margin-left:-10px;
+}
+.rubrique {
+	margin-top:10px;
+}
+.important .rubrique {
+	margin-left:20px;
+	margin-top:5px;
+}
+.contenuRubrique {
+	margin-left:17px;
+}
+.titreRubrique {
+	font-weight:bold;
+}
+.contenuRubrique .titreRubrique {
+	font-weight:bold;
+}
+.important .titreRubrique {
+	font-weight:normal;
+}
+.logoRubrique {
+	background:transparent url(img/d_carrev.gif) no-repeat scroll left center;
+	float:left;
+	height:9px;
+	margin-right:5px;
+	width:9px;
+}
+.contenuRubrique .logoRubrique {
+	background:transparent url(img/d_carrej.gif) no-repeat scroll left center;
+	float:left;
+	height:9px;
+	margin-right:5px;
+	width:9px;
+}
+.contenuRubrique .contenuRubrique .logoRubrique {
+	background:transparent url(img/d_carreb.gif) no-repeat scroll left center;
+	float:left;
+	height:9px;
+	margin-right:5px;
+	width:9px;
+}
+.important .logoRubrique {
+	background:transparent url(img/d_carrej.gif) no-repeat scroll left center;
+	float:left;
+	height:9px;
+	width:9px;
+}
+.listeCours .logoSession {
+	background:transparent url(img/d_carrej.gif) no-repeat scroll left center;
+	float:left;
+	height:9px;
+	margin-left:20px;
+	margin-right:5px;
+	width:9px;
+}
+.listeCours .titreSession {
+	font-weight:normal;
+}
+#contenuResultatRecherche .logoSeance {
+	background:transparent url(img/d_carrev.gif) no-repeat scroll left center;
+	float:left;
+	height:9px;
+	margin-left:0px;
+	margin-right:5px;
+	width:9px;
+}
+#contenuResultatRecherche .libelleSeance {
+	font-style:italic;
+	font-weight:normal;
+}
+.libelleBureau, .libelleCourriel, .libelleTelephone, .libelleDispo {
+	float:left;
+}
+.contenuBureau, .contenuCourriel, .contenuTelephone, .contenuDispo {
+}
+#footer {
+	border-top:1px solid #063871;
+	margin-top:20px;
+	padding-top:10px;
+}
+.teximus {
+	background:transparent url(img/LogoTeximus.gif) no-repeat scroll left center;
+	float:right;
+	height:24px;
+	width:87px;
+}
+#mainPageListeSeance {
+	margin-left:15%;
+	margin-right:10%;
+}
+#mainPageListeSeance #seances {
+	font-size:120%;
+	font-weight:bold;
+	margin-top:10px;
+}
+#listeSeances {
+	width:98%;
+}
+.headerListeSeance {
+	border:1px solid gray;
+	font-size:120%;
+	font-weight:bold;
+	margin-top:20px;
+	padding-bottom:5px;
+	padding-top:5px;
+}
+.ligneSeance {
+	border-bottom:1px solid gray;
+	border-left:1px solid gray;
+	border-right:1px solid gray;
+	padding-bottom:5px;
+	padding-top:5px;
+}
+.noSeanceListe {
+	float:left;
+	font-weight:bold;
+	text-align:center;
+	vertical-align:middle;
+	width:20%;
+}
+.theme {
+	border-left:1px solid gray;
+	padding-left:10px;
+	vertical-align:middle;
+	width:80%;
+}
+.headerListeSeance .theme {
+	text-align:center;
+}
+#noSeance {
+	color:black;
+	display:block;
+	float:left;
+	font-size:125%;
+	font-weight:700;
+	margin-top:5px;
+	padding-bottom:25px;
+	padding-right:2px;
+}
+#titreSeance {
+	color:black;
+	display:block;
+	font-size:125%;
+	font-weight:700;
+	margin-top:10px;
+}
+#seances {
+	color:#063871;
+	float:left;
+}
+#noSeanceLiens {
+	display:block;
+}
+#seancesDansListeSeances {
+	display:block;
+	font-size:125%;
+	font-weight:bold;
+}
+#contenu14 .date {
+	margin-bottom:10px;
+	margin-top:10px;
+}
+.bureau {
+	margin-top:5px;
+}
+.telephone {
+	margin-top:5px;
+}
+.courriel {
+	margin-top:5px;
+}
+.disponibilite {
+	margin-top:5px;
+}
+.detail {
+	font-size:80%;
+}
+#niv {
+	display:block;
+	float:right;
+	font-size:8pt;
+}
+#login {
+	font-size:80%;
+	left:10px;
+	position:absolute;
+	top:5px;
+	width:80px;
+}
+#message {
+	font-family:helvetica,arial,sans-serif;
+	font-size:80%;
+	font-weight:normal;
+	margin-top:15pt;
+}
+.isbn {
+	font-size:90%;
+	font-style:italic;
+}
+.bonjour {
+	float:left;
+	font-size:150%;
+	font-weight:bold;
+}
+.nom {
+	float:left;
+	font-size:150%;
+	font-weight:bold;
+}
+.login {
+	margin-left:460px;
+	padding-bottom:5px;
+}
+#contenuAccueil {
+	padding-top:5px;
+}
+#contenuAccueil .titrePage {
+	color:#063871;
+	font-size:140%;
+	font-weight:700;
+	margin-top:15px;
+}
+.codePlanCours {
+	float:left;
+	margin-left:5px;
+	text-align:right;
+	width:150px;
+}
+#contenuAccueil .codePlanCours {
+	margin-left:13px;
+}
+.listeCours {
+}
+.codeCours {
+	float:left;
+	margin-left:0px;
+	text-align:right;
+	width:70px;
+}
+.ssTitrePage {
+	font-size:120%;
+	font-weight:bold;
+	margin-bottom:5px;
+	margin-top:10px;
+}
+.cours {
+	margin-top:3px;
+}
+.libellePlanCours {
+}
+.professeur {
+	font-style:italic;
+	margin-left:5px;
+}
+.logoPCE {
+	background:transparent url(img/point.gif) no-repeat scroll left center;
+	float:left;
+	height:5px;
+	margin-right:5px;
+	margin-top:3px;
+	width:5px;
+}
+.erreurIdentification {
+	color:red;
+	float:left;
+	font-weight:normal;
+	padding-top:5px;
+}
+.erreurIdentificationNew {
+	color:red;
+}
+.erreurIdentificationPage {
+	color:red;
+	font-size:80%;
+	font-weight:normal;
+	left:10px;
+	margin-top:5px;
+	position:absolute;
+	top:70px;
+	width:80px;
+}
+#infos {
+	background:white none repeat scroll 0%;
+	border-left:1px solid black;
+	display:block;
+	float:right;
+	font-size:90%;
+	margin-bottom:4px;
+	margin-left:20px;
+	padding-left:20px;
+	padding-top:0px;
+	width:18%;
+}
+.encadre-titre {
+	font-size:120%;
+	font-weight:bold;
+	margin-bottom:5px;
+}
+.encadre-icone {
+}
+.encadre-texte {
+	margin-left:0px;
+}
+#encadre {
+	background:white none repeat scroll 0%;
+	border-color:#003399 rgb(0, 51, 153) rgb(6, 56, 113) rgb(6, 56, 113);
+	border-style:solid;
+	border-width:1px 1px 2px 2px;
+	display:block;
+	float:right;
+	font-size:88%;
+	margin-bottom:4px;
+	margin-top:15px;
+	padding:5px 5px 5px 8px;
+	width:20%;
+}
+
+#margehr-aide {
+	width:170px;
+}
+
+/* ---- CSS definitions overriding default GWT styles -------------- */
+
+.gwt-BorderedPanel {
+}
+
+.gwt-Button {
+  background:#f5f5f5;
+  border:1px solid #aaa;
+  border-top:1px solid #ddd;
+  border-left:1px solid #ddd;
+  padding: 2px;
+  width: 12em;
+}
+
+.gwt-Button:active {
+  border:1px solid #aaa;
+  border-bottom:1px solid #ccc;
+  border-right:1px solid #ccc;
+}
+
+.gwt-Button[disabled] {
+  background: #ccc;
+  border:1px solid #999;
+  border-top:1px solid #ccc;
+  border-left:1px solid #ccc;
+  color: #888;
+}
+
+.gwt-Canvas {
+}
+
+.gwt-CheckBox {
+}
+
+.gwt-DialogBox {
+  border: 2px outset;
+  background-color: white;
+}
+
+.gwt-DialogBox .Caption {
+  background-color: #C3D9FF;
+  background-image: url(img/blue_gradient.gif);
+  background-repeat: repeat-x;
+  padding: 4px 4px 8px 4px;
+  margin: 2px;
+  font-weight: bold;
+  cursor: default;
+}
+
+.gwt-FileUpload {
+	width: 250px;
+	margin: 10px;
+}
+
+.gwt-Frame {
+}
+
+.gwt-HTML {
+}
+
+.gwt-Hyperlink {
+}
+
+.gwt-Image {
+}
+
+.gwt-Label {
+	font-size: 80%;
+}
+
+.gwt-ListBox {
+}
+
+.gwt-MenuBar {
+  background-color: #C3D9FF;
+  border: 1px solid #87B3FF;
+  cursor: default;
+}
+
+.gwt-MenuBar .gwt-MenuItem {
+  padding: 1px 4px 1px 4px;
+  cursor: default;
+}
+
+.gwt-MenuBar .gwt-MenuItem-selected {
+  background-color: #E8EEF7;
+}
+
+.gwt-PasswordTextBox {
+}
+
+.gwt-RadioButton {
+}
+
+.gwt-TabPanel {
+  margin-top: 4px;
+}
+
+.gwt-TabPanelBottom {
+  background-color: #E8EEF7;
+}
+
+.gwt-TabBar {
+  padding-top: 2px;
+  border-bottom: 4px solid #87B3FF;
+  background-color: #fff;
+}
+
+.gwt-TabBar .gwt-TabBarFirst {
+}
+
+.gwt-TabBar .gwt-TabBarRest {
+}
+
+.gwt-TabBar .gwt-TabBarItem {
+  padding: 4px;
+  cursor: pointer;
+  cursor: hand;
+  background-color: #e8eef7;
+  border-bottom: 2px solid white;
+  margin-right: 2px;
+}
+
+.gwt-TabBar .gwt-TabBarItem-selected {
+  padding: 4px;
+  font-weight: bold;
+  cursor: default;
+  background-color: #87b3ff;
+  border-bottom: 2px solid #87b3ff;
+  margin-right: 2px;
+}
+
+.gwt-TextArea {
+}
+
+.gwt-TextBox {
+}
+
+.gwt-TextBox-readonly {
+  color: #888;
+}
+
+.gwt-StackPanel {
+}
+
+.gwt-StackPanel .gwt-StackPanelItem {
+  background-color: #C3D9FF;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-StackPanel .gwt-StackPanelItem-selected {
+}
+
+.gwt-PushButton-up {
+/*   background-color: #C3D9FF; */
+  padding: 3px;
+  border: 1px solid transparent;
+/*   border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255); */
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-PushButton-up-hovering {
+  border: 1px solid #C3D9FF;
+  padding: 3px;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-PushButton-down {
+/*   background-color: #C3D9FF; */
+  padding: 3px;
+  border: 1px solid #C3D9FF;
+/*   border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205); */
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-PushButton-down-hovering {
+/*   background-color: #C3D9FF; */
+  padding: 3px;
+  border: 1px solid #C3D9FF;
+/*   border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205); */
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-ToggleButton-up {
+  background-color: #C3D9FF;
+  padding: 2px;
+  border: 2px solid transparent;
+  border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-ToggleButton-up-hovering {
+  background-color: #C3D9FF;
+  padding: 2px;
+  border: 2px solid transparent;
+  border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-ToggleButton-down {
+  background-color: #C3D9FF;
+  padding: 2px;
+  background-color: #E8F1FF;
+  border: 2px solid transparent;
+  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-ToggleButton-down-hovering {
+  background-color: #C3D9FF;
+  padding: 2px;
+  background-color: #E8F1FF;
+  border: 2px solid transparent;
+  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+  cursor: pointer;
+  cursor: hand;
+}
+
+.gwt-RichTextArea {
+  border: 1px solid black;
+  background-color: white;
+}
+
+.gwt-RichTextToolbar {
+  width: 100%;
+  text-align: left;
+  margin-top: 0px;
+  background-color: #C3D9FF;
+  padding: 2px;
+}
+
+.gwt-RichTextToolbar .gwt-PushButton-up {
+  margin-right: 2px;
+  border: 1px solid #C3D9FF;
+}
+
+.gwt-RichTextToolbar .gwt-PushButton-up-hovering {
+  margin-right: 2px;
+  border: 1px solid #C3D9FF;
+  border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+}
+
+.gwt-RichTextToolbar .gwt-PushButton-down {
+  margin-right: 2px;
+  border: 1px solid #C3D9FF;
+  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+}
+
+.gwt-RichTextToolbar .gwt-PushButton-down-hovering {
+  margin-right: 2px;
+  border: 1px solid #C3D9FF;
+  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+}
+
+.gwt-RichTextToolbar .gwt-ToggleButton-up {
+  margin-right: 2px;
+  border: 1px solid #C3D9FF;
+}
+
+.gwt-RichTextToolbar .gwt-ToggleButton-up-hovering {
+  margin-right: 2px;
+  border: 1px solid #C3D9FF;
+  border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+}
+
+.gwt-RichTextToolbar .gwt-ToggleButton-down {
+  margin-right: 2px;
+  background-color: #E8F1FF;
+  border: 1px solid #C3D9FF;
+  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+}
+
+.gwt-RichTextToolbar .gwt-ToggleButton-down-hovering {
+  margin-right: 2px;
+  background-color: #E8F1FF;
+  border: 1px solid #C3D9FF;
+  border-color: #9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+}
+
+.gwt-HorizontalSplitPanel {
+  border: 8px solid #C3D9FF;
+}
+
+.gwt-HorizontalSplitPanel .hsplitter {
+  background-color: #C3D9FF;
+  cursor: e-resize;
+}
+
+.gwt-HorizontalSplitPanel .left {
+  background-color: #E8EEF7;
+}
+
+.gwt-HorizontalSplitPanel .right {
+  background-color: #E8EEF7;
+}
+
+.gwt-VerticalSplitPanel {
+}
+
+.gwt-VerticalSplitPanel .splitter {
+  background-color: #C3D9FF;
+  height: 8px;
+  cursor: move;
+}
+
+.gwt-SuggestBoxPopup {
+  border: 2px solid #C3D9FF;
+}
+
+.gwt-SuggestBoxPopup .item {
+  padding: 2px;
+}
+
+.gwt-SuggestBoxPopup .item-selected {
+  background-color: #C3D9FF;
+  padding: 2px;
+}
+
+/* ---- CSS definitions overriding default GWT styles (incubator widgets) */
+
+/* Date picker styles */
+
+.goog-date-picker {
+  background-color: white;
+  width: 100%;
+  border: 1px solid #f1f1f1;
+  border-bottom: 2px solid #f1f1f1;
+  color: #6b6b6b;
+}
+
+.goog-date-picker td {
+  font-family: Arial;
+  font-size: 9px;
+  padding: 2px;
+  text-align: center;
+  padding: 2px;
+  cursor: pointer;
+  outline: none;
+  -moz-outline: none;
+}
+
+.goog-date-picker td,.monthSelector td :focus {
+  outline: none
+}
+
+.gwt-DateBox {
+  width: 10em;
+}
+
+/* Calendar styles */
+
+.goog-date-picker .filler {
+  color: #bfbfbf
+}
+
+ .goog-date-picker .selected {
+  background: #aaccee;
+}
+
+.goog-date-picker .day-title {
+  background: #dbe6de;
+}
+
+.goog-date-picker .highlighted {
+  background: #ccee11;
+}
+
+.goog-date-picker .today {
+  border: 1px solid black;
+}
+
+.goog-date-picker .weekend {
+  background: #f1f1f1;
+}
+
+.goog-date-picker .disabled {
+  color: graytext;
+}
+
+/* Month selector styles */
+
+.monthSelector {
+  background: #dbe6de;
+  width: 100%;
+  text-align: center;
+}
+
+.monthSelector td {
+  font-weight: bold;
+  font-size: 70%;
+}
+
+.monthSelector .month-label {
+  text-align: center;
+}
+
+/* helper styles */
+
+.goog-date-picker .red-date {
+  background-color: red;
+}
+
+.goog-date-picker .blue-background {
+  background-color: blue;
+}
+
+.goog-date-picker .red-text {
+  color: red;
+}
+
+.goog-date-picker .green-border {
+  border: 1px solid green;
+}
+
+.selected-date {
+	background-color: #C3D9FF;
+}
+
+
+
+/* ---- CSS definitions specific to OpenSyllabus ------------------- */
+
+.Osyl-MainPanel {
+/*	background: url(img/bgFade.gif) repeat-x;*/
+	padding: 0px;
+	border: 1px solid #999;
+}
+
+.Osyl-MainToolbarPanel {
+	background: url(img/bgFade.gif) repeat-x;
+/*	background: url(img/hecmontreal.gif) no-repeat; */
+	border-bottom: 1px solid #999;
+	width: 100%;
+	text-align: center;
+}
+
+.Osyl-LongView-CourseOutline {
+	margin: 2px 30px 10px 2px;
+	color:#063871;
+	text-align:center;
+	font-size: 20px;
+	font-weight:bold;
+	padding-top:4px;
+	padding-bottom:4px;
+	font-family: sans-serif, Arial, Verdana;
+}
+
+.Osyl-PushButton {
+  padding: 2px;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.Osyl-FileUpload-uploadForm {
+	background: #fff url(img/bgFade.gif) repeat-x;
+	width: 300px;
+	margin: 80px 0px 0px 400px;
+	padding: 10px;
+	font-size: 100%;
+	font-family:Arial,sans-serif;
+	color:#000000;
+	background-color:#ffffff;
+	border: 2px outset;
+}
+
+.Osyl-FileUpload-resource-title {
+	font-size:14px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.Osyl-FileUpload-genericButton {
+	margin: 10px;
+}
+
+.Osyl-PublishView-Title { 
+	font-size:14px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.Osyl-PublishView-PopupPanel {
+	background: #fff url(img/bgFade.gif) repeat-x;
+	width: 430px;
+	margin: 120px 0px 0px 300px;
+	padding: 10px;
+	font-size: 100%;
+	font-family:Arial,sans-serif;
+	color:#000000;
+	background-color:#ffffff;
+	border: 2px outset;
+}
+
+.Osyl-PublishView-genericButton {
+	margin: 10px;
+}
+
+.Osyl-UnitView-MainPanel {
+	padding: 10px 5px 50px 50px;
+}
+
+/* Generic GWT textBox (i.e.: no style specified) */
+.Osyl-UnitView-TextBox {
+	font-family: helvetica,arial,sans-serif;
+	font-size: 1em;
+	height: 25px;
+	border: 1px dashed black;
+	padding: 3px;
+}
+
+.Osyl-UnitView-Title-Label {
+	margin: 2px 30px 10px 2px;
+	color:#063871;
+	font-size: 16px;
+	font-weight:bold;
+	padding-top:4px;
+	padding-bottom:4px;
+	font-family: sans-serif, Arial, Verdana;
+}
+
+.Osyl-UnitView-Title-TextBox {
+	border: 1px dashed blue;
+	margin-right: 11px;
+	margin-bottom: 12px; /* 10px is better for IE */
+	/* Below: ALMOST as Osyl-UnitView-Title-Label. Modified to
+	   avoid text shift when entering edition mode. Optimized for FF */
+	color:#063871;
+	font-size: 16px;
+	font-weight:bold;
+	padding-top:5px;
+	padding-bottom:4px;
+	font-family: sans-serif, Arial, Verdana;
+}
+
+.Osyl-UnitView-RubricName {
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 14px;
+	font-weight:bold;
+}
+
+.Osyl-UnitView-RubricImg {
+	margin:3px 4px 4px 4px;
+}
+
+.Osyl-ListItemView-Table {
+	border-width: 0;
+	border: 1px solid #e3f0FF;
+	margin-bottom: 5px;
+	margin-left: 30px;
+}
+
+.Osyl-ListItemView-labelNo {
+	width: 90px;
+	height: 30px;
+	padding: 0px 5px 0px 10px;
+}
+
+.Osyl-ListItemView-Hyperlink {
+	font-size: smaller;
+	cursor: pointer;
+}
+
+/* Content Unit Resource Panel unfocused */
+.Osyl-UnitView-ResPanel {
+	vertical-align: top;
+	margin: 5px 10px 5px 10px;
+	border: 1px solid white;
+	padding: 3px;
+	border-color: transparent;
+	width: 100%;
+}
+
+/* Content Unit Resource Panel focused */
+.Osyl-UnitView-ResPanelFocused {
+	background-color: #fdf6af;
+	margin: 5px 10px 5px 10px;
+	border: 1px solid transparent;
+	padding: 3px;
+	width: 100%;
+}
+
+.Osyl-UnitView-ResEditor {
+	padding: 0px;	
+	margin: 0px;
+}
+
+.Osyl-UnitView-ResEditorFocused {
+	padding: 0px;	
+	margin: 0px;
+}
+
+/* Panel for buttons edit/delete/validate/cancel */
+.Osyl-ButtonPanel {
+	margin: 0px;
+	padding: 0px;
+}
+
+/* Label in a Content Unit Panel  */
+.Osyl-UnitView-UnitLabel {
+	font-family: helvetica,arial,sans-serif;
+	font-size: 1em;
+	border: 1px solid white;
+	padding: 3px;
+	margin-bottom: 15px;
+	width: 100%;
+}
+
+/* Link in a Content Unit Panel */
+.Osyl-UnitView-UnitLink{
+	margin-left: 30px;
+}
+
+.Osyl-MainView-HorizontalSplitPanel {
+	border: none;
+}
+
+.Osyl-MainView-HorizontalSplitPanel .hsplitter {
+  background-color: #DCDCDC;
+  cursor: e-resize;
+}
+
+.Osyl-MockupLectureView-Panel {
+	margin: 1px;
+	padding: 2px;
+	border: thin dotted;
+}
+
+.Osyl-MenuButton {
+	background: transparent;
+}
+
+.Osyl-MenuButton-ListBox {
+	margin: 0px;
+	padding: 1px;
+	border: 1px solid #999;
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 80%;
+}
+
+.Osyl-TreeView-Tree {
+	background: url(img/bgFade.gif) repeat-x;
+	margin: 0px;
+	padding: 1px;
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 9pt;
+}
+
+.Osyl-TreeView-Tree .gwt-TreeItem{
+	cursor: pointer;
+}
+
+.Osyl-TreeView-Tree .gwt-TreeItem-selected{
+	cursor: default;
+}
+
+.Osyl-TreeView-Tree .gwt-TreeItem-selected .Osyl-TreeItem-HorizontalPanel{
+	background: #C3D9FF;
+}
+
+.Osyl-ResourceConfigView-DialogBox {
+  	font-family: sans-serif, Arial, Verdana;
+  	border: 2px outset;
+  	background-color: white;
+}
+
+.Osyl-ResourceConfigView-DialogBox .Caption {
+  	background-color: #C3D9FF;
+  	padding: 2px;
+  	margin: 2px;
+	font-size: 9px;
+	/*font-weight: bold;*/
+  	cursor: move;
+}
+
+.Osyl-ResourceConfigView-TabPanel {
+  margin-top: 4px;
+}
+.Osyl-ResourceConfigView-TabPanel .gwt-TabPanelBottom  {
+	background-color: white;
+}
+
+.Osyl-ResourceConfigView-TabPanel .gwt-TabBar {
+  font-size: 10px;
+  padding: 0px;
+  border-bottom: 4px solid #C3D9FF;
+  background-color: #fff;
+}
+.Osyl-ResourceConfigView-TabPanel .gwt-TabBarItem {
+  padding: 4px;
+  cursor: pointer;
+  cursor: hand;
+  /* color: white; */
+  /* background-color: #e8eef7; */
+  background-color: #e8eef7;
+  border-bottom: 2px solid white;
+  margin-right: 2px;
+}
+
+.Osyl-ResourceConfigView-TabPanel .gwt-TabBarItem-selected {
+  padding: 4px;
+  font-weight: bold;
+  cursor: default;
+  /* background-color:#063871; */
+  background-color: #C3D9FF;
+  border-bottom: 4px solid #C3D9FF;
+  margin-right: 2px;
+}
+.Osyl-ResourceConfigView-Tree {
+	margin: 1px;
+	padding: 1px;
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 10px;
+}
+
+.Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem {
+	font-size: 10px;
+	background-color: #ffffff;
+}
+
+.Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem .Osyl-ResourceConfigView-Tree-NodeContainer{
+    background: #FFFFFF;
+    cursor: pointer;
+}
+
+.Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem-selected .Osyl-ResourceConfigView-Tree-NodeContainer{
+    background: #C3D9FF;
+    cursor: pointer;
+}
+
+.Osyl-ResourceConfigView-Tree .gwt-TreeItem .Osyl-ResourceConfigView-Tree-NodeContainer{
+	cursor: pointer;
+}
+
+.Osyl-ResourceConfigView-Tree .gwt-TreeItem-selected .Osyl-ResourceConfigView-Tree-NodeContainer{
+	cursor: pointer;
+}
+
+.Osyl-EditorToolbar-DialogBox {
+  	font-family: sans-serif, Arial, Verdana;
+  	border: 1px outset;
+  	background-color: white;
+}
+
+.Osyl-EditorToolbar-DialogBox .Caption {
+  	background-color: #C3D9FF;
+  	padding: 2px;
+  	margin: 2px;
+	font-size: 9px;
+	/*font-weight: bold;*/
+  	cursor: move;
+}
+
+.Osyl-EditorToolbar-TopPanel {
+  text-align: left;
+  margin: 0px 2px 0px 2px;
+  background-color: #C3D9FF;
+  padding: 1px;
+}
+
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up {
+  /* We keep the same color as in "up" position, because it is mixed-up from
+     time to time, i.e.: down when the selection is not bold... */
+  background-color: #C3D9FF;
+  padding: 1px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down {
+  /* We keep the same color as in "up" position, because it is mixed-up from
+     time to time, i.e.: down when the selection is not bold... */
+  background-color: #C3D9FF;
+  padding: 1px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up-hovering {
+  background-color: #C3D9FF;
+  padding: 1px;
+  border: 1px solid transparent;
+  border-color: #E8F1FF;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down-hovering {
+  background-color: #C3D9FF;
+  padding: 1px;
+  border: 1px solid transparent;
+  border-color: #E8F1FF;
+  cursor: pointer;
+  cursor: hand;
+}
+
+/* Edition Toolbar Push buttons: same colors/behaviour that toggle putton */
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-up {
+  background-color: #C3D9FF;
+  padding: 1px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-down {
+  background-color: #C3D9FF;
+  padding: 1px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-up-hovering {
+  background-color: #C3D9FF;
+  padding: 1px;
+  border: 1px solid transparent;
+  border-color: #E8F1FF;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-down-hovering {
+  background-color: #C3D9FF;
+  padding: 1px;
+  border: 1px solid transparent;
+  border-color: #E8F1FF;
+  cursor: pointer;
+  cursor: hand;
+}
+
+/* ---- CSS definitions for new classes specific to Osyl -------------- */
+
+body {
+	border: 0px solid;
+	font-size: 100%;
+	background-color: White;
+	background-image: none;
+}
+
+.Osyl-MainView-WorkspaceView {
+	padding-left: 2px;
+	border-left: 1px solid #7f7f7f;
+	background: url(img/bgFadeV.gif) repeat-y;
+}
+
+#mainSlot > table {
+	border: 2px solid #063871;
+}
+#mainSlot > table > tbody > tr > td {
+	border: 0px solid blue ;
+}
+
+.Osyl-UnitView-UnitPanel > tbody > tr > td{
+	/* border-bottom: 1px solid #063871; */
+}
+.Osyl-UnitView-TextArea {
+	font-family: sans-serif, Arial, Verdana; /* Doesn't work in MSIE */
+	background: white;
+	border: 1px dashed blue;
+	margin: 0px;
+	padding: 0px; /* Doesn't work in any browser */
+}
+
+.Osyl-MainToolbar {
+	margin: 2px;
+	padding: 2px;
+}
+
+/* Toolbar button */
+.Osyl-MainToolbar .Osyl-PushButton {
+  margin-right: 2px;
+  border: 1px solid #C3D9FF;
+  width: 53px;
+  text-align: center;
+}
+
+.Osyl-MainToolbar .Osyl-PushButton-up-hovering {
+	border: 1px solid #fdf6af;
+}
+
+.Osyl-ResConfigView-Status-Panel {
+	margin: 1px;
+	padding: 2px;
+  	border: 1px solid #C3D9FF;
+}
+
+.Osyl-ResConfigView-Status-Label {
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 10px;
+	font-weight: bold;
+}
+
+.Osyl-ResConfigView-Status-RadioButton {
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 10px;
+}
+
+.Osyl-ResConfigView-Status-CheckBox {
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 10px;
+}
+
+.Osyl-ResConfigView-RubricList { 
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 10px;
+}
+.Osyl-ResProxAssignmentView-Label {
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 12px;
+	font-weight: bold;
+
+}
+
+.Osyl-ResProxCitationView-Label {
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 12px;
+	font-weight: bold;
+
+}
+
+.Osyl-ResourceConfigView-Welcome {
+	color: #999;
+	font-family: ns-serif, Arial, Verdana;
+	font-size: 12px;
+	padding: 30px 10px 20px 10px;
+	vertical-align: middle;
+}
+
+.Osyl-ResourceConfigView-Tree-NodeContainer {
+	vertical-align: middle;	
+}
+
+.Osyl-ResourceConfigView-Tree-NodeItemContainer {
+	font-family: ns-serif, Arial, Verdana;
+	font-size: 10px;
+	padding: 1px;
+	margin: 1px;
+}
+
+.Osyl-ResourceConfigView-Tree-Label {
+	font-family: ns-serif, Arial, Verdana;
+	font-size: 10px;
+}
+
+.Osyl-RemoteFileBrowser-Title-Label {
+	color: #063871;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 12px;
+	font-weight: bold;
+	background: url(img/bgFade.gif) repeat-x;
+	padding: 0;
+	border-left: 1px solid #C3D9FF;
+}
+
+.Osyl-RemoteFileBrowser-SelectedFileLabel {
+	font-size: 10px;
+	margin: 2px 0px 2px 0px;
+}
+
+.Osyl-RemoteFileBrowser-SelectedFile {
+	font-size: 9px;
+	margin: 2px 0px 4px 0px;
+}
+
+.Osyl-RemoteFileBrowser-ScrollPanel {
+	border-left: 1px solid #aaa;
+}
+
+.Osyl-DialogBox-ContentLabel {
+  padding: 5px;
+}
+
+.Osyl-TreeLabel{
+	font-size: 11px;
+}
+
+.Osyl-UnobtrusiveAlert {
+	background-color: white;
+ 	border: medium solid #C3D9FF;
+ 	padding: 5px;
+	/* Does not work with IE */
+	text-decoration: blink;
+}
+.Osyl-ResProxCitationView-LabelValue {
+	font-family: helvetica,arial,sans-serif;
+	font-size: 1em;
+	padding: 0px;
+	width: 100%;
+}
+.Osyl-ResProxView-Label {
+	font-size: 10px;
+	font-weight: bold;
+	margin-top: 5px;
+}
+
+
+.Osyl-ResProxView-LabelValue {
+	font-size: 10px;
+	margin-left: 10px;
+}
+
+.Osyl-ajaxSpinner {
+	background: url(img/ajaxSpinner.gif) no-repeat center;
+	margin: 2px;
+	padding: 2px;
+	border: medium;
+}

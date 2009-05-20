@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<registration>
+
+	<tool
+		id="sakai.opensyllabus.tool"
+		title="OpenSyllabus"
+		description="Sakai OpenSyllabus Tool">
+		
+		<configuration name="help.id" value="sakai.opensyllabus.tool" type="final" />
+		<category name="course" />
+		<category name="project" />
+
+		<keyword name="GWT" />
+
+	</tool>
+	
+</registration>

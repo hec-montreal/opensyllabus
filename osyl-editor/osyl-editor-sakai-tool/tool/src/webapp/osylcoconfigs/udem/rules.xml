@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- 
+ Rules for content display
+  @author <a href="mailto:sacha.Lepretre@crim.ca">Sacha Lepretre</a>
+  @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
+ --> 
+<schema>
+	<element name="CO">
+		<!-- restriction pattern is a regexp pattern based on the value of attriute type -->
+		<attribute name="type" restrictionpattern=".*" />
+		
+		<!-- list of element COUnit allowed at this level -->
+		<element name="COUnit">
+    		<attribute name="type" restrictionpattern="presentation" />
+			<element name="COResourceProxy">
+				<attribute name="type" restrictionpattern="text|document" />
+			</element>
+			<element name="COContentRubric">
+			    <attribute name="type" restrictionpattern="undefined|homework|session|quiz|qas|tools|readinglist|evaluations|news|learningstrat|teachnote|exercises|exams|assignments|casestudies|ressinclass|misresources|bibliography|pastexams|objectives|description|plagiat"/>
+			</element>
+		</element>
+		<element name="COUnit">
+			<attribute name="type" restrictionpattern="contactinfo" />
+			<element name="COResourceProxy">
+				<attribute name="type" restrictionpattern="text|document" />
+			</element>
+			<element name="COContentRubric">
+			    <attribute name="type" restrictionpattern="undefined|homework|session|quiz|qas|tools|readinglist|evaluations|news|learningstrat|teachnote|exercises|exams|assignments|casestudies|ressinclass|misresources|bibliography|pastexams|objectives|description|plagiat"/>
+			</element>
+		</element>
+		<element name="COUnit">
+			<attribute name="type" restrictionpattern="learningmat" />
+			<element name="COResourceProxy">
+				<attribute name="type" restrictionpattern="text|document" />
+			</element>
+			<element name="COContentRubric">
+			    <attribute name="type" restrictionpattern="undefined|homework|session|quiz|qas|tools|readinglist|evaluations|news|learningstrat|teachnote|exercises|exams|assignments|casestudies|ressinclass|misresources|bibliography|pastexams|objectives|description|plagiat"/>
+			</element>
+		</element>
+		<element name="COUnit">
+			<attribute name="type" restrictionpattern="assignexams" />
+			<element name="COResourceProxy">
+				<attribute name="type" restrictionpattern="text|document" />
+			</element>
+			<element name="COContentRubric">
+			    <attribute name="type" restrictionpattern="undefined|instructions|homework|session|quiz|qas|tools|readinglist|evaluations|news|learningstrat|teachnote|exercises|exams|assignments|casestudies|ressinclass|misresources|bibliography|pastexams|objectives|description|plagiat"/>
+			</element>
+		</element>
+		
+		<!-- list of element structureElement allowed at this level -->
+		<element name="COStructure">
+			<attribute name="type" restrictionpattern="lectures" />
+			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
+			<element name="COUnit">
+				<attribute name="type" restrictionpattern="lecture" />
+				<element name="COResourceProxy">
+					<attribute name="type" restrictionpattern="text|document|assignment" />
+				</element>
+		        <element name="COContentRubric">
+			        <attribute name="type" restrictionpattern="undefined|instructions|homework|session|quiz|qas|tools|readinglist|evaluations|news|learningstrat|teachnote|exercises|exams|assignments|casestudies|ressinclass|misresources|bibliography|pastexams|objectives|description|plagiat"/>
+			    </element>
+			</element>
+		</element>
+	</element>
+</schema>
