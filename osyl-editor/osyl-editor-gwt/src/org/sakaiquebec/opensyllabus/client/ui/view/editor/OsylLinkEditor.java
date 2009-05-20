@@ -1,0 +1,396 @@
+/*******************************************************************************
+ * $Id: $
+ *******************************************************************************
+ *
+ * Copyright (c) 2008 The Sakai Foundation, The Sakai Quebec Team.
+ *
+ * Licensed under the Educational Community License, Version 1.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.opensource.org/licenses/ecl1.php
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ******************************************************************************/
+
+package org.sakaiquebec.opensyllabus.client.ui.view.editor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
+import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxLinkView;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RichTextArea;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
+
+/**
+ * Link editor to be used within {@link OsylAbstractView}. The edition mode
+ * uses a Rich-text editor and the view mode displays a clickable link.
+ * 
+ * @author <a href="mailto:Remi.Saias@hec.ca">Remi Saias</a>
+ */
+public class OsylLinkEditor extends OsylAbstractResProxEditor {
+
+    // Our main panel which will display the viewer and the meta-info
+    private VerticalPanel mainPanel;
+
+    // Our editor
+    private VerticalPanel editor;
+    // private FlexTable editor;
+    private TextBox editorName;
+    private TextBox editorLink;
+    private RichTextArea editorDesc;
+
+    // Our viewers
+    private HTML viewer;
+    private HTML viewerURI;
+    private HTML viewerDesc;
+    
+    // Contains the viewer and info icons for the requirement level
+    private HorizontalPanel viewerPanel;
+
+    // remember editor description height for maximizing popup
+    private int originalEditorDescHeight;
+    
+    /**
+     * Constructor specifying the {@link OsylAbstractView} this editor is
+     * working for.
+     * 
+     * @param parent
+     */
+    public OsylLinkEditor(OsylAbstractView parent) {
+	super(parent);
+
+	initMainPanel();
+	if (!isReadOnly()) {
+	    initEditor();
+	}
+	initViewer();
+	initWidget(getMainPanel());
+    }
+
+    /**
+     * ====================== PRIVATE METHODS ======================
+     */
+
+    /**
+     * Creates and set the main panel.
+     */
+    private void initMainPanel() {
+	setMainPanel(new VerticalPanel());
+	getMainPanel().setStylePrimaryName("Osyl-ResProxLink");
+    }
+
+    private VerticalPanel getMainPanel() {
+	return mainPanel;
+    }
+
+    private void setMainPanel(VerticalPanel mainPanel) {
+	this.mainPanel = mainPanel;
+    }
+
+    /**
+     * Creates and set the low-level editor (TextBox).
+     */
+    private void initEditor() {
+    VerticalPanel editorPanel = new VerticalPanel();
+    
+	final FlexTable flexTable = new FlexTable();
+	flexTable.getFlexCellFormatter().setWidth(0, 0, "15%");
+	flexTable.getFlexCellFormatter().setWidth(0, 1, "85%");
+	
+	editorName = new TextBox();
+	editorName.setStylePrimaryName("Osyl-LabelEditor-TextBox");
+	editorName.setWidth("100%");
+	flexTable.setWidget(0, 0, new Label(getUiMessage("Link.label")+" : "));
+	flexTable.setWidget(0, 1, editorName);
+	
+	editorLink = new TextBox();
+	editorLink.setStylePrimaryName("Osyl-LabelEditor-TextBox");
+	editorLink.setWidth("100%");
+	flexTable.setWidget(1, 0, new Label(getUiMessage("Link.url")+" : "));
+	flexTable.setWidget(1, 1, editorLink);
+	
+	flexTable.setWidth("100%");
+	editorPanel.add(flexTable);
+	
+	Label label = new Label(getView().getUiMessage("comment"));
+	editorPanel.add(label);
+	editorDesc = new RichTextArea();
+	editorDesc.setWidth("99%");
+	editorDesc.setHeight("120px");
+	editorPanel.add(editorDesc);
+	
+	setEditor(editorPanel);
+    }
+
+    private void setEditor(VerticalPanel vp) {
+	this.editor = vp;
+    }
+
+    /**
+     * Creates and set the low-level viewer (HTML panel).
+     */
+    private void initViewer() {
+	HTML htmlViewer = new HTML();
+	htmlViewer.setStylePrimaryName("link");
+	setViewer(htmlViewer);
+	
+	HTML htmlViewerDesc = new HTML();
+	htmlViewerDesc.setStylePrimaryName("description");
+	htmlViewerDesc.setTitle(getView().getUiMessage("Link.description"));
+	setViewerDesc(htmlViewerDesc);
+
+	HTML htmlViewerURI = new HTML();
+	htmlViewerURI.setStylePrimaryName("uri");
+	setViewerURI(htmlViewerURI);
+	if(isReadOnly()) {
+	    getViewerURI().setVisible(false);
+	}
+
+	setViewerPanel(new HorizontalPanel());
+
+	if (isReadOnly()) {
+	    if (getView().isContextImportant()) {
+		htmlViewer
+			.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
+	    }
+	    if (COPropertiesType.REQ_LEVEL_MANDATORY.equals(getView()
+		    .getRequirementLevel())) {
+		Image mandatoryIcon =
+			getView().getOsylImageBundle().iconeObl().createImage();
+		getViewerPanel().add(mandatoryIcon);
+	    }
+	    if (getView().isContextHidden()) {
+		getMainPanel().setVisible(false);
+	    } else {
+		getMainPanel().setVisible(true);
+	    }
+	}
+	constructViewerLayout();
+    }
+    
+    private void constructViewerLayout() {
+	// Now we add our widgets with the following layout
+	//  ____________________________________________
+	// |  link displayed as		|	(source of		|
+    // |     name of link		|	    link)		|
+	// |--------------------------------------------|
+	// |  description                               |
+	// |____________________________________________|
+	//
+	VerticalPanel vp = new VerticalPanel();
+	getViewerPanel().add(vp);
+	HorizontalPanel linkAndNameHP = new HorizontalPanel();
+	vp.add(linkAndNameHP);
+	linkAndNameHP.add(getViewer());
+	linkAndNameHP.add(getViewerURI());
+	vp.add(getViewerDesc());
+	getMainPanel().add(getViewerPanel());
+    }
+    
+    // Clears the viewerPanel and calls constructViewerLayout().
+    private void reconstructViewerLayout() {
+	getViewerPanel().clear();
+	constructViewerLayout();
+    }
+
+    private void setViewer(HTML html) {
+	this.viewer = html;
+    }
+
+    private HTML getViewer() {
+	return this.viewer;
+    }
+
+    private void setViewerURI(HTML html) {
+	this.viewerURI = html;
+    }
+
+    private HTML getViewerURI() {
+	return this.viewerURI;
+    }
+    
+    private void setViewerDesc(HTML html) {
+    this.viewerDesc = html;
+    }
+    
+    private HTML getViewerDesc() {
+    return this.viewerDesc;
+    }
+    
+    private void setViewerPanel(HorizontalPanel viewerPanel){
+	this.viewerPanel = viewerPanel;
+    }
+    
+    private HorizontalPanel getViewerPanel(){
+	return viewerPanel;
+    }
+
+    /**
+     * ===================== OVERRIDEN METHODS ===================== See
+     * superclass for javadoc!
+     */
+
+    protected OsylResProxLinkView getView() {
+	return (OsylResProxLinkView) super.getView();
+    }
+
+    public void setText(String text) {
+	if (isInEditionMode()) {
+	    editorName.setText(text);
+	} else {
+	    viewer.setHTML(text);
+	}
+    }
+
+    public String getText() {
+	if (isInEditionMode()) {
+	    return editorName.getText();
+	} else {
+	    return viewer.getHTML();
+	}
+    }
+    
+    public void setLink(String text) {
+	if (isInEditionMode()) {
+	    editorLink.setText(text);
+	} else {
+	    viewer.setHTML(text);
+	}
+    }
+
+    public String getLink() {
+	if (isInEditionMode()) {
+	    return editorLink.getText();
+	} else {
+	    return viewer.getHTML();
+	}
+    }
+    
+    public String getDescription() {
+	if (isInEditionMode()) {
+	    return editorDesc.getHTML();
+	} else {
+	    return viewerDesc.getHTML();
+	}
+    }
+
+    public void setFocus(boolean b) {
+	if (isInEditionMode()) {
+	    editorName.setFocus(b);
+	}
+    }
+
+    public Widget getEditorTopWidget() {
+	return editor;
+    }
+
+    public boolean prepareForSave() {
+	return true;
+    }
+
+    public void enterEdit() {
+
+	// We keep track that we are now in edition-mode
+	setInEditionMode(true);
+
+	// We get the text to edit from the model
+	editorName.setText(getView().getTextFromModel());
+	// And put the cursor at the end
+	editorName.setCursorPos(getText().length());
+	// And we give the focus to the editor
+	editorName.setFocus(true);
+	// We get the URL for the link
+	editorLink.setText(getView().getLinkURI());
+	// We get the description text to edit from the model
+	editorDesc.setHTML(getView().getDescriptionFromModel());
+
+	createEditBox();
+
+    } // enterEdit
+
+    public void enterView() {
+	// We keep track that we are now in view-mode
+	setInEditionMode(false);
+
+	getMainPanel().clear();
+	// If we don't reconstruct the viewer layout the new size of our HTML
+	// components will not be effective until we mouse over...
+	reconstructViewerLayout();
+	getMainPanel().add(getViewerPanel());
+	// We get the text to display from the model
+	getViewer().setHTML(getView().getTextFromModel());
+	getViewerURI().setHTML("("+ getView().getRawURI() + ")");
+	getViewerDesc().setHTML(getView().getDescriptionFromModel());
+	
+	// If we are not in read-only mode, we display some meta-info and add
+	// buttons and listeners enabling edition or deletion:
+	if (!isReadOnly()) {
+	    getMainPanel().add(getMetaInfoLabel());
+	    addViewerStdButtons();
+
+	}
+    } // enterView
+
+    @Override
+    public Widget getConfigurationWidget() {
+	return null;
+    }
+
+    @Override
+    public Widget[] getAdditionalOptionWidgets() {
+	return null;
+    }
+
+    @Override
+    public Widget getBrowserWidget() {
+	// TODO: return the hyperlink browser here
+	return null;
+    }
+
+    @Override
+    protected List<FocusWidget> getEditionFocusWidgets() {
+	ArrayList<FocusWidget> focusWidgetList = new ArrayList<FocusWidget>();
+	focusWidgetList.add(editorName);
+	focusWidgetList.add(editorLink);
+	focusWidgetList.add(editorDesc);
+	return focusWidgetList;
+    }
+    
+    @Override
+    public boolean isResizable() {
+    return true;
+    }
+    
+    @Override
+    public void maximizeEditor() {
+	originalEditorDescHeight = editorDesc.getOffsetHeight();    	
+	super.maximizeEditor();
+	int descAdd = getEditorPopup().getOffsetHeight() - getOriginalEditorPopupHeight();
+	editorDesc.setHeight((originalEditorDescHeight + descAdd) 
+			+ "px");
+    }
+    
+    @Override
+    public void normalizeEditorWindowState() {
+	super.normalizeEditorWindowState();
+	editorDesc.setHeight(originalEditorDescHeight + "px");
+    }
+
+}

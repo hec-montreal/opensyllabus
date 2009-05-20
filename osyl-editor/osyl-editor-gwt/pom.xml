@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.sakaiquebec.opensyllabus</groupId>
+		<artifactId>opensyllabus-parent</artifactId>
+		<version>M2</version>
+		<relativePath>../osyl-pom/pom.xml</relativePath>
+	</parent>
+
+	<groupId>org.sakaiquebec.opensyllabus.coregwt</groupId>
+	<artifactId>opensyllabus-coregwt-base</artifactId>
+	<!--  Note: we create a jar to shade it in the associated tool -->
+	<packaging>jar</packaging>
+
+	<name>Sakai Quebec OpenSyllabus CoreGWT Project</name>
+
+	<properties>
+		<gwtModule>org.sakaiquebec.opensyllabus.OsylEditorEntryPoint</gwtModule>
+	</properties>
+
+	<dependencies>
+		<!--  opensyllabus -->
+		<dependency>
+			<groupId>org.sakaiquebec.opensyllabus</groupId>
+			<artifactId>sakai-opensyllabus-common-shared</artifactId>
+		</dependency>
+
+		<!-- gwt -->
+		<dependency>
+			<groupId>com.google.gwt-fx</groupId>
+			<artifactId>gwt-fx</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-dev</artifactId>
+			<classifier>${platform}</classifier>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-incubator</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.gwt.mosaic</groupId>
+			<artifactId>gwt-mosaic</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.gwt.mosaic</groupId>
+			<artifactId>gwt-beansbinding</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.gwt.mosaic</groupId>
+			<artifactId>gwt-dnd</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.gwt.mosaic</groupId>
+			<artifactId>gwt-ext</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>src</directory>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${basedir}</directory>
+							<includes>
+								<include>tomcat</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ant-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>generate-ant</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>ant</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>process-gwt</id>
+						<phase>process-resources</phase>
+						<configuration>
+							<tasks>
+								<copy todir="${project.build.outputDirectory}/${gwtModule}">
+									<fileset dir="${project.build.directory}/gwt/${gwtModule}" />
+								</copy>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>full</id>
+			<activation>
+				<!--
+					This does not work the first time you do a clean and you need to do
+					a 'mvn clean' then 'mvn whatever'. You can't even rely on things
+					such as ${project.build.directory} which is terribly sad. The
+					reason is that M2 seems to evaluate profile activation before
+					evaluating the rest of this POM (and / or execute phases). The
+					result is: * You cannot use a property from this POM so you MUST
+					specify on the command line if you want to use a property. *
+					Testing for the existence of a file happens before we can delete it
+					on a clean, so even with a 'clean install', you won't get the
+					desired result.
+				-->
+				<file>
+					<missing>m2-target/gwt/org.sakaiquebec.opensyllabus.OsylEditorEntryPoint</missing>
+				</file>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>generate-gwt</id>
+								<phase>generate-resources</phase>
+								<configuration>
+									<modules>
+										<module>${gwtModule}</module>
+									</modules>
+									<output>${project.build.directory}/gwt/</output>
+								</configuration>
+								<goals>
+									<goal>compile</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>hosted</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>process-gwt</id>
+								<phase>package</phase>
+								<configuration>
+									<tasks>
+										<ant antfile="build.xml" target="hosted"/>
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

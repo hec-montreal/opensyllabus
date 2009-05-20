@@ -1,0 +1,37 @@
+<module>
+
+	<!-- Inherit the core Web Toolkit stuff. -->
+	<inherits name='com.google.gwt.user.User'/>
+	<inherits name='com.google.gwt.xml.XML'/>
+	<inherits name='com.google.gwt.json.JSON'/>
+	<inherits name="com.google.gwt.http.HTTP"/>
+	<inherits name='com.google.gwt.widgetideas.DatePicker'/>
+		
+	<inherits name="org.adamtacy.GWTEffects"></inherits>  
+	
+	<inherits name='org.gwt.mosaic.Mosaic' />
+	<inherits name='org.gwt.mosaic.actions.Actions' />
+ 
+ <!--     
+    <inherits name="com.google.gwt.widgetideas.GlassPanel"/>
+-->
+
+	<inherits name='org.sakaiquebec.opensyllabus.shared'/>
+
+	<extend-property name="locale" values="fr_CA"/>
+    <extend-property name="locale" values="es"/>
+
+	<!-- Specify the app entry point class. -->
+	<entry-point class='org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint'/>
+	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint"/>
+
+	<!-- Specify the app servlet path. -->
+	<servlet path="/OsylGwtService" class="org.sakaiquebec.opensyllabus.server.OsylEditorGwtServiceImpl" />
+	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint"/>
+
+	<!-- Specify a style sheet -->
+	<stylesheet src='org.sakaiquebec.opensyllabus.public.css.osylcore.css'/>
+	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint"/>
+	<inherits name="com.google.gwt.widgetideas.DatePicker"/>
+
+</module>

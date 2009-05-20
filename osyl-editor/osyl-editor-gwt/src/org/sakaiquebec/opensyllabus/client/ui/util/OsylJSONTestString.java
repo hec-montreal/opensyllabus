@@ -1,0 +1,330 @@
+/*******************************************************************************
+ * $Id: $
+ *******************************************************************************
+ *
+ * Copyright (c) 2008 The Sakai Foundation, The Sakai Quebec Team.
+ *
+ * Licensed under the Educational Community License, Version 1.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.opensource.org/licenses/ecl1.php
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ******************************************************************************/
+
+package org.sakaiquebec.opensyllabus.client.ui.util;
+
+/**
+ * @author <a href="mailto:claude.coulombe@umontreal.ca">Claude Coulombe</a>
+ * @version $Id: $
+ */
+public class OsylJSONTestString {
+
+    /**
+     * 
+     * @return String the test JSON String
+     */
+    public static String getTestString() {
+	String json =
+		"{\"mixinNodeType\":[],\"items\":{\"desktop.ini\":{\"mimeType\":\"application/octet-stream\",\"mixinNodeType\":[],\"hidden\":false,"+
+		"\"length\":\"402\",\"position\":\"1\",\"available\":true,\"lastModified\":{\"month\":4,\"day\":3,\"year\":108,\"time\":1211400882741,"+
+		"\"seconds\":42,\"timezoneOffset\":240,\"date\":21,\"hours\":16,\"minutes\":14},\"primaryNodeType\":\"nt:file\",\"path\":"+
+		"\"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c/desktop.ini\",\"properties\":{\"CHEF:is-collection\":\"false\","+
+		"\"DAV:creationdate\":\"20080521201442738\",\"DAV:getlastmodified\":\"20080521201442741\",\"DAV:getcontentlength\":\"402\","+
+		"\"DAV:getcontenttype\":\"application/octet-stream\",\"DAV:displayname\":\"desktop.ini\",\"CHEF:creator\":\"admin\","+
+		"\"CHEF:modifiedby\":\"admin\"},\"name\":\"desktop.ini\"},\"work\":{\"mixinNodeType\":[],\"position\":\"6\","+
+		"\"primaryNodeType\":\"nt:folder\",\"path\":\"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c/work\","+
+		"\"properties\":{\"CHEF:is-collection\":\"true\",\"DAV:creationdate\":\"20080522195520863\",\"DAV:getlastmodified\":\"20080522195521144\","+
+		"\"SAKAI:content_priority\":\"7\",\"DAV:displayname\":\"work\",\"CHEF:creator\":\"admin\",\"CHEF:modifiedby\":\"admin\"},\"name\":\"work\"},"+
+		"\"Classeur1.xls\":{\"mimeType\":\"application/vnd.ms-excel\",\"mixinNodeType\":[],\"hidden\":false,\"length\":\"14848\",\"position\":\"0\","+
+		"\"available\":true,\"lastModified\":{\"month\":4,\"day\":3,\"year\":108,\"time\":1211400825158,\"seconds\":45,\"timezoneOffset\":240,"+
+		"\"date\":21,\"hours\":16,\"minutes\":13},\"primaryNodeType\":\"nt:file\",\"path\":\"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c/Classeur1.xls\","+
+		"\"properties\":{\"CHEF:is-collection\":\"false\",\"DAV:creationdate\":\"20080521201345152\",\"DAV:getlastmodified\":\"20080521201345158\","+
+		"\"DAV:getcontentlength\":\"14848\",\"DAV:getcontenttype\":\"application/vnd.ms-excel\",\"DAV:displayname\":\"Classeur1.xls\","+
+		"\"CHEF:creator\":\"admin\",\"CHEF:modifiedby\":\"admin\"},\"name\":\"Classeur1.xls\"},\"Maven.flt\":{\"mimeType\":"+
+		"\"application/octet-stream\",\"mixinNodeType\":[],\"hidden\":false,\"length\":\"1239\",\"position\":\"3\",\"available\":true,"+
+		"\"lastModified\":{\"month\":4,\"day\":3,\"year\":108,\"time\":1211399070341,\"seconds\":30,\"timezoneOffset\":240,\"date\":21,"+
+		"\"hours\":15,\"minutes\":44},\"primaryNodeType\":\"nt:file\",\"path\":\"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c/Maven.flt\","+
+		"\"properties\":{\"CHEF:is-collection\":\"false\",\"DAV:creationdate\":\"20080521194430336\",\"DAV:getlastmodified\":\"20080521194430341\","+
+		"\"DAV:getcontentlength\":\"1239\",\"DAV:getcontenttype\":\"application/octet-stream\",\"DAV:displayname\":\"Maven.flt\","+
+		"\"CHEF:creator\":\"admin\",\"CHEF:modifiedby\":\"admin\"},\"name\":\"Maven.flt\"},\"devenv.exe\":{\"mimeType\":\"application/octet-stream\","+
+		"\"mixinNodeType\":[],\"hidden\":false,\"length\":\"0\",\"position\":\"2\",\"available\":true,\"lastModified\":{\"month\":4,\"day\":3,"+
+		"\"year\":108,\"time\":1211400237938,\"seconds\":57,\"timezoneOffset\":240,\"date\":21,\"hours\":16,\"minutes\":3},"+
+		"\"primaryNodeType\":\"nt:file\",\"path\":\"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c/devenv.exe\",\"properties\":{\"CHEF:is-collection\":"+
+		"\"false\",\"DAV:creationdate\":\"20080521200357934\",\"DAV:getlastmodified\":\"20080521200357938\",\"DAV:getcontentlength\":\"0\","+
+		"\"DAV:getcontenttype\":\"application/octet-stream\",\"DAV:displayname\":\"devenv.exe\",\"CHEF:creator\":\"admin\",\"CHEF:modifiedby\":"+
+		"\"admin\"},\"name\":\"devenv.exe\"},\"gla\":{\"mixinNodeType\":[],\"position\":\"4\",\"primaryNodeType\":\"nt:folder\",\"path\":"+
+		"\"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c/gla\",\"properties\":{\"CHEF:is-collection\":\"true\",\"DAV:creationdate\":"+
+		"\"20080521201452332\",\"DAV:getlastmodified\":\"20080521201452339\",\"SAKAI:content_priority\":\"6\",\"DAV:displayname\":\"gla\","+
+		"\"CHEF:creator\":\"admin\",\"CHEF:modifiedby\":\"admin\"},\"name\":\"gla\"},\"publish\":{\"mixinNodeType\":[],\"position\":\"5\","+
+		"\"primaryNodeType\":\"nt:folder\",\"path\":\"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c/publish\",\"properties\":{\"CHEF:is-collection\":"+
+		"\"true\",\"DAV:creationdate\":\"20080522195521159\",\"DAV:getlastmodified\":\"20080522195521190\",\"SAKAI:content_priority\":\"7\","+
+		"\"DAV:displayname\":\"publish\",\"CHEF:creator\":\"admin\",\"CHEF:modifiedby\":\"admin\"},\"name\":\"publish\"}"+
+		",\"Nouveau Liste de Citations\":{\"mimeType\":\"text/html\",\"mixinNodeType\":[],\"permissions\":{\"write\":\"true\","+
+		"\"delete\":\"true\",\"read\":\"true\"},\"hidden\":false,\"length\":\"36\",\"position\":\"0\",\"available\":true,"+
+		"\"lastModified\":{\"month\":4,\"day\":5,\"year\":108,\"time\":1212180548042,\"seconds\":8,\"timezoneOffset\":240,\"date\":30,"+
+		"\"hours\":16,\"minutes\":49},\"primaryNodeType\":\"nt:file\",\"path\":\"/group/cc01931e-2112-4d5f-8557-c38d64ac6022/Nouveau Liste de Citations\","+
+		"\"properties\":{\"http://purl.org/dc/elements/1.1/creator\":\"\",\"DAV:getlastmodified\":\"20080530204908042\",\"sakai:reference-root\":\"/citation\","+
+		"\"DAV:displayname\":\"Nouveau Liste de Citations\"}}},\"primaryNodeType\":"+
+		"\"nt:folder\",\"path\":\"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c\",\"nitems\":7,\"properties\":	{\"CHEF:is-collection\":\"true\","+
+		"\"DAV:creationdate\":\"20080521194415112\",\"DAV:getlastmodified\":\"20080521194415112\",\"SAKAI:content_priority\":\"4\","+
+		"\"DAV:displayname\":\"MonSite\",\"CHEF:creator\":\"admin\",\"CHEF:modifiedby\":\"admin\"},\"name\":\"31f45839-f523-4be1-9ba8-80ad0fb1332c\"}";
+	return json;
+    }
+    
+    /*
+        {
+    	"mixinNodeType":[],"items":
+    	{
+    		"desktop.ini":
+    		{
+    			"mimeType":"application/octet-stream",
+    			"mixinNodeType":[],
+    			"hidden":false,
+    			"length":"402",
+    			"position":"1",
+    			"available":true,
+    			"lastModified":
+    			{
+    				"month":4,
+    				"day":3,
+    				"year":108,
+    				"time":1211400882741,
+    				"seconds":42,
+    				"timezoneOffset":240,
+    				"date":21,
+    				"hours":16,
+    				"minutes":14
+    			},
+    			"primaryNodeType":"nt:file",
+    			"path":"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c/desktop.ini",
+    			"properties":
+    			{
+    			    "CHEF:is-collection":"false",
+    			    "DAV:creationdate":"20080521201442738",
+    			    "DAV:getlastmodified":"20080521201442741",
+    			    "DAV:getcontentlength":"402",
+    			    "DAV:getcontenttype":"application/octet-stream",
+    			    "DAV:displayname":"desktop.ini",
+    			    "CHEF:creator":"admin",
+    			    "CHEF:modifiedby":"admin"
+    			},
+    			"name":"desktop.ini"
+    		},
+    		"work":
+    		{
+    		    "mixinNodeType":[],
+    		    "position":"6",
+    		    "primaryNodeType":"nt:folder",
+    		    "path":"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c/work",
+    		    "properties":
+    		    {	"CHEF:is-collection":"true",
+    		    	"DAV:creationdate":"20080522195520863",
+    		    	"DAV:getlastmodified":"20080522195521144",
+    		    	"SAKAI:content_priority":"7",
+    		    	"DAV:displayname":"work",
+    		    	"CHEF:creator":"admin",
+    		    	"CHEF:modifiedby":"admin"
+    		    },
+    		    "name":"work"
+    		},
+    		"Classeur1.xls":
+    		{
+    		    "mimeType":"application/vnd.ms-excel",
+    		    "mixinNodeType":[],"hidden":false,
+    		    "length":"14848",
+    		    "position":"0",
+    		    "available":true,
+    		    "lastModified":
+    		    {
+    		    	"month":4,
+    		    	"day":3,
+    		    	"year":108,
+    		    	"time":1211400825158,
+    		    	"seconds":45,
+    		    	"timezoneOffset":240,
+    		    	"date":21,
+    		    	"hours":16,
+    		    	"minutes":13
+    		    },
+    		    "primaryNodeType":"nt:file",
+    		    "path":"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c/Classeur1.xls",
+    		    "properties":
+    		    {
+    			"CHEF:is-collection":"false",
+    			"DAV:creationdate":"20080521201345152",
+    			"DAV:getlastmodified":"20080521201345158",
+    			"DAV:getcontentlength":"14848",
+    			"DAV:getcontenttype":"application/vnd.ms-excel",
+    			"DAV:displayname":"Classeur1.xls",
+    			"CHEF:creator":"admin",
+    			"CHEF:modifiedby":"admin"
+    		    },
+    		    "name":"Classeur1.xls"
+    		},
+    		"Maven.flt":
+    		{
+    		    "mimeType":"application/octet-stream",
+    		    "mixinNodeType":[],
+    		    "hidden":false,
+    		    "length":"1239",
+    		    "position":"3",
+    		    "available":true,
+    		    "lastModified":
+    		    {
+    		    	"month":4,
+    		    	"day":3,
+    		    	"year":108,
+    		    	"time":1211399070341,
+    		    	"seconds":30,
+    		    	"timezoneOffset":240,
+    		    	"date":21,
+    		    	"hours":15,
+    		    	"minutes":44
+    		    },
+    		    "primaryNodeType":"nt:file",
+    		    "path":"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c/Maven.flt",
+    		    "properties":
+    		    {
+    			"CHEF:is-collection":"false",
+    			"DAV:creationdate":"20080521194430336",
+    			"DAV:getlastmodified":"20080521194430341",
+    			"DAV:getcontentlength":"1239",
+    			"DAV:getcontenttype":"application/octet-stream",
+    			"DAV:displayname":"Maven.flt",
+    			"CHEF:creator":"admin",
+    			"CHEF:modifiedby":"admin"
+    		    },
+    		    "name":"Maven.flt"
+    		},
+    		"devenv.exe":
+    		{
+    		    "mimeType":"application/octet-stream",
+    		    "mixinNodeType":[],
+    		    "hidden":false,
+    		    "length":"0",
+    		    "position":"2",
+    		    "available":true,
+    		    "lastModified":
+    		    {
+    		    	"month":4,
+    		    	"day":3,
+    		    	"year":108,
+    		    	"time":1211400237938,
+    		    	"seconds":57,
+    		    	"timezoneOffset":240,
+    		    	"date":21,
+    		    	"hours":16,
+    		    	"minutes":3
+    		    },
+    		    "primaryNodeType":"nt:file",
+    		    "path":"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c/devenv.exe",
+    		    "properties":
+    		    {
+    			"CHEF:is-collection":"false",
+    			"DAV:creationdate":"20080521200357934",
+    			"DAV:getlastmodified":"20080521200357938",
+    			"DAV:getcontentlength":"0",
+    			"DAV:getcontenttype":"application/octet-stream",
+    			"DAV:displayname":"devenv.exe",
+    			"CHEF:creator":"admin",
+    			"CHEF:modifiedby":"admin"
+    		    },
+    		    "name":"devenv.exe"
+    		},
+    		"gla":
+    		{
+    		    "mixinNodeType":[],
+    		    "position":"4",
+    		    "primaryNodeType":"nt:folder",
+    		    "path":"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c/gla",
+    		    "properties":
+    		    {
+    		    	"CHEF:is-collection":"true",
+    		    	"DAV:creationdate":"20080521201452332",
+    		    	"DAV:getlastmodified":"20080521201452339",
+    		    	"SAKAI:content_priority":"6",
+    		    	"DAV:displayname":"gla",
+    		    	"CHEF:creator":"admin",
+    		    	"CHEF:modifiedby":"admin"
+    		    },
+    		    "name":"gla"
+    		},
+    		"publish":
+    		{	
+    		    "mixinNodeType":[],
+    		    "position":"5",
+    		    "primaryNodeType":"nt:folder",
+    		    "path":"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c/publish",
+    		    "properties":
+    		    {
+    		    	"CHEF:is-collection":"true",
+    		    	"DAV:creationdate":"20080522195521159",
+    		    	"DAV:getlastmodified":"20080522195521190",
+    		    	"SAKAI:content_priority":"7",
+    		    	"DAV:displayname":"publish",
+    		    	"CHEF:creator":"admin",
+    		    	"CHEF:modifiedby":"admin"
+    		    },
+    		    "name":"publish"
+    		},
+    		"Nouveau Liste de Citations":
+    		{
+        		"mimeType":"text/html",
+        		"mixinNodeType":[],
+        		"permissions":
+        		{
+                		"write":"true",
+                		"delete":"true",
+                		"read":"true"
+                	},
+                	"hidden":false,
+                	"length":"36",
+                	"position":"0",
+                	"available":true,
+                	"lastModified":
+        		{
+                		"month":4,
+                		"day":5,
+                		"year":108,
+                		"time":1212180548042,
+                		"seconds":8,
+                		"timezoneOffset":240,
+                		"date":30,
+                		"hours":16,
+                		"minutes":49
+        		},
+        		"primaryNodeType":"nt:file",
+        		"path":"/group/cc01931e-2112-4d5f-8557-c38d64ac6022/Nouveau Liste de Citations",
+        		"properties":
+        		{
+                		"http://purl.org/dc/elements/1.1/creator":"",
+                		"DAV:getlastmodified":"20080530204908042",
+                		"sakai:reference-root":"/citation",
+                		"DAV:displayname":"Nouveau Liste de Citations"
+        		}
+    		}
+    	},
+    	"primaryNodeType":"nt:folder",
+    	"path":"/group/31f45839-f523-4be1-9ba8-80ad0fb1332c",
+    	"nitems":7,
+    	"properties":
+    	{
+    	    	"CHEF:is-collection":"true",
+    	    	"DAV:creationdate":"20080521194415112",
+    	    	"DAV:getlastmodified":"20080521194415112",
+    	    	"SAKAI:content_priority":"4",
+    	    	"DAV:displayname":"MonSite",
+    	    	"CHEF:creator":"admin",
+    	    	"CHEF:modifiedby":"admin"
+    	},
+    	"name":"31f45839-f523-4be1-9ba8-80ad0fb1332c"
+        } 
+    */
+}

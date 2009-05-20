@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CO id="H2008-1-1429100" name="H2008-1-1429100" type="bylecture" lang="fr" scrty="public">
+	<label><![CDATA[Bases de données de l'entreprise]]></label>
+	<COUnit type="presentation" scrty="public">
+		<label><![CDATA[Blabla]]></label>
+		<COUnitContent type="presentation" scrty="public">
+			<COResourceProxy type="text" scrty="public">
+				<COContentRubric type="description" />
+				<properties>
+					<visible>true</visible>
+					<requirementLevel>recommended</requirementLevel>
+					<important>false</important>
+				</properties>
+				<COResource type="text" scrty="public">
+					<properties>
+						<text><![CDATA[
+		     <P>Voici une description pas mal exhaustive du cours. héhé.</P>
+		     ]]></text>
+					</properties>
+				</COResource>
+			</COResourceProxy>
+		</COUnitContent>
+	</COUnit>
+	<COUnit type="contactinfo" scrty="public">
+		<label><![CDATA[Contact information]]></label>
+		<COUnitContent type="contactinfo" scrty="public">
+			<COResourceProxy type="contactinforesource" scrty="public">
+				<COContentRubric type="coordinators" />
+				<properties>
+					<visible>true</visible>
+				</properties>
+				<COResource type="text" scrty="public">
+					<properties>
+					</properties>
+				</COResource>
+			</COResourceProxy>
+		</COUnitContent>
+	</COUnit>
+	<COUnit type="learningmat" scrty="public">
+		<label><![CDATA[Learning material]]></label>
+		<COUnitContent type="learningmat" scrty="public">
+			<COResourceProxy type="text" scrty="public">
+				<COContentRubric type="misresources" />
+				<properties>
+					<visible>true</visible>
+					<requirementLevel>recommended</requirementLevel>
+					<important>false</important>
+				</properties>
+				<COResource type="text" scrty="public">
+					<properties>
+						<text><![CDATA[
+		     <P>Voici une description pas mal exhaustive du cours. héhé.</P>
+		     ]]></text>
+					</properties>
+				</COResource>
+			</COResourceProxy>
+		</COUnitContent>
+	</COUnit>
+	<COStructure type="evaluations" scrty="public">
+		<COUnit type="evaluation" scrty="public">
+			<label><![CDATA[Examen Intra]]></label>
+			<COUnitContent type="evaluation" scrty="public">
+				<properties>
+					<rating>30%</rating>
+					<opendate>10-02-2008</opendate>
+					<closedate>10-02-2008</closedate>
+				</properties>
+				<COResourceProxy type="text" scrty="attendee">
+					<COContentRubric type="description" />
+					<label><![CDATA[Examen intra]]></label>
+					<properties>
+						<visible>true</visible>
+					</properties>
+					<COResource type="text" scrty="attendee">
+						<properties>
+							<text><![CDATA[L'examen intratrimestriel cherche à mesurer le raisonnement, l'articulation des idées reçues à cette étape du cours.]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="attendee">
+					<COContentRubric type="evalcriteria" />
+					<label><![CDATA[Examen intra]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="attendee">
+						<properties>
+							<text><![CDATA[
+		     <P>Voici les principaux critères retenus pour l'évaluation :</P>
+		     <P><STRONG>Le fond</STRONG>&nbsp;</P>
+		     <UL>
+		     <LI>La quantité d'arguments
+		     <LI>Le développement des arguments
+		     <LI>La pertinence des arguments 
+		     </UL>
+		     <P><STRONG>La forme</STRONG>&nbsp;</P>
+		     <UL>
+		     <LI>la qualité de la structuration du texte : traitement synthètique, articulation des liens entre les arguments, fil conducteur, etc.
+		     <LI>la qualité de la langue française (clarté, concision, vocabulaire, orthographe, etc.)
+		     </UL>
+		     <P>Le respect de ces critères devra être considéré lors de la rédaction.</P>
+		     ]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit type="evaluation" scrty="attendee">
+			<label><![CDATA[Travail de session]]></label>
+			<COUnitContent type="evaluation" scrty="public">
+				<properties>
+					<rating>15%</rating>
+					<opendate>2008-02-01</opendate>
+					<closedate>2008-02-05</closedate>
+				</properties>
+				<COResourceProxy type="text" scrty="attendee">
+					<COContentRubric type="description" />
+					<label><![CDATA[Devoir 1 individuel]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+					</properties>
+					<COResource type="text" scrty="attendee">
+						<properties>
+							<text><![CDATA[
+		     <P>Vous devez faire, en équipe, une analyse sociologique d'un thème d'actualité
+		     relié à la matière d'une des séances du cours (séances 3 à 12).  
+		     L'équipe compte quatre personnes, exceptionnellement cinq. Les équipes sont constituées 
+		     par le coordonnateur en fonction d'un certain nombre de critères (diversité culturelle, 
+		     mixit sexuelle, etc.). <br>Cette stratégie vise plusieurs objectifs, notamment ceux de favoriser 
+		     une meilleure intégration des étudiants et de vous familiariser avec le travail d'équipe sous 
+		     contrainte telle qu'il existe dans les entreprises. <br>Il s'agit d'une nouvelle initiative du programme
+		      de BAA qui se réalisera dans le cours de sociologie à la demande du directeur de ce programme.
+		     Un thème d'actualité est une question débattue dans les médias depuis moins d'un an.
+		     Votre analyse doit compter entre 8 et 10 pages (12 points, interligne et demie). 
+		     Le travail doit comporter une bibliographie dans laquelle on doit obligatoirement 
+		     retrouver 3 articles de journaux, 2 livres et un article scientifique. 
+		     Des sites Web peuvent aussi se retrouver dans la bibliographie.<br> 
+		     Nous vous suggérons fortement d'inclure une table des matières au début du travail. </P>
+		     ]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="attendee">
+					<COContentRubric type="evalsubproc" />
+					<label><![CDATA[Devoir 1 individuel]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+					</properties>
+					<COResource type="text" scrty="attendee">
+						<properties>
+							<text><![CDATA[
+		     <P>La remise du travail se fait par courriel en<a  href=\"mailto:ambre.lizurey@hec.ca&amp;cc=olivier.gerbe@hec.ca&amp;subject=272099-H08-Devoir%201&amp;body=----------------------------------------%0d%0aAttachez%20votre%20fichier%20et%20mettez%20vous%20en%20copie%0d%0a----------------------------------------%0d%0amatricule:%0d%0anom:\"> cliquant ici</a>. . Il doit être envoyé <STRONG>au plus tard le&nbsp;18 février&nbsp;à 12h00.</STRONG></P>
+		     <P><STRONG></STRONG>&nbsp;</P>
+		     <P><EM>Consignes pour la remise des travaux:</EM></P>
+		     <UL>
+		     <LI>Le fichier doit être de type .txt ou .sql seulement
+		     <LI>Le nom du fichier doit être de la forme: matricule-nom-prenom
+		     <LI>Les requêtes devront être écrites de manière à ce qu'elles puissent toutes être exécutées en même temps à partir du fichier (mettre un point-virgule (;) à la fin de chaque requête et tout ce qui n'est pas une requête en commantaires (/ ... )
+		     <LI>Il est fortement conseillé de tester les requêtes avant de les rendre, afin de s'assurer que celles-ci fonctionnent dans Aqua Data studio. </LI></UL>
+		     <P>Toute consigne non respectée entraînera une pénalité.</P>
+		     ]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="document" scrty="attendee">
+					<COContentRubric type="evalpreparation" />
+					<label><![CDATA[Énoncé du devoir 1]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="document" scrty="attendee">
+						<properties>
+							<uri><![CDATA[ 272099-H08-Devoir1.pdf]]></uri>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit type="evaluation" scrty="public">
+			<label><![CDATA[Quiz]]></label>
+			<COUnitContent type="evaluation" scrty="public">
+				<properties>
+					<rating>5%</rating>
+					<opendate>10-02-2008</opendate>
+					<closedate>10-02-2008</closedate>
+				</properties>
+				<COResourceProxy type="text" scrty="attendee">
+					<COContentRubric type="description" />
+					<label><![CDATA[Travail de session]]></label>
+					<properties>
+						<visible>true</visible>
+					</properties>
+					<COResource type="text" scrty="attendee">
+						<properties>
+							<text><![CDATA[Il y aura 4 quiz, un à la fin de chaque partie (cours 3, 6, 9, 12). <br>
+		     Nous retiendrons les 3 meilleurs pour la compilation de la note sur les quiz 
+		     (10 points chacun).<br>
+		     Chaque quiz comprendra 4 questions demandant de courts développements, soit de 5 à 10 lignes. Trois d'entre elles porteront sur les lectures et seront faites par le coordonnateur du cours. La quatrième sera composée par votre professeur et portera sur la matière vue en classe.]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit type="evaluation" scrty="public">
+			<label><![CDATA[Examen final]]></label>
+			<COUnitContent type="evaluation" scrty="public">
+				<properties>
+					<rating>50%</rating>
+					<opendate>10-02-2008</opendate>
+					<closedate>10-02-2008</closedate>
+				</properties>
+				<COResourceProxy type="text" scrty="attendee">
+					<COContentRubric type="description" />
+					<label><![CDATA[Examen Final]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="homework" scrty="attendee">
+						<properties>
+							<text><![CDATA[L'examen final sera exactement sous le même modèle que l'Intra. Veuillez vous y reférer.]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+	</COStructure>
+	<!-- evaluations-->
+	<COStructure type="lectures" scrty="public">
+		<COUnit type="lecture" scrty="public">
+			<label><![CDATA[Introduction et installation du logiciel Aquastudio]]></label>
+			<COUnitContent type="lecture" scrty="public">
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="description" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[
+		     <P>Un bref historique de l'évolution des bases de données 
+		     est présenté, suivi des différents rôles que les bases de
+		      données peuvent jouer, et de l'environnement 
+		     technologique et humain dans lequel elles sont utilisées.</P>
+		     ]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="objectives" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[
+		     <P>Environnement des bases de données</P>
+		     <UL>
+		     <LI>Faire la différence entre données et métadonnées.
+		     <LI>Faire la différence entre base de données et SGBD.
+		     <LI>Connaître les modèles hiérarchique, réseau, relationnel et objet
+		     <LI>Connaître les différents types d'utilisation des bases de données.
+		     <LI>Connaître les intervenants dans l'environnement de bases de données</LI></UL>
+		     <P>Modèle relationnel</P>
+		     <UL>
+		     <LI>Comprendre la structure d'une table relationnelle.
+		     <LI>Comprendre la notion de clé et établir la distinction entre les différents types de clés.
+		     <LI>Connaître les différentes types de contraintes.</LI></UL>
+		     ]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="document" scrty="attendee">
+					<COContentRubric type="ressinclass" />
+					<properties>
+						<visible>true</visible>
+						<mandatory>true</mandatory>
+						<important>false</important>
+					</properties>
+					<label><![CDATA[Environnement bases de données (acétates)]]></label>
+					<comment><![CDATA[Ceci est un test pour l attribut comment]]></comment>
+					<COResource type="document" scrty="attendee">
+						<properties>
+							<uri><![CDATA[ EnvBDRelationnel.ppt]]></uri>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit type="lecture" scrty="public">
+			<label><![CDATA[SQL : Langage de manipulation de données, première partie]]></label>
+			<COUnitContent type="lecture" scrty="public">
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="description" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[La séance se concentre sur la commande SELECT de sélection des 
+		     données, de loin la commande la plus complexe en SQL, malgré son apparente simplicité.]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="objectives" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[
+		     <UL>
+		     <LI>Comprendre les différentes sections de la commande SELECT, et notamment le GROUP BY.
+		     <LI>Bien établir la distinction entre WHERE et HAVING.
+		     <LI>Être capable de formuler des requêtes SQL portant sur une 
+		     seule table à partir d'un énoncé en français et d'une base de 
+		     données dont le schéma est fourni.<BR></LI></UL>
+		     ]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="document" scrty="public">
+					<COContentRubric type="ressinclass" />
+					<label><![CDATA[LMD 1 (acétates)]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="document" scrty="public">
+						<properties>
+							<uri><![CDATA[ H2008SQL-LMD1.ppt]]></uri>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit type="lecture" scrty="public">
+			<label><![CDATA[SQL : Langage de manipulation de données, deuxième partie]]></label>
+			<COUnitContent type="lecture" scrty="public">
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="description" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[La séance traite les fonctionnalités suivantes de la clause 
+		     SELECT : les opérations ensemblistes et les différents types de jointures.]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="document" scrty="public">
+					<COContentRubric type="ressinclass" />
+					<label><![CDATA[LMD 2 (acétates)]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="document" scrty="public">
+						<properties>
+							<uri><![CDATA[ H2008SQL-LMD2.ppt]]></uri>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit type="lecture" scrty="public">
+			<label><![CDATA[SQL : Langage de manipulation de données, troisième partie]]></label>
+			<COUnitContent ref="12345678" type="lecture" scrty="public" />
+		</COUnit>
+		<COUnit type="lecture" scrty="public">
+			<label><![CDATA[Conception de bases de données: Modèle conceptuel et règles d'affaires]]></label>
+			<COUnitContent type="lecture" scrty="public">
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="description" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[Cette séance présente les principes de la conception de bases de données
+		      ainsi que deux approches courantes de modélisation de bases de données : 
+		     l'approche entité-association (E/A), plus traditionnelle dans le monde du 
+		     relationnel, et l'approche UML, plus étroitement liée au monde de l'orienté-objet,
+		      mais qui s'applique néanmoins à la conception de bases de données relationnelles. 
+		     Nous nous arrêterons dans cette séance à l'élaboration du schéma conceptuel.]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="objectives" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[
+		     <UL>
+		     <LI>Comprendre le rôle de chacune des étapes de conception 
+		     <LI>Comprendre les concepts des deux formalismes de représentation (E/A et UML)
+		     <LI>Être capable d'élaborer un sch�ma conceptuel à partir d'un cas<BR></LI></UL>
+		     ]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="document" scrty="public">
+					<COContentRubric type="ressinclass" />
+					<label><![CDATA[Conception - 1 (acétates)]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="document" scrty="public">
+						<properties>
+							<uri><![CDATA[ H2008-1-1533030.H2008Conception1.ppt]]></uri>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit type="lecture" scrty="public">
+			<label><![CDATA[Pratiques sur des exercices SQL]]></label>
+			<COUnitContent type="lecture" scrty="public">
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="description" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[La séance est consacrée à la révision des requêtes SQL et aux 
+		     réponses aux questions des étudiants afin de préparer l'examen intra.
+		     Vous pouvez consulter les anciens examens dans la section Matèriel pédagogique]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit type="lecture" scrty="public">
+			<label><![CDATA[Conception de bases de données: Modèle logique et normalisation]]></label>
+			<COUnitContent type="lecture" scrty="public">
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="description" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[Cette séance présente les principes de la conception de bases de données 
+		     ainsi que deux approches courantes de modélisation de bases de données : 
+		     l'approche entité-association (E/A), plus traditionnelle dans le monde du 
+		     relationnel, et l'approche UML, plus étroitement liée au monde de l'orienté-objet,
+		      mais qui s'applique néanmoins à la conception de BDR. Nous complétons dans cette séance
+		      le processus de conception d'une base de données initié à la séance précédente par 
+		     la conception des schémas logique et physique.]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="objectives" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[
+		     <UL>
+		     <LI>Comprendre le rôle de chacune des étapes de la conception.
+		     <LI>Être capable d'élaborer un schéma logique à partir d'un cas, via un schéma conceptuel intermédiaire en UML.
+		     <LI>Comprendre les principes guidant la conception du schéma physique.<BR></LI></UL>
+		     ]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="document" scrty="public">
+					<COContentRubric type="ressinclass" />
+					<label><![CDATA[Fichier Visio de l'exercice fait en classe]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="document" scrty="public">
+						<properties>
+							<uri><![CDATA[ H2008-1-1548803.DessinSeance8.VSD]]></uri>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit type="lecture" scrty="public">
+			<label><![CDATA[SQL : Language de définition de données]]></label>
+			<COUnitContent type="lecture" scrty="public">
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="description" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[Dans cette séance nous verrons la mise en oeuvre d'une base de données 
+		     relationnelles, création des tables et des contraintes associées, insertion, 
+		     modification et suppression de données.]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="objectives" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[
+		     <UL>
+		     <LI>Être capable d'implémenter en SQL un schéma de base de données relationnelles.
+		     <LI>Être capable de mettre à jour les données d'une base de données relationnelles.
+		     ]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="document" scrty="public">
+					<COContentRubric type="misresources" />
+					<label><![CDATA[SQL - LDD(acétates)]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="document" scrty="public">
+						<properties>
+							<uri><![CDATA[ H2008-1-1549742.SQL-LDD.ppt]]></uri>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit type="lecture" scrty="public">
+			<label><![CDATA[Développement d'applications :  contraintes d'intégrité]]></label>
+			<COUnitContent type="lecture" scrty="public">
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="description" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[Cette séance présente des notions complémentaires à celles 
+		     vues dans les séances portant sur la conception, à savoir les contraintes 
+		     d'intégrité et les types complexes, qui doivent exister indépendamment des 
+		     applications accèdant aux bases de données. Les vues permettent entre autres 
+		     de spécifier l'impémentation des schémas externes mentionnés dans les séances 
+		     de conception. La notion de transaction, fondamentale, est quant à elle plus
+		      étroitement rattachée au développement d'applications transactionnelles bass 
+		     de données.]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="objectives" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[
+		     <UL>
+		     <LI>Comprendre le rôle et l'importance des concepts présentés: vues, contraintes d'intégrité, transactions et types complexes. 
+		     <LI>Être capable de mettre en oeuvre les vues, les contraintes d'intégrité, les transactions et les types complexes.
+		     ]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="document" scrty="public">
+					<COContentRubric type="ressinclass" />
+					<label><![CDATA[Exercice de conception fait en classe]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="document" scrty="public">
+						<properties>
+							<uri><![CDATA[ H2008-1-1566803.seance10.sql]]></uri>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit type="lecture" scrty="public">
+			<label><![CDATA[Développement d'applications :  Déclencheurs]]></label>
+			<COUnitContent type="lecture" scrty="public">
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="description" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[Cette séance présente les déclencheurs (triggers) qui sont essentiels 
+		     à la mise en oeuvre des contraintes d'intégrité complexes et des règles d'affaires. 
+		     Leur deuxième emploi est la gestion de la redondance introduite de façon mesurée et 
+		     raisonnée pour améliorer la performance des requêtes. Il s'agit d'un autre aspect
+		      de la gestion de l'intégrité des données.]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="objectives" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[
+		     <UL>
+		     <LI>Comprendre les principaux emplois des déclencheurs. 
+		     <LI>Bien distinguer la programmation procédurale en oeuvre dans les 
+		     déclencheurs de la programmation déclarative utilisée dans SQL. 
+		     <LI>Être capable de mettre en oeuvre des déclencheurs simples.<BR></LI></UL>
+		     ]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="document" scrty="public">
+					<COContentRubric type="ressinclass" />
+					<label><![CDATA[Triggers]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="document" scrty="public">
+						<properties>
+							<uri><![CDATA[ H2008-1-1571119.triggers11.sql]]></uri>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit type="lecture" scrty="public">
+			<label><![CDATA[Administration d'une base de données]]></label>
+			<COUnitContent type="lecture" scrty="public">
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="description" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[Cette séance présente la raison d'être et les principes sous-tendant 
+		     l'administration des données et des bases de données. Dans le cas de la gestion 
+		     de la sécurité, on présente des solutions concrtes directement applicables par
+		      les étudiants. Dans le cas de la gestion du schéma, de la récupérabilité et de 
+		     la performance, ce sont plutôt les grands principes qui sont présentés. 
+		     On n'aborde pas les détails soit parce qu'ils relèvent de la conception interne 
+		     des SGBD, soit parce qu'ils sont trop techniques.]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="objectives" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[
+		     <UL>
+		     <LI>Comprendre le rôle et l'importance de chacune des tâches de 
+		     l'administration des bases de données. 
+		     <LI>Être conscient de la différence entre administration des données et
+		      administration des bases de données et de la nécessité pour les 
+		     entreprises de mettre en place le premier type d'activité (bien que cela 
+		     soit peu fréquent en pratique). 
+		     <LI>Être capable de mettre en oeuvre une politique simple de la gestion 
+		     des accès à la base de données.<BR></LI></UL>
+		     ]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+				<COResourceProxy type="document" scrty="public">
+					<COContentRubric type="ressinclass" />
+					<label><![CDATA[Administration d'une base de données(acétates)]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="document" scrty="public">
+						<properties>
+							<uri><![CDATA[ administrationBD.ppt]]></uri>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit type="lecture" scrty="public">
+			<label><![CDATA[Synthèse et exercices]]></label>
+			<COUnitContent type="lecture" scrty="public">
+				<COResourceProxy type="text" scrty="public">
+					<COContentRubric type="description" />
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[La séance est consacrée à la synthèse de ce qui a été vu en cours et 
+		     aux réponses aux questions des étudiants afin  de préparer l'examen final. 
+		     Vous pouvez consulter les anciens examens dans la section<i> Matériel pédagogique</i>.]]></text>
+						</properties>
+					</COResource>
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+	</COStructure>
+</CO>

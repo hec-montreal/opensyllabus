@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CO type="bylecture" scrty="public">
+	<label><![CDATA[...insert your title here...]]></label>
+	<COUnit scrty="public" type="presentation">
+		<label><![CDATA[Presentation]]></label>
+		<COUnitContent scrty="public" type="presentation">
+			<COResourceProxy type="text" scrty="public">
+				<properties>
+					<visible>true</visible>
+					<requirementLevel>recommended</requirementLevel>
+					<important>false</important>
+				</properties>
+				<COResource type="text" scrty="public">
+					<properties>
+						<text><![CDATA[...insert your presentation text  here...]]></text>
+					</properties>
+				</COResource>
+				<COContentRubric type="description" />
+			</COResourceProxy>
+		</COUnitContent>
+	</COUnit>
+	<COUnit scrty="public" type="contactinfo">
+		<label><![CDATA[Contact information]]></label>
+		<COUnitContent scrty="public" type="contactinfo" />
+	</COUnit>
+	<COUnit scrty="public" type="learningmat">
+		<label><![CDATA[Learning material]]></label>
+		<COUnitContent scrty="public" type="learningmat">
+			<COResourceProxy type="text" scrty="public">
+				<properties>
+					<visible>true</visible>
+					<requirementLevel>recommended</requirementLevel>
+					<important>false</important>
+				</properties>
+				<COResource type="text" scrty="public">
+					<properties>
+						<text><![CDATA[...insert your learning material text  here...]]></text>
+					</properties>
+				</COResource>
+				<COContentRubric type="misresources" />
+			</COResourceProxy>
+			<COResourceProxy type="text" scrty="public">
+				<properties>
+					<visible>true</visible>
+					<requirementLevel>recommended</requirementLevel>
+					<important>false</important>
+				</properties>
+				<COResource type="text" scrty="public">
+					<properties>
+						<text><![CDATA[< <a  href="http://taos.hec.ca/web2/tramp2.exe/log_in&setting_key=french&screen=biblio.html&*nocours=3-430-05>La bibliothèque vous propose...</a>]]></text>
+					</properties>
+				</COResource>
+				<COContentRubric type="complbibres" />
+			</COResourceProxy>
+		</COUnitContent>
+	</COUnit>
+	<COStructure scrty="public" type="evaluations">
+		<COUnit scrty="public" type="evaluation">
+			<label><![CDATA[Mid-term exam]]></label>
+			<COUnitContent scrty="public" type="evaluation">
+				<COResourceProxy type="text" scrty="attendee">
+					<label><![CDATA[Mid-term exam]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+						<uri>sakaiAssignementURI</uri>
+						<rating>5</rating>
+						<opendate>10-02-2008</opendate>
+						<closedate>10-02-2008</closedate>
+					</properties>
+					<COResource type="text" scrty="attendee">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<properties>
+					<rating>30%</rating>
+				</properties>
+			</COUnitContent>
+		</COUnit>
+		<COUnit scrty="public" type="evaluation">
+			<label><![CDATA[Quiz]]></label>
+			<COUnitContent scrty="public" type="evaluation">
+				<COResourceProxy type="text" scrty="attendee">
+					<label><![CDATA[Quiz]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+						<uri>sakaiAssignementURI</uri>
+						<rating>5</rating>
+						<opendate>10-02-2008</opendate>
+						<closedate>10-02-2008</closedate>
+					</properties>
+					<COResource type="text" scrty="attendee">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<properties>
+					<rating>20%</rating>
+				</properties>
+			</COUnitContent>
+		</COUnit>
+		<COUnit scrty="public" type="evaluation">
+			<label><![CDATA[Session work]]></label>
+			<COUnitContent scrty="public" type="evaluation">
+				<COResourceProxy type="text" scrty="attendee">
+					<label><![CDATA[Session work]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+						<uri>sakaiAssignementURI</uri>
+						<rating>5</rating>
+						<opendate>10-02-2008</opendate>
+						<closedate>10-02-2008</closedate>
+					</properties>
+					<COResource type="homework" scrty="attendee">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<properties>
+					<rating>20%</rating>
+				</properties>
+			</COUnitContent>
+		</COUnit>
+		<COUnit scrty="public" type="evaluation">
+			<label><![CDATA[Final exam]]></label>
+			<COUnitContent scrty="public" type="evaluation">
+				<COResourceProxy type="text" scrty="attendee">
+					<label><![CDATA[Final exam]]></label>
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+						<uri>sakaiAssignementURI</uri>
+						<rating>5</rating>
+						<opendate>2008-02-01</opendate>
+						<closedate>2008-02-05</closedate>
+					</properties>
+					<COResource type="ehomework" scrty="attendee">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<properties>
+					<rating>30%</rating>
+				</properties>
+			</COUnitContent>
+		</COUnit>
+	</COStructure>
+	<COStructure scrty="public" type="lectures">
+		<COUnit scrty="public" type="lecture">
+			<label><![CDATA[...insert your title here...]]></label>
+			<COUnitContent scrty="public" type="lecture">
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="objectives" />
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit scrty="public" type="lecture">
+			<label><![CDATA[...insert your title here...]]></label>
+			<COUnitContent scrty="public" type="lecture">
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="objectives" />
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit scrty="public" type="lecture">
+			<label><![CDATA[...insert your title here...]]></label>
+			<COUnitContent scrty="public" type="lecture">
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="objectives" />
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit scrty="public" type="lecture">
+			<label><![CDATA[...insert your title here...]]></label>
+			<COUnitContent scrty="public" type="lecture">
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+						<library>false</library>
+						<bookstore>false</bookstore>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="objectives" />
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit scrty="public" type="lecture">
+			<label><![CDATA[...insert your title here...]]></label>
+			<COUnitContent scrty="public" type="lecture">
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="objectives" />
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit scrty="public" type="lecture">
+			<label><![CDATA[...insert your title here...]]></label>
+			<COUnitContent scrty="public" type="lecture">
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="objectives" />
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit scrty="public" type="lecture">
+			<label><![CDATA[...insert your title here...]]></label>
+			<COUnitContent scrty="public" type="lecture">
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="objectives" />
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit scrty="public" type="lecture">
+			<label><![CDATA[...insert your title here...]]></label>
+			<COUnitContent scrty="public" type="lecture">
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="objectives" />
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit scrty="public" type="lecture">
+			<label><![CDATA[...insert your title here...]]></label>
+			<COUnitContent scrty="public" type="lecture">
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="objectives" />
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit scrty="public" type="lecture">
+			<label><![CDATA[...insert your title here...]]></label>
+			<COUnitContent scrty="public" type="lecture">
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="objectives" />
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit scrty="public" type="lecture">
+			<label><![CDATA[...insert your title here...]]></label>
+			<COUnitContent scrty="public" type="lecture">
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="objectives" />
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+		<COUnit scrty="public" type="lecture">
+			<label><![CDATA[...insert your title here...]]></label>
+			<COUnitContent scrty="public" type="lecture">
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="description" />
+				</COResourceProxy>
+				<COResourceProxy type="text" scrty="public">
+					<properties>
+						<visible>true</visible>
+						<requirementLevel>recommended</requirementLevel>
+						<important>false</important>
+					</properties>
+					<COResource type="text" scrty="public">
+						<properties>
+							<text><![CDATA[...insert your text here...]]></text>
+						</properties>
+					</COResource>
+					<COContentRubric type="objectives" />
+				</COResourceProxy>
+			</COUnitContent>
+		</COUnit>
+	</COStructure>
+</CO>
