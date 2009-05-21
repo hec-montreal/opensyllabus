@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ====================================================================== -->
+<!-- Ant build file (http://ant.apache.org/) for Ant 1.6.2 or above.        -->
+<!-- ====================================================================== -->
+
+<project name="opensyllabus-admingwt-base" default="hosted" basedir=".">
+  <property name="maven.settings.offline" value="true" />
+
+  <import file="maven-build.xml" />
+
+  <target name="hosted" depends="compile" description="Run hosted mode">
+    <java failonerror="true" fork="true" classname="com.google.gwt.dev.GWTShell">
+      <classpath>
+        <path refid="build.classpath" />
+
+        <pathelement location="${maven.build.srcDir.0}" />
+        <pathelement location="${maven.build.outputDir}" />
+      </classpath>
+      <jvmarg value="-Xmx512M" />
+
+      <jvmarg value="-Xdebug" />
+      <jvmarg value="-Xnoagent" />
+      <jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n" />
+
+      <arg line="-out ${maven.build.dir} org.sakaiquebec.opensyllabus.admin.OsylAdminEntryPoint/OsylAdminEntryPoint.html"/>
+    </java>
+  </target>
+</project>
