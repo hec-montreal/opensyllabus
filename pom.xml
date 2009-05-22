@@ -22,7 +22,7 @@
   </organization>
 
   <prerequisites>
-    <maven>2.1.0</maven>
+    <maven>2.0.8</maven>
   </prerequisites>
 
   <properties>
