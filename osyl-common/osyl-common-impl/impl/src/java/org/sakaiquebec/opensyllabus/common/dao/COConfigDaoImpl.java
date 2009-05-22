@@ -25,9 +25,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
-import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -54,23 +52,6 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
 	} catch (Exception e) {
 	    log.error("Unable to create a config ", e);
 	}
-    }
-
-    /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
-	public List<COSerialized> getCORelatedToConfig(String configId)
-	    throws Exception {
-	List<COSerialized> results = null;
-	try {
-	    results =
-		    getHibernateTemplate().find(
-			    "from COSerialized where configId= ? ",
-			    new Object[] { configId });
-	} catch (Exception e) {
-	    log.error("Unable to retrieve config", e);
-	    throw new Exception(e);
-	}
-	return results;
     }
 
     /** {@inheritDoc} */
