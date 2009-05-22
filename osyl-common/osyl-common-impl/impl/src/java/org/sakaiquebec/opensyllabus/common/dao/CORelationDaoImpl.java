@@ -26,7 +26,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
-import org.sakaiquebec.opensyllabus.common.hbm.pojo.CORelation;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
