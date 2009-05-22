@@ -4,15 +4,15 @@
 
   <parent>
     <groupId>org.sakaiquebec.opensyllabus</groupId>
-    <artifactId>opensyllabus-base</artifactId>
+    <artifactId>osyl-editor</artifactId>
     <version>M2</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
-  <artifactId>sakai-opensyllabus-api</artifactId>
+  <artifactId>osyl-editor-server-api</artifactId>
   <packaging>jar</packaging>
-  <name>sakai-opensyllabus-api</name>
+  <name>osyl-editor-server-api</name>
 
   <properties>
     <deploy.target>shared</deploy.target>
@@ -22,11 +22,11 @@
       <!--  opensyllabus -->
     <dependency>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>sakai-opensyllabus-common-api</artifactId>
+      <artifactId>osyl-common-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>sakai-opensyllabus-common-shared</artifactId>
+      <artifactId>osyl-common-shared</artifactId>
     </dependency>
 
       <!--  sakai -->

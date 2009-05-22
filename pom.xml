@@ -10,7 +10,7 @@
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
-  <artifactId>opensyllabus-parent</artifactId>
+  <artifactId>osyl</artifactId>
   <version>M2</version>
   <packaging>pom</packaging>
 
@@ -22,7 +22,7 @@
   </organization>
 
   <prerequisites>
-    <maven>2.0.9</maven>
+    <maven>2.1.0</maven>
   </prerequisites>
 
   <properties>
@@ -75,62 +75,62 @@
       <!--  opensyllabus -->
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
-        <artifactId>sakai-opensyllabus-common-shared</artifactId>
+        <artifactId>osyl-common-shared</artifactId>
         <version>M2</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
-        <artifactId>sakai-opensyllabus-common-impl</artifactId>
+        <artifactId>osyl-common-impl</artifactId>
         <version>M2</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
-        <artifactId>sakai-opensyllabus-common-api</artifactId>
+        <artifactId>osyl-common-api</artifactId>
         <version>M2</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
-        <artifactId>sakai-opensyllabus-api</artifactId>
+        <artifactId>osyl-editor-server-api</artifactId>
         <version>${sakai.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
-        <artifactId>sakai-opensyllabus-impl</artifactId>
+        <artifactId>osyl-editor-sakai-impl</artifactId>
         <version>M2</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
-        <artifactId>sakai-opensyllabus-admin-api</artifactId>
+        <artifactId>osyl-admin-server-api</artifactId>
         <version>M2</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
-        <artifactId>sakai-opensyllabus-admin-impl</artifactId>
+        <artifactId>osyl-admin-sakai-impl</artifactId>
         <version>M2</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
-        <artifactId>sakai-opensyllabus-manager-api</artifactId>
+        <artifactId>osyl-manager-server-api</artifactId>
         <version>M2</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
-        <artifactId>sakai-opensyllabus-manager-impl</artifactId>
+        <artifactId>osyl-manager-sakai-impl</artifactId>
         <version>M2</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus.managergwt</groupId>
-        <artifactId>opensyllabus-managergwt-base</artifactId>
+        <artifactId>osyl-manager-gwt</artifactId>
         <version>M2</version>
       </dependency>
       <dependency>
-        <groupId>org.sakaiquebec.opensyllabus.coregwt</groupId>
-        <artifactId>opensyllabus-coregwt-base</artifactId>
+        <groupId>org.sakaiquebec.opensyllabus.editorgwt</groupId>
+        <artifactId>osyl-editor-gwt</artifactId>
         <version>M2</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus.admingwt</groupId>
-        <artifactId>opensyllabus-admingwt-base</artifactId>
+        <artifactId>osyl-admin-gwt</artifactId>
         <version>M2</version>
       </dependency>
 

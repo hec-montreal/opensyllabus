@@ -5,13 +5,13 @@
 
 	<parent>
 		<groupId>org.sakaiquebec.opensyllabus</groupId>
-		<artifactId>opensyllabus-parent</artifactId>
+		<artifactId>osyl</artifactId>
 		<version>M2</version>
 		<relativePath>../osyl-pom/pom.xml</relativePath>
 	</parent>
 
 	<groupId>org.sakaiquebec.opensyllabus.admingwt</groupId>
-	<artifactId>opensyllabus-admingwt-base</artifactId>
+	<artifactId>osyl-admin-gwt</artifactId>
 	<!--  Note: we create a jar to shade it in the associated tool -->
 	<packaging>jar</packaging>
 

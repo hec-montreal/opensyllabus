@@ -4,13 +4,13 @@
 
   <parent>
     <groupId>org.sakaiquebec.opensyllabus</groupId>
-    <artifactId>opensyllabus-admin</artifactId>
+    <artifactId>osyl-admin</artifactId>
     <version>M2</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
-  <artifactId>sakai-opensyllabus-admin-tool</artifactId>
+  <artifactId>osyl-admin-sakai-tool</artifactId>
   <packaging>war</packaging>
 
   <name>Sakai Opensyllabus Administrator tool</name>
@@ -20,17 +20,17 @@
       <!--  opensyllabus -->
     <dependency>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>sakai-opensyllabus-admin-api</artifactId>
+      <artifactId>osyl-admin-server-api</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId> sakai-opensyllabus-common-api</artifactId>
+      <artifactId> osyl-common-api</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.sakaiquebec.opensyllabus.admingwt</groupId>
-      <artifactId>opensyllabus-admingwt-base</artifactId>
+      <artifactId>osyl-admin-gwt</artifactId>
       <scope>compile</scope>
     </dependency>
 
@@ -118,12 +118,12 @@
             <configuration>
               <artifactSet>
                 <includes>
-                  <include>org.sakaiquebec.opensyllabus.admingwt:opensyllabus-admingwt-base</include>
+                  <include>org.sakaiquebec.opensyllabus.admingwt:osyl-admin-gwt</include>
                 </includes>
               </artifactSet>
               <filters>
                 <filter>
-                  <artifact>org.sakaiquebec.opensyllabus.admingwt:opensyllabus-admingwt-base</artifact>
+                  <artifact>org.sakaiquebec.opensyllabus.admingwt:osyl-admin-gwt</artifact>
                   <includes>
                     <include>${gwtModule}/**</include>
                   </includes>

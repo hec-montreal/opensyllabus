@@ -4,33 +4,33 @@
 
    <parent>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>opensyllabus-manager</artifactId>
+      <artifactId>osyl-manager</artifactId>
       <version>M2</version>
       <relativePath>../../pom.xml</relativePath>
    </parent>
 
    <groupId>org.sakaiquebec.opensyllabus</groupId>
-   <artifactId>sakai-opensyllabus-manager-tool</artifactId>
+   <artifactId>osyl-manager-sakai-tool</artifactId>
    <packaging>war</packaging>
 
-   <name>sakai-opensyllabus-manager-tool</name>
+   <name>osyl-manager-sakai-tool</name>
    <description>OpenSyllabus Manager webapp (tool)</description>
 
   <dependencies>
       <!--  opensyllabus -->
     <dependency>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>sakai-opensyllabus-manager-api</artifactId>
+      <artifactId>osyl-manager-server-api</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId> sakai-opensyllabus-common-api</artifactId>
+      <artifactId> osyl-common-api</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.sakaiquebec.opensyllabus.managergwt</groupId>
-      <artifactId>opensyllabus-managergwt-base</artifactId>
+      <artifactId>osyl-manager-gwt</artifactId>
       <scope>compile</scope>
     </dependency>
 
@@ -124,12 +124,12 @@
             <configuration>
               <artifactSet>
                 <includes>
-                  <include>org.sakaiquebec.opensyllabus.managergwt:opensyllabus-managergwt-base</include>
+                  <include>org.sakaiquebec.opensyllabus.managergwt:osyl-manager-gwt</include>
                 </includes>
               </artifactSet>
               <filters>
                 <filter>
-                  <artifact>org.sakaiquebec.opensyllabus.managergwt:opensyllabus-managergwt-base</artifact>
+                  <artifact>org.sakaiquebec.opensyllabus.managergwt:osyl-manager-gwt</artifact>
                   <includes>
                     <include>${gwtModule}/**</include>
                   </includes>

@@ -4,16 +4,16 @@
 
   <parent>
     <groupId>org.sakaiquebec.opensyllabus</groupId>
-    <artifactId>opensyllabus-manager</artifactId>
+    <artifactId>osyl-manager</artifactId>
     <version>M2</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
-  <artifactId>sakai-opensyllabus-manager-pack</artifactId>
+  <artifactId>osyl-manager-sakai-pack</artifactId>
   <packaging>sakai-component</packaging>
 
-  <name>sakai-opensyllabus-manager-pack</name>
+  <name>osyl-manager-sakai-pack</name>
   <description>OpenSyllabus Manager components pack (special Sakai convention)</description>
 
   <properties>
@@ -24,12 +24,12 @@
       <!--  opensyllabus -->
     <dependency>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>sakai-opensyllabus-manager-impl</artifactId>
+      <artifactId>osyl-manager-sakai-impl</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId> sakai-opensyllabus-common-impl</artifactId>
+      <artifactId> osyl-common-impl</artifactId>
       <scope>provided</scope>
     </dependency>
   </dependencies>

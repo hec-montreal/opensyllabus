@@ -4,32 +4,32 @@
 
   <parent>
     <groupId>org.sakaiquebec.opensyllabus</groupId>
-    <artifactId>opensyllabus-base</artifactId>
+    <artifactId>osyl-editor</artifactId>
     <version>M2</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
-  <artifactId>sakai-opensyllabus-tool</artifactId>
+  <artifactId>osyl-editor-sakai-tool</artifactId>
   <packaging>war</packaging>
 
-  <name>sakai-opensyllabus-tool</name>
+  <name>osyl-editor-sakai-tool</name>
 
   <dependencies>
       <!--  opensyllabus -->
     <dependency>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>sakai-opensyllabus-api</artifactId>
+      <artifactId>osyl-editor-server-api</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>sakai-opensyllabus-common-shared</artifactId>
+      <artifactId>osyl-common-shared</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.sakaiquebec.opensyllabus.coregwt</groupId>
-      <artifactId>opensyllabus-coregwt-base</artifactId>
+      <groupId>org.sakaiquebec.opensyllabus.editorgwt</groupId>
+      <artifactId>osyl-editor-gwt</artifactId>
     </dependency>
 
       <!--  sakai -->
@@ -172,12 +172,12 @@
             <configuration>
               <artifactSet>
                 <includes>
-                  <include>org.sakaiquebec.opensyllabus.coregwt:opensyllabus-coregwt-base</include>
+                  <include>org.sakaiquebec.opensyllabus.editorgwt:osyl-editor-gwt</include>
                 </includes>
               </artifactSet>
               <filters>
                 <filter>
-                  <artifact>org.sakaiquebec.opensyllabus.coregwt:opensyllabus-coregwt-base</artifact>
+                  <artifact>org.sakaiquebec.opensyllabus.editorgwt:osyl-editor-gwt</artifact>
                   <includes>
                     <include>${gwtModule}/**</include>
                   </includes>

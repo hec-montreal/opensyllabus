@@ -4,16 +4,16 @@
 
   <parent>
     <groupId>org.sakaiquebec.opensyllabus</groupId>
-    <artifactId>opensyllabus-admin</artifactId>
+    <artifactId>osyl-admin</artifactId>
     <version>M2</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
-  <artifactId>sakai-opensyllabus-admin-api</artifactId>
+  <artifactId>osyl-admin-server-api</artifactId>
   <packaging>jar</packaging>
 
-  <name>sakai-opensyllabus-admin-api</name>
+  <name>osyl-admin-server-api</name>
   <description>OpenSyllabus Administrator interfaces (API)</description>
 
   <properties>
@@ -24,7 +24,7 @@
       <!--  opensyllabus -->
     <dependency>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>sakai-opensyllabus-common-api</artifactId>
+      <artifactId>osyl-common-api</artifactId>
     </dependency>
 
     <!--  sakai -->

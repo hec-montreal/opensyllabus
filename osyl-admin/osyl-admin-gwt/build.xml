@@ -4,7 +4,7 @@
 <!-- Ant build file (http://ant.apache.org/) for Ant 1.6.2 or above.        -->
 <!-- ====================================================================== -->
 
-<project name="opensyllabus-admingwt-base" default="hosted" basedir=".">
+<project name="osyl-admin-gwt" default="hosted" basedir=".">
   <property name="maven.settings.offline" value="true" />
 
   <import file="maven-build.xml" />

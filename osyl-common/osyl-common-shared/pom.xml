@@ -4,16 +4,16 @@
 
   <parent>
     <groupId>org.sakaiquebec.opensyllabus</groupId>
-    <artifactId>opensyllabus-common</artifactId>
+    <artifactId>osyl-common</artifactId>
     <version>M2</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
-  <artifactId>sakai-opensyllabus-common-shared</artifactId>
+  <artifactId>osyl-common-shared</artifactId>
   <packaging>jar</packaging>
 
-  <name>sakai-opensyllabus-common-shared</name>
+  <name>osyl-common-shared</name>
 
   <properties>
     <deploy.target>shared</deploy.target>

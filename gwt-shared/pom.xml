@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0">
   <modelVersion>4.0.0</modelVersion>
-  <name>opensyllabus-shared-lib</name>
+  <name>gwt-shared-lib</name>
   <description>Shared GWT Libraries for OpenSyllabus</description>
   <packaging>pom</packaging>
 
   <parent>
-    <artifactId>opensyllabus-parent</artifactId>
+    <artifactId>osyl</artifactId>
     <groupId>org.sakaiquebec.opensyllabus</groupId>
     <version>M2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
-  <artifactId>opensyllabus-shared-lib</artifactId>
+  <artifactId>gwt-shared-lib</artifactId>
 
 
   <properties>

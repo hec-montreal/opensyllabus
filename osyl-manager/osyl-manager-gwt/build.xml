@@ -4,7 +4,7 @@
 <!-- Ant build file (http://ant.apache.org/) for Ant 1.6.2 or above.        -->
 <!-- ====================================================================== -->
 
-<project name="opensyllabus-managergwt-base" default="hosted" basedir=".">
+<project name="osyl-manager-gwt" default="hosted" basedir=".">
 	<property name="maven.settings.offline" value="true" />
 
 	<import file="maven-build.xml" />
@@ -14,7 +14,7 @@
 			<classpath>
 				<path refid="build.classpath" />
 				<!-- Workaround from multiproject install the maven-build.xml seems to be partly invalid-->
-				<pathelement location="${maven.repo.local}/org/sakaiquebec/opensyllabus/sakai-opensyllabus-common-shared/M2/sakai-opensyllabus-common-shared-M2.jar" />
+				<pathelement location="${maven.repo.local}/org/sakaiquebec/opensyllabus/osyl-common-shared/M2/osyl-common-shared-M2.jar" />
 				<pathelement location="${maven.build.srcDir.0}" />
 				<pathelement location="${maven.build.outputDir}" />
 			</classpath>

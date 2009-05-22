@@ -3,19 +3,19 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.sakaiquebec.opensyllabus</groupId>
-		<artifactId>opensyllabus-parent</artifactId>
-		<version>M2</version>
-		<relativePath>../osyl-pom/pom.xml</relativePath>
-	</parent>
+  <parent>
+	<groupId>org.sakaiquebec.opensyllabus</groupId>
+	<artifactId>osyl-editor</artifactId>
+	<version>M2</version>
+	<relativePath>../../pom.xml</relativePath>
+  </parent>
 
-	<groupId>org.sakaiquebec.opensyllabus.coregwt</groupId>
-	<artifactId>opensyllabus-coregwt-base</artifactId>
+	<groupId>org.sakaiquebec.opensyllabus.editorgwt</groupId>
+	<artifactId>osyl-editor-gwt</artifactId>
 	<!--  Note: we create a jar to shade it in the associated tool -->
 	<packaging>jar</packaging>
 
-	<name>Sakai Quebec OpenSyllabus CoreGWT Project</name>
+	<name>osyl-editor-gwt</name>
 
 	<properties>
 		<gwtModule>org.sakaiquebec.opensyllabus.OsylEditorEntryPoint</gwtModule>
@@ -25,7 +25,7 @@
 		<!--  opensyllabus -->
 		<dependency>
 			<groupId>org.sakaiquebec.opensyllabus</groupId>
-			<artifactId>sakai-opensyllabus-common-shared</artifactId>
+			<artifactId>osyl-common-shared</artifactId>
 		</dependency>
 
 		<!-- gwt -->

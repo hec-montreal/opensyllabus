@@ -4,16 +4,16 @@
 
   <parent>
     <groupId>org.sakaiquebec.opensyllabus</groupId>
-    <artifactId>opensyllabus-common</artifactId><!-- FIXME: CHANGE TO opensyllabus-parent -->
+    <artifactId>osyl-common</artifactId><!-- FIXME: CHANGE TO osyl -->
     <version>M2</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
-  <artifactId>sakai-opensyllabus-common-api</artifactId>
+  <artifactId>osyl-common-api</artifactId>
   <packaging>jar</packaging>
 
-  <name>sakai-opensyllabus-common-api</name>
+  <name>osyl-common-api</name>
 
   <properties>
      <deploy.target>shared</deploy.target>
@@ -21,12 +21,12 @@
 
   <dependencies>
     <!--
-        FIXME: reverse this dependency since sakai-opensyllabus-common-shared depends on GWT,
+        FIXME: reverse this dependency since osyl-common-shared depends on GWT,
         thus allowing GWT to leak into this API.
     -->
    <dependency>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>sakai-opensyllabus-common-shared</artifactId>
+      <artifactId>osyl-common-shared</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>

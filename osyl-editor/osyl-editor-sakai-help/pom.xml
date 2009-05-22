@@ -1,15 +1,20 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
-    <artifactId>opensyllabus-base</artifactId>
     <groupId>org.sakaiquebec.opensyllabus</groupId>
+    <artifactId>osyl-editor</artifactId>
     <version>M2</version>
-    <relativePath>../pom.xml</relativePath>
+    <relativePath>../../pom.xml</relativePath>
   </parent>
-  <name>Sakai OpenSyllabus Help</name>
-  <artifactId>sakai-opensyllabus-help</artifactId>
+
+  <groupId>org.sakaiquebec.opensyllabus</groupId>
+  <artifactId>osyl-editor-sakai-help</artifactId>
   <packaging>jar</packaging>
+
+  <name>osyl-editor-sakai-help</name>
+
   <properties>
     <deploy.target>shared</deploy.target>
   </properties>
