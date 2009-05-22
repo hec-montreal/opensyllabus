@@ -110,6 +110,7 @@ public class AbstractResourceDAOTest extends AbstractDAOTest {
 		assertEquals(
 				"Course.getCoId",
 				course.getCoId(), otherCourse.getCoId());
+		//FIXME: remove when the method is removed.
 		assertEquals(
 				"Course.getContent",
 				course.getContent(), otherCourse.getContent());

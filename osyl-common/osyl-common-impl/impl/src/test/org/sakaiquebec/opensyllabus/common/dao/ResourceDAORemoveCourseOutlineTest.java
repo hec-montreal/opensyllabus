@@ -1,7 +1,5 @@
 package org.sakaiquebec.opensyllabus.common.dao;
 
-import java.util.List;
-
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
 /**@see org.sakaiquebec.opensyllabus.common.dao.ResourceDaoImpl
