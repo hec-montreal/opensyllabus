@@ -617,7 +617,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
 		    .hasNext();) {
 		ContentEntity next = (ContentEntity) iMbrs.next();
-		String thisEntityRef = (next.getReference()).substring(8);
+		String thisEntityRef = next.getId();
 		String name =
 			thisEntityRef.substring(
 				thisEntityRef.lastIndexOf("/") + 1,
@@ -655,8 +655,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
 			    .hasNext();) {
 			ContentEntity next = (ContentEntity) iMbrs.next();
-			String thisEntityRef =
-				(next.getReference()).substring(8);
+			String thisEntityRef = next.getId();
 			ContentResource contentResource =
 				contentHostingService
 					.getResource(thisEntityRef);
