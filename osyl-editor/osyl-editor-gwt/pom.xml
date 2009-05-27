@@ -119,7 +119,7 @@
 						<configuration>
 							<tasks>
 								<copy todir="${project.build.outputDirectory}/${gwtModule}">
-									<fileset dir="${project.build.directory}/gwt/${gwtModule}" />
+						            <fileset dir="${project.build.directory}/gwt/${gwtModule}" />
 								</copy>
 							</tasks>
 						</configuration>
@@ -142,9 +142,10 @@
 					such as ${project.build.directory} which is terribly sad. The
 					reason is that M2 seems to evaluate profile activation before
 					evaluating the rest of this POM (and / or execute phases). The
-					result is: * You cannot use a property from this POM so you MUST
-					specify on the command line if you want to use a property. *
-					Testing for the existence of a file happens before we can delete it
+					result is: 
+                    * You cannot use a property from this POM so you MUST
+					specify on the command line if you want to use a property. 
+                    * Testing for the existence of a file happens before we can delete it
 					on a clean, so even with a 'clean install', you won't get the
 					desired result.
 				-->
@@ -166,7 +167,8 @@
 									<modules>
 										<module>${gwtModule}</module>
 									</modules>
-									<output>${project.build.directory}/gwt/</output>
+                                    <!-- @see http://mojo.codehaus.org/gwt-maven-plugin/1.1-SNAPSHOT/compile-mojo.html -->
+                                    <webappDirectory>${project.build.directory}/gwt</webappDirectory>
 								</configuration>
 								<goals>
 									<goal>compile</goal>
