@@ -57,6 +57,8 @@
 			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
 		<property name="configDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
+		<property name="coRelationDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
 	</bean>
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylRealmService.osylEditor"

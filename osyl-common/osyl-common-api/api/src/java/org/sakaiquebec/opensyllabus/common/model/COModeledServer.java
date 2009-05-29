@@ -1,11 +1,12 @@
-/*******************************************************************************
+/******************************************************************************
  * $Id: $
- *******************************************************************************
+ ******************************************************************************
  *
  * Copyright (c) 2008 The Sakai Foundation, The Sakai Quebec Team.
  *
- * Licensed under the Educational Community License, Version 1.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * Licensed under the Educational Community License, Version 1.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.
  * You may obtain a copy of the License at
  *
  *      http://www.opensource.org/licenses/ecl1.php
@@ -17,33 +18,56 @@
  * limitations under the License.
  *
  ******************************************************************************/
+package org.sakaiquebec.opensyllabus.common.model;
 
-package org.sakaiquebec.opensyllabus.shared.model;
-
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.sakaiquebec.opensyllabus.shared.util.UUID;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
-import com.google.gwt.xml.client.CDATASection;
-import com.google.gwt.xml.client.Document;
-import com.google.gwt.xml.client.Element;
-import com.google.gwt.xml.client.NamedNodeMap;
-import com.google.gwt.xml.client.Node;
-import com.google.gwt.xml.client.NodeList;
-import com.google.gwt.xml.client.Text;
-import com.google.gwt.xml.client.XMLParser;
+import org.sakaiquebec.opensyllabus.shared.model.COContent;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
+import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
+import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
+import org.sakaiquebec.opensyllabus.shared.model.COContentUnitType;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
+import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COProperties;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
+import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
+import org.sakaiquebec.opensyllabus.shared.util.UUID;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+import org.xml.sax.SAXException;
 
 /**
- * <code>COModeled</code> is a specialization of COSerialized, containing a full
- * tree-like structure of the outline, <code>COContent</code>.
- * 
- * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
- * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
+ * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
+ * @version $Id: $
  */
-public class COModeled extends COSerialized implements COModelInterface {
+public class COModeledServer {
 
     /**
      * The CourseOutlineContent node name in the xml DOM.
@@ -157,7 +181,7 @@ public class COModeled extends COSerialized implements COModelInterface {
     protected final static String UUID_PARENT_ATTRIBUTE_NAME = "uuid_parent";
 
     /**
-     *Name of editable attribute
+     *Name of uuid attribute
      */
     protected final static String EDITABLE_ATTRIBUTE_NAME = "editable";
 
@@ -175,27 +199,34 @@ public class COModeled extends COSerialized implements COModelInterface {
     private Map<String, String> documentSecurityMap;
 
     /**
+     * @uml.property name="coSerialized"
+     * @uml.associationEnd
+     */
+    private COSerialized coSerialized;
+
+    /**
      * Default Constructor
      */
-    public COModeled() {
+    public COModeledServer() {
     }
 
     /**
      * Constructor from a serialized course outline
      */
-    public COModeled(COSerialized serializedContent) {
-	super(serializedContent);
+    public COModeledServer(COSerialized serializedContent) {
+	this.coSerialized = serializedContent;
     }
 
     /**
      * Full constructor from superclass
      */
-    public COModeled(String idCo, String lang, String type, String security,
-	    String siteId, String sectionId, String osylConfigId,
-	    String content, String shortDesc, String desc, String title) {
-	super(idCo, lang, type, security, siteId, sectionId,
-		new COConfigSerialized(osylConfigId), content, shortDesc, desc,
-		title, false);
+    public COModeledServer(String idCo, String lang, String type,
+	    String security, String siteId, String sectionId,
+	    String osylConfigId, String content, String shortDesc, String desc,
+	    String title) {
+	// super(idCo, lang, type, security, siteId, sectionId,
+	// new COConfigSerialized(osylConfigId), content, shortDesc, desc,
+	// title, false);
     }
 
     /**
@@ -212,10 +243,6 @@ public class COModeled extends COSerialized implements COModelInterface {
 	this.modeledContent = modeledContent;
     }
 
-    /**
-     * Entry point of the XML string conversion to the model. After the
-     * conversion, setModeledContent is called on the new CourseOutlineContent.
-     */
     public void XML2Model() {
 
 	COContent coContent = new COContent();
@@ -224,7 +251,7 @@ public class COModeled extends COSerialized implements COModelInterface {
 
 	try {
 	    // XMLtoDOM
-	    messageDom = XMLParser.parse(getSerializedContent());
+	    messageDom = parseXml(coSerialized.getSerializedContent());
 
 	    // DOMtoModel
 	    coContent = createCOContentPOJO(messageDom, coContent);
@@ -232,6 +259,32 @@ public class COModeled extends COSerialized implements COModelInterface {
 	    e.printStackTrace();
 	}
 	setModeledContent(coContent);
+    }
+
+    private Document parseXml(String xml) {
+	// get the factory
+	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	Document dom = null;
+	try {
+
+	    // Using factory get an instance of document builder
+	    DocumentBuilder db = dbf.newDocumentBuilder();
+
+	    // parse using builder to get DOM representation of the XML file
+	    byte[] byteArray = xml.getBytes("UTF-8");
+	    ByteArrayInputStream byteArrayInputStream =
+		    new ByteArrayInputStream(byteArray);
+
+	    dom = db.parse(byteArrayInputStream);
+
+	} catch (ParserConfigurationException pce) {
+	    pce.printStackTrace();
+	} catch (SAXException se) {
+	    se.printStackTrace();
+	} catch (IOException ioe) {
+	    ioe.printStackTrace();
+	}
+	return dom;
     }
 
     /**
@@ -254,11 +307,6 @@ public class COModeled extends COSerialized implements COModelInterface {
 
 	String uuidParent = myRoot.getAttribute(UUID_PARENT_ATTRIBUTE_NAME);
 	coContent.setUuidParent(uuidParent);
-
-	String editable = myRoot.getAttribute(EDITABLE_ATTRIBUTE_NAME);
-	coContent.setEditable(editable == null ? true : Boolean
-		.valueOf(editable));
-
 	// Retrieve children: can be StructureElement or COUnit as well as the
 	// subnode label
 	NodeList rootChildren = myRoot.getChildNodes();
@@ -360,20 +408,11 @@ public class COModeled extends COSerialized implements COModelInterface {
 		sMap.getNamedItem(UUID_ATTRIBUTE_NAME) == null ? null : sMap
 			.getNamedItem(UUID_ATTRIBUTE_NAME).getNodeValue();
 	coStructElt.setUuid(uuid == null ? UUID.uuid() : uuid);
-
 	String uuidParent =
 		sMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME) == null ? null
 			: sMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME)
 				.getNodeValue();
 	coStructElt.setUuidParent(uuidParent);
-
-	String editable =
-		sMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? null
-			: sMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME)
-				.getNodeValue();
-	coStructElt.setEditable(editable == null ? true : Boolean
-		.valueOf(editable));
-
 	coStructElt.setParent(parent);
 
 	// Retrieve children: can be StructureElement or COUnit
@@ -430,25 +469,15 @@ public class COModeled extends COSerialized implements COModelInterface {
 	coContentUnit.setSecurity(coMap.getNamedItem(SECURITY_ATTRIBUTE_NAME)
 		.getNodeValue());
 	coContentUnit.setType(coContentUnitType);
-
 	String uuid =
 		coMap.getNamedItem(UUID_ATTRIBUTE_NAME) == null ? null : coMap
 			.getNamedItem(UUID_ATTRIBUTE_NAME).getNodeValue();
 	coContentUnit.setUuid(uuid == null ? UUID.uuid() : uuid);
-
 	String uuidParent =
 		coMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME) == null ? null
 			: coMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME)
 				.getNodeValue();
 	coContentUnit.setUuidParent(uuidParent);
-
-	String editable =
-		coMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? null
-			: coMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME)
-				.getNodeValue();
-	coContentUnit.setEditable(editable == null ? true : Boolean
-		.valueOf(editable));
-
 	// Evaluation attributes
 
 	if (COContentUnitType.EVALUATION.equals(coContentUnitType)) {
@@ -510,14 +539,6 @@ public class COModeled extends COSerialized implements COModelInterface {
 		SECURITY_ATTRIBUTE_NAME).getNodeValue());
 	coContentResProxy.setType(prMap.getNamedItem(TYPE_ATTRIBUTE_NAME)
 		.getNodeValue());
-
-	String editable =
-		prMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? null
-			: prMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME)
-				.getNodeValue();
-	coContentResProxy.setEditable(editable == null ? true : Boolean
-		.valueOf(editable));
-
 	coContentResProxy.setCoContentUnitParent(coContentUnitParent);
 
 	NodeList resProxyChildren = node.getChildNodes();
@@ -567,14 +588,6 @@ public class COModeled extends COSerialized implements COModelInterface {
 	String security =
 		rMap.getNamedItem(SECURITY_ATTRIBUTE_NAME).getNodeValue();
 	coContentRes.setSecurity(security);
-
-	String editable =
-		rMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? null
-			: rMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME)
-				.getNodeValue();
-	coContentRes.setEditable(editable == null ? true : Boolean
-		.valueOf(editable));
-
 	NodeList resChildren = node.getChildNodes();
 	for (int z = 0; z < resChildren.getLength(); z++) {
 	    Node rNode = resChildren.item(z);
@@ -625,17 +638,39 @@ public class COModeled extends COSerialized implements COModelInterface {
      * Entry point of the model conversion to XML string.
      * 
      * @return the XML string generated from the model.
-     * @deprecated use model2XML(false) instead
      */
     public void model2XML() {
-	model2XML(true);
+	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	Document dom = null;
+	try {
+
+	    // Using factory get an instance of document builder
+	    DocumentBuilder db = dbf.newDocumentBuilder();
+
+	    dom = db.newDocument();
+
+	} catch (ParserConfigurationException pce) {
+	    pce.printStackTrace();
+	}
+	createRootElement(dom, getModeledContent());
+	coSerialized.setSerializedContent(xmlToString(dom));
     }
 
-    public void model2XML(boolean saveParentInfos) {
-	Document document = XMLParser.createDocument();
-	createRootElement(document, getModeledContent(), saveParentInfos);
-	setSerializedContent("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-		+ document.toString());
+    private String xmlToString(Document doc) {
+	try {
+	    Source source = new DOMSource(doc);
+	    StringWriter stringWriter = new StringWriter();
+	    Result result = new StreamResult(stringWriter);
+	    TransformerFactory factory = TransformerFactory.newInstance();
+	    Transformer transformer = factory.newTransformer();
+	    transformer.transform(source, result);
+	    return stringWriter.getBuffer().toString();
+	} catch (TransformerConfigurationException e) {
+	    e.printStackTrace();
+	} catch (TransformerException e) {
+	    e.printStackTrace();
+	}
+	return null;
     }
 
     /**
@@ -644,8 +679,7 @@ public class COModeled extends COSerialized implements COModelInterface {
      * @param document the document being created
      * @param coContent the POJO needed to create the root element.
      */
-    private void createRootElement(Document document, COContent coContent,
-	    boolean saveParentInfos) {
+    private void createRootElement(Document document, COContent coContent) {
 	Element courseOutlineContentElem = document.createElement(CO_NODE_NAME);
 	courseOutlineContentElem.setAttribute(TYPE_ATTRIBUTE_NAME, coContent
 		.getType());
@@ -656,13 +690,14 @@ public class COModeled extends COSerialized implements COModelInterface {
 	if (coContent.getUuidParent() != null)
 	    courseOutlineContentElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
 		    coContent.getUuidParent());
+	courseOutlineContentElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
+		+ coContent.isEditable());
 	document.appendChild(courseOutlineContentElem);
 	createCDataNode(document, courseOutlineContentElem, CO_LABEL_NODE_NAME,
 		coContent.getLabel());
 	for (int i = 0; i < coContent.getChildren().size(); i++) {
 	    createChildElement(document, courseOutlineContentElem,
-		    (COElementAbstract) coContent.getChildren().get(i),
-		    saveParentInfos);
+		    (COElementAbstract) coContent.getChildren().get(i));
 
 	}
     }
@@ -709,10 +744,8 @@ public class COModeled extends COSerialized implements COModelInterface {
      * @param child the POJO from which the element is created.
      */
     private void createChildElement(Document document, Element parent,
-	    COElementAbstract child, boolean saveParentInfos) {
+	    COElementAbstract child) {
 	if (child.isCOStructureElement()) {
-	    System.out
-		    .println("ISSTRUCTUREELEMENT-start" + document.toString());
 	    COStructureElement coStructureElement = (COStructureElement) child;
 	    Element coStructureElem =
 		    document.createElement(CO_STRUCTURE_NODE_NAME);
@@ -725,13 +758,12 @@ public class COModeled extends COSerialized implements COModelInterface {
 	    if (coStructureElement.getUuidParent() != null)
 		coStructureElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
 			coStructureElement.getUuidParent());
-	    System.out.println("Children of :" + coStructureElement.getType()
-		    + coStructureElement.getChildren().size());
+	    coStructureElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
+		    + coStructureElement.isEditable());
 	    for (int i = 0; i < coStructureElement.getChildren().size(); i++) {
-		System.out.println("Child number" + i);
 		createChildElement(document, coStructureElem,
 			(COElementAbstract) coStructureElement.getChildren()
-				.get(i), saveParentInfos);
+				.get(i));
 	    }
 	    if (coStructureElement.getProperties() != null
 		    && !coStructureElement.getProperties().isEmpty()) {
@@ -739,12 +771,10 @@ public class COModeled extends COSerialized implements COModelInterface {
 			coStructureElement.getProperties());
 	    }
 	    parent.appendChild(coStructureElem);
-	    System.out.println("ISSTRUCTUREELEMENT-end" + document.toString());
 
 	} else if (child.isCOContentUnit()) {
 	    COContentUnit coContentUnit = (COContentUnit) child;
 	    // create a wrapper on the COUnitContent: a COUnit
-	    System.out.println("ISCONTENTUNIT-start" + document.toString());
 	    Element coUnitElem = document.createElement(CO_UNIT_NODE_NAME);
 	    parent.appendChild(coUnitElem);
 	    coUnitElem.setAttribute(SECURITY_ATTRIBUTE_NAME, coContentUnit
@@ -756,9 +786,10 @@ public class COModeled extends COSerialized implements COModelInterface {
 	    if (coContentUnit.getUuidParent() != null)
 		coUnitElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
 			coContentUnit.getUuidParent());
+	    coUnitElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
+		    + coContentUnit.isEditable());
 	    createCDataNode(document, coUnitElem, CO_LABEL_NODE_NAME,
 		    coContentUnit.getLabel());
-	    System.out.println("ISCONTENTUNIT-start" + document.toString());
 	    Element coContentUnitElem =
 		    document.createElement(CO_UNIT_CONTENT_NODE_NAME);
 	    coContentUnitElem.setAttribute(SECURITY_ATTRIBUTE_NAME,
@@ -770,6 +801,8 @@ public class COModeled extends COSerialized implements COModelInterface {
 	    if (coContentUnit.getUuidParent() != null)
 		coContentUnitElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
 			coContentUnit.getUuidParent());
+	    coContentUnitElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
+		    + coContentUnit.isEditable());
 	    // Evaluation attributes
 	    // coContentUnitElem.setAttribute(WEIGHT_ATTRIBUTE_NAME,
 	    // coContentUnit
@@ -780,8 +813,7 @@ public class COModeled extends COSerialized implements COModelInterface {
 		for (int i = 0; i < coContentUnit.getResourceProxies().size(); i++) {
 		    createChildElement(document, coContentUnitElem,
 			    (COContentResourceProxy) coContentUnit
-				    .getResourceProxies().get(i),
-			    saveParentInfos);
+				    .getResourceProxies().get(i));
 		}
 	    }
 	    // get the COUnitContent properties
@@ -793,7 +825,6 @@ public class COModeled extends COSerialized implements COModelInterface {
 	    // Assuming COUnit is the unique parent of COUnitContent
 
 	    coUnitElem.appendChild(coContentUnitElem);
-	    System.out.println("ISCONTENTUNIT-end" + document.toString());
 	}
     }
 
@@ -843,49 +874,47 @@ public class COModeled extends COSerialized implements COModelInterface {
      * @param child the POJO needed to create the child element.
      */
     private void createChildElement(Document document, Element parent,
-	    COContentResourceProxy child, boolean saveParentInfos) {
-	if (child.isEditable() || (!child.isEditable() && saveParentInfos)) {
-	    Element coContentResourceProxyElem =
-		    document.createElement(CO_RES_PROXY_NODE_NAME);
-	    coContentResourceProxyElem.setAttribute(TYPE_ATTRIBUTE_NAME, child
-		    .getType());
-	    coContentResourceProxyElem.setAttribute(SECURITY_ATTRIBUTE_NAME,
-		    child.getSecurity());
-	    // sometimes we don't necessarely have a comment on the resource
-	    // proxy
-	    String comment = child.getComment();
-	    if (comment != null && !"".equals(comment)) {
-		createCDataNode(document, coContentResourceProxyElem,
-			CO_COMMENT_NODE_NAME, child.getComment());
-	    }
-	    String label = child.getLabel();
-	    if (label != null && !"".equals(label)) {
-		createCDataNode(document, coContentResourceProxyElem,
-			CO_LABEL_NODE_NAME, child.getLabel());
-	    }
-	    // we may have a content unit without any resource proxy, using a
-	    // reference to a capsule for example
-	    if (child.getResourceProxies() != null) {
-		for (int i = 0; i < child.getResourceProxies().size(); i++) {
-		    createChildElement(document, coContentResourceProxyElem,
-			    (COContentResourceProxy) child.getResourceProxies()
-				    .get(i), saveParentInfos);
-		}
-	    }
-	    if (child.getProperties() != null
-		    && !child.getProperties().isEmpty()) {
-		createPropertiesElem(document, coContentResourceProxyElem,
-			child.getProperties());
-	    }
-	    createCOContentResourceChild(document, coContentResourceProxyElem,
-		    child.getResource(), child.getSecurity());
-	    // We may not have a rubric for exams for example
-	    if (child.getRubric() != null) {
-		createCOCOntentRubricChild(document,
-			coContentResourceProxyElem, child.getRubric());
-	    }
-	    parent.appendChild(coContentResourceProxyElem);
+	    COContentResourceProxy child) {
+	Element coContentResourceProxyElem =
+		document.createElement(CO_RES_PROXY_NODE_NAME);
+	coContentResourceProxyElem.setAttribute(TYPE_ATTRIBUTE_NAME, child
+		.getType());
+	coContentResourceProxyElem.setAttribute(SECURITY_ATTRIBUTE_NAME, child
+		.getSecurity());
+	coContentResourceProxyElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
+		+ child.isEditable());
+	// sometimes we don't necessarely have a comment on the resource proxy
+	String comment = child.getComment();
+	if (comment != null && !"".equals(comment)) {
+	    createCDataNode(document, coContentResourceProxyElem,
+		    CO_COMMENT_NODE_NAME, child.getComment());
 	}
+	String label = child.getLabel();
+	if (label != null && !"".equals(label)) {
+	    createCDataNode(document, coContentResourceProxyElem,
+		    CO_LABEL_NODE_NAME, child.getLabel());
+	}
+	// we may have a content unit without any resource proxy, using a
+	// reference to a capsule for example
+	if (child.getResourceProxies() != null) {
+	    for (int i = 0; i < child.getResourceProxies().size(); i++) {
+		createChildElement(document, coContentResourceProxyElem,
+			(COContentResourceProxy) child.getResourceProxies()
+				.get(i));
+	    }
+	}
+	if (child.getProperties() != null && !child.getProperties().isEmpty()) {
+	    createPropertiesElem(document, coContentResourceProxyElem, child
+		    .getProperties());
+	}
+	createCOContentResourceChild(document, coContentResourceProxyElem,
+		child.getResource(), child.getSecurity());
+	// We may not have a rubric for exams for example
+	if (child.getRubric() != null) {
+	    createCOCOntentRubricChild(document, coContentResourceProxyElem,
+		    child.getRubric());
+	}
+	parent.appendChild(coContentResourceProxyElem);
     }
 
     /**
@@ -904,9 +933,11 @@ public class COModeled extends COSerialized implements COModelInterface {
 		document.createElement(CO_RES_NODE_NAME);
 	coContentResourceElem.setAttribute(TYPE_ATTRIBUTE_NAME, resource
 		.getType());
+	coContentResourceElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
+		+ resource.isEditable());
 	// coContentResourceElem.setAttribute(SECURITY_ATTRIBUTE_NAME, resource
-	// .getSecurity()); //on prend pour le moment la securite du resource
-	// proxy.
+	// .getSecurity());
+	// TODO on prend pour le moment la securite du resource proxy.
 	coContentResourceElem.setAttribute(SECURITY_ATTRIBUTE_NAME, security);
 	if (resource.getProperties() != null
 		&& !resource.getProperties().isEmpty()) {
@@ -940,4 +971,213 @@ public class COModeled extends COSerialized implements COModelInterface {
     public void setDocumentSecurityMap(Map<String, String> documentSecurityMap) {
 	this.documentSecurityMap = documentSecurityMap;
     }
- }
+
+    public void associate(COModeledServer parent) {
+	COContent contentParent = parent.getModeledContent();
+	COContent contentChild = this.getModeledContent();
+
+	associateChild(contentChild, contentParent);
+
+    }
+
+    private void associateChild(COElementAbstract childElement,
+	    COElementAbstract parentElement) {
+
+	if (childElement.getType().equals(parentElement.getType())) {
+	    if (parentElement.isCourseOutlineContent()) {
+		childElement.setUuidParent(parentElement.getUuid());
+		COContent parentCO = (COContent) parentElement;
+		COContent childCO = (COContent) childElement;
+		for (int i = 0; i < parentCO.getChildren().size(); i++) {
+		    COElementAbstract coElementParent =
+			    parentCO.getChildren().get(i);
+		    if (childCO.getChildren() != null
+			    && !childCO.getChildren().isEmpty()) {
+			COElementAbstract coElementChild =
+				childCO.getChildren().get(i);
+			associateChild(coElementChild, coElementParent);
+		    }else{
+			//une structure existe chez le parent mais pas chez l'enfant
+			//incompatibilité ?
+		    }
+		}
+	    } else if (parentElement.isCOStructureElement()) {
+		childElement.setUuidParent(parentElement.getUuid());
+		COStructureElement parentSE =
+			(COStructureElement) parentElement;
+		COStructureElement childSE = (COStructureElement) childElement;
+		for (int i = 0; i < parentSE.getChildren().size(); i++) {
+		    COElementAbstract coElementParent =
+			    parentSE.getChildren().get(i);
+		    if (childSE.getChildren() != null
+			    && !childSE.getChildren().isEmpty()) {
+			COElementAbstract coElementChild =
+			    childSE.getChildren().get(i);
+			associateChild(coElementChild, coElementParent);
+		    } else{
+			//une structure existe chez le parent mais pas chez l'enfant
+			//incompatibilité ?
+		    }
+		}
+	    } else if (parentElement.isCOContentUnit()) {
+		childElement.setUuidParent(parentElement.getUuid());
+	    }
+	} else {
+	    // throw Error
+	    System.err.println("ERREUR DANS L'ASSOCIATION");
+	}
+    }
+
+    public void dissociate(COModeledServer parent) {
+	COContent contentParent = parent.getModeledContent();
+	COContent contentChild = this.getModeledContent();
+
+	dissociateChild(contentChild, contentParent);
+
+    }
+
+    private void dissociateChild(COElementAbstract childElement,
+	    COElementAbstract parentElement) {
+
+	if (parentElement.isCourseOutlineContent()) {
+	    COContent parentCO = (COContent) parentElement;
+	    COContent childCO = (COContent) childElement;
+	    for (int i = 0; i < parentCO.getChildren().size(); i++) {
+		COElementAbstract coElementParent =
+			parentCO.getChildren().get(i);
+		COElementAbstract coElementChild = childCO.getChildren().get(i);
+		associateChild(coElementChild, coElementParent);
+	    }
+	} else if (parentElement.isCOStructureElement()) {
+	    childElement.setUuidParent(null);
+	    COStructureElement parentSE = (COStructureElement) parentElement;
+	    COStructureElement childSE = (COStructureElement) childElement;
+	    for (int i = 0; i < parentSE.getChildren().size(); i++) {
+		COElementAbstract coElementParent =
+			parentSE.getChildren().get(i);
+		COElementAbstract coElementChild = childSE.getChildren().get(i);
+		associateChild(coElementChild, coElementParent);
+	    }
+	} else if (parentElement.isCOContentUnit()) {
+	    childElement.setUuidParent(null);
+	}
+    }
+
+    public String getSerializedContent() {
+	return coSerialized.getSerializedContent();
+    }
+
+    public void fusion(COModeledServer parent) {
+	COContent contentChild = this.getModeledContent();
+	COContent contentfusionned = parent.getModeledContent();
+	fusion(contentChild, contentfusionned);
+	setModeledContent(contentfusionned);
+    }
+
+    public void fusion(COElementAbstract child, COElementAbstract fusionned) {
+	if (child.isCourseOutlineContent()) {
+	    COContent co = (COContent) child;
+	    if (fusionned != null) {
+		fusionned.setUuidParent(fusionned.getUuid());
+		fusionned.setUuid(child.getUuid());
+	    }
+	    for (int i = 0; i < co.getChildren().size(); i++) {
+		COElementAbstract childElement = co.getChildren().get(i);
+		if (childElement.getUuidParent() != null
+			&& !childElement.getUuidParent().equals("")) {
+		    COElementAbstract parentElement =
+			    findCOElementAbstractWithUUID(fusionned,
+				    childElement.getUuidParent());
+		    if (parentElement != null) {
+			parentElement.setEditable(false);
+			parentElement.setUuidParent(parentElement.getUuid());
+			parentElement.setUuid(childElement.getUuid());
+			fusion(childElement, parentElement);
+		    } else {
+			// LE fils référence qqchose qui n'apparait plus dans le
+			// père
+		    }
+		} else {
+		    addChild(fusionned, childElement);
+		}
+	    }
+	} else if (child.isCOStructureElement()) {
+	    COStructureElement se = (COStructureElement) child;
+	    for (int i = 0; i < se.getChildren().size(); i++) {
+		COElementAbstract childElement = se.getChildren().get(i);
+		if (childElement.getUuidParent() != null
+			&& !childElement.getUuidParent().equals("")) {
+		    COElementAbstract parentElement =
+			    findCOElementAbstractWithUUID(fusionned,
+				    childElement.getUuidParent());
+		    if (parentElement != null) {
+			parentElement.setEditable(false);
+			parentElement.setUuidParent(parentElement.getUuid());
+			parentElement.setUuid(childElement.getUuid());
+			fusion(childElement, parentElement);
+		    } else {
+			// LE fils référence qqchose qui n'apparait plus dans le
+			// père
+		    }
+		} else {
+		    addChild(fusionned, childElement);
+		}
+	    }
+	} else if (child.isCOContentUnit()) {
+	    COContentUnit cuFusionned = (COContentUnit) fusionned;
+	    for (int i = 0; i < cuFusionned.getResourceProxies().size(); i++) {
+		COContentResourceProxy rp =
+			cuFusionned.getResourceProxies().get(i);
+		rp.setEditable(false);
+	    }
+
+	    COContentUnit cu = (COContentUnit) child;
+	    for (int i = 0; i < cu.getResourceProxies().size(); i++) {
+		COContentResourceProxy rp = cu.getResourceProxies().get(i);
+		addChild(fusionned, rp);
+	    }
+	}
+    }
+
+    private COElementAbstract findCOElementAbstractWithUUID(
+	    COElementAbstract root, String uuid) {
+	COElementAbstract result = null;
+	if (root.getUuid().equals(uuid))
+	    result = root;
+	else {
+	    if (root.isCourseOutlineContent()) {
+		COContent co = (COContent) root;
+		int i = 0;
+		while (i < co.getChildren().size() && result == null) {
+		    COElementAbstract coElem = co.getChildren().get(i);
+		    result = findCOElementAbstractWithUUID(coElem, uuid);
+		    i++;
+		}
+	    } else if (root.isCOStructureElement()) {
+		COStructureElement se = (COStructureElement) root;
+		int i = 0;
+		while (i < se.getChildren().size() && result == null) {
+		    COElementAbstract coElem = se.getChildren().get(i);
+		    result = findCOElementAbstractWithUUID(coElem, uuid);
+		    i++;
+		}
+	    } else if (root.isCOContentUnit()) {
+		// Nothing to do
+	    }
+	}
+	return result;
+    }
+
+    private void addChild(COElementAbstract parent, COModelInterface child) {
+	if (parent.isCourseOutlineContent()) {
+	    COContent parentCO = (COContent) parent;
+	    parentCO.addChild((COElementAbstract) child);
+	} else if (parent.isCOStructureElement()) {
+	    COStructureElement parentSE = (COStructureElement) parent;
+	    parentSE.addChild((COElementAbstract) child);
+	} else if (parent.isCOContentUnit()) {
+	    COContentUnit parentCU = (COContentUnit) parent;
+	    parentCU.addResourceProxy((COContentResourceProxy) child);
+	}
+    } 
+}

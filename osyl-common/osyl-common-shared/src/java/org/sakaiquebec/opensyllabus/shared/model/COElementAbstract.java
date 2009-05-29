@@ -20,6 +20,8 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
+import org.sakaiquebec.opensyllabus.shared.util.UUID;
+
 /**
  * This abstract class is the superclass of <code>CourseOutlineContent</code>,
  * <code>COStructureElement</code> and <code>COContentUnit</code> classes.
@@ -71,11 +73,28 @@ public abstract class COElementAbstract implements COModelInterface {
      */
     private String classType;
     
+    /**
+     * Editable or not (comming from parent or not)
+     */
+    private boolean editable=true;
+    
+    /**
+     * Identifier
+     */
+    private String uuid;
+    
+    
+    /**
+     * parent identifier
+     */
+    private String uuidParent;
+
 
     /**
      * Protected constructor to prohibit instantiation of this class.
      */
     protected COElementAbstract() {
+	this.uuid = UUID.uuid();
     }
     
     /**
@@ -176,5 +195,36 @@ public abstract class COElementAbstract implements COModelInterface {
     public void setLabel(String label) {
         this.label = label;
         notifyEventHandlers();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isEditable(){
+	return editable;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void setEditable(boolean edit){
+	this.editable = edit;
+    }
+    
+    
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getUuidParent() {
+        return uuidParent;
+    }
+
+    public void setUuidParent(String uuidParent) {
+        this.uuidParent = uuidParent;
     }
 }

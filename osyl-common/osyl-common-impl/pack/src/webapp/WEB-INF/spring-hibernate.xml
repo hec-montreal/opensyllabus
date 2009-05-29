@@ -50,5 +50,28 @@
 		</property>
 
 	</bean>
+	
+	<bean id="org.sakaiquebec.opensyllabus.common.dao.CORelationDao"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager"
+			ref="org.sakaiproject.springframework.orm.hibernate.GlobalTransactionManager" />
+		<property name="target">
+			<bean
+				class="org.sakaiquebec.opensyllabus.common.dao.CORelationDaoImpl"
+				singleton="true" init-method="init">
+
+				<property name="sessionFactory">
+					<ref
+						bean="org.sakaiproject.springframework.orm.hibernate.GlobalSessionFactory" />
+				</property>
+			</bean>
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+
+	</bean>
 
 </beans>

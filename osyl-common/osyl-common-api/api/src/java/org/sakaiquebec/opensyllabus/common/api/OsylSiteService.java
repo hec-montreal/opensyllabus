@@ -152,6 +152,13 @@ public interface OsylSiteService {
 	public COSerialized getSerializedCourseOutline(String webappDir);
 
 	/**
+	 * Returns the CourseOutline of the current context (version unfusionned).
+	 * 
+	 * @return the CourseOutline POJO corresponding to the current context.
+	 */
+	public COSerialized getUnfusionnedSerializedCourseOutlineBySiteId(String id);
+	
+	/**
 	 * Creates or update a new course outline
 	 * 
 	 * @return

@@ -24,133 +24,139 @@ import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
-import org.sakaiquebec.opensyllabus.impl.COModeledServer;
+import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
-public class OsylPublishServiceImpl implements OsylPublishService{
+public class OsylPublishServiceImpl implements OsylPublishService {
 
-	   private static Log log = LogFactory.getLog(OsylPublishServiceImpl.class);
+    private static Log log = LogFactory.getLog(OsylPublishServiceImpl.class);
 
-	    /**
-	     * The security service to be injected by Spring
-	     * @uml.property  name="osylSecurityService"
-	     * @uml.associationEnd  
-	     */
-	    private OsylSecurityService osylSecurityService;
+    /**
+     * The security service to be injected by Spring
+     * 
+     * @uml.property name="osylSecurityService"
+     * @uml.associationEnd
+     */
+    private OsylSecurityService osylSecurityService;
 
-	    /**
-	     * Sets the {@link OsylSecurityService}.
-	     * 
-	     * @param securityService
-	     */
-	    public void setSecurityService(OsylSecurityService securityService) {
-		this.osylSecurityService = securityService;
-	    }
+    /**
+     * Sets the {@link OsylSecurityService}.
+     * 
+     * @param securityService
+     */
+    public void setSecurityService(OsylSecurityService securityService) {
+	this.osylSecurityService = securityService;
+    }
 
-	    /**
-	     * The chs to be injected by Spring
-	     * @uml.property  name="contentHostingService"
-	     * @uml.associationEnd  multiplicity="(0 -1)" ordering="true" elementType="org.sakaiproject.content.api.ContentEntity" qualifier="substring:java.lang.String java.lang.String"
-	     */
-	    private ContentHostingService contentHostingService;
+    /**
+     * The chs to be injected by Spring
+     * 
+     * @uml.property name="contentHostingService"
+     * @uml.associationEnd multiplicity="(0 -1)" ordering="true"
+     *                     elementType="org.sakaiproject.content.api.ContentEntity"
+     *                     qualifier
+     *                     ="substring:java.lang.String java.lang.String"
+     */
+    private ContentHostingService contentHostingService;
 
-	    /**
-	     * Sets the <code>ContentHostingService</code>.
-	     * @param  contentHostingService
-	     * @uml.property  name="contentHostingService"
-	     */
-	    public void setContentHostingService(
-		    ContentHostingService contentHostingService) {
-		this.contentHostingService = contentHostingService;
-	    }
+    /**
+     * Sets the <code>ContentHostingService</code>.
+     * 
+     * @param contentHostingService
+     * @uml.property name="contentHostingService"
+     */
+    public void setContentHostingService(
+	    ContentHostingService contentHostingService) {
+	this.contentHostingService = contentHostingService;
+    }
 
-		   /**
-	     * Init method called at initialization of the bean.
-	     */
-	    public void init() {
-		log.info("INIT from OsylPublish service");
-	    }
-	    /* the tool manager to be injected by Spring 
-	    private ToolManager toolManager;
+    /**
+     * Init method called at initialization of the bean.
+     */
+    public void init() {
+	log.info("INIT from OsylPublish service");
+    }
 
-	    /*
-	     * Sets the <code>ToolManager</code>.
-	     * 
-	     * @param toolManager
-	     
-	    public void setToolManager(ToolManager toolManager) {
-		this.toolManager = toolManager;
-	    }
-	    */
-	    /**
-	     * The resouceDao to be injected by Spring
-	     * @uml.property  name="resourceDao"
-	     * @uml.associationEnd  
-	     */
-	    private ResourceDao resourceDao;
+    /*
+     * the tool manager to be injected by Spring private ToolManager
+     * toolManager; / Sets the <code>ToolManager</code>.
+     * @param toolManager public void setToolManager(ToolManager toolManager) {
+     * this.toolManager = toolManager; }
+     */
+    /**
+     * The resouceDao to be injected by Spring
+     * 
+     * @uml.property name="resourceDao"
+     * @uml.associationEnd
+     */
+    private ResourceDao resourceDao;
 
-	    /**
-	     * Sets the  {@link ResourceDao} .
-	     * @param  resourceDao
-	     * @uml.property  name="resourceDao"
-	     */
-	    public void setResourceDao(ResourceDao resourceDao) {
-		this.resourceDao = resourceDao;
-	    }
+    /**
+     * Sets the {@link ResourceDao} .
+     * 
+     * @param resourceDao
+     * @uml.property name="resourceDao"
+     */
+    public void setResourceDao(ResourceDao resourceDao) {
+	this.resourceDao = resourceDao;
+    }
 
-	    /**
-	     * The configDao to be injected by Spring
-	     * @uml.property  name="configDao"
-	     * @uml.associationEnd  
-	     */
-	    private COConfigDao configDao;
+    /**
+     * The configDao to be injected by Spring
+     * 
+     * @uml.property name="configDao"
+     * @uml.associationEnd
+     */
+    private COConfigDao configDao;
 
-	    /**
-	     * Sets the  {@link COConfigDao} .
-	     * @param  configDao
-	     * @uml.property  name="configDao"
-	     */
-	    public void setConfigDao(COConfigDao configDao) {
-		this.configDao = configDao;
-	    }
+    /**
+     * Sets the {@link COConfigDao} .
+     * 
+     * @param configDao
+     * @uml.property name="configDao"
+     */
+    public void setConfigDao(COConfigDao configDao) {
+	this.configDao = configDao;
+    }
 
-	    /**
-	     * The config service to be injected by Spring
-	     * @uml.property  name="osylConfigService"
-	     * @uml.associationEnd  
-	     */
-	    private OsylConfigService osylConfigService;
+    /**
+     * The config service to be injected by Spring
+     * 
+     * @uml.property name="osylConfigService"
+     * @uml.associationEnd
+     */
+    private OsylConfigService osylConfigService;
 
-	    /**
-	     * Sets the {@link OsylConfigService}.
-	     * 
-	     * @param configService
-	     */
-	    public void setConfigService(OsylConfigService configService) {
-		this.osylConfigService = configService;
-	    }
+    /**
+     * Sets the {@link OsylConfigService}.
+     * 
+     * @param configService
+     */
+    public void setConfigService(OsylConfigService configService) {
+	this.osylConfigService = configService;
+    }
 
-	    
-	    /**
-	     * The OsylSite service to be injected by Spring
-	     * @uml.property  name="osylSiteService"
-	     * @uml.associationEnd  
-	     */
-	    private OsylSiteService osylSiteService;
+    /**
+     * The OsylSite service to be injected by Spring
+     * 
+     * @uml.property name="osylSiteService"
+     * @uml.associationEnd
+     */
+    private OsylSiteService osylSiteService;
 
-	    /**
-	     * Sets the  {@link OsylSiteService} .
-	     * @param  osylSiteService
-	     * @uml.property  name="osylSiteService"
-	     */
-	    public void setOsylSiteService(OsylSiteService osylSiteService) {
-		this.osylSiteService = osylSiteService;
-	    }
+    /**
+     * Sets the {@link OsylSiteService} .
+     * 
+     * @param osylSiteService
+     * @uml.property name="osylSiteService"
+     */
+    public void setOsylSiteService(OsylSiteService osylSiteService) {
+	this.osylSiteService = osylSiteService;
+    }
 
-	    
-	    /**
+    /**
      * {@inheritDoc}
      */
     public COSerialized getSerializedPublishedCourseOutlineForAccessType(
@@ -162,24 +168,27 @@ public class OsylPublishServiceImpl implements OsylPublishService{
 	    siteId = osylSiteService.getCurrentSiteId();
 	    thisCo =
 		    resourceDao.getSerializedCourseOutlineBySiteId(siteId,
-		    		accessType);
+			    accessType);
 	    osylSiteService.getSiteInfo(thisCo, siteId);
 	    coConfig =
 		    configDao.getConfigByRef("osylcoconfigs" + File.separator
 			    + "default");
 	} catch (Exception e) {
-	    log.error("Unable to retrieve published course outline for access type",
-		    e);
+	    log
+		    .error(
+			    "Unable to retrieve published course outline for access type",
+			    e);
 	}
 	try {
-	    thisCo = osylConfigService.fillCo(webappDir + coConfig.getConfigRef(), thisCo);
+	    thisCo =
+		    osylConfigService.fillCo(webappDir
+			    + coConfig.getConfigRef(), thisCo);
 	} catch (Exception e) {
 	    log.error("Unable to fill course outline", e);
 	}
 	return thisCo;
     }
 
-    
     /**
      * Creates or updates the corresponding entries in the database and copies
      * the ressources
@@ -190,15 +199,15 @@ public class OsylPublishServiceImpl implements OsylPublishService{
 
 	// Create a course outline with security public
 	publish(co, SecurityInterface.SECURITY_ACCESS_PUBLIC,
-			OsylSiteService.CO_CONTENT_XSL_PUBLIC, webappDir);
+		OsylSiteService.CO_CONTENT_XSL_PUBLIC, webappDir);
 
 	// Create a course outline with security onsite
 	publish(co, SecurityInterface.SECURITY_ACCESS_ONSITE,
-			OsylSiteService.CO_CONTENT_XSL_ONSITE, webappDir);
+		OsylSiteService.CO_CONTENT_XSL_ONSITE, webappDir);
 
 	// Create a course outline with security attendee
 	publish(co, SecurityInterface.SECURITY_ACCESS_ATTENDEE,
-			OsylSiteService.CO_CONTENT_XSL_ATTENDEE, webappDir);
+		OsylSiteService.CO_CONTENT_XSL_ATTENDEE, webappDir);
 
 	COModeledServer coModeled = new COModeledServer(co);
 	coModeled.XML2Model();
@@ -207,15 +216,14 @@ public class OsylPublishServiceImpl implements OsylPublishService{
 
 	copyWorkToPublish(documentSecurityMap);
     }
-/*
-    private String getCurrentSiteReference() {
-    	String val1 = toolManager.getCurrentPlacement().getContext();
-    	String val2 = contentHostingService.getSiteCollection(val1);
-    	String refString = contentHostingService.getReference(val2);
-    	return refString;
-        }
-*/
-        /**
+
+    /*
+     * private String getCurrentSiteReference() { String val1 =
+     * toolManager.getCurrentPlacement().getContext(); String val2 =
+     * contentHostingService.getSiteCollection(val1); String refString =
+     * contentHostingService.getReference(val2); return refString; }
+     */
+    /**
      * Copies work's folder content to publish folder.
      * 
      * @return true.
@@ -234,7 +242,7 @@ public class OsylPublishServiceImpl implements OsylPublishService{
 	    @SuppressWarnings("unchecked")
 	    List<ContentEntity> members = workContent.getMemberResources();
 
-	    //We removes all resources in the publish directory collection
+	    // We removes all resources in the publish directory collection
 	    ContentCollection publishContent =
 		    contentHostingService.getCollection(id_publish);
 
@@ -257,7 +265,7 @@ public class OsylPublishServiceImpl implements OsylPublishService{
 			contentHostingService.copyIntoFolder(thisEntityRef,
 				id_publish);
 
-		//Permission
+		// Permission
 		String permission =
 			documentSecurityMap.get(thisEntityRef
 				.substring(thisEntityRef.lastIndexOf("/") + 1));
@@ -292,6 +300,7 @@ public class OsylPublishServiceImpl implements OsylPublishService{
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
 	}
     }
+
     /**
      * Applies sequentially 2 xsl transformations resulting ion 2 HTML files in
      * the specified directory according to the given security level
@@ -311,8 +320,9 @@ public class OsylPublishServiceImpl implements OsylPublishService{
 
 	// Retrieve xml and xsl from the webapps/xslt
 	File coXslFile =
-		new File(webbappDir + File.separator + OsylSiteService.XSLT_DIRECTORY
-			+ File.separator, xslSecurityFile + OsylSiteService.XSL_FILE_EXTENSION);
+		new File(webbappDir + File.separator
+			+ OsylSiteService.XSLT_DIRECTORY + File.separator,
+			xslSecurityFile + OsylSiteService.XSL_FILE_EXTENSION);
 	try {
 	    // retrieve the Xml source
 	    StreamSource coXmlContentSource =
@@ -330,7 +340,7 @@ public class OsylPublishServiceImpl implements OsylPublishService{
 	    content = out.toString("UTF-8");
 	} catch (Exception e) {
 	    log.error("Unable to transform XML", e);
-	    //throw e;
+	    // throw e;
 	}
 	return content;
     }

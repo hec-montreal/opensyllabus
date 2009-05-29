@@ -22,6 +22,7 @@ package org.sakaiquebec.opensyllabus.common.dao;
 
 import java.io.Serializable;
 
+
 /**
  * This interface provides the CRUD methods linked to use of the osyl_relation
  * table.
@@ -29,7 +30,7 @@ import java.io.Serializable;
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-final class CORelation implements Serializable {
+public class CORelation implements Serializable {
 
     private static final long serialVersionUID = 2L;
     private String parent;

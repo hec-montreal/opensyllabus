@@ -50,7 +50,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      * The panel where will be added widgets either for displaying or editing
      * the model object.
      */
-    //private HorizontalPanel mainPanel;
+    // private HorizontalPanel mainPanel;
     private AbsolutePanel mainPanel;
 
     /**
@@ -63,7 +63,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      * The editor for this view. Handles both the edition and display modes.
      */
     private OsylAbstractEditor editor;
-    
+
     private VerticalPanel upAndDownPanel;
 
     protected OsylEditableMouseOverListener popUpMouseOverListener;
@@ -82,8 +82,10 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 	setButtonPanel(new HorizontalPanel());
 	setUpAndDownPanel(new VerticalPanel());
 
-	popUpMouseOverListener = new OsylEditableMouseOverListener(this);
-	addMouseListener(popUpMouseOverListener);
+	if (model.isEditable()) {
+	    popUpMouseOverListener = new OsylEditableMouseOverListener(this);
+	    addMouseListener(popUpMouseOverListener);
+	}
     }
 
     /**
@@ -91,12 +93,12 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      */
 
     public VerticalPanel getUpAndDownPanel() {
-        return upAndDownPanel;
+	return upAndDownPanel;
     }
 
     public void setUpAndDownPanel(VerticalPanel upAndDownPanel) {
-        this.upAndDownPanel = upAndDownPanel;
-        this.upAndDownPanel.setStyleName("Osyl-MouseOverPopup-ButtonPanel");
+	this.upAndDownPanel = upAndDownPanel;
+	this.upAndDownPanel.setStyleName("Osyl-MouseOverPopup-ButtonPanel");
     }
 
     /**
@@ -105,7 +107,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
     private void setMainPanel(AbsolutePanel panel) {
 	this.mainPanel = panel;
 	this.mainPanel.setWidth("93%");
-	//this.mainPanel.setStylePrimaryName("Osyl-UnitView-ResPanel");
+	// this.mainPanel.setStylePrimaryName("Osyl-UnitView-ResPanel");
     }
 
     /**
@@ -113,7 +115,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      */
     private void setButtonPanel(HorizontalPanel panel) {
 	this.buttonPanel = panel;
-	//this.buttonPanel.setStylePrimaryName("Osyl-ButtonPanel");
+	// this.buttonPanel.setStylePrimaryName("Osyl-ButtonPanel");
 	this.buttonPanel.setStyleName("Osyl-MouseOverPopup-ButtonPanel");
     }
 
@@ -190,21 +192,21 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 	getButtonPanel().setVisible(false);
 	getEditor().enterEdit();
     }
-    
+
     /**
      * Called when leaving edition and Save button was clicked.
      * 
      * @param boolean if modification should be saved.
      */
     public void closeAndSaveEdit(boolean save) {
-    if (save) {
-		if (getEditor().prepareForSave()) {
-			updateModel();
+	if (save) {
+	    if (getEditor().prepareForSave()) {
+		updateModel();
 	    } else {
-	    	return;
+		return;
 	    }
-    }
-    	getEditor().closeEditor();
+	}
+	getEditor().closeEditor();
     }
 
     /**
@@ -212,8 +214,8 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      * current context).
      */
     public void leaveEdit() {
-	if(mouseListeners==null || mouseListeners.isEmpty()) 
-	    	addMouseListener(popUpMouseOverListener);
+	if (mouseListeners == null || mouseListeners.isEmpty())
+	    addMouseListener(popUpMouseOverListener);
 	getMainPanel().removeStyleDependentName("Hover");
 	getButtonPanel().setVisible(false);
 	getUpAndDownPanel().setVisible(false);
@@ -261,9 +263,9 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
     }
 
     /**
-     * Returns the document name which is the part after the last slash if it
-     * is a local resource, or the full URI if it looks as an external URI. 
-     *   
+     * Returns the document name which is the part after the last slash if it is
+     * a local resource, or the full URI if it looks as an external URI.
+     * 
      * @param uri
      * @return uri for presentation
      */
@@ -274,12 +276,12 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 	} else {
 	    return uri.substring(uri.lastIndexOf("/") + 1).trim();
 	}
-    }    
-    
+    }
+
     /**
-     * Returns the document name which is the part after the last slash if it
-     * is a local resource, or the full URI if it looks as an external URI. 
-     *   
+     * Returns the document name which is the part after the last slash if it is
+     * a local resource, or the full URI if it looks as an external URI.
+     * 
      * @param uri
      * @return uri for presentation
      */
@@ -288,10 +290,10 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 	    // If it's an external link we return it as is
 	    return uri;
 	} else {
-	    return uri.substring(0,uri.lastIndexOf("/")).trim();
+	    return uri.substring(0, uri.lastIndexOf("/")).trim();
 	}
-    }    
-    
+    }
+
     /**
      * @see Widget#setElement(Element)
      */

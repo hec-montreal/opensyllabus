@@ -153,8 +153,17 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	String webappDir = getServletContext().getRealPath("/");
 	log.warn("OSYL publishCourseOutline webappDir: " + webappDir);
 	osylServices.getOsylPublishService().publish(webappDir,
-		getSerializedCourseOutline());
+		getNonFusionnedSerializedCourseOutline());
 	return;
+    }
+    
+    private COSerialized getNonFusionnedSerializedCourseOutline() throws Exception{
+	COSerialized thisCo;
+	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
+	    thisCo =
+		    osylServices.getOsylSiteService()
+			    .getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
+	return thisCo;
     }
 
     /**

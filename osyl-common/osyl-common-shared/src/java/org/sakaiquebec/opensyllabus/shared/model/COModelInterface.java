@@ -37,4 +37,16 @@ public interface COModelInterface {
      * @param type to set for this model
      */
     public void setType(String type);
+    
+    /**
+     * 
+     * @return true if the model is editable
+     */
+    public boolean isEditable();
+    
+    /**
+     * 
+     * @param edit, boolean to set for this model
+     */
+    public void setEditable(boolean edit);
 }

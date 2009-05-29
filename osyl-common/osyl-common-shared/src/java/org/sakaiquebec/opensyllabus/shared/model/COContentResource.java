@@ -60,6 +60,12 @@ public class COContentResource implements COModelInterface,
      */
     private COProperties properties;
 
+    
+    /**
+     * if the resource is editable or not
+     */
+    private boolean editable=true;
+    
     /**
      * Constructor.
      */
@@ -239,4 +245,12 @@ public class COContentResource implements COModelInterface,
 	notifyEventHandlers();
     }
 
+    public boolean isEditable() {
+	return editable;
+    }
+
+    public void setEditable(boolean edit) {
+	this.editable=edit;
+    }
+    
 }

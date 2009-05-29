@@ -26,6 +26,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,8 +49,11 @@ import org.sakaiquebec.opensyllabus.common.api.OsylRealmService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
+import org.sakaiquebec.opensyllabus.common.dao.CORelation;
+import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
-import org.sakaiquebec.opensyllabus.shared.model.COConfig;
+import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
@@ -109,6 +114,17 @@ public class OsylSiteServiceImpl implements OsylSiteService {
     public void setContentHostingService(
 	    ContentHostingService contentHostingService) {
 	this.contentHostingService = contentHostingService;
+    }
+
+    private CORelationDao coRelationDao;
+
+    /**
+     * Sets the {@link CORelationDao}.
+     * 
+     * @param configDao
+     */
+    public void setCoRelationDao(CORelationDao relationDao) {
+	this.coRelationDao = relationDao;
     }
 
     private static Log log = LogFactory.getLog(OsylSiteServiceImpl.class);
@@ -190,6 +206,41 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	log.info("INIT from OsylSite service");
     }
 
+    private COModeledServer getFusionnedPublishedHierarchy(String siteId) {
+	COModeledServer coModeled = null;
+	try {
+	    COSerialized co =
+		    resourceDao.getSerializedCourseOutlineBySiteId(siteId,
+			    SecurityInterface.SECURITY_ACCESS_ATTENDEE);
+	    List<CORelation> corelationList =
+		    coRelationDao.getParentsOfCourseOutline(siteId);
+	    coModeled = (co == null) ? null : new COModeledServer(co);
+	    if (corelationList == null || corelationList.isEmpty()) {
+		if (coModeled != null)
+		    coModeled.XML2Model();
+		return coModeled;
+	    } else {
+		for (Iterator<CORelation> relationIterator =
+			coRelationDao.getParentsOfCourseOutline(siteId)
+				.iterator(); relationIterator.hasNext();) {
+		    CORelation relation = relationIterator.next();
+		    COModeledServer parentModel =
+			    getFusionnedPublishedHierarchy(relation.getParent());
+		    if (parentModel != null && coModeled != null) {
+			coModeled.XML2Model();
+			parentModel.XML2Model();
+			coModeled.associate(parentModel);
+			coModeled.fusion(parentModel);
+		    }
+		}
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+
+	return coModeled;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -199,9 +250,61 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 		    resourceDao.getSerializedCourseOutlineBySiteId(siteId, "");
 	    if (co != null) {
 		getSiteInfo(co, siteId);
+		COModeledServer coModelChild = new COModeledServer(co);
+		// récupération des parents
+		List<CORelation> corelationList =
+			coRelationDao.getParentsOfCourseOutline(siteId);
+		if (!corelationList.isEmpty()) {
+		    for (Iterator<CORelation> relationIterator =
+			    coRelationDao.getParentsOfCourseOutline(siteId)
+				    .iterator(); relationIterator.hasNext();) {
+			CORelation relation = relationIterator.next();
+
+			// fusion
+			COModeledServer coModelParent =
+				getFusionnedPublishedHierarchy(relation
+					.getParent());
+
+			if (coModelParent != null) {
+			    // TODO this sould be done once when user associate
+			    // his
+			    // CO with an another in manager interface
+			    // coRelationDao.addChildToCourseOutline(idParent,
+			    // idChild);
+			    coModelChild.XML2Model();
+			    coModelChild.associate(coModelParent);
+			    coModelChild.model2XML();
+			    co.setSerializedContent(coModelChild
+				    .getSerializedContent());
+			    resourceDao.createOrUpdateCourseOutline(co);
+			    // END TODO
+			    coModelChild.fusion(coModelParent);
+			    coModelChild.model2XML();
+			    co.setSerializedContent(coModelChild
+				    .getSerializedContent());
+			}
+		    }
+		}
 	    }
 	    return co;
 	} catch (Exception e) {
+	    e.printStackTrace();
+	    log.error("Unable to retrieve course outline by siteId", e);
+	}
+	return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public COSerialized getUnfusionnedSerializedCourseOutlineBySiteId(
+	    String siteId) {
+	try {
+	    COSerialized co =
+		    resourceDao.getSerializedCourseOutlineBySiteId(siteId, "");
+	    return co;
+	} catch (Exception e) {
+	    e.printStackTrace();
 	    log.error("Unable to retrieve course outline by siteId", e);
 	}
 	return null;
@@ -468,23 +571,19 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	try {
 
 	    siteId = getCurrentSiteId();
-	    thisCo = resourceDao.getSerializedCourseOutlineBySiteId(siteId, "");
+	    thisCo = getSerializedCourseOutlineBySiteId(siteId);
 
 	    if (thisCo == null) {
-		coConfig = osylConfigService.getConfigByRef(OsylConfigService.DEFAULT_CONFIG_REF, webappDir);
-
-		// thisCo =
-		// new COSerialized(IdManager.createUuid(),
-		// osylConfigService.getCurrentLocale(), "shared",
-		// "", siteId, "sectionId", coConfig,
-		// COContentTemplate.getDefaultXml(),
-		// "shortDescription", "description", "title",
-		// false);
+		coConfig =
+			osylConfigService
+				.getConfigByRef(
+					OsylConfigService.DEFAULT_CONFIG_REF,
+					webappDir);
 		thisCo =
 			new COSerialized(IdManager.createUuid(),
 				osylConfigService.getCurrentLocale(), "shared",
 				"", siteId, "sectionId", coConfig,
-				getXmlStringFromFile(coConfig,webappDir),
+				getXmlStringFromFile(coConfig, webappDir),
 				"shortDescription", "description", "title",
 				false);
 
@@ -521,7 +620,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
     public COSerialized getSerializedCourseOutline(String id, String webappDir)
 	    throws Exception {
 	try {
-	    COSerialized co = resourceDao.getSerializedCourseOutline(id);
+	    COSerialized co = getSerializedCourseOutline(id);
 	    getSiteInfo(co, co.getSiteId());
 	    return co;
 	} catch (Exception e) {
@@ -614,14 +713,17 @@ public class OsylSiteServiceImpl implements OsylSiteService {
     /**
      * Reads the course outline xml template from a file located in the
      * osylcoconfigs directory.
+     * 
      * @param webappDir The path to the webapp directory
      * @return
      */
-    private String getXmlStringFromFile(COConfigSerialized coConfig, String webappDir) {
+    private String getXmlStringFromFile(COConfigSerialized coConfig,
+	    String webappDir) {
 	StringBuilder fileData = new StringBuilder(1000);
 	try {
 
-	    BufferedReader reader = getXmlTemplateFileReader(coConfig,webappDir);
+	    BufferedReader reader =
+		    getXmlTemplateFileReader(coConfig, webappDir);
 
 	    char[] buf = new char[1024];
 	    int numRead = 0;
@@ -634,23 +736,23 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	}
 	return fileData.toString();
     }
-    
+
     /**
      * Checks if the file of the co template exists, if not it takes the default
      * template file, and return a buffered reader on the file.
+     * 
      * @param webappDir the location of the webapp
      * @return a BufferedReader on the appropriate template file.
      */
-    private BufferedReader getXmlTemplateFileReader(COConfigSerialized coConfig, String webappDir) {
+    private BufferedReader getXmlTemplateFileReader(
+	    COConfigSerialized coConfig, String webappDir) {
 	File coXmlFile = null;
 	String coXmlFilePath = null;
 	BufferedReader reader = null;
 	try {
 	    coXmlFilePath =
-		    webappDir
-			    + File.separator
-			    + coConfig.getConfigRef() + File.separator
-			    + CO_CONTENT_TEMPLATE + "_"
+		    webappDir + File.separator + coConfig.getConfigRef()
+			    + File.separator + CO_CONTENT_TEMPLATE + "_"
 			    + osylConfigService.getCurrentLocale()
 			    + OsylSiteService.XML_FILE_EXTENSION;
 	    coXmlFile = new File(coXmlFilePath);
@@ -659,15 +761,17 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 			    new FileInputStream(coXmlFile), "UTF-8"));
 	} catch (FileNotFoundException e) {
 	    try {
-		coXmlFilePath = webappDir
-		    + File.separator
-		    + osylConfigService.getCurrentConfig(webappDir)
-			    .getConfigRef() + File.separator
-		    + CO_CONTENT_TEMPLATE + OsylSiteService.XML_FILE_EXTENSION;
+		coXmlFilePath =
+			webappDir
+				+ File.separator
+				+ osylConfigService.getCurrentConfig(webappDir)
+					.getConfigRef() + File.separator
+				+ CO_CONTENT_TEMPLATE
+				+ OsylSiteService.XML_FILE_EXTENSION;
 		coXmlFile = new File(coXmlFilePath);
 		reader =
-		    new BufferedReader(new InputStreamReader(
-			    new FileInputStream(coXmlFile), "UTF-8"));
+			new BufferedReader(new InputStreamReader(
+				new FileInputStream(coXmlFile), "UTF-8"));
 	    } catch (Exception e1) {
 		e1.printStackTrace();
 	    }

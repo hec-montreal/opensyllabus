@@ -53,5 +53,12 @@ public class COContentRubric implements COModelInterface {
     public void setType(String type) {
 	this.type = type;
     }
+    
+    public boolean isEditable() {
+	return true;
+    }
+
+    public void setEditable(boolean edit) {
+    }
 
 }

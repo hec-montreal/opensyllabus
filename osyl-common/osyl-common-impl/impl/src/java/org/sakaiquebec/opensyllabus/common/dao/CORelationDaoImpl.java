@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -102,8 +101,8 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-	public List<String> getChildrenOfCourseOutline(String coId) {
-	List<String> children = null;
+    public List<CORelation> getChildrenOfCourseOutline(String coId) {
+	List<CORelation> children = null;
 	try {
 	    children =
 		    getHibernateTemplate().find(
@@ -118,8 +117,8 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-	public List<String> getParentsOfCourseOutline(String coId) {
-	List<String> parents = null;
+    public List<CORelation> getParentsOfCourseOutline(String coId) {
+	List<CORelation> parents = null;
 	try {
 	    parents =
 		    getHibernateTemplate().find(

@@ -61,7 +61,7 @@ public interface CORelationDao {
      * @param coId
      * @return
      */
-    public List<String> getParentsOfCourseOutline(String coId);
+    public List<CORelation> getParentsOfCourseOutline(String coId);
 
     /**
      * All the children of the courseOutline
@@ -69,6 +69,6 @@ public interface CORelationDao {
      * @param coId
      * @return
      */
-    public List<String> getChildrenOfCourseOutline(String coId);
+    public List<CORelation> getChildrenOfCourseOutline(String coId);
 
 }

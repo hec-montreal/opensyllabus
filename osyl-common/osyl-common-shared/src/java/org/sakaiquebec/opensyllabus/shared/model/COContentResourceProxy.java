@@ -74,6 +74,11 @@ public class COContentResourceProxy implements COModelInterface,
      * The resource object.
      */
     private COContentResource resource;
+    
+    /**
+     * if the <code>COContentResourceProxy</code> is editbale or not
+     */
+    private boolean editable=true;
 
     /**
      * List of all resource proxies associated to this resource proxy (as
@@ -503,5 +508,13 @@ public class COContentResourceProxy implements COModelInterface,
 	while(hasSuccessorInRubric())
 	    getCoContentUnitParent().changeResourceProxyPositionInRubric(this, 1); 
     }
+    
+    public boolean isEditable() {
+	return editable;
+    }
+
+    public void setEditable(boolean edit) {
+	this.editable = edit;
+    }   
 
 }

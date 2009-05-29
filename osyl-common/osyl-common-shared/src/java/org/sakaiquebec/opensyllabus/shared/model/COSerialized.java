@@ -115,6 +115,11 @@ public class COSerialized implements IsSerializable, COModelInterface {
     private Map<String,String> messages;
 
     /**
+     * is editable or not
+     */
+    private boolean editable;
+    
+    /**
      * Default constructor
      */
     public COSerialized() {
@@ -454,6 +459,14 @@ public class COSerialized implements IsSerializable, COModelInterface {
      */
     public void setSecurity(String security) {
 	this.security = security;
+    }
+    
+    public boolean isEditable() {
+	return editable;
+    }
+
+    public void setEditable(boolean edit) {
+	this.editable = edit;
     }
 
 }
