@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 import java.util.Map.Entry;
 
 import org.sakaiproject.authz.api.AuthzGroup;
@@ -42,13 +43,16 @@ import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.authz.cover.FunctionManager;
 import org.sakaiproject.authz.cover.SecurityService;
+import org.sakaiproject.citation.api.Citation;
+import org.sakaiproject.citation.api.CitationCollection;
+import org.sakaiproject.citation.api.CitationService;
+import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentEntity;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.content.api.ContentResourceEdit;
-import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.exception.IdInvalidException;
@@ -364,14 +368,28 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    int lastIndexOfPoint = name.lastIndexOf(".");
 	    fileName = name.substring(0, lastIndexOfPoint);
 	    fileExtension = name.substring(lastIndexOfPoint + 1, name.length());
-	    // Add the resource and its content
-	    ContentResourceEdit newResource =
-		    contentHostingService.addResource(resourceOutputDir,
-			    fileName, fileExtension, 3);
-	    newResource.setContent(content);
-	    newResource.setContentType(contentType);
-	    contentHostingService.commitResource(newResource);
-
+	    if ("citation".equals(fileExtension)) {
+	    	// read input stream of file to get properties of citation
+	    	byte[] bytes = new byte[1000];
+	    	int val = content.read();
+	    	int i = 0;
+	    	while (val != -1) {
+	    		bytes[i] = (byte) val;
+	    		i++;
+	    		val = content.read();
+	    	}
+	    	String citationContent = new String(bytes);
+	    	// TODO create citation
+	    }
+	    else {
+		    // Add the resource and its content
+		    ContentResourceEdit newResource =
+			    contentHostingService.addResource(resourceOutputDir,
+				    fileName, fileExtension, 3);
+		    newResource.setContent(content);
+		    newResource.setContentType(contentType);
+		    contentHostingService.commitResource(newResource);
+	    }
 	    String resourceName = resourceOutputDir + name;
 	    // osylSecurityService.applyPermissions(resourceName, permission);
 	    return resourceName;
@@ -593,7 +611,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * @param siteId
      * @return
      */
-    private Map<String, byte[]> createFilesMap(String siteId) {
+    @SuppressWarnings("unchecked")
+	private Map<String, byte[]> createFilesMap(String siteId) {
 	HashMap<String, byte[]> map = new HashMap<String, byte[]>();
 
 	COSerialized coSerialized =
@@ -612,7 +631,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	try {
 	    ContentCollection workContent =
 		    contentHostingService.getCollection(resourceDir);
-	    @SuppressWarnings("unchecked")
 	    List<ContentEntity> members = workContent.getMemberResources();
 	    for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
 		    .hasNext();) {
@@ -624,7 +642,49 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 				thisEntityRef.length());
 		ContentResource contentResource =
 			contentHostingService.getResource(thisEntityRef);
-		map.put(name, contentResource.getContent());
+		if (CitationService.CITATION_LIST_ID.equals(
+				contentResource.getResourceType())) {
+			// content resource is a citation:
+			// get properties of citation to save in a file
+			// TODO: citation file is created considering citation
+			// service of sdata ... modify this for general use
+			String colId = new String(contentResource.getContent());
+			CitationCollection col = org.sakaiproject.citation.cover.
+					CitationService.getCollection(colId);
+			List<Citation> citations = col.getCitations();
+			for (Iterator<Citation> iter = citations.iterator(); 
+					iter.hasNext();) {
+				Citation citation = iter.next();
+				String citationName = citation.getDisplayName();
+				// citation display name includes . at the end
+				citationName = citationName.substring(0,citationName.length()-1);
+				String result = "listname=" + citationName;
+				Map props = citation.getCitationProperties();
+				for (Iterator<String> iter2 = props.keySet().iterator(); 
+						iter2.hasNext();) {
+					String key = iter2.next();
+					result += "&cipkeys=" + key;
+					Object value = props.get(key);
+					if (key.equals("sakai:displayname")) {
+						result += "&cipvalues=" + citationName;
+					}
+					else if (value instanceof Vector) {
+						Vector val = (Vector) value;
+						for (Iterator iter3 = val.iterator(); iter3.hasNext();) {
+							result += "&cipvalues=" + iter3.next().toString();
+						}
+					}
+					else {
+						result += "&cipvalues=" + value.toString();
+					}
+				}
+				// save each citation as a file with .citation extension
+				map.put(citationName + ".citation", result.getBytes());
+			}			
+		}
+		else {
+			map.put(name, contentResource.getContent());
+		}
 	    }
 	} catch (Exception e) {
 	    e.printStackTrace();
