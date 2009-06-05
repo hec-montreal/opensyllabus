@@ -47,6 +47,9 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
 
     /** {@inheritDoc} */
     public void createConfig(COConfigSerialized cOConfig) {
+	if (cOConfig == null) {
+	    throw new IllegalArgumentException("Cannot create null config!");
+	}
 	try {
 	    getHibernateTemplate().saveOrUpdate(cOConfig);
 	} catch (Exception e) {
