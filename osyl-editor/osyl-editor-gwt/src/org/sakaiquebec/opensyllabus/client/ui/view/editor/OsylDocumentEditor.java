@@ -48,6 +48,7 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ChangeListener;
@@ -102,7 +103,6 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
     private OsylFileBrowser fileBrowser;
 
     private ResourcesLicencingInfo resourceLicencingInfo;
-    private boolean licenceListReady = false;
 
     private int originalEditorDescHeight;
 
@@ -625,18 +625,23 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 			    // TODO Auto-generated method stub
 			    // getView().getController().handleRPCError("Sucess
 			    // while retrieving license information object");
-			    resourceLicencingInfo.getCopyrightTypeList();
-			    licenseListBox.clear();
-			    for (String licence : resourceLicencingInfo
-				    .getCopyrightTypeList()) {
-				licenseListBox.addItem(licence);
-			    }
-			    licenceListReady = true;
+			    buildLicenseListBox();
 			}
 		    });
-	} else {
-	    licenceListReady = true;
 	}
+	else{
+	    buildLicenseListBox();
+	}
+    }
+    
+    private void buildLicenseListBox(){
+	resourceLicencingInfo.getCopyrightTypeList();
+	    licenseListBox.clear();
+	    for (String licence : resourceLicencingInfo
+		    .getCopyrightTypeList()) {
+		licenseListBox.addItem(licence);
+	    }
+	    refreshBrowsingComponents();
     }
 
     /**
@@ -665,16 +670,15 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		// before
 		// selecting an item in the licenceListBox
 		// The licence list is scrolled only if it is ready.
-		if (licenceListReady) {
-		    for (int i = 0; i < licenseListBox.getItemCount(); i++) {
-			String item = licenseListBox.getValue(i);
+		for (int i = 0; i < licenseListBox.getItemCount(); i++) {
+		    String item = licenseListBox.getValue(i);
 
-			if (item.equals(selectedFile.getCopyrightChoice())) {
-			    licenseListBox.setItemSelected(i, true);
-			    isFound = true;
-			}
+		    if (item.equals(selectedFile.getCopyrightChoice())) {
+			licenseListBox.setItemSelected(i, true);
+			isFound = true;
 		    }
 		}
+
 	    }
 
 	}
