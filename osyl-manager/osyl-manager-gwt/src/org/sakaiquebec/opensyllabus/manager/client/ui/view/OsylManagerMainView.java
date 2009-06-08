@@ -55,6 +55,7 @@ public class OsylManagerMainView extends OsylManagerAbstractView implements
 	
 	final RadioButton createRadioButton = new RadioButton("choix",getController().getMessages().createOption());
 	final RadioButton exportRadioButton = new RadioButton("choix",getController().getMessages().exportOption());
+	final RadioButton associateRadioButton = new RadioButton("choix",getController().getMessages().associateDissociate());
 	
 	Button valid = new Button();
 	valid.setText(getController().getMessages().valid());
@@ -66,12 +67,16 @@ public class OsylManagerMainView extends OsylManagerAbstractView implements
 		else if(exportRadioButton.isChecked()){
 		    setView(new ExportCOView(getController()));
 		}
+		else if(associateRadioButton.isChecked()){
+		    setView(new AssociateView(getController()));
+		}
 	    }
 	});
 	
 	mainPanel.add(title);
 	mainPanel.add(createRadioButton);
 	mainPanel.add(exportRadioButton);
+	mainPanel.add(associateRadioButton);
 	mainPanel.add(valid);
     }
 

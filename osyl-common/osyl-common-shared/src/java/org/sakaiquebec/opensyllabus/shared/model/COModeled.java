@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.shared.util.UUID;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.xml.client.CDATASection;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
@@ -628,7 +629,7 @@ public class COModeled extends COSerialized implements COModelInterface {
      * @deprecated use model2XML(false) instead
      */
     public void model2XML() {
-	model2XML(true);
+	model2XML(false);
     }
 
     public void model2XML(boolean saveParentInfos) {

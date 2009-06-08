@@ -32,6 +32,7 @@ import org.sakaiquebec.opensyllabus.manager.client.message.Messages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -233,6 +234,22 @@ public class OsylManagerController implements FireOsylManagerEvents {
 		    (OsylManagerEventHandler) iter.next();
 	    siteCreationEventHandler.onOsylManagerEvent();
 	}
+    }
+    
+    public void getParent(String siteId,AsyncCallback<String> callback){
+	OsylManagerRPCController.getInstance().getParent(siteId,callback);
+    }
+    
+    public void getOsylSites(String siteId,AsyncCallback<Map<String,String>> callback){
+	OsylManagerRPCController.getInstance().getOsylSites(siteId,callback);
+    }
+    
+    public void associate(String siteId, String parentId, AsyncCallback<Void> callback){
+	OsylManagerRPCController.getInstance().associate(siteId, parentId, callback);
+    }
+    
+    public void dissociate(String siteId, String parentId, AsyncCallback<Void> callback){
+	OsylManagerRPCController.getInstance().dissociate(siteId, parentId, callback);
     }
 
 }

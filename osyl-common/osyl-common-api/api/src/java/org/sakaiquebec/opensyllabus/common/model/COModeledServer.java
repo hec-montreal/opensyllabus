@@ -997,8 +997,10 @@ public class COModeledServer {
 				childCO.getChildren().get(i);
 			associateChild(coElementChild, coElementParent);
 		    }else{
-			//une structure existe chez le parent mais pas chez l'enfant
-			//incompatibilité ?
+			//Un structure existe chez le parent mia spas chez l'enfant
+			coElementParent.setUuidParent(coElementParent.getUuid());
+			coElementParent.setUuid(UUID.uuid());
+			childCO.addChild(coElementParent);
 		    }
 		}
 	    } else if (parentElement.isCOStructureElement()) {
@@ -1015,8 +1017,10 @@ public class COModeledServer {
 			    childSE.getChildren().get(i);
 			associateChild(coElementChild, coElementParent);
 		    } else{
-			//une structure existe chez le parent mais pas chez l'enfant
-			//incompatibilité ?
+			//Un structure existe chez le parent mia spas chez l'enfant
+			coElementParent.setUuidParent(coElementParent.getUuid());
+			coElementParent.setUuid(UUID.uuid());
+			childSE.addChild(coElementParent);
 		    }
 		}
 	    } else if (parentElement.isCOContentUnit()) {
@@ -1039,6 +1043,7 @@ public class COModeledServer {
     private void dissociateChild(COElementAbstract childElement,
 	    COElementAbstract parentElement) {
 
+	childElement.setUuidParent(null);
 	if (parentElement.isCourseOutlineContent()) {
 	    COContent parentCO = (COContent) parentElement;
 	    COContent childCO = (COContent) childElement;
@@ -1046,20 +1051,18 @@ public class COModeledServer {
 		COElementAbstract coElementParent =
 			parentCO.getChildren().get(i);
 		COElementAbstract coElementChild = childCO.getChildren().get(i);
-		associateChild(coElementChild, coElementParent);
+		dissociateChild(coElementChild, coElementParent);
 	    }
 	} else if (parentElement.isCOStructureElement()) {
-	    childElement.setUuidParent(null);
 	    COStructureElement parentSE = (COStructureElement) parentElement;
 	    COStructureElement childSE = (COStructureElement) childElement;
 	    for (int i = 0; i < parentSE.getChildren().size(); i++) {
 		COElementAbstract coElementParent =
 			parentSE.getChildren().get(i);
 		COElementAbstract coElementChild = childSE.getChildren().get(i);
-		associateChild(coElementChild, coElementParent);
+		dissociateChild(coElementChild, coElementParent);
 	    }
 	} else if (parentElement.isCOContentUnit()) {
-	    childElement.setUuidParent(null);
 	}
     }
 

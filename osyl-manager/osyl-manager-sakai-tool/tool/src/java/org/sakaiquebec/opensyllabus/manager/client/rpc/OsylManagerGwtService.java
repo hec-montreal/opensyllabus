@@ -42,6 +42,7 @@ public interface OsylManagerGwtService extends RemoteService {
 
     /**
      * Reads the XML and creates a course outline.
+     * 
      * @param xmlReference
      * @param siteId
      */
@@ -54,8 +55,16 @@ public interface OsylManagerGwtService extends RemoteService {
      * @param siteId
      */
     public void readZip(String xmlReference, String siteId);
-    
-    public Map<String,String> getOsylSitesMap();
-    
+
+    public Map<String, String> getOsylSitesMap();
+
     public String getOsylPackage(String siteId);
+
+    public Map<String, String> getOsylSites(String siteId);
+
+    public String getParent(String siteId);
+
+    public void associate(String siteId, String parentId) throws Exception;
+
+    public void dissociate(String siteId, String parentId) throws Exception;
 }

@@ -29,7 +29,6 @@ import java.util.List;
  * @version $Id: $
  */
 public interface CORelationDao {
-    public void addChildToCourseOutline(String coId, String idChild);
 
     /**
      * Adds a new Parent to the courseOutline
@@ -37,7 +36,7 @@ public interface CORelationDao {
      * @param coId
      * @param idParent
      */
-    public void addParentToCourseOutline(String coId, String idParent);
+    public void addParentToCourseOutline(String parent, String child);
 
     /**
      * Removes the child to the courseOutline
@@ -61,7 +60,7 @@ public interface CORelationDao {
      * @param coId
      * @return
      */
-    public List<CORelation> getParentsOfCourseOutline(String coId);
+    public String getParentOfCourseOutline(String coId);
 
     /**
      * All the children of the courseOutline

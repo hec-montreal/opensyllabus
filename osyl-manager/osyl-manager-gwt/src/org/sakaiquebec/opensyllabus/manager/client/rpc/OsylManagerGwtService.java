@@ -33,6 +33,7 @@ public interface OsylManagerGwtService extends RemoteService {
 
     /**
      * Creates a site with siteTitle title.
+     * 
      * @param siteTitle
      * @return
      */
@@ -53,8 +54,16 @@ public interface OsylManagerGwtService extends RemoteService {
      * @param siteId
      */
     public void readZip(String xmlReference, String siteId);
-    
-    public Map<String,String> getOsylSitesMap();
-    
+
+    public Map<String, String> getOsylSitesMap();
+
     public String getOsylPackage(String siteId);
+
+    public Map<String, String> getOsylSites(String siteId);
+
+    public String getParent(String siteId);
+
+    public void associate(String siteId, String parentId);
+
+    public void dissociate(String siteId, String parentId);
 }

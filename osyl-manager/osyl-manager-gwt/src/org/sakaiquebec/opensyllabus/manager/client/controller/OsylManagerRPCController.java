@@ -149,10 +149,11 @@ public class OsylManagerRPCController {
 		};
 	serviceProxy.getOsylSitesMap(callback);
     }
-    
-    public void getOsylPackage(OsylManagerController osylManagerController,String siteId){
+
+    public void getOsylPackage(OsylManagerController osylManagerController,
+	    String siteId) {
 	final OsylManagerController caller = osylManagerController;
-	AsyncCallback<String> callback = new AsyncCallback<String>(){
+	AsyncCallback<String> callback = new AsyncCallback<String>() {
 	    public void onSuccess(String fileUrl) {
 		caller.getOsylPackageCB(fileUrl);
 	    }
@@ -162,6 +163,25 @@ public class OsylManagerRPCController {
 	    }
 	};
 	serviceProxy.getOsylPackage(siteId, callback);
+    }
+
+    public void getParent(String siteId, AsyncCallback<String> callback) {
+	serviceProxy.getParent(siteId, callback);
+    }
+
+    public void getOsylSites(String siteId,
+	    AsyncCallback<Map<String, String>> callback) {
+	serviceProxy.getOsylSites(siteId, callback);
+    }
+
+    public void associate(String siteId, String parentId,
+	    AsyncCallback<Void> callback) {
+	serviceProxy.associate(siteId, parentId, callback);
+    }
+
+    public void dissociate(String siteId, String parentId,
+	    AsyncCallback<Void> callback) {
+	serviceProxy.dissociate(siteId, parentId, callback);
     }
 
 }

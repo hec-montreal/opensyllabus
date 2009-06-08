@@ -26,8 +26,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Iterator;
-import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,7 +47,6 @@ import org.sakaiquebec.opensyllabus.common.api.OsylRealmService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
-import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
@@ -212,27 +209,21 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	    COSerialized co =
 		    resourceDao.getSerializedCourseOutlineBySiteId(siteId,
 			    SecurityInterface.SECURITY_ACCESS_ATTENDEE);
-	    List<CORelation> corelationList =
-		    coRelationDao.getParentsOfCourseOutline(siteId);
+	    String parentId = coRelationDao.getParentOfCourseOutline(siteId);
 	    coModeled = (co == null) ? null : new COModeledServer(co);
-	    if (corelationList == null || corelationList.isEmpty()) {
+	    if (parentId == null) {
 		if (coModeled != null)
 		    coModeled.XML2Model();
 		return coModeled;
 	    } else {
-		for (Iterator<CORelation> relationIterator =
-			coRelationDao.getParentsOfCourseOutline(siteId)
-				.iterator(); relationIterator.hasNext();) {
-		    CORelation relation = relationIterator.next();
-		    COModeledServer parentModel =
-			    getFusionnedPublishedHierarchy(relation.getParent());
-		    if (parentModel != null && coModeled != null) {
-			coModeled.XML2Model();
-			parentModel.XML2Model();
-			coModeled.associate(parentModel);
-			coModeled.fusion(parentModel);
-		    }
+		COModeledServer parentModel =
+			getFusionnedPublishedHierarchy(parentId);
+		if (parentModel != null && coModeled != null) {
+		    coModeled.XML2Model();
+		    parentModel.XML2Model();
+		    coModeled.fusion(parentModel);
 		}
+
 	    }
 	} catch (Exception e) {
 	    e.printStackTrace();
@@ -252,38 +243,22 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 		getSiteInfo(co, siteId);
 		COModeledServer coModelChild = new COModeledServer(co);
 		// récupération des parents
-		List<CORelation> corelationList =
-			coRelationDao.getParentsOfCourseOutline(siteId);
-		if (!corelationList.isEmpty()) {
-		    for (Iterator<CORelation> relationIterator =
-			    coRelationDao.getParentsOfCourseOutline(siteId)
-				    .iterator(); relationIterator.hasNext();) {
-			CORelation relation = relationIterator.next();
+		String parentId =
+			coRelationDao.getParentOfCourseOutline(siteId);
+		if (parentId != null) {
 
-			// fusion
-			COModeledServer coModelParent =
-				getFusionnedPublishedHierarchy(relation
-					.getParent());
+		    // fusion
+		    COModeledServer coModelParent =
+			    getFusionnedPublishedHierarchy(parentId);
 
-			if (coModelParent != null) {
-			    // TODO this sould be done once when user associate
-			    // his
-			    // CO with an another in manager interface
-			    // coRelationDao.addChildToCourseOutline(idParent,
-			    // idChild);
-			    coModelChild.XML2Model();
-			    coModelChild.associate(coModelParent);
-			    coModelChild.model2XML();
-			    co.setSerializedContent(coModelChild
-				    .getSerializedContent());
-			    resourceDao.createOrUpdateCourseOutline(co);
-			    // END TODO
-			    coModelChild.fusion(coModelParent);
-			    coModelChild.model2XML();
-			    co.setSerializedContent(coModelChild
-				    .getSerializedContent());
-			}
+		    if (coModelParent != null) {
+			coModelChild.XML2Model();
+			coModelChild.fusion(coModelParent);
+			coModelChild.model2XML();
+			co.setSerializedContent(coModelChild
+				.getSerializedContent());
 		    }
+
 		}
 	    }
 	    return co;
@@ -549,9 +524,19 @@ public class OsylSiteServiceImpl implements OsylSiteService {
      * {@inheritDoc}
      */
     public boolean hasBeenPublished() {
-	String siteId = "";
 	try {
-	    siteId = getCurrentSiteId();
+	    return hasBeenPublished(getCurrentSiteId());
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+	return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean hasBeenPublished(String siteId) {
+	try {
 	    return resourceDao.hasBeenPublished(siteId);
 	} catch (Exception e) {
 	    log.warn("Unable to see if course outline has been published", e);
@@ -779,5 +764,70 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	    e.printStackTrace();
 	}
 	return reader;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getParent(String siteId) {
+	return coRelationDao.getParentOfCourseOutline(siteId);
+    }
+
+    public void associate(String siteId, String parentId) throws Exception {
+	COSerialized co;
+	try {
+	    co = resourceDao.getSerializedCourseOutlineBySiteId(siteId, "");
+
+	    if (co != null) {
+		getSiteInfo(co, siteId);
+		COModeledServer coModelChild = new COModeledServer(co);
+		if (parentId != null) {
+		    COModeledServer coModelParent =
+			    getFusionnedPublishedHierarchy(parentId);
+
+		    if (coModelParent != null) {
+			coModelChild.XML2Model();
+			coModelChild.associate(coModelParent);
+			coModelChild.model2XML();
+			co.setSerializedContent(coModelChild
+				.getSerializedContent());
+			resourceDao.createOrUpdateCourseOutline(co);
+		    }
+		    coRelationDao.addParentToCourseOutline(parentId, siteId);
+		}
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    throw e;
+	}
+    }
+
+    public void dissociate(String siteId, String parentId) throws Exception {
+	COSerialized co;
+	try {
+	    co = resourceDao.getSerializedCourseOutlineBySiteId(siteId, "");
+
+	    if (co != null) {
+		getSiteInfo(co, siteId);
+		COModeledServer coModelChild = new COModeledServer(co);
+		if (parentId != null) {
+		    COModeledServer coModelParent =
+			    getFusionnedPublishedHierarchy(parentId);
+
+		    if (coModelParent != null) {
+			coModelChild.XML2Model();
+			coModelChild.dissociate(coModelParent);
+			coModelChild.model2XML();
+			co.setSerializedContent(coModelChild
+				.getSerializedContent());
+			resourceDao.createOrUpdateCourseOutline(co);
+		    }
+		    coRelationDao.removeParentOfCourseOutline(siteId,parentId);
+		}
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    throw e;
+	}
     }
 }

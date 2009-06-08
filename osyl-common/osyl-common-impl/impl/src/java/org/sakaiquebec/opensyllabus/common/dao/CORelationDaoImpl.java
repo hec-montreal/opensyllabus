@@ -20,12 +20,10 @@
 
 package org.sakaiquebec.opensyllabus.common.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -47,55 +45,9 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
     }
 
     /** {@inheritDoc} */
-    public void addChildToCourseOutline(String coId, String idChild) {
-	COSerialized coParent =
-		(COSerialized) getHibernateTemplate().get(COSerialized.class,
-			idChild);
-	COSerialized coChild =
-		(COSerialized) getHibernateTemplate().get(COSerialized.class,
-			coId);
-	List<String> parents, children;
-	parents = coChild.getParents();
-
-	if (parents == null)
-	    parents = new ArrayList<String>();
-	parents.add(coId);
-
-	children = coParent.getChildren();
-	if (children == null)
-	    children = new ArrayList<String>();
-	children.add(idChild);
-
-	CORelation parent = new CORelation(coId, idChild);
-	getHibernateTemplate().saveOrUpdate(parent);
-	getHibernateTemplate().saveOrUpdate(coParent);
-	getHibernateTemplate().saveOrUpdate(coChild);
-    }
-
-    /** {@inheritDoc} */
-    public void addParentToCourseOutline(String coId, String idParent) {
-	COSerialized coParent =
-		(COSerialized) getHibernateTemplate().get(COSerialized.class,
-			idParent);
-	COSerialized coChild =
-		(COSerialized) getHibernateTemplate().get(COSerialized.class,
-			coId);
-	List<String> parents, children;
-	parents = coChild.getParents();
-
-	if (parents == null)
-	    parents = new ArrayList<String>();
-	parents.add(coId);
-
-	children = coParent.getChildren();
-	if (children == null)
-	    children = new ArrayList<String>();
-	children.add(idParent);
-
-	CORelation parent = new CORelation(coId, idParent);
-	getHibernateTemplate().saveOrUpdate(parent);
-	getHibernateTemplate().saveOrUpdate(coParent);
-	getHibernateTemplate().saveOrUpdate(coChild);
+    public void addParentToCourseOutline(String parent, String child) {
+	CORelation relation = new CORelation(parent, child);
+	getHibernateTemplate().saveOrUpdate(relation);
 
     }
 
@@ -117,7 +69,7 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-    public List<CORelation> getParentsOfCourseOutline(String coId) {
+    public String getParentOfCourseOutline(String coId) {
 	List<CORelation> parents = null;
 	try {
 	    parents =
@@ -127,8 +79,10 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline parents", e);
 	}
-
-	return parents;
+	if (parents != null && !parents.isEmpty())
+	    return parents.get(0).getParent();
+	else
+	    return null;
     }
 
     /** {@inheritDoc} */

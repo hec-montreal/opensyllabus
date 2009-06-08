@@ -124,6 +124,13 @@ public interface OsylSiteService {
 	public boolean hasBeenPublished();
 
 	/**
+	 * Check if the Co with the siteId has been published
+	 * 
+	 * @return true if published
+	 */
+	public boolean hasBeenPublished(String siteId);
+	
+	/**
 	 * Returns the CourseOutline whose ID is specified.
 	 * 
 	 * @param String
@@ -198,4 +205,11 @@ public interface OsylSiteService {
 	public COSerialized createCOFromData(String xmlData, String siteId);
 
 	public Site getSite(String siteId) throws IdUnusedException;
+	
+	public String getParent(String siteId);
+	
+	public void associate(String siteId, String parentId) throws Exception;
+	
+	public void dissociate(String siteId, String parentId)throws Exception;
+	
 }

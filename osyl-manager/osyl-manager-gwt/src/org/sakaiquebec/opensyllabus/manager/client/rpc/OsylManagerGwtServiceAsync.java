@@ -26,20 +26,20 @@ import java.util.Map;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
 public interface OsylManagerGwtServiceAsync {
-    
+
     /**
      * Crates a site with siteTitle title.
+     * 
      * @param siteTitle
      * @param callback
      */
     public void createSite(String siteTitle, AsyncCallback<String> callback);
-    
+
     /**
      * Reads the XML data and creates a course outline form it.
      * 
@@ -47,8 +47,9 @@ public interface OsylManagerGwtServiceAsync {
      * @param siteId
      * @param callback
      */
-    public void readXML(String xmlReference, String siteId, AsyncCallback<Void> callback);
-    
+    public void readXML(String xmlReference, String siteId,
+	    AsyncCallback<Void> callback);
+
     /**
      * Reads a archive file.
      * 
@@ -56,10 +57,21 @@ public interface OsylManagerGwtServiceAsync {
      * @param siteId
      * @param callback
      */
-    public void readZip(String xmlReference, String siteId, AsyncCallback<Void> callback);
-    
-    public void getOsylSitesMap(AsyncCallback<Map<String,String>> callback);
-    
-    public void getOsylPackage(String siteId, AsyncCallback<String> callback);
-}
+    public void readZip(String xmlReference, String siteId,
+	    AsyncCallback<Void> callback);
 
+    public void getOsylSitesMap(AsyncCallback<Map<String, String>> callback);
+
+    public void getOsylPackage(String siteId, AsyncCallback<String> callback);
+
+    public void getOsylSites(String siteId,
+	    AsyncCallback<Map<String, String>> callback);
+
+    public void getParent(String siteId, AsyncCallback<String> callback);
+
+    public void associate(String siteId, String parentId,
+	    AsyncCallback<Void> callback);
+    
+    public void dissociate(String siteId, String parentId,
+	    AsyncCallback<Void> callback);
+}

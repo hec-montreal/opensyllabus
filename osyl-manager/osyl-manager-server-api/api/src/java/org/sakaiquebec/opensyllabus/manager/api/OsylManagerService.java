@@ -47,18 +47,16 @@ public interface OsylManagerService {
      * published.
      */
     public static final String PUBLISH_DIRECTORY = "publish";
-    
-    
+
     /**
      * Name of the chs folder in which temporary files will be stored
      */
     public static final String TEMP_DIRECTORY = "temp";
-    
+
     /**
      * Name of the co xml file
      */
     public static final String CO_XML_FILENAME = "test.xml";
-
 
     /**
      * Create a Course outline using the xml reference
@@ -106,21 +104,33 @@ public interface OsylManagerService {
      *         created
      * @throws Exception
      */
-    //TODO: Quand la refactorisation sera terminee, il faut penser a supprimer cette 
-    //methode et passer par le service correspondant
-    
+    // TODO: Quand la refactorisation sera terminee, il faut penser a supprimer
+    // cette
+    // methode et passer par le service correspondant
     public String addRessource(String name, InputStream content,
 	    String contentType, String siteId) throws Exception;
-    
+
     /**
      * Get Map<id,name> of sites with OsylTool
+     * 
      * @return
      */
-    public Map<String,String> getOsylSitesMap();
-    
+    public Map<String, String> getOsylSitesMap();
+
     /**
      * Construct a package which contains course Outline and files
+     * 
      * @return url of the package file
      */
     public String getOsylPackage(String siteId);
+
+    public Map<String, String> getOsylSites(String siteId);
+
+    public String getParent(String siteId);
+
+    public void associate(String siteId, String parentId) throws Exception;
+
+    public void dissociate(String siteId, String parentId) throws Exception;
+    
+    
 }

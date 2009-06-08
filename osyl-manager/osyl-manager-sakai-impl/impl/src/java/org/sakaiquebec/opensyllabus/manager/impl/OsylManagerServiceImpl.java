@@ -85,12 +85,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     final static int TIMEOUT = 30;
 
-    //private static Log log = LogFactory.getLog(OsylManagerServiceImpl.class);
-
-    /**
-     * File delimeter used to split the url of a resource
-     */
-    protected static final String FILE_DELIMITER = "\\.";
+    // private static Log log = LogFactory.getLog(OsylManagerServiceImpl.class);
 
     /**
      * The name of the opensyllabusManager site to create.
@@ -115,10 +110,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      */
     private ServerConfigurationService serverConfigurationService;
 
-    public void setServerConfigurationService(ServerConfigurationService serverConfigurationService) {
+    public void setServerConfigurationService(
+	    ServerConfigurationService serverConfigurationService) {
 	this.serverConfigurationService = serverConfigurationService;
     }
-    
+
     /**
      * Set of all the functions to register in order to allow them in roles that
      * need them.
@@ -210,17 +206,17 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * Init method called at the initialization of the bean.
      */
     public void init() {
-//	log
-//		.info("OsylManagerServiceImpl service init() site managerSiteName == \""
-//			+ this.osylManagerSiteName + "\"");
+	// log
+	// .info("OsylManagerServiceImpl service init() site managerSiteName == \""
+	// + this.osylManagerSiteName + "\"");
 
 	if (null == this.osylManagerSiteName) {
 	    // can't create
-//	    log.info("init() managerSiteName is null");
+	    // log.info("init() managerSiteName is null");
 	} else if (siteService.siteExists(this.osylManagerSiteName)) {
 	    // no need to create
-//	    log.info("init() site " + this.osylManagerSiteName
-//		    + " already exists");
+	    // log.info("init() site " + this.osylManagerSiteName
+	    // + " already exists");
 	} else {
 	    // need to create
 	    try {
@@ -278,20 +274,20 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		page.addTool("sakai.opensyllabus.manager.tool");
 
 		siteService.save(osylManagerSite);
-//		log.debug("init() site " + this.osylManagerSiteName
-//			+ " has been created");
+		// log.debug("init() site " + this.osylManagerSiteName
+		// + " has been created");
 
 	    } catch (IdInvalidException e) {
-//		log.warn("IdInvalidException ", e);
+		// log.warn("IdInvalidException ", e);
 	    } catch (IdUsedException e) {
 		// we've already verified that the site doesn't exist but
 		// this can occur if site was created by another server
 		// in a cluster that is starting up at the same time.
-//		log.warn("IdUsedException ", e);
+		// log.warn("IdUsedException ", e);
 	    } catch (PermissionException e) {
-//		log.warn("PermissionException ", e);
+		// log.warn("PermissionException ", e);
 	    } catch (IdUnusedException e) {
-//		log.warn("IdUnusedException ", e);
+		// log.warn("IdUnusedException ", e);
 	    } catch (GroupNotDefinedException e) {
 		e.printStackTrace();
 	    } catch (AuthzPermissionException e) {
@@ -306,7 +302,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	osylPackage.unzipFile(zip);
 	return osylPackage.getXmlData();
     }
-
 
     /**
      * Adds the tool to the given site
@@ -344,24 +339,23 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    String resourceOutputDir =
 		    contentHostingService.getSiteCollection(siteId)
 			    + WORK_DIRECTORY + "/";
-	    
+
 	    try {
-		    @SuppressWarnings("unused")
-			ContentCollection resourceOutputCollection =
-		    	contentHostingService.getCollection(resourceOutputDir);
-		    
+		@SuppressWarnings("unused")
+		ContentCollection resourceOutputCollection =
+			contentHostingService.getCollection(resourceOutputDir);
+
 	    } catch (IdUnusedException exc) {
-	    	// collection is not existing yet, create it
-	    	ContentCollectionEdit col = contentHostingService.
-	    		addCollection(resourceOutputDir);
-	    	ResourcePropertiesEdit fileProperties = col.
-					getPropertiesEdit();
-			fileProperties.addProperty(
-					ResourceProperties.PROP_DISPLAY_NAME, WORK_DIRECTORY);
-	    	contentHostingService.commitCollection(col);
-	    	resourceOutputDir = col.getId();
+		// collection is not existing yet, create it
+		ContentCollectionEdit col =
+			contentHostingService.addCollection(resourceOutputDir);
+		ResourcePropertiesEdit fileProperties = col.getPropertiesEdit();
+		fileProperties.addProperty(
+			ResourceProperties.PROP_DISPLAY_NAME, WORK_DIRECTORY);
+		contentHostingService.commitCollection(col);
+		resourceOutputDir = col.getId();
 	    }
-	    
+
 	    // Extraction of name and extension
 	    String fileName;
 	    String fileExtension;
@@ -564,6 +558,44 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return siteMap;
     }
 
+    public Map<String, String> getOsylSites(String siteId) {
+
+	Map<String, String> siteMap = new HashMap<String, String>();
+	@SuppressWarnings("unchecked")
+	List<Site> sites =
+		siteService.getSites(SiteService.SelectionType.ACCESS, null,
+			null, null, SiteService.SortType.TITLE_ASC, null);
+	for (Iterator<Site> siteIterator = sites.iterator(); siteIterator
+		.hasNext();) {
+	    Site site = (Site) siteIterator.next();
+	    @SuppressWarnings("unchecked")
+	    List<SitePage> pagelist = site.getPages();
+	    for (Iterator<SitePage> iter = pagelist.iterator(); iter.hasNext();) {
+		SitePage sitePage = (SitePage) iter.next();
+		if (!sitePage.getTools(
+			new String[] { "sakai.opensyllabus.tool" }).isEmpty()) {
+		    if (osylSiteService.hasBeenPublished(site.getId())) {
+			boolean isInHierarchy = false;
+			String parentId = site.getId();
+			while (parentId != null && !isInHierarchy) {
+			    if (parentId.equals(siteId))
+				isInHierarchy = true;
+			    parentId = osylSiteService.getParent(parentId);
+			}
+			if (!isInHierarchy)
+			    siteMap.put(site.getId(), site.getTitle());
+		    }
+		    break;
+		}
+	    }
+	}
+	return siteMap;
+    }
+
+    public String getParent(String siteId) {
+	return osylSiteService.getParent(siteId);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -753,8 +785,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     private int getTimeOut() {
 	int timeout = 0;
 
-	//TODO Check first in sakai.properties, then in the components.xml as
-	//a bean property and then use the constant.
+	// TODO Check first in sakai.properties, then in the components.xml as
+	// a bean property and then use the constant.
 	String timeOutString =
 		serverConfigurationService
 			.getString("opensyllabus.manager.timeOut");
@@ -765,5 +797,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 	return timeout;
 
+    }
+    
+    public void associate(String siteId, String parentId) throws Exception{
+	osylSiteService.associate(siteId, parentId);
+    }
+
+    public void dissociate(String siteId, String parentId) throws Exception{
+	osylSiteService.dissociate(siteId, parentId);
     }
 }
