@@ -1094,8 +1094,10 @@ public class COModeledServer {
     public void fusion(COModeledServer parent) {
 	COContent contentChild = this.getModeledContent();
 	COContent contentfusionned = parent.getModeledContent();
-	fusion(contentChild, contentfusionned);
-	setModeledContent(contentfusionned);
+	if(contentChild.getUuidParent()!=null && !contentChild.getUuidParent().equals("")){
+        	fusion(contentChild, contentfusionned);
+        	setModeledContent(contentfusionned);
+	}
     }
 
     public void fusion(COElementAbstract child, COElementAbstract fusionned) {
