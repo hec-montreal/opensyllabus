@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.common.model;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -988,18 +989,20 @@ public class COModeledServer {
 		childElement.setUuidParent(parentElement.getUuid());
 		COContent parentCO = (COContent) parentElement;
 		COContent childCO = (COContent) childElement;
+		boolean childrenHasChild =
+			childCO.getChildren() != null
+				&& !childCO.getChildren().isEmpty();
 		for (int i = 0; i < parentCO.getChildren().size(); i++) {
 		    COElementAbstract coElementParent =
 			    parentCO.getChildren().get(i);
-		    if (childCO.getChildren() != null
-			    && !childCO.getChildren().isEmpty()) {
+		    if (childrenHasChild) {
 			COElementAbstract coElementChild =
 				childCO.getChildren().get(i);
 			associateChild(coElementChild, coElementParent);
-		    }else{
-			//Un structure existe chez le parent mia spas chez l'enfant
-			coElementParent.setUuidParent(coElementParent.getUuid());
-			coElementParent.setUuid(UUID.uuid());
+		    } else {
+			// Un structure existe chez le parent mia spas chez
+			// l'enfant
+			copyStructureOnly(coElementParent);
 			childCO.addChild(coElementParent);
 		    }
 		}
@@ -1008,18 +1011,20 @@ public class COModeledServer {
 		COStructureElement parentSE =
 			(COStructureElement) parentElement;
 		COStructureElement childSE = (COStructureElement) childElement;
+		boolean childrenHasChild =
+			childSE.getChildren() != null
+				&& !childSE.getChildren().isEmpty();
 		for (int i = 0; i < parentSE.getChildren().size(); i++) {
 		    COElementAbstract coElementParent =
 			    parentSE.getChildren().get(i);
-		    if (childSE.getChildren() != null
-			    && !childSE.getChildren().isEmpty()) {
+		    if (childrenHasChild) {
 			COElementAbstract coElementChild =
-			    childSE.getChildren().get(i);
+				childSE.getChildren().get(i);
 			associateChild(coElementChild, coElementParent);
-		    } else{
-			//Un structure existe chez le parent mia spas chez l'enfant
-			coElementParent.setUuidParent(coElementParent.getUuid());
-			coElementParent.setUuid(UUID.uuid());
+		    } else {
+			// Un structure existe chez le parent mia spas chez
+			// l'enfant
+			copyStructureOnly(coElementParent);
 			childSE.addChild(coElementParent);
 		    }
 		}
@@ -1028,7 +1033,23 @@ public class COModeledServer {
 	    }
 	} else {
 	    // throw Error
-	    System.err.println("ERREUR DANS L'ASSOCIATION");
+	    System.err.println("ERREUR DANS L'ASSOCIATION");// TODO
+	}
+    }
+
+    private void copyStructureOnly(COElementAbstract parentElement) {
+	parentElement.setUuidParent(parentElement.getUuid());
+	parentElement.setUuid(UUID.uuid());
+	if (parentElement.isCOStructureElement()) {
+	    COStructureElement parentSE = (COStructureElement) parentElement;
+	    for (int i = 0; i < parentSE.getChildren().size(); i++) {
+		COElementAbstract coElementParent =
+			parentSE.getChildren().get(i);
+		copyStructureOnly(coElementParent);
+	    }
+	} else if (parentElement.isCOContentUnit()) {
+	    COContentUnit coUnit = (COContentUnit) parentElement;
+	    coUnit.setResourceProxies(new ArrayList<COContentResourceProxy>());
 	}
     }
 
@@ -1182,5 +1203,5 @@ public class COModeledServer {
 	    COContentUnit parentCU = (COContentUnit) parent;
 	    parentCU.addResourceProxy((COContentResourceProxy) child);
 	}
-    } 
+    }
 }
