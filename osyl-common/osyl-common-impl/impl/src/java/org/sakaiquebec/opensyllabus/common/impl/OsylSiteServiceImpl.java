@@ -52,7 +52,6 @@ import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
-import org.sakaiquebec.opensyllabus.shared.model.COModeled;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
 /**
@@ -572,13 +571,13 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 				getXmlStringFromFile(coConfig, webappDir),
 				"shortDescription", "description", "title",
 				false);
-		//reinitilaisation des uuids
+		// reinitilaisation des uuids
 		COModeledServer coModeled = new COModeledServer(thisCo);
 		coModeled.XML2Model();
 		coModeled.resetUuid();
 		coModeled.model2XML();
 		thisCo.setSerializedContent(coModeled.getSerializedContent());
-		
+
 		resourceDao.createOrUpdateCourseOutline(thisCo);
 	    } else {
 		configSiteProperty = getSiteConfigProperty(thisCo.getSiteId());
@@ -829,7 +828,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 				.getSerializedContent());
 			resourceDao.createOrUpdateCourseOutline(co);
 		    }
-		    coRelationDao.removeParentOfCourseOutline(siteId,parentId);
+		    coRelationDao.removeParentOfCourseOutline(siteId, parentId);
 		}
 	    }
 	} catch (Exception e) {
