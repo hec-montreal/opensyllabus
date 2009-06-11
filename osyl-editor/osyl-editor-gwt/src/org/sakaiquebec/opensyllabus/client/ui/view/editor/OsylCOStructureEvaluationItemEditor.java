@@ -70,8 +70,9 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
     private TextBox endDateListBox;
     private ListBox typeRemiseListBox;
     private ListBox typeListBox;
-    private boolean isNotDeletable = false;
     private int selectedTypeIndex;
+
+    private boolean isInCoUnitList;
 
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
@@ -81,14 +82,20 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
      * @param parent
      */
     public OsylCOStructureEvaluationItemEditor(OsylAbstractView parent) {
+	this(parent, false);
+
+    }
+
+    public OsylCOStructureEvaluationItemEditor(OsylAbstractView parent,
+	    boolean isInCoUnitList) {
 	super(parent);
+	this.isInCoUnitList = isInCoUnitList;
 	initMainPanel();
 	if (!isReadOnly()) {
 	    initEditor();
 	}
 	initViewer();
 	initWidget(getMainPanel());
-
     }
 
     /**
@@ -114,7 +121,7 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	editorPanel.setWidth("98%");
 
 	Label nameLabel = new Label(getUiMessage("Evaluation.name"));
-	
+
 	editorPanel.add(nameLabel);
 
 	nameEditor = new TextBox();
@@ -202,6 +209,11 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	// We get the text to display from the model
 	setText(getView().getTextFromModel());
 
+	String rating =
+		(getView().getRating() != null && !getView().getRating()
+			.equals("")) ? "\t(" + getView().getRating() + ")" : "";
+
+	setText(getView().getTextFromModel() + rating);
 	// If we are in read-only mode, we return now to not add buttons and
 	// listeners enabling edition or deletion:
 	if (isReadOnly()) {
@@ -217,11 +229,11 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	getView().getButtonPanel().clear();
 	getView().getButtonPanel().add(pbEdit);
 
-	setText(getView().getTextFromModel()
-		+ "\t("
-		+ ((OsylCOStructureEvaluationItemLabelView) getView())
-			.getRating() + ")");
-	if (!isNotDeletable) {
+	if (!isInCoUnitList) {
+	    if (!isReadOnly()) {
+		getMainPanel().add(getMetaInfoLabel());
+	    }
+	} else {
 	    getView().getButtonPanel().add(createButtonDelete());
 	}
 
@@ -281,11 +293,9 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 
 	VerticalPanel ponderationPanel = new VerticalPanel();
 	ponderationPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	Label l1 = new Label(getView().getUiMessage("Evaluation.rating"));
+	Label l1 = new Label(getUiMessage("Evaluation.rating"));
 	weightTextBox = new TextBox();
-	weightTextBox
-		.setText(((OsylCOStructureEvaluationItemLabelView) getView())
-			.getRating());
+	weightTextBox.setText(getView().getRating());
 	weightTextBox.setWidth("40px");
 	weightTextBox.setTitle(getUiMessage("Evaluation.rating.tooltip"));
 	ponderationPanel.add(l1);
@@ -293,79 +303,71 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 
 	VerticalPanel localisationPanel = new VerticalPanel();
 	localisationPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	Label l2 = new Label(getView().getUiMessage("Evaluation.location"));
+	Label l2 = new Label(getUiMessage("Evaluation.location"));
 	localisationListBox = new ListBox();
-	localisationListBox.setTitle(getUiMessage("Evaluation.location.tooltip"));
+	localisationListBox
+		.setTitle(getUiMessage("Evaluation.location.tooltip"));
 	localisationListBox.addItem(getView().getCoMessage(
 		"Evaluation.Location.inclass"));
 	localisationListBox.addItem(getView().getCoMessage(
 		"Evaluation.Location.home"));
-	selectItemListBox(localisationListBox,
-		((OsylCOStructureEvaluationItemLabelView) getView())
-			.getLocation());
+	selectItemListBox(localisationListBox, getView().getLocation());
 	localisationPanel.add(l2);
 	localisationPanel.add(localisationListBox);
 
 	VerticalPanel modePanel = new VerticalPanel();
 	modePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	Label l3 = new Label(getView().getUiMessage("Evaluation.mode"));
+	Label l3 = new Label(getUiMessage("Evaluation.mode"));
 	modeListBox = new ListBox();
 	modeListBox.setTitle(getUiMessage("Evaluation.mode.tooltip"));
 	modeListBox.addItem(getView().getCoMessage("Evaluation.Mode.ind"));
 	modeListBox.addItem(getView().getCoMessage("Evaluation.Mode.team"));
-	selectItemListBox(modeListBox,
-		((OsylCOStructureEvaluationItemLabelView) getView()).getMode());
+	selectItemListBox(modeListBox, getView().getMode());
 	modePanel.add(l3);
 	modePanel.add(modeListBox);
 
 	VerticalPanel livrablePanel = new VerticalPanel();
 	livrablePanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
-	Label l4 = new Label(getView().getUiMessage("Evaluation.deliverable"));
+	Label l4 = new Label(getUiMessage("Evaluation.deliverable"));
 	livrableTextBox = new TextBox();
-	livrableTextBox.setTitle(getUiMessage("Evaluation.deliverable.tooltip"));
 	livrableTextBox
-		.setText(((OsylCOStructureEvaluationItemLabelView) getView())
-			.getResult());
+		.setTitle(getUiMessage("Evaluation.deliverable.tooltip"));
+	livrableTextBox.setText(getView().getResult());
 	livrablePanel.add(l4);
 	livrablePanel.add(livrableTextBox);
 
 	VerticalPanel porteePanel = new VerticalPanel();
 	porteePanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
-	Label l5 = new Label(getView().getUiMessage("Evaluation.scope"));
+	Label l5 = new Label(getUiMessage("Evaluation.scope"));
 	porteeListBox = new ListBox();
 	porteeListBox.setTitle(getUiMessage("Evaluation.scope.tooltip"));
 	porteeListBox.addItem(getView().getCoMessage("Evaluation.Scope.Obl"));
 	porteeListBox.addItem(getView().getCoMessage("Evaluation.Scope.Fac"));
-	selectItemListBox(porteeListBox,
-		((OsylCOStructureEvaluationItemLabelView) getView()).getScope());
+	selectItemListBox(porteeListBox, getView().getScope());
 	porteePanel.add(l5);
 	porteePanel.add(porteeListBox);
 
 	VerticalPanel startDatePanel = new VerticalPanel();
 	startDatePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	Label l6 = new Label(getView().getUiMessage("Evaluation.StartDate"));
+	Label l6 = new Label(getUiMessage("Evaluation.StartDate"));
 	startDateTextBox = new TextBox();
 	startDateTextBox.setTitle(getUiMessage("Evaluation.StartDate.tooltip"));
-	startDateTextBox
-		.setText(((OsylCOStructureEvaluationItemLabelView) getView())
-			.getOpenDate());
+	startDateTextBox.setText(getView().getOpenDate());
 	startDatePanel.add(l6);
 	startDatePanel.add(startDateTextBox);
 
 	VerticalPanel endDatePanel = new VerticalPanel();
 	endDatePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	Label l7 = new Label(getView().getUiMessage("Evaluation.EndDate"));
+	Label l7 = new Label(getUiMessage("Evaluation.EndDate"));
 	endDateListBox = new TextBox();
 	endDateListBox.setTitle(getUiMessage("Evaluation.EndDate.tooltip"));
-	endDateListBox
-		.setText(((OsylCOStructureEvaluationItemLabelView) getView())
-			.getCloseDate());
+	endDateListBox.setText(getView().getCloseDate());
 	endDatePanel.add(l7);
 	endDatePanel.add(endDateListBox);
 
 	VerticalPanel typeRemisePanel = new VerticalPanel();
 	typeRemisePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	Label l8 = new Label(getView().getUiMessage("Evaluation.subtype"));
+	Label l8 = new Label(getUiMessage("Evaluation.subtype"));
 	typeRemiseListBox = new ListBox();
 	typeRemiseListBox.setTitle(getUiMessage("Evaluation.subtype.tooltip"));
 	typeRemiseListBox.addItem("");
@@ -375,15 +377,13 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 		"Evaluation.Subtype.elect"));
 	typeRemiseListBox.addItem(getView().getCoMessage(
 		"Evaluation.Subtype.oral"));
-	selectItemListBox(typeRemiseListBox,
-		((OsylCOStructureEvaluationItemLabelView) getView())
-			.getSubmitionType());
+	selectItemListBox(typeRemiseListBox, getView().getSubmitionType());
 	typeRemisePanel.add(l8);
 	typeRemisePanel.add(typeRemiseListBox);
 
 	VerticalPanel typePanel = new VerticalPanel();
 	typePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	Label l9 = new Label(getView().getUiMessage("Evaluation.type"));
+	Label l9 = new Label(getUiMessage("Evaluation.type"));
 	typeListBox = new ListBox();
 	typeListBox.setTitle(getUiMessage("Evaluation.type.tooltip"));
 	typeListBox.addItem(getView()
@@ -415,8 +415,7 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	    }
 
 	});
-	selectItemListBox(typeListBox,
-		((OsylCOStructureEvaluationItemLabelView) getView()).getType());
+	selectItemListBox(typeListBox, getView().getType());
 	setSelectedTypeIndex(typeListBox.getSelectedIndex());
 	typePanel.add(l9);
 	typePanel.add(typeListBox);
@@ -440,6 +439,74 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	return new Widget[] { vp };
     }
 
+    protected OsylCOStructureEvaluationItemLabelView getView() {
+	return (OsylCOStructureEvaluationItemLabelView) super.getView();
+    }
+
+    @Override
+    protected Widget getMetaInfoLabel() {
+	VerticalPanel metaInfosPanel = new VerticalPanel();
+
+	String assessementType = getView().getType();
+	String weight = getView().getRating();
+	String location = getView().getLocation();
+	String workMode = getView().getMode();
+	String deliverable = getView().getResult();
+	String startDate = getView().getOpenDate();
+	String endDate = getView().getCloseDate();
+	String submissionMode = getView().getSubmitionType();
+	String scope = getView().getScope();
+
+	assessementType = assessementType != null ? assessementType : "";
+	weight = weight != null ? weight : "";
+	location = location != null ? location : "";
+	workMode = workMode != null ? workMode : "";
+	deliverable = deliverable != null ? deliverable : "";
+	startDate = startDate != null ? startDate : "";
+	endDate = endDate != null ? endDate : "";
+	submissionMode = submissionMode != null ? submissionMode : "";
+	scope = scope != null ? scope : "";
+
+	String assessementTypeLabel =
+		getUiMessage("Evaluation.type") + ": " + assessementType + " | ";
+	String weightLabel =
+		getUiMessage("Evaluation.rating") + ": " + weight + " | ";
+	String locationLabel =
+		getUiMessage("Evaluation.location") + ": " + location + " | ";
+	String workModeLabel =
+		getUiMessage("Evaluation.mode") + ": " + workMode;
+	String deliverableLabel =
+		!deliverable.equals("") ? getUiMessage("Evaluation.deliverable")
+			+ ": " + deliverable + " | "
+			: "";
+	String startDateLabel =
+		!startDate.equals("") ? getUiMessage("Evaluation.StartDate")
+			+ ": " + startDate + " | " : "";
+	String endDateLabel =
+		getUiMessage("Evaluation.EndDate") + ": " + endDate + " | ";
+	String submissionModeLabel =
+		!submissionMode.equals("") ? getUiMessage("Evaluation.subtype")
+			+ ": " + submissionMode + " | " : "";
+	String scopeLabel = getUiMessage("Evaluation.scope") + ": " + scope;
+
+	String metaInfoLabelStr1 =
+		assessementTypeLabel + weightLabel + locationLabel
+			+ workModeLabel;
+	String metaInfoLabelStr2 =
+		deliverableLabel + startDateLabel + endDateLabel
+			+ submissionModeLabel + scopeLabel;
+	;
+
+	Label label1 = new Label(metaInfoLabelStr1);
+	Label label2 = new Label(metaInfoLabelStr2);
+
+	label1.setStylePrimaryName("Osyl-UnitView-MetaInfo");
+	label2.setStylePrimaryName("Osyl-UnitView-MetaInfo");
+	metaInfosPanel.add(label1);
+	metaInfosPanel.add(label2);
+	return metaInfosPanel;
+    }
+
     /**
      * ==================== ADDED CLASSES or METHODS ====================
      */
@@ -454,7 +521,7 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 
     protected Button createButtonDelete() {
 	AbstractImagePrototype imgDeleteButton = getOsylImageBundle().delete();
-	String title = getView().getUiMessage("delete");
+	String title = getUiMessage("delete");
 	ClickListener listener =
 		new MyDeletePushButtonListener((COContentUnit) getView()
 			.getModel());
@@ -482,10 +549,10 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	    try {
 		// Here, we create a dialog box to confirm delete
 		OsylOkCancelDialog osylOkCancelDialog =
-			new OsylOkCancelDialog(getView().getUiMessage(
-				"OsylOkCancelDialog_Delete_Title"), getView()
-				.getUiMessage(
-					"OsylOkCancelDialog_Delete_Content"));
+			new OsylOkCancelDialog(
+				getView().getUiMessage(
+					"OsylOkCancelDialog_Delete_Title"),
+				getUiMessage("OsylOkCancelDialog_Delete_Content"));
 		osylOkCancelDialog
 			.addOkButtonCLickListener(new MyOkCancelDialogListener(
 				this.coContentUnit));
@@ -572,9 +639,4 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	}
 	lb.setSelectedIndex(selectedIndex);
     }
-
-    public void setIsNotDeletable(boolean isNotDeletable) {
-	this.isNotDeletable = isNotDeletable;
-    }
-
 }

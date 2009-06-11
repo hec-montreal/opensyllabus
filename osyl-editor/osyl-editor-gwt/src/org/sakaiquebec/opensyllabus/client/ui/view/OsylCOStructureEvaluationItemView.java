@@ -50,7 +50,7 @@ public class OsylCOStructureEvaluationItemView extends OsylViewableComposite {
     public OsylCOStructureEvaluationItemView(COContentUnit model,
 	    OsylController controller) {
 	super(model, controller);
-	setCoUnitLabel(new OsylCOStructureEvaluationItemLabelView(model,controller));
+	setCoUnitLabel(new OsylCOStructureEvaluationItemLabelView(model,controller,true));
 	initView();
     }
 

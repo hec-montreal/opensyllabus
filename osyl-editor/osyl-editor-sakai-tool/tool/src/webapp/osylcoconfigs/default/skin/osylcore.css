@@ -1593,23 +1593,24 @@ li {
 }
 
 .Osyl-UnitView-Title {
-	margin: 2px 30px 10px 2px;
+	/**margin: 2px 30px 10px 2px;**/
 	color:#063871;
 	font-size: 16px;
 	font-weight:bold;
-	padding: 4px 0px 4px 1px;
+	margin:10px 0;
+	/**padding: 4px 0px 4px 1px;**/
 	font-family: sans-serif, Arial, Verdana;
 	border: 1px solid transparent;
 }
 
 .Osyl-UnitView-Title-Hover {
-	border: 1px solid gray;
+	border: 1px solid #b0b0b0;
 	background-color: #eeeeee;
-	margin-left: 4px;
+	/**margin-left: 4px;
 	margin-top: 6px;
 	margin-right: 11px;
 	margin-bottom: 15px; /* 10px is better for IE */
-	padding: 3px 0px 5px 0px;
+	/**padding: 3px 0px 5px 0px;**/
 }
 /* Generic GWT textBox (i.e.: no style specified) */
 .Osyl-UnitView-TextBox {
@@ -1621,11 +1622,11 @@ li {
 }
 
 .Osyl-UnitView-Title .Osyl-LabelEditor-View {
-	margin: 2px 30px 10px 2px;
+	/**margin: 2px 30px 10px 2px;**/
 	color:#063871;
 	font-size: 16px;
 	font-weight:bold;
-	padding:4px;
+	/*padding:4px;*/
 	font-family: sans-serif, Arial, Verdana;
 }
 
@@ -1648,8 +1649,8 @@ li {
 	color:#063871;
 	font-size: 16px;
 	font-weight:bold;
-	padding: 1px 3px 3px 3px;
-	margin-bottom: 5px;
+	/*padding: 1px 3px 3px 3px;
+	margin-bottom: 5px;*/
 	font-family: sans-serif, Arial, Verdana;
 }
 
@@ -2315,6 +2316,14 @@ body {
 .Osyl-ResProxView-MetaInfo {
 	display: block;
 	margin: 15px 0px 15px 0px;
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 10px;
+	color: #a0a0a0;
+}
+
+.Osyl-UnitView-MetaInfo{
+	display: block;
+	margin: 0px 30px 0px 0px;
 	font-family: sans-serif, Arial, Verdana;
 	font-size: 10px;
 	color: #a0a0a0;

@@ -571,5 +571,8 @@ public abstract class OsylAbstractEditor extends Composite {
 	getEditorPopup().setHeight(getOriginalEditorPopupHeight() + "px");
 	getEditorTopWidget().setHeight(originalEditorWidgetHeight + "px");
     }
+    
+    
+    abstract protected Widget getMetaInfoLabel();
 
 }

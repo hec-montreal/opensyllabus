@@ -212,21 +212,21 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     public Widget getBrowserWidget() {
 	return null;
     }
-    
+
     @Override
     public boolean isResizable() {
-    return true;
+	return true;
     }
-    
+
     @Override
     public void maximizeEditor() {
-    getEditorPopup().setHeight(getOriginalEditorPopupHeight()+"px");
-    OsylEditorEntryPoint.centerObject(getEditorPopup());
+	getEditorPopup().setHeight(getOriginalEditorPopupHeight() + "px");
+	OsylEditorEntryPoint.centerObject(getEditorPopup());
     }
-    
+
     @Override
     public void normalizeEditorWindowState() {
-    // do nothing as editor height has not been changed
+	// do nothing as editor height has not been changed
     }
 
     @Override
@@ -244,6 +244,11 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 		getView().getButtonPanel().setVisible(false);
 	    }
 	};
+    }
+
+    @Override
+    protected Widget getMetaInfoLabel() {
+	return null;
     }
 
     /**

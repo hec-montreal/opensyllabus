@@ -33,16 +33,13 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 
     public OsylCOStructureEvaluationItemLabelView(COContentUnit model,
 	    OsylController controller) {
-	super(model, controller);
-	setEditor(new OsylCOStructureEvaluationItemEditor(this));
-	initView();
+	this(model, controller, false);
     }
     
     public OsylCOStructureEvaluationItemLabelView(COContentUnit model,
-	    OsylController controller, boolean isNotDeletable) {
+	    OsylController controller, boolean isInList) {
 	super(model, controller);
-	setEditor(new OsylCOStructureEvaluationItemEditor(this));
-	((OsylCOStructureEvaluationItemEditor) getEditor()).setIsNotDeletable(isNotDeletable);
+	setEditor(new OsylCOStructureEvaluationItemEditor(this,isInList));
 	initView();
     }
 

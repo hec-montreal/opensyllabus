@@ -171,24 +171,24 @@ public class OsylTestCOMessages {
 	    messages.put("evalsubproc", "Submission Procedures and Penalities");
 	    messages.put("plagiarism", "Notes on Plagiarism");
 	    
-	    messages.put(".Location.home","At Home");
-	    messages.put(".Location.inclass","In Class");
-	    messages.put(".Mode.ind","Individual");
-	    messages.put(".Mode.team","Team");
-	    messages.put(".Scope.Fac","Facultative");
-	    messages.put(".Scope.Obl","Compulsory");
-	    messages.put(".Subtype.elect","Electronic");
-	    messages.put(".Subtype.oral","Oral");
-	    messages.put(".Subtype.paper","Paper");
-	    messages.put(".Type.case_study", "Case Study");
-	    messages.put(".Type.practice_assignement", "Practice Assignment");
-	    messages.put(".Type.session_work", "Session Work");
-	    messages.put(".Type.intra_exam", "Intra Exam");
-	    messages.put(".Type.final_exam", "Final Exam");
-	    messages.put(".Type.quiz", "Quiz");
-	    messages.put(".Type.homework", "Homework");
-	    messages.put(".Type.participation", "Participation");
-	    messages.put(".Type.other", "Other");
+	    messages.put("Evaluation.Location.home","At Home");
+	    messages.put("Evaluation.Location.inclass","In Class");
+	    messages.put("Evaluation.Mode.ind","Individual");
+	    messages.put("Evaluation.Mode.team","Team");
+	    messages.put("Evaluation.Scope.Fac","Facultative");
+	    messages.put("Evaluation.Scope.Obl","Compulsory");
+	    messages.put("Evaluation.Subtype.elect","Electronic");
+	    messages.put("Evaluation.Subtype.oral","Oral");
+	    messages.put("Evaluation.Subtype.paper","Paper");
+	    messages.put("Evaluation.Type.case_study", "Case Study");
+	    messages.put("Evaluation.Type.practice_assignement", "Practice Assignment");
+	    messages.put("Evaluation.Type.session_work", "Session Work");
+	    messages.put("Evaluation.Type.intra_exam", "Intra Exam");
+	    messages.put("Evaluation.Type.final_exam", "Final Exam");
+	    messages.put("Evaluation.Type.quiz", "Quiz");
+	    messages.put("Evaluation.Type.homework", "Homework");
+	    messages.put("Evaluation.Type.participation", "Participation");
+	    messages.put("Evaluation.Type.other", "Other");
 	    
 	    // COContentUnitType
 	    messages.put("lecture", "Lecture");
