@@ -356,7 +356,7 @@ public class OsylTestCOMessagesUdeM {
 	    // Default values
 	    messages.put("UndefinedCitation", "Citation pas encore sélectionnée");
 	    messages.put("UndefinedDocument", "Document pas encore sélectionné");
-	    messages.put("InsertYourTextHere", "Tapez votre texte ici...");
+	    messages.put("InsertYourTextHere", "...Tapez votre texte ici...");
 	    messages.put("url", "Hyperlien");
 	    
 	    messages.put("LectureDate", "Date");
