@@ -13,7 +13,7 @@
         </property>
 
         <property name="content" type="text" >
-            <column name="CONTENT" />
+            <column name="CONTENT" length="16777215"/>
         </property>
 
         <property name="type" type="string">
