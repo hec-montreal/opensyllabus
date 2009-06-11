@@ -404,6 +404,9 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 		"ResProxContactInfoView_Full-timeLecturer"));
 	lb.addItem(getView().getCoMessage("ResProxContactInfoView_Student"));
 	lb.addItem(getView().getCoMessage("ResProxContactInfoView_Secretary"));
+	//  Addition for UdeM
+	lb.addItem(getView().getCoMessage("ResProxContactInfoView_Professor_UdeM"));
+	lb.addItem(getView().getCoMessage("ResProxContactInfoView_Full-timeLecturer_UdeM"));
 	return lb;
     }
 

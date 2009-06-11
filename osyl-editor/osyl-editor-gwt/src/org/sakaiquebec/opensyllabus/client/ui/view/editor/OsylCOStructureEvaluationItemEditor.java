@@ -400,6 +400,11 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	typeListBox.addItem(getView().getCoMessage("Evaluation.Type.homework"));
 	typeListBox.addItem(getView().getCoMessage(
 		"Evaluation.Type.participation"));
+	// Addition UdeM
+	typeListBox.addItem(getView().getCoMessage("Evaluation.Type.multiplechoice"));	
+	typeListBox.addItem(getView().getCoMessage("Evaluation.Type.shortwrittenanswer"));
+	typeListBox.addItem(getView().getCoMessage("Evaluation.Type.elaboratedwrittenanswer"));
+
 	typeListBox.addItem(getView().getCoMessage("Evaluation.Type.other"));
 	typeListBox.addChangeListener(new ChangeListener() {
 

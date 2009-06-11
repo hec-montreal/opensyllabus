@@ -114,7 +114,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
 	    getMainPanel().add(lbv);
 	}
-	if (COContentUnitType.EVALUATION.equals(getModel().getType())) {
+	else if (COContentUnitType.EVALUATION.equals(getModel().getType())) {
 	    // do not allow to delete the title and therefore the evaluation
 	    // within the COContentUnit (only at COStructure)
 	    OsylCOStructureEvaluationItemLabelView lbv =
@@ -122,6 +122,41 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 			    getController(), false);
 	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
 	    getMainPanel().add(lbv);
+	}
+	else if (COContentUnitType.FACPROGIDENT.equals(getModel().getType())) {
+	    OsylCOStructureItemLabelView lbv =
+		    new OsylCOStructureItemLabelView(getModel(),
+			    getController(), true);
+	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
+	    getMainPanel().add(lbv);
+	}
+	else if (COContentUnitType.COURSEINTRO.equals(getModel().getType())) {
+	    OsylCOStructureItemLabelView lbv =
+		    new OsylCOStructureItemLabelView(getModel(),
+			    getController(), true);
+	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
+	    getMainPanel().add(lbv);
+	}
+	else if (COContentUnitType.PEDAGOGICAL_APPROACH.equals(getModel().getType())) {
+	    OsylCOStructureItemLabelView lbv =
+		    new OsylCOStructureItemLabelView(getModel(),
+			    getController(), true);
+	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
+	    getMainPanel().add(lbv);
+	} 
+	else if (COContentUnitType.ASSESMENTDESCRIPTION.equals(getModel().getType())) {
+	    OsylCOStructureItemLabelView lbv =
+		    new OsylCOStructureItemLabelView(getModel(),
+			    getController(), true);
+	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
+	    getMainPanel().add(lbv);
+	} // Proposed GENERALIZATION
+	else {
+	    OsylCOStructureItemLabelView lbv =
+		    new OsylCOStructureItemLabelView(getModel(),
+			    getController(), true);
+	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
+	    getMainPanel().add(lbv);	    
 	}
 
 	initRubricViews();

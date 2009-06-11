@@ -154,7 +154,8 @@ public class OsylTreeView extends OsylViewableComposite implements
 	TreeItem treeItem = new TreeItem(treeItemView);
 	itemModelMap.put(treeItemView.getModel(), treeItem);
 	parentTreeItem.addItem(treeItem);
-	parentTreeItem.setState(true);
+	// The added TreeItem is closed by default UdeM
+	parentTreeItem.setState(false);
     }
 
     /**

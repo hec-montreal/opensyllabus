@@ -1,0 +1,306 @@
+<?xml version='1.0' encoding='UTF-8'?> <!-- RULES BySkillsActivities -->
+	 <schema> 
+	 	<element name='CO'> 
+	 		<attribute name='type'  restrictionpattern='.*' /> 
+	 		<!-- list of element COUnit allowed at this level --> 
+	 		
+	 		<element name='COUnit'>  <!-- contactinfo COUnit Begin -->
+				<attribute name="type" restrictionpattern="contactinfo" />
+				<element name="COResourceProxy">
+					<attribute name="type" restrictionpattern="contactinforesource|text|document|url" />
+				</element>
+				<element name="COContentRubric">
+			    	<attribute name="type" restrictionpattern="undefined|coursecoordinator|coordinators|lecturers|teachingassistants|secretaries"/>
+				</element>
+	 		</element>  <!-- contactinfo COUnit End --> 	
+	 		
+	 		<element name='COUnit'>  <!-- courseintro COUnit Begin -->
+	 			<attribute name='type'  restrictionpattern='courseintro' /> 
+	 			<element name='COResourceProxy'> 
+	 				<attribute name='type'  restrictionpattern='text|document|url' /> 
+	 			</element> 
+	 			<element name='COContentRubric'> 
+	 				<attribute name='type'  restrictionpattern='undefined|coursetopicspresentation|courseactivitiespresentation|coursemodulespresentation|coursecontentspresentation|tableofcontents|problematic|description|mis' /> 
+	 			</element> 
+	 		</element>  <!-- courseintro COUnit End -->
+	 			 		
+	 		<element name='COUnit'>  <!-- learningmat COUnit Begin -->
+	 			<attribute name='type'  restrictionpattern='learningmat' /> 
+	 			<element name='COResourceProxy'> 
+	 				<attribute name='type'  restrictionpattern='text|document|url|citation' /> 
+	 			</element> 
+	 			<element name='COContentRubric'> 
+	 				<attribute name='type'  restrictionpattern='undefined|description|requiredbooks|recommendedbooks|codex|hardwaresoftware|pastexams|misresources' /> 
+	 			</element> 
+	 		</element>  <!-- learningmat COUnit End -->
+	 		
+	 		<element name='COUnit'>  <!-- plagiarism COUnit Begin -->
+	 			<attribute name='type'  restrictionpattern='plagiarism' /> 
+	 			<element name='COResourceProxy'> 
+	 				<attribute name='type'  restrictionpattern='text|document|url' /> 
+	 			</element> 
+	 			<element name='COContentRubric'> 
+	 				<attribute name='type'  restrictionpattern='undefined|plagiat|description|misresources' /> 
+	 			</element> 
+	 		</element>  <!-- learningmat COUnit End -->
+	 		
+	 		<element name='COUnit'>  <!-- Bibliography COUnit Begin -->
+				<attribute name="type" restrictionpattern="Bibliography" />
+				<element name="COResourceProxy">
+					<attribute name="type" restrictionpattern="citation" />
+				</element>
+				<element name="COContentRubric">
+			    	<attribute name="type" restrictionpattern="undefined|description|requiredbooks|recommendedbooks|misresources"/>
+				</element>
+	 		</element>  <!-- Bibliography COUnit End --> 	 		
+
+	 		<element name='COUnit'>  <!-- ThematicBibliography COUnit Begin -->
+				<attribute name="type" restrictionpattern="ThematicBibliography" />
+				<element name="COResourceProxy">
+					<attribute name="type" restrictionpattern="text|document|url" />
+				</element>
+				<element name="COContentRubric">
+			    	<attribute name="type" restrictionpattern="undefined|bibliography|description|requiredbooks|recommendedbooks|misresources"/>
+				</element>
+	 		</element>  <!-- ThematicBibliography COUnit End --> 	 		
+	 		
+	 		<!-- list of element structureElement allowed at this level --> 
+	 			 
+	 		<element name='COStructure'>  <!-- CourseInfo COStructure Begin -->
+	 			<attribute name='type'  restrictionpattern='CourseInfo' /> 
+	 			<!-- list of element COUnit allowed at this level --> 
+	
+	 			<element name='COUnit'>  <!-- coursescheduleplace COUnit Begin -->
+	 				<attribute name='type'  restrictionpattern='coursescheduleplace' /> 
+	 				<element name='COResourceProxy'> 
+	 					<attribute name='type'  restrictionpattern='text|document|url|citation' /> 
+	 				</element> 
+	 				<element name='COContentRubric'> 
+	 					<attribute name='type'  restrictionpattern='undefined|coursebeginend|courseregularschedule|coursespecialevents' /> 
+	 				</element> 
+	 			</element>  <!-- coursescheduleplace COUnit End -->
+
+	 			<!-- list of element structureElement allowed at this level --> 
+
+	 			<element name='COStructure'>  <!-- coursedescription COStructure Begin -->	 			
+	 				<attribute name='type'  restrictionpattern='coursedescription' /> 
+	 				<!-- list of element contentUnit allowed at this level (only one at the moment) --> 
+	
+	 				<element name='COUnit'>  <!-- facprogident COUnit Begin -->
+	 					<attribute name='type'  restrictionpattern='facprogident' /> 
+	 					<element name='COResourceProxy'> 
+	 						<attribute name='type'  restrictionpattern='text|document|url' /> 
+	 					</element> 
+	 					<element name='COContentRubric'> 
+	 						<attribute name='type'  restrictionpattern='undefined|description|mis' /> 
+	 					</element> 
+	 				</element>  <!-- facprogident COUnit End -->
+
+	 				<element name='COUnit'>  <!-- courseident COUnit Begin -->
+	 					<attribute name='type'  restrictionpattern='courseident' /> 
+	 					<element name='COResourceProxy'> 
+	 						<attribute name='type'  restrictionpattern='text|document|url' /> 
+	 					</element> 
+	 					<element name='COContentRubric'> 
+	 						<attribute name='type'  restrictionpattern='undefined|courseabrev|coursetitle|description|mis' /> 
+	 					</element> 
+	 				</element>  <!-- courseident COUnit End -->
+
+	 				<element name='COUnit'>  <!-- courseofficialdescription COUnit Begin -->
+	 					<attribute name='type'  restrictionpattern='courseofficialdescription' /> 
+	 					<element name='COResourceProxy'> 
+	 						<attribute name='type'  restrictionpattern='text|document|url' /> 
+	 					</element> 
+	 					<element name='COContentRubric'> 
+	 						<attribute name='type'  restrictionpattern='undefined|description|courseplace|mis' /> 
+	 					</element> 
+	 				</element>   <!-- courseofficialdescription COUnit End -->
+	
+	 				<element name='COUnit'>  <!-- description COUnit Begin -->
+	 					<attribute name='type'  restrictionpattern='description' /> 
+	 					<element name='COResourceProxy'> 
+	 						<attribute name='type'  restrictionpattern='text|document|url|citation' /> 
+	 					</element> 
+	 					<element name='COContentRubric'> 
+	 						<attribute name='type'  restrictionpattern='undefined|description' /> 
+	 					</element> 
+	 				</element>  <!-- description COUnit End -->
+	 
+	 				<!-- list of element structureElement allowed at this level --> 
+
+	 			</element>  <!-- coursedescription COStructure End -->
+		
+            </element>  <!-- CourseInfo COStructure End -->	 
+        
+	 		<element name='COStructure'> <!-- PedagogicalApproachStruc COStructure Begin -->	
+	 	       <attribute name='type'  restrictionpattern='PedagogicalApproachStruc' />  	       
+	 		   <!-- list of element COUnit allowed at this level --> 
+	 		   
+	 		   <element name='COUnit'>  <!-- PedagogicalApproach COUnit Begin -->
+	 		      <attribute name='type'  restrictionpattern='PedagogicalApproach' /> 
+	 			  <element name='COResourceProxy'> 
+	 			     <attribute name='type'  restrictionpattern='text|document|url' /> 
+	 			  </element> 
+	 			  <element name='COContentRubric'>
+	 			     <attribute name='type'  restrictionpattern='undefined|pedagogicaltheory|generalobjectives|specificobjectives|teachingstrategy|learningstrategy|modusoperandi|description|mis' /> 
+	 	          </element> 
+	 		  </element>  <!-- pedagogicaltheory COUnit End -->
+	 	      
+	 	      <!-- list of element structureElement allowed at this level -->    
+	 	      
+	 		  <element name='COStructure'>   <!-- PedagogicalApproacSpecificStruc COStructure Begin -->  
+	 		     <attribute name='type'  restrictionpattern='PedagogicalApproacSpecificStruc' /> 
+                 <!-- list of element COUnit allowed at this level  -->
+	 				
+	 		        <element name='COUnit'> <!-- PedagogicalApproachSpecific COUnit Begin --> 
+	 		           <attribute name='type'  restrictionpattern='PedagogicalApproachSpecific' /> 
+	 			       <element name='COResourceProxy'> 
+	 			          <attribute name='type'  restrictionpattern='text|document|url' /> 
+	 			       </element> 
+	 			       <element name='COContentRubric'> 
+	 		              <attribute name='type'  restrictionpattern='undefined|description|mis' /> 
+	 			       </element> 
+	 		        </element> <!-- PedagogicalApproachSpecific COUnit End --> 
+	 				
+                 <!-- list of element structureElement allowed at this level -->
+
+	 		  </element>  <!-- PedagogicalApproacSpecificStruc COStructure End --> 
+	 		  
+	 	  </element>  <!-- PedagogicalApproachStruc COStructure End -->	 
+
+	 		<element name='COStructure'>  <!-- evaluations COStructure Begin -->
+	 			<attribute name='type'  restrictionpattern='evaluations' /> 
+	 			<!-- list of element contentUnit allowed at this level (only one at the moment) --> 
+	
+	 			<element name='COUnit'>  <!-- evaluation COUnit Begin -->
+	 		       <attribute name='type'  restrictionpattern='assesmentdescription' /> 
+	 			   <element name='COResourceProxy'> 
+	 			      <attribute name='type'  restrictionpattern='text|document|url|citation|assignment' /> 
+	 			   </element> 
+	 			   <element name='COContentRubric'> 
+	 		          <attribute name='type'  restrictionpattern='undefined|description|evalcriteria|evalpreparation|evaldetails|evalsubproc|plagiarism|SpecializedResource|misresources' /> 
+	 			   </element> 
+	 			</element>  <!-- evaluation COUnit Begin -->
+	
+	 		    <!-- list of element structureElement allowed at this level --> 
+	 		        
+	 		        <element name='COStructure'>  <!-- EvaluationInstrumentsList COStructure Begin -->
+	 			       <attribute name='type'  restrictionpattern='EvaluationInstrumentsList' /> 
+			 		   <!-- list of element contentUnit allowed at this level (only one at the moment) --> 
+			
+			 		   <element name='COUnit'>  <!-- evaluation COUnit Begin -->
+			 	          <attribute name='type'  restrictionpattern='evaluation' /> 
+			 			  <element name='COResourceProxy'> 
+			 			     <attribute name='type'  restrictionpattern='text|document|url|citation|assignment' /> 
+			 			  </element> 
+			 			  <element name='COContentRubric'> 
+			 			     <attribute name='type'  restrictionpattern='undefined|description|evalcriteria|evalpreparation|evaldetails|evalsubproc|plagiarism|SpecializedResource|misresources' /> 
+			 			  </element> 
+			 		   </element>  <!-- evaluation COUnit Begin -->
+	 		        
+	 		           <!-- list of element structureElement allowed at this level --> 
+	      
+	 		        </element>  <!-- EvaluationInstrumentsList COStructure End -->
+	 		        
+	 		</element>  <!-- evaluations COStructure End --> 
+
+	 		<element name='COStructure'>  <!-- lectures COStructure Begin -->
+	 			<attribute name='type'  restrictionpattern='lectures' /> 
+	 			<!-- list of element contentUnit allowed at this level (only one at the moment) --> 
+		
+	 		    <!-- list of element structureElement allowed at this level --> 
+	 		    
+	 		    <element name='COStructure'>  <!-- LectureStruc COStructure Begin -->
+	 			    <attribute name='type'  restrictionpattern='LectureStruc1|LectureStruc2|LectureStruc3|LectureStruc4|LectureStruc5|LectureStruc6|LectureStruc7|LectureStruc8|LectureStruc9|LectureStruc10|LectureStruc11|LectureStruc12|' /> 
+	 			    <!-- list of element contentUnit allowed at this level (only one at the moment) --> 	 		    	 			
+	 		    	
+	 		    	<element name='COUnit'>  <!-- lecture COUnit Begin -->
+	 			       <attribute name='type'  restrictionpattern='lecture' /> 
+	 				   <element name='COResourceProxy'> 
+	 				      <attribute name='type'  restrictionpattern='text|document|url|citation' /> 
+	 				   </element> 
+	 				   <element name='COContentRubric'> 
+	 				      <attribute name='type'  restrictionpattern='undefined|instructions|description|objectives|learningstrat|misresources|ressinclass|readinglist|casestudies|exercises' /> 
+	 				   </element> 
+	 		    	</element>  <!-- lecture COUnit End -->
+	 		    
+	 		        <!-- list of element structureElement allowed at this level --> 
+
+		 		    <element name='COStructure'>  <!-- 'LectureTeachingActivityList' COStructure Begin -->
+		 			    <attribute name='type'  restrictionpattern='LectureTeachingActivityList' /> 
+		 			    <!-- list of element contentUnit allowed at this level (only one at the moment) --> 	 		    	 			
+		 		    	
+		 		    	<element name='COUnit'>  <!-- LectureTeachingActivity COUnit Begin -->
+		 			       <attribute name='type'  restrictionpattern='LectureTeachingActivity' /> 
+		 				   <element name='COResourceProxy'> 
+		 				      <attribute name='type'  restrictionpattern='text|document|url|citation' /> 
+		 				   </element> 
+		 				   <element name='COContentRubric'> 
+		 				      <attribute name='type'  restrictionpattern='undefined|description|misresources' /> 
+		 				   </element> 
+		 		    	</element>  <!-- LectureTeachingActivity COUnit End -->
+		 		    
+		 		        <!-- list of element structureElement allowed at this level --> 
+		 		    
+		 		    </element> <!-- LectureTeachingActivityList COStructure End -->
+
+		 		    <element name='COStructure'>  <!-- 'LectureLearningActivityList' COStructure Begin -->
+		 			    <attribute name='type'  restrictionpattern='LectureLearningActivityList' /> 
+		 			    <!-- list of element contentUnit allowed at this level (only one at the moment) --> 	 		    	 			
+		 		    	
+		 		    	<element name='COUnit'>  <!-- LectureLearningActivity COUnit Begin -->
+		 			       <attribute name='type'  restrictionpattern='LectureLearningActivity' /> 
+		 				   <element name='COResourceProxy'> 
+		 				      <attribute name='type'  restrictionpattern='text|document|url|citation' /> 
+		 				   </element> 
+		 				   <element name='COContentRubric'> 
+		 				      <attribute name='type'  restrictionpattern='undefined|description|misresources' /> 
+		 				   </element> 
+		 		    	</element>  <!-- LectureLearningActivity COUnit End -->
+		 		    
+		 		        <!-- list of element structureElement allowed at this level --> 
+		 		    
+		 		    </element> <!-- LectureLearningActivityList COStructure End -->
+
+			 		<element name='COStructure'>  <!-- evaluations COStructure Begin -->
+			 			<attribute name='type'  restrictionpattern='evaluations' /> 
+			 			<!-- list of element contentUnit allowed at this level (only one at the moment) --> 
+			
+			 			<element name='COUnit'>  <!-- evaluation COUnit Begin -->
+			 		       <attribute name='type'  restrictionpattern='assesmentdescription' /> 
+			 			   <element name='COResourceProxy'> 
+			 			      <attribute name='type'  restrictionpattern='text|document|url|citation|assignment' /> 
+			 			   </element> 
+			 			   <element name='COContentRubric'> 
+			 		          <attribute name='type'  restrictionpattern='undefined|description|evalcriteria|evalpreparation|evaldetails|evalsubproc|plagiarism|SpecializedResource|misresources' /> 
+			 			   </element> 
+			 			</element>  <!-- evaluation COUnit Begin -->
+			
+			 		    <!-- list of element structureElement allowed at this level --> 
+			 		        
+			 		        <element name='COStructure'>  <!-- EvaluationInstrumentsList COStructure Begin -->
+			 			       <attribute name='type'  restrictionpattern='EvaluationInstrumentsList' /> 
+					 		   <!-- list of element contentUnit allowed at this level (only one at the moment) --> 
+					
+					 		   <element name='COUnit'>  <!-- evaluation COUnit Begin -->
+					 	          <attribute name='type'  restrictionpattern='evaluation' /> 
+					 			  <element name='COResourceProxy'> 
+					 			     <attribute name='type'  restrictionpattern='text|document|url|citation|assignment' /> 
+					 			  </element> 
+					 			  <element name='COContentRubric'> 
+					 			     <attribute name='type'  restrictionpattern='undefined|description|evalcriteria|evalpreparation|evaldetails|evalsubproc|plagiarism|SpecializedResource|misresources' /> 
+					 			  </element> 
+					 		   </element>  <!-- evaluation COUnit Begin -->
+			 		        
+			 		           <!-- list of element structureElement allowed at this level --> 
+			      
+			 		        </element>  <!-- EvaluationInstrumentsList COStructure End -->
+			 		        
+			 		</element>  <!-- evaluations COStructure End --> 
+	 		        
+	 		    </element> <!-- LectureStruc COStructure End -->
+	
+	 		</element> <!-- lectures COStructure End -->
+
+	 	</element>  <!--  End CO -->
+	 </schema>

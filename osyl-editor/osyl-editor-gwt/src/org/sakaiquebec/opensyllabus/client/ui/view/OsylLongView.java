@@ -98,17 +98,46 @@ public class OsylLongView extends OsylViewableComposite {
 	getMainPanel().add(titleLabel);
 	// displaying all sub views
 	List<COElementAbstract> children = content.getChildren();
-	Iterator<COElementAbstract> iter = children.iterator();
-	while (iter.hasNext()) {
-	    COElementAbstract childrenModel = (COElementAbstract) iter.next();
-	    if(childrenModel.isCOContentUnit()){
-		displayCOUnit((COContentUnit)childrenModel);
-	    }
-	    else if (childrenModel.isCOStructureElement()){
-		displayCOStructureElement((COStructureElement)childrenModel);
+	displayChildren(children);
+    }
+
+    public void displayChildren(List<COElementAbstract> children) {
+	if ( children == null ) {
+	    return;
+	}
+	else {
+	    Iterator<COElementAbstract> iter = children.iterator();
+	    while (iter.hasNext()) {
+           // this can be a Lecture leaf
+		COElementAbstract absElement = iter.next();
+		if ( absElement.isCOStructureElement() ) {
+		    COStructureElement newCOStructEl = (COStructureElement) absElement;
+	            addListItemView( newCOStructEl );
+	            children = newCOStructEl.getChildren();
+	            displayChildren(children);
+		}
+		else if (absElement.isCOContentUnit()) {
+		    COContentUnit itemModel = (COContentUnit) absElement;
+		    //addListItemView(itemModel);
+		    displayCOUnit(itemModel);
+		}
+		else {
+		    return;
+		}
 	    }
 	}
+    }
+    
+//    private void addListItemView(COContentUnit itemModel) {
+//	OsylCOStructureItemView listItemView =
+//		new OsylCOStructureItemView(itemModel, getController());
+//	getMainPanel().add(listItemView);
+//    }
 
+    private void addListItemView(COStructureElement itemModel) {
+	Label COStructTitleLabel = new Label(getCoMessage(itemModel.getType()));
+	COStructTitleLabel.setStylePrimaryName("Osyl-UnitView-Title");
+	getMainPanel().add(COStructTitleLabel);
     }
 
     /**
@@ -125,13 +154,13 @@ public class OsylLongView extends OsylViewableComposite {
      * Display an element of type structureElement
      * @param structureElement
      */
-    private void displayCOStructureElement(COStructureElement structureElement){
-	List<COElementAbstract> children = structureElement.getChildren();
-	Iterator<COElementAbstract> iter = children.iterator();
-	while (iter.hasNext()) {
-	    COContentUnit contentUnit = (COContentUnit) iter.next();
-	    displayCOUnit(contentUnit);
-	}
-    }
-
+//    private void displayCOStructureElement(COStructureElement structureElement){
+//	List<COElementAbstract> children = structureElement.getChildren();
+//	Iterator<COElementAbstract> iter = children.iterator();
+//	while (iter.hasNext()) {
+//	    COContentUnit contentUnit = (COContentUnit) iter.next();
+//	    displayCOUnit(contentUnit);
+//	}
+//    }
+    
 }
