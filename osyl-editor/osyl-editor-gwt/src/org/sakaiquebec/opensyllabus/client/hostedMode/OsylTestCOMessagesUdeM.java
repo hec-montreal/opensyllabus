@@ -32,7 +32,7 @@ import com.google.gwt.user.client.Window;
  * @version $Id: OsylTestCOMessages.java 1750 2008-12-01 22:03:01Z
  *          mathieu.cantin@hec.ca $
  */
-public class OsylTestCOMessages {
+public class OsylTestCOMessagesUdeM {
 
     private static Map<String, String> messages;
 
