@@ -34,13 +34,59 @@ import java.util.List;
 public class COStructureElementType {
 
     public static final String LECTURES = "lectures";
+
+    public static final String LECTURES_LIST_CONTEXT_SKILLS = "LecturesListContextSkills";
+
     public static final String EVALUATIONS = "evaluations";
     public static final String TOPICS = "topics";
+    public static final String COURSEINFO = "CourseInfo";
+    public static final String COURSEDESCRIPTION = "coursedescription";
+    public static final String PEDAGOGICAL_APPROACH_STRUC = "PedagogicalApproachStruc";   
+    public static final String PEDAGOGICAL_APPROACH_SPECIFIC_STRUC = "PedagogicalApproachSpecificStruc";
     
+    public static final String EVALUATION_STRUC = "EvaluationStruc";
+    public static final String EVALUATIONS_LIST = "EvaluationsList";
+    public static final String EVALUATION_INSTRUMENTS_LIST = "EvaluationInstrumentsList";
+    
+    public static final String LECTURE_STRUC = "LectureStruc";
+       
+    public static final String LECTURE_TEACHING_ACTIVITY_LIST = "LectureTeachingActivityList";    
+    public static final String LECTURE_LEARNING_ACTIVITY_LIST = "LectureLearningActivityList";
+  
+    public static final String THEMES_LIST = "ThemesList";
+
+    public static final String THEME_STRUC = "ThemeStruc";
+
+    public static final String THEME_TEACHING_ACTIVITY_LIST = "ThemeTeachingActivityList";    
+    public static final String THEME_LEARNING_ACTIVITY_LIST = "ThemeLearningActivityList";
+
     /**
      * The list of types.
      */
-    private static final String[] types = { LECTURES, EVALUATIONS, TOPICS };
+    private static final String[] types = {   LECTURES 
+	 
+	                                    , LECTURES_LIST_CONTEXT_SKILLS
+
+	                                    , EVALUATIONS 
+	                                    , TOPICS 
+	                                    , COURSEINFO
+	                                    , COURSEDESCRIPTION
+	                                    , PEDAGOGICAL_APPROACH_STRUC
+	                                    , PEDAGOGICAL_APPROACH_SPECIFIC_STRUC
+
+	                                    , EVALUATIONS_LIST
+	                                    , EVALUATION_STRUC
+	                                    , EVALUATION_INSTRUMENTS_LIST
+
+	                                    , LECTURE_STRUC
+	                                    , LECTURE_TEACHING_ACTIVITY_LIST
+	                                    , LECTURE_LEARNING_ACTIVITY_LIST
+	                                    
+	                                    , THEMES_LIST
+	                                    , THEME_STRUC
+	                                    , THEME_TEACHING_ACTIVITY_LIST
+	                                    , THEME_LEARNING_ACTIVITY_LIST
+    };
 
     /**
      * @return string array of types

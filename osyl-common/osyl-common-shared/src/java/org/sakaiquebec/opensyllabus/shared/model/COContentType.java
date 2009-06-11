@@ -32,13 +32,29 @@ import java.util.List;
  */
 public class COContentType {
     public static final String BYLECTURE = "bylecture";
+    public static final String BY_OBJECTIVES_LECTURES = "ByObjectivesLectures";
+    public static final String BY_OBJECTIVES_THEMES = "ByObjectivesThemes";
+    public static final String BY_OBJECTIVES_ACTIVITIES = "ByObjectivesActivities";
+    public static final String BY_SKILLS_LECTURES = "BySkillsLectures";
+    public static final String BY_SKILLS_ACTIVITIES = "BySkillsActivities";
+    public static final String BY_SKILLS_COMPONENTS = "BySkillsComponents";
+   
     //TODO to be completed
 
     /**
      * The list of types.
      */
     private static final String[] types =
-	    { BYLECTURE };
+	    {   
+	        BYLECTURE
+	      , BY_OBJECTIVES_LECTURES
+	      , BY_OBJECTIVES_THEMES
+	      , BY_OBJECTIVES_ACTIVITIES
+	      , BY_SKILLS_LECTURES
+	      , BY_SKILLS_ACTIVITIES
+	      , BY_SKILLS_COMPONENTS
+	      
+	    };
 
     /**
      * @return string array of types

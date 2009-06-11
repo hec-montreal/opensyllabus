@@ -70,11 +70,32 @@ public class COPropertiesType {
      * The list of types.
      */
     private static final String[] types =
-	    { TEXT, URI, VISIBILITY, IMPORTANCE, REQUIREMENT_LEVEL,
-		    AVAILABILITY_COOP, AVAILABILITY_LIB, CITATION, LINK, ISBNISSN,
-		    TYPE, CITATIONLISTID,
-		    RATING, OPENDATE, CLOSEDATE, DATE, ROLE, LASTNAME,
-		    FIRSTNAME, OFFICE, PHONE, EMAIL, AVAILABILITY, COMMENTS };
+	    {     
+	          TEXT
+		, URI
+		, VISIBILITY
+		, IMPORTANCE
+		, REQUIREMENT_LEVEL
+		, AVAILABILITY_COOP
+		, AVAILABILITY_LIB
+		, CITATION, LINK
+		, ISBNISSN
+		, TYPE
+		, CITATIONLISTID
+		, RATING
+		, OPENDATE
+		, CLOSEDATE
+		, DATE
+		, ROLE
+		, LASTNAME
+		, FIRSTNAME
+		, OFFICE
+		, PHONE
+		, EMAIL
+		, AVAILABILITY
+		, COMMENTS
+		    
+	    };
 
     /**
      * @return string array of types
