@@ -218,6 +218,17 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	// If we are in read-only mode, we return now to not add buttons and
 	// listeners enabling edition or deletion:
 
+	// We only create an edit button (as delete is not allowed) and add it:
+	if (!isReadOnly()) {
+	    String title = getView().getUiMessage("edit");
+	    ClickListener listener = new OsylLabelEditClickListener(getView());
+	    AbstractImagePrototype imgEditButton = getOsylImageBundle().edit();
+	    ImageAndTextButton pbEdit =
+		    createButton(imgEditButton, title, listener);
+	    getView().getButtonPanel().clear();
+	    getView().getButtonPanel().add(pbEdit);
+	}
+
 	if (!isInCoUnitList) {
 	    if (!isReadOnly()) {
 		getMainPanel().add(getMetaInfoLabel());
@@ -228,17 +239,6 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	    getView().getButtonPanel().add(createButtonDelete());
 	}
 
-	if (isReadOnly()) {
-	    return;
-	}
-	// We only create an edit button (as delete is not allowed) and add it:
-	String title = getView().getUiMessage("edit");
-	ClickListener listener = new OsylLabelEditClickListener(getView());
-	AbstractImagePrototype imgEditButton = getOsylImageBundle().edit();
-	ImageAndTextButton pbEdit =
-		createButton(imgEditButton, title, listener);
-	getView().getButtonPanel().clear();
-	getView().getButtonPanel().add(pbEdit);
     } // enterView
 
     @Override
@@ -589,83 +589,90 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	flexTable.getFlexCellFormatter().setWidth(0, 2, "13%");
 	flexTable.getFlexCellFormatter().setWidth(0, 3, "37%");
 
-	flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
 		addNewLabel(getUiMessage("Evaluation.type")));
 	// Value(editor)
 	viewerPanelEvaluationType = addNewEditorPanel();
 	viewerPanelEvaluationType.add(evaluationTypeHTML);
 	fieldNumber++;
-	flexTable.setWidget(fieldNumber/4, fieldNumber%4, viewerPanelEvaluationType);
+	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
+		viewerPanelEvaluationType);
 
 	fieldNumber++;
-	flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
 		addNewLabel(getUiMessage("Evaluation.location")));
 	// Value(editor)
 	viewerPanelLocalisation = addNewEditorPanel();
 	viewerPanelLocalisation.add(localisationHTML);
 	fieldNumber++;
-	flexTable.setWidget(fieldNumber/4, fieldNumber%4, viewerPanelLocalisation);
+	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
+		viewerPanelLocalisation);
 
 	// line change
 	fieldNumber++;
-	flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
 		addNewLabel(getUiMessage("Evaluation.mode")));
 	// Value(editor)
 	viewerPanelWorkMode = addNewEditorPanel();
 	viewerPanelWorkMode.add(workModeHTML);
 	fieldNumber++;
-	flexTable.setWidget(fieldNumber/4, fieldNumber%4, viewerPanelWorkMode);
+	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
+		viewerPanelWorkMode);
 
 	if (!deliverable.equals("")) {
 	    fieldNumber++;
-	    flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
 		    addNewLabel(getUiMessage("Evaluation.deliverable")));
 	    // Value(editor)
 	    viewerPanelDeliverable = addNewEditorPanel();
 	    viewerPanelDeliverable.add(deliverableHTML);
 	    fieldNumber++;
-	    flexTable.setWidget(fieldNumber/4,fieldNumber%4, viewerPanelDeliverable);
+	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
+		    viewerPanelDeliverable);
 	}
 
 	if (!startDate.equals("")) {
 	    fieldNumber++;
-	    flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
 		    addNewLabel(getUiMessage("Evaluation.StartDate")));
 	    // Value(editor)
 	    viewerPanelStartDate = addNewEditorPanel();
 	    viewerPanelStartDate.add(startDateHTML);
 	    fieldNumber++;
-	    flexTable.setWidget(fieldNumber/4, fieldNumber%4, viewerPanelStartDate);
+	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
+		    viewerPanelStartDate);
 	}
 	fieldNumber++;
-	flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
 		addNewLabel(getUiMessage("Evaluation.EndDate")));
 	// Value(editor)
 	viewerPanelEndDate = addNewEditorPanel();
 	viewerPanelEndDate.add(endDateHTML);
 	fieldNumber++;
-	flexTable.setWidget(fieldNumber/4, fieldNumber%4, viewerPanelEndDate);
+	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
+		viewerPanelEndDate);
 
 	if (!submissionMode.equals("")) {
 	    fieldNumber++;
-	    flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
 		    addNewLabel(getUiMessage("Evaluation.subtype")));
 	    // Value(editor)
 	    viewerPanelSubmissionMode = addNewEditorPanel();
 	    viewerPanelSubmissionMode.add(submissionModeHTML);
 	    fieldNumber++;
-	    flexTable.setWidget(fieldNumber/4, fieldNumber%4, viewerPanelSubmissionMode);
+	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
+		    viewerPanelSubmissionMode);
 	}
 
 	// Label
 	fieldNumber++;
-	flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
 		addNewLabel(getUiMessage("Evaluation.scope")));
 	// Value(editor)
 	viewerPanelScope = addNewEditorPanel();
 	viewerPanelScope.add(scopeHTML);
 	fieldNumber++;
-	flexTable.setWidget(fieldNumber/4, fieldNumber%4, viewerPanelScope);
+	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4, viewerPanelScope);
 
 	evaluationTypeHTML.setHTML(assessementType);
 	localisationHTML.setHTML(location);
