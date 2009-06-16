@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -216,10 +217,20 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	setText(getView().getTextFromModel() + rating);
 	// If we are in read-only mode, we return now to not add buttons and
 	// listeners enabling edition or deletion:
+
+	if (!isInCoUnitList) {
+	    if (!isReadOnly()) {
+		getMainPanel().add(getMetaInfoLabel());
+	    } else {
+		getMainPanel().add(getReadOnlyMetaInfoLabel());
+	    }
+	} else {
+	    getView().getButtonPanel().add(createButtonDelete());
+	}
+
 	if (isReadOnly()) {
 	    return;
 	}
-
 	// We only create an edit button (as delete is not allowed) and add it:
 	String title = getView().getUiMessage("edit");
 	ClickListener listener = new OsylLabelEditClickListener(getView());
@@ -228,15 +239,6 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 		createButton(imgEditButton, title, listener);
 	getView().getButtonPanel().clear();
 	getView().getButtonPanel().add(pbEdit);
-
-	if (!isInCoUnitList) {
-	    if (!isReadOnly()) {
-		getMainPanel().add(getMetaInfoLabel());
-	    }
-	} else {
-	    getView().getButtonPanel().add(createButtonDelete());
-	}
-
     } // enterView
 
     @Override
@@ -401,9 +403,12 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	typeListBox.addItem(getView().getCoMessage(
 		"Evaluation.Type.participation"));
 	// Addition UdeM
-	typeListBox.addItem(getView().getCoMessage("Evaluation.Type.multiplechoice"));	
-	typeListBox.addItem(getView().getCoMessage("Evaluation.Type.shortwrittenanswer"));
-	typeListBox.addItem(getView().getCoMessage("Evaluation.Type.elaboratedwrittenanswer"));
+	typeListBox.addItem(getView().getCoMessage(
+		"Evaluation.Type.multiplechoice"));
+	typeListBox.addItem(getView().getCoMessage(
+		"Evaluation.Type.shortwrittenanswer"));
+	typeListBox.addItem(getView().getCoMessage(
+		"Evaluation.Type.elaboratedwrittenanswer"));
 
 	typeListBox.addItem(getView().getCoMessage("Evaluation.Type.other"));
 	typeListBox.addChangeListener(new ChangeListener() {
@@ -473,7 +478,8 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	scope = scope != null ? scope : "";
 
 	String assessementTypeLabel =
-		getUiMessage("Evaluation.type") + ": " + assessementType + " | ";
+		getUiMessage("Evaluation.type") + ": " + assessementType
+			+ " | ";
 	String weightLabel =
 		getUiMessage("Evaluation.rating") + ": " + weight + " | ";
 	String locationLabel =
@@ -510,6 +516,167 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	metaInfosPanel.add(label1);
 	metaInfosPanel.add(label2);
 	return metaInfosPanel;
+    }
+
+    private HTML createNewViewer() {
+	HTML htmlViewer = new HTML();
+	htmlViewer.setStylePrimaryName("Osyl-ResProxView-LabelValue");
+	return htmlViewer;
+    }
+
+    private Label addNewLabel(String text) {
+	Label label = new Label(text);
+	label.setStyleName("Osyl-ResProxView-Label");
+	return label;
+
+    }
+
+    private VerticalPanel addNewEditorPanel() {
+	VerticalPanel oep = new VerticalPanel();
+	oep.setStylePrimaryName("Osyl-ContactInfoView-Panel");
+	oep.setWidth("100%");
+	return oep;
+    }
+
+    protected Widget getReadOnlyMetaInfoLabel() {
+
+	String assessementType = getView().getType();
+	String location = getView().getLocation();
+	String workMode = getView().getMode();
+	String deliverable = getView().getResult();
+	String startDate = getView().getOpenDate();
+	String endDate = getView().getCloseDate();
+	String submissionMode = getView().getSubmitionType();
+	String scope = getView().getScope();
+
+	assessementType = assessementType != null ? assessementType : "";
+	location = location != null ? location : "";
+	workMode = workMode != null ? workMode : "";
+	deliverable = deliverable != null ? deliverable : "";
+	startDate = startDate != null ? startDate : "";
+	endDate = endDate != null ? endDate : "";
+	submissionMode = submissionMode != null ? submissionMode : "";
+	scope = scope != null ? scope : "";
+
+	HTML evaluationTypeHTML = createNewViewer();
+	HTML localisationHTML = createNewViewer();
+	HTML workModeHTML = createNewViewer();
+	HTML deliverableHTML = createNewViewer();
+	HTML startDateHTML = createNewViewer();
+	HTML endDateHTML = createNewViewer();
+	HTML submissionModeHTML = createNewViewer();
+	HTML scopeHTML = createNewViewer();
+
+	// panels used to display information
+	VerticalPanel viewerPanelEvaluationType;
+	VerticalPanel viewerPanelLocalisation;
+	VerticalPanel viewerPanelWorkMode;
+	VerticalPanel viewerPanelDeliverable;
+	VerticalPanel viewerPanelStartDate;
+	VerticalPanel viewerPanelEndDate;
+	VerticalPanel viewerPanelSubmissionMode;
+	VerticalPanel viewerPanelScope;
+
+	final FlexTable flexTable = new FlexTable();
+
+	// General setting for the flextable
+	flexTable.setStylePrimaryName("Osyl-ContactInfo");
+
+	// Column size distribution
+	int fieldNumber = 0;
+	flexTable.getFlexCellFormatter().setWidth(0, 0, "13%");
+	flexTable.getFlexCellFormatter().setWidth(0, 1, "37%");
+	flexTable.getFlexCellFormatter().setWidth(0, 2, "13%");
+	flexTable.getFlexCellFormatter().setWidth(0, 3, "37%");
+
+	flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+		addNewLabel(getUiMessage("Evaluation.type")));
+	// Value(editor)
+	viewerPanelEvaluationType = addNewEditorPanel();
+	viewerPanelEvaluationType.add(evaluationTypeHTML);
+	fieldNumber++;
+	flexTable.setWidget(fieldNumber/4, fieldNumber%4, viewerPanelEvaluationType);
+
+	fieldNumber++;
+	flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+		addNewLabel(getUiMessage("Evaluation.location")));
+	// Value(editor)
+	viewerPanelLocalisation = addNewEditorPanel();
+	viewerPanelLocalisation.add(localisationHTML);
+	fieldNumber++;
+	flexTable.setWidget(fieldNumber/4, fieldNumber%4, viewerPanelLocalisation);
+
+	// line change
+	fieldNumber++;
+	flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+		addNewLabel(getUiMessage("Evaluation.mode")));
+	// Value(editor)
+	viewerPanelWorkMode = addNewEditorPanel();
+	viewerPanelWorkMode.add(workModeHTML);
+	fieldNumber++;
+	flexTable.setWidget(fieldNumber/4, fieldNumber%4, viewerPanelWorkMode);
+
+	if (!deliverable.equals("")) {
+	    fieldNumber++;
+	    flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+		    addNewLabel(getUiMessage("Evaluation.deliverable")));
+	    // Value(editor)
+	    viewerPanelDeliverable = addNewEditorPanel();
+	    viewerPanelDeliverable.add(deliverableHTML);
+	    fieldNumber++;
+	    flexTable.setWidget(fieldNumber/4,fieldNumber%4, viewerPanelDeliverable);
+	}
+
+	if (!startDate.equals("")) {
+	    fieldNumber++;
+	    flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+		    addNewLabel(getUiMessage("Evaluation.StartDate")));
+	    // Value(editor)
+	    viewerPanelStartDate = addNewEditorPanel();
+	    viewerPanelStartDate.add(startDateHTML);
+	    fieldNumber++;
+	    flexTable.setWidget(fieldNumber/4, fieldNumber%4, viewerPanelStartDate);
+	}
+	fieldNumber++;
+	flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+		addNewLabel(getUiMessage("Evaluation.EndDate")));
+	// Value(editor)
+	viewerPanelEndDate = addNewEditorPanel();
+	viewerPanelEndDate.add(endDateHTML);
+	fieldNumber++;
+	flexTable.setWidget(fieldNumber/4, fieldNumber%4, viewerPanelEndDate);
+
+	if (!submissionMode.equals("")) {
+	    fieldNumber++;
+	    flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+		    addNewLabel(getUiMessage("Evaluation.subtype")));
+	    // Value(editor)
+	    viewerPanelSubmissionMode = addNewEditorPanel();
+	    viewerPanelSubmissionMode.add(submissionModeHTML);
+	    fieldNumber++;
+	    flexTable.setWidget(fieldNumber/4, fieldNumber%4, viewerPanelSubmissionMode);
+	}
+
+	// Label
+	fieldNumber++;
+	flexTable.setWidget(fieldNumber/4, fieldNumber%4,
+		addNewLabel(getUiMessage("Evaluation.scope")));
+	// Value(editor)
+	viewerPanelScope = addNewEditorPanel();
+	viewerPanelScope.add(scopeHTML);
+	fieldNumber++;
+	flexTable.setWidget(fieldNumber/4, fieldNumber%4, viewerPanelScope);
+
+	evaluationTypeHTML.setHTML(assessementType);
+	localisationHTML.setHTML(location);
+	workModeHTML.setHTML(workMode);
+	deliverableHTML.setHTML(deliverable);
+	startDateHTML.setHTML(startDate);
+	endDateHTML.setHTML(endDate);
+	submissionModeHTML.setHTML(submissionMode);
+	scopeHTML.setHTML(scope);
+
+	return flexTable;
     }
 
     /**

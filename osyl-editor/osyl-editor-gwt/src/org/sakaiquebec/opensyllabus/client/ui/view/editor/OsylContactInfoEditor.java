@@ -620,14 +620,14 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	getMainPanel().clear();
 	initViewer();
 	getMainPanel().add(getViewer());
-	enterView(viewerRole, getView().getRole());
-	enterView(viewerLastName, getView().getLastName());
-	enterView(viewerFirstName, getView().getFirstName());
-	enterView(viewerOffice, getView().getOffice());
-	enterView(viewerPhone, getView().getPhone());
-	enterView(viewerEMail, getView().getEMail());
-	enterView(viewerAvailability, getView().getAvailability());
-	enterView(viewerComments, getView().getComments());
+	viewerRole.setHTML(getView().getRole());
+	viewerLastName.setHTML(getView().getLastName());
+	viewerFirstName.setHTML(getView().getFirstName());
+	viewerOffice.setHTML(getView().getOffice());
+	viewerPhone.setHTML(getView().getPhone());
+	viewerEMail.setHTML(getView().getEMail());
+	viewerAvailability.setHTML(getView().getAvailability());
+	viewerComments.setHTML(getView().getComments());
 
 	if (!isReadOnly()) {
 	    addViewerStdButtons();
@@ -861,20 +861,5 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	tb.setText(txt);
 
     } // enterEdit
-
-    /*
-     * ====================== ENTER VIEW METHODS ======================
-     */
-
-    /**
-     * Enters in view in view mode for the specified panel using the specified
-     * viewer and text
-     */
-    public void enterView(HTML viewer, String text) {
-
-	// We get the text to display from the model
-	viewer.setHTML(text);
-
-    } // enterView
 
 }
