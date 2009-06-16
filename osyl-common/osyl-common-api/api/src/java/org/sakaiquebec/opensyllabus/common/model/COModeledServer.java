@@ -41,6 +41,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
@@ -244,6 +245,10 @@ public class COModeledServer {
     }
 
     public void XML2Model() {
+	XML2Model(false);
+    }
+
+    public void XML2Model(boolean changeWorkToPublish) {
 
 	COContent coContent = new COContent();
 	Document messageDom = null;
@@ -254,7 +259,9 @@ public class COModeledServer {
 	    messageDom = parseXml(coSerialized.getSerializedContent());
 
 	    // DOMtoModel
-	    coContent = createCOContentPOJO(messageDom, coContent);
+	    coContent =
+		    createCOContentPOJO(messageDom, coContent,
+			    changeWorkToPublish);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
@@ -294,7 +301,7 @@ public class COModeledServer {
      * @param coContent the POJO to be created from the root element.
      */
     private COContent createCOContentPOJO(Document messageDom,
-	    COContent coContent) {
+	    COContent coContent, boolean changeWorkToPublish) {
 	Element myRoot = messageDom.getDocumentElement();
 	Node myNode;
 	String nodeName = "";
@@ -318,7 +325,7 @@ public class COModeledServer {
 	    if (nodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
 		COStructureElement coStructElt = new COStructureElement();
 		coContent.addChild(createCOStructureElementPOJO(myNode,
-			coStructElt, coContent));
+			coStructElt, coContent, changeWorkToPublish));
 	    } else if (nodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
 		// Retrieve the label and the unique child of COUnit: a
 		// COUnitCOntent
@@ -335,7 +342,8 @@ public class COModeledServer {
 		    } else if (CO_UNIT_CONTENT_NODE_NAME
 			    .equalsIgnoreCase(coUnitNode.getNodeName())) {
 			coContent.addChild(createCOContentUnitPOJO(coUnitNode,
-				coContentUnit, coContent, label));
+				coContentUnit, coContent, label,
+				changeWorkToPublish));
 		    }
 		}
 		coContentUnit.setLabel(label);
@@ -395,7 +403,8 @@ public class COModeledServer {
      * @param coContent the parent of the Structure element
      */
     private COStructureElement createCOStructureElementPOJO(Node node,
-	    COStructureElement coStructElt, COElementAbstract parent) {
+	    COStructureElement coStructElt, COElementAbstract parent,
+	    boolean changeWorkToPublish) {
 	Node sNode;
 	String sNodeName = "";
 	NamedNodeMap sMap = node.getAttributes();
@@ -424,7 +433,7 @@ public class COModeledServer {
 
 	    if (sNodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
 		coStructElt.addChild(createCOStructureElementPOJO(sNode,
-			coChildStructElt, coStructElt));
+			coChildStructElt, coStructElt, changeWorkToPublish));
 	    } else if (sNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
 		NodeList coUnitChild = sNode.getChildNodes();
 		String label = "";
@@ -438,7 +447,8 @@ public class COModeledServer {
 		    } else if (CO_UNIT_CONTENT_NODE_NAME
 			    .equalsIgnoreCase(coUnitNode.getNodeName())) {
 			coStructElt.addChild(createCOContentUnitPOJO(
-				coUnitNode, coContentUnit, coStructElt, label));
+				coUnitNode, coContentUnit, coStructElt, label,
+				changeWorkToPublish));
 		    }
 		}
 		coContentUnit.setLabel(label);
@@ -458,7 +468,8 @@ public class COModeledServer {
      * @param parent the parent of the Structure element
      */
     private COContentUnit createCOContentUnitPOJO(Node node,
-	    COContentUnit coContentUnit, COElementAbstract parent, String label) {
+	    COContentUnit coContentUnit, COElementAbstract parent,
+	    String label, boolean changeWorkToPublish) {
 	Node coNode;
 	String coNodeName = "";
 	String coContentUnitType = "";
@@ -510,7 +521,7 @@ public class COModeledServer {
 	    if (coNodeName.equalsIgnoreCase(CO_RES_PROXY_NODE_NAME)) {
 		coContentUnit
 			.addResourceProxy(createCOContentResourceProxyPOJO(
-				coNode, coContentUnit));
+				coNode, coContentUnit, changeWorkToPublish));
 	    } else if (coNodeName.equalsIgnoreCase(CO_LABEL_NODE_NAME)) {
 		coContentUnit.setLabel(getCDataSectionValue(coNode));
 	    } else if (coNodeName.equalsIgnoreCase(CO_PROPERTIES_NODE_NAME)) {
@@ -528,7 +539,7 @@ public class COModeledServer {
      * @return the created Course Outline Resource Proxy POJO
      */
     private COContentResourceProxy createCOContentResourceProxyPOJO(Node node,
-	    COContentUnit coContentUnitParent) {
+	    COContentUnit coContentUnitParent, boolean changeWorkToPublish) {
 
 	Node prNode;
 	String prNodeName = "";
@@ -559,12 +570,13 @@ public class COModeledServer {
 	    } else if (prNodeName.equalsIgnoreCase(CO_CONTENT_RUBRIC_NODE_NAME)) {
 		coContentResProxy.setRubric(createCOContentRubricPOJO(prNode));
 	    } else if (prNodeName.equalsIgnoreCase(CO_RES_NODE_NAME)) {
-		coContentResProxy
-			.setResource(createCOContentResourcePOJO(prNode));
+		coContentResProxy.setResource(createCOContentResourcePOJO(
+			prNode, changeWorkToPublish));
 	    } else if (prNodeName.equalsIgnoreCase(CO_RES_PROXY_NODE_NAME)) {
 		coContentResProxy
 			.addResourceProxy(createCOContentResourceProxyPOJO(
-				prNode, coContentUnitParent));
+				prNode, coContentUnitParent,
+				changeWorkToPublish));
 	    } else if (prNodeName.equalsIgnoreCase(CO_PROPERTIES_NODE_NAME)) {
 		coContentResProxy.setProperties(createProperties(prNode));
 	    }
@@ -579,7 +591,8 @@ public class COModeledServer {
      *            Content Resource
      * @return the created Content resource
      */
-    private COContentResource createCOContentResourcePOJO(Node node) {
+    private COContentResource createCOContentResourcePOJO(Node node,
+	    boolean changeWorkToPublish) {
 
 	COContentResource coContentRes = new COContentResource();
 	NamedNodeMap rMap = node.getAttributes();
@@ -597,9 +610,20 @@ public class COModeledServer {
 		coContentRes.setProperties(createProperties(rNode));
 	    }
 	}
-	if (type.equals(COContentResourceProxyType.DOCUMENT))
+	if (type.equals(COContentResourceProxyType.DOCUMENT)
+		|| type.equals(COContentResourceProxyType.CITATION)) {
 	    documentSecurityMap.put(coContentRes.getProperty(
 		    COPropertiesType.URI).trim(), security);
+	    if (changeWorkToPublish) {
+		COProperties copProperties = coContentRes.getProperties();
+		copProperties.put(COPropertiesType.URI, this
+			.changeDocumentsUrls(coContentRes.getProperty(
+				COPropertiesType.URI).trim(),
+				OsylSiteService.WORK_DIRECTORY,
+				OsylSiteService.PUBLISH_DIRECTORY));
+		coContentRes.setProperties(copProperties);
+	    }
+	}
 	return coContentRes;
     }
 
@@ -718,21 +742,6 @@ public class COModeledServer {
 	parent.appendChild(cDataElement);
     }
 
-    /**
-     * Create a child node containing text value.
-     * 
-     * @param document the document being created.
-     * @param parent the parent element of the text node.
-     * @param nodeName the name given to the text node.
-     * @param content the content to put in the text node value.
-     */
-    // private void createTextNode(Document document, Element parent,
-    // String nodeName, String content) {
-    // Element textElement = document.createElement(nodeName);
-    // Text contentText = document.createTextNode(content);
-    // textElement.appendChild(contentText);
-    // parent.appendChild(textElement);
-    // }
     /**
      * Creates all the children elements of type <code>COElementAbstract</code>
      * in the model. The parent can only be <code>CourseOutlineContent</code>
@@ -1107,7 +1116,7 @@ public class COModeledServer {
 		fusionned.setUuidParent(fusionned.getUuid());
 		fusionned.setUuid(child.getUuid());
 	    }
-	    int j=0;
+	    int j = 0;
 	    for (int i = 0; i < co.getChildren().size(); i++) {
 		COElementAbstract childElement = co.getChildren().get(i);
 		if (childElement.getUuidParent() != null
@@ -1149,7 +1158,7 @@ public class COModeledServer {
 	    j++;
 	} else if (child.isCOStructureElement()) {
 	    COStructureElement se = (COStructureElement) child;
-	    int j=0;
+	    int j = 0;
 	    for (int i = 0; i < se.getChildren().size(); i++) {
 		COElementAbstract childElement = se.getChildren().get(i);
 		if (childElement.getUuidParent() != null
@@ -1302,4 +1311,10 @@ public class COModeledServer {
 
 	}
     }
+
+    public String changeDocumentsUrls(String url, String originalDirectory,
+	    String newDirectory) {
+	return url.replaceFirst(originalDirectory, newDirectory);
+    }
+
 }

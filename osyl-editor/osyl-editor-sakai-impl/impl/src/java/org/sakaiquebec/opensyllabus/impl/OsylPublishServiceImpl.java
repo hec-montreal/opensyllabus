@@ -196,6 +196,15 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * @param String webapp dir (absolute pathname !?)
      */
     public void publish(String webappDir, COSerialized co) throws Exception {
+	COModeledServer coModeled = new COModeledServer(co);
+
+	// change work directory to publish directory
+	coModeled.XML2Model(true);
+	coModeled.model2XML();
+	co.setSerializedContent(coModeled.getSerializedContent());
+
+	Map<String, String> documentSecurityMap =
+		coModeled.getDocumentSecurityMap();
 
 	// Create a course outline with security public
 	publish(co, SecurityInterface.SECURITY_ACCESS_PUBLIC,
@@ -208,11 +217,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// Create a course outline with security attendee
 	publish(co, SecurityInterface.SECURITY_ACCESS_ATTENDEE,
 		OsylSiteService.CO_CONTENT_XSL_ATTENDEE, webappDir);
-
-	COModeledServer coModeled = new COModeledServer(co);
-	coModeled.XML2Model();
-	Map<String, String> documentSecurityMap =
-		coModeled.getDocumentSecurityMap();
 
 	copyWorkToPublish(documentSecurityMap);
     }
