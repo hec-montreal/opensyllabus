@@ -27,7 +27,6 @@ import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.shared.util.UUID;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.xml.client.CDATASection;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
@@ -941,4 +940,4 @@ public class COModeled extends COSerialized implements COModelInterface {
     public void setDocumentSecurityMap(Map<String, String> documentSecurityMap) {
 	this.documentSecurityMap = documentSecurityMap;
     }
- }
+}
