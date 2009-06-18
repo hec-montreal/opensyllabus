@@ -49,6 +49,8 @@ public class COConfigSerialized implements IsSerializable {
      * relative reference to the folder
      */
     private String configRef;
+    
+    private String description;
 
     /**
      * xml config rules on model for the UI
@@ -82,9 +84,26 @@ public class COConfigSerialized implements IsSerializable {
     /**
      * Empty Constructor
      */
-    public COConfigSerialized(String configId, String configRef) {
+    public COConfigSerialized(String configId, String configRef, String description) {
 	this.configId = configId;
 	this.configRef = configRef;
+	this.description = description;
+    }
+
+    /**
+     * 
+     * @return the description value
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * 
+     * @param description the new value of description
+     */
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**

@@ -249,21 +249,22 @@ public class COModeledServer {
     }
 
     public void XML2Model(boolean changeWorkToPublish) {
-
-	COContent coContent = new COContent();
+	COContent coContent = null;
 	Document messageDom = null;
 	documentSecurityMap = new HashMap<String, String>();
+	if (coSerialized.getSerializedContent() != null) {
+	    coContent = new COContent();
+	    try {
+		// XMLtoDOM
+		messageDom = parseXml(coSerialized.getSerializedContent());
 
-	try {
-	    // XMLtoDOM
-	    messageDom = parseXml(coSerialized.getSerializedContent());
-
-	    // DOMtoModel
-	    coContent =
-		    createCOContentPOJO(messageDom, coContent,
-			    changeWorkToPublish);
-	} catch (Exception e) {
-	    e.printStackTrace();
+		// DOMtoModel
+		coContent =
+			createCOContentPOJO(messageDom, coContent,
+				changeWorkToPublish);
+	    } catch (Exception e) {
+		e.printStackTrace();
+	    }
 	}
 	setModeledContent(coContent);
     }
@@ -985,13 +986,22 @@ public class COModeledServer {
 	COContent contentParent = parent.getModeledContent();
 	COContent contentChild = this.getModeledContent();
 
-	associateChild(contentChild, contentParent);
+	if(contentChild==null){
+	    copyStructureOnly(contentParent);
+	    this.setModeledContent(contentParent);
+	}
+	else {
+	    associateChild(contentChild, contentParent);
+	}
 
     }
 
     private void associateChild(COElementAbstract childElement,
 	    COElementAbstract parentElement) {
-
+	// if (childElement == null) {
+	// copyStructureOnly(parentElement);
+	// childElement=parentElement;
+	// }
 	if (childElement.getType().equals(parentElement.getType())) {
 	    if (parentElement.isCourseOutlineContent()) {
 		childElement.setUuidParent(parentElement.getUuid());
@@ -1048,7 +1058,14 @@ public class COModeledServer {
     private void copyStructureOnly(COElementAbstract parentElement) {
 	parentElement.setUuidParent(parentElement.getUuid());
 	parentElement.setUuid(UUID.uuid());
-	if (parentElement.isCOStructureElement()) {
+	if (parentElement.isCourseOutlineContent()) {
+	    COContent parentCO = (COContent) parentElement;
+	    for (int i = 0; i < parentCO.getChildren().size(); i++) {
+		COElementAbstract coElementParent =
+			parentCO.getChildren().get(i);
+		copyStructureOnly(coElementParent);
+	    }
+	} else if (parentElement.isCOStructureElement()) {
 	    COStructureElement parentSE = (COStructureElement) parentElement;
 	    for (int i = 0; i < parentSE.getChildren().size(); i++) {
 		COElementAbstract coElementParent =
@@ -1097,6 +1114,10 @@ public class COModeledServer {
 
     public String getSerializedContent() {
 	return coSerialized.getSerializedContent();
+    }
+
+    public void setSerializedContent(String sc) {
+	coSerialized.setSerializedContent(sc);
     }
 
     public void fusion(COModeledServer parent) {
@@ -1295,6 +1316,7 @@ public class COModeledServer {
 
     private void resetUuid(COElementAbstract element) {
 	element.setUuid(UUID.uuid());
+	element.setUuidParent(null);
 	if (element.isCourseOutlineContent()) {
 	    COContent co = (COContent) element;
 	    for (int i = 0; i < co.getChildren().size(); i++) {

@@ -21,11 +21,17 @@
 
 package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
 
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -41,9 +47,36 @@ public class CreateSiteView extends OsylManagerAbstractView {
 
     private TextBox nameTextBox;
 
+    private ListBox configListBox;
+
     private PushButton createSite;
 
     private VerticalPanel mainPanel;
+
+    AsyncCallback<Map<String, String>> configListAsyncCallback =
+	    new AsyncCallback<Map<String, String>>() {
+
+		public void onFailure(Throwable caught) {
+		    createSite.setEnabled(false);
+		}
+
+		public void onSuccess(Map<String, String> result) {
+		    if (result == null || result.isEmpty()) {
+			Window.alert(getController().getMessages()
+				.noAssociableCOSite());// TODO
+			createSite.setEnabled(false);
+		    } else {
+			for (Iterator<String> configMapKeysIterator =
+				result.keySet().iterator(); configMapKeysIterator
+				.hasNext();) {
+			    String siteId = configMapKeysIterator.next();
+			    String siteTitle = result.get(siteId);
+			    configListBox.addItem(siteTitle, siteId);
+			}
+		    }
+		}
+
+	    };
 
     /**
      * Constructor.
@@ -56,23 +89,40 @@ public class CreateSiteView extends OsylManagerAbstractView {
     }
 
     private void initView() {
-	createSite =
-	    new PushButton(getController().getMessages().create());
-	createSite.addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
-		if(!nameTextBox.getText().equals(""))
-		getController().createSite(nameTextBox.getText());
-	    }
-	});
+
 	mainPanel = new VerticalPanel();
 	initWidget(mainPanel);
 	nameTextBox = new TextBox();
 	nameLabel = new Label(getController().getMessages().courseName());
 	mainPanel.setWidth("100%");
-	Label title = new Label(getController().getMessages().createSiteTitle());
+	Label title =
+		new Label(getController().getMessages().createSiteTitle());
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);
 	mainPanel.add(createFormElement(nameLabel, nameTextBox));
+
+	Label configTitle =
+		new Label(getController().getMessages().chooseConfig());
+	configListBox = new ListBox();
+	getController().getOsylConfigs(configListAsyncCallback);// récupération
+								// de la liste
+								// des configs
+								// dispo
+	mainPanel.add(createFormElement(configTitle, configListBox));
+
+	createSite = new PushButton(getController().getMessages().create());
+	createSite.addClickListener(new ClickListener() {
+	    public void onClick(Widget sender) {
+		if (!nameTextBox.getText().equals("")
+			&& configListBox.getSelectedIndex() != -1) {
+		    String configId =
+			    configListBox.getValue(configListBox
+				    .getSelectedIndex());
+		    getController().createSite(nameTextBox.getText(), configId);
+		}
+	    }
+	});
+
 	mainPanel.add(createSite);
     }
 

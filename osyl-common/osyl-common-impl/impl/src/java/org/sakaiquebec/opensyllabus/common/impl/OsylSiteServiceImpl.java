@@ -64,6 +64,8 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 
     private final String CO_CONTENT_TEMPLATE = "coContentTemplate";
 
+    private static Log log = LogFactory.getLog(OsylSiteServiceImpl.class);
+
     /** the tool manager to be injected by Spring */
     private ToolManager toolManager;
 
@@ -123,8 +125,6 @@ public class OsylSiteServiceImpl implements OsylSiteService {
     public void setCoRelationDao(CORelationDao relationDao) {
 	this.coRelationDao = relationDao;
     }
-
-    private static Log log = LogFactory.getLog(OsylSiteServiceImpl.class);
 
     /** The resouceDao to be injected by Spring */
     private ResourceDao resourceDao;
@@ -288,7 +288,8 @@ public class OsylSiteServiceImpl implements OsylSiteService {
     /**
      * {@inheritDoc}
      */
-    public String createSite(String siteTitle) throws Exception {
+    public String createSite(String siteTitle, String configId)
+	    throws Exception {
 	Site site = null;
 	if (!siteService.siteExists(siteTitle)) {
 	    site = siteService.addSite(siteTitle, getSiteType());
@@ -319,53 +320,31 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	    osylSecurityService.applyDirectoryPermissions(directoryId);
 
 	    addCollection(PUBLISH_DIRECTORY, site);
+
+	    COConfigSerialized coConfig = null;
+	    COSerialized co = null;
+
+	    try {
+		coConfig = configDao.getConfig(configId);
+		co =
+			new COSerialized(IdManager.createUuid(),
+				osylConfigService.getCurrentLocale(), "shared",
+				"", site.getId(), "sectionId", coConfig,null,
+				"shortDescription", "description", "title",
+				false);
+		resourceDao.createOrUpdateCourseOutline(co);
+
+	    } catch (Exception e) {
+		log.error("createSite", e);
+	    }
+
 	} else {
 	    site = siteService.getSite(siteTitle);
 	}
 	return site.getId();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String createSite(String id, String title, boolean published,
-	    boolean joinable, String description) throws Exception {
-	Site site = null;
-	if (!siteService.siteExists(id)) {
-	    site = siteService.addSite(id, getSiteType());
-	    site.setTitle(title);
-	    site.setPublished(true);
-	    site.setJoinable(true);
-	    site.setDescription(description);
-
-	    // we add the tools
-	    addTool(site, "sakai.opensyllabus.tool");
-	    addTool(site, "sakai.resources");
-	    addTool(site, "sakai.siteinfo");
-
-	    siteService.save(site);
-
-	    // we add the directories
-	    String directoryId;
-	    addCollection(WORK_DIRECTORY, site);
-	    directoryId =
-		    contentHostingService.getSiteCollection(site.getId())
-			    + WORK_DIRECTORY + "/";
-	    osylSecurityService.applyDirectoryPermissions(directoryId);
-
-	    addCollection(PUBLISH_DIRECTORY, site);
-
-	    directoryId =
-		    contentHostingService.getSiteCollection(site.getId())
-			    + PUBLISH_DIRECTORY + "/";
-	    osylSecurityService.applyDirectoryPermissions(directoryId);
-
-	    addCollection(PUBLISH_DIRECTORY, site);
-	} else {
-	    site = siteService.getSite(id);
-	}
-	return site.getId();
-    }
+    
 
     /**
      * Returns the site type of the realm service if there is one otherwise the
@@ -558,19 +537,9 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	    siteId = getCurrentSiteId();
 	    thisCo = getSerializedCourseOutlineBySiteId(siteId);
 
-	    if (thisCo == null) {
-		coConfig =
-			osylConfigService
-				.getConfigByRef(
-					OsylConfigService.DEFAULT_CONFIG_REF,
-					webappDir);
-		thisCo =
-			new COSerialized(IdManager.createUuid(),
-				osylConfigService.getCurrentLocale(), "shared",
-				"", siteId, "sectionId", coConfig,
-				getXmlStringFromFile(coConfig, webappDir),
-				"shortDescription", "description", "title",
-				false);
+	    if (thisCo.getSerializedContent() == null) {
+		coConfig =thisCo.getOsylConfig();
+		thisCo.setSerializedContent(getXmlStringFromFile(coConfig, webappDir));
 		// reinitilaisation des uuids
 		COModeledServer coModeled = new COModeledServer(thisCo);
 		coModeled.XML2Model();
@@ -611,7 +580,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
     public COSerialized getSerializedCourseOutline(String id, String webappDir)
 	    throws Exception {
 	try {
-	    COSerialized co = getSerializedCourseOutline(id);
+	    COSerialized co = getSerializedCourseOutlineBySiteId(id);
 	    getSiteInfo(co, co.getSiteId());
 	    return co;
 	} catch (Exception e) {
@@ -669,23 +638,15 @@ public class OsylSiteServiceImpl implements OsylSiteService {
     }
 
     /** {@inheritDoc} */
-    public COSerialized createCOFromData(String xmlData, String siteId) {
-	COConfigSerialized coConfig = null;
+    public COSerialized importDataInCO(String xmlData, String siteId) {
 	COSerialized co = null;
 
 	try {
-	    coConfig =
-		    configDao.getConfigByRef("osylcoconfigs" + File.separator
-			    + "default");
-
 	    co = getSerializedCourseOutlineBySiteId(siteId);
 	    if (co == null) {
-		co =
-			new COSerialized(IdManager.createUuid(),
-				osylConfigService.getCurrentLocale(), "shared",
-				"", siteId, "sectionId", coConfig, xmlData,
-				"shortDescription", "description", "title",
-				false);
+		
+	    }else{
+		co.setSerializedContent(xmlData);
 	    }
 
 	    resourceDao.createOrUpdateCourseOutline(co);
@@ -786,21 +747,35 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 
 	    if (co != null) {
 		getSiteInfo(co, siteId);
-		COModeledServer coModelChild = new COModeledServer(co);
+		
+		
 		if (parentId != null) {
 		    COModeledServer coModelParent =
 			    getFusionnedPublishedHierarchy(parentId);
 
 		    if (coModelParent != null) {
-			coModelChild.XML2Model();
+			COModeledServer coModelChild = new COModeledServer(co);
+//			if(co.getSerializedContent()==null){
+//			    coModelChild.setModeledContent(coModelParent.getModeledContent());
+//			    coModelChild.resetUuid();
+//			}else{
+			    coModelChild.XML2Model();
+//			}
+			
 			coModelChild.associate(coModelParent);
 			coModelChild.model2XML();
 			co.setSerializedContent(coModelChild
 				.getSerializedContent());
 			resourceDao.createOrUpdateCourseOutline(co);
+			coRelationDao.addParentToCourseOutline(parentId, siteId);
 		    }
-		    coRelationDao.addParentToCourseOutline(parentId, siteId);
+		    else{
+			throw new Exception();//TODO
+		    }
 		}
+	    }
+	    else{
+		throw new Exception();//TODO
 	    }
 	} catch (Exception e) {
 	    e.printStackTrace();

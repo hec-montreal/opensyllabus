@@ -38,7 +38,9 @@ public interface OsylManagerGwtService extends RemoteService {
      * @param siteTitle
      * @return
      */
-    public String createSite(String siteTitle);
+    public String createSite(String siteTitle, String configId);
+
+    public Map<String, String> getOsylConfigs();
 
     /**
      * Reads the XML and creates a course outline.

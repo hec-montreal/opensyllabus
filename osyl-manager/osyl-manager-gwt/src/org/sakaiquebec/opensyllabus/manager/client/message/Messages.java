@@ -78,5 +78,7 @@ public interface Messages extends ConstantsWithLookup {
     String dissociate();
     
     String noAssociableCOSite();
+    
+    String chooseConfig();
 
 }

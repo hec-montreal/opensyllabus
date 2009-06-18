@@ -38,8 +38,11 @@ public interface OsylManagerGwtServiceAsync {
      * @param siteTitle
      * @param callback
      */
-    public void createSite(String siteTitle, AsyncCallback<String> callback);
+    public void createSite(String siteTitle, String configId, AsyncCallback<String> callback);
 
+    
+    public void getOsylConfigs(AsyncCallback<Map<String, String>> callback);
+    
     /**
      * Reads the XML data and creates a course outline form it.
      * 

@@ -96,7 +96,7 @@ public interface OsylSiteService {
 	 * @return the id of the site
 	 * @throws Exception
 	 */
-	public String createSite(String siteTitle) throws Exception;
+	public String createSite(String siteTitle, String configId) throws Exception;
 
 	/**
 	 * Returns the actual site id of this context.
@@ -202,7 +202,7 @@ public interface OsylSiteService {
 	 * @param xmlData
 	 * @return
 	 */
-	public COSerialized createCOFromData(String xmlData, String siteId);
+	public COSerialized importDataInCO(String xmlData, String siteId);
 
 	public Site getSite(String siteId) throws IdUnusedException;
 	

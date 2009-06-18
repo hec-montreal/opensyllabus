@@ -73,12 +73,25 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     /**
      * {@inheritDoc}
      */
-    public String createSite(String siteTitle) {
+    public String createSite(String siteTitle, String configId) {
+	String webappDir = getServletContext().getRealPath("/");
 	try {
 		if (osylManagerServices != null) {
 			log.warn("OsylSiteService : " + osylManagerServices.getOsylSiteService());
 			return osylManagerServices.getOsylSiteService().createSite(
-					siteTitle);
+					siteTitle,configId);
+		}
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+	return null;
+    }
+    
+    public Map<String,String> getOsylConfigs(){
+	try {
+		if (osylManagerServices != null) {
+			log.warn("OsylSiteService : " + osylManagerServices.getOsylConfigService());
+			return osylManagerServices.getOsylConfigService().getConfigs();
 		}
 	} catch (Exception e) {
 	    e.printStackTrace();

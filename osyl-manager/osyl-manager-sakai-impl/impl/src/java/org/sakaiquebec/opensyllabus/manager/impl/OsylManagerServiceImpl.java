@@ -472,7 +472,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	    xml = writer.toString();
 	    xml = new String(xml.getBytes(), "UTF-8");
-	    osylSiteService.createCOFromData(xml, siteId);
+	    osylSiteService.importDataInCO(xml, siteId);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
@@ -502,7 +502,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 
 	String xml = getXmlDataFromZip(file);
-	osylSiteService.createCOFromData(xml, siteId);
+	osylSiteService.importDataInCO(xml, siteId);
 	try {
 	    contentHostingService.removeResource(zipReference);
 	} catch (Exception e) {

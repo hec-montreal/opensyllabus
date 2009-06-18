@@ -69,7 +69,7 @@ public class OsylManagerRPCController {
      * @param siteId
      */
     public void createSite(OsylManagerController osylManagerController,
-	    String title) {
+	    String title, String configId) {
 	final OsylManagerController caller = osylManagerController;
 	// We first create a call-back for this method call
 	AsyncCallback<String> callback = new AsyncCallback<String>() {
@@ -81,7 +81,12 @@ public class OsylManagerRPCController {
 		Window.alert(caller.getMessages().rpcFailure());
 	    }
 	};
-	serviceProxy.createSite(title, callback);
+	serviceProxy.createSite(title, configId, callback);
+    }
+    
+    public void getOsylConfigs(AsyncCallback<Map<String,String>> callback) {
+	
+	serviceProxy.getOsylConfigs(callback);
     }
 
     /**

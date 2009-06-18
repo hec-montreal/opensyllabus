@@ -58,7 +58,8 @@ public interface OsylConfigService {
     /**
      * Default configs
      */
-    public static final String DEFAULT_CONFIG_REF = "osylcoconfigs"+File.separator+"default";
+    public static final String DEFAULT_CONFIG_REF =
+	    "osylcoconfigs" + File.separator + "default";
 
     /**
      * Returns the configurations related to the id
@@ -68,6 +69,13 @@ public interface OsylConfigService {
      */
     public COConfigSerialized getConfig(String configId, String webappDir)
 	    throws Exception;
+
+    /**
+     * Returns all configs avaiable
+     * @return A Map<Id,Description>
+     * @throws Exception
+     */
+    public Map<String, String> getConfigs() throws Exception;
 
     /**
      * Returns the config

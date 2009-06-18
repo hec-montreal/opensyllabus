@@ -28,6 +28,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -134,6 +135,21 @@ public class OsylConfigServiceImpl extends ResourceLoader implements
 	coConfigDao.createConfig(coConfig);
     }
 
+    
+   /**
+    * {@inheritDoc}
+    */
+    public Map<String, String> getConfigs() throws Exception{
+	Map<String,String> configsMap = new HashMap<String, String>();
+	List<COConfigSerialized> list = coConfigDao.getConfigs();
+	for(Iterator<COConfigSerialized> iter = list.iterator();iter.hasNext();){
+	    COConfigSerialized config = iter.next();
+	    configsMap.put(config.getConfigId(), config.getDescription());
+	}
+	return configsMap;
+    }
+    
+    
     /**
      * {@inheritDoc}
      * 
@@ -305,11 +321,11 @@ public class OsylConfigServiceImpl extends ResourceLoader implements
 	if (coConfigDao.getConfigs().size() <= 0) {
 	    COConfigSerialized coConfig =
 		    new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
-			    + File.separator + "udem");
+			    + File.separator + "udem", "Config from Université de Montréal");
 	    createConfig(coConfig);
 	    coConfig =
 		    new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
-			    + File.separator + "default");
+			    + File.separator + "default","Config from HEC Montréal");
 	    createConfig(coConfig);
 	}
     }

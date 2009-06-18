@@ -21,6 +21,7 @@
 
 package org.sakaiquebec.opensyllabus.manager.server;
 
+import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
 
@@ -40,6 +41,7 @@ public class OsylManagerBackingBean {
         this.osylManagerService = osylManagerService;
     }
     
+    
     private OsylSiteService osylSiteService;
     
     public OsylSiteService getOsylSiteService() {
@@ -48,7 +50,18 @@ public class OsylManagerBackingBean {
     public void setOsylSiteService(OsylSiteService osylSiteService) {
         this.osylSiteService = osylSiteService;
     }
-
+    
+    
+    private OsylConfigService osylConfigService;
+    
+    public OsylConfigService getOsylConfigService() {
+        return osylConfigService;
+    }
+    public void setOsylConfigService(OsylConfigService osConfigService) {
+        this.osylConfigService = osConfigService;
+    }
+    
+    
     /**
      * Init method called at initialization of the bean.
      */
