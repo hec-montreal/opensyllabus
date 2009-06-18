@@ -33,7 +33,7 @@
  		} // else fr
  	%>
 <title>OpenSyllabus Manager</title>
-<link rel="stylesheet" type="text/css" href="/sakai-opensyllabus-manager-tool/css/OsylManager.css" />
+<link rel="stylesheet" type="text/css" href="/osyl-manager-sakai-tool/css/OsylManager.css" />
 
 <!-- This script loads our GWT compiled module.        -->
 <!-- Any GWT meta tags must be added before this line. -->

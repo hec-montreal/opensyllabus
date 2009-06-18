@@ -70,7 +70,7 @@ public class OsylManagerAbstractView extends Composite {
 	flexTable.getFlexCellFormatter().setAlignment(0, 1,
 		HasHorizontalAlignment.ALIGN_LEFT,
 		HasVerticalAlignment.ALIGN_MIDDLE);
-	flexTable.getFlexCellFormatter().setStylePrimaryName(0, 0,
+	flexTable.getFlexCellFormatter().setStylePrimaryName(0, 1,
 		"OsylManager-form-element");
 	flexTable.setWidth("100%");
 	return flexTable;
