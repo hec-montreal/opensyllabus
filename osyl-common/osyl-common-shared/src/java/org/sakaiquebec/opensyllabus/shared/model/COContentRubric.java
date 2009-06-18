@@ -29,6 +29,8 @@ package org.sakaiquebec.opensyllabus.shared.model;
  */
 public class COContentRubric implements COModelInterface {
 
+    public static final String RUBRIC_TYPE_UNDEFINED = "undefined";
+    
     /**
      * Rubric type.
      */

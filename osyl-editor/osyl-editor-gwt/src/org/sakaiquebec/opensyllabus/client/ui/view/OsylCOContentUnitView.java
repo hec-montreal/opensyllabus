@@ -32,7 +32,6 @@ import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEv
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentUnitEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
-import org.sakaiquebec.opensyllabus.shared.model.COContentRubricTypeList;
 import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COContentUnitType;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
@@ -75,16 +74,21 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 
     private void initRubricViews() {
 	rubricViewsMap = new HashMap<String, OsylRubricView>();
-	String[] RubricTypeList = COContentRubricTypeList.getRubricTypeList();
-	// We iterate through all possible rubrics
-	for (int i = 0; i < RubricTypeList.length; i++) {
-	    String rubricTypeKey = RubricTypeList[i];
-	    COContentRubric rubric = new COContentRubric();
-	    rubric.setType(rubricTypeKey);
-	    OsylRubricView rubricView =
-		    new OsylRubricView(rubric, getController());
-	    getMainPanel().add(rubricView);
-	    rubricViewsMap.put(rubricTypeKey, rubricView);
+
+	List<COModelInterface> subModels =
+		getController().getOsylConfig().getOsylConfigRuler()
+			.getAllowedSubModels(getModel());
+
+	for (int i = 0; i < subModels.size(); i++) {
+	    Object subModel = subModels.get(i);
+
+	    if (subModel instanceof COContentRubric) {
+		COContentRubric coContentRubric = (COContentRubric) subModel;
+		OsylRubricView rubricView =
+			new OsylRubricView(coContentRubric, getController());
+		getMainPanel().add(rubricView);
+		rubricViewsMap.put(coContentRubric.getType(), rubricView);
+	    }
 	}
     }
 
@@ -104,17 +108,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 
 	// If we are editing a lecture or theme we allow to edit the title
 	// otherwise we don't (presentation, contact info, etc.)
-	if (COContentUnitType.LECTURE.equals(getModel().getType())
-		|| COContentUnitType.THEME.equals(getModel().getType())) {
-	    // do not allow to delete the title and therefore the lecture
-	    // within the COContentUnit (only at COStructure)
-	    OsylCOStructureItemLabelView lbv =
-		    new OsylCOStructureItemLabelView(getModel(),
-			    getController(), true);
-	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
-	    getMainPanel().add(lbv);
-	}
-	else if (COContentUnitType.EVALUATION.equals(getModel().getType())) {
+	if (COContentUnitType.EVALUATION.equals(getModel().getType())) {
 	    // do not allow to delete the title and therefore the evaluation
 	    // within the COContentUnit (only at COStructure)
 	    OsylCOStructureEvaluationItemLabelView lbv =
@@ -122,41 +116,12 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 			    getController(), false);
 	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
 	    getMainPanel().add(lbv);
-	}
-	else if (COContentUnitType.FACPROGIDENT.equals(getModel().getType())) {
+	} else {
 	    OsylCOStructureItemLabelView lbv =
 		    new OsylCOStructureItemLabelView(getModel(),
 			    getController(), true);
 	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
 	    getMainPanel().add(lbv);
-	}
-	else if (COContentUnitType.COURSEINTRO.equals(getModel().getType())) {
-	    OsylCOStructureItemLabelView lbv =
-		    new OsylCOStructureItemLabelView(getModel(),
-			    getController(), true);
-	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
-	    getMainPanel().add(lbv);
-	}
-	else if (COContentUnitType.PEDAGOGICAL_APPROACH.equals(getModel().getType())) {
-	    OsylCOStructureItemLabelView lbv =
-		    new OsylCOStructureItemLabelView(getModel(),
-			    getController(), true);
-	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
-	    getMainPanel().add(lbv);
-	} 
-	else if (COContentUnitType.ASSESMENTDESCRIPTION.equals(getModel().getType())) {
-	    OsylCOStructureItemLabelView lbv =
-		    new OsylCOStructureItemLabelView(getModel(),
-			    getController(), true);
-	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
-	    getMainPanel().add(lbv);
-	} // Proposed GENERALIZATION
-	else {
-	    OsylCOStructureItemLabelView lbv =
-		    new OsylCOStructureItemLabelView(getModel(),
-			    getController(), true);
-	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
-	    getMainPanel().add(lbv);	    
 	}
 
 	initRubricViews();
@@ -292,7 +257,9 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
     }
 
     /**
-     * Update the rubric content. Make the resProx to be add in order of the model
+     * Update the rubric content. Make the resProx to be add in order of the
+     * model
+     * 
      * @param rubricView
      */
     private void refreshRubric(OsylRubricView rubricView) {
