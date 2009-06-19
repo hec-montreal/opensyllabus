@@ -33,7 +33,6 @@ import org.sakaiquebec.opensyllabus.client.ui.listener.OsylDisclosureListener;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylAbstractBrowserComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationBrowser;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationItem;
-import org.sakaiquebec.opensyllabus.client.ui.util.OsylHostedModeCitationBrowserComposite;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxCitationView;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
@@ -77,7 +76,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
     // Browser panel widgets
     private HTML citationPreviewLabel;
-    private OsylCitationBrowser citationBrowser;
+    
 
     // Additional Widget;
     private CheckBox libraryCheckBox;
@@ -257,8 +256,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 	createEditBox(getEditBoxTitle());
 
-	if (citationBrowser.getFileItemPathToSelect() == null) {
-	    citationBrowser.setFileItemPathToSelect(getView().getDocPath());
+	if (browser.getFileItemPathToSelect() == null) {
+		browser.setFileItemPathToSelect(getView().getDocPath());
 	}
 
     } // enterEdit
@@ -310,31 +309,25 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	label1.setStylePrimaryName("sectionLabel");
 	browserPanel.add(label1);
 
-	if (getView().getController().isInHostedMode()) {
-	    // HOSTED MODE
-	    citationBrowser =
-		    (OsylCitationBrowser) new OsylHostedModeCitationBrowserComposite(
-			    getResourceDirectoryName(), getResourcesPath());
-	} else {
+
 	    // SAKAI MODE
 	    String basePath = getView().getDocPath();
 	    String siteId = getView().getController().getSiteId();
 	    String resourcesPath = "group/" + siteId + "/";
 	    basePath =
 		    basePath == null ? resourcesPath
-			    + getResourceDirectoryName() : basePath;
-	    citationBrowser =
-		    new OsylCitationBrowser(basePath, getResourcesPath(), "",
-			    getView().getDocPath() + "/"
-				    + getView().getDocName());
-	}
+			    + getView().getController().getDocFolderName() : basePath;
+		browser =
+		    new OsylCitationBrowser(basePath, getView().getDocPath() + "/"
+			    + getView().getDocName());
+	
 
-	citationBrowser.addEventHandler((RFBItemSelectionEventHandler) this);
-	citationBrowser.addEventHandler((RFBAddFolderEventHandler) this);
-	citationBrowser.addEventHandler((ItemListingAcquiredEventHandler) this);
+		browser.addEventHandler((RFBItemSelectionEventHandler) this);
+		browser.addEventHandler((RFBAddFolderEventHandler) this);
+		browser.addEventHandler((ItemListingAcquiredEventHandler) this);
 
-	browserPanel.add(citationBrowser);
-	citationBrowser.setWidth("100%");
+	browserPanel.add(browser);
+	browser.setWidth("100%");
 
 	DisclosurePanelImages disclosureImages =
 		(DisclosurePanelImages) GWT
@@ -358,10 +351,10 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 	OsylCitationItem selectedFile = null;
 
-	if (citationBrowser.getSelectedAbstractBrowserItem() != null
-		&& !citationBrowser.getSelectedAbstractBrowserItem().isFolder()) {
+	if (browser.getSelectedAbstractBrowserItem() != null
+		&& !browser.getSelectedAbstractBrowserItem().isFolder()) {
 	    selectedFile =
-		    (OsylCitationItem) citationBrowser
+		    (OsylCitationItem) browser
 			    .getSelectedAbstractBrowserItem();
 	}
 	citationPreviewLabel = new HTML();
@@ -477,10 +470,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	throw new IllegalStateException("Should not be used with citation");
     }
 
-    @Override
-    protected OsylAbstractBrowserComposite getBrowser() {
-	return citationBrowser;
-    }
+
 
     /**
      * ==================== ADDED CLASSES or METHODS ====================
@@ -518,16 +508,16 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     protected void refreshBrowsingComponents() {
 
 	// Called to refresh the file browser components
-	citationBrowser.refreshBrowser();
+    	browser.refreshBrowser();
 
 	boolean isFound = false;
 
-	if (citationBrowser.getSelectedAbstractBrowserItem() != null) {
-	    if (citationBrowser.getSelectedAbstractBrowserItem().isFolder()) {
+	if (browser.getSelectedAbstractBrowserItem() != null) {
+	    if (browser.getSelectedAbstractBrowserItem().isFolder()) {
 		citationPreviewLabel.setHTML("");
 	    } else {
 		OsylCitationItem selectedFile =
-			(OsylCitationItem) citationBrowser
+			(OsylCitationItem) browser
 				.getSelectedAbstractBrowserItem();
 		citationPreviewLabel.setHTML(getView()
 			.getCitationsInfosAsLink(selectedFile));
@@ -554,7 +544,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
     public String getSelectedCitationProperty(String key) {
 	OsylCitationItem selectedFile =
-		(OsylCitationItem) citationBrowser
+		(OsylCitationItem) browser
 			.getSelectedAbstractBrowserItem();
 	return selectedFile.getProperty(key);
     }

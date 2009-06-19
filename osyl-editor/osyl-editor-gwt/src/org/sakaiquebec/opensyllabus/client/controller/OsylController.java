@@ -20,15 +20,16 @@
 
 package org.sakaiquebec.opensyllabus.client.controller;
 
-import java.util.Date;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler;
+import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
 import org.sakaiquebec.opensyllabus.client.ui.OsylMainView;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylPublishView;
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfig;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
@@ -39,7 +40,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -55,6 +55,11 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class OsylController implements SavePushButtonEventHandler,
 	PublishPushButtonEventHandler {
+	
+	/**
+	 * Stand alone compilation mode : opensyllabus without sakai
+	 */
+	public final static boolean STAND_ALONE_MODE = false;
 
     public static final boolean TRACE = false;
     /**
@@ -66,7 +71,6 @@ public class OsylController implements SavePushButtonEventHandler,
      * Work folder name for documents in sakai
      */
     public static final String WORK_FOLDER_NAME = "work";
-    private static final int DEFAULT_ASSIGNMENT = -1;
 
     // Singleton instance
     private static OsylController _instance;
@@ -122,7 +126,7 @@ public class OsylController implements SavePushButtonEventHandler,
 	setModelController(new OsylModelController());
 	setReadOnly(getReadOnlyParameter());
 	osylModelController.setReadOnly(isReadOnly());
-	if (!isInHostedMode() && !isReadOnly()) {
+	if (!isReadOnly()) {
 	    pinger = new Pinger();
 	    pinger.start();
 	}
@@ -326,7 +330,6 @@ public class OsylController implements SavePushButtonEventHandler,
      */
     void unableToInitServer(String err) {
 	handleRPCError(uiMessages.getMessage("unableToInitServer", err));
-	OsylEditorEntryPoint.getInstance().initOffline();
     }
 
     /**
@@ -349,16 +352,105 @@ public class OsylController implements SavePushButtonEventHandler,
      * @param String ID of the requested CourseOutlineXML
      */
     public void getSerializedCourseOutline(String id) {
-	OsylRPCController.getInstance().getSerializedCourseOutline(id,
-		getInstance());
+
+		// The caller must be declared final to use it into an inner class
+		final OsylController caller = this;
+		// We first create a call-back for this method call
+		AsyncCallback<COSerialized> callback = new AsyncCallback<COSerialized>() {
+			// We define the behavior in case of success
+			public void onSuccess(COSerialized co) {
+				try {
+					System.out
+					.println("RPC SUCCESS getSerializedCourseOutline(...)");
+					caller.getSerializedCourseOutlineCB(co);
+				} catch (Exception error) {
+					System.out
+					.println("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
+							+ error.toString());
+					Window
+					.alert("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
+							+ error.toString());
+					caller
+					.handleRPCError("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
+							+ error.toString());
+				}
+			}
+
+			// And we define the behavior in case of failure
+			public void onFailure(Throwable error) {
+				System.out
+				.println("RPC FAILURE getSerializedCourseOutline(...) : "
+						+ error.toString());
+				Window.alert("RPC FAILURE - getSerializedCourseOutline(...) : "
+						+ error.toString());
+				caller
+				.handleRPCError("RPC FAILURE - getSerializedCourseOutline(...): "
+						+ error.toString());
+			}
+		};
+		OsylRemoteServiceLocator.getEditorRemoteService().getSerializedCourseOutline(id, callback);
     }
 
     /**
      * Request the loading of default CourseOutlineXML to the server.
      */
     public void getSerializedCourseOutline() {
-	OsylRPCController.getInstance().getSerializedCourseOutline(
-		getInstance());
+		// The caller must be declared final to use it into an inner class
+		final OsylController caller = this;
+		// We first create a call-back for this method call
+		AsyncCallback<COSerialized> callback = new AsyncCallback<COSerialized>() {
+			// We define the behavior in case of success
+			public void onSuccess(COSerialized co) {
+				try {
+					System.out
+					.println("RPC SUCCESS - getSerializedCourseOutline(...)");
+
+					if (co != null) {
+						caller.getSerializedCourseOutlineCB(co);
+					} else {
+						if (caller.isReadOnly()) {
+							caller.noPublishedCourseOutline();
+						}
+					}
+				} catch (Exception error) {
+					System.out
+					.println("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
+							+ error.toString());
+					Window
+					.alert("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
+							+ error.toString());
+					caller
+					.unableToInitSerializedCourseOutline("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
+							+ error.toString());
+				}
+			}
+
+			// And we define the behavior in case of failure
+			public void onFailure(Throwable error) {
+				System.out
+				.println("RPC FAILURE - getSerializedCourseOutline(...) : "
+						+ error.toString());
+				Window.alert("RPC FAILURE - getSerializedCourseOutline(...) : "
+						+ error.toString());
+				caller
+				.unableToGetSerializedCourseOutline("RPC FAILURE - getSerializedCourseOutline(...) : "
+						+ error.toString());
+			}
+		};
+		// Then we can call the method
+		// TODO: uncomment and check this code for special published content:
+		String publishedSecurityAccess = this.getPublishedSecurityAccessType();
+		if (SecurityInterface.SECURITY_ACCESS_PUBLIC
+				.equalsIgnoreCase(publishedSecurityAccess)
+				|| SecurityInterface.SECURITY_ACCESS_ATTENDEE
+				.equalsIgnoreCase(publishedSecurityAccess)) {
+			OsylRemoteServiceLocator.getEditorRemoteService()
+			.getSerializedPublishedCourseOutlineForAccessType(
+					publishedSecurityAccess, callback);
+		} else {
+			OsylRemoteServiceLocator.getEditorRemoteService()
+			.getSerializedCourseOutline(callback);
+		}
     }
 
     /**
@@ -420,8 +512,6 @@ public class OsylController implements SavePushButtonEventHandler,
 		new OsylAlertDialog(false, true, "Alert - RPC Error",
 			uiMessages.getMessage("unableToInitCO", errorMessage));
 	alertBox.show();
-	
-	OsylEditorEntryPoint.getInstance().initModelFromTestContent();
     }
 
     /**
@@ -498,9 +588,47 @@ public class OsylController implements SavePushButtonEventHandler,
      * 
      * @param COSerialized the pojo of the course outline
      */
-    public void updateSerializedCourseOutline(COSerialized pojo) {
-	OsylRPCController.getInstance().updateSerializedCourseOutline(pojo,
-		getInstance());
+    public void updateSerializedCourseOutline(final COSerialized pojo) {
+
+    		// The caller must be declared final to use it into an inner class
+    		final OsylController caller = this;
+    		// We first create a call-back for this method call
+    		AsyncCallback<String> callback = new AsyncCallback<String>() {
+    			// We define the behavior in case of success
+    			public void onSuccess(String id) {
+    				try {
+    					System.out
+    					.println("RPC SUCCESS - updateSerializedCourseOutline(...)");
+    					caller.updateSerializedCourseOutlineCB(pojo,id);
+    				} catch (Exception error) {
+    					System.out
+    					.println("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
+    							+ error.toString());
+    					Window
+    					.alert("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
+    							+ error.toString());
+    					caller
+    					.handleRPCError("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
+    							+ error.toString());
+    				}
+    			}
+
+    			// And we define the behavior in case of failure
+    			public void onFailure(Throwable error) {
+    				System.out
+    				.println("RPC FAILURE - updateSerializedCourseOutline(...) : "
+    						+ error.toString());
+    				Window
+    				.alert("RPC FAILURE - updateSerializedCourseOutline(...) : "
+    						+ error.toString());
+    				caller
+    				.handleRPCError("RPC FAILURE - updateSerializedCourseOutline(...) :"
+    						+ error.toString());
+    			}
+    		};
+    		// Then we can call the method
+    		OsylRemoteServiceLocator.getEditorRemoteService()
+    		.updateSerializedCourseOutline(pojo, callback);
     }
 
     /**
@@ -508,8 +636,11 @@ public class OsylController implements SavePushButtonEventHandler,
      * 
      * @param String the id of the saved XML content
      */
-    public void updateSerializedCourseOutlineCB(String id) {
+    public void updateSerializedCourseOutlineCB(COSerialized pojo, String id) {
 
+    pojo.setCoId(id);
+
+    	
 	// A POJO has been sent
 	if (getExecMode().equals("test")) {
 	    Window
@@ -538,8 +669,8 @@ public class OsylController implements SavePushButtonEventHandler,
      * @param String ID of the requested CourseOutlineXML
      */
     public void publishCourseOutline(AsyncCallback<Void> callback) {
-	OsylRPCController.getInstance().publishCourseOutline(getInstance(),
-		callback);
+    	OsylRemoteServiceLocator.getEditorRemoteService().publishCourseOutline(
+				callback);
     }
 
     /**
@@ -549,8 +680,8 @@ public class OsylController implements SavePushButtonEventHandler,
      * @param callback
      */
     public void hasBeenPublished(AsyncCallback<Boolean> callback) {
-	OsylRPCController.getInstance().hasBeenPublished(getInstance(),
-		callback);
+    	OsylRemoteServiceLocator.getEditorRemoteService().hasBeenPublished(
+				callback);
     }
 
     /**
@@ -561,33 +692,58 @@ public class OsylController implements SavePushButtonEventHandler,
 	    int openYear, int openMonth, int openDay, int openHour,
 	    int openMinute, int closeYear, int closeMonth, int closeDay,
 	    int closeHour, int closeMinute, int rating) {
-	if (isInHostedMode()) {
-	    createOrUpdateAssignmentCB(resProx, "dummyAssignmentId");
-	} else { // IMPORTANT : when the rating is -1 then it is a default
-	    if (rating == DEFAULT_ASSIGNMENT) {
-		Date today, nextWeek;
-		// Date yyyy-mm-dd
-		today = new Date();
-		DateTimeFormat simple = DateTimeFormat.getFormat("yyyy-MM-dd");
-		String todayString = simple.format(today);
-		String[] dividedDate = new String[3];
-		dividedDate = todayString.split("\\s*-\\s*");
-		openYear = Integer.parseInt(dividedDate[0]);
-		openMonth = Integer.parseInt(dividedDate[1]);
-		openDay = Integer.parseInt(dividedDate[2]);
-		nextWeek = new Date(today.getTime() + 1000 * 60 * 60 * 24 * 7);
-		String nextWeekString = simple.format(nextWeek);
-		dividedDate = nextWeekString.split("\\s*-\\s*");
-		closeYear = Integer.parseInt(dividedDate[0]);
-		closeMonth = Integer.parseInt(dividedDate[1]);
-		closeDay = Integer.parseInt(dividedDate[2]);
-		rating = 0;
-	    }
-	    OsylRPCController.getInstance().createOrUpdateAssignment(resProx,
-		    assignmentId, title, instructions, openYear, openMonth,
-		    openDay, openHour, openMinute, closeYear, closeMonth,
-		    closeDay, closeHour, closeMinute, rating, getInstance());
-	}
+		// The caller must be declared final to use it into an inner class
+		final OsylController caller = this;
+		final COContentResourceProxy rProx = resProx;
+
+		// We first create a call-back for this method call
+		AsyncCallback<String> callback = new AsyncCallback<String>() {
+			// We define the behavior in case of success
+			public void onSuccess(String assignmentId) {
+				try {
+					System.out
+					.println("RPC SUCCESS - createOrUpdateAssignment(...)");
+					caller.createOrUpdateAssignmentCB(rProx, assignmentId);
+				} catch (Exception error) {
+					System.out
+					.println("Error - Unable to createOrUpdateAssignment(...) on RPC Success: "
+							+ error.toString());
+					Window
+					.alert("Error - Unable to createOrUpdateAssignment(...) on RPC Success: "
+							+ error.toString());
+					caller
+					.unableToCreateOrUpdateAssignment("Error - Unable to createOrUpdateAssignment(...) on RPC Success: "
+							+ error.toString());
+				}
+			}
+
+			// And we define the behavior in case of failure
+			public void onFailure(Throwable error) {
+				System.out
+				.println("RPC FAILURE - createOrUpdateAssignment(...): "
+						+ error.toString());
+				Window.alert("RPC FAILURE - createOrUpdateAssignment(...): "
+						+ error.toString());
+				caller
+				.unableToCreateOrUpdateAssignment("RPC FAILURE - createOrUpdateAssignment(...): "
+						+ error.toString());
+			}
+		};
+
+		// Then we can call the method
+		if (-1 == openYear) {
+			// We are in the case where we just update the title.
+			OsylRemoteServiceLocator.getEditorRemoteService()
+			.createOrUpdateAssignment(assignmentId, title, callback);
+		} else {
+			OsylRemoteServiceLocator.getEditorRemoteService()
+			.createOrUpdateAssignment(assignmentId, title,
+					instructions, openYear, openMonth, openDay,
+					openHour, openMinute, closeYear, closeMonth,
+					closeDay, closeHour, closeMinute, rating,
+					callback);
+
+		}
     }
 
     /**
@@ -595,12 +751,9 @@ public class OsylController implements SavePushButtonEventHandler,
      */
     public void createOrUpdateAssignment(COContentResourceProxy resProx,
 	    String assignmentId, String title) {
-	if (isInHostedMode()) {
-	    createOrUpdateAssignmentCB(resProx, "dummyAssignmentId");
-	} else {
-	    OsylRPCController.getInstance().createOrUpdateAssignment(resProx,
-		    assignmentId, title, getInstance());
-	}
+
+		createOrUpdateAssignment(resProx, assignmentId, title, null, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1);
     }
 
     /**
@@ -671,9 +824,31 @@ public class OsylController implements SavePushButtonEventHandler,
      */
     public void getSerializedPublishedCourseOutlineForAccessType(
 	    String accessType) {
-	OsylRPCController.getInstance()
+		// The caller must be declared final to use it into an inner class
+		final OsylController caller = this;
+		// We first create a call-back for this method call
+		AsyncCallback<COSerialized> callback = new AsyncCallback<COSerialized>() {
+			public void onSuccess(COSerialized co) {
+				System.out
+				.println("RPC SUCCESS - getSerializedPublishedCourseOutlineForAccessType(...)");
+				caller.getSerializedPublishedCourseOutlineForAccessTypeCB(co);
+			}
+
+			public void onFailure(Throwable error) {
+				System.out
+				.println("RPC FAILURE - getSerializedPublishedCourseOutlineForAccessType(...) : "
+						+ error.toString());
+				Window
+				.alert("RPC FAILURE - getSerializedPublishedCourseOutlineForAccessType(...) : "
+						+ error.toString());
+				caller
+				.handleRPCError("RPC FAILURE - getSerializedPublishedCourseOutlineForAccessType(...)");
+			}
+		};
+		// Then we can call the method
+		OsylRemoteServiceLocator.getEditorRemoteService()
 		.getSerializedPublishedCourseOutlineForAccessType(accessType,
-			getInstance());
+				callback);
     }
 
     /**
@@ -698,7 +873,28 @@ public class OsylController implements SavePushButtonEventHandler,
      * Requests the user role for current user.
      */
     public void getCurrentUserRole() {
-	OsylRPCController.getInstance().getCurrentUserRole(getInstance());
+		// The caller must be declared final to use it into an inner class
+		final OsylController caller = this;
+		// We first create a call-back for this method call
+		AsyncCallback<String> callback = new AsyncCallback<String>() {
+			public void onSuccess(String role) {
+				System.out.println("RPC SUCCESS - getCurrentUserRole(...)");
+				caller.getCurrentUserRoleCB(role);
+			}
+
+			public void onFailure(Throwable error) {
+				System.out.println("RPC FAILURE - getCurrentUserRole(...) : "
+						+ error.toString());
+				Window.alert("RPC FAILURE - getCurrentUserRole(...) : "
+						+ error.toString());
+				caller
+				.handleRPCError("RPC FAILURE - getCurrentUserRole(...) : "
+						+ error.toString());
+			}
+		};
+		// Then we can call the method
+		OsylRemoteServiceLocator.getEditorRemoteService().getCurrentUserRole(
+				callback);
     }
 
     /**
@@ -723,8 +919,30 @@ public class OsylController implements SavePushButtonEventHandler,
      * @param String permission
      */
     public void applyPermissions(String resourceId, String permission) {
-	OsylRPCController.getInstance().applyPermissions(resourceId,
-		permission, getInstance());
+		// The caller must be declared final to use it into an inner class
+		final OsylController caller = this;
+		// We first create a call-back for this method call
+		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+			public void onSuccess(Void serverResponse) {
+				System.out.println("RPC SUCCESS applyPermissions(...)");
+				caller.applyPermissionsCB(true);
+			}
+
+			public void onFailure(Throwable error) {
+				System.out.println("RPC FAILURE - applyPermissions(...) : "
+						+ error.toString());
+				Window.alert("RPC FAILURE - applyPermissions(...) : "
+						+ error.toString());
+				caller.applyPermissionsCB(false);
+			}
+		};
+		// Then we can call the method
+		try {
+			OsylRemoteServiceLocator.getEditorRemoteService().applyPermissions(
+					resourceId, permission, callback);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 
     /**
@@ -746,8 +964,43 @@ public class OsylController implements SavePushButtonEventHandler,
      * Delete a citation from the course outline citation list
      */
     public void removeCitation(String citationId) {
-	OsylRPCController.getInstance().removeCitation(citationId,
-		getInstance());
+		// The caller must be declared final to use it into an inner class
+		final OsylController caller = this;
+		// We first create a call-back for this method call
+		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+
+			// We define the behavior in case of success
+			public void onSuccess(Void serverResponse) {
+				try {
+					System.out.println("RPC SUCCESS - removeCitation(...)");
+					caller.removeCitationCB();
+				} catch (Exception error) {
+					System.out
+					.println("Error - Unable to removeCitation(...) on RPC Success: "
+							+ error.toString());
+					Window
+					.alert("Error - Unable to removeCitation(...) on RPC Success: "
+							+ error.toString());
+					caller
+					.unableToRemoveCitation("Error - Unable to removeCitation(...) on RPC Success: "
+							+ error.toString());
+				}
+			}
+
+			// And we define the behavior in case of failure
+			public void onFailure(Throwable error) {
+				System.out.println("RPC FAILURE - removeCitation(...): "
+						+ error.toString());
+				Window.alert("RPC FAILURE - removeCitation(...): "
+						+ error.toString());
+				caller
+				.unableToRemoveAssignment("RPC FAILURE - removeCitation(...): "
+						+ error.toString());
+			}
+		};
+		// Then we can call the method
+		OsylRemoteServiceLocator.getEditorRemoteService().removeCitation(
+				citationId, callback);
     }
 
     /**
@@ -764,12 +1017,49 @@ public class OsylController implements SavePushButtonEventHandler,
 	    String citationListId, String citation, String author, String type,
 	    String isbnIssn, String link) {
 
-	if (isInHostedMode())
-	    createOrUpdateCitationCB(resProx, "dummyCitationListId");
-	else
-	    OsylRPCController.getInstance().createOrUpdateCitation(resProx,
-		    citationListId, citation, author, type, isbnIssn, link,
-		    getInstance());
+		// The caller must be declared final to use it into an inner class
+		final OsylController caller = this;
+		final COContentResourceProxy rProx = resProx;
+
+		// We first create a call-back for this method call
+		AsyncCallback<String> callback = new AsyncCallback<String>() {
+
+			// We define the behavior in case of success
+			public void onSuccess(String citationListId) {
+				try {
+
+					System.out
+					.println("RPC SUCCESS - createOrUpdateCitation(...)");
+					caller.createOrUpdateCitationCB(rProx, citationListId);
+				} catch (Exception error) {
+					System.out
+					.println("Error - Unable to createOrUpdateCitation(...) on RPC Success: "
+							+ error.toString());
+					Window
+					.alert("Error - Unable to createOrUpdateCitation(...) on RPC Success: "
+							+ error.toString());
+					caller
+					.unableToCreateOrUpdateCitation("Error - Unable to createOrUpdateCitation(...) on RPC Success: "
+							+ error.toString());
+				}
+			}
+
+			// And we define the behavior in case of failure
+			public void onFailure(Throwable error) {
+				System.out
+				.println("RPC FAILURE - createOrUpdateCitation(...): "
+						+ error.toString());
+				Window.alert("RPC FAILURE - createOrUpdateCitation(...): "
+						+ error.toString());
+				caller
+				.unableToCreateOrUpdateAssignment("RPC FAILURE - createOrUpdateCitation(...): "
+						+ error.toString());
+			}
+		};
+		// Then we can call the method
+		OsylRemoteServiceLocator.getEditorRemoteService()
+		.createOrUpdateCitation(citationListId, citation, author, type,
+				isbnIssn, link, callback);
     }
 
     /**
@@ -806,8 +1096,48 @@ public class OsylController implements SavePushButtonEventHandler,
      * Creates a temporary citation in the course outline
      */
     public void createTemporaryCitationList(COContentResourceProxy resProx) {
-	OsylRPCController.getInstance().createTemporaryCitationList(resProx,
-		getInstance());
+    	// The caller must be declared final to use it into an inner class
+		final OsylController caller = this;
+		final COContentResourceProxy rProx = resProx;
+
+		// We first create a call-back for this method call
+		AsyncCallback<String> callback = new AsyncCallback<String>() {
+
+			// We define the behavior in case of success
+			public void onSuccess(String citationId) {
+				try {
+					System.out
+					.println("RPC SUCCESS - createTemporaryCitationList(...)");
+					caller.createTemporaryCitationListCB(rProx, citationId);
+				} catch (Exception error) {
+					System.out
+					.println("Error - Unable to createTemporaryCitationList(...) on RPC Success: "
+							+ error.toString());
+					Window
+					.alert("Error - Unable to createTemporaryCitationList(...) on RPC Success: "
+							+ error.toString());
+					caller
+					.unableToCreateOrUpdateCitation("Error - Unable to createTemporaryCitationList(...) on RPC Success: "
+							+ error.toString());
+				}
+			}
+
+			// And we define the behavior in case of failure
+			public void onFailure(Throwable error) {
+				System.out
+				.println("RPC FAILURE - createTemporaryCitationList(...): "
+						+ error.toString());
+				Window.alert("RPC FAILURE - createTemporaryCitationList(...): "
+						+ error.toString());
+				caller
+				.unableToCreateTemporaryCitationList("RPC FAILURE - createTemporaryCitationList(...): "
+						+ error.toString());
+			}
+		};
+		// Then we can call the method
+		OsylRemoteServiceLocator.getEditorRemoteService()
+		.createTemporaryCitationList(callback);
+
     }
 
     /**
@@ -845,8 +1175,44 @@ public class OsylController implements SavePushButtonEventHandler,
      */
     public void removeAssignment(String assignmentId) {
 
-	OsylRPCController.getInstance().removeAssignment(assignmentId,
-		getInstance());
+    	// The caller must be declared final to use it into an inner class
+		final OsylController caller = this;
+
+		// We first create a call-back for this method call
+		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+
+			// We define the behavior in case of success
+			public void onSuccess(Void serverResponse) {
+				try {
+					System.out.println("RPC SUCCESS - removeAssignment(...)");
+					caller.removeAssignmentCB();
+				} catch (Exception error) {
+					System.out
+					.println("Error - Unable to removeAssignment(...) on RPC Success: "
+							+ error.toString());
+					Window
+					.alert("Error - Unable to removeAssignment(...) on RPC Success: "
+							+ error.toString());
+					caller
+					.unableToRemoveAssignment("Error - Unable to removeAssignment(...) on RPC Success: "
+							+ error.toString());
+				}
+			}
+
+			// And we define the behavior in case of failure
+			public void onFailure(Throwable error) {
+				System.out.println("RPC FAILURE - removeAssignment(...): "
+						+ error.toString());
+				Window.alert("RPC FAILURE - removeAssignment(...): "
+						+ error.toString());
+				caller
+				.unableToRemoveAssignment("RPC FAILURE - removeAssignment(...): "
+						+ error.toString());
+			}
+		};
+		// Then we can call the method
+		OsylRemoteServiceLocator.getEditorRemoteService().removeAssignment(
+				assignmentId, callback);
     }
 
     /**
@@ -873,12 +1239,52 @@ public class OsylController implements SavePushButtonEventHandler,
      */
     public void getSerializedConfig() {
 
-	try {
-	    OsylRPCController.getInstance().getSerializedConfig(getInstance());
-	} catch (RuntimeException e) {
-	    e.printStackTrace();
-	    unableToInitServer(e.toString());
-	}
+    	//OsylRPCController.getInstance().getSerializedConfig(getInstance());
+		try {
+			// The caller must be declared final to use it into an inner class
+			final OsylController caller = this;
+			// We first create a call-back for this method call
+			AsyncCallback<COConfigSerialized> callback = new AsyncCallback<COConfigSerialized>() {
+				// We define the behavior in case of success
+				public void onSuccess(COConfigSerialized cfg) {
+					try {
+						System.out
+						.println("RPC SUCCESS - getSerializedConfig(...)");
+						caller.getSerializedConfigCB(cfg);
+					} catch (Exception error) {
+						System.out
+						.println("Error - Unable to getSerializedConfig(...) on RPC Success: "
+								+ error.toString());
+						Window
+						.alert("Error - Unable to getSerializedConfig(...) on RPC Success: "
+								+ error.toString());
+						caller
+						.unableToInitServer("Error - Unable to getSerializedConfig(...) on RPC Success: "
+								+ error.toString());
+					}
+				}
+	
+				// And we define the behavior in case of failure
+				public void onFailure(Throwable error) {
+					System.out
+					.println("RPC FAILURE - getSerializedConfig(...): "
+							+ error.toString()
+							+ " Hint: Check GWT version");
+					Window.alert("RPC FAILURE - getSerializedConfig(...): "
+							+ error.toString() + " Hint: Check GWT version");
+					caller
+					.unableToInitServer("RPC FAILURE - getSerializedConfig(...): "
+							+ error.toString()
+							+ " Hint: Check GWT version");
+				}
+			};
+			// Then we can call the method
+			OsylRemoteServiceLocator.getEditorRemoteService()
+			.getSerializedConfig(callback);
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			unableToInitServer(e.toString());
+		}
     }
 
     /**
@@ -1028,14 +1434,7 @@ public class OsylController implements SavePushButtonEventHandler,
      * @return true if in hosted mode, false if not.
      */
     public boolean isInHostedMode() {
-	String url = GWT.getHostPageBaseURL();
-
-	if (url.startsWith("http://localhost:8888/")
-		&& (url
-			.indexOf("org.sakaiquebec.opensyllabus.OsylEditorEntryPoint") != -1))
-	    return true;
-	else
-	    return false;
+    	return !GWT.isScript();
     }
 
     /**
@@ -1146,7 +1545,29 @@ public class OsylController implements SavePushButtonEventHandler,
      * Pings the server to keep the session alive.
      */
     public void pingServer() {
-	OsylRPCController.getInstance().pingServer(getInstance());
+
+		// The caller must be declared final to use it into an inner class
+		final OsylController caller = this;
+
+		// We first create a call-back for this method call
+		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+
+			// We define the behavior in case of success
+			public void onSuccess(Void serverResponse) {
+				try {
+					caller.pingServerCB();
+				} catch (Exception e) {
+					caller.unableToPing(e);
+				}
+			}
+
+			// And we define the behavior in case of failure
+			public void onFailure(Throwable error) {
+				caller.unableToPing(error);
+			}
+		};
+		// Then we can call the method
+		OsylRemoteServiceLocator.getEditorRemoteService().ping(callback);
     }
 
     /**
@@ -1191,7 +1612,8 @@ public class OsylController implements SavePushButtonEventHandler,
 
     public void getXslForGroup(String group, AsyncCallback<String> callBack) {
 
-	OsylRPCController.getInstance().getXslForGroup(group, callBack);
+    	OsylRemoteServiceLocator.getEditorRemoteService().getXslForGroup(group,
+				callBack);
 
     }
 
@@ -1214,5 +1636,15 @@ public class OsylController implements SavePushButtonEventHandler,
     public String getTemporaryCitationList() {
 	return citationListId;
     }
+    
+	private static final String RPC_QUALIFIED_NAME = "org.sakaiquebec.opensyllabus.OsylEditorEntryPoint/";
+
+	public String getWebAppUrl(){
+		// The base url contains the qualified name. It's not compatible
+		// with the tool servlet mapping
+		String url = GWT.getModuleBaseURL();
+		String cleanUrl = url.substring(0, url.length() - RPC_QUALIFIED_NAME.length());
+		return cleanUrl;
+	}
 
 }

@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.tool.api.Tool;
-import org.sakaiquebec.opensyllabus.client.rpc.OsylEditorGwtService;
+import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtService;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;

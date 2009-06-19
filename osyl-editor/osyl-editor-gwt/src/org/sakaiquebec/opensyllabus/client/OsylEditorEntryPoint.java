@@ -21,10 +21,8 @@
 package org.sakaiquebec.opensyllabus.client;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
-import org.sakaiquebec.opensyllabus.client.hostedMode.COTestContent;
-import org.sakaiquebec.opensyllabus.client.hostedMode.OsylTestCOMessages;
-import org.sakaiquebec.opensyllabus.client.hostedMode.OsylTestRulesConfig;
-import org.sakaiquebec.opensyllabus.client.hostedMode.OsylTestUIMessages;
+import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylTestCOMessages;
+import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylTestUIMessages;
 import org.sakaiquebec.opensyllabus.client.ui.OsylMainView;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
@@ -97,29 +95,22 @@ public class OsylEditorEntryPoint implements EntryPoint {
     public void onModuleLoad() {
 	final OsylController osylController = OsylController.getInstance();
 
-	// We try to detect if the entryPoint we are loading is in GWT Hosted
-	// Mode. If this is the case, we do not try to connect to the server.
-	// This speeds up development.
-	if (GWT.getHostPageBaseURL().startsWith(
-		"http://localhost:8888/"
-			+ "org.sakaiquebec.opensyllabus.OsylEditorEntryPoint/")) {
-	    initOffline();
-	} else {
-	    // We seem to be online, therefore we initialize the communication
+
+
+	    // we initialize the communication
 	    // and load the course outline from the server. If some error
 	    // occurs, the callback will take charge of loading some default
 	    // content for development purposes (i.e: it will call
 	    // initOffline()).
 	    osylController.loadData();
-	}
+
 	Window.addWindowCloseListener(new WindowCloseListener() {
 	    public void onWindowClosed() {
 		// We instruct the ViewContext to close all editors in case
 		// an editor with modified content is still open.
 		osylController.getViewContext().closeAllEditors();
 		// If we don't need to save the model we leave now
-		if (!osylController.isModelDirty()
-			|| osylController.isInHostedMode()) {
+		if (!osylController.isModelDirty()) {
 		    return;
 		}
 
@@ -138,31 +129,10 @@ public class OsylEditorEntryPoint implements EntryPoint {
 
     } // onModuleLoad
 
-    /**
-     * Initializes the model and the config with test-oriented content to allow
-     * offline development.
-     */
-    public void initOffline() {
-	initConfigFromTest();
-	initModelFromTestContent();
-    }
 
-    /**
-     * Initializes the model with a development template.
-     */
-    // private void initModelFromContentTemplate() {
-    // initModel(COContentTemplate.getDefaultXml());
-    // }
-    /**
-     * Initializes the model with test content.
-     */
-    public void initModelFromTestContent() {
-	COTestContent.getTestXml();
-    }
+
     
-    public void initModelFromXml(String xml){
-	initModel(xml);
-    }
+
     
     public void initConfigFromRulesXml(String xml){
 	COConfigSerialized configSer = new COConfigSerialized("config-test-id");
@@ -174,37 +144,22 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	OsylController.getInstance().setCoMessages(coMessages);
     }
 
-    /**
-     * Initializes config with test content
-     */
-    private void initConfigFromTest() {
-	OsylTestRulesConfig.getXml();
-    }
 
-    /**
-     * Initializes the entry point's model from the specified XML string which
-     * may either be provided by the server or by other means. An important side
-     * effect of this method is that it calls initView(). TODO: It would
-     * probably be better to initialize the view before and use an event to
-     * trigger its refresh...
-     * 
-     * @param xml
-     */
-    private void initModel(String xmlContent) {
-	modeledCo = new COModeled();
-	modeledCo.setSerializedContent(xmlContent);
-	modeledCo.XML2Model();
-	setModel(modeledCo.getModeledContent());
 
-	// We can now initialize the view!
-	initView();
-    }
+
 
     public void initModel(COSerialized co) {
-	// This is absolutely required to get the ID:
-	serializedCO = co;
-	// And now we initialize the model from the XML content
-	initModel(co.getSerializedContent());
+    	// This is absolutely required to get the ID:
+		this.serializedCO = co;
+
+		// And now we initialize the model from the XML content
+		this.modeledCo = new COModeled();
+		this.modeledCo.setSerializedContent(co.getSerializedContent());
+		this.modeledCo.XML2Model();
+		setModel(this.modeledCo.getModeledContent());
+
+		// We can now initialize the view!
+		initView();
     }
 
     /**

@@ -21,8 +21,9 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
+import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
+
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -39,19 +40,14 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 	super();
     }
 
-    public OsylFileBrowser(String newDirPath, String newFilter) {
-	super(newDirPath, newFilter);
-    }
 
     /**
      * Constructor.
-     * 
      * @param model
      * @param newController
      */
-    public OsylFileBrowser(String newResDirName, String newResDirPath,
-	    String newFilter, String fileItemNameToSelect) {
-	super(newResDirName, newResDirPath, newFilter, fileItemNameToSelect);
+    public OsylFileBrowser(String newResDirName, String fileItemNameToSelect) {
+	super(newResDirName, fileItemNameToSelect);
     }
 
     @Override
@@ -81,59 +77,23 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
     }
 
     @Override
-    protected OsylAbstractBrowserItem getOsylAbstractBrowserItem(
-	    JSONObject jObject) {
-	JSONString referenceRoot =
-		(JSONString) ((JSONObject) jObject.get("properties"))
-			.get("sakai:reference-root");
-	if (referenceRoot != null
-		&& referenceRoot.stringValue().equals("/citation")) {
-	    return null;
-	} else {
-
-	    JSONString path = (JSONString) jObject.get("path");
-	    JSONString name =
-		    (JSONString) ((JSONObject) jObject.get("properties"))
-			    .get("DAV:displayname");
-	    String mimeTypeString = "";
-	    String lastmodifiedString = "";
-	    String descriptionString = "";
-	    String copyrightchoiceString = "";
-
-	    if (jObject.get("mimeType") != null) {
-		JSONString mimeType = (JSONString) jObject.get("mimeType");
-		mimeTypeString = mimeType.stringValue();
-	    }
-	    if (((JSONObject) jObject.get("properties"))
-		    .get("DAV:getlastmodified") != null) {
-		JSONString lastmodified =
-			(JSONString) ((JSONObject) jObject.get("properties"))
-				.get("DAV:getlastmodified");
-		lastmodifiedString = lastmodified.stringValue();
-	    }
-	    if (((JSONObject) jObject.get("properties"))
-		    .get("CHEF:description") != null) {
-		JSONString description =
-			(JSONString) ((JSONObject) jObject.get("properties"))
-				.get("CHEF:description");
-		descriptionString = description.stringValue();
-	    }
-	    if (((JSONObject) jObject.get("properties"))
-		    .get("CHEF:copyrightchoice") != null) {
-		JSONString copyrightchoice =
-			(JSONString) ((JSONObject) jObject.get("properties"))
-				.get("CHEF:copyrightchoice");
-		copyrightchoiceString = copyrightchoice.stringValue();
-	    }
-	    return new OsylFileItem(name.stringValue(), path.stringValue(),
-		    false, lastmodifiedString, mimeTypeString,
-		    descriptionString, copyrightchoiceString);
-	}
-    }
-
-    @Override
     protected void onFileDoubleClicking() {
 	//Nothing to do
     }
+
+
+	@Override
+	public void getRemoteDirectoryListing(String directoryPath) {
+		getFileListing().addStyleName("Osyl-RemoteFileBrowser-WaitingState");
+		if (TRACE){
+			Window.alert("DIR = " + directoryPath);
+		}
+	    
+	
+		OsylRemoteServiceLocator.getDirectoryRemoteService().getRemoteDirectoryContent(directoryPath, 
+				getRemoteDirListingRespHandler());
+	    
+		
+	}
 
 }

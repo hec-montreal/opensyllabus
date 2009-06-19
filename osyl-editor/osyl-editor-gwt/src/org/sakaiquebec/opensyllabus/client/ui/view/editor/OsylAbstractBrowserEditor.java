@@ -20,21 +20,18 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
+import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBAddFolderEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBItemSelectionEventHandler;
+import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylAbstractBrowserComposite;
-import org.sakaiquebec.opensyllabus.client.ui.util.OsylAbstractBrowserItem;
-import org.sakaiquebec.opensyllabus.client.ui.util.OsylJSONRemoteDirectory;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
+import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -51,45 +48,7 @@ public abstract class OsylAbstractBrowserEditor extends
 
     // The panel containing the document browser
     protected VerticalPanel browserPanel;
-
-    private RequestCallback folderCreationRespHandler = new RequestCallback() {
-
-	private static final int STATUS_CODE_SUCCESS = 200;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void onError(Request request, Throwable exception) {
-	    removeStyleName("Osyl-RemoteFileBrowser-WaitingState");
-	    final OsylAlertDialog alertBox =
-		    new OsylAlertDialog(false, true, getView().getController()
-			    .getUiMessage("Global.error"), getView()
-			    .getController().getUiMessage(
-				    "fileUpload.unableReadRemoteDir"));
-	    alertBox.show();
-	}
-
-	/** {@inheritDoc} */
-	public void onResponseReceived(Request request, Response response) {
-	    if (response.getStatusCode() == STATUS_CODE_SUCCESS) {
-		String parentResourceDirectoryPath =
-			getResourcesPath()+getBrowser().getBrowsedSiteId()+"/"
-				+ getBrowser().getCurrentDirectory()
-					.getDirectoryPath();
-		// Call to RemoFileBrowser in order to refresh its content
-		OsylJSONRemoteDirectory.getRemoteDirectoryContent(
-			parentResourceDirectoryPath, getBrowser()
-				.getRemoteDirListingRespHandler());
-	    } else {
-		final OsylAlertDialog alertBox =
-			new OsylAlertDialog(false, true, getView()
-				.getController().getUiMessage("Global.error"),
-				getView().getController().getUiMessage(
-					"fileUpload.unableReadRemoteDir"));
-		alertBox.show();
-	    }
-	}
-    };
+    protected OsylAbstractBrowserComposite browser;
 
     public OsylAbstractBrowserEditor(OsylAbstractView view) {
 	super(view);
@@ -119,17 +78,30 @@ public abstract class OsylAbstractBrowserEditor extends
 			    "DocumentEditor.AddFolderPromt.Promt"),
 			    newFolderName);
 	}
-	String resourcesPath = getFolderCreationPath();
-	String initResourceDirectoryName =
-		getBrowser().getCurrentDirectory().getDirectoryPath();
-	resourcesPath += initResourceDirectoryName + "/" + newFolderName;
-	resourcesPath =
-		OsylAbstractBrowserComposite.uriSlashCorrection(resourcesPath);
-	StringBuffer postData = new StringBuffer();
-	postData.append(URL.encode("f")).append("=").append(URL.encode("cf"));
-	// SData call in order to create the new Folder
-	OsylJSONRemoteDirectory.createNewRemoteDirectory(resourcesPath,
-		folderCreationRespHandler, postData);
+	
+	
+	final OsylAbstractBrowserComposite fileBrowser = getBrowser();
+	
+	AsyncCallback<Void> asyncCallback = new AsyncCallback<Void>() {
+		public void onFailure(Throwable caught) {
+			removeStyleName("Osyl-RemoteFileBrowser-WaitingState");
+			final OsylAlertDialog alertBox = new OsylAlertDialog(false, true, OsylController
+					.getInstance().getUiMessage("Global.error"), OsylController.getInstance()
+					.getUiMessage("fileUpload.unableReadRemoteDir") + caught.getMessage());
+			alertBox.center();
+			alertBox.show();
+		}
+
+		public void onSuccess(Void result) {
+			// Call to RemoFileBrowser in order to refresh its content
+			browser.getRemoteDirectoryListing(browser.getCurrentDirectory().getDirectoryPath());
+		}
+	};
+
+	// create the new Folder
+	OsylRemoteServiceLocator.getDirectoryRemoteService().createNewRemoteDirectory(
+			newFolderName, fileBrowser.getCurrentDirectory().getDirectoryPath(), asyncCallback);
+	
     }
 
     public void onItemSelectionEvent(RFBItemSelectionEvent event) {
@@ -162,47 +134,26 @@ public abstract class OsylAbstractBrowserEditor extends
 	}
     }
 
-    protected String getResourceDirectoryName() {
-	if (getView().getController().isInHostedMode()) {
-	    return "UserDir";
-	} else {
-	    return getView().getController().getDocFolderName();
-	}
-    }
 
-    /**
-     * Return path used to create new folder
-     **/
-    private String getFolderCreationPath() {
-	String uri = GWT.getModuleBaseURL();
-	String serverId = uri.split("\\s*/portal/tool/\\s*")[0];
-	String resourcesPath = serverId + "/sdata/c/group/" + getBrowser().getBrowsedSiteId() + "/";
-	resourcesPath =
-		OsylAbstractBrowserComposite.uriSlashCorrection(resourcesPath);
-	return resourcesPath;
-    }
-
-    // ABSTRACT METHOD
     /**
      * Return the browser used in the editor
      */
-    protected abstract OsylAbstractBrowserComposite getBrowser();
+    protected OsylAbstractBrowserComposite getBrowser() {
+    	return browser;
+    }
 
+    // ABSTRACT METHOD
     /**
      * initialize the browser
      */
     protected abstract void initBrowser();
 
-    /**
-     * Get the path used to obtain information from sdata
-     * 
-     * @return
-     */
-    protected abstract String getResourcesPath();
 
     /**
      * Refresh browser (and the metadata information coming from the browser
      */
     protected abstract void refreshBrowsingComponents();
+    
+
 
 }

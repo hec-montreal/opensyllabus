@@ -20,6 +20,7 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @author <a href="mailto:tom.landry@crim.ca>Tom Landry</a>
  * @version $Id: $
  */
-public class COSerialized implements IsSerializable, COModelInterface {
+public class COSerialized implements IsSerializable,Serializable, COModelInterface {
 
     private static final long serialVersionUID = 2L;
 

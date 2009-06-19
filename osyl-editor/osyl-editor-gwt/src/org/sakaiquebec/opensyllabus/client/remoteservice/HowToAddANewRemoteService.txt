@@ -1,0 +1,30 @@
+Comment ajouter un nouveau service d´accès a des méthodes distantes
+
+
+1) Création de l´interface  :
+ 
+	Créer une interface MonServiceDistantAsync.java dans le package rpc en respectant le formalisme GWT RPC qui est utilisé indépendamment 
+	du type de support de communication par convention. 
+
+	Pour rappel : 
+	au delà de la convention de nommage XXXXXXAsync.java de l´interface, il s´agit que le dernier paramètre de chaque méthode 
+	soit un call back de type com.google.gwt.user.client.rpc.AsyncCallback <E> où E est l´objet de retour.
+
+
+2) Création des implementations :
+
+	Créer essuite le ou les implementations desirées de l´interface MonServiceDistantAsync.java dans les packages adéquats
+
+	package HostedMode pour une implementation hosted : dans ce cas trivial, l´implementation consistera generalement à effectuer le traitement 
+	sur un jeu de test et a retourner la valeur adéquat.
+
+	package json pour une implementation json : dans ce cas l´implementation consistera a construire l´url d´appel, de transphormer le callback
+	com.google.gwt.user.client.rpc.AsyncCallback en com.google.gwt.http.client.RequestCallback a l´aide d´un adaptateur et a lancer l´appel. 
+
+
+	package rpc pour une implementation rpc. suivre le formalisme gwt -> meme nom de classe sans le sufixe "Async" et implementation distante.
+
+
+3) rendre les implementations accecible :
+
+	ajouter un getter dans la classe OsylRemoteServiceLocator.java.

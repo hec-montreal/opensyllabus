@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
+import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>

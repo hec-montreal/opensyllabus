@@ -23,8 +23,9 @@ package org.sakaiquebec.opensyllabus.client.ui.util;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresItemListingAcquiredEvents;
@@ -34,18 +35,15 @@ import org.sakaiquebec.opensyllabus.client.controller.event.RFBItemSelectionEven
 import org.sakaiquebec.opensyllabus.client.controller.event.UploadFileEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredEventHandler.ItemListingAcquiredEvent;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
+import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
+import org.sakaiquebec.opensyllabus.shared.model.file.OsylDirectory;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
@@ -92,75 +90,49 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 
     private TextBox currentSelectionTextBox;
 
-    private RequestCallback remoteDirListingRespHandler =
-	    new RequestCallback() {
-
-		private static final int STATUS_CODE_SUCCESS = 200;
+    private AsyncCallback<List<OsylAbstractBrowserItem>> remoteDirListingRespHandler =
+	    new AsyncCallback<List<OsylAbstractBrowserItem>>() {
 
 		/**
 		 * {@inheritDoc}
 		 */
-		public void onError(Request request, Throwable exception) {
-		    removeStyleName("Osyl-RemoteFileBrowser-WaitingState");
-		    final OsylAlertDialog alertBox =
-			    new OsylAlertDialog(false, true, getController()
-				    .getUiMessage("Global.error"),
-				    getController().getUiMessage(
-					    "fileUpload.unableReadRemoteDir"));
-		    alertBox.show();
+		public void onFailure(Throwable caught) {
+			removeStyleName("Osyl-RemoteFileBrowser-WaitingState");
+			final OsylAlertDialog alertBox = new OsylAlertDialog(false, true, getController()
+					.getUiMessage("Global.error"), getController().getUiMessage(
+					"fileUpload.unableReadRemoteDir") + caught.getMessage());
+			alertBox.center();
+			alertBox.show();
 		}
 
-		/** {@inheritDoc} */
-		public void onResponseReceived(Request request,
-			Response response) {
-		    // Window.alert(response.getStatusCode()+" "+response.getText());
-		    if (response.getStatusCode() == STATUS_CODE_SUCCESS) {
+		/**
+		 * {@inheritDoc}
+		 */
+		public void onSuccess(List<OsylAbstractBrowserItem> dirListing) {
 			try {
-			    getFileListing().clear();
-			    ArrayList<OsylAbstractBrowserItem> dirListing =
-				    (ArrayList<OsylAbstractBrowserItem>) getDirectoryContent(
-					    response.getText()).getFilesList();
-			    getCurrentDirectory().setFilesList(dirListing);
-			    sortDirContent(dirListing);
-
-			    for (int i = 0; i < dirListing.size(); i++) {
-				OsylAbstractBrowserItem fileItem =
-					dirListing.get(i);
-				getFileListing().addItem(
-					formatListingLine(fileItem));
-
-				// if there is a file to auto select (after
-				// uploading for example)
-				if (fileItem.getFilePath().equals(
-					getFileItemPathToSelect())) {
-				    setFileItemPathToSelect(fileItemPathToSelect);
+				getFileListing().clear();
+				getCurrentDirectory().setFilesList(dirListing);
+				if(dirListing!=null){
+					sortDirContent(dirListing);
+					for (int i = 0; i < dirListing.size(); i++) {
+						OsylAbstractBrowserItem fileItem = dirListing.get(i);
+						getFileListing().addItem(formatListingLine(fileItem));
+						// if there is a file to auto select (after
+						// uploading for example)
+						if (fileItem.getFilePath().equals(
+							getFileItemPathToSelect())) {
+						    setFileItemPathToSelect(fileItemPathToSelect);
+						}
+					}
 				}
-			    }
-
-			    // The FileListingAcquiredEvent handlers are then
-			    // notified
-			    notifyFileListingAcquiredEventHandlers();
+				notifyFileListingAcquiredEventHandlers();
 			} finally {
-			    getFileListing().removeStyleName(
-				    "Osyl-RemoteFileBrowser-WaitingState");
-			    removeStyleName("Osyl-RemoteFileBrowser-WaitingState");
+				getFileListing().removeStyleName("Osyl-RemoteFileBrowser-WaitingState");
+				removeStyleName("Osyl-RemoteFileBrowser-WaitingState");
 			}
-		    } else {
-			final OsylAlertDialog alertBox =
-				new OsylAlertDialog(
-					false,
-					true, 
-					getController().getUiMessage(
-						"Global.error"),
-					getController()
-						.getUiMessage(
-							"fileUpload.unableReadRemoteDir"));
-			alertBox.show();
-		    }
 		}
 	    };
 
-    private String fileExtensionFilter;
 
     private ArrayList<RFBAddFolderEventHandler> RFBAddFolderEventHandlerList;
 
@@ -180,35 +152,30 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 
     public OsylAbstractBrowserComposite() {
 	super();
-	this.setFileExtensionFilter(null);
 	initView();
     }
 
-    public OsylAbstractBrowserComposite(String newDirPath, String newFilter) {
+    public OsylAbstractBrowserComposite(String newDirPath) {
 	super();
 	setInitialDirPath(newDirPath);
-	this.setFileExtensionFilter(newFilter);
     }
 
     /**
      * Constructor.
-     * 
      * @param model
      * @param newController
      */
     public OsylAbstractBrowserComposite(String newResDirName,
-	    String newResDirPath, String newFilter, String fileItemNameToSelect) {
+	    String fileItemNameToSelect) {
 	if(TRACE)
 	    Window.alert("OsylAbstractBrowserComposite("+newResDirName+","+
-		    newResDirPath+","+newFilter+","+fileItemNameToSelect+")");
+		    ","+fileItemNameToSelect+")");
 	setBrowsedSiteId(extractRessourceSiteId(newResDirName));
 	String path = extractRessourceFolder(newResDirName);
-	setBaseDirectoryPath(newResDirPath);
-	setFileExtensionFilter(newFilter);
-	setCurrentDirectory(new OsylDirectory(path, path, newFilter,
+	setCurrentDirectory(new OsylDirectory(path, path, "",
 		new ArrayList<OsylAbstractBrowserItem>()));
+	
 	setInitialDirPath(getCurrentDirectory().getDirectoryPath());
-	setFileExtensionFilter(newFilter);
 	setFileItemPathToSelect(fileItemNameToSelect);
 	initView();
     }
@@ -222,6 +189,9 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 
 	// Browser Main Panel
 	VerticalPanel mainContentPanel = new VerticalPanel();
+	
+	// All composites must call initWidget() in their constructors.
+	initWidget(mainContentPanel);
 
 	// First row sub-panel
 	HorizontalPanel firstRowPanel = new HorizontalPanel();
@@ -305,8 +275,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	getCurrentSelectionTextBox().setWidth("315px");
 	fileSelectionSubPanel.add(getCurrentSelectionTextBox());
 
-	// All composites must call initWidget() in their constructors.
-	initWidget(mainContentPanel);
 
 	// Give the overall composite a style name
 	this.setStylePrimaryName("Osyl-RemoteFileBrowser");
@@ -335,68 +303,13 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	return button;
     }
 
-    /**
-     * Parse a JSON String and construct corresponding RemoteDirectory
-     * 
-     * @param jsonString
-     * @return The constructed remoteDirectory
-     */
-    public OsylDirectory getDirectoryContent(String jsonString) {
-	if (TRACE)
-	    Window.alert("JSON resp = " + jsonString);
-	JSONString name = null;
-	JSONString path = null;
-
-	JSONObject root = (JSONObject) JSONParser.parse(jsonString);
-	JSONObject items = (JSONObject) root.get("items");
-	Set<String> keys = items.keySet();
-	ArrayList<OsylAbstractBrowserItem> dirItems =
-		new ArrayList<OsylAbstractBrowserItem>();
-	for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-	    String key = (String) iter.next();
-	    boolean escaped = false;
-	    JSONObject jObject = (JSONObject) items.get(key);
-	    JSONString type = (JSONString) jObject.get("primaryNodeType");
-	    OsylAbstractBrowserItem osylRemoteDirItem = null;
-	    if (type != null && type.stringValue().equals("nt:folder")) {
-		path = (JSONString) jObject.get("path");
-		name =
-			(JSONString) ((JSONObject) jObject.get("properties"))
-				.get("DAV:displayname");
-		if (name.stringValue().equals("publish")) {
-		    // TODO change this to a non hard coded value
-		    escaped = true;
-		} else {
-		    ArrayList<OsylAbstractBrowserItem> list =
-			    new ArrayList<OsylAbstractBrowserItem>();
-		    osylRemoteDirItem =
-			    new OsylDirectory(name.stringValue(), path
-				    .stringValue(), "", list);
-		}
-	    } else {
-		OsylAbstractBrowserItem oBrowserItem =
-			getOsylAbstractBrowserItem(jObject);
-		if (oBrowserItem != null) {
-		    osylRemoteDirItem = oBrowserItem;
-		} else {
-		    escaped = true;
-		}
-	    }
-	    if (!escaped)
-		dirItems.add(osylRemoteDirItem);
-	}
-	OsylDirectory osylRemoteDirectory = null;
-	if (!dirItems.isEmpty()) {
-	    osylRemoteDirectory = new OsylDirectory("", "", "", dirItems);
-	}
-	return osylRemoteDirectory;
-    }
+   
 
     /**
      * Sorts the specified list according to the type and name of each element.
      * Folders come before files and name is case insensitive.
      */
-    private void sortDirContent(ArrayList<OsylAbstractBrowserItem> dirListing) {
+    private void sortDirContent(List<OsylAbstractBrowserItem> dirListing) {
 	java.util.Collections.sort(dirListing,
 		new Comparator<OsylAbstractBrowserItem>() {
 		    public int compare(OsylAbstractBrowserItem file1,
@@ -421,15 +334,8 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
      * 
      * @param directoryPath the path where to look to get the file listing.
      */
-    public void getRemoteDirectoryListing(String directoryPath) {
-	getFileListing().addStyleName("Osyl-RemoteFileBrowser-WaitingState");
-	if (TRACE)
-	    Window.alert("DIR = " + getBaseDirectoryPath() + getBrowsedSiteId()
-		    + "/" + directoryPath);
-	OsylJSONRemoteDirectory.getRemoteDirectoryContent(
-		getBaseDirectoryPath() + getBrowsedSiteId() + "/"
-			+ directoryPath, remoteDirListingRespHandler);
-    }
+    public abstract void getRemoteDirectoryListing(String directoryPath);
+
 
     public String formatListingLine(OsylAbstractBrowserItem abstractBrowserItem) {
 	String formattedLine = " ";
@@ -658,6 +564,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		newFilePath =
 			newFilePath.substring(0, newFilePath.lastIndexOf("/"));
 	    }
+	    setCurrentDirectory(new OsylDirectory());
 	    getCurrentDirectory().setDirectoryPath(newFilePath);
 	    // Fill the listing
 	    getFileListing().clear();
@@ -714,7 +621,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     }
 
     // GETTERS AND SETTERS
-    public RequestCallback getRemoteDirListingRespHandler() {
+    public AsyncCallback<List<OsylAbstractBrowserItem>> getRemoteDirListingRespHandler() {
 	return remoteDirListingRespHandler;
     }
 
@@ -761,19 +668,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	return this.baseDirectoryPath;
     }
 
-    /**
-     * @param baseDirectoryPath the new value of baseDirectoryPath.
-     */
-    public void setBaseDirectoryPath(String newBaseDirectoryPath) {
-	this.baseDirectoryPath = newBaseDirectoryPath;
-    }
-
-    /**
-     * @return the Previous Directory Path value.
-     */
-    public String getInitialDirectoryPath() {
-	return this.initialDirPath;
-    }
 
     /**
      * @param newDirPath the new value of Previous Directory Path.
@@ -798,19 +692,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	this.selectedAbstractBrowserItem = selectedAbstractFileItem;
     }
 
-    /**
-     * @return the File Extension filter value.
-     */
-    public String getFileExtensionFilter() {
-	return fileExtensionFilter;
-    }
 
-    /**
-     * @param fileExtensionFilter the new value of filter
-     */
-    public void setFileExtensionFilter(String newFilter) {
-	this.fileExtensionFilter = newFilter;
-    }
 
     public OsylImageBundleInterface getOsylImageBundle() {
 	return osylImageBundle;
@@ -919,7 +801,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     public void notifyFileListingAcquiredEventHandlers() {
 
 	if (getFileListingAcquiredEventHandlerList() != null) {
-	    ItemListingAcquiredEvent event = new ItemListingAcquiredEvent(null);
+	    ItemListingAcquiredEvent event = new ItemListingAcquiredEvent(this);
 	    for (int i = 0; i < getFileListingAcquiredEventHandlerList().size(); i++) {
 		getFileListingAcquiredEventHandlerList().get(i)
 			.onItemListingAcquired(event);
@@ -1002,12 +884,5 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     protected abstract String getCurrentSelectionLabel();
 
     protected abstract void onFileDoubleClicking();
-
-    /**
-     * @param jObject the JSONObject to be parsed.
-     * @return the OSylFileItem
-     */
-    protected abstract OsylAbstractBrowserItem getOsylAbstractBrowserItem(
-	    JSONObject jsObject);
 
 }

@@ -25,6 +25,7 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresUploadFileEvents;
 import org.sakaiquebec.opensyllabus.client.controller.event.UploadFileEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.UploadFileEventHandler.UploadFileEvent;
+import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewControllable;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
@@ -102,13 +103,7 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 	form.setWidget(table);
 
 	if (!getController().isInHostedMode()) {
-	    String url = GWT.getModuleBaseURL();
-	    // We use the URL from the beginning to the first slash after
-	    // the protocol part (hence the 8 skipped chars: we suppose it
-	    // can be either http:// or https://)
-	    String cleanUrl = url.substring(0, url.indexOf("/", 8));
-	    form.setAction(cleanUrl + "/sdata/c/group/" + getSiteId() + "/"
-		    + currentFolder + "/");
+		form.setAction(OsylRemoteServiceLocator.getUploadFileUrl(this.currentFolder));
 	}
 
 	// Because we're going to add a FileUpload widget, we'll need to set the
