@@ -254,6 +254,9 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     public void setText(String text) {
 	if (isInEditionMode()) {
 	    editorName.setText(text);
+	    if (editorName.getOffsetWidth() > 675) {
+	    	editorName.setWidth("675px");
+	    }
 	} else {
 	    viewer.setHTML(text);
 	}
@@ -270,6 +273,9 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     public void setLink(String text) {
 	if (isInEditionMode()) {
 	    editorLink.setText(text);
+	    if (editorLink.getOffsetWidth() > 675) {
+	    	editorLink.setWidth("675px");
+	    }
 	} else {
 	    viewer.setHTML(text);
 	}
@@ -309,19 +315,19 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 
 	// We keep track that we are now in edition-mode
 	setInEditionMode(true);
+	
+	createEditBox();
 
 	// We get the text to edit from the model
-	editorName.setText(getView().getTextFromModel());
+	setText(getView().getTextFromModel());
 	// And put the cursor at the end
 	editorName.setCursorPos(getText().length());
 	// And we give the focus to the editor
 	editorName.setFocus(true);
 	// We get the URL for the link
-	editorLink.setText(getView().getLinkURI());
+	setLink(getView().getLinkURI());
 	// We get the description text to edit from the model
 	editorDesc.setHTML(getView().getDescriptionFromModel());
-
-	createEditBox();
 
     } // enterEdit
 

@@ -405,6 +405,12 @@ public abstract class OsylAbstractEditor extends Composite {
 	// set minimum width of pop-up
 	if (pop.getContentWidth() < 400)
 	    pop.setContentSize(400, pop.getContentHeight());
+	// set maximum width of pop-up
+	if (pop.getContentWidth() > 750) {
+		pop.setContentSize(750, pop.getContentHeight());
+		getEditorTopWidget().setWidth("735px");
+	}
+	    
 	// remember original height
 	originalEditorPopupHeight = pop.getOffsetHeight();
 	originalEditorWidgetHeight = getEditorTopWidget().getOffsetHeight();

@@ -20,6 +20,7 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.client.ui.listener;
 
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 
@@ -60,18 +61,25 @@ public class OsylEditableMouseOverListener implements MouseListener {
 		&& !OsylController.getInstance().isReadOnly()) {
 	    view.addStyleDependentName("Hover");
 	    view.getButtonPanel().setVisible(true);
-	    int left =
-		    (view.getOffsetWidth() - view.getButtonPanel()
-			    .getOffsetWidth()) / 2;
+	    // left position of buttons is according to viewport if
+	    // width of main panel is larger than this
+	    int widthReference = OsylEditorEntryPoint.getViewportWidth() - 
+	    		view.getMainPanel().getAbsoluteLeft() <
+	    		view.getOffsetWidth() ?
+	    				OsylEditorEntryPoint.getViewportWidth() - 
+	    				view.getMainPanel().getAbsoluteLeft() :
+	    					view.getOffsetWidth();
+	    int left = (widthReference - view.getButtonPanel()
+	    		.getOffsetWidth()) / 2;
 	    int top =
 		    (view.getOffsetHeight() - view.getButtonPanel()
 			    .getOffsetHeight()) / 2;
 	    view.getMainPanel().setWidgetPosition(view.getButtonPanel(), left,
 		    top);
-
+	    
 	    view.getUpAndDownPanel().setVisible(true);
 	    int leftUDP =
-		    (view.getOffsetWidth() - view.getUpAndDownPanel()
+		    (widthReference - view.getUpAndDownPanel()
 			    .getOffsetWidth()-3);
 	    int topUDP = view.getOffsetHeight() - view.getOffsetHeight()+3;
 	    view.getMainPanel().setWidgetPosition(view.getUpAndDownPanel(),
