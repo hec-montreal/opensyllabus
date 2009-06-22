@@ -737,10 +737,12 @@ public class COModeledServer {
      */
     private void createCDataNode(Document document, Element parent,
 	    String nodeName, String content) {
-	Element cDataElement = document.createElement(nodeName);
-	CDATASection cData = document.createCDATASection(content);
-	cDataElement.appendChild(cData);
-	parent.appendChild(cDataElement);
+	if (content != null) {
+	    Element cDataElement = document.createElement(nodeName);
+	    CDATASection cData = document.createCDATASection(content);
+	    cDataElement.appendChild(cData);
+	    parent.appendChild(cDataElement);
+	}
     }
 
     /**
@@ -986,11 +988,10 @@ public class COModeledServer {
 	COContent contentParent = parent.getModeledContent();
 	COContent contentChild = this.getModeledContent();
 
-	if(contentChild==null){
+	if (contentChild == null) {
 	    copyStructureOnly(contentParent);
 	    this.setModeledContent(contentParent);
-	}
-	else {
+	} else {
 	    associateChild(contentChild, contentParent);
 	}
 

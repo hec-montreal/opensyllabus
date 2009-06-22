@@ -677,10 +677,12 @@ public class COModeled extends COSerialized implements COModelInterface {
      */
     private void createCDataNode(Document document, Element parent,
 	    String nodeName, String content) {
-	Element cDataElement = document.createElement(nodeName);
-	CDATASection cData = document.createCDATASection(content);
-	cDataElement.appendChild(cData);
-	parent.appendChild(cDataElement);
+	if (content != null) {
+	    Element cDataElement = document.createElement(nodeName);
+	    CDATASection cData = document.createCDATASection(content);
+	    cDataElement.appendChild(cData);
+	    parent.appendChild(cDataElement);
+	}
     }
 
     /**
