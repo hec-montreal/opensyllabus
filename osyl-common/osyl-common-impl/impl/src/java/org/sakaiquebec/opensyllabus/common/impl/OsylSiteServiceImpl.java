@@ -537,7 +537,28 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	    siteId = getCurrentSiteId();
 	    thisCo = getSerializedCourseOutlineBySiteId(siteId);
 
-	    if (thisCo.getSerializedContent() == null) {
+	    if(thisCo==null){
+		coConfig =
+			osylConfigService
+				.getConfigByRef(
+					OsylConfigService.DEFAULT_CONFIG_REF,
+					webappDir);
+		thisCo =
+			new COSerialized(IdManager.createUuid(),
+				osylConfigService.getCurrentLocale(), "shared",
+				"", siteId, "sectionId", coConfig,
+				getXmlStringFromFile(coConfig, webappDir),
+				"shortDescription", "description", "title",
+				false);
+		// reinitilaisation des uuids
+		COModeledServer coModeled = new COModeledServer(thisCo);
+		coModeled.XML2Model();
+		coModeled.resetUuid();
+		coModeled.model2XML();
+		thisCo.setSerializedContent(coModeled.getSerializedContent());
+
+		resourceDao.createOrUpdateCourseOutline(thisCo);
+	    } else if (thisCo.getSerializedContent() == null) {
 		coConfig =thisCo.getOsylConfig();
 		thisCo.setSerializedContent(getXmlStringFromFile(coConfig, webappDir));
 		// reinitilaisation des uuids
