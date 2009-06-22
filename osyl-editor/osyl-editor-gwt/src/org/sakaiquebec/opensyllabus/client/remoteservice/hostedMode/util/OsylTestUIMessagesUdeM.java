@@ -2,7 +2,7 @@
  * $Id: OsylTestUIMessages.java 1822 2009-01-27 16:20:46Z laurent.danet@hec.ca $
  **********************************************************************************
  *
- * Copyright (c) 2008 The Sakai Foundation, The Sakai Québec Team.
+ * Copyright (c) 2008 The Sakai Foundation, The Sakai Quï¿½bec Team.
  *
  * Licensed under the Educational Community License, Version 1.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import java.util.Map;
  * ATTENTION: Any message added to the default message bundle should be added
  * here!
  * 
- * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Lepêtre</a>
+ * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Lepï¿½tre</a>
  * @version $Id: OsylTestUIMessages.java 1046 2008-06-11 21:15:46Z
  *          claude.coulombe@umontreal.ca $
  */
@@ -61,21 +61,21 @@ public class OsylTestUIMessagesUdeM {
 	    messages.put("ButtonPrintToolBar", "Imprimer");
 	    messages.put("ButtonPublishToolBar", "Publier");
 	    messages.put("ButtonSaveToolBar", "Enregistrer");
-	    messages.put("ButtonViewToolBar", "Aperçu...");
+	    messages.put("ButtonViewToolBar", "AperÃ§u...");
 	    messages.put("ButtonCloseToolBar", "Fermer");
 
 	    // Toolbar tooltips
 	    messages.put("ButtonAddToolBarTooltip",
-		    "Ajouter un élément à la vue courante...");
+		    "Ajouter un Ã©lÃ©ment Ã  la vue courante...");
 	    messages.put("ButtonHomeToolBarTooltip",
-		    "Retourner à l'accueil principal...");
+		    "Retourner Ã  l'accueil principal...");
 	    messages.put("ButtonImportToolBarTooltip", "Ajouter un document...");
 	    messages.put("ButtonPrintToolBarTooltip", "Imprimer le plan de cours...");
 	    messages.put("ButtonPublishToolBarTooltip",
 		    "Publier le plan de cours...");
 	    messages.put("ButtonSaveToolBarTooltip", "Enregistrer le plan de cours...");
-	    messages.put("ButtonViewToolBarTooltip", "Voir un aperçu du plan de cours...");
-	    messages.put("ButtonCloseToolBarTooltip","Fermer la fenêtre de prévisualisation...");
+	    messages.put("ButtonViewToolBarTooltip", "Voir un aperÃ§u du plan de cours...");
+	    messages.put("ButtonCloseToolBarTooltip","Fermer la fenÃªtre de prÃ©visualisation...");
 	    
 	    messages.put("OsylToolbar", "Barre d''outils OpenSyllabus");
 
@@ -85,7 +85,7 @@ public class OsylTestUIMessagesUdeM {
 
 	    messages.put("RpcError", "*** Erreur du RPC ***");
 
-	    messages.put("RpcSuccess", "*** Succès du RPC ***");
+	    messages.put("RpcSuccess", "*** SuccÃ¨s du RPC ***");
 
 	    messages.put("Bienvenue", "Bienvenue!  Nous sommes le {0}.");
 
@@ -93,7 +93,7 @@ public class OsylTestUIMessagesUdeM {
 
 	    messages.put("delete", "Supprimer");
 
-	    messages.put("edit", "éditer");
+	    messages.put("edit", "Ã©diter");
 	    
 	    messages.put("follow", "Suivre le lien");
 	    
@@ -115,18 +115,18 @@ public class OsylTestUIMessagesUdeM {
 
 	    messages.put("fileUpload.addResource", "Ajout d'une ressource");
 
-	    messages.put("fileUpload.selectDest", "Sélectionnez la destination: ");
+	    messages.put("fileUpload.selectDest", "SÃ©lectionnez la destination: ");
 
-	    messages.put("fileUpload.plsSelectFile", "Veuillez sélectionner un fichier!");
+	    messages.put("fileUpload.plsSelectFile", "Veuillez sÃ©lectionner un fichier!");
 
 	    messages.put("fileUpload.resNotSaved",
 		    "Impossible d'enregistrer la ressource!");
 
-	    messages.put("fileUpload.resSaved", "Ressource enregistrée.");
+	    messages.put("fileUpload.resSaved", "Ressource enregistrÃ©e.");
 
 	    messages
 		    .put("fileUpload.unableAddRes",
-			    "Impossible d''ajouter la ressource au contexte courant!\n\nDétails: {0}");
+			    "Impossible d''ajouter la ressource au contexte courant!\n\n DÃ©tails: {0}");
 
 	    messages.put("fileUpload.unableReadRemoteDir", "Impossible de lire le contenu du dossier distant");
 	    
@@ -134,7 +134,7 @@ public class OsylTestUIMessagesUdeM {
 	    
 	    messages
 		    .put("fileUpload.unableToGetSiteID",
-			    "Erreur: Impossible d''obtenir le Site ID. La création de ressource ne fonctionnera pas.");
+			    "Erreur: Impossible d''obtenir le Site ID. La crÃ©ation de ressource ne fonctionnera pas.");
 
 	    messages.put("courseOutlinePublication", "Publication d'un plan de cours");
 
@@ -144,11 +144,11 @@ public class OsylTestUIMessagesUdeM {
 	    
 	    messages.put("close", "Fermer");
 	    	    
-	    messages.put("publishOK","Le plan de cours a été publié");
+	    messages.put("publishOK","Le plan de cours a Ã©tÃ© publiÃ©");
 
 	    messages.put("publishError","Impossible de publier le plan de cours");
 
-	    messages.put("resourceEditor","Détails de la ressource");
+	    messages.put("resourceEditor","DÃ©tails de la ressource");
 
 	    messages.put("resourceEditorSelectRubric","<choisissez une rubrique>");
 	    
@@ -168,7 +168,7 @@ public class OsylTestUIMessagesUdeM {
 
 	    messages.put("rtt_color", "couleur");
 
-	    messages.put("rtt_createLink", "Créer un lien");
+	    messages.put("rtt_createLink", "CrÃ©er un lien");
 
 	    messages.put("rtt_font", "Police");
 
@@ -176,19 +176,19 @@ public class OsylTestUIMessagesUdeM {
 
 	    messages.put("rtt_green", "vert");
 
-	    messages.put("rtt_hr", "Insérer réglet horizontal");
+	    messages.put("rtt_hr", "InsÃ©rer rÃ©glet horizontal");
 
 	    messages.put("rtt_indent", "Indenter vers la droite");
 
-	    messages.put("rtt_insertImage", "Insérer une image");
+	    messages.put("rtt_insertImage", "InsÃ©rer une image");
 
 	    messages.put("rtt_italic", "En italique");
 
 	    messages.put("rtt_justifyCenter", "Centrer");
 
-	    messages.put("rtt_justifyLeft", "Justifier à gauche");
+	    messages.put("rtt_justifyLeft", "Justifier Ã  gauche");
 
-	    messages.put("rtt_justifyRight", "Justifier à droite");
+	    messages.put("rtt_justifyRight", "Justifier Ã  droite");
 
 	    messages.put("rtt_large", "Large");
 
@@ -196,7 +196,7 @@ public class OsylTestUIMessagesUdeM {
 
 	    messages.put("rtt_normal", "Normal");
 
-	    messages.put("rtt_ol", "Insérer une liste ordonnée");
+	    messages.put("rtt_ol", "InsÃ©rer une liste ordonnÃ©e");
 
 	    messages.put("rtt_outdent", "Indenter vers la gauche");
 
@@ -216,7 +216,7 @@ public class OsylTestUIMessagesUdeM {
 
 	    messages.put("rtt_superscript", "Exposant");
 
-	    messages.put("rtt_ul", "Insérer une liste non-ordonnée");
+	    messages.put("rtt_ul", "InsÃ©rer une liste non-ordonnÃ©e");
 
 	    messages.put("rtt_underline", "Souligner");
 
@@ -239,17 +239,17 @@ public class OsylTestUIMessagesUdeM {
 
 	    messages.put("save", "Enregistrer");
 
-	    messages.put("savedOK", "Sauvegarde complétée!");
+	    messages.put("savedOK", "Sauvegarde complÃ©tÃ©e!");
 
 	    messages.put("unableToInitServer",
-		    "Impossible d''établir la communication avec le serveur.\r\n\r\nDétails:\r\n{0}");
+		    "Impossible d''Ã©tablir la communication avec le serveur.\r\n\r\nDÃ©tails:\r\n{0}");
 
 	    messages
 		    .put(
 			    "unableToLoadCO",
-			    "Impossible de charger le plan de cours du serveur.\nLe contenu de développement sera utilisé.\r\n\r\nDétails:\r\n{0}");
+			    "Impossible de charger le plan de cours du serveur.\nLe contenu de dÃ©veloppement sera utilisÃ©.\r\n\r\nDÃ©tails:\r\n{0}");
 
-	    messages.put("ResDocumentConfigView_Welcome", "Sélectionnez une ressource ci-contre");
+	    messages.put("ResDocumentConfigView_Welcome", "SÃ©lectionnez une ressource ci-contre");
 
 	    messages.put("ResDocumentConfigView_Display_Label", "Affichage");
 
@@ -268,7 +268,7 @@ public class OsylTestUIMessagesUdeM {
 		    "Institution");
 
 	    messages.put("ResDocumentConfigView_Attendee_RadioButton",
-		    "étudiant inscrit");
+		    "ï¿½tudiant inscrit");
 
 	    messages.put("UtilityRemoteFileBrowser_TitleLabel", 
 		    "Fureteur de ressources");
@@ -286,7 +286,7 @@ public class OsylTestUIMessagesUdeM {
 	    
 	    messages.put("UtilityRemoteFileBrowser_Choose_Button", "Choisir");
 	    
-	    messages.put("UtilityRemoteFileBrowser_Selected_File", "Fichier sélectionné: ");
+	    messages.put("UtilityRemoteFileBrowser_Selected_File", "Fichier sÃ©lectionnÃ©: ");
 	    
 	    messages.put("UtilityRemoteFileBrowser_Selected_File_None","aucun");
 	    
@@ -311,7 +311,7 @@ public class OsylTestUIMessagesUdeM {
 	    
 	    messages.put("OsylOkCancelDialog_Title", "Attention!");
 	    
-	    messages.put("OsylOkCancelDialog_Delete_Content", "êtes-vous certain de vouloir supprimer cet item?");
+	    messages.put("OsylOkCancelDialog_Delete_Content", "ÃŠtes-vous certain de vouloir supprimer cet item?");
 	    
 	    messages.put("OsylOkCancelDialog_Delete_Ok_Button", "Oui");
 	    
@@ -321,34 +321,34 @@ public class OsylTestUIMessagesUdeM {
 	    
 	    messages.put("OsylAlertDialog_Title", "Alerte");
 	    
-	    messages.put("saveBeforeQuit", "Vous êtes sur le point de quitter OpenSyllabus mais vous n'avez pas enregistré les dernières modifications.\nSouhaitez-vous enregistrer (bouton OK) ou quitter sans enregistrer (bouton Annuler) ?");
+	    messages.put("saveBeforeQuit", "Vous Ãªtes sur le point de quitter OpenSyllabus mais vous n'avez pas enregistrÃ© les derniÃ¨res modifications.\nSouhaitez-vous enregistrer (bouton OK) ou quitter sans enregistrer (bouton Annuler) ?");
 
-	    messages.put("RemovedContentUnit","Supprimé: '{0}'");
+	    messages.put("RemovedContentUnit","SupprimÃ©: '{0}'");
 	    
-	    messages.put("Preview.attendee_version", "Version des étudiants inscrits");
+	    messages.put("Preview.attendee_version", "Version des Ã©tudiants inscrits");
 	    
 	    messages.put("Preview.public_version", "Version publique");
 	    
 	    
 	    messages.put("MetaInfo.audience", "Niveau de diffusion");
 	    
-	    messages.put("MetaInfo.audience.attendee", "étudiants inscrits");
+	    messages.put("MetaInfo.audience.attendee", "Ã©tudiants inscrits");
 	    
 	    messages.put("MetaInfo.audience.onsite", "Institution");
 	    
 	    messages.put("MetaInfo.audience.public", "Public");
 	    
-	    messages.put("MetaInfo.audience.title", "Choisissez le niveau de diffusion de l'élément");
+	    messages.put("MetaInfo.audience.title", "Choisissez le niveau de diffusion de l'Ã©lÃ©ment");
 	    
-	    messages.put("MetaInfo.hidden", "Caché");
+	    messages.put("MetaInfo.hidden", "CachÃ©");
 	    
 	    messages.put("MetaInfo.hide", "Cacher");
 	    
-	    messages.put("MetaInfo.hide.title", "Cocher pour cacher l'élément, jusqu'à ce qu'il soit complété par exemple");
+	    messages.put("MetaInfo.hide.title", "Cocher pour cacher l'Ã©lÃ©ment, jusqu'a ce qu'il soit complÃ©tÃ© par exemple");
 	    
 	    messages.put("MetaInfo.important", "Important");
 	    
-	    messages.put("MetaInfo.important.title", "Cocher pour démarquer l'élément");
+	    messages.put("MetaInfo.important.title", "Cocher pour dÃ©marquer l'Ã©lÃ©ment");
 	    
 	    messages.put("MetaInfo.title", "Options");
 	    
@@ -356,28 +356,28 @@ public class OsylTestUIMessagesUdeM {
 	    
 	    messages.put("EditorPopUp.options.rubric.choose", "Choisissez une rubrique");
 	    
-	    messages.put("EditorPopUp.options.rubric.choose.title", "Choisissez la rubrique dans laquelle l'élément doit apparaître");
+	    messages.put("EditorPopUp.options.rubric.choose.title", "Choisissez la rubrique dans laquelle l'Ã©lÃ©ment doit apparaÃ®tre");
 
-	    messages.put("EditorPopUp.title", "édition");
+	    messages.put("EditorPopUp.title", "Ã‰dition");
 	    
 	    messages.put("MetaInfo.requirement", "Niveau d'exigence");
 	  //we don't want to display text by default for the requirement level
 	    messages.put("MetaInfo.requirement.undefined", " "); 
 	    messages.put("MetaInfo.requirement.mandatory", "Obligatoire");
-	    messages.put("MetaInfo.requirement.recommended", "Recommandé");
-	    messages.put("MetaInfo.requirement.complementary", "Complémentaire");
-	    messages.put("MetaInfo.requirement.title", "Choisissez le niveau d'exigence de cet élément");
+	    messages.put("MetaInfo.requirement.recommended", "RecommandÃ©");
+	    messages.put("MetaInfo.requirement.complementary", "ComplÃ©mentaire");
+	    messages.put("MetaInfo.requirement.title", "Choisissez le niveau d'exigence de cet Ã©lÃ©ment");
 	    
 
-	    messages.put("MetaInfo.library", "Bibliothèque");
+	    messages.put("MetaInfo.library", "BibliothÃ¨que");
 	
-	    messages.put("MetaInfo.library.title", "Cocher si la référence est disponible a la bibliothèque de l''Institution");
+	    messages.put("MetaInfo.library.title", "Cocher si la rÃ©fÃ©rence est disponible a la bibliothÃ¨que de l''Institution");
 
 	    messages.put("MetaInfo.bookstore", "Bookstore");
 
-	    messages.put("MetaInfo.bookstore.title", "Cocher si la référence est disponible à la librairie de l''Institution");
+	    messages.put("MetaInfo.bookstore.title", "Cocher si la rÃ©fÃ©rence est disponible Ã  la librairie de l''Institution");
 	  
-	    messages.put("MetaInfo.citation.exception", "La référence bibliographique ne doit pas être vide");
+	    messages.put("MetaInfo.citation.exception", "La rÃ©fÃ©rence bibliographique ne doit pas Ãªtre vide");
 	    
 	    messages.put("clickable_text", "Clickable text");
 	    messages.put("description", "Description");
@@ -388,10 +388,10 @@ public class OsylTestUIMessagesUdeM {
 	    messages.put("DocumentEditor.context", "2. Contexte d'utilisation");
 	    
 	    messages.put("DocumentEditor.title.add", "Ajouter un document");
-	    messages.put("DocumentEditor.title.edit", "éditer un document");
+	    messages.put("DocumentEditor.title.edit", "Ã‰diter un document");
 	    
-	    messages.put("DocumentEditor.document.details", "Voir les détails du document...");
-	    messages.put("DocumentEditor.document.selection", "1. Sélectionnez un document");
+	    messages.put("DocumentEditor.document.details", "Voir les dÃ©tails du document...");
+	    messages.put("DocumentEditor.document.selection", "1. SÃ©lectionnez un document");
 	    messages.put("DocumentEditor.document.description", "Description du document");
 	    messages.put("DocumentEditor.document.license", "Licence");
 	    messages.put("DocumentEditor.save.name", "Sauvegarder");
@@ -399,22 +399,22 @@ public class OsylTestUIMessagesUdeM {
 	    
 	    messages.put("DocumentEditor.context", "2. Use context");
 	    
-	    messages.put("DocumentEditor.document.PropUpdateError", "La mise à jour des propriétés du document a échoué.");
-	    messages.put("DocumentEditor.document.PropUpdateSuccess", "La mise à jour des propriétés du document a réussi.");
+	    messages.put("DocumentEditor.document.PropUpdateError", "La mise Ã  jour des propriÃ©tÃ©s du document a Ã©chouÃ©.");
+	    messages.put("DocumentEditor.document.PropUpdateSuccess", "La mise Ã  jour des propriÃ©tÃ©s du document a rÃ©ussi.");
 	    
 	    messages.put("Evaluation.EndDate","Date de fin / remise");
-	    messages.put("Evaluation.StartDate","Date de début");
+	    messages.put("Evaluation.StartDate","Date de dÃ©but");
 	    messages.put("Evaluation.deliverable","Livrable");
 	    messages.put("Evaluation.location","Localisation");
 	    messages.put("Evaluation.mode","Mode");
-	    messages.put("Evaluation.name","Titre de l'instrument & étape dans le cours");
-	    messages.put("Evaluation.rating","Pondération de l'instrument");
-	    messages.put("Evaluation.scope","Portée");
+	    messages.put("Evaluation.name","Titre de l'instrument & Ã©tape dans le cours");
+	    messages.put("Evaluation.rating","PondÃ©ration de l'instrument");
+	    messages.put("Evaluation.scope","PortÃ©e");
 	    messages.put("Evaluation.scope.tooltip","Sommatif = obligatoire, Formatif = facultatif");
 	    messages.put("Evaluation.subtype","Type de remise");
-	    messages.put("Evaluation.type","Type de l'instrument d'évaluation");
+	    messages.put("Evaluation.type","Type de l'instrument d'Ã©valuation");
 	    
-	    messages.put("Link.label","Libellé");
+	    messages.put("Link.label","LibellÃ©");
 	    messages.put("Link.url","URL");
 	    messages.put("Link.description","Description du lien");
 	    
@@ -422,20 +422,20 @@ public class OsylTestUIMessagesUdeM {
 	    messages.put("DownButton.title", "Descendre");
 	    
 	    messages.put("Browser.upButton.tooltip","Remonter d'un niveau");
-	    messages.put("Browser.addFolderButton.tooltip","Créer un dossier...");
+	    messages.put("Browser.addFolderButton.tooltip","CrÃ©er un dossier...");
 	    messages.put("Browser.addFileButton.tooltip","Ajouter un fichier...");
 	    messages.put("Browser.addCitationButton.tooltip","Ajouter une citation...");
 	    
-	    messages.put("Browser.selected_citation","Citation selectionnée: ");
-	    messages.put("Browser.selected_file","Fichier sélectionné : ");
+	    messages.put("Browser.selected_citation","Citation selectionnÃ©e: ");
+	    messages.put("Browser.selected_file","Fichier sÃ©lectionnÃ© : ");
 	    
-	    messages.put("CitationForm.createCitation", "Création d'une citation");
-	    messages.put("CitationForm.editCitation", "édition d'une citation");
+	    messages.put("CitationForm.createCitation", "CrÃ©ation d'une citation");
+	    messages.put("CitationForm.editCitation", "Ã‰dition d'une citation");
 	    messages.put("CitationForm.fillRequiredFields", "SVP, remplir les champs requis!");
-	    messages.put("CitationEditor.title.add","Ajouter une référence bibliographique");
-	    messages.put("CitationEditor.title.edit","éditer une référence bibliographique");
-	    messages.put("CitationEditor.document.selection","1. Sélectionner une référence bibliographique");
-	    messages.put("CitationEditor.document.details","Voir la référence bibliographique...");
+	    messages.put("CitationEditor.title.add","Ajouter une rÃ©fÃ©rence bibliographique");
+	    messages.put("CitationEditor.title.edit","Ã‰diter une rÃ©fÃ©rence bibliographique");
+	    messages.put("CitationEditor.document.selection","1. SÃ©lectionner une rÃ©fÃ©rence bibliographique");
+	    messages.put("CitationEditor.document.details","Voir la rÃ©fÃ©rence bibliographique...");
 	    messages.put(" CitationEditor.context","2. Contexte d'utilisation...");
 	   
 	    messages.put("selectRubric","<choisissez une rubrique>");
