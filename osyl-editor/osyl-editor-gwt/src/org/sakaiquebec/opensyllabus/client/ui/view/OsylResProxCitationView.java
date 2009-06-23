@@ -29,10 +29,18 @@ import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 
 /**
+ * Class providing display and edition capabilities for citations resources.
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  */
 public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 
+    /**
+     * Constructor specifying the model to display and edit as well as the
+     * current {@link OsylController}.
+     *  
+     * @param model
+     * @param osylController
+     */
     protected OsylResProxCitationView(COModelInterface model,
 	    OsylController osylController) {
 	super(model, osylController);
@@ -40,6 +48,9 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	initView();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getTextFromModel() {
 	String text = getModel().getLabel();
 	if (getEditor().isInEditionMode()) {
@@ -49,10 +60,16 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	}
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public OsylCitationEditor getEditor() {
 	return (OsylCitationEditor) super.getEditor();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected void updateModel() {
 	getModel().getResource().setProperties(new COProperties());
 	updateMetaInfo();
@@ -88,12 +105,18 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	setModelPropertyWithEditorProperty(CitationSchema.URL);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected void updateMetaInfo() {
 	super.updateMetaInfo();
 	setAvailableInBookstore(getEditor().isAvailableInBookstore());
 	setAvailableInLibrary(getEditor().isAvailableInLibrary());
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public String getDocName() {
 	String docName=super.getDocName();
 	if (docName == null)
@@ -116,23 +139,27 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	}
     }
 
+    /**
+     * 
+     * @return true if 
+     */
     public boolean isAvailableInLibrary() {
-	return "false".equals(getModel().getProperty(
+	return "true".equals(getModel().getProperty(
 		COPropertiesType.AVAILABILITY_LIB));
     }
 
     public void setAvailableInLibrary(boolean b) {
-	String booleanValue = "" + (!b);
+	String booleanValue = "" + (b);
 	getModel().addProperty(COPropertiesType.AVAILABILITY_LIB, booleanValue);
     }
 
     public boolean isAvailableInBookstore() {
-	return "false".equals(getModel().getProperty(
+	return "true".equals(getModel().getProperty(
 		COPropertiesType.AVAILABILITY_COOP));
     }
 
     public void setAvailableInBookstore(boolean b) {
-	String booleanValue = "" + (!b);
+	String booleanValue = "" + (b);
 	getModel()
 		.addProperty(COPropertiesType.AVAILABILITY_COOP, booleanValue);
     }
@@ -144,10 +171,18 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 
     }
 
+    /**
+     * @param property
+     * @return the property value
+     */
     private String getPropertyValue(String property) {
 	return getProperty(property) == null ? "" : getProperty(property);
     }
 
+    /**
+     * Generate a link, if possible, with citation informations
+     * @return A link or a simple string if link could not be created
+     */
     public String getCitationPreviewAsLink() {
 	
 	String link = "";
@@ -160,6 +195,10 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	
     }
     
+    /**
+     * Generate a link, if possible, with citation informations
+     * @return A link or a simple string if link could not be created
+     */
     public String getCitationsInfosAsLink(OsylCitationItem citationItem) {
 	String link = "";
 	String url = citationItem.getUrl();
@@ -171,7 +210,10 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	
     }
 
-    
+    /**
+     * 
+     * @return 
+     */
     public String getCitationPreview() {
 	String infos = "";
 	String type = getProperty(CitationSchema.TYPE);
