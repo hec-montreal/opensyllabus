@@ -141,7 +141,7 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 
     /**
      * 
-     * @return true if 
+     * @return true if available in library
      */
     public boolean isAvailableInLibrary() {
 	return "true".equals(getModel().getProperty(
@@ -153,6 +153,10 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	getModel().addProperty(COPropertiesType.AVAILABILITY_LIB, booleanValue);
     }
 
+    /**
+     * 
+     * @return true if available in bookstore
+     */
     public boolean isAvailableInBookstore() {
 	return "true".equals(getModel().getProperty(
 		COPropertiesType.AVAILABILITY_COOP));
