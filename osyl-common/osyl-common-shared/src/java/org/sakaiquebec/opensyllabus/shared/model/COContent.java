@@ -22,7 +22,7 @@ import java.util.List;
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
-public class COContent extends COElementAbstract implements COModelInterface {
+public class COContent extends COElementAbstract<COElementAbstract> implements COModelInterface {
 
     /**
      * Children of course content outline either of type
@@ -31,7 +31,7 @@ public class COContent extends COElementAbstract implements COModelInterface {
      * <org.sakaiquebec.opensyllabus.model.COElementAbstract>
      */
 
-    private List<COElementAbstract> children;
+    private List<COElementAbstract> childrens;
 
     /**
      * Constructor. The class type is set at the creation of the object.
@@ -39,7 +39,7 @@ public class COContent extends COElementAbstract implements COModelInterface {
     public COContent() {
 	super();
 	setClassType(CO_CONTENT_CLASS_TYPE);
-	children = new ArrayList<COElementAbstract>();
+	childrens = new ArrayList<COElementAbstract>();
     }
 
     /**
@@ -47,8 +47,8 @@ public class COContent extends COElementAbstract implements COModelInterface {
      *
      * @return the children
      */
-    public List<COElementAbstract> getChildren() {
-	return children;
+    public List<COElementAbstract> getChildrens() {
+	return childrens;
     }
 
     /**
@@ -57,8 +57,8 @@ public class COContent extends COElementAbstract implements COModelInterface {
      *
      * @param children the children to set
      */
-    public void setChildren(List<COElementAbstract>children) {
-	this.children = children;
+    public void setChildrens(List<COElementAbstract>children) {
+	this.childrens = children;
     }
 
     /**
@@ -69,7 +69,7 @@ public class COContent extends COElementAbstract implements COModelInterface {
      */
     public boolean addChild(COElementAbstract child) {
 	if (child.isCOContentUnit() || child.isCOStructureElement())
-	    return getChildren().add(child);
+	    return getChildrens().add(child);
 	else
 	    return false;
     }
@@ -82,39 +82,45 @@ public class COContent extends COElementAbstract implements COModelInterface {
      * @return true if the child is removed successfully, false if not.
      */
     public boolean removeChild(COElementAbstract child) {
-	boolean res = getChildren().remove(child);
+	boolean res = getChildrens().remove(child);
 	notifyEventHandlers();
 	return res;
     }
 
-    /*
-     * Finds and returns the <code>COElementAbstract</code> child with the
-     * specified id form the children list.
-     *
-     * @param childId the id of the child to find and return.
-     * @return the <code>COElementAbstract</code> if it is found, null
-     *         otherwise.
-
-    public COElementAbstract getChildWithId(String childId) {
-	boolean isFound = false;
-	COElementAbstract child = null;
-	Iterator childrenIter = getChildren().iterator();
-
-	while (childrenIter.hasNext() && !isFound) {
-	    COElementAbstract thisChild =
-		    (COElementAbstract) childrenIter.next();
-
-	    if (thisChild.getId().equals(childId)) {
-		child = thisChild;
-		isFound = true;
-	    }
-	}
-	return child;
-    }
- */
-
     /** {@inheritDoc} */
     void notifyEventHandlers() {
 	// TODO: notify please
+    }
+
+    @Override
+    public void changeElementPosition(COElementAbstract coEltAbs, int action) {
+	int ind = childrens.indexOf(coEltAbs);
+	COElementAbstract temp;
+	
+	if(action==COElementAbstract.POSITION_CHANGE_ACTION_UP){
+	   temp = childrens.get(ind-1);
+	   childrens.set(ind-1,coEltAbs);
+	   childrens.set(ind,temp);
+	}
+	if(action==COElementAbstract.POSITION_CHANGE_ACTION_DOWN){
+	    temp=childrens.get(ind+1);
+	    childrens.set(ind+1, coEltAbs);
+	    childrens.set(ind,temp);
+	}
+    }
+
+    @Override
+    public int getElementPosition(COElementAbstract coEltAbs) {
+	int pos = childrens.indexOf(coEltAbs);
+	boolean hasPredecessor=false;
+	boolean hasSuccessor=false;
+	
+	hasPredecessor = (pos!=0);
+	hasSuccessor= (pos!=childrens.size()-1);
+
+	if(hasPredecessor && hasSuccessor) return 2;
+	else if(hasPredecessor) return -1;
+	else if(hasSuccessor) return 1;
+	else return 0;
     }
 }

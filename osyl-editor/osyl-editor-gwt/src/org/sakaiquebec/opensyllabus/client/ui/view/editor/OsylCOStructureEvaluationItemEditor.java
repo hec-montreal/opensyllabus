@@ -20,24 +20,11 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
-import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
-import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylOkCancelDialog;
-import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
-import org.sakaiquebec.opensyllabus.client.ui.listener.OsylLabelEditClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureEvaluationItemLabelView;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
 
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -50,17 +37,10 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
+public class OsylCOStructureEvaluationItemEditor extends
+	OsylCOStructureItemEditor {
 
     // Our main panel which will display the viewer
-    private VerticalPanel mainPanel;
-
-    // Our editor
-    private VerticalPanel editorPanel;
-    private TextBox nameEditor;
-
-    // Our viewer
-    private HTML viewer;
 
     private TextBox weightTextBox;
     private ListBox localisationListBox;
@@ -72,8 +52,6 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
     private ListBox typeRemiseListBox;
     private ListBox typeListBox;
     private int selectedTypeIndex;
-
-    private boolean isInCoUnitList;
 
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
@@ -88,65 +66,8 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
     }
 
     public OsylCOStructureEvaluationItemEditor(OsylAbstractView parent,
-	    boolean isInCoUnitList) {
-	super(parent);
-	this.isInCoUnitList = isInCoUnitList;
-	initMainPanel();
-	if (!isReadOnly()) {
-	    initEditor();
-	}
-	initViewer();
-	initWidget(getMainPanel());
-    }
-
-    /**
-     * ====================== PRIVATE METHODS ======================
-     */
-    private VerticalPanel getMainPanel() {
-	return mainPanel;
-    }
-
-    private void setMainPanel(VerticalPanel mainPanel) {
-	this.mainPanel = mainPanel;
-    }
-
-    private void initMainPanel() {
-	setMainPanel(new VerticalPanel());
-    }
-
-    /**
-     * Creates and set the low-level editor (TextBox).
-     */
-    private void initEditor() {
-	editorPanel = new VerticalPanel();
-	editorPanel.setWidth("98%");
-
-	Label nameLabel = new Label(getUiMessage("Evaluation.name"));
-
-	editorPanel.add(nameLabel);
-
-	nameEditor = new TextBox();
-	nameEditor.setStylePrimaryName("Osyl-LabelEditor-TextBox");
-	nameEditor.setWidth("100%");
-	nameEditor.setTitle(getUiMessage("Evaluation.name.tooltip"));
-	editorPanel.add(nameEditor);
-    }
-
-    /**
-     * Creates and set the low-level viewer (HTML panel).
-     */
-    private void initViewer() {
-	HTML htmlViewer = new HTML();
-	htmlViewer.setStylePrimaryName("Osyl-LabelEditor-View");
-	setViewer(htmlViewer);
-    }
-
-    private void setViewer(HTML html) {
-	this.viewer = html;
-    }
-
-    private HTML getViewer() {
-	return viewer;
+	    boolean isDeletable) {
+	super(parent, isDeletable);
     }
 
     /**
@@ -154,50 +75,9 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
      * superclass for javadoc!
      */
 
-    public void setText(String text) {
-	if (isInEditionMode()) {
-	    nameEditor.setText(text);
-	} else {
-	    viewer.setHTML(text);
-	}
-    }
-
-    public String getText() {
-	if (isInEditionMode()) {
-	    return nameEditor.getText();
-	} else {
-	    return viewer.getHTML();
-	}
-    }
-
-    public void setFocus(boolean b) {
-	if (isInEditionMode()) {
-	    nameEditor.setFocus(b);
-	}
-    }
-
-    public Widget getEditorTopWidget() {
-	return editorPanel;
-    }
-
     public boolean prepareForSave() {
 	return true;
     }
-
-    public void enterEdit() {
-
-	createEditBox();
-
-	// We keep track that we are now in edition-mode
-	setInEditionMode(true);
-	// We get the text to edit from the model
-	setText(getView().getTextFromModel());
-	// And put the cursor at the end
-	nameEditor.setCursorPos(getText().length());
-	// And we give the focus to the editor
-	nameEditor.setFocus(true);
-
-    } // enterEdit
 
     public void enterView() {
 
@@ -218,71 +98,17 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	// If we are in read-only mode, we return now to not add buttons and
 	// listeners enabling edition or deletion:
 
-	// We only create an edit button (as delete is not allowed) and add it:
-	if (!isReadOnly()) {
-	    String title = getView().getUiMessage("edit");
-	    ClickListener listener = new OsylLabelEditClickListener(getView());
-	    AbstractImagePrototype imgEditButton = getOsylImageBundle().edit();
-	    ImageAndTextButton pbEdit =
-		    createButton(imgEditButton, title, listener);
-	    getView().getButtonPanel().clear();
-	    getView().getButtonPanel().add(pbEdit);
-	}
-
-	if (!isInCoUnitList) {
+	if (!isDeletable()) {
 	    if (!isReadOnly()) {
 		getMainPanel().add(getMetaInfoLabel());
 	    } else {
 		getMainPanel().add(getReadOnlyMetaInfoLabel());
 	    }
-	} else {
-	    getView().getButtonPanel().add(createButtonDelete());
 	}
+	if (!isReadOnly())
+	    refreshButtonPanel();
 
     } // enterView
-
-    @Override
-    public Widget getConfigurationWidget() {
-	return null;
-    }
-
-    @Override
-    public Widget getBrowserWidget() {
-	return null;
-    }
-
-    @Override
-    public boolean isResizable() {
-	return true;
-    }
-
-    @Override
-    public void maximizeEditor() {
-	getEditorPopup().setHeight(getOriginalEditorPopupHeight() + "px");
-	OsylEditorEntryPoint.centerObject(getEditorPopup());
-    }
-
-    @Override
-    public void normalizeEditorWindowState() {
-	// do nothing as editor height has not been changed
-    }
-
-    @Override
-    protected List<FocusWidget> getEditionFocusWidgets() {
-	ArrayList<FocusWidget> focusWidgetList = new ArrayList<FocusWidget>();
-	focusWidgetList.add(nameEditor);
-	return focusWidgetList;
-    }
-
-    protected ClickListener getCancelButtonClickListener() {
-	return new ClickListener() {
-
-	    public void onClick(Widget sender) {
-		getView().getMainPanel().removeStyleDependentName("Hover");
-		getView().getButtonPanel().setVisible(false);
-	    }
-	};
-    }
 
     @Override
     public Widget[] getOptionWidgets() {
@@ -698,78 +524,6 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	return selectedTypeIndex;
     }
 
-    protected Button createButtonDelete() {
-	AbstractImagePrototype imgDeleteButton = getOsylImageBundle().delete();
-	String title = getUiMessage("delete");
-	ClickListener listener =
-		new MyDeletePushButtonListener((COContentUnit) getView()
-			.getModel());
-	return createButton(imgDeleteButton, title, listener);
-
-    }
-
-    /**
-     * Class to manage click on the delete button
-     */
-    public class MyDeletePushButtonListener implements ClickListener {
-
-	// Model variables (we use either one or the other). We could also use
-	// a generic variable and cast it when needed...
-	private COContentUnit coContentUnit;
-
-	public MyDeletePushButtonListener(COContentUnit coContentUnit) {
-	    this.coContentUnit = coContentUnit;
-	}
-
-	/**
-	 * @see ClickListener#onClick(Widget)
-	 */
-	public void onClick(Widget sender) {
-	    try {
-		// Here, we create a dialog box to confirm delete
-		OsylOkCancelDialog osylOkCancelDialog =
-			new OsylOkCancelDialog(
-				getView().getUiMessage(
-					"OsylOkCancelDialog_Delete_Title"),
-				getUiMessage("OsylOkCancelDialog_Delete_Content"));
-		osylOkCancelDialog
-			.addOkButtonCLickListener(new MyOkCancelDialogListener(
-				this.coContentUnit));
-		osylOkCancelDialog
-			.addCancelButtonClickListener(getCancelButtonClickListener());
-		osylOkCancelDialog.show();
-		osylOkCancelDialog.centerAndFocus();
-	    } catch (Exception e) {
-		com.google.gwt.user.client.Window
-			.alert("Unable to delete object. Error=" + e);
-	    }
-	}
-    }
-
-    // The click listener that perform delete action if confirm button pushed
-    public class MyOkCancelDialogListener implements ClickListener {
-
-	private COContentUnit coContentUnit;
-
-	public MyOkCancelDialogListener(COContentUnit coContentUnit) {
-	    this.coContentUnit = coContentUnit;
-	}
-
-	public void onClick(Widget sender) {
-	    try {
-		String title = coContentUnit.getLabel();
-		coContentUnit.remove();
-		OsylUnobtrusiveAlert info =
-			new OsylUnobtrusiveAlert(getView().getUiMessages()
-				.getMessage("RemovedContentUnit", title));
-		OsylEditorEntryPoint.showWidgetOnTop(info);
-	    } catch (Exception e) {
-		com.google.gwt.user.client.Window
-			.alert("Unable to delete object. Error=" + e);
-	    }
-	}
-    }
-
     public String getWeight() {
 	return weightTextBox.getText();
     }
@@ -817,5 +571,13 @@ public class OsylCOStructureEvaluationItemEditor extends OsylAbstractEditor {
 	    }
 	}
 	lb.setSelectedIndex(selectedIndex);
+    }
+
+    protected Label getNameLabel() {
+	return new Label(getUiMessage("Evaluation.name"));
+    }
+
+    protected String getNameTooltip() {
+	return getUiMessage("Evaluation.name.tooltip");
     }
 }

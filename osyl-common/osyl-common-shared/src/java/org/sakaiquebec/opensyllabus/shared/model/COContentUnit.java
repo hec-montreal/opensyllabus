@@ -41,7 +41,7 @@ import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentUnitEventHandle
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
-public class COContentUnit extends COElementAbstract implements
+public class COContentUnit extends COElementAbstract<COContentResourceProxy> implements
 	COModelInterface, FiresUpdateCOContentUnitEvents {
 
     /**
@@ -130,7 +130,7 @@ public class COContentUnit extends COElementAbstract implements
      * 
      * @return the resourceProxies
      */
-    public List<COContentResourceProxy> getResourceProxies() {
+    public List<COContentResourceProxy> getChildrens() {
 	return resourceProxies;
     }
 
@@ -153,7 +153,7 @@ public class COContentUnit extends COElementAbstract implements
      * @return true if the resourcePRoxy is added successfully, false if not.
      */
     public boolean addResourceProxy(COContentResourceProxy resourceProxy) {
-	boolean res = getResourceProxies().add(resourceProxy);
+	boolean res = getChildrens().add(resourceProxy);
 	notifyEventHandlers(UpdateCOContentUnitEvent.ADD_RESSOURCE_PROXY_EVENT_TYPE);
 	return res;
     }
@@ -166,89 +166,9 @@ public class COContentUnit extends COElementAbstract implements
      * @return true if the resourceProxy is removed successfully, false if not.
      */
     public boolean removeResourceProxy(COContentResourceProxy resourceProxy) {
-	boolean res = getResourceProxies().remove(resourceProxy);
+	boolean res = getChildrens().remove(resourceProxy);
 	notifyEventHandlers();
 	return res;
-    }
-
-    /**
-     * Check the position of the ResouceProxy compared to other resourceProxy in the same rubric
-     * @return -1 if the element has no successor,<br/> 
-     * 1 if he has no predecessor,<br/> 
-     * 0 if he is the only resourceProxy in his rubric<br/>
-     * 2 otherwise
-     */
-    public int getResourceProxyPositionInRubric(COContentResourceProxy resourceProxy) {
-	boolean isFound = false;
-	boolean hasPredecessor=false;
-	boolean hasSuccessor=false;
-	
-	Iterator<COContentResourceProxy> resourceProxiesIter = getResourceProxies().iterator();
-
-	while (resourceProxiesIter.hasNext()) {
-	    COContentResourceProxy thisResourceProxy =
-		    (COContentResourceProxy) resourceProxiesIter.next();
-	 
-	    if (thisResourceProxy.equals(resourceProxy)) {
-		isFound = true;
-	    }
-	    else{
-		if(!isFound && thisResourceProxy.getRubricType().equals(resourceProxy.getRubricType()))
-			hasPredecessor=true;
-		if(isFound && thisResourceProxy.getRubricType().equals(resourceProxy.getRubricType())){
-		    hasSuccessor=true;
-		    break;
-		}
-	    }
-	}
-	if(hasPredecessor && hasSuccessor) return 2;
-	else if(hasPredecessor) return -1;
-	else if(hasSuccessor) return 1;
-	else return 0;
-    }
-    
-    /**
-     * Change the position of the resourceProxy in the rubric
-     * @param resourceProxy The resource Proxy
-     * @param action -1 if the RP must be move to a prior position
-     * @param action 1 if the RP must be move to a posterior position
-     */
-    public void changeResourceProxyPositionInRubric(COContentResourceProxy resourceProxy, int action){
-	Iterator<COContentResourceProxy> resourceProxiesIter = getResourceProxies().iterator();
-	boolean isFound = false;
-	int idRP=0;
-	int indPredecessor=0;
-	int indSuccessor=0;
-	
-	int i = 0;
-	while (resourceProxiesIter.hasNext()) {
-	    COContentResourceProxy thisResourceProxy =
-		    (COContentResourceProxy) resourceProxiesIter.next();
-	    
-	    if (thisResourceProxy.equals(resourceProxy)) {
-		isFound = true;
-		idRP=i;
-	    }else{
-		if(!isFound && thisResourceProxy.getRubricType().equals(resourceProxy.getRubricType()))
-			indPredecessor=i;
-		 if(isFound && thisResourceProxy.getRubricType().equals(resourceProxy.getRubricType())){
-			indSuccessor=i;
-			break;
-		 }
-	    }
-	    i++;
-	}
-	COContentResourceProxy temp;
-	if(action==-1){
-	   temp = resourceProxies.get(indPredecessor);
-	   resourceProxies.set(indPredecessor,resourceProxy);
-	   resourceProxies.set(idRP,temp);
-	}
-	if(action==1){
-	    temp=resourceProxies.get(indSuccessor);
-	    resourceProxies.set(indSuccessor, resourceProxy);
-	    resourceProxies.set(idRP,temp);
-	}
     }
 
     /** {@inheritDoc} */
@@ -352,4 +272,113 @@ public class COContentUnit extends COElementAbstract implements
 	return getProperties().getProperty(key);
     }
 
+    
+    /**
+     * Check the position of this resourceProxy compared to the other rp in the
+     * same rubric
+     * 
+     * @return true if the ResourceProxy is not the last element
+     */
+    public boolean hasSuccessorInStructure() {
+	if (getParent() == null)
+	    return false;
+	int i = getParent().getElementPosition(this);
+	if (i != -1 && i != 0)
+	    return true;
+	else
+	    return false;
+    }
+
+    /**
+     * Check the position of this resourceProxy compared to the other rp in the
+     * same rubric
+     * 
+     * @return true if the ResourceProxy is not the first element
+     */
+    public boolean hasPredecessorInStructure() {
+	if (getParent() == null)
+	    return false;
+	int i = getParent().getElementPosition(this);
+	if (i != 1 && i != 0)
+	    return true;
+	else
+	    return false;
+    }
+
+    @Override
+    public void changeElementPosition(COContentResourceProxy resourceProxy, int action) {
+	Iterator<COContentResourceProxy> resourceProxiesIter = getChildrens().iterator();
+	boolean isFound = false;
+	int idRP=0;
+	int indPredecessor=0;
+	int indSuccessor=0;
+	
+	int i = 0;
+	while (resourceProxiesIter.hasNext()) {
+	    COContentResourceProxy thisResourceProxy =
+		    (COContentResourceProxy) resourceProxiesIter.next();
+	    
+	    if (thisResourceProxy.equals(resourceProxy)) {
+		isFound = true;
+		idRP=i;
+	    }else{
+		if(!isFound && thisResourceProxy.getRubricType().equals(resourceProxy.getRubricType()))
+			indPredecessor=i;
+		 if(isFound && thisResourceProxy.getRubricType().equals(resourceProxy.getRubricType())){
+			indSuccessor=i;
+			break;
+		 }
+	    }
+	    i++;
+	}
+	COContentResourceProxy temp;
+	if(action==COElementAbstract.POSITION_CHANGE_ACTION_UP){
+	   temp = resourceProxies.get(indPredecessor);
+	   resourceProxies.set(indPredecessor,resourceProxy);
+	   resourceProxies.set(idRP,temp);
+	}
+	if(action==COElementAbstract.POSITION_CHANGE_ACTION_DOWN){
+	    temp=resourceProxies.get(indSuccessor);
+	    resourceProxies.set(indSuccessor, resourceProxy);
+	    resourceProxies.set(idRP,temp);
+	}
+    }
+
+    @Override
+    public int getElementPosition(COContentResourceProxy resourceProxy) {
+	boolean isFound = false;
+	boolean hasPredecessor=false;
+	boolean hasSuccessor=false;
+	
+	Iterator<COContentResourceProxy> resourceProxiesIter = getChildrens().iterator();
+
+	while (resourceProxiesIter.hasNext()) {
+	    COContentResourceProxy thisResourceProxy =
+		    (COContentResourceProxy) resourceProxiesIter.next();
+	 
+	    if (thisResourceProxy.equals(resourceProxy)) {
+		isFound = true;
+	    }
+	    else{
+		if(!isFound && thisResourceProxy.getRubricType().equals(resourceProxy.getRubricType()))
+			hasPredecessor=true;
+		if(isFound && thisResourceProxy.getRubricType().equals(resourceProxy.getRubricType())){
+		    hasSuccessor=true;
+		    break;
+		}
+	    }
+	}
+	if(hasPredecessor && hasSuccessor) return 2;
+	else if(hasPredecessor) return -1;
+	else if(hasSuccessor) return 1;
+	else return 0;
+    }
+
+    public void moveUp() {
+	getParent().changeElementPosition(this, COElementAbstract.POSITION_CHANGE_ACTION_UP);
+    }
+
+    public void moveDown() {
+	getParent().changeElementPosition(this, COElementAbstract.POSITION_CHANGE_ACTION_DOWN);
+    }
 }

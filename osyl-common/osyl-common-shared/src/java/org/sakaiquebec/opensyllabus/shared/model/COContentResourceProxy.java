@@ -256,7 +256,7 @@ public class COContentResourceProxy implements COModelInterface,
     public void setRubric(COContentRubric rubric) {
 	this.rubric = rubric;
 	if(rubric!=null)
-	    moveToTheBottomOftheRubric();
+	    moveToTheBottomOfTheRubric();
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.RUBRIC_UPDATE_EVENT_TYPE);
     }
 
@@ -471,7 +471,7 @@ public class COContentResourceProxy implements COModelInterface,
     public boolean hasSuccessorInRubric() {
 	if (getCoContentUnitParent() == null)
 	    return false;
-	int i = getCoContentUnitParent().getResourceProxyPositionInRubric(this);
+	int i = getCoContentUnitParent().getElementPosition(this);
 	if (i != -1 && i != 0)
 	    return true;
 	else
@@ -487,7 +487,7 @@ public class COContentResourceProxy implements COModelInterface,
     public boolean hasPredecessorInRubric() {
 	if (getCoContentUnitParent() == null)
 	    return false;
-	int i = getCoContentUnitParent().getResourceProxyPositionInRubric(this);
+	int i = getCoContentUnitParent().getElementPosition(this);
 	if (i != 1 && i != 0)
 	    return true;
 	else
@@ -495,18 +495,18 @@ public class COContentResourceProxy implements COModelInterface,
     }
 
     public void moveUp() {
-	getCoContentUnitParent().changeResourceProxyPositionInRubric(this, -1);
+	getCoContentUnitParent().changeElementPosition(this, COElementAbstract.POSITION_CHANGE_ACTION_UP);
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.MOVE_IN_RUBRIC_EVENT_TYPE);
     }
 
     public void moveDown() {
-	getCoContentUnitParent().changeResourceProxyPositionInRubric(this, 1);
+	getCoContentUnitParent().changeElementPosition(this, COElementAbstract.POSITION_CHANGE_ACTION_DOWN);
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.MOVE_IN_RUBRIC_EVENT_TYPE);
     }
     
-    private void moveToTheBottomOftheRubric(){
+    private void moveToTheBottomOfTheRubric(){
 	while(hasSuccessorInRubric())
-	    getCoContentUnitParent().changeResourceProxyPositionInRubric(this, 1); 
+	    getCoContentUnitParent().changeElementPosition(this, COElementAbstract.POSITION_CHANGE_ACTION_DOWN); 
     }
     
     public boolean isEditable() {

@@ -123,7 +123,7 @@ public class OsylMainView extends OsylViewableComposite {
 
 	List<COElementAbstract> childrenList =
 		(List<COElementAbstract>) ((COContent) this.getModel())
-			.getChildren();
+			.getChildrens();
 	boolean find = false;
 	Iterator<COElementAbstract> iter = childrenList.iterator();
 	COElementAbstract absElement = null;

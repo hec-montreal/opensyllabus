@@ -45,6 +45,9 @@ import com.google.gwt.xml.client.XMLParser;
  */
 public class COModeled extends COSerialized implements COModelInterface {
 
+ 
+    private static final long serialVersionUID = 1L;
+
     /**
      * The CourseOutlineContent node name in the xml DOM.
      */
@@ -659,9 +662,9 @@ public class COModeled extends COSerialized implements COModelInterface {
 	document.appendChild(courseOutlineContentElem);
 	createCDataNode(document, courseOutlineContentElem, CO_LABEL_NODE_NAME,
 		coContent.getLabel());
-	for (int i = 0; i < coContent.getChildren().size(); i++) {
+	for (int i = 0; i < coContent.getChildrens().size(); i++) {
 	    createChildElement(document, courseOutlineContentElem,
-		    (COElementAbstract) coContent.getChildren().get(i),
+		    (COElementAbstract) coContent.getChildrens().get(i),
 		    saveParentInfos);
 
 	}
@@ -728,11 +731,11 @@ public class COModeled extends COSerialized implements COModelInterface {
 		coStructureElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
 			coStructureElement.getUuidParent());
 	    System.out.println("Children of :" + coStructureElement.getType()
-		    + coStructureElement.getChildren().size());
-	    for (int i = 0; i < coStructureElement.getChildren().size(); i++) {
+		    + coStructureElement.getChildrens().size());
+	    for (int i = 0; i < coStructureElement.getChildrens().size(); i++) {
 		System.out.println("Child number" + i);
 		createChildElement(document, coStructureElem,
-			(COElementAbstract) coStructureElement.getChildren()
+			(COElementAbstract) coStructureElement.getChildrens()
 				.get(i), saveParentInfos);
 	    }
 	    if (coStructureElement.getProperties() != null
@@ -778,11 +781,11 @@ public class COModeled extends COSerialized implements COModelInterface {
 	    // .getWeight());
 	    // we may have a content unit without any resource proxy, using a
 	    // reference to a capsule fro example
-	    if (coContentUnit.getResourceProxies() != null) {
-		for (int i = 0; i < coContentUnit.getResourceProxies().size(); i++) {
+	    if (coContentUnit.getChildrens() != null) {
+		for (int i = 0; i < coContentUnit.getChildrens().size(); i++) {
 		    createChildElement(document, coContentUnitElem,
 			    (COContentResourceProxy) coContentUnit
-				    .getResourceProxies().get(i),
+				    .getChildrens().get(i),
 			    saveParentInfos);
 		}
 	    }

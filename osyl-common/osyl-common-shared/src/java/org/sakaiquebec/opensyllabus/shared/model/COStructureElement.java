@@ -31,7 +31,7 @@ import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventH
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
-public class COStructureElement extends COElementAbstract implements
+public class COStructureElement extends COElementAbstract<COElementAbstract> implements
 	COModelInterface {
 
     /**
@@ -54,7 +54,7 @@ public class COStructureElement extends COElementAbstract implements
      * <org.sakaiquebec.opensyllabus.model.COElementAbstract>
      */
 
-    private List<COElementAbstract> children;
+    private List<COElementAbstract> childrens;
 
     /**
      * Constructor. The class type is set at creation.
@@ -62,7 +62,7 @@ public class COStructureElement extends COElementAbstract implements
     public COStructureElement() {
 	super();
 	setClassType(CO_STRUCTURE_ELEMENT_CLASS_TYPE);
-	children = new ArrayList<COElementAbstract>();
+	childrens = new ArrayList<COElementAbstract>();
 	properties = new COProperties();
     }
 
@@ -101,8 +101,8 @@ public class COStructureElement extends COElementAbstract implements
      *
      * @return the children
      */
-    public List<COElementAbstract> getChildren() {
-	return children;
+    public List<COElementAbstract> getChildrens() {
+	return childrens;
     }
 
     /**
@@ -111,8 +111,8 @@ public class COStructureElement extends COElementAbstract implements
      *
      * @param children the children to set
      */
-    public void setChildren(List<COElementAbstract> children) {
-	this.children = children;
+    public void setChildrens(List<COElementAbstract> childrens) {
+	this.childrens = childrens;
 	notifyEventHandlers();
     }
 
@@ -127,7 +127,7 @@ public class COStructureElement extends COElementAbstract implements
     public boolean addChild(COElementAbstract child) {
 	if (child.getClassType().equals(CO_STRUCTURE_ELEMENT_CLASS_TYPE)
 		|| child.getClassType().equals(CO_CONTENT_UNIT_CLASS_TYPE)) {
-	    boolean res = getChildren().add(child);
+	    boolean res = getChildrens().add(child);
 	    notifyEventHandlers();
 	    return res;
 	} else
@@ -139,7 +139,7 @@ public class COStructureElement extends COElementAbstract implements
      * @return true if the child is removed successfully, false if not.
      */
     public boolean removeChild(COElementAbstract child) {
-	boolean res = getChildren().remove(child);
+	boolean res = getChildrens().remove(child);
 	notifyEventHandlers();
 	return res;
     }
@@ -249,11 +249,57 @@ public class COStructureElement extends COElementAbstract implements
      */
     public String getChildPosition(COElementAbstract coEltAbs){
 	String pos="0";
-	List<COElementAbstract> children = getChildren();
+	List<COElementAbstract> children = getChildrens();
 	if(children.contains(coEltAbs)) {
 	    pos=""+(children.indexOf(coEltAbs)+1);
 	}
 	return pos;
+    }
+    
+    /**
+     * Check the position of the ResouceProxy compared to other resourceProxy in the same rubric
+     * @return -1 if the element has no successor,<br/> 
+     * 1 if he has no predecessor,<br/> 
+     * 0 if he is the only resourceProxy in his rubric<br/>
+     * 2 otherwise
+     */
+    public int getElementPosition(COElementAbstract coEltAbs) {
+	
+	int pos = childrens.indexOf(coEltAbs);
+	boolean hasPredecessor=false;
+	boolean hasSuccessor=false;
+	
+	hasPredecessor = (pos!=0);
+	hasSuccessor= (pos!=childrens.size()-1);
+
+	if(hasPredecessor && hasSuccessor) return 2;
+	else if(hasPredecessor) return -1;
+	else if(hasSuccessor) return 1;
+	else return 0;
+    }
+    
+    /**
+     * Change the position of the resourceProxy in the rubric
+     * @param resourceProxy The resource Proxy
+     * @param action -1 if the RP must be move to a prior position
+     * @param action 1 if the RP must be move to a posterior position
+     */
+    public void changeElementPosition(COElementAbstract coEltAbs, int action){
+	
+	int ind = childrens.indexOf(coEltAbs);
+	COElementAbstract temp;
+	
+	if(action==COElementAbstract.POSITION_CHANGE_ACTION_UP){
+	   temp = childrens.get(ind-1);
+	   childrens.set(ind-1,coEltAbs);
+	   childrens.set(ind,temp);
+	}
+	if(action==COElementAbstract.POSITION_CHANGE_ACTION_DOWN){
+	    temp=childrens.get(ind+1);
+	    childrens.set(ind+1, coEltAbs);
+	    childrens.set(ind,temp);
+	}
+	notifyEventHandlers();
     }
 
 }

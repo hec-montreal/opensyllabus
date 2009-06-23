@@ -20,6 +20,8 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
+import java.util.List;
+
 import org.sakaiquebec.opensyllabus.shared.util.UUID;
 
 /**
@@ -36,7 +38,7 @@ import org.sakaiquebec.opensyllabus.shared.util.UUID;
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
-public abstract class COElementAbstract implements COModelInterface {
+public abstract class COElementAbstract<T extends COModelInterface> implements COModelInterface {
 
     /**
      * The <code>CourseOutlineContent</code> class type.
@@ -88,6 +90,11 @@ public abstract class COElementAbstract implements COModelInterface {
      * parent identifier
      */
     private String uuidParent;
+    
+    
+    public static final int POSITION_CHANGE_ACTION_UP=-1;
+    
+    public static final int POSITION_CHANGE_ACTION_DOWN=1;
 
 
     /**
@@ -227,4 +234,27 @@ public abstract class COElementAbstract implements COModelInterface {
     public void setUuidParent(String uuidParent) {
         this.uuidParent = uuidParent;
     }
+    
+    /**
+     * Check the position of the element compared to other element
+     * @return -1 if the element has no successor,<br/> 
+     * 1 if he has no predecessor,<br/> 
+     * 0 if he is the only element in this structure<br/>
+     * 2 otherwise
+     */
+    abstract public int getElementPosition(T coEltAbs);
+    
+    /**
+     * Change the position of the element
+     * @param coEltAbs The element
+     * @param action COElementAbstract.POSITION_CHANGE_ACTION_UP if the element must be move to a prior position
+     * @param action COElementAbstract.POSITION_CHANGE_ACTION_DOWN if the element must be move to a posterior position
+     */
+    abstract public void changeElementPosition(T coEltAbs, int action);
+    
+    /**
+     * 
+     * @return List of childrens
+     */
+    abstract public List<T> getChildrens();
 }

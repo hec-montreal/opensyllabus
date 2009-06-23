@@ -119,7 +119,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	} else {
 	    OsylCOStructureItemLabelView lbv =
 		    new OsylCOStructureItemLabelView(getModel(),
-			    getController(), true);
+			    getController(), false);
 	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
 	    getMainPanel().add(lbv);
 	}
@@ -133,7 +133,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	    // and the corresponding views
 	    resProxMap = new HashMap<COContentResourceProxy, OsylRubricView>();
 	    Iterator<COContentResourceProxy> iter =
-		    coContentUnit.getResourceProxies().iterator();
+		    coContentUnit.getChildrens().iterator();
 	    while (iter.hasNext()) {
 		COContentResourceProxy resProx =
 			(COContentResourceProxy) iter.next();
@@ -265,7 +265,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
     private void refreshRubric(OsylRubricView rubricView) {
 	COContentUnit coContentUnit = (COContentUnit) getModel();
 	Iterator<COContentResourceProxy> iter =
-		coContentUnit.getResourceProxies().iterator();
+		coContentUnit.getChildrens().iterator();
 	while (iter.hasNext()) {
 	    COContentResourceProxy resProx =
 		    (COContentResourceProxy) iter.next();
@@ -285,7 +285,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	if (event.isAddRessProxEvent()) {
 	    // the last resProxy is the added one
 	    List<COContentResourceProxy> proxies =
-		    ((COContentUnit) getModel()).getResourceProxies();
+		    ((COContentUnit) getModel()).getChildrens();
 	    COContentResourceProxy resProx =
 		    (COContentResourceProxy) proxies.get(proxies.size() - 1);
 	    addResProxToRubricView(resProx);

@@ -41,10 +41,10 @@ public class OsylCOStructureItemLabelView extends OsylAbstractView{
     }
     
     public OsylCOStructureItemLabelView(COContentUnit model,
-    	    OsylController controller, boolean isNotDeletable) {
+    	    OsylController controller, boolean isDeletable) {
 	super(model,controller);
 	setEditor(new OsylCOStructureItemEditor(this));
-	((OsylCOStructureItemEditor) getEditor()).setIsNotDeletable(isNotDeletable);
+	((OsylCOStructureItemEditor) getEditor()).setIsDeletable(isDeletable);
 	initView();
     }
     
@@ -54,8 +54,8 @@ public class OsylCOStructureItemLabelView extends OsylAbstractView{
      * superclass for javadoc!
      */
 
-    public COElementAbstract getModel() {
-	return (COElementAbstract) super.getModel();
+    public COContentUnit getModel() {
+	return (COContentUnit) super.getModel();
     }
 
     public String getTextFromModel() {

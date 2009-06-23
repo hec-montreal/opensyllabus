@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -254,4 +255,12 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     /**
      * ==================== ADDED CLASSES or METHODS ====================
      */
+    protected Label getNameLabel(){
+	return null;
+    }
+    
+    protected String getNameTooltip(){
+	return null;
+    }
+    
 }

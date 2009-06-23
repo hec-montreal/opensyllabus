@@ -50,7 +50,7 @@ public class OsylCOStructureItemView extends OsylViewableComposite {
     public OsylCOStructureItemView(COContentUnit model,
 	    OsylController controller) {
 	super(model, controller);
-	setCoUnitLabel(new OsylCOStructureItemLabelView(model,controller));
+	setCoUnitLabel(new OsylCOStructureItemLabelView(model,controller,true));
 	initView();
     }
 

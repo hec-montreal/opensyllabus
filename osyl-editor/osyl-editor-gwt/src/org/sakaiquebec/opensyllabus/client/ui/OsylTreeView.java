@@ -85,9 +85,9 @@ public class OsylTreeView extends OsylViewableComposite implements
 	// displaying all branches
 	List<COElementAbstract> children = null;
 	if (currentModel.isCourseOutlineContent()) {
-	    children = ((COContent) currentModel).getChildren();
+	    children = ((COContent) currentModel).getChildrens();
 	} else if (currentModel.isCOStructureElement()) {
-	    children = ((COStructureElement) currentModel).getChildren();
+	    children = ((COStructureElement) currentModel).getChildrens();
 	} else {
 	    return;
 	}
@@ -154,8 +154,7 @@ public class OsylTreeView extends OsylViewableComposite implements
 	TreeItem treeItem = new TreeItem(treeItemView);
 	itemModelMap.put(treeItemView.getModel(), treeItem);
 	parentTreeItem.addItem(treeItem);
-	// The added TreeItem is closed by default UdeM
-	parentTreeItem.setState(false);
+	parentTreeItem.setState(true);
     }
 
     /**

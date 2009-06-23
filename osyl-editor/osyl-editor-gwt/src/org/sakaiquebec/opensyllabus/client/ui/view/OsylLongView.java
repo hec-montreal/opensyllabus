@@ -97,7 +97,7 @@ public class OsylLongView extends OsylViewableComposite {
 	titleLabel.setStylePrimaryName("Osyl-LongView-CourseOutline");
 	getMainPanel().add(titleLabel);
 	// displaying all sub views
-	List<COElementAbstract> children = content.getChildren();
+	List<COElementAbstract> children = content.getChildrens();
 	displayChildren(children);
     }
 
@@ -113,7 +113,7 @@ public class OsylLongView extends OsylViewableComposite {
 		if ( absElement.isCOStructureElement() ) {
 		    COStructureElement newCOStructEl = (COStructureElement) absElement;
 	            addListItemView( newCOStructEl );
-	            children = newCOStructEl.getChildren();
+	            children = newCOStructEl.getChildrens();
 	            displayChildren(children);
 		}
 		else if (absElement.isCOContentUnit()) {
