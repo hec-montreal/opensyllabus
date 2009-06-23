@@ -483,7 +483,7 @@ public class COModeled extends COSerialized implements COModelInterface {
 
 	    if (coNodeName.equalsIgnoreCase(CO_RES_PROXY_NODE_NAME)) {
 		coContentUnit
-			.addResourceProxy(createCOContentResourceProxyPOJO(
+			.addChild(createCOContentResourceProxyPOJO(
 				coNode, coContentUnit));
 	    } else if (coNodeName.equalsIgnoreCase(CO_LABEL_NODE_NAME)) {
 		coContentUnit.setLabel(getCDataSectionValue(coNode));

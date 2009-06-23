@@ -520,9 +520,8 @@ public class COModeledServer {
 	    coNodeName = coContentUnitChildren.item(i).getNodeName();
 
 	    if (coNodeName.equalsIgnoreCase(CO_RES_PROXY_NODE_NAME)) {
-		coContentUnit
-			.addResourceProxy(createCOContentResourceProxyPOJO(
-				coNode, coContentUnit, changeWorkToPublish));
+		coContentUnit.addChild(createCOContentResourceProxyPOJO(coNode,
+			coContentUnit, changeWorkToPublish));
 	    } else if (coNodeName.equalsIgnoreCase(CO_LABEL_NODE_NAME)) {
 		coContentUnit.setLabel(getCDataSectionValue(coNode));
 	    } else if (coNodeName.equalsIgnoreCase(CO_PROPERTIES_NODE_NAME)) {
@@ -999,56 +998,30 @@ public class COModeledServer {
 
     private void associateChild(COElementAbstract childElement,
 	    COElementAbstract parentElement) {
-	// if (childElement == null) {
-	// copyStructureOnly(parentElement);
-	// childElement=parentElement;
-	// }
 	if (childElement.getType().equals(parentElement.getType())) {
-	    if (parentElement.isCourseOutlineContent()) {
+	    if (parentElement.isCOContentUnit()) {
 		childElement.setUuidParent(parentElement.getUuid());
-		COContent parentCO = (COContent) parentElement;
-		COContent childCO = (COContent) childElement;
+	    } else {
+		childElement.setUuidParent(parentElement.getUuid());
 		boolean childrenHasChild =
-			childCO.getChildrens() != null
-				&& !childCO.getChildrens().isEmpty();
-		for (int i = 0; i < parentCO.getChildrens().size(); i++) {
+			childElement.getChildrens() != null
+				&& !childElement.getChildrens().isEmpty();
+		for (int i = 0; i < parentElement.getChildrens().size(); i++) {
 		    COElementAbstract coElementParent =
-			    parentCO.getChildrens().get(i);
+			    (COElementAbstract) parentElement.getChildrens()
+				    .get(i);
 		    if (childrenHasChild) {
 			COElementAbstract coElementChild =
-				childCO.getChildrens().get(i);
+				(COElementAbstract) childElement.getChildrens()
+					.get(i);
 			associateChild(coElementChild, coElementParent);
 		    } else {
-			// Un structure existe chez le parent mia spas chez
+			// Un structure existe chez le parent mais pas chez
 			// l'enfant
 			copyStructureOnly(coElementParent);
-			childCO.addChild(coElementParent);
+			childElement.addChild(coElementParent);
 		    }
 		}
-	    } else if (parentElement.isCOStructureElement()) {
-		childElement.setUuidParent(parentElement.getUuid());
-		COStructureElement parentSE =
-			(COStructureElement) parentElement;
-		COStructureElement childSE = (COStructureElement) childElement;
-		boolean childrenHasChild =
-			childSE.getChildrens() != null
-				&& !childSE.getChildrens().isEmpty();
-		for (int i = 0; i < parentSE.getChildrens().size(); i++) {
-		    COElementAbstract coElementParent =
-			    parentSE.getChildrens().get(i);
-		    if (childrenHasChild) {
-			COElementAbstract coElementChild =
-				childSE.getChildrens().get(i);
-			associateChild(coElementChild, coElementParent);
-		    } else {
-			// Un structure existe chez le parent mia spas chez
-			// l'enfant
-			copyStructureOnly(coElementParent);
-			childSE.addChild(coElementParent);
-		    }
-		}
-	    } else if (parentElement.isCOContentUnit()) {
-		childElement.setUuidParent(parentElement.getUuid());
 	    }
 	} else {
 	    // throw Error
@@ -1059,23 +1032,15 @@ public class COModeledServer {
     private void copyStructureOnly(COElementAbstract parentElement) {
 	parentElement.setUuidParent(parentElement.getUuid());
 	parentElement.setUuid(UUID.uuid());
-	if (parentElement.isCourseOutlineContent()) {
-	    COContent parentCO = (COContent) parentElement;
-	    for (int i = 0; i < parentCO.getChildrens().size(); i++) {
-		COElementAbstract coElementParent =
-			parentCO.getChildrens().get(i);
-		copyStructureOnly(coElementParent);
-	    }
-	} else if (parentElement.isCOStructureElement()) {
-	    COStructureElement parentSE = (COStructureElement) parentElement;
-	    for (int i = 0; i < parentSE.getChildrens().size(); i++) {
-		COElementAbstract coElementParent =
-			parentSE.getChildrens().get(i);
-		copyStructureOnly(coElementParent);
-	    }
-	} else if (parentElement.isCOContentUnit()) {
+	if (parentElement.isCOContentUnit()) {
 	    COContentUnit coUnit = (COContentUnit) parentElement;
-	    coUnit.setResourceProxies(new ArrayList<COContentResourceProxy>());
+	    coUnit.setChildrens(new ArrayList<COContentResourceProxy>());
+	} else {
+	    for (int i = 0; i < parentElement.getChildrens().size(); i++) {
+		COElementAbstract coElementParent =
+			(COElementAbstract) parentElement.getChildrens().get(i);
+		copyStructureOnly(coElementParent);
+	    }
 	}
     }
 
@@ -1091,25 +1056,16 @@ public class COModeledServer {
 	    COElementAbstract parentElement) {
 
 	childElement.setUuidParent(null);
-	if (parentElement.isCourseOutlineContent()) {
-	    COContent parentCO = (COContent) parentElement;
-	    COContent childCO = (COContent) childElement;
-	    for (int i = 0; i < parentCO.getChildrens().size(); i++) {
+	if (parentElement.isCOContentUnit()) {
+	    //nothing to do
+	} else {
+	    for (int i = 0; i < parentElement.getChildrens().size(); i++) {
 		COElementAbstract coElementParent =
-			parentCO.getChildrens().get(i);
-		COElementAbstract coElementChild = childCO.getChildrens().get(i);
+			(COElementAbstract) parentElement.getChildrens().get(i);
+		COElementAbstract coElementChild =
+			(COElementAbstract) childElement.getChildrens().get(i);
 		dissociateChild(coElementChild, coElementParent);
 	    }
-	} else if (parentElement.isCOStructureElement()) {
-	    COStructureElement parentSE = (COStructureElement) parentElement;
-	    COStructureElement childSE = (COStructureElement) childElement;
-	    for (int i = 0; i < parentSE.getChildrens().size(); i++) {
-		COElementAbstract coElementParent =
-			parentSE.getChildrens().get(i);
-		COElementAbstract coElementChild = childSE.getChildrens().get(i);
-		dissociateChild(coElementChild, coElementParent);
-	    }
-	} else if (parentElement.isCOContentUnit()) {
 	}
     }
 
@@ -1126,107 +1082,20 @@ public class COModeledServer {
 	COContent contentfusionned = parent.getModeledContent();
 	if (contentChild.getUuidParent() != null
 		&& !contentChild.getUuidParent().equals("")) {
+	    if (contentfusionned != null) {
+		contentfusionned.setUuidParent(contentfusionned.getUuid());
+		contentfusionned.setUuid(contentChild.getUuid());
+	    }
 	    fusion(contentChild, contentfusionned);
 	    setModeledContent(contentfusionned);
 	}
     }
 
     public void fusion(COElementAbstract child, COElementAbstract fusionned) {
-	if (child.isCourseOutlineContent()) {
-	    COContent co = (COContent) child;
-	    if (fusionned != null) {
-		fusionned.setUuidParent(fusionned.getUuid());
-		fusionned.setUuid(child.getUuid());
-	    }
-	    int j = 0;
-	    for (int i = 0; i < co.getChildrens().size(); i++) {
-		COElementAbstract childElement = co.getChildrens().get(i);
-		if (childElement.getUuidParent() != null
-			&& !childElement.getUuidParent().equals("")) {
-		    COElementAbstract parentElement =
-			    findCOElementAbstractWithUUID(fusionned,
-				    childElement.getUuidParent());
-		    if (parentElement != null) {
-			parentElement.setEditable(false);
-			parentElement.setUuidParent(parentElement.getUuid());
-			parentElement.setUuid(childElement.getUuid());
-			fusion(childElement, parentElement);
-		    } else {
-			// L'enfant référence qqchose qui n'existe PLUS dans le
-			// parent
-			if (!hasResProx(childElement)) {
-			    // il n'a pas d'infos propres, on l'efface
-			    co.removeChild(childElement);
-			    i--;
-			    j--;
-			} else {
-			    // on supprime les uuidParent et on ajoute le
-			    // contenu à la
-			    // bonne place
-			    deleteParentUuids(childElement);
-			    COContent coFussioned = (COContent) fusionned;
-			    coFussioned.getChildrens().add(j, childElement);
-			    j++;
-			}
-		    }
-		} else {
-		    // L'enfant référence qqchose qui n'existe PAS dans le
-		    // parent
-		    COContent coFussioned = (COContent) fusionned;
-		    coFussioned.getChildrens().add(j, childElement);
-		    j++;
-		}
-	    }
-	    j++;
-	} else if (child.isCOStructureElement()) {
-	    COStructureElement se = (COStructureElement) child;
-	    int j = 0;
-	    for (int i = 0; i < se.getChildrens().size(); i++) {
-		COElementAbstract childElement = se.getChildrens().get(i);
-		if (childElement.getUuidParent() != null
-			&& !childElement.getUuidParent().equals("")) {
-		    COElementAbstract parentElement =
-			    findCOElementAbstractWithUUID(fusionned,
-				    childElement.getUuidParent());
-		    if (parentElement != null) {
-			parentElement.setEditable(false);
-			parentElement.setUuidParent(parentElement.getUuid());
-			parentElement.setUuid(childElement.getUuid());
-			fusion(childElement, parentElement);
-		    } else {
-			// L'enfant référence qqchose qui n'existe PLUS dans le
-			// parent
-			if (!hasResProx(childElement)) {
-			    // il n'a pas d'infos propres, on l'efface
-			    se.removeChild(childElement);
-			    i--;
-			    j--;
-			} else {
-			    // on supprime les uuidParent et on ajoute le
-			    // contenu à la
-			    // bonne place
-			    deleteParentUuids(childElement);
-			    COStructureElement coSeFussioned =
-				    (COStructureElement) fusionned;
-			    coSeFussioned.getChildrens().add(i, childElement);
-			    j++;
-			}
-		    }
-		} else {
-		    // L'enfant référence qqchose qui n'existe PAS dans le
-		    // parent
-		    COStructureElement coSeFussioned =
-			    (COStructureElement) fusionned;
-		    coSeFussioned.getChildrens().add(i, childElement);
-		    j++;
-		}
-	    }
-	    j++;
-	} else if (child.isCOContentUnit()) {
+	if (child.isCOContentUnit()) {
 	    COContentUnit cuFusionned = (COContentUnit) fusionned;
 	    for (int i = 0; i < cuFusionned.getChildrens().size(); i++) {
-		COContentResourceProxy rp =
-			cuFusionned.getChildrens().get(i);
+		COContentResourceProxy rp = cuFusionned.getChildrens().get(i);
 		rp.setEditable(false);
 	    }
 
@@ -1234,49 +1103,77 @@ public class COModeledServer {
 	    COContentUnit parentCU = (COContentUnit) fusionned;
 	    for (int i = 0; i < cu.getChildrens().size(); i++) {
 		COContentResourceProxy rp = cu.getChildrens().get(i);
-		parentCU.addResourceProxy(rp);
+		parentCU.addChild(rp);
+	    }
+	} else{
+	    int j = 0;
+	    for (int i = 0; i < child.getChildrens().size(); i++) {
+		COElementAbstract childElement = (COElementAbstract)child.getChildrens().get(i);
+		if (childElement.getUuidParent() != null
+			&& !childElement.getUuidParent().equals("")) {
+		    COElementAbstract parentElement =
+			    findCOElementAbstractWithUUID(fusionned,
+				    childElement.getUuidParent());
+		    if (parentElement != null) {
+			parentElement.setEditable(false);
+			parentElement.setUuidParent(parentElement.getUuid());
+			parentElement.setUuid(childElement.getUuid());
+			fusion(childElement, parentElement);
+		    } else {
+			// L'enfant référence qqchose qui n'existe PLUS dans le
+			// parent
+			if (!hasResProx(childElement)) {
+			    // il n'a pas d'infos propres, on l'efface
+			    child.removeChild(childElement);
+			    i--;
+			    j--;
+			} else {
+			    // on supprime les uuidParent et on ajoute le
+			    // contenu à la
+			    // bonne place
+			    deleteParentUuids(childElement);
+			    fusionned.getChildrens().add(j, childElement);
+			    j++;
+			}
+		    }
+		} else {
+		    // L'enfant référence qqchose qui n'existe PAS dans le
+		    // parent
+		    fusionned.getChildrens().add(j, childElement);
+		    j++;
+		}
+		j++;
 	    }
 	}
     }
 
     private void deleteParentUuids(COElementAbstract element) {
 	element.setUuidParent(null);
-	if (element.isCourseOutlineContent()) {
-	    COContent childCO = (COContent) element;
-	    for (int i = 0; i < childCO.getChildrens().size(); i++) {
-		COElementAbstract coElementChild = childCO.getChildrens().get(i);
+	if (element.isCOContentUnit()) {
+	    // Nothing to do
+	} else {
+	    for (int i = 0; i < element.getChildrens().size(); i++) {
+		COElementAbstract coElementChild =
+			(COElementAbstract) element.getChildrens().get(i);
 		deleteParentUuids(coElementChild);
 	    }
-	} else if (element.isCOStructureElement()) {
-	    COStructureElement childSE = (COStructureElement) element;
-	    for (int i = 0; i < childSE.getChildrens().size(); i++) {
-		COElementAbstract coElementChild = childSE.getChildrens().get(i);
-		deleteParentUuids(coElementChild);
-	    }
-	} else if (element.isCOContentUnit()) {
 	}
     }
 
     private boolean hasResProx(COElementAbstract element) {
 
 	boolean hasChild = false;
-	if (element.isCourseOutlineContent()) {
-	    COContent childCO = (COContent) element;
-	    for (int i = 0; i < childCO.getChildrens().size(); i++) {
-		COElementAbstract coElementChild = childCO.getChildrens().get(i);
-		hasChild = hasChild || hasResProx(coElementChild);
-	    }
-	} else if (element.isCOStructureElement()) {
-	    COStructureElement childSE = (COStructureElement) element;
-	    for (int i = 0; i < childSE.getChildrens().size(); i++) {
-		COElementAbstract coElementChild = childSE.getChildrens().get(i);
-		hasChild = hasChild || hasResProx(coElementChild);
-	    }
-	} else if (element.isCOContentUnit()) {
+	if (element.isCOContentUnit()) {
 	    COContentUnit contentUnit = (COContentUnit) element;
 	    hasChild =
 		    (contentUnit.getChildrens() != null && !contentUnit
 			    .getChildrens().isEmpty());
+	} else {
+	    for (int i = 0; i < element.getChildrens().size(); i++) {
+		COElementAbstract coElementChild =
+			(COElementAbstract) element.getChildrens().get(i);
+		hasChild = hasChild || hasResProx(coElementChild);
+	    }
 	}
 
 	return hasChild;
@@ -1288,24 +1185,16 @@ public class COModeledServer {
 	if (root.getUuid().equals(uuid))
 	    result = root;
 	else {
-	    if (root.isCourseOutlineContent()) {
-		COContent co = (COContent) root;
-		int i = 0;
-		while (i < co.getChildrens().size() && result == null) {
-		    COElementAbstract coElem = co.getChildrens().get(i);
-		    result = findCOElementAbstractWithUUID(coElem, uuid);
-		    i++;
-		}
-	    } else if (root.isCOStructureElement()) {
-		COStructureElement se = (COStructureElement) root;
-		int i = 0;
-		while (i < se.getChildrens().size() && result == null) {
-		    COElementAbstract coElem = se.getChildrens().get(i);
-		    result = findCOElementAbstractWithUUID(coElem, uuid);
-		    i++;
-		}
-	    } else if (root.isCOContentUnit()) {
+	    if (root.isCOContentUnit()) {
 		// Nothing to do
+	    } else {
+		int i = 0;
+		while (i < root.getChildrens().size() && result == null) {
+		    COElementAbstract coElem =
+			    (COElementAbstract) root.getChildrens().get(i);
+		    result = findCOElementAbstractWithUUID(coElem, uuid);
+		    i++;
+		}
 	    }
 	}
 	return result;
@@ -1318,20 +1207,14 @@ public class COModeledServer {
     private void resetUuid(COElementAbstract element) {
 	element.setUuid(UUID.uuid());
 	element.setUuidParent(null);
-	if (element.isCourseOutlineContent()) {
-	    COContent co = (COContent) element;
-	    for (int i = 0; i < co.getChildrens().size(); i++) {
-		COElementAbstract childElement = co.getChildrens().get(i);
+	if (element.isCOContentUnit()) {
+	    // Nothing to do
+	} else {
+	    for (int i = 0; i < element.getChildrens().size(); i++) {
+		COElementAbstract childElement =
+			(COElementAbstract) element.getChildrens().get(i);
 		resetUuid(childElement);
 	    }
-	} else if (element.isCOStructureElement()) {
-	    COStructureElement se = (COStructureElement) element;
-	    for (int i = 0; i < se.getChildrens().size(); i++) {
-		COElementAbstract childElement = se.getChildrens().get(i);
-		resetUuid(childElement);
-	    }
-	} else if (element.isCOContentUnit()) {
-
 	}
     }
 

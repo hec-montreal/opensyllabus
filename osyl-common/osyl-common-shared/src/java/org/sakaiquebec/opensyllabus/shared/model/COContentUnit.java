@@ -135,12 +135,9 @@ public class COContentUnit extends COElementAbstract<COContentResourceProxy> imp
     }
 
     /**
-     * atgwt.typeArgs resourceProxies
-     * <org.sakaiquebec.opensyllabus.model.COContentResourceProxy>
-     * 
-     * @param resourceProxies the resourceProxies to set
+     * {@inheritDoc}
      */
-    public void setResourceProxies(List<COContentResourceProxy> resourceProxies) {
+    public void setChildrens(List<COContentResourceProxy> resourceProxies) {
 	this.resourceProxies = resourceProxies;
 	notifyEventHandlers();
     }
@@ -152,7 +149,7 @@ public class COContentUnit extends COElementAbstract<COContentResourceProxy> imp
      * @param resourceProxy the resourceProxy to add.
      * @return true if the resourcePRoxy is added successfully, false if not.
      */
-    public boolean addResourceProxy(COContentResourceProxy resourceProxy) {
+    public boolean addChild(COContentResourceProxy resourceProxy) {
 	boolean res = getChildrens().add(resourceProxy);
 	notifyEventHandlers(UpdateCOContentUnitEvent.ADD_RESSOURCE_PROXY_EVENT_TYPE);
 	return res;
@@ -165,7 +162,7 @@ public class COContentUnit extends COElementAbstract<COContentResourceProxy> imp
      * @param resourceProxy the resourceProxy to remove.
      * @return true if the resourceProxy is removed successfully, false if not.
      */
-    public boolean removeResourceProxy(COContentResourceProxy resourceProxy) {
+    public boolean removeChild(COContentResourceProxy resourceProxy) {
 	boolean res = getChildrens().remove(resourceProxy);
 	notifyEventHandlers();
 	return res;

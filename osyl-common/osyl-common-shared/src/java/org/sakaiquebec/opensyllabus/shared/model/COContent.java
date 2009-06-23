@@ -52,20 +52,14 @@ public class COContent extends COElementAbstract<COElementAbstract> implements C
     }
 
     /**
-     * atgwt.typeArgs children
-     * <org.sakaiquebec.opensyllabus.model.COElementAbstract>
-     *
-     * @param children the children to set
+     * {@inheritDoc}
      */
     public void setChildrens(List<COElementAbstract>children) {
 	this.childrens = children;
     }
 
     /**
-     * Adds a child to the <code>CourseOutlineContent</code> children list.
-     *
-     * @param child the sild to add to the children list.
-     * @return true if the child is added successfully, false if not.
+     * {@inheritDoc}
      */
     public boolean addChild(COElementAbstract child) {
 	if (child.isCOContentUnit() || child.isCOStructureElement())
@@ -75,11 +69,7 @@ public class COContent extends COElementAbstract<COElementAbstract> implements C
     }
 
     /**
-     * Removes a child from the <code>CourseOutlineContent</code> children
-     * list.
-     *
-     * @param child the child to remove.
-     * @return true if the child is removed successfully, false if not.
+     * {@inheritDoc}
      */
     public boolean removeChild(COElementAbstract child) {
 	boolean res = getChildrens().remove(child);

@@ -135,7 +135,7 @@ public class COContentResourceProxy implements COModelInterface,
 
 	resProxModel.setResource(resModel);
 	// Add child (a model notification should fire)
-	((COContentUnit) parentModel).addResourceProxy(resProxModel);
+	((COContentUnit) parentModel).addChild(resProxModel);
 	resProxModel.setCoContentUnitParent((COContentUnit) parentModel);
 
 	return resProxModel;
@@ -456,7 +456,7 @@ public class COContentResourceProxy implements COModelInterface,
      * Removes itself from its parent.
      */
     public void remove() {
-	getCoContentUnitParent().removeResourceProxy(this);
+	getCoContentUnitParent().removeChild(this);
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.DELETE_EVENT_TYPE);
 	if (updateCOContentResourceProxyEventHandlers != null)
 	    updateCOContentResourceProxyEventHandlers.clear();

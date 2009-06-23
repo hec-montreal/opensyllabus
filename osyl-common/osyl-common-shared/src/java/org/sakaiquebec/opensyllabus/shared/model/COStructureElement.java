@@ -97,19 +97,14 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
     }
 
     /**
-     * atgwt.typeArgs <org.sakaiquebec.opensyllabus.model.COElementAbstract>
-     *
-     * @return the children
+     * {@inheritDoc}
      */
     public List<COElementAbstract> getChildrens() {
 	return childrens;
     }
 
     /**
-     * atgwt.typeArgs children
-     * <org.sakaiquebec.opensyllabus.model.COElementAbstract>
-     *
-     * @param children the children to set
+     * {@inheritDoc}
      */
     public void setChildrens(List<COElementAbstract> childrens) {
 	this.childrens = childrens;
@@ -117,12 +112,7 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
     }
 
     /**
-     * Adds a child to the <code>COStructureElement</code> children list.
-     * Tests if the child is of type <code>COStructureElement</code> or
-     * <code>COContentUnit</code> to add it. If not, it rejects the child.
-     *
-     * @param child the child to add
-     * @return true if the child is added successfully, false if not.
+     * <{@inheritDoc}
      */
     public boolean addChild(COElementAbstract child) {
 	if (child.getClassType().equals(CO_STRUCTURE_ELEMENT_CLASS_TYPE)
@@ -134,10 +124,9 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
 	    return false;
     }
 
-    /**
-     * @param child the child to remove.
-     * @return true if the child is removed successfully, false if not.
-     */
+   /**
+    * {@inheritDoc}
+    */
     public boolean removeChild(COElementAbstract child) {
 	boolean res = getChildrens().remove(child);
 	notifyEventHandlers();
@@ -174,32 +163,6 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
     public String getProperty(String key) {
 	return getProperties().getProperty(key);
     }
-
-    /*
-     * Finds and returns the <code>COElementAbstract</code> child with the
-     * specified id form the children list.
-     *
-     * @param childId the id of the child to find and return.
-     * @return the <code>COElementAbstract</code> if it is found, null
-     *         otherwise.
-     */
-    /*
-    public COElementAbstract getChildWithId(String childId) {
-	boolean isFound = false;
-	COElementAbstract child = null;
-	Iterator childrenIter = getChildren().iterator();
-
-	while (childrenIter.hasNext() && !isFound) {
-	    COElementAbstract thisChild =
-		    (COElementAbstract) childrenIter.next();
-
-	    if (thisChild.getId().equals(childId)) {
-		child = thisChild;
-		isFound = true;
-	    }
-	}
-	return child;
-    }*/
 
     /**
      * Adds a {@link UpdateCOStructureElementEventHandler} to the list of
@@ -256,13 +219,9 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
 	return pos;
     }
     
-    /**
-     * Check the position of the ResouceProxy compared to other resourceProxy in the same rubric
-     * @return -1 if the element has no successor,<br/> 
-     * 1 if he has no predecessor,<br/> 
-     * 0 if he is the only resourceProxy in his rubric<br/>
-     * 2 otherwise
-     */
+   /**
+    * {@inheritDoc}
+    */
     public int getElementPosition(COElementAbstract coEltAbs) {
 	
 	int pos = childrens.indexOf(coEltAbs);
@@ -279,10 +238,7 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
     }
     
     /**
-     * Change the position of the resourceProxy in the rubric
-     * @param resourceProxy The resource Proxy
-     * @param action -1 if the RP must be move to a prior position
-     * @param action 1 if the RP must be move to a posterior position
+     * {@inheritDoc}
      */
     public void changeElementPosition(COElementAbstract coEltAbs, int action){
 	

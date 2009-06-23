@@ -257,4 +257,21 @@ public abstract class COElementAbstract<T extends COModelInterface> implements C
      * @return List of childrens
      */
     abstract public List<T> getChildrens();
+    
+    abstract public void setChildrens(List<T> childs);
+    
+    /**
+     * Adds a child to the <code>COELementAbstract</code> children list.
+     * Tests if the child could be add. If not, it rejects the child.
+     *
+     * @param child the child to add
+     * @return true if the child is added successfully, false if not.
+     */
+    abstract public boolean addChild(T child);
+
+    /**
+     * @param child the child to remove.
+     * @return true if the child is removed successfully, false if not.
+     */
+    abstract public boolean removeChild(T child);
 }
