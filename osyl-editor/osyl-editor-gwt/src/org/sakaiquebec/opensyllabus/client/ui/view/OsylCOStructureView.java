@@ -68,11 +68,7 @@ public class OsylCOStructureView extends OsylViewableComposite implements
     }
 
     public void refreshView() {
-	COStructureElement coStructElt = (COStructureElement) this.getModel();
 	getMainPanel().clear();
-	titleLabel = new Label(getCoMessage(coStructElt.getType()));
-	titleLabel.setStylePrimaryName("Osyl-UnitView-Title");
-	getMainPanel().add(titleLabel);
 	// displaying all sub views
 	List<COElementAbstract> children = null;
 	children = ((COStructureElement) getModel()).getChildrens();
