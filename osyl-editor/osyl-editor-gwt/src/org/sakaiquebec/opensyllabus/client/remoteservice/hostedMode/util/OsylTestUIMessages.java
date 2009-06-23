@@ -2,7 +2,7 @@
  * $Id: OsylTestUIMessages.java 1822 2009-01-27 16:20:46Z laurent.danet@hec.ca $
  **********************************************************************************
  *
- * Copyright (c) 2008 The Sakai Foundation, The Sakai Qué©bec Team.
+ * Copyright (c) 2008 The Sakai Foundation, The Sakai Quï¿½bec Team.
  *
  * Licensed under the Educational Community License, Version 1.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class OsylTestUIMessages {
 	    // Toolbar texts
 	    messages.put("ButtonAddToolBar", "Add...");
 	    messages.put("ButtonHomeToolBar", "Home");
-	    messages.put("ButtonImportToolBar", "Documents");
+	    messages.put("ButtonImportToolBar", "Documents"); 
 	    messages.put("ButtonPrintToolBar", "Print");
 	    messages.put("ButtonPublishToolBar", "Publish");
 	    messages.put("ButtonSaveToolBar", "Save ");
