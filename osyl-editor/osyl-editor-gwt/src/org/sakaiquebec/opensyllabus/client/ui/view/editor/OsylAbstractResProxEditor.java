@@ -439,4 +439,8 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
 	return metaInfoLabel;
     }
+    
+    public boolean isMoveable(){
+	return false;//TODO change this when move to is ready
+    }
 }

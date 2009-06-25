@@ -36,6 +36,11 @@ import org.sakaiquebec.opensyllabus.client.ui.base.OsylWindowPanel;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylCloseClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylEditClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
+import org.sakaiquebec.opensyllabus.shared.model.COContent;
+import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
+import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COStructureElementType;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -50,6 +55,8 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -185,36 +192,6 @@ public abstract class OsylAbstractEditor extends Composite {
 	getView().getButtonPanel().add(pbEdit);
 	getView().getUpAndDownPanel().clear();
     }
-
-    // TODO: check this code if we can delete it
-    // I de-activated this code because it is never called (buttons are
-    // created at other places). As I changed the OsylCloseClickListener,
-    // I am not sure if this still works like it is supposed to.
-
-    // protected void addEditorStdButtons() {
-    // ImageAndTextButton pbSaveEdit = createButtonValidate();
-    // ImageAndTextButton pbCancelEdit = createButtonCancel();
-    // getView().getButtonPanel().clear();
-    // getView().getButtonPanel().add(pbSaveEdit);
-    // getView().getButtonPanel().add(pbCancelEdit);
-    // getView().getUpAndDownPanel().clear();
-    // }
-
-    // protected ImageAndTextButton createButtonValidate() {
-    // AbstractImagePrototype imgValidateButton =
-    // getOsylImageBundle().action_validate();
-    // String title = getView().getUiMessage("Global.ok");
-    // ClickListener listener = new OsylCloseClickListener(getView(), true);
-    // return createButton(imgValidateButton, title, listener);
-    // }
-    //
-    // protected ImageAndTextButton createButtonCancel() {
-    // AbstractImagePrototype imgCancelButton =
-    // getOsylImageBundle().action_validate();
-    // String title = getView().getUiMessage("Global.cancel");
-    // ClickListener listener = new OsylCloseClickListener(getView(), false);
-    // return createButton(imgCancelButton, title, listener);
-    // }
 
     protected ImageAndTextButton createButtonEdit() {
 	AbstractImagePrototype imgEditButton = getOsylImageBundle().edit();
@@ -369,6 +346,24 @@ public abstract class OsylAbstractEditor extends Composite {
 	 * OsylAlertDialog("Oops!", "Sorry: not yet implemented!"); al.show();
 	 * al.center(); } });
 	 */
+	
+
+	if(isMoveable()){
+	    HorizontalPanel leftPanel = new HorizontalPanel();
+	    leftPanel.setWidth("100%");
+	    leftPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+	    row5.add(leftPanel);
+	    
+	    Label label = new Label(getUiMessage("editor.moveTo"));
+	    leftPanel.add(label);
+	    
+	    ListBox coUnitListBox = new ListBox();
+	    coUnitListBox.clear();
+	    coUnitListBox.addItem("");
+	    fillListBoxwithCOunits((COContent)view.getController().getMainView().getModel(), coUnitListBox);
+	    leftPanel.add(coUnitListBox);
+	}
+	
 	HorizontalPanel rightPanel = new HorizontalPanel();
 	rightPanel.setWidth("100%");
 	rightPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -376,7 +371,7 @@ public abstract class OsylAbstractEditor extends Composite {
 
 	HorizontalPanel okCancelPanel = new HorizontalPanel();
 	rightPanel.add(okCancelPanel);
-
+	
 	AbstractImagePrototype imgOkButton =
 		getOsylImageBundle().action_validate();
 	ImageAndTextButton okButton = new ImageAndTextButton(
@@ -423,7 +418,23 @@ public abstract class OsylAbstractEditor extends Composite {
 	    }
 	});
     } // createEditBox
-
+    
+    private void fillListBoxwithCOunits(COElementAbstract model,ListBox lb){
+	if(model.isCOContentUnit()){
+	    String label = model.getLabel();
+	    //if(label.length()>18) label = label.substring(0, 15)+"...";
+	    lb.addItem(label, model.getUuid());
+	}
+	else{
+	    for(Iterator<COElementAbstract> iter = model.getChildrens().iterator();iter.hasNext();){
+		COElementAbstract coElement = iter.next();
+		fillListBoxwithCOunits(coElement, lb);
+	    }
+	}
+    }
+    
+    
+    
     public void closeEditor() {
 	pop.hide();
     }
@@ -522,6 +533,11 @@ public abstract class OsylAbstractEditor extends Composite {
      * Returns true if editor pop-up is resizable.
      */
     public abstract boolean isResizable();
+    
+    /**
+     * Returns true is the 
+     */
+    public abstract boolean isMoveable();
 
     /**
      * @return the list of focus widget used for edition

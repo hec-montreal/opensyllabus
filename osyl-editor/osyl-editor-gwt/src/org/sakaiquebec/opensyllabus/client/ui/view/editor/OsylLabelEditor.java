@@ -262,5 +262,10 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     protected String getNameTooltip(){
 	return null;
     }
+
+    @Override
+    public boolean isMoveable() {
+	return false;
+    }
     
 }

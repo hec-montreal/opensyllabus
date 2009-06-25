@@ -491,6 +491,8 @@ public class OsylTestUIMessages {
 		    "To change parameters like the due date or the " +
 		    "instructions for this assignment, use the Assignment " +
 		    "tool available in the left column.");
+	    
+	    messages.put("editor.moveTo", "Move to:");
 	}
 	return messages;
     }

@@ -437,4 +437,9 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 	return isDeletable;
     }
 
+    @Override
+    public boolean isMoveable() {
+	return false;
+    }
+
 }
