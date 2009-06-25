@@ -192,6 +192,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     public void refreshView() {
 	rootPanel.clear();
 	rootPanel.add((Widget) this.getView());
+	previousHeight=0;
 	int width = Math.max(rootPanel.getOffsetWidth() - 16, 500);
 	((OsylViewableComposite) this.getView()).setWidth(width + "px");
     }
@@ -203,8 +204,9 @@ public class OsylEditorEntryPoint implements EntryPoint {
      */
     public void setToolHeight(int h) {
 	try {
-	    if (h < MIN_SIZE) {
-		h = MIN_SIZE;
+	    if (previousHeight >= h) {
+		// This prevents costly and unneeded resizes
+		return;
 	    }
 	    previousHeight = h;
 
