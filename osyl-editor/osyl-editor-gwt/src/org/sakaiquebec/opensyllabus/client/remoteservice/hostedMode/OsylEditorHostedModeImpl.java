@@ -2,8 +2,12 @@ package org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode;
 
 import java.util.ArrayList;
 
+import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylUdeMSwitch;
+
 import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylTestCOMessages;
+import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylTestCOMessagesUdeM;
 import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylTestUIMessages;
+import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylTestUIMessagesUdeM;
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtServiceAsync;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
@@ -18,6 +22,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+// OsylTestCOMessages
 /**
  * @author mathieu colombet
  * This is the embedded implementation of OsylEditorGwtServiceAsync used in hosted mode only
@@ -27,13 +32,45 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
 	private final static String SITE_ID="6b9188e5-b3ca-49dd-be7c-540ad9bd60c4";
 	
-	private static String DEFAULT_CONFIG_PATH="rules/rules.xml";
-	public static String  UDEM_CONFIG_PATH = "rules/rulesUdeM.xml";
-	
-	private static String DEFAULT_MODEL_PATH="xml_examples/defaultXml.xml";
-	private static String UDEM_MODEL_PATH="xml_examples/UdeMXml.xml";
-	
+	private static String DEFAULT_CONFIG_PATH = "rules/rules.xml";
+	private static String  UDEM_CONFIG_PATH = "rules/rulesUdeM.xml";
+//	  private static String UDEM_CONFIG_PATH = "rules/rulesUdeMCompetencesActivites.xml";
+//	  private static String UDEM_CONFIG_PATH = "rules/rulesUdeMCompetencesComposantes.xml";
+//    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMCompetencesSeances.xml";
+//    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMObjectifsActivites.xml";
+//    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMObjectifsSeances.xml";
+//    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMObjectifsThemes.xml";
 
+	private static String DEFAULT_MODEL_PATH = "xml_examples/defaultXml.xml";
+	private static String UDEM_MODEL_PATH = "xml_examples/UdeMXml.xml";
+//	  private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlCompetencesActivites.xml";
+//	  private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlCompetencesComposantes.xml";
+//    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlCompetencesSeances.xml";
+//    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlObjectifsActivites.xml";
+//    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlObjectifsSeances.xml";
+//    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlObjectifsThemes.xml";
+
+	
+	public String getConfigPath() {
+		// UdeM ?
+		if ( OsylUdeMSwitch.isUdeM() ) {
+			return UDEM_CONFIG_PATH;
+		}
+		else {
+			return DEFAULT_CONFIG_PATH;			
+		}
+	}
+	
+	public String getModelPath() {
+		// UdeM ?
+		if ( OsylUdeMSwitch.isUdeM() ) {
+			return UDEM_MODEL_PATH;
+		}
+		else {
+			return DEFAULT_MODEL_PATH;
+		}
+	}
+	
 	public void applyPermissions(String resourceId, String permission,
 			AsyncCallback<Void> callback) {
 		callback.onSuccess(null);
@@ -84,14 +121,22 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	public void getSerializedConfig(final AsyncCallback<COConfigSerialized> callback) {
 
 		final COConfigSerialized configSer = new COConfigSerialized("config-test-id");
-		configSer.setCoreBundle(OsylTestUIMessages.getMap());
+		
+		if ( OsylUdeMSwitch.isUdeM() ) {
+			configSer.setCoreBundle(OsylTestUIMessagesUdeM.getMap());
+		}
+		else {
+			configSer.setCoreBundle(OsylTestUIMessages.getMap());	
+		}
 
-		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, DEFAULT_CONFIG_PATH);
+		RequestBuilder requestBuilder = null;
+
+			requestBuilder = new RequestBuilder(RequestBuilder.GET, getConfigPath());
 
 		try {
 		    requestBuilder.sendRequest(null, new RequestCallback() {
 			public void onError(Request request, Throwable exception) {
-			    Window.alert("Error while reading "+ DEFAULT_CONFIG_PATH+" :"+exception.toString());
+			    Window.alert("Error while reading " + getConfigPath() + " :" + exception.toString());
 			}
 
 			public void onResponseReceived(Request request,Response response) {
@@ -100,7 +145,7 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 			}
 		    });
 		} catch (RequestException ex) {
-		    Window.alert("Error while reading "+DEFAULT_CONFIG_PATH+" :"+ex.toString());
+		    Window.alert("Error while reading " + getConfigPath() + " :" + ex.toString());
 		}
 	}
 
@@ -114,14 +159,20 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
 		final COSerialized modeledCo = new COSerialized();
 		modeledCo.setSiteId(SITE_ID);
-		modeledCo.setMessages(OsylTestCOMessages.getMap());
 		
-		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, DEFAULT_MODEL_PATH);
+		if ( OsylUdeMSwitch.isUdeM() ) {
+			modeledCo.setMessages(OsylTestCOMessagesUdeM.getMap());
+		}
+		else {
+			modeledCo.setMessages(OsylTestCOMessages.getMap());	
+		}
+		
+		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, getModelPath());
 
 		try {
 		    requestBuilder.sendRequest(null, new RequestCallback() {
 			public void onError(Request request, Throwable exception) {
-			    Window.alert("Error while reading "+ DEFAULT_MODEL_PATH+" :"+exception.toString());
+			    Window.alert("Error while reading " + getModelPath() + " :" + exception.toString());
 			}
 
 			public void onResponseReceived(Request request,
@@ -131,7 +182,7 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 			}
 		    });
 		} catch (RequestException ex) {
-		    Window.alert("Error while reading "+DEFAULT_MODEL_PATH+" :"+ex.toString());
+		    Window.alert("Error while reading " + getModelPath() + " :" + ex.toString());
 		}
 
 	}
