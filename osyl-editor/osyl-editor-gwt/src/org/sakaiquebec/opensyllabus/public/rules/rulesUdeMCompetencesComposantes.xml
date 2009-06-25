@@ -198,23 +198,23 @@
 	 		        
 	 		</element>  <!-- evaluations COStructure End --> 
 
-	 		<element name='COStructure'>  <!-- lectures COStructure Begin -->
-	 			<attribute name='type'  restrictionpattern='lectures' /> 
+	 		<element name='COStructure'>  <!--  CourseSkillsComponentsList COStructure Begin -->
+	 			<attribute name='type'  restrictionpattern='CourseSkillsComponentsList' /> 
 	 			<!-- list of element contentUnit allowed at this level (only one at the moment) --> 
 		
-			 		<element name='COUnit'>  <!-- lecture COUnit Begin -->
-	 			       <attribute name='type'  restrictionpattern='lecture' /> 
+			 		<element name='COUnit'>  <!-- CourseSkills COUnit Begin -->
+	 			       <attribute name='type'  restrictionpattern='CourseSkills' /> 
 	 				   <element name='COResourceProxy'> 
 	 				      <attribute name='type'  restrictionpattern='text|document|url|citation' /> 
 	 				   </element> 
 	 				   <element name='COContentRubric'> 
-	 				      <attribute name='type'  restrictionpattern='undefined|LectureDate|LecturePlace|LectureTeachingActivity|LectureLearningActivity|evaluation|description|misresources' /> 
+	 				      <attribute name='type'  restrictionpattern='undefined|CourseSkillsDate|CourseSkillsPlace|CourseSkillsActivity|evaluation|description|misresources' /> 
 	 				   </element> 
-	 		    	</element>  <!-- lecture COUnit End -->
+	 		    	</element>  <!-- CourseSkills COUnit End -->
 		
 	 		    <!-- list of element structureElement allowed at this level --> 
 	 		    	 		    		
-	 		</element> <!-- lectures COStructure End -->
+	 		</element> <!-- CourseSkillsComponentsList COStructure End -->
 
 	 	</element>  <!--  End CO -->
 	 </schema>

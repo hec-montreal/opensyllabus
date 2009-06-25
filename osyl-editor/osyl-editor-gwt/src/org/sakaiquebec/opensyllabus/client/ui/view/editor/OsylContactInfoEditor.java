@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylUdeMSwitch;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxContactInfoView;
@@ -441,10 +442,12 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	lb.addItem(getView().getCoMessage("ResProxContactInfoView_Student"));
 	lb.addItem(getView().getCoMessage("ResProxContactInfoView_Secretary"));
 	// Addition for UdeM
-	lb.addItem(getView().getCoMessage(
-		"ResProxContactInfoView_Professor_UdeM"));
-	lb.addItem(getView().getCoMessage(
-		"ResProxContactInfoView_Full-timeLecturer_UdeM"));
+	if ( OsylUdeMSwitch.isUdeM() ) {
+		lb.addItem(getView().getCoMessage(
+			"ResProxContactInfoView_Professor_UdeM"));
+		lb.addItem(getView().getCoMessage(
+			"ResProxContactInfoView_Full-timeLecturer_UdeM"));
+	}
 	return lb;
     }
 

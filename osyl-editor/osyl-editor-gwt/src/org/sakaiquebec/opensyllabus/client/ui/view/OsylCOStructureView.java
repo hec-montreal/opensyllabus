@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
+import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylUdeMSwitch;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
@@ -36,114 +37,121 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id: $
  */
 public class OsylCOStructureView extends OsylViewableComposite implements
-	UpdateCOStructureElementEventHandler {
+UpdateCOStructureElementEventHandler {
 
-    public static boolean TRACE = false;
+	public static boolean TRACE = false;
 
-    // View variables
-    private VerticalPanel mainPanel;
+	// View variables
+	private VerticalPanel mainPanel;
 
-    private Label titleLabel;
+	private Label titleLabel;
 
-    public VerticalPanel getMainPanel() {
-	return mainPanel;
-    }
-
-    public void setMainPanel(VerticalPanel mainPanel) {
-	this.mainPanel = mainPanel;
-    }
-
-    public OsylCOStructureView(COModelInterface model,
-	    OsylController osylController) {
-	super(model, osylController);
-	initView();
-    }
-
-    protected void initView() {
-	setMainPanel(new VerticalPanel());
-	getMainPanel().setStylePrimaryName("Osyl-UnitView-UnitPanel");
-	getMainPanel().setWidth("98%");
-	refreshView();
-	initWidget(getMainPanel());
-    }
-
-    public void refreshView() {
-	getMainPanel().clear();
-	// displaying all sub views
-	List<COElementAbstract> children = null;
-	children = ((COStructureElement) getModel()).getChildrens();
-	displayChildren(children);
-    }
-
-    public void displayChildren(List<COElementAbstract> children) {
-	if (children == null) {
-	    if (TRACE)
-		Window
-			.alert("OsylCOStructureView 82 - displayChildren() : No more children ");
-	    return;
-	} else {
-	    if (TRACE)
-		Window
-			.alert("OsylCOStructureView 86 - displayChildren() : There are children! ");
-	    Iterator<COElementAbstract> iter = children.iterator();
-	    while (iter.hasNext()) {
-		// this can be a Lecture leaf
-		// COContentUnit itemModel = (COContentUnit) iter.next();
-		COElementAbstract absElement = iter.next();
-		if (absElement.isCOStructureElement()) {
-		    if (TRACE)
-			Window
-				.alert("OsylCOStructureView 93 - displayChildren() : COStructureElement = "
-					+ absElement.getType());
-		    COStructureElement newCOStructEl =
-			    (COStructureElement) absElement;
-		    addListItemView(newCOStructEl);
-		    children = newCOStructEl.getChildrens();
-		    // if ( children.size() == 1 ) {
-		    displayChildren(children);
-		    // }
-		} else if (absElement.isCOContentUnit()) {
-		    if (TRACE)
-			Window
-				.alert("OsylCOStructureView 100 - displayChildren() : COContentUnit = "
-					+ absElement.getType());
-		    COContentUnit itemModel = (COContentUnit) absElement;
-		    addListItemView(itemModel);
-		} else {
-		    if (TRACE)
-			Window
-				.alert("OsylCOStructureView 100 - displayChildren() : nor COStructureElement either COContentUnit = "
-					+ absElement.getType());
-		    return;
-		}
-	    }
+	public VerticalPanel getMainPanel() {
+		return mainPanel;
 	}
-    }
 
-    protected void addListItemView(COContentUnit itemModel) {
-	OsylCOStructureItemView listItemView =
-		new OsylCOStructureItemView(itemModel, getController());
-	getMainPanel().add(listItemView);
-    }
+	public void setMainPanel(VerticalPanel mainPanel) {
+		this.mainPanel = mainPanel;
+	}
 
-    protected void addListItemView(COStructureElement itemModel) {
-	Label COStructTitleLabel = new Label(getCoMessage(itemModel.getType()));
-	COStructTitleLabel.setStylePrimaryName("Osyl-UnitView-Title");
-	getMainPanel().add(COStructTitleLabel);
-	// addCoUnitLink(getCoMessage(itemModel.getType()),itemModel);
-    }
+	public OsylCOStructureView(COModelInterface model,
+			OsylController osylController) {
+		super(model, osylController);
+		initView();
+	}
 
-    public COStructureElement getModel() {
-	return (COStructureElement) super.getModel();
-    }
+	protected void initView() {
+		setMainPanel(new VerticalPanel());
+		getMainPanel().setStylePrimaryName("Osyl-UnitView-UnitPanel");
+		getMainPanel().setWidth("98%");
+		refreshView();
+		initWidget(getMainPanel());
+	}
 
-    public void setModel(COModelInterface model) {
-	super.setModel(model);
-	getModel().addEventHandler(this);
-    }
+	public void refreshView() {
+		getMainPanel().clear();
+		if ( OsylUdeMSwitch.isUdeM() ) {
+			COStructureElement coStructElt = (COStructureElement) this.getModel();
+			getMainPanel().clear();
+			titleLabel = new Label(getCoMessage(coStructElt.getType()));
+			titleLabel.setStylePrimaryName("Osyl-UnitView-Title");
+			getMainPanel().add(titleLabel);
+		}
+		// displaying all sub views
+		List<COElementAbstract> children = null;
+		children = ((COStructureElement) getModel()).getChildrens();
+		displayChildren(children);
+	}
 
-    public void onUpdateModel(UpdateCOStructureElementEvent event) {
-	refreshView();
-    }
+	public void displayChildren(List<COElementAbstract> children) {
+		if (children == null) {
+			if (TRACE)
+				Window
+				.alert("OsylCOStructureView 89 - displayChildren() : No more children ");
+			return;
+		} else {
+			if (TRACE)
+				Window
+				.alert("OsylCOStructureView 94 - displayChildren() : There are children! ");
+			Iterator<COElementAbstract> iter = children.iterator();
+			while (iter.hasNext()) {
+				// this can be a Lecture leaf
+				// COContentUnit itemModel = (COContentUnit) iter.next();
+				COElementAbstract absElement = iter.next();
+				if (absElement.isCOStructureElement()) {
+					if (TRACE)
+						Window
+						.alert("OsylCOStructureView 103 - displayChildren() : COStructureElement = "
+								+ absElement.getType());
+					COStructureElement newCOStructEl =
+						(COStructureElement) absElement;
+					addListItemView(newCOStructEl);
+					children = newCOStructEl.getChildrens();
+					// if ( children.size() == 1 ) {
+					displayChildren(children);
+					// }
+				} else if (absElement.isCOContentUnit()) {
+					if (TRACE)
+						Window
+						.alert("OsylCOStructureView 115 - displayChildren() : COContentUnit = "
+								+ absElement.getType());
+					COContentUnit itemModel = (COContentUnit) absElement;
+					addListItemView(itemModel);
+				} else {
+					if (TRACE)
+						Window
+						.alert("OsylCOStructureView 122 - displayChildren() : nor COStructureElement either COContentUnit = "
+								+ absElement.getType());
+					return;
+				}
+			}
+		}
+	}
+
+	protected void addListItemView(COContentUnit itemModel) {
+		OsylCOStructureItemView listItemView =
+			new OsylCOStructureItemView(itemModel, getController());
+		getMainPanel().add(listItemView);
+	}
+
+	protected void addListItemView(COStructureElement itemModel) {
+		Label COStructTitleLabel = new Label(getCoMessage(itemModel.getType()));
+		COStructTitleLabel.setStylePrimaryName("Osyl-UnitView-Title");
+		getMainPanel().add(COStructTitleLabel);
+		// addCoUnitLink(getCoMessage(itemModel.getType()),itemModel);
+	}
+
+	public COStructureElement getModel() {
+		return (COStructureElement) super.getModel();
+	}
+
+	public void setModel(COModelInterface model) {
+		super.setModel(model);
+		getModel().addEventHandler(this);
+	}
+
+	public void onUpdateModel(UpdateCOStructureElementEvent event) {
+		refreshView();
+	}
 
 }

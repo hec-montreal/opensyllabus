@@ -20,6 +20,8 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
+
+import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylUdeMSwitch;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureEvaluationItemLabelView;
 
@@ -229,13 +231,14 @@ public class OsylCOStructureEvaluationItemEditor extends
 	typeListBox.addItem(getView().getCoMessage(
 		"Evaluation.Type.participation"));
 	// Addition UdeM
-	typeListBox.addItem(getView().getCoMessage(
-		"Evaluation.Type.multiplechoice"));
-	typeListBox.addItem(getView().getCoMessage(
-		"Evaluation.Type.shortwrittenanswer"));
-	typeListBox.addItem(getView().getCoMessage(
-		"Evaluation.Type.elaboratedwrittenanswer"));
-
+	if ( OsylUdeMSwitch.isUdeM() ) {
+		typeListBox.addItem(getView().getCoMessage(
+			"Evaluation.Type.multiplechoice"));
+		typeListBox.addItem(getView().getCoMessage(
+			"Evaluation.Type.shortwrittenanswer"));
+		typeListBox.addItem(getView().getCoMessage(
+			"Evaluation.Type.elaboratedwrittenanswer"));
+	}
 	typeListBox.addItem(getView().getCoMessage("Evaluation.Type.other"));
 	typeListBox.addChangeListener(new ChangeListener() {
 
