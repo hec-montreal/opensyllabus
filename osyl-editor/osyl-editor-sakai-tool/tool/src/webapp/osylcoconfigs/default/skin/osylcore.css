@@ -2130,6 +2130,7 @@ body {
  	border: none;
  	padding: 3px;
 	margin: 0px;
+	z-index: 999999;
 }
 .Osyl-ResProxCitationView-LabelValue {
 	font-family: helvetica,arial,sans-serif;
