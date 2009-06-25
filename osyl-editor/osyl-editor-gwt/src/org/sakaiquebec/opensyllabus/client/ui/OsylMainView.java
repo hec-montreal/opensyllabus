@@ -61,8 +61,7 @@ public class OsylMainView extends OsylViewableComposite {
 
     public OsylMainView(COModelInterface model, OsylController osylController) {
 	super(model, osylController);
-
-	initViewContext();
+	
 	// Controller itself has a reference to the MainView
 	getController().setMainView(this);
 
@@ -104,6 +103,7 @@ public class OsylMainView extends OsylViewableComposite {
 	subscribeChildrenViewsToLocalHandlers();
 
 	initWidget(getMainPanel());
+	initViewContext();
 	getWorkspaceView().refreshView();
     } // constructor
 
