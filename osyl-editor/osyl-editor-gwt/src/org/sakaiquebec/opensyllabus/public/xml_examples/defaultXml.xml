@@ -2,7 +2,7 @@
 <CO id="H2008-1-1429100" name="H2008-1-1429100" type="bylecture" lang="fr" scrty="public">
 	<label><![CDATA[Bases de données de l'entreprise]]></label>
 	<COUnit type="presentation" scrty="public">
-		<label><![CDATA[Blabla]]></label>
+		<label><![CDATA[Presentation]]></label>
 		<COUnitContent type="presentation" scrty="public">
 			<COResourceProxy type="text" scrty="public">
 				<COContentRubric type="description" />
@@ -422,7 +422,7 @@
 		     <UL>
 		     <LI>Comprendre le rôle de chacune des étapes de conception 
 		     <LI>Comprendre les concepts des deux formalismes de représentation (E/A et UML)
-		     <LI>Être capable d'élaborer un sch�ma conceptuel à partir d'un cas<BR></LI></UL>
+		     <LI>Être capable d'élaborer un sch?ma conceptuel à partir d'un cas<BR></LI></UL>
 		     ]]></text>
 						</properties>
 					</COResource>
