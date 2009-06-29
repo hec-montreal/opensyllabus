@@ -117,7 +117,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 		    // within the COContentUnit (only at COStructure)
 		    OsylCOStructureItemLabelView lbv =
 			    new OsylCOStructureItemLabelView(getModel(),
-				    getController(), true);
+				    getController(), false);
 		    lbv.setStylePrimaryName("Osyl-UnitView-Title");
 		    getMainPanel().add(lbv);
 		}
