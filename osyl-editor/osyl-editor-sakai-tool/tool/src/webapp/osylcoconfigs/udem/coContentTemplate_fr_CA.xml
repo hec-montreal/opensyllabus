@@ -1,5 +1,5 @@
-<?xml version='1.0' encoding='UTF-8'?>
- <CO id='' name='' type='ByObjectivesActivities' lang ='fr' scrty='public'> 
+<?xml version='1.0' encoding='UTF-8'?> 
+ <CO id='' name='' type='ByObjectivesLectures' lang ='fr' scrty='public'> 
    
     <COStructure type='CourseInfo' scrty='public'>  <!-- CourseInfo COStructure Begin -->
            
@@ -67,6 +67,24 @@
                       </properties> 
                    </COResource> 
                  </COResourceProxy> 
+
+                 <COResourceProxy type='text' scrty='public'> 
+                    <COContentRubric type='coursecredits'/> 
+                    <properties> 
+                       <visible>true</visible>  
+                       <requirementLevel>mandatory</requirementLevel> 
+                       <important>true</important> 
+                       <library>false</library> 
+                       <bookstore>false</bookstore> 
+	                </properties> 
+	                <COResource  type='text' scrty='public'> 
+	                   <properties> 
+	                      <text> 
+	                         <![CDATA[...insérez le nombre de crédits ici...]]> 
+	                      </text> 
+                       </properties> 
+                    </COResource> 
+                 </COResourceProxy> 
 	                
                </COUnitContent> 
             </COUnit>  <!-- courseident COUnit End -->
@@ -93,6 +111,30 @@
       	          </COResourceProxy> 
                </COUnitContent> 
             </COUnit>  <!-- courseofficialdescription COUnit End -->
+            
+     	    <COUnit  type='CourseInCurriculum' scrty='public'>   <!-- CourseInCurriculum COUnit Begin -->
+	           <label><![CDATA[Place du cours dans le programme]]></label> 
+               <COUnitContent type='CourseInCurriculum' scrty='public'> 
+                  <COResourceProxy type='text' scrty='public'>          
+                     <COContentRubric type='description'/> 
+                     <properties> 
+                        <visible>true</visible>  
+                        <requirementLevel>recommended</requirementLevel> 
+                        <important>true</important> 
+                        <library>false</library> 
+                        <bookstore>false</bookstore> 
+	             </properties> 
+	             <COResource  type='text' scrty='public'> 
+	                <properties> 
+	                   <text> 
+	                      <![CDATA[...insérez une description ici...]]> 
+	                   </text> 
+                        </properties> 
+                     </COResource> 
+      	          </COResourceProxy> 
+               </COUnitContent> 
+            </COUnit>  <!-- CourseInCurriculum COUnit End -->
+            
              
          </COStructure>  <!-- coursedescription COStructure End -->
             
@@ -276,7 +318,7 @@
        </COUnitContent> 
     </COUnit>  <!-- CourseObjectives COUnit End -->
 
-      <COStructure type='evaluations' scrty='public'>  <!-- evaluations COStructure Begin -->
+    <COStructure type='evaluations' scrty='public'>  <!-- evaluations COStructure Begin -->
 	  
 		    <COUnit  type='assesmentdescription' scrty='public'>  <!-- assesmentdescription COUnit Begin -->
 		 	   <label><![CDATA[Présentation des modalités d'évaluation]]></label>
@@ -302,7 +344,6 @@
 		       </COUnitContent> 
 			</COUnit>  <!-- assesmentdescription COUnit End -->
 	     
-
 	     <COStructure type='EvaluationsList' scrty='public'>  <!-- EvaluationsList COStructure Begin -->
 
 	        <COUnit type='evaluation' scrty='public'>  <!-- evaluation COUnit Begin -->
@@ -311,8 +352,9 @@
                   <properties> 
                      <rating>30%</rating>
 	              </properties>
+
 	              <COResourceProxy type='text' scrty='attendee'> 
-	                 <COContentRubric type='description|EvaluationInstrument'/> 
+	                 <COContentRubric type='description|ObjectivesMeasured|EvaluationInstrument'/> 
 	                 <label><![CDATA[Examen intra]]></label> 
 	                 <properties> 
                         <visible>true</visible> 
@@ -331,6 +373,25 @@
                        </properties> 
                     </COResource> 
                  </COResourceProxy> 
+
+		         <COResourceProxy type='text' scrty='public'> 
+		            <COContentRubric type='ObjectivesMeasured'/> 
+		            <properties> 
+		               <visible>true</visible>  
+		               <requirementLevel>mandatory</requirementLevel> 
+		               <important>true</important> 
+		               <library>false</library> 
+		               <bookstore>false</bookstore> 
+			        </properties> 
+			        <COResource  type='text' scrty='public'> 
+			           <properties> 
+			              <text> 
+			                <![CDATA[...discutez des objectifs évaluées ici...]]> 
+			              </text> 
+		               </properties> 
+		            </COResource> 
+		         </COResourceProxy> 
+
 	          </COUnitContent>  
 	        </COUnit>  <!-- evaluation COUnit End -->
 	
@@ -340,9 +401,10 @@
 	              <properties> 
 	                 <rating>20%</rating>
 	              </properties> 
+
 	              <COResourceProxy type='text' scrty='attendee'> 
-	                 <COContentRubric type='description|EvaluationInstrument'/> 
-	                 <label><![CDATA[Travaux pratiques]]></label> 
+	                 <COContentRubric type='description|ObjectivesMeasured|EvaluationInstrument'/> 
+	                 <label><![CDATA[Travaux pratiques - rapport]]></label> 
 	                 <properties> 
 	                    <visible>true</visible> 
 	                    <requirementLevel>mandatory</requirementLevel> 
@@ -360,18 +422,38 @@
                         </properties> 
                      </COResource> 
                   </COResourceProxy> 
+
+		         <COResourceProxy type='text' scrty='public'> 
+		            <COContentRubric type='ObjectivesMeasured'/> 
+		            <properties> 
+		               <visible>true</visible>  
+		               <requirementLevel>mandatory</requirementLevel> 
+		               <important>true</important> 
+		               <library>false</library> 
+		               <bookstore>false</bookstore> 
+			        </properties> 
+			        <COResource  type='text' scrty='public'> 
+			           <properties> 
+			              <text> 
+			                <![CDATA[...discutez des objectifs évaluées ici...]]> 
+			              </text> 
+		               </properties> 
+		            </COResource> 
+		         </COResourceProxy> 
+
                </COUnitContent> 
 	        </COUnit>  <!-- evaluation COUnit End -->
 	   
 	        <COUnit type='evaluation' scrty='attendee'>  <!-- evaluation COUnit Begin -->
-	           <label><![CDATA[Examen final]]></label> 
+	           <label><![CDATA[Examen final - épreuve écrite]]></label> 
 	           <COUnitContent type='evaluation' scrty='public'> 
 	              <properties> 
 		             <rating>30%</rating>
 		          </properties> 
+
 		          <COResourceProxy type='text' scrty='attendee'> 
-		             <COContentRubric type='description|EvaluationInstrument'/> 
-		             <label><![CDATA[Examen final]]></label> 
+		             <COContentRubric type='description|ObjectivesMeasured|EvaluationInstrument'/> 
+		             <label><![CDATA[Examen final - épreuve écrite]]></label> 
 		             <properties> 
 		                <visible>true</visible> 
 			            <requirementLevel>mandatory</requirementLevel> 
@@ -389,12 +471,129 @@
 			            </properties> 
 		             </COResource> 
 	              </COResourceProxy> 
+
+		         <COResourceProxy type='text' scrty='public'> 
+		            <COContentRubric type='ObjectivesMeasured'/> 
+		            <properties> 
+		               <visible>true</visible>  
+		               <requirementLevel>mandatory</requirementLevel> 
+		               <important>true</important> 
+		               <library>false</library> 
+		               <bookstore>false</bookstore> 
+			        </properties> 
+			        <COResource  type='text' scrty='public'> 
+			           <properties> 
+			              <text> 
+			                <![CDATA[...discutez des objectifs évaluées ici...]]> 
+			              </text> 
+		               </properties> 
+		            </COResource> 
+		         </COResourceProxy> 
+
+	           </COUnitContent> 
+	        </COUnit>  <!-- evaluation COUnit End -->
+
+	        <COUnit type='evaluation' scrty='attendee'>  <!-- evaluation COUnit Begin -->
+	           <label><![CDATA[Examen final - exposé oral]]></label> 
+	           <COUnitContent type='evaluation' scrty='public'> 
+	              <properties> 
+		             <rating>10%</rating>
+		          </properties> 
+
+		          <COResourceProxy type='text' scrty='attendee'> 
+		             <COContentRubric type='description|ObjectivesMeasured|EvaluationInstrument'/> 
+		             <label><![CDATA[Examen final - exposé oral]]></label> 
+		             <properties> 
+		                <visible>true</visible> 
+			            <requirementLevel>mandatory</requirementLevel> 
+			            <important>false</important> 
+			            <uri>sakaiAssignementURI</uri>
+			            <rating>5</rating>
+			            <opendate>2008-02-01</opendate>
+			            <closedate>2008-02-05</closedate>
+		             </properties> 
+		             <COResource type='ehomework' scrty='attendee'> 
+		                <properties> 
+		                   <text> 
+		                      <![CDATA[...insérez votre texte ici...]]> 
+		                   </text> 
+			            </properties> 
+		             </COResource> 
+	              </COResourceProxy> 
+
+		         <COResourceProxy type='text' scrty='public'> 
+		            <COContentRubric type='ObjectivesMeasured'/> 
+		            <properties> 
+		               <visible>true</visible>  
+		               <requirementLevel>mandatory</requirementLevel> 
+		               <important>true</important> 
+		               <library>false</library> 
+		               <bookstore>false</bookstore> 
+			        </properties> 
+			        <COResource  type='text' scrty='public'> 
+			           <properties> 
+			              <text> 
+			                <![CDATA[...discutez des objectifs évaluées ici...]]> 
+			              </text> 
+		               </properties> 
+		            </COResource> 
+		         </COResourceProxy> 
+
+	           </COUnitContent> 
+	        </COUnit>  <!-- evaluation COUnit End -->
+
+	        <COUnit type='evaluation' scrty='attendee'>  <!-- evaluation COUnit Begin -->
+	           <label><![CDATA[Examen final - rapport]]></label> 
+	           <COUnitContent type='evaluation' scrty='public'> 
+	              <properties> 
+		             <rating>10%</rating>
+		          </properties> 
+
+		          <COResourceProxy type='text' scrty='attendee'> 
+		             <COContentRubric type='description|ObjectivesMeasured|EvaluationInstrument'/> 
+		             <label><![CDATA[Examen final - rapport]]></label> 
+		             <properties> 
+		                <visible>true</visible> 
+			            <requirementLevel>mandatory</requirementLevel> 
+			            <important>false</important> 
+			            <uri>sakaiAssignementURI</uri>
+			            <rating>5</rating>
+			            <opendate>2008-02-01</opendate>
+			            <closedate>2008-02-05</closedate>
+		             </properties> 
+		             <COResource type='ehomework' scrty='attendee'> 
+		                <properties> 
+		                   <text> 
+		                      <![CDATA[...insérez votre texte ici...]]> 
+		                   </text> 
+			            </properties> 
+		             </COResource> 
+	              </COResourceProxy> 
+
+		         <COResourceProxy type='text' scrty='public'> 
+		            <COContentRubric type='ObjectivesMeasured'/> 
+		            <properties> 
+		               <visible>true</visible>  
+		               <requirementLevel>mandatory</requirementLevel> 
+		               <important>true</important> 
+		               <library>false</library> 
+		               <bookstore>false</bookstore> 
+			        </properties> 
+			        <COResource  type='text' scrty='public'> 
+			           <properties> 
+			              <text> 
+			                <![CDATA[...discutez des objectifs évaluées ici...]]> 
+			              </text> 
+		               </properties> 
+		            </COResource> 
+		         </COResourceProxy> 
+
 	           </COUnitContent> 
 	        </COUnit>  <!-- evaluation COUnit End -->
 
 	     </COStructure>  <!-- EvaluationsList COStructure End -->
 	    
-	</COStructure>  <!-- evaluations COStructure End -->
+    </COStructure>  <!-- evaluations COStructure End -->
 	
 	<COUnit  type='plagiarism' scrty='public'>  <!-- plagiarism COUnit Begin -->
        <label><![CDATA[Notes sur le plagiat]]></label>
@@ -418,10 +617,9 @@
           </COResourceProxy> 
        </COUnitContent> 
     </COUnit>  <!-- plagiarism COUnit End -->
- 
- 
+          
     <COUnit  type='PedagogicalApproach' scrty='public'>  <!-- PedagogicalApproach COUnit Begin -->
-       <label><![CDATA[Approche pédagogique générale]]></label>
+       <label><![CDATA[Approche pédagogique générale]]></label> 
        <COUnitContent type='PedagogicalApproach' scrty='public'> 
     
           <COResourceProxy type='text' scrty='public'> 
@@ -498,8 +696,7 @@
 
        </COUnitContent> 
     </COUnit>  <!-- PedagogicalApproach COUnit End -->
-
-
+	      	  	 	  
 	<COUnit  type='learningmat' scrty='public'>  <!-- learningmat COUnit Begin -->
        <label><![CDATA[Ressources pédagogiques]]></label>
        <COUnitContent type='learningmat' scrty='public'> 
@@ -618,14 +815,14 @@
 	     
       </COUnit>  <!-- learningmat COUnit End -->
          	
-	  <COStructure type='ThemesList' scrty='public'>  <!-- ThemesList COStructure Begin -->
+	  <COStructure type='lectures' scrty='public'>  <!-- lectures COStructure Begin -->
 	   	   
-	       <COUnit type='Theme' scrty='public'>  <!-- Theme COUnit Begin -->
+	       <COUnit type='lecture' scrty='public'>  <!-- lecture COUnit Begin -->
 	          <label><![CDATA[...insérez le titre de la séance...]]></label> 
-		      <COUnitContent type='Theme' scrty='public'> 
+		      <COUnitContent type='lecture' scrty='public'> 
 	
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeDate'/> 
+			        <COContentRubric type='LectureDate'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -643,7 +840,7 @@
 			     </COResourceProxy> 
 
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemePlace'/> 
+			        <COContentRubric type='LecturePlace'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -661,7 +858,7 @@
 			     </COResourceProxy> 
 		     		     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeGeneralObjectives'/> 
+			        <COContentRubric type='LectureObjectives'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -677,27 +874,9 @@
 			           </properties> 
 			        </COResource> 
 			     </COResourceProxy> 
-			     
+			     			     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeSpecificObjectives'/> 
-			        <properties> 
-			           <visible>true</visible> 
-			           <requirementLevel>recommended</requirementLevel> 
-			           <important>false</important> 
-			           <library>false</library> 
-			           <bookstore>false</bookstore> 
-			        </properties> 
-			        <COResource  type='text' scrty='public'> 
-		               <properties> 
-		                  <text> 
-		                     <![CDATA[...insérez votre texte ici...]]> 
-				          </text> 
-			           </properties> 
-			        </COResource> 
-			     </COResourceProxy> 
-			     
-			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeRequiredMaterial'/> 
+			        <COContentRubric type='LectureRequiredMaterial'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -737,7 +916,7 @@
 	              
 			     <COResourceProxy  type='text' scrty='public'> 
 		             <label><![CDATA[...insérez le titre de l'activité d'enseignement...]]></label> 
-			        <COContentRubric type='ThemeTeachingActivity'/> 
+			        <COContentRubric type='LectureTeachingActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -756,7 +935,7 @@
 
 			     <COResourceProxy  type='text' scrty='public'> 
 		            <label><![CDATA[...insérez le titre de l'activité d'apprentissage...]]></label> 
-			        <COContentRubric type='ThemeLearningActivity'/> 
+			        <COContentRubric type='LectureLearningActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -774,14 +953,14 @@
 			     </COResourceProxy> 
 			     	     					
 		      </COUnitContent> 
-	       </COUnit>  <!-- Theme COUnit End -->
+	       </COUnit>  <!-- lecture COUnit End -->
 
-	       <COUnit type='Theme' scrty='public'>  <!-- Theme COUnit Begin -->
+	       <COUnit type='lecture' scrty='public'>  <!-- lecture COUnit Begin -->
 	          <label><![CDATA[...insérez le titre de la séance...]]></label> 
-		      <COUnitContent type='Theme' scrty='public'> 
+		      <COUnitContent type='lecture' scrty='public'> 
 	
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeDate'/> 
+			        <COContentRubric type='LectureDate'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -799,7 +978,7 @@
 			     </COResourceProxy> 
 
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemePlace'/> 
+			        <COContentRubric type='LecturePlace'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -817,7 +996,7 @@
 			     </COResourceProxy> 
 		     		     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeGeneralObjectives'/> 
+			        <COContentRubric type='LectureObjectives'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -835,25 +1014,7 @@
 			     </COResourceProxy> 
 			     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeSpecificObjectives'/> 
-			        <properties> 
-			           <visible>true</visible> 
-			           <requirementLevel>recommended</requirementLevel> 
-			           <important>false</important> 
-			           <library>false</library> 
-			           <bookstore>false</bookstore> 
-			        </properties> 
-			        <COResource  type='text' scrty='public'> 
-		               <properties> 
-		                  <text> 
-		                     <![CDATA[...insérez votre texte ici...]]> 
-				          </text> 
-			           </properties> 
-			        </COResource> 
-			     </COResourceProxy> 
-			     
-			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeRequiredMaterial'/> 
+			        <COContentRubric type='LectureRequiredMaterial'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -893,7 +1054,7 @@
 	              
 			     <COResourceProxy  type='text' scrty='public'> 
 		             <label><![CDATA[...insérez le titre de l'activité d'enseignement...]]></label> 
-			        <COContentRubric type='ThemeTeachingActivity'/> 
+			        <COContentRubric type='LectureTeachingActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -912,7 +1073,7 @@
 
 			     <COResourceProxy  type='text' scrty='public'> 
 		            <label><![CDATA[...insérez le titre de l'activité d'apprentissage...]]></label> 
-			        <COContentRubric type='ThemeLearningActivity'/> 
+			        <COContentRubric type='LectureLearningActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -930,14 +1091,14 @@
 			     </COResourceProxy> 
 			     	     					
 		      </COUnitContent> 
-	       </COUnit>  <!-- Theme COUnit End -->
+	       </COUnit>  <!-- lecture COUnit End -->
 
-	       <COUnit type='Theme' scrty='public'>  <!-- Theme COUnit Begin -->
+	       <COUnit type='lecture' scrty='public'>  <!-- lecture COUnit Begin -->
 	          <label><![CDATA[...insérez le titre de la séance...]]></label> 
-		      <COUnitContent type='Theme' scrty='public'> 
+		      <COUnitContent type='lecture' scrty='public'> 
 	
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeDate'/> 
+			        <COContentRubric type='LectureDate'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -955,7 +1116,7 @@
 			     </COResourceProxy> 
 
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemePlace'/> 
+			        <COContentRubric type='LecturePlace'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -973,7 +1134,7 @@
 			     </COResourceProxy> 
 		     		     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeGeneralObjectives'/> 
+			        <COContentRubric type='LectureObjectives'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -989,27 +1150,9 @@
 			           </properties> 
 			        </COResource> 
 			     </COResourceProxy> 
-			     
+			     			     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeSpecificObjectives'/> 
-			        <properties> 
-			           <visible>true</visible> 
-			           <requirementLevel>recommended</requirementLevel> 
-			           <important>false</important> 
-			           <library>false</library> 
-			           <bookstore>false</bookstore> 
-			        </properties> 
-			        <COResource  type='text' scrty='public'> 
-		               <properties> 
-		                  <text> 
-		                     <![CDATA[...insérez votre texte ici...]]> 
-				          </text> 
-			           </properties> 
-			        </COResource> 
-			     </COResourceProxy> 
-			     
-			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeRequiredMaterial'/> 
+			        <COContentRubric type='LectureRequiredMaterial'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1049,7 +1192,7 @@
 	              
 			     <COResourceProxy  type='text' scrty='public'> 
 		             <label><![CDATA[...insérez le titre de l'activité d'enseignement...]]></label> 
-			        <COContentRubric type='ThemeTeachingActivity'/> 
+			        <COContentRubric type='LectureTeachingActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1068,7 +1211,7 @@
 
 			     <COResourceProxy  type='text' scrty='public'> 
 		            <label><![CDATA[...insérez le titre de l'activité d'apprentissage...]]></label> 
-			        <COContentRubric type='ThemeLearningActivity'/> 
+			        <COContentRubric type='LectureLearningActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1086,14 +1229,14 @@
 			     </COResourceProxy> 
 			     	     					
 		      </COUnitContent> 
-	       </COUnit>  <!-- Theme COUnit End -->
+	       </COUnit>  <!-- lecture COUnit End -->
 
-	       <COUnit type='Theme' scrty='public'>  <!-- Theme COUnit Begin -->
+	       <COUnit type='lecture' scrty='public'>  <!-- lecture COUnit Begin -->
 	          <label><![CDATA[...insérez le titre de la séance...]]></label> 
-		      <COUnitContent type='Theme' scrty='public'> 
+		      <COUnitContent type='lecture' scrty='public'> 
 	
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeDate'/> 
+			        <COContentRubric type='LectureDate'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1111,7 +1254,7 @@
 			     </COResourceProxy> 
 
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemePlace'/> 
+			        <COContentRubric type='LecturePlace'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1129,7 +1272,7 @@
 			     </COResourceProxy> 
 		     		     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeGeneralObjectives'/> 
+			        <COContentRubric type='LectureObjectives'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1145,27 +1288,9 @@
 			           </properties> 
 			        </COResource> 
 			     </COResourceProxy> 
-			     
+			     			     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeSpecificObjectives'/> 
-			        <properties> 
-			           <visible>true</visible> 
-			           <requirementLevel>recommended</requirementLevel> 
-			           <important>false</important> 
-			           <library>false</library> 
-			           <bookstore>false</bookstore> 
-			        </properties> 
-			        <COResource  type='text' scrty='public'> 
-		               <properties> 
-		                  <text> 
-		                     <![CDATA[...insérez votre texte ici...]]> 
-				          </text> 
-			           </properties> 
-			        </COResource> 
-			     </COResourceProxy> 
-			     
-			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeRequiredMaterial'/> 
+			        <COContentRubric type='LectureRequiredMaterial'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1205,7 +1330,7 @@
 	              
 			     <COResourceProxy  type='text' scrty='public'> 
 		             <label><![CDATA[...insérez le titre de l'activité d'enseignement...]]></label> 
-			        <COContentRubric type='ThemeTeachingActivity'/> 
+			        <COContentRubric type='LectureTeachingActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1224,7 +1349,7 @@
 
 			     <COResourceProxy  type='text' scrty='public'> 
 		            <label><![CDATA[...insérez le titre de l'activité d'apprentissage...]]></label> 
-			        <COContentRubric type='ThemeLearningActivity'/> 
+			        <COContentRubric type='LectureLearningActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1242,14 +1367,14 @@
 			     </COResourceProxy> 
 			     	     					
 		      </COUnitContent> 
-	       </COUnit>  <!-- Theme COUnit End -->
+	       </COUnit>  <!-- lecture COUnit End -->
 
-	       <COUnit type='Theme' scrty='public'>  <!-- Theme COUnit Begin -->
+	       <COUnit type='lecture' scrty='public'>  <!-- lecture COUnit Begin -->
 	          <label><![CDATA[...insérez le titre de la séance...]]></label> 
-		      <COUnitContent type='Theme' scrty='public'> 
+		      <COUnitContent type='lecture' scrty='public'> 
 	
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeDate'/> 
+			        <COContentRubric type='LectureDate'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1267,7 +1392,7 @@
 			     </COResourceProxy> 
 
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemePlace'/> 
+			        <COContentRubric type='LecturePlace'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1285,7 +1410,7 @@
 			     </COResourceProxy> 
 		     		     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeGeneralObjectives'/> 
+			        <COContentRubric type='LectureObjectives'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1303,25 +1428,7 @@
 			     </COResourceProxy> 
 			     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeSpecificObjectives'/> 
-			        <properties> 
-			           <visible>true</visible> 
-			           <requirementLevel>recommended</requirementLevel> 
-			           <important>false</important> 
-			           <library>false</library> 
-			           <bookstore>false</bookstore> 
-			        </properties> 
-			        <COResource  type='text' scrty='public'> 
-		               <properties> 
-		                  <text> 
-		                     <![CDATA[...insérez votre texte ici...]]> 
-				          </text> 
-			           </properties> 
-			        </COResource> 
-			     </COResourceProxy> 
-			     
-			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeRequiredMaterial'/> 
+			        <COContentRubric type='LectureRequiredMaterial'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1361,7 +1468,7 @@
 	              
 			     <COResourceProxy  type='text' scrty='public'> 
 		             <label><![CDATA[...insérez le titre de l'activité d'enseignement...]]></label> 
-			        <COContentRubric type='ThemeTeachingActivity'/> 
+			        <COContentRubric type='LectureTeachingActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1380,7 +1487,7 @@
 
 			     <COResourceProxy  type='text' scrty='public'> 
 		            <label><![CDATA[...insérez le titre de l'activité d'apprentissage...]]></label> 
-			        <COContentRubric type='ThemeLearningActivity'/> 
+			        <COContentRubric type='LectureLearningActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1398,14 +1505,14 @@
 			     </COResourceProxy> 
 			     	     					
 		      </COUnitContent> 
-	       </COUnit>  <!-- Theme COUnit End -->
+	       </COUnit>  <!-- lecture COUnit End -->
 
-	       <COUnit type='Theme' scrty='public'>  <!-- Theme COUnit Begin -->
+	       <COUnit type='lecture' scrty='public'>  <!-- lecture COUnit Begin -->
 	          <label><![CDATA[...insérez le titre de la séance...]]></label> 
-		      <COUnitContent type='Theme' scrty='public'> 
+		      <COUnitContent type='lecture' scrty='public'> 
 	
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeDate'/> 
+			        <COContentRubric type='LectureDate'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1423,7 +1530,7 @@
 			     </COResourceProxy> 
 
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemePlace'/> 
+			        <COContentRubric type='LecturePlace'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1441,7 +1548,7 @@
 			     </COResourceProxy> 
 		     		     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeGeneralObjectives'/> 
+			        <COContentRubric type='LectureObjectives'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1457,27 +1564,9 @@
 			           </properties> 
 			        </COResource> 
 			     </COResourceProxy> 
-			     
+			     			     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeSpecificObjectives'/> 
-			        <properties> 
-			           <visible>true</visible> 
-			           <requirementLevel>recommended</requirementLevel> 
-			           <important>false</important> 
-			           <library>false</library> 
-			           <bookstore>false</bookstore> 
-			        </properties> 
-			        <COResource  type='text' scrty='public'> 
-		               <properties> 
-		                  <text> 
-		                     <![CDATA[...insérez votre texte ici...]]> 
-				          </text> 
-			           </properties> 
-			        </COResource> 
-			     </COResourceProxy> 
-			     
-			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeRequiredMaterial'/> 
+			        <COContentRubric type='LectureRequiredMaterial'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1517,7 +1606,7 @@
 	              
 			     <COResourceProxy  type='text' scrty='public'> 
 		             <label><![CDATA[...insérez le titre de l'activité d'enseignement...]]></label> 
-			        <COContentRubric type='ThemeTeachingActivity'/> 
+			        <COContentRubric type='LectureTeachingActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1536,7 +1625,7 @@
 
 			     <COResourceProxy  type='text' scrty='public'> 
 		            <label><![CDATA[...insérez le titre de l'activité d'apprentissage...]]></label> 
-			        <COContentRubric type='ThemeLearningActivity'/> 
+			        <COContentRubric type='LectureLearningActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1554,14 +1643,14 @@
 			     </COResourceProxy> 
 			     	     					
 		      </COUnitContent> 
-	       </COUnit>  <!-- Theme COUnit End -->
+	       </COUnit>  <!-- lecture COUnit End -->
 
-	       <COUnit type='Theme' scrty='public'>  <!-- Theme COUnit Begin -->
+	       <COUnit type='lecture' scrty='public'>  <!-- lecture COUnit Begin -->
 	          <label><![CDATA[...insérez le titre de la séance...]]></label> 
-		      <COUnitContent type='Theme' scrty='public'> 
+		      <COUnitContent type='lecture' scrty='public'> 
 	
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeDate'/> 
+			        <COContentRubric type='LectureDate'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1579,7 +1668,7 @@
 			     </COResourceProxy> 
 
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemePlace'/> 
+			        <COContentRubric type='LecturePlace'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1597,7 +1686,7 @@
 			     </COResourceProxy> 
 		     		     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeGeneralObjectives'/> 
+			        <COContentRubric type='LectureObjectives'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1613,27 +1702,9 @@
 			           </properties> 
 			        </COResource> 
 			     </COResourceProxy> 
-			     
+			     			     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeSpecificObjectives'/> 
-			        <properties> 
-			           <visible>true</visible> 
-			           <requirementLevel>recommended</requirementLevel> 
-			           <important>false</important> 
-			           <library>false</library> 
-			           <bookstore>false</bookstore> 
-			        </properties> 
-			        <COResource  type='text' scrty='public'> 
-		               <properties> 
-		                  <text> 
-		                     <![CDATA[...insérez votre texte ici...]]> 
-				          </text> 
-			           </properties> 
-			        </COResource> 
-			     </COResourceProxy> 
-			     
-			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeRequiredMaterial'/> 
+			        <COContentRubric type='LectureRequiredMaterial'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1673,7 +1744,7 @@
 	              
 			     <COResourceProxy  type='text' scrty='public'> 
 		             <label><![CDATA[...insérez le titre de l'activité d'enseignement...]]></label> 
-			        <COContentRubric type='ThemeTeachingActivity'/> 
+			        <COContentRubric type='LectureTeachingActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1692,7 +1763,7 @@
 
 			     <COResourceProxy  type='text' scrty='public'> 
 		            <label><![CDATA[...insérez le titre de l'activité d'apprentissage...]]></label> 
-			        <COContentRubric type='ThemeLearningActivity'/> 
+			        <COContentRubric type='LectureLearningActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1710,14 +1781,14 @@
 			     </COResourceProxy> 
 			     	     					
 		      </COUnitContent> 
-	       </COUnit>  <!-- Theme COUnit End -->
+	       </COUnit>  <!-- lecture COUnit End -->
 
-	       <COUnit type='Theme' scrty='public'>  <!-- Theme COUnit Begin -->
+	       <COUnit type='lecture' scrty='public'>  <!-- lecture COUnit Begin -->
 	          <label><![CDATA[...insérez le titre de la séance...]]></label> 
-		      <COUnitContent type='Theme' scrty='public'> 
+		      <COUnitContent type='lecture' scrty='public'> 
 	
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeDate'/> 
+			        <COContentRubric type='LectureDate'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1735,7 +1806,7 @@
 			     </COResourceProxy> 
 
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemePlace'/> 
+			        <COContentRubric type='LecturePlace'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1753,7 +1824,7 @@
 			     </COResourceProxy> 
 		     		     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeGeneralObjectives'/> 
+			        <COContentRubric type='LectureObjectives'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1769,27 +1840,9 @@
 			           </properties> 
 			        </COResource> 
 			     </COResourceProxy> 
-			     
+			     			     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeSpecificObjectives'/> 
-			        <properties> 
-			           <visible>true</visible> 
-			           <requirementLevel>recommended</requirementLevel> 
-			           <important>false</important> 
-			           <library>false</library> 
-			           <bookstore>false</bookstore> 
-			        </properties> 
-			        <COResource  type='text' scrty='public'> 
-		               <properties> 
-		                  <text> 
-		                     <![CDATA[...insérez votre texte ici...]]> 
-				          </text> 
-			           </properties> 
-			        </COResource> 
-			     </COResourceProxy> 
-			     
-			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeRequiredMaterial'/> 
+			        <COContentRubric type='LectureRequiredMaterial'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1829,7 +1882,7 @@
 	              
 			     <COResourceProxy  type='text' scrty='public'> 
 		             <label><![CDATA[...insérez le titre de l'activité d'enseignement...]]></label> 
-			        <COContentRubric type='ThemeTeachingActivity'/> 
+			        <COContentRubric type='LectureTeachingActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1848,7 +1901,7 @@
 
 			     <COResourceProxy  type='text' scrty='public'> 
 		            <label><![CDATA[...insérez le titre de l'activité d'apprentissage...]]></label> 
-			        <COContentRubric type='ThemeLearningActivity'/> 
+			        <COContentRubric type='LectureLearningActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1866,14 +1919,14 @@
 			     </COResourceProxy> 
 			     	     					
 		      </COUnitContent> 
-	       </COUnit>  <!-- Theme COUnit End -->
+	       </COUnit>  <!-- lecture COUnit End -->
 
-	       <COUnit type='Theme' scrty='public'>  <!-- Theme COUnit Begin -->
+	       <COUnit type='lecture' scrty='public'>  <!-- lecture COUnit Begin -->
 	          <label><![CDATA[...insérez le titre de la séance...]]></label> 
-		      <COUnitContent type='Theme' scrty='public'> 
+		      <COUnitContent type='lecture' scrty='public'> 
 	
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeDate'/> 
+			        <COContentRubric type='LectureDate'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1891,7 +1944,7 @@
 			     </COResourceProxy> 
 
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemePlace'/> 
+			        <COContentRubric type='LecturePlace'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1909,7 +1962,7 @@
 			     </COResourceProxy> 
 		     		     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeGeneralObjectives'/> 
+			        <COContentRubric type='LectureObjectives'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1925,27 +1978,9 @@
 			           </properties> 
 			        </COResource> 
 			     </COResourceProxy> 
-			     
+			     			     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeSpecificObjectives'/> 
-			        <properties> 
-			           <visible>true</visible> 
-			           <requirementLevel>recommended</requirementLevel> 
-			           <important>false</important> 
-			           <library>false</library> 
-			           <bookstore>false</bookstore> 
-			        </properties> 
-			        <COResource  type='text' scrty='public'> 
-		               <properties> 
-		                  <text> 
-		                     <![CDATA[...insérez votre texte ici...]]> 
-				          </text> 
-			           </properties> 
-			        </COResource> 
-			     </COResourceProxy> 
-			     
-			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeRequiredMaterial'/> 
+			        <COContentRubric type='LectureRequiredMaterial'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -1985,7 +2020,7 @@
 	              
 			     <COResourceProxy  type='text' scrty='public'> 
 		             <label><![CDATA[...insérez le titre de l'activité d'enseignement...]]></label> 
-			        <COContentRubric type='ThemeTeachingActivity'/> 
+			        <COContentRubric type='LectureTeachingActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2004,7 +2039,7 @@
 
 			     <COResourceProxy  type='text' scrty='public'> 
 		            <label><![CDATA[...insérez le titre de l'activité d'apprentissage...]]></label> 
-			        <COContentRubric type='ThemeLearningActivity'/> 
+			        <COContentRubric type='LectureLearningActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2022,14 +2057,14 @@
 			     </COResourceProxy> 
 			     	     					
 		      </COUnitContent> 
-	       </COUnit>  <!-- Theme COUnit End -->
+	       </COUnit>  <!-- lecture COUnit End -->
 
-	       <COUnit type='Theme' scrty='public'>  <!-- Theme COUnit Begin -->
+	       <COUnit type='lecture' scrty='public'>  <!-- lecture COUnit Begin -->
 	          <label><![CDATA[...insérez le titre de la séance...]]></label> 
-		      <COUnitContent type='Theme' scrty='public'> 
+		      <COUnitContent type='lecture' scrty='public'> 
 	
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeDate'/> 
+			        <COContentRubric type='LectureDate'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2047,7 +2082,7 @@
 			     </COResourceProxy> 
 
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemePlace'/> 
+			        <COContentRubric type='LecturePlace'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2065,7 +2100,7 @@
 			     </COResourceProxy> 
 		     		     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeGeneralObjectives'/> 
+			        <COContentRubric type='LectureObjectives'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2083,25 +2118,7 @@
 			     </COResourceProxy> 
 			     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeSpecificObjectives'/> 
-			        <properties> 
-			           <visible>true</visible> 
-			           <requirementLevel>recommended</requirementLevel> 
-			           <important>false</important> 
-			           <library>false</library> 
-			           <bookstore>false</bookstore> 
-			        </properties> 
-			        <COResource  type='text' scrty='public'> 
-		               <properties> 
-		                  <text> 
-		                     <![CDATA[...insérez votre texte ici...]]> 
-				          </text> 
-			           </properties> 
-			        </COResource> 
-			     </COResourceProxy> 
-			     
-			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeRequiredMaterial'/> 
+			        <COContentRubric type='LectureRequiredMaterial'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2141,7 +2158,7 @@
 	              
 			     <COResourceProxy  type='text' scrty='public'> 
 		             <label><![CDATA[...insérez le titre de l'activité d'enseignement...]]></label> 
-			        <COContentRubric type='ThemeTeachingActivity'/> 
+			        <COContentRubric type='LectureTeachingActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2160,7 +2177,7 @@
 
 			     <COResourceProxy  type='text' scrty='public'> 
 		            <label><![CDATA[...insérez le titre de l'activité d'apprentissage...]]></label> 
-			        <COContentRubric type='ThemeLearningActivity'/> 
+			        <COContentRubric type='LectureLearningActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2178,14 +2195,14 @@
 			     </COResourceProxy> 
 			     	     					
 		      </COUnitContent> 
-	       </COUnit>  <!-- Theme COUnit End -->
+	       </COUnit>  <!-- lecture COUnit End -->
 
-	       <COUnit type='Theme' scrty='public'>  <!-- Theme COUnit Begin -->
+	       <COUnit type='lecture' scrty='public'>  <!-- lecture COUnit Begin -->
 	          <label><![CDATA[...insérez le titre de la séance...]]></label> 
-		      <COUnitContent type='Theme' scrty='public'> 
+		      <COUnitContent type='lecture' scrty='public'> 
 	
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeDate'/> 
+			        <COContentRubric type='LectureDate'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2203,7 +2220,7 @@
 			     </COResourceProxy> 
 
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemePlace'/> 
+			        <COContentRubric type='LecturePlace'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2221,7 +2238,7 @@
 			     </COResourceProxy> 
 		     		     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeGeneralObjectives'/> 
+			        <COContentRubric type='LectureObjectives'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2237,27 +2254,9 @@
 			           </properties> 
 			        </COResource> 
 			     </COResourceProxy> 
-			     
+			     			     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeSpecificObjectives'/> 
-			        <properties> 
-			           <visible>true</visible> 
-			           <requirementLevel>recommended</requirementLevel> 
-			           <important>false</important> 
-			           <library>false</library> 
-			           <bookstore>false</bookstore> 
-			        </properties> 
-			        <COResource  type='text' scrty='public'> 
-		               <properties> 
-		                  <text> 
-		                     <![CDATA[...insérez votre texte ici...]]> 
-				          </text> 
-			           </properties> 
-			        </COResource> 
-			     </COResourceProxy> 
-			     
-			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeRequiredMaterial'/> 
+			        <COContentRubric type='LectureRequiredMaterial'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2297,7 +2296,7 @@
 	              
 			     <COResourceProxy  type='text' scrty='public'> 
 		             <label><![CDATA[...insérez le titre de l'activité d'enseignement...]]></label> 
-			        <COContentRubric type='ThemeTeachingActivity'/> 
+			        <COContentRubric type='LectureTeachingActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2316,7 +2315,7 @@
 
 			     <COResourceProxy  type='text' scrty='public'> 
 		            <label><![CDATA[...insérez le titre de l'activité d'apprentissage...]]></label> 
-			        <COContentRubric type='ThemeLearningActivity'/> 
+			        <COContentRubric type='LectureLearningActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2334,14 +2333,14 @@
 			     </COResourceProxy> 
 			     	     					
 		      </COUnitContent> 
-	       </COUnit>  <!-- Theme COUnit End -->
+	       </COUnit>  <!-- lecture COUnit End -->
 
-	       <COUnit type='Theme' scrty='public'>  <!-- Theme COUnit Begin -->
+	       <COUnit type='lecture' scrty='public'>  <!-- lecture COUnit Begin -->
 	          <label><![CDATA[...insérez le titre de la séance...]]></label> 
-		      <COUnitContent type='Theme' scrty='public'> 
+		      <COUnitContent type='lecture' scrty='public'> 
 	
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeDate'/> 
+			        <COContentRubric type='LectureDate'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2359,7 +2358,7 @@
 			     </COResourceProxy> 
 
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemePlace'/> 
+			        <COContentRubric type='LecturePlace'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2377,7 +2376,7 @@
 			     </COResourceProxy> 
 		     		     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeGeneralObjectives'/> 
+			        <COContentRubric type='LectureObjectives'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2393,27 +2392,9 @@
 			           </properties> 
 			        </COResource> 
 			     </COResourceProxy> 
-			     
+			     			     
 			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeSpecificObjectives'/> 
-			        <properties> 
-			           <visible>true</visible> 
-			           <requirementLevel>recommended</requirementLevel> 
-			           <important>false</important> 
-			           <library>false</library> 
-			           <bookstore>false</bookstore> 
-			        </properties> 
-			        <COResource  type='text' scrty='public'> 
-		               <properties> 
-		                  <text> 
-		                     <![CDATA[...insérez votre texte ici...]]> 
-				          </text> 
-			           </properties> 
-			        </COResource> 
-			     </COResourceProxy> 
-			     
-			     <COResourceProxy  type='text' scrty='public'> 
-			        <COContentRubric type='ThemeRequiredMaterial'/> 
+			        <COContentRubric type='LectureRequiredMaterial'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2453,7 +2434,7 @@
 	              
 			     <COResourceProxy  type='text' scrty='public'> 
 		             <label><![CDATA[...insérez le titre de l'activité d'enseignement...]]></label> 
-			        <COContentRubric type='ThemeTeachingActivity'/> 
+			        <COContentRubric type='LectureTeachingActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2472,7 +2453,7 @@
 
 			     <COResourceProxy  type='text' scrty='public'> 
 		            <label><![CDATA[...insérez le titre de l'activité d'apprentissage...]]></label> 
-			        <COContentRubric type='ThemeLearningActivity'/> 
+			        <COContentRubric type='LectureLearningActivity'/> 
 			        <properties> 
 			           <visible>true</visible> 
 			           <requirementLevel>recommended</requirementLevel> 
@@ -2490,9 +2471,9 @@
 			     </COResourceProxy> 
 			     	     					
 		      </COUnitContent> 
-	       </COUnit>  <!-- Theme COUnit End -->
+	       </COUnit>  <!-- lecture COUnit End -->
 
-	</COStructure>  <!-- Themes COStructure End -->
+	</COStructure>  <!-- lectures COStructure End -->
 
     <COUnit  type='Bibliography' scrty='public'>  <!-- Bibliography COUnit Begin -->
        <label><![CDATA[Liste des références bibliographiques :]]></label>
@@ -2545,7 +2526,7 @@
 	   </COUnitContent> 
 	</COUnit>  <!-- ThematicBibliography COUnit End -->
 	
-	<COUnit  type='LearningSupportServices' scrty='public'>  <!-- LearningSupportServices COUnit Begin -->
+    <COUnit  type='LearningSupportServices' scrty='public'>  <!-- LearningSupportServices COUnit Begin -->
        <label><![CDATA[Liste des services :]]></label>
 	   <COUnitContent type='LearningSupportServices' scrty='public'> 
 	    
@@ -2569,5 +2550,6 @@
 	         
 	   </COUnitContent> 
 	</COUnit>  <!-- LearningSupportServices COUnit End -->
-	   
+	        
  </CO> <!-- Course Outline End -->
+ 
