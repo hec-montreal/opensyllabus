@@ -191,7 +191,7 @@
 	 </COUnit>  <!-- contactinfo COUnit End -->
 	 
      <COUnit type='courseintro' scrty='public'>  <!-- courseintro COUnit Begin -->
-       <!--	<label><![CDATA[...insérez un titre de section ici...]]></label> -->
+       <label><![CDATA[Introduction au cours]]></label>
        <COUnitContent type='courseintro' scrty='public'>   
            
           <COResourceProxy type='text' scrty='public'>          
@@ -382,7 +382,7 @@
     </COStructure>   <!-- PedagogicalApproachStruc COStructure End -->
   
 	<COUnit  type='learningmat' scrty='public'>  <!-- learningmat COUnit Begin -->
-       <!--	<label><![CDATA[Ressources pédagogiques]]></label> -->
+       <label><![CDATA[Ressources pédagogiques]]></label>
        <COUnitContent type='learningmat' scrty='public'> 
 
           <COResourceProxy type='text' scrty='public'> 
@@ -618,7 +618,7 @@
 	</COStructure>  <!-- evaluations COStructure End -->
 	
 	<COUnit  type='plagiarism' scrty='public'>  <!-- plagiarism COUnit Begin -->
-       <!-- <label><![CDATA[Notes sur le plagiat]]></label> -->
+       <label><![CDATA[Notes sur le plagiat]]></label>
        <COUnitContent type='plagiarism' scrty='public'> 
           <COResourceProxy type='text' scrty='public'> 
              <COContentRubric type='description'/> 
@@ -837,7 +837,7 @@
 		              </properties>
 		              <COResourceProxy type='text' scrty='attendee'> 
 		                 <COContentRubric type='description'/> 
-<!--		                 <label><![CDATA[Examen intra]]></label> -->
+                         <label><![CDATA[Examen intra]]></label>
 		                 <properties> 
 	                        <visible>true</visible> 
 	                        <requirementLevel>mandatory</requirementLevel> 
@@ -1059,7 +1059,7 @@
 		              </properties>
 		              <COResourceProxy type='text' scrty='attendee'> 
 		                 <COContentRubric type='description'/> 
-<!--		                 <label><![CDATA[Examen intra]]></label> -->
+                         <label><![CDATA[Examen intra]]></label>
 		                 <properties> 
 	                        <visible>true</visible> 
 	                        <requirementLevel>mandatory</requirementLevel> 
@@ -1281,7 +1281,7 @@
 		              </properties>
 		              <COResourceProxy type='text' scrty='attendee'> 
 		                 <COContentRubric type='description'/> 
-<!--		                 <label><![CDATA[Examen intra]]></label> -->
+                         <label><![CDATA[Examen intra]]></label>
 		                 <properties> 
 	                        <visible>true</visible> 
 	                        <requirementLevel>mandatory</requirementLevel> 
@@ -1503,7 +1503,7 @@
 		              </properties>
 		              <COResourceProxy type='text' scrty='attendee'> 
 		                 <COContentRubric type='description'/> 
-<!--		                 <label><![CDATA[Examen intra]]></label> -->
+                         <label><![CDATA[Examen intra]]></label>
 		                 <properties> 
 	                        <visible>true</visible> 
 	                        <requirementLevel>mandatory</requirementLevel> 
@@ -1725,7 +1725,7 @@
 		              </properties>
 		              <COResourceProxy type='text' scrty='attendee'> 
 		                 <COContentRubric type='description'/> 
-<!--		                 <label><![CDATA[Examen intra]]></label> -->
+                         <label><![CDATA[Examen intra]]></label>
 		                 <properties> 
 	                        <visible>true</visible> 
 	                        <requirementLevel>mandatory</requirementLevel> 
@@ -1947,7 +1947,7 @@
 		              </properties>
 		              <COResourceProxy type='text' scrty='attendee'> 
 		                 <COContentRubric type='description'/> 
-<!--		                 <label><![CDATA[Examen intra]]></label> -->
+                         <label><![CDATA[Examen intra]]></label>
 		                 <properties> 
 	                        <visible>true</visible> 
 	                        <requirementLevel>mandatory</requirementLevel> 
@@ -2169,7 +2169,7 @@
 		              </properties>
 		              <COResourceProxy type='text' scrty='attendee'> 
 		                 <COContentRubric type='description'/> 
-<!--		                 <label><![CDATA[Examen intra]]></label> -->
+                         <label><![CDATA[Examen intra]]></label>
 		                 <properties> 
 	                        <visible>true</visible> 
 	                        <requirementLevel>mandatory</requirementLevel> 
@@ -2391,7 +2391,7 @@
 		              </properties>
 		              <COResourceProxy type='text' scrty='attendee'> 
 		                 <COContentRubric type='description'/> 
-<!--		                 <label><![CDATA[Examen intra]]></label> -->
+                         <label><![CDATA[Examen intra]]></label>
 		                 <properties> 
 	                        <visible>true</visible> 
 	                        <requirementLevel>mandatory</requirementLevel> 
@@ -2613,7 +2613,7 @@
 		              </properties>
 		              <COResourceProxy type='text' scrty='attendee'> 
 		                 <COContentRubric type='description'/> 
-<!--		                 <label><![CDATA[Examen intra]]></label> -->
+                         <label><![CDATA[Examen intra]]></label>
 		                 <properties> 
 	                        <visible>true</visible> 
 	                        <requirementLevel>mandatory</requirementLevel> 
@@ -2835,7 +2835,7 @@
 		              </properties>
 		              <COResourceProxy type='text' scrty='attendee'> 
 		                 <COContentRubric type='description'/> 
-<!--		                 <label><![CDATA[Examen intra]]></label> -->
+                         <label><![CDATA[Examen intra]]></label>
 		                 <properties> 
 	                        <visible>true</visible> 
 	                        <requirementLevel>mandatory</requirementLevel> 
@@ -3057,7 +3057,7 @@
 		              </properties>
 		              <COResourceProxy type='text' scrty='attendee'> 
 		                 <COContentRubric type='description'/> 
-<!--		                 <label><![CDATA[Examen intra]]></label> -->
+                         <label><![CDATA[Examen intra]]></label>
 		                 <properties> 
 	                        <visible>true</visible> 
 	                        <requirementLevel>mandatory</requirementLevel> 
@@ -3279,7 +3279,7 @@
 		              </properties>
 		              <COResourceProxy type='text' scrty='attendee'> 
 		                 <COContentRubric type='description'/> 
-<!--		                 <label><![CDATA[Examen intra]]></label> -->
+                         <label><![CDATA[Examen intra]]></label>
 		                 <properties> 
 	                        <visible>true</visible> 
 	                        <requirementLevel>mandatory</requirementLevel> 
@@ -3309,12 +3309,12 @@
 	</COStructure>  <!-- ThemesList COStructure End -->
 
     <COUnit  type='Bibliography' scrty='public'>  <!-- Bibliography COUnit Begin -->
-        <!-- <label><![CDATA[Liste des références bibliographiques :]]></label>  -->
+       <label><![CDATA[Liste des références bibliographiques :]]></label>
 	   <COUnitContent type='Bibliography' scrty='public'> 
 	    
           <COResourceProxy type='citation' scrty='public'> 
              <COContentRubric type='bibliography'/> 
-             <!-- <label><![CDATA[Référence bibliographique]]></label> -->
+             <label><![CDATA[Référence bibliographique]]></label>
                 <properties> 
                    <visible>true</visible>  
                    <requirementLevel>recommended</requirementLevel> 
@@ -3335,12 +3335,12 @@
 	   </COUnit>  <!-- Bibliography COUnit End -->
 	   
     <COUnit  type='ThematicBibliography' scrty='public'>  <!-- ThematicBibliography COUnit Begin -->
-        <!-- <label><![CDATA[Liste des références bibliographiques :]]></label>  -->
+       <label><![CDATA[Liste des références bibliographiques :]]></label>
 	   <COUnitContent type='ThematicBibliography' scrty='public'> 
 	    
           <COResourceProxy type='text' scrty='public'> 
              <COContentRubric type='bibliography'/> 
-             <!-- <label><![CDATA[Référence bibliographique]]></label> -->
+             <label><![CDATA[Référence bibliographique]]></label>
                 <properties> 
                    <visible>true</visible>  
                    <requirementLevel>recommended</requirementLevel> 
@@ -3358,5 +3358,30 @@
 	         
 	   </COUnitContent> 
 	</COUnit>  <!-- ThematicBibliography COUnit End -->
+
+    <COUnit  type='LearningSupportServices' scrty='public'>  <!-- LearningSupportServices COUnit Begin -->
+       <label><![CDATA[Liste des services :]]></label>
+	   <COUnitContent type='LearningSupportServices' scrty='public'> 
+	    
+          <COResourceProxy type='text' scrty='public'> 
+             <COContentRubric type='LearningSupportSAE'/> 
+             <!-- <label><![CDATA[Service aux étudiants (SAE)]]></label> -->
+                <properties> 
+                   <visible>true</visible>  
+                   <requirementLevel>recommended</requirementLevel> 
+                   <important>true</important> 
+                   <library>true</library> 
+ 	            </properties> 
+                <COResource  type='text' scrty='public'> 
+	               <properties> 
+	                  <text> 
+	                     <![CDATA[...insérez une description ici...]]> 
+	                  </text> 
+                   </properties> 
+                </COResource> 
+          </COResourceProxy>
+	         
+	   </COUnitContent> 
+	</COUnit>  <!-- LearningSupportServices COUnit End -->
 	        
  </CO> <!-- Course Outline End -->

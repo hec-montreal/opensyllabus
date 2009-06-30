@@ -1096,21 +1096,6 @@ li {
 .gwt-ListBox {
 }
 
-.gwt-MenuBar {
-  background-color: #C3D9FF;
-  border: 1px solid #87B3FF;
-  cursor: default;
-}
-
-.gwt-MenuBar .gwt-MenuItem {
-  padding: 1px 4px 1px 4px;
-  cursor: default;
-}
-
-.gwt-MenuBar .gwt-MenuItem-selected {
-  background-color: #E8EEF7;
-}
-
 .gwt-PasswordTextBox {
 }
 
@@ -1460,12 +1445,53 @@ li {
 }
 
 .Osyl-MainToolbarPanel {
-	background: url(img/bgFade.gif) repeat-x;
-/*	background: url(img/hecmontreal.gif) no-repeat; */
 	border-bottom: 1px solid #999;
 	width: 100%;
-	text-align: center;
+	text-align: left;
+	font-family: helvetica,arial,sans-serif;
 }
+
+.Osyl-MainToolbarButtonPanel .Osyl-TextButton {
+  background: transparent url(img/toolbar-background.png) repeat-x;
+  vertical-align: center;
+}
+
+/* I think we should not fiddle with the GWT class .html-face but I couldn't
+   find another way to center vertically the button texts
+   (vertical-align: middle works in IE but not FF). If I set the 3px padding
+   in the Osyl-TextButton class, the button is 23px tall in FF and 20 in IE! */
+.Osyl-MainToolbarPanel .Osyl-TextButton .html-face {
+  vertical-align: bottom;
+  height: 100%;
+  padding: 3px 0px 0px 0px;
+}
+
+.Osyl-MainToolbarPanel .Osyl-TextButton {
+  font-size: 11px;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #ffffff;
+  color: black;
+  border-right: 1px solid #888888;
+  padding: 0px 0px 0px 0px;
+  margin: 0px;
+  width: 80px;
+  height: 20px;
+  cursor: default;
+}
+
+.Osyl-MainToolbarPanel .Osyl-TextButton-up-disabled div {
+  color: #999999;
+}
+
+.Osyl-MainToolbarPanel .Osyl-TextButton-up-hovering {
+  /* background-color: #ffe37f; */
+  background: url(img/toolbar-background-hover.png) repeat-x;
+  cursor: pointer;
+  cursor: hand;
+}
+
 
 .Osyl-LongView-CourseOutline {
 	margin: 2px 30px 10px 2px;
@@ -1486,9 +1512,7 @@ li {
 
 .Osyl-FileUpload-uploadForm {
 	background: #fff url(img/bgFade.gif) repeat-x;
-	width: 300px;
-	margin: 80px 0px 0px 400px;
-	padding: 10px;
+	padding: 4px;
 	font-size: 100%;
 	font-family:Arial,sans-serif;
 	color:#000000;
@@ -1500,10 +1524,46 @@ li {
 	font-size:14px;
 	font-weight: bold;
 	text-align: center;
+	padding-bottom: 10px;
 }
 
 .Osyl-FileUpload-genericButton {
 	margin: 10px;
+}
+
+.Osyl-CitationForm-form {
+	background: #fff url(img/bgFade.gif) repeat-x;
+	padding: 4px;
+	font-size: 100%;
+	font-family:Arial,sans-serif;
+	color:#000000;
+	background-color:#ffffff;
+	border: 2px outset;
+}
+
+.Osyl-CitationForm-title {
+	font-size:14px;
+	font-weight: bold;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+.Osyl-CitationForm-typeField {
+	text-align: center;
+	margin: 20px;
+}
+
+.Osyl-CitationForm-genericPanel {
+	margin: 3px;
+}
+
+.Osyl-CitationForm-textBoxRight {
+	font-family: sans-serif, Arial, Verdana; /* Doesn't work in MSIE */
+	background: white;
+	border: 1px solid #aaa;
+	margin: 0px;
+	padding: 0px; /* Doesn't work in any browser */
+	margin-left: 3px;
 }
 
 .Osyl-PublishView-Title { 
@@ -1529,20 +1589,52 @@ li {
 }
 
 .Osyl-UnitView-MainPanel {
-	padding: 10px 5px 50px 50px;
+	padding: 10px 5px 0px 50px;
 }
 
+.Osyl-UnitView-Title {
+	/**margin: 2px 30px 10px 2px;**/
+	color:#063871;
+	font-size: 16px;
+	font-weight:bold;
+	margin:10px 0;
+	/**padding: 4px 0px 4px 1px;**/
+	font-family: sans-serif, Arial, Verdana;
+	border: 1px solid transparent;
+}
+
+.Osyl-UnitView-Title-Hover {
+	border: 1px solid #b0b0b0;
+	background-color: #eeeeee;
+	/**margin-left: 4px;
+	margin-top: 6px;
+	margin-right: 11px;
+	margin-bottom: 15px; /* 10px is better for IE */
+	/**padding: 3px 0px 5px 0px;**/
+}
 /* Generic GWT textBox (i.e.: no style specified) */
 .Osyl-UnitView-TextBox {
 	font-family: helvetica,arial,sans-serif;
 	font-size: 1em;
 	height: 25px;
-	border: 1px dashed black;
+	border: 1px solid #aaa;
 	padding: 3px;
 }
 
-.Osyl-UnitView-Title-Label {
-	margin: 2px 30px 10px 2px;
+.Osyl-UnitView-Title .Osyl-LabelEditor-View {
+	/**margin: 2px 30px 10px 2px;**/
+	color:#063871;
+	font-size: 16px;
+	font-weight:bold;
+	margin:10px 0;
+	font-family: sans-serif, Arial, Verdana;
+}
+
+.Osyl-UnitView-Title .Osyl-LabelEditor-TextBox {
+	border: 1px solid #aaa;
+	margin-bottom: 12px; /* 10px is better for IE */
+	/* Below: ALMOST as Osyl-LabelEditor-View. Modified to
+	   avoid text shift when entering edition mode. Optimized for FF */
 	color:#063871;
 	font-size: 16px;
 	font-weight:bold;
@@ -1551,18 +1643,26 @@ li {
 	font-family: sans-serif, Arial, Verdana;
 }
 
-.Osyl-UnitView-Title-TextBox {
-	border: 1px dashed blue;
-	margin-right: 11px;
-	margin-bottom: 12px; /* 10px is better for IE */
-	/* Below: ALMOST as Osyl-UnitView-Title-Label. Modified to
+.Osyl-UnitView-Title-Hover .Osyl-LabelEditor-View {
+	/* Below: ALMOST as Osyl-LabelEditor-View. Modified to
 	   avoid text shift when entering edition mode. Optimized for FF */
 	color:#063871;
 	font-size: 16px;
 	font-weight:bold;
-	padding-top:5px;
-	padding-bottom:4px;
+	/*padding: 1px 3px 3px 3px;
+	margin-bottom: 5px;*/
 	font-family: sans-serif, Arial, Verdana;
+}
+
+.Osyl-UnitView-ResPanel .Osyl-LabelEditor-TextBox {
+	border: 1px solid #aaa;
+	margin-bottom: 12px; /* 10px is better for IE */
+	/* Below: ALMOST as Osyl-LabelEditor-View. Modified to
+	   avoid text shift when entering edition mode. Optimized for FF */
+	padding-top:4px;
+	padding-bottom:4px;
+	font-family: helvetica,arial,sans-serif;
+	font-size: 1em;
 }
 
 .Osyl-UnitView-RubricName {
@@ -1575,8 +1675,27 @@ li {
 	margin:3px 4px 4px 4px;
 }
 
+.Osyl-ResProxDocument {
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 1em;
+}
+
+.Osyl-ResProxDocument .name {
+	margin: 0px 0px 0px 15px;
+	color: #a0a0a0;
+}
+
+.Osyl-ResProxDocument .description,
+.Osyl-ResProxLink .description {
+	margin-top: 5px;
+}
+
+.Osyl-ResProxLink .uri {
+	margin: 0px 0px 0px 15px;
+	color: #a0a0a0;
+}
+
 .Osyl-ListItemView-Table {
-	border-width: 0;
 	border: 1px solid #e3f0FF;
 	margin-bottom: 5px;
 	margin-left: 30px;
@@ -1588,18 +1707,21 @@ li {
 	padding: 0px 5px 0px 10px;
 }
 
+.Osyl-ListItemView-labelNo a {
+	white-space:nowrap;
+}
+
 .Osyl-ListItemView-Hyperlink {
-	font-size: smaller;
-	cursor: pointer;
+/*	font-size: smaller;
+	cursor: pointer;*/
 }
 
 /* Content Unit Resource Panel unfocused */
 .Osyl-UnitView-ResPanel {
-	vertical-align: top;
-	margin: 5px 10px 5px 10px;
-	border: 1px solid white;
-	padding: 3px;
-	border-color: transparent;
+	vertical-align: middle;
+	margin: 0px;
+	padding: 10px;
+	border: 1px solid transparent;
 	width: 100%;
 }
 
@@ -1610,6 +1732,15 @@ li {
 	border: 1px solid transparent;
 	padding: 3px;
 	width: 100%;
+}
+
+.Osyl-UnitView-ResPanel-Hover {
+	vertical-align: top;
+	margin: 0px;
+	border: 1px solid #b0b0b0;
+	padding: 10px;
+	width: 100%;
+	background-color: #eeeeee;
 }
 
 .Osyl-UnitView-ResEditor {
@@ -1623,7 +1754,7 @@ li {
 }
 
 /* Panel for buttons edit/delete/validate/cancel */
-.Osyl-ButtonPanel {
+.Osyl-MouseOverPopup-ButtonPanel {
 	margin: 0px;
 	padding: 0px;
 }
@@ -1632,7 +1763,15 @@ li {
 .Osyl-UnitView-UnitLabel {
 	font-family: helvetica,arial,sans-serif;
 	font-size: 1em;
-	border: 1px solid white;
+/*	border: 1px solid white;*/
+	padding: 3px;
+	width: 100%;
+}
+
+.Osyl-UnitView-UnitLabel-Important {
+	font-family: helvetica,arial,sans-serif;
+	font-size: 1em;
+	border: 1px solid red;
 	padding: 3px;
 	margin-bottom: 15px;
 	width: 100%;
@@ -1787,7 +1926,8 @@ li {
   text-align: left;
   margin: 0px 2px 0px 2px;
   background-color: #C3D9FF;
-  padding: 1px;
+  padding: 0px;
+/*  border: 1px solid #888888; */
 }
 
 .Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up {
@@ -1885,32 +2025,19 @@ body {
 	border: 0px solid blue ;
 }
 
+.Osyl-UnitView-UnitPanel {
+	padding-top: 5px;
+}
+
 .Osyl-UnitView-UnitPanel > tbody > tr > td{
 	/* border-bottom: 1px solid #063871; */
 }
 .Osyl-UnitView-TextArea {
 	font-family: sans-serif, Arial, Verdana; /* Doesn't work in MSIE */
 	background: white;
-	border: 1px dashed blue;
+	border: 1px solid #aaa;
 	margin: 0px;
 	padding: 0px; /* Doesn't work in any browser */
-}
-
-.Osyl-MainToolbar {
-	margin: 2px;
-	padding: 2px;
-}
-
-/* Toolbar button */
-.Osyl-MainToolbar .Osyl-PushButton {
-  margin-right: 2px;
-  border: 1px solid #C3D9FF;
-  width: 53px;
-  text-align: center;
-}
-
-.Osyl-MainToolbar .Osyl-PushButton-up-hovering {
-	border: 1px solid #fdf6af;
 }
 
 .Osyl-ResConfigView-Status-Panel {
@@ -1949,64 +2076,49 @@ body {
 .Osyl-ResProxCitationView-Label {
 	font-family: sans-serif, Arial, Verdana;
 	font-size: 12px;
+}
+
+.Osyl-RemoteFileBrowser {
+  padding: 4px;
+  font-size: 10pt;
+  background-color: #C3D9FF;
+}
+
+.Osyl-RemoteFileBrowser-TitleLabel {
+	margin: 0px;
+	padding: 3px 0px 0px 0px;
+	font-size: 10pt;
 	font-weight: bold;
-
 }
 
-.Osyl-ResourceConfigView-Welcome {
-	color: #999;
-	font-family: ns-serif, Arial, Verdana;
-	font-size: 12px;
-	padding: 30px 10px 20px 10px;
-	vertical-align: middle;
+.Osyl-RemoteFileBrowser .gwt-TextBox {
+	margin-right: 8px;
+  	font-size: 8pt;
+  	font-family: sans-serif, Arial, Verdana;
 }
 
-.Osyl-ResourceConfigView-Tree-NodeContainer {
-	vertical-align: middle;	
+.Osyl-RemoteFileBrowser-FileListing {
+  font-family: monospace, courier;
+  font-size: 8pt;
+  margin-bottom: 6px;
 }
 
-.Osyl-ResourceConfigView-Tree-NodeItemContainer {
-	font-family: ns-serif, Arial, Verdana;
-	font-size: 10px;
-	padding: 1px;
-	margin: 1px;
+.Osyl-RemoteFileBrowser-WaitingState {
+	cursor: wait;
+ 	background-color: #666666;
 }
-
-.Osyl-ResourceConfigView-Tree-Label {
-	font-family: ns-serif, Arial, Verdana;
-	font-size: 10px;
-}
-
-.Osyl-RemoteFileBrowser-Title-Label {
-	color: #063871;
-	margin-top: 0px;
-	margin-bottom: 0px;
-	padding-top: 4px;
-	padding-bottom: 4px;
-	font-family: sans-serif, Arial, Verdana;
-	font-size: 12px;
-	font-weight: bold;
-	background: url(img/bgFade.gif) repeat-x;
-	padding: 0;
-	border-left: 1px solid #C3D9FF;
-}
-
 .Osyl-RemoteFileBrowser-SelectedFileLabel {
-	font-size: 10px;
+	font-size: 10pt;
 	margin: 2px 0px 2px 0px;
 }
 
 .Osyl-RemoteFileBrowser-SelectedFile {
-	font-size: 9px;
+	font-size: 10pt;
 	margin: 2px 0px 4px 0px;
 }
 
-.Osyl-RemoteFileBrowser-ScrollPanel {
-	border-left: 1px solid #aaa;
-}
-
 .Osyl-DialogBox-ContentLabel {
-  padding: 5px;
+  padding: 10px;
 }
 
 .Osyl-TreeLabel{
@@ -2014,11 +2126,11 @@ body {
 }
 
 .Osyl-UnobtrusiveAlert {
-	background-color: white;
- 	border: medium solid #C3D9FF;
- 	padding: 5px;
-	/* Does not work with IE */
-	text-decoration: blink;
+	background-color: #fbeb90;
+ 	border: none;
+ 	padding: 3px;
+	margin: 0px;
+	z-index: 999999;
 }
 .Osyl-ResProxCitationView-LabelValue {
 	font-family: helvetica,arial,sans-serif;
@@ -2038,9 +2150,444 @@ body {
 	margin-left: 10px;
 }
 
+.Osyl-ResProxCitationView-LabelValue {
+	font-family: helvetica,arial,sans-serif;
+	font-size: 1em;
+	padding: 0px;
+	width: 100%;
+}
+.Osyl-ResProxView-NameValue{
+	font-size: 11px;
+	margin-left: 10px;
+	margin-top: 10px;
+	font-weight: 900;
+	font: small-caps
+}
 .Osyl-ajaxSpinner {
 	background: url(img/ajaxSpinner.gif) no-repeat center;
 	margin: 2px;
 	padding: 2px;
 	border: medium;
+}
+
+.Osyl-EditorPopup-Button {
+	margin: 2px;
+	width: 85px;
+}
+
+.Osyl-EditorPopup-RowOptions {
+	background-color: #C3D9FF;
+	margin: 0px 0px 0px 0px;
+	padding: 5px 2px 4px 0px;
+}
+
+.Osyl-EditorPopup-RowButtons {
+	margin: 3px 0px 3px 0px;
+	padding: 2px;
+}
+
+.Osyl-EditorPopup-RowEditor {
+	margin: 0px;
+	padding: 0px 2px 5px 6px;
+	border-bottom: 1px solid black;
+	background-color: #C3D9FF;
+}
+
+.Osyl-EditorPopup-RowToolBar {
+	margin: 0px;
+	padding: 5px 2px 0px 2px;
+	border-top: 1px solid #aaa;
+	background-color: #C3D9FF;
+}
+
+.Osyl-EditorPopup {
+	padding: 0px;
+	background-color: #C3D9FF;
+	border: 2px outset;
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 12px;	
+}
+
+.Osyl-EditorPopup .mosaic-Caption {
+	background-image: url(img/blue_gradient.gif);
+  	cursor: move;
+}
+
+.Osyl-EditorPopup .mosaic-Caption-text {
+	padding: 4px 4px 4px 4px;
+  	margin: 0px;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.Osyl-EditorPopup-OptionGroup {
+	font-size: 11px;
+	margin: 0px;
+	padding: 0px 12px 0px 7px;
+	border-right: 1px solid #aaa;
+}
+
+.Osyl-EditorPopup-OptionGroup-Row {
+	font-size: 11px;
+	margin: 0px;
+	padding: 0px;
+}
+
+.Osyl-EditorPopup-OptionGroup .gwt-TextBox {
+	font-size: 11px;
+}
+
+.Osyl-EditorPopup-LastOptionGroup .gwt-TextBox {
+	font-size: 11px;
+}
+
+.Osyl-EditorPopup-LastOptionGroup {
+	font-size: 11px;
+	margin: 0px;
+	padding: 0px 0px 0px 7px;
+	border-right: 0px;
+}
+
+.Osyl-EditorPopup-RowOptions .gwt-Label {
+	font-size: 11px;
+	color: #888;
+	margin-bottom: 3px;
+}
+
+.Osyl-EditorPopup-RowOptions .gwt-CheckBox {
+	font-size: 11px;
+	padding: 0px;
+	margin: 0px 14px 5px 0px;
+}
+
+.Osyl-EditorPopup .gwt-ListBox { 
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 10px;
+}
+
+.Osyl-EditorPopup .Osyl-ResourceBrowserPanel { 
+	width: 100%;
+}
+
+.Osyl-ResourceBrowserPanel .Osyl-ResourceBrowser { 
+	width: 100%;
+	height: 100px;
+	background-color: #dddddd;
+	text-align: center;
+	padding: 0px;
+	margin: 5px;
+}
+
+.Osyl-EditorPopup .sectionLabel {
+	width: 100%;
+	background-color: #B0C8F3;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	margin: 0px 0px 3px 0px;
+	padding: 3px 0px 3px 0px;
+}
+
+.Osyl-EditorPopup .Osyl-ResourceBrowserPanel {
+	margin: 0px;
+}
+
+.Osyl-EditorPopup .Osyl-ResourceBrowserPanel .gwt-Label {
+	font-size: 11px;
+	color: #888;
+	margin-bottom: 3px;
+}
+
+.Osyl-EditorPopup .gwt-Label {
+	font-size: 11px;
+	color: #888;
+	margin-bottom: 3px;
+}
+
+.Osyl-EditorPopup .gwt-TextArea {
+	margin: 0px 8px 3px 3px;
+}
+
+.Osyl-EditorPopup .information {
+	font-size: 11px;
+	font-style: italic;
+	margin: 5px 3px 3px 5px;
+}
+
+.Osyl-ResProxView-MetaInfo {
+	display: block;
+	margin: 15px 0px 15px 0px;
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 10px;
+	color: #a0a0a0;
+}
+
+.Osyl-UnitView-MetaInfo{
+	display: block;
+	margin: 0px 30px 0px 0px;
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 10px;
+	color: #a0a0a0;
+}
+
+.Osyl-ContactInfo{
+	border-bottom: 1px solid #C3D9FF;
+}
+
+/*For test use: display cells border*/
+/*.Osyl-ContactInfo tr td{
+	border: 1px solid #000;
+}*/
+
+.Osyl-ContactInfoView-TextBox{
+	font-family:sans-serif, Arial, Verdana;
+	font-size: 11px;
+	border: 1px solid #aaa;
+}
+.Osyl-ContactInfo-ListBox{
+	font-family:sans-serif, Arial, Verdana;
+	font-size: 11px;
+	border: 1px solid #aaa;
+}
+.Osyl-ContactInfoView-Panel{
+	font-family:sans-serif, Arial, Verdana;
+	font-size: 11px;
+}
+
+.Osyl-LightBox-Regular {
+ 
+    /* Glass panel color */
+    background-color: black !important; /* Keep !important for IE */
+
+    /* Override glass panel to 40% opacity (= 60% transparency) */
+    filter: alpha(opacity = 40) !important; /* IE */
+    -moz-opacity:.40 !important;
+    opacity: 0.4 !important; /* non-IE */
+
+    /*
+      NOTE: Please do NOT use either CSS 'width' or 'height' here, as
+      this would defeat much of the effort that went into GlassPanel
+      in order to get it to work consistently in a variety of
+      circumstances. Specifically, please resist the urge to use
+      'width/height: 100%' or similar constructs.
+    */
+}
+
+.Osyl-LightBox-Processing {
+	
+	/* Glass panel color */
+    background-color: #fdf6af !important; /* Keep !important for IE */
+
+    /* Override glass panel to 40% opacity (= 60% transparency) */
+    filter: alpha(opacity = 40) !important; /* IE */
+    -moz-opacity:.40 !important;
+    opacity: 0.4 !important; /* non-IE */
+	
+}
+
+.Osyl-LightBox-Red {
+
+    /* Glass panel color */
+    background-color: red !important; /* Keep !important for IE */
+
+    /* Override glass panel to 40% opacity (= 60% transparency) */
+    filter: alpha(opacity = 40) !important; /* IE */
+    -moz-opacity:.40 !important;
+    opacity: 0.4 !important; /* non-IE */
+}
+
+.Osyl-LightBox-Clear {
+	
+   /* Glass panel color */
+    background-color: transparent !important; /* Keep !important for IE */
+
+    /* Override glass panel to 0% opacity (= 100% transparency) */
+    filter: alpha(opacity = 0) !important; /* IE */
+    -moz-opacity:.0 !important;
+    opacity: 0.0 !important; /* non-IE */
+}
+
+.gwt-MenuBar-horizontal {
+	background: transparent url(img/toolbar-background.png) repeat-x;
+	vertical-align: center;
+	cursor: default;
+	border:0;
+	border-bottom: 1px solid #888888;
+}
+
+
+.gwt-MenuBar-horizontal .gwt-MenuItem {
+  font-size: 11px;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+  color: black;
+  border-right: 1px solid #888888;
+  padding: 2px 4px 2px 4px;
+  margin: 0px;
+  height: 20px;
+  cursor: default;
+  width: 80px;
+}
+.gwt-MenuBar-vertical {
+	background-color: #f8f8f8;
+	vertical-align: center;
+	cursor: default;
+	border: 1px solid #888888;
+}
+
+.gwt-MenuBar-vertical .gwt-MenuItem {
+  font-size: 11px;
+  font-weight: bold;
+  text-align: left;
+  vertical-align: middle;
+  color: black;
+  border: 0;
+  padding: 2px 4px 2px 4px;
+  margin: 0px;
+  cursor: default;
+}
+
+
+.gwt-MenuBar .gwt-MenuItem-selected {
+  background: url(img/toolbar-background-hover.png) repeat;
+  cursor: pointer;
+  cursor: hand;
+}
+
+
+.Osyl-MouseOverPopUp {
+    /* Override glass panel to 75% opacity (= 30% transparency) */
+    opacity: 0.75 !important; /* non-IE */
+	    
+/* width: 100px;
+height: 100px; */
+}
+
+.Osyl-MouseOverPopUp .MainPanel {
+
+	color: black;
+	text-align: center;
+	vertical-align: middle;
+} 
+
+.Osyl-MouseOverPopup-ButtonPanel {
+/*	width: 120px;
+	text-align: center;
+/*	filter: alpha(opacity = 100) !important;
+    -moz-opacity:1.0 !important;
+    opacity: 1.0 !important;*/
+}
+
+
+.Osyl-Button {
+  background-color: #C3D9FF;
+  font-weight: 900;
+  color: black;
+  padding: 3px;
+  border-width: 2px;
+  border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+  cursor: pointer;
+  cursor: hand;
+  margin: 0 5px 0 5px;
+  font-family: sans-serif, Arial, Verdana;
+}
+
+.Osyl-FileBrowserTopButton {
+	width: 24px;
+	height: 24px;
+	padding: 3px 0px 0px 3px;
+	background-color: #C3D9FF;
+	margin: 0px 1px 3px 0px;
+	border: 1px solid transparent;
+}
+
+.Osyl-FileBrowserTopButton-up-hovering {
+	border: 1px solid;
+  	border-color: #E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+	cursor: pointer;
+	cursor: hand;
+}
+
+.Osyl-ImageAndTextButton {
+	white-space: nowrap;
+}
+
+/* This is needed for Firefox only, otherwise the text is too close to the
+   bottom! This doesn't have any impact on MSIE7, Chrome or the Hosted mode. */
+.Osyl-ImageAndTextButton > img {
+	padding: 0px;
+	margin: 0px 3px -3px 0px;
+}
+
+.Osyl-EditorPopup .DetailsPanel {
+	margin-left: 4px;
+	font-size: 10px;
+}
+
+.Osyl-EditorPopup .DetailsPanel .header {
+	text-decoration: none; /* Doesn't work so we put a color which will make it invisible! */
+	color: #C3D9FF;
+	cursor: pointer;
+	cursor: hand;
+}
+
+.Osyl-EditorPopup .DetailsPanel .header td {
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 11px;
+	color: gray;
+}
+
+
+/* CSS for GWT-Mosaic */
+.mosaic-GlassPanel-default, 
+.mosaic-GlassPanel-invisible {
+	background-color: #000 !important;
+	background-repeat: repeat;
+	/* Override glass panel to 0% opacity (= 100% transparency) */
+	filter: alpha(opacity = 0) !important; /* IE */
+	opacity: 0.0 !important; /* non-IE */
+}
+
+.mosaic-Caption-iconBoxRight {
+	padding: 0px 2px 0px 0px;
+	cursor: default;
+}
+
+.mosaic-CaptionLayoutPanel .dragdrop-handle {
+	cursor: move;
+}
+
+.mosaic-WindowPanel .Resize-nw {
+	cursor: nw-resize;
+}
+
+.mosaic-WindowPanel .Resize-n {
+	cursor: n-resize;
+}
+
+.mosaic-WindowPanel .Resize-ne {
+	cursor: ne-resize;
+}
+
+.mosaic-WindowPanel .Resize-e {
+	cursor: e-resize;
+	/* background: #fff;  needed by IE */
+}
+
+.mosaic-WindowPanel .Resize-se {
+	cursor: se-resize;
+}
+
+.mosaic-WindowPanel .Resize-s {
+	cursor: s-resize;
+	/* background: #fff;  needed by IE */
+}
+
+.mosaic-WindowPanel .Resize-sw {
+	cursor: sw-resize;
+}
+
+.mosaic-WindowPanel .Resize-w {
+	cursor: w-resize;
 }

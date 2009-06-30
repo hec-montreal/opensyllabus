@@ -233,7 +233,7 @@
 	 </COUnit>  <!-- contactinfo COUnit End -->
 	 
      <COUnit type='courseintro' scrty='public'>  <!-- courseintro COUnit Begin -->
-       <!--	<label><![CDATA[...insérez un titre de section ici...]]></label> -->
+       <label><![CDATA[Introduction au cours]]></label>
        <COUnitContent type='courseintro' scrty='public'>   
            
           <COResourceProxy type='text' scrty='public'>          
@@ -276,7 +276,7 @@
     </COUnit>  <!-- courseintro COUnit End -->
 
     <COUnit type='CourseObjectives' scrty='public'>  <!-- 'CourseObjectives' COUnit Begin -->
-       <!--	<label><![CDATA[...insérez un titre de section ici...]]></label> -->
+       <label><![CDATA[Objectifs du cours]]></label>
        <COUnitContent type='CourseObjectives' scrty='public'>   
        
 	      <COResourceProxy type='text' scrty='public'> 
@@ -596,7 +596,7 @@
     </COStructure>  <!-- evaluations COStructure End -->
 	
 	<COUnit  type='plagiarism' scrty='public'>  <!-- plagiarism COUnit Begin -->
-       <!-- <label><![CDATA[Notes sur le plagiat]]></label> -->
+       <label><![CDATA[Notes sur le plagiat]]></label>
        <COUnitContent type='plagiarism' scrty='public'> 
           <COResourceProxy type='text' scrty='public'> 
              <COContentRubric type='description'/> 
@@ -698,7 +698,7 @@
     </COUnit>  <!-- PedagogicalApproach COUnit End -->
 	      	  	 	  
 	<COUnit  type='learningmat' scrty='public'>  <!-- learningmat COUnit Begin -->
-       <!-- <label><![CDATA[Ressources pédagogiques]]></label> -->
+       <label><![CDATA[Ressources pédagogiques]]></label>
        <COUnitContent type='learningmat' scrty='public'> 
 
           <COResourceProxy type='text' scrty='public'> 
@@ -2476,7 +2476,7 @@
 	</COStructure>  <!-- lectures COStructure End -->
 
     <COUnit  type='Bibliography' scrty='public'>  <!-- Bibliography COUnit Begin -->
-        <!-- <label><![CDATA[Liste des références bibliographiques :]]></label>  -->
+       <label><![CDATA[Liste des références bibliographiques :]]></label>
 	   <COUnitContent type='Bibliography' scrty='public'> 
 	    
           <COResourceProxy type='citation' scrty='public'> 
@@ -2502,7 +2502,7 @@
 	   </COUnit>  <!-- Bibliography COUnit End -->
 	   
     <COUnit  type='ThematicBibliography' scrty='public'>  <!-- ThematicBibliography COUnit Begin -->
-        <!-- <label><![CDATA[Liste des références bibliographiques :]]></label>  -->
+       <label><![CDATA[Liste des références bibliographiques :]]></label>
 	   <COUnitContent type='ThematicBibliography' scrty='public'> 
 	    
           <COResourceProxy type='text' scrty='public'> 
@@ -2526,8 +2526,8 @@
 	   </COUnitContent> 
 	</COUnit>  <!-- ThematicBibliography COUnit End -->
 	
-    <COUnit  type='LearningSupportServices' scrty='public'>  <!-- LearningSupportServices COUnit Begin -->
-        <!-- <label><![CDATA[Liste des services :]]></label>  -->
+    <COUnit type='LearningSupportServices' scrty='public'>  <!-- LearningSupportServices COUnit Begin -->
+       <label><![CDATA[Liste des services :]]></label>
 	   <COUnitContent type='LearningSupportServices' scrty='public'> 
 	    
           <COResourceProxy type='text' scrty='public'> 
