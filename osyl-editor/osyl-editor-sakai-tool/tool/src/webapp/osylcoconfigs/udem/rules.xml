@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?> <!-- RULES BySkillsComponents -->
+<?xml version='1.0' encoding='UTF-8'?> <!-- RULES BySkillsLectures -->
 	 <schema> 
 	 	<element name='CO'> 
 	 		<attribute name='type'  restrictionpattern='.*' /> 
@@ -83,6 +83,16 @@
 			    	<attribute name="type" restrictionpattern="undefined|bibliography|description|requiredbooks|recommendedbooks|misresources"/>
 				</element>
 	 		</element>  <!-- ThematicBibliography COUnit End --> 	 		
+
+	 		<element name='COUnit'>  <!-- LearningSupportServices COUnit Begin -->
+				<attribute name="type" restrictionpattern="LearningSupportServices" />
+				<element name="COResourceProxy">
+					<attribute name="type" restrictionpattern="text|document|url" />
+				</element>
+				<element name="COContentRubric">
+			    	<attribute name="type" restrictionpattern="undefined|description|LearningSupportSAE|LearningSupportCCE|LearningSupportOther|misresources"/>
+				</element>
+	 		</element>  <!-- LearningSupportServices COUnit End --> 	 		
 	 		
 	 		<!-- list of element structureElement allowed at this level --> 
 	 			 
@@ -122,7 +132,7 @@
 	 						<attribute name='type'  restrictionpattern='text|document|url' /> 
 	 					</element> 
 	 					<element name='COContentRubric'> 
-	 						<attribute name='type'  restrictionpattern='undefined|courseabrev|coursetitle|description|mis' /> 
+	 						<attribute name='type'  restrictionpattern='undefined|courseabrev|coursetitle|coursecredits|description|mis' /> 
 	 					</element> 
 	 				</element>  <!-- courseident COUnit End -->
 
@@ -188,7 +198,7 @@
 			 			     <attribute name='type'  restrictionpattern='text|document|url|citation|assignment' /> 
 			 			  </element> 
 			 			  <element name='COContentRubric'> 
-			 			     <attribute name='type'  restrictionpattern='undefined|description|EvaluationInstrument|evalcriteria|evalpreparation|evaldetails|evalsubproc|plagiarism|SpecializedResource|misresources' /> 
+			 			     <attribute name='type'  restrictionpattern='undefined|description|SkillsMeasured|EvaluationInstrument|evalcriteria|evalpreparation|evaldetails|evalsubproc|plagiarism|SpecializedResource|misresources' /> 
 			 			  </element> 
 			 		   </element>  <!-- evaluation COUnit Begin -->
 	 		        
@@ -198,23 +208,23 @@
 	 		        
 	 		</element>  <!-- evaluations COStructure End --> 
 
-	 		<element name='COStructure'>  <!--  CourseSkillsComponentsList COStructure Begin -->
-	 			<attribute name='type'  restrictionpattern='CourseSkillsComponentsList' /> 
+	 		<element name='COStructure'>  <!-- LecturesListContextSkills COStructure Begin -->
+	 			<attribute name='type'  restrictionpattern='LecturesListContextSkills' /> 
 	 			<!-- list of element contentUnit allowed at this level (only one at the moment) --> 
 		
-			 		<element name='COUnit'>  <!-- CourseSkills COUnit Begin -->
-	 			       <attribute name='type'  restrictionpattern='CourseSkills' /> 
+			 		<element name='COUnit'>  <!-- LectureContextSkills COUnit Begin -->
+	 			       <attribute name='type'  restrictionpattern='LectureContextSkills' /> 
 	 				   <element name='COResourceProxy'> 
 	 				      <attribute name='type'  restrictionpattern='text|document|url|citation' /> 
 	 				   </element> 
 	 				   <element name='COContentRubric'> 
-	 				      <attribute name='type'  restrictionpattern='undefined|CourseSkillsDate|CourseSkillsPlace|CourseSkillsActivity|evaluation|description|misresources' /> 
+	 				      <attribute name='type'  restrictionpattern='undefined|LectureDate|LecturePlace|LectureTeachingActivity|LectureLearningActivity|evaluation|description|misresources' /> 
 	 				   </element> 
-	 		    	</element>  <!-- CourseSkills COUnit End -->
+	 		    	</element>  <!-- LectureContextSkills COUnit End -->
 		
 	 		    <!-- list of element structureElement allowed at this level --> 
 	 		    	 		    		
-	 		</element> <!-- CourseSkillsComponentsList COStructure End -->
+	 		</element> <!-- LecturesListContextSkills COStructure End -->
 
 	 	</element>  <!--  End CO -->
 	 </schema>
