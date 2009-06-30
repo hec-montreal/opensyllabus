@@ -638,9 +638,8 @@ public class OsylController implements SavePushButtonEventHandler,
      */
     public void updateSerializedCourseOutlineCB(COSerialized pojo, String id) {
 
-    pojo.setCoId(id);
+	pojo.setCoId(id);
 
-    	
 	// A POJO has been sent
 	if (getExecMode().equals("test")) {
 	    Window

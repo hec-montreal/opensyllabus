@@ -25,6 +25,7 @@ import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterf
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewControllable;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.GWT;
@@ -127,6 +128,10 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 		}
 
 		public void onFailure(Throwable error) {
+		    final OsylAlertDialog alertBox =
+			    new OsylAlertDialog(false, true, getController().getUiMessage("publish.error")+" : "+error.toString());
+		    alertBox.show();
+		    osylPublishedListView.verifiyPublishState();
 		}
 	    };
 	    osylController.publishCourseOutline(callback);

@@ -257,7 +257,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    .hasNext();) {
 		ContentEntity next = (ContentEntity) pMbrs.next();
 		String thisEntityRef = next.getId();
-		contentHostingService.removeResource(thisEntityRef);
+		if (next.isCollection())
+		    contentHostingService.removeCollection(thisEntityRef);
+		else
+		    contentHostingService.removeResource(thisEntityRef);
 	    }
 
 	    // process members

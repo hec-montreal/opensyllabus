@@ -495,6 +495,8 @@ public class OsylTestUIMessages {
 	    messages.put("editor.moveTo", "Move to:");
 	    
 	    messages.put("element.moved", "The element was moved.");
+	    
+	    messages.put("publish.error", "Error in publishing");
 	}
 	return messages;
     }
