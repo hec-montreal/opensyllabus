@@ -16,10 +16,14 @@ package org.sakaiquebec.opensyllabus.client.ui.view;
 import org.adamtacy.client.ui.NEffectPanel;
 import org.adamtacy.client.ui.effects.impl.CollapseVertically;
 import org.adamtacy.client.ui.effects.impl.Fade;
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractResProxEditor;
+import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
+import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 
@@ -207,6 +211,32 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 	setContextHidden(getEditor().isContextHidden());
 	setDiffusionLevel(getEditor().getDiffusionLevel());
 	setRubricType(getEditor().getRubricType());
+    }
+
+    protected void moveTo(String targetUuid) {
+	COContentUnit targetElement =
+		(COContentUnit) ((COContent) getController().getMainView()
+			.getModel()).findCOElementAbstractWithUUID(targetUuid);
+	getModel().getCoContentUnitParent().removeChild(getModel());
+	getModel().setCoContentUnitParent(targetElement);
+	//updateModelOnDelete();
+	getModel().remove();
+	targetElement.addChild(getModel());
+	//affichage du message
+	OsylUnobtrusiveAlert alert =
+		new OsylUnobtrusiveAlert(getUiMessage("element.moved"));
+	OsylEditorEntryPoint.showWidgetOnTop(alert);
+	
+    }
+
+    protected void moveIfNeeded() {
+	String targetUuid = getEditor().getMoveToTarget();
+	if (getEditor().isMoveable()
+		&& !targetUuid.equals("")
+		&& !targetUuid.equals(getModel().getCoContentUnitParent()
+			.getUuid())) {
+	    moveTo(targetUuid);
+	}
     }
 
     /**

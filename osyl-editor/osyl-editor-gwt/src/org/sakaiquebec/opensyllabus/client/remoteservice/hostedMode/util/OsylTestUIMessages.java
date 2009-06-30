@@ -493,6 +493,8 @@ public class OsylTestUIMessages {
 		    "tool available in the left column.");
 	    
 	    messages.put("editor.moveTo", "Move to:");
+	    
+	    messages.put("element.moved", "The element was moved.");
 	}
 	return messages;
     }

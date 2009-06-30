@@ -235,6 +235,30 @@ public abstract class COElementAbstract<T extends COModelInterface> implements C
         this.uuidParent = uuidParent;
     }
     
+    
+    public COElementAbstract findCOElementAbstractWithUUID(String uuidToFind) {
+	COElementAbstract result = null;
+	if (this.getUuid().equals(uuidToFind))
+	    result = this;
+	else {
+	    if (this.isCOContentUnit()) {
+		// Nothing to do
+	    } else {
+		int i = 0;
+		while (i < this.getChildrens().size() && result == null) {
+		    COElementAbstract coElem =
+			    (COElementAbstract) this.getChildrens().get(i);
+		    result = coElem.findCOElementAbstractWithUUID(uuidToFind);
+		    i++;
+		}
+	    }
+	}
+	return result;
+    }
+    
+    
+    
+    
     /**
      * Check the position of the element compared to other element
      * @return -1 if the element has no successor,<br/> 

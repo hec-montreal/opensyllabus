@@ -202,11 +202,18 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 	if (save) {
 	    if (getEditor().prepareForSave()) {
 		updateModel();
+		moveIfNeeded();
 	    } else {
 		return;
 	    }
 	}
 	getEditor().closeEditor();
+    }
+
+    protected void moveIfNeeded() {
+	if (getEditor().isMoveable()) {
+	    //TODO
+	}
     }
 
     /**

@@ -36,11 +36,6 @@ import org.sakaiquebec.opensyllabus.client.ui.base.OsylWindowPanel;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylCloseClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylEditClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
-import org.sakaiquebec.opensyllabus.shared.model.COContent;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
-import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
-import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
-import org.sakaiquebec.opensyllabus.shared.model.COStructureElementType;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -88,6 +83,8 @@ public abstract class OsylAbstractEditor extends Composite {
     private int originalEditorWidgetHeight;
     // height of editor pop-up to remember for maximizing window
     private int originalEditorPopupHeight;
+    
+    protected ListBox targetsListBox;
 
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
@@ -248,7 +245,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	}
 	pop.addWindowCloseListener(new WindowCloseListener() {
 	    public void onWindowClosed() {
-    	if (pop.getWindowState() == WindowState.MAXIMIZED) {
+		if (pop.getWindowState() == WindowState.MAXIMIZED) {
 		    pop.setWindowState(WindowState.NORMAL);
 		}
 		getView().leaveEdit();
@@ -338,32 +335,20 @@ public abstract class OsylAbstractEditor extends Composite {
 	row5.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
 	mainPanel.add(row5);
 
-	/*
-	 * Button moveButton = new Button("Move...");
-	 * moveButton.setStylePrimaryName("Osyl-EditorPopup-Button");
-	 * row5.add(moveButton); moveButton.addClickListener(new ClickListener()
-	 * { public void onClick(Widget w) { OsylAlertDialog al = new
-	 * OsylAlertDialog("Oops!", "Sorry: not yet implemented!"); al.show();
-	 * al.center(); } });
-	 */
-	
-
-	if(isMoveable()){
+	if (isMoveable()) {
 	    HorizontalPanel leftPanel = new HorizontalPanel();
 	    leftPanel.setWidth("100%");
 	    leftPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 	    row5.add(leftPanel);
-	    
+
 	    Label label = new Label(getUiMessage("editor.moveTo"));
 	    leftPanel.add(label);
-	    
-	    ListBox coUnitListBox = new ListBox();
-	    coUnitListBox.clear();
-	    coUnitListBox.addItem("");
-	    fillListBoxwithCOunits((COContent)view.getController().getMainView().getModel(), coUnitListBox);
-	    leftPanel.add(coUnitListBox);
+
+	    targetsListBox = new ListBox();
+	    refreshTargetCoAbsractElementListBox(targetsListBox);
+	    leftPanel.add(targetsListBox);
 	}
-	
+
 	HorizontalPanel rightPanel = new HorizontalPanel();
 	rightPanel.setWidth("100%");
 	rightPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -371,7 +356,7 @@ public abstract class OsylAbstractEditor extends Composite {
 
 	HorizontalPanel okCancelPanel = new HorizontalPanel();
 	rightPanel.add(okCancelPanel);
-	
+
 	AbstractImagePrototype imgOkButton =
 		getOsylImageBundle().action_validate();
 	ImageAndTextButton okButton = new ImageAndTextButton(
@@ -402,10 +387,10 @@ public abstract class OsylAbstractEditor extends Composite {
 	    pop.setContentSize(400, pop.getContentHeight());
 	// set maximum width of pop-up
 	if (pop.getContentWidth() > 750) {
-		pop.setContentSize(750, pop.getContentHeight());
-		getEditorTopWidget().setWidth("735px");
+	    pop.setContentSize(750, pop.getContentHeight());
+	    getEditorTopWidget().setWidth("735px");
 	}
-	    
+
 	// remember original height
 	originalEditorPopupHeight = pop.getOffsetHeight();
 	originalEditorWidgetHeight = getEditorTopWidget().getOffsetHeight();
@@ -418,23 +403,23 @@ public abstract class OsylAbstractEditor extends Composite {
 	    }
 	});
     } // createEditBox
+
     
-    private void fillListBoxwithCOunits(COElementAbstract model,ListBox lb){
-	if(model.isCOContentUnit()){
-	    String label = model.getLabel();
-	    //if(label.length()>18) label = label.substring(0, 15)+"...";
-	    lb.addItem(label, model.getUuid());
-	}
-	else{
-	    for(Iterator<COElementAbstract> iter = model.getChildrens().iterator();iter.hasNext();){
-		COElementAbstract coElement = iter.next();
-		fillListBoxwithCOunits(coElement, lb);
-	    }
-	}
+    protected void refreshTargetCoAbsractElementListBox(ListBox lb) {
+	generateTargetCoAbstractElementListBox(lb);
     }
-    
-    
-    
+   
+    /**
+     * Test if an element could be move under another and create a list of
+     * potential targets.
+     * 
+     * @return ListBox<Label,Uuid> of possible CoAbstractElement targets for the
+     *         move to operation.
+     */
+    protected void generateTargetCoAbstractElementListBox(ListBox lb) {
+	//nothing to do (for the moment)
+    }
+
     public void closeEditor() {
 	pop.hide();
     }
@@ -519,10 +504,6 @@ public abstract class OsylAbstractEditor extends Composite {
      */
     public abstract Widget getBrowserWidget();
 
-    // public abstract Dimension getPreferredSize();
-
-    // public abstract RichTextArea getRichTextArea();
-
     /**
      * Returns the widget that should be displayed at the bottom-position of the
      * editor pop-up. If null is returned, then the section is empty.
@@ -533,9 +514,9 @@ public abstract class OsylAbstractEditor extends Composite {
      * Returns true if editor pop-up is resizable.
      */
     public abstract boolean isResizable();
-    
+
     /**
-     * Returns true is the 
+     * Returns true is the model could be move
      */
     public abstract boolean isMoveable();
 
@@ -593,8 +574,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	getEditorPopup().setHeight(getOriginalEditorPopupHeight() + "px");
 	getEditorTopWidget().setHeight(originalEditorWidgetHeight + "px");
     }
-    
-    
+
     abstract protected Widget getMetaInfoLabel();
 
 }

@@ -20,6 +20,7 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -29,12 +30,16 @@ import org.sakaiquebec.opensyllabus.client.ui.listener.OsylDeleteClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractResProxView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
+import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -177,6 +182,13 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	rubricPanel.add(rubricListBox);
 	rubricListBox
 		.setTitle(getUiMessage("EditorPopUp.options.rubric.choose.title"));
+	rubricListBox.addChangeListener(new ChangeListener() {
+
+	    public void onChange(Widget sender) {
+		refreshTargetCoAbsractElementListBox(targetsListBox);
+	    }
+
+	});
 
 	// Diffusion Level ListBox
 	VerticalPanel diffusionPanel = new VerticalPanel();
@@ -231,8 +243,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		"MetaInfo.requirement")));
 	requirementListBox = new ListBox();
 	requirementListBox.setWidth("100px");
-	requirementListBox.setTitle(
-		getUiMessage("MetaInfo.requirement.title"));
+	requirementListBox.setTitle(getUiMessage("MetaInfo.requirement.title"));
 	requirementListBox.addItem(
 		getUiMessage("MetaInfo.requirement.undefined"),
 		COPropertiesType.REQ_LEVEL_UNDEFINED);
@@ -378,8 +389,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	}
 
 	String undefinedRubricType = choices[0];
-	lb.addItem(getUiMessage("selectRubric"),
-		undefinedRubricType);
+	lb.addItem(getUiMessage("selectRubric"), undefinedRubricType);
 	for (int i = 1; i < choices.length; i++) {
 	    String rubricType = choices[i];
 	    lb.addItem(getView().getCoMessages().getShortMessage(rubricType),
@@ -389,6 +399,62 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    }
 	}
 	return lb;
+    }
+
+    protected void generateTargetCoAbstractElementListBox(ListBox lb) {
+	lb.clear();
+	lb.addItem("");
+	fillListBoxWithAllowedCoUnits((COContent) getView().getController()
+		.getMainView().getModel(), lb);
+
+    }
+
+    /**
+     * Create a list of potential coUnit targets considering the model type.
+     * 
+     * @param model
+     * @param lb
+     */
+    private void fillListBoxWithAllowedCoUnits(COElementAbstract model,
+	    ListBox lb) {
+	if (model.isCOContentUnit()) {
+	    COContentUnit targetContentUnit = (COContentUnit) model;
+	    List<COModelInterface> subModels =
+		    getView().getController().getOsylConfig()
+			    .getOsylConfigRuler().getAllowedSubModels(
+				    targetContentUnit);
+	    boolean rubricAllowed = false;
+	    boolean resourceProxyTypeAllowed = false;
+	    for (Iterator<COModelInterface> iter = subModels.iterator(); iter
+		    .hasNext();) {
+		COModelInterface coi = iter.next();
+		if (coi instanceof COContentRubric) {
+			if (coi.getType().equals(getRubricType()))
+			    rubricAllowed = true;
+		}
+		if (coi instanceof COContentResourceProxy) {
+		    if (coi.getType().equals(getView().getModel().getType())){
+			resourceProxyTypeAllowed = true;
+		    }
+		    
+		}	
+	    }
+	    if (rubricAllowed && resourceProxyTypeAllowed) {
+		String label = model.getLabel();
+		// if(label.length()>18) label = label.substring(0, 15)+"...";
+		lb.addItem(label, model.getUuid());
+	    }
+	} else {
+	    for (Iterator<COElementAbstract> iter =
+		    model.getChildrens().iterator(); iter.hasNext();) {
+		COElementAbstract coElement = iter.next();
+		fillListBoxWithAllowedCoUnits(coElement, lb);
+	    }
+	}
+    }
+
+    public String getMoveToTarget() {
+	return targetsListBox.getValue(targetsListBox.getSelectedIndex());
     }
 
     /**
@@ -439,8 +505,8 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
 	return metaInfoLabel;
     }
-    
-    public boolean isMoveable(){
-	return false;//TODO change this when move to is ready
+
+    public boolean isMoveable() {
+	return true;
     }
 }

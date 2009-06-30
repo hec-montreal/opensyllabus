@@ -1112,8 +1112,7 @@ public class COModeledServer {
 		if (childElement.getUuidParent() != null
 			&& !childElement.getUuidParent().equals("")) {
 		    COElementAbstract parentElement =
-			    findCOElementAbstractWithUUID(fusionned,
-				    childElement.getUuidParent());
+			    fusionned.findCOElementAbstractWithUUID(childElement.getUuidParent());
 		    if (parentElement != null) {
 			parentElement.setEditable(false);
 			parentElement.setUuidParent(parentElement.getUuid());
@@ -1177,27 +1176,6 @@ public class COModeledServer {
 	}
 
 	return hasChild;
-    }
-
-    private COElementAbstract findCOElementAbstractWithUUID(
-	    COElementAbstract root, String uuid) {
-	COElementAbstract result = null;
-	if (root.getUuid().equals(uuid))
-	    result = root;
-	else {
-	    if (root.isCOContentUnit()) {
-		// Nothing to do
-	    } else {
-		int i = 0;
-		while (i < root.getChildrens().size() && result == null) {
-		    COElementAbstract coElem =
-			    (COElementAbstract) root.getChildrens().get(i);
-		    result = findCOElementAbstractWithUUID(coElem, uuid);
-		    i++;
-		}
-	    }
-	}
-	return result;
     }
 
     public void resetUuid() {
