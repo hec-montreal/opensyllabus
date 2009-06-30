@@ -628,7 +628,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	viewerFirstName.setHTML(getView().getFirstName());
 	viewerOffice.setHTML(getView().getOffice());
 	viewerPhone.setHTML(getView().getPhone());
-	viewerEMail.setHTML(getView().getEMail());
+	viewerEMail.setHTML("<a href=\"mailto:"+getView().getEMail()+"\">"+getView().getEMail()+"</a>");
 	viewerAvailability.setHTML(getView().getAvailability());
 	viewerComments.setHTML(getView().getComments());
 
