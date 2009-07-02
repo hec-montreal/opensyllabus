@@ -191,18 +191,16 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     private void constructViewerLayout() {
 	// Now we add our widgets with the following layout
 	//  ____________________________________________
-	// |  link displayed as		|	(source of		|
-    // |     name of link		|	    link)		|
+	// |  link displayed as	name of link            |
+	// |  link   		                |
 	// |--------------------------------------------|
 	// |  description                               |
 	// |____________________________________________|
 	//
 	VerticalPanel vp = new VerticalPanel();
 	getViewerPanel().add(vp);
-	HorizontalPanel linkAndNameHP = new HorizontalPanel();
-	vp.add(linkAndNameHP);
-	linkAndNameHP.add(getViewer());
-	linkAndNameHP.add(getViewerURI());
+	vp.add(getViewer());
+	vp.add(getViewerURI());
 	vp.add(getViewerDesc());
 	getMainPanel().add(getViewerPanel());
     }
