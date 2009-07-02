@@ -98,6 +98,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 
 	TextBox tb = new TextBox();
 	setEditor(tb);
+	tb.addClickListener(new ResetLabelClickListener(getView().getCoMessage("SendWork")));
 	tb.setStylePrimaryName("Osyl-LabelEditor-TextBox");
 	editorPanel.add(tb);
 	

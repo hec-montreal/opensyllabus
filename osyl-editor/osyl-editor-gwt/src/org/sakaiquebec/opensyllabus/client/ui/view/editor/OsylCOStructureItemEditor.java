@@ -109,6 +109,8 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 	nameEditor = new TextBox();
 	nameEditor.setStylePrimaryName("Osyl-LabelEditor-TextBox");
 	nameEditor.setWidth("100%");
+	nameEditor.addClickListener(new ResetLabelClickListener(getView().getCoMessage(getView().getModel().getType())));
+	
 	if (getNameTooltip() != null) {
 	    nameEditor.setTitle(getUiMessage("Evaluation.name.tooltip"));
 	}

@@ -27,6 +27,7 @@ import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxLinkView;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
@@ -117,12 +118,14 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	editorName = new TextBox();
 	editorName.setStylePrimaryName("Osyl-LabelEditor-TextBox");
 	editorName.setWidth("100%");
+	editorName.addClickListener(new ResetLabelClickListener(getView().getCoMessage("InsertYourTextHere")));
 	flexTable.setWidget(0, 0, new Label(getUiMessage("Link.label")+" : "));
 	flexTable.setWidget(0, 1, editorName);
 	
 	editorLink = new TextBox();
 	editorLink.setStylePrimaryName("Osyl-LabelEditor-TextBox");
 	editorLink.setWidth("100%");
+	editorLink.addClickListener(new ResetLabelClickListener("http://www.google.ca/search?q=opensyllabus"));
 	flexTable.setWidget(1, 0, new Label(getUiMessage("Link.url")+" : "));
 	flexTable.setWidget(1, 1, editorLink);
 	

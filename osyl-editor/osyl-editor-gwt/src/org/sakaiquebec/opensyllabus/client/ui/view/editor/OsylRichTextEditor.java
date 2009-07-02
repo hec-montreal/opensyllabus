@@ -100,6 +100,7 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
 	RichTextArea rta = new RichTextArea();
 	rta.setWidth("500px");
 	rta.setStylePrimaryName("Osyl-UnitView-TextArea");
+	rta.addClickListener(new ResetLabelClickListener(getView().getCoMessage("InsertYourTextHere")));
 	setEditor(rta);
     }
 

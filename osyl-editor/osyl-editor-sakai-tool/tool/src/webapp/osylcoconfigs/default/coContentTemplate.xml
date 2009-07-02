@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Liquid XML Studio - FREE Community Edition 7.1.1.1206 (http://www.liquid-technologies.com) -->
 <CO type="bylecture" scrty="public">
-	<label><![CDATA[ Please type your title here...]]></label>
+	<label><![CDATA[Insert your Text Here...]]></label>
 	<COUnit scrty="public" type="presentation">
 		<label><![CDATA[ Presentation ]]></label>
 		<COUnitContent scrty="public" type="presentation">
@@ -13,7 +13,7 @@
 				</properties>
 				<COResource type="text" scrty="public">
 					<properties>
-						<text><![CDATA[ Please type your text here...  ]]></text>
+						<text><![CDATA[Insert your Text Here...]]></text>
 					</properties>
 				</COResource>
 				<COContentRubric type="description" />
@@ -99,7 +99,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="description" />
@@ -151,7 +151,7 @@
 			<label><![CDATA[ Final Exam  ]]></label>
 			<COUnitContent scrty="public" type="evaluation">
 				<COResourceProxy type="text" scrty="public">
-					<label><![CDATA[ Please type your text here...  ]]></label>
+					<label><![CDATA[Insert your Text Here...]]></label>
 					<properties>
 						<requirementLevel>undefined</requirementLevel>
 						<important>false</important>
@@ -159,7 +159,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="description" />
@@ -180,7 +180,7 @@
 	</COStructure>
 	<COStructure scrty="public" type="lectures">
 		<COUnit scrty="public" type="lecture">
-			<label><![CDATA[ Please type your title here...  ]]></label>
+			<label><![CDATA[Lecture]]></label>
 			<COUnitContent scrty="public" type="lecture">
 				<COResourceProxy type="text" scrty="public">
 					<properties>
@@ -190,7 +190,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="description" />
@@ -203,7 +203,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="objectives" />
@@ -211,7 +211,7 @@
 			</COUnitContent>
 		</COUnit>
 		<COUnit scrty="public" type="lecture">
-			<label><![CDATA[ Please type your title here... ]]></label>
+			<label><![CDATA[Lecture]]></label>
 			<COUnitContent scrty="public" type="lecture">
 				<COResourceProxy type="text" scrty="public">
 					<properties>
@@ -221,7 +221,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="description" />
@@ -234,7 +234,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="objectives" />
@@ -242,7 +242,7 @@
 			</COUnitContent>
 		</COUnit>
 		<COUnit scrty="public" type="lecture">
-			<label><![CDATA[ Please type your title here...  ]]></label>
+			<label><![CDATA[Lecture]]></label>
 			<COUnitContent scrty="public" type="lecture">
 				<COResourceProxy type="text" scrty="public">
 					<properties>
@@ -252,7 +252,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="description" />
@@ -265,7 +265,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="objectives" />
@@ -273,7 +273,7 @@
 			</COUnitContent>
 		</COUnit>
 		<COUnit scrty="public" type="lecture">
-			<label><![CDATA[ Please type your title here...  ]]></label>
+			<label><![CDATA[Lecture]]></label>
 			<COUnitContent scrty="public" type="lecture">
 				<COResourceProxy type="text" scrty="public">
 					<properties>
@@ -283,7 +283,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="description" />
@@ -298,7 +298,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="objectives" />
@@ -306,7 +306,7 @@
 			</COUnitContent>
 		</COUnit>
 		<COUnit scrty="public" type="lecture">
-			<label><![CDATA[ Please type your title here...  ]]></label>
+			<label><![CDATA[Lecture]]></label>
 			<COUnitContent scrty="public" type="lecture">
 				<COResourceProxy type="text" scrty="public">
 					<properties>
@@ -316,7 +316,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="description" />
@@ -329,7 +329,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="objectives" />
@@ -337,7 +337,7 @@
 			</COUnitContent>
 		</COUnit>
 		<COUnit scrty="public" type="lecture">
-			<label><![CDATA[ Please type your title here...  ]]></label>
+			<label><![CDATA[Lecture]]></label>
 			<COUnitContent scrty="public" type="lecture">
 				<COResourceProxy type="text" scrty="public">
 					<properties>
@@ -347,7 +347,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="description" />
@@ -360,7 +360,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="objectives" />
@@ -368,7 +368,7 @@
 			</COUnitContent>
 		</COUnit>
 		<COUnit scrty="public" type="lecture">
-			<label><![CDATA[ Please type your title here...  ]]></label>
+			<label><![CDATA[Lecture]]></label>
 			<COUnitContent scrty="public" type="lecture">
 				<COResourceProxy type="text" scrty="public">
 					<properties>
@@ -378,7 +378,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="description" />
@@ -391,7 +391,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="objectives" />
@@ -399,7 +399,7 @@
 			</COUnitContent>
 		</COUnit>
 		<COUnit scrty="public" type="lecture">
-			<label><![CDATA[ Please type your title here...  ]]></label>
+			<label><![CDATA[Lecture]]></label>
 			<COUnitContent scrty="public" type="lecture">
 				<COResourceProxy type="text" scrty="public">
 					<properties>
@@ -409,7 +409,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="description" />
@@ -422,7 +422,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="objectives" />
@@ -430,7 +430,7 @@
 			</COUnitContent>
 		</COUnit>
 		<COUnit scrty="public" type="lecture">
-			<label><![CDATA[ Please type your title here...  ]]></label>
+			<label><![CDATA[Lecture]]></label>
 			<COUnitContent scrty="public" type="lecture">
 				<COResourceProxy type="text" scrty="public">
 					<properties>
@@ -440,7 +440,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="description" />
@@ -453,7 +453,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="objectives" />
@@ -461,7 +461,7 @@
 			</COUnitContent>
 		</COUnit>
 		<COUnit scrty="public" type="lecture">
-			<label><![CDATA[ Please type your title here...  ]]></label>
+			<label><![CDATA[Lecture]]></label>
 			<COUnitContent scrty="public" type="lecture">
 				<COResourceProxy type="text" scrty="public">
 					<properties>
@@ -484,7 +484,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="objectives" />
@@ -492,7 +492,7 @@
 			</COUnitContent>
 		</COUnit>
 		<COUnit scrty="public" type="lecture">
-			<label><![CDATA[ Please type your title here...  ]]></label>
+			<label><![CDATA[Lecture]]></label>
 			<COUnitContent scrty="public" type="lecture">
 				<COResourceProxy type="text" scrty="public">
 					<properties>
@@ -502,7 +502,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="description" />
@@ -515,7 +515,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="objectives" />
@@ -523,7 +523,7 @@
 			</COUnitContent>
 		</COUnit>
 		<COUnit scrty="public" type="lecture">
-			<label><![CDATA[ Please type your title here...  ]]></label>
+			<label><![CDATA[Lecture]]></label>
 			<COUnitContent scrty="public" type="lecture">
 				<COResourceProxy type="text" scrty="public">
 					<properties>
@@ -533,7 +533,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="description" />
@@ -546,7 +546,7 @@
 					</properties>
 					<COResource type="text" scrty="public">
 						<properties>
-							<text><![CDATA[ Please type your text here...  ]]></text>
+							<text><![CDATA[Insert your Text Here...]]></text>
 						</properties>
 					</COResource>
 					<COContentRubric type="objectives" />

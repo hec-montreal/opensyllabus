@@ -146,6 +146,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	editorLabel = new TextBox();
 	editorLabel.setStylePrimaryName("Osyl-LabelEditor-TextBox");
 	editorLabel.setWidth("99%");
+	editorLabel.addClickListener(new ResetLabelClickListener(getView().getCoMessage("InsertYourTextHere")));
 	editorPanel.add(editorLabel);
 
 	Label l2 = new Label(getView().getUiMessage("comment"));

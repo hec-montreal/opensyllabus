@@ -54,6 +54,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RichTextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -83,7 +84,7 @@ public abstract class OsylAbstractEditor extends Composite {
     private int originalEditorWidgetHeight;
     // height of editor pop-up to remember for maximizing window
     private int originalEditorPopupHeight;
-    
+
     protected ListBox targetsListBox;
 
     /**
@@ -404,11 +405,10 @@ public abstract class OsylAbstractEditor extends Composite {
 	});
     } // createEditBox
 
-    
     protected void refreshTargetCoAbsractElementListBox(ListBox lb) {
 	generateTargetCoAbstractElementListBox(lb);
     }
-   
+
     /**
      * Test if an element could be move under another and create a list of
      * potential targets.
@@ -417,7 +417,7 @@ public abstract class OsylAbstractEditor extends Composite {
      *         move to operation.
      */
     protected void generateTargetCoAbstractElementListBox(ListBox lb) {
-	//nothing to do (for the moment)
+	// nothing to do (for the moment)
     }
 
     public void closeEditor() {
@@ -576,5 +576,29 @@ public abstract class OsylAbstractEditor extends Composite {
     }
 
     abstract protected Widget getMetaInfoLabel();
+
+    protected class ResetLabelClickListener implements ClickListener {
+
+	private String defaultText;
+
+	public ResetLabelClickListener(String defaultText) {
+	    super();
+	    this.defaultText = defaultText;
+	}
+
+	public void onClick(Widget sender) {
+	    if (sender instanceof TextBox) {
+		TextBox textbox = (TextBox) sender;
+		if (textbox.getText().equals(defaultText))
+		    textbox.setText("");
+	    }
+	    if (sender instanceof RichTextArea) {
+		RichTextArea rta = (RichTextArea) sender;
+		if (rta.getText().equals(defaultText))
+		    rta.setText("");
+	    }
+	}
+
+    }
 
 }

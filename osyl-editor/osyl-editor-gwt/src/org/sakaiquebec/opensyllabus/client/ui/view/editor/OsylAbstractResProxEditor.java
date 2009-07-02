@@ -429,15 +429,15 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		    .hasNext();) {
 		COModelInterface coi = iter.next();
 		if (coi instanceof COContentRubric) {
-			if (coi.getType().equals(getRubricType()))
-			    rubricAllowed = true;
+		    if (coi.getType().equals(getRubricType()))
+			rubricAllowed = true;
 		}
 		if (coi instanceof COContentResourceProxy) {
-		    if (coi.getType().equals(getView().getModel().getType())){
+		    if (coi.getType().equals(getView().getModel().getType())) {
 			resourceProxyTypeAllowed = true;
 		    }
-		    
-		}	
+
+		}
 	    }
 	    if (rubricAllowed && resourceProxyTypeAllowed) {
 		String label = model.getLabel();
@@ -509,4 +509,5 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     public boolean isMoveable() {
 	return true;
     }
+
 }
