@@ -393,7 +393,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     } // initViewer
 
     private boolean nullOrEmpty(String st) {
-	if (st == null || st.equals("") || st.equalsIgnoreCase("<P>&nbsp;</P>")
+	if (st == null || st.trim().equals("") || st.equalsIgnoreCase("<P>&nbsp;</P>")
 		|| st.equalsIgnoreCase("<BR>"))
 	    return true;
 	else
