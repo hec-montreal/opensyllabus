@@ -271,7 +271,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		String newId =
 			contentHostingService.copyIntoFolder(thisEntityRef,
 				id_publish);
-
+		
+		if(next.isCollection())
+			newId = newId+"/";
+		
 		// Permission
 		String permission =
 			documentSecurityMap.get(thisEntityRef
