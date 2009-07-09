@@ -175,17 +175,4 @@ public class COConfigSerialized implements IsSerializable {
 	this.configRef = configRef;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-	COConfigSerialized cocs = (COConfigSerialized) obj;
-
-	return (configId.equals(cocs.getConfigId())
-		&& configRef.equals(cocs.getConfigRef())
-		&& description.equals(cocs.getDescription())
-		&& rulesConfigContent.equals(cocs.getRulesConfig())
-		&& cascadingStyleSheetURI.equals(cocs
-			.getCascadingStyleSheetURI()) && i18nMessages
-		.equals(cocs.getI18nMessages()));
-    }
-
 }

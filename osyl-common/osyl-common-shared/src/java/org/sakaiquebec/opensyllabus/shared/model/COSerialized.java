@@ -403,22 +403,4 @@ public class COSerialized implements IsSerializable, Serializable,
     public void setEditable(boolean edit) {
 	this.editable = edit;
     }
-
-    public boolean equals(Object obj) {
-	COSerialized cos = (COSerialized) obj;
-
-	return (published == cos.isPublished() && coId.equals(cos.getCoId())
-		&& lang.equals(cos.getLang()) && type.equals(cos.getType())
-		&& security.equals(cos.getSecurity())
-		&& siteId.equals(cos.getSiteId())
-		&& group.equals(cos.getSection())
-		&& serializedCO.equals(cos.getContent())
-		&& osylConfig.equals(cos.getOsylConfig())
-		&& shortDescription.equals(cos.getShortDescription())
-		&& description.equals(cos.getDescription())
-		&& title.equals(cos.getTitle())
-		&& messages.equals(cos.getMessages()) && editable == cos
-		.isEditable());
-    }
-
 }
