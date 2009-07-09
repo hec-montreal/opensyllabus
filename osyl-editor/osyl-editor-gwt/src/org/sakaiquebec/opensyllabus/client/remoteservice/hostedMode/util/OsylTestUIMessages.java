@@ -417,6 +417,7 @@ public class OsylTestUIMessages {
 	    messages.put("DocumentEditor.document.license", "License");
 	    messages.put("DocumentEditor.save.name", "Save");
 	    messages.put("DocumentEditor.save.title", "Save Modifications");
+	    messages.put("DocumentEditor.save.error.documentUndefined","You must choose a document");
 
 	    messages.put("DocumentEditor.context", "2. Use Context");
 
@@ -436,6 +437,7 @@ public class OsylTestUIMessages {
 	    messages.put("CitationEditor.document.license", "License");
 	    messages.put("CitationEditor.save.name", "Save");
 	    messages.put("CitationEditor.save.title", "Save Modifications");
+	    messages.put("CitationEditor.save.error.citationUndefined","You must choose a citation");
 
 	    messages.put("CitationEditor.context", "2. Use Context");
 

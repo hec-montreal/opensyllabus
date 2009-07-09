@@ -31,6 +31,7 @@ import org.sakaiquebec.opensyllabus.client.controller.event.RFBItemSelectionEven
 import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
 import org.sakaiquebec.opensyllabus.client.ui.base.Dimension;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylDisclosureListener;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylAbstractBrowserComposite;
@@ -146,7 +147,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	editorLabel = new TextBox();
 	editorLabel.setStylePrimaryName("Osyl-LabelEditor-TextBox");
 	editorLabel.setWidth("99%");
-	editorLabel.addClickListener(new ResetLabelClickListener(getView().getCoMessage("InsertYourTextHere")));
+	editorLabel.addClickListener(new ResetLabelClickListener(getView()
+		.getCoMessage("InsertYourTextHere")));
 	editorPanel.add(editorLabel);
 
 	Label l2 = new Label(getView().getUiMessage("comment"));
@@ -296,7 +298,17 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
     }
 
     public boolean prepareForSave() {
-	return true;
+	if (getResourceURI() == null) {
+	    OsylAlertDialog oad =
+		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
+			    getView().getUiMessage(
+				    "DocumentEditor.save.error.documentUndefined"));
+	    oad.center();
+	    oad.show();
+	    return false;
+	} else {
+	    return true;
+	}
     }
 
     public void enterEdit() {
@@ -314,7 +326,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 	createEditBox(getEditBoxTitle());
 	if (browser.getFileItemPathToSelect() == null) {
-		browser.setFileItemPathToSelect(getView().getDocPath());
+	    browser.setFileItemPathToSelect(getView().getDocPath());
 	}
 	// refreshComponents();
 	saveButton.setEnabled(false);
@@ -381,22 +393,22 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	label1.setStylePrimaryName("sectionLabel");
 	browserPanel.add(label1);
 
-	
-	    // SAKAI MODE
-	    String basePath = getView().getDocPath();
-	    String siteId = getView().getController().getSiteId();
-	    String resourcesPath = "group/" + siteId + "/";
-	    basePath =
-		    basePath == null ? resourcesPath
-			    + getView().getController().getDocFolderName() : basePath;
-			    
-		browser = new OsylFileBrowser(basePath, getView().getDocPath() + "/"
-		    + getView().getDocName());
-	
+	// SAKAI MODE
+	String basePath = getView().getDocPath();
+	String siteId = getView().getController().getSiteId();
+	String resourcesPath = "group/" + siteId + "/";
+	basePath =
+		basePath == null ? resourcesPath
+			+ getView().getController().getDocFolderName()
+			: basePath;
 
-		browser.addEventHandler((RFBItemSelectionEventHandler) this);
-		browser.addEventHandler((RFBAddFolderEventHandler) this);
-		browser.addEventHandler((ItemListingAcquiredEventHandler) this);
+	browser =
+		new OsylFileBrowser(basePath, getView().getDocPath() + "/"
+			+ getView().getDocName());
+
+	browser.addEventHandler((RFBItemSelectionEventHandler) this);
+	browser.addEventHandler((RFBAddFolderEventHandler) this);
+	browser.addEventHandler((ItemListingAcquiredEventHandler) this);
 
 	browserPanel.add(browser);
 	browser.setWidth("100%");
@@ -471,11 +483,10 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 	saveButton.addClickListener(new ClickListener() {
 
-	    public void onClick(Widget sender) {	    	
-	    	
+	    public void onClick(Widget sender) {
+
 		if (browser.getSelectedAbstractBrowserItem() != null
-			&& !browser.getSelectedAbstractBrowserItem()
-				.isFolder()) {
+			&& !browser.getSelectedAbstractBrowserItem().isFolder()) {
 		    OsylFileItem selectedFile =
 			    (OsylFileItem) browser
 				    .getSelectedAbstractBrowserItem();
@@ -484,11 +495,17 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		    selectedFile.setCopyrightChoice(licenseListBox
 			    .getItemText(licenseListBox.getSelectedIndex()));
 
-		    OsylRemoteServiceLocator.getDirectoryRemoteService().updateRemoteFileInfo(
-					selectedFile.getFileName(), OsylDocumentEditor.this.browser.getCurrentDirectory().getDirectoryPath(),
-					selectedFile.getDescription(), selectedFile.getCopyrightChoice(),
-					OsylDocumentEditor.this.fileUpdateRequestHandler);
-		    
+		    OsylRemoteServiceLocator
+			    .getDirectoryRemoteService()
+			    .updateRemoteFileInfo(
+				    selectedFile.getFileName(),
+				    OsylDocumentEditor.this.browser
+					    .getCurrentDirectory()
+					    .getDirectoryPath(),
+				    selectedFile.getDescription(),
+				    selectedFile.getCopyrightChoice(),
+				    OsylDocumentEditor.this.fileUpdateRequestHandler);
+
 		}
 	    }
 	});
@@ -516,8 +533,6 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    }
 	});
     }
-
-
 
     @Override
     protected List<FocusWidget> getEditionFocusWidgets() {
@@ -571,37 +586,39 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
     private void updateResourceLicenceInfo() {
 	// caching result
 	if (resourceLicencingInfo == null) {
-		OsylRemoteServiceLocator.getEditorRemoteService().getResourceLicenceInfo(
-		    new AsyncCallback<ResourcesLicencingInfo>() {
+	    OsylRemoteServiceLocator.getEditorRemoteService()
+		    .getResourceLicenceInfo(
+			    new AsyncCallback<ResourcesLicencingInfo>() {
 
-			public void onFailure(Throwable caught) {
-			    // TODO Auto-generated method stub
-			    // getView().getController().handleRPCError("Error
-			    // while retrieving license information object");
-			}
+				public void onFailure(Throwable caught) {
+				    // TODO Auto-generated method stub
+				    // getView().getController().handleRPCError("Error
+				    // while retrieving license information
+				    // object");
+				}
 
-			public void onSuccess(ResourcesLicencingInfo result) {
-			    resourceLicencingInfo = result;
-			    // TODO Auto-generated method stub
-			    // getView().getController().handleRPCError("Sucess
-			    // while retrieving license information object");
-			    buildLicenseListBox();
-			}
-		    });
-	}
-	else{
+				public void onSuccess(
+					ResourcesLicencingInfo result) {
+				    resourceLicencingInfo = result;
+				    // TODO Auto-generated method stub
+				    // getView().getController().handleRPCError("Sucess
+				    // while retrieving license information
+				    // object");
+				    buildLicenseListBox();
+				}
+			    });
+	} else {
 	    buildLicenseListBox();
 	}
     }
-    
-    private void buildLicenseListBox(){
-			    resourceLicencingInfo.getCopyrightTypeList();
-			    licenseListBox.clear();
-			    for (String licence : resourceLicencingInfo
-				    .getCopyrightTypeList()) {
-				licenseListBox.addItem(licence);
-			    }
-	    refreshBrowsingComponents();
+
+    private void buildLicenseListBox() {
+	resourceLicencingInfo.getCopyrightTypeList();
+	licenseListBox.clear();
+	for (String licence : resourceLicencingInfo.getCopyrightTypeList()) {
+	    licenseListBox.addItem(licence);
+	}
+	refreshBrowsingComponents();
     }
 
     /**
@@ -622,22 +639,21 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		licenseListBox.setSelectedIndex(-1);
 	    } else {
 		OsylFileItem selectedFile =
-			(OsylFileItem) browser
-				.getSelectedAbstractBrowserItem();
+			(OsylFileItem) browser.getSelectedAbstractBrowserItem();
 		descriptionTextArea.setText(selectedFile.getDescription());
 
 		// TODO We have to wait until licenceListReady is set to true
 		// before
 		// selecting an item in the licenceListBox
 		// The licence list is scrolled only if it is ready.
-		    for (int i = 0; i < licenseListBox.getItemCount(); i++) {
-			String item = licenseListBox.getValue(i);
+		for (int i = 0; i < licenseListBox.getItemCount(); i++) {
+		    String item = licenseListBox.getValue(i);
 
-			if (item.equals(selectedFile.getCopyrightChoice())) {
-			    licenseListBox.setItemSelected(i, true);
-			    isFound = true;
-			}
+		    if (item.equals(selectedFile.getCopyrightChoice())) {
+			licenseListBox.setItemSelected(i, true);
+			isFound = true;
 		    }
+		}
 	    }
 
 	}
@@ -651,19 +667,27 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
      * Inner anonymous class that represent the response callback when updating
      * file properties via sdata.
      */
-    private final AsyncCallback<Void> fileUpdateRequestHandler = new AsyncCallback<Void>() {
+    private final AsyncCallback<Void> fileUpdateRequestHandler =
+	    new AsyncCallback<Void>() {
 		public void onFailure(Throwable caught) {
-			OsylUnobtrusiveAlert failure = new OsylUnobtrusiveAlert(getView().getUiMessage(
-			"Global.error")
-			+ ": " + getView().getUiMessage("DocumentEditor.document.PropUpdateError"));
-			OsylEditorEntryPoint.showWidgetOnTop(failure);
+		    OsylUnobtrusiveAlert failure =
+			    new OsylUnobtrusiveAlert(
+				    getView().getUiMessage("Global.error")
+					    + ": "
+					    + getView()
+						    .getUiMessage(
+							    "DocumentEditor.document.PropUpdateError"));
+		    OsylEditorEntryPoint.showWidgetOnTop(failure);
 		}
 
 		public void onSuccess(Void result) {
-			OsylUnobtrusiveAlert success = new OsylUnobtrusiveAlert(getView().getUiMessage(
-			"DocumentEditor.document.PropUpdateSuccess"));
-			OsylEditorEntryPoint.showWidgetOnTop(success);
-			OsylDocumentEditor.this.saveButton.setEnabled(false);
+		    OsylUnobtrusiveAlert success =
+			    new OsylUnobtrusiveAlert(
+				    getView()
+					    .getUiMessage(
+						    "DocumentEditor.document.PropUpdateSuccess"));
+		    OsylEditorEntryPoint.showWidgetOnTop(success);
+		    OsylDocumentEditor.this.saveButton.setEnabled(false);
 		}
-	};
+	    };
 }

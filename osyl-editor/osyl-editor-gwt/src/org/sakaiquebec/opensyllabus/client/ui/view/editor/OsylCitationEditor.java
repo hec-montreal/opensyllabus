@@ -29,6 +29,7 @@ import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredE
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBAddFolderEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBItemSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.base.Dimension;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylDisclosureListener;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylAbstractBrowserComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationBrowser;
@@ -242,7 +243,17 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     }
 
     public boolean prepareForSave() {
-	return true;
+	if (getResourceURI() == null) {
+	    OsylAlertDialog oad =
+		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
+			    getView().getUiMessage(
+				    "CitationEditor.save.error.citationUndefined"));
+	    oad.center();
+	    oad.show();
+	    return false;
+	} else {
+	    return true;
+	}
     }
 
     public void enterEdit() {
