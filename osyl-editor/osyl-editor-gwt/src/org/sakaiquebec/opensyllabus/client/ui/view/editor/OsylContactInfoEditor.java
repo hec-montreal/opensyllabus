@@ -94,7 +94,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
      * @param parent
      */
     public OsylContactInfoEditor(OsylAbstractView parent) {
-	super(parent);
+	super(parent,false);
 	initMainPanel();
 	if (!isReadOnly()) {
 	    initEditor();

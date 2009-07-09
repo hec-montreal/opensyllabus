@@ -206,11 +206,12 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     }
 
     protected void updateMetaInfo() {
-	setRequirementLevel(getEditor().getRequirementLevel());
 	setContextImportant(getEditor().isContextImportant());
 	setContextHidden(getEditor().isContextHidden());
 	setDiffusionLevel(getEditor().getDiffusionLevel());
 	setRubricType(getEditor().getRubricType());
+	if(getEditor().isHasRequirement())
+	    setRequirementLevel(getEditor().getRequirementLevel());
     }
 
     protected void moveTo(String targetUuid) {

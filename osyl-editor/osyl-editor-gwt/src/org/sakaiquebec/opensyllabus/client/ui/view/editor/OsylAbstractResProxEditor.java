@@ -63,6 +63,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     private ListBox diffusionListBox;
     private ListBox rubricListBox;
     private ListBox requirementListBox;
+    private boolean hasRequirement;
 
     /**
      * Constructor.
@@ -71,6 +72,13 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
      */
     public OsylAbstractResProxEditor(OsylAbstractView view) {
 	super(view);
+	hasRequirement = true;
+    }
+
+    public OsylAbstractResProxEditor(OsylAbstractView view,
+	    boolean hasRequirement) {
+	super(view);
+	this.hasRequirement = hasRequirement;
     }
 
     protected PushButton createPushButtonDelete() {
@@ -235,42 +243,6 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	importantCheckBox.setTitle(getUiMessage("MetaInfo.important.title"));
 	options.add(importantCheckBox);
 
-	// Requirement level ListBox
-	VerticalPanel requirementPanel = new VerticalPanel();
-	requirementPanel
-		.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
-	requirementPanel.add(new Label(getView().getUiMessage(
-		"MetaInfo.requirement")));
-	requirementListBox = new ListBox();
-	requirementListBox.setWidth("100px");
-	requirementListBox.setTitle(getUiMessage("MetaInfo.requirement.title"));
-	requirementListBox.addItem(
-		getUiMessage("MetaInfo.requirement.undefined"),
-		COPropertiesType.REQ_LEVEL_UNDEFINED);
-	requirementListBox.addItem(
-		getUiMessage("MetaInfo.requirement.mandatory"),
-		COPropertiesType.REQ_LEVEL_MANDATORY);
-	requirementListBox.addItem(
-		getUiMessage("MetaInfo.requirement.recommended"),
-		COPropertiesType.REQ_LEVEL_RECOMMENDED);
-	requirementListBox.addItem(
-		getUiMessage("MetaInfo.requirement.complementary"),
-		COPropertiesType.REQ_LEVEL_COMPLEMENTARY);
-	requirementPanel.add(requirementListBox);
-
-	String reqLevel = getView().getRequirementLevel();
-	int reqLevelIndex = 0;
-	if (COPropertiesType.REQ_LEVEL_UNDEFINED.equals(reqLevel)) {
-	    reqLevelIndex = 0;
-	} else if (COPropertiesType.REQ_LEVEL_MANDATORY.equals(reqLevel)) {
-	    reqLevelIndex = 1;
-	} else if (COPropertiesType.REQ_LEVEL_RECOMMENDED.equals(reqLevel)) {
-	    reqLevelIndex = 2;
-	} else if (COPropertiesType.REQ_LEVEL_COMPLEMENTARY.equals(reqLevel)) {
-	    reqLevelIndex = 3;
-	}
-	requirementListBox.setSelectedIndex(reqLevelIndex);
-
 	// Other options, specified by each subclass
 	Widget[] optionWidgets = getAdditionalOptionWidgets();
 	if (null != optionWidgets) {
@@ -278,8 +250,51 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		options.add(optionWidgets[i]);
 	    }
 	}
-	return new Widget[] { rubricPanel, diffusionPanel, optionPanel,
-		requirementPanel };
+
+	if (hasRequirement) {
+	    // Requirement level ListBox
+	    VerticalPanel requirementPanel = new VerticalPanel();
+	    requirementPanel
+		    .setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
+	    requirementPanel.add(new Label(getView().getUiMessage(
+		    "MetaInfo.requirement")));
+	    requirementListBox = new ListBox();
+	    requirementListBox.setWidth("100px");
+	    requirementListBox
+		    .setTitle(getUiMessage("MetaInfo.requirement.title"));
+	    requirementListBox.addItem(
+		    getUiMessage("MetaInfo.requirement.undefined"),
+		    COPropertiesType.REQ_LEVEL_UNDEFINED);
+	    requirementListBox.addItem(
+		    getUiMessage("MetaInfo.requirement.mandatory"),
+		    COPropertiesType.REQ_LEVEL_MANDATORY);
+	    requirementListBox.addItem(
+		    getUiMessage("MetaInfo.requirement.recommended"),
+		    COPropertiesType.REQ_LEVEL_RECOMMENDED);
+	    requirementListBox.addItem(
+		    getUiMessage("MetaInfo.requirement.complementary"),
+		    COPropertiesType.REQ_LEVEL_COMPLEMENTARY);
+	    requirementPanel.add(requirementListBox);
+
+	    String reqLevel = getView().getRequirementLevel();
+	    int reqLevelIndex = 0;
+	    if (COPropertiesType.REQ_LEVEL_UNDEFINED.equals(reqLevel)) {
+		reqLevelIndex = 0;
+	    } else if (COPropertiesType.REQ_LEVEL_MANDATORY.equals(reqLevel)) {
+		reqLevelIndex = 1;
+	    } else if (COPropertiesType.REQ_LEVEL_RECOMMENDED.equals(reqLevel)) {
+		reqLevelIndex = 2;
+	    } else if (COPropertiesType.REQ_LEVEL_COMPLEMENTARY
+		    .equals(reqLevel)) {
+		reqLevelIndex = 3;
+	    }
+	    requirementListBox.setSelectedIndex(reqLevelIndex);
+	    return new Widget[] { rubricPanel, diffusionPanel, optionPanel,
+		    requirementPanel };
+	} else {
+	    optionPanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
+	}
+	return new Widget[] { rubricPanel, diffusionPanel, optionPanel };
     }
 
     public Widget getBrowserWidget() {
@@ -478,7 +493,6 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	String reqLevelUiMsg = "";
 	String requirementLevel = "";
 	String requirementLevelLabel = "";
-	String reqLevelfromView = getView().getRequirementLevel();
 
 	String metaInfoLabelStr =
 		getUiMessage("MetaInfo.audience") + ": " + diffusionLevel
@@ -486,24 +500,36 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 			+ hidden + " | " + getUiMessage("MetaInfo.important")
 			+ ": " + important;
 
-	if (reqLevelfromView == null || "".equals(reqLevelfromView)
-		|| "undefined".equals(reqLevelfromView)) {
-	    metaInfoLabel.setText(metaInfoLabelStr);
+	if (hasRequirement) {
+	    String reqLevelfromView = getView().getRequirementLevel();
+	    if (reqLevelfromView != null && !"".equals(reqLevelfromView)
+		    && !"undefined".equals(reqLevelfromView)) {
+		reqLevelUiMsg =
+			"MetaInfo.requirement."
+				+ getView().getRequirementLevel();
+		requirementLevel = getUiMessage(reqLevelUiMsg);
+		requirementLevelLabel =
+			getUiMessage("MetaInfo.requirement") + ": ";
 
-	} else {
+		metaInfoLabelStr =
+			metaInfoLabelStr + " | " + requirementLevelLabel
+				+ requirementLevel;
 
-	    reqLevelUiMsg =
-		    "MetaInfo.requirement." + getView().getRequirementLevel();
-	    requirementLevel = getUiMessage(reqLevelUiMsg);
-	    requirementLevelLabel = getUiMessage("MetaInfo.requirement") + ": ";
-
-	    metaInfoLabel.setText(metaInfoLabelStr + " | "
-		    + requirementLevelLabel + requirementLevel);
+	    }
 	}
+	metaInfoLabel.setText(metaInfoLabelStr);
 
 	metaInfoLabel.setStylePrimaryName("Osyl-ResProxView-MetaInfo");
 
 	return metaInfoLabel;
+    }
+
+    public boolean isHasRequirement() {
+	return hasRequirement;
+    }
+
+    public void setHasRequirement(boolean hasRequirement) {
+	this.hasRequirement = hasRequirement;
     }
 
     public boolean isMoveable() {
