@@ -52,8 +52,9 @@ public interface OsylConfigService {
     /**
      * Temporary method to automatically create 2 configs (HEC - UdeM) in the
      * corresponding table
+     * @throws Exception 
      */
-    public void initConfigs();
+    public void initConfigs() throws Exception;
 
     /**
      * Default configs
@@ -101,8 +102,9 @@ public interface OsylConfigService {
      * Creates a new COConfig
      * 
      * @param coConfig
+     * @throws Exception 
      */
-    public void createConfig(COConfigSerialized coConfig);
+    public void createConfig(COConfigSerialized coConfig) throws Exception;
 
     /**
      * Removes the COConfig

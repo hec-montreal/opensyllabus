@@ -206,7 +206,7 @@ public interface OsylSiteService {
 
 	public Site getSite(String siteId) throws IdUnusedException;
 	
-	public String getParent(String siteId);
+	public String getParent(String siteId) throws Exception;
 	
 	public void associate(String siteId, String parentId) throws Exception;
 	

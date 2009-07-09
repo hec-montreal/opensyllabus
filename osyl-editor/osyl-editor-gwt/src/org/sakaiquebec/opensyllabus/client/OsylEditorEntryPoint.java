@@ -154,7 +154,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 
 		// And now we initialize the model from the XML content
 		this.modeledCo = new COModeled();
-		this.modeledCo.setSerializedContent(co.getSerializedContent());
+		this.modeledCo.setContent(co.getContent());
 		this.modeledCo.XML2Model();
 		setModel(this.modeledCo.getModeledContent());
 
@@ -610,7 +610,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	comodeled.setModeledContent(getModel());
 	comodeled.model2XML(true);
 	COSerialized cos = new COSerialized();
-	cos.setSerializedContent(comodeled.getSerializedContent());
+	cos.setContent(comodeled.getContent());
 	return cos;
     }
 
@@ -627,7 +627,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	    // because we are offline, but it won't crash (NPE) here!
 	    serializedCO = new COSerialized();
 	}
-	serializedCO.setSerializedContent(modeledCo.getSerializedContent());
+	serializedCO.setContent(modeledCo.getContent());
     }
 
     public static String getExecMode() {

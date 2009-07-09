@@ -21,7 +21,6 @@
 package org.sakaiquebec.opensyllabus.shared.model;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
@@ -36,7 +35,8 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @author <a href="mailto:tom.landry@crim.ca>Tom Landry</a>
  * @version $Id: $
  */
-public class COSerialized implements IsSerializable,Serializable, COModelInterface {
+public class COSerialized implements IsSerializable, Serializable,
+	COModelInterface {
 
     private static final long serialVersionUID = 2L;
 
@@ -86,16 +86,6 @@ public class COSerialized implements IsSerializable,Serializable, COModelInterfa
     private COConfigSerialized osylConfig;
 
     /**
-     * The list of parents of this course outline
-     */
-    private List<String> parents;
-
-    /**
-     * The list of children of this course outline
-     */
-    private List<String> children;
-
-    /**
      * A short description for this course. Comes from the site service.
      */
     private String shortDescription;
@@ -113,13 +103,13 @@ public class COSerialized implements IsSerializable,Serializable, COModelInterfa
     /**
      * A map for the titles of rubrics
      */
-    private Map<String,String> messages;
+    private Map<String, String> messages;
 
     /**
      * is editable or not
      */
     private boolean editable;
-    
+
     /**
      * Default constructor
      */
@@ -141,8 +131,8 @@ public class COSerialized implements IsSerializable,Serializable, COModelInterfa
 	this(courseOutlineXML.getCoId(), courseOutlineXML.getLang(),
 		courseOutlineXML.getType(), courseOutlineXML.getSecurity(),
 		courseOutlineXML.getSiteId(), courseOutlineXML.getSection(),
-		courseOutlineXML.getOsylConfig(), courseOutlineXML
-			.getSerializedContent(), courseOutlineXML
+		courseOutlineXML.getOsylConfig(),
+		courseOutlineXML.getContent(), courseOutlineXML
 			.getShortDescription(), courseOutlineXML
 			.getDescription(), courseOutlineXML.getTitle(),
 		courseOutlineXML.isPublished());
@@ -164,48 +154,12 @@ public class COSerialized implements IsSerializable,Serializable, COModelInterfa
 	this.setSiteId(siteId);
 	this.setSection(sectionId);
 	this.setOsylConfig(osylConfigId);
-	this.setSerializedContent(content);
+	this.setContent(content);
 	this.setShortDescription(shortDescription);
 	this.setDescription(description);
 	this.setTitle(title);
 	this.setPublished(published);
 
-    }
-
-    /**
-     * Get the parents of the current course outline.
-     * 
-     * @return a list of related course outlines
-     */
-    public List<String> getParents() {
-	return parents;
-    }
-
-    /**
-     * Set a list of parents for the current course outline.
-     * 
-     * @param a list of related course outlines
-     */
-    public void setParents(List<String> parents) {
-	this.parents = parents;
-    }
-
-    /**
-     * Get the children of the current course outline.
-     * 
-     * @param a list of related course outlines
-     */
-    public void setChildren(List<String> children) {
-	this.children = children;
-    }
-
-    /**
-     * Get the children of the current course outline.
-     * 
-     * @return a list of related course outlines
-     */
-    public List<String> getChildren() {
-	return children;
     }
 
     /**
@@ -383,28 +337,8 @@ public class COSerialized implements IsSerializable,Serializable, COModelInterfa
      * Get the actual XML content of the current course outline.
      * 
      * @return a String that describes all the course outline itself
-     * @deprecated Use getSerializedContent
      */
     public String getContent() {
-	return getSerializedContent();
-    }
-
-    /**
-     * Set the actual XML content of the current course outline.
-     * 
-     * @param a String that describes all the course outline itself
-     * @deprecated Use setSerializedContent
-     */
-    public void setContent(String content) {
-	setSerializedContent(content);
-    }
-
-    /**
-     * Get the actual XML content of the current course outline.
-     * 
-     * @return a String that describes all the course outline itself
-     */
-    public String getSerializedContent() {
 	return this.serializedCO;
     }
 
@@ -413,7 +347,7 @@ public class COSerialized implements IsSerializable,Serializable, COModelInterfa
      * 
      * @param a String that describes all the course outline itself
      */
-    public void setSerializedContent(String content) {
+    public void setContent(String content) {
 	this.serializedCO = content;
     }
 
@@ -422,7 +356,7 @@ public class COSerialized implements IsSerializable,Serializable, COModelInterfa
      * 
      * @return the messages value.
      */
-    public Map<String,String> getMessages() {
+    public Map<String, String> getMessages() {
 	return messages;
     }
 
@@ -431,7 +365,7 @@ public class COSerialized implements IsSerializable,Serializable, COModelInterfa
      * 
      * @param messages the new value of messages.
      */
-    public void setMessages(Map<String,String> messages) {
+    public void setMessages(Map<String, String> messages) {
 	this.messages = messages;
     }
 
@@ -461,13 +395,30 @@ public class COSerialized implements IsSerializable,Serializable, COModelInterfa
     public void setSecurity(String security) {
 	this.security = security;
     }
-    
+
     public boolean isEditable() {
 	return editable;
     }
 
     public void setEditable(boolean edit) {
 	this.editable = edit;
+    }
+
+    public boolean equals(Object obj) {
+	COSerialized cos = (COSerialized) obj;
+
+	return (published == cos.isPublished() && coId.equals(cos.getCoId())
+		&& lang.equals(cos.getLang()) && type.equals(cos.getType())
+		&& security.equals(cos.getSecurity())
+		&& siteId.equals(cos.getSiteId())
+		&& group.equals(cos.getSection())
+		&& serializedCO.equals(cos.getContent())
+		&& osylConfig.equals(cos.getOsylConfig())
+		&& shortDescription.equals(cos.getShortDescription())
+		&& description.equals(cos.getDescription())
+		&& title.equals(cos.getTitle())
+		&& messages.equals(cos.getMessages()) && editable == cos
+		.isEditable());
     }
 
 }

@@ -580,7 +580,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			while (parentId != null && !isInHierarchy) {
 			    if (parentId.equals(siteId))
 				isInHierarchy = true;
-			    parentId = osylSiteService.getParent(parentId);
+			    try {
+				parentId = osylSiteService.getParent(parentId);
+			    } catch (Exception e) {
+				parentId=null;
+			    }
 			}
 			if (!isInHierarchy)
 			    siteMap.put(site.getId(), site.getTitle());
@@ -592,7 +596,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return siteMap;
     }
 
-    public String getParent(String siteId) {
+    public String getParent(String siteId) throws Exception{
 	return osylSiteService.getParent(siteId);
     }
 
@@ -651,7 +655,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
 	try {
 	    byte[] xmlBytes =
-		    coSerialized.getSerializedContent().getBytes("UTF-8");
+		    coSerialized.getContent().getBytes("UTF-8");
 	    map.put(OsylManagerService.CO_XML_FILENAME, xmlBytes);
 	} catch (Exception e) {
 	    e.printStackTrace();

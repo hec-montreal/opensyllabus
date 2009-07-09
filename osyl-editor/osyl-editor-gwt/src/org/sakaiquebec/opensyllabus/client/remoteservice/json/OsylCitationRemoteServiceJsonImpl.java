@@ -24,6 +24,7 @@ package org.sakaiquebec.opensyllabus.client.remoteservice.json;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
+import org.sakaiquebec.opensyllabus.client.helper.FormHelper;
 import org.sakaiquebec.opensyllabus.client.remoteservice.json.callback.OsylCitationRemoteDirectoryContentCallBackAdaptator;
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylCitationRemoteServiceAsync;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylAbstractBrowserComposite;
@@ -86,9 +87,9 @@ public class OsylCitationRemoteServiceJsonImpl extends
 			action = serverId + "/sdata/ci" + p_citation.getResourceId();
 			
 			// create hidden field to define put(update) method
-			panel.add(createHiddenField("method", "put"));
+			panel.add(FormHelper.createHiddenField("method", "put"));
 			// create hidden field to define citation id
-			panel.add(createHiddenField("cid", p_citation.getId()));
+			panel.add(FormHelper.createHiddenField("cid", p_citation.getId()));
 			
 			listname=p_citation.getResourceId();
 		}else{
@@ -104,46 +105,46 @@ public class OsylCitationRemoteServiceJsonImpl extends
 		}
 
 		// Create an hidden textbox for each pojo property.
-		panel.add(createHiddenField("listname", listname));
+		panel.add(FormHelper.createHiddenField("listname", listname));
 		
-		panel.add(createHiddenField("cipkeys", "sakai:displayname"));
-		panel.add(createHiddenField("cipvalues", p_citation.getTitle()));
+		panel.add(FormHelper.createHiddenField("cipkeys", "sakai:displayname"));
+		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getTitle()));
 		
-		panel.add(createHiddenField("cipkeys", "sakai:mediatype"));
-		panel.add(createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.TYPE)));
+		panel.add(FormHelper.createHiddenField("cipkeys", "sakai:mediatype"));
+		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.TYPE)));
 		
-		panel.add(createHiddenField("cipkeys", CitationSchema.TITLE));
-		panel.add(createHiddenField("cipvalues", p_citation.getTitle()));
+		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.TITLE));
+		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getTitle()));
 		
-		panel.add(createHiddenField("cipkeys", CitationSchema.TITLE));
-		panel.add(createHiddenField("cipvalues", p_citation.getTitle()));
+		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.TITLE));
+		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getTitle()));
 		
-		panel.add(createHiddenField("cipkeys", CitationSchema.CREATOR));
-		panel.add(createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.CREATOR)));
+		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.CREATOR));
+		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.CREATOR)));
 		
-		panel.add(createHiddenField("cipkeys", CitationSchema.YEAR));
-		panel.add(createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.YEAR)));
+		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.YEAR));
+		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.YEAR)));
 		
-		panel.add(createHiddenField("cipkeys", CitationSchema.SOURCE_TITLE));
-		panel.add(createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.SOURCE_TITLE)));
+		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.SOURCE_TITLE));
+		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.SOURCE_TITLE)));
 		
-		panel.add(createHiddenField("cipkeys", CitationSchema.DATE));
-		panel.add(createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.DATE)));
+		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.DATE));
+		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.DATE)));
 		
-		panel.add(createHiddenField("cipkeys", CitationSchema.VOLUME));
-		panel.add(createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.VOLUME)));
+		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.VOLUME));
+		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.VOLUME)));
 		
-		panel.add(createHiddenField("cipkeys", CitationSchema.ISSUE));
-		panel.add(createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.ISSUE)));
+		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.ISSUE));
+		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.ISSUE)));
 		
-		panel.add(createHiddenField("cipkeys", CitationSchema.PAGES));
-		panel.add(createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.PAGES)));
+		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.PAGES));
+		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.PAGES)));
 		
-		panel.add(createHiddenField("cipkeys", CitationSchema.ISN));
-		panel.add(createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.ISN)));
+		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.ISN));
+		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.ISN)));
 		
-		panel.add(createHiddenField("cipkeys", CitationSchema.DOI));
-		panel.add(createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.DOI)));
+		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.DOI));
+		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.DOI)));
 
 
 		
@@ -181,24 +182,4 @@ public class OsylCitationRemoteServiceJsonImpl extends
 		}
 		
 	}
-
-	/**
-	 * TODO: should be located in a class like FormHelper.java to be reusable
-	 * Creates a invisible textbox with given name as name of textbox and given
-	 * value as its value
-	 * 
-	 * @param name
-	 *            to set as name of textbox
-	 * @param value
-	 *            to set as value of textbox
-	 * @return the textbox
-	 */
-	private TextBox createHiddenField(String name, String value) {
-		TextBox tb = new TextBox();
-		tb.setName(name);
-		tb.setText(value);
-		tb.setVisible(false);
-		return tb;
-	}
-
 }

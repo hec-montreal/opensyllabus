@@ -25,7 +25,6 @@ public final class ConfigDAOCreateConfigTest extends AbstractConfigDAOTest {
 		testCreateImpl(null);//this test should not fail..		
 	}
 
-	//FIXME: this test should not even exist since we should not have to set internal IDs to database objects.
 	public void testCreateWithID() throws Exception {
 		testCreateImpl("0");		
 	}
@@ -34,8 +33,12 @@ public final class ConfigDAOCreateConfigTest extends AbstractConfigDAOTest {
 	public void testCreateDoubleRef() {
 		COConfigDao configDAO = getConfigDAO();
 		
-		COConfigSerialized config = newConfig("0");		
-		configDAO.createConfig(config);
+		COConfigSerialized config = newConfig("0");	
+		try{
+		    configDAO.createConfig(config);
+		}catch (Exception e) {
+		   fail("Unable to create a config");
+		}
 		
 		COConfigSerialized otherConfig = newConfig("1");
 		otherConfig.setConfigRef(config.getConfigRef());
@@ -52,16 +55,17 @@ public final class ConfigDAOCreateConfigTest extends AbstractConfigDAOTest {
 			//fine
 		}
 	}
+
 	
-	//FIXME: the implementation of the DAO at the time this test is written
-	//eats up the exception from Hibernate when the same ID is used to create another config.
-	//The result being one never knows if a config has actually been created without actually querying it.
-	//The implementation should be fixed to not swallow such exception or the create method should at least provide a return value.
 	public void testCreateDoubleID() {
 		COConfigDao configDAO = getConfigDAO();
 		
 		COConfigSerialized config = newConfig("0");		
-		configDAO.createConfig(config);
+		try{
+		    configDAO.createConfig(config);
+		}catch (Exception e) {
+		   fail("Unable to create a config");
+		}
 		
 		//Make sure only the ID field has the same value as the first config		
 		COConfigSerialized otherConfig = newConfig("1");

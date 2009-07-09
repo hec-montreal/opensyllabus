@@ -8,7 +8,11 @@ import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
  * */
 public final class ConfigDAOGetConfigByRefTest extends AbstractConfigDAOTest {
 	
-	public void testGetNullConfigByRef() {
+	public void testGetNullConfigByRef() throws Exception{
+	    	COConfigDao configDAO = getConfigDAO();
+	    	COConfigSerialized config = newConfig("0");		
+		configDAO.createConfig(config);
+	    
 		try {
 			getConfigDAO().getConfigByRef(null);
 			fail("getConfigByRef(): expected an Exception from a NULL id parameter.");
@@ -18,7 +22,11 @@ public final class ConfigDAOGetConfigByRefTest extends AbstractConfigDAOTest {
 		}		
 	}
 	
-	public void testGetBlankConfigByRef() {		
+	public void testGetBlankConfigByRef() throws Exception{	
+	    	COConfigDao configDAO = getConfigDAO();
+	    	COConfigSerialized config = newConfig("0");		
+		configDAO.createConfig(config);
+	    
 		try {
 			getConfigDAO().getConfigByRef("");
 			fail("getConfigByRef(): expected an Exception from an empty id parameter.");
@@ -28,7 +36,11 @@ public final class ConfigDAOGetConfigByRefTest extends AbstractConfigDAOTest {
 		}		
 	}
 
-	public void testGetNonExistingConfigByRef() {		
+	public void testGetNonExistingConfigByRef() throws Exception{
+	    	COConfigDao configDAO = getConfigDAO();
+	    	COConfigSerialized config = newConfig("0");		
+		configDAO.createConfig(config);
+		
 		try {
 			getConfigDAO().getConfigByRef("NonExistingID");
 			fail("getConfigByRef(): expected an Exception from a non-existing id parameter.");

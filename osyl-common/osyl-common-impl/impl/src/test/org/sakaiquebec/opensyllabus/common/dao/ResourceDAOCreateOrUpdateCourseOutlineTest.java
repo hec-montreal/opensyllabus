@@ -58,4 +58,29 @@ public class ResourceDAOCreateOrUpdateCourseOutlineTest extends AbstractResource
 				course,
 				courses.get(0));		
 	}
+	
+	public void testCreateCourseOutlineWithSameSiteIdAndSameSecurity() throws Exception {	
+		ResourceDao resourceDAO = getResourceDAO();
+		String siteId="siteId";
+		String security="security";
+		
+		COSerialized course = newCourseOutline("0");
+		course.setSiteId(siteId);
+		course.setSecurity(security);
+		
+		resourceDAO.createOrUpdateCourseOutline(course);
+		
+		
+		course = newCourseOutline("1");
+		course.setSiteId(siteId);
+		course.setSecurity(security);
+		
+		try{
+		    resourceDAO.createOrUpdateCourseOutline(course);
+		    fail("create same course with indentical siteId and group should fail");
+		}catch (Exception e) {
+		    //fine
+		}
+			
+	}
 }

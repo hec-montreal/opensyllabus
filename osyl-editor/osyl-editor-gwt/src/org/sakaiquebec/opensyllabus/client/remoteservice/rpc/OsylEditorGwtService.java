@@ -67,7 +67,7 @@ public interface OsylEditorGwtService extends RemoteService {
 	 * @param COSerialized POJO
 	 * @return the CourseOutline ID
 	 */
-	public String updateSerializedCourseOutline(COSerialized co);
+	public String updateSerializedCourseOutline(COSerialized co) throws Exception;
 
 	/**
 	 * Publishes the CourseOutline whose ID is specified. It must have been

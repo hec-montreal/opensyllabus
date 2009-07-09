@@ -32,6 +32,7 @@
 			<list>				
 			 	<value>org/sakaiquebec/opensyllabus/common/dao/osyl.hbm.xml</value> 			
 			 	<value>org/sakaiquebec/opensyllabus/common/dao/COConfig.hbm.xml</value>
+			 	<value>org/sakaiquebec/opensyllabus/common/dao/CORelation.hbm.xml</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

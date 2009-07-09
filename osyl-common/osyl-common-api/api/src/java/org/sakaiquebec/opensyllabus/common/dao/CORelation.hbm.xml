@@ -5,10 +5,13 @@
 <hibernate-mapping>
 
     <class name="org.sakaiquebec.opensyllabus.common.dao.CORelation" table="osyl_co_relation">
-        <composite-id>
-            <key-property name="parent" column="PARENT" length="99" />
-            <key-property name="child" column="CHILD" length="99" />
-        </composite-id>
+     	<id name="child" type="string">
+     	 	<column name="CHILD" length="99" />
+            <generator class="assigned" />
+     	</id>
+     	<property name="parent" type="string">
+            <column name="PARENT" length="99" />
+        </property>
    	</class>
 
 </hibernate-mapping>

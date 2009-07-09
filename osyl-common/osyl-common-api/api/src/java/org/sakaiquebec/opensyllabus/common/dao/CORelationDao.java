@@ -36,15 +36,7 @@ public interface CORelationDao {
      * @param coId
      * @param idParent
      */
-    public void addParentToCourseOutline(String parent, String child);
-
-    /**
-     * Removes the child to the courseOutline
-     * 
-     * @param coId
-     * @param idChild
-     */
-    public boolean removeChildOfCourseOutline(String coId, String idChild);
+    public void createRelation(String child, String parent) throws Exception;
 
     /**
      * Removes the parent to the courseOutline
@@ -52,15 +44,15 @@ public interface CORelationDao {
      * @param coId
      * @param idParent
      */
-    public boolean removeParentOfCourseOutline(String coId, String idParent);
+    public boolean removeRelation(String coId, String idParent) throws Exception;
 
     /**
-     * All the parents of the courseOutline
+     * Get parent (unique) of the course outline
      * 
      * @param coId
      * @return
      */
-    public String getParentOfCourseOutline(String coId);
+    public String getParentOfCourseOutline(String coId) throws Exception;
 
     /**
      * All the children of the courseOutline
@@ -68,6 +60,6 @@ public interface CORelationDao {
      * @param coId
      * @return
      */
-    public List<CORelation> getChildrenOfCourseOutline(String coId);
+    public List<CORelation> getRelationsWithParentsCourseOutlineId(String coId) throws Exception;
 
 }

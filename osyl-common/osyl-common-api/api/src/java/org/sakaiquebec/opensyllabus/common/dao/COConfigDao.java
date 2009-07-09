@@ -45,7 +45,7 @@ public interface COConfigDao {
      * 
      * @param cOConfig
      */
-    public void createConfig(COConfigSerialized cOConfig);
+    public void createConfig(COConfigSerialized cOConfig) throws Exception;
 
     /**
      * Removes the COConfig
@@ -68,8 +68,9 @@ public interface COConfigDao {
      * 
      * @param configId
      * @return A String representation of the xml config
+     * @throws Exception 
      */
-    public String getConfigRef(String configId);
+    public String getConfigRef(String configId) throws Exception;
 
     /**
      * Returns the config

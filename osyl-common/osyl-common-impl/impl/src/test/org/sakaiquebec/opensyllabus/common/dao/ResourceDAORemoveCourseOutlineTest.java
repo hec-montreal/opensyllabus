@@ -7,6 +7,8 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 public class ResourceDAORemoveCourseOutlineTest extends AbstractResourceDAOTest {
 	
 	public void testRemoveNullCourseOutline() throws Exception {
+	    	COSerialized course = newCourseOutline("0");
+		getResourceDAO().createOrUpdateCourseOutline(course);
 		try {
 			getResourceDAO().removeCourseOutline(null);
 			//FIXME: removeCourseOutline() probably returns false...but it's not pretty...
@@ -18,6 +20,8 @@ public class ResourceDAORemoveCourseOutlineTest extends AbstractResourceDAOTest 
 	}
 	
 	public void testRemoveNonExistingCourseOutline() throws Exception {
+	    	COSerialized course = newCourseOutline("0");
+		getResourceDAO().createOrUpdateCourseOutline(course);
 		assertFalse(
 				"removeCourseOutline(): expected a FALSE value because of a non existing course parameter.",
 				getResourceDAO().removeCourseOutline("" + System.currentTimeMillis()));
@@ -39,7 +43,7 @@ public class ResourceDAORemoveCourseOutlineTest extends AbstractResourceDAOTest 
 		
 		//Just making sure by testing non existence using another mean
 		try {
-			resourceDAO.getCourseOutlineInfo(ID);
+			resourceDAO.getSerializedCourseOutline("0");
 			fail("Expected an Exception raised as course should not be found.");
 		}
 		catch (Exception e) {

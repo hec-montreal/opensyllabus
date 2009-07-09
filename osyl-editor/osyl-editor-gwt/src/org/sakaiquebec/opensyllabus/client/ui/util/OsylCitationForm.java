@@ -23,6 +23,7 @@ import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.UploadFileEventHandler;
+import org.sakaiquebec.opensyllabus.client.helper.FormHelper;
 import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewControllable;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
@@ -176,19 +177,19 @@ public class OsylCitationForm extends WindowPanel implements
 
 	// Create hidden field to define the citation list name.
 	hiddenListName =
-		createHiddenField("listname", citation == null ? "" : citation
+	    FormHelper.createHiddenField("listname", citation == null ? "" : citation
 			.getResourceId());
 	mainPanel.add(hiddenListName);
 
 	// Create hidden field to define the display name of the citation.
-	mainPanel.add(createHiddenField("cipkeys", "sakai:displayname"));
+	mainPanel.add(FormHelper.createHiddenField("cipkeys", "sakai:displayname"));
 	hiddenDisplayName =
-		createHiddenField("cipvalues", (citation == null || citation
+	    FormHelper.createHiddenField("cipvalues", (citation == null || citation
 			.getTitle() == null) ? "" : citation.getTitle());
 	mainPanel.add(hiddenDisplayName);
 
 	// Create a listbox for the citation type.
-	citationType = createListBox();
+	citationType = FormHelper.createListBox("Osyl-UnitView-TextArea");
 	citationType.setName("cipvalues");
 	initTypeListBox();
 	citationType.addChangeListener(new ChangeListener() {
@@ -205,27 +206,27 @@ public class OsylCitationForm extends WindowPanel implements
 	typePanel.setCellHorizontalAlignment(citationType,
 		HasHorizontalAlignment.ALIGN_CENTER);
 	// set the type key for saving citation in sakai resources
-	mainPanel.add(createHiddenField("cipkeys", "sakai:mediatype"));
+	mainPanel.add(FormHelper.createHiddenField("cipkeys", "sakai:mediatype"));
 	mainPanel.add(typePanel);
 
 	// Create a textarea for the citation type others
 	citationPanel = new VerticalPanel();
 	citationPanel.setWidth("99%");
-	citationPanel.add(createHiddenField("cipkeys", CitationSchema.TITLE));
+	citationPanel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.TITLE));
 	citationPanel.add(createNewLabel(osylController
 		.getCoMessage("ResProxCitationView_citationLabel")
 		+ " *:"));
 	citationField =
-		createTextArea((citation == null || citation.getTitle() == null) ? ""
-			: citation.getTitle());
+		FormHelper.createTextArea((citation == null || citation.getTitle() == null) ? ""
+			: citation.getTitle(),"Osyl-UnitView-TextArea");
 	citationPanel.add(citationField);
 	mainPanel.add(citationPanel);
 
 	// Create a textbox for the title.
 	titleField =
-		createTextBox((citation == null || citation.getTitle() == null || CitationSchema.TYPE_UNKNOWN
+	    FormHelper.createTextBox((citation == null || citation.getTitle() == null || CitationSchema.TYPE_UNKNOWN
 			.equals(citation.getProperty(CitationSchema.TYPE))) ? ""
-			: citation.getTitle());
+			: citation.getTitle(),"Osyl-UnitView-TextArea");
 	titlePanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_titleLabel")
@@ -235,8 +236,8 @@ public class OsylCitationForm extends WindowPanel implements
 
 	// Create a textbox for the author.
 	authorField =
-		createTextBox((citation == null || citation.getCreator() == null) ? ""
-			: citation.getCreator());
+	    FormHelper.createTextBox((citation == null || citation.getCreator() == null) ? ""
+			: citation.getCreator(),"Osyl-UnitView-TextArea");
 	authorLabel =
 		createNewLabel(osylController
 			.getCoMessage("ResProxCitationView_authorLabel")
@@ -247,9 +248,9 @@ public class OsylCitationForm extends WindowPanel implements
 	mainPanel.add(authorPanel);
 
 	// Create a textbox for the year.
-	final TextBox yearTextBox=createTextBox((citation == null || citation
+	final TextBox yearTextBox=FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.YEAR) == null) ? ""
-					: citation.getProperty(CitationSchema.YEAR));
+					: citation.getProperty(CitationSchema.YEAR),"Osyl-UnitView-TextArea");
 	yearPanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_yearLabel")
@@ -258,9 +259,9 @@ public class OsylCitationForm extends WindowPanel implements
 	mainPanel.add(yearPanel);
 
 	// Create a textbox for the journal.
-	final TextBox sourceTitle = createTextBox((citation == null || citation
+	final TextBox sourceTitle = FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.SOURCE_TITLE) == null) ? ""
-			: citation.getProperty(CitationSchema.SOURCE_TITLE));
+			: citation.getProperty(CitationSchema.SOURCE_TITLE),"Osyl-UnitView-TextArea");
 	journalPanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_journalLabel")
@@ -269,9 +270,9 @@ public class OsylCitationForm extends WindowPanel implements
 	mainPanel.add(journalPanel);
 
 	// Create a textbox for the date.
-	final TextBox dateTextBox = createTextBox((citation == null || citation
+	final TextBox dateTextBox = FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.DATE) == null) ? ""
-					: citation.getProperty(CitationSchema.DATE));
+					: citation.getProperty(CitationSchema.DATE),"Osyl-UnitView-TextArea");
 	datePanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_dateLabel")
@@ -280,12 +281,12 @@ public class OsylCitationForm extends WindowPanel implements
 	mainPanel.add(datePanel);
 
 	// Create two textboxes for the volume and issue.
-	final TextBox volumeTextBox=createTextBox((citation == null || citation
+	final TextBox volumeTextBox=FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.VOLUME) == null) ? ""
-					: citation.getProperty(CitationSchema.VOLUME));
-	final TextBox issueTextBox = createTextBox((citation == null || citation
+					: citation.getProperty(CitationSchema.VOLUME),"Osyl-UnitView-TextArea");
+	final TextBox issueTextBox = FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.ISSUE) == null) ? ""
-			: citation.getProperty(CitationSchema.ISSUE));
+			: citation.getProperty(CitationSchema.ISSUE),"Osyl-UnitView-TextArea");
 	volIssuePanel =
 		createDoubleLabelTextboxElement(
 			osylController
@@ -300,9 +301,9 @@ public class OsylCitationForm extends WindowPanel implements
 	mainPanel.add(volIssuePanel);
 
 	// Create a textbox for the pages.
-	final TextBox pagesTextBox=createTextBox((citation == null || citation
+	final TextBox pagesTextBox=FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.PAGES) == null) ? ""
-					: citation.getProperty(CitationSchema.PAGES));
+					: citation.getProperty(CitationSchema.PAGES),"Osyl-UnitView-TextArea");
 	pagePanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_pagesLabel")
@@ -316,9 +317,9 @@ public class OsylCitationForm extends WindowPanel implements
 		createNewLabel(osylController
 			.getCoMessage("ResProxCitationView_isbnLabel")
 			+ ":");
-	final TextBox isnTextBox=createTextBox((citation == null || citation
+	final TextBox isnTextBox=FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.ISN) == null) ? ""
-					: citation.getProperty(CitationSchema.ISN));
+					: citation.getProperty(CitationSchema.ISN),"Osyl-UnitView-TextArea");
 	isnPanel =
 		createLabelTextboxElement(isnLabel,
 				isnTextBox,
@@ -326,9 +327,9 @@ public class OsylCitationForm extends WindowPanel implements
 	mainPanel.add(isnPanel);
 
 	// Create a textbox for DOI.
-	final TextBox doiTextBox= createTextBox((citation == null || citation
+	final TextBox doiTextBox= FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.DOI) == null) ? ""
-			: citation.getProperty(CitationSchema.DOI));
+			: citation.getProperty(CitationSchema.DOI),"Osyl-UnitView-TextArea");
 	doiPanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_doiLabel")
@@ -542,73 +543,6 @@ public class OsylCitationForm extends WindowPanel implements
     }
 
     /**
-     * TODO: should be located in a class like FormHelper.java to be reusable
-     * Creates a textbox with given text as value
-     * and sets CSS style and width
-     * 
-     * @param text to set as value
-     * @return the textbox
-     */
-    private TextBox createTextBox(String text) {
-	TextBox tb = new TextBox();
-	tb.setStylePrimaryName("Osyl-UnitView-TextArea");
-	tb.setWidth("99%");
-	tb.setName("cipvalues");
-	tb.setText(text);
-	return tb;
-    }
-
-    /**
-     * TODO: should be located in a class like FormHelper.java to be reusable
-     * Creates a textarea with given text as value 
-     * and sets CSS style, width, and height
-     * 
-     * @param text to set as value
-     * @return the textarea
-     */
-    private TextArea createTextArea(String text) {
-	TextArea ta = new TextArea();
-	ta.setStylePrimaryName("Osyl-UnitView-TextArea");
-	ta.setWidth("99%");
-	ta.setHeight("110px");
-	ta.setName("cipvalues");
-	ta.setText(text);
-	return ta;
-    }
-
-    /**
-     * TODO: should be located in a class like FormHelper.java to be reusable
-     * Creates a invisible textbox with given name as name
-     * of textbox and given value as its value
-     * 
-     * @param name to set as name of textbox
-     * @param value to set as value of textbox
-     * @return the textbox
-     */
-    private TextBox createHiddenField(String name, String value) {
-	TextBox tb = new TextBox();
-	tb.setName(name);
-	tb.setText(value);
-	tb.setVisible(false);
-	return tb;
-    }
-
-    /**
-     * TODO: should be located in a class like FormHelper.java to be reusable
-     * Creates an empty lixtbox and sets CSS style 
-     * and width
-     * 
-     * @param text to set as value
-     * @return the textarea
-     */
-    private ListBox createListBox() {
-	ListBox lb = new ListBox();
-	lb.setStylePrimaryName("Osyl-UnitView-TextArea");
-	lb.setWidth("99%");
-	return lb;
-    }
-
-    /**
      * Creates a horizontal panel with a label and a textbox, 
      * also creates a hidden textbox to define a key which is 
      * used by submit of the form
@@ -637,7 +571,7 @@ public class OsylCitationForm extends WindowPanel implements
     private HorizontalPanel createLabelTextboxElement(Label label, TextBox tb,
 	    String key) {
 	HorizontalPanel hp = new HorizontalPanel();
-	hp.add(createHiddenField("cipkeys", key));
+	hp.add(FormHelper.createHiddenField("cipkeys", key));
 	hp.add(label);
 	hp.add(tb);
 	hp.setWidth("99%");
@@ -668,10 +602,10 @@ public class OsylCitationForm extends WindowPanel implements
 	HorizontalPanel hp = new HorizontalPanel();
 	Label lab1 = createNewLabel(label1);
 	Label lab2 = createNewLabel(label2);
-	hp.add(createHiddenField("cipkeys", key1));
+	hp.add(FormHelper.createHiddenField("cipkeys", key1));
 	hp.add(lab1);
 	hp.add(tb1);
-	hp.add(createHiddenField("cipkeys", key2));
+	hp.add(FormHelper.createHiddenField("cipkeys", key2));
 	hp.add(lab2);
 	hp.add(tb2);
 	hp.setWidth("98%");

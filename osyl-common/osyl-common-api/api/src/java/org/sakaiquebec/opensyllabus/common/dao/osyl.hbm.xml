@@ -21,11 +21,11 @@
         </property>
 
         <property name="security" type="string">
-            <column name="SECURITY" length="45"/>
+            <column name="SECURITY" length="45" />
         </property>
  
         <property name="siteId" type="string">
-            <column name="SITE_ID" length="99" not-null="true"/>
+            <column name="SITE_ID" length="99" not-null="true" />
         </property>
 
         <property name="section" type="string">

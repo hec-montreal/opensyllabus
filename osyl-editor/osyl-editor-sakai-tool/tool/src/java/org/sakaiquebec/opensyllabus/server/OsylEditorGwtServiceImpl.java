@@ -255,12 +255,13 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * @param COSerialized POJO
      * @return the CourseOutlineXML ID
      */
-    public String updateSerializedCourseOutline(COSerialized co) {
+    public String updateSerializedCourseOutline(COSerialized co) throws Exception {
 	String id=co.getCoId();
 	try {
 	    id = osylServices.getOsylSiteService().updateSerializedCourseOutline(co);
 	} catch (Exception e) {
 	    e.printStackTrace();
+	    throw e;
 	}
 	return id;
     }

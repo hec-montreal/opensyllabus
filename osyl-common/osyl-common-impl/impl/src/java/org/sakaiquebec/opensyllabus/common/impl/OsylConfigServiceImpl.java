@@ -118,7 +118,7 @@ public class OsylConfigServiceImpl extends ResourceLoader implements
     /**
      * Init method called at initialization of the bean.
      */
-    public void init() {
+    public void init() throws Exception{
 	initConfigs();
 	log.info("INIT from Config service");
     }
@@ -131,7 +131,7 @@ public class OsylConfigServiceImpl extends ResourceLoader implements
     }
 
     /** {@inheritDoc} */
-    public void createConfig(COConfigSerialized coConfig) {
+    public void createConfig(COConfigSerialized coConfig) throws Exception {
 	coConfigDao.createConfig(coConfig);
     }
 
@@ -317,7 +317,7 @@ public class OsylConfigServiceImpl extends ResourceLoader implements
     }
 
     /** {@inheritDoc} */
-    public void initConfigs() {
+    public void initConfigs() throws Exception{
 	if (coConfigDao.getConfigs().size() <= 0) {
 	    COConfigSerialized coConfig =
 		    new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR

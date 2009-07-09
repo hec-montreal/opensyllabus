@@ -46,7 +46,7 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
     }
 
     /** {@inheritDoc} */
-    public void createConfig(COConfigSerialized cOConfig) {
+    public void createConfig(COConfigSerialized cOConfig) throws Exception {
 	if (cOConfig == null) {
 	    throw new IllegalArgumentException("Cannot create null config!");
 	}
@@ -54,15 +54,16 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
 	    getHibernateTemplate().saveOrUpdate(cOConfig);
 	} catch (Exception e) {
 	    log.error("Unable to create a config ", e);
+	    throw e;
 	}
     }
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-	public String getConfigRef(String configId) {
+    public String getConfigRef(String configId) throws Exception{
 	List<COConfigSerialized> results = null;
 	COConfigSerialized cOConfig = null;
-
+	//if(configId==null) throw new IllegalArgumentException();
 	try {
 	    results =
 		    getHibernateTemplate().find(
@@ -70,12 +71,13 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
 			    new Object[] { configId });
 	} catch (Exception e) {
 	    log.error("Unable to retrieve config", e);
+	    throw e;
 	}
 	if (results.size() >= 1) {
 	    cOConfig = (COConfigSerialized) results.get(0);
 	    return cOConfig.getConfigRef();
 	}
-	return null;
+	else throw new Exception("Unexisting config id = "+configId);
     }
 
     /** {@inheritDoc} */
@@ -102,9 +104,8 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-	public COConfigSerialized getConfig(String configId) throws Exception {
+    public COConfigSerialized getConfig(String configId) throws Exception {
 	List<COConfigSerialized> results = null;
-	COConfigSerialized cOConfig = null;
 
 	try {
 	    results =
@@ -115,16 +116,16 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
 	    log.error("Unable to retrieve config", e);
 	    throw new Exception(e);
 	}
-
-	cOConfig = (COConfigSerialized) results.get(0);
-
-	return cOConfig;
+	if(results.size()>=1)
+	    return (COConfigSerialized) results.get(0);
+	else 
+	    throw new Exception("Unexisting config id= "+configId);
 
     }
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-	public List<COConfigSerialized> getConfigs() {
+    public List<COConfigSerialized> getConfigs() {
 	List<COConfigSerialized> configs = new ArrayList<COConfigSerialized>();
 	configs = getHibernateTemplate().loadAll(COConfigSerialized.class);
 	return configs;
@@ -132,9 +133,8 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-	public COConfigSerialized getConfigByRef(String configRef) throws Exception {
+    public COConfigSerialized getConfigByRef(String configRef) throws Exception {
 	List<COConfigSerialized> results = null;
-	COConfigSerialized cOConfig = null;
 
 	try {
 	    results =
@@ -145,10 +145,10 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
 	    log.error("Unable to retrieve config by its reference", e);
 	    throw new Exception(e);
 	}
-
-	cOConfig = (COConfigSerialized) results.get(0);
-
-	return cOConfig;
+	if(results.size()>=1)
+	    return (COConfigSerialized) results.get(0);
+	else 
+	    throw new Exception("Unexisting config ref= "+configRef);
     }
 
 }

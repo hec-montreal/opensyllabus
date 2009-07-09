@@ -157,7 +157,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	return osylManagerServices.getOsylManagerService().getOsylSites(siteId);
     }
 
-    public String getParent(String siteId) {
+    public String getParent(String siteId) throws Exception{
 	return osylManagerServices.getOsylManagerService().getParent(siteId);
     }
     

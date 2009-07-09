@@ -11,26 +11,11 @@ import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
  * */
 public final class ConfigDAOGetConfigTest extends AbstractConfigDAOTest {
 	
-	//FIXME: there a bug in getConfig() implementation: it does not check the returned result size,	
-	//Other tests don't detect it because of the catch all (caused by the DAO methods throwing Exception only).
-	//Remove this test when the problem is fixed.
-	public void testGetConfigNeedsToBeFixed() {
-		try {
-			getConfigDAO().getConfig("" + System.currentTimeMillis());
-			fail("getConfig(): expected an exception from a non-existing id parameter.");
-		}
-		catch (IndexOutOfBoundsException e) {
-			fail(
-					"COConfigDaoImpl.getConfig() has a bug which causes an IndexOutOfBoundsException: " +
-					"the result returned from Hibernate is not checked and get(0) is performed on an empty list): " + 
-					e.getLocalizedMessage());
-		}
-		catch (Exception e) {
-			//fine
-		}		
-	}
-	
-	public void testGetNullConfig() {
+		
+	public void testGetNullConfig() throws Exception{
+	    	COConfigDao configDAO = getConfigDAO();
+	    	COConfigSerialized config = newConfig("0");		
+		configDAO.createConfig(config);
 		try {
 			getConfigDAO().getConfig(null);
 			fail("getConfig(): expected an Exception from a NULL id parameter.");
@@ -40,7 +25,10 @@ public final class ConfigDAOGetConfigTest extends AbstractConfigDAOTest {
 		}		
 	}
 	
-	public void testGetBlankConfig() {		
+	public void testGetBlankConfig() throws Exception{
+	    COConfigDao configDAO = getConfigDAO();
+	    	COConfigSerialized config = newConfig("0");		
+		configDAO.createConfig(config);
 		try {
 			getConfigDAO().getConfig("");
 			fail("getConfig(): expected an Exception from an empty id parameter.");
@@ -50,7 +38,10 @@ public final class ConfigDAOGetConfigTest extends AbstractConfigDAOTest {
 		}		
 	}
 
-	public void testGetNonExistingConfig() {		
+	public void testGetNonExistingConfig() throws Exception{
+	    COConfigDao configDAO = getConfigDAO();
+	    	COConfigSerialized config = newConfig("0");		
+		configDAO.createConfig(config);
 		try {
 			getConfigDAO().getConfig("NonExistingID");
 			fail("getConfig(): expected an Exception from a non-existing id parameter.");

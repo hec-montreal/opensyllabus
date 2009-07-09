@@ -7,11 +7,14 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 public class ResourceDAOGetSerializedCourseOutlineBySiteIDTest extends AbstractResourceDAOTest {
 	
 	public void testGetNull() throws Exception {
-		ResourceDao resourceDAO = getResourceDAO();				
+		ResourceDao resourceDAO = getResourceDAO();	
+		
+		COSerialized course = newCourseOutline("0");
+		course.setSecurity("sec");
+		resourceDAO.createOrUpdateCourseOutline(course);
+		
 		try {
 			resourceDAO.getSerializedCourseOutlineBySiteId(null, null);
-			//FIXME: the behaviour in case of NULL is not specified by the interface documentation.
-			//Lets assume that a null should produce an error.
 			fail("getSerializedCourseOutlineBySiteId(): expected an exception because of null parameters.");
 		}
 		catch (Exception e) {
@@ -27,8 +30,6 @@ public class ResourceDAOGetSerializedCourseOutlineBySiteIDTest extends AbstractR
 		
 		try {
 			resourceDAO.getSerializedCourseOutlineBySiteId(course.getSiteId(), null);
-			//FIXME: the behaviour in case of NULL is not specified by the interface documentation.
-			//Lets assume that a null should produce an error.
 			fail("getSerializedCourseOutlineBySiteId(): expected an exception because of a null group parameter.");
 		}
 		catch (Exception e) {
@@ -45,8 +46,6 @@ public class ResourceDAOGetSerializedCourseOutlineBySiteIDTest extends AbstractR
 		resourceDAO.createOrUpdateCourseOutline(course);
 		try {
 			resourceDAO.getSerializedCourseOutlineBySiteId(null, GROUP);
-			//FIXME: the behaviour in case of NULL is not specified by the interface documentation.
-			//Lets assume that a null should produce an error.
 			fail("getSerializedCourseOutlineBySiteId(): expected an exception because of a null course parameter.");
 		}
 		catch (Exception e) {
@@ -74,8 +73,6 @@ public class ResourceDAOGetSerializedCourseOutlineBySiteIDTest extends AbstractR
 	
 	public void testGetNonExistingCourse() throws Exception {
 		ResourceDao resourceDAO = getResourceDAO();
-		//FIXME: the behaviour for a non-found object is not specified in the documentation.
-		//Lets assume that a getter never returns null and fails on non-existence (contrary to a finder).
 		try {
 			resourceDAO.getSerializedCourseOutlineBySiteId(
 					"" + System.currentTimeMillis(), 
@@ -94,8 +91,6 @@ public class ResourceDAOGetSerializedCourseOutlineBySiteIDTest extends AbstractR
 		COSerialized course = newCourseOutline("0");
 		course.setSecurity(GROUP);
 		resourceDAO.createOrUpdateCourseOutline(course);
-		//FIXME: the behaviour for a non-found object is not specified in the documentation.
-		//Lets assume that a getter never returns null and fails on non-existence (contrary to a finder).
 		try {
 			resourceDAO.getSerializedCourseOutlineBySiteId(
 					course.getSiteId(), 
@@ -114,8 +109,6 @@ public class ResourceDAOGetSerializedCourseOutlineBySiteIDTest extends AbstractR
 		COSerialized course = newCourseOutline("0");
 		course.setSecurity(GROUP);
 		resourceDAO.createOrUpdateCourseOutline(course);
-		//FIXME: the behaviour for a non-found object is not specified in the documentation.
-		//Lets assume that a getter never returns null and fails on non-existence (contrary to a finder).
 		try {
 			resourceDAO.getSerializedCourseOutlineBySiteId(
 					"" + System.currentTimeMillis(), 

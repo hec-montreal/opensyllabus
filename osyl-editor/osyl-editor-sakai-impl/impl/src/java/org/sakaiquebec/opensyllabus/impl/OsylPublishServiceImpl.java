@@ -201,7 +201,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// change work directory to publish directory
 	coModeled.XML2Model(true);
 	coModeled.model2XML();
-	co.setSerializedContent(coModeled.getSerializedContent());
+	co.setContent(coModeled.getSerializedContent());
+	co.setContent(coModeled.getSerializedContent());
 
 	Map<String, String> documentSecurityMap =
 		coModeled.getDocumentSecurityMap();
@@ -271,10 +272,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		String newId =
 			contentHostingService.copyIntoFolder(thisEntityRef,
 				id_publish);
-		
-		if(next.isCollection())
-			newId = newId+"/";
-		
+
+		if (next.isCollection())
+		    newId = newId + "/";
+
 		// Permission
 		String permission =
 			documentSecurityMap.get(thisEntityRef
@@ -292,21 +293,25 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     private void publish(COSerialized co, String security, String xslFileName,
 	    String webappDir) throws Exception {
-	COSerialized publishedCO =
-		resourceDao.isPublished(co.getSiteId(), security);
+	COSerialized publishedCO = null;
+	try {
+	    publishedCO = resourceDao.getSerializedCourseOutlineBySiteId(co.getSiteId(),
+		    security);
+	} catch (Exception e) {
+	}
 
 	// Create a course outline with security public
 	if (publishedCO == null) {
 	    publishedCO = new COSerialized(co);
 	    publishedCO.setCoId(IdManager.createUuid());
-	    publishedCO.setSerializedContent(XslTransform(webappDir, co
-		    .getSerializedContent(), xslFileName));
+	    publishedCO.setContent(XslTransform(webappDir, co.getContent(),
+		    xslFileName));
 	    publishedCO.setSecurity(security);
 	    publishedCO.setPublished(true);
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
 	} else {
-	    publishedCO.setSerializedContent(XslTransform(webappDir, co
-		    .getSerializedContent(), xslFileName));
+	    publishedCO.setContent(XslTransform(webappDir, co.getContent(),
+		    xslFileName));
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
 	}
     }

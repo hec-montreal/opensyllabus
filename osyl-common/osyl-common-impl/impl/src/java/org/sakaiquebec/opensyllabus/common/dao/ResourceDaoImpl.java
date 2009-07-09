@@ -20,13 +20,11 @@
 
 package org.sakaiquebec.opensyllabus.common.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
-import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -54,7 +52,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-	public List<COSerialized> getCourseOutlines() {
+    public List<COSerialized> getCourseOutlines() {
 	return getHibernateTemplate().loadAll(COSerialized.class);
     }
 
@@ -64,11 +62,13 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-	public COSerialized getSerializedCourseOutlineBySiteId(String siteId,
+    public COSerialized getSerializedCourseOutlineBySiteId(String siteId,
 	    String groupName) throws Exception {
 	List<COSerialized> results = null;
 	COSerialized courseOutline = null;
 
+	if (siteId == null || groupName == null)
+	    throw new IllegalArgumentException();
 	try {
 	    results =
 		    getHibernateTemplate()
@@ -79,11 +79,12 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    log.error("Unable to retrieve course outline by its siteId", e);
 	    throw e;
 	}
-	if (results.size() == 1) {
+	if (results.size() >= 1) {
 	    courseOutline = (COSerialized) results.get(0);
 	    return courseOutline;
 	} else
-	    return null;
+	    throw new Exception("No course outline with site id= " + siteId
+		    + " and groupName=" + groupName);
     }
 
     /**
@@ -101,8 +102,9 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	} catch (HibernateException e) {
 	    log.error("Unable to retrieve course outline ", e);
 	    throw new Exception(e);
-
 	}
+	if (coXml == null)
+	    throw new Exception("No course outline with id=" + idCO);
 	return coXml;
     }
 
@@ -111,24 +113,8 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
      * 
      * @throws Exception
      */
-    public String getCourseOutlineContent(String idCo) throws Exception {
-	COSerialized courseOutline = null;
-	try {
-	    courseOutline = getSerializedCourseOutline(idCo);
-	} catch (Exception e) {
-	    log.error("Unable to retrieve course outline", e);
-	    throw e;
-	}
-
-	return courseOutline.getSerializedContent();
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @throws Exception
-     */
-    public COConfigSerialized getOsylConfig(String idCo) throws Exception {
+    public COConfigSerialized getCourseOutlineOsylConfig(String idCo)
+	    throws Exception {
 	COSerialized courseOutline = null;
 	try {
 	    courseOutline = getSerializedCourseOutline(idCo);
@@ -145,60 +131,27 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
      * 
      * @throws Exception
      */
-    public List<String> getCourseOutlineInfo(String idCo) throws Exception {
-	List<String> info = new ArrayList<String>();
+    @SuppressWarnings("unchecked")
+    public COSerialized getCourseOutlineSiteId(String siteId) throws Exception {
+	List<COSerialized> results = null;
 	COSerialized courseOutline = null;
-	try {
-	    courseOutline = getSerializedCourseOutline(idCo);
-	} catch (Exception e) {
-	    log.error("Unable to retrieve course outline", e);	   
-	}
-	if (courseOutline == null){
-	    throw new Exception("No course outline");
-	}
-	else {
-	    info.add(courseOutline.getCoId());
-	    info.add(courseOutline.getLang());
-	    info.add(courseOutline.getSection());
-	    info.add(courseOutline.getSecurity());
-	    info.add(courseOutline.getType());
-	    return info;
-	}
 
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @throws Exception
-     */
-    public COConfigSerialized getCourseOutlineOsylConfig(String idCo) throws Exception {
-	COSerialized courseOutline = null;
+	if (siteId == null)
+	    throw new IllegalArgumentException();
 	try {
-	    courseOutline = getSerializedCourseOutline(idCo);
+	    results =
+		    getHibernateTemplate().find(
+			    "from COSerialized where siteId= ? ",
+			    new Object[] { siteId });
 	} catch (Exception e) {
-	    log.error("Unable to retrieve course outline", e);
+	    log.error("Unable to retrieve course outline by its siteId", e);
 	    throw e;
 	}
-
-	return courseOutline.getOsylConfig();
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @throws Exception
-     */
-    public String getCourseOutlineSiteId(String idCo) throws Exception {
-	COSerialized courseOutline = null;
-	try {
-	    courseOutline = getSerializedCourseOutline(idCo);
-	} catch (Exception e) {
-	    log.error("Unable to retrieve course outline", e);
-	    throw e;
-	}
-
-	return courseOutline.getSiteId();
+	if (results.size() >= 1) {
+	    courseOutline = (COSerialized) results.get(0);
+	    return courseOutline;
+	} else
+	    throw new Exception("No course outline with site id= " + siteId);
     }
 
     /**
@@ -208,6 +161,24 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
      */
     public String createOrUpdateCourseOutline(COSerialized courseOutline)
 	    throws Exception {
+	boolean alreadyExist = false;
+	COSerialized cos = null;
+	try {
+	    cos =
+		    getSerializedCourseOutlineBySiteId(courseOutline
+			    .getSiteId(), courseOutline.getSecurity());
+	    if (!cos.getCoId().equals(courseOutline.getCoId()))
+		alreadyExist = true;
+
+	} catch (Exception e) {
+	}
+	if (alreadyExist)
+	    throw new Exception(
+		    "A course outline with same siteId and groupName already exists in database");
+	// to avoid org.springframework.orm.hibernate3.HibernateSystemException:
+	// a different object with the same identifier value was already associated with the session
+	getHibernateTemplate().evict(cos);
+	
 	try {
 	    getHibernateTemplate().saveOrUpdate(courseOutline);
 	} catch (Exception e) {
@@ -218,8 +189,10 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
     }
 
     /** {@inheritDoc} */
-    public boolean removeCourseOutline(String courseOutlineId) {
+    public boolean removeCourseOutline(String courseOutlineId) throws Exception {
 	COSerialized courseOutline = null;
+	if (courseOutlineId == null)
+	    throw new IllegalArgumentException();
 	try {
 	    courseOutline = getSerializedCourseOutline(courseOutlineId);
 	} catch (Exception e) {
@@ -237,13 +210,24 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-	public boolean hasBeenPublished(String siteId) throws Exception{
+    public boolean hasBeenPublished(String siteId) throws Exception {
 	List<COSerialized> results = null;
+
+	if (siteId == null)
+	    throw new IllegalArgumentException();
+
+	try {
+	    getCourseOutlineSiteId(siteId);
+	} catch (Exception e) {
+	    throw new Exception("No course outline with site id= " + siteId);
+	}
+
 	try {
 	    results =
 		    getHibernateTemplate()
 			    .find(
-				    "from COSerialized where siteId= ? and published=1", new Object[]{siteId});
+				    "from COSerialized where siteId= ? and published=1",
+				    new Object[] { siteId });
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline", e);
 	    throw e;
@@ -254,24 +238,27 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    return false;
     }
 
-	@SuppressWarnings("unchecked")
-	public COSerialized isPublished(String siteId, String security) throws Exception {
-        List<COSerialized> results = null;
-        COSerialized courseOutline = null;
+    @SuppressWarnings("unchecked")
+    public COSerialized isPublished(String siteId, String security)
+	    throws Exception {
+	List<COSerialized> results = null;
+	COSerialized courseOutline = null;
 
-        try {
-            results = getHibernateTemplate().find(
-                    "from COSerialized where siteId= ? and security = ? ",
-                    new Object[] { siteId, security });
-        } catch (Exception e) {
+	try {
+	    results =
+		    getHibernateTemplate()
+			    .find(
+				    "from COSerialized where siteId= ? and security = ? ",
+				    new Object[] { siteId, security });
+	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline", e);
-            throw e;
-        }
-        if (results.size() >= 1) {
-            courseOutline = (COSerialized) results.get(0);
-            return courseOutline;
-       }else 
-    	   return courseOutline;
+	    throw e;
 	}
+	if (results.size() >= 1) {
+	    courseOutline = (COSerialized) results.get(0);
+	    return courseOutline;
+	} else
+	    return courseOutline;
+    }
 
 }

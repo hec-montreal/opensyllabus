@@ -49,7 +49,7 @@ public class COConfigSerialized implements IsSerializable {
      * relative reference to the folder
      */
     private String configRef;
-    
+
     private String description;
 
     /**
@@ -60,7 +60,7 @@ public class COConfigSerialized implements IsSerializable {
     /**
      * Messages selected for the user locale
      */
-    private Map<String,String> i18nMessages;
+    private Map<String, String> i18nMessages;
 
     /**
      * CSS URI, used for jsp page
@@ -84,26 +84,25 @@ public class COConfigSerialized implements IsSerializable {
     /**
      * Empty Constructor
      */
-    public COConfigSerialized(String configId, String configRef, String description) {
+    public COConfigSerialized(String configId, String configRef,
+	    String description) {
 	this.configId = configId;
 	this.configRef = configRef;
 	this.description = description;
     }
 
     /**
-     * 
      * @return the description value
      */
     public String getDescription() {
-        return description;
+	return description;
     }
 
     /**
-     * 
      * @param description the new value of description
      */
     public void setDescription(String description) {
-        this.description = description;
+	this.description = description;
     }
 
     /**
@@ -123,14 +122,14 @@ public class COConfigSerialized implements IsSerializable {
     /**
      * @return the i18nMessages value.
      */
-    public Map<String,String> getI18nMessages() {
+    public Map<String, String> getI18nMessages() {
 	return i18nMessages;
     }
 
     /**
      * @param i18nMessages the new value of coreBundle.
      */
-    public void setCoreBundle(Map<String,String> i18nMessages) {
+    public void setCoreBundle(Map<String, String> i18nMessages) {
 	this.i18nMessages = i18nMessages;
     }
 
@@ -174,6 +173,19 @@ public class COConfigSerialized implements IsSerializable {
      */
     public void setConfigRef(String configRef) {
 	this.configRef = configRef;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	COConfigSerialized cocs = (COConfigSerialized) obj;
+
+	return (configId.equals(cocs.getConfigId())
+		&& configRef.equals(cocs.getConfigRef())
+		&& description.equals(cocs.getDescription())
+		&& rulesConfigContent.equals(cocs.getRulesConfig())
+		&& cascadingStyleSheetURI.equals(cocs
+			.getCascadingStyleSheetURI()) && i18nMessages
+		.equals(cocs.getI18nMessages()));
     }
 
 }

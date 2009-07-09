@@ -209,7 +209,11 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	    COSerialized co =
 		    resourceDao.getSerializedCourseOutlineBySiteId(siteId,
 			    SecurityInterface.SECURITY_ACCESS_ATTENDEE);
-	    String parentId = coRelationDao.getParentOfCourseOutline(siteId);
+	    String parentId = null;
+	    try {
+		parentId = coRelationDao.getParentOfCourseOutline(siteId);
+	    } catch (Exception e) {
+	    }
 	    coModeled = (co == null) ? null : new COModeledServer(co);
 	    if (parentId == null) {
 		if (coModeled != null)
@@ -243,8 +247,11 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 		getSiteInfo(co, siteId);
 		COModeledServer coModelChild = new COModeledServer(co);
 		// récupération des parents
-		String parentId =
-			coRelationDao.getParentOfCourseOutline(siteId);
+		String parentId = null;
+		try {
+		    parentId = coRelationDao.getParentOfCourseOutline(siteId);
+		} catch (Exception e) {
+		}
 		if (parentId != null) {
 
 		    // fusion
@@ -255,8 +262,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 			coModelChild.XML2Model();
 			coModelChild.fusion(coModelParent);
 			coModelChild.model2XML();
-			co.setSerializedContent(coModelChild
-				.getSerializedContent());
+			co.setContent(coModelChild.getSerializedContent());
 		    }
 
 		}
@@ -329,7 +335,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 		co =
 			new COSerialized(IdManager.createUuid(),
 				osylConfigService.getCurrentLocale(), "shared",
-				"", site.getId(), "sectionId", coConfig,null,
+				"", site.getId(), "sectionId", coConfig, null,
 				"shortDescription", "description", "title",
 				false);
 		resourceDao.createOrUpdateCourseOutline(co);
@@ -343,8 +349,6 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	}
 	return site.getId();
     }
-
-    
 
     /**
      * Returns the site type of the realm service if there is one otherwise the
@@ -537,7 +541,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	    siteId = getCurrentSiteId();
 	    thisCo = getSerializedCourseOutlineBySiteId(siteId);
 
-	    if(thisCo==null){
+	    if (thisCo == null) {
 		coConfig =
 			osylConfigService
 				.getConfigByRef(
@@ -555,18 +559,18 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 		coModeled.XML2Model();
 		coModeled.resetUuid();
 		coModeled.model2XML();
-		thisCo.setSerializedContent(coModeled.getSerializedContent());
+		thisCo.setContent(coModeled.getSerializedContent());
 
 		resourceDao.createOrUpdateCourseOutline(thisCo);
-	    } else if (thisCo.getSerializedContent() == null) {
-		coConfig =thisCo.getOsylConfig();
-		thisCo.setSerializedContent(getXmlStringFromFile(coConfig, webappDir));
+	    } else if (thisCo.getContent() == null) {
+		coConfig = thisCo.getOsylConfig();
+		thisCo.setContent(getXmlStringFromFile(coConfig, webappDir));
 		// reinitilaisation des uuids
 		COModeledServer coModeled = new COModeledServer(thisCo);
 		coModeled.XML2Model();
 		coModeled.resetUuid();
 		coModeled.model2XML();
-		thisCo.setSerializedContent(coModeled.getSerializedContent());
+		thisCo.setContent(coModeled.getSerializedContent());
 
 		resourceDao.createOrUpdateCourseOutline(thisCo);
 	    } else {
@@ -665,9 +669,9 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	try {
 	    co = getSerializedCourseOutlineBySiteId(siteId);
 	    if (co == null) {
-		
-	    }else{
-		co.setSerializedContent(xmlData);
+
+	    } else {
+		co.setContent(xmlData);
 	    }
 
 	    resourceDao.createOrUpdateCourseOutline(co);
@@ -757,8 +761,12 @@ public class OsylSiteServiceImpl implements OsylSiteService {
     /**
      * {@inheritDoc}
      */
-    public String getParent(String siteId) {
-	return coRelationDao.getParentOfCourseOutline(siteId);
+    public String getParent(String siteId) throws Exception {
+	try{
+	    return coRelationDao.getParentOfCourseOutline(siteId);
+	}catch (Exception e) {
+	    return null;
+	}
     }
 
     public void associate(String siteId, String parentId) throws Exception {
@@ -768,35 +776,31 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 
 	    if (co != null) {
 		getSiteInfo(co, siteId);
-		
-		
+
 		if (parentId != null) {
 		    COModeledServer coModelParent =
 			    getFusionnedPublishedHierarchy(parentId);
 
 		    if (coModelParent != null) {
 			COModeledServer coModelChild = new COModeledServer(co);
-//			if(co.getSerializedContent()==null){
-//			    coModelChild.setModeledContent(coModelParent.getModeledContent());
-//			    coModelChild.resetUuid();
-//			}else{
-			    coModelChild.XML2Model();
-//			}
-			
+			// if(co.getSerializedContent()==null){
+			// coModelChild.setModeledContent(coModelParent.getModeledContent());
+			// coModelChild.resetUuid();
+			// }else{
+			coModelChild.XML2Model();
+			// }
+
 			coModelChild.associate(coModelParent);
 			coModelChild.model2XML();
-			co.setSerializedContent(coModelChild
-				.getSerializedContent());
+			co.setContent(coModelChild.getSerializedContent());
 			resourceDao.createOrUpdateCourseOutline(co);
-			coRelationDao.addParentToCourseOutline(parentId, siteId);
-		    }
-		    else{
-			throw new Exception();//TODO
+			coRelationDao.createRelation(siteId, parentId);
+		    } else {
+			throw new Exception();// TODO
 		    }
 		}
-	    }
-	    else{
-		throw new Exception();//TODO
+	    } else {
+		throw new Exception();// TODO
 	    }
 	} catch (Exception e) {
 	    e.printStackTrace();
@@ -820,11 +824,10 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 			coModelChild.XML2Model();
 			coModelChild.dissociate(coModelParent);
 			coModelChild.model2XML();
-			co.setSerializedContent(coModelChild
-				.getSerializedContent());
+			co.setContent(coModelChild.getSerializedContent());
 			resourceDao.createOrUpdateCourseOutline(co);
 		    }
-		    coRelationDao.removeParentOfCourseOutline(siteId, parentId);
+		    coRelationDao.removeRelation(siteId, parentId);
 		}
 	    }
 	} catch (Exception e) {

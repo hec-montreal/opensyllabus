@@ -227,7 +227,7 @@ public class COModeled extends COSerialized implements COModelInterface {
 
 	try {
 	    // XMLtoDOM
-	    messageDom = XMLParser.parse(getSerializedContent());
+	    messageDom = XMLParser.parse(getContent());
 
 	    // DOMtoModel
 	    coContent = createCOContentPOJO(messageDom, coContent);
@@ -637,7 +637,7 @@ public class COModeled extends COSerialized implements COModelInterface {
     public void model2XML(boolean saveParentInfos) {
 	Document document = XMLParser.createDocument();
 	createRootElement(document, getModeledContent(), saveParentInfos);
-	setSerializedContent("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+	setContent("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 		+ document.toString());
     }
 

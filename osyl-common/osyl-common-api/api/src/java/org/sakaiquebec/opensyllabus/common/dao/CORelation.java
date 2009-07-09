@@ -49,7 +49,7 @@ public class CORelation implements Serializable {
      * @param parent
      * @param child
      */
-    public CORelation(String parent, String child) {
+    public CORelation(String child, String parent) {
 	this.parent = parent;
 	this.child = child;
     }

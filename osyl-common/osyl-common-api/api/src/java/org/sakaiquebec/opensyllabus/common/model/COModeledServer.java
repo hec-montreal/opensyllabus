@@ -252,11 +252,11 @@ public class COModeledServer {
 	COContent coContent = null;
 	Document messageDom = null;
 	documentSecurityMap = new HashMap<String, String>();
-	if (coSerialized.getSerializedContent() != null) {
+	if (coSerialized.getContent() != null) {
 	    coContent = new COContent();
 	    try {
 		// XMLtoDOM
-		messageDom = parseXml(coSerialized.getSerializedContent());
+		messageDom = parseXml(coSerialized.getContent());
 
 		// DOMtoModel
 		coContent =
@@ -677,7 +677,7 @@ public class COModeledServer {
 	    pce.printStackTrace();
 	}
 	createRootElement(dom, getModeledContent());
-	coSerialized.setSerializedContent(xmlToString(dom));
+	coSerialized.setContent(xmlToString(dom));
     }
 
     private String xmlToString(Document doc) {
@@ -1070,11 +1070,11 @@ public class COModeledServer {
     }
 
     public String getSerializedContent() {
-	return coSerialized.getSerializedContent();
+	return coSerialized.getContent();
     }
 
     public void setSerializedContent(String sc) {
-	coSerialized.setSerializedContent(sc);
+	coSerialized.setContent(sc);
     }
 
     public void fusion(COModeledServer parent) {

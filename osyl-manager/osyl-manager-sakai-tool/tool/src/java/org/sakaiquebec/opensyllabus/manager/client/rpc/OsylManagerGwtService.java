@@ -64,7 +64,7 @@ public interface OsylManagerGwtService extends RemoteService {
 
     public Map<String, String> getOsylSites(String siteId);
 
-    public String getParent(String siteId);
+    public String getParent(String siteId) throws Exception;
 
     public void associate(String siteId, String parentId) throws Exception;
 

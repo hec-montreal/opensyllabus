@@ -177,7 +177,7 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
 			public void onResponseReceived(Request request,
 				Response response) {
-				modeledCo.setSerializedContent(response.getText());
+				modeledCo.setContent(response.getText());
 				callback.onSuccess(modeledCo);
 			}
 		    });
