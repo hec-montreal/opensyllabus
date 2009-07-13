@@ -37,89 +37,89 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $Id: $
  */
 public class OsylManagerMainView extends OsylManagerAbstractView implements
-	OsylManagerEventHandler {
+OsylManagerEventHandler {
 
-    private VerticalPanel mainPanel;
+	private VerticalPanel mainPanel;
 
-    public OsylManagerMainView(OsylManagerController controller) {
-	super(controller);
-	controller.addEventHandler(this);
-	mainPanel = new VerticalPanel();
-	initWidget(mainPanel);
-	initView();
-    }
-    
-    private void initView(){
-	Label title= new Label(getController().getMessages().optionsTitle());
-	title.setStylePrimaryName("OsylManager-form-title");
-	
-	final RadioButton createRadioButton = new RadioButton("choix",getController().getMessages().createOption());
-	final RadioButton exportRadioButton = new RadioButton("choix",getController().getMessages().exportOption());
-	final RadioButton associateRadioButton = new RadioButton("choix",getController().getMessages().associateDissociate());
-	
-	Button valid = new Button();
-	valid.setText(getController().getMessages().valid());
-	valid.addClickListener(new ClickListener(){
-	    public void onClick(Widget sender) {
-		if(createRadioButton.isChecked()){
-		    setView(new CreateSiteView(getController()));
-		}
-		else if(exportRadioButton.isChecked()){
-		    setView(new ExportCOView(getController()));
-		}
-		else if(associateRadioButton.isChecked()){
-		    setView(new AssociateView(getController()));
-		}
-	    }
-	});
-	
-	mainPanel.add(title);
-	mainPanel.add(createRadioButton);
-	mainPanel.add(exportRadioButton);
-	mainPanel.add(associateRadioButton);
-	mainPanel.add(valid);
-    }
-
-    public void setView(OsylManagerAbstractView newView) {
-	mainPanel.clear();
-	mainPanel.add(newView);
-    }
-
-    public VerticalPanel getMainPanel() {
-	return mainPanel;
-    }
-
-    public void setMainPanel(VerticalPanel mainPanel) {
-	this.mainPanel = mainPanel;
-    }
-
-    /**
-     * Refreshes the <code>OsylManagerMainView</code> view.
-     */
-    public void refreshView() {
-	switch (getController().getState()) {
-	case OsylManagerController.STATE_CREATION_FORM:
-	    setView(new CreateSiteView(getController()));
-	    break;
-	case OsylManagerController.STATE_UPLOAD_FORM:
-	    setView(new ImportCOView(getController()));
-	    break;
-	case OsylManagerController.STATE_FINISH:
-	    setView(new FinishView(getController()));
-	    break;
-	case OsylManagerController.STATE_FILE_DOWNLOAD:
-	    break;
-	default:
-	    initView();
-	    break;
+	public OsylManagerMainView(OsylManagerController controller) {
+		super(controller);
+		controller.addEventHandler(this);
+		mainPanel = new VerticalPanel();
+		initWidget(mainPanel);
+		initView();
 	}
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void onOsylManagerEvent() {
-	refreshView();
-    }
+	private void initView(){
+		Label title= new Label(getController().getMessages().optionsTitle());
+		title.setStylePrimaryName("OsylManager-form-title");
+
+		final RadioButton createRadioButton = new RadioButton("choix",getController().getMessages().createOption());
+		final RadioButton exportRadioButton = new RadioButton("choix",getController().getMessages().exportOption());
+		final RadioButton associateRadioButton = new RadioButton("choix",getController().getMessages().associateDissociate());
+
+		Button valid = new Button();
+		valid.setText(getController().getMessages().valid());
+		valid.addClickListener(new ClickListener(){
+			public void onClick(Widget sender) {
+				if(createRadioButton.isChecked()){
+					setView(new CreateSiteView(getController()));
+				}
+				else if(exportRadioButton.isChecked()){
+					setView(new ExportCOView(getController()));
+				}
+				else if(associateRadioButton.isChecked()){
+					setView(new AssociateView(getController()));
+				}
+			}
+		});
+
+		mainPanel.add(title);
+		mainPanel.add(createRadioButton);
+		mainPanel.add(exportRadioButton);
+		mainPanel.add(associateRadioButton);
+		mainPanel.add(valid);
+	}
+
+	public void setView(OsylManagerAbstractView newView) {
+		mainPanel.clear();
+		mainPanel.add(newView);
+	}
+
+	public VerticalPanel getMainPanel() {
+		return mainPanel;
+	}
+
+	public void setMainPanel(VerticalPanel mainPanel) {
+		this.mainPanel = mainPanel;
+	}
+
+	/**
+	 * Refreshes the <code>OsylManagerMainView</code> view.
+	 */
+	public void refreshView() {
+		switch (getController().getState()) {
+		case OsylManagerController.STATE_CREATION_FORM:
+			setView(new CreateSiteView(getController()));
+			break;
+		case OsylManagerController.STATE_UPLOAD_FORM:
+			setView(new ImportCOView(getController()));
+			break;
+		case OsylManagerController.STATE_FINISH:
+			setView(new FinishView(getController()));
+			break;
+		case OsylManagerController.STATE_FILE_DOWNLOAD:
+			break;
+		default:
+			initView();
+		break;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void onOsylManagerEvent() {
+		refreshView();
+	}
 
 }

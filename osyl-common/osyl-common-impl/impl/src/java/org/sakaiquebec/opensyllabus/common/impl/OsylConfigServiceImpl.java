@@ -316,19 +316,41 @@ public class OsylConfigServiceImpl extends ResourceLoader implements
 	return relativePath;
     }
 
-    /** {@inheritDoc} */
-    public void initConfigs() throws Exception{
-	if (coConfigDao.getConfigs().size() <= 0) {
-	    COConfigSerialized coConfig =
-		    new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
-			    + File.separator + "udem", "Config from Université de Montréal");
-	    createConfig(coConfig);
-	    coConfig =
-		    new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
-			    + File.separator + "default","Config from HEC Montréal");
-	    createConfig(coConfig);
+	/** {@inheritDoc} 
+	 * @throws Exception */
+	public void initConfigs() throws Exception {
+		if (coConfigDao.getConfigs().size() <= 0) {
+			COConfigSerialized coConfig =
+				new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
+						+ File.separator + "default","Config from HEC Montreal");
+			createConfig(coConfig);
+
+			coConfig =
+				new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
+						+ File.separator + "udem", "Config udem");
+			createConfig(coConfig);
+
+			coConfig =
+				new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
+						+ File.separator + "udemCompetencesComposantes", "Config UdeM - Competences Composantes");
+			createConfig(coConfig);
+
+			coConfig =
+				new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
+						+ File.separator + "udemCompetencesSeances", "Config UdeM - Competences Seances");
+			createConfig(coConfig);
+
+			coConfig =
+				new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
+						+ File.separator + "udemObjectifsActivites", "Config UdeM - Objectifs Activites");
+			createConfig(coConfig);
+
+			coConfig =
+				new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
+						+ File.separator + "udemObjectifsSeances", "Config UdeM - Objectifs Seances");
+			createConfig(coConfig);
+		}
 	}
-    }
 
     /** {@inheritDoc} */
     public COConfigSerialized getConfigByRef(String configRef, String webappDir)

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?> 
  <CO id='' name='' type='ByObjectivesLectures' lang ='fr' scrty='public'> 
-   
+
     <COStructure type='CourseInfo' scrty='public'>  <!-- CourseInfo COStructure Begin -->
            
          <COStructure type='coursedescription' scrty='public'>  <!-- coursedescription COStructure Begin -->

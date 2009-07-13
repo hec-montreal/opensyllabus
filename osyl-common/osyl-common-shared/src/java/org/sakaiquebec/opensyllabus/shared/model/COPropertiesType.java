@@ -71,14 +71,15 @@ public class COPropertiesType {
      */
     private static final String[] types =
 	    {     
-	          TEXT
+	      TEXT
 		, URI
 		, VISIBILITY
 		, IMPORTANCE
 		, REQUIREMENT_LEVEL
 		, AVAILABILITY_COOP
 		, AVAILABILITY_LIB
-		, CITATION, LINK
+		, CITATION
+		, LINK
 		, ISBNISSN
 		, TYPE
 		, CITATIONLISTID

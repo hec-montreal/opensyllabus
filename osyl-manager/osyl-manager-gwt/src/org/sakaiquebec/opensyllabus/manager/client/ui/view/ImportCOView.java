@@ -45,113 +45,123 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class ImportCOView extends OsylManagerAbstractView {
 
-    private VerticalPanel mainPanel;
-    private Label isZipFileLabel;
-    private Label fileUploadLabel;
-    private CheckBox isZipFile;
-    private FileUpload fileUpload;
-    private PushButton importSite;
+	private VerticalPanel mainPanel;
+	private Label isZipFileLabel;
+	private Label fileUploadLabel;
+	private CheckBox isZipFile;
+	private FileUpload fileUpload;
+	private PushButton importSite;
 
-    /**
-     * Constructor.
-     * 
-     * @param controller
-     */
-    public ImportCOView(OsylManagerController controller) {
-	super(controller);
-	initView();
-    }
+	/**
+	 * Constructor.
+	 * 
+	 * @param controller
+	 */
+	public ImportCOView(OsylManagerController controller) {
+		super(controller);
+		initView();
+	}
 
-    private void initView() {
-	mainPanel = new VerticalPanel();
-	final FormPanel formPanel = new FormPanel();
-	formPanel.setWidget(mainPanel);
-	formPanel.setWidth("95%");
-	formPanel.setEncoding(FormPanel.ENCODING_MULTIPART);
-	formPanel.setMethod(FormPanel.METHOD_POST);
-	
-	isZipFile = new CheckBox();
-	fileUpload = new FileUpload();
-	fileUpload.setName("uploadFormElement");
-	importSite = new PushButton(getController().getMessages().importXML());
-	importSite.addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
-		formPanel.setAction(getFormAction());
-		formPanel.submit();
-	    }
-	});
-	isZipFileLabel = new Label(getController().getMessages().isZip());
-	fileUploadLabel = new Label(getController().getMessages().file());
-	mainPanel.setWidth("100%");
-	Label title = new Label(getController().getMessages().importCOTitle());
-	title.setStylePrimaryName("OsylManager-form-title");
-	mainPanel.add(title);
-	mainPanel.add(createFormElement(fileUploadLabel, fileUpload));
-	mainPanel.add(createFormElement(isZipFileLabel, isZipFile));
-	mainPanel.add(importSite);
-	formPanel.addFormHandler(new FormHandler() {
-	    public void onSubmit(FormSubmitEvent event) {
-		new AsyncCallback<Void>() {
-		    public void onSuccess(Void results) {
-		    }
+	private void initView() {
+		mainPanel = new VerticalPanel();
+		final FormPanel formPanel = new FormPanel();
+		formPanel.setWidget(mainPanel);
+		formPanel.setWidth("95%");
+		formPanel.setEncoding(FormPanel.ENCODING_MULTIPART);
+		formPanel.setMethod(FormPanel.METHOD_POST);
 
-		    public void onFailure(Throwable error) {
-			try {
-			    throw error;
-			} catch (Throwable e) {
-			    e.printStackTrace();
+		isZipFile = new CheckBox();
+		fileUpload = new FileUpload();
+		fileUpload.setName("uploadFormElement");
+		importSite = new PushButton(getController().getMessages().importXML());
+		importSite.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				formPanel.setAction(getFormAction());
+				formPanel.submit();
 			}
-			error.printStackTrace();
-		    }
-		};
-	    }
-
-	    /**
-	     * Parse the file upload return string JSON String
-	     * 
-	     * @param jsonString
-	     * @return a boolean of the success state
-	     */
-	    public boolean getState(String jsonString) {
-		return (jsonString.contains("status\":\"ok"));
-	    }
-
-	    public String getURL(String jsonString){
-		String url = jsonString.substring(jsonString.indexOf("\"url\":\"")+7);
-		url = url.substring(0, url.indexOf("\""));
-		return url;
-	    }
-	    
-	    /*
-	     * When the form submission is successfully completed, this event is
-	     * fired. SDATA returns an event of type JSON.
-	     */
-	    public void onSubmitComplete(FormSubmitCompleteEvent event) {
-		String retourJSON = event.getResults();
-		if (getState(event.getResults())) {
-		    String url = getURL(retourJSON);
-		    if (isZipFile.isChecked()) {
-			    getController().readZip(url);
-			} else {
-			    getController().readXML(url);
+		});
+		isZipFileLabel = new Label(getController().getMessages().isZip());
+		fileUploadLabel = new Label(getController().getMessages().file());
+		mainPanel.setWidth("100%");
+		Label title = new Label(getController().getMessages().importCOTitle());
+		title.setStylePrimaryName("OsylManager-form-title");
+		mainPanel.add(title);
+		mainPanel.add(createFormElement(fileUploadLabel, fileUpload));
+		mainPanel.add(createFormElement(isZipFileLabel, isZipFile));
+		mainPanel.add(importSite);
+		
+		PushButton skipButton = new PushButton("Skip");
+		skipButton.setWidth("25px");
+		skipButton.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				mainPanel.clear();
 			}
-		} else {
-		    Window
-			    .alert(getController().getMessages()
-				    .siteNotCreated());
-		    return;
-		}
-	    }
-	}); // new FormHandler (inner class)
-	initWidget(formPanel);
-    }
+		});
+		mainPanel.add(skipButton);
 
-    private String getFormAction() {
-	String url = GWT.getModuleBaseURL();
-	String cleanUrl = url.substring(0, url.indexOf("/", 8));
-	String formAction =
-		cleanUrl + "/sdata/c/group/" + getController().getSiteId() + "/";
-	return formAction;
-    }
+		formPanel.addFormHandler(new FormHandler() {
+			public void onSubmit(FormSubmitEvent event) {
+				new AsyncCallback<Void>() {
+					public void onSuccess(Void results) {
+					}
+
+					public void onFailure(Throwable error) {
+						try {
+							throw error;
+						} catch (Throwable e) {
+							e.printStackTrace();
+						}
+						error.printStackTrace();
+					}
+				};
+			}
+
+			/**
+			 * Parse the file upload return string JSON String
+			 * 
+			 * @param jsonString
+			 * @return a boolean of the success state
+			 */
+			public boolean getState(String jsonString) {
+				return (jsonString.contains("status\":\"ok"));
+			}
+
+			public String getURL(String jsonString){
+				String url = jsonString.substring(jsonString.indexOf("\"url\":\"")+7);
+				url = url.substring(0, url.indexOf("\""));
+				return url;
+			}
+
+			/*
+			 * When the form submission is successfully completed, this event is
+			 * fired. SDATA returns an event of type JSON.
+			 */
+			public void onSubmitComplete(FormSubmitCompleteEvent event) {
+				String retourJSON = event.getResults();
+				if (getState(event.getResults())) {
+					String url = getURL(retourJSON);
+					if (isZipFile.isChecked()) {
+						getController().readZip(url);
+					} else {
+						getController().readXML(url);
+					}
+				} else {
+					Window
+					.alert(getController().getMessages()
+							.siteNotCreated());
+					return;
+				}
+			}
+		}); // new FormHandler (inner class)
+		initWidget(formPanel);
+	}
+
+	private String getFormAction() {
+		String url = GWT.getModuleBaseURL();
+		String cleanUrl = url.substring(0, url.indexOf("/", 8));
+		String formAction =
+			cleanUrl + "/sdata/c/group/" + getController().getSiteId() + "/";
+		return formAction;
+	}
 
 }

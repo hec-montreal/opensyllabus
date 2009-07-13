@@ -37,6 +37,8 @@ public class COStructureElementType {
 
     public static final String LECTURES_LIST_CONTEXT_SKILLS = "LecturesListContextSkills";
 
+    public static final String ACTIVITIES = "activities";
+    
     public static final String EVALUATIONS = "evaluations";
     public static final String TOPICS = "topics";
     public static final String COURSEINFO = "CourseInfo";
@@ -52,6 +54,8 @@ public class COStructureElementType {
        
     public static final String LECTURE_TEACHING_ACTIVITY_LIST = "LectureTeachingActivityList";    
     public static final String LECTURE_LEARNING_ACTIVITY_LIST = "LectureLearningActivityList";
+    
+    public static final String COURSE_SKILLS_COMPONENTS_LIST = "CourseSkillsComponentsList";    
   
     public static final String THEMES_LIST = "ThemesList";
 
@@ -63,10 +67,13 @@ public class COStructureElementType {
     /**
      * The list of types.
      */
-    private static final String[] types = {   LECTURES 
-	 
+    private static final String[] types = {   
+    	
+    									  LECTURES 
 	                                    , LECTURES_LIST_CONTEXT_SKILLS
 
+	                                    , ACTIVITIES
+	                                    
 	                                    , EVALUATIONS 
 	                                    , TOPICS 
 	                                    , COURSEINFO
@@ -81,6 +88,8 @@ public class COStructureElementType {
 	                                    , LECTURE_STRUC
 	                                    , LECTURE_TEACHING_ACTIVITY_LIST
 	                                    , LECTURE_LEARNING_ACTIVITY_LIST
+	                                    
+	                                    , COURSE_SKILLS_COMPONENTS_LIST
 	                                    
 	                                    , THEMES_LIST
 	                                    , THEME_STRUC

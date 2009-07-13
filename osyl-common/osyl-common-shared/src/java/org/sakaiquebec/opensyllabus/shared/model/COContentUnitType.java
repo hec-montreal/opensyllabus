@@ -40,6 +40,8 @@ public class COContentUnitType {
     public static final String LECTURE = "lecture";
     public static final String LECTURE_CONTEXT_SKILLS = "LectureContextSkills";
 
+    public static final String ACTIVITY = "Activity";
+    
     public static final String PRESENTATION = "presentation";
     public static final String CONTACTINFO = "contactinfo";
     public static final String LEARNINGMAT = "learningmat";
@@ -90,8 +92,13 @@ public class COContentUnitType {
      * The list of types.
      */
     private static final String[] types =
-	    {     LECTURE
-	        , LECTURE_CONTEXT_SKILLS
+	    {     
+    	
+    	  LECTURE
+	    , LECTURE_CONTEXT_SKILLS
+	    
+	    , ACTIVITY
+	    
 		, PRESENTATION
 		, CONTACTINFO
 		, LEARNINGMAT
