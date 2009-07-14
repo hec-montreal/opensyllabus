@@ -73,34 +73,6 @@ public class OsylResProxAssignmentView extends OsylAbstractResProxView {
     }
 
     /**
-     * Overridden to delete the assignment in the Sakai Assignment Tool.
-     */
-    @Override
-    public void updateModelOnDelete() {
-	// We delete the model
-	super.updateModelOnDelete();
-
-	if (!getController().isInHostedMode()) {
-	    // For now we remove the asn without confirmation as it is useless
-	    // to keep it (we don't have an asn browser to select it later).
-	    getController().removeAssignment(getAssignmentId());
-	}
-	/*
-	 * // TODO: i18n OsylOkCancelDialog yesNoDialog = new
-	 * OsylOkCancelDialog( false, true, "Attention",
-	 * "Delete the assignment (in the Sakai tool) too?", "Yes", "No");
-	 * yesNoDialog.addOkButtonCLickListener(new ClickListener() { public
-	 * void onClick(Widget sender) { try { // We delete the assignment in
-	 * the Sakai Assignment Tool
-	 * getController().removeAssignment(getAssignmentId()); } catch
-	 * (Exception e) { e.printStackTrace(); OsylAlertDialog alert = new
-	 * OsylAlertDialog( "Unable to delete the assignment: " + e);
-	 * alert.show(); } } }); yesNoDialog.show();
-	 * yesNoDialog.centerAndFocus();
-	 */
-    }
-
-    /**
      * =========================== ADDED METHODS ===========================
      */
 
