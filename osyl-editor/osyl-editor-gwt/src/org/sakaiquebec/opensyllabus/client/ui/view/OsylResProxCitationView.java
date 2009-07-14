@@ -204,7 +204,6 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
      * @return A link or a simple string if link could not be created
      */
     public String getCitationsInfosAsLink(OsylCitationItem citationItem) {
-	String link = "";
 	String url = citationItem.getUrl();
 	
 	if ( url == null)

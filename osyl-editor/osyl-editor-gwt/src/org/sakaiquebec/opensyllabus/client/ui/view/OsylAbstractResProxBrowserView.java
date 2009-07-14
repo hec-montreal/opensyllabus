@@ -89,7 +89,7 @@ public abstract class OsylAbstractResProxBrowserView extends
     public String getDocName() {
 	String docName;
 	if (isDocumentDefined()) {
-	    docName = extractRessourceName(getRawURI());
+	    docName = extractResourceName(getRawURI());
 	} else {
 	    docName = null;
 	}
@@ -99,7 +99,7 @@ public abstract class OsylAbstractResProxBrowserView extends
     public String getDocPath() {
 	String docPath;
 	if (isDocumentDefined()) {
-	    docPath = extractRessourcePath(getRawURI());
+	    docPath = extractResourcePath(getRawURI());
 	} else {
 	    docPath = null;
 	}

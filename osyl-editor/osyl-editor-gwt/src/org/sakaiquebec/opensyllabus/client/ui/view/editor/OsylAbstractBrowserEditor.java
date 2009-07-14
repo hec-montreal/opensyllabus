@@ -68,7 +68,7 @@ public abstract class OsylAbstractBrowserEditor extends
 	newFolderName =
 		Window.prompt(getView().getUiMessage(
 			"DocumentEditor.AddFolderPromt.Promt"), newFolderName);
-	while (!validFolderName(newFolderName)) {
+	while (!validateFolderName(newFolderName)) {
 	    Window.alert("'"
 		    + newFolderName
 		    + getView().getUiMessage(
@@ -113,7 +113,7 @@ public abstract class OsylAbstractBrowserEditor extends
     }
 
     // ADDED METHODS
-    public boolean validFolderName(String newFolderName) {
+    public boolean validateFolderName(String newFolderName) {
 	return ((!(newFolderName.length() < 1))
 		&& (!(newFolderName.length() > 255)) && (validateFolderNameJSregExp(newFolderName)));
     }

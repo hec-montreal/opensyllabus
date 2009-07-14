@@ -276,7 +276,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      * @param uri
      * @return uri for presentation
      */
-    protected String extractRessourceName(String uri) {
+    protected String extractResourceName(String uri) {
 	if (uri.matches("^(https?|ftp|mailto)://.+")) {
 	    // If it's an external link we return it as is
 	    return uri;
@@ -292,7 +292,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      * @param uri
      * @return uri for presentation
      */
-    protected String extractRessourcePath(String uri) {
+    protected String extractResourcePath(String uri) {
 	if (uri.matches("^(https?|ftp|mailto)://.+")) {
 	    // If it's an external link we return it as is
 	    return uri;
