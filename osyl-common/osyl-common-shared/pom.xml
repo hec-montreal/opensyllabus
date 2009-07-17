@@ -37,6 +37,15 @@
         </includes>
         <filtering>false</filtering>
       </resource>
-    </resources>    
+    </resources> 
+    <testResources>
+      <testResource>
+        <directory>${basedir}/src/test</directory>
+        <includes>        	
+          <include>**/*.xml</include>
+          <include>**/*.properties</include>
+        </includes>
+      </testResource>
+    </testResources>
   </build>
 </project>
