@@ -58,8 +58,6 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 OsylEditorGwtService {
 
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * @uml.property  name="osylServices"
 	 * @uml.associationEnd  

@@ -22,8 +22,9 @@ import java.util.List;
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
-public class COContent extends COElementAbstract<COElementAbstract> implements COModelInterface {
+public class COContent extends COElementAbstract<COElementAbstract>/* implements COModelInterface*/ {
 
+    private static final long serialVersionUID = 870548605023877753L;
     /**
      * Children of course content outline either of type
      * <code>COStructureElement</code> or <code>COContentUnit</code>.

@@ -20,6 +20,7 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.shared.util.UUID;
@@ -38,7 +39,9 @@ import org.sakaiquebec.opensyllabus.shared.util.UUID;
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
-public abstract class COElementAbstract<T extends COModelInterface> implements COModelInterface {
+public abstract class COElementAbstract<T extends COModelInterface> implements Serializable, COModelInterface {
+
+    private static final long serialVersionUID = 5786482983027706074L;
 
     /**
      * The <code>CourseOutlineContent</code> class type.

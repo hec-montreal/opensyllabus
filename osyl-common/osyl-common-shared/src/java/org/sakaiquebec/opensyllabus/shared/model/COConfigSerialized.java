@@ -20,9 +20,9 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  * This is the POJO used for the configuration of a course outline. In the
@@ -39,9 +39,9 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @version $Id: COConfigSerialized.java 661 2008-05-28 15:24:39Z
  *          sacha.lepretre@crim.ca $
  */
-public class COConfigSerialized implements IsSerializable {
+public class COConfigSerialized implements java.io.Serializable {
 
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = -6379837302597754703L;
 
     private String configId;
 
@@ -60,7 +60,7 @@ public class COConfigSerialized implements IsSerializable {
     /**
      * Messages selected for the user locale
      */
-    private Map<String, String> i18nMessages;
+    private HashMap<String, String> i18nMessages;//Force a HashMap so GWT figures out this field is Serializable
 
     /**
      * CSS URI, used for jsp page
@@ -71,7 +71,8 @@ public class COConfigSerialized implements IsSerializable {
      * Empty Constructor
      */
     public COConfigSerialized() {
-	// empty contructor
+        super();
+        this.i18nMessages = new HashMap<String, String>();
     }
 
     /**
@@ -130,7 +131,10 @@ public class COConfigSerialized implements IsSerializable {
      * @param i18nMessages the new value of coreBundle.
      */
     public void setCoreBundle(Map<String, String> i18nMessages) {
-	this.i18nMessages = i18nMessages;
+        this.i18nMessages.clear();
+        if (null != i18nMessages) {
+            this.i18nMessages.putAll(i18nMessages);
+        }
     }
 
     /**

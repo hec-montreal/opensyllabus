@@ -25,7 +25,7 @@ import java.io.Serializable;
 
 public abstract class OsylAbstractBrowserItem implements Serializable {
 
-    private static final long serialVersionUID = 42L;
+    private static final long serialVersionUID = 1544363089460945827L;
 
     private String fileName;
     

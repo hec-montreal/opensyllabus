@@ -106,11 +106,11 @@
 	</dependency>
 	
 	<!-- FIXME: remove this dependency (get rid of com/google/gwt/user/client/rpc/IsSerializable dependency from common-shared!  --> 
-	<dependency>
+	<!-- <dependency>
  		<groupId>com.google.gwt</groupId>
  		<artifactId>gwt-user</artifactId> 		
  		<scope>test</scope>
- 	</dependency>
+ 	</dependency> -->
   </dependencies>
 
   <build>

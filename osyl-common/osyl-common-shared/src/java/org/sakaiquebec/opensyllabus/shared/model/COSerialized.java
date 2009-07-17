@@ -20,10 +20,7 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
-import java.io.Serializable;
 import java.util.Map;
-
-import com.google.gwt.user.client.rpc.IsSerializable;
 
 /**
  * This is the main POJO container sent to the client. It contains an XML
@@ -35,10 +32,9 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  * @author <a href="mailto:tom.landry@crim.ca>Tom Landry</a>
  * @version $Id: $
  */
-public class COSerialized implements IsSerializable, Serializable,
-	COModelInterface {
+public class COSerialized implements java.io.Serializable, COModelInterface {
 
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 3500746463914797287L;
 
     /**
      * The value tells the course outline is published or not

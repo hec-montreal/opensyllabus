@@ -23,17 +23,17 @@ package org.sakaiquebec.opensyllabus.shared.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sakaiquebec.opensyllabus.shared.api.ClientSerializablePojo;
-
 /**
  * ResourcesLicencingInfo is a pojo about Resources Licensing information
  * 
  * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Leprêtre</a>
  * @version $Id: ResourcesLicencingInfo.java 661 2008-05-28 15:24:39Z sacha.lepretre@crim.ca $
  */
-public class ResourcesLicencingInfo implements ClientSerializablePojo{
+public class ResourcesLicencingInfo implements java.io.Serializable {
 
-	private List<String> copyrightTypeList;
+    private static final long serialVersionUID = 1005876208565176631L;
+
+    private List<String> copyrightTypeList;
 	private String defaultCopyright;
 	
 	/**

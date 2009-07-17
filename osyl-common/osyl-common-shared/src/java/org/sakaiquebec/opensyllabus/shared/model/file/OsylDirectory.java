@@ -5,8 +5,8 @@ import java.util.List;
 
 
 public class OsylDirectory extends OsylAbstractBrowserItem implements Serializable {
-    
-    private static final long serialVersionUID=42L;
+        
+    private static final long serialVersionUID = 9036472826345417985L;
     
     private List<OsylAbstractBrowserItem> filesList;
     
