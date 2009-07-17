@@ -203,6 +203,11 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	log.info("INIT from OsylSite service");
     }
 
+    /** Destroy method to be called by Spring */
+    public void destroy() {
+        log.info("DESTROY from OsylSite service");
+    }
+    
     private COModeledServer getFusionnedPublishedHierarchy(String siteId) {
 	COModeledServer coModeled = null;
 	try {
@@ -629,8 +634,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	    throw e;
 	}
     }
-
-    /** Destroy method to be called by Spring */
+    
     public String createOrUpdateCO(COSerialized co) {
 
 	try {
