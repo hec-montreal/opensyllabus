@@ -49,346 +49,342 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public class OsylConfigServiceImpl extends ResourceLoader implements
-	OsylConfigService {
+// FIXME: extending a class (ResourceLoader) should really be avoided here.
+// It makes it impossible to have a hierarchy of service-oriented classes.
+public class OsylConfigServiceImpl extends ResourceLoader implements OsylConfigService {
 
-    /**
-     * Default locale considered
-     */
-    private static String DEFAULT_LOCALE = "fr_CA";
+	private static Log log = LogFactory.getLog(OsylConfigServiceImpl.class);
 
-    /**
-     * Folder containing the file messages (.properties)
-     */
-    protected static final String CONFIG_UIMESSAGES_DIR = "bundle";
+	/**
+	 * Default locale considered
+	 */
+	private static String DEFAULT_LOCALE = "fr_CA";
 
-    /**
-     * Folder containing the skin file (.css)
-     */
-    protected static final String CONFIGS_SKIN_DIRECTORY = "skin";
+	/**
+	 * Folder containing the file messages (.properties)
+	 */
+	protected static final String CONFIG_UIMESSAGES_DIR = "bundle";
 
-    /**
-     * File containing the xml representation of the rules or config
-     */
-    protected static final String CONFIG_RULES = "rules.xml";
+	/**
+	 * Folder containing the skin file (.css)
+	 */
+	protected static final String CONFIGS_SKIN_DIRECTORY = "skin";
 
-    /**
-     * Css file for skin properties
-     */
-    protected static final String CONFIG_SKIN = "osylcore.css";
+	/**
+	 * File containing the xml representation of the rules or config
+	 */
+	protected static final String CONFIG_RULES = "rules.xml";
 
-    /**
-     * Message file in french
-     */
-    protected static final String PROPERTIES_EXTENSION = ".properties";
+	/**
+	 * Css file for skin properties
+	 */
+	protected static final String CONFIG_SKIN = "osylcore.css";
 
-    /**
-     * Package (ie: folder) containing the message files (.properties)
-     */
-    protected static final String CONFIG_DIR = "osylcoconfigs";
+	/**
+	 * Message file in french
+	 */
+	protected static final String PROPERTIES_EXTENSION = ".properties";
 
-    /**
-     * Folder containing the file messages (.properties)
-     */
-    protected static final String MESSAGES_DIRECTORY = "bundle";
+	/**
+	 * Package (ie: folder) containing the message files (.properties)
+	 */
+	protected static final String CONFIG_DIR = "osylcoconfigs";
 
-    private static Log log = LogFactory.getLog(OsylConfigServiceImpl.class);
+	/**
+	 * Folder containing the file messages (.properties)
+	 */
+	protected static final String MESSAGES_DIRECTORY = "bundle";
 
-    /**
-     * Constructor.
-     */
-    public OsylConfigServiceImpl() {
-	super(CONFIG_UIMESSAGES);
-    }
+	/**
+	 * Injection of the ConfigDao
+	 */
+	private COConfigDao coConfigDao;
 
-    /**
-     * Injection of the ConfigDao
-     */
-    private COConfigDao coConfigDao;
-
-    /**
-     * Sets the {@link COConfigDao}.
-     * 
-     * @param courseOutlineConfigDao
-     */
-    public void setConfigDao(COConfigDao courseOutlineConfigDao) {
-	this.coConfigDao = courseOutlineConfigDao;
-    }
-
-    /**
-     * Init method called at initialization of the bean.
-     */
-    public void init() throws Exception{
-	initConfigs();
-	log.info("INIT from Config service");
-    }
-
-    /**
-     * Destroy method called at destruction of the bean.
-     */
-    public void destroy() {
-	log.info("DESTROY from Config service");
-    }
-
-    /** {@inheritDoc} */
-    public void createConfig(COConfigSerialized coConfig) throws Exception {
-	coConfigDao.createConfig(coConfig);
-    }
-
-    
-   /**
-    * {@inheritDoc}
-    */
-    public Map<String, String> getConfigs() throws Exception{
-	Map<String,String> configsMap = new HashMap<String, String>();
-	List<COConfigSerialized> list = coConfigDao.getConfigs();
-	for(Iterator<COConfigSerialized> iter = list.iterator();iter.hasNext();){
-	    COConfigSerialized config = iter.next();
-	    configsMap.put(config.getConfigId(), config.getDescription());
-	}
-	return configsMap;
-    }
-    
-    
-    /**
-     * {@inheritDoc}
-     * 
-     * @throws Exception
-     */
-    public COConfigSerialized getCourseOutlineConfig(String configId)
-	    throws Exception {
-	return coConfigDao.getConfig(configId);
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @throws IOException
-     */
-    public COConfigSerialized getCurrentConfig(String webappDir)
-	    throws Exception {
-	List<COConfigSerialized> configs = coConfigDao.getConfigs();
-	COConfigSerialized coConfig = (COConfigSerialized) configs.get(0);
-	coConfig =
-		fillConfig(coConfig, webappDir, coConfig.getConfigRef(),
-			coConfig.getConfigId());
-	return coConfig;
-    }
-
-    /** {@inheritDoc} */
-    public COConfigSerialized getConfig(String configId, String webappDir)
-	    throws Exception {
-	COConfigSerialized coConfig = coConfigDao.getConfig(configId);
-	coConfig =
-		fillConfig(coConfig, webappDir, coConfig.getConfigRef(),
-			configId);
-	return coConfig;
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @throws Exception
-     */
-    public void removeConfig(String configId) throws Exception {
-	coConfigDao.removeConfig(configId);
-
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @throws Exception
-     */
-    public void updateConfig(COConfigSerialized coConfig) throws Exception {
-	coConfigDao.updateConfig(coConfig);
-    }
-
-    /**
-     * Private method used to fill out some variables of a COConfigSerialiazed:
-     * the css URI, the String representation of the rules and a map
-     * representation of the messages.
-     * 
-     * @param coConfig
-     * @param dir
-     * @param configId
-     * @return Filled COConfigSerialized
-     * @throws Exception
-     */
-    private COConfigSerialized fillConfig(COConfigSerialized coConfig,
-	    String webappdir, String configRef, String configId)
-	    throws Exception {
-	String path = webappdir + configRef;
-	coConfig.setCascadingStyleSheetURI(getCascadingStyleSheetURI(path));
-	coConfig.setCoreBundle(getMessages(path, CONFIG_UIMESSAGES,
-		getCurrentLocale()));
-	coConfig.setRulesConfig(getRules(path));
-	return coConfig;
-    }
-
-    /**
-     * For a given skin directory in the webapp, this method reads the xml rule
-     * file into a String.
-     * 
-     * @param dir
-     * @return String
-     * @throws Exception
-     */
-    private String getRules(String dir) throws Exception {
-	String result = "";
-	File rules = new File(dir, CONFIG_RULES);
-	BufferedReader readFile;
-	String line;
-
-	try {
-	    readFile = new BufferedReader(new FileReader(rules));
-	    while ((line = readFile.readLine()) != null) {
-		result += line;
-	    }
-	    readFile.close();
-
-	} catch (FileNotFoundException e) {
-	    log.error("Unable to find file config files", e);
-	    throw new Exception(e);
+	/**
+	 * Constructor.
+	 */
+	public OsylConfigServiceImpl() {
+		super(CONFIG_UIMESSAGES);
 	}
 
-	return result;
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @throws Exception
-     */
-    public Map<String, String> getMessages(String path, String baseFileName,
-	    String locale) throws Exception {
-	try {
-
-	    String key;
-	    String dir =
-		    path + File.separator + MESSAGES_DIRECTORY + File.separator;
-
-	    File messagesFile =
-		    new File(dir, baseFileName + "_" + locale
-			    + PROPERTIES_EXTENSION);
-
-	    // The file is not found for this locale, use default.
-	    if (!messagesFile.exists()) {
-		messagesFile =
-			new File(dir, baseFileName + PROPERTIES_EXTENSION);
-		log.info("Cannot load property file: " + baseFileName
-			+ " for locale " + locale);
-	    }
-
-	    FileInputStream inputStream = new FileInputStream(messagesFile);
-	    PropertyResourceBundle bundle =
-		    new PropertyResourceBundle(inputStream);
-
-	    // We transform our ResourceBundle to a Map to return it.
-	    Map<String, String> messages = new HashMap<String, String>();
-	    Enumeration<String> enu = bundle.getKeys();
-	    while (enu.hasMoreElements()) {
-		key = enu.nextElement();
-		messages.put(key, bundle.getString(key));
-	    }
-
-	    return messages;
-
-	} catch (Exception e) {
-	    log.warn("Unable to retrieve messages", e);
-	    return new HashMap<String, String>();
+	/**
+	 * Sets the {@link COConfigDao}.
+	 * 
+	 * @param courseOutlineConfigDao
+	 */
+	public void setConfigDao(COConfigDao courseOutlineConfigDao) {
+		this.coConfigDao = courseOutlineConfigDao;
 	}
-    }
 
-    /**
-     * For a given directory returns the String representation of the URI
-     * 
-     * @param dir
-     * @return String
-     */
-    private String getCascadingStyleSheetURI(String dir) {
-	String relativePath =
-		dir.substring(dir.indexOf("webapps") + 7, dir.length());
-	relativePath =
-		relativePath + File.separator + CONFIGS_SKIN_DIRECTORY
-			+ File.separator + CONFIG_SKIN;
-	relativePath = relativePath.replaceAll("\\\\", "/");
-	return relativePath;
-    }
+	/**
+	 * Init method called at initialization of the bean.
+	 */
+	public void init() throws Exception {
+		initConfigs();
+		log.info("INIT from Config service");
+	}
 
-	/** {@inheritDoc} 
-	 * @throws Exception */
+	/**
+	 * Destroy method called at destruction of the bean.
+	 */
+	public void destroy() {
+		log.info("DESTROY from Config service");
+	}
+
+	/** {@inheritDoc} */
+	public void createConfig(COConfigSerialized coConfig) throws Exception {
+		coConfigDao.createConfig(coConfig);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Map<String, String> getConfigs() throws Exception {
+		Map<String, String> configsMap = new HashMap<String, String>();
+		List<COConfigSerialized> list = coConfigDao.getConfigs();
+		for (Iterator<COConfigSerialized> iter = list.iterator(); iter
+				.hasNext();) {
+			COConfigSerialized config = iter.next();
+			configsMap.put(config.getConfigId(), config.getDescription());
+		}
+		return configsMap;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @throws Exception
+	 */
+	public COConfigSerialized getCourseOutlineConfig(String configId) throws Exception {
+		return coConfigDao.getConfig(configId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @throws IOException
+	 */
+	public COConfigSerialized getCurrentConfig(String webappDir)
+			throws Exception {
+		List<COConfigSerialized> configs = coConfigDao.getConfigs();
+		COConfigSerialized coConfig = (COConfigSerialized) configs.get(0);
+		coConfig = fillConfig(coConfig, webappDir, coConfig.getConfigRef(),
+				coConfig.getConfigId());
+		return coConfig;
+	}
+
+	/** {@inheritDoc} */
+	public COConfigSerialized getConfig(String configId, String webappDir)
+			throws Exception {
+		COConfigSerialized coConfig = coConfigDao.getConfig(configId);
+		coConfig = fillConfig(coConfig, webappDir, coConfig.getConfigRef(),
+				configId);
+		return coConfig;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @throws Exception
+	 */
+	public void removeConfig(String configId) throws Exception {
+		coConfigDao.removeConfig(configId);
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @throws Exception
+	 */
+	public void updateConfig(COConfigSerialized coConfig) throws Exception {
+		coConfigDao.updateConfig(coConfig);
+	}
+
+	/**
+	 * Private method used to fill out some variables of a COConfigSerialiazed:
+	 * the css URI, the String representation of the rules and a map
+	 * representation of the messages.
+	 * 
+	 * @param coConfig
+	 * @param dir
+	 * @param configId
+	 * @return Filled COConfigSerialized
+	 * @throws Exception
+	 */
+	private COConfigSerialized fillConfig(COConfigSerialized coConfig,
+			String webappdir, String configRef, String configId)
+			throws Exception {
+		String path = webappdir + configRef;
+		coConfig.setCascadingStyleSheetURI(getCascadingStyleSheetURI(path));
+		coConfig.setCoreBundle(getMessages(path, CONFIG_UIMESSAGES,
+				getCurrentLocale()));
+		coConfig.setRulesConfig(getRules(path));
+		return coConfig;
+	}
+
+	/**
+	 * For a given skin directory in the webapp, this method reads the xml rule
+	 * file into a String.
+	 * 
+	 * @param dir
+	 * @return String
+	 * @throws Exception
+	 */
+	private String getRules(String dir) throws Exception {
+		String result = "";
+		File rules = new File(dir, CONFIG_RULES);
+		BufferedReader readFile;
+		String line;
+
+		try {
+			readFile = new BufferedReader(new FileReader(rules));
+			while ((line = readFile.readLine()) != null) {
+				result += line;
+			}
+			readFile.close();
+
+		} catch (FileNotFoundException e) {
+			log.error("Unable to find file config files", e);
+			throw new Exception(e);
+		}
+
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @throws Exception
+	 */
+	public Map<String, String> getMessages(String path, String baseFileName,
+			String locale) throws Exception {
+		try {
+
+			String key;
+			String dir = path + File.separator + MESSAGES_DIRECTORY
+					+ File.separator;
+
+			File messagesFile = new File(dir, baseFileName + "_" + locale
+					+ PROPERTIES_EXTENSION);
+
+			// The file is not found for this locale, use default.
+			if (!messagesFile.exists()) {
+				messagesFile = new File(dir, baseFileName
+						+ PROPERTIES_EXTENSION);
+				log.info("Cannot load property file: " + baseFileName
+						+ " for locale " + locale);
+			}
+
+			FileInputStream inputStream = new FileInputStream(messagesFile);
+			PropertyResourceBundle bundle = new PropertyResourceBundle(
+					inputStream);
+
+			// We transform our ResourceBundle to a Map to return it.
+			Map<String, String> messages = new HashMap<String, String>();
+			Enumeration<String> enu = bundle.getKeys();
+			while (enu.hasMoreElements()) {
+				key = enu.nextElement();
+				messages.put(key, bundle.getString(key));
+			}
+
+			return messages;
+
+		} catch (Exception e) {
+			log.warn("Unable to retrieve messages", e);
+			return new HashMap<String, String>();
+		}
+	}
+
+	/**
+	 * For a given directory returns the String representation of the URI
+	 * 
+	 * @param dir
+	 * @return String
+	 */
+	private String getCascadingStyleSheetURI(String dir) {
+		String relativePath = dir.substring(dir.indexOf("webapps") + 7, dir
+				.length());
+		relativePath = relativePath + File.separator + CONFIGS_SKIN_DIRECTORY
+				+ File.separator + CONFIG_SKIN;
+		relativePath = relativePath.replaceAll("\\\\", "/");
+		return relativePath;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @throws Exception
+	 */
 	public void initConfigs() throws Exception {
 		if (coConfigDao.getConfigs().size() <= 0) {
-			COConfigSerialized coConfig =
-				new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
-						+ File.separator + "default","Config from HEC Montreal");
+			COConfigSerialized coConfig = new COConfigSerialized(IdManager
+					.createUuid(), CONFIG_DIR + File.separator + "default",
+					"Config from HEC Montreal");
 			createConfig(coConfig);
 
-			coConfig =
-				new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
-						+ File.separator + "udem", "Config udem");
+			coConfig = new COConfigSerialized(IdManager.createUuid(),
+					CONFIG_DIR + File.separator + "udem", "Config udem");
 			createConfig(coConfig);
 
-			coConfig =
-				new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
-						+ File.separator + "udemCompetencesComposantes", "Config UdeM - Competences Composantes");
+			coConfig = new COConfigSerialized(IdManager.createUuid(),
+					CONFIG_DIR + File.separator + "udemCompetencesComposantes",
+					"Config UdeM - Competences Composantes");
 			createConfig(coConfig);
 
-			coConfig =
-				new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
-						+ File.separator + "udemCompetencesSeances", "Config UdeM - Competences Seances");
+			coConfig = new COConfigSerialized(IdManager.createUuid(),
+					CONFIG_DIR + File.separator + "udemCompetencesSeances",
+					"Config UdeM - Competences Seances");
 			createConfig(coConfig);
 
-			coConfig =
-				new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
-						+ File.separator + "udemObjectifsActivites", "Config UdeM - Objectifs Activites");
+			coConfig = new COConfigSerialized(IdManager.createUuid(),
+					CONFIG_DIR + File.separator + "udemObjectifsActivites",
+					"Config UdeM - Objectifs Activites");
 			createConfig(coConfig);
 
-			coConfig =
-				new COConfigSerialized(IdManager.createUuid(), CONFIG_DIR
-						+ File.separator + "udemObjectifsSeances", "Config UdeM - Objectifs Seances");
+			coConfig = new COConfigSerialized(IdManager.createUuid(),
+					CONFIG_DIR + File.separator + "udemObjectifsSeances",
+					"Config UdeM - Objectifs Seances");
 			createConfig(coConfig);
 		}
 	}
 
-    /** {@inheritDoc} */
-    public COConfigSerialized getConfigByRef(String configRef, String webappDir)
-	    throws Exception {
-	COConfigSerialized coConfig = coConfigDao.getConfigByRef(configRef);
-	coConfig =
-		fillConfig(coConfig, webappDir, configRef, coConfig
-			.getConfigId());
-	return coConfig;
-    }
-
-    /** {@inheritDoc} */
-    public String getCurrentLocale() throws Exception {
-
-	String locale = "";
-	ResourceLoader rb = new ResourceLoader();
-	try {
-	    Locale sessionLocale = rb.getLocale();
-	    locale = sessionLocale.toString();
-	} catch (NullPointerException e) {
-	    locale = DEFAULT_LOCALE;
-	} catch (Exception e) {
-	    log.error("Unable to retrieve current locale", e);
-	    throw new Exception(e);
+	/** {@inheritDoc} */
+	public COConfigSerialized getConfigByRef(String configRef, String webappDir)
+			throws Exception {
+		COConfigSerialized coConfig = coConfigDao.getConfigByRef(configRef);
+		coConfig = fillConfig(coConfig, webappDir, configRef, coConfig
+				.getConfigId());
+		return coConfig;
 	}
 
-	return locale;
-    }
+	/** {@inheritDoc} */
+	public String getCurrentLocale() throws Exception {
 
-    /** {@inheritDoc} */
-    public COSerialized fillCo(String dir, COSerialized coSerialized)
-	    throws Exception {
-	if (coSerialized != null)
-	    coSerialized
-		    .setMessages(getMessages(dir,
-			    OsylConfigService.CONFIG_COMESSAGES, coSerialized
-				    .getLang()));
-	return coSerialized;
-    }
+		String locale = "";
+		ResourceLoader rb = new ResourceLoader();
+		try {
+			Locale sessionLocale = rb.getLocale();
+			locale = sessionLocale.toString();
+		} catch (NullPointerException e) {
+			locale = DEFAULT_LOCALE;
+		} catch (Exception e) {
+			log.error("Unable to retrieve current locale", e);
+			throw new Exception(e);
+		}
+
+		return locale;
+	}
+
+	/** {@inheritDoc} */
+	public COSerialized fillCo(String dir, COSerialized coSerialized)
+			throws Exception {
+		if (coSerialized != null)
+			coSerialized
+					.setMessages(getMessages(dir,
+							OsylConfigService.CONFIG_COMESSAGES, coSerialized
+									.getLang()));
+		return coSerialized;
+	}
 
 }

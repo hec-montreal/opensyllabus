@@ -52,7 +52,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class OsylRealmServiceImpl implements OsylRealmService {
 
-	protected final transient Log log = LogFactory.getLog(OsylRealmServiceImpl.class);
+	private static final Log log = LogFactory.getLog(OsylRealmServiceImpl.class);
 
 	/**
     * Name of realm from which new realm will be copied
@@ -89,7 +89,7 @@ public class OsylRealmServiceImpl implements OsylRealmService {
 	 * Init method called at initialization of the bean.
 	 */
 	public void init() {
-		log.warn("INIT from Osyl realm service");
+		log.info("INIT from Osyl realm service");
 		// register new functions for permissions
 		for (Iterator<String> iFunctionsToRegister =
 			this.functionsToRegister.iterator(); iFunctionsToRegister
@@ -155,6 +155,10 @@ public class OsylRealmServiceImpl implements OsylRealmService {
       }
    }
 
+	public void destroy() {
+		log.info("DESTROY from Osyl realm service");
+	}
+	
 	/**
 	 * Sets the name of the realm from which the new
 	 * realm should be copied

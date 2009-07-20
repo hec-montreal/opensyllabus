@@ -47,221 +47,216 @@ import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
  */
 public class OsylSecurityServiceImpl implements OsylSecurityService {
 
-    /** the authorisation service to be injected by Spring */
-    private AuthzGroupService authzService;
+	/** Our logger */
+	private static Log log = LogFactory.getLog(OsylSecurityServiceImpl.class);
 
-    /**
-     * Sets the <code>AuthzGroupService</code>.
-     * 
-     * @param authzService
-     */
-    public void setAuthzGroupService(AuthzGroupService authzService) {
-	this.authzService = authzService;
-    }
+	/** the authorisation service to be injected by Spring */
+	private AuthzGroupService authzService;
 
-    /** the site service to be injected by Spring */
-    private SiteService siteService;
+	/** the site service to be injected by Spring */
+	private SiteService siteService;
 
-    /**
-     * Sets the <code>SiteService</code>.
-     * 
-     * @param siteService
-     */
-    public void setSiteService(SiteService siteService) {
-	this.siteService = siteService;
-    }
+	/** the site service to be injected by Spring */
+	private SecurityService securityService;
 
-    /** the site service to be injected by Spring */
-    private SecurityService securityService;
+	/** the chs to be injected by Spring */
+	private ContentHostingService contentHostingService;
 
-    /**
-     * Sets the <code>SecurityyService</code>.
-     * 
-     * @param securityService
-     */
-    public void setSecurityService(SecurityService securityService) {
-	this.securityService = securityService;
-    }
+	/** the session manager to be injected by Spring */
+	private SessionManager sessionManager;
 
-    /** the chs to be injected by Spring */
-    private ContentHostingService contentHostingService;
+	/** the tool manager to be injected by Spring */
+	private ToolManager toolManager;
 
-    /**
-     * Sets the <code>ContentHostingService</code>.
-     * 
-     * @param contentHostingService
-     */
-    public void setContentHostingService(
-	    ContentHostingService contentHostingService) {
-	this.contentHostingService = contentHostingService;
-    }
-
-    /** the session manager to be injected by Spring */
-    private SessionManager sessionManager;
-
-    /**
-     * Sets the <code>SessionManager</code>.
-     * 
-     * @param sessionManager
-     */
-    public void setSessionManager(SessionManager sessionManager) {
-	this.sessionManager = sessionManager;
-    }
-
-    /** the tool manager to be injected by Spring */
-    private ToolManager toolManager;
-
-    /**
-     * Sets the <code>ToolManager</code>.
-     * 
-     * @param toolManager
-     */
-    public void setToolManager(ToolManager toolManager) {
-	this.toolManager = toolManager;
-    }
-
-    /** Our logger */
-    private static Log log = LogFactory.getLog(OsylSecurityServiceImpl.class);
-
-    /** Init method to be called by Spring */
-    public void init() {
-	log.warn("INIT from SecurityService");
-    }
-
-    /** Destroy method to be called by Spring */
-    public void destroy() {
-	log.warn("DESTROY from SecurityService");
-    }
-
-    /** {@inheritDoc} */
-    public String filterContent(String inputXml, String role) {
-	// TODO: not yet implemented
-	return "yes";
-    }
-
-    /** {@inheritDoc} */
-    public boolean isAllowedToEdit(String siteId) {
-	// TODO: this is just a workaround ... must be implemented
-	boolean result =
-		contentHostingService
-			.allowUpdateCollection(contentHostingService
-				.getSiteCollection(siteId));
-	log.info("is allowed to edit - result: " + result);
-	return result;
-    }
-
-    /** {@inheritDoc} */
-    public String getCurrentUserRole() {
-	String role = null;
-	ToolSession toolSession = sessionManager.getCurrentToolSession();
-
-	if (securityService.isSuperUser())
-	    role = SecurityInterface.SECURITY_ROLE_PROJECT_MAINTAIN;
-	else
-	    role =
-		    authzService.getUserRole(toolSession.getUserId(),
-			    getSiteRealmID());
-
-	return role;
-    }
-
-    /** {@inheritDoc} */
-    public void setCurrentSessionActive() {
-	Session session = sessionManager.getCurrentSession();
-	session.setActive();
-    }
-
-    /** {@inheritDoc} */
-    public void applyPermissions(String resourceId, String permission)
-	    throws Exception {
-	Site site =
-		siteService.getSite(toolManager.getCurrentPlacement()
-			.getContext());
-	applyPermissions(site.getId(), resourceId, permission);
-
-    }
-
-    /** {@inheritDoc} */
-    public void applyPermissions(String siteId, String resourceId,
-	    String permission) throws Exception {
-	try {
-	    ResourceProperties properties =
-		    contentHostingService.getProperties(resourceId);
-	    boolean isCollection = false;
-
-	    try {
-		isCollection =
-			properties
-				.getBooleanProperty(ResourceProperties.PROP_IS_COLLECTION);
-	    } catch (Exception e) {
-		// assume isCollection is false if property is not set
-	    }
-
-	    if (isCollection) {
-		ContentCollectionEdit edit =
-			contentHostingService.editCollection(resourceId);
-		// check if directory is work directory
-		if (!edit.getId().equals(
-			contentHostingService.getSiteCollection(siteId)
-				+ OsylSiteService.WORK_DIRECTORY + "/")) {
-		    if (SecurityInterface.SECURITY_ACCESS_PUBLIC
-			    .equals(permission)) {
-			edit.setPublicAccess();
-		    }
-		} else {
-		    // directory is work directory, no public is allowed
-		    log.warn("no public access of work directory allowed: "
-			    + edit.getId());
-		}
-		contentHostingService.commitCollection(edit);
-	    }
-
-	    else {
-		ContentResourceEdit edit =
-			contentHostingService.editResource(resourceId);
-		// check if resource is in work directory
-		if (!resourceId.contains(contentHostingService
-			.getSiteCollection(siteId)
-			+ OsylSiteService.WORK_DIRECTORY + "/")) {
-		    if (SecurityInterface.SECURITY_ACCESS_PUBLIC
-			    .equals(permission)) {
-			edit.setPublicAccess();
-		    }
-		} else {
-		    // resource is in work directory, no public is allowed
-		    log.warn("no public access in work directory allowed: "
-			    + resourceId);
-		}
-		contentHostingService.commitResource(edit);
-	    }
-	} catch (Exception e) {
-	    log.error("Unable to apply permissions", e);
-	    // We wrap the exception (could be IdUnusedException,
-	    // OverQuotaException, etc.) in a java.lang.Exception.
-	    // This way our "client" doesn't have to know about
-	    // these exceptions.
-	    throw new Exception(e);
+	/**
+	 * Sets the <code>AuthzGroupService</code>.
+	 * 
+	 * @param authzService
+	 */
+	public void setAuthzGroupService(AuthzGroupService authzService) {
+		this.authzService = authzService;
 	}
-    }
 
-    /** {@inheritDoc} */
-    public void applyDirectoryPermissions(String directoryId) {
-	// TODO: set permissions for directory
-	// differ between work and publish directory
-	if (directoryId.contains(OsylSiteService.WORK_DIRECTORY)) {
-
-	} else {
-	    // default folder permissions
+	/**
+	 * Sets the <code>SiteService</code>.
+	 * 
+	 * @param siteService
+	 */
+	public void setSiteService(SiteService siteService) {
+		this.siteService = siteService;
 	}
-    }
 
-    /**
-     * Gets the actual site realm Id.
-     * 
-     * @return a String id of the group of the realm
-     */
-    private String getSiteRealmID() {
-	return ("/site/" + toolManager.getCurrentPlacement().getContext());
-    }
+	/**
+	 * Sets the <code>SecurityyService</code>.
+	 * 
+	 * @param securityService
+	 */
+	public void setSecurityService(SecurityService securityService) {
+		this.securityService = securityService;
+	}
+
+	/**
+	 * Sets the <code>ContentHostingService</code>.
+	 * 
+	 * @param contentHostingService
+	 */
+	public void setContentHostingService(ContentHostingService contentHostingService) {
+		this.contentHostingService = contentHostingService;
+	}
+
+	/**
+	 * Sets the <code>SessionManager</code>.
+	 * 
+	 * @param sessionManager
+	 */
+	public void setSessionManager(SessionManager sessionManager) {
+		this.sessionManager = sessionManager;
+	}
+
+	/**
+	 * Sets the <code>ToolManager</code>.
+	 * 
+	 * @param toolManager
+	 */
+	public void setToolManager(ToolManager toolManager) {
+		this.toolManager = toolManager;
+	}
+
+	/** Init method to be called by Spring */
+	public void init() {
+		log.info("INIT from SecurityService");
+	}
+
+	/** Destroy method to be called by Spring */
+	public void destroy() {
+		log.info("DESTROY from SecurityService");
+	}
+
+	/** {@inheritDoc} */
+	public String filterContent(String inputXml, String role) {
+		// TODO: not yet implemented
+		return "yes";
+	}
+
+	/** {@inheritDoc} */
+	public boolean isAllowedToEdit(String siteId) {
+		// TODO: this is just a workaround ... must be implemented
+		boolean result = contentHostingService
+				.allowUpdateCollection(contentHostingService
+						.getSiteCollection(siteId));
+		log.info("is allowed to edit - result: " + result);
+		return result;
+	}
+
+	/** {@inheritDoc} */
+	public String getCurrentUserRole() {
+		String role = null;
+		ToolSession toolSession = sessionManager.getCurrentToolSession();
+
+		if (securityService.isSuperUser())
+			role = SecurityInterface.SECURITY_ROLE_PROJECT_MAINTAIN;
+		else
+			role = authzService.getUserRole(toolSession.getUserId(),
+					getSiteRealmID());
+
+		return role;
+	}
+
+	/** {@inheritDoc} */
+	public void setCurrentSessionActive() {
+		Session session = sessionManager.getCurrentSession();
+		session.setActive();
+	}
+
+	/** {@inheritDoc} */
+	public void applyPermissions(String resourceId, String permission)
+			throws Exception {
+		Site site = siteService.getSite(toolManager.getCurrentPlacement()
+				.getContext());
+		applyPermissions(site.getId(), resourceId, permission);
+
+	}
+
+	/** {@inheritDoc} */
+	public void applyPermissions(String siteId, String resourceId,
+			String permission) throws Exception {
+		try {
+			ResourceProperties properties = contentHostingService
+					.getProperties(resourceId);
+			boolean isCollection = false;
+
+			try {
+				isCollection = properties
+						.getBooleanProperty(ResourceProperties.PROP_IS_COLLECTION);
+			} catch (Exception e) {
+				// assume isCollection is false if property is not set
+			}
+
+			if (isCollection) {
+				ContentCollectionEdit edit = contentHostingService
+						.editCollection(resourceId);
+				// check if directory is work directory
+				if (!edit.getId().equals(
+						contentHostingService.getSiteCollection(siteId)
+								+ OsylSiteService.WORK_DIRECTORY + "/")) {
+					if (SecurityInterface.SECURITY_ACCESS_PUBLIC
+							.equals(permission)) {
+						edit.setPublicAccess();
+					}
+				} else {
+					// directory is work directory, no public is allowed
+					log.warn("no public access of work directory allowed: "
+							+ edit.getId());
+				}
+				contentHostingService.commitCollection(edit);
+			}
+
+			else {
+				ContentResourceEdit edit = contentHostingService
+						.editResource(resourceId);
+				// check if resource is in work directory
+				if (!resourceId.contains(contentHostingService
+						.getSiteCollection(siteId)
+						+ OsylSiteService.WORK_DIRECTORY + "/")) {
+					if (SecurityInterface.SECURITY_ACCESS_PUBLIC
+							.equals(permission)) {
+						edit.setPublicAccess();
+					}
+				} else {
+					// resource is in work directory, no public is allowed
+					log.warn("no public access in work directory allowed: "
+							+ resourceId);
+				}
+				contentHostingService.commitResource(edit);
+			}
+		} catch (Exception e) {
+			log.error("Unable to apply permissions", e);
+			// We wrap the exception (could be IdUnusedException,
+			// OverQuotaException, etc.) in a java.lang.Exception.
+			// This way our "client" doesn't have to know about
+			// these exceptions.
+			throw new Exception(e);
+		}
+	}
+
+	/** {@inheritDoc} */
+	public void applyDirectoryPermissions(String directoryId) {
+		// TODO: set permissions for directory
+		// differ between work and publish directory
+		if (directoryId.contains(OsylSiteService.WORK_DIRECTORY)) {
+
+		} else {
+			// default folder permissions
+		}
+	}
+
+	/**
+	 * Gets the actual site realm Id.
+	 * 
+	 * @return a String id of the group of the realm
+	 */
+	private String getSiteRealmID() {
+		return ("/site/" + toolManager.getCurrentPlacement().getContext());
+	}
 
 }
