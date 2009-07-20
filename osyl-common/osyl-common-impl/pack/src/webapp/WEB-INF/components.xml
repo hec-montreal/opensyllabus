@@ -11,19 +11,26 @@
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylSecurityServiceImpl"
-		init-method="init" singleton="true">
+		init-method="init"
+		destroy-method="destroy" 
+		singleton="true">
 		
 		<!-- Sakai dependencies -->
 		<property name="sessionManager"
 			ref="org.sakaiproject.tool.api.SessionManager" />
+			
 		<property name="authzGroupService"
 			ref="org.sakaiproject.authz.api.AuthzGroupService" />
+			
 		<property name="securityService"
 			ref="org.sakaiproject.authz.api.SecurityService" />
+			
 		<property name="siteService"
 			ref="org.sakaiproject.site.api.SiteService" />
+			
 		<property name="toolManager"
 			ref="org.sakaiproject.tool.api.ToolManager" />
+			
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />
 
@@ -31,14 +38,18 @@
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylConfigService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylConfigServiceImpl"
-		init-method="init" singleton="true">
+		init-method="init"
+		destroy-method="destroy" 
+		singleton="true">
 		<property name="configDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
 	</bean>
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylSiteService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylSiteServiceImpl"
-		init-method="init" singleton="true">
+		init-method="init"
+		destroy-method="destroy" 
+		singleton="true">
 		
 		<!-- Sakai dependencies -->
 		<property name="contentHostingService"
@@ -63,7 +74,9 @@
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylRealmService.osylEditor"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylRealmServiceImpl"
-		singleton="true" init-method="init">
+		init-method="init"
+		destroy-method="destroy"
+		singleton="true">
 		<!-- let parentRealm null to create empty realm -->
 		<property name="parentRealm" value="!site.template.course"/>
 		<property name="newRealmName" value="!site.template.osylEditor"/>
