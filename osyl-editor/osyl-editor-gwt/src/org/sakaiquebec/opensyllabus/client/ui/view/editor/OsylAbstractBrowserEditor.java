@@ -29,6 +29,7 @@ import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylAbstractBrowserComposite;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
+import org.sakaiquebec.opensyllabus.shared.model.file.OsylDirectory;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -127,7 +128,7 @@ public abstract class OsylAbstractBrowserEditor extends
     public String getResourceURI() {
 	OsylAbstractBrowserItem item =
 		getBrowser().getSelectedAbstractBrowserItem();
-	if (item == null) {
+	if (item == null || item instanceof OsylDirectory) {
 	    return null;
 	} else {
 	    return item.getFilePath();
