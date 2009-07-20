@@ -10,6 +10,7 @@ import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationItem;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylDirectory;
+import org.sakaiquebec.opensyllabus.shared.util.UUID;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -61,15 +62,16 @@ public class OsylCitationRemoteServiceHostedModeImpl extends
 	 * {@inheritDoc}
 	 */
 	public void createOrUpdateCitation(String p_relativePathFolder,
-			OsylCitationItem p_citation, AsyncCallback<Void> callback) {
+			OsylCitationItem p_citation, AsyncCallback<String> callback) {
 		List<OsylAbstractBrowserItem> list = findDirectoryByRelativePath(p_relativePathFolder);
+		String id = p_citation.getId();
 		if(list!=null){
-			if(p_citation.getId()!=null){
+			if(id!=null){
 				// update an existing one
-				removeCitationById(p_citation.getId(), list);
+				removeCitationById(id, list);
 			}else{
 				//create an unique id
-				String id = String.valueOf(new Date().getTime());
+				id = UUID.uuid();
 				p_citation.setId(id);
 				p_citation.setProperty(CitationSchema.CITATIONID, id);
 				p_citation.setFilePath(p_relativePathFolder);
@@ -77,7 +79,7 @@ public class OsylCitationRemoteServiceHostedModeImpl extends
 			//add the new reference
 			list.add(p_citation);
 		}
-		callback.onSuccess(null);
+		callback.onSuccess(id);
 	}
 	
 	/**

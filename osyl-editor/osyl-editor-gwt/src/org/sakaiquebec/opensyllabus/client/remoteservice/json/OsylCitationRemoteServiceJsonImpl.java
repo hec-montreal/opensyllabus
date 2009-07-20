@@ -40,7 +40,6 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -48,138 +47,176 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id: $
  */
 public class OsylCitationRemoteServiceJsonImpl extends
-		OsylDirectoryRemoteServiceJsonImpl implements
-		OsylCitationRemoteServiceAsync {
+	OsylDirectoryRemoteServiceJsonImpl implements
+	OsylCitationRemoteServiceAsync {
 
-	public OsylCitationRemoteServiceJsonImpl() {
-		super();
+    public OsylCitationRemoteServiceJsonImpl() {
+	super();
+    }
+
+    @Override
+    protected RequestCallback getRemoteDirectoryContentCallBackAdaptator(
+	    final AsyncCallback<List<OsylAbstractBrowserItem>> callback) {
+	return new OsylCitationRemoteDirectoryContentCallBackAdaptator(callback);
+    }
+
+    @Override
+    protected void initRemoteUri() {
+	this.remoteUri =
+		serverId + "/sdata/ci/group/"
+			+ OsylController.getInstance().getSiteId() + "/";
+	this.remoteUri =
+		OsylAbstractBrowserComposite.uriSlashCorrection(this.remoteUri);
+    }
+
+    public void createOrUpdateCitation(String p_relativePathFolder,
+	    OsylCitationItem p_citation, final AsyncCallback<String> callback) {
+
+	if (TRACE) {
+	    Window
+		    .alert("OsylCitationRemoteServiceJsonImpl.createOrUpdateCitation : "
+			    + p_citation.getTitle());
 	}
 
-	@Override
-	protected RequestCallback getRemoteDirectoryContentCallBackAdaptator(
-			final AsyncCallback<List<OsylAbstractBrowserItem>> callback) {
-		return new OsylCitationRemoteDirectoryContentCallBackAdaptator(callback);
+	// create form to submit
+	final FormPanel form = new FormPanel();
+	VerticalPanel panel = new VerticalPanel();
+	form.add(panel);
+
+	// determinate form action
+	String action;
+	String listname;
+	if (p_citation.getId() != null) {
+	    // update case
+	    action = serverId + "/sdata/ci" + p_citation.getResourceId();
+
+	    // create hidden field to define put(update) method
+	    panel.add(FormHelper.createHiddenField("method", "put"));
+	    // create hidden field to define citation id
+	    panel.add(FormHelper.createHiddenField("cid", p_citation.getId()));
+
+	    listname = p_citation.getResourceId();
+	} else {
+	    listname = p_citation.getTitle();
+	    action = getRessourceUri(p_relativePathFolder);
 	}
 
-	@Override
-	protected void initRemoteUri() {
-		this.remoteUri = serverId + "/sdata/ci/group/" + OsylController.getInstance().getSiteId() + "/";
-		this.remoteUri = OsylAbstractBrowserComposite.uriSlashCorrection(this.remoteUri);
+	form.setAction(action);
+	form.setMethod(FormPanel.METHOD_POST);
+
+	if (TRACE) {
+	    Window.alert("Create an hidden textbox for each pojo property ");
 	}
 
-	public void createOrUpdateCitation(String p_relativePathFolder,
-			OsylCitationItem p_citation, final AsyncCallback<Void> callback) {
-		
-		if (TRACE) {
-			Window.alert("OsylCitationRemoteServiceJsonImpl.createOrUpdateCitation : " + p_citation.getTitle());
-		}
-		
-		// create form to submit
-		final FormPanel form = new FormPanel();
-		VerticalPanel panel = new VerticalPanel();
-		form.add(panel);
-		
-		//determinate form action
-		String action;
-		String listname;
-		if(p_citation.getId()!=null){
-			// update case
-			action = serverId + "/sdata/ci" + p_citation.getResourceId();
-			
-			// create hidden field to define put(update) method
-			panel.add(FormHelper.createHiddenField("method", "put"));
-			// create hidden field to define citation id
-			panel.add(FormHelper.createHiddenField("cid", p_citation.getId()));
-			
-			listname=p_citation.getResourceId();
-		}else{
-			listname=p_citation.getTitle();
-			action = getRessourceUri(p_relativePathFolder);
-		}
-		
-		form.setAction(action);
-		form.setMethod(FormPanel.METHOD_POST);
+	// Create an hidden textbox for each pojo property.
+	panel.add(FormHelper.createHiddenField("listname", listname));
 
-		if (TRACE) {
-			Window.alert("Create an hidden textbox for each pojo property ");
-		}
+	panel.add(FormHelper.createHiddenField("cipkeys", "sakai:displayname"));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getTitle()));
 
-		// Create an hidden textbox for each pojo property.
-		panel.add(FormHelper.createHiddenField("listname", listname));
-		
-		panel.add(FormHelper.createHiddenField("cipkeys", "sakai:displayname"));
-		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getTitle()));
-		
-		panel.add(FormHelper.createHiddenField("cipkeys", "sakai:mediatype"));
-		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.TYPE)));
-		
-		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.TITLE));
-		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getTitle()));
-		
-		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.TITLE));
-		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getTitle()));
-		
-		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.CREATOR));
-		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.CREATOR)));
-		
-		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.YEAR));
-		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.YEAR)));
-		
-		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.SOURCE_TITLE));
-		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.SOURCE_TITLE)));
-		
-		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.DATE));
-		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.DATE)));
-		
-		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.VOLUME));
-		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.VOLUME)));
-		
-		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.ISSUE));
-		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.ISSUE)));
-		
-		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.PAGES));
-		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.PAGES)));
-		
-		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.ISN));
-		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.ISN)));
-		
-		panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.DOI));
-		panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getProperty(CitationSchema.DOI)));
+	panel.add(FormHelper.createHiddenField("cipkeys", "sakai:mediatype"));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getProperty(CitationSchema.TYPE)));
 
+	panel
+		.add(FormHelper.createHiddenField("cipkeys",
+			CitationSchema.TITLE));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getTitle()));
 
-		
-		//add event handler
-		form.addFormHandler(new FormHandler() {
-			/**
-			 * {@inheritDoc}
-			 */
-		    public void onSubmit(FormSubmitEvent event) {
-		    }
+	panel
+		.add(FormHelper.createHiddenField("cipkeys",
+			CitationSchema.TITLE));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getTitle()));
 
-		    /**
-			 * {@inheritDoc}
-			 */
-		    public void onSubmitComplete(FormSubmitCompleteEvent event) {
-		    	if (TRACE) {
-					Window.alert("call back from the server : " + event.getResults());
-				}
-		    	RootPanel.detachNow(form);
-				callback.onSuccess(null);
-		    }
-		});
-		
+	panel.add(FormHelper.createHiddenField("cipkeys",
+		CitationSchema.CREATOR));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getProperty(CitationSchema.CREATOR)));
+
+	panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.YEAR));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getProperty(CitationSchema.YEAR)));
+
+	panel.add(FormHelper.createHiddenField("cipkeys",
+		CitationSchema.SOURCE_TITLE));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getProperty(CitationSchema.SOURCE_TITLE)));
+
+	panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.DATE));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getProperty(CitationSchema.DATE)));
+
+	panel.add(FormHelper
+		.createHiddenField("cipkeys", CitationSchema.VOLUME));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getProperty(CitationSchema.VOLUME)));
+
+	panel
+		.add(FormHelper.createHiddenField("cipkeys",
+			CitationSchema.ISSUE));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getProperty(CitationSchema.ISSUE)));
+
+	panel
+		.add(FormHelper.createHiddenField("cipkeys",
+			CitationSchema.PAGES));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getProperty(CitationSchema.PAGES)));
+
+	panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.ISN));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getProperty(CitationSchema.ISN)));
+
+	panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.DOI));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getProperty(CitationSchema.DOI)));
+
+	// add event handler
+	form.addFormHandler(new FormHandler() {
+	    /**
+	     * {@inheritDoc}
+	     */
+	    public void onSubmit(FormSubmitEvent event) {
+	    }
+
+	    /**
+	     * {@inheritDoc}
+	     */
+	    public void onSubmitComplete(FormSubmitCompleteEvent event) {
 		if (TRACE) {
-			Window.alert("add the form to the rootPanel ");
+		    Window.alert("call back from the server : "
+			    + event.getResults());
 		}
-	
-		RootPanel.get().add(form);
-		if (TRACE) {
-			Window.alert("Submit the form - createOrUpdateCitation : " + form.getAction());
-		}
-		form.submit();
-		if (TRACE) {
-			Window.alert("Form submited ");
-		}
-		
+		RootPanel.detachNow(form);
+		callback.onSuccess(getPath(event.getResults()));
+	    }
+
+	    private String getPath(String preJson) {
+		// String st = null;
+		// String json = preJson.substring(preJson.indexOf('{'),preJson.lastIndexOf('}'));
+		String s =
+			preJson.substring(preJson.indexOf("\"path\":\"") + 8);
+		s = s.substring(0, s.indexOf("\""));
+		return s;
+	    }
+	});
+
+	if (TRACE) {
+	    Window.alert("add the form to the rootPanel ");
 	}
+
+	RootPanel.get().add(form);
+	if (TRACE) {
+	    Window.alert("Submit the form - createOrUpdateCitation : "
+		    + form.getAction());
+	}
+	form.submit();
+	if (TRACE) {
+	    Window.alert("Form submited ");
+	}
+
+    }
 }

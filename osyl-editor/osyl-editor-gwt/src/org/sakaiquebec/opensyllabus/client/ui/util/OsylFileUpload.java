@@ -204,7 +204,7 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 		    
 		    // parse the handler list 
 		   for(Iterator<UploadFileEventHandler> it = uploadEvtHandlerList.iterator();it.hasNext();){
-			it.next().onUploadFile(new UploadFileEvent(getName(event.getResults())));
+			it.next().onUploadFile(new UploadFileEvent(getPath(event.getResults())));
 		    }
 
 		    
@@ -250,7 +250,7 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
      * @param jsonString
      * @return The resource name
      */
-    public String getName(String jsonString) {
+    public String getPath(String jsonString) {
 	String s = jsonString.substring(jsonString.indexOf("\"url\":\"")+7);
 	s=s.substring(0, s.indexOf("\""));
 	return s;

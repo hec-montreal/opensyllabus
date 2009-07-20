@@ -13,8 +13,8 @@ public interface OsylCitationRemoteServiceAsync extends OsylDirectoryRemoteServi
 	 * To create or update a citation
 	 * @param p_relativePathFolder
 	 * @param p_citation
-	 * @param callback
+	 * @param callback with path parameter (String)
 	 */
-	public void createOrUpdateCitation(String p_relativePathFolder, OsylCitationItem p_citation, final AsyncCallback<Void> callback);
+	public void createOrUpdateCitation(String p_relativePathFolder, OsylCitationItem p_citation, final AsyncCallback<String> callback);
 	
 }
