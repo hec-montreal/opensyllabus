@@ -85,32 +85,40 @@
       <artifactId>commons-logging</artifactId>
     </dependency>
 
-    <!-- testing dependencies -->
+    <!-- Test classes dependencies -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <!-- TODO
-      <scope>test</scope> -->
-    </dependency>
+      <scope>test</scope>      
+    </dependency>    
     <dependency>
-      <groupId>${sakai.spring.groupId}</groupId>
-      <artifactId>${sakai.spring.mock.artifactId}</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    
-    <!-- testing dependencies -->
- 	<dependency>
+    	<groupId>org.jmock</groupId>
+    	<artifactId>jmock-junit3</artifactId>
+    	<scope>test</scope>    
+	</dependency>
+	<dependency>
+    	<groupId>org.jmock</groupId>
+    	<artifactId>jmock-legacy</artifactId>
+    	<scope>test</scope>
+	</dependency>
+	
+	<!--  Test runtime dependencies -->
+	<dependency>
    		<groupId>hsqldb</groupId>
    		<artifactId>hsqldb</artifactId>   		
    		<scope>test</scope>
 	</dependency>
 	
-	<!-- FIXME: remove this dependency (get rid of com/google/gwt/user/client/rpc/IsSerializable dependency from common-shared!  --> 
-	<!-- <dependency>
- 		<groupId>com.google.gwt</groupId>
- 		<artifactId>gwt-user</artifactId> 		
- 		<scope>test</scope>
- 	</dependency> -->
+	<dependency>
+    	<groupId>javax.servlet</groupId>
+    	<artifactId>servlet-api</artifactId>
+    	<scope>test</scope>
+	</dependency>
+	<dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-user-api</artifactId>
+      <scope>test</scope>
+    </dependency>	
   </dependencies>
 
   <build>
