@@ -217,7 +217,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+		    log.error(e.getLocalizedMessage(), e);
 		}
 
 		return coModeled;
@@ -254,8 +254,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 				}
 			}
 			return co;
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception e) {			
 			log.error("Unable to retrieve course outline by siteId", e);
 		}
 		return null;
@@ -271,7 +270,6 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 					siteId, "");
 			return co;
 		} catch (Exception e) {
-			e.printStackTrace();
 			log.error("Unable to retrieve course outline by siteId", e);
 		}
 		return null;
@@ -456,8 +454,8 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	public boolean hasBeenPublished() {
 		try {
 			return hasBeenPublished(getCurrentSiteId());
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception e) {			
+			log.error(e.getLocalizedMessage(), e);
 		}
 		return false;
 	}
@@ -648,7 +646,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 			}
 			reader.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error(e.getLocalizedMessage(), e);
 		}
 		return fileData.toString();
 	}
@@ -687,10 +685,10 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 				reader = new BufferedReader(new InputStreamReader(
 						new FileInputStream(coXmlFile), "UTF-8"));
 			} catch (Exception e1) {
-				e1.printStackTrace();
+			    log.error(e.getLocalizedMessage(), e1);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+		    log.error(e.getLocalizedMessage(), e);
 		}
 		return reader;
 	}
@@ -739,7 +737,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 				throw new Exception();// TODO
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+		    log.error(e.getLocalizedMessage(), e);
 			throw e;
 		}
 	}
@@ -766,7 +764,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+		    log.error(e.getLocalizedMessage(), e);			
 			throw e;
 		}
 	}
