@@ -1,6 +1,9 @@
 package org.sakaiquebec.opensyllabus.common.impl;
 
+import java.util.Locale;
+
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
+import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
 
 public abstract class AbstractOsylConfigServiceTest extends AbstractServiceTest {
 
@@ -9,8 +12,21 @@ public abstract class AbstractOsylConfigServiceTest extends AbstractServiceTest 
     public final OsylConfigService getService() {
         return this.service;
     }
-    
-    public final void setService(OsylConfigService service) {
-        this.service = service;
-    }     
+
+    @Override
+    protected void onServiceSetUp() throws Exception {
+        COConfigDao dao = getMockery().mock(COConfigDao.class);
+        
+        OsylConfigServiceImpl serviceImpl = new OsylConfigServiceImpl();
+        
+        serviceImpl.setBaseName("UnitTestBaseName");
+        serviceImpl.setConfigDao(dao);
+        //FIXME: setContextLocale() has an inner call to ComponentManager.getInstance()...from Sakai
+        //This shows a problem with the design of OsylConfigServiceImpl, which should not extend ResourceLoader.        
+        serviceImpl.setContextLocale(Locale.getDefault());
+        //This test will fail because of the above
+        
+        serviceImpl.setIdManager(getMockery().newIdManager());
+        serviceImpl.init();
+    }    
 }
