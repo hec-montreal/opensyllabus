@@ -118,6 +118,12 @@
       <groupId>org.sakaiproject</groupId>
       <artifactId>sakai-user-api</artifactId>
       <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>${sakai.spring.groupId}</groupId>
+      <artifactId>${sakai.spring.mock.artifactId}</artifactId>
+      <scope>provided</scope>
     </dependency>	
   </dependencies>
 
