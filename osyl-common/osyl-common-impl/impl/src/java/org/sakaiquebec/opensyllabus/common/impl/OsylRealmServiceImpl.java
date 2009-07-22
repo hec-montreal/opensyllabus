@@ -2,12 +2,15 @@ package org.sakaiquebec.opensyllabus.common.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupAlreadyDefinedException;
@@ -20,8 +23,6 @@ import org.sakaiproject.authz.cover.FunctionManager;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiquebec.opensyllabus.common.api.OsylRealmService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /******************************************************************************
  * $Id: $
@@ -85,6 +86,13 @@ public class OsylRealmServiceImpl implements OsylRealmService {
      */
 	private boolean autoDdl = true;
 
+	public OsylRealmServiceImpl() {
+	    super();
+	    this.rolesToRegister = new HashSet<String>();
+	    this.functionsToRegister = new HashSet<String>();
+	    this.functionsToAllow = new HashMap<String, List<String>>();
+	}
+	
 	/**
 	 * Init method called at initialization of the bean.
 	 */
@@ -202,7 +210,8 @@ public class OsylRealmServiceImpl implements OsylRealmService {
 	 * @param rolesToRegister
 	 */
    public void setRolesToRegister(Set<String> rolesToRegister) {
-	   this.rolesToRegister = rolesToRegister;
+       this.rolesToRegister.clear();
+	   this.rolesToRegister.addAll(rolesToRegister);
    }   
 
 	/**
@@ -211,7 +220,8 @@ public class OsylRealmServiceImpl implements OsylRealmService {
 	 * @param functionsToRegister
 	 */
    public void setFunctionsToRegister(Set<String> functionsToRegister) {
-	   this.functionsToRegister = functionsToRegister;
+       this.functionsToRegister.clear();
+	   this.functionsToRegister.addAll(functionsToRegister);
    }
    
 	/**
@@ -220,9 +230,9 @@ public class OsylRealmServiceImpl implements OsylRealmService {
 	 * 
 	 * @param functionsToAllow
 	 */
-   public void setFunctionsToAllow(
-		   HashMap<String, List<String>> functionsToAllow) {
-	   this.functionsToAllow = functionsToAllow;
+   public void setFunctionsToAllow(HashMap<String, List<String>> functionsToAllow) {
+       this.functionsToAllow.clear();
+	   this.functionsToAllow.putAll(functionsToAllow);
    }
    
    /** {@inheritDoc} */
