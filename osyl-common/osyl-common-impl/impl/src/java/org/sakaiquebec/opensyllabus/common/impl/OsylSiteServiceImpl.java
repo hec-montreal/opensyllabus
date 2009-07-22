@@ -35,13 +35,13 @@ import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
-import org.sakaiproject.id.cover.IdManager;
+import org.sakaiproject.id.api.IdManager;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.tool.api.Tool;
-import org.sakaiproject.tool.cover.ToolManager;
+import org.sakaiproject.tool.api.ToolManager;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylRealmService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
@@ -66,6 +66,10 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 
 	private static final Log log = LogFactory.getLog(OsylSiteServiceImpl.class);
 
+	private ToolManager toolManager;
+	
+	private IdManager idManager;
+	
 	/** The config service to be injected by Spring */
 	private OsylConfigService osylConfigService;
 
@@ -98,7 +102,15 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 		this.osylConfigService = osylConfigService;
 	}
 
-	/**
+	public void setToolManager(ToolManager toolManager) {
+        this.toolManager = toolManager;
+    }
+
+    public void setIdManager(IdManager idManager) {
+        this.idManager = idManager;
+    }
+
+    /**
 	 * Sets the {@link OsylSecurityService}.
 	 * 
 	 * @param securityService
@@ -314,7 +326,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 
 			try {
 				coConfig = configDao.getConfig(configId);
-				co = new COSerialized(IdManager.createUuid(), osylConfigService
+				co = new COSerialized(idManager.createUuid(), osylConfigService
 						.getCurrentLocale(), "shared", "", site.getId(),
 						"sectionId", coConfig, null, "shortDescription",
 						"description", "title", false);
@@ -422,7 +434,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 
 		try {
 			siteId = siteService.getSite(
-					ToolManager.getCurrentPlacement().getContext()).getId();
+					toolManager.getCurrentPlacement().getContext()).getId();
 		} catch (IdUnusedException e) {
 			log.error("Get current site id - Id unused exception", e);
 			// We wrap the exception in a java.lang.Exception. This way our
@@ -489,7 +501,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 			if (thisCo == null) {
 				coConfig = osylConfigService.getConfigByRef(
 						OsylConfigService.DEFAULT_CONFIG_REF, webappDir);
-				thisCo = new COSerialized(IdManager.createUuid(),
+				thisCo = new COSerialized(idManager.createUuid(),
 						osylConfigService.getCurrentLocale(), "shared", "",
 						siteId, "sectionId", coConfig, getXmlStringFromFile(
 								coConfig, webappDir), "shortDescription",
@@ -580,7 +592,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	/** {@inheritDoc} */
 	public void addTool(Site site, String toolId) {
 		SitePage page = site.addPage();
-		Tool tool = ToolManager.getTool(toolId);
+		Tool tool = toolManager.getTool(toolId);
 		page.setTitle(tool.getTitle());
 		page.setLayout(SitePage.LAYOUT_SINGLE_COL);
 		ToolConfiguration toolConf = page.addTool();

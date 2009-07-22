@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,7 +35,7 @@ import java.util.PropertyResourceBundle;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.sakaiproject.id.cover.IdManager;
+import org.sakaiproject.id.api.IdManager;
 import org.sakaiproject.util.ResourceLoader;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
@@ -100,6 +99,8 @@ public class OsylConfigServiceImpl extends ResourceLoader implements OsylConfigS
 	 */
 	private COConfigDao coConfigDao;
 
+	private IdManager idManager;
+	
 	/**
 	 * Constructor.
 	 */
@@ -116,7 +117,11 @@ public class OsylConfigServiceImpl extends ResourceLoader implements OsylConfigS
 		this.coConfigDao = courseOutlineConfigDao;
 	}
 
-	/**
+	public void setIdManager(IdManager idManager) {
+        this.idManager = idManager;
+    }
+
+    /**
 	 * Init method called at initialization of the bean.
 	 */
 	public void init() throws Exception {
@@ -318,31 +323,31 @@ public class OsylConfigServiceImpl extends ResourceLoader implements OsylConfigS
 	 */
 	public void initConfigs() throws Exception {
 		if (coConfigDao.getConfigs().size() <= 0) {
-			COConfigSerialized coConfig = new COConfigSerialized(IdManager
+			COConfigSerialized coConfig = new COConfigSerialized(idManager
 					.createUuid(), CONFIG_DIR + File.separator + "default",
 					"Config from HEC Montreal");
 			createConfig(coConfig);
 
-			coConfig = new COConfigSerialized(IdManager.createUuid(),
+			coConfig = new COConfigSerialized(idManager.createUuid(),
 					CONFIG_DIR + File.separator + "udem", "Config udem");
 			createConfig(coConfig);
 
-			coConfig = new COConfigSerialized(IdManager.createUuid(),
+			coConfig = new COConfigSerialized(idManager.createUuid(),
 					CONFIG_DIR + File.separator + "udemCompetencesComposantes",
 					"Config UdeM - Competences Composantes");
 			createConfig(coConfig);
 
-			coConfig = new COConfigSerialized(IdManager.createUuid(),
+			coConfig = new COConfigSerialized(idManager.createUuid(),
 					CONFIG_DIR + File.separator + "udemCompetencesSeances",
 					"Config UdeM - Competences Seances");
 			createConfig(coConfig);
 
-			coConfig = new COConfigSerialized(IdManager.createUuid(),
+			coConfig = new COConfigSerialized(idManager.createUuid(),
 					CONFIG_DIR + File.separator + "udemObjectifsActivites",
 					"Config UdeM - Objectifs Activites");
 			createConfig(coConfig);
 
-			coConfig = new COConfigSerialized(IdManager.createUuid(),
+			coConfig = new COConfigSerialized(idManager.createUuid(),
 					CONFIG_DIR + File.separator + "udemObjectifsSeances",
 					"Config UdeM - Objectifs Seances");
 			createConfig(coConfig);

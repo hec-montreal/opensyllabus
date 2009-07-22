@@ -41,8 +41,12 @@
 		init-method="init"
 		destroy-method="destroy" 
 		singleton="true">
+		
 		<property name="configDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
+			
+		<property name="idManager"
+			ref="org.sakaiproject.id.api.IdManager"/>
 	</bean>
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylSiteService"
@@ -56,7 +60,11 @@
 			ref="org.sakaiproject.content.api.ContentHostingService" />
 		<property name="siteService"
 			ref="org.sakaiproject.site.api.SiteService" />
-
+		<property name="idManager"
+			ref="org.sakaiproject.id.api.IdManager"/>
+		<property name="toolManager"
+			ref="org.sakaiproject.tool.api.ToolManager" />
+				
 		<!-- Osyl dependencies -->
 		<property name="securityService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
