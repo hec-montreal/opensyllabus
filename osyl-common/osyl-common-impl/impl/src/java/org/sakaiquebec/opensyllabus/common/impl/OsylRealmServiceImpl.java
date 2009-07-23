@@ -12,16 +12,16 @@ import java.util.Map.Entry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.authz.api.AuthzGroup;
+import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzPermissionException;
+import org.sakaiproject.authz.api.FunctionManager;
 import org.sakaiproject.authz.api.GroupAlreadyDefinedException;
 import org.sakaiproject.authz.api.GroupIdInvalidException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.RoleAlreadyDefinedException;
-import org.sakaiproject.authz.cover.AuthzGroupService;
-import org.sakaiproject.authz.cover.FunctionManager;
 import org.sakaiproject.tool.api.Session;
-import org.sakaiproject.tool.cover.SessionManager;
+import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiquebec.opensyllabus.common.api.OsylRealmService;
 
 /******************************************************************************
@@ -55,6 +55,12 @@ public class OsylRealmServiceImpl implements OsylRealmService {
 
 	private static final Log log = LogFactory.getLog(OsylRealmServiceImpl.class);
 
+	private FunctionManager functionManager;
+		
+	private AuthzGroupService authService;
+	
+	private SessionManager sessionManager;
+	
 	/**
     * Name of realm from which new realm will be copied
     */
@@ -99,25 +105,23 @@ public class OsylRealmServiceImpl implements OsylRealmService {
 	public void init() {
 		log.info("INIT from Osyl realm service");
 		// register new functions for permissions
-		for (Iterator<String> iFunctionsToRegister =
-			this.functionsToRegister.iterator(); iFunctionsToRegister
-			.hasNext();) {
-		    FunctionManager.getInstance().registerFunction(iFunctionsToRegister.
-		    		next());
-		}	
+		for (String function: this.functionsToRegister) {
+		    functionManager.registerFunction(function);
+		}
+		
 		if (autoDdl) {
-			Session sakaiSession = SessionManager.getCurrentSession();
+			Session sakaiSession = sessionManager.getCurrentSession();
 			String userId = sakaiSession.getUserId();
 			try {
 				sakaiSession.setUserId("admin");
 				sakaiSession.setUserEid("admin");
             try {
-            	AuthzGroup group = AuthzGroupService.getInstance().getAuthzGroup(newRealmName);
+            	AuthzGroup group = authService.getAuthzGroup(newRealmName);
             	if (group != null) {
             		if (recreate){
-            			AuthzGroupService.getInstance().removeAuthzGroup(group);
+            		    authService.removeAuthzGroup(group);
             		}
-            		else {
+            		else {            		   
             			return;
             		}
             	}
@@ -132,18 +136,18 @@ public class OsylRealmServiceImpl implements OsylRealmService {
             	AuthzGroup newRealm;
             	AuthzGroup parent = null;
             	if (parentRealm != null) {
-            		parent = AuthzGroupService.getInstance().getAuthzGroup(parentRealm);
+            		parent = authService.getAuthzGroup(parentRealm);
             	}
             	if (parent == null) {
-	            	newRealm = AuthzGroupService.getInstance().addAuthzGroup(newRealmName);
+	            	newRealm = authService.addAuthzGroup(newRealmName);
 	            }
 	            else {
 	            	// copy an existing AuthzGroup 
-	            	newRealm = AuthzGroupService.getInstance().addAuthzGroup(newRealmName, parent, null);
+	            	newRealm = authService.addAuthzGroup(newRealmName, parent, null);
 	            }
 	            addRoles(newRealm);
 	            addPermissions(newRealm);
-            	AuthzGroupService.getInstance().save(newRealm);            	
+	            authService.save(newRealm);            	
             	
             } catch (GroupNotDefinedException e) {
                throw new RuntimeException(e);
@@ -167,7 +171,19 @@ public class OsylRealmServiceImpl implements OsylRealmService {
 		log.info("DESTROY from Osyl realm service");
 	}
 	
-	/**
+	public void setFunctionManager(FunctionManager functionManager) {
+        this.functionManager = functionManager;
+    }
+
+    public void setAuthzGroupService(AuthzGroupService authService) {
+        this.authService = authService;
+    }
+
+    public void setSessionManager(SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
+    }
+
+    /**
 	 * Sets the name of the realm from which the new
 	 * realm should be copied
 	 * 
@@ -254,8 +270,7 @@ public class OsylRealmServiceImpl implements OsylRealmService {
    public Set<String> getRoles() {
 	   Set<String> roles = new LinkedHashSet<String>();
 	   try {
-		   AuthzGroup group = AuthzGroupService.getInstance().getAuthzGroup(
-						newRealmName);
+		   AuthzGroup group = authService.getAuthzGroup(newRealmName);
 		   Set<Role> groupRoles = group.getRoles();
 			   
 		   for (Iterator<Role> iRoles = groupRoles.iterator(); 
@@ -272,8 +287,7 @@ public class OsylRealmServiceImpl implements OsylRealmService {
    @SuppressWarnings("unchecked")
    public void updateFunction(String function, Set<String> allowedRoles) {
 	   try {
-		AuthzGroup group = AuthzGroupService.getInstance().getAuthzGroup(
-					newRealmName);
+		AuthzGroup group = authService.getAuthzGroup(newRealmName);
 		Set<Role> groupRoles = group.getRoles();
 		for (Iterator<Role> iRoles = groupRoles.iterator(); 
 			iRoles.hasNext();) {
@@ -285,7 +299,7 @@ public class OsylRealmServiceImpl implements OsylRealmService {
 		    	role.disallowFunction(function);
 		    }
 		}
-		AuthzGroupService.getInstance().save(group);
+		authService.save(group);
 	   } catch (GroupNotDefinedException e) {
 			log.error("Error while updating functions: Realm not found " 
 					+ e.getMessage());
@@ -299,8 +313,7 @@ public class OsylRealmServiceImpl implements OsylRealmService {
    public HashMap<String, List<String>> getFunctionsWithAllowedRoles() {
 	   HashMap<String, List<String>> res = new HashMap<String, List<String>>();
 	   try {
-		   AuthzGroup group = AuthzGroupService.getInstance().getAuthzGroup(
-					newRealmName);
+		   AuthzGroup group = authService.getAuthzGroup(newRealmName);
 		   Set<Role> groupRoles = group.getRoles();
 		   
 		   for (Iterator<String> iFunctions = getPermissionFunctions().
