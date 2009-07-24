@@ -72,7 +72,7 @@ public class COConfigSerialized implements java.io.Serializable {
      */
     public COConfigSerialized() {
         super();
-        this.i18nMessages = new HashMap<String, String>();
+        initMessages();        
     }
 
     /**
@@ -80,16 +80,18 @@ public class COConfigSerialized implements java.io.Serializable {
      */
     public COConfigSerialized(String configId) {
 	this.configId = configId;
+	initMessages();
     }
 
     /**
-     * Empty Constructor
+     * Constructor
      */
     public COConfigSerialized(String configId, String configRef,
 	    String description) {
 	this.configId = configId;
 	this.configRef = configRef;
 	this.description = description;
+	initMessages();
     }
 
     /**
@@ -179,4 +181,10 @@ public class COConfigSerialized implements java.io.Serializable {
 	this.configRef = configRef;
     }
 
+    
+    private void initMessages(){
+    	if(i18nMessages==null){
+    		i18nMessages = new HashMap<String, String>();
+    	}
+    }
 }
