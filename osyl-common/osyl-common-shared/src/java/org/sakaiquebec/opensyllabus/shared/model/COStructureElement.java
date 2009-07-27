@@ -106,7 +106,7 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
     /**
      * {@inheritDoc}
      */
-    public void setChildrens(List<COElementAbstract> childrens) {
+    public void setChildren(List<COElementAbstract> childrens) {
 	this.childrens = childrens;
 	notifyEventHandlers();
     }

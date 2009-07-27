@@ -285,7 +285,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
      */
     abstract public List<T> getChildrens();
     
-    abstract public void setChildrens(List<T> childs);
+    abstract public void setChildren(List<T> childs);
     
     /**
      * Adds a child to the <code>COELementAbstract</code> children list.

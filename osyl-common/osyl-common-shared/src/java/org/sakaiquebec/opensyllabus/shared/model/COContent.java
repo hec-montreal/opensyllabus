@@ -32,7 +32,7 @@ public class COContent extends COElementAbstract<COElementAbstract>/* implements
      * <org.sakaiquebec.opensyllabus.model.COElementAbstract>
      */
 
-    private List<COElementAbstract> childrens;
+    private List<COElementAbstract> children;
 
     /**
      * Constructor. The class type is set at the creation of the object.
@@ -40,7 +40,7 @@ public class COContent extends COElementAbstract<COElementAbstract>/* implements
     public COContent() {
 	super();
 	setClassType(CO_CONTENT_CLASS_TYPE);
-	childrens = new ArrayList<COElementAbstract>();
+	children = new ArrayList<COElementAbstract>();
     }
 
     /**
@@ -49,14 +49,14 @@ public class COContent extends COElementAbstract<COElementAbstract>/* implements
      * @return the children
      */
     public List<COElementAbstract> getChildrens() {
-	return childrens;
+	return children;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void setChildrens(List<COElementAbstract>children) {
-	this.childrens = children;
+    public void setChildren(List<COElementAbstract>children) {
+	this.children = children;
     }
 
     /**
@@ -85,29 +85,29 @@ public class COContent extends COElementAbstract<COElementAbstract>/* implements
 
     @Override
     public void changeElementPosition(COElementAbstract coEltAbs, int action) {
-	int ind = childrens.indexOf(coEltAbs);
+	int ind = children.indexOf(coEltAbs);
 	COElementAbstract temp;
 	
 	if(action==COElementAbstract.POSITION_CHANGE_ACTION_UP){
-	   temp = childrens.get(ind-1);
-	   childrens.set(ind-1,coEltAbs);
-	   childrens.set(ind,temp);
+	   temp = children.get(ind-1);
+	   children.set(ind-1,coEltAbs);
+	   children.set(ind,temp);
 	}
 	if(action==COElementAbstract.POSITION_CHANGE_ACTION_DOWN){
-	    temp=childrens.get(ind+1);
-	    childrens.set(ind+1, coEltAbs);
-	    childrens.set(ind,temp);
+	    temp=children.get(ind+1);
+	    children.set(ind+1, coEltAbs);
+	    children.set(ind,temp);
 	}
     }
 
     @Override
     public int getElementPosition(COElementAbstract coEltAbs) {
-	int pos = childrens.indexOf(coEltAbs);
+	int pos = children.indexOf(coEltAbs);
 	boolean hasPredecessor=false;
 	boolean hasSuccessor=false;
 	
 	hasPredecessor = (pos!=0);
-	hasSuccessor= (pos!=childrens.size()-1);
+	hasSuccessor= (pos!=children.size()-1);
 
 	if(hasPredecessor && hasSuccessor) return 2;
 	else if(hasPredecessor) return -1;

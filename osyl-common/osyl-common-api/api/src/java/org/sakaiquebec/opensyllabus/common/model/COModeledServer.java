@@ -1034,7 +1034,7 @@ public class COModeledServer {
 	parentElement.setUuid(UUID.uuid());
 	if (parentElement.isCOContentUnit()) {
 	    COContentUnit coUnit = (COContentUnit) parentElement;
-	    coUnit.setChildrens(new ArrayList<COContentResourceProxy>());
+	    coUnit.setChildren(new ArrayList<COContentResourceProxy>());
 	} else {
 	    for (int i = 0; i < parentElement.getChildrens().size(); i++) {
 		COElementAbstract coElementParent =

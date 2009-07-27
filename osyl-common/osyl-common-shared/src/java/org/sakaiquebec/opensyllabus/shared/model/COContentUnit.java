@@ -137,7 +137,7 @@ public class COContentUnit extends COElementAbstract<COContentResourceProxy> imp
     /**
      * {@inheritDoc}
      */
-    public void setChildrens(List<COContentResourceProxy> resourceProxies) {
+    public void setChildren(List<COContentResourceProxy> resourceProxies) {
 	this.resourceProxies = resourceProxies;
 	notifyEventHandlers();
     }
