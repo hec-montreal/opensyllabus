@@ -1,0 +1,404 @@
+/* ---- CSS definitions overriding default GWT styles -------------- */
+
+.gwt-BorderedPanel {
+}
+
+.gwt-Button {
+  background:#F5F5F5;
+  border:1px solid #AAA;
+  border-top:1px solid #DDD;
+  border-left:1px solid #DDD;
+  padding:2px;
+  width:12em;
+}
+
+.gwt-Button:active {
+  border:1px solid #AAA;
+  border-bottom:1px solid #CCC;
+  border-right:1px solid #CCC;
+}
+
+.gwt-Button[disabled] {
+  background:#ccc;
+  border:1px solid #999;
+  border-top:1px solid #CCC;
+  border-left:1px solid #CCC;
+  color:#888;
+}
+/*
+.gwt-Canvas {
+}*/
+
+/*.gwt-CheckBox {
+}*/
+
+.gwt-DialogBox {
+  border:2px outset;
+  background-color:#FFF;
+}
+
+.gwt-DialogBox .Caption, .gwt-DialogBox .mosaic-Caption {
+  background-color:#C3D9FF;
+  background-image:url(img/blue_gradient.gif);
+  background-repeat:repeat-x;
+  padding:4px 4px 8px 4px;
+  cursor:default;
+}
+
+/*Cette classe à été ajoutée.*/
+.gwt-DialogBox .Caption {
+  font-weight:bold;
+  margin:2px;
+}
+
+.gwt-FileUpload {
+	width:250px;
+	margin:10px;
+}
+/*
+.gwt-Frame {
+}*/
+
+/*.gwt-HTML {
+}*/
+
+/*.gwt-Hyperlink {
+}*/
+
+/*.gwt-Image {
+}*/
+
+.gwt-Label {
+	font-size:0.8em;
+}
+/*
+.gwt-ListBox {
+}*/
+
+/*.gwt-PasswordTextBox {
+}*/
+
+/*.gwt-RadioButton {
+}*/
+
+.gwt-TabPanel {
+  margin-top:4px;
+}
+
+.gwt-TabPanelBottom {
+  background-color:#E8EEF7;
+}
+
+.gwt-TabBar {
+  padding-top:2px;
+  border-bottom:4px solid #87B3FF;
+  background-color:#FFF;
+}
+
+/*.gwt-TabBar .gwt-TabBarFirst {
+}*/
+
+/*.gwt-TabBar .gwt-TabBarRest {
+}*/
+
+.gwt-TabBar .gwt-TabBarItem {
+  padding:4px;
+  cursor:pointer;
+  background-color:#e8eef7;
+  border-bottom:2px solid #FFF;
+  margin-right:2px;
+}
+
+.gwt-TabBar .gwt-TabBarItem-selected {
+  padding:4px;
+  font-weight:bold;
+  cursor:default;
+  background-color:#87b3ff;
+  border-bottom:2px solid #87b3ff;
+  margin-right:2px;
+}
+
+/*.gwt-TextArea {
+}*/
+
+/*.gwt-TextBox {
+}*/
+
+/*.gwt-TextBox-readonly {
+  color:#888;
+}*/
+
+/*.gwt-StackPanel {
+}*/
+
+.gwt-StackPanel .gwt-StackPanelItem {
+  background-color:#C3D9FF;
+  cursor:pointer;
+}
+/*Cette classe à été ajoutée.*/
+.gwt-StackPanel .gwt-StackPanelItem-selected {
+}
+
+.gwt-PushButton-up {
+/*   background-color:#C3D9FF; */
+  padding:3px;
+  border:1px solid transparent;
+/*   border-color:#E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255); */
+  cursor:pointer;
+}
+
+.gwt-PushButton-up-hovering {
+  border:1px solid #C3D9FF;
+  padding:3px;
+  cursor:pointer;
+}
+
+.gwt-PushButton-down {
+/*   background-color:#C3D9FF; */
+  padding:3px;
+  border:1px solid #C3D9FF;
+/*   border-color:#9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205); */
+  cursor:pointer;
+}
+
+.gwt-PushButton-down-hovering {
+/*   background-color:#C3D9FF; */
+  padding:3px;
+  border:1px solid #C3D9FF;
+/*   border-color:#9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205); */
+  cursor:pointer;
+}
+
+.gwt-ToggleButton-up {
+  background-color:#C3D9FF;
+  padding:2px;
+  border:2px solid transparent;
+  border-color:#E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+  cursor:pointer;
+}
+
+.gwt-ToggleButton-up-hovering {
+  background-color:#C3D9FF;
+  padding:2px;
+  border:2px solid transparent;
+  border-color:#E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+  cursor:pointer;
+}
+
+.gwt-ToggleButton-down {
+  /*background-color:#C3D9FF;*/
+  padding:2px;
+  background-color:#E8F1FF;
+  border:2px solid transparent;
+  border-color:#9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+  cursor:pointer;
+}
+
+.gwt-ToggleButton-down-hovering {
+  /*background-color:#C3D9FF;*/
+  padding:2px;
+  background-color:#E8F1FF;
+  border:2px solid transparent;
+  border-color:#9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+  cursor:pointer;
+}
+
+.gwt-RichTextArea {
+  border:1px solid #000;
+  background-color:#FFF;
+}
+
+.gwt-RichTextToolbar {
+  width:100%;
+  text-align:left;
+  /*margin-top:0;*/
+  background-color:#C3D9FF;
+  padding:2px;
+}
+
+.gwt-RichTextToolbar .gwt-PushButton-up {
+  margin-right:2px;
+  border:1px solid #C3D9FF;
+}
+
+.gwt-RichTextToolbar .gwt-PushButton-up-hovering {
+  margin-right:2px;
+  border:1px solid #C3D9FF;
+  border-color:#E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+}
+
+.gwt-RichTextToolbar .gwt-PushButton-down {
+  margin-right:2px;
+  border:1px solid #C3D9FF;
+  border-color:#9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+}
+
+.gwt-RichTextToolbar .gwt-PushButton-down-hovering {
+  margin-right:2px;
+  border:1px solid #C3D9FF;
+  border-color:#9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+}
+
+.gwt-RichTextToolbar .gwt-ToggleButton-up {
+  margin-right:2px;
+  border:1px solid #C3D9FF;
+}
+
+.gwt-RichTextToolbar .gwt-ToggleButton-up-hovering {
+  margin-right:2px;
+  border:1px solid #C3D9FF;
+  border-color:#E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255);
+}
+
+.gwt-RichTextToolbar .gwt-ToggleButton-down {
+  margin-right:2px;
+  background-color:#E8F1FF;
+  border:1px solid #C3D9FF;
+  border-color:#9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+}
+
+.gwt-RichTextToolbar .gwt-ToggleButton-down-hovering {
+  margin-right:2px;
+  background-color:#E8F1FF;
+  border:1px solid #C3D9FF;
+  border-color:#9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205);
+}
+
+.gwt-HorizontalSplitPanel {
+  border:8px solid #C3D9FF;
+}
+
+.gwt-HorizontalSplitPanel .hsplitter {
+  background-color:#FFF;
+  cursor:e-resize;
+}
+/*Cette classe à été ajoutée*/
+.gwt-HorizontalSplitPanel .left {
+  background-color:#E8EEF7;
+}
+/*Cette classe à été ajoutée*/
+.gwt-HorizontalSplitPanel .right {
+  background-color:#E8EEF7;
+}
+
+/*.gwt-VerticalSplitPanel {
+}*/
+
+.gwt-VerticalSplitPanel .splitter {
+  background-color:#C3D9FF;
+  height:8px;
+  /*cursor:move;*/
+}
+
+.gwt-SuggestBoxPopup {
+  border:2px solid #C3D9FF;
+}
+
+.gwt-SuggestBoxPopup .item {
+  padding:2px;
+}
+
+.gwt-SuggestBoxPopup .item-selected {
+  background-color:#C3D9FF;
+  padding:2px;
+}
+
+/* ---- CSS definitions overriding default GWT styles (incubator widgets) */
+
+/* Date picker styles */
+
+.goog-date-picker {
+  background-color:#FFF;
+  width:100%;
+  border:1px solid #f1f1f1;
+  border-bottom:2px solid #f1f1f1;
+  color:#6b6b6b;
+}
+
+.goog-date-picker td {
+  font-family:Arial;
+  font-size:9px;
+  padding:2px;
+  text-align:center;
+  padding:2px;
+  cursor:pointer;
+  outline:none;
+  -moz-outline:none;
+}
+
+.goog-date-picker td,.monthSelector td :focus {
+  outline:none;
+}
+
+.gwt-DateBox {
+  width:10em;
+}
+
+/* Calendar styles */
+
+.goog-date-picker .filler {
+  color:#bfbfbf;
+}
+
+ .goog-date-picker .selected {
+  background:#aaccee;
+}
+
+.goog-date-picker .day-title {
+  background:#dbe6de;
+}
+
+.goog-date-picker .highlighted {
+  background:#ccee11;
+}
+
+.goog-date-picker .today {
+  border:1px solid #000;
+}
+
+.goog-date-picker .weekend {
+  background:#f1f1f1;
+}
+
+.goog-date-picker .disabled {
+  color:graytext;
+}
+
+/* Month selector styles */
+
+.monthSelector {
+  background:#dbe6de;
+  width:100%;
+  text-align:center;
+}
+
+.monthSelector td {
+  font-weight:bold;
+  font-size:70%;
+}
+
+.monthSelector .month-label {
+  text-align:center;
+}
+
+/* helper styles */
+
+.goog-date-picker .red-date {
+  background-color:red;
+}
+
+.goog-date-picker .blue-background {
+  background-color:blue;
+}
+
+.goog-date-picker .red-text {
+  color:red;
+}
+
+.goog-date-picker .green-border {
+  border:1px solid green;
+}
+
+.selected-date {
+	background-color:#C3D9FF;
+}

@@ -30,7 +30,9 @@
 	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint"/>
 
 	<!-- Specify a style sheet -->
-	<stylesheet src='org.sakaiquebec.opensyllabus.public.css.osylcore.css'/>
+<!-- NOTE: We have the choice between declare css in HTML or in gwt.xml but not in both places
+    <stylesheet src='org.sakaiquebec.opensyllabus.public.css.osylcore.css'/>
+-->
 	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint"/>
 	<inherits name="com.google.gwt.widgetideas.DatePicker"/>
 

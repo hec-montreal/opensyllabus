@@ -2591,3 +2591,13 @@ height: 100px; */
 .mosaic-WindowPanel .Resize-w {
 	cursor: w-resize;
 }
+
+.Osyl-TreeView-TreeHeaderLabel {
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 12px;
+	color: gray;	
+}
+
+.Osyl-TreeView-VertCont {
+	border:3px solid #ccc;
+}

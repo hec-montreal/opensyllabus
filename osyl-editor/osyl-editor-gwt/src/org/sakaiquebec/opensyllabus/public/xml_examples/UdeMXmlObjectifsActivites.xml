@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?> 
  <CO id='' name='' type='ByObjectivesActivities' lang ='fr' scrty='public'> 
    
-    <COStructure type='CourseInfo' scrty='public'>  <!-- CourseInfo COStructure Begin -->
+    <COStructure type='CourseInfoHeader' scrty='public'>  <!-- CourseInfoHeader COStructure Begin -->
            
-         <COStructure type='coursedescription' scrty='public'>  <!-- coursedescription COStructure Begin -->
+         <COStructure type='CourseDescriptionHeader' scrty='public'>  <!-- CourseDescriptionHeader COStructure Begin -->
               
            <COUnit  type='facprogident' scrty='public'>  <!-- facprogident COUnit Begin -->
               <label><![CDATA[Faculté et programme]]></label> 
@@ -136,7 +136,7 @@
             </COUnit>  <!-- CourseInCurriculum COUnit End -->
             
              
-         </COStructure>  <!-- coursedescription COStructure End -->
+         </COStructure>  <!-- CourseDescriptionHeader COStructure End -->
             
   	    <COUnit  type='coursescheduleplace' scrty='public'>   <!-- coursescheduleplace COUnit Begin -->
 	       <label><![CDATA[Horaire et lieux]]></label> 
@@ -199,7 +199,7 @@
             </COUnitContent> 
          </COUnit>  <!-- coursescheduleplace COUnit End -->
                
-	 </COStructure>  <!-- CourseInfo COStructure End -->
+	 </COStructure>  <!-- CourseInfoHeader COStructure End -->
 	 
 	 <COUnit  type='contactinfo' scrty='public'>  <!-- contactinfo COUnit Begin -->
 	    <label><![CDATA[Liste du personnel :]]></label> 
@@ -318,7 +318,7 @@
        </COUnitContent> 
     </COUnit>  <!-- CourseObjectives COUnit End -->
 
-    <COStructure type='evaluations' scrty='public'>  <!-- evaluations COStructure Begin -->
+    <COStructure type='EvaluationHeader' scrty='public'>  <!-- EvaluationHeader COStructure Begin -->
 	  
 		    <COUnit  type='assesmentdescription' scrty='public'>  <!-- assesmentdescription COUnit Begin -->
 		 	   <label><![CDATA[Présentation des modalités d'évaluation]]></label>
@@ -593,7 +593,7 @@
 
 	     </COStructure>  <!-- EvaluationsList COStructure End -->
 	    
-    </COStructure>  <!-- evaluations COStructure End -->
+    </COStructure>  <!-- EvaluationHeader COStructure End -->
 	
 	<COUnit  type='plagiarism' scrty='public'>  <!-- plagiarism COUnit Begin -->
        <label><![CDATA[Notes sur le plagiat]]></label>

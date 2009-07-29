@@ -63,11 +63,21 @@
 			    	<attribute name="type" restrictionpattern="undefined|bibliography|description|requiredbooks|recommendedbooks|misresources"/>
 				</element>
 	 		</element>  <!-- ThematicBibliography COUnit End --> 	 		
+
+	 		<element name='COUnit'>  <!-- LearningSupportServices COUnit Begin -->
+				<attribute name="type" restrictionpattern="LearningSupportServices" />
+				<element name="COResourceProxy">
+					<attribute name="type" restrictionpattern="text|document|url" />
+				</element>
+				<element name="COContentRubric">
+			    	<attribute name="type" restrictionpattern="undefined|description|LearningSupportSAE|LearningSupportCCE|LearningSupportOther|misresources"/>
+				</element>
+	 		</element>  <!-- LearningSupportServices COUnit End --> 	 		
 	 		
 	 		<!-- list of element structureElement allowed at this level --> 
 	 			 
-	 		<element name='COStructure'>  <!-- CourseInfo COStructure Begin -->
-	 			<attribute name='type'  restrictionpattern='CourseInfo' /> 
+	 		<element name='COStructure'>  <!-- CourseInfoHeader COStructure Begin -->
+	 			<attribute name='type'  restrictionpattern='CourseInfoHeader' /> 
 	 			<!-- list of element COUnit allowed at this level --> 
 	
 	 			<element name='COUnit'>  <!-- coursescheduleplace COUnit Begin -->
@@ -82,8 +92,8 @@
 
 	 			<!-- list of element structureElement allowed at this level --> 
 
-	 			<element name='COStructure'>  <!-- coursedescription COStructure Begin -->	 			
-	 				<attribute name='type'  restrictionpattern='coursedescription' /> 
+	 			<element name='COStructure'>  <!-- CourseDescriptionHeader COStructure Begin -->	 			
+	 				<attribute name='type'  restrictionpattern='CourseDescriptionHeader' /> 
 	 				<!-- list of element contentUnit allowed at this level (only one at the moment) --> 
 	
 	 				<element name='COUnit'>  <!-- facprogident COUnit Begin -->
@@ -116,6 +126,16 @@
 	 					</element> 
 	 				</element>   <!-- courseofficialdescription COUnit End -->
 	
+	 				<element name='COUnit'>  <!-- CourseInCurriculum COUnit Begin -->
+	 					<attribute name='type'  restrictionpattern='CourseInCurriculum' /> 
+	 					<element name='COResourceProxy'> 
+	 						<attribute name='type'  restrictionpattern='text|document|url' /> 
+	 					</element> 
+	 					<element name='COContentRubric'> 
+	 						<attribute name='type'  restrictionpattern='undefined|description|mis' /> 
+	 					</element> 
+	 				</element>   <!-- CourseInCurriculum COUnit End -->
+
 	 				<element name='COUnit'>  <!-- description COUnit Begin -->
 	 					<attribute name='type'  restrictionpattern='description' /> 
 	 					<element name='COResourceProxy'> 
@@ -128,9 +148,9 @@
 	 
 	 				<!-- list of element structureElement allowed at this level --> 
 
-	 			</element>  <!-- coursedescription COStructure End -->
+	 			</element>  <!-- CourseDescriptionHeader COStructure End -->
 		
-            </element>  <!-- CourseInfo COStructure End -->	 
+            </element>  <!-- CourseInfoHeader COStructure End -->	 
         
 	 		<element name='COStructure'> <!-- PedagogicalApproachStruc COStructure Begin -->	
 	 	       <attribute name='type'  restrictionpattern='PedagogicalApproachStruc' />  	       
@@ -168,8 +188,8 @@
 	 		  
 	 	  </element>  <!-- PedagogicalApproachStruc COStructure End -->	 
 
-	 		<element name='COStructure'>  <!-- evaluations COStructure Begin -->
-	 			<attribute name='type'  restrictionpattern='evaluations' /> 
+	 		<element name='COStructure'>  <!-- EvaluationHeader COStructure Begin -->
+	 			<attribute name='type'  restrictionpattern='EvaluationHeader' /> 
 	 			<!-- list of element contentUnit allowed at this level (only one at the moment) --> 
 	
 	 			<element name='COUnit'>  <!-- evaluation COUnit Begin -->
@@ -202,7 +222,7 @@
 	      
 	 		        </element>  <!-- EvaluationInstrumentsList COStructure End -->
 	 		        
-	 		</element>  <!-- evaluations COStructure End --> 
+	 		</element>  <!-- EvaluationHeader COStructure End --> 
 
 	 		<element name='COStructure'>  <!-- lectures COStructure Begin -->
 	 			<attribute name='type'  restrictionpattern='lectures' /> 
@@ -262,8 +282,8 @@
 		 		    
 		 		    </element> <!-- LectureLearningActivityList COStructure End -->
 
-			 		<element name='COStructure'>  <!-- evaluations COStructure Begin -->
-			 			<attribute name='type'  restrictionpattern='evaluations' /> 
+			 		<element name='COStructure'>  <!-- EvaluationHeader COStructure Begin -->
+			 			<attribute name='type'  restrictionpattern='EvaluationHeader' /> 
 			 			<!-- list of element contentUnit allowed at this level (only one at the moment) --> 
 			
 			 			<element name='COUnit'>  <!-- evaluation COUnit Begin -->
@@ -296,7 +316,7 @@
 			      
 			 		        </element>  <!-- EvaluationInstrumentsList COStructure End -->
 			 		        
-			 		</element>  <!-- evaluations COStructure End --> 
+			 		</element>  <!-- EvaluationHeader COStructure End --> 
 	 		        
 	 		    </element> <!-- LectureStruc COStructure End -->
 	
