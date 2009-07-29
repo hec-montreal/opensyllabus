@@ -94,10 +94,10 @@ public class OsylTestCOMessages {
 	    messages.put("assigndescr", "Assignment Description...");
 	    messages.put("assignexam", "Assignment and Exam");
 	    messages.put("assignexamShort", "Assignments and Exams");
-	    messages.put("evaluations",
-		    "Assessments Modes");
-	    messages.put("evaluationsShort",
-	    "Assessments");
+	    messages.put("EvaluationHeader","Assessments Modes");
+	    messages.put("EvaluationHeaderShort","Assessments");
+	    messages.put("evaluations","Assessments Modes");
+	    messages.put("evaluationsShort","Assessments");
 	    messages.put("evaluation", "Assessment");
 	    messages.put("assignexamsShort", "Assignments and Exams");
 	    messages.put("assignment", "Electronic Submission Tool Assignment");
@@ -149,6 +149,8 @@ public class OsylTestCOMessages {
 	    messages.put("element", "Element");
 	    messages.put("evaluationShort", "Assessment");
 	    messages.put("evaluations", "Assessment Modes");
+	    messages.put("EvaluationHeader", "Assessment Modes");
+	    messages.put("EvaluationHeaderShort", "Assessment");
 	    messages.put("exams", "Exams");
 	    messages.put("exam", "Exam");
 	    messages.put("oralpresentation", "Oral Presentation");

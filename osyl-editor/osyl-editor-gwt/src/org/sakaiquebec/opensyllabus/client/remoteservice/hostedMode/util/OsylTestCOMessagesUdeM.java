@@ -175,17 +175,17 @@ public class OsylTestCOMessagesUdeM {
 	    messages.put("courseabrev", "Sigle du cours");
 	    messages.put("coursecredits", "Nombre de crédits");
 	    
-	    messages.put("coursedescription", "Description du cours");
-	    messages.put("coursedescriptionShort", "Description du cours");
+	    messages.put("CourseDescriptionHeader", "Description du cours");
+	    messages.put("CourseDescriptionHeaderShort", "Description du cours");
 	    messages.put("courseofficialdescription", "Descripteur officiel du cours (annuaire)");
 	    messages.put("courseofficialdescriptionShort", "Descripteur officiel");
 	    messages.put("courseplace", "Lieu où se donne le cours");
 	    
 	    messages.put("courseimage", "Image");
-	    messages.put("CourseInfo", "Informations générales sur le cours");
-	    messages.put("CourseInfoShort", "Informations sur le cours");
+	    messages.put("CourseInfoHeader", "Informations générales sur le cours");
+	    messages.put("CourseInfoHeaderShort", "Informations sur le cours");
 	    messages.put("CourseInCurriculum", "Place du cours dans le programme");
-	    messages.put("courseoutline", "Hiver 2008 - SOL 2104");
+	    messages.put("courseoutline", "Test Osyl UdeM");
 
 	    messages.put("coursesession", "Trimestre");
 	    
@@ -238,8 +238,8 @@ public class OsylTestCOMessagesUdeM {
 	    messages.put("evalsubproc", "Procédures de remise et pénalités");
 	    messages.put("SpecializedResource", "Ressource spécialisée");
 	    	    	    	    
-	    messages.put("evaluations","Modalités d'évaluation sommative");
-	    messages.put("evaluationsShort","Évaluation");
+	    messages.put("EvaluationHeader","Modalités d'évaluation sommative");
+	    messages.put("EvaluationHeaderShort","Évaluation");
 	    messages.put("EvaluationsList","Liste des évaluations");
 	    messages.put("EvaluationsListShort","Évaluations");
 	    	    
@@ -406,6 +406,23 @@ public class OsylTestCOMessagesUdeM {
 	    messages.put("ThemeTeachingActivity", "Activité d'enseignement");
 	    messages.put("ThemeLearningActivityList", "Activités d'apprentissage");
 	    messages.put("ThemeLearningActivity", "Activité d'apprentissage");
+
+	    messages.put("Activity","Activité");
+	    messages.put("ActivityDate", "Date de présentation de l'activité");
+	    messages.put("ActivityPlace", "Lieu de présentation de l'activité");
+	    messages.put("ActivityType", "Type d'activité");
+	    messages.put("ActivityResources", "Ressources mobilisées");
+	    messages.put("ActivityGeneralObjectives", "Objectifs généraux");
+	    messages.put("ActivitySpecificObjectives", "Objectifs spécifiques");
+	    messages.put("ActivityRequiredMaterial", "Matériel requis");
+
+	    messages.put("Activities", "Liste des activités");
+	    messages.put("ActivitiesShort", "Liste des activités");
+	    messages.put("ActivityStruc", "Activité");
+	    messages.put("ActivityTeachingActivityList", "Activités d'enseignement");
+	    messages.put("ActivityTeachingActivity", "Activité d'enseignement");
+	    messages.put("ActivityLearningActivityList", "Activités d'apprentissage");
+	    messages.put("ActivityLearningActivity", "Activité d'apprentissage");
 
 	    messages.put("Bibliography", "Liste des références bibliographiques");
 	    messages.put("BibliographyShort", "Bibliographie");
