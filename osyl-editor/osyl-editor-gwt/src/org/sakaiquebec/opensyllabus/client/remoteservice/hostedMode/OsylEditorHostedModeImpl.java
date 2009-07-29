@@ -34,17 +34,19 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	
 	private static String DEFAULT_CONFIG_PATH = "rules/rules.xml";
 	private static String  UDEM_CONFIG_PATH = "rules/rulesUdeM.xml";
-//	  private static String UDEM_CONFIG_PATH = "rules/rulesUdeMCompetencesActivites.xml";
-//	  private static String UDEM_CONFIG_PATH = "rules/rulesUdeMCompetencesComposantes.xml";
+	
+//    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMCompetencesActivites.xml";
+//    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMCompetencesComposantes.xml";
 //    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMCompetencesSeances.xml";
 //    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMObjectifsActivites.xml";
 //    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMObjectifsSeances.xml";
 //    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMObjectifsThemes.xml";
 
-	private static String DEFAULT_MODEL_PATH = "xml_examples/defaultXml.xml";
-	private static String UDEM_MODEL_PATH = "xml_examples/UdeMXml.xml";
-//	  private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlCompetencesActivites.xml";
-//	  private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlCompetencesComposantes.xml";
+    private static String DEFAULT_MODEL_PATH = "xml_examples/defaultXml.xml";
+    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXml.xml";
+
+//    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlCompetencesActivites.xml";
+//    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlCompetencesComposantes.xml";
 //    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlCompetencesSeances.xml";
 //    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlObjectifsActivites.xml";
 //    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlObjectifsSeances.xml";
