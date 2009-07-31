@@ -230,7 +230,7 @@ public class OsylCOStructureEvaluationItemEditor extends
 	typeListBox.addItem(getView().getCoMessage("Evaluation.Type.homework"));
 	typeListBox.addItem(getView().getCoMessage(
 		"Evaluation.Type.participation"));
-	// Addition UdeM
+	// TODO : Should be moved to XML external configuration file
 	if ( OsylUdeMSwitch.isUdeM() ) {
 		typeListBox.addItem(getView().getCoMessage(
 			"Evaluation.Type.multiplechoice"));

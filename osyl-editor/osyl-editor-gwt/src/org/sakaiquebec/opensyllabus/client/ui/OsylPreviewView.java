@@ -146,7 +146,7 @@ public class OsylPreviewView extends OsylViewableComposite implements
 		new HorizontalSplitPanel();
 	horizontalSplitPanel
 		.setStylePrimaryName("Osyl-MainView-HorizontalSplitPanel");
-	horizontalSplitPanel.setSplitPosition(OsylTreeView.DEFAULT_WIDTH);
+	horizontalSplitPanel.setSplitPosition( OsylTreeView.getInitialSplitPosition());
 
 	// Create and set the OpenSyllabus TreeView
 	setOsylTreeView(new OsylTreeView(getModel(), getController()));

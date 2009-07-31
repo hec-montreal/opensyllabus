@@ -27,6 +27,9 @@ import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 
+import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
+
+
 /**
  * The Unit Tree Item View usable for the Osyl tree view
  * 
@@ -54,9 +57,16 @@ public class OsylUnitTreeItemView extends OsylTreeItemBaseView implements
 	COElementAbstract eltAbs = itemModel.getParent();
 	if (eltAbs.isCOStructureElement()) {
 	    COStructureElement coStructElt = (COStructureElement) eltAbs;
-	    treeItemText =
-		    coStructElt.getChildPosition(itemModel) + " : "
-			    + itemModel.getLabel();
+	    if ( OsylStyleLevelChooser.getHasANumber((COContentUnit) getModel()) ) {
+		String positionString = coStructElt.getChildPosition(itemModel);
+		if ( positionString.length() < 2 ) {
+		    positionString = "0" + positionString; 
+		}
+		treeItemText = positionString + " : " + itemModel.getLabel();
+	    }
+	    else {
+		treeItemText = itemModel.getLabel();
+	    }
 	} else {
 	    // A content unit with no parent structure element
 	    treeItemText = getShortCoMessage(itemModel.getType());

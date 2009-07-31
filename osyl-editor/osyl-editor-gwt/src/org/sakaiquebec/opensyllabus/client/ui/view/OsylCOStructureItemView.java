@@ -56,16 +56,15 @@ public class OsylCOStructureItemView extends OsylViewableComposite {
 
     protected void initView(){
 	setMainPanel(new FlexTable());
-	getMainPanel().setWidth("92%");
 	getMainPanel().setStylePrimaryName("Osyl-ListItemView-Table");
 	COContentUnit coContentUnit = (COContentUnit) getModel();
 	COStructureElement coStructElt =
-		(COStructureElement) coContentUnit.getParent();
-	addCoUnitLink(getCoMessage(coContentUnit.getType()), coStructElt
-		.getChildPosition(coContentUnit));
-	
+	    (COStructureElement) coContentUnit.getParent();
+	addCoUnitLink(getCoMessage(coContentUnit.getType()), 
+		coStructElt.getChildPosition(coContentUnit));
+
 	addCoUnitLabel();
-	
+
 	initWidget(getMainPanel());
     }
     

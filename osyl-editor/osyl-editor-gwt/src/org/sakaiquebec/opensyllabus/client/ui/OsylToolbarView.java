@@ -114,12 +114,12 @@ public class OsylToolbarView extends OsylViewableComposite implements
 
 	public void execute() {
 	    if (parentModel.isCOStructureElement()) {
-		COContentUnit.createDefaultCOContenUnit(type, getCoMessages(),
-			parentModel);
+		    COContentUnit.createDefaultCOContenUnit(type, getCoMessages(),
+			    parentModel);
 	    } else if (parentModel.isCOContentUnit()) {
 		COContentResourceProxy resProxModel =
-			COContentResourceProxy.createDefaultResProxy(type,
-				getCoMessages(), parentModel);
+		    COContentResourceProxy.createDefaultResProxy(type,
+			    getCoMessages(), parentModel);
 		if (type
 			.equalsIgnoreCase(COContentResourceProxyType.ASSIGNMENT)) {
 		    // Call the SAKAI server in order to receive an assignment
@@ -205,17 +205,12 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		// Invisible iFrame that should be added to HTML page
 		// in order to print Widgets using Print class from Andre
 		// Freller
-		getController()
-			.getMainView()
-			.getWorkspaceView()
-			.getWorkspacePanel()
-			.add(
-				new HTML(
-					"<iframe id='__printingFrame' style='width:0;height:0;border:0'></iframe>"));
+		getController().getMainView().getWorkspaceView().getWorkspacePanel().add(
+			new HTML(
+				"<iframe id='__printingFrame' style='width:0;height:0;border:0'></iframe>"));
 		getController().setReadOnly(true);
 		getController().getViewContext().closeAllEditors();
-		getController().getMainView().setHorizontalSplitPanelPosition(
-			"0px");
+		getController().getMainView().setHorizontalSplitPanelPosition("0px");
 		final MenuItem bHome = getOsylToolbar().getHomePushButton();
 		final MenuItem bSave = getOsylToolbar().getSavePushButton();
 		final MenuBar bAdd = getOsylToolbar().getAddMenuButton();
@@ -226,50 +221,36 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		getOsylToolbar().getMenuBar().clearItems();
 		if (closeMenuItem == null) {
 		    closeMenuItem =
-			    new MenuItem(uiMessages
-				    .getMessage("ButtonCloseToolBar"),
-				    new Command() {
-					public void execute() {
-					    getController().setReadOnly(false);
-					    entryPoint.refreshView();
-					    entryPoint
-						    .setView(previousMainView);
-					    entryPoint.refreshView();
-					    getController()
-						    .getViewContext()
-						    .setContextModel(
-							    getController()
-								    .getMainView()
-								    .findStartingViewContext());
-					    ((OsylMainView) previousMainView)
-						    .refreshView();
-					    getController()
-						    .getMainView()
-						    .setHorizontalSplitPanelPosition(
-							    OsylTreeView.DEFAULT_WIDTH);
-					    getOsylToolbar().getMenuBar()
-						    .addItem(bHome);
-					    getOsylToolbar().getMenuBar()
-						    .addItem(bSave);
-					    getOsylToolbar()
-						    .getMenuBar()
-						    .addItem(
-							    uiMessages
-								    .getMessage("ButtonAddToolBar"),
-							    bAdd);
-					    getOsylToolbar()
-						    .getMenuBar()
-						    .addItem(
-							    uiMessages
-								    .getMessage("ButtonViewToolBar"),
-							    bView);
-					    getOsylToolbar().getMenuBar()
-						    .addItem(bPublish);
-					    getOsylToolbar().getMenuBar()
-						    .addItem(bPrint);
-					    closeMenuItem.setVisible(false);
-					}
-				    });
+			new MenuItem(uiMessages
+				.getMessage("ButtonCloseToolBar"),
+				new Command() {
+			    public void execute() {
+				getController().setReadOnly(false);
+				entryPoint.refreshView();
+				entryPoint.setView(previousMainView);
+				entryPoint.refreshView();
+				getController().getViewContext()
+					.setContextModel(
+						getController()
+						.getMainView()
+						.findStartingViewContext());
+				((OsylMainView) previousMainView).refreshView();
+				getController().getMainView().setHorizontalSplitPanelPosition(OsylTreeView.getInitialSplitPosition());
+				getOsylToolbar().getMenuBar().addItem(bHome);
+				getOsylToolbar().getMenuBar().addItem(bSave);
+				getOsylToolbar().getMenuBar().addItem(
+					uiMessages
+					.getMessage("ButtonAddToolBar"),
+					bAdd);
+				getOsylToolbar().getMenuBar().addItem(
+					uiMessages
+					.getMessage("ButtonViewToolBar"),
+					bView);
+				getOsylToolbar().getMenuBar().addItem(bPublish);
+				getOsylToolbar().getMenuBar().addItem(bPrint);
+				closeMenuItem.setVisible(false);
+			    }
+			});
 		    getOsylToolbar().getMenuBar().addItem(closeMenuItem);
 		} else {
 		    closeMenuItem.setVisible(true);
@@ -278,25 +259,12 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		final int sp = 100;
 		Timer t = new Timer() {
 		    public void run() {
-			int documentHeight =
-				osylPrintView.getOffsetHeight() + sp;
+			int documentHeight = osylPrintView.getOffsetHeight() + sp;
 			entryPoint.setToolHeight(documentHeight);
 			if (getBrowserType().equals("webkit")) {
 			    printJSNI();
 			} else {
-			    Print
-				    .it(
-					    "<style type=text/css media=paper> "
-						    + ".Osyl-UnitView-MainPanel { padding: 10px 5px 0px 50px; } "
-						    + ".Osyl-LongView-CourseOutline { margin: 2px 30px 10px 2px; color:#063871; text-align:center; font-size: 20px; font-weight:bold; padding-top:4px; padding-bottom:4px; font-family: sans-serif, Arial, Verdana; } "
-						    + ".Osyl-UnitView-Title { margin: 2px 30px 10px 2px; color:#063871; font-size: 16px; font-weight:bold; padding: 4px 0px 4px 1px; font-family: sans-serif, Arial, Verdana; border: 1px solid transparent; } "
-						    + ".Osyl-UnitView-Title .Osyl-LabelEditor-View { margin: 2px 30px 10px 2px; color:#063871; font-size: 16px; font-weight:bold; padding:4px; font-family: sans-serif, Arial, Verdana; } "
-						    + ".Osyl-UnitView-Title .Osyl-LabelEditor-TextBox { border: 1px solid #aaa; margin-bottom: 12px; color:#063871; font-size: 16px; font-weight:bold; padding-top:4px; padding-bottom:4px; font-family: sans-serif, Arial, Verdana; } "
-						    + ".Osyl-UnitView-RubricName { font-family: sans-serif, Arial, Verdana; font-size: 14px; font-weight:bold; } "
-						    + ".Osyl-UnitView-RubricImg { display: list-item; list-style-image: url(img/carreVert.gif); margin:3px 4px 4px 4px; } "
-						    + ".Osyl-ResProxView-MetaInfo { display: block; margin: 15px 0px 15px 0px; font-family: sans-serif, Arial, Verdana; font-size: 10px; color: #a0a0a0; }"
-						    + ".Osyl-ContactInfo { border-bottom: 1px solid #C3D9FF; } "
-						    + "</style>", osylPrintView);
+			    draftPrinting();
 			}
 		    }
 		};
@@ -310,8 +278,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
      */
 
     private static native void printJSNI() /*-{  
-          window.parent.print();
-        }-*/;
+      window.parent.print();
+    }-*/;
 
     /**
      * The code comes from UserAgent.gwt.xml in gwt-user.jar
@@ -319,29 +287,47 @@ public class OsylToolbarView extends OsylViewableComposite implements
      * @return client or user agent browser name
      */
     private native String getBrowserType() /*-{ 
-               var ua = navigator.userAgent.toLowerCase(); 
-               if (ua.indexOf("opera") != -1) { 
-                   return "opera"; 
-               } 
-               else if (ua.indexOf("webkit") != -1) { 
-                   return "webkit"; 
-               } 
-               else if ((ua.indexOf("msie 6.0") != -1) || 
-                        (ua.indexOf("msie 7.0") != -1)) { 
-                   return "ie6"; 
-                     } 
-               else if (ua.indexOf("gecko") != -1) { 
-                   var result = /rv:([0-9]+)\.([0-9]+)/.exec(ua); 
-                   if (result && result.length == 3) { 
-                     var version = (parseInt(result[1]) * 10) + parseInt(result[2]); 
-                     if (version >= 18) 
-                       return "gecko1_8"; 
-                   } 
-                   return "gecko"; 
-               } 
-               return "unknown"; 
-           }-*/;
+       var ua = navigator.userAgent.toLowerCase(); 
+       if (ua.indexOf("opera") != -1) { 
+           return "opera"; 
+       } 
+       else if (ua.indexOf("webkit") != -1) { 
+           return "webkit"; 
+       } 
+       else if ((ua.indexOf("msie 6.0") != -1) || 
+                (ua.indexOf("msie 7.0") != -1)) { 
+           return "ie6"; 
+             } 
+       else if (ua.indexOf("gecko") != -1) { 
+           var result = /rv:([0-9]+)\.([0-9]+)/.exec(ua); 
+           if (result && result.length == 3) { 
+             var version = (parseInt(result[1]) * 10) + parseInt(result[2]); 
+             if (version >= 18) 
+               return "gecko1_8"; 
+           } 
+           return "gecko"; 
+       } 
+       return "unknown"; 
+   }-*/;
 
+    /*
+     * Draft Printing for Browser different from WebKit
+     */
+    private void draftPrinting() {
+	Print.it(
+	    "<style type=text/css media=paper> "
+	    + ".Osyl-UnitView-MainPanel { padding: 10px 5px 0px 50px; } "
+	    + ".Osyl-LongView-CourseOutline { margin: 2px 30px 10px 2px; color:#063871; text-align:center; font-size: 20px; font-weight:bold; padding-top:4px; padding-bottom:4px; font-family: sans-serif, Arial, Verdana; } "
+	    + ".Osyl-UnitView-Title { margin: 2px 30px 10px 2px; color:#063871; font-size: 16px; font-weight:bold; padding: 4px 0px 4px 1px; font-family: sans-serif, Arial, Verdana; border: 1px solid transparent; } "
+	    + ".Osyl-UnitView-Title .Osyl-LabelEditor-View { margin: 2px 30px 10px 2px; color:#063871; font-size: 16px; font-weight:bold; padding:4px; font-family: sans-serif, Arial, Verdana; } "
+	    + ".Osyl-UnitView-Title .Osyl-LabelEditor-TextBox { border: 1px solid #aaa; margin-bottom: 12px; color:#063871; font-size: 16px; font-weight:bold; padding-top:4px; padding-bottom:4px; font-family: sans-serif, Arial, Verdana; } "
+	    + ".Osyl-UnitView-RubricName { font-family: sans-serif, Arial, Verdana; font-size: 14px; font-weight:bold; } "
+	    + ".Osyl-UnitView-RubricImg { display: list-item; list-style-image: url(img/carreVert.gif); margin:3px 4px 4px 4px; } "
+	    + ".Osyl-ResProxView-MetaInfo { display: block; margin: 15px 0px 15px 0px; font-family: sans-serif, Arial, Verdana; font-size: 10px; color: #a0a0a0; }"
+	    + ".Osyl-ContactInfo { border-bottom: 1px solid #C3D9FF; } "
+	    + "</style>", osylPrintView);
+    }    
+    
     /**
      * refresh this whole view
      */
@@ -439,12 +425,18 @@ public class OsylToolbarView extends OsylViewableComposite implements
 					.getAllowedSubModels(getModel());
 			Iterator<COModelInterface> iter = subModels.iterator();
 			while (iter.hasNext()) {
-			    COModelInterface subModel =
-				    (COModelInterface) iter.next();
-			    getOsylToolbar().getAddMenuButton().addItem(
-				    getCoMessage(subModel.getType()),
-				    new AddMenuCommand(castedModel, subModel
-					    .getType()));
+			    COModelInterface subModel =(COModelInterface) iter.next();
+			    // Special case : No addition is allowable under Header COStructure
+			    String parentType = castedModel.getType();
+			    if ( parentType.endsWith("Header") ) {
+				getOsylToolbar().getAddMenuButton().setVisible(false);
+				return;
+			    }
+			    else {
+				getOsylToolbar().getAddMenuButton().addItem(
+					getCoMessage(subModel.getType()),
+					new AddMenuCommand(castedModel,subModel.getType()));				    
+			    }				
 			}
 		    } catch (RuntimeException e) {
 			e.printStackTrace();
@@ -526,4 +518,5 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    List<ClosePushButtonEventHandler> closeEventHandlerList) {
 	this.closeEventHandlerList = closeEventHandlerList;
     }
+
 }

@@ -442,7 +442,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	lb.addItem(getView().getCoMessage("ResProxContactInfoView_Trainee"));
 	lb.addItem(getView().getCoMessage("ResProxContactInfoView_Student"));
 	lb.addItem(getView().getCoMessage("ResProxContactInfoView_Secretary"));
-	// Addition for UdeM
+	// TODO : Should be moved to XML external configuration file
 	if ( OsylUdeMSwitch.isUdeM() ) {
 		lb.addItem(getView().getCoMessage(
 			"ResProxContactInfoView_Professor_UdeM"));

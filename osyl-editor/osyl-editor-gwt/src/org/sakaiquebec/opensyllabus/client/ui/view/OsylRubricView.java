@@ -29,10 +29,8 @@ import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
 import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
-
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -66,11 +64,10 @@ public class OsylRubricView extends OsylViewableComposite {
 
 	// Rubric section display
 	HorizontalPanel hPanel = new HorizontalPanel();
-	Image img = getOsylImageBundle().carreVert().createImage();
-	img.setStylePrimaryName("Osyl-UnitView-RubricImg");
-	hPanel.add(img);
 	Label l = new Label(getCoMessages().getMessage(getModel().getType()));
-	l.setStylePrimaryName("Osyl-UnitView-RubricName");
+	// TODO adapt to the level...
+	l.setStylePrimaryName("Osyl-UnitView-Title");
+	l.addStyleName("Osyl-Title5");
 	hPanel.add(l);
 	getMainPanel().add(hPanel);
 
@@ -213,4 +210,7 @@ public class OsylRubricView extends OsylViewableComposite {
 	    }
         }
     }
+
+    
+
 }

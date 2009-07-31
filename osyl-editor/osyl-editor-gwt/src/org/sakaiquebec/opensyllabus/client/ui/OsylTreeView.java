@@ -32,9 +32,13 @@ import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.CaptionPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.TreeListener;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * OsylTreeView displays the tree structure of current course outline in
@@ -48,8 +52,8 @@ import com.google.gwt.user.client.ui.TreeListener;
  * @version $Id: $
  */
 public class OsylTreeView extends OsylViewableComposite implements
-	TreeListener, ViewContextSelectionEventHandler,
-	UpdateCOStructureElementEventHandler {
+TreeListener, ViewContextSelectionEventHandler,
+UpdateCOStructureElementEventHandler {
 
     private TreeItem root;
 
@@ -59,7 +63,9 @@ public class OsylTreeView extends OsylViewableComposite implements
 
     private Map<COModelInterface, TreeItem> itemModelMap;
 
-    public static final String DEFAULT_WIDTH = "270px";
+    private static int maxTreeWidth = 20;
+
+    public static final int DEFAULT_WIDTH = 130;
 
     public OsylTreeView(COModelInterface model, OsylController osylController) {
 	super(model, osylController);
@@ -68,17 +74,31 @@ public class OsylTreeView extends OsylViewableComposite implements
     }
 
     private void initView() {
+
+	CaptionPanel verticalLayoutContainer = new CaptionPanel();
+	verticalLayoutContainer.setStylePrimaryName("Osyl-TreeView-VertCont");
+	VerticalPanel vertPan = new VerticalPanel(); 
+	Label treeHeaderLabel = new Label("Pages");
+	treeHeaderLabel.setStylePrimaryName("Osyl-TreeView-TreeHeaderLabel");
+	vertPan.add(treeHeaderLabel);
+
 	final Tree tree = new Tree();
 	setTree(tree);
 	getTree().setStylePrimaryName("Osyl-TreeView-Tree");
 	// the listener is "this" itself
 	getTree().addTreeListener(this);
-	initWidget(osylTree);
+	vertPan.add(getTree());
+	verticalLayoutContainer.add(vertPan);
+//	verticalLayoutContainer.setCellHorizontalAlignment(getTree(),HasHorizontalAlignment.ALIGN_LEFT );
+	initWidget(verticalLayoutContainer);
+//	initWidget(getTree());
 	refreshView();
     }
 
     private void refreshSubModelsViews(COElementAbstract currentModel) {
 	// clean panel
+        // The only mean to control the padding of the root
+	DOM.setStyleAttribute(root.getElement(), "padding", "10px");
 	TreeItem currentTreeItem = (TreeItem) itemModelMap.get(currentModel);
 	currentTreeItem.removeItems();
 
@@ -96,6 +116,8 @@ public class OsylTreeView extends OsylViewableComposite implements
 	while (iter.hasNext()) {
 	    // this can be a Lecture leaf
 	    COElementAbstract itemModel = (COElementAbstract) iter.next();
+	    // Compute the maximum tree width
+	    computeMaxTreeWidth(itemModel);
 	    if (itemModel.isCOStructureElement()) {
 		addStructTreeItem(currentTreeItem,
 			(COStructureElement) itemModel);
@@ -113,11 +135,11 @@ public class OsylTreeView extends OsylViewableComposite implements
 	COContent co = (COContent) getModel();
 	getTree().removeItems();
 	String treeItemTitle = null;
-	
+
 	try {
-		treeItemTitle = getController().getCOSerialized().getTitle();
+	    treeItemTitle = getController().getCOSerialized().getTitle();
 	} catch (NullPointerException e) {
-		treeItemTitle = null;
+	    treeItemTitle = null;
 	}
 	// If we don't have a controller or a COSerialized (in hosted mode for
 	// instance), or an empty title, we simply display "Course Outline".
@@ -138,14 +160,14 @@ public class OsylTreeView extends OsylViewableComposite implements
     private void addUnitTreeItem(TreeItem parentTreeItem,
 	    COContentUnit itemModel) {
 	OsylUnitTreeItemView treeItemView =
-		new OsylUnitTreeItemView(itemModel, getController());
+	    new OsylUnitTreeItemView(itemModel, getController());
 	addTreeItemView(parentTreeItem, treeItemView);
     }
 
     private void addStructTreeItem(TreeItem parentTreeItem,
 	    COStructureElement itemModel) {
 	OsylStructTreeItemView treeItemView =
-		new OsylStructTreeItemView(itemModel, getController());
+	    new OsylStructTreeItemView(itemModel, getController());
 	addTreeItemView(parentTreeItem, treeItemView);
     }
 
@@ -154,6 +176,7 @@ public class OsylTreeView extends OsylViewableComposite implements
 	TreeItem treeItem = new TreeItem(treeItemView);
 	itemModelMap.put(treeItemView.getModel(), treeItem);
 	parentTreeItem.addItem(treeItem);
+	// The tree is expanded by default
 	parentTreeItem.setState(true);
     }
 
@@ -197,7 +220,7 @@ public class OsylTreeView extends OsylViewableComposite implements
 	    getController().getViewContext().setContextModel(getModel());
 	} else {
 	    OsylTreeItemBaseView treeItemView =
-		    (OsylTreeItemBaseView) item.getWidget();
+		(OsylTreeItemBaseView) item.getWidget();
 	    getController().getViewContext().setContextModel(
 		    treeItemView.getModel());
 	}
@@ -217,7 +240,7 @@ public class OsylTreeView extends OsylViewableComposite implements
      */
     public void onViewContextSelection(ViewContextSelectionEvent event) {
 	COElementAbstract viewContextModel =
-		(COElementAbstract) event.getSource();
+	    (COElementAbstract) event.getSource();
 	// show the treeview according to the model selected
 	// retrieving the corresponding treeitem of the model
 	TreeItem treeItem = (TreeItem) itemModelMap.get(viewContextModel);
@@ -230,4 +253,31 @@ public class OsylTreeView extends OsylViewableComposite implements
 	refreshSubModelsViews((COElementAbstract) event.getSource());
     }
 
+    /**
+     * @param itemModel
+     */
+    private void computeMaxTreeWidth(COElementAbstract itemModel) {
+	// Computation of the initial split position based on max width of the Tree
+	getTree().setVisible(true);
+	if ( itemModel.getLabel() != null ){
+	    int currentTreeWidth = itemModel.getLabel().length();
+	    if ( currentTreeWidth > getMaxTreeWidth() ) {
+		setMaxTreeWidth(currentTreeWidth);
+	    }		
+	}
+    }
+
+    public static int getMaxTreeWidth() {
+	return maxTreeWidth;
+    }
+
+    public void setMaxTreeWidth(int newMaxTreeWidth) {
+	this.maxTreeWidth = newMaxTreeWidth;
+    }
+    
+    public static String getInitialSplitPosition(){
+	int splitterPosition = getMaxTreeWidth()*4 + OsylTreeView.DEFAULT_WIDTH;
+	return splitterPosition + "px";
+    }
+    
 }

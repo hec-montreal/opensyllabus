@@ -131,7 +131,6 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 				new OsylCOStructureView(getModel(), getController());
 			currentView = newView; 
 		}
-
 		getWorkspacePanel().add(currentView);
 		scrollPrevent = 100;
 	    }

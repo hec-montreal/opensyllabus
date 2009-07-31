@@ -46,7 +46,7 @@ public class OsylStructTreeItemView extends OsylTreeItemBaseView implements
 	super(model, osylController);
     }
 
-    protected String createTreeItemText() {
+    public String createTreeItemText() {
 	COStructureElement itemModel = (COStructureElement) getModel();
 	String treeItemText = getCoMessages().getShortMessage((itemModel.getType()));
 	return treeItemText;

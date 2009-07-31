@@ -98,7 +98,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 
     public void setUpAndDownPanel(VerticalPanel upAndDownPanel) {
 	this.upAndDownPanel = upAndDownPanel;
-	this.upAndDownPanel.setStyleName("Osyl-MouseOverPopup-ButtonPanel");
+	this.upAndDownPanel.setStyleName("Osyl-MouseOverPopup-ArrowButtonPanel");
     }
 
     /**
