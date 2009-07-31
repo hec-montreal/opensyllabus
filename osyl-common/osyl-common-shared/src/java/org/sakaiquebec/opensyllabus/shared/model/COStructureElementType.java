@@ -37,12 +37,15 @@ public class COStructureElementType {
 
     public static final String LECTURES_LIST_CONTEXT_SKILLS = "LecturesListContextSkills";
 
-    public static final String ACTIVITIES = "activities";
+    public static final String ACTIVITIES = "Activities";
+    
+    public static final String EVALUATION_HEADER = "EvaluationHeader";
     
     public static final String EVALUATIONS = "evaluations";
+
     public static final String TOPICS = "topics";
-    public static final String COURSEINFO = "CourseInfo";
-    public static final String COURSEDESCRIPTION = "coursedescription";
+    public static final String COURSEINFO_HEADER = "CourseInfoHeader";
+    public static final String COURSEDESCRIPTION_HEADER = "CourseDescriptionHeader";
     public static final String PEDAGOGICAL_APPROACH_STRUC = "PedagogicalApproachStruc";   
     public static final String PEDAGOGICAL_APPROACH_SPECIFIC_STRUC = "PedagogicalApproachSpecificStruc";
     
@@ -69,15 +72,16 @@ public class COStructureElementType {
      */
     private static final String[] types = {   
     	
-    									  LECTURES 
+    					      LECTURES 
 	                                    , LECTURES_LIST_CONTEXT_SKILLS
 
 	                                    , ACTIVITIES
 	                                    
-	                                    , EVALUATIONS 
+	                                    , EVALUATIONS
+	                                    , EVALUATION_HEADER 
 	                                    , TOPICS 
-	                                    , COURSEINFO
-	                                    , COURSEDESCRIPTION
+	                                    , COURSEINFO_HEADER
+	                                    , COURSEDESCRIPTION_HEADER
 	                                    , PEDAGOGICAL_APPROACH_STRUC
 	                                    , PEDAGOGICAL_APPROACH_SPECIFIC_STRUC
 
