@@ -1,0 +1,12 @@
+/* ---- CSS Reset ---------------------------- */
+* {
+	font-size:100%;
+	padding:0;
+	margin:0;
+	outline:none;
+}
+table {
+	border:none;
+	border-collapse:collapse;
+}
+/*End  CSS Reset*/
