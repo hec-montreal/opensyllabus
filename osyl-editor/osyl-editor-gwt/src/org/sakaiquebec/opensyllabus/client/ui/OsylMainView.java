@@ -83,9 +83,8 @@ public class OsylMainView extends OsylViewableComposite {
 		    (PublishPushButtonEventHandler) getController());
 	    getOsylToolbarView().refreshView();
 	    getOsylToolbarView().setTitle(getUiMessage("OsylToolbar"));
-	    OsylRoundCornersPanel toolBarRoundCornerPanel = new OsylRoundCornersPanel(getOsylToolbarView());
-	    getMainPanel().add(toolBarRoundCornerPanel);
-	    getMainPanel().setCellHeight(toolBarRoundCornerPanel, "21px");
+	    getMainPanel().add(getOsylToolbarView());
+	    getMainPanel().setCellHeight(getOsylToolbarView(), "21px");
 	}
 
 	// Create and set the Main Horizontal Split Panel
@@ -98,13 +97,26 @@ public class OsylMainView extends OsylViewableComposite {
 	// TODO: compute dynamically the maximum width of the TreeView
         //  horizontalSplitPanel.setSplitPosition("320px");
 	horizontalSplitPanel.setSplitPosition( OsylTreeView.getInitialSplitPosition());
-	OsylRoundCornersPanel treeViewRoundCornerPanel = new OsylRoundCornersPanel(getOsylTreeView());
+	OsylRoundCornersPanel treeViewRoundCornerPanel = 
+	    	new OsylRoundCornersPanel(getOsylTreeView(),
+	    		"Osyl-TreeView",
+			"Osyl-TreeView-BottomLeft", 
+			"Osyl-TreeView-BottomRight", 
+			"Osyl-TreeView-TopLeft", 
+			"Osyl-TreeView-TopRight");
 	horizontalSplitPanel.setLeftWidget(treeViewRoundCornerPanel);
 
 	// Create and set the OpenSyllabus Workspace View
 	setWorkspaceView(new OsylWorkspaceView(getController()
 		.getViewContextModel(), getController()));
-	OsylRoundCornersPanel workSpaceViewRoundCornerPanel = new OsylRoundCornersPanel(getWorkspaceView());
+	OsylRoundCornersPanel workSpaceViewRoundCornerPanel = 
+	    new OsylRoundCornersPanel(
+		    getWorkspaceView(),
+	    		"Osyl-WorkspaceView",
+			"Osyl-WorkspaceView-BottomLeft", 
+			"Osyl-WorkspaceView-BottomRight", 
+			"Osyl-WorkspaceView-TopLeft", 
+			"Osyl-WorkspaceView-TopRight");
 	horizontalSplitPanel.setRightWidget(workSpaceViewRoundCornerPanel);
 
 	subscribeChildrenViewsToLocalHandlers();

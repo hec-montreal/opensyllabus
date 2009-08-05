@@ -52,8 +52,8 @@ import com.google.gwt.user.client.ui.Label;
  * @version $Id: $
  */
 public class OsylTreeView extends OsylViewableComposite implements
-TreeListener, ViewContextSelectionEventHandler,
-UpdateCOStructureElementEventHandler {
+	TreeListener, ViewContextSelectionEventHandler,
+	UpdateCOStructureElementEventHandler {
 
     private TreeItem root;
 
@@ -75,11 +75,9 @@ UpdateCOStructureElementEventHandler {
 
     private void initView() {
 
-	CaptionPanel verticalLayoutContainer = new CaptionPanel();
-	verticalLayoutContainer.setStylePrimaryName("Osyl-TreeView-VertCont");
 	VerticalPanel vertPan = new VerticalPanel(); 
 	Label treeHeaderLabel = new Label("Pages");
-	treeHeaderLabel.setStylePrimaryName("Osyl-TreeView-TreeHeaderLabel");
+	treeHeaderLabel.setStylePrimaryName("Osyl-TreeView-Header");
 	vertPan.add(treeHeaderLabel);
 
 	final Tree tree = new Tree();
@@ -88,16 +86,13 @@ UpdateCOStructureElementEventHandler {
 	// the listener is "this" itself
 	getTree().addTreeListener(this);
 	vertPan.add(getTree());
-	verticalLayoutContainer.add(vertPan);
-//	verticalLayoutContainer.setCellHorizontalAlignment(getTree(),HasHorizontalAlignment.ALIGN_LEFT );
-	initWidget(verticalLayoutContainer);
-//	initWidget(getTree());
+	initWidget(vertPan);
 	refreshView();
     }
 
     private void refreshSubModelsViews(COElementAbstract currentModel) {
 	// clean panel
-        // The only mean to control the padding of the root
+	// The only mean to control the padding of the root
 	DOM.setStyleAttribute(root.getElement(), "padding", "10px");
 	TreeItem currentTreeItem = (TreeItem) itemModelMap.get(currentModel);
 	currentTreeItem.removeItems();
@@ -274,10 +269,10 @@ UpdateCOStructureElementEventHandler {
     public void setMaxTreeWidth(int newMaxTreeWidth) {
 	this.maxTreeWidth = newMaxTreeWidth;
     }
-    
+
     public static String getInitialSplitPosition(){
 	int splitterPosition = getMaxTreeWidth()*4 + OsylTreeView.DEFAULT_WIDTH;
 	return splitterPosition + "px";
     }
-    
+
 }

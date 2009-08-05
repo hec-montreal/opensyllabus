@@ -62,7 +62,6 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 	super(model, controller);
 	setWorkspacePanel(new VerticalPanel());
 	getWorkspacePanel().setSize("100%", "100%");
-	getWorkspacePanel().setStylePrimaryName("Osyl-MainView-WorkspaceView");
 	getWorkspacePanel().setHorizontalAlignment(
 		HasHorizontalAlignment.ALIGN_CENTER);
 	initWidget(getWorkspacePanel());

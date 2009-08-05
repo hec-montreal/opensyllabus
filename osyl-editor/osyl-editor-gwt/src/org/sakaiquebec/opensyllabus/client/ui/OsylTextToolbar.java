@@ -27,6 +27,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.OsylMenuBar;
 
 /**
  * A toolBar displayed in the upper part of the editor. the OsylToolbar
@@ -46,7 +47,8 @@ public class OsylTextToolbar extends Composite {
      */
     final OsylConfigMessages uiMessages;
 
-    private MenuBar menuBar;
+//    private MenuBar menuBar;
+    private OsylMenuBar menuBar;
 
     private MenuItem homePushButton;
 
@@ -71,8 +73,10 @@ public class OsylTextToolbar extends Composite {
 	setOsylController(osylController);
 	uiMessages = osylController.getUiMessages();
 
-	menuBar = new MenuBar();
+//	menuBar = new MenuBar();
 
+	menuBar = new OsylMenuBar();
+	
 	if (getOsylController().isInPreview()) {
 	    closePreviewPushButton =
 		    createMenuItem("ButtonCloseToolBar",
@@ -133,11 +137,20 @@ public class OsylTextToolbar extends Composite {
 	this.osylController = osylController;
     }
 
-    public MenuBar getMenuBar() {
+//    public MenuBar getMenuBar() {
+//	return menuBar;
+//    }
+    
+    public OsylMenuBar getMenuBar() {
 	return menuBar;
     }
 
-    public void setMenuBar(MenuBar menuBar) {
+
+//    public void setMenuBar(MenuBar menuBar) {
+//	this.menuBar = menuBar;
+//    }
+
+    public void setMenuBar(OsylMenuBar menuBar) {
 	this.menuBar = menuBar;
     }
 
