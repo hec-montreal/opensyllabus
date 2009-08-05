@@ -27,7 +27,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
-import com.google.gwt.user.client.ui.OsylMenuBar;
 
 /**
  * A toolBar displayed in the upper part of the editor. the OsylToolbar
