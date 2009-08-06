@@ -63,7 +63,10 @@ public class OsylTreeView extends OsylViewableComposite implements
 
     private Map<COModelInterface, TreeItem> itemModelMap;
 
-    private static int maxTreeWidth = 20;
+ 
+    public static final int INIT_TREE_WIDTH = 20;
+    
+    private static int maxTreeWidth = INIT_TREE_WIDTH;
 
     public static final int DEFAULT_WIDTH = 130;
 
@@ -253,6 +256,7 @@ public class OsylTreeView extends OsylViewableComposite implements
      */
     private void computeMaxTreeWidth(COElementAbstract itemModel) {
 	// Computation of the initial split position based on max width of the Tree
+	setMaxTreeWidth(INIT_TREE_WIDTH);
 	getTree().setVisible(true);
 	if ( itemModel.getLabel() != null ){
 	    int currentTreeWidth = itemModel.getLabel().length();
