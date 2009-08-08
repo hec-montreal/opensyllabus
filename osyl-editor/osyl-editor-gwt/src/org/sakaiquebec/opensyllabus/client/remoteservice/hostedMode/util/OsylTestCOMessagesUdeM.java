@@ -177,7 +177,7 @@ public class OsylTestCOMessagesUdeM {
 	    
 	    messages.put("CourseDescriptionHeader", "Description du cours");
 	    messages.put("CourseDescriptionHeaderShort", "Description du cours");
-	    messages.put("courseofficialdescription", "Descripteur officiel du cours (annuaire)");
+	    messages.put("courseofficialdescription", "Descripteur officiel de l'annuaire");
 	    messages.put("courseofficialdescriptionShort", "Descripteur officiel");
 	    messages.put("courseplace", "Lieu où se donne le cours");
 	    
@@ -313,7 +313,7 @@ public class OsylTestCOMessagesUdeM {
 	    messages.put("tableofcontents", "Table des matières");
 	    messages.put("problematic", "Problématique");
 	    
-	    messages.put("PedagogicalApproachStruc", "Approche pédagogique générale");
+	    messages.put("PedagogicalApproachStruc", "Approche pédagogique");
 	    messages.put("PedagogicalApproachStrucShort", "Approche pédagogique");
 	    messages.put("PedagogicalApproach", "Approche pédagogique");
 	    messages.put("PedagogicalApproachShort", "Approche pédagogique");
