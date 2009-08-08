@@ -83,6 +83,8 @@ public class OsylTreeView extends OsylViewableComposite implements
 	treeHeaderLabel.setStylePrimaryName("Osyl-TreeView-Header");
 	vertPan.add(treeHeaderLabel);
 
+	setMaxTreeWidth(INIT_TREE_WIDTH);
+
 	final Tree tree = new Tree();
 	setTree(tree);
 	getTree().setStylePrimaryName("Osyl-TreeView-Tree");
@@ -256,7 +258,6 @@ public class OsylTreeView extends OsylViewableComposite implements
      */
     private void computeMaxTreeWidth(COElementAbstract itemModel) {
 	// Computation of the initial split position based on max width of the Tree
-	setMaxTreeWidth(INIT_TREE_WIDTH);
 	getTree().setVisible(true);
 	if ( itemModel.getLabel() != null ){
 	    int currentTreeWidth = itemModel.getLabel().length();
