@@ -165,6 +165,7 @@ behavior:url(border-radius.htc);
 	color:#063871;
 	padding:4px 0 4px 1px;
 	border:1px solid transparent;
+	white-space: nowrap;
 }
 
 .Osyl-UnitView-Title-Hover {
@@ -175,6 +176,15 @@ behavior:url(border-radius.htc);
 	/*margin:6px 11px 10px 4px;/* 10px is better for bottom in IE */
 	/*padding:3px 0 5px 0;*/
 }
+
+.Osyl-UnitView-SemanticTag {
+	display: block;
+	margin: 0px 30px 20px 2px;
+	font-family: sans-serif, Arial, Verdana;
+	font-size: 10px;
+	color: #a0a0a0;
+}
+
 /* Generic GWT textBox (i.e.: no style specified) */
 .Osyl-UnitView-TextBox {
 	font-family:helvetica,arial,sans-serif;

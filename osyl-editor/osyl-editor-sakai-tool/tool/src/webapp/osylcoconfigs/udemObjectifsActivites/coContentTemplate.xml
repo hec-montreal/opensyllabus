@@ -139,7 +139,7 @@
          </COStructure>  <!-- CourseDescriptionHeader COStructure End -->
             
   	    <COUnit  type='coursescheduleplace' scrty='public'>   <!-- coursescheduleplace COUnit Begin -->
-	       <label><![CDATA[Horaire et lieux]]></label> 
+	       <label><![CDATA[Horaire et lieux du cours]]></label> 
                <COUnitContent type='coursescheduleplace' scrty='public'>   
                
                    <COResourceProxy type='text' scrty='public'>          
@@ -202,7 +202,7 @@
 	 </COStructure>  <!-- CourseInfoHeader COStructure End -->
 	 
 	 <COUnit  type='contactinfo' scrty='public'>  <!-- contactinfo COUnit Begin -->
-	    <label><![CDATA[Liste du personnel :]]></label> 
+	    <label><![CDATA[Coordonnées de l'ensemble du personnel affecté à ce cours]]></label> 
 	    <COUnitContent type='contactinfo' scrty='public'> 
 	    
                <COResourceProxy type='contactinforesource' scrty='public'> 
@@ -233,7 +233,7 @@
 	 </COUnit>  <!-- contactinfo COUnit End -->
 	 
      <COUnit type='courseintro' scrty='public'>  <!-- courseintro COUnit Begin -->
-       <label><![CDATA[Introduction au cours]]></label>
+       <label><![CDATA[Introduction du cours]]></label>
        <COUnitContent type='courseintro' scrty='public'>   
            
           <COResourceProxy type='text' scrty='public'>          
@@ -276,7 +276,7 @@
     </COUnit>  <!-- courseintro COUnit End -->
 
     <COUnit type='CourseObjectives' scrty='public'>  <!-- 'CourseObjectives' COUnit Begin -->
-       <label><![CDATA[Objectifs du cours]]></label>
+       <label><![CDATA[Objectifs définis par le professeur]]></label>
        <COUnitContent type='CourseObjectives' scrty='public'>   
        
 	      <COResourceProxy type='text' scrty='public'> 
@@ -619,7 +619,7 @@
     </COUnit>  <!-- plagiarism COUnit End -->
           
     <COUnit  type='PedagogicalApproach' scrty='public'>  <!-- PedagogicalApproach COUnit Begin -->
-       <label><![CDATA[Approche pédagogique générale]]></label> 
+       <label><![CDATA[Approche pédagogique]]></label> 
        <COUnitContent type='PedagogicalApproach' scrty='public'> 
     
           <COResourceProxy type='text' scrty='public'> 
@@ -698,7 +698,7 @@
     </COUnit>  <!-- PedagogicalApproach COUnit End -->
 	      	  	 	  
 	<COUnit  type='learningmat' scrty='public'>  <!-- learningmat COUnit Begin -->
-       <label><![CDATA[Ressources pédagogiques]]></label>
+       <label><![CDATA[Ressources pédagogiques utilisées durant tout le cours]]></label>
        <COUnitContent type='learningmat' scrty='public'> 
 
           <COResourceProxy type='text' scrty='public'> 
@@ -2476,7 +2476,7 @@
 	</COStructure>  <!-- Activities COStructure End -->
 
     <COUnit  type='Bibliography' scrty='public'>  <!-- Bibliography COUnit Begin -->
-       <label><![CDATA[Liste des références bibliographiques :]]></label>
+       <label><![CDATA[Liste des références bibliographiques]]></label>
 	   <COUnitContent type='Bibliography' scrty='public'> 
 	    
           <COResourceProxy type='citation' scrty='public'> 
@@ -2502,7 +2502,7 @@
 	   </COUnit>  <!-- Bibliography COUnit End -->
 	   
     <COUnit  type='ThematicBibliography' scrty='public'>  <!-- ThematicBibliography COUnit Begin -->
-       <label><![CDATA[Liste des références bibliographiques :]]></label>
+       <label><![CDATA[Bibliothèque disciplinaire du cours]]></label>
 	   <COUnitContent type='ThematicBibliography' scrty='public'> 
 	    
           <COResourceProxy type='text' scrty='public'> 
@@ -2527,7 +2527,7 @@
 	</COUnit>  <!-- ThematicBibliography COUnit End -->
 	
     <COUnit  type='LearningSupportServices' scrty='public'>  <!-- LearningSupportServices COUnit Begin -->
-       <label><![CDATA[Liste des services :]]></label>
+       <label><![CDATA[Services de soutien à l'apprentissage]]></label>
 	   <COUnitContent type='LearningSupportServices' scrty='public'> 
 	    
           <COResourceProxy type='text' scrty='public'> 
