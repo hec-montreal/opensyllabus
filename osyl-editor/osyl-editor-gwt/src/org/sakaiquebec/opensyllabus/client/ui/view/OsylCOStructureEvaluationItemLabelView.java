@@ -20,8 +20,12 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.client.ui.view;
 
+import java.util.Iterator;
+
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCOStructureEvaluationItemEditor;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
 import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 
@@ -35,11 +39,11 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 	    OsylController controller) {
 	this(model, controller, false);
     }
-    
+
     public OsylCOStructureEvaluationItemLabelView(COContentUnit model,
 	    OsylController controller, boolean isInList) {
 	super(model, controller);
-	setEditor(new OsylCOStructureEvaluationItemEditor(this,isInList));
+	setEditor(new OsylCOStructureEvaluationItemEditor(this, isInList));
 	initView();
     }
 
@@ -59,6 +63,67 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
     protected void updateModel() {
 	updateMetaInfo();
 	getModel().setLabel(getEditor().getText());
+	updateAssignement();
+
+    }
+
+    private void updateAssignement() {
+	for (Iterator<COContentResourceProxy> childsIterator =
+		getModel().getChildrens().iterator(); childsIterator.hasNext();) {
+	    COContentResourceProxy contentResourceProxy = childsIterator.next();
+	    if (contentResourceProxy.getType().equals(
+		    COContentResourceProxyType.ASSIGNMENT)) {
+
+		String uri =
+			contentResourceProxy.getProperty(COPropertiesType.URI);
+		String rawAssignmentId = uri.split("\\s*/a/\\s*")[1];
+		rawAssignmentId = rawAssignmentId.split("\\s*/\\s*")[1];
+		String assignmentId =
+			rawAssignmentId.split("\\s*&panel=\\s*")[0];
+
+		int rating = -1;
+		int openYear = 0;
+		int openMonth = 0;
+		int openDay = 0;
+		int closeYear = 0;
+		int closeMonth = 0;
+		int closeDay = 0;
+		String ratingString = getRating();
+		if (null != ratingString || !"undefined".equals(ratingString)
+			|| !"".equals(ratingString)) {
+		    rating = Integer.parseInt(ratingString);
+		}
+
+		String openDateString = getOpenDate();
+		if (null != openDateString
+			|| !"undefined".equals(openDateString)
+			|| !"".equals(openDateString)) {
+		    openYear =
+			    Integer.parseInt(openDateString.substring(6, 10));
+		    openMonth =
+			    Integer.parseInt(openDateString.substring(3, 5));
+		    openDay = Integer.parseInt(openDateString.substring(0, 2));
+
+		}
+
+		String closeDateString = getCloseDate();
+		if (null != closeDateString
+			|| !"undefined".equals(closeDateString)
+			|| !"".equals(closeDateString)) {
+		    closeYear =
+			    Integer.parseInt(closeDateString.substring(6, 10));
+		    closeMonth =
+			    Integer.parseInt(closeDateString.substring(3, 5));
+		    closeDay =
+			    Integer.parseInt(closeDateString.substring(0, 2));
+		}
+
+		getController().createOrUpdateAssignment(contentResourceProxy,
+			assignmentId, getModel().getLabel(), null, openYear,
+			openMonth, openDay, 0, 0, closeYear, closeMonth,
+			closeDay, 0, 0, rating);
+	    }
+	}
     }
 
     private void updateMetaInfo() {

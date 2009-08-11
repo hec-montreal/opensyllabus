@@ -94,7 +94,7 @@ public class OsylCOStructureEvaluationItemEditor extends
 
 	String rating =
 		(getView().getRating() != null && !getView().getRating()
-			.equals("")) ? "\t(" + getView().getRating() + ")" : "";
+			.equals("")) ? "\t(" + getView().getRating() + "%)" : "";
 
 	setText(getView().getTextFromModel() + rating);
 	// If we are in read-only mode, we return now to not add buttons and
@@ -129,7 +129,11 @@ public class OsylCOStructureEvaluationItemEditor extends
 	weightTextBox.setWidth("40px");
 	weightTextBox.setTitle(getUiMessage("Evaluation.rating.tooltip"));
 	ponderationPanel.add(l1);
-	ponderationPanel.add(weightTextBox);
+	HorizontalPanel ratingPanel = new HorizontalPanel();
+	ratingPanel.add(weightTextBox);
+	Label percentageLabel= new Label("%");
+	ratingPanel.add(percentageLabel);
+	ponderationPanel.add(ratingPanel);
 
 	VerticalPanel localisationPanel = new VerticalPanel();
 	localisationPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
