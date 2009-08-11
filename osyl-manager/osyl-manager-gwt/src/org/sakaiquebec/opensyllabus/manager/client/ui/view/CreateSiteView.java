@@ -43,52 +43,52 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class CreateSiteView extends OsylManagerAbstractView {
 
-	private Label nameLabel;
+    private Label nameLabel;
 
-	private TextBox nameTextBox;
+    private TextBox nameTextBox;
 
-	private ListBox configListBox;
+    private ListBox configListBox;
 
-	private PushButton createSite;
+    private PushButton createSite;
 
-	private VerticalPanel mainPanel;
+    private VerticalPanel mainPanel;
 
-	AsyncCallback<Map<String, String>> configListAsyncCallback =
-		new AsyncCallback<Map<String, String>>() {
+    AsyncCallback<Map<String, String>> configListAsyncCallback =
+	    new AsyncCallback<Map<String, String>>() {
 
 		public void onFailure(Throwable caught) {
-			createSite.setEnabled(false);
+		    createSite.setEnabled(false);
 		}
 
 		public void onSuccess(Map<String, String> result) {
-			if (result == null || result.isEmpty()) {
-				Window.alert(getController().getMessages()
-						.noAssociableCOSite());// TODO
-				createSite.setEnabled(false);
-			} else {
-				for (Iterator<String> configMapKeysIterator =
-					result.keySet().iterator(); configMapKeysIterator
-					.hasNext();) {
-					String siteId = configMapKeysIterator.next();
-					String siteTitle = result.get(siteId);
-					configListBox.addItem(siteTitle, siteId);
-				}
+		    if (result == null || result.isEmpty()) {
+			Window.alert(getController().getMessages()
+				.noAssociableCOSite());// TODO
+			createSite.setEnabled(false);
+		    } else {
+			for (Iterator<String> configMapKeysIterator =
+				result.keySet().iterator(); configMapKeysIterator
+				.hasNext();) {
+			    String siteId = configMapKeysIterator.next();
+			    String siteTitle = result.get(siteId);
+			    configListBox.addItem(siteTitle, siteId);
 			}
+		    }
 		}
 
-	};
+	    };
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param controller
-	 */
-	public CreateSiteView(OsylManagerController controller) {
-		super(controller);
-		initView();
-	}
+    /**
+     * Constructor.
+     * 
+     * @param controller
+     */
+    public CreateSiteView(OsylManagerController controller) {
+	super(controller);
+	initView();
+    }
 
-	private void initView() {
+    private void initView() {
 
 		mainPanel = new VerticalPanel();
 		initWidget(mainPanel);
@@ -114,17 +114,27 @@ public class CreateSiteView extends OsylManagerAbstractView {
 		createSite.setWidth("30px");
 		createSite.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
-				if (!nameTextBox.getText().equals("")
-						&& configListBox.getSelectedIndex() != -1) {
+			    boolean nameValid = false;
+			    String name = nameTextBox.getText();
+				nameValid = (name!=null && name.matches("^[a-zA-Z0-9].*[\\S]$"));
+				if (nameValid) {
+				    if (configListBox.getSelectedIndex() != -1) {
 					String configId =
 						configListBox.getValue(configListBox
-								.getSelectedIndex());
-					getController().createSite(nameTextBox.getText(), configId);
+							.getSelectedIndex());
+					getController().createSite(name,
+						configId);
+				    } else {
+					  Window.alert(getController().getMessages()
+						    .noConfig());
+				    }
+				} else {
+				    Window.alert(getController().getMessages()
+					    .siteNameNotValid());
 				}
 			}
 		});
 
 		mainPanel.add(createSite);
 	}
-
 }

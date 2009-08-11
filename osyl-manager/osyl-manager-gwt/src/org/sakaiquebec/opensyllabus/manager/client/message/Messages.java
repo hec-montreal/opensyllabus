@@ -80,5 +80,9 @@ public interface Messages extends ConstantsWithLookup {
     String noAssociableCOSite();
     
     String chooseConfig();
+    
+    String siteNameNotValid();
+    
+    String noConfig();
 
 }
