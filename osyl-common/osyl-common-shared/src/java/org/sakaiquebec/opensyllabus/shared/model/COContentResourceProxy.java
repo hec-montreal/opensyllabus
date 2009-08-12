@@ -122,7 +122,7 @@ public class COContentResourceProxy implements COModelInterface,
 	else
 	    resProxModel.setLabel(osylConfigMessages
 		    .getMessage("InsertYourTextHere"));
-	resProxModel.setSecurity(SecurityInterface.SECURITY_ACCESS_PUBLIC);
+	resProxModel.setSecurity(SecurityInterface.SECURITY_ACCESS_ATTENDEE);
 	resProxModel.setRubricType(COContentRubric.RUBRIC_TYPE_UNDEFINED);
 	COProperties prop = new COProperties();
 	prop.addProperty(COPropertiesType.VISIBILITY, "true");
