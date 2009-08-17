@@ -447,9 +447,9 @@ public class OsylTestUIMessages {
 		    "Citation properties update succeeded.");
 	    
 	    messages.put("Evaluation.EndDate","End Date");
-	    messages.put("Evaluation.EndDate.tooltip"," The date at whitch the assessment is due. \r\nSuggested format: dd/mm/yyyy"); 
+	    messages.put("Evaluation.EndDate.tooltip"," The date at whitch the assessment is due. \r\nFormat: yyyy-mm-dd"); 
 	    messages.put("Evaluation.StartDate"," Start Date");
-	    messages.put("Evaluation.StartDate.tooltip"," Date at which the assessment is available for start. \r\nSuggested format: dd/mm/yyyy"); 
+	    messages.put("Evaluation.StartDate.tooltip"," Date at which the assessment is available for start. \r\nFormat: yyyy-mm-dd"); 
 	    messages.put("Evaluation.deliverable"," Deliverable");
 	    messages.put("Evaluation.deliverable.tooltip "," The tangible and measurable result produced by the end of assessment execution by students. E.g.: Report, Portfolio, Presentation. \r\nNote: this field is not restricted. Many deliverables could be used for the same assessment.");
 	    messages.put("Evaluation.location"," Location");
@@ -499,6 +499,12 @@ public class OsylTestUIMessages {
 	    messages.put("element.moved", "The element was moved.");
 	    
 	    messages.put("publish.error", "Error in publishing");
+	    
+	    messages.put("Evaluation.field.required","The field '{0}' is required");
+	    messages.put("Evaluation.field.date.unISO","The field '{0}' no respect the date format yyyy-mm-dd");
+	    messages.put("Evaluation.field.date.order","The end date is not after the start date");
+	    messages.put(" Evaluation.field.weight.format","Field weight must be expressed as a percentage");
+	   
 	}
 	return messages;
     }

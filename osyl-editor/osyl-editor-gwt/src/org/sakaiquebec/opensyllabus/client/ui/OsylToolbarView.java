@@ -143,7 +143,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    if (null != ratingString
 			    || !"undefined".equals(ratingString)
 			    || !"".equals(ratingString)) {
-			rating = Integer.parseInt(ratingString);
+			rating = Integer.parseInt(ratingString.substring(0,ratingString.lastIndexOf("%")));
 		    }
 
 		    String openDateString =
@@ -152,9 +152,9 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    if (null != openDateString
 			    || !"undefined".equals(openDateString)
 			    || !"".equals(openDateString)) {
-			openYear = Integer.parseInt(openDateString.substring(6, 10));
-			openMonth = Integer.parseInt(openDateString.substring(3, 5));
-			openDay = Integer.parseInt(openDateString.substring(0, 2));
+			openYear = Integer.parseInt(openDateString.substring(0, 4));
+			openMonth = Integer.parseInt(openDateString.substring(5, 7));
+			openDay = Integer.parseInt(openDateString.substring(8, 10));
 			
 		    }
 
@@ -164,9 +164,9 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    if (null != closeDateString
 			    || !"undefined".equals(closeDateString)
 			    || !"".equals(closeDateString)) {
-			closeYear = Integer.parseInt(closeDateString.substring(6, 10));
-			closeMonth = Integer.parseInt(closeDateString.substring(3, 5));
-			closeDay = Integer.parseInt(closeDateString.substring(0, 2));
+			closeYear = Integer.parseInt(closeDateString.substring(0, 4));
+			closeMonth = Integer.parseInt(closeDateString.substring(5, 7));
+			closeDay = Integer.parseInt(closeDateString.substring(8, 10));
 		    }
 
 		    getController().createOrUpdateAssignment(resProxModel, "",
