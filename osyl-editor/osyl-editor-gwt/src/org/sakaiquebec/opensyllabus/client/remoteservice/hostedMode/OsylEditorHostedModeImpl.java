@@ -1,19 +1,35 @@
+/**********************************************************************************
+ * $Id:  $
+ **********************************************************************************
+ *
+ * Copyright (c) 2008 The Sakai Foundation, The Sakai Québec Team.
+ *
+ * Licensed under the Educational Community License, Version 1.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.opensource.org/licenses/ecl1.php
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ **********************************************************************************/
+
 package org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode;
 
 import java.util.ArrayList;
 
-import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylUdeMSwitch;
-
-import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylTestCOMessages;
-import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylTestCOMessagesUdeM;
-import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylTestUIMessages;
-import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylTestUIMessagesUdeM;
+import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylHostedModeInit;
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtServiceAsync;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -32,45 +48,18 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
 	private final static String SITE_ID="6b9188e5-b3ca-49dd-be7c-540ad9bd60c4";
 	
-	private static String DEFAULT_CONFIG_PATH = "rules/rules.xml";
-	private static String  UDEM_CONFIG_PATH = "rules/rulesUdeM.xml";
-	
-//    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMCompetencesActivites.xml";
-//    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMCompetencesComposantes.xml";
-//    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMCompetencesSeances.xml";
-//    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMObjectifsActivites.xml";
-//    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMObjectifsSeances.xml";
-//    private static String UDEM_CONFIG_PATH = "rules/rulesUdeMObjectifsThemes.xml";
-
-    private static String DEFAULT_MODEL_PATH = "xml_examples/defaultXml.xml";
-    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXml.xml";
-
-//    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlCompetencesActivites.xml";
-//    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlCompetencesComposantes.xml";
-//    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlCompetencesSeances.xml";
-//    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlObjectifsActivites.xml";
-//    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlObjectifsSeances.xml";
-//    private static String UDEM_MODEL_PATH = "xml_examples/UdeMXmlObjectifsThemes.xml";
-
+	/** Initialization properties object used in hosted mode such as ConfigPath, ModelPath,
+	 *  implement class will be choose by GWT differed binding mechanism
+	 *  please see module.xml definition to find implementation class
+	 */
+	private static OsylHostedModeInit osylHostedModeInit = (OsylHostedModeInit) GWT.create(OsylHostedModeInit.class);
 	
 	public String getConfigPath() {
-		// UdeM ?
-		if ( OsylUdeMSwitch.isUdeM() ) {
-			return UDEM_CONFIG_PATH;
-		}
-		else {
-			return DEFAULT_CONFIG_PATH;			
-		}
+		return osylHostedModeInit.getConfigPath();
 	}
 	
 	public String getModelPath() {
-		// UdeM ?
-		if ( OsylUdeMSwitch.isUdeM() ) {
-			return UDEM_MODEL_PATH;
-		}
-		else {
-			return DEFAULT_MODEL_PATH;
-		}
+		return osylHostedModeInit.getModelPath();
 	}
 	
 	public void applyPermissions(String resourceId, String permission,
@@ -124,12 +113,7 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
 		final COConfigSerialized configSer = new COConfigSerialized("config-test-id");
 		
-		if ( OsylUdeMSwitch.isUdeM() ) {
-			configSer.setCoreBundle(OsylTestUIMessagesUdeM.getMap());
-		}
-		else {
-			configSer.setCoreBundle(OsylTestUIMessages.getMap());	
-		}
+		configSer.setCoreBundle(osylHostedModeInit.getUIMessages());		
 
 		RequestBuilder requestBuilder = null;
 
@@ -161,14 +145,9 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
 		final COSerialized modeledCo = new COSerialized();
 		modeledCo.setSiteId(SITE_ID);
-		
-		if ( OsylUdeMSwitch.isUdeM() ) {
-			modeledCo.setMessages(OsylTestCOMessagesUdeM.getMap());
-		}
-		else {
-			modeledCo.setMessages(OsylTestCOMessages.getMap());	
-		}
-		
+				
+		modeledCo.setMessages(osylHostedModeInit.getCOMessages());		
+	
 		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, getModelPath());
 
 		try {

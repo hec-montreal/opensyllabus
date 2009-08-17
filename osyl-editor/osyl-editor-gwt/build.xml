@@ -9,7 +9,23 @@
 
 	<import file="maven-build.xml" />
 
+	<!-- 	Changing GWT hosted mode index page if the env variable "hosted_mode_init" equals "udem".      -->
+	<!-- 	This occurs if you add the extra parameter -Dhosted_mode_init=udem on your maven command line. -->
+	<!-- 	Ex: mvn install -Phosted -Dhosted_mode_init=udem                                               -->
+	<condition property="hosted_mode_init_index_page" value="OsylEditorEntryPointUdem.html">
+		<and>
+			<equals arg1="${hosted_mode_init}" arg2="udem" casesensitive="false" />
+		</and>
+	</condition>
+	<!-- 	Default GWT hosted mode index page                                                             -->
+	<condition property="hosted_mode_init_index_page" value="OsylEditorEntryPoint.html">
+		<not>
+			<isset property="hosted_mode_init_index_page" />
+		</not>
+	</condition>
+
 	<target name="hosted" depends="compile" description="Run hosted mode">
+		<echo message="Launching hosted mode with index page: ${hosted_mode_init_index_page}" />
 		<java failonerror="true" fork="true" classname="com.google.gwt.dev.GWTShell">
 			<classpath>
 				<path refid="build.classpath" />
@@ -23,8 +39,7 @@
 			<jvmarg value="-Xdebug" />
 			<jvmarg value="-Xnoagent" />
 			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n" />
-
-			<arg line="-out ${maven.build.dir} org.sakaiquebec.opensyllabus.OsylEditorEntryPoint/OsylEditorEntryPoint.html" />
+			<arg line="-out ${maven.build.dir} org.sakaiquebec.opensyllabus.OsylEditorEntryPoint/${hosted_mode_init_index_page}" />
 		</java>
 	</target>
 </project>

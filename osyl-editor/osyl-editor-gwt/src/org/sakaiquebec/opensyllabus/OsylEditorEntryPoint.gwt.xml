@@ -1,39 +1,68 @@
 <module>
 
 	<!-- Inherit the core Web Toolkit stuff. -->
-	<inherits name='com.google.gwt.user.User'/>
-	<inherits name='com.google.gwt.xml.XML'/>
-	<inherits name='com.google.gwt.json.JSON'/>
-	<inherits name="com.google.gwt.http.HTTP"/>
-	<inherits name='com.google.gwt.widgetideas.DatePicker'/>
-		
-	<inherits name="org.adamtacy.GWTEffects"></inherits>  
-	
+	<inherits name='com.google.gwt.user.User' />
+	<inherits name='com.google.gwt.xml.XML' />
+	<inherits name='com.google.gwt.json.JSON' />
+	<inherits name="com.google.gwt.http.HTTP" />
+	<inherits name='com.google.gwt.widgetideas.DatePicker' />
+
+	<inherits name="org.adamtacy.GWTEffects"></inherits>
+
 	<inherits name='org.gwt.mosaic.Mosaic' />
 	<inherits name='org.gwt.mosaic.actions.Actions' />
- 
- <!--     
-    <inherits name="com.google.gwt.widgetideas.GlassPanel"/>
--->
 
-	<inherits name='org.sakaiquebec.opensyllabus.shared'/>
+	<!--
+		<inherits name="com.google.gwt.widgetideas.GlassPanel"/>
+	-->
 
-	<extend-property name="locale" values="fr_CA"/>
-    <extend-property name="locale" values="es"/>
+	<inherits name='org.sakaiquebec.opensyllabus.shared' />
 
+	<extend-property name="locale" values="fr_CA" />
+	<extend-property name="locale" values="es" />
 	<!-- Specify the app entry point class. -->
-	<entry-point class='org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint'/>
-	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint"/>
+	<entry-point class='org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint' />
+	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint" />
 
 	<!-- Specify the app servlet path. -->
-	<servlet path="/OsylGwtService" class="org.sakaiquebec.opensyllabus.server.OsylEditorGwtServiceImpl" />
-	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint"/>
+	<servlet path="/OsylGwtService"
+		class="org.sakaiquebec.opensyllabus.server.OsylEditorGwtServiceImpl" />
+	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint" />
 
 	<!-- Specify a style sheet -->
-<!-- NOTE: We have the choice between declare css in HTML or in gwt.xml but not in both places
-    <stylesheet src='org.sakaiquebec.opensyllabus.public.css.osylcore.css'/>
--->
-	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint"/>
-	<inherits name="com.google.gwt.widgetideas.DatePicker"/>
+	<!--
+		NOTE: We have the choice between declare css in HTML or in gwt.xml but
+		not in both places <stylesheet
+		src='org.sakaiquebec.opensyllabus.public.css.osylcore.css'/>
+	-->
+	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint" />
+	<inherits name="com.google.gwt.widgetideas.DatePicker" />
+
+	<!-- Hosted mode special deferred binding init:
+	 if Metatag info hosted_mode_init is specified: use it to choose hosted mode init. Else the default hosted mode init will be used.  -->
+	<define-property name="hosted_mode_init" values="default,udem" />
+	<property-provider name="hosted_mode_init">
+     <![CDATA[
+       var hosted_mode_init = __gwt_getMetaProperty("hosted_mode_init");
+       if (hosted_mode_init == null){
+               hosted_mode_init = "default";
+       }
+       return hosted_mode_init;
+     ]]>
+	</property-provider>
+
+	<replace-with
+		class="org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylHostedModeInitImpl">
+		<when-type-is
+			class="org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylHostedModeInit" />
+		<when-property-is name="hosted_mode_init" value="default" />
+	</replace-with>
+
+	<replace-with
+		class="org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylHostedModeInitImplUdem">
+		<when-type-is
+			class="org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylHostedModeInit" />
+		<when-property-is name="hosted_mode_init" value="udem" />
+	</replace-with>
 
 </module>
