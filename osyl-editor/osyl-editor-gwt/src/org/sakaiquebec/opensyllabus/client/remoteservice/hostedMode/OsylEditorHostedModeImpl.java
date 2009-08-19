@@ -21,8 +21,10 @@
 package org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylHostedModeInit;
+import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylHostedModeMessages;
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtServiceAsync;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
@@ -40,28 +42,38 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 // OsylTestCOMessages
 /**
- * @author mathieu colombet
- * This is the embedded implementation of OsylEditorGwtServiceAsync used in hosted mode only
- * It simulate the server behavior.
+ * @author mathieu colombet This is the embedded implementation of
+ *         OsylEditorGwtServiceAsync used in hosted mode only It simulate the
+ *         server behavior.
  */
 public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
-	private final static String SITE_ID="6b9188e5-b3ca-49dd-be7c-540ad9bd60c4";
-	
-	/** Initialization properties object used in hosted mode such as ConfigPath, ModelPath,
-	 *  implement class will be choose by GWT differed binding mechanism
-	 *  please see module.xml definition to find implementation class
+	private final static String SITE_ID = "6b9188e5-b3ca-49dd-be7c-540ad9bd60c4";
+
+	/**
+	 * Initialization properties object used in hosted mode such as ConfigPath,
+	 * ModelPath, implement class will be choose by GWT differed binding
+	 * mechanism please see module.xml definition to find implementation class
 	 */
-	private static OsylHostedModeInit osylHostedModeInit = (OsylHostedModeInit) GWT.create(OsylHostedModeInit.class);
-	
+	private static OsylHostedModeInit osylHostedModeInit = (OsylHostedModeInit) GWT
+			.create(OsylHostedModeInit.class);
+
 	public String getConfigPath() {
 		return osylHostedModeInit.getConfigPath();
 	}
-	
+
 	public String getModelPath() {
 		return osylHostedModeInit.getModelPath();
 	}
-	
+
+	public String getCOMessagesPath() {
+		return osylHostedModeInit.getCOMessagesPath();
+	}
+
+	public String getUIMessagesPath() {
+		return osylHostedModeInit.getUIMessagesPath();
+	}
+
 	public void applyPermissions(String resourceId, String permission,
 			AsyncCallback<Void> callback) {
 		callback.onSuccess(null);
@@ -99,39 +111,63 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
 		ResourcesLicencingInfo ress = new ResourcesLicencingInfo();
 		ress.setCopyrightTypeList(new ArrayList<String>());
-		ress.getCopyrightTypeList().add("hosted mode : Material is in public domain.");
+		ress.getCopyrightTypeList().add(
+				"hosted mode : Material is in public domain.");
 		ress.getCopyrightTypeList().add("hosted mode : I hold copyright.");
-		ress.getCopyrightTypeList().add("hosted mode : Material is subject to fair une exception.");
-		ress.getCopyrightTypeList().add("hosted mode : I have obtained permission to use this material.");
-		ress.getCopyrightTypeList().add("hosted mode : Copyright status is not yet determined.");
+		ress.getCopyrightTypeList().add(
+				"hosted mode : Material is subject to fair une exception.");
+		ress
+				.getCopyrightTypeList()
+				.add(
+						"hosted mode : I have obtained permission to use this material.");
+		ress.getCopyrightTypeList().add(
+				"hosted mode : Copyright status is not yet determined.");
 		ress.getCopyrightTypeList().add("hosted mode : Use copyright below.");
 		callback.onSuccess(ress);
 
 	}
 
-	public void getSerializedConfig(final AsyncCallback<COConfigSerialized> callback) {
+	public void getSerializedConfig(
+			final AsyncCallback<COConfigSerialized> callback) {
 
-		final COConfigSerialized configSer = new COConfigSerialized("config-test-id");
-		
-		configSer.setCoreBundle(osylHostedModeInit.getUIMessages());		
+		final COConfigSerialized configSer = new COConfigSerialized(
+				"config-test-id");
+
+		getMessagesMap(getUIMessagesPath(), new RequestCallback() {
+			public void onError(Request request, Throwable exception) {
+				Window.alert("Error while reading " + getUIMessagesPath()
+						+ " :" + exception.toString());
+			}
+
+			public void onResponseReceived(Request request, Response response) {
+				String responseTxt = response.getText();
+				// transform text to map
+				Map<String, String> messages = OsylHostedModeMessages
+						.getMap(responseTxt);
+				configSer.setCoreBundle(messages);
+			}
+		});
 
 		RequestBuilder requestBuilder = null;
 
-			requestBuilder = new RequestBuilder(RequestBuilder.GET, getConfigPath());
+		requestBuilder = new RequestBuilder(RequestBuilder.GET, getConfigPath());
 
 		try {
-		    requestBuilder.sendRequest(null, new RequestCallback() {
-			public void onError(Request request, Throwable exception) {
-			    Window.alert("Error while reading " + getConfigPath() + " :" + exception.toString());
-			}
+			requestBuilder.sendRequest(null, new RequestCallback() {
+				public void onError(Request request, Throwable exception) {
+					Window.alert("Error while reading " + getConfigPath()
+							+ " :" + exception.toString());
+				}
 
-			public void onResponseReceived(Request request,Response response) {
-				configSer.setRulesConfig(response.getText());
-				callback.onSuccess(configSer);
-			}
-		    });
+				public void onResponseReceived(Request request,
+						Response response) {
+					configSer.setRulesConfig(response.getText());
+					callback.onSuccess(configSer);
+				}
+			});
 		} catch (RequestException ex) {
-		    Window.alert("Error while reading " + getConfigPath() + " :" + ex.toString());
+			Window.alert("Error while reading " + getConfigPath() + " :"
+					+ ex.toString());
 		}
 	}
 
@@ -141,29 +177,60 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
 	}
 
-	public void getSerializedCourseOutline(final AsyncCallback<COSerialized> callback) {
+	private void getMessagesMap(final String messagesPath,
+			final RequestCallback callback) {
+
+		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET,
+				messagesPath);
+
+		try {
+			requestBuilder.sendRequest(null, callback);
+		} catch (RequestException ex) {
+			Window.alert("Error while reading " + messagesPath + " :"
+					+ ex.toString());
+		}
+	}
+
+	public void getSerializedCourseOutline(
+			final AsyncCallback<COSerialized> callback) {
 
 		final COSerialized modeledCo = new COSerialized();
 		modeledCo.setSiteId(SITE_ID);
-				
-		modeledCo.setMessages(osylHostedModeInit.getCOMessages());		
-	
-		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, getModelPath());
+
+		getMessagesMap(getCOMessagesPath(), new RequestCallback() {
+			public void onError(Request request, Throwable exception) {
+				Window.alert("Error while reading " + getCOMessagesPath()
+						+ " :" + exception.toString());
+			}
+
+			public void onResponseReceived(Request request, Response response) {
+				String responseTxt = response.getText();
+				// transform text to map
+				Map<String, String> messages = OsylHostedModeMessages
+						.getMap(responseTxt);
+				modeledCo.setMessages(messages);
+			}
+		});
+
+		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET,
+				getModelPath());
 
 		try {
-		    requestBuilder.sendRequest(null, new RequestCallback() {
-			public void onError(Request request, Throwable exception) {
-			    Window.alert("Error while reading " + getModelPath() + " :" + exception.toString());
-			}
+			requestBuilder.sendRequest(null, new RequestCallback() {
+				public void onError(Request request, Throwable exception) {
+					Window.alert("Error while reading " + getModelPath() + " :"
+							+ exception.toString());
+				}
 
-			public void onResponseReceived(Request request,
-				Response response) {
-				modeledCo.setContent(response.getText());
-				callback.onSuccess(modeledCo);
-			}
-		    });
+				public void onResponseReceived(Request request,
+						Response response) {
+					modeledCo.setContent(response.getText());
+					callback.onSuccess(modeledCo);
+				}
+			});
 		} catch (RequestException ex) {
-		    Window.alert("Error while reading " + getModelPath() + " :" + ex.toString());
+			Window.alert("Error while reading " + getModelPath() + " :"
+					+ ex.toString());
 		}
 
 	}

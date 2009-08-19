@@ -2,7 +2,7 @@
  * $Id:  $
  **********************************************************************************
  *
- * Copyright (c) 2008 The Sakai Foundation, The Sakai Québec Team.
+ * Copyright (c) 2008 The Sakai Foundation, The Sakai Quï¿½bec Team.
  *
  * Licensed under the Educational Community License, Version 1.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,13 @@
 
 package org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util;
 
-import java.util.Map;
 
 /**
  * OsylHostedModeInit Interface. This interface is used to define the
  * initialization properties used in hosted mode such as ConfigPath, ModelPath
  * etc...
  * 
- * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Leprêtre</a>
+ * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Leprï¿½tre</a>
  * @version $$
  */
 public interface OsylHostedModeInit {
@@ -43,12 +42,12 @@ public interface OsylHostedModeInit {
 	public String getModelPath();
 
 	/**
-	 * @return the COMessages map object for hosted mode
+	 * @return the COMessages path object for hosted mode
 	 */
-	public Map<String, String> getCOMessages();
+	public String getCOMessagesPath();
 
 	/**
-	 * @return the UIMessages map object for hosted mode
+	 * @return the UIMessages path object for hosted mode
 	 */
-	public Map<String, String> getUIMessages();
+	public String getUIMessagesPath();
 }

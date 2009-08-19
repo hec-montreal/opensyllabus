@@ -20,7 +20,6 @@
 
 package org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util;
 
-import java.util.Map;
 
 /**
  * UDEM init implementation version for hosted mode. This class is Instantiated
@@ -30,12 +29,10 @@ import java.util.Map;
  * @version $$
  */
 public class OsylHostedModeInitImplUdem implements OsylHostedModeInit {
-	protected String configPath = "rules/rulesUdeM.xml";
-	protected String modelPath = "xml_examples/UdeMXml.xml";
-	protected Map<String, String> OsylCOMessages = OsylTestCOMessagesUdeM
-			.getMap();
-	protected Map<String, String> OsylUIMessages = OsylTestUIMessagesUdeM
-			.getMap();
+	protected String configPath = "resources/osylcoconfigsmock/udem/rules.xml";
+	protected String modelPath = "resources/osylcoconfigsmock/udem/coContentTemplate.xml";
+	protected String cOMessagesPath = "resources/osylcoconfigsmock/udem/bundle/COMessages.properties";
+	protected String uIMessagesPath = "resources/osylcoconfigsmock/udem/bundle/UIMessages.properties";
 
 	/**
 	 * {@inheritDoc}
@@ -54,14 +51,14 @@ public class OsylHostedModeInitImplUdem implements OsylHostedModeInit {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Map<String, String> getCOMessages() {
-		return OsylCOMessages;
+	public String getUIMessagesPath() {
+		return uIMessagesPath;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Map<String, String> getUIMessages() {
-		return OsylUIMessages;
+	public String getCOMessagesPath() {
+		return cOMessagesPath;
 	}
 }

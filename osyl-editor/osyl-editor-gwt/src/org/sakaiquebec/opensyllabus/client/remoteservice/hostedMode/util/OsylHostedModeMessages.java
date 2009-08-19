@@ -20,46 +20,36 @@
 
 package org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Default init implementation version for hosted mode. This class is
- * Instantiated by differed binding
- * 
- * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Leprêtre</a>
- * @version $$
+ * Util class for HostedMode Messages
  */
-public class OsylHostedModeInitImpl implements OsylHostedModeInit {
-	protected String configPath = "resources/osylcoconfigsmock/default/rules.xml";
-	protected String modelPath = "resources/osylcoconfigsmock/default/coContentTemplate.xml";
-	protected String cOMessagesPath = "resources/osylcoconfigsmock/default/bundle/COMessages.properties";
-	protected String uIMessagesPath = "resources/osylcoconfigsmock/default/bundle/UIMessages.properties";
-
+public class OsylHostedModeMessages {
 	/**
-	 * {@inheritDoc}
+	 * @param responseTxt
+	 *            (bundle property file style text)
+	 * @return message Map
 	 */
-	public String getConfigPath() {
-		return configPath;
+	public static Map<String, String> getMap(String responseTxt) {
+		Map<String, String> messages = new HashMap<String, String>();
+		// Window.alert(responseTxt);
+		String[] lines = responseTxt.split("\\n");
+		for (String line : lines) {
+			String lineTrim = line.trim();
+			if (lineTrim.length() > 0) {
+				if (!(lineTrim.charAt(0) == '#')) {
+					int eqPos = lineTrim.indexOf("=");
+					if (eqPos > 0) {
+						String key = lineTrim.substring(0, eqPos).trim();
+						String value = lineTrim.substring(eqPos + 1).trim();
+						messages.put(key, value);
+					}
+				}
+			}
+		}
+		return messages;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getModelPath() {
-		return modelPath;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getUIMessagesPath() {
-		return uIMessagesPath;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getCOMessagesPath() {
-		return cOMessagesPath;
-	}
 }
