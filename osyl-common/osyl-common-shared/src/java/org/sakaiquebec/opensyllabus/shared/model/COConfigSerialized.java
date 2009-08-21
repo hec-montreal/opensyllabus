@@ -20,7 +20,9 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -41,9 +43,9 @@ import java.util.Map;
  */
 public class COConfigSerialized implements java.io.Serializable {
 
-    private static final long serialVersionUID = -6379837302597754703L;
+	private static final long serialVersionUID = -3238686296047000845L;
 
-    private String configId;
+	private String configId;
 
     /**
      * relative reference to the folder
@@ -68,11 +70,21 @@ public class COConfigSerialized implements java.io.Serializable {
     private String cascadingStyleSheetURI;
 
     /**
+     * RolesList definition
+     */
+    private ArrayList<String> rolesList;
+    
+    /**
+     * EvalTypeList definition
+     */
+    private ArrayList<String> evalTypeList;       
+
+	/**
      * Empty Constructor
      */
     public COConfigSerialized() {
         super();
-        initMessages();        
+        initAll();        
     }
 
     /**
@@ -80,7 +92,7 @@ public class COConfigSerialized implements java.io.Serializable {
      */
     public COConfigSerialized(String configId) {
 	this.configId = configId;
-	initMessages();
+	initAll();
     }
 
     /**
@@ -91,7 +103,7 @@ public class COConfigSerialized implements java.io.Serializable {
 	this.configId = configId;
 	this.configRef = configRef;
 	this.description = description;
-	initMessages();
+	initAll();
     }
 
     /**
@@ -181,10 +193,61 @@ public class COConfigSerialized implements java.io.Serializable {
 	this.configRef = configRef;
     }
 
+    private void initAll(){
+    	initMessages();
+    	initRolesList();
+    	initEvalTypeList();
+    }
+    
+    private void initEvalTypeList(){
+    	if(evalTypeList==null){
+    		evalTypeList = new ArrayList<String>();
+    	}
+    }
+    
+    private void initRolesList(){
+    	if(rolesList==null){
+    		rolesList = new ArrayList<String>();
+    	}
+    }
     
     private void initMessages(){
     	if(i18nMessages==null){
     		i18nMessages = new HashMap<String, String>();
     	}
     }
+
+    /**
+	 * @return the rolesList
+	 */
+	public ArrayList<String> getRolesList() {
+		return rolesList;
+	}
+
+    /**
+	 * @return the evalTypeList
+	 */
+	public List<String> getEvalTypeList() {
+		return evalTypeList;
+	}
+	
+	/**
+	 * @param rolesList the rolesList to set
+	 */
+	public void setRolesList(List<String> rolesList) {
+		this.rolesList.clear();
+		if(rolesList!=null){
+			this.rolesList.addAll(rolesList);
+		}
+	}
+	
+	/**
+	 * @param evalTypeList the evalTypeList to set
+	 */
+	public void setEvalTypeList(List<String> evalTypeList) {
+		this.evalTypeList.clear();
+		if(evalTypeList!=null){
+			this.evalTypeList.addAll(evalTypeList);
+		}
+	}
 }

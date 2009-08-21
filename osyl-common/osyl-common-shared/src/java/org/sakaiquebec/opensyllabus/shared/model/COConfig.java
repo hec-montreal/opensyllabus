@@ -20,6 +20,8 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
+import java.util.List;
+
 /**
  * COConfig is a class used by the UI which concentrate all the OSYL elements of
  * configuration such as, the OsylConfigRuler, the UI localized message map.
@@ -36,6 +38,10 @@ public class COConfig {
     private OsylConfigRuler osylConfigRuler;
 
     private OsylConfigMessages i18nMessages;
+    
+    private List<String> rolesList;
+    
+    private List<String> evalTypeList;
 
     /**
      * Construct an COConfig and its OsylConfigRuler based on the
@@ -51,6 +57,8 @@ public class COConfig {
 	// init ruler
 	this.osylConfigRuler =
 		new OsylConfigRuler(this.cOConfigSerialized.getRulesConfig());
+	this.rolesList = cOConfigSerialized.getRolesList();
+	this.evalTypeList = cOConfigSerialized.getEvalTypeList();
     }
 
     /**
@@ -66,4 +74,18 @@ public class COConfig {
     public OsylConfigMessages getI18nMessages() {
 	return i18nMessages;
     }
+
+	/**
+	 * @return the rolesList
+	 */
+	public List<String> getRolesList() {
+		return rolesList;
+	}    
+    
+	/**
+	 * @return the evalTypeList
+	 */
+	public List<String> getEvalTypeList() {
+		return evalTypeList;
+	} 
 }

@@ -21,18 +21,13 @@
 package org.sakaiquebec.opensyllabus.client;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
-import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylTestCOMessages;
-import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylTestUIMessages;
 import org.sakaiquebec.opensyllabus.client.ui.OsylMainView;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
-import org.sakaiquebec.opensyllabus.shared.model.COConfig;
-import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COModeled;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
-import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -128,24 +123,6 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	});
 
     } // onModuleLoad
-
-
-
-    
-
-    
-    public void initConfigFromRulesXml(String xml){
-	COConfigSerialized configSer = new COConfigSerialized("config-test-id");
-	configSer.setRulesConfig(xml);
-	configSer.setCoreBundle(OsylTestUIMessages.getMap());
-	OsylController.getInstance().setOsylConfig(new COConfig(configSer));
-	OsylConfigMessages coMessages =
-		new OsylConfigMessages(OsylTestCOMessages.getMap());
-	OsylController.getInstance().setCoMessages(coMessages);
-    }
-
-
-
 
 
     public void initModel(COSerialized co) {

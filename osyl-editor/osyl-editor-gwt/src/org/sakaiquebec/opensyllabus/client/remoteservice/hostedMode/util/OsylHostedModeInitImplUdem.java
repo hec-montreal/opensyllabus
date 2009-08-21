@@ -2,7 +2,7 @@
  * $Id:  $
  **********************************************************************************
  *
- * Copyright (c) 2008 The Sakai Foundation, The Sakai Québec Team.
+ * Copyright (c) 2008 The Sakai Foundation, The Sakai QuÃ©bec Team.
  *
  * Licensed under the Educational Community License, Version 1.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,11 @@
 
 package org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util;
 
-
 /**
  * UDEM init implementation version for hosted mode. This class is Instantiated
  * by differed binding
  * 
- * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Leprêtre</a>
+ * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha LeprÃªtre</a>
  * @version $$
  */
 public class OsylHostedModeInitImplUdem implements OsylHostedModeInit {
@@ -33,7 +32,9 @@ public class OsylHostedModeInitImplUdem implements OsylHostedModeInit {
 	protected String modelPath = "resources/osylcoconfigsmock/udem/coContentTemplate.xml";
 	protected String cOMessagesPath = "resources/osylcoconfigsmock/udem/bundle/COMessages.properties";
 	protected String uIMessagesPath = "resources/osylcoconfigsmock/udem/bundle/UIMessages.properties";
-
+	protected String cORolesListPath = "resources/osylcoconfigsmock/udem/coRolesList.xml";
+	protected String cOEvalTypeListPath = "resources/osylcoconfigsmock/udem/coEvalTypeList.xml";
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -60,5 +61,19 @@ public class OsylHostedModeInitImplUdem implements OsylHostedModeInit {
 	 */
 	public String getCOMessagesPath() {
 		return cOMessagesPath;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getRolesListPath() {
+		return cORolesListPath;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getEvalTypeListPath() {
+		return cOEvalTypeListPath;
 	}
 }

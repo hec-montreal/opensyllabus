@@ -21,10 +21,11 @@
 package org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylHostedModeInit;
-import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylHostedModeMessages;
+import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylHostedModeTransformUtil;
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtServiceAsync;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
@@ -49,6 +50,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
 	private final static String SITE_ID = "6b9188e5-b3ca-49dd-be7c-540ad9bd60c4";
+	private COConfigSerialized configSer;
 
 	/**
 	 * Initialization properties object used in hosted mode such as ConfigPath,
@@ -57,22 +59,6 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	 */
 	private static OsylHostedModeInit osylHostedModeInit = (OsylHostedModeInit) GWT
 			.create(OsylHostedModeInit.class);
-
-	public String getConfigPath() {
-		return osylHostedModeInit.getConfigPath();
-	}
-
-	public String getModelPath() {
-		return osylHostedModeInit.getModelPath();
-	}
-
-	public String getCOMessagesPath() {
-		return osylHostedModeInit.getCOMessagesPath();
-	}
-
-	public String getUIMessagesPath() {
-		return osylHostedModeInit.getUIMessagesPath();
-	}
 
 	public void applyPermissions(String resourceId, String permission,
 			AsyncCallback<Void> callback) {
@@ -129,45 +115,103 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
 	public void getSerializedConfig(
 			final AsyncCallback<COConfigSerialized> callback) {
+		if (configSer == null) {
+			configSer = new COConfigSerialized("config-test-id");
 
-		final COConfigSerialized configSer = new COConfigSerialized(
-				"config-test-id");
+			// Getting UI messages for config
+			getFileByRequest(osylHostedModeInit.getUIMessagesPath(),
+					new RequestCallback() {
+						public void onError(Request request, Throwable exception) {
+							Window.alert("Error while reading "
+									+ osylHostedModeInit.getUIMessagesPath()
+									+ " :" + exception.toString());
+						}
 
-		getMessagesMap(getUIMessagesPath(), new RequestCallback() {
-			public void onError(Request request, Throwable exception) {
-				Window.alert("Error while reading " + getUIMessagesPath()
-						+ " :" + exception.toString());
+						public void onResponseReceived(Request request,
+								Response response) {
+							String responseTxt = response.getText();
+							// transform text to map
+							Map<String, String> messages = OsylHostedModeTransformUtil
+									.propertyTxt2Map(responseTxt);
+							configSer.setCoreBundle(messages);
+						}
+					});
+
+			// Getting RolesList for config
+			getFileByRequest(osylHostedModeInit.getRolesListPath(),
+					new RequestCallback() {
+						public void onError(Request request, Throwable exception) {
+							Window.alert("Error while reading "
+									+ osylHostedModeInit.getRolesListPath()
+									+ " :" + exception.toString());
+						}
+
+						public void onResponseReceived(Request request,
+								Response response) {
+							String responseTxt = response.getText();
+							// transform text to List
+							List<String> list = new ArrayList<String>();
+							try {
+								list = OsylHostedModeTransformUtil
+										.xmlTxt2List(responseTxt);
+							} catch (Exception e) {
+								e.printStackTrace();
+								Window.alert(e.getMessage() + " " + e);
+							}
+							configSer.setRolesList(list);
+						}
+					});
+
+			// Getting EvalTypeList for config
+			getFileByRequest(osylHostedModeInit.getEvalTypeListPath(),
+					new RequestCallback() {
+						public void onError(Request request, Throwable exception) {
+							Window.alert("Error while reading "
+									+ osylHostedModeInit.getEvalTypeListPath()
+									+ " :" + exception.toString());
+						}
+
+						public void onResponseReceived(Request request,
+								Response response) {
+							String responseTxt = response.getText();
+							// transform text to List
+							List<String> list = new ArrayList<String>();
+							try {
+								list = OsylHostedModeTransformUtil
+										.xmlTxt2List(responseTxt);
+								configSer.setEvalTypeList(list);
+							} catch (Exception e) {
+								e.printStackTrace();
+								Window.alert(e.getMessage() + " " + e);
+							}							
+						}
+					});
+
+			// Getting Rules for config
+			RequestBuilder requestBuilder = null;
+
+			requestBuilder = new RequestBuilder(RequestBuilder.GET,
+					osylHostedModeInit.getConfigPath());
+
+			try {
+				requestBuilder.sendRequest(null, new RequestCallback() {
+					public void onError(Request request, Throwable exception) {
+						Window.alert("Error while reading "
+								+ osylHostedModeInit.getConfigPath() + " :"
+								+ exception.toString());
+					}
+
+					public void onResponseReceived(Request request,
+							Response response) {
+						configSer.setRulesConfig(response.getText());
+						callback.onSuccess(configSer);
+					}
+				});
+			} catch (RequestException ex) {
+				Window.alert("Error while reading "
+						+ osylHostedModeInit.getConfigPath() + " :"
+						+ ex.toString());
 			}
-
-			public void onResponseReceived(Request request, Response response) {
-				String responseTxt = response.getText();
-				// transform text to map
-				Map<String, String> messages = OsylHostedModeMessages
-						.getMap(responseTxt);
-				configSer.setCoreBundle(messages);
-			}
-		});
-
-		RequestBuilder requestBuilder = null;
-
-		requestBuilder = new RequestBuilder(RequestBuilder.GET, getConfigPath());
-
-		try {
-			requestBuilder.sendRequest(null, new RequestCallback() {
-				public void onError(Request request, Throwable exception) {
-					Window.alert("Error while reading " + getConfigPath()
-							+ " :" + exception.toString());
-				}
-
-				public void onResponseReceived(Request request,
-						Response response) {
-					configSer.setRulesConfig(response.getText());
-					callback.onSuccess(configSer);
-				}
-			});
-		} catch (RequestException ex) {
-			Window.alert("Error while reading " + getConfigPath() + " :"
-					+ ex.toString());
 		}
 	}
 
@@ -177,17 +221,16 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
 	}
 
-	private void getMessagesMap(final String messagesPath,
+	private void getFileByRequest(final String path,
 			final RequestCallback callback) {
 
 		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET,
-				messagesPath);
+				path);
 
 		try {
 			requestBuilder.sendRequest(null, callback);
 		} catch (RequestException ex) {
-			Window.alert("Error while reading " + messagesPath + " :"
-					+ ex.toString());
+			Window.alert("Error while reading " + path + " :" + ex.toString());
 		}
 	}
 
@@ -197,28 +240,32 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 		final COSerialized modeledCo = new COSerialized();
 		modeledCo.setSiteId(SITE_ID);
 
-		getMessagesMap(getCOMessagesPath(), new RequestCallback() {
-			public void onError(Request request, Throwable exception) {
-				Window.alert("Error while reading " + getCOMessagesPath()
-						+ " :" + exception.toString());
-			}
+		getFileByRequest(osylHostedModeInit.getCOMessagesPath(),
+				new RequestCallback() {
+					public void onError(Request request, Throwable exception) {
+						Window.alert("Error while reading "
+								+ osylHostedModeInit.getCOMessagesPath() + " :"
+								+ exception.toString());
+					}
 
-			public void onResponseReceived(Request request, Response response) {
-				String responseTxt = response.getText();
-				// transform text to map
-				Map<String, String> messages = OsylHostedModeMessages
-						.getMap(responseTxt);
-				modeledCo.setMessages(messages);
-			}
-		});
+					public void onResponseReceived(Request request,
+							Response response) {
+						String responseTxt = response.getText();
+						// transform text to map
+						Map<String, String> messages = OsylHostedModeTransformUtil
+								.propertyTxt2Map(responseTxt);
+						modeledCo.setMessages(messages);
+					}
+				});
 
 		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET,
-				getModelPath());
+				osylHostedModeInit.getModelPath());
 
 		try {
 			requestBuilder.sendRequest(null, new RequestCallback() {
 				public void onError(Request request, Throwable exception) {
-					Window.alert("Error while reading " + getModelPath() + " :"
+					Window.alert("Error while reading "
+							+ osylHostedModeInit.getModelPath() + " :"
 							+ exception.toString());
 				}
 
@@ -229,8 +276,8 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 				}
 			});
 		} catch (RequestException ex) {
-			Window.alert("Error while reading " + getModelPath() + " :"
-					+ ex.toString());
+			Window.alert("Error while reading "
+					+ osylHostedModeInit.getModelPath() + " :" + ex.toString());
 		}
 
 	}

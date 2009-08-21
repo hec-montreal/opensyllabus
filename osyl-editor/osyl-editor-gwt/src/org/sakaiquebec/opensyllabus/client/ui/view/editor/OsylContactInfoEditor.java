@@ -23,7 +23,6 @@ package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylUdeMSwitch;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxContactInfoView;
@@ -418,36 +417,14 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	ListBox lb = new ListBox();
 	lb.setStylePrimaryName("Osyl-ContactInfo-ListBox");
 
-	lb.addItem(getView()
-		.getCoMessage("ResProxContactInfoView_PleaseChoose"));
-	lb.addItem(getView().getCoMessage("ResProxContactInfoView_Professor"));
-	lb.addItem(getView().getCoMessage(
-		"ResProxContactInfoView_AssistantProfessor"));
-	lb.addItem(getView().getCoMessage(
-		"ResProxContactInfoView_AdjunctProfessor"));
-	lb.addItem(getView().getCoMessage(
-		"ResProxContactInfoView_AffiliatedProfessor"));
-	lb.addItem(getView().getCoMessage(
-		"ResProxContactInfoView_AssociateProfessor"));
-	lb.addItem(getView().getCoMessage(
-		"ResProxContactInfoView_GuestProfessor"));
-	lb.addItem(getView().getCoMessage(
-		"ResProxContactInfoView_HonoraryProfessor"));
-	lb.addItem(getView().getCoMessage(
-		"ResProxContactInfoView_Full-timeFacultyLecturer"));
-	lb.addItem(getView().getCoMessage(
-		"ResProxContactInfoView_Part-timeFacultyLecturer"));
-	lb.addItem(getView().getCoMessage(
-		"ResProxContactInfoView_Full-timeLecturer"));
-	lb.addItem(getView().getCoMessage("ResProxContactInfoView_Trainee"));
-	lb.addItem(getView().getCoMessage("ResProxContactInfoView_Student"));
-	lb.addItem(getView().getCoMessage("ResProxContactInfoView_Secretary"));
-	// TODO : Should be moved to XML external configuration file
-	if ( OsylUdeMSwitch.isUdeM() ) {
-		lb.addItem(getView().getCoMessage(
-			"ResProxContactInfoView_Professor_UdeM"));
-		lb.addItem(getView().getCoMessage(
-			"ResProxContactInfoView_Full-timeLecturer_UdeM"));
+	List<String> rolesList = getView().getController().getOsylConfig().getRolesList();
+	if(rolesList.size()>0){
+		lb.addItem(getView()
+				.getCoMessage("ResProxContactInfoView_PleaseChoose"));
+	}
+	for(String roleKey : rolesList){
+		lb.addItem(getView()
+				.getCoMessage(roleKey));
 	}
 	return lb;
     }

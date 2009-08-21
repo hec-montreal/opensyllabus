@@ -20,7 +20,6 @@
 
 package org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util;
 
-import java.util.Map;
 
 /**
  * Default init implementation version for hosted mode. This class is
@@ -34,7 +33,9 @@ public class OsylHostedModeInitImpl implements OsylHostedModeInit {
 	protected String modelPath = "resources/osylcoconfigsmock/default/coContentTemplate.xml";
 	protected String cOMessagesPath = "resources/osylcoconfigsmock/default/bundle/COMessages.properties";
 	protected String uIMessagesPath = "resources/osylcoconfigsmock/default/bundle/UIMessages.properties";
-
+	protected String cORolesListPath = "resources/osylcoconfigsmock/default/coRolesList.xml";
+	protected String cOEvalTypeListPath = "resources/osylcoconfigsmock/default/coEvalTypeList.xml";
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -61,5 +62,19 @@ public class OsylHostedModeInitImpl implements OsylHostedModeInit {
 	 */
 	public String getCOMessagesPath() {
 		return cOMessagesPath;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getRolesListPath() {
+		return cORolesListPath;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getEvalTypeListPath() {
+		return cOEvalTypeListPath;
 	}
 }

@@ -20,7 +20,6 @@
 
 package org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util;
 
-
 /**
  * OsylHostedModeInit Interface. This interface is used to define the
  * initialization properties used in hosted mode such as ConfigPath, ModelPath
@@ -42,12 +41,22 @@ public interface OsylHostedModeInit {
 	public String getModelPath();
 
 	/**
-	 * @return the COMessages path object for hosted mode
+	 * @return the COMessages path for hosted mode
 	 */
 	public String getCOMessagesPath();
 
 	/**
-	 * @return the UIMessages path object for hosted mode
+	 * @return the UIMessages path for hosted mode
 	 */
 	public String getUIMessagesPath();
+
+	/**
+	 * @return the RolesList path
+	 */
+	public String getRolesListPath();
+	
+	/**
+	 * @return the EvalTypeList path
+	 */
+	public String getEvalTypeListPath();
 }

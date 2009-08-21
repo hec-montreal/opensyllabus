@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		List of Evaluation.Type to be displayed in OpenSyllabus Warning: each
+		value specified in the list targets a corresponding key in the bundle
+		COMessages_??_??.properties files
+	-->
+<list>
+	<item value="Evaluation.Type.case_study" />
+	<item value="Evaluation.Type.practice_assignement" />
+	<item value="Evaluation.Type.session_work" />
+	<item value="Evaluation.Type.intra_exam" />
+	<item value="Evaluation.Type.final_exam" />
+	<item value="Evaluation.Type.quiz" />
+	<item value="Evaluation.Type.homework" />
+	<item value="Evaluation.Type.participation" />
+	<item value="Evaluation.Type.other" />
+</list>

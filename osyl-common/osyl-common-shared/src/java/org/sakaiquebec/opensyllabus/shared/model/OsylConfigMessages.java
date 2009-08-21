@@ -103,5 +103,13 @@ public class OsylConfigMessages {
     public Map<String,String> getMessages() {
 	return messages;
     }
+    
+    /**
+     * @param key
+     * @return true if the maps contains the key
+     */
+    public boolean containsKey(String key){
+    	return this.messages.containsKey(key);    
+    }
 
 }

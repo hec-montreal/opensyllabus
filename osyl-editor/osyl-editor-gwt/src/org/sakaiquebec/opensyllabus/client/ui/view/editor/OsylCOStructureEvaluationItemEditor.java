@@ -21,14 +21,12 @@
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
 
-import java.text.DateFormat;
+import java.util.List;
 
-import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylUdeMSwitch;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureEvaluationItemLabelView;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
@@ -269,30 +267,13 @@ public class OsylCOStructureEvaluationItemEditor extends
 	Label l9 = new Label(getUiMessage("Evaluation.type"));
 	typeListBox = new ListBox();
 	typeListBox.setTitle(getUiMessage("Evaluation.type.tooltip"));
-	typeListBox.addItem(getView()
-		.getCoMessage("Evaluation.Type.case_study"));
-	typeListBox.addItem(getView().getCoMessage(
-		"Evaluation.Type.practice_assignement"));
-	typeListBox.addItem(getView().getCoMessage(
-		"Evaluation.Type.session_work"));
-	typeListBox.addItem(getView()
-		.getCoMessage("Evaluation.Type.intra_exam"));
-	typeListBox.addItem(getView()
-		.getCoMessage("Evaluation.Type.final_exam"));
-	typeListBox.addItem(getView().getCoMessage("Evaluation.Type.quiz"));
-	typeListBox.addItem(getView().getCoMessage("Evaluation.Type.homework"));
-	typeListBox.addItem(getView().getCoMessage(
-		"Evaluation.Type.participation"));
-	// TODO : Should be moved to XML external configuration file
-	if ( OsylUdeMSwitch.isUdeM() ) {
-		typeListBox.addItem(getView().getCoMessage(
-			"Evaluation.Type.multiplechoice"));
-		typeListBox.addItem(getView().getCoMessage(
-			"Evaluation.Type.shortwrittenanswer"));
-		typeListBox.addItem(getView().getCoMessage(
-			"Evaluation.Type.elaboratedwrittenanswer"));
+	List<String> evalTypeList = getView().getController().getOsylConfig().getEvalTypeList();
+	if(evalTypeList!=null){
+		for(String evalTypeKey: evalTypeList){
+			typeListBox.addItem(getView()
+					.getCoMessage(evalTypeKey));
+		}
 	}
-	typeListBox.addItem(getView().getCoMessage("Evaluation.Type.other"));
 	typeListBox.addChangeListener(new ChangeListener() {
 
 	    public void onChange(Widget sender) {

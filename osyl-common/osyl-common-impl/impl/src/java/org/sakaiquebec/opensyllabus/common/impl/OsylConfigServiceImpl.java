@@ -24,10 +24,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,6 +40,12 @@ import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+
 
 /**
  * Implementation of the {@link OsylConfigService} interface.
@@ -56,6 +66,16 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	 * File containing the xml representation of the rules or config
 	 */
 	private static final String CONFIG_RULES = "rules.xml";
+	
+	/**
+	 * File containing the rolesList config (in xml)
+	 */
+	private static final String CONFIG_ROLES_LIST = "coRolesList.xml";
+	
+	/**
+	 * File containing the evalTypeList config (in xml)
+	 */
+	private static final String CONFIG_EVAL_TYPE_LIST = "coEvalTypeList.xml";
 
 	/**
 	 * Css file for skin properties
@@ -67,6 +87,16 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	 */
 	private static final String CONFIG_DIR = "osylcoconfigs";
 
+	/**
+	 * Item node name for xml parsing
+	 */
+	private static final String ITEM_NODE_NAME = "item";
+	
+	/**
+	 * Value attribute name for xml parsing
+	 */
+	private static final String VALUE_ATTRIBUTE_NAME = "value";
+	
 	/**
 	 * Injection of the ConfigDao
 	 */
@@ -271,9 +301,60 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
         coConfig.setCoreBundle(
                 OsylConfigServiceMessages.getMessages(path, CONFIG_UIMESSAGES));
         coConfig.setRulesConfig(getRules(path));
+        coConfig.setRolesList(getRolesList(path));
+        coConfig.setEvalTypeList(getEvalTypeList(path));
         return coConfig;
     }
 
+    /**
+     * For a given config directory in the webapp, this method reads the rolesList xml
+     * file and parse it as a List
+     * @param dir
+     * @return List
+     */    
+    private static List<String> getRolesList(String dir) throws Exception{
+    	File xmlFile = new File(dir, CONFIG_ROLES_LIST);
+    	List<String> list = parseXmlForList(xmlFile);
+    	return list;
+    }
+    
+    /**
+     * Parsing xml file (list xml schema) and retrieve list
+     * @param xmlFile
+     * @return
+     * @throws Exception
+     */
+    private static List<String> parseXmlForList(File xmlFile) throws Exception{
+    	List<String> list = new ArrayList<String>();
+    	DocumentBuilder docBuilder =  DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    	Document dom = docBuilder.parse(xmlFile);
+    	Element nodeElement = dom.getDocumentElement();
+		NodeList nodeList = nodeElement.getChildNodes();
+		if (nodeList != null) {
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node node = nodeList.item(i);
+				if (node.getNodeName().equalsIgnoreCase(ITEM_NODE_NAME)) {
+					String value = node.getAttributes().getNamedItem(
+							VALUE_ATTRIBUTE_NAME).getNodeValue();
+					list.add(value);
+				}
+			}
+		}
+    	return list;
+    }
+    
+    /**
+     * For a given config directory in the webapp, this method reads the evalType xml
+     * file and parse it as a List
+     * @param dir
+     * @return List
+     */   
+    private static List<String> getEvalTypeList(String dir) throws Exception{
+    	File xmlFile = new File(dir, CONFIG_EVAL_TYPE_LIST);
+    	List<String> list = parseXmlForList(xmlFile);
+    	return list;
+    }
+    
     /**
      * For a given skin directory in the webapp, this method reads the xml rule
      * file into a String.
