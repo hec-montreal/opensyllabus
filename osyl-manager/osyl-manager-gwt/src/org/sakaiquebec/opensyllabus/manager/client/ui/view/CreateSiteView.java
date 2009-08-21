@@ -116,7 +116,7 @@ public class CreateSiteView extends OsylManagerAbstractView {
 			public void onClick(Widget sender) {
 			    boolean nameValid = false;
 			    String name = nameTextBox.getText();
-				nameValid = (name!=null && name.matches("^[a-zA-Z0-9]*[\\S]"));
+				nameValid = (name!=null && name.matches("^[a-zA-Z0-9][ a-zA-Z0-9\\._-]*") && name.matches(".*[\\S]$"));
 				if (nameValid) {
 				    if (configListBox.getSelectedIndex() != -1) {
 					String configId =
