@@ -64,13 +64,10 @@ import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.time.api.Time;
 import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiproject.tool.api.Tool;
-import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
@@ -301,32 +298,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	osylPackage = new OsylPackage();
 	osylPackage.unzipFile(zip);
 	return osylPackage.getXmlData();
-    }
-
-    /**
-     * Adds the tool to the given site
-     * 
-     * @param site
-     * @param toolId
-     */
-    private void addTool(Site site, String toolId) {
-	SitePage page = site.addPage();
-	Tool tool = ToolManager.getTool(toolId);
-	page.setTitle(tool.getTitle());
-	page.setLayout(SitePage.LAYOUT_SINGLE_COL);
-	ToolConfiguration toolConf = page.addTool();
-	toolConf.setTool(toolId, tool);
-	toolConf.setTitle(tool.getTitle());
-	toolConf.setLayoutHints("0,0");
-
-	try {
-	    siteService.save(site);
-	} catch (IdUnusedException e) {
-	    e.printStackTrace();
-	} catch (PermissionException e) {
-	    e.printStackTrace();
-	}
-
     }
 
     /**

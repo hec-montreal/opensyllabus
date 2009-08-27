@@ -319,8 +319,6 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 					+ PUBLISH_DIRECTORY + "/";
 			osylSecurityService.applyDirectoryPermissions(directoryId);
 
-			addCollection(PUBLISH_DIRECTORY, site);
-
 			COConfigSerialized coConfig = null;
 			COSerialized co = null;
 
