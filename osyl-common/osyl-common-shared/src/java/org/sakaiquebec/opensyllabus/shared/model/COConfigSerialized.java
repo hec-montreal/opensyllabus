@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * This is the POJO used for the configuration of a course outline. In the
  * database we only save the configuration id and a reference of the relative
@@ -47,206 +46,195 @@ public class COConfigSerialized implements java.io.Serializable {
 
 	private String configId;
 
-    /**
-     * relative reference to the folder
-     */
-    private String configRef;
+	/**
+	 * relative reference to the folder
+	 */
+	private String configRef;
 
-    private String description;
-
-    /**
-     * xml config rules on model for the UI
-     */
-    private String rulesConfigContent;
-
-    /**
-     * Messages selected for the user locale
-     */
-    private HashMap<String, String> i18nMessages;//Force a HashMap so GWT figures out this field is Serializable
-
-    /**
-     * CSS URI, used for jsp page
-     */
-    private String cascadingStyleSheetURI;
-
-    /**
-     * RolesList definition
-     */
-    private ArrayList<String> rolesList;
-    
-    /**
-     * EvalTypeList definition
-     */
-    private ArrayList<String> evalTypeList;       
+	private String description;
 
 	/**
-     * Empty Constructor
-     */
-    public COConfigSerialized() {
-        super();
-        initAll();        
-    }
+	 * xml config rules on model for the UI
+	 */
+	private String rulesConfigContent;
 
-    /**
-     * Constructor
-     */
-    public COConfigSerialized(String configId) {
-	this.configId = configId;
-	initAll();
-    }
+	/**
+	 * Messages selected for the user locale
+	 */
+	private HashMap<String, String> i18nMessages;// Force a HashMap so GWT
+													// figures out this field is
+													// Serializable
 
-    /**
-     * Constructor
-     */
-    public COConfigSerialized(String configId, String configRef,
-	    String description) {
-	this.configId = configId;
-	this.configRef = configRef;
-	this.description = description;
-	initAll();
-    }
+	/**
+	 * CSS URI, used for jsp page
+	 */
+	private String cascadingStyleSheetURI;
 
-    /**
-     * @return the description value
-     */
-    public String getDescription() {
-	return description;
-    }
+	/**
+	 * RolesList definition
+	 */
+	private ArrayList<String> rolesList;
 
-    /**
-     * @param description the new value of description
-     */
-    public void setDescription(String description) {
-	this.description = description;
-    }
+	/**
+	 * EvalTypeList definition
+	 */
+	private ArrayList<String> evalTypeList;
 
-    /**
-     * @return the cascadingStyleSheetURI value.
-     */
-    public String getCascadingStyleSheetURI() {
-	return cascadingStyleSheetURI;
-    }
+	/**
+	 * Empty Constructor
+	 */
+	public COConfigSerialized() {
+		this(null);
+	}
 
-    /**
-     * @param cascadingStyleSheetURI the new value of cascadingStyleSheetURI.
-     */
-    public void setCascadingStyleSheetURI(String cascadingStyleSheetURI) {
-	this.cascadingStyleSheetURI = cascadingStyleSheetURI;
-    }
+	/**
+	 * Constructor
+	 */
+	public COConfigSerialized(String configId) {
+		super();
+		this.configId = configId;
+		this.evalTypeList = new ArrayList<String>();
+		this.rolesList = new ArrayList<String>();
+		this.i18nMessages = new HashMap<String, String>();
+	}
 
-    /**
-     * @return the i18nMessages value.
-     */
-    public Map<String, String> getI18nMessages() {
-	return i18nMessages;
-    }
+	/**
+	 * Constructor
+	 */
+	public COConfigSerialized(
+			String configId, 
+			String configRef,
+			String description) {
+		this(configId);
+		this.configRef = configRef;
+		this.description = description;
+	}
 
-    /**
-     * @param i18nMessages the new value of coreBundle.
-     */
-    public void setCoreBundle(Map<String, String> i18nMessages) {
-        this.i18nMessages.clear();
-        if (null != i18nMessages) {
-            this.i18nMessages.putAll(i18nMessages);
-        }
-    }
+	/**
+	 * @return the description value
+	 */
+	public String getDescription() {
+		return description;
+	}
 
-    /**
-     * @return the osylConfigId value.
-     */
-    public String getConfigId() {
-	return configId;
-    }
+	/**
+	 * @param description
+	 *            the new value of description
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    /**
-     * @param osylConfigId the new value of osylConfigId.
-     */
-    public void setConfigId(String osylConfigId) {
-	this.configId = osylConfigId;
-    }
+	/**
+	 * @return the cascadingStyleSheetURI value.
+	 */
+	public String getCascadingStyleSheetURI() {
+		return cascadingStyleSheetURI;
+	}
 
-    /**
-     * @return the rulesConfigContent value.
-     */
-    public String getRulesConfig() {
-	return rulesConfigContent;
-    }
+	/**
+	 * @param cascadingStyleSheetURI
+	 *            the new value of cascadingStyleSheetURI.
+	 */
+	public void setCascadingStyleSheetURI(String cascadingStyleSheetURI) {
+		this.cascadingStyleSheetURI = cascadingStyleSheetURI;
+	}
 
-    /**
-     * @param rulesConfigContent the new value of rulesConfigContent.
-     */
-    public void setRulesConfig(String rulesConfig) {
-	this.rulesConfigContent = rulesConfig;
-    }
+	/**
+	 * @return the i18nMessages value.
+	 */
+	public Map<String, String> getI18nMessages() {
+		return i18nMessages;
+	}
 
-    /**
-     * @return the configRef value.
-     */
-    public String getConfigRef() {
-	return configRef;
-    }
+	/**
+	 * @param i18nMessages
+	 *            the new value of coreBundle.
+	 */
+	public void setCoreBundle(Map<String, String> i18nMessages) {
+		this.i18nMessages.clear();
+		if (null != i18nMessages) {
+			this.i18nMessages.putAll(i18nMessages);
+		}
+	}
 
-    /**
-     * @param configRef the new value of configRef.
-     */
-    public void setConfigRef(String configRef) {
-	this.configRef = configRef;
-    }
+	/**
+	 * @return the osylConfigId value.
+	 */
+	public String getConfigId() {
+		return configId;
+	}
 
-    private void initAll(){
-    	initMessages();
-    	initRolesList();
-    	initEvalTypeList();
-    }
-    
-    private void initEvalTypeList(){
-    	if(evalTypeList==null){
-    		evalTypeList = new ArrayList<String>();
-    	}
-    }
-    
-    private void initRolesList(){
-    	if(rolesList==null){
-    		rolesList = new ArrayList<String>();
-    	}
-    }
-    
-    private void initMessages(){
-    	if(i18nMessages==null){
-    		i18nMessages = new HashMap<String, String>();
-    	}
-    }
+	/**
+	 * @param osylConfigId
+	 *            the new value of osylConfigId.
+	 */
+	public void setConfigId(String osylConfigId) {
+		this.configId = osylConfigId;
+	}
 
-    /**
+	/**
+	 * @return the rulesConfigContent value.
+	 */
+	public String getRulesConfig() {
+		return rulesConfigContent;
+	}
+
+	/**
+	 * @param rulesConfigContent
+	 *            the new value of rulesConfigContent.
+	 */
+	public void setRulesConfig(String rulesConfig) {
+		this.rulesConfigContent = rulesConfig;
+	}
+
+	/**
+	 * @return the configRef value.
+	 */
+	public String getConfigRef() {
+		return configRef;
+	}
+
+	/**
+	 * @param configRef
+	 *            the new value of configRef.
+	 */
+	public void setConfigRef(String configRef) {
+		this.configRef = configRef;
+	}
+
+	/**
 	 * @return the rolesList
 	 */
 	public ArrayList<String> getRolesList() {
 		return rolesList;
 	}
 
-    /**
+	/**
 	 * @return the evalTypeList
 	 */
 	public List<String> getEvalTypeList() {
 		return evalTypeList;
 	}
-	
+
 	/**
-	 * @param rolesList the rolesList to set
+	 * @param rolesList
+	 *            the rolesList to set
 	 */
 	public void setRolesList(List<String> rolesList) {
 		this.rolesList.clear();
-		if(rolesList!=null){
+		if (rolesList != null) {
 			this.rolesList.addAll(rolesList);
 		}
 	}
-	
+
 	/**
-	 * @param evalTypeList the evalTypeList to set
+	 * @param evalTypeList
+	 *            the evalTypeList to set
 	 */
 	public void setEvalTypeList(List<String> evalTypeList) {
 		this.evalTypeList.clear();
-		if(evalTypeList!=null){
+		if (evalTypeList != null) {
 			this.evalTypeList.addAll(evalTypeList);
 		}
 	}
