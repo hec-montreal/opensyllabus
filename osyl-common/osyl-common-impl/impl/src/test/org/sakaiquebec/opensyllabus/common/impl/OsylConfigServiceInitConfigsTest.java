@@ -9,13 +9,11 @@ public final class OsylConfigServiceInitConfigsTest extends AbstractOsylConfigSe
     public void testInitConfigs() throws Exception {
     	//DO NOT CALL initConfigs(), the IMPL does it already through init()
     	//(which in itself shows that initConfigs() should not be part of the interface).
-    	//We expect 2 configs as the doc says.
+    	//We expect 6 configs as the doc says.
     	
     	assertEquals(
-    			"OsylServiceConfig.initConfigs() didn't created the number " + 
+    			"OsylServiceConfig.initConfigs() didn't created the number of " + 
     			"COConfigSerialized that the documentation says it does.",
-    			2, getService().getConfigs().size()); 
-    	
-    	//FIXME: at the time of writing this test, the returned size is 6...
+    			6, getService().getConfigs().size());    	
     }
 }

@@ -50,8 +50,14 @@ public interface OsylConfigService {
     public static final String CONFIG_COMESSAGES = "COMessages";
 
     /**
-     * Temporary method to automatically create 2 configs (HEC - UdeM) in the
-     * corresponding table
+     * Creates the following configurations:
+     * "default" - "Config from HEC Montreal"
+     * "udem" - "Config udem"
+     * "udemCompetencesComposantes" - "Config UdeM - Competences Composantes"
+     * "udemCompetencesSeances" - "Config UdeM - Competences Seances"
+     * "udemObjectifsActivites" - "Config UdeM - Objectifs Activites"
+     * "udemObjectifsSeances" - "Config UdeM - Objectifs Seances"
+     * 
      * @throws Exception 
      */
     public void initConfigs() throws Exception;
