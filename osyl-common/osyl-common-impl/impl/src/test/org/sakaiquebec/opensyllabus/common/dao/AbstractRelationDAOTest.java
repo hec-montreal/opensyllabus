@@ -24,7 +24,7 @@ package org.sakaiquebec.opensyllabus.common.dao;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class AbstractRelationDAOTest extends AbstractDAOTest {
+abstract class AbstractRelationDAOTest extends AbstractDAOTest {
 
     private CORelationDao coRelationDao;
 

@@ -10,7 +10,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 /**
  * @see org.sakaiquebec.opensyllabus.common.dao.ResourceDaoImpl
  */
-public class AbstractResourceDAOTest extends AbstractDAOTest {
+abstract class AbstractResourceDAOTest extends AbstractDAOTest {
 
     private ResourceDao resourceDAO;// What we're testing
 
