@@ -262,7 +262,7 @@ public class OsylRealmServiceImpl implements OsylRealmService {
 		if (i == -1)
 			return newRealmName;
 		else
-			return newRealmName.substring(i+9);
+			return newRealmName.substring(i+8);
    }
    
    /** {@inheritDoc} */
