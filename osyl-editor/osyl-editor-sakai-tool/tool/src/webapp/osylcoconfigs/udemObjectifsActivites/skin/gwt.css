@@ -1,91 +1,74 @@
 /* ---- CSS definitions overriding default GWT styles -------------- */
 
-.gwt-BorderedPanel {
-}
-
 .gwt-Button {
-  background:#F5F5F5;
-  border:1px solid #AAA;
-  border-top:1px solid #DDD;
-  border-left:1px solid #DDD;
-  padding:2px;
-  width:12em;
+	/*background:transparent;
+	border-color:#AAA #DDD #DDD #AAA;
+	padding:2px;
+	width:80px;
+	height:26px;*/
+	margin:5px 2px;
+	width:85px;
+	height:30px;
+	background:transparent url(img/button/osyl_button_gwt.png) no-repeat;
+	border:0;
+	cursor:pointer;
 }
-
+.gwt-Button:hover {
+	background-position:left bottom;
+}
 .gwt-Button:active {
-  border:1px solid #AAA;
-  border-bottom:1px solid #CCC;
-  border-right:1px solid #CCC;
+  border-color:#AAA #CCC #CCC #AAA;
 }
 
 .gwt-Button[disabled] {
-  background:#ccc;
-  border:1px solid #999;
-  border-top:1px solid #CCC;
-  border-left:1px solid #CCC;
+  background:#CCC;
+  border-color:#999 #CCC #CCC #999;
   color:#888;
 }
-/*
-.gwt-Canvas {
-}*/
-
-/*.gwt-CheckBox {
-}*/
 
 .gwt-DialogBox {
-  border:2px outset;
-  background:#FCFCFC url(img/tree_bg.gif) repeat-x;
-  
+	background-color:#FCFCFC;
+	border:3px solid #454a4f;
+	-moz-box-shadow:0 0 10px #000;
+	-webkit-box-shadow:1px 1px 10px #000;
+ 	box-shadow:1px 1px 10px #000;
 }
-.gwt-DialogBox .dialogTopCenter {
-  background:#FCFCFC url(img/tree_bg.gif) repeat-x;
-  
-}
+.gwt-DialogBox .dialogTopCenter {background-color:#454a4f;}
 .gwt-DialogBox .Caption, .gwt-DialogBox .mosaic-Caption {
-
-  padding:4px 4px 8px 4px;
+  padding:4px 4px 8px;
   cursor:default;
 }
 
-/*Cette classe à été ajoutée.*/
 .gwt-DialogBox .Caption {
-  font-weight:bold;
-  margin:2px;
+	background:transparent url(img/exclamation.png) no-repeat 1px 2px;
+	padding-left:28px;
+  	font-weight:bold;
+  	/*margin:2px;*/
+	color:#FFF;
+	margin:0;
+	background-color:#454a4f;
 }
 
 .gwt-FileUpload {
 	width:250px;
 	margin:10px;
 }
-/*
-.gwt-Frame {
-}*/
 
-/*.gwt-HTML {
-}*/
-
-.div.gwt-Hyperlink a {
+.gwt-Hyperlink > a:link {
+	text-decoration:none !important; /* ByPass the underline style in the gwt stylesheet. */
 	text-decoration:none;
+	white-space:nowrap;
 }
 
-.div.gwt-Hyperlink a:hover {
-	text-decoration:underline;
+.gwt-Hyperlink > a:hover {
+	text-decoration:underline !important;
+	color:#006e96;
 }
-/*.gwt-Image {
-}*/
 
 .gwt-Label {
 	font-size:0.8em;
+	cursor:default;
 }
-/*
-.gwt-ListBox {
-}*/
-
-/*.gwt-PasswordTextBox {
-}*/
-
-/*.gwt-RadioButton {
-}*/
 
 .gwt-TabPanel {
   margin-top:4px;
@@ -101,15 +84,8 @@
   background-color:#FFF;
 }
 
-/*.gwt-TabBar .gwt-TabBarFirst {
-}*/
-
-/*.gwt-TabBar .gwt-TabBarRest {
-}*/
-
 .gwt-TabBar .gwt-TabBarItem {
   padding:4px;
-  cursor:pointer;
   background-color:#e8eef7;
   border-bottom:2px solid #FFF;
   margin-right:2px;
@@ -118,28 +94,13 @@
 .gwt-TabBar .gwt-TabBarItem-selected {
   padding:4px;
   font-weight:bold;
-  cursor:default;
   background-color:#87b3ff;
   border-bottom:2px solid #87b3ff;
   margin-right:2px;
 }
 
-/*.gwt-TextArea {
-}*/
-
-/*.gwt-TextBox {
-}*/
-
-/*.gwt-TextBox-readonly {
-  color:#888;
-}*/
-
-/*.gwt-StackPanel {
-}*/
-
 .gwt-StackPanel .gwt-StackPanelItem {
   background-color:#FCFCFC;
-  cursor:pointer;
 }
 /*Cette classe à été ajoutée.*/
 .gwt-StackPanel .gwt-StackPanelItem-selected {
@@ -210,14 +171,13 @@
 }
 
 .gwt-RichTextArea {
-  border:1px solid #000;
+  border:1px solid #878A8C;
   background-color:#FFF;
 }
 
 .gwt-RichTextToolbar {
   width:100%;
   text-align:left;
-  /*margin-top:0;*/
   background-color:#FCFCFC;
   padding:2px;
 }

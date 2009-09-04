@@ -2,235 +2,116 @@
  <CO id='' name='' type='ByObjectivesLectures' lang ='fr' scrty='public'> 
    
     <COStructure type='CourseInfoHeader' scrty='public'>  <!-- CourseInfoHeader COStructure Begin -->
-           
-         <COStructure type='CourseDescriptionHeader' scrty='public'>  <!-- CourseDescriptionHeader COStructure Begin -->
-              
-           <COUnit  type='facprogident' scrty='public'>  <!-- facprogident COUnit Begin -->
-              <label><![CDATA[Faculté et programme]]></label> 
-              <COUnitContent type='facprogident' scrty='public'> 
-                 <COResourceProxy type='text' scrty='public'> 
-                    <COContentRubric type='description'/> 
-                       <properties> 
-                           <visible>true</visible>  
-                           <requirementLevel>recommanded</requirementLevel> 
-                           <important>true</important> 
-                           <library>false</library> 
-                           <bookstore>false</bookstore> 
-	                   </properties> 
-                       <COResource  type='text' scrty='public'> 
-	                      <properties> 
-	                         <text> 
-	                            <![CDATA[...insérez une description ici...]]> 
-	                         </text> 
-                          </properties> 
-                       </COResource> 
-                 </COResourceProxy> 
-              </COUnitContent> 
-           </COUnit>  <!-- facprogident COUnit End -->
-                
-           <COUnit  type='courseident' scrty='public'>  <!-- courseident COUnit Begin -->
-              <label><![CDATA[Identificateur du cours]]></label> 
-              <COUnitContent type='courseident' scrty='public'> 
-                   
-                 <COResourceProxy type='text' scrty='public'> 
-                    <COContentRubric type='courseabrev'/> 
-                    <properties> 
-                       <visible>true</visible>  
-                       <requirementLevel>mandatory</requirementLevel> 
-                       <important>true</important> 
-                       <library>false</library> 
-                       <bookstore>false</bookstore> 
-	                </properties> 
-	                <COResource  type='text' scrty='public'> 
-	                   <properties> 
-	                      <text> 
-	                         <![CDATA[...insérez un sigle ici...]]> 
-	                      </text> 
-                       </properties> 
-                    </COResource> 
-                 </COResourceProxy> 
-                  
-                 <COResourceProxy type='text' scrty='public'>          
-                    <COContentRubric type='coursetitle'/> 
-                    <properties> 
-                       <visible>true</visible>  
-                       <requirementLevel>mandatory</requirementLevel> 
-                       <important>true</important> 
-                       <library>false</library> 
-                       <bookstore>false</bookstore> 
-                    </properties> 
-                    <COResource  type='text' scrty='public'> 
-                       <properties> 
-                          <text> 
-                             <![CDATA[...insérez une titre ici...]]> 
-                          </text> 
-                      </properties> 
-                   </COResource> 
-                 </COResourceProxy> 
-
-                 <COResourceProxy type='text' scrty='public'> 
-                    <COContentRubric type='coursecredits'/> 
-                    <properties> 
-                       <visible>true</visible>  
-                       <requirementLevel>mandatory</requirementLevel> 
-                       <important>true</important> 
-                       <library>false</library> 
-                       <bookstore>false</bookstore> 
-	                </properties> 
-	                <COResource  type='text' scrty='public'> 
-	                   <properties> 
-	                      <text> 
-	                         <![CDATA[...insérez le nombre de crédits ici...]]> 
-	                      </text> 
-                       </properties> 
-                    </COResource> 
-                 </COResourceProxy> 
-	                
-               </COUnitContent> 
-            </COUnit>  <!-- courseident COUnit End -->
-            
-     	    <COUnit  type='courseofficialdescription' scrty='public'>   <!-- courseofficialdescription COUnit Begin -->
-	           <label><![CDATA[Descripteur officiel de l'annuaire]]></label> 
-               <COUnitContent type='courseofficialdescription' scrty='public'> 
-                  <COResourceProxy type='text' scrty='public'>          
-                     <COContentRubric type='description'/> 
-                     <properties> 
-                        <visible>true</visible>  
-                        <requirementLevel>mandatory</requirementLevel> 
-                        <important>true</important> 
-                        <library>false</library> 
-                        <bookstore>false</bookstore> 
-	             </properties> 
-	             <COResource  type='text' scrty='public'> 
-	                <properties> 
-	                   <text> 
-	                      <![CDATA[...insérez une description ici...]]> 
-	                   </text> 
-                        </properties> 
-                     </COResource> 
-      	          </COResourceProxy> 
-               </COUnitContent> 
-            </COUnit>  <!-- courseofficialdescription COUnit End -->
-            
-     	    <COUnit  type='CourseInCurriculum' scrty='public'>   <!-- CourseInCurriculum COUnit Begin -->
-	           <label><![CDATA[Place du cours dans le programme]]></label> 
-               <COUnitContent type='CourseInCurriculum' scrty='public'> 
-                  <COResourceProxy type='text' scrty='public'>          
-                     <COContentRubric type='description'/> 
-                     <properties> 
-                        <visible>true</visible>  
-                        <requirementLevel>recommended</requirementLevel> 
-                        <important>true</important> 
-                        <library>false</library> 
-                        <bookstore>false</bookstore> 
-	             </properties> 
-	             <COResource  type='text' scrty='public'> 
-	                <properties> 
-	                   <text> 
-	                      <![CDATA[...insérez une description ici...]]> 
-	                   </text> 
-                        </properties> 
-                     </COResource> 
-      	          </COResourceProxy> 
-               </COUnitContent> 
-            </COUnit>  <!-- CourseInCurriculum COUnit End -->
-            
-             
-         </COStructure>  <!-- CourseDescriptionHeader COStructure End -->
-            
-  	    <COUnit  type='coursescheduleplace' scrty='public'>   <!-- coursescheduleplace COUnit Begin -->
-	       <label><![CDATA[Horaire et lieux du cours]]></label> 
-               <COUnitContent type='coursescheduleplace' scrty='public'>   
+       <COUnit  type='courseofficialdescription' scrty='public'>   <!-- courseofficialdescription COUnit Begin -->
+	      <label><![CDATA[Descripteur officiel de l'annuaire]]></label> 
+          <COUnitContent type='courseofficialdescription' scrty='public'> 
+             <COResourceProxy type='text' scrty='public'>          
+                <COContentRubric type='description'/> 
+                <properties> 
+                   <visible>true</visible>  
+                   <requirementLevel>mandatory</requirementLevel> 
+                   <important>true</important> 
+                   <library>false</library> 
+                   <bookstore>false</bookstore> 
+	            </properties> 
+	            <COResource  type='text' scrty='public'> 
+	               <properties> 
+	                  <text> 
+	                     <![CDATA[...insérez une description ici...]]> 
+	                  </text> 
+                   </properties> 
+                </COResource> 
+      	     </COResourceProxy> 
+          </COUnitContent> 
+      </COUnit>  <!-- courseofficialdescription COUnit End -->
+                     
+      <COUnit  type='coursescheduleplace' scrty='public'>   <!-- coursescheduleplace COUnit Begin -->
+	     <label><![CDATA[Horaire et lieux du cours]]></label> 
+         <COUnitContent type='coursescheduleplace' scrty='public'>                  
+            <COResourceProxy type='text' scrty='public'>          
+               <COContentRubric type='coursebeginend'/> 
+               <properties> 
+                  <visible>true</visible>  
+                  <requirementLevel>mandatory</requirementLevel> 
+                  <important>true</important> 
+                  <library>false</library> 
+                  <bookstore>false</bookstore> 
+	           </properties> 
+	           <COResource  type='text' scrty='public'> 
+	              <properties> 
+	                 <text> 
+	                    <![CDATA[...insérez les dates de début et de fin du cours...]]> 
+	                 </text> 
+                  </properties> 
+               </COResource> 
+   	        </COResourceProxy> 
+            <COResourceProxy type='text' scrty='public'>          
+               <COContentRubric type='courseregularschedule'/> 
+               <properties> 
+                  <visible>true</visible>  
+                  <requirementLevel>mandatory</requirementLevel> 
+                  <important>true</important> 
+                  <library>false</library> 
+                  <bookstore>false</bookstore> 
+	           </properties> 
+	           <COResource  type='text' scrty='public'> 
+	              <properties> 
+	                 <text> 
+	                    <![CDATA[...insérez l'horaire régulier du cours...]]> 
+	                 </text> 
+                  </properties> 
+               </COResource> 
+	        </COResourceProxy> 
+            <COResourceProxy type='text' scrty='public'>          
+               <COContentRubric type='coursespecialevents'/> 
+               <properties> 
+                  <visible>true</visible>  
+                  <requirementLevel>mandatory</requirementLevel> 
+                  <important>true</important> 
+                  <library>false</library> 
+                  <bookstore>false</bookstore> 
+	           </properties> 
+	           <COResource  type='text' scrty='public'> 
+	              <properties> 
+	                 <text> 
+	                    <![CDATA[...insérez les événements spéciaux du cours...]]> 
+	                 </text> 
+                  </properties> 
+               </COResource> 
+            </COResourceProxy> 
+         </COUnitContent> 
+      </COUnit>  <!-- coursescheduleplace COUnit End -->
                
-                   <COResourceProxy type='text' scrty='public'>          
-                      <COContentRubric type='coursebeginend'/> 
-                      <properties> 
-                         <visible>true</visible>  
-                         <requirementLevel>mandatory</requirementLevel> 
-                         <important>true</important> 
-                         <library>false</library> 
-                         <bookstore>false</bookstore> 
-	                 </properties> 
-	                 <COResource  type='text' scrty='public'> 
-	                    <properties> 
-	                       <text> 
-	                          <![CDATA[...insérez les dates de début et de fin du cours...]]> 
-	                       </text> 
-                        </properties> 
-                     </COResource> 
-   	              </COResourceProxy> 
-
-                  <COResourceProxy type='text' scrty='public'>          
-                     <COContentRubric type='courseregularschedule'/> 
-                     <properties> 
-                        <visible>true</visible>  
-                           <requirementLevel>mandatory</requirementLevel> 
-                           <important>true</important> 
-                           <library>false</library> 
-                           <bookstore>false</bookstore> 
-	                </properties> 
-	                <COResource  type='text' scrty='public'> 
-	                   <properties> 
-	                      <text> 
-	                         <![CDATA[...insérez l'horaire régulier du cours...]]> 
-	                      </text> 
-                      </properties> 
-                   </COResource> 
-	            </COResourceProxy> 
-
-                <COResourceProxy type='text' scrty='public'>          
-                   <COContentRubric type='coursespecialevents'/> 
-                   <properties> 
-                      <visible>true</visible>  
-                      <requirementLevel>mandatory</requirementLevel> 
-                      <important>true</important> 
-                      <library>false</library> 
-                      <bookstore>false</bookstore> 
-	              </properties> 
-	              <COResource  type='text' scrty='public'> 
-	                 <properties> 
-	                    <text> 
-	                       <![CDATA[...insérez les événements spéciaux du cours...]]> 
-	                    </text> 
-                     </properties> 
-                  </COResource> 
-               </COResourceProxy> 
-
-            </COUnitContent> 
-         </COUnit>  <!-- coursescheduleplace COUnit End -->
-               
-	 </COStructure>  <!-- CourseInfoHeader COStructure End -->
+    </COStructure>  <!-- CourseInfoHeader COStructure End -->
 	 
-	 <COUnit  type='contactinfo' scrty='public'>  <!-- contactinfo COUnit Begin -->
-	    <label><![CDATA[Coordonnées de l'ensemble du personnel affecté à ce cours]]></label> 
-	    <COUnitContent type='contactinfo' scrty='public'> 
-	    
-               <COResourceProxy type='contactinforesource' scrty='public'> 
-                  <COContentRubric type='coursecoordinator'/> 
-		          <label><![CDATA[Responsable du cours]]></label> 
-                  <properties> 
-                     <visible>true</visible>  
-                     <requirementLevel>mandatory</requirementLevel> 
-                     <important>true</important> 
-                     <library>false</library> 
-                     <bookstore>false</bookstore> 
-	              </properties> 
-	              <COResource  type='contactinforesource' scrty='public'> 
-	                 <properties> 
-			            <role>aaa</role> 
-			            <lastname>bbb</lastname> 
-			            <firstname>ccc</firstname> 
-			            <office>ddd</office> 
-			            <phone>eee</phone> 
-			            <email>fff</email> 
-			            <availability>ggg</availability> 
-			            <comments>hhh</comments> 
-                     </properties> 
-                  </COResource> 
-	           </COResourceProxy>
-	           
-	    </COUnitContent> 
-	 </COUnit>  <!-- contactinfo COUnit End -->
+	<COUnit  type='contactinfo' scrty='public'>  <!-- contactinfo COUnit Begin -->
+	   <label><![CDATA[Coordonnées de l'ensemble du personnel affecté à ce cours]]></label> 
+	   <COUnitContent type='contactinfo' scrty='public'>    
+          <COResourceProxy type='contactinforesource' scrty='public'> 
+             <COContentRubric type='coursecoordinator'/> 
+		     <label><![CDATA[Responsable du cours]]></label> 
+             <properties> 
+                <visible>true</visible>  
+                <requirementLevel>mandatory</requirementLevel> 
+                <important>true</important> 
+                <library>false</library> 
+                <bookstore>false</bookstore> 
+	         </properties> 
+	         <COResource  type='contactinforesource' scrty='public'> 
+	            <properties> 
+			       <role>aaa</role> 
+			       <lastname>bbb</lastname> 
+			       <firstname>ccc</firstname> 
+			       <office>ddd</office> 
+			       <phone>eee</phone> 
+			       <email>fff</email> 
+			       <availability>ggg</availability> 
+			       <comments>hhh</comments> 
+                </properties> 
+             </COResource> 
+	      </COResourceProxy>    
+	   </COUnitContent> 
+	</COUnit>  <!-- contactinfo COUnit End -->
 	 
      <COUnit type='courseintro' scrty='public'>  <!-- courseintro COUnit Begin -->
        <label><![CDATA[Introduction du cours]]></label>

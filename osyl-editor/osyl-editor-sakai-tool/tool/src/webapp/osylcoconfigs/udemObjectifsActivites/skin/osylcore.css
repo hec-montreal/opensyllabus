@@ -1,7 +1,7 @@
-@import url("reset.css");
 @import url("base.css");
 @import url("gwt.css");
 @import url("osyl.css");
+/*@import url("standard.css");*/
 
 /*******************************************************************************
  * $Id: $
@@ -27,13 +27,9 @@
    CSS definitions for OpenSyllabus (AKA Osyl)
    -------------------------------------------
    This file is (more or less) organized in sections as follows:
-      1. CSS definitions from ZoneCours (zonecours.hec.ca)
-      2. CSS definitions overriding default GWT styles
-      3. CSS definitions overriding default GWT styles (incubator widgets)
-      4. CSS definitions for new classes specific to Osyl
-
-   Some definitions (specially those from ZoneCours) may not be used by
-   OpenSyllabus yet.
+	  1. CSS definitions for reset and base attributes
+      2. CSS definitions overriding default GWT styles and incubator widgets
+      3. CSS definitions for new classes specific to Osyl
 
    To be customized to your institution needs! All comments appreciated,
    we're no CSS experts!
