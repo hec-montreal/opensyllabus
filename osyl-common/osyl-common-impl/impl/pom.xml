@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+﻿<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -92,28 +92,26 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>      
-    </dependency>    
+      <scope>test</scope>
+    </dependency>
     <dependency>
     	<groupId>org.jmock</groupId>
     	<artifactId>jmock-junit3</artifactId>
-    	<version>2.5.1</version>
-    	<scope>test</scope>    
+    	<scope>test</scope>
 	</dependency>
 	<dependency>
     	<groupId>org.jmock</groupId>
     	<artifactId>jmock-legacy</artifactId>
-   	    <version>2.5.1</version>
     	<scope>test</scope>
 	</dependency>
-	
+
 	<!--  Test runtime dependencies -->
 	<dependency>
    		<groupId>hsqldb</groupId>
-   		<artifactId>hsqldb</artifactId>   		
+   		<artifactId>hsqldb</artifactId>
    		<scope>test</scope>
 	</dependency>
-	
+
 	<dependency>
     	<groupId>javax.servlet</groupId>
     	<artifactId>servlet-api</artifactId>
@@ -124,12 +122,12 @@
       <artifactId>sakai-user-api</artifactId>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>${sakai.spring.groupId}</groupId>
       <artifactId>${sakai.spring.mock.artifactId}</artifactId>
       <scope>provided</scope>
-    </dependency>	
+    </dependency>
   </dependencies>
 
   <build>
@@ -143,21 +141,20 @@
         <filtering>false</filtering>
       </resource>
     </resources>
-
     <testResources>
       <testResource>
-      	<!--  
-      		FIXME: remove this band-aid please! 
+      	<!--
+      		FIXME: remove this band-aid please!
       		The IMPL package should be self-contained and not depend on a runtime component. -->
         <directory>${basedir}/../pack/src/webapp/WEB-INF</directory>
         <includes>
           <include>spring-hibernate.xml</include>
         </includes>
       </testResource>
-      <!--  Use the IMPL hibernate settings -->      
+      <!--  Use the IMPL hibernate settings -->
       <testResource>
         <directory>${basedir}/src/test</directory>
-        <includes>        	
+        <includes>
           <include>**/*.xml</include>
           <include>**/*.properties</include>
         </includes>
