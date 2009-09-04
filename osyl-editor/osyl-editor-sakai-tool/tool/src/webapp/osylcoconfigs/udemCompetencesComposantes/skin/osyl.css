@@ -1,4 +1,4 @@
-﻿/* ---- CSS definitions specific to OpenSyllabus ------------------- */
+/* ---- CSS definitions specific to OpenSyllabus ------------------- */
 
 /* Main panel of Osyl -----------------------------------------------------------------------------------*/
 .Osyl-MainPanel {
@@ -351,11 +351,13 @@
 
 /* Content Unit Resource Panel unfocused */
 .Osyl-UnitView-ResPanel {
+	position:relative;
 	vertical-align:middle;
 	margin:0 0 5px;
 	padding:10px;
 	border:1px solid #e3f0FF;
 	width:auto; /* Will take effect when removed from code*/
+	overflow:visible;
 }
 .Osyl-ListItemView-Hyperlink .Osyl-UnitView-ResPanel {
 	color:#FFF; /*For IE6*/
@@ -364,21 +366,26 @@
 }
 /* Content Unit Resource Panel focused */
 .Osyl-UnitView-ResPanelFocused {
+	position:relative;
 	background-color:#FDF6AF;
 	margin:5px 10px 5px;
 	border:1px solid transparent;
 	color:#FFF; /*For IE6*/
 	padding:3px;
 	width:auto;
+	/*overflow:visible;*/
+	overflow:hidden;
 }
 
 .Osyl-UnitView-ResPanel-Hover {
+	position:relative;
 	vertical-align:top;
 	border:1px solid #B0B0B0;
 	padding:10px;
 	width:auto;
 	margin-bottom:5px;
 	background-color:#EEE;
+	overflow:visible;
 }
 .Osyl-ListItemView-Hyperlink .Osyl-UnitView-ResPanel-Hover {
 	border:1px solid #B0B0B0;
@@ -401,6 +408,36 @@
 	background-color:#FDD;
 	margin-bottom:15px;
 }
+/*.Osyl-UnitView-SemanticTag {
+	display:block;
+	margin:5px 0 0 0;
+	font:normal 10px sans-serif, Arial, Verdana;
+	color:#FFF;
+	margin:0 0 3px 10px;
+	color:#A0A0A0;
+}
+
+.Osyl-ResProxView-MetaInfo,
+.Osyl-UnitView-MetaInfo {
+	position:absolute;
+	bottom:-20px;
+	left:-1px;
+	padding:2px;
+	display:none;
+	margin:0;
+	width:100%;
+	font:normal 10px sans-serif, Arial, Verdana;
+	white-space:nowrap;
+	color:#444;
+	background-color:#FCFCFC;
+	border:1px solid #999;
+}
+
+.Osyl-UnitView-ResPanel-Hover .Osyl-UnitView-SemanticTag {color:#A0A0A0}
+.Osyl-UnitView-ResPanel-Hover .Osyl-ResProxView-MetaInfo,
+.Osyl-UnitView-ResPanel-Hover .Osyl-UnitView-MetaInfo {
+	display:block;
+}*/
 
 .Osyl-ResProxView-MetaInfo,
 .Osyl-UnitView-MetaInfo,
@@ -408,16 +445,10 @@
 	display:block;
 	margin:5px 0 0 0;
 	font:normal 10px sans-serif, Arial, Verdana;
-	color:#FFF;
+	color:#A0A0A0;
 }
 
 .Osyl-UnitView-SemanticTag {margin:0 0 3px 10px;color:#A0A0A0}
-
-.Osyl-UnitView-ResPanel-Hover .Osyl-ResProxView-MetaInfo,
-.Osyl-UnitView-ResPanel-Hover .Osyl-UnitView-MetaInfo,
-.Osyl-UnitView-ResPanel-Hover .Osyl-UnitView-SemanticTag {
-	color:#A0A0A0;
-}
 
 /* Link in a Content Unit Panel */
 .Osyl-UnitView-UnitLink{
