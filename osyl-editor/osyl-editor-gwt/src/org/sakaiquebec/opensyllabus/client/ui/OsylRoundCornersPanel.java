@@ -2,10 +2,11 @@ package org.sakaiquebec.opensyllabus.client.ui;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class OsylRoundCornersPanel extends Composite {
     
-    private SimplePanel enclosingPanel;
+    private VerticalPanel enclosingPanel;
     private SimplePanel bottomLeft;
     private SimplePanel bottomRight;
     private SimplePanel topLeft;
@@ -27,7 +28,7 @@ public class OsylRoundCornersPanel extends Composite {
 	    		String topLeftStyle,
 	    		String topRightStyle
 	    ){
-	enclosingPanel = new SimplePanel(); 
+	enclosingPanel = new VerticalPanel(); 
 	enclosingPanel.setStyleName(enclosingPanelStyle); 
 	bottomLeft = new SimplePanel(); 
 	bottomLeft.setStyleName(bottomLeftStyle); 
@@ -37,12 +38,13 @@ public class OsylRoundCornersPanel extends Composite {
 	topLeft.setStyleName(topLeftStyle); 	    
 	topRight = new SimplePanel(); 
 	topRight.setStyleName(topRightStyle); 
-        // Nesting of panels like russian Matryoshka dolls ;-)
+        // Corners panels and internal Widget are all 
+         // children of the enclosingPanel
 	enclosingPanel.add(bottomLeft);
-	bottomLeft.add(bottomRight); 
-	bottomRight.add(topLeft); 
-	topLeft.add(topRight); 
-	topRight.add(internalWidget); 
+	enclosingPanel.add(bottomRight); 
+	enclosingPanel.add(topLeft); 
+	enclosingPanel.add(topRight); 
+	enclosingPanel.add(internalWidget); 
 	initWidget(enclosingPanel);
     }
 

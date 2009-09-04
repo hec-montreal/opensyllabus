@@ -421,6 +421,8 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	if(rolesList.size()>0){
 		lb.addItem(getView()
 				.getCoMessage("ResProxContactInfoView_PleaseChoose"));
+		lb.addItem(getView().getCoMessage(
+			"ResProxContactInfoView_Other_UdeM"));
 	}
 	for(String roleKey : rolesList){
 		lb.addItem(getView()

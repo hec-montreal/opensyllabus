@@ -40,6 +40,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COStructureElementType;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Label;
 
@@ -94,30 +95,37 @@ public class OsylMainView extends OsylViewableComposite {
 
 	// Create and set the OpenSyllabus TreeView
 	setOsylTreeView(new OsylTreeView(getModel(), getController()));
-	// TODO: compute dynamically the maximum width of the TreeView
-        //  horizontalSplitPanel.setSplitPosition("320px");
-	horizontalSplitPanel.setSplitPosition( OsylTreeView.getInitialSplitPosition());
+	// TODO: compute dynamically the maximum height of the TreeView
+ 	horizontalSplitPanel.setSplitPosition( OsylTreeView.getInitialSplitPosition());
+ 	SimplePanel treeEnclosingPanel = new SimplePanel();
 	OsylRoundCornersPanel treeViewRoundCornerPanel = 
 	    	new OsylRoundCornersPanel(getOsylTreeView(),
-	    		"Osyl-TreeView",
+	    		// "Osyl-TreeView",
+	    		"",
 			"Osyl-TreeView-BottomLeft", 
 			"Osyl-TreeView-BottomRight", 
 			"Osyl-TreeView-TopLeft", 
 			"Osyl-TreeView-TopRight");
-	horizontalSplitPanel.setLeftWidget(treeViewRoundCornerPanel);
+	treeEnclosingPanel.add(treeViewRoundCornerPanel);
+	treeEnclosingPanel.setStylePrimaryName("Osyl-TreeView");
+	horizontalSplitPanel.setLeftWidget(treeEnclosingPanel);
 
 	// Create and set the OpenSyllabus Workspace View
 	setWorkspaceView(new OsylWorkspaceView(getController()
 		.getViewContextModel(), getController()));
+ 	SimplePanel workspaceEnclosingPanel = new SimplePanel();
 	OsylRoundCornersPanel workSpaceViewRoundCornerPanel = 
 	    new OsylRoundCornersPanel(
 		    getWorkspaceView(),
-	    		"Osyl-WorkspaceView",
+	    		// "Osyl-WorkspaceView",
+		        "",
 			"Osyl-WorkspaceView-BottomLeft", 
 			"Osyl-WorkspaceView-BottomRight", 
 			"Osyl-WorkspaceView-TopLeft", 
 			"Osyl-WorkspaceView-TopRight");
-	horizontalSplitPanel.setRightWidget(workSpaceViewRoundCornerPanel);
+	workspaceEnclosingPanel.add(workSpaceViewRoundCornerPanel);
+	workspaceEnclosingPanel.setStylePrimaryName("Osyl-WorkspaceView");
+	horizontalSplitPanel.setRightWidget(workspaceEnclosingPanel);
 
 	subscribeChildrenViewsToLocalHandlers();
 

@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
+import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
 import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
@@ -46,6 +47,17 @@ public class OsylRubricView extends OsylViewableComposite {
     private Panel mainPanel;
     private Map<COModelInterface, OsylAbstractView> resProxViewMap;
 
+    private String rubricStyleLevel;
+    
+    public void setRubricStyleLevel(String rubricStyleLevel) {
+	this.rubricStyleLevel = rubricStyleLevel;
+    }
+
+    public String getRubricStyleLevel() {
+	return rubricStyleLevel;
+    }
+
+
     /**
      * Public constructor to display a rubric with the specified model.
      * 
@@ -57,6 +69,13 @@ public class OsylRubricView extends OsylViewableComposite {
 	initView();
     }
 
+    public OsylRubricView(COContentRubric model,
+	    OsylController controller, String styleLevel) {
+	super(model, controller);
+	setRubricStyleLevel(styleLevel);
+	initView();
+   }
+
     private void initView() {
 	resProxViewMap = new HashMap<COModelInterface, OsylAbstractView>();
 	setMainPanel(new VerticalPanel());
@@ -67,7 +86,8 @@ public class OsylRubricView extends OsylViewableComposite {
 	Label l = new Label(getCoMessages().getMessage(getModel().getType()));
 	// TODO adapt to the level...
 	l.setStylePrimaryName("Osyl-UnitView-Title");
-	l.addStyleName("Osyl-Title5");
+	l.addStyleName(getRubricStyleLevel());
+	l.addStyleName("Osyl-RubricTitle");
 	hPanel.add(l);
 	getMainPanel().add(hPanel);
 
@@ -210,7 +230,5 @@ public class OsylRubricView extends OsylViewableComposite {
 	    }
         }
     }
-
-    
 
 }

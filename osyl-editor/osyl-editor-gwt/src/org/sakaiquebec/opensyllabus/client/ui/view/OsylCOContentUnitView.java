@@ -29,6 +29,8 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
+import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
+import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylRichTextEditor;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentUnitEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
@@ -39,6 +41,9 @@ import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -50,12 +55,14 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id: $
  */
 public class OsylCOContentUnitView extends OsylViewableComposite implements
-UpdateCOContentResourceProxyEventHandler,
-UpdateCOContentUnitEventHandler {
+	UpdateCOContentResourceProxyEventHandler,
+	UpdateCOContentUnitEventHandler {
 
     // View variables
     private VerticalPanel mainPanel;
-    private Label mainTitleLabel;
+    private Label unitTitleLabel;
+    private Label unitSemanticTag;
+    
     final static boolean TRACE = false;
 
     private Map<String, OsylRubricView> rubricViewsMap;
@@ -73,7 +80,7 @@ UpdateCOContentUnitEventHandler {
 	refreshView();
     }
 
-    private void initRubricViews() {
+    private void initRubricViews(String styleLevel) {
 	rubricViewsMap = new HashMap<String, OsylRubricView>();
 
 	List<COModelInterface> subModels =
@@ -86,7 +93,7 @@ UpdateCOContentUnitEventHandler {
 	    if (subModel instanceof COContentRubric) {
 		COContentRubric coContentRubric = (COContentRubric) subModel;
 		OsylRubricView rubricView =
-		    new OsylRubricView(coContentRubric, getController());
+		    new OsylRubricView(coContentRubric, getController(), styleLevel);
 		getMainPanel().add(rubricView);
 		rubricViewsMap.put(coContentRubric.getType(), rubricView);
 	    }
@@ -100,23 +107,8 @@ UpdateCOContentUnitEventHandler {
 	getMainPanel().setStylePrimaryName("Osyl-UnitView-MainPanel");
 	getMainPanel().setWidth("98%");
 
-	final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
-	getMainPanel().add(horizontalPanel_1);
-	if ( OsylStyleLevelChooser.getHasANumber((COContentUnit) getModel()) ) {
-	    String positionString = getUnitPosition();
-	    if ( positionString.length() < 2 ) {
-		positionString = "0" + positionString; 
-	    }
-	    setMainTitleLabel(new Label(getCoMessage(getModel().getType())  
-		    + " "
-		    + positionString));
-	} 
-	else {
-	    setMainTitleLabel(new Label(getCoMessage(getModel().getType())));	
-	}
-	getMainTitleLabel().setStylePrimaryName("Osyl-UnitView-Title");
-	getMainTitleLabel().addStyleName(OsylStyleLevelChooser.getLevelStyle(getModel()));  
-	horizontalPanel_1.add(getMainTitleLabel());
+	if (TRACE) Window.alert("*** Model = " + getCoMessage(getModel().getType()) + 
+		" ***\n*** Label = " + getModel().getLabel() + " ***");
 
 	// If we are editing a lecture or theme we allow to edit the title
 	// otherwise we don't (presentation, contact info, etc.)
@@ -127,31 +119,56 @@ UpdateCOContentUnitEventHandler {
 	    // within the COContentUnit (only at COStructure)
 	    OsylCOStructureItemLabelView lbv =
 		new OsylCOStructureItemLabelView(getModel(),
-			getController(), false);
-	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
-	    lbv.addStyleName(OsylStyleLevelChooser.getLevelStyle(getModel()));  
+			getController(), false, OsylStyleLevelChooser.getLevelStyle(getModel()));
 	    getMainPanel().add(lbv);
 	}
 	else if (COContentUnitType.EVALUATION.equals(getModel().getType())) {
 	    // do not allow to delete the title and therefore the evaluation
 	    // within the COContentUnit (only at COStructure)
-	    OsylCOStructureEvaluationItemLabelView lbv =
-		new OsylCOStructureEvaluationItemLabelView(getModel(),
-			getController(), false);
-	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
-	    lbv.addStyleName(OsylStyleLevelChooser.getLevelStyle(getModel()));	    
+	    OsylCOStructureItemLabelView lbv =
+		new OsylCOStructureItemLabelView(getModel(),
+			getController(), false, OsylStyleLevelChooser.getLevelStyle(getModel()));
+
 	    getMainPanel().add(lbv);
 	} 
 	else {
-	    OsylCOStructureItemLabelView lbv =
-		new OsylCOStructureItemLabelView(getModel(),
-			getController(), false);
-	    lbv.setStylePrimaryName("Osyl-UnitView-Title");
-	    lbv.addStyleName(OsylStyleLevelChooser.getLevelStyle(getModel()));	    
-	    getMainPanel().add(lbv);
+	    if (isCOUnitTitleEditable()) {
+		OsylCOStructureItemLabelView lbv =
+		    new OsylCOStructureItemLabelView(getModel(),
+			    getController(), false, OsylStyleLevelChooser.getLevelStyle(getModel()));
+		getMainPanel().add(lbv);
+	    }
+	    else {
+		Label lbv = new Label(getCoMessage(getModel().getType()));
+		lbv.setStylePrimaryName("Osyl-UnitView-Title");
+		lbv.addStyleName(OsylStyleLevelChooser.getLevelStyle(getModel()));  
+		getMainPanel().add(lbv);
+	    }
 	}
 
-	initRubricViews();
+	// Semantic Tag linked to COUnit 
+	if ( OsylStyleLevelChooser.getHasANumber((COContentUnit) getModel()) ) {
+	    String positionString = getUnitPosition();
+	    if ( positionString.length() < 2 ) {
+		positionString = "0" + positionString; 
+	    }
+	    setUnitSemanticTag(new Label(getCoMessage(getModel().getType())  
+		    + " "
+		    + positionString));
+	} 
+	else {
+	    setUnitSemanticTag(new Label(getCoMessage(getModel().getType())));	
+	}
+
+	getUnitSemanticTag().setStylePrimaryName("Osyl-UnitView-SemanticTag");
+
+	// If the COUnitTitle is not editable, it is equal to its semantic tag
+	// and there is no need to add the tag since it is already there
+	if ( isCOUnitTitleEditable()) {
+	    getMainPanel().add(getUnitSemanticTag());
+	}
+
+	initRubricViews(OsylStyleLevelChooser.getSubLevelStyle(getModel()));
 	if (getModel() != null) {
 	    // We cast our content unit
 	    COContentUnit coContentUnit = (COContentUnit) getModel();
@@ -170,30 +187,23 @@ UpdateCOContentUnitEventHandler {
 	}
     }
 
-//    public int getLevel() {
-//	if (getModel().isCourseOutlineContent()) {
-//	    return 1;
-//	}
-//	if (getModel().getParent().isCourseOutlineContent()) {
-//	    return 2;
-//	}
-//	if ( getModel().getParent().isCOStructureElement() ) {
-//	    COStructureElement parent = (COStructureElement) getModel().getParent();
-//	    if ( parent.getParent().isCourseOutlineContent()){
-//		return 3;
-//	    }
-//	}
-//	if ( getModel().getParent().isCOStructureElement() ) {
-//	    COStructureElement parent1 = (COStructureElement) getModel().getParent();
-//	    if (parent1.getParent().isCOStructureElement()) {
-//		COStructureElement parent2 = (COStructureElement) parent1.getParent();
-//		if ( parent2.getParent().isCourseOutlineContent()){
-//		    return 4;
-//		}
-//	    }
-//	}
-//	return 5;
-//    }
+    /**
+     * @return Boolean if the COUnit title is editable or not
+     */
+    	public boolean isCOUnitTitleEditable() {
+    	    String proposedXMLTitle = getModel().getLabel();
+    	    String modelCoUnitSemTag = getCoMessage(getModel().getType());
+    	     // If the proposed label in the XML is null or 
+    	     // empty then the label is not editable
+    	     // Also if the proposed label is identical to the model 
+    	     // semantic Tag, so the label is invariable and not editable
+   	    if (  ( proposedXMLTitle.length() <= 0) || 
+    		  ( proposedXMLTitle.equals(modelCoUnitSemTag) )  
+    	        ){
+    		return false;
+    	    }
+    	    return true;    
+	}
 
     /**
      * @return String the content unit position (for instance "2" if it is the
@@ -232,8 +242,8 @@ UpdateCOContentUnitEventHandler {
     /**
      * Get the main title label
      */
-    public Label getMainTitleLabel() {
-	return mainTitleLabel;
+    public Label getUnitTitleLabel() {
+	return unitTitleLabel;
     }
 
     /**
@@ -241,8 +251,16 @@ UpdateCOContentUnitEventHandler {
      * 
      * @param newMainTitleLabel
      */
-    public void setMainTitleLabel(Label newMainTitleLabel) {
-	this.mainTitleLabel = newMainTitleLabel;
+    public void setUnitTitleLabel(Label newUnitTitleLabel) {
+	this.unitTitleLabel = newUnitTitleLabel;
+    }
+
+    public Label getUnitSemanticTag() {
+        return unitSemanticTag;
+    }
+
+    public void setUnitSemanticTag(Label newUnitSemanticTag) {
+        this.unitSemanticTag = newUnitSemanticTag;
     }
 
     /**

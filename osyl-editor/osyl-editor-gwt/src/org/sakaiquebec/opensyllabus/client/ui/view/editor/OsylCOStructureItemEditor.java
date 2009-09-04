@@ -134,6 +134,11 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 	return viewer;
     }
 
+    public void setViewerStyle(String levelStyle) {
+	getViewer().addStyleName(levelStyle);
+	getViewer().addStyleName("Osyl-TitleEditor");
+    }
+
     /**
      * ===================== PROTECTED METHODS =====================
      */

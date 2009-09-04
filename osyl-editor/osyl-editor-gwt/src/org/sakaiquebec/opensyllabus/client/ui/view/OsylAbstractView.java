@@ -106,7 +106,8 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      */
     private void setMainPanel(AbsolutePanel panel) {
 	this.mainPanel = panel;
-	this.mainPanel.setWidth("93%");
+	// Control move to CSS
+	// this.mainPanel.setWidth("93%");
 	// this.mainPanel.setStylePrimaryName("Osyl-UnitView-ResPanel");
     }
 

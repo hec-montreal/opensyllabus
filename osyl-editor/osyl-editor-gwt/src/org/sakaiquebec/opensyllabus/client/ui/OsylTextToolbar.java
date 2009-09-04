@@ -25,6 +25,7 @@ import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 
@@ -72,10 +73,13 @@ public class OsylTextToolbar extends Composite {
 	setOsylController(osylController);
 	uiMessages = osylController.getUiMessages();
 
-//	menuBar = new MenuBar();
-
 	menuBar = new OsylMenuBar();
-	
+
+//	menuBar = new OsylMenuBar(false, MenuBar.MenuBarImages images);
+//	Image myIcon =
+//		getView().getOsylImageBundle().myIcon().createImage();
+//	getViewerPanel().add(myIcon);
+
 	if (getOsylController().isInPreview()) {
 	    closePreviewPushButton =
 		    createMenuItem("ButtonCloseToolBar",

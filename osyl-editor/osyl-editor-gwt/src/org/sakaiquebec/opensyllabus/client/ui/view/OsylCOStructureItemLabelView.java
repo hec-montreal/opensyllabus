@@ -21,9 +21,12 @@
 package org.sakaiquebec.opensyllabus.client.ui.view;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
+import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCOStructureItemEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
+
+import com.google.gwt.user.client.Window;
 
 /**
  *
@@ -49,6 +52,15 @@ public class OsylCOStructureItemLabelView extends OsylAbstractView{
     }
     
     
+    public OsylCOStructureItemLabelView(COContentUnit model,
+	    OsylController controller, boolean isDeletable, String levelStyle) {
+	super(model,controller);
+	setEditor(new OsylCOStructureItemEditor(this));
+	((OsylCOStructureItemEditor) getEditor()).setIsDeletable(isDeletable);
+	((OsylCOStructureItemEditor) getEditor()).setViewerStyle(levelStyle);
+	initView();
+    }
+
     /**
      * ===================== OVERRIDEN METHODS ===================== See
      * superclass for javadoc!
