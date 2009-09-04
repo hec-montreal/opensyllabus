@@ -30,8 +30,8 @@ package org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util;
 public class OsylHostedModeInitImplUdem implements OsylHostedModeInit {
 	protected String configPath = "resources/osylcoconfigsmock/udem/rules.xml";
 	protected String modelPath = "resources/osylcoconfigsmock/udem/coContentTemplate.xml";
-	protected String cOMessagesPath = "resources/osylcoconfigsmock/udem/bundle/COMessages.properties";
-	protected String uIMessagesPath = "resources/osylcoconfigsmock/udem/bundle/UIMessages.properties";
+	protected String cOMessagesPath = "resources/osylcoconfigsmock/udem/bundle/COMessages_fr_CA.properties";
+	protected String uIMessagesPath = "resources/osylcoconfigsmock/udem/bundle/UIMessages_fr_CA.properties";
 	protected String cORolesListPath = "resources/osylcoconfigsmock/udem/coRolesList.xml";
 	protected String cOEvalTypeListPath = "resources/osylcoconfigsmock/udem/coEvalTypeList.xml";
 	
