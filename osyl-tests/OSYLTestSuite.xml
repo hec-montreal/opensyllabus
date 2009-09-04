@@ -1,0 +1,19 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="OSYLSuite" verbose="10">
+   <parameter name="webSite" value="http://osyldev.hec.ca:12345/"/>
+   <parameter name="seleniumHost" value="seleniumrc.hec.ca"/>
+   <parameter name="seleniumPort" value="5556"/>
+   <parameter name="browser" value="*firefox"/>
+   <parameter name="timeout" value="10000"/>
+   <!-- this parameter is not yet used (not even tried) -->
+   <parameter name="fileServer" value="http://jive2.hec.ca/osyl/selenium/TestingData/" />
+
+   <test name="Sakai OSYL test case: Log into Sakai and do a basic test in OSYL">
+      <classes>
+         <!-- class name="org.sakaiquebec.opensyllabus.test.selenium.OSYLAddDocComment"/ -->
+         <class name="org.sakaiquebec.opensyllabus.test.selenium.TextTest"/>
+         <class name="org.sakaiquebec.opensyllabus.test.selenium.LectureTest"/>
+      </classes>
+   </test>
+</suite>
