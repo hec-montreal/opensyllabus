@@ -100,6 +100,26 @@
 	 			<attribute name='type'  restrictionpattern='CourseInfoHeader' /> 
 	 			<!-- list of element COUnit allowed at this level --> 
 	
+	 				<element name='COUnit'>  <!-- courseofficialdescription COUnit Begin -->
+	 					<attribute name='type'  restrictionpattern='courseofficialdescription' /> 
+	 					<element name='COResourceProxy'> 
+	 						<attribute name='type'  restrictionpattern='text|document|url' /> 
+	 					</element> 
+	 					<element name='COContentRubric'> 
+	 						<attribute name='type'  restrictionpattern='undefined|description|mis' /> 
+	 					</element> 
+	 				</element>   <!-- courseofficialdescription COUnit End -->
+
+	 				<element name='COUnit'>  <!-- description COUnit Begin -->
+	 					<attribute name='type'  restrictionpattern='description' /> 
+	 					<element name='COResourceProxy'> 
+	 						<attribute name='type'  restrictionpattern='text|document|url|citation' /> 
+	 					</element> 
+	 					<element name='COContentRubric'> 
+	 						<attribute name='type'  restrictionpattern='undefined|description' /> 
+	 					</element> 
+	 				</element>  <!-- description COUnit End -->
+
 	 			<element name='COUnit'>  <!-- coursescheduleplace COUnit Begin -->
 	 				<attribute name='type'  restrictionpattern='coursescheduleplace' /> 
 	 				<element name='COResourceProxy'> 
@@ -111,65 +131,7 @@
 	 			</element>  <!-- coursescheduleplace COUnit End -->
 
 	 			<!-- list of element structureElement allowed at this level --> 
-
-	 			<element name='COStructure'>  <!-- CourseDescriptionHeader COStructure Begin -->	 			
-	 				<attribute name='type'  restrictionpattern='CourseDescriptionHeader' /> 
-	 				<!-- list of element contentUnit allowed at this level (only one at the moment) --> 
-	
-	 				<element name='COUnit'>  <!-- facprogident COUnit Begin -->
-	 					<attribute name='type'  restrictionpattern='facprogident' /> 
-	 					<element name='COResourceProxy'> 
-	 						<attribute name='type'  restrictionpattern='text|document|url' /> 
-	 					</element> 
-	 					<element name='COContentRubric'> 
-	 						<attribute name='type'  restrictionpattern='undefined|description|mis' /> 
-	 					</element> 
-	 				</element>  <!-- facprogident COUnit End -->
-
-	 				<element name='COUnit'>  <!-- courseident COUnit Begin -->
-	 					<attribute name='type'  restrictionpattern='courseident' /> 
-	 					<element name='COResourceProxy'> 
-	 						<attribute name='type'  restrictionpattern='text|document|url' /> 
-	 					</element> 
-	 					<element name='COContentRubric'> 
-	 						<attribute name='type'  restrictionpattern='undefined|courseabrev|coursetitle|coursecredits|description|mis' /> 
-	 					</element> 
-	 				</element>  <!-- courseident COUnit End -->
-
-	 				<element name='COUnit'>  <!-- courseofficialdescription COUnit Begin -->
-	 					<attribute name='type'  restrictionpattern='courseofficialdescription' /> 
-	 					<element name='COResourceProxy'> 
-	 						<attribute name='type'  restrictionpattern='text|document|url' /> 
-	 					</element> 
-	 					<element name='COContentRubric'> 
-	 						<attribute name='type'  restrictionpattern='undefined|description|courseplace|mis' /> 
-	 					</element> 
-	 				</element>   <!-- courseofficialdescription COUnit End -->
-
-	 				<element name='COUnit'>  <!-- CourseInCurriculum COUnit Begin -->
-	 					<attribute name='type'  restrictionpattern='CourseInCurriculum' /> 
-	 					<element name='COResourceProxy'> 
-	 						<attribute name='type'  restrictionpattern='text|document|url' /> 
-	 					</element> 
-	 					<element name='COContentRubric'> 
-	 						<attribute name='type'  restrictionpattern='undefined|description|mis' /> 
-	 					</element> 
-	 				</element>   <!-- CourseInCurriculum COUnit End -->
-	
-	 				<element name='COUnit'>  <!-- description COUnit Begin -->
-	 					<attribute name='type'  restrictionpattern='description' /> 
-	 					<element name='COResourceProxy'> 
-	 						<attribute name='type'  restrictionpattern='text|document|url|citation' /> 
-	 					</element> 
-	 					<element name='COContentRubric'> 
-	 						<attribute name='type'  restrictionpattern='undefined|description' /> 
-	 					</element> 
-	 				</element>  <!-- description COUnit End -->
-	 
-	 				<!-- list of element structureElement allowed at this level --> 
-
-	 			</element>  <!-- CourseDescriptionHeader COStructure End -->
-		
+			
             </element>  <!-- CourseInfoHeader COStructure End -->	 
         
 	 		<element name='COStructure'>  <!-- EvaluationHeader COStructure Begin -->

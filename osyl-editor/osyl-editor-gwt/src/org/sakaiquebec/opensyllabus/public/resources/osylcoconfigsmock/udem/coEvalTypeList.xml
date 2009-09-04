@@ -13,8 +13,5 @@
 	<item value="Evaluation.Type.quiz" />
 	<item value="Evaluation.Type.homework" />
 	<item value="Evaluation.Type.participation" />
-	<item value="Evaluation.Type.multiplechoice" />
-	<item value="Evaluation.Type.shortwrittenanswer" />
-	<item value="Evaluation.Type.elaboratedwrittenanswer" />
 	<item value="Evaluation.Type.other" />
 </list>
