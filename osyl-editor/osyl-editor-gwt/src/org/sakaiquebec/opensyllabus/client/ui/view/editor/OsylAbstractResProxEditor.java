@@ -456,7 +456,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    }
 	    if (rubricAllowed && resourceProxyTypeAllowed) {
 		String label = model.getLabel();
-		// if(label.length()>18) label = label.substring(0, 15)+"...";
+		if(label.length()>35) label = label.substring(0, 35) + "...";
 		lb.addItem(label, model.getUuid());
 	    }
 	} else {
