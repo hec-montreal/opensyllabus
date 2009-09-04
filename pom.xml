@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -415,7 +415,7 @@
     	<groupId>org.jmock</groupId>
     	<artifactId>jmock-junit3</artifactId>
     	<version>2.5.1</version>
-    	<scope>test</scope>    
+    	<scope>test</scope>
 	</dependency>
 	<dependency>
     	<groupId>org.jmock</groupId>
@@ -551,7 +551,7 @@
           <artifactId>maven-war-plugin</artifactId>
           <version>2.1-beta-1</version>
         </plugin>
-        		
+
         <!-- Misc -->
         <plugin>
           <groupId>org.mortbay.jetty</groupId>
@@ -566,11 +566,11 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>gwt-maven-plugin</artifactId>
-          <version>1.1-SNAPSHOT</version>         
+          <version>1.1-SNAPSHOT</version>
           <configuration>
             <runTarget>${gwtModule}/</runTarget>
             <gwtModule>${gwtModule}</gwtModule>
-            <gwtVersion>${gwtVersion}</gwtVersion>            
+            <gwtVersion>${gwtVersion}</gwtVersion>
           </configuration>
         </plugin>
       </plugins>
@@ -605,7 +605,7 @@
       </plugin>
     </plugins>
   </build>
-  
+
   <reporting>
     <plugins>
       <!--  Ensure JDK level 1.5+ for generics support and other worries -->
@@ -620,6 +620,7 @@
 	  <plugin>
 		<groupId>org.codehaus.mojo</groupId>
 		<artifactId>cobertura-maven-plugin</artifactId>
+		<version>2.2</version>
 		<configuration>
 			<formats>
 				<format>xml</format>
@@ -632,22 +633,23 @@
         <artifactId>maven-surefire-report-plugin</artifactId>
         <version>2.4.2</version>
         <configuration>
-           <!-- place your configuration here -->
+        	<!-- see http://www.nabble.com/surefire-forkMode-setting-td22863160.html -->
+           	<forkMode>once</forkMode>
         </configuration>
-      </plugin>	  
+      </plugin>
 	  <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
         <version>2.1</version>
-      </plugin>	  
+      </plugin>
 	  <plugin>
 	    <groupId>org.apache.maven.plugins</groupId>
-	    <artifactId>maven-project-info-reports-plugin</artifactId>        
-	    <version>2.1.1</version>	    
+	    <artifactId>maven-project-info-reports-plugin</artifactId>
+	    <version>2.1.1</version>
 	  </plugin>
 	</plugins>
   </reporting>
-  
+
   <profiles>
     <!--  profiles (with activation per platform) -->
     <profile>
