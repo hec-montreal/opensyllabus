@@ -1,4 +1,4 @@
-/* ---- CSS definitions specific to OpenSyllabus ------------------- */
+﻿/* ---- CSS definitions specific to OpenSyllabus ------------------- */
 
 /* Main panel of Osyl -----------------------------------------------------------------------------------*/
 .Osyl-MainPanel {
@@ -19,7 +19,7 @@
 	padding-top:5px;
 }
 
-.gwt-MenuBar-horizontal .gwt-MenuItem, 
+.gwt-MenuBar-horizontal .gwt-MenuItem,
 .gwt-MenuBar-vertical .gwt-MenuItem {
   font:bold 0.9em Arial, Verdana, sans-serif;
   vertical-align:middle;
@@ -29,7 +29,7 @@
   text-decoration:none;
 }
 
-.gwt-MenuBar-horizontal .gwt-MenuItem:first-child, #gwt-uid-1{background-image:none} /* Remove left border of the first element */
+.gwt-MenuBar-horizontal .gwt-MenuItem:first-child, #gwt-uid-1, .gwt-MenuBar-vertical .gwt-MenuItem{background-image:none} /* Remove left border of the first element */
 .gwt-MenuBar-horizontal .gwt-MenuItem {
   text-align:center;
   padding:0 10px;
@@ -37,7 +37,6 @@
 
 .gwt-MenuBar-vertical .gwt-MenuItem {
   text-align:left;
-  border:none;
   padding:4px 2px;
 }
 
@@ -76,27 +75,29 @@
 }
 /*TreeView Left Zone --------------------------------------------------------------------------------------*/
 .Osyl-TreeView {
-	border:3px solid #D6DBDF;
-	background:transparent url(img/ui/tree_bg.gif) repeat-x;
+	position:relative;
+	overflow:visible;
 	font-size:12px;
 	margin:0;
+	zoom:1;
+	border:3px solid #D6DBDF;
+	background:transparent url(img/ui/tree_bg.gif) repeat-x;
 }
-.Osyl-TreeView, .Osyl-TreeView-BottomLeft, .Osyl-TreeView-BottomRight, .Osyl-TreeView-TopLeft, .Osyl-TreeView-TopRight {position:relative;zoom:1}
-.Osyl-TreeView-BottomLeft {
-	margin:0 0 -3px -3px;
-	background:transparent url(img/ui/outer_bg.gif) no-repeat bottom left;
-}
-.Osyl-TreeView-BottomRight {
-	margin-right:-3px;
-	background:transparent url(img/ui/inner_bd.gif) no-repeat bottom right;
-}
-.Osyl-TreeView-TopLeft {
-	margin-top:-3px;
-	background:transparent url(img/ui/treeview_top-left.gif) no-repeat;
-}
+
+.Osyl-TreeView-BottomLeft, 
+.Osyl-TreeView-BottomRight, 
+.Osyl-TreeView-TopLeft, 
 .Osyl-TreeView-TopRight {
-	background:transparent url(img/ui/treeview_top-right.gif) no-repeat top right;
+	position:absolute;
+	width:11px;
+	height:11px;
+	overflow:hidden;
+	background:url(img/ui/treeview-corners.gif) no-repeat;
 }
+.Osyl-TreeView-BottomLeft {bottom:-3px;left:-3px;background-position:0 -46px}
+.Osyl-TreeView-BottomRight {bottom:-3px;right:-3px;background-position:-11px -46px}
+.Osyl-TreeView-TopLeft {top:-3px;left:-3px;height:46px;background-position:0 0;}
+.Osyl-TreeView-TopRight {top:-3px;right:-3px;height:46px;background-position:-11px 0}
 
 /*TreeView Header */
 .Osyl-TreeView-Header {
@@ -112,7 +113,6 @@
 	padding:1px;
 	font:normal 13px Arial, Verdana, sans-serif;
 	color:#006E96;
-	
 }
 
 .Osyl-TreeView-Tree .gwt-TreeItem {
@@ -144,26 +144,27 @@
   width:3px;
 }
 /*Workspace View Right Zone --------------------------------------------------------------------------------*/
-.Osyl-WorkspaceView, .Osyl-WorkspaceView-BottomLeft, .Osyl-WorkspaceView-BottomRight, .Osyl-WorkspaceView-TopLeft, .Osyl-WorkspaceView-TopRight {position:relative;zoom:1}
-.Osyl-WorkspaceView {border:3px solid #D6DBDF}
-.Osyl-WorkspaceView-BottomLeft {
-	margin:0 0 -3px -3px;
-	background:transparent url(img/ui/inner_bg.gif) no-repeat bottom left;
+.Osyl-WorkspaceView {
+	position:relative;
+	overflow:visible;
+	zoom:1;
+	border:3px solid #D6DBDF;
 }
-.Osyl-WorkspaceView-BottomRight {
-	margin-right:-3px;
-	background:transparent url(img/ui/outer_bd.gif) no-repeat bottom right;
-}
-.Osyl-WorkspaceView-TopLeft {
-	margin-top:-3px;
-	background:transparent url(img/ui/inner_hg.gif) no-repeat;
-}
+.Osyl-WorkspaceView-BottomLeft, 
+.Osyl-WorkspaceView-BottomRight, 
+.Osyl-WorkspaceView-TopLeft, 
 .Osyl-WorkspaceView-TopRight {
-	background:transparent url(img/ui/inner_hd.gif) no-repeat top right;
+	position:absolute;
+	width:11px;
+	height:11px;
+	overflow:hidden;
+	background:url(img/ui/workspace-corners.gif) no-repeat;
 }
-.Osyl-WorkspaceView-TopRight > table {
-	/*margin:10px 0;*/ /* MODIFY JAVA CODE TO FIX HEIGHT WITH THIS ACTIVATED*/
-}
+.Osyl-WorkspaceView-BottomLeft {bottom:-3px;left:-3px;background-position:0 -11px}
+.Osyl-WorkspaceView-BottomRight {margin-right:-3px;bottom:-3px;right:-3px;background-position:-14px -11px}
+.Osyl-WorkspaceView-TopLeft {top:-3px;left:-3px;background-position:0 0}
+.Osyl-WorkspaceView-TopRight {top:-3px;right:-3px;background-position:-11px 0}
+
 /* End WorkspaceView Right Zone ---------------------------------------------------------------------------*/
 
 .Osyl-LongView-CourseOutline {
@@ -254,6 +255,7 @@
 /*Unit View --------------------------------------------------------------------------------------*/
 .Osyl-UnitView-MainPanel {
 	padding:10px 5px 0 50px;
+	width:100%;
 }
 
 .Osyl-TitleEditor {
@@ -275,6 +277,7 @@
 
 .Osyl-Title1, .Osyl-Title2, .Osyl-Title3, .Osyl-Title4, .Osyl-Title5 {
 	font:bold 25px Arial, Verdana, sans-serif;
+	margin-left:10px;
 }
 
 .Osyl-Title1 {
@@ -304,9 +307,6 @@
 	font-size:13px;
 	padding:2px 0 2px;
 	border:0;
-}
-Osyl-TitleEditor {
-	
 }
 
 /* Generic GWT textBox (i.e.:no style specified) */
@@ -354,7 +354,7 @@ Osyl-TitleEditor {
 	vertical-align:middle;
 	margin:0 0 5px;
 	padding:10px;
-	border:1px solid #B0B0B0;
+	border:1px solid #e3f0FF;
 	width:auto; /* Will take effect when removed from code*/
 }
 .Osyl-ListItemView-Hyperlink .Osyl-UnitView-ResPanel {
@@ -369,14 +369,14 @@ Osyl-TitleEditor {
 	border:1px solid transparent;
 	color:#FFF; /*For IE6*/
 	padding:3px;
-	width:100%;
+	width:auto;
 }
 
 .Osyl-UnitView-ResPanel-Hover {
 	vertical-align:top;
 	border:1px solid #B0B0B0;
 	padding:10px;
-	width:100%;
+	width:auto;
 	margin-bottom:5px;
 	background-color:#EEE;
 }
@@ -392,13 +392,31 @@ Osyl-TitleEditor {
 /* Label in a Content Unit Panel  */
 .Osyl-UnitView-UnitLabel, .Osyl-UnitView-UnitLabel-Important {
 	font-size:1em;
-	padding:3px;
-	width:100%;
+	padding:3px 0;
+	width:auto;
 }
 
 .Osyl-UnitView-UnitLabel-Important {
-	border:1px solid #FD0;
+	border:1px solid #F00;
+	background-color:#FDD;
 	margin-bottom:15px;
+}
+
+.Osyl-ResProxView-MetaInfo,
+.Osyl-UnitView-MetaInfo,
+.Osyl-UnitView-SemanticTag {
+	display:block;
+	margin:5px 0 0 0;
+	font:normal 10px sans-serif, Arial, Verdana;
+	color:#FFF;
+}
+
+.Osyl-UnitView-SemanticTag {margin:0 0 3px 10px;color:#A0A0A0}
+
+.Osyl-UnitView-ResPanel-Hover .Osyl-ResProxView-MetaInfo,
+.Osyl-UnitView-ResPanel-Hover .Osyl-UnitView-MetaInfo,
+.Osyl-UnitView-ResPanel-Hover .Osyl-UnitView-SemanticTag {
+	color:#A0A0A0;
 }
 
 /* Link in a Content Unit Panel */
@@ -409,9 +427,9 @@ Osyl-TitleEditor {
 
 /*List Item View --------------------------------------------------------------------------------------*/
 .Osyl-ListItemView-Table {
-	width:92%;
+	width:100%;
 	border:1px solid #e3f0FF;
-	margin:0 0 5px 30px;
+	margin:0 0 5px;
 }
 
 .Osyl-ListItemView-labelNo {
@@ -420,8 +438,7 @@ Osyl-TitleEditor {
 	padding:0 5px 0 10px;
 }
 
-.Osyl-ListItemView-Hyperlink {
-}
+.Osyl-ListItemView-Hyperlink {}
 /*End List Item View --------------------------------------------------------------------------------------*/
 
 /*Res ProxDocument --------------------------------------------------------------------------------------*/
@@ -430,12 +447,9 @@ Osyl-TitleEditor {
 	font-size:1em;
 }
 
-.Osyl-ResProxDocument .name, .Osyl-ResProxLink .uri {
-	margin:0 0 0 15px;
-	color:#A0A0A0;
-}
-
-.Osyl-ResProxDocument .description, .Osyl-ResProxLink .description {margin-top:5px}
+.Osyl-ResProxDocument .name, .Osyl-ResProxLink .uri {color:#A0A0A0}
+.Osyl-ResProxDocument .name {margin-left:5px}
+.Osyl-ResProxLink .uri, .Osyl-ResProxDocument .description, .Osyl-ResProxLink .description {margin-top:5px}
 
 /*End Res ProxDocument --------------------------------------------------------------------------------------*/
 
@@ -671,9 +685,6 @@ Osyl-TitleEditor {
 	-moz-box-shadow:0 0 10px #000;
 	-webkit-box-shadow:1px 1px 10px #000;
  	box-shadow:1px 1px 10px #000;
-	/*-moz-border-radius:4px;
-	-webkit-border-radius:4px;
-	border-radius:4px;*/
 }
 
 .Osyl-EditorPopup .Osyl-LabelEditor-TextBox {
@@ -791,17 +802,6 @@ Osyl-TitleEditor {
 	margin:0 0 0 3px;
 	border-top:1px solid #AAA;
 }
-
-.Osyl-ResProxView-MetaInfo,
-.Osyl-UnitView-MetaInfo,
-.Osyl-UnitView-SemanticTag {
-	display:block;
-	margin:5px 0;
-	font:normal 10px sans-serif, Arial, Verdana;
-	color:#A0A0A0;
-}
-
-.Osyl-UnitView-SemanticTag {margin:0 0 3px 3px}
 
 /* Light Box -----------------------------------------------------------------------*/
 .Osyl-LightBox-Regular,
@@ -947,17 +947,10 @@ Osyl-TitleEditor {
 
 .mosaic-CaptionLayoutPanel .dragdrop-handle {cursor:move}
 .mosaic-WindowPanel .Resize-nw {cursor:nw-resize}
-.mosaic-WindowPanel .Resize-n {cursor:n-resize;background-color:#454A4F}/* background needed by IE */
+.mosaic-WindowPanel .Resize-n {cursor:n-resize;background-color:transparent}
 .mosaic-WindowPanel .Resize-ne {cursor:ne-resize}
-.mosaic-WindowPanel .Resize-e {cursor:e-resize;background-color:#FCFCFC}/* background needed by IE */
+.mosaic-WindowPanel .Resize-e {cursor:e-resize;background-color:transparent}
 .mosaic-WindowPanel .Resize-se {cursor:se-resize}
-.mosaic-WindowPanel .Resize-s {cursor:s-resize;background-color:#FCFCFC}/* background needed by IE */
+.mosaic-WindowPanel .Resize-s {cursor:s-resize;background-color:transparent}
 .mosaic-WindowPanel .Resize-sw {cursor:sw-resize}
-.mosaic-WindowPanel .Resize-w {cursor:w-resize}
-
-/*body, .Osyl-MainPanel {min-height:2000px}
-
-.Osyl-TreeView-TopRight {
-	min-height:1975px;
-	overflow:hidden;
-}*/
+.mosaic-WindowPanel .Resize-w {cursor:w-resize;background-color:transparent}
