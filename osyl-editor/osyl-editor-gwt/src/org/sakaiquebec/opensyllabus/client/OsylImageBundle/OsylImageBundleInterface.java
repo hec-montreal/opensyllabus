@@ -45,7 +45,7 @@ public interface OsylImageBundleInterface extends ImageBundle {
     public AbstractImagePrototype notImportant();
 
     public AbstractImagePrototype notVisible();
-
+     
     public AbstractImagePrototype publish();
 
     public AbstractImagePrototype rtt_backColors();
