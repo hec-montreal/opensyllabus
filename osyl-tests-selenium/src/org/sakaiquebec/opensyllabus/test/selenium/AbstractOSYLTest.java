@@ -161,15 +161,14 @@ public class AbstractOSYLTest  extends AbstractTestCase {
 			waitForPageToLoad();
 
 			if(session().isTextPresent(TEST_SITE_NAME)) {
-				Reporter.log("Found site '" + TEST_SITE_NAME + "' to delete",
-							 true);
+				log("Found site '" + TEST_SITE_NAME + "' to delete");
 			} else {
 				if (fail) {
 					fail("Cannot delete site '" + TEST_SITE_NAME
 						 + "' because it could not be found!");
 				} else {
-					Reporter.log("Did not delete site '" + TEST_SITE_NAME
-								 + "' because it did not exist", true);
+					log("Did not delete site '" + TEST_SITE_NAME
+								 + "' because it did not exist");
 					return;
 				}
 			}
@@ -227,7 +226,7 @@ public class AbstractOSYLTest  extends AbstractTestCase {
 			Thread.sleep(1000);
 		}
 
-		Reporter.log("Found OpenSyllabus: tests will begin now");
+		log("Found OpenSyllabus: tests will begin now");
 
 		// Increase this to be able to see the test running. Do not set it below
 		// 100 as it tends to cause problems (menu items not found for instance).
@@ -260,4 +259,10 @@ public class AbstractOSYLTest  extends AbstractTestCase {
 		}
 	} // saveCourseOutline
 
+	/**
+	 * Shortcut for <code>org.testng.Reporter.log(msg, true)</code>.
+	 */
+	protected void log(String msg) {
+		Reporter.log(msg, true);
+	}
 }

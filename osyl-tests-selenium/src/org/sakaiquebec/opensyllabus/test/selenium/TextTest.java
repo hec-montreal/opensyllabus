@@ -71,10 +71,10 @@ public class TextTest extends AbstractOSYLTest {
 		session().click("//td/table/tbody/tr/td[1]/button");
 		// check if text is visible
 		verifyTrue(session().isTextPresent("text resource typed by selenium"));
-		Reporter.log("OK: Text resource renamed");
+		log("OK: Text resource renamed");
 		// Save changes
 		saveCourseOutline();
-		Reporter.log("OK: Course outline saved");
+		log("OK: Course outline saved");
 
 		session().selectFrame("relative=parent");
 		// See class comment above
