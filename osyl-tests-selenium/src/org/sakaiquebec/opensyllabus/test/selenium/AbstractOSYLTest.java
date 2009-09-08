@@ -40,7 +40,7 @@ public class AbstractOSYLTest  extends AbstractTestCase {
 	public static final String TEST_SITE_NAME = "tests-selenium-opensyllabus";
 
 	/**
-	 * Shortcut for session.waitForPageToLoad(30000).
+	 * Shortcut for session.waitForPageToLoad("30000").
 	 */
 	public void waitForPageToLoad() {
 		session().waitForPageToLoad("30000");
@@ -213,7 +213,8 @@ public class AbstractOSYLTest  extends AbstractTestCase {
 		session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
 		for (int second = 0;; second++) {
 			if (second >= 60) {
-				fail("Timeout waiting for Osyl-UnitView-UnitPanel sub-structure");
+				fail("Timeout waiting for Osyl-UnitView-UnitPanel sub-structure:"
+					 +" __Was OpenSyllabus added to the site?__");
 			}
 			try {
 				if (session().isElementPresent(
@@ -225,6 +226,8 @@ public class AbstractOSYLTest  extends AbstractTestCase {
 			}
 			Thread.sleep(1000);
 		}
+
+		Reporter.log("Found OpenSyllabus: tests will begin now");
 
 		// Increase this to be able to see the test running. Do not set it below
 		// 100 as it tends to cause problems (menu items not found for instance).

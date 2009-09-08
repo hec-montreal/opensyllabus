@@ -63,6 +63,7 @@ public class LectureTest extends AbstractOSYLTest {
 		session().click("//td/table/tbody/tr/td[1]/button");
 		// Ensure the new name is visible
 		verifyTrue(session().isTextPresent(newName));
+		Reporter.log("OK: Lecture renamed");
 
 		/* Now we switch the edited lecture with the 2nd one which comes at the
 		 * 1st position. Then we edit the 1st one with a new name, we ensure it
@@ -95,6 +96,7 @@ public class LectureTest extends AbstractOSYLTest {
 		session().click("//td/table/tbody/tr/td[1]/button");
 		// Ensure the new name is not visible anymore
 		verifyTrue(! session().isTextPresent(newName));
+		Reporter.log("OK: Lecture deleted");
 
 		// Click menu "Add..."
 		session().click("gwt-uid-5");
@@ -114,6 +116,7 @@ public class LectureTest extends AbstractOSYLTest {
 			fail("Found " + newLectureNb + " lectures instead of " + lectureNb
 				 + " as expected.");
 		}
+		Reporter.log("OK: Lecture added");
 
 		// Click Edit for the last lecture (actually we don't really specify it
 		// is the 1st lecture)
@@ -126,6 +129,7 @@ public class LectureTest extends AbstractOSYLTest {
 		session().click("//td/table/tbody/tr/td[1]/button");
 		// Ensure the new name is visible
 		verifyTrue(session().isTextPresent(newName));
+		Reporter.log("OK: Last lecture renamed");
 
 		// And we save the changes
 		saveCourseOutline();
