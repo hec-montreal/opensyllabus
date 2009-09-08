@@ -24,6 +24,7 @@ import java.util.Iterator;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCOStructureEvaluationItemEditor;
+import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCOStructureItemEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
 import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
@@ -44,6 +45,15 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 	    OsylController controller, boolean isInList) {
 	super(model, controller);
 	setEditor(new OsylCOStructureEvaluationItemEditor(this, isInList));
+	initView();
+    }
+    
+    
+    public OsylCOStructureEvaluationItemLabelView(COContentUnit model,
+	    OsylController controller, boolean isInList, String levelStyle) {
+	super(model,controller);
+	setEditor(new OsylCOStructureEvaluationItemEditor(this, isInList));
+	((OsylCOStructureItemEditor) getEditor()).setViewerStyle(levelStyle);
 	initView();
     }
 
