@@ -110,7 +110,7 @@ public class AbstractOSYLTest  extends AbstractTestCase {
 		assertTrue(session().isTextPresent(""));
 		// Note to myself: under my current localhost setup, OSYL is the 10th
 		// tool, under our hudson-deployed server it is the 28th
-		session().click("//form[@id='thisOne']/table/tbody/tr[2]/td/p[10]/label");
+		session().click("//form[@id='thisOne']/table/tbody/tr[2]/td/p[28]/label");
 		waitForPageToLoad();
 		session().click("eventSubmit_doSave_tool");
 		waitForPageToLoad();
