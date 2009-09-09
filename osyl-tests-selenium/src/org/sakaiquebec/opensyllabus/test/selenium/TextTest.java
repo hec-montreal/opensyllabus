@@ -56,6 +56,8 @@ public class TextTest extends AbstractOSYLTest {
 
 	String undefRubric = "Non défini";
 	// We first check if we already have an undefined rubric
+	// TODO: this seems to always return true, even when the lecture is
+	// completely empty as it is now, when we add a new one.
 	boolean undefRubricVisible = session().isTextPresent(undefRubric);
 	if (undefRubricVisible) {
 	    log("Rubric \"" + undefRubric + "\" is already showing");
