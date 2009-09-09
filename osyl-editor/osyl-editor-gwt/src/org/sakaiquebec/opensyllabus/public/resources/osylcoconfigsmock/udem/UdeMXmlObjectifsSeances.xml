@@ -99,15 +99,15 @@
                 <bookstore>false</bookstore> 
 	         </properties> 
 	         <COResource  type='contactinforesource' scrty='public'> 
-	            <properties> 
-			       <role>aaa</role> 
-			       <lastname>bbb</lastname> 
-			       <firstname>ccc</firstname> 
-			       <office>ddd</office> 
-			       <phone>eee</phone> 
-			       <email>fff</email> 
-			       <availability>ggg</availability> 
-			       <comments>hhh</comments> 
+ 	            <properties> 
+			       <role></role> 
+			       <lastname>###</lastname> 
+			       <firstname>###</firstname> 
+			       <office>###</office> 
+			       <phone>514-343-6111, poste #####</phone> 
+			       <email>####.####@umontreal.ca</email> 
+			       <availability></availability> 
+			       <comments></comments> 
                 </properties> 
              </COResource> 
 	      </COResourceProxy>    
