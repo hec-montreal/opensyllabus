@@ -131,5 +131,12 @@
       <groupId>${sakai.spring.groupId}</groupId>
       <artifactId>${sakai.spring.mock.artifactId}</artifactId>
     </dependency>
+    <dependency>
+    	<groupId>commons-io</groupId>
+    	<artifactId>commons-io</artifactId>
+    	<version>1.2</version>
+    	<type>jar</type>
+    	<scope>provided</scope>
+    </dependency>
   </dependencies>
 </project>

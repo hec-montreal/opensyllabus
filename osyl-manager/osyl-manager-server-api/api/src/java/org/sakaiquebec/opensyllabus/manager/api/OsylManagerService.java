@@ -54,9 +54,9 @@ public interface OsylManagerService {
     public static final String TEMP_DIRECTORY = "temp";
 
     /**
-     * Name of the co xml file
+     * Name of the course outline xml file
      */
-    public static final String CO_XML_FILENAME = "test.xml";
+    public static final String CO_XML_FILENAME = "syllabus.xml";
 
     /**
      * Create a Course outline using the xml reference
@@ -74,24 +74,16 @@ public interface OsylManagerService {
      */
     public void readZip(String zipReference, String siteId);
 
-    /**
-     * This method is given a string reference to the zip file name and it
-     * returns the content of the file <B>test.xml</B>
-     * 
-     * @param zipReference
-     * @return A string representation of the xml file, null if there is no xml
-     *         file with the given name
-     */
-    public String getXmlDataFromZip(File zip);
 
     /**
      * This method return a list of the files contained in the same zip file as
      * the xml Data. getXmlDataFromZip should be called before this method
      * otherwise you will have a null pointer exception.
      * 
-     * @return a list of files, empty if there no file other than the xml file
+     * @return files, empty if there no file other than the xml file, 
+     * key is the file, value is the real file Name to use
      */
-    public List<File> getImportedFiles();
+    public Map<File, String> getImportedFiles();
 
     /**
      * A method that allows us to add a new resource in site resource tool

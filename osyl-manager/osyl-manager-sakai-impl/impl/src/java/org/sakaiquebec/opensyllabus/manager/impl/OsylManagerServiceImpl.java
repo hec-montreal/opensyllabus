@@ -21,9 +21,13 @@
 
 package org.sakaiquebec.opensyllabus.manager.impl;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
@@ -34,7 +38,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
@@ -61,6 +70,7 @@ import org.sakaiproject.exception.IdUsedException;
 import org.sakaiproject.exception.OverQuotaException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
+import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
@@ -79,6 +89,10 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
  * @version $Id: $
  */
 public class OsylManagerServiceImpl implements OsylManagerService {
+	
+	private static final String CITATION_EXTENSION = ".citation";
+
+	private static final Log log = LogFactory.getLog(OsylManagerServiceImpl.class);
 
     final static int TIMEOUT = 30;
 
@@ -293,13 +307,41 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
     }
 
-    public String getXmlDataFromZip(File zip) {
+    private String mkdirCollection(String resourceDirToCreate, String propDisplayName)
+			throws Exception {
+    	if(!collectionExist(resourceDirToCreate)){
+			try {
+			// collection is not existing yet, create it
+			ContentCollectionEdit col = contentHostingService
+					.addCollection(resourceDirToCreate);
+			ResourcePropertiesEdit fileProperties = col.getPropertiesEdit();
+			fileProperties.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
+					propDisplayName);
+			contentHostingService.commitCollection(col);
+			resourceDirToCreate = col.getId();
+			}catch (IdUsedException e) {
+				log.debug("ID already used ?", e);
+			}
+		}
+		return resourceDirToCreate;
+	}
+    
 
-	osylPackage = new OsylPackage();
-	osylPackage.unzipFile(zip);
-	return osylPackage.getXmlData();
+    private void mkdirsCollection(String rootDir, String path) throws Exception{
+    	String[] subFolders = path.split("/");
+	    if(subFolders!=null){
+	    	String currentFolder = rootDir;	    	
+	    	if(currentFolder.endsWith("/")){
+	    		currentFolder=currentFolder.substring(0,currentFolder.length()-1);
+	    	}
+	    	for(int i = 0 ; i < subFolders.length; i++){
+	    		String subFolderName = subFolders[i];
+	    		currentFolder += "/" + subFolders[i];
+	    		mkdirCollection(currentFolder, subFolderName);
+	    	}
+	    }    	
     }
-
+    
     /**
      * {@inheritDoc}
      */
@@ -311,28 +353,21 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    contentHostingService.getSiteCollection(siteId)
 			    + WORK_DIRECTORY + "/";
 
-	    try {
-		@SuppressWarnings("unused")
-		ContentCollection resourceOutputCollection =
-			contentHostingService.getCollection(resourceOutputDir);
-
-	    } catch (IdUnusedException exc) {
-		// collection is not existing yet, create it
-		ContentCollectionEdit col =
-			contentHostingService.addCollection(resourceOutputDir);
-		ResourcePropertiesEdit fileProperties = col.getPropertiesEdit();
-		fileProperties.addProperty(
-			ResourceProperties.PROP_DISPLAY_NAME, WORK_DIRECTORY);
-		contentHostingService.commitCollection(col);
-		resourceOutputDir = col.getId();
-	    }
-
-	    // Extraction of name and extension
-	    String fileName;
-	    String fileExtension;
+	    resourceOutputDir = mkdirCollection(resourceOutputDir, WORK_DIRECTORY);
+	    
+	    // Extraction of name and extension	    
 	    int lastIndexOfPoint = name.lastIndexOf(".");
-	    fileName = name.substring(0, lastIndexOfPoint);
-	    fileExtension = name.substring(lastIndexOfPoint + 1, name.length());
+	    String fileName = name.substring(0, lastIndexOfPoint);
+	    String fileExtension = name.substring(lastIndexOfPoint + 1, name.length());
+	    //check if filename is in a subdirectory,if true then create all necessary subfolders
+	    int slashPos = fileName.lastIndexOf("/");
+	    if(slashPos>0){
+	    	String filePath = fileName.substring(0,slashPos);	    	
+	    	mkdirsCollection(resourceOutputDir,filePath);
+	    	fileName = fileName.substring(slashPos+1);
+	    	resourceOutputDir += filePath + "/";
+	    }
+	    	    
 	    if ("citation".equals(fileExtension)) {
 	    	// read input stream of file to get properties of citation
 	    	byte[] bytes = new byte[1000];
@@ -460,28 +495,28 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * {@inheritDoc}
      */
     public void readZip(String zipReference, String siteId) {
-	File file = new File("zipFile");
-	try {
-	    ContentResource contentResource =
-		    contentHostingService.getResource(zipReference);
-	    byte[] content = contentResource.getContent();
-	    FileOutputStream writer = new FileOutputStream(file);
-	    writer.write(content);
+		try {
+			File zipTempfile = File.createTempFile("osyl-package-import", ".zip");
+			ContentResource contentResource = contentHostingService
+					.getResource(zipReference);
+			byte[] content = contentResource.getContent();
+			FileOutputStream writer = new FileOutputStream(zipTempfile);
+			writer.write(content);
 
-	} catch (Exception e) {
-	    e.printStackTrace();
+			osylPackage = new OsylPackage();
+			osylPackage.unzip(zipTempfile);
+			String xml =  osylPackage.getXml();			
+			
+			osylSiteService.importDataInCO(xml, siteId);
+			contentHostingService.removeResource(zipReference);
+			zipTempfile.delete();			
+		} catch (Exception e) {
+			log.error(e);
+		}
+
 	}
 
-	String xml = getXmlDataFromZip(file);
-	osylSiteService.importDataInCO(xml, siteId);
-	try {
-	    contentHostingService.removeResource(zipReference);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
-    }
-
-    public List<File> getImportedFiles() {
+    public Map<File, String> getImportedFiles() {
 	return osylPackage.getImportedFiles();
     }
 
@@ -575,129 +610,147 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * {@inheritDoc}
      */
     public String getOsylPackage(String siteId) {
-	String url = null;
+		String url = null;
 
-	OsylPackage osylPackage = new OsylPackage();
+		try {
+			File zipFile = zip(siteId);
+			Site site = siteService.getSite(siteId);
+			String title = site.getTitle();
+			String resourceOutputDir = contentHostingService
+					.getSiteCollection(siteId);
+			try {
+				addCollection(TEMP_DIRECTORY, site);
+			} catch (Exception e) {
+			}
+			resourceOutputDir += TEMP_DIRECTORY + "/";
 
-	Map<String, byte[]> filesMap = createFilesMap(siteId);
-
-	byte[] byteArray = osylPackage.createOsylPackage(filesMap);
-
-	try {
-	    Site site = siteService.getSite(siteId);
-	    String title = site.getTitle();
-	    String resourceOutputDir =
-		    contentHostingService.getSiteCollection(siteId);
-	    try {
-		addCollection(TEMP_DIRECTORY, site);
-	    } catch (Exception e) {
-	    }
-	    resourceOutputDir += TEMP_DIRECTORY + "/";
-
-	    ContentResourceEdit newResource =
-		    contentHostingService.addResource(resourceOutputDir, title,
-			    ".zip", 10);
-	    String ressourceUrl = newResource.getUrl();
-	    String filename =
-		    ressourceUrl.substring(ressourceUrl.lastIndexOf("/") + 1,
-			    ressourceUrl.length());
-	    newResource.setContent(byteArray);
-	    newResource.setContentType("application/zip");
-	    contentHostingService.commitResource(newResource);
-	    url = resourceOutputDir + filename;
-	} catch (Exception e) {
-	    e.printStackTrace();
+			ContentResourceEdit newResource = contentHostingService
+					.addResource(resourceOutputDir, title + "_" + siteId, ".zip", 10);
+			String ressourceUrl = newResource.getUrl();
+			String filename = ressourceUrl.substring(ressourceUrl
+					.lastIndexOf("/") + 1, ressourceUrl.length());
+			newResource.setContent(new BufferedInputStream(new FileInputStream(
+					zipFile)));
+			newResource.setContentType("application/zip");
+			contentHostingService.commitResource(newResource);
+			zipFile.delete();
+			url = resourceOutputDir + filename;
+		} catch (Exception e) {
+			log.error("Cannot create the zip package", e);
+		}
+		return url;
 	}
-	return url;
-    }
 
-    /**
-     * Create a Map<name,content> of the files which should be on the
-     * osylpackage
-     * 
-     * @param siteId
-     * @return
-     */
+    
     @SuppressWarnings("unchecked")
-	private Map<String, byte[]> createFilesMap(String siteId) {
-	HashMap<String, byte[]> map = new HashMap<String, byte[]>();
-
-	COSerialized coSerialized =
-		osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
-	try {
-	    byte[] xmlBytes =
-		    coSerialized.getContent().getBytes("UTF-8");
-	    map.put(OsylManagerService.CO_XML_FILENAME, xmlBytes);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
-
-	String resourceDir =
-		contentHostingService.getSiteCollection(siteId)
-			+ WORK_DIRECTORY + "/";
-	try {
-	    ContentCollection workContent =
-		    contentHostingService.getCollection(resourceDir);
-	    List<ContentEntity> members = workContent.getMemberResources();
-	    for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
-		    .hasNext();) {
-		ContentEntity next = (ContentEntity) iMbrs.next();
-		String thisEntityRef = next.getId();
-		String name =
-			thisEntityRef.substring(
-				thisEntityRef.lastIndexOf("/") + 1,
-				thisEntityRef.length());
-		ContentResource contentResource =
-			contentHostingService.getResource(thisEntityRef);
-		if (CitationService.CITATION_LIST_ID.equals(
-				contentResource.getResourceType())) {
-			// content resource is a citation:
-			// get properties of citation to save in a file
-			// TODO: citation file is created considering citation
-			// service of sdata ... modify this for general use
-			String colId = new String(contentResource.getContent());
-			CitationCollection col = org.sakaiproject.citation.cover.
-					CitationService.getCollection(colId);
-			List<Citation> citations = col.getCitations();
-			for (Iterator<Citation> iter = citations.iterator(); 
-					iter.hasNext();) {
-				Citation citation = iter.next();
-				String citationName = citation.getDisplayName();
-				// citation display name includes . at the end
-				citationName = citationName.substring(0,citationName.length()-1);
-				String result = "listname=" + citationName;
-				Map props = citation.getCitationProperties();
-				for (Iterator<String> iter2 = props.keySet().iterator(); 
-						iter2.hasNext();) {
-					String key = iter2.next();
-					result += "&cipkeys=" + key;
-					Object value = props.get(key);
-					if (key.equals("sakai:displayname")) {
-						result += "&cipvalues=" + citationName;
-					}
-					else if (value instanceof Vector) {
-						Vector val = (Vector) value;
-						for (Iterator iter3 = val.iterator(); iter3.hasNext();) {
-							result += "&cipvalues=" + iter3.next().toString();
+    private void retrieveFiles(ZipOutputStream zos, ContentCollection collection, String rootDir) throws PermissionException, IdUnusedException, TypeException, ServerOverloadException, IOException{
+	    List<ContentEntity> members = collection.getMemberResources();
+	    for (ContentEntity entity : members) {
+		    if(entity.isCollection()){
+		    	retrieveFiles(zos, (ContentCollection)entity, rootDir);
+		    } else {
+			    String thisEntityRef = entity.getId();
+			    // the fileName is a subpath after rootDir
+				String name = thisEntityRef.substring(rootDir.length());
+				
+				ContentResource contentResource =
+					contentHostingService.getResource(thisEntityRef);
+				if (CitationService.CITATION_LIST_ID.equals(
+						contentResource.getResourceType())) {
+					// content resource is a citation:
+					// get properties of citation to save in a file
+					// TODO: citation file is created considering citation
+					// service of sdata ... modify this for general use
+					String colId = new String(contentResource.getContent());
+					CitationCollection col = org.sakaiproject.citation.cover.
+							CitationService.getCollection(colId);
+					List<Citation> citations = col.getCitations();
+					for (Iterator<Citation> iter = citations.iterator(); 
+							iter.hasNext();) {
+						Citation citation = iter.next();
+						String citationName = citation.getDisplayName();
+						// citation display name includes . at the end
+						citationName = citationName.substring(0,citationName.length()-1);
+						String result = "listname=" + citationName;
+						Map props = citation.getCitationProperties();
+						for (Iterator<String> iter2 = props.keySet().iterator(); 
+								iter2.hasNext();) {
+							String key = iter2.next();
+							result += "&cipkeys=" + key;
+							Object value = props.get(key);
+							if (key.equals("sakai:displayname")) {
+								result += "&cipvalues=" + citationName;
+							}
+							else if (value instanceof Vector) {
+								Vector val = (Vector) value;
+								for (Iterator iter3 = val.iterator(); iter3.hasNext();) {
+									result += "&cipvalues=" + iter3.next().toString();
+								}
+							}
+							else {
+								result += "&cipvalues=" + value.toString();
+							}
 						}
-					}
-					else {
-						result += "&cipvalues=" + value.toString();
-					}
+						// save each citation as a file with .citation extension
+						writeToZip(zos, citationName + CITATION_EXTENSION, result.getBytes());
+					}			
 				}
-				// save each citation as a file with .citation extension
-				map.put(citationName + ".citation", result.getBytes());
-			}			
-		}
-		else {
-			map.put(name, contentResource.getContent());
-		}
+				else {
+					writeToZip(zos, name, contentResource.streamContent());
+				}
+		    }
 	    }
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
-	return map;
     }
+        	
+	private void writeToZip(ZipOutputStream zos, String fileName, InputStream inputStream) throws IOException{
+		ZipEntry zipEntry = new ZipEntry(fileName);		
+		zos.putNextEntry(zipEntry);
+		BufferedOutputStream bos = new BufferedOutputStream(zos);
+		IOUtils.copy(inputStream, bos);
+		bos.flush();
+	}
+	
+	private void writeToZip(ZipOutputStream zos, String fileName, byte[] bytes ) throws IOException{
+		ZipEntry zipEntry = new ZipEntry(fileName);		
+		zos.putNextEntry(zipEntry);
+		zos.write((byte[]) bytes);		
+	}
+	
+    /**
+	 * List the files in a sites and zip them
+	 * 
+	 * @param siteId
+	 * @return zipFile a temporary zip file...
+     * @throws IOException 
+	 */
+	@SuppressWarnings("unchecked")
+	private File zip(String siteId) throws Exception {
+		// opening a new temporary zipfile
+		File zipFile = File.createTempFile("osyl-package-export", ".zip");
+		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile));
+		
+		// retrieving the xml file
+		COSerialized coSerialized = osylSiteService
+				.getSerializedCourseOutlineBySiteId(siteId);
+
+		byte[] xmlBytes = coSerialized.getContent().getBytes("UTF-8");
+		writeToZip(zos, OsylManagerService.CO_XML_FILENAME, xmlBytes);
+
+		// retrieving other resources
+		String resourceDir = contentHostingService.getSiteCollection(siteId)
+				+ WORK_DIRECTORY + "/";
+		try {
+			ContentCollection workContent = contentHostingService
+					.getCollection(resourceDir);
+			// recursively retrieve all files
+			retrieveFiles(zos, workContent, resourceDir);
+		} catch (Exception e) {
+			log.error(e);
+			throw new Exception("Cannot retrieve files in site for zipping" , e);
+		}
+		zos.close();
+		return zipFile;
+	}
 
     /**
      * Delete temporary files and the temporary directory created when export CO
