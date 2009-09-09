@@ -54,10 +54,11 @@ public class TextTest extends AbstractOSYLTest {
 	waitForOSYL();
 	enterFirstLecture();
 
+	String undefRubric = "Non défini";
 	// We first check if we already have an undefined rubric
-	boolean undefRubricVisible = session().isTextPresent("Non défini");
+	boolean undefRubricVisible = session().isTextPresent(undefRubric);
 	if (undefRubricVisible) {
-	    log("Rubric \"Undefined\" is already showing");
+	    log("Rubric \"" + undefRubric + "\" is already showing");
 	}
 
 	// Click menu "Add..."
@@ -69,7 +70,7 @@ public class TextTest extends AbstractOSYLTest {
 
 	// We check that our new text was added (this has no effect if there
 	// was already an Undef Rubric item
-	verifyTrue(session().isTextPresent("Non défini"));
+	verifyTrue(session().isTextPresent(undefRubric));
 
 	// open text resource editor
 	session().click("//tr[3]/td/table/tbody/tr[2]/td/div/table[2]/tbody" +
@@ -92,9 +93,25 @@ public class TextTest extends AbstractOSYLTest {
 	// check if text is visible
 	verifyTrue(session().isTextPresent("text resource typed by selenium"));
 	log("OK: Text resource renamed");
-
+	// check if the new rubric is visible
+	verifyTrue(session().isTextPresent("Description"));
+	log("OK: rubric Description is visible");
+	
 	// We should be back to the initial state
-	verifyTrue(session().isTextPresent("Non défini") ==undefRubricVisible);
+	if(session().isTextPresent(undefRubric)) {
+	    if (undefRubricVisible) {
+		log("OK Rubric \"" + undefRubric + "\" is still showing");
+	    } else {
+		log("ERROR Rubric \"" + undefRubric + "\" is still showing");
+	    }
+	} else {
+	    if (undefRubricVisible) {
+		log("ERROR Rubric \"" + undefRubric + "\" is not showing");
+	    } else {
+		log("OK Rubric \"" + undefRubric + "\" is still not showing");
+	    }
+	}
+	//verifyTrue(session().isTextPresent(undefRubric) ==undefRubricVisible);
 
 	// Save changes
 	saveCourseOutline();
