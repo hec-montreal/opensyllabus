@@ -396,7 +396,7 @@ public class OsylCOStructureEvaluationItemEditor extends
 
     private VerticalPanel addNewEditorPanel() {
 	VerticalPanel oep = new VerticalPanel();
-	oep.setStylePrimaryName("Osyl-ContactInfoView-Panel");
+	oep.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	oep.setWidth("100%");
 	return oep;
     }
