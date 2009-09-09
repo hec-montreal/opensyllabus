@@ -99,14 +99,14 @@
 	         </properties> 
 	         <COResource  type='contactinforesource' scrty='public'> 
 	            <properties> 
-			       <role>aaa</role> 
-			       <lastname>bbb</lastname> 
-			       <firstname>ccc</firstname> 
-			       <office>ddd</office> 
-			       <phone>eee</phone> 
-			       <email>fff</email> 
-			       <availability>ggg</availability> 
-			       <comments>hhh</comments> 
+			       <role></role> 
+			       <lastname>nom</lastname> 
+			       <firstname>prénom</firstname> 
+			       <office>1234</office> 
+			       <phone>514-343-6111, poste 1234</phone> 
+			       <email>prenom.nom@umontreal.ca</email> 
+			       <availability>Du lundi au vendredi entre 9 h 00 et 17 h 00</availability> 
+			       <comments>Ceci est un commentaire</comments> 
                 </properties> 
              </COResource> 
 	      </COResourceProxy>    
