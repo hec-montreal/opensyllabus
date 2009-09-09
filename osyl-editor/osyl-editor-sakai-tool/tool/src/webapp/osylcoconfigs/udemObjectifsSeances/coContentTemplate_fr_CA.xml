@@ -104,12 +104,12 @@
 			       <lastname>###</lastname> 
 			       <firstname>###</firstname> 
 			       <office>###</office> 
-			       <phone>514-343-6111, poste #####</phone> 
-			       <email>####.####@umontreal.ca</email> 
-			       <availability></availability> 
-			       <comments></comments> 
+			       <phone>514-343-6111, poste #</phone> 
+			       <email>###.###@umontreal.ca</email> 
+			       <availability>###</availability> 
+			       <comments>###</comments> 
                 </properties> 
-             </COResource> 
+              </COResource> 
 	      </COResourceProxy>    
 	   </COUnitContent> 
 	</COUnit>  <!-- contactinfo COUnit End -->
