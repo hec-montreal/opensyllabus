@@ -27,12 +27,13 @@ import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxContactInfoView;
 
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RichTextArea;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -42,12 +43,12 @@ import com.google.gwt.user.client.ui.Widget;
  * different from other editors as it shows 8 different views and their
  * respective editor. Each contact-info shows these views:
  * <ul>
- * <li>Role</li>
- * <li>Last Name</li>
  * <li>First Name</li>
- * <li>Office</li>
- * <li>Phone</li>
+ * <li>Last Name</li>
+ * <li>Role</li>
  * <li>eMail</li>
+ * <li>Phone</li>
+ * <li>Office</li>
  * <li>Availability</li>
  * <li>Comments</li>
  * </ul>
@@ -57,35 +58,9 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 
-    // Our main panel which will display the description panel as well as the
-    // link panel
-    private VerticalPanel mainPanel;
-
-    // Our edition widgets
-    private FlexTable editor;
-    private ListBox editorRole;
-    private TextBox editorLastName;
-    private TextBox editorFirstName;
-    private TextBox editorOffice;
-    private TextBox editorPhone;
-    private TextBox editorEMail;
-    private RichTextArea editorAvailability;
-    private RichTextArea editorComments;
-
-    // Our viewers
-    private FlexTable viewer;
-    private HTML viewerRole;
-    private HTML viewerLastName;
-    private HTML viewerFirstName;
-    private HTML viewerOffice;
-    private HTML viewerPhone;
-    private HTML viewerEMail;
-    private HTML viewerAvailability;
-    private HTML viewerComments;
-
-    // remember height of rich text elements for maximizing popup
-    private int originalEditorRichTextHeight;
-
+    /**
+     * ====================== CONSTRUCTORS ======================
+     */
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
      * working for.
@@ -101,6 +76,349 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	initViewer();
 	initWidget(mainPanel);
     }
+
+    // Our main panel which will display the description panel as well as the
+    // link panel
+    private VerticalPanel mainPanel;
+
+    /**
+     * ===================== SETTERS + GETTERS =====================
+     * =================== FOR VIEWERS + EDITORS ===================
+     */
+
+    // Edition widgets ------------------------------------------------
+
+    private VerticalPanel editorContainer;
+    public VerticalPanel getEditorContainer() {
+	if (editorContainer == null) {
+	    editorContainer = new VerticalPanel();
+	    // TODO : to be controlled by CSS
+            // editorContainer.setWidth("500px");
+	    editorContainer.setStyleName("Osyl-ContactInfo-Editor");
+	}
+	return editorContainer;
+    }
+
+    // remember height of rich text elements for maximizing popup
+    private int originalEditorRichTextHeight;
+    public void setOriginalEditorRichTextHeight(int originalEditorRichTextHeight) {
+        this.originalEditorRichTextHeight = originalEditorRichTextHeight;
+    }
+    public int getOriginalEditorRichTextHeight() {
+        return originalEditorRichTextHeight;
+    }
+
+    private TextBox editorFirstName;
+    public TextBox getEditorFirstName() {
+	if (editorFirstName == null) {
+	    editorFirstName = new TextBox();
+	    editorFirstName.setStylePrimaryName("Osyl-ContactInfo-TextBox");
+	    editorFirstName.setTitle(getView().getCoMessage(
+		"ResProxContactInfoView_FirstNameLabel"));
+	}
+        return editorFirstName;
+    }
+
+    private Label firstNameLabel;
+    public Label getFirstNameLabel() {
+	if (firstNameLabel == null) {
+	    firstNameLabel = new Label(getView().getCoMessage(
+	    	"ResProxContactInfoView_FirstNameLabel"));
+	    firstNameLabel.setStylePrimaryName("Osyl-ResProxView-Label");
+	    firstNameLabel.addStyleName("Osyl-ContactInfo-Label");
+	}
+	return firstNameLabel;
+    }
+
+    private TextBox editorLastName;
+    public TextBox getEditorLastName() {
+	if (editorLastName == null) {
+	    editorLastName = new TextBox();
+	    editorLastName.setStylePrimaryName("Osyl-ContactInfo-TextBox");
+	    editorLastName.setTitle(getView().getCoMessage(
+		"ResProxContactInfoView_LastNameLabel"));
+	}
+	return editorLastName;
+    }
+    
+    private Label lastNameLabel;
+    public Label getLastNameLabel() {
+	if (lastNameLabel == null) {
+	    lastNameLabel = new Label(getView().getCoMessage(
+	    	"ResProxContactInfoView_LastNameLabel"));
+	    lastNameLabel.setStylePrimaryName("Osyl-ResProxView-Label");
+	    lastNameLabel.addStyleName("Osyl-ContactInfo-Label");
+	}
+	return lastNameLabel;
+    }
+
+    private ListBox editorRole;
+    public ListBox getEditorRole() {
+	if (editorRole == null) {
+	    editorRole = createRoleListBox();
+	    editorRole.setTitle(getView().getCoMessage(
+		"ResProxContactInfoView_TitleLabel"));
+	}
+	return editorRole;
+    }
+    
+    private Label roleLabel;
+    public Label getRoleLabel() {
+	if (roleLabel == null) {
+	    roleLabel = new Label(getView().getCoMessage(
+	    	"ResProxContactInfoView_TitleLabel"));
+	    roleLabel.setStylePrimaryName("Osyl-ResProxView-Label");
+	    roleLabel.addStyleName("Osyl-ContactInfo-Label");
+	}
+	return roleLabel;
+    }
+
+    private ListBox createRoleListBox() {
+	ListBox lb = new ListBox();
+	lb.setStylePrimaryName("Osyl-ContactInfo-ListBox");
+	List<String> rolesList = getView().getController().getOsylConfig().getRolesList();
+	if(rolesList.size()>0){
+	    lb.addItem(getView()
+		    .getCoMessage("ResProxContactInfoView_PleaseChoose"));
+	}
+	for(String roleKey : rolesList){
+	    lb.addItem(getView()
+		    .getCoMessage(roleKey));
+	}
+	return lb;
+    }
+
+    private TextBox editorEMail;
+    public TextBox getEditorEMail() {
+	if (editorEMail == null) {
+	    editorEMail = new TextBox();
+	    editorEMail.setStylePrimaryName("Osyl-ContactInfo-TextBox");
+	    editorEMail.setTitle(getView().getCoMessage(
+	    	"ResProxContactInfoView_EMailLabel"));
+	}
+        return editorEMail;
+    }
+
+    private Label eMailLabel;
+    public Label getEMailLabel() {
+	if (eMailLabel == null) {
+	    eMailLabel = new Label(getView().getCoMessage(
+	    	"ResProxContactInfoView_EMailLabel"));
+	    eMailLabel.setStylePrimaryName("Osyl-ResProxView-Label");
+	    eMailLabel.addStyleName("Osyl-ContactInfo-Label");
+	}
+	return eMailLabel;
+    }
+
+    private TextBox editorPhone;
+    public TextBox getEditorPhone() {
+	if (editorPhone == null) {
+	    editorPhone = new TextBox();
+	    editorPhone.setTitle(getView().getCoMessage(
+		    "ResProxContactInfoView_PhoneLabel"));
+	    editorPhone.setStylePrimaryName("Osyl-ContactInfo-TextBox");
+	}
+        return editorPhone;
+    }
+
+    private Label phoneLabel;
+    public Label getPhoneLabel() {
+	if (phoneLabel == null) {
+	    phoneLabel = new Label(getView().getCoMessage(
+	    	"ResProxContactInfoView_PhoneLabel"));
+	    phoneLabel.setStylePrimaryName("Osyl-ResProxView-Label");
+	    phoneLabel.addStyleName("Osyl-ContactInfo-Label");
+	}
+	return phoneLabel;
+    }
+
+    private TextBox editorOffice;
+    public TextBox getEditorOffice() {
+	if (editorOffice == null) {
+	    editorOffice = new TextBox();
+	    editorOffice.setStylePrimaryName("Osyl-ContactInfo-TextBox");
+	    editorOffice.setTitle(getView().getCoMessage(
+		"ResProxContactInfoView_OfficeLabel"));
+	}
+        return editorOffice;
+    }
+    
+    private Label officeLabel;
+    public Label getOfficeLabel() {
+	if (officeLabel == null) {
+	    officeLabel = new Label(getView().getCoMessage(
+		"ResProxContactInfoView_OfficeLabel"));
+	    officeLabel.setStylePrimaryName("Osyl-ResProxView-Label");
+	    officeLabel.addStyleName("Osyl-ContactInfo-Label");
+	}
+        return officeLabel;
+    }
+    
+    private Label officeLabelViewer;
+    public Label getOfficeLabelViewer() {
+	if (officeLabelViewer == null) {
+	    officeLabelViewer = new Label(getView().getCoMessage(
+		"ResProxContactInfoView_OfficeLabel"));
+	    officeLabelViewer.addStyleName("Osyl-ContactInfo-OfficeLabel");
+	}
+        return officeLabelViewer;
+    }
+
+    private RichTextArea editorAvailability;
+    public RichTextArea getEditorAvailability() {
+	if (editorAvailability == null) {
+	    editorAvailability = new RichTextArea();
+	    editorAvailability.setStylePrimaryName("Osyl-UnitView-TextArea");
+	    editorAvailability.setTitle(getView().getCoMessage(
+		"ResProxContactInfoView_AvailabilityLabel"));
+	}
+        return editorAvailability;
+    }
+ 
+    private Label availabilityLabel;
+    public Label getAvailabilityLabel() {
+	if (availabilityLabel == null) {
+	    availabilityLabel = new Label(getView().getCoMessage(
+		"ResProxContactInfoView_AvailabilityLabel"));
+	    availabilityLabel.setStylePrimaryName("Osyl-ResProxView-Label");
+	    availabilityLabel.addStyleName("Osyl-ContactInfo-Label");
+	}
+        return availabilityLabel;
+    }
+
+    private Label availabilityLabelViewer;
+    public Label getAvailabilityLabelViewer() {
+	if (availabilityLabelViewer == null) {
+	    availabilityLabelViewer = new Label(getView().getCoMessage(
+		"ResProxContactInfoView_AvailabilityLabel"));
+	    availabilityLabelViewer.addStyleName("Osyl-ContactInfo-AvailabilityLabel");
+	}
+        return availabilityLabelViewer;
+    }
+
+    private RichTextArea editorComments;
+    public RichTextArea getEditorComments() {
+	if (editorComments == null) {
+	    editorComments = new RichTextArea();
+	    editorComments.setStylePrimaryName("Osyl-UnitView-TextArea");
+	    editorComments.setTitle(getView().getCoMessage(
+		    "ResProxContactInfoView_CommentsLabel"));
+	}
+        return editorComments;
+    }
+
+    private Label commentsLabel;
+    public Label getCommentsLabel() {
+	if (commentsLabel == null) {
+	    commentsLabel = new Label(getView().getCoMessage(
+		"ResProxContactInfoView_CommentsLabel"));
+	    commentsLabel.setStylePrimaryName("Osyl-ResProxView-Label");
+	    commentsLabel.addStyleName("Osyl-ContactInfo-Label");
+	}
+        return commentsLabel;
+    }
+
+    // Viewer widgets ------------------------------------------------
+
+    private VerticalPanel viewerContainer;
+    public VerticalPanel getViewerContainer() {
+	if (viewerContainer == null) {
+	    viewerContainer = new VerticalPanel();
+	    // TODO : to be controlled by CSS
+//	    viewerContainer.setWidth("500px");
+	    viewerContainer.setStyleName("Osyl-ContactInfo-Viewer");
+	}
+	return viewerContainer;
+    }
+
+    private HTML viewerFirstName;
+    public HTML getViewerFirstName() {
+	if (viewerFirstName == null) {
+	    viewerFirstName = new HTML();
+	    viewerFirstName.setStylePrimaryName("Osyl-ContactInfo-FirstName");
+	    viewerFirstName.setTitle(getView().getCoMessage(
+		"ResProxContactInfoView_FirstNameLabel"));
+	}
+        return viewerFirstName;
+    }
+
+    private HTML viewerLastName;
+    public HTML getViewerLastName() {
+	if (viewerLastName == null) {
+	    viewerLastName = new HTML();
+	    viewerLastName.setStylePrimaryName("Osyl-ContactInfo-LastName");
+	    viewerLastName.setTitle(getView().getCoMessage(
+		"ResProxContactInfoView_LastNameLabel"));
+	}
+        return viewerLastName;
+    }
+
+    private HTML viewerRole;
+    public HTML getViewerRole() {
+	if (viewerRole == null) {
+	    viewerRole = new HTML();
+	    viewerRole.setStylePrimaryName("Osyl-ContactInfo-Role");
+	    viewerRole.setTitle(getView().getCoMessage(
+		"ResProxContactInfoView_TitleLabel"));
+	}
+        return viewerRole;
+    }
+
+    private HTML viewerEMail;
+    public HTML getViewerEMail() {
+	if (viewerEMail == null) {
+	    viewerEMail = new HTML();
+	    viewerEMail.setStylePrimaryName("Osyl-ContactInfo-EMail");
+	    viewerEMail.setTitle(getView().getCoMessage(
+		    "ResProxContactInfoView_EMailLabel"));
+	}
+        return viewerEMail;
+    }
+
+    private HTML viewerPhone;
+    public HTML getViewerPhone() {
+	if (viewerPhone == null) {
+	    viewerPhone = new HTML();
+	    viewerPhone.setStylePrimaryName("Osyl-ContactInfo-Phone");
+	    viewerPhone.setTitle(getView().getCoMessage(
+		    "ResProxContactInfoView_PhoneLabel"));
+	}
+	return viewerPhone;
+    }
+
+    private HTML viewerOffice;
+    public HTML getViewerOffice() {
+	if (viewerOffice == null) {
+	    viewerOffice = new HTML();
+	    viewerOffice.setStylePrimaryName("Osyl-ContactInfo-Office");
+	    viewerOffice.setTitle(getView().getCoMessage(
+		"ResProxContactInfoView_OfficeLabel"));
+	}
+        return viewerOffice;
+    }
+    
+    private HTML viewerAvailability;
+    public HTML getViewerAvailability() {
+	if (viewerAvailability == null) {
+	    viewerAvailability = new HTML();
+	    viewerAvailability.setStylePrimaryName("Osyl-ContactInfo-Availability");
+	    viewerAvailability.setTitle(getView().getCoMessage(
+		"ResProxContactInfoView_AvailabilityLabel"));
+	}
+        return viewerAvailability;
+    }
+
+    private HTML viewerComments;
+    public HTML getViewerComments() {
+	if (viewerComments == null) {
+	    viewerComments = new HTML();
+	    viewerComments.setStylePrimaryName("Osyl-ContactInfo-Comments");
+	    viewerComments.setTitle(getView().getCoMessage(
+	    	"ResProxContactInfoView_CommentsLabel"));
+	}
+	return viewerComments;
+    }
+
 
     /**
      * ====================== PRIVATE METHODS ======================
@@ -124,123 +442,84 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
      * FirstName, Office, Phone and E-Mail, and Label+TextArea for Availability
      * and Comments and Label+ComboBox for the Title.
      */
+    
     private void initEditor() {
+	
+	// Panels used to edit each information
+	
+	VerticalPanel firstNameLabelPanel = new VerticalPanel();
+	firstNameLabelPanel.add(getFirstNameLabel());
+	VerticalPanel editorPanelFirstName = new VerticalPanel();
+	editorPanelFirstName.setStylePrimaryName("Osyl-ContactInfo-Panel");
+	editorPanelFirstName.add(getEditorFirstName());
+	VerticalPanel lastNameLabelPanel = new VerticalPanel();
+	lastNameLabelPanel.add(getLastNameLabel());	
+	VerticalPanel editorPanelLastName = new VerticalPanel();
+	editorPanelLastName.setStylePrimaryName("Osyl-ContactInfo-Panel");
+	editorPanelLastName.add(getEditorLastName());
+	HorizontalPanel nameHzContainer = new HorizontalPanel();
+	nameHzContainer.add(firstNameLabelPanel);
+	nameHzContainer.add(editorPanelFirstName);
+	nameHzContainer.add(lastNameLabelPanel);
+	nameHzContainer.add(editorPanelLastName);
+	getEditorContainer().add(nameHzContainer);
 
-	// Panel used to display each information
-	VerticalPanel editorPanelRole;
-	VerticalPanel editorPanelLastName;
-	VerticalPanel editorPanelFirstName;
-	VerticalPanel editorPanelOffice;
-	VerticalPanel editorPanelPhone;
-	VerticalPanel editorPanelEMail;
-	VerticalPanel editorPanelAvailability;
-	VerticalPanel editorPanelComments;
+	// Osyl-ContactInfoView-
+	VerticalPanel roleLabelPanel = new VerticalPanel();
+	roleLabelPanel.add(getRoleLabel());	
+	VerticalPanel editorPanelRole = new VerticalPanel();
+	editorPanelRole.setStylePrimaryName("Osyl-ContactInfo-Panel");
+	editorPanelRole.add(getEditorRole());
+	HorizontalPanel roleHzContainer = new HorizontalPanel();
+	roleHzContainer.add(roleLabelPanel);
+	roleHzContainer.add(editorPanelRole);
+	getEditorContainer().add(roleHzContainer);
+		
+	VerticalPanel emailLabelPanel = new VerticalPanel();
+	emailLabelPanel.add(getEMailLabel());	
+	VerticalPanel editorPanelEMail = new VerticalPanel();
+	editorPanelEMail.setStylePrimaryName("Osyl-ContactInfo-Panel");
+	editorPanelEMail.add(getEditorEMail());
+	HorizontalPanel emailHzContainer = new HorizontalPanel();
+	emailHzContainer.add(emailLabelPanel);
+	emailHzContainer.add(editorPanelEMail);
+	getEditorContainer().add(emailHzContainer);
+		
+	VerticalPanel phoneLabelPanel = new VerticalPanel();
+	phoneLabelPanel.add(getPhoneLabel());
+	VerticalPanel editorPanelPhone = new VerticalPanel();
+	editorPanelPhone.setStylePrimaryName("Osyl-ContactInfo-Panel");
+	editorPanelPhone.add(getEditorPhone());
+	HorizontalPanel phoneHzContainer = new HorizontalPanel();
+	phoneHzContainer.add(phoneLabelPanel);
+	phoneHzContainer.add(editorPanelPhone);
+	getEditorContainer().add(phoneHzContainer);
+	
+	VerticalPanel officeLabelPanel = new VerticalPanel();
+	officeLabelPanel.add(getOfficeLabel());
+	VerticalPanel editorPanelOffice = new VerticalPanel();
+	editorPanelOffice.add(getEditorOffice());
+	editorPanelOffice.setStylePrimaryName("Osyl-ContactInfo-Panel");
+	HorizontalPanel officeHzContainer = new HorizontalPanel();
+	officeHzContainer.add(officeLabelPanel);
+	officeHzContainer.add(editorPanelOffice);
+	getEditorContainer().add(officeHzContainer);
+			
+	VerticalPanel availabilityLabelPanel = new VerticalPanel();
+	availabilityLabelPanel.add(getAvailabilityLabel());
+	getEditorContainer().add(availabilityLabelPanel);
+	VerticalPanel editorPanelAvailability = new VerticalPanel();
+	editorPanelAvailability.setStylePrimaryName("Osyl-ContactInfo-Panel");
+	editorPanelAvailability.add(getEditorAvailability());
+	getEditorContainer().add(editorPanelAvailability);	
 
-	// creation of the differents editors
-	setEditorRole(createRoleListBox());
-	setEditorLastName(createNewTextBox());
-	setEditorFirstName(createNewTextBox());
-	setEditorOffice(createNewTextBox());
-	setEditorPhone(createNewTextBox());
-	setEditorEMail(createNewTextBox());
-	RichTextArea rta = createNewRichTextArea();
-	setEditorAvailability(rta);
-	rta = createNewRichTextArea();
-	setEditorComments(rta);
-
-	final FlexTable flexTable = new FlexTable();
-	flexTable.setWidth("500px");
-
-	// General setting for the flextable
-	flexTable.setStylePrimaryName("Osyl-ContactInfo");
-
-	// Column size distribution
-	flexTable.getFlexCellFormatter().setWidth(0, 0, "75px");
-	flexTable.getFlexCellFormatter().setWidth(0, 1, "175px");
-	flexTable.getFlexCellFormatter().setWidth(0, 2, "75px");
-	flexTable.getFlexCellFormatter().setWidth(0, 3, "175px");
-
-	// LastName
-	// Label
-	flexTable.setWidget(0, 0, addNewLabel(getView().getCoMessage(
-		"ResProxContactInfoView_LastNameLabel")));
-	// Value(editor)
-	editorPanelLastName = addNewEditorPanel();
-	editorPanelLastName.add(editorLastName);
-	flexTable.setWidget(0, 1, editorPanelLastName);
-
-	// FirstName
-	// Label
-	flexTable.setWidget(0, 2, addNewLabel(getView().getCoMessage(
-		"ResProxContactInfoView_FirstNameLabel")));
-	// Value(editor)
-	editorPanelFirstName = addNewEditorPanel();
-	editorPanelFirstName.add(editorFirstName);
-	flexTable.setWidget(0, 3, editorPanelFirstName);
-
-	// Title
-	// Label
-	flexTable.setWidget(1, 0, addNewLabel(getView().getCoMessage(
-		"ResProxContactInfoView_TitleLabel")));
-	// Value(editor)
-	editorPanelRole = addNewEditorPanel();
-	editorPanelRole.add(editorRole);
-	flexTable.setWidget(1, 1, editorPanelRole);
-
-	// Office
-	// Label
-	flexTable.setWidget(1, 2, addNewLabel(getView().getCoMessage(
-		"ResProxContactInfoView_OfficeLabel")));
-	// Value(editor)
-	editorPanelOffice = addNewEditorPanel();
-	editorPanelOffice.add(editorOffice);
-	flexTable.setWidget(1, 3, editorPanelOffice);
-
-	// Phone
-	// Label
-	flexTable.setWidget(2, 0, addNewLabel(getView().getCoMessage(
-		"ResProxContactInfoView_PhoneLabel")));
-	// Value(editor)
-	editorPanelPhone = addNewEditorPanel();
-	editorPanelPhone.add(editorPhone);
-	flexTable.setWidget(2, 1, editorPanelPhone);
-
-	// EMail
-	// Label
-	flexTable.setWidget(2, 2, addNewLabel(getView().getCoMessage(
-		"ResProxContactInfoView_EMailLabel")));
-	// Value(editor)
-	editorPanelEMail = addNewEditorPanel();
-	editorPanelEMail.add(editorEMail);
-	flexTable.setWidget(2, 3, editorPanelEMail);
-
-	// Availability
-	// Label
-	flexTable.setWidget(3, 0, addNewLabel(getView().getCoMessage(
-		"ResProxContactInfoView_AvailabilityLabel")));
-	// Value(editor)
-	editorPanelAvailability = addNewEditorPanel();
-	editorPanelAvailability.add(editorAvailability);
-	flexTable.setWidget(3, 1, editorPanelAvailability);
-	flexTable.getFlexCellFormatter().setColSpan(3, 1, 3);
-	editorPanelAvailability.setHeight("75px");
-	editorAvailability.setHeight("75px");
-	editorAvailability.setWidth("100%");
-
-	// Comments
-	// Label
-	flexTable.setWidget(4, 0, addNewLabel(getView().getCoMessage(
-		"ResProxContactInfoView_CommentsLabel")));
-	// Value(editor)
-	editorPanelComments = addNewEditorPanel();
-	editorPanelComments.add(editorComments);
-	flexTable.setWidget(4, 1, editorPanelComments);
-	flexTable.getFlexCellFormatter().setColSpan(4, 1, 3);
-	editorPanelComments.setHeight("75px");
-	editorComments.setHeight("75px");
-	editorComments.setWidth("100%");
-
-	setEditor(flexTable);
+	VerticalPanel commentsLabelPanel = new VerticalPanel();
+	commentsLabelPanel.add(getCommentsLabel());
+	getEditorContainer().add(commentsLabelPanel);
+	VerticalPanel editorPanelComments = new VerticalPanel();
+	editorPanelComments.setStylePrimaryName("Osyl-ContactInfo-Panel");
+	editorPanelComments.add(getEditorComments());
+	getEditorContainer().add(editorPanelComments);	
 
     } // initEditor
 
@@ -251,145 +530,60 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
      */
     private void initViewer() {
 
-	// panels used to display information
-	VerticalPanel viewerPanelRole;
-	VerticalPanel viewerPanelLastName;
-	VerticalPanel viewerPanelFirstName;
-	VerticalPanel viewerPanelOffice;
-	VerticalPanel viewerPanelPhone;
-	VerticalPanel viewerPanelEMail;
-	VerticalPanel viewerPanelAvailability;
-	VerticalPanel viewerPanelComments;
+	// Panels used to display information
 
-	// creations of viewers
-	setViewerRole(createNewViewer());
-	setViewerLastName(createNewNameViewer());
-	setViewerFirstName(createNewNameViewer());
-	setViewerOffice(createNewViewer());
-	setViewerPhone(createNewViewer());
-	setViewerEMail(createNewViewer());
-	setViewerAvailability(createNewViewer());
-	setViewerComments(createNewViewer());
+	VerticalPanel viewerPanelFirstName = new VerticalPanel();
+	viewerPanelFirstName.add(getViewerFirstName());
+	VerticalPanel viewerPanelLastName = new VerticalPanel();
+	viewerPanelLastName.add(getViewerLastName());
+	HorizontalPanel viewerNameHzContainer = new HorizontalPanel();
+	viewerNameHzContainer.add(viewerPanelFirstName);
+	viewerNameHzContainer.add(viewerPanelLastName);
+	getViewerContainer().add(viewerNameHzContainer);
 
-	final FlexTable flexTable = new FlexTable();
+	VerticalPanel viewerPanelRole = new VerticalPanel();
+	viewerPanelRole.add(getViewerRole());
+	getViewerContainer().add(viewerPanelRole);
 
-	// General setting for the flextable
-	flexTable.setStylePrimaryName("Osyl-ContactInfo");
-
-	// Column size distribution
-	int row = 0;
-	int column = 0;
-	flexTable.getFlexCellFormatter().setWidth(row, column++, "13%");
-	flexTable.getFlexCellFormatter().setWidth(row, column++, "37%");
-	flexTable.getFlexCellFormatter().setWidth(row, column++, "13%");
-	flexTable.getFlexCellFormatter().setWidth(row, column++, "37%");
-
-	column = 0;
-	// LastName
-	// Label
-	flexTable.setWidget(row, column++, addNewLabel(getView().getCoMessage(
-		"ResProxContactInfoView_LastNameLabel")));
-	// Value(editor)
-	viewerPanelLastName = addNewEditorPanel();
-	viewerPanelLastName.add(viewerLastName);
-	flexTable.setWidget(row, column++, viewerPanelLastName);
-
-	// FirstName
-	// Label
-	flexTable.setWidget(row, column++, addNewLabel(getView().getCoMessage(
-		"ResProxContactInfoView_FirstNameLabel")));
-	// Value(editor)
-	viewerPanelFirstName = addNewEditorPanel();
-	viewerPanelFirstName.add(viewerFirstName);
-	flexTable.setWidget(row, column++, viewerPanelFirstName);
-
-	// line change
-	row++;
-	column = 0;
-
-	// Title
-	// Label
-	flexTable.setWidget(row, column++, addNewLabel(getView().getCoMessage(
-		"ResProxContactInfoView_TitleLabel")));
-	// Value(editor)
-	viewerPanelRole = addNewEditorPanel();
-	viewerPanelRole.add(viewerRole);
-	flexTable.setWidget(row, column++, viewerPanelRole);
-
-	// Office
-	// Label
-	flexTable.setWidget(row, column++, addNewLabel(getView().getCoMessage(
-		"ResProxContactInfoView_OfficeLabel")));
-	// Value(editor)
-	viewerPanelOffice = addNewEditorPanel();
-	viewerPanelOffice.add(viewerOffice);
-	flexTable.setWidget(row, column++, viewerPanelOffice);
-
-	if (!((nullOrEmpty(getView().getPhone())) && nullOrEmpty(getView()
-		.getEMail()))) {
-	    // line change
-	    row++;
-	    column = 0;
-
-	    if (!nullOrEmpty(getView().getPhone())) {
-		// Phone
-		// Label
-		flexTable.setWidget(row, column++, addNewLabel(getView()
-			.getCoMessage("ResProxContactInfoView_PhoneLabel")));
-		// Value(editor)
-		viewerPanelPhone = addNewEditorPanel();
-		viewerPanelPhone.add(viewerPhone);
-		flexTable.setWidget(row, column++, viewerPanelPhone);
-	    }
-
-	    if (!nullOrEmpty(getView().getEMail())) {
-		// EMail
-		// Label
-		flexTable.setWidget(row, column++, addNewLabel(getView()
-			.getCoMessage("ResProxContactInfoView_EMailLabel")));
-		// Value(editor)
-		viewerPanelEMail = addNewEditorPanel();
-		viewerPanelEMail.add(viewerEMail);
-		flexTable.setWidget(row, column++, viewerPanelEMail);
-	    }
+	VerticalPanel viewerPanelEMail = new VerticalPanel();
+	viewerPanelEMail.add(getViewerEMail());
+	if (!nullOrEmpty(getView().getPhone())) {
+	    getViewerContainer().add(viewerPanelEMail);
 	}
 
-	// Availability
-	// Label
+	VerticalPanel viewerPanelPhone = new VerticalPanel();
+	viewerPanelPhone.add(getViewerPhone());
+	if (!nullOrEmpty(getView().getEMail())) {
+	    getViewerContainer().add(viewerPanelPhone);	
+	}
+	
+	VerticalPanel viewerOfficeLabelPanel = new VerticalPanel();
+	viewerOfficeLabelPanel.add(getOfficeLabelViewer());
+	VerticalPanel viewerPanelOffice = new VerticalPanel();
+	viewerPanelOffice.add(getViewerOffice());
+	HorizontalPanel viewerOfficeHzContainer = new HorizontalPanel();
+	viewerOfficeHzContainer.add(viewerOfficeLabelPanel);
+	viewerOfficeHzContainer.add(viewerPanelOffice);
+	getViewerContainer().add(viewerOfficeHzContainer);
+
+	VerticalPanel viewerAvailabilityLabelPanel = new VerticalPanel();
+	viewerAvailabilityLabelPanel.add(getAvailabilityLabelViewer());
+	VerticalPanel viewerPanelAvailability = new VerticalPanel();
+	viewerPanelAvailability.add(getViewerAvailability());
+	HorizontalPanel viewerAvailabilityHzContainer = new HorizontalPanel();
+	viewerAvailabilityHzContainer.add(viewerAvailabilityLabelPanel);
+	viewerAvailabilityHzContainer.add(viewerPanelAvailability);
 	if (!nullOrEmpty(getView().getAvailability())) {
-	    // line change
-	    row++;
-	    column = 0;
-	    flexTable.setWidget(row, column++, addNewLabel(getView()
-		    .getCoMessage("ResProxContactInfoView_AvailabilityLabel")));
-	    // Value(editor)
-	    viewerPanelAvailability = addNewEditorPanel();
-	    viewerPanelAvailability.add(viewerAvailability);
-	    flexTable.setWidget(row, column, viewerPanelAvailability);
-	    flexTable.getFlexCellFormatter().setColSpan(row, column++, 3);
-	    viewerPanelAvailability.setHeight("100%");
-	    viewerAvailability.setHeight("100%");
+	    getViewerContainer().add(viewerAvailabilityHzContainer);	
 	}
-
-	// Comments
-	// Label
+	
+	VerticalPanel viewerPanelComments = new VerticalPanel();
+	viewerPanelComments.add(getViewerComments());
 	if (!nullOrEmpty(getView().getComments())) {
-	    // line change
-	    row++;
-	    column = 0;
-	    flexTable.setWidget(row, column++, addNewLabel(getView()
-		    .getCoMessage("ResProxContactInfoView_CommentsLabel")));
-	    // Value(editor)
-	    viewerPanelComments = addNewEditorPanel();
-	    flexTable.setWidget(row, column, viewerPanelComments);
-	    viewerPanelComments.add(viewerComments);
-	    flexTable.getFlexCellFormatter().setColSpan(row, column++, 3);
-	    viewerPanelComments.setHeight("100%");
-	    viewerComments.setHeight("100%");
+	    getViewerContainer().add(viewerPanelComments);	
 	}
 
-	setViewer(flexTable);
-    } // initViewer
+   } // initViewer
 
     private boolean nullOrEmpty(String st) {
 	if (st == null || st.trim().equals("") || st.equalsIgnoreCase("<P>&nbsp;</P>")
@@ -399,145 +593,6 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	    return false;
     }
 
-    private Label addNewLabel(String text) {
-	Label label = new Label(text);
-	label.setStyleName("Osyl-ResProxView-Label");
-	return label;
-
-    }
-
-    private VerticalPanel addNewEditorPanel() {
-	VerticalPanel oep = new VerticalPanel();
-	oep.setStylePrimaryName("Osyl-ContactInfoView-Panel");
-	oep.setWidth("100%");
-	return oep;
-    }
-
-    private ListBox createRoleListBox() {
-	ListBox lb = new ListBox();
-	lb.setStylePrimaryName("Osyl-ContactInfo-ListBox");
-
-	List<String> rolesList = getView().getController().getOsylConfig().getRolesList();
-	if(rolesList.size()>0){
-		lb.addItem(getView()
-				.getCoMessage("ResProxContactInfoView_PleaseChoose"));
-		lb.addItem(getView().getCoMessage(
-			"ResProxContactInfoView_Other_UdeM"));
-	}
-	for(String roleKey : rolesList){
-		lb.addItem(getView()
-				.getCoMessage(roleKey));
-	}
-	return lb;
-    }
-
-    private RichTextArea createNewRichTextArea() {
-	RichTextArea rta = new RichTextArea();
-	rta.setStylePrimaryName("Osyl-UnitView-TextArea");
-	return rta;
-    }
-
-    private TextBox createNewTextBox() {
-	TextBox tb = new TextBox();
-	tb.setStylePrimaryName("Osyl-ContactInfoView-TextBox");
-	return tb;
-    }
-
-    private HTML createNewViewer() {
-	HTML htmlViewer = new HTML();
-	htmlViewer.setStylePrimaryName("Osyl-ResProxView-LabelValue");
-	return htmlViewer;
-    }
-
-    private HTML createNewNameViewer() {
-	HTML htmlViewer = new HTML();
-	htmlViewer.setStylePrimaryName("Osyl-ResProxView-NameValue");
-	return htmlViewer;
-    }
-
-    /**
-     * ===================== SETTERS + GETTERS =====================
-     * =================== FOR VIEWERS + EDITORS ===================
-     */
-    public FlexTable getEditor() {
-	return editor;
-    }
-
-    public void setEditor(FlexTable editor) {
-	this.editor = editor;
-    }
-
-    public FlexTable getViewer() {
-	return viewer;
-    }
-
-    public void setViewer(FlexTable viewer) {
-	this.viewer = viewer;
-    }
-
-    private void setEditorRole(ListBox editorRole) {
-	this.editorRole = editorRole;
-    }
-
-    private void setEditorLastName(TextBox editorLastName) {
-	this.editorLastName = editorLastName;
-    }
-
-    private void setEditorFirstName(TextBox editorFirstName) {
-	this.editorFirstName = editorFirstName;
-    }
-
-    private void setEditorOffice(TextBox editorOffice) {
-	this.editorOffice = editorOffice;
-    }
-
-    private void setEditorPhone(TextBox editorPhone) {
-	this.editorPhone = editorPhone;
-    }
-
-    private void setEditorEMail(TextBox editorEMail) {
-	this.editorEMail = editorEMail;
-    }
-
-    private void setEditorAvailability(RichTextArea editorAvailability) {
-	this.editorAvailability = editorAvailability;
-    }
-
-    private void setEditorComments(RichTextArea editorComments) {
-	this.editorComments = editorComments;
-    }
-
-    private void setViewerRole(HTML viewerRole) {
-	this.viewerRole = viewerRole;
-    }
-
-    private void setViewerLastName(HTML viewerLastName) {
-	this.viewerLastName = viewerLastName;
-    }
-
-    private void setViewerFirstName(HTML viewerFirstName) {
-	this.viewerFirstName = viewerFirstName;
-    }
-
-    private void setViewerOffice(HTML viewerOffice) {
-	this.viewerOffice = viewerOffice;
-    }
-
-    private void setViewerPhone(HTML viewerPhone) {
-	this.viewerPhone = viewerPhone;
-    }
-
-    private void setViewerEMail(HTML viewerEMail) {
-	this.viewerEMail = viewerEMail;
-    }
-
-    private void setViewerAvailability(HTML viewerAvailability) {
-	this.viewerAvailability = viewerAvailability;
-    }
-
-    private void setViewerComments(HTML viewerComments) {
-	this.viewerComments = viewerComments;
-    }
 
     /**
      * ===================== OVERRIDDEN METHODS ===================== See
@@ -556,7 +611,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
      */
     public void setText(String text) {
 	throw new IllegalStateException(
-		"Do not use setText(String) for contactInfos.");
+	"Do not use setText(String) for contactInfos.");
     }
 
     /**
@@ -567,7 +622,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
      */
     public String getText() {
 	throw new IllegalStateException(
-		"Do not use getText() for contactInfos.");
+	"Do not use getText() for contactInfos.");
     }
 
     /**
@@ -602,7 +657,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	setInEditionMode(false);
 	getMainPanel().clear();
 	initViewer();
-	getMainPanel().add(getViewer());
+	getMainPanel().add(getViewerContainer());
 	viewerRole.setHTML(getView().getRole());
 	viewerLastName.setHTML(getView().getLastName());
 	viewerFirstName.setHTML(getView().getFirstName());
@@ -628,7 +683,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     }
 
     public Widget getEditorTopWidget() {
-	return editor;
+	return editorContainer;
     }
 
     public boolean prepareForSave() {
@@ -637,25 +692,25 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	String firstName = getTextFirstName();
 	if ("".equals(role)) {
 	    OsylAlertDialog alert =
-		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
-			    getView().getCoMessage(
-				    "ResProxContactInfoView_RoleMandatory"));
+		new OsylAlertDialog(getView().getUiMessage("Global.error"),
+			getView().getCoMessage(
+			"ResProxContactInfoView_RoleMandatory"));
 	    alert.show();
 	    return false;
 	} else if ("".equals(lastName)) {
 	    OsylAlertDialog alert =
-		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
-			    getView().getCoMessage(
-				    "ResProxContactInfoView_LastNameMandatory"));
+		new OsylAlertDialog(getView().getUiMessage("Global.error"),
+			getView().getCoMessage(
+			"ResProxContactInfoView_LastNameMandatory"));
 	    alert.show();
 	    return false;
 	} else if ("".equals(firstName)) {
 	    OsylAlertDialog alert =
-		    new OsylAlertDialog(
-			    getView().getUiMessage("Global.error"),
-			    getView()
-				    .getCoMessage(
-					    "ResProxContactInfoView_FirstNameMandatory"));
+		new OsylAlertDialog(
+			getView().getUiMessage("Global.error"),
+			getView()
+			.getCoMessage(
+				"ResProxContactInfoView_FirstNameMandatory"));
 	    alert.show();
 	    return false;
 	} else {
@@ -697,7 +752,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	originalEditorRichTextHeight = editorAvailability.getOffsetHeight();
 	super.maximizeEditor();
 	int rtAdd =
-		(getEditorPopup().getOffsetHeight() - getOriginalEditorPopupHeight()) / 2;
+	    (getEditorPopup().getOffsetHeight() - getOriginalEditorPopupHeight()) / 2;
 	editorAvailability.setHeight((originalEditorRichTextHeight + rtAdd)
 		+ "px");
 	editorComments.setHeight((originalEditorRichTextHeight + rtAdd) + "px");
@@ -737,8 +792,8 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	} else {
 	    if (null == text || text.length() == 0) {
 		text =
-			getView().getCoMessage(
-				"ResProxContactInfoView_PleaseChoose");
+		    getView().getCoMessage(
+		    "ResProxContactInfoView_PleaseChoose");
 	    }
 	    viewerRole.setHTML(text);
 	}
