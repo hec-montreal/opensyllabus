@@ -63,7 +63,8 @@ UpdateCOStructureElementEventHandler {
 	protected void initView() {
 		setMainPanel(new VerticalPanel());
 		getMainPanel().setStylePrimaryName("Osyl-UnitView-UnitPanel");
-		getMainPanel().setWidth("98%");
+		// TODO: TO BE CONTROLLED BY CSS
+		// getMainPanel().setWidth("98%");
 		refreshView();
 		initWidget(getMainPanel());
 	}

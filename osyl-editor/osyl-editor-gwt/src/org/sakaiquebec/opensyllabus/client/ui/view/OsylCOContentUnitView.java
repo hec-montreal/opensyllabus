@@ -105,7 +105,8 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
      */
     public void refreshView() {
 	getMainPanel().setStylePrimaryName("Osyl-UnitView-MainPanel");
-	getMainPanel().setWidth("98%");
+	// TODO: TO BE CONTROLLED BY CSS
+	//getMainPanel().setWidth("98%");
 
 	if (TRACE) Window.alert("*** Model = " + getCoMessage(getModel().getType()) + 
 		" ***\n*** Label = " + getModel().getLabel() + " ***");
