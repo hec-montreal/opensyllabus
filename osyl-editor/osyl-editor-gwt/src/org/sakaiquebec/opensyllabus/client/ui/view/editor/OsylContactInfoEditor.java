@@ -447,14 +447,14 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	
 	// Panels used to edit each information
 	
-	VerticalPanel firstNameLabelPanel = new VerticalPanel();
+	SimplePanel firstNameLabelPanel = new SimplePanel();
 	firstNameLabelPanel.add(getFirstNameLabel());
-	VerticalPanel editorPanelFirstName = new VerticalPanel();
+	SimplePanel editorPanelFirstName = new SimplePanel();
 	editorPanelFirstName.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	editorPanelFirstName.add(getEditorFirstName());
-	VerticalPanel lastNameLabelPanel = new VerticalPanel();
+	SimplePanel lastNameLabelPanel = new SimplePanel();
 	lastNameLabelPanel.add(getLastNameLabel());	
-	VerticalPanel editorPanelLastName = new VerticalPanel();
+	SimplePanel editorPanelLastName = new SimplePanel();
 	editorPanelLastName.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	editorPanelLastName.add(getEditorLastName());
 	HorizontalPanel nameHzContainer = new HorizontalPanel();
@@ -465,9 +465,9 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	getEditorContainer().add(nameHzContainer);
 
 	// Osyl-ContactInfoView-
-	VerticalPanel roleLabelPanel = new VerticalPanel();
+	SimplePanel roleLabelPanel = new SimplePanel();
 	roleLabelPanel.add(getRoleLabel());	
-	VerticalPanel editorPanelRole = new VerticalPanel();
+	SimplePanel editorPanelRole = new SimplePanel();
 	editorPanelRole.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	editorPanelRole.add(getEditorRole());
 	HorizontalPanel roleHzContainer = new HorizontalPanel();
@@ -475,9 +475,9 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	roleHzContainer.add(editorPanelRole);
 	getEditorContainer().add(roleHzContainer);
 		
-	VerticalPanel emailLabelPanel = new VerticalPanel();
+	SimplePanel emailLabelPanel = new SimplePanel();
 	emailLabelPanel.add(getEMailLabel());	
-	VerticalPanel editorPanelEMail = new VerticalPanel();
+	SimplePanel editorPanelEMail = new SimplePanel();
 	editorPanelEMail.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	editorPanelEMail.add(getEditorEMail());
 	HorizontalPanel emailHzContainer = new HorizontalPanel();
@@ -485,9 +485,9 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	emailHzContainer.add(editorPanelEMail);
 	getEditorContainer().add(emailHzContainer);
 		
-	VerticalPanel phoneLabelPanel = new VerticalPanel();
+	SimplePanel phoneLabelPanel = new SimplePanel();
 	phoneLabelPanel.add(getPhoneLabel());
-	VerticalPanel editorPanelPhone = new VerticalPanel();
+	SimplePanel editorPanelPhone = new SimplePanel();
 	editorPanelPhone.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	editorPanelPhone.add(getEditorPhone());
 	HorizontalPanel phoneHzContainer = new HorizontalPanel();
@@ -495,9 +495,9 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	phoneHzContainer.add(editorPanelPhone);
 	getEditorContainer().add(phoneHzContainer);
 	
-	VerticalPanel officeLabelPanel = new VerticalPanel();
+	SimplePanel officeLabelPanel = new SimplePanel();
 	officeLabelPanel.add(getOfficeLabel());
-	VerticalPanel editorPanelOffice = new VerticalPanel();
+	SimplePanel editorPanelOffice = new SimplePanel();
 	editorPanelOffice.add(getEditorOffice());
 	editorPanelOffice.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	HorizontalPanel officeHzContainer = new HorizontalPanel();
@@ -505,18 +505,18 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	officeHzContainer.add(editorPanelOffice);
 	getEditorContainer().add(officeHzContainer);
 			
-	VerticalPanel availabilityLabelPanel = new VerticalPanel();
+	SimplePanel availabilityLabelPanel = new SimplePanel();
 	availabilityLabelPanel.add(getAvailabilityLabel());
 	getEditorContainer().add(availabilityLabelPanel);
-	VerticalPanel editorPanelAvailability = new VerticalPanel();
+	SimplePanel editorPanelAvailability = new SimplePanel();
 	editorPanelAvailability.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	editorPanelAvailability.add(getEditorAvailability());
 	getEditorContainer().add(editorPanelAvailability);	
 
-	VerticalPanel commentsLabelPanel = new VerticalPanel();
+	SimplePanel commentsLabelPanel = new SimplePanel();
 	commentsLabelPanel.add(getCommentsLabel());
 	getEditorContainer().add(commentsLabelPanel);
-	VerticalPanel editorPanelComments = new VerticalPanel();
+	SimplePanel editorPanelComments = new SimplePanel();
 	editorPanelComments.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	editorPanelComments.add(getEditorComments());
 	getEditorContainer().add(editorPanelComments);	
@@ -532,43 +532,43 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 
 	// Panels used to display information
 
-	VerticalPanel viewerPanelFirstName = new VerticalPanel();
+	SimplePanel viewerPanelFirstName = new SimplePanel();
 	viewerPanelFirstName.add(getViewerFirstName());
-	VerticalPanel viewerPanelLastName = new VerticalPanel();
+	SimplePanel viewerPanelLastName = new SimplePanel();
 	viewerPanelLastName.add(getViewerLastName());
 	HorizontalPanel viewerNameHzContainer = new HorizontalPanel();
 	viewerNameHzContainer.add(viewerPanelFirstName);
 	viewerNameHzContainer.add(viewerPanelLastName);
 	getViewerContainer().add(viewerNameHzContainer);
 
-	VerticalPanel viewerPanelRole = new VerticalPanel();
+	SimplePanel viewerPanelRole = new SimplePanel();
 	viewerPanelRole.add(getViewerRole());
 	getViewerContainer().add(viewerPanelRole);
 
-	VerticalPanel viewerPanelEMail = new VerticalPanel();
+	SimplePanel viewerPanelEMail = new SimplePanel();
 	viewerPanelEMail.add(getViewerEMail());
 	if (!nullOrEmpty(getView().getPhone())) {
 	    getViewerContainer().add(viewerPanelEMail);
 	}
 
-	VerticalPanel viewerPanelPhone = new VerticalPanel();
+	SimplePanel viewerPanelPhone = new SimplePanel();
 	viewerPanelPhone.add(getViewerPhone());
 	if (!nullOrEmpty(getView().getEMail())) {
 	    getViewerContainer().add(viewerPanelPhone);	
 	}
 	
-	VerticalPanel viewerOfficeLabelPanel = new VerticalPanel();
+	SimplePanel viewerOfficeLabelPanel = new SimplePanel();
 	viewerOfficeLabelPanel.add(getOfficeLabelViewer());
-	VerticalPanel viewerPanelOffice = new VerticalPanel();
+	SimplePanel viewerPanelOffice = new SimplePanel();
 	viewerPanelOffice.add(getViewerOffice());
 	HorizontalPanel viewerOfficeHzContainer = new HorizontalPanel();
 	viewerOfficeHzContainer.add(viewerOfficeLabelPanel);
 	viewerOfficeHzContainer.add(viewerPanelOffice);
 	getViewerContainer().add(viewerOfficeHzContainer);
 
-	VerticalPanel viewerAvailabilityLabelPanel = new VerticalPanel();
+	SimplePanel viewerAvailabilityLabelPanel = new SimplePanel();
 	viewerAvailabilityLabelPanel.add(getAvailabilityLabelViewer());
-	VerticalPanel viewerPanelAvailability = new VerticalPanel();
+	SimplePanel viewerPanelAvailability = new SimplePanel();
 	viewerPanelAvailability.add(getViewerAvailability());
 	HorizontalPanel viewerAvailabilityHzContainer = new HorizontalPanel();
 	viewerAvailabilityHzContainer.add(viewerAvailabilityLabelPanel);
@@ -577,7 +577,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	    getViewerContainer().add(viewerAvailabilityHzContainer);	
 	}
 	
-	VerticalPanel viewerPanelComments = new VerticalPanel();
+	SimplePanel viewerPanelComments = new SimplePanel();
 	viewerPanelComments.add(getViewerComments());
 	if (!nullOrEmpty(getView().getComments())) {
 	    getViewerContainer().add(viewerPanelComments);	
