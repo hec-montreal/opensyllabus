@@ -1,114 +1,225 @@
 /* ---- CSS definitions specific to OpenSyllabus ------------------- */
 
-/**/
-
-.curved {
--moz-border-radius:10px;
--webkit-border-radius:10px;
-behavior:url(border-radius.htc);
-}
-
-/*--------------------------------------------------------*/
+/* Main panel of Osyl -----------------------------------------------------------------------------------*/
 .Osyl-MainPanel {
-  	/*background:url(img/bgFade.gif) repeat-x;*/
-	border:none;
-	-moz-border-radius:10px;
-	-webkit-border-radius:10px;
-	behavior:url(border-radius.htc);
+	margin:0;
 }
 
-.Osyl-MainToolbarPanel {
-	border-bottom:1px solid #999;
-	width:100%;
-	text-align:left;
+/*MenuBar -----------------------------------------------------------------------------------------------*/
+.gwt-MenuBar-horizontal {
+	background:#D6DBDF url(img/ui/opt-top-left.gif) no-repeat;
+	position:relative;
+	float:left;
+	cursor:default;
+	overflow:auto;
+	padding-bottom:5px;
+}
+.Osyl-MenuBar-horizontal-TopRight {
+	background:transparent url(img/ui/opt-top-right.gif) no-repeat top right;
+	padding-top:5px;
 }
 
-/*Pas Utilisé
-.Osyl-MainToolbarButtonPanel .Osyl-TextButton {
-  background:transparent url(img/toolbar-background.png) repeat-x;
+.gwt-MenuBar-horizontal .gwt-MenuItem,
+.gwt-MenuBar-vertical .gwt-MenuItem {
+  font:bold 0.9em Arial, Verdana, sans-serif;
   vertical-align:middle;
-}
-*/
-
-/* I think we should not fiddle with the GWT class .html-face but I couldn't
-   find another way to center vertically the button texts
-   (vertical-align:middle works in IE but not FF). If I set the 3px padding
-   in the Osyl-TextButton class, the button is 23px tall in FF and 20 in IE! */
-.Osyl-MainToolbarPanel .Osyl-TextButton .html-face {
-  vertical-align:bottom;
-  height:100%;
-  padding:3px 0 0 0;
-}
-
-.Osyl-MainToolbarPanel .Osyl-TextButton {
-  font-size:11px;
-  font-weight:bold;
-  text-align:center;
-  vertical-align:middle;
-  background-color:#FFF;
-  color:#000;
-  border-right:1px solid #888;
-  padding:0;
-  margin:0;
-  width:80px;
-  height:20px;
+  color:#454a4f;
+  background:transparent url(img/ui/opt_separator.gif) no-repeat left center;
   cursor:default;
+  text-decoration:none;
 }
 
-.Osyl-MainToolbarPanel .Osyl-TextButton-up-disabled div {
-  color:#999;
+.gwt-MenuBar-horizontal .gwt-MenuItem:first-child, #gwt-uid-1, .gwt-MenuBar-vertical .gwt-MenuItem{background-image:none} /* Remove left border of the first element */
+.gwt-MenuBar-horizontal .gwt-MenuItem {
+  text-align:center;
+  padding:0 10px;
 }
+
+.gwt-MenuBar-vertical .gwt-MenuItem {
+  text-align:left;
+  padding:4px 2px;
+}
+
+.gwt-MenuBar-vertical {
+	vertical-align:middle;
+	background-color:#FFF;
+	border:1px solid #CBD0D4;
+	padding:2px;
+	cursor:default;
+}
+
+/* Act as a hover */
+.gwt-MenuBar .gwt-MenuItem-selected {
+	text-decoration:underline;
+  	cursor:pointer;
+}
+.gwt-MenuBar-vertical .gwt-MenuItem-selected {
+	text-decoration:none;
+	background-color:#DCEFFD;
+}
+/* Menu Button --------------------------------------------------------------------------------------------*/
+/* À identifier */
+.Osyl-MenuButton {background:transparent} /* Menu Button allowing transparency. Se Java Code*/
+/* À identifier */
+.Osyl-MenuButton-ListBox {
+	padding:1px;
+	border:1px solid #999;
+	font:normal 10px Arial, Verdana, sans-serif;
+}
+/* End Menu Button ----------------------------------------------------------------------------------------*/
+
+/* Horizontal Split Panel , parent of the left, middle and right Zone -------------------------------------*/
+.Osyl-MainView-HorizontalSplitPanel {
+	margin:0;
+	overflow:hidden;
+}
+/*TreeView Left Zone --------------------------------------------------------------------------------------*/
+.Osyl-TreeView {
+	position:relative;
+	overflow:visible;
+	font-size:12px;
+	margin:0;
+	zoom:1;
+	border:3px solid #D6DBDF;
+	background:transparent url(img/ui/tree_bg.gif) repeat-x;
+}
+
+.Osyl-TreeView-BottomLeft, 
+.Osyl-TreeView-BottomRight, 
+.Osyl-TreeView-TopLeft, 
+.Osyl-TreeView-TopRight {
+	position:absolute;
+	width:11px;
+	height:11px;
+	overflow:hidden;
+	background:url(img/ui/treeview-corners.gif) no-repeat;
+}
+.Osyl-TreeView-BottomLeft {bottom:-3px;left:-3px;background-position:0 -46px}
+.Osyl-TreeView-BottomRight {bottom:-3px;right:-3px;background-position:-11px -46px}
+.Osyl-TreeView-TopLeft {top:-3px;left:-3px;height:46px;background-position:0 0;}
+.Osyl-TreeView-TopRight {top:-3px;right:-3px;height:46px;background-position:-11px 0}
+
+/*TreeView Header */
+.Osyl-TreeView-Header {
+	font:bold 15px Arial, Verdana, sans-serif;
+	color:#878A8C;
+	padding:14px 0 8px 35px;
+	background:transparent url(img/tree_logo.png) no-repeat 12px 14px;
+}
+/*TreeView Tree */
+.Osyl-TreeView-Tree {
+	border:0;
+	margin:8px 3px 3px;
+	padding:1px;
+	font:normal 13px Arial, Verdana, sans-serif;
+	color:#006E96;
+}
+
+.Osyl-TreeView-Tree .gwt-TreeItem {
+	cursor:pointer;
+	color:#006E96;
+}
+.Osyl-TreeView-Tree .gwt-TreeItem .Osyl-TreeLabel {
+	margin:1px 5px;
+	font-size:12px;
+	color:#006E96;
+	text-decoration:none;
+}
+.Osyl-TreeView-Tree .gwt-TreeItem .Osyl-TreeLabel:hover{text-decoration:underline}
+
+.Osyl-TreeView-Tree .gwt-TreeItem-selected {cursor:default;background:url(img/ui/tree-selected.gif) repeat-x;color:#000} /* TreeView item selected zone*/
+.Osyl-TreeView-Tree .gwt-TreeItem-selected .Osyl-TreeItem-HorizontalPanel {background:url(img/ui/tree-selected.gif) repeat-x}/* TreeView item selected container */
+.Osyl-TreeView-Tree .gwt-TreeItem-selected .Osyl-TreeItem-HorizontalPanel .Osyl-TreeLabel{color:#000}/* TreeView item selected text */
+
+.Osyl-TreeView-Tree table {border-collapse:separate} /*Restore default alignment */
+.Osyl-TreeView-Tree img {margin:1px} /* Correct the alignment */
+
+/*End TreeView ---------------------------------------------------------------------------------------------*/
+
+/*Split Pannel Middle Zone ---------------------------------------------------------------------------------*/
+.Osyl-MainView-HorizontalSplitPanel .hsplitter {
+  background-color:#D6DBDF;
+  vertical-align:middle;
+  cursor:e-resize;
+  width:3px;
+}
+/*Workspace View Right Zone --------------------------------------------------------------------------------*/
+.Osyl-WorkspaceView {
+	position:relative;
+	overflow:visible;
+	zoom:1;
+	padding:10px;
+	border:3px solid #D6DBDF;
+}
+.Osyl-WorkspaceView > table {
+	width:100%;
+	margin:0;
+}
+.Osyl-WorkspaceView-BottomLeft, 
+.Osyl-WorkspaceView-BottomRight, 
+.Osyl-WorkspaceView-TopLeft, 
+.Osyl-WorkspaceView-TopRight {
+	position:absolute;
+	width:11px;
+	height:11px;
+	overflow:hidden;
+	background:url(img/ui/workspace-corners.gif) no-repeat;
+}
+.Osyl-WorkspaceView-BottomLeft {bottom:-3px;left:-3px;background-position:0 -11px}
+.Osyl-WorkspaceView-BottomRight {bottom:-3px;right:-3px;background-position:-11px -11px}
+.Osyl-WorkspaceView-TopLeft {top:-3px;left:-3px;background-position:0 0}
+.Osyl-WorkspaceView-TopRight {top:-3px;right:-3px;background-position:-11px 0}
+
+/* End WorkspaceView Right Zone ---------------------------------------------------------------------------*/
 
 .Osyl-LongView-CourseOutline {
-	margin:2px 30px 10px 2px;
+	font:bold 20px Arial, Verdana, sans-serif;
 	color:#063871;
 	text-align:center;
-	font-size:20px;
-	font-weight:bold;
-	padding-top:4px;
-	padding-bottom:4px;
-	font-family:sans-serif, Arial, Verdana;
+	margin:2px 30px 10px 2px;
+	padding:4px 0;
 }
 
+/*Arrow buttons*/
 .Osyl-PushButton {
-  padding:2px;
-  cursor:pointer;
+	padding:2px;
+	cursor:pointer;
 }
+.Osyl-PushButton-up-disabled, .Osyl-PushButton-down-disabled {display:none} /* Hide disabled arrows*/
+
+/* File Upload ------------------------------------------------------------------------------------------*/
 
 .Osyl-FileUpload-uploadForm {
-	background:#FFF url(img/bgFade.gif) repeat-x;
+	background-color:#FCFCFC;
+	border:3px solid #454a4f; 
+	font:normal 100% Arial, Verdana, sans-serif;
 	padding:4px;
-	font-size:100%;
-	font-family:Arial,sans-serif;
-	color:#000;
-	background-color:#FFF;
-	border:2px outset;
+	-moz-box-shadow:0 0 10px #000;
+	-webkit-box-shadow:1px 1px 10px #000;
+ 	box-shadow:1px 1px 10px #000;
+	
 }
+.Osyl-FileUpload-uploadForm .mosaic-Caption {}
 
 .Osyl-FileUpload-resource-title {
-	font-size:14px;
-	font-weight:bold;
+	font:bold 14px Arial, Verdana, sans-serif;
+	color:#333;
 	text-align:center;
-	padding-bottom:10px;
+	margin-bottom:10px;
 }
 
-.Osyl-FileUpload-genericButton {
-	margin:10px;
-}
 
+/* Citation Form -----------------------------------------------------------------------------------------*/
 .Osyl-CitationForm-form {
-	background:#FFF url(img/bgFade.gif) repeat-x;
 	padding:4px;
-	font-size:100%;
-	font-family:Arial,sans-serif;
+	font:normal 100% Arial, Verdana, sans-serif;
 	color:#000;
 	background-color:#FFF;
 	border:2px outset;
 }
 
 .Osyl-CitationForm-title {
-	font-size:14px;
-	font-weight:bold;
+	font:bold 14px Arial, Verdana, sans-serif;
 	text-align:center;
 	margin-bottom:10px;
 }
@@ -118,120 +229,118 @@ behavior:url(border-radius.htc);
 	margin:20px;
 }
 
-.Osyl-CitationForm-genericPanel {
-	margin:3px;
-}
-
+.Osyl-CitationForm-genericPanel {margin:3px}
 .Osyl-CitationForm-textBoxRight {
 	font-family:sans-serif, Arial, Verdana; /* Doesn't work in MSIE */
 	background:#FFF;
 	border:1px solid #AAA;
-	margin:0;
+	margin:0 0 0 3px;
 	padding:0; /* Doesn't work in any browser */
-	margin-left:3px;
 }
 
+/*Publish View -------------------------------------------------------------------------------*/
 .Osyl-PublishView-Title { 
-	font-size:14px;
-	font-weight:bold;
+	font:bold 14px Arial, Verdana, sans-serif;
 	text-align:center;
 }
 
 .Osyl-PublishView-PopupPanel {
-	background:#FFF url(img/bgFade.gif) repeat-x;
 	width:430px;
 	margin:120px 0 0 300px;
 	padding:10px;
-	font-size:100%;
-	font-family:Arial,sans-serif;
+	font:normal 100% Arial, Verdana, sans-serif;
 	color:#000;
 	background-color:#FFF;
 	border:2px outset;
 }
 
-.Osyl-PublishView-genericButton {
-	margin:10px;
-}
+.Osyl-PublishView-genericButton {margin:10px}
 
+
+/*Unit View --------------------------------------------------------------------------------------*/
 .Osyl-UnitView-MainPanel {
-	padding:10px 5px 0 50px;
+	width:100%;
 }
 
+.Osyl-TitleEditor {
+	
+}
+.Osyl-RubricTitle {
+	
+}
 .Osyl-UnitView-Title {
-	margin:2px 30px 10px 2px;
-	color:#063871;
-	/*font-size:16px;
-	font-weight:bold;
-	font-family:sans-serif, Arial, Verdana;*/
+	margin:2px 0 0;
 	padding:4px 0 4px 1px;
 	border:1px solid transparent;
 }
 
 .Osyl-UnitView-Title-Hover {
-	border-color:#808080;
+	border:1px solid #808080;
 	background-color:#EEE;
-	margin:6px 11px 15px 4px;/* 10px is better for bottom in IE */
-	padding:3px 0 5px 0;
 }
 
-.Osyl-UnitView-SemanticTag {
-	display: block;
-	margin: 0px 30px 0px 0px;
-	font-family: sans-serif, Arial, Verdana;
-	font-size: 10px;
-	color: #a0a0a0;
+.Osyl-Title1, .Osyl-Title2, .Osyl-Title3, .Osyl-Title4, .Osyl-Title5 {
+	font:bold 25px Arial, Verdana, sans-serif;
+	margin-left:10px;
 }
 
-/* Generic GWT textBox (i.e.: no style specified) */
+.Osyl-Title1 {
+	color:#1c4d6c;
+	font-size:25px;
+	margin-bottom:20px;
+	text-align:left;
+}
+
+.Osyl-Title2 {
+	color:#454a4f;
+	font-size:22px;
+}
+
+.Osyl-Title3 {
+	color:#5a6a7c;
+	font-size:17px;
+}
+
+.Osyl-Title4 {
+	color:#878a8c;
+	font-size:15px;
+}
+
+.Osyl-Title5 {
+	color:#454a4f;
+	font-size:13px;
+	padding:2px 0 2px;
+	border:0;
+}
+
+/* Generic GWT textBox (i.e.:no style specified) */
 .Osyl-UnitView-TextBox {
-	font-family:helvetica,arial,sans-serif;
-	font-size:1em;
+	font:normal 1em Arial, Verdana, sans-serif;
 	height:25px;
-	border:1px solid #AAA;
 	padding:3px;
 }
 
 .Osyl-UnitView-Title .Osyl-LabelEditor-View,
 .Osyl-UnitView-Title .Osyl-LabelEditor-TextBox,
 .Osyl-UnitView-Title-Hover .Osyl-LabelEditor-View {
-	color:#063871;
-	font-size:16px;
-	font-weight:bold;
-	padding 5px 0;
-	font-family:sans-serif, Arial, Verdana;
-}
-/*----------------*/
-.Osyl-UnitView-Title .Osyl-LabelEditor-View {
-	margin:2px 30px 10px 2px;
-	padding:4px;
+	color:#333;
+	font:normal 12px Arial, Verdana, sans-serif;
+	padding:5px 0;
 }
 
-.Osyl-LabelEditor-View {
+.Osyl-LabelEditor-View {}
 
-}
-
+.Osyl-UnitView-TextBox,
 .Osyl-UnitView-Title .Osyl-LabelEditor-TextBox,
 .Osyl-UnitView-ResPanel .Osyl-LabelEditor-TextBox {
-	border:1px solid #AAA;
-	margin-bottom:12px; /* 10px is better for IE */
-	/* Below: ALMOST as Osyl-LabelEditor-View. Modified to
-	   avoid text shift when entering edition mode. Optimized for FF */
-	padding-top:4px;
-	padding-bottom:4px;
+	border:1px solid #878a8c;
 }
 
 .Osyl-UnitView-Title-Hover .Osyl-LabelEditor-View {
-	/* Below: ALMOST as Osyl-LabelEditor-View. Modified to
-	   avoid text shift when entering edition mode. Optimized for FF */
-	padding:1px 3px 3px 3px;
-	margin-bottom:5px;
 }
 
 .Osyl-UnitView-ResPanel .Osyl-LabelEditor-TextBox {
-	/* Below: ALMOST as Osyl-LabelEditor-View. Modified to
-	   avoid text shift when entering edition mode. Optimized for FF */
-	font-family:helvetica,arial,sans-serif;
-	font-size:1em;
+	font-family:Arial, Verdana, Sans-serif;
 }
 
 .Osyl-UnitView-RubricName {
@@ -241,71 +350,52 @@ behavior:url(border-radius.htc);
 }
 
 .Osyl-UnitView-RubricImg {
-	margin:3px 4px 4px 4px;
-}
-
-.Osyl-ResProxDocument {
-	font-family:sans-serif, Arial, Verdana;
-	font-size:1em;
-}
-
-.Osyl-ResProxDocument .name {
-	margin:0 0 0 15px;
-	color:#a0a0a0;
-}
-
-.Osyl-ResProxDocument .description, .Osyl-ResProxLink .description {
-	margin-top:5px;
-}
-
-.Osyl-ResProxLink .uri {
-	margin:0 0 0 15px;
-	color:#a0a0a0;
-}
-
-.Osyl-ListItemView-Table {
-	border:1px solid #e3f0FF;
-	margin-bottom:5px;
-	margin-left:30px;
-}
-
-.Osyl-ListItemView-labelNo {
-	width:90px;
-	height:30px;
-	padding:0 5px 0 10px;
-}
-
-.Osyl-ListItemView-Hyperlink {
-/*	font-size:smaller;
-	cursor:pointer;*/
+	margin:3px 4px 4px;
 }
 
 /* Content Unit Resource Panel unfocused */
 .Osyl-UnitView-ResPanel {
+	position:relative;
 	vertical-align:middle;
-	margin:0;
+	margin:0 10px 5px;
 	padding:10px;
-	border:1px solid transparent;
+	border:1px solid #e3f0FF;
 	width:100%;
+	zoom:1;
+	overflow:hidden;
 }
-
+.Osyl-ListItemView-Hyperlink .Osyl-UnitView-ResPanel {
+	color:#FFF; /*For IE6*/
+	border:1px solid transparent;
+	margin:0;
+}
 /* Content Unit Resource Panel focused */
 .Osyl-UnitView-ResPanelFocused {
-	background-color:#fdf6af;
-	margin:5px 10px 5px 10px;
+	position:relative;
+	background-color:#FDF6AF;
+	margin:5px 10px 5px;
 	border:1px solid transparent;
+	color:#FFF; /*For IE6*/
 	padding:3px;
-	width:100%;
+	width:auto;
+	zoom:1;
+	overflow:hidden;
 }
 
 .Osyl-UnitView-ResPanel-Hover {
+	position:relative;
 	vertical-align:top;
 	border:1px solid #B0B0B0;
 	padding:10px;
-	width:100%;
+	width:auto;
+	margin-bottom:5px;
 	background-color:#EEE;
+	overflow:visible;
 }
-
+.Osyl-ListItemView-Hyperlink .Osyl-UnitView-ResPanel-Hover {
+	border:1px solid #B0B0B0;
+	margin:0;
+}
 .Osyl-UnitView-ResEditor, .Osyl-UnitView-ResEditorFocused {
 	padding:0;	
 	margin:0;
@@ -314,94 +404,107 @@ behavior:url(border-radius.htc);
 /* Label in a Content Unit Panel  */
 .Osyl-UnitView-UnitLabel, .Osyl-UnitView-UnitLabel-Important {
 	font-size:1em;
-	padding:3px;
-	width:100%;
+	padding:3px 0;
+	width:auto;
 }
 
 .Osyl-UnitView-UnitLabel-Important {
-	border:1px solid red;
+	border:1px solid #F00;
+	background-color:#FDD;
 	margin-bottom:15px;
 }
+/*.Osyl-UnitView-SemanticTag {
+	display:block;
+	margin:5px 0 0 0;
+	font:normal 10px sans-serif, Arial, Verdana;
+	color:#FFF;
+	margin:0 0 3px 10px;
+	color:#A0A0A0;
+}
+
+.Osyl-ResProxView-MetaInfo,
+.Osyl-UnitView-MetaInfo {
+	position:absolute;
+	bottom:-20px;
+	left:-1px;
+	padding:2px;
+	display:none;
+	margin:0;
+	width:100%;
+	font:normal 10px sans-serif, Arial, Verdana;
+	white-space:nowrap;
+	color:#444;
+	background-color:#FCFCFC;
+	border:1px solid #999;
+}
+
+.Osyl-UnitView-ResPanel-Hover .Osyl-UnitView-SemanticTag {color:#A0A0A0}
+.Osyl-UnitView-ResPanel-Hover .Osyl-ResProxView-MetaInfo,
+.Osyl-UnitView-ResPanel-Hover .Osyl-UnitView-MetaInfo {
+	display:block;
+}*/
+
+.Osyl-ResProxView-MetaInfo,
+.Osyl-UnitView-MetaInfo,
+.Osyl-UnitView-SemanticTag {
+	display:block;
+	margin:5px 0 0 0;
+	font:normal 10px sans-serif, Arial, Verdana;
+	color:#A0A0A0;
+}
+
+.Osyl-UnitView-SemanticTag {margin:0 0 3px 10px;color:#A0A0A0}
 
 /* Link in a Content Unit Panel */
 .Osyl-UnitView-UnitLink{
 	margin-left:30px;
 }
-/*Split Pannel*/
-.Osyl-MainView-HorizontalSplitPanel {
-	border:none;
-	vertical-align:middle;
-}
-/*Splitter*/
-.Osyl-MainView-HorizontalSplitPanel .hsplitter {
-  /*background-color:#D6DBDF;*/
-  background-color:#FFF;
-  vertical-align:middle;
-  cursor:e-resize;
-  width:20px;
+/*End Unit View --------------------------------------------------------------------------------------*/
+
+/*List Item View --------------------------------------------------------------------------------------*/
+.Osyl-ListItemView-Table {
+	width:100%;
+	border:1px solid #e3f0FF;
+	margin:0 0 5px;
 }
 
-/*.Osyl-MockupLectureView-Panel {
-	margin:1px;
-	padding:2px;
-	border:thin dotted;
+.Osyl-ListItemView-labelNo {
+	width:90px;
+	height:30px;
+	padding:0 5px 0 10px;
 }
-*/
-/*.Osyl-MenuButton {
-	background:transparent;
-}*/
-.Osyl-MenuButton-ListBox, .Osyl-TreeView-Tree {
-	margin:0;
-	padding:1px;
-	border:1px solid #999;
+
+.Osyl-ListItemView-Hyperlink {}
+/*End List Item View --------------------------------------------------------------------------------------*/
+
+/*Res ProxDocument --------------------------------------------------------------------------------------*/
+.Osyl-ResProxDocument {
 	font-family:sans-serif, Arial, Verdana;
-	font-size:12px;
+	font-size:1em;
 }
 
-.Osyl-MenuButton-ListBox {
-	border:1px solid #999;
-	font-size:80%;
-}
+.Osyl-ResProxDocument .name, .Osyl-ResProxLink .uri {color:#A0A0A0}
+.Osyl-ResProxDocument .name {margin-left:5px}
+.Osyl-ResProxLink .uri, .Osyl-ResProxDocument .description, .Osyl-ResProxLink .description {margin-top:5px}
 
-/*TreeView Left Zone*/
-/* .Osyl-TreeView-Tree { */
-	/*background:url(img/bgFade.gif) repeat-x;*/
-/*	border:3px solid #D6DBDF; */
-/*	-moz-border-radius:8px; */
-/*	-webkit-border-radius:8px; */
-/*	font-size:9pt; */
-/*	padding:10px; *
-/* } */
-
-.Osyl-TreeView-Tree .gwt-TreeItem{
-	cursor:pointer;
-}
-/* TreeView item selected zone*/
-.Osyl-TreeView-Tree .gwt-TreeItem-selected{
-	cursor:default;
-}
-/* TreeView item selected text*/
-.Osyl-TreeView-Tree .gwt-TreeItem-selected .Osyl-TreeItem-HorizontalPanel{
-	background:#C3D9FF;
-}
+/*End Res ProxDocument --------------------------------------------------------------------------------------*/
 
 .Osyl-ResourceConfigView-DialogBox {
+	background:#FCFCFC url(img/editor_bg.gif) repeat-x;
   	font-family:sans-serif, Arial, Verdana;
   	border:2px outset;
-  	background-color:#FFF;
 }
 
 .Osyl-ResourceConfigView-DialogBox .Caption {
-  	background-color:#C3D9FF;
+  	background-color:#FCFCFC;
   	padding:2px;
   	margin:2px;
 	font-size:9px;
-	/*font-weight:bold;*/
   	cursor:move;
 }
 
 .Osyl-ResourceConfigView-TabPanel {
-  margin-top:4px;
+	margin-top:4px;
 }
 .Osyl-ResourceConfigView-TabPanel .gwt-TabPanelBottom  {
 	background-color:#FFF;
@@ -410,15 +513,13 @@ behavior:url(border-radius.htc);
 .Osyl-ResourceConfigView-TabPanel .gwt-TabBar {
   font-size:10px;
   padding:0;
-  border-bottom:4px solid #C3D9FF;
+  border-bottom:4px solid #FCFCFC;
   background-color:#FFF;
 }
 .Osyl-ResourceConfigView-TabPanel .gwt-TabBarItem {
   padding:4px;
   cursor:pointer;
-  /* color:#FFF; */
-  /* background-color:#e8eef7; */
-  background-color:#e8eef7;
+  background-color:#E8EEF7;
   border-bottom:2px solid #FFF;
   margin-right:2px;
 }
@@ -427,16 +528,14 @@ behavior:url(border-radius.htc);
   padding:4px;
   font-weight:bold;
   cursor:default;
-  /* background-color:#063871; */
-  background-color:#C3D9FF;
-  border-bottom:4px solid #C3D9FF;
+  background-color:#FCFCFC;
+  border-bottom:4px solid #FCFCFC;
   margin-right:2px;
 }
 .Osyl-ResourceConfigView-Tree {
 	margin:1px;
 	padding:1px;
-	font-family:sans-serif, Arial, Verdana;
-	font-size:10px;
+	font:normal 10px sans-serif, Arial, Verdana;
 }
 
 .Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem {
@@ -451,13 +550,8 @@ behavior:url(border-radius.htc);
 	cursor:pointer;
 }
 
-.Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem .Osyl-ResourceConfigView-Tree-NodeContainer{
-    background-color:#FFF;
-}
-
-.Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem-selected .Osyl-ResourceConfigView-Tree-NodeContainer{
-    background-color:#C3D9FF;
-}
+.Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem .Osyl-ResourceConfigView-Tree-NodeContainer{background-color:#FFF}
+.Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem-selected .Osyl-ResourceConfigView-Tree-NodeContainer{background-color:#DCEFFD}
 
 .Osyl-EditorToolbar-DialogBox {
   	font-family:sans-serif, Arial, Verdana;
@@ -466,20 +560,18 @@ behavior:url(border-radius.htc);
 }
 
 .Osyl-EditorToolbar-DialogBox .Caption {
-  	background-color:#C3D9FF;
+  	background-color:#FCFCFC;
   	padding:2px;
   	margin:2px;
 	font-size:9px;
-	/*font-weight:bold;*/
   	cursor:move;
 }
 
 .Osyl-EditorToolbar-TopPanel {
   text-align:left;
-  margin:0 2px 0 2px;
-  background-color:#C3D9FF;
+  margin:0 2px;
+  background-color:#FCFCFC;
   padding:0;
-/*  border:1px solid #888; */
 }
 
 .Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up, 
@@ -491,231 +583,174 @@ behavior:url(border-radius.htc);
 .Osyl-EditorToolbar-TopPanel .gwt-PushButton-down, 
 .Osyl-EditorToolbar-TopPanel .gwt-PushButton-up-hovering, 
 .Osyl-EditorToolbar-TopPanel .gwt-PushButton-down-hovering {
-  background-color:#C3D9FF;
-  padding:1px;
-  border:1px solid transparent;
-  cursor:pointer;
+	background:#FCFCFC url(img/button/editor-toolbar-button.gif) no-repeat left top;
+	height:20px;
+	width:20px;
+	padding:2px;
+	margin:1px;
+	cursor:pointer;
+	border:0;
 }
 
 .Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up-hovering, 
 .Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down-hovering, 
 .Osyl-EditorToolbar-TopPanel .gwt-PushButton-up-hovering, 
 .Osyl-EditorToolbar-TopPanel .gwt-PushButton-down-hovering {
-  border-color:#E8F1FF;
+	background-position:left bottom;
 }
 
 /* ---- CSS definitions for new classes specific to Osyl -------------- */
 
-/*WorkspaceView Right Zone*/
-.Osyl-MainView-WorkspaceView {
-	display:block;
-	padding:20px;
-	border:3px solid #D6DBDF;
-	-moz-border-radius:8px 0 8px 8px;
-	-webkit-border-radius:8px 0 8px 8px;
-	background-color:#FFF;
-	background-image:url("img/osyl-top-right-corner.gif");
-	background-repeat:no-repeat;
-	background-position:top right;
-	/*border-left:1px solid #7f7f7f;
-	
-	background:url(img/bgFadeV.gif) repeat-y;*/
-}
-.Osyl-MainView-WorkspaceView > tbody > tr > td{
+.Osyl-UnitView-UnitPanel {
 	width:100%;
-	margin:0;
-}
-#mainSlot > table {
-	border:2px solid #063871;
-}
-#mainSlot > table > tbody > tr > td {
-	border:0 solid blue;
 }
 
-.Osyl-UnitView-UnitPanel > tbody > tr > td{
-	/* border-bottom:1px solid #063871; */
-}
 .Osyl-UnitView-TextArea {
-	font-family:sans-serif, Arial, Verdana; /* Doesn't work in MSIE */
+	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
 	background:#FFF;
 	border:1px solid #AAA;
-	margin:0;
-	padding:0; /* Doesn't work in any browser */
+	margin:0 3px;
 }
-
+.Osyl-UnitView-TextArea body {color:red}
 .Osyl-ResConfigView-Status-Panel {
 	margin:1px;
 	padding:2px;
-  	border:1px solid #C3D9FF;
+  	border:1px solid #FCFCFC;
 }
-
 .Osyl-ResConfigView-Status-Label, 
 .Osyl-ResConfigView-Status-RadioButton, 
 .Osyl-ResConfigView-Status-CheckBox, 
 .Osyl-ResConfigView-RubricList, 
 .Osyl-ResProxAssignmentView-Label, 
 .Osyl-ResProxCitationView-Label {
-	font-family:sans-serif, Arial, Verdana;
-	font-size:10px;
+	font:normal 10px sans-serif, Arial, Verdana;
 }
-
-.Osyl-ResProxAssignmentView-Label, 
-.Osyl-ResProxCitationView-Label {
-	font-size:12px;
-}
-.Osyl-ResProxAssignmentView-Label, 
-.Osyl-ResConfigView-Status-Label {
-	font-weight:bold;
-}
-
+.Osyl-ResProxAssignmentView-Label, .Osyl-ResProxCitationView-Label {font-size:12px}
+.Osyl-ResProxAssignmentView-Label, .Osyl-ResConfigView-Status-Label {font-weight:bold}
 .Osyl-RemoteFileBrowser {
-  padding:4px;
-  font-size:10pt;
-  background-color:#C3D9FF;
+  margin:4px 0 4px 3px;
+  font-size:13px;
+  background-color:#FCFCFC;
 }
-
 .Osyl-RemoteFileBrowser-TitleLabel {
 	margin:0;
-	padding:3px 0 0 0;
-	font-size:10pt;
-	font-weight:bold;
+	padding:3px 0 0;
+	font:bold 13px sans-serif, Arial, Verdana;
 }
-
 .Osyl-RemoteFileBrowser .gwt-TextBox {
 	margin-right:8px;
-  	font-size:8pt;
-  	font-family:sans-serif, Arial, Verdana;
+  	font:normal 11px sans-serif, Arial, Verdana;
 }
-
 .Osyl-RemoteFileBrowser-FileListing {
   font-family:monospace, courier;
   font-size:8pt;
   margin-bottom:6px;
 }
-
 .Osyl-RemoteFileBrowser-WaitingState {
 	cursor:wait;
  	background-color:#666;
 }
-.Osyl-RemoteFileBrowser-SelectedFileLabel, 
-.Osyl-RemoteFileBrowser-SelectedFile {
+.Osyl-RemoteFileBrowser-SelectedFileLabel, .Osyl-RemoteFileBrowser-SelectedFile {
 	font-size:10pt;
 	margin:2px 0;
 }
+.Osyl-RemoteFileBrowser-SelectedFile {margin-bottom:4px}
+.Osyl-DialogBox-ContentLabel {padding:20px 5px 5px}
 
-.Osyl-RemoteFileBrowser-SelectedFile {
-	margin-bottom:4px;
-}
-
-.Osyl-DialogBox-ContentLabel {
-  padding:5px;
-  padding-top:20px;
-}
-
-.Osyl-TreeLabel{
-	font-size:11px;
-}
-
+/* UnobtrusiveAlert -----------------------------------*/
 .Osyl-UnobtrusiveAlert {
-	background-color:#fbeb90;
- 	border:none;
- 	padding:3px;
-	margin:0;
+	background-color:#DCEFFD;
+	border:1px solid #AAA;
+	padding:4px;
+	-moz-box-shadow:0 0 10px #000;
+	-webkit-box-shadow:1px 1px 10px #000;
+	box-shadow:1px 1px 10px #000;
 }
+/* End UnobtrusiveAlert -----------------------------------*/
 
+/*Contact Info-----------------------------------------------------*/
+.Osyl-ContactInfo {border:1px solid #EEE}
+.Osyl-ContactInfo > tbody > tr td{padding-left:2px}
+
+/* Édition */
+.Osyl-ContactInfo-TextBox, 
+.Osyl-ContactInfo-ListBox, 
+.Osyl-ContactInfo-Panel {
+	font:normal 11px Arial, Verdana, sans-serif;
+	border:1px solid #AAA;
+	margin:2px 0;
+}
+.Osyl-ContactInfo-Panel{width:100%;border:0}
+/* Fin Édition */
+.Osyl-ContactInfo-TextBox{
+	width:250px;
+}
 .Osyl-ResProxView-Label {
-	font-size:10px;
-	font-weight:bold;
-	margin-top:5px;
+	font:bold 10px Arial, Verdana, sans-serif;
+	margin:5px 2px 0 5px;
 }
-
+.Osyl-ContactInfo-Label {width:60px}
 .Osyl-ResProxView-LabelValue {
 	font-size:10px;
-	margin-left:10px;
+	margin:6px 0 0 10px;
 }
 
 .Osyl-ResProxCitationView-LabelValue {
-	font-family:helvetica,arial,sans-serif;
-	font-size:1em;
 	padding:0;
 	width:100%;
 }
-.Osyl-ResProxView-NameValue{
-	font-size:11px;
-	margin-left:10px;
-	margin-top:10px;
-	font-weight:900;
-	font-variant:small-caps;
+.Osyl-ResProxView-NameValue {
+	font:bold 11px Arial, Verdana, sans-serif;
+	margin:6px 0 0 10px;
 }
+
+/* Endcontact -----------------------------------*/
+
 .Osyl-ajaxSpinner {
-	background:url(img/ajaxSpinner.gif) no-repeat center;
+	background:transparent url(img/ajaxSpinner.gif) no-repeat 50% 50%;
 	margin:2px;
 	padding:2px;
 	border:medium;
 }
 
-.Osyl-EditorPopup-Button {
-	margin:2px;
-	width:85px;
-}
-
-.Osyl-EditorPopup-RowOptions {
-	background-color:#C3D9FF;
-	margin:0;
-	padding:5px 2px 4px 0;
-}
-
-.Osyl-EditorPopup-RowButtons {
-	margin:3px 0;
-	padding:2px;
-}
-
-.Osyl-EditorPopup-RowEditor {
-	margin:0;
-	padding:0 2px 5px 6px;
-	border-bottom:1px solid #000;
-	background-color:#C3D9FF;
-}
-
-.Osyl-EditorPopup-RowToolBar {
-	margin:0;
-	padding:5px 2px 0 2px;
-	border-top:1px solid #AAA;
-	background-color:#C3D9FF;
-}
-
 .Osyl-EditorPopup {
+	font-family:Arial, Verdana, sans-serif;
+	font-size:12px;
+	background:#FCFCFC url(img/ui/popup_head.gif) repeat-x;
+	border:3px solid #454a4f;
 	padding:0;
-	background-color:#C3D9FF;
-	border:2px outset;
-	font-family:sans-serif, Arial, Verdana;
-	font-size:12px;	
+	-moz-box-shadow:0 0 10px #000;
+	-webkit-box-shadow:1px 1px 10px #000;
+ 	box-shadow:1px 1px 10px #000;
 }
 
-.Osyl-EditorPopup .mosaic-Caption {
-	background-image:url(img/blue_gradient.gif);
-  	cursor:move;
+.Osyl-EditorPopup .Osyl-LabelEditor-TextBox {
+	border:0;
+	border:1px solid #878a8c;
+	margin:2px;
 }
+
+.Osyl-EditorPopup table {border-collapse:separate}
+
+.Osyl-EditorPopup .mosaic-Caption {margin:0}
 
 .Osyl-EditorPopup .mosaic-Caption-text {
-	padding:4px;
-  	margin:0;
-	font-size:12px;
-	font-weight:bold;
+	padding:2px 4px 4px;
+	height:18px;
+	font:bold 12px Arial, Verdana, sans-serif;
+	color:#FFF;
 }
 
 .Osyl-EditorPopup-OptionGroup, 
 .Osyl-EditorPopup-LastOptionGroup, 
 .Osyl-EditorPopup-RowOptions .gwt-Label, 
 .Osyl-EditorPopup-RowOptions .gwt-CheckBox {
+	background-color:#FCFCFC;
 	font-size:11px;
 	margin:0;
 }
 
-.Osyl-EditorPopup-OptionGroup {
-	padding:0 12px 0 7px;
-	border-right:1px solid #AAA;
-}
+.Osyl-EditorPopup-OptionGroup {padding:0 12px 0 7px}
 
 .Osyl-EditorPopup-LastOptionGroup {
 	padding:0 0 0 7px;
@@ -723,18 +758,20 @@ behavior:url(border-radius.htc);
 }
 
 .Osyl-EditorPopup-RowOptions .gwt-Label {
-	color:#888;
+	color:#454A4f;
 	margin-bottom:3px;
 }
 
 .Osyl-EditorPopup-RowOptions .gwt-CheckBox {
 	padding:0;
-	margin:0 14px 5px 0;
+	margin:0 14px 6px 0;
+}
+.Osyl-EditorPopup-RowOptions .gwt-CheckBox input {
+	margin:4px 2px 0 0;
 }
 
 .Osyl-EditorPopup .gwt-ListBox {
-	font-family:sans-serif, Arial, Verdana;
-	font-size:10px;
+	font:normal 10px sans-serif, Arial, Verdana;
 }
 
 .Osyl-EditorPopup .Osyl-ResourceBrowserPanel,
@@ -752,28 +789,22 @@ behavior:url(border-radius.htc);
 }
 
 .Osyl-EditorPopup .sectionLabel {
-	background-color:#B0C8F3;
-	font-size:11px;
-	font-weight:bold;
-	color:#000;
-	margin:0 0 3px 0;
+	background-color:#D6DBDF;
+	font:bold 11px Arial, Verdana, sans-serif;
+	color:#006E96;
+	margin:0 0 3px;
 	padding:3px 0;
 }
-
-.Osyl-EditorPopup .Osyl-ResourceBrowserPanel {
-	margin:0;
-}
-
+.Osyl-EditorPopup .sectionLabel {width:100%}
+.Osyl-EditorPopup .Osyl-ResourceBrowserPanel {margin:0}
 .Osyl-EditorPopup .Osyl-ResourceBrowserPanel .gwt-Label, 
 .Osyl-EditorPopup .gwt-Label {
 	font-size:11px;
-	color:#888;
+	color:#454a4f;
 	margin-bottom:3px;
 }
 
-.Osyl-EditorPopup .gwt-TextArea {
-	margin:0 8px 3px 3px;
-}
+.Osyl-EditorPopup .gwt-TextArea {margin:0 8px 3px 3px}
 
 .Osyl-EditorPopup .information {
 	font-size:11px;
@@ -781,161 +812,62 @@ behavior:url(border-radius.htc);
 	margin:5px 3px 3px 5px;
 }
 
-.Osyl-ResProxView-MetaInfo {
-	display:block;
-	margin:15px 0;
-	font-family:sans-serif, Arial, Verdana;
-	font-size:10px;
-	color:#a0a0a0;
+.Osyl-EditorPopup-Button {
+	margin:2px;
+	width:85px;
+	height:30px;
+	background:transparent url(img/button/osyl_button.png) no-repeat;
+	border:0;
+	cursor:pointer;
+}
+.Osyl-EditorPopup-Button:hover {
+	background-position:left bottom;
+}
+.Osyl-EditorPopup-RowOptions {
+	margin:0 0 0 3px;
 }
 
-.Osyl-ContactInfo{
-	border-bottom:1px solid #C3D9FF;
+.Osyl-EditorPopup-RowButtons {
+	margin:3px 0 0 3px;
 }
 
-/*For test use: display cells border*/
-.Osyl-ContactInfo tr td{
-	border:1px solid #000;
+.Osyl-EditorPopup-RowEditor {
+	margin:0 0 0 3px;
 }
 
-.Osyl-ContactInfoView-TextBox, 
-.Osyl-ContactInfo-ListBox, 
-.Osyl-ContactInfoView-Panel {
-	font-family:sans-serif, Arial, Verdana;
-	font-size:11px;
-	border:1px solid #AAA;
-}
-.Osyl-ContactInfoView-Panel{
-	border:none;
+.Osyl-EditorPopup-RowToolBar {
+	margin:0 0 0 3px;
+	border-top:1px solid #AAA;
 }
 
-.Osyl-LightBox-Regular {
-    /* Glass panel color */
-    background-color:#000 !important; /* Keep !important for IE */
-    /* Override glass panel to 40% opacity (= 60% transparency) */
-	filter :alpha(opacity=40); /* IE */
-	-moz-opacity :0.4 !important; /* FF */
-	opacity :0.4 !important; /* default */
-    /*
-      NOTE: Please do NOT use either CSS 'width' or 'height' here, as
-      this would defeat much of the effort that went into GlassPanel
-      in order to get it to work consistently in a variety of
-      circumstances. Specifically, please resist the urge to use
-      'width/height: 100%' or similar constructs.
-    */
-}
-
-.Osyl-LightBox-Processing {
-	/* Glass panel color */
-    background-color:#fdf6af !important; /* Keep !important for IE */
-    /* Override glass panel to 40% opacity (= 60% transparency) */
-	filter :alpha(opacity=40); /* IE */
-	-moz-opacity :0.4 !important; /* FF */
-	opacity :0.4 !important; /* default */
-}
-
+/* Light Box -----------------------------------------------------------------------*/
+.Osyl-LightBox-Regular,
+.Osyl-LightBox-Processing, 
 .Osyl-LightBox-Red {
-    /* Glass panel color */
-    background-color:red !important; /* Keep !important for IE */
-    /* Override glass panel to 40% opacity (= 60% transparency) */
-	filter :alpha(opacity=40); /* IE */
+	/* Override glass panel to 40% opacity (= 60% transparency) */
+	filter :alpha(opacity=40) !important; /* IE */
 	-moz-opacity :0.4 !important; /* FF */
 	opacity :0.4 !important; /* default */
 }
+
+.Osyl-LightBox-Regular { background-color:#000 !important;} /* Glass panel color. Keep !important for IE */
+.Osyl-LightBox-Processing { background-color:#FDF6AF !important;} /* Glass panel color. Keep !important for IE */
+.Osyl-LightBox-Red { background-color:#F00 !important;} /* Glass panel color. Keep !important for IE */
 
 .Osyl-LightBox-Clear {
    /* Glass panel color */
     background-color:transparent !important; /* Keep !important for IE */
     /* Override glass panel to 0% opacity (= 100% transparency) */
-	filter :alpha(opacity=0); /* IE */
+	filter :alpha(opacity=0) !important; /* IE */
 	-moz-opacity :0 !important; /* FF */
 	opacity :0 !important; /* default */
 }
-/*Horizontal Menu*/
-.gwt-MenuBar-horizontal {
-	/*background:transparent url(img/toolbar-background.png) repeat-x;*/
-	position:relative;
-	width:100%;
-	vertical-align:middle;
-	cursor:default;
-	/*border-bottom:3px solid #D6DBDF;*/
-	overflow:auto;
-}
-
-.gwt-MenuBar-horizontal table {
-	float:right;
-	display:block;/*Permet de mettre un padding dans un tableau. Non fonctionnel dans IE */
-	padding:5px 0;
-	background-color:#D6DBDF;
-	-moz-border-radius:8px 8px 0 0;
-	-webkit-border-radius:8px 8px 0 0;
-	behavior:url(border-radius.htc);
-}
-
-.gwt-MenuBar-horizontal .gwt-MenuItem, 
-.gwt-MenuBar-vertical .gwt-MenuItem {
-  font-size:0.9em;
-  font-weight:bold;
-  vertical-align:middle;
-  color:#454a4f;
-  border-left:1px solid #898c8e;
-  /*border-right:1px solid #EEE;*/
-  /*border-top:3px solid #D6DBDF;*/
-  padding:0 4px;
-  margin:5px 0;
-  cursor:default;
-  text-decoration:none;
-}
-.gwt-MenuBar-horizontal .gwt-MenuItem:first-child{
-	border-left:none;
-}
-.gwt-MenuBar-horizontal .gwt-MenuItem:last-child{
-	border-right:none;
-}
-
-.gwt-MenuBar-horizontal .gwt-MenuItem {
-  text-align:center;
-  width:80px;
-}
-
-.gwt-MenuBar-vertical .gwt-MenuItem {
-  text-align:left;
-  border:none;
-  padding:4px 2px;
-}
-
-.gwt-MenuBar-vertical {
-	background-color:#FFF;
-	vertical-align:middle;
-	cursor:default;
-	border:1px solid #cbd0d4;
-}
-
-.gwt-MenuBar-vertical table {
-	display:block;/*Permet de mettre un padding dans un tableau. Non fonctionnel dans IE */
-	padding:2px;
-}
-
-/* Considéré comme un Hover */
-.gwt-MenuBar .gwt-MenuItem-selected {
-	text-decoration:underline;
-	/*background:url(img/toolbar-background-hover.png) repeat-x;*/
-  	cursor:pointer;
-}
-.gwt-MenuBar-vertical .gwt-MenuItem-selected {
-	text-decoration:none;
-	background-color:#dceffd;
-}
-
 
 .Osyl-MouseOverPopUp {
     /* Override glass panel to 75% opacity (= 25% transparency) */
-    filter :alpha(opacity=75); /* IE */
+    filter :alpha(opacity=75) !important; /* IE */
 	-moz-opacity :.75 !important; /* FF */
 	opacity :0.75 !important; /* default */
-	    
-/* width:100px;
-height:100px; */
 }
 
 .Osyl-MouseOverPopUp .MainPanel {
@@ -943,56 +875,80 @@ height:100px; */
 	text-align:center;
 	vertical-align:middle;
 } 
+
 /* Panel for buttons edit/delete/validate/cancel */
 .Osyl-MouseOverPopup-ButtonPanel {
 	margin:0;
 	padding:0;
-/*	width:120px;
-	text-align:center;*/
-/*	filter:alpha(opacity = 100);
-    -moz-opacity:1.0 !important;
-    opacity:1.0 !important;*/
 }
 
-.Osyl-Button {
-	background-color:#444A4E;
-	font-weight:900;
-	font-size:12px;
-	color:#FFF;
-	padding:0 3px;
-	border:none;
-	/*border-color:#E8F1FF #9DAECC #9DAECC E8F1FF;*/
-	cursor:pointer;
+/* Button -------------------------------------------------------------------------------- */
+
+.Osyl-Button,
+.Osyl-FileUpload-genericButton {
+	font:bold 12px Arial, Verdana, sans-serif;
+	white-space:nowrap;
+	color:#444;
+	background-color:#F7F7F7;
+	border:1px solid #999;
 	margin:0 5px;
+	padding:3px;
+	cursor:pointer;
+	overflow:visible;/* removes extra side padding in IE */
 	-moz-border-radius:8px;
 	-webkit-border-radius:8px;
-	behavior:url(border-radius.htc);
-	font-family:Arial, Verdana, sans-serif;
+}
+.Osyl-Button::-moz-focus-inner, .Osyl-FileUpload-genericButton::-moz-focus-inner {border:none} /* removes inner border of buttons in Firefox */
+.Osyl-Button:hover, .Osyl-FileUpload-genericButton:hover {background-color:#FFF}
+.Osyl-Button:active, .Osyl-FileUpload-genericButton:active {
+	padding:4px 3px 2px;
+	background-color:#F0F0F0;
 }
 
+.Osyl-ImageAndTextButton {}
+.Osyl-ImageAndTextButton > img {
+	margin:0 3px -3px 0 !important; /*needed for Firefox only*/
+} 
+
+/* Test Button */
+/*.Osyl-Button {
+	font:bold 12px Arial, Verdana, sans-serif;
+	color:#444;
+    background:transparent url('img/button/osyl_button_right.png') no-repeat top right;
+	padding:0 10px 0 0;
+	height:30px;
+	cursor:pointer;
+	border:0;
+	white-space:nowrap;
+	overflow:visible;
+}
+
+.Osyl-Button > div {
+	background:transparent url('img/button/osyl_button_left.png') no-repeat;
+	line-height:20px;
+	margin-top:-1px;
+	padding:5px 0 5px 10px;
+}
+.Osyl-ImageAndTextButton > div > img {}
+
+.Osyl-Button:hover {background-position:bottom right}
+
+.Osyl-Button:hover > div{background-position:0 -30px}*/
+/* End Button --------------------------------------------------------------*/
 .Osyl-FileBrowserTopButton {
 	width:24px;
 	height:24px;
 	padding:3px 0 0 3px;
-	background-color:#C3D9FF;
+	background-color:#FCFCFC;
 	margin:0 1px 3px 0;
 	border:1px solid transparent;
+	color:#FFF; /*For IE6*/
 }
 
 .Osyl-FileBrowserTopButton-up-hovering {
 	border:1px solid;
-  	border-color:#E8F1FF #9DAECC #9DAECC E8F1FF;
+  	border-color:#E8F1FF #9DAECC #9DAECC #E8F1FF;
 	cursor:pointer;
-}
-
-.Osyl-ImageAndTextButton {
-	white-space:nowrap;
-}
-
-/* This is needed for Firefox only, otherwise the text is too close to the
-   bottom! This doesn't have any impact on MSIE7, Chrome or the Hosted mode. */
-.Osyl-ImageAndTextButton > img {
-	margin:0 3px -3px 0;
 }
 
 .Osyl-EditorPopup .DetailsPanel {
@@ -1002,24 +958,23 @@ height:100px; */
 
 .Osyl-EditorPopup .DetailsPanel .header {
 	text-decoration:none; /* Doesn't work so we put a color which will make it invisible! */
-	color:#C3D9FF;
+	color:#FCFCFC;
 	cursor:pointer;
 }
 
 .Osyl-EditorPopup .DetailsPanel .header td {
-	font-family:sans-serif, Arial, Verdana;
-	font-size:11px;
+	font:normal 11px sans-serif, Arial, Verdana;
 	color:#808080;
 }
 
 /* CSS for GWT-Mosaic */
 .mosaic-GlassPanel-default, .mosaic-GlassPanel-invisible {
-	background-color:#000 !important;
+	background-color:#EEE !important;
 	background-repeat:repeat;
 	/* Override glass panel to 0% opacity (= 100% transparency) */
-	filter :alpha(opacity=0); /* IE */
-	-moz-opacity :0 !important; /* FF */
-	opacity :0 !important; /* default */
+	filter :alpha(opacity=25) !important; /* IE */
+	-moz-opacity :.25 !important; /* FF */
+	opacity :0.25 !important; /* default */
 }
 
 .mosaic-Caption-iconBoxRight {
@@ -1027,109 +982,76 @@ height:100px; */
 	cursor:default;
 }
 
-.mosaic-CaptionLayoutPanel .dragdrop-handle {
-	cursor:move;
+.mosaic-CaptionLayoutPanel .dragdrop-handle {cursor:move}
+.mosaic-WindowPanel .Resize-nw {cursor:nw-resize}
+.mosaic-WindowPanel .Resize-n {cursor:n-resize;background-color:transparent}
+.mosaic-WindowPanel .Resize-ne {cursor:ne-resize}
+.mosaic-WindowPanel .Resize-e {cursor:e-resize;background-color:transparent}
+.mosaic-WindowPanel .Resize-se {cursor:se-resize}
+.mosaic-WindowPanel .Resize-s {cursor:s-resize;background-color:transparent}
+.mosaic-WindowPanel .Resize-sw {cursor:sw-resize}
+.mosaic-WindowPanel .Resize-w {cursor:w-resize;background-color:transparent}
+
+/* ------- */
+
+.Osyl-ContactInfo-Editor {
 }
 
-.mosaic-WindowPanel .Resize-nw {
-	cursor:nw-resize;
+.Osyl-ContactInfo-Viewer {
 }
 
-.mosaic-WindowPanel .Resize-n {
-	cursor:n-resize;
-}
-
-.mosaic-WindowPanel .Resize-ne {
-	cursor:ne-resize;
-}
-
-.mosaic-WindowPanel .Resize-e {
-	cursor:e-resize;
-	/* background:#FFF;  needed by IE */
-}
-
-.mosaic-WindowPanel .Resize-se {
-	cursor:se-resize;
-}
-
-.mosaic-WindowPanel .Resize-s {
-	cursor:s-resize;
-	/* background:#FFF;  needed by IE */
-}
-
-.mosaic-WindowPanel .Resize-sw {
-	cursor:sw-resize;
-}
-
-.mosaic-WindowPanel .Resize-w {
-	cursor:w-resize;
-}
-
-/*--------------------------------------------------------*/
-.Osyl-Title1, .Osyl-Title2, .Osyl-Title3, .Osyl-Title4, .Osyl-Title5 {
-	/*white-space : nowrap;*/
+.Osyl-ContactInfo-FirstName, .Osyl-ContactInfo-LastName {
+	font-size:14px;
+	color:#444;
 	font-weight:bold;
-	margin-bottom:10px;
-	font-family:Helvetica, Arial, sans-serif;
-	padding 5px 0;
+	padding:1px 0 0;
+}
+.Osyl-ContactInfo-LastName {
+	margin-left:5px;
+	text-transform:uppercase;
+}	
+
+.Osyl-ContactInfo-Role {	
+	font-size:11px;
+	padding:0 0 3px 1px;
 }
 
-.Osyl-Title1 {
-	color:#454a4f;
-	font-size:22px;
-	margin-bottom:20px;
-	text-align:center;
+.Osyl-ContactInfo-EMail {
+	font-size:11px;
+	padding:0;
 }
 
-.Osyl-Title2 {
-	color:#454a4f;
-	font-size:25px;
+.Osyl-ContactInfo-Phone {
+	font-size:11px;
+	padding:2px 0 0;
 }
 
-.Osyl-Title3 {
-	color:#5a6a7c;
-	font-size:15px;
+.Osyl-ContactInfo-Office {
+	font-size:11px;
+	
+	padding:0 0 2px;
+	margin-left:5px;
+}	
+
+
+.Osyl-ContactInfo-OfficeLabel {
+	padding:0;
+	font-size:11px;
 }
 
-.Osyl-Title4 {
-	color:#878a8c;
-	font-size:15px;
-	font-weight:normal;
+.Osyl-ContactInfo-Availability {
+	font-size:11px;
+	padding:2px 0 2px;
+	margin-left:5px;
 }
 
-.Osyl-Title5 {
-	color:#000;
-	font-size:12px;
+
+.Osyl-ContactInfo-AvailabilityLabel {
+	padding:2px 0 2px;
+	font-size:11px;
 }
 
-p {
-	color:#333;
-	font-size:12px;
-	font-weight:normal;
-	margin-bottom:10px;
-	font-family:Arial, Helvetica, sans-serif;
+.Osyl-ContactInfo-Comments {
+	font-size:11px;
+	padding:2px 0 3px;
 }
-
-.Osyl-TreeView-TreeHeaderLabel {
-	font-family: sans-serif, Arial, Verdana;
-	font-size: 12px;
-	color: gray;	
-}
-
-.Osyl-TreeView-VertCont {
-	border:3px solid #D6DBDF;
-	-moz-border-radius:8px;
-	-webkit-border-radius:8px;
-	font-size:9pt;
-	padding:10px;
-}
-
-/*TreeView Left Zone*/
-/* .Osyl-TreeView-Tree { */
-	/*background:url(img/bgFade.gif) repeat-x;*/
-/*	border:3px solid #D6DBDF; */
-/*	-moz-border-radius:8px; */
-/*	-webkit-border-radius:8px; */
-/*	font-size:9pt; */
-/*	padding:10px; *
-/* } */
