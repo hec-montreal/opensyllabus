@@ -136,7 +136,8 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
      * @param siteId
      */
     private void importFilesInSite(String zipReference, String siteId) {
-		Map<File, String> fileMap = osylManagerServices.getOsylManagerService()
+	        // TODO: Valider la corrrection apportée pour la compilation
+		Map<File, String> fileMap = (Map<File, String>) osylManagerServices.getOsylManagerService()
 				.getImportedFiles();
 		Set<File> files = fileMap.keySet();
 		for (File file : files) {
