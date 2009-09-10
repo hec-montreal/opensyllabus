@@ -121,10 +121,10 @@ public class OsylPackage {
 			elementType = element.getAttribute(URI_TYPE);
 			if (URI_VALUE.equals(elementType)) {
 				children = element.getElementsByTagName(URI_TAGNAME);
-
 				node = children.item(0).getFirstChild();
-				node.setNodeValue(node.getNodeValue().trim());
-
+				if(node!=null){
+					node.setNodeValue(node.getNodeValue().trim());
+				}
 			}
 			i++;
 		}
