@@ -288,6 +288,7 @@ public class AbstractOSYLTest extends AbstractTestCase {
 				"//div[@class=\"Osyl-UnobtrusiveAlert\"]")) {
 		    // We are ok
 		    log("Leaving saveCourseOutline: OK");
+		    return;
 		}
 		if (session().isAlertPresent()) {
 		    String alertTxt = session().getAlert();
