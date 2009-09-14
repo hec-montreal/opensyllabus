@@ -191,17 +191,6 @@ public class COModeled extends COSerialized implements COModelInterface {
     }
 
     /**
-     * Full constructor from superclass
-     */
-    public COModeled(String idCo, String lang, String type, String security,
-	    String siteId, String sectionId, String osylConfigId,
-	    String content, String shortDesc, String desc, String title) {
-	super(idCo, lang, type, security, siteId, sectionId,
-		new COConfigSerialized(osylConfigId), content, shortDesc, desc,
-		title, false);
-    }
-
-    /**
      * @return the POJO of the modeled content
      */
     public COContent getModeledContent() {
