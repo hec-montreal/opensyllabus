@@ -23,8 +23,7 @@ public abstract class AbstractOsylConfigServiceTest extends AbstractServiceTest 
         //This shows a problem with the design of OsylConfigServiceImpl, which should not extend ResourceLoader.        
         //serviceImpl.setContextLocale(Locale.getDefault());
         //This test will fail because of the above
-        
-        serviceImpl.setIdManager(getMockery().newIdManager());
+                
         serviceImpl.init();
         this.service = serviceImpl;
     }    

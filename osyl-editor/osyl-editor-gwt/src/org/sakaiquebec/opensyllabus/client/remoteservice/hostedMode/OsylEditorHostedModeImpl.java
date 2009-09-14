@@ -2,7 +2,7 @@
  * $Id:  $
  **********************************************************************************
  *
- * Copyright (c) 2008 The Sakai Foundation, The Sakai Québec Team.
+ * Copyright (c) 2008 The Sakai Foundation, The Sakai Quï¿½bec Team.
  *
  * Licensed under the Educational Community License, Version 1.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	public void getSerializedConfig(
 			final AsyncCallback<COConfigSerialized> callback) {
 		if (configSer == null) {
-			configSer = new COConfigSerialized("config-test-id");
+			configSer = new COConfigSerialized();
 
 			// Getting UI messages for config
 			getFileByRequest(osylHostedModeInit.getUIMessagesPath(),

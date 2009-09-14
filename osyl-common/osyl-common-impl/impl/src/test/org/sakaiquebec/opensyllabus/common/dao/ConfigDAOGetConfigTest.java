@@ -13,9 +13,7 @@ public final class ConfigDAOGetConfigTest extends AbstractConfigDAOTest {
 	
 		
 	public void testGetNullConfig() throws Exception{
-	    	COConfigDao configDAO = getConfigDAO();
-	    	COConfigSerialized config = newConfig("0");		
-		configDAO.createConfig(config);
+
 		try {
 			getConfigDAO().getConfig(null);
 			fail("getConfig(): expected an Exception from a NULL id parameter.");
@@ -26,9 +24,6 @@ public final class ConfigDAOGetConfigTest extends AbstractConfigDAOTest {
 	}
 	
 	public void testGetBlankConfig() throws Exception{
-	    COConfigDao configDAO = getConfigDAO();
-	    	COConfigSerialized config = newConfig("0");		
-		configDAO.createConfig(config);
 		try {
 			getConfigDAO().getConfig("");
 			fail("getConfig(): expected an Exception from an empty id parameter.");
@@ -39,9 +34,7 @@ public final class ConfigDAOGetConfigTest extends AbstractConfigDAOTest {
 	}
 
 	public void testGetNonExistingConfig() throws Exception{
-	    COConfigDao configDAO = getConfigDAO();
-	    	COConfigSerialized config = newConfig("0");		
-		configDAO.createConfig(config);
+
 		try {
 			getConfigDAO().getConfig("NonExistingID");
 			fail("getConfig(): expected an Exception from a non-existing id parameter.");
@@ -54,7 +47,7 @@ public final class ConfigDAOGetConfigTest extends AbstractConfigDAOTest {
 	public void testGetOneConfig() throws Exception {
 		COConfigDao configDAO = getConfigDAO();
 		
-		COConfigSerialized config = newConfig("0");
+		COConfigSerialized config = newConfig();
 		configDAO.createConfig(config);
 		
 		COConfigSerialized otherConfig = configDAO.getConfig(config.getConfigId());
@@ -67,7 +60,7 @@ public final class ConfigDAOGetConfigTest extends AbstractConfigDAOTest {
 
 		List<COConfigSerialized> configs = new LinkedList<COConfigSerialized>();
 		for (int i = 0; i < SIZE; i++) {
-			COConfigSerialized config = newConfig("" + i);
+			COConfigSerialized config = newConfig();
 			configDAO.createConfig(config);
 			configs.add(config);
 		}

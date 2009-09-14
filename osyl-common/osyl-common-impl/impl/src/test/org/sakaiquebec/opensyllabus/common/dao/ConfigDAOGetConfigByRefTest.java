@@ -8,11 +8,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
  * */
 public final class ConfigDAOGetConfigByRefTest extends AbstractConfigDAOTest {
 	
-	public void testGetNullConfigByRef() throws Exception{
-	    	COConfigDao configDAO = getConfigDAO();
-	    	COConfigSerialized config = newConfig("0");		
-		configDAO.createConfig(config);
-	    
+	public void testGetNullConfigByRef() throws Exception{	    
 		try {
 			getConfigDAO().getConfigByRef(null);
 			fail("getConfigByRef(): expected an Exception from a NULL id parameter.");
@@ -22,11 +18,7 @@ public final class ConfigDAOGetConfigByRefTest extends AbstractConfigDAOTest {
 		}		
 	}
 	
-	public void testGetBlankConfigByRef() throws Exception{	
-	    	COConfigDao configDAO = getConfigDAO();
-	    	COConfigSerialized config = newConfig("0");		
-		configDAO.createConfig(config);
-	    
+	public void testGetBlankConfigByRef() throws Exception{		    	    
 		try {
 			getConfigDAO().getConfigByRef("");
 			fail("getConfigByRef(): expected an Exception from an empty id parameter.");
@@ -36,11 +28,7 @@ public final class ConfigDAOGetConfigByRefTest extends AbstractConfigDAOTest {
 		}		
 	}
 
-	public void testGetNonExistingConfigByRef() throws Exception{
-	    	COConfigDao configDAO = getConfigDAO();
-	    	COConfigSerialized config = newConfig("0");		
-		configDAO.createConfig(config);
-		
+	public void testGetNonExistingConfigByRef() throws Exception{    			
 		try {
 			getConfigDAO().getConfigByRef("NonExistingID");
 			fail("getConfigByRef(): expected an Exception from a non-existing id parameter.");
@@ -54,7 +42,7 @@ public final class ConfigDAOGetConfigByRefTest extends AbstractConfigDAOTest {
 		COConfigDao configDAO = getConfigDAO();
 		
 		//Create a new config, get it back and check that it's the same config.
-		COConfigSerialized config = newConfig("0");		
+		COConfigSerialized config = newConfig();		
 		configDAO.createConfig(config);
 		
 		COConfigSerialized otherConfig = configDAO.getConfigByRef(config.getConfigRef());

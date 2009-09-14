@@ -22,7 +22,7 @@ public final class ConfigDAOGetConfigsTest extends AbstractConfigDAOTest {
 	
 	public void testGetOneConfig() throws Exception {
 		COConfigDao configDAO = getConfigDAO();
-		configDAO.createConfig(newConfig("0"));
+		configDAO.createConfig(newConfig());
 		List<COConfigSerialized> configs = configDAO.getConfigs();
 		assertEquals(
 				"One COConfigSerialized was created.",
@@ -36,7 +36,7 @@ public final class ConfigDAOGetConfigsTest extends AbstractConfigDAOTest {
 		//a little overkill...
 		final int SIZE = 10;
 		for (int i = 0; i < SIZE; i++) {
-			configDAO.createConfig(newConfig("" + i));
+			configDAO.createConfig(newConfig());
 		}
 		configs = configDAO.getConfigs();
 		assertEquals(
@@ -44,7 +44,7 @@ public final class ConfigDAOGetConfigsTest extends AbstractConfigDAOTest {
 				SIZE, configs.size());
 		
 		//still works if I delete one?
-		configDAO.removeConfig("0");
+		configDAO.removeConfig(configs.get(0).getConfigId());
 		configs = configDAO.getConfigs();
 		assertEquals(
 				"Invalid number of configs returned by getConfigs().",

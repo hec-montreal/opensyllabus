@@ -19,7 +19,7 @@ public final class ConfigDAOUpdateConfigTest extends AbstractConfigDAOTest {
 	}
 	
 	public void testUpdateNonExisting() throws Exception {
-		COConfigSerialized config = newConfig("0");
+		COConfigSerialized config = newConfig();
 		try {
 			getConfigDAO().updateConfig(config);
 			fail("updateConfig(): expected an Exception from a non-existing config parameter.");
@@ -34,7 +34,7 @@ public final class ConfigDAOUpdateConfigTest extends AbstractConfigDAOTest {
 		final String REF = "testUpdateRulesConfig()"+ System.currentTimeMillis();
 		COConfigDao configDAO = getConfigDAO();
 		
-		COConfigSerialized config = newConfig("0");		
+		COConfigSerialized config = newConfig();		
 		configDAO.createConfig(config);
 		
 		config = configDAO.getConfig(config.getConfigId());

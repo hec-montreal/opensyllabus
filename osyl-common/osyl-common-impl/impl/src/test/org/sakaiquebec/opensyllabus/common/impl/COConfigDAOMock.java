@@ -14,6 +14,7 @@ import org.jmock.lib.action.CustomAction;
 import org.jmock.lib.action.VoidAction;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
+import org.sakaiquebec.opensyllabus.shared.util.UUID;
 
 final class COConfigDAOMock extends AbstractMock<COConfigDao> {
 	private final Map<String, COConfigSerialized> configs;
@@ -48,9 +49,7 @@ final class COConfigDAOMock extends AbstractMock<COConfigDao> {
                     	if (null == co) {
                     		throw new IllegalArgumentException("Null COConfigSerialized");
                     	}
-                    	if (StringUtils.isBlank(co.getConfigId())) {
-                    		throw new IllegalArgumentException("Empty COConfigSerialized.configId");
-                    	}
+                    	co.setConfigId(UUID.uuid());
                     	configs.put(co.getConfigId(), co);
                         return null;
                     }                    

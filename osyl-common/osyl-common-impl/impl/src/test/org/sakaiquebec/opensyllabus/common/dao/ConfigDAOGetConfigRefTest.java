@@ -8,11 +8,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
  * */
 public final class ConfigDAOGetConfigRefTest extends AbstractConfigDAOTest {
 	
-	public void testGetNullConfigRef() throws Exception{
-	    	COConfigDao configDAO = getConfigDAO();
-	    	COConfigSerialized config = newConfig("0");		
-		configDAO.createConfig(config);
-		
+	public void testGetNullConfigRef() throws Exception{	    
 		try {
 			getConfigDAO().getConfigRef(null);
 			fail("getConfigRef(): expected an Exception from a NULL id parameter.");
@@ -22,11 +18,7 @@ public final class ConfigDAOGetConfigRefTest extends AbstractConfigDAOTest {
 		}		
 	}
 	
-	public void testGetBlankConfigRef()  throws Exception{	
-	    COConfigDao configDAO = getConfigDAO();
-	    	COConfigSerialized config = newConfig("0");		
-		configDAO.createConfig(config);
-		
+	public void testGetBlankConfigRef()  throws Exception{		    
 		try {
 			getConfigDAO().getConfigRef("");
 			fail("getConfigRef(): expected an Exception from an empty id parameter.");
@@ -36,11 +28,7 @@ public final class ConfigDAOGetConfigRefTest extends AbstractConfigDAOTest {
 		}		
 	}
 
-	public void testGetNonExistingConfigRef()  throws Exception{	
-	    	COConfigDao configDAO = getConfigDAO();
-	    	COConfigSerialized config = newConfig("0");		
-		configDAO.createConfig(config);
-		
+	public void testGetNonExistingConfigRef()  throws Exception{		    
 		try {
 			getConfigDAO().getConfigRef("NonExistingID");
 			//FIXME: if the above does not fail, 
@@ -55,15 +43,11 @@ public final class ConfigDAOGetConfigRefTest extends AbstractConfigDAOTest {
 	public void testGetExistingConfigRef()  throws Exception{				
 		COConfigDao configDAO = getConfigDAO();
 		
-		COConfigSerialized config = newConfig("0");
-		try {
-		    configDAO.createConfig(config);
-		} catch (Exception e) {
-		    fail("Unable to create config");
-		}
-		try{
-		String ref = configDAO.getConfigRef(config.getConfigId());
-		
+		COConfigSerialized config = newConfig();
+	    configDAO.createConfig(config);
+
+        String ref = configDAO.getConfigRef(config.getConfigId());
+	
 		assertNotNull(
 				"Expected a non-null ref returned by getConfigRef()",
 				ref);
@@ -71,9 +55,5 @@ public final class ConfigDAOGetConfigRefTest extends AbstractConfigDAOTest {
 		assertEquals(
 				"getConfigRef() returned an unexpected ref.",
 				config.getConfigRef(), ref);
-		}catch (Exception e) {
-		    fail("Unable to get config");
-		}
-	}
-	
+	}	
 }

@@ -22,12 +22,6 @@ abstract class AbstractResourceDAOTest extends AbstractDAOTest {
 	super.onSetUp();
 	osylConfig = new COConfigSerialized();
 
-	// FIXME: not setting an ID on this bean gives:
-	// org.springframework.orm.hibernate3.HibernateSystemException:
-	// ids for this class must be manually assigned before calling save():
-	// Shouldn't IDs be auto-generated??
-	osylConfig.setConfigId("0");
-
 	osylConfig.setCascadingStyleSheetURI("http://acme/stylesheet.css");
 	osylConfig.setConfigRef(null);
 	osylConfig.setRulesConfig("");

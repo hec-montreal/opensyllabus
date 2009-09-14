@@ -1,6 +1,7 @@
 package org.sakaiquebec.opensyllabus.common.dao;
 
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
+import org.sakaiquebec.opensyllabus.shared.util.UUID;
 
 abstract class AbstractConfigDAOTest extends AbstractDAOTest {
 
@@ -14,11 +15,10 @@ abstract class AbstractConfigDAOTest extends AbstractDAOTest {
 		return this.configDAO;
 	}
 
-
-	protected static final COConfigSerialized newConfig(String id) {
-		COConfigSerialized config = new COConfigSerialized();
+	protected static final COConfigSerialized newConfig() {
+	    String id = UUID.uuid();
 		
-		config.setConfigId(id);		
+	    COConfigSerialized config = new COConfigSerialized();		
 		config.setCascadingStyleSheetURI("http://acme/stylesheet.css");
 		config.setConfigRef("UnitTestConfigRef#" + id);
 		config.setRulesConfig("UnitTestRulesConfig#" + id);

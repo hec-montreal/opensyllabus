@@ -81,33 +81,14 @@ public class COConfigSerialized implements java.io.Serializable {
 	private ArrayList<String> evalTypeList;
 
 	/**
-	 * Empty Constructor
-	 */
-	public COConfigSerialized() {
-		this(null);
-	}
-
-	/**
 	 * Constructor
 	 */
-	public COConfigSerialized(String configId) {
+	public COConfigSerialized() {
 		super();
-		this.configId = configId;
+		
 		this.evalTypeList = new ArrayList<String>();
 		this.rolesList = new ArrayList<String>();
 		this.i18nMessages = new HashMap<String, String>();
-	}
-
-	/**
-	 * Constructor
-	 */
-	public COConfigSerialized(
-			String configId, 
-			String configRef,
-			String description) {
-		this(configId);
-		this.configRef = configRef;
-		this.description = description;
 	}
 
 	/**

@@ -5,8 +5,9 @@
 <hibernate-mapping>
     <class name="org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized" table="osyl_co_config">
         <id name="configId" type="string">
-            <column name="CONFIG_ID" length="99" />
-            <generator class="assigned" />
+        	<!--  Note: this ID needs to be compatible with a Sakai UUID, which is 32 characters long -->
+            <column name="CONFIG_ID" length="32"/>
+            <generator class="uuid" />
         </id>
        
         <property name="configRef" type="text">
