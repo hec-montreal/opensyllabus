@@ -74,10 +74,12 @@ public class TextTest extends AbstractOSYLTest {
 	// was already an Undef Rubric item
 	verifyTrue(session().isTextPresent(undefRubric));
 
-	// open text resource editor
-	session().click("//tr[3]/td/table/tbody/tr[2]/td/div/table[2]/tbody" +
-			"/tr/td[1]/button");
-
+	
+	// open text resource editor (actually this is : Click the Edit button
+	// in the first UnitView-ResPanel
+	session().click("//div[@class=\"Osyl-UnitView-ResPanel\"]/table[2]/" +
+			"tbody/tr/td[1]/button");
+	
 	// Change rubric
 	session().select("listBoxFormElement", "label=Description");
 	session().click("//option[@value='description']");
