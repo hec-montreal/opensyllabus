@@ -75,6 +75,8 @@ public class AbstractOSYLTest extends AbstractTestCase {
 	session().type("pw", "osyl123");
 	session().click("submit");
 	waitForPageToLoad();
+	assertFalse("Login failed", session().isElementPresent(
+		"//div[@class=\"alertMessage\"]"));
     }
 
     /**
@@ -117,12 +119,7 @@ public class AbstractOSYLTest extends AbstractTestCase {
 	waitForPageToLoad();
 	session().click("link=Nouvel outil");
 	waitForPageToLoad();
-	assertTrue(session().isTextPresent(""));
-	// Note to myself: under my current localhost setup, OSYL is the 10th
-	// tool, under our hudson-deployed server it is the 28th
-	// TODO: increase reliability (ie: find the tool dynamically!)
-	session().click(
-		"//form[@id='thisOne']/table/tbody/tr[2]/td/p[28]/label");
+	session().click("//input[@value=\"sakai.opensyllabus.tool\"]");
 	waitForPageToLoad();
 	session().click("eventSubmit_doSave_tool");
 	waitForPageToLoad();
