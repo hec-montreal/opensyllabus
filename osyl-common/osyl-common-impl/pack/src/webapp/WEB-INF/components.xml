@@ -44,9 +44,6 @@
 		
 		<property name="configDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
-			
-		<property name="idManager"
-			ref="org.sakaiproject.id.api.IdManager"/>
 	</bean>
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylSiteService"
