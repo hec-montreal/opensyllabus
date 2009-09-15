@@ -11,6 +11,9 @@ import java.io.Serializable;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /** This TestCase tests Serializable objects and make sure the implementation of java.io.Serializable is valid. That is
  *  <br/>
  *  <ol>
@@ -26,8 +29,7 @@ public abstract class AbstractSerializableTest extends TestCase {
         
     private Serializable tested = null;
         
-    /** This method must return a Class that represents a Serializable object with a default constructor.
-     *  The test will use a new instance of the given Class as the tested object.
+    /** This method must return a new instance of the Serializable object to be tested.
      * */
     public abstract Serializable getSerializable();
     
@@ -39,14 +41,15 @@ public abstract class AbstractSerializableTest extends TestCase {
         return 0;
     }
 
-    /** if returning TRUE, this test will make sure that the hashCode() and equals() methods of the tested Serializable
-     *  are consistent (that is, the serialised and de-serialised objects should have the same hash code and should be equal.
-     *  This is a requirement for proper serialisation.<br/>
-     *  The default implementation returns TRUE.
-     * @see http://onjava.com/pub/a/onjava/excerpt/JavaRMI_10/index.html?page=3#66063
+    /** If returning TRUE, this test will make sure that the hashCode() and equals() methods of the tested Serializable
+     *  are consistent (that is, the serialised and de-serialised objects should have the same hash code and should be equal.<br/>
+     *  Otherwise, org.apache.commons.lang.builder.EqualsBuilder and org.apache.commons.lang.builder.HashCodeBuilder
+     *  will be used to verify that serialized fields were read back correctly.<br/>
+     *  <b>FIXME: the above may not be a valid assumption</b>.<br/>
+     *  The default implementation returns FALSE.
      */
     public boolean getCheckOverrides() {
-        return true;
+        return false;
     }
     
     public void onSetUp(){}
@@ -73,18 +76,24 @@ public abstract class AbstractSerializableTest extends TestCase {
             in = new ObjectInputStream(bin);
             Serializable saved = (Serializable)in.readObject();
             
-            assertEquals(
-                    "Incorrect serialized object Class.",
-                    tested.getClass(), saved.getClass());
-            
             if (getCheckOverrides()) {
                 assertTrue(
-                    "Serialized object not equal to original one (the equals() method of " + tested.getClass() + " is not implemented correctly).",
+                    "Serialized object not equal to original one (check the implementation of " + tested.getClass() + ".equals() and hashCode()).",
                     tested.equals(saved));
                 
                 assertEquals(
-                    "Hashcodes don't match (the hashCode() method of " + tested.getClass() + " is not implemented correctly).",
+                    "Hashcodes don't match (check the implementation " + tested.getClass() + ".hashCode()).",
                     tested.hashCode(), saved.hashCode());
+            }
+            else {
+                assertEquals(
+                        "Hashcodes of the original object and the serialized version don't match.",
+                        HashCodeBuilder.reflectionHashCode(tested), 
+                        HashCodeBuilder.reflectionHashCode(saved));
+                
+                assertTrue(
+                        "Fields within the original object and the serialized version don't equal each other.",
+                        EqualsBuilder.reflectionEquals(tested, saved));
             }
             
             long maxSize = getMaxSize();            
