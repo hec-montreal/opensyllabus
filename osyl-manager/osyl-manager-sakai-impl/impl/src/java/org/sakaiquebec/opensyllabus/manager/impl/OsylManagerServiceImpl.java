@@ -613,7 +613,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		String url = null;
 
 		try {
-			File zipFile = zip(siteId);
+			File zipFile = exportAndZip(siteId);
 			Site site = siteService.getSite(siteId);
 			String title = site.getTitle();
 			String resourceOutputDir = contentHostingService
@@ -668,7 +668,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 					for (Iterator<Citation> iter = citations.iterator(); 
 							iter.hasNext();) {
 						Citation citation = iter.next();
-						String citationName = citation.getDisplayName();
+						String citationName = filterCitationName(citation.getDisplayName());
 						// citation display name includes . at the end
 						citationName = citationName.substring(0,citationName.length()-1);
 						String result = "listname=" + citationName;
@@ -701,8 +701,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    }
 	    }
     }
-        	
-	private void writeToZip(ZipOutputStream zos, String fileName, InputStream inputStream) throws IOException{
+     // Filter all slash, backslash, double and simple quote and replace by underscore  
+    private String filterCitationName(String rawName) {
+	return( rawName.replaceAll("\\/|\\\\|\"|'", "_"));
+    }
+
+    private void writeToZip(ZipOutputStream zos, String fileName, InputStream inputStream) throws IOException{
 		ZipEntry zipEntry = new ZipEntry(fileName);		
 		zos.putNextEntry(zipEntry);
 		BufferedOutputStream bos = new BufferedOutputStream(zos);
@@ -724,7 +728,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * @throws IOException 
 	 */
 	@SuppressWarnings("unchecked")
-	private File zip(String siteId) throws Exception {
+	private File exportAndZip(String siteId) throws Exception {
 		// opening a new temporary zipfile
 		File zipFile = File.createTempFile("osyl-package-export", ".zip");
 		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile));
