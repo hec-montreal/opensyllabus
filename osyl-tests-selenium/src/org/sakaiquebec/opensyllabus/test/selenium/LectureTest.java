@@ -68,6 +68,18 @@ public class LectureTest extends AbstractOSYLTest {
 	verifyTrue(session().isTextPresent(newName));
 	log("OK: Lecture renamed");
 
+	// Now we rename the lecture from inside
+	enterFirstLecture();
+	session().click("//table[@class=\"Osyl-MouseOverPopup-ButtonPanel\"]"
+			+ "/tbody/tr/td[1]/button");
+	newName = "lecture renamed from inside on " + timeStamp();
+	session().type("//input[@type='text']", newName);
+	// Click OK
+	session().click("//td/table/tbody/tr/td[1]/button");
+	// Ensure the new name is visible
+	verifyTrue(session().isTextPresent(newName));
+	log("OK: Lecture renamed from inside");
+
 	/* Now we switch the edited lecture with the 2nd one which comes at the
 	 * 1st position. Then we edit the 1st one with a new name, we ensure it
 	 * is visible, then we delete the lecture and we ensure it is not
@@ -124,10 +136,9 @@ public class LectureTest extends AbstractOSYLTest {
 	}
 	log("OK: Lecture added");
 
-	// Click Edit for the last lecture (actually we don't really specify it
-	// is the 1st lecture)
-	session().click("//tr["	+ lectureNb + "]/td/table/tbody/tr/td[2]/" +
-			"div/table[2]/tbody/tr/td[1]/button");
+	// Click Edit for the last lecture
+	session().click("//tr[" + lectureNb + "]/td/table/tbody/tr/td[2]/"
+			+ "div/table[2]/tbody/tr/td[1]/button");
 	// Type a new name
 	newName = "last lecture renamed on " + timeStamp();
 	session().type("//input[@type='text']", newName);
