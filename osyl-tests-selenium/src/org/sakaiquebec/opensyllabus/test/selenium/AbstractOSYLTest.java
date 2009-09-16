@@ -262,6 +262,29 @@ public class AbstractOSYLTest extends AbstractTestCase {
 			+ "/tbody/tr/td/table/tbody/tr/td/div/a");
     } // enterFirstLecture
 
+    
+    /**
+     * Clicks on the Home button in OpenSyllabus. It expects to see at least
+     * one td with class Osyl-ListItemView-labelNo and fails otherwise. Note:
+     * This could be OK that there is no such td (zero lecture in the course
+     * outline) but this is the way this method behaves for now.
+     */
+    public void clickHomeButton() throws Exception {
+	log("Entering clickHomeButton");
+
+	// Click the button
+	session().click("gwt-uid-1");
+	
+	// We check that we see at least one LectureNo label. Actually there
+	// could be zero such label if all lectures have been deleted!
+	String xpath = "//td[@class=\"Osyl-ListItemView-labelNo\"]";
+	int lectureNb =	session().getXpathCount(xpath).intValue();
+	log("clickHomeButton: found " + lectureNb + " lectures");
+	if (lectureNb == 0) {
+	    fail("clickHomeButton: Could not find " + xpath);
+	}
+    } // clickHomeButton
+
     /**
      * Clicks on the Save button in OpenSyllabus. It expects to see an
      * UnobtrusiveAlert in the next 60 seconds. We can safely assume that it
@@ -305,6 +328,28 @@ public class AbstractOSYLTest extends AbstractTestCase {
 	    Thread.sleep(100);
 	} // for
     } // saveCourseOutline
+
+    /**
+     * Pauses for a specified delay (in milliseconds). This might be needed 
+     * in some cases to allow an unobtrusive message to disappear, for
+     * instance. 
+     */
+    public void pause(int millis) {
+	try {
+	    Thread.sleep(millis);
+	} catch(InterruptedException e) {
+	    log("pause(" + millis +") failed :" + e);
+	    e.printStackTrace();
+	}
+    }
+
+    /**
+     * Pauses for a default delay (5 seconds). This allow for any unobtrusive 
+     * alert to disappear. 
+     */
+    public void pause() {
+	pause(5000);
+    }
 
     /**
      * Shortcut for <code>org.testng.Reporter.log(msg, true)</code>.
