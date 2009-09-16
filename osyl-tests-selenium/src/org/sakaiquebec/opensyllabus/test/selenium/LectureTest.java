@@ -108,7 +108,7 @@ public class LectureTest extends AbstractOSYLTest {
 	// MSIE):
 	session().mouseOver("//div[@class=\"Osyl-UnitView-ResPanel\"]");
 	session().mouseOver("//div[@class=\"Osyl-UnitView-ResPanel Osyl-UnitView-ResPanel-Hover\"]");
-	session().mouseOver("//table[@class=\"Osyl-MouseOverPopup-ButtonPanel\"][2]/tbody/tr[2]");
+	session().mouseOver("//table[@class=\"Osyl-MouseOverPopup-ArrowButtonPanel\"]/tbody/tr[2]");
 	session().mouseOver("//div[@class=\"Osyl-PushButton Osyl-PushButton-up\"]");
 	session().mouseDown("//div[@class=\"Osyl-PushButton Osyl-PushButton-up-hovering\"]");
 	session().mouseUp("//div[@class=\"Osyl-PushButton Osyl-PushButton-down-hovering\"]");
