@@ -91,7 +91,7 @@ public class LectureTest extends AbstractOSYLTest {
 
 	// We rename the 2nd lecture: this will help us check that the
 	// following step (lecture switch) is working
-	session().click("//tr[2]/td/table/tbody/tr/td[2]/"
+	session().click("//tr[3]/td/table/tbody/tr/td[2]/"
 			+ "div/table[2]/tbody/tr/td[1]/button");
 	// Type a new name
 	String newName2 = "2nd lecture renamed on " + timeStamp();
@@ -101,6 +101,8 @@ public class LectureTest extends AbstractOSYLTest {
 	// Ensure the new name is visible
 	assertTrue("2nd lecture new title not present",
 		session().isTextPresent(newName2));
+	assertTrue("1st lecture new title not present after 2nd lecture edit",
+		session().isTextPresent(newName));
 	log("OK: 2nd lecture renamed");
 	
 	
@@ -112,6 +114,7 @@ public class LectureTest extends AbstractOSYLTest {
 	session().mouseOver("//div[@class=\"Osyl-PushButton Osyl-PushButton-up\"]");
 	session().mouseDown("//div[@class=\"Osyl-PushButton Osyl-PushButton-up-hovering\"]");
 	session().mouseUp("//div[@class=\"Osyl-PushButton Osyl-PushButton-down-hovering\"]");
+	pause();
 	
 	// Click Delete for the first lecture (the one titled "2nd lecture..."
 	session().click(
@@ -155,8 +158,8 @@ public class LectureTest extends AbstractOSYLTest {
 	}
 	log("OK: Lecture added");
 
-	// Click Edit for the last lecture
-	session().click("//tr[" + lectureNb + "]/td/table/tbody/tr/td[2]/"
+	// Click Edit for the last lecture (add 1 because 1st row is a label)
+	session().click("//tr[" + (1+lectureNb) + "]/td/table/tbody/tr/td[2]/"
 			+ "div/table[2]/tbody/tr/td[1]/button");
 	// Type a new name
 	newName = "last lecture renamed on " + timeStamp();
