@@ -1,6 +1,9 @@
 package org.sakaiquebec.opensyllabus.client.ui;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -31,12 +34,16 @@ public class OsylRoundCornersPanel extends Composite {
 	enclosingPanel = new VerticalPanel(); 
 	enclosingPanel.setStyleName(enclosingPanelStyle); 
 	bottomLeft = new SimplePanel(); 
+	bottomLeft.add(new HTML(" "));
 	bottomLeft.setStyleName(bottomLeftStyle); 
 	bottomRight = new SimplePanel(); 
+	bottomRight.add(new HTML(" "));
 	bottomRight.setStyleName(bottomRightStyle); 
 	topLeft = new SimplePanel(); 
+	topLeft.add(new HTML(" "));
 	topLeft.setStyleName(topLeftStyle); 	    
 	topRight = new SimplePanel(); 
+	topRight.add(new HTML(" "));
 	topRight.setStyleName(topRightStyle); 
         // Corners panels and internal Widget are all 
          // children of the enclosingPanel

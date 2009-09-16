@@ -20,12 +20,14 @@
 
 package org.sakaiquebec.opensyllabus.client.ui;
 
+import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 
@@ -40,6 +42,7 @@ import com.google.gwt.user.client.ui.MenuItem;
  * @version $Id: $
  */
 public class OsylTextToolbar extends Composite {
+    
     private OsylController osylController;
 
     /**
@@ -47,7 +50,6 @@ public class OsylTextToolbar extends Composite {
      */
     final OsylConfigMessages uiMessages;
 
-//    private MenuBar menuBar;
     private OsylMenuBar menuBar;
 
     private MenuItem homePushButton;
@@ -67,6 +69,10 @@ public class OsylTextToolbar extends Composite {
     private MenuItem printPushButton;
 
     private MenuItem closePreviewPushButton;
+    
+    // Image Bundle
+    private OsylImageBundleInterface osylImageBundle =
+	    (OsylImageBundleInterface) GWT.create(OsylImageBundleInterface.class);
 
     public OsylTextToolbar(OsylController osylController) {
 	// int messages
@@ -75,23 +81,21 @@ public class OsylTextToolbar extends Composite {
 
 	menuBar = new OsylMenuBar();
 
-//	menuBar = new OsylMenuBar(false, MenuBar.MenuBarImages images);
-//	Image myIcon =
-//		getView().getOsylImageBundle().myIcon().createImage();
-//	getViewerPanel().add(myIcon);
-
 	if (getOsylController().isInPreview()) {
 	    closePreviewPushButton =
-		    createMenuItem("ButtonCloseToolBar",
+		    createMenuItem("ButtonCloseToolBar", 
+			    getOsylImageBundle().cross(),
 			    "ButtonCloseToolBarTooltip");
 	    menuBar.addItem(closePreviewPushButton);
 	} else {
 	    homePushButton =
 		    createMenuItem("ButtonHomeToolBar",
+			    getOsylImageBundle().home(),
 			    "ButtonHomeToolBarTooltip");
 
 	    savePushButton =
 		    createMenuItem("ButtonSaveToolBar",
+			    getOsylImageBundle().save(),
 			    "ButtonSaveToolBarTooltip");
 
 	    addMenuButton = new MenuBar(true);
@@ -106,22 +110,42 @@ public class OsylTextToolbar extends Composite {
 
 	    publishPushButton =
 		    createMenuItem("ButtonPublishToolBar",
+			    getOsylImageBundle().publish(),
 			    "ButtonPublishToolBarTooltip");
 
 	    printPushButton =
 		    createMenuItem("ButtonPrintToolBar",
+			    getOsylImageBundle().printer(),
 			    "ButtonPrintToolBarTooltip");
 
 	    menuBar.addItem(homePushButton);
 	    menuBar.addItem(savePushButton);
-	    menuBar.addItem(uiMessages.getMessage("ButtonAddToolBar"),
-		    addMenuButton);
-	    menuBar.addItem(uiMessages.getMessage("ButtonViewToolBar"),
+	    // MenuBar Item with icon - nice trick...
+	    menuBar.addItem( getOsylImageBundle().plus().getHTML() + "&nbsp;" + 
+		    	uiMessages.getMessage("ButtonAddToolBar"),
+		    	true,
+		    	addMenuButton);
+	    menuBar.addItem(getOsylImageBundle().preview().getHTML() + "&nbsp;" + 
+		    uiMessages.getMessage("ButtonViewToolBar") ,
+		    true,
 		    viewMenuButton);
 	    menuBar.addItem(publishPushButton);
 	    menuBar.addItem(printPushButton);
 	}
 	initWidget(menuBar);
+    }
+
+    public MenuItem createMenuItem(String messageKey, 
+	    AbstractImagePrototype menuImage, 
+	    String toolTipKey) {
+	Command nullCommand = null;
+        MenuItem menuItem =
+		new MenuItem(menuImage.getHTML() + 
+			"&nbsp;"+ uiMessages.getMessage(messageKey), 
+			true, 
+			nullCommand);
+        menuItem.setTitle(uiMessages.getMessage(toolTipKey));
+	return menuItem;
     }
 
     public MenuItem createMenuItem(String messageKey, String toolTipKey) {
@@ -140,18 +164,13 @@ public class OsylTextToolbar extends Composite {
 	this.osylController = osylController;
     }
 
-//    public MenuBar getMenuBar() {
-//	return menuBar;
-//    }
-    
+    public OsylImageBundleInterface getOsylImageBundle() {
+	return osylImageBundle;
+    }
+
     public OsylMenuBar getMenuBar() {
 	return menuBar;
     }
-
-
-//    public void setMenuBar(MenuBar menuBar) {
-//	this.menuBar = menuBar;
-//    }
 
     public void setMenuBar(OsylMenuBar menuBar) {
 	this.menuBar = menuBar;

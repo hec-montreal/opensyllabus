@@ -46,8 +46,6 @@ public interface OsylImageBundleInterface extends ImageBundle {
 
     public AbstractImagePrototype notVisible();
      
-    public AbstractImagePrototype publish();
-
     public AbstractImagePrototype rtt_backColors();
 
     public AbstractImagePrototype rtt_bold();
@@ -90,8 +88,6 @@ public interface OsylImageBundleInterface extends ImageBundle {
 
     public AbstractImagePrototype rtt_ul();
     
-    public AbstractImagePrototype save();
-
     public AbstractImagePrototype treeClosed();
 
     public AbstractImagePrototype treeLeaf();
@@ -111,5 +107,25 @@ public interface OsylImageBundleInterface extends ImageBundle {
     public AbstractImagePrototype down_full();
     
     public AbstractImagePrototype down_empty();
+    
+    // Specific Methods for the MenuBar
+    
+    // icon for close button
+    public AbstractImagePrototype cross();
+
+    public AbstractImagePrototype home();
+
+    // icon for adding item
+    public AbstractImagePrototype plus();
+
+    public AbstractImagePrototype preview();
+
+    public AbstractImagePrototype printer();
+
+    public AbstractImagePrototype publish();
+    
+    public AbstractImagePrototype save();
+
+
     
 }
