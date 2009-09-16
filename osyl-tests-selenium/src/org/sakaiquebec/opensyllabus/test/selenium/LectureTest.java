@@ -60,58 +60,77 @@ public class LectureTest extends AbstractOSYLTest {
 	session().click(
 		"//button[@class=\"Osyl-Button Osyl-ImageAndTextButton\"]");
 	// Type a new name
-	String newName = "lecture renamed on " + timeStamp();
+	String newName = "First lecture renamed on " + timeStamp();
 	session().type("//input[@type='text']", newName);
 	// Click OK
 	session().click("//td/table/tbody/tr/td[1]/button");
 	// Ensure the new name is visible
-	verifyTrue(session().isTextPresent(newName));
+	assertTrue("New lecture title not present",
+		session().isTextPresent(newName));
 	log("OK: Lecture renamed");
-
+	
 	// Now we rename the lecture from inside
 	enterFirstLecture();
 	session().click("//table[@class=\"Osyl-MouseOverPopup-ButtonPanel\"]"
 			+ "/tbody/tr/td[1]/button");
-	newName = "lecture renamed from inside on " + timeStamp();
+	newName = "First lecture renamed from inside on " + timeStamp();
 	session().type("//input[@type='text']", newName);
 	// Click OK
 	session().click("//td/table/tbody/tr/td[1]/button");
 	// Ensure the new name is visible
-	verifyTrue(session().isTextPresent(newName));
+	assertTrue("New lecture title not present (inside the lecture)",
+		session().isTextPresent(newName));
 	log("OK: Lecture renamed from inside");
 
-	/* Now we switch the edited lecture with the 2nd one which comes at the
-	 * 1st position. Then we edit the 1st one with a new name, we ensure it
-	 * is visible, then we delete the lecture and we ensure it is not
-	 * visible anymore.
+	// Now we return to the lecture list
+	clickHomeButton();
 
-	======= All this section is commented because right now it
-	======= doesn't work at all (can't click on an arrow)
+	// Ensure the new name is still visible
+	assertTrue("New lecture title not present (renamed from inside)",
+		session().isTextPresent(newName));
 
-	// We could move the 1st lecture to the 2nd position
-	// -- click on the down-arrow (1st lecture) doesn't work:
-	//    session().click("//tr[2]/td/table/tbody/tr/td/div/img");
-	// -- Click on the up-arrow (2nd lecture) doesn't work either
-	//    session().click("//tr[2]/td/table/tbody/tr/td[2]/div/table[3]/tbody/tr[1]/td/table/tbody/tr/td/div/img");
-	// Click edit for the 1st lecture
-	session().click("//button[@class=\"Osyl-Button Osyl-ImageAndTextButton\"]");
+	// We rename the 2nd lecture: this will help us check that the
+	// following step (lecture switch) is working
+	session().click("//tr[2]/td/table/tbody/tr/td[2]/"
+			+ "div/table[2]/tbody/tr/td[1]/button");
 	// Type a new name
-	String newName2 = "lecture to delete " + timeStamp();
+	String newName2 = "2nd lecture renamed on " + timeStamp();
 	session().type("//input[@type='text']", newName2);
 	// Click OK
 	session().click("//td/table/tbody/tr/td[1]/button");
 	// Ensure the new name is visible
-	verifyTrue(session().isTextPresent(newName2));
-*/
-
-	// Click Delete for the first lecture
+	assertTrue("2nd lecture new title not present",
+		session().isTextPresent(newName2));
+	log("OK: 2nd lecture renamed");
+	
+	
+	// We now switch the 1st and 2nd lectures (this might not work in
+	// MSIE):
+	session().mouseOver("//div[@class=\"Osyl-UnitView-ResPanel\"]");
+	session().mouseOver("//div[@class=\"Osyl-UnitView-ResPanel Osyl-UnitView-ResPanel-Hover\"]");
+	session().mouseOver("//table[@class=\"Osyl-MouseOverPopup-ButtonPanel\"][2]/tbody/tr[2]");
+	session().mouseOver("//div[@class=\"Osyl-PushButton Osyl-PushButton-up\"]");
+	session().mouseDown("//div[@class=\"Osyl-PushButton Osyl-PushButton-up-hovering\"]");
+	session().mouseUp("//div[@class=\"Osyl-PushButton Osyl-PushButton-down-hovering\"]");
+	
+	// Click Delete for the first lecture (the one titled "2nd lecture..."
 	session().click(
 		"//td[2]/button[@class=\"Osyl-Button "
 			+ "Osyl-ImageAndTextButton\"]");
 	// We click OK to confirm the deletion
 	session().click("//td/table/tbody/tr/td[1]/button");
-	// Ensure the new name is not visible anymore
-	verifyTrue(!session().isTextPresent(newName));
+	// We pause to allow for the delete confirmation to disappear!
+	// Otherwise the test below ensuring that the 2nd lecture title is not
+	// visible anymore will fail
+	pause();
+	saveCourseOutline();
+	// Ensure the new title of first lecture is still visible
+	assertTrue("1st lecture title not present after switch and delete",
+		session().isTextPresent(newName));
+	// Ensure the new title of 2nd lecture is not visible
+	assertFalse("2nd lecture title still present after switch and delete",
+		session().isTextPresent(newName2));
+	log("OK: Lecture 1 and 2 switched");
 	log("OK: Lecture deleted");
 
 	// Click menu "Add..."
@@ -145,7 +164,8 @@ public class LectureTest extends AbstractOSYLTest {
 	// Click OK
 	session().click("//td/table/tbody/tr/td[1]/button");
 	// Ensure the new name is visible
-	verifyTrue(session().isTextPresent(newName));
+	assertTrue("Last lecture new title not present",
+		session().isTextPresent(newName));
 	log("OK: Last lecture renamed");
 
 	// And we save the changes
