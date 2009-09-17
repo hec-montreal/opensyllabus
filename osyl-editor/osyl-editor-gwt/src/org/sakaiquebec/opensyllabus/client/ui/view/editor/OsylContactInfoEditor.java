@@ -176,10 +176,11 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     private ListBox createRoleListBox() {
 	ListBox lb = new ListBox();
 	lb.setStylePrimaryName("Osyl-ContactInfo-ListBox");
-	List<String> rolesList = getView().getController().getOsylConfig().getRolesList();
+	List<String> rolesList =
+	    getView().getController().getOsylConfig().getRolesList();
 	if(rolesList.size()>0){
-	    lb.addItem(getView()
-		    .getCoMessage("ResProxContactInfoView_PleaseChoose"), "");
+	    lb.addItem(getView().getCoMessage(
+		    "ResProxContactInfoView_PleaseChoose").trim(), "");
 	}
 	for(String roleKey : rolesList){
 	    lb.addItem(getView()
@@ -787,7 +788,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	if (isInEditionMode()) {
 	    int selectedIndex = 0;
 	    for (int i = 0; i < editorRole.getItemCount(); i++) {
-		if (editorRole.getItemText(i).equals(text)) {
+		if (editorRole.getValue(i).equals(text)) {
 		    selectedIndex = i;
 		    break;
 		}
