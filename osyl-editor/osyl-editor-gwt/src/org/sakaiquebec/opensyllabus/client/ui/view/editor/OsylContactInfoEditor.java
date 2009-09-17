@@ -699,7 +699,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	    OsylAlertDialog alert =
 		new OsylAlertDialog(getView().getUiMessage("Global.error"),
 			getView().getCoMessage(
-			"ResProxContactInfoView_RoleMandatory"));
+			"ResProxContactInfoView_TitleMandatory"));
 	    alert.show();
 	    return false;
 	} else if ("".equals(lastName)) {
