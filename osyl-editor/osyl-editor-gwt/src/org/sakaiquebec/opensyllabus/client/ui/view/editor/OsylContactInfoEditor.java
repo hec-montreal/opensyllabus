@@ -179,7 +179,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	List<String> rolesList = getView().getController().getOsylConfig().getRolesList();
 	if(rolesList.size()>0){
 	    lb.addItem(getView()
-		    .getCoMessage("ResProxContactInfoView_PleaseChoose"));
+		    .getCoMessage("ResProxContactInfoView_PleaseChoose"), "");
 	}
 	for(String roleKey : rolesList){
 	    lb.addItem(getView()
@@ -268,6 +268,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public RichTextArea getEditorAvailability() {
 	if (editorAvailability == null) {
 	    editorAvailability = new RichTextArea();
+	    editorAvailability.setHeight("5em");
 	    editorAvailability.setStylePrimaryName("Osyl-UnitView-TextArea");
 	    editorAvailability.setTitle(getView().getCoMessage(
 		"ResProxContactInfoView_AvailabilityLabel"));
@@ -300,6 +301,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public RichTextArea getEditorComments() {
 	if (editorComments == null) {
 	    editorComments = new RichTextArea();
+	    editorComments.setHeight("5em");
 	    editorComments.setStylePrimaryName("Osyl-UnitView-TextArea");
 	    editorComments.setTitle(getView().getCoMessage(
 		    "ResProxContactInfoView_CommentsLabel"));
@@ -547,13 +549,13 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 
 	SimplePanel viewerPanelEMail = new SimplePanel();
 	viewerPanelEMail.add(getViewerEMail());
-	if (!nullOrEmpty(getView().getPhone())) {
+	if (!nullOrEmpty(getView().getEMail())) {
 	    getViewerContainer().add(viewerPanelEMail);
 	}
 
 	SimplePanel viewerPanelPhone = new SimplePanel();
 	viewerPanelPhone.add(getViewerPhone());
-	if (!nullOrEmpty(getView().getEMail())) {
+	if (!nullOrEmpty(getView().getPhone())) {
 	    getViewerContainer().add(viewerPanelPhone);	
 	}
 	
@@ -564,7 +566,9 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	HorizontalPanel viewerOfficeHzContainer = new HorizontalPanel();
 	viewerOfficeHzContainer.add(viewerOfficeLabelPanel);
 	viewerOfficeHzContainer.add(viewerPanelOffice);
-	getViewerContainer().add(viewerOfficeHzContainer);
+	if (!nullOrEmpty(getView().getOffice())) {
+	    getViewerContainer().add(viewerOfficeHzContainer);
+	}
 
 	SimplePanel viewerAvailabilityLabelPanel = new SimplePanel();
 	viewerAvailabilityLabelPanel.add(getAvailabilityLabelViewer());
@@ -663,7 +667,8 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	viewerFirstName.setHTML(getView().getFirstName());
 	viewerOffice.setHTML(getView().getOffice());
 	viewerPhone.setHTML(getView().getPhone());
-	viewerEMail.setHTML("<a href=\"mailto:"+getView().getEMail()+"\">"+getView().getEMail()+"</a>");
+	viewerEMail.setHTML("<a href=\"mailto:"+getView().getEMail()+"\">"+
+		getView().getEMail()+"</a>");
 	viewerAvailability.setHTML(getView().getAvailability());
 	viewerComments.setHTML(getView().getComments());
 
@@ -775,7 +780,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public String getTextRole() {
 	// We return the listBox value as this is what must be stored in the
 	// model (and not the text value).
-	return editorRole.getItemText(editorRole.getSelectedIndex());
+	return editorRole.getValue(editorRole.getSelectedIndex());
     }
 
     private void setTextRole(String text) {
