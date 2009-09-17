@@ -268,7 +268,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public RichTextArea getEditorAvailability() {
 	if (editorAvailability == null) {
 	    editorAvailability = new RichTextArea();
-	    editorAvailability.setHeight("5em");
+	    editorAvailability.setHeight("7em");
 	    editorAvailability.setStylePrimaryName("Osyl-UnitView-TextArea");
 	    editorAvailability.setTitle(getView().getCoMessage(
 		"ResProxContactInfoView_AvailabilityLabel"));
@@ -301,7 +301,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public RichTextArea getEditorComments() {
 	if (editorComments == null) {
 	    editorComments = new RichTextArea();
-	    editorComments.setHeight("5em");
+	    editorComments.setHeight("7em");
 	    editorComments.setStylePrimaryName("Osyl-UnitView-TextArea");
 	    editorComments.setTitle(getView().getCoMessage(
 		    "ResProxContactInfoView_CommentsLabel"));
@@ -883,8 +883,9 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
      */
     private void enterEdit(RichTextArea rta, String txt) {
 
-	// We instruct the editor to use all the available space
-	rta.setWidth("100%");
+	// We instruct the editor to use almost all the available space. Do not use
+	// 100% as it makes the textarea left-end go beyond the popup limits.
+	rta.setWidth("98%");
 
 	// We get the text to edit from the model
 	rta.setHTML(txt);
@@ -897,10 +898,11 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
      */
     private void enterEdit(TextBox tb, String txt) {
 
-	// We instruct the editor to use all the available space
-	tb.setWidth("100%");
+	// We instruct the editor to use almost all the available space. Do not use
+	// 100% as it makes the textarea left-end go beyond the popup limits.
+	tb.setWidth("98%");
+
 	// We get the text to edit from the model
-	// rta.setHTML(txt);
 	tb.setText(txt);
 
     } // enterEdit
