@@ -31,7 +31,10 @@
       <groupId>org.sakaiquebec.opensyllabus.editorgwt</groupId>
       <artifactId>osyl-editor-gwt</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>org.sakaiquebec.opensyllabus</groupId>
+      <artifactId>osyl-configs</artifactId>
+    </dependency>
       <!--  sakai -->
     <dependency>
       <groupId>org.sakaiproject</groupId>
@@ -94,37 +97,6 @@
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.gwt-fx</groupId>
-      <artifactId>gwt-fx</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-incubator</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.gwt.mosaic</groupId>
-      <artifactId>gwt-mosaic</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.gwt.mosaic</groupId>
-      <artifactId>gwt-beansbinding</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.gwt.mosaic</groupId>
-      <artifactId>gwt-dnd</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.gwt.mosaic</groupId>
-      <artifactId>gwt-ext</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -190,6 +162,32 @@
           </execution>
         </executions>
       </plugin>
-    </plugins>
+	  <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-dependency-plugin</artifactId>
+		<version>2.1</version>
+		<executions>
+			<execution>
+				<id>unpack</id>
+				<phase>package</phase>
+				<goals>
+					<goal>unpack</goal>
+				</goals>
+				<configuration>
+					<artifactItems>
+						<artifactItem>
+							<groupId>org.sakaiquebec.opensyllabus</groupId>
+							<artifactId>osyl-configs</artifactId>
+							<version>M2</version>
+							<type>jar</type>
+							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
+							<excludes>META-INF/**</excludes>
+						</artifactItem>
+					</artifactItems>
+				</configuration>
+			</execution>
+		</executions>
+	</plugin>
+	</plugins>
   </build>
 </project>

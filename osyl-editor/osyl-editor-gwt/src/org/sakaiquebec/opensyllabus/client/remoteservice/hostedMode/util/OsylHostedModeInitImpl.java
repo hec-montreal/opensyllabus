@@ -29,12 +29,12 @@ package org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util;
  * @version $$
  */
 public class OsylHostedModeInitImpl implements OsylHostedModeInit {
-	protected String configPath = "resources/osylcoconfigsmock/default/rules.xml";
-	protected String modelPath = "resources/osylcoconfigsmock/default/coContentTemplate.xml";
-	protected String cOMessagesPath = "resources/osylcoconfigsmock/default/bundle/COMessages.properties";
-	protected String uIMessagesPath = "resources/osylcoconfigsmock/default/bundle/UIMessages.properties";
-	protected String cORolesListPath = "resources/osylcoconfigsmock/default/coRolesList.xml";
-	protected String cOEvalTypeListPath = "resources/osylcoconfigsmock/default/coEvalTypeList.xml";
+	protected String configPath = "resources/osylcoconfigs/default/rules.xml";
+	protected String modelPath = "resources/osylcoconfigs/default/coContentTemplate.xml";
+	protected String cOMessagesPath = "resources/osylcoconfigs/default/bundle/COMessages.properties";
+	protected String uIMessagesPath = "resources/osylcoconfigs/default/bundle/UIMessages.properties";
+	protected String cORolesListPath = "resources/osylcoconfigs/default/coRolesList.xml";
+	protected String cOEvalTypeListPath = "resources/osylcoconfigs/default/coEvalTypeList.xml";
 	
 	/**
 	 * {@inheritDoc}

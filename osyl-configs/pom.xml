@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.sakaiquebec.opensyllabus</groupId>
+		<artifactId>osyl</artifactId>
+		<version>M2</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<groupId>org.sakaiquebec.opensyllabus</groupId>
+	<artifactId>osyl-configs</artifactId>
+	<packaging>jar</packaging>
+
+	<name>osyl-configs</name>
+	<description>OpenSyllabus Configurations Package (skin, rules...). The content should be modified by any organization who wants to specify her own configuration</description>
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+	</build>
+
+	<dependencies>
+	</dependencies>
+</project>

@@ -35,6 +35,7 @@
 
   <modules>
     <module>gwt-shared</module>
+    <module>osyl-configs</module>
     <module>osyl-admin</module>
     <module>osyl-common</module>
     <module>osyl-editor</module>
@@ -73,6 +74,11 @@
   <dependencyManagement>
     <dependencies>
       <!--  opensyllabus -->
+      <dependency>
+        <groupId>org.sakaiquebec.opensyllabus</groupId>
+        <artifactId>osyl-configs</artifactId>
+        <version>M2</version>
+      </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-common-shared</artifactId>
