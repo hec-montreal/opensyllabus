@@ -376,14 +376,15 @@ public class AbstractOSYLTest extends AbstractTestCase {
 	    session().selectFrame("relative=parent");
 	    session().captureEntirePageScreenshot(fileName, "background=white");
 	} catch (Exception e) {
-	    log("Unable to capture screenshot [" + fileName + "]");
+	    log("Unable to capture screenshot [" + fileName + "]: " + e);
+	    e.printStackTrace();
 	}
 	fail(msg);
     }
     
     private String getScreenShotFileName(String msg) {
 	String fileName = System.getProperty("user.dir") + File.separator;
-	fileName += msg.replaceAll("[/\\:?!]", "_") + ".png";
+	fileName += msg.replaceAll("[ /\\:?!]", "_") + ".png";
 	return fileName;
     }
 }
