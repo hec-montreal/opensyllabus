@@ -40,6 +40,13 @@ public class AbstractOSYLTest extends AbstractTestCase {
 
     public static final String TEST_SITE_NAME = "tests-selenium-opensyllabus";
 
+    private static final String SCREENSHOT_DIR = "C:/opt/selenium/screenshots/";
+
+    // Static initializer: create screenshot dir
+    static {
+	ensureScreenShotDirOK();
+    }
+    
     /**
      * Shortcut for session.waitForPageToLoad("30000").
      */
@@ -269,23 +276,22 @@ public class AbstractOSYLTest extends AbstractTestCase {
 			+ "/tbody/tr/td/table/tbody/tr/td/div/a");
     } // enterFirstLecture
 
-    
     /**
-     * Clicks on the Home button in OpenSyllabus. It expects to see at least
-     * one td with class Osyl-ListItemView-labelNo and fails otherwise. Note:
-     * This could be OK that there is no such td (zero lecture in the course
-     * outline) but this is the way this method behaves for now.
+     * Clicks on the Home button in OpenSyllabus. It expects to see at least one
+     * td with class Osyl-ListItemView-labelNo and fails otherwise. Note: This
+     * could be OK that there is no such td (zero lecture in the course outline)
+     * but this is the way this method behaves for now.
      */
     public void clickHomeButton() throws Exception {
 	log("Entering clickHomeButton");
 
 	// Click the button
 	session().click("gwt-uid-1");
-	
+
 	// We check that we see at least one LectureNo label. Actually there
 	// could be zero such label if all lectures have been deleted!
 	String xpath = "//td[@class=\"Osyl-ListItemView-labelNo\"]";
-	int lectureNb =	session().getXpathCount(xpath).intValue();
+	int lectureNb = session().getXpathCount(xpath).intValue();
 	log("clickHomeButton: found " + lectureNb + " lectures");
 	if (lectureNb == 0) {
 	    fail("clickHomeButton: Could not find " + xpath);
@@ -337,22 +343,21 @@ public class AbstractOSYLTest extends AbstractTestCase {
     } // saveCourseOutline
 
     /**
-     * Pauses for a specified delay (in milliseconds). This might be needed 
-     * in some cases to allow an unobtrusive message to disappear, for
-     * instance. 
+     * Pauses for a specified delay (in milliseconds). This might be needed in
+     * some cases to allow an unobtrusive message to disappear, for instance.
      */
     public void pause(int millis) {
 	try {
 	    Thread.sleep(millis);
-	} catch(InterruptedException e) {
-	    log("pause(" + millis +") failed :" + e);
+	} catch (InterruptedException e) {
+	    log("pause(" + millis + ") failed :" + e);
 	    e.printStackTrace();
 	}
     }
 
     /**
-     * Pauses for a default delay (5 seconds). This allow for any unobtrusive 
-     * alert to disappear. 
+     * Pauses for a default delay (5 seconds). This allow for any unobtrusive
+     * alert to disappear.
      */
     public void pause() {
 	pause(5000);
@@ -373,19 +378,31 @@ public class AbstractOSYLTest extends AbstractTestCase {
 	String fileName = getScreenShotFileName(msg);
 	log("capturing to " + fileName);
 	try {
+	    // Do not put this selectFrame in captureScreenShot()
 	    session().selectFrame("relative=parent");
-	    session().captureEntirePageScreenshot(fileName, "background=white");
+	    captureScreenShot(fileName);
 	} catch (Exception e) {
 	    log("Unable to capture screenshot [" + fileName + "]: " + e);
 	    e.printStackTrace();
 	}
 	fail(msg);
     }
+
+    private static String getScreenShotFileName(String msg) {
+	return SCREENSHOT_DIR + msg.replaceAll("[/\\:?!]", "_") + ".png";
+    }
+
+    private static void ensureScreenShotDirOK() {
+	// Actually the capture is always done on the windows machine (running
+	// the test) and not on the grid
+	File dir = new File(SCREENSHOT_DIR);
+	dir.mkdirs();
+	if (!dir.exists()) {
+	    fail("Unable to create screenshot dir: " + SCREENSHOT_DIR);
+	}
+    }
     
-    private String getScreenShotFileName(String msg) {
-//	String fileName = System.getProperty("user.dir") + File.separator;
-	String fileName = "C:/";
-	fileName += msg.replaceAll("[ /\\:?!]", "_") + ".png";
-	return fileName;
+    protected static void captureScreenShot(String fileName) {
+	session().captureEntirePageScreenshot(fileName, "background=white");
     }
 }
