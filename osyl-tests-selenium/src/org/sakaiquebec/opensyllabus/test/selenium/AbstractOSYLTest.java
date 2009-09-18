@@ -21,6 +21,7 @@
 
 package org.sakaiquebec.opensyllabus.test.selenium;
 
+import java.io.File;
 import com.rsmart.cle.test.AbstractTestCase;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -231,6 +232,12 @@ public class AbstractOSYLTest extends AbstractTestCase {
 		fail("Timeout waiting for Osyl-UnitView-UnitPanel sub-structure:"
 			+ " __Was OpenSyllabus added to the site?__");
 	    }
+	    if (session().isTextPresent("Exception")
+		    && session().isTextPresent("Stacktrace")
+		    && session().isTextPresent("at org.sakaiproject.portal")) {
+		logAndFail("Found exception waiting for OpenSyllabus: "
+			+ "deployment may have failed. See screenshot.");
+	    }
 	    try {
 		if (session().isElementPresent(
 			"//table[@class=\"Osyl-UnitView-UnitPanel\"]"
@@ -363,6 +370,20 @@ public class AbstractOSYLTest extends AbstractTestCase {
      */
     protected void logAndFail(String msg) {
 	log(msg);
+	String fileName = getScreenShotFileName(msg);
+	log("capturing to " + fileName);
+	try {
+	    session().selectFrame("relative=parent");
+	    session().captureEntirePageScreenshot(fileName, "background=white");
+	} catch (Exception e) {
+	    log("Unable to capture screenshot [" + fileName + "]");
+	}
 	fail(msg);
+    }
+    
+    private String getScreenShotFileName(String msg) {
+	String fileName = System.getProperty("user.dir") + File.separator;
+	fileName += msg.replaceAll("[/\\:?!]", "_") + ".png";
+	return fileName;
     }
 }
