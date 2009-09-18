@@ -19,6 +19,8 @@
 
 	<properties>
 		<gwtModule>org.sakaiquebec.opensyllabus.OsylEditorEntryPoint</gwtModule>
+		<gwtFFWorkingModule>org.sakaiquebec.opensyllabus.FFWorkingOsylEditorEntryPoint</gwtFFWorkingModule>
+		<gwtIEWorkingModule>org.sakaiquebec.opensyllabus.IEWorkingOsylEditorEntryPoint</gwtIEWorkingModule>
 	</properties>
 
 	<dependencies>
@@ -197,6 +199,66 @@
 								<configuration>
 									<modules>
 										<module>${gwtModule}</module>
+									</modules>
+                                    <!-- @see http://mojo.codehaus.org/gwt-maven-plugin/1.1-SNAPSHOT/compile-mojo.html -->
+                                    <webappDirectory>${project.build.directory}/gwt</webappDirectory>
+								</configuration>
+								<goals>
+									<goal>compile</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>dev-ff</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>generate-gwt</id>
+								<phase>generate-resources</phase>
+								<configuration>
+									<modules>
+										<module>${gwtFFWorkingModule}</module>
+									</modules>
+                                    <!-- @see http://mojo.codehaus.org/gwt-maven-plugin/1.1-SNAPSHOT/compile-mojo.html -->
+                                    <webappDirectory>${project.build.directory}/gwt</webappDirectory>
+								</configuration>
+								<goals>
+									<goal>compile</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>dev-ie</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>generate-gwt</id>
+								<phase>generate-resources</phase>
+								<configuration>
+									<modules>
+										<module>${gwtIEWorkingModule}</module>
 									</modules>
                                     <!-- @see http://mojo.codehaus.org/gwt-maven-plugin/1.1-SNAPSHOT/compile-mojo.html -->
                                     <webappDirectory>${project.build.directory}/gwt</webappDirectory>
