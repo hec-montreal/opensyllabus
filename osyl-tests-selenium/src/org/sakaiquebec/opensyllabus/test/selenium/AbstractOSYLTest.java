@@ -384,7 +384,7 @@ public class AbstractOSYLTest extends AbstractTestCase {
     
     private String getScreenShotFileName(String msg) {
 //	String fileName = System.getProperty("user.dir") + File.separator;
-	String fileName = "C:/"'
+	String fileName = "C:/";
 	fileName += msg.replaceAll("[ /\\:?!]", "_") + ".png";
 	return fileName;
     }
