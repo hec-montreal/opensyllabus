@@ -106,14 +106,19 @@ public class LectureTest extends AbstractOSYLTest {
 	log("OK: 2nd lecture renamed");
 	
 	
-	// We now switch the 1st and 2nd lectures (this might not work in
-	// MSIE):
-	session().mouseOver("//div[@class=\"Osyl-UnitView-ResPanel\"]");
-	session().mouseOver("//div[@class=\"Osyl-UnitView-ResPanel Osyl-UnitView-ResPanel-Hover\"]");
-	session().mouseOver("//table[@class=\"Osyl-MouseOverPopup-ArrowButtonPanel\"]/tbody/tr[2]");
-	session().mouseOver("//div[@class=\"Osyl-PushButton Osyl-PushButton-up\"]");
-	session().mouseDown("//div[@class=\"Osyl-PushButton Osyl-PushButton-up-hovering\"]");
-	session().mouseUp("//div[@class=\"Osyl-PushButton Osyl-PushButton-down-hovering\"]");
+	// We now switch the 1st and 2nd lectures (different ways to do it for
+	// MSIE and FF, unfortunately):
+	if (inInternetExplorer()) {
+	    session().keyPress("//div[@class=\"Osyl-PushButton " +
+	    		"Osyl-PushButton-up\"]", "\r");
+	} else {
+	    session().mouseOver("//div[@class=\"Osyl-UnitView-ResPanel\"]");
+	    session().mouseOver("//div[@class=\"Osyl-UnitView-ResPanel Osyl-UnitView-ResPanel-Hover\"]");
+	    session().mouseOver("//table[@class=\"Osyl-MouseOverPopup-ArrowButtonPanel\"]/tbody/tr[2]");
+	    session().mouseOver("//div[@class=\"Osyl-PushButton Osyl-PushButton-up\"]");
+	    session().mouseDown("//div[@class=\"Osyl-PushButton Osyl-PushButton-up-hovering\"]");
+	    session().mouseUp("//div[@class=\"Osyl-PushButton Osyl-PushButton-down-hovering\"]");
+	}
 	pause();
 	
 	// Click Delete for the first lecture (the one titled "2nd lecture..."

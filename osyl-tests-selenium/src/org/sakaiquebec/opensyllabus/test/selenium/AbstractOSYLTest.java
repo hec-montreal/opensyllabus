@@ -22,11 +22,18 @@
 package org.sakaiquebec.opensyllabus.test.selenium;
 
 import java.io.File;
-import com.rsmart.cle.test.AbstractTestCase;
+import com.thoughtworks.selenium.BrowserConfigurationOptions;
+import com.thoughtworks.selenium.SeleneseTestCase;
+
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import org.testng.Reporter;
+
+import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.closeSeleniumSession;
 import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.session;
+import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.startSeleniumSession;
 
 /**
  * AbstractOSYLTest contains several methods that can be used to implement
@@ -36,17 +43,41 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
  * 
  * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
  */
-public class AbstractOSYLTest extends AbstractTestCase {
+public class AbstractOSYLTest extends SeleneseTestCase {
 
+    // Current test site
     public static final String TEST_SITE_NAME = "tests-selenium-opensyllabus";
 
+    // The screenshot capture is always done on the windows machine (running
+    // the test) and not on the grid. This explains the following!
     private static final String SCREENSHOT_DIR = "C:/opt/selenium/screenshots/";
 
-    // Static initializer: create screenshot dir
+    // Current browser
+    private String browserString;
+
+    // Static initializer: create screenshot dir if needed
     static {
 	ensureScreenShotDirOK();
     }
     
+    protected String fileServer;
+
+    @BeforeClass(alwaysRun = true)
+    @Parameters({"seleniumHost", "seleniumPort", "browser", "webSite"})
+    public void setUp(String seleniumHost, int seleniumPort, String browser,
+	    String webSite) {
+
+	startSeleniumSession(seleniumHost, seleniumPort, browser, webSite);
+
+	browserString = browser;
+	log("Starting test with browser: " + browser);
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void tearDown() throws Exception {
+	closeSeleniumSession();
+    }
+
     /**
      * Shortcut for session.waitForPageToLoad("30000").
      */
@@ -375,26 +406,35 @@ public class AbstractOSYLTest extends AbstractTestCase {
      */
     protected void logAndFail(String msg) {
 	log(msg);
-	String fileName = getScreenShotFileName(msg);
-	log("capturing to " + fileName);
-	try {
-	    // Do not put this selectFrame in captureScreenShot()
-	    session().selectFrame("relative=parent");
-	    captureScreenShot(fileName);
-	} catch (Exception e) {
-	    log("Unable to capture screenshot [" + fileName + "]: " + e);
-	    e.printStackTrace();
+
+	// If we are in FF we do a screenshot capture
+	if (inFireFox()) {
+	    String fileName = getScreenShotFileName(msg);
+	    log("capturing to " + fileName);
+	    try {
+		// Do not put this selectFrame in captureScreenShot()
+		session().selectFrame("relative=parent");
+		captureScreenShot(fileName);
+	    } catch (Exception e) {
+		log("Unable to capture screenshot [" + fileName + "]: " + e);
+		e.printStackTrace();
+	    }
 	}
 	fail(msg);
     }
 
+    /**
+     * Returns the screenshot file name corresponding to the specified
+     * message, removing forbidden chars and adding ".png".
+     */    
     private static String getScreenShotFileName(String msg) {
 	return SCREENSHOT_DIR + msg.replaceAll("[/\\:?!]", "_") + ".png";
     }
 
+    /**
+     * Ensures the directory for screenshots exists.    
+     */
     private static void ensureScreenShotDirOK() {
-	// Actually the capture is always done on the windows machine (running
-	// the test) and not on the grid
 	File dir = new File(SCREENSHOT_DIR);
 	dir.mkdirs();
 	if (!dir.exists()) {
@@ -402,7 +442,34 @@ public class AbstractOSYLTest extends AbstractTestCase {
 	}
     }
     
-    protected static void captureScreenShot(String fileName) {
+    /**
+     * Captures a screenshot of current page as PNG file whose name is
+     * specified. Only works in Firefox.
+     */    
+    protected void captureScreenShot(String fileName) {
+	if (inInternetExplorer()) {
+	    log ("Cannot capture a screenshot in Internet Explorer: "
+		    + fileName);
+	    return;
+	}
 	session().captureEntirePageScreenshot(fileName, "background=white");
+    }
+    
+    /**
+     * Returns true if we are running in Internet Explorer.
+     */
+    public boolean inInternetExplorer() {
+	// Note: we don't use runtimeBrowserString() which seems to always
+	// return *iexplore!
+	return browserString.equals("*iexplore");
+    }
+    
+    /**
+     * Returns true if we are running in Firefox.
+     */
+    public boolean inFireFox() {
+	// Note: we don't use runtimeBrowserString() which seems to always
+	// return *iexplore!
+	return browserString.equals("*firefox");
     }
 }
