@@ -22,13 +22,11 @@
 package org.sakaiquebec.opensyllabus.test.selenium;
 
 import java.io.File;
-import com.thoughtworks.selenium.BrowserConfigurationOptions;
 import com.thoughtworks.selenium.SeleneseTestCase;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
 import org.testng.Reporter;
 
 import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.closeSeleniumSession;
@@ -105,6 +103,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().setTimeout("180000");
 	session().open(url);
 	session().setTimeout("30000");
+	if (! session().isElementPresent("eid")
+		&& session().isElementPresent("loginLink1")) {
+	    // We seem to be logged in already. This happens when RC fails to
+	    // close MSIE after a test.
+	    log("logInAsAdmin: We are already logged in!");
+	    return;
+	}
 	session().type("eid", "admin");
 	session().type("pw", "osyl123");
 	session().click("submit");
