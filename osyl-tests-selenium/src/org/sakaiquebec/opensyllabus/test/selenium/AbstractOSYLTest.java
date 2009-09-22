@@ -475,4 +475,26 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	// return *iexplore!
 	return browserString.equals("*firefox");
     }
+    
+    /**
+     * Verifies the specified boolean is true (if we are in MSIE), asserts it
+     * otherwise. This method is handy for tests which can't be fixed in MSIE.
+     * 
+     * @param result
+     */
+    protected void assertOrVerify(String msg, boolean result) {
+	if (inInternetExplorer()) {
+	    // First we do the check (supposed fail at tearDown)
+	    verifyTrue(result);
+	    // And we log it
+	    if (result) {
+		log("assertOrVerify MSIE PASSED : " + msg);
+	    } else {
+		log("assertOrVerify MSIE FAILED : " + msg);
+	    }
+	} else {
+	    assertTrue(msg, result);
+	}
+    } // assertOrVerify
+    
 }

@@ -41,6 +41,9 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
  */
 public class TextTest extends AbstractOSYLTest {
 
+    private static final String SELECTED_RUBRIC = "Description"; 
+    private static final String SELECTED_RUBRIC_VALUE = "description"; 
+    
     @Test(groups = "OSYL-Suite", description = "OSYL test: add a text resource, edit it and save the changes")
     @Parameters( { "webSite" })
     public void testAddText(String webSite) throws Exception {
@@ -74,6 +77,8 @@ public class TextTest extends AbstractOSYLTest {
 
 	// We check that our new text was added (this has no effect if there
 	// was already an Undef Rubric item
+	// TODO: count the resources before and after the addition instead
+	// of detecting this rubric which is localized and not reliable.
 	verifyTrue(session().isTextPresent(undefRubric));
 
 	// open text resource editor
@@ -81,33 +86,36 @@ public class TextTest extends AbstractOSYLTest {
 			"/tr/td[1]/button");
 
 	// Change rubric
-	session().select("listBoxFormElement", "label=Description");
-	session().click("//option[@value='description']");
+	session().select("listBoxFormElement", "label=" + SELECTED_RUBRIC);
+	session().click("//option[@value='" + SELECTED_RUBRIC_VALUE + "']");
 
-	// type text
-	session().selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
-	String newText = "this is a text resource typed by "
+	if (inFireFox()) {
+	    // type text
+	    session().selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
+	    String newText = "this is a text resource typed by "
 		+ "selenium, hope it works and you see it. Added on"
-		+ timeStamp();
-	if (inInternetExplorer()) {
-	    newText += " in MSIE";
-	} else if (inFireFox()) {
-	    newText += " in Firefox";
+		+ timeStamp() + " in Firefox";
+
+	    session().type("//html/body", newText);
+	    // close editor
+	    session().selectFrame("relative=parent");
+	    session().click("//td/table/tbody/tr/td[1]/button");
+	    // check if text is visible
+	    assertTrue(session().isTextPresent(newText));
+	    log("OK: Text resource edited");
 	} else {
-	    newText += " in an unknown browser";
+	    log("RichText edition can only be tested in Firefox");
+	    // close editor
+	    session().selectFrame("relative=parent");
+	    session().click("//td/table/tbody/tr/td[1]/button");
 	}
-	session().type("//html/body", newText);
-	session().selectFrame("relative=parent");
-	// close editor
-	session().click("//td/table/tbody/tr/td[1]/button");
-	// check if text is visible TODO: should use assert instead of
-	// verifyTrue but I have to make it work in MSIE before!
-	verifyTrue(session().isTextPresent(newText));
-	log("OK: Text resource edited");
-	// check if the new rubric is visible
-	assertTrue(session().isTextPresent("Description"));
-	log("OK: rubric Description is visible");
-	
+
+	// check if the new rubric is visible. This test fail on my local MSIE
+	// but not our RC...  
+	assertOrVerify("Expected to see rubric [" + SELECTED_RUBRIC
+		+ "] after text edition",
+		session().isTextPresent(SELECTED_RUBRIC));
+
 	// We should be back to the initial state
 	if(session().isTextPresent(undefRubric)) {
 	    if (undefRubricVisible) {
@@ -122,7 +130,6 @@ public class TextTest extends AbstractOSYLTest {
 		log("OK Rubric \"" + undefRubric + "\" is still not showing");
 	    }
 	}
-	//verifyTrue(session().isTextPresent(undefRubric) ==undefRubricVisible);
 
 	// Save changes
 	saveCourseOutline();
