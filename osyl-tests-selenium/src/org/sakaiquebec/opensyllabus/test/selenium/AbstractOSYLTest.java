@@ -55,11 +55,6 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     // Current browser
     private String browserString;
 
-    // Static initializer: create screenshot dir if needed
-    static {
-	ensureScreenShotDirOK();
-    }
-    
     protected String fileServer;
 
     @BeforeClass(alwaysRun = true)
@@ -338,9 +333,14 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      */
     public void saveCourseOutline() throws Exception {
 	log("Entering saveCourseOutline");
+
+	long start = System.currentTimeMillis();
+	String origSpeed = session().getSpeed();
+	session().setSpeed("30");
+
 	session().click("gwt-uid-2");
 	for (int second = 0;; second++) {
-	    if (second >= 600) {
+	    if (second >= 2000) {
 		logAndFail("Save failed: Timed out waiting for "
 			+ "confirmation (after 60 seconds)");
 		return; // for readability :-)
@@ -352,6 +352,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 				"//div[@class=\"Osyl-UnobtrusiveAlert\"]")) {
 		    // We are ok
 		    log("Leaving saveCourseOutline: OK");
+		    session().setSpeed(origSpeed);
 		    return;
 		}
 		if (session().isAlertPresent()) {
@@ -366,10 +367,11 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		}
 	    } catch (Exception e) {
 		logAndFail("saveCourseOutline: Got exception: " + e);
+		e.printStackTrace();
 		return;
 	    }
 
-	    Thread.sleep(100);
+	    Thread.sleep(30);
 	} // for
     } // saveCourseOutline
 
@@ -452,6 +454,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		    + fileName);
 	    return;
 	}
+	ensureScreenShotDirOK();
 	session().captureEntirePageScreenshot(fileName, "background=white");
     }
     

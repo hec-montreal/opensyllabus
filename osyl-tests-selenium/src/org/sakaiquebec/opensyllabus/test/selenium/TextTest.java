@@ -61,6 +61,8 @@ public class TextTest extends AbstractOSYLTest {
 	boolean undefRubricVisible = session().isTextPresent(undefRubric);
 	if (undefRubricVisible) {
 	    log("Rubric \"" + undefRubric + "\" is already showing");
+	} else {
+	    log("Rubric \"" + undefRubric + "\" not initially showing");
 	}
 
 	// Click menu "Add..."
@@ -84,19 +86,26 @@ public class TextTest extends AbstractOSYLTest {
 
 	// type text
 	session().selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
-	session().type(
-		"//html/body",
-		"this is a text resource typed by "
-			+ "selenium, hope it works and you see it. Added on"
-			+ timeStamp());
+	String newText = "this is a text resource typed by "
+		+ "selenium, hope it works and you see it. Added on"
+		+ timeStamp();
+	if (inInternetExplorer()) {
+	    newText += " in MSIE";
+	} else if (inFireFox()) {
+	    newText += " in Firefox";
+	} else {
+	    newText += " in an unknown browser";
+	}
+	session().type("//html/body", newText);
 	session().selectFrame("relative=parent");
 	// close editor
 	session().click("//td/table/tbody/tr/td[1]/button");
-	// check if text is visible
-	verifyTrue(session().isTextPresent("text resource typed by selenium"));
-	log("OK: Text resource renamed");
+	// check if text is visible TODO: should use assert instead of
+	// verifyTrue but I have to make it work in MSIE before!
+	verifyTrue(session().isTextPresent(newText));
+	log("OK: Text resource edited");
 	// check if the new rubric is visible
-	verifyTrue(session().isTextPresent("Description"));
+	assertTrue(session().isTextPresent("Description"));
 	log("OK: rubric Description is visible");
 	
 	// We should be back to the initial state
@@ -123,5 +132,6 @@ public class TextTest extends AbstractOSYLTest {
 	// See class comment above
 	// deleteTestSite();
 	logOut();
+	log("testAddText: test complete");
     } // testAddText
 }

@@ -167,7 +167,7 @@ public class LectureTest extends AbstractOSYLTest {
 	session().click("//tr[" + (1+lectureNb) + "]/td/table/tbody/tr/td[2]/"
 			+ "div/table[2]/tbody/tr/td[1]/button");
 	// Type a new name
-	newName = "last lecture renamed on " + timeStamp();
+	newName = "Lecture added on " + timeStamp();
 	session().type("//input[@type='text']", newName);
 	// Click OK
 	session().click("//td/table/tbody/tr/td[1]/button");
@@ -181,5 +181,6 @@ public class LectureTest extends AbstractOSYLTest {
 
 	session().selectFrame("relative=parent");
 	logOut();
+	log("testAddLecture: test complete");
     } // testAddLecture
 }
