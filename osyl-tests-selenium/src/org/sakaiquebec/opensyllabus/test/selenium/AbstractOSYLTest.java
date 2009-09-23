@@ -341,24 +341,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 	String origSpeed = session().getSpeed();
 	session().setSpeed("30");
-
-	session().click("gwt-uid-2");
+	long start = System.currentTimeMillis();
+	
+	clickSaveButton();
 	for (int second = 0;; second++) {
-	    if (second >= 2000) {
-		logAndFail("Save failed: Timed out waiting for "
-			+ "confirmation (after 60 seconds)");
-		return; // for readability :-)
-	    }
-	    try {
-		if (session().isElementPresent(
-			"//div[@class=\"Osyl-UnobtrusiveAlert\"]")
-			&& session().isVisible(
-				"//div[@class=\"Osyl-UnobtrusiveAlert\"]")) {
-		    // We are ok
-		    log("Leaving saveCourseOutline: OK");
-		    session().setSpeed(origSpeed);
-		    return;
-		}
+	    if (System.currentTimeMillis() - start >= 60000) {
+		// After 60s we still did not see our confirmation we try
+		// detect some common alerts
 		if (session().isAlertPresent()) {
 		    String alertTxt = session().getAlert();
 		    logAndFail("saveCourseOutline failed: got an alert: "
@@ -366,18 +355,49 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		    return;
 		}
 		if (session().isTextPresent("RPC FAILURE")) {
-		    logAndFail("saveCourseOutline failed: got an RPC FAILURE");
+		    logAndFail("saveCourseOutline failed: RPC FAILURE");
+		    return;
+		}
+		logAndFail("saveCourseOutline: Timed out waiting"
+			+ " for confirmation (after 60 seconds)");
+		return; // for readability :-)
+	    }
+	    try {
+		if (isSaveConfirmationVisible()) {
+		    // We are OK
+		    log("Leaving saveCourseOutline: OK");
+		    session().setSpeed(origSpeed);
 		    return;
 		}
 	    } catch (Exception e) {
-		logAndFail("saveCourseOutline: Got exception: " + e);
-		e.printStackTrace();
-		return;
+		log("saveCourseOutline: Got exception: " + e);
+		if (inInternetExplorer()) {
+		    // We try again if in MSIE (No sleep as the processing is
+		    // slow enough!)
+		    log("saveCourseOutline: trying again...");
+		    clickSaveButton();
+		} else {
+		    Thread.sleep(100);
+		}
 	    }
-
-	    Thread.sleep(30);
 	} // for
     } // saveCourseOutline
+
+    private boolean isSaveConfirmationVisible() {
+	if (inInternetExplorer()) {
+	    return session().isVisible(
+		    "//div[@class=\"Osyl-UnobtrusiveAlert\"]");
+	} else {
+	    return session().isElementPresent(
+		    "//div[@class=\"Osyl-UnobtrusiveAlert\"]")
+		&& session().isVisible(
+		    "//div[@class=\"Osyl-UnobtrusiveAlert\"]");
+	}
+    }
+
+    private void clickSaveButton() {
+	session().click("gwt-uid-2");
+    }
 
     /**
      * Pauses for a specified delay (in milliseconds). This might be needed in
