@@ -40,9 +40,6 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
  */
 public class TextTest extends AbstractOSYLTest {
 
-    private static final String SELECTED_RUBRIC = "Description"; 
-    private static final String SELECTED_RUBRIC_VALUE = "description"; 
-    
     @Test(groups = "OSYL-Suite", description =
 	"OSYLEditor test. Add a text resource, edit it and save the changes")
     @Parameters( { "webSite" })
@@ -83,10 +80,11 @@ public class TextTest extends AbstractOSYLTest {
 	session().click("//tr[3]/td/table/tbody/tr[2]/td/div/table[2]/tbody" +
 			"/tr/td[1]/button");
 
-	// Change rubric
-	session().select("//select[@name=\"listBoxFormElement\"]",
-		"value=" + SELECTED_RUBRIC_VALUE);
+	String selectedRubric = getRandomRubric();
+	log("Selecting rubric [" + selectedRubric + "]");
+	changeRubric(selectedRubric);
 
+	// Type some text in the rich-text area
 	if (inFireFox()) {
 	    // type text
 	    session().selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
@@ -108,15 +106,11 @@ public class TextTest extends AbstractOSYLTest {
 	}
 	saveCourseOutline();
 
-	// check if the new rubric is visible. This test fail on my local MSIE
-	// but not our RC...  
-	assertOrVerify("Expected to see rubric [" + SELECTED_RUBRIC
+	// check if the new rubric is visible.
+	assertTrue("Expected to see rubric [" + selectedRubric
 		+ "] after text edition",
-		session().isTextPresent(SELECTED_RUBRIC));
-
-	// Save changes
-	saveCourseOutline();
-	log("OK: Course outline saved");
+		session().isTextPresent(selectedRubric));
+	log("OK: Selected rubric is visible");
 
 	session().selectFrame("relative=parent");
 	// See class comment above
@@ -128,5 +122,22 @@ public class TextTest extends AbstractOSYLTest {
     private int getResourceCount() {
 	return session().getXpathCount(
 		"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
+    }
+
+    private String getRandomRubric() {
+	// Get list of available rubrics
+	String[] rubrics = session().getSelectOptions(
+		"//select[@name=\"listBoxFormElement\"]");
+	// Generate a random number between 1 and last rubric index (avoid 0
+	// because first one is "Select a rubric")
+	int rubricCount = rubrics.length - 1;
+	int rubricId = 1 + (int) Math.round(Math.random() * rubricCount);
+	return rubrics[rubricId];
+    }	    
+
+    // Change rubric
+    private void changeRubric(String rubricLabel) {
+	session().select("//select[@name=\"listBoxFormElement\"]",
+		"label=" + rubricLabel);
     }
 }
