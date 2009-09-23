@@ -339,7 +339,6 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     public void saveCourseOutline() throws Exception {
 	log("Entering saveCourseOutline");
 
-	long start = System.currentTimeMillis();
 	String origSpeed = session().getSpeed();
 	session().setSpeed("30");
 

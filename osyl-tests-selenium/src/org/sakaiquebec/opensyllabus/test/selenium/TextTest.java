@@ -43,7 +43,8 @@ public class TextTest extends AbstractOSYLTest {
     private static final String SELECTED_RUBRIC = "Description"; 
     private static final String SELECTED_RUBRIC_VALUE = "description"; 
     
-    @Test(groups = "OSYL-Suite", description = "OSYL test: add a text resource, edit it and save the changes")
+    @Test(groups = "OSYL-Suite", description =
+	"OSYLEditor test. Add a text resource, edit it and save the changes")
     @Parameters( { "webSite" })
     public void testAddText(String webSite) throws Exception {
 	// We log in
@@ -56,16 +57,10 @@ public class TextTest extends AbstractOSYLTest {
 	waitForOSYL();
 	enterFirstLecture();
 
-	String undefRubric = "Non défini";
-	// We first check if we already have an undefined rubric
-	// TODO: this seems to always return true, even when the lecture is
-	// completely empty as it is now, when we add a new one.
-	boolean undefRubricVisible = session().isTextPresent(undefRubric);
-	if (undefRubricVisible) {
-	    log("Rubric \"" + undefRubric + "\" is already showing");
-	} else {
-	    log("Rubric \"" + undefRubric + "\" not initially showing");
-	}
+	// We keep track of how many resources are showing to check that it
+	// is incremented as expected when we add one
+	int resNb = getResourceCount();
+	log("We start with " + resNb + " resources");
 
 	// Click menu "Add..."
 	session().click("gwt-uid-5");
@@ -74,11 +69,15 @@ public class TextTest extends AbstractOSYLTest {
 	session().click("//div[@class=\"gwt-MenuBar gwt-MenuBar-vertical\"]" +
 			"/table/tbody/tr[1]/td");
 
-	// We check that our new text was added (this has no effect if there
-	// was already an Undef Rubric item
-	// TODO: count the resources before and after the addition instead
-	// of detecting this rubric which is localized and not reliable.
-	verifyTrue(session().isTextPresent(undefRubric));
+	// We check that our new text was added
+	int resNb2 = getResourceCount();
+	log("We now have " + resNb2 + " resources");
+	if (1+resNb != resNb2) {
+	    fail ("Resource count not incremented as expected!");
+	} else {
+	    log ("OK Text resource added");
+	}
+	saveCourseOutline();
 
 	// open text resource editor
 	session().click("//tr[3]/td/table/tbody/tr[2]/td/div/table[2]/tbody" +
@@ -108,27 +107,13 @@ public class TextTest extends AbstractOSYLTest {
 	    session().selectFrame("relative=parent");
 	    session().click("//td/table/tbody/tr/td[1]/button");
 	}
+	saveCourseOutline();
 
 	// check if the new rubric is visible. This test fail on my local MSIE
 	// but not our RC...  
 	assertOrVerify("Expected to see rubric [" + SELECTED_RUBRIC
 		+ "] after text edition",
 		session().isTextPresent(SELECTED_RUBRIC));
-
-	// We should be back to the initial state
-	if(session().isTextPresent(undefRubric)) {
-	    if (undefRubricVisible) {
-		log("OK Rubric \"" + undefRubric + "\" is still showing");
-	    } else {
-		log("ERROR Rubric \"" + undefRubric + "\" is still showing");
-	    }
-	} else {
-	    if (undefRubricVisible) {
-		log("ERROR Rubric \"" + undefRubric + "\" is not showing");
-	    } else {
-		log("OK Rubric \"" + undefRubric + "\" is still not showing");
-	    }
-	}
 
 	// Save changes
 	saveCourseOutline();
@@ -140,4 +125,9 @@ public class TextTest extends AbstractOSYLTest {
 	logOut();
 	log("testAddText: test complete");
     } // testAddText
+    
+    private int getResourceCount() {
+	return session().getXpathCount(
+		"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
+    }
 }

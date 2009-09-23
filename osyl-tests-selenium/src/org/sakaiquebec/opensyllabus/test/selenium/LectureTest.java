@@ -38,7 +38,8 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
  */
 public class LectureTest extends AbstractOSYLTest {
 
-    @Test(groups = "OSYL-Suite", description = "OSYL test: remove the 1st lecture, add another one, edit it and save the changes")
+    @Test(groups = "OSYL-Suite", description =
+	"OSYLEditor test. Remove, add, edit lectures and save the changes")
     @Parameters( { "webSite" })
     public void testDeleteAddLecture(String webSite) throws Exception {
 	// We log in
