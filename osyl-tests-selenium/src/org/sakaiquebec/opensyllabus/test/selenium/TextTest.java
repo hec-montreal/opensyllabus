@@ -84,8 +84,8 @@ public class TextTest extends AbstractOSYLTest {
 			"/tr/td[1]/button");
 
 	// Change rubric
-	session().select("listBoxFormElement", "label=" + SELECTED_RUBRIC);
-	session().click("//option[@value='" + SELECTED_RUBRIC_VALUE + "']");
+	session().select("//select[@name=\"listBoxFormElement\"]",
+		"value=" + SELECTED_RUBRIC_VALUE);
 
 	if (inFireFox()) {
 	    // type text
