@@ -104,7 +104,6 @@ public class TextTest extends AbstractOSYLTest {
 	} else {
 	    log("RichText edition can only be tested in Firefox");
 	    // close editor
-	    session().selectFrame("relative=parent");
 	    session().click("//td/table/tbody/tr/td[1]/button");
 	}
 	saveCourseOutline();
