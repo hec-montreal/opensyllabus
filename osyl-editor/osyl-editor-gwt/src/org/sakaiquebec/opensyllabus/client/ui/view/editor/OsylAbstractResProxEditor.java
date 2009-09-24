@@ -355,6 +355,19 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		.getSelectedIndex());
     }
 
+    protected Image getCurrentRequirementLevelIcon() {
+	String reqLevel = getView().getRequirementLevel();
+	if (COPropertiesType.REQ_LEVEL_MANDATORY.equals(reqLevel)) {
+	    return getOsylImageBundle().iconeObl().createImage();
+	} else if (COPropertiesType.REQ_LEVEL_RECOMMENDED.equals(reqLevel)) {
+	    return getOsylImageBundle().iconeRec().createImage();
+	} else if (COPropertiesType.REQ_LEVEL_COMPLEMENTARY.equals(reqLevel)) {
+	    return getOsylImageBundle().iconeCompl().createImage();
+	} else {
+	    return null;
+	}
+    }
+    
     /**
      * Returns the selected diffusion level. This is either
      * {@link SecurityInterface#SECURITY_GROUP_PUBLIC},

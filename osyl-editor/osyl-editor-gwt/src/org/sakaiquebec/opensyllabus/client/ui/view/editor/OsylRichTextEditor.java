@@ -123,11 +123,9 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
 		htmlViewer
 			.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
 	    }
-	    if (COPropertiesType.REQ_LEVEL_MANDATORY.equals(getView()
-		    .getRequirementLevel())) {
-		Image mandatoryIcon =
-			getView().getOsylImageBundle().iconeObl().createImage();
-		getViewerPanel().add(mandatoryIcon);
+	    Image reqLevelIcon = getCurrentRequirementLevelIcon();
+	    if (null != reqLevelIcon) {
+		getViewerPanel().add(reqLevelIcon);
 	    }
 	    if (getView().isContextHidden()) {
 		mainPanel.setVisible(false);
