@@ -26,9 +26,11 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCOStructureEvaluationItemEditor;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCOStructureItemEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
-import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+import org.sakaiquebec.opensyllabus.shared.model.COUnit;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -36,12 +38,12 @@ import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
  */
 public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 
-    public OsylCOStructureEvaluationItemLabelView(COContentUnit model,
+    public OsylCOStructureEvaluationItemLabelView(COUnit model,
 	    OsylController controller) {
 	this(model, controller, false);
     }
 
-    public OsylCOStructureEvaluationItemLabelView(COContentUnit model,
+    public OsylCOStructureEvaluationItemLabelView(COUnit model,
 	    OsylController controller, boolean isInList) {
 	super(model, controller);
 	setEditor(new OsylCOStructureEvaluationItemEditor(this, isInList));
@@ -49,7 +51,7 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
     }
     
     
-    public OsylCOStructureEvaluationItemLabelView(COContentUnit model,
+    public OsylCOStructureEvaluationItemLabelView(COUnitContent model,
 	    OsylController controller, boolean isInList, String levelStyle) {
 	super(model,controller);
 	setEditor(new OsylCOStructureEvaluationItemEditor(this, isInList));
@@ -62,8 +64,8 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
      * superclass for javadoc!
      */
 
-    public COContentUnit getModel() {
-	return (COContentUnit) super.getModel();
+    public COUnit getModel() {
+	return (COUnit) super.getModel();
     }
 
     public String getTextFromModel() {
@@ -73,67 +75,76 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
     protected void updateModel() {
 	updateMetaInfo();
 	getModel().setLabel(getEditor().getText());
-	updateAssignement();
+	updateAssignements();
 
     }
 
-    private void updateAssignement() {
-	for (Iterator<COContentResourceProxy> childsIterator =
-		getModel().getChildrens().iterator(); childsIterator.hasNext();) {
-	    COContentResourceProxy contentResourceProxy = childsIterator.next();
-	    if (contentResourceProxy.getType().equals(
-		    COContentResourceProxyType.ASSIGNMENT)) {
-
-		String uri =
-			contentResourceProxy.getProperty(COPropertiesType.URI);
-		String rawAssignmentId = uri.split("\\s*/a/\\s*")[1];
-		rawAssignmentId = rawAssignmentId.split("\\s*/\\s*")[1];
-		String assignmentId =
-			rawAssignmentId.split("\\s*&panel=\\s*")[0];
-
-		int rating = -1;
-		int openYear = 0;
-		int openMonth = 0;
-		int openDay = 0;
-		int closeYear = 0;
-		int closeMonth = 0;
-		int closeDay = 0;
-		String ratingString = getRating();
-		if (null != ratingString || !"undefined".equals(ratingString)
-			|| !"".equals(ratingString)) {
-		    rating = Integer.parseInt(ratingString.substring(0, ratingString.lastIndexOf("%")));
+    private void updateAssignements() {
+	for (Iterator<COElementAbstract> coUnitChildsIterator =
+		getModel().getChildrens().iterator(); coUnitChildsIterator
+		.hasNext();) {
+	    COElementAbstract coUnitChild = coUnitChildsIterator.next();
+	    if (coUnitChild.isCOUnitContent()) {
+		COUnitContent coUnitContent = (COUnitContent) coUnitChild;
+		for (Iterator<COContentResourceProxy> childsIterator =
+			coUnitContent.getChildrens().iterator(); childsIterator
+			.hasNext();) {
+		    COContentResourceProxy contentResourceProxy =
+			    childsIterator.next();
+		    if (contentResourceProxy.getResource().getType().equals(
+			    COContentResourceType.ASSIGNMENT)) {
+			updateAssignement(contentResourceProxy);
+		    }
 		}
-
-		String openDateString = getOpenDate();
-		if (null != openDateString
-			|| !"undefined".equals(openDateString)
-			|| !"".equals(openDateString)) {
-		    openYear =
-			    Integer.parseInt(openDateString.substring(0, 4));
-		    openMonth =
-			    Integer.parseInt(openDateString.substring(5, 7));
-		    openDay = Integer.parseInt(openDateString.substring(8, 10));
-
-		}
-
-		String closeDateString = getCloseDate();
-		if (null != closeDateString
-			|| !"undefined".equals(closeDateString)
-			|| !"".equals(closeDateString)) {
-		    closeYear =
-			    Integer.parseInt(closeDateString.substring(0, 4));
-		    closeMonth =
-			    Integer.parseInt(closeDateString.substring(5, 7));
-		    closeDay =
-			    Integer.parseInt(closeDateString.substring(8, 10));
-		}
-
-		getController().createOrUpdateAssignment(contentResourceProxy,
-			assignmentId, getModel().getLabel(), null, openYear,
-			openMonth, openDay, 0, 0, closeYear, closeMonth,
-			closeDay, 0, 0, rating);
+	    }
+	    if (coUnitChild.isCOUnitStructure()) {
+		// TODO when counitstructure is ready
 	    }
 	}
+
+    }
+
+    private void updateAssignement(COContentResourceProxy contentResourceProxy) {
+	String uri = contentResourceProxy.getProperty(COPropertiesType.URI);
+	String rawAssignmentId = uri.split("\\s*/a/\\s*")[1];
+	rawAssignmentId = rawAssignmentId.split("\\s*/\\s*")[1];
+	String assignmentId = rawAssignmentId.split("\\s*&panel=\\s*")[0];
+
+	int rating = -1;
+	int openYear = 0;
+	int openMonth = 0;
+	int openDay = 0;
+	int closeYear = 0;
+	int closeMonth = 0;
+	int closeDay = 0;
+	String ratingString = getRating();
+	if (null != ratingString || !"undefined".equals(ratingString)
+		|| !"".equals(ratingString)) {
+	    rating =
+		    Integer.parseInt(ratingString.substring(0, ratingString
+			    .lastIndexOf("%")));
+	}
+
+	String openDateString = getOpenDate();
+	if (null != openDateString || !"undefined".equals(openDateString)
+		|| !"".equals(openDateString)) {
+	    openYear = Integer.parseInt(openDateString.substring(0, 4));
+	    openMonth = Integer.parseInt(openDateString.substring(5, 7));
+	    openDay = Integer.parseInt(openDateString.substring(8, 10));
+
+	}
+
+	String closeDateString = getCloseDate();
+	if (null != closeDateString || !"undefined".equals(closeDateString)
+		|| !"".equals(closeDateString)) {
+	    closeYear = Integer.parseInt(closeDateString.substring(0, 4));
+	    closeMonth = Integer.parseInt(closeDateString.substring(5, 7));
+	    closeDay = Integer.parseInt(closeDateString.substring(8, 10));
+	}
+
+	getController().createOrUpdateAssignment(contentResourceProxy,
+		assignmentId, getModel().getLabel(), null, openYear, openMonth,
+		openDay, 0, 0, closeYear, closeMonth, closeDay, 0, 0, rating);
     }
 
     private void updateMetaInfo() {

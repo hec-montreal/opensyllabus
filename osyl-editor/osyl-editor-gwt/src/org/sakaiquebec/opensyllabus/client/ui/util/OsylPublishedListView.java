@@ -85,9 +85,9 @@ public class OsylPublishedListView extends Composite implements
 	setCurrentText(uiMessages.getMessage("publishedVersions"));
 
 	// TODO: the onsite group is not active for the moment
-	displayPublishedLink(SecurityInterface.SECURITY_ACCESS_PUBLIC);
+	displayPublishedLink(SecurityInterface.ACCESS_PUBLIC);
 	// displayPublishedLink(SecurityInterface.SECURITY_ACCESS_ONSITE);
-	displayPublishedLink(SecurityInterface.SECURITY_ACCESS_ATTENDEE);
+	displayPublishedLink(SecurityInterface.ACCESS_ATTENDEE);
     }
 
     private void displayPublishedLink(String securityGroup) {

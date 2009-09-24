@@ -51,7 +51,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class OsylPreviewView extends OsylViewableComposite implements
 	ClosePushButtonEventHandler {
 
-    private String security;
+    private String access;
 
     private OsylController controller;
 
@@ -75,18 +75,18 @@ public class OsylPreviewView extends OsylViewableComposite implements
 	this.osylToolbarView = osylToolbarView;
     }
 
-    public OsylPreviewView(String security, OsylController controller) {
+    public OsylPreviewView(String access, OsylController controller) {
 
 	super(null, controller);
-	this.security = security;
+	this.access = access;
 	this.controller = controller;
 
 	if (getController().isInHostedMode()) {
 	    String xsl = "";
-	    if (security.equals(SecurityInterface.SECURITY_ACCESS_PUBLIC)) {
+	    if (access.equals(SecurityInterface.ACCESS_PUBLIC)) {
 		xsl = OsylTestXsl.XSL_PUBLIC;
-	    } else if (security
-		    .equals(SecurityInterface.SECURITY_ACCESS_ONSITE)) {
+	    } else if (access
+		    .equals(SecurityInterface.ACCESS_ONSITE)) {
 		xsl = OsylTestXsl.XSL_ONSITE;
 	    } else {
 		xsl = OsylTestXsl.XSL_ATTENDEE;
@@ -108,7 +108,7 @@ public class OsylPreviewView extends OsylViewableComposite implements
 		}
 
 	    };
-	    getController().getXslForGroup(security, asyncallback);
+	    getController().getXslForGroup(access, asyncallback);
 	}
     }
 
@@ -179,12 +179,12 @@ public class OsylPreviewView extends OsylViewableComposite implements
 	getController().getViewContext().removeEventHandler(getOsylTreeView());
     }
 
-    public String getSecurity() {
-	return security;
+    public String getAccess() {
+	return access;
     }
 
-    public void setSecurity(String security) {
-	this.security = security;
+    public void setAccess(String access) {
+	this.access = access;
     }
 
     public OsylController getController() {
@@ -251,7 +251,7 @@ public class OsylPreviewView extends OsylViewableComposite implements
 		// We prefer to be on the first Lectures type when the
 		// application opens
 		if (absElement.getType().equalsIgnoreCase(
-			COStructureElementType.LECTURES)) {
+			COStructureElementType.PEDAGOGICAL_STRUCT)) {
 		    find = true;
 		    break;
 		}

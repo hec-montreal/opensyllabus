@@ -41,13 +41,17 @@ import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.Print;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylLongView;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
+import org.sakaiquebec.opensyllabus.shared.model.COUnit;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.user.client.Command;
@@ -105,77 +109,155 @@ public class OsylToolbarView extends OsylViewableComposite implements
 
 	private COElementAbstract parentModel;
 	private String type;
+	private String subType;
 
 	public AddMenuCommand(final COElementAbstract parentModel, String type) {
+	    this.parentModel = parentModel;
+	    this.type = type;
+	    this.subType = null;
+	}
+
+	public AddMenuCommand(final COElementAbstract parentModel, String type,
+		String subtype) {
+	    this.parentModel = parentModel;
+	    this.type = type;
+	    this.subType = subtype;
+	}
+
+	public void execute() {
+	    if (parentModel.isCOStructureElement()) {
+		COUnit coU =
+			COUnit.createDefaultCOUnit(type, getCoMessages(),
+				parentModel);
+		try {
+		    List<COModelInterface> coUnitSubModels =
+			    getController().getOsylConfig()
+				    .getOsylConfigRuler().getAllowedSubModels(
+					    coU);
+		    if (!coUnitSubModels.isEmpty()) {
+			COUnitStructure coUnitStructure =
+				COUnitStructure.createDefaultCOUnitStructure(
+					coUnitSubModels.get(0).getType(),
+					getCoMessages(), coU);
+			List<COModelInterface> coUnitStructureSubModels =
+				getController().getOsylConfig()
+					.getOsylConfigRuler()
+					.getAllowedSubModels(coUnitStructure);
+			if (!coUnitStructureSubModels.isEmpty())
+			    COUnitContent.createDefaultCOContentUnit(
+				    coUnitStructureSubModels.get(0).getType(),
+				    getCoMessages(), coUnitStructure);
+		    }
+
+		} catch (RuntimeException e) {
+		    // TODO: handle exception
+		}
+
+	    } else if (parentModel.isCOUnit()) {
+		// TODO change this when multiple coUnitContent under one COUnit
+		// will be authorized
+		COUnitContent coUnitContent =
+			(COUnitContent) parentModel.getChildrens().get(0);
+		createASMContext(coUnitContent);
+
+	    } else if (parentModel.isCOUnitStructure()) {
+		// TODO change this when multiple coUnitContent under one COUnit
+		// will be authorized
+		COUnitContent coUnitContent =
+			(COUnitContent) parentModel.getChildrens().get(0);
+		createASMContext(coUnitContent);
+	    }
+	}
+
+	private void createASMContext(COUnitContent coUnitContent) {
+	    COContentResourceProxy resProxModel =
+		    COContentResourceProxy.createDefaultResProxy(type,
+			    getCoMessages(), coUnitContent, subType);
+	    if (subType.equalsIgnoreCase(COContentResourceType.ASSIGNMENT)) {
+		createAssignement(resProxModel, coUnitContent);
+	    }
+	}
+
+    }
+
+    class AddUnitStructureCommand implements Command {
+
+	private COElementAbstract parentModel;
+	private String type;
+
+	public AddUnitStructureCommand(final COElementAbstract parentModel,
+		String type) {
 	    this.parentModel = parentModel;
 	    this.type = type;
 	}
 
 	public void execute() {
-	    if (parentModel.isCOStructureElement()) {
-		COContentUnit.createDefaultCOContenUnit(type, getCoMessages(),
-			parentModel);
-	    } else if (parentModel.isCOContentUnit()) {
-		COContentResourceProxy resProxModel =
-			COContentResourceProxy.createDefaultResProxy(type,
-				getCoMessages(), parentModel);
-		if (type
-			.equalsIgnoreCase(COContentResourceProxyType.ASSIGNMENT)) {
-		    COContentUnit parentEvaluationUnit =
-			    (COContentUnit) parentModel;
-		    // Call the SAKAI server in order to receive an assignment
-		    // id
-		    // Callback will be processed by the Controller
-		    resProxModel.getProperties().addProperty(
-			    COPropertiesType.URI, "emptyAssignmentURI");
-		    // IMPORTANT : when the rating (the last parameter) is -1
-		    // then it is a default assignment
-		    int rating = -1;
-		    int openYear = 0;
-		    int openMonth = 0;
-		    int openDay = 0;
-		    int closeYear = 0;
-		    int closeMonth = 0;
-		    int closeDay = 0;
-		    String ratingString =
-			    parentEvaluationUnit
-				    .getProperty(COPropertiesType.RATING);
-		    if (null != ratingString
-			    || !"undefined".equals(ratingString)
-			    || !"".equals(ratingString)) {
-			rating = Integer.parseInt(ratingString.substring(0,ratingString.lastIndexOf("%")));
-		    }
-
-		    String openDateString =
-			    parentEvaluationUnit
-				    .getProperty(COPropertiesType.OPENDATE);
-		    if (null != openDateString
-			    || !"undefined".equals(openDateString)
-			    || !"".equals(openDateString)) {
-			openYear = Integer.parseInt(openDateString.substring(0, 4));
-			openMonth = Integer.parseInt(openDateString.substring(5, 7));
-			openDay = Integer.parseInt(openDateString.substring(8, 10));
-			
-		    }
-
-		    String closeDateString =
-			    parentEvaluationUnit
-				    .getProperty(COPropertiesType.CLOSEDATE);
-		    if (null != closeDateString
-			    || !"undefined".equals(closeDateString)
-			    || !"".equals(closeDateString)) {
-			closeYear = Integer.parseInt(closeDateString.substring(0, 4));
-			closeMonth = Integer.parseInt(closeDateString.substring(5, 7));
-			closeDay = Integer.parseInt(closeDateString.substring(8, 10));
-		    }
-
-		    getController().createOrUpdateAssignment(resProxModel, "",
-			    parentEvaluationUnit.getLabel(), null, openYear,
-			    openMonth, openDay, 0, 0, closeYear, closeMonth,
-			    closeDay, 0, 0, rating);
+	    COUnitStructure coUnitStructure =
+		    COUnitStructure.createDefaultCOUnitStructure(type,
+			    getCoMessages(), parentModel);
+	    try {
+		List<COModelInterface> subModels =
+			getController().getOsylConfig().getOsylConfigRuler()
+				.getAllowedSubModels(coUnitStructure);
+		if (!subModels.isEmpty()) {
+		    COUnitContent.createDefaultCOContentUnit(subModels.get(0)
+			    .getType(), getCoMessages(), coUnitStructure);
 		}
+	    } catch (RuntimeException e) {
+		e.printStackTrace();
+		Window.alert("Error while parsing rules: " + e);
 	    }
+
 	}
+    }
+
+    private void createAssignement(COContentResourceProxy resProxModel,
+	    COUnitContent parentEvaluationUnit) {
+	// Call the SAKAI server in order to receive an assignment
+	// id
+	// Callback will be processed by the Controller
+	resProxModel.getProperties().addProperty(COPropertiesType.URI,
+		"emptyAssignmentURI");
+	// IMPORTANT : when the rating (the last parameter) is -1
+	// then it is a default assignment
+	int rating = -1;
+	int openYear = 0;
+	int openMonth = 0;
+	int openDay = 0;
+	int closeYear = 0;
+	int closeMonth = 0;
+	int closeDay = 0;
+	String ratingString =
+		parentEvaluationUnit.getProperty(COPropertiesType.RATING);
+	if (null != ratingString || !"undefined".equals(ratingString)
+		|| !"".equals(ratingString)) {
+	    rating =
+		    Integer.parseInt(ratingString.substring(0, ratingString
+			    .lastIndexOf("%")));
+	}
+
+	String openDateString =
+		parentEvaluationUnit.getProperty(COPropertiesType.OPENDATE);
+	if (null != openDateString || !"undefined".equals(openDateString)
+		|| !"".equals(openDateString)) {
+	    openYear = Integer.parseInt(openDateString.substring(0, 4));
+	    openMonth = Integer.parseInt(openDateString.substring(5, 7));
+	    openDay = Integer.parseInt(openDateString.substring(8, 10));
+
+	}
+
+	String closeDateString =
+		parentEvaluationUnit.getProperty(COPropertiesType.CLOSEDATE);
+	if (null != closeDateString || !"undefined".equals(closeDateString)
+		|| !"".equals(closeDateString)) {
+	    closeYear = Integer.parseInt(closeDateString.substring(0, 4));
+	    closeMonth = Integer.parseInt(closeDateString.substring(5, 7));
+	    closeDay = Integer.parseInt(closeDateString.substring(8, 10));
+	}
+
+	getController().createOrUpdateAssignment(resProxModel, "",
+		parentEvaluationUnit.getLabel(), null, openYear, openMonth,
+		openDay, 0, 0, closeYear, closeMonth, closeDay, 0, 0, rating);
     }
 
     public void onViewContextSelection(ViewContextSelectionEvent event) {
@@ -340,8 +422,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
      */
 
     private static native void printJSNI() /*-{  
-               window.parent.print();
-             }-*/;
+					   window.parent.print();
+					   }-*/;
 
     /**
      * The code comes from UserAgent.gwt.xml in gwt-user.jar
@@ -349,28 +431,28 @@ public class OsylToolbarView extends OsylViewableComposite implements
      * @return client or user agent browser name
      */
     private native String getBrowserType() /*-{ 
-                var ua = navigator.userAgent.toLowerCase(); 
-                if (ua.indexOf("opera") != -1) { 
-                    return "opera"; 
-                } 
-                else if (ua.indexOf("webkit") != -1) { 
-                    return "webkit"; 
-                } 
-                else if ((ua.indexOf("msie 6.0") != -1) || 
-                         (ua.indexOf("msie 7.0") != -1)) { 
-                    return "ie6"; 
-                      } 
-                else if (ua.indexOf("gecko") != -1) { 
-                    var result = /rv:([0-9]+)\.([0-9]+)/.exec(ua); 
-                    if (result && result.length == 3) { 
-                      var version = (parseInt(result[1]) * 10) + parseInt(result[2]); 
-                      if (version >= 18) 
-                        return "gecko1_8"; 
-                    } 
-                    return "gecko"; 
-                } 
-                return "unknown"; 
-            }-*/;
+					   var ua = navigator.userAgent.toLowerCase(); 
+					   if (ua.indexOf("opera") != -1) { 
+					   return "opera"; 
+					   } 
+					   else if (ua.indexOf("webkit") != -1) { 
+					   return "webkit"; 
+					   } 
+					   else if ((ua.indexOf("msie 6.0") != -1) || 
+					   (ua.indexOf("msie 7.0") != -1)) { 
+					   return "ie6"; 
+					   } 
+					   else if (ua.indexOf("gecko") != -1) { 
+					   var result = /rv:([0-9]+)\.([0-9]+)/.exec(ua); 
+					   if (result && result.length == 3) { 
+					   var version = (parseInt(result[1]) * 10) + parseInt(result[2]); 
+					   if (version >= 18) 
+					   return "gecko1_8"; 
+					   } 
+					   return "gecko"; 
+					   } 
+					   return "unknown"; 
+					   }-*/;
 
     /*
      * Draft Printing for Browser different from WebKit
@@ -431,7 +513,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 				"Preview.attendee_version"), new Command() {
 			    public void execute() {
 				new OsylPreviewView(
-					SecurityInterface.SECURITY_ACCESS_ATTENDEE,
+					SecurityInterface.ACCESS_ATTENDEE,
 					getController());
 			    }
 			});
@@ -440,7 +522,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 				"Preview.public_version"), new Command() {
 			    public void execute() {
 				new OsylPreviewView(
-					SecurityInterface.SECURITY_ACCESS_PUBLIC,
+					SecurityInterface.ACCESS_PUBLIC,
 					getController());
 			    }
 			});
@@ -452,27 +534,25 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		// 3 big ViewContext cases
 		if (getModel().isCourseOutlineContent()) {
 		    getOsylToolbar().getAddMenuButton().setVisible(false);
-		} else if (getModel().isCOContentUnit()) {
+		} else if (getModel().isCOUnit()) {
 		    // Enables or Disables buttons in this ViewContext
-		    COContentUnit castedModel = (COContentUnit) getModel();
 		    getOsylToolbar().getAddMenuButton().setVisible(true);
 		    // Clear menu list, and set it according to the viewcontext
 		    try {
-			List<COModelInterface> subModels =
-				getController().getOsylConfig()
-					.getOsylConfigRuler()
-					.getAllowedSubModels(getModel());
-			Iterator<COModelInterface> iter = subModels.iterator();
-			while (iter.hasNext()) {
-			    COModelInterface subModel =
-				    (COModelInterface) iter.next();
-			    if (subModel instanceof COContentResourceProxy) {
-				getOsylToolbar().getAddMenuButton().addItem(
-					getCoMessage(subModel.getType()),
-					new AddMenuCommand(castedModel,
-						subModel.getType()));
-			    }
-			}
+
+			createAllowedCOUnitAddAction((COUnit) getModel());
+
+		    } catch (RuntimeException e) {
+			e.printStackTrace();
+			Window.alert("Error while parsing rules: " + e);
+		    }
+		} else if (getModel().isCOUnitStructure()) {
+		    // Enables or Disables buttons in this ViewContext
+		    getOsylToolbar().getAddMenuButton().setVisible(true);
+		    // Clear menu list, and set it according to the viewcontext
+		    try {
+			createAllowedCOUnitStructureAddAction((COUnitStructure) getModel());
+			// TODO allow creation of nested COUNITSTRUCTURE
 		    } catch (RuntimeException e) {
 			e.printStackTrace();
 			Window.alert("Error while parsing rules: " + e);
@@ -512,6 +592,50 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    }
 	}
     } // refreshView
+
+    private void createAllowedCOUnitStructureAddAction(COUnitStructure model) {
+	List<COModelInterface> subModels =
+		getController().getOsylConfig().getOsylConfigRuler()
+			.getAllowedSubModels(model.getChildrens().get(0));
+	Iterator<COModelInterface> iter = subModels.iterator();
+	while (iter.hasNext()) {
+	    COModelInterface subModel = (COModelInterface) iter.next();
+	    if (subModel instanceof COContentResource) {
+		String type = "";
+		if (subModel.getType().equals(COContentResourceType.TEXT)) {
+		    type = COContentResourceProxyType.INFORMATION;
+		} else if (subModel.getType().equals(
+			COContentResourceType.BIBLIO_RESSOURCE)) {
+		    type = COContentResourceProxyType.BIBLIO;
+		} else if (subModel.getType().equals(
+			COContentResourceType.PERSON)) {
+		    type = COContentResourceProxyType.PEOPLE;
+		} else {
+		    type = COContentResourceProxyType.REFERENCE;
+		}
+		getOsylToolbar().getAddMenuButton().addItem(
+			getCoMessage(subModel.getType()),
+			new AddMenuCommand(model, type, subModel.getType()));
+	    }
+	}
+    }
+
+    private void createAllowedCOUnitAddAction(COUnit model) {
+	List<COModelInterface> subModels =
+		getController().getOsylConfig().getOsylConfigRuler()
+			.getAllowedSubModels(model);
+	Iterator<COModelInterface> iter = subModels.iterator();
+	while (iter.hasNext()) {
+	    COModelInterface subModel = (COModelInterface) iter.next();
+	    getOsylToolbar().getAddMenuButton().addItem(
+		    getCoMessage("ASMUnitStructure"),
+		    new AddUnitStructureCommand(model, subModel.getType()));
+	}
+	if (getModel().getChildrens().size() == 1) {
+	    createAllowedCOUnitStructureAddAction((COUnitStructure) model
+		    .getChildrens().get(0));
+	}
+    }
 
     private OsylTextToolbar getOsylToolbar() {
 	return osylToolbar;

@@ -56,8 +56,23 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     /**
      * The <code>COContentUnit</code> class type.
      */
-    protected final String CO_CONTENT_UNIT_CLASS_TYPE = "COContentUnit";
-
+    protected final String CO_UNIT_CONTENT_CLASS_TYPE = "COUnitContent";
+    
+    /**
+     * The <code>COUnitStructure</code> class type. 
+     */
+    protected final String CO_UNIT_STRUCTURE_CLASS_TYPE = "COUnitStructure";
+    
+    /**
+     * The <code>COUnit</code> class type. 
+     */
+    protected final String CO_UNIT_CLASS_TYPE = "COUnit";
+    
+    /**
+     * The <code>COCOntentResourceProx</code> class type. 
+     */
+    protected final String CO_CONTENT_RESOURCE_PROXY_CLASS_TYPE = "COContentResourceProxy";
+    
     /**
      * (ie. Course outline by competence, by lecture, by theme)
      */
@@ -71,7 +86,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     /**
      * Security related to content access
      */
-    private String security;
+    private String access;
 
     /**
      * The class of the object that inherits this abstract class.
@@ -88,13 +103,14 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
      */
     private String uuid;
     
-    
     /**
      * parent identifier
      */
     private String uuidParent;
     
+    private COElementAbstract parent=null;
     
+
     public static final int POSITION_CHANGE_ACTION_UP=-1;
     
     public static final int POSITION_CHANGE_ACTION_DOWN=1;
@@ -123,17 +139,17 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     }
 
     /**
-     * @return the security
+     * @return the access
      */
-    public String getSecurity() {
-	return security;
+    public String getAccess() {
+	return access;
     }
 
     /**
-     * @param security the security to set
+     * @param access the access to set
      */
-    public void setSecurity(String security) {
-	this.security = security;
+    public void setAccess(String access) {
+	this.access = access;
 	notifyEventHandlers();
     }
 
@@ -173,13 +189,44 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     }
 
     /**
-     * Tests if the object is of type <code>COContentUnit</code>.
+     * Tests if the object is of type <code>COUnitContent</code>.
      *
-     * @return true if the object is of type <code>COContentUnit</code>,
+     * @return true if the object is of type <code>COUnitContent</code>,
      *         false if not.
      */
-    public boolean isCOContentUnit() {
-	return getClassType().equals(CO_CONTENT_UNIT_CLASS_TYPE);
+    public boolean isCOUnitContent() {
+	return getClassType().equals(CO_UNIT_CONTENT_CLASS_TYPE);
+    }
+    
+    /**
+     * Tests if the object is of type <code>COUnit</code>.
+     *
+     * @return true if the object is of type <code>CoUnit</code>,
+     *         false if not.
+     */
+    public boolean isCOUnit() {
+	return getClassType().equals(CO_UNIT_CLASS_TYPE);
+    }
+    
+    
+    /**
+     * Tests if the object is of type <code>COUnitStructure</code>.
+     *
+     * @return true if the object is of type <code>CoUnitStructure</code>,
+     *         false if not.
+     */
+    public boolean isCOUnitStructure() {
+	return getClassType().equals(CO_UNIT_STRUCTURE_CLASS_TYPE);
+    }
+    
+    /**
+     * Tests if the object is of type <code>COUnitStructure</code>.
+     *
+     * @return true if the object is of type <code>CoUnitStructure</code>,
+     *         false if not.
+     */
+    public boolean isCOContentResourceProxy() {
+	return getClassType().equals(CO_CONTENT_RESOURCE_PROXY_CLASS_TYPE);
     }
 
     /**
@@ -244,7 +291,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
 	if (this.getUuid().equals(uuidToFind))
 	    result = this;
 	else {
-	    if (this.isCOContentUnit()) {
+	    if (this.isCOUnitContent()) {
 		// Nothing to do
 	    } else {
 		int i = 0;
@@ -259,8 +306,36 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
 	return result;
     }
     
+    /**
+     * Gets the position of a structure element child.
+     * 
+     * @param the child
+     * @return the child poistion
+     */
+    public String getChildPosition(COElementAbstract coEltAbs){
+	String pos="0";
+	List<T> children = getChildrens();
+	if(children.contains(coEltAbs)) {
+	    pos=""+(children.indexOf(coEltAbs)+1);
+	}
+	return pos;
+    }
     
-    
+    /**
+     * 
+     * @return the parent of the courseOutline
+     */
+    public COElementAbstract getParent() {
+        return parent;
+    }
+
+    /**
+     * 
+     * @param parent ht eparent to set
+     */
+    public void setParent(COElementAbstract parent) {
+        this.parent = parent;
+    }
     
     /**
      * Check the position of the element compared to other element
@@ -285,7 +360,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
      */
     abstract public List<T> getChildrens();
     
-    abstract public void setChildren(List<T> childs);
+    abstract public void setChildrens(List<T> childs);
     
     /**
      * Adds a child to the <code>COELementAbstract</code> children list.

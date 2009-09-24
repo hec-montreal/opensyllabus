@@ -208,7 +208,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 		COModeledServer coModeled = null;
 		try {
 			COSerialized co = resourceDao.getSerializedCourseOutlineBySiteId(
-					siteId, SecurityInterface.SECURITY_ACCESS_ATTENDEE);
+					siteId, SecurityInterface.ACCESS_ATTENDEE);
 			String parentId = null;
 			try {
 				parentId = coRelationDao.getParentOfCourseOutline(siteId);

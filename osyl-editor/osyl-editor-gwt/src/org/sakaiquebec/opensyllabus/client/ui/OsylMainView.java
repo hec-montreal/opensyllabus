@@ -161,7 +161,7 @@ public class OsylMainView extends OsylViewableComposite {
 		// We prefer to be on the first Lectures type when the
 		// application opens
 		if (absElement.getType().equalsIgnoreCase(
-			COStructureElementType.LECTURES)) {
+			COStructureElementType.PEDAGOGICAL_STRUCT)) {
 		    find = true;
 		    break;
 		}
@@ -191,8 +191,6 @@ public class OsylMainView extends OsylViewableComposite {
     }
 
     private void subscribeChildrenViewsToLocalHandlers() {
-	getController().getViewContext().addEventHandler(
-		(ViewContextSelectionEventHandler) getOsylToolbarView());
 	getController().getViewContext().addEventHandler(
 		(ViewContextSelectionEventHandler) getOsylToolbarView());
 	getController().getViewContext().addEventHandler(

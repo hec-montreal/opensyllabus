@@ -21,14 +21,12 @@
 package org.sakaiquebec.opensyllabus.client.ui.base;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
-import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentUnitEventHandler;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
+import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
+import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
-
-import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
-
+import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
 /**
  * The Unit Tree Item View usable for the Osyl tree view
@@ -38,7 +36,7 @@ import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
  *          laurent.danet@hec.ca $
  */
 public class OsylUnitTreeItemView extends OsylTreeItemBaseView implements
-	UpdateCOContentUnitEventHandler {
+	UpdateCOUnitEventHandler {
 
     /**
      * Constructor.
@@ -53,18 +51,17 @@ public class OsylUnitTreeItemView extends OsylTreeItemBaseView implements
 
     protected String createTreeItemText() {
 	String treeItemText = "";
-	COContentUnit itemModel = (COContentUnit) getModel();
+	COUnit itemModel = (COUnit) getModel();
 	COElementAbstract eltAbs = itemModel.getParent();
 	if (eltAbs.isCOStructureElement()) {
 	    COStructureElement coStructElt = (COStructureElement) eltAbs;
-	    if ( OsylStyleLevelChooser.getHasANumber((COContentUnit) getModel()) ) {
+	    if (OsylStyleLevelChooser.getHasANumber((COUnit) getModel())) {
 		String positionString = coStructElt.getChildPosition(itemModel);
-		if ( positionString.length() < 2 ) {
-		    positionString = "0" + positionString; 
+		if (positionString.length() < 2) {
+		    positionString = "0" + positionString;
 		}
 		treeItemText = positionString + " : " + itemModel.getLabel();
-	    }
-	    else {
+	    } else {
 		treeItemText = itemModel.getLabel();
 	    }
 	} else {
@@ -76,12 +73,12 @@ public class OsylUnitTreeItemView extends OsylTreeItemBaseView implements
 
     public void setModel(COModelInterface model) {
 	super.setModel(model);
-	COContentUnit itemModel = (COContentUnit) getModel();
+	COUnit itemModel = (COUnit) getModel();
 	itemModel.addEventHandler(this);
     }
 
     /** {@inheritDoc} */
-    public void onUpdateModel(UpdateCOContentUnitEvent event) {
+    public void onUpdateModel(UpdateCOUnitEvent event) {
 	refreshView();
     }
 

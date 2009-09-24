@@ -58,6 +58,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 OsylEditorGwtService {
 
+    private static final long serialVersionUID = -8433432771110370390L;
 	/**
 	 * @uml.property  name="osylServices"
 	 * @uml.associationEnd  
@@ -226,7 +227,7 @@ OsylEditorGwtService {
 				.getSerializedCourseOutline(webappDir);
 		} else {
 			thisCo =
-				getSerializedPublishedCourseOutlineForAccessType(SecurityInterface.SECURITY_ACCESS_PUBLIC);
+				getSerializedPublishedCourseOutlineForAccessType(SecurityInterface.ACCESS_PUBLIC);
 			if (thisCo == null) {
 				// FIXME: Gracefully inform the user (a student) that he has
 				// nothing to do in

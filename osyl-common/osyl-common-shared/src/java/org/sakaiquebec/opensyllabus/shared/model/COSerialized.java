@@ -32,7 +32,7 @@ import java.util.Map;
  * @author <a href="mailto:tom.landry@crim.ca>Tom Landry</a>
  * @version $Id: $
  */
-public class COSerialized implements java.io.Serializable, COModelInterface {
+public class COSerialized implements java.io.Serializable{
 
     private static final long serialVersionUID = 3500746463914797287L;
 
@@ -57,9 +57,9 @@ public class COSerialized implements java.io.Serializable, COModelInterface {
     private String type;
 
     /**
-     * The general security level. Might change.
+     * The general access level. Might change.
      */
-    private String security;
+    private String access;
 
     /**
      * The site to which this outline relates.
@@ -125,7 +125,7 @@ public class COSerialized implements java.io.Serializable, COModelInterface {
      */
     public COSerialized(COSerialized courseOutlineXML) {
 	this(courseOutlineXML.getCoId(), courseOutlineXML.getLang(),
-		courseOutlineXML.getType(), courseOutlineXML.getSecurity(),
+		courseOutlineXML.getType(), courseOutlineXML.getAccess(),
 		courseOutlineXML.getSiteId(), courseOutlineXML.getSection(),
 		courseOutlineXML.getOsylConfig(),
 		courseOutlineXML.getContent(), courseOutlineXML
@@ -139,14 +139,14 @@ public class COSerialized implements java.io.Serializable, COModelInterface {
      * 
      * @param published TODO
      */
-    public COSerialized(String coId, String lang, String type, String security,
+    public COSerialized(String coId, String lang, String type, String access,
 	    String siteId, String sectionId, COConfigSerialized osylConfigId,
 	    String content, String shortDescription, String description,
 	    String title, boolean published) {
 	this.setCoId(coId);
 	this.setLang(lang);
 	this.setType(type);
-	this.setSecurity(security);
+	this.setAccess(access);
 	this.setSiteId(siteId);
 	this.setSection(sectionId);
 	this.setOsylConfig(osylConfigId);
@@ -267,12 +267,12 @@ public class COSerialized implements java.io.Serializable, COModelInterface {
     }
 
     /**
-     * Get the security level of the current course outline.
+     * Get the access level of the current course outline.
      * 
-     * @return an Integer of the course outline security level
+     * @return an Integer of the course outline access level
      */
-    public String getSecurity() {
-	return this.security;
+    public String getAccess() {
+	return this.access;
     }
 
     /**
@@ -384,12 +384,12 @@ public class COSerialized implements java.io.Serializable, COModelInterface {
     }
 
     /**
-     * Set the security level of the current course outline.
+     * Set the access level of the current course outline.
      * 
-     * @param security the security to set
+     * @param access the access to set
      */
-    public void setSecurity(String security) {
-	this.security = security;
+    public void setAccess(String access) {
+	this.access = access;
     }
 
     public boolean isEditable() {

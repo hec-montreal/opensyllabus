@@ -73,7 +73,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    results =
 		    getHibernateTemplate()
 			    .find(
-				    "from COSerialized where siteId= ? and security= ?",
+				    "from COSerialized where siteId= ? and access= ?",
 				    new Object[] { siteId, groupName });
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by its siteId", e);
@@ -166,7 +166,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	try {
 	    cos =
 		    getSerializedCourseOutlineBySiteId(courseOutline
-			    .getSiteId(), courseOutline.getSecurity());
+			    .getSiteId(), courseOutline.getAccess());
 	    if (!cos.getCoId().equals(courseOutline.getCoId()))
 		alreadyExist = true;
 
@@ -239,7 +239,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
     }
 
     @SuppressWarnings("unchecked")
-    public COSerialized isPublished(String siteId, String security)
+    public COSerialized isPublished(String siteId, String access)
 	    throws Exception {
 	List<COSerialized> results = null;
 	COSerialized courseOutline = null;
@@ -248,8 +248,8 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    results =
 		    getHibernateTemplate()
 			    .find(
-				    "from COSerialized where siteId= ? and security = ? ",
-				    new Object[] { siteId, security });
+				    "from COSerialized where siteId= ? and access = ? ",
+				    new Object[] { siteId, access });
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline", e);
 	    throw e;

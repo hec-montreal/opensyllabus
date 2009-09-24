@@ -1,11 +1,12 @@
 /******************************************************************************
- * $Id$
+ * $Id: $
  ******************************************************************************
  *
- * Copyright (c) 2008 The Sakai Foundation, The Sakai Quebec Team.
+ * Copyright (c) 2009 The Sakai Foundation, The Sakai Quebec Team.
  *
- * Licensed under the Educational Community License, Version 1.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * Licensed under the Educational Community License, Version 1.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.
  * You may obtain a copy of the License at
  *
  *      http://www.opensource.org/licenses/ecl1.php
@@ -16,8 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *****************************************************************************/
-
+ ******************************************************************************/
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
 import java.util.ArrayList;
@@ -27,6 +27,7 @@ import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylLabelEditClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
+import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -38,9 +39,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Rich-text editor to be used within {@link OsylAbstractView}.
- * 
- * @author <a href="mailto:Remi.Saias@hec.ca">Remi Saias</a>
+ * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
+ * @version $Id: $
  */
 public class OsylLabelEditor extends OsylAbstractEditor {
 
@@ -48,7 +48,8 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     private VerticalPanel mainPanel;
 
     // Our editor
-    private TextBox editor;
+    private VerticalPanel editorPanel;
+    private TextBox nameEditor;
 
     // Our viewer
     private HTML viewer;
@@ -68,16 +69,14 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 	}
 	initViewer();
 	initWidget(getMainPanel());
+
     }
 
-    /**
-     * ====================== PRIVATE METHODS ======================
-     */
-    private VerticalPanel getMainPanel() {
+    protected VerticalPanel getMainPanel() {
 	return mainPanel;
     }
 
-    private void setMainPanel(VerticalPanel mainPanel) {
+    protected void setMainPanel(VerticalPanel mainPanel) {
 	this.mainPanel = mainPanel;
     }
 
@@ -89,13 +88,23 @@ public class OsylLabelEditor extends OsylAbstractEditor {
      * Creates and set the low-level editor (TextBox).
      */
     private void initEditor() {
-	TextBox tb = new TextBox();
-	tb.setStylePrimaryName("Osyl-LabelEditor-TextBox");
-	setEditor(tb);
-    }
+	editorPanel = new VerticalPanel();
+	editorPanel.setWidth("98%");
 
-    private void setEditor(TextBox rta) {
-	this.editor = rta;
+	if (getNameLabel() != null) {
+	    editorPanel.add(getNameLabel());
+	}
+
+	nameEditor = new TextBox();
+	nameEditor.setStylePrimaryName("Osyl-LabelEditor-TextBox");
+	nameEditor.setWidth("100%");
+	nameEditor.addClickListener(new ResetLabelClickListener(getView()
+		.getCoMessage(getView().getModel().getType())));
+
+	if (getNameTooltip() != null) {
+	    nameEditor.setTitle(getUiMessage("Evaluation.name.tooltip"));
+	}
+	editorPanel.add(nameEditor);
     }
 
     /**
@@ -107,11 +116,11 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 	setViewer(htmlViewer);
     }
 
-    private void setViewer(HTML html) {
+    protected void setViewer(HTML html) {
 	this.viewer = html;
     }
 
-    private HTML getViewer() {
+    protected HTML getViewer() {
 	return viewer;
     }
 
@@ -119,7 +128,24 @@ public class OsylLabelEditor extends OsylAbstractEditor {
      * ===================== PROTECTED METHODS =====================
      */
 
-    /* none */
+    protected Label getNameLabel() {
+	return null;
+    }
+
+    protected String getNameTooltip() {
+	return null;
+    }
+
+    protected void refreshButtonPanel() {
+	// We only create an edit button (as delete is not allowed) and add it:
+	String title = getView().getUiMessage("edit");
+	ClickListener listener = new OsylLabelEditClickListener(getView());
+	AbstractImagePrototype imgEditButton = getOsylImageBundle().edit();
+	ImageAndTextButton pbEdit =
+		createButton(imgEditButton, title, listener);
+	getView().getButtonPanel().clear();
+	getView().getButtonPanel().add(pbEdit);
+    }
 
     /**
      * ===================== OVERRIDEN METHODS ===================== See
@@ -128,7 +154,7 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 
     public void setText(String text) {
 	if (isInEditionMode()) {
-	    editor.setText(text);
+	    nameEditor.setText(text);
 	} else {
 	    viewer.setHTML(text);
 	}
@@ -136,7 +162,7 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 
     public String getText() {
 	if (isInEditionMode()) {
-	    return editor.getText();
+	    return nameEditor.getText();
 	} else {
 	    return viewer.getHTML();
 	}
@@ -144,12 +170,12 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 
     public void setFocus(boolean b) {
 	if (isInEditionMode()) {
-	    editor.setFocus(b);
+	    nameEditor.setFocus(b);
 	}
     }
 
     public Widget getEditorTopWidget() {
-	return editor;
+	return editorPanel;
     }
 
     public boolean prepareForSave() {
@@ -165,9 +191,9 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 	// We get the text to edit from the model
 	setText(getView().getTextFromModel());
 	// And put the cursor at the end
-	editor.setCursorPos(getText().length());
+	nameEditor.setCursorPos(getText().length());
 	// And we give the focus to the editor
-	editor.setFocus(true);
+	nameEditor.setFocus(true);
 
     } // enterEdit
 
@@ -188,14 +214,7 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 	    return;
 	}
 
-	// We only create an edit button (as delete is not allowed) and add it:
-	String title = getView().getUiMessage("edit");
-	ClickListener listener = new OsylLabelEditClickListener(getView());
-	AbstractImagePrototype imgEditButton = getOsylImageBundle().edit();
-	ImageAndTextButton pbEdit =
-		createButton(imgEditButton, title, listener);
-	getView().getButtonPanel().clear();
-	getView().getButtonPanel().add(pbEdit);
+	refreshButtonPanel();
 
     } // enterView
 
@@ -233,7 +252,7 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     @Override
     protected List<FocusWidget> getEditionFocusWidgets() {
 	ArrayList<FocusWidget> focusWidgetList = new ArrayList<FocusWidget>();
-	focusWidgetList.add(editor);
+	focusWidgetList.add(nameEditor);
 	return focusWidgetList;
     }
 
@@ -255,17 +274,10 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     /**
      * ==================== ADDED CLASSES or METHODS ====================
      */
-    protected Label getNameLabel(){
-	return null;
-    }
-    
-    protected String getNameTooltip(){
-	return null;
-    }
 
     @Override
     public boolean isMoveable() {
 	return false;
     }
-    
+
 }

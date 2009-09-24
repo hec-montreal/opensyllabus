@@ -24,82 +24,78 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This class contains the list of all the possible structure element in a course outline.
- * TODO: when GWT 1.5 release will be used, replace this class with enum types
- *
+ * This class contains the list of all the possible structure element in a
+ * course outline. TODO: when GWT 1.5 release will be used, replace this class
+ * with enum types
+ * 
  * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Lepretre</a>
- * @version $Id: COStructureElementType.java 525 2008-05-22 04:30:56Z sacha.lepretre@crim.ca $
+ * @version $Id: COStructureElementType.java 525 2008-05-22 04:30:56Z
+ *          sacha.lepretre@crim.ca $
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
 public class COStructureElementType {
 
-    public static final String LECTURES = "lectures";
+    public static final String PEDAGOGICAL_STRUCT = "PedagogicalStruct";
+    public static final String STAFF_STRUCT = "StaffStruct";
+    public static final String LEARNING_MATERIAL_STRUCT = "LearningMaterialStruct";
+    public static final String OVERVIEW_STRUCT = "OverviewStruct";
+    public static final String EVALUATIONS_STRUCT = "AssessmentStruct";
 
-    public static final String LECTURES_LIST_CONTEXT_SKILLS = "LecturesListContextSkills";
-
-    public static final String ACTIVITIES = "Activities";
-    
-    public static final String EVALUATION_HEADER = "EvaluationHeader";
-    
-    public static final String EVALUATIONS = "evaluations";
-
-    public static final String TOPICS = "topics";
-    public static final String COURSEINFO_HEADER = "CourseInfoHeader";
-    public static final String COURSEDESCRIPTION_HEADER = "CourseDescriptionHeader";
-    public static final String PEDAGOGICAL_APPROACH_STRUC = "PedagogicalApproachStruc";   
-    public static final String PEDAGOGICAL_APPROACH_SPECIFIC_STRUC = "PedagogicalApproachSpecificStruc";
-    
-    public static final String EVALUATION_STRUC = "EvaluationStruc";
-    public static final String EVALUATIONS_LIST = "EvaluationsList";
-    public static final String EVALUATION_INSTRUMENTS_LIST = "EvaluationInstrumentsList";
-    
-    public static final String LECTURE_STRUC = "LectureStruc";
-       
-    public static final String LECTURE_TEACHING_ACTIVITY_LIST = "LectureTeachingActivityList";    
-    public static final String LECTURE_LEARNING_ACTIVITY_LIST = "LectureLearningActivityList";
-    
-    public static final String COURSE_SKILLS_COMPONENTS_LIST = "CourseSkillsComponentsList";    
-  
-    public static final String THEMES_LIST = "ThemesList";
-
-    public static final String THEME_STRUC = "ThemeStruc";
-
-    public static final String THEME_TEACHING_ACTIVITY_LIST = "ThemeTeachingActivityList";    
-    public static final String THEME_LEARNING_ACTIVITY_LIST = "ThemeLearningActivityList";
+    // public static final String LECTURES_LIST_CONTEXT_SKILLS =
+    // "LecturesListContextSkills";
+    //
+    // public static final String ACTIVITIES = "Activities";
+    //
+    // public static final String EVALUATION_HEADER = "EvaluationHeader";
+    // public static final String TOPICS = "topics";
+    // public static final String COURSEINFO_HEADER = "CourseInfoHeader";
+    // public static final String COURSEDESCRIPTION_HEADER =
+    // "CourseDescriptionHeader";
+    // public static final String PEDAGOGICAL_APPROACH_STRUC =
+    // "PedagogicalApproachStruc";
+    // public static final String PEDAGOGICAL_APPROACH_SPECIFIC_STRUC =
+    // "PedagogicalApproachSpecificStruc";
+    //
+    // public static final String EVALUATION_STRUC = "EvaluationStruc";
+    // public static final String EVALUATIONS_LIST = "EvaluationsList";
+    // public static final String EVALUATION_INSTRUMENTS_LIST =
+    // "EvaluationInstrumentsList";
+    //
+    // public static final String LECTURE_STRUC = "LectureStruc";
+    //
+    // public static final String LECTURE_TEACHING_ACTIVITY_LIST =
+    // "LectureTeachingActivityList";
+    // public static final String LECTURE_LEARNING_ACTIVITY_LIST =
+    // "LectureLearningActivityList";
+    //
+    // public static final String COURSE_SKILLS_COMPONENTS_LIST =
+    // "CourseSkillsComponentsList";
+    //
+    // public static final String THEMES_LIST = "ThemesList";
+    //
+    // public static final String THEME_STRUC = "ThemeStruc";
+    //
+    // public static final String THEME_TEACHING_ACTIVITY_LIST =
+    // "ThemeTeachingActivityList";
+    // public static final String THEME_LEARNING_ACTIVITY_LIST =
+    // "ThemeLearningActivityList";
 
     /**
      * The list of types.
      */
-    private static final String[] types = {   
-    	
-    					      LECTURES 
-	                                    , LECTURES_LIST_CONTEXT_SKILLS
+    private static final String[] types = {
 
-	                                    , ACTIVITIES
-	                                    
-	                                    , EVALUATIONS
-	                                    , EVALUATION_HEADER 
-	                                    , TOPICS 
-	                                    , COURSEINFO_HEADER
-	                                    , COURSEDESCRIPTION_HEADER
-	                                    , PEDAGOGICAL_APPROACH_STRUC
-	                                    , PEDAGOGICAL_APPROACH_SPECIFIC_STRUC
+    PEDAGOGICAL_STRUCT, STAFF_STRUCT, OVERVIEW_STRUCT, LEARNING_MATERIAL_STRUCT, EVALUATIONS_STRUCT, };
 
-	                                    , EVALUATIONS_LIST
-	                                    , EVALUATION_STRUC
-	                                    , EVALUATION_INSTRUMENTS_LIST
-
-	                                    , LECTURE_STRUC
-	                                    , LECTURE_TEACHING_ACTIVITY_LIST
-	                                    , LECTURE_LEARNING_ACTIVITY_LIST
-	                                    
-	                                    , COURSE_SKILLS_COMPONENTS_LIST
-	                                    
-	                                    , THEMES_LIST
-	                                    , THEME_STRUC
-	                                    , THEME_TEACHING_ACTIVITY_LIST
-	                                    , THEME_LEARNING_ACTIVITY_LIST
-    };
+    /*
+     * LECTURES_LIST_CONTEXT_SKILLS , ACTIVITIES , EVALUATION_HEADER, TOPICS,
+     * COURSEINFO_HEADER, COURSEDESCRIPTION_HEADER, PEDAGOGICAL_APPROACH_STRUC,
+     * PEDAGOGICAL_APPROACH_SPECIFIC_STRUC , EVALUATIONS_LIST, EVALUATION_STRUC,
+     * EVALUATION_INSTRUMENTS_LIST , LECTURE_STRUC,
+     * LECTURE_TEACHING_ACTIVITY_LIST, LECTURE_LEARNING_ACTIVITY_LIST ,
+     * COURSE_SKILLS_COMPONENTS_LIST , THEMES_LIST, THEME_STRUC,
+     * THEME_TEACHING_ACTIVITY_LIST, THEME_LEARNING_ACTIVITY_LIST
+     */
 
     /**
      * @return string array of types
@@ -107,13 +103,13 @@ public class COStructureElementType {
     public static final String[] getTypes() {
 	return types;
     }
-    
+
     /**
      * Gets the list of all possible <code>COStructureElement</code> types.
      * 
      * @return a list of all possible types.
      */
-    public static final List<String> getTypesList(){
+    public static final List<String> getTypesList() {
 	return Arrays.asList(types);
     }
 }

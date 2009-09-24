@@ -374,7 +374,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      * Returns the text content of current resource as stored in its model.
      * Caveat: This only applies to views responsible for a single text field as
      * the {@link OsylResProxTextView}, {@link OsylResProxDocumentView} and
-     * {@link OsylLabelView}. Return value for other views is either undefined
+     * {@link OsylCOUnitStructureLabelView}. Return value for other views is either undefined
      * (may throw an exception) or implicit (may be the first field of the
      * view). Refer to the specific view documentation.
      * 

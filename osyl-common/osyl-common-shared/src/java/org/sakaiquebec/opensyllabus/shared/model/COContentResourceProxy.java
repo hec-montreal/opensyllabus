@@ -38,18 +38,16 @@ import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEv
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
-public class COContentResourceProxy implements COModelInterface,
-	FiresUpdateCOContentResourceProxyEvents {
+public class COContentResourceProxy extends COElementAbstract<COModelInterface>
+	implements COModelInterface, FiresUpdateCOContentResourceProxyEvents,
+	COElementMoveable {
+
+    private static final long serialVersionUID = 2320739372238332151L;
 
     /**
      * Boolean value to print trace in debug mode.
      */
     public static final boolean TRACE = false;
-
-    /**
-     * The type of <code>COContentResourceProxy</code>.
-     */
-    private String type;
 
     /**
      * A comment associated to a <code>COContentResourceProxy</code>.
@@ -60,34 +58,18 @@ public class COContentResourceProxy implements COModelInterface,
      * The description of a <code>COContentResourceProxy</code>.
      */
     // private String description;
-    /**
-     * The label of a <code>COContentResourceProxy</code>.
-     */
-    private String label;
 
     /**
-     * The security level.
+     * The child object could be ASMunit or an ASMResource
      */
-    private String security;
-
-    /**
-     * The resource object.
-     */
-    private COContentResource resource;
-    
-    /**
-     * if the <code>COContentResourceProxy</code> is editbale or not
-     */
-    private boolean editable=true;
+    private COModelInterface resource;
 
     /**
      * List of all resource proxies associated to this resource proxy (as
      * attachments. atgwt.typeArgs resourceProxies
      * <org.sakaiquebec.opensyllabus.model.COContentResourceProxy>
      */
-    private List<COContentResourceProxy> resourceProxies;
-
-    private COContentUnit coContentUnitParent;
+    private List<COContentResourceProxy> nestedCOResourceProxies;
 
     /**
      * The rubric to put the resource proxy in.
@@ -105,24 +87,26 @@ public class COContentResourceProxy implements COModelInterface,
      * Constructor.
      */
     public COContentResourceProxy() {
-	resourceProxies = new ArrayList<COContentResourceProxy>();
+	super();
+	setClassType(CO_CONTENT_RESOURCE_PROXY_CLASS_TYPE);
+	nestedCOResourceProxies = new ArrayList<COContentResourceProxy>();
 	properties = new COProperties();
     }
 
     public static COContentResourceProxy createDefaultResProxy(
 	    final String type, final OsylConfigMessages osylConfigMessages,
-	    final COElementAbstract parentModel) {
+	    final COElementAbstract parentModel, final String resourceType) {
 
 	final COContentResourceProxy resProxModel =
 		new COContentResourceProxy();
 	resProxModel.setType(type);
-	if (type.equalsIgnoreCase(COContentResourceProxyType.ASSIGNMENT))
+	if (resourceType.equalsIgnoreCase(COContentResourceType.ASSIGNMENT))
 	    // We change the default text
 	    resProxModel.setLabel(osylConfigMessages.getMessage("SendWork"));
 	else
 	    resProxModel.setLabel(osylConfigMessages
 		    .getMessage("InsertYourTextHere"));
-	resProxModel.setSecurity(SecurityInterface.SECURITY_ACCESS_ATTENDEE);
+	resProxModel.setAccess(SecurityInterface.ACCESS_ATTENDEE);
 	resProxModel.setRubricType(COContentRubric.RUBRIC_TYPE_UNDEFINED);
 	COProperties prop = new COProperties();
 	prop.addProperty(COPropertiesType.VISIBILITY, "true");
@@ -131,28 +115,23 @@ public class COContentResourceProxy implements COModelInterface,
 
 	// Default resource
 	final COContentResource resModel =
-		COContentResource.createDefaultRes(type, osylConfigMessages);
+		COContentResource.createDefaultRes(resourceType,
+			osylConfigMessages);
 
 	resProxModel.setResource(resModel);
 	// Add child (a model notification should fire)
-	((COContentUnit) parentModel).addChild(resProxModel);
-	resProxModel.setCoContentUnitParent((COContentUnit) parentModel);
+	((COUnitContent) parentModel).addChild(resProxModel);
+	resProxModel.setParent((COUnitContent) parentModel);
 
 	return resProxModel;
     }
 
-    /**
-     * @return the type
-     */
-    public String getType() {
-	return type;
-    }
 
     /**
      * @param type the type to set
      */
     public void setType(String type) {
-	this.type = type;
+	super.setType(type);
 	notifyEventHandlers();
     }
 
@@ -184,32 +163,27 @@ public class COContentResourceProxy implements COModelInterface,
     // this.description = description;
     // notifyEventHandlers();
     // }
-    /**
-     * @return the security
-     */
-    public String getSecurity() {
-	return security;
-    }
+    
 
     /**
-     * @param security the security to set
+     * @param access the access to set
      */
-    public void setSecurity(String security) {
-	this.security = security;
+    public void setAccess(String access) {
+	super.setAccess(access);
 	notifyEventHandlers();
     }
 
     /**
      * @return the resource
      */
-    public COContentResource getResource() {
+    public COModelInterface getResource() {
 	return resource;
     }
 
     /**
      * @param resource the resource to set
      */
-    public void setResource(COContentResource resource) {
+    public void setResource(COModelInterface resource) {
 	this.resource = resource;
 	notifyEventHandlers();
     }
@@ -220,8 +194,8 @@ public class COContentResourceProxy implements COModelInterface,
      * 
      * @return ResourceProxies children
      */
-    public List<COContentResourceProxy> getResourceProxies() {
-	return resourceProxies;
+    public List<COContentResourceProxy> getNestedCOContentResourceProxies() {
+	return nestedCOResourceProxies;
     }
 
     /**
@@ -230,17 +204,18 @@ public class COContentResourceProxy implements COModelInterface,
      * 
      * @param resourcePRoxies the resourceProxies to set
      */
-    public void setResourceProxies(List<COContentResourceProxy> resourceProxies) {
-	this.resourceProxies = resourceProxies;
+    public void setNestedCOContentResourceProxies(
+	    List<COContentResourceProxy> resourceProxies) {
+	this.nestedCOResourceProxies = resourceProxies;
 	notifyEventHandlers();
     }
 
-    public COContentUnit getCoContentUnitParent() {
-	return coContentUnitParent;
+    public COUnitContent getParent() {
+	return (COUnitContent)super.getParent();
     }
 
-    public void setCoContentUnitParent(COContentUnit coContentUnitParent) {
-	this.coContentUnitParent = coContentUnitParent;
+    public void setParent(COUnitContent coContentUnitParent) {
+	super.setParent(coContentUnitParent);
     }
 
     /**
@@ -255,7 +230,7 @@ public class COContentResourceProxy implements COModelInterface,
      */
     public void setRubric(COContentRubric rubric) {
 	this.rubric = rubric;
-	if(rubric!=null)
+	if (rubric != null)
 	    moveToTheBottomOfTheRubric();
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.RUBRIC_UPDATE_EVENT_TYPE);
     }
@@ -296,14 +271,14 @@ public class COContentResourceProxy implements COModelInterface,
     }
 
     /**
-     * @return the properties.
+     * {@inheritDoc}
      */
     public COProperties getProperties() {
 	return properties;
     }
 
     /**
-     * @param properties the properties to set.
+     * {@inheritDoc}
      */
     public void setProperties(COProperties properties) {
 	this.properties = properties;
@@ -316,8 +291,8 @@ public class COContentResourceProxy implements COModelInterface,
      * @param resourceProxy the resourcePRoxy to add.
      * @return true if the resourcePRoxy is added successfully, false if not.
      */
-    public boolean addResourceProxy(COContentResourceProxy resourceProxy) {
-	boolean res = getResourceProxies().add(resourceProxy);
+    public boolean addNestedResourceProxy(COContentResourceProxy resourceProxy) {
+	boolean res = getNestedCOContentResourceProxies().add(resourceProxy);
 	notifyEventHandlers();
 	return res;
     }
@@ -328,17 +303,14 @@ public class COContentResourceProxy implements COModelInterface,
      * @param resourceProxy the resourceProxy to remove.
      * @return true if the resourceProxy is removed successfully, false if not.
      */
-    public boolean removeResourceProxy(COContentResourceProxy resourceProxy) {
-	boolean res = getResourceProxies().remove(resourceProxy);
+    public boolean removeNestedResourceProxy(COContentResourceProxy resourceProxy) {
+	boolean res = getNestedCOContentResourceProxies().remove(resourceProxy);
 	notifyEventHandlers();
 	return res;
     }
 
     /**
-     * Adds a property to the <code>COProperties</code> structure.
-     * 
-     * @param key the eky used to retrieve the property value.
-     * @param value the property value.
+     * {@inheritDoc}
      */
     public void addProperty(String key, String value) {
 
@@ -351,9 +323,7 @@ public class COContentResourceProxy implements COModelInterface,
     }
 
     /**
-     * Removes a property from the <code>COProperties</code> structure.
-     * 
-     * @param key
+     * {@inheritDoc}
      */
     public void removeProperty(String key) {
 	getProperties().removeProperty(key);
@@ -361,10 +331,7 @@ public class COContentResourceProxy implements COModelInterface,
     }
 
     /**
-     * Gets the specified proeprty value.
-     * 
-     * @param key the property key used to retrieve the value.
-     * @return the proeprty value.
+     * {@inheritDoc}
      */
     public String getProperty(String key) {
 	return getProperties().getProperty(key);
@@ -388,12 +355,9 @@ public class COContentResourceProxy implements COModelInterface,
      *         resourceProxy; }
      */
 
-    public String getLabel() {
-	return label;
-    }
 
     public void setLabel(String label) {
-	this.label = label;
+	super.setLabel(label);
 	if (TRACE)
 	    System.out
 		    .println("*** TRACE *** UPDATE THE MODEL COContentResourceProxy - Label = "
@@ -456,22 +420,19 @@ public class COContentResourceProxy implements COModelInterface,
      * Removes itself from its parent.
      */
     public void remove() {
-	getCoContentUnitParent().removeChild(this);
+	getParent().removeChild(this);
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.DELETE_EVENT_TYPE);
 	if (updateCOContentResourceProxyEventHandlers != null)
 	    updateCOContentResourceProxyEventHandlers.clear();
     }
 
     /**
-     * Check the position of this resourceProxy compared to the other rp in the
-     * same rubric
-     * 
-     * @return true if the ResourceProxy is not the last element
+     * {@inheritDoc}
      */
-    public boolean hasSuccessorInRubric() {
-	if (getCoContentUnitParent() == null)
+    public boolean hasSuccessor() {
+	if (getParent() == null)
 	    return false;
-	int i = getCoContentUnitParent().getElementPosition(this);
+	int i = getParent().getElementPosition(this);
 	if (i != -1 && i != 0)
 	    return true;
 	else
@@ -479,42 +440,78 @@ public class COContentResourceProxy implements COModelInterface,
     }
 
     /**
-     * Check the position of this resourceProxy compared to the other rp in the
-     * same rubric
-     * 
-     * @return true if the ResourceProxy is not the first element
+     * {@inheritDoc}
      */
-    public boolean hasPredecessorInRubric() {
-	if (getCoContentUnitParent() == null)
+    public boolean hasPredecessor() {
+	if (getParent() == null)
 	    return false;
-	int i = getCoContentUnitParent().getElementPosition(this);
+	int i = getParent().getElementPosition(this);
 	if (i != 1 && i != 0)
 	    return true;
 	else
 	    return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void moveUp() {
-	getCoContentUnitParent().changeElementPosition(this, COElementAbstract.POSITION_CHANGE_ACTION_UP);
+	getParent().changeElementPosition(this,
+		COElementAbstract.POSITION_CHANGE_ACTION_UP);
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.MOVE_IN_RUBRIC_EVENT_TYPE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void moveDown() {
-	getCoContentUnitParent().changeElementPosition(this, COElementAbstract.POSITION_CHANGE_ACTION_DOWN);
+	getParent().changeElementPosition(this,
+		COElementAbstract.POSITION_CHANGE_ACTION_DOWN);
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.MOVE_IN_RUBRIC_EVENT_TYPE);
     }
-    
-    private void moveToTheBottomOfTheRubric(){
-	while(hasSuccessorInRubric())
-	    getCoContentUnitParent().changeElementPosition(this, COElementAbstract.POSITION_CHANGE_ACTION_DOWN); 
-    }
-    
-    public boolean isEditable() {
-	return editable;
+
+    private void moveToTheBottomOfTheRubric() {
+	while (hasSuccessor())
+	    getParent().changeElementPosition(this,
+		    COElementAbstract.POSITION_CHANGE_ACTION_DOWN);
     }
 
-    public void setEditable(boolean edit) {
-	this.editable = edit;
-    }   
+    @Override
+    public boolean addChild(COModelInterface child) {
+	this.resource = child;
+	return true;
+    }
+
+    @Override
+    public void changeElementPosition(COModelInterface coEltAbs, int action) {
+	// nothing to do: only one child at a time
+    }
+
+    @Override
+    public List<COModelInterface> getChildrens() {
+	List<COModelInterface> list = new ArrayList<COModelInterface>();
+	list.add(resource);
+	return list;
+    }
+
+    @Override
+    public int getElementPosition(COModelInterface coEltAbs) {
+	return 0;
+    }
+
+    @Override
+    public boolean removeChild(COModelInterface child) {
+	if (child.equals(resource)) {
+	    resource = null;
+	    return true;
+	} else {
+	    return false;
+	}
+    }
+
+    @Override
+    public void setChildrens(List<COModelInterface> childs) {
+	resource=childs.get(0);//one child at a time 
+    }
 
 }

@@ -26,19 +26,19 @@ package org.sakaiquebec.opensyllabus.shared.events;
  * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Lepretre</a>
  * @version $Id: FiresUpdateCOContentUnitEvents.java 507 2008-05-21 18:09:48Z sacha.lepretre@crim.ca $
  */
-public interface FiresUpdateCOContentUnitEvents {
+public interface FiresUpdateCOUnitContentEvents {
     
     /**
      * Add handler
      *
      * @param handler
      */
-    public void addEventHandler(UpdateCOContentUnitEventHandler handler);
+    public void addEventHandler(UpdateCOUnitContentEventHandler handler);
 
     /**
      * Remove Handler
      *
      * @param handler
      */
-    public void removeEventHandler(UpdateCOContentUnitEventHandler handler);
+    public void removeEventHandler(UpdateCOUnitContentEventHandler handler);
 }

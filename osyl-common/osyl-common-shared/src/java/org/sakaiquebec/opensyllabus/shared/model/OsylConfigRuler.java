@@ -59,13 +59,15 @@ import com.google.gwt.xml.client.XMLParser;
  *          yvette.lapa-dessap@hec.ca $
  */
 public class OsylConfigRuler {
-    
+
     protected static final String UNDEFINED_NODE_NAME = "undefined";
     protected static final String RESTRICTION_PATTERN_ATTRIBUTE_NAME =
 	    "restrictionpattern";
     protected static final String NAME_ATTRIBUTE_NAME = "name";
     protected static final String ELEMENT_NODE_NAME = "element";
     protected static final String ATTRIBUTE_NODE_NAME = "attribute";
+    protected static final String PROPERTY_TYPE_ATTRIBUTE_NAME = "propertyType";
+    protected static final String TYPE_ATTRIBUTE_NAME = "type";
     private String rulesConfigContent;
     private Document dom = null;
 
@@ -96,14 +98,17 @@ public class OsylConfigRuler {
 	for (int i = 0; i < children.getLength(); i++) {
 	    myNode = children.item(i);
 	    String myNodeName = myNode.getNodeName();
-	    if (ATTRIBUTE_NODE_NAME.equalsIgnoreCase(myNodeName)) {
+	    if (ATTRIBUTE_NODE_NAME.equalsIgnoreCase(myNodeName)
+		    && getNameAttributeValue(myNode)
+			    .equals(TYPE_ATTRIBUTE_NAME)) {
 		break;
 	    }
 	}
 	return myNode;
     }
 
-    private List<COModelInterface> getAllowedSubModels(List<COElementAbstract> path) {
+    private List<COModelInterface> getAllowedSubModels(
+	    List<COElementAbstract> path) {
 	List<COModelInterface> allowedSubModels = null;
 
 	if (path != null) {
@@ -120,7 +125,8 @@ public class OsylConfigRuler {
 		Node node = nodeElement;
 		String nodeName = "";
 
-		// First, try to match position in the dom with this path to find the correct rule
+		// First, try to match position in the dom with this path to
+		// find the correct rule
 		int pathPositionEnd = path.size() - 1;
 		while (pathPosition <= pathPositionEnd) {
 		    elementPath = (COElementAbstract) path.get(pathPosition);
@@ -136,43 +142,68 @@ public class OsylConfigRuler {
 
 			    if (nameAttribute != null) {
 
-				// Identification of elementPathName, based on classtypes
+				// Identification of elementPathName, based on
+				// classtypes
 				String elementPathName = UNDEFINED_NODE_NAME;
 				if (elementPath.isCourseOutlineContent()) {
 				    elementPathName = COModeled.CO_NODE_NAME;
 				} else if (elementPath.isCOStructureElement()) {
 				    elementPathName =
 					    COModeled.CO_STRUCTURE_NODE_NAME;
-				} else if (elementPath.isCOContentUnit()) {
+				} else if (elementPath.isCOUnit()) {
 				    elementPathName =
 					    COModeled.CO_UNIT_NODE_NAME;
+				} else if (elementPath.isCOUnitStructure()) {
+				    elementPathName =
+					    COModeled.CO_UNIT_STRUCTURE_NODE_NAME;
+				} else if (elementPath.isCOUnitContent()) {
+				    elementPathName =
+					    COModeled.CO_UNIT_CONTENT_NODE_NAME;
 				}
 
-				//if nameAttribute matches, then retrieving its restrictionPattern
-				if (nameAttribute
-					.equalsIgnoreCase(elementPathName)) {
-				    // checking on type if restrictionpattern matches also
-				    Node attributeTypeNode =
-					    findingAttributeTypeNode(node);
+				// if nameAttribute matches, then retrieving its
+				// restrictionPattern
 
-				    String restrictionPattern =
-					    getRestrictionPatternAttributeValue(attributeTypeNode);
+				// The CO tag does not have a type anymore in
+				// the new OO XML version
+				if (!elementPath.isCourseOutlineContent()) {
 
-				    // check if the restriction pattern matches...
-				    if (elementPath.getType().matches(
-					    restrictionPattern)) {
+				    if (nameAttribute
+					    .equalsIgnoreCase(elementPathName)) {
+					// checking on type if
+					// restrictionpattern
+					// matches also
+					Node attributeTypeNode =
+						findingAttributeTypeNode(node);
 
-					// all matches, then ... one step more for path
-					pathPosition++;
-					break;
+					String restrictionPattern =
+						getRestrictionPatternAttributeValue(attributeTypeNode);
+
+					// check if the restriction pattern
+					// matches...
+					if (elementPath.getType().matches(
+						restrictionPattern)) {
+
+					    // all matches, then ... one step
+					    // more
+					    // for path
+					    pathPosition++;
+					    break;
+					}
 				    }
+				}
+				// increment the pathposition here for the CO
+				// tag (not invremented above)
+				else {
+				    pathPosition++;
+				    break;
 				}
 			    }
 			}
 		    }// for
 		}// while
 
-		//Secondly, identify the available possibilities(rules)
+		// Secondly, identify the available possibilities(rules)
 		NodeList nodeChildren = node.getChildNodes();
 		for (int i = 0; i < nodeChildren.getLength(); i++) {
 		    Node myNode = nodeChildren.item(i);
@@ -192,23 +223,27 @@ public class OsylConfigRuler {
 				    restrictionPattern.split("\\|");
 			    for (int j = 0; j < typesStringArray.length; j++) {
 				String type = typesStringArray[j].trim();
-				// create a new model instance based on name and type
+				// create a new model instance based on name and
+				// type
 				COModelInterface modelInstance =
 					createModelInstance(nameAttribute, type);
 				if (modelInstance != null) {
 				    if (allowedSubModels == null) {
-					allowedSubModels = new ArrayList<COModelInterface>();
+					allowedSubModels =
+						new ArrayList<COModelInterface>();
 				    }
 				    allowedSubModels.add(modelInstance);
 				}
 			    }
 			} else if (restrictionPattern.indexOf("*") > 0) {
-			    // TODO: here list all available types for this nameAttribute
+			    // TODO: here list all available types for this
+			    // nameAttribute
 			} else {
 			    COModelInterface modelInstance =
 				    createModelInstance(nameAttribute,
 					    restrictionPattern);
-			    allowedSubModels = new ArrayList<COModelInterface>();
+			    allowedSubModels =
+				    new ArrayList<COModelInterface>();
 			    allowedSubModels.add(modelInstance);
 			}
 		    }
@@ -230,17 +265,23 @@ public class OsylConfigRuler {
 		.equalsIgnoreCase(nameAttribute)) {
 	    modelInstance = new COStructureElement();
 	} else if (COModeled.CO_UNIT_NODE_NAME.equalsIgnoreCase(nameAttribute)) {
-	    modelInstance = new COContentUnit();
-	} else if (COModeled.CO_RES_PROXY_NODE_NAME
+	    modelInstance = new COUnit();
+	} else if (COModeled.CO_UNIT_STRUCTURE_NODE_NAME
 		.equalsIgnoreCase(nameAttribute)) {
-	    modelInstance = new COContentResourceProxy();
+	    modelInstance = new COUnitStructure();
+	} else if (COModeled.CO_UNIT_CONTENT_NODE_NAME
+		.equalsIgnoreCase(nameAttribute)) {
+	    modelInstance = new COUnitContent();
+	} else if (COModeled.CO_RES_NODE_NAME
+		.equalsIgnoreCase(nameAttribute)) {
+	    modelInstance = new COContentResource();
 	} else if (COModeled.CO_CONTENT_RUBRIC_NODE_NAME
 		.equalsIgnoreCase(nameAttribute)) {
 	    modelInstance = new COContentRubric();
 	} else if (COModeled.CO_RES_NODE_NAME.equalsIgnoreCase(nameAttribute)) {
 	    modelInstance = new COContentResource();
 	} else {
-	    //TODO: this is forbidden, throw an exception
+	    // TODO: this is forbidden, throw an exception
 	}
 	if (modelInstance != null) {
 	    modelInstance.setType(type);
@@ -271,7 +312,8 @@ public class OsylConfigRuler {
     public List<COModelInterface> getAllowedSubModels(COElementAbstract model) {
 	List<COModelInterface> allowedSubModels = null;
 	if (model != null) {
-	    //First find the current path of the model (node sequence in the tree)
+	    // First find the current path of the model (node sequence in the
+	    // tree)
 	    List<COElementAbstract> path = findModelPath(model);
 	    // Then check for subelements possibilities(rules) for this path
 	    allowedSubModels = getAllowedSubModels(path);
@@ -293,21 +335,29 @@ public class OsylConfigRuler {
 	    COElementAbstract currentModel = model;
 	    COElementAbstract previousModel = model;
 	    while (!currentModel.isCourseOutlineContent()) {
-		if (currentModel.isCOContentUnit()) {
+		if (currentModel.isCOUnitStructure()) {
 		    path.add(currentModel);
-		    currentModel = ((COContentUnit) currentModel).getParent();
+		    currentModel = ((COUnitStructure) currentModel).getParent();
+
+		} else if (currentModel.isCOUnit()) {
+		    path.add(currentModel);
+		    currentModel = ((COUnit) currentModel).getParent();
 
 		} else if (currentModel.isCOStructureElement()) {
 		    path.add(currentModel);
 		    currentModel =
 			    ((COStructureElement) currentModel).getParent();
+		} else if (currentModel.isCOUnitContent()) {
+		    path.add(currentModel);
+		    currentModel = ((COUnitContent) currentModel).getParent();
+
 		} else {
 		    // TODO: exception to throw
 		    break;
 		}
 		// To avoid infinite loopback
 		if (previousModel == currentModel) {
-		    //TODO: throw infinite loopback exception
+		    // TODO: throw infinite loopback exception
 		    break;
 		}
 		previousModel = currentModel;
@@ -334,5 +384,33 @@ public class OsylConfigRuler {
      */
     public void setRulesConfigContent(String rulesConfigContent) {
 	this.rulesConfigContent = rulesConfigContent;
+    }
+
+    public String getPropertyType() {
+	String type = null;
+	Element nodeElement = dom.getDocumentElement();
+	String nodeName = "";
+	NodeList nodeList = nodeElement.getChildNodes();
+	for (int i = 0; i < nodeList.getLength(); i++) {
+	    Node myNode = nodeList.item(i);
+	    nodeName = myNode.getNodeName();
+	    if (nodeName.equals(ELEMENT_NODE_NAME)
+		    && getNameAttributeValue(myNode).equals(
+			    COModeled.CO_NODE_NAME)) {
+		NodeList coNodeList = myNode.getChildNodes();
+		for (int j = 0; j < coNodeList.getLength(); j++) {
+		    Node myCONode = coNodeList.item(j);
+		    nodeName = myCONode.getNodeName();
+		    if (nodeName.equals(ATTRIBUTE_NODE_NAME)
+			    && getNameAttributeValue(myCONode).equals(
+				    PROPERTY_TYPE_ATTRIBUTE_NAME)) {
+			type = getRestrictionPatternAttributeValue(myCONode);
+			break;
+		    }
+		}
+		break;
+	    }
+	}
+	return type;
     }
 }

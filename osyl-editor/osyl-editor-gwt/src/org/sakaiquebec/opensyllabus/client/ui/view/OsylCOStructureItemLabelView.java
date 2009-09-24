@@ -21,38 +21,31 @@
 package org.sakaiquebec.opensyllabus.client.ui.view;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
-import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCOStructureItemEditor;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
-import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
-
-import com.google.gwt.user.client.Window;
+import org.sakaiquebec.opensyllabus.shared.model.COUnit;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 
 /**
- *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylCOStructureItemLabelView extends OsylAbstractView{
+public class OsylCOStructureItemLabelView extends OsylAbstractView {
 
-    
-    public OsylCOStructureItemLabelView(COContentUnit model,
-	    OsylController controller){
-	super(model,controller);
+    public OsylCOStructureItemLabelView(COUnit model, OsylController controller) {
+	super(model, controller);
 	setEditor(new OsylCOStructureItemEditor(this));
 	initView();
     }
-    
-    public OsylCOStructureItemLabelView(COContentUnit model,
-    	    OsylController controller, boolean isDeletable) {
-	super(model,controller);
+
+    public OsylCOStructureItemLabelView(COUnit model,
+	    OsylController controller, boolean isDeletable) {
+	super(model, controller);
 	setEditor(new OsylCOStructureItemEditor(this));
 	((OsylCOStructureItemEditor) getEditor()).setIsDeletable(isDeletable);
 	initView();
     }
-    
-    
-    public OsylCOStructureItemLabelView(COContentUnit model,
+
+    public OsylCOStructureItemLabelView(COUnitContent model,
 	    OsylController controller, boolean isDeletable, String levelStyle) {
 	super(model,controller);
 	setEditor(new OsylCOStructureItemEditor(this));
@@ -66,8 +59,8 @@ public class OsylCOStructureItemLabelView extends OsylAbstractView{
      * superclass for javadoc!
      */
 
-    public COContentUnit getModel() {
-	return (COContentUnit) super.getModel();
+    public COUnit getModel() {
+	return (COUnit) super.getModel();
     }
 
     public String getTextFromModel() {
@@ -78,4 +71,3 @@ public class OsylCOStructureItemLabelView extends OsylAbstractView{
 	getModel().setLabel(getEditor().getText());
     }
 }
-

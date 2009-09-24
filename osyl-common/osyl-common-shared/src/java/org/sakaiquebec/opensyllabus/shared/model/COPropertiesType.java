@@ -28,8 +28,8 @@ public class COPropertiesType {
     public static final String TEXT = "text";
     public static final String URI = "uri";
     public static final String VISIBILITY = "visible";
-    public static final String IMPORTANCE = "important";
-    public static final String REQUIREMENT_LEVEL = "requirementLevel";
+    public static final String IMPORTANCE = "importance";
+    public static final String REQUIREMENT_LEVEL = "level";
 
     public final static String REQ_LEVEL_MANDATORY = "mandatory";
     public final static String REQ_LEVEL_RECOMMENDED = "recommended";

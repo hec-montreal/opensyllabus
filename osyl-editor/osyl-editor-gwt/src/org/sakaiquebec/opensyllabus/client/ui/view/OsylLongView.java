@@ -28,10 +28,10 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
+import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -57,6 +57,7 @@ public class OsylLongView extends OsylViewableComposite {
 
     /**
      * Constructor
+     * 
      * @param model the model to display
      * @param osylController
      */
@@ -86,19 +87,17 @@ public class OsylLongView extends OsylViewableComposite {
 	getMainPanel().clear();
 
 	try {
-	    if(null != getController().getCOSerialized().getTitle()
-		    && !"".equals(getController().getCOSerialized().getTitle())){
-		titleLabel = new Label(getController().getCOSerialized().getTitle() 
-		);
-//			+ " N1");
+	    if (null != getController().getCOSerialized().getTitle()
+		    && !"".equals(getController().getCOSerialized().getTitle())) {
+		titleLabel =
+			new Label(getController().getCOSerialized().getTitle());
+		// + " N1");
 	    } else {
-		titleLabel = new Label(getCoMessage("courseoutline") 
-		);
-//			+ " N1");
+		titleLabel = new Label(getCoMessage("courseoutline"));
+		// + " N1");
 	    }
 
-	} 
-	catch (Exception e) {
+	} catch (Exception e) {
 	    titleLabel = new Label(getCoMessage("courseoutline"));
 	}
 	titleLabel.setStylePrimaryName("Osyl-UnitView-Title");
@@ -110,91 +109,91 @@ public class OsylLongView extends OsylViewableComposite {
     }
 
     public void displayChildren(List<COElementAbstract> children) {
-	if ( children == null ) {
+	if (children == null) {
 	    return;
-	}
-	else {
+	} else {
 	    Iterator<COElementAbstract> iter = children.iterator();
 	    while (iter.hasNext()) {
-           // this can be a Lecture leaf
+		// this can be a Lecture leaf
 		COElementAbstract absElement = iter.next();
-		if ( absElement.isCOStructureElement() ) {
-		    COStructureElement newCOStructEl = (COStructureElement) absElement;
-	            addListItemView( newCOStructEl );
-	            children = newCOStructEl.getChildrens();
-	            displayChildren(children);
-		}
-		else if (absElement.isCOContentUnit()) {
-		    COContentUnit itemModel = (COContentUnit) absElement;
-		    //addListItemView(itemModel);
+		if (absElement.isCOStructureElement()) {
+		    COStructureElement newCOStructEl =
+			    (COStructureElement) absElement;
+		    addListItemView(newCOStructEl);
+		    children = newCOStructEl.getChildrens();
+		    displayChildren(children);
+		} else if (absElement.isCOUnit()) {
+		    COUnit itemModel = (COUnit) absElement;
+		    // addListItemView(itemModel);
 		    displayCOUnit(itemModel);
-		}
-		else {
+		} else {
 		    return;
 		}
 	    }
 	}
     }
-    
-//    private void addListItemView(COContentUnit itemModel) {
-//	OsylCOStructureItemView listItemView =
-//		new OsylCOStructureItemView(itemModel, getController());
-//	getMainPanel().add(listItemView);
-//    }
+
+    // private void addListItemView(COContentUnit itemModel) {
+    // OsylCOStructureItemView listItemView =
+    // new OsylCOStructureItemView(itemModel, getController());
+    // getMainPanel().add(listItemView);
+    // }
 
     private void addListItemView(COStructureElement itemModel) {
 	Label COStructTitleLabel = new Label(getCoMessage(itemModel.getType()));
 	COStructTitleLabel.setStylePrimaryName("Osyl-UnitView-Title");
-	COStructTitleLabel.addStyleName(OsylStyleLevelChooser.getLevelStyle(itemModel));
+	COStructTitleLabel.addStyleName(OsylStyleLevelChooser
+		.getLevelStyle(itemModel));
 	getMainPanel().add(COStructTitleLabel);
     }
 
     /**
      * Display a contentUnitElement
+     * 
      * @param contentUnit
      */
-    private void displayCOUnit(COContentUnit contentUnit){
-	OsylCOContentUnitView view =
-	    new OsylCOContentUnitView(contentUnit, getController());
+    private void displayCOUnit(COUnit contentUnit) {
+	OsylCOUnitView view = new OsylCOUnitView(contentUnit, getController());
 	getMainPanel().add(view);
     }
 
     /**
      * Display an element of type structureElement
+     * 
      * @param structureElement
      */
-//    private void displayCOStructureElement(COStructureElement structureElement){
-//	List<COElementAbstract> children = structureElement.getChildren();
-//	Iterator<COElementAbstract> iter = children.iterator();
-//	while (iter.hasNext()) {
-//	    COContentUnit contentUnit = (COContentUnit) iter.next();
-//	    displayCOUnit(contentUnit);
-//	}
-//    }
-    
-	
-//	public int getLevel(COStructureElement itemModel) {
-//	    if (itemModel.isCourseOutlineContent()) {
-//		return 1;
-//	    }
-//	    if ( itemModel.getParent().isCourseOutlineContent()) {
-//		return 2;
-//	    }
-//	    if ( itemModel.getParent().isCOStructureElement() ) {
-//		COStructureElement parent = (COStructureElement) itemModel.getParent();
-//		if (parent.getParent().isCourseOutlineContent()){
-//		    return 3;
-//		}
-//	    }
-//	    if ( itemModel.getParent().isCOStructureElement() ) {
-//		COStructureElement parent1 = (COStructureElement) itemModel.getParent();
-//		if (parent1.getParent().isCOStructureElement()) {
-//		    COStructureElement parent2 = (COStructureElement) parent1.getParent();
-//		    if ( parent2.getParent().isCourseOutlineContent()){
-//			return 4;
-//		    }
-//		}
-//	    }
-//	    return 5;
-//	}
+    // private void displayCOStructureElement(COStructureElement
+    // structureElement){
+    // List<COElementAbstract> children = structureElement.getChildren();
+    // Iterator<COElementAbstract> iter = children.iterator();
+    // while (iter.hasNext()) {
+    // COContentUnit contentUnit = (COContentUnit) iter.next();
+    // displayCOUnit(contentUnit);
+    // }
+    // }
+
+    // public int getLevel(COStructureElement itemModel) {
+    // if (itemModel.isCourseOutlineContent()) {
+    // return 1;
+    // }
+    // if ( itemModel.getParent().isCourseOutlineContent()) {
+    // return 2;
+    // }
+    // if ( itemModel.getParent().isCOStructureElement() ) {
+    // COStructureElement parent = (COStructureElement) itemModel.getParent();
+    // if (parent.getParent().isCourseOutlineContent()){
+    // return 3;
+    // }
+    // }
+    // if ( itemModel.getParent().isCOStructureElement() ) {
+    // COStructureElement parent1 = (COStructureElement) itemModel.getParent();
+    // if (parent1.getParent().isCOStructureElement()) {
+    // COStructureElement parent2 = (COStructureElement) parent1.getParent();
+    // if ( parent2.getParent().isCourseOutlineContent()){
+    // return 4;
+    // }
+    // }
+    // }
+    // return 5;
+    // }
 }

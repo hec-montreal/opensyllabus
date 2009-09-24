@@ -23,9 +23,10 @@ import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractResProxEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+import org.sakaiquebec.opensyllabus.shared.model.COUnit;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Panel;
@@ -190,11 +191,11 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     }
 
     public void setDiffusionLevel(String l) {
-	getModel().setSecurity(l);
+	getModel().setAccess(l);
     }
 
     public String getDiffusionLevel() {
-	return getModel().getSecurity();
+	return getModel().getAccess();
     }
 
     public String getRubricType() {
@@ -215,14 +216,13 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     }
 
     protected void moveTo(String targetUuid) {
-	COContentUnit targetElement =
-		(COContentUnit) ((COContent) getController().getMainView()
+	COUnitContent targetCoUnitContent =
+		(COUnitContent) ((COContent) getController().getMainView()
 			.getModel()).findCOElementAbstractWithUUID(targetUuid);
-	getModel().getCoContentUnitParent().removeChild(getModel());
-	getModel().setCoContentUnitParent(targetElement);
-	//updateModelOnDelete();
+	getModel().getParent().removeChild(getModel());
+	getModel().setParent(targetCoUnitContent);
 	getModel().remove();
-	targetElement.addChild(getModel());
+	targetCoUnitContent.addChild(getModel());
 	//affichage du message
 	OsylUnobtrusiveAlert alert =
 		new OsylUnobtrusiveAlert(getUiMessage("element.moved"));
@@ -234,8 +234,7 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 	String targetUuid = getEditor().getMoveToTarget();
 	if (getEditor().isMoveable()
 		&& !targetUuid.equals("")
-		&& !targetUuid.equals(getModel().getCoContentUnitParent()
-			.getUuid())) {
+		&& !targetUuid.equals(getModel().getParent().getUuid())) {
 	    moveTo(targetUuid);
 	}
     }

@@ -21,10 +21,10 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
+import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
@@ -107,11 +107,11 @@ UpdateCOStructureElementEventHandler {
 			// if ( children.size() == 1 ) {
 			displayChildren(children);
 			// }
-		    } else if (absElement.isCOContentUnit()) {
+		    } else if (absElement.isCOUnit()) {
 			if (TRACE)
 			    Window.alert("OsylCOStructureView 114 : COContentUnit = "
 				    + absElement.getType());
-			COContentUnit itemModel = (COContentUnit) absElement;
+			COUnit itemModel = (COUnit) absElement;
 			addListItemView(itemModel);
 		    } else {
 			if (TRACE)
@@ -123,7 +123,7 @@ UpdateCOStructureElementEventHandler {
 	    }
 	}
 
-	protected void addListItemView(COContentUnit itemModel) {
+	protected void addListItemView(COUnit itemModel) {
 		OsylCOStructureItemView listItemView =
 			new OsylCOStructureItemView(itemModel, getController());
 		getMainPanel().add(listItemView);

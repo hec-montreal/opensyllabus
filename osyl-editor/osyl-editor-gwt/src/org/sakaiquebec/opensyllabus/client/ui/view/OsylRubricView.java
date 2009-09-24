@@ -25,11 +25,13 @@ import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
-import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
 import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -40,7 +42,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * A wrapper for displaying a rubric and the resource proxies in this rubric.
  * 
  * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Leprêtre</a>
- * @version $Id: OsylRubricView.java 1414 2008-10-14 14:28:08Z remi.saias@hec.ca $
+ * @version $Id: OsylRubricView.java 1414 2008-10-14 14:28:08Z remi.saias@hec.ca
+ *          $
  */
 public class OsylRubricView extends OsylViewableComposite {
 
@@ -57,6 +60,10 @@ public class OsylRubricView extends OsylViewableComposite {
 	return rubricStyleLevel;
     }
 
+//    public OsylRubricView(COContentRubric model, OsylController osylController) {
+//	super(model, osylController);
+//	initView();
+//    }
 
     /**
      * Public constructor to display a rubric with the specified model.
@@ -64,11 +71,6 @@ public class OsylRubricView extends OsylViewableComposite {
      * @param model COContentRubric model
      * @param osylController
      */
-    public OsylRubricView(COContentRubric model, OsylController osylController) {
-	super(model, osylController);
-	initView();
-    }
-
     public OsylRubricView(COContentRubric model,
 	    OsylController controller, String styleLevel) {
 	super(model, controller);
@@ -107,41 +109,37 @@ public class OsylRubricView extends OsylViewableComposite {
     public void addResProxView(COContentResourceProxy resProx) {
 
 	OsylAbstractView oe = null;
-	if (resProx.getType().equals(COContentResourceProxyType.TEXT)) {
+	if(resProx.getResource() instanceof COContentResource){
+	COContentResource resource = (COContentResource)resProx.getResource();
+	if (resource.getType().equals(COContentResourceType.TEXT)) {
 	    oe = new OsylResProxTextView(resProx, getController());
-	} else if (resProx.getType()
-		.equals(COContentResourceProxyType.DOCUMENT)) {
+	} else if (resource.getType().equals(COContentResourceType.DOCUMENT)) {
 	    oe = new OsylResProxDocumentView(resProx, getController());
-	} else if (resProx.getType()
-		.equals(COContentResourceProxyType.HYPERLINK)) {
+	} else if (resource.getType().equals(COContentResourceType.URL)) {
 	    oe = new OsylResProxLinkView(resProx, getController());
-	} else if (resProx.getType().equals(
-		COContentResourceProxyType.CONTACTINFO)) {
+	} else if (resource.getType().equals(COContentResourceType.PERSON)) {
 	    oe = new OsylResProxContactInfoView(resProx, getController());
-	} else if (resProx.getType().equals(
-		COContentResourceProxyType.ASSIGNMENT)) {
-	    oe = new OsylResProxAssignmentView(resProx, getController());
-	} else if (resProx.getType().equals(COContentResourceProxyType.EXAM)
-		|| resProx.getType().equals(
-			COContentResourceProxyType.ORALPRESENTATION)
-		|| resProx.getType()
-			.equals(COContentResourceProxyType.HOMEWORK)
-		|| resProx.getType().equals(
-			COContentResourceProxyType.PARTICIPATION)
-		|| resProx.getType().equals(COContentResourceProxyType.QUIZ)
-		|| resProx.getType().equals(
-			COContentResourceProxyType.OTHEREVALUATIONS)) {
+	} else if (resource.getType().equals(COContentResourceType.ASSIGNMENT)) {
 	    oe = new OsylResProxEvaluationView(resProx, getController());
-	} else if (resProx.getType()
-		.equals(COContentResourceProxyType.CITATION)) {
+	} else if (resource.getType().equals(
+		COContentResourceType.BIBLIO_RESSOURCE)) {
 	    oe = new OsylResProxCitationView(resProx, getController());
-	} else {
+	}
+	// else if (resource.getType().equals(
+	// COContentResourceType.ASSIGNMENT)) {
+	// oe = new OsylResProxAssignmentView(resProx, getController());
+	// }
+	else {
 	    Window.alert("Internal error : addResProxView doesn't know how to "
-		    + "handle resource of type " + resProx.getType());
+		    + "handle resource of type " + resource.getType());
 	    return;
 	}
 
 	addResProxView(oe);
+	}
+	else{
+	    //TODO display COUnit as resource
+	}
 
     }
 
@@ -183,7 +181,6 @@ public class OsylRubricView extends OsylViewableComposite {
 	}
 	checkVisibility();
     }
-    
 
     /**
      * Get the main panel
@@ -203,32 +200,34 @@ public class OsylRubricView extends OsylViewableComposite {
 
     private void checkVisibility() {
 	this.setVisible(false);
-	
-	//We make sure there is at least 1 view in the map
+
+	// We make sure there is at least 1 view in the map
 	if (resProxViewMap.size() > 0) {
-	    
-	    //We check that we are in read-only mode
-	    if (getController().isReadOnly()){
-		
-		//We scroll the map and if we encounter a view that is not a
-		//OsylAbstractResProx view, automatically the rubric is visible
-		//if not, we scroll the map until we find a
-		//OsylAbstractResProxView that is context hidden
-		for(OsylAbstractView view : resProxViewMap.values()){
-		    if(!(view instanceof OsylAbstractResProxView)){
+
+	    // We check that we are in read-only mode
+	    if (getController().isReadOnly()) {
+
+		// We scroll the map and if we encounter a view that is not a
+		// OsylAbstractResProx view, automatically the rubric is visible
+		// if not, we scroll the map until we find a
+		// OsylAbstractResProxView that is context hidden
+		for (OsylAbstractView view : resProxViewMap.values()) {
+		    if (!(view instanceof OsylAbstractResProxView)) {
 			this.setVisible(true);
 			break;
-	            } else if(!((OsylAbstractResProxView)view).isContextHidden()){
-	        	this.setVisible(true);
-	        	break;
+		    } else if (!((OsylAbstractResProxView) view)
+			    .isContextHidden()) {
+			this.setVisible(true);
+			break;
 		    }
-	        }
-	    //If we are in edition mode, we show the rubric if there is at least
-	    //one view in the map no matter what the context is.
+		}
+		// If we are in edition mode, we show the rubric if there is at
+		// least
+		// one view in the map no matter what the context is.
 	    } else {
-	        this.setVisible(true);
+		this.setVisible(true);
 	    }
-        }
+	}
     }
 
 }

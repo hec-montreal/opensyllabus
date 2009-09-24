@@ -24,9 +24,10 @@ import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
-import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOContentUnitView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureEvaluationView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureView;
+import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOUnitStructureView;
+import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOUnitView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylLongView;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
@@ -103,11 +104,11 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 		currentView = newView;
 		getWorkspacePanel().add(currentView);
 		scrollPrevent = 100;
-	    } else if (getModel().isCOContentUnit()) {
+	    } else if (getModel().isCOUnit()) {
 		// Display a COContentUnit
 		getWorkspacePanel().clear();
-		OsylCOContentUnitView newView =
-			new OsylCOContentUnitView(getModel(), getController());
+		OsylCOUnitView newView =
+			new OsylCOUnitView(getModel(), getController());
 		currentView = newView;
 		getWorkspacePanel().add(currentView);
 		// A bit more space to allow content addition without getting
@@ -118,7 +119,7 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 		getWorkspacePanel().clear();
 		
 		// Special case: evaluation
-		if (COStructureElementType.EVALUATIONS
+		if (COStructureElementType.EVALUATIONS_STRUCT
 			.equals(((COStructureElement) getModel()).getType())) {
 		    OsylCOStructureEvaluationView newView =
 			    new OsylCOStructureEvaluationView(getModel(),
@@ -131,6 +132,15 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 			currentView = newView; 
 		}
 		getWorkspacePanel().add(currentView);
+		scrollPrevent = 100;
+	    } else if(getModel().isCOUnitStructure()){
+		getWorkspacePanel().clear();
+		OsylCOUnitStructureView newView =
+			new OsylCOUnitStructureView(getModel(), getController());
+		currentView = newView;
+		getWorkspacePanel().add(currentView);
+		// A bit more space to allow content addition without getting
+		// nasty double-scrollbars!
 		scrollPrevent = 100;
 	    }
 	    // We leave 250ms for the view to generate before setting the

@@ -44,7 +44,7 @@ public class ResourceDAOHasBeenPublishedTest extends AbstractResourceDAOTest {
 	ResourceDao resourceDAO = getResourceDAO();
 
 	COSerialized course = newCourseOutline("0");
-	course.setSecurity(GROUP);
+	course.setAccess(GROUP);
 	course.setPublished(false);
 	resourceDAO.createOrUpdateCourseOutline(course);
 
@@ -61,7 +61,7 @@ public class ResourceDAOHasBeenPublishedTest extends AbstractResourceDAOTest {
 	ResourceDao resourceDAO = getResourceDAO();
 
 	COSerialized course = newCourseOutline("0");
-	course.setSecurity(GROUP);
+	course.setAccess(GROUP);
 	course.setPublished(true);
 	resourceDAO.createOrUpdateCourseOutline(course);
 

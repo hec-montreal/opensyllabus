@@ -39,6 +39,7 @@ import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -233,7 +234,7 @@ public abstract class OsylAbstractEditor extends Composite {
      * 
      * @param title
      */
-    protected void createEditBox(String title) {
+    protected void createEditBox(String title) {;
 	pop = new OsylWindowPanel(title, this);
 	pop.setStylePrimaryName("Osyl-EditorPopup");
 
@@ -260,7 +261,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	VerticalPanel mainPanel = new VerticalPanel();
 	pop.setWidget(mainPanel);
 	mainPanel.setWidth("100%");
-
+	
 	Widget browserWidget = getBrowserWidget();
 	if (null != browserWidget) {
 	    // row 0 (if applicable): the resource browser
@@ -282,7 +283,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	// We need an additional panel to get our stuff aligned correctly
 	HorizontalPanel configGroups = new HorizontalPanel();
 	row1.add(configGroups);
-
+	
 	// Other options, specified by each subclass
 	Widget[] optionWidgets = getOptionWidgets();
 	if (null != optionWidgets) {
@@ -290,7 +291,7 @@ public abstract class OsylAbstractEditor extends Composite {
 		configGroups.add(optionWidgets[i]);
 	    }
 	}
-
+	
 	for (Iterator<FocusWidget> fwIterator =
 		getEditionFocusWidgets().iterator(); fwIterator.hasNext();) {
 	    FocusWidget fw = (FocusWidget) fwIterator.next();
@@ -300,7 +301,7 @@ public abstract class OsylAbstractEditor extends Composite {
 			new OsylFormattingToolbar((RichTextArea) fw);
 	    }
 	}
-
+	
 	if (osylFormattingToolbar != null) {
 	    // 2nd row: the formatting toolBar
 	    HorizontalPanel row2 = new HorizontalPanel();
@@ -309,6 +310,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	    mainPanel.add(row2);
 	    row2.add(osylFormattingToolbar);
 	}
+	
 	// 3rd row: the editor only
 	HorizontalPanel row3 = new HorizontalPanel();
 	row3.setStylePrimaryName("Osyl-EditorPopup-RowEditor");
@@ -327,6 +329,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	    row4.add(configWidget);
 	    configWidget.setWidth("100%");
 	}
+	
 	// 5th row: the "move..." and "OK"/"Cancel" buttons We have to use 3
 	// Horizontal Panels to get the right alignment
 	HorizontalPanel row5 = new HorizontalPanel();
@@ -335,7 +338,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	row5.setHeight("30px");
 	row5.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
 	mainPanel.add(row5);
-
+	
 	if (isMoveable()) {
 	    HorizontalPanel leftPanel = new HorizontalPanel();
 	    leftPanel.setWidth("100%");
@@ -349,7 +352,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	    refreshTargetCoAbsractElementListBox(targetsListBox);
 	    leftPanel.add(targetsListBox);
 	}
-
+	
 	HorizontalPanel rightPanel = new HorizontalPanel();
 	rightPanel.setWidth("100%");
 	rightPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -357,7 +360,7 @@ public abstract class OsylAbstractEditor extends Composite {
 
 	HorizontalPanel okCancelPanel = new HorizontalPanel();
 	rightPanel.add(okCancelPanel);
-
+	
 	AbstractImagePrototype imgOkButton =
 		getOsylImageBundle().action_validate();
 	ImageAndTextButton okButton = new ImageAndTextButton(
@@ -366,7 +369,7 @@ public abstract class OsylAbstractEditor extends Composite {
 		imgOkButton, getUiMessage("Global.ok"));
 	okButton.setStylePrimaryName("Osyl-EditorPopup-Button");
 	okCancelPanel.add(okButton);
-
+	
 	AbstractImagePrototype imgCancelButton =
 		getOsylImageBundle().action_cancel();
 	ImageAndTextButton cancelButton = new ImageAndTextButton(
@@ -379,7 +382,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	okButton.addClickListener(new OsylCloseClickListener(getView(), true));
 	cancelButton.addClickListener(new OsylCloseClickListener(getView(),
 		false));
-
+	
 	// Sizes the pop-up to fit the preferred size of the its subcomponents,
 	// shows it modal and centers it.
 	pop.showModal(true);
@@ -391,7 +394,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	    pop.setContentSize(750, pop.getContentHeight());
 	    getEditorTopWidget().setWidth("735px");
 	}
-
+	
 	// remember original height
 	originalEditorPopupHeight = pop.getOffsetHeight();
 	originalEditorWidgetHeight = getEditorTopWidget().getOffsetHeight();

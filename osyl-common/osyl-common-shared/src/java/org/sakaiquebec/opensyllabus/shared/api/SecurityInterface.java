@@ -32,35 +32,35 @@ public interface SecurityInterface {
     /**
      * On site access security value.
      */
-    public static final String SECURITY_ACCESS_ONSITE = "onsite";
+    public static final String ACCESS_ONSITE = "onsite";
 
     /**
      * Public access security value.
      */
-    public static final String SECURITY_ACCESS_PUBLIC = "public";
+    public static final String ACCESS_PUBLIC = "public";
     
     /**
      * Attendee access security value.
      */
-    public static final String SECURITY_ACCESS_ATTENDEE = "attendee";
+    public static final String ACCESS_ATTENDEE = "attendee";
 
     /**
-     * Project access role security value.
+     * Project access role value.
      */
     public static final String SECURITY_ROLE_PROJECT_ACCESS = "access";
 
     /**
-     * Course access role security value.
+     * Course access role value.
      */
     public static final String SECURITY_ROLE_COURSE_ACCESS = "Student";
 
     /**
-     * Project maintain role security value.
+     * Project maintain role  value.
      */
     public static final String SECURITY_ROLE_PROJECT_MAINTAIN = "maintain";
 
     /**
-     * Course maintain role security value.
+     * Course maintain role  value.
      */
     public static final String SECURITY_ROLE_COURSE_MAINTAIN = "Instructor";
 

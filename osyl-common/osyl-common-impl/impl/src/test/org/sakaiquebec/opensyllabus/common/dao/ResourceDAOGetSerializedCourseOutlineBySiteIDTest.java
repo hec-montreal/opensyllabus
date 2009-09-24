@@ -10,7 +10,7 @@ public class ResourceDAOGetSerializedCourseOutlineBySiteIDTest extends AbstractR
 		ResourceDao resourceDAO = getResourceDAO();	
 		
 		COSerialized course = newCourseOutline("0");
-		course.setSecurity("sec");
+		course.setAccess("sec");
 		resourceDAO.createOrUpdateCourseOutline(course);
 		
 		try {
@@ -25,7 +25,7 @@ public class ResourceDAOGetSerializedCourseOutlineBySiteIDTest extends AbstractR
 		ResourceDao resourceDAO = getResourceDAO();
 		
 		COSerialized course = newCourseOutline("0");
-		course.setSecurity("sec");
+		course.setAccess("sec");
 		resourceDAO.createOrUpdateCourseOutline(course);
 		
 		try {
@@ -42,7 +42,7 @@ public class ResourceDAOGetSerializedCourseOutlineBySiteIDTest extends AbstractR
 		ResourceDao resourceDAO = getResourceDAO();
 		
 		COSerialized course = newCourseOutline("0");
-		course.setSecurity(GROUP);
+		course.setAccess(GROUP);
 		resourceDAO.createOrUpdateCourseOutline(course);
 		try {
 			resourceDAO.getSerializedCourseOutlineBySiteId(null, GROUP);
@@ -58,13 +58,13 @@ public class ResourceDAOGetSerializedCourseOutlineBySiteIDTest extends AbstractR
 		ResourceDao resourceDAO = getResourceDAO();
 		
 		COSerialized course = newCourseOutline("0");
-		course.setSecurity(GROUP);
+		course.setAccess(GROUP);
 		resourceDAO.createOrUpdateCourseOutline(course);
 		
 		COSerialized otherCourse = 
 			resourceDAO.getSerializedCourseOutlineBySiteId(
 					course.getSiteId(), 
-					course.getSecurity());
+					course.getAccess());
 		
 		assertEquals(
 				"Course retrieved using getSerializedCourseOutlineBySiteId() doesn't match the created one.",
@@ -89,7 +89,7 @@ public class ResourceDAOGetSerializedCourseOutlineBySiteIDTest extends AbstractR
 		ResourceDao resourceDAO = getResourceDAO();
 		
 		COSerialized course = newCourseOutline("0");
-		course.setSecurity(GROUP);
+		course.setAccess(GROUP);
 		resourceDAO.createOrUpdateCourseOutline(course);
 		try {
 			resourceDAO.getSerializedCourseOutlineBySiteId(
@@ -107,7 +107,7 @@ public class ResourceDAOGetSerializedCourseOutlineBySiteIDTest extends AbstractR
 		ResourceDao resourceDAO = getResourceDAO();
 		
 		COSerialized course = newCourseOutline("0");
-		course.setSecurity(GROUP);
+		course.setAccess(GROUP);
 		resourceDAO.createOrUpdateCourseOutline(course);
 		try {
 			resourceDAO.getSerializedCourseOutlineBySiteId(

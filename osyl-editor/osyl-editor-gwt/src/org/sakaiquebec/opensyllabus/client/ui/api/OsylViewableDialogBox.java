@@ -27,8 +27,8 @@ import org.sakaiquebec.opensyllabus.client.ui.OsylToolbarView;
 import org.sakaiquebec.opensyllabus.client.ui.OsylTreeView;
 import org.sakaiquebec.opensyllabus.client.ui.OsylWorkspaceView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
-import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentUnitEventHandler;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
+import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitContentEventHandler;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
@@ -55,9 +55,9 @@ import com.google.gwt.user.client.ui.DialogBox;
  * {@link EditorMainView#addEventHandler(ViewContextSelectionEventHandler)}.
  * This would allow to receive notification when the editor main view changes
  * from an object to another.</li>
- * <li>It could also implement {@link UpdateCOContentUnitEventHandler} and
+ * <li>It could also implement {@link UpdateCOUnitContentEventHandler} and
  * register as a listener by calling
- * {@link COContentUnit#addEventHandler(UpdateCOContentUnitEventHandler)}.
+ * {@link COUnitContent#addEventHandler(UpdateCOUnitContentEventHandler)}.
  * </li>
  * </ul>
  * The general layout is as follows (TODO: this is outdated):

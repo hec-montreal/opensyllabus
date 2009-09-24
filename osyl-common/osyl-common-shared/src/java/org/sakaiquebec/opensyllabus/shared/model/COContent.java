@@ -22,7 +22,7 @@ import java.util.List;
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
-public class COContent extends COElementAbstract<COElementAbstract>/* implements COModelInterface*/ {
+public class COContent extends COElementAbstract<COElementAbstract> implements COModelInterface {
 
     private static final long serialVersionUID = 870548605023877753L;
     /**
@@ -33,6 +33,8 @@ public class COContent extends COElementAbstract<COElementAbstract>/* implements
      */
 
     private List<COElementAbstract> children;
+    
+    private COProperties properties;
 
     /**
      * Constructor. The class type is set at the creation of the object.
@@ -41,6 +43,7 @@ public class COContent extends COElementAbstract<COElementAbstract>/* implements
 	super();
 	setClassType(CO_CONTENT_CLASS_TYPE);
 	children = new ArrayList<COElementAbstract>();
+	properties = new COProperties();
     }
 
     /**
@@ -55,7 +58,7 @@ public class COContent extends COElementAbstract<COElementAbstract>/* implements
     /**
      * {@inheritDoc}
      */
-    public void setChildren(List<COElementAbstract>children) {
+    public void setChildrens(List<COElementAbstract>children) {
 	this.children = children;
     }
 
@@ -63,10 +66,7 @@ public class COContent extends COElementAbstract<COElementAbstract>/* implements
      * {@inheritDoc}
      */
     public boolean addChild(COElementAbstract child) {
-	if (child.isCOContentUnit() || child.isCOStructureElement())
 	    return getChildrens().add(child);
-	else
-	    return false;
     }
 
     /**
@@ -113,5 +113,43 @@ public class COContent extends COElementAbstract<COElementAbstract>/* implements
 	else if(hasPredecessor) return -1;
 	else if(hasSuccessor) return 1;
 	else return 0;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public COProperties getProperties() {
+	return properties;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setProperties(COProperties properties) {
+	this.properties = properties;
+	// notifyEventHandlers();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void addProperty(String key, String value) {
+
+	getProperties().addProperty(key, value);
+	// notifyEventHandlers();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void removeProperty(String key) {
+	getProperties().removeProperty(key);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getProperty(String key) {
+	return getProperties().getProperty(key);
     }
 }

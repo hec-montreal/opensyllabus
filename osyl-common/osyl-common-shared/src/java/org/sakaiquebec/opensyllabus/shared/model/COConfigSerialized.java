@@ -62,8 +62,8 @@ public class COConfigSerialized implements java.io.Serializable {
 	 * Messages selected for the user locale
 	 */
 	private HashMap<String, String> i18nMessages;// Force a HashMap so GWT
-													// figures out this field is
-													// Serializable
+	                                             // figures out this field is
+	                                             // Serializable
 
 	/**
 	 * CSS URI, used for jsp page

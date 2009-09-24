@@ -199,7 +199,7 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 				if (!edit.getId().equals(
 						contentHostingService.getSiteCollection(siteId)
 								+ OsylSiteService.WORK_DIRECTORY + "/")) {
-					if (SecurityInterface.SECURITY_ACCESS_PUBLIC
+					if (SecurityInterface.ACCESS_PUBLIC
 							.equals(permission)) {
 						edit.setPublicAccess();
 					}
@@ -218,7 +218,7 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 				if (!resourceId.contains(contentHostingService
 						.getSiteCollection(siteId)
 						+ OsylSiteService.WORK_DIRECTORY + "/")) {
-					if (SecurityInterface.SECURITY_ACCESS_PUBLIC
+					if (SecurityInterface.ACCESS_PUBLIC
 							.equals(permission)) {
 						edit.setPublicAccess();
 					}

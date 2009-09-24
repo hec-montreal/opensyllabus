@@ -28,44 +28,16 @@ public class COContentResourceProxyType {
 
     // These values must be identical to those found in file rules.xml and the
     // XML representation of Course Outlines.
-    public static final String DOCUMENT = "document";
-    public static final String HYPERLINK = "url";
-    public static final String INTERNALDOCUMENT = "internaldocument";
-    public static final String TEXT = "text";
-    public static final String CITATION = "citation";
-    public static final String CONTACTINFO = "contactinforesource";
-    //at this point, there are different kind of assignments
-    public static final String ASSIGNMENT = "assignment";
-    //public static final String EVALUATION = "evaluation";
-    public static final String EHOMEWORK= "ehomework";
-    public static final String HOMEWORK= "homework";
-    public static final String  EXAM = "exam";
-    public static final String ORALPRESENTATION= "oralpresentation";
-    public static final String PARTICIPATION= "participation";
-    public static final String QUIZ= "quiz";
-    public static final String OTHEREVALUATIONS = "otherevaluations";
+    public static final String INFORMATION="InformationContext";
+    public static final String BIBLIO="BiblioContext";
+    public static final String REFERENCE="ReferenceContext";
+    public static final String PEOPLE="PeopleContext";
 
-    
     /**
      * The list of types.
      */
     private static final String[] types = { 
-	DOCUMENT, 
-	HYPERLINK, 
-	INTERNALDOCUMENT, 
-	TEXT, 
-	CITATION,
-	CONTACTINFO,
-	ASSIGNMENT,
-	//EVALUATION,
-	HOMEWORK,
-	EHOMEWORK,
-	EXAM,
-	ORALPRESENTATION,
-	PARTICIPATION,
-	QUIZ,
-	OTHEREVALUATIONS
-	
+	INFORMATION,BIBLIO,REFERENCE,PEOPLE
     };
 
     /**

@@ -33,7 +33,7 @@ public class ResourceDAOGetSerializedCourseOutlineTest extends
 	ResourceDao resourceDAO = getResourceDAO();
 	
 	COSerialized course = newCourseOutline("0");
-	course.setSecurity("sec");
+	course.setAccess("sec");
 	resourceDAO.createOrUpdateCourseOutline(course);
 	
 	try {
@@ -49,7 +49,7 @@ public class ResourceDAOGetSerializedCourseOutlineTest extends
 	ResourceDao resourceDAO = getResourceDAO();
 
 	COSerialized course = newCourseOutline("0");
-	course.setSecurity(GROUP);
+	course.setAccess(GROUP);
 	resourceDAO.createOrUpdateCourseOutline(course);
 
 	COSerialized otherCourse =

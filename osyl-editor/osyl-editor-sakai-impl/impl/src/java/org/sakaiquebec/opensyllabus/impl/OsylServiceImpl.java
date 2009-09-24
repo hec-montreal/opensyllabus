@@ -496,10 +496,8 @@ public class OsylServiceImpl implements OsylService {
 	 */
 	public String getXslForGroup(String group, String webappdir) {
 		String xslFileName;
-		if (group.equals(SecurityInterface.SECURITY_ACCESS_PUBLIC)) {
+		if (group.equals(SecurityInterface.ACCESS_PUBLIC)) {
 			xslFileName = OsylSiteService.CO_CONTENT_XSL_PUBLIC;
-		} else if (group.equals(SecurityInterface.SECURITY_ACCESS_ONSITE)) {
-			xslFileName = OsylSiteService.CO_CONTENT_XSL_ONSITE;
 		} else {
 			xslFileName = OsylSiteService.CO_CONTENT_XSL_ATTENDEE;
 		}

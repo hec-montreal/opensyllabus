@@ -44,7 +44,7 @@ public class ResourceDAOCreateOrUpdateCourseOutlineTest extends AbstractResource
 		
 		//Test update
 		course.setTitle("NewTitle");
-		course.setSecurity("NewSecurity");
+		course.setAccess("NewSecurity");
 		
 		Map<String, String> messages = new HashMap<String, String>();
 		messages.put("newA", "newA");
@@ -62,18 +62,18 @@ public class ResourceDAOCreateOrUpdateCourseOutlineTest extends AbstractResource
 	public void testCreateCourseOutlineWithSameSiteIdAndSameSecurity() throws Exception {	
 		ResourceDao resourceDAO = getResourceDAO();
 		String siteId="siteId";
-		String security="security";
+		String access="security";
 		
 		COSerialized course = newCourseOutline("0");
 		course.setSiteId(siteId);
-		course.setSecurity(security);
+		course.setAccess(access);
 		
 		resourceDAO.createOrUpdateCourseOutline(course);
 		
 		
 		course = newCourseOutline("1");
 		course.setSiteId(siteId);
-		course.setSecurity(security);
+		course.setAccess(access);
 		
 		try{
 		    resourceDAO.createOrUpdateCourseOutline(course);

@@ -27,7 +27,8 @@ package org.sakaiquebec.opensyllabus.shared.model;
  *
  */
 public interface COModelInterface {
-
+    
+    
     /**
      * @return the type for this model
      */
@@ -49,4 +50,42 @@ public interface COModelInterface {
      * @param edit, boolean to set for this model
      */
     public void setEditable(boolean edit);
+    
+   /**
+    * 
+    * @return COProperties properties of the model object
+    */
+    public COProperties getProperties();
+    
+    
+    /**
+     * 
+     * @param coProperties the properties to set
+     */
+    public void setProperties(COProperties coProperties);
+    
+    /**
+     * Adds a property to the <code>COProperties</code> structure.
+     * 
+     * @param key the proerty key used to retrieve the value.
+     * @param value the value of this property.
+     */
+    public void addProperty(String key, String value);
+    
+    /**
+     * Removes a property from the <code>COProperties</code> structure.
+     * 
+     * @param key the key of the property to remove.
+     */
+    public void removeProperty(String key);
+
+    /**
+     * Returns a specific property of the model object.
+     * 
+     * @param key
+     * @return
+     */
+    public String getProperty(String key);
+    
+    
 }

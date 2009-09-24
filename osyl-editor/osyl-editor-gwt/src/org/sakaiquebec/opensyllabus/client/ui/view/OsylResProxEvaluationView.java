@@ -99,6 +99,4 @@ public class OsylResProxEvaluationView extends OsylAbstractResProxView {
 	setProperty(COPropertiesType.RATING, editor.getTextRating());
 	setProperty(COPropertiesType.DATE, editor.getTextDate());
     }
-
-
 }

@@ -20,8 +20,8 @@
             <column name="TYPE" length="45" />
         </property>
 
-        <property name="security" type="string">
-            <column name="SECURITY" length="45" />
+        <property name="access" type="string">
+            <column name="ACCESS" length="45" />
         </property>
  
         <property name="siteId" type="string">

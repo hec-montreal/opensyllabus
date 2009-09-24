@@ -107,8 +107,8 @@ abstract class AbstractResourceDAOTest extends AbstractDAOTest {
 	assertEquals("Course.getLang", course.getLang(), otherCourse.getLang());
 	assertEquals("Course.getSection", course.getSection(), otherCourse
 		.getSection());
-	assertEquals("Course.getSecurity", course.getSecurity(), otherCourse
-		.getSecurity());
+	assertEquals("Course.getSecurity", course.getAccess(), otherCourse
+		.getAccess());
 	assertEquals("Course.getSerializedContent", course
 		.getContent(), otherCourse.getContent());
 	assertEquals("Course.getShortDescription",

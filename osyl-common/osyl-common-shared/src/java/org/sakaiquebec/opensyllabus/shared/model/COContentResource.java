@@ -51,9 +51,9 @@ public class COContentResource implements COModelInterface,
     private String type;
 
     /**
-     * The security level.
+     * The access level.
      */
-    private String security;
+    private String access;
 
     /**
      * The properties object that extends a HashMap
@@ -84,30 +84,30 @@ public class COContentResource implements COModelInterface,
 	    final OsylConfigMessages osylConfigMessages) {
 	final COContentResource resModel = new COContentResource();
 	resModel.setType(type);
-	if (type.equalsIgnoreCase(COContentResourceProxyType.TEXT)) {
+	if (type.equalsIgnoreCase(COContentResourceType.TEXT)) {
 	    COProperties prop = new COProperties();
 	    prop.addProperty(COPropertiesType.TEXT,
 		    osylConfigMessages.getMessage("InsertYourTextHere"));
 	    resModel.setProperties(prop);
 	} else if (type
-		.equalsIgnoreCase(COContentResourceProxyType.HYPERLINK)) {
+		.equalsIgnoreCase(COContentResourceType.URL)) {
 	    COProperties prop = new COProperties();
 	    prop.addProperty(COPropertiesType.URI,
 	    "http://www.google.ca/search?q=opensyllabus");
 	    resModel.setProperties(prop);
 	} else if (type
-		.equalsIgnoreCase(COContentResourceProxyType.DOCUMENT)) {
+		.equalsIgnoreCase(COContentResourceType.DOCUMENT)) {
 	    COProperties prop = new COProperties();
 	    prop.addProperty(COPropertiesType.URI, "");
 	    resModel.setProperties(prop);
 	} else if (type
-		.equalsIgnoreCase(COContentResourceProxyType.EHOMEWORK)) {
+		.equalsIgnoreCase(COContentResourceType.ASSIGNMENT)) {
 	    COProperties prop = new COProperties();
 	    prop.addProperty(COPropertiesType.TEXT,
 		    osylConfigMessages.getMessage("assigndescr"));
 	    resModel.setProperties(prop);
 	} else if (type
-		.equalsIgnoreCase(COContentResourceProxyType.CITATION)) {
+		.equalsIgnoreCase(COContentResourceType.BIBLIO_RESSOURCE)) {
 	    COProperties prop = new COProperties();
 	    prop.addProperty(COPropertiesType.CITATION,
 		    osylConfigMessages.getMessage("bibliographicReference"));
@@ -236,12 +236,12 @@ public class COContentResource implements COModelInterface,
 	}
     }
 
-    public String getSecurity() {
-	return security;
+    public String getAccess() {
+	return access;
     }
 
-    public void setSecurity(String security) {
-	this.security = security;
+    public void setAccess(String access) {
+	this.access = access;
 	notifyEventHandlers();
     }
 

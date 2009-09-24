@@ -23,8 +23,8 @@ package org.sakaiquebec.opensyllabus.client.ui.view;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
+import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -44,37 +44,37 @@ public class OsylCOStructureEvaluationItemView extends OsylViewableComposite {
     private FlexTable mainPanel;
     private Hyperlink coUnitHyperlink;
     private OsylCOStructureEvaluationItemLabelView coUnitLabel;
-    
 
     // View Constructor
-    public OsylCOStructureEvaluationItemView(COContentUnit model,
+    public OsylCOStructureEvaluationItemView(COUnit model,
 	    OsylController controller) {
 	super(model, controller);
-	setCoUnitLabel(new OsylCOStructureEvaluationItemLabelView(model,controller,true));
+	setCoUnitLabel(new OsylCOStructureEvaluationItemLabelView(model,
+		controller, true));
 	initView();
     }
 
-    protected void initView(){
+    protected void initView() {
 	setMainPanel(new FlexTable());
 	getMainPanel().setWidth("92%");
 	getMainPanel().setStylePrimaryName("Osyl-ListItemView-Table");
-	COContentUnit coContentUnit = (COContentUnit) getModel();
+	COUnit coUnit = (COUnit) getModel();
 	COStructureElement coStructElt =
-		(COStructureElement) coContentUnit.getParent();
-	addCoUnitLink(getCoMessage(coContentUnit.getType()), coStructElt
-		.getChildPosition(coContentUnit));
-	
+		(COStructureElement) coUnit.getParent();
+	addCoUnitLink(getCoMessage(coUnit.getType()), coStructElt
+		.getChildPosition(coUnit));
+
 	addCoUnitLabel();
-	
+
 	initWidget(getMainPanel());
     }
-    
+
     private void addCoUnitLink(String type, String position) {
-	setCoUnitHyperlink(new Hyperlink(type + " " + position + " - ",null));
+	setCoUnitHyperlink(new Hyperlink(type + " " + position + " - ", null));
 	getCoUnitHyperlink().addClickListener(new ClickListener() {
 	    public void onClick(Widget sender) {
 		getController().getViewContext().setContextModel(
-			(COContentUnit) getModel());
+			(COUnit) getModel());
 	    }
 	});
 	getMainPanel().setWidget(0, 0, getCoUnitHyperlink());
@@ -85,39 +85,39 @@ public class OsylCOStructureEvaluationItemView extends OsylViewableComposite {
 		HasHorizontalAlignment.ALIGN_LEFT,
 		HasVerticalAlignment.ALIGN_MIDDLE);
     }
-    
-   private void addCoUnitLabel(){
-       getMainPanel().setWidget(0, 1, getCoUnitLabel());
+
+    private void addCoUnitLabel() {
+	getMainPanel().setWidget(0, 1, getCoUnitLabel());
 	getMainPanel().getFlexCellFormatter().setStylePrimaryName(0, 1,
 		"Osyl-ListItemView-Hyperlink");
 	getMainPanel().getFlexCellFormatter().setAlignment(0, 1,
 		HasHorizontalAlignment.ALIGN_LEFT,
 		HasVerticalAlignment.ALIGN_MIDDLE);
-   }
-    
+    }
+
     public Hyperlink getCoUnitHyperlink() {
-        return coUnitHyperlink;
+	return coUnitHyperlink;
     }
 
     public void setCoUnitHyperlink(Hyperlink CoUnitHyperlink) {
-        this.coUnitHyperlink = CoUnitHyperlink;
+	this.coUnitHyperlink = CoUnitHyperlink;
     }
-    
+
     public FlexTable getMainPanel() {
-        return mainPanel;
+	return mainPanel;
     }
 
     public void setMainPanel(FlexTable mainPanel) {
-        this.mainPanel = mainPanel;
+	this.mainPanel = mainPanel;
     }
-    
+
     public OsylCOStructureEvaluationItemLabelView getCoUnitLabel() {
-        return coUnitLabel;
+	return coUnitLabel;
     }
 
-    public void setCoUnitLabel(OsylCOStructureEvaluationItemLabelView coUnitLabel) {
-        this.coUnitLabel = coUnitLabel;
+    public void setCoUnitLabel(
+	    OsylCOStructureEvaluationItemLabelView coUnitLabel) {
+	this.coUnitLabel = coUnitLabel;
     }
 
-    
 }

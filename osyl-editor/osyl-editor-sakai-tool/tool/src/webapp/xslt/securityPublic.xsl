@@ -5,17 +5,17 @@
 <!--  =========================================================================== -->
 
 	<xsl:template match="/">
-		<xsl:apply-templates select="/*[@scrty='public']|*[not(@scrty)]" />
+		<xsl:apply-templates select="/*[@access='public']|*[not(@access)]" />
 	</xsl:template>
 	
-	<xsl:template match="@*|node()[@scrty='public']">
+	<xsl:template match="@*|node()[@access='public']">
 	  <xsl:copy>
 		<xsl:copy-of select="@*"/> 
-	    <xsl:apply-templates select="@*|*[@scrty='public']|text()|*[not(@scrty)]"/>
+	    <xsl:apply-templates select="@*|*[@access='public']|text()|*[not(@access)]"/>
 	  </xsl:copy>
 	</xsl:template>
 	
-	<xsl:template match="@*|text()|*[not(@scrty)]">
+	<xsl:template match="@*|text()|*[not(@access)]">
 	  <xsl:copy-of select="."/>
 	</xsl:template>
 

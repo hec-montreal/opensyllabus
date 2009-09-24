@@ -22,13 +22,14 @@ package org.sakaiquebec.opensyllabus.client.controller;
 
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEventHandler;
-import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentUnitEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler;
+import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitContentEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
+import org.sakaiquebec.opensyllabus.shared.model.COUnit;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 
 /**
  * OsylModelController is the controller related to the model (i.e.: course
@@ -40,7 +41,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 public class OsylModelController implements
 	UpdateCOContentResourceEventHandler,
 	UpdateCOContentResourceProxyEventHandler,
-	UpdateCOContentUnitEventHandler, UpdateCOStructureElementEventHandler {
+	UpdateCOUnitContentEventHandler, UpdateCOStructureElementEventHandler {
 
     private boolean modelDirty = false;
 
@@ -99,7 +100,7 @@ public class OsylModelController implements
     }
 
     /** {@inheritDoc} */
-    public void onUpdateModel(UpdateCOContentUnitEvent event) {
+    public void onUpdateModel(UpdateCOUnitContentEvent event) {
 	setModelDirty(true);
     }
 
@@ -124,8 +125,8 @@ public class OsylModelController implements
     public void trackChanges(COModelInterface model) {
 	if (model instanceof COStructureElement) {
 	    ((COStructureElement) model).addEventHandler(this);
-	} else if (model instanceof COContentUnit) {
-	    ((COContentUnit) model).addEventHandler(this);
+	} else if (model instanceof COUnitContent) {
+	    ((COUnitContent) model).addEventHandler(this);
 	} else if (model instanceof COContentResource) {
 	    ((COContentResource) model).addEventHandler(this);
 	} else if (model instanceof COContentResourceProxy) {
@@ -133,7 +134,8 @@ public class OsylModelController implements
 	    // the proxy and the resource itself:
 	    COContentResourceProxy proxy = (COContentResourceProxy) model;
 	    proxy.addEventHandler(this);
-	    proxy.getResource().addEventHandler(this);
+	    if(proxy.getResource() instanceof COContentResource)//could be a CoUnit too
+		((COContentResource)proxy.getResource()).addEventHandler(this);
 	}
     }
 

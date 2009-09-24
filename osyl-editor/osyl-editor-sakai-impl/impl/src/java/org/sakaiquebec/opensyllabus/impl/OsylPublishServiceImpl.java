@@ -208,15 +208,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		coModeled.getDocumentSecurityMap();
 
 	// Create a course outline with security public
-	publish(co, SecurityInterface.SECURITY_ACCESS_PUBLIC,
+	publish(co, SecurityInterface.ACCESS_PUBLIC,
 		OsylSiteService.CO_CONTENT_XSL_PUBLIC, webappDir);
 
-	// Create a course outline with security onsite
-	publish(co, SecurityInterface.SECURITY_ACCESS_ONSITE,
-		OsylSiteService.CO_CONTENT_XSL_ONSITE, webappDir);
-
 	// Create a course outline with security attendee
-	publish(co, SecurityInterface.SECURITY_ACCESS_ATTENDEE,
+	publish(co, SecurityInterface.ACCESS_ATTENDEE,
 		OsylSiteService.CO_CONTENT_XSL_ATTENDEE, webappDir);
 
 	copyWorkToPublish(documentSecurityMap);
@@ -291,12 +287,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	}
     }
 
-    private void publish(COSerialized co, String security, String xslFileName,
+    private void publish(COSerialized co, String access, String xslFileName,
 	    String webappDir) throws Exception {
 	COSerialized publishedCO = null;
 	try {
 	    publishedCO = resourceDao.getSerializedCourseOutlineBySiteId(co.getSiteId(),
-		    security);
+		    access);
 	} catch (Exception e) {
 	}
 
@@ -306,7 +302,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    publishedCO.setCoId(IdManager.createUuid());
 	    publishedCO.setContent(XslTransform(webappDir, co.getContent(),
 		    xslFileName));
-	    publishedCO.setSecurity(security);
+	    publishedCO.setAccess(access);
 	    publishedCO.setPublished(true);
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
 	} else {

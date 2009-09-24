@@ -26,6 +26,7 @@ import java.util.List;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -196,7 +197,6 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
 
 	setInEditionMode(true);
 	createEditBox();
-
 	// We get the text to edit from the model
 	setText(getTextFromModel());
 	

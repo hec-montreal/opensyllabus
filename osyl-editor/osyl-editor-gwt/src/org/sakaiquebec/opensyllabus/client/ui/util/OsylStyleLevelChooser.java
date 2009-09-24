@@ -1,11 +1,10 @@
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
-import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnitType;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
+import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
 public class OsylStyleLevelChooser {
 
@@ -24,8 +23,8 @@ public class OsylStyleLevelChooser {
      */
     protected final String CO_CONTENT_UNIT_CLASS_TYPE = "COContentUnit";
 
-    public static boolean getHasANumber( COContentUnit model ) {
-	COContentUnit unit = model;
+    public static boolean getHasANumber( COUnitContent model ) {
+	COUnitContent unit = model;
 	COElementAbstract eltAbs = unit.getParent();
 	if (eltAbs.isCOStructureElement()) {
 	    COStructureElement parent = (COStructureElement) unit.getParent();
@@ -38,8 +37,13 @@ public class OsylStyleLevelChooser {
 	}
 	return false;   
     }
+    
+    //TODO Change this.
+    public static boolean getHasANumber( COUnit model ) {
+	return true;
+    }
 
-    public static String getLevelStyle( COContentUnit model ) {
+    public static String getLevelStyle( COUnitContent model ) {
 	if (model.isCourseOutlineContent()) {
 	    return "Osyl-Title1";
 	}
@@ -90,7 +94,7 @@ public class OsylStyleLevelChooser {
 	return "Osyl-Title5";
     }
 
-    public static String getSubLevelStyle(COContentUnit model) {
+    public static String getSubLevelStyle(COUnitContent model) {
 	if (model.isCourseOutlineContent()) {
 	    return "Osyl-Title2";
 	}
@@ -113,6 +117,11 @@ public class OsylStyleLevelChooser {
 	    }
 	}
 	return "Osyl-Title5";
+    }
+    
+    //TODO: We have to change this method.
+    public static String getLevelStyle(COModelInterface coModelInterface){
+	return "Osyl-Title3";
     }
 
 }

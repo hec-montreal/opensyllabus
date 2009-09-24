@@ -14,13 +14,14 @@
 package org.sakaiquebec.opensyllabus.client.ui.view;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
 /**
  * This view is used to display a list of COContentUnit, for instance a list of
  * Lecture.
- * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a> 
+ * 
+ * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
 public class OsylCOStructureEvaluationView extends OsylCOStructureView {
@@ -30,7 +31,7 @@ public class OsylCOStructureEvaluationView extends OsylCOStructureView {
 	super(model, osylController);
     }
 
-    protected void addListItemView(COContentUnit itemModel) {
+    protected void addListItemView(COUnit itemModel) {
 	OsylCOStructureEvaluationItemView listItemView =
 		new OsylCOStructureEvaluationItemView(itemModel,
 			getController());

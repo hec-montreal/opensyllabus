@@ -31,12 +31,13 @@ import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractResProxView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ChangeListener;
@@ -99,7 +100,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
     protected OsylPushButton createButtonUp() {
 	OsylPushButton upButton;
-	if (getView().getModel().hasPredecessorInRubric()) {
+	if (getView().getModel().hasPredecessor()) {
 	    upButton =
 		    new OsylPushButton(getOsylImageBundle().up_full()
 			    .createImage(), getOsylImageBundle().up_full()
@@ -129,7 +130,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
     protected OsylPushButton createButtonDown() {
 	OsylPushButton downButton;
-	if (getView().getModel().hasSuccessorInRubric()) {
+	if (getView().getModel().hasSuccessor()) {
 	    downButton =
 		    new OsylPushButton(getOsylImageBundle().down_full()
 			    .createImage(), getOsylImageBundle().down_full()
@@ -197,7 +198,6 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    }
 
 	});
-
 	// Diffusion Level ListBox
 	VerticalPanel diffusionPanel = new VerticalPanel();
 	diffusionPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
@@ -207,23 +207,18 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	diffusionListBox.setWidth("100px");
 	diffusionListBox.setTitle(getUiMessage("MetaInfo.audience.title"));
 	diffusionListBox.addItem(getUiMessage("MetaInfo.audience.attendee"),
-		SecurityInterface.SECURITY_ACCESS_ATTENDEE);
-	diffusionListBox.addItem(getUiMessage("MetaInfo.audience.onsite"),
-		SecurityInterface.SECURITY_ACCESS_ONSITE);
+		SecurityInterface.ACCESS_ATTENDEE);
 	diffusionListBox.addItem(getUiMessage("MetaInfo.audience.public"),
-		SecurityInterface.SECURITY_ACCESS_PUBLIC);
+		SecurityInterface.ACCESS_PUBLIC);
 	diffusionPanel.add(diffusionListBox);
 	String level = getView().getDiffusionLevel();
-	int levelIndex = 2;
-	if (SecurityInterface.SECURITY_ACCESS_ATTENDEE.equals(level)) {
+	int levelIndex = 1;
+	if (SecurityInterface.ACCESS_ATTENDEE.equals(level)) {
 	    levelIndex = 0;
-	} else if (SecurityInterface.SECURITY_ACCESS_ONSITE.equals(level)) {
+	} else if (SecurityInterface.ACCESS_PUBLIC.equals(level)) {
 	    levelIndex = 1;
-	} else if (SecurityInterface.SECURITY_ACCESS_PUBLIC.equals(level)) {
-	    levelIndex = 2;
 	}
 	diffusionListBox.setSelectedIndex(levelIndex);
-
 	// Other options
 	VerticalPanel optionPanel = new VerticalPanel();
 	optionPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
@@ -242,7 +237,6 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	importantCheckBox.setChecked(getView().isContextImportant());
 	importantCheckBox.setTitle(getUiMessage("MetaInfo.important.title"));
 	options.add(importantCheckBox);
-
 	// Other options, specified by each subclass
 	Widget[] optionWidgets = getAdditionalOptionWidgets();
 	if (null != optionWidgets) {
@@ -398,7 +392,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
 	List<COModelInterface> subModels =
 		getView().getController().getOsylConfig().getOsylConfigRuler()
-			.getAllowedSubModels(resProx.getCoContentUnitParent());
+			.getAllowedSubModels(resProx.getParent());
 
 	Vector<String> rubricTypes = new Vector<String>();
 
@@ -445,14 +439,14 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
      */
     private void fillListBoxWithAllowedCoUnits(COElementAbstract model,
 	    ListBox lb) {
-	if (model.isCOContentUnit()) {
-	    COContentUnit targetContentUnit = (COContentUnit) model;
+	if (model.isCOUnitContent()) {
+	    COUnitContent targetContentUnit = (COUnitContent) model;
 	    List<COModelInterface> subModels =
 		    getView().getController().getOsylConfig()
 			    .getOsylConfigRuler().getAllowedSubModels(
 				    targetContentUnit);
 	    boolean rubricAllowed = false;
-	    boolean resourceProxyTypeAllowed = false;
+	    boolean resourceTypeAllowed = false;
 	    for (Iterator<COModelInterface> iter = subModels.iterator(); iter
 		    .hasNext();) {
 		COModelInterface coi = iter.next();
@@ -460,15 +454,15 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		    if (coi.getType().equals(getRubricType()))
 			rubricAllowed = true;
 		}
-		if (coi instanceof COContentResourceProxy) {
-		    if (coi.getType().equals(getView().getModel().getType())) {
-			resourceProxyTypeAllowed = true;
+		if (coi instanceof COContentResource) {
+		    if (coi.getType().equals(getView().getModel().getResource().getType())) {
+			resourceTypeAllowed = true;
 		    }
 
 		}
 	    }
-	    if (rubricAllowed && resourceProxyTypeAllowed) {
-		String label = model.getLabel();
+	    if (rubricAllowed && resourceTypeAllowed) {
+		String label = getView().getCoMessage(model.getType()); //TODO modify this for explicit name
 		if(label.length()>35) label = label.substring(0, 35) + "...";
 		lb.addItem(label, model.getUuid());
 	    }

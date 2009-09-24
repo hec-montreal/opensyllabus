@@ -34,6 +34,8 @@ import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventH
 public class COStructureElement extends COElementAbstract<COElementAbstract> implements
 	COModelInterface {
 
+    private static final long serialVersionUID = 1701561339679430501L;
+
     /**
      * The handler for updates
      */
@@ -44,10 +46,6 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
      */
     private COProperties properties;
 
-    /**
-     * The parent of the <code>COStructureElement</code>.
-     */
-    private COElementAbstract parent;
     /**
      * List of children taht can be either <code>COStructureElement</code>
      * objects or <code>COContentUnit</code> objects. atgwt.typeArgs children
@@ -67,32 +65,17 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
     }
 
     /**
-     * @return the properties
+     * {@inheritDoc}
      */
     public COProperties getProperties() {
 	return properties;
     }
 
     /**
-     * @param properties the properties object to set.
+     * {@inheritDoc}
      */
     public void setProperties(COProperties properties) {
 	this.properties = properties;
-	notifyEventHandlers();
-    }
-
-    /**
-     * @return the parent
-     */
-    public COElementAbstract getParent() {
-	return parent;
-    }
-
-    /**
-     * @param parent the parent to set
-     */
-    public void setParent(COElementAbstract parent) {
-	this.parent = parent;
 	notifyEventHandlers();
     }
 
@@ -106,7 +89,7 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
     /**
      * {@inheritDoc}
      */
-    public void setChildren(List<COElementAbstract> childrens) {
+    public void setChildrens(List<COElementAbstract> childrens) {
 	this.childrens = childrens;
 	notifyEventHandlers();
     }
@@ -115,13 +98,9 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
      * <{@inheritDoc}
      */
     public boolean addChild(COElementAbstract child) {
-	if (child.getClassType().equals(CO_STRUCTURE_ELEMENT_CLASS_TYPE)
-		|| child.getClassType().equals(CO_CONTENT_UNIT_CLASS_TYPE)) {
 	    boolean res = getChildrens().add(child);
 	    notifyEventHandlers();
 	    return res;
-	} else
-	    return false;
     }
 
    /**
@@ -134,10 +113,7 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
     }
 
     /**
-     * Adds a property to the <code>COProperties</code> structure.
-     *
-     * @param key the property key used to retrieve its value.
-     * @param value the proerty value.
+     * {@inheritDoc}
      */
     public void addProperty(String key, String value) {
 	getProperties().addProperty(key, value);
@@ -145,9 +121,7 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
     }
 
     /**
-     * Removes a property from the <code>COProerties</code> structure.
-     *
-     * @param key the property key used to retrieve its value.
+     * {@inheritDoc}
      */
     public void removeProperty(String key) {
 	getProperties().removeProperty(key);
@@ -155,10 +129,7 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
     }
 
     /**
-     * Retrieves the property value associated to the specified key.
-     *
-     * @param key the key used to retrieve its value.
-     * @return the property value if it is found, null otherwise.
+     * {@inheritDoc}
      */
     public String getProperty(String key) {
 	return getProperties().getProperty(key);
@@ -202,21 +173,6 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
 		handler.onUpdateModel(event);
 	    }
 	}
-    }
-
-    /**
-     * Gets the position of a structure element child.
-     * 
-     * @param the child
-     * @return the child poistion
-     */
-    public String getChildPosition(COElementAbstract coEltAbs){
-	String pos="0";
-	List<COElementAbstract> children = getChildrens();
-	if(children.contains(coEltAbs)) {
-	    pos=""+(children.indexOf(coEltAbs)+1);
-	}
-	return pos;
     }
     
    /**

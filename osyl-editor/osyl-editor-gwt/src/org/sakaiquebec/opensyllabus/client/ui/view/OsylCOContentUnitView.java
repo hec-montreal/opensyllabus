@@ -29,48 +29,47 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
-import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
-import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylRichTextEditor;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEventHandler;
-import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentUnitEventHandler;
+import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitContentEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
-import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnit;
-import org.sakaiquebec.opensyllabus.shared.model.COContentUnitType;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
- * The view dedicated to displaying a {@link COContentUnit}.
+ * The view dedicated to displaying a {@link COUnitContent}.
  * 
  * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
  * @version $Id: $
  */
 public class OsylCOContentUnitView extends OsylViewableComposite implements
 	UpdateCOContentResourceProxyEventHandler,
-	UpdateCOContentUnitEventHandler {
+	UpdateCOUnitContentEventHandler {
 
     // View variables
     private VerticalPanel mainPanel;
-    private Label unitTitleLabel;
-    private Label unitSemanticTag;
-    
+    private Label mainTitleLabel;
     final static boolean TRACE = false;
+    private boolean showLabel;
 
     private Map<String, OsylRubricView> rubricViewsMap;
     private Map<COContentResourceProxy, OsylRubricView> resProxMap;
 
     public OsylCOContentUnitView(COModelInterface model,
 	    OsylController osylController) {
+	this(model, osylController, true);
+    }
+
+    public OsylCOContentUnitView(COModelInterface model,
+	    OsylController osylController, boolean showLabel) {
 	super(model, osylController);
+	this.showLabel = showLabel;
 	initView();
     }
 
@@ -80,12 +79,12 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	refreshView();
     }
 
-    private void initRubricViews(String styleLevel) {
+    private void initRubricViews() {
 	rubricViewsMap = new HashMap<String, OsylRubricView>();
 
 	List<COModelInterface> subModels =
-	    getController().getOsylConfig().getOsylConfigRuler()
-	    .getAllowedSubModels(getModel());
+		getController().getOsylConfig().getOsylConfigRuler()
+			.getAllowedSubModels(getModel());
 
 	for (int i = 0; i < subModels.size(); i++) {
 	    Object subModel = subModels.get(i);
@@ -93,7 +92,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	    if (subModel instanceof COContentRubric) {
 		COContentRubric coContentRubric = (COContentRubric) subModel;
 		OsylRubricView rubricView =
-		    new OsylRubricView(coContentRubric, getController(), styleLevel);
+			new OsylRubricView(coContentRubric, getController(), OsylStyleLevelChooser.getLevelStyle(coContentRubric));
 		getMainPanel().add(rubricView);
 		rubricViewsMap.put(coContentRubric.getType(), rubricView);
 	    }
@@ -105,82 +104,42 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
      */
     public void refreshView() {
 	getMainPanel().setStylePrimaryName("Osyl-UnitView-MainPanel");
-	// TODO: TO BE CONTROLLED BY CSS
-	//getMainPanel().setWidth("98%");
+	getMainPanel().setWidth("98%");
 
-	if (TRACE) Window.alert("*** Model = " + getCoMessage(getModel().getType()) + 
-		" ***\n*** Label = " + getModel().getLabel() + " ***");
-
-	// If we are editing a lecture or theme we allow to edit the title
-	// otherwise we don't (presentation, contact info, etc.)
-	if (COContentUnitType.LECTURE.equals(getModel().getType())
-		|| COContentUnitType.THEME.equals(getModel().getType())
-	) {
-	    // do not allow to delete the title and therefore the lecture
-	    // within the COContentUnit (only at COStructure)
-	    OsylCOStructureItemLabelView lbv =
-		new OsylCOStructureItemLabelView(getModel(),
-			getController(), false, OsylStyleLevelChooser.getLevelStyle(getModel()));
-	    getMainPanel().add(lbv);
-	}
-	else if (COContentUnitType.EVALUATION.equals(getModel().getType())) {
-	    // do not allow to delete the title and therefore the evaluation
-	    // within the COContentUnit (only at COStructure)
-	    OsylCOStructureEvaluationItemLabelView lbv =
-		new OsylCOStructureEvaluationItemLabelView(getModel(),
-			getController(), false, OsylStyleLevelChooser.getLevelStyle(getModel()));
-
-	    getMainPanel().add(lbv);
-	} 
-	else {
-	    if (isCOUnitTitleEditable()) {
-		OsylCOStructureItemLabelView lbv =
-		    new OsylCOStructureItemLabelView(getModel(),
-			    getController(), false, OsylStyleLevelChooser.getLevelStyle(getModel()));
-		getMainPanel().add(lbv);
-	    }
-	    else {
-		Label lbv = new Label(getCoMessage(getModel().getType()));
-		lbv.setStylePrimaryName("Osyl-UnitView-Title");
-		lbv.addStyleName(OsylStyleLevelChooser.getLevelStyle(getModel()));  
-		getMainPanel().add(lbv);
-	    }
+	final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
+	getMainPanel().add(horizontalPanel_1);
+	// if ( OsylStyleLevelChooser.getHasANumber((COUnitContent) getModel())
+	// ) {
+	// String positionString = getUnitPosition();
+	// if ( positionString.length() < 2 ) {
+	// positionString = "0" + positionString;
+	// }
+	// setMainTitleLabel(new Label(getCoMessage(getModel().getType())
+	// + " "
+	// + positionString));
+	// }
+	// else {
+	if (showLabel) {
+	    setMainTitleLabel(new Label(getCoMessage(getModel().getType())));
+	    // }
+	    getMainTitleLabel().setStylePrimaryName("Osyl-UnitView-Title");
+	    getMainTitleLabel().addStyleName(
+		    OsylStyleLevelChooser.getLevelStyle(getModel()));
+	    horizontalPanel_1.add(getMainTitleLabel());
 	}
 
-	// Semantic Tag linked to COUnit 
-	if ( OsylStyleLevelChooser.getHasANumber((COContentUnit) getModel()) ) {
-	    String positionString = getUnitPosition();
-	    if ( positionString.length() < 2 ) {
-		positionString = "0" + positionString; 
-	    }
-	    setUnitSemanticTag(new Label(getCoMessage(getModel().getType())  
-		    + " "
-		    + positionString));
-	} 
-	else {
-	    setUnitSemanticTag(new Label(getCoMessage(getModel().getType())));	
-	}
-
-	getUnitSemanticTag().setStylePrimaryName("Osyl-UnitView-SemanticTag");
-
-	// If the COUnitTitle is not editable, it is equal to its semantic tag
-	// and there is no need to add the tag since it is already there
-	if ( isCOUnitTitleEditable()) {
-	    getMainPanel().add(getUnitSemanticTag());
-	}
-
-	initRubricViews(OsylStyleLevelChooser.getSubLevelStyle(getModel()));
+	initRubricViews();
 	if (getModel() != null) {
 	    // We cast our content unit
-	    COContentUnit coContentUnit = (COContentUnit) getModel();
+	    COUnitContent coContentUnit = (COUnitContent) getModel();
 	    // We iterate through the resources proxies to create a rubric map
 	    // and the corresponding views
 	    resProxMap = new HashMap<COContentResourceProxy, OsylRubricView>();
 	    Iterator<COContentResourceProxy> iter =
-		coContentUnit.getChildrens().iterator();
+		    coContentUnit.getChildrens().iterator();
 	    while (iter.hasNext()) {
 		COContentResourceProxy resProx =
-		    (COContentResourceProxy) iter.next();
+			(COContentResourceProxy) iter.next();
 		// And we create the rubric views
 		if (resProx != null)
 		    addResProxToRubricView(resProx);
@@ -188,23 +147,30 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	}
     }
 
-    /**
-     * @return Boolean if the COUnit title is editable or not
-     */
-    	public boolean isCOUnitTitleEditable() {
-    	    String proposedXMLTitle = getModel().getLabel();
-    	    String modelCoUnitSemTag = getCoMessage(getModel().getType());
-    	     // If the proposed label in the XML is null or 
-    	     // empty then the label is not editable
-    	     // Also if the proposed label is identical to the model 
-    	     // semantic Tag, so the label is invariable and not editable
-   	    if (  ( proposedXMLTitle.length() <= 0) || 
-    		  ( proposedXMLTitle.equals(modelCoUnitSemTag) )  
-    	        ){
-    		return false;
-    	    }
-    	    return true;    
-	}
+    // public int getLevel() {
+    // if (getModel().isCourseOutlineContent()) {
+    // return 1;
+    // }
+    // if (getModel().getParent().isCourseOutlineContent()) {
+    // return 2;
+    // }
+    // if ( getModel().getParent().isCOStructureElement() ) {
+    // COStructureElement parent = (COStructureElement) getModel().getParent();
+    // if ( parent.getParent().isCourseOutlineContent()){
+    // return 3;
+    // }
+    // }
+    // if ( getModel().getParent().isCOStructureElement() ) {
+    // COStructureElement parent1 = (COStructureElement) getModel().getParent();
+    // if (parent1.getParent().isCOStructureElement()) {
+    // COStructureElement parent2 = (COStructureElement) parent1.getParent();
+    // if ( parent2.getParent().isCourseOutlineContent()){
+    // return 4;
+    // }
+    // }
+    // }
+    // return 5;
+    // }
 
     /**
      * @return String the content unit position (for instance "2" if it is the
@@ -215,7 +181,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	// element because they don't have a structure element parent :
 	// For example: presentation
 	String position = "";
-	COContentUnit unit = (COContentUnit) getModel();
+	COUnitContent unit = (COUnitContent) getModel();
 	COElementAbstract eltAbs = unit.getParent();
 	if (eltAbs.isCOStructureElement()) {
 	    COStructureElement parent = (COStructureElement) unit.getParent();
@@ -243,8 +209,8 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
     /**
      * Get the main title label
      */
-    public Label getUnitTitleLabel() {
-	return unitTitleLabel;
+    public Label getMainTitleLabel() {
+	return mainTitleLabel;
     }
 
     /**
@@ -252,16 +218,8 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
      * 
      * @param newMainTitleLabel
      */
-    public void setUnitTitleLabel(Label newUnitTitleLabel) {
-	this.unitTitleLabel = newUnitTitleLabel;
-    }
-
-    public Label getUnitSemanticTag() {
-        return unitSemanticTag;
-    }
-
-    public void setUnitSemanticTag(Label newUnitSemanticTag) {
-        this.unitSemanticTag = newUnitSemanticTag;
+    public void setMainTitleLabel(Label newMainTitleLabel) {
+	this.mainTitleLabel = newMainTitleLabel;
     }
 
     /**
@@ -272,13 +230,13 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	getModel().addEventHandler(this);
     }
 
-    public COContentUnit getModel() {
-	return (COContentUnit) super.getModel();
+    public COUnitContent getModel() {
+	return (COUnitContent) super.getModel();
     }
 
     public void onUpdateModel(UpdateCOContentResourceProxyEvent event) {
 	COContentResourceProxy resProx =
-	    (COContentResourceProxy) event.getSource();
+		(COContentResourceProxy) event.getSource();
 	OsylRubricView rubricView = (OsylRubricView) resProxMap.get(resProx);
 	// retrieve the resproxview
 	OsylAbstractView resProxView = rubricView.findResProxView(resProx);
@@ -288,8 +246,8 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	if (event.isRubricUpdateEvent()) {
 
 	    OsylRubricView newDestRubricView =
-		(OsylRubricView) rubricViewsMap
-		.get(resProx.getRubricType());
+		    (OsylRubricView) rubricViewsMap
+			    .get(resProx.getRubricType());
 	    // remove old resprox view from the rubricView
 	    rubricView.removeResProxView(resProxView);
 	    // move it to the new dest rubricview
@@ -316,12 +274,12 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
     private void refreshResProxUpAndDownArrowsInSameRubric(
 	    OsylRubricView rubricView) {
 	for (Iterator<COContentResourceProxy> respIt =
-	    resProxMap.keySet().iterator(); respIt.hasNext();) {
+		resProxMap.keySet().iterator(); respIt.hasNext();) {
 	    COContentResourceProxy coCRProxy = respIt.next();
 	    OsylAbstractView rPView = rubricView.findResProxView(coCRProxy);
 	    if (rPView != null) {
 		((OsylAbstractResProxView) rPView).getEditor()
-		.refreshUpAndDownPanel();
+			.refreshUpAndDownPanel();
 	    }
 	}
     }
@@ -333,38 +291,38 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
      * @param rubricView
      */
     private void refreshRubric(OsylRubricView rubricView) {
-	COContentUnit coContentUnit = (COContentUnit) getModel();
+	COUnitContent coContentUnit = (COUnitContent) getModel();
 	Iterator<COContentResourceProxy> iter =
-	    coContentUnit.getChildrens().iterator();
+		coContentUnit.getChildrens().iterator();
 	while (iter.hasNext()) {
 	    COContentResourceProxy resProx =
-		(COContentResourceProxy) iter.next();
+		    (COContentResourceProxy) iter.next();
 	    // And we create the rubric views
 	    if (resProx != null
 		    && resProx.getRubricType().equals(
 			    rubricView.getModel().getType())) {
 		OsylAbstractView resProxView =
-		    rubricView.findResProxView(resProx);
+			rubricView.findResProxView(resProx);
 		rubricView.removeResProxView(resProxView);
 		rubricView.addResProxView(resProxView);
 	    }
 	}
     }
 
-    public void onUpdateModel(UpdateCOContentUnitEvent event) {
+    public void onUpdateModel(UpdateCOUnitContentEvent event) {
 	if (event.isAddRessProxEvent()) {
 	    // the last resProxy is the added one
 	    List<COContentResourceProxy> proxies =
-		((COContentUnit) getModel()).getChildrens();
+		    ((COUnitContent) getModel()).getChildrens();
 	    COContentResourceProxy resProx =
-		(COContentResourceProxy) proxies.get(proxies.size() - 1);
+		    (COContentResourceProxy) proxies.get(proxies.size() - 1);
 	    addResProxToRubricView(resProx);
 	}
     }
 
     private void addResProxToRubricView(COContentResourceProxy resProx) {
 	OsylRubricView newDestRubricView =
-	    (OsylRubricView) rubricViewsMap.get(resProx.getRubricType());
+		(OsylRubricView) rubricViewsMap.get(resProx.getRubricType());
 	if (newDestRubricView != null)
 	    newDestRubricView.addResProxView(resProx);
 	resProx.addEventHandler(this);

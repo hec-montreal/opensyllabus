@@ -23,12 +23,12 @@ package org.sakaiquebec.opensyllabus.shared.events;
 import java.util.EventObject;
 
 /**
- * UpdateCOContentUnitEventHandler interface
+ * UpdateCOUnitContentEventHandler interface
  *
  * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Lepretre</a>
  * @version $Id: UpdateCOContentUnitEventHandler.java 507 2008-05-21 18:09:48Z sacha.lepretre@crim.ca $
  */
-public interface UpdateCOContentUnitEventHandler {
+public interface UpdateCOUnitContentEventHandler {
     
     /**
      * Represents the <code>UpdateCOContentUnitEvent</code> in the application.
@@ -36,7 +36,9 @@ public interface UpdateCOContentUnitEventHandler {
      * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
      * @version $Id: $
      */
-    public class UpdateCOContentUnitEvent extends EventObject {
+    public class UpdateCOUnitContentEvent extends EventObject {
+	
+	private static final long serialVersionUID = -970824361197576324L;
 
 	/**
 	 * The default Event type when not specified
@@ -50,11 +52,9 @@ public interface UpdateCOContentUnitEventHandler {
 
 	private int eventType = DEFAULT_EVENT_TYPE;
 
-	/** The unique id for serialization */
-	private static final long serialVersionUID = 55L;
 
 	/** Constructor */
-	public UpdateCOContentUnitEvent(Object source) {
+	public UpdateCOUnitContentEvent(Object source) {
 	    super(source);
 	}
 
@@ -94,5 +94,5 @@ public interface UpdateCOContentUnitEventHandler {
     }
 
     /** Called when the model is updated */
-    void onUpdateModel(UpdateCOContentUnitEvent event);
+    void onUpdateModel(UpdateCOUnitContentEvent event);
 }
