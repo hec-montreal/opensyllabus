@@ -187,10 +187,6 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		htmlViewer
 			.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
 	    }
-	    Image reqLevelIcon = getCurrentRequirementLevelIcon();
-	    if (null != reqLevelIcon) {
-		getViewerPanel().add(reqLevelIcon);
-	    }
 	    if (getView().isContextHidden()) {
 		mainPanel.setVisible(false);
 	    } else {
@@ -202,12 +198,18 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
     private void constructViewerLayout() {
 	// Now we add our widgets with the following layout
-	// ____________________________________________
-	// | link to the doc | (document name) |
+	//  ____________________________________________
+	// | link to the doc | (document name)          |
 	// |--------------------------------------------|
-	// | description |
+	// | description                                |
 	// |____________________________________________|
 	//
+	if (isReadOnly()) {
+	    Image reqLevelIcon = getCurrentRequirementLevelIcon();
+	    if (null != reqLevelIcon) {
+		getViewerPanel().add(reqLevelIcon);
+	    }
+	}
 	VerticalPanel vp = new VerticalPanel();
 	getViewerPanel().add(vp);
 	HorizontalPanel linkAndNameHP = new HorizontalPanel();

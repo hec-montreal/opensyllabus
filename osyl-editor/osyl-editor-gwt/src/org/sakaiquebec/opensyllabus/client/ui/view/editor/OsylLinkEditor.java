@@ -173,10 +173,6 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 		htmlViewer
 			.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
 	    }
-	    Image reqLevelIcon = getCurrentRequirementLevelIcon();
-	    if (null != reqLevelIcon) {
-		getViewerPanel().add(reqLevelIcon);
-	    }
 	    if (getView().isContextHidden()) {
 		getMainPanel().setVisible(false);
 	    } else {
@@ -190,11 +186,17 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	// Now we add our widgets with the following layout
 	//  ____________________________________________
 	// |  link displayed as	name of link            |
-	// |  link   		                |
+	// |  link                                      |
 	// |--------------------------------------------|
 	// |  description                               |
 	// |____________________________________________|
 	//
+	if (isReadOnly()) {
+	    Image reqLevelIcon = getCurrentRequirementLevelIcon();
+	    if (null != reqLevelIcon) {
+		getViewerPanel().add(reqLevelIcon);
+	    }
+	}
 	VerticalPanel vp = new VerticalPanel();
 	getViewerPanel().add(vp);
 	vp.add(getViewer());
