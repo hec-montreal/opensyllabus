@@ -1077,7 +1077,7 @@ public class OsylController implements SavePushButtonEventHandler,
 	}
 
 	try {
-	    if (!COContentResourceType.BIBLIO_RESSOURCE.equals(resProx
+	    if (!COContentResourceType.BIBLIO_RESOURCE.equals(resProx
 		    .getResource().getType())) {
 		throw new IllegalArgumentException("createOrUpdateCitationCB:"
 			+ " Wrong type of resource!");
@@ -1156,7 +1156,7 @@ public class OsylController implements SavePushButtonEventHandler,
 	}
 
 	try {
-	    if (!COContentResourceType.BIBLIO_RESSOURCE.equals(resProx
+	    if (!COContentResourceType.BIBLIO_RESOURCE.equals(resProx
 		    .getResource().getType())) {
 		throw new IllegalArgumentException("createOrUpdateCitationCB:"
 			+ " Wrong type of resource!");

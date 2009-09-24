@@ -605,7 +605,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		if (subModel.getType().equals(COContentResourceType.TEXT)) {
 		    type = COContentResourceProxyType.INFORMATION;
 		} else if (subModel.getType().equals(
-			COContentResourceType.BIBLIO_RESSOURCE)) {
+			COContentResourceType.BIBLIO_RESOURCE)) {
 		    type = COContentResourceProxyType.BIBLIO;
 		} else if (subModel.getType().equals(
 			COContentResourceType.PERSON)) {

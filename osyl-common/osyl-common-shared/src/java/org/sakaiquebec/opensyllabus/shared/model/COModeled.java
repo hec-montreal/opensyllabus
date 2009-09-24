@@ -177,7 +177,7 @@ public class COModeled extends COSerialized {
     /**
      *Name of person node
      */
-    protected final static String PERSON_NODE_NAME = "person";
+    protected final static String PERSON_NODE_NAME = "Person";
 
     /**
      * The modeledContent is a POJO filled by XML2Model

@@ -202,7 +202,7 @@ public class COModeledServer {
     /**
      *Name of person node
      */
-    protected final static String PERSON_NODE_NAME = "person";
+    protected final static String PERSON_NODE_NAME = "Person";
 
     /**
      * The modeledContent is a POJO filled by XML2Model
@@ -733,7 +733,7 @@ public class COModeledServer {
 	    addProperty(coContentRes.getProperties(), rNode);
 	}
 	if (type.equals(COContentResourceType.DOCUMENT)
-		|| type.equals(COContentResourceType.BIBLIO_RESSOURCE)) {
+		|| type.equals(COContentResourceType.BIBLIO_RESOURCE)) {
 	    documentSecurityMap.put(coContentRes.getProperty(
 		    COPropertiesType.URI).trim(), security);
 	    if (changeWorkToPublish) {

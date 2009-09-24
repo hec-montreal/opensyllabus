@@ -107,7 +107,7 @@ public class COContentResource implements COModelInterface,
 		    osylConfigMessages.getMessage("assigndescr"));
 	    resModel.setProperties(prop);
 	} else if (type
-		.equalsIgnoreCase(COContentResourceType.BIBLIO_RESSOURCE)) {
+		.equalsIgnoreCase(COContentResourceType.BIBLIO_RESOURCE)) {
 	    COProperties prop = new COProperties();
 	    prop.addProperty(COPropertiesType.CITATION,
 		    osylConfigMessages.getMessage("bibliographicReference"));

@@ -30,7 +30,7 @@ import java.util.List;
 public class COContentResourceType {
 
     public static final String TEXT = "Text";
-    public static final String BIBLIO_RESSOURCE = "BiblioResource";
+    public static final String BIBLIO_RESOURCE = "BiblioResource";
     public static final String DOCUMENT = "Document";
     public static final String ASSIGNMENT = "Assignment";
     public static final String URL="URL";
@@ -41,7 +41,7 @@ public class COContentResourceType {
      * The list of types.
      */
     private static final String[] types =
-	    { TEXT, BIBLIO_RESSOURCE, DOCUMENT, ASSIGNMENT, URL, PERSON };
+	    { TEXT, BIBLIO_RESOURCE, DOCUMENT, ASSIGNMENT, URL, PERSON };
 
     /**
      * @return string array of types
