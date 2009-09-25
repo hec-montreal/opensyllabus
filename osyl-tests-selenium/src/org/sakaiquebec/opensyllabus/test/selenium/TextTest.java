@@ -77,8 +77,7 @@ public class TextTest extends AbstractOSYLTest {
 	saveCourseOutline();
 
 	// open text resource editor
-	session().click("//tr[3]/td/table/tbody/tr[2]/td/div/table[2]/tbody" +
-			"/tr/td[1]/button");
+	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
 
 	String selectedRubric = getRandomRubric();
 	log("Selecting rubric [" + selectedRubric + "]");
