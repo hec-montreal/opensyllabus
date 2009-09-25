@@ -898,11 +898,6 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
      * and text.
      */
     private void enterEdit(TextBox tb, String txt) {
-
-	// We instruct the editor to use almost all the available space. Do not use
-	// 100% as it makes the textarea left-end go beyond the popup limits.
-	tb.setWidth("98%");
-
 	// We get the text to edit from the model
 	tb.setText(txt);
 
