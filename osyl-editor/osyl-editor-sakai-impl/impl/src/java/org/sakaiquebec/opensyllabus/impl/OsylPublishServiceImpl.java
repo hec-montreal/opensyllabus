@@ -202,8 +202,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	coModeled.XML2Model(true);
 	coModeled.model2XML();
 	co.setContent(coModeled.getSerializedContent());
-	co.setContent(coModeled.getSerializedContent());
-
+	
 	Map<String, String> documentSecurityMap =
 		coModeled.getDocumentSecurityMap();
 
