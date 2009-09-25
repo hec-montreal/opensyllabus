@@ -57,7 +57,6 @@ public class GenericMatriculeNomMapFactory {
 	while ((buffer = breader.readLine()) != null) {
 	    tokenizer = new StringTokenizer(buffer,";");
 	    matricule = tokenizer.nextToken();
-	    System.out.println(matricule);
 	    // on reprend l'entree existante
 	    if (map.containsKey(matricule)) {
 		entry = map.get(matricule);

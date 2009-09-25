@@ -227,7 +227,7 @@
 			
 	</bean>
 	
-	<bean id="osylcmjob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImpl">
+	<bean id="osylcmjob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImpl" >
 		<property name="userDirService"
 			ref="org.sakaiproject.user.api.UserDirectoryService" />
 		<property name="cmAdmin"

@@ -44,265 +44,41 @@ import org.sakaiproject.coursemanagement.api.SectionCategory;
  */
 public interface OsylCMJob extends Job {
 
-    /**
-     * Method used to create the sessions
-     */
-    public void loadSessions();
+	/**
+	 * Method used to call all the other methods in the good order
+	 */
+	public void load();
 
-    /**
-     * Method used to create users
-     */
-    public void loadUsers();
+	/**
+	 * Method used to create the sessions
+	 */
+	public void loadSessions();
 
-    /**
-     * Method used to load the courses
-     */
-    public void loadCourses();
+	/**
+	 * Method used to create users
+	 */
+	public void loadUsers();
 
-    /**
-     * This method allows us to create a new session without having an id
-     * 
-     * @param title
-     * @param description
-     * @param startDate
-     * @param endDate
-     */
-    public void createSession(String title, String description, Date startDate,
-	    Date endDate);
+	/**
+	 * Method used to load the courses
+	 */
+	public void loadCourses();
 
-    /**
-     * This method is used when we know the id of the session we are creating
-     * 
-     * @param eid
-     * @param title
-     * @param description
-     * @param startDate
-     * @param endDate
-     */
-    public void createSession(String eid, String title, String description,
-	    Date startDate, Date endDate);
+	/**
+	 * This method is used to load teachers, secretaries, interns .... For now
+	 * it is used just for teachers
+	 */
+	public void loadMembership();
 
-    /**
-     * This method allow us to create a canonical course
-     * 
-     * @param title
-     * @param description
-     */
-    public void createCanonicalCourse(String title, String description);
+	/**
+	 * This method is used to assign students to their given course section
+	 */
+	public void loadEnrollments();
 
-    /**
-     * This method allow us to create a course offering without knowing the id
-     * 
-     * @param title
-     * @param description
-     * @param status
-     * @param academicSessionEid
-     * @param canonicalCourseEid
-     * @param startDate
-     * @param endDate
-     */
-    public void createCourseOffering(String title, String description,
-	    String status, String academicSessionEid,
-	    String canonicalCourseEid, Date startDate, Date endDate);
-
-    /**
-     * This method allows us to create a course offering with the given id
-     * 
-     * @param eid
-     * @param title
-     * @param description
-     * @param status
-     * @param academicSessionEid
-     * @param canonicalCourseEid
-     * @param startDate
-     * @param endDate
-     */
-    public void createCourseOffering(String eid, String title,
-	    String description, String status, String academicSessionEid,
-	    String canonicalCourseEid, Date startDate, Date endDate);
-
-    /**
-     * Creates a canonical course with the given id
-     * 
-     * @param eid
-     * @param title
-     * @param description
-     */
-    public void createCanonicalCourse(String eid, String title,
-	    String description);
-
-    /**
-     * Creates a course set without knowing the id
-     * 
-     * @param title
-     * @param description
-     * @param category
-     * @param parentCourseSetEid
-     */
-    public void createCourseSet(String title, String description,
-	    String category, String parentCourseSetEid);
-
-    /**
-     * Creates a course set with the given id
-     * 
-     * @param eid
-     * @param title
-     * @param description
-     * @param category
-     * @param parentCourseSetEid
-     */
-    public void createCourseSet(String eid, String title, String description,
-	    String category, String parentCourseSetEid);
-
-    /**
-     * Creates a section
-     * 
-     * @param title
-     * @param description
-     * @param category
-     * @param parentSectionEid
-     * @param courseOfferingEid
-     * @param enrollmentSetEid
-     */
-    public void createSection(String title, String description,
-	    String category, String parentSectionEid, String courseOfferingEid,
-	    String enrollmentSetEid);
-
-    /**
-     * Links a canonical course to the course set
-     * 
-     * @param courseSetEid
-     * @param canonicalCourseEid
-     */
-    public void addCanonicalCourseToCourseSet(String courseSetEid,
-	    String canonicalCourseEid);
-
-    /**
-     * Adds a new user to a course offering.
-     * 
-     * @param userId
-     * @param role
-     * @param courseOfferingEid
-     * @param status
-     */
-    public void addCourseOfferingMembership(String userId, String role,
-	    String courseOfferingEid, String status);
-
-    /**
-     * Adds a new user to the course set
-     * 
-     * @param userId
-     * @param role
-     * @param courseSetEid
-     * @param status
-     */
-    public void addCourseSetMembership(String userId, String role,
-	    String courseSetEid, String status);
-
-    /**
-     * Enrolls a new user
-     * 
-     * @param userId
-     * @param enrollmentSetEid
-     * @param enrollmentStatus
-     * @param credits
-     * @param gradingScheme
-     */
-    public void addEnrollment(String userId, String enrollmentSetEid,
-	    String enrollmentStatus, String credits, String gradingScheme);
-
-    /**
-     * Assign a teacher to a course offering
-     */
-    public void assignTeachers();
-
-    /**
-     * Creates a new enrollmentSet for a course offering and the teachers linked
-     * to it
-     * 
-     * @param eid
-     * @param title
-     * @param description
-     * @param category
-     * @param defaultEnrollmentCredits
-     * @param courseOfferingEid
-     * @param officialInstructors
-     */
-    public void createEnrollmentSet(String eid, String title,
-	    String description, String category,
-	    String defaultEnrollmentCredits, String courseOfferingEid,
-	    Set officialInstructors);
-
-    /**
-     * Creates a new enrollmentSet with the given id for a course offering and
-     * the teachers linked to it
-     * 
-     * @param title
-     * @param description
-     * @param category
-     * @param defaultEnrollmentCredits
-     * @param courseOfferingEid
-     * @param officialInstructors
-     */
-    public void createEnrollmentSet(String title, String description,
-	    String category, String defaultEnrollmentCredits,
-	    String courseOfferingEid, Set officialInstructors);
-
-    /**
-     * Removes the link between a user and an enrollment
-     * 
-     * @param userId
-     * @param enrollmentSetEid
-     */
-    public void dropEnrollment(String userId, String enrollmentSetEid);
-
-    /**
-     * Adds a category to a section
-     * 
-     * @param categoryCode
-     * @param categoryDescription
-     */
-    public void addSectionCategory(String categoryCode,
-	    String categoryDescription);
-
-    /**
-     * removes the link between a course set and a canonical course
-     * 
-     * @param courseSetEid
-     * @param canonicalCourseEid
-     */
-    public void removeCanonicalCourseToCourseSet(String courseSetEid,
-	    String canonicalCourseEid);
-
-    /**
-     * Removes a user membership to a course offering
-     * 
-     * @param userId
-     * @param courseOfferingEid
-     */
-    public void removeCourseOfferingMembership(String userId,
-	    String courseOfferingEid);
-
-    /**
-     * Removes a user membership to a course set
-     * 
-     * @param userId
-     * @param courseSetEid
-     */
-    public void removeCourseSetMembership(String userId, String courseSetEid);
-
-    /**
-     * Deletes a section
-     * 
-     * @param eid
-     */
-    public void removeSection(String eid);
-
-    /**
-     * Deletes a session
-     * 
-     * @param eid
-     */
-    public void removeSession(String eid);
+	/**
+	 * This method is used to automatically register mid-term and final exams.
+	 * It can also be used for any prescheduled meeting
+	 */
+	public void loadMeetings();
 
 }

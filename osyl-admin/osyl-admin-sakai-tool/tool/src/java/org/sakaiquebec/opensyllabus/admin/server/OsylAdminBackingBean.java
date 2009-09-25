@@ -22,6 +22,7 @@
 package org.sakaiquebec.opensyllabus.admin.server;
 
 import org.sakaiquebec.opensyllabus.admin.api.*;
+import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
 import org.sakaiquebec.opensyllabus.common.api.OsylRealmService;
 
 /**
@@ -33,8 +34,36 @@ import org.sakaiquebec.opensyllabus.common.api.OsylRealmService;
  */
 public class OsylAdminBackingBean {
     
+    
+	/**
+	 * This injection is for develodpment purposes
+	 * remove when in production
+	 */
+	private OsylCMJob osylCMJob;
+    
+    /**
+     * Gets the {@link OsylCMJob}.
+     * 
+     * @return
+     *         the {@link OsylCMJob}
+     */
+    public OsylCMJob getOsylCMJob() {
+        return osylCMJob;
+    }
+
+    /**
+     * Sets the {@link OsylCMJob}.
+     * 
+     * @param OsylCMJob
+     */
+    public void setOsylCMJob(OsylCMJob osylCmJob) {
+        this.osylCMJob = osylCmJob;
+    }
+
+    
     private OsylAdminService osylAdminService;
     
+        
     /**
      * Gets the {@link OsylAdminService}.
      * 
@@ -79,7 +108,7 @@ public class OsylAdminBackingBean {
      * Init method called at initialization of the bean.
      */
     public void init(){
-	
+    	osylCMJob.load();
     }
 }
 

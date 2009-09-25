@@ -15,7 +15,6 @@
 <script> // Size of the JS application
 	function myLoad() {
 		OsylAdminBackingBean osyl = new OsylAdminBackingBean();
-		System.out.println (osyl.createUsers());
 		setTimeout("<%=request.getAttribute("sakai.html.body.onload") %>", 500);
 	}
 
