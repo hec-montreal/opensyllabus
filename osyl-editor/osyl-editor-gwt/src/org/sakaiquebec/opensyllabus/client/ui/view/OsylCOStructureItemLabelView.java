@@ -23,7 +23,6 @@ package org.sakaiquebec.opensyllabus.client.ui.view;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCOStructureItemEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
-import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -31,12 +30,11 @@ import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
  */
 public class OsylCOStructureItemLabelView extends OsylAbstractView {
 
-    public OsylCOStructureItemLabelView(COUnit model, OsylController controller) {
-	super(model, controller);
-	setEditor(new OsylCOStructureItemEditor(this));
-	initView();
-    }
-
+    /**
+     * @param model
+     * @param controller
+     * @param isDeletable
+     */
     public OsylCOStructureItemLabelView(COUnit model,
 	    OsylController controller, boolean isDeletable) {
 	super(model, controller);
@@ -45,9 +43,9 @@ public class OsylCOStructureItemLabelView extends OsylAbstractView {
 	initView();
     }
 
-    public OsylCOStructureItemLabelView(COUnitContent model,
+    public OsylCOStructureItemLabelView(COUnit model,
 	    OsylController controller, boolean isDeletable, String levelStyle) {
-	super(model,controller);
+	super(model, controller);
 	setEditor(new OsylCOStructureItemEditor(this));
 	((OsylCOStructureItemEditor) getEditor()).setIsDeletable(isDeletable);
 	((OsylCOStructureItemEditor) getEditor()).setViewerStyle(levelStyle);

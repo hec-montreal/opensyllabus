@@ -628,7 +628,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	while (iter.hasNext()) {
 	    COModelInterface subModel = (COModelInterface) iter.next();
 	    getOsylToolbar().getAddMenuButton().addItem(
-		    getCoMessage("ASMUnitStructure"),
+		    getCoMessage(subModel.getType()),
 		    new AddUnitStructureCommand(model, subModel.getType()));
 	}
 	if (getModel().getChildrens().size() == 1) {

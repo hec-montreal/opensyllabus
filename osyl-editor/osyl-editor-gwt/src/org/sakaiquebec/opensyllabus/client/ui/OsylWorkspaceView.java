@@ -33,6 +33,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElementType;
+import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
@@ -109,6 +110,7 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 		getWorkspacePanel().clear();
 		OsylCOUnitView newView =
 			new OsylCOUnitView(getModel(), getController());
+		((COUnit)getModel()).addEventHandler(newView);
 		currentView = newView;
 		getWorkspacePanel().add(currentView);
 		// A bit more space to allow content addition without getting

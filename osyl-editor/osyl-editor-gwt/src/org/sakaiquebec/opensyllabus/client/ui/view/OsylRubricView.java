@@ -60,11 +60,6 @@ public class OsylRubricView extends OsylViewableComposite {
 	return rubricStyleLevel;
     }
 
-//    public OsylRubricView(COContentRubric model, OsylController osylController) {
-//	super(model, osylController);
-//	initView();
-//    }
-
     /**
      * Public constructor to display a rubric with the specified model.
      * 

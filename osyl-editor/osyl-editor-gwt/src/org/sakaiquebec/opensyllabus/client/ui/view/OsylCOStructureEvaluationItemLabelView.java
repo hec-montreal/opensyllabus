@@ -43,6 +43,11 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 	this(model, controller, false);
     }
 
+    /**
+     * @param model
+     * @param controller
+     * @param isInList
+     */
     public OsylCOStructureEvaluationItemLabelView(COUnit model,
 	    OsylController controller, boolean isInList) {
 	super(model, controller);
@@ -51,7 +56,7 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
     }
     
     
-    public OsylCOStructureEvaluationItemLabelView(COUnitContent model,
+    public OsylCOStructureEvaluationItemLabelView(COUnit model,
 	    OsylController controller, boolean isInList, String levelStyle) {
 	super(model,controller);
 	setEditor(new OsylCOStructureEvaluationItemEditor(this, isInList));

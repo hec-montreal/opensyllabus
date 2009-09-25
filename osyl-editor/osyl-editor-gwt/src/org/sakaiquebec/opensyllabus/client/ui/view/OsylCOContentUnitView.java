@@ -32,9 +32,9 @@ import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitContentEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
+import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
-import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 
@@ -79,7 +79,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	refreshView();
     }
 
-    private void initRubricViews() {
+    private void initRubricViews(String styleLevel) {
 	rubricViewsMap = new HashMap<String, OsylRubricView>();
 
 	List<COModelInterface> subModels =
@@ -92,7 +92,8 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	    if (subModel instanceof COContentRubric) {
 		COContentRubric coContentRubric = (COContentRubric) subModel;
 		OsylRubricView rubricView =
-			new OsylRubricView(coContentRubric, getController(), OsylStyleLevelChooser.getLevelStyle(coContentRubric));
+			new OsylRubricView(coContentRubric, getController(),
+				styleLevel);
 		getMainPanel().add(rubricView);
 		rubricViewsMap.put(coContentRubric.getType(), rubricView);
 	    }
@@ -108,17 +109,6 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 
 	final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
 	getMainPanel().add(horizontalPanel_1);
-	// if ( OsylStyleLevelChooser.getHasANumber((COUnitContent) getModel())
-	// ) {
-	// String positionString = getUnitPosition();
-	// if ( positionString.length() < 2 ) {
-	// positionString = "0" + positionString;
-	// }
-	// setMainTitleLabel(new Label(getCoMessage(getModel().getType())
-	// + " "
-	// + positionString));
-	// }
-	// else {
 	if (showLabel) {
 	    setMainTitleLabel(new Label(getCoMessage(getModel().getType())));
 	    // }
@@ -128,7 +118,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	    horizontalPanel_1.add(getMainTitleLabel());
 	}
 
-	initRubricViews();
+	initRubricViews(OsylStyleLevelChooser.getLevelStyle(getModel()));
 	if (getModel() != null) {
 	    // We cast our content unit
 	    COUnitContent coContentUnit = (COUnitContent) getModel();
@@ -146,31 +136,6 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	    }
 	}
     }
-
-    // public int getLevel() {
-    // if (getModel().isCourseOutlineContent()) {
-    // return 1;
-    // }
-    // if (getModel().getParent().isCourseOutlineContent()) {
-    // return 2;
-    // }
-    // if ( getModel().getParent().isCOStructureElement() ) {
-    // COStructureElement parent = (COStructureElement) getModel().getParent();
-    // if ( parent.getParent().isCourseOutlineContent()){
-    // return 3;
-    // }
-    // }
-    // if ( getModel().getParent().isCOStructureElement() ) {
-    // COStructureElement parent1 = (COStructureElement) getModel().getParent();
-    // if (parent1.getParent().isCOStructureElement()) {
-    // COStructureElement parent2 = (COStructureElement) parent1.getParent();
-    // if ( parent2.getParent().isCourseOutlineContent()){
-    // return 4;
-    // }
-    // }
-    // }
-    // return 5;
-    // }
 
     /**
      * @return String the content unit position (for instance "2" if it is the

@@ -27,7 +27,6 @@ import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylLabelEditClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
-import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -122,6 +121,11 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 
     protected HTML getViewer() {
 	return viewer;
+    }
+    
+    public void setViewerStyle(String levelStyle) {
+	getViewer().addStyleName(levelStyle);
+	getViewer().addStyleName("Osyl-TitleEditor");
     }
 
     /**

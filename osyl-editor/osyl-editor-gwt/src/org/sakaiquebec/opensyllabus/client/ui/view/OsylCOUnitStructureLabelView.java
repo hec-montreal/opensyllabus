@@ -36,6 +36,14 @@ public class OsylCOUnitStructureLabelView extends OsylAbstractView {
 	setEditor(new OsylLabelEditor(this));
 	initView();
     }
+    
+    public OsylCOUnitStructureLabelView(COUnitStructure model,
+	    OsylController controller, String styleLevel) {
+	super(model, controller);
+	setEditor(new OsylLabelEditor(this));
+	initView();
+	((OsylLabelEditor)getEditor()).setViewerStyle(styleLevel);
+    }
 
     /**
      * ===================== OVERRIDEN METHODS ===================== See
