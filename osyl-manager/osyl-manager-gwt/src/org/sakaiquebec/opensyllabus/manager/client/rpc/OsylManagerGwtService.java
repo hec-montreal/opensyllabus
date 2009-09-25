@@ -68,4 +68,8 @@ public interface OsylManagerGwtService extends RemoteService {
     public void associate(String siteId, String parentId);
 
     public void dissociate(String siteId, String parentId);
+    
+    public Boolean associateToCM(String courseSectionId, String siteId);
+    
+    public Map<String, String> getCMCourses(); 
 }

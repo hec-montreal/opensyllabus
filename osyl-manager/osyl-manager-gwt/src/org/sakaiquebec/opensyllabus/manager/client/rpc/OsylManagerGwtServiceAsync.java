@@ -77,4 +77,8 @@ public interface OsylManagerGwtServiceAsync {
     
     public void dissociate(String siteId, String parentId,
 	    AsyncCallback<Void> callback);
+    
+    public void associateToCM (String courseSectionId, String siteId, AsyncCallback<Boolean> callback);
+    
+    public void getCMCourses( AsyncCallback<Map<String, String>> callback) ;
 }

@@ -43,102 +43,104 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * @version $Id: $
  */
 public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
-	OsylManagerGwtService {
+		OsylManagerGwtService {
 
-    public static final long serialVersionUID = 56L;
+	public static final long serialVersionUID = 56L;
 
-    private static Log log = LogFactory.getLog(OsylManagerGwtServiceImpl.class);
-    protected OsylManagerBackingBean osylManagerServices;
-    private ServletContext servletContext = null;
-    private WebApplicationContext webAppContext = null;
+	private static Log log = LogFactory.getLog(OsylManagerGwtServiceImpl.class);
+	protected OsylManagerBackingBean osylManagerServices;
+	private ServletContext servletContext = null;
+	private WebApplicationContext webAppContext = null;
 
-    /**
-     * {@inheritDoc}
-     */
-    public void init() {
-	log.warn("INIT OsylEditorGwtServiceImpl");
+	/**
+	 * {@inheritDoc}
+	 */
+	public void init() {
+		log.warn("INIT OsylEditorGwtServiceImpl");
 
-	servletContext = getServletContext();
-	webAppContext =
-		WebApplicationContextUtils
-			.getWebApplicationContext(servletContext);
+		servletContext = getServletContext();
+		webAppContext = WebApplicationContextUtils
+				.getWebApplicationContext(servletContext);
 
-	if (webAppContext != null) {
-	    osylManagerServices =
-		    (OsylManagerBackingBean) webAppContext
-			    .getBean("osylManagerMainBean");
-	}
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String createSite(String siteTitle, String configId) {
-	try {
-		if (osylManagerServices != null) {
-			log.warn("OsylSiteService : " + osylManagerServices.getOsylSiteService());
-			return osylManagerServices.getOsylSiteService().createSite(
-					siteTitle,configId);
+		if (webAppContext != null) {
+			osylManagerServices = (OsylManagerBackingBean) webAppContext
+					.getBean("osylManagerMainBean");
 		}
-	} catch (Exception e) {
-	    e.printStackTrace();
+
 	}
-	return null;
-    }
-    
-    public Map<String,String> getOsylConfigs(){
-	try {
-		if (osylManagerServices != null) {
-			log.warn("OsylSiteService : " + osylManagerServices.getOsylConfigService());
-			return osylManagerServices.getOsylConfigService().getConfigs();
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String createSite(String siteTitle, String configId) {
+		try {
+			if (osylManagerServices != null) {
+				log.warn("OsylSiteService : "
+						+ osylManagerServices.getOsylSiteService());
+				return osylManagerServices.getOsylSiteService().createSite(
+						siteTitle, configId);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-	} catch (Exception e) {
-	    e.printStackTrace();
+		return null;
 	}
-	return null;
-    }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void readXML(String xmlReference, String siteId) {
-	osylManagerServices.getOsylManagerService().readXML(xmlReference,
-		siteId);
-    }
+	public Map<String, String> getOsylConfigs() {
+		try {
+			if (osylManagerServices != null) {
+				log.warn("OsylSiteService : "
+						+ osylManagerServices.getOsylConfigService());
+				return osylManagerServices.getOsylConfigService().getConfigs();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public Map<String,String> getOsylSitesMap(){
-	return osylManagerServices.getOsylManagerService().getOsylSitesMap();
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void readZip(String zipReference, String siteId) {
-	osylManagerServices.getOsylManagerService().readZip(zipReference,
-		siteId);
-	importFilesInSite(zipReference, siteId);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public String getOsylPackage(String siteId){
-	return osylManagerServices.getOsylManagerService().getOsylPackage(siteId);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public void readXML(String xmlReference, String siteId) {
+		osylManagerServices.getOsylManagerService().readXML(xmlReference,
+				siteId);
+	}
 
-    /**
-     * Import file contains in the osylPackage to sakai ressources
-     * @param zipReference
-     * @param siteId
-     */
-    private void importFilesInSite(String zipReference, String siteId) {
-	        // TODO: Valider la corrrection apportée pour la compilation
-		Map<File, String> fileMap = (Map<File, String>) osylManagerServices.getOsylManagerService()
-				.getImportedFiles();
+	/**
+	 * {@inheritDoc}
+	 */
+	public Map<String, String> getOsylSitesMap() {
+		return osylManagerServices.getOsylManagerService().getOsylSitesMap();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void readZip(String zipReference, String siteId) {
+		osylManagerServices.getOsylManagerService().readZip(zipReference,
+				siteId);
+		importFilesInSite(zipReference, siteId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getOsylPackage(String siteId) {
+		return osylManagerServices.getOsylManagerService().getOsylPackage(
+				siteId);
+	}
+
+	/**
+	 * Import file contains in the osylPackage to sakai ressources
+	 * 
+	 * @param zipReference
+	 * @param siteId
+	 */
+	private void importFilesInSite(String zipReference, String siteId) {
+		// TODO: Valider la corrrection apportï¿½e pour la compilation
+		Map<File, String> fileMap = (Map<File, String>) osylManagerServices
+				.getOsylManagerService().getImportedFiles();
 		Set<File> files = fileMap.keySet();
 		for (File file : files) {
 			try {
@@ -153,20 +155,29 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 
-    public Map<String, String> getOsylSites(String siteId) {
-	return osylManagerServices.getOsylManagerService().getOsylSites(siteId);
-    }
+	public Map<String, String> getOsylSites(String siteId) {
+		return osylManagerServices.getOsylManagerService().getOsylSites(siteId);
+	}
 
-    public String getParent(String siteId) throws Exception{
-	return osylManagerServices.getOsylManagerService().getParent(siteId);
-    }
-    
-    public void associate(String siteId, String parentId)throws Exception{
-	osylManagerServices.getOsylManagerService().associate(siteId, parentId);
-    }
+	public String getParent(String siteId) throws Exception {
+		return osylManagerServices.getOsylManagerService().getParent(siteId);
+	}
 
-    public void dissociate(String siteId, String parentId)throws Exception{
-	osylManagerServices.getOsylManagerService().dissociate(siteId, parentId);
-    }
-    
+	public void associate(String siteId, String parentId) throws Exception {
+		osylManagerServices.getOsylManagerService().associate(siteId, parentId);
+	}
+
+	public void dissociate(String siteId, String parentId) throws Exception {
+		osylManagerServices.getOsylManagerService()
+				.dissociate(siteId, parentId);
+	}
+
+	public Boolean associateToCM(String courseSectionId, String siteId) {
+		return osylManagerServices.getOsylManagerService().associateToCM(
+				courseSectionId, siteId);
+	}
+	
+	public Map<String, String> getCMCourses() {
+		return osylManagerServices.getOsylManagerService().getCMCourses();
+	}
 }

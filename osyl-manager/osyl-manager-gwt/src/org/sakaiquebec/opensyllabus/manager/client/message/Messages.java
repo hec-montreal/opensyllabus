@@ -73,7 +73,19 @@ public interface Messages extends ConstantsWithLookup {
     
     String associateDissociate();
     
+    String associateDissociateCM();
+    
     String associate();
+    
+    String associateToCM();
+    
+    String associateToCMSuccess();
+    
+    String associateToCMFailure();
+    
+    String associateToCMChooseSite();
+    
+    String associateToCMChooseCourse();
     
     String dissociate();
     

@@ -189,4 +189,12 @@ public class OsylManagerRPCController {
 	serviceProxy.dissociate(siteId, parentId, callback);
     }
 
+    public void associateToCM(String courseSectionId, String siteId, 
+    	    AsyncCallback<Boolean> callback) {
+    	serviceProxy.associateToCM(courseSectionId, siteId, callback);
+        }
+
+    public void getCMCourses(AsyncCallback<Map<String,String>> callback){
+    	serviceProxy.getCMCourses(callback);
+    }
 }

@@ -56,7 +56,8 @@ OsylManagerEventHandler {
 		final RadioButton createRadioButton = new RadioButton("choix",getController().getMessages().createOption());
 		final RadioButton exportRadioButton = new RadioButton("choix",getController().getMessages().exportOption());
 		final RadioButton associateRadioButton = new RadioButton("choix",getController().getMessages().associateDissociate());
-
+		final RadioButton associateCMRadioButton = new RadioButton("choix",getController().getMessages().associateDissociateCM());
+		
 		Button valid = new Button();
 		valid.setText(getController().getMessages().valid());
 		valid.addClickListener(new ClickListener(){
@@ -70,6 +71,9 @@ OsylManagerEventHandler {
 				else if(associateRadioButton.isChecked()){
 					setView(new AssociateView(getController()));
 				}
+				else if(associateCMRadioButton.isChecked()){
+					setView(new AssociateToCMView(getController()));
+				}
 			}
 		});
 
@@ -77,6 +81,7 @@ OsylManagerEventHandler {
 		mainPanel.add(createRadioButton);
 		mainPanel.add(exportRadioButton);
 		mainPanel.add(associateRadioButton);
+		mainPanel.add(associateCMRadioButton);
 		mainPanel.add(valid);
 	}
 

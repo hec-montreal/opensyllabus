@@ -138,9 +138,22 @@
     	<type>jar</type>
     	<scope>provided</scope>
     </dependency>
+
+    <dependency>
+    	<groupId>org.sakaiproject</groupId>
+    	<artifactId>sakai-coursemanagement-api</artifactId>
+    	<version>M2</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.sakaiproject</groupId>
+    	<artifactId>sakai-authz-api</artifactId>
+    	<version>M2</version>
+    </dependency>
+
     <dependency>
     	<groupId>commons-io</groupId>
     	<artifactId>commons-io</artifactId>
     </dependency>
+
   </dependencies>
 </project>

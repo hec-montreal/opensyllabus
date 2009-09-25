@@ -57,6 +57,8 @@
 			ref="org.sakaiproject.content.api.ContentHostingService" />
 		<property name="serverConfigurationService"
 			ref="org.sakaiproject.component.api.ServerConfigurationService" />
+		<property name="courseManagementService"
+			ref="org.sakaiproject.coursemanagement.api.CourseManagementService"/>	
 	</bean>
 
 </beans>

@@ -63,6 +63,8 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     private Map<String, String> osylSitesMap;
 
+    private Map<String, String> coursesMap;
+
     private String osylPackageUrl;
 
     /**
@@ -145,6 +147,10 @@ public class OsylManagerController implements FireOsylManagerEvents {
     public void setOsylSitesMap(Map<String, String> osylSitesMap) {
 	this.osylSitesMap = osylSitesMap;
     }
+
+    public void setCoursesMap(Map<String, String> coursesMap) {
+    	this.coursesMap = coursesMap ;
+        }
 
     //SERVER CALLS
     /**
@@ -257,4 +263,15 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	OsylManagerRPCController.getInstance().dissociate(siteId, parentId, callback);
     }
 
+    public void associateToCM (String courseSectionId, String siteId, AsyncCallback<Boolean> callback){
+    OsylManagerRPCController.getInstance().associateToCM(courseSectionId, siteId, callback);	
+    }
+    
+    public Map<String, String> getCMCourses(){
+    	return coursesMap;
+    }
+    
+    public void getCMCourses(AsyncCallback<Map<String,String>> callback){
+    	OsylManagerRPCController.getInstance().getCMCourses(callback);
+    }
 }
