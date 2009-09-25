@@ -455,6 +455,7 @@ public class OsylController implements SavePushButtonEventHandler,
 			OsylRemoteServiceLocator.getEditorRemoteService()
 			.getSerializedCourseOutline(callback);
 		}
+		//OsylRemoteServiceLocator.getEditorRemoteService().getSerializedCourseOutline(callback);
     }
 
     /**
@@ -1483,7 +1484,7 @@ public class OsylController implements SavePushButtonEventHandler,
      * 
      * @return the adjusted module URL
      */
-    public String getAdjustedModuleBaseURL() {
+    public String getPublishedModuleBaseURL() {
 	String moduleBaseURL = GWT.getModuleBaseURL();
 	moduleBaseURL = moduleBaseURL.substring(0, moduleBaseURL.length() - 1);
 	moduleBaseURL =
@@ -1645,18 +1646,6 @@ public class OsylController implements SavePushButtonEventHandler,
 
     public String getTemporaryCitationList() {
 	return citationListId;
-    }
-
-    private static final String RPC_QUALIFIED_NAME =
-	    "org.sakaiquebec.opensyllabus.OsylEditorEntryPoint/";
-
-    public String getWebAppUrl() {
-	// The base url contains the qualified name. It's not compatible
-	// with the tool servlet mapping
-	String url = GWT.getModuleBaseURL();
-	String cleanUrl =
-		url.substring(0, url.length() - RPC_QUALIFIED_NAME.length());
-	return cleanUrl;
     }
 
 }

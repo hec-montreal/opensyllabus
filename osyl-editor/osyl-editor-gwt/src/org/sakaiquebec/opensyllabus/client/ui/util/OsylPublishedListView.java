@@ -100,7 +100,7 @@ public class OsylPublishedListView extends Composite implements
 	    link = "OsylPublishedEntryPoint_" + securityGroup + ".html";
 	} else {
 	    link =
-		    osylController.getAdjustedModuleBaseURL()
+		    osylController.getPublishedModuleBaseURL()
 			    + "/index.jsp?ro=true&sg=" + securityGroup;
 	}
 	HTML htmlLink =

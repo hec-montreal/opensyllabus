@@ -74,7 +74,7 @@ public class OsylRemoteServiceLocator {
 			return ((OsylDirectoryRemoteServiceJsonImpl) directoryRemoteService)
 			.getUploadFileUrl(relativePathFolder);
 		} else {
-			return OsylController.getInstance().getWebAppUrl() + "upload?dir=" + relativePathFolder;
+			return getWebAppUrl() + "upload?dir=" + relativePathFolder;
 		}
 	}
 
@@ -97,7 +97,7 @@ public class OsylRemoteServiceLocator {
 			// OsylEditorEntryPoint.gwt.xml (for testing).
 			ServiceDefTarget pointService = (ServiceDefTarget) serviceProxy;
 
-			pointService.setServiceEntryPoint(OsylController.getInstance().getWebAppUrl() + "OsylGwtService");
+			pointService.setServiceEntryPoint(getWebAppUrl() + "OsylGwtService");
 
 			return serviceProxy;
 		}
@@ -121,7 +121,7 @@ public class OsylRemoteServiceLocator {
 			// OsylEditorEntryPoint.gwt.xml (for testing).
 			ServiceDefTarget pointService = (ServiceDefTarget) serviceProxy;
 
-			pointService.setServiceEntryPoint(OsylController.getInstance().getWebAppUrl() + "OsylDirectoryGwtService");
+			pointService.setServiceEntryPoint(getWebAppUrl() + "OsylDirectoryGwtService");
 
 			return serviceProxy;
 		} else {
@@ -144,6 +144,18 @@ public class OsylRemoteServiceLocator {
 			return new OsylCitationRemoteServiceJsonImpl();
 		}
 	}
+
+    private static final String RPC_QUALIFIED_NAME =
+	    "org.sakaiquebec.opensyllabus.OsylEditorEntryPoint/";
+
+    private static String getWebAppUrl() {
+	// The base url contains the qualified name. It's not compatible
+	// with the tool servlet mapping
+	String url = GWT.getModuleBaseURL();
+	String cleanUrl =
+		url.substring(0, url.length() - RPC_QUALIFIED_NAME.length());
+	return cleanUrl;
+    }
 
 
 }
