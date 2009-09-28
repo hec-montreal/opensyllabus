@@ -127,6 +127,8 @@ public class OsylServiceImpl implements OsylService {
 	 */
 	private OsylSecurityService osylSecurityService;
 
+	private CORelationDao coRelationDao;
+
 	/**
 	 * Sets the {@link OsylSecurityService}.
 	 * 
