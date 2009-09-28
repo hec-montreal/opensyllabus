@@ -818,7 +818,64 @@ public class OsylController implements SavePushButtonEventHandler,
 	    alertBox.show();
 	}
     }
+    /**
+	 * Checks if the current site has a relation (child - parent or ancestor) with the site
+	 * containing the resource. If it is the case, we allow the site to access
+	 * to the resource
+	 * 
+	 * @param resourceURI
+	 * @return
+	 */
+	public void checkSitesRelation(String resourceURI){
+		try {
+			final OsylController caller = this;
+			AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+				public void onSuccess(Void relation) {
+					try {
+						System.out
+						.println("RPC SUCCESS - checkSitesRelation(...)");
+						caller.checkSitesRelationCB(true);
+					} catch (Exception error) {
+						System.out
+						.println("Error - Unable to checkSitesRelation(...) on RPC Success: "
+								+ error.toString());
+						Window
+						.alert("Error - Unable to checkSitesRelation(...) on RPC Success: "
+								+ error.toString());
+						caller
+						.unableToInitServer("Error - Unable to checkSitesRelation(...) on RPC Success: "
+								+ error.toString());
+					}
+				}
+	
+				// And we define the behavior in case of failure
+				public void onFailure(Throwable error) {
+					System.out
+					.println("RPC FAILURE - checkSitesRelation(...): "
+							+ error.toString()
+							+ " Hint: Check GWT version");
+					Window.alert("RPC FAILURE - checkSitesRelation(...): "
+							+ error.toString() + " Hint: Check GWT version");
+					caller
+					.unableToInitServer("RPC FAILURE - checkSitesRelation(...): "
+							+ error.toString()
+							+ " Hint: Check GWT version");
+					caller.checkSitesRelationCB(false);
+				}
+			};
+			//TODO: It is here that we allow or unable access to the resource
+			OsylRemoteServiceLocator.getEditorRemoteService().checkSitesRelation(resourceURI, callback);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+ 
+	}
 
+	public void checkSitesRelationCB(boolean relation){
+		
+	}
+
+	
     /**
      * Requests the URL where we can access the CourseOutline whose ID is
      * specified. It must have been published previously.
@@ -1643,7 +1700,8 @@ public class OsylController implements SavePushButtonEventHandler,
     public void setInPreview(boolean inPreview) {
 	this.inPreview = inPreview;
     }
-
+    // TODO: this method is not used and no longer needed, it should be removed
+	// - Awa
     public String getTemporaryCitationList() {
 	return citationListId;
     }

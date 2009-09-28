@@ -181,4 +181,14 @@ public interface OsylEditorGwtService extends RemoteService {
 	 */
 	public ResourcesLicencingInfo getResourceLicenceInfo();
 
+    /**
+	 * Checks if the current site has a relation (child - parent) with the site
+	 * containing the resource. If it is the case, we allow the site to access
+	 * to the resource
+	 * 
+	 * @param resourceURI
+	 * @return
+	 */
+	public boolean checkSitesRelation(String resourceURI);
+
 }

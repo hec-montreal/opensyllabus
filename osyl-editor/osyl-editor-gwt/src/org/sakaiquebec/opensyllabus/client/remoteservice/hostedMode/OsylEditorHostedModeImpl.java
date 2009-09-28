@@ -322,4 +322,11 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 		callback.onSuccess("hostedId");
 	}
 
+
+	public void checkSitesRelation(String resourceURI,
+			AsyncCallback<Void> callback){
+		callback.onSuccess(null);
+	}
+
+
 }

@@ -421,4 +421,8 @@ OsylEditorGwtService {
 		return osylServices.getOsylService().getResourceLicenceInfo();
 	}
 
+	public boolean checkSitesRelation(String resourceURI) {
+		return osylServices.getOsylService().checkSitesRelation(resourceURI);
+	}
+
 }

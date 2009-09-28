@@ -23,10 +23,14 @@ package org.sakaiquebec.opensyllabus.api;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 
 /**
- * This interface intents to replace the resource service interface. It lists all functions and methods related to Osyl Editor and the resources or tools used in it. It acts as a hub to other sakai tools, such as assignment and citations. It works together with the SDATA servlet.
- * @author  <a href="mailto:tom.landry@crim.ca">Tom Landry</a>
- * @author  <a href="mailto:mame-awa.diopy@hec.ca">Mame Awa Diop</a>
- * @version  $Id: $
+ * This interface intents to replace the resource service interface. It lists
+ * all functions and methods related to Osyl Editor and the resources or tools
+ * used in it. It acts as a hub to other sakai tools, such as assignment and
+ * citations. It works together with the SDATA servlet.
+ * 
+ * @author <a href="mailto:tom.landry@crim.ca">Tom Landry</a>
+ * @author <a href="mailto:mame-awa.diopy@hec.ca">Mame Awa Diop</a>
+ * @version $Id: $
  */
 public interface OsylService {
 
@@ -131,4 +135,14 @@ public interface OsylService {
      */
     public ResourcesLicencingInfo getResourceLicenceInfo();
     
+    /**
+	 * Checks if the current site has a relation (child - parent) with the site
+	 * containing the resource. If it is the case, we allow the site to access
+	 * to the resource
+	 * 
+	 * @param resourceURI
+	 * @return
+	 */
+	public boolean checkSitesRelation(String resourceURI);
+
 }

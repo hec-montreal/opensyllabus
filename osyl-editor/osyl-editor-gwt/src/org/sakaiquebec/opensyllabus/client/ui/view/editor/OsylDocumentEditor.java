@@ -34,6 +34,7 @@ import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylDisclosureListener;
+import org.sakaiquebec.opensyllabus.client.ui.listener.OsylLinkClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylAbstractBrowserComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylFileBrowser;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
@@ -344,7 +345,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 	// We keep track that we are now in view-mode
 	setInEditionMode(false);
-
+	
 	getMainPanel().clear();
 	// If we don't reconstruct the viewer layout the new size of our HTML
 	// components will not be effective until we mouse over...
@@ -352,8 +353,11 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	getMainPanel().add(getViewerPanel());
 	// We get the text to display from the model
 	getViewer().setHTML(getView().getTextFromModel());
-	getViewerName().setHTML("(" + getView().getDocName() + ")");
-	getViewerDesc().setHTML(getView().getDescriptionFromModel());
+	getViewer().addClickListener(
+				new OsylLinkClickListener(getView(), getView()
+						.getTextFromModel()));
+		getViewerName().setHTML("(" + getView().getDocName() + ")");
+		getViewerDesc().setHTML(getView().getDescriptionFromModel());
 
 	// If we are not in read-only mode, we display some meta-info and add
 	// buttons and listeners enabling edition or deletion:

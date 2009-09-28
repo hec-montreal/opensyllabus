@@ -294,7 +294,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 			throws Exception {
 		Site site = null;
 		if (!siteService.siteExists(siteTitle)) {
-			site = siteService.addSite(siteTitle, getSiteType());
+			site = siteService.addSite(siteTitle, "osylEditor");
 			site.setTitle(siteTitle);
 			site.setPublished(true);
 			site.setJoinable(true);

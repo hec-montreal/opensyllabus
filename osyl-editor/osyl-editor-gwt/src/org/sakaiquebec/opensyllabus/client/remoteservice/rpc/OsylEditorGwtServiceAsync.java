@@ -187,4 +187,15 @@ public interface OsylEditorGwtServiceAsync {
 	 */
 	public void getResourceLicenceInfo(
 			AsyncCallback<ResourcesLicencingInfo> callback);
+	
+    /**
+	 * Checks if the current site has a relation (child - parent) with the site
+	 * containing the resource. If it is the case, we allow the site to access
+	 * to the resource
+	 * 
+	 * @param resourceURI
+	 * @return
+	 */
+	public void checkSitesRelation(String resourceURI, AsyncCallback<Void> callback);
+
 }

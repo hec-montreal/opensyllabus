@@ -37,6 +37,8 @@ import org.sakaiproject.time.cover.TimeService;
 import org.sakaiquebec.opensyllabus.api.OsylService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
+import org.sakaiquebec.opensyllabus.common.dao.CORelation;
+import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 
@@ -656,6 +658,41 @@ public class OsylServiceImpl implements OsylService {
 		resourcesLicencingInfo.setCopyrightTypeList(copyrightTypeList);
 		resourcesLicencingInfo.setDefaultCopyright(defaultCopyright);
 		return resourcesLicencingInfo;
+	}
+
+	public boolean checkSitesRelation(String resourceURI) {
+		try {
+			String currentSiteId = osylSiteService.getCurrentSiteId();
+			Site resourceSite;
+			String parent = coRelationDao
+					.getParentOfCourseOutline(currentSiteId);
+			if (resourceURI.indexOf(parent, 0) != -1) {
+				System.err.println("le parent est " + parent);
+				// temporarily allow the user to read and write from assignments
+				// (asn.revise permission)
+
+				if (osylSecurityService.isAllowedToEdit(parent)) {
+					SecurityService.pushAdvisor(new SecurityAdvisor() {
+						public SecurityAdvice isAllowed(String userId,
+								String function, String reference) {
+							return SecurityAdvice.ALLOWED;
+						}
+					});
+
+				}
+
+				// clear the permission
+
+				// if (osylSecurityService.isAllowedToEdit(siteId)) {
+				// SecurityService.clearAdvisors(); }
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return false;
 	}
 
 }
