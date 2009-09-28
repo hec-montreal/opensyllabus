@@ -226,7 +226,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     /**
      * Copies work's folder content to publish folder.
      * 
-     * @return true.
      */
     private void copyWorkToPublish(Map<String, String> documentSecurityMap)
 	    throws Exception {
@@ -242,7 +241,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    @SuppressWarnings("unchecked")
 	    List<ContentEntity> members = workContent.getMemberResources();
 
-	    // We removes all resources in the publish directory collection
+	    // We remove all resources in the publish directory collection
 	    ContentCollection publishContent =
 		    contentHostingService.getCollection(id_publish);
 
@@ -311,26 +310,23 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	}
     }
 
-    /**
-     * Applies sequentially 2 xsl transformations resulting ion 2 HTML files in
-     * the specified directory according to the given security level
-     * 
-     * @param webbappDir the application Webbapp directory
-     */
 
     /**
-     * Applies a Xsl transformation to a Xml file and put resulting HTML in
-     * specified directory using a security level
+     * Applies an XSL transformation to the XML content specified and return
+     * the resulting XML.
      * 
-     * @param webbappDir the application Webbapp directory
+     * @param webappDir the current webapp directory
+     * @param content the course outline XML to transform
+     * @param xslSecurityFile the XSL file to use
      */
-    private String XslTransform(String webbappDir, String content,
+    private String XslTransform(String webappDir, String content,
 	    String xslSecurityFile) throws Exception {
+
 	TransformerFactory tFactory = TransformerFactory.newInstance();
 
 	// Retrieve xml and xsl from the webapps/xslt
 	File coXslFile =
-		new File(webbappDir + File.separator
+		new File(webappDir + File.separator
 			+ OsylSiteService.XSLT_DIRECTORY + File.separator,
 			xslSecurityFile + OsylSiteService.XSL_FILE_EXTENSION);
 	try {
@@ -338,20 +334,19 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    StreamSource coXmlContentSource =
 		    new StreamSource(new ByteArrayInputStream(content
 			    .getBytes("UTF-8")));
-	    // retrieve all Xsls sources
+	    // retrieve the Xsl source
 	    StreamSource coXslContentSource = new StreamSource(coXslFile);
-	    // we use a ByteArrayOutputStream to not have to use a file
+	    // we use a ByteArrayOutputStream to avoid using a file
 	    ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
 	    StreamResult xmlResult = new StreamResult(out);
 
 	    Transformer transformerXml =
 		    tFactory.newTransformer(coXslContentSource);
 	    transformerXml.transform(coXmlContentSource, xmlResult);
-	    content = out.toString("UTF-8");
+	    return out.toString("UTF-8");
 	} catch (Exception e) {
 	    log.error("Unable to transform XML", e);
-	    // throw e;
+	    throw e;
 	}
-	return content;
     }
 }
