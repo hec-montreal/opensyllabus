@@ -35,11 +35,9 @@ import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylDisclosureListener;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylLinkClickListener;
-import org.sakaiquebec.opensyllabus.client.ui.util.OsylAbstractBrowserComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylFileBrowser;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxDocumentView;
-import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
@@ -199,10 +197,10 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
     private void constructViewerLayout() {
 	// Now we add our widgets with the following layout
-	//  ____________________________________________
-	// | link to the doc | (document name)          |
+	// ____________________________________________
+	// | link to the doc | (document name) |
 	// |--------------------------------------------|
-	// | description                                |
+	// | description |
 	// |____________________________________________|
 	//
 	if (isReadOnly()) {
@@ -301,9 +299,11 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
     public boolean prepareForSave() {
 	if (getResourceURI() == null) {
 	    OsylAlertDialog oad =
-		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
-			    getView().getUiMessage(
-				    "DocumentEditor.save.error.documentUndefined"));
+		    new OsylAlertDialog(
+			    getView().getUiMessage("Global.error"),
+			    getView()
+				    .getUiMessage(
+					    "DocumentEditor.save.error.documentUndefined"));
 	    oad.center();
 	    oad.show();
 	    return false;
@@ -345,7 +345,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 	// We keep track that we are now in view-mode
 	setInEditionMode(false);
-	
+
 	getMainPanel().clear();
 	// If we don't reconstruct the viewer layout the new size of our HTML
 	// components will not be effective until we mouse over...
@@ -354,10 +354,10 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	// We get the text to display from the model
 	getViewer().setHTML(getView().getTextFromModel());
 	getViewer().addClickListener(
-				new OsylLinkClickListener(getView(), getView()
-						.getTextFromModel()));
-		getViewerName().setHTML("(" + getView().getDocName() + ")");
-		getViewerDesc().setHTML(getView().getDescriptionFromModel());
+		new OsylLinkClickListener(getView(), getView()
+			.getTextFromModel()));
+	getViewerName().setHTML("(" + getView().getDocName() + ")");
+	getViewerDesc().setHTML(getView().getDescriptionFromModel());
 
 	// If we are not in read-only mode, we display some meta-info and add
 	// buttons and listeners enabling edition or deletion:
@@ -564,9 +564,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	editorDesc.setHeight(originalEditorDescHeight + "px");
     }
 
-
     protected OsylFileBrowser getBrowser() {
-	return (OsylFileBrowser)browser;
+	return (OsylFileBrowser) browser;
     }
 
     /**

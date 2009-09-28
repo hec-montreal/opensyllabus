@@ -27,8 +27,6 @@ import java.util.Map;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 
-import com.google.gwt.user.client.Window;
-
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
@@ -80,16 +78,16 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
      * @return the url to our library
      */
     public String getUrl() {
-        return getProperty(CitationSchema.URL);
+	return getProperty(CitationSchema.URL);
     }
 
     /**
      * @param url to our library
      */
     private void setUrl(String url) {
-        this.url = url;
+	this.url = url;
     }
-   
+
     /**
      * @param Id the Id to set (citationListId)
      */
@@ -267,7 +265,7 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 	    infos += ".";
 
 	} else if (type.equals(CitationSchema.TYPE_ARTICLE)) {
-    	// <auteurs>, <titre>, <périodique>, <date>, <volume>, 
+	    // <auteurs>, <titre>, <périodique>, <date>, <volume>,
 	    // <numéro>, <pages>, <ISSN>, <DOI>
 	    infos +=
 		    getPropertyValue(CitationSchema.CREATOR).equals("") ? ""
@@ -309,7 +307,7 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
     public String getItemTag() {
 	return "UtilityRemoteFileBrowser_citationTag";
     }
-    
+
     @Override
     public boolean equals(Object obj) {
 	OsylCitationItem oci = (OsylCitationItem) obj;

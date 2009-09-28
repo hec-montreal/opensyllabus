@@ -20,36 +20,32 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.client.ui.listener;
 
-import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxDocumentView;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.Window;
 
 /**
- *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public class OsylLinkClickListener implements ClickListener{
+public class OsylLinkClickListener implements ClickListener {
 
-	private OsylResProxDocumentView view;
-	private String url;
-	
-	public OsylLinkClickListener (OsylResProxDocumentView view, String url){
-		this.view = view;
-		this.url = url;
-		
+    private OsylResProxDocumentView view;
+    private String url;
+
+    public OsylLinkClickListener(OsylResProxDocumentView view, String url) {
+	this.view = view;
+	this.url = url;
+
+    }
+
+    public void onClick(Widget sender) {
+	String parent = view.getModel().getParent().getUuidParent();
+	if (parent != null) {
+	    view.getController().checkSitesRelation(url);
+	    // Window.alert(url + " en plus nous avons " + parent);
 	}
-	public void onClick(Widget sender) {
-		String parent = view.getModel().getParent()
-				.getUuidParent();
-		if (parent != null) {
-			view.getController().checkSitesRelation(url);
-			//Window.alert(url + " en plus nous avons " + parent);
-		}
-	}
+    }
 
 }
-
