@@ -37,6 +37,8 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 
     private boolean firstTimeRefreshing = true;
 
+    private OsylCitationListItem currentCitationListItem = null;
+
     public OsylCitationBrowser() {
 	super();
     }
@@ -157,16 +159,43 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 
     private void refreshBrowserWithCitationListContent(
 	    OsylCitationListItem osylCitationListItem) {
+	currentCitationListItem = osylCitationListItem;
 	setFolderAddButtonEnabled(false);
 	setAddFileButtonEnabled(false);// TODO delete this when add could add a
-				       // citation into an existing list
+	// citation into an existing list
+	setCitationListAsDirectory(currentCitationListItem);
 	refreshFileListing(osylCitationListItem.getCitations());
 
+    }
+
+    private void setCitationListAsDirectory(
+	    OsylCitationListItem osylCitationListItem) {
+	getCurrentDirectory().setDirectoryPath(
+		getCurrentDirectory().getDirectoryPath() + "/"
+			+ osylCitationListItem.getResourceName());
+	getCurrentDirectoryTextBox().setText(
+		getCurrentDirectoryTextBox().getText() + "/"
+			+ osylCitationListItem.getResourceName());
+	getCurrentDirectory().setFilesList(
+		currentCitationListItem.getCitations());
     }
 
     protected void onUpButtonClick() {
 	setFolderAddButtonEnabled(true);
 	setAddFileButtonEnabled(true);
+	currentCitationListItem = null;
+    }
+
+    public void onUploadFile(UploadFileEvent event) {
+	firstTimeRefreshing = true;
+	setItemToSelect(getSelectedAbstractBrowserItem());
+	String citationListDirectory =
+		getCurrentDirectory().getDirectoryPath().substring(
+			0,
+			getCurrentDirectory().getDirectoryPath().lastIndexOf(
+				"/"));
+	getCurrentDirectory().setDirectoryPath(citationListDirectory);
+	getRemoteDirectoryListing(citationListDirectory);
     }
 
 }

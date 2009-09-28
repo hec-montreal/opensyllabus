@@ -796,7 +796,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     /** to refresh the listing */
     public void onUploadFile(UploadFileEvent event) {
 	// setItemToSelect(event.getSource().toString());
-	Window.alert(event.getSource().toString());
 	getRemoteDirectoryListing(getCurrentDirectory().getDirectoryPath());
     }
 
