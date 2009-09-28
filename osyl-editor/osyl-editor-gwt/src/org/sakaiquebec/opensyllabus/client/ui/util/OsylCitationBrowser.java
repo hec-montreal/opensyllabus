@@ -187,15 +187,19 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
     }
 
     public void onUploadFile(UploadFileEvent event) {
-	firstTimeRefreshing = true;
-	setItemToSelect(getSelectedAbstractBrowserItem());
-	String citationListDirectory =
-		getCurrentDirectory().getDirectoryPath().substring(
-			0,
-			getCurrentDirectory().getDirectoryPath().lastIndexOf(
-				"/"));
-	getCurrentDirectory().setDirectoryPath(citationListDirectory);
-	getRemoteDirectoryListing(citationListDirectory);
+	if (currentCitationListItem != null) {
+	    firstTimeRefreshing = true;
+	    setItemToSelect(getSelectedAbstractBrowserItem());
+	    String citationListDirectory =
+		    getCurrentDirectory().getDirectoryPath().substring(
+			    0,
+			    getCurrentDirectory().getDirectoryPath()
+				    .lastIndexOf("/"));
+	    getCurrentDirectory().setDirectoryPath(citationListDirectory);
+	    getRemoteDirectoryListing(citationListDirectory);
+	} else {
+	    super.onUploadFile(event);
+	}
     }
 
 }
