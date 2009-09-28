@@ -130,6 +130,15 @@ public class OsylServiceImpl implements OsylService {
 	private CORelationDao coRelationDao;
 
 	/**
+	 * Sets the {@link CORelationDao}.
+	 * 
+	 * @param configDao
+	 */
+	public void setCoRelationDao(CORelationDao relationDao) {
+		this.coRelationDao = relationDao;
+	}
+
+	/**
 	 * Sets the {@link OsylSecurityService}.
 	 * 
 	 * @param securityService
