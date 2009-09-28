@@ -127,6 +127,10 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     private ArrayList<RFBItemSelectionEventHandler> RFBFileSelectionEventHandlerList;
 
     private ArrayList<ItemListingAcquiredEventHandler> fileListingAcquiredEventHandlerList;
+    
+    private PushButton folderAddButton ;
+    
+    private PushButton addFileButton;
 
     // Image Bundle
     private OsylImageBundleInterface osylImageBundle =
@@ -220,7 +224,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	buttonPanel.add(upButton);
 
 	// Folder Creation button
-	PushButton folderAddButton =
+	folderAddButton =
 		createTopButton(getOsylImageBundle().folderAdd(),
 			getController().getUiMessage(
 				"Browser.addFolderButton.tooltip"));
@@ -228,7 +232,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	buttonPanel.add(folderAddButton);
 
 	// Add file button
-	PushButton addFileButton = createAddPushButton();
+	addFileButton = createAddPushButton();
 	buttonPanel.add(addFileButton);
 
 	// 2nd row: File Listing
@@ -555,6 +559,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	    getCurrentSelectionTextBox().setText("");
 	    getFileListing().removeStyleName(
 		    "Osyl-RemoteFileBrowser-WaitingState");
+	    onUpButtonClick();
 	}
     }
 
@@ -870,6 +875,19 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	notifyFileListingAcquiredEventHandlers();
     }
 
+    
+    protected void setFolderAddButtonEnabled(boolean enabled){
+	folderAddButton.setEnabled(enabled);
+    }
+    
+    protected void setAddFileButtonEnabled(boolean enabled){
+	addFileButton.setEnabled(enabled);
+    }
+    
+    protected void onUpButtonClick(){
+	//nothing to do
+    }
+    
     // ABSTRACT METHOD
 
     protected abstract PushButton createAddPushButton();

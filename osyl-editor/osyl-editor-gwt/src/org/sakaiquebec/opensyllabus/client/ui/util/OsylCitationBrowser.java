@@ -35,20 +35,20 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 
-    
-    private boolean firstTimeRefreshing=true;
-    
+    private boolean firstTimeRefreshing = true;
+
     public OsylCitationBrowser() {
 	super();
     }
 
-
     /**
      * Constructor.
+     * 
      * @param model
      * @param newController
      */
-    public OsylCitationBrowser(String newResDirName, String citationId, String citationListPath) {
+    public OsylCitationBrowser(String newResDirName, String citationId,
+	    String citationListPath) {
 	super(newResDirName, null);
 	setCitationIdToSelect(citationId, citationListPath);
     }
@@ -68,7 +68,7 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 	ofi.setFilePath(citationListPath);
 	setItemToSelect(ofi);
     }
-    
+
     private final class FileAddButtonClickListener implements ClickListener {
 
 	public void onClick(Widget sender) {
@@ -89,52 +89,52 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 	return getController().getUiMessage("Browser.selected_citation");
     }
 
-
-
     @Override
     protected void onFileDoubleClicking() {
 	if (getSelectedAbstractBrowserItem() instanceof OsylCitationListItem) {
 	    OsylCitationListItem osylCitationListItem =
 		    (OsylCitationListItem) getSelectedAbstractBrowserItem();
 	    try {
-		refreshFileListing(osylCitationListItem.getCitations());
+		refreshBrowserWithCitationListContent(osylCitationListItem);
 	    } finally {
 		getFileListing().removeStyleName(
 			"Osyl-RemoteFileBrowser-WaitingState");
 		removeStyleName("Osyl-RemoteFileBrowser-WaitingState");
 	    }
+
 	} else {
 	    OsylCitationItem citation =
 		    (OsylCitationItem) getSelectedAbstractBrowserItem();
 	    openEditor(citation);
 	}
     }
-    
+
     @Override
-	public void getRemoteDirectoryListing(String directoryPath) {
-		getFileListing().addStyleName("Osyl-RemoteFileBrowser-WaitingState");
-		
-		if (TRACE){
-			Window.alert("DIR = " + directoryPath);
-		}
-		
-		OsylRemoteServiceLocator.getCitationRemoteService().getRemoteDirectoryContent(directoryPath, 
-					getRemoteDirListingRespHandler());
+    public void getRemoteDirectoryListing(String directoryPath) {
+	getFileListing().addStyleName("Osyl-RemoteFileBrowser-WaitingState");
+
+	if (TRACE) {
+	    Window.alert("DIR = " + directoryPath);
 	}
-    
-    public void refreshBrowser(){
-	if(firstTimeRefreshing){
-	    firstTimeRefreshing=false;
+
+	OsylRemoteServiceLocator.getCitationRemoteService()
+		.getRemoteDirectoryContent(directoryPath,
+			getRemoteDirListingRespHandler());
+    }
+
+    public void refreshBrowser() {
+	if (firstTimeRefreshing) {
+	    firstTimeRefreshing = false;
 	    firstTimeRefreshBrowser();
-	}else{
+	} else {
 	    super.refreshBrowser();
 	}
     }
-    
-    public void firstTimeRefreshBrowser(){
+
+    public void firstTimeRefreshBrowser() {
 	boolean fileItemFound = false;
 	OsylAbstractBrowserItem itemToSelect = getItemToSelect();
-	OsylCitationListItem osylCitationListItem=null;
+	OsylCitationListItem osylCitationListItem = null;
 	if (itemToSelect != null) {
 
 	    for (int i = 0; i < getCurrentDirectory().getFilesList().size(); i++) {
@@ -143,17 +143,30 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 
 		if (fileItem.getFilePath().equals(itemToSelect.getFilePath())) {
 		    fileItemFound = true;
-		    osylCitationListItem = (OsylCitationListItem)fileItem;
+		    osylCitationListItem = (OsylCitationListItem) fileItem;
 		}
 	    }
 	}
 	if (!fileItemFound) {
 	    setSelectedAbstractBrowserItem(null);
 	    getFileListing().setSelectedIndex(-1);
-	}
-	else{
-	    refreshFileListing(osylCitationListItem.getCitations());
-	    super.refreshBrowser();
+	} else {
+	    refreshBrowserWithCitationListContent(osylCitationListItem);
 	}
     }
+
+    private void refreshBrowserWithCitationListContent(
+	    OsylCitationListItem osylCitationListItem) {
+	setFolderAddButtonEnabled(false);
+	setAddFileButtonEnabled(false);// TODO delete this when add could add a
+				       // citation into an existing list
+	refreshFileListing(osylCitationListItem.getCitations());
+
+    }
+
+    protected void onUpButtonClick() {
+	setFolderAddButtonEnabled(true);
+	setAddFileButtonEnabled(true);
+    }
+
 }
