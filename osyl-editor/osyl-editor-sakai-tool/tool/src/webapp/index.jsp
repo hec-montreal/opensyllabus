@@ -4,7 +4,7 @@
 <%@ page import="org.sakaiquebec.opensyllabus.server.OsylBackingBean"%>
 <%@ page import="org.sakaiquebec.opensyllabus.shared.model.COSerialized"%>
 <%@ page import="org.springframework.web.context.WebApplicationContext"%>
-<%@ page import="org.sakaiquebec.opensyllabus.shared.api.SecurityInterface"%>
+<%@ page import="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService"%>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="org.sakaiproject.util.ResourceLoader"%>
 <%@ page import="java.io.File"%>
@@ -27,9 +27,9 @@
 	// We need a full maintain access to call them. Since they're called at each tool access,
 	// let's make sure that only a user with maintain rights will init the tool
 	if (osylMainBean.getOsylSecurityService().isAllowedToEdit(osylMainBean.getOsylSiteService().getCurrentSiteId())
-			|| SecurityInterface.SECURITY_ROLE_PROJECT_MAINTAIN
+			|| OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN
 					.equals(userRole)
-			|| SecurityInterface.SECURITY_ROLE_COURSE_MAINTAIN
+			|| OsylSecurityService.SECURITY_ROLE_COURSE_MAINTAIN
 					.equals(userRole)) {
 		osylMainBean.getOsylService().initService();
 	}

@@ -32,6 +32,26 @@ package org.sakaiquebec.opensyllabus.common.api;
 public interface OsylSecurityService {
 
     /**
+     * Project access role value.
+     */
+    public static final String SECURITY_ROLE_PROJECT_ACCESS = "access";
+
+    /**
+     * Course access role value.
+     */
+    public static final String SECURITY_ROLE_COURSE_ACCESS = "Student";
+
+    /**
+     * Project maintain role  value.
+     */
+    public static final String SECURITY_ROLE_PROJECT_MAINTAIN = "maintain";
+
+    /**
+     * Course maintain role  value.
+     */
+    public static final String SECURITY_ROLE_COURSE_MAINTAIN = "Instructor";
+    
+    /**
      * Takes an XML file and strips tags based on a user role
      * 
      * @param inputXml the XML content to strip

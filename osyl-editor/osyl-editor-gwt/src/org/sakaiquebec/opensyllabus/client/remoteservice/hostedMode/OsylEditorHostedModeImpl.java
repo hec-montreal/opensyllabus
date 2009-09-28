@@ -27,7 +27,6 @@ import java.util.Map;
 import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylHostedModeInit;
 import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylHostedModeTransformUtil;
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtServiceAsync;
-import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
@@ -89,7 +88,7 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	}
 
 	public void getCurrentUserRole(AsyncCallback<String> callback) {
-		callback.onSuccess(SecurityInterface.SECURITY_ROLE_PROJECT_MAINTAIN);
+		callback.onSuccess("maintain");
 	}
 
 	public void getResourceLicenceInfo(

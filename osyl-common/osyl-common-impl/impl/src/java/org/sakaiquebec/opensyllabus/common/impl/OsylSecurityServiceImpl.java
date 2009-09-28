@@ -154,7 +154,7 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 		ToolSession toolSession = sessionManager.getCurrentToolSession();
 
 		if (securityService.isSuperUser())
-			role = SecurityInterface.SECURITY_ROLE_PROJECT_MAINTAIN;
+			role = OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN;
 		else
 			role = authzService.getUserRole(toolSession.getUserId(),
 					getSiteRealmID());
