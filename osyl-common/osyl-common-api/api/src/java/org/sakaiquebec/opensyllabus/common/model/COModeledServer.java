@@ -1216,7 +1216,7 @@ public class COModeledServer {
 
     private void associateChild(COElementAbstract childElement,
 	    COElementAbstract parentElement) {
-	if (childElement.getType().equals(parentElement.getType())) {
+	if ((parentElement.isCourseOutlineContent() && childElement.isCourseOutlineContent()) || (childElement.getType().equals(parentElement.getType()))) {
 	    if (parentElement.isCOUnitContent()) {
 		childElement.setUuidParent(parentElement.getUuid());
 	    } else {
