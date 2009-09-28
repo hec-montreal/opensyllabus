@@ -196,7 +196,8 @@ public class OsylCitationRemoteServiceJsonImpl extends
 
 	    private String getPath(String preJson) {
 		// String st = null;
-		// String json = preJson.substring(preJson.indexOf('{'),preJson.lastIndexOf('}'));
+		// String json =
+		// preJson.substring(preJson.indexOf('{'),preJson.lastIndexOf('}'));
 		String s =
 			preJson.substring(preJson.indexOf("\"path\":\"") + 8);
 		s = s.substring(0, s.indexOf("\""));

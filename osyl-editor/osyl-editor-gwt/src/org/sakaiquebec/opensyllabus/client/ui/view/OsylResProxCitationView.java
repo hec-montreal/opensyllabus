@@ -86,6 +86,7 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	if (uri != null) {
 	    setProperty(COPropertiesType.URI, uri);
 	}
+	setModelPropertyWithEditorProperty(CitationSchema.CITATIONID);
 	setModelPropertyWithEditorProperty(CitationSchema.TYPE);
 	setModelPropertyWithEditorProperty(CitationSchema.LONGTEXT);
 	setModelPropertyWithEditorProperty(CitationSchema.SHORTTEXT);
@@ -170,11 +171,15 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 
     private void setModelPropertyWithEditorProperty(String property) {
 	String value = getEditor().getSelectedCitationProperty(property);
-	if (!value.equals("undefined") && value != "")
+	if (value!=null && !value.equals("undefined") && value != "")
 	    setProperty(property, value);
 
     }
 
+    public String getCitationId(){
+	return getProperty(CitationSchema.CITATIONID);
+    }
+    
     /**
      * @param property
      * @return the property value

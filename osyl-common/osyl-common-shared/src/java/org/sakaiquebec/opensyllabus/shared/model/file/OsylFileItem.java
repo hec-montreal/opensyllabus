@@ -3,9 +3,9 @@ package org.sakaiquebec.opensyllabus.shared.model.file;
 import java.io.Serializable;
 
 public class OsylFileItem extends OsylAbstractBrowserItem implements Serializable {
-     
-    private static final long serialVersionUID=42L;
     
+    private static final long serialVersionUID = 374077851404414736L;
+
     private String mimeType;
     
     private String description;
@@ -57,6 +57,13 @@ public class OsylFileItem extends OsylAbstractBrowserItem implements Serializabl
 	return "UtilityRemoteFileBrowser_fileTag";
     }
     
-   
+    @Override
+    public boolean equals(Object obj) {
+	OsylFileItem ofi = (OsylFileItem) obj;
+	if (getFilePath().equals(ofi.getFilePath()))
+	    return true;
+	else
+	    return false;
+    }
     
 }

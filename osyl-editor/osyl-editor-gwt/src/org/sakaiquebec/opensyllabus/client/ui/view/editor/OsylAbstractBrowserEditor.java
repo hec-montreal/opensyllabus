@@ -81,7 +81,7 @@ public abstract class OsylAbstractBrowserEditor extends
 	}
 	
 	
-	final OsylAbstractBrowserComposite fileBrowser = getBrowser();
+	final OsylAbstractBrowserComposite fileBrowser = browser;
 	
 	AsyncCallback<Void> asyncCallback = new AsyncCallback<Void>() {
 		public void onFailure(Throwable caught) {
@@ -127,20 +127,12 @@ public abstract class OsylAbstractBrowserEditor extends
 
     public String getResourceURI() {
 	OsylAbstractBrowserItem item =
-		getBrowser().getSelectedAbstractBrowserItem();
+		browser.getSelectedAbstractBrowserItem();
 	if (item == null || item instanceof OsylDirectory) {
 	    return null;
 	} else {
 	    return item.getFilePath();
 	}
-    }
-
-
-    /**
-     * Return the browser used in the editor
-     */
-    protected OsylAbstractBrowserComposite getBrowser() {
-    	return browser;
     }
 
     // ABSTRACT METHOD
@@ -155,6 +147,4 @@ public abstract class OsylAbstractBrowserEditor extends
      */
     protected abstract void refreshBrowsingComponents();
     
-
-
 }

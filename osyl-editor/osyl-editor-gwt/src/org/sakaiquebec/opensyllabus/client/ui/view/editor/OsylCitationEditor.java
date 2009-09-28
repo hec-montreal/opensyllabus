@@ -267,8 +267,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 	createEditBox(getEditBoxTitle());
 
-	if (browser.getFileItemPathToSelect() == null) {
-		browser.setFileItemPathToSelect(getView().getDocPath());
+	if (browser.getItemToSelect() == null) {
+	    getBrowser().setCitationIdToSelect(getView().getCitationId(), getView().getDocPath());
 	}
 
     } // enterEdit
@@ -321,21 +321,20 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	browserPanel.add(label1);
 
 
-	    // SAKAI MODE
-	    String basePath = getView().getDocPath();
-	    String siteId = getView().getController().getSiteId();
-	    String resourcesPath = "group/" + siteId + "/";
-	    basePath =
-		    basePath == null ? resourcesPath
-			    + getView().getController().getDocFolderName() : basePath;
-		browser =
-		    new OsylCitationBrowser(basePath, getView().getDocPath() + "/"
-			    + getView().getDocName());
-	
+	// SAKAI MODE
+	String basePath = getView().getDocPath();
+	String siteId = getView().getController().getSiteId();
+	String resourcesPath = "group/" + siteId + "/";
+	basePath =
+		basePath == null ? resourcesPath
+			+ getView().getController().getDocFolderName()
+			: basePath;
+	browser = new OsylCitationBrowser(basePath, getView().getCitationId(), getView().getDocPath() + "/"
+		+ getView().getDocName());
 
-		browser.addEventHandler((RFBItemSelectionEventHandler) this);
-		browser.addEventHandler((RFBAddFolderEventHandler) this);
-		browser.addEventHandler((ItemListingAcquiredEventHandler) this);
+	browser.addEventHandler((RFBItemSelectionEventHandler) this);
+	browser.addEventHandler((RFBAddFolderEventHandler) this);
+	browser.addEventHandler((ItemListingAcquiredEventHandler) this);
 
 	browserPanel.add(browser);
 	browser.setWidth("100%");
@@ -487,6 +486,10 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
      * ==================== ADDED CLASSES or METHODS ====================
      */
 
+    protected OsylCitationBrowser getBrowser() {
+	return (OsylCitationBrowser) browser;
+    }
+    
     public String getDescription() {
 	if (isInEditionMode()) {
 	    return editorDesc.getHTML();
@@ -519,7 +522,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     protected void refreshBrowsingComponents() {
 
 	// Called to refresh the file browser components
-    	browser.refreshBrowser();
+    	getBrowser().refreshBrowser();
 
 	boolean isFound = false;
 
@@ -530,8 +533,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		OsylCitationItem selectedFile =
 			(OsylCitationItem) browser
 				.getSelectedAbstractBrowserItem();
-		citationPreviewLabel.setHTML(getView()
-			.getCitationsInfosAsLink(selectedFile));
+		citationPreviewLabel.setHTML(getView().getCitationsInfosAsLink(
+			selectedFile));
 		isFound = true;
 	    }
 

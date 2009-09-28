@@ -27,6 +27,8 @@ import java.util.Map;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 
+import com.google.gwt.user.client.Window;
+
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
@@ -306,6 +308,16 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
     @Override
     public String getItemTag() {
 	return "UtilityRemoteFileBrowser_citationTag";
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+	OsylCitationItem oci = (OsylCitationItem) obj;
+	if (getPropertyValue(CitationSchema.CITATIONID).equals(
+		oci.getPropertyValue(CitationSchema.CITATIONID)))
+	    return true;
+	else
+	    return false;
     }
 
 }

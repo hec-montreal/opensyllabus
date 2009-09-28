@@ -326,8 +326,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	editorDesc.setHTML(getView().getDescriptionFromModel());
 
 	createEditBox(getEditBoxTitle());
-	if (browser.getFileItemPathToSelect() == null) {
-	    browser.setFileItemPathToSelect(getView().getDocPath());
+	if (getBrowser().getItemToSelect() == null) {
+	    getBrowser().setItemPathToSelect(getView().getDocPath());
 	}
 	// refreshComponents();
 	saveButton.setEnabled(false);
@@ -564,9 +564,9 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	editorDesc.setHeight(originalEditorDescHeight + "px");
     }
 
-    @Override
-    protected OsylAbstractBrowserComposite getBrowser() {
-	return browser;
+
+    protected OsylFileBrowser getBrowser() {
+	return (OsylFileBrowser)browser;
     }
 
     /**

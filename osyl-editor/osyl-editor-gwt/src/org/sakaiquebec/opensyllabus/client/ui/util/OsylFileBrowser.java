@@ -22,6 +22,7 @@
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
 import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
+import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -46,8 +47,9 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
      * @param model
      * @param newController
      */
-    public OsylFileBrowser(String newResDirName, String fileItemNameToSelect) {
-	super(newResDirName, fileItemNameToSelect);
+    public OsylFileBrowser(String newResDirName, String pathToSelect) {
+	super(newResDirName, null);
+	setItemPathToSelect(pathToSelect);
     }
 
     @Override
@@ -71,6 +73,12 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 	}
     }
 
+    public void setItemPathToSelect(String path) {
+	OsylFileItem ofi = new OsylFileItem();
+	ofi.setFilePath(path);
+	setItemToSelect(ofi);
+    }
+    
     @Override
     protected String getCurrentSelectionLabel() {
 	return getController().getUiMessage("Browser.selected_file");

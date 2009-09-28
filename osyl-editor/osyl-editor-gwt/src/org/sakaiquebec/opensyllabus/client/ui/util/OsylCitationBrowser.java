@@ -21,6 +21,8 @@
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
 import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
+import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
+import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -33,6 +35,9 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 
+    
+    private boolean firstTimeRefreshing=true;
+    
     public OsylCitationBrowser() {
 	super();
     }
@@ -43,8 +48,9 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
      * @param model
      * @param newController
      */
-    public OsylCitationBrowser(String newResDirName, String fileItemNameToSelect) {
-	super(newResDirName, fileItemNameToSelect);
+    public OsylCitationBrowser(String newResDirName, String citationId, String citationListPath) {
+	super(newResDirName, null);
+	setCitationIdToSelect(citationId, citationListPath);
     }
 
     protected PushButton createAddPushButton() {
@@ -56,6 +62,13 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 	return pb;
     }
 
+    public void setCitationIdToSelect(String id, String citationListPath) {
+	OsylCitationItem ofi = new OsylCitationItem();
+	ofi.setProperty(CitationSchema.CITATIONID, id);
+	ofi.setFilePath(citationListPath);
+	setItemToSelect(ofi);
+    }
+    
     private final class FileAddButtonClickListener implements ClickListener {
 
 	public void onClick(Widget sender) {
@@ -80,9 +93,21 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 
     @Override
     protected void onFileDoubleClicking() {
-	OsylCitationItem citation =
-		(OsylCitationItem) getSelectedAbstractBrowserItem();
-	openEditor(citation);
+	if (getSelectedAbstractBrowserItem() instanceof OsylCitationListItem) {
+	    OsylCitationListItem osylCitationListItem =
+		    (OsylCitationListItem) getSelectedAbstractBrowserItem();
+	    try {
+		refreshFileListing(osylCitationListItem.getCitations());
+	    } finally {
+		getFileListing().removeStyleName(
+			"Osyl-RemoteFileBrowser-WaitingState");
+		removeStyleName("Osyl-RemoteFileBrowser-WaitingState");
+	    }
+	} else {
+	    OsylCitationItem citation =
+		    (OsylCitationItem) getSelectedAbstractBrowserItem();
+	    openEditor(citation);
+	}
     }
     
     @Override
@@ -96,4 +121,39 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 		OsylRemoteServiceLocator.getCitationRemoteService().getRemoteDirectoryContent(directoryPath, 
 					getRemoteDirListingRespHandler());
 	}
+    
+    public void refreshBrowser(){
+	if(firstTimeRefreshing){
+	    firstTimeRefreshing=false;
+	    firstTimeRefreshBrowser();
+	}else{
+	    super.refreshBrowser();
+	}
+    }
+    
+    public void firstTimeRefreshBrowser(){
+	boolean fileItemFound = false;
+	OsylAbstractBrowserItem itemToSelect = getItemToSelect();
+	OsylCitationListItem osylCitationListItem=null;
+	if (itemToSelect != null) {
+
+	    for (int i = 0; i < getCurrentDirectory().getFilesList().size(); i++) {
+		OsylAbstractBrowserItem fileItem =
+			getCurrentDirectory().getFilesList().get(i);
+
+		if (fileItem.getFilePath().equals(itemToSelect.getFilePath())) {
+		    fileItemFound = true;
+		    osylCitationListItem = (OsylCitationListItem)fileItem;
+		}
+	    }
+	}
+	if (!fileItemFound) {
+	    setSelectedAbstractBrowserItem(null);
+	    getFileListing().setSelectedIndex(-1);
+	}
+	else{
+	    refreshFileListing(osylCitationListItem.getCitations());
+	    super.refreshBrowser();
+	}
+    }
 }

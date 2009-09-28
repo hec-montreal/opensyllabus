@@ -64,5 +64,14 @@ public class OsylDirectory extends OsylAbstractBrowserItem implements Serializab
     public String getItemTag() {
 	return "UtilityRemoteFileBrowser_directoryTag";
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+	OsylDirectory od = (OsylDirectory) obj;
+	if (getDirectoryPath().equals(od.getDirectoryPath()))
+	    return true;
+	else
+	    return false;
+    }
 
 }
