@@ -120,16 +120,16 @@ public class OsylServiceImpl implements OsylService {
 
 	}
 
-	private CORelationDao coRelationDao;
-
-	/**
-	 * Sets the {@link CORelationDao}.
-	 * 
-	 * @param configDao
-	 */
-	public void setCORelationDao(CORelationDao relationDao) {
-		this.coRelationDao = relationDao;
-	}
+//	private CORelationDao CORelationDao;
+//
+//	/**
+//	 * Sets the {@link CORelationDao}.
+//	 * 
+//	 * @param coRelationDAO
+//	 */
+//	public void setCORelationDao(CORelationDao coRelationDao) {
+//		this.CORelationDao = coRelationDao;
+//	}
 
 	/**
 	 * The security service to be injected by Spring
@@ -672,16 +672,17 @@ public class OsylServiceImpl implements OsylService {
 	}
 
 	public boolean checkSitesRelation(String resourceURI) {
-		try {
-			String currentSiteId = osylSiteService.getCurrentSiteId();
-			Site resourceSite;
-			String parent = coRelationDao
+		//try {
+			//String currentSiteId = osylSiteService.getCurrentSiteId();
+			/*Site resourceSite;
+			String parent = CORelationDao
 					.getParentOfCourseOutline(currentSiteId);
 			if (resourceURI.indexOf(parent, 0) != -1) {
-				System.err.println("le parent est " + parent);
+				System.err.println(contentHostingService.allowGetResource(resourceURI) + " le parent est " + parent);
 				// temporarily allow the user to read and write from assignments
 				// (asn.revise permission)
 
+				
 				if (osylSecurityService.isAllowedToEdit(parent)) {
 					SecurityService.pushAdvisor(new SecurityAdvisor() {
 						public SecurityAdvice isAllowed(String userId,
@@ -691,18 +692,18 @@ public class OsylServiceImpl implements OsylService {
 					});
 
 				}
-
+*/
 				// clear the permission
 
 				// if (osylSecurityService.isAllowedToEdit(siteId)) {
 				// SecurityService.clearAdvisors(); }
 
-			}
+		/*	}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+*/
 		return false;
 	}
 
