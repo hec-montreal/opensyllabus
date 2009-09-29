@@ -42,7 +42,7 @@ public class GenericDetailCoursMapFactory {
 
 	BufferedReader breader = new BufferedReader(
 			new InputStreamReader(
-					new FileInputStream(dataDir + "/" + baseName + ".dat")));
+					new FileInputStream(dataDir + "/" + baseName + ".dat"),"utf8"));
 	String buffer, key, numeroHEL, session, periode;
 	DetailCoursMapEntry entry;
 

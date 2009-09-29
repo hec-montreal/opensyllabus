@@ -120,13 +120,6 @@ public class OsylServiceImpl implements OsylService {
 
 	}
 
-	/**
-	 * The security service to be injected by Spring
-	 * @uml.property  name="osylSecurityService"
-	 * @uml.associationEnd  
-	 */
-	private OsylSecurityService osylSecurityService;
-
 	private CORelationDao coRelationDao;
 
 	/**
@@ -134,9 +127,16 @@ public class OsylServiceImpl implements OsylService {
 	 * 
 	 * @param configDao
 	 */
-	public void setCoRelationDao(CORelationDao relationDao) {
+	public void setCORelationDao(CORelationDao relationDao) {
 		this.coRelationDao = relationDao;
 	}
+
+	/**
+	 * The security service to be injected by Spring
+	 * @uml.property  name="osylSecurityService"
+	 * @uml.associationEnd  
+	 */
+	private OsylSecurityService osylSecurityService;
 
 	/**
 	 * Sets the {@link OsylSecurityService}.

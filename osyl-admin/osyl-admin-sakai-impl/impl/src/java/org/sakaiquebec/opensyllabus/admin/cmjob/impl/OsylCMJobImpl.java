@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -285,9 +286,6 @@ public class OsylCMJobImpl implements OsylCMJob {
 					courseOff.setAcademicSession(session);
 					courseOfferingSet.add(courseOff);
 					cmAdmin.updateCourseOffering(courseOff);
-					cmAdmin
-					.addCourseOfferingToCourseSet("11",
-							courseOfferingId);
 					cmAdmin.addOrUpdateCourseOfferingMembership("admin",
 							"CourseAdmin", courseOfferingId, "active");
 				}
@@ -300,13 +298,13 @@ public class OsylCMJobImpl implements OsylCMJob {
 				enrollmentSetId = getEnrollmentSetId(coursEntry);
 				if (!cmService.isEnrollmentSetDefined(enrollmentSetId)) {
 					cmAdmin.createEnrollmentSet(enrollmentSetId, title,
-							description, "GTI-Info", "3", courseOfferingId,
+							description, "111", "3", courseOfferingId,
 							null);
 				} else {
 					// We update
 					EnrollmentSet enrollmentSet = cmService
 							.getEnrollmentSet(enrollmentSetId);
-					enrollmentSet.setCategory("GTI-Info");
+					enrollmentSet.setCategory("111");
 					enrollmentSet.setDefaultEnrollmentCredits("3");
 					enrollmentSet.setDescription(description);
 					enrollmentSet.setTitle(title);
@@ -324,13 +322,13 @@ public class OsylCMJobImpl implements OsylCMJob {
 					// from here
 					cmAdmin
 							.createSection(courseSectionId, title, description,
-									"GTI-Info", null, courseOfferingId,
+									"111", null, courseOfferingId,
 									enrollmentSetId);
 				} else {
 					// We update
 					Section courseSection = cmService
 							.getSection(courseSectionId);
-					courseSection.setCategory("GTI-Info");
+					courseSection.setCategory("111");
 					courseSection.setDescription(description);
 					courseSection.setTitle(title);
 					courseSection.setEnrollmentSet(cmService
@@ -692,15 +690,14 @@ public class OsylCMJobImpl implements OsylCMJob {
 	// For HEC Montreal this will list the different services
 	private void loadCategory() {
 		if (cmService.getSectionCategoryDescription("111") == null)
-			cmAdmin.addSectionCategory("111", "GTI-Info");
+			cmAdmin.addSectionCategory("111", "Finance");
+		
 	}
 
 	// For HEC Montreal, this is the institution HEC Montreal
 	private void loadCourseSets() {
 		if (!cmService.isCourseSetDefined("11"))
 			cmAdmin.createCourseSet("11", "HEC Montréal", "Montréal - Québec",
-					"GTI-Info", null);
-		cmAdmin.addOrUpdateCourseSetMembership("admin", "DeptAdmin", "11",
-				"active");
+					"111", null);
 	}
 }
