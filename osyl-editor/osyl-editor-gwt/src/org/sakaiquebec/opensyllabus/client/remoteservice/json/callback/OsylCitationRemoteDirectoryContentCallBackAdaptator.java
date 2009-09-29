@@ -45,7 +45,7 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 			    path.stringValue().lastIndexOf("/") + 1);
 	}
 	JSONString citationListName =
-		(JSONString) jObject.get("sakaidisplayname");
+		(JSONString) jObject.get("sakai:displayname");
 
 	JSONObject citations = (JSONObject) jObject.get("citations");
 	Set<String> keys = citations.keySet();
