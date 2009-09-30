@@ -330,6 +330,39 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     } // clickHomeButton
 
     /**
+     * Calls clickAddButton and clicks on the item containing the specified
+     * text (case sensitive).
+     *  
+     * @param itemText to click
+     * @throws Exception if the item is not found
+     */
+    public void clickAddItem(String itemText) throws Exception {
+	log("Entering clickAddItem " + itemText);
+
+	// Click the add button
+	clickAddButton();
+
+	try {
+	    session().click(
+		    "//div[@class=\"gwt-MenuBar gwt-MenuBar-vertical\"]"
+		    + "/table/tbody/tr/td[contains(text(),'" + itemText
+		    + "')]");
+	} catch (Exception e) {
+	    log("clickAddButton(" + itemText + ") FAILED: " + e);
+	    logAndFail("clickAddButton(" + itemText + ") FAILED: " + e);
+	    throw e;
+	}
+    } // clickAddItem
+
+    /**
+     * Clicks on the Add button in the toolBar (identified by its id gwt-uid-5
+     * for now).
+     */
+    public void clickAddButton() {
+	session().click("gwt-uid-5");
+    }
+    
+    /**
      * Clicks on the Save button in OpenSyllabus. It expects to see an
      * UnobtrusiveAlert in the next 60 seconds. We can safely assume that it
      * confirms the operation was successful. We also detect an alert (either
@@ -376,6 +409,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		    // slow enough!)
 		    log("saveCourseOutline: trying again...");
 		    clickSaveButton();
+		    // TODO: après trois fois on pourrait assumer que le save a fonctionné!
 		} else {
 		    Thread.sleep(100);
 		}
@@ -428,11 +462,43 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     }
 
     /**
-     * Logs and fail with the same message. This is to ease reports reading.
+     * Logs and fail with the same message. This is to ease reports reading. A
+     * screenShot capture is taken if possible.
      */
     protected void logAndFail(String msg) {
 	log(msg);
+	captureScreenShotFailure(msg);
+	fail(msg);
+    }
 
+    /**
+     * Returns the screenshot file name corresponding to the specified
+     * message, removing forbidden chars and adding ".png".
+     */    
+    private static String getScreenShotFileName(String msg) {
+	return SCREENSHOT_DIR + msg.replaceAll("[/\\:\\?\\!\\|><\"\\*]", "_")
+		+ ".png";
+    }
+
+    /**
+     * Ensures the directory for screenshots exists.    
+     */
+    private static void ensureScreenShotDirOK() {
+	File dir = new File(SCREENSHOT_DIR);
+	dir.mkdirs();
+	if (!dir.exists()) {
+	    fail("Unable to create screenshot dir: " + SCREENSHOT_DIR);
+	}
+    }
+    
+    /**
+     * Captures a screenShot to document current failure. Use the specified
+     * error message to generate the file name. Warning: this method performs a
+     * selectFrame("relative=parent") to capture the whole page, therefore if
+     * the test procedure is not stopped right after its invocation, it may
+     * fail as the context is changed.
+     */    
+    protected void captureScreenShotFailure(String msg) {
 	// If we are in FF we do a screenshot capture
 	if (inFireFox()) {
 	    String fileName = getScreenShotFileName(msg);
@@ -445,26 +511,6 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		log("Unable to capture screenshot [" + fileName + "]: " + e);
 		e.printStackTrace();
 	    }
-	}
-	fail(msg);
-    }
-
-    /**
-     * Returns the screenshot file name corresponding to the specified
-     * message, removing forbidden chars and adding ".png".
-     */    
-    private static String getScreenShotFileName(String msg) {
-	return SCREENSHOT_DIR + msg.replaceAll("[/\\:?!]", "_") + ".png";
-    }
-
-    /**
-     * Ensures the directory for screenshots exists.    
-     */
-    private static void ensureScreenShotDirOK() {
-	File dir = new File(SCREENSHOT_DIR);
-	dir.mkdirs();
-	if (!dir.exists()) {
-	    fail("Unable to create screenshot dir: " + SCREENSHOT_DIR);
 	}
     }
     

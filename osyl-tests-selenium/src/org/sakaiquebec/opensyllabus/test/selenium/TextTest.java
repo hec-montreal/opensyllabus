@@ -59,12 +59,8 @@ public class TextTest extends AbstractOSYLTest {
 	int resNb = getResourceCount();
 	log("We start with " + resNb + " resources");
 
-	// Click menu "Add..."
-	session().click("gwt-uid-5");
-	// Click 1st item in menu which is "Text" in this context (don't use
-	// gwt-uid because it's dynamically generated)
-	session().click("//div[@class=\"gwt-MenuBar gwt-MenuBar-vertical\"]" +
-			"/table/tbody/tr[1]/td");
+	// Click menu Add/Text
+	clickAddItem("Text");
 
 	// We check that our new text was added
 	int resNb2 = getResourceCount();
