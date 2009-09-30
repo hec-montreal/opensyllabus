@@ -26,13 +26,14 @@ import org.testng.annotations.Test;
 import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.session;
 
 /**
- * Tests lecture operations: renaming, deleting and adding a lecture. The exact
- * steps are: log in as admin, delete the previous test site if applicable,
- * creates a new one, load it (OpenSyllabus is the first and only page), rename
- * the first lecture, check it worked, delete it, click Lecture in the Add menu,
- * click edit for the last lecture (the new one) and type a new text, click OK,
- * check the text is here, click save, log out.<br/>
- * <br/>
+ * Tests lecture operations: renaming, switching, deleting and adding a lecture.
+ * The exact steps are: log in as admin, creates a new site if needed, load it
+ * (OpenSyllabus is the first and only page), rename the first lecture, check
+ * it worked, enter into it, rename it from inside, return to the lecture list,
+ * rename the 2nd lecture, switch it with the 1st one, delete it, check that
+ * the 2nd is not visible anymore and the 1st is still. Click Lecture in the
+ * Add menu, check it was added, click edit for the last lecture (the new one)
+ * and type a new text, click OK, check the text is here, click save, log out.
  * 
  * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
  */
@@ -44,11 +45,12 @@ public class LectureTest extends AbstractOSYLTest {
     public void testDeleteAddLecture(String webSite) throws Exception {
 	// We log in
 	logInAsAdmin(webSite);
-	// We delete the test site if it exists. If it does not, we don't fail!
-	deleteTestSite(false);
-	// We create a brand new one to ensure a constant "playground"!
-	createTestSite();
-	goToSite();
+	try {
+	    goToSite();
+	} catch (IllegalStateException e) {
+	    createTestSite();
+	    goToSite();
+	}
 	waitForOSYL();
 
 	// We keep the current lecture count for future comparison
@@ -66,8 +68,9 @@ public class LectureTest extends AbstractOSYLTest {
 	// Click OK
 	session().click("//td/table/tbody/tr/td[1]/button");
 	// Ensure the new name is visible
-	assertTrue("New lecture title not present",
-		session().isTextPresent(newName));
+	if(!session().isTextPresent(newName)) {
+	    logAndFail("New lecture title not present");	    
+	}
 	log("OK: Lecture renamed");
 	
 	// Now we rename the lecture from inside
@@ -79,16 +82,18 @@ public class LectureTest extends AbstractOSYLTest {
 	// Click OK
 	session().click("//td/table/tbody/tr/td[1]/button");
 	// Ensure the new name is visible
-	assertTrue("New lecture title not present (inside the lecture)",
-		session().isTextPresent(newName));
+	if(!session().isTextPresent(newName)) {
+		logAndFail("New lecture title not present (inside the lecture)");
+	}
 	log("OK: Lecture renamed from inside");
 
 	// Now we return to the lecture list
 	clickHomeButton();
 
 	// Ensure the new name is still visible
-	assertTrue("New lecture title not present (renamed from inside)",
-		session().isTextPresent(newName));
+	if(!session().isTextPresent(newName)) {
+		logAndFail("New lecture title not present (renamed from inside)");
+	}
 
 	// We rename the 2nd lecture: this will help us check that the
 	// following step (lecture switch) is working
@@ -100,10 +105,12 @@ public class LectureTest extends AbstractOSYLTest {
 	// Click OK
 	session().click("//td/table/tbody/tr/td[1]/button");
 	// Ensure the new name is visible
-	assertTrue("2nd lecture new title not present",
-		session().isTextPresent(newName2));
-	assertTrue("1st lecture new title not present after 2nd lecture edit",
-		session().isTextPresent(newName));
+	if(!session().isTextPresent(newName2)) {
+		logAndFail("2nd lecture new title not present");
+	}
+	if(!session().isTextPresent(newName)) {
+		logAndFail("1st lecture new title not present after 2nd lecture edit");
+	}
 	log("OK: 2nd lecture renamed");
 	
 	
@@ -134,21 +141,22 @@ public class LectureTest extends AbstractOSYLTest {
 	pause();
 	saveCourseOutline();
 	// Ensure the new title of first lecture is still visible
-	assertTrue("1st lecture title not present after switch and delete",
-		session().isTextPresent(newName));
+	if(!session().isTextPresent(newName)) {
+		logAndFail("1st lecture title not present after switch and delete");
+	}
 	// Ensure the new title of 2nd lecture is not visible
-	assertFalse("2nd lecture title still present after switch and delete",
-		session().isTextPresent(newName2));
+	if(session().isTextPresent(newName2)) {
+		logAndFail("2nd lecture title still present after switch and delete");
+	}
 	log("OK: Lecture 1 and 2 switched");
 	log("OK: Lecture deleted");
 
-	// Click menu "Add..."
-	session().click("gwt-uid-5");
-	// Click 1st item in menu which is "Lecture" in this context (don't use
-	// gwt-uid because it's dynamically generated)
-	session().click(
-		"//div[@class=\"gwt-MenuBar gwt-MenuBar-vertical\"]"
-			+ "/table/tbody/tr[1]/td");
+	// Add a lecture. We cannot really use the text to identify the menu
+	// item as it is "Séance" in French and being accentuated it cannot be
+	// found by Selenium. May be if we used properties files for messages
+	// it would work... The other possibility is to use "ance" to find the
+	// item, but it is as unreliable as specifying item #1.
+	clickAddItem(1);
 
 	// Save changes. We do it before checking the addition was done, this
 	// way we can log into the site and look into the situation.
@@ -173,8 +181,9 @@ public class LectureTest extends AbstractOSYLTest {
 	// Click OK
 	session().click("//td/table/tbody/tr/td[1]/button");
 	// Ensure the new name is visible
-	assertTrue("Last lecture new title not present",
-		session().isTextPresent(newName));
+	if(!session().isTextPresent(newName)) {
+		logAndFail("Last lecture new title not present");
+	}
 	log("OK: Last lecture renamed");
 
 	// And we save the changes

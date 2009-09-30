@@ -22,6 +22,9 @@
 package org.sakaiquebec.opensyllabus.test.selenium;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.thoughtworks.selenium.SeleneseTestCase;
 
 import org.testng.annotations.AfterClass;
@@ -44,7 +47,9 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
 public class AbstractOSYLTest extends SeleneseTestCase {
 
     // Current test site
-    public static final String TEST_SITE_NAME = "tests-selenium-opensyllabus";
+    private String siteName;
+    // Base name for test sites
+    public static final String TEST_SITE_BASE_NAME = "Se-";
 
     // The screenshot capture is always done on the windows machine (running
     // the test) and not on the grid. This explains the following!
@@ -53,6 +58,9 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     // Current browser
     private String browserString;
 
+    // Formatter for timeStamps
+    private SimpleDateFormat timeStampFormatter;
+    
     protected String fileServer;
 
     @BeforeClass(alwaysRun = true)
@@ -64,6 +72,8 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 	browserString = browser;
 	log("Starting test with browser: " + browser);
+	initCurrentTestSiteName();
+	timeStampFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 
     @AfterClass(alwaysRun = true)
@@ -78,12 +88,17 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().waitForPageToLoad("30000");
     }
 
+    private void initCurrentTestSiteName() {
+	siteName = TEST_SITE_BASE_NAME +
+	    (new SimpleDateFormat("yyyy-MM-dd")).format(new Date());	
+    }
+
     /**
      * Returns a time stamp that can be used to mark some test (insert in texts
      * for instance).
      */
     public String timeStamp() {
-	return new java.util.Date().toString();
+	return timeStampFormatter.format(new Date());	
     }
 
     /**
@@ -124,20 +139,23 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * site is deleted, the OpenSyllabus content is kept in the database and it
      * will be reused when another site with the same name is recreated!
      * WARNING: this test assumes the admin user has fr_CA as preferred locale!
-     * TODO: change the selenium locators so they are locale-independant.
+     * TODO: change the locators so they are locale-independent.
      */
     public void createTestSite() throws Exception {
+	log("Creating site " + getCurrentTestSiteName());
+	session().open("/portal/site/%7Eadmin");
+	waitForPageToLoad();
 	// Click on Sites, the 4th item in the list menu
 	session().click("//div[@id='toolMenu']/ul/li[4]/a/span");
 	waitForPageToLoad();
 	session().selectFrame("Mainxadminx310");
 	// Ensure the site doesn't already exist
-	assertFalse("Site '" + TEST_SITE_NAME + "' already exists!", session()
-		.isTextPresent(TEST_SITE_NAME));
+	assertFalse("Site '" + getCurrentTestSiteName() + "' already exists!",
+		session().isTextPresent(getCurrentTestSiteName()));
 	session().click("link=Nouveau site");
 	waitForPageToLoad();
-	session().type("id", TEST_SITE_NAME);
-	session().type("title", "Site for Selenium Tests");
+	session().type("id", getCurrentTestSiteName());
+	session().type("title", getCurrentTestSiteName());
 	session().type("type", "project");
 	session().type(
 		"shortDescription",
@@ -148,8 +166,8 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().click("eventSubmit_doPages");
 	waitForPageToLoad();
 	// Ensure the site doesn't already exist or another error
-	assertFalse("Received Alert when creating Site '" + TEST_SITE_NAME
-		+ "'", session().isElementPresent(
+	assertFalse("Received Alert when creating Site '"
+		+ getCurrentTestSiteName() + "'", session().isElementPresent(
 		"//div[@class=\"alertMessage\"]"));
 	session().click("link=Nouvelle page");
 	waitForPageToLoad();
@@ -170,15 +188,20 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	waitForPageToLoad();
     } // createTestSite
 
+    public String getCurrentTestSiteName() {
+	return siteName;
+    }
+    
     /**
      * Loads the test site. Assumes we are already logged-in. A failure occurs
      * if the site does not exist.
      */
     public void goToSite() throws Exception {
-	session().open("/portal/site/" + TEST_SITE_NAME);
+	session().open("/portal/site/" + getCurrentTestSiteName());
 	waitForPageToLoad();
-	assertFalse("Got 'Site Unavailable' !", session().isTextPresent(
-		"Site Unavailable"));
+	if(session().isTextPresent("Site Unavailable")) {
+	    throw new IllegalStateException("Got 'Site Unavailable' !");
+	}
     }
 
     /**
@@ -203,32 +226,32 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    session().click("//div[@id='toolMenu']/ul/li[4]/a/span");
 	    waitForPageToLoad();
 	    session().selectFrame("Mainxadminx310");
-	    session().type("search_site", TEST_SITE_NAME);
+	    session().type("search_site", getCurrentTestSiteName());
 	    session().click("link=ID du site");
 	    waitForPageToLoad();
 	    waitForPageToLoad();
 
-	    if (session().isTextPresent(TEST_SITE_NAME)) {
-		log("Found site '" + TEST_SITE_NAME + "' to delete");
+	    if (session().isTextPresent(getCurrentTestSiteName())) {
+		log("Found site '" + getCurrentTestSiteName() + "' to delete");
 	    } else {
 		if (fail) {
-		    fail("Cannot delete site '" + TEST_SITE_NAME
+		    fail("Cannot delete site '" + getCurrentTestSiteName()
 			    + "' because it could not be found!");
 		} else {
-		    log("Did not delete site '" + TEST_SITE_NAME
+		    log("Did not delete site '" + getCurrentTestSiteName()
 			    + "' because it did not exist");
 		    return;
 		}
 	    }
 
-	    session().click("link=" + TEST_SITE_NAME);
+	    session().click("link=" + getCurrentTestSiteName());
 	    waitForPageToLoad();
 	    session().click("link=Supprimer site");
 	    waitForPageToLoad();
 	    session().click("eventSubmit_doRemove_confirmed");
 	    waitForPageToLoad();
 	    assertFalse("Site not deleted as expected!", session()
-		    .isTextPresent(TEST_SITE_NAME));
+		    .isTextPresent(getCurrentTestSiteName()));
 	} finally {
 	    // Return to Home "tool"
 	    session().selectFrame("relative=parent");
@@ -331,28 +354,48 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
     /**
      * Calls clickAddButton and clicks on the item containing the specified
-     * text (case sensitive).
+     * text (case sensitive). Calls logAndFail if the item is not found.
      *  
      * @param itemText to click
-     * @throws Exception if the item is not found
      */
-    public void clickAddItem(String itemText) throws Exception {
+    public void clickAddItem(String itemText) {
 	log("Entering clickAddItem " + itemText);
 
 	// Click the add button
 	clickAddButton();
 
+	// Click the item or fail if it is not found
 	try {
 	    session().click(
 		    "//div[@class=\"gwt-MenuBar gwt-MenuBar-vertical\"]"
 		    + "/table/tbody/tr/td[contains(text(),'" + itemText
 		    + "')]");
 	} catch (Exception e) {
-	    log("clickAddButton(" + itemText + ") FAILED: " + e);
 	    logAndFail("clickAddButton(" + itemText + ") FAILED: " + e);
-	    throw e;
 	}
-    } // clickAddItem
+    } // clickAddItem(String)
+
+    /**
+     * Calls clickAddButton and clicks on the item at the specified index.
+     * Calls logAndFail if the index is out of bounds.
+     *  
+     * @param index of item to click
+     */
+    public void clickAddItem(int index) {
+	log("Entering clickAddItem " + index);
+
+	// Click the add button
+	clickAddButton();
+
+	// Click the item or fail if it is not found
+	try {
+	    session().click(
+		    "//div[@class=\"gwt-MenuBar gwt-MenuBar-vertical\"]"
+		    + "/table/tbody/tr[" + index + "]/td");
+	} catch (Exception e) {
+	    logAndFail("clickAddButton(" + index + ") FAILED: " + e);
+	}
+    } // clickAddItem(int)
 
     /**
      * Clicks on the Add button in the toolBar (identified by its id gwt-uid-5

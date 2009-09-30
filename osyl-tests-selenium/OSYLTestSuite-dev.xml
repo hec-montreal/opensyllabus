@@ -10,8 +10,8 @@
    <test name="Sakai OSYLEditor test suite for Firefox">
       <classes>
          <!-- class name="org.sakaiquebec.opensyllabus.test.selenium.OSYLAddDocComment"/ -->
-         <class name="org.sakaiquebec.opensyllabus.test.selenium.TextTest"/>
-         <!-- class name="org.sakaiquebec.opensyllabus.test.selenium.LectureTest"/ -->
+         <class name="org.sakaiquebec.opensyllabus.test.selenium.LectureTest"/>
+         <!-- class name="org.sakaiquebec.opensyllabus.test.selenium.TextTest"/ -->
       </classes>
    </test>
 </suite>

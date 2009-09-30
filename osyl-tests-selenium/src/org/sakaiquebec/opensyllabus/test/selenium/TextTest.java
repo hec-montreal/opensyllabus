@@ -27,14 +27,11 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
 
 /**
  * Tests the addition of a text resource. The exact steps are: log in as admin,
- * delete the previous test site if applicable, creates a new one, load it
- * (OpenSyllabus is the first and only page), enters in the first lecture, click
- * Text in the Add menu, type in some text, click OK, check the text is here,
- * click save, log out.<br/>
- * <br/>
- * In a previous version, the test also deleted the site at the end. This could
- * be reactivated later, once we are confident enough that everything really
- * happens as it should!
+ * creates a new site if needed, load it (OpenSyllabus is the first and only
+ * page), enters in the first lecture, click Text in the Add menu, check the
+ * resource count has incremented by 1, open the editor, type in some text,
+ * change the rubric (randomly) click OK, check the text is here, check the
+ * rubric is visible, click save, log out.
  * 
  * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
  */
@@ -46,11 +43,12 @@ public class TextTest extends AbstractOSYLTest {
     public void testAddText(String webSite) throws Exception {
 	// We log in
 	logInAsAdmin(webSite);
-	// We delete the test site if it exists. If it does not, we don't fail!
-	deleteTestSite(false);
-	// We create a brand new one to ensure a constant "playground"!
-	createTestSite();
-	goToSite();
+	try {
+	    goToSite();
+	} catch (IllegalStateException e) {
+	    createTestSite();
+	    goToSite();
+	}
 	waitForOSYL();
 	enterFirstLecture();
 
@@ -66,7 +64,7 @@ public class TextTest extends AbstractOSYLTest {
 	int resNb2 = getResourceCount();
 	log("We now have " + resNb2 + " resources");
 	if (1+resNb != resNb2) {
-	    fail ("Resource count not incremented as expected!");
+	    logAndFail("Resource count not incremented as expected!");
 	} else {
 	    log ("OK Text resource added");
 	}
@@ -84,7 +82,7 @@ public class TextTest extends AbstractOSYLTest {
 	    // type text
 	    session().selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
 	    String newText = "this is a text resource typed by "
-		+ "selenium, hope it works and you see it. Added on"
+		+ "selenium, hope it works and you see it. Added on "
 		+ timeStamp() + " in Firefox";
 
 	    session().type("//html/body", newText);
@@ -92,7 +90,10 @@ public class TextTest extends AbstractOSYLTest {
 	    session().selectFrame("relative=parent");
 	    session().click("//td/table/tbody/tr/td[1]/button");
 	    // check if text is visible
-	    assertTrue(session().isTextPresent(newText));
+	    if (!session().isTextPresent(newText)) {
+		logAndFail("Expected to see text [" + newText 
+			+ "] after text edition");
+	    }
 	    log("OK: Text resource edited");
 	} else {
 	    log("RichText edition can only be tested in Firefox");
@@ -102,14 +103,13 @@ public class TextTest extends AbstractOSYLTest {
 	saveCourseOutline();
 
 	// check if the new rubric is visible.
-	assertTrue("Expected to see rubric [" + selectedRubric
-		+ "] after text edition",
-		session().isTextPresent(selectedRubric));
+	if (!session().isTextPresent(selectedRubric)) {
+	    logAndFail("Expected to see rubric [" + selectedRubric
+		+ "] after text edition");
+	}
 	log("OK: Selected rubric is visible");
 
 	session().selectFrame("relative=parent");
-	// See class comment above
-	// deleteTestSite();
 	logOut();
 	log("testAddText: test complete");
     } // testAddText
@@ -125,7 +125,7 @@ public class TextTest extends AbstractOSYLTest {
 		"//select[@name=\"listBoxFormElement\"]");
 	// Generate a random number between 1 and last rubric index (avoid 0
 	// because first one is "Select a rubric")
-	int rubricCount = rubrics.length - 1;
+	int rubricCount = rubrics.length - 2;
 	int rubricId = 1 + (int) Math.round(Math.random() * rubricCount);
 	return rubrics[rubricId];
     }	    
