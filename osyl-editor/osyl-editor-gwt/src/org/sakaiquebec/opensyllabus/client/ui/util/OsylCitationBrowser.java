@@ -74,7 +74,14 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
     private final class FileAddButtonClickListener implements ClickListener {
 
 	public void onClick(Widget sender) {
-	    openEditor(null);
+	    if (currentCitationListItem == null) {
+		openEditor(null);
+	    } else {
+		OsylCitationItem oci = new OsylCitationItem();
+		oci.setFilePath(currentCitationListItem.getFilePath());
+		oci.setId(null);
+		openEditor(oci);
+	    }
 	}
     }
 
@@ -161,8 +168,6 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 	    OsylCitationListItem osylCitationListItem) {
 	currentCitationListItem = osylCitationListItem;
 	setFolderAddButtonEnabled(false);
-	setAddFileButtonEnabled(false);// TODO delete this when add could add a
-	// citation into an existing list
 	setCitationListAsDirectory(currentCitationListItem);
 	refreshFileListing(osylCitationListItem.getCitations());
 
@@ -182,19 +187,26 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 
     protected void onUpButtonClick() {
 	setFolderAddButtonEnabled(true);
-	setAddFileButtonEnabled(true);
 	currentCitationListItem = null;
     }
 
     public void onUploadFile(UploadFileEvent event) {
 	if (currentCitationListItem != null) {
 	    firstTimeRefreshing = true;
-	    setItemToSelect(getSelectedAbstractBrowserItem());
+	    if (getSelectedAbstractBrowserItem() != null)
+		setItemToSelect(getSelectedAbstractBrowserItem());
+	    else {
+		OsylCitationItem dumbCitationItem = new OsylCitationItem();
+		dumbCitationItem.setFilePath(currentCitationListItem
+			.getFilePath());
+		setItemToSelect(dumbCitationItem);
+	    }
 	    String citationListDirectory =
 		    getCurrentDirectory().getDirectoryPath().substring(
 			    0,
 			    getCurrentDirectory().getDirectoryPath()
 				    .lastIndexOf("/"));
+	    getCurrentDirectoryTextBox().setText(citationListDirectory);
 	    getCurrentDirectory().setDirectoryPath(citationListDirectory);
 	    getRemoteDirectoryListing(citationListDirectory);
 	} else {
