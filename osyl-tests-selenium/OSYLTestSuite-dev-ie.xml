@@ -1,7 +1,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="OSYLSuite-IE" verbose="10">
-   <parameter name="webSite" value="http://localhost:8080/"/>
+   <parameter name="webSite" value="http://osyldev.hec.ca/"/>
    <parameter name="seleniumHost" value="localhost"/>
    <parameter name="seleniumPort" value="5555"/>
    <parameter name="browser" value="*iexplore"/>
@@ -11,7 +11,7 @@
       <classes>
          <!-- class name="org.sakaiquebec.opensyllabus.test.selenium.OSYLAddDocComment"/ -->
          <class name="org.sakaiquebec.opensyllabus.test.selenium.TextTest"/>
-         <!-- class name="org.sakaiquebec.opensyllabus.test.selenium.LectureTest"/ -->
+         <class name="org.sakaiquebec.opensyllabus.test.selenium.LectureTest"/>
       </classes>
    </test>
 </suite>
