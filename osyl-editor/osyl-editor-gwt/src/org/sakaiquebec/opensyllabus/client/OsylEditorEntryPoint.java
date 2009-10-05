@@ -421,7 +421,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	setTopMostPosition(a, 0);
 	Timer timer = new Timer() {
 	    public void run() {
-		a.setMsg(getDebugMsg());
+		a.setMsg("GWT " + GWT.getVersion() + " " + getDebugMsg());
 		a.show();
 		setTopMostPosition(a, 0);
 	    }
@@ -498,10 +498,10 @@ public class OsylEditorEntryPoint implements EntryPoint {
      */
     private static int getTopMostPosition() {
 	if (OsylController.getInstance().isInHostedMode()) {
-	    return 41;
+	    return 62;
 	} else {
 	    // We return 26px (24 for the toolBar + 2 for its borders)
-	    return 26; // Is OK for MSIE 6/7 and Firefox
+	    return 47; // Is OK for MSIE 6/7 and Firefox
 	}
     }
 
