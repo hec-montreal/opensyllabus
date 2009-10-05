@@ -304,6 +304,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		}
 	    }
 	});
+	// TODO: cleanup! Do a separate command to remove all this code which
+	//       should not be in initButtonsCommands
 	// Print Button
 	// This method works for Chrome and Safari Browsers
 	// but it doesn't work well with FireFox
@@ -578,8 +580,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 					false);
 				return;
 			    } else {
-				getOsylToolbar().getAddMenuButton().addItem(
-					getCoMessage(subModel.getType()),
+				addAddMenuItem(subModel.getType(),
 					new AddMenuCommand(castedModel,
 						subModel.getType()));
 			    }
@@ -613,8 +614,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		} else {
 		    type = COContentResourceProxyType.REFERENCE;
 		}
-		getOsylToolbar().getAddMenuButton().addItem(
-			getCoMessage(subModel.getType()),
+		addAddMenuItem(subModel.getType(),
 			new AddMenuCommand(model, type, subModel.getType()));
 	    }
 	}
@@ -627,8 +627,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	Iterator<COModelInterface> iter = subModels.iterator();
 	while (iter.hasNext()) {
 	    COModelInterface subModel = (COModelInterface) iter.next();
-	    getOsylToolbar().getAddMenuButton().addItem(
-		    getCoMessage(subModel.getType()),
+	    addAddMenuItem(subModel.getType(),
 		    new AddUnitStructureCommand(model, subModel.getType()));
 	}
 	if (getModel().getChildrens().size() == 1) {
@@ -641,6 +640,12 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	return osylToolbar;
     }
 
+    private void addAddMenuItem(String itemType, Command cmd) {
+	String html = "<div id=\"add" + itemType + "\">" +
+	    getCoMessage(itemType) + "</div>";
+	getOsylToolbar().getAddMenuButton().addItem(html, true, cmd);
+    }
+    
     public void addEventHandler(PublishPushButtonEventHandler handler) {
 	if (publishEventHandlerList == null) {
 	    publishEventHandlerList =
