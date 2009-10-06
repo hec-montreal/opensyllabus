@@ -90,7 +90,8 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
     private void initCurrentTestSiteName() {
 	siteName = TEST_SITE_BASE_NAME +
-	    (new SimpleDateFormat("yyyy-MM-dd")).format(new Date());	
+	    (new SimpleDateFormat("yyyy-MM-dd")).format(new Date());
+	log("Test site is " + siteName);
     }
 
     /**
@@ -353,8 +354,9 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     } // clickHomeButton
 
     /**
-     * Calls clickAddButton and clicks on the item containing the specified
-     * text (case sensitive). Calls logAndFail if the item is not found.
+     * Calls clickAddButton and clicks on the item whose id is specified
+     * (case sensitive). This ID uses the pattern addType. For instance addText
+     * or addPedagogicalUnit. Calls logAndFail if the item is not found.
      *  
      * @param itemText to click
      */
@@ -366,10 +368,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 	// Click the item or fail if it is not found
 	try {
-	    session().click(
-		    "//div[@class=\"gwt-MenuBar gwt-MenuBar-vertical\"]"
-		    + "/table/tbody/tr/td[contains(text(),'" + itemText
-		    + "')]");
+	    session().click("//div[@id=\"" + itemText + "\"]");
 	} catch (Exception e) {
 	    logAndFail("clickAddButton(" + itemText + ") FAILED: " + e);
 	}
@@ -377,8 +376,9 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
     /**
      * Calls clickAddButton and clicks on the item at the specified index.
-     * Calls logAndFail if the index is out of bounds.
-     *  
+     * Calls logAndFail if the index is out of bounds. Using this method is
+     * discouraged as it doesn't allow to click on a specific known item.
+     * 
      * @param index of item to click
      */
     public void clickAddItem(int index) {

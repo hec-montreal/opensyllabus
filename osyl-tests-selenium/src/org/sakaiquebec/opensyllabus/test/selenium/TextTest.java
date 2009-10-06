@@ -58,7 +58,7 @@ public class TextTest extends AbstractOSYLTest {
 	log("We start with " + resNb + " resources");
 
 	// Click menu Add/Text
-	clickAddItem("Text");
+	clickAddItem("addText");
 
 	// We check that our new text was added
 	int resNb2 = getResourceCount();

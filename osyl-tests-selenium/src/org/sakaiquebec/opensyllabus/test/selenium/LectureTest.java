@@ -151,12 +151,8 @@ public class LectureTest extends AbstractOSYLTest {
 	log("OK: Lecture 1 and 2 switched");
 	log("OK: Lecture deleted");
 
-	// Add a lecture. We cannot really use the text to identify the menu
-	// item as it is "Séance" in French and being accentuated it cannot be
-	// found by Selenium. May be if we used properties files for messages
-	// it would work... The other possibility is to use "ance" to find the
-	// item, but it is as unreliable as specifying item #1.
-	clickAddItem(1);
+	// We click Add lecture whose type is actually PedagogicalUnit
+	clickAddItem("addPedagogicalUnit");
 
 	// Save changes. We do it before checking the addition was done, this
 	// way we can log into the site and look into the situation.
