@@ -27,7 +27,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <gwtVersion>1.5.3</gwtVersion>
+    <gwtVersion>1.7.0</gwtVersion>
     <maven.tomcat.home>${CATALINA_HOME}</maven.tomcat.home>
     <!-- TODO -->
     <maven.test.skip>true</maven.test.skip>
@@ -36,10 +36,10 @@
   <modules>
     <module>gwt-shared</module>
     <module>osyl-configs</module>
-    <module>osyl-admin</module>
     <module>osyl-common</module>
-    <module>osyl-editor</module>
+    <module>osyl-admin</module>
     <module>osyl-manager</module>
+	<module>osyl-editor</module>
   </modules>
 
   <pluginRepositories>
@@ -73,6 +73,7 @@
 
   <dependencyManagement>
     <dependencies>
+    
       <!--  opensyllabus -->
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
@@ -140,7 +141,7 @@
         <version>M2</version>
       </dependency>
 
-        <!--  sakai -->
+      <!--  sakai -->
       <dependency>
         <groupId>org.sakaiproject</groupId>
         <artifactId>sakai-site-api</artifactId>
@@ -346,7 +347,7 @@
         <version>2.0</version>
       </dependency>
 
-   <!-- gwt -->
+      <!-- gwt -->
       <dependency>
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-user</artifactId>
@@ -375,34 +376,33 @@
       <dependency>
         <groupId>com.google.gwt-fx</groupId>
         <artifactId>gwt-fx</artifactId>
-        <version>3.0.0</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.gwt</groupId>
-        <artifactId>gwt-incubator</artifactId>
-        <version>1.5-Dec_28</version>
+        <version>4.0.0</version>
       </dependency>
       <dependency>
         <groupId>org.gwt.mosaic</groupId>
         <artifactId>gwt-mosaic</artifactId>
-        <version>0.1.9.1</version>
-      </dependency>
-      <dependency>
-        <groupId>org.gwt.mosaic</groupId>
-        <artifactId>gwt-beansbinding</artifactId>
         <version>0.2.3</version>
       </dependency>
       <dependency>
         <groupId>org.gwt.mosaic</groupId>
-        <artifactId>gwt-dnd</artifactId>
-        <version>2.5.6</version>
+        <artifactId>gwt-beansbinding</artifactId>
+        <version>0.2.4</version>
       </dependency>
       <dependency>
         <groupId>org.gwt.mosaic</groupId>
-        <artifactId>gwt-ext</artifactId>
-        <version>1.5</version>
+        <artifactId>gwt-dnd</artifactId>
+        <version>2.6.5</version>
       </dependency>
-
+      <dependency>
+        <groupId>org.gwt.mosaic</groupId>
+        <artifactId>gwtx</artifactId>
+        <version>1.5.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.gwt.mosaic</groupId>
+        <artifactId>gwt-incubator</artifactId>
+        <version>trunk-r1684</version>
+      </dependency>
         <!-- test -->
       <dependency>
         <groupId>junit</groupId>
@@ -572,11 +572,10 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>gwt-maven-plugin</artifactId>
-          <version>1.1-SNAPSHOT</version>
+          <version>1.1</version>
           <configuration>
-            <runTarget>${gwtModule}/</runTarget>
-            <gwtModule>${gwtModule}</gwtModule>
             <gwtVersion>${gwtVersion}</gwtVersion>
+        	<extraJvmArgs>-Xmx768m -Xss4096k</extraJvmArgs>
           </configuration>
         </plugin>
       </plugins>
