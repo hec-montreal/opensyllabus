@@ -912,8 +912,6 @@ public class COModeledServer {
     private void createChildElement(Document document, Element parent,
 	    COElementAbstract child) {
 	if (child.isCOStructureElement()) {
-	    System.out
-		    .println("ISSTRUCTUREELEMENT-start" + document.toString());
 	    COStructureElement coStructure = (COStructureElement) child;
 	    Element coStructureElem =
 		    document.createElement(CO_STRUCTURE_NODE_NAME);
