@@ -25,7 +25,7 @@
     </dependency>
     <dependency>
       <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId> osyl-common-api</artifactId>
+      <artifactId>osyl-common-api</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -107,10 +107,11 @@
   </dependencies>
 
   <properties>
-    <gwtModule>org.sakaiquebec.opensyllabus.manager.OsylManagerEntryPoint</gwtModule>
+    <gwtModuleRename>OsylManagerEntryPoint</gwtModuleRename>    
   </properties>
 
   <build>
+  	<sourceDirectory>src</sourceDirectory>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -131,7 +132,7 @@
                 <filter>
                   <artifact>org.sakaiquebec.opensyllabus.managergwt:osyl-manager-gwt</artifact>
                   <includes>
-                    <include>${gwtModule}/**</include>
+                    <include>${gwtModuleRename}/**</include>
                   </includes>
                 </filter>
               </filters>

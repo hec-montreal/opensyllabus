@@ -37,7 +37,7 @@
 
 <!-- This script loads our GWT compiled module.        -->
 <!-- Any GWT meta tags must be added before this line. -->
-<script language='javascript' src='<%=request.getContextPath() %>/org.sakaiquebec.opensyllabus.manager.OsylManagerEntryPoint/org.sakaiquebec.opensyllabus.manager.OsylManagerEntryPoint.nocache.js'></script>
+<script language='javascript' src='<%=request.getContextPath() %>/OsylManagerEntryPoint/OsylManagerEntryPoint.nocache.js'></script>
 <script> // Size of the JS application
 	function myLoad() {
 		setTimeout("<%=request.getAttribute("sakai.html.body.onload") %>", 500);
