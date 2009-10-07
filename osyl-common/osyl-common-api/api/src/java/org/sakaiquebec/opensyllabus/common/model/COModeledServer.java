@@ -926,10 +926,7 @@ public class COModeledServer {
 	    if (coStructure.getUuidParent() != null)
 		coStructureElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
 			coStructure.getUuidParent());
-	    System.out.println("Children of :" + coStructure.getType()
-		    + coStructure.getChildrens().size());
 	    for (int i = 0; i < coStructure.getChildrens().size(); i++) {
-		System.out.println("Child number" + i);
 		createChildElement(document, coStructureElem,
 			(COElementAbstract) coStructure.getChildrens().get(i));
 	    }
@@ -939,12 +936,10 @@ public class COModeledServer {
 			.getProperties());
 	    }
 	    parent.appendChild(coStructureElem);
-	    System.out.println("ISSTRUCTUREELEMENT-end" + document.toString());
 
 	} else if (child.isCOUnit()) {
 	    COUnit coUnit = (COUnit) child;
 	    // create a wrapper on the COUnitContent: a COUnit
-	    System.out.println("ISCONTENTUNIT-start" + document.toString());
 	    Element coUnitElem = document.createElement(CO_UNIT_NODE_NAME);
 	    parent.appendChild(coUnitElem);
 	    coUnitElem.setAttribute(ACCESS_ATTRIBUTE_NAME, coUnit.getAccess());
@@ -969,7 +964,6 @@ public class COModeledServer {
 	} else if (child.isCOUnitStructure()) {
 	    COUnitStructure coUnitStructure = (COUnitStructure) child;
 	    // create a wrapper on the COUnitContent: a COUnit
-	    System.out.println("ISUNITSTRUCTURE-start" + document.toString());
 	    Element coUnitElem =
 		    document.createElement(CO_UNIT_STRUCTURE_NODE_NAME);
 	    parent.appendChild(coUnitElem);
@@ -997,7 +991,6 @@ public class COModeledServer {
 	    }
 	} else if (child.isCOUnitContent()) {
 	    COUnitContent coContentUnit = (COUnitContent) child;
-	    System.out.println("ISCONTENTUNIT-start" + document.toString());
 	    Element coContentUnitElem =
 		    document.createElement(CO_UNIT_CONTENT_NODE_NAME);
 	    parent.appendChild(coContentUnitElem);
@@ -1029,7 +1022,6 @@ public class COModeledServer {
 		createPropertiesElem(document, coContentUnitElem, coContentUnit
 			.getProperties());
 	    }
-	    System.out.println("ISCONTENTUNIT-end" + document.toString());
 	}
     }
 
