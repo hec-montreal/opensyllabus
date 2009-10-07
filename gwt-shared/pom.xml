@@ -133,7 +133,7 @@
                     <goal>install-file</goal>
                   </goals>
                   <configuration>
-                    <file>${project.basedir}/lib/gwt-beans-binding-0.2.4.jar</file>
+                    <file>${project.basedir}/lib/gwt-beansbinding-0.2.4.jar</file>
                     <groupId>org.gwt.mosaic</groupId>
                     <artifactId>gwt-beansbinding</artifactId>
                     <version>0.2.4</version>
