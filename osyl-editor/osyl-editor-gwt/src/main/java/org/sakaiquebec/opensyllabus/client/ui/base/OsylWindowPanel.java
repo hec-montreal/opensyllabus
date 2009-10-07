@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.client.ui.base;
 
 import org.gwt.mosaic.core.client.DOM;
+import org.gwt.mosaic.core.client.Dimension;
 import org.gwt.mosaic.ui.client.WindowPanel;
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
