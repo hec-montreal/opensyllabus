@@ -66,36 +66,6 @@
                   </configuration>
                 </execution>
                 <execution>
-                  <id>gwt-incubator-1.4</id>
-                  <phase>validate</phase>
-                  <goals>
-                    <goal>install-file</goal>
-                  </goals>
-                  <configuration>
-                    <file>${project.basedir}/lib/gwt-incubator_1-4_final.jar</file>
-                    <groupId>com.google.gwt</groupId>
-                    <artifactId>gwt-incubator</artifactId>
-                    <version>1.4-final</version>
-                    <packaging>jar</packaging>
-                    <generatePom>true</generatePom>
-                  </configuration>
-                </execution>
-                <execution>
-                  <id>gwt-incubator-1.5</id>
-                  <phase>validate</phase>
-                  <goals>
-                    <goal>install-file</goal>
-                  </goals>
-                  <configuration>
-                    <file>${project.basedir}/lib/gwt-incubator_1-5_Dec_28.jar</file>
-                    <groupId>com.google.gwt</groupId>
-                    <artifactId>gwt-incubator</artifactId>
-                    <version>1.5-Dec_28</version>
-                    <packaging>jar</packaging>
-                    <generatePom>true</generatePom>
-                  </configuration>
-                </execution>
-                <execution>
                   <id>gwt-mosaic</id>
                   <phase>validate</phase>
                   <goals>
