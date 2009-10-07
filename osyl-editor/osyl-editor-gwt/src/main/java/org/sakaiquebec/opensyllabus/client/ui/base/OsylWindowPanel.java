@@ -79,7 +79,6 @@ public class OsylWindowPanel extends WindowPanel {
      * 
      * @param oldState
      */
-    @Override
     protected void maximize(WindowState oldState) {
 	if (isResizable()) {
 	    if (!isActive()) {
@@ -90,12 +89,12 @@ public class OsylWindowPanel extends WindowPanel {
 		restoredWidth = getContentWidth();
 		restoredHeight = getContentHeight();
 	    }
-	    final int[] size = DOM.getClientSize(boundaryPanel.getElement());
-	    final int[] size2 = DOM.getBoxSize(getElement());
-	    final int[] size3 = DOM.getBoxSize(getLayoutPanel().getElement());
+	    final Dimension dim = DOM.getClientSize(boundaryPanel.getElement());
+	    final Dimension dim2 = DOM.getBoxSize(getElement());
+	    final Dimension dim3 = DOM.getBoxSize(getLayoutPanel().getElement());
 	    setPopupPosition(0, 0);
-	    setContentSize(size[0] - (size2[0] - size3[0]), size[1]
-		    - (size2[1] - size3[1]));
+	    setContentSize(dim.width - (dim2.width - dim3.width), dim.height
+		    - (dim2.height - dim3.height));
 	    delayedLayout(MIN_DELAY_MILLIS);
 	}
     }
@@ -105,8 +104,7 @@ public class OsylWindowPanel extends WindowPanel {
      * current position of maximized window
      * 
      * @param oldState
-     */
-    @Override
+     */    
     protected void restore(WindowState oldState) {
 	final Widget boundaryPanel = RootPanel.get();
 	final int[] borders = DOM.getBorderSizes(boundaryPanel.getElement());
