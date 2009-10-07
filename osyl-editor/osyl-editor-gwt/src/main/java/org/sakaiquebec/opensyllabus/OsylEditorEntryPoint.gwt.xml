@@ -1,12 +1,13 @@
-<module>
+<module rename-to='OsylEditorEntryPoint'>
 
 	<!-- Inherit the core Web Toolkit stuff. -->
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name='com.google.gwt.xml.XML' />
 	<inherits name='com.google.gwt.json.JSON' />
 	<inherits name="com.google.gwt.http.HTTP" />
-	<inherits name='com.google.gwt.widgetideas.DatePicker' />
+	<!--<inherits name='com.google.gwt.user.datepicker.client' />
 
+	-->
 	<inherits name="org.adamtacy.GWTEffects"></inherits>
 
 	<inherits name='org.gwt.mosaic.Mosaic' />
@@ -25,9 +26,7 @@
 	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint" />
 
 	<!-- Specify the app servlet path. -->
-	<servlet path="/OsylGwtService"
-		class="org.sakaiquebec.opensyllabus.server.OsylEditorGwtServiceImpl" />
-	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint" />
+	<!-- now moved to web.xml -->
 
 	<!-- Specify a style sheet -->
 	<!--
@@ -35,11 +34,15 @@
 		not in both places <stylesheet
 		src='org.sakaiquebec.opensyllabus.public.css.osylcore.css'/>
 	-->
-	<inherits name="org.sakaiquebec.opensyllabus.OsylEditorEntryPoint" />
-	<inherits name="com.google.gwt.widgetideas.DatePicker" />
+	<!--
+	<inherits name='com.google.gwt.user.datepicker.client' />
+	-->
 
-	<!-- Hosted mode special deferred binding init:
-	 if Metatag info hosted_mode_init is specified: use it to choose hosted mode init. Else the default hosted mode init will be used.  -->
+	<!--
+		Hosted mode special deferred binding init: if Metatag info
+		hosted_mode_init is specified: use it to choose hosted mode init. Else
+		the default hosted mode init will be used.
+	-->
 	<define-property name="hosted_mode_init" values="default,udem" />
 	<property-provider name="hosted_mode_init">
      <![CDATA[

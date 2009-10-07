@@ -146,7 +146,7 @@ public class OsylRemoteServiceLocator {
 	}
 
     private static final String RPC_QUALIFIED_NAME =
-	    "org.sakaiquebec.opensyllabus.OsylEditorEntryPoint/";
+	    "OsylEditorEntryPoint/";
 
     private static String getWebAppUrl() {
 	// The base url contains the qualified name. It's not compatible

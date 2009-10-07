@@ -121,18 +121,18 @@ public abstract class OsylAbstractEditor extends Composite {
 	    }
 	});
 	windowPanel.addWindowStateListener(new WindowStateListener() {
-	    public void onWindowStateChange(WindowPanel sender) {
-		if (sender.getWindowState() == WindowState.MAXIMIZED) {
-		    maximizeBtn.setImage(Caption.IMAGES.windowRestore()
-			    .createImage());
-		    maximizeEditor();
-		} else {
-		    maximizeBtn.setImage(Caption.IMAGES.windowMaximize()
-			    .createImage());
-		    normalizeEditorWindowState();
+		public void onWindowStateChange(WindowPanel sender,
+				WindowState oldWindowState, WindowState newWindowState) {
+			if (sender.getWindowState() == WindowState.MAXIMIZED) {
+			    maximizeBtn.setImage(Caption.IMAGES.windowRestore()
+				    .createImage());
+			    maximizeEditor();
+			} else {
+			    maximizeBtn.setImage(Caption.IMAGES.windowMaximize()
+				    .createImage());
+			    normalizeEditorWindowState();
+			}			
 		}
-
-	    }
 	});
 	windowPanel.getHeader().add(maximizeBtn, captionRegion);
     }
@@ -388,10 +388,10 @@ public abstract class OsylAbstractEditor extends Composite {
 	pop.showModal(true);
 	// set minimum width of pop-up
 	if (pop.getContentWidth() < 400)
-	    pop.setContentSize(400, pop.getContentHeight());
+	    pop.setWidth(""+400);
 	// set maximum width of pop-up
 	if (pop.getContentWidth() > 750) {
-	    pop.setContentSize(750, pop.getContentHeight());
+	    pop.setHeight(""+750);
 	    getEditorTopWidget().setWidth("735px");
 	}
 	
