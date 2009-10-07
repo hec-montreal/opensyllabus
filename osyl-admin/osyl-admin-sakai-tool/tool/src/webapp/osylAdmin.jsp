@@ -11,7 +11,7 @@
 
 <!-- This script loads our GWT compiled module.        -->
 <!-- Any GWT meta tags must be added before this line. -->
-<script language='javascript' src='<%=request.getContextPath() %>/org.sakaiquebec.opensyllabus.admin.OsylAdminEntryPoint/org.sakaiquebec.opensyllabus.admin.OsylAdminEntryPoint.nocache.js'></script>
+<script language='javascript' src='<%=request.getContextPath() %>/OsylAdminEntryPoint/OsylAdminEntryPoint.nocache.js'></script>
 <script> // Size of the JS application
 	function myLoad() {
 		OsylAdminBackingBean osyl = new OsylAdminBackingBean();

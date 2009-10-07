@@ -101,7 +101,7 @@
   </dependencies>
 
   <properties>
-    <gwtModule>org.sakaiquebec.opensyllabus.admin.OsylAdminEntryPoint</gwtModule>
+    <gwtModuleRename>OsylAdminEntryPoint</gwtModuleRename>
   </properties>
 
   <build>
@@ -125,7 +125,7 @@
                 <filter>
                   <artifact>org.sakaiquebec.opensyllabus.admingwt:osyl-admin-gwt</artifact>
                   <includes>
-                    <include>${gwtModule}/**</include>
+                    <include>${gwtModuleRename}/**</include>
                   </includes>
                 </filter>
               </filters>

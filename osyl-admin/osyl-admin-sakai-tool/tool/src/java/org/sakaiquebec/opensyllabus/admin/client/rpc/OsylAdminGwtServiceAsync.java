@@ -47,7 +47,7 @@ public interface OsylAdminGwtServiceAsync{
      * 
      * @return a Set containing the IDs of the roles
      */
-    public void getTemplateRoles(AsyncCallback<Void> callback);
+    public void getTemplateRoles(AsyncCallback<Set<String>> callback);
     
     /**
      * Returns the functions with the lists of allowed roles 
@@ -56,7 +56,7 @@ public interface OsylAdminGwtServiceAsync{
      * @return a HashMap containing the function as key and the
      * 		list with the allowed roles as value
      */
-    public void getTemplateFunctionsWithAllowedRoles(AsyncCallback<Void> callback);
+    public void getTemplateFunctionsWithAllowedRoles(AsyncCallback<HashMap<String, List<String>>> callback);
     
     /**
      * Gives all roles in the given list the permission for this
