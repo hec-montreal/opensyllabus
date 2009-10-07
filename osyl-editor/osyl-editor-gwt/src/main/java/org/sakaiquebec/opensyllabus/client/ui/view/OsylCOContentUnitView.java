@@ -63,7 +63,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 
     public OsylCOContentUnitView(COModelInterface model,
 	    OsylController osylController) {
-	this(model, osylController, true);
+	this(model, osylController, false);
     }
 
     public OsylCOContentUnitView(COModelInterface model,
