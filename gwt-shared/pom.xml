@@ -150,8 +150,23 @@
                   <configuration>
                     <file>${project.basedir}/lib/gwtx-1.5.2.jar</file>
                     <groupId>org.gwt.mosaic</groupId>
-                    <artifactId>gwt-ext</artifactId>
+                    <artifactId>gwtx</artifactId>
                     <version>1.5.2</version>
+                    <packaging>jar</packaging>
+                    <generatePom>true</generatePom>
+                  </configuration>
+                </execution>
+              <execution>
+                  <id>gwt-incubator</id>
+                  <phase>validate</phase>
+                  <goals>
+                    <goal>install-file</goal>
+                  </goals>
+                  <configuration>
+                    <file>${project.basedir}/lib/gwt-incubator-trunk-r1684.jar</file>
+                    <groupId>org.gwt.mosaic</groupId>
+                    <artifactId>gwt-incubator</artifactId>
+                    <version>trunk-r1684</version>
                     <packaging>jar</packaging>
                     <generatePom>true</generatePom>
                   </configuration>
