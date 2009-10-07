@@ -27,6 +27,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
+ * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
 public interface OsylManagerGwtService extends RemoteService {
@@ -42,7 +43,7 @@ public interface OsylManagerGwtService extends RemoteService {
     public Map<String, String> getOsylConfigs();
 
     /**
-     * Reads XML data and creates a course outline from it.
+     * Reads the XML and creates a course outline.
      * 
      * @param xmlReference
      * @param siteId
@@ -50,7 +51,7 @@ public interface OsylManagerGwtService extends RemoteService {
     public void readXML(String xmlReference, String siteId);
 
     /**
-     * Reads a archive file.
+     * Reads the archive file.
      * 
      * @param xmlReference
      * @param siteId
@@ -63,13 +64,13 @@ public interface OsylManagerGwtService extends RemoteService {
 
     public Map<String, String> getOsylSites(String siteId);
 
-    public String getParent(String siteId);
+    public String getParent(String siteId) throws Exception;
 
-    public void associate(String siteId, String parentId);
+    public void associate(String siteId, String parentId) throws Exception;
 
-    public void dissociate(String siteId, String parentId);
+    public void dissociate(String siteId, String parentId) throws Exception;
     
-    public Boolean associateToCM(String courseSectionId, String siteId);
+    public Boolean associateToCM (String courseSectionId, String siteId);
     
-    public Map<String, String> getCMCourses(); 
+    public Map<String, String> getCMCourses() ;
 }

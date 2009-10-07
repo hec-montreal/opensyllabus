@@ -40,7 +40,7 @@ public class OsylManagerRPCController {
     private static OsylManagerRPCController rpcController = null;
 
     private static String QUALIFIED_NAME =
-	    "org.sakaiquebec.opensyllabus.manager.OsylManagerEntryPoint/";
+	    "OsylManagerEntryPoint/";
 
     final OsylManagerGwtServiceAsync serviceProxy;
 
