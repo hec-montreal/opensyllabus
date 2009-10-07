@@ -68,6 +68,8 @@ public class OsylConfigRuler {
     protected static final String ATTRIBUTE_NODE_NAME = "attribute";
     protected static final String PROPERTY_TYPE_ATTRIBUTE_NAME = "propertyType";
     protected static final String TYPE_ATTRIBUTE_NAME = "type";
+    protected static final String ALLOW_MULTIPLE_ATTRIBUTE_NAME =
+	    "allowMultiple";
     private String rulesConfigContent;
     private Document dom = null;
 
@@ -218,33 +220,40 @@ public class OsylConfigRuler {
 			String restrictionPattern =
 				getRestrictionPatternAttributeValue(attributeTypeNode);
 
-			if (restrictionPattern.indexOf("|") > 0) {
-			    String[] typesStringArray =
-				    restrictionPattern.split("\\|");
-			    for (int j = 0; j < typesStringArray.length; j++) {
-				String type = typesStringArray[j].trim();
-				// create a new model instance based on name and
-				// type
-				COModelInterface modelInstance =
-					createModelInstance(nameAttribute, type);
-				if (modelInstance != null) {
-				    if (allowedSubModels == null) {
-					allowedSubModels =
-						new ArrayList<COModelInterface>();
+			boolean allowMultiple =
+				getAllowMultipleAttributeValue(attributeTypeNode);
+
+			if (allowMultiple) {
+			    if (restrictionPattern.indexOf("|") > 0) {
+				String[] typesStringArray =
+					restrictionPattern.split("\\|");
+				for (int j = 0; j < typesStringArray.length; j++) {
+				    String type = typesStringArray[j].trim();
+				    // create a new model instance based on name
+				    // and
+				    // type
+				    COModelInterface modelInstance =
+					    createModelInstance(nameAttribute,
+						    type);
+				    if (modelInstance != null) {
+					if (allowedSubModels == null) {
+					    allowedSubModels =
+						    new ArrayList<COModelInterface>();
+					}
+					allowedSubModels.add(modelInstance);
 				    }
-				    allowedSubModels.add(modelInstance);
 				}
+			    } else if (restrictionPattern.indexOf("*") > 0) {
+				// TODO: here list all available types for this
+				// nameAttribute
+			    } else {
+				COModelInterface modelInstance =
+					createModelInstance(nameAttribute,
+						restrictionPattern);
+				allowedSubModels =
+					new ArrayList<COModelInterface>();
+				allowedSubModels.add(modelInstance);
 			    }
-			} else if (restrictionPattern.indexOf("*") > 0) {
-			    // TODO: here list all available types for this
-			    // nameAttribute
-			} else {
-			    COModelInterface modelInstance =
-				    createModelInstance(nameAttribute,
-					    restrictionPattern);
-			    allowedSubModels =
-				    new ArrayList<COModelInterface>();
-			    allowedSubModels.add(modelInstance);
 			}
 		    }
 
@@ -272,8 +281,7 @@ public class OsylConfigRuler {
 	} else if (COModeled.CO_UNIT_CONTENT_NODE_NAME
 		.equalsIgnoreCase(nameAttribute)) {
 	    modelInstance = new COUnitContent();
-	} else if (COModeled.CO_RES_NODE_NAME
-		.equalsIgnoreCase(nameAttribute)) {
+	} else if (COModeled.CO_RES_NODE_NAME.equalsIgnoreCase(nameAttribute)) {
 	    modelInstance = new COContentResource();
 	} else if (COModeled.CO_CONTENT_RUBRIC_NODE_NAME
 		.equalsIgnoreCase(nameAttribute)) {
@@ -301,6 +309,17 @@ public class OsylConfigRuler {
 		myNode.getAttributes().getNamedItem(
 			RESTRICTION_PATTERN_ATTRIBUTE_NAME).getNodeValue();
 	return attributeValue;
+    }
+
+    private boolean getAllowMultipleAttributeValue(Node myNode) {
+	Node node =
+		myNode.getAttributes().getNamedItem(
+			ALLOW_MULTIPLE_ATTRIBUTE_NAME);
+	if (node != null && node.getNodeValue() != null) {
+	    return Boolean.parseBoolean(node.getNodeValue());
+	} else {
+	    return true;
+	}
     }
 
     /**

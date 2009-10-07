@@ -305,7 +305,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    }
 	});
 	// TODO: cleanup! Do a separate command to remove all this code which
-	//       should not be in initButtonsCommands
+	// should not be in initButtonsCommands
 	// Print Button
 	// This method works for Chrome and Safari Browsers
 	// but it doesn't work well with FireFox
@@ -614,8 +614,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		} else {
 		    type = COContentResourceProxyType.REFERENCE;
 		}
-		addAddMenuItem(subModel.getType(),
-			new AddMenuCommand(model, type, subModel.getType()));
+		addAddMenuItem(subModel.getType(), new AddMenuCommand(model,
+			type, subModel.getType()));
 	    }
 	}
     }
@@ -624,11 +624,13 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	List<COModelInterface> subModels =
 		getController().getOsylConfig().getOsylConfigRuler()
 			.getAllowedSubModels(model);
-	Iterator<COModelInterface> iter = subModels.iterator();
-	while (iter.hasNext()) {
-	    COModelInterface subModel = (COModelInterface) iter.next();
-	    addAddMenuItem(subModel.getType(),
-		    new AddUnitStructureCommand(model, subModel.getType()));
+	if (subModels != null) {
+	    Iterator<COModelInterface> iter = subModels.iterator();
+	    while (iter.hasNext()) {
+		COModelInterface subModel = (COModelInterface) iter.next();
+		addAddMenuItem(subModel.getType(), new AddUnitStructureCommand(
+			model, subModel.getType()));
+	    }
 	}
 	if (getModel().getChildrens().size() == 1) {
 	    createAllowedCOUnitStructureAddAction((COUnitStructure) model
@@ -641,11 +643,12 @@ public class OsylToolbarView extends OsylViewableComposite implements
     }
 
     private void addAddMenuItem(String itemType, Command cmd) {
-	String html = "<div id=\"add" + itemType + "\">" +
-	    getCoMessage(itemType) + "</div>";
+	String html =
+		"<div id=\"add" + itemType + "\">" + getCoMessage(itemType)
+			+ "</div>";
 	getOsylToolbar().getAddMenuButton().addItem(html, true, cmd);
     }
-    
+
     public void addEventHandler(PublishPushButtonEventHandler handler) {
 	if (publishEventHandlerList == null) {
 	    publishEventHandlerList =

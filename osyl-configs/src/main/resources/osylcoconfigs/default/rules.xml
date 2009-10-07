@@ -15,7 +15,7 @@
 			<element name="asmUnit">
 				<attribute name="type" restrictionpattern="OverviewUnit" />
 				<element name="asmUnitStructure">
-					<attribute name="type" restrictionpattern="OverviewUnitStruct" />
+					<attribute name="type" restrictionpattern="OverviewUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
 						<attribute name="type" restrictionpattern="OverviewUnitContent" />
 			    		<element name="asmResource">
@@ -33,7 +33,7 @@
 			<element name="asmUnit">
 				<attribute name="type" restrictionpattern="StaffUnit" />
 				<element name="asmUnitStructure">
-					<attribute name="type" restrictionpattern="StaffUnitStruct" />
+					<attribute name="type" restrictionpattern="StaffUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
 						<attribute name="type" restrictionpattern="StaffUnitContent" />
 			    		<element name="asmResource">
@@ -51,7 +51,7 @@
 			<element name="asmUnit">
 				<attribute name="type" restrictionpattern="LearningMaterialUnit" />
 				<element name="asmUnitStructure">
-					<attribute name="type" restrictionpattern="LearningMaterialUnitStruct" />
+					<attribute name="type" restrictionpattern="LearningMaterialUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
 						<attribute name="type" restrictionpattern="LearningMaterialUnitContent" />
 			    		<element name="asmResource">
@@ -71,7 +71,7 @@
 			<element name="asmUnit">
 				<attribute name="type" restrictionpattern="AssessmentUnit" />
 				<element name="asmUnitStructure">
-					<attribute name="type" restrictionpattern="AssessmentUnitStruct" />
+					<attribute name="type" restrictionpattern="AssessmentUnitStruct" allowMultiple="true"/>
 					<element name="asmUnitContent">
 						<attribute name="type" restrictionpattern="AssessmentUnitContent" />
 						<element name="asmResource">
@@ -91,7 +91,7 @@
 			<element name="asmUnit">
 				<attribute name="type" restrictionpattern="PedagogicalUnit" />
 				<element name="asmUnitStructure">
-					<attribute name="type" restrictionpattern="PedagogicalUnitStruct" />
+					<attribute name="type" restrictionpattern="PedagogicalUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
 						<attribute name="type" restrictionpattern="PedagogicalUnitContent" />
 						<element name="asmResource">
