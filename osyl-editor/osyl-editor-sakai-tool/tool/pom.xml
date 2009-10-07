@@ -127,10 +127,11 @@
   </dependencies>
 
   <properties>
-    <gwtModule>org.sakaiquebec.opensyllabus.OsylEditorEntryPoint</gwtModule>
+    <gwtModuleRename>OsylEditorEntryPoint</gwtModuleRename>
   </properties>
 
 	<build>
+		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -152,7 +153,7 @@
 								<filter>
 									<artifact>org.sakaiquebec.opensyllabus.editorgwt:osyl-editor-gwt</artifact>
 									<includes>
-										<include>${gwtModule}/**</include>
+										<include>${gwtModuleRename}/**</include>
 									</includes>
 								</filter>
 				                <filter>

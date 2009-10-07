@@ -45,11 +45,11 @@
 	<head>
 
 	<!-- AJAXSLT -->
-	<script src='<%=request.getContextPath() %>/org.sakaiquebec.opensyllabus.OsylEditorEntryPoint/js/ajaxslt-0.8.1/util.js' type="text/javascript"></script>
-    <script src='<%=request.getContextPath() %>/org.sakaiquebec.opensyllabus.OsylEditorEntryPoint/js/ajaxslt-0.8.1/xmltoken.js' type="text/javascript"></script>
-    <script src='<%=request.getContextPath() %>/org.sakaiquebec.opensyllabus.OsylEditorEntryPoint/js/ajaxslt-0.8.1/dom.js' type="text/javascript"></script>
-    <script src='<%=request.getContextPath() %>/org.sakaiquebec.opensyllabus.OsylEditorEntryPoint/js/ajaxslt-0.8.1/xpath.js' type="text/javascript"></script>
-    <script src='<%=request.getContextPath() %>/org.sakaiquebec.opensyllabus.OsylEditorEntryPoint/js/ajaxslt-0.8.1/xslt.js' type="text/javascript"></script>
+	<script src='<%=request.getContextPath() %>/OsylEditorEntryPoint/js/ajaxslt-0.8.1/util.js' type="text/javascript"></script>
+    <script src='<%=request.getContextPath() %>/OsylEditorEntryPoint/js/ajaxslt-0.8.1/xmltoken.js' type="text/javascript"></script>
+    <script src='<%=request.getContextPath() %>/OsylEditorEntryPoint/js/ajaxslt-0.8.1/dom.js' type="text/javascript"></script>
+    <script src='<%=request.getContextPath() %>/OsylEditorEntryPoint/js/ajaxslt-0.8.1/xpath.js' type="text/javascript"></script>
+    <script src='<%=request.getContextPath() %>/OsylEditorEntryPoint/js/ajaxslt-0.8.1/xslt.js' type="text/javascript"></script>
 	
 	<!--                                           -->
 	<!-- Sets the parameters of the EntryPoint     -->
@@ -132,7 +132,7 @@
 		
 		<!-- This script loads our GWT compiled module.        -->
 		<!-- Any GWT meta tags must be added before this line. -->
-		<script language='javascript' src='<%=request.getContextPath() %>/org.sakaiquebec.opensyllabus.OsylEditorEntryPoint/org.sakaiquebec.opensyllabus.OsylEditorEntryPoint.nocache.js'></script>
+		<script language='javascript' src='<%=request.getContextPath() %>/OsylEditorEntryPoint/OsylEditorEntryPoint.nocache.js'></script>
 
 		<script> // Size of the JS application
 			function myLoad() {

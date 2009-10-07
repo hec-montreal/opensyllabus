@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-	<groupId>org.sakaiquebec.opensyllabus</groupId>
-	<artifactId>osyl-editor</artifactId>
-	<version>M2</version>
-	<relativePath>../../pom.xml</relativePath>
-  </parent>
+	<parent>
+		<groupId>org.sakaiquebec.opensyllabus</groupId>
+		<artifactId>osyl-editor</artifactId>
+		<version>M2</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
 
 	<groupId>org.sakaiquebec.opensyllabus.editorgwt</groupId>
 	<artifactId>osyl-editor-gwt</artifactId>
@@ -21,6 +21,9 @@
 		<gwtModule>org.sakaiquebec.opensyllabus.OsylEditorEntryPoint</gwtModule>
 		<gwtFFWorkingModule>org.sakaiquebec.opensyllabus.FFWorkingOsylEditorEntryPoint</gwtFFWorkingModule>
 		<gwtIEWorkingModule>org.sakaiquebec.opensyllabus.IEWorkingOsylEditorEntryPoint</gwtIEWorkingModule>
+		<gwtModuleRename>OsylEditorEntryPoint</gwtModuleRename>
+		<gwtHostedEntryPointPage>OsylEditorEntryPoint.html</gwtHostedEntryPointPage>
+		<gwtHostedEntryPointPageUdem>OsylEditorEntryPointUdem.html</gwtHostedEntryPointPageUdem>
 	</properties>
 
 	<dependencies>
@@ -29,10 +32,10 @@
 			<groupId>org.sakaiquebec.opensyllabus</groupId>
 			<artifactId>osyl-common-shared</artifactId>
 		</dependency>
-	    <dependency>
-	      <groupId>org.sakaiquebec.opensyllabus</groupId>
-	      <artifactId>osyl-configs</artifactId>
-	    </dependency>
+		<dependency>
+			<groupId>org.sakaiquebec.opensyllabus</groupId>
+			<artifactId>osyl-configs</artifactId>
+		</dependency>
 		<!-- gwt -->
 		<dependency>
 			<groupId>com.google.gwt-fx</groupId>
@@ -51,16 +54,10 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-incubator</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.gwt.mosaic</groupId>
 			<artifactId>gwt-mosaic</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.gwt.mosaic</groupId>
 			<artifactId>gwt-beansbinding</artifactId>
@@ -73,87 +70,38 @@
 		</dependency>
 		<dependency>
 			<groupId>org.gwt.mosaic</groupId>
-			<artifactId>gwt-ext</artifactId>
+			<artifactId>gwtx</artifactId>
+			<scope>provided</scope>
+		</dependency>		
+		<dependency>
+			<groupId>org.gwt.mosaic</groupId>
+			<artifactId>gwt-incubator</artifactId>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<sourceDirectory>src</sourceDirectory>
-		<resources>
-			<resource>
-				<directory>src</directory>
-			</resource>
-		</resources>
-
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<outputDirectory>war/WEB-INF/classes</outputDirectory>
 		<plugins>
+			<!--
+				The following is done just before packaging to jar phase : Adding in
+				the target jar artefact the compiled javascript folder, the java
+				source code
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clean-plugin</artifactId>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>${basedir}</directory>
-							<includes>
-								<include>tomcat</include>
-							</includes>
-							<followSymlinks>false</followSymlinks>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-ant-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>generate-ant</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>ant</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.1</version>
-				<executions>
-					<execution>
-						<id>unpack</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.sakaiquebec.opensyllabus</groupId>
-									<artifactId>osyl-configs</artifactId>
-									<version>M2</version>
-									<type>jar</type>
-									<outputDirectory>
-										${project.build.outputDirectory}/org/sakaiquebec/opensyllabus/public/resources
-									</outputDirectory>
-									<excludes>META-INF/**</excludes>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>process-gwt</id>
-						<phase>process-resources</phase>
+						<phase>verify</phase>
 						<configuration>
 							<tasks>
-								<copy todir="${project.build.outputDirectory}/${gwtModule}">
-						            <fileset dir="${project.build.directory}/gwt/${gwtModule}" />
-								</copy>
+								<jar destfile="${project.build.directory}/${project.build.finalName}.jar"
+									update="true" defaultexcludes="true">
+									<fileset dir="${basedir}/src/main/java" includes="**/*.*" />
+									<fileset dir="${basedir}/war/" includes="${gwtModuleRename}/**/*" />
+								</jar>
 							</tasks>
 						</configuration>
 						<goals>
@@ -162,30 +110,39 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!--
+				Cleaning specific GWT files
+			-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${basedir}</directory>
+							<includes>
+								<include>war/${gwtModuleRename}</include>
+								<include>war/WEB-INF/classes</include>
+								<include>war/WEB-INF/lib</include>
+								<include>war/osylcoconfigs</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
 	<profiles>
 		<profile>
+			<!--
+				This profile is active by default, the gwt-maven-plugin will check
+				its self if a compilation is required ex: mvn clean install
+			-->
 			<id>full</id>
 			<activation>
-				<!--
-					This does not work the first time you do a clean and you need to do
-					a 'mvn clean' then 'mvn whatever'. You can't even rely on things
-					such as ${project.build.directory} which is terribly sad. The
-					reason is that M2 seems to evaluate profile activation before
-					evaluating the rest of this POM (and / or execute phases). The
-					result is: 
-                    * You cannot use a property from this POM so you MUST
-					specify on the command line if you want to use a property. 
-                    * Testing for the existence of a file happens before we can delete it
-					on a clean, so even with a 'clean install', you won't get the
-					desired result.
-				-->
-				<file>
-					<missing>m2-target/gwt/org.sakaiquebec.opensyllabus.OsylEditorEntryPoint</missing>
-				</file>
-				<activeByDefault>false</activeByDefault>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<build>
 				<plugins>
@@ -195,106 +152,162 @@
 						<executions>
 							<execution>
 								<id>generate-gwt</id>
-								<phase>generate-resources</phase>
-								<configuration>
-									<modules>
-										<module>${gwtModule}</module>
-									</modules>
-                                    <!-- @see http://mojo.codehaus.org/gwt-maven-plugin/1.1-SNAPSHOT/compile-mojo.html -->
-                                    <webappDirectory>${project.build.directory}/gwt</webappDirectory>
-								</configuration>
+								<phase>compile</phase>
 								<goals>
 									<goal>compile</goal>
 								</goals>
 							</execution>
 						</executions>
+						<configuration>
+							<module>${gwtModule}</module>
+							<webappDirectory>war</webappDirectory>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
 		</profile>
 		<profile>
-			<id>dev-ff</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>gwt-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>generate-gwt</id>
-								<phase>generate-resources</phase>
-								<configuration>
-									<modules>
-										<module>${gwtFFWorkingModule}</module>
-									</modules>
-                                    <!-- @see http://mojo.codehaus.org/gwt-maven-plugin/1.1-SNAPSHOT/compile-mojo.html -->
-                                    <webappDirectory>${project.build.directory}/gwt</webappDirectory>
-								</configuration>
-								<goals>
-									<goal>compile</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>dev-ie</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>gwt-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>generate-gwt</id>
-								<phase>generate-resources</phase>
-								<configuration>
-									<modules>
-										<module>${gwtIEWorkingModule}</module>
-									</modules>
-                                    <!-- @see http://mojo.codehaus.org/gwt-maven-plugin/1.1-SNAPSHOT/compile-mojo.html -->
-                                    <webappDirectory>${project.build.directory}/gwt</webappDirectory>
-								</configuration>
-								<goals>
-									<goal>compile</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
+			<!--
+				Launching hosted mode by profile call, ex: mvn clean install
+				-Phosted
+			-->
 			<id>hosted</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
 			<build>
 				<plugins>
+					<!--
+						Adding osyl-configs unpacked artefact to war (for hosted mode
+						usage)
+					-->
 					<plugin>
-						<artifactId>maven-antrun-plugin</artifactId>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<version>2.1</version>
 						<executions>
 							<execution>
-								<id>process-gwt</id>
-								<phase>package</phase>
+								<id>unpack-osyl-configs</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>unpack</goal>
+								</goals>
 								<configuration>
-									<tasks>
-										<ant antfile="build.xml" target="hosted"/>
-									</tasks>
+									<artifactItems>
+										<artifactItem>
+											<groupId>org.sakaiquebec.opensyllabus</groupId>
+											<artifactId>osyl-configs</artifactId>
+											<version>M2</version>
+											<type>jar</type>
+											<outputDirectory>war</outputDirectory>
+											<excludes>META-INF/**</excludes>
+										</artifactItem>
+									</artifactItems>
 								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>hosted-gwt</id>
+								<phase>compile</phase>
 								<goals>
 									<goal>run</goal>
 								</goals>
 							</execution>
 						</executions>
+						<configuration>
+							<module>${gwtModule}</module>
+							<runTarget>${gwtHostedEntryPointPage}</runTarget>
+							<webappDirectory>war</webappDirectory>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.0.2</version>
+						<configuration>
+							<warSourceDirectory>war</warSourceDirectory>
+							<webXml>war/WEB-INF/web.xml</webXml>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
 		</profile>
+				<profile>
+			<!--
+				Launching udem hosted mode by profile call, ex: mvn clean install
+				-Phosted_udem
+			-->
+			<id>hosted_udem</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<!--
+						Adding osyl-configs unpacked artefact to war (for hosted mode
+						usage)
+					-->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<version>2.1</version>
+						<executions>
+							<execution>
+								<id>unpack-osyl-configs</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>unpack</goal>
+								</goals>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>org.sakaiquebec.opensyllabus</groupId>
+											<artifactId>osyl-configs</artifactId>
+											<version>M2</version>
+											<type>jar</type>
+											<outputDirectory>war</outputDirectory>
+											<excludes>META-INF/**</excludes>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>hosted-gwt</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<module>${gwtModule}</module>
+							<runTarget>${gwtHostedEntryPointPageUdem}</runTarget>
+							<webappDirectory>war</webappDirectory>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.0.2</version>
+						<configuration>
+							<warSourceDirectory>war</warSourceDirectory>
+							<webXml>war/WEB-INF/web.xml</webXml>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>		
 	</profiles>
 </project>
