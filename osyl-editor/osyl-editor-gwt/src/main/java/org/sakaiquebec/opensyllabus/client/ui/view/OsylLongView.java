@@ -33,6 +33,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -119,12 +120,14 @@ public class OsylLongView extends OsylViewableComposite {
 		if (absElement.isCOStructureElement()) {
 		    COStructureElement newCOStructEl =
 			    (COStructureElement) absElement;
-		    addListItemView(newCOStructEl);
+		    
 		    children = newCOStructEl.getChildrens();
+		    if(children.size()>1)
+			addListItemView(newCOStructEl);
 		    displayChildren(children);
 		} else if (absElement.isCOUnit()) {
 		    COUnit itemModel = (COUnit) absElement;
-		    // addListItemView(itemModel);
+		    //addListItemView(itemModel);
 		    displayCOUnit(itemModel);
 		} else {
 		    return;
@@ -133,11 +136,11 @@ public class OsylLongView extends OsylViewableComposite {
 	}
     }
 
-    // private void addListItemView(COContentUnit itemModel) {
-    // OsylCOStructureItemView listItemView =
-    // new OsylCOStructureItemView(itemModel, getController());
-    // getMainPanel().add(listItemView);
-    // }
+    private void addListItemView(COUnit itemModel) {
+	OsylCOStructureItemView listItemView =
+		new OsylCOStructureItemView(itemModel, getController());
+	getMainPanel().add(listItemView);
+    }
 
     private void addListItemView(COStructureElement itemModel) {
 	Label COStructTitleLabel = new Label(getCoMessage(itemModel.getType()));
@@ -162,15 +165,14 @@ public class OsylLongView extends OsylViewableComposite {
      * 
      * @param structureElement
      */
-    // private void displayCOStructureElement(COStructureElement
-    // structureElement){
-    // List<COElementAbstract> children = structureElement.getChildren();
-    // Iterator<COElementAbstract> iter = children.iterator();
-    // while (iter.hasNext()) {
-    // COContentUnit contentUnit = (COContentUnit) iter.next();
-    // displayCOUnit(contentUnit);
-    // }
-    // }
+    private void displayCOStructureElement(COStructureElement structureElement) {
+	List<COElementAbstract> children = structureElement.getChildrens();
+	Iterator<COElementAbstract> iter = children.iterator();
+	while (iter.hasNext()) {
+	    COUnit coUnit = (COUnit) iter.next();
+	    displayCOUnit(coUnit);
+	}
+    }
 
     // public int getLevel(COStructureElement itemModel) {
     // if (itemModel.isCourseOutlineContent()) {

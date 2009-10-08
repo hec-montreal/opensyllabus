@@ -32,10 +32,15 @@ import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelection
 import org.sakaiquebec.opensyllabus.client.controller.event.ResProxySelectionEventHandler.ResProxySelectionEvent;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractResProxView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
+import org.sakaiquebec.opensyllabus.shared.model.COContent;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
 import org.sakaiquebec.opensyllabus.shared.model.COContentType;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElementType;
+import org.sakaiquebec.opensyllabus.shared.model.COUnit;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructureType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
 
@@ -120,19 +125,15 @@ public class OsylViewContext implements FiresUnitSelectionEvents,
     public void setContextModel(COModelInterface contextModel) {
 	if (!contextModel.equals(this.contextModel)) {
 	    this.contextModel = contextModel;
-	    if (COContentType.getTypesList().contains(contextModel.getType())) {
+	    if (contextModel instanceof COContent) {
 		notifyViewContextSelectionEventHandlers(contextModel);
-	    } else if (Arrays.asList(COStructureElementType.getTypes())
-		    .contains(contextModel.getType())) {
+	    } else if (contextModel instanceof COStructureElement) {
 		notifyViewContextSelectionEventHandlers(contextModel);
-	    } else if (COUnitType.getTypesList().contains(
-		    contextModel.getType())) {
+	    } else if (contextModel instanceof COUnit) {
 		notifyViewContextSelectionEventHandlers(contextModel);
-	    } else if (COUnitStructureType.getTypesList().contains(
-		    contextModel.getType())) {
+	    } else if (contextModel instanceof COUnitStructure) {
 		notifyViewContextSelectionEventHandlers(contextModel);
-	    } else if (COContentResourceProxyType.getTypesList().contains(
-		    contextModel.getType())) {
+	    } else if (contextModel instanceof COContentResourceProxy) {
 		// nothing to do
 	    }
 	}
