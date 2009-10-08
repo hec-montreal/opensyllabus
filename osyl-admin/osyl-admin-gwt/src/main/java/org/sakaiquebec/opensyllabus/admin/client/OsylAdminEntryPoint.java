@@ -26,11 +26,12 @@ import org.sakaiquebec.opensyllabus.admin.client.rpc.OsylAdminGwtServiceAsync;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -38,7 +39,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -58,8 +58,7 @@ public class OsylAdminEntryPoint implements EntryPoint {
     private RadioButton createUser =
 	    new RadioButton("create", messages.OsylAdminUsersRadioButton());
 
-    private final String QUALIFIED_NAME =
-	    "OsylAdminEntryPoint/";
+    private final String QUALIFIED_NAME = "OsylAdminEntryPoint/";
     private int operation = CREATE_USERS;
 
     /** {@inheritDoc} */
@@ -78,8 +77,8 @@ public class OsylAdminEntryPoint implements EntryPoint {
 
 	final AdminDialog dialog = new AdminDialog(messages);
 
-	createButton.addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
+	createButton.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
 		dialog.center();
 		dialog.show();
 		AsyncCallback<Void> osylAdmin = new AsyncCallback<Void>() {
@@ -134,13 +133,13 @@ public class OsylAdminEntryPoint implements EntryPoint {
 
 	final VerticalPanel verticalPanel = new VerticalPanel();
 	verticalPanel_1.add(verticalPanel);
-	createUser.addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
+	createUser.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
 		operation = CREATE_USERS;
 	    }
 	});
 	createUser.setStyleName("Osyl-Admin-RadioButton");
-	createUser.setChecked(true);
+	createUser.setValue(true);
 	verticalPanel.add(createUser);
 
 	vPanel.add(createButton);
