@@ -25,19 +25,17 @@ import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerControl
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FileUpload;
-import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -74,8 +72,8 @@ public class ImportCOView extends OsylManagerAbstractView {
 		fileUpload = new FileUpload();
 		fileUpload.setName("uploadFormElement");
 		importSite = new PushButton(getController().getMessages().importXML());
-		importSite.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
+		importSite.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				formPanel.setAction(getFormAction());
 				formPanel.submit();
 			}
@@ -92,30 +90,14 @@ public class ImportCOView extends OsylManagerAbstractView {
 		
 		PushButton skipButton = new PushButton("Skip");
 		skipButton.setWidth("25px");
-		skipButton.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
+		skipButton.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
 				mainPanel.clear();
 			}
 		});
 		mainPanel.add(skipButton);
 
-		formPanel.addFormHandler(new FormHandler() {
-			public void onSubmit(FormSubmitEvent event) {
-				new AsyncCallback<Void>() {
-					public void onSuccess(Void results) {
-					}
-
-					public void onFailure(Throwable error) {
-						try {
-							throw error;
-						} catch (Throwable e) {
-							e.printStackTrace();
-						}
-						error.printStackTrace();
-					}
-				};
-			}
-
+		formPanel.addSubmitCompleteHandler(new SubmitCompleteHandler(){
 			/**
 			 * Parse the file upload return string JSON String
 			 * 
@@ -136,11 +118,11 @@ public class ImportCOView extends OsylManagerAbstractView {
 			 * When the form submission is successfully completed, this event is
 			 * fired. SDATA returns an event of type JSON.
 			 */
-			public void onSubmitComplete(FormSubmitCompleteEvent event) {
+			public void onSubmitComplete(SubmitCompleteEvent event) {
 				String retourJSON = event.getResults();
 				if (getState(event.getResults())) {
 					String url = getURL(retourJSON);
-					if (isZipFile.isChecked()) {
+					if (isZipFile.getValue()) {
 						getController().readZip(url);
 					} else {
 						getController().readXML(url);

@@ -27,15 +27,15 @@ import java.util.Map;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -90,51 +90,53 @@ public class CreateSiteView extends OsylManagerAbstractView {
 
     private void initView() {
 
-		mainPanel = new VerticalPanel();
-		initWidget(mainPanel);
-		nameTextBox = new TextBox();
-		nameLabel = new Label(getController().getMessages().courseName());
-		mainPanel.setWidth("100%");
-		Label title =
-			new Label(getController().getMessages().createSiteTitle());
-		title.setStylePrimaryName("OsylManager-form-title");
-		mainPanel.add(title);
-		mainPanel.add(createFormElement(nameLabel, nameTextBox));
+	mainPanel = new VerticalPanel();
+	initWidget(mainPanel);
+	nameTextBox = new TextBox();
+	nameLabel = new Label(getController().getMessages().courseName());
+	mainPanel.setWidth("100%");
+	Label title =
+		new Label(getController().getMessages().createSiteTitle());
+	title.setStylePrimaryName("OsylManager-form-title");
+	mainPanel.add(title);
+	mainPanel.add(createFormElement(nameLabel, nameTextBox));
 
-		Label configTitle =
-			new Label(getController().getMessages().chooseConfig());
-		configListBox = new ListBox();
-		getController().getOsylConfigs(configListAsyncCallback);// récupération
-		// de la liste
-		// des configs
-		// dispo
-		mainPanel.add(createFormElement(configTitle, configListBox));
+	Label configTitle =
+		new Label(getController().getMessages().chooseConfig());
+	configListBox = new ListBox();
+	getController().getOsylConfigs(configListAsyncCallback);// récupération
+	// de la liste
+	// des configs
+	// dispo
+	mainPanel.add(createFormElement(configTitle, configListBox));
 
-		createSite = new PushButton(getController().getMessages().create());
-		createSite.setWidth("30px");
-		createSite.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
-			    boolean nameValid = false;
-			    String name = nameTextBox.getText();
-				nameValid = (name!=null && name.matches("^[a-zA-Z0-9][ a-zA-Z0-9\\._-]*") && name.matches(".*[\\S]$"));
-				if (nameValid) {
-				    if (configListBox.getSelectedIndex() != -1) {
-					String configId =
-						configListBox.getValue(configListBox
-							.getSelectedIndex());
-					getController().createSite(name,
-						configId);
-				    } else {
-					  Window.alert(getController().getMessages()
-						    .noConfig());
-				    }
-				} else {
-				    Window.alert(getController().getMessages()
-					    .siteNameNotValid());
-				}
-			}
-		});
+	createSite = new PushButton(getController().getMessages().create());
+	createSite.setWidth("30px");
+	createSite.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
+		boolean nameValid = false;
+		String name = nameTextBox.getText();
+		nameValid =
+			(name != null
+				&& name
+					.matches("^[a-zA-Z0-9][ a-zA-Z0-9\\._-]*") && name
+				.matches(".*[\\S]$"));
+		if (nameValid) {
+		    if (configListBox.getSelectedIndex() != -1) {
+			String configId =
+				configListBox.getValue(configListBox
+					.getSelectedIndex());
+			getController().createSite(name, configId);
+		    } else {
+			Window.alert(getController().getMessages().noConfig());
+		    }
+		} else {
+		    Window.alert(getController().getMessages()
+			    .siteNameNotValid());
+		}
+	    }
+	});
 
-		mainPanel.add(createSite);
-	}
+	mainPanel.add(createSite);
+    }
 }

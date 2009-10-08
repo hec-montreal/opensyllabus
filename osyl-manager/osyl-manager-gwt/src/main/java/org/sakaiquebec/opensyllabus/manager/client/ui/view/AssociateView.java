@@ -28,16 +28,18 @@ import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerControl
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -61,6 +63,8 @@ public class AssociateView extends OsylManagerAbstractView implements
     private ListBox parentSiteList;
 
     private String parentId;
+
+    HandlerRegistration handlerRegistration;
 
     AsyncCallback<String> parentAsyncCallback = new AsyncCallback<String>() {
 
@@ -91,7 +95,8 @@ public class AssociateView extends OsylManagerAbstractView implements
 
 		public void onSuccess(Map<String, String> result) {
 		    if (result == null || result.isEmpty()) {
-			Window.alert(getController().getMessages().noAssociableCOSite());
+			Window.alert(getController().getMessages()
+				.noAssociableCOSite());
 			adButton.setEnabled(false);
 		    } else {
 			for (Iterator<String> sitesMapKeysIterator =
@@ -131,9 +136,9 @@ public class AssociateView extends OsylManagerAbstractView implements
 
     };
 
-    ClickListener associateClickListener = new ClickListener() {
+    ClickHandler associateClickHandler = new ClickHandler() {
 
-	public void onClick(Widget sender) {
+	public void onClick(ClickEvent event) {
 	    int selectedIndex = parentSiteList.getSelectedIndex();
 	    if (selectedIndex != -1) {
 		String pId = parentSiteList.getValue(selectedIndex);
@@ -145,9 +150,9 @@ public class AssociateView extends OsylManagerAbstractView implements
 
     };
 
-    ClickListener dissociateClickListener = new ClickListener() {
+    ClickHandler dissociateClickHandler = new ClickHandler() {
 
-	public void onClick(Widget sender) {
+	public void onClick(ClickEvent event) {
 	    getController().dissociate(siteSelectedId, parentId,
 		    dissociateAsyncCallback);
 	}
@@ -185,9 +190,9 @@ public class AssociateView extends OsylManagerAbstractView implements
 		siteList.addItem(siteTitle, siteId);
 	    }
 	}
-	siteList.addChangeListener(new ChangeListener() {
+	siteList.addChangeHandler(new ChangeHandler() {
 
-	    public void onChange(Widget sender) {
+	    public void onChange(ChangeEvent event) {
 		parentId = null;
 		adButton.setEnabled(false);
 		onListChange();
@@ -208,19 +213,17 @@ public class AssociateView extends OsylManagerAbstractView implements
 	mainPanel.add(horizontalPanel);
     }
 
-    
-    private void onListChange(){
+    private void onListChange() {
 	parentSiteList.clear();
 	int selectedIndex = siteList.getSelectedIndex();
 	if (selectedIndex != -1) {
 	    siteSelectedId = siteList.getValue(selectedIndex);
 	    getController().getOsylSites(siteSelectedId,
 		    parentListAsyncCallback);
-	    getController().getParent(siteSelectedId,
-		    parentAsyncCallback);
+	    getController().getParent(siteSelectedId, parentAsyncCallback);
 	}
     }
-    
+
     private void setSelectedParent(String parentId) {
 	if (parentId != null) {
 	    for (int i = 0; i < parentSiteList.getItemCount(); i++) {
@@ -237,16 +240,18 @@ public class AssociateView extends OsylManagerAbstractView implements
     }
 
     private void setButtonAction(int action) {
-	adButton.removeClickListener(associateClickListener);
-	adButton.removeClickListener(dissociateClickListener);
+	if (handlerRegistration != null)
+	    handlerRegistration.removeHandler();
 	switch (action) {
 	case AssociateView.ACTION_ASSOCIATE:
 	    adButton.setText(getController().getMessages().associate());
-	    adButton.addClickListener(associateClickListener);
+	    handlerRegistration =
+		    adButton.addClickHandler(associateClickHandler);
 	    break;
 	case AssociateView.ACTION_DISSOCIATE:
 	    adButton.setText(getController().getMessages().dissociate());
-	    adButton.addClickListener(dissociateClickListener);
+	    handlerRegistration =
+		    adButton.addClickHandler(dissociateClickHandler);
 	    break;
 	}
     }

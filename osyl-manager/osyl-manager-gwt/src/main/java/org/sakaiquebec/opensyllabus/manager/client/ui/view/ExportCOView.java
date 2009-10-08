@@ -29,13 +29,13 @@ import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerE
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -79,9 +79,9 @@ public class ExportCOView extends OsylManagerAbstractView implements
 	}
 	Button exportButton = new Button();
 	exportButton.setText(getController().getMessages().exportCO());
-	exportButton.addClickListener(new ClickListener() {
+	exportButton.addClickHandler(new ClickHandler() {
 
-	    public void onClick(Widget sender) {
+	    public void onClick(ClickEvent event) {
 		int selectedIndex = siteListBox.getSelectedIndex();
 		if (selectedIndex != -1) {
 		    siteSelectedId = siteListBox.getValue(selectedIndex);
