@@ -31,9 +31,10 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -90,17 +91,16 @@ public class OsylEditorEntryPoint implements EntryPoint {
     public void onModuleLoad() {
 	final OsylController osylController = OsylController.getInstance();
 
+	// we initialize the communication
+	// and load the course outline from the server. If some error
+	// occurs, the callback will take charge of loading some default
+	// content for development purposes (i.e: it will call
+	// initOffline()).
+	osylController.loadData();
 
+	Window.addCloseHandler(new CloseHandler<Window>() {
 
-	    // we initialize the communication
-	    // and load the course outline from the server. If some error
-	    // occurs, the callback will take charge of loading some default
-	    // content for development purposes (i.e: it will call
-	    // initOffline()).
-	    osylController.loadData();
-
-	Window.addWindowCloseListener(new WindowCloseListener() {
-	    public void onWindowClosed() {
+	    public void onClose(CloseEvent<Window> event) {
 		// We instruct the ViewContext to close all editors in case
 		// an editor with modified content is still open.
 		osylController.getViewContext().closeAllEditors();
@@ -116,27 +116,22 @@ public class OsylEditorEntryPoint implements EntryPoint {
 		    osylController.onSavePushButton(null);
 		}
 	    }
-
-	    public String onWindowClosing() {
-		return null;
-	    }
 	});
 
     } // onModuleLoad
 
-
     public void initModel(COSerialized co) {
-    	// This is absolutely required to get the ID:
-		this.serializedCO = co;
+	// This is absolutely required to get the ID:
+	this.serializedCO = co;
 
-		// And now we initialize the model from the XML content
-		this.modeledCo = new COModeled();
-		this.modeledCo.setContent(co.getContent());
-		this.modeledCo.XML2Model();
-		setModel(this.modeledCo.getModeledContent());
+	// And now we initialize the model from the XML content
+	this.modeledCo = new COModeled();
+	this.modeledCo.setContent(co.getContent());
+	this.modeledCo.XML2Model();
+	setModel(this.modeledCo.getModeledContent());
 
-		// We can now initialize the view!
-		initView();
+	// We can now initialize the view!
+	initView();
     }
 
     /**
@@ -169,7 +164,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     public void refreshView() {
 	rootPanel.clear();
 	rootPanel.add((Widget) this.getView());
-	previousHeight=0;
+	previousHeight = 0;
 	int width = Math.max(rootPanel.getOffsetWidth() - 16, 500);
 	((OsylViewableComposite) this.getView()).setWidth(width + "px");
     }
@@ -221,8 +216,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * called twice in this case (see setToolHeight).
      */
     private static native boolean resizeSakaiIFrame(String id) /*-{
-                	return parent.setMainFrameHeightNow(id);
-                }-*/;
+							       return parent.setMainFrameHeightNow(id);
+							       }-*/;
 
     /**
      * Returns the current vertical scroll position in browser (ie: for the
@@ -231,14 +226,14 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * @return int number of pixels from top
      */
     public static native int getGlobalYPosition() /*-{
-                	if (document.all) {
-                	    // We are In MSIE.
-             	    return top.document.documentElement.scrollTop;
-                	} else {
-             	    // In Firefox
-                	    return top.pageYOffset;
-                	} 
-                }-*/;
+						  if (document.all) {
+						  // We are In MSIE.
+						  return top.document.documentElement.scrollTop;
+						  } else {
+						  // In Firefox
+						  return top.pageYOffset;
+						  } 
+						  }-*/;
 
     /**
      * Returns, in pixels, the space above the tool (The Sakai navigation
@@ -260,12 +255,12 @@ public class OsylEditorEntryPoint implements EntryPoint {
     }
 
     private static native boolean isInternetExplorer() /*-{
-       	if (document.all) {
-       		return true;
-       	} else {
-       		return false;
-       	}
-       }-*/;
+						       if (document.all) {
+						       return true;
+						       } else {
+						       return false;
+						       }
+						       }-*/;
 
     /**
      * Returns the current vertical scroll position in OSYL.
@@ -289,14 +284,14 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * @return int number of pixel from left
      */
     public static native int getGlobalXPosition() /*-{
-                	if (document.all) {
-                	    // We are In MSIE.
-             	    return top.document.documentElement.scrollLeft;
-                	} else {
-             	    // In Firefox
-                	    return top.pageXOffset;
-                	} 
-                }-*/;
+						  if (document.all) {
+						  // We are In MSIE.
+						  return top.document.documentElement.scrollLeft;
+						  } else {
+						  // In Firefox
+						  return top.pageXOffset;
+						  } 
+						  }-*/;
 
     /**
      * Returns, in pixel, the space to the left of the tool (The Sakai
@@ -330,9 +325,9 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * @return int height in pixel
      */
     public static native int getPageHeight() /*-{
-       	// This is a Sakai method (located in headscripts.js)
-    return parent.browserSafeDocHeight();
-       }-*/;
+					     // This is a Sakai method (located in headscripts.js)
+					     return parent.browserSafeDocHeight();
+					     }-*/;
 
     /**
      * Returns the current viewport height. This is the height of current
@@ -356,22 +351,22 @@ public class OsylEditorEntryPoint implements EntryPoint {
      */
     private static native int getViewportHeightNative() /*-{
 
-    // This code is adapted from Sakai's browserSafeDocHeight
-    if (top.innerHeight) {
-    	// all except Explorer
-    	return top.innerHeight;
-    } else if (top.document.documentElement
-    		&& top.document.documentElement.clientHeight) {
-    	// Explorer 7 and MSIE embedded in FF
-    	return top.document.documentElement.clientHeight;
-    } else if (document.body) {
-    	// other Explorers (including GWT HostedMode)
-    		alert("Unsupported browser");
-    	// return document.body.clientHeight;
-    		return 400;
-    }
-    
-       }-*/;
+							// This code is adapted from Sakai's browserSafeDocHeight
+							if (top.innerHeight) {
+							// all except Explorer
+							return top.innerHeight;
+							} else if (top.document.documentElement
+							&& top.document.documentElement.clientHeight) {
+							// Explorer 7 and MSIE embedded in FF
+							return top.document.documentElement.clientHeight;
+							} else if (document.body) {
+							// other Explorers (including GWT HostedMode)
+							alert("Unsupported browser");
+							// return document.body.clientHeight;
+							return 400;
+							}
+							
+							}-*/;
 
     /**
      * Returns the current viewport width. This is the width of current visible
@@ -397,22 +392,22 @@ public class OsylEditorEntryPoint implements EntryPoint {
      */
     private static native int getViewportWidthNative() /*-{
 
-    // This code is adapted from Sakai's browserSafeDocHeight
-    if (top.innerWidth) {
-    	// all except Explorer
-    	return top.innerWidth;
-    } else if (top.document.documentElement
-    		&& top.document.documentElement.clientWidth) {
-    	// Explorer 7 and MSIE embedded in FF
-    	return top.document.documentElement.clientWidth;
-    } else if (document.body) {
-    	// other Explorers (including GWT HostedMode)
-    		alert("Unsupported browser");
-    	// return document.body.clientWidth;
-    		return 600;
-    }
-    
-       }-*/;
+						       // This code is adapted from Sakai's browserSafeDocHeight
+						       if (top.innerWidth) {
+						       // all except Explorer
+						       return top.innerWidth;
+						       } else if (top.document.documentElement
+						       && top.document.documentElement.clientWidth) {
+						       // Explorer 7 and MSIE embedded in FF
+						       return top.document.documentElement.clientWidth;
+						       } else if (document.body) {
+						       // other Explorers (including GWT HostedMode)
+						       alert("Unsupported browser");
+						       // return document.body.clientWidth;
+						       return 600;
+						       }
+						       
+						       }-*/;
 
     // Shows the y-position in a sticky label
     private void startDebugMsg() {
@@ -528,8 +523,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * @param y pixels from the top
      */
     public static native void scrollToYPosition(int y) /*-{
-                	top.scrollTo(0,y);
-                }-*/;
+						       top.scrollTo(0,y);
+						       }-*/;
 
     /**
      * Returns the RootPanel's width.
@@ -581,8 +576,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
     public COSerialized getSerializedCourseOutline() {
 	return serializedCO;
     }
-    
-    public COSerialized getPreviewSerializeCourseOutline(){
+
+    public COSerialized getPreviewSerializeCourseOutline() {
 	COModeled comodeled = new COModeled();
 	comodeled.setModeledContent(getModel());
 	comodeled.model2XML(true);

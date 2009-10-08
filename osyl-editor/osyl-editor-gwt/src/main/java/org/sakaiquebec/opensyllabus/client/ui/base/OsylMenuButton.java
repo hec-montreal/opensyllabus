@@ -15,15 +15,17 @@
 package org.sakaiquebec.opensyllabus.client.ui.base;
 
 
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FocusListenerAdapter;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.Window;
 
 /**
  * A {@link OsylPushButton} that displays a small list of choices in a
@@ -78,8 +80,9 @@ public class OsylMenuButton extends Composite {
 	firstTime = true;
 
 	// Adding a ClickListener to the PushButton to show a List of choices
-	getMenuButton().addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
+	getMenuButton().addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
+		Widget sender = (Widget)event.getSource();
 		getMenuListBox().setVisible(true);
 		int x = sender.getAbsoluteLeft();
 		int y = sender.getAbsoluteTop();
@@ -114,8 +117,8 @@ public class OsylMenuButton extends Composite {
 	});
 
 	// Adding a ClickListener to the ListBox in order to select a value
-	getMenuListBox().addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
+	getMenuListBox().addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
 		getMenuListBox().setFocus(false);
 		getMenuButton().getPushButton().setFocus(true);
 		int selectedIndex = getMenuListBox().getSelectedIndex();
@@ -129,8 +132,8 @@ public class OsylMenuButton extends Composite {
 
 	// Adding a FocusListener to the ListBox in order to hide
 	// the ListBox after the choice was done
-	getMenuListBox().addFocusListener(new FocusListenerAdapter() {
-	    public void onLostFocus(Widget sender) {
+	getMenuListBox().addBlurHandler(new BlurHandler() {
+	    public void onBlur(BlurEvent event) {
 		getMenuListBox().setVisible(false);
 	    }
 	});
@@ -179,8 +182,8 @@ public class OsylMenuButton extends Composite {
 	getMenuButton().setDisabledButton();
     }
 
-    public void addClickListener(ClickListener listener) {
-	getMenuButton().addClickListener(listener);
+    public void addClickHandler(ClickHandler handler) {
+	getMenuButton().addClickHandler(handler);
     }
 
     /**

@@ -22,14 +22,14 @@ package org.sakaiquebec.opensyllabus.client.ui.listener;
 
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxDocumentView;
 
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public class OsylLinkClickListener implements ClickListener {
+public class OsylLinkClickListener implements ClickHandler {
 
     private OsylResProxDocumentView view;
     private String url;
@@ -40,7 +40,7 @@ public class OsylLinkClickListener implements ClickListener {
 
     }
 
-    public void onClick(Widget sender) {
+    public void onClick(ClickEvent event) {
 	String parent = view.getModel().getParent().getUuidParent();
 	if (parent != null) {
 	    view.getController().checkSitesRelation(url);

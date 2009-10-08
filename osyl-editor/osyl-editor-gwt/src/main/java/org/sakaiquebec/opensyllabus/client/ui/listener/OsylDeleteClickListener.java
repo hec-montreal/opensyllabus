@@ -25,13 +25,13 @@ import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractResProxView;
 
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 
 /**
  * Class to manage click on the edit button
  */
-public class OsylDeleteClickListener implements ClickListener {
+public class OsylDeleteClickListener implements ClickHandler {
 
     private OsylAbstractResProxView osylResProxView;
 
@@ -44,10 +44,7 @@ public class OsylDeleteClickListener implements ClickListener {
 	this.osylResProxView = osylResProxView;
     }
 
-    /**
-     * @see ClickListener#onClick(Widget)
-     */
-    public void onClick(Widget sender) {
+    public void onClick(ClickEvent event) {
 	try {
 	    // Here, we create a dialog box to confirm delete action.
 	    OsylOkCancelDialog osylOkCancelDialog =
@@ -57,8 +54,8 @@ public class OsylDeleteClickListener implements ClickListener {
 			    osylResProxView
 				    .getUiMessage("OsylOkCancelDialog_Delete_Content"));
 
-	    osylOkCancelDialog.addOkButtonCLickListener(new ClickListener() {
-		public void onClick(Widget sender) {
+	    osylOkCancelDialog.addOkButtonCLickHandler(new ClickHandler() {
+		public void onClick(ClickEvent event) {
 		    try {
 			osylResProxView.updateModelOnDelete();
 		    } catch (Exception e) {
@@ -68,16 +65,15 @@ public class OsylDeleteClickListener implements ClickListener {
 		    }
 		}
 	    });
-	    osylOkCancelDialog
-		    .addCancelButtonClickListener(new ClickListener() {
+	    osylOkCancelDialog.addCancelButtonClickHandler(new ClickHandler() {
 
-			public void onClick(Widget sender) {
-			    osylResProxView.getMainPanel()
-				    .removeStyleDependentName("Hover");
-			    osylResProxView.getButtonPanel().setVisible(false);
-			    osylResProxView.getUpAndDownPanel().setVisible(false);
-			}
-		    });
+		public void onClick(ClickEvent event) {
+		    osylResProxView.getMainPanel().removeStyleDependentName(
+			    "Hover");
+		    osylResProxView.getButtonPanel().setVisible(false);
+		    osylResProxView.getUpAndDownPanel().setVisible(false);
+		}
+	    });
 	    osylOkCancelDialog.show();
 	    osylOkCancelDialog.centerAndFocus();
 	} catch (Exception e) {

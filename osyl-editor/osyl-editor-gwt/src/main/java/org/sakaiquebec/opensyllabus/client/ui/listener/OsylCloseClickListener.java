@@ -23,27 +23,26 @@ package org.sakaiquebec.opensyllabus.client.ui.listener;
 
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 
 /**
  * Listener for handling a close button click while in editing a resource. It
- * can be used for the cancel-changes button as well as the save-changes
- * button. 
+ * can be used for the cancel-changes button as well as the save-changes button.
  * 
  * @author <a href="mailto:Remi.Saias@hec.ca">Remi Saias</a>
  */
-public class OsylCloseClickListener implements ClickListener {
+public class OsylCloseClickListener implements ClickHandler {
 
     // Either we want to save or not on close.
     private boolean save;
-    
+
     // The OsylAbstractView we are listening to.
     private OsylAbstractView view;
 
     /**
-     * Constructor specifying the {@link OsylAbstractView} this listener is working
-     * for and whether it should save changes (if the validate button is
+     * Constructor specifying the {@link OsylAbstractView} this listener is
+     * working for and whether it should save changes (if the validate button is
      * clicked) or discard them (cancel button clicked).
      * 
      * @param view
@@ -55,9 +54,9 @@ public class OsylCloseClickListener implements ClickListener {
     }
 
     /** {@inheritDoc} */
-    public void onClick(Widget sender) {
-    view.closeAndSaveEdit(save);
-    // Note: getView().leaveEdit(); is now called in the 
-    // WindowCloseListener of the editor pop-up
+    public void onClick(ClickEvent event) {
+	view.closeAndSaveEdit(save);
+	// Note: getView().leaveEdit(); is now called in the
+	// WindowCloseListener of the editor pop-up
     }
 }

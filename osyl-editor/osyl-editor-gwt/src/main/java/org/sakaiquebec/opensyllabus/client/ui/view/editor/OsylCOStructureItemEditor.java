@@ -32,6 +32,8 @@ import org.sakaiquebec.opensyllabus.client.ui.listener.OsylLabelEditClickListene
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FocusWidget;
@@ -63,7 +65,7 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
      * Constructor specifying the {@link OsylAbstractView} this editor is
      * working for and whether the edition mode is activated by clicking on the
      * main panel or not.
-     *
+     * 
      * @param parent
      */
     public OsylCOStructureItemEditor(OsylAbstractView parent) {
@@ -109,7 +111,7 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 	nameEditor = new TextBox();
 	nameEditor.setStylePrimaryName("Osyl-LabelEditor-TextBox");
 	nameEditor.setWidth("100%");
-	nameEditor.addClickListener(new ResetLabelClickListener(getView()
+	nameEditor.addClickHandler(new ResetLabelClickListener(getView()
 		.getCoMessage(getView().getModel().getType())));
 
 	if (getNameTooltip() != null) {
@@ -155,10 +157,9 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
     protected void refreshButtonPanel() {
 	// We only create an edit button (as delete is not allowed) and add it:
 	String title = getView().getUiMessage("edit");
-	ClickListener listener = new OsylLabelEditClickListener(getView());
+	ClickHandler handler = new OsylLabelEditClickListener(getView());
 	AbstractImagePrototype imgEditButton = getOsylImageBundle().edit();
-	ImageAndTextButton pbEdit =
-		createButton(imgEditButton, title, listener);
+	ImageAndTextButton pbEdit = createButton(imgEditButton, title, handler);
 	getView().getButtonPanel().clear();
 	getView().getButtonPanel().add(pbEdit);
 	if (isDeletable) {
@@ -276,10 +277,10 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 	return focusWidgetList;
     }
 
-    protected ClickListener getCancelButtonClickListener() {
-	return new ClickListener() {
+    protected ClickHandler getCancelButtonClickListener() {
+	return new ClickHandler() {
 
-	    public void onClick(Widget sender) {
+	    public void onClick(ClickEvent event) {
 		getView().getMainPanel().removeStyleDependentName("Hover");
 		getView().getButtonPanel().setVisible(false);
 	    }
@@ -298,9 +299,9 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
     protected ImageAndTextButton createButtonDelete() {
 	AbstractImagePrototype imgDeleteButton = getOsylImageBundle().delete();
 	String title = getView().getUiMessage("delete");
-	ClickListener listener =
+	ClickHandler handler =
 		new MyDeletePushButtonListener((COUnit) getView().getModel());
-	return createButton(imgDeleteButton, title, listener);
+	return createButton(imgDeleteButton, title, handler);
     }
 
     protected OsylPushButton createButtonUp() {
@@ -313,9 +314,9 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 			    .createImage());
 	    upButton.setTitle(getUiMessage("UpButton.title"));
 	    upButton.setEnabledButton();
-	    upButton.addClickListener(new ClickListener() {
+	    upButton.addClickHandler(new ClickHandler() {
 
-		public void onClick(Widget sender) {
+		public void onClick(ClickEvent event) {
 		    getView().leaveEdit();
 		    ((COUnit) getView().getModel()).moveUp();
 		}
@@ -343,9 +344,9 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 			    .createImage());
 	    downButton.setTitle(getUiMessage("DownButton.title"));
 	    downButton.setEnabledButton();
-	    downButton.addClickListener(new ClickListener() {
+	    downButton.addClickHandler(new ClickHandler() {
 
-		public void onClick(Widget sender) {
+		public void onClick(ClickEvent event) {
 		    getView().leaveEdit();
 		    ((COUnit) getView().getModel()).moveDown();
 		}
@@ -376,7 +377,7 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
     /**
      * Class to manage click on the delete button
      */
-    public class MyDeletePushButtonListener implements ClickListener {
+    public class MyDeletePushButtonListener implements ClickHandler {
 
 	// Model variables (we use either one or the other). We could also use
 	// a generic variable and cast it when needed...
@@ -386,10 +387,7 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 	    this.coUnit = coContentUnit;
 	}
 
-	/**
-	 * @see ClickListener#onClick(Widget)
-	 */
-	public void onClick(Widget sender) {
+	public void onClick(ClickEvent event) {
 	    try {
 		// Here, we create a dialog box to confirm delete
 		OsylOkCancelDialog osylOkCancelDialog =
@@ -398,10 +396,10 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 				.getUiMessage(
 					"OsylOkCancelDialog_Delete_Content"));
 		osylOkCancelDialog
-			.addOkButtonCLickListener(new MyOkCancelDialogListener(
+			.addOkButtonCLickHandler(new MyOkCancelDialogListener(
 				this.coUnit));
 		osylOkCancelDialog
-			.addCancelButtonClickListener(getCancelButtonClickListener());
+			.addCancelButtonClickHandler(getCancelButtonClickListener());
 		osylOkCancelDialog.show();
 		osylOkCancelDialog.centerAndFocus();
 	    } catch (Exception e) {
@@ -412,7 +410,7 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
     }
 
     // The click listener that perform delete action if confirm button pushed
-    public class MyOkCancelDialogListener implements ClickListener {
+    public class MyOkCancelDialogListener implements ClickHandler {
 
 	private COUnit coUnit;
 
@@ -420,7 +418,7 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 	    this.coUnit = coUnit;
 	}
 
-	public void onClick(Widget sender) {
+	public void onClick(ClickEvent event) {
 	    try {
 		String title = coUnit.getLabel();
 		coUnit.getParent().removeChild(coUnit);

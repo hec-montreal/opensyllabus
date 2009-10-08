@@ -39,10 +39,12 @@ import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -85,7 +87,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     protected PushButton createPushButtonDelete() {
 	Image img = getOsylImageBundle().delete().createImage();
 	String title = getUiMessage("delete");
-	ClickListener listener =
+	ClickHandler listener =
 		new OsylDeleteClickListener((OsylAbstractResProxView) getView());
 	return createPushButton(img, title, listener);
     }
@@ -93,7 +95,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     protected ImageAndTextButton createButtonDelete() {
 	AbstractImagePrototype imgDeleteButton = getOsylImageBundle().delete();
 	String title = getUiMessage("delete");
-	ClickListener listener =
+	ClickHandler listener =
 		new OsylDeleteClickListener((OsylAbstractResProxView) getView());
 	return createButton(imgDeleteButton, title, listener);
     }
@@ -108,9 +110,9 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 			    .createImage());
 	    upButton.setTitle(getUiMessage("UpButton.title"));
 	    upButton.setEnabledButton();
-	    upButton.addClickListener(new ClickListener() {
+	    upButton.addClickHandler(new ClickHandler() {
 
-		public void onClick(Widget sender) {
+		public void onClick(ClickEvent event) {
 		    getView().leaveEdit();
 		    getView().getModel().moveUp();
 		}
@@ -138,9 +140,9 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 			    .createImage());
 	    downButton.setTitle(getUiMessage("DownButton.title"));
 	    downButton.setEnabledButton();
-	    downButton.addClickListener(new ClickListener() {
+	    downButton.addClickHandler(new ClickHandler() {
 
-		public void onClick(Widget sender) {
+		public void onClick(ClickEvent event) {
 		    getView().leaveEdit();
 		    getView().getModel().moveDown();
 		}
@@ -191,9 +193,9 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	rubricPanel.add(rubricListBox);
 	rubricListBox
 		.setTitle(getUiMessage("EditorPopUp.options.rubric.choose.title"));
-	rubricListBox.addChangeListener(new ChangeListener() {
+	rubricListBox.addChangeHandler(new ChangeHandler() {
 
-	    public void onChange(Widget sender) {
+	    public void onChange(ChangeEvent event) {
 		refreshTargetCoAbsractElementListBox(targetsListBox);
 	    }
 
@@ -228,13 +230,13 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	optionPanel.add(options);
 	// Hide CheckBox
 	hideCheckBox = new CheckBox(getUiMessage("MetaInfo.hide"));
-	hideCheckBox.setChecked(getView().isContextHidden());
+	hideCheckBox.setValue(getView().isContextHidden());
 	hideCheckBox.setTitle(getUiMessage("MetaInfo.hide.title"));
 	options.add(hideCheckBox);
 
 	// "Important" CheckBox
 	importantCheckBox = new CheckBox(getUiMessage("MetaInfo.important"));
-	importantCheckBox.setChecked(getView().isContextImportant());
+	importantCheckBox.setValue(getView().isContextImportant());
 	importantCheckBox.setTitle(getUiMessage("MetaInfo.important.title"));
 	options.add(importantCheckBox);
 	// Other options, specified by each subclass
@@ -322,7 +324,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
      * @return boolean
      */
     public boolean isContextImportant() {
-	return importantCheckBox.isChecked();
+	return importantCheckBox.getValue();
     }
 
     /**
@@ -331,7 +333,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
      * @return boolean
      */
     public boolean isContextHidden() {
-	return hideCheckBox.isChecked();
+	return hideCheckBox.getValue();
     }
 
     protected String getUiMessage(String key) {

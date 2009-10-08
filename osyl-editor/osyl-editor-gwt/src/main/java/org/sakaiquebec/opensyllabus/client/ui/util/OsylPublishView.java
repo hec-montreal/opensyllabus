@@ -29,14 +29,14 @@ import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -90,7 +90,7 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	// TODO: Bug with ImageBundle, we have to use
 		// AbstractImagePrototype
 		imgPublishButton, uiMessages.getMessage("publish"));
-	publishButton.addClickListener(new PublishLinkClickListener());
+	publishButton.addClickHandler(new PublishLinkClickHandler());
 	publishButton.setStylePrimaryName("Osyl-PublishView-genericButton");
 	buttonPanel.add(publishButton);
 
@@ -106,8 +106,8 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	// TODO: Bug with ImageBundle, we have to use
 		// AbstractImagePrototype
 		imgCloseButton, uiMessages.getMessage("close"));
-	cancelButton.addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
+	cancelButton.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
 		hide();
 	    }
 	});
@@ -118,9 +118,9 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	setStylePrimaryName("Osyl-PublishView-PopupPanel");
     }
 
-    public class PublishLinkClickListener implements ClickListener {
+    public class PublishLinkClickHandler implements ClickHandler {
 
-	public void onClick(Widget sender) {
+	public void onClick(ClickEvent event) {
 	    osylPublishedListView.setPublishingNow();
 	    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 		public void onSuccess(Void serverResponse) {
@@ -129,7 +129,9 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 
 		public void onFailure(Throwable error) {
 		    final OsylAlertDialog alertBox =
-			    new OsylAlertDialog(false, true, getController().getUiMessage("publish.error")+" : "+error.toString());
+			    new OsylAlertDialog(false, true, getController()
+				    .getUiMessage("publish.error")
+				    + " : " + error.toString());
 		    alertBox.show();
 		    osylPublishedListView.verifiyPublishState();
 		}

@@ -28,8 +28,9 @@ import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylLabelEditClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -97,7 +98,7 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 	nameEditor = new TextBox();
 	nameEditor.setStylePrimaryName("Osyl-LabelEditor-TextBox");
 	nameEditor.setWidth("100%");
-	nameEditor.addClickListener(new ResetLabelClickListener(getView()
+	nameEditor.addClickHandler(new ResetLabelClickListener(getView()
 		.getCoMessage(getView().getModel().getType())));
 
 	if (getNameTooltip() != null) {
@@ -122,7 +123,7 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     protected HTML getViewer() {
 	return viewer;
     }
-    
+
     public void setViewerStyle(String levelStyle) {
 	getViewer().addStyleName(levelStyle);
 	getViewer().addStyleName("Osyl-TitleEditor");
@@ -143,7 +144,7 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     protected void refreshButtonPanel() {
 	// We only create an edit button (as delete is not allowed) and add it:
 	String title = getView().getUiMessage("edit");
-	ClickListener listener = new OsylLabelEditClickListener(getView());
+	ClickHandler listener = new OsylLabelEditClickListener(getView());
 	AbstractImagePrototype imgEditButton = getOsylImageBundle().edit();
 	ImageAndTextButton pbEdit =
 		createButton(imgEditButton, title, listener);
@@ -260,10 +261,10 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 	return focusWidgetList;
     }
 
-    protected ClickListener getCancelButtonClickListener() {
-	return new ClickListener() {
+    protected ClickHandler getCancelButtonClickListener() {
+	return new ClickHandler() {
 
-	    public void onClick(Widget sender) {
+	    public void onClick(ClickEvent event) {
 		getView().getMainPanel().removeStyleDependentName("Hover");
 		getView().getButtonPanel().setVisible(false);
 	    }

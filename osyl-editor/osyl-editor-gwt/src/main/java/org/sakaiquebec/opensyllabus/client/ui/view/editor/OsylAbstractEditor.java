@@ -37,15 +37,17 @@ import org.sakaiquebec.opensyllabus.client.ui.listener.OsylCloseClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylEditClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.WindowCloseListener;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -53,6 +55,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextBox;
@@ -111,8 +114,8 @@ public abstract class OsylAbstractEditor extends Composite {
 	    CaptionRegion captionRegion) {
 	final ImageButton maximizeBtn =
 		new ImageButton(Caption.IMAGES.windowMaximize());
-	maximizeBtn.addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
+	maximizeBtn.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
 		if (windowPanel.getWindowState() == WindowState.MAXIMIZED) {
 		    windowPanel.setWindowState(WindowState.NORMAL);
 		} else {
@@ -121,18 +124,18 @@ public abstract class OsylAbstractEditor extends Composite {
 	    }
 	});
 	windowPanel.addWindowStateListener(new WindowStateListener() {
-		public void onWindowStateChange(WindowPanel sender,
-				WindowState oldWindowState, WindowState newWindowState) {
-			if (sender.getWindowState() == WindowState.MAXIMIZED) {
-			    maximizeBtn.setImage(Caption.IMAGES.windowRestore()
-				    .createImage());
-			    maximizeEditor();
-			} else {
-			    maximizeBtn.setImage(Caption.IMAGES.windowMaximize()
-				    .createImage());
-			    normalizeEditorWindowState();
-			}			
+	    public void onWindowStateChange(WindowPanel sender,
+		    WindowState oldWindowState, WindowState newWindowState) {
+		if (sender.getWindowState() == WindowState.MAXIMIZED) {
+		    maximizeBtn.setImage(Caption.IMAGES.windowRestore()
+			    .createImage());
+		    maximizeEditor();
+		} else {
+		    maximizeBtn.setImage(Caption.IMAGES.windowMaximize()
+			    .createImage());
+		    normalizeEditorWindowState();
 		}
+	    }
 	});
 	windowPanel.getHeader().add(maximizeBtn, captionRegion);
     }
@@ -195,28 +198,28 @@ public abstract class OsylAbstractEditor extends Composite {
     protected ImageAndTextButton createButtonEdit() {
 	AbstractImagePrototype imgEditButton = getOsylImageBundle().edit();
 	String title = getView().getUiMessage("edit");
-	ClickListener listener = new OsylEditClickListener(getView());
+	ClickHandler listener = new OsylEditClickListener(getView());
 	return createButton(imgEditButton, title, listener);
     }
 
     protected PushButton createPushButton(Image img, String msg,
-	    ClickListener listener) {
+	    ClickHandler handler) {
 
 	// We return a PushButton with the specified image, title and listener
 	PushButton button = new PushButton(img);
 	button.setStylePrimaryName("gwt-PushButton-up");
 	button.setTitle(msg);
-	button.addClickListener(listener);
+	button.addClickHandler(handler);
 
 	return button;
 
     }
 
     protected ImageAndTextButton createButton(AbstractImagePrototype imgButton,
-	    String msg, ClickListener listener) {
+	    String msg, ClickHandler handler) {
 	ImageAndTextButton button = new ImageAndTextButton(imgButton, msg);
 	button.setStylePrimaryName("Osyl-Button");
-	button.addClickListener(listener);
+	button.addClickHandler(handler);
 	return button;
     }
 
@@ -234,7 +237,8 @@ public abstract class OsylAbstractEditor extends Composite {
      * 
      * @param title
      */
-    protected void createEditBox(String title) {;
+    protected void createEditBox(String title) {
+	;
 	pop = new OsylWindowPanel(title, this);
 	pop.setStylePrimaryName("Osyl-EditorPopup");
 
@@ -245,23 +249,19 @@ public abstract class OsylAbstractEditor extends Composite {
 	if (isResizable()) {
 	    addMaximizeButton(pop, CaptionRegion.RIGHT);
 	}
-	pop.addWindowCloseListener(new WindowCloseListener() {
-	    public void onWindowClosed() {
+	pop.addCloseHandler(new CloseHandler<PopupPanel>() {
+
+	    public void onClose(CloseEvent<PopupPanel> event) {
 		if (pop.getWindowState() == WindowState.MAXIMIZED) {
 		    pop.setWindowState(WindowState.NORMAL);
 		}
 		getView().leaveEdit();
 	    }
-
-	    public String onWindowClosing() {
-		// no warning message when closing the editor window
-		return null;
-	    }
 	});
 	VerticalPanel mainPanel = new VerticalPanel();
 	pop.setWidget(mainPanel);
 	mainPanel.setWidth("100%");
-	
+
 	Widget browserWidget = getBrowserWidget();
 	if (null != browserWidget) {
 	    // row 0 (if applicable): the resource browser
@@ -283,7 +283,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	// We need an additional panel to get our stuff aligned correctly
 	HorizontalPanel configGroups = new HorizontalPanel();
 	row1.add(configGroups);
-	
+
 	// Other options, specified by each subclass
 	Widget[] optionWidgets = getOptionWidgets();
 	if (null != optionWidgets) {
@@ -291,17 +291,17 @@ public abstract class OsylAbstractEditor extends Composite {
 		configGroups.add(optionWidgets[i]);
 	    }
 	}
-	
+
 	for (Iterator<FocusWidget> fwIterator =
 		getEditionFocusWidgets().iterator(); fwIterator.hasNext();) {
 	    FocusWidget fw = (FocusWidget) fwIterator.next();
-	    fw.addFocusListener(new FocusWidgetFocusListener());
+	    fw.addFocusHandler(new FocusWidgetFocusHandler());
 	    if (fw.getClass().equals(RichTextArea.class)) {
 		osylFormattingToolbar =
 			new OsylFormattingToolbar((RichTextArea) fw);
 	    }
 	}
-	
+
 	if (osylFormattingToolbar != null) {
 	    // 2nd row: the formatting toolBar
 	    HorizontalPanel row2 = new HorizontalPanel();
@@ -310,7 +310,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	    mainPanel.add(row2);
 	    row2.add(osylFormattingToolbar);
 	}
-	
+
 	// 3rd row: the editor only
 	HorizontalPanel row3 = new HorizontalPanel();
 	row3.setStylePrimaryName("Osyl-EditorPopup-RowEditor");
@@ -329,7 +329,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	    row4.add(configWidget);
 	    configWidget.setWidth("100%");
 	}
-	
+
 	// 5th row: the "move..." and "OK"/"Cancel" buttons We have to use 3
 	// Horizontal Panels to get the right alignment
 	HorizontalPanel row5 = new HorizontalPanel();
@@ -338,7 +338,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	row5.setHeight("30px");
 	row5.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
 	mainPanel.add(row5);
-	
+
 	if (isMoveable()) {
 	    HorizontalPanel leftPanel = new HorizontalPanel();
 	    leftPanel.setWidth("100%");
@@ -352,7 +352,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	    refreshTargetCoAbsractElementListBox(targetsListBox);
 	    leftPanel.add(targetsListBox);
 	}
-	
+
 	HorizontalPanel rightPanel = new HorizontalPanel();
 	rightPanel.setWidth("100%");
 	rightPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
@@ -360,7 +360,7 @@ public abstract class OsylAbstractEditor extends Composite {
 
 	HorizontalPanel okCancelPanel = new HorizontalPanel();
 	rightPanel.add(okCancelPanel);
-	
+
 	AbstractImagePrototype imgOkButton =
 		getOsylImageBundle().action_validate();
 	ImageAndTextButton okButton = new ImageAndTextButton(
@@ -369,7 +369,7 @@ public abstract class OsylAbstractEditor extends Composite {
 		imgOkButton, getUiMessage("Global.ok"));
 	okButton.setStylePrimaryName("Osyl-EditorPopup-Button");
 	okCancelPanel.add(okButton);
-	
+
 	AbstractImagePrototype imgCancelButton =
 		getOsylImageBundle().action_cancel();
 	ImageAndTextButton cancelButton = new ImageAndTextButton(
@@ -379,22 +379,22 @@ public abstract class OsylAbstractEditor extends Composite {
 	cancelButton.setStylePrimaryName("Osyl-EditorPopup-Button");
 	okCancelPanel.add(cancelButton);
 
-	okButton.addClickListener(new OsylCloseClickListener(getView(), true));
-	cancelButton.addClickListener(new OsylCloseClickListener(getView(),
+	okButton.addClickHandler(new OsylCloseClickListener(getView(), true));
+	cancelButton.addClickHandler(new OsylCloseClickListener(getView(),
 		false));
-	
+
 	// Sizes the pop-up to fit the preferred size of the its subcomponents,
 	// shows it modal and centers it.
 	pop.showModal(true);
 	// set minimum width of pop-up
 	if (pop.getContentWidth() < 400)
-	    pop.setWidth(""+400);
+	    pop.setWidth("" + 400);
 	// set maximum width of pop-up
 	if (pop.getContentWidth() > 750) {
-	    pop.setHeight(""+750);
+	    pop.setHeight("" + 750);
 	    getEditorTopWidget().setWidth("735px");
 	}
-	
+
 	// remember original height
 	originalEditorPopupHeight = pop.getOffsetHeight();
 	originalEditorWidgetHeight = getEditorTopWidget().getOffsetHeight();
@@ -539,20 +539,17 @@ public abstract class OsylAbstractEditor extends Composite {
     /**
      * Listener used to know which RichtextArea has the focused
      */
-    public class FocusWidgetFocusListener implements FocusListener {
+    public class FocusWidgetFocusHandler implements FocusHandler {
 
-	public void onFocus(Widget sender) {
-	    if (sender.getClass().equals(RichTextArea.class)) {
-		osylFormattingToolbar.setRichText((RichTextArea) sender);
+	public void onFocus(FocusEvent event) {
+	    
+	    if (event.getSource().getClass().equals(RichTextArea.class)) {
+		osylFormattingToolbar.setRichText((RichTextArea) event.getSource());
 	    } else {
 		if (null != osylFormattingToolbar) {
 		    osylFormattingToolbar.setRichText(null);
 		}
 	    }
-	}
-
-	public void onLostFocus(Widget sender) {
-	    // Nothing to do
 	}
     }
 
@@ -580,7 +577,7 @@ public abstract class OsylAbstractEditor extends Composite {
 
     abstract protected Widget getMetaInfoLabel();
 
-    protected class ResetLabelClickListener implements ClickListener {
+    protected class ResetLabelClickListener implements ClickHandler {
 
 	private String defaultText;
 
@@ -589,14 +586,14 @@ public abstract class OsylAbstractEditor extends Composite {
 	    this.defaultText = defaultText;
 	}
 
-	public void onClick(Widget sender) {
-	    if (sender instanceof TextBox) {
-		TextBox textbox = (TextBox) sender;
+	public void onClick(ClickEvent event) {
+	    if (event.getSource() instanceof TextBox) {
+		TextBox textbox = (TextBox) event.getSource();
 		if (textbox.getText().equals(defaultText))
 		    textbox.setText("");
 	    }
-	    if (sender instanceof RichTextArea) {
-		RichTextArea rta = (RichTextArea) sender;
+	    if (event.getSource() instanceof RichTextArea) {
+		RichTextArea rta = (RichTextArea) event.getSource();
 		if (rta.getText().equals(defaultText))
 		    rta.setText("");
 	    }

@@ -25,9 +25,7 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxLinkView;
-import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
@@ -40,8 +38,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * Link editor to be used within {@link OsylAbstractView}. The edition mode
- * uses a Rich-text editor and the view mode displays a clickable link.
+ * Link editor to be used within {@link OsylAbstractView}. The edition mode uses
+ * a Rich-text editor and the view mode displays a clickable link.
  * 
  * @author <a href="mailto:Remi.Saias@hec.ca">Remi Saias</a>
  */
@@ -61,13 +59,13 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     private HTML viewer;
     private HTML viewerURI;
     private HTML viewerDesc;
-    
+
     // Contains the viewer and info icons for the requirement level
     private HorizontalPanel viewerPanel;
 
     // remember editor description height for maximizing popup
     private int originalEditorDescHeight;
-    
+
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
      * working for.
@@ -109,36 +107,39 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
      * Creates and set the low-level editor (TextBox).
      */
     private void initEditor() {
-    VerticalPanel editorPanel = new VerticalPanel();
-    
+	VerticalPanel editorPanel = new VerticalPanel();
+
 	final FlexTable flexTable = new FlexTable();
 	flexTable.getFlexCellFormatter().setWidth(0, 0, "15%");
 	flexTable.getFlexCellFormatter().setWidth(0, 1, "85%");
-	
+
 	editorName = new TextBox();
 	editorName.setStylePrimaryName("Osyl-LabelEditor-TextBox");
 	editorName.setWidth("100%");
-	editorName.addClickListener(new ResetLabelClickListener(getView().getCoMessage("InsertYourTextHere")));
-	flexTable.setWidget(0, 0, new Label(getUiMessage("Link.label")+" : "));
+	editorName.addClickHandler(new ResetLabelClickListener(getView()
+		.getCoMessage("InsertYourTextHere")));
+	flexTable
+		.setWidget(0, 0, new Label(getUiMessage("Link.label") + " : "));
 	flexTable.setWidget(0, 1, editorName);
-	
+
 	editorLink = new TextBox();
 	editorLink.setStylePrimaryName("Osyl-LabelEditor-TextBox");
 	editorLink.setWidth("100%");
-	editorLink.addClickListener(new ResetLabelClickListener("http://www.google.ca/search?q=opensyllabus"));
-	flexTable.setWidget(1, 0, new Label(getUiMessage("Link.url")+" : "));
+	editorLink.addClickHandler(new ResetLabelClickListener(
+		"http://www.google.ca/search?q=opensyllabus"));
+	flexTable.setWidget(1, 0, new Label(getUiMessage("Link.url") + " : "));
 	flexTable.setWidget(1, 1, editorLink);
-	
+
 	flexTable.setWidth("100%");
 	editorPanel.add(flexTable);
-	
+
 	Label label = new Label(getView().getUiMessage("comment"));
 	editorPanel.add(label);
 	editorDesc = new RichTextArea();
 	editorDesc.setWidth("99%");
 	editorDesc.setHeight("120px");
 	editorPanel.add(editorDesc);
-	
+
 	setEditor(editorPanel);
     }
 
@@ -153,7 +154,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	HTML htmlViewer = new HTML();
 	htmlViewer.setStylePrimaryName("link");
 	setViewer(htmlViewer);
-	
+
 	HTML htmlViewerDesc = new HTML();
 	htmlViewerDesc.setStylePrimaryName("description");
 	htmlViewerDesc.setTitle(getView().getUiMessage("Link.description"));
@@ -162,7 +163,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	HTML htmlViewerURI = new HTML();
 	htmlViewerURI.setStylePrimaryName("uri");
 	setViewerURI(htmlViewerURI);
-	if(isReadOnly()) {
+	if (isReadOnly()) {
 	    getViewerURI().setVisible(false);
 	}
 
@@ -181,14 +182,14 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	}
 	constructViewerLayout();
     }
-    
+
     private void constructViewerLayout() {
 	// Now we add our widgets with the following layout
-	//  ____________________________________________
-	// |  link displayed as	name of link            |
-	// |  link                                      |
+	// ____________________________________________
+	// | link displayed as name of link |
+	// | link |
 	// |--------------------------------------------|
-	// |  description                               |
+	// | description |
 	// |____________________________________________|
 	//
 	if (isReadOnly()) {
@@ -204,7 +205,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	vp.add(getViewerDesc());
 	getMainPanel().add(getViewerPanel());
     }
-    
+
     // Clears the viewerPanel and calls constructViewerLayout().
     private void reconstructViewerLayout() {
 	getViewerPanel().clear();
@@ -226,20 +227,20 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     private HTML getViewerURI() {
 	return this.viewerURI;
     }
-    
+
     private void setViewerDesc(HTML html) {
-    this.viewerDesc = html;
+	this.viewerDesc = html;
     }
-    
+
     private HTML getViewerDesc() {
-    return this.viewerDesc;
+	return this.viewerDesc;
     }
-    
-    private void setViewerPanel(HorizontalPanel viewerPanel){
+
+    private void setViewerPanel(HorizontalPanel viewerPanel) {
 	this.viewerPanel = viewerPanel;
     }
-    
-    private HorizontalPanel getViewerPanel(){
+
+    private HorizontalPanel getViewerPanel() {
 	return viewerPanel;
     }
 
@@ -256,7 +257,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	if (isInEditionMode()) {
 	    editorName.setText(text);
 	    if (editorName.getOffsetWidth() > 675) {
-	    	editorName.setWidth("675px");
+		editorName.setWidth("675px");
 	    }
 	} else {
 	    viewer.setHTML(text);
@@ -270,12 +271,12 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	    return viewer.getHTML();
 	}
     }
-    
+
     public void setLink(String text) {
 	if (isInEditionMode()) {
 	    editorLink.setText(text);
 	    if (editorLink.getOffsetWidth() > 675) {
-	    	editorLink.setWidth("675px");
+		editorLink.setWidth("675px");
 	    }
 	} else {
 	    viewer.setHTML(text);
@@ -289,7 +290,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	    return viewer.getHTML();
 	}
     }
-    
+
     public String getDescription() {
 	if (isInEditionMode()) {
 	    return editorDesc.getHTML();
@@ -316,7 +317,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 
 	// We keep track that we are now in edition-mode
 	setInEditionMode(true);
-	
+
 	createEditBox();
 
 	// We get the text to edit from the model
@@ -343,9 +344,9 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	getMainPanel().add(getViewerPanel());
 	// We get the text to display from the model
 	getViewer().setHTML(getView().getTextFromModel());
-	getViewerURI().setHTML("("+ getView().getRawURI() + ")");
+	getViewerURI().setHTML("(" + getView().getRawURI() + ")");
 	getViewerDesc().setHTML(getView().getDescriptionFromModel());
-	
+
 	// If we are not in read-only mode, we display some meta-info and add
 	// buttons and listeners enabling edition or deletion:
 	if (!isReadOnly()) {
@@ -379,21 +380,22 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	focusWidgetList.add(editorDesc);
 	return focusWidgetList;
     }
-    
+
     @Override
     public boolean isResizable() {
-    return true;
+	return true;
     }
-    
+
     @Override
     public void maximizeEditor() {
-	originalEditorDescHeight = editorDesc.getOffsetHeight();    	
+	originalEditorDescHeight = editorDesc.getOffsetHeight();
 	super.maximizeEditor();
-	int descAdd = getEditorPopup().getOffsetHeight() - getOriginalEditorPopupHeight();
-	editorDesc.setHeight((originalEditorDescHeight + descAdd) 
-			+ "px");
+	int descAdd =
+		getEditorPopup().getOffsetHeight()
+			- getOriginalEditorPopupHeight();
+	editorDesc.setHeight((originalEditorDescHeight + descAdd) + "px");
     }
-    
+
     @Override
     public void normalizeEditorWindowState() {
 	super.normalizeEditorWindowState();

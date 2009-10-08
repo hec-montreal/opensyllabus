@@ -17,13 +17,13 @@ import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * First version of an OsylDialog package OsylOKCancelDialog extends GWT.
@@ -86,14 +86,14 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
      * OsylOkCancelDialog Constructor
      * 
      * @param autoHide : true if the dialog should be automatically hidden when
-     *                the user clicks outside of it
+     *            the user clicks outside of it
      * @param modal : true if keyboard and mouse events for widgets not
-     *                contained by the dialog should be ignored
+     *            contained by the dialog should be ignored
      * @param dialogTitle : the title of the dialog
      * @param dialogContent : the text content of the dialog
      */
-    public OsylOkCancelDialog(boolean autoHide, boolean modal, 
-    		String dialogTitle, String dialogContent) {
+    public OsylOkCancelDialog(boolean autoHide, boolean modal,
+	    String dialogTitle, String dialogContent) {
 	super(autoHide, modal);
 	initDialog(dialogTitle, dialogContent);
     }
@@ -102,25 +102,25 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
      * OsylOkCancelDialog Constructor with default title.
      * 
      * @param autoHide : true if the dialog should be automatically hidden when
-     *                the user clicks outside of it
+     *            the user clicks outside of it
      * @param modal : true if keyboard and mouse events for widgets not
-     *                contained by the dialog should be ignore
+     *            contained by the dialog should be ignore
      * @param dialogContent : the text content of the dialog
      */
     public OsylOkCancelDialog(boolean autoHide, boolean modal,
-    		String dialogContent) {
-	this(autoHide, modal, 
-			uiMessages.getMessage("OsylOkCancelDialog_Title"), 
-			dialogContent);
+	    String dialogContent) {
+	this(autoHide, modal,
+		uiMessages.getMessage("OsylOkCancelDialog_Title"),
+		dialogContent);
     }
 
     /**
      * OsylOkCancelDialog Constructor specifying every possible parameter
      * 
      * @param autoHide : true if the dialog should be automatically hidden when
-     *                the user clicks outside of it
+     *            the user clicks outside of it
      * @param modal : true if keyboard and mouse events for widgets not
-     *                contained by the dialog should be ignore
+     *            contained by the dialog should be ignore
      * @param dialogTitle : the title of the dialog
      * @param dialogContent : the text content of the dialog
      * @param okButtonLabel : label for ok button
@@ -157,8 +157,8 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
 	okButton = new Button(okButtonLabel);
 	okButton.setWidth("60");
 	optionPanel.add(okButton);
-	okButton.addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
+	okButton.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
 		setSelectedValue(true);
 		OsylOkCancelDialog.this.hide();
 	    }
@@ -167,8 +167,8 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
 	cancelButton = new Button(cancelButtonLabel);
 	cancelButton.setWidth("60");
 	optionPanel.add(cancelButton);
-	cancelButton.addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
+	cancelButton.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
 		setSelectedValue(false);
 		OsylOkCancelDialog.this.hide();
 	    }
@@ -209,8 +209,8 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
      * 
      * @param clickListener
      */
-    public void addOkButtonCLickListener(ClickListener clickListener) {
-	okButton.addClickListener(clickListener);
+    public void addOkButtonCLickHandler(ClickHandler clickListener) {
+	okButton.addClickHandler(clickListener);
     }
 
     /**
@@ -218,15 +218,15 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
      * 
      * @param clickListener
      */
-    public void addCancelButtonClickListener(ClickListener clickListener) {
-	cancelButton.addClickListener(clickListener);
+    public void addCancelButtonClickHandler(ClickHandler clickListener) {
+	cancelButton.addClickHandler(clickListener);
     }
 
     /**
      * Centers the dialog (by invoking
-     * {@link OsylEditorEntryPoint#centerObject(com.google.gwt.user.client.ui.PopupPanel)}.
-     * This must be invoked after the {@link PopupPanel#show()} method otherwise
-     * the centering calculations may be wrong!
+     * {@link OsylEditorEntryPoint#centerObject(com.google.gwt.user.client.ui.PopupPanel)}
+     * . This must be invoked after the {@link PopupPanel#show()} method
+     * otherwise the centering calculations may be wrong!
      */
     public void center() {
 	OsylEditorEntryPoint.centerObject(this);

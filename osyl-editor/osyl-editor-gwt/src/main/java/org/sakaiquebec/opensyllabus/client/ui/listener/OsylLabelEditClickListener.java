@@ -25,8 +25,8 @@ import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 
 /**
  * This class represents the click listeners of a Osyl label being clicked.
@@ -34,7 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylLabelEditClickListener implements ClickListener{
+public class OsylLabelEditClickListener implements ClickHandler {
     private OsylAbstractView view;
 
     /**
@@ -46,12 +46,9 @@ public class OsylLabelEditClickListener implements ClickListener{
 	this.view = view;
     }
 
-    /**
-     * @see ClickListener#onClick(Widget)
-     */
-    public void onClick(Widget sender) {
+    public void onClick(ClickEvent event) {
 	try {
-	    
+
 	    view.getController().getViewContext().setView(view);
 
 	    OsylAbstractEditor editor = view.getEditor();
@@ -64,12 +61,12 @@ public class OsylLabelEditClickListener implements ClickListener{
 
 	} catch (Exception e) {
 	    final OsylAlertDialog alertBox =
-		new OsylAlertDialog(false, true, "OsylLabelEditClickListener 256,"
-			+ " Unable to enter edit mode: " + e);
+		    new OsylAlertDialog(false, true,
+			    "OsylLabelEditClickListener 256,"
+				    + " Unable to enter edit mode: " + e);
 	    e.printStackTrace();
 	    alertBox.center();
 	    alertBox.show();
 	}
     } // onClick
 }
-

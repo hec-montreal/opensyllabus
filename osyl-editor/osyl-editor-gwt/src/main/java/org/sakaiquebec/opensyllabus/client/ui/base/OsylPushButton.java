@@ -22,7 +22,7 @@
 package org.sakaiquebec.opensyllabus.client.ui.base;
 
 
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -123,7 +123,7 @@ public class OsylPushButton extends Composite {
      * 
      * @param clickListener
      */
-    public void addClickListener(ClickListener clickListener) {
-	getPushButton().addClickListener(clickListener);
+    public void addClickHandler(ClickHandler clickHandler) {
+	getPushButton().addClickHandler(clickHandler);
     }
 }

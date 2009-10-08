@@ -24,9 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
-import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -50,8 +48,8 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
 
     // Our viewer
     private HTML viewer;
-    
-    //Contains the viewer and info icons for the requirement level
+
+    // Contains the viewer and info icons for the requirement level
     private HorizontalPanel viewerPanel;
 
     /**
@@ -101,7 +99,8 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
 	RichTextArea rta = new RichTextArea();
 	rta.setWidth("500px");
 	rta.setStylePrimaryName("Osyl-UnitView-TextArea");
-	rta.addClickListener(new ResetLabelClickListener(getView().getCoMessage("InsertYourTextHere")));
+	rta.addClickHandler(new ResetLabelClickListener(getView().getCoMessage(
+		"InsertYourTextHere")));
 	setEditor(rta);
     }
 
@@ -145,12 +144,12 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
     public HTML getViewer() {
 	return this.viewer;
     }
-    
-    private void setViewerPanel(HorizontalPanel viewerPanel){
+
+    private void setViewerPanel(HorizontalPanel viewerPanel) {
 	this.viewerPanel = viewerPanel;
     }
-    
-    private HorizontalPanel getViewerPanel(){
+
+    private HorizontalPanel getViewerPanel() {
 	return viewerPanel;
     }
 
@@ -199,7 +198,7 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
 	createEditBox();
 	// We get the text to edit from the model
 	setText(getTextFromModel());
-	
+
     } // enterEdit
 
     public void enterView() {
@@ -237,10 +236,10 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
 	focusWidgetList.add(editor);
 	return focusWidgetList;
     }
-    
+
     @Override
     public boolean isResizable() {
-    return true;
+	return true;
     }
 
     /**

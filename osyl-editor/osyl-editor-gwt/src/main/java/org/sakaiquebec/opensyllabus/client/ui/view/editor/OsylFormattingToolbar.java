@@ -25,6 +25,10 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -50,12 +54,13 @@ public class OsylFormattingToolbar extends Composite {
      * We use an inner EventListener class to avoid exposing event methods on
      * the RichTextToolbar itself.
      */
-    private class EventListener implements ClickListener, KeyboardListener {
+    private class EventListener implements ClickHandler, KeyUpHandler {
 
 	/**
 	 * @see ClickListener#onClick(Widget)
 	 */
-	public void onClick(Widget sender) {
+	public void onClick(ClickEvent event) {
+	    Widget sender = (Widget) event.getSource();
 	    if (sender == bold) {
 		basic.toggleBold();
 	    } else if (sender == italic) {
@@ -101,21 +106,10 @@ public class OsylFormattingToolbar extends Composite {
 	}
 
 	/**
-	 * @see KeyboardListener#onKeyDown(Widget, char, int)
-	 */
-	public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-	}
-
-	/**
-	 * @see KeyboardListener#onKeyPress(Widget, char, int)
-	 */
-	public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-	}
-
-	/**
 	 * @see KeyboardListener#onKeyUp(Widget, char, int)
 	 */
-	public void onKeyUp(Widget sender, char keyCode, int modifiers) {
+	public void onKeyUp(KeyUpEvent event) {
+	    Widget sender = (Widget) event.getSource();
 	    if (sender == richText) {
 		// We use the RichTextArea's onKeyUp event to update the toolbar
 		// status.
@@ -167,7 +161,6 @@ public class OsylFormattingToolbar extends Composite {
     /**
      * Creates a toolBar that will work for a not-yet-specified
      * {@link RichTextArea}.
-     * 
      */
     public OsylFormattingToolbar() {
 	this(null);
@@ -246,7 +239,7 @@ public class OsylFormattingToolbar extends Composite {
      */
     private PushButton createPushButton(AbstractImagePrototype img, String tip) {
 	PushButton pb = new PushButton(img.createImage());
-	pb.addClickListener(listener);
+	pb.addClickHandler(listener);
 	pb.setTitle(tip);
 	return pb;
     }
@@ -261,7 +254,7 @@ public class OsylFormattingToolbar extends Composite {
     private ToggleButton createToggleButton(AbstractImagePrototype img,
 	    String tip) {
 	ToggleButton tb = new ToggleButton(img.createImage());
-	tb.addClickListener(listener);
+	tb.addClickHandler(listener);
 	tb.setTitle(tip);
 	return tb;
     }

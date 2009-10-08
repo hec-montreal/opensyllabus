@@ -24,20 +24,22 @@ package org.sakaiquebec.opensyllabus.client.ui.listener;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Widget;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 
 /**
  * Class to manage click on the edit button.
+ * 
  * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
  */
-public class OsylEditClickListener implements ClickListener {
+public class OsylEditClickListener implements ClickHandler {
 
     private OsylAbstractView view;
 
     /**
      * Constructor for adding a click listener on an element of the specified
-     * {@link OsylAbstractView}. 
+     * {@link OsylAbstractView}.
      * 
      * @param view
      */
@@ -45,16 +47,13 @@ public class OsylEditClickListener implements ClickListener {
 	if (view.getController().isReadOnly()) {
 	    // This may not be good encapsulation but that exception will help
 	    // not forgetting the handling of ro mode in editors...
-	    throw new IllegalStateException("OsylEditClickListener should" +
-	    		" not be instantiated in read-only mode");
+	    throw new IllegalStateException("OsylEditClickListener should"
+		    + " not be instantiated in read-only mode");
 	}
 	this.view = view;
     }
 
-    /**
-     * @see ClickListener#onClick(Widget)
-     */
-    public void onClick(Widget sender) {
+    public void onClick(ClickEvent event) {
 	try {
 	    view.getController().getViewContext().setChild(view);
 
@@ -68,8 +67,9 @@ public class OsylEditClickListener implements ClickListener {
 
 	} catch (Exception e) {
 	    final OsylAlertDialog alertBox =
-		new OsylAlertDialog(false, true, "OsylEditClickListener 256,"
-			+ " Unable to enter edit mode: " + e);
+		    new OsylAlertDialog(false, true,
+			    "OsylEditClickListener 256,"
+				    + " Unable to enter edit mode: " + e);
 	    e.printStackTrace();
 	    alertBox.center();
 	    alertBox.show();

@@ -42,10 +42,14 @@ import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.DisclosurePanelImages;
 import com.google.gwt.user.client.ui.FocusWidget;
@@ -53,7 +57,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RichTextArea;
@@ -146,7 +149,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	editorLabel = new TextBox();
 	editorLabel.setStylePrimaryName("Osyl-LabelEditor-TextBox");
 	editorLabel.setWidth("99%");
-	editorLabel.addClickListener(new ResetLabelClickListener(getView()
+	editorLabel.addClickHandler(new ResetLabelClickListener(getView()
 		.getCoMessage("InsertYourTextHere")));
 	editorPanel.add(editorLabel);
 
@@ -353,7 +356,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	getMainPanel().add(getViewerPanel());
 	// We get the text to display from the model
 	getViewer().setHTML(getView().getTextFromModel());
-	getViewer().addClickListener(
+	getViewer().addClickHandler(
 		new OsylLinkClickListener(getView(), getView()
 			.getTextFromModel()));
 	getViewerName().setHTML("(" + getView().getDocName() + ")");
@@ -485,9 +488,9 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 	saveButton.setEnabled(false);
 
-	saveButton.addClickListener(new ClickListener() {
+	saveButton.addClickHandler(new ClickHandler() {
 
-	    public void onClick(Widget sender) {
+	    public void onClick(ClickEvent event) {
 
 		if (browser.getSelectedAbstractBrowserItem() != null
 			&& !browser.getSelectedAbstractBrowserItem().isFolder()) {
@@ -523,16 +526,16 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	label2.setStylePrimaryName("sectionLabel");
 	browserPanel.add(label2);
 
-	descriptionTextArea.addKeyboardListener(new KeyboardListenerAdapter() {
+	descriptionTextArea.addKeyPressHandler(new KeyPressHandler() {
 
-	    public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+	    public void onKeyPress(KeyPressEvent event) {
 		saveButton.setEnabled(true);
 	    }
 	});
 
-	licenseListBox.addChangeListener(new ChangeListener() {
+	licenseListBox.addChangeHandler(new ChangeHandler() {
 
-	    public void onChange(Widget sender) {
+	    public void onChange(ChangeEvent event) {
 		saveButton.setEnabled(true);
 	    }
 	});
