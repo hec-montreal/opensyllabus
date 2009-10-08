@@ -33,6 +33,8 @@ import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -132,8 +134,8 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 	// TODO: Bug with ImageBundle, we have to use
 		// AbstractImagePrototype
 		imgSaveButton, uiMessages.getMessage("save"));
-	saveButton.addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
+	saveButton.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
 		form.submit();
 	    }
 	});
@@ -146,8 +148,8 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 	// TODO: Bug with ImageBundle, we have to use
 		// AbstractImagePrototype
 		imgCancelButton, uiMessages.getMessage("cancel"));
-	cancelButton.addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
+	cancelButton.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
 		cancel();
 	    }
 	});

@@ -20,14 +20,14 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
-
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureEvaluationItemLabelView;
 
-import com.google.gwt.user.client.ui.ChangeListener;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -82,49 +82,63 @@ public class OsylCOStructureEvaluationItemEditor extends
     public boolean prepareForSave() {
 	boolean ok = true;
 	String messages = "";
-	boolean errordate=false;
-	String isoRegex = "^(\\d{4})\\D?(0[1-9]|1[0-2])\\D?([12]\\d|0[1-9]|3[01])$";////ISO format yyyy-mm-dd
-	
-	
-	//required fields validations
+	boolean errordate = false;
+	String isoRegex =
+		"^(\\d{4})\\D?(0[1-9]|1[0-2])\\D?([12]\\d|0[1-9]|3[01])$";// //ISO
+									  // format
+									  // yyyy-mm-dd
+
+	// required fields validations
 	String weight = weightTextBox.getText();
-	if(weight.trim().equals("")){
-	    messages+=getView().getUiMessage("Evaluation.field.required", getUiMessage("Evaluation.rating"))+"\n\n";
-	    ok=false;
+	if (weight.trim().equals("")) {
+	    messages +=
+		    getView().getUiMessage("Evaluation.field.required",
+			    getUiMessage("Evaluation.rating"))
+			    + "\n\n";
+	    ok = false;
+	} else {
+	    if (!weight.matches("^[0-9][0-9]*%$")) {
+		messages +=
+			getUiMessage("Evaluation.field.weight.format") + "\n\n";
+		ok = false;
+	    }
 	}
-	else{
-	    if(!weight.matches("^[0-9][0-9]*%$")){
-		    messages+=getUiMessage("Evaluation.field.weight.format")+"\n\n";  
-		    ok=false;
-		}
+	String endDateString = endDateTextBox.getText();
+	if (endDateString.trim().equals("")) {
+	    messages +=
+		    getView().getUiMessage("Evaluation.field.required",
+			    getUiMessage("Evaluation.EndDate"))
+			    + "\n\n";
+	    ok = false;
+	} else {
+	    if (!endDateString.matches(isoRegex)) {
+		messages +=
+			getView().getUiMessage("Evaluation.field.date.unISO",
+				getUiMessage("Evaluation.EndDate"))
+				+ "\n\n";
+		ok = false;
+		errordate = true;
+	    }
 	}
-	String endDateString  = endDateTextBox.getText();
-	if(endDateString.trim().equals("")){
-	    messages+=getView().getUiMessage("Evaluation.field.required", getUiMessage("Evaluation.EndDate"))+"\n\n";
-	    ok=false;
-	}else{
-	    if(!endDateString.matches(isoRegex)){
-		    messages+=getView().getUiMessage("Evaluation.field.date.unISO", getUiMessage("Evaluation.EndDate"))+"\n\n";  
-		    ok=false;
-		    errordate=true;
-		}
+
+	// date validation
+
+	String startDateString = startDateTextBox.getText();
+	if (!startDateString.trim().equals("")
+		&& !startDateString.matches(isoRegex)) {
+	    messages +=
+		    getView().getUiMessage("Evaluation.field.date.unISO",
+			    getUiMessage("Evaluation.StartDate"))
+			    + "\n\n";
+	    ok = false;
+	    errordate = true;
 	}
-	
-	//date validation
-	
-	
-	String startDateString  = startDateTextBox.getText();
-	if(!startDateString.trim().equals("") && !startDateString.matches(isoRegex)){
-	    messages+=getView().getUiMessage("Evaluation.field.date.unISO", getUiMessage("Evaluation.StartDate"))+"\n\n"; 
-	    ok=false;
-	    errordate=true;
+
+	if (!errordate && startDateString.compareTo(endDateString) > 0) {
+	    messages += getUiMessage("Evaluation.field.date.order") + "\n";
+	    ok = false;
 	}
-	
-	if(!errordate && startDateString.compareTo(endDateString)>0){
-	    messages+=getUiMessage("Evaluation.field.date.order")+"\n";
-	    ok=false;
-	}
-	if(!ok){
+	if (!ok) {
 	    OsylAlertDialog osylAlertDialog = new OsylAlertDialog(messages);
 	    osylAlertDialog.center();
 	    osylAlertDialog.show();
@@ -267,16 +281,16 @@ public class OsylCOStructureEvaluationItemEditor extends
 	Label l9 = new Label(getUiMessage("Evaluation.type"));
 	typeListBox = new ListBox();
 	typeListBox.setTitle(getUiMessage("Evaluation.type.tooltip"));
-	List<String> evalTypeList = getView().getController().getOsylConfig().getEvalTypeList();
-	if(evalTypeList!=null){
-		for(String evalTypeKey: evalTypeList){
-			typeListBox.addItem(getView()
-					.getCoMessage(evalTypeKey));
-		}
+	List<String> evalTypeList =
+		getView().getController().getOsylConfig().getEvalTypeList();
+	if (evalTypeList != null) {
+	    for (String evalTypeKey : evalTypeList) {
+		typeListBox.addItem(getView().getCoMessage(evalTypeKey));
+	    }
 	}
-	typeListBox.addChangeListener(new ChangeListener() {
+	typeListBox.addChangeHandler(new ChangeHandler() {
 
-	    public void onChange(Widget sender) {
+	    public void onChange(ChangeEvent event) {
 		if (typeListBox.getItemText(getSelectedTypeIndex()).equals(
 			getText())
 			|| getView().getCoMessage("evaluation").equals(

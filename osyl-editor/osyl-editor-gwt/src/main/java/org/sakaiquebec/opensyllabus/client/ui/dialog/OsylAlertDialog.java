@@ -16,12 +16,12 @@ import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * First version of an OsylDialog package OsylOKCancelDialog extends GWT.
@@ -127,8 +127,8 @@ public class OsylAlertDialog extends OsylAbstractLightBox {
 		new Button(uiMessages.getMessage("OsylAlertDialog_Ok_Button"));
 	okButton.setWidth("60");
 	optionPanel.add(okButton);
-	okButton.addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
+	okButton.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
 		OsylAlertDialog.this.hide();
 	    }
 	});

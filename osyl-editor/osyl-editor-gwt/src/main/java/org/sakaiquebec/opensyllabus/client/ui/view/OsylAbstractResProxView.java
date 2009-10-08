@@ -25,7 +25,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
-import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 
 import com.google.gwt.user.client.Timer;
@@ -211,7 +210,7 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 	setContextHidden(getEditor().isContextHidden());
 	setDiffusionLevel(getEditor().getDiffusionLevel());
 	setRubricType(getEditor().getRubricType());
-	if(getEditor().isHasRequirement())
+	if (getEditor().isHasRequirement())
 	    setRequirementLevel(getEditor().getRequirementLevel());
     }
 
@@ -223,17 +222,16 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 	getModel().setParent(targetCoUnitContent);
 	getModel().remove();
 	targetCoUnitContent.addChild(getModel());
-	//affichage du message
+	// affichage du message
 	OsylUnobtrusiveAlert alert =
 		new OsylUnobtrusiveAlert(getUiMessage("element.moved"));
 	OsylEditorEntryPoint.showWidgetOnTop(alert);
-	
+
     }
 
     protected void moveIfNeeded() {
 	String targetUuid = getEditor().getMoveToTarget();
-	if (getEditor().isMoveable()
-		&& !targetUuid.equals("")
+	if (getEditor().isMoveable() && !targetUuid.equals("")
 		&& !targetUuid.equals(getModel().getParent().getUuid())) {
 	    moveTo(targetUuid);
 	}

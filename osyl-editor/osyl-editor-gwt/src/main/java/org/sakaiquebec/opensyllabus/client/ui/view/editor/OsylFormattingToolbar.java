@@ -31,11 +31,9 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -56,9 +54,6 @@ public class OsylFormattingToolbar extends Composite {
      */
     private class EventListener implements ClickHandler, KeyUpHandler {
 
-	/**
-	 * @see ClickListener#onClick(Widget)
-	 */
 	public void onClick(ClickEvent event) {
 	    Widget sender = (Widget) event.getSource();
 	    if (sender == bold) {
@@ -105,9 +100,6 @@ public class OsylFormattingToolbar extends Composite {
 	    }
 	}
 
-	/**
-	 * @see KeyboardListener#onKeyUp(Widget, char, int)
-	 */
 	public void onKeyUp(KeyUpEvent event) {
 	    Widget sender = (Widget) event.getSource();
 	    if (sender == richText) {

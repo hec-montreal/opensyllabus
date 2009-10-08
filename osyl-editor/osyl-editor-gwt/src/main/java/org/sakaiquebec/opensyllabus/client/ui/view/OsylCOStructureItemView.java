@@ -26,12 +26,12 @@ import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * This view is used to display a COContentUnit in a list view, for instance a
@@ -68,8 +68,8 @@ public class OsylCOStructureItemView extends OsylViewableComposite {
 
     private void addCoUnitLink(String type, String position) {
 	setCoUnitHyperlink(new Hyperlink(type + " " + position + " - ", null));
-	getCoUnitHyperlink().addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
+	getCoUnitHyperlink().addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
 		getController().getViewContext().setContextModel(
 			(COUnit) getModel());
 	    }

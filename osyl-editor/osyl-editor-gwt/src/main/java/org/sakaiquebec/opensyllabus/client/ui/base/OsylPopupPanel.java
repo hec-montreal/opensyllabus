@@ -25,14 +25,11 @@ import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.ClickListenerCollection;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.SourcesClickEvents;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -43,11 +40,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:remi.saia@hec.ca">Remi Saias</a>
  * @version $Id: $
  */
-public class OsylPopupPanel extends PopupPanel implements
-/* SourcesMouseEvents, */SourcesClickEvents {
-
-    // private MouseListenerCollection mouseListeners;
-    private ClickListenerCollection clickListeners;
+public class OsylPopupPanel extends PopupPanel {
 
     private HorizontalPanel hPanel;
     private Panel buttonPanel;
@@ -73,10 +66,6 @@ public class OsylPopupPanel extends PopupPanel implements
 	hPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 	hPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
 	super.add(hPanel);
-
-	// listener = new MyListener();
-	// addMouseListener(listener);
-	// addClickListener(listener);
 
 	this.buttonPanel = buttonPanel;
 
@@ -213,18 +202,6 @@ public class OsylPopupPanel extends PopupPanel implements
     // }
     //
     // }
-    public void addClickListener(ClickListener listener) {
-	if (clickListeners == null) {
-	    clickListeners = new ClickListenerCollection();
-	}
-	clickListeners.add(listener);
-    }
-
-    public void removeClickListener(ClickListener listener) {
-	if (clickListeners != null) {
-	    clickListeners.remove(listener);
-	}
-    }
 
     public void hide() {
 	// TODO: implanter un fade out!
