@@ -33,7 +33,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -120,14 +119,14 @@ public class OsylLongView extends OsylViewableComposite {
 		if (absElement.isCOStructureElement()) {
 		    COStructureElement newCOStructEl =
 			    (COStructureElement) absElement;
-		    
+
 		    children = newCOStructEl.getChildrens();
-		    if(children.size()>1)
+		    if (children.size() > 1)
 			addListItemView(newCOStructEl);
 		    displayChildren(children);
 		} else if (absElement.isCOUnit()) {
 		    COUnit itemModel = (COUnit) absElement;
-		    //addListItemView(itemModel);
+		    // addListItemView(itemModel);
 		    displayCOUnit(itemModel);
 		} else {
 		    return;
