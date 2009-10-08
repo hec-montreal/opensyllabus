@@ -38,18 +38,22 @@ import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylDirectory;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FocusListener;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
@@ -127,9 +131,9 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     private ArrayList<RFBItemSelectionEventHandler> RFBFileSelectionEventHandlerList;
 
     private ArrayList<ItemListingAcquiredEventHandler> fileListingAcquiredEventHandlerList;
-    
-    private PushButton folderAddButton ;
-    
+
+    private PushButton folderAddButton;
+
     private PushButton addFileButton;
 
     // Image Bundle
@@ -205,10 +209,10 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	// To disallow direct edition of the file path, set to true:
 	// and comment-out the 4 lines below
 	getCurrentDirectoryTextBox().setReadOnly(false);
-	getCurrentDirectoryTextBox().addKeyboardListener(
-		new CurrentFolderEnterKeyListener());
-	getCurrentDirectoryTextBox().addFocusListener(
-		new CurrentFolderFocusChangeListener());
+	getCurrentDirectoryTextBox().addKeyPressHandler(
+		new CurrentFolderEnterKeyPressHandler());
+	getCurrentDirectoryTextBox().addBlurHandler(
+		new CurrentFolderBlurHandler());
 	firstRowPanel.add(getCurrentDirectoryTextBox());
 
 	// 1st row, 3rd widget, button panel:
@@ -220,7 +224,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		createTopButton(getOsylImageBundle().action_OneLevelUp(),
 			getController()
 				.getUiMessage("Browser.upButton.tooltip"));
-	upButton.addClickListener(new UpButtonClickListener());
+	upButton.addClickHandler(new UpButtonClickHandler());
 	buttonPanel.add(upButton);
 
 	// Folder Creation button
@@ -228,12 +232,18 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		createTopButton(getOsylImageBundle().folderAdd(),
 			getController().getUiMessage(
 				"Browser.addFolderButton.tooltip"));
-	folderAddButton.addClickListener(new FolderAddButtonClickListener());
+	folderAddButton.addClickHandler(new FolderAddButtonClickHandler());
 	buttonPanel.add(folderAddButton);
 
 	// Add file button
 	addFileButton = createAddPushButton();
 	buttonPanel.add(addFileButton);
+
+	// edit button
+	PushButton editButton = createEditButton();
+	if (editButton != null) {
+	    buttonPanel.add(editButton);
+	}
 
 	// 2nd row: File Listing
 	setFileListing(new DoubleClickListBox());
@@ -244,7 +254,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	// Put the Listing in place
 	// Trick to avoid selection of the first item at initialization
 	getFileListing().setSelectedIndex(-1);
-	getFileListing().addClickListener(new SpecialDoubleClickListener());
+	getFileListing().addClickHandler(new SpecialDoubleClickHandler());
 
 	mainContentPanel.add(getFileListing());
 
@@ -485,23 +495,18 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	}
     }
 
-    private final class CurrentFolderFocusChangeListener implements
-	    FocusListener {
+    private final class CurrentFolderBlurHandler implements BlurHandler {
 
-	public void onLostFocus(Widget sender) {
-	    // Reset the current path
+	public void onBlur(BlurEvent event) {
 	    getCurrentDirectoryTextBox().setText(
 		    getCurrentDirectory().getDirectoryPath());
 	}
-
-	public void onFocus(Widget sender) {
-	}
     }
 
-    private final class CurrentFolderEnterKeyListener extends
-	    KeyboardListenerAdapter {
-	public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-	    if (((keyCode == (char) KEY_ENTER))) {
+    private final class CurrentFolderEnterKeyPressHandler implements
+	    KeyPressHandler {
+	public void onKeyPress(KeyPressEvent event) {
+	    if (event.getCharCode() == KeyCodes.KEY_ENTER) {
 		// Fill the listing
 		String newFilePath = getCurrentDirectoryTextBox().getText();
 		try {
@@ -533,15 +538,19 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	}
     }
 
-    class SpecialDoubleClickListener implements ClickListener {
+    class SpecialDoubleClickHandler implements ClickHandler {
 	// just get the click event and dispatch it
 	public void onClick(Widget sender) {
 	    sender.sinkEvents(Event.ONDBLCLICK);
 	}
+
+	public void onClick(ClickEvent event) {
+
+	}
     }
 
-    private final class UpButtonClickListener implements ClickListener {
-	public void onClick(Widget sender) {
+    private final class UpButtonClickHandler implements ClickHandler {
+	public void onClick(ClickEvent event) {
 	    if (currentDirectory == null) {
 		return;
 	    }
@@ -563,11 +572,11 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	}
     }
 
-    private final class FolderAddButtonClickListener implements ClickListener {
-	public void onClick(Widget sender) {
+    private final class FolderAddButtonClickHandler implements ClickHandler {
+	public void onClick(ClickEvent event) {
 	    // Notify all the event handlers and
 	    // call the onClickAddFolderButton on each one
-	    RFBAddFolderEventHandler.RFBAddFolderEvent event =
+	    RFBAddFolderEventHandler.RFBAddFolderEvent rFBevent =
 		    new RFBAddFolderEventHandler.RFBAddFolderEvent(
 			    getCurrentDirectoryTextBox().getText());
 	    if (getRFBAddFolderEventHandlerList() != null) {
@@ -576,7 +585,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		while (iter.hasNext()) {
 		    RFBAddFolderEventHandler handler =
 			    (RFBAddFolderEventHandler) iter.next();
-		    handler.onClickAddFolderButton(event);
+		    handler.onClickAddFolderButton(rFBevent);
 		}
 	    }
 	}
@@ -874,20 +883,20 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	notifyFileListingAcquiredEventHandlers();
     }
 
-    
-    protected void setFolderAddButtonEnabled(boolean enabled){
+    protected void setFolderAddButtonEnabled(boolean enabled) {
 	folderAddButton.setEnabled(enabled);
     }
-    
-    protected void setAddFileButtonEnabled(boolean enabled){
+
+    protected void setAddFileButtonEnabled(boolean enabled) {
 	addFileButton.setEnabled(enabled);
     }
-    
-    protected void onUpButtonClick(){
-	//nothing to do
+
+    protected void onUpButtonClick() {
+	// nothing to do
     }
-    
+
     // ABSTRACT METHOD
+    protected abstract PushButton createEditButton();
 
     protected abstract PushButton createAddPushButton();
 

@@ -24,10 +24,10 @@ package org.sakaiquebec.opensyllabus.client.ui.util;
 import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:claude.coulombe@umontreal.ca">Claude Coulombe</a>
@@ -41,9 +41,9 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 	super();
     }
 
-
     /**
      * Constructor.
+     * 
      * @param model
      * @param newController
      */
@@ -58,13 +58,13 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 		createTopButton(getOsylImageBundle().document_add(),
 			getController().getUiMessage(
 				"Browser.addFileButton.tooltip"));
-	pb.addClickListener(new FileAddButtonClickListener());
+	pb.addClickHandler(new FileAddButtonClickHandler());
 	return pb;
     }
 
-    private final class FileAddButtonClickListener implements ClickListener {
+    private final class FileAddButtonClickHandler implements ClickHandler {
 
-	public void onClick(Widget sender) {
+	public void onClick(ClickEvent event) {
 	    OsylFileUpload osylFileUpload =
 		    new OsylFileUpload(getController(), getCurrentDirectory()
 			    .getDirectoryPath());
@@ -78,7 +78,7 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 	ofi.setFilePath(path);
 	setItemToSelect(ofi);
     }
-    
+
     @Override
     protected String getCurrentSelectionLabel() {
 	return getController().getUiMessage("Browser.selected_file");
@@ -86,22 +86,25 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 
     @Override
     protected void onFileDoubleClicking() {
-	//Nothing to do
+	// Nothing to do
     }
 
-
-	@Override
-	public void getRemoteDirectoryListing(String directoryPath) {
-		getFileListing().addStyleName("Osyl-RemoteFileBrowser-WaitingState");
-		if (TRACE){
-			Window.alert("DIR = " + directoryPath);
-		}
-	    
-	
-		OsylRemoteServiceLocator.getDirectoryRemoteService().getRemoteDirectoryContent(directoryPath, 
-				getRemoteDirListingRespHandler());
-	    
-		
+    @Override
+    public void getRemoteDirectoryListing(String directoryPath) {
+	getFileListing().addStyleName("Osyl-RemoteFileBrowser-WaitingState");
+	if (TRACE) {
+	    Window.alert("DIR = " + directoryPath);
 	}
+
+	OsylRemoteServiceLocator.getDirectoryRemoteService()
+		.getRemoteDirectoryContent(directoryPath,
+			getRemoteDirListingRespHandler());
+
+    }
+
+    @Override
+    protected PushButton createEditButton() {
+	return null;
+    }
 
 }

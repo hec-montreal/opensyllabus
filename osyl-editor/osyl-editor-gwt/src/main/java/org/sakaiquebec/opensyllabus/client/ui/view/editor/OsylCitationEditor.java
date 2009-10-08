@@ -418,12 +418,12 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     protected Widget[] getAdditionalOptionWidgets() {
 	// Library
 	libraryCheckBox = new CheckBox(getUiMessage("MetaInfo.library"));
-	libraryCheckBox.setChecked(getView().isAvailableInLibrary());
+	libraryCheckBox.setValue(getView().isAvailableInLibrary());
 	libraryCheckBox.setTitle(getUiMessage("MetaInfo.library.title"));
 
 	// Bookstore
 	bookstoreCheckBox = new CheckBox(getUiMessage("MetaInfo.bookstore"));
-	bookstoreCheckBox.setChecked(getView().isAvailableInBookstore());
+	bookstoreCheckBox.setValue(getView().isAvailableInBookstore());
 	bookstoreCheckBox.setTitle(getUiMessage("MetaInfo.bookstore.title"));
 
 	Widget[] additional = { libraryCheckBox, bookstoreCheckBox };
@@ -502,7 +502,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
      * @return boolean
      */
     public boolean isAvailableInBookstore() {
-	return bookstoreCheckBox.isChecked();
+	return bookstoreCheckBox.getValue();
     }
 
     /**
@@ -511,7 +511,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
      * @return boolean
      */
     public boolean isAvailableInLibrary() {
-	return libraryCheckBox.isChecked();
+	return libraryCheckBox.getValue();
     }
 
     /**

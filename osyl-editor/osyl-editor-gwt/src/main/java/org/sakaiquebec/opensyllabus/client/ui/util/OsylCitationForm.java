@@ -33,10 +33,13 @@ import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -194,8 +197,8 @@ public class OsylCitationForm extends WindowPanel implements
 	citationType = FormHelper.createListBox("Osyl-UnitView-TextArea");
 	citationType.setName("cipvalues");
 	initTypeListBox();
-	citationType.addChangeListener(new ChangeListener() {
-	    public void onChange(Widget sender) {
+	citationType.addChangeHandler(new ChangeHandler() {
+	    public void onChange(ChangeEvent event) {
 		updateForm(getCurrentCitationType());
 	    }
 	});
@@ -361,8 +364,9 @@ public class OsylCitationForm extends WindowPanel implements
 		// AbstractImagePrototype
 		imgSaveButton, uiMessages.getMessage("save"));
 
-	saveButton.addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
+	saveButton.addClickHandler(new ClickHandler() {
+	    
+	    public void onClick(ClickEvent event) {
 
 		final String title =
 			getCurrentCitationType().equals(
@@ -494,8 +498,9 @@ public class OsylCitationForm extends WindowPanel implements
 	// TODO: Bug with ImageBundle, we have to use
 		// AbstractImagePrototype
 		imgCancelButton, uiMessages.getMessage("cancel"));
-	cancelButton.addClickListener(new ClickListener() {
-	    public void onClick(Widget sender) {
+	cancelButton.addClickHandler(new ClickHandler() {
+
+	    public void onClick(ClickEvent event) {
 		cancel();
 	    }
 	});

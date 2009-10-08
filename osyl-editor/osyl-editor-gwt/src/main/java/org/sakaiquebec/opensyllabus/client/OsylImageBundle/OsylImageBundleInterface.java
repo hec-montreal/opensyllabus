@@ -37,6 +37,8 @@ public interface OsylImageBundleInterface extends ImageBundle {
     public AbstractImagePrototype delete();
     
     public AbstractImagePrototype document_add();
+    
+    public AbstractImagePrototype document_edit();
 
     public AbstractImagePrototype edit();
 
