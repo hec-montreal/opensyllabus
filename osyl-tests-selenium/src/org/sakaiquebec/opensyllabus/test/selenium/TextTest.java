@@ -118,21 +118,4 @@ public class TextTest extends AbstractOSYLTest {
 	return session().getXpathCount(
 		"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
     }
-
-    private String getRandomRubric() {
-	// Get list of available rubrics
-	String[] rubrics = session().getSelectOptions(
-		"//select[@name=\"listBoxFormElement\"]");
-	// Generate a random number between 1 and last rubric index (avoid 0
-	// because first one is "Select a rubric")
-	int rubricCount = rubrics.length - 2;
-	int rubricId = 1 + (int) Math.round(Math.random() * rubricCount);
-	return rubrics[rubricId];
-    }	    
-
-    // Change rubric
-    private void changeRubric(String rubricLabel) {
-	session().select("//select[@name=\"listBoxFormElement\"]",
-		"label=" + rubricLabel);
-    }
 }

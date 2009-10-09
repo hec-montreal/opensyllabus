@@ -609,5 +609,36 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    assertTrue(msg, result);
 	}
     } // assertOrVerify
-    
+
+
+    /**
+     * Returns a String corresponding to one of the rubrics available. The
+     * corresponding select menu (name=listBoxFormElement) must be visible
+     * before calling this method.
+     * 
+     * @return random rubric
+     */
+    protected String getRandomRubric() {
+	// Get list of available rubrics
+	String[] rubrics = session().getSelectOptions(
+		"//select[@name=\"listBoxFormElement\"]");
+	// Generate a random number between 1 and last rubric index (avoid 0
+	// because first one is "Select a rubric")
+	int rubricCount = rubrics.length - 2;
+	int rubricId = 1 + (int) Math.round(Math.random() * rubricCount);
+	return rubrics[rubricId];
+    }
+
+    /**
+     * Changes the rubric in the resource being edited. The corresponding
+     * select menu (name=listBoxFormElement) must be visible before calling
+     * this method.
+     * 
+     * @param rubricLabel
+     */
+    protected void changeRubric(String rubricLabel) {
+	session().select("//select[@name=\"listBoxFormElement\"]",
+		"label=" + rubricLabel);
+    }
+
 }
