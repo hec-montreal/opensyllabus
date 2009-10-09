@@ -357,8 +357,9 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	VerticalPanel descriptionPanel = new VerticalPanel();
 	metaInfoPanel.add(descriptionPanel);
 
-	metaInfoDiscPanel.addEventHandler(new OsylDisclosureListener(
-		getEditorPopup()));
+	OsylDisclosureListener odl = new OsylDisclosureListener(getEditorPopup());
+	metaInfoDiscPanel.addCloseHandler(odl);
+	metaInfoDiscPanel.addOpenHandler(odl);
 
 	OsylCitationItem selectedFile = null;
 

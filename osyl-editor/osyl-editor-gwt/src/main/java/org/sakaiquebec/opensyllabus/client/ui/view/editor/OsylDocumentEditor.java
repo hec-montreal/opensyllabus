@@ -440,8 +440,9 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	descriptionPanel.add(new Label(getView().getUiMessage(
 		"DocumentEditor.document.description")));
 
-	metaInfoDiscPanel.addEventHandler(new OsylDisclosureListener(
-		getEditorPopup()));
+	OsylDisclosureListener odl = new OsylDisclosureListener(getEditorPopup());
+	metaInfoDiscPanel.addCloseHandler(odl);
+	metaInfoDiscPanel.addOpenHandler(odl);
 
 	OsylFileItem selectedFile = null;
 

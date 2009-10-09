@@ -23,6 +23,10 @@ package org.sakaiquebec.opensyllabus.client.ui.listener;
 
 import org.sakaiquebec.opensyllabus.client.ui.base.OsylWindowPanel;
 
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.user.client.ui.DisclosureEvent;
 import com.google.gwt.user.client.ui.DisclosureHandler;
 import com.google.gwt.user.client.ui.DisclosurePanel;
@@ -33,7 +37,8 @@ import com.google.gwt.user.client.ui.DisclosurePanel;
  * 
  * @author <a href="mailto:katharina.bauer-oppinger@crim.ca">Katharina Bauer-Oppinger</a>
  */
-public class OsylDisclosureListener implements DisclosureHandler {
+public class OsylDisclosureListener implements OpenHandler<DisclosurePanel>,
+	CloseHandler<DisclosurePanel> {
 
     // Popup which includes DisclosurePanel
     private OsylWindowPanel popup;
@@ -49,14 +54,14 @@ public class OsylDisclosureListener implements DisclosureHandler {
     }
 
     /** {@inheritDoc} */
-	public void onClose(DisclosureEvent event) {
+	public void onClose(CloseEvent<DisclosurePanel> event) {
 		DisclosurePanel panel = (DisclosurePanel)event.getSource();
 		popup.updateLayout(popup.getContentWidth(), 
 				popup.getContentHeight() - panel.getContent().getOffsetHeight());
 	}
 
 	/** {@inheritDoc} */
-	public void onOpen(DisclosureEvent event) {
+	public void onOpen(OpenEvent<DisclosurePanel> event) {
 		DisclosurePanel panel = (DisclosurePanel)event.getSource();
 		popup.updateLayout(popup.getContentWidth(), 
 				popup.getContentHeight() + panel.getContent().getOffsetHeight());
