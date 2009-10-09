@@ -612,6 +612,23 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 
     /**
+     * Given a select menu whose XPath is specified, returns a String
+     * corresponding to a random option. The select menu must be visible
+     * before calling this method.
+     * 
+     * @return random option
+     */
+    protected String getRandomOption(String xpath) {
+	// Get list of available options
+	String[] options = session().getSelectOptions(xpath);
+	// Generate a random number between 1 and last option index (avoid 0
+	// because first one is "Select a option")
+	int optionCount = options.length - 2;
+	int optionId = 1 + (int) Math.round(Math.random() * optionCount);
+	return options[optionId];
+    }
+
+    /**
      * Returns a String corresponding to one of the rubrics available. The
      * corresponding select menu (name=listBoxFormElement) must be visible
      * before calling this method.
@@ -619,14 +636,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * @return random rubric
      */
     protected String getRandomRubric() {
-	// Get list of available rubrics
-	String[] rubrics = session().getSelectOptions(
-		"//select[@name=\"listBoxFormElement\"]");
-	// Generate a random number between 1 and last rubric index (avoid 0
-	// because first one is "Select a rubric")
-	int rubricCount = rubrics.length - 2;
-	int rubricId = 1 + (int) Math.round(Math.random() * rubricCount);
-	return rubrics[rubricId];
+    	return getRandomOption("//select[@name=\"listBoxFormElement\"]");
     }
 
     /**
