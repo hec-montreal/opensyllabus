@@ -10,6 +10,7 @@
       <classes>
          <class name="org.sakaiquebec.opensyllabus.test.selenium.TextTest"/>
          <class name="org.sakaiquebec.opensyllabus.test.selenium.LectureTest"/>
+         <class name="org.sakaiquebec.opensyllabus.test.selenium.ContactInfoTest"/>
       </classes>
    </test>
 </suite>
