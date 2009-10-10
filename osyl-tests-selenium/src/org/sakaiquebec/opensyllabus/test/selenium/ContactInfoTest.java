@@ -26,10 +26,11 @@ import org.testng.annotations.Test;
 import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.session;
 
 /**
- * Tests the addition of a text resource. The exact steps are: log in as admin,
- * creates a new site if needed, load it (OpenSyllabus is the first and only
- * page), enters in the first lecture, click Text in the Add menu, check the
- * resource count has incremented by 1, open the editor, type in some text,
+ * Tests the addition of a contact-info resource. The exact steps are: log in
+ * as admin, creates a new site if needed, load it (OpenSyllabus is the first
+ * and only page), enters in the contact info page, click Contact in the Add
+ * menu, open the editor, check that we get errors when trying to close the
+ * editor without completing the required fields, fill in those fields,
  * change the rubric (randomly) click OK, check the text is here, check the
  * rubric is visible, click save, log out.
  * 
@@ -51,14 +52,14 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	}
 	waitForOSYL();
 	
-	//Cliquer sur la page Coordonnées
+	//Cliquer sur la page CoordonnÃ©es
 	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td/div[contains(text(),'Coordo')]");
 
 	
-	//Ajouter coordonnée
+	//Ajouter coordonnÃ©e
 	clickAddItem("addPerson");
 	
-	//Editer coordonnée
+	//Editer coordonnÃ©e
 	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
 	pause();
 	
@@ -81,7 +82,7 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	session().select("//select[@class=\"Osyl-ContactInfo-ListBox\"]", newText );
 	
 	session().click("//td/table/tbody/tr/td[1]/button");
-	String Erreur2 = "Le nom de famille de la coordonnée ne peut pas être vide" ;
+	String Erreur2 = "Le nom de famille de la coordonnÃ©e ne peut pas Ãªtre vide" ;
 	if (!session().isTextPresent(Erreur2)) {
 	    logAndFail("Expected to see text [" + Erreur2 
 		    + "] after text edition");
@@ -98,7 +99,7 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	session().type("//input[@class=\"Osyl-ContactInfo-TextBox\"]", newText1);
 	
 	session().click("//td/table/tbody/tr/td[1]/button");
-	String Erreur3 = "Le nom de famille de la coordonnée ne peut pas être vide" ;
+	String Erreur3 = "Le nom de famille de la coordonnÃ©e ne peut pas Ãªtre vide" ;
 	if (!session().isTextPresent(Erreur3)) {
 	    logAndFail("Expected to see text [" + Erreur3 
 		    + "] after text edition");
@@ -133,7 +134,7 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	session().selectFrame("relative=parent");
 	session().click("//td/table/tbody/tr/td[1]/button");
 	
-	//Verifier la creation de la coordonnée
+	//Verifier la creation de la coordonnÃ©e
 	if (!session().isTextPresent(newText1)) {
 	    logAndFail("Expected to see text [" + newText1 
 		    + "] after text edition");
@@ -157,7 +158,7 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	//Sauvegarder sur le serveur
 	saveCourseOutline();
 	
-	//Faire un aperçu
+	//Faire un aperÃ§u
 	
 	//Log out
 	
