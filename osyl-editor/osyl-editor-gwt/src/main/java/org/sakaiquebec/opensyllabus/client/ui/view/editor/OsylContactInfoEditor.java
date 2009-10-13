@@ -175,6 +175,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 
     private ListBox createRoleListBox() {
 	ListBox lb = new ListBox();
+	lb.setName("listBoxContactInfoRole");
 	lb.setStylePrimaryName("Osyl-ContactInfo-ListBox");
 	List<String> rolesList =
 	    getView().getController().getOsylConfig().getRolesList();
