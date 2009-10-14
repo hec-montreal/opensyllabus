@@ -13,15 +13,15 @@
         </property>
 
         <property name="content" type="text" >
-            <column name="CONTENT" length="16777215"/>
+            <column name="`CONTENT`" length="16777215"/>
         </property>
 
         <property name="type" type="string">
-            <column name="TYPE" length="45" />
+            <column name="`TYPE`" length="45" />
         </property>
 
         <property name="access" type="string">
-            <column name="ACCESS" length="45" />
+            <column name="`ACCESS`" length="45" />
         </property>
  
         <property name="siteId" type="string">
