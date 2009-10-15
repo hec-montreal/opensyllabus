@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com) -->
-<OSYL schemaVersion="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<OSYL access="public" schemaVersion="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <CO access="public">
 	<template type="HEC">TemplateHec</template>
 	<title type="HEC">Titre du cours à HEC</title>
@@ -29,7 +29,7 @@
 			<asmUnitStructure access="public" xsi:type="OverviewUnitStruct">
 				<label><![CDATA[ Présentation du cours]]></label>
 				<asmUnitContent access="public" xsi:type="OverviewUnitContent">
-			    	<asmContext xsi:type="InformationContext" access="public">
+			    	<asmContext access="public"  xsi:type="InformationContext" >
 			    		<id type="HECsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -43,7 +43,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -79,7 +79,7 @@
 			<asmUnitStructure access="public" xsi:type="LearningMaterialUnitStruct">
 				<label><![CDATA[ Materiel pédagogique]]></label>
 				<asmUnitContent access="public" xsi:type="LearningMaterialUnitContent">
-			    	<asmContext xsi:type="InformationContext" access="public">
+			    	<asmContext access="public"  xsi:type="InformationContext" >
 			    		<id type="HECsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -93,7 +93,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -102,7 +102,7 @@
 						</asmResource>
 						<label />
 					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -116,7 +116,7 @@
 						<level>undefined</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -140,7 +140,7 @@
 			<asmUnitStructure access="public" xsi:type="AssessmentUnitStruct">
 				<label><![CDATA[ Participation]]></label>
 				<asmUnitContent access="public" xsi:type="AssessmentUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">9808690780809696</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -155,7 +155,7 @@
 						<level>undefined</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -181,7 +181,7 @@
 			<asmUnitStructure access="public" xsi:type="AssessmentUnitStruct">
 				<label><![CDATA[ Quiz]]></label>
 				<asmUnitContent access="public" xsi:type="AssessmentUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">9808690780809696</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -196,7 +196,7 @@
 						<level>undefined</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -222,7 +222,7 @@
 			<asmUnitStructure access="public" xsi:type="AssessmentUnitStruct">
 				<label><![CDATA[ Travail de session  ]]></label>
 				<asmUnitContent access="public" xsi:type="AssessmentUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">9808690780809696</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -237,7 +237,7 @@
 						<level>undefined</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -263,7 +263,7 @@
 			<asmUnitStructure access="public" xsi:type="AssessmentUnitStruct">
 				<label><![CDATA[ Examen final  ]]></label>
 				<asmUnitContent access="public" xsi:type="AssessmentUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">9808690780809696</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -278,7 +278,7 @@
 						<level>undefined</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -311,7 +311,7 @@
 			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
 				<label><![CDATA[Séance]]></label>
 				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -326,7 +326,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -335,7 +335,7 @@
 						</asmResource>
 						<label />
 					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -349,7 +349,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -366,7 +366,7 @@
 			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
 				<label><![CDATA[Séance]]></label>
 				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -381,7 +381,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -390,7 +390,7 @@
 						</asmResource>
 						<label />
 					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -406,7 +406,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -423,7 +423,7 @@
 			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
 				<label><![CDATA[Séance]]></label>
 				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -438,7 +438,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -447,7 +447,7 @@
 						</asmResource>
 						<label />
 					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -461,7 +461,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -478,7 +478,7 @@
 			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
 				<label><![CDATA[Séance]]></label>
 				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -493,7 +493,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -502,7 +502,7 @@
 						</asmResource>
 						<label />
 					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -518,7 +518,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -535,7 +535,7 @@
 			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
 				<label><![CDATA[Séance]]></label>
 				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -550,7 +550,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -559,7 +559,7 @@
 						</asmResource>
 						<label />
 					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -573,7 +573,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -590,7 +590,7 @@
 			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
 				<label><![CDATA[Séance]]></label>
 				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -605,7 +605,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -614,7 +614,7 @@
 						</asmResource>
 						<label />
 					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -628,7 +628,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -645,7 +645,7 @@
 			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
 				<label><![CDATA[Séance]]></label>
 				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -660,7 +660,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -669,7 +669,7 @@
 						</asmResource>
 						<label />
 					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -683,7 +683,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -700,7 +700,7 @@
 			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
 				<label><![CDATA[Séance]]></label>
 				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -715,7 +715,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -724,7 +724,7 @@
 						</asmResource>
 						<label />
 					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -738,7 +738,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -755,7 +755,7 @@
 			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
 				<label><![CDATA[Séance]]></label>
 				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -770,7 +770,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -779,7 +779,7 @@
 						</asmResource>
 						<label />
 					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -793,7 +793,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -810,7 +810,7 @@
 			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
 				<label><![CDATA[Séance]]></label>
 				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -825,7 +825,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="public" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -834,7 +834,7 @@
 						</asmResource>
 						<label />
 					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -848,7 +848,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource  access="public" xsi:type="Text">
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -865,7 +865,7 @@
 			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
 				<label><![CDATA[Séance]]></label>
 				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -880,7 +880,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource  access="public" xsi:type="Text">
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -889,7 +889,7 @@
 						</asmResource>
 						<label />
 					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -903,7 +903,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource  access="public" xsi:type="Text">
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -920,7 +920,7 @@
 			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
 				<label><![CDATA[Séance]]></label>
 				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="public"  xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -935,7 +935,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource  access="public" xsi:type="Text">
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
@@ -944,7 +944,7 @@
 						</asmResource>
 						<label />
 					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
+					<asmContext access="attendee" xsi:type="InformationContext" >
 						<id type="HECsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
@@ -958,7 +958,7 @@
 						<level>recommended</level>
 						<action>r</action>
 						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
+						<asmResource access="attendee" xsi:type="Text" >
 							<id type="HECsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>

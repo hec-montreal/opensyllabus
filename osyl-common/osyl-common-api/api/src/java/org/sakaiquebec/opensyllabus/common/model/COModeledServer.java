@@ -42,6 +42,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
@@ -852,6 +853,7 @@ public class COModeledServer {
     private void createRootElement(Document document, COContent coContent) {
 	
 	Element osylElement = document.createElement("OSYL");
+	osylElement.setAttribute(this.ACCESS_ATTRIBUTE_NAME, SecurityInterface.ACCESS_PUBLIC);
 	osylElement.setAttribute("schemaVersion", "1.0");
 	osylElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 	Element courseOutlineContentElem = document.createElement(CO_NODE_NAME);

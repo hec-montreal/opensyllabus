@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.util.UUID;
 
 import com.google.gwt.xml.client.CDATASection;
@@ -772,6 +773,7 @@ public class COModeled extends COSerialized {
     private void createRootElement(Document document, COContent coContent,
 	    boolean saveParentInfos) {
 	Element osylElement = document.createElement("OSYL");
+	osylElement.setAttribute(this.ACCESS_ATTRIBUTE_NAME, SecurityInterface.ACCESS_PUBLIC);
 	osylElement.setAttribute("schemaVersion", "1.0");
 	osylElement.setAttribute("xmlns:xsi",
 		"http://www.w3.org/2001/XMLSchema-instance");
