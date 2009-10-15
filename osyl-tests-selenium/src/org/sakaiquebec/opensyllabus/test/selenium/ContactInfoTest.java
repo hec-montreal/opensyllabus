@@ -32,9 +32,11 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
  * menu, open the editor, check that we get errors when trying to close the
  * editor without completing the required fields, fill in those fields,
  * change the rubric (randomly) click OK, check the text is here, check the
- * rubric is visible, click save, log out.
+ * rubric is visible, click save, click public overview,enters in the contact 
+ * info page,check the text is here, check the rubric is visible, log out.
  * 
- * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
+ *@author<a href="mailto:remi.saias@hec.ca">Remi Saias</a>
+ *@author<a href="mailto:bouchra.laabissi.1@ens.etsmtl.ca">Bouchra Laabissi</a>
  */
 public class ContactInfoTest extends AbstractOSYLTest {
 
@@ -52,21 +54,23 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	}
 	waitForOSYL();
 	
-	//Cliquer sur la page Coordonnées
-	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td/div[contains(text(),'Coordo')]");
-
+	//Click Contact Information
+        session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td/" 
+        		+ "div[contains(text(),'Coordo')]");
 	
-	//Ajouter coordonnée
+	//Add Contact Information
 	clickAddItem("addPerson");
 	
-	//Editer coordonnée
+	
+	//Edit Contact Information
 	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
 	pause();
 	
-	//Verifier si le message d'erreur s'affiche qd on clique OK sans remplir les champs
-	//Nom, Prenom et Titre.
+	//Check if Opensyllabus displays a message error when the user click OK 
+	//without fill in the fields First Name, Last Name and Title.
+	
 	session().click("//td/table/tbody/tr/td[1]/button");
-	String Erreur1 = "Missing key: ResProxContactInfoView_TitleMandatory" ;
+	String Erreur1 = "Erreur" ;
 	if (!session().isTextPresent(Erreur1)) {
 	    logAndFail("Expected to see text [" + Erreur1 
 		    + "] after text edition");
@@ -76,15 +80,16 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	session().click("//tr[2]/td/table/tbody/tr/td/button");
 	pause();
 	
-	//Verifier si le message d'erreur s'affiche qd on clique OK sans remplir les champs
-	//Nom et Prenom 
-	String newText = "Professeur titulaire" ;
-	session().select("//select[@class=\"Osyl-ContactInfo-ListBox\"]", newText );
+	//Check if Opensyllabus displays a message error when the user click OK 
+	//without fill in the fields First Name, Last Name. 
+	String xpathRole = "//select[@name=\"listBoxContactInfoRole\"]";
+	String newText = getRandomOption(xpathRole);
+	session().select(xpathRole, newText);
+
 	
 	session().click("//td/table/tbody/tr/td[1]/button");
-	String Erreur2 = "Le nom de famille de la coordonnée ne peut pas être vide" ;
-	if (!session().isTextPresent(Erreur2)) {
-	    logAndFail("Expected to see text [" + Erreur2 
+	if (!session().isTextPresent(Erreur1)) {
+	    logAndFail("Expected to see text [" + Erreur1 
 		    + "] after text edition");
 		}
 	
@@ -92,16 +97,15 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	session().click("//tr[2]/td/table/tbody/tr/td/button");
 	pause();
 	
-	//Verifier si le message d'erreur s'affiche qd on clique OK sans remplir les champs
-	//Nom 
+	//Check if Opensyllabus displays a message error when the user click OK 
+	//without fill in the field Last Name.
 	
-	String newText1 = "XXXXXXXX";
+	String newText1 = timeStamp();
 	session().type("//input[@class=\"Osyl-ContactInfo-TextBox\"]", newText1);
 	
 	session().click("//td/table/tbody/tr/td[1]/button");
-	String Erreur3 = "Le nom de famille de la coordonnée ne peut pas être vide" ;
-	if (!session().isTextPresent(Erreur3)) {
-	    logAndFail("Expected to see text [" + Erreur3 
+	if (!session().isTextPresent(Erreur1)) {
+	    logAndFail("Expected to see text [" + Erreur1 
 		    + "] after text edition");
 		}
 	
@@ -109,16 +113,16 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	session().click("//tr[2]/td/table/tbody/tr/td/button");
 	pause();
 		
-	//Selectionner les champs necessaires
-	session().select("//select[@class=\"Osyl-ContactInfo-ListBox\"]", newText );
+	//Select required fields
+	session().select(xpathRole, newText);
 	
-	//Selectionner une rubrique
+	//Select rubric.
 	String selectedRubric = getRandomRubric();
 	log("Selecting rubric [" + selectedRubric + "]");
 	changeRubric(selectedRubric);
 
 	
-	//Enterer les informations obligatoires (nom, prenom et titres) 
+	//Fill in the required informations (FirstName, Last Name and Title) 
 	
 	session().type("//input[@class=\"Osyl-ContactInfo-TextBox\"]", newText1);
 	
@@ -126,15 +130,17 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	session().type("//input[@title=\"Nom:\"]", newText2);
 	pause();
 	
-	session().selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
-	String newText3 = "Lundi AM et Mardi PM";
-	session().type("//html/body", newText3);
+	String newText3 = "Lundi AM et Mardi PM" + timeStamp();
+	if (inFireFox()) {
+        	session().selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
+        	session().type("//html/body", newText3);
+		session().selectFrame("relative=parent");
+	}	
 	
-	//Sauvegarder localement
-	session().selectFrame("relative=parent");
 	session().click("//td/table/tbody/tr/td[1]/button");
+	pause();
 	
-	//Verifier la creation de la coordonnée
+	//Check if the new rubric is visible.
 	if (!session().isTextPresent(newText1)) {
 	    logAndFail("Expected to see text [" + newText1 
 		    + "] after text edition");
@@ -143,34 +149,62 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	    logAndFail("Expected to see text [" + newText2 
 		    + "] after text edition");
 	}
-	if (!session().isTextPresent(newText3)) {
-	    logAndFail("Expected to see text [" + newText3 
-		    + "] after text edition");
+	if (inFireFox()) {
+        	if (!session().isTextPresent(newText3)) {
+        	    logAndFail("Expected to see text [" + newText3 + timeStamp()
+        		    + "] after text edition");
+        	}
 	}
 
-	// check if the new rubric is visible.
 	if (!session().isTextPresent(selectedRubric)) {
 	    logAndFail("Expected to see rubric [" + selectedRubric
 		    + "] after text edition");
 	}
 	log("OK: Selected rubric is visible");
 
-	//Sauvegarder sur le serveur
+	//Save the new rubric
 	saveCourseOutline();
+	pause();
 	
-	//Faire un aperçu
+	//Overview
+	session().click("gwt-uid-6");
+	pause();
+	//Will be tested when the problem is resolved(public & attendee)
+	session().click("//td[@class=\"gwt-MenuItem\"]");
+	
+	
+	//Click on Contact Informations
+	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
+			"td/div[contains(text(),'Coordo')]");
+	pause();
+	
+	// check if the new rubric is visible.
+	if (!session().isTextPresent(newText1)) {
+	    logAndFail("Expected to see text [" + newText1 
+		    + "] after text edition");
+	}
+	if (!session().isTextPresent(newText2)) {
+	    logAndFail("Expected to see text [" + newText2 
+		    + "] after text edition");
+	}
+	
+	if (inFireFox()) {
+        	if (!session().isTextPresent(newText3)) {
+        	    logAndFail("Expected to see text [" + newText3 + timeStamp()
+        		    + "] after text edition");
+        	}
+	}
+
+	if (!session().isTextPresent(selectedRubric)) {
+	    logAndFail("Expected to see rubric [" + selectedRubric
+		    + "] after text edition");
+	}
+	log("OK: Selected rubric is visible");
 	
 	//Log out
-	
-	
-	
-
-	
-
 	session().selectFrame("relative=parent");
 	logOut();
 	log("testAddContactInfo: test complete");
     } // testAddContactInfo
-    
-    
+        
 }
