@@ -44,16 +44,14 @@ import com.google.gwt.user.client.ui.Widget;
 public class OsylCOStructureEvaluationItemEditor extends
 	OsylCOStructureItemEditor {
 
-    // Our main panel which will display the viewer
-
     private TextBox weightTextBox;
     private ListBox localisationListBox;
     private ListBox modeListBox;
     private TextBox livrableTextBox;
-    private ListBox porteeListBox;
+    private ListBox scopeListBox;
     private TextBox startDateTextBox;
     private TextBox endDateTextBox;
-    private ListBox typeRemiseListBox;
+    private ListBox subTypeListBox;
     private ListBox typeListBox;
     private int selectedTypeIndex;
 
@@ -139,7 +137,8 @@ public class OsylCOStructureEvaluationItemEditor extends
 	    ok = false;
 	}
 	if (!ok) {
-	    OsylAlertDialog osylAlertDialog = new OsylAlertDialog(messages);
+	    OsylAlertDialog osylAlertDialog = new OsylAlertDialog(
+		    getView().getUiMessage("Global.error"), messages);
 	    osylAlertDialog.center();
 	    osylAlertDialog.show();
 	}
@@ -200,6 +199,7 @@ public class OsylCOStructureEvaluationItemEditor extends
 	localisationPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
 	Label l2 = new Label(getUiMessage("Evaluation.location"));
 	localisationListBox = new ListBox();
+	localisationListBox.setName("Evaluation.location");
 	localisationListBox
 		.setTitle(getUiMessage("Evaluation.location.tooltip"));
 	localisationListBox.addItem(getView().getCoMessage(
@@ -214,6 +214,7 @@ public class OsylCOStructureEvaluationItemEditor extends
 	modePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
 	Label l3 = new Label(getUiMessage("Evaluation.mode"));
 	modeListBox = new ListBox();
+	modeListBox.setName("Evaluation.mode");
 	modeListBox.setTitle(getUiMessage("Evaluation.mode.tooltip"));
 	modeListBox.addItem(getView().getCoMessage("Evaluation.Mode.ind"));
 	modeListBox.addItem(getView().getCoMessage("Evaluation.Mode.team"));
@@ -231,16 +232,17 @@ public class OsylCOStructureEvaluationItemEditor extends
 	livrablePanel.add(l4);
 	livrablePanel.add(livrableTextBox);
 
-	VerticalPanel porteePanel = new VerticalPanel();
-	porteePanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
+	VerticalPanel scopePanel = new VerticalPanel();
+	scopePanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
 	Label l5 = new Label(getUiMessage("Evaluation.scope"));
-	porteeListBox = new ListBox();
-	porteeListBox.setTitle(getUiMessage("Evaluation.scope.tooltip"));
-	porteeListBox.addItem(getView().getCoMessage("Evaluation.Scope.Obl"));
-	porteeListBox.addItem(getView().getCoMessage("Evaluation.Scope.Fac"));
-	selectItemListBox(porteeListBox, getView().getScope());
-	porteePanel.add(l5);
-	porteePanel.add(porteeListBox);
+	scopeListBox = new ListBox();
+	scopeListBox.setName("Evaluation.scope");
+	scopeListBox.setTitle(getUiMessage("Evaluation.scope.tooltip"));
+	scopeListBox.addItem(getView().getCoMessage("Evaluation.Scope.Obl"));
+	scopeListBox.addItem(getView().getCoMessage("Evaluation.Scope.Fac"));
+	selectItemListBox(scopeListBox, getView().getScope());
+	scopePanel.add(l5);
+	scopePanel.add(scopeListBox);
 
 	VerticalPanel startDatePanel = new VerticalPanel();
 	startDatePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
@@ -260,26 +262,28 @@ public class OsylCOStructureEvaluationItemEditor extends
 	endDatePanel.add(l7);
 	endDatePanel.add(endDateTextBox);
 
-	VerticalPanel typeRemisePanel = new VerticalPanel();
-	typeRemisePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
+	VerticalPanel subTypePanel = new VerticalPanel();
+	subTypePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
 	Label l8 = new Label(getUiMessage("Evaluation.subtype"));
-	typeRemiseListBox = new ListBox();
-	typeRemiseListBox.setTitle(getUiMessage("Evaluation.subtype.tooltip"));
-	typeRemiseListBox.addItem("");
-	typeRemiseListBox.addItem(getView().getCoMessage(
+	subTypeListBox = new ListBox();
+	subTypeListBox.setName("Evaluation.subtype");
+	subTypeListBox.setTitle(getUiMessage("Evaluation.subtype.tooltip"));
+	subTypeListBox.addItem("");
+	subTypeListBox.addItem(getView().getCoMessage(
 		"Evaluation.Subtype.paper"));
-	typeRemiseListBox.addItem(getView().getCoMessage(
+	subTypeListBox.addItem(getView().getCoMessage(
 		"Evaluation.Subtype.elect"));
-	typeRemiseListBox.addItem(getView().getCoMessage(
+	subTypeListBox.addItem(getView().getCoMessage(
 		"Evaluation.Subtype.oral"));
-	selectItemListBox(typeRemiseListBox, getView().getSubmitionType());
-	typeRemisePanel.add(l8);
-	typeRemisePanel.add(typeRemiseListBox);
+	selectItemListBox(subTypeListBox, getView().getSubmitionType());
+	subTypePanel.add(l8);
+	subTypePanel.add(subTypeListBox);
 
 	VerticalPanel typePanel = new VerticalPanel();
 	typePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
 	Label l9 = new Label(getUiMessage("Evaluation.type"));
 	typeListBox = new ListBox();
+	typeListBox.setName("Evaluation.type");
 	typeListBox.setTitle(getUiMessage("Evaluation.type.tooltip"));
 	List<String> evalTypeList =
 		getView().getController().getOsylConfig().getEvalTypeList();
@@ -315,8 +319,8 @@ public class OsylCOStructureEvaluationItemEditor extends
 
 	ligne2.add(startDatePanel);
 	ligne2.add(endDatePanel);
-	ligne2.add(typeRemisePanel);
-	ligne2.add(porteePanel);
+	ligne2.add(subTypePanel);
+	ligne2.add(scopePanel);
 
 	ligne1.setWidth("100%");
 	ligne2.setWidth("100%");
@@ -593,7 +597,7 @@ public class OsylCOStructureEvaluationItemEditor extends
     }
 
     public String getScope() {
-	return porteeListBox.getItemText(porteeListBox.getSelectedIndex());
+	return scopeListBox.getItemText(scopeListBox.getSelectedIndex());
     }
 
     public String getOpenDate() {
@@ -605,7 +609,7 @@ public class OsylCOStructureEvaluationItemEditor extends
     }
 
     public String getSubmitionType() {
-	return typeRemiseListBox.getItemText(typeRemiseListBox
+	return subTypeListBox.getItemText(subTypeListBox
 		.getSelectedIndex());
     }
 

@@ -78,7 +78,9 @@ public class OsylDeleteClickListener implements ClickHandler {
 	    osylOkCancelDialog.centerAndFocus();
 	} catch (Exception e) {
 	    final OsylAlertDialog alertBox =
-		    new OsylAlertDialog("Error: Unable to process delete!");
+		    new OsylAlertDialog(
+			    osylResProxView.getUiMessage("Global.error"),
+			    "Error: Unable to process delete!");
 	    alertBox.center();
 	    alertBox.show();
 	}
