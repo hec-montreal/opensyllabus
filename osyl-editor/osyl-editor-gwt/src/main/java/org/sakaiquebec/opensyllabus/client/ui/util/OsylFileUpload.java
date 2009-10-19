@@ -37,7 +37,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FormHandler;
@@ -47,7 +46,6 @@ import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
 
 /**
@@ -278,21 +276,6 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 
     }
 
-    private String getSiteId() {
-	String id = osylController.getSiteId();
-	if (id == null) {
-	    final OsylAlertDialog alertBox =
-		    new OsylAlertDialog(false, true, uiMessages
-			    .getMessage("fileUpload.unableToGetSiteID"));
-	    // get index of file upload form to set z-index of alert window
-	    int index = new Integer(DOM.getStyleAttribute(
-	    		this.getElement(), "zIndex"));
-	    alertBox.setZIndex(index + 1);
-	    alertBox.center();
-	    alertBox.show();
-	}
-	return id;
-    }
     
 	/**
 	 * Centers window with OsylEditorEntryPoint
