@@ -40,16 +40,16 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Pop-up window to create or edit a citation. The citation is saved/updated in
@@ -63,8 +63,6 @@ public class OsylCitationForm extends WindowPanel implements
 	OsylViewControllable {
 
     private static final int FORM_WIDTH = 450;
-    // original height of panel according to citation type "book"
-    private static final int FORM_HEIGHT = 280;
 
     /**
      * Information about citation which is updated
@@ -92,8 +90,8 @@ public class OsylCitationForm extends WindowPanel implements
     private List<UploadFileEventHandler> citationEvtHandlerList =
 	    new ArrayList<UploadFileEventHandler>();
 
-    private TextBox hiddenListName;
-    private TextBox hiddenDisplayName;
+    private Hidden hiddenListName;
+    private Hidden hiddenDisplayName;
 
     private ListBox citationType;
 
@@ -396,7 +394,7 @@ public class OsylCitationForm extends WindowPanel implements
 		    alertBox.show();
 		    return;
 		} else {
-		    hiddenDisplayName.setText(title);
+		    hiddenDisplayName.setValue(title);
 		    cancelButton.setEnabled(false);
 		    saveButton.setEnabled(false);
 		}
@@ -517,7 +515,8 @@ public class OsylCitationForm extends WindowPanel implements
 		HasHorizontalAlignment.ALIGN_LEFT);
 	mainPanel.add(buttonPanel);
 
-	setWidget(form);
+	ScrollPanel sp = new ScrollPanel(form);
+	setWidget(sp);
 	updateForm(getCurrentCitationType());
 	setStylePrimaryName("Osyl-CitationForm-form");
     } // Constructor
@@ -693,30 +692,8 @@ public class OsylCitationForm extends WindowPanel implements
     }
 
     /**
-     * Returns the site id, shows an alert window when error occurs
-     * 
-     * @return the site id
-     */
-    private String getSiteId() {
-	String id = osylController.getSiteId();
-	if (id == null) {
-	    final OsylAlertDialog alertBox =
-		    new OsylAlertDialog(false, true, uiMessages
-			    .getMessage("fileUpload.unableToGetSiteID"));
-	    // get index of citation form to set z-index of alert window
-	    int index =
-		    new Integer(DOM.getStyleAttribute(this.getElement(),
-			    "zIndex"));
-	    alertBox.setZIndex(index + 1);
-	    alertBox.center();
-	    alertBox.show();
-	}
-	return id;
-    }
-
-    /**
      * Updates form according to the new type of citation, shows or hides fields
-     * for each type and fits the height of the form
+     * for each type.
      * 
      * @param the new type of citation
      */
@@ -738,7 +715,6 @@ public class OsylCitationForm extends WindowPanel implements
 	    volIssuePanel.setVisible(false);
 	    pagePanel.setVisible(false);
 	    doiPanel.setVisible(false);
-	    setContentSize(getContentWidth(), FORM_HEIGHT);
 	} else if (newType.equals(CitationSchema.TYPE_ARTICLE)) {
 	    authorLabel.setText(osylController
 		    .getCoMessage("ResProxCitationView_authorLabel")
@@ -756,8 +732,6 @@ public class OsylCitationForm extends WindowPanel implements
 	    doiPanel.setVisible(true);
 	    yearPanel.setVisible(false);
 	    citationPanel.setVisible(false);
-	    int addHeight = journalPanel.getOffsetHeight() * 5;
-	    setContentSize(getContentWidth(), FORM_HEIGHT + addHeight);
 	} else {
 	    citationPanel.setVisible(true);
 	    titlePanel.setVisible(false);
@@ -769,7 +743,6 @@ public class OsylCitationForm extends WindowPanel implements
 	    volIssuePanel.setVisible(false);
 	    pagePanel.setVisible(false);
 	    doiPanel.setVisible(false);
-	    setContentSize(getContentWidth(), FORM_HEIGHT + 30);
 	}
 	layout();
     }

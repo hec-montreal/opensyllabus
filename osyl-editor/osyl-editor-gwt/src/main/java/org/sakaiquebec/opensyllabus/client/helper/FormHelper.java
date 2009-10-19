@@ -20,6 +20,7 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.client.helper;
 
+import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
@@ -31,27 +32,22 @@ import com.google.gwt.user.client.ui.TextBox;
 public class FormHelper {
 
     /**
-     * Creates a invisible textbox with given name as name of textbox and given
-     * value as its value
+     * Creates a hidden field with given name and value.
      * 
-     * @param name to set as name of textbox
-     * @param value to set as value of textbox
-     * @return the textbox
+     * @param name to set as name of field
+     * @param value to set as value of field
+     * @return the hidden field
      */
-    public static TextBox createHiddenField(String name, String value) {
-	TextBox tb = new TextBox();
-	tb.setName(name);
-	tb.setText(value);
-	tb.setVisible(false);
-	return tb;
+    public static Hidden createHiddenField(String name, String value) {
+	return new Hidden(name, value);
     }
     
     /**
-     * Creates an empty lixtbox and sets CSS style 
+     * Creates an empty listBox and sets CSS style 
      * and width
      * 
      * @param text to set as value
-     * @return the textarea
+     * @return the listBox
      */
     public static ListBox createListBox(String stylePrimaryName) {
 	ListBox lb = new ListBox();
@@ -62,11 +58,11 @@ public class FormHelper {
     
     
     /**
-     * Creates a textbox with given text as value
+     * Creates a textBox with given text as value
      * and sets CSS style and width
      * 
      * @param text to set as value
-     * @return the textbox
+     * @return the textBox
      */
     public static TextBox createTextBox(String text, String stylePrimaryName) {
 	TextBox tb = new TextBox();
@@ -77,11 +73,11 @@ public class FormHelper {
     }
 
     /**
-     * Creates a textarea with given text as value 
+     * Creates a textArea with given text as value 
      * and sets CSS style, width, and height
      * 
      * @param text to set as value
-     * @return the textarea
+     * @return the textArea
      */
     public static TextArea createTextArea(String text, String stylePrimaryName) {
 	TextArea ta = new TextArea();
