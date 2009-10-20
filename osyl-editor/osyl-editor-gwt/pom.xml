@@ -72,7 +72,7 @@
 			<groupId>org.gwt.mosaic</groupId>
 			<artifactId>gwtx</artifactId>
 			<scope>provided</scope>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>org.gwt.mosaic</groupId>
 			<artifactId>gwt-incubator</artifactId>
@@ -238,6 +238,79 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<!--
+				Launching hosted mode by profile call, ex: mvn clean install
+				-Phosted
+			-->
+			<id>debug</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<!--
+						Adding osyl-configs unpacked artefact to war (for hosted mode
+						usage)
+					-->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<version>2.1</version>
+						<executions>
+							<execution>
+								<id>unpack-osyl-configs</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>unpack</goal>
+								</goals>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>org.sakaiquebec.opensyllabus</groupId>
+											<artifactId>osyl-configs</artifactId>
+											<version>M2</version>
+											<type>jar</type>
+											<outputDirectory>war</outputDirectory>
+											<excludes>META-INF/**</excludes>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>hosted-gwt</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>debug</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<module>${gwtModule}</module>
+							<runTarget>${gwtHostedEntryPointPage}</runTarget>
+							<webappDirectory>war</webappDirectory>
+							<debugPort>9000</debugPort>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.0.2</version>
+						<configuration>
+							<warSourceDirectory>war</warSourceDirectory>
+							<webXml>war/WEB-INF/web.xml</webXml>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 				<profile>
 			<!--
 				Launching udem hosted mode by profile call, ex: mvn clean install
@@ -308,6 +381,6 @@
 					</plugin>
 				</plugins>
 			</build>
-		</profile>		
+		</profile>
 	</profiles>
 </project>
