@@ -110,7 +110,7 @@ public class OsylConfigRuler {
     }
 
     private List<COModelInterface> getAllowedSubModels(
-	    List<COElementAbstract> path) {
+	    List<COElementAbstract> path, boolean hasNoChild) {
 	List<COModelInterface> allowedSubModels = null;
 
 	if (path != null) {
@@ -223,7 +223,7 @@ public class OsylConfigRuler {
 			boolean allowMultiple =
 				getAllowMultipleAttributeValue(attributeTypeNode);
 
-			if (allowMultiple) {
+			if (hasNoChild || allowMultiple) {
 			    if (restrictionPattern.indexOf("|") > 0) {
 				String[] typesStringArray =
 					restrictionPattern.split("\\|");
@@ -334,8 +334,11 @@ public class OsylConfigRuler {
 	    // First find the current path of the model (node sequence in the
 	    // tree)
 	    List<COElementAbstract> path = findModelPath(model);
+	    
+	    boolean hasNoChild = model.getChildrens().isEmpty();
+	    
 	    // Then check for subelements possibilities(rules) for this path
-	    allowedSubModels = getAllowedSubModels(path);
+	    allowedSubModels = getAllowedSubModels(path, hasNoChild);
 	}
 	return allowedSubModels;
     }
