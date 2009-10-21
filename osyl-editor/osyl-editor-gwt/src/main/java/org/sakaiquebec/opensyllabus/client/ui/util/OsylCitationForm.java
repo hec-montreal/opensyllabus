@@ -120,6 +120,9 @@ public class OsylCitationForm extends WindowPanel implements
     private HorizontalPanel pagePanel;
 
     private HorizontalPanel doiPanel;
+    
+    private VerticalPanel urlPanel; 
+    private TextBox urlTextBox;
 
     // keys of the different citation types
     private List<String> citationTypeKeys;
@@ -355,6 +358,21 @@ public class OsylCitationForm extends WindowPanel implements
 			+ ":", doiTextBox, CitationSchema.DOI);
 	mainPanel.add(doiPanel);
 
+	// Create a textbox to allow the user to give another link
+	// different from the one to the library
+	urlPanel = new VerticalPanel();
+	urlPanel.setWidth("99%");
+	urlPanel.add(FormHelper.createHiddenField("cipkeys",
+		CitationSchema.URL));
+	urlPanel.add(createNewLabel(osylController
+		.getCoMessage("ResProxCitationView_urlLabel")
+		+ ":"));
+	urlTextBox =
+		FormHelper.createTextBox((citation == null || citation.getUrl() == null) ? "" : citation.getUrl(),
+			"Osyl-UnitView-TextArea");
+	urlPanel.add(urlTextBox);
+	mainPanel.add(urlPanel);
+
 	// Add a 'save' button.
 	AbstractImagePrototype imgSaveButton = osylImageBundle.save();
 	saveButton = new ImageAndTextButton(
@@ -430,6 +448,7 @@ public class OsylCitationForm extends WindowPanel implements
 		citation.setProperty(CitationSchema.SOURCE_TITLE, sourceTitle
 			.getText());
 		// citation.setResourceName(listname == null ? "" : listname);
+		citation.setProperty(CitationSchema.URL, urlTextBox.getText());
 
 		citation.setFileName(titleField.getText());
 
@@ -464,6 +483,7 @@ public class OsylCitationForm extends WindowPanel implements
 				    }
 
 				    public void onSuccess(String result) {
+			
 					hide();
 					OsylUnobtrusiveAlert alert =
 						new OsylUnobtrusiveAlert(
@@ -715,6 +735,7 @@ public class OsylCitationForm extends WindowPanel implements
 	    volIssuePanel.setVisible(false);
 	    pagePanel.setVisible(false);
 	    doiPanel.setVisible(false);
+	    urlPanel.setVisible(false);
 	} else if (newType.equals(CitationSchema.TYPE_ARTICLE)) {
 	    authorLabel.setText(osylController
 		    .getCoMessage("ResProxCitationView_authorLabel")
@@ -732,6 +753,7 @@ public class OsylCitationForm extends WindowPanel implements
 	    doiPanel.setVisible(true);
 	    yearPanel.setVisible(false);
 	    citationPanel.setVisible(false);
+	    urlPanel.setVisible(false);
 	} else {
 	    citationPanel.setVisible(true);
 	    titlePanel.setVisible(false);
@@ -743,6 +765,7 @@ public class OsylCitationForm extends WindowPanel implements
 	    volIssuePanel.setVisible(false);
 	    pagePanel.setVisible(false);
 	    doiPanel.setVisible(false);
+	    urlPanel.setVisible(true);
 	}
 	layout();
     }

@@ -28,6 +28,8 @@ import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 
+import com.google.gwt.user.client.Window;
+
 /**
  * Class providing display and edition capabilities for citations resources.
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>

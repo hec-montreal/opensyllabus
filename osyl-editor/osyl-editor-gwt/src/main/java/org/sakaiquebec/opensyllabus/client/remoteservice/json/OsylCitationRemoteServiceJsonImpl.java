@@ -82,7 +82,7 @@ public class OsylCitationRemoteServiceJsonImpl extends
 	final FormPanel form = new FormPanel();
 	VerticalPanel panel = new VerticalPanel();
 	form.add(panel);
-
+	
 	// determinate form action
 	String action;
 	String listname;
@@ -173,6 +173,10 @@ public class OsylCitationRemoteServiceJsonImpl extends
 	panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.DOI));
 	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
 		.getProperty(CitationSchema.DOI)));
+
+	panel.add(FormHelper.createHiddenField("cipkeys", CitationSchema.URL));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getProperty(CitationSchema.URL)));
 
 	// add event handler
 	form.addSubmitCompleteHandler(new SubmitCompleteHandler() {
