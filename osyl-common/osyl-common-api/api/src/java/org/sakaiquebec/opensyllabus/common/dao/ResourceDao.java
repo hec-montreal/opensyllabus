@@ -44,9 +44,26 @@ public interface ResourceDao {
      * @return The site id of the courseOutline
      * @throws Exception if null parameter or non existing course outline
      */
-    public COSerialized getSerializedCourseOutlineBySiteId(String siteId,
-	    String groupName) throws Exception;
+    public COSerialized getSerializedCourseOutlineBySiteId(String siteId) throws Exception;
 
+    
+    /**
+     * @param siteId
+     * @return The site id of the courseOutline
+     * @throws Exception if null parameter or non existing course outline
+     */
+    public COSerialized getPrePublishSerializedCourseOutlineBySiteId(String siteId) throws Exception;
+    
+    
+    /**
+     * @param siteId
+     * @param groupName the name of the group you want access CO.
+     * @return The site id of the courseOutline
+     * @throws Exception if null parameter or non existing course outline
+     */
+    public COSerialized getPublishedSerializedCourseOutlineBySiteIdAndAccess(String siteId,
+	    String access) throws Exception;
+    
     /**
      * Returns the course outline with the given id
      * 

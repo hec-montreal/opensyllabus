@@ -167,7 +167,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	try {
 	    siteId = osylSiteService.getCurrentSiteId();
 	    thisCo =
-		    resourceDao.getSerializedCourseOutlineBySiteId(siteId,
+		    resourceDao.getPublishedSerializedCourseOutlineBySiteIdAndAccess(siteId,
 			    accessType);
 	    osylSiteService.getSiteInfo(thisCo, siteId);
 	    coConfig =
@@ -196,22 +196,48 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * @param String webapp dir (absolute pathname !?)
      */
     public void publish(String webappDir, COSerialized co) throws Exception {
+	
+	
 	COModeledServer coModeled = new COModeledServer(co);
 
+	//PRE-PUBLICATION
 	// change work directory to publish directory
 	coModeled.XML2Model(true);
 	coModeled.model2XML();
 	co.setContent(coModeled.getSerializedContent());
 	
+	COSerialized publishedCO = null;
+	try {
+	    publishedCO = resourceDao.getPrePublishSerializedCourseOutlineBySiteId(co.getSiteId());
+	} catch (Exception e) {
+	}
+
+	// Create a course outline with security public
+	if (publishedCO == null) {
+	    publishedCO = new COSerialized(co);
+	    publishedCO.setCoId(IdManager.createUuid());
+	    publishedCO.setAccess("");
+	    publishedCO.setPublished(true);
+	    resourceDao.createOrUpdateCourseOutline(publishedCO);
+	} else {
+	    publishedCO.setContent(co.getContent());
+	    resourceDao.createOrUpdateCourseOutline(publishedCO);
+	}
+	
+	//PUBLICATION
+	//TODO verify hierarchy compatibility and publish only if compatible
+
+	COSerialized hierarchyFussionedCO = osylSiteService.getSerializedCourseOutlineBySiteId(co.getSiteId());
+	
 	Map<String, String> documentSecurityMap =
 		coModeled.getDocumentSecurityMap();
 
 	// Create a course outline with security public
-	publish(co, SecurityInterface.ACCESS_PUBLIC,
+	publish(hierarchyFussionedCO, SecurityInterface.ACCESS_PUBLIC,
 		OsylSiteService.CO_CONTENT_XSL_PUBLIC, webappDir);
 
 	// Create a course outline with security attendee
-	publish(co, SecurityInterface.ACCESS_ATTENDEE,
+	publish(hierarchyFussionedCO, SecurityInterface.ACCESS_ATTENDEE,
 		OsylSiteService.CO_CONTENT_XSL_ATTENDEE, webappDir);
 
 	copyWorkToPublish(documentSecurityMap);
@@ -289,12 +315,13 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    String webappDir) throws Exception {
 	COSerialized publishedCO = null;
 	try {
-	    publishedCO = resourceDao.getSerializedCourseOutlineBySiteId(co.getSiteId(),
+	    publishedCO = resourceDao.getPublishedSerializedCourseOutlineBySiteIdAndAccess(co.getSiteId(),
 		    access);
 	} catch (Exception e) {
 	}
+	
 
-	// Create a course outline with security public
+	// Create a course outline with specified access
 	if (publishedCO == null) {
 	    publishedCO = new COSerialized(co);
 	    publishedCO.setCoId(IdManager.createUuid());

@@ -62,19 +62,18 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-    public COSerialized getSerializedCourseOutlineBySiteId(String siteId,
-	    String groupName) throws Exception {
+    public COSerialized getSerializedCourseOutlineBySiteId(String siteId) throws Exception {
 	List<COSerialized> results = null;
 	COSerialized courseOutline = null;
 
-	if (siteId == null || groupName == null)
+	if (siteId == null)
 	    throw new IllegalArgumentException();
 	try {
 	    results =
 		    getHibernateTemplate()
 			    .find(
-				    "from COSerialized where siteId= ? and access= ?",
-				    new Object[] { siteId, groupName });
+				    "from COSerialized where siteId= ? and published=0",
+				    new Object[] { siteId });
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by its siteId", e);
 	    throw e;
@@ -84,7 +83,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    return courseOutline;
 	} else
 	    throw new Exception("No course outline with site id= " + siteId
-		    + " and groupName=" + groupName);
+		    + " and published=false");
     }
 
     /**
@@ -165,8 +164,8 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	COSerialized cos = null;
 	try {
 	    cos =
-		    getSerializedCourseOutlineBySiteId(courseOutline
-			    .getSiteId(), courseOutline.getAccess());
+		getSerializedVourseOutlineBySiteIdAccessAndPublished(courseOutline
+			    .getSiteId(), courseOutline.getAccess(), courseOutline.isPublished());
 	    if (!cos.getCoId().equals(courseOutline.getCoId()))
 		alreadyExist = true;
 
@@ -186,6 +185,30 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    throw e;
 	}
 	return courseOutline.getCoId();
+    }
+    
+    private COSerialized getSerializedVourseOutlineBySiteIdAccessAndPublished(String siteId, String access, boolean published) throws Exception{
+	List<COSerialized> results = null;
+	COSerialized courseOutline = null;
+
+	if (siteId == null || access == null)
+	    throw new IllegalArgumentException();
+	try {
+	    results =
+		    getHibernateTemplate()
+			    .find(
+				    "from COSerialized where siteId= ? and access= ? and published= ?",
+				    new Object[] { siteId, access, published });
+	} catch (Exception e) {
+	    log.error("Unable to retrieve course outline by its siteId", e);
+	    throw e;
+	}
+	if (results.size() >= 1) {
+	    courseOutline = (COSerialized) results.get(0);
+	    return courseOutline;
+	} else
+	    throw new Exception("No course outline with site id= " + siteId
+		    + " and access=" + access);
     }
 
     /** {@inheritDoc} */
@@ -259,6 +282,56 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    return courseOutline;
 	} else
 	    return courseOutline;
+    }
+
+    public COSerialized getPrePublishSerializedCourseOutlineBySiteId(
+	    String siteId) throws Exception {
+	List<COSerialized> results = null;
+	COSerialized courseOutline = null;
+
+	if (siteId == null)
+	    throw new IllegalArgumentException();
+	try {
+	    results =
+		    getHibernateTemplate()
+			    .find(
+				    "from COSerialized where siteId= ? and published=1 and access= ?",
+				    new Object[] { siteId,""});
+	} catch (Exception e) {
+	    log.error("Unable to retrieve course outline by its siteId", e);
+	    throw e;
+	}
+	if (results.size() >= 1) {
+	    courseOutline = (COSerialized) results.get(0);
+	    return courseOutline;
+	} else
+	    throw new Exception("No course outline with site id= " + siteId
+		    + " and published=true");
+    }
+
+    public COSerialized getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+	    String siteId, String access) throws Exception {
+	List<COSerialized> results = null;
+	COSerialized courseOutline = null;
+
+	if (siteId == null || access == null)
+	    throw new IllegalArgumentException();
+	try {
+	    results =
+		    getHibernateTemplate()
+			    .find(
+				    "from COSerialized where siteId= ? and access= ?",
+				    new Object[] { siteId, access });
+	} catch (Exception e) {
+	    log.error("Unable to retrieve course outline by its siteId", e);
+	    throw e;
+	}
+	if (results.size() >= 1) {
+	    courseOutline = (COSerialized) results.get(0);
+	    return courseOutline;
+	} else
+	    throw new Exception("No course outline with site id= " + siteId
+		    + " and access=" + access);
     }
 
 }
