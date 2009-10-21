@@ -853,7 +853,7 @@ public class COModeledServer {
     private void createRootElement(Document document, COContent coContent) {
 	
 	Element osylElement = document.createElement("OSYL");
-	osylElement.setAttribute(this.ACCESS_ATTRIBUTE_NAME, SecurityInterface.ACCESS_PUBLIC);
+	osylElement.setAttribute(ACCESS_ATTRIBUTE_NAME, SecurityInterface.ACCESS_PUBLIC);
 	osylElement.setAttribute("schemaVersion", "1.0");
 	osylElement.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 	Element courseOutlineContentElem = document.createElement(CO_NODE_NAME);
@@ -923,6 +923,7 @@ public class COModeledServer {
 		    .getType());
 	    coStructureElem.setAttribute(UUID_ATTRIBUTE_NAME, coStructure
 		    .getUuid());
+	    coStructureElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""+coStructure.isEditable());
 	    if (coStructure.getUuidParent() != null)
 		coStructureElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
 			coStructure.getUuidParent());
@@ -945,6 +946,7 @@ public class COModeledServer {
 	    coUnitElem.setAttribute(ACCESS_ATTRIBUTE_NAME, coUnit.getAccess());
 	    coUnitElem.setAttribute(XSI_TYPE_ATTRIBUTE_NAME, coUnit.getType());
 	    coUnitElem.setAttribute(UUID_ATTRIBUTE_NAME, coUnit.getUuid());
+	    coUnitElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""+coUnit.isEditable());
 	    if (coUnit.getUuidParent() != null)
 		coUnitElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME, coUnit
 			.getUuidParent());
@@ -973,6 +975,7 @@ public class COModeledServer {
 		    .getType());
 	    coUnitElem.setAttribute(UUID_ATTRIBUTE_NAME, coUnitStructure
 		    .getUuid());
+	    coUnitElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""+coUnitStructure.isEditable());
 	    if (coUnitStructure.getUuidParent() != null)
 		coUnitElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
 			coUnitStructure.getUuidParent());
@@ -1000,6 +1003,7 @@ public class COModeledServer {
 		    .getType());
 	    coContentUnitElem.setAttribute(UUID_ATTRIBUTE_NAME, coContentUnit
 		    .getUuid());
+	    coContentUnitElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""+coContentUnit.isEditable());
 	    if (coContentUnit.getUuidParent() != null)
 		coContentUnitElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
 			coContentUnit.getUuidParent());
