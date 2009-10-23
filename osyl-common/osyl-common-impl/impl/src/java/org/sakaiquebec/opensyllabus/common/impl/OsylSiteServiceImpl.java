@@ -50,6 +50,7 @@ import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
@@ -243,31 +244,53 @@ public class OsylSiteServiceImpl implements OsylSiteService {
      */
     public COSerialized getSerializedCourseOutlineBySiteId(String siteId) {
 	try {
-	    COSerialized co =
-		    resourceDao.getSerializedCourseOutlineBySiteId(siteId);
-	    if (co != null) {
-		getSiteInfo(co, siteId);
-		COModeledServer coModelChild = new COModeledServer(co);
-		// récupération des parents
-		String parentId = null;
-		try {
-		    parentId = coRelationDao.getParentOfCourseOutline(siteId);
-		} catch (Exception e) {
-		}
-		if (parentId != null) {
-
-		    // fusion
-		    COModeledServer coModelParent =
-			    getFusionnedPrePublishedHierarchy(parentId);
-
-		    if (coModelParent != null) {
-			coModelChild.XML2Model();
-			coModelChild.fusion(coModelParent);
-			coModelChild.model2XML();
-			co.setContent(coModelChild.getSerializedContent());
+	    COSerialized co;
+	    if (osylSecurityService.isAllowedToEdit(siteId)) {
+		co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
+		if (co != null) {
+		    getSiteInfo(co, siteId);
+		    COModeledServer coModelChild = new COModeledServer(co);
+		    // récupération des parents
+		    String parentId = null;
+		    try {
+			parentId =
+				coRelationDao.getParentOfCourseOutline(siteId);
+		    } catch (Exception e) {
 		    }
+		    if (parentId != null) {
 
+			// fusion
+			COModeledServer coModelParent =
+				getFusionnedPrePublishedHierarchy(parentId);
+
+			if (coModelParent != null) {
+			    coModelChild.XML2Model();
+			    coModelChild.fusion(coModelParent);
+			    coModelChild.model2XML();
+			    co.setContent(coModelChild.getSerializedContent());
+			}
+
+		    }
 		}
+	    } else {
+		if (osylSecurityService.getCurrentUserRole().equals(
+			OsylSecurityService.SECURITY_ROLE_COURSE_ACCESS)
+			|| osylSecurityService
+				.getCurrentUserRole()
+				.equals(
+					OsylSecurityService.SECURITY_ROLE_PROJECT_ACCESS))
+		    co =
+			    resourceDao
+				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+					    siteId,
+					    SecurityInterface.ACCESS_ATTENDEE);
+		else
+		    co =
+			    resourceDao
+				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+					    siteId,
+					    SecurityInterface.ACCESS_PUBLIC);
+
 	    }
 	    return co;
 	} catch (Exception e) {
