@@ -2,6 +2,7 @@ package org.sakaiquebec.opensyllabus.common.api;
 
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.site.api.Site;
+import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
 /******************************************************************************
@@ -211,5 +212,7 @@ public interface OsylSiteService {
 	public void associate(String siteId, String parentId) throws Exception;
 	
 	public void dissociate(String siteId, String parentId)throws Exception;
+	
+	public COModeledServer getFusionnedPrePublishedHierarchy(String siteId);
 	
 }

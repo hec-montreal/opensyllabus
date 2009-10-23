@@ -205,7 +205,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	log.info("DESTROY from OsylSite service");
     }
 
-    private COModeledServer getFusionnedPublishedHierarchy(String siteId) {
+    public COModeledServer getFusionnedPrePublishedHierarchy(String siteId) {
 	COModeledServer coModeled = null;
 	try {
 	    COSerialized co =
@@ -223,7 +223,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 		return coModeled;
 	    } else {
 		COModeledServer parentModel =
-			getFusionnedPublishedHierarchy(parentId);
+			getFusionnedPrePublishedHierarchy(parentId);
 		if (parentModel != null && coModeled != null) {
 		    coModeled.XML2Model();
 		    parentModel.XML2Model();
@@ -258,7 +258,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 
 		    // fusion
 		    COModeledServer coModelParent =
-			    getFusionnedPublishedHierarchy(parentId);
+			    getFusionnedPrePublishedHierarchy(parentId);
 
 		    if (coModelParent != null) {
 			coModelChild.XML2Model();
@@ -740,7 +740,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 
 		if (parentId != null) {
 		    COModeledServer coModelParent =
-			    getFusionnedPublishedHierarchy(parentId);
+			    getFusionnedPrePublishedHierarchy(parentId);
 
 		    if (coModelParent != null) {
 			COModeledServer coModelChild = new COModeledServer(co);
@@ -779,7 +779,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 		COModeledServer coModelChild = new COModeledServer(co);
 		if (parentId != null) {
 		    COModeledServer coModelParent =
-			    getFusionnedPublishedHierarchy(parentId);
+			    getFusionnedPrePublishedHierarchy(parentId);
 
 		    if (coModelParent != null) {
 			coModelChild.XML2Model();

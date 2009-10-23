@@ -17,7 +17,9 @@
 		<property name="securityService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
 		<property name="configService"
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylConfigService" />		
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylConfigService" />
+		<property name="coRelationDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />		
 
 		<!-- Sakai dependencies -->
 		<property name="contentHostingService"

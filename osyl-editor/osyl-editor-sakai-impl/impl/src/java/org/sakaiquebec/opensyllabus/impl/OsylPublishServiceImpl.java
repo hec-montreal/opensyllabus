@@ -23,6 +23,8 @@ import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
+import org.sakaiquebec.opensyllabus.common.dao.CORelation;
+import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
@@ -156,6 +158,17 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	this.osylSiteService = osylSiteService;
     }
 
+    private CORelationDao coRelationDao;
+
+    /**
+     * Sets the {@link CORelationDao}.
+     * 
+     * @param configDao
+     */
+    public void setCoRelationDao(CORelationDao relationDao) {
+	this.coRelationDao = relationDao;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -167,8 +180,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	try {
 	    siteId = osylSiteService.getCurrentSiteId();
 	    thisCo =
-		    resourceDao.getPublishedSerializedCourseOutlineBySiteIdAndAccess(siteId,
-			    accessType);
+		    resourceDao
+			    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+				    siteId, accessType);
 	    osylSiteService.getSiteInfo(thisCo, siteId);
 	    coConfig =
 		    configDao.getConfigByRef("osylcoconfigs" + File.separator
@@ -196,19 +210,20 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * @param String webapp dir (absolute pathname !?)
      */
     public void publish(String webappDir, COSerialized co) throws Exception {
-	
-	
+
 	COModeledServer coModeled = new COModeledServer(co);
 
-	//PRE-PUBLICATION
+	// PRE-PUBLICATION
 	// change work directory to publish directory
 	coModeled.XML2Model(true);
 	coModeled.model2XML();
 	co.setContent(coModeled.getSerializedContent());
-	
+
 	COSerialized publishedCO = null;
 	try {
-	    publishedCO = resourceDao.getPrePublishSerializedCourseOutlineBySiteId(co.getSiteId());
+	    publishedCO =
+		    resourceDao.getPrePublishSerializedCourseOutlineBySiteId(co
+			    .getSiteId());
 	} catch (Exception e) {
 	}
 
@@ -223,14 +238,26 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    publishedCO.setContent(co.getContent());
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
 	}
-	
-	//PUBLICATION
-	//TODO verify hierarchy compatibility and publish only if compatible
 
-	COSerialized hierarchyFussionedCO = osylSiteService.getSerializedCourseOutlineBySiteId(co.getSiteId());
-	
+	// PUBLICATION
+	// TODO verify hierarchy compatibility and publish only if compatible
+
 	Map<String, String> documentSecurityMap =
 		coModeled.getDocumentSecurityMap();
+
+	publish(co.getSiteId(), webappDir);
+	
+	copyWorkToPublish(documentSecurityMap);
+    }
+
+    private void publish(String siteId, String webappDir) throws Exception {
+
+	COSerialized hierarchyFussionedCO =
+		osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
+	
+	COModeledServer coModeled = osylSiteService.getFusionnedPrePublishedHierarchy(siteId);
+	coModeled.model2XML();
+	hierarchyFussionedCO.setContent(coModeled.getSerializedContent());
 
 	// Create a course outline with security public
 	publish(hierarchyFussionedCO, SecurityInterface.ACCESS_PUBLIC,
@@ -239,8 +266,24 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// Create a course outline with security attendee
 	publish(hierarchyFussionedCO, SecurityInterface.ACCESS_ATTENDEE,
 		OsylSiteService.CO_CONTENT_XSL_ATTENDEE, webappDir);
+	
+	publishChild(siteId, webappDir);
+    }
 
-	copyWorkToPublish(documentSecurityMap);
+    private void publishChild(String siteId, String webappDir) {
+	List<CORelation> coRelationList;
+	try {
+	    coRelationList =
+		    coRelationDao.getRelationsWithParentsCourseOutlineId(siteId);
+	    for (Iterator<CORelation> coRelationIter =
+		    coRelationList.iterator(); coRelationIter.hasNext();) {
+		String childId = coRelationIter.next().getChild();
+		publish(childId, webappDir);
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+
     }
 
     /*
@@ -251,7 +294,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     /**
      * Copies work's folder content to publish folder.
-     * 
      */
     private void copyWorkToPublish(Map<String, String> documentSecurityMap)
 	    throws Exception {
@@ -315,11 +357,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    String webappDir) throws Exception {
 	COSerialized publishedCO = null;
 	try {
-	    publishedCO = resourceDao.getPublishedSerializedCourseOutlineBySiteIdAndAccess(co.getSiteId(),
-		    access);
+	    publishedCO =
+		    resourceDao
+			    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+				    co.getSiteId(), access);
 	} catch (Exception e) {
 	}
-	
 
 	// Create a course outline with specified access
 	if (publishedCO == null) {
@@ -337,10 +380,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	}
     }
 
-
     /**
-     * Applies an XSL transformation to the XML content specified and return
-     * the resulting XML.
+     * Applies an XSL transformation to the XML content specified and return the
+     * resulting XML.
      * 
      * @param webappDir the current webapp directory
      * @param content the course outline XML to transform
