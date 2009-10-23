@@ -35,6 +35,7 @@ import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.tool.api.Tool;
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtService;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
+import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -56,193 +57,201 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  */
 
 public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
-OsylEditorGwtService {
+	OsylEditorGwtService {
 
     private static final long serialVersionUID = -8433432771110370390L;
-	/**
-	 * @uml.property  name="osylServices"
-	 * @uml.associationEnd  
-	 */
-	private OsylBackingBean osylServices;
-	/**
-	 * @uml.property  name="servletContext"
-	 * @uml.associationEnd  
-	 */
-	private ServletContext servletContext = null;
-	/**
-	 * @uml.property  name="webAppContext"
-	 * @uml.associationEnd  
-	 */
-	private WebApplicationContext webAppContext = null;
+    /**
+     * @uml.property name="osylServices"
+     * @uml.associationEnd
+     */
+    private OsylBackingBean osylServices;
+    /**
+     * @uml.property name="servletContext"
+     * @uml.associationEnd
+     */
+    private ServletContext servletContext = null;
+    /**
+     * @uml.property name="webAppContext"
+     * @uml.associationEnd
+     */
+    private WebApplicationContext webAppContext = null;
 
-	private static Log log = LogFactory.getLog(OsylEditorGwtServiceImpl.class);
+    private static Log log = LogFactory.getLog(OsylEditorGwtServiceImpl.class);
 
-	/**
-	 * Constructor.
-	 */
-	public OsylEditorGwtServiceImpl() {
-		;
-	} // must have
+    /**
+     * Constructor.
+     */
+    public OsylEditorGwtServiceImpl() {
+	;
+    } // must have
 
-	/** {@inheritDoc} */
-	public void init() {
-		log.warn("INIT OsylEditorGwtServiceImpl");
+    /** {@inheritDoc} */
+    public void init() {
+	log.warn("INIT OsylEditorGwtServiceImpl");
 
-		servletContext = getServletContext();
-		webAppContext =
-			WebApplicationContextUtils
+	servletContext = getServletContext();
+	webAppContext =
+		WebApplicationContextUtils
 			.getWebApplicationContext(servletContext);
 
-		// This is not the best place to initialize this bean injection!
-		// Spring injection
-		if (webAppContext != null) {
-			osylServices =
-				(OsylBackingBean) webAppContext.getBean("osylMainBean");
-		}
-
+	// This is not the best place to initialize this bean injection!
+	// Spring injection
+	if (webAppContext != null) {
+	    osylServices =
+		    (OsylBackingBean) webAppContext.getBean("osylMainBean");
 	}
 
-	@Override
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+    }
 
-		log.warn("OSYL doGet");
+    @Override
+    protected void doGet(HttpServletRequest request,
+	    HttpServletResponse response) throws ServletException, IOException {
 
-		final String contextPath = request.getContextPath();
-		request.setAttribute(Tool.NATIVE_URL, Tool.NATIVE_URL);
-		HttpServletRequest wrappedRequest =
-			new HttpServletRequestWrapper(request) {
-			public String getContextPath() {
-				return contextPath;
-			}
+	log.warn("OSYL doGet");
+
+	final String contextPath = request.getContextPath();
+	request.setAttribute(Tool.NATIVE_URL, Tool.NATIVE_URL);
+	HttpServletRequest wrappedRequest =
+		new HttpServletRequestWrapper(request) {
+		    public String getContextPath() {
+			return contextPath;
+		    }
 		};
 
-		// otherwise do the dispatch
-		RequestDispatcher dispatcher;
-		if (request.getPathInfo() == null) {
-			dispatcher = request.getRequestDispatcher("/");
-		} else {
-			dispatcher = request.getRequestDispatcher(request.getPathInfo());
-		}
-
-		dispatcher.forward(wrappedRequest, response);
+	// otherwise do the dispatch
+	RequestDispatcher dispatcher;
+	if (request.getPathInfo() == null) {
+	    dispatcher = request.getRequestDispatcher("/");
+	} else {
+	    dispatcher = request.getRequestDispatcher(request.getPathInfo());
 	}
 
-	/**
-	 * Initialize the tool. At this time we create the directory structure
-	 * needed by the tool here as we don't have a better place to do it.
-	 */
-	public void initTool() throws Exception {
-		if (osylServices != null) {
-			// TODO: insure that once the resource and security mechanisms are
-			// completed that the init are updated
-			// osylServices.getOsylSecurityService().initService();
-			osylServices.getOsylService().initService();
-		}
-	}
+	dispatcher.forward(wrappedRequest, response);
+    }
 
-	/**
-	 * Publishes the CourseOutline whose ID is specified. It must have been
-	 * saved previously. Throws an exception if any error occurs, returns
-	 * otherwise.
-	 * 
-	 * @param String id
-	 */
-	public void publishCourseOutline() throws Exception {
-		String webappDir = getServletContext().getRealPath("/");
-		log.warn("OSYL publishCourseOutline webappDir: " + webappDir);
-		osylServices.getOsylPublishService().publish(webappDir,
-				getNonFusionnedSerializedCourseOutline());
-		return;
+    /**
+     * Initialize the tool. At this time we create the directory structure
+     * needed by the tool here as we don't have a better place to do it.
+     */
+    public void initTool() throws Exception {
+	if (osylServices != null) {
+	    // TODO: insure that once the resource and security mechanisms are
+	    // completed that the init are updated
+	    // osylServices.getOsylSecurityService().initService();
+	    osylServices.getOsylService().initService();
 	}
+    }
 
-	private COSerialized getNonFusionnedSerializedCourseOutline() throws Exception{
-		COSerialized thisCo;
-		String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
-		thisCo =
-			osylServices.getOsylSiteService()
+    /**
+     * Publishes the CourseOutline whose ID is specified. It must have been
+     * saved previously. Throws an exception if any error occurs, returns
+     * otherwise.
+     * 
+     * @param String id
+     */
+    public void publishCourseOutline() throws Exception {
+	String webappDir = getServletContext().getRealPath("/");
+	log.warn("OSYL publishCourseOutline webappDir: " + webappDir);
+	osylServices.getOsylPublishService().publish(webappDir,
+		getNonFusionnedSerializedCourseOutline());
+	return;
+    }
+
+    private COSerialized getNonFusionnedSerializedCourseOutline()
+	    throws Exception {
+	COSerialized thisCo;
+	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
+	thisCo =
+		osylServices.getOsylSiteService()
 			.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
-		return thisCo;
-	}
+	return thisCo;
+    }
 
-	/**
-	 * Returns the URL where we can access the CourseOutline whose ID is
-	 * specified. It must have been published previously.
-	 * 
-	 * @param String id
-	 * @return String URL
-	 */
-	public COSerialized getSerializedPublishedCourseOutlineForAccessType(
-			String accessType) throws Exception {
-		// Check security permission for this method
-		String webappdir = getServletContext().getRealPath("/");
-		return osylServices.getOsylPublishService()
+    /**
+     * Returns the URL where we can access the CourseOutline whose ID is
+     * specified. It must have been published previously.
+     * 
+     * @param String id
+     * @return String URL
+     */
+    public COSerialized getSerializedPublishedCourseOutlineForAccessType(
+	    String accessType) throws Exception {
+	// Check security permission for this method
+	String webappdir = getServletContext().getRealPath("/");
+	return osylServices.getOsylPublishService()
 		.getSerializedPublishedCourseOutlineForAccessType(accessType,
-				webappdir);
+			webappdir);
+    }
+
+    /**
+     * Returns the CourseOutlineXML whose ID is specified Note that the id 1
+     * will always be available as a test POJO
+     * 
+     * @param String id
+     * @return the CourseOutlineXML POJO corresponding to the specified ID
+     * @throws Exception
+     */
+    public COSerialized getSerializedCourseOutline(String id) throws Exception {
+	String webappDir = getServletContext().getRealPath("/");
+	try {
+	    return osylServices.getOsylSiteService()
+		    .getSerializedCourseOutline(id, webappDir);
+	} catch (Exception e) {
+	    log.error("Unable to retrieve course outline", e);
+	    throw e;
 	}
+    }
 
-	/**
-	 * Returns the CourseOutlineXML whose ID is specified Note that the id 1
-	 * will always be available as a test POJO
-	 * 
-	 * @param String id
-	 * @return the CourseOutlineXML POJO corresponding to the specified ID
-	 * @throws Exception
-	 */
-	public COSerialized getSerializedCourseOutline(String id) throws Exception {
-		String webappDir = getServletContext().getRealPath("/");
-		try {
-			return osylServices.getOsylSiteService()
-			.getSerializedCourseOutline(id, webappDir);
-		} catch (Exception e) {
-			log.error("Unable to retrieve course outline", e);
-			throw e;
-		}
+    boolean checkPermission(String function) {
+	boolean res = false;
+	// TODO: move this code in security, check user role, for method name
+	// (function)
+
+	return res;
+    }
+
+    /**
+     * Returns the CourseOutlineXML whose ID is unspecified By default, asks for
+     * the CourseOutline. Return published Course Outline if the current user
+     * has not permission to edit it.
+     * 
+     * @return the CourseOutlineXML POJO corresponding to the current site
+     *         context
+     */
+    public COSerialized getSerializedCourseOutline() throws Exception {
+	String webappDir = getServletContext().getRealPath("/");
+	COSerialized thisCo;
+	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
+
+	if (osylServices.getOsylSecurityService().isAllowedToEdit(siteId)) {
+	    thisCo =
+		    osylServices.getOsylSiteService()
+			    .getSerializedCourseOutline(webappDir);
+	} else {
+	    if (getCurrentUserRole().equals(
+		    OsylSecurityService.SECURITY_ROLE_COURSE_ACCESS)
+		    || getCurrentUserRole().equals(
+			    OsylSecurityService.SECURITY_ROLE_PROJECT_ACCESS))
+		thisCo =
+			getSerializedPublishedCourseOutlineForAccessType(SecurityInterface.ACCESS_ATTENDEE);
+	    else
+		thisCo =
+			getSerializedPublishedCourseOutlineForAccessType(SecurityInterface.ACCESS_PUBLIC);
+	    if (thisCo == null) {
+		// FIXME: Gracefully inform the user (a student) that he has
+		// nothing to do in
+		// opensyllabus while the course outline is not publish. For
+		// example, hide the
+		// tool page for the users.
+		// We are not suppose to have to tell to the user that the
+		// course outline is not
+		// available. If there is no course outline, the corresponding
+		// site should not be
+		// available.
+	    }
 	}
-
-	boolean checkPermission(String function) {
-		boolean res = false;
-		// TODO: move this code in security, check user role, for method name
-		// (function)
-
-		return res;
-	}
-
-	/**
-	 * Returns the CourseOutlineXML whose ID is unspecified By default, asks for
-	 * the CourseOutline. Return published Course Outline if the current user
-	 * has not permission to edit it.
-	 * 
-	 * @return the CourseOutlineXML POJO corresponding to the current site
-	 *         context
-	 */
-	public COSerialized getSerializedCourseOutline() throws Exception {
-		String webappDir = getServletContext().getRealPath("/");
-		COSerialized thisCo;
-		String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
-
-		if (osylServices.getOsylSecurityService().isAllowedToEdit(siteId)) {
-			thisCo =
-				osylServices.getOsylSiteService()
-				.getSerializedCourseOutline(webappDir);
-		} else {
-			thisCo =
-				getSerializedPublishedCourseOutlineForAccessType(SecurityInterface.ACCESS_PUBLIC);
-			if (thisCo == null) {
-				// FIXME: Gracefully inform the user (a student) that he has
-				// nothing to do in
-				// opensyllabus while the course outline is not publish. For
-				// example, hide the
-				// tool page for the users.
-				// We are not suppose to have to tell to the user that the
-				// course outline is not
-				// available. If there is no course outline, the corresponding
-				// site should not be
-				// available.
-			}
-		}
-		return thisCo;
-	}
+	return thisCo;
+    }
 
     /**
      * Saves the CourseOutlineXML specified. The ID is returned. This is useful
@@ -254,175 +263,178 @@ OsylEditorGwtService {
      * @param COSerialized POJO
      * @return the CourseOutlineXML ID
      */
-	public String updateSerializedCourseOutline(COSerialized co) throws Exception {
-		String id=co.getCoId();
-		try {
-			id = osylServices.getOsylSiteService().updateSerializedCourseOutline(co);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-		return id;
+    public String updateSerializedCourseOutline(COSerialized co)
+	    throws Exception {
+	String id = co.getCoId();
+	try {
+	    id =
+		    osylServices.getOsylSiteService()
+			    .updateSerializedCourseOutline(co);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    throw e;
 	}
+	return id;
+    }
 
-	/**
-	 * Returns the user role for current user.
-	 * 
-	 * @return String userRole
-	 */
-	public String getCurrentUserRole() {
-		return osylServices.getOsylSecurityService().getCurrentUserRole();
+    /**
+     * Returns the user role for current user.
+     * 
+     * @return String userRole
+     */
+    public String getCurrentUserRole() {
+	return osylServices.getOsylSecurityService().getCurrentUserRole();
+    }
+
+    /**
+     * Applies a permission for the specified Site. If something prevents the
+     * call to complete successfully an exception is thrown. TODO: check if the
+     * description is OK, I'm not sure I understand this one well.
+     * 
+     * @param String resourceId
+     */
+    public void applyPermissions(String resourceId, String permission) {
+	try {
+	    // TODO: check this
+	    osylServices.getOsylSecurityService().applyPermissions(resourceId,
+		    permission);
+	} catch (Exception e) {
+	    log.error("Unable to apply permissions", e);
 	}
+    }
 
-	/**
-	 * Applies a permission for the specified Site. If something prevents the
-	 * call to complete successfully an exception is thrown. TODO: check if the
-	 * description is OK, I'm not sure I understand this one well.
-	 * 
-	 * @param String resourceId
-	 */
-	public void applyPermissions(String resourceId, String permission) {
-		try {
-			// TODO: check this
-			osylServices.getOsylSecurityService().applyPermissions(resourceId,
-					permission);
-		} catch (Exception e) {
-			log.error("Unable to apply permissions", e);
-		}
+    /**
+     * Returns the default configuration to be used with the rules, the message
+     * bundle and a reference to the css file
+     * 
+     * @return COConfigSerialized
+     */
+    public COConfigSerialized getSerializedConfig() throws Exception {
+	String webappDir = getServletContext().getRealPath("/");
+	log.warn("OSYL getSerializedConfig webappDir: " + webappDir);
+	COConfigSerialized cfg = null;
+	Object configSiteProperty = "";
+	try {
+	    COSerialized thisCo =
+		    osylServices.getOsylSiteService()
+			    .getSerializedCourseOutline(webappDir);
+	    if (thisCo == null)
+		cfg =
+			osylServices.getOsylConfigService()
+				.getConfig(
+					OsylConfigService.DEFAULT_CONFIG_REF,
+					webappDir);
+	    else
+		configSiteProperty =
+			osylServices.getOsylSiteService()
+				.getSiteConfigProperty(thisCo.getSiteId());
+	    if (configSiteProperty == null)
+		cfg =
+			osylServices.getOsylConfigService()
+				.getConfig(
+					thisCo.getOsylConfig().getConfigId(),
+					webappDir);
+	    else
+		cfg =
+			osylServices.getOsylConfigService().getConfigByRef(
+				"osylcoconfigs" + File.separator
+					+ configSiteProperty.toString(),
+				webappDir);
+
+	} catch (Exception e) {
+	    log.error("Unable to retrieve serialized config", e);
+	    throw e;
 	}
+	return cfg;
+    }
 
-	/**
-	 * Returns the default configuration to be used with the rules, the message
-	 * bundle and a reference to the css file
-	 * 
-	 * @return COConfigSerialized
-	 */
-	public COConfigSerialized getSerializedConfig() throws Exception {
-		String webappDir = getServletContext().getRealPath("/");
-		log.warn("OSYL getSerializedConfig webappDir: " + webappDir);
-		COConfigSerialized cfg = null;
-		Object configSiteProperty = "";
-		try {
-			COSerialized thisCo =
-				osylServices.getOsylSiteService()
-				.getSerializedCourseOutline(webappDir);
-			if (thisCo == null)
-				cfg =
-					osylServices.getOsylConfigService()
-					.getConfig(
-							OsylConfigService.DEFAULT_CONFIG_REF,
-							webappDir);
-			else
-				configSiteProperty =
-					osylServices.getOsylSiteService()
-					.getSiteConfigProperty(thisCo.getSiteId());
-			if (configSiteProperty == null)
-				cfg =
-					osylServices.getOsylConfigService()
-					.getConfig(
-							thisCo.getOsylConfig().getConfigId(),
-							webappDir);
-			else
-				cfg =
-					osylServices.getOsylConfigService().getConfigByRef(
-							"osylcoconfigs" + File.separator
-							+ configSiteProperty.toString(),
-							webappDir);
+    /**
+     * Adds or update an assignment to the site. This method checks whether the
+     * Assignment tool is already integrated into the site, if it isn't, it is
+     * automatically added.
+     */
+    public String createOrUpdateAssignment(String assignmentId, String title,
+	    String instructions, int openYear, int openMonth, int openDay,
+	    int openHour, int openMinute, int closeYear, int closeMonth,
+	    int closeDay, int closeHour, int closeMinute, int percentage) {
+	return osylServices.getOsylService().createOrUpdateAssignment(
+		assignmentId, title, instructions, openYear, openMonth,
+		openDay, openHour, openMinute, closeYear, closeMonth, closeDay,
+		closeHour, closeMinute, percentage);
+    }
 
-		} catch (Exception e) {
-			log.error("Unable to retrieve serialized config", e);
-			throw e;
-		}
-		return cfg;
-	}
+    /**
+     * Adds or update an assignment to the site. This method checks whether the
+     * Assignment tool is already integrated into the site, if it isn't, it is
+     * automatically added.
+     */
+    public String createOrUpdateAssignment(String assignmentId, String title) {
+	return osylServices.getOsylService().createOrUpdateAssignment(
+		assignmentId, title);
+    }
 
-	/**
-	 * Adds or update an assignment to the site. This method checks whether the
-	 * Assignment tool is already integrated into the site, if it isn't, it is
-	 * automatically added.
-	 */
-	public String createOrUpdateAssignment(String assignmentId, String title,
-			String instructions, int openYear, int openMonth, int openDay,
-			int openHour, int openMinute, int closeYear, int closeMonth,
-			int closeDay, int closeHour, int closeMinute, int percentage) {
-		return osylServices.getOsylService().createOrUpdateAssignment(
-				assignmentId, title, instructions, openYear, openMonth,
-				openDay, openHour, openMinute, closeYear, closeMonth, closeDay,
-				closeHour, closeMinute, percentage);
-	}
+    /**
+     * Delete an existing assignment.
+     */
+    public void removeAssignment(String assignmentId) {
+	osylServices.getOsylService().removeAssignment(assignmentId);
+    }
 
-	/**
-	 * Adds or update an assignment to the site. This method checks whether the
-	 * Assignment tool is already integrated into the site, if it isn't, it is
-	 * automatically added.
-	 */
-	public String createOrUpdateAssignment(String assignmentId, String title) {
-		return osylServices.getOsylService().createOrUpdateAssignment(
-				assignmentId, title);
-	}
+    /**
+     * Add or updates a citation in the course outline citation list
+     */
+    public String createOrUpdateCitation(String citationListId,
+	    String citation, String author, String type, String isbnIssn,
+	    String link) {
+	return osylServices.getOsylService().createOrUpdateCitation(
+		citationListId, citation, author, type, isbnIssn, link);
+    }
 
-	/**
-	 * Delete an existing assignment.
-	 */
-	public void removeAssignment(String assignmentId) {
-		osylServices.getOsylService().removeAssignment(assignmentId);
-	}
+    /**
+     * Delete a citation from the course outline citation list
+     */
+    public void removeCitation(String citationId) {
+	osylServices.getOsylService().removeCitation(citationId);
+    }
 
-	/**
-	 * Add or updates a citation in the course outline citation list
-	 */
-	public String createOrUpdateCitation(String citationListId,
-			String citation, String author, String type, String isbnIssn,
-			String link) {
-		return osylServices.getOsylService().createOrUpdateCitation(
-				citationListId, citation, author, type, isbnIssn, link);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public boolean hasBeenPublished() throws Exception {
+	return osylServices.getOsylSiteService().hasBeenPublished();
+    }
 
-	/**
-	 * Delete a citation from the course outline citation list
-	 */
-	public void removeCitation(String citationId) {
-		osylServices.getOsylService().removeCitation(citationId);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public void ping() {
+	osylServices.getOsylSecurityService().setCurrentSessionActive();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean hasBeenPublished() throws Exception {
-		return osylServices.getOsylSiteService().hasBeenPublished();
-	}
+    /**
+     * Get the xsl associated with the particular group
+     * 
+     * @param group
+     * @param callback
+     */
+    public String getXslForGroup(String group) {
+	String webappDir = getServletContext().getRealPath("/");
+	return osylServices.getOsylService().getXslForGroup(group, webappDir);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void ping() {
-		osylServices.getOsylSecurityService().setCurrentSessionActive();
-	}
+    public String createTemporaryCitationList() {
+	return osylServices.getOsylService().createTemporaryCitationList();
+    }
 
-	/**
-	 * Get the xsl associated with the particular group
-	 * 
-	 * @param group
-	 * @param callback
-	 */
-	public String getXslForGroup(String group) {
-		String webappDir = getServletContext().getRealPath("/");
-		return osylServices.getOsylService().getXslForGroup(group, webappDir);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public ResourcesLicencingInfo getResourceLicenceInfo() {
+	return osylServices.getOsylService().getResourceLicenceInfo();
+    }
 
-	public String createTemporaryCitationList() {
-		return osylServices.getOsylService().createTemporaryCitationList();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public ResourcesLicencingInfo getResourceLicenceInfo() {
-		return osylServices.getOsylService().getResourceLicenceInfo();
-	}
-
-	public boolean checkSitesRelation(String resourceURI) {
-		return osylServices.getOsylService().checkSitesRelation(resourceURI);
-	}
+    public boolean checkSitesRelation(String resourceURI) {
+	return osylServices.getOsylService().checkSitesRelation(resourceURI);
+    }
 
 }
