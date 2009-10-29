@@ -26,7 +26,6 @@ import java.util.Map;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
-import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
 import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
@@ -51,7 +50,7 @@ public class OsylRubricView extends OsylViewableComposite {
     private Map<COModelInterface, OsylAbstractView> resProxViewMap;
 
     private String rubricStyleLevel;
-    
+
     public void setRubricStyleLevel(String rubricStyleLevel) {
 	this.rubricStyleLevel = rubricStyleLevel;
     }
@@ -66,12 +65,12 @@ public class OsylRubricView extends OsylViewableComposite {
      * @param model COContentRubric model
      * @param osylController
      */
-    public OsylRubricView(COContentRubric model,
-	    OsylController controller, String styleLevel) {
+    public OsylRubricView(COContentRubric model, OsylController controller,
+	    String styleLevel) {
 	super(model, controller);
 	setRubricStyleLevel(styleLevel);
 	initView();
-   }
+    }
 
     private void initView() {
 	resProxViewMap = new HashMap<COModelInterface, OsylAbstractView>();
@@ -104,31 +103,35 @@ public class OsylRubricView extends OsylViewableComposite {
     public void addResProxView(COContentResourceProxy resProx) {
 
 	OsylAbstractView oe = null;
-	if(resProx.getResource() instanceof COContentResource){
-	COContentResource resource = (COContentResource)resProx.getResource();
-	if (resource.getType().equals(COContentResourceType.TEXT)) {
-	    oe = new OsylResProxTextView(resProx, getController());
-	} else if (resource.getType().equals(COContentResourceType.DOCUMENT)) {
-	    oe = new OsylResProxDocumentView(resProx, getController());
-	} else if (resource.getType().equals(COContentResourceType.URL)) {
-	    oe = new OsylResProxLinkView(resProx, getController());
-	} else if (resource.getType().equals(COContentResourceType.PERSON)) {
-	    oe = new OsylResProxContactInfoView(resProx, getController());
-	} else if (resource.getType().equals(COContentResourceType.ASSIGNMENT)) {
-	    oe = new OsylResProxAssignmentView(resProx, getController());
-	} else if (resource.getType().equals(
-		COContentResourceType.BIBLIO_RESOURCE)) {
-	    oe = new OsylResProxCitationView(resProx, getController());
-	} else {
-	    Window.alert("Internal error : addResProxView doesn't know how to "
-		    + "handle resource of type " + resource.getType());
-	    return;
-	}
+	if (resProx.getResource() instanceof COContentResource) {
+	    COContentResource resource =
+		    (COContentResource) resProx.getResource();
+	    if (resource.getType().equals(COContentResourceType.TEXT)) {
+		oe = new OsylResProxTextView(resProx, getController());
+	    } else if (resource.getType()
+		    .equals(COContentResourceType.DOCUMENT)) {
+		oe = new OsylResProxDocumentView(resProx, getController());
+	    } else if (resource.getType().equals(COContentResourceType.URL)) {
+		oe = new OsylResProxLinkView(resProx, getController());
+	    } else if (resource.getType().equals(COContentResourceType.PERSON)) {
+		oe = new OsylResProxContactInfoView(resProx, getController());
+	    } else if (resource.getType().equals(
+		    COContentResourceType.ASSIGNMENT)) {
+		oe = new OsylResProxAssignmentView(resProx, getController());
+	    } else if (resource.getType().equals(
+		    COContentResourceType.BIBLIO_RESOURCE)) {
+		oe = new OsylResProxCitationView(resProx, getController());
+	    } else {
+		Window
+			.alert("Internal error : addResProxView doesn't know how to "
+				+ "handle resource of type "
+				+ resource.getType());
+		return;
+	    }
 
-	addResProxView(oe);
-	}
-	else{
-	    //TODO display COUnit as resource
+	    addResProxView(oe);
+	} else {
+	    // TODO display COUnit as resource
 	}
 
     }
