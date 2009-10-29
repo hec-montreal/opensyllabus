@@ -75,9 +75,9 @@
 		<visible>true</visible>
 		<label>Informations sur le matériel d'apprentissage</label>
 		<asmUnit access="public" xsi:type="LearningMaterialUnit">
-			<label><![CDATA[ Materiel pédagogique]]></label>
+			<label><![CDATA[ Matériel pédagogique]]></label>
 			<asmUnitStructure access="public" xsi:type="LearningMaterialUnitStruct">
-				<label><![CDATA[ Materiel pédagogique]]></label>
+				<label><![CDATA[ Matériel pédagogique]]></label>
 				<asmUnitContent access="public" xsi:type="LearningMaterialUnitContent">
 			    	<asmContext access="public"  xsi:type="InformationContext" >
 			    		<id type="HECsakai">805655358980</id>
