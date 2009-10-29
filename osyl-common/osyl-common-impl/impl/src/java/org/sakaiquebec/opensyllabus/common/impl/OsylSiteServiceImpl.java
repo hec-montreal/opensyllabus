@@ -328,9 +328,10 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 
 	    // we add the tools
 	    addTool(site, "sakai.opensyllabus.tool");
+	    addTool(site, "sakai.assignment.grades");
 	    addTool(site, "sakai.resources");
 	    addTool(site, "sakai.siteinfo");
-
+	    
 	    siteService.save(site);
 
 	    // we add the directories
