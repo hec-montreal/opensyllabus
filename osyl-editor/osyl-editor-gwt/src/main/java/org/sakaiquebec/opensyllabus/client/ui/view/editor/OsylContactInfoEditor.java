@@ -795,7 +795,6 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 		}
 	    }
 	    editorRole.setSelectedIndex(selectedIndex);
-	    editorRole.setWidth("100%");
 	} else {
 	    if (null == text || text.length() == 0) {
 		text =
