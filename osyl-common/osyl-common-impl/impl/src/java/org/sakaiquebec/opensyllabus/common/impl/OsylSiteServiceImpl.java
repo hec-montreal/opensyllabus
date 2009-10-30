@@ -781,11 +781,11 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 			resourceDao.createOrUpdateCourseOutline(co);
 			coRelationDao.createRelation(siteId, parentId);
 		    } else {
-			throw new Exception();// TODO
+			throw new Exception("Parent course outline is null");
 		    }
 		}
 	    } else {
-		throw new Exception();// TODO
+		throw new Exception("Child course outline is null");
 	    }
 	} catch (Exception e) {
 	    log.error(e.getLocalizedMessage(), e);
