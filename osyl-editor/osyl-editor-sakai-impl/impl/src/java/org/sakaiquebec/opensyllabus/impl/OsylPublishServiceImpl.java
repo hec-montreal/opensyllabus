@@ -246,7 +246,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		coModeled.getDocumentSecurityMap();
 
 	publish(co.getSiteId(), webappDir);
-	
+
 	copyWorkToPublish(documentSecurityMap);
     }
 
@@ -254,27 +254,31 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	COSerialized hierarchyFussionedCO =
 		osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
-	
-	COModeledServer coModeled = osylSiteService.getFusionnedPrePublishedHierarchy(siteId);
-	coModeled.model2XML();
-	hierarchyFussionedCO.setContent(coModeled.getSerializedContent());
 
-	// Create a course outline with security public
-	publish(hierarchyFussionedCO, SecurityInterface.ACCESS_PUBLIC,
-		OsylSiteService.CO_CONTENT_XSL_PUBLIC, webappDir);
+	COModeledServer coModeled =
+		osylSiteService.getFusionnedPrePublishedHierarchy(siteId);
+	if (coModeled != null) {
+	    coModeled.model2XML();
+	    hierarchyFussionedCO.setContent(coModeled.getSerializedContent());
 
-	// Create a course outline with security attendee
-	publish(hierarchyFussionedCO, SecurityInterface.ACCESS_ATTENDEE,
-		OsylSiteService.CO_CONTENT_XSL_ATTENDEE, webappDir);
-	
-	publishChild(siteId, webappDir);
+	    // Create a course outline with security public
+	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_PUBLIC,
+		    OsylSiteService.CO_CONTENT_XSL_PUBLIC, webappDir);
+
+	    // Create a course outline with security attendee
+	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_ATTENDEE,
+		    OsylSiteService.CO_CONTENT_XSL_ATTENDEE, webappDir);
+
+	    publishChild(siteId, webappDir);
+	}
     }
 
     private void publishChild(String siteId, String webappDir) {
 	List<CORelation> coRelationList;
 	try {
 	    coRelationList =
-		    coRelationDao.getRelationsWithParentsCourseOutlineId(siteId);
+		    coRelationDao
+			    .getRelationsWithParentsCourseOutlineId(siteId);
 	    for (Iterator<CORelation> coRelationIter =
 		    coRelationList.iterator(); coRelationIter.hasNext();) {
 		String childId = coRelationIter.next().getChild();
