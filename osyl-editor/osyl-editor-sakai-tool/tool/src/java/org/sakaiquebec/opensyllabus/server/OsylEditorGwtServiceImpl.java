@@ -87,7 +87,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 
     /** {@inheritDoc} */
     public void init() {
-	log.warn("INIT OsylEditorGwtServiceImpl");
 
 	servletContext = getServletContext();
 	webAppContext =
@@ -106,9 +105,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     @Override
     protected void doGet(HttpServletRequest request,
 	    HttpServletResponse response) throws ServletException, IOException {
-
-	log.warn("OSYL doGet");
-
+	
 	final String contextPath = request.getContextPath();
 	request.setAttribute(Tool.NATIVE_URL, Tool.NATIVE_URL);
 	HttpServletRequest wrappedRequest =
@@ -151,7 +148,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      */
     public void publishCourseOutline() throws Exception {
 	String webappDir = getServletContext().getRealPath("/");
-	log.warn("OSYL publishCourseOutline webappDir: " + webappDir);
 	osylServices.getOsylPublishService().publish(webappDir,
 		getNonFusionnedSerializedCourseOutline());
 	return;
@@ -311,7 +307,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      */
     public COConfigSerialized getSerializedConfig() throws Exception {
 	String webappDir = getServletContext().getRealPath("/");
-	log.warn("OSYL getSerializedConfig webappDir: " + webappDir);
 	COConfigSerialized cfg = null;
 	Object configSiteProperty = "";
 	try {
