@@ -38,6 +38,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -363,7 +364,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    return null;
 	}
     }
-    
+
     /**
      * Returns the selected diffusion level. This is either
      * {@link SecurityInterface#SECURITY_GROUP_PUBLIC},
@@ -441,32 +442,24 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
      */
     private void fillListBoxWithAllowedCoUnits(COElementAbstract model,
 	    ListBox lb) {
-	if (model.isCOUnitContent()) {
-	    COUnitContent targetContentUnit = (COUnitContent) model;
-	    List<COModelInterface> subModels =
-		    getView().getController().getOsylConfig()
-			    .getOsylConfigRuler().getAllowedSubModels(
-				    targetContentUnit);
-	    boolean rubricAllowed = false;
-	    boolean resourceTypeAllowed = false;
-	    for (Iterator<COModelInterface> iter = subModels.iterator(); iter
-		    .hasNext();) {
-		COModelInterface coi = iter.next();
-		if (coi instanceof COContentRubric) {
-		    if (coi.getType().equals(getRubricType()))
-			rubricAllowed = true;
-		}
-		if (coi instanceof COContentResource) {
-		    if (coi.getType().equals(getView().getModel().getResource().getType())) {
-			resourceTypeAllowed = true;
-		    }
-
-		}
+	if (model.isCOUnit() && model.getChildrens().size() == 1) {
+	    COUnitStructure coUnitStructure = (COUnitStructure)model.getChildrens().get(0);
+	 // TODO modify this method when multiple coUnitContent could be process
+	    COUnitContent targetModel = (COUnitContent)coUnitStructure.getChildrens().get(0);
+	    if (isAnAllowedTargetModel(targetModel)) {
+		String label = model.getLabel(); 
+		if (label.length() > 35)
+		    label = label.substring(0, 35) + "...";
+		lb.addItem(label, targetModel.getUuid());
 	    }
-	    if (rubricAllowed && resourceTypeAllowed) {
-		String label = getView().getCoMessage(model.getType()); //TODO modify this for explicit name
-		if(label.length()>35) label = label.substring(0, 35) + "...";
-		lb.addItem(label, model.getUuid());
+	} else if (model.isCOUnitStructure()) {
+	 // TODO modify this method when multiple coUnitContent could be process
+	    COUnitContent targetModel = (COUnitContent)model.getChildrens().get(0);
+	    if (isAnAllowedTargetModel(targetModel)) {
+		String label = model.getLabel(); 
+		if (label.length() > 35)
+		    label = label.substring(0, 35) + "...";
+		lb.addItem(label, targetModel.getUuid());
 	    }
 	} else {
 	    for (Iterator<COElementAbstract> iter =
@@ -475,6 +468,30 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		fillListBoxWithAllowedCoUnits(coElement, lb);
 	    }
 	}
+    }
+
+    private boolean isAnAllowedTargetModel(COElementAbstract targetModel) {
+	boolean rubricAllowed = false;
+	boolean resourceTypeAllowed = false;
+	List<COModelInterface> subModels =
+		getView().getController().getOsylConfig().getOsylConfigRuler()
+			.getAllowedSubModels(targetModel);
+	for (Iterator<COModelInterface> iter = subModels.iterator(); iter
+		.hasNext();) {
+	    COModelInterface coi = iter.next();
+	    if (coi instanceof COContentRubric) {
+		if (coi.getType().equals(getRubricType()))
+		    rubricAllowed = true;
+	    }
+	    if (coi instanceof COContentResource) {
+		if (coi.getType().equals(
+			getView().getModel().getResource().getType())) {
+		    resourceTypeAllowed = true;
+		}
+
+	    }
+	}
+	return (rubricAllowed && resourceTypeAllowed);
     }
 
     public String getMoveToTarget() {
