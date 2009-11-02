@@ -269,102 +269,99 @@
   padding:2px;
 }
 
-/* ---- CSS definitions overriding default GWT styles (incubator widgets) */
-
-/* Date picker styles */
-
-.goog-date-picker {
-  background-color:#FFF;
-  width:100%;
-  border:1px solid #f1f1f1;
-  border-bottom:2px solid #f1f1f1;
-  color:#6b6b6b;
+/*-- Date Picker --*/
+.gwt-DatePicker {
+  border: 1px solid #888;
+  cursor: default;
 }
 
-.goog-date-picker td {
-  font-family:Arial;
-  font-size:9px;
-  padding:2px;
-  text-align:center;
-  padding:2px;
-  cursor:pointer;
-  outline:none;
-  -moz-outline:none;
+.gwt-DatePicker td,
+.datePickerMonthSelector td:focus {
+  outline: none
 }
 
-.goog-date-picker td,.monthSelector td :focus {
-  outline:none;
+.datePickerMonthSelector td:focus {
+  outline: none
 }
 
-.gwt-DateBox {
-  width:10em;
+.datePickerDays {
+  width: 100%;
+  background: white;
 }
 
-/* Calendar styles */
-
-.goog-date-picker .filler {
-  color:#bfbfbf;
+.datePickerDay,
+.datePickerWeekdayLabel,
+.datePickerWeekendLabel {
+  font-size: 75%;
+  text-align: center;
+  padding: 4px;
+  outline: none;
 }
 
- .goog-date-picker .selected {
-  background:#aaccee;
+.datePickerWeekdayLabel,
+.datePickerWeekendLabel {
+  background: #c1c1c1;
+  padding: 0px 4px 2px;
+  cursor: default;
 }
 
-.goog-date-picker .day-title {
-  background:#dbe6de;
+.datePickerDay {
+  padding: 4px;
+  cursor: hand;
+  cursor: pointer;
 }
 
-.goog-date-picker .highlighted {
-  background:#ccee11;
+.datePickerDayIsToday {
+  border: 1px solid black;
+  padding: 3px;
 }
 
-.goog-date-picker .today {
-  border:1px solid #000;
+.datePickerDayIsWeekend {
+  background: #EEEEEE;
 }
 
-.goog-date-picker .weekend {
-  background:#f1f1f1;
+.datePickerDayIsFiller {
+  color: #888888;
 }
 
-.goog-date-picker .disabled {
-  color:graytext;
+.datePickerDayIsValue {
+  background: #abf;
 }
 
-/* Month selector styles */
-
-.monthSelector {
-  background:#dbe6de;
-  width:100%;
-  text-align:center;
+.datePickerDayIsDisabled {
+  color: #AAAAAA;
+  font-style: italic;
 }
 
-.monthSelector td {
-  font-weight:bold;
-  font-size:70%;
+.datePickerDayIsHighlighted {
+  background: #dde;
 }
 
-.monthSelector .month-label {
-  text-align:center;
+.datePickerDayIsValueAndHighlighted {
+  background: #ccf;
 }
 
-/* helper styles */
-
-.goog-date-picker .red-date {
-  background-color:red;
+.datePickerMonthSelector {
+  background: #c1c1c1;
+  width: 100%;
 }
 
-.goog-date-picker .blue-background {
-  background-color:blue;
+.datePickerPreviousButton,
+.datePickerNextButton {
+  font-size: 120%;
+  line-height: 1em;
+  cursor: hand;
+  cursor: pointer;
+  padding: 0px 4px;
 }
 
-.goog-date-picker .red-text {
-  color:red;
+td.datePickerMonth {
+  text-align: center;
+  vertical-align: center;
+  white-space: nowrap;
+  font-size: 70%;
+  font-weight: bold;
 }
 
-.goog-date-picker .green-border {
-  border:1px solid green;
-}
-
-.selected-date {
-	background-color:#FCFCFC;
-}
+.dateBoxPopup{
+	z-index: 15000;

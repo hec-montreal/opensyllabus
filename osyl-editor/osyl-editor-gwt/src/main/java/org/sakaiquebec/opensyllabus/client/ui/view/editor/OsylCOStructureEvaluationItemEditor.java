@@ -28,6 +28,7 @@ import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureEvaluationItem
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -36,6 +37,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.DateBox;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -49,8 +51,8 @@ public class OsylCOStructureEvaluationItemEditor extends
     private ListBox modeListBox;
     private TextBox livrableTextBox;
     private ListBox scopeListBox;
-    private TextBox startDateTextBox;
-    private TextBox endDateTextBox;
+    private DateBox startDateBox;
+    private DateBox endDateBox;
     private ListBox subTypeListBox;
     private ListBox typeListBox;
     private int selectedTypeIndex;
@@ -83,8 +85,8 @@ public class OsylCOStructureEvaluationItemEditor extends
 	boolean errordate = false;
 	String isoRegex =
 		"^(\\d{4})\\D?(0[1-9]|1[0-2])\\D?([12]\\d|0[1-9]|3[01])$";// //ISO
-									  // format
-									  // yyyy-mm-dd
+	// format
+	// yyyy-mm-dd
 
 	// required fields validations
 	String weight = weightTextBox.getText();
@@ -101,7 +103,7 @@ public class OsylCOStructureEvaluationItemEditor extends
 		ok = false;
 	    }
 	}
-	String endDateString = endDateTextBox.getText();
+	String endDateString = endDateBox.getTextBox().getText();
 	if (endDateString.trim().equals("")) {
 	    messages +=
 		    getView().getUiMessage("Evaluation.field.required",
@@ -121,7 +123,7 @@ public class OsylCOStructureEvaluationItemEditor extends
 
 	// date validation
 
-	String startDateString = startDateTextBox.getText();
+	String startDateString = startDateBox.getTextBox().getText();
 	if (!startDateString.trim().equals("")
 		&& !startDateString.matches(isoRegex)) {
 	    messages +=
@@ -137,8 +139,9 @@ public class OsylCOStructureEvaluationItemEditor extends
 	    ok = false;
 	}
 	if (!ok) {
-	    OsylAlertDialog osylAlertDialog = new OsylAlertDialog(
-		    getView().getUiMessage("Global.error"), messages);
+	    OsylAlertDialog osylAlertDialog =
+		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
+			    messages);
 	    osylAlertDialog.center();
 	    osylAlertDialog.show();
 	}
@@ -247,20 +250,24 @@ public class OsylCOStructureEvaluationItemEditor extends
 	VerticalPanel startDatePanel = new VerticalPanel();
 	startDatePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
 	Label l6 = new Label(getUiMessage("Evaluation.StartDate"));
-	startDateTextBox = new TextBox();
-	startDateTextBox.setTitle(getUiMessage("Evaluation.StartDate.tooltip"));
-	startDateTextBox.setText(getView().getOpenDate());
+	startDateBox = new DateBox();
+	startDateBox.setFormat(new DateBox.DefaultFormat(DateTimeFormat
+		.getFormat("yyyy-MM-dd")));
+	startDateBox.setTitle(getUiMessage("Evaluation.StartDate.tooltip"));
+	startDateBox.getTextBox().setText(getView().getOpenDate());
 	startDatePanel.add(l6);
-	startDatePanel.add(startDateTextBox);
+	startDatePanel.add(startDateBox);
 
 	VerticalPanel endDatePanel = new VerticalPanel();
 	endDatePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
 	Label l7 = new Label(getUiMessage("Evaluation.EndDate"));
-	endDateTextBox = new TextBox();
-	endDateTextBox.setTitle(getUiMessage("Evaluation.EndDate.tooltip"));
-	endDateTextBox.setText(getView().getCloseDate());
+	endDateBox = new DateBox();
+	endDateBox.setFormat(new DateBox.DefaultFormat(DateTimeFormat
+		.getFormat("yyyy-MM-dd")));
+	endDateBox.setTitle(getUiMessage("Evaluation.EndDate.tooltip"));
+	endDateBox.getTextBox().setText(getView().getCloseDate());
 	endDatePanel.add(l7);
-	endDatePanel.add(endDateTextBox);
+	endDatePanel.add(endDateBox);
 
 	VerticalPanel subTypePanel = new VerticalPanel();
 	subTypePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
@@ -273,8 +280,8 @@ public class OsylCOStructureEvaluationItemEditor extends
 		"Evaluation.Subtype.paper"));
 	subTypeListBox.addItem(getView().getCoMessage(
 		"Evaluation.Subtype.elect"));
-	subTypeListBox.addItem(getView().getCoMessage(
-		"Evaluation.Subtype.oral"));
+	subTypeListBox.addItem(getView()
+		.getCoMessage("Evaluation.Subtype.oral"));
 	selectItemListBox(subTypeListBox, getView().getSubmitionType());
 	subTypePanel.add(l8);
 	subTypePanel.add(subTypeListBox);
@@ -332,6 +339,12 @@ public class OsylCOStructureEvaluationItemEditor extends
 
     protected OsylCOStructureEvaluationItemLabelView getView() {
 	return (OsylCOStructureEvaluationItemLabelView) super.getView();
+    }
+
+    public void closeEditor() {
+	startDateBox.hideDatePicker();
+	endDateBox.hideDatePicker();
+	super.closeEditor();
     }
 
     @Override
@@ -601,16 +614,15 @@ public class OsylCOStructureEvaluationItemEditor extends
     }
 
     public String getOpenDate() {
-	return startDateTextBox.getText();
+	return startDateBox.getTextBox().getText();
     }
 
     public String getCloseDate() {
-	return endDateTextBox.getText();
+	return endDateBox.getTextBox().getText();
     }
 
     public String getSubmitionType() {
-	return subTypeListBox.getItemText(subTypeListBox
-		.getSelectedIndex());
+	return subTypeListBox.getItemText(subTypeListBox.getSelectedIndex());
     }
 
     public String getType() {
