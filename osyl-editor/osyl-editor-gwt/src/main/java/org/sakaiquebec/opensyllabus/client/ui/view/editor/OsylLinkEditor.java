@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxLinkView;
 
@@ -310,7 +311,20 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     }
 
     public boolean prepareForSave() {
-	return true;
+	String messages = "";
+	boolean ok=true;
+	if(getLink().trim().equals("")){
+	    ok=false;
+	    messages=getView().getUiMessage("LinkEditor.unvalidLink");
+	}
+	if (!ok) {
+	    OsylAlertDialog osylAlertDialog =
+		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
+			    messages);
+	    osylAlertDialog.center();
+	    osylAlertDialog.show();
+	}
+	return ok;
     }
 
     public void enterEdit() {
