@@ -11,91 +11,182 @@
 		<attribute name="propertyType" restrictionpattern="UdeM" />
 		<!-- list of element asmUnit allowed at this level -->
 		<element name="asmStructure">
-			<attribute name="type" restrictionpattern="CourseInfoHeader" />
+			<attribute name="type" restrictionpattern="OverviewStruct" />
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="courseofficialdescription" />
+				<attribute name="type" restrictionpattern="OverviewUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
-					<attribute name="type" restrictionpattern="courseofficialdescriptionstruct" />
+					<attribute name="type" restrictionpattern="OverviewUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
-						<attribute name="type" restrictionpattern="courseofficialdescriptioncontent" />
+						<attribute name="type" restrictionpattern="CourseOfficialDescriptionUnitContent" />
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="Text|Document|URL" />
 			    		</element>
 			    		<element name="semanticType">
-			        		<attribute name="type" restrictionpattern="undefined|description" />
+			        		<attribute name="type" restrictionpattern="undefined|officialdescription|description" />
 			    		</element>
 					</element>
 				</element>
 			</element>
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="coursescheduleplace" />
+				<attribute name="type" restrictionpattern="SchedulePlaceUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
-					<attribute name="type" restrictionpattern="coursescheduleplacestruct" />
+					<attribute name="type" restrictionpattern="SchedulePlaceUnitStruct"  allowMultiple="false"/>
 					<element name="asmUnitContent">
-						<attribute name="type" restrictionpattern="coursescheduleplacecontent" />
+						<attribute name="type" restrictionpattern="SchedulePlaceUnitContent" />
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="Text|Document|URL" />
 			    		</element>
 			    		<element name="semanticType">
-			        		<attribute name="type" restrictionpattern="undefined|description" />
+			        		<attribute name="type" restrictionpattern="undefined|coursebeginend|courseregularschedule|coursespecialevents" />
 			    		</element>
 					</element>
 				</element>
 			</element>
-
-		</element>
+		</element>		
 		<element name="asmStructure">
 			<attribute name="type" restrictionpattern="StaffStruct" />
 			<element name="asmUnit">
 				<attribute name="type" restrictionpattern="StaffUnit" />
 				<element name="asmUnitStructure">
-					<attribute name="type" restrictionpattern="StaffUnitStruct" />
+					<attribute name="type" restrictionpattern="StaffUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
 						<attribute name="type" restrictionpattern="StaffUnitContent" />
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="Person" />
 			    		</element>
 			    		<element name="semanticType">
-			        		<attribute name="type" restrictionpattern="undefined|coordinators|lecturers|teachingassistants|secretaries" />
+			        		<attribute name="type" restrictionpattern="undefined|coursecoordinator|coordinators|lecturers|teachingassistants|secretaries|others" />
 			    		</element>
 					</element>
 				</element>
 			</element>
 		</element>
 		<element name="asmStructure">
+			<attribute name="type" restrictionpattern="IntroductionStruct" />
+			<element name="asmUnit">
+				<attribute name="type" restrictionpattern="IntroductionUnit" />
+				<element name="asmUnitStructure">
+					<attribute name="type" restrictionpattern="IntroductionUnitStruct" allowMultiple="false"/>
+					<element name="asmUnitContent">
+						<attribute name="type" restrictionpattern="IntroductionUnitContent" />
+			    		<element name="asmResource">
+				    		<attribute name="type" restrictionpattern="Text|Document|URL" />
+			    		</element>
+			    		<element name="semanticType">
+			        		<attribute name="type" restrictionpattern="undefined|coursetopicspresentation|problematic|description" />
+			    		</element>
+					</element>
+				</element>
+			</element>
+		</element>		
+		<element name="asmStructure">
+			<attribute name="type" restrictionpattern="ObjectivesStruct" />
+			<element name="asmUnit">
+				<attribute name="type" restrictionpattern="ObjectivesUnit" />
+				<element name="asmUnitStructure">
+					<attribute name="type" restrictionpattern="ObjectivesUnitStruct" allowMultiple="false"/>
+					<element name="asmUnitContent">
+						<attribute name="type" restrictionpattern="ObjectivesUnitContent" />
+			    		<element name="asmResource">
+				    		<attribute name="type" restrictionpattern="Text|Document|URL" />
+			    		</element>
+			    		<element name="semanticType">
+			        		<attribute name="type" restrictionpattern="undefined|generalobjectives|specificobjectives|description|mis" />
+			    		</element>
+					</element>
+				</element>
+			</element>
+		</element>	
+		<!-- list of element structureElement allowed at this level -->
+		<element name="asmStructure">
+			<attribute name="type" restrictionpattern="AssessmentHeaderStruct" allowMultiple="false"/>
+			<element name="asmStructure">
+				<attribute name="type" restrictionpattern="AssessmentIntroStruct" allowMultiple="false"/>
+				<element name="asmUnit">
+					<attribute name="type" restrictionpattern="AssessmentIntroUnit"  allowMultiple="false"/>
+					<element name="asmUnitStructure">
+						<attribute name="type" restrictionpattern="AssessmentIntroUnitStruct" />
+						<element name="asmUnitContent">
+							<attribute name="type" restrictionpattern="AssessmentIntroUnitContent" />
+							<element name="asmResource">
+								<attribute name="type" restrictionpattern="Text|Document|URL"/>
+							</element>
+							<element name="semanticType">
+					    		<attribute name="type" restrictionpattern="undefined|description" />
+							</element>
+						</element>
+					</element>
+				</element>
+			</element>
+			<element name="asmStructure">
+				<attribute name="type" restrictionpattern="AssessmentStruct" allowMultiple="false"/>
+				<element name="asmUnit">
+					<attribute name="type" restrictionpattern="AssessmentUnit" />
+					<element name="asmUnitStructure">
+						<attribute name="type" restrictionpattern="AssessmentUnitStruct" />
+						<element name="asmUnitContent">
+							<attribute name="type" restrictionpattern="AssessmentUnitContent" />
+							<element name="asmResource">
+								<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource|Assignment"/>
+							</element>
+							<element name="semanticType">
+					    		<attribute name="type" restrictionpattern="undefined|description|ObjectivesMeasured|EvaluationInstrument|evalcriteria|evalpreparation|evaldetails|evalsubproc|misresources" />
+							</element>
+						</element>
+					</element>
+				</element>
+			</element>
+		</element>	
+		<element name="asmStructure">
+			<attribute name="type" restrictionpattern="PlagiarismStruct" />
+			<element name="asmUnit">
+				<attribute name="type" restrictionpattern="PlagiarismUnit"/>
+				<element name="asmUnitStructure">
+					<attribute name="type" restrictionpattern="PlagiarismUnitStruct" allowMultiple="false"/>
+					<element name="asmUnitContent">
+						<attribute name="type" restrictionpattern="PlagiarismUnitContent" />
+			    		<element name="asmResource">
+				    		<attribute name="type" restrictionpattern="Text|Document|URL" />
+			    		</element>
+			    		<element name="semanticType">
+			        		<attribute name="type" restrictionpattern="undefined|plagiarism|description|mis" />
+			    		</element>
+					</element>
+				</element>
+			</element>
+		</element>
+		<element name="asmStructure">
+			<attribute name="type" restrictionpattern="PedagogicalApproachStruct" />
+			<element name="asmUnit">
+				<attribute name="type" restrictionpattern="PedagogicalApproachUnit" />
+				<element name="asmUnitStructure">
+					<attribute name="type" restrictionpattern="PedagogicalApproachUnitStruct" allowMultiple="false"/>
+					<element name="asmUnitContent">
+						<attribute name="type" restrictionpattern="PedagogicalApproachUnitContent" />
+			    		<element name="asmResource">
+				    		<attribute name="type" restrictionpattern="Text|Document|URL" />
+			    		</element>
+			    		<element name="semanticType">
+			        		<attribute name="type" restrictionpattern="undefined|pedagogicaltheory|teachingstrategy|learningstrategy|modusoperandi|description|mis" />
+			    		</element>
+					</element>
+				</element>
+			</element>
+		</element>				
+		<element name="asmStructure">
 			<attribute name="type" restrictionpattern="LearningMaterialStruct" />
 			<element name="asmUnit">
 				<attribute name="type" restrictionpattern="LearningMaterialUnit" />
 				<element name="asmUnitStructure">
-					<attribute name="type" restrictionpattern="LearningMaterialUnitStruct" />
+					<attribute name="type" restrictionpattern="LearningMaterialUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
 						<attribute name="type" restrictionpattern="LearningMaterialUnitContent" />
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource" />
 			    		</element>
 			    		<element name="semanticType">
-			        		<attribute name="type" restrictionpattern="undefined|misresources|bibliography|tools|pastexams|complbibres" />
+			        		<attribute name="type" restrictionpattern="undefined|complbibres|requiredbook|recommendedbooks|codex|hardwaresoftware|oldexams|bibliography|description|mis" />
 			    		</element>
-					</element>
-				</element>
-			</element>
-		</element>
-		<!-- list of element structureElement allowed at this level -->
-		<element name="asmStructure">
-			<attribute name="type" restrictionpattern="AssessmentStruct" />
-			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
-			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="AssessmentUnit" />
-				<element name="asmUnitStructure">
-					<attribute name="type" restrictionpattern="AssessmentUnitStruct" />
-					<element name="asmUnitContent">
-						<attribute name="type" restrictionpattern="AssessmentUnitContent" />
-						<element name="asmResource">
-							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource|Assignment"/>
-						</element>
-						<element name="semanticType">
-				    		<attribute name="type" restrictionpattern="undefined|description|evalcriteria|evalpreparation|evaldetails|evalsubproc|misresources" />
-						</element>
 					</element>
 				</element>
 			</element>
@@ -105,16 +196,73 @@
 			<attribute name="type" restrictionpattern="PedagogicalStruct" />
 			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="PedagogicalUnit" />
+				<attribute name="type" restrictionpattern="PedagogicalUnit"/>
 				<element name="asmUnitStructure">
-					<attribute name="type" restrictionpattern="PedagogicalUnitStruct" />
+					<attribute name="type" restrictionpattern="PedagogicalUnitStruct" allowMultiple="true"/>
 					<element name="asmUnitContent">
 						<attribute name="type" restrictionpattern="PedagogicalUnitContent" />
 						<element name="asmResource">
 							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource" />
 						</element>
 						<element name="semanticType">
-				    		<attribute name="type" restrictionpattern="undefined|instructions|description|objectives|learningstrat|misresources|ressinclass|readinglist|exercises" />
+				    		<attribute name="type" restrictionpattern="undefined|LectureTimePlace|description|instructions|LectureObjectives|LectureRequiredMaterial|evaluation|LectureTeachingActivity|LectureLearningActivity|misresources|ressinclass|readinglist|exercises" />
+						</element>
+					</element>
+				</element>
+			</element>
+		</element>
+		<element name="asmStructure">
+			<attribute name="type" restrictionpattern="BibliographyStruct" />
+			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
+			<element name="asmUnit">
+				<attribute name="type" restrictionpattern="BibliographyUnit" />
+				<element name="asmUnitStructure">
+					<attribute name="type" restrictionpattern="BibliographyUnitStruct" allowMultiple="false"/>
+					<element name="asmUnitContent">
+						<attribute name="type" restrictionpattern="BibliographyUnitContent" />
+						<element name="asmResource">
+							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource" />
+						</element>
+						<element name="semanticType">
+				    		<attribute name="type" restrictionpattern= "undefined|bibliography|complbibres|requiredbook|recommendedbooks|codex|description|mis" />
+						</element>
+					</element>
+				</element>
+			</element>
+		</element>
+		<element name="asmStructure">
+			<attribute name="type" restrictionpattern="ThematicBibliographyStruct" />
+			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
+			<element name="asmUnit">
+				<attribute name="type" restrictionpattern="ThematicBibliographyUnit"/>
+				<element name="asmUnitStructure">
+					<attribute name="type" restrictionpattern="ThematicBibliographyUnitStruct" />
+					<element name="asmUnitContent">
+						<attribute name="type" restrictionpattern="ThematicBibliographyUnitContent" />
+						<element name="asmResource">
+							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource" />
+						</element>
+						<element name="semanticType">
+				    		<attribute name="type" restrictionpattern= "undefined|bibliography|complbibres|requiredbook|recommendedbooks|codex|description|mis" />
+						</element>
+					</element>
+				</element>
+			</element>
+		</element>
+		<element name="asmStructure">
+			<attribute name="type" restrictionpattern="LearningSupportServicesStruct" />
+			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
+			<element name="asmUnit">
+				<attribute name="type" restrictionpattern="LearningSupportServicesUnit" />
+				<element name="asmUnitStructure">
+					<attribute name="type" restrictionpattern="LearningSupportServicesUnitStruct" allowMultiple="false"/>
+					<element name="asmUnitContent">
+						<attribute name="type" restrictionpattern="LearningSupportServicesUnitContent" />
+						<element name="asmResource">
+							<attribute name="type" restrictionpattern="Text|Document|URL" />
+						</element>
+						<element name="semanticType">
+				    		<attribute name="type" restrictionpattern= "undefined|description|LearningSupportSAE|LearningSupportCCE|LearningSupportOther|mis" />
 						</element>
 					</element>
 				</element>
