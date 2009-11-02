@@ -35,11 +35,24 @@ import java.util.List;
  */
 public class COStructureElementType {
 
-    public static final String PEDAGOGICAL_STRUCT = "PedagogicalStruct";
     public static final String STAFF_STRUCT = "StaffStruct";
-    public static final String LEARNING_MATERIAL_STRUCT = "LearningMaterialStruct";
     public static final String OVERVIEW_STRUCT = "OverviewStruct";
-    public static final String EVALUATIONS_STRUCT = "AssessmentStruct";
+    public static final String INTRODUCTION_STRUCT = "IntroductionStruct";
+    public static final String OBJECTIVES_STRUCT = "ObjectivesStruct";
+    public static final String SKILLS_STRUCT =  "SkillsStruct";
+    public static final String ASSESSMENT_HEADER_STRUCT = "AssessmentHeaderStruct";
+    public static final String ASSESSMENT_INTRO_STRUCT = "AssessmentIntroStruct";
+    public static final String ASSESSMENT_STRUCT = "AssessmentStruct";
+    public static final String PLAGIARISM_STRUCT = "PlagiarismStruct";
+    public static final String PEDAGOGICAL_APPROACH_STRUCT = "PedagogicalApproachStruct";
+    public static final String LEARNING_MATERIAL_STRUCT = "LearningMaterialStruct";
+    public static final String PEDAGOGICAL_STRUCT = "PedagogicalStruct";
+    public static final String SKILLS_COMPONENTS_STRUCT = "SkillsComponentsStruct";
+    public static final String SKILLS_LECTURES_STRUCT = "SkillsLecturesStruct";
+    public static final String LECTURES_ACTIVITIES_STRUCT = "LecturesActivitiesStruct";
+    public static final String BIBLIOGRAPHY_STRUCT = "BibliographyStruct";
+    public static final String THEMATIC_BIBLIOGRAPHY_STRUCT = "ThematicBibliographyStruct";
+    public static final String LEARNING_SUPPORT_SERVICES_STRUCT = "LearningSupportServicesStruct";
 
     // public static final String LECTURES_LIST_CONTEXT_SKILLS =
     // "LecturesListContextSkills";
@@ -85,7 +98,26 @@ public class COStructureElementType {
      */
     private static final String[] types = {
 
-    PEDAGOGICAL_STRUCT, STAFF_STRUCT, OVERVIEW_STRUCT, LEARNING_MATERIAL_STRUCT, EVALUATIONS_STRUCT, };
+    STAFF_STRUCT, 
+    OVERVIEW_STRUCT, 
+    INTRODUCTION_STRUCT,
+    OBJECTIVES_STRUCT,
+    SKILLS_STRUCT,
+    ASSESSMENT_HEADER_STRUCT,
+    ASSESSMENT_INTRO_STRUCT,
+    ASSESSMENT_STRUCT,
+    PLAGIARISM_STRUCT,
+    PEDAGOGICAL_APPROACH_STRUCT,
+    PEDAGOGICAL_STRUCT,
+    SKILLS_COMPONENTS_STRUCT,
+    SKILLS_LECTURES_STRUCT,
+    LECTURES_ACTIVITIES_STRUCT,
+    LEARNING_MATERIAL_STRUCT,
+    BIBLIOGRAPHY_STRUCT,
+    THEMATIC_BIBLIOGRAPHY_STRUCT,
+    LEARNING_SUPPORT_SERVICES_STRUCT
+    
+    };
 
     /*
      * LECTURES_LIST_CONTEXT_SKILLS , ACTIVITIES , EVALUATION_HEADER, TOPICS,

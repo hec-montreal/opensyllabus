@@ -37,12 +37,27 @@ public class COUnitContentType {
 
     // These values must be identical to those found in file rules.xml and the
     // XML representation of Course Outlines.
-    public static final String PEDAGOGICAL_UNITCONTENT = "PedagogicalUnitContent";
-    public static final String LEARNING_MATERIAL_UNITCONTENT = "LearningMaterialUnitContent";
     public static final String OVERVIEW_UNITCONTENT = "OverviewUnitContent";
+    public static final String COURSE_OFFICIALDESCRIPTION_UNITCONTENT = "CourseOfficialDescriptionUnitContent";
+    public static final String SCHEDULEPLACE_UNITCONTENT = "SchedulePlaceUnitContent";
     public static final String STAFF_UNITCONTENT = "StaffUnitContent";
+    public static final String INTRODUCTION_UNITCONTENT = "IntroductionUnitContent";
+    public static final String OBJECTIVES_UNITCONTENT = "ObjectivesUnitContent";
+    public static final String SKILLS_UNITCONTENT = "SkillsUnitContent";
+    public static final String ASSESSMENT_HEADER_UNITCONTENT = "AssessmentHeaderUnitContent";
+    public static final String ASSESSMENT_INTRO_UNITCONTENT = "AssessmentIntroUnitContent";
     public static final String ASSESSMENT_UNITCONTENT = "AssessmentUnitContent";
-
+    public static final String PLAGIARISM_UNITCONTENT = "PlagiarismUnitContent";
+    public static final String PEDAGOGICAL_APPROACH_UNITCONTENT = "PedagogicalApproachUnitContent";
+    public static final String LEARNING_MATERIAL_UNITCONTENT = "LearningMaterialUnitContent";
+    public static final String PEDAGOGICAL_UNITCONTENT = "PedagogicalUnitContent";
+    public static final String SKILLS_COMPONENTS_UNITCONTENT = "SkillsComponentsUnitContent";
+    public static final String SKILLS_LECTURES_UNITCONTENT = "SkillsLecturesUnitContent";
+    public static final String LECTURES_ACTIVITIES_UNITCONTENT = "LecturesActivitiesUnitContent";
+    public static final String BIBLIOGRAPHY_UNITCONTENT = "BibliographyUnitContent";
+    public static final String THEMATIC_BIBLIOGRAPHY_UNITCONTENT = "ThematicBibliographyUnitContent";
+    public static final String LEARNING_SUPPORT_SERVICES_UNITCONTENT = "LearningSupportServicesUnitContent";
+    
     // public static final String EVALUATION_INSTRUMENT =
     // "EvaluationInstrument";
     // public static final String LAB_SESSION = "labsession";
@@ -85,8 +100,25 @@ public class COUnitContentType {
      */
     private static final String[] types = {
 
-    PEDAGOGICAL_UNITCONTENT, OVERVIEW_UNITCONTENT, STAFF_UNITCONTENT, LEARNING_MATERIAL_UNITCONTENT, ASSESSMENT_UNITCONTENT
-
+	OVERVIEW_UNITCONTENT, 
+	COURSE_OFFICIALDESCRIPTION_UNITCONTENT, 
+	SCHEDULEPLACE_UNITCONTENT, 
+	STAFF_UNITCONTENT, 
+	INTRODUCTION_UNITCONTENT,
+	OBJECTIVES_UNITCONTENT,
+	SKILLS_UNITCONTENT,
+	ASSESSMENT_UNITCONTENT,
+	ASSESSMENT_INTRO_UNITCONTENT,
+	PLAGIARISM_UNITCONTENT,
+	PEDAGOGICAL_APPROACH_UNITCONTENT,
+	LEARNING_MATERIAL_UNITCONTENT, 
+	PEDAGOGICAL_UNITCONTENT, 
+	SKILLS_COMPONENTS_UNITCONTENT,
+	SKILLS_LECTURES_UNITCONTENT,
+	LECTURES_ACTIVITIES_UNITCONTENT,
+	THEMATIC_BIBLIOGRAPHY_UNITCONTENT,
+	LEARNING_SUPPORT_SERVICES_UNITCONTENT
+	
     };
 
     /*

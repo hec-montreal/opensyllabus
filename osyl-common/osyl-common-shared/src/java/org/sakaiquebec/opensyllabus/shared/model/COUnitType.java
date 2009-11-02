@@ -30,10 +30,25 @@ import java.util.List;
 public class COUnitType {
     
     public final static String OVERVIEW_UNIT = "OverviewUnit";
+    public final static String SCHEDULEPLACE_UNIT ="SchedulePlaceUnit";
     public final static String STAFF_UNIT = "StaffUnit";
-    public final static String LEARNING_MATERIAL_UNIT = "LearningMaterialUnit";
+    public final static String INTRODUCTION_UNIT = "IntroductionUnit";
+    public final static String OBJECTIVES_UNIT = "ObjectivesUnit";
+    public final static String SKILLS_UNIT = "SkillsUnit";
+    public static final String ASSESSMENT_HEADER_UNIT = "AssessmentHeaderUnit";
+    public static final String ASSESSMENT_INTRO_UNIT = "AssessmentIntroUnit";
     public final static String ASSESSMENT_UNIT = "AssessmentUnit";
-    public final static String PEDAGOGICAL_UNIT= "PedagogicalUnit";
+    public final static String PLAGIARISM_UNIT = "PlagiarismUnit";
+    public final static String PEDAGOGICAL_APPROACH_UNIT = "PedagogicalApproachUnit";
+    public final static String LEARNING_MATERIAL_UNIT = "LearningMaterialUnit";
+    public final static String PEDAGOGICAL_UNIT = "PedagogicalUnit";
+    public final static String SKILLS_COMPONENTS_UNIT = "SkillsComponentsUnit";
+    public final static String SKILLS_LECTURES_UNIT = "SkillsLecturesUnit";
+    public final static String LECTURES_ACTIVITIES_UNIT = "LecturesActivitiesUnit";
+    public final static String BIBLIOGRAPHY_UNIT = "BibliographyUnit";
+    public final static String THEMATIC_BIBLIOGRAPHY_UNIT = "ThematicBibliographyUnit";
+    public final static String LEARNING_SUPPORT_SERVICES_UNIT = "LearningSupportServicesUnit";
+    
     //public final static String NEWS = "news";
     // public final static String RECITATION= "recitation";
     // public final static String MODULE= "module";
@@ -45,7 +60,25 @@ public class COUnitType {
      */
     private static final String[] types = {
 
-    OVERVIEW_UNIT, STAFF_UNIT, LEARNING_MATERIAL_UNIT, ASSESSMENT_UNIT, PEDAGOGICAL_UNIT
+	OVERVIEW_UNIT, 
+	SCHEDULEPLACE_UNIT, 
+	STAFF_UNIT, 
+	INTRODUCTION_UNIT,
+	OBJECTIVES_UNIT,
+	SKILLS_UNIT,
+	ASSESSMENT_HEADER_UNIT,
+	ASSESSMENT_INTRO_UNIT,
+	ASSESSMENT_UNIT, 
+	PLAGIARISM_UNIT,
+	PEDAGOGICAL_APPROACH_UNIT,
+	LEARNING_MATERIAL_UNIT, 
+	PEDAGOGICAL_UNIT,
+	SKILLS_COMPONENTS_UNIT,
+	SKILLS_LECTURES_UNIT,
+	LECTURES_ACTIVITIES_UNIT,
+	BIBLIOGRAPHY_UNIT,
+	THEMATIC_BIBLIOGRAPHY_UNIT,
+	LEARNING_SUPPORT_SERVICES_UNIT
 
     };
 
