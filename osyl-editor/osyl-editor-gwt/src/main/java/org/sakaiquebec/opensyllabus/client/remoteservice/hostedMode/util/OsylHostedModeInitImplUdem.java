@@ -34,7 +34,28 @@ public class OsylHostedModeInitImplUdem implements OsylHostedModeInit {
 	protected String uIMessagesPath = "../osylcoconfigs/udem/bundle/UIMessages_fr_CA.properties";
 	protected String cORolesListPath = "../osylcoconfigs/udem/coRolesList.xml";
 	protected String cOEvalTypeListPath = "../osylcoconfigs/udem/coEvalTypeList.xml";
-	
+
+//	protected String configPath = "../osylcoconfigs/udemObjectifsActivites/rules.xml";
+//	protected String modelPath = "../osylcoconfigs/udemObjectifsActivites/coContentTemplate.xml";
+//	protected String cOMessagesPath = "../osylcoconfigs/udemObjectifsActivites/bundle/COMessages_fr_CA.properties";
+//	protected String uIMessagesPath = "../osylcoconfigs/udemObjectifsActivites/bundle/UIMessages_fr_CA.properties";
+//	protected String cORolesListPath = "../osylcoconfigs/udemObjectifsActivites/coRolesList.xml";
+//	protected String cOEvalTypeListPath = "../osylcoconfigs/udemObjectifsActivites/coEvalTypeList.xml";
+
+//	protected String configPath = "../osylcoconfigs/udemCompetencesComposantes/rules.xml";
+//	protected String modelPath = "../osylcoconfigs/udemCompetencesComposantes/coContentTemplate.xml";
+//	protected String cOMessagesPath = "../osylcoconfigs/udemCompetencesComposantes/bundle/COMessages_fr_CA.properties";
+//	protected String uIMessagesPath = "../osylcoconfigs/udemCompetencesComposantes/bundle/UIMessages_fr_CA.properties";
+//	protected String cORolesListPath = "../osylcoconfigs/udemCompetencesComposantes/coRolesList.xml";
+//	protected String cOEvalTypeListPath = "../osylcoconfigs/udemCompetencesComposantes/coEvalTypeList.xml";
+
+//	protected String configPath = "../osylcoconfigs/udemCompetencesSeances/rules.xml";
+//	protected String modelPath = "../osylcoconfigs/udemCompetencesSeances/coContentTemplate.xml";
+//	protected String cOMessagesPath = "../osylcoconfigs/udemCompetencesSeances/bundle/COMessages_fr_CA.properties";
+//	protected String uIMessagesPath = "../osylcoconfigs/udemCompetencesSeances/bundle/UIMessages_fr_CA.properties";
+//	protected String cORolesListPath = "../osylcoconfigs/udemCompetencesSeances/coRolesList.xml";
+//	protected String cOEvalTypeListPath = "../osylcoconfigs/udemCompetencesSeances/coEvalTypeList.xml";
+
 	/**
 	 * {@inheritDoc}
 	 */

@@ -121,7 +121,7 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 		getWorkspacePanel().clear();
 		
 		// Special case: evaluation
-		if (COStructureElementType.EVALUATIONS_STRUCT
+		if (COStructureElementType.ASSESSMENT_STRUCT
 			.equals(((COStructureElement) getModel()).getType())) {
 		    OsylCOStructureEvaluationView newView =
 			    new OsylCOStructureEvaluationView(getModel(),

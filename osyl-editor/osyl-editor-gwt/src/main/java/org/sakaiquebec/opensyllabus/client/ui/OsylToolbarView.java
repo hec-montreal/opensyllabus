@@ -565,24 +565,26 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    // Clear menu list, and set it according to the viewcontext
 		    try {
 			List<COModelInterface> subModels =
-				getController().getOsylConfig()
-					.getOsylConfigRuler()
-					.getAllowedSubModels(getModel());
-			Iterator<COModelInterface> iter = subModels.iterator();
-			while (iter.hasNext()) {
-			    COModelInterface subModel =
+			    getController().getOsylConfig()
+			    .getOsylConfigRuler()
+			    .getAllowedSubModels(getModel());
+			if ( subModels != null ) {
+			    Iterator<COModelInterface> iter = subModels.iterator();
+			    while (iter.hasNext()) {
+				COModelInterface subModel =
 				    (COModelInterface) iter.next();
-			    // Special case : No addition is allowable under
-			    // Header COStructure
-			    String parentType = castedModel.getType();
-			    if (parentType.endsWith("Header")) {
-				getOsylToolbar().getAddMenuButton().setVisible(
-					false);
-				return;
-			    } else {
-				addAddMenuItem(subModel.getType(),
-					new AddMenuCommand(castedModel,
-						subModel.getType()));
+				// Special case : No addition is allowable under
+				// Header COStructure
+				String parentType = castedModel.getType();
+				if (parentType.endsWith("Header")) {
+				    getOsylToolbar().getAddMenuButton().setVisible(
+					    false);
+				    return;
+				} else {
+				    addAddMenuItem(subModel.getType(),
+					    new AddMenuCommand(castedModel,
+						    subModel.getType()));
+				}
 			    }
 			}
 		    } catch (RuntimeException e) {
@@ -633,8 +635,10 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    }
 	}
 	if (getModel().getChildrens().size() == 1) {
-	    createAllowedCOUnitStructureAddAction((COUnitStructure) model
-		    .getChildrens().get(0));
+	    if ((COUnitStructure) model.getChildrens().get(0) != null ) {
+		createAllowedCOUnitStructureAddAction((COUnitStructure) 
+			model.getChildrens().get(0)); 
+	    }
 	}
     }
 

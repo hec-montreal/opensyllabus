@@ -67,6 +67,9 @@ public class OsylCOStructureItemView extends OsylViewableComposite {
     }
 
     private void addCoUnitLink(String type, String position) {
+	if (position.length() < 2) {
+	    position = "0" + position;
+	}
 	setCoUnitHyperlink(new Hyperlink(type + " " + position + " - ", null));
 	getCoUnitHyperlink().addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
