@@ -883,12 +883,12 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	notifyFileListingAcquiredEventHandlers();
     }
 
-    protected void setFolderAddButtonEnabled(boolean enabled) {
-	folderAddButton.setEnabled(enabled);
+    protected PushButton getFolderAddButton() {
+	return folderAddButton;
     }
-
-    protected void setAddFileButtonEnabled(boolean enabled) {
-	addFileButton.setEnabled(enabled);
+    
+    protected PushButton getAddFileButton() {
+	return addFileButton;
     }
 
     protected void onUpButtonClick() {
