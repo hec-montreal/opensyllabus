@@ -57,6 +57,7 @@ public class COUnitContentType {
     public static final String BIBLIOGRAPHY_UNITCONTENT = "BibliographyUnitContent";
     public static final String THEMATIC_BIBLIOGRAPHY_UNITCONTENT = "ThematicBibliographyUnitContent";
     public static final String LEARNING_SUPPORT_SERVICES_UNITCONTENT = "LearningSupportServicesUnitContent";
+    public final static String NEWS_UNITCONTENT="NewsUnitContent";
     
     // public static final String EVALUATION_INSTRUMENT =
     // "EvaluationInstrument";
@@ -117,7 +118,8 @@ public class COUnitContentType {
 	SKILLS_LECTURES_UNITCONTENT,
 	LECTURES_ACTIVITIES_UNITCONTENT,
 	THEMATIC_BIBLIOGRAPHY_UNITCONTENT,
-	LEARNING_SUPPORT_SERVICES_UNITCONTENT
+	LEARNING_SUPPORT_SERVICES_UNITCONTENT,
+	NEWS_UNITCONTENT
 	
     };
 

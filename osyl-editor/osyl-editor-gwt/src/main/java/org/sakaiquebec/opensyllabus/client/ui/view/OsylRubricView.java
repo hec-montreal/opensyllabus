@@ -121,7 +121,9 @@ public class OsylRubricView extends OsylViewableComposite {
 	    } else if (resource.getType().equals(
 		    COContentResourceType.BIBLIO_RESOURCE)) {
 		oe = new OsylResProxCitationView(resProx, getController());
-	    } else {
+	    } else if(resource.getType().equals(COContentResourceType.NEWS)){
+		oe = new OsylNewsView(resProx, getController());
+	    }else {
 		Window
 			.alert("Internal error : addResProxView doesn't know how to "
 				+ "handle resource of type "

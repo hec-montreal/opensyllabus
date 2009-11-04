@@ -19,6 +19,19 @@
 	<parent type="HEC"></parent>
 	<access></access>
 	<label><![CDATA[Insert your Text Here...]]></label>
+	<asmStructure access="public" xsi:type="NewsStruct">
+		<id type="HECsakai">888754567</id>
+		<modified>2001-12-17T09:30:47Z</modified>
+		<visible>true</visible>
+		<label>News</label>
+		<asmUnit access="public" xsi:type="NewsUnit">
+			<label><![CDATA[ News ]]></label>
+			<asmUnitStructure access="public" xsi:type="NewsUnitStruct">
+				<label><![CDATA[Nouvelles]]></label>
+				<asmUnitContent access="public" xsi:type="NewsUnitContent" />
+			</asmUnitStructure>
+		</asmUnit>
+	</asmStructure>
 	<asmStructure access="public" xsi:type="OverviewStruct">
 		<id type="HECsakai">38404736</id>
 		<modified>2001-12-17T09:30:47Z</modified>

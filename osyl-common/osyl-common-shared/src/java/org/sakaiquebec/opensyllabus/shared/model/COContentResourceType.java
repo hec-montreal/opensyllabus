@@ -35,13 +35,14 @@ public class COContentResourceType {
     public static final String ASSIGNMENT = "Assignment";
     public static final String URL="URL";
     public static final String PERSON="Person";
+    public static final String NEWS="News";
 
 
     /**
      * The list of types.
      */
     private static final String[] types =
-	    { TEXT, BIBLIO_RESOURCE, DOCUMENT, ASSIGNMENT, URL, PERSON };
+	    { TEXT, BIBLIO_RESOURCE, DOCUMENT, ASSIGNMENT, URL, PERSON, NEWS };
 
     /**
      * @return string array of types

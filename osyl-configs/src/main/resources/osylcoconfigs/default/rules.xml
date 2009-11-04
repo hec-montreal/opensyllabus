@@ -11,6 +11,24 @@
 		<attribute name="propertyType" restrictionpattern="HEC" />
 		<!-- list of element asmUnit allowed at this level -->
 		<element name="asmStructure">
+			<attribute name="type" restrictionpattern="NewsStruct" />
+			<element name="asmUnit">
+				<attribute name="type" restrictionpattern="NewsUnit" />
+				<element name="asmUnitStructure">
+					<attribute name="type" restrictionpattern="NewsUnitStruct" allowMultiple="false"/>
+					<element name="asmUnitContent">
+						<attribute name="type" restrictionpattern="NewsUnitContent" />
+			    		<element name="asmResource">
+				    		<attribute name="type" restrictionpattern="News" />
+			    		</element>
+			    		<element name="semanticType">
+			        		<attribute name="type" restrictionpattern="news" />
+			    		</element>
+					</element>
+				</element>
+			</element>
+		</element>
+		<element name="asmStructure">
 			<attribute name="type" restrictionpattern="OverviewStruct" />
 			<element name="asmUnit">
 				<attribute name="type" restrictionpattern="OverviewUnit" />
@@ -95,10 +113,10 @@
 					<element name="asmUnitContent">
 						<attribute name="type" restrictionpattern="PedagogicalUnitContent" />
 						<element name="asmResource">
-							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource" />
+							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource|News" />
 						</element>
 						<element name="semanticType">
-				    		<attribute name="type" restrictionpattern="undefined|instructions|description|objectives|learningstrat|misresources|ressinclass|readinglist|exercises" />
+				    		<attribute name="type" restrictionpattern="undefined|news|instructions|description|objectives|learningstrat|misresources|ressinclass|readinglist|exercises" />
 						</element>
 					</element>
 				</element>

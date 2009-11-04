@@ -68,6 +68,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     private ListBox rubricListBox;
     private ListBox requirementListBox;
     private boolean hasRequirement;
+    private boolean rubricMoveable;
 
     /**
      * Constructor.
@@ -77,12 +78,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     public OsylAbstractResProxEditor(OsylAbstractView view) {
 	super(view);
 	hasRequirement = true;
-    }
-
-    public OsylAbstractResProxEditor(OsylAbstractView view,
-	    boolean hasRequirement) {
-	super(view);
-	this.hasRequirement = hasRequirement;
+	rubricMoveable=true;
     }
 
     protected PushButton createPushButtonDelete() {
@@ -160,6 +156,14 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	return downButton;
     }
 
+    public boolean isRubricMoveable() {
+        return rubricMoveable;
+    }
+
+    public void setRubricMoveable(boolean rubricMoveable) {
+        this.rubricMoveable = rubricMoveable;
+    }
+    
     /**
      * ===================== OVERRIDEN METHODS ===================== See
      * superclass for javadoc!
@@ -291,7 +295,11 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	} else {
 	    optionPanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
 	}
+	if(isRubricMoveable()){
 	return new Widget[] { rubricPanel, diffusionPanel, optionPanel };
+	}else{
+	    return new Widget[] {diffusionPanel, optionPanel };
+	}
     }
 
     public Widget getBrowserWidget() {
@@ -404,7 +412,8 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
 	    if (subModel instanceof COContentRubric) {
 		COContentRubric coContentRubric = (COContentRubric) subModel;
-		rubricTypes.addElement(coContentRubric.getType());
+		if(!coContentRubric.getType().equals(COContentRubric.RUBRIC_TYPE_NEWS))
+		    rubricTypes.addElement(coContentRubric.getType());
 	    }
 	}
 	String[] choices = new String[rubricTypes.size()];
@@ -495,7 +504,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     }
 
     public String getMoveToTarget() {
-	return targetsListBox.getValue(targetsListBox.getSelectedIndex());
+	    return targetsListBox.getValue(targetsListBox.getSelectedIndex());
     }
 
     /**

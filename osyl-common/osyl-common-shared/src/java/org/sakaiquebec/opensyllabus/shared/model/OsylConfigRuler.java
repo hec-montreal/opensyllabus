@@ -250,8 +250,10 @@ public class OsylConfigRuler {
 				COModelInterface modelInstance =
 					createModelInstance(nameAttribute,
 						restrictionPattern);
-				allowedSubModels =
-					new ArrayList<COModelInterface>();
+				if (allowedSubModels == null) {
+				    allowedSubModels =
+					    new ArrayList<COModelInterface>();
+				}
 				allowedSubModels.add(modelInstance);
 			    }
 			}

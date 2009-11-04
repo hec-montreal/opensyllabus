@@ -95,7 +95,7 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 
     public static COContentResourceProxy createDefaultResProxy(
 	    final String type, final OsylConfigMessages osylConfigMessages,
-	    final COElementAbstract parentModel, final String resourceType) {
+	    final COElementAbstract parentModel, final String resourceType, String defaultRubric) {
 
 	final COContentResourceProxy resProxModel =
 		new COContentResourceProxy();
@@ -107,7 +107,7 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	    resProxModel.setLabel(osylConfigMessages
 		    .getMessage("InsertYourTextHere"));
 	resProxModel.setAccess(SecurityInterface.ACCESS_ATTENDEE);
-	resProxModel.setRubricType(COContentRubric.RUBRIC_TYPE_UNDEFINED);
+	resProxModel.setRubricType(defaultRubric);
 	COProperties prop = new COProperties();
 	prop.addProperty(COPropertiesType.VISIBILITY, "true");
 	prop.addProperty(COPropertiesType.IMPORTANCE, "false");

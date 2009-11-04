@@ -53,6 +53,7 @@ public class COStructureElementType {
     public static final String BIBLIOGRAPHY_STRUCT = "BibliographyStruct";
     public static final String THEMATIC_BIBLIOGRAPHY_STRUCT = "ThematicBibliographyStruct";
     public static final String LEARNING_SUPPORT_SERVICES_STRUCT = "LearningSupportServicesStruct";
+    public static final String NEWS_STRUCT = "NewsStruct";
 
     // public static final String LECTURES_LIST_CONTEXT_SKILLS =
     // "LecturesListContextSkills";
@@ -115,7 +116,8 @@ public class COStructureElementType {
     LEARNING_MATERIAL_STRUCT,
     BIBLIOGRAPHY_STRUCT,
     THEMATIC_BIBLIOGRAPHY_STRUCT,
-    LEARNING_SUPPORT_SERVICES_STRUCT
+    LEARNING_SUPPORT_SERVICES_STRUCT,
+    NEWS_STRUCT
     
     };
 

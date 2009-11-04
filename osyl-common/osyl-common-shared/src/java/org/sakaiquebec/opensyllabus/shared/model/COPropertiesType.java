@@ -65,6 +65,8 @@ public class COPropertiesType {
     public static final String EMAIL = "email";
     public static final String AVAILABILITY = "availability";
     public static final String COMMENTS = "comments";
+    
+    public static final String MODIFIED = "modified";
 
     /**
      * The list of types.

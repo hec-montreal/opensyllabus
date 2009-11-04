@@ -45,6 +45,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
+import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
@@ -170,9 +171,28 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	}
 
 	private void createASMContext(COUnitContent coUnitContent) {
+	    String defaultRubric = "";
+	    List<COModelInterface> coUnitSubModels =
+		    getController().getOsylConfig().getOsylConfigRuler()
+			    .getAllowedSubModels(coUnitContent);
+
+	    for (int i = 0; i < coUnitSubModels.size(); i++) {
+		Object subModel = coUnitSubModels.get(i);
+
+		if (subModel instanceof COContentRubric) {
+		    COContentRubric coContentRubric =
+			    (COContentRubric) subModel;
+		    defaultRubric = coContentRubric.getType();
+		    break;
+		}
+	    }
+	    //NEWS HACK
+	    if(subType.equals(COContentResourceType.NEWS))
+		defaultRubric=COContentRubric.RUBRIC_TYPE_NEWS;
+	    
 	    COContentResourceProxy resProxModel =
 		    COContentResourceProxy.createDefaultResProxy(type,
-			    getCoMessages(), coUnitContent, subType);
+			    getCoMessages(), coUnitContent, subType, defaultRubric);
 	    if (subType.equalsIgnoreCase(COContentResourceType.ASSIGNMENT)) {
 		createAssignement(resProxModel, coUnitContent);
 	    }
@@ -565,20 +585,21 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    // Clear menu list, and set it according to the viewcontext
 		    try {
 			List<COModelInterface> subModels =
-			    getController().getOsylConfig()
-			    .getOsylConfigRuler()
-			    .getAllowedSubModels(getModel());
-			if ( subModels != null ) {
-			    Iterator<COModelInterface> iter = subModels.iterator();
+				getController().getOsylConfig()
+					.getOsylConfigRuler()
+					.getAllowedSubModels(getModel());
+			if (subModels != null) {
+			    Iterator<COModelInterface> iter =
+				    subModels.iterator();
 			    while (iter.hasNext()) {
 				COModelInterface subModel =
-				    (COModelInterface) iter.next();
+					(COModelInterface) iter.next();
 				// Special case : No addition is allowable under
 				// Header COStructure
 				String parentType = castedModel.getType();
 				if (parentType.endsWith("Header")) {
-				    getOsylToolbar().getAddMenuButton().setVisible(
-					    false);
+				    getOsylToolbar().getAddMenuButton()
+					    .setVisible(false);
 				    return;
 				} else {
 				    addAddMenuItem(subModel.getType(),
@@ -605,7 +626,9 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    COModelInterface subModel = (COModelInterface) iter.next();
 	    if (subModel instanceof COContentResource) {
 		String type = "";
-		if (subModel.getType().equals(COContentResourceType.TEXT)) {
+		if (subModel.getType().equals(COContentResourceType.TEXT)
+			|| subModel.getType()
+				.equals(COContentResourceType.NEWS)) {
 		    type = COContentResourceProxyType.INFORMATION;
 		} else if (subModel.getType().equals(
 			COContentResourceType.BIBLIO_RESOURCE)) {
@@ -635,9 +658,9 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    }
 	}
 	if (getModel().getChildrens().size() == 1) {
-	    if ((COUnitStructure) model.getChildrens().get(0) != null ) {
-		createAllowedCOUnitStructureAddAction((COUnitStructure) 
-			model.getChildrens().get(0)); 
+	    if ((COUnitStructure) model.getChildrens().get(0) != null) {
+		createAllowedCOUnitStructureAddAction((COUnitStructure) model
+			.getChildrens().get(0));
 	    }
 	}
     }

@@ -20,18 +20,12 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
-import java.util.Iterator;
-import java.util.Set;
-
-import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler;
-import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler.UpdateCOStructureElementEvent;
-
 /**
  * Represents the rubrics objects. The resources are associated to rubrics in
  * the XML tree.
  * 
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
- * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a> 
+ * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
 public class COContentRubric implements COModelInterface {
 
@@ -40,22 +34,25 @@ public class COContentRubric implements COModelInterface {
      */
     public static final boolean TRACE = false;
     
-    public static final String RUBRIC_TYPE_UNDEFINED = "undefined";
-    
+    //TODO delete this hack as soon as possible
+    @Deprecated
+    public static final String RUBRIC_TYPE_NEWS = "news";
+
     /**
      * Rubric type.
      */
     private String type;
-    
+
     /**
      * Properties object that extends a <code>HashMap</code>.
      */
     private COProperties properties;
-    
+
     /**
      * The handler for updates
      */
-//    private Set<UpdateCOContentRubricEventHandler> updateCOContentRubricEventHandler;
+    // private Set<UpdateCOContentRubricEventHandler>
+    // updateCOContentRubricEventHandler;
 
     /**
      * Constructor.
@@ -77,14 +74,14 @@ public class COContentRubric implements COModelInterface {
     public void setType(String type) {
 	this.type = type;
     }
-    
+
     public boolean isEditable() {
 	return true;
     }
 
     public void setEditable(boolean edit) {
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -126,17 +123,18 @@ public class COContentRubric implements COModelInterface {
 	this.properties = properties;
 	notifyEventHandlers();
     }
-    
+
     void notifyEventHandlers() {
-//	if (updateCOContentRubricEventHandler != null) {
-//	    UpdateCOContentRubricEvent event =
-//		    new UpdateCOContentRubricEvent(this);
-//	    Iterator<UpdateCOContentRubricEventHandler> iter = updateCOContentRubricEventHandler.iterator();
-//	    while (iter.hasNext()) {
-//		UpdateCOContentRubricEventHandler handler =
-//			(UpdateCOContentRubricEventHandler) iter.next();
-//		handler.onUpdateModel(event);
-//	    }
-//	}
+	// if (updateCOContentRubricEventHandler != null) {
+	// UpdateCOContentRubricEvent event =
+	// new UpdateCOContentRubricEvent(this);
+	// Iterator<UpdateCOContentRubricEventHandler> iter =
+	// updateCOContentRubricEventHandler.iterator();
+	// while (iter.hasNext()) {
+	// UpdateCOContentRubricEventHandler handler =
+	// (UpdateCOContentRubricEventHandler) iter.next();
+	// handler.onUpdateModel(event);
+	// }
+	// }
     }
 }

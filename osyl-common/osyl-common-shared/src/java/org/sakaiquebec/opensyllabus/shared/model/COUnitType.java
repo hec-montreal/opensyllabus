@@ -48,6 +48,7 @@ public class COUnitType {
     public final static String BIBLIOGRAPHY_UNIT = "BibliographyUnit";
     public final static String THEMATIC_BIBLIOGRAPHY_UNIT = "ThematicBibliographyUnit";
     public final static String LEARNING_SUPPORT_SERVICES_UNIT = "LearningSupportServicesUnit";
+    public final static String NEWS_UNIT = "NewsUnit";
     
     //public final static String NEWS = "news";
     // public final static String RECITATION= "recitation";
@@ -78,7 +79,8 @@ public class COUnitType {
 	LECTURES_ACTIVITIES_UNIT,
 	BIBLIOGRAPHY_UNIT,
 	THEMATIC_BIBLIOGRAPHY_UNIT,
-	LEARNING_SUPPORT_SERVICES_UNIT
+	LEARNING_SUPPORT_SERVICES_UNIT,
+	NEWS_UNIT
 
     };
 

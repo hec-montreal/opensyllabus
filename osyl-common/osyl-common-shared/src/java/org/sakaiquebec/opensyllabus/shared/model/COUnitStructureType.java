@@ -50,6 +50,7 @@ public class COUnitStructureType {
     public static final String BIBLIOGRAPHY_UNITSTRUCTURE = "BibliographyUnitStruct";
     public static final String THEMATIC_BIBLIOGRAPHY_UNITSTRUCTURE = "ThematicBibliographyUnitStruct";
     public static final String LEARNING_SUPPORT_SERVICES_UNITSTRUCTURE = "LearningSupportServicesUnitStruct";
+    public final static String NEWS_UNITSTRUCTURE = "NewsUnitStruct";
     
     /**
      * The list of types.
@@ -74,7 +75,8 @@ public class COUnitStructureType {
     LECTURES_ACTIVITIES_UNITSTRUCTURE,
     BIBLIOGRAPHY_UNITSTRUCTURE,
     THEMATIC_BIBLIOGRAPHY_UNITSTRUCTURE,
-    LEARNING_SUPPORT_SERVICES_UNITSTRUCTURE
+    LEARNING_SUPPORT_SERVICES_UNITSTRUCTURE,
+    NEWS_UNITSTRUCTURE
     
     };
 
