@@ -548,6 +548,34 @@ public class OsylServiceImpl implements OsylService {
 				(osylSiteService.getCurrentSiteReference() + WORK_DIRECTORY + "/")
 				.substring(8);
 			osylSecurityService.applyDirectoryPermissions(directoryId);
+			
+			// we add the default citationList
+			    
+			    String citationListName = "Mes références bibliographiques";// TODO I18N
+			    CitationCollection citationList = citationService.addCollection();
+
+			    ContentResourceEdit cre =
+				    contentHostingService
+					    .addResource(
+						    directoryId,
+						    citationListName,
+						    null,1);
+
+			    cre.setResourceType(CitationService.CITATION_LIST_ID);
+			    cre.setContentType(ResourceType.MIME_TYPE_HTML);
+
+			    ResourcePropertiesEdit props = cre.getPropertiesEdit();
+			    props
+				    .addProperty(
+					    ContentHostingService.PROP_ALTERNATE_REFERENCE,
+					    org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
+			    props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
+				    ResourceType.MIME_TYPE_HTML);
+			    props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
+				    citationListName);
+
+			    cre.setContent(citationList.getId().getBytes());
+			    contentHostingService.commitResource(cre);
 		}
 
 		if (addCollection(PUBLISH_DIRECTORY, null)) {
@@ -556,14 +584,6 @@ public class OsylServiceImpl implements OsylService {
 						+ PUBLISH_DIRECTORY + "/").substring(8);
 			osylSecurityService.applyDirectoryPermissions(directoryId);
 		}
-
-		// String citationCollectionId = addCitationList();
-		/*
-		 * if (citationCollectionId != "") { directoryId =
-		 * (getCurrentSiteReference() + REFERENCES_DIRECTORY + "/")
-		 * .substring(8); osylSecurityService.applyPermissions(directoryId,
-		 * OsylSecurityService.SECURITY_GROUP_ADMIN, ""); }
-		 */
 	}
 
 	/**
