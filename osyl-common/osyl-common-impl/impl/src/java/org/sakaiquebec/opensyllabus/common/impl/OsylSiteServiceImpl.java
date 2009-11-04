@@ -324,7 +324,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	    site = siteService.addSite(siteTitle, "osylEditor");
 	    site.setTitle(siteTitle);
 	    site.setPublished(true);
-	    site.setJoinable(true);
+	    site.setJoinable(false);
 
 	    // we add the tools
 	    addTool(site, "sakai.opensyllabus.tool");
