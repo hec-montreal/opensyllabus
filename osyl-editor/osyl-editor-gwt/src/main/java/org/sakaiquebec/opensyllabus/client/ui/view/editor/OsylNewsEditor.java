@@ -272,7 +272,7 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
     }
     
     public boolean isMoveable(){
-	return false;
+	return true;
     }
     
     public String getRubricType(){
