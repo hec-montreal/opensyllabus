@@ -120,24 +120,27 @@ public class OsylTreeView extends OsylViewableComposite implements
 	    // Compute the maximum tree width
 	    computeMaxTreeWidth(itemModel);
 	    if (itemModel.isCOStructureElement()) {
-		if (itemModel.getChildrens().size() > 1) {
+		if (itemModel.getChildrens().size() == 1) {
+		    COElementAbstract childOfAsmStruct =
+			    (COElementAbstract) itemModel.getChildrens().get(0);
+		    if (childOfAsmStruct.isCOUnit()) {
+			addUnitTreeItem(currentTreeItem,
+				(COUnit) childOfAsmStruct);
+			((COUnit) childOfAsmStruct).addEventHandler(this);
+		    } else if (childOfAsmStruct.isCOStructureElement()) {
+			addStructTreeItem(currentTreeItem,
+				(COStructureElement) childOfAsmStruct);
+			((COStructureElement) childOfAsmStruct)
+				.addEventHandler(this);
+		    }
+		    refreshSubModelsViews(childOfAsmStruct);
+
+		} else {
 		    addStructTreeItem(currentTreeItem,
 			    (COStructureElement) itemModel);
 		    ((COStructureElement) itemModel).addEventHandler(this);
-		    refreshSubModelsViews(itemModel);
-		} else {
-		    if (itemModel.getChildrens().size()==1) {
-			COElementAbstract childOfAsmStruct =
-			    (COElementAbstract) itemModel.getChildrens().get(0);
-			if (childOfAsmStruct.isCOUnit()) {
-			    addUnitTreeItem(currentTreeItem, (COUnit) childOfAsmStruct);
-			    ((COUnit) childOfAsmStruct).addEventHandler(this);
-			} else if (childOfAsmStruct.isCOStructureElement()) {
-			    addStructTreeItem(currentTreeItem, (COStructureElement)childOfAsmStruct);
-			    ((COStructureElement) childOfAsmStruct).addEventHandler(this);
-			}
-			refreshSubModelsViews(childOfAsmStruct);
-		    }
+		    if (!itemModel.getChildrens().isEmpty())
+			refreshSubModelsViews(itemModel);
 		}
 	    } else if (itemModel.isCOUnitStructure()) {
 		if (currentModel.getChildrens().size() > 1) {
