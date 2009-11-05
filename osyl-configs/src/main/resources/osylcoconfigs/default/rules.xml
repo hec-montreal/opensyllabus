@@ -89,7 +89,7 @@
 			<element name="asmUnit">
 				<attribute name="type" restrictionpattern="AssessmentUnit" />
 				<element name="asmUnitStructure">
-					<attribute name="type" restrictionpattern="AssessmentUnitStruct" allowMultiple="true"/>
+					<attribute name="type" restrictionpattern="AssessmentUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
 						<attribute name="type" restrictionpattern="AssessmentUnitContent" />
 						<element name="asmResource">
