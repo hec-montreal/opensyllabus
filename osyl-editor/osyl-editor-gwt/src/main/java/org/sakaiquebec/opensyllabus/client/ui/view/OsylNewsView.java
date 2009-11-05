@@ -29,6 +29,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.Window;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>

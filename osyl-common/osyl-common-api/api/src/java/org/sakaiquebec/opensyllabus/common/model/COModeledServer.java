@@ -385,7 +385,7 @@ public class COModeledServer {
 	if (isPublication) {
 	    SimpleDateFormat dateFormat =
 		    new SimpleDateFormat(OsylDateUtils.DATE_TIME_FORMAT);
-	    coContent.addProperty(COPropertiesType.MODIFIED, dateFormat.format(new Date()));
+	    coContent.addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getXsDateTimeString(dateFormat.format(new Date())));
 	}
 	return coContent;
     }
