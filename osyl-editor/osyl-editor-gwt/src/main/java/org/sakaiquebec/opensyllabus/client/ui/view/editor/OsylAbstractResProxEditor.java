@@ -20,6 +20,7 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -78,7 +79,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     public OsylAbstractResProxEditor(OsylAbstractView view) {
 	super(view);
 	hasRequirement = true;
-	rubricMoveable=true;
+	rubricMoveable = true;
     }
 
     protected PushButton createPushButtonDelete() {
@@ -157,13 +158,13 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     }
 
     public boolean isRubricMoveable() {
-        return rubricMoveable;
+	return rubricMoveable;
     }
 
     public void setRubricMoveable(boolean rubricMoveable) {
-        this.rubricMoveable = rubricMoveable;
+	this.rubricMoveable = rubricMoveable;
     }
-    
+
     /**
      * ===================== OVERRIDEN METHODS ===================== See
      * superclass for javadoc!
@@ -189,22 +190,27 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
     @Override
     public Widget[] getOptionWidgets() {
-	VerticalPanel rubricPanel = new VerticalPanel();
-	rubricPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	// configGroups.add(rubricPanel);
-	rubricPanel.add(new Label(getUiMessage("EditorPopUp.options.rubric")));
-	rubricListBox = generateRubricList();
-	rubricListBox.setWidth("150px");
-	rubricPanel.add(rubricListBox);
-	rubricListBox
-		.setTitle(getUiMessage("EditorPopUp.options.rubric.choose.title"));
-	rubricListBox.addChangeHandler(new ChangeHandler() {
+	ArrayList<Widget> widgetList = new ArrayList<Widget>();
+	if (isRubricMoveable()) {
+	    VerticalPanel rubricPanel = new VerticalPanel();
+	    rubricPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
+	    // configGroups.add(rubricPanel);
+	    rubricPanel.add(new Label(
+		    getUiMessage("EditorPopUp.options.rubric")));
+	    rubricListBox = generateRubricList();
+	    rubricListBox.setWidth("150px");
+	    rubricPanel.add(rubricListBox);
+	    rubricListBox
+		    .setTitle(getUiMessage("EditorPopUp.options.rubric.choose.title"));
+	    rubricListBox.addChangeHandler(new ChangeHandler() {
 
-	    public void onChange(ChangeEvent event) {
-		refreshTargetCoAbsractElementListBox(targetsListBox);
-	    }
+		public void onChange(ChangeEvent event) {
+		    refreshTargetCoAbsractElementListBox(targetsListBox);
+		}
 
-	});
+	    });
+	    widgetList.add(rubricPanel);
+	}
 	// Diffusion Level ListBox
 	VerticalPanel diffusionPanel = new VerticalPanel();
 	diffusionPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
@@ -226,6 +232,8 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    levelIndex = 1;
 	}
 	diffusionListBox.setSelectedIndex(levelIndex);
+	widgetList.add(diffusionPanel);
+	
 	// Other options
 	VerticalPanel optionPanel = new VerticalPanel();
 	optionPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
@@ -252,6 +260,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    }
 	}
 
+	widgetList.add(optionPanel);
 	if (hasRequirement) {
 	    // Requirement level ListBox
 	    VerticalPanel requirementPanel = new VerticalPanel();
@@ -290,16 +299,11 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		reqLevelIndex = 3;
 	    }
 	    requirementListBox.setSelectedIndex(reqLevelIndex);
-	    return new Widget[] { rubricPanel, diffusionPanel, optionPanel,
-		    requirementPanel };
+	    widgetList.add(requirementPanel);
 	} else {
 	    optionPanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
 	}
-	if(isRubricMoveable()){
-	return new Widget[] { rubricPanel, diffusionPanel, optionPanel };
-	}else{
-	    return new Widget[] {diffusionPanel, optionPanel };
-	}
+	return (Widget[]) widgetList.toArray(new Widget[widgetList.size()]);
     }
 
     public Widget getBrowserWidget() {
@@ -412,7 +416,8 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
 	    if (subModel instanceof COContentRubric) {
 		COContentRubric coContentRubric = (COContentRubric) subModel;
-		if(!coContentRubric.getType().equals(COContentRubric.RUBRIC_TYPE_NEWS))
+		if (!coContentRubric.getType().equals(
+			COContentRubric.RUBRIC_TYPE_NEWS))
 		    rubricTypes.addElement(coContentRubric.getType());
 	    }
 	}
@@ -452,20 +457,25 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     private void fillListBoxWithAllowedCoUnits(COElementAbstract model,
 	    ListBox lb) {
 	if (model.isCOUnit() && model.getChildrens().size() == 1) {
-	    COUnitStructure coUnitStructure = (COUnitStructure)model.getChildrens().get(0);
-	 // TODO modify this method when multiple coUnitContent could be process
-	    COUnitContent targetModel = (COUnitContent)coUnitStructure.getChildrens().get(0);
+	    COUnitStructure coUnitStructure =
+		    (COUnitStructure) model.getChildrens().get(0);
+	    // TODO modify this method when multiple coUnitContent could be
+	    // process
+	    COUnitContent targetModel =
+		    (COUnitContent) coUnitStructure.getChildrens().get(0);
 	    if (isAnAllowedTargetModel(targetModel)) {
-		String label = model.getLabel(); 
+		String label = model.getLabel();
 		if (label.length() > 35)
 		    label = label.substring(0, 35) + "...";
 		lb.addItem(label, targetModel.getId());
 	    }
 	} else if (model.isCOUnitStructure()) {
-	 // TODO modify this method when multiple coUnitContent could be process
-	    COUnitContent targetModel = (COUnitContent)model.getChildrens().get(0);
+	    // TODO modify this method when multiple coUnitContent could be
+	    // process
+	    COUnitContent targetModel =
+		    (COUnitContent) model.getChildrens().get(0);
 	    if (isAnAllowedTargetModel(targetModel)) {
-		String label = model.getLabel(); 
+		String label = model.getLabel();
 		if (label.length() > 35)
 		    label = label.substring(0, 35) + "...";
 		lb.addItem(label, targetModel.getId());
@@ -504,7 +514,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     }
 
     public String getMoveToTarget() {
-	    return targetsListBox.getValue(targetsListBox.getSelectedIndex());
+	return targetsListBox.getValue(targetsListBox.getSelectedIndex());
     }
 
     /**
