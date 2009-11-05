@@ -163,12 +163,12 @@ public class COModeled extends COSerialized {
     /**
      *Name of uuid attribute
      */
-    protected final static String UUID_ATTRIBUTE_NAME = "uuid";
+    protected final static String ID_ATTRIBUTE_NAME = "id";
 
     /**
      *Name of uuid parent attribute
      */
-    protected final static String UUID_PARENT_ATTRIBUTE_NAME = "uuid_parent";
+    protected final static String ID_PARENT_ATTRIBUTE_NAME = "id_parent";
 
     /**
      *Name of editable attribute
@@ -271,12 +271,12 @@ public class COModeled extends COSerialized {
 	coContent.setAccess(map.getNamedItem(ACCESS_ATTRIBUTE_NAME)
 		.getNodeValue());
 
-	coContent.setUuid(map.getNamedItem(UUID_ATTRIBUTE_NAME) == null ? UUID
-		.uuid() : map.getNamedItem(UUID_ATTRIBUTE_NAME).getNodeValue());
+	coContent.setId(map.getNamedItem(ID_ATTRIBUTE_NAME) == null ? UUID
+		.uuid() : map.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue());
 
 	coContent
-		.setUuidParent(map.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME) == null ? null
-			: map.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME)
+		.setIdParent(map.getNamedItem(ID_PARENT_ATTRIBUTE_NAME) == null ? null
+			: map.getNamedItem(ID_PARENT_ATTRIBUTE_NAME)
 				.getNodeValue());
 
 	coContent
@@ -342,15 +342,15 @@ public class COModeled extends COSerialized {
 		.getNodeValue());
 
 	String uuid =
-		sMap.getNamedItem(UUID_ATTRIBUTE_NAME) == null ? null : sMap
-			.getNamedItem(UUID_ATTRIBUTE_NAME).getNodeValue();
-	coUnit.setUuid(uuid == null ? UUID.uuid() : uuid);
+		sMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : sMap
+			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
+	coUnit.setId(uuid == null ? UUID.uuid() : uuid);
 
 	String uuidParent =
-		sMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME) == null ? null
-			: sMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME)
+		sMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME) == null ? null
+			: sMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME)
 				.getNodeValue();
-	coUnit.setUuidParent(uuidParent);
+	coUnit.setIdParent(uuidParent);
 
 	coUnit.setAccess(sMap.getNamedItem(ACCESS_ATTRIBUTE_NAME)
 		.getNodeValue());
@@ -401,15 +401,15 @@ public class COModeled extends COSerialized {
 		.getNodeValue());
 
 	String uuid =
-		sMap.getNamedItem(UUID_ATTRIBUTE_NAME) == null ? null : sMap
-			.getNamedItem(UUID_ATTRIBUTE_NAME).getNodeValue();
-	coUnitStructure.setUuid(uuid == null ? UUID.uuid() : uuid);
+		sMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : sMap
+			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
+	coUnitStructure.setId(uuid == null ? UUID.uuid() : uuid);
 
 	String uuidParent =
-		sMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME) == null ? null
-			: sMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME)
+		sMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME) == null ? null
+			: sMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME)
 				.getNodeValue();
-	coUnitStructure.setUuidParent(uuidParent);
+	coUnitStructure.setIdParent(uuidParent);
 
 	coUnitStructure.setAccess(sMap.getNamedItem(ACCESS_ATTRIBUTE_NAME)
 		.getNodeValue());
@@ -488,15 +488,15 @@ public class COModeled extends COSerialized {
 		.getNodeValue());
 
 	String uuid =
-		sMap.getNamedItem(UUID_ATTRIBUTE_NAME) == null ? null : sMap
-			.getNamedItem(UUID_ATTRIBUTE_NAME).getNodeValue();
-	coStructElt.setUuid(uuid == null ? UUID.uuid() : uuid);
+		sMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : sMap
+			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
+	coStructElt.setId(uuid == null ? UUID.uuid() : uuid);
 
 	String uuidParent =
-		sMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME) == null ? null
-			: sMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME)
+		sMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME) == null ? null
+			: sMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME)
 				.getNodeValue();
-	coStructElt.setUuidParent(uuidParent);
+	coStructElt.setIdParent(uuidParent);
 
 	String editable =
 		sMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? null
@@ -551,15 +551,15 @@ public class COModeled extends COSerialized {
 	coContentUnit.setType(coContentUnitType);
 
 	String uuid =
-		coMap.getNamedItem(UUID_ATTRIBUTE_NAME) == null ? null : coMap
-			.getNamedItem(UUID_ATTRIBUTE_NAME).getNodeValue();
-	coContentUnit.setUuid(uuid == null ? UUID.uuid() : uuid);
+		coMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : coMap
+			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
+	coContentUnit.setId(uuid == null ? UUID.uuid() : uuid);
 
 	String uuidParent =
-		coMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME) == null ? null
-			: coMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME)
+		coMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME) == null ? null
+			: coMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME)
 				.getNodeValue();
-	coContentUnit.setUuidParent(uuidParent);
+	coContentUnit.setIdParent(uuidParent);
 
 	String editable =
 		coMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? null
@@ -615,6 +615,11 @@ public class COModeled extends COSerialized {
 				.getNodeValue();
 	coContentResProxy.setEditable(editable == null ? true : Boolean
 		.valueOf(editable));
+	
+	String uuid =
+	    prMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : prMap
+			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
+	coContentResProxy.setId(uuid == null ? UUID.uuid() : uuid);
 
 	coContentResProxy.setParent(coContentUnitParent);
 
@@ -680,6 +685,11 @@ public class COModeled extends COSerialized {
 				.getNodeValue();
 	coContentRes.setEditable(editable == null ? true : Boolean
 		.valueOf(editable));
+	
+	String uuid =
+	    rMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : rMap
+			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
+	coContentRes.setId(uuid == null ? UUID.uuid() : uuid);
 
 	NodeList resChildren = node.getChildNodes();
 	for (int z = 0; z < resChildren.getLength(); z++) {
@@ -711,6 +721,12 @@ public class COModeled extends COSerialized {
 				.getNodeValue();
 	coContentRes.setEditable(editable == null ? true : Boolean
 		.valueOf(editable));
+	
+	String uuid =
+	    rMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : rMap
+			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
+	coContentRes.setId(uuid == null ? UUID.uuid() : uuid);
+
 
 	NodeList resChildren = node.getChildNodes();
 	for (int z = 0; z < resChildren.getLength(); z++) {
@@ -780,11 +796,11 @@ public class COModeled extends COSerialized {
 	Element courseOutlineContentElem = document.createElement(CO_NODE_NAME);
 	courseOutlineContentElem.setAttribute(ACCESS_ATTRIBUTE_NAME, coContent
 		.getAccess());
-	courseOutlineContentElem.setAttribute(UUID_ATTRIBUTE_NAME, coContent
-		.getUuid());
-	if (coContent.getUuidParent() != null)
-	    courseOutlineContentElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
-		    coContent.getUuidParent());
+	courseOutlineContentElem.setAttribute(ID_ATTRIBUTE_NAME, coContent
+		.getId());
+	if (coContent.getIdParent() != null)
+	    courseOutlineContentElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
+		    coContent.getIdParent());
 	osylElement.appendChild(courseOutlineContentElem);
 	document.appendChild(osylElement);
 	createCDataNode(document, courseOutlineContentElem, CO_LABEL_NODE_NAME,
@@ -858,11 +874,11 @@ public class COModeled extends COSerialized {
 		    .getType());
 	    coStructureElem.setAttribute(ACCESS_ATTRIBUTE_NAME, coStructure
 		    .getAccess());
-	    coStructureElem.setAttribute(UUID_ATTRIBUTE_NAME, coStructure
-		    .getUuid());
-	    if (coStructure.getUuidParent() != null)
-		coStructureElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
-			coStructure.getUuidParent());
+	    coStructureElem.setAttribute(ID_ATTRIBUTE_NAME, coStructure
+		    .getId());
+	    if (coStructure.getIdParent() != null)
+		coStructureElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
+			coStructure.getIdParent());
 	    System.out.println("Children of :" + coStructure.getType()
 		    + coStructure.getChildrens().size());
 	    for (int i = 0; i < coStructure.getChildrens().size(); i++) {
@@ -887,10 +903,10 @@ public class COModeled extends COSerialized {
 	    parent.appendChild(coUnitElem);
 	    coUnitElem.setAttribute(ACCESS_ATTRIBUTE_NAME, coUnit.getAccess());
 	    coUnitElem.setAttribute(XSI_TYPE_ATTRIBUTE_NAME, coUnit.getType());
-	    coUnitElem.setAttribute(UUID_ATTRIBUTE_NAME, coUnit.getUuid());
-	    if (coUnit.getUuidParent() != null)
-		coUnitElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME, coUnit
-			.getUuidParent());
+	    coUnitElem.setAttribute(ID_ATTRIBUTE_NAME, coUnit.getId());
+	    if (coUnit.getIdParent() != null)
+		coUnitElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME, coUnit
+			.getIdParent());
 	    createCDataNode(document, coUnitElem, CO_LABEL_NODE_NAME, coUnit
 		    .getLabel());
 	    if (coUnit.getChildrens() != null) {
@@ -915,11 +931,11 @@ public class COModeled extends COSerialized {
 		    .getAccess());
 	    coUnitElem.setAttribute(XSI_TYPE_ATTRIBUTE_NAME, coUnitStructure
 		    .getType());
-	    coUnitElem.setAttribute(UUID_ATTRIBUTE_NAME, coUnitStructure
-		    .getUuid());
-	    if (coUnitStructure.getUuidParent() != null)
-		coUnitElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
-			coUnitStructure.getUuidParent());
+	    coUnitElem.setAttribute(ID_ATTRIBUTE_NAME, coUnitStructure
+		    .getId());
+	    if (coUnitStructure.getIdParent() != null)
+		coUnitElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
+			coUnitStructure.getIdParent());
 	    createCDataNode(document, coUnitElem, CO_LABEL_NODE_NAME,
 		    coUnitStructure.getLabel());
 	    if (coUnitStructure.getChildrens() != null) {
@@ -943,11 +959,11 @@ public class COModeled extends COSerialized {
 		    .getAccess());
 	    coContentUnitElem.setAttribute(XSI_TYPE_ATTRIBUTE_NAME,
 		    coContentUnit.getType());
-	    coContentUnitElem.setAttribute(UUID_ATTRIBUTE_NAME, coContentUnit
-		    .getUuid());
-	    if (coContentUnit.getUuidParent() != null)
-		coContentUnitElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
-			coContentUnit.getUuidParent());
+	    coContentUnitElem.setAttribute(ID_ATTRIBUTE_NAME, coContentUnit
+		    .getId());
+	    if (coContentUnit.getIdParent() != null)
+		coContentUnitElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
+			coContentUnit.getIdParent());
 	    // Evaluation attributes
 	    // coContentUnitElem.setAttribute(WEIGHT_ATTRIBUTE_NAME,
 	    // coContentUnit
@@ -1034,6 +1050,8 @@ public class COModeled extends COSerialized {
 		    child.getAccess());
 	    coContentResourceProxyElem.setAttribute(XSI_TYPE_ATTRIBUTE_NAME,
 		    child.getType());
+	    coContentResourceProxyElem.setAttribute(ID_ATTRIBUTE_NAME,
+		    child.getId());
 	    // sometimes we don't necessarely have a comment on the resource
 	    // proxy
 	    String comment = child.getComment();
@@ -1106,6 +1124,7 @@ public class COModeled extends COSerialized {
 		    resource.getType());
 
 	}
+	coContentResourceElem.setAttribute(ID_ATTRIBUTE_NAME, resource.getId());
 	if (resource.getProperties() != null
 		&& !resource.getProperties().isEmpty()) {
 	    createPropertiesElem(document, coContentResourceElem, resource

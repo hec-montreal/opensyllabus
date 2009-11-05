@@ -101,12 +101,12 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     /**
      * Identifier
      */
-    private String uuid;
+    private String id;
     
     /**
      * parent identifier
      */
-    private String uuidParent;
+    private String idParent;
     
     private COElementAbstract parent=null;
     
@@ -120,7 +120,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
      * Protected constructor to prohibit instantiation of this class.
      */
     protected COElementAbstract() {
-	this.uuid = UUID.uuid();
+	this.id = UUID.uuid();
     }
     
     /**
@@ -269,26 +269,26 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     }
     
     
-    public String getUuid() {
-        return uuid;
+    public String getId() {
+        return id;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getUuidParent() {
-        return uuidParent;
+    public String getIdParent() {
+        return idParent;
     }
 
-    public void setUuidParent(String uuidParent) {
-        this.uuidParent = uuidParent;
+    public void setIdParent(String idP) {
+        this.idParent = idP;
     }
     
     
     public COElementAbstract findCOElementAbstractWithUUID(String uuidToFind) {
 	COElementAbstract result = null;
-	if (this.getUuid().equals(uuidToFind))
+	if (this.getId().equals(uuidToFind))
 	    result = this;
 	else {
 	    if (this.isCOUnitContent()) {

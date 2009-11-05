@@ -459,7 +459,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		String label = model.getLabel(); 
 		if (label.length() > 35)
 		    label = label.substring(0, 35) + "...";
-		lb.addItem(label, targetModel.getUuid());
+		lb.addItem(label, targetModel.getId());
 	    }
 	} else if (model.isCOUnitStructure()) {
 	 // TODO modify this method when multiple coUnitContent could be process
@@ -468,7 +468,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		String label = model.getLabel(); 
 		if (label.length() > 35)
 		    label = label.substring(0, 35) + "...";
-		lb.addItem(label, targetModel.getUuid());
+		lb.addItem(label, targetModel.getId());
 	    }
 	} else {
 	    for (Iterator<COElementAbstract> iter =

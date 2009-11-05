@@ -87,5 +87,9 @@ public interface COModelInterface {
      */
     public String getProperty(String key);
     
+    public String getId() ;
+
+    public void setId(String id) ;
+    
     
 }

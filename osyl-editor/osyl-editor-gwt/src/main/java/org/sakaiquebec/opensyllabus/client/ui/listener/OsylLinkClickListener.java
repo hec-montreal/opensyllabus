@@ -41,7 +41,7 @@ public class OsylLinkClickListener implements ClickHandler {
     }
 
     public void onClick(ClickEvent event) {
-	String parent = view.getModel().getParent().getUuidParent();
+	String parent = view.getModel().getParent().getIdParent();
 	if (parent != null) {
 	    view.getController().checkSitesRelation(url);
 	    // Window.alert(url + " en plus nous avons " + parent);

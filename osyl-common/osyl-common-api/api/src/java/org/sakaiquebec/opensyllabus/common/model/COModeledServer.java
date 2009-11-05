@@ -190,12 +190,12 @@ public class COModeledServer {
     /**
      *Name of uuid attribute
      */
-    protected final static String UUID_ATTRIBUTE_NAME = "uuid";
+    protected final static String ID_ATTRIBUTE_NAME = "id";
 
     /**
      *Name of uuid parent attribute
      */
-    protected final static String UUID_PARENT_ATTRIBUTE_NAME = "uuid_parent";
+    protected final static String ID_PARENT_ATTRIBUTE_NAME = "id_parent";
 
     /**
      *Name of uuid attribute
@@ -350,12 +350,12 @@ public class COModeledServer {
 	coContent.setAccess(map.getNamedItem(ACCESS_ATTRIBUTE_NAME)
 		.getNodeValue());
 
-	coContent.setUuid(map.getNamedItem(UUID_ATTRIBUTE_NAME) == null ? UUID
-		.uuid() : map.getNamedItem(UUID_ATTRIBUTE_NAME).getNodeValue());
+	coContent.setId(map.getNamedItem(ID_ATTRIBUTE_NAME) == null ? UUID
+		.uuid() : map.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue());
 
 	coContent
-		.setUuidParent(map.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME) == null ? null
-			: map.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME)
+		.setIdParent(map.getNamedItem(ID_PARENT_ATTRIBUTE_NAME) == null ? null
+			: map.getNamedItem(ID_PARENT_ATTRIBUTE_NAME)
 				.getNodeValue());
 
 	coContent
@@ -446,15 +446,15 @@ public class COModeledServer {
 		.getNodeValue());
 
 	String uuid =
-		sMap.getNamedItem(UUID_ATTRIBUTE_NAME) == null ? null : sMap
-			.getNamedItem(UUID_ATTRIBUTE_NAME).getNodeValue();
-	coUnit.setUuid(uuid == null ? UUID.uuid() : uuid);
+		sMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : sMap
+			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
+	coUnit.setId(uuid == null ? UUID.uuid() : uuid);
 
 	String uuidParent =
-		sMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME) == null ? null
-			: sMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME)
+		sMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME) == null ? null
+			: sMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME)
 				.getNodeValue();
-	coUnit.setUuidParent(uuidParent);
+	coUnit.setIdParent(uuidParent);
 
 	coUnit.setAccess(sMap.getNamedItem(ACCESS_ATTRIBUTE_NAME)
 		.getNodeValue());
@@ -505,15 +505,15 @@ public class COModeledServer {
 		.getNodeValue());
 
 	String uuid =
-		sMap.getNamedItem(UUID_ATTRIBUTE_NAME) == null ? null : sMap
-			.getNamedItem(UUID_ATTRIBUTE_NAME).getNodeValue();
-	coUnitStructure.setUuid(uuid == null ? UUID.uuid() : uuid);
+		sMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : sMap
+			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
+	coUnitStructure.setId(uuid == null ? UUID.uuid() : uuid);
 
 	String uuidParent =
-		sMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME) == null ? null
-			: sMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME)
+		sMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME) == null ? null
+			: sMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME)
 				.getNodeValue();
-	coUnitStructure.setUuidParent(uuidParent);
+	coUnitStructure.setIdParent(uuidParent);
 
 	coUnitStructure.setAccess(sMap.getNamedItem(ACCESS_ATTRIBUTE_NAME)
 		.getNodeValue());
@@ -570,15 +570,15 @@ public class COModeledServer {
 		.getNodeValue());
 
 	String uuid =
-		sMap.getNamedItem(UUID_ATTRIBUTE_NAME) == null ? null : sMap
-			.getNamedItem(UUID_ATTRIBUTE_NAME).getNodeValue();
-	coStructElt.setUuid(uuid == null ? UUID.uuid() : uuid);
+		sMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : sMap
+			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
+	coStructElt.setId(uuid == null ? UUID.uuid() : uuid);
 
 	String uuidParent =
-		sMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME) == null ? null
-			: sMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME)
+		sMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME) == null ? null
+			: sMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME)
 				.getNodeValue();
-	coStructElt.setUuidParent(uuidParent);
+	coStructElt.setIdParent(uuidParent);
 
 	String editable =
 		sMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? null
@@ -633,15 +633,15 @@ public class COModeledServer {
 	coContentUnit.setType(coContentUnitType);
 
 	String uuid =
-		coMap.getNamedItem(UUID_ATTRIBUTE_NAME) == null ? null : coMap
-			.getNamedItem(UUID_ATTRIBUTE_NAME).getNodeValue();
-	coContentUnit.setUuid(uuid == null ? UUID.uuid() : uuid);
+		coMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : coMap
+			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
+	coContentUnit.setId(uuid == null ? UUID.uuid() : uuid);
 
 	String uuidParent =
-		coMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME) == null ? null
-			: coMap.getNamedItem(UUID_PARENT_ATTRIBUTE_NAME)
+		coMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME) == null ? null
+			: coMap.getNamedItem(ID_PARENT_ATTRIBUTE_NAME)
 				.getNodeValue();
-	coContentUnit.setUuidParent(uuidParent);
+	coContentUnit.setIdParent(uuidParent);
 
 	String editable =
 		coMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? null
@@ -688,6 +688,19 @@ public class COModeledServer {
 		.getNodeValue());
 	coContentResProxy.setType(prMap.getNamedItem(XSI_TYPE_ATTRIBUTE_NAME)
 		.getNodeValue());
+	
+	String editable =
+		prMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? null
+			: prMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME)
+				.getNodeValue();
+	coContentResProxy.setEditable(editable == null ? true : Boolean
+		.valueOf(editable));
+	
+	String uuid =
+	    prMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : prMap
+			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
+	coContentResProxy.setId(uuid == null ? UUID.uuid() : uuid);
+
 	coContentResProxy.setParent(coContentUnitParent);
 
 	NodeList resProxyChildren = node.getChildNodes();
@@ -745,6 +758,19 @@ public class COModeledServer {
 	String security =
 		rMap.getNamedItem(ACCESS_ATTRIBUTE_NAME).getNodeValue();
 	coContentRes.setAccess(security);
+	
+	String editable =
+		rMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? null
+			: rMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME)
+				.getNodeValue();
+	coContentRes.setEditable(editable == null ? true : Boolean
+		.valueOf(editable));
+	
+	String uuid =
+	    rMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : rMap
+			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
+	coContentRes.setId(uuid == null ? UUID.uuid() : uuid);
+	
 	NodeList resChildren = node.getChildNodes();
 	for (int z = 0; z < resChildren.getLength(); z++) {
 	    Node rNode = resChildren.item(z);
@@ -787,6 +813,11 @@ public class COModeledServer {
 	coContentRes.setEditable(editable == null ? true : Boolean
 		.valueOf(editable));
 
+	String uuid =
+	    rMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : rMap
+			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
+	coContentRes.setId(uuid == null ? UUID.uuid() : uuid);
+	
 	NodeList resChildren = node.getChildNodes();
 	for (int z = 0; z < resChildren.getLength(); z++) {
 	    Node rNode = resChildren.item(z);
@@ -879,11 +910,11 @@ public class COModeledServer {
 
 	courseOutlineContentElem.setAttribute(ACCESS_ATTRIBUTE_NAME, coContent
 		.getAccess());
-	courseOutlineContentElem.setAttribute(UUID_ATTRIBUTE_NAME, coContent
-		.getUuid());
-	if (coContent.getUuidParent() != null)
-	    courseOutlineContentElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
-		    coContent.getUuidParent());
+	courseOutlineContentElem.setAttribute(ID_ATTRIBUTE_NAME, coContent
+		.getId());
+	if (coContent.getIdParent() != null)
+	    courseOutlineContentElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
+		    coContent.getIdParent());
 	courseOutlineContentElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
 		+ coContent.isEditable());
 	osylElement.appendChild(courseOutlineContentElem);
@@ -940,13 +971,13 @@ public class COModeledServer {
 		    .getAccess());
 	    coStructureElem.setAttribute(XSI_TYPE_ATTRIBUTE_NAME, coStructure
 		    .getType());
-	    coStructureElem.setAttribute(UUID_ATTRIBUTE_NAME, coStructure
-		    .getUuid());
+	    coStructureElem.setAttribute(ID_ATTRIBUTE_NAME, coStructure
+		    .getId());
 	    coStructureElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
 		    + coStructure.isEditable());
-	    if (coStructure.getUuidParent() != null)
-		coStructureElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
-			coStructure.getUuidParent());
+	    if (coStructure.getIdParent() != null)
+		coStructureElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
+			coStructure.getIdParent());
 	    for (int i = 0; i < coStructure.getChildrens().size(); i++) {
 		createChildElement(document, coStructureElem,
 			(COElementAbstract) coStructure.getChildrens().get(i));
@@ -965,12 +996,12 @@ public class COModeledServer {
 	    parent.appendChild(coUnitElem);
 	    coUnitElem.setAttribute(ACCESS_ATTRIBUTE_NAME, coUnit.getAccess());
 	    coUnitElem.setAttribute(XSI_TYPE_ATTRIBUTE_NAME, coUnit.getType());
-	    coUnitElem.setAttribute(UUID_ATTRIBUTE_NAME, coUnit.getUuid());
+	    coUnitElem.setAttribute(ID_ATTRIBUTE_NAME, coUnit.getId());
 	    coUnitElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
 		    + coUnit.isEditable());
-	    if (coUnit.getUuidParent() != null)
-		coUnitElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME, coUnit
-			.getUuidParent());
+	    if (coUnit.getIdParent() != null)
+		coUnitElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME, coUnit
+			.getIdParent());
 	    createCDataNode(document, coUnitElem, CO_LABEL_NODE_NAME, coUnit
 		    .getLabel());
 	    if (coUnit.getChildrens() != null) {
@@ -994,13 +1025,13 @@ public class COModeledServer {
 		    .getAccess());
 	    coUnitElem.setAttribute(XSI_TYPE_ATTRIBUTE_NAME, coUnitStructure
 		    .getType());
-	    coUnitElem.setAttribute(UUID_ATTRIBUTE_NAME, coUnitStructure
-		    .getUuid());
+	    coUnitElem.setAttribute(ID_ATTRIBUTE_NAME, coUnitStructure
+		    .getId());
 	    coUnitElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
 		    + coUnitStructure.isEditable());
-	    if (coUnitStructure.getUuidParent() != null)
-		coUnitElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
-			coUnitStructure.getUuidParent());
+	    if (coUnitStructure.getIdParent() != null)
+		coUnitElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
+			coUnitStructure.getIdParent());
 	    createCDataNode(document, coUnitElem, CO_LABEL_NODE_NAME,
 		    coUnitStructure.getLabel());
 	    if (coUnitStructure.getChildrens() != null) {
@@ -1023,13 +1054,13 @@ public class COModeledServer {
 		    .getAccess());
 	    coContentUnitElem.setAttribute(XSI_TYPE_ATTRIBUTE_NAME,
 		    coContentUnit.getType());
-	    coContentUnitElem.setAttribute(UUID_ATTRIBUTE_NAME, coContentUnit
-		    .getUuid());
+	    coContentUnitElem.setAttribute(ID_ATTRIBUTE_NAME, coContentUnit
+		    .getId());
 	    coContentUnitElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
 		    + coContentUnit.isEditable());
-	    if (coContentUnit.getUuidParent() != null)
-		coContentUnitElem.setAttribute(UUID_PARENT_ATTRIBUTE_NAME,
-			coContentUnit.getUuidParent());
+	    if (coContentUnit.getIdParent() != null)
+		coContentUnitElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
+			coContentUnit.getIdParent());
 	    // Evaluation attributes
 	    // coContentUnitElem.setAttribute(WEIGHT_ATTRIBUTE_NAME,
 	    // coContentUnit
@@ -1115,6 +1146,8 @@ public class COModeledServer {
 		.getAccess());
 	coContentResourceProxyElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
 		+ child.isEditable());
+	coContentResourceProxyElem.setAttribute(ID_ATTRIBUTE_NAME,
+		    child.getId());
 	// sometimes we don't necessarely have a comment on the resource proxy
 	String comment = child.getComment();
 	if (comment != null && !"".equals(comment)) {
@@ -1179,6 +1212,7 @@ public class COModeledServer {
 		    resource.getType());
 
 	}
+	coContentResourceElem.setAttribute(ID_ATTRIBUTE_NAME, resource.getId());
 	if (resource.getProperties() != null
 		&& !resource.getProperties().isEmpty()) {
 	    createPropertiesElem(document, coContentResourceElem, resource
@@ -1241,9 +1275,9 @@ public class COModeledServer {
 		.isCourseOutlineContent())
 		|| (childElement.getType().equals(parentElement.getType()))) {
 	    if (parentElement.isCOUnitContent()) {
-		childElement.setUuidParent(parentElement.getUuid());
+		childElement.setIdParent(parentElement.getId());
 	    } else {
-		childElement.setUuidParent(parentElement.getUuid());
+		childElement.setIdParent(parentElement.getId());
 		for (int i = 0; i < parentElement.getChildrens().size(); i++) {
 		    COElementAbstract coElementParent =
 			    (COElementAbstract) parentElement.getChildrens()
@@ -1272,8 +1306,8 @@ public class COModeledServer {
     }
 
     private void copyStructureOnly(COElementAbstract parentElement) {
-	parentElement.setUuidParent(parentElement.getUuid());
-	parentElement.setUuid(UUID.uuid());
+	parentElement.setIdParent(parentElement.getId());
+	parentElement.setId(UUID.uuid());
 	if (parentElement.isCOUnitContent()) {
 	    COUnitContent coUnit = (COUnitContent) parentElement;
 	    coUnit.setChildrens(new ArrayList<COContentResourceProxy>());
@@ -1297,7 +1331,7 @@ public class COModeledServer {
     private void dissociateChild(COElementAbstract childElement,
 	    COElementAbstract parentElement) {
 
-	childElement.setUuidParent(null);
+	childElement.setIdParent(null);
 	if (parentElement.isCOUnitContent()) {
 	    // nothing to do
 	} else {
@@ -1322,11 +1356,11 @@ public class COModeledServer {
     public void fusion(COModeledServer parent) {
 	COContent contentChild = this.getModeledContent();
 	COContent contentfusionned = parent.getModeledContent();
-	if (contentChild.getUuidParent() != null
-		&& !contentChild.getUuidParent().equals("")) {
+	if (contentChild.getIdParent() != null
+		&& !contentChild.getIdParent().equals("")) {
 	    if (contentfusionned != null) {
-		contentfusionned.setUuidParent(contentfusionned.getUuid());
-		contentfusionned.setUuid(contentChild.getUuid());
+		contentfusionned.setIdParent(contentfusionned.getId());
+		contentfusionned.setId(contentChild.getId());
 	    }
 	    fusion(contentChild, contentfusionned);
 	    setModeledContent(contentfusionned);
@@ -1352,16 +1386,16 @@ public class COModeledServer {
 	    for (int i = 0; i < child.getChildrens().size(); i++) {
 		COElementAbstract childElement =
 			(COElementAbstract) child.getChildrens().get(i);
-		if (childElement.getUuidParent() != null
-			&& !childElement.getUuidParent().equals("")) {
+		if (childElement.getIdParent() != null
+			&& !childElement.getIdParent().equals("")) {
 		    COElementAbstract parentElement =
 			    fusionned
 				    .findCOElementAbstractWithUUID(childElement
-					    .getUuidParent());
+					    .getIdParent());
 		    if (parentElement != null) {
 			parentElement.setEditable(false);
-			parentElement.setUuidParent(parentElement.getUuid());
-			parentElement.setUuid(childElement.getUuid());
+			parentElement.setIdParent(parentElement.getId());
+			parentElement.setId(childElement.getId());
 			fusion(childElement, parentElement);
 		    } else {
 			// L'enfant référence qqchose qui n'existe PLUS dans le
@@ -1392,7 +1426,7 @@ public class COModeledServer {
     }
 
     private void deleteParentUuids(COElementAbstract element) {
-	element.setUuidParent(null);
+	element.setIdParent(null);
 	if (element.isCOUnitContent()) {
 	    // Nothing to do
 	} else {
@@ -1428,9 +1462,9 @@ public class COModeledServer {
     }
 
     private void resetUuid(COElementAbstract element) {
-	element.setUuid(UUID.uuid());
-	element.setUuidParent(null);
-	if (element.isCOUnitContent()) {
+	element.setId(UUID.uuid());
+	element.setIdParent(null);
+	if (element.isCOContentResourceProxy()) {
 	    // Nothing to do
 	} else {
 	    for (int i = 0; i < element.getChildrens().size(); i++) {

@@ -20,7 +20,6 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -29,8 +28,7 @@ import org.sakaiquebec.opensyllabus.shared.events.FiresUpdateCOContentResourceEv
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceEventHandler.UpdateCOContentResourceEvent;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
-
-import com.google.gwt.i18n.client.DateTimeFormat;
+import org.sakaiquebec.opensyllabus.shared.util.UUID;
 
 /**
  * The resource object. It can be of many types like text resource or a wrapper
@@ -69,6 +67,8 @@ public class COContentResource implements COModelInterface,
      */
     private boolean editable = true;
 
+    private String id;
+
     /**
      * Constructor.
      */
@@ -87,6 +87,7 @@ public class COContentResource implements COModelInterface,
 	    final OsylConfigMessages osylConfigMessages) {
 	final COContentResource resModel = new COContentResource();
 	resModel.setType(type);
+	resModel.setId(UUID.uuid());
 	if (type.equalsIgnoreCase(COContentResourceType.TEXT)) {
 	    COProperties prop = new COProperties();
 	    prop.addProperty(COPropertiesType.TEXT, osylConfigMessages
@@ -117,7 +118,8 @@ public class COContentResource implements COModelInterface,
 	    COProperties prop = new COProperties();
 	    prop.addProperty(COPropertiesType.TEXT, osylConfigMessages
 		    .getMessage("InsertYourTextHere"));
-	    prop.addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getDateString());
+	    prop.addProperty(COPropertiesType.MODIFIED, OsylDateUtils
+		    .getDateString());
 	    resModel.setProperties(prop);
 
 	}
@@ -204,6 +206,22 @@ public class COContentResource implements COModelInterface,
 	}
     }
 
+    public boolean isEditable() {
+	return editable;
+    }
+
+    public void setEditable(boolean edit) {
+	this.editable = edit;
+    }
+
+    public String getId() {
+	return id;
+    }
+
+    public void setId(String id) {
+	this.id = id;
+    }
+
     /*
      * void notifyEventHandlers() { if (updateCOContentResourceEventHandlers !=
      * null) { UpdateCOContentResourceEvent event = new
@@ -250,14 +268,6 @@ public class COContentResource implements COModelInterface,
     public void setAccess(String access) {
 	this.access = access;
 	notifyEventHandlers();
-    }
-
-    public boolean isEditable() {
-	return editable;
-    }
-
-    public void setEditable(boolean edit) {
-	this.editable = edit;
     }
 
 }

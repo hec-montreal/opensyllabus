@@ -137,4 +137,11 @@ public class COContentRubric implements COModelInterface {
 	// }
 	// }
     }
+    
+    public String getId() {
+	return null;
+    }
+
+    public void setId(String id) {
+    }
 }

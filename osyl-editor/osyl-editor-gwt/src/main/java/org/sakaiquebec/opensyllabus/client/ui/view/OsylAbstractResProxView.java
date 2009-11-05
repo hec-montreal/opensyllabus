@@ -233,7 +233,7 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 	if (getEditor().isMoveable()) {
 	    String targetUuid = getEditor().getMoveToTarget();
 	    if (!targetUuid.equals("")
-		    && !targetUuid.equals(getModel().getParent().getUuid())) {
+		    && !targetUuid.equals(getModel().getParent().getId())) {
 		moveTo(targetUuid);
 	    }
 	}
