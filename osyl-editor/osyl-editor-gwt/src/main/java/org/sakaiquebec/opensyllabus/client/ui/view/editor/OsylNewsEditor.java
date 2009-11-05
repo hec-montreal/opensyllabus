@@ -21,14 +21,17 @@
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
+import org.sakaiquebec.opensyllabus.client.ui.view.OsylNewsView;
 import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -48,10 +51,11 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
     private RichTextArea editor;
 
     // Our viewer
-    private HTML viewer;
+    private HTML textViewer;
+    private HTML timestampViewer;
 
     // Contains the viewer and info icons for the requirement level
-    private HorizontalPanel viewerPanel;
+    private VerticalPanel viewerPanel;
 
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
@@ -118,8 +122,13 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
     private void initViewer() {
 	HTML htmlViewer = new HTML();
 	htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel");
-	setViewer(htmlViewer);
-	setViewerPanel(new HorizontalPanel());
+	setTextViewer(htmlViewer);
+	
+	HTML timeViewer = new HTML();
+	timeViewer.setStylePrimaryName("Osyl-News-TimeStamp");
+	setTimestampViewer(timeViewer);
+	
+	setViewerPanel(new VerticalPanel());
 
 	if (isReadOnly()) {
 	    if (getView().isContextImportant()) {
@@ -136,28 +145,44 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
 		mainPanel.setVisible(true);
 	    }
 	}
-	getViewerPanel().add(getViewer());
+	getViewerPanel().add(getTextViewer());
+	getViewerPanel().add(getTimestampViewer());
 	mainPanel.add(getViewerPanel());
     }
 
-    private void setViewer(HTML html) {
-	this.viewer = html;
+    private void setTextViewer(HTML html) {
+	this.textViewer = html;
     }
 
-    public HTML getViewer() {
-	return this.viewer;
+    public HTML getTextViewer() {
+	return this.textViewer;
+    }
+    
+    public HTML getTimestampViewer() {
+        return timestampViewer;
     }
 
-    private void setViewerPanel(HorizontalPanel viewerPanel) {
+    public void setTimestampViewer(HTML timestampViewer) {
+        this.timestampViewer = timestampViewer;
+    }
+
+    private void setViewerPanel(VerticalPanel viewerPanel) {
 	this.viewerPanel = viewerPanel;
     }
 
-    private HorizontalPanel getViewerPanel() {
+    private VerticalPanel getViewerPanel() {
 	return viewerPanel;
     }
 
     private String getTextFromModel() {
 	return getView().getTextFromModel();
+    }
+    
+    private String getTimeStamp() {
+	String dateString = ((OsylNewsView)getView()).getTimeStampFromModel();
+	Date date = OsylDateUtils.getDate(dateString);
+	DateTimeFormat dtf2 = DateTimeFormat.getFormat("dd/MM/yyyy hh:mm:ss");//TODO has to come from config
+	return dtf2.format(date);
     }
 
     /**
@@ -169,7 +194,7 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
 	if (isInEditionMode()) {
 	    editor.setHTML(text);
 	} else {
-	    viewer.setHTML(text);
+	    textViewer.setHTML(text);
 	}
     }
 
@@ -177,7 +202,7 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
 	if (isInEditionMode()) {
 	    return editor.getHTML();
 	} else {
-	    return viewer.getHTML();
+	    return textViewer.getHTML();
 	}
     }
 
@@ -213,6 +238,7 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
 
 	// We get the text to display from the model
 	setText(getTextFromModel());
+	setTimeStamp(getTimeStamp());
 
 	// If we are not in read-only mode, we display some meta-info and add
 	// buttons and listeners enabling edition or deletion:
@@ -257,5 +283,9 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
      * ====================== ADDED METHODS ====================== Not in any
      * superclass.
      */
-
+    public void setTimeStamp(String text) {
+	if (!isInEditionMode()){
+	    timestampViewer.setHTML(text);
+	}
+    }
 }

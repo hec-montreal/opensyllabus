@@ -23,7 +23,9 @@ package org.sakaiquebec.opensyllabus.common.model;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -56,6 +58,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.sakaiquebec.opensyllabus.shared.util.UUID;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -205,6 +208,11 @@ public class COModeledServer {
     protected final static String PERSON_NODE_NAME = "Person";
 
     /**
+     *Name of modified node
+     */
+    protected final static String MODIFIED_NODE_NAME = "modified";
+
+    /**
      * The modeledContent is a POJO filled by XML2Model
      */
     private COContent modeledContent;
@@ -266,7 +274,7 @@ public class COModeledServer {
 	XML2Model(false);
     }
 
-    public void XML2Model(boolean changeWorkToPublish) {
+    public void XML2Model(boolean isPublication) {
 	COContent coContent = null;
 	Document messageDom = null;
 	documentSecurityMap = new HashMap<String, String>();
@@ -279,7 +287,7 @@ public class COModeledServer {
 		// DOMtoModel
 		coContent =
 			createCOContentPOJO(messageDom, coContent,
-				changeWorkToPublish);
+				isPublication);
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    }
@@ -320,7 +328,7 @@ public class COModeledServer {
      * @param coContent the POJO to be created from the root element.
      */
     private COContent createCOContentPOJO(Document messageDom,
-	    COContent coContent, boolean changeWorkToPublish) {
+	    COContent coContent, boolean isPublication) {
 
 	Node myRoot = null;
 
@@ -366,13 +374,18 @@ public class COModeledServer {
 	    if (nodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
 		COStructureElement coStructElt = new COStructureElement();
 		coContent.addChild(createCOStructureElementPOJO(myNode,
-			coStructElt, coContent, changeWorkToPublish));
+			coStructElt, coContent, isPublication));
 
 	    } else if (nodeName.equalsIgnoreCase(CO_LABEL_NODE_NAME)) {
 		coContent.setLabel(getCDataSectionValue(myNode));
 	    } else {
 		addProperty(coContent.getProperties(), myNode);
 	    }
+	}
+	if (isPublication) {
+	    SimpleDateFormat dateFormat =
+		    new SimpleDateFormat(OsylDateUtils.DATE_TIME_FORMAT);
+	    coContent.addProperty(COPropertiesType.MODIFIED, dateFormat.format(new Date()));
 	}
 	return coContent;
     }
@@ -423,7 +436,7 @@ public class COModeledServer {
      * @param parent the parent of the Structure element
      */
     private COUnit createCOUnitPOJO(Node node, COUnit coUnit,
-	    COElementAbstract parent, boolean changeWorkToPublish) {
+	    COElementAbstract parent, boolean isPublication) {
 	Node sNode;
 	String sNodeName = "";
 
@@ -463,7 +476,7 @@ public class COModeledServer {
 	    if (sNodeName.equalsIgnoreCase(CO_UNIT_STRUCTURE_NODE_NAME)) {
 		COUnitStructure coUnitStruct = new COUnitStructure();
 		coUnit.addChild(createCOUnitStructurePOJO(sNode, coUnitStruct,
-			coUnit, changeWorkToPublish));
+			coUnit, isPublication));
 	    } else if (sNodeName.equalsIgnoreCase(CO_LABEL_NODE_NAME)) {
 		coUnit.setLabel(getCDataSectionValue(sNode));
 	    } else {
@@ -482,7 +495,7 @@ public class COModeledServer {
      */
     private COUnitStructure createCOUnitStructurePOJO(Node node,
 	    COUnitStructure coUnitStructure, COElementAbstract parent,
-	    boolean changeWorkToPublish) {
+	    boolean isPublication) {
 	Node sNode;
 	String sNodeName = "";
 
@@ -522,14 +535,12 @@ public class COModeledServer {
 
 	    if (sNodeName.equalsIgnoreCase(CO_UNIT_STRUCTURE_NODE_NAME)) {
 		COUnitStructure coUnitStructure2 = new COUnitStructure();
-		coUnitStructure
-			.addChild(createCOUnitStructurePOJO(sNode,
-				coUnitStructure2, coUnitStructure,
-				changeWorkToPublish));
+		coUnitStructure.addChild(createCOUnitStructurePOJO(sNode,
+			coUnitStructure2, coUnitStructure, isPublication));
 	    } else if (sNodeName.equalsIgnoreCase(CO_UNIT_CONTENT_NODE_NAME)) {
 		COUnitContent coContentUnit = new COUnitContent();
 		coUnitStructure.addChild(createCOContentUnitPOJO(sNode,
-			coContentUnit, coUnitStructure, changeWorkToPublish));
+			coContentUnit, coUnitStructure, isPublication));
 	    } else if (sNodeName.equalsIgnoreCase(CO_LABEL_NODE_NAME)) {
 		coUnitStructure.setLabel(getCDataSectionValue(sNode));
 	    } else {
@@ -549,7 +560,7 @@ public class COModeledServer {
      */
     private COStructureElement createCOStructureElementPOJO(Node node,
 	    COStructureElement coStructElt, COElementAbstract parent,
-	    boolean changeWorkToPublish) {
+	    boolean isPublication) {
 	Node sNode;
 	String sNodeName = "";
 	NamedNodeMap sMap = node.getAttributes();
@@ -587,11 +598,11 @@ public class COModeledServer {
 	    if (sNodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
 		COStructureElement coChildStructElt = new COStructureElement();
 		coStructElt.addChild(createCOStructureElementPOJO(sNode,
-			coChildStructElt, coStructElt, changeWorkToPublish));
+			coChildStructElt, coStructElt, isPublication));
 	    } else if (sNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
 		COUnit coUnit = new COUnit();
 		coStructElt.addChild(createCOUnitPOJO(sNode, coUnit,
-			coStructElt, changeWorkToPublish));
+			coStructElt, isPublication));
 	    } else {
 		addProperty(coStructElt.getProperties(), sNode);
 	    }
@@ -609,7 +620,7 @@ public class COModeledServer {
      */
     private COUnitContent createCOContentUnitPOJO(Node node,
 	    COUnitContent coContentUnit, COElementAbstract parent,
-	    boolean changeWorkToPublish) {
+	    boolean isPublication) {
 	Node coNode;
 	String coNodeName = "";
 	String coContentUnitType = "";
@@ -648,7 +659,7 @@ public class COModeledServer {
 
 	    if (coNodeName.equalsIgnoreCase(CO_RES_PROXY_NODE_NAME)) {
 		coContentUnit.addChild(createCOContentResourceProxyPOJO(coNode,
-			coContentUnit, changeWorkToPublish));
+			coContentUnit, isPublication));
 	    } else if (coNodeName.equalsIgnoreCase(CO_LABEL_NODE_NAME)) {
 		coContentUnit.setLabel(getCDataSectionValue(coNode));
 	    } else {
@@ -666,7 +677,7 @@ public class COModeledServer {
      * @return the created Course Outline Resource Proxy POJO
      */
     private COContentResourceProxy createCOContentResourceProxyPOJO(Node node,
-	    COUnitContent coContentUnitParent, boolean changeWorkToPublish) {
+	    COUnitContent coContentUnitParent, boolean isPublication) {
 
 	Node prNode;
 	String prNodeName = "";
@@ -698,19 +709,18 @@ public class COModeledServer {
 		coContentResProxy.setRubric(createCOContentRubricPOJO(prNode));
 	    } else if (prNodeName.equalsIgnoreCase(CO_RES_NODE_NAME)) {
 		coContentResProxy.setResource(createCOContentResourcePOJO(
-			prNode, changeWorkToPublish));
+			prNode, isPublication));
 	    } else if (prNodeName.equalsIgnoreCase(PERSON_NODE_NAME)) {
 		coContentResProxy
 			.setResource(createCOContentResourcePersonPOJO(prNode));
 	    } else if (prNodeName.equalsIgnoreCase(CO_RES_PROXY_NODE_NAME)) {
 		coContentResProxy
 			.addNestedResourceProxy(createCOContentResourceProxyPOJO(
-				prNode, coContentUnitParent,
-				changeWorkToPublish));
+				prNode, coContentUnitParent, isPublication));
 	    } else if (prNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
 		COUnit coUnit = new COUnit();
 		coContentResProxy.setResource(createCOUnitPOJO(prNode, coUnit,
-			coContentResProxy, changeWorkToPublish));
+			coContentResProxy, isPublication));
 	    } else {
 		addProperty(coContentResProxy.getProperties(), prNode);
 	    }
@@ -726,7 +736,7 @@ public class COModeledServer {
      * @return the created Content resource
      */
     private COContentResource createCOContentResourcePOJO(Node node,
-	    boolean changeWorkToPublish) {
+	    boolean isPublication) {
 
 	COContentResource coContentRes = new COContentResource();
 	NamedNodeMap rMap = node.getAttributes();
@@ -744,7 +754,7 @@ public class COModeledServer {
 		|| type.equals(COContentResourceType.BIBLIO_RESOURCE)) {
 	    documentSecurityMap.put(coContentRes.getProperty(
 		    COPropertiesType.URI).trim(), security);
-	    if (changeWorkToPublish) {
+	    if (isPublication) {
 		COProperties copProperties = coContentRes.getProperties();
 		copProperties.addProperty(COPropertiesType.URI, this
 			.changeDocumentsUrls(coContentRes.getProperty(
@@ -1212,7 +1222,7 @@ public class COModeledServer {
 	this.documentSecurityMap = documentSecurityMap;
     }
 
-    public void associate(COModeledServer parent) throws Exception{
+    public void associate(COModeledServer parent) throws Exception {
 	COContent contentParent = parent.getModeledContent();
 	COContent contentChild = this.getModeledContent();
 

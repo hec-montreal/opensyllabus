@@ -20,6 +20,7 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -27,6 +28,9 @@ import java.util.Set;
 import org.sakaiquebec.opensyllabus.shared.events.FiresUpdateCOContentResourceEvents;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceEventHandler.UpdateCOContentResourceEvent;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
+
+import com.google.gwt.i18n.client.DateTimeFormat;
 
 /**
  * The resource object. It can be of many types like text resource or a wrapper
@@ -60,12 +64,11 @@ public class COContentResource implements COModelInterface,
      */
     private COProperties properties;
 
-    
     /**
      * if the resource is editable or not
      */
-    private boolean editable=true;
-    
+    private boolean editable = true;
+
     /**
      * Constructor.
      */
@@ -74,49 +77,53 @@ public class COContentResource implements COModelInterface,
     }
 
     /**
-     * Creates a Default a COContentResource with a default content 
-     * TODO: this method can be a helper class for the model, so move it...
+     * Creates a Default a COContentResource with a default content TODO: this
+     * method can be a helper class for the model, so move it...
      * 
      * @param type of the new model to create
      * @return model created
      */
-    public static COContentResource createDefaultRes(final String type, 
+    public static COContentResource createDefaultRes(final String type,
 	    final OsylConfigMessages osylConfigMessages) {
 	final COContentResource resModel = new COContentResource();
 	resModel.setType(type);
 	if (type.equalsIgnoreCase(COContentResourceType.TEXT)) {
 	    COProperties prop = new COProperties();
-	    prop.addProperty(COPropertiesType.TEXT,
-		    osylConfigMessages.getMessage("InsertYourTextHere"));
+	    prop.addProperty(COPropertiesType.TEXT, osylConfigMessages
+		    .getMessage("InsertYourTextHere"));
 	    resModel.setProperties(prop);
-	} else if (type
-		.equalsIgnoreCase(COContentResourceType.URL)) {
+	} else if (type.equalsIgnoreCase(COContentResourceType.URL)) {
 	    COProperties prop = new COProperties();
 	    prop.addProperty(COPropertiesType.URI,
-	    "http://www.google.ca/search?q=opensyllabus");
+		    "http://www.google.ca/search?q=opensyllabus");
 	    resModel.setProperties(prop);
-	} else if (type
-		.equalsIgnoreCase(COContentResourceType.DOCUMENT)) {
+	} else if (type.equalsIgnoreCase(COContentResourceType.DOCUMENT)) {
 	    COProperties prop = new COProperties();
 	    prop.addProperty(COPropertiesType.URI, "");
 	    resModel.setProperties(prop);
-	} else if (type
-		.equalsIgnoreCase(COContentResourceType.ASSIGNMENT)) {
+	} else if (type.equalsIgnoreCase(COContentResourceType.ASSIGNMENT)) {
 	    COProperties prop = new COProperties();
-	    prop.addProperty(COPropertiesType.TEXT,
-		    osylConfigMessages.getMessage("assigndescr"));
+	    prop.addProperty(COPropertiesType.TEXT, osylConfigMessages
+		    .getMessage("assigndescr"));
 	    resModel.setProperties(prop);
-	} else if (type
-		.equalsIgnoreCase(COContentResourceType.BIBLIO_RESOURCE)) {
+	} else if (type.equalsIgnoreCase(COContentResourceType.BIBLIO_RESOURCE)) {
 	    COProperties prop = new COProperties();
-	    prop.addProperty(COPropertiesType.CITATION,
-		    osylConfigMessages.getMessage("bibliographicReference"));
+	    prop.addProperty(COPropertiesType.CITATION, osylConfigMessages
+		    .getMessage("bibliographicReference"));
 	    // key of citation type (which is in english) is saved in model
 	    prop.addProperty(COPropertiesType.TYPE, "unknown");
 	    resModel.setProperties(prop);
+	} else if (type.equalsIgnoreCase(COContentResourceType.NEWS)) {
+	    COProperties prop = new COProperties();
+	    prop.addProperty(COPropertiesType.TEXT, osylConfigMessages
+		    .getMessage("InsertYourTextHere"));
+	    prop.addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getDateString());
+	    resModel.setProperties(prop);
+
 	}
 	return resModel;
     }
+
     /**
      * @return the type
      */
@@ -185,7 +192,8 @@ public class COContentResource implements COModelInterface,
 
     public void addEventHandler(UpdateCOContentResourceEventHandler handler) {
 	if (updateCOContentResourceEventHandlers == null) {
-	    updateCOContentResourceEventHandlers = new HashSet<UpdateCOContentResourceEventHandler>();
+	    updateCOContentResourceEventHandlers =
+		    new HashSet<UpdateCOContentResourceEventHandler>();
 	}
 	updateCOContentResourceEventHandlers.add(handler);
     }
@@ -196,41 +204,40 @@ public class COContentResource implements COModelInterface,
 	}
     }
 
-    /*    void notifyEventHandlers() {
-	if (updateCOContentResourceEventHandlers != null) {
-	    UpdateCOContentResourceEvent event = new UpdateCOContentResourceEvent(this);
-	    Iterator iter = updateCOContentResourceEventHandlers.iterator();
-	    while (iter.hasNext()) {
-		UpdateCOContentResourceEventHandler handler = 
-		    (UpdateCOContentResourceEventHandler) iter.next();
-		System.out.println("*** TRACE *** COContentResource - Handler: " + handler.toString());
-		handler.onUpdateModel(event);
-	    }
-	}
-    }
+    /*
+     * void notifyEventHandlers() { if (updateCOContentResourceEventHandlers !=
+     * null) { UpdateCOContentResourceEvent event = new
+     * UpdateCOContentResourceEvent(this); Iterator iter =
+     * updateCOContentResourceEventHandlers.iterator(); while (iter.hasNext()) {
+     * UpdateCOContentResourceEventHandler handler =
+     * (UpdateCOContentResourceEventHandler) iter.next();
+     * System.out.println("*** TRACE *** COContentResource - Handler: " +
+     * handler.toString()); handler.onUpdateModel(event); } } }
      */
 
     /**
      * Notifies event handlers that it has changed.
      */
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings( { "unchecked" })
     void notifyEventHandlers() {
 	Set<UpdateCOContentResourceEventHandler> copyEventHandlersList;
 	if (updateCOContentResourceEventHandlers != null) {
 	    UpdateCOContentResourceEvent event =
-		new UpdateCOContentResourceEvent(this);
+		    new UpdateCOContentResourceEvent(this);
 	    synchronized (this) {
-		copyEventHandlersList =(HashSet<UpdateCOContentResourceEventHandler>)((HashSet<UpdateCOContentResourceEventHandler>) updateCOContentResourceEventHandlers)
-		.clone();
+		copyEventHandlersList =
+			(HashSet<UpdateCOContentResourceEventHandler>) ((HashSet<UpdateCOContentResourceEventHandler>) updateCOContentResourceEventHandlers)
+				.clone();
 	    }
-	    Iterator<UpdateCOContentResourceEventHandler> iter = copyEventHandlersList.iterator();
+	    Iterator<UpdateCOContentResourceEventHandler> iter =
+		    copyEventHandlersList.iterator();
 	    while (iter.hasNext()) {
 		UpdateCOContentResourceEventHandler handler =
-		    (UpdateCOContentResourceEventHandler) iter.next();
+			(UpdateCOContentResourceEventHandler) iter.next();
 		if (TRACE)
 		    System.out
-		    .println("*** TRACE *** COContentResource - Handler: "
-			    + handler.toString());
+			    .println("*** TRACE *** COContentResource - Handler: "
+				    + handler.toString());
 		handler.onUpdateModel(event);
 	    }
 	}
@@ -250,7 +257,7 @@ public class COContentResource implements COModelInterface,
     }
 
     public void setEditable(boolean edit) {
-	this.editable=edit;
+	this.editable = edit;
     }
-    
+
 }

@@ -1055,3 +1055,11 @@
 	font-size:11px;
 	padding:2px 0 3px;
 }
+
+.Osyl-News-TimeStamp {
+	font-size:0.85em;
+	padding:3px 0;
+	width:auto;
+	font-style: italic;
+	
+}
