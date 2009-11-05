@@ -58,7 +58,7 @@
 				    		<attribute name="type" restrictionpattern="Person" />
 			    		</element>
 			    		<element name="semanticType">
-			        		<attribute name="type" restrictionpattern="undefined|coordinators|lecturers|teachingassistants|secretaries" />
+			        		<attribute name="type" restrictionpattern="undefined|coordinators|lecturers|teachingassistants|speakers|secretaries" />
 			    		</element>
 					</element>
 				</element>
@@ -76,7 +76,7 @@
 				    		<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource" />
 			    		</element>
 			    		<element name="semanticType">
-			        		<attribute name="type" restrictionpattern="undefined|misresources|bibliography|tools|pastexams|complbibres" />
+			        		<attribute name="type" restrictionpattern="undefined|misresources|bibliographicres|complbibres|tools|pastexams" />
 			    		</element>
 					</element>
 				</element>
@@ -96,7 +96,7 @@
 							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource|Assignment"/>
 						</element>
 						<element name="semanticType">
-				    		<attribute name="type" restrictionpattern="undefined|description|evalcriteria|evalpreparation|evaldetails|evalsubproc|misresources" />
+				    		<attribute name="type" restrictionpattern="undefined|description|objectives|evalcriteria|evalpreparation|evalsubproc|misresources" />
 						</element>
 					</element>
 				</element>
@@ -116,7 +116,7 @@
 							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource|News" />
 						</element>
 						<element name="semanticType">
-				    		<attribute name="type" restrictionpattern="undefined|news|instructions|description|objectives|learningstrat|misresources|ressinclass|readinglist|exercises" />
+				    		<attribute name="type" restrictionpattern="undefined|news|description|objectives|learningstrat|misresources|ressinclass|readinglist|exercises" />
 						</element>
 					</element>
 				</element>
