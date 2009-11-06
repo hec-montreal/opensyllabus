@@ -56,7 +56,6 @@ public class COStructureElement extends COElementAbstract<COElementAbstract>
 	super();
 	setClassType(CO_STRUCTURE_ELEMENT_CLASS_TYPE);
 	childrens = new ArrayList<COElementAbstract>();
-	addProperty(COPropertiesType.VISIBILITY, "true");
     }
 
     /**

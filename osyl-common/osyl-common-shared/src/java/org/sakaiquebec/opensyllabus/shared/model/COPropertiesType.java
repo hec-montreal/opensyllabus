@@ -32,14 +32,15 @@ public class COPropertiesType {
     public static final String REQUIREMENT_LEVEL = "level";
     public static final String LABEL="label";
     public static final String DESCRIPTION="description";
+    public static final String COMMENT="comment";
 
     public final static String REQ_LEVEL_MANDATORY = "mandatory";
     public final static String REQ_LEVEL_RECOMMENDED = "recommended";
     public final static String REQ_LEVEL_COMPLEMENTARY = "complementary";
     public final static String REQ_LEVEL_UNDEFINED = "undefined";
     // Specific to citations
-    public static final String AVAILABILITY_COOP = "availability_coop";
-    public static final String AVAILABILITY_LIB = "availability_lib";
+    public static final String BOOKSTORE = "bookstore";
+    public static final String LIBRARY = "library";
     public static final String CITATION = "citation";
     public static final String LINK = "link";
     public static final String TYPE = "type";
@@ -47,16 +48,16 @@ public class COPropertiesType {
     public static final String CITATIONLISTID = "citation_list_id";
 
     // Specific to assignments/evaluations
-    public static final String RATING = "rating";
-    public static final String OPENDATE = "opendate";
-    public static final String CLOSEDATE = "closedate";
+    public static final String WEIGHT = "weight";
+    public static final String DATE_START = "dateStart";
+    public static final String DATE_END = "dateEnd";
     public static final String DATE = "date";
     public static final String LOCATION = "location";
     public static final String MODE = "mode";
     public static final String RESULT = "result";
     public static final String SCOPE = "scope";
     public static final String SUBMITION_TYPE ="submition_type";
-    public static final String EVALUATION_TYPE= "evaluation_type";
+    public static final String ASSESSMENT_TYPE= "assessmentType";
 
     // Specific to contact-info (coordonnées)
     public static final String ROLE = "role";
@@ -88,6 +89,9 @@ public class COPropertiesType {
     public static final String CHILDS = "childs";
     public static final String COURSE_ID = "courseId";
     public static final String DEPARTEMENT = "departement";
+    
+    //Reference context
+    public static final String DISPLAY_AS="displayAs";
    
 
     /**
@@ -100,16 +104,16 @@ public class COPropertiesType {
 		, VISIBILITY
 		, IMPORTANCE
 		, REQUIREMENT_LEVEL
-		, AVAILABILITY_COOP
-		, AVAILABILITY_LIB
+		, BOOKSTORE
+		, LIBRARY
 		, CITATION
 		, LINK
 		, ISBNISSN
 		, TYPE
 		, CITATIONLISTID
-		, RATING
-		, OPENDATE
-		, CLOSEDATE
+		, WEIGHT
+		, DATE_START
+		, DATE_END
 		, DATE
 		, ROLE
 		, LASTNAME

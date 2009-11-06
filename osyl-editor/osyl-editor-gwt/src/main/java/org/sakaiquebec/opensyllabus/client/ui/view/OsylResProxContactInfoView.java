@@ -33,11 +33,11 @@ import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
  * @version $Id: $
  */
 public class OsylResProxContactInfoView extends OsylAbstractResProxView {
-    
+
     /**
      * Constructor specifying the model to display and edit as well as the
      * current {@link OsylController}.
-     *  
+     * 
      * @param model
      * @param osylController
      */
@@ -48,40 +48,52 @@ public class OsylResProxContactInfoView extends OsylAbstractResProxView {
 	initView();
     }
 
-    
     /**
-     * ===================== OVERRIDDEN METHODS =====================
-     * See superclass for javadoc!  
+     * ===================== OVERRIDDEN METHODS ===================== See
+     * superclass for javadoc!
      */
 
     @Override
     public String getTextFromModel() {
-	throw new IllegalStateException("Do not use getTextFromModel() for " +
-			"contactInfos.");
+	throw new IllegalStateException("Do not use getTextFromModel() for "
+		+ "contactInfos.");
     }
-    
+
     protected void updateModel() {
 	updateMetaInfo();
 	OsylContactInfoEditor editor = (OsylContactInfoEditor) getEditor();
-	setProperty(COPropertiesType.ROLE, editor.getTextRole());
+	// save context
+	getModel().addProperty(COPropertiesType.ROLE, editor.getTextRole());
+	getModel().addProperty(COPropertiesType.AVAILABILITY,
+		editor.getTextAvailability());
+	getModel().addProperty(COPropertiesType.COMMENTS,
+		editor.getTextComments());
+	// save resource
 	setProperty(COPropertiesType.LASTNAME, editor.getTextLastName());
 	setProperty(COPropertiesType.FIRSTNAME, editor.getTextFirstName());
 	setProperty(COPropertiesType.OFFICE, editor.getTextOffice());
 	setProperty(COPropertiesType.PHONE, editor.getTextPhone());
 	setProperty(COPropertiesType.EMAIL, editor.getTextEMail());
-	setProperty(COPropertiesType.AVAILABILITY, editor.getTextAvailability());
-	setProperty(COPropertiesType.COMMENTS, editor.getTextComments());
+
     }
 
-    
     /**
      * =========================== ADDED METHODS ===========================
-     *
      */
-    
+
     // Role
     public String getRole() {
-	return getProperty(COPropertiesType.ROLE);
+	return getModel().getProperty(COPropertiesType.ROLE);
+    }
+
+    // Availability
+    public String getAvailability() {
+	return getModel().getProperty(COPropertiesType.AVAILABILITY);
+    }
+
+    // Comments
+    public String getComments() {
+	return getModel().getProperty(COPropertiesType.COMMENTS);
     }
 
     // Last Name
@@ -93,7 +105,7 @@ public class OsylResProxContactInfoView extends OsylAbstractResProxView {
     public String getFirstName() {
 	return getProperty(COPropertiesType.FIRSTNAME);
     }
-    
+
     // Office
     public String getOffice() {
 	return getProperty(COPropertiesType.OFFICE);
@@ -108,15 +120,4 @@ public class OsylResProxContactInfoView extends OsylAbstractResProxView {
     public String getEMail() {
 	return getProperty(COPropertiesType.EMAIL);
     }
-
-    // Availability
-    public String getAvailability() {
-	return getProperty(COPropertiesType.AVAILABILITY);
-    }
-
-    // Comments
-    public String getComments() {
-	return getProperty(COPropertiesType.COMMENTS);
-    }
-
 }

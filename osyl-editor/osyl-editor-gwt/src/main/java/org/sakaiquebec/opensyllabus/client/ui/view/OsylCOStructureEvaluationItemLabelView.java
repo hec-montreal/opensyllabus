@@ -122,7 +122,7 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 	int closeYear = 0;
 	int closeMonth = 0;
 	int closeDay = 0;
-	String ratingString = getRating();
+	String ratingString = getWeight();
 	if (null != ratingString || !"undefined".equals(ratingString)
 		|| !"".equals(ratingString)) {
 	    rating =
@@ -130,7 +130,7 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 			    .lastIndexOf("%")));
 	}
 
-	String openDateString = getOpenDate();
+	String openDateString = getDateStart();
 	if (null != openDateString || !"undefined".equals(openDateString)
 		|| !"".equals(openDateString)) {
 	    openYear = Integer.parseInt(openDateString.substring(0, 4));
@@ -139,7 +139,7 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 
 	}
 
-	String closeDateString = getCloseDate();
+	String closeDateString = getDateEnd();
 	if (null != closeDateString || !"undefined".equals(closeDateString)
 		|| !"".equals(closeDateString)) {
 	    closeYear = Integer.parseInt(closeDateString.substring(0, 4));
@@ -153,7 +153,7 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
     }
 
     private void updateMetaInfo() {
-	setRating(((OsylCOStructureEvaluationItemEditor) getEditor())
+	setWeight(((OsylCOStructureEvaluationItemEditor) getEditor())
 		.getWeight());
 	setLocation(((OsylCOStructureEvaluationItemEditor) getEditor())
 		.getLocation());
@@ -161,57 +161,57 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 	setResult(((OsylCOStructureEvaluationItemEditor) getEditor())
 		.getResult());
 	setScope(((OsylCOStructureEvaluationItemEditor) getEditor()).getScope());
-	setOpenDate(((OsylCOStructureEvaluationItemEditor) getEditor())
+	setDateStart(((OsylCOStructureEvaluationItemEditor) getEditor())
 		.getOpenDate());
-	setCloseDate(((OsylCOStructureEvaluationItemEditor) getEditor())
+	setDateEnd(((OsylCOStructureEvaluationItemEditor) getEditor())
 		.getCloseDate());
 	setSubmitionType(((OsylCOStructureEvaluationItemEditor) getEditor())
 		.getSubmitionType());
-	setType((((OsylCOStructureEvaluationItemEditor) getEditor()).getType()));
+	setAssessmentType((((OsylCOStructureEvaluationItemEditor) getEditor()).getType()));
     }
 
     /**
      * =========================ADD METHODS=======================
      */
 
-    public void setRating(String l) {
-	getModel().addProperty(COPropertiesType.RATING, l);
+    public void setWeight(String l) {
+	getModel().addProperty(COPropertiesType.WEIGHT, l);
     }
 
-    public String getRating() {
+    public String getWeight() {
 	String reqLevel = null;
 	if (!"undefined"
-		.equals(getModel().getProperty(COPropertiesType.RATING))
-		|| null != getModel().getProperty(COPropertiesType.RATING)) {
-	    reqLevel = getModel().getProperty(COPropertiesType.RATING);
+		.equals(getModel().getProperty(COPropertiesType.WEIGHT))
+		|| null != getModel().getProperty(COPropertiesType.WEIGHT)) {
+	    reqLevel = getModel().getProperty(COPropertiesType.WEIGHT);
 	}
 	return reqLevel;
     }
 
-    public void setOpenDate(String l) {
-	getModel().addProperty(COPropertiesType.OPENDATE, l);
+    public void setDateStart(String l) {
+	getModel().addProperty(COPropertiesType.DATE_START, l);
     }
 
-    public String getOpenDate() {
+    public String getDateStart() {
 	String reqLevel = null;
 	if (!"undefined".equals(getModel().getProperty(
-		COPropertiesType.OPENDATE))
-		|| null != getModel().getProperty(COPropertiesType.OPENDATE)) {
-	    reqLevel = getModel().getProperty(COPropertiesType.OPENDATE);
+		COPropertiesType.DATE_START))
+		|| null != getModel().getProperty(COPropertiesType.DATE_START)) {
+	    reqLevel = getModel().getProperty(COPropertiesType.DATE_START);
 	}
 	return reqLevel;
     }
 
-    public void setCloseDate(String l) {
-	getModel().addProperty(COPropertiesType.CLOSEDATE, l);
+    public void setDateEnd(String l) {
+	getModel().addProperty(COPropertiesType.DATE_END, l);
     }
 
-    public String getCloseDate() {
+    public String getDateEnd() {
 	String reqLevel = null;
 	if (!"undefined".equals(getModel().getProperty(
-		COPropertiesType.CLOSEDATE))
-		|| null != getModel().getProperty(COPropertiesType.CLOSEDATE)) {
-	    reqLevel = getModel().getProperty(COPropertiesType.CLOSEDATE);
+		COPropertiesType.DATE_END))
+		|| null != getModel().getProperty(COPropertiesType.DATE_END)) {
+	    reqLevel = getModel().getProperty(COPropertiesType.DATE_END);
 	}
 	return reqLevel;
     }
@@ -285,17 +285,17 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 	return reqLevel;
     }
 
-    public void setType(String l) {
-	getModel().addProperty(COPropertiesType.EVALUATION_TYPE, l);
+    public void setAssessmentType(String l) {
+	getModel().addProperty(COPropertiesType.ASSESSMENT_TYPE, l);
     }
 
-    public String getType() {
+    public String getAssessmentType() {
 	String reqLevel = null;
 	if (!"undefined".equals(getModel().getProperty(
-		COPropertiesType.EVALUATION_TYPE))
+		COPropertiesType.ASSESSMENT_TYPE))
 		|| null != getModel().getProperty(
-			COPropertiesType.EVALUATION_TYPE)) {
-	    reqLevel = getModel().getProperty(COPropertiesType.EVALUATION_TYPE);
+			COPropertiesType.ASSESSMENT_TYPE)) {
+	    reqLevel = getModel().getProperty(COPropertiesType.ASSESSMENT_TYPE);
 	}
 	return reqLevel;
     }

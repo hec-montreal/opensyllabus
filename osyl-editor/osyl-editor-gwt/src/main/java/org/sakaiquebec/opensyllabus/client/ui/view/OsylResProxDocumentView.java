@@ -59,7 +59,7 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
     protected void updateModel() {
 	updateMetaInfo();
 	getModel().setLabel(getEditor().getText());
-	getModel().addProperty(COPropertiesType.TEXT,
+	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());
 	// This is a workaround. Should be deleted after we have a way to
 	// display the fileBrowser showing the previously selected file.

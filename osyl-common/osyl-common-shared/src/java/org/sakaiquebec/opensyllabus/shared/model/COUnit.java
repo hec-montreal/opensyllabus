@@ -48,7 +48,6 @@ public class COUnit extends COElementAbstract<COElementAbstract> implements
 	super();
 	setClassType(CO_UNIT_CLASS_TYPE);
 	childrens = new ArrayList<COElementAbstract>();
-	addProperty(COPropertiesType.VISIBILITY, "true");
     }
 
     /**

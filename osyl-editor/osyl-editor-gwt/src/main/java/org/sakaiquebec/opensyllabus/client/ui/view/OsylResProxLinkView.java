@@ -57,7 +57,7 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
     protected void updateModel() {
 	updateMetaInfo();
 	getModel().setLabel(getEditor().getText());
-	getModel().addProperty(COPropertiesType.TEXT,
+	getModel().addProperty(COPropertiesType.COMMENT,
 			((OsylLinkEditor)getEditor()).getDescription());
 	getModel().getResource().addProperty(COPropertiesType.URI, ((OsylLinkEditor)getEditor()).getLink());
     }
@@ -82,8 +82,8 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
     /**
      * Returns the description text of current resource.
      */
-    public String getDescriptionFromModel() {
-	return getModel().getProperty(COPropertiesType.TEXT);
+    public String getCommentFromModel() {
+	return getModel().getProperty(COPropertiesType.COMMENT);
     }
 
     /**

@@ -160,8 +160,8 @@ public class OsylCOStructureEvaluationItemEditor extends
 	setText(getView().getTextFromModel());
 
 	String rating =
-		(getView().getRating() != null && !getView().getRating()
-			.equals("")) ? "\t(" + getView().getRating() + ")" : "";
+		(getView().getWeight() != null && !getView().getWeight()
+			.equals("")) ? "\t(" + getView().getWeight() + ")" : "";
 
 	setText(getView().getTextFromModel() + rating);
 	// If we are in read-only mode, we return now to not add buttons and
@@ -192,7 +192,7 @@ public class OsylCOStructureEvaluationItemEditor extends
 	ponderationPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
 	Label l1 = new Label(getUiMessage("Evaluation.rating"));
 	weightTextBox = new TextBox();
-	weightTextBox.setText(getView().getRating());
+	weightTextBox.setText(getView().getWeight());
 	weightTextBox.setWidth("40px");
 	weightTextBox.setTitle(getUiMessage("Evaluation.rating.tooltip"));
 	ponderationPanel.add(l1);
@@ -254,7 +254,7 @@ public class OsylCOStructureEvaluationItemEditor extends
 	startDateBox.setFormat(new DateBox.DefaultFormat(DateTimeFormat
 		.getFormat("yyyy-MM-dd")));
 	startDateBox.setTitle(getUiMessage("Evaluation.StartDate.tooltip"));
-	startDateBox.getTextBox().setText(getView().getOpenDate());
+	startDateBox.getTextBox().setText(getView().getDateStart());
 	startDatePanel.add(l6);
 	startDatePanel.add(startDateBox);
 
@@ -265,7 +265,7 @@ public class OsylCOStructureEvaluationItemEditor extends
 	endDateBox.setFormat(new DateBox.DefaultFormat(DateTimeFormat
 		.getFormat("yyyy-MM-dd")));
 	endDateBox.setTitle(getUiMessage("Evaluation.EndDate.tooltip"));
-	endDateBox.getTextBox().setText(getView().getCloseDate());
+	endDateBox.getTextBox().setText(getView().getDateEnd());
 	endDatePanel.add(l7);
 	endDatePanel.add(endDateBox);
 
@@ -313,7 +313,7 @@ public class OsylCOStructureEvaluationItemEditor extends
 	    }
 
 	});
-	selectItemListBox(typeListBox, getView().getType());
+	selectItemListBox(typeListBox, getView().getAssessmentType());
 	setSelectedTypeIndex(typeListBox.getSelectedIndex());
 	typePanel.add(l9);
 	typePanel.add(typeListBox);
@@ -351,13 +351,13 @@ public class OsylCOStructureEvaluationItemEditor extends
     protected Widget getMetaInfoLabel() {
 	VerticalPanel metaInfosPanel = new VerticalPanel();
 
-	String assessementType = getView().getType();
-	String weight = getView().getRating();
+	String assessementType = getView().getAssessmentType();
+	String weight = getView().getWeight();
 	String location = getView().getLocation();
 	String workMode = getView().getMode();
 	String deliverable = getView().getResult();
-	String startDate = getView().getOpenDate();
-	String endDate = getView().getCloseDate();
+	String dateStart = getView().getDateStart();
+	String dateEnd = getView().getDateEnd();
 	String submissionMode = getView().getSubmitionType();
 	String scope = getView().getScope();
 
@@ -366,8 +366,8 @@ public class OsylCOStructureEvaluationItemEditor extends
 	location = location != null ? location : "";
 	workMode = workMode != null ? workMode : "";
 	deliverable = deliverable != null ? deliverable : "";
-	startDate = startDate != null ? startDate : "";
-	endDate = endDate != null ? endDate : "";
+	dateStart = dateStart != null ? dateStart : "";
+	dateEnd = dateEnd != null ? dateEnd : "";
 	submissionMode = submissionMode != null ? submissionMode : "";
 	scope = scope != null ? scope : "";
 
@@ -385,10 +385,10 @@ public class OsylCOStructureEvaluationItemEditor extends
 			+ ": " + deliverable + " | "
 			: "";
 	String startDateLabel =
-		!startDate.equals("") ? getUiMessage("Evaluation.StartDate")
-			+ ": " + startDate + " | " : "";
+		!dateStart.equals("") ? getUiMessage("Evaluation.StartDate")
+			+ ": " + dateStart + " | " : "";
 	String endDateLabel =
-		getUiMessage("Evaluation.EndDate") + ": " + endDate + " | ";
+		getUiMessage("Evaluation.EndDate") + ": " + dateEnd + " | ";
 	String submissionModeLabel =
 		!submissionMode.equals("") ? getUiMessage("Evaluation.subtype")
 			+ ": " + submissionMode + " | " : "";
@@ -434,12 +434,12 @@ public class OsylCOStructureEvaluationItemEditor extends
 
     protected Widget getReadOnlyMetaInfoLabel() {
 
-	String assessementType = getView().getType();
+	String assessementType = getView().getAssessmentType();
 	String location = getView().getLocation();
 	String workMode = getView().getMode();
 	String deliverable = getView().getResult();
-	String startDate = getView().getOpenDate();
-	String endDate = getView().getCloseDate();
+	String dateStart = getView().getDateStart();
+	String dateEnd = getView().getDateEnd();
 	String submissionMode = getView().getSubmitionType();
 	String scope = getView().getScope();
 
@@ -447,8 +447,8 @@ public class OsylCOStructureEvaluationItemEditor extends
 	location = location != null ? location : "";
 	workMode = workMode != null ? workMode : "";
 	deliverable = deliverable != null ? deliverable : "";
-	startDate = startDate != null ? startDate : "";
-	endDate = endDate != null ? endDate : "";
+	dateStart = dateStart != null ? dateStart : "";
+	dateEnd = dateEnd != null ? dateEnd : "";
 	submissionMode = submissionMode != null ? submissionMode : "";
 	scope = scope != null ? scope : "";
 
@@ -525,7 +525,7 @@ public class OsylCOStructureEvaluationItemEditor extends
 		    viewerPanelDeliverable);
 	}
 
-	if (!startDate.equals("")) {
+	if (!dateStart.equals("")) {
 	    fieldNumber++;
 	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
 		    addNewLabel(getUiMessage("Evaluation.StartDate")));
@@ -572,8 +572,8 @@ public class OsylCOStructureEvaluationItemEditor extends
 	localisationHTML.setHTML(location);
 	workModeHTML.setHTML(workMode);
 	deliverableHTML.setHTML(deliverable);
-	startDateHTML.setHTML(startDate);
-	endDateHTML.setHTML(endDate);
+	startDateHTML.setHTML(dateStart);
+	endDateHTML.setHTML(dateEnd);
 	submissionModeHTML.setHTML(submissionMode);
 	scopeHTML.setHTML(scope);
 

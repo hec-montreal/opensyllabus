@@ -232,12 +232,18 @@ public class OsylToolbarView extends OsylViewableComposite implements
     }
 
     private void createAssignement(COContentResourceProxy resProxModel,
-	    COUnitContent parentEvaluationUnit) {
+	    COUnitContent contentUnit) {
 	// Call the SAKAI server in order to receive an assignment
 	// id
 	// Callback will be processed by the Controller
 	resProxModel.getProperties().addProperty(COPropertiesType.URI,
 		"emptyAssignmentURI");
+	
+	COElementAbstract parentEvaluationUnit = contentUnit;
+	while (!parentEvaluationUnit.isCOUnit())
+	    parentEvaluationUnit = parentEvaluationUnit.getParent();
+	    
+	
 	// IMPORTANT : when the rating (the last parameter) is -1
 	// then it is a default assignment
 	int rating = -1;
@@ -248,7 +254,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	int closeMonth = 0;
 	int closeDay = 0;
 	String ratingString =
-		parentEvaluationUnit.getProperty(COPropertiesType.RATING);
+		parentEvaluationUnit.getProperty(COPropertiesType.WEIGHT);
 	if (null != ratingString || !"undefined".equals(ratingString)
 		|| !"".equals(ratingString)) {
 	    rating =
@@ -257,7 +263,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	}
 
 	String openDateString =
-		parentEvaluationUnit.getProperty(COPropertiesType.OPENDATE);
+		parentEvaluationUnit.getProperty(COPropertiesType.DATE_START);
 	if (null != openDateString || !"undefined".equals(openDateString)
 		|| !"".equals(openDateString)) {
 	    openYear = Integer.parseInt(openDateString.substring(0, 4));
@@ -267,7 +273,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	}
 
 	String closeDateString =
-		parentEvaluationUnit.getProperty(COPropertiesType.CLOSEDATE);
+		parentEvaluationUnit.getProperty(COPropertiesType.DATE_END);
 	if (null != closeDateString || !"undefined".equals(closeDateString)
 		|| !"".equals(closeDateString)) {
 	    closeYear = Integer.parseInt(closeDateString.substring(0, 4));

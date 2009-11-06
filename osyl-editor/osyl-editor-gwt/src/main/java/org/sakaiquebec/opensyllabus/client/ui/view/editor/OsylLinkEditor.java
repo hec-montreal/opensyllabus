@@ -343,7 +343,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	// We get the URL for the link
 	setLink(getView().getLinkURI());
 	// We get the description text to edit from the model
-	editorDesc.setHTML(getView().getDescriptionFromModel());
+	editorDesc.setHTML(getView().getCommentFromModel());
 
     } // enterEdit
 
@@ -359,7 +359,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	// We get the text to display from the model
 	getViewer().setHTML(getView().getTextFromModel());
 	getViewerURI().setHTML("(" + getView().getRawURI() + ")");
-	getViewerDesc().setHTML(getView().getDescriptionFromModel());
+	getViewerDesc().setHTML(getView().getCommentFromModel());
 
 	// If we are not in read-only mode, we display some meta-info and add
 	// buttons and listeners enabling edition or deletion:

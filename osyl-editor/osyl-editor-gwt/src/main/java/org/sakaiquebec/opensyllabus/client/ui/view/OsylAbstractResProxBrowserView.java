@@ -77,8 +77,8 @@ public abstract class OsylAbstractResProxBrowserView extends
     /**
      * Returns the description text of current resource.
      */
-    public String getDescriptionFromModel() {
-	return getModel().getProperty(COPropertiesType.TEXT);
+    public String getCommentFromModel() {
+	return getModel().getProperty(COPropertiesType.COMMENT);
     }
 
     /**

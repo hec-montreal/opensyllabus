@@ -48,8 +48,6 @@ public class COUnitStructure extends COElementAbstract<COElementAbstract>
 	super();
 	setClassType(CO_UNIT_STRUCTURE_CLASS_TYPE);
 	childrens = new ArrayList<COElementAbstract>();
-	addProperty(COPropertiesType.VISIBILITY, "true");
-	addProperty(COPropertiesType.DESCRIPTION, "");
     }
 
     /**
@@ -66,7 +64,6 @@ public class COUnitStructure extends COElementAbstract<COElementAbstract>
 	    final COElementAbstract parentModel) {
 	final COUnitStructure structureModel = new COUnitStructure();
 	structureModel.setType(type);
-	structureModel.setLabel(osylConfigMessages.getMessage(type));
 	structureModel.setParent(parentModel);
 
 	// Add child (a model notification should fire)

@@ -49,10 +49,6 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
      */
     public static final boolean TRACE = false;
 
-    /**
-     * A comment associated to a <code>COContentResourceProxy</code>.
-     */
-    private String comment;
 
     /*
      * The description of a <code>COContentResourceProxy</code>.
@@ -85,28 +81,33 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	super();
 	setClassType(CO_CONTENT_RESOURCE_PROXY_CLASS_TYPE);
 	nestedCOResourceProxies = new ArrayList<COContentResourceProxy>();
-	addProperty(COPropertiesType.VISIBILITY, "true");
     }
 
     public static COContentResourceProxy createDefaultResProxy(
 	    final String type, final OsylConfigMessages osylConfigMessages,
-	    final COElementAbstract parentModel, final String resourceType, String defaultRubric) {
+	    final COElementAbstract parentModel, final String resourceType,
+	    String defaultRubric) {
 
 	final COContentResourceProxy resProxModel =
 		new COContentResourceProxy();
 	resProxModel.setType(type);
-	if (resourceType.equalsIgnoreCase(COContentResourceType.ASSIGNMENT))
-	    // We change the default text
-	    resProxModel.setLabel(osylConfigMessages.getMessage("SendWork"));
-	else
-	    resProxModel.setLabel(osylConfigMessages
-		    .getMessage("InsertYourTextHere"));
+	if (!type.equalsIgnoreCase(COContentResourceProxyType.PEOPLE)) {
+	    if (resourceType.equalsIgnoreCase(COContentResourceType.ASSIGNMENT))
+		// We change the default text
+		resProxModel
+			.setLabel(osylConfigMessages.getMessage("SendWork"));
+	    else
+		resProxModel.setLabel(osylConfigMessages
+			.getMessage("InsertYourTextHere"));
+
+	    resProxModel.addProperty(COPropertiesType.IMPORTANCE, "false");
+	    resProxModel.addProperty(COPropertiesType.REQUIREMENT_LEVEL,
+		    "undefined");
+	}
+
 	resProxModel.setAccess(SecurityInterface.ACCESS_ATTENDEE);
 	resProxModel.setRubricType(defaultRubric);
 	
-	resProxModel.addProperty(COPropertiesType.IMPORTANCE, "false");
-	resProxModel.addProperty(COPropertiesType.REQUIREMENT_LEVEL, "undefined");
-
 	// Default resource
 	final COContentResource resModel =
 		COContentResource.createDefaultRes(resourceType,
@@ -120,7 +121,6 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	return resProxModel;
     }
 
-
     /**
      * @param type the type to set
      */
@@ -129,35 +129,6 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	notifyEventHandlers();
     }
 
-    /**
-     * @return the comment
-     */
-    public String getComment() {
-	return comment;
-    }
-
-    /**
-     * @param comment the comment to set
-     */
-    public void setComment(String comment) {
-	this.comment = comment;
-	notifyEventHandlers();
-    }
-
-    /*
-     * @return the description
-     */
-    // public String getDescription() {
-    // return description;
-    // }
-    /*
-     * @param description the description to set
-     */
-    // public void setDescription(String description) {
-    // this.description = description;
-    // notifyEventHandlers();
-    // }
-    
 
     /**
      * @param access the access to set
@@ -205,7 +176,7 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     }
 
     public COUnitContent getParent() {
-	return (COUnitContent)super.getParent();
+	return (COUnitContent) super.getParent();
     }
 
     public void setParent(COUnitContent coContentUnitParent) {
@@ -282,7 +253,8 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
      * @param resourceProxy the resourceProxy to remove.
      * @return true if the resourceProxy is removed successfully, false if not.
      */
-    public boolean removeNestedResourceProxy(COContentResourceProxy resourceProxy) {
+    public boolean removeNestedResourceProxy(
+	    COContentResourceProxy resourceProxy) {
 	boolean res = getNestedCOContentResourceProxies().remove(resourceProxy);
 	notifyEventHandlers();
 	return res;
@@ -305,7 +277,6 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
      *         resourceProxy = thisResourceProxy; isFound = true; } } return
      *         resourceProxy; }
      */
-
 
     /** {@inheritDoc} */
     public void addEventHandler(UpdateCOContentResourceProxyEventHandler handler) {
@@ -453,7 +424,7 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 
     @Override
     public void setChildrens(List<COModelInterface> childs) {
-	resource=childs.get(0);//one child at a time 
+	resource = childs.get(0);// one child at a time
     }
 
 }

@@ -67,7 +67,6 @@ public class OsylResProxAssignmentView extends OsylAbstractResProxView {
     protected void updateModel() {
 	updateMetaInfo();
 	OsylAssignmentEditor asnEditor = ((OsylAssignmentEditor) getEditor());
-	// setProperty(COPropertiesType.TEXT, asnEditor.getTextDesc());
 	getModel().setLabel(asnEditor.getText());
 	updateSakaiToolInfo();
     }

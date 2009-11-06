@@ -58,9 +58,9 @@ import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
+import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.sakaiquebec.opensyllabus.shared.util.UUID;
-import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -215,9 +215,8 @@ public class COModeledServer {
     protected final static List<String> CDATA_NODE_NAMES =
 	    Arrays.asList(new String[] { COPropertiesType.LABEL,
 		    COPropertiesType.URI, COPropertiesType.DESCRIPTION,
-		    COPropertiesType.TEXT });
-    
-    
+		    COPropertiesType.TEXT, CitationSchema.URL });
+
     /**
      * Map<name,permissions> of permissions applied to ressources
      * 
@@ -700,15 +699,7 @@ public class COModeledServer {
 	    prNode = resProxyChildren.item(j);
 	    prNodeName = prNode.getNodeName();
 
-	    if (prNodeName.equalsIgnoreCase(CO_COMMENT_NODE_NAME)) {
-		coContentResProxy.setComment(getCDataSectionValue(prNode));
-	    }/*
-	      * no more description else if
-	      * (prNodeName.equalsIgnoreCase(CO_DESCRIPTION_NODE_NAME)) {
-	      * coContentResProxy.setDescription(getCDataSectionValue(prNode));
-	      * }
-	      */
-	    else if (prNodeName.equalsIgnoreCase(CO_CONTENT_RUBRIC_NODE_NAME)) {
+	    if (prNodeName.equalsIgnoreCase(CO_CONTENT_RUBRIC_NODE_NAME)) {
 		coContentResProxy.setRubric(createCOContentRubricPOJO(prNode));
 	    } else if (prNodeName.equalsIgnoreCase(CO_RES_NODE_NAME)) {
 		coContentResProxy.setResource(createCOContentResourcePOJO(
@@ -909,6 +900,7 @@ public class COModeledServer {
 		+ coContent.isEditable());
 	osylElement.appendChild(courseOutlineContentElem);
 	document.appendChild(osylElement);
+	// Properties
 	if (coContent.getProperties() != null
 		&& !coContent.getProperties().isEmpty()) {
 	    createPropertiesElem(document, courseOutlineContentElem, coContent
@@ -918,24 +910,6 @@ public class COModeledServer {
 	    createChildElement(document, courseOutlineContentElem,
 		    (COElementAbstract) coContent.getChildrens().get(i));
 
-	}
-    }
-
-    /**
-     * Create a child node containing a CDATASection value.
-     * 
-     * @param document the document being created.
-     * @param parent the parent element of the CDATASection node.
-     * @param nodeName the name given to the text node.
-     * @param content the content to put in the CDATASection.
-     */
-    private void createCDataNode(Document document, Element parent,
-	    String nodeName, String content) {
-	if (content != null) {
-	    Element cDataElement = document.createElement(nodeName);
-	    CDATASection cData = document.createCDATASection(content);
-	    cDataElement.appendChild(cData);
-	    parent.appendChild(cDataElement);
 	}
     }
 
@@ -966,14 +940,15 @@ public class COModeledServer {
 	    if (coStructure.getIdParent() != null)
 		coStructureElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
 			coStructure.getIdParent());
-	    for (int i = 0; i < coStructure.getChildrens().size(); i++) {
-		createChildElement(document, coStructureElem,
-			(COElementAbstract) coStructure.getChildrens().get(i));
-	    }
+	    // Properties
 	    if (coStructure.getProperties() != null
 		    && !coStructure.getProperties().isEmpty()) {
 		createPropertiesElem(document, coStructureElem, coStructure
 			.getProperties());
+	    }
+	    for (int i = 0; i < coStructure.getChildrens().size(); i++) {
+		createChildElement(document, coStructureElem,
+			(COElementAbstract) coStructure.getChildrens().get(i));
 	    }
 	    parent.appendChild(coStructureElem);
 
@@ -990,16 +965,17 @@ public class COModeledServer {
 	    if (coUnit.getIdParent() != null)
 		coUnitElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME, coUnit
 			.getIdParent());
+	    // Properties
+	    if (coUnit.getProperties() != null
+		    && !coUnit.getProperties().isEmpty()) {
+		createPropertiesElem(document, coUnitElem, coUnit
+			.getProperties());
+	    }
 	    if (coUnit.getChildrens() != null) {
 		for (int i = 0; i < coUnit.getChildrens().size(); i++) {
 		    createChildElement(document, coUnitElem, coUnit
 			    .getChildrens().get(i));
 		}
-	    }
-	    if (coUnit.getProperties() != null
-		    && !coUnit.getProperties().isEmpty()) {
-		createPropertiesElem(document, coUnitElem, coUnit
-			.getProperties());
 	    }
 	} else if (child.isCOUnitStructure()) {
 	    COUnitStructure coUnitStructure = (COUnitStructure) child;
@@ -1017,16 +993,17 @@ public class COModeledServer {
 	    if (coUnitStructure.getIdParent() != null)
 		coUnitElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
 			coUnitStructure.getIdParent());
+	    // Properties
+	    if (coUnitStructure.getProperties() != null
+		    && !coUnitStructure.getProperties().isEmpty()) {
+		createPropertiesElem(document, coUnitElem, coUnitStructure
+			.getProperties());
+	    }
 	    if (coUnitStructure.getChildrens() != null) {
 		for (int i = 0; i < coUnitStructure.getChildrens().size(); i++) {
 		    createChildElement(document, coUnitElem, coUnitStructure
 			    .getChildrens().get(i));
 		}
-	    }
-	    if (coUnitStructure.getProperties() != null
-		    && !coUnitStructure.getProperties().isEmpty()) {
-		createPropertiesElem(document, coUnitElem, coUnitStructure
-			.getProperties());
 	    }
 	} else if (child.isCOUnitContent()) {
 	    COUnitContent coContentUnit = (COUnitContent) child;
@@ -1044,24 +1021,18 @@ public class COModeledServer {
 	    if (coContentUnit.getIdParent() != null)
 		coContentUnitElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
 			coContentUnit.getIdParent());
-	    // Evaluation attributes
-	    // coContentUnitElem.setAttribute(WEIGHT_ATTRIBUTE_NAME,
-	    // coContentUnit
-	    // .getWeight());
-	    // we may have a content unit without any resource proxy, using a
-	    // reference to a capsule fro example
+	    // Properties
+	    if (coContentUnit.getProperties() != null
+		    && !coContentUnit.getProperties().isEmpty()) {
+		createPropertiesElem(document, coContentUnitElem, coContentUnit
+			.getProperties());
+	    }
 	    if (coContentUnit.getChildrens() != null) {
 		for (int i = 0; i < coContentUnit.getChildrens().size(); i++) {
 		    createChildElement(document, coContentUnitElem,
 			    (COContentResourceProxy) coContentUnit
 				    .getChildrens().get(i));
 		}
-	    }
-	    // get the COUnitContent properties
-	    if (coContentUnit.getProperties() != null
-		    && !coContentUnit.getProperties().isEmpty()) {
-		createPropertiesElem(document, coContentUnitElem, coContentUnit
-			.getProperties());
 	    }
 	}
     }
@@ -1096,7 +1067,6 @@ public class COModeledServer {
 		    }
 		    if (CDATA_NODE_NAMES.contains(propElemName)) {
 			propElemValue = document.createCDATASection(value);
-
 		    } else {
 			propElemValue = document.createTextNode(value);
 		    }
@@ -1130,14 +1100,11 @@ public class COModeledServer {
 		+ child.isEditable());
 	coContentResourceProxyElem.setAttribute(ID_ATTRIBUTE_NAME, child
 		.getId());
-	// sometimes we don't necessarely have a comment on the resource proxy
-	String comment = child.getComment();
-	if (comment != null && !"".equals(comment)) {
-	    createCDataNode(document, coContentResourceProxyElem,
-		    CO_COMMENT_NODE_NAME, child.getComment());
+	//Properties
+	if (child.getProperties() != null && !child.getProperties().isEmpty()) {
+	    createPropertiesElem(document, coContentResourceProxyElem, child
+		    .getProperties());
 	}
-	// we may have a content unit without any resource proxy, using a
-	// reference to a capsule for example
 	if (child.getNestedCOContentResourceProxies() != null) {
 	    for (int i = 0; i < child.getNestedCOContentResourceProxies()
 		    .size(); i++) {
@@ -1145,10 +1112,6 @@ public class COModeledServer {
 			(COContentResourceProxy) child
 				.getNestedCOContentResourceProxies().get(i));
 	    }
-	}
-	if (child.getProperties() != null && !child.getProperties().isEmpty()) {
-	    createPropertiesElem(document, coContentResourceProxyElem, child
-		    .getProperties());
 	}
 	// We may not have a rubric for exams for example
 	if (child.getRubric() != null) {

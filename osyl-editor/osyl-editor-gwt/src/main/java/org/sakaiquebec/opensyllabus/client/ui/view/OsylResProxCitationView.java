@@ -28,10 +28,9 @@ import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 
-import com.google.gwt.user.client.Window;
-
 /**
  * Class providing display and edition capabilities for citations resources.
+ * 
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  */
 public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
@@ -39,7 +38,7 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
     /**
      * Constructor specifying the model to display and edit as well as the
      * current {@link OsylController}.
-     *  
+     * 
      * @param model
      * @param osylController
      */
@@ -54,12 +53,7 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
      * {@inheritDoc}
      */
     public String getTextFromModel() {
-	String text = getModel().getLabel();
-	if (getEditor().isInEditionMode()) {
-	    return text;
-	} else {
-	    return generateHTMLLink(getLinkURI(), text);
-	}
+	return "Do not use with BibiloContext";
     }
 
     /**
@@ -75,16 +69,12 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
     protected void updateModel() {
 	getModel().getResource().setProperties(new COProperties());
 	updateMetaInfo();
-	// TODO setProperty(COPropertiesType.LINK, uri);
 
 	String uri = getEditor().getResourceURI();
 
-	getModel().addProperty(COPropertiesType.TEXT,
+	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());
-
-	String title =
-		getEditor().getSelectedCitationProperty(CitationSchema.TITLE);
-	getModel().setLabel(title.substring(0, Math.min(title.length(), 30)));
+	
 	if (uri != null) {
 	    setProperty(COPropertiesType.URI, uri);
 	}
@@ -116,12 +106,12 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	setAvailableInBookstore(getEditor().isAvailableInBookstore());
 	setAvailableInLibrary(getEditor().isAvailableInLibrary());
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public String getDocName() {
-	String docName=super.getDocName();
+	String docName = super.getDocName();
 	if (docName == null)
 	    docName = getCoMessage("UndefinedCitation");
 	return docName;
@@ -143,45 +133,43 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
     }
 
     /**
-     * 
      * @return true if available in library
      */
     public boolean isAvailableInLibrary() {
 	return "true".equals(getModel().getProperty(
-		COPropertiesType.AVAILABILITY_LIB));
+		COPropertiesType.LIBRARY));
     }
 
     public void setAvailableInLibrary(boolean b) {
 	String booleanValue = "" + (b);
-	getModel().addProperty(COPropertiesType.AVAILABILITY_LIB, booleanValue);
+	getModel().addProperty(COPropertiesType.LIBRARY, booleanValue);
     }
 
     /**
-     * 
      * @return true if available in bookstore
      */
     public boolean isAvailableInBookstore() {
 	return "true".equals(getModel().getProperty(
-		COPropertiesType.AVAILABILITY_COOP));
+		COPropertiesType.BOOKSTORE));
     }
 
     public void setAvailableInBookstore(boolean b) {
 	String booleanValue = "" + (b);
 	getModel()
-		.addProperty(COPropertiesType.AVAILABILITY_COOP, booleanValue);
+		.addProperty(COPropertiesType.BOOKSTORE, booleanValue);
     }
 
     private void setModelPropertyWithEditorProperty(String property) {
 	String value = getEditor().getSelectedCitationProperty(property);
-	if (value!=null && !value.equals("undefined") && value != "")
+	if (value != null && !value.equals("undefined") && value != "")
 	    setProperty(property, value);
 
     }
 
-    public String getCitationId(){
+    public String getCitationId() {
 	return getProperty(CitationSchema.CITATIONID);
     }
-    
+
     /**
      * @param property
      * @return the property value
@@ -192,37 +180,38 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 
     /**
      * Generate a link, if possible, with citation informations
+     * 
      * @return A link or a simple string if link could not be created
      */
     public String getCitationPreviewAsLink() {
-	
+
 	String link = "";
 	String url = getProperty(CitationSchema.URL);
 	if (url != null)
-	    link = generateHTMLLink(url , getCitationPreview());
-	else 
+	    link = generateHTMLLink(url, getCitationPreview());
+	else
 	    link = getCitationPreview();
 	return link;
-	
+
     }
-    
+
     /**
      * Generate a link, if possible, with citation informations
+     * 
      * @return A link or a simple string if link could not be created
      */
     public String getCitationsInfosAsLink(OsylCitationItem citationItem) {
 	String url = citationItem.getUrl();
-	
-	if ( url == null)
+
+	if (url == null)
 	    return citationItem.getCitationsInfos();
-	else 
-	  return  generateHTMLLink(url, citationItem.getCitationsInfos()); 
-	
+	else
+	    return generateHTMLLink(url, citationItem.getCitationsInfos());
+
     }
 
     /**
-     * 
-     * @return 
+     * @return
      */
     public String getCitationPreview() {
 	String infos = "";

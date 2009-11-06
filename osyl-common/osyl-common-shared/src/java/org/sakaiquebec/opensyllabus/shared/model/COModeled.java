@@ -30,7 +30,6 @@ import java.util.Set;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.util.UUID;
 
-import com.google.gwt.xml.client.CDATASection;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.NamedNodeMap;
@@ -180,7 +179,7 @@ public class COModeled extends COSerialized {
     protected final static List<String> CDATA_NODE_NAMES =
 	    Arrays.asList(new String[] { COPropertiesType.LABEL,
 		    COPropertiesType.URI, COPropertiesType.DESCRIPTION,
-		    COPropertiesType.TEXT });
+		    COPropertiesType.TEXT, CitationSchema.URL });
 
     /**
      * The modeledContent is a POJO filled by XML2Model
@@ -622,9 +621,7 @@ public class COModeled extends COSerialized {
 	    prNode = resProxyChildren.item(j);
 	    prNodeName = prNode.getNodeName();
 
-	    if (prNodeName.equalsIgnoreCase(CO_COMMENT_NODE_NAME)) {
-		coContentResProxy.setComment(getCDataSectionValue(prNode));
-	    } else if (prNodeName.equalsIgnoreCase(CO_CONTENT_RUBRIC_NODE_NAME)) {
+	    if (prNodeName.equalsIgnoreCase(CO_CONTENT_RUBRIC_NODE_NAME)) {
 		coContentResProxy.setRubric(createCOContentRubricPOJO(prNode));
 	    } else if (prNodeName.equalsIgnoreCase(CO_RES_NODE_NAME)) {
 		coContentResProxy
@@ -789,6 +786,7 @@ public class COModeled extends COSerialized {
 		    coContent.getIdParent());
 	osylElement.appendChild(courseOutlineContentElem);
 	document.appendChild(osylElement);
+	// Properties
 	if (coContent.getProperties() != null
 		&& !coContent.getProperties().isEmpty()) {
 	    createPropertiesElem(document, courseOutlineContentElem, coContent
@@ -804,39 +802,6 @@ public class COModeled extends COSerialized {
     }
 
     /**
-     * Create a child node containing a CDATASection value.
-     * 
-     * @param document the document being created.
-     * @param parent the parent element of the CDATASection node.
-     * @param nodeName the name given to the text node.
-     * @param content the content to put in the CDATASection.
-     */
-    private void createCDataNode(Document document, Element parent,
-	    String nodeName, String content) {
-	if (content != null) {
-	    Element cDataElement = document.createElement(nodeName);
-	    CDATASection cData = document.createCDATASection(content);
-	    cDataElement.appendChild(cData);
-	    parent.appendChild(cDataElement);
-	}
-    }
-
-    /**
-     * Create a child node containing text value.
-     * 
-     * @param document the document being created.
-     * @param parent the parent element of the text node.
-     * @param nodeName the name given to the text node.
-     * @param content the content to put in the text node value.
-     */
-    // private void createTextNode(Document document, Element parent,
-    // String nodeName, String content) {
-    // Element textElement = document.createElement(nodeName);
-    // Text contentText = document.createTextNode(content);
-    // textElement.appendChild(contentText);
-    // parent.appendChild(textElement);
-    // }
-    /**
      * Creates all the children elements of type <code>COElementAbstract</code>
      * in the model. The parent can only be <code>CourseOutlineContent</code>
      * objects or <code>COStructureElement</code> objects following model
@@ -849,8 +814,6 @@ public class COModeled extends COSerialized {
     private void createChildElement(Document document, Element parent,
 	    COElementAbstract child, boolean saveParentInfos) {
 	if (child.isCOStructureElement()) {
-	    System.out
-		    .println("ISSTRUCTUREELEMENT-start" + document.toString());
 	    COStructureElement coStructure = (COStructureElement) child;
 	    Element coStructureElem =
 		    document.createElement(CO_STRUCTURE_NODE_NAME);
@@ -863,26 +826,22 @@ public class COModeled extends COSerialized {
 	    if (coStructure.getIdParent() != null)
 		coStructureElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
 			coStructure.getIdParent());
-	    System.out.println("Children of :" + coStructure.getType()
-		    + coStructure.getChildrens().size());
-	    for (int i = 0; i < coStructure.getChildrens().size(); i++) {
-		System.out.println("Child number" + i);
-		createChildElement(document, coStructureElem,
-			(COElementAbstract) coStructure.getChildrens().get(i),
-			saveParentInfos);
-	    }
+	    // Properties
 	    if (coStructure.getProperties() != null
 		    && !coStructure.getProperties().isEmpty()) {
 		createPropertiesElem(document, coStructureElem, coStructure
 			.getProperties());
 	    }
+	    for (int i = 0; i < coStructure.getChildrens().size(); i++) {
+		createChildElement(document, coStructureElem,
+			(COElementAbstract) coStructure.getChildrens().get(i),
+			saveParentInfos);
+	    }
 	    parent.appendChild(coStructureElem);
-	    System.out.println("ISSTRUCTUREELEMENT-end" + document.toString());
 
 	} else if (child.isCOUnit()) {
 	    COUnit coUnit = (COUnit) child;
 	    // create a wrapper on the COUnitContent: a COUnit
-	    System.out.println("ISCONTENTUNIT-start" + document.toString());
 	    Element coUnitElem = document.createElement(CO_UNIT_NODE_NAME);
 	    parent.appendChild(coUnitElem);
 	    coUnitElem.setAttribute(ACCESS_ATTRIBUTE_NAME, coUnit.getAccess());
@@ -891,21 +850,21 @@ public class COModeled extends COSerialized {
 	    if (coUnit.getIdParent() != null)
 		coUnitElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME, coUnit
 			.getIdParent());
+	    // Properties
+	    if (coUnit.getProperties() != null
+		    && !coUnit.getProperties().isEmpty()) {
+		createPropertiesElem(document, coUnitElem, coUnit
+			.getProperties());
+	    }
 	    if (coUnit.getChildrens() != null) {
 		for (int i = 0; i < coUnit.getChildrens().size(); i++) {
 		    createChildElement(document, coUnitElem, coUnit
 			    .getChildrens().get(i), saveParentInfos);
 		}
 	    }
-	    if (coUnit.getProperties() != null
-		    && !coUnit.getProperties().isEmpty()) {
-		createPropertiesElem(document, coUnitElem, coUnit
-			.getProperties());
-	    }
 	} else if (child.isCOUnitStructure()) {
 	    COUnitStructure coUnitStructure = (COUnitStructure) child;
 	    // create a wrapper on the COUnitContent: a COUnit
-	    System.out.println("ISUNITSTRUCTURE-start" + document.toString());
 	    Element coUnitElem =
 		    document.createElement(CO_UNIT_STRUCTURE_NODE_NAME);
 	    parent.appendChild(coUnitElem);
@@ -917,20 +876,20 @@ public class COModeled extends COSerialized {
 	    if (coUnitStructure.getIdParent() != null)
 		coUnitElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
 			coUnitStructure.getIdParent());
+	    // Properties
+	    if (coUnitStructure.getProperties() != null
+		    && !coUnitStructure.getProperties().isEmpty()) {
+		createPropertiesElem(document, coUnitElem, coUnitStructure
+			.getProperties());
+	    }
 	    if (coUnitStructure.getChildrens() != null) {
 		for (int i = 0; i < coUnitStructure.getChildrens().size(); i++) {
 		    createChildElement(document, coUnitElem, coUnitStructure
 			    .getChildrens().get(i), saveParentInfos);
 		}
 	    }
-	    if (coUnitStructure.getProperties() != null
-		    && !coUnitStructure.getProperties().isEmpty()) {
-		createPropertiesElem(document, coUnitElem, coUnitStructure
-			.getProperties());
-	    }
 	} else if (child.isCOUnitContent()) {
 	    COUnitContent coContentUnit = (COUnitContent) child;
-	    System.out.println("ISCONTENTUNIT-start" + document.toString());
 	    Element coContentUnitElem =
 		    document.createElement(CO_UNIT_CONTENT_NODE_NAME);
 	    parent.appendChild(coContentUnitElem);
@@ -943,12 +902,12 @@ public class COModeled extends COSerialized {
 	    if (coContentUnit.getIdParent() != null)
 		coContentUnitElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
 			coContentUnit.getIdParent());
-	    // Evaluation attributes
-	    // coContentUnitElem.setAttribute(WEIGHT_ATTRIBUTE_NAME,
-	    // coContentUnit
-	    // .getWeight());
-	    // we may have a content unit without any resource proxy, using a
-	    // reference to a capsule fro example
+	    // Properties
+	    if (coContentUnit.getProperties() != null
+		    && !coContentUnit.getProperties().isEmpty()) {
+		createPropertiesElem(document, coContentUnitElem, coContentUnit
+			.getProperties());
+	    }
 	    if (coContentUnit.getChildrens() != null) {
 		for (int i = 0; i < coContentUnit.getChildrens().size(); i++) {
 		    createChildElement(document, coContentUnitElem,
@@ -956,13 +915,6 @@ public class COModeled extends COSerialized {
 				    .getChildrens().get(i), saveParentInfos);
 		}
 	    }
-	    // get the COUnitContent properties
-	    if (coContentUnit.getProperties() != null
-		    && !coContentUnit.getProperties().isEmpty()) {
-		createPropertiesElem(document, coContentUnitElem, coContentUnit
-			.getProperties());
-	    }
-	    System.out.println("ISCONTENTUNIT-end" + document.toString());
 	}
     }
 
@@ -1030,15 +982,12 @@ public class COModeled extends COSerialized {
 		    child.getType());
 	    coContentResourceProxyElem.setAttribute(ID_ATTRIBUTE_NAME, child
 		    .getId());
-	    // sometimes we don't necessarely have a comment on the resource
-	    // proxy
-	    String comment = child.getComment();
-	    if (comment != null && !"".equals(comment)) {
-		createCDataNode(document, coContentResourceProxyElem,
-			CO_COMMENT_NODE_NAME, child.getComment());
+	    // Properties
+	    if (child.getProperties() != null
+		    && !child.getProperties().isEmpty()) {
+		createPropertiesElem(document, coContentResourceProxyElem,
+			child.getProperties());
 	    }
-	    // we may have a content unit without any resource proxy, using a
-	    // reference to a capsule for example
 	    if (child.getNestedCOContentResourceProxies() != null) {
 		for (int i = 0; i < child.getNestedCOContentResourceProxies()
 			.size(); i++) {
@@ -1049,11 +998,6 @@ public class COModeled extends COSerialized {
 				    .getNestedCOContentResourceProxies().get(i),
 			    saveParentInfos);
 		}
-	    }
-	    if (child.getProperties() != null
-		    && !child.getProperties().isEmpty()) {
-		createPropertiesElem(document, coContentResourceProxyElem,
-			child.getProperties());
 	    }
 	    // We may not have a rubric for exams for example
 	    if (child.getRubric() != null) {

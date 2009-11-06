@@ -326,7 +326,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	editorLabel.setFocus(true);
 
 	// We get the description text to edit from the model
-	editorDesc.setHTML(getView().getDescriptionFromModel());
+	editorDesc.setHTML(getView().getCommentFromModel());
 
 	createEditBox(getEditBoxTitle());
 	if (getBrowser().getItemToSelect() == null) {
@@ -360,7 +360,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		new OsylLinkClickListener(getView(), getView()
 			.getTextFromModel()));
 	getViewerName().setHTML("(" + getView().getDocName() + ")");
-	getViewerDesc().setHTML(getView().getDescriptionFromModel());
+	getViewerDesc().setHTML(getView().getCommentFromModel());
 
 	// If we are not in read-only mode, we display some meta-info and add
 	// buttons and listeners enabling edition or deletion:

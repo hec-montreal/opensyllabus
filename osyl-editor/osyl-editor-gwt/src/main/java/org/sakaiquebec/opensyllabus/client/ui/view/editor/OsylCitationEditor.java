@@ -262,7 +262,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	setInEditionMode(true);
 
 	// We get the description text to edit from the model
-	editorDesc.setHTML(getView().getDescriptionFromModel());
+	editorDesc.setHTML(getView().getCommentFromModel());
 	editorDesc.setFocus(true);
 
 	createEditBox(getEditBoxTitle());
@@ -286,7 +286,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	getMainPanel().add(getViewerPanel());
 	getViewer().setHTML(getView().getCitationPreviewAsLink());
 	// We get the text to display from the model
-	getViewerDesc().setHTML(getView().getDescriptionFromModel());
+	getViewerDesc().setHTML(getView().getCommentFromModel());
 
 	// If we are not in read-only mode, we display some meta-info and add
 	// buttons and listeners enabling edition or deletion:
