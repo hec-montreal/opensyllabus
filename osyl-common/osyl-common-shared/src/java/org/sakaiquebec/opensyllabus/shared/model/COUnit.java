@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitEventHandler.UpdateCOUnitEvent;
 
@@ -34,14 +33,9 @@ import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitEventHandler.Updat
  * @version $Id: $
  */
 public class COUnit extends COElementAbstract<COElementAbstract> implements
-	COModelInterface,COElementMoveable {
+	COModelInterface, COElementMoveable {
 
     private static final long serialVersionUID = -6115273965524477729L;
-
-    /**
-     * Properties object that extends a <code>HashMap</code>.
-     */
-    private COProperties properties;
 
     private HashSet<UpdateCOUnitEventHandler> updateCOUnitEventHandler;
 
@@ -54,7 +48,7 @@ public class COUnit extends COElementAbstract<COElementAbstract> implements
 	super();
 	setClassType(CO_UNIT_CLASS_TYPE);
 	childrens = new ArrayList<COElementAbstract>();
-	properties = new COProperties();
+	addProperty(COPropertiesType.VISIBILITY, "true");
     }
 
     /**
@@ -72,51 +66,12 @@ public class COUnit extends COElementAbstract<COElementAbstract> implements
 	final COUnit unitModel = new COUnit();
 	unitModel.setType(type);
 	unitModel.setLabel(osylConfigMessages.getMessage(type));
-	unitModel.setAccess(SecurityInterface.ACCESS_PUBLIC);
 	unitModel.setParent(parentModel);
 
 	// Add child (a model notification should fire)
 	parentModel.addChild(unitModel);
 
 	return unitModel;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public COProperties getProperties() {
-	return properties;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setProperties(COProperties properties) {
-	this.properties = properties;
-	// notifyEventHandlers();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void addProperty(String key, String value) {
-
-	getProperties().addProperty(key, value);
-	// notifyEventHandlers();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void removeProperty(String key) {
-	getProperties().removeProperty(key);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getProperty(String key) {
-	return getProperties().getProperty(key);
     }
 
     /** {@inheritDoc} */
@@ -149,9 +104,9 @@ public class COUnit extends COElementAbstract<COElementAbstract> implements
 
     @Override
     public boolean addChild(COElementAbstract child) {
-	    boolean res = getChildrens().add(child);
-	    notifyEventHandlers();
-	    return res;
+	boolean res = getChildrens().add(child);
+	notifyEventHandlers();
+	return res;
     }
 
     @Override
@@ -164,7 +119,7 @@ public class COUnit extends COElementAbstract<COElementAbstract> implements
     public List<COElementAbstract> getChildrens() {
 	return childrens;
     }
-    
+
     @Override
     public int getElementPosition(COElementAbstract coEltAbs) {
 	int pos = childrens.indexOf(coEltAbs);

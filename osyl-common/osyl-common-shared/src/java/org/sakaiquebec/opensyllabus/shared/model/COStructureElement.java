@@ -25,14 +25,14 @@ import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventH
 /**
  * This class represents all the objects of the type
  * <code>COStructureElement</code>. The children of
- * <code>COStructureElement</code> can be other
- * <code>COStructureElement</code> or <code>COContentUnit</code>.
- *
+ * <code>COStructureElement</code> can be other <code>COStructureElement</code>
+ * or <code>COContentUnit</code>.
+ * 
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
-public class COStructureElement extends COElementAbstract<COElementAbstract> implements
-	COModelInterface {
+public class COStructureElement extends COElementAbstract<COElementAbstract>
+	implements COModelInterface {
 
     private static final long serialVersionUID = 1701561339679430501L;
 
@@ -40,11 +40,6 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
      * The handler for updates
      */
     private Set<UpdateCOStructureElementEventHandler> updateCOStructureElementEventHandler;
-
-    /**
-     * Properties object that extends a <code>HashMap</code>.
-     */
-    private COProperties properties;
 
     /**
      * List of children taht can be either <code>COStructureElement</code>
@@ -61,22 +56,7 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
 	super();
 	setClassType(CO_STRUCTURE_ELEMENT_CLASS_TYPE);
 	childrens = new ArrayList<COElementAbstract>();
-	properties = new COProperties();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public COProperties getProperties() {
-	return properties;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setProperties(COProperties properties) {
-	this.properties = properties;
-	notifyEventHandlers();
+	addProperty(COPropertiesType.VISIBILITY, "true");
     }
 
     /**
@@ -98,16 +78,7 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
      * <{@inheritDoc}
      */
     public boolean addChild(COElementAbstract child) {
-	    boolean res = getChildrens().add(child);
-	    notifyEventHandlers();
-	    return res;
-    }
-
-   /**
-    * {@inheritDoc}
-    */
-    public boolean removeChild(COElementAbstract child) {
-	boolean res = getChildrens().remove(child);
+	boolean res = getChildrens().add(child);
 	notifyEventHandlers();
 	return res;
     }
@@ -115,35 +86,22 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
     /**
      * {@inheritDoc}
      */
-    public void addProperty(String key, String value) {
-	getProperties().addProperty(key, value);
+    public boolean removeChild(COElementAbstract child) {
+	boolean res = getChildrens().remove(child);
 	notifyEventHandlers();
+	return res;
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public void removeProperty(String key) {
-	getProperties().removeProperty(key);
-	notifyEventHandlers();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getProperty(String key) {
-	return getProperties().getProperty(key);
-    }
-
-    /**
-     * Adds a {@link UpdateCOStructureElementEventHandler} to the list of
-     * event handlers.
+     * Adds a {@link UpdateCOStructureElementEventHandler} to the list of event
+     * handlers.
      * 
      * @param handler
      */
     public void addEventHandler(UpdateCOStructureElementEventHandler handler) {
 	if (updateCOStructureElementEventHandler == null) {
-	    updateCOStructureElementEventHandler = new HashSet<UpdateCOStructureElementEventHandler>();
+	    updateCOStructureElementEventHandler =
+		    new HashSet<UpdateCOStructureElementEventHandler>();
 	}
 	updateCOStructureElementEventHandler.add(handler);
     }
@@ -160,13 +118,13 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
 	}
     }
 
-
     /** {@inheritDoc} */
     void notifyEventHandlers() {
 	if (updateCOStructureElementEventHandler != null) {
 	    UpdateCOStructureElementEvent event =
 		    new UpdateCOStructureElementEvent(this);
-	    Iterator<UpdateCOStructureElementEventHandler> iter = updateCOStructureElementEventHandler.iterator();
+	    Iterator<UpdateCOStructureElementEventHandler> iter =
+		    updateCOStructureElementEventHandler.iterator();
 	    while (iter.hasNext()) {
 		UpdateCOStructureElementEventHandler handler =
 			(UpdateCOStructureElementEventHandler) iter.next();
@@ -174,42 +132,46 @@ public class COStructureElement extends COElementAbstract<COElementAbstract> imp
 	    }
 	}
     }
-    
-   /**
-    * {@inheritDoc}
-    */
-    public int getElementPosition(COElementAbstract coEltAbs) {
-	
-	int pos = childrens.indexOf(coEltAbs);
-	boolean hasPredecessor=false;
-	boolean hasSuccessor=false;
-	
-	hasPredecessor = (pos!=0);
-	hasSuccessor= (pos!=childrens.size()-1);
 
-	if(hasPredecessor && hasSuccessor) return 2;
-	else if(hasPredecessor) return -1;
-	else if(hasSuccessor) return 1;
-	else return 0;
-    }
-    
     /**
      * {@inheritDoc}
      */
-    public void changeElementPosition(COElementAbstract coEltAbs, int action){
-	
+    public int getElementPosition(COElementAbstract coEltAbs) {
+
+	int pos = childrens.indexOf(coEltAbs);
+	boolean hasPredecessor = false;
+	boolean hasSuccessor = false;
+
+	hasPredecessor = (pos != 0);
+	hasSuccessor = (pos != childrens.size() - 1);
+
+	if (hasPredecessor && hasSuccessor)
+	    return 2;
+	else if (hasPredecessor)
+	    return -1;
+	else if (hasSuccessor)
+	    return 1;
+	else
+	    return 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void changeElementPosition(COElementAbstract coEltAbs, int action) {
+
 	int ind = childrens.indexOf(coEltAbs);
 	COElementAbstract temp;
-	
-	if(action==COElementAbstract.POSITION_CHANGE_ACTION_UP){
-	   temp = childrens.get(ind-1);
-	   childrens.set(ind-1,coEltAbs);
-	   childrens.set(ind,temp);
+
+	if (action == COElementAbstract.POSITION_CHANGE_ACTION_UP) {
+	    temp = childrens.get(ind - 1);
+	    childrens.set(ind - 1, coEltAbs);
+	    childrens.set(ind, temp);
 	}
-	if(action==COElementAbstract.POSITION_CHANGE_ACTION_DOWN){
-	    temp=childrens.get(ind+1);
-	    childrens.set(ind+1, coEltAbs);
-	    childrens.set(ind,temp);
+	if (action == COElementAbstract.POSITION_CHANGE_ACTION_DOWN) {
+	    temp = childrens.get(ind + 1);
+	    childrens.set(ind + 1, coEltAbs);
+	    childrens.set(ind, temp);
 	}
 	notifyEventHandlers();
     }

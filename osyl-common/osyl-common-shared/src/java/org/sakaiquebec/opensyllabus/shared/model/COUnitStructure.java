@@ -25,20 +25,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitStructureEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitStructureEventHandler.UpdateCOUnitStructureEvent;
 
 /**
- *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class COUnitStructure extends COElementAbstract<COElementAbstract> implements COModelInterface, COElementMoveable{
+public class COUnitStructure extends COElementAbstract<COElementAbstract>
+	implements COModelInterface, COElementMoveable {
 
     private static final long serialVersionUID = 3055320855146159375L;
-
-    private COProperties properties;
 
     private HashSet<UpdateCOUnitStructureEventHandler> updateCOUnitStructureEventHandler;
 
@@ -47,30 +44,29 @@ public class COUnitStructure extends COElementAbstract<COElementAbstract> implem
      */
     private List<COElementAbstract> childrens;
 
-    
     public COUnitStructure() {
 	super();
 	setClassType(CO_UNIT_STRUCTURE_CLASS_TYPE);
 	childrens = new ArrayList<COElementAbstract>();
-	properties = new COProperties();
+	addProperty(COPropertiesType.VISIBILITY, "true");
+	addProperty(COPropertiesType.DESCRIPTION, "");
     }
 
     /**
-     * Creates a Default a COUnitStructure with a default content ¸ This method is an
-     * helper class for the model
+     * Creates a Default a COUnitStructure with a default content ¸ This method
+     * is an helper class for the model
      * 
      * @param type of the new model to create
      * @param osylConfigMessages, i.e. all the course outline messages
      * @param parentModel, i.e. the parent model
      * @return model created
      */
-    public static COUnitStructure createDefaultCOUnitStructure(final String type,
-	    final OsylConfigMessages osylConfigMessages,
+    public static COUnitStructure createDefaultCOUnitStructure(
+	    final String type, final OsylConfigMessages osylConfigMessages,
 	    final COElementAbstract parentModel) {
 	final COUnitStructure structureModel = new COUnitStructure();
 	structureModel.setType(type);
 	structureModel.setLabel(osylConfigMessages.getMessage(type));
-	structureModel.setAccess(SecurityInterface.ACCESS_PUBLIC);
 	structureModel.setParent(parentModel);
 
 	// Add child (a model notification should fire)
@@ -79,48 +75,11 @@ public class COUnitStructure extends COElementAbstract<COElementAbstract> implem
 	return structureModel;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public COProperties getProperties() {
-	return properties;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setProperties(COProperties properties) {
-	this.properties = properties;
-	// notifyEventHandlers();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void addProperty(String key, String value) {
-
-	getProperties().addProperty(key, value);
-	// notifyEventHandlers();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void removeProperty(String key) {
-	getProperties().removeProperty(key);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getProperty(String key) {
-	return getProperties().getProperty(key);
-    }
-
     /** {@inheritDoc} */
     public void addEventHandler(UpdateCOUnitStructureEventHandler handler) {
 	if (updateCOUnitStructureEventHandler == null) {
-	    updateCOUnitStructureEventHandler = new HashSet<UpdateCOUnitStructureEventHandler>();
+	    updateCOUnitStructureEventHandler =
+		    new HashSet<UpdateCOUnitStructureEventHandler>();
 	}
 	updateCOUnitStructureEventHandler.add(handler);
     }
@@ -134,7 +93,8 @@ public class COUnitStructure extends COElementAbstract<COElementAbstract> implem
 
     void notifyEventHandlers() {
 	if (updateCOUnitStructureEventHandler != null) {
-	    UpdateCOUnitStructureEvent event = new UpdateCOUnitStructureEvent(this);
+	    UpdateCOUnitStructureEvent event =
+		    new UpdateCOUnitStructureEvent(this);
 	    Iterator<UpdateCOUnitStructureEventHandler> iter =
 		    updateCOUnitStructureEventHandler.iterator();
 	    while (iter.hasNext()) {
@@ -147,9 +107,9 @@ public class COUnitStructure extends COElementAbstract<COElementAbstract> implem
 
     @Override
     public boolean addChild(COElementAbstract child) {
-	    boolean res = getChildrens().add(child);
-	    notifyEventHandlers();
-	    return res;
+	boolean res = getChildrens().add(child);
+	notifyEventHandlers();
+	return res;
     }
 
     @Override
@@ -251,4 +211,3 @@ public class COUnitStructure extends COElementAbstract<COElementAbstract> implem
 	    updateCOUnitStructureEventHandler.clear();
     }
 }
-

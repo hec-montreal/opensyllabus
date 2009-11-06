@@ -33,8 +33,6 @@ public class COContent extends COElementAbstract<COElementAbstract> implements C
      */
 
     private List<COElementAbstract> children;
-    
-    private COProperties properties;
 
     /**
      * Constructor. The class type is set at the creation of the object.
@@ -43,7 +41,6 @@ public class COContent extends COElementAbstract<COElementAbstract> implements C
 	super();
 	setClassType(CO_CONTENT_CLASS_TYPE);
 	children = new ArrayList<COElementAbstract>();
-	properties = new COProperties();
     }
 
     /**
@@ -113,43 +110,5 @@ public class COContent extends COElementAbstract<COElementAbstract> implements C
 	else if(hasPredecessor) return -1;
 	else if(hasSuccessor) return 1;
 	else return 0;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public COProperties getProperties() {
-	return properties;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setProperties(COProperties properties) {
-	this.properties = properties;
-	// notifyEventHandlers();
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void addProperty(String key, String value) {
-
-	getProperties().addProperty(key, value);
-	// notifyEventHandlers();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void removeProperty(String key) {
-	getProperties().removeProperty(key);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getProperty(String key) {
-	return getProperties().getProperty(key);
     }
 }

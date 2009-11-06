@@ -76,11 +76,6 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
      */
     private COContentRubric rubric;
 
-    /**
-     * Properties object that extends a <code>HashMap</code>.
-     */
-    private COProperties properties;
-
     private Set<UpdateCOContentResourceProxyEventHandler> updateCOContentResourceProxyEventHandlers;
 
     /**
@@ -90,7 +85,7 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	super();
 	setClassType(CO_CONTENT_RESOURCE_PROXY_CLASS_TYPE);
 	nestedCOResourceProxies = new ArrayList<COContentResourceProxy>();
-	properties = new COProperties();
+	addProperty(COPropertiesType.VISIBILITY, "true");
     }
 
     public static COContentResourceProxy createDefaultResProxy(
@@ -108,10 +103,9 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 		    .getMessage("InsertYourTextHere"));
 	resProxModel.setAccess(SecurityInterface.ACCESS_ATTENDEE);
 	resProxModel.setRubricType(defaultRubric);
-	COProperties prop = new COProperties();
-	prop.addProperty(COPropertiesType.VISIBILITY, "true");
-	prop.addProperty(COPropertiesType.IMPORTANCE, "false");
-	prop.addProperty(COPropertiesType.REQUIREMENT_LEVEL, "undefined");
+	
+	resProxModel.addProperty(COPropertiesType.IMPORTANCE, "false");
+	resProxModel.addProperty(COPropertiesType.REQUIREMENT_LEVEL, "undefined");
 
 	// Default resource
 	final COContentResource resModel =
@@ -271,21 +265,6 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public COProperties getProperties() {
-	return properties;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setProperties(COProperties properties) {
-	this.properties = properties;
-	notifyEventHandlers();
-    }
-
-    /**
      * Adds a resourceProxy to the list of resourceProxies.
      * 
      * @param resourceProxy the resourcePRoxy to add.
@@ -310,34 +289,6 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public void addProperty(String key, String value) {
-
-	getProperties().addProperty(key, value);
-	if (TRACE)
-	    System.out
-		    .println("*** TRACE *** UPDATE THE MODEL COContentResourceProxy "
-			    + key + " = " + value);
-	notifyEventHandlers();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void removeProperty(String key) {
-	getProperties().removeProperty(key);
-	notifyEventHandlers();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getProperty(String key) {
-	return getProperties().getProperty(key);
-    }
-
-    /**
      * Finds and returns a specific <code>COContentResourceProxy</code> from the
      * list.
      * 
@@ -355,15 +306,6 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
      *         resourceProxy; }
      */
 
-
-    public void setLabel(String label) {
-	super.setLabel(label);
-	if (TRACE)
-	    System.out
-		    .println("*** TRACE *** UPDATE THE MODEL COContentResourceProxy - Label = "
-			    + label);
-	notifyEventHandlers();
-    }
 
     /** {@inheritDoc} */
     public void addEventHandler(UpdateCOContentResourceProxyEventHandler handler) {

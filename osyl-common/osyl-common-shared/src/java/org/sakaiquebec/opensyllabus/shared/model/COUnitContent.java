@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.events.FiresUpdateCOUnitContentEvents;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitContentEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEventHandler.UpdateCOContentResourceProxyEvent;
@@ -51,13 +50,7 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
      */
     public static final boolean TRACE = false;
 
-    /**
-     * Properties object that extends a <code>HashMap</code>.
-     */
-    private COProperties properties;
-
     private Set<UpdateCOUnitContentEventHandler> updateCOUnitContentEventHandler;
-
 
     /**
      * List of <code>ResourceProxy</code> that are contained in a
@@ -73,7 +66,6 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
 	super();
 	setClassType(CO_UNIT_CONTENT_CLASS_TYPE);
 	resourceProxies = new ArrayList<COContentResourceProxy>();
-	properties = new COProperties();
     }
 
     /**
@@ -90,8 +82,6 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
 	    final COElementAbstract parentModel) {
 	final COUnitContent unitModel = new COUnitContent();
 	unitModel.setType(type);
-	unitModel.setLabel(osylConfigMessages.getMessage(type));
-	unitModel.setAccess(SecurityInterface.ACCESS_PUBLIC);
 	unitModel.setParent(parentModel);
 
 	// Add child (a model notification should fire)
@@ -178,48 +168,6 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
 		handler.onUpdateModel(event);
 	    }
 	}
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public COProperties getProperties() {
-	return properties;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setProperties(COProperties properties) {
-	this.properties = properties;
-	notifyEventHandlers();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void addProperty(String key, String value) {
-
-	getProperties().addProperty(key, value);
-	if (TRACE)
-	    System.out.println("*** TRACE *** UPDATE THE MODEL COContentUnit "
-		    + key + " = " + value);
-	notifyEventHandlers();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void removeProperty(String key) {
-	getProperties().removeProperty(key);
-	notifyEventHandlers();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getProperty(String key) {
-	return getProperties().getProperty(key);
     }
 
     @Override

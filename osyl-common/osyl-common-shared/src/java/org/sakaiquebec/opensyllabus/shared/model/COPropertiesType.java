@@ -30,6 +30,8 @@ public class COPropertiesType {
     public static final String VISIBILITY = "visible";
     public static final String IMPORTANCE = "importance";
     public static final String REQUIREMENT_LEVEL = "level";
+    public static final String LABEL="label";
+    public static final String DESCRIPTION="description";
 
     public final static String REQ_LEVEL_MANDATORY = "mandatory";
     public final static String REQ_LEVEL_RECOMMENDED = "recommended";
@@ -66,7 +68,27 @@ public class COPropertiesType {
     public static final String AVAILABILITY = "availability";
     public static final String COMMENTS = "comments";
     
+    //AsmObject
     public static final String MODIFIED = "modified";
+    
+    //AsmRoot
+    public static final String IDENTIFIER = "identifier";
+    public static final String TEMPLATE = "template";
+    public static final String TITLE = "title";
+    public static final String LANGUAGE = "language";
+    public static final String CREATED = "created";
+    public static final String LAST_MODIFIED = "lastModified";
+    public static final String CREATED_BY = "createdBy";
+    public static final String LAST_MODIFIED_BY = "lastModifiedBy";
+    public static final String PARENT = "parent";
+    
+    //CO type
+    public static final String PUBLISHED = "published";
+    public static final String PREVIOUS_PUBLISHED = "previousPublished";
+    public static final String CHILDS = "childs";
+    public static final String COURSE_ID = "courseId";
+    public static final String DEPARTEMENT = "departement";
+   
 
     /**
      * The list of types.

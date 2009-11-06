@@ -20,9 +20,8 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.shared.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import com.google.gwt.i18n.client.DateTimeFormat;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -30,19 +29,27 @@ import com.google.gwt.i18n.client.DateTimeFormat;
  */
 public class OsylDateUtils {
 
-    public static String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+    private static String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
     public static String getDateString() {
 	Date now = new Date();
-	DateTimeFormat dtf =
-		DateTimeFormat.getFormat(OsylDateUtils.DATE_TIME_FORMAT);
-	return getXsDateTimeString(dtf.format(now));
+	SimpleDateFormat dateFormat =
+		new SimpleDateFormat(OsylDateUtils.DATE_TIME_FORMAT);
+	return getXsDateTimeString(dateFormat.format(now));
     }
 
     public static Date getDate(String dateString) {
-	DateTimeFormat dtf =
-		DateTimeFormat.getFormat(OsylDateUtils.DATE_TIME_FORMAT);
-	return dtf.parse(OsylDateUtils.getRFC822String(dateString));
+	SimpleDateFormat dateFormat =
+		new SimpleDateFormat(OsylDateUtils.DATE_TIME_FORMAT);
+	Date date = new Date();
+
+	try {
+	    date = dateFormat.parse(OsylDateUtils.getRFC822String(dateString));
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+
+	return date;
     }
 
     /**
@@ -50,7 +57,7 @@ public class OsylDateUtils {
      * @return a RFC-822 standard date (ie: 2002-05-30T09:30:10-0600) recognize
      *         by our parser
      */
-    public static String getRFC822String(String dateString) {
+    private static String getRFC822String(String dateString) {
 	int colonIndex = dateString.lastIndexOf(":");
 	return dateString.substring(0, colonIndex)
 		+ dateString.substring(colonIndex + 1, dateString.length());
@@ -61,7 +68,7 @@ public class OsylDateUtils {
      * @return a xs:datetime standard date (ie: 2002-05-30T09:30:10-06:00) for
      *         XML
      */
-    public static String getXsDateTimeString(String dateString) {
+    private static String getXsDateTimeString(String dateString) {
 	return dateString.substring(0, dateString.length() - 2)
 		+ ":"
 		+ dateString.substring(dateString.length() - 2, dateString

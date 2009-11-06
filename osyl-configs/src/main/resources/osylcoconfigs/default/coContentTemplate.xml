@@ -23,11 +23,17 @@
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<label>News</label>
+		<description>For future implementation.</description>
 		<asmUnit access="public" xsi:type="NewsUnit">
-			<label><![CDATA[ News ]]></label>
+			<label><![CDATA[News]]></label>
+			<visible>true</visible>
+			<modified>2001-12-17T09:30:47Z</modified>
 			<asmUnitStructure access="public" xsi:type="NewsUnitStruct">
-				<label><![CDATA[Nouvelles]]></label>
-				<asmUnitContent access="public" xsi:type="NewsUnitContent" />
+				<visible>true</visible>
+				<label><![CDATA[News]]></label>
+				<description>For future implementation.</description>
+				<asmUnitContent access="public" xsi:type="NewsUnitContent">
+				</asmUnitContent>
 			</asmUnitStructure>
 		</asmUnit>
 	</asmStructure>
@@ -35,11 +41,17 @@
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<label>Course Introduction</label>
+		<description>For future implementation.</description>
 		<asmUnit access="public" xsi:type="OverviewUnit">
-			<label><![CDATA[ Presentation ]]></label>
+			<label><![CDATA[Presentation]]></label>
+			<visible>true</visible>
+			<modified>2001-12-17T09:30:47Z</modified>
 			<asmUnitStructure access="public" xsi:type="OverviewUnitStruct">
-				<label><![CDATA[ Presentation ]]></label>
-				<asmUnitContent access="public" xsi:type="OverviewUnitContent"/>
+				<visible>true</visible>
+				<label><![CDATA[Presentation]]></label>
+				<description>For future implementation.</description>
+				<asmUnitContent access="public" xsi:type="OverviewUnitContent">
+				</asmUnitContent>
 			</asmUnitStructure>
 		</asmUnit>
 	</asmStructure>
@@ -47,10 +59,17 @@
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<label>Staff information</label>
+		<description>For future implementation.</description>
 		<asmUnit access="public" xsi:type="StaffUnit">
-			<label><![CDATA[ Contact Information ]]></label>
+			<label><![CDATA[Contact Information]]></label>
+			<visible>true</visible>
+			<modified>2001-12-17T09:30:47Z</modified>
 			<asmUnitStructure access="public" xsi:type="StaffUnitStruct">
-				<asmUnitContent access="public" xsi:type="StaffUnitContent" />
+				<visible>true</visible>
+				<label><![CDATA[Contact Information]]></label>
+				<description>For future implementation.</description>
+				<asmUnitContent access="public" xsi:type="StaffUnitContent">
+				</asmUnitContent>
 			</asmUnitStructure>
 		</asmUnit>
 	</asmStructure>
@@ -58,25 +77,31 @@
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<label>Learning material information</label>
+		<description>For future implementation.</description>
 		<asmUnit access="public" xsi:type="LearningMaterialUnit">
-			<label><![CDATA[ Learning Material]]></label>
+			<label><![CDATA[Learning Material]]></label>
+			<visible>true</visible>
+			<modified>2001-12-17T09:30:47Z</modified>
 			<asmUnitStructure access="public" xsi:type="LearningMaterialUnitStruct">
-				<label><![CDATA[ Learning Material]]></label>
-				<asmUnitContent access="public" xsi:type="LearningMaterialUnitContent"/>
+				<visible>true</visible>
+				<label><![CDATA[Learning Material]]></label>
+				<description>For future implementation.</description>
+				<asmUnitContent access="public" xsi:type="LearningMaterialUnitContent">
+				</asmUnitContent>
 			</asmUnitStructure>
 		</asmUnit>
 	</asmStructure>
 	<asmStructure access="public" xsi:type="AssessmentStruct">
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
-		<label>Assessments</label>
-		<description>String</description>
+		<label><![CDATA[Assessments]]></label>
+		<description>For future implementation.</description>
 	</asmStructure>
 	<asmStructure access="public" xsi:type="PedagogicalStruct">
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
-		<label>Lectures</label>
-		<description>String</description>
+		<label><![CDATA[Lectures]]></label>
+		<description>For future implementation.</description>
 	</asmStructure>
 </CO>
 </OSYL>

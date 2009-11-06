@@ -23,6 +23,8 @@ package org.sakaiquebec.opensyllabus.shared.model;
 import java.io.Serializable;
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.sakaiquebec.opensyllabus.shared.util.UUID;
 
 /**
@@ -79,11 +81,6 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     private String type;
     
     /**
-     * Description of the content or the structure element or the content unit.
-     */
-    private String label;
-    
-    /**
      * Security related to content access
      */
     private String access;
@@ -110,6 +107,8 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     
     private COElementAbstract parent=null;
     
+    private COProperties properties;
+    
 
     public static final int POSITION_CHANGE_ACTION_UP=-1;
     
@@ -121,6 +120,9 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
      */
     protected COElementAbstract() {
 	this.id = UUID.uuid();
+	properties = new COProperties();
+	addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getDateString());
+	setAccess(SecurityInterface.ACCESS_PUBLIC);
     }
     
     /**
@@ -241,7 +243,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
      *         the label.
      */
     public String getLabel() {
-        return label;
+        return this.getProperty(COPropertiesType.LABEL);
     }
 
     /**
@@ -250,7 +252,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
      * @param label
      */
     public void setLabel(String label) {
-        this.label = label;
+	this.addProperty(COPropertiesType.LABEL, label);
         notifyEventHandlers();
     }
     
@@ -335,6 +337,44 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
      */
     public void setParent(COElementAbstract parent) {
         this.parent = parent;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public COProperties getProperties() {
+	return properties;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setProperties(COProperties properties) {
+	this.properties = properties;
+	notifyEventHandlers();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addProperty(String key, String value) {
+	properties.addProperty(key, value);
+	notifyEventHandlers();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void removeProperty(String key) {
+	properties.removeProperty(key);
+	notifyEventHandlers();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getProperty(String key) {
+	return properties.getProperty(key);
     }
     
     /**

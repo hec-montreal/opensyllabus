@@ -23,11 +23,11 @@ package org.sakaiquebec.opensyllabus.common.model;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -122,11 +122,6 @@ public class COModeledServer {
     protected final static String CO_PROPERTIES_TEXT_NODE_NAME = "text";
 
     /**
-     * Name of a label node.
-     */
-    protected final static String CO_LABEL_NODE_NAME = "label";
-
-    /**
      * Name of a comment node.
      */
     protected final static String CO_COMMENT_NODE_NAME = "comment";
@@ -217,6 +212,12 @@ public class COModeledServer {
      */
     private COContent modeledContent;
 
+    protected final static List<String> CDATA_NODE_NAMES =
+	    Arrays.asList(new String[] { COPropertiesType.LABEL,
+		    COPropertiesType.URI, COPropertiesType.DESCRIPTION,
+		    COPropertiesType.TEXT });
+    
+    
     /**
      * Map<name,permissions> of permissions applied to ressources
      * 
@@ -376,16 +377,13 @@ public class COModeledServer {
 		coContent.addChild(createCOStructureElementPOJO(myNode,
 			coStructElt, coContent, isPublication));
 
-	    } else if (nodeName.equalsIgnoreCase(CO_LABEL_NODE_NAME)) {
-		coContent.setLabel(getCDataSectionValue(myNode));
 	    } else {
 		addProperty(coContent.getProperties(), myNode);
 	    }
 	}
 	if (isPublication) {
-	    SimpleDateFormat dateFormat =
-		    new SimpleDateFormat(OsylDateUtils.DATE_TIME_FORMAT);
-	    coContent.addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getXsDateTimeString(dateFormat.format(new Date())));
+	    coContent.addProperty(COPropertiesType.MODIFIED, OsylDateUtils
+		    .getDateString());
 	}
 	return coContent;
     }
@@ -477,8 +475,6 @@ public class COModeledServer {
 		COUnitStructure coUnitStruct = new COUnitStructure();
 		coUnit.addChild(createCOUnitStructurePOJO(sNode, coUnitStruct,
 			coUnit, isPublication));
-	    } else if (sNodeName.equalsIgnoreCase(CO_LABEL_NODE_NAME)) {
-		coUnit.setLabel(getCDataSectionValue(sNode));
 	    } else {
 		addProperty(coUnit.getProperties(), sNode);
 	    }
@@ -541,8 +537,6 @@ public class COModeledServer {
 		COUnitContent coContentUnit = new COUnitContent();
 		coUnitStructure.addChild(createCOContentUnitPOJO(sNode,
 			coContentUnit, coUnitStructure, isPublication));
-	    } else if (sNodeName.equalsIgnoreCase(CO_LABEL_NODE_NAME)) {
-		coUnitStructure.setLabel(getCDataSectionValue(sNode));
 	    } else {
 		// properties
 		addProperty(coUnitStructure.getProperties(), sNode);
@@ -660,8 +654,6 @@ public class COModeledServer {
 	    if (coNodeName.equalsIgnoreCase(CO_RES_PROXY_NODE_NAME)) {
 		coContentUnit.addChild(createCOContentResourceProxyPOJO(coNode,
 			coContentUnit, isPublication));
-	    } else if (coNodeName.equalsIgnoreCase(CO_LABEL_NODE_NAME)) {
-		coContentUnit.setLabel(getCDataSectionValue(coNode));
 	    } else {
 		addProperty(coContentUnit.getProperties(), coNode);
 	    }
@@ -688,16 +680,16 @@ public class COModeledServer {
 		.getNodeValue());
 	coContentResProxy.setType(prMap.getNamedItem(XSI_TYPE_ATTRIBUTE_NAME)
 		.getNodeValue());
-	
+
 	String editable =
 		prMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? null
 			: prMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME)
 				.getNodeValue();
 	coContentResProxy.setEditable(editable == null ? true : Boolean
 		.valueOf(editable));
-	
+
 	String uuid =
-	    prMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : prMap
+		prMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : prMap
 			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
 	coContentResProxy.setId(uuid == null ? UUID.uuid() : uuid);
 
@@ -716,9 +708,7 @@ public class COModeledServer {
 	      * coContentResProxy.setDescription(getCDataSectionValue(prNode));
 	      * }
 	      */
-	    else if (prNodeName.equalsIgnoreCase(CO_LABEL_NODE_NAME)) {
-		coContentResProxy.setLabel(getCDataSectionValue(prNode));
-	    } else if (prNodeName.equalsIgnoreCase(CO_CONTENT_RUBRIC_NODE_NAME)) {
+	    else if (prNodeName.equalsIgnoreCase(CO_CONTENT_RUBRIC_NODE_NAME)) {
 		coContentResProxy.setRubric(createCOContentRubricPOJO(prNode));
 	    } else if (prNodeName.equalsIgnoreCase(CO_RES_NODE_NAME)) {
 		coContentResProxy.setResource(createCOContentResourcePOJO(
@@ -758,19 +748,19 @@ public class COModeledServer {
 	String security =
 		rMap.getNamedItem(ACCESS_ATTRIBUTE_NAME).getNodeValue();
 	coContentRes.setAccess(security);
-	
+
 	String editable =
 		rMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? null
 			: rMap.getNamedItem(EDITABLE_ATTRIBUTE_NAME)
 				.getNodeValue();
 	coContentRes.setEditable(editable == null ? true : Boolean
 		.valueOf(editable));
-	
+
 	String uuid =
-	    rMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : rMap
+		rMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : rMap
 			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
 	coContentRes.setId(uuid == null ? UUID.uuid() : uuid);
-	
+
 	NodeList resChildren = node.getChildNodes();
 	for (int z = 0; z < resChildren.getLength(); z++) {
 	    Node rNode = resChildren.item(z);
@@ -814,10 +804,10 @@ public class COModeledServer {
 		.valueOf(editable));
 
 	String uuid =
-	    rMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : rMap
+		rMap.getNamedItem(ID_ATTRIBUTE_NAME) == null ? null : rMap
 			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue();
 	coContentRes.setId(uuid == null ? UUID.uuid() : uuid);
-	
+
 	NodeList resChildren = node.getChildNodes();
 	for (int z = 0; z < resChildren.getLength(); z++) {
 	    Node rNode = resChildren.item(z);
@@ -919,8 +909,6 @@ public class COModeledServer {
 		+ coContent.isEditable());
 	osylElement.appendChild(courseOutlineContentElem);
 	document.appendChild(osylElement);
-	createCDataNode(document, courseOutlineContentElem, CO_LABEL_NODE_NAME,
-		coContent.getLabel());
 	if (coContent.getProperties() != null
 		&& !coContent.getProperties().isEmpty()) {
 	    createPropertiesElem(document, courseOutlineContentElem, coContent
@@ -971,8 +959,8 @@ public class COModeledServer {
 		    .getAccess());
 	    coStructureElem.setAttribute(XSI_TYPE_ATTRIBUTE_NAME, coStructure
 		    .getType());
-	    coStructureElem.setAttribute(ID_ATTRIBUTE_NAME, coStructure
-		    .getId());
+	    coStructureElem
+		    .setAttribute(ID_ATTRIBUTE_NAME, coStructure.getId());
 	    coStructureElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
 		    + coStructure.isEditable());
 	    if (coStructure.getIdParent() != null)
@@ -1002,8 +990,6 @@ public class COModeledServer {
 	    if (coUnit.getIdParent() != null)
 		coUnitElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME, coUnit
 			.getIdParent());
-	    createCDataNode(document, coUnitElem, CO_LABEL_NODE_NAME, coUnit
-		    .getLabel());
 	    if (coUnit.getChildrens() != null) {
 		for (int i = 0; i < coUnit.getChildrens().size(); i++) {
 		    createChildElement(document, coUnitElem, coUnit
@@ -1025,15 +1011,12 @@ public class COModeledServer {
 		    .getAccess());
 	    coUnitElem.setAttribute(XSI_TYPE_ATTRIBUTE_NAME, coUnitStructure
 		    .getType());
-	    coUnitElem.setAttribute(ID_ATTRIBUTE_NAME, coUnitStructure
-		    .getId());
+	    coUnitElem.setAttribute(ID_ATTRIBUTE_NAME, coUnitStructure.getId());
 	    coUnitElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
 		    + coUnitStructure.isEditable());
 	    if (coUnitStructure.getIdParent() != null)
 		coUnitElem.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
 			coUnitStructure.getIdParent());
-	    createCDataNode(document, coUnitElem, CO_LABEL_NODE_NAME,
-		    coUnitStructure.getLabel());
 	    if (coUnitStructure.getChildrens() != null) {
 		for (int i = 0; i < coUnitStructure.getChildrens().size(); i++) {
 		    createChildElement(document, coUnitElem, coUnitStructure
@@ -1111,8 +1094,7 @@ public class COModeledServer {
 		    } else {
 			value = (String) properties.getProperty(propElemName);
 		    }
-		    if (propElemName
-			    .equalsIgnoreCase(CO_PROPERTIES_TEXT_NODE_NAME)) {
+		    if (CDATA_NODE_NAMES.contains(propElemName)) {
 			propElemValue = document.createCDATASection(value);
 
 		    } else {
@@ -1146,18 +1128,13 @@ public class COModeledServer {
 		.getAccess());
 	coContentResourceProxyElem.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
 		+ child.isEditable());
-	coContentResourceProxyElem.setAttribute(ID_ATTRIBUTE_NAME,
-		    child.getId());
+	coContentResourceProxyElem.setAttribute(ID_ATTRIBUTE_NAME, child
+		.getId());
 	// sometimes we don't necessarely have a comment on the resource proxy
 	String comment = child.getComment();
 	if (comment != null && !"".equals(comment)) {
 	    createCDataNode(document, coContentResourceProxyElem,
 		    CO_COMMENT_NODE_NAME, child.getComment());
-	}
-	String label = child.getLabel();
-	if (label != null && !"".equals(label)) {
-	    createCDataNode(document, coContentResourceProxyElem,
-		    CO_LABEL_NODE_NAME, child.getLabel());
 	}
 	// we may have a content unit without any resource proxy, using a
 	// reference to a capsule for example
