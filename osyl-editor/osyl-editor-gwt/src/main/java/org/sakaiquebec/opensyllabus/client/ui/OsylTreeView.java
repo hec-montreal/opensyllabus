@@ -120,7 +120,10 @@ public class OsylTreeView extends OsylViewableComposite implements
 	    // Compute the maximum tree width
 	    computeMaxTreeWidth(itemModel);
 	    if (itemModel.isCOStructureElement()) {
-		if (itemModel.getChildrens().size() == 1) {
+		List<COModelInterface> subModels =
+			getController().getOsylConfig().getOsylConfigRuler()
+				.getAllowedSubModels(itemModel);
+		if (itemModel.getChildrens().size() == 1 && subModels==null) {
 		    COElementAbstract childOfAsmStruct =
 			    (COElementAbstract) itemModel.getChildrens().get(0);
 		    if (childOfAsmStruct.isCOUnit()) {

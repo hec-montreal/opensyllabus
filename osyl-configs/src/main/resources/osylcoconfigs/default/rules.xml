@@ -13,7 +13,7 @@
 		<element name="asmStructure">
 			<attribute name="type" restrictionpattern="NewsStruct" />
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="NewsUnit" />
+				<attribute name="type" restrictionpattern="NewsUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="NewsUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -31,7 +31,7 @@
 		<element name="asmStructure">
 			<attribute name="type" restrictionpattern="OverviewStruct" />
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="OverviewUnit" />
+				<attribute name="type" restrictionpattern="OverviewUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="OverviewUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -49,7 +49,7 @@
 		<element name="asmStructure">
 			<attribute name="type" restrictionpattern="StaffStruct" />
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="StaffUnit" />
+				<attribute name="type" restrictionpattern="StaffUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="StaffUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -67,7 +67,7 @@
 		<element name="asmStructure">
 			<attribute name="type" restrictionpattern="LearningMaterialStruct" />
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="LearningMaterialUnit" />
+				<attribute name="type" restrictionpattern="LearningMaterialUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="LearningMaterialUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -87,7 +87,7 @@
 			<attribute name="type" restrictionpattern="AssessmentStruct" />
 			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="AssessmentUnit" />
+				<attribute name="type" restrictionpattern="AssessmentUnit" allowMultiple="true"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="AssessmentUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -107,7 +107,7 @@
 			<attribute name="type" restrictionpattern="PedagogicalStruct" />
 			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="PedagogicalUnit" />
+				<attribute name="type" restrictionpattern="PedagogicalUnit" allowMultiple="true"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="PedagogicalUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
