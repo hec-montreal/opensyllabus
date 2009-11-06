@@ -91,44 +91,4 @@ public class COPropertiesType {
     
     //Reference context
     public static final String DISPLAY_AS="displayAs";
-   
-
-    /**
-     * The list of types.
-     */
-    private static final String[] types =
-	    {     
-	      TEXT
-		, URI
-		, VISIBILITY
-		, IMPORTANCE
-		, REQUIREMENT_LEVEL
-		, BOOKSTORE
-		, LIBRARY
-		, CITATION
-		, LINK
-		, ISBNISSN
-		, TYPE
-		, CITATIONLISTID
-		, WEIGHT
-		, DATE_START
-		, DATE_END
-		, DATE
-		, PERSON_TITLE
-		, SURNAME
-		, FIRSTNAME
-		, OFFICE_ROOM
-		, TEL
-		, EMAIL
-		, AVAILABILITY
-		, COMMENTS
-		    
-	    };
-
-    /**
-     * @return string array of types
-     */
-    public static final String[] getTypes() {
-	return types;
-    }
 }

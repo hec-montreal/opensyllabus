@@ -26,6 +26,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Panel;
@@ -206,12 +207,18 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     }
 
     protected void updateMetaInfo() {
+	//contextMetaInfo
 	setContextImportant(getEditor().isContextImportant());
 	setContextHidden(getEditor().isContextHidden());
 	setDiffusionLevel(getEditor().getDiffusionLevel());
 	setRubricType(getEditor().getRubricType());
+	getModel().addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getDateString());
 	if (getEditor().isHasRequirement())
 	    setRequirementLevel(getEditor().getRequirementLevel());
+	//resourceMetaInfo
+	if(getModel().getResource()!=null){
+	    getModel().getResource().addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getDateString());
+	}
     }
 
     protected void moveTo(String targetUuid) {

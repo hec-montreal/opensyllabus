@@ -62,8 +62,6 @@ public class OsylNewsView extends OsylAbstractResProxView {
 	updateMetaInfo();
 	getModel().getResource().addProperty(COPropertiesType.TEXT,
 		getEditor().getText());
-	getModel().getResource().addProperty(COPropertiesType.MODIFIED,
-		OsylDateUtils.getDateString());
     }
 
     /**
