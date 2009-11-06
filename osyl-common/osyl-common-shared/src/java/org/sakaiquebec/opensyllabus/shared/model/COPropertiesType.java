@@ -60,14 +60,13 @@ public class COPropertiesType {
     public static final String ASSESSMENT_TYPE= "assessmentType";
 
     // Specific to contact-info (coordonnées)
-    public static final String ROLE = "role";
-    public static final String LASTNAME = "lastname";
+    public static final String PERSON_TITLE = "title";
+    public static final String SURNAME = "surname";
     public static final String FIRSTNAME = "firstname";
-    public static final String OFFICE = "office";
-    public static final String PHONE = "phone";
+    public static final String OFFICE_ROOM = "officeroom";
+    public static final String TEL = "tel";
     public static final String EMAIL = "email";
     public static final String AVAILABILITY = "availability";
-    public static final String COMMENTS = "comments";
     
     //AsmObject
     public static final String MODIFIED = "modified";
@@ -115,11 +114,11 @@ public class COPropertiesType {
 		, DATE_START
 		, DATE_END
 		, DATE
-		, ROLE
-		, LASTNAME
+		, PERSON_TITLE
+		, SURNAME
 		, FIRSTNAME
-		, OFFICE
-		, PHONE
+		, OFFICE_ROOM
+		, TEL
 		, EMAIL
 		, AVAILABILITY
 		, COMMENTS

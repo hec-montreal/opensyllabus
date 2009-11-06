@@ -53,7 +53,8 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
      * {@inheritDoc}
      */
     public String getTextFromModel() {
-	return "Do not use with BibiloContext";
+	throw new IllegalStateException("Do not use getTextFromModel() for "
+		+ "BiblioContext.");
     }
 
     /**

@@ -63,16 +63,16 @@ public class OsylResProxContactInfoView extends OsylAbstractResProxView {
 	updateMetaInfo();
 	OsylContactInfoEditor editor = (OsylContactInfoEditor) getEditor();
 	// save context
-	getModel().addProperty(COPropertiesType.ROLE, editor.getTextRole());
 	getModel().addProperty(COPropertiesType.AVAILABILITY,
 		editor.getTextAvailability());
-	getModel().addProperty(COPropertiesType.COMMENTS,
+	getModel().addProperty(COPropertiesType.COMMENT,
 		editor.getTextComments());
 	// save resource
-	setProperty(COPropertiesType.LASTNAME, editor.getTextLastName());
+	setProperty(COPropertiesType.PERSON_TITLE, editor.getTextRole());
+	setProperty(COPropertiesType.SURNAME, editor.getTextLastName());
 	setProperty(COPropertiesType.FIRSTNAME, editor.getTextFirstName());
-	setProperty(COPropertiesType.OFFICE, editor.getTextOffice());
-	setProperty(COPropertiesType.PHONE, editor.getTextPhone());
+	setProperty(COPropertiesType.OFFICE_ROOM, editor.getTextOffice());
+	setProperty(COPropertiesType.TEL, editor.getTextPhone());
 	setProperty(COPropertiesType.EMAIL, editor.getTextEMail());
 
     }
@@ -83,7 +83,7 @@ public class OsylResProxContactInfoView extends OsylAbstractResProxView {
 
     // Role
     public String getRole() {
-	return getModel().getProperty(COPropertiesType.ROLE);
+	return getProperty(COPropertiesType.PERSON_TITLE);
     }
 
     // Availability
@@ -93,12 +93,12 @@ public class OsylResProxContactInfoView extends OsylAbstractResProxView {
 
     // Comments
     public String getComments() {
-	return getModel().getProperty(COPropertiesType.COMMENTS);
+	return getModel().getProperty(COPropertiesType.COMMENT);
     }
 
     // Last Name
     public String getLastName() {
-	return getProperty(COPropertiesType.LASTNAME);
+	return getProperty(COPropertiesType.SURNAME);
     }
 
     // FirstName
@@ -108,12 +108,12 @@ public class OsylResProxContactInfoView extends OsylAbstractResProxView {
 
     // Office
     public String getOffice() {
-	return getProperty(COPropertiesType.OFFICE);
+	return getProperty(COPropertiesType.OFFICE_ROOM);
     }
 
     // Phone
     public String getPhone() {
-	return getProperty(COPropertiesType.PHONE);
+	return getProperty(COPropertiesType.TEL);
     }
 
     // EMail
