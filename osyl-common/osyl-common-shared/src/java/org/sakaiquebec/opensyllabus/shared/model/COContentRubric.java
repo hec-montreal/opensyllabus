@@ -42,12 +42,14 @@ public class COContentRubric implements COModelInterface {
      * Rubric type.
      */
     private String type;
+    
+    private COProperties coProperties;
 
     /**
      * Constructor.
      */
     public COContentRubric() {
-	
+	coProperties=new COProperties();
     }
 
     /**
@@ -75,33 +77,35 @@ public class COContentRubric implements COModelInterface {
      * {@inheritDoc}
      */
     public void addProperty(String key, String value) {
-	
+	coProperties.addProperty(key, value);
     }
 
     /**
      * {@inheritDoc}
      */
     public COProperties getProperties() {
-	return null;
+	return coProperties;
     }
 
     /**
      * {@inheritDoc}
      */
     public String getProperty(String key) {
-	return null;
+	return coProperties.getProperty(key);
     }
 
     /**
      * {@inheritDoc}
      */
     public void removeProperty(String key) {
+	coProperties.remove(key);
     }
 
     /**
      * {@inheritDoc}
      */
     public void setProperties(COProperties coProperties) {
+	this.coProperties=coProperties;
     }
     
     public String getId() {
