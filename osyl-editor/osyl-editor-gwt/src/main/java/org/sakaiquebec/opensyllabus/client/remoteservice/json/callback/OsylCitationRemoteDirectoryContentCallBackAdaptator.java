@@ -9,6 +9,7 @@ import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationItem;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationListItem;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -46,7 +47,7 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 	}
 	JSONString citationListName =
 		(JSONString) jObject.get("sakai:displayname");
-
+	JSONString lastModified = (JSONString) jObject.get("DAV:getlastmodified");
 	JSONObject citations = (JSONObject) jObject.get("citations");
 	Set<String> keys = citations.keySet();
 	for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
@@ -147,6 +148,7 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 	    csi.setFilePath(path == null ? "" : path.stringValue());
 	    csi.setResourceId(path == null ? "" : path.stringValue());
 	    csi.setResourceName(listname == null ? "" : listname);
+	    csi.setLastModifTime(OsylDateUtils.getXmlDateStringFromSakaiDateString(lastModified.stringValue()));
 	    citationsList.add(csi);
 	}
 	OsylCitationListItem osylCitationListItem = new OsylCitationListItem();

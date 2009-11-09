@@ -20,16 +20,11 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.client.ui.view;
 
-import java.util.Date;
-
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylNewsEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
-
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Window;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -37,9 +32,6 @@ import com.google.gwt.user.client.Window;
  */
 public class OsylNewsView extends OsylAbstractResProxView {
 
-    
- 
-    
     /**
      * Constructor specifying the model to display and edit as well as the
      * current {@link OsylController}.
@@ -70,14 +62,18 @@ public class OsylNewsView extends OsylAbstractResProxView {
     public String getTextFromModel() {
 	return getModel().getResource().getProperty(COPropertiesType.TEXT);
     }
-    
+
     /**
      * ===================== ADDED METHODS =====================
      */
     public String getTimeStampFromModel() {
 	return getModel().getResource().getProperty(COPropertiesType.MODIFIED);
     }
-    
-    
-    
+
+    @Override
+    public void updateResourceMetaInfo() {
+	getModel().getResource().addProperty(COPropertiesType.MODIFIED,
+		OsylDateUtils.getNowDateAsXmlString());
+    }
+
 }

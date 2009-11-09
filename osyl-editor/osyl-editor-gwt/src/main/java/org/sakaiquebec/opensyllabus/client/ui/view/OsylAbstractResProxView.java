@@ -212,12 +212,12 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 	setContextHidden(getEditor().isContextHidden());
 	setDiffusionLevel(getEditor().getDiffusionLevel());
 	setRubricType(getEditor().getRubricType());
-	getModel().addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getDateString());
+	getModel().addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getNowDateAsXmlString());
 	if (getEditor().isHasRequirement())
 	    setRequirementLevel(getEditor().getRequirementLevel());
 	//resourceMetaInfo
 	if(getModel().getResource()!=null){
-	    getModel().getResource().addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getDateString());
+	     updateResourceMetaInfo();
 	}
     }
 
@@ -266,5 +266,7 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     public String getTextFromModelDesc() {
 	return null;
     }
+    
+    public abstract void updateResourceMetaInfo();
 
 }

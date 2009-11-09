@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -50,7 +51,7 @@ public class OsylFileRemoteDirectoryContentCallBackAdaptator extends
 					.get("DAV:getlastmodified") != null) {
 				JSONString lastmodified = (JSONString) ((JSONObject) jObject
 						.get("properties")).get("DAV:getlastmodified");
-				lastmodifiedString = lastmodified.stringValue();
+				lastmodifiedString = OsylDateUtils.getXmlDateStringFromSakaiDateString(lastmodified.stringValue());
 			}
 			if (((JSONObject) jObject.get("properties"))
 					.get("CHEF:description") != null) {

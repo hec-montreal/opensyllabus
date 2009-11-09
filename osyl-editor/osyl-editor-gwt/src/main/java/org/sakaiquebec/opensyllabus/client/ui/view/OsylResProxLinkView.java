@@ -24,6 +24,7 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylLinkEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.core.client.GWT;
 
@@ -38,7 +39,7 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
     /**
      * Constructor specifying the model to display and edit as well as the
      * current {@link OsylController}.
-     *  
+     * 
      * @param model
      * @param osylController
      */
@@ -50,18 +51,18 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
     }
 
     /**
-     * ===================== OVERRIDEN METHODS =====================
-     * See superclass for javadoc!  
+     * ===================== OVERRIDEN METHODS ===================== See
+     * superclass for javadoc!
      */
 
     protected void updateModel() {
 	updateMetaInfo();
 	getModel().setLabel(getEditor().getText());
 	getModel().addProperty(COPropertiesType.COMMENT,
-			((OsylLinkEditor)getEditor()).getDescription());
-	getModel().getResource().addProperty(COPropertiesType.URI, ((OsylLinkEditor)getEditor()).getLink());
+		((OsylLinkEditor) getEditor()).getDescription());
+	getModel().getResource().addProperty(COPropertiesType.URI,
+		((OsylLinkEditor) getEditor()).getLink());
     }
-
 
     /**
      * ===================== ADDED METHODS =====================
@@ -78,7 +79,7 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
 	    return generateHTMLLink(getLinkURI(), text);
 	}
     }
-    
+
     /**
      * Returns the description text of current resource.
      */
@@ -109,11 +110,16 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
 	}
     } // getLinkURI
 
-
     /**
      * Returns the URI of current resource
      */
     public String getRawURI() {
 	return getModel().getResource().getProperty(COPropertiesType.URI);
-    } // getRawURI
+    }
+
+    @Override
+    public void updateResourceMetaInfo() {
+	getModel().getResource().addProperty(COPropertiesType.MODIFIED,
+		OsylDateUtils.getNowDateAsXmlString());
+    }
 }

@@ -24,6 +24,7 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylContactInfoEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 /**
  * Class providing display and edition capabilities for Assignment resources.
@@ -119,5 +120,11 @@ public class OsylResProxContactInfoView extends OsylAbstractResProxView {
     // EMail
     public String getEMail() {
 	return getProperty(COPropertiesType.EMAIL);
+    }
+
+    @Override
+    public void updateResourceMetaInfo() {
+	getModel().getResource().addProperty(COPropertiesType.MODIFIED,
+		OsylDateUtils.getNowDateAsXmlString());
     }
 }

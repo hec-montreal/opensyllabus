@@ -30,15 +30,16 @@ import java.util.Date;
 public class OsylDateUtils {
 
     private static String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+    private static String SAKAI_DATE_TIME_FORMAT="yyyyMMddHHmmssSSS";
 
-    public static String getDateString() {
+    public static String getNowDateAsXmlString() {
 	Date now = new Date();
 	SimpleDateFormat dateFormat =
 		new SimpleDateFormat(OsylDateUtils.DATE_TIME_FORMAT);
 	return getXsDateTimeString(dateFormat.format(now));
     }
 
-    public static Date getDate(String dateString) {
+    public static Date getDateFromXMLDate(String dateString) {
 	SimpleDateFormat dateFormat =
 		new SimpleDateFormat(OsylDateUtils.DATE_TIME_FORMAT);
 	Date date = new Date();
@@ -50,6 +51,23 @@ public class OsylDateUtils {
 	}
 
 	return date;
+    }
+    
+    public static String getXmlDateStringFromSakaiDateString(String sakaiDate){
+	SimpleDateFormat sakaiDateFormat =
+		new SimpleDateFormat(OsylDateUtils.SAKAI_DATE_TIME_FORMAT);
+	SimpleDateFormat dateFormat =
+		new SimpleDateFormat(OsylDateUtils.DATE_TIME_FORMAT);
+	Date date = new Date();
+
+	try {
+	    date = sakaiDateFormat.parse(sakaiDate);
+	    return getXsDateTimeString(dateFormat.format(date));
+	    
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    return "";
+	}
     }
 
     /**

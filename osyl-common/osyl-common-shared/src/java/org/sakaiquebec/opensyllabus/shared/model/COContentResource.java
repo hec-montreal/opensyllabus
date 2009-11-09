@@ -119,7 +119,7 @@ public class COContentResource implements COModelInterface,
 	    prop.addProperty(COPropertiesType.TEXT, osylConfigMessages
 		    .getMessage("InsertYourTextHere"));
 	    prop.addProperty(COPropertiesType.MODIFIED, OsylDateUtils
-		    .getDateString());
+		    .getNowDateAsXmlString());
 	    resModel.setProperties(prop);
 
 	}

@@ -121,7 +121,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     protected COElementAbstract() {
 	this.id = UUID.uuid();
 	properties = new COProperties();
-	addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getDateString());
+	addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getNowDateAsXmlString());
 	setAccess(SecurityInterface.ACCESS_PUBLIC);
     }
     

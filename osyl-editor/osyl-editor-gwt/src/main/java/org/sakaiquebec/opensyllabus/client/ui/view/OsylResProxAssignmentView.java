@@ -24,6 +24,7 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAssignmentEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 /**
  * Class providing display and edition capabilities for Assignment resources.
@@ -141,6 +142,12 @@ public class OsylResProxAssignmentView extends OsylAbstractResProxView {
      */
     private String getAssignmentURI() {
 	return getModel().getProperty(COPropertiesType.URI);
+    }
+
+    @Override
+    public void updateResourceMetaInfo() {
+	getModel().getResource().addProperty(COPropertiesType.MODIFIED,
+		OsylDateUtils.getNowDateAsXmlString());
     }
 
 }

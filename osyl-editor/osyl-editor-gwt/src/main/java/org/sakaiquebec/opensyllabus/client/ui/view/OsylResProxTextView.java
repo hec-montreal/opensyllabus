@@ -24,6 +24,7 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylRichTextEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 /**
  * Class providing display and edition capabilities for Text resources.
@@ -36,7 +37,7 @@ public class OsylResProxTextView extends OsylAbstractResProxView {
     /**
      * Constructor specifying the model to display and edit as well as the
      * current {@link OsylController}.
-     *  
+     * 
      * @param model
      * @param osylController
      */
@@ -48,8 +49,8 @@ public class OsylResProxTextView extends OsylAbstractResProxView {
     }
 
     /**
-     * ===================== OVERRIDEN METHODS =====================
-     * See superclass for javadoc!  
+     * ===================== OVERRIDEN METHODS ===================== See
+     * superclass for javadoc!
      */
 
     protected void updateModel() {
@@ -58,7 +59,6 @@ public class OsylResProxTextView extends OsylAbstractResProxView {
 		getEditor().getText());
     }
 
-    
     /**
      * ===================== ADDED METHODS =====================
      */
@@ -68,6 +68,12 @@ public class OsylResProxTextView extends OsylAbstractResProxView {
      */
     public String getTextFromModel() {
 	return getModel().getResource().getProperty(COPropertiesType.TEXT);
+    }
+
+    @Override
+    public void updateResourceMetaInfo() {
+	getModel().getResource().addProperty(COPropertiesType.MODIFIED,
+		OsylDateUtils.getNowDateAsXmlString());
     }
 
 }

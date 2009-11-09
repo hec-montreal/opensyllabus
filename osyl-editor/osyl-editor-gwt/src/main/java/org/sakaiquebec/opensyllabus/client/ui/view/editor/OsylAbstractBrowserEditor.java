@@ -134,6 +134,16 @@ public abstract class OsylAbstractBrowserEditor extends
 	    return item.getFilePath();
 	}
     }
+    
+    public String getLastModifiedDateString(){
+	OsylAbstractBrowserItem item =
+		browser.getSelectedAbstractBrowserItem();
+	if (item == null || item instanceof OsylDirectory) {
+	    return null;
+	} else {
+	    return item.getLastModifTime();
+	}
+    }
 
     // ABSTRACT METHOD
     /**

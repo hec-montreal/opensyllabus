@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.client.ui.view;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
+import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractBrowserEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 
@@ -104,6 +105,17 @@ public abstract class OsylAbstractResProxBrowserView extends
 	    docPath = null;
 	}
 	return docPath;
+    }
+
+    public OsylAbstractBrowserEditor getEditor() {
+	return (OsylAbstractBrowserEditor) super.getEditor();
+
+    }
+
+    @Override
+    public void updateResourceMetaInfo() {
+	getModel().getResource().addProperty(COPropertiesType.MODIFIED,
+		getEditor().getLastModifiedDateString());
     }
 
 }

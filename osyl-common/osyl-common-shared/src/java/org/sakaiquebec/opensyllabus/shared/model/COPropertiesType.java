@@ -91,4 +91,8 @@ public class COPropertiesType {
     
     //Reference context
     public static final String DISPLAY_AS="displayAs";
+    
+    //Document resource
+    public static final String LICENCE="licence";
+    
 }

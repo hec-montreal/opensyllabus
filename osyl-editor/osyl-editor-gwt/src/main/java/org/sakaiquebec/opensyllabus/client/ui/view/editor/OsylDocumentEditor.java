@@ -583,6 +583,14 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    return viewerDesc.getHTML();
 	}
     }
+    
+    public String getLicence(){
+	return licenseListBox.getItemText(licenseListBox.getSelectedIndex()) ;
+    }
+    
+    public String getResourceDescription(){
+	return descriptionTextArea.getText();
+    }
 
     /**
      * update the Licence List the list is cached into the object

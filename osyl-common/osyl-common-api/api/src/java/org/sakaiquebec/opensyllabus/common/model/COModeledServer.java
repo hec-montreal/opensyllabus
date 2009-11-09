@@ -382,7 +382,7 @@ public class COModeledServer {
 	}
 	if (isPublication) {
 	    coContent.addProperty(COPropertiesType.MODIFIED, OsylDateUtils
-		    .getDateString());
+		    .getNowDateAsXmlString());
 	}
 	return coContent;
     }
