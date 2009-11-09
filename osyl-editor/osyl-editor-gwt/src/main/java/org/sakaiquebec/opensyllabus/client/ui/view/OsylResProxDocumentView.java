@@ -78,9 +78,9 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
     
     public void updateResourceMetaInfo() {
 	super.updateResourceMetaInfo();
-	getModel().getResource().addProperty(COPropertiesType.LICENCE,
-		getEditor().getLicence());
-	getModel().getResource().addProperty(COPropertiesType.DESCRIPTION,
-		getEditor().getResourceDescription());
+//	getModel().getResource().addProperty(COPropertiesType.LICENCE,
+//		getEditor().getLicence());
+//	getModel().getResource().addProperty(COPropertiesType.DESCRIPTION,
+//		getEditor().getResourceDescription());
     }
 }
