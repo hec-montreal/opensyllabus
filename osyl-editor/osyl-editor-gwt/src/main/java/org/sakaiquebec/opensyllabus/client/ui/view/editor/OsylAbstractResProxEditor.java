@@ -70,6 +70,8 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     private ListBox requirementListBox;
     private boolean hasRequirement;
     private boolean rubricMoveable;
+    private boolean hasImportant;
+    private boolean moveableInRubric;
 
     /**
      * Constructor.
@@ -80,6 +82,8 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	super(view);
 	hasRequirement = true;
 	rubricMoveable = true;
+	hasImportant = true;
+	moveableInRubric = true;
     }
 
     protected PushButton createPushButtonDelete() {
@@ -233,7 +237,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	}
 	diffusionListBox.setSelectedIndex(levelIndex);
 	widgetList.add(diffusionPanel);
-	
+
 	// Other options
 	VerticalPanel optionPanel = new VerticalPanel();
 	optionPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
@@ -251,7 +255,8 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	importantCheckBox = new CheckBox(getUiMessage("MetaInfo.important"));
 	importantCheckBox.setValue(getView().isContextImportant());
 	importantCheckBox.setTitle(getUiMessage("MetaInfo.important.title"));
-	options.add(importantCheckBox);
+	if (hasImportant)
+	    options.add(importantCheckBox);
 	// Other options, specified by each subclass
 	Widget[] optionWidgets = getAdditionalOptionWidgets();
 	if (null != optionWidgets) {
@@ -324,11 +329,13 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
      * Used to refresh up and down arrows
      */
     public void refreshUpAndDownPanel() {
-	OsylPushButton upButton = createButtonUp();
-	OsylPushButton downButton = createButtonDown();
 	getView().getUpAndDownPanel().clear();
-	getView().getUpAndDownPanel().add(upButton);
-	getView().getUpAndDownPanel().add(downButton);
+	if (isMoveableInRubric()) {
+	    OsylPushButton upButton = createButtonUp();
+	    OsylPushButton downButton = createButtonDown();
+	    getView().getUpAndDownPanel().add(upButton);
+	    getView().getUpAndDownPanel().add(downButton);
+	}
     }
 
     /**
@@ -531,9 +538,6 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	String hidden =
 		(getView().isContextHidden() ? getUiMessage("Global.yes")
 			: getUiMessage("Global.no"));
-	String important =
-		(getView().isContextImportant() ? getUiMessage("Global.yes")
-			: getUiMessage("Global.no"));
 
 	String reqLevelUiMsg = "";
 	String requirementLevel = "";
@@ -542,8 +546,16 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	String metaInfoLabelStr =
 		getUiMessage("MetaInfo.audience") + ": " + diffusionLevel
 			+ " | " + getUiMessage("MetaInfo.hidden") + ": "
-			+ hidden + " | " + getUiMessage("MetaInfo.important")
-			+ ": " + important;
+			+ hidden;
+
+	if (hasImportant) {
+	    String important =
+		    (getView().isContextImportant() ? getUiMessage("Global.yes")
+			    : getUiMessage("Global.no"));
+	    metaInfoLabelStr +=
+		    " | " + getUiMessage("MetaInfo.important") + ": "
+			    + important;
+	}
 
 	if (hasRequirement) {
 	    String reqLevelfromView = getView().getRequirementLevel();
@@ -556,9 +568,8 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		requirementLevelLabel =
 			getUiMessage("MetaInfo.requirement") + ": ";
 
-		metaInfoLabelStr =
-			metaInfoLabelStr + " | " + requirementLevelLabel
-				+ requirementLevel;
+		metaInfoLabelStr +=
+			" | " + requirementLevelLabel + requirementLevel;
 
 	    }
 	}
@@ -575,6 +586,22 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
     public void setHasRequirement(boolean hasRequirement) {
 	this.hasRequirement = hasRequirement;
+    }
+
+    public boolean isHasImportant() {
+	return hasImportant;
+    }
+
+    public void setHasImportant(boolean hasImportant) {
+	this.hasImportant = hasImportant;
+    }
+
+    public boolean isMoveableInRubric() {
+	return moveableInRubric;
+    }
+
+    public void setMoveableInRubric(boolean moveableInRubric) {
+	this.moveableInRubric = moveableInRubric;
     }
 
     public boolean isMoveable() {

@@ -65,6 +65,7 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
      */
     public OsylNewsEditor(OsylAbstractView parent) {
 	this(parent, true);
+	setMoveableInRubric(false);
     }
 
     /**

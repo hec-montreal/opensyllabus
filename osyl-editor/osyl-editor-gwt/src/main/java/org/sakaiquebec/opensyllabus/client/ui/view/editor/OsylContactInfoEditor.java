@@ -70,6 +70,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public OsylContactInfoEditor(OsylAbstractView parent) {
 	super(parent);
 	this.setHasRequirement(false);
+	this.setHasImportant(false);
 	initMainPanel();
 	if (!isReadOnly()) {
 	    initEditor();
