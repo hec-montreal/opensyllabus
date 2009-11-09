@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.events.FiresUpdateCOContentResourceEvents;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceEventHandler.UpdateCOContentResourceEvent;
@@ -88,6 +89,7 @@ public class COContentResource implements COModelInterface,
 	final COContentResource resModel = new COContentResource();
 	resModel.setType(type);
 	resModel.setId(UUID.uuid());
+	resModel.setAccess(SecurityInterface.ACCESS_ATTENDEE);
 	if (type.equalsIgnoreCase(COContentResourceType.TEXT)) {
 	    COProperties prop = new COProperties();
 	    prop.addProperty(COPropertiesType.TEXT, osylConfigMessages

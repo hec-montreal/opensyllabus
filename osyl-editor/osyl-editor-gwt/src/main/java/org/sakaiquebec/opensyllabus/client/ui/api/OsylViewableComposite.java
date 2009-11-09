@@ -21,8 +21,10 @@ import org.sakaiquebec.opensyllabus.client.ui.OsylTreeView;
 import org.sakaiquebec.opensyllabus.client.ui.OsylWorkspaceView;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitContentEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Composite;
@@ -241,5 +243,12 @@ public abstract class OsylViewableComposite extends Composite implements
      */
     public String getShortCoMessage(String key) {
 	return getCoMessages().getMessage(key + "Short");
+    }
+    
+    /**
+     * Change the modified date of the model to this moment
+     */
+    public void setModifiedDateToNow(){
+	getModel().getProperties().addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getNowDateAsXmlString());
     }
 }

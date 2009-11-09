@@ -275,6 +275,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
     }
 
     public void onUpdateModel(UpdateCOUnitContentEvent event) {
+	setModifiedDateToNow();
 	if (event.isAddRessProxEvent()) {
 	    // the last resProxy is the added one
 	    List<COContentResourceProxy> proxies =
