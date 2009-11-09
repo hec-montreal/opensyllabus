@@ -1009,8 +1009,7 @@ public class COModeled extends COSerialized {
 		COContentResource coContentResource =
 			(COContentResource) child.getResource();
 		createCOContentResourceChild(document,
-			coContentResourceProxyElem, coContentResource, child
-				.getAccess());
+			coContentResourceProxyElem, coContentResource);
 	    } else {
 		COUnit coUnit = (COUnit) child.getResource();
 		createChildElement(document, coContentResourceProxyElem,
@@ -1029,18 +1028,18 @@ public class COModeled extends COSerialized {
      *            node is created.
      */
     private void createCOContentResourceChild(Document document,
-	    Element coContentResourceProxyElem, COContentResource resource,
-	    String security) {
+	    Element coContentResourceProxyElem, COContentResource resource) {
 	Element coContentResourceElem = null;
 	if (resource.getType().equals(COContentResourceType.PERSON)) {
 	    coContentResourceElem = document.createElement(PERSON_NODE_NAME);
 	} else {
 	    coContentResourceElem = document.createElement(CO_RES_NODE_NAME);
-	    coContentResourceElem.setAttribute(ACCESS_ATTRIBUTE_NAME, security);
 	    coContentResourceElem.setAttribute(XSI_TYPE_ATTRIBUTE_NAME,
 		    resource.getType());
 
 	}
+	coContentResourceElem.setAttribute(ACCESS_ATTRIBUTE_NAME, resource
+		.getAccess());
 	coContentResourceElem.setAttribute(ID_ATTRIBUTE_NAME, resource.getId());
 	if (resource.getProperties() != null
 		&& !resource.getProperties().isEmpty()) {

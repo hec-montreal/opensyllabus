@@ -44,21 +44,10 @@ public class COContentRubric implements COModelInterface {
     private String type;
 
     /**
-     * Properties object that extends a <code>HashMap</code>.
-     */
-    private COProperties properties;
-
-    /**
-     * The handler for updates
-     */
-    // private Set<UpdateCOContentRubricEventHandler>
-    // updateCOContentRubricEventHandler;
-
-    /**
      * Constructor.
      */
     public COContentRubric() {
-	properties = new COProperties();
+	
     }
 
     /**
@@ -86,56 +75,33 @@ public class COContentRubric implements COModelInterface {
      * {@inheritDoc}
      */
     public void addProperty(String key, String value) {
-	getProperties().addProperty(key, value);
-	if (TRACE)
-	    System.out
-		    .println("*** TRACE *** UPDATE THE MODEL COContentRubric "
-			    + key + " = " + value);
-	notifyEventHandlers();
+	
     }
 
     /**
      * {@inheritDoc}
      */
     public COProperties getProperties() {
-	return properties;
+	return null;
     }
 
     /**
      * {@inheritDoc}
      */
     public String getProperty(String key) {
-	return getProperties().getProperty(key);
+	return null;
     }
 
     /**
      * {@inheritDoc}
      */
     public void removeProperty(String key) {
-	getProperties().removeProperty(key);
-	notifyEventHandlers();
     }
 
     /**
      * {@inheritDoc}
      */
     public void setProperties(COProperties coProperties) {
-	this.properties = properties;
-	notifyEventHandlers();
-    }
-
-    void notifyEventHandlers() {
-	// if (updateCOContentRubricEventHandler != null) {
-	// UpdateCOContentRubricEvent event =
-	// new UpdateCOContentRubricEvent(this);
-	// Iterator<UpdateCOContentRubricEventHandler> iter =
-	// updateCOContentRubricEventHandler.iterator();
-	// while (iter.hasNext()) {
-	// UpdateCOContentRubricEventHandler handler =
-	// (UpdateCOContentRubricEventHandler) iter.next();
-	// handler.onUpdateModel(event);
-	// }
-	// }
     }
     
     public String getId() {
@@ -143,5 +109,12 @@ public class COContentRubric implements COModelInterface {
     }
 
     public void setId(String id) {
+    }
+
+    public String getAccess() {
+	return null;
+    }
+
+    public void setAccess(String access) {
     }
 }

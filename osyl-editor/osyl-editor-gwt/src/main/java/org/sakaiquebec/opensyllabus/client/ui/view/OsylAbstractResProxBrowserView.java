@@ -114,6 +114,7 @@ public abstract class OsylAbstractResProxBrowserView extends
 
     @Override
     public void updateResourceMetaInfo() {
+	super.updateResourceMetaInfo();
 	getModel().getResource().addProperty(COPropertiesType.MODIFIED,
 		getEditor().getLastModifiedDateString());
     }

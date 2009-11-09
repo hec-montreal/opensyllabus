@@ -91,5 +91,9 @@ public interface COModelInterface {
 
     public void setId(String id) ;
     
+    public String getAccess() ;
+    
+    public void setAccess(String access) ;
+    
     
 }
