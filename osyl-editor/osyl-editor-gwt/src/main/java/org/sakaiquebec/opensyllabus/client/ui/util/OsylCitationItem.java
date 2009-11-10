@@ -52,11 +52,6 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
     private String resourceName;
 
     /**
-     * Link to the Library
-     */
-    private String url;
-
-    /**
      * Map of citation properties
      */
     private Map<String, String> properties = new HashMap<String, String>();
@@ -65,6 +60,11 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
      * empty constructor
      */
     public OsylCitationItem() {
+    }
+
+    public OsylCitationItem(String citationId, String citationListPath) {
+	super.setFilePath(citationListPath);
+	setProperty(CitationSchema.CITATIONID, citationId);
     }
 
     /**
@@ -79,13 +79,6 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
      */
     public String getUrl() {
 	return getProperty(CitationSchema.URL);
-    }
-
-    /**
-     * @param url to our library
-     */
-    private void setUrl(String url) {
-	this.url = url;
     }
 
     /**
@@ -310,12 +303,16 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 
     @Override
     public boolean equals(Object obj) {
-	OsylCitationItem oci = (OsylCitationItem) obj;
-	if (getPropertyValue(CitationSchema.CITATIONID).equals(
-		oci.getPropertyValue(CitationSchema.CITATIONID)))
-	    return true;
-	else
+	if (obj instanceof OsylCitationItem) {
+	    OsylCitationItem oci = (OsylCitationItem) obj;
+	    if (getPropertyValue(CitationSchema.CITATIONID).equals(
+		    oci.getPropertyValue(CitationSchema.CITATIONID)))
+		return true;
+	    else
+		return false;
+	} else {
 	    return false;
+	}
     }
 
 }

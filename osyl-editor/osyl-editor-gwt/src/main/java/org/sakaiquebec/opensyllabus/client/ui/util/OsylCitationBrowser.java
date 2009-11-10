@@ -23,7 +23,6 @@ package org.sakaiquebec.opensyllabus.client.ui.util;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
-import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -55,8 +54,7 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
      */
     public OsylCitationBrowser(String newResDirName, String citationId,
 	    String citationListPath) {
-	super(newResDirName, null);
-	setCitationIdToSelect(citationId, citationListPath);
+	super(newResDirName, new OsylCitationItem(citationId, citationListPath));
     }
 
     // INHERITED METHODS
@@ -163,12 +161,6 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
     }
 
     // ADDED METHODS
-    public void setCitationIdToSelect(String id, String citationListPath) {
-	OsylCitationItem ofi = new OsylCitationItem();
-	ofi.setProperty(CitationSchema.CITATIONID, id);
-	ofi.setFilePath(citationListPath);
-	setItemToSelect(ofi);
-    }
 
     private void createOrUpdateCitationList(
 	    OsylCitationListItem osylCitationListItem) {

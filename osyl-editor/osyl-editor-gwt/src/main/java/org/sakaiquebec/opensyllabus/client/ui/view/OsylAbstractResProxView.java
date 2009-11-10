@@ -208,7 +208,8 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 
     protected void updateMetaInfo() {
 	//contextMetaInfo
-	setContextImportant(getEditor().isContextImportant());
+	if(getEditor().isHasImportant())
+	    setContextImportant(getEditor().isContextImportant());
 	setContextHidden(getEditor().isContextHidden());
 	setDiffusionLevel(getEditor().getDiffusionLevel());
 	setRubricType(getEditor().getRubricType());

@@ -330,7 +330,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 	createEditBox(getEditBoxTitle());
 	if (getBrowser().getItemToSelect() == null) {
-	    getBrowser().setItemPathToSelect(getView().getDocPath());
+	    getBrowser().setItemToSelect(
+		    new OsylFileItem(getView().getDocPath()));
 	}
 	// refreshComponents();
 	saveButton.setEnabled(false);
@@ -440,7 +441,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	descriptionPanel.add(new Label(getView().getUiMessage(
 		"DocumentEditor.document.description")));
 
-	OsylDisclosureListener odl = new OsylDisclosureListener(getEditorPopup());
+	OsylDisclosureListener odl =
+		new OsylDisclosureListener(getEditorPopup());
 	metaInfoDiscPanel.addCloseHandler(odl);
 	metaInfoDiscPanel.addOpenHandler(odl);
 
@@ -583,12 +585,16 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    return viewerDesc.getHTML();
 	}
     }
-    
-    public String getLicence(){
-	return licenseListBox.getItemText(licenseListBox.getSelectedIndex()) ;
+
+    public String getLicence() {
+	if (licenseListBox.getSelectedIndex() != -1)
+	    return licenseListBox
+		    .getItemText(licenseListBox.getSelectedIndex());
+	else
+	    return "";
     }
-    
-    public String getResourceDescription(){
+
+    public String getResourceDescription() {
 	return descriptionTextArea.getText();
     }
 

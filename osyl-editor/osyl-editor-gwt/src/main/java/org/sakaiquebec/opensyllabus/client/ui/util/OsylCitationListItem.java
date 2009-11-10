@@ -24,17 +24,16 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
-import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
 /**
- *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylCitationListItem extends OsylAbstractBrowserItem implements Serializable{
+public class OsylCitationListItem extends OsylAbstractBrowserItem implements
+	Serializable {
 
     private static final long serialVersionUID = 1816353682345687468L;
-    
+
     /**
      * the id (citationListId)
      */
@@ -54,57 +53,60 @@ public class OsylCitationListItem extends OsylAbstractBrowserItem implements Ser
      * Link to the Library
      */
     private String url;
-    
+
     private List<OsylAbstractBrowserItem> citations;
-    
+
     public String getId() {
-        return id;
+	return id;
     }
 
     public void setId(String id) {
-        this.id = id;
+	this.id = id;
     }
 
     public String getResourceId() {
-        return resourceId;
+	return resourceId;
     }
 
     public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
+	this.resourceId = resourceId;
     }
 
     public String getResourceName() {
-        return resourceName;
+	return resourceName;
     }
 
     public void setResourceName(String resourceName) {
-        this.resourceName = resourceName;
+	this.resourceName = resourceName;
     }
 
     public String getUrl() {
-        return url;
+	return url;
     }
 
     public void setUrl(String url) {
-        this.url = url;
+	this.url = url;
     }
 
-    
     public List<OsylAbstractBrowserItem> getCitations() {
-        return citations;
+	return citations;
     }
 
     public void setCitations(List<OsylAbstractBrowserItem> citations) {
-        this.citations = citations;
+	this.citations = citations;
     }
 
     @Override
     public boolean equals(Object obj) {
-	OsylFileItem ofi = (OsylFileItem) obj;
-	if (getFilePath().equals(ofi.getFilePath()))
-	    return true;
-	else
+	if (obj instanceof OsylCitationListItem) {
+	    OsylCitationListItem ofi = (OsylCitationListItem) obj;
+	    if (getFilePath().equals(ofi.getFilePath()))
+		return true;
+	    else
+		return false;
+	} else {
 	    return false;
+	}
     }
 
     @Override
@@ -118,4 +120,3 @@ public class OsylCitationListItem extends OsylAbstractBrowserItem implements Ser
     }
 
 }
-

@@ -268,8 +268,9 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	createEditBox(getEditBoxTitle());
 
 	if (browser.getItemToSelect() == null) {
-	    getBrowser().setCitationIdToSelect(getView().getCitationId(),
-		    getView().getDocPath());
+	    getBrowser().setItemToSelect(
+		    new OsylCitationItem(getView().getCitationId(), getView()
+			    .getDocPath()));
 	}
 
     } // enterEdit
@@ -357,7 +358,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	VerticalPanel descriptionPanel = new VerticalPanel();
 	metaInfoPanel.add(descriptionPanel);
 
-	OsylDisclosureListener odl = new OsylDisclosureListener(getEditorPopup());
+	OsylDisclosureListener odl =
+		new OsylDisclosureListener(getEditorPopup());
 	metaInfoDiscPanel.addCloseHandler(odl);
 	metaInfoDiscPanel.addOpenHandler(odl);
 

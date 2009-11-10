@@ -816,11 +816,9 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	boolean fileItemFound = false;
 	OsylAbstractBrowserItem itemToSelect = getItemToSelect();
 	if (itemToSelect != null) {
-
-	    for (int i = 0; i < getCurrentDirectory().getFilesList().size(); i++) {
-		OsylAbstractBrowserItem fileItem =
-			getCurrentDirectory().getFilesList().get(i);
-
+	    List<OsylAbstractBrowserItem> fileList = getCurrentDirectory().getFilesList();
+	    for (int i = 0; i < fileList.size(); i++) {
+		OsylAbstractBrowserItem fileItem =fileList.get(i);
 		if (fileItem.equals(itemToSelect)) {
 		    fileItemFound = true;
 		    setSelectedAbstractBrowserItem(fileItem);
@@ -837,7 +835,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		}
 	    }
 	}
-
 	if (!fileItemFound) {
 	    setSelectedAbstractBrowserItem(null);
 	    getFileListing().setSelectedIndex(-1);
@@ -886,7 +883,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     protected PushButton getFolderAddButton() {
 	return folderAddButton;
     }
-    
+
     protected PushButton getAddFileButton() {
 	return addFileButton;
     }

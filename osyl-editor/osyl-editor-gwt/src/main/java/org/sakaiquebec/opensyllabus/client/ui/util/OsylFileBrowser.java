@@ -21,7 +21,6 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
-import org.sakaiquebec.opensyllabus.client.controller.event.UploadFileEventHandler.UploadFileEvent;
 import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
@@ -49,8 +48,7 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
      * @param newController
      */
     public OsylFileBrowser(String newResDirName, String pathToSelect) {
-	super(newResDirName, null);
-	setItemPathToSelect(pathToSelect);
+	super(newResDirName, new OsylFileItem(pathToSelect));
     }
 
     @Override
@@ -72,12 +70,6 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 	    osylFileUpload.addEventHandler(OsylFileBrowser.this);
 	    osylFileUpload.showModal();
 	}
-    }
-
-    public void setItemPathToSelect(String path) {
-	OsylFileItem ofi = new OsylFileItem();
-	ofi.setFilePath(path);
-	setItemToSelect(ofi);
     }
 
     @Override
@@ -107,9 +99,9 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
     protected PushButton createEditButton() {
 	return null;
     }
-    
+
     public void onUploadFile(UploadFileEvent event) {
-	setItemPathToSelect(event.getSource().toString());
+	setItemToSelect(new OsylFileItem(event.getSource().toString()));
 	super.onUploadFile(event);
     }
 
