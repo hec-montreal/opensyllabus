@@ -18,12 +18,26 @@
 	<department type="UdeM"></department>
 	<parent type="UdeM"></parent>
 	<access></access>
+	<asmStructure access="public" xsi:type="NewsStruct">
+		<modified>2001-12-17T09:30:47-05:00</modified>
+		<asmUnit access="public" xsi:type="NewsUnit">
+			<label><![CDATA[Nouvelles]]></label>
+			<modified>2001-12-17T09:30:47-05:00</modified>
+			<asmUnitStructure access="public" xsi:type="NewsUnitStruct">
+				<label><![CDATA[News]]></label>
+				<modified>2001-12-17T09:30:47-05:00</modified>
+				<asmUnitContent access="public" xsi:type="NewsUnitContent">
+					<modified>2001-12-17T09:30:47-05:00</modified>
+				</asmUnitContent>
+			</asmUnitStructure>
+		</asmUnit>
+	</asmStructure>
 	<asmStructure access="public" xsi:type="OverviewStruct">
 		<id type="UdeMsakai">38404736</id>
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<asmUnit access="public" xsi:type="OverviewUnit">
-			<label><![CDATA[Présentation du cours]]></label>
+			<label><![CDATA[Informations sur le cours]]></label>
 			<asmUnitStructure access="public" xsi:type="OverviewUnitStruct">
 				<asmUnitContent access="public" xsi:type="CourseOfficialDescriptionUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
@@ -53,7 +67,7 @@
 			</asmUnitStructure>
 		</asmUnit>
 		<asmUnit access="public" xsi:type="SchedulePlaceUnit">
-			<label><![CDATA[Horaire et lieux du cours]]></label>
+			<label><![CDATA[Horaires et lieux]]></label>
 			<asmUnitStructure access="public" xsi:type="SchedulePlaceUnitStruct">
 				<asmUnitContent access="public" xsi:type="SchedulePlaceUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
@@ -134,9 +148,28 @@
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<asmUnit access="public" xsi:type="StaffUnit">
-  			<label><![CDATA[Coordonnées]]></label>
+    	<label><![CDATA[Coordonnées]]></label>
 			<asmUnitStructure access="public" xsi:type="StaffUnitStruct">
-				<asmUnitContent access="public" xsi:type="StaffUnitContent" />
+				<asmUnitContent access="public" xsi:type="StaffUnitContent">
+					<asmContext access="attendee" xsi:type="PeopleContext">
+                    	<label><![CDATA[Tapez votre texte ici...]]></label>
+                            <importance>false</importance>
+                            <visible>true</visible>
+                            <semanticType>
+                                <type>coursecoordinator</type>
+                            </semanticType>
+                            <availability>Du lundi au vendredi entre 9 h et 17 h</availability>
+                            <comment>Pas de commentaire&lt;br&gt;</comment>
+                            <Person access="attendee">
+                                <title>Professeur titulaire</title>
+                                <surname>Nom</surname>
+                                <firstname>Prénom</firstname>
+                                <officeroom># 1234</officeroom>
+                                <tel>514-343-6111, poste 1234</tel>
+                                <email>prenom.nom@umontreal.ca</email>
+                            </Person>
+					</asmContext>
+				</asmUnitContent>
 			</asmUnitStructure>
 		</asmUnit>
 	</asmStructure>
@@ -145,7 +178,7 @@
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<asmUnit access="public" xsi:type="IntroductionUnit">
-			<label><![CDATA[]]></label>
+			<label><![CDATA[Introduction]]></label>
 			<asmUnitStructure access="public" xsi:type="IntroductionUnitStruct">
 				<label><![CDATA[Introduction / présentation du cours]]></label>
 				<asmUnitContent access="public" xsi:type="IntroductionUnitContent">
@@ -204,7 +237,7 @@
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<asmUnit access="public" xsi:type="ObjectivesUnit">
-			<label><![CDATA[]]></label>
+			<label><![CDATA[Objectifs]]></label>
 			<asmUnitStructure access="public" xsi:type="ObjectivesUnitStruct">
 				<label><![CDATA[Objectifs du cours]]></label>
 				<asmUnitContent access="public" xsi:type="ObjectivesUnitContent">
@@ -268,7 +301,7 @@
 			<modified>2001-12-17T09:30:47Z</modified>
 			<visible>true</visible>
 			<asmUnit access="public" xsi:type="AssessmentIntroUnit">
-  				<label><![CDATA[]]></label>
+  				<label><![CDATA[Description des évaluations]]></label>
 				<asmUnitStructure access="public" xsi:type="AssessmentIntroUnitStruct">
 					<asmUnitContent access="public" xsi:type="AssessmentIntroUnitContent">
 						<asmContext xsi:type="InformationContext" access="public">
@@ -557,9 +590,9 @@
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<asmUnit access="public" xsi:type="PlagiarismUnit">
-			<label><![CDATA[]]></label>
+			<label><![CDATA[Plagiat]]></label>
 			<asmUnitStructure access="public" xsi:type="PlagiarismUnitStruct">
-				<label><![CDATA[Introduction / présentation du cours]]></label>
+				<label><![CDATA[Plagiat]]></label>
 				<asmUnitContent access="public" xsi:type="PlagiarismUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
 			    		<id type="UdeMsakai">805655358980</id>
@@ -593,9 +626,9 @@
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<asmUnit access="public" xsi:type="PedagogicalApproachUnit">
-			<label><![CDATA[]]></label>
+			<label><![CDATA[Approche pédagogique]]></label>
 			<asmUnitStructure access="public" xsi:type="PedagogicalApproachUnitStruct">
-				<label><![CDATA[Introduction / présentation du cours]]></label>
+				<label><![CDATA[Approche pédagogique]]></label>
 				<asmUnitContent access="public" xsi:type="PedagogicalApproachUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
 			    		<id type="UdeMsakai">805655358980</id>
@@ -698,7 +731,7 @@
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<asmUnit access="public" xsi:type="LearningMaterialUnit">
-			<label><![CDATA[]]></label>
+			<label><![CDATA[Ressources pédagogiques]]></label>
 			<asmUnitStructure access="public" xsi:type="LearningMaterialUnitStruct">
 				<label><![CDATA[Ressources pédagogiques utilisées durant tout le cours]]></label>
 				<asmUnitContent access="public" xsi:type="LearningMaterialUnitContent">
@@ -721,7 +754,7 @@
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
 							<language>fr</language>
-							<text><![CDATA[[...Insérez une description des ressources pédagogiques...]]></text>
+							<text><![CDATA[...Insérez une description des ressources pédagogiques...]]></text>
 						</asmResource>
 						<label />
 					</asmContext>
@@ -848,12 +881,12 @@
 		<id type="UdeMsakai">335345334534</id>
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
-		<label>Séances</label>
+		<label>Liste des activités</label>
 		<description>String</description>
 		<asmUnit access="public" xsi:type="LecturesActivitiesUnit">
 			<label><![CDATA[... Tapez le titre de l'activité ...]]></label>
 			<asmUnitStructure access="public" xsi:type="LecturesActivitiesUnitStruct">
-				<label><![CDATA[Séance]]></label>
+				<label><![CDATA[Activité]]></label>
 				<asmUnitContent access="public" xsi:type="LecturesActivitiesUnitContent">
 					<asmContext xsi:type="InformationContext" access="public">
 						<id type="UdeMsakai">999000999000999</id>
@@ -1024,7 +1057,7 @@
 		<asmUnit access="public" xsi:type="LecturesActivitiesUnit">
 			<label><![CDATA[... Tapez le titre de l'activité ...]]></label>
 			<asmUnitStructure access="public" xsi:type="LecturesActivitiesUnitStruct">
-				<label><![CDATA[Séance]]></label>
+				<label><![CDATA[Activité]]></label>
 				<asmUnitContent access="public" xsi:type="LecturesActivitiesUnitContent">
 					<asmContext xsi:type="InformationContext" access="public">
 						<id type="UdeMsakai">999000999000999</id>
@@ -1195,7 +1228,7 @@
 		<asmUnit access="public" xsi:type="LecturesActivitiesUnit">
 			<label><![CDATA[... Tapez le titre de l'activité ...]]></label>
 			<asmUnitStructure access="public" xsi:type="LecturesActivitiesUnitStruct">
-				<label><![CDATA[Séance]]></label>
+				<label><![CDATA[Activité]]></label>
 				<asmUnitContent access="public" xsi:type="LecturesActivitiesUnitContent">
 					<asmContext xsi:type="InformationContext" access="public">
 						<id type="UdeMsakai">999000999000999</id>
@@ -1366,7 +1399,7 @@
 		<asmUnit access="public" xsi:type="LecturesActivitiesUnit">
 			<label><![CDATA[... Tapez le titre de l'activité ...]]></label>
 			<asmUnitStructure access="public" xsi:type="LecturesActivitiesUnitStruct">
-				<label><![CDATA[Séance]]></label>
+				<label><![CDATA[Activité]]></label>
 				<asmUnitContent access="public" xsi:type="LecturesActivitiesUnitContent">
 					<asmContext xsi:type="InformationContext" access="public">
 						<id type="UdeMsakai">999000999000999</id>
@@ -1537,7 +1570,7 @@
 		<asmUnit access="public" xsi:type="LecturesActivitiesUnit">
 			<label><![CDATA[... Tapez le titre de l'activité ...]]></label>
 			<asmUnitStructure access="public" xsi:type="LecturesActivitiesUnitStruct">
-				<label><![CDATA[Séance]]></label>
+				<label><![CDATA[Activité]]></label>
 				<asmUnitContent access="public" xsi:type="LecturesActivitiesUnitContent">
 					<asmContext xsi:type="InformationContext" access="public">
 						<id type="UdeMsakai">999000999000999</id>
@@ -1708,7 +1741,7 @@
 		<asmUnit access="public" xsi:type="LecturesActivitiesUnit">
 			<label><![CDATA[... Tapez le titre de l'activité ...]]></label>
 			<asmUnitStructure access="public" xsi:type="LecturesActivitiesUnitStruct">
-				<label><![CDATA[Séance]]></label>
+				<label><![CDATA[Activité]]></label>
 				<asmUnitContent access="public" xsi:type="LecturesActivitiesUnitContent">
 					<asmContext xsi:type="InformationContext" access="public">
 						<id type="UdeMsakai">999000999000999</id>
@@ -1879,7 +1912,7 @@
 		<asmUnit access="public" xsi:type="LecturesActivitiesUnit">
 			<label><![CDATA[... Tapez le titre de l'activité ...]]></label>
 			<asmUnitStructure access="public" xsi:type="LecturesActivitiesUnitStruct">
-				<label><![CDATA[Séance]]></label>
+				<label><![CDATA[Activité]]></label>
 				<asmUnitContent access="public" xsi:type="LecturesActivitiesUnitContent">
 					<asmContext xsi:type="InformationContext" access="public">
 						<id type="UdeMsakai">999000999000999</id>
@@ -2050,7 +2083,7 @@
 		<asmUnit access="public" xsi:type="LecturesActivitiesUnit">
 			<label><![CDATA[... Tapez le titre de l'activité ...]]></label>
 			<asmUnitStructure access="public" xsi:type="LecturesActivitiesUnitStruct">
-				<label><![CDATA[Séance]]></label>
+				<label><![CDATA[Activité]]></label>
 				<asmUnitContent access="public" xsi:type="LecturesActivitiesUnitContent">
 					<asmContext xsi:type="InformationContext" access="public">
 						<id type="UdeMsakai">999000999000999</id>
@@ -2221,7 +2254,7 @@
 		<asmUnit access="public" xsi:type="LecturesActivitiesUnit">
 			<label><![CDATA[... Tapez le titre de l'activité ...]]></label>
 			<asmUnitStructure access="public" xsi:type="LecturesActivitiesUnitStruct">
-				<label><![CDATA[Séance]]></label>
+				<label><![CDATA[Activité]]></label>
 				<asmUnitContent access="public" xsi:type="LecturesActivitiesUnitContent">
 					<asmContext xsi:type="InformationContext" access="public">
 						<id type="UdeMsakai">999000999000999</id>
@@ -2392,7 +2425,7 @@
 		<asmUnit access="public" xsi:type="LecturesActivitiesUnit">
 			<label><![CDATA[... Tapez le titre de l'activité ...]]></label>
 			<asmUnitStructure access="public" xsi:type="LecturesActivitiesUnitStruct">
-				<label><![CDATA[Séance]]></label>
+				<label><![CDATA[Activité]]></label>
 				<asmUnitContent access="public" xsi:type="LecturesActivitiesUnitContent">
 					<asmContext xsi:type="InformationContext" access="public">
 						<id type="UdeMsakai">999000999000999</id>
@@ -2563,7 +2596,7 @@
 		<asmUnit access="public" xsi:type="LecturesActivitiesUnit">
 			<label><![CDATA[... Tapez le titre de l'activité ...]]></label>
 			<asmUnitStructure access="public" xsi:type="LecturesActivitiesUnitStruct">
-				<label><![CDATA[Séance]]></label>
+				<label><![CDATA[Activité]]></label>
 				<asmUnitContent access="public" xsi:type="LecturesActivitiesUnitContent">
 					<asmContext xsi:type="InformationContext" access="public">
 						<id type="UdeMsakai">999000999000999</id>
@@ -2734,7 +2767,7 @@
 		<asmUnit access="public" xsi:type="LecturesActivitiesUnit">
 			<label><![CDATA[... Tapez le titre de l'activité ...]]></label>
 			<asmUnitStructure access="public" xsi:type="LecturesActivitiesUnitStruct">
-				<label><![CDATA[Séance]]></label>
+				<label><![CDATA[Activité]]></label>
 				<asmUnitContent access="public" xsi:type="LecturesActivitiesUnitContent">
 					<asmContext xsi:type="InformationContext" access="public">
 						<id type="UdeMsakai">999000999000999</id>
@@ -2908,9 +2941,9 @@
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<asmUnit access="public" xsi:type="BibliographyUnit">
-			<label><![CDATA[]]></label>
+			<label><![CDATA[Bibliographie]]></label>
 			<asmUnitStructure access="public" xsi:type="BibliographyUnitStruct">
-				<label><![CDATA[Introduction / présentation du cours]]></label>
+				<label><![CDATA[Bibliographie]]></label>
 				<asmUnitContent access="public" xsi:type="BibliographyUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
 			    		<id type="UdeMsakai">805655358980</id>
@@ -2944,7 +2977,7 @@
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<asmUnit access="public" xsi:type="ThematicBibliographyUnit">
-			<label><![CDATA[]]></label>
+			<label><![CDATA[Bibliothèque disciplinaire]]></label>
 			<asmUnitStructure access="public" xsi:type="ThematicBibliographyUnitStruct">
 				<asmUnitContent access="public" xsi:type="ThematicBibliographyUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
@@ -2979,7 +3012,7 @@
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<asmUnit access="public" xsi:type="LearningSupportServicesUnit">
-			<label><![CDATA[]]></label>
+			<label><![CDATA[Support à la formation]]></label>
 			<asmUnitStructure access="public" xsi:type="LearningSupportServicesUnitStruct">
 				<label><![CDATA[Services de soutien à l'apprentissage]]></label>
 				<asmUnitContent access="public" xsi:type="LearningSupportServicesUnitContent">

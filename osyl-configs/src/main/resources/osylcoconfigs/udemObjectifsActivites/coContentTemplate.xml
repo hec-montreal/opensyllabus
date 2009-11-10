@@ -18,6 +18,20 @@
 	<department type="UdeM"></department>
 	<parent type="UdeM"></parent>
 	<access></access>
+	<asmStructure access="public" xsi:type="NewsStruct">
+		<modified>2001-12-17T09:30:47-05:00</modified>
+		<asmUnit access="public" xsi:type="NewsUnit">
+			<label><![CDATA[Nouvelles]]></label>
+			<modified>2001-12-17T09:30:47-05:00</modified>
+			<asmUnitStructure access="public" xsi:type="NewsUnitStruct">
+				<label><![CDATA[News]]></label>
+				<modified>2001-12-17T09:30:47-05:00</modified>
+				<asmUnitContent access="public" xsi:type="NewsUnitContent">
+					<modified>2001-12-17T09:30:47-05:00</modified>
+				</asmUnitContent>
+			</asmUnitStructure>
+		</asmUnit>
+	</asmStructure>
 	<asmStructure access="public" xsi:type="OverviewStruct">
 		<id type="UdeMsakai">38404736</id>
 		<modified>2001-12-17T09:30:47Z</modified>
@@ -134,7 +148,7 @@
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<asmUnit access="public" xsi:type="StaffUnit">
-  			<label><![CDATA[Coordonnées des intervenants]]></label>
+    	<label><![CDATA[Coordonnées]]></label>
 			<asmUnitStructure access="public" xsi:type="StaffUnitStruct">
 				<asmUnitContent access="public" xsi:type="StaffUnitContent">
 					<asmContext access="attendee" xsi:type="PeopleContext">
@@ -144,17 +158,17 @@
                             <semanticType>
                                 <type>coursecoordinator</type>
                             </semanticType>
-                            <Person>
-                                <role>Professeur titulaire</role>
-                                <lastname>Nom</lastname>
+                            <availability>Du lundi au vendredi entre 9 h et 17 h</availability>
+                            <comment>Pas de commentaire&lt;br&gt;</comment>
+                            <Person access="attendee">
+                                <title>Professeur titulaire</title>
+                                <surname>Nom</surname>
                                 <firstname>Prénom</firstname>
-                                <office># 1234</office>
-                                <phone>514-343-6111, poste 1234</phone>
+                                <officeroom># 1234</officeroom>
+                                <tel>514-343-6111, poste 1234</tel>
                                 <email>prenom.nom@umontreal.ca</email>
-                                <availability>Du lundi au vendredi entre 9 h et 17 h</availability>
-                                <comments>Pas de commentaire&lt;br&gt;</comments>
                             </Person>
-                        </asmContext>
+					</asmContext>
 				</asmUnitContent>
 			</asmUnitStructure>
 		</asmUnit>
@@ -164,7 +178,7 @@
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<asmUnit access="public" xsi:type="IntroductionUnit">
-			<label><![CDATA[Introduction / présentation du cours]]></label>
+			<label><![CDATA[Introduction]]></label>
 			<asmUnitStructure access="public" xsi:type="IntroductionUnitStruct">
 				<label><![CDATA[Introduction / présentation du cours]]></label>
 				<asmUnitContent access="public" xsi:type="IntroductionUnitContent">

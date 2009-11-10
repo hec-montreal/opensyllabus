@@ -11,6 +11,24 @@
 		<attribute name="propertyType" restrictionpattern="UdeM" />
 		<!-- list of element asmUnit allowed at this level -->
 		<element name="asmStructure">
+			<attribute name="type" restrictionpattern="NewsStruct" />
+			<element name="asmUnit">
+				<attribute name="type" restrictionpattern="NewsUnit" allowMultiple="false"/>
+				<element name="asmUnitStructure">
+					<attribute name="type" restrictionpattern="NewsUnitStruct" allowMultiple="false"/>
+					<element name="asmUnitContent">
+						<attribute name="type" restrictionpattern="NewsUnitContent" />
+			    		<element name="asmResource">
+				    		<attribute name="type" restrictionpattern="News" />
+			    		</element>
+			    		<element name="semanticType">
+			        		<attribute name="type" restrictionpattern="news" />
+			    		</element>
+					</element>
+				</element>
+			</element>
+		</element>
+		<element name="asmStructure">
 			<attribute name="type" restrictionpattern="OverviewStruct" />
 			<element name="asmUnit">
 				<attribute name="type" restrictionpattern="OverviewUnit" allowMultiple="false"/>
@@ -46,7 +64,7 @@
 		<element name="asmStructure">
 			<attribute name="type" restrictionpattern="StaffStruct" />
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="StaffUnit" />
+				<attribute name="type" restrictionpattern="StaffUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="StaffUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -82,7 +100,7 @@
 		<element name="asmStructure">
 			<attribute name="type" restrictionpattern="SkillsStruct" />
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="SkillsUnit"/>
+				<attribute name="type" restrictionpattern="SkillsUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="SkillsUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -140,7 +158,7 @@
 		<element name="asmStructure">
 			<attribute name="type" restrictionpattern="PlagiarismStruct" />
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="PlagiarismUnit"/>
+				<attribute name="type" restrictionpattern="PlagiarismUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="PlagiarismUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -158,7 +176,7 @@
 		<element name="asmStructure">
 			<attribute name="type" restrictionpattern="PedagogicalApproachStruct" />
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="PedagogicalApproachUnit" />
+				<attribute name="type" restrictionpattern="PedagogicalApproachUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="PedagogicalApproachUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -176,7 +194,7 @@
 		<element name="asmStructure">
 			<attribute name="type" restrictionpattern="LearningMaterialStruct" />
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="LearningMaterialUnit" />
+				<attribute name="type" restrictionpattern="LearningMaterialUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="LearningMaterialUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -196,9 +214,9 @@
 			<attribute name="type" restrictionpattern="SkillsComponentsStruct" />
 			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="SkillsComponentsUnit" />
+				<attribute name="type" restrictionpattern="SkillsComponentsUnit" allowMultiple="true"/>
 				<element name="asmUnitStructure">
-					<attribute name="type" restrictionpattern="SkillsComponentsUnitStruct" allowMultiple="true"/>
+					<attribute name="type" restrictionpattern="SkillsComponentsUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
 						<attribute name="type" restrictionpattern="SkillsComponentsUnitContent" />
 						<element name="asmResource">
@@ -215,7 +233,7 @@
 			<attribute name="type" restrictionpattern="BibliographyStruct" />
 			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="BibliographyUnit" />
+				<attribute name="type" restrictionpattern="BibliographyUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="BibliographyUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -234,7 +252,7 @@
 			<attribute name="type" restrictionpattern="ThematicBibliographyStruct" />
 			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="ThematicBibliographyUnit"/>
+				<attribute name="type" restrictionpattern="ThematicBibliographyUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="ThematicBibliographyUnitStruct" />
 					<element name="asmUnitContent">
@@ -253,7 +271,7 @@
 			<attribute name="type" restrictionpattern="LearningSupportServicesStruct" />
 			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="LearningSupportServicesUnit" />
+				<attribute name="type" restrictionpattern="LearningSupportServicesUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="LearningSupportServicesUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
