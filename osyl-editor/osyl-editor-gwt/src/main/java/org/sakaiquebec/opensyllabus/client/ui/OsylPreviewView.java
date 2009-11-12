@@ -36,6 +36,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COModeled;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElementType;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
 import org.sakaiquebec.opensyllabus.shared.model.OsylTestXsl;
 
 import com.google.gwt.user.client.Window;
@@ -238,33 +239,43 @@ public class OsylPreviewView extends OsylViewableComposite implements
      */
     public COModelInterface findStartingViewContext() {
 
+	COElementAbstract root = (COContent) getModel();
+
+	COElementAbstract absElement = findStartingViewContext(root);
+
+	if (absElement == null && root.getChildrens() != null
+		&& root.getChildrens().size() > 0) {
+	    absElement = (COElementAbstract) root.getChildrens().get(0);
+	}
+	return absElement;
+    }
+
+    private COElementAbstract findStartingViewContext(COElementAbstract coe) {
+	COElementAbstract absElement = null;
 	List<COElementAbstract> childrenList =
-		(List<COElementAbstract>) ((COContent) this.getModel())
-			.getChildrens();
+		(List<COElementAbstract>) coe.getChildrens();
 	boolean find = false;
 	Iterator<COElementAbstract> iter = childrenList.iterator();
-	COElementAbstract absElement = null;
 	while (iter.hasNext()) {
 	    absElement = (COElementAbstract) iter.next();
-	    if (absElement.isCOStructureElement()) {
-
-		// We prefer to be on the first Lectures type when the
-		// application opens
-		if (absElement.getType().equalsIgnoreCase(
-			COStructureElementType.PEDAGOGICAL_STRUCT)) {
+	    if (absElement.isCOUnit()) {
+		if (absElement.getType().equalsIgnoreCase(COUnitType.NEWS_UNIT)) {
+		    find = true;
+		    break;
+		}
+	    } else {
+		absElement = findStartingViewContext(absElement);
+		if (absElement != null) {
 		    find = true;
 		    break;
 		}
 	    }
 	}
-
 	if (!find && childrenList != null && childrenList.size() > 0) {
-	    absElement = (COElementAbstract) childrenList.get(0);
-	} else {
-	    // TODO: Display the root CourseOutline
-	    // Window.alert("TODO: please check findStartingViewContext");
+	    absElement = null;
 	}
 	return absElement;
     }
+
 
 }

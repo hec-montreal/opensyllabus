@@ -172,27 +172,33 @@ public class OsylToolbarView extends OsylViewableComposite implements
 
 	private void createASMContext(COUnitContent coUnitContent) {
 	    String defaultRubric = "";
-	    List<COModelInterface> coUnitSubModels =
-		    getController().getOsylConfig().getOsylConfigRuler()
-			    .getAllowedSubModels(coUnitContent);
 
-	    for (int i = 0; i < coUnitSubModels.size(); i++) {
-		Object subModel = coUnitSubModels.get(i);
+	    // NEWS HACK
+	    if (subType.equals(COContentResourceType.NEWS)) {
+		defaultRubric = COContentRubric.RUBRIC_TYPE_NEWS;
+	    } else {
+		List<COModelInterface> coUnitSubModels =
+			getController().getOsylConfig().getOsylConfigRuler()
+				.getAllowedSubModels(coUnitContent);
 
-		if (subModel instanceof COContentRubric) {
-		    COContentRubric coContentRubric =
-			    (COContentRubric) subModel;
-		    defaultRubric = coContentRubric.getType();
-		    break;
+		for (int i = 0; i < coUnitSubModels.size(); i++) {
+		    Object subModel = coUnitSubModels.get(i);
+
+		    if (subModel instanceof COContentRubric) {
+			COContentRubric coContentRubric =
+				(COContentRubric) subModel;
+			if (!coContentRubric.getType().equals(
+				COContentRubric.RUBRIC_TYPE_NEWS)) {
+			    defaultRubric = coContentRubric.getType();
+			    break;
+			}
+		    }
 		}
 	    }
-	    //NEWS HACK
-	    if(subType.equals(COContentResourceType.NEWS))
-		defaultRubric=COContentRubric.RUBRIC_TYPE_NEWS;
-	    
 	    COContentResourceProxy resProxModel =
 		    COContentResourceProxy.createDefaultResProxy(type,
-			    getCoMessages(), coUnitContent, subType, defaultRubric);
+			    getCoMessages(), coUnitContent, subType,
+			    defaultRubric);
 	    if (subType.equalsIgnoreCase(COContentResourceType.ASSIGNMENT)) {
 		createAssignement(resProxModel, coUnitContent);
 	    }
@@ -238,12 +244,11 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	// Callback will be processed by the Controller
 	resProxModel.getProperties().addProperty(COPropertiesType.URI,
 		"emptyAssignmentURI");
-	
+
 	COElementAbstract parentEvaluationUnit = contentUnit;
 	while (!parentEvaluationUnit.isCOUnit())
 	    parentEvaluationUnit = parentEvaluationUnit.getParent();
-	    
-	
+
 	// IMPORTANT : when the rating (the last parameter) is -1
 	// then it is a default assignment
 	int rating = -1;

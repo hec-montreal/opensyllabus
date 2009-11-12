@@ -29,20 +29,16 @@ import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEve
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
-import org.sakaiquebec.opensyllabus.client.ui.OsylTreeView;
-import org.sakaiquebec.opensyllabus.client.ui.OsylRoundCornersPanel;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
-import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
-import org.sakaiquebec.opensyllabus.shared.model.COStructureElementType;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Label;
 
 /**
  * OsylMainView defines the OpenSyllabus main view which is composed by a
@@ -65,7 +61,7 @@ public class OsylMainView extends OsylViewableComposite {
 
     public OsylMainView(COModelInterface model, OsylController osylController) {
 	super(model, osylController);
-	
+
 	// Controller itself has a reference to the MainView
 	getController().setMainView(this);
 
@@ -90,21 +86,22 @@ public class OsylMainView extends OsylViewableComposite {
 
 	// Create and set the Main Horizontal Split Panel
 	horizontalSplitPanel = new HorizontalSplitPanel();
-	horizontalSplitPanel.setStylePrimaryName("Osyl-MainView-HorizontalSplitPanel");
+	horizontalSplitPanel
+		.setStylePrimaryName("Osyl-MainView-HorizontalSplitPanel");
 	getMainPanel().add(horizontalSplitPanel);
 
 	// Create and set the OpenSyllabus TreeView
 	setOsylTreeView(new OsylTreeView(getModel(), getController()));
 	// TODO: compute dynamically the maximum height of the TreeView
- 	horizontalSplitPanel.setSplitPosition( OsylTreeView.getInitialSplitPosition());
- 	SimplePanel treeEnclosingPanel = new SimplePanel();
-	OsylRoundCornersPanel treeViewRoundCornerPanel = 
-	    	new OsylRoundCornersPanel(getOsylTreeView(),
-	    		// "Osyl-TreeView",
-	    		"",
-			"Osyl-TreeView-BottomLeft", 
-			"Osyl-TreeView-BottomRight", 
-			"Osyl-TreeView-TopLeft", 
+	horizontalSplitPanel.setSplitPosition(OsylTreeView
+		.getInitialSplitPosition());
+	SimplePanel treeEnclosingPanel = new SimplePanel();
+	OsylRoundCornersPanel treeViewRoundCornerPanel =
+		new OsylRoundCornersPanel(
+			getOsylTreeView(),
+			// "Osyl-TreeView",
+			"", "Osyl-TreeView-BottomLeft",
+			"Osyl-TreeView-BottomRight", "Osyl-TreeView-TopLeft",
 			"Osyl-TreeView-TopRight");
 	treeEnclosingPanel.add(treeViewRoundCornerPanel);
 	treeEnclosingPanel.setStylePrimaryName("Osyl-TreeView");
@@ -113,15 +110,14 @@ public class OsylMainView extends OsylViewableComposite {
 	// Create and set the OpenSyllabus Workspace View
 	setWorkspaceView(new OsylWorkspaceView(getController()
 		.getViewContextModel(), getController()));
- 	SimplePanel workspaceEnclosingPanel = new SimplePanel();
-	OsylRoundCornersPanel workSpaceViewRoundCornerPanel = 
-	    new OsylRoundCornersPanel(
-		    getWorkspaceView(),
-	    		// "Osyl-WorkspaceView",
-		        "",
-			"Osyl-WorkspaceView-BottomLeft", 
-			"Osyl-WorkspaceView-BottomRight", 
-			"Osyl-WorkspaceView-TopLeft", 
+	SimplePanel workspaceEnclosingPanel = new SimplePanel();
+	OsylRoundCornersPanel workSpaceViewRoundCornerPanel =
+		new OsylRoundCornersPanel(
+			getWorkspaceView(),
+			// "Osyl-WorkspaceView",
+			"", "Osyl-WorkspaceView-BottomLeft",
+			"Osyl-WorkspaceView-BottomRight",
+			"Osyl-WorkspaceView-TopLeft",
 			"Osyl-WorkspaceView-TopRight");
 	workspaceEnclosingPanel.add(workSpaceViewRoundCornerPanel);
 	workspaceEnclosingPanel.setStylePrimaryName("Osyl-WorkspaceView");
@@ -148,33 +144,41 @@ public class OsylMainView extends OsylViewableComposite {
      */
     public COModelInterface findStartingViewContext() {
 
+	COElementAbstract root = (COContent) getModel();
+
+	COElementAbstract absElement = findStartingViewContext(root);
+
+	if (absElement == null && root.getChildrens() != null
+		&& root.getChildrens().size() > 0) {
+	    absElement = (COElementAbstract) root.getChildrens().get(0);
+	}
+	return absElement;
+    }
+
+    private COElementAbstract findStartingViewContext(COElementAbstract coe) {
+	COElementAbstract absElement = null;
 	List<COElementAbstract> childrenList =
-		(List<COElementAbstract>) ((COContent) this.getModel())
-			.getChildrens();
+		(List<COElementAbstract>) coe.getChildrens();
 	boolean find = false;
 	Iterator<COElementAbstract> iter = childrenList.iterator();
-	COElementAbstract absElement = null;
 	while (iter.hasNext()) {
 	    absElement = (COElementAbstract) iter.next();
-	    if (absElement.isCOStructureElement()) {
-
-		// We prefer to be on the first Lectures type when the
-		// application opens
-		if (absElement.getType().equalsIgnoreCase(
-			COStructureElementType.PEDAGOGICAL_STRUCT)) {
+	    if (absElement.isCOUnit()) {
+		if (absElement.getType().equalsIgnoreCase(COUnitType.NEWS_UNIT)) {
+		    find = true;
+		    break;
+		}
+	    } else {
+		absElement = findStartingViewContext(absElement);
+		if (absElement != null) {
 		    find = true;
 		    break;
 		}
 	    }
 	}
-
 	if (!find && childrenList != null && childrenList.size() > 0) {
-	    absElement = (COElementAbstract) childrenList.get(0);
-	} else {
-	    // TODO: Display the root CourseOutline
-	    // Window.alert("TODO: please check findStartingViewContext");
+	    absElement = null;
 	}
-
 	return absElement;
     }
 
@@ -183,11 +187,8 @@ public class OsylMainView extends OsylViewableComposite {
      * model
      */
     private void initViewContext() {
-	// Init model to first cOStructureElement
-	// FIXME: template model must be not null !
-	COStructureElement structureElement =
-		(COStructureElement) findStartingViewContext();
-	getController().setViewContext(structureElement);
+	if (getModel() != null)
+	    getController().setViewContext(findStartingViewContext());
     }
 
     private void subscribeChildrenViewsToLocalHandlers() {
