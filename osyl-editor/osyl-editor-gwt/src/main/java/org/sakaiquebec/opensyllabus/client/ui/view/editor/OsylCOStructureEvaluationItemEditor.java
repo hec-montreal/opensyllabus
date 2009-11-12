@@ -304,7 +304,8 @@ public class OsylCOStructureEvaluationItemEditor extends
 	    public void onChange(ChangeEvent event) {
 		if (typeListBox.getItemText(getSelectedTypeIndex()).equals(
 			getText())
-			|| getView().getCoMessage("evaluation").equals(
+			|| getView().getCoMessage(
+				getView().getModel().getType()).equals(
 				getText())) {
 		    setText(typeListBox.getItemText(typeListBox
 			    .getSelectedIndex()));
