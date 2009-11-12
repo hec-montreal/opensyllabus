@@ -44,137 +44,161 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylDirectoryRemoteServiceJsonImpl implements OsylDirectoryRemoteServiceAsync {
+public class OsylDirectoryRemoteServiceJsonImpl implements
+	OsylDirectoryRemoteServiceAsync {
 
-	protected static final boolean TRACE = false;
-	protected String remoteUri;
-	protected String serverId;
+    protected static final boolean TRACE = false;
+    protected String remoteUri;
+    protected String serverId;
 
-	public OsylDirectoryRemoteServiceJsonImpl() {
-		super();
-		serverId = GWT.getModuleBaseURL().split("\\s*/portal/tool/\\s*")[0];
-		initRemoteUri();
+    public OsylDirectoryRemoteServiceJsonImpl() {
+	super();
+	serverId = GWT.getModuleBaseURL().split("\\s*/portal/tool/\\s*")[0];
+	initRemoteUri();
+    }
+
+    protected void initRemoteUri() {
+	this.remoteUri =
+		serverId + "/sdata/c/group/"
+			+ OsylController.getInstance().getSiteId() + "/";
+	this.remoteUri =
+		OsylAbstractBrowserComposite.uriSlashCorrection(this.remoteUri);
+    }
+
+    protected String getRessourceUri(String relativePathFolder) {
+	// Keep the parent path directory in order to refresh its content
+	String ressourceUri = this.remoteUri;
+	if (relativePathFolder != null) {
+	    ressourceUri += relativePathFolder + "/";
 	}
+	return ressourceUri;
+    }
 
-	protected void initRemoteUri() {
-		this.remoteUri = serverId + "/sdata/c/group/" + OsylController.getInstance().getSiteId()+ "/";
-		this.remoteUri = OsylAbstractBrowserComposite.uriSlashCorrection(this.remoteUri);
+    protected RequestCallback getRemoteDirectoryContentCallBackAdaptator(
+	    final AsyncCallback<List<OsylAbstractBrowserItem>> callback) {
+	return new OsylFileRemoteDirectoryContentCallBackAdaptator(callback);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void getRemoteDirectoryContent(String relativePathFolder,
+	    final AsyncCallback<List<OsylAbstractBrowserItem>> callback) {
+
+	RequestCallback requestCallback =
+		getRemoteDirectoryContentCallBackAdaptator(callback);
+
+	// Keep the parent path directory in order to refresh its content
+	String resourceDirectoryPath = getRessourceUri(relativePathFolder);
+	resourceDirectoryPath += "?nocache=" + new Date().getTime();
+
+	RequestBuilder requestBuilder =
+		new RequestBuilder(RequestBuilder.GET, URL.encode(resourceDirectoryPath));
+	requestBuilder.setCallback(requestCallback);
+	try {
+	    if (TRACE) {
+		Window.alert("Call the server - getRemoteDirectoryListing : "
+			+ resourceDirectoryPath);
+	    }
+	    requestBuilder.send();
+	    if (TRACE) {
+		Window.alert("Returned from the server ");
+	    }
+	} catch (RequestException e) {
+	    final OsylAlertDialog alertBox =
+		    new OsylAlertDialog(false, true, OsylController
+			    .getInstance().getUiMessage("Global.error")
+			    + " " + e.getMessage(), OsylController
+			    .getInstance().getUiMessage(
+				    "fileUpload.unableReadRemoteDir"));
+	    alertBox.center();
+	    alertBox.show();
 	}
+    }
 
-	protected String getRessourceUri(String relativePathFolder) {
-		// Keep the parent path directory in order to refresh its content
-		String ressourceUri = this.remoteUri;
-		if (relativePathFolder != null) {
-			ressourceUri += relativePathFolder + "/";
-		}
-		return ressourceUri;
+    /**
+     * {@inheritDoc}
+     */
+    public void updateRemoteFileInfo(String fileName,
+	    String relativePathFolder, String description, String copyright,
+	    final AsyncCallback<Void> callback) {
+
+	String requestParams =
+		"f=" + URL.encode("pu") + "&fp="
+			+ URL.encode("CHEF:description") + "&fv="
+			+ URL.encode(description) + "&fp="
+			+ URL.encode("CHEF:copyrightchoice") + "&fv="
+			+ URL.encode(copyright);
+
+	String resourceDirectoryPath =
+		getRessourceUri(relativePathFolder) + fileName;
+
+	RequestBuilder requestBuilder =
+		new RequestBuilder(RequestBuilder.POST, URL.encode(resourceDirectoryPath));
+	requestBuilder.setHeader("Content-type",
+		"application/x-www-form-urlencoded");
+
+	RequestCallback requestCallback =
+		new OsylVoidCallBackAdaptator(callback);
+
+	try {
+	    requestBuilder.sendRequest(requestParams, requestCallback);
+	} catch (RequestException e) {
+	    // TODO : Manage exception
+	    e.printStackTrace();
 	}
-	
-	protected RequestCallback getRemoteDirectoryContentCallBackAdaptator(final AsyncCallback<List<OsylAbstractBrowserItem>> callback){
-		return new OsylFileRemoteDirectoryContentCallBackAdaptator(callback);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void createNewRemoteDirectory(String newFolderName,
+	    String relativePathFolder, final AsyncCallback<Void> callback) {
+
+	RequestCallback requestCallback =
+		new OsylVoidCallBackAdaptator(callback);
+
+	String resourceDirectoryPath =
+		getRessourceUri(relativePathFolder) + newFolderName;
+	resourceDirectoryPath =
+		OsylAbstractBrowserComposite
+			.uriSlashCorrection(resourceDirectoryPath);
+
+	StringBuffer postData = new StringBuffer();
+	postData.append(URL.encode("f")).append("=").append(URL.encode("cf"));
+
+	RequestBuilder requestBuilder =
+		new RequestBuilder(RequestBuilder.POST, URL.encode(resourceDirectoryPath));
+	requestBuilder.setCallback(requestCallback);
+	requestBuilder.setHeader("Content-type",
+		"application/x-www-form-urlencoded");
+	try {
+	    if (TRACE) {
+		Window.alert("Call the server - createNewRemoteDirectory "
+			+ resourceDirectoryPath);
+	    }
+	    requestBuilder.sendRequest(postData.toString(), requestCallback);
+	    if (TRACE) {
+		Window.alert("Returned from the server ");
+	    }
+	} catch (RequestException e) {
+	    Window.alert("createNewRemoteDirectory" + e.getMessage());
+	    final OsylAlertDialog alertBox =
+		    new OsylAlertDialog(false, true, OsylController
+			    .getInstance().getUiMessage("Global.error"),
+			    OsylController.getInstance().getUiMessage(
+				    "fileUpload.unableReadRemoteDir")
+				    + " error during folder creation");
+	    alertBox.center();
+	    alertBox.show();
 	}
+    }
 
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void getRemoteDirectoryContent(String relativePathFolder,
-			final AsyncCallback<List<OsylAbstractBrowserItem>> callback) {
-
-		RequestCallback requestCallback = getRemoteDirectoryContentCallBackAdaptator(callback);
-
-		// Keep the parent path directory in order to refresh its content
-		String resourceDirectoryPath = getRessourceUri(relativePathFolder);
-		resourceDirectoryPath += "?nocache=" + new Date().getTime();
-
-		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET,
-				resourceDirectoryPath);
-		requestBuilder.setCallback(requestCallback);
-		try {
-			if (TRACE) {
-				Window.alert("Call the server - getRemoteDirectoryListing : " + resourceDirectoryPath);
-			}
-			requestBuilder.send();
-			if (TRACE) {
-				Window.alert("Returned from the server ");
-			}
-		} catch (RequestException e) {
-			final OsylAlertDialog alertBox = new OsylAlertDialog(false, true, OsylController
-					.getInstance().getUiMessage("Global.error") + " " + e.getMessage(), OsylController.getInstance()
-					.getUiMessage("fileUpload.unableReadRemoteDir"));
-			alertBox.center();
-			alertBox.show();
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void updateRemoteFileInfo(String fileName, String relativePathFolder,
-			String description, String copyright, final AsyncCallback<Void> callback) {
-
-		String requestParams = "f=" + URL.encode("pu") + "&fp=" + URL.encode("CHEF:description")
-		+ "&fv=" + URL.encode(description) + "&fp=" + URL.encode("CHEF:copyrightchoice")
-		+ "&fv=" + URL.encode(copyright);
-
-		String resourceDirectoryPath = getRessourceUri(relativePathFolder) + fileName;
-
-		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, resourceDirectoryPath);
-		requestBuilder.setHeader("Content-type", "application/x-www-form-urlencoded");
-
-		RequestCallback requestCallback = new OsylVoidCallBackAdaptator(callback);
-
-		try {
-			requestBuilder.sendRequest(requestParams, requestCallback);
-		} catch (RequestException e) {
-			// TODO : Manage exception
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void createNewRemoteDirectory(String newFolderName, String relativePathFolder,
-			final AsyncCallback<Void> callback) {
-
-		RequestCallback requestCallback = new OsylVoidCallBackAdaptator(callback);
-
-		String resourceDirectoryPath = getRessourceUri(relativePathFolder) + newFolderName;
-		resourceDirectoryPath = OsylAbstractBrowserComposite.uriSlashCorrection(resourceDirectoryPath);
-
-		StringBuffer postData = new StringBuffer();
-		postData.append(URL.encode("f")).append("=").append(URL.encode("cf"));
-
-		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST,
-				resourceDirectoryPath);
-		requestBuilder.setCallback(requestCallback);
-		requestBuilder.setHeader("Content-type", "application/x-www-form-urlencoded");
-		try {
-			if (TRACE) {
-				Window.alert("Call the server - createNewRemoteDirectory " + resourceDirectoryPath);
-			}
-			requestBuilder.sendRequest(postData.toString(), requestCallback);
-			if (TRACE) {
-				Window.alert("Returned from the server ");
-			}
-		} catch (RequestException e) {
-			Window.alert("createNewRemoteDirectory" + e.getMessage());
-			final OsylAlertDialog alertBox = new OsylAlertDialog(false, true, OsylController
-					.getInstance().getUiMessage("Global.error"), OsylController.getInstance()
-					.getUiMessage("fileUpload.unableReadRemoteDir")
-					+ " error during folder creation");
-			alertBox.center();
-			alertBox.show();
-		}
-	}
-
-	/**
-	 * @param relativePathFolder
-	 *            The current relative folder path
-	 * @return the url to submit the upload file form
-	 */
-	public String getUploadFileUrl(String relativePathFolder) {
-		return getRessourceUri(relativePathFolder);
-	}
+    /**
+     * @param relativePathFolder The current relative folder path
+     * @return the url to submit the upload file form
+     */
+    public String getUploadFileUrl(String relativePathFolder) {
+	return URL.encode(getRessourceUri(relativePathFolder));
+    }
 }
