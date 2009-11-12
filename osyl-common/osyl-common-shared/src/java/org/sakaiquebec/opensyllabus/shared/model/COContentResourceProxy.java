@@ -194,9 +194,11 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
      * @param rubric the rubric to set
      */
     public void setRubric(COContentRubric rubric) {
-	this.rubric = rubric;
-	if (rubric != null)
+	
+	if (rubric != null){
+	    this.rubric = rubric;
 	    moveToTheBottomOfTheRubric();
+	}
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.RUBRIC_UPDATE_EVENT_TYPE);
     }
 
@@ -383,10 +385,17 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.MOVE_IN_RUBRIC_EVENT_TYPE);
     }
 
-    private void moveToTheBottomOfTheRubric() {
+    public void moveToTheBottomOfTheRubric() {
 	while (hasSuccessor())
 	    getParent().changeElementPosition(this,
 		    COElementAbstract.POSITION_CHANGE_ACTION_DOWN);
+    }
+    
+    public void moveToTheTopOfTheRubric() {
+	while (hasPredecessor())
+	    getParent().changeElementPosition(this,
+		    COElementAbstract.POSITION_CHANGE_ACTION_UP);
+	notifyEventHandlers(UpdateCOContentResourceProxyEvent.MOVE_IN_RUBRIC_EVENT_TYPE);
     }
 
     @Override

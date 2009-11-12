@@ -38,6 +38,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -209,7 +210,6 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	// Here we are using specific event ids to avoid refresh of the whole
 	// view.
 	if (event.isRubricUpdateEvent()) {
-
 	    OsylRubricView newDestRubricView =
 		    (OsylRubricView) rubricViewsMap
 			    .get(resProx.getRubricType());
@@ -277,12 +277,15 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
     public void onUpdateModel(UpdateCOUnitContentEvent event) {
 	setModifiedDateToNow();
 	if (event.isAddRessProxEvent()) {
-	    // the last resProxy is the added one
 	    List<COContentResourceProxy> proxies =
 		    ((COUnitContent) getModel()).getChildrens();
 	    COContentResourceProxy resProx =
 		    (COContentResourceProxy) proxies.get(proxies.size() - 1);
 	    addResProxToRubricView(resProx);
+	    if(resProx.getRubricType().equals(COContentRubric.RUBRIC_TYPE_NEWS)){
+		resProx.moveToTheTopOfTheRubric();
+		refreshRubric(rubricViewsMap.get(resProx.getRubricType()));
+	    }
 	}
     }
 
