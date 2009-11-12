@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com) -->
+<OSYL access="public" schemaVersion="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<CO access="public" id="22234B13-FA19-4D53-962C-110981B67AF9">
+		<modified>
+		</modified>
+		<created>2001-12-17T09:30:47-05:00</created>
+		<title type="HEC">Title of course at HEC</title>
+		<template type="HEC">TemplateHec</template>
+		<createdBy>HEC Montréal</createdBy>
+		<language>ENG</language>
+		<department type="HEC">
+		</department>
+		<previousPublished>
+		</previousPublished>
+		<lastPublished>
+		</lastPublished>
+		<lastModified>
+		</lastModified>
+		<identifier type="HEC">Identifier of course</identifier>
+		<courseId type="HEC">Course Id</courseId>
+		<parent type="HEC">
+		</parent>
+		<lastModifiedBy>
+		</lastModifiedBy>
+		<asmStructure access="public" id="103088CD-A420-4E7E-A30D-E048B633588A" xsi:type="NewsStruct">
+			<modified>2001-12-17T09:30:47-05:00</modified>
+			<asmUnit access="public" id="D333ED48-1612-4E3C-9825-AA2445C3AE1F" xsi:type="NewsUnit">
+				<modified>2001-12-17T09:30:47-05:00</modified>
+				<label><![CDATA[News]]></label>
+				<asmUnitStructure access="public" id="9E7BDC68-B6E0-45C0-B4D2-2034C3E1E218" xsi:type="NewsUnitStruct">
+					<modified>2001-12-17T09:30:47-05:00</modified>
+					<label><![CDATA[News]]></label>
+					<asmUnitContent access="public" id="2DD1F0BA-AEDF-4DE2-A2A7-A98BDCCFA300" xsi:type="NewsUnitContent">
+						<modified>2009-11-11T16:12:18-05:00</modified>
+						<asmContext access="attendee" id="BE3EB350-8B43-4630-A2E8-2519EA84D543" xsi:type="InformationContext">
+							<modified>2009-11-11T16:14:12-05:00</modified>
+							<label><![CDATA[Insert your Text Here...]]></label>
+							<importance>false</importance>
+							<level>undefined</level>
+							<visible>true</visible>
+							<semanticType>
+								<type>flu</type>
+							</semanticType>
+							<asmResource xsi:type="Text" access="attendee" id="F6DD380F-2FAB-4F3F-B3ED-640E6C77995A">
+								<text><![CDATA[In the event of exceptional circumstances [as established by the Direction of&nbsp; Programs] beyond HEC Montréal's control, the content and/or evaluation scheme of&nbsp; the courses can be subject to change. <a href="http://www.hec.ca/en/flu/index.html">Learn more...</a>]]></text>
+								<modified>2009-11-11T16:14:12-05:00</modified>
+							</asmResource>
+						</asmContext>
+						<asmContext access="attendee" id="0FA43BC5-C09E-441C-9124-8408AFCB7AB8" xsi:type="InformationContext">
+							<modified>2009-11-11T16:12:13-05:00</modified>
+							<label><![CDATA[Insert your Text Here...]]></label>
+							<importance>false</importance>
+							<level>undefined</level>
+							<visible>true</visible>
+							<semanticType>
+								<type>plagiarism</type>
+							</semanticType>
+							<asmResource xsi:type="Text" access="attendee" id="CC2B0464-458F-420C-A250-F31306C5D2FF">
+								<text><![CDATA[Please consult the acts and gestures that are considered plagiarism or another academic violation, along with the applicable procedure and sanctions, which range up to suspension and even expulsion from HEC. Violations are analyzed&nbsp; based on the facts and circumstances, and sanctions are applied accordingly.&nbsp; <a href="http://www.hec.ca/en/programs_training/plagiarism.html">Learn more about plagiarism .</a><br>]]></text>
+								<modified>2009-11-11T16:12:13-05:00</modified>
+							</asmResource>
+						</asmContext>
+						<asmContext access="attendee" id="E05A1F35-B5B3-4624-8E02-F815FCF8B37F" xsi:type="InformationContext">
+							<modified>2009-11-11T16:14:23-05:00</modified>
+							<label><![CDATA[Insert your Text Here...]]></label>
+							<importance>false</importance>
+							<level>undefined</level>
+							<visible>true</visible>
+							<semanticType>
+								<type>calculators</type>
+							</semanticType>
+							<asmResource xsi:type="Text" access="attendee" id="7AF8226B-28A6-4FDC-9A75-93D18BB09D91">
+								<text><![CDATA[Please consult the <a href="http://www.hec.ca/etudiant_actuel/technologies/calculatrices.html">calculator usage policy (in French)</a> during exams when&nbsp; applicable.]]></text>
+								<modified>2009-11-11T16:14:23-05:00</modified>
+							</asmResource>
+						</asmContext>
+											
+					</asmUnitContent>
+				</asmUnitStructure>
+			</asmUnit>
+		</asmStructure>
+		<asmStructure access="public" id="67D5DD5C-D7C7-4FF3-92F4-3512830649C4" xsi:type="OverviewStruct">
+			<modified>2001-12-17T09:30:47-05:00</modified>
+			<asmUnit access="public" id="A3BF7D51-3DD5-4C8A-B21D-2F37F319CF01" xsi:type="OverviewUnit">
+				<modified>2001-12-17T09:30:47-05:00</modified>
+				<label><![CDATA[Presentation]]></label>
+				<asmUnitStructure access="public" id="3352A5F2-9F04-47B1-A6FE-637C4F31BA2B" xsi:type="OverviewUnitStruct">
+					<modified>2001-12-17T09:30:47-05:00</modified>
+					<label><![CDATA[Presentation]]></label>
+					<asmUnitContent access="public" id="07D11A93-CBCC-4FBD-B05A-6078F445909B" xsi:type="OverviewUnitContent">
+						<modified>2001-12-17T09:30:47-05:00</modified>
+					</asmUnitContent>
+				</asmUnitStructure>
+			</asmUnit>
+		</asmStructure>
+		<asmStructure access="public" id="46238542-6748-4822-AB1A-314ECA58E0B3" xsi:type="StaffStruct">
+			<modified>2001-12-17T09:30:47-05:00</modified>
+			<asmUnit access="public" id="28D2AB66-340B-4329-8A43-44C1FBF93114" xsi:type="StaffUnit">
+				<modified>2001-12-17T09:30:47-05:00</modified>
+				<label><![CDATA[Contact Information]]></label>
+				<asmUnitStructure access="public" id="70810516-2ED3-4A27-8EB4-F67D0D6BB028" xsi:type="StaffUnitStruct">
+					<modified>2001-12-17T09:30:47-05:00</modified>
+					<label><![CDATA[Contact Information]]></label>
+					<asmUnitContent access="public" id="7A4F4D14-B658-4FEB-AABE-AE1981E0B593" xsi:type="StaffUnitContent">
+						<modified>2001-12-17T09:30:47-05:00</modified>
+					</asmUnitContent>
+				</asmUnitStructure>
+			</asmUnit>
+		</asmStructure>
+		<asmStructure access="public" id="04D4B87D-F81F-415C-99DA-F8D2D60FF061" xsi:type="LearningMaterialStruct">
+			<modified>2001-12-17T09:30:47-05:00</modified>
+			<asmUnit access="public" id="5455620B-F3DD-45B4-B891-7B750A5F9BA8" xsi:type="LearningMaterialUnit">
+				<modified>2001-12-17T09:30:47-05:00</modified>
+				<label><![CDATA[Learning Material]]></label>
+				<asmUnitStructure access="public" id="AD470BB0-73A7-4371-8A96-61F551892DA6" xsi:type="LearningMaterialUnitStruct">
+					<modified>2001-12-17T09:30:47-05:00</modified>
+					<label><![CDATA[Learning Material]]></label>
+					<asmUnitContent access="public" id="0853D130-43B9-4E96-B58B-CB497981D0B9" xsi:type="LearningMaterialUnitContent">
+						<modified>2001-12-17T09:30:47-05:00</modified>
+					</asmUnitContent>
+				</asmUnitStructure>
+			</asmUnit>
+		</asmStructure>
+		<asmStructure access="public" id="EEF049BC-FB94-4860-9D70-2C8D2D7CF48A" xsi:type="AssessmentStruct">
+			<modified>2001-12-17T09:30:47-05:00</modified>
+		</asmStructure>
+		<asmStructure access="public" id="AF4A59C7-EF56-4FB8-87FD-81EFB1BEC9FA" xsi:type="PedagogicalStruct">
+			<modified>2001-12-17T09:30:47-05:00</modified>
+		</asmStructure>
+	</CO>
+</OSYL>
