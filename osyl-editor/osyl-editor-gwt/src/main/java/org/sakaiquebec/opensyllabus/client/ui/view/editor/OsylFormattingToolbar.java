@@ -22,7 +22,9 @@ package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
+import org.sakaiquebec.opensyllabus.shared.util.LinkValidator;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -78,8 +80,23 @@ public class OsylFormattingToolbar extends Composite {
 		String url =
 			Window.prompt(uiMessages.getMessage("enterLinkURL"),
 				"http://");
+		boolean valid = true;
+		String messages = "";
 		if (url != null) {
-		    extended.createLink(url);
+		    if (!LinkValidator.isValidLink(url)) {
+			valid = false;
+			messages =
+				uiMessages.getMessage("LinkEditor.unvalidLink");
+		    }
+		    if (!valid) {
+			OsylAlertDialog osylAlertDialog =
+				new OsylAlertDialog(uiMessages
+					.getMessage("Global.error"), messages);
+			osylAlertDialog.center();
+			osylAlertDialog.show();
+		    } else {
+			extended.createLink(url);
+		    }
 		}
 	    } else if (sender == removeLink) {
 		extended.removeLink();

@@ -26,6 +26,7 @@ import java.util.List;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxLinkView;
+import org.sakaiquebec.opensyllabus.shared.util.LinkValidator;
 
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
@@ -313,7 +314,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     public boolean prepareForSave() {
 	String messages = "";
 	boolean ok=true;
-	if(getLink().trim().equals("")){
+	if(LinkValidator.isValidLink(getLink())){
 	    ok=false;
 	    messages=getView().getUiMessage("LinkEditor.unvalidLink");
 	}
