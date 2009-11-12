@@ -41,6 +41,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -63,6 +64,8 @@ public class OsylCitationForm extends WindowPanel implements
 	OsylViewControllable {
 
     private static final int FORM_WIDTH = 450;
+    private static final String MANDATORY_FIELD_INDICATOR = " *";
+    private static final String RECOMMENDED_FIELD_INDICATOR = " <sup>+</sup>";
 
     /**
      * Information about citation which is updated
@@ -104,7 +107,7 @@ public class OsylCitationForm extends WindowPanel implements
 
     private HorizontalPanel authorPanel;
     private TextBox authorField;
-    private Label authorLabel; // this changes for certain types
+    private HTML authorLabel; // this changes for certain types
 
     private HorizontalPanel isnPanel;
     private Label isnLabel; // this changes for certain types
@@ -194,6 +197,9 @@ public class OsylCitationForm extends WindowPanel implements
 				: citation.getTitle());
 	mainPanel.add(hiddenDisplayName);
 
+	
+	mainPanel.add(new HTML(uiMessages.getMessage("CitationForm.requiredFields")));
+	mainPanel.add(new HTML(uiMessages.getMessage("CitationForm.recommendedFields")));
 	// Create a listbox for the citation type.
 	citationType = FormHelper.createListBox("Osyl-UnitView-TextArea");
 	citationType.setName("cipvalues");
@@ -223,7 +229,7 @@ public class OsylCitationForm extends WindowPanel implements
 		CitationSchema.TITLE));
 	citationPanel.add(createNewLabel(osylController
 		.getCoMessage("ResProxCitationView_citationLabel")
-		+ " *:"));
+		+ MANDATORY_FIELD_INDICATOR +":"));
 	citationField =
 		FormHelper.createTextArea((citation == null || citation
 			.getTitle() == null) ? "" : citation.getTitle(),
@@ -244,7 +250,7 @@ public class OsylCitationForm extends WindowPanel implements
 	titlePanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_titleLabel")
-			+ " *:", titleField, CitationSchema.TITLE);
+			+ MANDATORY_FIELD_INDICATOR +":", titleField, CitationSchema.TITLE);
 
 	mainPanel.add(titlePanel);
 
@@ -256,7 +262,7 @@ public class OsylCitationForm extends WindowPanel implements
 	authorLabel =
 		createNewLabel(osylController
 			.getCoMessage("ResProxCitationView_authorLabel")
-			+ " *:");
+			+ MANDATORY_FIELD_INDICATOR +":");
 	authorPanel =
 		createLabelTextboxElement(authorLabel, authorField,
 			CitationSchema.CREATOR);
@@ -295,7 +301,7 @@ public class OsylCitationForm extends WindowPanel implements
 	datePanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_dateLabel")
-			+ ":", dateTextBox, CitationSchema.DATE);
+			+ RECOMMENDED_FIELD_INDICATOR +":", dateTextBox, CitationSchema.DATE);
 	mainPanel.add(datePanel);
 
 	// Create two textboxes for the volume and issue.
@@ -312,10 +318,10 @@ public class OsylCitationForm extends WindowPanel implements
 	volIssuePanel =
 		createDoubleLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_volumeLabel")
-			+ ":", volumeTextBox, CitationSchema.VOLUME,
+			+ RECOMMENDED_FIELD_INDICATOR +":", volumeTextBox, CitationSchema.VOLUME,
 			osylController
 				.getCoMessage("ResProxCitationView_issueLabel")
-				+ ":", issueTextBox, CitationSchema.ISSUE);
+				+ RECOMMENDED_FIELD_INDICATOR +":", issueTextBox, CitationSchema.ISSUE);
 	mainPanel.add(volIssuePanel);
 
 	// Create a textbox for the pages.
@@ -327,7 +333,7 @@ public class OsylCitationForm extends WindowPanel implements
 	pagePanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_pagesLabel")
-			+ ":", pagesTextBox, CitationSchema.PAGES);
+			+ RECOMMENDED_FIELD_INDICATOR +":", pagesTextBox, CitationSchema.PAGES);
 
 	mainPanel.add(pagePanel);
 
@@ -601,8 +607,8 @@ public class OsylCitationForm extends WindowPanel implements
      * @param text of label
      * @return the label
      */
-    private Label createNewLabel(String text) {
-	Label label = new Label(text);
+    private HTML createNewLabel(String text) {
+	HTML label = new HTML(text);
 	label.setStyleName("Osyl-ResProxView-Label");
 	return label;
     }
@@ -618,7 +624,7 @@ public class OsylCitationForm extends WindowPanel implements
      */
     private HorizontalPanel createLabelTextboxElement(String text, TextBox tb,
 	    String key) {
-	Label lab = createNewLabel(text);
+	HTML lab = createNewLabel(text);
 	return createLabelTextboxElement(lab, tb, key);
     }
 
@@ -719,9 +725,9 @@ public class OsylCitationForm extends WindowPanel implements
      */
     private void updateForm(String newType) {
 	if (newType.equals(CitationSchema.TYPE_BOOK)) {
-	    authorLabel.setText(osylController
+	    authorLabel.setHTML(osylController
 		    .getCoMessage("ResProxCitationView_authorLabel")
-		    + " *:");
+		    + MANDATORY_FIELD_INDICATOR +":");
 	    isnLabel.setText(osylController
 		    .getCoMessage("ResProxCitationView_isbnLabel")
 		    + ":");
@@ -737,7 +743,7 @@ public class OsylCitationForm extends WindowPanel implements
 	    doiPanel.setVisible(false);
 	    urlPanel.setVisible(false);
 	} else if (newType.equals(CitationSchema.TYPE_ARTICLE)) {
-	    authorLabel.setText(osylController
+	    authorLabel.setHTML(osylController
 		    .getCoMessage("ResProxCitationView_authorLabel")
 		    + ":");
 	    isnLabel.setText(osylController
