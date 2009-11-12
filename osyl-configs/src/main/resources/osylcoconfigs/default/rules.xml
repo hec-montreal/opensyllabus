@@ -22,7 +22,7 @@
 				    		<attribute name="type" restrictionpattern="News" />
 			    		</element>
 			    		<element name="semanticType">
-			        		<attribute name="type" restrictionpattern="news" />
+			        		<attribute name="type" restrictionpattern="news|flu|plagiarism|calculators" />
 			    		</element>
 					</element>
 				</element>

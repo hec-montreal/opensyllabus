@@ -45,8 +45,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
-
 /**
  * Implementation of the {@link OsylConfigService} interface.
  * 
@@ -66,12 +64,12 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	 * File containing the xml representation of the rules or config
 	 */
 	private static final String CONFIG_RULES = "rules.xml";
-	
+
 	/**
 	 * File containing the rolesList config (in xml)
 	 */
 	private static final String CONFIG_ROLES_LIST = "coRolesList.xml";
-	
+
 	/**
 	 * File containing the evalTypeList config (in xml)
 	 */
@@ -91,12 +89,12 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	 * Item node name for xml parsing
 	 */
 	private static final String ITEM_NODE_NAME = "item";
-	
+
 	/**
 	 * Value attribute name for xml parsing
 	 */
 	private static final String VALUE_ATTRIBUTE_NAME = "value";
-	
+
 	/**
 	 * Injection of the ConfigDao
 	 */
@@ -118,7 +116,7 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 		this.coConfigDao = courseOutlineConfigDao;
 	}
 
-    /**
+	/**
 	 * Init method called at initialization of the bean.
 	 */
 	public void init() throws Exception {
@@ -157,7 +155,8 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	 * 
 	 * @throws Exception
 	 */
-	public COConfigSerialized getCourseOutlineConfig(String configId) throws Exception {
+	public COConfigSerialized getCourseOutlineConfig(String configId)
+			throws Exception {
 		return coConfigDao.getConfig(configId);
 	}
 
@@ -166,7 +165,8 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	 * 
 	 * @throws IOException
 	 */
-	public COConfigSerialized getCurrentConfig(String webappDir) throws Exception {
+	public COConfigSerialized getCurrentConfig(String webappDir)
+			throws Exception {
 		List<COConfigSerialized> configs = coConfigDao.getConfigs();
 		COConfigSerialized coConfig = (COConfigSerialized) configs.get(0);
 		coConfig = fillConfig(coConfig, webappDir, coConfig.getConfigRef(),
@@ -175,7 +175,8 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	}
 
 	/** {@inheritDoc} */
-	public COConfigSerialized getConfig(String configId, String webappDir) throws Exception {
+	public COConfigSerialized getConfig(String configId, String webappDir)
+			throws Exception {
 		COConfigSerialized coConfig = coConfigDao.getConfig(configId);
 		coConfig = fillConfig(coConfig, webappDir, coConfig.getConfigRef(),
 				configId);
@@ -206,8 +207,10 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	 * 
 	 * @throws Exception
 	 */
-	public Map<String, String> getMessages(String path, String baseFileName, String locale) throws Exception {
-		return OsylConfigServiceMessages.getMessages(path, baseFileName, locale);
+	public Map<String, String> getMessages(String path, String baseFileName,
+			String locale) throws Exception {
+		return OsylConfigServiceMessages
+				.getMessages(path, baseFileName, locale);
 	}
 
 	/**
@@ -215,98 +218,107 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	 * 
 	 * @throws Exception
 	 */
-	public void initConfigs() throws Exception {	    
+	public void initConfigs() throws Exception {
 		if (coConfigDao.getConfigs().size() <= 0) {
 			createConfig("default", "Config from HEC Montreal");
+			createConfig("announcementsRegulationsHEC",
+					"Config HEC Montreal - Announcements and Regulations");
 			createConfig("udem", "Config UdeM");
-			createConfig("udemCompetencesComposantes", "Config UdeM - Competences Composantes");
-			createConfig("udemCompetencesSeances", "Config UdeM - Competences Seances");
-			createConfig("udemObjectifsActivites", "Config UdeM - Objectifs Activites");
-			createConfig("udemObjectifsSeances", "Config UdeM - Objectifs Seances");
+			createConfig("udemCompetencesComposantes",
+					"Config UdeM - Competences Composantes");
+			createConfig("udemCompetencesSeances",
+					"Config UdeM - Competences Seances");
+			createConfig("udemObjectifsActivites",
+					"Config UdeM - Objectifs Activites");
+			createConfig("udemObjectifsSeances",
+					"Config UdeM - Objectifs Seances");
 		}
 	}
 
 	/** {@inheritDoc} */
-	public COConfigSerialized getConfigByRef(String configRef, String webappDir) throws Exception {
+	public COConfigSerialized getConfigByRef(String configRef, String webappDir)
+			throws Exception {
 		COConfigSerialized coConfig = coConfigDao.getConfigByRef(configRef);
-		coConfig = fillConfig(
-		        coConfig, 
-		        webappDir, 
-		        configRef, 
-		        coConfig.getConfigId());
+		coConfig = fillConfig(coConfig, webappDir, configRef, coConfig
+				.getConfigId());
 		return coConfig;
 	}
 
-	/** {@inheritDoc} */	
+	/** {@inheritDoc} */
 	public String getCurrentLocale() throws Exception {
 		return OsylConfigServiceMessages.getCurrentLocale();
 	}
 
 	/** {@inheritDoc} */
-	public COSerialized fillCo(String dir, COSerialized coSerialized) throws Exception {	    
+	public COSerialized fillCo(String dir, COSerialized coSerialized)
+			throws Exception {
 		if (coSerialized != null) {
-			coSerialized.setMessages(getMessages(
-			        dir,
-					OsylConfigService.CONFIG_COMESSAGES, 
-					coSerialized.getLang()));
+			coSerialized
+					.setMessages(getMessages(dir,
+							OsylConfigService.CONFIG_COMESSAGES, coSerialized
+									.getLang()));
 		}
 		return coSerialized;
 	}
 
-	private void createConfig(String configRef, String description) throws Exception {
-        COConfigSerialized coConfig = new COConfigSerialized();
-        coConfig.setConfigRef(CONFIG_DIR + File.separator + configRef);
-        coConfig.setDescription(description);
-        createConfig(coConfig);
+	private void createConfig(String configRef, String description)
+			throws Exception {
+		COConfigSerialized coConfig = new COConfigSerialized();
+		coConfig.setConfigRef(CONFIG_DIR + File.separator + configRef);
+		coConfig.setDescription(description);
+		createConfig(coConfig);
 	}
 
-    /**
-     * Private method used to fill out some variables of a COConfigSerialiazed:
-     * the css URI, the String representation of the rules and a map
-     * representation of the messages.
-     * 
-     * @param coConfig
-     * @param dir
-     * @param configId
-     * @return Filled COConfigSerialized
-     * @throws Exception
-     */
-    private static COConfigSerialized fillConfig(COConfigSerialized coConfig,
-            String webappdir, String configRef, String configId)
-            throws Exception {
-        String path = webappdir + configRef;
-        coConfig.setCascadingStyleSheetURI(getCascadingStyleSheetURI(path));
-        coConfig.setCoreBundle(
-                OsylConfigServiceMessages.getMessages(path, CONFIG_UIMESSAGES));
-        coConfig.setRulesConfig(getRules(path));
-        coConfig.setRolesList(getRolesList(path));
-        coConfig.setEvalTypeList(getEvalTypeList(path));
-        return coConfig;
-    }
+	/**
+	 * Private method used to fill out some variables of a COConfigSerialiazed:
+	 * the css URI, the String representation of the rules and a map
+	 * representation of the messages.
+	 * 
+	 * @param coConfig
+	 * @param dir
+	 * @param configId
+	 * @return Filled COConfigSerialized
+	 * @throws Exception
+	 */
+	private static COConfigSerialized fillConfig(COConfigSerialized coConfig,
+			String webappdir, String configRef, String configId)
+			throws Exception {
+		String path = webappdir + configRef;
+		coConfig.setCascadingStyleSheetURI(getCascadingStyleSheetURI(path));
+		coConfig.setCoreBundle(OsylConfigServiceMessages.getMessages(path,
+				CONFIG_UIMESSAGES));
+		coConfig.setRulesConfig(getRules(path));
+		coConfig.setRolesList(getRolesList(path));
+		coConfig.setEvalTypeList(getEvalTypeList(path));
+		return coConfig;
+	}
 
-    /**
-     * For a given config directory in the webapp, this method reads the rolesList xml
-     * file and parse it as a List
-     * @param dir
-     * @return List
-     */    
-    private static List<String> getRolesList(String dir) throws Exception{
-    	File xmlFile = new File(dir, CONFIG_ROLES_LIST);
-    	List<String> list = parseXmlForList(xmlFile);
-    	return list;
-    }
-    
-    /**
-     * Parsing xml file (list xml schema) and retrieve list
-     * @param xmlFile
-     * @return
-     * @throws Exception
-     */
-    private static List<String> parseXmlForList(File xmlFile) throws Exception{
-    	List<String> list = new ArrayList<String>();
-    	DocumentBuilder docBuilder =  DocumentBuilderFactory.newInstance().newDocumentBuilder();
-    	Document dom = docBuilder.parse(xmlFile);
-    	Element nodeElement = dom.getDocumentElement();
+	/**
+	 * For a given config directory in the webapp, this method reads the
+	 * rolesList xml file and parse it as a List
+	 * 
+	 * @param dir
+	 * @return List
+	 */
+	private static List<String> getRolesList(String dir) throws Exception {
+		File xmlFile = new File(dir, CONFIG_ROLES_LIST);
+		List<String> list = parseXmlForList(xmlFile);
+		return list;
+	}
+
+	/**
+	 * Parsing xml file (list xml schema) and retrieve list
+	 * 
+	 * @param xmlFile
+	 * @return
+	 * @throws Exception
+	 */
+	private static List<String> parseXmlForList(File xmlFile) throws Exception {
+		List<String> list = new ArrayList<String>();
+		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance()
+				.newDocumentBuilder();
+		Document dom = docBuilder.parse(xmlFile);
+		Element nodeElement = dom.getDocumentElement();
 		NodeList nodeList = nodeElement.getChildNodes();
 		if (nodeList != null) {
 			for (int i = 0; i < nodeList.getLength(); i++) {
@@ -318,63 +330,64 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 				}
 			}
 		}
-    	return list;
-    }
-    
-    /**
-     * For a given config directory in the webapp, this method reads the evalType xml
-     * file and parse it as a List
-     * @param dir
-     * @return List
-     */   
-    private static List<String> getEvalTypeList(String dir) throws Exception{
-    	File xmlFile = new File(dir, CONFIG_EVAL_TYPE_LIST);
-    	List<String> list = parseXmlForList(xmlFile);
-    	return list;
-    }
-    
-    /**
-     * For a given skin directory in the webapp, this method reads the xml rule
-     * file into a String.
-     * 
-     * @param dir
-     * @return String
-     * @throws Exception
-     */
-    private static String getRules(String dir) throws Exception {
-        String result = "";
-        File rules = new File(dir, CONFIG_RULES);
-        BufferedReader readFile;
-        String line;
+		return list;
+	}
 
-        try {
-            readFile = new BufferedReader(new FileReader(rules));
-            while ((line = readFile.readLine()) != null) {
-                result += line;
-            }
-            readFile.close();
+	/**
+	 * For a given config directory in the webapp, this method reads the
+	 * evalType xml file and parse it as a List
+	 * 
+	 * @param dir
+	 * @return List
+	 */
+	private static List<String> getEvalTypeList(String dir) throws Exception {
+		File xmlFile = new File(dir, CONFIG_EVAL_TYPE_LIST);
+		List<String> list = parseXmlForList(xmlFile);
+		return list;
+	}
 
-        } catch (FileNotFoundException e) {
-            log.error("Unable to find file config files", e);
-            throw new Exception(e);
-        }
+	/**
+	 * For a given skin directory in the webapp, this method reads the xml rule
+	 * file into a String.
+	 * 
+	 * @param dir
+	 * @return String
+	 * @throws Exception
+	 */
+	private static String getRules(String dir) throws Exception {
+		String result = "";
+		File rules = new File(dir, CONFIG_RULES);
+		BufferedReader readFile;
+		String line;
 
-        return result;
-    }
-    
-    /**
-     * For a given directory returns the String representation of the URI
-     * 
-     * @param dir
-     * @return String
-     */
-    private static String getCascadingStyleSheetURI(String dir) {
-        String relativePath = dir.substring(dir.indexOf("webapps") + 7, dir
-                .length());
-        relativePath = relativePath + File.separator + CONFIGS_SKIN_DIRECTORY
-                + File.separator + CONFIG_SKIN;
-        relativePath = relativePath.replaceAll("\\\\", "/");
-        return relativePath;
-    }
+		try {
+			readFile = new BufferedReader(new FileReader(rules));
+			while ((line = readFile.readLine()) != null) {
+				result += line;
+			}
+			readFile.close();
+
+		} catch (FileNotFoundException e) {
+			log.error("Unable to find file config files", e);
+			throw new Exception(e);
+		}
+
+		return result;
+	}
+
+	/**
+	 * For a given directory returns the String representation of the URI
+	 * 
+	 * @param dir
+	 * @return String
+	 */
+	private static String getCascadingStyleSheetURI(String dir) {
+		String relativePath = dir.substring(dir.indexOf("webapps") + 7, dir
+				.length());
+		relativePath = relativePath + File.separator + CONFIGS_SKIN_DIRECTORY
+				+ File.separator + CONFIG_SKIN;
+		relativePath = relativePath.replaceAll("\\\\", "/");
+		return relativePath;
+	}
 
 }
