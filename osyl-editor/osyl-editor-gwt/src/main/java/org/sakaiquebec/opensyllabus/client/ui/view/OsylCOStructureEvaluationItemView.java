@@ -61,16 +61,18 @@ public class OsylCOStructureEvaluationItemView extends OsylViewableComposite {
 	COUnit coUnit = (COUnit) getModel();
 	COStructureElement coStructElt =
 		(COStructureElement) coUnit.getParent();
-	addCoUnitLink(getCoMessage(coUnit.getType()), coStructElt
-		.getChildPosition(coUnit));
+	addCoUnitLink(coStructElt.getChildPosition(coUnit));
 
 	addCoUnitLabel();
 
 	initWidget(getMainPanel());
     }
 
-    private void addCoUnitLink(String type, String position) {
-	setCoUnitHyperlink(new Hyperlink(type + " " + position + " - ", null));
+    private void addCoUnitLink(String position) {
+	if (position.length() < 2) {
+	    position = "0" + position;
+	}
+	setCoUnitHyperlink(new Hyperlink(position + " - ", null));
 	getCoUnitHyperlink().addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		getController().getViewContext().setContextModel(
