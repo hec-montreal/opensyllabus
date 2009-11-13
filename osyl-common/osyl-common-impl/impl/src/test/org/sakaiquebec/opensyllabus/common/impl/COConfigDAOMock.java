@@ -100,6 +100,25 @@ final class COConfigDAOMock extends AbstractMock<COConfigDao> {
                     }                    
                 });
     		}
+    		{
+			allowing(equal(dao)).
+			method("getConfigByRef").
+			with(any(String.class));
+			will(new CustomAction("COConfigDao.getConfigByRef()") {
+                public Object invoke(Invocation invocation) throws Throwable {
+                	String id = (String)invocation.getParameter(0);
+                	if (StringUtils.isBlank(id)) {
+                		throw new IllegalArgumentException("Blank COConfigSerialized ID.");
+                	}
+                	
+                	COConfigSerialized config = configs.get(id);                    	
+                	if (null == config) {
+                		throw new IllegalArgumentException("Unknown COConfigSerialized ID " + id);
+                	}
+                	return configs.get(id);
+                }                    
+            });
+		}
     	};
 	}		
 }
