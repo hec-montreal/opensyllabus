@@ -28,6 +28,7 @@ public class OsylFileRemoteDirectoryContentCallBackAdaptator extends
 	@Override
 	protected OsylAbstractBrowserItem getOsylAbstractBrowserItem(
 			JSONObject jObject) {
+	    try{
 		JSONString referenceRoot = (JSONString) ((JSONObject) jObject
 				.get("properties")).get("sakai:reference-root");
 		if (referenceRoot != null
@@ -69,6 +70,9 @@ public class OsylFileRemoteDirectoryContentCallBackAdaptator extends
 					false, lastmodifiedString, mimeTypeString,
 					descriptionString, copyrightchoiceString);
 		}
+	    }catch (Exception e) {
+		return null;
+	    }
 	}
 	
 	
