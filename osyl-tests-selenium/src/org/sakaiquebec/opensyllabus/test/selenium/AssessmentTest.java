@@ -279,13 +279,6 @@ public class AssessmentTest extends AbstractOSYLTest{
 	//We select randomly the assessment type field
 	session().select(xpathRole1, newText5);
 
-	
-
-	
-
-	
-	
-
 	//We close Editor
 	session().click("//td/table/tbody/tr/td[1]/button");
 	pause();
