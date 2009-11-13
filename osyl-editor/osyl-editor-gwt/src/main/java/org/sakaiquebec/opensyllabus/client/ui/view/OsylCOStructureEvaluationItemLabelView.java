@@ -123,8 +123,8 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 	int closeMonth = 0;
 	int closeDay = 0;
 	String ratingString = getWeight();
-	if (null != ratingString || !"undefined".equals(ratingString)
-		|| !"".equals(ratingString)) {
+	if (null != ratingString && !"undefined".equals(ratingString)
+		&& !"".equals(ratingString)) {
 	    rating =
 		    Integer.parseInt(ratingString.substring(0, ratingString
 			    .lastIndexOf("%")));
@@ -133,8 +133,8 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 	}
 
 	String openDateString = getDateStart();
-	if (null != openDateString || !"undefined".equals(openDateString)
-		|| !"".equals(openDateString)) {
+	if (null != openDateString && !"undefined".equals(openDateString)
+		&& !"".equals(openDateString)) {
 	    openYear = Integer.parseInt(openDateString.substring(0, 4));
 	    openMonth = Integer.parseInt(openDateString.substring(5, 7));
 	    openDay = Integer.parseInt(openDateString.substring(8, 10));
@@ -144,8 +144,8 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 	}
 
 	String closeDateString = getDateEnd();
-	if (null != closeDateString || !"undefined".equals(closeDateString)
-		|| !"".equals(closeDateString)) {
+	if (null != closeDateString && !"undefined".equals(closeDateString)
+		&& !"".equals(closeDateString)) {
 	    closeYear = Integer.parseInt(closeDateString.substring(0, 4));
 	    closeMonth = Integer.parseInt(closeDateString.substring(5, 7));
 	    closeDay = Integer.parseInt(closeDateString.substring(8, 10));

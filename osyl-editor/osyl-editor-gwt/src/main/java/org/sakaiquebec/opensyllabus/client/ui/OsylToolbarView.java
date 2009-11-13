@@ -38,6 +38,7 @@ import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEve
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler.SavePushButtonEvent;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.util.Print;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylLongView;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
@@ -200,7 +201,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 			    getCoMessages(), coUnitContent, subType,
 			    defaultRubric);
 	    if (subType.equalsIgnoreCase(COContentResourceType.ASSIGNMENT)) {
-		createAssignement(resProxModel, coUnitContent);
+		if(createAssignement(resProxModel, coUnitContent)==false);
+			resProxModel.remove();
 	    }
 	}
 
@@ -237,7 +239,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	}
     }
 
-    private void createAssignement(COContentResourceProxy resProxModel,
+    private boolean createAssignement(COContentResourceProxy resProxModel,
 	    COUnitContent contentUnit) {
 	// Call the SAKAI server in order to receive an assignment
 	// id
@@ -259,10 +261,11 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	int closeYear = 0;
 	int closeMonth = 0;
 	int closeDay = 0;
+	String messages = "";
 	String ratingString =
 		parentEvaluationUnit.getProperty(COPropertiesType.WEIGHT);
-	if (null != ratingString || !"undefined".equals(ratingString)
-		|| !"".equals(ratingString)) {
+	if (ratingString != null && !ratingString.equals("undefined")
+		&& !ratingString.equals("")) {
 	    rating =
 		    Integer.parseInt(ratingString.substring(0, ratingString
 			    .lastIndexOf("%")));
@@ -270,32 +273,43 @@ public class OsylToolbarView extends OsylViewableComposite implements
 
 	String openDateString =
 		parentEvaluationUnit.getProperty(COPropertiesType.DATE_START);
-	if (null != openDateString || !"undefined".equals(openDateString)
-		|| !"".equals(openDateString)) {
+	if (openDateString != null && !openDateString.equals("undefined")
+		&& !openDateString.equals("")) {
 	    openYear = Integer.parseInt(openDateString.substring(0, 4));
 	    openMonth = Integer.parseInt(openDateString.substring(5, 7));
 	    openDay = Integer.parseInt(openDateString.substring(8, 10));
 
 	} else {
 	    error = true;
+	    messages += getUiMessage("Evaluation.StartDate");
 	}
 
 	String closeDateString =
 		parentEvaluationUnit.getProperty(COPropertiesType.DATE_END);
-	if (null != closeDateString || !"undefined".equals(closeDateString)
-		|| !"".equals(closeDateString)) {
+	if (closeDateString != null && !closeDateString.equals("undefined")
+		&& !closeDateString.equals("")) {
 	    closeYear = Integer.parseInt(closeDateString.substring(0, 4));
 	    closeMonth = Integer.parseInt(closeDateString.substring(5, 7));
 	    closeDay = Integer.parseInt(closeDateString.substring(8, 10));
 	} else {
 	    error = true;
+	    messages +=
+		    (messages.equals("") ? "" : ", ")
+			    + getUiMessage("Evaluation.EndDate");
 	}
 	if (!error) {
 	    getController().createOrUpdateAssignment(resProxModel, "",
 		    parentEvaluationUnit.getLabel(), null, openYear, openMonth,
 		    openDay, 0, 0, closeYear, closeMonth, closeDay, 0, 0,
 		    rating);
+	} else {
+	    OsylAlertDialog osylAlertDialog =
+		    new OsylAlertDialog(getUiMessage("Global.error"),
+			    getUiMessage("Assignement.error.create", messages));
+	    osylAlertDialog.center();
+	    osylAlertDialog.show();
 	}
+	return error;
     }
 
     public void onViewContextSelection(ViewContextSelectionEvent event) {
