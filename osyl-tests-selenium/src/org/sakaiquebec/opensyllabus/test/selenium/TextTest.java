@@ -50,12 +50,28 @@ public class TextTest extends AbstractOSYLTest {
 	    goToSite();
 	}
 	waitForOSYL();
-	enterFirstLecture();
+	
+	//Open Seances Section
+        session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div/" +
+        		"div/table/tbody/tr[5]/td/table/tbody/tr[2]/td/div/" +
+        		"div[2]/div/div[6]/div");
+        pause();
 
+	// If we don't have a Lecture we add one
+	int LectNb = getResourceCount();
+	if(LectNb == 0){
+            //We add a first Lecture
+            clickAddItem("addPedagogicalUnit");
+            pause();
+        }
+	
+	enterFirstLecture();
+	
 	// We keep track of how many resources are showing to check that it
 	// is incremented as expected when we add one
 	int resNb = getResourceCount();
 	log("We start with " + resNb + " resources");
+	
 
 	// Click menu Add/Text
 	clickAddItem("addText");
