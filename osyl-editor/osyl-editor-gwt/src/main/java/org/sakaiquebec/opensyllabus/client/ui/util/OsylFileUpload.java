@@ -118,6 +118,14 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
 	titleLabel.setStylePrimaryName("Osyl-FileUpload-resource-title");
 
+	//display file size limit
+	row++;
+	final Label sizeLabel =
+		new Label(uiMessages.getMessage("fileUpload.size.limit"));
+	table.setWidget(row, 0, sizeLabel);
+	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
+	sizeLabel.setStylePrimaryName("Osyl-FileUpload-information");
+	
 	// Create a FileUpload widget.
 	row++;
 	final FileUpload upload = new FileUpload();
