@@ -302,14 +302,14 @@ public class OsylCOStructureEvaluationItemEditor extends
 	typeListBox.addChangeHandler(new ChangeHandler() {
 
 	    public void onChange(ChangeEvent event) {
-		if (typeListBox.getItemText(getSelectedTypeIndex()).equals(
-			getText())
-			|| getView().getCoMessage(
-				getView().getModel().getType()).equals(
-				getText())) {
+//		if (typeListBox.getItemText(getSelectedTypeIndex()).equals(
+//			getText())
+//			|| getView().getCoMessage(
+//				getView().getModel().getType()).equals(
+//				getText())) {
 		    setText(typeListBox.getItemText(typeListBox
 			    .getSelectedIndex()));
-		}
+//		}
 		setSelectedTypeIndex(typeListBox.getSelectedIndex());
 	    }
 
