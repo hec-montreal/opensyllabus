@@ -1,0 +1,686 @@
+/******************************************************************************
+ * $Id: $
+ ******************************************************************************
+ *
+ * Copyright (c) 2009 The Sakai Foundation, The Sakai Quebec Team.
+ *
+ * Licensed under the Educational Community License, Version 1.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.opensource.org/licenses/ecl1.php
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ******************************************************************************/
+
+package org.sakaiquebec.opensyllabus.test.selenium;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.session;
+
+/**
+ * Tests all the features in the section Assessment. The exact steps are: log in as admin,
+ * creates a new site if needed, load it (OpenSyllabus is the first and only
+ * page), enters in the Assessment section, delete the first assessment unit,
+ * ck Text in the Add menu, check the
+ * resource count has incremented by 1, open the editor, type in some text,
+ * change the rubric (randomly) click OK, check the text is here, check the
+ * rubric is visible, click save, log out.
+ * 
+ * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
+ * @author <a href="mailto:bouchra.laabissi@hec.ca">Bouchra Laabissi</a>
+ */
+
+public class SeancesTest extends AbstractOSYLTest{
+    
+    @Test(groups = "OSYL-Suite", description =
+	"OSYLEditor test. Add a contact resource, edit it and save the changes")
+	@Parameters( { "webSite" })
+	public void TestAddSeance(String webSite) throws Exception {
+	// We log in
+	logInAsAdmin(webSite);
+	try {
+	    goToSite();
+	} catch (IllegalStateException e) {
+	    createTestSite();
+	    goToSite();
+	}
+	waitForOSYL();
+
+//---------------------------------------------------------------------------//
+//	                      Add Seance        		             //
+//---------------------------------------------------------------------------//
+
+	//Open Seances Section
+        session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div/" +
+        		"div/table/tbody/tr[5]/td/table/tbody/tr[2]/td/div/" +
+        		"div[2]/div/div[6]/div");
+        pause();
+        
+        // We keep track of how many resources are showing to check that it
+        // is incremented as expected when we add one
+        int resNb = getResourceCount();
+        log("We start with " + resNb + " resources");
+        
+        //We add a first Assessment Unit
+        clickAddItem("addPedagogicalUnit");
+        pause();
+        
+        //We add a first Assessment Unit
+        clickAddItem("addPedagogicalUnit");
+        pause();
+        
+//---------------------------------------------------------------------------//
+//     			       Modify Seance name			     //
+//---------------------------------------------------------------------------//
+        
+        int Position = resNb +3;
+    	//We edit the last Seance
+	session().click("//tr["+Position+"]/td/table/tbody/tr/td[2]/div/" +
+			"table[2]/tbody/tr/td/button");
+	pause();
+	
+	//Rename the last Seance unit
+	String newText1 = "Seance" + timeStamp();
+	session().type("//table/tbody/tr/td/table/tbody/tr/td/input", newText1);
+	pause();
+	
+	//Click OK to close Editor
+	session().click("//tr/td/table/tbody/tr/td/table/tbody/tr/td/button");
+	pause();
+    
+//---------------------------------------------------------------------------//
+//      		Add Text in the Seance Unit			     //
+//---------------------------------------------------------------------------//
+    
+	//We edit the last Seance
+	session().click("//tr[5]/td/table/tbody/tr/td/table/tbody/tr["+Position
+		+"]/td/table/tbody/tr/td/div");
+	pause();
+	
+	//Add Text in the last Seance Unit
+	clickAddItem("addText");
+
+	//We edit the new text rubric
+	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+
+	//We select randomly the rubric name  
+	String selectedRubric1 = getRandomRubric();
+	log("Selecting rubric [" + selectedRubric1 + "]");
+	changeRubric(selectedRubric1);
+	
+	// Type some text in the rich-text area
+	if (inFireFox()) {
+	    // type text
+	    session().selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
+	    String newText9 = "this is a text resource typed by "
+		+ "selenium, hope it works and you see it. Added on "
+		+ timeStamp() + " in Firefox";
+	    session().type("//html/body", newText9);
+	    // close editor
+	    session().selectFrame("relative=parent");
+	    session().click("//td/table/tbody/tr/td[1]/button");
+	    // check if text is visible
+	    if (!session().isTextPresent(newText9)) {
+		logAndFail("Expected to see text [" + newText9 
+			+ "] after text edition");
+	    }
+	    log("OK: Text resource edited");
+	} else {
+	    log("RichText edition can only be tested in Firefox");
+	    // close editor
+	    session().click("//td/table/tbody/tr/td[1]/button");
+	}
+	
+	//Save modifications
+	saveCourseOutline();
+	pause();
+	
+	if (inFireFox()) {
+	    
+        	//Overview
+        	session().click("gwt-uid-6");
+        	//Attendee Overview 
+        	session().click("//tr[2]/td[2]/div/div/table/tbody/tr/td");
+        	pause();
+                
+        	//Open Seances Section
+        	session().mouseDown("//html/body/table/tbody/tr[2]/td/div/" +
+        			"div/div/table/tbody/tr[2]/td/div/div[2]/" +
+        			"div/div[6]/table/tbody/tr/td[2]");
+                pause();
+        	//Open the last Seance unit
+        	session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
+        	pause();
+                        	
+        	if (!session().isTextPresent(selectedRubric1)) {
+        	    logAndFail("Expected to see rubric [" + selectedRubric1
+        		+ "] after text edition");
+        	}
+        	log("OK: Selected rubric is visible");
+        	
+        	//Close Overview
+        	session().click("//html/body/table/tbody/tr/td/div/table/" +
+        			"tbody/tr/td");
+        	
+        	//Overview
+        	session().click("gwt-uid-6");
+        	//Public Overview 
+        	session().click("//tr[2]/td[2]/div/div/table/tbody/tr[2]/td");
+        	pause();
+        	
+        	//Open Seances Section
+        	session().mouseDown("//html/body/table/tbody/tr[2]/td/div/" +
+			"div/div/table/tbody/tr[2]/td/div/div[2]/" +
+			"div/div[6]/table/tbody/tr/td[2]");
+                pause();
+        	//Open the last Seance unit
+        	session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
+        	pause();
+        	        	
+                if (session().isTextPresent(selectedRubric1)) {
+                    logAndFail("Expected to not see rubric [" + selectedRubric1
+                		+ "] after text edition on public overview");
+                }
+                log("OK: Selected rubric is not visible");
+        	        	
+        	//Close Overview
+        	session().click("//html/body/table/tbody/tr/td/div/table/" +
+        			"tbody/tr/td");
+	}
+	
+//---------------------------------------------------------------------------//
+//      			Add Hyperlink in Seance Unit	             //
+//---------------------------------------------------------------------------//
+	
+	//Open Seances Section
+	session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div/" +
+		"div/table/tbody/tr[5]/td/table/tbody/tr[2]/td/div/" +
+		"div[2]/div/div[6]/div");
+        pause();
+	//Open the last Seance unit 
+	session().click("//tr[5]/td/table/tbody/tr/td/table/tbody/tr["+Position
+		+"]/td/table/tbody/tr/td/div");
+	pause();
+       
+	//Add Hyperlink in the last Seance Unit
+	clickAddItem("addURL");
+	
+	//We edit the new Hyperlink rubric
+	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+	
+	//We select randomly the rubric name
+	String selectedRubric2 = getRandomRubric();
+	log("Selecting rubric [" + selectedRubric2 + "]");
+	changeRubric(selectedRubric2);
+	
+	//We type the clickable text
+	String newText11 = timeStamp();
+	session().type("//input[@type='text']", newText11);
+
+	//We type the URL link
+	String newText10 = "http://webmail.hec.ca/";
+	session().type("//tr[2]/td[2]/input", newText10);
+
+	//We click OK to close editor
+	session().click("//td/table/tbody/tr/td[1]/button");
+
+	//We click URL to test 
+	session().click("link=" + newText11);
+
+	//Save modifications
+	saveCourseOutline();
+	pause();
+	
+	if (inFireFox()) {
+        	//Overview
+        	session().click("gwt-uid-6");
+        	//Attendee Overview 
+        	session().click("//tr[2]/td[2]/div/div/table/tbody/tr/td");
+        	pause();
+
+        	//Open Seances Section
+        	session().mouseDown("//html/body/table/tbody/tr[2]/td/div/" +
+			"div/div/table/tbody/tr[2]/td/div/div[2]/" +
+			"div/div[6]/table/tbody/tr/td[2]");
+                pause();
+        	//Open the last Seance unit 
+        	session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
+        	pause();
+        
+        	if (!session().isTextPresent(selectedRubric2)) {
+        	    logAndFail("Expected to see rubric [" + selectedRubric2
+        		+ "] after text edition");
+        	}
+        	log("OK: Selected rubric is visible");
+        	
+        	//Close Overview
+        	session().click("//html/body/table/tbody/tr/td/div/table/" +
+        			"tbody/tr/td");
+        	
+        	//Overview
+        	session().click("gwt-uid-6");
+        	
+        	//Public Overview 
+        	session().click("//tr[2]/td[2]/div/div/table/tbody/tr[2]/td");
+        	pause();
+        	
+        	//Open Seances Section
+        	session().mouseDown("//html/body/table/tbody/tr[2]/td/div/" +
+			"div/div/table/tbody/tr[2]/td/div/div[2]/" +
+			"div/div[6]/table/tbody/tr/td[2]");
+                pause();
+        	//Open the last Seance unit 
+        	session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
+        	pause();
+        	
+                if (session().isTextPresent(selectedRubric2)) {
+                    logAndFail("Expected to not see rubric [" + selectedRubric2
+                		+ "] after text edition on public overview");
+                }
+                log("OK: Selected rubric is not visible");
+        	
+        	//Close Overview
+        	session().click("//html/body/table/tbody/tr/td/div/table/" +
+        			"tbody/tr/td");
+	}
+	
+//---------------------------------------------------------------------------//
+//      			Add Document in Seance Unit                  //
+//---------------------------------------------------------------------------//
+	//Open Seances Section
+	session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div/" +
+		"div/table/tbody/tr[5]/td/table/tbody/tr[2]/td/div/" +
+		"div[2]/div/div[6]/div");
+        pause();
+	//Open the last Seance unit 
+	session().click("//tr[5]/td/table/tbody/tr/td/table/tbody/tr["+Position
+		+"]/td/table/tbody/tr/td/div");
+	pause();
+        
+        //Add new document
+        clickAddItem("addDocument");
+        
+        // We open Document resource editor
+        session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+        
+        // We choose randomly a Rubric
+        String selectedRubric3 = getRandomRubric();
+        log("Selecting rubric [" + selectedRubric3 + "]");
+        changeRubric(selectedRubric3);
+        
+        //We type the clickable text
+        String newText12 = timeStamp();
+        session().type("//input[@class=\"Osyl-LabelEditor-TextBox\"]", 
+        newText12);
+        
+        // Open form to upload a first document
+        if (inFireFox()) {
+        
+        session().mouseOver("//div[@class=\"Osyl-FileBrowserTopButto" +
+        		"n Osyl-FileBrowserTopButton-up\"]");
+        session().mouseOver("//div[@class=\"Osyl-FileBrowserTopButto" +
+        		"n Osyl-FileBrowserTopButton-up\"]");
+        session().mouseOver("//div[@class=\"Osyl-FileBrowserTopButto" +
+        		"n Osyl-FileBrowserTopButton-up\"]");
+        session().mouseOut("//div[@class=\"Osyl-FileBrowserTopButton" +
+        		" Osyl-FileBrowserTopButton-up-hovering\"]");
+        session().mouseOut("//div[@class=\"Osyl-FileBrowserTopButton" +
+        		" Osyl-FileBrowserTopButton-up-hovering\"]");
+        session().mouseDown("//div[@class=\"Osyl-FileBrowserTopButto" +
+        		"n Osyl-FileBrowserTopButton-up-hovering\"]");
+        session().mouseUp("//div[@class=\"Osyl-FileBrowserTopButton" +
+        		" Osyl-FileBrowserTopButton-down-hovering\"]");
+        
+        // Choose file and close window
+        session().type("uploadFormElement", "C:\\Documents and Setti" +
+        		"ngs\\clihec3\\Local Settings\\Temporary Int" +
+        		"ernet Files\\" +
+        	"Content.IE5\\K0F6YKYM\\osyl-src[1].zip");
+        session().click("document.forms[0].elements[1]");
+        
+        }/*else {
+        session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
+        session().focus("//input[@class=\"gwt-FileUpload\"]");
+        session().getCursorPosition("//input[@class=\"gwt-FileUpload\
+        "]");
+        
+        }*/
+        
+        // Open form to upload a second document
+        if (inFireFox()) {
+        
+        session().mouseOver("//td[3]/div/img");
+        session().mouseDown("//td[3]/div/img");
+        session().mouseUp("//td[3]/div/img");
+        
+        // Choose file and close window
+        session().type("//input[@class=\"gwt-FileUpload\"]", "C:\\" +
+        		"Documents and Settings\\" +
+        	"clihec3\\Local Settings\\Temporary Internet Files\\" +
+        	"Content.IE5\\K0F6YKYM\\powerpoint[1].ppt");
+        session().click("document.forms[0].elements[1]");
+        
+        }/*else {
+        session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");	    	
+        session().focus("//input[@class=\"gwt-FileUpload\"]"); 
+        
+        
+        }*/
+        
+        pause();
+        
+        // Select file in browser window
+        session().select("//tr[2]/td/table/tbody/tr[2]/td/select","value= (F" +
+        	")   osyl-src_1_.zip");
+        session().mouseOver("//option[@value=' (F)   osyl-src_1_.zip']");
+        session().focus("//option[@value=' (F)   osyl-src_1_.zip']");
+        session().click("//option[@value=' (F)   osyl-src_1_.zip']");
+        
+        // Close Editor
+        session().click("//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/" +
+        	"tbody/tr/td[1]/button");
+        
+        //Save modifications
+        saveCourseOutline();
+        pause();
+        
+        if (inFireFox()) {
+                        
+            //Overview
+            session().click("gwt-uid-6");
+            
+            //Attendee Overview 
+            session().click("//tr[2]/td[2]/div/div/table/tbody/tr/td");
+            pause();
+            
+            //Open Seances Section
+            session().mouseDown("//html/body/table/tbody/tr[2]/td/div/" +
+			"div/div/table/tbody/tr[2]/td/div/div[2]/" +
+			"div/div[6]/table/tbody/tr/td[2]");
+            pause();
+            //Open the last Seance unit 
+            session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
+    	    pause();
+            
+            if (!session().isTextPresent(selectedRubric3)) {
+            logAndFail("Expected to see rubric [" + selectedRubric3
+            	+ "] after text edition");
+            }
+            log("OK: Selected rubric is visible");
+            
+            if (!session().isTextPresent(newText12)) {
+            logAndFail("Expected to see rubric [" + newText12
+            	+ "] after text edition");
+            }
+            log("OK: Text is visible");
+            
+            //Close Overview
+            session().click("//html/body/table/tbody/tr/td/div/table/" +
+            		"tbody/tr/td");
+            
+            //Overview
+            session().click("gwt-uid-6");
+            
+            //Public Overview 
+            session().click("//tr[2]/td[2]/div/div/table/tbody/tr[2]/td");
+            pause();
+            
+            //Open Seances Section
+            session().mouseDown("//html/body/table/tbody/tr[2]/td/div/" +
+			"div/div/table/tbody/tr[2]/td/div/div[2]/" +
+			"div/div[6]/table/tbody/tr/td[2]");
+            pause();
+            //Open the last Seance unit 
+            session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
+    	    pause();
+            
+            if (session().isTextPresent(selectedRubric3)) {
+            logAndFail("Expected to not see rubric [" + selectedRubric3
+            		+ "] after text edition on public overview");
+            }
+            log("OK: Selected rubric is not visible");
+            	
+            if (session().isTextPresent(newText12)) {
+            logAndFail("Expected to not see rubric [" + newText12
+            		+ "] after text edition on public overview");
+            }
+            log("OK: Text is not visible");
+            
+            
+            //Close Overview
+            session().click("//html/body/table/tbody/tr/td/div/table/" +
+            		"tbody/tr/td");
+        }
+
+//---------------------------------------------------------------------------//
+//      			Add Citation in Seance Unit                  //
+//---------------------------------------------------------------------------//
+
+        //Open Seances Section
+        session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div/" +
+		"div/table/tbody/tr[5]/td/table/tbody/tr[2]/td/div/" +
+		"div[2]/div/div[6]/div");
+        pause();
+        
+        //Click Assessment section 
+        session().click("//tr[5]/td/table/tbody/tr/td/table/tbody/tr["+Position
+		+"]/td/table/tbody/tr/td/div");
+        
+        //Add new Citation
+        clickAddItem("addBiblioResource");
+        
+        // open Citation resource editor
+        session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+        
+        // We choose randomly a Rubric
+        String selectedRubric4 = getRandomRubric();
+        log("Selecting rubric [" + selectedRubric4 + "]");
+        changeRubric(selectedRubric4);
+        
+        /*/Create a new citation list
+        session().answerOnNextPrompt("NewListe"+ newText1);
+        if (inFireFox()) {
+        session().mouseOver("//td[3]/div/img");
+        session().mouseDown("//td[3]/div/img");
+        session().mouseUp("//td[3]/div/img");
+        }else{
+        session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
+        }
+        pause();
+        assertTrue(session().isPromptPresent());*/
+        
+        //Open Citation list
+        session().focus("//tr[2]/td/table/tbody/tr[2]/td/select/option/");
+        session().click("//tr[2]/td/table/tbody/tr[2]/td/select/option");
+        session().select("//tr[2]/td/table/tbody/tr[2]/td/select","index=0");
+        session().doubleClick("//tr[2]/td/table/tbody/tr[2]/td/select/option/");
+        
+        //Open form to upload a first Citation (Book)
+        if (inFireFox()) {
+        session().mouseOver("//td[3]/div/img");
+        session().mouseDown("//td[3]/div/img");
+        session().mouseUp("//td[3]/div/img");
+        }else{
+        session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
+        }
+        
+        //Fill the mandatory fields
+        session().select("//select[@name='cipvalues']", "label=Article");
+        String Titre = "Titre"+ timeStamp();
+        session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Titre );
+        String Auteur = "Auteur"+ timeStamp();
+        session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Auteur);
+        String Periodique = "Periodique"+ timeStamp();
+        session().type("//tr[13]/td/table/tbody/tr/td[3]/input", Periodique);
+        String Date = "Date"+ timeStamp();
+        session().type("//tr[14]/td/table/tbody/tr/td[3]/input", Date);
+        String Volume = "Volume"+ timeStamp();
+        session().type("//tr[15]/td/table/tbody/tr/td[3]/input", Volume);
+        String Numero = "Numero"+ timeStamp();
+        session().type("//tr[15]/td/table/tbody/tr/td[6]/input", Numero);
+        String Pages = "Pages"+ timeStamp();
+        session().type("//tr[16]/td/table/tbody/tr/td[3]/input", Pages);
+        String ISSN = "ISSN"+ timeStamp();
+        session().type("//tr[17]/td/table/tbody/tr/td[3]/input", ISSN);
+        String DOI = "DOI"+ timeStamp();
+        session().type("//tr[18]/td/table/tbody/tr/td[3]/input", DOI);
+        
+        //Close Window
+        session().click("//tr[20]/td/table/tbody/tr/td/button");
+        pause();
+        pause();
+        
+        // Select first resource in browser window
+        session().focus("//option[@value=' (REF)   " + Titre +"']");
+        session().select("//tr[2]/td/table/tbody/tr[2]/td/select","value= " +
+        	"(REF)   "+ Titre);
+        session().mouseOver("//option[@value=' (REF)   " + Titre +"']");
+        session().click("//option[@value=' (REF)   " + Titre +"']");
+        
+        // Close Editor
+        session().click("//td/table/tbody/tr/td[1]/button");
+        
+        //Save modifications
+        saveCourseOutline();
+        pause();
+
+        /*/Overview
+        session().click("gwt-uid-6");
+        pause();
+        //Attendee Overview 
+        session().click("//tr[2]/td[2]/div/div/table/tbody/tr/td");
+        pause();
+        pause();
+        //Click Assessment section 
+        session().mouseDown("//td[2]/div/table/tbody/tr/td/div");
+        pause();
+        //Open Assessment 1
+        session().click("link=Evaluation 1 -");
+        
+        if (!session().isTextPresent(selectedRubric4)) {
+        logAndFail("Expected to see rubric [" + selectedRubric4
+        + "] after text edition");
+        }
+        log("OK: Selected rubric is visible");
+        
+        if (!session().isTextPresent(Auteur+"."+Titre+"."+Annee+"."+ISBN)) {
+        logAndFail("Expected to see text [" + Auteur+"."+Titre+"."+Annee+"."
+        +ISBN + "] after text edition");
+        }
+        log("OK: Text is visible");
+        
+        //Close Overview
+        session().click("//html/body/table/tbody/tr/td/div/table/tbody/tr/td");
+        
+        //Overview
+        session().click("gwt-uid-6");
+        pause();
+        //Public Overview 
+        session().click("//tr[2]/td[2]/div/div/table/tbody/tr[2]/td");
+        pause();
+        //Click Assessment section 
+        session().mouseDown("//td[2]/div/table/tbody/tr/td/div");
+        pause();
+        //Open Assessment 1
+        session().click("link=Evaluation 1 -");
+        
+        if (session().isTextPresent(selectedRubric4)) {
+        logAndFail("Expected to not see rubric [" + selectedRubric4
+        + "] after text edition on public overview");
+        }
+        log("OK: Selected rubric is not visible");
+        
+        if (session().isTextPresent(Auteur+"."+Titre+"."+Annee+"."+ISBN)) {
+        logAndFail("Expected to not see rubric [" + Auteur+"."+Titre+"."+Annee+"."
+        +ISBN + "] after text edition on public overview");
+        }
+        log("OK: Text is not visible");
+        
+        //Close Overview
+        session().click("//html/body/table/tbody/tr/td/div/table/tbody/tr/td");*/
+        
+//---------------------------------------------------------------------------//
+//      			Switch two Seance                            //
+//---------------------------------------------------------------------------//
+        
+        //Open Seances Section
+        session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div/" +
+		"div/table/tbody/tr[5]/td/table/tbody/tr[2]/td/div/" +
+		"div[2]/div/div[6]/div");
+        pause();
+        
+        // We switch the 1st and 2nd assessment 
+        int Val = resNb +2;
+        if (inInternetExplorer()) {
+        session().keyPress("//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
+        	"div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
+        	"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table" +
+        	"[3]/tbody/tr[2]/td/table/tbody/tr/td/div", "\r");
+        } else {
+            session().mouseOver("//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
+    		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
+    		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div");
+            session().mouseOver("//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
+    		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
+    		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div");
+            session().mouseOver("//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
+    		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
+    		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table[3]");
+            session().mouseOver("//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
+    		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
+    		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table[3]" +
+    		"/tbody/tr[2]/td/table/tbody/tr/td/div");
+            session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
+    		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
+    		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table[3]" +
+    				"/tbody/tr[2]/td/table/tbody/tr/td/div");
+            session().mouseUp("//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
+    		"div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
+    		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table" +
+    		"[3]/tbody/tr[2]/td/table/tbody/tr/td/div");
+        }
+
+//---------------------------------------------------------------------------//
+//			Delete Seance Unit		                     //
+//---------------------------------------------------------------------------//
+
+       
+        //We delete Assessment 1
+        int Val1 = Val+1;
+        session().click("//tr["+Val1+"]/td/table/tbody/tr/td[2]/div/table[2]" +
+        	"/tbody/tr/td[2]/button");
+        
+        session().click("//tr[2]/td/table/tbody/tr/td/button");
+        
+        
+        
+        //Save modifications
+        saveCourseOutline();
+        pause();
+        
+        //Log out
+        session().selectFrame("relative=parent");
+        logOut();
+        log("testAddContactInfo: test complete");	
+        	
+	
+    }
+       	private int getResourceCount() {
+	return session().getXpathCount(
+		"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
+
+	}
+    
+}
+
+
