@@ -314,7 +314,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     public boolean prepareForSave() {
 	String messages = "";
 	boolean ok=true;
-	if(LinkValidator.isValidLink(getLink())){
+	if(!LinkValidator.isValidLink(getLink())){
 	    ok=false;
 	    messages=getView().getUiMessage("LinkEditor.unvalidLink");
 	}
