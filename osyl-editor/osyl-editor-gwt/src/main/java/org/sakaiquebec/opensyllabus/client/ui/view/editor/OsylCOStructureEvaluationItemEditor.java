@@ -55,7 +55,6 @@ public class OsylCOStructureEvaluationItemEditor extends
     private DateBox endDateBox;
     private ListBox subTypeListBox;
     private ListBox typeListBox;
-    private int selectedTypeIndex;
 
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
@@ -103,23 +102,46 @@ public class OsylCOStructureEvaluationItemEditor extends
 		ok = false;
 	    }
 	}
-	String endDateString = endDateBox.getTextBox().getText();
-	if (endDateString.trim().equals("")) {
+	if (typeListBox.getSelectedIndex() == 0) {
 	    messages +=
 		    getView().getUiMessage("Evaluation.field.required",
+			    getUiMessage("Evaluation.type"))
+			    + "\n\n";
+	    ok = false;
+	}
+	if (localisationListBox.getSelectedIndex() == 0) {
+	    messages +=
+		    getView().getUiMessage("Evaluation.field.required",
+			    getUiMessage("Evaluation.location"))
+			    + "\n\n";
+	    ok = false;
+	}
+	if (modeListBox.getSelectedIndex() == 0) {
+	    messages +=
+		    getView().getUiMessage("Evaluation.field.required",
+			    getUiMessage("Evaluation.mode"))
+			    + "\n\n";
+	    ok = false;
+	}
+	String endDateString = endDateBox.getTextBox().getText();
+	// if (endDateString.trim().equals("")) {
+	// messages +=
+	// getView().getUiMessage("Evaluation.field.required",
+	// getUiMessage("Evaluation.EndDate"))
+	// + "\n\n";
+	// ok = false;
+	// } else {
+	// if (!endDateString.matches(isoRegex)) {
+	if (!endDateString.trim().equals("")
+		&& !endDateString.matches(isoRegex)) {
+	    messages +=
+		    getView().getUiMessage("Evaluation.field.date.unISO",
 			    getUiMessage("Evaluation.EndDate"))
 			    + "\n\n";
 	    ok = false;
-	} else {
-	    if (!endDateString.matches(isoRegex)) {
-		messages +=
-			getView().getUiMessage("Evaluation.field.date.unISO",
-				getUiMessage("Evaluation.EndDate"))
-				+ "\n\n";
-		ok = false;
-		errordate = true;
-	    }
+	    errordate = true;
 	}
+	// }
 
 	// date validation
 
@@ -205,6 +227,7 @@ public class OsylCOStructureEvaluationItemEditor extends
 	localisationListBox.setName("Evaluation.location");
 	localisationListBox
 		.setTitle(getUiMessage("Evaluation.location.tooltip"));
+	localisationListBox.addItem("");
 	localisationListBox.addItem(getView().getCoMessage(
 		"Evaluation.Location.inclass"));
 	localisationListBox.addItem(getView().getCoMessage(
@@ -219,6 +242,7 @@ public class OsylCOStructureEvaluationItemEditor extends
 	modeListBox = new ListBox();
 	modeListBox.setName("Evaluation.mode");
 	modeListBox.setTitle(getUiMessage("Evaluation.mode.tooltip"));
+	modeListBox.addItem("");
 	modeListBox.addItem(getView().getCoMessage("Evaluation.Mode.ind"));
 	modeListBox.addItem(getView().getCoMessage("Evaluation.Mode.team"));
 	selectItemListBox(modeListBox, getView().getMode());
@@ -292,6 +316,7 @@ public class OsylCOStructureEvaluationItemEditor extends
 	typeListBox = new ListBox();
 	typeListBox.setName("Evaluation.type");
 	typeListBox.setTitle(getUiMessage("Evaluation.type.tooltip"));
+	typeListBox.addItem("");
 	List<String> evalTypeList =
 		getView().getController().getOsylConfig().getEvalTypeList();
 	if (evalTypeList != null) {
@@ -302,20 +327,18 @@ public class OsylCOStructureEvaluationItemEditor extends
 	typeListBox.addChangeHandler(new ChangeHandler() {
 
 	    public void onChange(ChangeEvent event) {
-//		if (typeListBox.getItemText(getSelectedTypeIndex()).equals(
-//			getText())
-//			|| getView().getCoMessage(
-//				getView().getModel().getType()).equals(
-//				getText())) {
-		    setText(typeListBox.getItemText(typeListBox
-			    .getSelectedIndex()));
-//		}
-		setSelectedTypeIndex(typeListBox.getSelectedIndex());
+		// if (typeListBox.getItemText(getSelectedTypeIndex()).equals(
+		// getText())
+		// || getView().getCoMessage(
+		// getView().getModel().getType()).equals(
+		// getText())) {
+		setText(typeListBox.getItemText(typeListBox.getSelectedIndex()));
+		// }
+		typeListBox.setSelectedIndex(typeListBox.getSelectedIndex());
 	    }
 
 	});
 	selectItemListBox(typeListBox, getView().getAssessmentType());
-	setSelectedTypeIndex(typeListBox.getSelectedIndex());
 	typePanel.add(l9);
 	typePanel.add(typeListBox);
 
@@ -389,7 +412,8 @@ public class OsylCOStructureEvaluationItemEditor extends
 		!dateStart.equals("") ? getUiMessage("Evaluation.StartDate")
 			+ ": " + dateStart + " | " : "";
 	String endDateLabel =
-		getUiMessage("Evaluation.EndDate") + ": " + dateEnd + " | ";
+		!dateEnd.equals("") ? getUiMessage("Evaluation.EndDate") + ": "
+			+ dateEnd + " | " : "";
 	String submissionModeLabel =
 		!submissionMode.equals("") ? getUiMessage("Evaluation.subtype")
 			+ ": " + submissionMode + " | " : "";
@@ -537,15 +561,17 @@ public class OsylCOStructureEvaluationItemEditor extends
 	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
 		    viewerPanelStartDate);
 	}
-	fieldNumber++;
-	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-		addNewLabel(getUiMessage("Evaluation.EndDate")));
-	// Value(editor)
-	viewerPanelEndDate = addNewEditorPanel();
-	viewerPanelEndDate.add(endDateHTML);
-	fieldNumber++;
-	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-		viewerPanelEndDate);
+	if (!dateEnd.equals("")) {
+	    fieldNumber++;
+	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
+		    addNewLabel(getUiMessage("Evaluation.EndDate")));
+	    // Value(editor)
+	    viewerPanelEndDate = addNewEditorPanel();
+	    viewerPanelEndDate.add(endDateHTML);
+	    fieldNumber++;
+	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
+		    viewerPanelEndDate);
+	}
 
 	if (!submissionMode.equals("")) {
 	    fieldNumber++;
@@ -584,15 +610,6 @@ public class OsylCOStructureEvaluationItemEditor extends
     /**
      * ==================== ADDED CLASSES or METHODS ====================
      */
-
-    private void setSelectedTypeIndex(int index) {
-	this.selectedTypeIndex = index;
-    }
-
-    private int getSelectedTypeIndex() {
-	return selectedTypeIndex;
-    }
-
     public String getWeight() {
 	return weightTextBox.getText();
     }

@@ -54,11 +54,10 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 	setEditor(new OsylCOStructureEvaluationItemEditor(this, isInList));
 	initView();
     }
-    
-    
+
     public OsylCOStructureEvaluationItemLabelView(COUnit model,
 	    OsylController controller, boolean isInList, String levelStyle) {
-	super(model,controller);
+	super(model, controller);
 	setEditor(new OsylCOStructureEvaluationItemEditor(this, isInList));
 	((OsylCOStructureItemEditor) getEditor()).setViewerStyle(levelStyle);
 	initView();
@@ -110,6 +109,7 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
     }
 
     private void updateAssignement(COContentResourceProxy contentResourceProxy) {
+	boolean error = false;
 	String uri = contentResourceProxy.getProperty(COPropertiesType.URI);
 	String rawAssignmentId = uri.split("\\s*/a/\\s*")[1];
 	rawAssignmentId = rawAssignmentId.split("\\s*/\\s*")[1];
@@ -128,6 +128,8 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 	    rating =
 		    Integer.parseInt(ratingString.substring(0, ratingString
 			    .lastIndexOf("%")));
+	} else {
+	    error = true;
 	}
 
 	String openDateString = getDateStart();
@@ -137,6 +139,8 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 	    openMonth = Integer.parseInt(openDateString.substring(5, 7));
 	    openDay = Integer.parseInt(openDateString.substring(8, 10));
 
+	} else {
+	    error = true;
 	}
 
 	String closeDateString = getDateEnd();
@@ -145,11 +149,15 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 	    closeYear = Integer.parseInt(closeDateString.substring(0, 4));
 	    closeMonth = Integer.parseInt(closeDateString.substring(5, 7));
 	    closeDay = Integer.parseInt(closeDateString.substring(8, 10));
+	} else {
+	    error = true;
 	}
-
-	getController().createOrUpdateAssignment(contentResourceProxy,
-		assignmentId, getModel().getLabel(), null, openYear, openMonth,
-		openDay, 0, 0, closeYear, closeMonth, closeDay, 0, 0, rating);
+	if (!error) {
+	    getController().createOrUpdateAssignment(contentResourceProxy,
+		    assignmentId, getModel().getLabel(), null, openYear,
+		    openMonth, openDay, 0, 0, closeYear, closeMonth, closeDay,
+		    0, 0, rating);
+	}
     }
 
     private void updateMetaInfo() {
@@ -167,7 +175,8 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 		.getCloseDate());
 	setSubmitionType(((OsylCOStructureEvaluationItemEditor) getEditor())
 		.getSubmitionType());
-	setAssessmentType((((OsylCOStructureEvaluationItemEditor) getEditor()).getType()));
+	setAssessmentType((((OsylCOStructureEvaluationItemEditor) getEditor())
+		.getType()));
     }
 
     /**

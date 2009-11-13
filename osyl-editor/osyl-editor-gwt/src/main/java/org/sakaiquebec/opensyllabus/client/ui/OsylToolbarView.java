@@ -249,6 +249,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	while (!parentEvaluationUnit.isCOUnit())
 	    parentEvaluationUnit = parentEvaluationUnit.getParent();
 
+	boolean error = false;
 	// IMPORTANT : when the rating (the last parameter) is -1
 	// then it is a default assignment
 	int rating = -1;
@@ -275,6 +276,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    openMonth = Integer.parseInt(openDateString.substring(5, 7));
 	    openDay = Integer.parseInt(openDateString.substring(8, 10));
 
+	} else {
+	    error = true;
 	}
 
 	String closeDateString =
@@ -284,11 +287,15 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    closeYear = Integer.parseInt(closeDateString.substring(0, 4));
 	    closeMonth = Integer.parseInt(closeDateString.substring(5, 7));
 	    closeDay = Integer.parseInt(closeDateString.substring(8, 10));
+	} else {
+	    error = true;
 	}
-
-	getController().createOrUpdateAssignment(resProxModel, "",
-		parentEvaluationUnit.getLabel(), null, openYear, openMonth,
-		openDay, 0, 0, closeYear, closeMonth, closeDay, 0, 0, rating);
+	if (!error) {
+	    getController().createOrUpdateAssignment(resProxModel, "",
+		    parentEvaluationUnit.getLabel(), null, openYear, openMonth,
+		    openDay, 0, 0, closeYear, closeMonth, closeDay, 0, 0,
+		    rating);
+	}
     }
 
     public void onViewContextSelection(ViewContextSelectionEvent event) {
