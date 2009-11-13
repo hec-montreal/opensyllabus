@@ -646,16 +646,18 @@ public class COModeledServer {
 	if (coContentRes.getType().equals(COContentResourceType.DOCUMENT)
 		|| coContentRes.getType().equals(
 			COContentResourceType.BIBLIO_RESOURCE)) {
-	    documentSecurityMap.put(coContentRes.getProperty(
-		    COPropertiesType.URI).trim(), coContentRes.getAccess());
-	    if (isPublication) {
-		COProperties copProperties = coContentRes.getProperties();
-		copProperties.addProperty(COPropertiesType.URI, this
-			.changeDocumentsUrls(coContentRes.getProperty(
-				COPropertiesType.URI).trim(),
-				OsylSiteService.WORK_DIRECTORY,
-				OsylSiteService.PUBLISH_DIRECTORY));
-		coContentRes.setProperties(copProperties);
+	    if (coContentRes.getProperty(COPropertiesType.URI) != null) {
+		documentSecurityMap.put(coContentRes.getProperty(
+			COPropertiesType.URI).trim(), coContentRes.getAccess());
+		if (isPublication) {
+		    COProperties copProperties = coContentRes.getProperties();
+		    copProperties.addProperty(COPropertiesType.URI, this
+			    .changeDocumentsUrls(coContentRes.getProperty(
+				    COPropertiesType.URI).trim(),
+				    OsylSiteService.WORK_DIRECTORY,
+				    OsylSiteService.PUBLISH_DIRECTORY));
+		    coContentRes.setProperties(copProperties);
+		}
 	    }
 	}
 	return coContentRes;
@@ -757,7 +759,7 @@ public class COModeledServer {
 	element.setAttribute(ID_ATTRIBUTE_NAME, modelInterface.getId());
 	element.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
 		+ modelInterface.isEditable());
-	
+
 	if (modelInterface.getType() != null) {
 	    element.setAttribute(XSI_TYPE_ATTRIBUTE_NAME, modelInterface
 		    .getType());
@@ -794,11 +796,12 @@ public class COModeledServer {
 		"http://www.w3.org/2001/XMLSchema-instance");
 	Element courseOutlineContentElem = document.createElement(CO_NODE_NAME);
 
-	setCommonAttributesAndProperties(courseOutlineContentElem, coContent,document);
-	
+	setCommonAttributesAndProperties(courseOutlineContentElem, coContent,
+		document);
+
 	osylElement.appendChild(courseOutlineContentElem);
 	document.appendChild(osylElement);
-	
+
 	for (int i = 0; i < coContent.getChildrens().size(); i++) {
 	    createChildElement(document, courseOutlineContentElem,
 		    (COElementAbstract) coContent.getChildrens().get(i));
@@ -819,28 +822,27 @@ public class COModeledServer {
     private void createChildElement(Document document, Element parent,
 	    COElementAbstract child) {
 	if (child instanceof COContentResourceProxy) {
-	    createChildElement(document, parent,
-		    (COContentResourceProxy) child);
+	    createChildElement(document, parent, (COContentResourceProxy) child);
 	} else {
 	    Element element = null;
-		if (child.isCOStructureElement()) {
-		    element = document.createElement(CO_STRUCTURE_NODE_NAME);
-		} else if (child.isCOUnit()) {
-		    element = document.createElement(CO_UNIT_NODE_NAME);
+	    if (child.isCOStructureElement()) {
+		element = document.createElement(CO_STRUCTURE_NODE_NAME);
+	    } else if (child.isCOUnit()) {
+		element = document.createElement(CO_UNIT_NODE_NAME);
 
-		} else if (child.isCOUnitStructure()) {
-		    element = document.createElement(CO_UNIT_STRUCTURE_NODE_NAME);
+	    } else if (child.isCOUnitStructure()) {
+		element = document.createElement(CO_UNIT_STRUCTURE_NODE_NAME);
 
-		} else if (child.isCOUnitContent()) {
-		    element = document.createElement(CO_UNIT_CONTENT_NODE_NAME);
-		}
-		setCommonAttributesAndProperties(element, child, document);
-		
-		for (int i = 0; i < child.getChildrens().size(); i++) {
-		    createChildElement(document, element,
-			    (COElementAbstract) child.getChildrens().get(i));
-		}
-		parent.appendChild(element);
+	    } else if (child.isCOUnitContent()) {
+		element = document.createElement(CO_UNIT_CONTENT_NODE_NAME);
+	    }
+	    setCommonAttributesAndProperties(element, child, document);
+
+	    for (int i = 0; i < child.getChildrens().size(); i++) {
+		createChildElement(document, element, (COElementAbstract) child
+			.getChildrens().get(i));
+	    }
+	    parent.appendChild(element);
 	}
     }
 
@@ -899,9 +901,10 @@ public class COModeledServer {
 	    COContentResourceProxy child) {
 	Element coContentResourceProxyElem =
 		document.createElement(CO_RES_PROXY_NODE_NAME);
-	
-	setCommonAttributesAndProperties(coContentResourceProxyElem, child,document);
-	
+
+	setCommonAttributesAndProperties(coContentResourceProxyElem, child,
+		document);
+
 	if (child.getNestedCOContentResourceProxies() != null) {
 	    for (int i = 0; i < child.getNestedCOContentResourceProxies()
 		    .size(); i++) {

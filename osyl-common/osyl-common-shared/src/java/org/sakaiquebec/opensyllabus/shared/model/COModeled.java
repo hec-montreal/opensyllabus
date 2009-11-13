@@ -563,8 +563,9 @@ public class COModeled extends COSerialized {
 	if (coContentRes.getType().equals(COContentResourceType.DOCUMENT)
 		|| coContentRes.getType().equals(
 			COContentResourceType.BIBLIO_RESOURCE))
-	    documentSecurityMap.put(coContentRes.getProperty(
-		    COPropertiesType.URI).trim(), coContentRes.getAccess());
+	    if (coContentRes.getProperty(COPropertiesType.URI) != null)
+		documentSecurityMap.put(coContentRes.getProperty(
+			COPropertiesType.URI).trim(), coContentRes.getAccess());
 	return coContentRes;
     }
 
@@ -677,11 +678,12 @@ public class COModeled extends COSerialized {
 		"http://www.w3.org/2001/XMLSchema-instance");
 	Element courseOutlineContentElem = document.createElement(CO_NODE_NAME);
 
-	setCommonAttributesAndProperties(courseOutlineContentElem, coContent, document);
+	setCommonAttributesAndProperties(courseOutlineContentElem, coContent,
+		document);
 
 	osylElement.appendChild(courseOutlineContentElem);
 	document.appendChild(osylElement);
-	
+
 	for (int i = 0; i < coContent.getChildrens().size(); i++) {
 	    createChildElement(document, courseOutlineContentElem,
 		    (COElementAbstract) coContent.getChildrens().get(i),
@@ -708,25 +710,24 @@ public class COModeled extends COSerialized {
 		    (COContentResourceProxy) child, saveParentInfos);
 	} else {
 	    Element element = null;
-		if (child.isCOStructureElement()) {
-		    element = document.createElement(CO_STRUCTURE_NODE_NAME);
-		} else if (child.isCOUnit()) {
-		    element = document.createElement(CO_UNIT_NODE_NAME);
+	    if (child.isCOStructureElement()) {
+		element = document.createElement(CO_STRUCTURE_NODE_NAME);
+	    } else if (child.isCOUnit()) {
+		element = document.createElement(CO_UNIT_NODE_NAME);
 
-		} else if (child.isCOUnitStructure()) {
-		    element = document.createElement(CO_UNIT_STRUCTURE_NODE_NAME);
+	    } else if (child.isCOUnitStructure()) {
+		element = document.createElement(CO_UNIT_STRUCTURE_NODE_NAME);
 
-		} else if (child.isCOUnitContent()) {
-		    element = document.createElement(CO_UNIT_CONTENT_NODE_NAME);
-		}
-		setCommonAttributesAndProperties(element, child, document);
-		
-		for (int i = 0; i < child.getChildrens().size(); i++) {
-		    createChildElement(document, element,
-			    (COElementAbstract) child.getChildrens().get(i),
-			    saveParentInfos);
-		}
-		parent.appendChild(element);
+	    } else if (child.isCOUnitContent()) {
+		element = document.createElement(CO_UNIT_CONTENT_NODE_NAME);
+	    }
+	    setCommonAttributesAndProperties(element, child, document);
+
+	    for (int i = 0; i < child.getChildrens().size(); i++) {
+		createChildElement(document, element, (COElementAbstract) child
+			.getChildrens().get(i), saveParentInfos);
+	    }
+	    parent.appendChild(element);
 	}
     }
 
@@ -788,9 +789,10 @@ public class COModeled extends COSerialized {
 	if (child.isEditable() || (!child.isEditable() && saveParentInfos)) {
 	    Element coContentResourceProxyElem =
 		    document.createElement(CO_RES_PROXY_NODE_NAME);
-	    
-	    setCommonAttributesAndProperties(coContentResourceProxyElem, child, document);
-	    
+
+	    setCommonAttributesAndProperties(coContentResourceProxyElem, child,
+		    document);
+
 	    if (child.getNestedCOContentResourceProxies() != null) {
 		for (int i = 0; i < child.getNestedCOContentResourceProxies()
 			.size(); i++) {
