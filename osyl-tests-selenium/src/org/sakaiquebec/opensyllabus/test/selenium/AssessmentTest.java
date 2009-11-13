@@ -94,6 +94,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	//We check if Opensyllabus displays a message error when the user click 
 	//OK without fill the mandatory fields
 	//--------------------------------------------------------------------//
+	
 	//We click OK without filling the mandatory fields
 	session().click("//td/table/tbody/tr/td[1]/button");
 	
@@ -107,6 +108,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	//We click OK to return to Assessment editor after message error 
 	//displaying
 	session().click("//tr[2]/td/table/tbody/tr/td/button");	
+	
 	
 	//We check if the field "assessment type" is mandatory
 	//--------------------------------------------------------------------//
@@ -135,9 +137,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 		}
 	
 	//We click OK to return to assessment editor
-	session().click("//tr[2]/td/table/tbody/tr/td/button");
-	
-	
+	session().click("//tr[2]/td/table/tbody/tr/td/button");	
 	
 	//We check if the field "Location" is mandatory
 	//--------------------------------------------------------------------//
@@ -147,16 +147,70 @@ public class AssessmentTest extends AbstractOSYLTest{
 	String newText5 = getRandomOption(xpathRole1);
 	session().select(xpathRole1, newText5);
 	
+	//We empty the fields "Location"
+	session().select(xpathRole2, "label=");
+	
+	//We click OK to close assessment editor
+	session().click("//td/table/tbody/tr/td[1]/button");
+	
+	//We check if Opensyllabus displays a message error 
+	if (!session().isTextPresent(Erreur)) {
+	    logAndFail("Expected to see text [" + Erreur 
+		    + "] after text edition");
+		}
+	
+	//We click OK to return to assessment editor
+	session().click("//tr[2]/td/table/tbody/tr/td/button");
+	
 	//We check if the field "Work mode" is mandatory
 	//--------------------------------------------------------------------//
 	
+	//We select randomly the location field
+	session().select(xpathRole2, newText6);
 	
+	//We empty the fields "Work mode"
+	session().select(xpathRole3, "label=");
+	
+	//We click OK to close assessment editor
+	session().click("//td/table/tbody/tr/td[1]/button");
+	
+	//We check if Opensyllabus displays a message error 
+	if (!session().isTextPresent(Erreur)) {
+	    logAndFail("Expected to see text [" + Erreur 
+		    + "] after text edition");
+		}
+	
+	//We click OK to return to assessment editor
+	session().click("//tr[2]/td/table/tbody/tr/td/button");
+		
 	//We check if the field "Weighting" is mandatory
-	//--------------------------------------------------------------------//
+	//-------------------------------------------------------------------//
 	
+	//We select randomly the work mode field
+	session().select(xpathRole3, newText7);
+	
+	//We empty the fields "Weighting"
+	session().type("//input[@type='text']", "");
+	
+	//We click OK to close assessment editor
+	session().click("//td/table/tbody/tr/td[1]/button");
+	
+	//We check if Opensyllabus displays a message error 
+	if (!session().isTextPresent(Erreur)) {
+	    logAndFail("Expected to see text [" + Erreur 
+		    + "] after text edition");
+		}
+	
+	//We click OK to return to assessment editor
+	session().click("//tr[2]/td/table/tbody/tr/td/button");
 	
 	//We check if Opensyllabus displays a message error when the user enter 
 	//a wrong date format.	
+	//-------------------------------------------------------------------//
+	
+	//We fill the weighting field
+	session().type("//input[@type='text']", newText3);
+	
 	//We fill the assessment name field
 	String newText1 = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 	session().type("//tr[2]/td/table/tbody/tr/td[2]/table/tbody/tr[2]/td" +
@@ -165,8 +219,6 @@ public class AssessmentTest extends AbstractOSYLTest{
 	//We fill the start date field by a wrong format
 	String newText2 = timeStamp();
 	session().type("//td[1]/table/tbody/tr[2]/td/input", newText2);
-	
-	
 	
 	//We click OK to close assessment editor
 	session().click("//td/table/tbody/tr/td[1]/button");
@@ -182,6 +234,8 @@ public class AssessmentTest extends AbstractOSYLTest{
 	
 	//Check if Opensyllabus displays a message error when the user click OK 
 	//and the end date is not later than the start date.
+	//-------------------------------------------------------------------//
+	
 	//We fill the end date field
 	String newText4 = "2009-09-10";
 	session().type("//tr[2]/td/table/tbody/tr/td[2]/table/tbody/tr[2]/td" +
@@ -189,9 +243,6 @@ public class AssessmentTest extends AbstractOSYLTest{
 	
 	//We fill the start date field by today's date
 	session().type("//td[1]/table/tbody/tr[2]/td/input", newText1);
-	
-	//We fill the weighting field
-	session().type("//input[@type='text']", newText3);
 	
 	//We fill the assessment name field
 	String Name = "Evaluation" + timeStamp();

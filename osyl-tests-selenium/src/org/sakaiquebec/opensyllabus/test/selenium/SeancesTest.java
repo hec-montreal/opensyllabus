@@ -66,8 +66,7 @@ public class SeancesTest extends AbstractOSYLTest{
         		"div[2]/div/div[6]/div");
         pause();
         
-        // We keep track of how many resources are showing to check that it
-        // is incremented as expected when we add one
+        // We keep track of how many resources are showing
         int resNb = getResourceCount();
         log("We start with " + resNb + " resources");
         
@@ -90,18 +89,46 @@ public class SeancesTest extends AbstractOSYLTest{
 	pause();
 	
 	//Rename the last Seance unit
-	String newText1 = "Seance" + timeStamp();
+	String newText1 = "FirstSeanceName" + timeStamp();
 	session().type("//table/tbody/tr/td/table/tbody/tr/td/input", newText1);
 	pause();
 	
 	//Click OK to close Editor
 	session().click("//tr/td/table/tbody/tr/td/table/tbody/tr/td/button");
 	pause();
+	
+	// Ensure the new name is visible
+	if(!session().isTextPresent(newText1)) {
+	    logAndFail("New lecture title not present");	    
+	}
+	log("OK: Lecture renamed");
+	
+	// Now we rename the lecture from inside
+	session().click("//tr[5]/td/table/tbody/tr/td/table/tbody/tr["+Position
+		+"]/td/table/tbody/tr/td/div");
+	pause();
+	String newText2 = "SeanceReNamed" + timeStamp();
+	session().click("//tr/td/div/table[2]/tbody/tr/td/button");
+	session().type("//input[@type='text']", newText2);
+	// Click OK
+	session().click("//td/table/tbody/tr/td[1]/button");
+	// Ensure the new name is visible
+	if(!session().isTextPresent(newText2)) {
+		logAndFail("New lecture title not present (inside the lecture)");
+	}
+	log("OK: Lecture renamed from inside");
+	pause();
     
 //---------------------------------------------------------------------------//
 //      		Add Text in the Seance Unit			     //
 //---------------------------------------------------------------------------//
     
+	//Open Seances Section
+        session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div/" +
+        		"div/table/tbody/tr[5]/td/table/tbody/tr[2]/td/div/" +
+        		"div[2]/div/div[6]/div");
+        pause();
+	
 	//We edit the last Seance
 	session().click("//tr[5]/td/table/tbody/tr/td/table/tbody/tr["+Position
 		+"]/td/table/tbody/tr/td/div");
