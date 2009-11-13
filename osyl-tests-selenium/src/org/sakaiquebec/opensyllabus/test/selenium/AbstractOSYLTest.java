@@ -24,6 +24,7 @@ package org.sakaiquebec.opensyllabus.test.selenium;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+ 
 
 import com.thoughtworks.selenium.SeleneseTestCase;
 
@@ -302,8 +303,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    }
 	    try {
 		if (session().isElementPresent(
-			"//table[@class=\"Osyl-UnitView-UnitPanel\"]"
-				+ "/tbody/tr/td/table/tbody/tr/td/div/a")) {
+			"//table[@class=\"Osyl-TreeItem-HorizontalPanel\"]")) {
 		    break;
 		}
 	    } catch (Exception e) {
