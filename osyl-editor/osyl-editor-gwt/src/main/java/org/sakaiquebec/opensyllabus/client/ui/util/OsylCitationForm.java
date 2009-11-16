@@ -224,7 +224,7 @@ public class OsylCitationForm extends WindowPanel implements
 
 	// Create a textarea for the citation type others
 	citationPanel = new VerticalPanel();
-	citationPanel.setWidth("99%");
+	citationPanel.setStylePrimaryName("Osyl-CitationForm-genericPanel");
 	citationPanel.add(FormHelper.createHiddenField("cipkeys",
 		CitationSchema.TITLE));
 	citationPanel.add(createNewLabel(osylController
@@ -233,7 +233,7 @@ public class OsylCitationForm extends WindowPanel implements
 	citationField =
 		FormHelper.createTextArea((citation == null || citation
 			.getTitle() == null) ? "" : citation.getTitle(),
-			"Osyl-UnitView-TextArea");
+			"Osyl-CitationForm-textArea");
 	citationPanel.add(citationField);
 	mainPanel.add(citationPanel);
 
@@ -246,7 +246,7 @@ public class OsylCitationForm extends WindowPanel implements
 					.equals(citation
 						.getProperty(CitationSchema.TYPE))) ? ""
 					: citation.getTitle(),
-				"Osyl-UnitView-TextArea");
+				"Osyl-CitationForm-textBox");
 	titlePanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_titleLabel")
@@ -258,7 +258,7 @@ public class OsylCitationForm extends WindowPanel implements
 	authorField =
 		FormHelper.createTextBox((citation == null || citation
 			.getCreator() == null) ? "" : citation.getCreator(),
-			"Osyl-UnitView-TextArea");
+			"Osyl-CitationForm-textBox");
 	authorLabel =
 		createNewLabel(osylController
 			.getCoMessage("ResProxCitationView_authorLabel")
@@ -273,7 +273,7 @@ public class OsylCitationForm extends WindowPanel implements
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.YEAR) == null) ? ""
 			: citation.getProperty(CitationSchema.YEAR),
-			"Osyl-UnitView-TextArea");
+			"Osyl-CitationForm-textBox");
 	yearPanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_yearLabel")
@@ -285,7 +285,7 @@ public class OsylCitationForm extends WindowPanel implements
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.SOURCE_TITLE) == null) ? ""
 			: citation.getProperty(CitationSchema.SOURCE_TITLE),
-			"Osyl-UnitView-TextArea");
+			"Osyl-CitationForm-textBox");
 	journalPanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_journalLabel")
@@ -297,7 +297,7 @@ public class OsylCitationForm extends WindowPanel implements
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.DATE) == null) ? ""
 			: citation.getProperty(CitationSchema.DATE),
-			"Osyl-UnitView-TextArea");
+			"Osyl-CitationForm-textBox");
 	datePanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_dateLabel")
@@ -309,12 +309,12 @@ public class OsylCitationForm extends WindowPanel implements
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.VOLUME) == null) ? ""
 			: citation.getProperty(CitationSchema.VOLUME),
-			"Osyl-UnitView-TextArea");
+			"Osyl-CitationForm-textBox");
 	final TextBox issueTextBox =
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.ISSUE) == null) ? ""
 			: citation.getProperty(CitationSchema.ISSUE),
-			"Osyl-UnitView-TextArea");
+			"Osyl-CitationForm-textBox");
 	volIssuePanel =
 		createDoubleLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_volumeLabel")
@@ -329,7 +329,7 @@ public class OsylCitationForm extends WindowPanel implements
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.PAGES) == null) ? ""
 			: citation.getProperty(CitationSchema.PAGES),
-			"Osyl-UnitView-TextArea");
+			"Osyl-CitationForm-textBox");
 	pagePanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_pagesLabel")
@@ -346,7 +346,7 @@ public class OsylCitationForm extends WindowPanel implements
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.ISN) == null) ? ""
 			: citation.getProperty(CitationSchema.ISN),
-			"Osyl-UnitView-TextArea");
+			"Osyl-CitationForm-textBox");
 	isnPanel =
 		createLabelTextboxElement(isnLabel, isnTextBox,
 			CitationSchema.ISN);
@@ -357,7 +357,7 @@ public class OsylCitationForm extends WindowPanel implements
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.DOI) == null) ? ""
 			: citation.getProperty(CitationSchema.DOI),
-			"Osyl-UnitView-TextArea");
+			"Osyl-CitationForm-textBox");
 	doiPanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_doiLabel")
@@ -367,7 +367,7 @@ public class OsylCitationForm extends WindowPanel implements
 	// Create a textbox to allow the user to give another link
 	// different from the one to the library
 	urlPanel = new VerticalPanel();
-	urlPanel.setWidth("99%");
+	urlPanel.setStylePrimaryName("Osyl-CitationForm-genericPanel");
 	urlPanel.add(FormHelper.createHiddenField("cipkeys",
 		CitationSchema.URL));
 	urlPanel.add(createNewLabel(osylController
@@ -375,7 +375,7 @@ public class OsylCitationForm extends WindowPanel implements
 		+ ":"));
 	urlTextBox =
 		FormHelper.createTextBox((citation == null || citation.getUrl() == null) ? "" : citation.getUrl(),
-			"Osyl-UnitView-TextArea");
+			"Osyl-CitationForm-textBox");
 	urlPanel.add(urlTextBox);
 	mainPanel.add(urlPanel);
 
@@ -642,8 +642,9 @@ public class OsylCitationForm extends WindowPanel implements
 	HorizontalPanel hp = new HorizontalPanel();
 	hp.add(FormHelper.createHiddenField("cipkeys", key));
 	hp.add(label);
+	tb.setWidth("99%");
 	hp.add(tb);
-	hp.setWidth("99%");
+	//hp.setWidth("99%");
 	hp.setCellWidth(label, "15%");
 	hp.setCellWidth(tb, "84%");
 	hp.setStylePrimaryName("Osyl-CitationForm-genericPanel");
@@ -670,11 +671,13 @@ public class OsylCitationForm extends WindowPanel implements
 	Label lab2 = createNewLabel(label2);
 	hp.add(FormHelper.createHiddenField("cipkeys", key1));
 	hp.add(lab1);
+	tb1.setWidth("99%");
 	hp.add(tb1);
 	hp.add(FormHelper.createHiddenField("cipkeys", key2));
 	hp.add(lab2);
+	tb2.setWidth("99%");
 	hp.add(tb2);
-	hp.setWidth("98%");
+	//hp.setWidth("98%");
 	hp.setCellWidth(lab1, "15%");
 	hp.setCellWidth(tb1, "34%");
 	hp.setCellWidth(lab2, "15%");

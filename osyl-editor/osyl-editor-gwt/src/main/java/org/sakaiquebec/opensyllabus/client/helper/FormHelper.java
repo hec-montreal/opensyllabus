@@ -66,9 +66,8 @@ public class FormHelper {
      */
     public static TextBox createTextBox(String text, String stylePrimaryName) {
 	TextBox tb = new TextBox();
-	tb.setStylePrimaryName(stylePrimaryName);
-	tb.setWidth("99%");
 	tb.setText(text);
+	tb.setStylePrimaryName(stylePrimaryName);
 	return tb;
     }
 
@@ -82,8 +81,6 @@ public class FormHelper {
     public static TextArea createTextArea(String text, String stylePrimaryName) {
 	TextArea ta = new TextArea();
 	ta.setStylePrimaryName(stylePrimaryName);
-	ta.setWidth("99%");
-	ta.setHeight("110px");
 	ta.setText(text);
 	return ta;
     }

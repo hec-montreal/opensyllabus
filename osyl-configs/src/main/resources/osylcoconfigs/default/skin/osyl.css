@@ -237,13 +237,37 @@
 	margin:20px;
 }
 
-.Osyl-CitationForm-genericPanel {margin:3px}
+.Osyl-CitationForm-genericPanel{
+	margin:3px;
+	width:415px;
+}
+	
+	
 .Osyl-CitationForm-textBoxRight {
 	font-family:sans-serif, Arial, Verdana; /* Doesn't work in MSIE */
 	background:#FFF;
 	border:1px solid #AAA;
 	margin:0 0 0 3px;
 	padding:0; /* Doesn't work in any browser */
+}
+
+.Osyl-CitationForm-textArea{
+	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
+	background:#FFF;
+	border:1px solid #AAA;
+	margin:0 3px;	
+	padding:0;
+	width:415px;
+	height: 110px;
+}
+
+.Osyl-CitationForm-textBox{
+	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
+	background:#FFF;
+	border:1px solid #AAA;
+	margin:0 3px;	
+	padding:0;
+	width:415px;
 }
 
 /*Publish View -------------------------------------------------------------------------------*/
@@ -412,7 +436,7 @@
 .Osyl-UnitView-UnitLabel, .Osyl-UnitView-UnitLabel-Important {
 	font-size:1em;
 	padding:3px 0;
-	width: auto;
+	width:auto;
 }
 
 .Osyl-UnitView-UnitLabel-Important {
