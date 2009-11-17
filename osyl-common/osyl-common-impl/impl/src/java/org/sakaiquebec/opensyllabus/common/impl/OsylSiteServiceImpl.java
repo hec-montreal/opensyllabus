@@ -331,7 +331,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	    addTool(site, "sakai.assignment.grades");
 	    addTool(site, "sakai.resources");
 	    addTool(site, "sakai.siteinfo");
-	    
+
 	    siteService.save(site);
 
 	    // we add the directories
@@ -711,31 +711,62 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	File coXmlFile = null;
 	String coXmlFilePath = null;
 	BufferedReader reader = null;
+	String templateFileName = "";
+	System.out.println("log.isInfoEnabled"+log.isInfoEnabled());
 	try {
-	    coXmlFilePath =
-		    webappDir + File.separator + coConfig.getConfigRef()
-			    + File.separator + CO_CONTENT_TEMPLATE + "_"
+	    templateFileName =
+		    CO_CONTENT_TEMPLATE + "_"
 			    + osylConfigService.getCurrentLocale()
 			    + OsylSiteService.XML_FILE_EXTENSION;
+	    coXmlFilePath =
+		    webappDir + File.separator + coConfig.getConfigRef()
+			    + File.separator + templateFileName;
 	    coXmlFile = new File(coXmlFilePath);
 	    reader =
 		    new BufferedReader(new InputStreamReader(
 			    new FileInputStream(coXmlFile), "UTF-8"));
+	    
+	    log.info("Course outline created with template '"
+		    + templateFileName + "' and config '"
+		    + coConfig.getConfigRef() + "'");
 	} catch (FileNotFoundException e) {
 	    try {
-		coXmlFilePath =
-			webappDir
-				+ File.separator
-				+ osylConfigService.getCurrentConfig(webappDir)
-					.getConfigRef() + File.separator
-				+ CO_CONTENT_TEMPLATE
+		templateFileName =
+			CO_CONTENT_TEMPLATE
 				+ OsylSiteService.XML_FILE_EXTENSION;
+		;
+		coXmlFilePath =
+			webappDir + File.separator + coConfig.getConfigRef()
+				+ File.separator + templateFileName;
 		coXmlFile = new File(coXmlFilePath);
 		reader =
 			new BufferedReader(new InputStreamReader(
 				new FileInputStream(coXmlFile), "UTF-8"));
+		log.info("Course outline created with template '"
+			+ templateFileName + "' and config '"
+			+ coConfig.getConfigRef() + "'");
 	    } catch (Exception e1) {
-		log.error(e.getLocalizedMessage(), e1);
+		try {
+		    templateFileName =
+			    CO_CONTENT_TEMPLATE
+				    + OsylSiteService.XML_FILE_EXTENSION;
+		    String defaultConfigRef =
+			    osylConfigService.getCurrentConfig(webappDir)
+				    .getConfigRef();
+		    coXmlFilePath =
+			    webappDir + File.separator + defaultConfigRef
+				    + File.separator + templateFileName;
+		    coXmlFile = new File(coXmlFilePath);
+		    reader =
+			    new BufferedReader(new InputStreamReader(
+				    new FileInputStream(coXmlFile), "UTF-8"));
+		    log.info("Course outline created with template '"
+			    + templateFileName + "' and config '"
+			    + defaultConfigRef + "'");
+		} catch (Exception e2) {
+		    log.error("Could not created course oultine. "
+			    + e2.getLocalizedMessage(), e2);
+		}
 	    }
 	} catch (Exception e) {
 	    log.error(e.getLocalizedMessage(), e);
