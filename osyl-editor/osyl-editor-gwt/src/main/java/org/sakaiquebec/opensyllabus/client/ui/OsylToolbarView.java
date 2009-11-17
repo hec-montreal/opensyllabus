@@ -201,8 +201,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 			    getCoMessages(), coUnitContent, subType,
 			    defaultRubric);
 	    if (subType.equalsIgnoreCase(COContentResourceType.ASSIGNMENT)) {
-		if(createAssignement(resProxModel, coUnitContent)==false);
-			resProxModel.remove();
+		createAssignement(resProxModel, coUnitContent);
 	    }
 	}
 
@@ -239,7 +238,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	}
     }
 
-    private boolean createAssignement(COContentResourceProxy resProxModel,
+    private void createAssignement(COContentResourceProxy resProxModel,
 	    COUnitContent contentUnit) {
 	// Call the SAKAI server in order to receive an assignment
 	// id
@@ -251,7 +250,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	while (!parentEvaluationUnit.isCOUnit())
 	    parentEvaluationUnit = parentEvaluationUnit.getParent();
 
-	boolean error = false;
+	boolean ok = true;
 	// IMPORTANT : when the rating (the last parameter) is -1
 	// then it is a default assignment
 	int rating = -1;
@@ -280,7 +279,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    openDay = Integer.parseInt(openDateString.substring(8, 10));
 
 	} else {
-	    error = true;
+	    ok = false;
 	    messages += getUiMessage("Evaluation.StartDate");
 	}
 
@@ -292,24 +291,24 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    closeMonth = Integer.parseInt(closeDateString.substring(5, 7));
 	    closeDay = Integer.parseInt(closeDateString.substring(8, 10));
 	} else {
-	    error = true;
+	    ok = false;
 	    messages +=
 		    (messages.equals("") ? "" : ", ")
 			    + getUiMessage("Evaluation.EndDate");
 	}
-	if (!error) {
+	if (ok) {
 	    getController().createOrUpdateAssignment(resProxModel, "",
 		    parentEvaluationUnit.getLabel(), null, openYear, openMonth,
 		    openDay, 0, 0, closeYear, closeMonth, closeDay, 0, 0,
 		    rating);
 	} else {
+	    resProxModel.remove();
 	    OsylAlertDialog osylAlertDialog =
 		    new OsylAlertDialog(getUiMessage("Global.error"),
 			    getUiMessage("Assignement.error.create", messages));
 	    osylAlertDialog.center();
 	    osylAlertDialog.show();
 	}
-	return error;
     }
 
     public void onViewContextSelection(ViewContextSelectionEvent event) {
