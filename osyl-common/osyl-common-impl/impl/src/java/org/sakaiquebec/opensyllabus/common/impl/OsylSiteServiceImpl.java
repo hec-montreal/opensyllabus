@@ -712,7 +712,6 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	String coXmlFilePath = null;
 	BufferedReader reader = null;
 	String templateFileName = "";
-	System.out.println("log.isInfoEnabled"+log.isInfoEnabled());
 	try {
 	    templateFileName =
 		    CO_CONTENT_TEMPLATE + "_"
@@ -725,7 +724,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	    reader =
 		    new BufferedReader(new InputStreamReader(
 			    new FileInputStream(coXmlFile), "UTF-8"));
-	    
+
 	    log.info("Course outline created with template '"
 		    + templateFileName + "' and config '"
 		    + coConfig.getConfigRef() + "'");
