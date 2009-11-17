@@ -105,7 +105,6 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
     protected void updateMetaInfo() {
 	super.updateMetaInfo();
 	setAvailableInBookstore(getEditor().isAvailableInBookstore());
-	setAvailableInLibrary(getEditor().isAvailableInLibrary());
     }
 
     /**
@@ -131,19 +130,6 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	} else {
 	    return generateHTMLLink(link, link);
 	}
-    }
-
-    /**
-     * @return true if available in library
-     */
-    public boolean isAvailableInLibrary() {
-	return "true".equals(getModel().getProperty(
-		COPropertiesType.LIBRARY));
-    }
-
-    public void setAvailableInLibrary(boolean b) {
-	String booleanValue = "" + (b);
-	getModel().addProperty(COPropertiesType.LIBRARY, booleanValue);
     }
 
     /**

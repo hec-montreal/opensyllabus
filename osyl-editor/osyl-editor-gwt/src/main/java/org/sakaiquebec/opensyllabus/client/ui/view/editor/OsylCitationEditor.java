@@ -78,7 +78,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     private HTML citationPreviewLabel;
 
     // Additional Widget;
-    private CheckBox libraryCheckBox;
     private CheckBox bookstoreCheckBox;
 
     private int originalEditorDescHeight;
@@ -419,17 +418,12 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
     @Override
     protected Widget[] getAdditionalOptionWidgets() {
-	// Library
-	libraryCheckBox = new CheckBox(getUiMessage("MetaInfo.library"));
-	libraryCheckBox.setValue(getView().isAvailableInLibrary());
-	libraryCheckBox.setTitle(getUiMessage("MetaInfo.library.title"));
-
 	// Bookstore
 	bookstoreCheckBox = new CheckBox(getUiMessage("MetaInfo.bookstore"));
 	bookstoreCheckBox.setValue(getView().isAvailableInBookstore());
 	bookstoreCheckBox.setTitle(getUiMessage("MetaInfo.bookstore.title"));
 
-	Widget[] additional = { libraryCheckBox, bookstoreCheckBox };
+	Widget[] additional = { bookstoreCheckBox };
 
 	return additional;
     }
@@ -455,9 +449,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     @Override
     protected Widget getMetaInfoLabel() {
 	Label metaInfoLabel = (Label) super.getMetaInfoLabel();
-	String library =
-		(getView().isAvailableInLibrary() ? getUiMessage("Global.yes")
-			: getUiMessage("Global.no"));
 	String bookstore =
 		(getView().isAvailableInBookstore() ? getUiMessage("Global.yes")
 			: getUiMessage("Global.no"));
@@ -465,8 +456,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	String label = metaInfoLabel.getText();
 
 	label =
-		label + " | " + getUiMessage("MetaInfo.library") + ": "
-			+ library + " | " + getUiMessage("MetaInfo.bookstore")
+		label + " | " + getUiMessage("MetaInfo.bookstore")
 			+ ": " + bookstore;
 
 	metaInfoLabel.setText(label);
@@ -506,15 +496,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
      */
     public boolean isAvailableInBookstore() {
 	return bookstoreCheckBox.getValue();
-    }
-
-    /**
-     * Returns whether the checkBox "AvailableInBookstore" is checked.
-     * 
-     * @return boolean
-     */
-    public boolean isAvailableInLibrary() {
-	return libraryCheckBox.getValue();
     }
 
     /**

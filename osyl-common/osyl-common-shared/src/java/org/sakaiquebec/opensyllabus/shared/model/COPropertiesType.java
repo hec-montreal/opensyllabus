@@ -40,7 +40,6 @@ public class COPropertiesType {
     public final static String REQ_LEVEL_UNDEFINED = "undefined";
     // Specific to citations
     public static final String BOOKSTORE = "bookstore";
-    public static final String LIBRARY = "library";
     public static final String CITATION = "citation";
     public static final String LINK = "link";
     public static final String TYPE = "type";
