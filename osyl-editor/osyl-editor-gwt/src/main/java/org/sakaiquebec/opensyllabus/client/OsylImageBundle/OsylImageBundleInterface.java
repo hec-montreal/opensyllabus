@@ -42,7 +42,7 @@ public interface OsylImageBundleInterface extends ImageBundle {
 
     public AbstractImagePrototype edit();
 
-    public AbstractImagePrototype folderAdd();
+    public AbstractImagePrototype folder_add();
 
     public AbstractImagePrototype notImportant();
 

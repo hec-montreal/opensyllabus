@@ -229,7 +229,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 
 	// Folder Creation button
 	folderAddButton =
-		createTopButton(getOsylImageBundle().folderAdd(),
+		createTopButton(getOsylImageBundle().folder_add(),
 			getController().getUiMessage(
 				"Browser.addFolderButton.tooltip"));
 	folderAddButton.addClickHandler(new FolderAddButtonClickHandler());
