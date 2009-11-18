@@ -199,7 +199,7 @@ public class SeancesTest extends AbstractOSYLTest{
         	session().click("//html/body/table/tbody/tr/td/div/table/" +
         			"tbody/tr/td");
         	
-        	//Overview
+        	/*/Overview
         	session().click("gwt-uid-6");
         	//Public Overview 
         	session().click("//tr[2]/td[2]/div/div/table/tbody/tr[2]/td");
@@ -214,7 +214,7 @@ public class SeancesTest extends AbstractOSYLTest{
         	session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
         	pause();
         	        	
-                if (session().isTextPresent(selectedRubric1)) {
+                if (!(!session().isTextPresent(selectedRubric1))) {
                     logAndFail("Expected to not see rubric [" + selectedRubric1
                 		+ "] after text edition on public overview");
                 }
@@ -222,7 +222,7 @@ public class SeancesTest extends AbstractOSYLTest{
         	        	
         	//Close Overview
         	session().click("//html/body/table/tbody/tr/td/div/table/" +
-        			"tbody/tr/td");
+        			"tbody/tr/td");*/
 	}
 	
 //---------------------------------------------------------------------------//
@@ -294,7 +294,7 @@ public class SeancesTest extends AbstractOSYLTest{
         	session().click("//html/body/table/tbody/tr/td/div/table/" +
         			"tbody/tr/td");
         	
-        	//Overview
+        	/*/Overview
         	session().click("gwt-uid-6");
         	
         	//Public Overview 
@@ -318,7 +318,7 @@ public class SeancesTest extends AbstractOSYLTest{
         	
         	//Close Overview
         	session().click("//html/body/table/tbody/tr/td/div/table/" +
-        			"tbody/tr/td");
+        			"tbody/tr/td");*/
 	}
 	
 //---------------------------------------------------------------------------//
@@ -455,7 +455,7 @@ public class SeancesTest extends AbstractOSYLTest{
             session().click("//html/body/table/tbody/tr/td/div/table/" +
             		"tbody/tr/td");
             
-            //Overview
+            /*/Overview
             session().click("gwt-uid-6");
             
             //Public Overview 
@@ -486,14 +486,14 @@ public class SeancesTest extends AbstractOSYLTest{
             
             //Close Overview
             session().click("//html/body/table/tbody/tr/td/div/table/" +
-            		"tbody/tr/td");
+            		"tbody/tr/td");*/
         }
 
 //---------------------------------------------------------------------------//
 //      			Add Citation in Seance Unit                  //
 //---------------------------------------------------------------------------//
 
-        //Open Seances Section
+        /*/Open Seances Section
         session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div/" +
 		"div/table/tbody/tr[5]/td/table/tbody/tr[2]/td/div/" +
 		"div[2]/div/div[6]/div");
@@ -512,7 +512,7 @@ public class SeancesTest extends AbstractOSYLTest{
         // We choose randomly a Rubric
         String selectedRubric4 = getRandomRubric();
         log("Selecting rubric [" + selectedRubric4 + "]");
-        changeRubric(selectedRubric4);
+        changeRubric(selectedRubric4);*/
         
         /*/Create a new citation list
         session().answerOnNextPrompt("NewListe"+ newText1);
@@ -526,7 +526,7 @@ public class SeancesTest extends AbstractOSYLTest{
         pause();
         assertTrue(session().isPromptPresent());*/
         
-        //Open Citation list
+        /*/Open Citation list
         session().focus("//tr[2]/td/table/tbody/tr[2]/td/select/option/");
         session().click("//tr[2]/td/table/tbody/tr[2]/td/select/option");
         session().select("//tr[2]/td/table/tbody/tr[2]/td/select","index=0");
@@ -579,7 +579,7 @@ public class SeancesTest extends AbstractOSYLTest{
         
         //Save modifications
         saveCourseOutline();
-        pause();
+        pause();*/
 
         /*/Overview
         session().click("gwt-uid-6");

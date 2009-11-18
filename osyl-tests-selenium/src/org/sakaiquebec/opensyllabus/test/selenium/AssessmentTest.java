@@ -377,7 +377,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         	session().click("//html/body/table/tbody/tr/td/div/table/" +
         			"tbody/tr/td");
         	
-        	//Overview
+        	/*/Overview
         	session().click("gwt-uid-6");
         	//Public Overview 
         	session().click("//tr[2]/td[2]/div/div/table/tbody/tr[2]/td");
@@ -394,7 +394,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         	    session().click("link=" + Val + " -");
         	}
         	        	
-                if (session().isTextPresent(selectedRubric1)) {
+                if (!(!session().isTextPresent(selectedRubric1))) {
                     logAndFail("Expected to not see rubric [" + selectedRubric1
                 		+ "] after text edition on public overview");
                 }
@@ -402,7 +402,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         	        	
         	//Close Overview
         	session().click("//html/body/table/tbody/tr/td/div/table/" +
-        			"tbody/tr/td");
+        			"tbody/tr/td");*/
 	}
 	
 	
@@ -480,7 +480,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         	session().click("//html/body/table/tbody/tr/td/div/table/" +
         			"tbody/tr/td");
         	
-        	//Overview
+        	/*/Overview
         	session().click("gwt-uid-6");
         	//Public Overview 
         	session().click("//tr[2]/td[2]/div/div/table/tbody/tr[2]/td");
@@ -504,7 +504,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         	
         	//Close Overview
         	session().click("//html/body/table/tbody/tr/td/div/table/" +
-        			"tbody/tr/td");
+        			"tbody/tr/td");*/
 	}
 	
 //---------------------------------------------------------------------------//
@@ -640,7 +640,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         	session().click("//html/body/table/tbody/tr/td/div/table/" +
         			"tbody/tr/td");
         	
-        	//Overview
+        	/*/Overview
         	session().click("gwt-uid-6");
 
         	//Public Overview 
@@ -672,14 +672,14 @@ public class AssessmentTest extends AbstractOSYLTest{
         	
         	//Close Overview
         	session().click("//html/body/table/tbody/tr/td/div/table/" +
-        			"tbody/tr/td");
+        			"tbody/tr/td");*/
 	}
 	
 //---------------------------------------------------------------------------//
 //                          Add Citation in Assessment Unit                  //
 //---------------------------------------------------------------------------//
 	
-	//Click Assessment section 
+	/*/Click Assessment section 
 	session().mouseDown("//html/body/table/tbody/tr[2]/td/div/" +
 		"div/div/div/table/tbody/tr[5]/td/table/tbody/tr[2]" +
 		"/td/div/div[2]/div/div[5]/");
@@ -756,7 +756,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         
        //Save modifications
 	saveCourseOutline();
-	pause();
+	pause();*/
 	
 	/*/Overview
 	session().click("gwt-uid-6");
