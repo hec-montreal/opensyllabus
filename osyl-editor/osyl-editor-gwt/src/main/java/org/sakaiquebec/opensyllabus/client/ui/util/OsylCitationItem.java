@@ -231,7 +231,8 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 	String infos = "";
 	// 3 cases: Book, Article, Other
 	String type = getProperty(CitationSchema.TYPE);
-	if (type.equals(CitationSchema.TYPE_BOOK)) {
+	if (type.equals(CitationSchema.TYPE_BOOK)
+		|| type.equals(CitationSchema.TYPE_REPORT)) {
 	    // <auteurs>, <titre>, <édition>,<pages>, <éditeur>, <année>,
 	    // <ISBN>
 	    infos +=
