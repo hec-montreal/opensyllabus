@@ -9,7 +9,7 @@
 	margin:5px 2px;
 	width:85px;
 	height:30px;
-	background:transparent url(img/button/osyl_button_gwt.png) no-repeat;
+	background:transparent url(images/button/osyl_button_gwt.png) no-repeat;
 	border:0;
 	cursor:pointer;
 }
@@ -40,7 +40,7 @@
 }
 
 .gwt-DialogBox .Caption {
-	background:transparent url(img/exclamation.png) no-repeat 1px 2px;
+	background:transparent url(images/exclamation.png) no-repeat 1px 2px;
 	padding-left:28px;
   	font-weight:bold;
   	/*margin:2px;*/
