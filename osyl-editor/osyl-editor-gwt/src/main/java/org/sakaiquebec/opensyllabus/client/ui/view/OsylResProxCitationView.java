@@ -28,6 +28,8 @@ import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 
+import com.google.gwt.user.client.Window;
+
 /**
  * Class providing display and edition capabilities for citations resources.
  * 
@@ -97,7 +99,13 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	setModelPropertyWithEditorProperty(CitationSchema.DOI);
 	setModelPropertyWithEditorProperty(CitationSchema.SOURCE_TITLE);
 	setModelPropertyWithEditorProperty(CitationSchema.URL);
-    }
+	setModelIdentifierPropertyWithEditorProperty(
+				COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
+		setModelIdentifierPropertyWithEditorProperty(
+				COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_URL);
+	}
 
     /**
      * {@inheritDoc}
@@ -153,6 +161,13 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 
     }
 
+    private void setModelIdentifierPropertyWithEditorProperty(String property, String type) {
+    	String value = getEditor().getSelectedCitationIdentifier(type);
+    	if (value != null && !value.equals("undefined") && value != "")
+    	    setProperty(property, value);
+
+        }
+
     public String getCitationId() {
 	return getProperty(CitationSchema.CITATIONID);
     }
@@ -173,15 +188,38 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
     public String getCitationPreviewAsLink() {
 
 	String link = "";
-	String url = getProperty(CitationSchema.URL);
-	if (url != null)
+	String url = getIdentifier(COPropertiesType.IDENTIFIER_TYPE_URL);
+	if (url != null && url.equalsIgnoreCase("undefined"))
+		url = getIdentifier(COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
+	
+	Window.alert(getIdentifier(COPropertiesType.IDENTIFIER_TYPE_URL));
+	if (url != null && !url.equalsIgnoreCase("undefined"))
 	    link = generateHTMLLink(url, getCitationPreview());
 	else
 	    link = getCitationPreview();
 	return link;
 
+	
     }
 
+	/**
+	 * Tells us whether the registered link points to the library catalog or
+	 * another source
+	 * 
+	 * @param citationItem
+	 * @return
+	 */
+	public boolean isCitationLinkLibrary(OsylCitationItem citationItem) {
+
+		String identifier = citationItem.getProperties().getProperty(
+				COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
+
+		if (identifier != null && !"undefined".equalsIgnoreCase(identifier))
+			return true;
+		return false;
+	}
+	
     /**
      * Generate a link, if possible, with citation informations
      * 

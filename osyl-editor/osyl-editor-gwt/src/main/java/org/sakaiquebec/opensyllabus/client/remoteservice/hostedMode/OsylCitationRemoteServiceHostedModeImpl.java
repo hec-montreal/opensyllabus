@@ -7,6 +7,7 @@ import java.util.List;
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylCitationRemoteServiceAsync;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationItem;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationListItem;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylDirectory;
@@ -50,6 +51,7 @@ public class OsylCitationRemoteServiceHostedModeImpl extends
 	    citation.setFilePath("work/HostedModeCitationListPath");
 	    citation.setResourceId("dummyId"+i);
 	    citation.setResourceName("ressourceName");
+	    citation.setIdentifier("www.google.com", COPropertiesType.IDENTIFIER_TYPE_URL );
 	    citation.setProperty(CitationSchema.CITATIONID, "dummyId"+i);
 	    citation.setProperty(CitationSchema.TYPE, "Book"+i);
 	    citation.setProperty(CitationSchema.TITLE, "ma citation"+i);
@@ -63,7 +65,6 @@ public class OsylCitationRemoteServiceHostedModeImpl extends
 	    citation.setProperty(CitationSchema.YEAR, "2009"+i);
 	    citation.setProperty(CitationSchema.DATE, "01/01/2009");
 	    citation.setProperty(CitationSchema.DOI, "doi"+i);
-	    citation.setProperty(CitationSchema.URL, "www.google.com");
 	    citation.setProperty(CitationSchema.SOURCE_TITLE, "sourceTitle"+i);
 	    citations.add(citation);
 	}

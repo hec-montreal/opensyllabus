@@ -92,6 +92,22 @@ public class COProperties extends HashMap<String, HashMap<String, String>> {
     }
 
     /**
+     * Removes the specified type
+     * @param key
+     * @param type
+     */
+    public void removeProperty(String key, String type){
+    	HashMap<String, String> map = get(key);
+    	if(map!=null){
+    	    map.remove(type);
+    	}
+    	if (TRACE)
+    	    System.out.println("*** TRACE *** UPDATE THE MODEL COProperties "
+    		    + key + " = " + type);
+
+    }
+    
+    /**
      * Retrieves a property from the properties object.
      *
      * @param key the key used to retrieve the property form the properties

@@ -179,7 +179,8 @@ public class COModeled extends COSerialized {
     protected final static List<String> CDATA_NODE_NAMES =
 	    Arrays.asList(new String[] { COPropertiesType.LABEL,
 		    COPropertiesType.URI, COPropertiesType.DESCRIPTION,
-		    COPropertiesType.TEXT, CitationSchema.URL,
+		    COPropertiesType.TEXT, CitationSchema.URL, COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_LIBRARY, COPropertiesType.IDENTIFIER_TYPE_URL,
 		    COPropertiesType.COMMENT, COPropertiesType.AVAILABILITY });
 
     /**

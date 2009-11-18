@@ -25,6 +25,7 @@ package org.sakaiquebec.opensyllabus.shared.model;
 public class COPropertiesType {
 
     // General
+    public static final String IDENTIFIER = "identifier";
     public static final String TEXT = "text";
     public static final String URI = "uri";
     public static final String VISIBILITY = "visible";
@@ -70,8 +71,12 @@ public class COPropertiesType {
     //AsmObject
     public static final String MODIFIED = "modified";
     
+    // BiblioResource identifiers
+	// configure links to other libraries
+	public static final String IDENTIFIER_TYPE_URL = "url";
+	public static final String IDENTIFIER_TYPE_LIBRARY = "library";
+
     //AsmRoot
-    public static final String IDENTIFIER = "identifier";
     public static final String TEMPLATE = "template";
     public static final String TITLE = "title";
     public static final String LANGUAGE = "language";

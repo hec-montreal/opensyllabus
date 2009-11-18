@@ -150,6 +150,17 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 	getModel().getResource().addProperty(key, val);
     }
 
+    protected void setIdentifier(String type, String val) {
+		getModel().getResource().getProperties().addProperty(
+				COPropertiesType.IDENTIFIER, type, val);
+	}
+    
+
+    protected String getIdentifier(String type) {
+		return getModel().getResource().getProperties().getProperty(
+				COPropertiesType.IDENTIFIER, type);
+	}
+
     protected String getProperty(String key) {
 	return getModel().getResource().getProperty(key);
     }

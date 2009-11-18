@@ -31,13 +31,16 @@ import java.io.Serializable;
  */
 public interface CitationSchema extends Serializable {
     
-    	public static final String CITATION_TYPE_PREFIX = "Citation.type.";
+    public static final String CITATION_TYPE_PREFIX = "Citation.type.";
 	public static final String TYPE_UNKNOWN = "unknown";
 	public static final String TYPE_BOOK = "book";
 	public static final String TYPE_CHAPTER = "chapter";
 	public static final String TYPE_ARTICLE = "article";
 	public static final String TYPE_REPORT = "report";
     
+	public static final String CITATION_IDENTIFIER = "sakai:url_string";
+	public static final String CITATION_IDENTIFIER_TYPE = "type_url";
+	
 	public static final String CITATIONID="citationId";
 	public static final String TYPE="type";
 	public static final String LONGTEXT = "longtext";

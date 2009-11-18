@@ -106,7 +106,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 				    .getUiMessage("Global.error"),
 				    getController().getUiMessage(
 					    "fileUpload.unableReadRemoteDir")
-					    + caught.getMessage());
+					    + caught.getMessage() );
 		    alertBox.center();
 		    alertBox.show();
 		}

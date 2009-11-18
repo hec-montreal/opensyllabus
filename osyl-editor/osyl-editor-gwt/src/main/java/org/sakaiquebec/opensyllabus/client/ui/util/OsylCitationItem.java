@@ -24,8 +24,12 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.shared.model.COProperties;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
+
+import com.google.gwt.user.client.Window;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -50,11 +54,19 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
      * Name of the resource (citationList name)
      */
     private String resourceName;
+    
+    /**
+     * Type of links associated to this citation. The possible values are 
+     * <ul><li><b>hecLibrary:</b> the url point to a resource in the HEC library</li>
+     *     <li><b>other: </b>the url points to a resource not in the HEC library</li></ul>
+     * 
+     */
+    private String identifier;
 
     /**
      * Map of citation properties
      */
-    private Map<String, String> properties = new HashMap<String, String>();
+    private COProperties properties = new COProperties();
 
     /**
      * empty constructor
@@ -75,12 +87,27 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
     }
 
     /**
-     * @return the url to our library
-     */
-    public String getUrl() {
-	return getProperty(CitationSchema.URL);
-    }
+	 * @return the url linked to this citation. It can be our library or any
+	 *         other address
+	 */
+	public String getUrl() {
+		String url = getIdentifier(COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
+		if (url == null)
+			return null;
+			if (url.trim() != "undefined")
+			return url;
+		else
+			return getIdentifier(COPropertiesType.IDENTIFIER_TYPE_URL);
+	}
 
+    /**
+	 * @return the url linked to this citation. It can be our library or any
+	 *         other address
+	 */
+//	public String getUrl() {
+//		return getProperty(CitationSchema.URL);
+//	}
+	
     /**
      * @param Id the Id to set (citationListId)
      */
@@ -119,14 +146,14 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
     /**
      * @return the properties of the citation
      */
-    public Map<String, String> getProperties() {
+    public COProperties getProperties() {
 	return properties;
     }
 
     /**
      * @param properties the properties to set
      */
-    public void setProperties(Map<String, String> properties) {
+    public void setProperties(COProperties properties) {
 	this.properties = properties;
     }
 
@@ -136,9 +163,24 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
      * Help method to access to a specific property
      */
     public String getProperty(String key) {
-	return properties.get(key);
+	return properties.getProperty(key);
     }
 
+    /**
+     * Remove the specified property
+     */
+    public void removeProperty(String key) {
+    	properties.removeProperty(key);
+    }
+
+    /**
+     * Remove the property with the specified type
+     * @param key
+     * @param type
+     */
+    public void removeProperty(String key, String type){
+    	properties.removeProperty(key, type);
+    }
     /**
      * Help method to set specific property
      * 
@@ -146,7 +188,7 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
      * @param value
      */
     public void setProperty(String key, String value) {
-	properties.put(key, value);
+	properties.addProperty(key, value);
     }
 
     /**
@@ -167,6 +209,19 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 	setProperty(CitationSchema.TITLE, title);
     }
 
+    
+    /**
+     * Help method
+     * @return the identifier
+     */
+    public String getIdentifier(String type){
+    	return properties.getProperty(COPropertiesType.IDENTIFIER,type);
+    }
+    
+    public void setIdentifier( String identifierValue, String type){
+    	properties.addProperty(COPropertiesType.IDENTIFIER, type, identifierValue);
+    }
+    
     /**
      * Help method
      * 
