@@ -28,7 +28,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 
-import com.google.gwt.user.client.Window;
 
 /**
  * Class providing display and edition capabilities for citations resources.
@@ -192,7 +191,6 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	if (url != null && url.equalsIgnoreCase("undefined"))
 		url = getIdentifier(COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
 	
-	Window.alert(getIdentifier(COPropertiesType.IDENTIFIER_TYPE_URL));
 	if (url != null && !url.equalsIgnoreCase("undefined"))
 	    link = generateHTMLLink(url, getCitationPreview());
 	else
