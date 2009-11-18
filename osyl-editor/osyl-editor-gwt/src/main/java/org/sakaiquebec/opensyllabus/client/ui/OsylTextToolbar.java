@@ -28,6 +28,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 
@@ -50,7 +51,9 @@ public class OsylTextToolbar extends Composite {
      */
     final OsylConfigMessages uiMessages;
 
-    private OsylMenuBar menuBar;
+    private MenuBar menuBar;
+    
+    private DecoratorPanel enclosingPanel;
 
     private MenuItem homePushButton;
 
@@ -79,7 +82,11 @@ public class OsylTextToolbar extends Composite {
 	setOsylController(osylController);
 	uiMessages = osylController.getUiMessages();
 
-	menuBar = new OsylMenuBar();
+	menuBar = new MenuBar();
+	
+	enclosingPanel = new DecoratorPanel();
+	enclosingPanel.setWidget(menuBar);
+	enclosingPanel.setStylePrimaryName("Osyl-MenuBar");
 
 	if (getOsylController().isInPreview()) {
 	    closePreviewPushButton =
@@ -132,7 +139,9 @@ public class OsylTextToolbar extends Composite {
 	    menuBar.addItem(publishPushButton);
 	    menuBar.addItem(printPushButton);
 	}
-	initWidget(menuBar);
+//	initWidget(menuBar);
+	initWidget(enclosingPanel);
+
     }
 
     public MenuItem createMenuItem(String messageKey, 
@@ -168,11 +177,11 @@ public class OsylTextToolbar extends Composite {
 	return osylImageBundle;
     }
 
-    public OsylMenuBar getMenuBar() {
+    public MenuBar getMenuBar() {
 	return menuBar;
     }
 
-    public void setMenuBar(OsylMenuBar menuBar) {
+    public void setMenuBar(MenuBar menuBar) {
 	this.menuBar = menuBar;
     }
 
