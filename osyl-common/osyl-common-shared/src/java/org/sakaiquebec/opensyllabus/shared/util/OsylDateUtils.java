@@ -30,8 +30,12 @@ import java.util.Date;
 public class OsylDateUtils {
 
     private static String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
-    private static String SAKAI_DATE_TIME_FORMAT="yyyyMMddHHmmssSSS";
+    private static String SAKAI_DATE_TIME_FORMAT = "yyyyMMddHHmmssSSSZ";
 
+    /**
+     * @return A String represents the present date and time (format example:
+     *         2002-05-30T09:30:10-06:00)
+     */
     public static String getNowDateAsXmlString() {
 	Date now = new Date();
 	SimpleDateFormat dateFormat =
@@ -52,18 +56,22 @@ public class OsylDateUtils {
 
 	return date;
     }
-    
-    public static String getXmlDateStringFromSakaiDateString(String sakaiDate){
+
+    /**
+     * @param sakaiDate in format yyyyMMddHHmmssSSS
+     * @return A String represents date (format example:
+     *         2002-05-30T09:30:10-06:00)
+     */
+    public static String getXmlDateStringFromSakaiDateString(String sakaiDate) {
 	SimpleDateFormat sakaiDateFormat =
 		new SimpleDateFormat(OsylDateUtils.SAKAI_DATE_TIME_FORMAT);
 	SimpleDateFormat dateFormat =
 		new SimpleDateFormat(OsylDateUtils.DATE_TIME_FORMAT);
-	Date date = new Date();
-
+	sakaiDate += "-0000";// sakai date came in GMT time
 	try {
-	    date = sakaiDateFormat.parse(sakaiDate);
-	    return getXsDateTimeString(dateFormat.format(date));
-	    
+	    return getXsDateTimeString(dateFormat.format(sakaiDateFormat
+		    .parse(sakaiDate)));
+
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    return "";
