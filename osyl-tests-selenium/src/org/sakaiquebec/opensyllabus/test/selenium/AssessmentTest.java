@@ -104,6 +104,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	    logAndFail("Expected to see text [" + Erreur 
 		    + "] after text edition");
 		}
+	log("OK: Error displayed");
 	
 	//We click OK to return to Assessment editor after message error 
 	//displaying
@@ -135,6 +136,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	    logAndFail("Expected to see text [" + Erreur 
 		    + "] after text edition");
 		}
+	log("OK: Error displayed");
 	
 	//We click OK to return to assessment editor
 	session().click("//tr[2]/td/table/tbody/tr/td/button");	
@@ -158,6 +160,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	    logAndFail("Expected to see text [" + Erreur 
 		    + "] after text edition");
 		}
+	log("OK: Error displayed");
 	
 	//We click OK to return to assessment editor
 	session().click("//tr[2]/td/table/tbody/tr/td/button");
@@ -200,6 +203,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	    logAndFail("Expected to see text [" + Erreur 
 		    + "] after text edition");
 		}
+	log("OK: Error displayed");
 	
 	//We click OK to return to assessment editor
 	session().click("//tr[2]/td/table/tbody/tr/td/button");
@@ -228,6 +232,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	    logAndFail("Expected to see text [" + Erreur 
 		    + "] after text edition");
 		}
+	log("OK: Error displayed");
 	
 	//We click OK to return to assessment editor
 	session().click("//tr[2]/td/table/tbody/tr/td/button");	
@@ -282,7 +287,6 @@ public class AssessmentTest extends AbstractOSYLTest{
 	//We close Editor
 	session().click("//td/table/tbody/tr/td[1]/button");
 	pause();
-	pause();
 
 	//TODO: Check if the new rubric is visible.
 	//if (!session().isTextPresent(newText2)){
@@ -301,8 +305,11 @@ public class AssessmentTest extends AbstractOSYLTest{
 			"div[2]/div/div[5]/");
 	//Edit first Assessment unit
 	int Val = resNb + 2;
-	session().click("link=0" + Val + " -");
-	
+	if(Val < 10){
+	    session().click("link=0" + Val + " -");
+	}else{
+	    session().click("link=" + Val + " -");
+	}
 	//Add Text in Assessment Unit
 	clickAddItem("addText");
 
@@ -354,7 +361,11 @@ public class AssessmentTest extends AbstractOSYLTest{
         			"/div[5]/");
                 
         	//Open last Assessment unit
-        	session().click("link=0" + Val + " -");
+        	if(Val < 10){
+        	    session().click("link=0" + Val + " -");
+        	}else{
+        	    session().click("link=" + Val + " -");
+        	}
                         	
         	if (!session().isTextPresent(selectedRubric1)) {
         	    logAndFail("Expected to see rubric [" + selectedRubric1
@@ -377,7 +388,11 @@ public class AssessmentTest extends AbstractOSYLTest{
 			"/div[5]/");
                 
         	//Open last Assessment unit
-        	session().click("link=0" + Val + " -");
+        	if(Val < 10){
+        	    session().click("link=0" + Val + " -");
+        	}else{
+        	    session().click("link=" + Val + " -");
+        	}
         	        	
                 if (session().isTextPresent(selectedRubric1)) {
                     logAndFail("Expected to not see rubric [" + selectedRubric1
@@ -401,7 +416,11 @@ public class AssessmentTest extends AbstractOSYLTest{
 		"/td/div/div[2]/div/div[5]/");
         
         //Edit first Assessment unit
-	session().click("link=0" + Val + " -");
+	if(Val < 10){
+	    session().click("link=0" + Val + " -");
+	}else{
+	    session().click("link=" + Val + " -");
+	}
 	
 	//Add Hyperlink in Assessment Unit
 	clickAddItem("addURL");
@@ -445,7 +464,11 @@ public class AssessmentTest extends AbstractOSYLTest{
 			"/div[5]/");
 
         	//Edit the last Assessment unit
-        	session().click("link=0" + Val + " -");
+        	if(Val < 10){
+        	    session().click("link=0" + Val + " -");
+        	}else{
+        	    session().click("link=" + Val + " -");
+        	}
         
         	if (!session().isTextPresent(selectedRubric2)) {
         	    logAndFail("Expected to see rubric [" + selectedRubric2
@@ -467,7 +490,11 @@ public class AssessmentTest extends AbstractOSYLTest{
 			"/div[5]/");
 
         	//Edit the last Assessment unit
-        	session().click("link=0" + Val + " -");
+        	if(Val < 10){
+        	    session().click("link=0" + Val + " -");
+        	}else{
+        	    session().click("link=" + Val + " -");
+        	}
         	
                 if (session().isTextPresent(selectedRubric2)) {
                     logAndFail("Expected to not see rubric [" + selectedRubric2
@@ -489,7 +516,11 @@ public class AssessmentTest extends AbstractOSYLTest{
 		"/td/div/div[2]/div/div[5]/");
         
 	//Edit first Assessment unit
-	session().click("link=0" + Val + " -");
+	if(Val < 10){
+	    session().click("link=0" + Val + " -");
+	}else{
+	    session().click("link=" + Val + " -");
+	}
 
 	//Add new document
 	clickAddItem("addDocument");
@@ -587,7 +618,11 @@ public class AssessmentTest extends AbstractOSYLTest{
 			"/div[5]/");
 
         	//Edit first Assessment unit
-        	session().click("link=0" + Val + " -");
+        	if(Val < 10){
+        	    session().click("link=0" + Val + " -");
+        	}else{
+        	    session().click("link=" + Val + " -");
+        	}
         
         	if (!session().isTextPresent(selectedRubric3)) {
         	    logAndFail("Expected to see rubric [" + selectedRubric3
@@ -616,7 +651,11 @@ public class AssessmentTest extends AbstractOSYLTest{
 			"/div[5]/");
 
         	//Edit first Assessment unit
-        	session().click("link=0" + Val + " -");
+        	if(Val < 10){
+        	    session().click("link=0" + Val + " -");
+        	}else{
+        	    session().click("link=" + Val + " -");
+        	}
         	
                 if (session().isTextPresent(selectedRubric3)) {
                     logAndFail("Expected to not see rubric [" + selectedRubric3
@@ -646,7 +685,11 @@ public class AssessmentTest extends AbstractOSYLTest{
 		"/td/div/div[2]/div/div[5]/");
         
 	//Edit first Assessment unit
-	session().click("link=0" + Val + " -");
+	if(Val < 10){
+	    session().click("link=0" + Val + " -");
+	}else{
+	    session().click("link=" + Val + " -");
+	}
 
 	//Add new Citation
 	clickAddItem("addBiblioResource");
