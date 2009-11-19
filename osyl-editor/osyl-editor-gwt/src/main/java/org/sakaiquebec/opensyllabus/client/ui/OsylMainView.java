@@ -34,8 +34,8 @@ import org.sakaiquebec.opensyllabus.client.ui.OsylRoundCornersPanel;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
-import org.sakaiquebec.opensyllabus.shared.model.COStructureElementType;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -153,12 +153,23 @@ public class OsylMainView extends OsylViewableComposite {
      */
     public COModelInterface findStartingViewContext() {
 
+	COElementAbstract root = (COContent) getModel();
+
+	COElementAbstract absElement = findStartingViewContext(root);
+
+	if (absElement == null && root.getChildrens() != null
+		&& root.getChildrens().size() > 0) {
+	    absElement = (COElementAbstract) root.getChildrens().get(0);
+	}
+	return absElement;
+    }
+
+    private COElementAbstract findStartingViewContext(COElementAbstract coe) {
+	COElementAbstract absElement = null;
 	List<COElementAbstract> childrenList =
-		(List<COElementAbstract>) ((COContent) this.getModel())
-			.getChildrens();
+		(List<COElementAbstract>) coe.getChildrens();
 	boolean find = false;
 	Iterator<COElementAbstract> iter = childrenList.iterator();
-	COElementAbstract absElement = null;
 	while (iter.hasNext()) {
 	    absElement = (COElementAbstract) iter.next();
 	    if (absElement.isCOUnit()) {
@@ -166,29 +177,29 @@ public class OsylMainView extends OsylViewableComposite {
 		    find = true;
 		    break;
 		}
+	    } else {
+		absElement = findStartingViewContext(absElement);
+		if (absElement != null) {
+		    find = true;
+		    break;
+		}
 	    }
 	}
-
 	if (!find && childrenList != null && childrenList.size() > 0) {
-	    absElement = (COElementAbstract) childrenList.get(0);
-	} else {
-	    // TODO: Display the root CourseOutline
-	    // Window.alert("TODO: please check findStartingViewContext");
+	    absElement = null;
 	}
-
 	return absElement;
     }
+
 
     /**
      * Initializing the viewContext to the first structureElement of the global
      * model
      */
     private void initViewContext() {
-	// Init model to first cOStructureElement
-	// FIXME: template model must be not null !
-	COStructureElement structureElement =
-		(COStructureElement) findStartingViewContext();
-	getController().setViewContext(structureElement);
+	if (getModel() != null) {
+	    getController().setViewContext(findStartingViewContext());
+	}
     }
 
     private void subscribeChildrenViewsToLocalHandlers() {
