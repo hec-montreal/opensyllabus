@@ -181,16 +181,22 @@ public class OsylCitationRemoteServiceJsonImpl extends
 	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
 		.getProperty(CitationSchema.DOI)));
 
-	panel.add(FormHelper.createHiddenField("cipkeys", PREFERRED_URL));
-	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
-		.getProperty(COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_URL)));
+	if (p_citation.getProperty(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_URL) != null) {
+	    panel.add(FormHelper.createHiddenField("cipkeys", PREFERRED_URL));
+	    panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		    .getProperty(COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_URL)));
+	}
 
-	panel.add(FormHelper.createHiddenField("cipkeys",
-		COPropertiesType.IDENTIFIER_TYPE_URL));
-	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
-		.getProperty(COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_LIBRARY)));
+	if (p_citation.getProperty(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_LIBRARY) != null) {
+	    panel.add(FormHelper.createHiddenField("cipkeys",
+		    COPropertiesType.IDENTIFIER_TYPE_URL));
+	    panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		    .getProperty(COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_LIBRARY)));
+	}
 
 	// add event handler
 	form.addSubmitCompleteHandler(new SubmitCompleteHandler() {
