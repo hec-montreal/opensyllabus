@@ -277,7 +277,7 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     }
     
     public void updateResourceMetaInfo(){
-	getModel().getResource().setAccess(getModel().getAccess());
+	//getModel().getResource().setAccess(getModel().getAccess());
     }
 
 }
