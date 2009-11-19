@@ -91,14 +91,19 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	final COContentResourceProxy resProxModel =
 		new COContentResourceProxy();
 	resProxModel.setType(type);
+	
 	if (!type.equalsIgnoreCase(COContentResourceProxyType.PEOPLE)) {
+	    if(type.equalsIgnoreCase(COContentResourceProxyType.REFERENCE)){
+		resProxModel.addProperty(COPropertiesType.DISPLAY_AS, "link");
+	    }
 	    if (resourceType.equalsIgnoreCase(COContentResourceType.ASSIGNMENT))
 		// We change the default text
 		resProxModel
 			.setLabel(osylConfigMessages.getMessage("SendWork"));
-	    else
+	    else if(!resourceType.equalsIgnoreCase(COContentResourceType.BIBLIO_RESOURCE)){
 		resProxModel.setLabel(osylConfigMessages
 			.getMessage("InsertYourTextHere"));
+	    }
 
 	    resProxModel.addProperty(COPropertiesType.IMPORTANCE, "false");
 	    resProxModel.addProperty(COPropertiesType.REQUIREMENT_LEVEL,

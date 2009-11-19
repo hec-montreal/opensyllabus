@@ -243,7 +243,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	// Call the SAKAI server in order to receive an assignment
 	// id
 	// Callback will be processed by the Controller
-	resProxModel.getProperties().addProperty(COPropertiesType.URI,
+	resProxModel.addProperty(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_URI,
 		"emptyAssignmentURI");
 
 	COElementAbstract parentEvaluationUnit = contentUnit;

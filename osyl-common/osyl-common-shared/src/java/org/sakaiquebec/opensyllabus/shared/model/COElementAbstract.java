@@ -288,9 +288,9 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     }
     
     
-    public COElementAbstract findCOElementAbstractWithUUID(String uuidToFind) {
+    public COElementAbstract findCOElementAbstractWithId(String idToFind) {
 	COElementAbstract result = null;
-	if (this.getId().equals(uuidToFind))
+	if (this.getId().equals(idToFind))
 	    result = this;
 	else {
 	    if (this.isCOUnitContent()) {
@@ -300,7 +300,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
 		while (i < this.getChildrens().size() && result == null) {
 		    COElementAbstract coElem =
 			    (COElementAbstract) this.getChildrens().get(i);
-		    result = coElem.findCOElementAbstractWithUUID(uuidToFind);
+		    result = coElem.findCOElementAbstractWithId(idToFind);
 		    i++;
 		}
 	    }
@@ -361,6 +361,11 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
 	properties.addProperty(key, value);
 	notifyEventHandlers();
     }
+    
+    public void addProperty(String key, String type, String value){
+	properties.addProperty(key, type, value);
+	notifyEventHandlers();
+    }
 
     /**
      * {@inheritDoc}
@@ -375,6 +380,10 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
      */
     public String getProperty(String key) {
 	return properties.getProperty(key);
+    }
+    
+    public String getProperty(String key, String type){
+	return properties.getProperty(key, type);
     }
     
     /**

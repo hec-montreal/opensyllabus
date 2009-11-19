@@ -27,26 +27,21 @@ public class COPropertiesType {
     // General
     public static final String IDENTIFIER = "identifier";
     public static final String TEXT = "text";
-    public static final String URI = "uri";
+    public static final String IDENTIFIER_TYPE_URI = "uri";
     public static final String VISIBILITY = "visible";
     public static final String IMPORTANCE = "importance";
     public static final String REQUIREMENT_LEVEL = "level";
-    public static final String LABEL="label";
-    public static final String DESCRIPTION="description";
-    public static final String COMMENT="comment";
+    public static final String LABEL = "label";
+    public static final String DESCRIPTION = "description";
+    public static final String COMMENT = "comment";
+    public static final String NON_APPLICABLE = "n/a";
 
+    //Requirement Level
     public final static String REQ_LEVEL_MANDATORY = "mandatory";
     public final static String REQ_LEVEL_RECOMMENDED = "recommended";
     public final static String REQ_LEVEL_COMPLEMENTARY = "complementary";
     public final static String REQ_LEVEL_UNDEFINED = "undefined";
-    // Specific to citations
-    public static final String BOOKSTORE = "bookstore";
-    public static final String CITATION = "citation";
-    public static final String LINK = "link";
-    public static final String TYPE = "type";
-    public static final String ISBNISSN = "isbnissn";
-    public static final String CITATIONLISTID = "citation_list_id";
-
+    
     // Specific to assignments/evaluations
     public static final String WEIGHT = "weight";
     public static final String DATE_START = "dateStart";
@@ -54,12 +49,12 @@ public class COPropertiesType {
     public static final String DATE = "date";
     public static final String LOCATION = "location";
     public static final String MODE = "mode";
-    public static final String RESULT = "result";
-    public static final String SCOPE = "scope";
-    public static final String SUBMITION_TYPE ="submition_type";
-    public static final String ASSESSMENT_TYPE= "assessmentType";
+    // public static final String RESULT = "result";
+    // public static final String SCOPE = "scope";
+    public static final String SUBMITION_TYPE = "submition_type";
+    public static final String ASSESSMENT_TYPE = "assessmentType";
 
-    // Specific to contact-info (coordonnées)
+    // Specific to contact-info
     public static final String PERSON_TITLE = "title";
     public static final String SURNAME = "surname";
     public static final String FIRSTNAME = "firstname";
@@ -67,16 +62,21 @@ public class COPropertiesType {
     public static final String TEL = "tel";
     public static final String EMAIL = "email";
     public static final String AVAILABILITY = "availability";
-    
-    //AsmObject
-    public static final String MODIFIED = "modified";
-    
-    // BiblioResource identifiers
-	// configure links to other libraries
-	public static final String IDENTIFIER_TYPE_URL = "url";
-	public static final String IDENTIFIER_TYPE_LIBRARY = "library";
 
-    //AsmRoot
+    // AsmObject
+    public static final String MODIFIED = "modified";
+
+    //Specific to BiblioResource
+    public static final String BOOKSTORE = "bookstore";
+    public static final String AUTHOR="author";
+    public static final String JOURNAL="journal";
+    public static final String RESOURCE_TYPE="resourceType";
+    public static final String IDENTIFIER_TYPE_URL = "url";
+    public static final String IDENTIFIER_TYPE_LIBRARY = "library";
+    public static final String IDENTIFIER_TYPE_DOI = "doi";
+    public static final String IDENTIFIER_TYPE_ISN = "isn";
+
+    // AsmRoot
     public static final String TEMPLATE = "template";
     public static final String TITLE = "title";
     public static final String LANGUAGE = "language";
@@ -85,18 +85,19 @@ public class COPropertiesType {
     public static final String CREATED_BY = "createdBy";
     public static final String LAST_MODIFIED_BY = "lastModifiedBy";
     public static final String PARENT = "parent";
-    
-    //CO type
+
+    // CO type
     public static final String PUBLISHED = "published";
     public static final String PREVIOUS_PUBLISHED = "previousPublished";
     public static final String CHILDS = "childs";
     public static final String COURSE_ID = "courseId";
     public static final String DEPARTEMENT = "departement";
-    
-    //Reference context
-    public static final String DISPLAY_AS="displayAs";
-    
-    //Document resource
-    public static final String LICENCE="licence";
-    
+
+    //Specific to  Reference context
+    public static final String DISPLAY_AS = "displayAs";
+
+    //Specific to Document resource
+    public static final String LICENSE = "license";
+    public static final String RIGHTS = "rights";
+
 }

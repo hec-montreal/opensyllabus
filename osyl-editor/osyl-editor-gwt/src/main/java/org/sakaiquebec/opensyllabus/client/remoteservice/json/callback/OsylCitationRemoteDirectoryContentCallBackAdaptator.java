@@ -16,7 +16,6 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -27,14 +26,13 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 	OsylAbstractRemoteDirectoryContentCallBackAdaptator {
 
-	/**
-	 * Value used to map the citation IDENTIFIER_TYPE_URL to preferredUrl of
-	 * SDATA
-	 * 
-	 */
-	private static final String PREFERRED_URL = "preferredUrl";
+    /**
+     * Value used to map the citation IDENTIFIER_TYPE_URL to preferredUrl of
+     * SDATA
+     */
+    private static final String PREFERRED_URL = "preferredUrl";
 
-	public OsylCitationRemoteDirectoryContentCallBackAdaptator(
+    public OsylCitationRemoteDirectoryContentCallBackAdaptator(
 	    AsyncCallback<List<OsylAbstractBrowserItem>> asyncCallback) {
 	super(asyncCallback);
     }
@@ -56,7 +54,8 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 	}
 	JSONString citationListName =
 		(JSONString) jObject.get("sakai:displayname");
-	JSONString lastModified = (JSONString) jObject.get("DAV:getlastmodified");
+	JSONString lastModified =
+		(JSONString) jObject.get("DAV:getlastmodified");
 	JSONObject citations = (JSONObject) jObject.get("citations");
 	Set<String> keys = citations.keySet();
 	for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
@@ -79,11 +78,13 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 	    JSONString doi = (JSONString) properties.get(CitationSchema.DOI);
 	    JSONString sourceTitle =
 		    (JSONString) properties.get(CitationSchema.SOURCE_TITLE);
-	    JSONString url = (JSONString) properties.get(CitationSchema.URL);
-	    
-	    JSONString identifierTypeUrl = (JSONString) properties.get(PREFERRED_URL);
-	    JSONString identifierTypeLibrary = (JSONString) properties.get(COPropertiesType.IDENTIFIER_TYPE_URL);
- 
+
+	    JSONString identifierTypeUrl =
+		    (JSONString) properties.get(PREFERRED_URL);
+	    JSONString identifierTypeLibrary =
+		    (JSONString) properties
+			    .get(COPropertiesType.IDENTIFIER_TYPE_URL);
+
 	    JSONString mediaType =
 		    (JSONString) properties.get("sakai:mediatype");
 
@@ -150,26 +151,26 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 	    csi.setProperty(CitationSchema.YEAR, year == null ? "" : year
 		    .stringValue());
 	    csi.setProperty(CitationSchema.DATE, date == null ? "" : date
-	    .stringValue());
-		csi.setProperty(CitationSchema.DOI, doi == null ? "" : doi
-				.stringValue());
+		    .stringValue());
+	    csi.setProperty(CitationSchema.DOI, doi == null ? "" : doi
+		    .stringValue());
 
-		// TODO: remove this setting
-		csi.setProperty(CitationSchema.URL, url == null ? "" : url
-				.stringValue());
+	    csi.setProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_URL, identifierTypeUrl
+			    .stringValue());
+	    csi.setProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_LIBRARY,
+		    identifierTypeLibrary.stringValue());
 
-		csi.setIdentifier(identifierTypeUrl.stringValue(),
-				COPropertiesType.IDENTIFIER_TYPE_URL);
-		csi.setIdentifier(identifierTypeLibrary.stringValue(),
-				COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
-
-		csi.setProperty(CitationSchema.SOURCE_TITLE,
-	    sourceTitle == null ? "" : sourceTitle.stringValue());
+	    csi.setProperty(CitationSchema.SOURCE_TITLE,
+		    sourceTitle == null ? "" : sourceTitle.stringValue());
 	    csi.setFileName(title == null ? "" : title.stringValue());
 	    csi.setFilePath(path == null ? "" : path.stringValue());
 	    csi.setResourceId(path == null ? "" : path.stringValue());
 	    csi.setResourceName(listname == null ? "" : listname);
-	    csi.setLastModifTime(OsylDateUtils.getXmlDateStringFromSakaiDateString(lastModified.stringValue()));
+	    csi.setLastModifTime(OsylDateUtils
+		    .getXmlDateStringFromSakaiDateString(lastModified
+			    .stringValue()));
 	    citationsList.add(csi);
 	}
 	OsylCitationListItem osylCitationListItem = new OsylCitationListItem();

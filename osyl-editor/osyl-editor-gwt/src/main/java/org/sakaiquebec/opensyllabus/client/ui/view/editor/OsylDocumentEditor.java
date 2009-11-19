@@ -97,7 +97,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
     private TextArea descriptionTextArea;
     private ListBox licenseListBox;
 
-    private ResourcesLicencingInfo resourceLicencingInfo;
+    private ResourcesLicencingInfo resourceLicensingInfo;
 
     private int originalEditorDescHeight;
 
@@ -467,7 +467,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	rightsAndSavePanel.add(new Label(getView().getUiMessage(
 		"DocumentEditor.document.license")));
 	licenseListBox = new ListBox();
-	updateResourceLicenceInfo();
+	updateResourceLicenseInfo();
 
 	rightsAndSavePanel.add(licenseListBox);
 	licenseListBox.setWidth("100%");
@@ -604,9 +604,9 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
      * for every document editor when the operation is completed, the flag is
      * set to licenceListReady=true
      */
-    private void updateResourceLicenceInfo() {
+    private void updateResourceLicenseInfo() {
 	// caching result
-	if (resourceLicencingInfo == null) {
+	if (resourceLicensingInfo == null) {
 	    OsylRemoteServiceLocator.getEditorRemoteService()
 		    .getResourceLicenceInfo(
 			    new AsyncCallback<ResourcesLicencingInfo>() {
@@ -620,7 +620,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 				public void onSuccess(
 					ResourcesLicencingInfo result) {
-				    resourceLicencingInfo = result;
+				    resourceLicensingInfo = result;
 				    // TODO Auto-generated method stub
 				    // getView().getController().handleRPCError("Sucess
 				    // while retrieving license information
@@ -634,9 +634,9 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
     }
 
     private void buildLicenseListBox() {
-	resourceLicencingInfo.getCopyrightTypeList();
+	resourceLicensingInfo.getCopyrightTypeList();
 	licenseListBox.clear();
-	for (String licence : resourceLicencingInfo.getCopyrightTypeList()) {
+	for (String licence : resourceLicensingInfo.getCopyrightTypeList()) {
 	    licenseListBox.addItem(licence);
 	}
 	refreshBrowsingComponents();

@@ -88,7 +88,7 @@ public class COModeled extends COSerialized {
     /**
      * The COContentRubric node name in the xml DOM.
      */
-    protected final static String CO_CONTENT_RUBRIC_NODE_NAME = "semanticType";
+    protected final static String SEMANTIC_TAG = "semanticTag";
 
     /**
      * Name of the text property node.
@@ -178,10 +178,9 @@ public class COModeled extends COSerialized {
 
     protected final static List<String> CDATA_NODE_NAMES =
 	    Arrays.asList(new String[] { COPropertiesType.LABEL,
-		    COPropertiesType.URI, COPropertiesType.DESCRIPTION,
-		    COPropertiesType.TEXT, CitationSchema.URL, COPropertiesType.IDENTIFIER,
-		    COPropertiesType.IDENTIFIER_TYPE_LIBRARY, COPropertiesType.IDENTIFIER_TYPE_URL,
-		    COPropertiesType.COMMENT, COPropertiesType.AVAILABILITY });
+		    COPropertiesType.IDENTIFIER, COPropertiesType.DESCRIPTION,
+		    COPropertiesType.TEXT, COPropertiesType.COMMENT,
+		    COPropertiesType.AVAILABILITY });
 
     /**
      * The modeledContent is a POJO filled by XML2Model
@@ -315,23 +314,6 @@ public class COModeled extends COSerialized {
 
 	}
 	return coContent;
-    }
-
-    /**
-     * Gets the CDataSection Value No confusion here: there is no specific
-     * treatment for cdata sections They are retrieved same way as normal node
-     * values
-     * 
-     * @param cDataSectionNode
-     * @return the cData section value
-     */
-    private String getCDataSectionValue(Node cDataSectionNode) {
-	String value = "";
-
-	for (int i = 0; i < cDataSectionNode.getChildNodes().getLength(); i++) {
-	    value += cDataSectionNode.getChildNodes().item(i).getNodeValue();
-	}
-	return value;
     }
 
     /**
@@ -520,7 +502,7 @@ public class COModeled extends COSerialized {
 	    prNode = resProxyChildren.item(j);
 	    prNodeName = prNode.getNodeName();
 
-	    if (prNodeName.equalsIgnoreCase(CO_CONTENT_RUBRIC_NODE_NAME)) {
+	    if (prNodeName.equalsIgnoreCase(SEMANTIC_TAG)) {
 		coContentResProxy.setRubric(createCOContentRubricPOJO(prNode));
 	    } else if (prNodeName.equalsIgnoreCase(CO_RES_NODE_NAME)) {
 		coContentResProxy
@@ -564,9 +546,12 @@ public class COModeled extends COSerialized {
 	if (coContentRes.getType().equals(COContentResourceType.DOCUMENT)
 		|| coContentRes.getType().equals(
 			COContentResourceType.BIBLIO_RESOURCE))
-	    if (coContentRes.getProperty(COPropertiesType.URI) != null)
+	    if (coContentRes.getProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_URI) != null)
 		documentSecurityMap.put(coContentRes.getProperty(
-			COPropertiesType.URI).trim(), coContentRes.getAccess());
+			COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_URI).trim(),
+			coContentRes.getAccess());
 	return coContentRes;
     }
 
@@ -601,21 +586,19 @@ public class COModeled extends COSerialized {
      */
     private COContentRubric createCOContentRubricPOJO(Node node) {
 	COContentRubric coContentRubric = new COContentRubric();
-	NodeList resChildren = node.getChildNodes();
+	NamedNodeMap namedNodeMap = node.getAttributes();
+	String type =
+		(namedNodeMap == null) ? null : (namedNodeMap
+			.getNamedItem(TYPE_ATTRIBUTE_NAME) == null) ? null
+			: namedNodeMap.getNamedItem(TYPE_ATTRIBUTE_NAME)
+				.getNodeValue();
+	if (type.equals("rubric")) {
+	    String value = "";
 
-	for (int i = 0; i < resChildren.getLength(); i++) {
-	    Node rNode = resChildren.item(i);
-
-	    if (rNode.getNodeName().equals(TYPE_NODE_NAME)) {
-		String value = "";
-
-		for (int j = 0; j < rNode.getChildNodes().getLength(); j++) {
-		    value += rNode.getChildNodes().item(j).getNodeValue();
-		}
-		coContentRubric.setType(value);
-	    } else {
-		addProperty(coContentRubric.getProperties(), rNode);
+	    for (int j = 0; j < node.getChildNodes().getLength(); j++) {
+		value += node.getChildNodes().item(j).getNodeValue();
 	    }
+	    coContentRubric.setType(value);
 	}
 	return coContentRubric;
     }
@@ -866,19 +849,12 @@ public class COModeled extends COSerialized {
      */
     private void createCOCOntentRubricChild(Document document,
 	    Element coContentResourceProxyElem, COContentRubric rubric) {
-	Element coContentRubricElem =
-		document.createElement(CO_CONTENT_RUBRIC_NODE_NAME);
-	Element coContentRubricTypeElem =
-		document.createElement(TYPE_NODE_NAME);
-	coContentRubricElem.appendChild(coContentRubricTypeElem);
+	Element coContentRubricElem = document.createElement(SEMANTIC_TAG);
+	coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME, "rubric");
 
 	Text elemValue = document.createTextNode(rubric.getType());
-	coContentRubricTypeElem.appendChild(elemValue);
+	coContentRubricElem.appendChild(elemValue);
 
-	if (rubric.getProperties() != null && !rubric.getProperties().isEmpty()) {
-	    createPropertiesElem(document, coContentRubricElem, rubric
-		    .getProperties());
-	}
 	coContentResourceProxyElem.appendChild(coContentRubricElem);
     }
 

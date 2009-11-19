@@ -110,7 +110,9 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 
     private void updateAssignement(COContentResourceProxy contentResourceProxy) {
 	boolean error = false;
-	String uri = contentResourceProxy.getProperty(COPropertiesType.URI);
+	String uri =
+		contentResourceProxy.getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_URI);
 	String rawAssignmentId = uri.split("\\s*/a/\\s*")[1];
 	rawAssignmentId = rawAssignmentId.split("\\s*/\\s*")[1];
 	String assignmentId = rawAssignmentId.split("\\s*&panel=\\s*")[0];
@@ -166,9 +168,9 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 	setLocation(((OsylCOStructureEvaluationItemEditor) getEditor())
 		.getLocation());
 	setMode(((OsylCOStructureEvaluationItemEditor) getEditor()).getMode());
-	setResult(((OsylCOStructureEvaluationItemEditor) getEditor())
-		.getResult());
-	setScope(((OsylCOStructureEvaluationItemEditor) getEditor()).getScope());
+//	setResult(((OsylCOStructureEvaluationItemEditor) getEditor())
+//		.getResult());
+//	setScope(((OsylCOStructureEvaluationItemEditor) getEditor()).getScope());
 	setDateStart(((OsylCOStructureEvaluationItemEditor) getEditor())
 		.getOpenDate());
 	setDateEnd(((OsylCOStructureEvaluationItemEditor) getEditor())
@@ -252,32 +254,32 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
 	return reqLevel;
     }
 
-    public void setResult(String l) {
-	getModel().addProperty(COPropertiesType.RESULT, l);
-    }
-
-    public String getResult() {
-	String reqLevel = null;
-	if (!"undefined"
-		.equals(getModel().getProperty(COPropertiesType.RESULT))
-		|| null != getModel().getProperty(COPropertiesType.RESULT)) {
-	    reqLevel = getModel().getProperty(COPropertiesType.RESULT);
-	}
-	return reqLevel;
-    }
-
-    public void setScope(String l) {
-	getModel().addProperty(COPropertiesType.SCOPE, l);
-    }
-
-    public String getScope() {
-	String reqLevel = null;
-	if (!"undefined".equals(getModel().getProperty(COPropertiesType.SCOPE))
-		|| null != getModel().getProperty(COPropertiesType.SCOPE)) {
-	    reqLevel = getModel().getProperty(COPropertiesType.SCOPE);
-	}
-	return reqLevel;
-    }
+//    public void setResult(String l) {
+//	getModel().addProperty(COPropertiesType.RESULT, l);
+//    }
+//
+//    public String getResult() {
+//	String reqLevel = null;
+//	if (!"undefined"
+//		.equals(getModel().getProperty(COPropertiesType.RESULT))
+//		|| null != getModel().getProperty(COPropertiesType.RESULT)) {
+//	    reqLevel = getModel().getProperty(COPropertiesType.RESULT);
+//	}
+//	return reqLevel;
+//    }
+//
+//    public void setScope(String l) {
+//	getModel().addProperty(COPropertiesType.SCOPE, l);
+//    }
+//
+//    public String getScope() {
+//	String reqLevel = null;
+//	if (!"undefined".equals(getModel().getProperty(COPropertiesType.SCOPE))
+//		|| null != getModel().getProperty(COPropertiesType.SCOPE)) {
+//	    reqLevel = getModel().getProperty(COPropertiesType.SCOPE);
+//	}
+//	return reqLevel;
+//    }
 
     public void setSubmitionType(String l) {
 	getModel().addProperty(COPropertiesType.SUBMITION_TYPE, l);

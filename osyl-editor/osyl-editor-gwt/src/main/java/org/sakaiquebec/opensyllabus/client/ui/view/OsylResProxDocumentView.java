@@ -65,7 +65,8 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 	// display the fileBrowser showing the previously selected file.
 	String uri = getEditor().getResourceURI();
 	if (uri != null) {
-	    getModel().getResource().addProperty(COPropertiesType.URI, uri);
+	    getModel().getResource().addProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_URI, uri);
 	}
     }
 
@@ -78,7 +79,7 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 
     public void updateResourceMetaInfo() {
 	super.updateResourceMetaInfo();
-	getModel().getResource().addProperty(COPropertiesType.LICENCE,
+	getModel().getResource().addProperty(COPropertiesType.LICENSE,
 		getEditor().getLicence());
 	getModel().getResource().addProperty(COPropertiesType.DESCRIPTION,
 		getEditor().getResourceDescription());

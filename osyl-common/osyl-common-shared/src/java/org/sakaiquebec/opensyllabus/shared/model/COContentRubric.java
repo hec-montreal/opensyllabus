@@ -79,6 +79,13 @@ public class COContentRubric implements COModelInterface {
     public void addProperty(String key, String value) {
 	coProperties.addProperty(key, value);
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void addProperty(String key, String type, String value) {
+	coProperties.addProperty(key, type, value);
+    }
 
     /**
      * {@inheritDoc}
@@ -92,6 +99,13 @@ public class COContentRubric implements COModelInterface {
      */
     public String getProperty(String key) {
 	return coProperties.getProperty(key);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public String getProperty(String key, String type) {
+	return coProperties.getProperty(key, type);
     }
 
     /**

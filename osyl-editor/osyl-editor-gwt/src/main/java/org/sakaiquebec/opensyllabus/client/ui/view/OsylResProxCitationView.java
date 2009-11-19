@@ -28,7 +28,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 
-
 /**
  * Class providing display and edition capabilities for citations resources.
  * 
@@ -76,35 +75,77 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 
 	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());
-	
+
 	if (uri != null) {
-	    setProperty(COPropertiesType.URI, uri);
+	    setProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_URI, uri
+			    + "/"
+			    + getEditor().getSelectedCitationProperty(
+				    CitationSchema.CITATIONID));
 	}
-	setModelPropertyWithEditorProperty(CitationSchema.CITATIONID);
-	setModelPropertyWithEditorProperty(CitationSchema.TYPE);
-	setModelPropertyWithEditorProperty(CitationSchema.LONGTEXT);
-	setModelPropertyWithEditorProperty(CitationSchema.SHORTTEXT);
-	setModelPropertyWithEditorProperty(CitationSchema.NUMBER);
-	setModelPropertyWithEditorProperty(CitationSchema.DATE);
-	setModelPropertyWithEditorProperty(CitationSchema.TITLE);
-	setModelPropertyWithEditorProperty(CitationSchema.EDITOR);
-	setModelPropertyWithEditorProperty(CitationSchema.CREATOR);
-	setModelPropertyWithEditorProperty(CitationSchema.VOLUME);
-	setModelPropertyWithEditorProperty(CitationSchema.ISSUE);
-	setModelPropertyWithEditorProperty(CitationSchema.PAGES);
-	setModelPropertyWithEditorProperty(CitationSchema.PUBLISHER);
-	setModelPropertyWithEditorProperty(CitationSchema.YEAR);
-	setModelPropertyWithEditorProperty(CitationSchema.ISN);
-	setModelPropertyWithEditorProperty(CitationSchema.DOI);
-	setModelPropertyWithEditorProperty(CitationSchema.SOURCE_TITLE);
-	setModelPropertyWithEditorProperty(CitationSchema.URL);
-	setModelIdentifierPropertyWithEditorProperty(
+	setModelPropertyWithEditorProperty(COPropertiesType.RESOURCE_TYPE,
+		getEditor().getSelectedCitationProperty(CitationSchema.TYPE));
+
+	setModelPropertyWithEditorProperty(CitationSchema.LONGTEXT, getEditor()
+		.getSelectedCitationProperty(CitationSchema.LONGTEXT));
+
+	setModelPropertyWithEditorProperty(CitationSchema.SHORTTEXT,
+		getEditor().getSelectedCitationProperty(
+			CitationSchema.SHORTTEXT));
+	setModelPropertyWithEditorProperty(CitationSchema.NUMBER, getEditor()
+		.getSelectedCitationProperty(CitationSchema.NUMBER));
+
+	setModelPropertyWithEditorProperty(CitationSchema.DATE, getEditor()
+		.getSelectedCitationProperty(CitationSchema.DATE));
+
+	setModelPropertyWithEditorProperty(CitationSchema.TITLE, getEditor()
+		.getSelectedCitationProperty(CitationSchema.TITLE));
+
+	setModelPropertyWithEditorProperty(CitationSchema.EDITOR, getEditor()
+		.getSelectedCitationProperty(CitationSchema.EDITOR));
+
+	setModelPropertyWithEditorProperty(COPropertiesType.AUTHOR, getEditor()
+		.getSelectedCitationProperty(CitationSchema.CREATOR));
+
+	setModelPropertyWithEditorProperty(CitationSchema.VOLUME, getEditor()
+		.getSelectedCitationProperty(CitationSchema.VOLUME));
+
+	setModelPropertyWithEditorProperty(CitationSchema.ISSUE, getEditor()
+		.getSelectedCitationProperty(CitationSchema.ISSUE));
+
+	setModelPropertyWithEditorProperty(CitationSchema.PAGES, getEditor()
+		.getSelectedCitationProperty(CitationSchema.PAGES));
+
+	setModelPropertyWithEditorProperty(CitationSchema.PAGES, getEditor()
+		.getSelectedCitationProperty(CitationSchema.PAGES));
+
+	setModelPropertyWithEditorProperty(CitationSchema.PAGES, getEditor()
+		.getSelectedCitationProperty(CitationSchema.PAGES));
+
+	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_ISN, getEditor()
+			.getSelectedCitationProperty(CitationSchema.ISN));
+
+	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_DOI, getEditor()
+			.getSelectedCitationProperty(CitationSchema.DOI));
+
+	setModelPropertyWithEditorProperty(COPropertiesType.JOURNAL,
+		getEditor().getSelectedCitationProperty(
+			CitationSchema.SOURCE_TITLE));
+
+	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_LIBRARY, getEditor()
+			.getSelectedCitationProperty(
 				COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
-		setModelIdentifierPropertyWithEditorProperty(
+				COPropertiesType.IDENTIFIER_TYPE_LIBRARY));
+
+	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_URL, getEditor()
+			.getSelectedCitationProperty(
 				COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_URL);
-	}
+				COPropertiesType.IDENTIFIER_TYPE_URL));
+    }
 
     /**
      * {@inheritDoc}
@@ -124,51 +165,51 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	return docName;
     }
 
-    // Link
-    public String getTextFromModelLink() {
-	String link =
-		getModel().getResource().getProperty(COPropertiesType.LINK);
-	if (null == link || "".equals(link)) {
-	    return "";
-	}
-
-	if (getEditor().isInEditionMode()) {
-	    return link;
-	} else {
-	    return generateHTMLLink(link, link);
-	}
+    public String getRawURI() {
+	String identifier_uri =
+		getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_URI);
+	if (identifier_uri != null) {
+	    return identifier_uri.substring(0, identifier_uri.lastIndexOf("/"));
+	} else
+	    return null;
     }
 
     /**
      * @return true if available in bookstore
      */
     public boolean isAvailableInBookstore() {
-	return "true".equals(getModel().getProperty(
-		COPropertiesType.BOOKSTORE));
+	return "true"
+		.equals(getModel().getProperty(COPropertiesType.BOOKSTORE));
     }
 
     public void setAvailableInBookstore(boolean b) {
 	String booleanValue = "" + (b);
-	getModel()
-		.addProperty(COPropertiesType.BOOKSTORE, booleanValue);
+	getModel().addProperty(COPropertiesType.BOOKSTORE, booleanValue);
     }
 
-    private void setModelPropertyWithEditorProperty(String property) {
-	String value = getEditor().getSelectedCitationProperty(property);
+    private void setModelPropertyWithEditorProperty(String property,
+	    String type, String value) {
+	if (value != null && !value.equals("undefined") && value != "")
+	    setProperty(property, type, value);
+    }
+
+    private void setModelPropertyWithEditorProperty(String property,
+	    String value) {
 	if (value != null && !value.equals("undefined") && value != "")
 	    setProperty(property, value);
-
     }
 
-    private void setModelIdentifierPropertyWithEditorProperty(String property, String type) {
-    	String value = getEditor().getSelectedCitationIdentifier(type);
-    	if (value != null && !value.equals("undefined") && value != "")
-    	    setProperty(property, value);
-
-        }
-
     public String getCitationId() {
-	return getProperty(CitationSchema.CITATIONID);
+	String identifier_uri =
+		getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_URI);
+	if (identifier_uri != null) {
+	    return identifier_uri.substring(
+		    identifier_uri.lastIndexOf("/") + 1, identifier_uri
+			    .length());
+	} else
+	    return null;
     }
 
     /**
@@ -187,37 +228,40 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
     public String getCitationPreviewAsLink() {
 
 	String link = "";
-	String url = getIdentifier(COPropertiesType.IDENTIFIER_TYPE_URL);
-	if (url != null && url.equalsIgnoreCase("undefined"))
-		url = getIdentifier(COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
-	
-	if (url != null && !url.equalsIgnoreCase("undefined"))
+	String url =
+		getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_URL);
+	if (url == null || url.equalsIgnoreCase("undefined") || url.equals(""))
+	    url =
+		    getProperty(COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
+
+	if (url == null || !url.equalsIgnoreCase("undefined") || url.equals(""))
 	    link = generateHTMLLink(url, getCitationPreview());
 	else
 	    link = getCitationPreview();
 	return link;
 
-	
     }
 
-	/**
-	 * Tells us whether the registered link points to the library catalog or
-	 * another source
-	 * 
-	 * @param citationItem
-	 * @return
-	 */
-	public boolean isCitationLinkLibrary(OsylCitationItem citationItem) {
+    /**
+     * Tells us whether the registered link points to the library catalog or
+     * another source
+     * 
+     * @param citationItem
+     * @return
+     */
+    public boolean isCitationLinkLibrary(OsylCitationItem citationItem) {
 
-		String identifier = citationItem.getProperties().getProperty(
-				COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
+	String identifier =
+		citationItem.getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
 
-		if (identifier != null && !"undefined".equalsIgnoreCase(identifier))
-			return true;
-		return false;
-	}
-	
+	if (identifier != null && !"undefined".equalsIgnoreCase(identifier))
+	    return true;
+	return false;
+    }
+
     /**
      * Generate a link, if possible, with citation informations
      * 
@@ -243,7 +287,8 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	    return getCoMessage("UndefinedCitation");
 	} else {
 	    // 3 cases: Book, Article, Other
-	    if (type.equals(CitationSchema.TYPE_BOOK)) {
+	    if (type.equals(CitationSchema.TYPE_BOOK)
+		    || type.equals(CitationSchema.TYPE_REPORT)) {
 		// <auteurs>, <titre>, <édition>,<pages>, <éditeur>, <année>,
 		// <ISBN>
 		infos +=

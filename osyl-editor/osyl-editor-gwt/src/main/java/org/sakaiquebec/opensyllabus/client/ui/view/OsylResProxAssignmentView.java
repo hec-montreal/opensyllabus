@@ -141,7 +141,8 @@ public class OsylResProxAssignmentView extends OsylAbstractResProxView {
      * @return uri
      */
     private String getAssignmentURI() {
-	return getModel().getProperty(COPropertiesType.URI);
+	return getModel().getProperty(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_URI);
     }
 
     @Override

@@ -174,8 +174,6 @@ public class OsylServiceImpl implements OsylService {
 			// The client doesn't know the id. It must be a new item
 			if (assignmentId.equals("") || assignmentId.equals(null)) {
 				edit = assignmentService.addAssignment(siteId);
-				System.out.println(assignmentService.allowUpdateAssignment(edit
-						.getReference()));
 				contentEdit = assignmentService.addAssignmentContent(siteId);
 				// Ajouter le user dans le user dans le groupe de l'assignment
 

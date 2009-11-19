@@ -21,15 +21,11 @@
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
-
-import com.google.gwt.user.client.Window;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -54,14 +50,6 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
      * Name of the resource (citationList name)
      */
     private String resourceName;
-    
-    /**
-     * Type of links associated to this citation. The possible values are 
-     * <ul><li><b>hecLibrary:</b> the url point to a resource in the HEC library</li>
-     *     <li><b>other: </b>the url points to a resource not in the HEC library</li></ul>
-     * 
-     */
-    private String identifier;
 
     /**
      * Map of citation properties
@@ -87,27 +75,30 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
     }
 
     /**
-	 * @return the url linked to this citation. It can be our library or any
-	 *         other address
-	 */
-	public String getUrl() {
-		String url = getIdentifier(COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
-		if (url == null)
-			return null;
-			if (url.trim() != "undefined")
-			return url;
-		else
-			return getIdentifier(COPropertiesType.IDENTIFIER_TYPE_URL);
-	}
+     * @return the url linked to this citation. It can be our library or any
+     *         other address
+     */
+    public String getUrl() {
+	String url =
+		getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
+	if (url == null)
+	    return null;
+	if (url.trim() != "undefined")
+	    return url;
+	else
+	    return getProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_URL);
+    }
 
     /**
-	 * @return the url linked to this citation. It can be our library or any
-	 *         other address
-	 */
-//	public String getUrl() {
-//		return getProperty(CitationSchema.URL);
-//	}
-	
+     * @return the url linked to this citation. It can be our library or any
+     *         other address
+     */
+    // public String getUrl() {
+    // return getProperty(CitationSchema.URL);
+    // }
+
     /**
      * @param Id the Id to set (citationListId)
      */
@@ -166,21 +157,27 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 	return properties.getProperty(key);
     }
 
+    public String getProperty(String key, String type) {
+	return properties.getProperty(key, type);
+    }
+
     /**
      * Remove the specified property
      */
     public void removeProperty(String key) {
-    	properties.removeProperty(key);
+	properties.removeProperty(key);
     }
 
     /**
      * Remove the property with the specified type
+     * 
      * @param key
      * @param type
      */
-    public void removeProperty(String key, String type){
-    	properties.removeProperty(key, type);
+    public void removeProperty(String key, String type) {
+	properties.removeProperty(key, type);
     }
+
     /**
      * Help method to set specific property
      * 
@@ -189,6 +186,10 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
      */
     public void setProperty(String key, String value) {
 	properties.addProperty(key, value);
+    }
+
+    public void setProperty(String key, String type, String value) {
+	properties.addProperty(key, type, value);
     }
 
     /**
@@ -209,19 +210,6 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 	setProperty(CitationSchema.TITLE, title);
     }
 
-    
-    /**
-     * Help method
-     * @return the identifier
-     */
-    public String getIdentifier(String type){
-    	return properties.getProperty(COPropertiesType.IDENTIFIER,type);
-    }
-    
-    public void setIdentifier( String identifierValue, String type){
-    	properties.addProperty(COPropertiesType.IDENTIFIER, type, identifierValue);
-    }
-    
     /**
      * Help method
      * 

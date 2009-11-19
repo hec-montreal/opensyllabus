@@ -2,20 +2,21 @@
 <!-- Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com) -->
 <OSYL access="public" schemaVersion="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <CO access="public">
+	<modified></modified>
+	<identifier type="HEC">Identifier of course</identifier>
 	<template type="HEC">TemplateHec</template>
 	<title type="HEC">Title of course at HEC</title>
-	<identifier type="HEC">Identifier of course</identifier>
 	<language>ENG</language>
 	<created>2001-12-17T09:30:47-05:00</created>
-	<lastModified></lastModified>
+	<creator></creator>
+	<modifiedBy></modifiedBy>
+	<parent type="HEC"></parent>
+	<children type="HEC"></children>
 	<previousPublished></previousPublished>
 	<lastPublished></lastPublished>
 	<createdBy>HEC Montréal</createdBy>
-	<lastModifiedBy></lastModifiedBy>
 	<courseId type="HEC">Course Id</courseId>
-	<modified></modified>
 	<department type="HEC"></department>
-	<parent type="HEC"></parent>
 	<asmStructure access="public" xsi:type="NewsStruct">
 		<modified>2001-12-17T09:30:47-05:00</modified>
 		<asmUnit access="public" xsi:type="NewsUnit">

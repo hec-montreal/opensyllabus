@@ -72,7 +72,8 @@ public abstract class OsylAbstractResProxBrowserView extends
      * Returns the URI of current resource
      */
     public String getRawURI() {
-	return getModel().getResource().getProperty(COPropertiesType.URI);
+	return getModel().getResource().getProperty(
+		COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_URI);
     } // getRawURI
 
     /**

@@ -91,39 +91,35 @@ public class COContentResource implements COModelInterface,
 	resModel.setId(UUID.uuid());
 	resModel.setAccess(SecurityInterface.ACCESS_ATTENDEE);
 	if (type.equalsIgnoreCase(COContentResourceType.TEXT)) {
-	    COProperties prop = new COProperties();
-	    prop.addProperty(COPropertiesType.TEXT, osylConfigMessages
+	    resModel.addProperty(COPropertiesType.TEXT, osylConfigMessages
 		    .getMessage("InsertYourTextHere"));
-	    resModel.setProperties(prop);
+	    resModel.addProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.NON_APPLICABLE,
+		    COPropertiesType.NON_APPLICABLE);
 	} else if (type.equalsIgnoreCase(COContentResourceType.URL)) {
-	    COProperties prop = new COProperties();
-	    prop.addProperty(COPropertiesType.URI,
+	    resModel.addProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_URI,
 		    "http://www.google.ca/search?q=opensyllabus");
-	    resModel.setProperties(prop);
 	} else if (type.equalsIgnoreCase(COContentResourceType.DOCUMENT)) {
-	    COProperties prop = new COProperties();
-	    prop.addProperty(COPropertiesType.URI, "");
-	    resModel.setProperties(prop);
+	    resModel.addProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_URI, "");
 	} else if (type.equalsIgnoreCase(COContentResourceType.ASSIGNMENT)) {
-	    COProperties prop = new COProperties();
-	    prop.addProperty(COPropertiesType.TEXT, osylConfigMessages
+	    resModel.addProperty(COPropertiesType.TEXT, osylConfigMessages
 		    .getMessage("assigndescr"));
-	    resModel.setProperties(prop);
 	} else if (type.equalsIgnoreCase(COContentResourceType.BIBLIO_RESOURCE)) {
-	    COProperties prop = new COProperties();
-	    prop.addProperty(COPropertiesType.CITATION, osylConfigMessages
-		    .getMessage("bibliographicReference"));
-	    // key of citation type (which is in english) is saved in model
-	    prop.addProperty(COPropertiesType.TYPE, "unknown");
-	    resModel.setProperties(prop);
+	    resModel.addProperty(COPropertiesType.RESOURCE_TYPE, "unknown");
 	} else if (type.equalsIgnoreCase(COContentResourceType.NEWS)) {
-	    COProperties prop = new COProperties();
-	    prop.addProperty(COPropertiesType.TEXT, osylConfigMessages
+	    resModel.addProperty(COPropertiesType.TEXT, osylConfigMessages
 		    .getMessage("InsertYourTextHere"));
-	    prop.addProperty(COPropertiesType.MODIFIED, OsylDateUtils
+	    resModel.addProperty(COPropertiesType.MODIFIED, OsylDateUtils
 		    .getNowDateAsXmlString());
-	    resModel.setProperties(prop);
-
+	    resModel.addProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.NON_APPLICABLE,
+		    COPropertiesType.NON_APPLICABLE);
+	} else if (type.equals(COContentResourceType.PERSON)) {
+	    resModel.addProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.NON_APPLICABLE,
+		    COPropertiesType.NON_APPLICABLE);
 	}
 	return resModel;
     }
@@ -143,55 +139,36 @@ public class COContentResource implements COModelInterface,
 	notifyEventHandlers();
     }
 
-    /**
-     * @return the properties
-     */
     public COProperties getProperties() {
 	return properties;
     }
 
-    /**
-     * @param properties the properties to set.
-     */
     public void setProperties(COProperties properties) {
 	this.properties = properties;
 	notifyEventHandlers();
     }
 
-    /**
-     * Adds a property to the <code>COProperties</code> structure.
-     * 
-     * @param key the proerty key used to retrieve the value.
-     * @param value the value of this property.
-     */
     public void addProperty(String key, String value) {
-	// If current value is defined and equal to the new we return.
-	if ((null != (getProperties().getProperty(key)))
-		&& (getProperties().getProperty(key).equals(value))) {
-	    return;
-	}
 	getProperties().addProperty(key, value);
 	notifyEventHandlers();
     }
 
-    /**
-     * Removes a property from the <code>COProperties</code> structure.
-     * 
-     * @param key the key of the property to remove.
-     */
+    public void addProperty(String key, String type, String value) {
+	getProperties().addProperty(key, type, value);
+	notifyEventHandlers();
+    }
+
     public void removeProperty(String key) {
 	getProperties().removeProperty(key);
 	notifyEventHandlers();
     }
 
-    /**
-     * Returns a specific property of <code>COContentResource</code>.
-     * 
-     * @param key
-     * @return
-     */
     public String getProperty(String key) {
 	return getProperties().getProperty(key);
+    }
+
+    public String getProperty(String key, String type) {
+	return getProperties().getProperty(key, type);
     }
 
     public void addEventHandler(UpdateCOContentResourceEventHandler handler) {

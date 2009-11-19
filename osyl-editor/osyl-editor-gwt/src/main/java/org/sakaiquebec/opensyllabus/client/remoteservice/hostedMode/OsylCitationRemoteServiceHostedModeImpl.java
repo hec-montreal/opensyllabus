@@ -51,7 +51,7 @@ public class OsylCitationRemoteServiceHostedModeImpl extends
 	    citation.setFilePath("work/HostedModeCitationListPath");
 	    citation.setResourceId("dummyId"+i);
 	    citation.setResourceName("ressourceName");
-	    citation.setIdentifier("www.google.com", COPropertiesType.IDENTIFIER_TYPE_URL );
+	    citation.setProperty(COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_URL,"dummyURL" );
 	    citation.setProperty(CitationSchema.CITATIONID, "dummyId"+i);
 	    citation.setProperty(CitationSchema.TYPE, "Book"+i);
 	    citation.setProperty(CitationSchema.TITLE, "ma citation"+i);

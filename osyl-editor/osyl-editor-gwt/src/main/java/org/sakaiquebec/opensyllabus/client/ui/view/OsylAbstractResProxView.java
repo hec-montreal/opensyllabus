@@ -128,7 +128,7 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 	effectPanel.addEffect(collapseEffect);
 
 	// Set the duration of the effects
-	effectPanel.setEffectsLength(0.5);
+	effectPanel.setEffectsLength(1);
 
 	// Play the Effect
 	effectPanel.playEffects();
@@ -149,20 +149,17 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     protected void setProperty(String key, String val) {
 	getModel().getResource().addProperty(key, val);
     }
-
-    protected void setIdentifier(String type, String val) {
-		getModel().getResource().getProperties().addProperty(
-				COPropertiesType.IDENTIFIER, type, val);
-	}
     
-
-    protected String getIdentifier(String type) {
-		return getModel().getResource().getProperties().getProperty(
-				COPropertiesType.IDENTIFIER, type);
-	}
+    protected void setProperty(String key, String type, String val){
+	getModel().getResource().addProperty(key, type, val);
+    }
 
     protected String getProperty(String key) {
 	return getModel().getResource().getProperty(key);
+    }
+    
+    protected String getProperty(String key, String type) {
+	return getModel().getResource().getProperty(key,type);
     }
 
     public void setContextImportant(boolean b) {
@@ -236,7 +233,7 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     protected void moveTo(String targetUuid) {
 	COUnitContent targetCoUnitContent =
 		(COUnitContent) ((COContent) getController().getMainView()
-			.getModel()).findCOElementAbstractWithUUID(targetUuid);
+			.getModel()).findCOElementAbstractWithId(targetUuid);
 	getModel().getParent().removeChild(getModel());
 	getModel().setParent(targetCoUnitContent);
 	getModel().remove();

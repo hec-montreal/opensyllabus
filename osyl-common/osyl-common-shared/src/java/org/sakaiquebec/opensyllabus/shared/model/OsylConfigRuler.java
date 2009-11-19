@@ -285,7 +285,7 @@ public class OsylConfigRuler {
 	    modelInstance = new COUnitContent();
 	} else if (COModeled.CO_RES_NODE_NAME.equalsIgnoreCase(nameAttribute)) {
 	    modelInstance = new COContentResource();
-	} else if (COModeled.CO_CONTENT_RUBRIC_NODE_NAME
+	} else if (COModeled.SEMANTIC_TAG
 		.equalsIgnoreCase(nameAttribute)) {
 	    modelInstance = new COContentRubric();
 	} else if (COModeled.CO_RES_NODE_NAME.equalsIgnoreCase(nameAttribute)) {
