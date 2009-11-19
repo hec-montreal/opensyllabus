@@ -110,7 +110,7 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 		    "undefined");
 	}
 
-	resProxModel.setAccess(SecurityInterface.ACCESS_ATTENDEE);
+	resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);
 	resProxModel.setRubricType(defaultRubric);
 	
 	// Default resource

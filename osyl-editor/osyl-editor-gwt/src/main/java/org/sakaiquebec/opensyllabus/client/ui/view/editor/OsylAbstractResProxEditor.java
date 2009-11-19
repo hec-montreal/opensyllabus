@@ -246,9 +246,9 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	HorizontalPanel options = new HorizontalPanel();
 	optionPanel.add(options);
 	// Hide CheckBox
-	hideCheckBox = new CheckBox(getUiMessage("MetaInfo.hide"));
+	hideCheckBox = new CheckBox(getUiMessage("MetaInfo.hidden"));
 	hideCheckBox.setValue(getView().isContextHidden());
-	hideCheckBox.setTitle(getUiMessage("MetaInfo.hide.title"));
+	hideCheckBox.setTitle(getUiMessage("MetaInfo.hidden.title"));
 	options.add(hideCheckBox);
 
 	// "Important" CheckBox
