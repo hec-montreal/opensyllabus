@@ -1,8 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="war/WEB-INF/classes" path="src/main/java"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
-	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
-	<classpathentry kind="output" path="war/WEB-INF/classes"/>
+  <classpathentry kind="src" path="src/main/java"/>
+  <classpathentry kind="output" path="war/WEB-INF/classes"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry kind="var" path="M2_REPO/org/gwt/mosaic/gwt-beansbinding/0.2.4/gwt-beansbinding-0.2.4.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/google/gwt/gwt-dev/1.7.0/gwt-dev-1.7.0-windows.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/gwt/mosaic/gwt-dnd/2.6.5/gwt-dnd-2.6.5.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/google/gwt-fx/gwt-fx/4.0.0/gwt-fx-4.0.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/gwt/mosaic/gwt-incubator/trunk-r1684/gwt-incubator-trunk-r1684.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/gwt/mosaic/gwt-mosaic/0.2.3/gwt-mosaic-0.2.3.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/google/gwt/gwt-user/1.7.0/gwt-user-1.7.0.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/gwt/mosaic/gwtx/1.5.2/gwtx-1.5.2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.1/junit-3.8.1.jar"/>
+  <classpathentry kind="src" path="/osyl-common-shared"/>
+  <classpathentry kind="src" path="/osyl-configs"/>
 </classpath>
