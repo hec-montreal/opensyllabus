@@ -161,12 +161,8 @@ public class OsylMainView extends OsylViewableComposite {
 	COElementAbstract absElement = null;
 	while (iter.hasNext()) {
 	    absElement = (COElementAbstract) iter.next();
-	    if (absElement.isCOStructureElement()) {
-
-		// We prefer to be on the first Lectures type when the
-		// application opens
-		if (absElement.getType().equalsIgnoreCase(
-			COStructureElementType.PEDAGOGICAL_STRUCT)) {
+	    if (absElement.isCOUnit()) {
+		if (absElement.getType().equalsIgnoreCase(COUnitType.NEWS_UNIT)) {
 		    find = true;
 		    break;
 		}
