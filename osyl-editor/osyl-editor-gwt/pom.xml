@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.sakaiquebec.opensyllabus</groupId>
 		<artifactId>osyl-editor</artifactId>
-		<version>M2</version>
+		<version>2.6.1</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -197,7 +197,7 @@
 										<artifactItem>
 											<groupId>org.sakaiquebec.opensyllabus</groupId>
 											<artifactId>osyl-configs</artifactId>
-											<version>M2</version>
+											<version>${sakai.version}</version>
 											<type>jar</type>
 											<outputDirectory>war</outputDirectory>
 											<excludes>META-INF/**</excludes>
@@ -269,7 +269,7 @@
 										<artifactItem>
 											<groupId>org.sakaiquebec.opensyllabus</groupId>
 											<artifactId>osyl-configs</artifactId>
-											<version>M2</version>
+											<version>${sakai.version}</version>
 											<type>jar</type>
 											<outputDirectory>war</outputDirectory>
 											<excludes>META-INF/**</excludes>
@@ -342,7 +342,7 @@
 										<artifactItem>
 											<groupId>org.sakaiquebec.opensyllabus</groupId>
 											<artifactId>osyl-configs</artifactId>
-											<version>M2</version>
+											<version>${sakai.version}</version>
 											<type>jar</type>
 											<outputDirectory>war</outputDirectory>
 											<excludes>META-INF/**</excludes>

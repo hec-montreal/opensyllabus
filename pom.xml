@@ -1,17 +1,17 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <artifactId>base</artifactId>
     <groupId>org.sakaiproject</groupId>
-    <version>M2</version>
+    <version>2.6.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
   <artifactId>osyl</artifactId>
-  <version>M2</version>
+  <version>2.6.1</version>
   <packaging>pom</packaging>
 
   <name>Sakai Quebec OpenSyllabus</name>
@@ -73,27 +73,27 @@
 
   <dependencyManagement>
     <dependencies>
-    
+
       <!--  opensyllabus -->
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-configs</artifactId>
-        <version>M2</version>
+        <version>${sakai.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-common-shared</artifactId>
-        <version>M2</version>
+        <version>${sakai.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-common-impl</artifactId>
-        <version>M2</version>
+        <version>${sakai.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-common-api</artifactId>
-        <version>M2</version>
+        <version>${sakai.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
@@ -103,102 +103,45 @@
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-editor-sakai-impl</artifactId>
-        <version>M2</version>
+        <version>${sakai.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-admin-server-api</artifactId>
-        <version>M2</version>
+        <version>${sakai.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-admin-sakai-impl</artifactId>
-        <version>M2</version>
+        <version>${sakai.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-manager-server-api</artifactId>
-        <version>M2</version>
+        <version>${sakai.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-manager-sakai-impl</artifactId>
-        <version>M2</version>
+        <version>${sakai.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus.managergwt</groupId>
         <artifactId>osyl-manager-gwt</artifactId>
-        <version>M2</version>
+        <version>${sakai.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus.editorgwt</groupId>
         <artifactId>osyl-editor-gwt</artifactId>
-        <version>M2</version>
+        <version>${sakai.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus.admingwt</groupId>
         <artifactId>osyl-admin-gwt</artifactId>
-        <version>M2</version>
+        <version>${sakai.version}</version>
       </dependency>
 
       <!--  sakai -->
-      <dependency>
-        <groupId>org.sakaiproject</groupId>
-        <artifactId>sakai-site-api</artifactId>
-        <version>M2</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.sakaiproject</groupId>
-        <artifactId>sakai-site-impl</artifactId>
-        <version>M2</version>
-      </dependency>
-      <dependency>
-        <groupId>org.sakaiproject</groupId>
-        <artifactId>sakai-content-api</artifactId>
-        <scope>provided</scope>
-        <version>M2</version>
-      </dependency>
-      <dependency>
-        <groupId>org.sakaiproject</groupId>
-        <artifactId>sakai-authz-api</artifactId>
-        <scope>provided</scope>
-        <version>M2</version>
-      </dependency>
-      <dependency>
-        <groupId>org.sakaiproject</groupId>
-        <artifactId>sakai-tool-api</artifactId>
-        <scope>provided</scope>
-        <version>M2</version>
-      </dependency>
-      <dependency>
-        <groupId>org.sakaiproject</groupId>
-        <artifactId>sakai-util-api</artifactId>
-        <scope>provided</scope>
-        <version>M2</version>
-      </dependency>
-      <dependency>
-        <groupId>org.sakaiproject</groupId>
-        <artifactId>sakai-entity-api</artifactId>
-        <scope>provided</scope>
-        <version>M2</version>
-      </dependency>
-      <dependency>
-        <groupId>org.sakaiproject</groupId>
-        <artifactId>sakai-component-api</artifactId>
-        <scope>provided</scope>
-        <version>M2</version>
-      </dependency>
-      <dependency>
-        <groupId>org.sakaiproject</groupId>
-        <artifactId>sakai-component</artifactId>
-        <version>${sakai.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.sakaiproject</groupId>
-        <artifactId>sakai-util</artifactId>
-        <version>${sakai.version}</version>
-      </dependency>
       <dependency>
         <groupId>org.sakaiproject</groupId>
         <artifactId>sakai-assignment-api</artifactId>
@@ -213,25 +156,8 @@
       </dependency>
       <dependency>
         <groupId>org.sakaiproject</groupId>
-        <artifactId>sakai-event-api</artifactId>
-        <scope>provided</scope>
-        <version>${sakai.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.sakaiproject</groupId>
-        <artifactId>sakai-util-impl</artifactId>
-        <version>M2</version>
-      </dependency>
-      <dependency>
-        <groupId>org.sakaiproject</groupId>
-        <artifactId>sakai-user-api</artifactId>
-        <scope>provided</scope>
-        <version>${sakai.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.sakaiproject</groupId>
         <artifactId>sakai-jsp-adapter</artifactId>
-        <version>0.8-M2</version>
+        <version>${sakai.version}</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiproject</groupId>
@@ -567,7 +493,7 @@
         <plugin>
           <groupId>org.sakaiproject.maven.plugins</groupId>
           <artifactId>sakai</artifactId>
-          <version>M2</version>
+          <version>1.2.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
