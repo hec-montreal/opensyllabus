@@ -9,7 +9,8 @@
 	margin:5px 2px;
 	width:85px;
 	height:30px;
-	background:transparent url(img/button/osyl_button_gwt.png) no-repeat;
+/*	background:transparent url(img/button/osyl_button_gwt.png) no-repeat; */
+	background:transparent url(images/button/osyl_button_gwt.png) no-repeat;
 	border:0;
 	cursor:pointer;
 }
@@ -40,7 +41,8 @@
 }
 
 .gwt-DialogBox .Caption {
-	background:transparent url(img/exclamation.png) no-repeat 1px 2px;
+/*	background:transparent url(img/exclamation.png) no-repeat 1px 2px; */
+	background:transparent url(images/exclamation.png) no-repeat 1px 2px;
 	padding-left:28px;
   	font-weight:bold;
   	/*margin:2px;*/
@@ -365,3 +367,104 @@ td.datePickerMonth {
 
 .dateBoxPopup{
 	z-index: 15000;
+	
+/* ---- CSS definitions overriding default GWT styles (incubator widgets) */
+
+/* Date picker styles */
+
+.goog-date-picker {
+  background-color:#FFF;
+  width:100%;
+  border:1px solid #f1f1f1;
+  border-bottom:2px solid #f1f1f1;
+  color:#6b6b6b;
+}
+
+.goog-date-picker td {
+  font-family:Arial;
+  font-size:9px;
+  padding:2px;
+  text-align:center;
+  padding:2px;
+  cursor:pointer;
+  outline:none;
+  -moz-outline:none;
+}
+
+.goog-date-picker td,.monthSelector td :focus {
+  outline:none;
+}
+
+.gwt-DateBox {
+  width:10em;
+}
+
+/* Calendar styles */
+
+.goog-date-picker .filler {
+  color:#bfbfbf;
+}
+
+ .goog-date-picker .selected {
+  background:#aaccee;
+}
+
+.goog-date-picker .day-title {
+  background:#dbe6de;
+}
+
+.goog-date-picker .highlighted {
+  background:#ccee11;
+}
+
+.goog-date-picker .today {
+  border:1px solid #000;
+}
+
+.goog-date-picker .weekend {
+  background:#f1f1f1;
+}
+
+.goog-date-picker .disabled {
+  color:graytext;
+}
+
+/* Month selector styles */
+
+.monthSelector {
+  background:#dbe6de;
+  width:100%;
+  text-align:center;
+}
+
+.monthSelector td {
+  font-weight:bold;
+  font-size:70%;
+}
+
+.monthSelector .month-label {
+  text-align:center;
+}
+
+/* helper styles */
+
+.goog-date-picker .red-date {
+  background-color:red;
+}
+
+.goog-date-picker .blue-background {
+  background-color:blue;
+}
+
+.goog-date-picker .red-text {
+  color:red;
+}
+
+.goog-date-picker .green-border {
+  border:1px solid green;
+}
+
+.selected-date {
+	background-color:#FCFCFC;
+}
+	

@@ -1,0 +1,54 @@
+@import url("base.css");
+@import url("gwt.css");
+@import url("osyl.css");
+/*@import url("standard.css");*/
+
+/*******************************************************************************
+ * $Id: $
+ *******************************************************************************
+ *
+ * Copyright (c) 2009 The Sakai Foundation, The Sakai Quebec Team.
+ *
+ * Licensed under the Educational Community License, Version 1.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.opensource.org/licenses/ecl1.php
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ ******************************************************************************/
+
+/*
+   CSS definitions for OpenSyllabus (AKA Osyl)
+   -------------------------------------------
+   This file is (more or less) organized in sections as follows:
+	  1. CSS definitions for reset and base attributes
+      2. CSS definitions overriding default GWT styles and incubator widgets
+      3. CSS definitions for new classes specific to Osyl
+
+   To be customized to your institution needs! All comments appreciated,
+   we're no CSS experts!
+
+   WARNING: at least two versions of this file exist in the project.
+
+            The first one is located in the opensyllabus-gwt project and is only
+            used by the GWT hosted mode. Its full path is:
+            opensyllabus-gwt/src/org/sakaiquebec/opensyllabus/public/css/OsylCore.css
+
+            The second one is located in the osyl project and is deployed in the
+            web application, so this is the one everybody will see when using
+            OpenSyllabus (with its default config). its full path is:
+            opensyllabus-tool/tool/src/webapp/osylcoconfigs/default/skin/osylcore.css
+
+	    At this time there is no difference between the two files, ie: when
+	    you edit one of them, copy the file to its other location!
+	    
+	    Eventually we will remove the tool css and have our deployment script
+	    copy it from the gwt folder to the webapp. 
+
+*/

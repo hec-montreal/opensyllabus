@@ -1,4 +1,4 @@
-/* ---- CSS definitions specific to OpenSyllabus ------------------- */
+﻿/* ---- CSS definitions specific to OpenSyllabus ------------------- */
 
 /* Main panel of Osyl -----------------------------------------------------------------------------------*/
 .Osyl-MainPanel {
@@ -54,7 +54,7 @@
 }
 .Osyl-MenuBar .middleCenterInner {
 }
-/* ******************************************* */
+
 .gwt-MenuBar-horizontal {
 	cursor:default;
 	background:#d6dbdf;
@@ -82,9 +82,11 @@
   text-align:left;
   padding:4px 2px;
 }
+
 .gwt-MenuBar-horizontal .gwt-MenuItem img {
 	margin:0 2px 0 0;
 }
+
 .gwt-MenuBar-vertical {
 	vertical-align:middle;
 	background-color:#FFF;
@@ -195,7 +197,7 @@
 /*TreeView Tree */
 .Osyl-TreeView-Tree {
 	border:0;
-	margin:8px 3px 3px;
+	margin:8px 3px 3px 0px;
 	padding:1px;
 	font:normal 13px Arial, Verdana, sans-serif;
 	color:#006E96;
@@ -215,6 +217,7 @@
 
 .Osyl-TreeView-Tree .gwt-TreeItem-selected {cursor:default;background:#DBDEE1 url(images/ui/tree-selected.gif) repeat-x;color:#000} /* TreeView item selected zone*/
 .Osyl-TreeView-Tree .gwt-TreeItem-selected .Osyl-TreeItem-HorizontalPanel {background:#DBDEE1 url(images/ui/tree-selected.gif) repeat-x}/* TreeView item selected container */
+
 .Osyl-TreeView-Tree .gwt-TreeItem-selected .Osyl-TreeItem-HorizontalPanel .Osyl-TreeLabel{color:#000}/* TreeView item selected text */
 
 .Osyl-TreeView-Tree table {border-collapse:separate} /*Restore default alignment */
@@ -281,8 +284,9 @@
   height: 8px;
   overflow: hidden;
 }
-.Osyl-WorkspaceView .middleCenterInner > table{
-	
+
+.Osyl-WorkspaceView .middleCenterInner > table {
+
 }
 
 /* End WorkspaceView Right Zone ---------------------------------------------------------------------------*/
@@ -323,6 +327,13 @@
 	margin-bottom:10px;
 }
 
+.Osyl-FileUpload-information {
+	font:normal 12px Arial, Verdana, sans-serif;
+	color:#333;
+	text-align:center;
+	margin-bottom:10px;
+}
+
 
 /* Citation Form -----------------------------------------------------------------------------------------*/
 .Osyl-CitationForm-form {
@@ -331,6 +342,7 @@
 	color:#000;
 	background-color:#FFF;
 	border:2px outset;
+	width: 450px;
 }
 
 .Osyl-CitationForm-title {
@@ -344,13 +356,36 @@
 	margin:20px;
 }
 
-.Osyl-CitationForm-genericPanel {margin:3px}
+.Osyl-CitationForm-genericPanel {
+	margin:3px;
+	width:415px;
+}
+
 .Osyl-CitationForm-textBoxRight {
 	font-family:sans-serif, Arial, Verdana; /* Doesn't work in MSIE */
 	background:#FFF;
 	border:1px solid #AAA;
 	margin:0 0 0 3px;
 	padding:0; /* Doesn't work in any browser */
+}
+
+.Osyl-CitationForm-textArea{
+	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
+	background:#FFF;
+	border:1px solid #AAA;
+	margin:0 3px;	
+	padding:0;
+	width:415px;
+	height: 110px;
+}
+
+.Osyl-CitationForm-textBox{
+	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
+	background:#FFF;
+	border:1px solid #AAA;
+	margin:0 3px;	
+	padding:0;
+	width:415px;
 }
 
 /*Publish View -------------------------------------------------------------------------------*/
@@ -370,7 +405,6 @@
 }
 
 .Osyl-PublishView-genericButton {margin:10px}
-
 
 /*Unit View --------------------------------------------------------------------------------------*/
 .Osyl-UnitView-MainPanel {
@@ -472,9 +506,11 @@
 .Osyl-UnitView-ResPanel {
 	position:relative;
 	vertical-align:middle;
+/*	margin:0 10px 5px; ??? */
 	margin:5px 10px 5px;
 	padding:10px;
 	border:1px solid #e3f0FF;
+/*	width:100%; ??? */
 	width:auto;
 	zoom:1;
 	overflow:hidden;
@@ -522,6 +558,7 @@
 	padding:3px 0;
 	width:auto;
 }
+
 .Osyl-UnitView-UnitLabel ul, .Osyl-UnitView-UnitLabel-Important ul {margin-left:30px}
 
 .Osyl-UnitView-UnitLabel-Important {
@@ -585,6 +622,7 @@
 }
 
 .Osyl-ListItemView-labelNo {
+/*  width:30px; ??? */
 	width:90px;
 	height:30px;
 	padding:0 5px 0 10px;
@@ -799,7 +837,8 @@
 .Osyl-ContactInfo-Panel{width:100%;border:0}
 /* Fin Édition */
 .Osyl-ContactInfo-TextBox{
-	width:250px;
+    width:130px;
+/*  width:250px; ??? */
 }
 .Osyl-ResProxView-Label {
 	font:bold 10px Arial, Verdana, sans-serif;
@@ -1049,7 +1088,8 @@
 
 .Osyl-Button:hover {background-position:bottom right}
 
-.Osyl-Button:hover > div{background-position:0 -30px}*/
+.Osyl-Button:hover > div{background-position:0 -30px}
+*/
 /* End Button --------------------------------------------------------------*/
 .Osyl-FileBrowserTopButton {
 	width:24px;
@@ -1170,4 +1210,12 @@
 .Osyl-ContactInfo-Comments {
 	font-size:11px;
 	padding:2px 0 3px;
+}
+
+.Osyl-News-TimeStamp {
+	font-size:0.85em;
+	padding:3px 0;
+	width:auto;
+	font-style: italic;
+	
 }
