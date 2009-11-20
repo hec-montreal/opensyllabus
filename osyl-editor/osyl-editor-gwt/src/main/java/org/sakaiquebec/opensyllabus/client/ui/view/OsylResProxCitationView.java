@@ -190,13 +190,13 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 
     private void setModelPropertyWithEditorProperty(String property,
 	    String type, String value) {
-	if (value != null && !value.equals("undefined") && value != "")
+	if (value != null && !value.equals(""))
 	    setProperty(property, type, value);
     }
 
     private void setModelPropertyWithEditorProperty(String property,
 	    String value) {
-	if (value != null && !value.equals("undefined") && value != "")
+	if (value != null && !value.equals(""))
 	    setProperty(property, value);
     }
 
@@ -226,20 +226,19 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
      * @return A link or a simple string if link could not be created
      */
     public String getCitationPreviewAsLink() {
-
 	String link = "";
 	String url =
 		getProperty(COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_URL);
-	if (url == null || url.equalsIgnoreCase("undefined") || url.equals(""))
+	if (url == null || url.equals(""))
 	    url =
 		    getProperty(COPropertiesType.IDENTIFIER,
 			    COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
 
-	if (url == null || !url.equalsIgnoreCase("undefined") || url.equals(""))
-	    link = generateHTMLLink(url, getCitationPreview());
-	else
+	if (url == null || url.equals(""))
 	    link = getCitationPreview();
+	else
+	    link = generateHTMLLink(url, getCitationPreview());
 	return link;
 
     }
@@ -257,7 +256,7 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 		citationItem.getProperty(COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
 
-	if (identifier != null && !"undefined".equalsIgnoreCase(identifier))
+	if (identifier != null && !"".equalsIgnoreCase(identifier))
 	    return true;
 	return false;
     }

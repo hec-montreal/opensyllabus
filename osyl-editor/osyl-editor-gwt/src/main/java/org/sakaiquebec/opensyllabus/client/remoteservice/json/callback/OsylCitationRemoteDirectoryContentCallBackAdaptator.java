@@ -155,12 +155,16 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 	    csi.setProperty(CitationSchema.DOI, doi == null ? "" : doi
 		    .stringValue());
 
+	    
 	    csi.setProperty(COPropertiesType.IDENTIFIER,
-		    COPropertiesType.IDENTIFIER_TYPE_URL, identifierTypeUrl
+		    COPropertiesType.IDENTIFIER_TYPE_URL,
+		    identifierTypeUrl == null ? "" : identifierTypeUrl
 			    .stringValue());
+	    
 	    csi.setProperty(COPropertiesType.IDENTIFIER,
 		    COPropertiesType.IDENTIFIER_TYPE_LIBRARY,
-		    identifierTypeLibrary.stringValue());
+		    identifierTypeLibrary == null ? "" : identifierTypeLibrary
+			    .stringValue());
 
 	    csi.setProperty(CitationSchema.SOURCE_TITLE,
 		    sourceTitle == null ? "" : sourceTitle.stringValue());

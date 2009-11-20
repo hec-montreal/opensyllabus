@@ -84,7 +84,7 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 			COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
 	if (url == null)
 	    return null;
-	if (url.trim() != "undefined")
+	if (url.trim() != "")
 	    return url;
 	else
 	    return getProperty(COPropertiesType.IDENTIFIER,
