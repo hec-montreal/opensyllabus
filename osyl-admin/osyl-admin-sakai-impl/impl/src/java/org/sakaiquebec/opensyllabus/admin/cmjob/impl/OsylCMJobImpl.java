@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -377,8 +378,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 				// you can activate a session manually by changing to 1 //
 				// the value of is_current in the cm_academic_session_t //
 				// TODO: activate this method when running again on sakai 2.6 //
-				// cmAdmin.setCurrentAcademicSessions(Arrays //
-				// .asList(new String[] { eid })); //
+				 cmAdmin.setCurrentAcademicSessions(Arrays
+				 .asList(new String[] { eid })); //
 				// ////////////////////////////////////////////////////////////////
 			} else {
 				// We update
