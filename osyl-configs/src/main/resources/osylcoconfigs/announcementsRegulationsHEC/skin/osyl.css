@@ -238,6 +238,10 @@
 	width:100%;
 }
 
+.Osyl-WorkspaceView-MainPanel {
+	width:98%;
+}
+
 .Osyl-WorkspaceView .topCenter,
 .Osyl-WorkspaceView .bottomCenter {
   background:url(images/ui/hborder.png) repeat-x;
