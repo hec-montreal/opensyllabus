@@ -72,9 +72,7 @@ public class OsylLongView extends OsylViewableComposite {
      */
     private void initView() {
 	setMainPanel(new VerticalPanel());
-	getMainPanel().setStylePrimaryName("Osyl-UnitView-UnitPanel");
-	// TODO: TO BE CONTROLLED BY CSS
-	// getMainPanel().setWidth("98%");
+	getMainPanel().setStylePrimaryName("Osyl-WorkspaceView-MainPanel");
 	refreshView();
 	initWidget(getMainPanel());
     }

@@ -29,11 +29,9 @@ import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
-import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
-import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Label;
@@ -69,8 +67,7 @@ public class OsylCOUnitView extends OsylViewableComposite implements
 
     private void refreshView() {
 	getMainPanel().clear();
-	getMainPanel().setStylePrimaryName("Osyl-UnitView-UnitPanel");
-	getMainPanel().setWidth("98%");
+	getMainPanel().setStylePrimaryName("Osyl-WorkspaceView-MainPanel");
 	// If we are editing a lecture or theme we allow to edit the title
 	// otherwise we don't (presentation, contact info, etc.)
 

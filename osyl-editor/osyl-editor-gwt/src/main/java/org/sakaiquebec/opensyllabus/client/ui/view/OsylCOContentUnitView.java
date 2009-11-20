@@ -38,7 +38,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -106,7 +105,6 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
      */
     public void refreshView() {
 	getMainPanel().setStylePrimaryName("Osyl-UnitView-MainPanel");
-	getMainPanel().setWidth("98%");
 
 	final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
 	getMainPanel().add(horizontalPanel_1);
@@ -282,7 +280,8 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	    COContentResourceProxy resProx =
 		    (COContentResourceProxy) proxies.get(proxies.size() - 1);
 	    addResProxToRubricView(resProx);
-	    if(resProx.getRubricType().equals(COContentRubric.RUBRIC_TYPE_NEWS)){
+	    if (resProx.getRubricType()
+		    .equals(COContentRubric.RUBRIC_TYPE_NEWS)) {
 		resProx.moveToTheTopOfTheRubric();
 		refreshRubric(rubricViewsMap.get(resProx.getRubricType()));
 	    }

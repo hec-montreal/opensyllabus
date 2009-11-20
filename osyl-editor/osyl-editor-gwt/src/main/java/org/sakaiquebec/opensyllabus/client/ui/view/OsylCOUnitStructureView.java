@@ -73,7 +73,6 @@ public class OsylCOUnitStructureView extends OsylViewableComposite implements
     private void refreshView() {
 	mainPanel = new VerticalPanel();
 	getMainPanel().setStylePrimaryName("Osyl-UnitView-UnitPanel");
-	getMainPanel().setWidth("98%");
 	if (showLabel) {
 	    OsylCOUnitStructureLabelView lbv =
 		    new OsylCOUnitStructureLabelView(

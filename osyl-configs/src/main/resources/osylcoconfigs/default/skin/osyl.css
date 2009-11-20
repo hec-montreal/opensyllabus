@@ -755,6 +755,10 @@
 
 /* ---- CSS definitions for new classes specific to Osyl -------------- */
 
+.Osyl-WorkspaceView-MainPanel {
+	width:98%;
+}
+
 .Osyl-UnitView-UnitPanel {
 	width:100%;
 }
