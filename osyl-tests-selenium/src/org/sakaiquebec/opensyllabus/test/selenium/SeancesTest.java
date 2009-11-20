@@ -206,8 +206,9 @@ public class SeancesTest extends AbstractOSYLTest{
         	//Close Overview
         	session().click("//html/body/table/tbody/tr/td/table/tbody" +
         			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+        	pause();
         	
-        	//Overview
+        	/*/Overview
         	session().click("gwt-uid-6");
         	//Public Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
@@ -231,7 +232,7 @@ public class SeancesTest extends AbstractOSYLTest{
         	//Close Overview
                 session().click("//html/body/table/tbody/tr/td/table/tbody" +
 		"/tr[2]/td[2]/div/div/table/tbody/tr/td");
-                pause();
+                pause();*/
 	}
 	
 //---------------------------------------------------------------------------//
@@ -307,8 +308,9 @@ public class SeancesTest extends AbstractOSYLTest{
         	//Close Overview
         	session().click("//html/body/table/tbody/tr/td/table/tbody" +
         			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+        	pause();
         	
-        	//Overview
+        	/*/Overview
         	session().click("gwt-uid-6");
         	
         	//Public Overview 
@@ -333,7 +335,7 @@ public class SeancesTest extends AbstractOSYLTest{
         	//Close Overview
         	session().click("//html/body/table/tbody/tr/td/table/tbody" +
         			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
-        	pause();
+        	pause();*/
 	}
 	
 //---------------------------------------------------------------------------//
@@ -473,10 +475,11 @@ public class SeancesTest extends AbstractOSYLTest{
             log("OK: Text is visible");
             
             //Close Overview
-           session().click("//html/body/table/tbody/tr/td/table/tbody" +
+            session().click("//html/body/table/tbody/tr/td/table/tbody" +
         			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+            pause();
             
-            //Overview
+            /*/Overview
             session().click("gwt-uid-6");
             
             //Public Overview 
@@ -508,7 +511,7 @@ public class SeancesTest extends AbstractOSYLTest{
             //Close Overview
             session().click("//html/body/table/tbody/tr/td/table/tbody" +
         			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
-            pause();
+            pause();*/
         }
 
 //---------------------------------------------------------------------------//

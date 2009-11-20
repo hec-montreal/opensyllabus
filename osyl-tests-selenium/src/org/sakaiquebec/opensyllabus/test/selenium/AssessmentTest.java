@@ -486,8 +486,9 @@ public class AssessmentTest extends AbstractOSYLTest{
         	//Close Overview
         	session().click("//html/body/table/tbody/tr/td/table/tbody" +
         			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+        	pause();
         	
-        	//Overview
+        	/*/Overview
         	session().click("gwt-uid-6");
         	//Public Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
@@ -512,7 +513,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         	
         	//Close Overview
         	session().click("//html/body/table/tbody/tr/td/table/tbody" +
-        			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+        			"/tr[2]/td[2]/div/div/table/tbody/tr/td");*/
 	}
 	
 //---------------------------------------------------------------------------//
@@ -652,8 +653,9 @@ public class AssessmentTest extends AbstractOSYLTest{
         	//Close Overview
         	session().click("//html/body/table/tbody/tr/td/table/tbody" +
         			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+        	pause();
         	
-        	//Overview
+        	/*/Overview
         	session().click("gwt-uid-6");
 
         	//Public Overview 
@@ -686,7 +688,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         	
         	//Close Overview
         	session().click("//html/body/table/tbody/tr/td/table/tbody" +
-        			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+        			"/tr[2]/td[2]/div/div/table/tbody/tr/td");*/
 	}
 	
 //---------------------------------------------------------------------------//

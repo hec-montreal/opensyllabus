@@ -52,9 +52,8 @@ public class TextTest extends AbstractOSYLTest {
 	waitForOSYL();
 	
 	//Open Seances Section
-        session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div/" +
-        		"div/table/tbody/tr[5]/td/table/tbody/tr[2]/td/div/" +
-        		"div[2]/div/div[6]/div");
+	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
+	"td/div[contains(text(),'ances')]");
         pause();
 
 	// If we don't have a Lecture we add one
