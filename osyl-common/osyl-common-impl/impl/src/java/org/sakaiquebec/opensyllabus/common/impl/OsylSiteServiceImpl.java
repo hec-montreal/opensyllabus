@@ -368,7 +368,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 
 	} else {
 	    log.error("Could not create site cause site with title='"+siteTitle+"' already exists");
-	    throw new Exception("Could not create site cause site with title='"+siteTitle+"' already exists");
+	    throw new Exception("Could not create site because site with title='"+siteTitle+"' already exists");
 	}
 	return site.getId();
     }
