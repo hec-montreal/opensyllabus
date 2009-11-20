@@ -61,9 +61,8 @@ public class SeancesTest extends AbstractOSYLTest{
 //---------------------------------------------------------------------------//
 
 	//Open Seances Section
-        session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div/" +
-        		"div/table/tbody/tr[5]/td/table/tbody/tr[2]/td/div/" +
-        		"div[2]/div/div[6]/div");
+        session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
+        		"td/div[contains(text(),'ances')]");
         pause();
         
         // We keep track of how many resources are showing
@@ -104,8 +103,12 @@ public class SeancesTest extends AbstractOSYLTest{
 	log("OK: Lecture renamed");
 	
 	// Now we rename the lecture from inside
-	session().click("//tr[5]/td/table/tbody/tr/td/table/tbody/tr["+Position
-		+"]/td/table/tbody/tr/td/div");
+	int Val = resNb +2;
+	if(Val < 10){
+	    session().click("link=0" + Val + " -");
+	}else{
+	    session().click("link=" + Val + " -");
+	}
 	pause();
 	String newText2 = "SeanceReNamed" + timeStamp();
 	session().click("//tr/td/div/table[2]/tbody/tr/td/button");
@@ -124,14 +127,16 @@ public class SeancesTest extends AbstractOSYLTest{
 //---------------------------------------------------------------------------//
     
 	//Open Seances Section
-        session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div/" +
-        		"div/table/tbody/tr[5]/td/table/tbody/tr[2]/td/div/" +
-        		"div[2]/div/div[6]/div");
+	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
+	"td/div[contains(text(),'ances')]");
         pause();
 	
 	//We edit the last Seance
-	session().click("//tr[5]/td/table/tbody/tr/td/table/tbody/tr["+Position
-		+"]/td/table/tbody/tr/td/div");
+        if(Val < 10){
+	    session().click("link=0" + Val + " -");
+	}else{
+	    session().click("link=" + Val + " -");
+	}
 	pause();
 	
 	//Add Text in the last Seance Unit
@@ -139,11 +144,14 @@ public class SeancesTest extends AbstractOSYLTest{
 
 	//We edit the new text rubric
 	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
-
+	
 	//We select randomly the rubric name  
 	String selectedRubric1 = getRandomRubric();
 	log("Selecting rubric [" + selectedRubric1 + "]");
 	changeRubric(selectedRubric1);
+	
+	//We select attendee on dissemination level
+	session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select","index=0");
 	
 	// Type some text in the rich-text area
 	if (inFireFox()) {
@@ -177,13 +185,13 @@ public class SeancesTest extends AbstractOSYLTest{
         	//Overview
         	session().click("gwt-uid-6");
         	//Attendee Overview 
-        	session().click("//tr[2]/td[2]/div/div/table/tbody/tr/td");
+        	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
+        			"div/table/tbody/tr/td");
         	pause();
                 
         	//Open Seances Section
-        	session().mouseDown("//html/body/table/tbody/tr[2]/td/div/" +
-        			"div/div/table/tbody/tr[2]/td/div/div[2]/" +
-        			"div/div[6]/table/tbody/tr/td[2]");
+        	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
+			"td/div[contains(text(),'ances')]");
                 pause();
         	//Open the last Seance unit
         	session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
@@ -196,33 +204,34 @@ public class SeancesTest extends AbstractOSYLTest{
         	log("OK: Selected rubric is visible");
         	
         	//Close Overview
-        	session().click("//html/body/table/tbody/tr/td/div/table/" +
-        			"tbody/tr/td");
+        	session().click("//html/body/table/tbody/tr/td/table/tbody" +
+        			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
         	
-        	/*/Overview
+        	//Overview
         	session().click("gwt-uid-6");
         	//Public Overview 
-        	session().click("//tr[2]/td[2]/div/div/table/tbody/tr[2]/td");
+        	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
+        			"/div/div/table/tbody/tr[2]/td");
         	pause();
         	
         	//Open Seances Section
-        	session().mouseDown("//html/body/table/tbody/tr[2]/td/div/" +
-			"div/div/table/tbody/tr[2]/td/div/div[2]/" +
-			"div/div[6]/table/tbody/tr/td[2]");
+        	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
+        		"td/div[contains(text(),'ances')]");
                 pause();
         	//Open the last Seance unit
         	session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
         	pause();
         	        	
-                if (!(!session().isTextPresent(selectedRubric1))) {
-                    logAndFail("Expected to not see rubric [" + selectedRubric1
+                if (session().isTextPresent(selectedRubric1)) {
+                    logAndFail("Expected to see rubric [" + selectedRubric1
                 		+ "] after text edition on public overview");
                 }
-                log("OK: Selected rubric is not visible");
+                log("OK: Selected rubric is visible");
         	        	
         	//Close Overview
-        	session().click("//html/body/table/tbody/tr/td/div/table/" +
-        			"tbody/tr/td");*/
+                session().click("//html/body/table/tbody/tr/td/table/tbody" +
+		"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+                pause();
 	}
 	
 //---------------------------------------------------------------------------//
@@ -230,13 +239,15 @@ public class SeancesTest extends AbstractOSYLTest{
 //---------------------------------------------------------------------------//
 	
 	//Open Seances Section
-	session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div/" +
-		"div/table/tbody/tr[5]/td/table/tbody/tr[2]/td/div/" +
-		"div[2]/div/div[6]/div");
+	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
+		"td/div[contains(text(),'ances')]");
         pause();
 	//Open the last Seance unit 
-	session().click("//tr[5]/td/table/tbody/tr/td/table/tbody/tr["+Position
-		+"]/td/table/tbody/tr/td/div");
+        if(Val < 10){
+	    session().click("link=0" + Val + " -");
+	}else{
+	    session().click("link=" + Val + " -");
+	}
 	pause();
        
 	//Add Hyperlink in the last Seance Unit
@@ -244,6 +255,9 @@ public class SeancesTest extends AbstractOSYLTest{
 	
 	//We edit the new Hyperlink rubric
 	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+	
+	//We select attendee on dissemination level
+	session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select","index=0");
 	
 	//We select randomly the rubric name
 	String selectedRubric2 = getRandomRubric();
@@ -272,13 +286,13 @@ public class SeancesTest extends AbstractOSYLTest{
         	//Overview
         	session().click("gwt-uid-6");
         	//Attendee Overview 
-        	session().click("//tr[2]/td[2]/div/div/table/tbody/tr/td");
+        	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
+        			"div/table/tbody/tr/td");
         	pause();
 
         	//Open Seances Section
-        	session().mouseDown("//html/body/table/tbody/tr[2]/td/div/" +
-			"div/div/table/tbody/tr[2]/td/div/div[2]/" +
-			"div/div[6]/table/tbody/tr/td[2]");
+        	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
+			"td/div[contains(text(),'ances')]");
                 pause();
         	//Open the last Seance unit 
         	session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
@@ -291,20 +305,20 @@ public class SeancesTest extends AbstractOSYLTest{
         	log("OK: Selected rubric is visible");
         	
         	//Close Overview
-        	session().click("//html/body/table/tbody/tr/td/div/table/" +
-        			"tbody/tr/td");
+        	session().click("//html/body/table/tbody/tr/td/table/tbody" +
+        			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
         	
-        	/*/Overview
+        	//Overview
         	session().click("gwt-uid-6");
         	
         	//Public Overview 
-        	session().click("//tr[2]/td[2]/div/div/table/tbody/tr[2]/td");
+        	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
+        			"/div/div/table/tbody/tr[2]/td");
         	pause();
         	
         	//Open Seances Section
-        	session().mouseDown("//html/body/table/tbody/tr[2]/td/div/" +
-			"div/div/table/tbody/tr[2]/td/div/div[2]/" +
-			"div/div[6]/table/tbody/tr/td[2]");
+        	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
+        		"td/div[contains(text(),'ances')]");
                 pause();
         	//Open the last Seance unit 
         	session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
@@ -317,21 +331,24 @@ public class SeancesTest extends AbstractOSYLTest{
                 log("OK: Selected rubric is not visible");
         	
         	//Close Overview
-        	session().click("//html/body/table/tbody/tr/td/div/table/" +
-        			"tbody/tr/td");*/
+        	session().click("//html/body/table/tbody/tr/td/table/tbody" +
+        			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+        	pause();
 	}
 	
 //---------------------------------------------------------------------------//
 //      			Add Document in Seance Unit                  //
 //---------------------------------------------------------------------------//
 	//Open Seances Section
-	session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div/" +
-		"div/table/tbody/tr[5]/td/table/tbody/tr[2]/td/div/" +
-		"div[2]/div/div[6]/div");
+	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
+		"td/div[contains(text(),'ances')]");
         pause();
 	//Open the last Seance unit 
-	session().click("//tr[5]/td/table/tbody/tr/td/table/tbody/tr["+Position
-		+"]/td/table/tbody/tr/td/div");
+        if(Val < 10){
+	    session().click("link=0" + Val + " -");
+	}else{
+	    session().click("link=" + Val + " -");
+	}
 	pause();
         
         //Add new document
@@ -344,6 +361,10 @@ public class SeancesTest extends AbstractOSYLTest{
         String selectedRubric3 = getRandomRubric();
         log("Selecting rubric [" + selectedRubric3 + "]");
         changeRubric(selectedRubric3);
+        
+        //We select attendee on dissemination level
+	session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select","index=0");
+        
         
         //We type the clickable text
         String newText12 = timeStamp();
@@ -427,13 +448,13 @@ public class SeancesTest extends AbstractOSYLTest{
             session().click("gwt-uid-6");
             
             //Attendee Overview 
-            session().click("//tr[2]/td[2]/div/div/table/tbody/tr/td");
+            session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
+        			"div/table/tbody/tr/td");
             pause();
             
             //Open Seances Section
-            session().mouseDown("//html/body/table/tbody/tr[2]/td/div/" +
-			"div/div/table/tbody/tr[2]/td/div/div[2]/" +
-			"div/div[6]/table/tbody/tr/td[2]");
+            session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
+		"td/div[contains(text(),'ances')]");
             pause();
             //Open the last Seance unit 
             session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
@@ -452,20 +473,20 @@ public class SeancesTest extends AbstractOSYLTest{
             log("OK: Text is visible");
             
             //Close Overview
-            session().click("//html/body/table/tbody/tr/td/div/table/" +
-            		"tbody/tr/td");
+           session().click("//html/body/table/tbody/tr/td/table/tbody" +
+        			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
             
-            /*/Overview
+            //Overview
             session().click("gwt-uid-6");
             
             //Public Overview 
-            session().click("//tr[2]/td[2]/div/div/table/tbody/tr[2]/td");
+            session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
+        			"/div/div/table/tbody/tr[2]/td");
             pause();
             
             //Open Seances Section
-            session().mouseDown("//html/body/table/tbody/tr[2]/td/div/" +
-			"div/div/table/tbody/tr[2]/td/div/div[2]/" +
-			"div/div[6]/table/tbody/tr/td[2]");
+            session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
+        		"td/div[contains(text(),'ances')]");
             pause();
             //Open the last Seance unit 
             session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
@@ -485,23 +506,27 @@ public class SeancesTest extends AbstractOSYLTest{
             
             
             //Close Overview
-            session().click("//html/body/table/tbody/tr/td/div/table/" +
-            		"tbody/tr/td");*/
+            session().click("//html/body/table/tbody/tr/td/table/tbody" +
+        			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+            pause();
         }
 
 //---------------------------------------------------------------------------//
 //      			Add Citation in Seance Unit                  //
 //---------------------------------------------------------------------------//
 
-        /*/Open Seances Section
-        session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div/" +
-		"div/table/tbody/tr[5]/td/table/tbody/tr[2]/td/div/" +
-		"div[2]/div/div[6]/div");
+        //Open Seances Section
+        session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
+	"td/div[contains(text(),'ances')]");
         pause();
         
         //Click Assessment section 
-        session().click("//tr[5]/td/table/tbody/tr/td/table/tbody/tr["+Position
-		+"]/td/table/tbody/tr/td/div");
+        if(Val < 10){
+	    session().click("link=0" + Val + " -");
+	}else{
+	    session().click("link=" + Val + " -");
+	}
+        pause();
         
         //Add new Citation
         clickAddItem("addBiblioResource");
@@ -509,10 +534,13 @@ public class SeancesTest extends AbstractOSYLTest{
         // open Citation resource editor
         session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
         
+        //We select attendee on dissemination level
+	session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select","index=0");
+        
         // We choose randomly a Rubric
         String selectedRubric4 = getRandomRubric();
         log("Selecting rubric [" + selectedRubric4 + "]");
-        changeRubric(selectedRubric4);*/
+        changeRubric(selectedRubric4);
         
         /*/Create a new citation list
         session().answerOnNextPrompt("NewListe"+ newText1);
@@ -526,8 +554,8 @@ public class SeancesTest extends AbstractOSYLTest{
         pause();
         assertTrue(session().isPromptPresent());*/
         
-        /*/Open Citation list
-        session().focus("//tr[2]/td/table/tbody/tr[2]/td/select/option/");
+        //Open Citation list
+        session().focus("//tr[2]/td/table/tbody/tr[2]/td/select/option");
         session().click("//tr[2]/td/table/tbody/tr[2]/td/select/option");
         session().select("//tr[2]/td/table/tbody/tr[2]/td/select","index=0");
         session().doubleClick("//tr[2]/td/table/tbody/tr[2]/td/select/option/");
@@ -579,103 +607,72 @@ public class SeancesTest extends AbstractOSYLTest{
         
         //Save modifications
         saveCourseOutline();
-        pause();*/
+        pause();
 
-        /*/Overview
-        session().click("gwt-uid-6");
-        pause();
-        //Attendee Overview 
-        session().click("//tr[2]/td[2]/div/div/table/tbody/tr/td");
-        pause();
-        pause();
-        //Click Assessment section 
-        session().mouseDown("//td[2]/div/table/tbody/tr/td/div");
-        pause();
-        //Open Assessment 1
-        session().click("link=Evaluation 1 -");
-        
-        if (!session().isTextPresent(selectedRubric4)) {
-        logAndFail("Expected to see rubric [" + selectedRubric4
-        + "] after text edition");
-        }
-        log("OK: Selected rubric is visible");
-        
-        if (!session().isTextPresent(Auteur+"."+Titre+"."+Annee+"."+ISBN)) {
-        logAndFail("Expected to see text [" + Auteur+"."+Titre+"."+Annee+"."
-        +ISBN + "] after text edition");
-        }
-        log("OK: Text is visible");
-        
-        //Close Overview
-        session().click("//html/body/table/tbody/tr/td/div/table/tbody/tr/td");
-        
-        //Overview
-        session().click("gwt-uid-6");
-        pause();
-        //Public Overview 
-        session().click("//tr[2]/td[2]/div/div/table/tbody/tr[2]/td");
-        pause();
-        //Click Assessment section 
-        session().mouseDown("//td[2]/div/table/tbody/tr/td/div");
-        pause();
-        //Open Assessment 1
-        session().click("link=Evaluation 1 -");
-        
-        if (session().isTextPresent(selectedRubric4)) {
-        logAndFail("Expected to not see rubric [" + selectedRubric4
-        + "] after text edition on public overview");
-        }
-        log("OK: Selected rubric is not visible");
-        
-        if (session().isTextPresent(Auteur+"."+Titre+"."+Annee+"."+ISBN)) {
-        logAndFail("Expected to not see rubric [" + Auteur+"."+Titre+"."+Annee+"."
-        +ISBN + "] after text edition on public overview");
-        }
-        log("OK: Text is not visible");
-        
-        //Close Overview
-        session().click("//html/body/table/tbody/tr/td/div/table/tbody/tr/td");*/
         
 //---------------------------------------------------------------------------//
 //      			Switch two Seance                            //
 //---------------------------------------------------------------------------//
         
         //Open Seances Section
-        session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div/" +
-		"div/table/tbody/tr[5]/td/table/tbody/tr[2]/td/div/" +
-		"div[2]/div/div[6]/div");
+        session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
+		"td/div[contains(text(),'ances')]");
         pause();
         
         // We switch the 1st and 2nd assessment 
-        int Val = resNb +2;
         if (inInternetExplorer()) {
-        session().keyPress("//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
-        	"div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
-        	"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table" +
-        	"[3]/tbody/tr[2]/td/table/tbody/tr/td/div", "\r");
-        } else {
-            session().mouseOver("//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
-    		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
-    		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div");
-            session().mouseOver("//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
-    		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
-    		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div");
-            session().mouseOver("//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
-    		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
-    		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table[3]");
-            session().mouseOver("//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
-    		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
-    		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table[3]" +
-    		"/tbody/tr[2]/td/table/tbody/tr/td/div");
-            session().mouseDown("//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
-    		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
-    		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table[3]" +
-    				"/tbody/tr[2]/td/table/tbody/tr/td/div");
-            session().mouseUp("//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
-    		"div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
-    		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table" +
-    		"[3]/tbody/tr[2]/td/table/tbody/tr/td/div");
-        }
+            session().keyPress("//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
+            		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
+            		"tbody/tr["+Val+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
+            		"tbody/tr[2]/td/table/tbody/tr/td/div", "\r");
+            		/*"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
+            		"div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
+            		"tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div/table" +
+            		"[3]/tbody/tr[2]/td/table/tbody/tr/td/div", "\r");*/ 
+            		
+            } else {
+            session().mouseOver(
+            		"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
+            		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
+            		"/tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div");
+            		/*"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
+            		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
+            		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div");*/
+            session().mouseOver(
+        	    	"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
+            		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
+            		"/tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table[3]");
+            		/*"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
+            		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
+            		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table[3]");*/
+            session().mouseOver(
+        	    	"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
+            		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
+            		"tbody/tr["+Val+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
+            		"tbody/tr[2]/td/table/tbody/tr/td/div");
+            		/*"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
+            		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
+            		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table[3]" +
+            		"/tbody/tr[2]/td/table/tbody/tr/td/div");*/
+            session().mouseDown(
+        	    	"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
+            		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
+            		"tbody/tr["+Val+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
+            		"tbody/tr[2]/td/table/tbody/tr/td/div");
+            		/*"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
+            		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
+            		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table[3]" +
+            				"/tbody/tr[2]/td/table/tbody/tr/td/div");*/
+            session().mouseUp(
+        	    	"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
+            		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
+            		"tbody/tr["+Val+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
+            		"tbody/tr[2]/td/table/tbody/tr/td/div");
+            		/*"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
+            		"div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
+            		"tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table" +
+            		"[3]/tbody/tr[2]/td/table/tbody/tr/td/div");*/
+            }
 
 //---------------------------------------------------------------------------//
 //			Delete Seance Unit		                     //
