@@ -28,87 +28,61 @@ import org.sakaiquebec.opensyllabus.common.api.OsylRealmService;
 /**
  * A bean that acts as a concentrator for OSYL admin services, to be used in JSP
  * pages and in the servlets.
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
 public class OsylAdminBackingBean {
-    
-    
-	/**
-	 * This injection is for develodpment purposes
-	 * remove when in production
-	 */
-	private OsylCMJob osylCMJob;
-    
-    /**
-     * Gets the {@link OsylCMJob}.
-     * 
-     * @return
-     *         the {@link OsylCMJob}
-     */
-    public OsylCMJob getOsylCMJob() {
-        return osylCMJob;
-    }
 
-    /**
-     * Sets the {@link OsylCMJob}.
-     * 
-     * @param OsylCMJob
-     */
-    public void setOsylCMJob(OsylCMJob osylCmJob) {
-        this.osylCMJob = osylCmJob;
-    }
 
-    
+
     private OsylAdminService osylAdminService;
-    
-        
+
+
     /**
      * Gets the {@link OsylAdminService}.
-     * 
+     *
      * @return
      *         the {@link OsylAdminService}
      */
     public OsylAdminService getOsylAdminService() {
         return osylAdminService;
     }
-    
+
     /**
      * Sets the {@link OsylAdminService}.
-     * 
+     *
      * @param osylAdminService
      */
     public void setOsylAdminService(OsylAdminService osylAdminService) {
         this.osylAdminService = osylAdminService;
     }
-    
+
     private OsylRealmService osylRealmService;
-    
+
     /**
      * Gets the {@link OsylRealmService}.
-     * 
+     *
      * @return
      *         the {@link OsylRealmService}
      */
     public OsylRealmService getOsylRealmService() {
         return osylRealmService;
     }
-    
+
     /**
      * Sets the {@link OsylRealmService}.
-     * 
+     *
      * @param osylRealmService
      */
     public void setOsylRealmService(OsylRealmService osylRealmService) {
         this.osylRealmService = osylRealmService;
     }
-    
+
     /**
      * Init method called at initialization of the bean.
      */
     public void init(){
-    	osylCMJob.load();
     }
 }
 

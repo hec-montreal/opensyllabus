@@ -38,16 +38,12 @@ import org.sakaiproject.coursemanagement.api.SectionCategory;
  * teachers. This class can be used to implement the methods to provide the job
  * used to populate tables and a service to request or send information to the
  * course management.
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
 public interface OsylCMJob extends Job {
 
-	/**
-	 * Method used to call all the other methods in the good order
-	 */
-	public void load();
 
 	/**
 	 * Method used to create the sessions

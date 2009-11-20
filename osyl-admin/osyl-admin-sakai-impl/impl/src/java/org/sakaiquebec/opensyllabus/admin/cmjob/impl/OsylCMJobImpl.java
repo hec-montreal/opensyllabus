@@ -74,7 +74,7 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProfCoursMapEntry;
 
 /**
  * The class is an implementation of the OsylCMJob as job launched by the quartz
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -178,7 +178,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 	/**
 	 * Sets the <code>UserDirectoryService</code> needed to create the site in
 	 * the init() method.
-	 * 
+	 *
 	 * @param userDirService
 	 */
 	public void setUserDirService(UserDirectoryService userDirService) {
@@ -218,7 +218,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 				instructors.add(matricule);
 				enrollmentSet.setOfficialInstructors(instructors);
 				cmAdmin.updateEnrollmentSet(enrollmentSet);
-				
+
 			}
 		}
 	}
@@ -432,7 +432,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 	/**
 	 * This method maps the status of a user to a valid type in Sakai
-	 * 
+	 *
 	 * @param status
 	 * @return
 	 */
@@ -456,7 +456,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 	/**
 	 * This method whether a course is linked to an enrollmentSet
-	 * 
+	 *
 	 * @param cours
 	 * @return hasEnrollmentSet
 	 */
@@ -505,7 +505,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 	 * Retreives the folder where is kept the extract file. Later on we will
 	 * have a fixed values representing the place where are kept the extract
 	 * files.
-	 * 
+	 *
 	 * @param CLASSPATHTOEXTRACTS
 	 */
 	private String getPathToExtracts() {
@@ -576,25 +576,36 @@ public class OsylCMJobImpl implements OsylCMJob {
 					.getInstance(directory);
 			detailSessionMap = GenericDetailSessionsMapFactory
 					.buildMap(directory);
+			// We load sessions
 			loadSessions();
 
 			matNomMap = GenericMatriculeNomMapFactory.getInstance(directory);
 			matNomMap = GenericMatriculeNomMapFactory.buildMap(directory);
+			// We load user
 			loadUsers();
 
+			// We add a category
+			loadCategory();
+			// We add a courseSet
+			loadCourseSets();
 			detailCoursMap = GenericDetailCoursMapFactory
 					.getInstance(directory);
 			detailCoursMap = GenericDetailCoursMapFactory.buildMap(directory);
+			// We load courses
 			loadCourses();
 
 			profCoursMap = GenericProfCoursMapFactory.getInstance(directory);
 			profCoursMap = GenericProfCoursMapFactory.buildMap(directory,
 					detailCoursMap, detailSessionMap);
+			// We assign teachers
+			loadMembership();
 
 			etudCoursMap = GenericEtudiantCoursMapFactory
 					.getInstance(directory);
 			etudCoursMap = GenericEtudiantCoursMapFactory.buildMap(directory,
 					detailCoursMap, detailSessionMap);
+			// We assign students to their classes
+			loadEnrollments();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -692,7 +703,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 	private void loadCategory() {
 		if (cmService.getSectionCategoryDescription("111") == null)
 			cmAdmin.addSectionCategory("111", "Finance");
-		
+
 	}
 
 	// For HEC Montreal, this is the institution HEC Montreal

@@ -12,7 +12,5 @@
 				ref="org.sakaiquebec.opensyllabus.admin.api.OsylAdminService" />
 			<property name="osylRealmService"
 				ref="org.sakaiquebec.opensyllabus.common.api.OsylRealmService.osylEditor" />
-			<property name="osylCMJob"
-				ref="osylcmjob" />
 		</bean>
 </beans>
