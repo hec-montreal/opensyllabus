@@ -95,6 +95,8 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	if (!type.equalsIgnoreCase(COContentResourceProxyType.PEOPLE)) {
 	    if(type.equalsIgnoreCase(COContentResourceProxyType.REFERENCE)){
 		resProxModel.addProperty(COPropertiesType.DISPLAY_AS, "link");
+		if(resourceType.equals(COContentResourceType.DOCUMENT))
+		    resProxModel.setAccess(SecurityInterface.ACCESS_ATTENDEE);
 	    }
 	    if (resourceType.equalsIgnoreCase(COContentResourceType.ASSIGNMENT))
 		// We change the default text
@@ -116,7 +118,8 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	final COContentResource resModel =
 		COContentResource.createDefaultRes(resourceType,
 			osylConfigMessages);
-
+	resModel.setAccess(resProxModel.getAccess());
+	
 	resProxModel.setResource(resModel);
 	// Add child (a model notification should fire)
 	((COUnitContent) parentModel).addChild(resProxModel);
