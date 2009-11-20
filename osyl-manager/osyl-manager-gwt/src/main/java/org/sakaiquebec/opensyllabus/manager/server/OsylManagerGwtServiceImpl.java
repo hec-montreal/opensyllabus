@@ -55,7 +55,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
      * {@inheritDoc}
      */
     public void init() {
-	log.warn("INIT OsylEditorGwtServiceImpl");
+	log.info("INIT OsylEditorGwtServiceImpl");
 
 	servletContext = getServletContext();
 	webAppContext =
@@ -73,24 +73,23 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     /**
      * {@inheritDoc}
      */
-    public String createSite(String siteTitle, String configId) {
-	try {
-	    if (osylManagerServices != null) {
-		log.warn("OsylSiteService : "
-			+ osylManagerServices.getOsylSiteService());
-		return osylManagerServices.getOsylSiteService().createSite(
-			siteTitle, configId);
-	    }
-	} catch (Exception e) {
-	    e.printStackTrace();
+    public String createSite(String siteTitle, String configId)
+	    throws Exception {
+
+	if (osylManagerServices != null) {
+	    log.info("OsylSiteService : "
+		    + osylManagerServices.getOsylSiteService());
+	    return osylManagerServices.getOsylSiteService().createSite(
+		    siteTitle, configId);
 	}
+
 	return null;
     }
 
     public Map<String, String> getOsylConfigs() {
 	try {
 	    if (osylManagerServices != null) {
-		log.warn("OsylSiteService : "
+		log.info("OsylSiteService : "
 			+ osylManagerServices.getOsylConfigService());
 		return osylManagerServices.getOsylConfigService().getConfigs();
 	    }

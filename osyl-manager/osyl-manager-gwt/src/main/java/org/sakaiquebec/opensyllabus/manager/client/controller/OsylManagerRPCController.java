@@ -39,8 +39,7 @@ public class OsylManagerRPCController {
 
     private static OsylManagerRPCController rpcController = null;
 
-    private static String QUALIFIED_NAME =
-	    "OsylManagerEntryPoint/";
+    private static String QUALIFIED_NAME = "OsylManagerEntryPoint/";
 
     final OsylManagerGwtServiceAsync serviceProxy;
 
@@ -68,7 +67,7 @@ public class OsylManagerRPCController {
      * @param title
      * @param siteId
      */
-    public void createSite(OsylManagerController osylManagerController,
+    public void createSite(final OsylManagerController osylManagerController,
 	    String title, String configId) {
 	final OsylManagerController caller = osylManagerController;
 	// We first create a call-back for this method call
@@ -78,14 +77,15 @@ public class OsylManagerRPCController {
 	    }
 
 	    public void onFailure(Throwable error) {
-		Window.alert(caller.getMessages().rpcFailure());
+		Window.alert(osylManagerController.getMessages()
+			.siteNotCreated());
 	    }
 	};
 	serviceProxy.createSite(title, configId, callback);
     }
-    
-    public void getOsylConfigs(AsyncCallback<Map<String,String>> callback) {
-	
+
+    public void getOsylConfigs(AsyncCallback<Map<String, String>> callback) {
+
 	serviceProxy.getOsylConfigs(callback);
     }
 
@@ -189,12 +189,12 @@ public class OsylManagerRPCController {
 	serviceProxy.dissociate(siteId, parentId, callback);
     }
 
-    public void associateToCM(String courseSectionId, String siteId, 
-    	    AsyncCallback<Boolean> callback) {
-    	serviceProxy.associateToCM(courseSectionId, siteId, callback);
-        }
+    public void associateToCM(String courseSectionId, String siteId,
+	    AsyncCallback<Boolean> callback) {
+	serviceProxy.associateToCM(courseSectionId, siteId, callback);
+    }
 
-    public void getCMCourses(AsyncCallback<Map<String,String>> callback){
-    	serviceProxy.getCMCourses(callback);
+    public void getCMCourses(AsyncCallback<Map<String, String>> callback) {
+	serviceProxy.getCMCourses(callback);
     }
 }
