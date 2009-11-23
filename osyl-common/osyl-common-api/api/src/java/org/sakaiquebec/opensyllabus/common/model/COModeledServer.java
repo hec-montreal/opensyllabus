@@ -630,7 +630,7 @@ public class COModeledServer {
 			COContentResourceType.BIBLIO_RESOURCE)) {
 	    if (coContentRes.getProperty(COPropertiesType.IDENTIFIER,
 		    COPropertiesType.IDENTIFIER_TYPE_URI) != null) {
-		documentSecurityMap.put(coContentRes.getProperty(
+		documentSecurityMap.put(coContentRes.getProperty(COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_URI).trim(),
 			coContentRes.getAccess());
 		if (isPublication) {
