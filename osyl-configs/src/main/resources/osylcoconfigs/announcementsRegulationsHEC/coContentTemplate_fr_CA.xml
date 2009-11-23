@@ -40,9 +40,8 @@
 							<importance>false</importance>
 							<level>undefined</level>
 							<visible>true</visible>
-							<semanticType>
-								<type>calculators</type>
-							</semanticType>
+							<semanticTag type="rubric">calculators
+							</semanticTag>
 							<asmResource xsi:type="Text" access="attendee" id="D51AE845-C5B3-4B9E-9DDD-BA8862D2335B">
 								<text><![CDATA[Les étudiants sont priés de prendre connaissance de la
 													politique d'utilisation de calculatriceslors d'examens lorsque
@@ -56,9 +55,7 @@
 							<importance>false</importance>
 							<level>undefined</level>
 							<visible>true</visible>
-							<semanticType>
-								<type>plagiarism</type>
-							</semanticType>
+							<semanticTag type="rubric">plagiarism</semanticTag>
 							<asmResource xsi:type="Text" access="attendee" id="A9B0B9D5-BF49-4A3A-99F4-EBBAD17A1201">
 								<text><![CDATA[Les étudiants sont priés de prendre connaissance des actes et des
 												gestes qui sont considérés comme étant du plagiat ou une autre
@@ -76,9 +73,7 @@
 							<importance>false</importance>
 							<level>undefined</level>
 							<visible>true</visible>
-							<semanticType>
-								<type>flu</type>
-							</semanticType>
+							<semanticTag type="rubric">flu</semanticTag>
 							<asmResource xsi:type="Text" access="attendee" id="DA142A63-61EC-4BF9-87AE-704BEEE5A698">
 								<text><![CDATA[Dans le cas de circonstances exceptionnelles [établies par la Direction
 											des programmes] et hors du contrôle de HEC Montréal, le contenu et/ou

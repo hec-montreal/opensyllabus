@@ -22,7 +22,7 @@
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="News" />
 			    		</element>
-			    		<element name="semanticType">
+			    		<element name="semanticTag">
 			        		<attribute name="type" restrictionpattern="news" />
 			    		</element>
 					</element>
@@ -40,7 +40,7 @@
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="Text|Document|URL" />
 			    		</element>
-			    		<element name="semanticType">
+			    		<element name="semanticTag">
 			        		<attribute name="type" restrictionpattern="undefined|officialdescription|description" />
 			    		</element>
 					</element>
@@ -55,7 +55,7 @@
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="Text|Document|URL" />
 			    		</element>
-			    		<element name="semanticType">
+			    		<element name="semanticTag">
 			        		<attribute name="type" restrictionpattern="undefined|coursebeginend|courseregularschedule|coursespecialevents" />
 			    		</element>
 					</element>
@@ -73,7 +73,7 @@
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="Person" />
 			    		</element>
-			    		<element name="semanticType">
+			    		<element name="semanticTag">
 			        		<attribute name="type" restrictionpattern="undefined|coursecoordinator|coordinators|lecturers|teachingassistants|secretaries|others" />
 			    		</element>
 					</element>
@@ -91,7 +91,7 @@
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="Text|Document|URL" />
 			    		</element>
-			    		<element name="semanticType">
+			    		<element name="semanticTag">
 			        		<attribute name="type" restrictionpattern="undefined|coursetopicspresentation|problematic|description" />
 			    		</element>
 					</element>
@@ -109,7 +109,7 @@
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="Text|Document|URL" />
 			    		</element>
-			    		<element name="semanticType">
+			    		<element name="semanticTag">
 			        		<attribute name="type" restrictionpattern="undefined|generalobjectives|specificobjectives|description|mis" />
 			    		</element>
 					</element>
@@ -130,7 +130,7 @@
 							<element name="asmResource">
 								<attribute name="type" restrictionpattern="Text|Document|URL"/>
 							</element>
-							<element name="semanticType">
+							<element name="semanticTag">
 					    		<attribute name="type" restrictionpattern="undefined|description" />
 							</element>
 						</element>
@@ -148,7 +148,7 @@
 							<element name="asmResource">
 								<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource|Assignment"/>
 							</element>
-							<element name="semanticType">
+							<element name="semanticTag">
 					    		<attribute name="type" restrictionpattern="undefined|description|ObjectivesMeasured|EvaluationInstrument|evalcriteria|evalpreparation|evaldetails|evalsubproc|misresources" />
 							</element>
 						</element>
@@ -167,7 +167,7 @@
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="Text|Document|URL" />
 			    		</element>
-			    		<element name="semanticType">
+			    		<element name="semanticTag">
 			        		<attribute name="type" restrictionpattern="undefined|plagiarism|description|mis" />
 			    		</element>
 					</element>
@@ -185,7 +185,7 @@
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="Text|Document|URL" />
 			    		</element>
-			    		<element name="semanticType">
+			    		<element name="semanticTag">
 			        		<attribute name="type" restrictionpattern="undefined|pedagogicaltheory|teachingstrategy|learningstrategy|modusoperandi|description|mis" />
 			    		</element>
 					</element>
@@ -203,7 +203,7 @@
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource" />
 			    		</element>
-			    		<element name="semanticType">
+			    		<element name="semanticTag">
 			        		<attribute name="type" restrictionpattern="undefined|complbibres|requiredbook|recommendedbooks|codex|hardwaresoftware|oldexams|bibliography|description|mis" />
 			    		</element>
 					</element>
@@ -223,7 +223,7 @@
 						<element name="asmResource">
 							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource" />
 						</element>
-						<element name="semanticType">
+						<element name="semanticTag">
 				    		<attribute name="type" restrictionpattern="undefined|LectureTimePlace|description|instructions|LectureObjectives|LectureLearningObjectives|LectureRequiredMaterial|evaluation|ActivityResources|misresources|ressinclass|readinglist|exercises" />
 						</element>
 					</element>
@@ -242,7 +242,7 @@
 						<element name="asmResource">
 							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource" />
 						</element>
-						<element name="semanticType">
+						<element name="semanticTag">
 				    		<attribute name="type" restrictionpattern= "undefined|bibliography|complbibres|requiredbook|recommendedbooks|codex|description|mis" />
 						</element>
 					</element>
@@ -261,7 +261,7 @@
 						<element name="asmResource">
 							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource" />
 						</element>
-						<element name="semanticType">
+						<element name="semanticTag">
 				    		<attribute name="type" restrictionpattern= "undefined|bibliography|complbibres|requiredbook|recommendedbooks|codex|description|mis" />
 						</element>
 					</element>
@@ -280,7 +280,7 @@
 						<element name="asmResource">
 							<attribute name="type" restrictionpattern="Text|Document|URL" />
 						</element>
-						<element name="semanticType">
+						<element name="semanticTag">
 				    		<attribute name="type" restrictionpattern= "undefined|description|LearningSupportSAE|LearningSupportCCE|LearningSupportOther|mis" />
 						</element>
 					</element>

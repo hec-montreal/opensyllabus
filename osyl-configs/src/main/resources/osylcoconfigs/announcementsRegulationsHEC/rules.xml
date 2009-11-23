@@ -21,7 +21,7 @@
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="News|Text" />
 			    		</element>
-			    		<element name="semanticType">
+			    		<element name="semanticTag">
 			        		<attribute name="type" restrictionpattern="news|flu|plagiarism|calculators" />
 			    		</element>
 					</element>
@@ -39,7 +39,7 @@
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="Text|Document|URL" />
 			    		</element>
-			    		<element name="semanticType">
+			    		<element name="semanticTag">
 			        		<attribute name="type" restrictionpattern="undefined|description|objectives|learningstrat" />
 			    		</element>
 					</element>
@@ -57,7 +57,7 @@
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="Person" />
 			    		</element>
-			    		<element name="semanticType">
+			    		<element name="semanticTag">
 			        		<attribute name="type" restrictionpattern="undefined|coordinators|lecturers|teachingassistants|speakers|secretaries" />
 			    		</element>
 					</element>
@@ -75,7 +75,7 @@
 			    		<element name="asmResource">
 				    		<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource" />
 			    		</element>
-			    		<element name="semanticType">
+			    		<element name="semanticTag">
 			        		<attribute name="type" restrictionpattern="undefined|misresources|bibliographicres|complbibres|tools|pastexams" />
 			    		</element>
 					</element>
@@ -95,7 +95,7 @@
 						<element name="asmResource">
 							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource|Assignment"/>
 						</element>
-						<element name="semanticType">
+						<element name="semanticTag">
 				    		<attribute name="type" restrictionpattern="undefined|description|objectives|evalcriteria|evalpreparation|evalsubproc|misresources" />
 						</element>
 					</element>
@@ -115,7 +115,7 @@
 						<element name="asmResource">
 							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource|News" />
 						</element>
-						<element name="semanticType">
+						<element name="semanticTag">
 				    		<attribute name="type" restrictionpattern="undefined|news|description|objectives|learningstrat|misresources|ressinclass|readinglist|exercises" />
 						</element>
 					</element>
