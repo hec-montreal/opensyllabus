@@ -6,7 +6,7 @@ import java.io.*;
 
 public class GenericProfCoursMapFactory {
 
-    private static final String DEFAULT_BASE_NAME = "prof_cours";
+    private static final String DEFAULT_BASE_NAME = "prof_cours3";
 
     public static ProfCoursMap buildMap(String dataDir,
 					DetailCoursMap detailCoursMap,
@@ -83,36 +83,52 @@ public class GenericProfCoursMapFactory {
 	}
 
 	// Voir le commentaire de methode ci-dessus
-	removeAllCours(map, detailCoursMap,
-		       detailSessionsMap.getLatestSession());
+//	removeAllCours(map, detailCoursMap,
+//		       detailSessionsMap.getLatestSession());
 
 	BufferedReader breader = new BufferedReader(
 			new InputStreamReader(
 					new FileInputStream(dataDir + "/" + baseName + ".dat"),"utf8"));
 	String buffer;
-	StringTokenizer tokenizer;
-
+	String[] token;
+	int i;
+	// We remove the first line containing the title
+	breader.readLine();
+	
 	// fait le tour des lignes du fichier
 	while ((buffer = breader.readLine()) != null) {
-	    tokenizer = new StringTokenizer(buffer,";");
-
+	    token = buffer.split(";");
+	    i = 0;
 	    ProfCoursMapEntry entry;
-	    String matricule = tokenizer.nextToken();
-	    String numeroHEL = tokenizer.nextToken();
-	    String session   = tokenizer.nextToken();
-	    String periode   = tokenizer.nextToken();
-	    if(map.containsKey(matricule)) {
-		entry = map.get(matricule);
+	    String emplId = token[i++];
+	    String catalogNbr = token[i++];
+	    String strm   = token[i++];
+	    String sessionCode   = token[i++];
+	    String unitMinimum = token[i++];
+	    String descLong = token[i++];
+	    String nDescLong = token[i++];
+	    String acadOrg = token[i++];
+	    String role = token[i++];
+	    String strmId = token[i++];
+	    
+	    if(map.containsKey(emplId)) {
+		entry = map.get(emplId);
 	    } else {
-		entry = new ProfCoursMapEntry(matricule);
+		entry = new ProfCoursMapEntry(emplId);
 		map.put(entry);
 	    }
 	    DetailCoursMapEntry cours = detailCoursMap.get(
-			numeroHEL, session, periode);
+			catalogNbr, strm, sessionCode);
 	    if (cours == null) {
 		throw new IllegalStateException("cours == null pour " + buffer);
 	    }
 
+	    entry.setUnitMinimum(unitMinimum);
+	    entry.setDescLong(descLong);
+	    entry.setNDescLong(nDescLong);
+	    entry.setAcadOrg(acadOrg);
+	    entry.setRole(role);
+	    entry.setStrmId(strmId);
 	    // On ajoute le cours a cet etudiant uniquement s'il ne l'a pas deja
 	    // (ce qui est le cas pour tous ses cours d'anciennes sessions).
 	    if (! entry.containsCours(cours)) {

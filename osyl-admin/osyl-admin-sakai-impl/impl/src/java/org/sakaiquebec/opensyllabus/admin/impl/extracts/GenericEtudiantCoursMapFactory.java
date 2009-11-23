@@ -6,7 +6,7 @@ import java.io.*;
 
 public class GenericEtudiantCoursMapFactory {
 
-    private static final String DEFAULT_BASE_NAME = "etudiant_cours";
+    private static final String DEFAULT_BASE_NAME = "etudiant_cours3";
 
     public static EtudiantCoursMap buildMap(String dataDir,
 					    DetailCoursMap detailCoursMap,
@@ -81,32 +81,44 @@ public class GenericEtudiantCoursMapFactory {
 	}
 
 	// Voir le commentaire de methode ci-dessus
-	removeAllCours(map, detailCoursMap,
-		       detailSessionsMap.getLatestSession());
+//	removeAllCours(map, detailCoursMap,
+//		       detailSessionsMap.getLatestSession());
 
 	BufferedReader breader = new BufferedReader(
 			new InputStreamReader(
 					new FileInputStream(dataDir + "/" + baseName + ".dat"),"utf8"));
 	String buffer;
-	StringTokenizer tokenizer;
+	String[] token;
+	int i;
 
+	// We remove the first line containing the title
+	breader.readLine();
+
+	
 	// fait le tour des lignes du fichier
 	while ((buffer = breader.readLine()) != null) {
-	    tokenizer = new StringTokenizer(buffer,";");
-
+	    token = buffer.split(";");
+	    i=0;
+	    
 	    EtudiantCoursMapEntry entry;
-	    String matricule = tokenizer.nextToken();
-	    String numeroHEL = tokenizer.nextToken();
-	    String session   = tokenizer.nextToken();
-	    String periode   = tokenizer.nextToken();
-	    if(map.containsKey(matricule)) {
-		entry = map.get(matricule);
+	    String emplId = token[i++];
+	    String catalogNbr = token[i++];
+	    String strm   = token[i++];
+	    String sessionCode   = token[i++];
+	    String classSection  = token[i++];
+	    String status  = token[i++];
+	    String strmId  = token[i++];
+	    
+	    if(map.containsKey(emplId)) {
+		entry = map.get(emplId);
 	    } else {
-		entry = new EtudiantCoursMapEntry(matricule);
+		entry = new EtudiantCoursMapEntry(emplId);
 		map.put(entry);
 	    }
+	    
+	    
 	    DetailCoursMapEntry cours = detailCoursMap.get(
-			numeroHEL, session, periode);
+			catalogNbr, strm, sessionCode);
  	    if (cours == null) {
  		throw new IllegalStateException("cours == null pour " + buffer);
  	    }

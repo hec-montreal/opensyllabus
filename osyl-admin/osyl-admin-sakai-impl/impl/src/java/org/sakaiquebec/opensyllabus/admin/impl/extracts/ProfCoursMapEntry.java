@@ -1,16 +1,12 @@
-
 package org.sakaiquebec.opensyllabus.admin.impl.extracts;
-
 
 import java.util.*;
 
-
 /**
- * Represente les donnees provenant de l'extract prof_cours.dat<br/><br/>
- *
- * Chaque <code>ProfCoursEntry</code> correspond a un professeur et
- * permet d'acceder aux cours qu'il donne.
- *
+ * Represente les donnees provenant de l'extract prof_cours.dat<br/>
+ * <br/>
+ * Chaque <code>ProfCoursEntry</code> correspond a un professeur et permet
+ * d'acceder aux cours qu'il donne.
  */
 public class ProfCoursMapEntry implements java.io.Serializable {
 
@@ -19,26 +15,88 @@ public class ProfCoursMapEntry implements java.io.Serializable {
     public static final long serialVersionUID = -913935703184167796L;
 
     private Vector<DetailCoursMapEntry> cours;
-    private Map<String,DetailCoursMapEntry> coursCoordonnes;
-    private String matricule;
+    private Map<String, DetailCoursMapEntry> coursCoordonnes;
+    private String emplId;
+    private String unitMinimum ;
+    private String descLong ;
+    private String nDescLong;
+    private String acadOrg;
+    private String role;
+    private String strmId;
+    
+
+    public String getUnitMinimum() {
+        return unitMinimum;
+    }
+
+    public void setUnitMinimum(String unitMinimum) {
+        this.unitMinimum = unitMinimum;
+    }
+
+    public String getDescLong() {
+        return descLong;
+    }
+
+    public void setDescLong(String descLong) {
+        this.descLong = descLong;
+    }
+
+    public String getNDescLong() {
+        return nDescLong;
+    }
+
+    public void setNDescLong(String descLong) {
+        nDescLong = descLong;
+    }
+
+    public String getAcadOrg() {
+        return acadOrg;
+    }
+
+    public void setAcadOrg(String acadOrg) {
+        this.acadOrg = acadOrg;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getStrmId() {
+        return strmId;
+    }
+
+    public void setStrmId(String strmId) {
+        this.strmId = strmId;
+    }
+
+    public void setCours(Vector<DetailCoursMapEntry> cours) {
+        this.cours = cours;
+    }
+
+    public void setCoursCoordonnes(Map<String, DetailCoursMapEntry> coursCoordonnes) {
+        this.coursCoordonnes = coursCoordonnes;
+    }
+
+    public void setEmplId(String emplId) {
+        this.emplId = emplId;
+    }
 
     /**
      * One arg Constructor.
      */
-    ProfCoursMapEntry(String matricule) {
-	this.matricule = matricule;
+    ProfCoursMapEntry(String emplId) {
+	this.emplId = emplId;
 	cours = new Vector<DetailCoursMapEntry>();
-	coursCoordonnes = new HashMap<String,DetailCoursMapEntry>();
+	coursCoordonnes = new HashMap<String, DetailCoursMapEntry>();
     }
 
-    public String getMatricule() {
-	return matricule;
+    public String getEmplId() {
+	return emplId;
     }
-
-    public String getEmailAddress() {
-	return getMatricule() + "@hec.ca";
-    }
-
 
     // ============= Gestion des cours enseignes =============
     //
@@ -63,7 +121,7 @@ public class ProfCoursMapEntry implements java.io.Serializable {
      * faire l'equivalent dans la liste des profs d'un cours!
      */
     public void addCours(DetailCoursMapEntry cours) {
-	if (! containsCours(cours)) {
+	if (!containsCours(cours)) {
 	    getCoursVector().add(cours);
 	}
     }
@@ -74,8 +132,8 @@ public class ProfCoursMapEntry implements java.io.Serializable {
 
     /**
      * Supprime tous les cours de ce prof, donnes ou coordonnes dans la session
-     * specifiee.<br><br>
-     *
+     * specifiee.<br>
+     * <br>
      * Note: ne pas faire de modification a la liste des cours d'un prof sans
      * faire l'equivalent dans la liste des profs d'un cours!
      */
@@ -103,9 +161,9 @@ public class ProfCoursMapEntry implements java.io.Serializable {
 	}
     } // removeAllCours
 
-//    private void removeCours(DetailCoursMapEntry cours) {
-//	getCoursVector().remove(cours);
-//    }
+    // private void removeCours(DetailCoursMapEntry cours) {
+    // getCoursVector().remove(cours);
+    // }
 
     public boolean containsAnyGroupeCoursOf(DetailCoursMapEntry cours) {
 	Iterator<DetailCoursMapEntry> iterator = getCours();
@@ -123,7 +181,7 @@ public class ProfCoursMapEntry implements java.io.Serializable {
 	return getCoursCoordonnesMap().values().iterator();
     }
 
-    private Map<String,DetailCoursMapEntry> getCoursCoordonnesMap() {
+    private Map<String, DetailCoursMapEntry> getCoursCoordonnesMap() {
 	return coursCoordonnes;
     }
 
@@ -135,33 +193,32 @@ public class ProfCoursMapEntry implements java.io.Serializable {
 	return getCoursCoordonnesMap().size();
     }
 
-
     public void addCoursCoordonne(DetailCoursMapEntry cours) {
-	getCoursCoordonnesMap().put(cours.getSession()
-				    + cours.getNumeroRepertoire(), cours);
+	getCoursCoordonnesMap().put(cours.getStrm() + cours.getCatalogNbr(),
+		cours);
     } // addCoursCoordonne
 
     public boolean containsCoursCoordonne(DetailCoursMapEntry cours) {
 	return getCoursCoordonnesMap().containsKey(
-			     cours.getSession() + cours.getNumeroRepertoire());
+		cours.getStrm() + cours.getCatalogNbr());
     }
 
-
     public String toString() {
-	return "Professeur " + getMatricule() + " coordonne: " + getCoursCoordonnesCollection().size() + " cours : " + getCoursCoordonnesMap().keySet();
+	return "Professeur " + getEmplId() + " coordonne: "
+		+ getCoursCoordonnesCollection().size() + " cours : "
+		+ getCoursCoordonnesMap().keySet();
     }
 
     /**
      * On redefinit <code>hashCode()</code> pour assurer que malgre la
      * serialisation 2 instances soit reconnues egales lorsque c'est approprie
-     * (meme matricule).
-     *
+     * (meme emplId).
      */
     public int hashCode() {
 	try {
 	    // On ajoute le chiffre 1 devant car certains matricules commencent
 	    // par un ou plusieurs zeros.
-	    return Integer.parseInt("1" + getMatricule());
+	    return Integer.parseInt("1" + getEmplId());
 	} catch (NumberFormatException e) {
 	    System.out.println("ProfCoursMapEntry.hashCode: " + e);
 	    return super.hashCode();
@@ -171,13 +228,12 @@ public class ProfCoursMapEntry implements java.io.Serializable {
     /**
      * On redefinit <code>equals(Object)</code> pour assurer que malgre la
      * serialisation 2 instances soit reconnues egales lorsque c'est approprie.
-     *
      */
     public boolean equals(Object o) {
 	if (o == null) {
 	    return false;
-	} else if (! o.getClass().getName().equals(
-					"ca.hec.peoplesoft.ProfCoursMapEntry")) {
+	} else if (!o.getClass().getName().equals(
+		"ca.hec.peoplesoft.ProfCoursMapEntry")) {
 	    return false;
 	} else {
 	    if (o.hashCode() == hashCode()) {
@@ -187,6 +243,5 @@ public class ProfCoursMapEntry implements java.io.Serializable {
 	    }
 	}
     } // equals
-
 
 }

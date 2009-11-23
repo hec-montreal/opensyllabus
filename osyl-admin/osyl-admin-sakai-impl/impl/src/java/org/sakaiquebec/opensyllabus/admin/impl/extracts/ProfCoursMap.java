@@ -6,7 +6,7 @@ import java.util.*;
 
 
 /**
- * Permet d'acceder aux donnees provenant de l'extract prof_cours.dat,
+ * Permet d'acceder aux donnees provenant de l'extract prof_cours3.dat,
  * chaque professeur (potentiellement sur plusieurs lignes) etant une
  * <code>ProfCoursMapEntry</code>.<br/><br/>
  *
@@ -22,7 +22,7 @@ public class ProfCoursMap extends HashMap<String,ProfCoursMapEntry> {
     }
 
     public void put(ProfCoursMapEntry prof) {
-	put(prof.getMatricule(),prof);
+	put(prof.getEmplId(),prof);
     }
 
     public boolean contains(MatriculeNomMapEntry matricule) {

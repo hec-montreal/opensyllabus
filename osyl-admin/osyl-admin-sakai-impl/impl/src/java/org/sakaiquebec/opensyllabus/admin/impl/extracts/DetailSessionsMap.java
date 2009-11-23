@@ -44,7 +44,7 @@ public class DetailSessionsMap extends HashMap<String,DetailSessionsMapEntry> {
 	while (values.hasNext()) {
 	    session = (DetailSessionsMapEntry) values.next();
 	    try {
-		sessionNo = Math.max(Integer.parseInt(session.getNumero()),
+		sessionNo = Math.max(Integer.parseInt(session.getAcadCareer()),
 				     sessionNo);
 	    } catch (NumberFormatException e) {
 		System.out.println("DetailSessionsMapEntry.getLatestSession "

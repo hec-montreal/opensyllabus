@@ -15,12 +15,20 @@ public class DetailSessionsMapEntry implements java.io.Serializable {
     // quand on change la classe...
     public static final long serialVersionUID = 2768315680298436303l;
 
-    private String numero;
-    private String longForm;
-    private String shortForm;
-    private String startDate; // TODO : translate in date/long ?
-    private String endDate;   //        -> voir comment ca va etre utilise
-
+    private String acadCareer;
+    private String strm;
+    private String descrFrancais;
+    private String descAnglais; 
+    private String descShortFrancais;
+    private String descShortAnglais;
+    private String beginDate;
+    private String endDate;
+    private String sessionCode;
+    private String strmId;
+    
+    
+    //        -> voir comment ca va etre utilise
+ // TODO : translate in date/long ?
     /**
      * Empty constructor.
      */
@@ -28,53 +36,101 @@ public class DetailSessionsMapEntry implements java.io.Serializable {
 	// empty constructor
     }
 
-    public String getNumero(){
-	return numero;
+    public String getAcadCareer(){
+	return acadCareer;
     }
 
-    public String getLongForm(){
-	return longForm;
+    public String getStrm(){
+	return strm;
     }
 
-    public String getShortForm(){
-	return shortForm;
+    public String getDescFrancais(){
+	return descrFrancais;
     }
 
-    public String getStartDate(){
-	return startDate;
+    public String getDescAnglais(){
+	return descAnglais;
     }
 
-    public String getEndDate(){
-	return endDate;
+    public String getDescShortFrancais(){
+	return descShortFrancais;
     }
 
     public String getUniqueKey() {
-	return getNumero();
+	return getSessionCode();
     }
 
-    public void setNumero(String numero){
-	this.numero = numero;
+    public void setAcadCareer(String acadCareer){
+	this.acadCareer = acadCareer;
     }
 
-    public void setShortForm(String shortForm){
-	this.shortForm = shortForm;
+    public void setDescFrancais(String descFrancais){
+	this.descrFrancais = descFrancais;
     }
 
-    public void setLongForm(String longForm){
-	this.longForm = longForm;
+    public void setStrm(String strm){
+	this.strm = strm;
     }
 
-    public void setStartDate(String startDate){
-	this.startDate = startDate;
+    public void setDescAnglais(String descAnglais){
+	this.descAnglais = descAnglais;
     }
 
-    public void setEndDate(String endDate){
-	this.endDate = endDate;
+    public String getDescrFrancais() {
+        return descrFrancais;
+    }
+
+    public void setDescrFrancais(String descrFrancais) {
+        this.descrFrancais = descrFrancais;
+    }
+
+    public String getDescShortAnglais() {
+        return descShortAnglais;
+    }
+
+    public void setDescShortAnglais(String descShortAnglais) {
+        this.descShortAnglais = descShortAnglais;
+    }
+
+    public String getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(String beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getSessionCode() {
+        return sessionCode;
+    }
+
+    public void setSessionCode(String sessionCode) {
+        this.sessionCode = sessionCode;
+    }
+
+    public String getStrmId() {
+        return strmId;
+    }
+
+    public void setStrmId(String strmId) {
+        this.strmId = strmId;
+    }
+
+    public void setDescShortFrancais(String descShortFrancais){
+	this.descShortFrancais = descShortFrancais;
     }
 
     public String toString() {
-	return "Session " + getLongForm() + " (" + getShortForm() + ", "
-	    + getNumero() + ")";
+	return "Session " + getStrm() + " (" + getDescFrancais() + ", "
+	    + getAcadCareer() + ")";
     }
 
 }

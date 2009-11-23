@@ -90,7 +90,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 	/**
 	 * Map used to store information about users : name, id
 	 */
-	private MatriculeNomMap matNomMap = null;
+	//private MatriculeNomMap matNomMap = null;
 
 	/**
 	 * Map used to store information about the courses that a teacher gives:
@@ -199,7 +199,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 		while (profCours.hasNext()) {
 			profCoursEntry = (ProfCoursMapEntry) profCours.next();
-			matricule = profCoursEntry.getMatricule();
+			matricule = profCoursEntry.getEmplId();
 			cours = profCoursEntry.getCours();
 			while (cours.hasNext()) {
 				detailsCours = (DetailCoursMapEntry) cours.next();
@@ -241,8 +241,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 		while (cours.hasNext()) {
 			coursEntry = (DetailCoursMapEntry) cours.next();
 			canonicalCourseId = coursEntry.getUniqueKey();
-			title = coursEntry.getTitre();
-			description = coursEntry.getTitreAlt();
+			title = coursEntry.getCourseTitleLong();
+			description = coursEntry.getCourseTitleLong();
 
 			// create the canonical course
 			if (!cmService.isCanonicalCourseDefined(canonicalCourseId)) {
@@ -259,7 +259,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 			}
 
 			// create course offering
-			session = cmService.getAcademicSession(coursEntry.getSession());
+			session = cmService.getAcademicSession(coursEntry.getStrmId());
 			title = title + "   " + session.getDescription();
 			if (session != null) {
 				// TODO: This should be a final static constant
@@ -297,6 +297,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 				// TODO: the extracts don't give the course credit
 				// TODO: find a better way to retrieve the list of teachers
 				enrollmentSetId = getEnrollmentSetId(coursEntry);
+				System.out.println(enrollmentSetId + " is defined " + cmService.isEnrollmentSetDefined(enrollmentSetId));
 				if (!cmService.isEnrollmentSetDefined(enrollmentSetId)) {
 					cmAdmin.createEnrollmentSet(enrollmentSetId, title,
 							description, "111", "3", courseOfferingId,
@@ -313,7 +314,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 				}
 
 				// create course section
-				section = coursEntry.getSection();
+				section = coursEntry.getClassSection();
 				courseSectionId = courseOfferingId + section;
 				title = title + "  " + section;
 				if (!cmService.isSectionDefined(courseSectionId)) {
@@ -358,12 +359,12 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 		while (sessions.hasNext()) {
 			sessionEntry = (DetailSessionsMapEntry) sessions.next();
-			eid = sessionEntry.getNumero();
-			title = sessionEntry.getShortForm();
-			description = sessionEntry.getLongForm();
+			eid = sessionEntry.getStrmId();
+			title = sessionEntry.getDescAnglais();
+			description = sessionEntry.getDescAnglais();
 			try {
 				startDate = DateFormat.getDateInstance().parse(
-						sessionEntry.getStartDate());
+						sessionEntry.getBeginDate());
 				endDate = DateFormat.getDateInstance().parse(
 						sessionEntry.getEndDate());
 			} catch (ParseException e) {
@@ -396,38 +397,38 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 	/** {@inheritDoc} */
 	public void loadUsers() {
-		Iterator<MatriculeNomMapEntry> values = matNomMap.values().iterator();
-		MatriculeNomMapEntry entry;
-		Collection userExists = null;
-		// User informations
-		String eid, firstName, lastName, email, pw, type;
-
-		while (values.hasNext()) {
-			entry = (MatriculeNomMapEntry) values.next();
-			try {
-				email = entry.getEmailAddress();
-				// We check if user already in table
-				userExists = userDirService.findUsersByEmail(email);
-
-				if (userExists.size() == 0) {
-					// We create a new user
-					eid = entry.getMatricule();
-					firstName = entry.getFirstName();
-					lastName = entry.getLastName();
-					type = getType(entry.getStatus());
-					pw = eid;
-					userDirService.addUser(null, eid, firstName, lastName,
-							email, pw, type, null);
-				}
-			} catch (UserIdInvalidException e) {
-				log.error("Create users - user invalid id", e);
-			} catch (UserAlreadyDefinedException e) {
-				log.warn("Create users - user already defined");
-			} catch (UserPermissionException e) {
-				log.error("Create users - permission exception", e);
-			}
-
-		}
+//		Iterator<MatriculeNomMapEntry> values = matNomMap.values().iterator();
+//		MatriculeNomMapEntry entry;
+//		Collection userExists = null;
+//		// User informations
+//		String eid, firstName, lastName, email, pw, type;
+//
+//		while (values.hasNext()) {
+//			entry = (MatriculeNomMapEntry) values.next();
+//			try {
+//				email = entry.getEmailAddress();
+//				// We check if user already in table
+//				userExists = userDirService.findUsersByEmail(email);
+//
+//				if (userExists.size() == 0) {
+//					// We create a new user
+//					eid = entry.getMatricule();
+//					firstName = entry.getFirstName();
+//					lastName = entry.getLastName();
+//					type = getType(entry.getStatus());
+//					pw = eid;
+//					userDirService.addUser(null, eid, firstName, lastName,
+//							email, pw, type, null);
+//				}
+//			} catch (UserIdInvalidException e) {
+//				log.error("Create users - user invalid id", e);
+//			} catch (UserAlreadyDefinedException e) {
+//				log.warn("Create users - user already defined");
+//			} catch (UserPermissionException e) {
+//				log.error("Create users - permission exception", e);
+//			}
+//
+//		}
 	}
 
 	/**
@@ -446,8 +447,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 		String enrollmentSetId = null;
 
 		if (cours != null) {
-			enrollmentSetId = cours.getSection() + cours.getUniqueKey()
-					+ cours.getSession() + cours.getSection();
+			enrollmentSetId = cours.getClassSection()+ cours.getUniqueKey()
+					+ cours.getStrmId() + cours.getClassSection();
 
 		}
 
@@ -531,8 +532,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 			// We load sessions
 			loadSessions();
 
-			matNomMap = GenericMatriculeNomMapFactory.getInstance(directory);
-			matNomMap = GenericMatriculeNomMapFactory.buildMap(directory);
+//			matNomMap = GenericMatriculeNomMapFactory.getInstance(directory);
+//			matNomMap = GenericMatriculeNomMapFactory.buildMap(directory);
 			// We load user
 			loadUsers();
 
@@ -579,10 +580,10 @@ public class OsylCMJobImpl implements OsylCMJob {
 			// We load sessions
 			loadSessions();
 
-			matNomMap = GenericMatriculeNomMapFactory.getInstance(directory);
-			matNomMap = GenericMatriculeNomMapFactory.buildMap(directory);
+//			matNomMap = GenericMatriculeNomMapFactory.getInstance(directory);
+//			matNomMap = GenericMatriculeNomMapFactory.buildMap(directory);
 			// We load user
-			loadUsers();
+			//loadUsers();
 
 			// We add a category
 			loadCategory();
@@ -663,7 +664,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 	private String getCourseOfferingId(DetailCoursMapEntry cours) {
 		String courseOfferingId = null;
 		if (cours != null) {
-			courseOfferingId = cours.getUniqueKey() + cours.getSession();
+			courseOfferingId = cours.getUniqueKey() + cours.getStrmId();
 		}
 		return courseOfferingId;
 	}
@@ -673,8 +674,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 		if (course != null) {
 			String coursId = course.getUniqueKey();
-			String session = course.getSession();
-			String section = course.getSection();
+			String session = course.getStrmId();
+			String section = course.getClassSection();
 
 			courseSectionId = coursId + session + section;
 		}

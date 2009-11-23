@@ -21,10 +21,10 @@ public class DetailCoursMap extends HashMap<String,DetailCoursMapEntry> {
 	put(entry.getUniqueKey(), entry);
     }
 
-    public DetailCoursMapEntry get(String numeroHEL, String session,
-				   String periode) {
+    public DetailCoursMapEntry get(String catalogNbr, String strm,
+				   String sessionCode) {
 	return get(DetailCoursMapEntry.getUniqueKey(
-                                           numeroHEL, session, periode));
+                                           catalogNbr, strm, sessionCode));
     }
 
     public DetailCoursMapEntry get(String key) {
@@ -41,7 +41,7 @@ public class DetailCoursMap extends HashMap<String,DetailCoursMapEntry> {
      *
      */
     public Iterator<DetailCoursMapEntry> getAllGroupeCours(DetailCoursMapEntry cours) {
-	return getAllGroupeCours(cours.getNumeroRepertoire(),
+	return getAllGroupeCours(cours.getCatalogNbr(),
 				 cours.getCoordonnateur());
     }
 
@@ -53,7 +53,7 @@ public class DetailCoursMap extends HashMap<String,DetailCoursMapEntry> {
      */
     // TODO: verifier que le fait que ce soit independant de la session est ok
     // (remarque du 2005-08-05)
-    public Iterator<DetailCoursMapEntry> getAllGroupeCours(String numeroRepertoire,
+    public Iterator<DetailCoursMapEntry> getAllGroupeCours(String catalogNbr,
 				      ProfCoursMapEntry coordonnateur) {
 	Vector<DetailCoursMapEntry> v = new Vector<DetailCoursMapEntry>();
 
@@ -65,7 +65,7 @@ public class DetailCoursMap extends HashMap<String,DetailCoursMapEntry> {
 	Iterator<DetailCoursMapEntry> values = values().iterator();
 	while (values.hasNext()) {
 	    DetailCoursMapEntry cours = (DetailCoursMapEntry) values.next();
-	    if (numeroRepertoire.equals(cours.getNumeroRepertoire())
+	    if (catalogNbr.equals(cours.getCatalogNbr())
 		    && coordonnateur == cours.getCoordonnateur()) {
 		v.add(cours);
 	    }
@@ -87,7 +87,7 @@ public class DetailCoursMap extends HashMap<String,DetailCoursMapEntry> {
 	Iterator<DetailCoursMapEntry> values = values().iterator();
 	while (values.hasNext()) {
 	    DetailCoursMapEntry cours = (DetailCoursMapEntry) values.next();
-	    if (numeroRepertoire.equals(cours.getNumeroRepertoire())
+	    if (numeroRepertoire.equals(cours.getCatalogNbr())
 		&& cours.isInSession(session)) {
 		v.add(cours);
 	    }
@@ -109,7 +109,7 @@ public class DetailCoursMap extends HashMap<String,DetailCoursMapEntry> {
 	Iterator<DetailCoursMapEntry> values = values().iterator();
 	while (values.hasNext()) {
 	    DetailCoursMapEntry cours = (DetailCoursMapEntry) values.next();
-	    if (numeroRepertoire.equals(cours.getNumeroRepertoire())
+	    if (numeroRepertoire.equals(cours.getCatalogNbr())
 		&& cours.isInSession(session)) {
 		v.add(cours);
 	    }

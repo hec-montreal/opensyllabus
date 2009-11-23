@@ -20,6 +20,10 @@ public class EtudiantCoursMapEntry implements java.io.Serializable {
 
     private String matricule;
     private Vector<DetailCoursMapEntry> cours;
+    private String classSection  ;
+    private String status  ;
+    private String strmId ;
+
 
     /**
      * Empty constructor.
@@ -48,6 +52,38 @@ public class EtudiantCoursMapEntry implements java.io.Serializable {
 
     public int getCoursCount() {
 	return getCoursVector().size();
+    }
+
+    public String getClassSection() {
+        return classSection;
+    }
+
+    public void setClassSection(String classSection) {
+        this.classSection = classSection;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStrmId() {
+        return strmId;
+    }
+
+    public void setStrmId(String strmId) {
+        this.strmId = strmId;
+    }
+
+    public void setMatricule(String matricule) {
+        this.matricule = matricule;
+    }
+
+    public void setCours(Vector<DetailCoursMapEntry> cours) {
+        this.cours = cours;
     }
 
     /**

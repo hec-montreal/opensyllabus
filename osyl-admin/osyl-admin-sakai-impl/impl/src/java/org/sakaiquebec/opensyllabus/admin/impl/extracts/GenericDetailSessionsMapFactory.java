@@ -1,12 +1,11 @@
 
 package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 
-import java.util.*;
 import java.io.*;
 
 public class GenericDetailSessionsMapFactory {
 
-    private static final String DEFAULT_BASE_NAME = "detail_sessions";
+    private static final String DEFAULT_BASE_NAME = "session";
 
     public static DetailSessionsMap buildMap(String dataDir)
 	throws java.io.IOException {
@@ -41,20 +40,29 @@ public class GenericDetailSessionsMapFactory {
 
 	BufferedReader breader  = new BufferedReader(
 			new InputStreamReader(
-					new FileInputStream(dataDir + "/" + baseName + ".dat"),"utf8"));
+					new FileInputStream(dataDir + File.separator + baseName + ".dat"),"utf8"));
 	String buffer;
-	StringTokenizer tokenizer;
 
+	//We remove the first line containing the title
+	breader.readLine();
+	
 	// fait le tour des lignes du fichier
+	String delimeter = ";";
+	String [] token;
 	while ((buffer = breader.readLine()) != null) {
+	    token = buffer.split(delimeter);
 	    DetailSessionsMapEntry entry = new DetailSessionsMapEntry();
-	    tokenizer = new StringTokenizer(buffer,";");
-	    entry.setNumero(tokenizer.nextToken());
-	    entry.setLongForm(tokenizer.nextToken());
-	    entry.setShortForm(tokenizer.nextToken());
-	    entry.setStartDate(tokenizer.nextToken());
-	    entry.setEndDate(tokenizer.nextToken());
-
+	    entry.setAcadCareer(token[0]);
+	    entry.setStrm(token[1]);
+	    entry.setDescFrancais(token[2]);
+	    entry.setDescAnglais(token[3]);
+	    entry.setDescShortFrancais(token[4]);
+	    entry.setDescShortAnglais(token[5]);
+	    entry.setBeginDate(token[6]);
+	    entry.setEndDate(token[7]);
+	    entry.setSessionCode(token[8]);
+	    entry.setStrmId(token[9]);
+	    
 	    map.put(entry);
 	}
 
@@ -66,7 +74,6 @@ public class GenericDetailSessionsMapFactory {
 
     public static DetailSessionsMap getInstance(String dataDir)
 	throws IOException {
-
 	return getInstance(dataDir, DEFAULT_BASE_NAME);
     }
 
