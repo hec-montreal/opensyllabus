@@ -219,6 +219,12 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
     private String getPropertyValue(String property) {
 	return getProperty(property) == null ? "" : getProperty(property);
     }
+    
+    private String getPropertyValue(String property,  String type) {
+	return getProperty(property,type) == null ? "" : getProperty(property,type);
+    }
+    
+    
 
     /**
      * Generate a link, if possible, with citation informations
@@ -281,7 +287,7 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
      */
     public String getCitationPreview() {
 	String infos = "";
-	String type = getProperty(CitationSchema.TYPE);
+	String type = getProperty(COPropertiesType.RESOURCE_TYPE);
 	if (!isDocumentDefined()) {
 	    return getCoMessage("UndefinedCitation");
 	} else {
@@ -291,8 +297,8 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 		// <auteurs>, <titre>, <édition>,<pages>, <éditeur>, <année>,
 		// <ISBN>
 		infos +=
-			getPropertyValue(CitationSchema.CREATOR).equals("") ? ""
-				: (getPropertyValue(CitationSchema.CREATOR) + ". ");
+			getPropertyValue(COPropertiesType.AUTHOR).equals("") ? ""
+				: (getPropertyValue(COPropertiesType.AUTHOR) + ". ");
 		infos +=
 			getPropertyValue(CitationSchema.TITLE).equals("") ? ""
 				: (getPropertyValue(CitationSchema.TITLE) + ", ");
@@ -309,23 +315,23 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 			getPropertyValue(CitationSchema.YEAR).equals("") ? ""
 				: (getPropertyValue(CitationSchema.YEAR) + ", ");
 		infos +=
-			getPropertyValue(CitationSchema.ISN).equals("") ? ""
-				: getPropertyValue(CitationSchema.ISN);
+			getPropertyValue(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_ISN).equals("") ? ""
+				: getPropertyValue(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_ISN);
 		infos += ".";
 
 	    } else if (type.equals(CitationSchema.TYPE_ARTICLE)) {
 		// <auteurs>, <titre>, <périodique>, <date>, <volume>,
 		// <numéro>, <pages>, <ISSN>, <DOI>
 		infos +=
-			getPropertyValue(CitationSchema.CREATOR).equals("") ? ""
-				: (getPropertyValue(CitationSchema.CREATOR) + ". ");
+			getPropertyValue(COPropertiesType.AUTHOR).equals("") ? ""
+				: (getPropertyValue(COPropertiesType.AUTHOR) + ". ");
 		infos +=
 			getPropertyValue(CitationSchema.TITLE).equals("") ? ""
 				: getPropertyValue(CitationSchema.TITLE);
 		infos +=
-			getPropertyValue(CitationSchema.SOURCE_TITLE)
+			getPropertyValue(COPropertiesType.JOURNAL)
 				.equals("") ? ""
-				: (", " + getPropertyValue(CitationSchema.SOURCE_TITLE));
+				: (", " + getPropertyValue(COPropertiesType.JOURNAL));
 		infos +=
 			getPropertyValue(CitationSchema.DATE).equals("") ? ""
 				: (", " + getPropertyValue(CitationSchema.DATE));
@@ -339,11 +345,11 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 			getPropertyValue(CitationSchema.PAGES).equals("") ? ""
 				: (", " + getPropertyValue(CitationSchema.PAGES));
 		infos +=
-			getPropertyValue(CitationSchema.ISN).equals("") ? ""
-				: (", " + getPropertyValue(CitationSchema.ISN));
+			getPropertyValue(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_ISN).equals("") ? ""
+				: (", " + getPropertyValue(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_ISN));
 		infos +=
-			getPropertyValue(CitationSchema.DOI).equals("") ? ""
-				: (", " + getPropertyValue(CitationSchema.DOI));
+			getPropertyValue(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_DOI).equals("") ? ""
+				: (", " + getPropertyValue(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_DOI));
 		infos += ".";
 	    } else {
 		infos +=
