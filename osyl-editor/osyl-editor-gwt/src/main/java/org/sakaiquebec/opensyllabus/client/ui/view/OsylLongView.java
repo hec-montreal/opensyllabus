@@ -72,7 +72,7 @@ public class OsylLongView extends OsylViewableComposite {
      */
     private void initView() {
 	setMainPanel(new VerticalPanel());
-	getMainPanel().setStylePrimaryName("Osyl-WorkspaceView-MainPanel");
+	getMainPanel().setStylePrimaryName("Osyl-UnitView-MainPanel");
 	refreshView();
 	initWidget(getMainPanel());
     }
