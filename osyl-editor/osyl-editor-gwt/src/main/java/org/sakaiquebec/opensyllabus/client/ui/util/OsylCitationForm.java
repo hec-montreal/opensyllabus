@@ -408,8 +408,10 @@ public class OsylCitationForm extends WindowPanel implements
 		// Title is always required, author is required when type is
 		// book
 		if (title.length() == 0
-			|| (getCurrentCitationType().equals(
-				CitationSchema.TYPE_BOOK) && author.length() == 0)) {
+			|| ((getCurrentCitationType().equals(
+				CitationSchema.TYPE_BOOK) || getCurrentCitationType()
+				.equals(CitationSchema.TYPE_REPORT)) && author
+				.length() == 0)) {
 		    final OsylAlertDialog alertBox =
 			    new OsylAlertDialog(
 				    false,
@@ -713,6 +715,7 @@ public class OsylCitationForm extends WindowPanel implements
     private void initCitationTypes() {
 	citationTypeKeys = new ArrayList<String>();
 	citationTypeKeys.add(CitationSchema.TYPE_BOOK);
+	citationTypeKeys.add(CitationSchema.TYPE_REPORT);
 	citationTypeKeys.add(CitationSchema.TYPE_ARTICLE);
 	citationTypeKeys.add(CitationSchema.TYPE_UNKNOWN);
     }
@@ -746,7 +749,8 @@ public class OsylCitationForm extends WindowPanel implements
      * @param the new type of citation
      */
     private void updateForm(String newType) {
-	if (newType.equals(CitationSchema.TYPE_BOOK)) {
+	if (newType.equals(CitationSchema.TYPE_BOOK)
+		|| newType.equals(CitationSchema.TYPE_REPORT)) {
 	    authorLabel.setHTML(osylController
 		    .getCoMessage("ResProxCitationView_authorLabel")
 		    + MANDATORY_FIELD_INDICATOR + ":");
