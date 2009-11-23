@@ -564,6 +564,7 @@
 }
 
 .Osyl-UnitView-UnitLabel ul, .Osyl-UnitView-UnitLabel-Important ul {margin-left:30px}
+.Osyl-UnitView-UnitLabel ol, .Osyl-UnitView-UnitLabel-Important ol {margin-left:35px}
 
 .Osyl-UnitView-UnitLabel-Important {
 	border:1px solid #F00;
@@ -626,8 +627,7 @@
 }
 
 .Osyl-ListItemView-labelNo {
-/*  width:30px; ??? */
-	width:90px;
+	width:30px;
 	height:30px;
 	padding:0 5px 0 10px;
 }

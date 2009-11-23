@@ -32,11 +32,9 @@ a:hover {
 ul, ol {
 	margin-bottom:5px;
 	margin-top:5px;
-/*	margin-left:5px; ??? */
 }
 
 li {
-/*	margin-left:20px; ??? */
 	margin-left:-10px;
 }
 
