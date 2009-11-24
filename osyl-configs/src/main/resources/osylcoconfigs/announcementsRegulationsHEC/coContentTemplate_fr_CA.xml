@@ -40,8 +40,7 @@
 							<importance>false</importance>
 							<level>undefined</level>
 							<visible>true</visible>
-							<semanticTag type="rubric">calculators
-							</semanticTag>
+							<semanticTag type="rubric">calculators</semanticTag>
 							<asmResource xsi:type="Text" access="attendee" id="D51AE845-C5B3-4B9E-9DDD-BA8862D2335B">
 								<text><![CDATA[Les étudiants sont priés de prendre connaissance de la
 													politique d'utilisation de calculatriceslors d'examens lorsque
