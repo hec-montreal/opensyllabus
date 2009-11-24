@@ -538,7 +538,6 @@ public class COModeledServer {
 	    boolean isPublication) {
 	Node coNode;
 	String coNodeName = "";
-	String coContentUnitType = "";
 
 	setCommonAttributes(coContentUnit, node);
 
