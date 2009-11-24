@@ -625,12 +625,12 @@ public class COModeledServer {
 	    Node rNode = resChildren.item(z);
 	    addProperty(coContentRes.getProperties(), rNode);
 	}
-	if (coContentRes.getType().equals(COContentResourceType.DOCUMENT)
-		|| coContentRes.getType().equals(
-			COContentResourceType.BIBLIO_RESOURCE)) {
+
+	if (coContentRes.getType().equals(COContentResourceType.DOCUMENT)) {
 	    if (coContentRes.getProperty(COPropertiesType.IDENTIFIER,
 		    COPropertiesType.IDENTIFIER_TYPE_URI) != null) {
-		documentSecurityMap.put(coContentRes.getProperty(COPropertiesType.IDENTIFIER,
+		documentSecurityMap.put(coContentRes.getProperty(
+			COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_URI).trim(),
 			coContentRes.getAccess());
 		if (isPublication) {
@@ -645,6 +645,13 @@ public class COModeledServer {
 		    coContentRes.setProperties(copProperties);
 		}
 	    }
+	} else if (coContentRes.getType().equals(
+		COContentResourceType.BIBLIO_RESOURCE)) {
+	    String uri =
+		    coContentRes.getProperty(COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_URI);
+	    documentSecurityMap.put(uri.substring(0, uri.lastIndexOf("/")),
+		    coContentRes.getAccess());
 	}
 	return coContentRes;
     }

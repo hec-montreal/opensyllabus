@@ -44,9 +44,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>officialdescription</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							officialdescription
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -74,9 +74,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>coursebeginend</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							coursebeginend
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -97,9 +97,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>courseregularschedule</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							courseregularschedule
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -120,9 +120,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>coursespecialevents</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							coursespecialevents
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -155,9 +155,9 @@
                     	<label><![CDATA[Tapez votre texte ici...]]></label>
                             <importance>false</importance>
                             <visible>true</visible>
-                            <semanticType>
-                                <type>coursecoordinator</type>
-                            </semanticType>
+                            <semanticTag type="rubric">
+                                coursecoordinator
+                            </semanticTag>
                             <availability>Du lundi au vendredi entre 9 h et 17 h</availability>
                             <comment>Pas de commentaire&lt;br&gt;</comment>
                             <Person access="attendee">
@@ -186,9 +186,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>coursetopicspresentation</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							coursetopicspresentation
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -209,9 +209,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>problematic</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							problematic
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -245,9 +245,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponents</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponents
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -268,9 +268,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsLearningSet</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsLearningSet
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -308,10 +308,10 @@
 							<id type="UdeMsakai">9808690780809696</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<visible>true</visible>
-							<semanticType>
-								<type>description</type>
-								<userDefTopic>String</userDefTopic>
-							</semanticType>
+							<semanticTag type="rubric">
+								description
+								
+							</semanticTag>
 							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 							<mode>individual</mode>
@@ -343,10 +343,10 @@
 							<id type="UdeMsakai">9808690780809696</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<visible>true</visible>
-							<semanticType>
-								<type>description</type>
-								<userDefTopic>String</userDefTopic>
-							</semanticType>
+							<semanticTag type="rubric">
+								description
+								
+							</semanticTag>
 							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 							<mode>individual</mode>
@@ -366,9 +366,9 @@
 				    		<id type="UdeMsakai">805655358980</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<visible>true</visible>
-							<semanticType>
-								<type>SkillsMeasured</type>
-							</semanticType>
+							<semanticTag type="rubric">
+								SkillsMeasured
+							</semanticTag>
 							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 							<mode>individual</mode>
@@ -405,10 +405,10 @@
 							<id type="UdeMsakai">9808690780809696</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<visible>true</visible>
-							<semanticType>
-								<type>description</type>
-								<userDefTopic>String</userDefTopic>
-							</semanticType>
+							<semanticTag type="rubric">
+								description
+								
+							</semanticTag>
 							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 							<mode>individual</mode>
@@ -428,9 +428,9 @@
 				    		<id type="UdeMsakai">805655358980</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<visible>true</visible>
-							<semanticType>
-								<type>SkillsMeasured</type>
-							</semanticType>
+							<semanticTag type="rubric">
+								SkillsMeasured
+							</semanticTag>
 							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 							<mode>individual</mode>
@@ -467,10 +467,10 @@
 							<id type="UdeMsakai">9808690780809696</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<visible>true</visible>
-							<semanticType>
-								<type>description</type>
-								<userDefTopic>String</userDefTopic>
-							</semanticType>
+							<semanticTag type="rubric">
+								description
+								
+							</semanticTag>
 							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 							<mode>individual</mode>
@@ -490,9 +490,9 @@
 				    		<id type="UdeMsakai">805655358980</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<visible>true</visible>
-							<semanticType>
-								<type>SkillsMeasured</type>
-							</semanticType>
+							<semanticTag type="rubric">
+								SkillsMeasured
+							</semanticTag>
 							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 							<mode>individual</mode>
@@ -529,10 +529,10 @@
 							<id type="UdeMsakai">9808690780809696</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<visible>true</visible>
-							<semanticType>
-								<type>description</type>
-								<userDefTopic>String</userDefTopic>
-							</semanticType>
+							<semanticTag type="rubric">
+								description
+								
+							</semanticTag>
 							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 							<mode>individual</mode>
@@ -552,9 +552,9 @@
 				    		<id type="UdeMsakai">805655358980</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<visible>true</visible>
-							<semanticType>
-								<type>SkillsMeasured</type>
-							</semanticType>
+							<semanticTag type="rubric">
+								SkillsMeasured
+							</semanticTag>
 							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 							<mode>individual</mode>
@@ -598,9 +598,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>description</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							description
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -634,9 +634,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>pedagogicaltheory</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							pedagogicaltheory
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -657,9 +657,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>teachingstrategy</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							teachingstrategy
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -680,9 +680,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>learningstrategy</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							learningstrategy
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -703,9 +703,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>modusoperandi</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							modusoperandi
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -739,9 +739,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>complbibres</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							complbibres
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -762,9 +762,9 @@
 						<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>requiredbooks</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							requiredbooks
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -785,9 +785,9 @@
 						<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>recommendedbooks</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							recommendedbooks
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -808,9 +808,9 @@
 						<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>codex</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							codex
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -831,9 +831,9 @@
 						<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>hardwaresoftware</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							hardwaresoftware
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -854,9 +854,9 @@
 						<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>oldexams</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							oldexams
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -892,10 +892,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsTimePlace</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsTimePlace
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -916,10 +916,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>description</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							description
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -940,9 +940,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsGeneralObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsGeneralObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -963,9 +963,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsSpecificObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsSpecificObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -986,9 +986,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsRequiredMaterial</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsRequiredMaterial
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1009,9 +1009,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>evaluation</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							evaluation
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1032,9 +1032,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsActivity</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsActivity
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1063,10 +1063,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsTimePlace</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsTimePlace
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1087,10 +1087,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>description</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							description
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1111,9 +1111,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsGeneralObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsGeneralObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1134,9 +1134,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsSpecificObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsSpecificObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1157,9 +1157,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsRequiredMaterial</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsRequiredMaterial
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1180,9 +1180,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>evaluation</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							evaluation
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1203,9 +1203,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsActivity</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsActivity
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1234,10 +1234,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsTimePlace</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsTimePlace
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1258,10 +1258,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>description</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							description
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1282,9 +1282,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsGeneralObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsGeneralObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1305,9 +1305,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsSpecificObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsSpecificObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1328,9 +1328,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsRequiredMaterial</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsRequiredMaterial
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1351,9 +1351,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>evaluation</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							evaluation
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1374,9 +1374,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsActivity</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsActivity
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1405,10 +1405,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsTimePlace</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsTimePlace
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1429,10 +1429,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>description</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							description
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1453,9 +1453,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsGeneralObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsGeneralObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1476,9 +1476,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsSpecificObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsSpecificObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1499,9 +1499,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsRequiredMaterial</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsRequiredMaterial
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1522,9 +1522,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>evaluation</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							evaluation
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1545,9 +1545,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsActivity</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsActivity
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1576,10 +1576,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsTimePlace</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsTimePlace
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1600,10 +1600,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>description</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							description
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1624,9 +1624,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsGeneralObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsGeneralObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1647,9 +1647,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsSpecificObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsSpecificObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1670,9 +1670,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsRequiredMaterial</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsRequiredMaterial
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1693,9 +1693,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>evaluation</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							evaluation
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1716,9 +1716,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsActivity</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsActivity
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1747,10 +1747,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsTimePlace</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsTimePlace
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1771,10 +1771,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>description</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							description
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1795,9 +1795,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsGeneralObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsGeneralObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1818,9 +1818,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsSpecificObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsSpecificObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1841,9 +1841,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsRequiredMaterial</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsRequiredMaterial
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1864,9 +1864,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>evaluation</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							evaluation
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1887,9 +1887,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsActivity</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsActivity
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1918,10 +1918,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsTimePlace</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsTimePlace
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1942,10 +1942,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>description</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							description
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1966,9 +1966,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsGeneralObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsGeneralObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -1989,9 +1989,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsSpecificObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsSpecificObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2012,9 +2012,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsRequiredMaterial</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsRequiredMaterial
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2035,9 +2035,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>evaluation</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							evaluation
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2058,9 +2058,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsActivity</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsActivity
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2089,10 +2089,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsTimePlace</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsTimePlace
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2113,10 +2113,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>description</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							description
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2137,9 +2137,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsGeneralObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsGeneralObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2160,9 +2160,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsSpecificObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsSpecificObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2183,9 +2183,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsRequiredMaterial</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsRequiredMaterial
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2206,9 +2206,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>evaluation</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							evaluation
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2229,9 +2229,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsActivity</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsActivity
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2260,10 +2260,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsTimePlace</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsTimePlace
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2284,10 +2284,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>description</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							description
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2308,9 +2308,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsGeneralObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsGeneralObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2331,9 +2331,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsSpecificObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsSpecificObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2354,9 +2354,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsRequiredMaterial</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsRequiredMaterial
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2377,9 +2377,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>evaluation</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							evaluation
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2400,9 +2400,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsActivity</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsActivity
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2431,10 +2431,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsTimePlace</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsTimePlace
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2455,10 +2455,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>description</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							description
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2479,9 +2479,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsGeneralObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsGeneralObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2502,9 +2502,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsSpecificObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsSpecificObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2525,9 +2525,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsRequiredMaterial</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsRequiredMaterial
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2548,9 +2548,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>evaluation</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							evaluation
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2571,9 +2571,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsActivity</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsActivity
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2602,10 +2602,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsTimePlace</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsTimePlace
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2626,10 +2626,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>description</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							description
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2650,9 +2650,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsGeneralObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsGeneralObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2673,9 +2673,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsSpecificObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsSpecificObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2696,9 +2696,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsRequiredMaterial</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsRequiredMaterial
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2719,9 +2719,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>evaluation</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							evaluation
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2742,9 +2742,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsActivity</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsActivity
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2773,10 +2773,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsTimePlace</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsTimePlace
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2797,10 +2797,10 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>description</type>
-							<userDefTopic>String</userDefTopic>
-						</semanticType>
+						<semanticTag type="rubric">
+							description
+							
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2821,9 +2821,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsGeneralObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsGeneralObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2844,9 +2844,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsSpecificObjectives</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsSpecificObjectives
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2867,9 +2867,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsRequiredMaterial</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsRequiredMaterial
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2890,9 +2890,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>evaluation</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							evaluation
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2913,9 +2913,9 @@
 						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>SkillsComponentsActivity</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							SkillsComponentsActivity
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2949,9 +2949,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>description</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							description
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -2984,9 +2984,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>description</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							description
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
@@ -3020,9 +3020,9 @@
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
-						<semanticType>
-							<type>LearningSupportSAE</type>
-						</semanticType>
+						<semanticTag type="rubric">
+							LearningSupportSAE
+						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>

@@ -15,6 +15,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.content.api.ContentCollection;
+import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentEntity;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.id.cover.IdManager;
@@ -330,31 +331,64 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    contentHostingService.removeResource(thisEntityRef);
 	    }
 
-	    // process members
-	    for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
-		    .hasNext();) {
-		ContentEntity next = (ContentEntity) iMbrs.next();
-		String thisEntityRef = next.getId();
-		String newId =
-			contentHostingService.copyIntoFolder(thisEntityRef,
-				id_publish);
-
-		if (next.isCollection())
-		    newId = newId + "/";
-
-		// Permission
-		String permission =
-			documentSecurityMap.get(thisEntityRef
-				.substring(thisEntityRef.lastIndexOf("/") + 1));
-		if (permission != null)
-		    osylSecurityService.applyPermissions(newId, permission);
-	    }
+	    copyWorkToPublish(workContent, documentSecurityMap);
+	    
 	} catch (Exception e) {
 	    log.error(
 		    "Unable to copy the work folder content to publish folder",
 		    e);
 	    throw e;
 	}
+    }
+
+    @SuppressWarnings("unchecked")
+    private void copyWorkToPublish(ContentCollection directory,
+	    Map<String, String> documentSecurityMap) throws Exception{
+	String currentSiteRef = osylSiteService.getCurrentSiteReference();
+	List<ContentEntity> members = directory.getMemberResources();
+	for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
+		.hasNext();) {
+	    ContentEntity next = (ContentEntity) iMbrs.next();
+	    String thisEntityRef = next.getId();
+
+	    if (next.isCollection()) {
+		ContentCollection collection = (ContentCollection) next;
+		copyWorkToPublish(collection, documentSecurityMap);
+	    } else {
+		String permission =
+			documentSecurityMap.get(thisEntityRef);
+		if (permission != null) {
+		    //doc exists in CO
+		    String this_work_id = directory.getId();
+
+		    String this_publish_directory =
+			    currentSiteRef
+				    + PUBLISH_DIRECTORY
+				    + this_work_id.substring(this_work_id
+					    .lastIndexOf(currentSiteRef
+						    + WORK_DIRECTORY),
+					    this_work_id.length());
+		    ContentCollection publishContent =
+			    contentHostingService
+				    .getCollection(this_publish_directory);
+		    if (publishContent == null) {
+			ContentCollectionEdit publishContentEdit;
+			publishContentEdit =
+				contentHostingService
+					.addCollection(this_publish_directory);
+
+			contentHostingService
+				.commitCollection(publishContentEdit);
+		    }
+		    String newId =
+			    contentHostingService.copyIntoFolder(thisEntityRef,
+				    this_publish_directory);
+		    // Permission application
+		    osylSecurityService.applyPermissions(newId, permission);
+		}
+	    }
+	}
+
     }
 
     private void publish(COSerialized co, String access, String xslFileName,
