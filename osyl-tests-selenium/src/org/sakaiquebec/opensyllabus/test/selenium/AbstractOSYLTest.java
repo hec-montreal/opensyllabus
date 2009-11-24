@@ -292,6 +292,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
 	for (int second = 0;; second++) {
 	    if (second >= 60) {
+		
 		fail("Timeout waiting for Osyl-UnitView-UnitPanel sub-structure:"
 			+ " __Was OpenSyllabus added to the site?__");
 	    }
@@ -327,7 +328,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     public void enterFirstLecture() throws Exception {
 	// enter first lecture
 	session().click(
-		"//table[@class=\"Osyl-UnitView-UnitPanel\"]"
+		"//table[@class=\"Osyl-WorkspaceView-MainPanel\"]"
 			+ "/tbody/tr/td/table/tbody/tr/td/div/a");
     } // enterFirstLecture
 
