@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.events.FiresUpdateCOContentResourceProxyEvents;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEventHandler.UpdateCOContentResourceProxyEvent;
@@ -48,7 +47,6 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
      * Boolean value to print trace in debug mode.
      */
     public static final boolean TRACE = false;
-
 
     /*
      * The description of a <code>COContentResourceProxy</code>.
@@ -91,18 +89,17 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	final COContentResourceProxy resProxModel =
 		new COContentResourceProxy();
 	resProxModel.setType(type);
-	
+
 	if (!type.equalsIgnoreCase(COContentResourceProxyType.PEOPLE)) {
-	    if(type.equalsIgnoreCase(COContentResourceProxyType.REFERENCE)){
+	    if (type.equalsIgnoreCase(COContentResourceProxyType.REFERENCE)) {
 		resProxModel.addProperty(COPropertiesType.DISPLAY_AS, "link");
-		if(resourceType.equals(COContentResourceType.DOCUMENT))
-		    resProxModel.setAccess(SecurityInterface.ACCESS_ATTENDEE);
 	    }
 	    if (resourceType.equalsIgnoreCase(COContentResourceType.ASSIGNMENT))
 		// We change the default text
 		resProxModel
 			.setLabel(osylConfigMessages.getMessage("SendWork"));
-	    else if(!resourceType.equalsIgnoreCase(COContentResourceType.BIBLIO_RESOURCE)){
+	    else if (!resourceType
+		    .equalsIgnoreCase(COContentResourceType.BIBLIO_RESOURCE)) {
 		resProxModel.setLabel(osylConfigMessages
 			.getMessage("InsertYourTextHere"));
 	    }
@@ -111,15 +108,15 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	    resProxModel.addProperty(COPropertiesType.REQUIREMENT_LEVEL,
 		    "undefined");
 	}
-	
+
 	resProxModel.setRubricType(defaultRubric);
-	
+
 	// Default resource
 	final COContentResource resModel =
 		COContentResource.createDefaultRes(resourceType,
 			osylConfigMessages);
 	resModel.setAccess(resProxModel.getAccess());
-	
+
 	resProxModel.setResource(resModel);
 	// Add child (a model notification should fire)
 	((COUnitContent) parentModel).addChild(resProxModel);
@@ -135,7 +132,6 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	super.setType(type);
 	notifyEventHandlers();
     }
-
 
     /**
      * @param access the access to set
@@ -201,8 +197,8 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
      * @param rubric the rubric to set
      */
     public void setRubric(COContentRubric rubric) {
-	
-	if (rubric != null){
+
+	if (rubric != null) {
 	    this.rubric = rubric;
 	    moveToTheBottomOfTheRubric();
 	}
@@ -397,7 +393,7 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	    getParent().changeElementPosition(this,
 		    COElementAbstract.POSITION_CHANGE_ACTION_DOWN);
     }
-    
+
     public void moveToTheTopOfTheRubric() {
 	while (hasPredecessor())
 	    getParent().changeElementPosition(this,
