@@ -846,15 +846,14 @@ public class AssessmentTest extends AbstractOSYLTest{
         // We switch the 1st and 2nd assessment 
         int Val1 = resNb +2;
         if (inInternetExplorer()) {
-        session().keyPress(
-        		/*/html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
+        session().keyPress("//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
         		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
         		"tbody/tr["+Val1+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
-        		"tbody/tr[2]/td/table/tbody/tr/td/div", "\r");*/
-        		"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
+        		"tbody/tr[2]/td/table/tbody/tr/td/div", "\r");
+        		/*"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
         		"div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
         		"tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div/table" +
-        		"[3]/tbody/tr[2]/td/table/tbody/tr/td/div", "\r");
+        		"[3]/tbody/tr[2]/td/table/tbody/tr/td/div", "\r");*/
         		
         } else {
         session().mouseOver(
