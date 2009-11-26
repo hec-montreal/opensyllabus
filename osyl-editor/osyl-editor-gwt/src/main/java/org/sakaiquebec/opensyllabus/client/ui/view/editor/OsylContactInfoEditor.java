@@ -22,10 +22,12 @@ package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxContactInfoView;
+import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
@@ -193,12 +195,17 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	lb.setStylePrimaryName("Osyl-ContactInfo-ListBox");
 	List<String> rolesList =
 		getView().getController().getOsylConfig().getRolesList();
-	if (rolesList.size() > 0) {
+	TreeSet<String> sortedRoleSet =
+		new TreeSet<String>(LocalizedStringComparator.getInstance());
+	for (String roleKey : rolesList) {
+	    sortedRoleSet.add(getView().getCoMessage(roleKey));
+	}
+	if (sortedRoleSet.size() > 0) {
 	    lb.addItem(getView().getCoMessage(
 		    "ResProxContactInfoView_PleaseChoose").trim(), "");
 	}
-	for (String roleKey : rolesList) {
-	    lb.addItem(getView().getCoMessage(roleKey));
+	for (String role : sortedRoleSet) {
+	    lb.addItem(role);
 	}
 	return lb;
     }
@@ -720,8 +727,9 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	getViewerFirstName().setHTML(getView().getFirstName());
 	getViewerOffice().setHTML(getView().getOffice());
 	getViewerPhone().setHTML(getView().getPhone());
-	getViewerEMail().setHTML("<a href=\"mailto:" + getView().getEMail() + "\">"
-		+ getView().getEMail() + "</a>");
+	getViewerEMail().setHTML(
+		"<a href=\"mailto:" + getView().getEMail() + "\">"
+			+ getView().getEMail() + "</a>");
 	getViewerAvailability().setHTML(getView().getAvailability());
 	getViewerComments().setHTML(getView().getComments());
 
