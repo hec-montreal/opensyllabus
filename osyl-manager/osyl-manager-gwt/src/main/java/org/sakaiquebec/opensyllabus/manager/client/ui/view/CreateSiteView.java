@@ -116,10 +116,12 @@ public class CreateSiteView extends OsylManagerAbstractView {
 	    public void onClick(ClickEvent event) {
 		boolean nameValid = false;
 		String name = nameTextBox.getText();
+		//TODO Maybe we should make a blacklist of forbidden characters
+		//instead of a whitelist of authorized characters
 		nameValid =
 			(name != null
 				&& name
-					.matches("^[a-zA-Z0-9][ a-zA-Z0-9\\._-]*") && name
+					.matches("^[a-zA-Z0-9àâÀÂçÇéèêëÉÈÊËîïÎÏôÔùÙ][ a-zA-Z0-9àâÀÂçÇéèêëÉÈÊËîïÎÏôÔùÙ\\._-]*") && name
 				.matches(".*[\\S]$"));
 		if (nameValid) {
 		    if (configListBox.getSelectedIndex() != -1) {
