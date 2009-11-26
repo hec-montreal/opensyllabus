@@ -186,8 +186,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 				    siteId, accessType);
 	    osylSiteService.getSiteInfo(thisCo, siteId);
 	    coConfig =
-		    configDao.getConfigByRef("osylcoconfigs" + File.separator
-			    + "default");
+		    configDao
+			    .getConfigByRef(OsylConfigService.DEFAULT_CONFIG_REF);
 	} catch (Exception e) {
 	    log
 		    .error(
@@ -197,6 +197,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	try {
 	    thisCo =
 		    osylConfigService.fillCo(webappDir
+			    + OsylConfigService.CONFIG_DIR + File.separator
 			    + coConfig.getConfigRef(), thisCo);
 	} catch (Exception e) {
 	    log.error("Unable to fill course outline", e);
@@ -264,11 +265,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	    // Create a course outline with security public
 	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_PUBLIC,
-		    OsylSiteService.CO_CONTENT_XSL_PUBLIC, webappDir);
+		    webappDir);
 
 	    // Create a course outline with security attendee
 	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_ATTENDEE,
-		    OsylSiteService.CO_CONTENT_XSL_ATTENDEE, webappDir);
+		    webappDir);
 
 	    publishChild(siteId, webappDir);
 	}
@@ -310,9 +311,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	try {
 	    ContentCollection workContent =
 		    contentHostingService.getCollection(id_work);
-
-	    @SuppressWarnings("unchecked")
-	    List<ContentEntity> members = workContent.getMemberResources();
 
 	    // We remove all resources in the publish directory collection
 	    ContentCollection publishContent =
@@ -369,8 +367,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 					    + currentSiteRef.length()
 					    + WORK_DIRECTORY.length(),
 					    this_work_id.length());
-		    
-		    if(!contentHostingService.isCollection(this_publish_directory)){
+
+		    if (!contentHostingService
+			    .isCollection(this_publish_directory)) {
 			ContentCollectionEdit publishContentEdit;
 			publishContentEdit =
 				contentHostingService
@@ -390,8 +389,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     }
 
-    private void publish(COSerialized co, String access, String xslFileName,
-	    String webappDir) throws Exception {
+    private void publish(COSerialized co, String access, String webappDir)
+	    throws Exception {
 	COSerialized publishedCO = null;
 	try {
 	    publishedCO =
@@ -405,36 +404,29 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	if (publishedCO == null) {
 	    publishedCO = new COSerialized(co);
 	    publishedCO.setCoId(IdManager.createUuid());
-	    publishedCO.setContent(XslTransform(webappDir, co.getContent(),
-		    xslFileName));
+	    publishedCO.setContent(transformXmlForGroup(co.getContent(),
+		    access, webappDir));
 	    publishedCO.setAccess(access);
 	    publishedCO.setPublished(true);
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
 	} else {
-	    publishedCO.setContent(XslTransform(webappDir, co.getContent(),
-		    xslFileName));
+	    publishedCO.setContent(transformXmlForGroup(co.getContent(),
+		    access, webappDir));
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
 	}
     }
 
-    /**
-     * Applies an XSL transformation to the XML content specified and return the
-     * resulting XML.
-     * 
-     * @param webappDir the current webapp directory
-     * @param content the course outline XML to transform
-     * @param xslSecurityFile the XSL file to use
-     */
-    private String XslTransform(String webappDir, String content,
-	    String xslSecurityFile) throws Exception {
-
+    public String transformXmlForGroup(String content, String group,
+	    String webappDir) throws Exception {
 	TransformerFactory tFactory = TransformerFactory.newInstance();
-
+	String xslFileName =
+		OsylSiteService.XSL_PREFIX + group
+			+ OsylSiteService.XSL_FILE_EXTENSION;
 	// Retrieve xml and xsl from the webapps/xslt
 	File coXslFile =
 		new File(webappDir + File.separator
 			+ OsylSiteService.XSLT_DIRECTORY + File.separator,
-			xslSecurityFile + OsylSiteService.XSL_FILE_EXTENSION);
+			xslFileName);
 	try {
 	    // retrieve the Xml source
 	    StreamSource coXmlContentSource =
@@ -455,4 +447,5 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    throw e;
 	}
     }
+
 }

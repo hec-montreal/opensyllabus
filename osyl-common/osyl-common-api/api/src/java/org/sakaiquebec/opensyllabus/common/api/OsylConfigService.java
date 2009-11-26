@@ -20,7 +20,6 @@
 
 package org.sakaiquebec.opensyllabus.common.api;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -50,23 +49,26 @@ public interface OsylConfigService {
     public static final String CONFIG_COMESSAGES = "COMessages";
 
     /**
-     * Creates the following configurations:
-     * "default" - "Config from HEC Montreal"
-     * "udem" - "Config udem"
+     * Package (ie: folder) containing the message files (.properties)
+     */
+    public static final String CONFIG_DIR = "osylcoconfigs";
+
+    /**
+     * Creates the following configurations: "default" -
+     * "Config from HEC Montreal" "udem" - "Config udem"
      * "udemCompetencesComposantes" - "Config UdeM - Competences Composantes"
      * "udemCompetencesSeances" - "Config UdeM - Competences Seances"
      * "udemObjectifsActivites" - "Config UdeM - Objectifs Activites"
      * "udemObjectifsSeances" - "Config UdeM - Objectifs Seances"
      * 
-     * @throws Exception 
+     * @throws Exception
      */
     public void initConfigs() throws Exception;
 
     /**
      * Default configs
      */
-    public static final String DEFAULT_CONFIG_REF =
-	    "osylcoconfigs" + File.separator + "default";
+    public static final String DEFAULT_CONFIG_REF = "default";
 
     /**
      * Returns the configurations related to the id
@@ -79,6 +81,7 @@ public interface OsylConfigService {
 
     /**
      * Returns all configs avaiable
+     * 
      * @return A Map<Id,Description>
      * @throws Exception
      */
@@ -108,7 +111,7 @@ public interface OsylConfigService {
      * Creates a new COConfig
      * 
      * @param coConfig
-     * @throws Exception 
+     * @throws Exception
      */
     public void createConfig(COConfigSerialized coConfig) throws Exception;
 

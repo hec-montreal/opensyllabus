@@ -35,9 +35,9 @@ import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COModeled;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
-import org.sakaiquebec.opensyllabus.shared.model.COStructureElementType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
 import org.sakaiquebec.opensyllabus.shared.model.OsylTestXsl;
+import org.sakaiquebec.opensyllabus.shared.util.BrowserUtil;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -67,6 +67,8 @@ public class OsylPreviewView extends OsylViewableComposite implements
     private OsylTreeView osylTree;
     private OsylWorkspaceView osylWorkspaceView;
     private OsylToolbarView osylToolbarView;
+    
+    private COSerialized coSerializedForGroup;
 
     public OsylToolbarView getOsylToolbarView() {
 	return osylToolbarView;
@@ -81,44 +83,73 @@ public class OsylPreviewView extends OsylViewableComposite implements
 	super(null, controller);
 	this.access = access;
 	this.controller = controller;
+	entryPoint.prepareModelForSave();
+	coSerializedForGroup =
+		new COSerialized(entryPoint.getPreviewSerializeCourseOutline());
+	
+	
 
 	if (getController().isInHostedMode()) {
 	    String xsl = "";
 	    if (access.equals(SecurityInterface.ACCESS_PUBLIC)) {
 		xsl = OsylTestXsl.XSL_PUBLIC;
-	    } else if (access
-		    .equals(SecurityInterface.ACCESS_ONSITE)) {
+	    } else if (access.equals(SecurityInterface.ACCESS_ONSITE)) {
 		xsl = OsylTestXsl.XSL_ONSITE;
 	    } else {
 		xsl = OsylTestXsl.XSL_ATTENDEE;
 	    }
-	    initModel(xsl);
+	    initModelWithXsl(xsl);
 	} else {
+	    //For ie (version 7 and 8 at least), xsl transformation client-side is too long, we make it server-side
+	    if (BrowserUtil.getBrowserType().equals("ie6")) {
+		AsyncCallback<String> asyncallback =
+			new AsyncCallback<String>() {
 
-	    AsyncCallback<String> asyncallback = new AsyncCallback<String>() {
+			    public void onSuccess(String xml) {
+				initViewWithXmlModel(xml);
+			    }
 
-		public void onSuccess(String xsl) {
-		    initModel(xsl);
-		}
+			    public void onFailure(Throwable error) {
+				System.out
+					.println("RPC FAILURE - getXslForGroup(...) : "
+						+ error.toString());
+				Window
+					.alert("RPC FAILURE - getXslForGroup(...) : "
+						+ error.toString());
+			    }
 
-		public void onFailure(Throwable error) {
-		    System.out.println("RPC FAILURE - getXslForGroup(...) : "
-			    + error.toString());
-		    Window.alert("RPC FAILURE - getXslForGroup(...) : "
-			    + error.toString());
-		}
+			};
+			getController().transformXmlForGroup(coSerializedForGroup.getContent(), access, asyncallback);
+	    } else {
+		AsyncCallback<String> asyncallback =
+			new AsyncCallback<String>() {
 
-	    };
-	    getController().getXslForGroup(access, asyncallback);
+			    public void onSuccess(String xsl) {
+				initModelWithXsl(xsl);
+			    }
+
+			    public void onFailure(Throwable error) {
+				System.out
+					.println("RPC FAILURE - getXslForGroup(...) : "
+						+ error.toString());
+				Window
+					.alert("RPC FAILURE - getXslForGroup(...) : "
+						+ error.toString());
+			    }
+
+			};
+		getController().getXslForGroup(access, asyncallback);
+	    }
 	}
     }
-
-    private void initModel(String xsl) {
-	entryPoint.prepareModelForSave();
-	COSerialized coSerializedForGroup =
-		new COSerialized(entryPoint.getPreviewSerializeCourseOutline());
-	coSerializedForGroup.setContent(getController().xslTransform(
+    
+    private void initModelWithXsl(String xsl){
+	initViewWithXmlModel(getController().xslTransform(
 		coSerializedForGroup.getContent(), xsl));
+    }
+    
+    private void initViewWithXmlModel(String xml){
+	coSerializedForGroup.setContent(xml);
 	COModeled model = new COModeled(coSerializedForGroup);
 	model.XML2Model();
 	setModel(model.getModeledContent());
@@ -147,7 +178,8 @@ public class OsylPreviewView extends OsylViewableComposite implements
 		new HorizontalSplitPanel();
 	horizontalSplitPanel
 		.setStylePrimaryName("Osyl-MainView-HorizontalSplitPanel");
-	horizontalSplitPanel.setSplitPosition( OsylTreeView.getInitialSplitPosition());
+	horizontalSplitPanel.setSplitPosition(OsylTreeView
+		.getInitialSplitPosition());
 
 	// Create and set the OpenSyllabus TreeView
 	setOsylTreeView(new OsylTreeView(getModel(), getController()));
@@ -163,7 +195,8 @@ public class OsylPreviewView extends OsylViewableComposite implements
 	initWidget(getMainPanel());
 	entryPoint.setView(this);
 	entryPoint.refreshView();
-	getController().getViewContext().setContextModel(findStartingViewContext());
+	getController().getViewContext().setContextModel(
+		findStartingViewContext());
 	getWorkspaceView().refreshView();
 	getOsylTreeView().refreshView();
     }
@@ -276,6 +309,5 @@ public class OsylPreviewView extends OsylViewableComposite implements
 	}
 	return absElement;
     }
-
 
 }

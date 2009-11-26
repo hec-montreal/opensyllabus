@@ -20,7 +20,6 @@
 
 package org.sakaiquebec.opensyllabus.server;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
@@ -105,7 +104,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     @Override
     protected void doGet(HttpServletRequest request,
 	    HttpServletResponse response) throws ServletException, IOException {
-	
+
 	final String contextPath = request.getContextPath();
 	request.setAttribute(Tool.NATIVE_URL, Tool.NATIVE_URL);
 	HttpServletRequest wrappedRequest =
@@ -332,9 +331,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	    else
 		cfg =
 			osylServices.getOsylConfigService().getConfigByRef(
-				"osylcoconfigs" + File.separator
-					+ configSiteProperty.toString(),
-				webappDir);
+				configSiteProperty.toString(), webappDir);
 
 	} catch (Exception e) {
 	    log.error("Unable to retrieve serialized config", e);
@@ -430,6 +427,13 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 
     public boolean checkSitesRelation(String resourceURI) {
 	return osylServices.getOsylService().checkSitesRelation(resourceURI);
+    }
+
+    public String transformXmlForGroup(String xml, String group)
+	    throws Exception {
+	String webappDir = getServletContext().getRealPath("/");
+	return osylServices.getOsylPublishService().transformXmlForGroup(xml,
+		group, webappDir);
     }
 
 }

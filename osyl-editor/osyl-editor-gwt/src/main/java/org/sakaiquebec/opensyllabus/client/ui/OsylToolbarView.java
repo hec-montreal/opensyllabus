@@ -55,6 +55,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
+import org.sakaiquebec.opensyllabus.shared.util.BrowserUtil;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
@@ -458,7 +459,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 			int documentHeight =
 				osylPrintView.getOffsetHeight() + sp;
 			entryPoint.setToolHeight(documentHeight);
-			if (getBrowserType().equals("webkit")) {
+			if (BrowserUtil.getBrowserType().equals("webkit")) {
 			    printJSNI();
 			} else {
 			    draftPrinting();
@@ -478,34 +479,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 					   window.parent.print();
 					   }-*/;
 
-    /**
-     * The code comes from UserAgent.gwt.xml in gwt-user.jar
-     * 
-     * @return client or user agent browser name
-     */
-    private native String getBrowserType() /*-{ 
-					   var ua = navigator.userAgent.toLowerCase(); 
-					   if (ua.indexOf("opera") != -1) { 
-					   return "opera"; 
-					   } 
-					   else if (ua.indexOf("webkit") != -1) { 
-					   return "webkit"; 
-					   } 
-					   else if ((ua.indexOf("msie 6.0") != -1) || 
-					   (ua.indexOf("msie 7.0") != -1)) { 
-					   return "ie6"; 
-					   } 
-					   else if (ua.indexOf("gecko") != -1) { 
-					   var result = /rv:([0-9]+)\.([0-9]+)/.exec(ua); 
-					   if (result && result.length == 3) { 
-					   var version = (parseInt(result[1]) * 10) + parseInt(result[2]); 
-					   if (version >= 18) 
-					   return "gecko1_8"; 
-					   } 
-					   return "gecko"; 
-					   } 
-					   return "unknown"; 
-					   }-*/;
+    
 
     /*
      * Draft Printing for Browser different from WebKit

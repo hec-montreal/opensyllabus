@@ -367,8 +367,11 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	    }
 
 	} else {
-	    log.error("Could not create site because site with title='"+siteTitle+"' already exists");
-	    throw new Exception("Could not create site because site with title='"+siteTitle+"' already exists");
+	    log.error("Could not create site because site with title='"
+		    + siteTitle + "' already exists");
+	    throw new Exception(
+		    "Could not create site because site with title='"
+			    + siteTitle + "' already exists");
 	}
 	return site.getId();
     }
@@ -566,13 +569,13 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 		    coConfig = thisCo.getOsylConfig();
 		else
 		    coConfig =
-			    configDao.getConfigByRef("osylcoconfigs"
-				    + File.separator
-				    + configSiteProperty.toString());
+			    configDao.getConfigByRef(configSiteProperty
+				    .toString());
 	    }
 
 	    thisCo =
 		    osylConfigService.fillCo(webappDir
+			    + OsylConfigService.CONFIG_DIR + File.separator
 			    + coConfig.getConfigRef(), thisCo);
 	    getSiteInfo(thisCo, thisCo.getSiteId());
 	    // System.err.println("siteId : "+siteId);
@@ -719,7 +722,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 			    + osylConfigService.getCurrentLocale()
 			    + OsylSiteService.XML_FILE_EXTENSION;
 	    coXmlFilePath =
-		    webappDir + File.separator + coConfig.getConfigRef()
+		    webappDir + OsylConfigService.CONFIG_DIR + File.separator + coConfig.getConfigRef()
 			    + File.separator + templateFileName;
 	    coXmlFile = new File(coXmlFilePath);
 	    reader =
@@ -736,7 +739,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 				+ OsylSiteService.XML_FILE_EXTENSION;
 		;
 		coXmlFilePath =
-			webappDir + File.separator + coConfig.getConfigRef()
+			webappDir + OsylConfigService.CONFIG_DIR + File.separator + coConfig.getConfigRef()
 				+ File.separator + templateFileName;
 		coXmlFile = new File(coXmlFilePath);
 		reader =
@@ -754,7 +757,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 			    osylConfigService.getCurrentConfig(webappDir)
 				    .getConfigRef();
 		    coXmlFilePath =
-			    webappDir + File.separator + defaultConfigRef
+			    webappDir + OsylConfigService.CONFIG_DIR + File.separator + defaultConfigRef
 				    + File.separator + templateFileName;
 		    coXmlFile = new File(coXmlFilePath);
 		    reader =

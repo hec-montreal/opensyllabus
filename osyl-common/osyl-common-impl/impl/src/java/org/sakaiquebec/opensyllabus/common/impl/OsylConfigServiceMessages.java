@@ -31,6 +31,7 @@ import java.util.PropertyResourceBundle;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.util.ResourceLoader;
+import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 
 /**
  * Implementation of the {@link OsylConfigService} interface.
@@ -74,7 +75,7 @@ final class OsylConfigServiceMessages {
             if (!messagesFile.exists()) {
                 messagesFile = new File(dir, baseFileName
                         + PROPERTIES_EXTENSION);
-                log.info("Cannot load property file: " + baseFileName
+                log.warn("Cannot load property file: " + baseFileName
                         + " for locale " + locale);
             }
 

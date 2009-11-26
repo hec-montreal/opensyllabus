@@ -572,6 +572,8 @@ public class OsylServiceImpl implements OsylService {
 
 	    cre.setContent(citationList.getId().getBytes());
 	    contentHostingService.commitResource(cre);
+	    // Permission application
+	    // osylSecurityService.applyPermissions(newId,SecurityInterface.ACCESS_PUBLIC);
 	}
 
 	if (addCollection(PUBLISH_DIRECTORY, null)) {

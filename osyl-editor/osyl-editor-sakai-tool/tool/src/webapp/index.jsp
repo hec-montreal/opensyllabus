@@ -116,9 +116,7 @@
 	    	if (configSiteProperty == null) {
 	    		configId = co.getOsylConfig().getConfigId();
 	    	} else {
-	    		configId = osylMainBean.getOsylConfigService().getConfigByRef(
-					"osylcoconfigs"	+ File.separator
-					+ configSiteProperty.toString(), webappDir).getConfigId();
+	    		configId = osylMainBean.getOsylConfigService().getConfigByRef(configSiteProperty.toString(), webappDir).getConfigId();
 	    	}
 	    	String cssPath = osylMainBean.getOsylConfigService().getConfig(
 	    			configId, webappDir).getCascadingStyleSheetURI();

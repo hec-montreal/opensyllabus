@@ -6,27 +6,21 @@
 <OSYL access="public" schemaVersion="1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<CO access="public" id="22234B13-FA19-4D53-962C-110981B67AF9">
-		<modified>
-		</modified>
-		<created>2001-12-17T09:30:47-05:00</created>
-		<title type="HEC">Title of course at HEC</title>
+		<modified></modified>
+		<identifier type="HEC">Identifiant du cours</identifier>
 		<template type="HEC">TemplateHec</template>
+		<title type="HEC">Titre du cours à HEC</title>
+		<language>FR-CA</language>
+		<created>2001-12-17T09:30:47-05:00</created>
+		<creator></creator>
+		<modifiedBy></modifiedBy>
+		<parent type="HEC"></parent>
+		<children type="HEC"></children>
+		<previousPublished></previousPublished>
+		<lastPublished></lastPublished>
 		<createdBy>HEC Montréal</createdBy>
-		<language>ENG</language>
-		<department type="HEC">
-		</department>
-		<previousPublished>
-		</previousPublished>
-		<lastPublished>
-		</lastPublished>
-		<lastModified>
-		</lastModified>
-		<identifier type="HEC">Identifier of course</identifier>
-		<courseId type="HEC">Course Id</courseId>
-		<parent type="HEC">
-		</parent>
-		<lastModifiedBy>
-		</lastModifiedBy>
+		<courseId type="HEC">Id du cours</courseId>
+		<department type="HEC"></department>
 		<asmStructure access="public"
 			id="103088CD-A420-4E7E-A30D-E048B633588A" xsi:type="NewsStruct">
 			<modified>2001-12-17T09:30:47-05:00</modified>

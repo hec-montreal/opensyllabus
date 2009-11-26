@@ -1,61 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com) -->
-<OSYL access="public" schemaVersion="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<!--
+		Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440
+		(http://www.liquid-technologies.com)
+	-->
+<OSYL access="public" schemaVersion="1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<CO access="public" id="01631FFA-B350-4DD3-A645-DB8C44DA334E">
-		<modified>
-		</modified>
-		<created>2001-12-17T09:30:47-05:00</created>
-		<title type="HEC">Titre du cours à HEC</title>
-		<template type="HEC">TemplateHec</template>
-		<createdBy>HEC Montréal</createdBy>
-		<language>FR-CA</language>
-		<department type="HEC">
-		</department>
-		<previousPublished>
-		</previousPublished>
-		<lastPublished>
-		</lastPublished>
-		<lastModified>
-		</lastModified>
+		<modified></modified>
 		<identifier type="HEC">Identifiant du cours</identifier>
+		<template type="HEC">TemplateHec</template>
+		<title type="HEC">Titre du cours à HEC</title>
+		<language>FR-CA</language>
+		<created>2001-12-17T09:30:47-05:00</created>
+		<creator></creator>
+		<modifiedBy></modifiedBy>
+		<parent type="HEC"></parent>
+		<children type="HEC"></children>
+		<previousPublished></previousPublished>
+		<lastPublished></lastPublished>
+		<createdBy>HEC Montréal</createdBy>
 		<courseId type="HEC">Id du cours</courseId>
-		<parent type="HEC">
-		</parent>
-		<lastModifiedBy>
-		</lastModifiedBy>
-		<asmStructure access="public" id="1BDD64BE-3673-4B9C-85C4-28BF92D7DF35" xsi:type="NewsStruct">
+		<department type="HEC"></department>
+		<asmStructure access="public"
+			id="1BDD64BE-3673-4B9C-85C4-28BF92D7DF35" xsi:type="NewsStruct">
 			<modified>2001-12-17T09:30:47-05:00</modified>
-			<asmUnit access="public" id="C10554E4-BB97-4E65-8653-E1BEB6B3A97C" xsi:type="NewsUnit">
+			<asmUnit access="public" id="C10554E4-BB97-4E65-8653-E1BEB6B3A97C"
+				xsi:type="NewsUnit">
 				<modified>2001-12-17T09:30:47-05:00</modified>
 				<label><![CDATA[Nouvelles]]></label>
-				<asmUnitStructure access="public" id="12B27432-1F30-436E-B018-D128D18ABE2A" xsi:type="NewsUnitStruct">
+				<asmUnitStructure access="public"
+					id="12B27432-1F30-436E-B018-D128D18ABE2A" xsi:type="NewsUnitStruct">
 					<modified>2001-12-17T09:30:47-05:00</modified>
 					<label><![CDATA[Nouvelles]]></label>
-					<asmUnitContent access="public" id="B5174862-795E-40EE-9CB6-147C53188A15" xsi:type="NewsUnitContent">
+					<asmUnitContent access="public"
+						id="B5174862-795E-40EE-9CB6-147C53188A15" xsi:type="NewsUnitContent">
 						<modified>2009-11-11T10:59:43-05:00</modified>
-				
-						<asmContext access="attendee" id="C080811C-F3F0-410E-B728-41E0E3859CCA" xsi:type="InformationContext">
+
+						<asmContext access="attendee"
+							id="C080811C-F3F0-410E-B728-41E0E3859CCA" xsi:type="InformationContext">
 							<modified>2009-11-11T11:05:48-05:00</modified>
 							<label><![CDATA[Tapez votre texte ici...]]></label>
 							<importance>false</importance>
 							<level>undefined</level>
 							<visible>true</visible>
 							<semanticTag type="rubric">calculators</semanticTag>
-							<asmResource xsi:type="Text" access="attendee" id="D51AE845-C5B3-4B9E-9DDD-BA8862D2335B">
+							<asmResource xsi:type="Text" access="attendee"
+								id="D51AE845-C5B3-4B9E-9DDD-BA8862D2335B">
 								<text><![CDATA[Les étudiants sont priés de prendre connaissance de la
 													politique d'utilisation de calculatriceslors d'examens lorsque
 													celles-ci sont autorisées. <a href="http://www.hec.ca/etudiant_actuel/technologies/calculatrices.html">En savoir plus...</a><br>]]></text>
 								<modified>2009-11-11T11:05:48-05:00</modified>
 							</asmResource>
 						</asmContext>
-						<asmContext access="attendee" id="B6C9C3E3-E0EC-4FC2-9EE5-1BFFED518A97" xsi:type="InformationContext">
+						<asmContext access="attendee"
+							id="B6C9C3E3-E0EC-4FC2-9EE5-1BFFED518A97" xsi:type="InformationContext">
 							<modified>2009-11-11T11:04:30-05:00</modified>
 							<label><![CDATA[Tapez votre texte ici...]]></label>
 							<importance>false</importance>
 							<level>undefined</level>
 							<visible>true</visible>
 							<semanticTag type="rubric">plagiarism</semanticTag>
-							<asmResource xsi:type="Text" access="attendee" id="A9B0B9D5-BF49-4A3A-99F4-EBBAD17A1201">
+							<asmResource xsi:type="Text" access="attendee"
+								id="A9B0B9D5-BF49-4A3A-99F4-EBBAD17A1201">
 								<text><![CDATA[Les étudiants sont priés de prendre connaissance des actes et des
 												gestes qui sont considérés comme étant du plagiat ou une autre
 												infraction de nature pédagogique, de la procédure et des sanctions, qui
@@ -66,14 +72,16 @@
 								<modified>2009-11-11T11:04:30-05:00</modified>
 							</asmResource>
 						</asmContext>
-						<asmContext access="attendee" id="84562D24-0736-4887-AB9D-7CD035CBA1C7" xsi:type="InformationContext">
+						<asmContext access="attendee"
+							id="84562D24-0736-4887-AB9D-7CD035CBA1C7" xsi:type="InformationContext">
 							<modified>2009-11-11T11:03:07-05:00</modified>
 							<label><![CDATA[Tapez votre texte ici...]]></label>
 							<importance>false</importance>
 							<level>undefined</level>
 							<visible>true</visible>
 							<semanticTag type="rubric">flu</semanticTag>
-							<asmResource xsi:type="Text" access="attendee" id="DA142A63-61EC-4BF9-87AE-704BEEE5A698">
+							<asmResource xsi:type="Text" access="attendee"
+								id="DA142A63-61EC-4BF9-87AE-704BEEE5A698">
 								<text><![CDATA[Dans le cas de circonstances exceptionnelles [établies par la Direction
 											des programmes] et hors du contrôle de HEC Montréal, le contenu et/ou
 											le mode d'évaluation des cours pourra être sujet à changement. <a href="http://hec.ca/grippe/index.html">En savoir plus...</a><br>]]></text>
@@ -84,52 +92,66 @@
 				</asmUnitStructure>
 			</asmUnit>
 		</asmStructure>
-		<asmStructure access="public" id="53C2D8FF-E44E-4E35-8140-87FF05F6DAA5" xsi:type="OverviewStruct">
+		<asmStructure access="public"
+			id="53C2D8FF-E44E-4E35-8140-87FF05F6DAA5" xsi:type="OverviewStruct">
 			<modified>2001-12-17T09:30:47-05:00</modified>
-			<asmUnit access="public" id="9F4A99C7-D70B-44AA-B531-FE5EE216F096" xsi:type="OverviewUnit">
+			<asmUnit access="public" id="9F4A99C7-D70B-44AA-B531-FE5EE216F096"
+				xsi:type="OverviewUnit">
 				<modified>2001-12-17T09:30:47-05:00</modified>
 				<label><![CDATA[Présentation du cours]]></label>
-				<asmUnitStructure access="public" id="1EC19FE5-DCC3-45C3-9CB5-26D84244950A" xsi:type="OverviewUnitStruct">
+				<asmUnitStructure access="public"
+					id="1EC19FE5-DCC3-45C3-9CB5-26D84244950A" xsi:type="OverviewUnitStruct">
 					<modified>2001-12-17T09:30:47-05:00</modified>
 					<label><![CDATA[Présentation du cours]]></label>
-					<asmUnitContent access="public" id="9A257E39-D7BD-479E-8CB8-EA0D40E8CEAA" xsi:type="OverviewUnitContent">
+					<asmUnitContent access="public"
+						id="9A257E39-D7BD-479E-8CB8-EA0D40E8CEAA" xsi:type="OverviewUnitContent">
 						<modified>2001-12-17T09:30:47-05:00</modified>
 					</asmUnitContent>
 				</asmUnitStructure>
 			</asmUnit>
 		</asmStructure>
-		<asmStructure access="public" id="C07AEBD6-4843-48D9-90D8-14C49DA6305C" xsi:type="StaffStruct">
+		<asmStructure access="public"
+			id="C07AEBD6-4843-48D9-90D8-14C49DA6305C" xsi:type="StaffStruct">
 			<modified>2001-12-17T09:30:47-05:00</modified>
-			<asmUnit access="public" id="98554752-A3E4-4D61-A8BC-1BEEC837E962" xsi:type="StaffUnit">
+			<asmUnit access="public" id="98554752-A3E4-4D61-A8BC-1BEEC837E962"
+				xsi:type="StaffUnit">
 				<modified>2001-12-17T09:30:47-05:00</modified>
 				<label><![CDATA[Coordonnées]]></label>
-				<asmUnitStructure access="public" id="42B441DB-4024-4FB0-82DA-851524830E45" xsi:type="StaffUnitStruct">
+				<asmUnitStructure access="public"
+					id="42B441DB-4024-4FB0-82DA-851524830E45" xsi:type="StaffUnitStruct">
 					<modified>2001-12-17T09:30:47-05:00</modified>
 					<label><![CDATA[Coordonnées]]></label>
-					<asmUnitContent access="public" id="A8BAF121-F319-40C9-843F-238CE760A717" xsi:type="StaffUnitContent">
+					<asmUnitContent access="public"
+						id="A8BAF121-F319-40C9-843F-238CE760A717" xsi:type="StaffUnitContent">
 						<modified>2001-12-17T09:30:47-05:00</modified>
 					</asmUnitContent>
 				</asmUnitStructure>
 			</asmUnit>
 		</asmStructure>
-		<asmStructure access="public" id="3A0821AA-0408-4DA9-B6E6-06B4A72911AA" xsi:type="LearningMaterialStruct">
+		<asmStructure access="public"
+			id="3A0821AA-0408-4DA9-B6E6-06B4A72911AA" xsi:type="LearningMaterialStruct">
 			<modified>2001-12-17T09:30:47-05:00</modified>
-			<asmUnit access="public" id="39BD0B12-4276-4F35-8837-557303564345" xsi:type="LearningMaterialUnit">
+			<asmUnit access="public" id="39BD0B12-4276-4F35-8837-557303564345"
+				xsi:type="LearningMaterialUnit">
 				<modified>2001-12-17T09:30:47-05:00</modified>
 				<label><![CDATA[Matériel pédagogique]]></label>
-				<asmUnitStructure access="public" id="9FDBC4B3-E8F6-4A07-B333-3A1FD179FB8A" xsi:type="LearningMaterialUnitStruct">
+				<asmUnitStructure access="public"
+					id="9FDBC4B3-E8F6-4A07-B333-3A1FD179FB8A" xsi:type="LearningMaterialUnitStruct">
 					<modified>2001-12-17T09:30:47-05:00</modified>
 					<label><![CDATA[Matériel pédagogique]]></label>
-					<asmUnitContent access="public" id="7F43E022-0F1E-46DC-BF16-1D219D2C5947" xsi:type="LearningMaterialUnitContent">
+					<asmUnitContent access="public"
+						id="7F43E022-0F1E-46DC-BF16-1D219D2C5947" xsi:type="LearningMaterialUnitContent">
 						<modified>2001-12-17T09:30:47-05:00</modified>
 					</asmUnitContent>
 				</asmUnitStructure>
 			</asmUnit>
 		</asmStructure>
-		<asmStructure access="public" id="286E52DE-2265-4820-A4DF-C588731E000F" xsi:type="AssessmentStruct">
+		<asmStructure access="public"
+			id="286E52DE-2265-4820-A4DF-C588731E000F" xsi:type="AssessmentStruct">
 			<modified>2001-12-17T09:30:47-05:00</modified>
 		</asmStructure>
-		<asmStructure access="public" id="4120F21C-EA39-41C3-AE48-5D4D771364DD" xsi:type="PedagogicalStruct">
+		<asmStructure access="public"
+			id="4120F21C-EA39-41C3-AE48-5D4D771364DD" xsi:type="PedagogicalStruct">
 			<modified>2001-12-17T09:30:47-05:00</modified>
 		</asmStructure>
 	</CO>

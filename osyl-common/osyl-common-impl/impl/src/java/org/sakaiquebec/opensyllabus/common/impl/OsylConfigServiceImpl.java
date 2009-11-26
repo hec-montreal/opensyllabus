@@ -81,11 +81,6 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
     private static final String CONFIG_SKIN = "osylcore.css";
 
     /**
-     * Package (ie: folder) containing the message files (.properties)
-     */
-    private static final String CONFIG_DIR = "osylcoconfigs";
-
-    /**
      * Item node name for xml parsing
      */
     private static final String ITEM_NODE_NAME = "item";
@@ -222,44 +217,44 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
      */
     public void initConfigs() throws Exception {
 	try {
-	    coConfigDao.getConfigByRef(CONFIG_DIR + File.separator+"default");
+	    coConfigDao.getConfigByRef("default");
 	} catch (Exception e) {
 	    createConfig("default", "Config from HEC Montreal");
 	}
 	try {
-	    coConfigDao.getConfigByRef(CONFIG_DIR + File.separator+"announcementsRegulationsHEC");
+	    coConfigDao.getConfigByRef("announcementsRegulationsHEC");
 	} catch (Exception e) {
 	    createConfig("announcementsRegulationsHEC",
-	    "Config HEC Montreal - Announcements and Regulations");
+		    "Config HEC Montreal - Announcements and Regulations");
 	}
 	try {
-	    coConfigDao.getConfigByRef(CONFIG_DIR + File.separator+"udem");
+	    coConfigDao.getConfigByRef("udem");
 	} catch (Exception e) {
 	    createConfig("udem", "Config UdeM");
 	}
 	try {
-	    coConfigDao.getConfigByRef(CONFIG_DIR + File.separator+"udemCompetencesComposantes");
+	    coConfigDao.getConfigByRef("udemCompetencesComposantes");
 	} catch (Exception e) {
 	    createConfig("udemCompetencesComposantes",
-	    "Config UdeM - Competences Composantes");
+		    "Config UdeM - Competences Composantes");
 	}
 	try {
-	    coConfigDao.getConfigByRef(CONFIG_DIR + File.separator+"udemCompetencesSeances");
+	    coConfigDao.getConfigByRef("udemCompetencesSeances");
 	} catch (Exception e) {
 	    createConfig("udemCompetencesSeances",
-	    "Config UdeM - Competences Seances");
+		    "Config UdeM - Competences Seances");
 	}
 	try {
-	    coConfigDao.getConfigByRef(CONFIG_DIR + File.separator+"udemObjectifsActivites");
+	    coConfigDao.getConfigByRef("udemObjectifsActivites");
 	} catch (Exception e) {
 	    createConfig("udemObjectifsActivites",
-	    "Config UdeM - Objectifs Activites");
+		    "Config UdeM - Objectifs Activites");
 	}
 	try {
-	    coConfigDao.getConfigByRef(CONFIG_DIR + File.separator+"udemObjectifsSeances");
+	    coConfigDao.getConfigByRef("udemObjectifsSeances");
 	} catch (Exception e) {
 	    createConfig("udemObjectifsSeances",
-	    "Config UdeM - Objectifs Seances");
+		    "Config UdeM - Objectifs Seances");
 	}
     }
 
@@ -293,7 +288,7 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
     private void createConfig(String configRef, String description)
 	    throws Exception {
 	COConfigSerialized coConfig = new COConfigSerialized();
-	coConfig.setConfigRef(CONFIG_DIR + File.separator + configRef);
+	coConfig.setConfigRef(configRef);
 	coConfig.setDescription(description);
 	createConfig(coConfig);
     }
@@ -312,7 +307,7 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
     private static COConfigSerialized fillConfig(COConfigSerialized coConfig,
 	    String webappdir, String configRef, String configId)
 	    throws Exception {
-	String path = webappdir + configRef;
+	String path = webappdir + CONFIG_DIR + File.separator + configRef;
 	coConfig.setCascadingStyleSheetURI(getCascadingStyleSheetURI(path));
 	coConfig.setCoreBundle(OsylConfigServiceMessages.getMessages(path,
 		CONFIG_UIMESSAGES));

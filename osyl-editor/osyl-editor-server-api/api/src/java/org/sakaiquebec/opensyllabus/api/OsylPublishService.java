@@ -77,4 +77,12 @@ public interface OsylPublishService {
      */
     public void publish(String webappDir, COSerialized co) throws Exception;
 
+    /**
+     * Make an xsl transformation of the specified xml for the specified group
+     * 
+     * @param xml
+     * @param group
+     * @return the result of the transformation
+     */
+    public String transformXmlForGroup(String xml, String group, String webappDir) throws Exception;
 }

@@ -37,158 +37,168 @@ import com.google.gwt.user.client.rpc.RemoteService;
  */
 public interface OsylEditorGwtService extends RemoteService {
 
-	/**
-	 * Initialize the tool.
-	 */
-	public void initTool() throws Exception;
-
-	/**
-	 * Returns the CourseOutline whose ID is specified.
-	 * 
-	 * @param String ID
-	 * @return the CourseOutline POJO corresponding to the specified ID
-	 * @throws Exception
-	 */
-	public COSerialized getSerializedCourseOutline(String id) throws Exception;
-
-	/**
-	 * Returns the CourseOutline of the current context.
-	 * 
-	 * @return the CourseOutline POJO corresponding to the current context.
-	 */
-	public COSerialized getSerializedCourseOutline() throws Exception;
-
-	/**
-	 * Saves the CourseOutline specified. The ID is returned. This is useful if
-	 * this instance has never been saved before (i.e.: its ID is -1). In this
-	 * case, it is the responsibility of the client application to keep track of
-	 * this new ID, notably to save it again at a later time.
-	 * 
-	 * @param COSerialized POJO
-	 * @return the CourseOutline ID
-	 * @throws Exception 
-	 */
-	public String updateSerializedCourseOutline(COSerialized co) throws Exception;
-
-	/**
-	 * Publishes the CourseOutline whose ID is specified. It must have been
-	 * saved previously. Throws an exception if any error occurs, returns
-	 * otherwise.
-	 * 
-	 * @param String id
-	 */
-	public void publishCourseOutline() throws Exception;
-
-	/**
-	 * Returns the Published CourseOutline for the access type specified in
-	 * parameter. It must have been published previously.
-	 * 
-	 * @param String groupName
-	 */
-	public COSerialized getSerializedPublishedCourseOutlineForAccessType(
-			String accessType) throws Exception;
-
-	/**
-	 * Check if the CO of the current context as been published
-	 * 
-	 * @return true if the CO has been published at least one time;
-	 */
-	public boolean hasBeenPublished() throws Exception;
-
-	/**
-	 * Returns the user role for current user.
-	 * 
-	 * @return String userRole
-	 */
-	public String getCurrentUserRole();
-
-	/**
-	 * Applies permission for the specified resource. If something prevents the
-	 * call to complete successfully an exception is thrown.
-	 * 
-	 * @param String resourceId
-	 */
-	public void applyPermissions(String resourceId, String permission);
-
-	/**
-	 * Returns the default {@link COConfigSerialized} for current context.
-	 * 
-	 * @return {@link COConfigSerialized}
-	 */
-	public COConfigSerialized getSerializedConfig() throws Exception;
-
-	/**
-	 * Creates or updates an assignment for this context.
-	 * 
-	 * @return String the assignment ID
-	 */
-	public String createOrUpdateAssignment(String assignmentId, String title,
-			String instructions, int openYear, int openMonth, int openDay,
-			int openHour, int openMinute, int closeYear, int closeMonth,
-			int closeDay, int closeHour, int closeMinute, int percentage);
-
-	/**
-	 * Creates or updates an assignment for this context.
-	 * 
-	 * @return String the assignment ID
-	 */
-	public String createOrUpdateAssignment(String assignmentId, String title);
-
-	/**
-	 * Delete an existing assignment.
-	 */
-	public void removeAssignment(String assignmentId);
-
-	/**
-	 * Delete a citation from the course outline citation list
-	 */
-	public void removeCitation(String citationId);
-
-	/**
-	 * Add or updates a citation in the course outline citation list
-	 */
-	public String createOrUpdateCitation(String citationListId,
-			String citation, String author, String type, String isbnIssn,
-			String link);
-
-	/**
-	 * Creates a temporary citation list that will contain the citation created.
-	 * With this we won't need another callback from the server to retrieve the
-	 * citationlistid to be saved in the XML. If the user cancels his creation
-	 * process, we remove this citation list
-	 * 
-	 * @return citationListId : the id of the new citation list
-	 */
-	public String createTemporaryCitationList();
-
-	/**
-	 * Pings the server to keep user session alive as long as its client
-	 * interface is running.
-	 */
-	public void ping();
-
-	/**
-	 * Get the xsl associated with the particular group
-	 * 
-	 * @param group
-	 * @param callback
-	 */
-	public String getXslForGroup(String group);
-
-	/**
-	 * @return a ResourcesLicencingInfo object which contains informations about
-	 *         Licencing on resources
-	 */
-	public ResourcesLicencingInfo getResourceLicenceInfo();
+    /**
+     * Initialize the tool.
+     */
+    public void initTool() throws Exception;
 
     /**
-	 * Checks if the current site has a relation (child - parent) with the site
-	 * containing the resource. If it is the case, we allow the site to access
-	 * to the resource
-	 * 
-	 * @param resourceURI
-	 * @return
-	 */
-	public boolean checkSitesRelation(String resourceURI);
+     * Returns the CourseOutline whose ID is specified.
+     * 
+     * @param String ID
+     * @return the CourseOutline POJO corresponding to the specified ID
+     * @throws Exception
+     */
+    public COSerialized getSerializedCourseOutline(String id) throws Exception;
+
+    /**
+     * Returns the CourseOutline of the current context.
+     * 
+     * @return the CourseOutline POJO corresponding to the current context.
+     */
+    public COSerialized getSerializedCourseOutline() throws Exception;
+
+    /**
+     * Saves the CourseOutline specified. The ID is returned. This is useful if
+     * this instance has never been saved before (i.e.: its ID is -1). In this
+     * case, it is the responsibility of the client application to keep track of
+     * this new ID, notably to save it again at a later time.
+     * 
+     * @param COSerialized POJO
+     * @return the CourseOutline ID
+     * @throws Exception
+     */
+    public String updateSerializedCourseOutline(COSerialized co)
+	    throws Exception;
+
+    /**
+     * Publishes the CourseOutline whose ID is specified. It must have been
+     * saved previously. Throws an exception if any error occurs, returns
+     * otherwise.
+     * 
+     * @param String id
+     */
+    public void publishCourseOutline() throws Exception;
+
+    /**
+     * Returns the Published CourseOutline for the access type specified in
+     * parameter. It must have been published previously.
+     * 
+     * @param String groupName
+     */
+    public COSerialized getSerializedPublishedCourseOutlineForAccessType(
+	    String accessType) throws Exception;
+
+    /**
+     * Check if the CO of the current context as been published
+     * 
+     * @return true if the CO has been published at least one time;
+     */
+    public boolean hasBeenPublished() throws Exception;
+
+    /**
+     * Returns the user role for current user.
+     * 
+     * @return String userRole
+     */
+    public String getCurrentUserRole();
+
+    /**
+     * Applies permission for the specified resource. If something prevents the
+     * call to complete successfully an exception is thrown.
+     * 
+     * @param String resourceId
+     */
+    public void applyPermissions(String resourceId, String permission);
+
+    /**
+     * Returns the default {@link COConfigSerialized} for current context.
+     * 
+     * @return {@link COConfigSerialized}
+     */
+    public COConfigSerialized getSerializedConfig() throws Exception;
+
+    /**
+     * Creates or updates an assignment for this context.
+     * 
+     * @return String the assignment ID
+     */
+    public String createOrUpdateAssignment(String assignmentId, String title,
+	    String instructions, int openYear, int openMonth, int openDay,
+	    int openHour, int openMinute, int closeYear, int closeMonth,
+	    int closeDay, int closeHour, int closeMinute, int percentage);
+
+    /**
+     * Creates or updates an assignment for this context.
+     * 
+     * @return String the assignment ID
+     */
+    public String createOrUpdateAssignment(String assignmentId, String title);
+
+    /**
+     * Delete an existing assignment.
+     */
+    public void removeAssignment(String assignmentId);
+
+    /**
+     * Delete a citation from the course outline citation list
+     */
+    public void removeCitation(String citationId);
+
+    /**
+     * Add or updates a citation in the course outline citation list
+     */
+    public String createOrUpdateCitation(String citationListId,
+	    String citation, String author, String type, String isbnIssn,
+	    String link);
+
+    /**
+     * Creates a temporary citation list that will contain the citation created.
+     * With this we won't need another callback from the server to retrieve the
+     * citationlistid to be saved in the XML. If the user cancels his creation
+     * process, we remove this citation list
+     * 
+     * @return citationListId : the id of the new citation list
+     */
+    public String createTemporaryCitationList();
+
+    /**
+     * Pings the server to keep user session alive as long as its client
+     * interface is running.
+     */
+    public void ping();
+
+    /**
+     * Get the xsl associated with the particular group
+     * 
+     * @param group
+     * @param callback
+     */
+    public String getXslForGroup(String group);
+
+    /**
+     * @return a ResourcesLicencingInfo object which contains informations about
+     *         Licencing on resources
+     */
+    public ResourcesLicencingInfo getResourceLicenceInfo();
+
+    /**
+     * Checks if the current site has a relation (child - parent) with the site
+     * containing the resource. If it is the case, we allow the site to access
+     * to the resource
+     * 
+     * @param resourceURI
+     * @return
+     */
+    public boolean checkSitesRelation(String resourceURI);
+
+    /**
+     * Make an xsl transformation of the specified xml for the specified group
+     * 
+     * @param xml
+     * @param group
+     * @return the result of the transformation
+     */
+    public String transformXmlForGroup(String xml, String group) throws Exception;
 
 }

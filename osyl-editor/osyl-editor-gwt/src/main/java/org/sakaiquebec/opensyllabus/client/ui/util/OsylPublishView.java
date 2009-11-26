@@ -122,9 +122,10 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 
 	public void onClick(ClickEvent event) {
 	    osylPublishedListView.setPublishingNow();
-	    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-		public void onSuccess(Void serverResponse) {
-		    osylPublishedListView.verifiyPublishState();
+
+	    AsyncCallback<String> callback = new AsyncCallback<String>() {
+		public void onSuccess(String serverResponse) {
+		    publish();
 		}
 
 		public void onFailure(Throwable error) {
@@ -136,8 +137,27 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 		    osylPublishedListView.verifiyPublishState();
 		}
 	    };
-	    osylController.publishCourseOutline(callback);
+	    osylController.saveCourseOutline(callback);
+
 	}
+    }
+
+    private void publish() {
+	AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+	    public void onSuccess(Void serverResponse) {
+		osylPublishedListView.verifiyPublishState();
+	    }
+
+	    public void onFailure(Throwable error) {
+		final OsylAlertDialog alertBox =
+			new OsylAlertDialog(false, true, getController()
+				.getUiMessage("publish.error")
+				+ " : " + error.toString());
+		alertBox.show();
+		osylPublishedListView.verifiyPublishState();
+	    }
+	};
+	osylController.publishCourseOutline(callback);
     }
 
     public OsylController getController() {

@@ -42,9 +42,7 @@ public interface OsylSiteService {
 	public static final String XSL_FILE_EXTENSION = ".xsl";
 	public static final String HTML_FILE_EXTENSION = ".html";
 
-	public static final String CO_CONTENT_XSL_PUBLIC = "securityPublic";
-	public static final String CO_CONTENT_XSL_ONSITE = "securityOnsite";
-	public static final String CO_CONTENT_XSL_ATTENDEE = "securityAttendee";
+	public static final String XSL_PREFIX = "security_";
 
 	/**
 	 * Name of the chs folder in which the course outline content will be
