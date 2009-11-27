@@ -563,6 +563,10 @@
 	width:auto;
 }
 
+.Osyl-UnitView-HtmlViewer{
+	width:100%;
+}
+
 .Osyl-UnitView-UnitLabel ul, .Osyl-UnitView-UnitLabel-Important ul {margin-left:30px}
 .Osyl-UnitView-UnitLabel ol, .Osyl-UnitView-UnitLabel-Important ol {margin-left:35px}
 

@@ -133,6 +133,7 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
 		mainPanel.setVisible(true);
 	    }
 	}
+	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewerPanel().add(getViewer());
 	mainPanel.add(getViewerPanel());
     }

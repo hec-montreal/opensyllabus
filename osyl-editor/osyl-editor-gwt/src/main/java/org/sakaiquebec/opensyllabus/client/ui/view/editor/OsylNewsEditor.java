@@ -146,6 +146,7 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
 		mainPanel.setVisible(true);
 	    }
 	}
+	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewerPanel().add(getTextViewer());
 	getViewerPanel().add(getTimestampViewer());
 	mainPanel.add(getViewerPanel());
