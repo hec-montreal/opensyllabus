@@ -139,12 +139,10 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
 
 	if (results.size() == 1) {
 	    return (COConfigSerialized) results.get(0);
-	}
-
-	if (results.size() == 0) {
+	} else if (results.size() == 0) {
 	    throw new Exception("Unexisting config ref= " + configRef);
+	} else {
+	    throw new Exception("Too many configs with ref= " + configRef);
 	}
-
-	throw new Exception("Too many configs with ref= " + configRef);
     }
 }
