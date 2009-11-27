@@ -188,14 +188,6 @@ public class COModeled extends COSerialized {
     private COContent modeledContent;
 
     /**
-     * Map<name,permissions> of permissions applied to ressources
-     * 
-     * @uml.property name="documentSecurityMap"
-     * @uml.associationEnd qualifier="trim:java.lang.String java.lang.String"
-     */
-    private Map<String, String> documentSecurityMap;
-
-    /**
      * Default Constructor
      */
     public COModeled() {
@@ -230,7 +222,6 @@ public class COModeled extends COSerialized {
 
 	COContent coContent = new COContent();
 	Document messageDom = null;
-	documentSecurityMap = new HashMap<String, String>();
 
 	try {
 	    // XMLtoDOM
@@ -543,15 +534,6 @@ public class COModeled extends COSerialized {
 	    Node rNode = resChildren.item(z);
 	    addProperty(coContentRes.getProperties(), rNode);
 	}
-	if (coContentRes.getType().equals(COContentResourceType.DOCUMENT)
-		|| coContentRes.getType().equals(
-			COContentResourceType.BIBLIO_RESOURCE))
-	    if (coContentRes.getProperty(COPropertiesType.IDENTIFIER,
-		    COPropertiesType.IDENTIFIER_TYPE_URI) != null)
-		documentSecurityMap.put(coContentRes.getProperty(
-			COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_URI).trim(),
-			coContentRes.getAccess());
 	return coContentRes;
     }
 
@@ -856,13 +838,5 @@ public class COModeled extends COSerialized {
 	coContentRubricElem.appendChild(elemValue);
 
 	coContentResourceProxyElem.appendChild(coContentRubricElem);
-    }
-
-    public Map<String, String> getDocumentSecurityMap() {
-	return documentSecurityMap;
-    }
-
-    public void setDocumentSecurityMap(Map<String, String> documentSecurityMap) {
-	this.documentSecurityMap = documentSecurityMap;
     }
 }
