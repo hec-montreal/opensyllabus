@@ -170,6 +170,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	}
 
 	setViewerPanel(new HorizontalPanel());
+	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 
 	if (isReadOnly()) {
 	    if (getView().isContextImportant()) {
@@ -201,7 +202,9 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	    }
 	}
 	VerticalPanel vp = new VerticalPanel();
+	vp.setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewerPanel().add(vp);
+//	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	vp.add(getViewer());
 	vp.add(getViewerURI());
 	vp.add(getViewerDesc());

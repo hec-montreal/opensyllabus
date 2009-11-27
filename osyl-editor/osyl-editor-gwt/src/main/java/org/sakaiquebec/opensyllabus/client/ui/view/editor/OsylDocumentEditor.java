@@ -183,6 +183,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	}
 
 	setViewerPanel(new HorizontalPanel());
+	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 
 	if (isReadOnly()) {
 	    if (getView().isContextImportant()) {
@@ -213,6 +214,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    }
 	}
 	VerticalPanel vp = new VerticalPanel();
+	vp.setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewerPanel().add(vp);
 	HorizontalPanel linkAndNameHP = new HorizontalPanel();
 	vp.add(linkAndNameHP);
