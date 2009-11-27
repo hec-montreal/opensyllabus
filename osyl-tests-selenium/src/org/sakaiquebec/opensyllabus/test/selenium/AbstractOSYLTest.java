@@ -154,7 +154,38 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	// Ensure the site doesn't already exist
 	assertFalse("Site '" + getCurrentTestSiteName() + "' already exists!",
 		session().isTextPresent(getCurrentTestSiteName()));
-	session().click("link=Nouveau site");
+	
+	session().open("/portal/site/opensyllabusManager");
+	pause();	
+	session().click("gwt-uid-1");
+	session().click("//button[@type='button']");
+	
+	session().type("//input[@type='text']", getCurrentTestSiteName());
+	session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "label=Config" +
+	    		" from HEC Montreal");
+	if(inFireFox()){
+	session().mouseOver("//html/body/table/tbody/tr/td/table/tbody/tr[4]" +
+				"/td/div/div");
+	session().mouseDown("//html/body/table/tbody/tr/td/table/tbody/tr[4]" +
+				"/td/div/div");
+	session().mouseUp("//html/body/table/tbody/tr/td/table/tbody/tr[4]/" +
+				"td/div/div");
+	pause();
+	}else{
+	    	session().keyPress("//html/body/table/tbody/tr/td/table/tbody/tr" +
+	    	    		"[4]/td/div/div", "\r");
+	}
+	
+	if(inFireFox()){
+		session().mouseOver("//html/body/table/tbody/tr/td/form/table/tbody/tr[5]/td/div/div");
+		session().mouseDown("//html/body/table/tbody/tr/td/form/table/tbody/tr[5]/td/div/div");
+		session().mouseUp("//html/body/table/tbody/tr/td/form/table/tbody/tr[5]/td/div/div");
+	}else{
+		session().keyPress("//tr[4]/td/div", "\r");
+	}
+	pause();
+	    
+	/*session().click("link=Nouveau site");
 	waitForPageToLoad();
 	session().type("id", getCurrentTestSiteName());
 	session().type("title", getCurrentTestSiteName());
@@ -181,13 +212,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().click("//input[@value=\"sakai.opensyllabus.tool\"]");
 	waitForPageToLoad();
 	session().click("eventSubmit_doSave_tool");
-	waitForPageToLoad();
+	waitForPageToLoad();*/
 
 	// Warning: we leave the "Sites" tool otherwise a future test might fail
 	// when trying to click on it!
-	session().selectFrame("relative=parent");
-	session().click("//div[@id='toolMenu']/ul/li[1]/a/span");
-	waitForPageToLoad();
+	//session().selectFrame("relative=parent");
+	//session().click("//div[@id='toolMenu']/ul/li[1]/a/span");
+	//waitForPageToLoad();
     } // createTestSite
 
     public String getCurrentTestSiteName() {
