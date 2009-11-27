@@ -41,7 +41,7 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
      * Init method called at initialization of the bean.
      */
     public void init() {
-	log.warn("Init from COConfig DAO");
+	log.info("Init from COConfig DAO");
     }
 
     /** {@inheritDoc} */
