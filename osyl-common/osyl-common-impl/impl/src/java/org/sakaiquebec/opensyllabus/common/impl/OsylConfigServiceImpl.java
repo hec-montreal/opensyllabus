@@ -216,45 +216,30 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
      * @throws Exception
      */
     public void initConfigs() throws Exception {
+	initConfig("default", "Config from HEC Montréal");
+	initConfig("announcementsRegulationsHEC",
+		"Config HEC Montreal - Announcements and Regulations");
+	initConfig("udem", "Config UdeM");
+	initConfig("udemCompetencesComposantes",
+		"Config UdeM - Competences Composantes");
+	initConfig("udemCompetencesSeances",
+		"Config UdeM - Competences Seances");
+	initConfig("udemObjectifsActivites",
+		"Config UdeM - Objectifs Activites");
+	initConfig("udemObjectifsSeances", "Config UdeM - Objectifs Seances");
+    }
+
+    private void initConfig(String configref, String desc) throws Exception {
 	try {
-	    coConfigDao.getConfigByRef("default");
+	    coConfigDao.getConfigByRef(configref);
 	} catch (Exception e) {
-	    createConfig("default", "Config from HEC Montreal");
-	}
-	try {
-	    coConfigDao.getConfigByRef("announcementsRegulationsHEC");
-	} catch (Exception e) {
-	    createConfig("announcementsRegulationsHEC",
-		    "Config HEC Montreal - Announcements and Regulations");
-	}
-	try {
-	    coConfigDao.getConfigByRef("udem");
-	} catch (Exception e) {
-	    createConfig("udem", "Config UdeM");
-	}
-	try {
-	    coConfigDao.getConfigByRef("udemCompetencesComposantes");
-	} catch (Exception e) {
-	    createConfig("udemCompetencesComposantes",
-		    "Config UdeM - Competences Composantes");
-	}
-	try {
-	    coConfigDao.getConfigByRef("udemCompetencesSeances");
-	} catch (Exception e) {
-	    createConfig("udemCompetencesSeances",
-		    "Config UdeM - Competences Seances");
-	}
-	try {
-	    coConfigDao.getConfigByRef("udemObjectifsActivites");
-	} catch (Exception e) {
-	    createConfig("udemObjectifsActivites",
-		    "Config UdeM - Objectifs Activites");
-	}
-	try {
-	    coConfigDao.getConfigByRef("udemObjectifsSeances");
-	} catch (Exception e) {
-	    createConfig("udemObjectifsSeances",
-		    "Config UdeM - Objectifs Seances");
+	    log.warn("Could not find config with configref='" + configref
+		    + "'. This config will be create.");
+	    if (log.isInfoEnabled()) {
+		log.info("Details:");
+		e.printStackTrace();
+	    }
+	    createConfig(configref, desc);
 	}
     }
 
