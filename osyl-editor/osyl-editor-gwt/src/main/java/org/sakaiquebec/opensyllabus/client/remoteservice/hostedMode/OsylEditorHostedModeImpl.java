@@ -65,15 +65,11 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	}
 
 	public void createOrUpdateAssignment(String assignmentId, String title,
-			String instructions, int openYear, int openMonth, int openDay,
-			int openHour, int openMinute, int closeYear, int closeMonth,
-			int closeDay, int closeHour, int closeMinute, int percentage,
-			AsyncCallback<String> callback) {
-		callback.onSuccess("dummyCitationListId");
-	}
-
-	public void createOrUpdateAssignment(String assignmentId, String title,
-			AsyncCallback<String> callback) {
+		    String instructions, int openYear, int openMonth, int openDay,
+		    int openHour, int openMinute, int closeYear, int closeMonth,
+		    int closeDay, int closeHour, int closeMinute, int dueYear, int dueMonth,
+		    int dueDay, int dueHour, int dueMinute, int percentage,
+		    AsyncCallback<String> callback) {
 		callback.onSuccess("dummyCitationListId");
 	}
 

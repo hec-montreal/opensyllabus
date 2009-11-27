@@ -348,21 +348,13 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     public String createOrUpdateAssignment(String assignmentId, String title,
 	    String instructions, int openYear, int openMonth, int openDay,
 	    int openHour, int openMinute, int closeYear, int closeMonth,
-	    int closeDay, int closeHour, int closeMinute, int percentage) {
+	    int closeDay, int closeHour, int closeMinute,int dueYear, int dueMonth,
+	    int dueDay, int dueHour, int dueMinute, int percentage) {
 	return osylServices.getOsylService().createOrUpdateAssignment(
 		assignmentId, title, instructions, openYear, openMonth,
 		openDay, openHour, openMinute, closeYear, closeMonth, closeDay,
-		closeHour, closeMinute, percentage);
-    }
-
-    /**
-     * Adds or update an assignment to the site. This method checks whether the
-     * Assignment tool is already integrated into the site, if it isn't, it is
-     * automatically added.
-     */
-    public String createOrUpdateAssignment(String assignmentId, String title) {
-	return osylServices.getOsylService().createOrUpdateAssignment(
-		assignmentId, title);
+		closeHour, closeMinute, dueYear, dueMonth,
+		    dueDay, dueHour, dueMinute, percentage);
     }
 
     /**

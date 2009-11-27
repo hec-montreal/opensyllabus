@@ -85,6 +85,23 @@ public class OsylConfigMessages {
 	    message = message.replaceAll("\\{0\\}", arg);
 	return message;
     }
+    
+    /**
+     *  Return the message corresponding to the key with parameter set
+     * @param key
+     * @param arg Argument 
+     * @return The message String
+     */
+    public String getMessage(String key, String arg0, String arg1) {
+	String message = (String) messages.get(key);
+	if (message == null)
+	    return "Missing key: " + key;
+	else{
+	    message = message.replaceAll("\\{0\\}", arg0);
+	    message = message.replaceAll("\\{1\\}", arg1);
+	}
+	return message;
+    }
 
     /**
      * Set messages map

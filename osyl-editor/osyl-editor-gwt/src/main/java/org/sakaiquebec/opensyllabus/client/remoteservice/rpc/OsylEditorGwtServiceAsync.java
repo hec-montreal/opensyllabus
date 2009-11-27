@@ -132,15 +132,8 @@ public interface OsylEditorGwtServiceAsync {
     public void createOrUpdateAssignment(String assignmentId, String title,
 	    String instructions, int openYear, int openMonth, int openDay,
 	    int openHour, int openMinute, int closeYear, int closeMonth,
-	    int closeDay, int closeHour, int closeMinute, int percentage,
-	    AsyncCallback<String> callback);
-
-    /**
-     * Creates or updates an assignment for this context.
-     * 
-     * @param callback the callback to return the assignment ID
-     */
-    public void createOrUpdateAssignment(String assignmentId, String title,
+	    int closeDay, int closeHour, int closeMinute, int dueYear, int dueMonth,
+	    int dueDay, int dueHour, int dueMinute, int percentage,
 	    AsyncCallback<String> callback);
 
     /**

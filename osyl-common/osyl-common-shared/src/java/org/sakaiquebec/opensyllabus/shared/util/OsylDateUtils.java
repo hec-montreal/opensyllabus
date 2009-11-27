@@ -38,9 +38,13 @@ public class OsylDateUtils {
      */
     public static String getNowDateAsXmlString() {
 	Date now = new Date();
+	return getDateAsXmlString(now);
+    }
+    
+    public static String getDateAsXmlString(Date date) {
 	SimpleDateFormat dateFormat =
 		new SimpleDateFormat(OsylDateUtils.DATE_TIME_FORMAT);
-	return getXsDateTimeString(dateFormat.format(now));
+	return getXsDateTimeString(dateFormat.format(date));
     }
 
     public static Date getDateFromXMLDate(String dateString) {

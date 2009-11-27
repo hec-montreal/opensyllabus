@@ -38,7 +38,6 @@ import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEve
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler.SavePushButtonEvent;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
-import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.util.Print;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylLongView;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
@@ -49,7 +48,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
 import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
-import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
@@ -201,9 +199,6 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    COContentResourceProxy.createDefaultResProxy(type,
 			    getCoMessages(), coUnitContent, subType,
 			    defaultRubric);
-	    if (subType.equalsIgnoreCase(COContentResourceType.ASSIGNMENT)) {
-		createAssignement(resProxModel, coUnitContent);
-	    }
 	}
 
     }
@@ -236,79 +231,6 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		Window.alert("Error while parsing rules: " + e);
 	    }
 
-	}
-    }
-
-    private void createAssignement(COContentResourceProxy resProxModel,
-	    COUnitContent contentUnit) {
-	// Call the SAKAI server in order to receive an assignment
-	// id
-	// Callback will be processed by the Controller
-	resProxModel.addProperty(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_URI,
-		"emptyAssignmentURI");
-
-	COElementAbstract parentEvaluationUnit = contentUnit;
-	while (!parentEvaluationUnit.isCOUnit())
-	    parentEvaluationUnit = parentEvaluationUnit.getParent();
-
-	boolean ok = true;
-	// IMPORTANT : when the rating (the last parameter) is -1
-	// then it is a default assignment
-	int rating = -1;
-	int openYear = 0;
-	int openMonth = 0;
-	int openDay = 0;
-	int closeYear = 0;
-	int closeMonth = 0;
-	int closeDay = 0;
-	String messages = "";
-	String ratingString =
-		parentEvaluationUnit.getProperty(COPropertiesType.WEIGHT);
-	if (ratingString != null && !ratingString.equals("undefined")
-		&& !ratingString.equals("")) {
-	    rating =
-		    Integer.parseInt(ratingString.substring(0, ratingString
-			    .lastIndexOf("%")));
-	}
-
-	String openDateString =
-		parentEvaluationUnit.getProperty(COPropertiesType.DATE_START);
-	if (openDateString != null && !openDateString.equals("undefined")
-		&& !openDateString.equals("")) {
-	    openYear = Integer.parseInt(openDateString.substring(0, 4));
-	    openMonth = Integer.parseInt(openDateString.substring(5, 7));
-	    openDay = Integer.parseInt(openDateString.substring(8, 10));
-
-	} else {
-	    ok = false;
-	    messages += getUiMessage("Evaluation.StartDate");
-	}
-
-	String closeDateString =
-		parentEvaluationUnit.getProperty(COPropertiesType.DATE_END);
-	if (closeDateString != null && !closeDateString.equals("undefined")
-		&& !closeDateString.equals("")) {
-	    closeYear = Integer.parseInt(closeDateString.substring(0, 4));
-	    closeMonth = Integer.parseInt(closeDateString.substring(5, 7));
-	    closeDay = Integer.parseInt(closeDateString.substring(8, 10));
-	} else {
-	    ok = false;
-	    messages +=
-		    (messages.equals("") ? "" : ", ")
-			    + getUiMessage("Evaluation.EndDate");
-	}
-	if (ok) {
-	    getController().createOrUpdateAssignment(resProxModel, "",
-		    parentEvaluationUnit.getLabel(), null, openYear, openMonth,
-		    openDay, 0, 0, closeYear, closeMonth, closeDay, 0, 0,
-		    rating);
-	} else {
-	    resProxModel.remove();
-	    OsylAlertDialog osylAlertDialog =
-		    new OsylAlertDialog(getUiMessage("Global.error"),
-			    getUiMessage("Assignement.error.create", messages));
-	    osylAlertDialog.center();
-	    osylAlertDialog.show();
 	}
     }
 
@@ -478,8 +400,6 @@ public class OsylToolbarView extends OsylViewableComposite implements
     private static native void printJSNI() /*-{  
 					   window.parent.print();
 					   }-*/;
-
-    
 
     /*
      * Draft Printing for Browser different from WebKit

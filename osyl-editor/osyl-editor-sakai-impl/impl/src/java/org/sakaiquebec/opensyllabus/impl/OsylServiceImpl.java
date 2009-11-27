@@ -155,14 +155,15 @@ public class OsylServiceImpl implements OsylService {
     /** {@inheritDoc} */
     public String createOrUpdateAssignment(String assignmentId, String title) {
 	return createOrUpdateAssignment(assignmentId, title, null, -1, -1, -1,
-		-1, -1, -1, -1, -1, -1, -1, -1);
+		-1, -1, -1, -1, -1, -1, -1, -1,-1,-1,-1,-1,-1);
     }
 
     /** {@inheritDoc} */
     public String createOrUpdateAssignment(String assignmentId, String title,
 	    String instructions, int openYear, int openMonth, int openDay,
 	    int openHour, int openMinute, int closeYear, int closeMonth,
-	    int closeDay, int closeHour, int closeMinute, int percentage) {
+	    int closeDay, int closeHour, int closeMinute,int dueYear, int dueMonth,
+	    int dueDay, int dueHour, int dueMinute, int percentage) {
 	String siteId = "";
 	String toolId = "";
 	AssignmentEdit edit = null;
@@ -177,7 +178,7 @@ public class OsylServiceImpl implements OsylService {
 
 	try {
 	    // The client doesn't know the id. It must be a new item
-	    if (assignmentId.equals("") || assignmentId.equals(null)) {
+	    if (assignmentId==null || assignmentId.equals("")) {
 		edit = assignmentService.addAssignment(siteId);
 		contentEdit = assignmentService.addAssignmentContent(siteId);
 		// Ajouter le user dans le user dans le groupe de l'assignment
@@ -223,8 +224,13 @@ public class OsylServiceImpl implements OsylService {
 			TimeService.newTimeLocal(closeYear, closeMonth,
 				closeDay, closeHour, closeMinute, 0, 0);
 		edit.setCloseTime(closeTime);
-		edit.setDueTime(closeTime);
 		edit.setDropDeadTime(closeTime);
+	    }
+	    if (dueYear != -1) {
+		Time dueTime =
+			TimeService.newTimeLocal(dueYear, dueMonth,
+				dueDay, dueHour, dueMinute, 0, 0);
+		edit.setDueTime(dueTime);
 	    }
 	    edit.setDraft(false);
 	    contentEdit.setTitle(title);

@@ -44,8 +44,8 @@ public class COPropertiesType {
     
     // Specific to assignments/evaluations
     public static final String WEIGHT = "weight";
-    public static final String DATE_START = "dateStart";
-    public static final String DATE_END = "dateEnd";
+    public static final String DATE_START = "date-start";
+    public static final String DATE_END = "date-end";
     public static final String DATE = "date";
     public static final String LOCATION = "location";
     public static final String MODE = "mode";

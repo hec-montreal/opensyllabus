@@ -20,6 +20,9 @@
 
 package org.sakaiquebec.opensyllabus.client.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler;
@@ -31,12 +34,15 @@ import org.sakaiquebec.opensyllabus.client.ui.util.OsylPublishView;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfig;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
@@ -656,71 +662,142 @@ public class OsylController implements SavePushButtonEventHandler,
      * Requests the server for the creation or update of an assignment.
      */
     public void createOrUpdateAssignment(COContentResourceProxy resProx,
-	    String assignmentId, String title, String instructions,
-	    int openYear, int openMonth, int openDay, int openHour,
-	    int openMinute, int closeYear, int closeMonth, int closeDay,
-	    int closeHour, int closeMinute, int rating) {
-	// The caller must be declared final to use it into an inner class
-	final OsylController caller = this;
-	final COContentResourceProxy rProx = resProx;
+	    String assignmentId) {
 
-	// We first create a call-back for this method call
-	AsyncCallback<String> callback = new AsyncCallback<String>() {
-	    // We define the behavior in case of success
-	    public void onSuccess(String assignmentId) {
-		try {
-		    System.out
-			    .println("RPC SUCCESS - createOrUpdateAssignment(...)");
-		    caller.createOrUpdateAssignmentCB(rProx, assignmentId);
-		} catch (Exception error) {
-		    System.out
-			    .println("Error - Unable to createOrUpdateAssignment(...) on RPC Success: "
-				    + error.toString());
-		    Window
-			    .alert("Error - Unable to createOrUpdateAssignment(...) on RPC Success: "
-				    + error.toString());
-		    caller
-			    .unableToCreateOrUpdateAssignment("Error - Unable to createOrUpdateAssignment(...) on RPC Success: "
-				    + error.toString());
+	COContentResource ressource = (COContentResource) resProx.getResource();
+	if (ressource != null) {
+
+	    Date startDate = null;
+	    String dateStartString =
+		    ressource.getProperty(COPropertiesType.DATE_START);
+	    if (dateStartString != null) {
+		startDate = OsylDateUtils.getDateFromXMLDate(dateStartString);
+	    }
+
+	    Date endDate = null;
+	    String endDateString =
+		    ressource.getProperty(COPropertiesType.DATE_END);
+	    if (endDateString != null) {
+		endDate = OsylDateUtils.getDateFromXMLDate(endDateString);
+	    }
+
+	    int rating = 0;
+	    COElementAbstract model = resProx;
+	    boolean found = false;
+	    String title = "";
+	    while (!found && model.getParent() != null) {
+		if (model.isCOUnit()) {
+		    if (model.getProperty(COPropertiesType.WEIGHT) != null) {
+			rating =
+				Integer.parseInt(model
+					.getProperty(COPropertiesType.WEIGHT));
+		    }
+		    title = model.getLabel();
+		    found = true;
+		} else {
+		    model = model.getParent();
 		}
 	    }
+	    String instructions = "";
 
-	    // And we define the behavior in case of failure
-	    public void onFailure(Throwable error) {
-		System.out
-			.println("RPC FAILURE - createOrUpdateAssignment(...): "
-				+ error.toString());
-		Window.alert("RPC FAILURE - createOrUpdateAssignment(...): "
-			+ error.toString());
-		caller
-			.unableToCreateOrUpdateAssignment("RPC FAILURE - createOrUpdateAssignment(...): "
-				+ error.toString());
-	    }
-	};
-
-	// Then we can call the method
-	if (-1 == openYear) {
-	    // We are in the case where we just update the title.
-	    OsylRemoteServiceLocator.getEditorRemoteService()
-		    .createOrUpdateAssignment(assignmentId, title, callback);
+	    if (startDate != null && endDate != null)
+		createOrUpdateAssignment(resProx, assignmentId, title,
+			instructions, startDate, endDate, null, rating);
 	} else {
-	    OsylRemoteServiceLocator.getEditorRemoteService()
-		    .createOrUpdateAssignment(assignmentId, title,
-			    instructions, openYear, openMonth, openDay,
-			    openHour, openMinute, closeYear, closeMonth,
-			    closeDay, closeHour, closeMinute, rating, callback);
-
+	    final OsylAlertDialog alertBox =
+		    new OsylAlertDialog(false, true, "Assignment tool error",
+			    "The assignment not exists.");
+	    alertBox.show();
 	}
     }
 
-    /**
-     * Requests the server for the creation or update of an assignment.
-     */
-    public void createOrUpdateAssignment(COContentResourceProxy resProx,
-	    String assignmentId, String title) {
+    private void createOrUpdateAssignment(final COContentResourceProxy resProx,
+	    String assignmentId, String title, String instructions,
+	    Date dateStart, Date dateEnd, Date dateDue, int rating) {
 
-	createOrUpdateAssignment(resProx, assignmentId, title, null, -1, -1,
-		-1, -1, -1, -1, -1, -1, -1, -1, -1);
+	int openYear = -1;
+	int openMonth = -1;
+	int openDay = -1;
+	int openHour = 0;
+	int openMinute = 0;
+	int endYear = -1;
+	int endMonth = -1;
+	int endDay = 0;
+	int endHour = 0;
+	int endMinute = -1;
+	int dueYear = -1;
+	int dueMonth = -1;
+	int dueDay = 0;
+	int dueHour = 0;
+	int dueMinute = -1;
+
+	if (dateStart != null && dateEnd != null) {
+
+	    if (dateDue == null)
+		dateDue = dateEnd;
+
+	    SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+	    SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+	    SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+	    // SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
+	    // SimpleDateFormat minuteFormat = new SimpleDateFormat("mm");
+
+	    openYear = Integer.parseInt(yearFormat.format(dateStart));
+	    openMonth = Integer.parseInt(monthFormat.format(dateStart));
+	    openDay = Integer.parseInt(dayFormat.format(dateStart));
+	    // openHour = Integer.parseInt(hourFormat.format(dateStart));
+	    // openMinute = Integer.parseInt(minuteFormat.format(dateStart));
+	    endYear = Integer.parseInt(yearFormat.format(dateEnd));
+	    endMonth = Integer.parseInt(monthFormat.format(dateEnd));
+	    endDay = Integer.parseInt(dayFormat.format(dateEnd));
+	    // endHour = Integer.parseInt(hourFormat.format(dateEnd));
+	    // endMinute = Integer.parseInt(minuteFormat.format(dateEnd));
+	    dueYear = Integer.parseInt(yearFormat.format(dateDue));
+	    dueMonth = Integer.parseInt(monthFormat.format(dateDue));
+	    dueDay = Integer.parseInt(dayFormat.format(dateDue));
+	    // dueHour = Integer.parseInt(hourFormat.format(dateDue));
+	    // dueMinute = Integer.parseInt(minuteFormat.format(dateDue));
+
+	    AsyncCallback<String> callback = new AsyncCallback<String>() {
+		// We define the behavior in case of success
+		public void onSuccess(String assignmentId) {
+		    try {
+			System.out
+				.println("RPC SUCCESS - createOrUpdateAssignment(...)");
+			createOrUpdateAssignmentCB(resProx, assignmentId);
+		    } catch (Exception error) {
+			System.out
+				.println("Error - Unable to createOrUpdateAssignment(...) on RPC Success: "
+					+ error.toString());
+			Window
+				.alert("Error - Unable to createOrUpdateAssignment(...) on RPC Success: "
+					+ error.toString());
+			unableToCreateOrUpdateAssignment("Error - Unable to createOrUpdateAssignment(...) on RPC Success: "
+				+ error.toString());
+		    }
+		}
+
+		// And we define the behavior in case of failure
+		public void onFailure(Throwable error) {
+		    System.out
+			    .println("RPC FAILURE - createOrUpdateAssignment(...): "
+				    + error.toString());
+		    Window
+			    .alert("RPC FAILURE - createOrUpdateAssignment(...): "
+				    + error.toString());
+		    unableToCreateOrUpdateAssignment("RPC FAILURE - createOrUpdateAssignment(...): "
+			    + error.toString());
+		}
+	    };
+
+	    OsylRemoteServiceLocator.getEditorRemoteService()
+		    .createOrUpdateAssignment(assignmentId, title,
+			    instructions, openYear, openMonth, openDay,
+			    openHour, openMinute, endYear, endMonth, endDay,
+			    endHour, endMinute, dueYear, dueMonth, dueDay,
+			    dueHour, dueMinute, rating, callback);
+
+	}
     }
 
     /**
@@ -748,7 +825,7 @@ public class OsylController implements SavePushButtonEventHandler,
 		Window.alert("AssignmentID = " + assignmentId);
 		Window.alert("NewAssignmentID = " + assignmentId);
 	    }
-	    resProx.addProperty(COPropertiesType.IDENTIFIER,
+	    resProx.getResource().addProperty(COPropertiesType.IDENTIFIER,
 		    COPropertiesType.IDENTIFIER_TYPE_URI, assignmentId);
 	} catch (Exception e) {
 	    final OsylAlertDialog alertBox =

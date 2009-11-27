@@ -93,7 +93,8 @@ public interface OsylService {
     public String createOrUpdateAssignment(String assignmentId, String title,
 	    String instructions, int openYear, int openMonth, int openDay,
 	    int openHour, int openMinute, int closeYear, int closeMonth,
-	    int closeDay, int closeHour, int closeMinute, int percentage);
+	    int closeDay, int closeHour, int closeMinute, int dueYear, int dueMonth,
+	    int dueDay, int dueHour, int dueMinute, int percentage);
 
     /**
      * Adds or update an assignment to the site. This method checks

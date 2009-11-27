@@ -20,6 +20,8 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.view;
 
+import java.util.Date;
+
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAssignmentEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
@@ -104,22 +106,18 @@ public class OsylResProxAssignmentView extends OsylAbstractResProxView {
      */
     private void updateSakaiToolInfo() {
 
-	// We first get the link label
-	String linkLabel = getModel().getLabel();
-
 	// Then we get its ID and update the assignment.
 	//
 	// Of course, we don't do this if we are in hosted mode. Note: we could
 	// check if we are in hosted mode at the beginning of the method but
 	// if the code above generates an exception, we would still see it in
 	// hosted mode and that would mean earlier bug discovery.
-	if (!getController().isInHostedMode()) {
+	//if (!getController().isInHostedMode()) {
 	    String assignmentId = getAssignmentId();
 
 	    // And at last, the RPC call
-	    getController().createOrUpdateAssignment(getModel(), assignmentId,
-		    linkLabel);
-	}
+	    getController().createOrUpdateAssignment(getModel(), assignmentId);
+	//}
 
     }
 
@@ -129,10 +127,16 @@ public class OsylResProxAssignmentView extends OsylAbstractResProxView {
      * @return uri
      */
     private String getAssignmentId() {
-	String assignmentURI = getAssignmentURI();
-	String rawAssignmentId = assignmentURI.split("\\s*/a/\\s*")[1];
-	rawAssignmentId = rawAssignmentId.split("\\s*/\\s*")[1];
-	return rawAssignmentId.split("\\s*&panel=\\s*")[0];
+	String assId = null;
+	try {
+	    String assignmentURI = getAssignmentURI();
+	    String rawAssignmentId = assignmentURI.split("\\s*/a/\\s*")[1];
+	    rawAssignmentId = rawAssignmentId.split("\\s*/\\s*")[1];
+	    assId = rawAssignmentId.split("\\s*&panel=\\s*")[0];
+	    return assId;
+	} catch (Exception e) {
+	    return null;
+	}
     }
 
     /**
@@ -141,15 +145,50 @@ public class OsylResProxAssignmentView extends OsylAbstractResProxView {
      * @return uri
      */
     private String getAssignmentURI() {
-	return getModel().getProperty(COPropertiesType.IDENTIFIER,
+	return getModel().getResource().getProperty(COPropertiesType.IDENTIFIER,
 		COPropertiesType.IDENTIFIER_TYPE_URI);
     }
 
     @Override
     public void updateResourceMetaInfo() {
 	super.updateResourceMetaInfo();
+	getModel()
+		.getResource()
+		.addProperty(
+			COPropertiesType.DATE_START,
+			OsylDateUtils
+				.getDateAsXmlString(((OsylAssignmentEditor) getEditor())
+					.getDateStart()));
+	getModel()
+		.getResource()
+		.addProperty(
+			COPropertiesType.DATE_END,
+			OsylDateUtils
+				.getDateAsXmlString(((OsylAssignmentEditor) getEditor())
+					.getDateEnd()));
 	getModel().getResource().addProperty(COPropertiesType.MODIFIED,
 		OsylDateUtils.getNowDateAsXmlString());
+    }
+
+    public Date getDateStart() {
+	String dateString =
+		getModel().getResource().getProperty(
+			COPropertiesType.DATE_START);
+	Date date = null;
+	if (dateString != null && !dateString.trim().equals("")) {
+	    date = OsylDateUtils.getDateFromXMLDate(dateString);
+	}
+	return date;
+    }
+
+    public Date getDateEnd() {
+	String dateString =
+		getModel().getResource().getProperty(COPropertiesType.DATE_END);
+	Date date = null;
+	if (dateString != null  && !dateString.trim().equals("")) {
+	    date = OsylDateUtils.getDateFromXMLDate(dateString);
+	}
+	return date;
     }
 
 }

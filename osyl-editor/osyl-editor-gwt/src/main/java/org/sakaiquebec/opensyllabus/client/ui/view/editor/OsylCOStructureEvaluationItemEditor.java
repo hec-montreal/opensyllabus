@@ -20,11 +20,19 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureEvaluationItemLabelView;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -46,11 +54,16 @@ import com.google.gwt.user.datepicker.client.DateBox;
 public class OsylCOStructureEvaluationItemEditor extends
 	OsylCOStructureItemEditor {
 
+    private static final DateTimeFormat dateTimeFormat =
+	    DateTimeFormat.getFormat("yyyy-MM-dd");
+    private static final DateBox.Format dateFormat =
+	    new DateBox.DefaultFormat(dateTimeFormat);
+
     private TextBox weightTextBox;
     private ListBox localisationListBox;
     private ListBox modeListBox;
-    //private TextBox livrableTextBox;
-    //private ListBox scopeListBox;
+    // private TextBox livrableTextBox;
+    // private ListBox scopeListBox;
     private DateBox startDateBox;
     private DateBox endDateBox;
     private ListBox subTypeListBox;
@@ -91,42 +104,42 @@ public class OsylCOStructureEvaluationItemEditor extends
 	String weight = weightTextBox.getText();
 	if (weight.trim().equals("")) {
 	    messages +=
-		    getView().getUiMessage("Evaluation.field.required",
+		    getView().getUiMessage("Global.field.required",
 			    getUiMessage("Evaluation.rating"))
-			    + "\n\n";
+			    + "\n";
 	    ok = false;
 	} else {
-	    if (!weight.matches("^[0-9][0-9]*%$")) {
+	    if (!weight.matches("^[0-9][0-9]")) {
 		messages +=
-			getUiMessage("Evaluation.field.weight.format") + "\n\n";
+			getUiMessage("Evaluation.field.weight.format") + "\n";
 		ok = false;
 	    }
 	}
 	if (typeListBox.getSelectedIndex() == 0) {
 	    messages +=
-		    getView().getUiMessage("Evaluation.field.required",
+		    getView().getUiMessage("Global.field.required",
 			    getUiMessage("Evaluation.type"))
-			    + "\n\n";
+			    + "\n";
 	    ok = false;
 	}
 	if (localisationListBox.getSelectedIndex() == 0) {
 	    messages +=
-		    getView().getUiMessage("Evaluation.field.required",
+		    getView().getUiMessage("Global.field.required",
 			    getUiMessage("Evaluation.location"))
-			    + "\n\n";
+			    + "\n";
 	    ok = false;
 	}
 	if (modeListBox.getSelectedIndex() == 0) {
 	    messages +=
-		    getView().getUiMessage("Evaluation.field.required",
+		    getView().getUiMessage("Global.field.required",
 			    getUiMessage("Evaluation.mode"))
-			    + "\n\n";
+			    + "\n";
 	    ok = false;
 	}
 	String endDateString = endDateBox.getTextBox().getText();
 	// if (endDateString.trim().equals("")) {
 	// messages +=
-	// getView().getUiMessage("Evaluation.field.required",
+	// getView().getUiMessage("Global.field.required",
 	// getUiMessage("Evaluation.EndDate"))
 	// + "\n\n";
 	// ok = false;
@@ -135,9 +148,9 @@ public class OsylCOStructureEvaluationItemEditor extends
 	if (!endDateString.trim().equals("")
 		&& !endDateString.matches(isoRegex)) {
 	    messages +=
-		    getView().getUiMessage("Evaluation.field.date.unISO",
+		    getView().getUiMessage("Global.field.date.unISO",
 			    getUiMessage("Evaluation.EndDate"))
-			    + "\n\n";
+			    + "\n";
 	    ok = false;
 	    errordate = true;
 	}
@@ -149,9 +162,9 @@ public class OsylCOStructureEvaluationItemEditor extends
 	if (!startDateString.trim().equals("")
 		&& !startDateString.matches(isoRegex)) {
 	    messages +=
-		    getView().getUiMessage("Evaluation.field.date.unISO",
+		    getView().getUiMessage("Global.field.date.unISO",
 			    getUiMessage("Evaluation.StartDate"))
-			    + "\n\n";
+			    + "\n";
 	    ok = false;
 	    errordate = true;
 	}
@@ -160,6 +173,15 @@ public class OsylCOStructureEvaluationItemEditor extends
 	    messages += getUiMessage("Evaluation.field.date.order") + "\n";
 	    ok = false;
 	}
+
+	if (!errordate && !endDateString.trim().equals("")) {
+	    String verifyAssignement = verifyAssignementTool();
+	    if (!verifyAssignement.equals("")) {
+		ok = false;
+		messages += verifyAssignement;
+	    }
+	}
+
 	if (!ok) {
 	    OsylAlertDialog osylAlertDialog =
 		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
@@ -168,6 +190,56 @@ public class OsylCOStructureEvaluationItemEditor extends
 	    osylAlertDialog.show();
 	}
 	return ok;
+    }
+
+    private String verifyAssignementTool() {
+	return verifyAssignementTool(getView().getModel());
+    }
+
+    private String verifyAssignementTool(COElementAbstract model) {
+	String message = "";
+	if (model.isCOContentResourceProxy()) {
+	    COContentResourceProxy contentResourceProxy =
+		    (COContentResourceProxy) model;
+	    if (contentResourceProxy.getResource().getType().equals(
+		    COContentResourceType.ASSIGNMENT)) {
+		COContentResource resource =
+			(COContentResource) contentResourceProxy.getResource();
+		Date assignementStartDate =
+			OsylDateUtils.getDateFromXMLDate(resource
+				.getProperty(COPropertiesType.DATE_START));
+		Date assignementEndDate =
+			OsylDateUtils.getDateFromXMLDate(resource
+				.getProperty(COPropertiesType.DATE_END));
+		if (endDateBox.getValue().before(assignementStartDate)) {
+		    message +=
+			    getView()
+				    .getUiMessages()
+				    .getMessage(
+					    "Assignement.field.date.order.dateAfterDate",
+					    getUiMessage("Evaluation.EndDate"),
+					    getUiMessage("Assignement.date_start"))
+				    + "\n";
+		}
+		if (assignementEndDate.before(endDateBox.getValue())) {
+		    message +=
+			    getView()
+				    .getUiMessages()
+				    .getMessage(
+					    "Assignement.field.date.order.dateAfterDate",
+					    getUiMessage("Assignement.date_end"),
+					    getUiMessage("Evaluation.EndDate"))
+				    + "\n";
+		}
+
+	    }
+	} else {
+	    for (Iterator<COElementAbstract> childsIterator =
+		    model.getChildrens().iterator(); childsIterator.hasNext();) {
+		message += verifyAssignementTool(childsIterator.next());
+	    }
+	}
+	return message;
     }
 
     public void enterView() {
@@ -183,7 +255,8 @@ public class OsylCOStructureEvaluationItemEditor extends
 
 	String rating =
 		(getView().getWeight() != null && !getView().getWeight()
-			.equals("")) ? "\t(" + getView().getWeight() + ")" : "";
+			.equals("")) ? "\t(" + getView().getWeight() + "%)"
+			: "";
 
 	setText(getView().getTextFromModel() + rating);
 	// If we are in read-only mode, we return now to not add buttons and
@@ -249,36 +322,35 @@ public class OsylCOStructureEvaluationItemEditor extends
 	modePanel.add(l3);
 	modePanel.add(modeListBox);
 
-//	VerticalPanel livrablePanel = new VerticalPanel();
-//	livrablePanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
-//	Label l4 = new Label(getUiMessage("Evaluation.deliverable"));
-//	livrableTextBox = new TextBox();
-//	livrableTextBox
-//		.setTitle(getUiMessage("Evaluation.deliverable.tooltip"));
-//	livrableTextBox.setText(getView().getResult());
-//	livrablePanel.add(l4);
-//	livrablePanel.add(livrableTextBox);
-//
-//	VerticalPanel scopePanel = new VerticalPanel();
-//	scopePanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
-//	Label l5 = new Label(getUiMessage("Evaluation.scope"));
-//	scopeListBox = new ListBox();
-//	scopeListBox.setName("Evaluation.scope");
-//	scopeListBox.setTitle(getUiMessage("Evaluation.scope.tooltip"));
-//	scopeListBox.addItem(getView().getCoMessage("Evaluation.Scope.Obl"));
-//	scopeListBox.addItem(getView().getCoMessage("Evaluation.Scope.Fac"));
-//	selectItemListBox(scopeListBox, getView().getScope());
-//	scopePanel.add(l5);
-//	scopePanel.add(scopeListBox);
+	// VerticalPanel livrablePanel = new VerticalPanel();
+	// livrablePanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
+	// Label l4 = new Label(getUiMessage("Evaluation.deliverable"));
+	// livrableTextBox = new TextBox();
+	// livrableTextBox
+	// .setTitle(getUiMessage("Evaluation.deliverable.tooltip"));
+	// livrableTextBox.setText(getView().getResult());
+	// livrablePanel.add(l4);
+	// livrablePanel.add(livrableTextBox);
+	//
+	// VerticalPanel scopePanel = new VerticalPanel();
+	// scopePanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
+	// Label l5 = new Label(getUiMessage("Evaluation.scope"));
+	// scopeListBox = new ListBox();
+	// scopeListBox.setName("Evaluation.scope");
+	// scopeListBox.setTitle(getUiMessage("Evaluation.scope.tooltip"));
+	// scopeListBox.addItem(getView().getCoMessage("Evaluation.Scope.Obl"));
+	// scopeListBox.addItem(getView().getCoMessage("Evaluation.Scope.Fac"));
+	// selectItemListBox(scopeListBox, getView().getScope());
+	// scopePanel.add(l5);
+	// scopePanel.add(scopeListBox);
 
 	VerticalPanel startDatePanel = new VerticalPanel();
 	startDatePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
 	Label l6 = new Label(getUiMessage("Evaluation.StartDate"));
 	startDateBox = new DateBox();
-	startDateBox.setFormat(new DateBox.DefaultFormat(DateTimeFormat
-		.getFormat("yyyy-MM-dd")));
+	startDateBox.setFormat(dateFormat);
 	startDateBox.setTitle(getUiMessage("Evaluation.StartDate.tooltip"));
-	startDateBox.getTextBox().setText(getView().getDateStart());
+	startDateBox.setValue(getView().getDateStart());
 	startDatePanel.add(l6);
 	startDatePanel.add(startDateBox);
 
@@ -286,10 +358,9 @@ public class OsylCOStructureEvaluationItemEditor extends
 	endDatePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
 	Label l7 = new Label(getUiMessage("Evaluation.EndDate"));
 	endDateBox = new DateBox();
-	endDateBox.setFormat(new DateBox.DefaultFormat(DateTimeFormat
-		.getFormat("yyyy-MM-dd")));
+	endDateBox.setFormat(dateFormat);
 	endDateBox.setTitle(getUiMessage("Evaluation.EndDate.tooltip"));
-	endDateBox.getTextBox().setText(getView().getDateEnd());
+	endDateBox.setValue(getView().getDateEnd());
 	endDatePanel.add(l7);
 	endDatePanel.add(endDateBox);
 
@@ -346,12 +417,12 @@ public class OsylCOStructureEvaluationItemEditor extends
 	ligne1.add(ponderationPanel);
 	ligne1.add(localisationPanel);
 	ligne1.add(modePanel);
-	//ligne1.add(livrablePanel);
+	// ligne1.add(livrablePanel);
 
 	ligne2.add(startDatePanel);
 	ligne2.add(endDatePanel);
 	ligne2.add(subTypePanel);
-	//ligne2.add(scopePanel);
+	// ligne2.add(scopePanel);
 
 	ligne1.setWidth("100%");
 	ligne2.setWidth("100%");
@@ -379,35 +450,39 @@ public class OsylCOStructureEvaluationItemEditor extends
 	String weight = getView().getWeight();
 	String location = getView().getLocation();
 	String workMode = getView().getMode();
-	//String deliverable = getView().getResult();
-	String dateStart = getView().getDateStart();
-	String dateEnd = getView().getDateEnd();
+	// String deliverable = getView().getResult();
+	String dateStart =
+		getView().getDateStart() == null ? "" : dateTimeFormat
+			.format(getView().getDateStart());
+	String dateEnd =
+		getView().getDateEnd() == null ? "" : dateTimeFormat
+			.format(getView().getDateEnd());
 	String submissionMode = getView().getSubmitionType();
-	//String scope = getView().getScope();
+	// String scope = getView().getScope();
 
 	assessementType = assessementType != null ? assessementType : "";
 	weight = weight != null ? weight : "";
 	location = location != null ? location : "";
 	workMode = workMode != null ? workMode : "";
-	//deliverable = deliverable != null ? deliverable : "";
+	// deliverable = deliverable != null ? deliverable : "";
 	dateStart = dateStart != null ? dateStart : "";
 	dateEnd = dateEnd != null ? dateEnd : "";
 	submissionMode = submissionMode != null ? submissionMode : "";
-	//scope = scope != null ? scope : "";
+	// scope = scope != null ? scope : "";
 
 	String assessementTypeLabel =
 		getUiMessage("Evaluation.type") + ": " + assessementType
 			+ " | ";
 	String weightLabel =
-		getUiMessage("Evaluation.rating") + ": " + weight + " | ";
+		getUiMessage("Evaluation.rating") + ": " + weight + "% | ";
 	String locationLabel =
 		getUiMessage("Evaluation.location") + ": " + location + " | ";
 	String workModeLabel =
 		getUiMessage("Evaluation.mode") + ": " + workMode;
-//	String deliverableLabel =
-//		!deliverable.equals("") ? getUiMessage("Evaluation.deliverable")
-//			+ ": " + deliverable + " | "
-//			: "";
+	// String deliverableLabel =
+	// !deliverable.equals("") ? getUiMessage("Evaluation.deliverable")
+	// + ": " + deliverable + " | "
+	// : "";
 	String startDateLabel =
 		!dateStart.equals("") ? getUiMessage("Evaluation.StartDate")
 			+ ": " + dateStart + " | " : "";
@@ -417,18 +492,16 @@ public class OsylCOStructureEvaluationItemEditor extends
 	String submissionModeLabel =
 		!submissionMode.equals("") ? getUiMessage("Evaluation.subtype")
 			+ ": " + submissionMode : "";
-//	String scopeLabel = getUiMessage("Evaluation.scope") + ": " + scope;
+	// String scopeLabel = getUiMessage("Evaluation.scope") + ": " + scope;
 
 	String metaInfoLabelStr1 =
 		assessementTypeLabel + weightLabel + locationLabel
 			+ workModeLabel;
-//	String metaInfoLabelStr2 =
-//		deliverableLabel + startDateLabel + endDateLabel
-//			+ submissionModeLabel + scopeLabel;
+	// String metaInfoLabelStr2 =
+	// deliverableLabel + startDateLabel + endDateLabel
+	// + submissionModeLabel + scopeLabel;
 	String metaInfoLabelStr2 =
-		 startDateLabel + endDateLabel
-			+ submissionModeLabel ;
-	
+		startDateLabel + endDateLabel + submissionModeLabel;
 
 	Label label1 = new Label(metaInfoLabelStr1);
 	Label label2 = new Label(metaInfoLabelStr2);
@@ -465,39 +538,43 @@ public class OsylCOStructureEvaluationItemEditor extends
 	String assessementType = getView().getAssessmentType();
 	String location = getView().getLocation();
 	String workMode = getView().getMode();
-	//String deliverable = getView().getResult();
-	String dateStart = getView().getDateStart();
-	String dateEnd = getView().getDateEnd();
+	// String deliverable = getView().getResult();
+	String dateStart =
+		getView().getDateStart() == null ? "" : dateTimeFormat
+			.format(getView().getDateStart());
+	String dateEnd =
+		getView().getDateEnd() == null ? "" : dateTimeFormat
+			.format(getView().getDateEnd());
 	String submissionMode = getView().getSubmitionType();
-	//String scope = getView().getScope();
+	// String scope = getView().getScope();
 
 	assessementType = assessementType != null ? assessementType : "";
 	location = location != null ? location : "";
 	workMode = workMode != null ? workMode : "";
-	//deliverable = deliverable != null ? deliverable : "";
+	// deliverable = deliverable != null ? deliverable : "";
 	dateStart = dateStart != null ? dateStart : "";
 	dateEnd = dateEnd != null ? dateEnd : "";
 	submissionMode = submissionMode != null ? submissionMode : "";
-	//scope = scope != null ? scope : "";
+	// scope = scope != null ? scope : "";
 
 	HTML evaluationTypeHTML = createNewViewer();
 	HTML localisationHTML = createNewViewer();
 	HTML workModeHTML = createNewViewer();
-	//HTML deliverableHTML = createNewViewer();
+	// HTML deliverableHTML = createNewViewer();
 	HTML startDateHTML = createNewViewer();
 	HTML endDateHTML = createNewViewer();
 	HTML submissionModeHTML = createNewViewer();
-	//HTML scopeHTML = createNewViewer();
+	// HTML scopeHTML = createNewViewer();
 
 	// panels used to display information
 	VerticalPanel viewerPanelEvaluationType;
 	VerticalPanel viewerPanelLocalisation;
 	VerticalPanel viewerPanelWorkMode;
-	//VerticalPanel viewerPanelDeliverable;
+	// VerticalPanel viewerPanelDeliverable;
 	VerticalPanel viewerPanelStartDate;
 	VerticalPanel viewerPanelEndDate;
 	VerticalPanel viewerPanelSubmissionMode;
-	//VerticalPanel viewerPanelScope;
+	// VerticalPanel viewerPanelScope;
 
 	final FlexTable flexTable = new FlexTable();
 
@@ -541,17 +618,17 @@ public class OsylCOStructureEvaluationItemEditor extends
 	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
 		viewerPanelWorkMode);
 
-//	if (!deliverable.equals("")) {
-//	    fieldNumber++;
-//	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-//		    addNewLabel(getUiMessage("Evaluation.deliverable")));
-//	    // Value(editor)
-//	    viewerPanelDeliverable = addNewEditorPanel();
-//	    viewerPanelDeliverable.add(deliverableHTML);
-//	    fieldNumber++;
-//	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-//		    viewerPanelDeliverable);
-//	}
+	// if (!deliverable.equals("")) {
+	// fieldNumber++;
+	// flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
+	// addNewLabel(getUiMessage("Evaluation.deliverable")));
+	// // Value(editor)
+	// viewerPanelDeliverable = addNewEditorPanel();
+	// viewerPanelDeliverable.add(deliverableHTML);
+	// fieldNumber++;
+	// flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
+	// viewerPanelDeliverable);
+	// }
 
 	if (!dateStart.equals("")) {
 	    fieldNumber++;
@@ -593,19 +670,20 @@ public class OsylCOStructureEvaluationItemEditor extends
 	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
 		addNewLabel(getUiMessage("Evaluation.scope")));
 	// Value(editor)
-//	viewerPanelScope = addNewEditorPanel();
-//	viewerPanelScope.add(scopeHTML);
-//	fieldNumber++;
-//	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4, viewerPanelScope);
+	// viewerPanelScope = addNewEditorPanel();
+	// viewerPanelScope.add(scopeHTML);
+	// fieldNumber++;
+	// flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
+	// viewerPanelScope);
 
 	evaluationTypeHTML.setHTML(assessementType);
 	localisationHTML.setHTML(location);
 	workModeHTML.setHTML(workMode);
-	//deliverableHTML.setHTML(deliverable);
+	// deliverableHTML.setHTML(deliverable);
 	startDateHTML.setHTML(dateStart);
 	endDateHTML.setHTML(dateEnd);
 	submissionModeHTML.setHTML(submissionMode);
-	//scopeHTML.setHTML(scope);
+	// scopeHTML.setHTML(scope);
 
 	return flexTable;
     }
@@ -626,20 +704,20 @@ public class OsylCOStructureEvaluationItemEditor extends
 	return modeListBox.getItemText(modeListBox.getSelectedIndex());
     }
 
-//    public String getResult() {
-//	return livrableTextBox.getText();
-//    }
+    // public String getResult() {
+    // return livrableTextBox.getText();
+    // }
 
-//    public String getScope() {
-//	return scopeListBox.getItemText(scopeListBox.getSelectedIndex());
-//    }
+    // public String getScope() {
+    // return scopeListBox.getItemText(scopeListBox.getSelectedIndex());
+    // }
 
-    public String getOpenDate() {
-	return startDateBox.getTextBox().getText();
+    public Date getOpenDate() {
+	return startDateBox.getValue();
     }
 
-    public String getCloseDate() {
-	return endDateBox.getTextBox().getText();
+    public Date getCloseDate() {
+	return endDateBox.getValue();
     }
 
     public String getSubmitionType() {

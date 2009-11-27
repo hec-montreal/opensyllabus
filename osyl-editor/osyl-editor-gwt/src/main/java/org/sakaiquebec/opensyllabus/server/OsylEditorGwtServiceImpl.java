@@ -22,12 +22,8 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     public String createOrUpdateAssignment(String assignmentId, String title,
 	    String instructions, int openYear, int openMonth, int openDay,
 	    int openHour, int openMinute, int closeYear, int closeMonth,
-	    int closeDay, int closeHour, int closeMinute, int percentage) {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    public String createOrUpdateAssignment(String assignmentId, String title) {
+	    int closeDay, int closeHour, int closeMinute,int dueYear, int dueMonth,
+	    int dueDay, int dueHour, int dueMinute, int percentage) {
 	// TODO Auto-generated method stub
 	return null;
     }
