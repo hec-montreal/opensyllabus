@@ -70,20 +70,18 @@
   color:#454a4f;
   background:transparent url(images/ui/opt_separator.gif) no-repeat left center;
   cursor:default;
+  heigth:auto;
   text-decoration:none;
 }
 .gwt-MenuBar-horizontal .gwt-MenuItem:first-child, #gwt-uid-1, .gwt-MenuBar-vertical .gwt-MenuItem{background-image:none} /* Remove left border of the first element */
+
 .gwt-MenuBar-horizontal .gwt-MenuItem {
   text-align:center;
-  padding:0 10px;
-}
-
-.gwt-MenuBar-vertical .gwt-MenuItem {
-  text-align:left;
-  padding:4px 2px;
+  padding:1px 10px;
 }
 
 .gwt-MenuBar-horizontal .gwt-MenuItem img {
+	vertical-align:middle;
 	margin:0 2px 0 0;
 }
 
@@ -93,6 +91,11 @@
 	border:1px solid #CBD0D4;
 	padding:2px;
 	cursor:default;
+}
+
+.gwt-MenuBar-vertical .gwt-MenuItem {
+  text-align:left;
+  padding:4px 2px;
 }
 
 /* Act as a hover */
@@ -232,6 +235,8 @@
   cursor:e-resize;
   width:5px;
 }
+
+.Osyl-MainView-HorizontalSplitPanel .hsplitter img {display:none}
 /*Workspace View Right Zone --------------------------------------------------------------------------------*/
 
 .Osyl-WorkspaceView {
@@ -561,10 +566,6 @@
 	font-size:1em;
 	padding:3px 0;
 	width:auto;
-}
-
-.Osyl-UnitView-HtmlViewer{
-	width:100%;
 }
 
 .Osyl-UnitView-UnitLabel ul, .Osyl-UnitView-UnitLabel-Important ul {margin-left:30px}
