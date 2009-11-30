@@ -912,7 +912,8 @@
 
 .Osyl-EditorPopup-OptionGroup, 
 .Osyl-EditorPopup-LastOptionGroup, 
-.Osyl-EditorPopup-RowOptions .gwt-Label, 
+.Osyl-EditorPopup-RowOptions .gwt-Label,
+.Osyl-EditorPopup-RowOptions .gwt-HTML,  
 .Osyl-EditorPopup-RowOptions .gwt-CheckBox {
 	background-color:#FCFCFC;
 	font-size:11px;
@@ -926,7 +927,8 @@
 	border-right:0;
 }
 
-.Osyl-EditorPopup-RowOptions .gwt-Label {
+.Osyl-EditorPopup-RowOptions .gwt-Label,
+.Osyl-EditorPopup-RowOptions .gwt-HTML {
 	color:#454A4f;
 	margin-bottom:3px;
 }
@@ -967,7 +969,9 @@
 .Osyl-EditorPopup .sectionLabel {width:100%}
 .Osyl-EditorPopup .Osyl-ResourceBrowserPanel {margin:0}
 .Osyl-EditorPopup .Osyl-ResourceBrowserPanel .gwt-Label, 
-.Osyl-EditorPopup .gwt-Label {
+.Osyl-EditorPopup .gwt-Label,
+.Osyl-EditorPopup .Osyl-ResourceBrowserPanel .gwt-HTML, 
+.Osyl-EditorPopup .gwt-HTML {
 	font-size:11px;
 	color:#454a4f;
 	margin-bottom:3px;
@@ -1231,5 +1235,8 @@
 	padding:3px 0;
 	width:auto;
 	font-style: italic;
-	
+}
+
+.Osyl-Mandatory_field {
+	color:red;	
 }
