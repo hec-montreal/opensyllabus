@@ -166,6 +166,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	htmlViewerName.setStylePrimaryName("name");
 
 	setViewerPanel(new HorizontalPanel());
+	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 
 	if (isReadOnly()) {
 	    if (getView().isContextImportant()) {
@@ -196,6 +197,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	    }
 	}
 	VerticalPanel vp = new VerticalPanel();
+	vp.setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewerPanel().add(vp);
 	HorizontalPanel linkAndNameHP = new HorizontalPanel();
 	vp.add(linkAndNameHP);
