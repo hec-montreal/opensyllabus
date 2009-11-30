@@ -236,9 +236,8 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	    log.warn("Could not find config with configref='" + configref
 		    + "'. This config will be create.");
 	    if (log.isInfoEnabled()) {
-		log.warn("Details:");
+		log.info("Details:");
 		e.printStackTrace();
-		
 	    }
 	    createConfig(configref, desc);
 	}
