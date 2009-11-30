@@ -127,13 +127,15 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	return editorFirstName;
     }
 
-    private Label firstNameLabel;
+    private HTML firstNameLabel;
 
-    public Label getFirstNameLabel() {
+    public HTML getFirstNameLabel() {
 	if (firstNameLabel == null) {
 	    firstNameLabel =
-		    new Label(getView().getCoMessage(
-			    "ResProxContactInfoView_FirstNameLabel"));
+		    new HTML(
+			    getView().getCoMessage(
+				    "ResProxContactInfoView_FirstNameLabel")
+				    + OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
 	    firstNameLabel.setStylePrimaryName("Osyl-ResProxView-Label");
 	    firstNameLabel.addStyleName("Osyl-ContactInfo-Label");
 	}
@@ -152,13 +154,15 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	return editorLastName;
     }
 
-    private Label lastNameLabel;
+    private HTML lastNameLabel;
 
-    public Label getLastNameLabel() {
+    public HTML getLastNameLabel() {
 	if (lastNameLabel == null) {
 	    lastNameLabel =
-		    new Label(getView().getCoMessage(
-			    "ResProxContactInfoView_LastNameLabel"));
+		    new HTML(
+			    getView().getCoMessage(
+				    "ResProxContactInfoView_LastNameLabel")
+				    + OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
 	    lastNameLabel.setStylePrimaryName("Osyl-ResProxView-Label");
 	    lastNameLabel.addStyleName("Osyl-ContactInfo-Label");
 	}
@@ -176,13 +180,15 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	return editorRole;
     }
 
-    private Label roleLabel;
+    private HTML roleLabel;
 
-    public Label getRoleLabel() {
+    public HTML getRoleLabel() {
 	if (roleLabel == null) {
 	    roleLabel =
-		    new Label(getView().getCoMessage(
-			    "ResProxContactInfoView_TitleLabel"));
+		    new HTML(
+			    getView().getCoMessage(
+				    "ResProxContactInfoView_TitleLabel")
+				    + OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
 	    roleLabel.setStylePrimaryName("Osyl-ResProxView-Label");
 	    roleLabel.addStyleName("Osyl-ContactInfo-Label");
 	}

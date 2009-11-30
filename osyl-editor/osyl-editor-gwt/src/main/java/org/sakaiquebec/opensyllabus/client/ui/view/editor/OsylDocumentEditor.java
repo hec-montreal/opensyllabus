@@ -144,7 +144,9 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
     private void initEditor() {
 	editorPanel = new VerticalPanel();
 
-	Label l1 = new Label(getView().getUiMessage("clickable_text"));
+	HTML l1 =
+		new HTML(getView().getUiMessage("clickable_text")
+			+ OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
 	editorPanel.add(l1);
 	editorLabel = new TextBox();
 	editorLabel.setStylePrimaryName("Osyl-LabelEditor-TextBox");
@@ -313,6 +315,15 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    oad.show();
 	    return false;
 	} else {
+	    if (editorLabel.getText().trim().equals("")) {
+		OsylAlertDialog oad =
+			new OsylAlertDialog(getUiMessage("Global.error"),
+				getView().getUiMessage("Global.field.required",
+					getUiMessage("clickable_text")));
+		oad.center();
+		oad.show();
+		return false;
+	    }
 	    return true;
 	}
     }

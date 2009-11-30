@@ -129,7 +129,8 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	editorLink.setWidth("100%");
 	editorLink.addClickHandler(new ResetLabelClickListener(
 		"http://www.google.ca/search?q=opensyllabus"));
-	flexTable.setWidget(1, 0, new Label(getUiMessage("Link.url") + " : "));
+	flexTable.setWidget(1, 0, new HTML(getUiMessage("Link.url")
+		+ OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR + " : "));
 	flexTable.setWidget(1, 1, editorLink);
 
 	flexTable.setWidth("100%");
@@ -204,7 +205,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	VerticalPanel vp = new VerticalPanel();
 	vp.setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewerPanel().add(vp);
-//	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
+	// getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	vp.add(getViewer());
 	vp.add(getViewerURI());
 	vp.add(getViewerDesc());
@@ -316,10 +317,10 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 
     public boolean prepareForSave() {
 	String messages = "";
-	boolean ok=true;
-	if(!LinkValidator.isValidLink(getLink())){
-	    ok=false;
-	    messages=getView().getUiMessage("LinkEditor.unvalidLink");
+	boolean ok = true;
+	if (!LinkValidator.isValidLink(getLink())) {
+	    ok = false;
+	    messages = getView().getUiMessage("LinkEditor.unvalidLink");
 	}
 	if (!ok) {
 	    OsylAlertDialog osylAlertDialog =

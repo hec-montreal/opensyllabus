@@ -112,12 +112,15 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 	dateEndDateBox.setFormat(dateFormat);
 
 	HorizontalPanel datePanel = new HorizontalPanel();
-	Label dateStartLabel =
-		new Label(getUiMessage("Assignement.date_start"));
+	HTML dateStartLabel =
+		new HTML(getUiMessage("Assignement.date_start")
+			+ OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
 	datePanel.add(dateStartLabel);
 	datePanel.add(dateStartDateBox);
 
-	Label dateEndLabel = new Label(getUiMessage("Assignement.date_end"));
+	HTML dateEndLabel =
+		new HTML(getUiMessage("Assignement.date_end")
+			+ OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
 	datePanel.add(dateEndLabel);
 	datePanel.add(dateEndDateBox);
 
@@ -271,7 +274,6 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 
 	    COElementAbstract model = getView().getModel();
 	    boolean found = false;
-	    String title = "";
 	    Date dueDate = null;
 	    while (!found && model.getParent() != null) {
 		if (model.isCOUnit()) {
