@@ -175,6 +175,7 @@
 .gwt-RichTextArea {
   border:1px solid #878A8C;
   background-color:#FFF;
+  margin:2px 0 0 2px;
 }
 
 .gwt-RichTextToolbar {

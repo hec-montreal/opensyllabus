@@ -107,16 +107,6 @@
 	text-decoration:none;
 	background-color:#DCEFFD;
 }
-/* Menu Button --------------------------------------------------------------------------------------------*/
-/* À identifier */
-.Osyl-MenuButton {background:transparent} /* Menu Button allowing transparency. Se Java Code*/
-/* À identifier */
-.Osyl-MenuButton-ListBox {
-	padding:1px;
-	border:1px solid #999;
-	font:normal 10px Arial, Verdana, sans-serif;
-}
-/* End Menu Button ----------------------------------------------------------------------------------------*/
 
 /* Horizontal Split Panel , parent of the left, middle and right Zone -------------------------------------*/
 .Osyl-MainView-HorizontalSplitPanel {
@@ -777,7 +767,7 @@
 	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
 	background:#FFF;
 	border:1px solid #AAA;
-	margin:0 3px;
+	margin:0;
 }
 .Osyl-UnitView-TextArea body {color:red}
 .Osyl-ResConfigView-Status-Panel {
@@ -848,7 +838,7 @@
 	border:1px solid #AAA;
 	margin:2px 0;
 }
-.Osyl-ContactInfo-Panel{width:100%;border:0}
+.Osyl-ContactInfo-Panel{width:100%;border:0;margin:2px 3px;}
 /* Fin Édition */
 .Osyl-ContactInfo-TextBox{
     width:130px;
@@ -896,7 +886,7 @@
 .Osyl-EditorPopup .Osyl-LabelEditor-TextBox {
 	border:0;
 	border:1px solid #878a8c;
-	margin:2px;
+	margin:1px 0 0 2px;
 }
 
 .Osyl-EditorPopup table {border-collapse:separate}
@@ -912,12 +902,12 @@
 
 .Osyl-EditorPopup-OptionGroup, 
 .Osyl-EditorPopup-LastOptionGroup, 
-.Osyl-EditorPopup-RowOptions .gwt-Label,
-.Osyl-EditorPopup-RowOptions .gwt-HTML,  
+.Osyl-EditorPopup-RowOptions .gwt-Label, 
+.Osyl-EditorPopup-RowOptions .gwt-HTML, 
 .Osyl-EditorPopup-RowOptions .gwt-CheckBox {
 	background-color:#FCFCFC;
 	font-size:11px;
-	margin:0;
+	margin:0 3px;
 }
 
 .Osyl-EditorPopup-OptionGroup {padding:0 12px 0 7px}
@@ -928,14 +918,14 @@
 }
 
 .Osyl-EditorPopup-RowInformation{
-	margin: 0;
-	width: 100%;	
+	margin:0;
+	width:100%;
 }
 
 .Osyl-EditorPopup-RowOptions .gwt-Label,
 .Osyl-EditorPopup-RowOptions .gwt-HTML {
 	color:#454A4f;
-	margin-bottom:3px;
+	margin:3px 0 0 3px;
 }
 
 .Osyl-EditorPopup-RowOptions .gwt-CheckBox {
@@ -968,7 +958,7 @@
 	background-color:#D6DBDF;
 	font:bold 11px Arial, Verdana, sans-serif;
 	color:#006E96;
-	margin:0 0 3px;
+	margin:0;
 	padding:3px 0;
 }
 .Osyl-EditorPopup .sectionLabel {width:100%}
@@ -979,10 +969,10 @@
 .Osyl-EditorPopup .gwt-HTML {
 	font-size:11px;
 	color:#454a4f;
-	margin-bottom:3px;
+	margin:3px 0 0 3px;
 }
 
-.Osyl-EditorPopup .gwt-TextArea {margin:0 8px 3px 3px}
+.Osyl-EditorPopup .gwt-TextArea {margin:0 8px 3px 0}
 
 .Osyl-EditorPopup .information {
 	font-size:11px;
@@ -1002,19 +992,19 @@
 	background-position:left bottom;
 }
 .Osyl-EditorPopup-RowOptions {
-	margin:0 0 0 3px;
+	margin:0;
 }
 
 .Osyl-EditorPopup-RowButtons {
-	margin:3px 0 0 3px;
+	margin:3px 0 0;
 }
 
 .Osyl-EditorPopup-RowEditor {
-	margin:0 0 0 3px;
+	margin:0;
 }
 
 .Osyl-EditorPopup-RowToolBar {
-	margin:0 0 0 3px;
+	margin:0;
 	border-top:1px solid #AAA;
 }
 
