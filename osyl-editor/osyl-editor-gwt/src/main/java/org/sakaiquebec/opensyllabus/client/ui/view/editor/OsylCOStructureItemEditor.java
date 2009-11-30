@@ -290,6 +290,16 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
     protected Widget getMetaInfoLabel() {
 	return null;
     }
+    
+    @Override
+    public boolean isMoveable() {
+	return false;
+    }
+
+    @Override
+    public Widget getInformationWidget() {
+	return null;
+    }
 
     /**
      * ==================== ADDED CLASSES or METHODS ====================
@@ -440,9 +450,6 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 	return isDeletable;
     }
 
-    @Override
-    public boolean isMoveable() {
-	return false;
-    }
+    
 
 }

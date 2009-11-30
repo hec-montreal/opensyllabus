@@ -927,6 +927,11 @@
 	border-right:0;
 }
 
+.Osyl-EditorPopup-RowInformation{
+	margin: 0;
+	width: 100%;	
+}
+
 .Osyl-EditorPopup-RowOptions .gwt-Label,
 .Osyl-EditorPopup-RowOptions .gwt-HTML {
 	color:#454A4f;

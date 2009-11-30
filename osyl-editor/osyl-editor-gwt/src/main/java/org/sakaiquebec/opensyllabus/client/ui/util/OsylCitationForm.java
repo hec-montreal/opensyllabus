@@ -198,8 +198,8 @@ public class OsylCitationForm extends WindowPanel implements
 				: citation.getTitle());
 	mainPanel.add(hiddenDisplayName);
 
-	mainPanel.add(new HTML(uiMessages
-		.getMessage("CitationForm.requiredFields")));
+	mainPanel.add(new HTML(OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR + uiMessages
+		.getMessage("Global.fields.mandatory")));
 	mainPanel.add(new HTML(uiMessages
 		.getMessage("CitationForm.recommendedFields")));
 	// Create a listbox for the citation type.

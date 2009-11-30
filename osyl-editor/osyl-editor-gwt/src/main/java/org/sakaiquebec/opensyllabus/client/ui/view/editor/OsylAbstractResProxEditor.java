@@ -47,6 +47,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -62,10 +63,9 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
+    public static final String MANDATORY_FIELD_INDICATOR =
+	    "<span class=\"Osyl-Mandatory_field\"> *</span>";
 
-    public static final String MANDATORY_FIELD_INDICATOR = "<span class=\"Osyl-Mandatory_field\"> *</span>";
-    
-    
     // TODO: document
     private CheckBox importantCheckBox;
     private CheckBox hideCheckBox;
@@ -317,6 +317,11 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
     public Widget getBrowserWidget() {
 	return null;
+    }
+
+    public Widget getInformationWidget() {
+	return new HTML(OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR
+		+ getUiMessage("Global.fields.mandatory"));
     }
 
     /**

@@ -262,6 +262,14 @@ public abstract class OsylAbstractEditor extends Composite {
 	pop.setWidget(mainPanel);
 	mainPanel.setWidth("100%");
 
+	Widget informationWidget = getInformationWidget();
+	if(informationWidget!=null){
+	    HorizontalPanel row00 = new HorizontalPanel();
+	    row00.setStylePrimaryName("Osyl-EditorPopup-RowInformation");
+	    mainPanel.add(row00);
+	    row00.add(informationWidget);
+	}
+	
 	Widget browserWidget = getBrowserWidget();
 	if (null != browserWidget) {
 	    // row 0 (if applicable): the resource browser
@@ -528,6 +536,8 @@ public abstract class OsylAbstractEditor extends Composite {
      */
     protected abstract List<FocusWidget> getEditionFocusWidgets();
 
+    public abstract Widget getInformationWidget();
+    
     /**
      * ====================== ADDED METHODS =======================
      */

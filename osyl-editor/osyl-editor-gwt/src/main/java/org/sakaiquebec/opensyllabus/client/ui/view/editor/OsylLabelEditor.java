@@ -275,14 +275,19 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     protected Widget getMetaInfoLabel() {
 	return null;
     }
-
-    /**
-     * ==================== ADDED CLASSES or METHODS ====================
-     */
-
+    
     @Override
     public boolean isMoveable() {
 	return false;
     }
+
+    @Override
+    public Widget getInformationWidget() {
+	return null;
+    }
+
+    /**
+     * ==================== ADDED CLASSES or METHODS ====================
+     */
 
 }
