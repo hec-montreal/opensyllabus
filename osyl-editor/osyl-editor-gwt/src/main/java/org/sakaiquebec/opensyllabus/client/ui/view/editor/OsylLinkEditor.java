@@ -120,8 +120,8 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	editorName.setWidth("100%");
 	editorName.addClickHandler(new ResetLabelClickListener(getView()
 		.getCoMessage("InsertYourTextHere")));
-	flexTable
-		.setWidget(0, 0, new Label(getUiMessage("Link.label") + " : "));
+	flexTable.setWidget(0, 0, new HTML(getUiMessage("Link.label")
+		+ OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR + " : "));
 	flexTable.setWidget(0, 1, editorName);
 
 	editorLink = new TextBox();
@@ -318,6 +318,11 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     public boolean prepareForSave() {
 	String messages = "";
 	boolean ok = true;
+	if(getText().trim().equals("")){
+	    ok=false;
+	    messages+=getView().getUiMessage("Global.field.required",
+			getUiMessage("Link.label")); 
+	}
 	if (!LinkValidator.isValidLink(getLink())) {
 	    ok = false;
 	    messages = getView().getUiMessage("LinkEditor.unvalidLink");

@@ -34,6 +34,7 @@ import org.sakaiquebec.opensyllabus.client.controller.event.RFBItemSelectionEven
 import org.sakaiquebec.opensyllabus.client.controller.event.UploadFileEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredEventHandler.ItemListingAcquiredEvent;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
+import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractResProxEditor;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylDirectory;
 
@@ -52,6 +53,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -106,7 +108,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 				    .getUiMessage("Global.error"),
 				    getController().getUiMessage(
 					    "fileUpload.unableReadRemoteDir")
-					    + caught.getMessage() );
+					    + caught.getMessage());
 		    alertBox.center();
 		    alertBox.show();
 		}
@@ -263,7 +265,9 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	mainContentPanel.add(fileSelectionSubPanel);
 
 	// The Label
-	Label currentSelectionLabel = new Label(getCurrentSelectionLabel());
+	HTML currentSelectionLabel =
+		new HTML(getCurrentSelectionLabel()
+			+ OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
 	currentSelectionLabel.addStyleName("Osyl-RemoteFileBrowser-TitleLabel");
 	currentSelectionLabel.setWidth("130px");
 	fileSelectionSubPanel.add(currentSelectionLabel);
@@ -816,9 +820,10 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	boolean fileItemFound = false;
 	OsylAbstractBrowserItem itemToSelect = getItemToSelect();
 	if (itemToSelect != null) {
-	    List<OsylAbstractBrowserItem> fileList = getCurrentDirectory().getFilesList();
+	    List<OsylAbstractBrowserItem> fileList =
+		    getCurrentDirectory().getFilesList();
 	    for (int i = 0; i < fileList.size(); i++) {
-		OsylAbstractBrowserItem fileItem =fileList.get(i);
+		OsylAbstractBrowserItem fileItem = fileList.get(i);
 		if (fileItem.equals(itemToSelect)) {
 		    fileItemFound = true;
 		    setSelectedAbstractBrowserItem(fileItem);

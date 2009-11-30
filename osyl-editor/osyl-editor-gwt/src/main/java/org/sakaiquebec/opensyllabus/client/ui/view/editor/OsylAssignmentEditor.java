@@ -36,7 +36,6 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -126,7 +125,9 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 
 	editorPanel.add(datePanel);
 
-	Label l1 = new Label(getUiMessage("clickable_text"));
+	HTML l1 =
+		new HTML(getUiMessage("clickable_text")
+			+ OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
 	editorPanel.add(l1);
 
 	TextBox tb = new TextBox();
@@ -219,12 +220,20 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 	String messages = "";
 	boolean errordate = false;
 
+	if (nameEditor.getText().trim().equals("")) {
+	    messages +=
+		    getView().getUiMessage("Global.field.required",
+			    getUiMessage("clickable_text"))
+			    + "\n";
+	    ok=false;
+	}
+
 	String endDateString = dateEndDateBox.getTextBox().getText();
 	if (endDateString.trim().equals("")) {
 	    messages +=
 		    getView().getUiMessage("Global.field.required",
 			    getUiMessage("Assignement.date_end"))
-			    + "\n\n";
+			    + "\n";
 	    ok = false;
 	    errordate = true;
 	} else {
@@ -234,7 +243,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 		    messages +=
 			    getView().getUiMessage("Global.field.date.unISO",
 				    getUiMessage("Assignement.date_end"))
-				    + "\n\n";
+				    + "\n";
 		    ok = false;
 		    errordate = true;
 		}
@@ -245,7 +254,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 	    messages +=
 		    getView().getUiMessage("Global.field.required",
 			    getUiMessage("Assignement.date_start"))
-			    + "\n\n";
+			    + "\n";
 	    ok = false;
 	    errordate = true;
 	} else {
@@ -255,7 +264,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 		    messages +=
 			    getView().getUiMessage("Global.field.date.unISO",
 				    getUiMessage("Assignement.date_start"))
-				    + "\n\n";
+				    + "\n";
 		    ok = false;
 		    errordate = true;
 		}
