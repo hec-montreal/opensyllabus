@@ -82,8 +82,8 @@ public class OsylCOUnitView extends OsylViewableComposite implements
 	} else if (COUnitType.ASSESSMENT_UNIT.equals(getModel().getType())) {
 	    // do not allow to delete the title and therefore the evaluation
 	    // within the COContentUnit (only at COStructure)
-	    OsylCOStructureEvaluationItemLabelView lbv =
-		    new OsylCOStructureEvaluationItemLabelView(
+	    OsylCOStructureAssessmentItemLabelView lbv =
+		    new OsylCOStructureAssessmentItemLabelView(
 			    (COUnit) getModel(), getController(), false,
 			    OsylStyleLevelChooser.getLevelStyle(getModel()));
 	    getMainPanel().add(lbv);

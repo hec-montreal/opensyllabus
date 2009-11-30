@@ -39,17 +39,17 @@ import com.google.gwt.user.client.ui.Hyperlink;
  * 
  * @version $Id: $
  */
-public class OsylCOStructureEvaluationItemView extends OsylViewableComposite {
+public class OsylCOStructureAssessmentItemView extends OsylViewableComposite {
 
     private FlexTable mainPanel;
     private Hyperlink coUnitHyperlink;
-    private OsylCOStructureEvaluationItemLabelView coUnitLabel;
+    private OsylCOStructureAssessmentItemLabelView coUnitLabel;
 
     // View Constructor
-    public OsylCOStructureEvaluationItemView(COUnit model,
+    public OsylCOStructureAssessmentItemView(COUnit model,
 	    OsylController controller) {
 	super(model, controller);
-	setCoUnitLabel(new OsylCOStructureEvaluationItemLabelView(model,
+	setCoUnitLabel(new OsylCOStructureAssessmentItemLabelView(model,
 		controller, true));
 	initView();
     }
@@ -113,12 +113,12 @@ public class OsylCOStructureEvaluationItemView extends OsylViewableComposite {
 	this.mainPanel = mainPanel;
     }
 
-    public OsylCOStructureEvaluationItemLabelView getCoUnitLabel() {
+    public OsylCOStructureAssessmentItemLabelView getCoUnitLabel() {
 	return coUnitLabel;
     }
 
     public void setCoUnitLabel(
-	    OsylCOStructureEvaluationItemLabelView coUnitLabel) {
+	    OsylCOStructureAssessmentItemLabelView coUnitLabel) {
 	this.coUnitLabel = coUnitLabel;
     }
 

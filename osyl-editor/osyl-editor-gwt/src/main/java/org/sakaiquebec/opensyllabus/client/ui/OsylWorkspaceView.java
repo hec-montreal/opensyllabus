@@ -24,7 +24,7 @@ import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
-import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureEvaluationView;
+import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureAssessmentView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOUnitStructureView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOUnitView;
@@ -123,8 +123,8 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 		// Special case: evaluation
 		if (COStructureElementType.ASSESSMENT_STRUCT
 			.equals(((COStructureElement) getModel()).getType())) {
-		    OsylCOStructureEvaluationView newView =
-			    new OsylCOStructureEvaluationView(getModel(),
+		    OsylCOStructureAssessmentView newView =
+			    new OsylCOStructureAssessmentView(getModel(),
 				    getController());
 		    currentView = newView;
 		}// end special case

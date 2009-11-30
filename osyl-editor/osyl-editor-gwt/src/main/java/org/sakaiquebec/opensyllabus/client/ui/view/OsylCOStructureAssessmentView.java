@@ -24,16 +24,16 @@ import org.sakaiquebec.opensyllabus.shared.model.COUnit;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylCOStructureEvaluationView extends OsylCOStructureView {
+public class OsylCOStructureAssessmentView extends OsylCOStructureView {
 
-    public OsylCOStructureEvaluationView(COModelInterface model,
+    public OsylCOStructureAssessmentView(COModelInterface model,
 	    OsylController osylController) {
 	super(model, osylController);
     }
 
     protected void addListItemView(COUnit itemModel) {
-	OsylCOStructureEvaluationItemView listItemView =
-		new OsylCOStructureEvaluationItemView(itemModel,
+	OsylCOStructureAssessmentItemView listItemView =
+		new OsylCOStructureAssessmentItemView(itemModel,
 			getController());
 	getMainPanel().add(listItemView);
     }

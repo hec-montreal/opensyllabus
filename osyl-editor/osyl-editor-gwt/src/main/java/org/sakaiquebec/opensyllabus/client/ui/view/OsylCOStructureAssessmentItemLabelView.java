@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.Iterator;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
-import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCOStructureEvaluationItemEditor;
+import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCOStructureAssessmentItemEditor;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCOStructureItemEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
@@ -37,9 +37,9 @@ import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
+public class OsylCOStructureAssessmentItemLabelView extends OsylAbstractView {
 
-    public OsylCOStructureEvaluationItemLabelView(COUnit model,
+    public OsylCOStructureAssessmentItemLabelView(COUnit model,
 	    OsylController controller) {
 	this(model, controller, false);
     }
@@ -49,17 +49,17 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
      * @param controller
      * @param isInList
      */
-    public OsylCOStructureEvaluationItemLabelView(COUnit model,
+    public OsylCOStructureAssessmentItemLabelView(COUnit model,
 	    OsylController controller, boolean isInList) {
 	super(model, controller);
-	setEditor(new OsylCOStructureEvaluationItemEditor(this, isInList));
+	setEditor(new OsylCOStructureAssessmentItemEditor(this, isInList));
 	initView();
     }
 
-    public OsylCOStructureEvaluationItemLabelView(COUnit model,
+    public OsylCOStructureAssessmentItemLabelView(COUnit model,
 	    OsylController controller, boolean isInList, String levelStyle) {
 	super(model, controller);
-	setEditor(new OsylCOStructureEvaluationItemEditor(this, isInList));
+	setEditor(new OsylCOStructureAssessmentItemEditor(this, isInList));
 	((OsylCOStructureItemEditor) getEditor()).setViewerStyle(levelStyle);
 	initView();
     }
@@ -117,22 +117,22 @@ public class OsylCOStructureEvaluationItemLabelView extends OsylAbstractView {
     }
 
     private void updateMetaInfo() {
-	setWeight(((OsylCOStructureEvaluationItemEditor) getEditor())
+	setWeight(((OsylCOStructureAssessmentItemEditor) getEditor())
 		.getWeight());
-	setLocation(((OsylCOStructureEvaluationItemEditor) getEditor())
+	setLocation(((OsylCOStructureAssessmentItemEditor) getEditor())
 		.getLocation());
-	setMode(((OsylCOStructureEvaluationItemEditor) getEditor()).getMode());
+	setMode(((OsylCOStructureAssessmentItemEditor) getEditor()).getMode());
 	// setResult(((OsylCOStructureEvaluationItemEditor) getEditor())
 	// .getResult());
 	// setScope(((OsylCOStructureEvaluationItemEditor)
 	// getEditor()).getScope());
-	setDateStart(((OsylCOStructureEvaluationItemEditor) getEditor())
+	setDateStart(((OsylCOStructureAssessmentItemEditor) getEditor())
 		.getOpenDate());
-	setDateEnd(((OsylCOStructureEvaluationItemEditor) getEditor())
+	setDateEnd(((OsylCOStructureAssessmentItemEditor) getEditor())
 		.getCloseDate());
-	setSubmitionType(((OsylCOStructureEvaluationItemEditor) getEditor())
+	setSubmitionType(((OsylCOStructureAssessmentItemEditor) getEditor())
 		.getSubmitionType());
-	setAssessmentType((((OsylCOStructureEvaluationItemEditor) getEditor())
+	setAssessmentType((((OsylCOStructureAssessmentItemEditor) getEditor())
 		.getType()));
     }
 

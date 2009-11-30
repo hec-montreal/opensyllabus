@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
-import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureEvaluationItemLabelView;
+import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureAssessmentItemLabelView;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
@@ -51,7 +51,7 @@ import com.google.gwt.user.datepicker.client.DateBox;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylCOStructureEvaluationItemEditor extends
+public class OsylCOStructureAssessmentItemEditor extends
 	OsylCOStructureItemEditor {
 
     private static final DateTimeFormat dateTimeFormat =
@@ -76,12 +76,12 @@ public class OsylCOStructureEvaluationItemEditor extends
      * 
      * @param parent
      */
-    public OsylCOStructureEvaluationItemEditor(OsylAbstractView parent) {
+    public OsylCOStructureAssessmentItemEditor(OsylAbstractView parent) {
 	this(parent, false);
 
     }
 
-    public OsylCOStructureEvaluationItemEditor(OsylAbstractView parent,
+    public OsylCOStructureAssessmentItemEditor(OsylAbstractView parent,
 	    boolean isDeletable) {
 	super(parent, isDeletable);
     }
@@ -291,7 +291,10 @@ public class OsylCOStructureEvaluationItemEditor extends
 	weightTextBox.setWidth("40px");
 	weightTextBox.setTitle(getUiMessage("Evaluation.rating.tooltip"));
 	ponderationPanel.add(l1);
-	ponderationPanel.add(weightTextBox);
+	HorizontalPanel weightPanel= new HorizontalPanel();
+	weightPanel.add(weightTextBox);
+	weightPanel.add(new Label("%"));
+	ponderationPanel.add(weightPanel);
 
 	VerticalPanel localisationPanel = new VerticalPanel();
 	localisationPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
@@ -432,8 +435,8 @@ public class OsylCOStructureEvaluationItemEditor extends
 	return new Widget[] { vp };
     }
 
-    protected OsylCOStructureEvaluationItemLabelView getView() {
-	return (OsylCOStructureEvaluationItemLabelView) super.getView();
+    protected OsylCOStructureAssessmentItemLabelView getView() {
+	return (OsylCOStructureAssessmentItemLabelView) super.getView();
     }
 
     public void closeEditor() {
