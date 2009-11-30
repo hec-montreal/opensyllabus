@@ -116,7 +116,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	//--------------------------------------------------------------------//
 	
 	//We fill the weighting field
-	String newText3 = "20%";
+	String newText3 = "20";
 	session().type("//input[@type='text']", newText3);	
 	
 	//We select randomly the location field
