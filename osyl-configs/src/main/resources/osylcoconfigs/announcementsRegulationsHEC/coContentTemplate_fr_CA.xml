@@ -27,11 +27,11 @@
 			<asmUnit access="public" id="C10554E4-BB97-4E65-8653-E1BEB6B3A97C"
 				xsi:type="NewsUnit">
 				<modified>2001-12-17T09:30:47-05:00</modified>
-				<label><![CDATA[Nouvelles]]></label>
+				<label><![CDATA[Nouvelles et règlements]]></label>
 				<asmUnitStructure access="public"
 					id="12B27432-1F30-436E-B018-D128D18ABE2A" xsi:type="NewsUnitStruct">
 					<modified>2001-12-17T09:30:47-05:00</modified>
-					<label><![CDATA[Nouvelles]]></label>
+					<label><![CDATA[Nouvelles et règlements]]></label>
 					<asmUnitContent access="public"
 						id="B5174862-795E-40EE-9CB6-147C53188A15" xsi:type="NewsUnitContent">
 						<modified>2009-11-11T10:59:43-05:00</modified>
