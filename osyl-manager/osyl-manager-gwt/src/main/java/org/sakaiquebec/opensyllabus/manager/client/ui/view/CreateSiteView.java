@@ -121,7 +121,7 @@ public class CreateSiteView extends OsylManagerAbstractView {
 		nameValid =
 			(name != null
 				&& name
-					.matches("^[a-zA-Z0-9àâÀÂçÇéèêëÉÈÊËîïÎÏôÔùÙ][ a-zA-Z0-9àâÀÂçÇéèêëÉÈÊËîïÎÏôÔùÙ\\._-]*") && name
+					.matches("^[a-zA-Z0-9áàâÁÀÂçÇéèêëÉÈÊËíîïÍÎÏñÑóôÓÔúùüÚÙÜ][ a-zA-Z0-9a-zA-Z0-9áàâÁÀÂçÇéèêëÉÈÊËíîïÍÎÏñÑóôÓÔúùüÚÙÜ\\._-]*") && name
 				.matches(".*[\\S]$"));
 		if (nameValid) {
 		    if (configListBox.getSelectedIndex() != -1) {
