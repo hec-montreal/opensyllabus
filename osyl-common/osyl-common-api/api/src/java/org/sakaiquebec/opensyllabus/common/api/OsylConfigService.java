@@ -68,7 +68,7 @@ public interface OsylConfigService {
     /**
      * Default configs
      */
-    public static final String DEFAULT_CONFIG_REF = "default";
+    public static final String DEFAULT_CONFIG_REF = "hec";
 
     /**
      * Returns the configurations related to the id

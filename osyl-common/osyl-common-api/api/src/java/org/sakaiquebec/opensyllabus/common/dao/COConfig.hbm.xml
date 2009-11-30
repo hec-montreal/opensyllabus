@@ -14,9 +14,6 @@
             <column name="CONFIGREF" />
         </property>
         
-        <property name="description" type="string">
-            <column name="DESCRIPTION" />
-        </property>
         
  	</class>
 

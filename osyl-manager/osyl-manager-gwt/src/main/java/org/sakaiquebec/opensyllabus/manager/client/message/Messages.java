@@ -96,5 +96,19 @@ public interface Messages extends ConstantsWithLookup {
     String siteNameNotValid();
     
     String noConfig();
+    
+    String config_default();
+    
+    String config_udem();
+    
+    String config_udemCompetencesComposantes();
+    
+    String config_udemCompetencesSeances();
+    
+   String config_udemObjectifsActivites();
+   
+   String config_udemObjectifsSeances();
+   
+   String config_announcementsRegulationsHEC();
 
 }

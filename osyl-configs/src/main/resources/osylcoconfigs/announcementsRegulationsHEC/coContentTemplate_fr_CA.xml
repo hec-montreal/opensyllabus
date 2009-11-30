@@ -46,8 +46,8 @@
 							<asmResource xsi:type="Text" access="attendee"
 								id="D51AE845-C5B3-4B9E-9DDD-BA8862D2335B">
 								<text><![CDATA[Les étudiants sont priés de prendre connaissance de la
-													politique d'utilisation de calculatriceslors d'examens lorsque
-													celles-ci sont autorisées. <a href="http://www.hec.ca/etudiant_actuel/technologies/calculatrices.html">En savoir plus...</a><br>]]></text>
+													politique d'utilisation de calculatrices lors d'examens lorsque
+													celles-ci sont autorisées. <a href="http://www.hec.ca/etudiant_actuel/technologies/calculatrices.html" target="_blank">En savoir plus sur la politique d'usage de calculatrices...</a><br>]]></text>
 								<modified>2009-11-11T11:05:48-05:00</modified>
 							</asmResource>
 						</asmContext>
@@ -64,10 +64,10 @@
 								<text><![CDATA[Les étudiants sont priés de prendre connaissance des actes et des
 												gestes qui sont considérés comme étant du plagiat ou une autre
 												infraction de nature pédagogique, de la procédure et des sanctions, qui
-												peuvent aller jusqu'à la suspension et même l'expulsion de l'École.
+												peuvent aller jusqu'à la suspension et même l'expulsion de HEC Montréal.
 												Toute infraction sera analysée en fonction des faits et des
-												circonstances, et une sanction sera appliquée en conséquence. <a href="http://www.hec.ca/programmes_formations/plagiat.html">En savoir
-												plus...</a>]]></text>
+												circonstances, et une sanction sera appliquée en conséquence. <a href="http://www.hec.ca/programmes_formations/plagiat.html" target="_blank">En savoir
+												plus sur le plagiat...</a>]]></text>
 								<modified>2009-11-11T11:04:30-05:00</modified>
 							</asmResource>
 						</asmContext>
@@ -83,7 +83,7 @@
 								id="DA142A63-61EC-4BF9-87AE-704BEEE5A698">
 								<text><![CDATA[Dans le cas de circonstances exceptionnelles [établies par la Direction
 											des programmes] et hors du contrôle de HEC Montréal, le contenu et/ou
-											le mode d'évaluation des cours pourra être sujet à changement. <a href="http://hec.ca/grippe/index.html">En savoir plus...</a><br>]]></text>
+											le mode d'évaluation des cours pourra être sujet à changement. <a href="http://hec.ca/grippe/index.html" target="_blank">En savoir plus sur la grippe A (H1N1)...</a><br>]]></text>
 								<modified>2009-11-11T11:03:07-05:00</modified>
 							</asmResource>
 						</asmContext>

@@ -51,7 +51,7 @@ public class COConfigSerialized implements java.io.Serializable {
 	 */
 	private String configRef;
 
-	private String description;
+
 
 	/**
 	 * xml config rules on model for the UI
@@ -91,20 +91,9 @@ public class COConfigSerialized implements java.io.Serializable {
 		this.i18nMessages = new HashMap<String, String>();
 	}
 
-	/**
-	 * @return the description value
-	 */
-	public String getDescription() {
-		return description;
-	}
 
-	/**
-	 * @param description
-	 *            the new value of description
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
+
+
 
 	/**
 	 * @return the cascadingStyleSheetURI value.

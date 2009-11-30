@@ -140,7 +140,7 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	for (Iterator<COConfigSerialized> iter = list.iterator(); iter
 		.hasNext();) {
 	    COConfigSerialized config = iter.next();
-	    configsMap.put(config.getConfigId(), config.getDescription());
+	    configsMap.put(config.getConfigId(), config.getConfigRef());
 	}
 	return configsMap;
     }
@@ -216,9 +216,9 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
      * @throws Exception
      */
     public void initConfigs() throws Exception {
-	initConfig("default", "Config from HEC Montréal");
+/*	initConfig("default", "Config from HEC Montréal");
 	initConfig("announcementsRegulationsHEC",
-		"Config HEC Montreal - Announcements and Regulations");
+		"Config HEC Montreal - Nouvelles et règlements");
 	initConfig("udem", "Config UdeM");
 	initConfig("udemCompetencesComposantes",
 		"Config UdeM - Competences Composantes");
@@ -226,10 +226,20 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 		"Config UdeM - Competences Seances");
 	initConfig("udemObjectifsActivites",
 		"Config UdeM - Objectifs Activites");
-	initConfig("udemObjectifsSeances", "Config UdeM - Objectifs Seances");
+	initConfig("udemObjectifsSeances", "Config UdeM - Objectifs Seances");*/
+	
+	//internationalisation
+	
+	initConfig("default");
+	initConfig("announcementsRegulationsHEC");
+	initConfig("udem");
+	initConfig("udemCompetencesComposantes");
+	initConfig("udemCompetencesSeances");
+	initConfig("udemObjectifsActivites");
+	initConfig("udemObjectifsSeances");
     }
 
-    private void initConfig(String configref, String desc) throws Exception {
+    private void initConfig(String configref) throws Exception {
 	try {
 	    coConfigDao.getConfigByRef(configref);
 	} catch (Exception e) {
@@ -239,7 +249,7 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 		log.info("Details:");
 		e.printStackTrace();
 	    }
-	    createConfig(configref, desc);
+	    createConfig(configref);
 	}
     }
 
@@ -270,11 +280,10 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	return coSerialized;
     }
 
-    private void createConfig(String configRef, String description)
+    private void createConfig(String configRef)
 	    throws Exception {
 	COConfigSerialized coConfig = new COConfigSerialized();
 	coConfig.setConfigRef(configRef);
-	coConfig.setDescription(description);
 	createConfig(coConfig);
     }
 

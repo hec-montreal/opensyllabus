@@ -69,9 +69,9 @@ public class CreateSiteView extends OsylManagerAbstractView {
 			for (Iterator<String> configMapKeysIterator =
 				result.keySet().iterator(); configMapKeysIterator
 				.hasNext();) {
-			    String siteId = configMapKeysIterator.next();
-			    String siteTitle = result.get(siteId);
-			    configListBox.addItem(siteTitle, siteId);
+			    String configId = configMapKeysIterator.next();	
+			    String configTitle = getController().getMessages().getString("config_" + result.get(configId) ) ;
+			    configListBox.addItem(configTitle, configId);
 			}
 		    }
 		}

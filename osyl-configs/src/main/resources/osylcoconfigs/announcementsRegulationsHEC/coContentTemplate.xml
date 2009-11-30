@@ -45,7 +45,7 @@
 							<semanticTag type="rubric">flu</semanticTag>
 							<asmResource xsi:type="Text" access="attendee"
 								id="F6DD380F-2FAB-4F3F-B3ED-640E6C77995A">
-								<text><![CDATA[In the event of exceptional circumstances [as established by the Direction of&nbsp; Programs] beyond HEC Montréal's control, the content and/or evaluation scheme of&nbsp; the courses can be subject to change. <a href="http://www.hec.ca/en/flu/index.html">Learn more...</a>]]></text>
+								<text><![CDATA[In the event of exceptional circumstances [as established by the Direction of&nbsp; Programs] beyond HEC Montréal's control, the content and/or evaluation scheme of&nbsp; the courses can be subject to change. <a href="http://www.hec.ca/en/flu/index.html" target="_blank">Learn more about H1N1 Influenza...</a>]]></text>
 								<modified>2009-11-11T16:14:12-05:00</modified>
 							</asmResource>
 						</asmContext>
@@ -59,7 +59,7 @@
 							<semanticTag type="rubric">plagiarism</semanticTag>
 							<asmResource xsi:type="Text" access="attendee"
 								id="CC2B0464-458F-420C-A250-F31306C5D2FF">
-								<text><![CDATA[Please consult the acts and gestures that are considered plagiarism or another academic violation, along with the applicable procedure and sanctions, which range up to suspension and even expulsion from HEC. Violations are analyzed&nbsp; based on the facts and circumstances, and sanctions are applied accordingly.&nbsp; <a href="http://www.hec.ca/en/programs_training/plagiarism.html">Learn more about plagiarism .</a><br>]]></text>
+								<text><![CDATA[Please consult the acts and gestures that are considered plagiarism or another academic violation, along with the applicable procedure and sanctions, which range up to suspension and even expulsion from HEC Montréal. Violations are analyzed&nbsp; based on the facts and circumstances, and sanctions are applied accordingly.&nbsp; <a href="http://www.hec.ca/en/programs_training/plagiarism.html" target="_blank">Learn more about plagiarism .</a><br>]]></text>
 								<modified>2009-11-11T16:12:13-05:00</modified>
 							</asmResource>
 						</asmContext>
@@ -73,7 +73,7 @@
 							<semanticTag type="rubric">calculators</semanticTag>
 							<asmResource xsi:type="Text" access="attendee"
 								id="7AF8226B-28A6-4FDC-9A75-93D18BB09D91">
-								<text><![CDATA[Please consult the <a href="http://www.hec.ca/etudiant_actuel/technologies/calculatrices.html">calculator usage policy (in French)</a> during exams when&nbsp; applicable.]]></text>
+								<text><![CDATA[Please consult the <a href="http://www.hec.ca/etudiant_actuel/technologies/calculatrices.html" target="_blank">calculator usage policy (in French)</a> during exams when&nbsp; applicable.]]></text>
 								<modified>2009-11-11T16:14:23-05:00</modified>
 							</asmResource>
 						</asmContext>
