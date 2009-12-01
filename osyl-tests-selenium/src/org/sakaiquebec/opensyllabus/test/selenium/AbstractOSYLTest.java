@@ -161,8 +161,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().click("//button[@type='button']");
 	
 	session().type("//input[@type='text']", getCurrentTestSiteName());
-	session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "label=Config" +
-	    		" from HEC Montreal");
+	session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=0");
 	if(inFireFox()){
 	session().mouseOver("//html/body/table/tbody/tr/td/table/tbody/tr[4]" +
 				"/td/div/div");
