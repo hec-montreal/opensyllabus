@@ -138,9 +138,9 @@ public class OsylPackage {
     private File renderXML(Document doc, String fileName) {
 	TransformerFactory factory = TransformerFactory.newInstance();
 	Transformer transform;
-	File xmlDataFile = new File(fileName);
+	File xmlDataFile = new File(System.getProperty("java.io.tmpdir")+File.separator+fileName);
 	try {
-
+		
 	    transform = factory.newTransformer();
 	    DOMSource source = new DOMSource(doc);
 	    StreamResult result = new StreamResult(xmlDataFile);
