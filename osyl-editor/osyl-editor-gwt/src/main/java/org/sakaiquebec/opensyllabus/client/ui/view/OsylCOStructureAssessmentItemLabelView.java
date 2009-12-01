@@ -127,9 +127,9 @@ public class OsylCOStructureAssessmentItemLabelView extends OsylAbstractView {
 	// setScope(((OsylCOStructureEvaluationItemEditor)
 	// getEditor()).getScope());
 	setDateStart(((OsylCOStructureAssessmentItemEditor) getEditor())
-		.getOpenDate());
+		.getDate());
 	setDateEnd(((OsylCOStructureAssessmentItemEditor) getEditor())
-		.getCloseDate());
+		.getDate());
 	setSubmitionType(((OsylCOStructureAssessmentItemEditor) getEditor())
 		.getSubmitionType());
 	setAssessmentType((((OsylCOStructureAssessmentItemEditor) getEditor())
@@ -159,15 +159,6 @@ public class OsylCOStructureAssessmentItemLabelView extends OsylAbstractView {
 	    getModel().addProperty(COPropertiesType.DATE_START,
 		    OsylDateUtils.getDateAsXmlString(l));
 	}
-    }
-
-    public Date getDateStart() {
-	String dateString = getModel().getProperty(COPropertiesType.DATE_START);
-	Date date = null;
-	if (dateString != null && !dateString.trim().equals("")) {
-	    date = OsylDateUtils.getDateFromXMLDate(dateString);
-	}
-	return date;
     }
 
     public void setDateEnd(Date l) {

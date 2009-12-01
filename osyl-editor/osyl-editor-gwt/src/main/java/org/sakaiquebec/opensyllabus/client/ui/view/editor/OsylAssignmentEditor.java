@@ -305,7 +305,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 				    .getUiMessages()
 				    .getMessage(
 					    "Assignement.field.date.order.dateAfterDate",
-					    getUiMessage("Evaluation.EndDate"),
+					    getUiMessage("Assessment.EndDate"),
 					    getUiMessage("Assignement.date_start"))
 				    + "\n";
 		    ok = false;
@@ -317,7 +317,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 				    .getMessage(
 					    "Assignement.field.date.order.dateAfterDate",
 					    getUiMessage("Assignement.date_end"),
-					    getUiMessage("Evaluation.EndDate"))
+					    getUiMessage("Assessment.EndDate"))
 				    + "\n";
 		    ok = false;
 		}

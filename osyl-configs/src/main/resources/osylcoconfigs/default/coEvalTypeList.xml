@@ -6,9 +6,9 @@
 	-->
 <list>
 	
-	<item value="Evaluation.Type.intra_exam" />
-	<item value="Evaluation.Type.final_exam" />
-	<item value="Evaluation.Type.session_work" />
-	<item value="Evaluation.Type.participation" />
-	<item value="Evaluation.Type.other" />
+	<item value="Assessment.Type.intra_exam" />
+	<item value="Assessment.Type.final_exam" />
+	<item value="Assessment.Type.session_work" />
+	<item value="Assessment.Type.participation" />
+	<item value="Assessment.Type.other" />
 </list>

@@ -102,7 +102,7 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 		.getCoMessage(getView().getModel().getType())));
 
 	if (getNameTooltip() != null) {
-	    nameEditor.setTitle(getUiMessage("Evaluation.name.tooltip"));
+	    nameEditor.setTitle(getUiMessage("Assessment.name.tooltip"));
 	}
 	editorPanel.add(nameEditor);
     }
