@@ -481,7 +481,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 	// : "";
 	String endDateLabel =
 		!dateEnd.equals("") ? " | "
-			+ getUiMessage("Assessment.EndDate") + ": " + dateEnd
+			+ getUiMessage("Assessment.date") + ": " + dateEnd
 			: "";
 	String submissionModeLabel =
 		!submissionMode.equals("") ? " | "
@@ -621,7 +621,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 	if (!dateEnd.equals("")) {
 	    fieldNumber++;
 	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-		    addNewLabel(getUiMessage("Assessment.EndDate")));
+		    addNewLabel(getUiMessage("Assessment.date")));
 	    // Value(editor)
 	    viewerPanelEndDate = addNewEditorPanel();
 	    viewerPanelEndDate.add(endDateHTML);
