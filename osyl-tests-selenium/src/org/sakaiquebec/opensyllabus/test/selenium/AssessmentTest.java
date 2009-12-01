@@ -91,10 +91,41 @@ public class AssessmentTest extends AbstractOSYLTest{
 	session().click("//tr["+Position+"]/td/table/tbody/tr/td[2]/div/" +
 			"table[2]/tbody/tr/td/button");
 	pause();
-
+	
+	//We fill the weighting field
+	String newText3 = "20";
+	session().type("//input[@type='text']", newText3);
+	
+	
+	//We close the assessment editor
+	session().click("//table/tbody/tr/td/table/tbody/tr/td/table/tbody/" +
+			"tr/td/button");
+	pause();
+	
+	
+	
+//---------------------------------------------------------------------------//
+//     			 Modify Assessment Unit			             //
+//---------------------------------------------------------------------------//	
+	
+	//We open the last assessment
+	int Val = resNb + 2;
+	if(Val < 10){
+	    session().click("link=0" + Val + " -");
+	}else{
+	    session().click("link=" + Val + " -");
+	}
+	
+	//We edit the last assessment
+	session().click("//table/tbody/tr/td/div/table[2]/tbody/tr/td/button");
+	pause();
+	
 	//We check if Opensyllabus displays a message error when the user click 
 	//OK without fill the mandatory fields
 	//--------------------------------------------------------------------//
+	
+	//We empty the fields "Weighting"
+	session().type("//input[@type='text']", "");
 	
 	//We click OK without filling the mandatory fields
 	session().click("//td/table/tbody/tr/td[1]/button");
@@ -116,7 +147,6 @@ public class AssessmentTest extends AbstractOSYLTest{
 	//--------------------------------------------------------------------//
 	
 	//We fill the weighting field
-	String newText3 = "20";
 	session().type("//input[@type='text']", newText3);	
 	
 	//We select randomly the location field
@@ -250,10 +280,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	//We fill the start date field by today's date
 	session().type("//td[1]/table/tbody/tr[2]/td/input", newText1);
 	
-	//We fill the assessment name field
-	String Name = "Evaluation" + timeStamp();
-	session().type("//input[@class=\"Osyl-LabelEditor-TextBox\"]", 
-		Name);
+	
 	
 	//We click OK to close assessment editor
 	session().click("//td/table/tbody/tr/td[1]/button");
@@ -281,6 +308,11 @@ public class AssessmentTest extends AbstractOSYLTest{
 	
 	//We Fill the start date field
 	session().type("//td[1]/table/tbody/tr[2]/td/input", newText1);
+	
+	//We fill the assessment name field
+	String Name = "Evaluation" + timeStamp();
+	session().type("//input[@class=\"Osyl-LabelEditor-TextBox\"]", 
+		Name);
 
 	//We select randomly the assessment type field
 	session().select(xpathRole1, newText5);
@@ -301,10 +333,9 @@ public class AssessmentTest extends AbstractOSYLTest{
 //---------------------------------------------------------------------------//
 	
 	//Open Assessment section
-	//session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td" +
-	//	"/div[contains(text(),'valuations')]");
-	//Edit first Assessment unit
-	int Val = resNb + 2;
+	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td" +
+		"/div[contains(text(),'valuations')]");
+	//Open last Assessment unit
 	if(Val < 10){
 	    session().click("link=0" + Val + " -");
 	}else{
@@ -850,53 +881,31 @@ public class AssessmentTest extends AbstractOSYLTest{
         		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
         		"tbody/tr["+Val1+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
         		"tbody/tr[2]/td/table/tbody/tr/td/div", "\r");
-        		/*"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
-        		"div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
-        		"tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div/table" +
-        		"[3]/tbody/tr[2]/td/table/tbody/tr/td/div", "\r");*/
         		
         } else {
         session().mouseOver(
         		"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
         		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
         		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div");
-        		/*"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
-        		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
-        		"tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div");*/
         session().mouseOver(
         		"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
         		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
         		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div/table[3]");
-        		/*"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
-        		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
-        		"tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div/table[3]");*/
         session().mouseOver(
         		"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
         		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
         		"tbody/tr["+Val1+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
         		"tbody/tr[2]/td/table/tbody/tr/td/div");
-        		/*"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
-        		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
-        		"tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div/table[3]" +
-        		"/tbody/tr[2]/td/table/tbody/tr/td/div");*/
         session().mouseDown(
         		"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
         		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
         		"tbody/tr["+Val1+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
         		"tbody/tr[2]/td/table/tbody/tr/td/div");
-        		/*"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
-        		"/div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
-        		"tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div/table[3]" +
-        				"/tbody/tr[2]/td/table/tbody/tr/td/div");*/
         session().mouseUp(
         		"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
         		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
         		"tbody/tr["+Val1+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
         		"tbody/tr[2]/td/table/tbody/tr/td/div");
-        		/*"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
-        		"div/table/tbody/tr[5]/td/table/tbody/tr/td/table/" +
-        		"tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div/table" +
-        		"[3]/tbody/tr[2]/td/table/tbody/tr/td/div");*/
         }
         
 //---------------------------------------------------------------------------//
