@@ -53,7 +53,7 @@ public class OsylCitationRemoteServiceHostedModeImpl extends
 	    citation.setResourceName("ressourceName");
 	    citation.setProperty(COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_URL,"dummyURL" );
 	    citation.setProperty(CitationSchema.CITATIONID, "dummyId"+i);
-	    citation.setProperty(CitationSchema.TYPE, "Book"+i);
+	    citation.setProperty(CitationSchema.TYPE, "Other");
 	    citation.setProperty(CitationSchema.TITLE, "ma citation"+i);
 	    citation.setProperty(CitationSchema.ISN, "dummyISN"+i);
 	    citation.setProperty(CitationSchema.CREATOR, "Mathieu"+i);
