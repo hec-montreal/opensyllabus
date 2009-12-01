@@ -76,6 +76,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     private boolean rubricMoveable;
     private boolean hasImportant;
     private boolean moveableInRubric;
+    private boolean hasHide;
 
     /**
      * Constructor.
@@ -88,6 +89,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	rubricMoveable = true;
 	hasImportant = true;
 	moveableInRubric = true;
+	hasHide = true;
     }
 
     protected PushButton createPushButtonDelete() {
@@ -243,33 +245,45 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	widgetList.add(diffusionPanel);
 
 	// Other options
-	VerticalPanel optionPanel = new VerticalPanel();
-	optionPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	// configGroups.add(optionPanel);
-	optionPanel.add(new Label(getUiMessage("MetaInfo.title") + ": "));
+	boolean hasOption = false;
 	HorizontalPanel options = new HorizontalPanel();
-	optionPanel.add(options);
-	// Hide CheckBox
-	hideCheckBox = new CheckBox(getUiMessage("MetaInfo.hidden"));
-	hideCheckBox.setValue(getView().isContextHidden());
-	hideCheckBox.setTitle(getUiMessage("MetaInfo.hidden.title"));
-	options.add(hideCheckBox);
+	if (hasHide) {
+	    // Hide CheckBox
+	    hideCheckBox = new CheckBox(getUiMessage("MetaInfo.hidden"));
+	    hideCheckBox.setValue(getView().isContextHidden());
+	    hideCheckBox.setTitle(getUiMessage("MetaInfo.hidden.title"));
+	    options.add(hideCheckBox);
+	    hasOption = true;
+	}
 
 	// "Important" CheckBox
-	importantCheckBox = new CheckBox(getUiMessage("MetaInfo.important"));
-	importantCheckBox.setValue(getView().isContextImportant());
-	importantCheckBox.setTitle(getUiMessage("MetaInfo.important.title"));
-	if (hasImportant)
+	if (hasImportant) {
+	    importantCheckBox =
+		    new CheckBox(getUiMessage("MetaInfo.important"));
+	    importantCheckBox.setValue(getView().isContextImportant());
+	    importantCheckBox
+		    .setTitle(getUiMessage("MetaInfo.important.title"));
 	    options.add(importantCheckBox);
+	    hasOption = true;
+	}
 	// Other options, specified by each subclass
 	Widget[] optionWidgets = getAdditionalOptionWidgets();
 	if (null != optionWidgets) {
+	    hasOption = true;
 	    for (int i = 0; i < optionWidgets.length; i++) {
 		options.add(optionWidgets[i]);
 	    }
 	}
+	VerticalPanel optionPanel = null;
+	if (hasOption) {
+	    optionPanel = new VerticalPanel();
+	    optionPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
+	    // configGroups.add(optionPanel);
+	    optionPanel.add(new Label(getUiMessage("MetaInfo.title") + ": "));
+	    optionPanel.add(options);
+	    widgetList.add(optionPanel);
+	}
 
-	widgetList.add(optionPanel);
 	if (hasRequirement) {
 	    // Requirement level ListBox
 	    VerticalPanel requirementPanel = new VerticalPanel();
@@ -310,7 +324,8 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    requirementListBox.setSelectedIndex(reqLevelIndex);
 	    widgetList.add(requirementPanel);
 	} else {
-	    optionPanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
+	    if(optionPanel!=null)
+		optionPanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
 	}
 	return (Widget[]) widgetList.toArray(new Widget[widgetList.size()]);
     }
@@ -589,6 +604,10 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	return metaInfoLabel;
     }
 
+    public boolean isMoveable() {
+	return true;
+    }
+
     public boolean isHasRequirement() {
 	return hasRequirement;
     }
@@ -613,8 +632,11 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	this.moveableInRubric = moveableInRubric;
     }
 
-    public boolean isMoveable() {
-	return true;
+    public boolean isHasHide() {
+	return hasHide;
     }
 
+    public void setHasHide(boolean hasHide) {
+	this.hasHide = hasHide;
+    }
 }
