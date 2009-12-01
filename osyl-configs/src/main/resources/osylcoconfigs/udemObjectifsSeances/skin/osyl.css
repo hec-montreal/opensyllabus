@@ -3,6 +3,7 @@
 /* Main panel of Osyl -----------------------------------------------------------------------------------*/
 .Osyl-MainPanel {
 	margin:0;
+	width:100%;
 }
 
 /*MenuBar -----------------------------------------------------------------------------------------------*/
@@ -887,6 +888,7 @@
 	border:0;
 	border:1px solid #878a8c;
 	margin:1px 0 0 2px;
+	width:100%;
 }
 
 .Osyl-EditorPopup table {border-collapse:separate}
@@ -909,6 +911,8 @@
 	font-size:11px;
 	margin:0 3px;
 }
+.Osyl-EditorPopup-RowBrowser{width:100%}
+.Osyl-EditorPopup-RowConfiguration{width:100%}
 
 .Osyl-EditorPopup-OptionGroup {padding:0 12px 0 7px}
 
@@ -993,14 +997,17 @@
 }
 .Osyl-EditorPopup-RowOptions {
 	margin:0;
+	width:100%;
 }
 
 .Osyl-EditorPopup-RowButtons {
 	margin:3px 0 0;
+	width:100%;
 }
 
 .Osyl-EditorPopup-RowEditor {
 	margin:0;
+	width:100%;
 }
 
 .Osyl-EditorPopup-RowToolBar {
@@ -1123,6 +1130,7 @@
 .Osyl-EditorPopup .DetailsPanel {
 	margin-left:4px;
 	font-size:10px;
+	width:100%;
 }
 
 .Osyl-EditorPopup .DetailsPanel .header {
