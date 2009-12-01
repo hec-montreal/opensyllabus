@@ -95,10 +95,9 @@ public class OsylCOStructureAssessmentItemEditor extends
 	boolean ok = true;
 	String messages = "";
 	boolean errordate = false;
+	// ISO format yyyy-mm-dd
 	String isoRegex =
-		"^(\\d{4})\\D?(0[1-9]|1[0-2])\\D?([12]\\d|0[1-9]|3[01])$";// //ISO
-	// format
-	// yyyy-mm-dd
+		"^(\\d{4})\\D?(0[1-9]|1[0-2])\\D?([12]\\d|0[1-9]|3[01])$";
 
 	// required fields validations
 	String weight = weightTextBox.getText();
@@ -115,27 +114,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 		ok = false;
 	    }
 	}
-	if (typeListBox.getSelectedIndex() == 0) {
-	    messages +=
-		    getView().getUiMessage("Global.field.required",
-			    getUiMessage("Evaluation.type"))
-			    + "\n";
-	    ok = false;
-	}
-	if (localisationListBox.getSelectedIndex() == 0) {
-	    messages +=
-		    getView().getUiMessage("Global.field.required",
-			    getUiMessage("Evaluation.location"))
-			    + "\n";
-	    ok = false;
-	}
-	if (modeListBox.getSelectedIndex() == 0) {
-	    messages +=
-		    getView().getUiMessage("Global.field.required",
-			    getUiMessage("Evaluation.mode"))
-			    + "\n";
-	    ok = false;
-	}
+
 	String endDateString = endDateBox.getTextBox().getText();
 	// if (endDateString.trim().equals("")) {
 	// messages +=
@@ -156,32 +135,55 @@ public class OsylCOStructureAssessmentItemEditor extends
 	}
 	// }
 
-	// date validation
-
-	String startDateString = startDateBox.getTextBox().getText();
-	if (!startDateString.trim().equals("")
-		&& !startDateString.matches(isoRegex)) {
-	    messages +=
-		    getView().getUiMessage("Global.field.date.unISO",
-			    getUiMessage("Evaluation.StartDate"))
-			    + "\n";
-	    ok = false;
-	    errordate = true;
-	}
-
-	if (!errordate && startDateString.compareTo(endDateString) > 0) {
-	    messages += getUiMessage("Evaluation.field.date.order") + "\n";
-	    ok = false;
-	}
-
-	if (!errordate && !endDateString.trim().equals("")) {
-	    String verifyAssignement = verifyAssignementTool();
-	    if (!verifyAssignement.equals("")) {
+	if (!isDeletable()) {
+	    if (typeListBox.getSelectedIndex() == 0) {
+		messages +=
+			getView().getUiMessage("Global.field.required",
+				getUiMessage("Evaluation.type"))
+				+ "\n";
 		ok = false;
-		messages += verifyAssignement;
+	    }
+	    if (localisationListBox.getSelectedIndex() == 0) {
+		messages +=
+			getView().getUiMessage("Global.field.required",
+				getUiMessage("Evaluation.location"))
+				+ "\n";
+		ok = false;
+	    }
+	    if (modeListBox.getSelectedIndex() == 0) {
+		messages +=
+			getView().getUiMessage("Global.field.required",
+				getUiMessage("Evaluation.mode"))
+				+ "\n";
+		ok = false;
+	    }
+
+	    // date validation
+
+	    String startDateString = startDateBox.getTextBox().getText();
+	    if (!startDateString.trim().equals("")
+		    && !startDateString.matches(isoRegex)) {
+		messages +=
+			getView().getUiMessage("Global.field.date.unISO",
+				getUiMessage("Evaluation.StartDate"))
+				+ "\n";
+		ok = false;
+		errordate = true;
+	    }
+
+	    if (!errordate && startDateString.compareTo(endDateString) > 0) {
+		messages += getUiMessage("Evaluation.field.date.order") + "\n";
+		ok = false;
+	    }
+
+	    if (!errordate && !endDateString.trim().equals("")) {
+		String verifyAssignement = verifyAssignementTool();
+		if (!verifyAssignement.equals("")) {
+		    ok = false;
+		    messages += verifyAssignement;
+		}
 	    }
 	}
-
 	if (!ok) {
 	    OsylAlertDialog osylAlertDialog =
 		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
@@ -255,10 +257,14 @@ public class OsylCOStructureAssessmentItemEditor extends
 
 	String rating =
 		(getView().getWeight() != null && !getView().getWeight()
-			.equals("")) ? "\t(" + getView().getWeight() + "%)"
+			.equals("")) ? " (" + getView().getWeight() + "%)"
 			: "";
 
-	setText(getView().getTextFromModel() + rating);
+	String date =
+		(getView().getDateEnd() != null) ? (" - "+dateTimeFormat
+			.format(getView().getDateEnd())) : "";
+
+	setText(getView().getTextFromModel() + rating + date);
 	// If we are in read-only mode, we return now to not add buttons and
 	// listeners enabling edition or deletion:
 
@@ -291,7 +297,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 	weightTextBox.setWidth("40px");
 	weightTextBox.setTitle(getUiMessage("Evaluation.rating.tooltip"));
 	ponderationPanel.add(l1);
-	HorizontalPanel weightPanel= new HorizontalPanel();
+	HorizontalPanel weightPanel = new HorizontalPanel();
 	weightPanel.add(weightTextBox);
 	weightPanel.add(new Label("%"));
 	ponderationPanel.add(weightPanel);
@@ -401,13 +407,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 	typeListBox.addChangeHandler(new ChangeHandler() {
 
 	    public void onChange(ChangeEvent event) {
-		// if (typeListBox.getItemText(getSelectedTypeIndex()).equals(
-		// getText())
-		// || getView().getCoMessage(
-		// getView().getModel().getType()).equals(
-		// getText())) {
 		setText(typeListBox.getItemText(typeListBox.getSelectedIndex()));
-		// }
 		typeListBox.setSelectedIndex(typeListBox.getSelectedIndex());
 	    }
 
@@ -416,21 +416,25 @@ public class OsylCOStructureAssessmentItemEditor extends
 	typePanel.add(l9);
 	typePanel.add(typeListBox);
 
-	ligne1.add(typePanel);
-	ligne1.add(ponderationPanel);
-	ligne1.add(localisationPanel);
-	ligne1.add(modePanel);
-	// ligne1.add(livrablePanel);
+	if (isDeletable()) {
+	    ligne1.add(ponderationPanel);
+	    ligne1.add(endDatePanel);
+	    vp.add(ligne1);
+	} else {
+	    ligne1.add(typePanel);
+	    ligne1.add(ponderationPanel);
+	    ligne1.add(localisationPanel);
+	    ligne1.add(modePanel);
+	    // ligne1.add(livrablePanel);
 
-	ligne2.add(startDatePanel);
-	ligne2.add(endDatePanel);
-	ligne2.add(subTypePanel);
-	// ligne2.add(scopePanel);
-
-	ligne1.setWidth("100%");
-	ligne2.setWidth("100%");
-	vp.add(ligne1);
-	vp.add(ligne2);
+	    ligne2.add(startDatePanel);
+	    ligne2.add(endDatePanel);
+	    ligne2.add(subTypePanel);
+	    // ligne2.add(scopePanel);
+	    
+	    vp.add(ligne1);
+	    vp.add(ligne2);
+	}
 
 	return new Widget[] { vp };
     }
