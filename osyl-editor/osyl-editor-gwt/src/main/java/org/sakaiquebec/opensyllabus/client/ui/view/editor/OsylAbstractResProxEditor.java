@@ -324,8 +324,9 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    requirementListBox.setSelectedIndex(reqLevelIndex);
 	    widgetList.add(requirementPanel);
 	} else {
-	    if(optionPanel!=null)
-		optionPanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
+	    if (optionPanel != null)
+		optionPanel
+			.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
 	}
 	return (Widget[]) widgetList.toArray(new Widget[widgetList.size()]);
     }
@@ -559,19 +560,22 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	String diffusionLevel =
 		getUiMessage("MetaInfo.audience."
 			+ getView().getDiffusionLevel());
-	String hidden =
-		(getView().isContextHidden() ? getUiMessage("Global.yes")
-			: getUiMessage("Global.no"));
 
 	String reqLevelUiMsg = "";
 	String requirementLevel = "";
 	String requirementLevelLabel = "";
 
 	String metaInfoLabelStr =
-		getUiMessage("MetaInfo.audience") + ": " + diffusionLevel
-			+ " | " + getUiMessage("MetaInfo.hidden") + ": "
-			+ hidden;
-
+		getUiMessage("MetaInfo.audience") + ": " + diffusionLevel;
+	
+	if (hasHide) {
+	    String hidden =
+		    (getView().isContextHidden() ? getUiMessage("Global.yes")
+			    : getUiMessage("Global.no"));
+	    metaInfoLabelStr +=
+		    " | " + getUiMessage("MetaInfo.hidden") + ": " + hidden;
+	}
+	
 	if (hasImportant) {
 	    String important =
 		    (getView().isContextImportant() ? getUiMessage("Global.yes")

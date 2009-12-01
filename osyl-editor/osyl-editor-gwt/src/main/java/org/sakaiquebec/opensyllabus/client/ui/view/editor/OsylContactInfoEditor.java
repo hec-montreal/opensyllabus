@@ -186,10 +186,8 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public HTML getRoleLabel() {
 	if (roleLabel == null) {
 	    roleLabel =
-		    new HTML(
-			    getView().getCoMessage(
-				    "ResProxContactInfoView_TitleLabel")
-				    + OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
+		    new HTML(getView().getCoMessage(
+			    "ResProxContactInfoView_TitleLabel"));
 	    roleLabel.setStylePrimaryName("Osyl-ResProxView-Label");
 	    roleLabel.addStyleName("Osyl-ContactInfo-Label");
 	}
@@ -208,8 +206,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	    sortedRoleSet.add(getView().getCoMessage(roleKey));
 	}
 	if (sortedRoleSet.size() > 0) {
-	    lb.addItem(getView().getCoMessage(
-		    "ResProxContactInfoView_PleaseChoose").trim(), "");
+	    lb.addItem("", "");
 	}
 	for (String role : sortedRoleSet) {
 	    lb.addItem(role);
@@ -760,35 +757,29 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     }
 
     public boolean prepareForSave() {
-	String role = getTextRole();
 	String lastName = getTextLastName();
 	String firstName = getTextFirstName();
-	if ("".equals(role)) {
-	    OsylAlertDialog alert =
-		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
-			    getView().getCoMessage(
-				    "ResProxContactInfoView_TitleMandatory"));
-	    alert.show();
-	    return false;
-	} else if ("".equals(lastName)) {
-	    OsylAlertDialog alert =
-		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
-			    getView().getCoMessage(
-				    "ResProxContactInfoView_LastNameMandatory"));
-	    alert.show();
-	    return false;
-	} else if ("".equals(firstName)) {
-	    OsylAlertDialog alert =
-		    new OsylAlertDialog(
-			    getView().getUiMessage("Global.error"),
-			    getView()
-				    .getCoMessage(
-					    "ResProxContactInfoView_FirstNameMandatory"));
-	    alert.show();
-	    return false;
-	} else {
-	    return true;
+	String messages = "";
+	boolean error = false;
+	if ("".equals(firstName)) {
+	    messages +=
+		    getView().getCoMessage(
+			    "ResProxContactInfoView_FirstNameMandatory");
+	    error = true;
+	} 
+	if ("".equals(lastName)) {
+	    messages +=
+		    getView().getCoMessage(
+			    "ResProxContactInfoView_LastNameMandatory");
+	    error = true;
 	}
+	if (error) {
+	    OsylAlertDialog alert =
+		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
+			    messages);
+	    alert.show();
+	}
+	return !error;
     }
 
     @Override

@@ -69,7 +69,13 @@ public class OsylResProxContactInfoView extends OsylAbstractResProxView {
 	getModel().addProperty(COPropertiesType.COMMENT,
 		editor.getTextComments());
 	// save resource
-	setProperty(COPropertiesType.PERSON_TITLE, editor.getTextRole());
+	if (!editor.getTextRole().equals("")) {
+	    setProperty(COPropertiesType.PERSON_TITLE, editor.getTextRole());
+	} else {
+	    getModel().getResource().removeProperty(
+		    COPropertiesType.PERSON_TITLE);
+	}
+
 	setProperty(COPropertiesType.SURNAME, editor.getTextLastName());
 	setProperty(COPropertiesType.FIRSTNAME, editor.getTextFirstName());
 	setProperty(COPropertiesType.OFFICE_ROOM, editor.getTextOffice());
@@ -84,7 +90,8 @@ public class OsylResProxContactInfoView extends OsylAbstractResProxView {
 
     // Role
     public String getRole() {
-	return getProperty(COPropertiesType.PERSON_TITLE);
+	return getProperty(COPropertiesType.PERSON_TITLE) == null ? ""
+		: getProperty(COPropertiesType.PERSON_TITLE);
     }
 
     // Availability
