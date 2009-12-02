@@ -150,14 +150,16 @@ public class AssessmentTest extends AbstractOSYLTest{
 	session().type("//input[@type='text']", newText3);	
 	
 	//We select randomly the location field
-	String xpathRole2 = "//td[3]/table/tbody/tr[2]/td/select";
+	String xpathRole2 = "//tr/td/table/tbody/tr/td[3]/table/tbody/tr[2]/td/select";
 	String newText6 = getRandomOption(xpathRole2);
 	session().select(xpathRole2, newText6);
+	pause();
 	
 	//We select randomly the work mode field
-	String xpathRole3 = "//td[4]/table/tbody/tr[2]/td/select";
+	String xpathRole3 = "//tr[2]/td/table/tbody/tr/td/table/tbody/tr[2]/td/select";
 	String newText7 = getRandomOption(xpathRole3);
 	session().select(xpathRole3, newText7);
+	pause();
 	
 	//We click OK to close assessment editor
 	session().click("//td/table/tbody/tr/td[1]/button");
@@ -251,9 +253,9 @@ public class AssessmentTest extends AbstractOSYLTest{
 	session().type("//tr[2]/td/table/tbody/tr/td[2]/table/tbody/tr[2]/td" +
 			"/input", newText1);
 	
-	//We fill the start date field by a wrong format
+	//We fill the assessment date field by a wrong format
 	String newText2 = timeStamp();
-	session().type("//td[1]/table/tbody/tr[2]/td/input", newText2);
+	session().type("//tr[2]/td/input", newText2);
 	
 	//We click OK to close assessment editor
 	session().click("//td/table/tbody/tr/td[1]/button");
@@ -267,55 +269,15 @@ public class AssessmentTest extends AbstractOSYLTest{
 	
 	//We click OK to return to assessment editor
 	session().click("//tr[2]/td/table/tbody/tr/td/button");	
+
 	
-	//Check if Opensyllabus displays a message error when the user click OK 
-	//and the end date is not later than the start date.
-	//-------------------------------------------------------------------//
-	
-	//We fill the end date field
-	String newText4 = "2009-09-10";
-	session().type("//tr[2]/td/table/tbody/tr/td[2]/table/tbody/tr[2]/td" +
-			"/input", newText4);
-	
-	//We fill the start date field by today's date
-	session().type("//td[1]/table/tbody/tr[2]/td/input", newText1);
-	
-	
-	
-	//We click OK to close assessment editor
-	session().click("//td/table/tbody/tr/td[1]/button");
-	
-	//We check if Opensyllabus displays a message error
-	if (!session().isTextPresent(Erreur)) {
-	    logAndFail("Expected to see text [" + Erreur 
-		    + "] after text edition");
-		}
-	
-	//We select randomly the delivery mode field
-	String xpathRole4 = "//tr[2]/td/table/tbody/tr/td[3]/table/tbody/" +
-			"tr[2]/td/select";
-	
-	//We select randomly the requirement level field
-	String newText8 = getRandomOption(xpathRole4);
-	session().select(xpathRole4, newText8);
-	
-	//We click OK to return to assessment editor
-	session().click("//tr[2]/td/table/tbody/tr/td/button");
-	
-	//We Fill the end date field
-	session().type("//tr[2]/td/table/tbody/tr/td[2]/table/tbody/tr[2]/td" +
-			"/input", newText1);
-	
-	//We Fill the start date field
-	session().type("//td[1]/table/tbody/tr[2]/td/input", newText1);
+	//We Fill the assessment date field
+	session().type("//tr[2]/td/input", newText1);
 	
 	//We fill the assessment name field
 	String Name = "Evaluation" + timeStamp();
 	session().type("//input[@class=\"Osyl-LabelEditor-TextBox\"]", 
 		Name);
-
-	//We select randomly the assessment type field
-	session().select(xpathRole1, newText5);
 
 	//We close Editor
 	session().click("//td/table/tbody/tr/td[1]/button");
