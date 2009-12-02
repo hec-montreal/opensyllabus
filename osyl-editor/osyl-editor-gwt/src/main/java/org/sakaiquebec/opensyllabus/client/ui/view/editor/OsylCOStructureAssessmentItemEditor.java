@@ -37,7 +37,6 @@ import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -120,14 +119,6 @@ public class OsylCOStructureAssessmentItemEditor extends
 	}
 
 	String endDateString = dateDateBox.getTextBox().getText();
-	// if (endDateString.trim().equals("")) {
-	// messages +=
-	// getView().getUiMessage("Global.field.required",
-	// getUiMessage("Assessment.EndDate"))
-	// + "\n\n";
-	// ok = false;
-	// } else {
-	// if (!endDateString.matches(isoRegex)) {
 	if (!endDateString.trim().equals("")
 		&& !endDateString.matches(isoRegex)) {
 	    messages +=
@@ -247,7 +238,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 			.equals("")) ? " (" + getView().getWeight() + "%)" : "";
 
 	String date =
-		(getView().getDateEnd() != null) ? (" - " + dateTimeFormat
+		(getView().getDateEnd() != null) ? ("  " + dateTimeFormat
 			.format(getView().getDateEnd())) : "";
 
 	setText(getView().getTextFromModel() + rating + date);
@@ -255,10 +246,9 @@ public class OsylCOStructureAssessmentItemEditor extends
 	// listeners enabling edition or deletion:
 
 	if (!isDeletable()) {
+	    getMainPanel().add(getAdditionalInfos());
 	    if (!isReadOnly()) {
 		getMainPanel().add(getMetaInfoLabel());
-	    } else {
-		getMainPanel().add(getReadOnlyMetaInfoLabel());
 	    }
 	}
 	if (!isReadOnly())
@@ -400,10 +390,10 @@ public class OsylCOStructureAssessmentItemEditor extends
 
 	});
 	selectItemListBox(typeListBox, getView().getAssessmentType());
-	if (getView().getAssessmentType().equals(
+	if (getView().getAssessmentType()!=null && (getView().getAssessmentType().equals(
 		getView().getCoMessage("Assessment.Type.intra_exam"))
 		|| getView().getAssessmentType().equals(
-			getView().getCoMessage("Assessment.Type.final_exam"))) {
+			getView().getCoMessage("Assessment.Type.final_exam")))) {
 	    dateDateBox.setValue(null);
 	    dateDateBox.setEnabled(false);
 	}
@@ -446,66 +436,31 @@ public class OsylCOStructureAssessmentItemEditor extends
 	VerticalPanel metaInfosPanel = new VerticalPanel();
 
 	String assessementType = getView().getAssessmentType();
-	String weight = getView().getWeight();
-	String location = getView().getLocation();
-	String workMode = getView().getMode();
-	// String deliverable = getView().getResult();
-
-	String dateEnd =
-		getView().getDateEnd() == null ? "" : dateTimeFormat
-			.format(getView().getDateEnd());
-	String submissionMode = getView().getSubmitionType();
-	// String scope = getView().getScope();
 
 	assessementType = assessementType != null ? assessementType : "";
-	weight = weight != null ? weight : "";
-	location = location != null ? location : "";
-	workMode = workMode != null ? workMode : "";
-	// deliverable = deliverable != null ? deliverable : "";
-	dateEnd = dateEnd != null ? dateEnd : "";
-	submissionMode = submissionMode != null ? submissionMode : "";
-	// scope = scope != null ? scope : "";
 
 	String assessementTypeLabel =
-		getUiMessage("Assessment.type") + ": " + assessementType
-			+ " | ";
-	String weightLabel =
-		getUiMessage("Assessment.rating") + ": " + weight + "% | ";
-	String locationLabel =
-		getUiMessage("Assessment.location") + ": " + location;
-	String workModeLabel =
-		getUiMessage("Assessment.mode") + ": " + workMode;
-	// String deliverableLabel =
-	// !deliverable.equals("") ? getUiMessage("Assessment.deliverable")
-	// + ": " + deliverable + " | "
-	// : "";
-	String endDateLabel =
-		!dateEnd.equals("") ? " | "
-			+ getUiMessage("Assessment.date") + ": " + dateEnd
-			: "";
-	String submissionModeLabel =
-		!submissionMode.equals("") ? " | "
-			+ getUiMessage("Assessment.subtype") + ": "
-			+ submissionMode : "";
-	// String scopeLabel = getUiMessage("Assessment.scope") + ": " + scope;
+		getUiMessage("Assessment.type") + ": " + assessementType;
 
-	String metaInfoLabelStr1 =
-		assessementTypeLabel + weightLabel + locationLabel;
-	// String metaInfoLabelStr2 =
-	// deliverableLabel + startDateLabel + endDateLabel
-	// + submissionModeLabel + scopeLabel;
-	String metaInfoLabelStr2 =
-		workModeLabel + endDateLabel + submissionModeLabel;
+	String metaInfoLabelStr1 = assessementTypeLabel;
 
 	Label label1 = new Label(metaInfoLabelStr1);
-	Label label2 = new Label(metaInfoLabelStr2);
-
 	label1.setStylePrimaryName("Osyl-UnitView-MetaInfo");
-	label2.setStylePrimaryName("Osyl-UnitView-MetaInfo");
 	metaInfosPanel.add(label1);
-	metaInfosPanel.add(label2);
 	return metaInfosPanel;
     }
+
+    protected Label getNameLabel() {
+	return new Label(getUiMessage("Assessment.name"));
+    }
+
+    protected String getNameTooltip() {
+	return getUiMessage("Assessment.name.tooltip");
+    }
+
+    /**
+     * ==================== ADDED CLASSES or METHODS ====================
+     */
 
     private HTML createNewViewer() {
 	HTML htmlViewer = new HTML();
@@ -527,146 +482,6 @@ public class OsylCOStructureAssessmentItemEditor extends
 	return oep;
     }
 
-    protected Widget getReadOnlyMetaInfoLabel() {
-
-	String assessementType = getView().getAssessmentType();
-	String location = getView().getLocation();
-	String workMode = getView().getMode();
-	// String deliverable = getView().getResult();
-	String dateEnd =
-		getView().getDateEnd() == null ? "" : dateTimeFormat
-			.format(getView().getDateEnd());
-	String submissionMode = getView().getSubmitionType();
-	// String scope = getView().getScope();
-
-	assessementType = assessementType != null ? assessementType : "";
-	location = location != null ? location : "";
-	workMode = workMode != null ? workMode : "";
-	// deliverable = deliverable != null ? deliverable : "";
-	dateEnd = dateEnd != null ? dateEnd : "";
-	submissionMode = submissionMode != null ? submissionMode : "";
-	// scope = scope != null ? scope : "";
-
-	HTML evaluationTypeHTML = createNewViewer();
-	HTML localisationHTML = createNewViewer();
-	HTML workModeHTML = createNewViewer();
-	// HTML deliverableHTML = createNewViewer();
-	HTML endDateHTML = createNewViewer();
-	HTML submissionModeHTML = createNewViewer();
-	// HTML scopeHTML = createNewViewer();
-
-	// panels used to display information
-	VerticalPanel viewerPanelEvaluationType;
-	VerticalPanel viewerPanelLocalisation;
-	VerticalPanel viewerPanelWorkMode;
-	// VerticalPanel viewerPanelDeliverable;
-	VerticalPanel viewerPanelEndDate;
-	VerticalPanel viewerPanelSubmissionMode;
-	// VerticalPanel viewerPanelScope;
-
-	final FlexTable flexTable = new FlexTable();
-
-	// General setting for the flextable
-	flexTable.setStylePrimaryName("Osyl-ContactInfo");
-
-	// Column size distribution
-	int fieldNumber = 0;
-	flexTable.getFlexCellFormatter().setWidth(0, 0, "13%");
-	flexTable.getFlexCellFormatter().setWidth(0, 1, "37%");
-	flexTable.getFlexCellFormatter().setWidth(0, 2, "13%");
-	flexTable.getFlexCellFormatter().setWidth(0, 3, "37%");
-
-	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-		addNewLabel(getUiMessage("Assessment.type")));
-	// Value(editor)
-	viewerPanelEvaluationType = addNewEditorPanel();
-	viewerPanelEvaluationType.add(evaluationTypeHTML);
-	fieldNumber++;
-	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-		viewerPanelEvaluationType);
-
-	fieldNumber++;
-	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-		addNewLabel(getUiMessage("Assessment.location")));
-	// Value(editor)
-	viewerPanelLocalisation = addNewEditorPanel();
-	viewerPanelLocalisation.add(localisationHTML);
-	fieldNumber++;
-	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-		viewerPanelLocalisation);
-
-	// line change
-	fieldNumber++;
-	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-		addNewLabel(getUiMessage("Assessment.mode")));
-	// Value(editor)
-	viewerPanelWorkMode = addNewEditorPanel();
-	viewerPanelWorkMode.add(workModeHTML);
-	fieldNumber++;
-	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-		viewerPanelWorkMode);
-
-	// if (!deliverable.equals("")) {
-	// fieldNumber++;
-	// flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-	// addNewLabel(getUiMessage("Assessment.deliverable")));
-	// // Value(editor)
-	// viewerPanelDeliverable = addNewEditorPanel();
-	// viewerPanelDeliverable.add(deliverableHTML);
-	// fieldNumber++;
-	// flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-	// viewerPanelDeliverable);
-	// }
-
-	if (!dateEnd.equals("")) {
-	    fieldNumber++;
-	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-		    addNewLabel(getUiMessage("Assessment.date")));
-	    // Value(editor)
-	    viewerPanelEndDate = addNewEditorPanel();
-	    viewerPanelEndDate.add(endDateHTML);
-	    fieldNumber++;
-	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-		    viewerPanelEndDate);
-	}
-
-	if (!submissionMode.equals("")) {
-	    fieldNumber++;
-	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-		    addNewLabel(getUiMessage("Assessment.subtype")));
-	    // Value(editor)
-	    viewerPanelSubmissionMode = addNewEditorPanel();
-	    viewerPanelSubmissionMode.add(submissionModeHTML);
-	    fieldNumber++;
-	    flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-		    viewerPanelSubmissionMode);
-	}
-
-	// Label
-	fieldNumber++;
-	flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-		addNewLabel(getUiMessage("Assessment.scope")));
-	// Value(editor)
-	// viewerPanelScope = addNewEditorPanel();
-	// viewerPanelScope.add(scopeHTML);
-	// fieldNumber++;
-	// flexTable.setWidget(fieldNumber / 4, fieldNumber % 4,
-	// viewerPanelScope);
-
-	evaluationTypeHTML.setHTML(assessementType);
-	localisationHTML.setHTML(location);
-	workModeHTML.setHTML(workMode);
-	// deliverableHTML.setHTML(deliverable);
-	endDateHTML.setHTML(dateEnd);
-	submissionModeHTML.setHTML(submissionMode);
-	// scopeHTML.setHTML(scope);
-
-	return flexTable;
-    }
-
-    /**
-     * ==================== ADDED CLASSES or METHODS ====================
-     */
     public String getWeight() {
 	return weightTextBox.getText();
     }
@@ -711,11 +526,30 @@ public class OsylCOStructureAssessmentItemEditor extends
 	lb.setSelectedIndex(selectedIndex);
     }
 
-    protected Label getNameLabel() {
-	return new Label(getUiMessage("Assessment.name"));
+    private Widget getAdditionalInfos() {
+	VerticalPanel metaInfosPanel = new VerticalPanel();
+
+	String location = getView().getLocation();
+	String workMode = getView().getMode();
+	String submissionMode = getView().getSubmitionType();
+	
+	workMode = workMode != null ? workMode+"   " : "";
+	location = location != null ? location : "";
+	
+	submissionMode = submissionMode != null ? submissionMode : "";
+
+	String submissionModeLabel =
+		!submissionMode.equals("") ? getUiMessage("Assessment.subtype")
+			+ " : " + submissionMode : "";
+
+	Label label1 = new Label(workMode + location);
+	Label label2 = new Label(submissionModeLabel);
+
+	label1.setStylePrimaryName("Osyl-AssessmentView-AdditionalInfos");
+	label2.setStylePrimaryName("Osyl-AssessmentView-AdditionalInfos");
+	metaInfosPanel.add(label1);
+	metaInfosPanel.add(label2);
+	return metaInfosPanel;
     }
 
-    protected String getNameTooltip() {
-	return getUiMessage("Assessment.name.tooltip");
-    }
 }
