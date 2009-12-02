@@ -290,7 +290,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     
     public COElementAbstract findCOElementAbstractWithId(String idToFind) {
 	COElementAbstract result = null;
-	if (this.getId().equals(idToFind))
+	if (this.getId()!=null && this.getId().equals(idToFind))
 	    result = this;
 	else {
 	    if (this.isCOUnitContent()) {
@@ -301,6 +301,26 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
 		    COElementAbstract coElem =
 			    (COElementAbstract) this.getChildrens().get(i);
 		    result = coElem.findCOElementAbstractWithId(idToFind);
+		    i++;
+		}
+	    }
+	}
+	return result;
+    }
+    
+    public COElementAbstract findCOElementAbstractWithParentId(String idToFind) {
+	COElementAbstract result = null;
+	if (this.getIdParent()!=null && this.getIdParent().equals(idToFind))
+	    result = this;
+	else {
+	    if (this.isCOUnitContent()) {
+		// Nothing to do
+	    } else {
+		int i = 0;
+		while (i < this.getChildrens().size() && result == null) {
+		    COElementAbstract coElem =
+			    (COElementAbstract) this.getChildrens().get(i);
+		    result = coElem.findCOElementAbstractWithParentId(idToFind);
 		    i++;
 		}
 	    }

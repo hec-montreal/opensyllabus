@@ -997,9 +997,19 @@ public class COModeledServer {
 	if ((parentElement.isCourseOutlineContent() && childElement
 		.isCourseOutlineContent())
 		|| (childElement.getType().equals(parentElement.getType()))) {
-	    if (parentElement.isCOUnitContent()) {
+
+	    if (childElement.getIdParent() == null
+		    || childElement.getIdParent().equals(""))
 		childElement.setIdParent(parentElement.getId());
-	    } else {
+	    else if (!childElement.getIdParent().equals(parentElement.getId())) {
+		throw new Exception("Element " + childElement.getType()
+			+ " with id " + childElement.getId()
+			+ " is already associated with a parent(id "
+			+ childElement.getIdParent()
+			+ ") and could not be associated with parent (id "
+			+ parentElement.getId() + ").");
+	    }
+	    if (!parentElement.isCOUnitContent()) {
 		childElement.setIdParent(parentElement.getId());
 		for (int i = 0; i < parentElement.getChildrens().size(); i++) {
 		    COElementAbstract coElementParent =
@@ -1081,6 +1091,8 @@ public class COModeledServer {
 	COContent contentfusionned = parent.getModeledContent();
 	if (contentChild.getIdParent() != null
 		&& !contentChild.getIdParent().equals("")) {
+
+	    prepareForFusion(contentfusionned);
 	    if (contentfusionned != null) {
 		contentfusionned.setIdParent(contentfusionned.getId());
 		contentfusionned.setId(contentChild.getId());
@@ -1090,14 +1102,20 @@ public class COModeledServer {
 	}
     }
 
+    private void prepareForFusion(COElementAbstract modelToPrepare) {
+	modelToPrepare.setEditable(false);
+	if (!modelToPrepare.isCOContentResourceProxy()) {
+	    modelToPrepare.setIdParent(modelToPrepare.getId());
+	    modelToPrepare.setId(UUID.uuid());
+	    for (Iterator<COElementAbstract> iter =
+		    modelToPrepare.getChildrens().iterator(); iter.hasNext();) {
+		prepareForFusion(iter.next());
+	    }
+	}
+    }
+
     public void fusion(COElementAbstract child, COElementAbstract fusionned) {
 	if (child.isCOUnitContent()) {
-	    COUnitContent cuFusionned = (COUnitContent) fusionned;
-	    for (int i = 0; i < cuFusionned.getChildrens().size(); i++) {
-		COContentResourceProxy rp = cuFusionned.getChildrens().get(i);
-		rp.setEditable(false);
-	    }
-
 	    COUnitContent cu = (COUnitContent) child;
 	    COUnitContent parentCU = (COUnitContent) fusionned;
 	    for (int i = 0; i < cu.getChildrens().size(); i++) {
@@ -1112,11 +1130,10 @@ public class COModeledServer {
 		if (childElement.getIdParent() != null
 			&& !childElement.getIdParent().equals("")) {
 		    COElementAbstract parentElement =
-			    fusionned.findCOElementAbstractWithId(childElement
-				    .getIdParent());
+			    fusionned
+				    .findCOElementAbstractWithParentId(childElement
+					    .getIdParent());
 		    if (parentElement != null) {
-			parentElement.setEditable(false);
-			parentElement.setIdParent(parentElement.getId());
 			parentElement.setId(childElement.getId());
 			fusion(childElement, parentElement);
 		    } else {
@@ -1133,14 +1150,12 @@ public class COModeledServer {
 			    // bonne place
 			    deleteParentUuids(childElement);
 			    fusionned.getChildrens().add(j, childElement);
-			    j++;
 			}
 		    }
 		} else {
 		    // L'enfant référence qqchose qui n'existe PAS dans le
 		    // parent
 		    fusionned.getChildrens().add(j, childElement);
-		    j++;
 		}
 		j++;
 	    }
