@@ -216,20 +216,7 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
      * @throws Exception
      */
     public void initConfigs() throws Exception {
-/*	initConfig("default", "Config from HEC Montréal");
-	initConfig("announcementsRegulationsHEC",
-		"Config HEC Montreal - Nouvelles et règlements");
-	initConfig("udem", "Config UdeM");
-	initConfig("udemCompetencesComposantes",
-		"Config UdeM - Competences Composantes");
-	initConfig("udemCompetencesSeances",
-		"Config UdeM - Competences Seances");
-	initConfig("udemObjectifsActivites",
-		"Config UdeM - Objectifs Activites");
-	initConfig("udemObjectifsSeances", "Config UdeM - Objectifs Seances");*/
-	
-	//internationalisation
-	
+	// Config names are internationalized, we only see keys here: 
 	initConfig("default");
 	initConfig("announcementsRegulationsHEC");
 	initConfig("udem");

@@ -90,7 +90,8 @@ final class OsylConfigServiceMessages {
                 key = enu.nextElement();
                 messages.put(key, bundle.getString(key));
             }
-
+            
+            inputStream.close();
             return messages;
 
         } catch (Exception e) {
