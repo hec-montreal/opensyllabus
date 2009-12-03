@@ -34,7 +34,7 @@ import org.sakaiquebec.opensyllabus.client.controller.event.RFBItemSelectionEven
 import org.sakaiquebec.opensyllabus.client.controller.event.UploadFileEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredEventHandler.ItemListingAcquiredEvent;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
-import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractResProxEditor;
+import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylDirectory;
 
@@ -267,7 +267,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	// The Label
 	HTML currentSelectionLabel =
 		new HTML(getCurrentSelectionLabel()
-			+ OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
 	currentSelectionLabel.addStyleName("Osyl-RemoteFileBrowser-TitleLabel");
 	currentSelectionLabel.setWidth("130px");
 	fileSelectionSubPanel.add(currentSelectionLabel);

@@ -146,7 +146,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 	HTML l1 =
 		new HTML(getView().getUiMessage("clickable_text")
-			+ OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
 	editorPanel.add(l1);
 	editorLabel = new TextBox();
 	editorLabel.setStylePrimaryName("Osyl-LabelEditor-TextBox");

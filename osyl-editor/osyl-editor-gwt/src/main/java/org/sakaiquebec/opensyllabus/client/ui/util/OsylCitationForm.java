@@ -29,7 +29,7 @@ import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewControllable;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
-import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractResProxEditor;
+import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
@@ -198,7 +198,7 @@ public class OsylCitationForm extends WindowPanel implements
 				: citation.getTitle());
 	mainPanel.add(hiddenDisplayName);
 
-	mainPanel.add(new HTML(OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR + uiMessages
+	mainPanel.add(new HTML(OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + uiMessages
 		.getMessage("Global.fields.mandatory")));
 	mainPanel.add(new HTML(uiMessages
 		.getMessage("CitationForm.recommendedFields")));
@@ -231,7 +231,7 @@ public class OsylCitationForm extends WindowPanel implements
 		CitationSchema.TITLE));
 	citationPanel.add(createNewLabel(osylController
 		.getCoMessage("ResProxCitationView_citationLabel")
-		+ OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR + ":"));
+		+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + ":"));
 	citationField =
 		FormHelper.createTextArea((citation == null || citation
 			.getTitle() == null) ? "" : citation.getTitle(),
@@ -252,7 +252,7 @@ public class OsylCitationForm extends WindowPanel implements
 	titlePanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_titleLabel")
-			+ OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR
 			+ ":", titleField, CitationSchema.TITLE);
 
 	mainPanel.add(titlePanel);
@@ -265,7 +265,7 @@ public class OsylCitationForm extends WindowPanel implements
 	authorLabel =
 		createNewLabel(osylController
 			.getCoMessage("ResProxCitationView_authorLabel")
-			+ OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR
 			+ ":");
 	authorPanel =
 		createLabelTextboxElement(authorLabel, authorField,
@@ -755,7 +755,7 @@ public class OsylCitationForm extends WindowPanel implements
 	    authorLabel
 		    .setHTML(osylController
 			    .getCoMessage("ResProxCitationView_authorLabel")
-			    + OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR
+			    + OsylAbstractEditor.MANDATORY_FIELD_INDICATOR
 			    + ":");
 	    isnLabel.setText(osylController
 		    .getCoMessage("ResProxCitationView_isbnLabel")

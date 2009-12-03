@@ -155,16 +155,20 @@ public class OsylCOStructureAssessmentItemLabelView extends OsylAbstractView {
     }
 
     public void setDateStart(Date l) {
-	if (l != null) {
+	if (l != null)
 	    getModel().addProperty(COPropertiesType.DATE_START,
 		    OsylDateUtils.getDateAsXmlString(l));
-	}
+	else
+	    getModel().removeProperty(COPropertiesType.DATE_START);
+
     }
 
     public void setDateEnd(Date l) {
 	if (l != null)
 	    getModel().addProperty(COPropertiesType.DATE_END,
 		    OsylDateUtils.getDateAsXmlString(l));
+	else
+	    getModel().removeProperty(COPropertiesType.DATE_END);
     }
 
     public Date getDateEnd() {

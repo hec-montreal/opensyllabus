@@ -136,7 +136,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 		    new HTML(
 			    getView().getCoMessage(
 				    "ResProxContactInfoView_FirstNameLabel")
-				    + OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
+				    + OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
 	    firstNameLabel.setStylePrimaryName("Osyl-ResProxView-Label");
 	    firstNameLabel.addStyleName("Osyl-ContactInfo-Label");
 	}
@@ -163,7 +163,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 		    new HTML(
 			    getView().getCoMessage(
 				    "ResProxContactInfoView_LastNameLabel")
-				    + OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
+				    + OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
 	    lastNameLabel.setStylePrimaryName("Osyl-ResProxView-Label");
 	    lastNameLabel.addStyleName("Osyl-ContactInfo-Label");
 	}

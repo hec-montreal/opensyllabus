@@ -63,9 +63,6 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
-    public static final String MANDATORY_FIELD_INDICATOR =
-	    "<span class=\"Osyl-Mandatory_field\"> *</span>";
-
     // TODO: document
     private CheckBox importantCheckBox;
     private CheckBox hideCheckBox;
@@ -336,7 +333,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     }
 
     public Widget getInformationWidget() {
-	return new HTML(OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR
+	return new HTML(OsylAbstractEditor.MANDATORY_FIELD_INDICATOR
 		+ getUiMessage("Global.fields.mandatory"));
     }
 

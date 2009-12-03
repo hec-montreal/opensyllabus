@@ -91,6 +91,9 @@ public abstract class OsylAbstractEditor extends Composite {
 
     protected ListBox targetsListBox;
 
+    public static final String MANDATORY_FIELD_INDICATOR =
+    "<span class=\"Osyl-Mandatory_field\"> *</span>";
+
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
      * working for.

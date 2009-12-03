@@ -99,6 +99,13 @@ public class OsylCOStructureAssessmentItemEditor extends
 		"^(\\d{4})\\D?(0[1-9]|1[0-2])\\D?([12]\\d|0[1-9]|3[01])$";
 
 	// required fields validations
+	if(getText().trim().equals("")){
+	    messages +=
+		    getView().getUiMessage("Global.field.required",
+			    getUiMessage("Assessment.name"))
+			    + "\n";
+	    ok = false;
+	}
 	String weight = weightTextBox.getText();
 	if (weight.trim().equals("")) {
 	    messages +=
@@ -129,15 +136,16 @@ public class OsylCOStructureAssessmentItemEditor extends
 	    errordate = true;
 	}
 	// }
+	if (typeListBox.getSelectedIndex() == 0) {
+	    messages +=
+		    getView().getUiMessage("Global.field.required",
+			    getUiMessage("Assessment.type"))
+			    + "\n";
+	    ok = false;
+	}
 
 	if (!isDeletable()) {
-	    if (typeListBox.getSelectedIndex() == 0) {
-		messages +=
-			getView().getUiMessage("Global.field.required",
-				getUiMessage("Assessment.type"))
-				+ "\n";
-		ok = false;
-	    }
+
 	    if (localisationListBox.getSelectedIndex() == 0) {
 		messages +=
 			getView().getUiMessage("Global.field.required",
@@ -153,13 +161,13 @@ public class OsylCOStructureAssessmentItemEditor extends
 		ok = false;
 	    }
 
-	    // date validation
-	    if (!errordate && !endDateString.trim().equals("")) {
-		String verifyAssignement = verifyAssignementTool();
-		if (!verifyAssignement.equals("")) {
-		    ok = false;
-		    messages += verifyAssignement;
-		}
+	}
+	// date validation
+	if (!errordate && !endDateString.trim().equals("")) {
+	    String verifyAssignement = verifyAssignementTool();
+	    if (!verifyAssignement.equals("")) {
+		ok = false;
+		messages += verifyAssignement;
 	    }
 	}
 	if (!ok) {
@@ -250,7 +258,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 	}
 	if (!isReadOnly())
 	    getMainPanel().add(getMetaInfoLabel());
-	    refreshButtonPanel();
+	refreshButtonPanel();
 
     } // enterView
 
@@ -265,7 +273,9 @@ public class OsylCOStructureAssessmentItemEditor extends
 
 	VerticalPanel ponderationPanel = new VerticalPanel();
 	ponderationPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	Label l1 = new Label(getUiMessage("Assessment.rating"));
+	HTML l1 =
+		new HTML(getUiMessage("Assessment.rating")
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
 	weightTextBox = new TextBox();
 	weightTextBox.setText(getView().getWeight());
 	weightTextBox.setWidth("40px");
@@ -278,7 +288,9 @@ public class OsylCOStructureAssessmentItemEditor extends
 
 	VerticalPanel localisationPanel = new VerticalPanel();
 	localisationPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	Label l2 = new Label(getUiMessage("Assessment.location"));
+	HTML l2 =
+		new HTML(getUiMessage("Assessment.location")
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
 	localisationListBox = new ListBox();
 	localisationListBox.setName("Assessment.location");
 	localisationListBox
@@ -294,7 +306,9 @@ public class OsylCOStructureAssessmentItemEditor extends
 
 	VerticalPanel modePanel = new VerticalPanel();
 	modePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	Label l3 = new Label(getUiMessage("Assessment.mode"));
+	HTML l3 =
+		new HTML(getUiMessage("Assessment.mode")
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
 	modeListBox = new ListBox();
 	modeListBox.setName("Assessment.mode");
 	modeListBox.setTitle(getUiMessage("Assessment.mode.tooltip"));
@@ -329,7 +343,8 @@ public class OsylCOStructureAssessmentItemEditor extends
 
 	VerticalPanel endDatePanel = new VerticalPanel();
 	endDatePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	Label l7 = new Label(getUiMessage("Assessment.date"));
+	HTML l7 =
+		new HTML(getUiMessage("Assessment.date"));
 	dateDateBox = new DateBox();
 	dateDateBox.setFormat(dateFormat);
 	dateDateBox.setTitle(getUiMessage("Assessment.date.tooltip"));
@@ -356,7 +371,9 @@ public class OsylCOStructureAssessmentItemEditor extends
 
 	VerticalPanel typePanel = new VerticalPanel();
 	typePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	Label l9 = new Label(getUiMessage("Assessment.type"));
+	HTML l9 =
+		new HTML(getUiMessage("Assessment.type")
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
 	typeListBox = new ListBox();
 	typeListBox.setName("Assessment.type");
 	typeListBox.setTitle(getUiMessage("Assessment.type.tooltip"));
@@ -388,10 +405,12 @@ public class OsylCOStructureAssessmentItemEditor extends
 
 	});
 	selectItemListBox(typeListBox, getView().getAssessmentType());
-	if (getView().getAssessmentType()!=null && (getView().getAssessmentType().equals(
-		getView().getCoMessage("Assessment.Type.intra_exam"))
-		|| getView().getAssessmentType().equals(
-			getView().getCoMessage("Assessment.Type.final_exam")))) {
+	if (getView().getAssessmentType() != null
+		&& (getView().getAssessmentType().equals(
+			getView().getCoMessage("Assessment.Type.intra_exam")) || getView()
+			.getAssessmentType().equals(
+				getView().getCoMessage(
+					"Assessment.Type.final_exam")))) {
 	    dateDateBox.setValue(null);
 	    dateDateBox.setEnabled(false);
 	}
@@ -450,11 +469,18 @@ public class OsylCOStructureAssessmentItemEditor extends
     }
 
     protected Label getNameLabel() {
-	return new Label(getUiMessage("Assessment.name"));
+	return new HTML(getUiMessage("Assessment.name")
+		+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
     }
 
     protected String getNameTooltip() {
 	return getUiMessage("Assessment.name.tooltip");
+    }
+
+    @Override
+    public Widget getInformationWidget() {
+	return new HTML(OsylAbstractEditor.MANDATORY_FIELD_INDICATOR
+		+ getUiMessage("Global.fields.mandatory"));
     }
 
     /**
@@ -510,10 +536,10 @@ public class OsylCOStructureAssessmentItemEditor extends
 	String location = getView().getLocation();
 	String workMode = getView().getMode();
 	String submissionMode = getView().getSubmitionType();
-	
-	workMode = workMode != null ? workMode+"   " : "";
+
+	workMode = workMode != null ? workMode + " / " : "";
 	location = location != null ? location : "";
-	
+
 	submissionMode = submissionMode != null ? submissionMode : "";
 
 	String submissionModeLabel =

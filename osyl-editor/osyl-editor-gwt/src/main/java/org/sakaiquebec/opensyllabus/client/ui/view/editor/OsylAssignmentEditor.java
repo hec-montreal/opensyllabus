@@ -113,13 +113,13 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 	HorizontalPanel datePanel = new HorizontalPanel();
 	HTML dateStartLabel =
 		new HTML(getUiMessage("Assignement.date_start")
-			+ OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
 	datePanel.add(dateStartLabel);
 	datePanel.add(dateStartDateBox);
 
 	HTML dateEndLabel =
 		new HTML(getUiMessage("Assignement.date_end")
-			+ OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
 	datePanel.add(dateEndLabel);
 	datePanel.add(dateEndDateBox);
 
@@ -127,7 +127,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 
 	HTML l1 =
 		new HTML(getUiMessage("clickable_text")
-			+ OsylAbstractResProxEditor.MANDATORY_FIELD_INDICATOR);
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
 	editorPanel.add(l1);
 
 	TextBox tb = new TextBox();
