@@ -217,8 +217,6 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 
 		    
 		} else {
-		    Window.alert(uiMessages
-			    .getMessage("fileUpload.resNotSaved"));
 		    final OsylAlertDialog alertBox =
 			    new OsylAlertDialog(
 				    false,
