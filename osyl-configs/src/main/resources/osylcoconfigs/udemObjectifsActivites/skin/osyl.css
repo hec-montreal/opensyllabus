@@ -60,7 +60,7 @@
 	cursor:default;
 	background:#d6dbdf;
 	position:relative;
-	margin:-2px -2px 0;
+	margin:-1px -2px 0;
 	overflow:visible;
 }
 
@@ -69,16 +69,17 @@
   font:bold 0.9em Arial, Verdana, sans-serif;
   vertical-align:middle;
   color:#454a4f;
-  background:transparent url(images/ui/opt_separator.gif) no-repeat left center;
   cursor:default;
   heigth:auto;
   text-decoration:none;
 }
-.gwt-MenuBar-horizontal .gwt-MenuItem:first-child, #gwt-uid-1, .gwt-MenuBar-vertical .gwt-MenuItem{background-image:none} /* Remove left border of the first element */
+.gwt-MenuBar-horizontal .gwt-MenuItem:first-child, #gwt-uid-1{/*border-right:none;*/background-image:none} /* Remove left border of the first element */
 
 .gwt-MenuBar-horizontal .gwt-MenuItem {
   text-align:center;
   padding:1px 10px;
+    /*border-left:1px solid #888;*/
+  background:transparent url(images/ui/opt_separator.gif) no-repeat left center;
 }
 
 .gwt-MenuBar-horizontal .gwt-MenuItem img {
@@ -92,6 +93,7 @@
 	border:1px solid #CBD0D4;
 	padding:2px;
 	cursor:default;
+	margin-left:26px;
 }
 
 .gwt-MenuBar-vertical .gwt-MenuItem {
