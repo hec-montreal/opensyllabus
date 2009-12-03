@@ -247,11 +247,9 @@ public class OsylCOStructureAssessmentItemEditor extends
 
 	if (!isDeletable()) {
 	    getMainPanel().add(getAdditionalInfos());
-	    if (!isReadOnly()) {
-		getMainPanel().add(getMetaInfoLabel());
-	    }
 	}
 	if (!isReadOnly())
+	    getMainPanel().add(getMetaInfoLabel());
 	    refreshButtonPanel();
 
     } // enterView
@@ -401,6 +399,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 	typePanel.add(typeListBox);
 
 	if (isDeletable()) {
+	    ligne1.add(typePanel);
 	    ligne1.add(ponderationPanel);
 	    ligne1.add(endDatePanel);
 	    vp.add(ligne1);
@@ -461,27 +460,6 @@ public class OsylCOStructureAssessmentItemEditor extends
     /**
      * ==================== ADDED CLASSES or METHODS ====================
      */
-
-    private HTML createNewViewer() {
-	HTML htmlViewer = new HTML();
-	htmlViewer.setStylePrimaryName("Osyl-ResProxView-LabelValue");
-	return htmlViewer;
-    }
-
-    private Label addNewLabel(String text) {
-	Label label = new Label(text);
-	label.setStyleName("Osyl-ResProxView-Label");
-	return label;
-
-    }
-
-    private VerticalPanel addNewEditorPanel() {
-	VerticalPanel oep = new VerticalPanel();
-	oep.setStylePrimaryName("Osyl-ContactInfo-Panel");
-	oep.setWidth("100%");
-	return oep;
-    }
-
     public String getWeight() {
 	return weightTextBox.getText();
     }
