@@ -780,6 +780,7 @@
 	background:#FFF;
 	border:1px solid #AAA;
 	margin:0;
+	width:100%;
 }
 .Osyl-UnitView-TextArea body {color:red}
 .Osyl-ResConfigView-Status-Panel {
@@ -815,6 +816,7 @@
   font-family:monospace, courier;
   font-size:8pt;
   margin-bottom:6px;
+  width:99%;
 }
 .Osyl-RemoteFileBrowser-WaitingState {
 	cursor:wait;
@@ -899,9 +901,10 @@
 	border:0;
 	border:1px solid #878a8c;
 	margin:1px 0 0 2px;
-	width:100%;
 }
-
+.Osyl-EditorPopup-RowEditor .Osyl-LabelEditor-TextBox {
+	width:99%;
+}
 .Osyl-EditorPopup table {border-collapse:separate}
 
 .Osyl-EditorPopup .mosaic-Caption {margin:0}
@@ -1024,6 +1027,7 @@
 .Osyl-EditorPopup-RowToolBar {
 	margin:0;
 	border-top:1px solid #AAA;
+	width:100%;
 }
 
 /* Light Box -----------------------------------------------------------------------*/
