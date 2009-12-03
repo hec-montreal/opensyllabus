@@ -1,6 +1,10 @@
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
+import java.util.List;
+
+import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
+import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
@@ -21,18 +25,24 @@ public class OsylStyleLevelChooser {
 	}
 	return false;
     }
-
     
-
     public static String getLevelStyle(COElementAbstract model) {
+	OsylController controller = OsylController.getInstance();
 	int i = 1;
 	while (!model.isCourseOutlineContent()) {
 	    model = model.getParent();
+	    
+	    if(model.isCOStructureElement() || model.isCOUnit()){
+		List<COModelInterface> subModels =
+		controller.getOsylConfig().getOsylConfigRuler()
+			.getAllowedSubModels(model);
+		if(subModels==null)
+		    i--;
+	    }
 	    i++;
 	}
 	if (i > 5)
 	    i = 5;
 	return OSYL_TITLE + i;
     }
-
 }

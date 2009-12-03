@@ -34,7 +34,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
 
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -88,20 +87,11 @@ public class OsylCOUnitView extends OsylViewableComposite implements
 			    OsylStyleLevelChooser.getLevelStyle(getModel()));
 	    getMainPanel().add(lbv);
 	} else {
-	    if (isCOUnitTitleEditable()) {
-		OsylCOStructureItemLabelView lbv =
-			new OsylCOStructureItemLabelView((COUnit) getModel(),
-				getController(), false, OsylStyleLevelChooser
-					.getLevelStyle(getModel()));
-		getMainPanel().add(lbv);
-	    } else {
-		Label lbv = new Label(getCoMessage(getModel().getType()));
-		lbv.setStylePrimaryName("Osyl-UnitView-Title");
-		lbv.addStyleName(OsylStyleLevelChooser
-			.getLevelStyle(getModel()));
-		getMainPanel().add(lbv);
-	    }
-
+	    OsylCOStructureItemLabelView lbv =
+		    new OsylCOStructureItemLabelView((COUnit) getModel(),
+			    getController(), false, OsylStyleLevelChooser
+				    .getLevelStyle(getModel()));
+	    getMainPanel().add(lbv);
 	}
 	List<COElementAbstract> childrens = null;
 	childrens = ((COUnit) getModel()).getChildrens();
@@ -134,23 +124,6 @@ public class OsylCOUnitView extends OsylViewableComposite implements
 		new OsylCOUnitStructureView(itemModel, getController(),
 			showLabel);
 	getMainPanel().add(coUnitStructureView);
-    }
-
-    /**
-     * @return Boolean if the COUnit title is editable or not
-     */
-    public boolean isCOUnitTitleEditable() {
-	String proposedXMLTitle = ((COUnit) getModel()).getLabel();
-	String modelCoUnitSemTag = getCoMessage(getModel().getType());
-	// If the proposed label in the XML is null or
-	// empty then the label is not editable
-	// Also if the proposed label is identical to the model
-	// semantic Tag, so the label is invariable and not editable
-	if ((proposedXMLTitle.length() <= 0)
-		|| (proposedXMLTitle.equals(modelCoUnitSemTag))) {
-	    return false;
-	}
-	return true;
     }
 
     public void onUpdateModel(UpdateCOUnitEvent event) {

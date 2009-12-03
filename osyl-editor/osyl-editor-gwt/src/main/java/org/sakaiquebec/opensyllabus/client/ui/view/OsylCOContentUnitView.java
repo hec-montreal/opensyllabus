@@ -79,7 +79,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	refreshView();
     }
 
-    private void initRubricViews(String styleLevel) {
+    private void initRubricViews() {
 	rubricViewsMap = new HashMap<String, OsylRubricView>();
 
 	List<COModelInterface> subModels =
@@ -92,8 +92,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	    if (subModel instanceof COContentRubric) {
 		COContentRubric coContentRubric = (COContentRubric) subModel;
 		OsylRubricView rubricView =
-			new OsylRubricView(coContentRubric, getController(),
-				styleLevel);
+			new OsylRubricView(coContentRubric, getController(), OsylStyleLevelChooser.getLevelStyle(getModel()));
 		getMainPanel().add(rubricView);
 		rubricViewsMap.put(coContentRubric.getType(), rubricView);
 	    }
@@ -117,7 +116,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	    horizontalPanel_1.add(getMainTitleLabel());
 	}
 
-	initRubricViews(OsylStyleLevelChooser.getLevelStyle(getModel()));
+	initRubricViews();
 	if (getModel() != null) {
 	    // We cast our content unit
 	    COUnitContent coContentUnit = (COUnitContent) getModel();
@@ -283,7 +282,6 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	    if (resProx.getRubricType()
 		    .equals(COContentRubric.RUBRIC_TYPE_NEWS)) {
 		resProx.moveToTheTopOfTheRubric();
-		refreshRubric(rubricViewsMap.get(resProx.getRubricType()));
 	    }
 	}
     }
