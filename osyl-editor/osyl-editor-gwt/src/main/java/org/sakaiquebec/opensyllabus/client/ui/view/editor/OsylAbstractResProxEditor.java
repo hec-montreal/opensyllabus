@@ -308,15 +308,15 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
 	    String reqLevel = getView().getRequirementLevel();
 	    int reqLevelIndex = 0;
-	    if (COPropertiesType.REQ_LEVEL_UNDEFINED.equals(reqLevel)) {
-		reqLevelIndex = 0;
-	    } else if (COPropertiesType.REQ_LEVEL_MANDATORY.equals(reqLevel)) {
+	    if (COPropertiesType.REQ_LEVEL_MANDATORY.equals(reqLevel)) {
 		reqLevelIndex = 1;
 	    } else if (COPropertiesType.REQ_LEVEL_RECOMMENDED.equals(reqLevel)) {
 		reqLevelIndex = 2;
 	    } else if (COPropertiesType.REQ_LEVEL_COMPLEMENTARY
 		    .equals(reqLevel)) {
 		reqLevelIndex = 3;
+	    } else{
+		reqLevelIndex = 0;
 	    }
 	    requirementListBox.setSelectedIndex(reqLevelIndex);
 	    widgetList.add(requirementPanel);

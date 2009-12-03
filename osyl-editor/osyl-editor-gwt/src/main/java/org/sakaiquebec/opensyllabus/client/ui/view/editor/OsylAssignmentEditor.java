@@ -75,6 +75,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
      */
     public OsylAssignmentEditor(OsylAbstractView parent) {
 	super(parent);
+	setHasRequirement(false);
 	initMainPanel();
 	if (!isReadOnly()) {
 	    initEditor();

@@ -103,10 +103,6 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 		resProxModel.setLabel(osylConfigMessages
 			.getMessage("InsertYourTextHere"));
 	    }
-
-	    resProxModel.addProperty(COPropertiesType.IMPORTANCE, "false");
-	    resProxModel.addProperty(COPropertiesType.REQUIREMENT_LEVEL,
-		    "undefined");
 	}
 
 	resProxModel.setRubricType(defaultRubric);
