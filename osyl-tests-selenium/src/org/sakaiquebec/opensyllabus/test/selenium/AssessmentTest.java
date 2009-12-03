@@ -96,6 +96,11 @@ public class AssessmentTest extends AbstractOSYLTest{
 	String newText3 = "20";
 	session().type("//input[@type='text']", newText3);
 	
+	//We select randomly the assessment type field
+	String xpathRole1 = "//select[@class=\"gwt-ListBox\"]";
+	String newText5 = getRandomOption(xpathRole1);
+	session().select(xpathRole1, newText5);
+	
 	
 	//We close the assessment editor
 	session().click("//table/tbody/tr/td/table/tbody/tr/td/table/tbody/" +
@@ -126,6 +131,9 @@ public class AssessmentTest extends AbstractOSYLTest{
 	
 	//We empty the fields "Weighting"
 	session().type("//input[@type='text']", "");
+	
+	//We empty the the assessment type field
+	session().select(xpathRole1, "label=");
 	
 	//We click OK without filling the mandatory fields
 	session().click("//td/table/tbody/tr/td[1]/button");
@@ -178,12 +186,13 @@ public class AssessmentTest extends AbstractOSYLTest{
 	//--------------------------------------------------------------------//
 	
 	//We select randomly the assessment type field
-	String xpathRole1 = "//select[@class=\"gwt-ListBox\"]";
-	String newText5 = getRandomOption(xpathRole1);
 	session().select(xpathRole1, newText5);
 	
 	//We empty the fields "Location"
 	session().select(xpathRole2, "label=");
+	
+	//We select randomly the work mode field
+	session().select(xpathRole3, newText7);
 	
 	//We click OK to close assessment editor
 	session().click("//td/table/tbody/tr/td[1]/button");
@@ -890,7 +899,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	//Log out
 	session().selectFrame("relative=parent");
 	logOut();
-	log("testAddContactInfo: test complete");	
+	log("AssessmentTest: test complete");	
     }
 
 	private int getResourceCount() {
