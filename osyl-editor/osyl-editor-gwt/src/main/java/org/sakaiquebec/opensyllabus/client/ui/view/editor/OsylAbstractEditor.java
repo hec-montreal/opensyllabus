@@ -278,7 +278,6 @@ public abstract class OsylAbstractEditor extends Composite {
 	    // row 0 (if applicable): the resource browser
 	    HorizontalPanel row0 = new HorizontalPanel();
 	    row0.setStylePrimaryName("Osyl-EditorPopup-RowBrowser");
-	    row0.setWidth("100%");
 	    mainPanel.add(row0);
 	    row0.add(browserWidget);
 	    browserWidget.setWidth("100%");
@@ -289,7 +288,6 @@ public abstract class OsylAbstractEditor extends Composite {
 	row1.setStylePrimaryName("Osyl-EditorPopup-RowOptions");
 	row1.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 	row1.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
-	row1.setWidth("100%");
 	mainPanel.add(row1);
 	// We need an additional panel to get our stuff aligned correctly
 	HorizontalPanel configGroups = new HorizontalPanel();
@@ -317,7 +315,6 @@ public abstract class OsylAbstractEditor extends Composite {
 	    // 2nd row: the formatting toolBar
 	    HorizontalPanel row2 = new HorizontalPanel();
 	    row2.setStylePrimaryName("Osyl-EditorPopup-RowToolBar");
-	    row2.setWidth("100%");
 	    mainPanel.add(row2);
 	    row2.add(osylFormattingToolbar);
 	}
@@ -325,7 +322,6 @@ public abstract class OsylAbstractEditor extends Composite {
 	// 3rd row: the editor only
 	HorizontalPanel row3 = new HorizontalPanel();
 	row3.setStylePrimaryName("Osyl-EditorPopup-RowEditor");
-	row3.setWidth("100%");
 	mainPanel.add(row3);
 	Widget editor = getEditorTopWidget();
 	editor.setWidth("99%");
@@ -335,7 +331,6 @@ public abstract class OsylAbstractEditor extends Composite {
 	    // 4th row (if applicable): the configuration panel
 	    HorizontalPanel row4 = new HorizontalPanel();
 	    row4.setStylePrimaryName("Osyl-EditorPopup-RowConfiguration");
-	    row4.setWidth("100%");
 	    mainPanel.add(row4);
 	    row4.add(configWidget);
 	    configWidget.setWidth("100%");
@@ -345,7 +340,6 @@ public abstract class OsylAbstractEditor extends Composite {
 	// Horizontal Panels to get the right alignment
 	HorizontalPanel row5 = new HorizontalPanel();
 	row5.setStylePrimaryName("Osyl-EditorPopup-RowButtons");
-	row5.setWidth("100%");
 	row5.setHeight("30px");
 	row5.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
 	mainPanel.add(row5);
