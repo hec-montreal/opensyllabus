@@ -117,7 +117,6 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 
 	editorName = new TextBox();
 	editorName.setStylePrimaryName("Osyl-LabelEditor-TextBox");
-	editorName.setWidth("100%");
 	editorName.addClickHandler(new ResetLabelClickListener(getView()
 		.getCoMessage("InsertYourTextHere")));
 	flexTable.setWidget(0, 0, new HTML(getUiMessage("Link.label")
@@ -126,7 +125,6 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 
 	editorLink = new TextBox();
 	editorLink.setStylePrimaryName("Osyl-LabelEditor-TextBox");
-	editorLink.setWidth("100%");
 	editorLink.addClickHandler(new ResetLabelClickListener(
 		"http://www.google.ca/search?q=opensyllabus"));
 	flexTable.setWidget(1, 0, new HTML(getUiMessage("Link.url")
