@@ -109,6 +109,7 @@ public class OsylTextToolbar extends Composite {
 	    addMenuButton.setTitle(uiMessages
 		    .getMessage("ButtonAddToolBarTooltip"));
 	    addMenuButton.setAutoOpen(true);
+	    addMenuButton.addStyleName("Osyl-MenuItem-vertical");
 
 	    viewMenuButton = new MenuBar(true);
 	    viewMenuButton.setTitle(uiMessages
@@ -131,11 +132,12 @@ public class OsylTextToolbar extends Composite {
 	    menuBar.addItem( getOsylImageBundle().plus().getHTML() + "&nbsp;" + 
 		    	uiMessages.getMessage("ButtonAddToolBar"),
 		    	true,
-		    	addMenuButton);
+		    	addMenuButton).addStyleName("Osyl-MenuItem-vertical");
+
 	    menuBar.addItem(getOsylImageBundle().preview().getHTML() + "&nbsp;" + 
 		    uiMessages.getMessage("ButtonViewToolBar") ,
 		    true,
-		    viewMenuButton);
+		    viewMenuButton).addStyleName("Osyl-MenuItem-vertical");;
 	    menuBar.addItem(publishPushButton);
 	    menuBar.addItem(printPushButton);
 	}
