@@ -3,7 +3,10 @@ package org.sakaiquebec.opensyllabus.impl;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
@@ -153,22 +156,46 @@ public class OsylServiceImpl implements OsylService {
     }
 
     /** {@inheritDoc} */
-    public String createOrUpdateAssignment(String assignmentId, String title) {
-	return createOrUpdateAssignment(assignmentId, title, null, -1, -1, -1,
-		-1, -1, -1, -1, -1, -1, -1, -1,-1,-1,-1,-1,-1);
-    }
-
-    /** {@inheritDoc} */
     public String createOrUpdateAssignment(String assignmentId, String title,
-	    String instructions, int openYear, int openMonth, int openDay,
-	    int openHour, int openMinute, int closeYear, int closeMonth,
-	    int closeDay, int closeHour, int closeMinute,int dueYear, int dueMonth,
-	    int dueDay, int dueHour, int dueMinute, int percentage) {
+	    String instructions, Date openDate, Date closeDate, Date dueDate, int percentage) {
 	String siteId = "";
 	String toolId = "";
 	AssignmentEdit edit = null;
 	AssignmentContentEdit contentEdit = null;
 
+	Calendar cal = Calendar.getInstance();
+	cal.setTime(openDate);
+	int openYear=cal.get(Calendar.YEAR);
+	int openMonth=cal.get(Calendar.MONTH)+1;
+	int openDay=cal.get(Calendar.DAY_OF_MONTH);
+//	int openHour=cal.get(Calendar.HOUR_OF_DAY);
+//	int openMinute=cal.get(Calendar.MINUTE);
+	int openHour=0;
+	int openMinute=0;
+	
+	cal.setTime(closeDate);
+	cal.add(Calendar.DATE, 1);
+	int closeYear=cal.get(Calendar.YEAR);
+	int closeMonth=cal.get(Calendar.MONTH)+1;
+	int closeDay=cal.get(Calendar.DAY_OF_MONTH);
+//	int closeHour=cal.get(Calendar.HOUR_OF_DAY);
+//	int closeMinute=cal.get(Calendar.MINUTE);
+	int closeHour=0;
+	int closeMinute=-1;
+	
+	if(dueDate!=null){
+	    cal.setTime(dueDate);
+	    cal.add(Calendar.DATE, 1);
+	    dueDate = cal.getTime();
+	}
+	int dueYear=cal.get(Calendar.YEAR);
+	int dueMonth=cal.get(Calendar.MONTH)+1;
+	int dueDay=cal.get(Calendar.DAY_OF_MONTH);
+//	int dueHour=cal.get(Calendar.HOUR_OF_DAY);
+//	int dueMinute=cal.get(Calendar.MINUTE);
+	int dueHour=0;
+	int dueMinute=-1;
+	
 	try {
 	    siteId = osylSiteService.getCurrentSiteId();
 

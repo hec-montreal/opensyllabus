@@ -20,6 +20,8 @@
 
 package org.sakaiquebec.opensyllabus.client.remoteservice.rpc;
 
+import java.util.Date;
+
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
@@ -124,10 +126,8 @@ public interface OsylEditorGwtService extends RemoteService {
      * @return String the assignment ID
      */
     public String createOrUpdateAssignment(String assignmentId, String title,
-	    String instructions, int openYear, int openMonth, int openDay,
-	    int openHour, int openMinute, int closeYear, int closeMonth,
-	    int closeDay, int closeHour, int closeMinute,int dueYear, int dueMonth,
-	    int dueDay, int dueHour, int dueMinute,int percentage);
+	    String instructions, Date openDate, Date closeDate, Date dueDate,
+	    int percentage);
 
     /**
      * Delete an existing assignment.
@@ -193,6 +193,7 @@ public interface OsylEditorGwtService extends RemoteService {
      * @param group
      * @return the result of the transformation
      */
-    public String transformXmlForGroup(String xml, String group) throws Exception;
+    public String transformXmlForGroup(String xml, String group)
+	    throws Exception;
 
 }

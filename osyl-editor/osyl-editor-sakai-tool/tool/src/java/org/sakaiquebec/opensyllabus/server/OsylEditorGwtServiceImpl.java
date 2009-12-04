@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.server;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -346,15 +347,11 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * automatically added.
      */
     public String createOrUpdateAssignment(String assignmentId, String title,
-	    String instructions, int openYear, int openMonth, int openDay,
-	    int openHour, int openMinute, int closeYear, int closeMonth,
-	    int closeDay, int closeHour, int closeMinute,int dueYear, int dueMonth,
-	    int dueDay, int dueHour, int dueMinute, int percentage) {
+	    String instructions, Date openDate, Date closeDate, Date dueDate,
+	    int percentage) {
 	return osylServices.getOsylService().createOrUpdateAssignment(
-		assignmentId, title, instructions, openYear, openMonth,
-		openDay, openHour, openMinute, closeYear, closeMonth, closeDay,
-		closeHour, closeMinute, dueYear, dueMonth,
-		    dueDay, dueHour, dueMinute, percentage);
+		assignmentId, title, instructions, openDate, closeDate,
+		dueDate, percentage);
     }
 
     /**

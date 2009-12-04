@@ -20,6 +20,8 @@
 
 package org.sakaiquebec.opensyllabus.client.remoteservice.rpc;
 
+import java.util.Date;
+
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
@@ -130,11 +132,8 @@ public interface OsylEditorGwtServiceAsync {
      * @param callback the callback to return the assignment ID
      */
     public void createOrUpdateAssignment(String assignmentId, String title,
-	    String instructions, int openYear, int openMonth, int openDay,
-	    int openHour, int openMinute, int closeYear, int closeMonth,
-	    int closeDay, int closeHour, int closeMinute, int dueYear, int dueMonth,
-	    int dueDay, int dueHour, int dueMinute, int percentage,
-	    AsyncCallback<String> callback);
+	    String instructions, Date openDate, Date closeDate, Date dueDate,
+	    int percentage, AsyncCallback<String> callback);
 
     /**
      * Delete an existing assignment.

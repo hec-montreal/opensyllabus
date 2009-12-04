@@ -20,6 +20,8 @@
 
 package org.sakaiquebec.opensyllabus.api;
 
+import java.util.Date;
+
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 
 /**
@@ -86,22 +88,13 @@ public interface OsylService {
 	    String path, String role) throws Exception;
 
     /**
-     * Adds or update an assignment to the site. This method checks
-     * whether the Assignment tool is already integrated into the site, if it
-     * isn't, it is automatically added.
+     * Adds or update an assignment to the site. This method checks whether the
+     * Assignment tool is already integrated into the site, if it isn't, it is
+     * automatically added.
      */
     public String createOrUpdateAssignment(String assignmentId, String title,
-	    String instructions, int openYear, int openMonth, int openDay,
-	    int openHour, int openMinute, int closeYear, int closeMonth,
-	    int closeDay, int closeHour, int closeMinute, int dueYear, int dueMonth,
-	    int dueDay, int dueHour, int dueMinute, int percentage);
-
-    /**
-     * Adds or update an assignment to the site. This method checks
-     * whether the Assignment tool is already integrated into the site, if it
-     * isn't, it is automatically added.
-     */
-    public String createOrUpdateAssignment(String assignmentId, String title);
+	    String instructions, Date openDate, Date closeDate, Date dueDate,
+	    int percentage);
 
     /**
      * Delete an assignment
@@ -116,8 +109,9 @@ public interface OsylService {
     /**
      * Add or updates a citation in the course outline citation list
      */
-    public String createOrUpdateCitation(String citationListId, String citation, String author, String type, 
-	    String isbnIssn, String link);
+    public String createOrUpdateCitation(String citationListId,
+	    String citation, String author, String type, String isbnIssn,
+	    String link);
 
     /**
      * Creates a temporary citation list that will contain the citation created.
@@ -130,20 +124,21 @@ public interface OsylService {
     public String createTemporaryCitationList();
 
     /**
-     * @return   a ResourcesLicencingInfo object which contains informations about Licencing on resources
-     * @uml.property  name="resourceLicenceInfo"
-     * @uml.associationEnd  
+     * @return a ResourcesLicencingInfo object which contains informations about
+     *         Licencing on resources
+     * @uml.property name="resourceLicenceInfo"
+     * @uml.associationEnd
      */
     public ResourcesLicencingInfo getResourceLicenceInfo();
-    
+
     /**
-	 * Checks if the current site has a relation (child - parent) with the site
-	 * containing the resource. If it is the case, we allow the site to access
-	 * to the resource
-	 * 
-	 * @param resourceURI
-	 * @return
-	 */
-	public boolean checkSitesRelation(String resourceURI);
+     * Checks if the current site has a relation (child - parent) with the site
+     * containing the resource. If it is the case, we allow the site to access
+     * to the resource
+     * 
+     * @param resourceURI
+     * @return
+     */
+    public boolean checkSitesRelation(String resourceURI);
 
 }

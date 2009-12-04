@@ -20,7 +20,6 @@
 
 package org.sakaiquebec.opensyllabus.client.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
@@ -715,63 +714,14 @@ public class OsylController implements SavePushButtonEventHandler,
 	    String assignmentId, String title, String instructions,
 	    Date dateStart, Date dateEnd, Date dateDue, int rating) {
 
-	int openYear = -1;
-	int openMonth = -1;
-	int openDay = -1;
-	int openHour = 0;
-	int openMinute = 0;
-	int endYear = -1;
-	int endMonth = -1;
-	int endDay = 0;
-	int endHour = 0;
-	int endMinute = -1;
-	int dueYear = -1;
-	int dueMonth = -1;
-	int dueDay = 0;
-	int dueHour = 0;
-	int dueMinute = -1;
-
 	if (dateStart != null && dateEnd != null) {
-
-	    if (dateDue == null)
-		dateDue = dateEnd;
-
-	    SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
-	    SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
-	    SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
-	    // SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
-	    // SimpleDateFormat minuteFormat = new SimpleDateFormat("mm");
-
-	    openYear = Integer.parseInt(yearFormat.format(dateStart));
-	    openMonth = Integer.parseInt(monthFormat.format(dateStart));
-	    openDay = Integer.parseInt(dayFormat.format(dateStart));
-	    // openHour = Integer.parseInt(hourFormat.format(dateStart));
-	    // openMinute = Integer.parseInt(minuteFormat.format(dateStart));
-	    endYear = Integer.parseInt(yearFormat.format(dateEnd));
-	    endMonth = Integer.parseInt(monthFormat.format(dateEnd));
-	    endDay = Integer.parseInt(dayFormat.format(dateEnd));
-	    // endHour = Integer.parseInt(hourFormat.format(dateEnd));
-	    // endMinute = Integer.parseInt(minuteFormat.format(dateEnd));
-	    dueYear = Integer.parseInt(yearFormat.format(dateDue));
-	    dueMonth = Integer.parseInt(monthFormat.format(dateDue));
-	    dueDay = Integer.parseInt(dayFormat.format(dateDue));
-	    // dueHour = Integer.parseInt(hourFormat.format(dateDue));
-	    // dueMinute = Integer.parseInt(minuteFormat.format(dateDue));
 
 	    AsyncCallback<String> callback = new AsyncCallback<String>() {
 		// We define the behavior in case of success
 		public void onSuccess(String assignmentId) {
 		    try {
-			System.out
-				.println("RPC SUCCESS - createOrUpdateAssignment(...)");
 			createOrUpdateAssignmentCB(resProx, assignmentId);
 		    } catch (Exception error) {
-			System.out
-				.println("Error - Unable to createOrUpdateAssignment(...) on RPC Success: "
-					+ error.toString());
-			Window
-				.alert("Error - Unable to createOrUpdateAssignment(...) on RPC Success: "
-					+ error.toString());
 			unableToCreateOrUpdateAssignment("Error - Unable to createOrUpdateAssignment(...) on RPC Success: "
 				+ error.toString());
 		    }
@@ -779,12 +729,6 @@ public class OsylController implements SavePushButtonEventHandler,
 
 		// And we define the behavior in case of failure
 		public void onFailure(Throwable error) {
-		    System.out
-			    .println("RPC FAILURE - createOrUpdateAssignment(...): "
-				    + error.toString());
-		    Window
-			    .alert("RPC FAILURE - createOrUpdateAssignment(...): "
-				    + error.toString());
 		    unableToCreateOrUpdateAssignment("RPC FAILURE - createOrUpdateAssignment(...): "
 			    + error.toString());
 		}
@@ -792,10 +736,8 @@ public class OsylController implements SavePushButtonEventHandler,
 
 	    OsylRemoteServiceLocator.getEditorRemoteService()
 		    .createOrUpdateAssignment(assignmentId, title,
-			    instructions, openYear, openMonth, openDay,
-			    openHour, openMinute, endYear, endMonth, endDay,
-			    endHour, endMinute, dueYear, dueMonth, dueDay,
-			    dueHour, dueMinute, rating, callback);
+			    instructions, dateStart, dateEnd, dateEnd, rating,
+			    callback);
 
 	}
     }

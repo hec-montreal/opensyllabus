@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -65,12 +66,9 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	}
 
 	public void createOrUpdateAssignment(String assignmentId, String title,
-		    String instructions, int openYear, int openMonth, int openDay,
-		    int openHour, int openMinute, int closeYear, int closeMonth,
-		    int closeDay, int closeHour, int closeMinute, int dueYear, int dueMonth,
-		    int dueDay, int dueHour, int dueMinute, int percentage,
-		    AsyncCallback<String> callback) {
-		callback.onSuccess("dummyCitationListId");
+		String instructions, Date openDate, Date closeDate,
+		Date dueDate, int percentage, AsyncCallback<String> callback) {
+	    callback.onSuccess("dummyCitationListId");
 	}
 
 	public void createOrUpdateCitation(String citationListId, String citation,
@@ -327,6 +325,5 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 		AsyncCallback<String> callback) {
 	    // TODO Auto-generated method stub
 	}
-
 
 }
