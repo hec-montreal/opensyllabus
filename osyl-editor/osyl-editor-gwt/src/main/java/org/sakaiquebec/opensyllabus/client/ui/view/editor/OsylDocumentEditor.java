@@ -150,7 +150,6 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	editorPanel.add(l1);
 	editorLabel = new TextBox();
 	editorLabel.setStylePrimaryName("Osyl-LabelEditor-TextBox");
-	editorLabel.setWidth("99%");
 	editorLabel.addClickHandler(new ResetLabelClickListener(getView()
 		.getCoMessage("InsertYourTextHere")));
 	editorPanel.add(editorLabel);
@@ -442,7 +441,6 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 			"DocumentEditor.document.details"), false);
 	metaInfoDiscPanel.setAnimationEnabled(true);
 	metaInfoDiscPanel.setStylePrimaryName("DetailsPanel");
-	metaInfoDiscPanel.setWidth("100%");
 	HorizontalPanel metaInfoPanel = new HorizontalPanel();
 	metaInfoDiscPanel.add(metaInfoPanel);
 	metaInfoPanel.setWidth("100%");
