@@ -249,7 +249,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 
 	// 2nd row: File Listing
 	setFileListing(new DoubleClickListBox());
-	getFileListing().setWidth("99%");
 	getFileListing().setVisibleItemCount(LISTING_ITEM_NUMBER);
 	getFileListing().addStyleName("Osyl-RemoteFileBrowser-FileListing");
 
