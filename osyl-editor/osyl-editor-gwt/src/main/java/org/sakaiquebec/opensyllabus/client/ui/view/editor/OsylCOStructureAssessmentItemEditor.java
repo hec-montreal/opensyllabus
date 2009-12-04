@@ -537,7 +537,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 	String workMode = getView().getMode();
 	String submissionMode = getView().getSubmitionType();
 
-	workMode = workMode != null ? workMode + " / " : "";
+	workMode = (workMode != null && !workMode.trim().equals("")) ? workMode + " / " : "";
 	location = location != null ? location : "";
 
 	submissionMode = submissionMode != null ? submissionMode : "";
