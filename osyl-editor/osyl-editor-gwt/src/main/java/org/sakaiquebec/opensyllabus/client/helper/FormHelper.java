@@ -52,7 +52,6 @@ public class FormHelper {
     public static ListBox createListBox(String stylePrimaryName) {
 	ListBox lb = new ListBox();
 	lb.setStylePrimaryName(stylePrimaryName);
-	lb.setWidth("99%");
 	return lb;
     }
     
