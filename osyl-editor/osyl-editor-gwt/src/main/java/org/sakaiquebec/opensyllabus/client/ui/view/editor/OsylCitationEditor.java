@@ -362,7 +362,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 						"CitationEditor.document.details"), false);
 		metaInfoDiscPanel.setAnimationEnabled(true);
 		metaInfoDiscPanel.setStylePrimaryName("DetailsPanel");
-		metaInfoDiscPanel.setWidth("100%");
 		HorizontalPanel metaInfoPanel = new HorizontalPanel();
 		metaInfoDiscPanel.add(metaInfoPanel);
 		metaInfoPanel.setWidth("100%");
