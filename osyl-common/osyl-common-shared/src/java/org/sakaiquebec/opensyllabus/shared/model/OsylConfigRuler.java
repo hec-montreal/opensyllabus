@@ -70,6 +70,8 @@ public class OsylConfigRuler {
     protected static final String TYPE_ATTRIBUTE_NAME = "type";
     protected static final String ALLOW_MULTIPLE_ATTRIBUTE_NAME =
 	    "allowMultiple";
+    protected static final String TITLE_EDITABLE = "titleEditable";
+
     private String rulesConfigContent;
     private Document dom = null;
 
@@ -109,10 +111,8 @@ public class OsylConfigRuler {
 	return myNode;
     }
 
-    private List<COModelInterface> getAllowedSubModels(
-	    List<COElementAbstract> path, boolean hasNoChild) {
-	List<COModelInterface> allowedSubModels = null;
-
+    private Node findNode(List<COElementAbstract> path) {
+	Node node = null;
 	if (path != null) {
 	    int pathPosition = 0;
 	    COElementAbstract rootPath =
@@ -124,7 +124,7 @@ public class OsylConfigRuler {
 
 		// Root model for init
 		Element nodeElement = dom.getDocumentElement();
-		Node node = nodeElement;
+		node = nodeElement;
 		String nodeName = "";
 
 		// First, try to match position in the dom with this path to
@@ -204,65 +204,71 @@ public class OsylConfigRuler {
 			}
 		    }// for
 		}// while
+	    }
+	}
+	return node;
+    }
 
-		// Secondly, identify the available possibilities(rules)
-		NodeList nodeChildren = node.getChildNodes();
-		for (int i = 0; i < nodeChildren.getLength(); i++) {
-		    Node myNode = nodeChildren.item(i);
-		    String myNodeName = myNode.getNodeName();
+    private List<COModelInterface> getAllowedSubModels(
+	    List<COElementAbstract> path, boolean hasNoChild) {
+	List<COModelInterface> allowedSubModels = null;
+	Node node = findNode(path);
 
-		    if (myNodeName.equalsIgnoreCase(ELEMENT_NODE_NAME)) {
-			String nameAttribute = getNameAttributeValue(myNode);
+	if (node != null) {
 
-			Node attributeTypeNode =
-				findingAttributeTypeNode(myNode);
+	    // Secondly, identify the available possibilities(rules)
+	    NodeList nodeChildren = node.getChildNodes();
+	    for (int i = 0; i < nodeChildren.getLength(); i++) {
+		Node myNode = nodeChildren.item(i);
+		String myNodeName = myNode.getNodeName();
 
-			String restrictionPattern =
-				getRestrictionPatternAttributeValue(attributeTypeNode);
+		if (myNodeName.equalsIgnoreCase(ELEMENT_NODE_NAME)) {
+		    String nameAttribute = getNameAttributeValue(myNode);
 
-			boolean allowMultiple =
-				getAllowMultipleAttributeValue(attributeTypeNode);
+		    Node attributeTypeNode = findingAttributeTypeNode(myNode);
 
-			if (hasNoChild || allowMultiple) {
-			    if (restrictionPattern.indexOf("|") > 0) {
-				String[] typesStringArray =
-					restrictionPattern.split("\\|");
-				for (int j = 0; j < typesStringArray.length; j++) {
-				    String type = typesStringArray[j].trim();
-				    // create a new model instance based on name
-				    // and
-				    // type
-				    COModelInterface modelInstance =
-					    createModelInstance(nameAttribute,
-						    type);
-				    if (modelInstance != null) {
-					if (allowedSubModels == null) {
-					    allowedSubModels =
-						    new ArrayList<COModelInterface>();
-					}
-					allowedSubModels.add(modelInstance);
-				    }
-				}
-			    } else if (restrictionPattern.indexOf("*") > 0) {
-				// TODO: here list all available types for this
-				// nameAttribute
-			    } else {
+		    String restrictionPattern =
+			    getRestrictionPatternAttributeValue(attributeTypeNode);
+
+		    boolean allowMultiple =
+			    getAllowMultipleAttributeValue(attributeTypeNode);
+
+		    if (hasNoChild || allowMultiple) {
+			if (restrictionPattern.indexOf("|") > 0) {
+			    String[] typesStringArray =
+				    restrictionPattern.split("\\|");
+			    for (int j = 0; j < typesStringArray.length; j++) {
+				String type = typesStringArray[j].trim();
+				// create a new model instance based on name
+				// and
+				// type
 				COModelInterface modelInstance =
-					createModelInstance(nameAttribute,
-						restrictionPattern);
-				if (allowedSubModels == null) {
-				    allowedSubModels =
-					    new ArrayList<COModelInterface>();
+					createModelInstance(nameAttribute, type);
+				if (modelInstance != null) {
+				    if (allowedSubModels == null) {
+					allowedSubModels =
+						new ArrayList<COModelInterface>();
+				    }
+				    allowedSubModels.add(modelInstance);
 				}
-				allowedSubModels.add(modelInstance);
 			    }
+			} else if (restrictionPattern.indexOf("*") > 0) {
+			    // TODO: here list all available types for this
+			    // nameAttribute
+			} else {
+			    COModelInterface modelInstance =
+				    createModelInstance(nameAttribute,
+					    restrictionPattern);
+			    if (allowedSubModels == null) {
+				allowedSubModels =
+					new ArrayList<COModelInterface>();
+			    }
+			    allowedSubModels.add(modelInstance);
 			}
 		    }
-
 		}
-
-	    } // .isCourseOutlineContent()
-	} // path != null
+	    }
+	}
 
 	return allowedSubModels;
     }
@@ -285,8 +291,7 @@ public class OsylConfigRuler {
 	    modelInstance = new COUnitContent();
 	} else if (COModeled.CO_RES_NODE_NAME.equalsIgnoreCase(nameAttribute)) {
 	    modelInstance = new COContentResource();
-	} else if (COModeled.SEMANTIC_TAG
-		.equalsIgnoreCase(nameAttribute)) {
+	} else if (COModeled.SEMANTIC_TAG.equalsIgnoreCase(nameAttribute)) {
 	    modelInstance = new COContentRubric();
 	} else if (COModeled.CO_RES_NODE_NAME.equalsIgnoreCase(nameAttribute)) {
 	    modelInstance = new COContentResource();
@@ -336,13 +341,31 @@ public class OsylConfigRuler {
 	    // First find the current path of the model (node sequence in the
 	    // tree)
 	    List<COElementAbstract> path = findModelPath(model);
-	    
+
 	    boolean hasNoChild = model.getChildrens().isEmpty();
-	    
+
 	    // Then check for subelements possibilities(rules) for this path
 	    allowedSubModels = getAllowedSubModels(path, hasNoChild);
 	}
 	return allowedSubModels;
+    }
+
+    public boolean isTitleEditable(COElementAbstract model) {
+	List<COElementAbstract> path = findModelPath(model);
+	Node node = findNode(path);
+	return getTitleEditableAttributeValue(node);
+    }
+
+    private boolean getTitleEditableAttributeValue(Node myNode) {
+	boolean titleEditable=true;
+	Node attributeNode = findingAttributeTypeNode(myNode);
+	if(attributeNode!=null){
+	    Node node = attributeNode.getAttributes().getNamedItem(TITLE_EDITABLE);
+	    if (node != null && node.getNodeValue() != null) {
+		titleEditable= Boolean.parseBoolean(node.getNodeValue());
+	    }
+	}
+	return titleEditable;
     }
 
     /**

@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.client.ui.view;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
+import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
@@ -48,7 +49,8 @@ public class OsylCOStructureItemView extends OsylViewableComposite {
     // View Constructor
     public OsylCOStructureItemView(COUnit model, OsylController controller) {
 	super(model, controller);
-	setCoUnitLabel(new OsylCOStructureItemLabelView(model, controller, true));
+	setCoUnitLabel(new OsylCOStructureItemLabelView(model, controller,
+		true, OsylStyleLevelChooser.getLevelStyle(model)));
 	initView();
     }
 

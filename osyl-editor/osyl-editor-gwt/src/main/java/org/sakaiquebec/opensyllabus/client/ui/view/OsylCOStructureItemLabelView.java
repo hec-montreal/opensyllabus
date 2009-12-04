@@ -30,22 +30,10 @@ import org.sakaiquebec.opensyllabus.shared.model.COUnit;
  */
 public class OsylCOStructureItemLabelView extends OsylAbstractView {
 
-    /**
-     * @param model
-     * @param controller
-     * @param isDeletable
-     */
-    public OsylCOStructureItemLabelView(COUnit model,
-	    OsylController controller, boolean isDeletable) {
-	super(model, controller);
-	setEditor(new OsylCOStructureItemEditor(this));
-	((OsylCOStructureItemEditor) getEditor()).setIsDeletable(isDeletable);
-	initView();
-    }
-
     public OsylCOStructureItemLabelView(COUnit model,
 	    OsylController controller, boolean isDeletable, String levelStyle) {
-	super(model, controller);
+	super(model, controller, controller.getOsylConfig()
+		.getOsylConfigRuler().isTitleEditable(model));
 	setEditor(new OsylCOStructureItemEditor(this));
 	((OsylCOStructureItemEditor) getEditor()).setIsDeletable(isDeletable);
 	((OsylCOStructureItemEditor) getEditor()).setViewerStyle(levelStyle);

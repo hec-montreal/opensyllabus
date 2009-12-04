@@ -40,25 +40,9 @@ import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 public class OsylCOStructureAssessmentItemLabelView extends OsylAbstractView {
 
     public OsylCOStructureAssessmentItemLabelView(COUnit model,
-	    OsylController controller) {
-	this(model, controller, false);
-    }
-
-    /**
-     * @param model
-     * @param controller
-     * @param isInList
-     */
-    public OsylCOStructureAssessmentItemLabelView(COUnit model,
-	    OsylController controller, boolean isInList) {
-	super(model, controller);
-	setEditor(new OsylCOStructureAssessmentItemEditor(this, isInList));
-	initView();
-    }
-
-    public OsylCOStructureAssessmentItemLabelView(COUnit model,
 	    OsylController controller, boolean isInList, String levelStyle) {
-	super(model, controller);
+	super(model, controller, controller.getOsylConfig()
+		.getOsylConfigRuler().isTitleEditable(model));
 	setEditor(new OsylCOStructureAssessmentItemEditor(this, isInList));
 	((OsylCOStructureItemEditor) getEditor()).setViewerStyle(levelStyle);
 	initView();
