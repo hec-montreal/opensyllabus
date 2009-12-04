@@ -61,7 +61,6 @@ public class OsylPopupPanel extends PopupPanel {
 	super(autoHide, modal);
 
 	hPanel = new HorizontalPanel();
-	hPanel.setWidth("100%");
 	hPanel.setStylePrimaryName("MainPanel");
 	hPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 	hPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
