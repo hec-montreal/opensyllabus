@@ -562,8 +562,8 @@
 	width:auto;
 }
 
-.Osyl-UnitView-UnitLabel ul, .Osyl-UnitView-UnitLabel-Important ul {margin-left:30px}
-.Osyl-UnitView-UnitLabel ol, .Osyl-UnitView-UnitLabel-Important ol {margin-left:35px}
+.Osyl-UnitView-UnitLabel ul, .Osyl-UnitView-UnitLabel-Important ul, .Osyl-UnitView-HtmlViewer ul {margin-left:30px}
+.Osyl-UnitView-UnitLabel ol, .Osyl-UnitView-UnitLabel-Important ol, .Osyl-UnitView-HtmlViewer ol {margin-left:35px}
 
 .Osyl-UnitView-UnitLabel-Important {
 	border:1px solid #F00;
@@ -1226,8 +1226,6 @@
 	padding:0 0 2px;
 	margin-left:5px;
 }	
-
-
 .Osyl-ContactInfo-OfficeLabel {
 	padding:0;
 	font-size:11px;
@@ -1239,7 +1237,6 @@
 	margin-left:5px;
 }
 
-
 .Osyl-ContactInfo-AvailabilityLabel {
 	padding:2px 0 2px;
 	font-size:11px;
@@ -1248,6 +1245,16 @@
 .Osyl-ContactInfo-Comments {
 	font-size:11px;
 	padding:2px 0 3px;
+}
+
+.Osyl-ContactInfo-Availability ul, .Osyl-ContactInfo-Availability ol{
+	margin-left:30px;
+	margin-top: 0px;
+}
+
+.Osyl-ContactInfo-Comments ul, .Osyl-ContactInfo-Comments ol{
+	margin-left:30px;
+	margin-top: 0px;
 }
 
 .Osyl-News-TimeStamp {
