@@ -45,6 +45,7 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -198,8 +199,8 @@ public class OsylCitationForm extends WindowPanel implements
 				: citation.getTitle());
 	mainPanel.add(hiddenDisplayName);
 
-	mainPanel.add(new HTML(OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + uiMessages
-		.getMessage("Global.fields.mandatory")));
+	mainPanel.add(new HTML(OsylAbstractEditor.MANDATORY_FIELD_INDICATOR
+		+ uiMessages.getMessage("Global.fields.mandatory")));
 	mainPanel.add(new HTML(uiMessages
 		.getMessage("CitationForm.recommendedFields")));
 	// Create a listbox for the citation type.
@@ -252,8 +253,8 @@ public class OsylCitationForm extends WindowPanel implements
 	titlePanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_titleLabel")
-			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR
-			+ ":", titleField, CitationSchema.TITLE);
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + ":",
+			titleField, CitationSchema.TITLE);
 
 	mainPanel.add(titlePanel);
 
@@ -265,8 +266,7 @@ public class OsylCitationForm extends WindowPanel implements
 	authorLabel =
 		createNewLabel(osylController
 			.getCoMessage("ResProxCitationView_authorLabel")
-			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR
-			+ ":");
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + ":");
 	authorPanel =
 		createLabelTextboxElement(authorLabel, authorField,
 			CitationSchema.CREATOR);
@@ -314,12 +314,12 @@ public class OsylCitationForm extends WindowPanel implements
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.VOLUME) == null) ? ""
 			: citation.getProperty(CitationSchema.VOLUME),
-			"Osyl-CitationForm-textBox");
+			"Osyl-CitationForm-doubleTextBox");
 	final TextBox issueTextBox =
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.ISSUE) == null) ? ""
 			: citation.getProperty(CitationSchema.ISSUE),
-			"Osyl-CitationForm-textBox");
+			"Osyl-CitationForm-doubleTextBox");
 	volIssuePanel =
 		createDoubleLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_volumeLabel")
@@ -384,7 +384,7 @@ public class OsylCitationForm extends WindowPanel implements
 		FormHelper.createTextBox(
 			(citation == null || citation.getUrl() == null) ? ""
 				: citation.getUrl(),
-			"Osyl-CitationForm-textBox");
+			"Osyl-CitationForm-longTextBox");
 	urlPanel.add(urlTextBox);
 	mainPanel.add(urlPanel);
 
@@ -664,11 +664,10 @@ public class OsylCitationForm extends WindowPanel implements
 	HorizontalPanel hp = new HorizontalPanel();
 	hp.add(FormHelper.createHiddenField("cipkeys", key));
 	hp.add(label);
-	tb.setWidth("99%");
 	hp.add(tb);
-	// hp.setWidth("99%");
-	hp.setCellWidth(label, "15%");
-	hp.setCellWidth(tb, "84%");
+	hp.setCellWidth(label, "25%");
+	hp.setCellWidth(tb, "75%");
+	hp.setCellVerticalAlignment(tb, HasVerticalAlignment.ALIGN_BOTTOM);
 	hp.setStylePrimaryName("Osyl-CitationForm-genericPanel");
 	return hp;
     }
@@ -693,19 +692,18 @@ public class OsylCitationForm extends WindowPanel implements
 	Label lab2 = createNewLabel(label2);
 	hp.add(FormHelper.createHiddenField("cipkeys", key1));
 	hp.add(lab1);
-	tb1.setWidth("99%");
 	hp.add(tb1);
 	hp.add(FormHelper.createHiddenField("cipkeys", key2));
 	hp.add(lab2);
-	tb2.setWidth("99%");
 	hp.add(tb2);
-	// hp.setWidth("98%");
-	hp.setCellWidth(lab1, "15%");
-	hp.setCellWidth(tb1, "34%");
-	hp.setCellWidth(lab2, "15%");
-	hp.setCellWidth(tb2, "34%");
+	hp.setCellWidth(lab1, "18%");
+	hp.setCellWidth(tb1, "32%");
+	hp.setCellWidth(lab2, "18%");
+	hp.setCellWidth(tb2, "32%");
+	hp.setCellVerticalAlignment(tb1, HasVerticalAlignment.ALIGN_BOTTOM);
+	hp.setCellVerticalAlignment(tb2, HasVerticalAlignment.ALIGN_BOTTOM);
 	hp.setCellHorizontalAlignment(lab2, HasHorizontalAlignment.ALIGN_RIGHT);
-	tb2.setStylePrimaryName("Osyl-CitationForm-textBoxRight");
+
 	hp.setStylePrimaryName("Osyl-CitationForm-genericPanel");
 	return hp;
     }
@@ -752,11 +750,9 @@ public class OsylCitationForm extends WindowPanel implements
     private void updateForm(String newType) {
 	if (newType.equals(CitationSchema.TYPE_BOOK)
 		|| newType.equals(CitationSchema.TYPE_REPORT)) {
-	    authorLabel
-		    .setHTML(osylController
-			    .getCoMessage("ResProxCitationView_authorLabel")
-			    + OsylAbstractEditor.MANDATORY_FIELD_INDICATOR
-			    + ":");
+	    authorLabel.setHTML(osylController
+		    .getCoMessage("ResProxCitationView_authorLabel")
+		    + OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + ":");
 	    isnLabel.setText(osylController
 		    .getCoMessage("ResProxCitationView_isbnLabel")
 		    + ":");

@@ -363,14 +363,6 @@
 	width:415px;
 }
 
-.Osyl-CitationForm-textBoxRight {
-	font-family:sans-serif, Arial, Verdana; /* Doesn't work in MSIE */
-	background:#FFF;
-	border:1px solid #AAA;
-	margin:0 0 0 3px;
-	padding:0; /* Doesn't work in any browser */
-}
-
 .Osyl-CitationForm-textArea{
 	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
 	background:#FFF;
@@ -381,13 +373,31 @@
 	height: 110px;
 }
 
-.Osyl-CitationForm-textBox{
+.Osyl-CitationForm-longTextBox{
 	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
 	background:#FFF;
 	border:1px solid #AAA;
 	margin:0 3px;	
 	padding:0;
 	width:415px;
+}
+
+.Osyl-CitationForm-textBox{
+	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
+	background:#FFF;
+	border:1px solid #AAA;
+	margin:0 3px;	
+	padding:0;
+	width:340px;
+}
+
+.Osyl-CitationForm-doubleTextBox{
+	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
+	background:#FFF;
+	border:1px solid #AAA;
+	margin:0 3px;	
+	padding:0;
+	width:130px;
 }
 
 /*Publish View -------------------------------------------------------------------------------*/
