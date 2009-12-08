@@ -99,7 +99,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 		"^(\\d{4})\\D?(0[1-9]|1[0-2])\\D?([12]\\d|0[1-9]|3[01])$";
 
 	// required fields validations
-	if(getText().trim().equals("")){
+	if (getText().trim().equals("")) {
 	    messages +=
 		    getView().getUiMessage("Global.field.required",
 			    getUiMessage("Assessment.name"))
@@ -193,33 +193,37 @@ public class OsylCOStructureAssessmentItemEditor extends
 		    COContentResourceType.ASSIGNMENT)) {
 		COContentResource resource =
 			(COContentResource) contentResourceProxy.getResource();
-		Date assignementStartDate =
-			OsylDateUtils.getDateFromXMLDate(resource
-				.getProperty(COPropertiesType.DATE_START));
-		Date assignementEndDate =
-			OsylDateUtils.getDateFromXMLDate(resource
-				.getProperty(COPropertiesType.DATE_END));
-		if (dateDateBox.getValue().before(assignementStartDate)) {
-		    message +=
-			    getView()
-				    .getUiMessages()
-				    .getMessage(
-					    "Assignement.field.date.order.dateAfterDate",
-					    getUiMessage("Assessment.date"),
-					    getUiMessage("Assignement.date_start.details"))
-				    + "\n";
-		}
-		if (assignementEndDate.before(dateDateBox.getValue())) {
-		    message +=
-			    getView()
-				    .getUiMessages()
-				    .getMessage(
-					    "Assignement.field.date.order.dateAfterDate",
-					    getUiMessage("Assignement.date_end.details"),
-					    getUiMessage("Assessment.date"))
-				    + "\n";
-		}
+		String date_start =
+			resource.getProperty(COPropertiesType.DATE_START);
+		String date_end =
+			resource.getProperty(COPropertiesType.DATE_END);
+		if (date_start != null && date_end != null ) {
+		    Date assignementStartDate =
+			    OsylDateUtils.getDateFromXMLDate(date_start);
+		    Date assignementEndDate =
+			    OsylDateUtils.getDateFromXMLDate(date_end);
+		    if (dateDateBox.getValue().before(assignementStartDate)) {
+			message +=
+				getView()
+					.getUiMessages()
+					.getMessage(
+						"Assignement.field.date.order.dateAfterDate",
+						getUiMessage("Assessment.date"),
+						getUiMessage("Assignement.date_start.details"))
+					+ "\n";
+		    }
+		    if (assignementEndDate.before(dateDateBox.getValue())) {
+			message +=
+				getView()
+					.getUiMessages()
+					.getMessage(
+						"Assignement.field.date.order.dateAfterDate",
+						getUiMessage("Assignement.date_end.details"),
+						getUiMessage("Assessment.date"))
+					+ "\n";
+		    }
 
+		}
 	    }
 	} else {
 	    for (Iterator<COElementAbstract> childsIterator =
@@ -343,8 +347,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 
 	VerticalPanel endDatePanel = new VerticalPanel();
 	endDatePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	HTML l7 =
-		new HTML(getUiMessage("Assessment.date"));
+	HTML l7 = new HTML(getUiMessage("Assessment.date"));
 	dateDateBox = new DateBox();
 	dateDateBox.setFormat(dateFormat);
 	dateDateBox.setTitle(getUiMessage("Assessment.date.tooltip"));
@@ -537,7 +540,9 @@ public class OsylCOStructureAssessmentItemEditor extends
 	String workMode = getView().getMode();
 	String submissionMode = getView().getSubmitionType();
 
-	workMode = (workMode != null && !workMode.trim().equals("")) ? workMode + " / " : "";
+	workMode =
+		(workMode != null && !workMode.trim().equals("")) ? workMode
+			+ " / " : "";
 	location = location != null ? location : "";
 
 	submissionMode = submissionMode != null ? submissionMode : "";
