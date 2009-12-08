@@ -253,7 +253,7 @@
 }
 
 .Osyl-WorkspaceView-MainPanel {
-	width:98%;
+	width:100%;
 }
 
 .Osyl-WorkspaceView .topCenter,
@@ -447,8 +447,7 @@
 }
 
 .Osyl-UnitView-Title {
-	margin:2px 0 0;
-	padding:4px 0 4px 1px;
+	padding:4px 0;
 	border:1px solid transparent;
 }
 
@@ -461,6 +460,11 @@
 	font:bold 25px Arial, Verdana, sans-serif;
 	margin-left:10px;
 }
+.Osyl-UnitView-ResPanel .Osyl-Title1,
+.Osyl-UnitView-ResPanel .Osyl-Title2, 
+.Osyl-UnitView-ResPanel .Osyl-Title3, 
+.Osyl-UnitView-ResPanel .Osyl-Title4, 
+.Osyl-UnitView-ResPanel .Osyl-Title5 {margin-left:0}
 
 .Osyl-Title1 {
 	color:#1c4d6c;
@@ -487,7 +491,6 @@
 .Osyl-Title5 {
 	color:#454a4f;
 	font-size:13px;
-	padding:2px 0 2px;
 	border:0;
 }
 
@@ -536,7 +539,7 @@
 	position:relative;
 	vertical-align:middle;
 /*	margin:0 10px 5px; ??? */
-	margin:5px 10px 5px;
+	margin:0 0 5px;
 	padding:10px;
 	border:1px solid #e3f0FF;
 /*	width:100%; ??? */
@@ -553,7 +556,7 @@
 .Osyl-UnitView-ResPanelFocused {
 	position:relative;
 	background-color:#FDF6AF;
-	margin:5px 10px 5px;
+	margin:0 0 5px;
 	border:1px solid transparent;
 	color:#FFF; /*For IE6*/
 	padding:3px;
@@ -568,7 +571,7 @@
 	border:1px solid #B0B0B0;
 	padding:10px;
 	width:auto;
-	margin-bottom:5px;
+	margin:0 0 5px;
 	background-color:#EEE;
 	overflow:visible;
 }
@@ -655,7 +658,6 @@
 	font-family:Arial,Verdana,sans-serif;
 	font-size:12px;
 	font-size-adjust:none;
-	margin-left:10px;
 }
 /*Assessment Unit View -------------------------------------------------------------------------------*/
 
