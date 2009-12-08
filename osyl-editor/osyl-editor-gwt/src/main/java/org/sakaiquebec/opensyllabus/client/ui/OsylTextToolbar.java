@@ -94,6 +94,7 @@ public class OsylTextToolbar extends Composite {
 			    getOsylImageBundle().cross(),
 			    "ButtonCloseToolBarTooltip");
 	    menuBar.addItem(closePreviewPushButton);
+	    closePreviewPushButton.addStyleName("Osyk-MenuItem-LastChild");
 	} else {
 	    homePushButton =
 		    createMenuItem("ButtonHomeToolBar",
@@ -129,17 +130,18 @@ public class OsylTextToolbar extends Composite {
 	    menuBar.addItem(homePushButton);
 	    menuBar.addItem(savePushButton);
 	    // MenuBar Item with icon - nice trick...
-	    menuBar.addItem( getOsylImageBundle().plus().getHTML() + "&nbsp;" + 
+	    menuBar.addItem( getOsylImageBundle().plus().getHTML() +
 		    	uiMessages.getMessage("ButtonAddToolBar"),
 		    	true,
 		    	addMenuButton).addStyleName("Osyl-MenuItem-vertical");
 
-	    menuBar.addItem(getOsylImageBundle().preview().getHTML() + "&nbsp;" + 
+	    menuBar.addItem(getOsylImageBundle().preview().getHTML() +
 		    uiMessages.getMessage("ButtonViewToolBar") ,
 		    true,
 		    viewMenuButton).addStyleName("Osyl-MenuItem-vertical");;
 	    menuBar.addItem(publishPushButton);
 	    menuBar.addItem(printPushButton);
+	    printPushButton.addStyleName("Osyk-MenuItem-LastChild");
 	}
 //	initWidget(menuBar);
 	initWidget(enclosingPanel);
@@ -152,7 +154,7 @@ public class OsylTextToolbar extends Composite {
 	Command nullCommand = null;
         MenuItem menuItem =
 		new MenuItem(menuImage.getHTML() + 
-			"&nbsp;"+ uiMessages.getMessage(messageKey), 
+			uiMessages.getMessage(messageKey), 
 			true, 
 			nullCommand);
         menuItem.setTitle(uiMessages.getMessage(toolTipKey));
