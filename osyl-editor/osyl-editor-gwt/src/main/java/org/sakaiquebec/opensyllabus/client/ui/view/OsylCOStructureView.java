@@ -100,9 +100,15 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 			Window
 				.alert("OsylCOStructureView 103 : COStructureElement = "
 					+ absElement.getType());
+		    List<COModelInterface> subModels =
+			    getController().getOsylConfig()
+				    .getOsylConfigRuler().getAllowedSubModels(
+					    absElement);
 		    COStructureElement newCOStructEl =
 			    (COStructureElement) absElement;
-		    addListItemView(newCOStructEl);
+		    if (!(absElement.getChildrens().size() == 1 && subModels == null)) {
+			addListItemView(newCOStructEl);
+		    }
 		    children = newCOStructEl.getChildrens();
 		    // if ( children.size() == 1 ) {
 		    displayChildren(children);
@@ -135,7 +141,7 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 	Label COStructTitleLabel = new Label(getCoMessage(itemModel.getType()));
 	COStructTitleLabel.setStylePrimaryName("Osyl-UnitView-Title");
 	COStructTitleLabel.addStyleName(OsylStyleLevelChooser
-		.getLevelStyle(getModel()));
+		.getLevelStyle(itemModel));
 	getMainPanel().add(COStructTitleLabel);
     }
 

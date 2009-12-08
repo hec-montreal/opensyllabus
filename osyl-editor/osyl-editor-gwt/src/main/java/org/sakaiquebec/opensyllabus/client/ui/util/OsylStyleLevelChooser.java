@@ -25,18 +25,17 @@ public class OsylStyleLevelChooser {
 	}
 	return false;
     }
-    
+
     public static String getLevelStyle(COElementAbstract model) {
 	OsylController controller = OsylController.getInstance();
 	int i = 1;
 	while (!model.isCourseOutlineContent()) {
 	    model = model.getParent();
-	    
-	    if(model.isCOStructureElement() || model.isCOUnit()){
+	    if (model.isCOStructureElement() || model.isCOUnit()) {
 		List<COModelInterface> subModels =
-		controller.getOsylConfig().getOsylConfigRuler()
-			.getAllowedSubModels(model);
-		if(subModels==null)
+			controller.getOsylConfig().getOsylConfigRuler()
+				.getAllowedSubModels(model);
+		if (subModels == null && model.getChildrens().size() < 2)
 		    i--;
 	    }
 	    i++;
