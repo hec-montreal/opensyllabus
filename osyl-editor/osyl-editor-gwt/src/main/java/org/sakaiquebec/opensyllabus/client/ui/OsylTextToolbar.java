@@ -94,7 +94,7 @@ public class OsylTextToolbar extends Composite {
 			    getOsylImageBundle().cross(),
 			    "ButtonCloseToolBarTooltip");
 	    menuBar.addItem(closePreviewPushButton);
-	    closePreviewPushButton.addStyleName("Osyk-MenuItem-LastChild");
+	    closePreviewPushButton.addStyleName("Osyl-MenuItem-LastChild");
 	} else {
 	    homePushButton =
 		    createMenuItem("ButtonHomeToolBar",
@@ -141,7 +141,7 @@ public class OsylTextToolbar extends Composite {
 		    viewMenuButton).addStyleName("Osyl-MenuItem-vertical");;
 	    menuBar.addItem(publishPushButton);
 	    menuBar.addItem(printPushButton);
-	    printPushButton.addStyleName("Osyk-MenuItem-LastChild");
+	    printPushButton.addStyleName("Osyl-MenuItem-LastChild");
 	}
 //	initWidget(menuBar);
 	initWidget(enclosingPanel);
