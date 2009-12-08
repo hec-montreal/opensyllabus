@@ -73,18 +73,34 @@
   heigth:auto;
   text-decoration:none;
 }
-.gwt-MenuBar-horizontal .gwt-MenuItem:first-child, #gwt-uid-1{/*border-right:none;*/background-image:none} /* Remove left border of the first element */
 
 .gwt-MenuBar-horizontal .gwt-MenuItem {
   text-align:center;
   padding:1px 10px;
     /*border-left:1px solid #888;*/
-  background:transparent url(images/ui/opt_separator.gif) no-repeat left center;
+  background:transparent url(images/ui/opt_separator.gif) no-repeat right center;
 }
+
+.gwt-MenuBar-horizontal .gwt-MenuItem.Osyl-MenuItem-vertical {
+	padding:1px 21px 1px 10px;
+	background-image:url(images/ui/menuitem_vertical-arrow.gif);
+}
+.gwt-MenuBar-horizontal .gwt-MenuItem.gwt-MenuItem-selected.Osyl-MenuItem-vertical {
+	background-image:url(images/ui/menuitem_vertical-arrow_select.gif);
+}
+.gwt-MenuBar-horizontal .gwt-MenuItem.gwt-MenuItem.Osyl-MenuItem-LastChild.Osyl-MenuItem-vertical {
+	padding:1px 20px 1px 10px;
+	background-image:url(images/ui/menuitem_vertical-arrow_last.gif);
+}
+.gwt-MenuBar-horizontal .gwt-MenuItem.gwt-MenuItem.Osyl-MenuItem-LastChild.gwt-MenuItem-selected.Osyl-MenuItem-vertical {
+	background-image:url(images/ui/menuitem_vertical-arrow_last_select.gif);
+}
+.gwt-MenuBar-horizontal .gwt-MenuItem.Osyl-MenuItem-LastChild {background-image:none} /* Remove right border of the last element */
+
 
 .gwt-MenuBar-horizontal .gwt-MenuItem img {
 	vertical-align:middle;
-	margin:0 2px 0 0;
+	margin:0 5px 0 0;
 }
 
 .gwt-MenuBar-vertical {
@@ -93,12 +109,12 @@
 	border:1px solid #CBD0D4;
 	padding:2px;
 	cursor:default;
-	margin-left:26px;
+	margin-left:24px;
 }
 
 .gwt-MenuBar-vertical .gwt-MenuItem {
   text-align:left;
-  padding:4px 2px;
+  padding:4px 4px;
 }
 
 /* Act as a hover */
@@ -196,25 +212,25 @@
 	margin:8px 3px 3px 0px;
 	padding:1px;
 	font:normal 13px Arial, Verdana, sans-serif;
-	color:#006E96;
+	color:#058EC4;
 }
 
 .Osyl-TreeView-Tree .gwt-TreeItem {
 	cursor:pointer;
-	color:#006E96;
+	color:#058EC4;
 }
 .Osyl-TreeView-Tree .gwt-TreeItem .Osyl-TreeLabel {
 	margin:1px 5px;
 	font-size:12px;
-	color:#006E96;
+	color:#058EC4;
 	text-decoration:none;
 }
 .Osyl-TreeView-Tree .gwt-TreeItem .Osyl-TreeLabel:hover{text-decoration:underline}
 
-.Osyl-TreeView-Tree .gwt-TreeItem-selected {cursor:default;background:#DBDEE1 url(images/ui/tree-selected.gif) repeat-x;color:#000} /* TreeView item selected zone*/
-.Osyl-TreeView-Tree .gwt-TreeItem-selected .Osyl-TreeItem-HorizontalPanel {background:#DBDEE1 url(images/ui/tree-selected.gif) repeat-x}/* TreeView item selected container */
+.Osyl-TreeView-Tree .gwt-TreeItem-selected {cursor:default;font-weight:bold;color:#666} /* TreeView item selected zone*/
+.Osyl-TreeView-Tree .gwt-TreeItem-selected .Osyl-TreeItem-HorizontalPanel {}/* TreeView item selected container */
 
-.Osyl-TreeView-Tree .gwt-TreeItem-selected .Osyl-TreeItem-HorizontalPanel .Osyl-TreeLabel{color:#000}/* TreeView item selected text */
+.Osyl-TreeView-Tree .gwt-TreeItem-selected .Osyl-TreeItem-HorizontalPanel .Osyl-TreeLabel{font-weight:bold;color:#666}/* TreeView item selected text */
 
 .Osyl-TreeView-Tree table {border-collapse:separate} /*Restore default alignment */
 .Osyl-TreeView-Tree img {margin:1px} /* Correct the alignment */
@@ -1236,6 +1252,7 @@
 	padding:0 0 2px;
 	margin-left:5px;
 }	
+
 .Osyl-ContactInfo-OfficeLabel {
 	padding:0;
 	font-size:11px;
