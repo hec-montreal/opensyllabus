@@ -206,7 +206,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 				    .getMessage(
 					    "Assignement.field.date.order.dateAfterDate",
 					    getUiMessage("Assessment.date"),
-					    getUiMessage("Assignement.date_start"))
+					    getUiMessage("Assignement.date_start.details"))
 				    + "\n";
 		}
 		if (assignementEndDate.before(dateDateBox.getValue())) {
@@ -215,7 +215,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 				    .getUiMessages()
 				    .getMessage(
 					    "Assignement.field.date.order.dateAfterDate",
-					    getUiMessage("Assignement.date_end"),
+					    getUiMessage("Assignement.date_end.details"),
 					    getUiMessage("Assessment.date"))
 				    + "\n";
 		}
