@@ -275,9 +275,9 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 	    if (dateEndDateBox.getValue().before(dateStartDateBox.getValue())) {
 		messages +=
 			getView().getUiMessages().getMessage(
-				"Assignement.field.date.order.dateBeforeDate",
-				getUiMessage("Assignement.date_start"),
-				getUiMessage("Assignement.date_end"))
+				"Assignement.field.date.order.dateAfterDate",
+				getUiMessage("Assignement.date_end"),
+				getUiMessage("Assignement.date_start"))
 				+ "\n";
 		ok = false;
 	    }
@@ -306,7 +306,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 				    .getUiMessages()
 				    .getMessage(
 					    "Assignement.field.date.order.dateAfterDate",
-					    getUiMessage("Assessment.EndDate"),
+					    getUiMessage("Assessment.date"),
 					    getUiMessage("Assignement.date_start"))
 				    + "\n";
 		    ok = false;
@@ -318,7 +318,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 				    .getMessage(
 					    "Assignement.field.date.order.dateAfterDate",
 					    getUiMessage("Assignement.date_end"),
-					    getUiMessage("Assessment.EndDate"))
+					    getUiMessage("Assessment.date"))
 				    + "\n";
 		    ok = false;
 		}
