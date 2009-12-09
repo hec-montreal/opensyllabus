@@ -37,6 +37,7 @@ public interface CitationSchema extends Serializable {
 	public static final String TYPE_CHAPTER = "chapter";
 	public static final String TYPE_ARTICLE = "article";
 	public static final String TYPE_REPORT = "report";
+	public static final String TYPE_PROCEED = "proceed";
     
 	public static final String CITATION_IDENTIFIER = "sakai:url_string";
 	public static final String CITATION_IDENTIFIER_TYPE = "type_url";

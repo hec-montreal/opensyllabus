@@ -352,12 +352,45 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 			getPropertyValue(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_DOI).equals("") ? ""
 				: (", " + getPropertyValue(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_DOI));
 		infos += ".";
-	    } else {
+	    } else if (type.equals(CitationSchema.TYPE_PROCEED)) {
+			// <auteurs>, <titre>, <conference>, <year>, <volume>,
+			//  <pages>
+	    	infos +=
+				getPropertyValue(COPropertiesType.AUTHOR).equals("") ? ""
+					: (getPropertyValue(COPropertiesType.AUTHOR) + ". ");
+			infos +=
+				getPropertyValue(CitationSchema.TITLE).equals("") ? ""
+					: getPropertyValue(CitationSchema.TITLE);
+	    	infos +=
+				getPropertyValue(COPropertiesType.JOURNAL)
+					.equals("") ? ""
+					: (", " + getPropertyValue(COPropertiesType.JOURNAL));
+			infos +=
+				getPropertyValue(CitationSchema.YEAR).equals("") ? ""
+					: (", " + getPropertyValue(CitationSchema.YEAR));
+			infos +=
+				getPropertyValue(CitationSchema.VOLUME).equals("") ? ""
+					: (", " + getPropertyValue(CitationSchema.VOLUME));
+			infos +=
+				getPropertyValue(CitationSchema.PAGES).equals("") ? ""
+					: (", " + getPropertyValue(CitationSchema.PAGES));
+			infos += ".";
+		    }else {
 		infos +=
 			getPropertyValue(CitationSchema.TITLE).equals("") ? ""
 				: (getPropertyValue(CitationSchema.TITLE));
 	    }
 	}
 	return infos;
+    }
+    
+    
+    public void closeAndSaveEdit(boolean save) {
+    	if (getEditor().getSaveButton().isEnabled()){
+    		Window.alert(getUiMessage("CitationEditor.ChangeUrl.Save"));
+    	}else{
+    		super.closeAndSaveEdit(save);
+    	}
+    
     }
 }

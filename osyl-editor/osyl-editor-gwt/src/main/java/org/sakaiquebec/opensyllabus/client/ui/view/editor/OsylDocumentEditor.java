@@ -528,6 +528,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 				    OsylDocumentEditor.this.fileUpdateRequestHandler);
 
 		}
+		
+		saveButton.setEnabled(false);
 	    }
 	});
 
@@ -652,6 +654,11 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	}
 	refreshBrowsingComponents();
     }
+    
+	public ImageAndTextButton getSaveButton(){
+		return saveButton;
+	}
+
 
     /**
      * Refreshes the components of the document editor and the file browser on

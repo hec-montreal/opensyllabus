@@ -330,7 +330,29 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 		    getPropertyValue(CitationSchema.DOI).equals("") ? ""
 			    : (", " + getPropertyValue(CitationSchema.DOI));
 	    infos += ".";
-	} else {
+	} else if (type.equals(CitationSchema.TYPE_PROCEED)) {
+	    // <auteurs>, <titre>, <conference>, <year>, <volume>,
+	    //  <pages>
+	    infos +=
+		    getPropertyValue(CitationSchema.CREATOR).equals("") ? ""
+			    : (getPropertyValue(CitationSchema.CREATOR) + ". ");
+	    infos +=
+		    getPropertyValue(CitationSchema.TITLE).equals("") ? ""
+			    : (getPropertyValue(CitationSchema.TITLE));
+	    infos +=
+		    getPropertyValue(CitationSchema.SOURCE_TITLE).equals("") ? ""
+			    : (", " + getPropertyValue(CitationSchema.SOURCE_TITLE));
+	    infos +=
+		    getPropertyValue(CitationSchema.YEAR).equals("") ? ""
+			    : (", " + getPropertyValue(CitationSchema.YEAR));
+	    infos +=
+		    getPropertyValue(CitationSchema.VOLUME).equals("") ? ""
+			    : (", " + getPropertyValue(CitationSchema.VOLUME));
+	    infos +=
+		    getPropertyValue(CitationSchema.PAGES).equals("") ? ""
+			    : (", " + getPropertyValue(CitationSchema.PAGES));
+    infos += ".";
+	}else {
 	    infos +=
 		    getPropertyValue(CitationSchema.TITLE).equals("") ? ""
 			    : (getPropertyValue(CitationSchema.TITLE));

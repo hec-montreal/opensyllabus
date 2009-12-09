@@ -426,7 +426,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	saveButton.setStylePrimaryName("Osyl-EditorPopup-Button");
 	saveButton
 		.setTitle(getView().getUiMessage("DocumentEditor.save.title"));
-
+	
+	
 	saveButton.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
@@ -475,11 +476,13 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 				    }
 				});
 
+		saveButton.setEnabled(false);
+
 	    }
 	});
 
-	saveButton.setEnabled(false);
 
+	saveButton.setEnabled(false);
 	if (selectedFile != null)
 	    if (getView().isCitationLinkLibrary(selectedFile)) {
 		useLibraryLinkCheckBox.setValue(false);
@@ -729,4 +732,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	return selectedFile.getProperty(key, type);
     }
 
+
+	public ImageAndTextButton getSaveButton(){
+		return saveButton;
+	}
 }
