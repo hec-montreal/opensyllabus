@@ -73,14 +73,14 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     /**
      * {@inheritDoc}
      */
-    public String createSite(String siteTitle, String configId)
+    public String createSite(String siteTitle, String configId, String lang)
 	    throws Exception {
 
 	if (osylManagerServices != null) {
 	    log.info("OsylSiteService : "
 		    + osylManagerServices.getOsylSiteService());
 	    return osylManagerServices.getOsylSiteService().createSite(
-		    siteTitle, configId);
+		    siteTitle, configId, lang);
 	}
 
 	return null;

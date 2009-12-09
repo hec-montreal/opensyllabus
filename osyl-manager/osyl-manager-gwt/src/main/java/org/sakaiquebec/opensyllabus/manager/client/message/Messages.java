@@ -95,6 +95,8 @@ public interface Messages extends ConstantsWithLookup {
     
     String chooseConfig();
     
+    String chooseLang();
+    
     String siteNameNotValid();
     
     String noConfig();
@@ -112,5 +114,11 @@ public interface Messages extends ConstantsWithLookup {
    String config_udemObjectifsSeances();
    
    String config_announcementsRegulationsHEC();
+   
+   String language_en();
+   
+   String language_es();
+   
+   String language_fr_CA();
 
 }

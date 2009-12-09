@@ -158,8 +158,8 @@ public class OsylManagerController implements FireOsylManagerEvents {
      * 
      * @param name
      */
-    public void createSite(String name, String configId) {
-	OsylManagerRPCController.getInstance().createSite(this, name, configId);
+    public void createSite(String name, String configId, String lang) {
+	OsylManagerRPCController.getInstance().createSite(this, name, configId, lang);
     }
     
     

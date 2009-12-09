@@ -21,7 +21,9 @@
 
 package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
@@ -42,12 +44,16 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id: $
  */
 public class CreateSiteView extends OsylManagerAbstractView {
+    
+    private static List<String> supportedLang = Arrays.asList(new String[]{"en","es","fr_CA"});//TODO to be parameterized
 
     private Label nameLabel;
 
     private TextBox nameTextBox;
 
     private ListBox configListBox;
+    
+    private ListBox langListBox;
 
     private PushButton createSite;
 
@@ -101,21 +107,30 @@ public class CreateSiteView extends OsylManagerAbstractView {
 	mainPanel.add(title);
 	mainPanel.add(createFormElement(nameLabel, nameTextBox));
 
+	Label langTitle = new Label(getController().getMessages().chooseLang());
+	langListBox = new ListBox();
+	
+	for(Iterator<String> langIter=supportedLang.iterator();langIter.hasNext();){
+	    String lang = langIter.next();
+	    langListBox.addItem(getController().getMessages().getString("language_"+lang), lang);
+	}	
+	mainPanel.add(createFormElement(langTitle, langListBox));
+	
 	Label configTitle =
 		new Label(getController().getMessages().chooseConfig());
 	configListBox = new ListBox();
-	getController().getOsylConfigs(configListAsyncCallback);// récupération
-	// de la liste
-	// des configs
-	// dispo
+	getController().getOsylConfigs(configListAsyncCallback);
 	mainPanel.add(createFormElement(configTitle, configListBox));
-
+	
+	
+	
 	createSite = new PushButton(getController().getMessages().create());
 	createSite.setWidth("30px");
 	createSite.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		boolean nameValid = false;
 		String name = nameTextBox.getText();
+		String lang = langListBox.getValue(langListBox.getSelectedIndex());
 		//TODO Maybe we should make a blacklist of forbidden characters
 		//instead of a whitelist of authorized characters
 		nameValid =
@@ -128,7 +143,7 @@ public class CreateSiteView extends OsylManagerAbstractView {
 			String configId =
 				configListBox.getValue(configListBox
 					.getSelectedIndex());
-			getController().createSite(name, configId);
+			getController().createSite(name, configId, lang);
 		    } else {
 			Window.alert(getController().getMessages().noConfig());
 		    }

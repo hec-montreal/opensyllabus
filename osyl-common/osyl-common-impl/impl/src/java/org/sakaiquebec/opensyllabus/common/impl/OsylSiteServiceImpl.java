@@ -317,7 +317,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
     /**
      * {@inheritDoc}
      */
-    public String createSite(String siteTitle, String configId)
+    public String createSite(String siteTitle, String configId, String lang)
 	    throws Exception {
 	Site site = null;
 	if (!siteService.siteExists(siteTitle)) {
@@ -356,7 +356,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 		coConfig = configDao.getConfig(configId);
 		co =
 			new COSerialized(idManager.createUuid(),
-				osylConfigService.getCurrentLocale(), "shared",
+				lang, "shared",
 				"", site.getId(), "sectionId", coConfig, null,
 				"shortDescription", "description", "title",
 				false);
@@ -541,7 +541,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 			new COSerialized(idManager.createUuid(),
 				osylConfigService.getCurrentLocale(), "shared",
 				"", siteId, "sectionId", coConfig,
-				getXmlStringFromFile(coConfig, webappDir),
+				getXmlStringFromFile(coConfig,osylConfigService.getCurrentLocale(),webappDir),
 				"shortDescription", "description", "title",
 				false);
 		// reinitilaisation des uuids
@@ -554,7 +554,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 		resourceDao.createOrUpdateCourseOutline(thisCo);
 	    } else if (thisCo.getContent() == null) {
 		coConfig = thisCo.getOsylConfig();
-		thisCo.setContent(getXmlStringFromFile(coConfig, webappDir));
+		thisCo.setContent(getXmlStringFromFile(coConfig, thisCo.getLang(), webappDir));
 		// reinitilaisation des uuids
 		COModeledServer coModeled = new COModeledServer(thisCo);
 		coModeled.XML2Model();
@@ -683,13 +683,13 @@ public class OsylSiteServiceImpl implements OsylSiteService {
      * @param webappDir The path to the webapp directory
      * @return
      */
-    private String getXmlStringFromFile(COConfigSerialized coConfig,
+    private String getXmlStringFromFile(COConfigSerialized coConfig,String lang,
 	    String webappDir) {
 	StringBuilder fileData = new StringBuilder(1000);
 	try {
 
 	    BufferedReader reader =
-		    getXmlTemplateFileReader(coConfig, webappDir);
+		    getXmlTemplateFileReader(coConfig, lang, webappDir);
 
 	    char[] buf = new char[1024];
 	    int numRead = 0;
@@ -711,7 +711,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
      * @return a BufferedReader on the appropriate template file.
      */
     private BufferedReader getXmlTemplateFileReader(
-	    COConfigSerialized coConfig, String webappDir) {
+	    COConfigSerialized coConfig, String lang, String webappDir) {
 	File coXmlFile = null;
 	String coXmlFilePath = null;
 	BufferedReader reader = null;
@@ -719,7 +719,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	try {
 	    templateFileName =
 		    CO_CONTENT_TEMPLATE + "_"
-			    + osylConfigService.getCurrentLocale()
+			    + lang
 			    + OsylSiteService.XML_FILE_EXTENSION;
 	    coXmlFilePath =
 		    webappDir + OsylConfigService.CONFIG_DIR + File.separator + coConfig.getConfigRef()
