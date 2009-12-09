@@ -227,7 +227,6 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 			getFusionnedPrePublishedHierarchy(parentId);
 		if (parentModel != null && coModeled != null) {
 		    coModeled.XML2Model();
-		    parentModel.XML2Model();
 		    coModeled.fusion(parentModel);
 		}
 
