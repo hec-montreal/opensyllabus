@@ -87,6 +87,8 @@ public interface Messages extends ConstantsWithLookup {
     
     String associateToCMChooseCourse();
     
+    String unexistingCMcourse();
+    
     String dissociate();
     
     String noAssociableCOSite();

@@ -1,5 +1,6 @@
 package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -17,7 +18,8 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /******************************************************************************
@@ -54,17 +56,19 @@ public class AssociateToCMView extends OsylManagerAbstractView implements
 
     private Button adButton;
 
-    private TextBox cmCourseSection;
-
     private ListBox courseSitesList;
-
-    private ListBox coursesList;
 
     private String cmCourseSectionId;
 
     private Label selectSiteLabel;
 
     private Label enterCourseLabel;
+
+    private SuggestBox cmSuggestBox;
+
+    private HashMap<String, String> cmHashMap;
+
+    private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 
     AsyncCallback<Map<String, String>> courseSitesListAsyncCallback =
 	    new AsyncCallback<Map<String, String>>() {
@@ -97,17 +101,16 @@ public class AssociateToCMView extends OsylManagerAbstractView implements
 
 		public void onSuccess(Map<String, String> result) {
 		    adButton.setEnabled(true);
-		    coursesList.clear();
+		    cmHashMap = new HashMap<String, String>();
 		    for (Iterator<String> coursesMapKeysIterator =
 			    result.keySet().iterator(); coursesMapKeysIterator
 			    .hasNext();) {
 			String courseId = coursesMapKeysIterator.next();
 			String courseTitle = result.get(courseId);
-			coursesList.addItem(courseTitle, courseId);
+			cmHashMap.put(courseTitle, courseId);
+			oracle.add(courseTitle);
 		    }
-
 		}
-
 	    };
 
     AsyncCallback<Boolean> associateToCMAsyncCallback =
@@ -128,27 +131,23 @@ public class AssociateToCMView extends OsylManagerAbstractView implements
 
 	    };
 
-    AsyncCallback<Void> dissociateAsyncCallback = new AsyncCallback<Void>() {
-
-	public void onFailure(Throwable caught) {
-	    Window.alert("Erreur");// TODO
-	}
-
-	public void onSuccess(Void result) {
-	    onListChange();
-	    onCourseListChange();
-	}
-
-    };
-
     ClickHandler associateClickHandler = new ClickHandler() {
 
 	public void onClick(ClickEvent event) {
-	    // We call the method from the controller, if verifies if the course
-	    // exist
-	    // and returns a boolean to tell if all worked or not
-	    getController().associateToCM(cmCourseSectionId, siteSelectedId,
-		    associateToCMAsyncCallback);
+
+	    cmCourseSectionId = cmHashMap.get(cmSuggestBox.getValue());
+	    if (cmCourseSectionId != null) {
+		// We call the method from the controller, if verifies if the
+		// course
+		// exist
+		// and returns a boolean to tell if all worked or not
+		getController().associateToCM(cmCourseSectionId,
+			siteSelectedId, associateToCMAsyncCallback);
+	    } else {
+		Window
+			.alert(getController().getMessages()
+				.unexistingCMcourse());
+	    }
 	}
 
     };
@@ -176,8 +175,9 @@ public class AssociateToCMView extends OsylManagerAbstractView implements
 	VerticalPanel verticalPanel = new VerticalPanel();
 
 	courseSitesList = new ListBox();
-	coursesList = new ListBox();
-	cmCourseSection = new TextBox();
+	cmSuggestBox = new SuggestBox(oracle);
+	cmSuggestBox.setLimit(20);
+
 	adButton = new Button();
 	adButton.addClickHandler(associateClickHandler);
 	adButton.setText(getController().getMessages().associateToCM());
@@ -201,6 +201,7 @@ public class AssociateToCMView extends OsylManagerAbstractView implements
 
 	    public void onChange(ChangeEvent event) {
 		cmCourseSectionId = null;
+
 		onListChange();
 	    }
 
@@ -208,24 +209,6 @@ public class AssociateToCMView extends OsylManagerAbstractView implements
 
 	// We retrieve the course available in the course management
 	getController().getCMCourses(coursesListAsyncCallback);
-	/*
-	 * Map<String, String> coursesMap = getController().getCMCourses(); if
-	 * (coursesMap == null || coursesMap.isEmpty()) {
-	 * Window.alert(getController().getMessages().noCOSite()); } else { for
-	 * (Iterator<String> coursesMapKeysIterator = coursesMap.keySet()
-	 * .iterator(); coursesMapKeysIterator.hasNext();) { String courseId =
-	 * coursesMapKeysIterator.next(); String courseTitle =
-	 * coursesMap.get(courseId); coursesList.addItem(courseTitle, courseId);
-	 * } }
-	 */
-	coursesList.addChangeHandler(new ChangeHandler() {
-
-	    public void onChange(ChangeEvent event) {
-		cmCourseSectionId = null;
-		onCourseListChange();
-	    }
-
-	});
 
 	adButton.setEnabled(true);
 
@@ -237,7 +220,7 @@ public class AssociateToCMView extends OsylManagerAbstractView implements
 
 	verticalPanel = new VerticalPanel();
 	verticalPanel.add(courseSitesList);
-	verticalPanel.add(coursesList);
+	verticalPanel.add(cmSuggestBox);
 
 	horizontalPanel.add(verticalPanel);
 
@@ -253,11 +236,6 @@ public class AssociateToCMView extends OsylManagerAbstractView implements
 	    siteSelectedId = courseSitesList.getValue(selectedIndex);
 
 	}
-    }
-
-    private void onCourseListChange() {
-	int selectedIndex = coursesList.getSelectedIndex();
-	cmCourseSectionId = coursesList.getValue(selectedIndex);
     }
 
     /** {@inheritDoc} */

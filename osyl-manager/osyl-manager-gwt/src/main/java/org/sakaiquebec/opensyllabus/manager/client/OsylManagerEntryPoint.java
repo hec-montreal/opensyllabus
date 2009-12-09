@@ -22,6 +22,7 @@
 package org.sakaiquebec.opensyllabus.manager.client;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
+import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
 import org.sakaiquebec.opensyllabus.manager.client.ui.view.OsylManagerMainView;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -35,6 +36,9 @@ public class OsylManagerEntryPoint implements EntryPoint {
     private OsylManagerController controller =
 	    OsylManagerController.getInstance();
 
+    private RootPanel rootPanel = RootPanel.get();
+    private OsylManagerAbstractView view;
+
     /**
      * {@inheritDoc}
      */
@@ -43,7 +47,9 @@ public class OsylManagerEntryPoint implements EntryPoint {
     }
 
     private void initView() {
-	RootPanel.get().add(new OsylManagerMainView(controller));
+	view = new OsylManagerMainView(controller);
+	rootPanel.add(view);
+	rootPanel.setHeight("600px");
     }
 
 }

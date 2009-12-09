@@ -1150,8 +1150,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			courseManagementService.getSections(courseOff.getEid());
 		for (Iterator<Section> cSs = sections.iterator(); cSs.hasNext();) {
 		    courseS = cSs.next();
+		    String courseSTitle = courseS.getTitle();
+		    String session = courseOff.getAcademicSession().getTitle();
+		    String sigle = courseOff.getCanonicalCourseEid();
+		    String section = courseSTitle.substring(courseSTitle.length()-3, courseSTitle.length());
 		    // Info sur la section pas dans le CM
-		    value = courseS.getTitle();
+		    value = sigle+" "+session+" "+section;
 		    cmCourses.put(courseS.getEid(), value);
 		}
 

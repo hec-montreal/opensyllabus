@@ -47,7 +47,7 @@
 	String bodyonload = (String)request.getAttribute("sakai.html.body.onload");
 	String element = bodyonload.substring(bodyonload.indexOf('\'')+1, bodyonload.lastIndexOf('\''));
 	%>
-	window.parent.document.getElementById("<%=element%>").style.height="300px";
+	window.parent.document.getElementById("<%=element%>").style.height="600px";
 </script>
 
 </head>
