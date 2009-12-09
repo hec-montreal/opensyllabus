@@ -77,7 +77,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      */
     protected OsylAbstractView(COModelInterface model,
 	    OsylController osylController) {
-	this(model,osylController,model.isEditable());
+	this(model,osylController,true);
     }
     
     protected OsylAbstractView(COModelInterface model,
@@ -87,7 +87,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 	setButtonPanel(new HorizontalPanel());
 	setUpAndDownPanel(new VerticalPanel());
 
-	if (editable) {
+	if (model.isEditable() && editable) {
 	    popUpMouseOverListener = new OsylEditableMouseOverListener(this);
 	    addMouseListener(popUpMouseOverListener);
 	}
