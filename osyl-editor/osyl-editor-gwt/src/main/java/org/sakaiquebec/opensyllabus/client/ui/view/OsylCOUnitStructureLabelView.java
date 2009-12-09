@@ -56,5 +56,6 @@ public class OsylCOUnitStructureLabelView extends OsylAbstractView {
 
     protected void updateModel() {
 	((COUnitStructure) getModel()).setLabel(getEditor().getText());
+	setModifiedDateToNow();
     }
 }

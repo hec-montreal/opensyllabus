@@ -155,7 +155,6 @@ public class OsylCOStructureView extends OsylViewableComposite implements
     }
 
     public void onUpdateModel(UpdateCOStructureElementEvent event) {
-	setModifiedDateToNow();
 	refreshView();
     }
 

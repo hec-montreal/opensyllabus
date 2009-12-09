@@ -272,7 +272,6 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
     }
 
     public void onUpdateModel(UpdateCOUnitContentEvent event) {
-	setModifiedDateToNow();
 	if (event.isAddRessProxEvent()) {
 	    List<COContentResourceProxy> proxies =
 		    ((COUnitContent) getModel()).getChildrens();

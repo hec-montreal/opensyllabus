@@ -119,7 +119,6 @@ public class OsylCOUnitView extends OsylViewableComposite implements
     }
 
     public void onUpdateModel(UpdateCOUnitEvent event) {
-	setModifiedDateToNow();
 	refreshView();
     }
 

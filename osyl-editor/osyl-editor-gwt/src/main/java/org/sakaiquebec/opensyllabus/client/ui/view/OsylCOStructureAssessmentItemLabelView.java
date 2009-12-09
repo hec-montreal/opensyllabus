@@ -118,6 +118,7 @@ public class OsylCOStructureAssessmentItemLabelView extends OsylAbstractView {
 		.getSubmitionType());
 	setAssessmentType((((OsylCOStructureAssessmentItemEditor) getEditor())
 		.getType()));
+	setModifiedDateToNow();
     }
 
     /**
