@@ -30,6 +30,7 @@ import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylLabelEditClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -69,7 +70,6 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
      */
     public OsylCOStructureItemEditor(OsylAbstractView parent) {
 	this(parent, false);
-
     }
 
     public OsylCOStructureItemEditor(OsylAbstractView parent,
@@ -308,65 +308,67 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 	AbstractImagePrototype imgDeleteButton = getOsylImageBundle().delete();
 	String title = getView().getUiMessage("delete");
 	ClickHandler handler =
-		new MyDeletePushButtonListener((COUnit) getView().getModel());
+		new MyDeletePushButtonListener((COElementAbstract) getView().getModel());
 	return createButton(imgDeleteButton, title, handler);
     }
 
     protected OsylPushButton createButtonUp() {
-	OsylPushButton upButton;
-	if (((COUnit) getView().getModel()).hasPredecessor()) {
-	    upButton =
-		    new OsylPushButton(getOsylImageBundle().up_full()
-			    .createImage(), getOsylImageBundle().up_full()
-			    .createImage(), getOsylImageBundle().up_full()
-			    .createImage());
-	    upButton.setTitle(getUiMessage("UpButton.title"));
-	    upButton.setEnabledButton();
-	    upButton.addClickHandler(new ClickHandler() {
+	OsylPushButton upButton = null;
+	COElementAbstract model = ((COElementAbstract) getView().getModel());
+	if (model.isCOUnit()) {			
+			if (((COUnit) getView().getModel()).hasPredecessor()) {
+				upButton = new OsylPushButton(getOsylImageBundle().up_full()
+						.createImage(), getOsylImageBundle().up_full()
+						.createImage(), getOsylImageBundle().up_full()
+						.createImage());
+				upButton.setTitle(getUiMessage("UpButton.title"));
+				upButton.setEnabledButton();
+				upButton.addClickHandler(new ClickHandler() {
 
-		public void onClick(ClickEvent event) {
-		    getView().leaveEdit();
-		    ((COUnit) getView().getModel()).moveUp();
+					public void onClick(ClickEvent event) {
+						getView().leaveEdit();
+						((COUnit) getView().getModel()).moveUp();
+					}
+
+				});
+			} else {
+				upButton = new OsylPushButton(getOsylImageBundle().up_empty()
+						.createImage(), getOsylImageBundle().up_empty()
+						.createImage(), getOsylImageBundle().up_empty()
+						.createImage());
+				upButton.setDisabledButton();
+			}
+			upButton.setVisible(true);
 		}
-
-	    });
-	} else {
-	    upButton =
-		    new OsylPushButton(getOsylImageBundle().up_empty()
-			    .createImage(), getOsylImageBundle().up_empty()
-			    .createImage(), getOsylImageBundle().up_empty()
-			    .createImage());
-	    upButton.setDisabledButton();
-	}
-	upButton.setVisible(true);
 	return upButton;
     }
 
     protected OsylPushButton createButtonDown() {
-	OsylPushButton downButton;
+	OsylPushButton downButton = null;
+	COElementAbstract model = ((COElementAbstract) getView().getModel());
+	if (model.isCOUnit()) {	
 	if (((COUnit) getView().getModel()).hasSuccessor()) {
-	    downButton =
-		    new OsylPushButton(getOsylImageBundle().down_full()
-			    .createImage(), getOsylImageBundle().down_full()
-			    .createImage(), getOsylImageBundle().down_full()
-			    .createImage());
-	    downButton.setTitle(getUiMessage("DownButton.title"));
-	    downButton.setEnabledButton();
-	    downButton.addClickHandler(new ClickHandler() {
+				downButton = new OsylPushButton(getOsylImageBundle()
+						.down_full().createImage(), getOsylImageBundle()
+						.down_full().createImage(), getOsylImageBundle()
+						.down_full().createImage());
+				downButton.setTitle(getUiMessage("DownButton.title"));
+				downButton.setEnabledButton();
+				downButton.addClickHandler(new ClickHandler() {
 
-		public void onClick(ClickEvent event) {
-		    getView().leaveEdit();
-		    ((COUnit) getView().getModel()).moveDown();
-		}
+					public void onClick(ClickEvent event) {
+						getView().leaveEdit();
+						((COUnit) getView().getModel()).moveDown();
+					}
 
-	    });
-	} else {
-	    downButton =
-		    new OsylPushButton(getOsylImageBundle().down_empty()
-			    .createImage(), getOsylImageBundle().down_empty()
-			    .createImage(), getOsylImageBundle().down_empty()
-			    .createImage());
-	    downButton.setDisabledButton();
+				});
+			} else {
+				downButton = new OsylPushButton(getOsylImageBundle()
+						.down_empty().createImage(), getOsylImageBundle()
+						.down_empty().createImage(), getOsylImageBundle()
+						.down_empty().createImage());
+				downButton.setDisabledButton();
+			}
 	}
 	return downButton;
     }
@@ -389,10 +391,10 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 
 	// Model variables (we use either one or the other). We could also use
 	// a generic variable and cast it when needed...
-	private COUnit coUnit;
+	private COElementAbstract model;
 
-	public MyDeletePushButtonListener(COUnit coContentUnit) {
-	    this.coUnit = coContentUnit;
+	public MyDeletePushButtonListener(COElementAbstract model) {
+	    this.model = model;
 	}
 
 	public void onClick(ClickEvent event) {
@@ -405,7 +407,7 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 					"OsylOkCancelDialog_Delete_Content"));
 		osylOkCancelDialog
 			.addOkButtonCLickHandler(new MyOkCancelDialogListener(
-				this.coUnit));
+				this.model));
 		osylOkCancelDialog
 			.addCancelButtonClickHandler(getCancelButtonClickListener());
 		osylOkCancelDialog.show();
@@ -420,16 +422,16 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
     // The click listener that perform delete action if confirm button pushed
     public class MyOkCancelDialogListener implements ClickHandler {
 
-	private COUnit coUnit;
+	private COElementAbstract model;
 
-	public MyOkCancelDialogListener(COUnit coUnit) {
-	    this.coUnit = coUnit;
+	public MyOkCancelDialogListener(COElementAbstract model) {
+	    this.model = model;
 	}
 
 	public void onClick(ClickEvent event) {
 	    try {
-		String title = coUnit.getLabel();
-		coUnit.getParent().removeChild(coUnit);
+		String title = model.getLabel();
+		model.getParent().removeChild(model);
 		OsylUnobtrusiveAlert info =
 			new OsylUnobtrusiveAlert(getView().getUiMessages()
 				.getMessage("RemovedContentUnit", title));
