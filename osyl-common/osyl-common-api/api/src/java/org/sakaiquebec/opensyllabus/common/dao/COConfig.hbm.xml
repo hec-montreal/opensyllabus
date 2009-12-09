@@ -10,8 +10,8 @@
             <generator class="uuid" />
         </id>
        
-        <property name="configRef" type="text">
-            <column name="CONFIGREF" />
+        <property name="configRef" type="string">
+            <column name="CONFIGREF" length="50"/>
         </property>
         
         

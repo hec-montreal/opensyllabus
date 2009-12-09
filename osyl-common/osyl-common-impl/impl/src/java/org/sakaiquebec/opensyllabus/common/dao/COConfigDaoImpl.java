@@ -130,7 +130,7 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
 	try {
 	    results =
 		    getHibernateTemplate().find(
-			    "from COConfigSerialized where configref= ? ",
+			    "from COConfigSerialized where configRef= ? ",
 			    new Object[] { configRef });
 	} catch (Exception e) {
 	    log.error("Unable to retrieve config by its reference", e);

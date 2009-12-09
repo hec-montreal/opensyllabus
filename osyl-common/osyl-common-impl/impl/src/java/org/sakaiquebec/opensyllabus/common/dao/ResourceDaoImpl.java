@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
+import org.sakaiproject.db.cover.SqlService;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -194,11 +195,20 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	if (siteId == null || access == null)
 	    throw new IllegalArgumentException();
 	try {
-	    results =
-		    getHibernateTemplate()
-			    .find(
-				    "from COSerialized where siteId= ? and access= ? and published= ?",
-				    new Object[] { siteId, access, published });
+		if ("oracle".equalsIgnoreCase(SqlService.getVendor()) && access.equals("")) {
+		    results =
+			    getHibernateTemplate()
+				    .find(
+					    "from COSerialized where siteId= ? and published= ? and access is null",
+					    new Object[] { siteId, published });
+		}
+		else {
+			results =
+			    getHibernateTemplate()
+				    .find(
+					    "from COSerialized where siteId= ? and access= ? and published= ?",
+					    new Object[] { siteId, access, published });
+		}
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by its siteId", e);
 	    throw e;
@@ -292,11 +302,20 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	if (siteId == null)
 	    throw new IllegalArgumentException();
 	try {
-	    results =
-		    getHibernateTemplate()
-			    .find(
-				    "from COSerialized where siteId= ? and published=1 and access= ?",
-				    new Object[] { siteId,""});
+		if ("oracle".equalsIgnoreCase(SqlService.getVendor())) {
+		    results =
+			    getHibernateTemplate()
+				    .find(
+					    "from COSerialized where siteId= ? and published=1 and access is null",
+					    new Object[] { siteId });
+		}
+		else {
+			results =
+			    getHibernateTemplate()
+				    .find(
+					    "from COSerialized where siteId= ? and published=1 and access= ?",
+					    new Object[] { siteId, "" });
+		}	
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by its siteId", e);
 	    throw e;
