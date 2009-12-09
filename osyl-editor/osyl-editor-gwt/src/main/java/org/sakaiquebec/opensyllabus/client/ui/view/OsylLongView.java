@@ -122,7 +122,7 @@ public class OsylLongView extends OsylViewableComposite {
 		    List<COModelInterface> subModels =
 			getController().getOsylConfig().getOsylConfigRuler()
 				.getAllowedSubModels(newCOStructEl);
-		    if (subModels!=null)
+		    if (subModels!=null || children.size()>1)
 			addListItemView(newCOStructEl);
 		    displayChildren(children);
 		} else if (absElement.isCOUnit()) {
