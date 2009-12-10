@@ -301,9 +301,15 @@ public class OsylCitationForm extends WindowPanel implements
 			+ ":", sourceTitle, CitationSchema.SOURCE_TITLE);
 	mainPanel.add(journalPanel);
 
-	proceedingPanel = createLabelTextboxElement(osylController
+	final TextBox proceedingSourceTitle =
+		FormHelper.createTextBox((citation == null || citation
+			.getProperty(CitationSchema.SOURCE_TITLE) == null) ? ""
+			: citation.getProperty(CitationSchema.SOURCE_TITLE),
+		"Osyl-CitationForm-textBox");
+
+			proceedingPanel = createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_proceedingLabel")
-			+ ":", sourceTitle, CitationSchema.SOURCE_TITLE);
+			+ ":", proceedingSourceTitle, CitationSchema.SOURCE_TITLE);
 	mainPanel.add(proceedingPanel);
 	
 	// Create a textbox for the date.
@@ -340,11 +346,19 @@ public class OsylCitationForm extends WindowPanel implements
 			issueTextBox, CitationSchema.ISSUE);
 	mainPanel.add(volIssuePanel);
 
-	volumeTextBox.setStylePrimaryName("Osyl-CitationForm-textBox");
+	//Textbox used for the property volume in a proceeding
+	//Different from volume textbox because the layout is different
+	//If mixed layout in article will not be correct
+	final TextBox proceedVolumeTextBox =
+		FormHelper.createTextBox((citation == null || citation
+			.getProperty(CitationSchema.VOLUME) == null) ? ""
+			: citation.getProperty(CitationSchema.VOLUME),
+			"Osyl-CitationForm-textBox");
+	
 	volumePanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_volumeLabel")
-			+ RECOMMENDED_FIELD_INDICATOR + ":", volumeTextBox,
+			+ RECOMMENDED_FIELD_INDICATOR + ":", proceedVolumeTextBox,
 			CitationSchema.VOLUME);
 	mainPanel.add(volumePanel);
 	
@@ -489,6 +503,17 @@ public class OsylCitationForm extends WindowPanel implements
 		// here
 		String tempCitationType =
 			citationType.getValue(citationType.getSelectedIndex());
+		
+		if (tempCitationType.equals
+				(CitationSchema.TYPE_PROCEED)){
+			citation.setProperty(CitationSchema.VOLUME, proceedVolumeTextBox
+					.getText());
+			citation.setProperty(CitationSchema.SOURCE_TITLE, proceedingSourceTitle
+					.getText());
+		}
+		
+
+		
 		if (CitationSchema.TYPE_UNKNOWN
 			.equalsIgnoreCase(tempCitationType)) {
 		    citation.setProperty(COPropertiesType.IDENTIFIER,
@@ -808,7 +833,7 @@ public class OsylCitationForm extends WindowPanel implements
 	    yearPanel.setVisible(false);
 	    citationPanel.setVisible(false);
 	    urlPanel.setVisible(false);
-	}  else if (newType.equals(CitationSchema.TYPE_PROCEED)) {
+	} else if (newType.equals(CitationSchema.TYPE_PROCEED)) {
 	    authorLabel.setHTML(osylController
 			    .getCoMessage("ResProxCitationView_authorLabel")
 			    + ":");
