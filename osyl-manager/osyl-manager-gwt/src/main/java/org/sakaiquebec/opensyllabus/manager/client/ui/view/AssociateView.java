@@ -23,10 +23,12 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
+import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -99,11 +101,21 @@ public class AssociateView extends OsylManagerAbstractView implements
 				.noAssociableCOSite());
 			adButton.setEnabled(false);
 		    } else {
+			TreeMap<String, String> sortedMap =
+				new TreeMap<String, String>(
+					LocalizedStringComparator.getInstance());
 			for (Iterator<String> sitesMapKeysIterator =
 				result.keySet().iterator(); sitesMapKeysIterator
 				.hasNext();) {
 			    String siteId = sitesMapKeysIterator.next();
 			    String siteTitle = result.get(siteId);
+			    sortedMap.put(siteTitle, siteId);
+			}
+			for (Iterator<String> sortedSiteIterator =
+				sortedMap.keySet().iterator(); sortedSiteIterator
+				.hasNext();) {
+			    String siteTitle = sortedSiteIterator.next();
+			    String siteId = sortedMap.get(siteTitle);
 			    parentSiteList.addItem(siteTitle, siteId);
 			}
 			setSelectedParent(parentId);
@@ -182,11 +194,20 @@ public class AssociateView extends OsylManagerAbstractView implements
 	if (sitesMap == null || sitesMap.isEmpty()) {
 	    Window.alert(getController().getMessages().noCOSite());
 	} else {
+	    TreeMap<String, String> sortedMap =
+		    new TreeMap<String, String>(LocalizedStringComparator
+			    .getInstance());
 	    for (Iterator<String> sitesMapKeysIterator =
 		    sitesMap.keySet().iterator(); sitesMapKeysIterator
 		    .hasNext();) {
 		String siteId = sitesMapKeysIterator.next();
 		String siteTitle = sitesMap.get(siteId);
+		sortedMap.put(siteTitle, siteId);
+	    }
+	    for (Iterator<String> sortedSiteIterator =
+		    sortedMap.keySet().iterator(); sortedSiteIterator.hasNext();) {
+		String siteTitle = sortedSiteIterator.next();
+		String siteId = sortedMap.get(siteTitle);
 		siteList.addItem(siteTitle, siteId);
 	    }
 	}

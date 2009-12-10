@@ -3,10 +3,12 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
+import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -69,28 +71,6 @@ public class AssociateToCMView extends OsylManagerAbstractView implements
     private HashMap<String, String> cmHashMap;
 
     private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
-
-    AsyncCallback<Map<String, String>> courseSitesListAsyncCallback =
-	    new AsyncCallback<Map<String, String>>() {
-
-		public void onFailure(Throwable caught) {
-		    adButton.setEnabled(false);
-		}
-
-		public void onSuccess(Map<String, String> result) {
-		    adButton.setEnabled(true);
-		    courseSitesList.clear();
-		    for (Iterator<String> sitesMapKeysIterator =
-			    result.keySet().iterator(); sitesMapKeysIterator
-			    .hasNext();) {
-			String siteId = sitesMapKeysIterator.next();
-			String siteTitle = result.get(siteId);
-			courseSitesList.addItem(siteTitle, siteId);
-		    }
-
-		}
-
-	    };
 
     AsyncCallback<Map<String, String>> coursesListAsyncCallback =
 	    new AsyncCallback<Map<String, String>>() {
@@ -188,11 +168,20 @@ public class AssociateToCMView extends OsylManagerAbstractView implements
 	if (sitesMap == null || sitesMap.isEmpty()) {
 	    Window.alert(getController().getMessages().noCOSite());
 	} else {
+	    TreeMap<String, String> sortedMap =
+		    new TreeMap<String, String>(LocalizedStringComparator
+			    .getInstance());
 	    for (Iterator<String> sitesMapKeysIterator =
 		    sitesMap.keySet().iterator(); sitesMapKeysIterator
 		    .hasNext();) {
 		String siteId = sitesMapKeysIterator.next();
 		String siteTitle = sitesMap.get(siteId);
+		sortedMap.put(siteTitle, siteId);
+	    }
+	    for (Iterator<String> sortedSiteIterator =
+		    sortedMap.keySet().iterator(); sortedSiteIterator.hasNext();) {
+		String siteTitle = sortedSiteIterator.next();
+		String siteId = sortedMap.get(siteTitle);
 		courseSitesList.addItem(siteTitle, siteId);
 	    }
 	}

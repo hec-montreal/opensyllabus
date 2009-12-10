@@ -23,10 +23,12 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
+import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -69,11 +71,20 @@ public class ExportCOView extends OsylManagerAbstractView implements
 	if (sitesMap == null || sitesMap.isEmpty()) {
 	    Window.alert(getController().getMessages().noCOSite());
 	} else {
+	    TreeMap<String, String> sortedMap =
+		    new TreeMap<String, String>(LocalizedStringComparator
+			    .getInstance());
 	    for (Iterator<String> sitesMapKeysIterator =
 		    sitesMap.keySet().iterator(); sitesMapKeysIterator
 		    .hasNext();) {
 		String siteId = sitesMapKeysIterator.next();
 		String siteTitle = sitesMap.get(siteId);
+		sortedMap.put(siteTitle, siteId);
+	    }
+	    for (Iterator<String> sortedSiteIterator =
+		    sortedMap.keySet().iterator(); sortedSiteIterator.hasNext();) {
+		String siteTitle = sortedSiteIterator.next();
+		String siteId = sortedMap.get(siteTitle);
 		siteListBox.addItem(siteTitle, siteId);
 	    }
 	}
