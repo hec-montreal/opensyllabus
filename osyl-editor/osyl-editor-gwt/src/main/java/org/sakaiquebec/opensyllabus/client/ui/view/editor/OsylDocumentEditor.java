@@ -505,7 +505,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	saveButton.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
-
+	    	saveButton.setEnabled(false);
+	 	   
 		if (browser.getSelectedAbstractBrowserItem() != null
 			&& !browser.getSelectedAbstractBrowserItem().isFolder()) {
 		    OsylFileItem selectedFile =
@@ -529,8 +530,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 		}
 		
-		saveButton.setEnabled(false);
-	    }
+		 }
 	});
 
 	// Note: we prepend the message with a blank space instead of using
