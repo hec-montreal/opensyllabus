@@ -78,6 +78,7 @@ public class ImportCOView extends OsylManagerAbstractView {
 				formPanel.submit();
 			}
 		});
+		importSite.setWidth("50px");
 		isZipFileLabel = new Label(getController().getMessages().isZip());
 		fileUploadLabel = new Label(getController().getMessages().file());
 		mainPanel.setWidth("100%");
