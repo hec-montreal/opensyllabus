@@ -35,7 +35,7 @@
 					<asmUnitContent access="public"
 						id="2DD1F0BA-AEDF-4DE2-A2A7-A98BDCCFA300" xsi:type="NewsUnitContent">
 						<modified>2009-11-11T16:12:18-05:00</modified>
-						<asmContext access="attendee"
+						<asmContext access="public"
 							id="BE3EB350-8B43-4630-A2E8-2519EA84D543" xsi:type="InformationContext">
 							<modified>2009-11-11T16:14:12-05:00</modified>
 							<label><![CDATA[Insert your Text Here...]]></label>
@@ -43,13 +43,13 @@
 							<level>undefined</level>
 							<visible>true</visible>
 							<semanticTag type="rubric">flu</semanticTag>
-							<asmResource xsi:type="Text" access="attendee"
+							<asmResource xsi:type="Text" access="public"
 								id="F6DD380F-2FAB-4F3F-B3ED-640E6C77995A">
 								<text><![CDATA[In the event of exceptional circumstances [as established by the Direction of&nbsp; Programs] beyond HEC Montréal's control, the content and/or evaluation scheme of&nbsp; the courses can be subject to change. <a href="http://www.hec.ca/en/flu/index.html" target="_blank">Learn more about H1N1 Influenza...</a>]]></text>
 								<modified>2009-11-11T16:14:12-05:00</modified>
 							</asmResource>
 						</asmContext>
-						<asmContext access="attendee"
+						<asmContext access="public"
 							id="0FA43BC5-C09E-441C-9124-8408AFCB7AB8" xsi:type="InformationContext">
 							<modified>2009-11-11T16:12:13-05:00</modified>
 							<label><![CDATA[Insert your Text Here...]]></label>
@@ -57,13 +57,13 @@
 							<level>undefined</level>
 							<visible>true</visible>
 							<semanticTag type="rubric">plagiarism</semanticTag>
-							<asmResource xsi:type="Text" access="attendee"
+							<asmResource xsi:type="Text" access="public"
 								id="CC2B0464-458F-420C-A250-F31306C5D2FF">
 								<text><![CDATA[Please consult the acts and gestures that are considered plagiarism or another academic violation, along with the applicable procedure and sanctions, which range up to suspension and even expulsion from HEC Montréal. Violations are analyzed&nbsp; based on the facts and circumstances, and sanctions are applied accordingly.&nbsp; <a href="http://www.hec.ca/en/programs_training/plagiarism.html" target="_blank">Learn more about plagiarism .</a><br>]]></text>
 								<modified>2009-11-11T16:12:13-05:00</modified>
 							</asmResource>
 						</asmContext>
-						<asmContext access="attendee"
+						<asmContext access="public"
 							id="E05A1F35-B5B3-4624-8E02-F815FCF8B37F" xsi:type="InformationContext">
 							<modified>2009-11-11T16:14:23-05:00</modified>
 							<label><![CDATA[Insert your Text Here...]]></label>
@@ -71,7 +71,7 @@
 							<level>undefined</level>
 							<visible>true</visible>
 							<semanticTag type="rubric">calculators</semanticTag>
-							<asmResource xsi:type="Text" access="attendee"
+							<asmResource xsi:type="Text" access="public"
 								id="7AF8226B-28A6-4FDC-9A75-93D18BB09D91">
 								<text><![CDATA[Please consult the <a href="http://www.hec.ca/etudiant_actuel/technologies/calculatrices.html" target="_blank">calculator usage policy (in French)</a> during exams when&nbsp; applicable.]]></text>
 								<modified>2009-11-11T16:14:23-05:00</modified>
