@@ -799,7 +799,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * @return zipFile a temporary zip file...
      * @throws IOException
      */
-    @SuppressWarnings("unchecked")
     private File exportAndZip(String siteId) throws Exception {
 	// opening a new temporary zipfile
 	File zipFile = File.createTempFile("osyl-package-export", ".zip");
@@ -808,7 +807,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	// retrieving the xml file
 	COSerialized coSerialized =
-		osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
+		osylSiteService.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
 
 	byte[] xmlBytes = coSerialized.getContent().getBytes("UTF-8");
 	writeToZip(zos, OsylManagerService.CO_XML_FILENAME, xmlBytes);

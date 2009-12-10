@@ -656,14 +656,15 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 
 	try {
 	    co = getSerializedCourseOutlineBySiteId(siteId);
-	    if (co == null) {
-
-	    } else {
+	    if (co != null) {
 		co.setContent(xmlData);
+		COModeledServer coModeledServer = new COModeledServer(co);
+		coModeledServer.XML2Model();
+		coModeledServer.resetUuid();
+		coModeledServer.model2XML();
+		co.setContent(coModeledServer.getSerializedContent());
+		resourceDao.createOrUpdateCourseOutline(co);
 	    }
-
-	    resourceDao.createOrUpdateCourseOutline(co);
-
 	} catch (Exception e) {
 	    log.error("CreateCOFromData", e);
 	}
