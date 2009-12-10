@@ -74,7 +74,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	browserString = browser;
 	log("Starting test with browser: " + browser);
 	initCurrentTestSiteName();
-	timeStampFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	timeStampFormatter = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
     }
 
     @AfterClass(alwaysRun = true)
@@ -161,18 +161,19 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().click("//button[@type='button']");
 	
 	session().type("//input[@type='text']", getCurrentTestSiteName());
-	session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=0");
+	session().select("//tr[4]/td/table/tbody/tr/td[2]/select", "index=0");
+	session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=2");
 	if(inFireFox()){
-	session().mouseOver("//html/body/table/tbody/tr/td/table/tbody/tr[4]" +
+	session().mouseOver("//html/body/table/tbody/tr/td/table/tbody/tr[5]" +
 				"/td/div/div");
-	session().mouseDown("//html/body/table/tbody/tr/td/table/tbody/tr[4]" +
+	session().mouseDown("//html/body/table/tbody/tr/td/table/tbody/tr[5]" +
 				"/td/div/div");
-	session().mouseUp("//html/body/table/tbody/tr/td/table/tbody/tr[4]/" +
+	session().mouseUp("//html/body/table/tbody/tr/td/table/tbody/tr[5]/" +
 				"td/div/div");
 	pause();
 	}else{
 	    	session().keyPress("//html/body/table/tbody/tr/td/table/tbody/tr" +
-	    	    		"[4]/td/div/div", "\r");
+	    	    		"[5]/td/div/div", "\r");
 	}
 	
 	if(inFireFox()){
