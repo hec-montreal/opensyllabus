@@ -196,9 +196,29 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 			public void onResponseReceived(Request request,
 				Response response) {
 			    configSer.setRulesConfig(response.getText());
-			    callback.onSuccess(configSer);
 			}
 		    });
+
+	    getFileByRequest(osylHostedModeInit.getSettingsPath(),
+			    new RequestCallback() {
+				public void onError(Request request, Throwable exception) {
+				    Window.alert("Error while reading "
+					    + osylHostedModeInit.getSettingsPath()
+					    + " :" + exception.toString());
+				}
+
+				public void onResponseReceived(Request request,
+					Response response) {
+				    String responseTxt = response.getText();
+				    // transform text to map
+				    Map<String, String> settings =
+					    OsylHostedModeTransformUtil
+						    .propertyTxt2Map(responseTxt);
+				    configSer.setSettings(settings);				    
+				    callback.onSuccess(configSer);
+				}
+			    });
+
 	}
     }
 
