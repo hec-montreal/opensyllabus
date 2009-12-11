@@ -266,18 +266,20 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     }
 
     public boolean prepareForSave() {
+	String message = "";
 	if (getResourceURI() == null) {
+	    message+= getUiMessage("CitationEditor.save.error.citationUndefined");
+	} else if (saveButton.isEnabled()) {
+	    message+= getUiMessage("CitationEditor.ChangeUrl.Save");
+	} 
+	if(message.equals("")){
+	    return true;
+	}else{
 	    OsylAlertDialog oad =
-		    new OsylAlertDialog(
-			    getView().getUiMessage("Global.error"),
-			    getView()
-				    .getUiMessage(
-					    "CitationEditor.save.error.citationUndefined"));
+		    new OsylAlertDialog(getUiMessage("Global.error"),message);
 	    oad.center();
 	    oad.show();
 	    return false;
-	} else {
-	    return true;
 	}
     }
 
@@ -426,8 +428,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	saveButton.setStylePrimaryName("Osyl-EditorPopup-Button");
 	saveButton
 		.setTitle(getView().getUiMessage("DocumentEditor.save.title"));
-	
-	
+
 	saveButton.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
@@ -480,7 +481,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 	    }
 	});
-
 
 	saveButton.setEnabled(false);
 	if (selectedFile != null)
@@ -732,8 +732,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	return selectedFile.getProperty(key, type);
     }
 
-
-	public ImageAndTextButton getSaveButton(){
-		return saveButton;
-	}
+    public ImageAndTextButton getSaveButton() {
+	return saveButton;
+    }
 }

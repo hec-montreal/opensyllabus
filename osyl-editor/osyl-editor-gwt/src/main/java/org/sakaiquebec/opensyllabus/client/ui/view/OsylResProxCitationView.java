@@ -28,8 +28,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 
-import com.google.gwt.user.client.Window;
-
 /**
  * Class providing display and edition capabilities for citations resources.
  * 
@@ -221,12 +219,11 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
     private String getPropertyValue(String property) {
 	return getProperty(property) == null ? "" : getProperty(property);
     }
-    
-    private String getPropertyValue(String property,  String type) {
-	return getProperty(property,type) == null ? "" : getProperty(property,type);
+
+    private String getPropertyValue(String property, String type) {
+	return getProperty(property, type) == null ? "" : getProperty(property,
+		type);
     }
-    
-    
 
     /**
      * Generate a link, if possible, with citation informations
@@ -316,8 +313,11 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 			getPropertyValue(CitationSchema.YEAR).equals("") ? ""
 				: (getPropertyValue(CitationSchema.YEAR) + ", ");
 		infos +=
-			getPropertyValue(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_ISN).equals("") ? ""
-				: getPropertyValue(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_ISN);
+			getPropertyValue(COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_ISN)
+				.equals("") ? "" : getPropertyValue(
+				COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_ISN);
 		infos += ".";
 
 	    } else if (type.equals(CitationSchema.TYPE_ARTICLE)) {
@@ -330,8 +330,7 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 			getPropertyValue(CitationSchema.TITLE).equals("") ? ""
 				: getPropertyValue(CitationSchema.TITLE);
 		infos +=
-			getPropertyValue(COPropertiesType.JOURNAL)
-				.equals("") ? ""
+			getPropertyValue(COPropertiesType.JOURNAL).equals("") ? ""
 				: (", " + getPropertyValue(COPropertiesType.JOURNAL));
 		infos +=
 			getPropertyValue(CitationSchema.DATE).equals("") ? ""
@@ -346,51 +345,46 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 			getPropertyValue(CitationSchema.PAGES).equals("") ? ""
 				: (", " + getPropertyValue(CitationSchema.PAGES));
 		infos +=
-			getPropertyValue(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_ISN).equals("") ? ""
-				: (", " + getPropertyValue(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_ISN));
+			getPropertyValue(COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_ISN)
+				.equals("") ? "" : (", " + getPropertyValue(
+				COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_ISN));
 		infos +=
-			getPropertyValue(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_DOI).equals("") ? ""
-				: (", " + getPropertyValue(COPropertiesType.IDENTIFIER,COPropertiesType.IDENTIFIER_TYPE_DOI));
+			getPropertyValue(COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_DOI)
+				.equals("") ? "" : (", " + getPropertyValue(
+				COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_DOI));
 		infos += ".";
 	    } else if (type.equals(CitationSchema.TYPE_PROCEED)) {
-			// <auteurs>, <titre>, <conference>, <year>, <volume>,
-			//  <pages>
-	    	infos +=
-				getPropertyValue(COPropertiesType.AUTHOR).equals("") ? ""
-					: (getPropertyValue(COPropertiesType.AUTHOR) + ". ");
-			infos +=
-				getPropertyValue(CitationSchema.TITLE).equals("") ? ""
-					: getPropertyValue(CitationSchema.TITLE);
-	    	infos +=
-				getPropertyValue(COPropertiesType.JOURNAL)
-					.equals("") ? ""
-					: (", " + getPropertyValue(COPropertiesType.JOURNAL));
-			infos +=
-				getPropertyValue(CitationSchema.YEAR).equals("") ? ""
-					: (", " + getPropertyValue(CitationSchema.YEAR));
-			infos +=
-				getPropertyValue(CitationSchema.VOLUME).equals("") ? ""
-					: (", " + getPropertyValue(CitationSchema.VOLUME));
-			infos +=
-				getPropertyValue(CitationSchema.PAGES).equals("") ? ""
-					: (", " + getPropertyValue(CitationSchema.PAGES));
-			infos += ".";
-		    }else {
+		// <auteurs>, <titre>, <conference>, <year>, <volume>,
+		// <pages>
+		infos +=
+			getPropertyValue(COPropertiesType.AUTHOR).equals("") ? ""
+				: (getPropertyValue(COPropertiesType.AUTHOR) + ". ");
+		infos +=
+			getPropertyValue(CitationSchema.TITLE).equals("") ? ""
+				: getPropertyValue(CitationSchema.TITLE);
+		infos +=
+			getPropertyValue(COPropertiesType.JOURNAL).equals("") ? ""
+				: (", " + getPropertyValue(COPropertiesType.JOURNAL));
+		infos +=
+			getPropertyValue(CitationSchema.YEAR).equals("") ? ""
+				: (", " + getPropertyValue(CitationSchema.YEAR));
+		infos +=
+			getPropertyValue(CitationSchema.VOLUME).equals("") ? ""
+				: (", " + getPropertyValue(CitationSchema.VOLUME));
+		infos +=
+			getPropertyValue(CitationSchema.PAGES).equals("") ? ""
+				: (", " + getPropertyValue(CitationSchema.PAGES));
+		infos += ".";
+	    } else {
 		infos +=
 			getPropertyValue(CitationSchema.TITLE).equals("") ? ""
 				: (getPropertyValue(CitationSchema.TITLE));
 	    }
 	}
 	return infos;
-    }
-    
-    
-    public void closeAndSaveEdit(boolean save) {
-    	if (getEditor().getSaveButton().isEnabled()){
-    		Window.alert(getUiMessage("CitationEditor.ChangeUrl.Save"));
-    	}else{
-    		super.closeAndSaveEdit(save);
-    	}
-    
     }
 }

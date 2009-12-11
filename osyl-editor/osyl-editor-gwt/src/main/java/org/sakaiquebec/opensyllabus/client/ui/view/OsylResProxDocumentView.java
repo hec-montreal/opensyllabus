@@ -25,8 +25,6 @@ import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylDocumentEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 
-import com.google.gwt.user.client.Window;
-
 /**
  * Class providing display and edition capabilities for Document resources.
  * 
@@ -85,15 +83,6 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 		getEditor().getLicence());
 	getModel().getResource().addProperty(COPropertiesType.DESCRIPTION,
 		getEditor().getResourceDescription());
-    }
-    
-    public void closeAndSaveEdit(boolean save) {
-    	if (getEditor().getSaveButton().isEnabled()){
-    		Window.alert(getUiMessage("DocumentEditor.document.PropUpdateSave"));
-    	}else{
-    		super.closeAndSaveEdit(save);
-    	}
-    
     }
 
 }

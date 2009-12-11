@@ -303,27 +303,30 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
     }
 
     public boolean prepareForSave() {
+	String message = "";
 	if (getResourceURI() == null) {
+	    message +=
+		    getUiMessage("DocumentEditor.save.error.documentUndefined");
+	} else {
+	    if (editorLabel.getText().trim().equals("")) {
+		message +=
+			getView().getUiMessage("Global.field.required",
+				getUiMessage("clickable_text"))
+				+ "\n";
+	    }
+	    if (saveButton.isEnabled()) {
+		message +=
+			getUiMessage("DocumentEditor.document.PropUpdateSave");
+	    }
+	}
+	if (message.equals("")) {
+	    return true;
+	} else {
 	    OsylAlertDialog oad =
-		    new OsylAlertDialog(
-			    getView().getUiMessage("Global.error"),
-			    getView()
-				    .getUiMessage(
-					    "DocumentEditor.save.error.documentUndefined"));
+		    new OsylAlertDialog(getUiMessage("Global.error"), message);
 	    oad.center();
 	    oad.show();
 	    return false;
-	} else {
-	    if (editorLabel.getText().trim().equals("")) {
-		OsylAlertDialog oad =
-			new OsylAlertDialog(getUiMessage("Global.error"),
-				getView().getUiMessage("Global.field.required",
-					getUiMessage("clickable_text")));
-		oad.center();
-		oad.show();
-		return false;
-	    }
-	    return true;
 	}
     }
 
@@ -505,8 +508,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	saveButton.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
-	    	saveButton.setEnabled(false);
-	 	   
+		saveButton.setEnabled(false);
+
 		if (browser.getSelectedAbstractBrowserItem() != null
 			&& !browser.getSelectedAbstractBrowserItem().isFolder()) {
 		    OsylFileItem selectedFile =
@@ -529,8 +532,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 				    OsylDocumentEditor.this.fileUpdateRequestHandler);
 
 		}
-		
-		 }
+
+	    }
 	});
 
 	// Note: we prepend the message with a blank space instead of using
@@ -654,11 +657,10 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	}
 	refreshBrowsingComponents();
     }
-    
-	public ImageAndTextButton getSaveButton(){
-		return saveButton;
-	}
 
+    public ImageAndTextButton getSaveButton() {
+	return saveButton;
+    }
 
     /**
      * Refreshes the components of the document editor and the file browser on
@@ -700,6 +702,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    licenseListBox.setSelectedIndex(-1);
 	    descriptionTextArea.setText("");
 	}
+	saveButton.setEnabled(false);
     }
 
     /**
