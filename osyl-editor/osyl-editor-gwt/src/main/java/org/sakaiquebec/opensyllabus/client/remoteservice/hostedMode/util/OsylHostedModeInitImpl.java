@@ -35,6 +35,7 @@ public class OsylHostedModeInitImpl implements OsylHostedModeInit {
 	protected String uIMessagesPath = "../osylcoconfigs/default/bundle/UIMessages.properties";
 	protected String cORolesListPath = "../osylcoconfigs/default/coRolesList.xml";
 	protected String cOEvalTypeListPath = "../osylcoconfigs/default/coEvalTypeList.xml";
+	protected String settingsPath = "../osylcoconfigs/default/settings.properties";
 	
 	/**
 	 * {@inheritDoc}
@@ -77,4 +78,11 @@ public class OsylHostedModeInitImpl implements OsylHostedModeInit {
 	public String getEvalTypeListPath() {
 		return cOEvalTypeListPath;
 	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getSettingsPath() {
+		return settingsPath;
+	}
+
 }

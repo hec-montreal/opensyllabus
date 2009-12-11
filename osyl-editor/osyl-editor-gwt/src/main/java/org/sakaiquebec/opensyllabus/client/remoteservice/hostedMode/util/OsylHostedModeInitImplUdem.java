@@ -34,6 +34,7 @@ public class OsylHostedModeInitImplUdem implements OsylHostedModeInit {
 	protected String uIMessagesPath = "../osylcoconfigs/udem/bundle/UIMessages_fr_CA.properties";
 	protected String cORolesListPath = "../osylcoconfigs/udem/coRolesList.xml";
 	protected String cOEvalTypeListPath = "../osylcoconfigs/udem/coEvalTypeList.xml";
+	protected String settingsPath = "../osylcoconfigs/udem/settings.properties";
 
 //	protected String configPath = "../osylcoconfigs/udemObjectifsActivites/rules.xml";
 //	protected String modelPath = "../osylcoconfigs/udemObjectifsActivites/coContentTemplate.xml";
@@ -96,5 +97,11 @@ public class OsylHostedModeInitImplUdem implements OsylHostedModeInit {
 	 */
 	public String getEvalTypeListPath() {
 		return cOEvalTypeListPath;
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getSettingsPath() {
+		return settingsPath;
 	}
 }
