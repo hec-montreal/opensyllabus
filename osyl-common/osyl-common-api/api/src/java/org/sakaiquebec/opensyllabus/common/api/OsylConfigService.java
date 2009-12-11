@@ -49,6 +49,11 @@ public interface OsylConfigService {
     public static final String CONFIG_COMESSAGES = "COMessages";
 
     /**
+     * Message file
+     */
+    public static final String CONFIG_SETTINGS = "settings";
+
+    /**
      * Package (ie: folder) containing the message files (.properties)
      */
     public static final String CONFIG_DIR = "osylcoconfigs";
@@ -173,5 +178,15 @@ public interface OsylConfigService {
      */
     public COSerialized fillCo(String dir, COSerialized coSerialized)
 	    throws Exception;
+
+    /**
+     * For a given directory, this method reads the general settings file and put it
+     * into a map.
+     * 
+     * @param dir Configuration directory
+     * @return Map
+     * @throws Exception
+     */
+    public Map<String, String> getSettings(String path, String baseFileName) throws Exception;
 
 }
