@@ -108,7 +108,10 @@ public class OsylController implements SavePushButtonEventHandler,
 
     // Instance of pinger to keep the session alive.
     private Pinger pinger;
-
+    
+    // Instance of AutoSaver to save current course outline automatically
+    private AutoSaver autoSaver;
+    
     // Our Model Controller
     private OsylModelController osylModelController;
 
@@ -139,6 +142,8 @@ public class OsylController implements SavePushButtonEventHandler,
 	if (!isReadOnly()) {
 	    pinger = new Pinger();
 	    pinger.start();
+	    autoSaver = new AutoSaver();
+	    autoSaver.start();
 	}
     }
 
@@ -1210,10 +1215,18 @@ public class OsylController implements SavePushButtonEventHandler,
     }
 
     public void saveCourseOutline(AsyncCallback<String> callBack) {
+	saveCourseOutline(callBack, false);
+    }
+    
+    public void saveCourseOutline(AsyncCallback<String> callBack,
+	    boolean autoSave) {
 	try {
-	    // 1. We instruct the ViewContext to close all editors in case an
-	    // editor with modified content is still open.
-	    getViewContext().closeAllEditors();
+	    // 1. Unless we are performing an auto-save, we instruct the
+	    // ViewContext to close all editors in case an editor with modified
+	    // content is still open.
+	    if (! autoSave) {
+		getViewContext().closeAllEditors();
+	    }
 
 	    // 2. Then we serialize the model
 	    OsylEditorEntryPoint entryPoint =
@@ -1393,6 +1406,7 @@ public class OsylController implements SavePushButtonEventHandler,
 	private int errors;
 	private long lastErrortime;
 	private Timer t;
+	private boolean isRunning;
 
 	// Run every 2 minutes
 	private int delay = 2 * 60 * 1000;
@@ -1408,11 +1422,17 @@ public class OsylController implements SavePushButtonEventHandler,
 	}
 
 	private void start() {
+	    isRunning = true;
 	    t.scheduleRepeating(delay);
 	}
 
 	private void stop() {
+	    isRunning = false;
 	    t.cancel();
+	}
+
+	private boolean isStopped() {
+	    return isRunning;
 	}
 
 	private void incrementErrorCount() {
@@ -1433,6 +1453,7 @@ public class OsylController implements SavePushButtonEventHandler,
 	private int getRecentErrorCount() {
 	    return errors;
 	}
+
     } // class Pinger
 
     /**
@@ -1496,6 +1517,94 @@ public class OsylController implements SavePushButtonEventHandler,
 		new OsylAlertDialog(false, true, "Error", msg);
 	alertBox.show();
     }
+
+
+    private class AutoSaver {
+	private Timer t;
+
+	// Run every 5 minutes if the model is dirty (it has been edited)
+	private int delay = 5 * 60 * 1000;
+
+	AutoSaver() {
+	    t = new Timer() {
+		public void run() {
+		    if (isModelDirty()) {
+			autoSave();
+		    }
+		}
+	    };
+	}
+
+	private void start() {
+	    t.scheduleRepeating(delay);
+	}
+
+	private void stop() {
+	    t.cancel();
+	}
+    } // class AutoSaver
+
+
+    /**
+     * AutoSaves current course outline.
+     */
+    private void autoSave() {
+
+	// The caller must be declared final to use it into an inner class
+	final OsylController caller = this;
+
+	// We first create a call-back for this method call
+	AsyncCallback<String> callback = new AsyncCallback<String>() {
+
+	    // We define the behavior in case of success
+	    public void onSuccess(String serverResponse) {
+		try {
+		    caller.autoSaveCB(serverResponse);
+		} catch (Exception e) {
+		    caller.unableToAutoSave(e);
+		}
+	    }
+
+	    // And we define the behavior in case of failure
+	    public void onFailure(Throwable error) {
+		caller.unableToAutoSave(error);
+	    }
+	};
+	// Then we can call the method
+	saveCourseOutline(callback, true);
+    }
+
+    /**
+     * Call-back method for autoSave.
+     */
+    public void autoSaveCB(String serverResponse) {
+	updateSerializedCourseOutlineCB(getCOSerialized(), serverResponse);
+    }
+
+    /**
+     * Call-back method when we cannot autoSave.
+     * 
+     * @param String errorMessage
+     */
+    public void unableToAutoSave(Throwable error) {
+	String msg;
+	if (pinger.isStopped()) {
+	    msg = uiMessages.getMessage("AutoSaveStopping");
+	    autoSaver.stop();
+	} else {
+	    int MAX_MSG = 120;
+	    String errMsg = error.toString();
+	    if (errMsg.length() > MAX_MSG) {
+		errMsg = errMsg.substring(0, MAX_MSG) + "...";
+	    }
+	    msg = uiMessages.getMessage("AutoSaveDidNotWork", errMsg);
+	}
+	final OsylAlertDialog alertBox =
+		new OsylAlertDialog(false, true, "Error", msg);
+	alertBox.show();
+    } // unableToAutoSave
+
+
 
     public native String xslTransform(String xml, String xsl)/*-{
 							     var xml = $wnd.xmlParse(xml);
