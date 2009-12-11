@@ -30,7 +30,7 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
 /**
  * Tests all the features in the section Assessment. The exact steps are: log 
  * in as admin, creates a new site if needed, load it (OpenSyllabus is the 
- * first and only page), enters in the Assessment section, Add two assessments,
+ * first ), enters in the Assessment section, Add two assessments,
  * edit the last assessment, delete the first assessment unit,check if 
  * OpenSyllabus displays a error message if a mandatory fields are not filled  
  * or filled with wrong values,Add text in the last assessment, and check if 
@@ -748,7 +748,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         
         //Fill the necessary fields
         String Titre = "Titre"+ timeStamp();
-        session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Titre );
+        session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Titre );        
         String Auteur = "Auteur"+ timeStamp();
         session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Auteur);
         String Annee = "Annee"+ timeStamp();
@@ -757,7 +757,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         session().type("//tr[17]/td/table/tbody/tr/td[3]/input", ISBN);
         
         //Close Window
-        session().click("//tr[20]/td/table/tbody/tr/td/button");
+        session().click("//tr[22]/td/table/tbody/tr/td/button");
         pause();
         pause();
  
