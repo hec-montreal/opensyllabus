@@ -4,6 +4,10 @@
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name='com.google.gwt.xml.XML' />
 
+	<!-- to avoid error from common-shared -->
+	<inherits name='org.gwt.mosaic.Mosaic' />
+	<inherits name='org.gwt.mosaic.actions.Actions' />
+
 	<!-- Inherit the default GWT style sheet.  You can change       -->
 	<!-- the theme of your GWT application by uncommenting          -->
 	<!-- any one of the following lines.                            -->

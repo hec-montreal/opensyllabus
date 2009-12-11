@@ -62,6 +62,31 @@
 			<artifactId>osyl-common-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.gwt.mosaic</groupId>
+			<artifactId>gwt-mosaic</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.gwt.mosaic</groupId>
+			<artifactId>gwt-dnd</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.gwt.mosaic</groupId>
+			<artifactId>gwt-beansbinding</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.gwt.mosaic</groupId>
+			<artifactId>gwtx</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.gwt.mosaic</groupId>
+			<artifactId>gwt-incubator</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
