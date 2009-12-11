@@ -25,8 +25,10 @@ import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
 
 /**
  * The Unit Tree Item View usable for the Osyl tree view
@@ -51,7 +53,9 @@ public class OsylUnitTreeItemView extends OsylTreeItemBaseView implements
 
     protected String createTreeItemText() {
 	String treeItemText = "";
+	String rate = "";
 	COUnit itemModel = (COUnit) getModel();
+	boolean showAssessmentRate = getSettings().isTreeViewAssessmentShowRate();
 	COElementAbstract eltAbs = itemModel.getParent();
 	if (eltAbs.isCOStructureElement()) {
 	    COStructureElement coStructElt = (COStructureElement) eltAbs;
@@ -63,6 +67,15 @@ public class OsylUnitTreeItemView extends OsylTreeItemBaseView implements
 		treeItemText = positionString + " : " + itemModel.getLabel();
 	    } else {
 		treeItemText = itemModel.getLabel();
+	    }
+	    
+	    if(showAssessmentRate && 
+	       COUnitType.ASSESSMENT_UNIT.equalsIgnoreCase(itemModel.getType())){
+		    if(itemModel.getProperty(COPropertiesType.WEIGHT)!=null &&
+		    		itemModel.getProperty(COPropertiesType.WEIGHT).length() > 0){
+		    	rate = " (" + itemModel.getProperty(COPropertiesType.WEIGHT) + "%)" ;
+		        treeItemText+= rate;
+		    }
 	    }
 	} else {
 	    // A content unit with no parent structure element

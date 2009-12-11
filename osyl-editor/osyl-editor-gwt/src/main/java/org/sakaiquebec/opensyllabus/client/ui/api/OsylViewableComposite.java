@@ -24,6 +24,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
+import org.sakaiquebec.opensyllabus.shared.model.OsylSettings;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -83,6 +84,11 @@ public abstract class OsylViewableComposite extends Composite implements
     private OsylConfigMessages uiMessages;
 
     /**
+     * Course Outline general settings.
+     */
+    private OsylSettings settings;
+
+    /**
      * Private instance of {@link OsylImageBundleInterface} to provide easy
      * access to images commonly used in the user interface.
      */
@@ -101,6 +107,7 @@ public abstract class OsylViewableComposite extends Composite implements
 	setModel(model);
 	setUiMessages(osylController.getUiMessages());
 	setCoMessages(osylController.getCoMessages());
+	setSettings(osylController.getSettings());
 	initImageBundle();
     }
 
@@ -251,4 +258,18 @@ public abstract class OsylViewableComposite extends Composite implements
     public void setModifiedDateToNow(){
 	getModel().getProperties().addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getNowDateAsXmlString());
     }
+
+    
+    /**
+     * Provides access to general settings
+     * 
+     * @return {@link OsylSettings}
+     */
+	public OsylSettings getSettings() {
+		return settings;
+	}
+
+	private void setSettings(OsylSettings settings) {
+		this.settings = settings;
+	}
 }
