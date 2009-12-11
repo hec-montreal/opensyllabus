@@ -43,6 +43,8 @@ public class COConfig {
     
     private List<String> evalTypeList;
 
+    private OsylSettings settings;
+
     /**
      * Construct an COConfig and its OsylConfigRuler based on the
      * cOConfigSerialized passed
@@ -59,6 +61,8 @@ public class COConfig {
 		new OsylConfigRuler(this.cOConfigSerialized.getRulesConfig());
 	this.rolesList = cOConfigSerialized.getRolesList();
 	this.evalTypeList = cOConfigSerialized.getEvalTypeList();
+	this.settings = 
+		new OsylSettings(cOConfigSerialized.getSettings());
     }
 
     /**
@@ -88,4 +92,12 @@ public class COConfig {
 	public List<String> getEvalTypeList() {
 		return evalTypeList;
 	} 
+
+    /**
+     * @return the general settings.
+     */
+    public OsylSettings getSettings() {
+	return settings;
+    }
+
 }

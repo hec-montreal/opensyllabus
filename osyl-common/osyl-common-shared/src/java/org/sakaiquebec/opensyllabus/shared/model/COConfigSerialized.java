@@ -66,6 +66,13 @@ public class COConfigSerialized implements java.io.Serializable {
 	                                             // Serializable
 
 	/**
+	 * general properties for the current application
+	 */
+	private HashMap<String, String> settings;// Force a HashMap so GWT
+	                                             // figures out this field is
+	                                             // Serializable
+
+	/**
 	 * CSS URI, used for jsp page
 	 */
 	private String cascadingStyleSheetURI;
@@ -89,6 +96,7 @@ public class COConfigSerialized implements java.io.Serializable {
 		this.evalTypeList = new ArrayList<String>();
 		this.rolesList = new ArrayList<String>();
 		this.i18nMessages = new HashMap<String, String>();
+		this.settings = new HashMap<String, String>();
 	}
 
 
@@ -208,4 +216,26 @@ public class COConfigSerialized implements java.io.Serializable {
 			this.evalTypeList.addAll(evalTypeList);
 		}
 	}
+
+	/**
+	 * @return the generalSettings value.
+	 */
+	public Map<String, String> getSettings() {
+		return settings;
+		
+	}
+
+	/**
+	 * @param generalSettings
+	 *            the new value of generalSettings.
+	 */
+	public void setSettings(Map<String, String> settings) {
+		this.settings.clear();
+		if (null != settings) {
+			this.settings.putAll(settings);
+		}
+
+	}
+
+
 }
