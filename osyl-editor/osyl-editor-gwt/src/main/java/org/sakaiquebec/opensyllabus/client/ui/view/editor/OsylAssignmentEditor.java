@@ -307,7 +307,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 				    .getMessage(
 					    "Assignement.field.date.order.dateAfterDate",
 					    getUiMessage("Assessment.date"),
-					    getUiMessage("Assignement.date_start"))
+					    getUiMessage("Assignement.date_start.details"))
 				    + "\n";
 		    ok = false;
 		}
@@ -317,7 +317,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 				    .getUiMessages()
 				    .getMessage(
 					    "Assignement.field.date.order.dateAfterDate",
-					    getUiMessage("Assignement.date_end"),
+					    getUiMessage("Assignement.date_end.details"),
 					    getUiMessage("Assessment.date"))
 				    + "\n";
 		    ok = false;
@@ -364,7 +364,10 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 	// We keep track that we are now in view-mode
 	setInEditionMode(false);
 	// We get the text to display from the model
-	setText(getView().getTextFromModelLink());
+	if(getView().getDateStart()!=null)
+	    setText(getView().getTextFromModelLink());
+	else
+	    setText(getUiMessage("Assignement.undefined"));
 
 	// If we are not in read-only mode, we display some meta-info and add
 	// buttons and listeners enabling edition or deletion:
