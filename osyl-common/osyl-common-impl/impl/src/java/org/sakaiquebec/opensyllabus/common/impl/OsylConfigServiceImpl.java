@@ -295,6 +295,8 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	coConfig.setRulesConfig(getRules(path));
 	coConfig.setRolesList(getRolesList(path));
 	coConfig.setEvalTypeList(getEvalTypeList(path));
+	coConfig.setSettings(OsylConfigSettingsService.getSettings(path, 
+			CONFIG_SETTINGS));
 	return coConfig;
     }
 
@@ -396,5 +398,15 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	relativePath = relativePath.replaceAll("\\\\", "/");
 	return relativePath;
     }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @throws Exception
+     */
+    public Map<String, String> getSettings(String path, String baseFileName) throws Exception {
+	return OsylConfigSettingsService.getSettings(path, baseFileName);
+    }
+
 
 }
