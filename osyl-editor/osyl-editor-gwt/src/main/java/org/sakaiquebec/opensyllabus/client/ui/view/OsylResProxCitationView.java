@@ -95,8 +95,8 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	setModelPropertyWithEditorProperty(CitationSchema.NUMBER, getEditor()
 		.getSelectedCitationProperty(CitationSchema.NUMBER));
 
-	setModelPropertyWithEditorProperty(CitationSchema.DATE, getEditor()
-		.getSelectedCitationProperty(CitationSchema.DATE));
+	setModelPropertyWithEditorProperty(CitationSchema.YEAR, getEditor()
+		.getSelectedCitationProperty(CitationSchema.YEAR));
 
 	setModelPropertyWithEditorProperty(CitationSchema.TITLE, getEditor()
 		.getSelectedCitationProperty(CitationSchema.TITLE));
