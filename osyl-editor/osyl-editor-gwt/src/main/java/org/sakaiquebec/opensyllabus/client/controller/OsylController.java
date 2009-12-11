@@ -41,6 +41,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
+import org.sakaiquebec.opensyllabus.shared.model.OsylSettings;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -92,6 +93,11 @@ public class OsylController implements SavePushButtonEventHandler,
      * Course outline and user interface message bundle
      */
     private OsylConfigMessages coMessages, uiMessages;
+
+    /**
+     * osyl general settings
+     */
+    private OsylSettings settings;
 
     private OsylPublishView osylPublishView = null;
 
@@ -1294,6 +1300,12 @@ public class OsylController implements SavePushButtonEventHandler,
 	return uiMessages;
     }
 
+    /**
+     * @return the general settings object.
+     */
+    public OsylSettings getSettings() {  
+    return getOsylConfig().getSettings();
+    }
     /**
      * Returns the UI message corresponding to the specified key
      * 
