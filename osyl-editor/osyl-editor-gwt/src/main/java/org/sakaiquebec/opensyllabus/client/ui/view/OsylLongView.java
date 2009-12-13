@@ -122,8 +122,10 @@ public class OsylLongView extends OsylViewableComposite {
 		    List<COModelInterface> subModels =
 			getController().getOsylConfig().getOsylConfigRuler()
 				.getAllowedSubModels(newCOStructEl);
-		    if (subModels!=null || children.size()>1)
-			addListItemView(newCOStructEl);
+		    if (subModels!=null || children.size()>1){
+			//addListItemView(newCOStructEl);
+		    	displayCOStructureElement(newCOStructEl);
+		    }
 		    displayChildren(children);
 		} else if (absElement.isCOUnit()) {
 		    COUnit itemModel = (COUnit) absElement;
@@ -166,12 +168,8 @@ public class OsylLongView extends OsylViewableComposite {
      * @param structureElement
      */
     private void displayCOStructureElement(COStructureElement structureElement) {
-	List<COElementAbstract> children = structureElement.getChildrens();
-	Iterator<COElementAbstract> iter = children.iterator();
-	while (iter.hasNext()) {
-	    COUnit coUnit = (COUnit) iter.next();
-	    displayCOUnit(coUnit);
-	}
+	OsylCOStructureView view = new OsylCOStructureView(structureElement, getController(), true);	
+	getMainPanel().add(view);
     }
 
     // public int getLevel(COStructureElement itemModel) {
