@@ -22,7 +22,7 @@ package org.sakaiquebec.opensyllabus.client.ui.view;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCOStructureItemEditor;
-import org.sakaiquebec.opensyllabus.shared.model.COUnit;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -30,10 +30,10 @@ import org.sakaiquebec.opensyllabus.shared.model.COUnit;
  */
 public class OsylCOStructureItemLabelView extends OsylAbstractView {
 
-    public OsylCOStructureItemLabelView(COUnit model,
+    public OsylCOStructureItemLabelView(COElementAbstract model,
 	    OsylController controller, boolean isDeletable, String levelStyle) {
 	super(model, controller, controller.getOsylConfig()
-		.getOsylConfigRuler().isTitleEditable(model));
+		.getSettings().isUnitViewTitleLabelEditable());
 	setEditor(new OsylCOStructureItemEditor(this));
 	((OsylCOStructureItemEditor) getEditor()).setIsDeletable(isDeletable);
 	((OsylCOStructureItemEditor) getEditor()).setViewerStyle(levelStyle);
@@ -45,8 +45,8 @@ public class OsylCOStructureItemLabelView extends OsylAbstractView {
      * superclass for javadoc!
      */
 
-    public COUnit getModel() {
-	return (COUnit) super.getModel();
+    public COElementAbstract getModel() {
+	return (COElementAbstract) super.getModel();
     }
 
     public String getTextFromModel() {

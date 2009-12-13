@@ -70,7 +70,6 @@ public class OsylConfigRuler {
     protected static final String TYPE_ATTRIBUTE_NAME = "type";
     protected static final String ALLOW_MULTIPLE_ATTRIBUTE_NAME =
 	    "allowMultiple";
-    protected static final String TITLE_EDITABLE = "titleEditable";
 
     private String rulesConfigContent;
     private Document dom = null;
@@ -350,23 +349,6 @@ public class OsylConfigRuler {
 	return allowedSubModels;
     }
 
-    public boolean isTitleEditable(COElementAbstract model) {
-	List<COElementAbstract> path = findModelPath(model);
-	Node node = findNode(path);
-	return getTitleEditableAttributeValue(node);
-    }
-
-    private boolean getTitleEditableAttributeValue(Node myNode) {
-	boolean titleEditable=true;
-	Node attributeNode = findingAttributeTypeNode(myNode);
-	if(attributeNode!=null){
-	    Node node = attributeNode.getAttributes().getNamedItem(TITLE_EDITABLE);
-	    if (node != null && node.getNodeValue() != null) {
-		titleEditable= Boolean.parseBoolean(node.getNodeValue());
-	    }
-	}
-	return titleEditable;
-    }
 
     /**
      * Finds the path (node sequence) of COElementAbstract elements starting

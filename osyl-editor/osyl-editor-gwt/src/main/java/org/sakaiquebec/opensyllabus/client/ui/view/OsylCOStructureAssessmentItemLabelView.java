@@ -42,7 +42,7 @@ public class OsylCOStructureAssessmentItemLabelView extends OsylAbstractView {
     public OsylCOStructureAssessmentItemLabelView(COUnit model,
 	    OsylController controller, boolean isInList, String levelStyle) {
 	super(model, controller, controller.getOsylConfig()
-		.getOsylConfigRuler().isTitleEditable(model));
+		.getSettings().isAssessmentViewTitleLabelEditable());
 	setEditor(new OsylCOStructureAssessmentItemEditor(this, isInList));
 	((OsylCOStructureItemEditor) getEditor()).setViewerStyle(levelStyle);
 	initView();

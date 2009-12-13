@@ -31,7 +31,7 @@ public class OsylStyleLevelChooser {
 	int i = 1;
 	while (!model.isCourseOutlineContent()) {
 	    model = model.getParent();
-	    if (model.isCOStructureElement() || model.isCOUnit()) {
+	    if (model.isCOStructureElement() || model.isCOUnit() || model.isCOStructureElement()) {
 		List<COModelInterface> subModels =
 			controller.getOsylConfig().getOsylConfigRuler()
 				.getAllowedSubModels(model);

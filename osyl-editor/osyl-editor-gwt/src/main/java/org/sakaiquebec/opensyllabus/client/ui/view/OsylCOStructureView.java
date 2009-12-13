@@ -44,7 +44,9 @@ public class OsylCOStructureView extends OsylViewableComposite implements
     // View variables
     private VerticalPanel mainPanel;
 
-    private Label titleLabel;
+    private OsylCOStructureLabelView editableTitleLabel;
+    
+    private boolean showTitleOnly = false;
 
     public VerticalPanel getMainPanel() {
 	return mainPanel;
@@ -60,6 +62,13 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 	initView();
     }
 
+    public OsylCOStructureView(COModelInterface model,
+			OsylController osylController, boolean showTitleOnly) {
+		super(model, osylController);
+		this.showTitleOnly = showTitleOnly;
+		initView();
+	}
+    
     protected void initView() {
 	setMainPanel(new VerticalPanel());
 	getMainPanel().setStylePrimaryName("Osyl-WorkspaceView-MainPanel");
@@ -67,21 +76,26 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 	initWidget(getMainPanel());
     }
 
-    public void refreshView() {
+    public void refreshView() {	
 	getMainPanel().clear();
-	COStructureElement coStructElt = (COStructureElement) this.getModel();
-	getMainPanel().clear();
-	titleLabel = new Label(getCoMessage(coStructElt.getType()));
-	titleLabel.setStylePrimaryName("Osyl-UnitView-Title");
-	titleLabel
-		.addStyleName(OsylStyleLevelChooser.getLevelStyle(getModel()));
-	getMainPanel().add(titleLabel);
-	// displaying all sub views
-	List<COElementAbstract> children = null;
-	children = ((COStructureElement) getModel()).getChildrens();
-	displayChildren(children);
+	editableTitleLabel = new OsylCOStructureLabelView(getModel(), getController(),
+			false, OsylStyleLevelChooser.getLevelStyle(getModel()));
+	getMainPanel().add(editableTitleLabel);
+	if (getShowTitleOnly() == false) {
+			// displaying all sub views
+			List<COElementAbstract> children = null;
+			children = ((COStructureElement) getModel()).getChildrens();
+			displayChildren(children);
+		}
     }
-
+    
+    /**
+     * @return true if the view displays only the title
+     */
+    private boolean getShowTitleOnly(){
+    	return showTitleOnly;
+    }
+    
     public void displayChildren(List<COElementAbstract> children) {
 	if (children == null) {
 	    if (TRACE)

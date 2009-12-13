@@ -380,8 +380,12 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 	OsylPushButton upButton = createButtonUp();
 	OsylPushButton downButton = createButtonDown();
 	getView().getUpAndDownPanel().clear();
-	getView().getUpAndDownPanel().add(upButton);
-	getView().getUpAndDownPanel().add(downButton);
+	if(upButton!=null){
+		getView().getUpAndDownPanel().add(upButton);
+	}
+	if(downButton!=null){
+		getView().getUpAndDownPanel().add(downButton);
+	}
     }
 
     /**

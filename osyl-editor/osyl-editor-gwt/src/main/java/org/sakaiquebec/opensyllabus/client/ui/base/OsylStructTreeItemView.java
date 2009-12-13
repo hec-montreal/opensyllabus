@@ -48,7 +48,11 @@ public class OsylStructTreeItemView extends OsylTreeItemBaseView implements
 
     public String createTreeItemText() {
 	COStructureElement itemModel = (COStructureElement) getModel();
-	String treeItemText = getCoMessages().getShortMessage((itemModel.getType()));
+	String treeItemText = itemModel.getLabel();
+	// if a label string exists (not null), it overrides the text based on the type
+	if(treeItemText==null){
+		treeItemText = getCoMessages().getShortMessage((itemModel.getType()));
+	}
 	return treeItemText;
     }
 
