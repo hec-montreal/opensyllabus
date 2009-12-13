@@ -30,7 +30,11 @@ import java.util.Map;
  */
 public class OsylSettings {
 
-	public static final String TREEVIEW_SHOWRATE = "treeview.assessmentunit.showrate"; 
+	private static final String TREEVIEW_SHOWRATE = "treeview.assessmentunit.showrate";
+	private static final String UNITVIEW_TITLELABEL_EDITABLE = "unitview.titlelabel.editable";
+	private static final String STRUCTVIEW_TITLELABEL_EDITABLE = "structview.titlelabel.editable";
+	private static final String ASSESSMENTVIEW_TITLELABEL_EDITABLE = "assessmentview.titlelabel.editable";
+	
     private Map<String,String> settings;
 
     /**
@@ -84,18 +88,46 @@ public class OsylSettings {
     }
 
     /**
-     * @param key
-     * @return true if the maps contains the TREEVIEW_SHOWRATE key
+     * For boolean option properties
+     * @param option from the propertie file
+     * @param defaultValue the default Values when, the option is not specified
+     * @return value
+     */
+    private boolean checkBooleanOption(String option, boolean defaultValue) {
+		boolean res = defaultValue;
+		if (settings.containsKey(option)) {
+			String key = getSettingsPropertie(option);
+			res = Boolean.parseBoolean(key);
+		}
+		return res;
+	}
+    
+    /**
+     * @return true if the treeview rate showing for assessment is set
      */
     public boolean isTreeViewAssessmentShowRate(){
-    	boolean showRate = false;
-    	
-    	if(this.settings.containsKey(TREEVIEW_SHOWRATE)){
-    		String strShowRate = this.getSettingsPropertie(TREEVIEW_SHOWRATE);
-    		showRate = Boolean.parseBoolean(strShowRate);
-    	}
-    	return showRate;
+    	return checkBooleanOption(TREEVIEW_SHOWRATE, false);     	
     }
 
-
+	/**
+	 * @return true if the UnitView TitleLabel can be editable
+	 */
+	public boolean isUnitViewTitleLabelEditable() {
+		return checkBooleanOption(UNITVIEW_TITLELABEL_EDITABLE, false);
+	}
+	
+	/**
+	 * @return true if the StructView TitleLabel can be editable
+	 */
+	public boolean isStructViewTitleLabelEditable() {
+		return checkBooleanOption(STRUCTVIEW_TITLELABEL_EDITABLE, false);
+	}
+	
+	/**
+	 * @return true if the AssessmentView TitleLabel can be editable
+	 */
+	public boolean isAssessmentViewTitleLabelEditable() {
+		return checkBooleanOption(ASSESSMENTVIEW_TITLELABEL_EDITABLE, false);
+	}
+    
 }
