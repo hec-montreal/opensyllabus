@@ -41,11 +41,9 @@
 }
 
 .gwt-DialogBox .Caption {
-/*	background:transparent url(img/exclamation.png) no-repeat 1px 2px; */
-	background:transparent url(images/exclamation.png) no-repeat 1px 2px;
+	background:transparent url(images/error.png) no-repeat 2px 4px;
 	padding-left:28px;
   	font-weight:bold;
-  	/*margin:2px;*/
 	color:#FFF;
 	margin:0;
 	background-color:#454a4f;

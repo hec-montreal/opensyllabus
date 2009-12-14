@@ -101,6 +101,7 @@
 .gwt-MenuBar-horizontal .gwt-MenuItem gwt\:clipper { /*Name space gwt:clipper for IE margin between image and text in menu*/
 	vertical-align:middle;
 	margin-right:5px;
+	margin-top:-2px;
 }
 
 .gwt-MenuBar-vertical {
@@ -323,6 +324,8 @@
 	padding:2px;
 	cursor:pointer;
 }
+.Osyl-MouseOverPopup-ArrowButtonPanel .Osyl-PushButton.Osyl-PushButton-up img {}
+
 .Osyl-PushButton-up-disabled, .Osyl-PushButton-down-disabled {display:none} /* Hide disabled arrows*/
 
 /* File Upload ------------------------------------------------------------------------------------------*/
@@ -539,11 +542,9 @@
 .Osyl-UnitView-ResPanel {
 	position:relative;
 	vertical-align:middle;
-/*	margin:0 10px 5px; ??? */
 	margin:0 0 5px;
 	padding:10px;
 	border:1px solid #e3f0FF;
-/*	width:100%; ??? */
 	width:auto;
 	zoom:1;
 	overflow:hidden;
@@ -605,6 +606,11 @@
 
 .Osyl-UnitView-HtmlViewer {
 	width:100%;
+}
+
+.Osyl-UnitView-HtmlViewer .gwt-Image {
+	margin-left:0;
+	margin-right:0;
 }
 
 /*.Osyl-UnitView-SemanticTag {
@@ -864,13 +870,20 @@
 
 /* UnobtrusiveAlert -----------------------------------*/
 .Osyl-UnobtrusiveAlert {
-	background-color:#DCEFFD;
-	border:1px solid #AAA;
-	padding:4px;
+	background-color:#FFF;
+	border:1px solid #454A4F;
+	padding:3px;
 	-moz-box-shadow:0 0 10px #000;
 	-webkit-box-shadow:1px 1px 10px #000;
 	box-shadow:1px 1px 10px #000;
-	z-index: 99999;
+	z-index:99999;
+}
+.Osyl-UnobtrusiveAlert .gwt-Label {
+	background-color:#DCEFFD;
+	color:#333;
+	padding:4px;
+	font-size:12px;
+	font-weight:bold;
 }
 /* End UnobtrusiveAlert -----------------------------------*/
 
