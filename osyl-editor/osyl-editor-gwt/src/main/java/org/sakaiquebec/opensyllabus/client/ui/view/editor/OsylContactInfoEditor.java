@@ -761,16 +761,16 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	String firstName = getTextFirstName();
 	String messages = "";
 	boolean error = false;
-	if ("".equals(firstName)) {
+	if ("".equals(firstName.trim())) {
 	    messages +=
 		    getView().getCoMessage(
-			    "ResProxContactInfoView_FirstNameMandatory");
+			    "ResProxContactInfoView_FirstNameMandatory")+"\n";
 	    error = true;
 	} 
-	if ("".equals(lastName)) {
+	if ("".equals(lastName.trim())) {
 	    messages +=
 		    getView().getCoMessage(
-			    "ResProxContactInfoView_LastNameMandatory");
+			    "ResProxContactInfoView_LastNameMandatory")+"\n";
 	    error = true;
 	}
 	if (error) {
