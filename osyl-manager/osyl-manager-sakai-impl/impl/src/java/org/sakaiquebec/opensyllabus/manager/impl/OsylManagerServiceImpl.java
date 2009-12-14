@@ -40,6 +40,7 @@ import java.util.Vector;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
@@ -788,8 +789,16 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     private void writeToZip(ZipOutputStream zos, String fileName, byte[] bytes)
 	    throws IOException {
 	ZipEntry zipEntry = new ZipEntry(fileName);
-	zos.putNextEntry(zipEntry);
-	zos.write((byte[]) bytes);
+	try {
+	    zos.putNextEntry(zipEntry);
+	    zos.write((byte[]) bytes);
+	} catch (ZipException e) {
+	    log.warn(fileName + " could not be add to zipfile.");
+	    if (log.isInfoEnabled()) {
+		log.info("Details");
+		e.printStackTrace();
+	    }
+	}
     }
 
     /**
@@ -807,7 +816,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	// retrieving the xml file
 	COSerialized coSerialized =
-		osylSiteService.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
+		osylSiteService
+			.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
 
 	byte[] xmlBytes = coSerialized.getContent().getBytes("UTF-8");
 	writeToZip(zos, OsylManagerService.CO_XML_FILENAME, xmlBytes);
@@ -1152,9 +1162,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    String courseSTitle = courseS.getTitle();
 		    String session = courseOff.getAcademicSession().getTitle();
 		    String sigle = courseOff.getCanonicalCourseEid();
-		    String section = courseSTitle.substring(courseSTitle.length()-3, courseSTitle.length());
+		    String section =
+			    courseSTitle.substring(courseSTitle.length() - 3,
+				    courseSTitle.length());
 		    // Info sur la section pas dans le CM
-		    value = sigle+" "+session+" "+section;
+		    value = sigle + " " + session + " " + section;
 		    cmCourses.put(courseS.getEid(), value);
 		}
 
