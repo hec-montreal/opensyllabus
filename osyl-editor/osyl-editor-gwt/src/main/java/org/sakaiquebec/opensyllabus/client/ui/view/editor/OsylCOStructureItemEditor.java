@@ -26,6 +26,7 @@ import java.util.List;
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
 import org.sakaiquebec.opensyllabus.client.ui.base.OsylPushButton;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylLabelEditClickListener;
@@ -198,7 +199,17 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
     }
 
     public boolean prepareForSave() {
-	return true;
+	if(nameEditor.getText().trim().equals("")){
+	    OsylAlertDialog osylAlertDialog =
+		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
+			    getView().getUiMessage("Global.field.required",
+				    getUiMessage("ASMUnit.title")));
+	    osylAlertDialog.center();
+	    osylAlertDialog.show();
+	    return false;
+	}else{
+	    return true;
+	}
     }
 
     public void enterEdit() {
