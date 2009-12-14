@@ -471,9 +471,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 							getUiMessage("CitationEditor.document.PropUpdateSuccess"));
 					OsylEditorEntryPoint
 						.showWidgetOnTop(alert);
-					citationPreviewLabel.setHTML(getView()
-						.getCitationsInfosAsLink(
-							selectedFile));
+					getBrowser().refreshCitationsInList();
 				    }
 				});
 

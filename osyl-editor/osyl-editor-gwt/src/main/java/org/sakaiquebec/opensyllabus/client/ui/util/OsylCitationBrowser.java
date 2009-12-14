@@ -67,26 +67,29 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 	currentCitationListItem = null;
     }
 
+    public void refreshCitationsInList() {
+	firstTimeRefreshing = true;
+	if (getSelectedAbstractBrowserItem() != null)
+	    setItemToSelect(getSelectedAbstractBrowserItem());
+	else {
+	    OsylCitationItem dumbCitationItem = new OsylCitationItem();
+	    dumbCitationItem.setFilePath(currentCitationListItem.getFilePath());
+	    setItemToSelect(dumbCitationItem);
+	}
+	String citationListDirectory =
+		getCurrentDirectory().getDirectoryPath().substring(
+			0,
+			getCurrentDirectory().getDirectoryPath().lastIndexOf(
+				"/"));
+	getCurrentDirectoryTextBox().setText(citationListDirectory);
+	getCurrentDirectory().setDirectoryPath(citationListDirectory);
+	getRemoteDirectoryListing(citationListDirectory);
+    }
+
     @Override
     public void onUploadFile(UploadFileEvent event) {
 	if (isInCitationList()) {
-	    firstTimeRefreshing = true;
-	    if (getSelectedAbstractBrowserItem() != null)
-		setItemToSelect(getSelectedAbstractBrowserItem());
-	    else {
-		OsylCitationItem dumbCitationItem = new OsylCitationItem();
-		dumbCitationItem.setFilePath(currentCitationListItem
-			.getFilePath());
-		setItemToSelect(dumbCitationItem);
-	    }
-	    String citationListDirectory =
-		    getCurrentDirectory().getDirectoryPath().substring(
-			    0,
-			    getCurrentDirectory().getDirectoryPath()
-				    .lastIndexOf("/"));
-	    getCurrentDirectoryTextBox().setText(citationListDirectory);
-	    getCurrentDirectory().setDirectoryPath(citationListDirectory);
-	    getRemoteDirectoryListing(citationListDirectory);
+	    refreshCitationsInList();
 	} else {
 	    super.onUploadFile(event);
 	}
