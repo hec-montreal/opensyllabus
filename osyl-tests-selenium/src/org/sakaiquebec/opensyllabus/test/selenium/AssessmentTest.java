@@ -73,7 +73,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         
         // We keep track of how many resources are showing to check that it
 	// is incremented as expected when we add one
-	int resNb = getResourceCount();
+	int resNb = getResourceCount()-1;
 	log("We start with " + resNb + " resources");
         
         //We add a first Assessment Unit

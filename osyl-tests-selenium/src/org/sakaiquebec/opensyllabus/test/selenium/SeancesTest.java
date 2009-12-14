@@ -65,7 +65,7 @@ public class SeancesTest extends AbstractOSYLTest{
         pause();
         
         // We keep track of how many resources are showing
-        int resNb = getResourceCount();
+        int resNb = getResourceCount()-1;
         log("We start with " + resNb + " resources");
         
         //We add a first Assessment Unit
@@ -434,6 +434,7 @@ public class SeancesTest extends AbstractOSYLTest{
         session().mouseOver("//option[@value=' (F)   osyl-src_1_.zip']");
         session().focus("//option[@value=' (F)   osyl-src_1_.zip']");
         session().click("//option[@value=' (F)   osyl-src_1_.zip']");
+        pause();
         
         // Close Editor
         session().click("//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/" +
