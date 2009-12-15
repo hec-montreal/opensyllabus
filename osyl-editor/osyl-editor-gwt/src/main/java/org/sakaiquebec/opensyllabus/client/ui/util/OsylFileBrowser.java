@@ -27,7 +27,6 @@ import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
-import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylDocumentEditor;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -48,8 +47,6 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 
     private OsylFileUpload osylFileUpload;
 
-    private OsylDocumentEditor osylDocumentEditor;
-
     public OsylFileBrowser() {
 	super();
     }
@@ -60,10 +57,8 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
      * @param model
      * @param newController
      */
-    public OsylFileBrowser(String newResDirName, String pathToSelect,
-	    OsylDocumentEditor osylDocumentEditor) {
+    public OsylFileBrowser(String newResDirName, String pathToSelect) {
 	super(newResDirName, new OsylFileItem(pathToSelect));
-	this.osylDocumentEditor = osylDocumentEditor;
     }
 
     @Override
@@ -117,24 +112,20 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 
     public void onUploadFile(UploadFileEvent event) {
 	setItemToSelect(new OsylFileItem(event.getSource().toString()));
-	setSelectedAbstractBrowserItem(getItemToSelect());
-	((OsylFileItem) getItemToSelect()).setCopyrightChoice(osylFileUpload
-		.getRight());
 	((OsylFileItem) getItemToSelect()).setFileName(event.getSource()
 		.toString().substring(
 			event.getSource().toString().lastIndexOf("/"),
 			event.getSource().toString().length()));
-	((OsylFileItem) getItemToSelect()).setDescription("");
 
 	OsylRemoteServiceLocator
 		.getDirectoryRemoteService()
 		.updateRemoteFileInfo(
 			((OsylFileItem) getItemToSelect()).getFileName(),
 			this.getCurrentDirectory().getDirectoryPath(),
-			((OsylFileItem) getItemToSelect()).getDescription(),
-			((OsylFileItem) getItemToSelect()).getCopyrightChoice(),
+			"",
+			osylFileUpload
+			.getRight(),
 			this.fileUpdateRequestHandler);
-	super.onUploadFile(event);
     }
 
     public void setRightsList(List<String> rightsList) {
@@ -161,14 +152,7 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 		}
 
 		public void onSuccess(Void result) {
-		    OsylUnobtrusiveAlert success =
-			    new OsylUnobtrusiveAlert(
-				    OsylController
-					    .getInstance()
-					    .getUiMessage(
-						    "DocumentEditor.document.PropUpdateSuccess"));
-		    OsylEditorEntryPoint.showWidgetOnTop(success);
-		    // osylDocumentEditor.refreshBrowsingComponents();
+		    OsylFileBrowser.super.onUploadFile(null);
 		}
 	    };
 

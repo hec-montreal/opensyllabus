@@ -429,7 +429,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor{
 
 	browser =
 		new OsylFileBrowser(basePath, getView().getDocPath() + "/"
-			+ getView().getDocName(), this);
+			+ getView().getDocName());
 
 	browser.addEventHandler((RFBItemSelectionEventHandler) this);
 	browser.addEventHandler((RFBAddFolderEventHandler) this);
