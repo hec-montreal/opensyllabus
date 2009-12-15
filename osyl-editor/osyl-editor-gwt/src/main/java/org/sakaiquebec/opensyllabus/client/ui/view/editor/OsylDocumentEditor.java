@@ -48,6 +48,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.DisclosurePanel;
@@ -71,7 +72,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author <a href="mailto:Remi.Saias@hec.ca">Remi Saias</a>
  */
-public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
+public class OsylDocumentEditor extends OsylAbstractBrowserEditor{
 
     // Our main panel which will display the viewer and the meta-info
     private VerticalPanel mainPanel;
@@ -160,7 +161,6 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	editorDesc.setWidth("99%");
 	editorDesc.setHeight("80px");
 	editorPanel.add(editorDesc);
-
     }
 
     /**
@@ -317,6 +317,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    if (saveButton.isEnabled()) {
 		message +=
 			getUiMessage("DocumentEditor.document.PropUpdateSave");
+	    } else if(getLicence().equals(licenseListBox.getItemText(0))){
+		message += "Vous ne pouvez référencer ce document dans le plan de cours si vous n'Avez pas les droits";
 	    }
 	}
 	if (message.equals("")) {
@@ -427,7 +429,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 	browser =
 		new OsylFileBrowser(basePath, getView().getDocPath() + "/"
-			+ getView().getDocName());
+			+ getView().getDocName(), this);
 
 	browser.addEventHandler((RFBItemSelectionEventHandler) this);
 	browser.addEventHandler((RFBAddFolderEventHandler) this);
@@ -481,7 +483,6 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	rightsAndSavePanel.add(new Label(getView().getUiMessage(
 		"DocumentEditor.document.license")));
 	licenseListBox = new ListBox();
-	updateResourceLicenseInfo();
 
 	rightsAndSavePanel.add(licenseListBox);
 	licenseListBox.setWidth("100%");
@@ -555,9 +556,14 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	licenseListBox.addChangeHandler(new ChangeHandler() {
 
 	    public void onChange(ChangeEvent event) {
-		saveButton.setEnabled(true);
+		if(licenseListBox.getSelectedIndex()>0){
+		    saveButton.setEnabled(true);
+		} else {
+		    saveButton.setEnabled(false);
+		}
 	    }
 	});
+	updateResourceLicenseInfo();
     }
 
     @Override
@@ -637,6 +643,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 				public void onSuccess(
 					ResourcesLicencingInfo result) {
 				    resourceLicensingInfo = result;
+				    ((OsylFileBrowser)browser).setRightsList(resourceLicensingInfo
+						.getCopyrightTypeList());
 				    // TODO Auto-generated method stub
 				    // getView().getController().handleRPCError("Sucess
 				    // while retrieving license information
@@ -666,15 +674,13 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
      * Refreshes the components of the document editor and the file browser on
      * some events.
      */
-    protected void refreshBrowsingComponents() {
+    public void refreshBrowsingComponents() {
 
 	// Called to refresh the file browser components
 	browser.refreshBrowser();
 
 	boolean isFound = false;
-
 	if (browser.getSelectedAbstractBrowserItem() != null) {
-
 	    if (browser.getSelectedAbstractBrowserItem().isFolder()) {
 		descriptionTextArea.setText("");
 		licenseListBox.setSelectedIndex(-1);
@@ -699,7 +705,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 	}
 	if (!isFound) {
-	    licenseListBox.setSelectedIndex(-1);
+	    licenseListBox.setSelectedIndex(0);
 	    descriptionTextArea.setText("");
 	}
 	saveButton.setEnabled(false);

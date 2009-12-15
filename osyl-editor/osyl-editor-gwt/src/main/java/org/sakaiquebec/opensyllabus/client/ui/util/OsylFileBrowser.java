@@ -21,12 +21,19 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
+import java.util.List;
+
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
+import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
+import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylDocumentEditor;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.PushButton;
 
 /**
@@ -36,6 +43,12 @@ import com.google.gwt.user.client.ui.PushButton;
  * @version $Id: $
  */
 public class OsylFileBrowser extends OsylAbstractBrowserComposite {
+
+    private List<String> rightsList;
+
+    private OsylFileUpload osylFileUpload;
+
+    private OsylDocumentEditor osylDocumentEditor;
 
     public OsylFileBrowser() {
 	super();
@@ -47,8 +60,10 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
      * @param model
      * @param newController
      */
-    public OsylFileBrowser(String newResDirName, String pathToSelect) {
+    public OsylFileBrowser(String newResDirName, String pathToSelect,
+	    OsylDocumentEditor osylDocumentEditor) {
 	super(newResDirName, new OsylFileItem(pathToSelect));
+	this.osylDocumentEditor = osylDocumentEditor;
     }
 
     @Override
@@ -64,9 +79,9 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
     private final class FileAddButtonClickHandler implements ClickHandler {
 
 	public void onClick(ClickEvent event) {
-	    OsylFileUpload osylFileUpload =
+	    osylFileUpload =
 		    new OsylFileUpload(getController(), getCurrentDirectory()
-			    .getDirectoryPath());
+			    .getDirectoryPath(), rightsList);
 	    osylFileUpload.addEventHandler(OsylFileBrowser.this);
 	    osylFileUpload.showModal();
 	}
@@ -102,7 +117,59 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 
     public void onUploadFile(UploadFileEvent event) {
 	setItemToSelect(new OsylFileItem(event.getSource().toString()));
+	setSelectedAbstractBrowserItem(getItemToSelect());
+	((OsylFileItem) getItemToSelect()).setCopyrightChoice(osylFileUpload
+		.getRight());
+	((OsylFileItem) getItemToSelect()).setFileName(event.getSource()
+		.toString().substring(
+			event.getSource().toString().lastIndexOf("/"),
+			event.getSource().toString().length()));
+	((OsylFileItem) getItemToSelect()).setDescription("");
+
+	OsylRemoteServiceLocator
+		.getDirectoryRemoteService()
+		.updateRemoteFileInfo(
+			((OsylFileItem) getItemToSelect()).getFileName(),
+			this.getCurrentDirectory().getDirectoryPath(),
+			((OsylFileItem) getItemToSelect()).getDescription(),
+			((OsylFileItem) getItemToSelect()).getCopyrightChoice(),
+			this.fileUpdateRequestHandler);
 	super.onUploadFile(event);
     }
+
+    public void setRightsList(List<String> rightsList) {
+	this.rightsList = rightsList;
+    }
+
+    /**
+     * Inner anonymous class that represent the response callback when updating
+     * file properties via sdata.
+     */
+    private final AsyncCallback<Void> fileUpdateRequestHandler =
+	    new AsyncCallback<Void>() {
+		public void onFailure(Throwable caught) {
+		    OsylUnobtrusiveAlert failure =
+			    new OsylUnobtrusiveAlert(
+				    OsylController.getInstance().getUiMessage(
+					    "Global.error")
+					    + ": "
+					    + OsylController
+						    .getInstance()
+						    .getUiMessage(
+							    "DocumentEditor.document.PropUpdateError"));
+		    OsylEditorEntryPoint.showWidgetOnTop(failure);
+		}
+
+		public void onSuccess(Void result) {
+		    OsylUnobtrusiveAlert success =
+			    new OsylUnobtrusiveAlert(
+				    OsylController
+					    .getInstance()
+					    .getUiMessage(
+						    "DocumentEditor.document.PropUpdateSuccess"));
+		    OsylEditorEntryPoint.showWidgetOnTop(success);
+		    // osylDocumentEditor.refreshBrowsingComponents();
+		}
+	    };
 
 }

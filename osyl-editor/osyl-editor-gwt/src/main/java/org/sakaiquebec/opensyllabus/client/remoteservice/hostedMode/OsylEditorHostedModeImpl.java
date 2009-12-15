@@ -92,17 +92,10 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	ResourcesLicencingInfo ress = new ResourcesLicencingInfo();
 	ress.setCopyrightTypeList(new ArrayList<String>());
 	ress.getCopyrightTypeList().add(
-		"hosted mode : Material is in public domain.");
+		"hosted mode : Choose a copyright status.");
 	ress.getCopyrightTypeList().add("hosted mode : I hold copyright.");
 	ress.getCopyrightTypeList().add(
-		"hosted mode : Material is subject to fair une exception.");
-	ress
-		.getCopyrightTypeList()
-		.add(
-			"hosted mode : I have obtained permission to use this material.");
-	ress.getCopyrightTypeList().add(
-		"hosted mode : Copyright status is not yet determined.");
-	ress.getCopyrightTypeList().add("hosted mode : Use copyright below.");
+		"hosted mode : I obtained the rights.");
 	callback.onSuccess(ress);
 
     }
