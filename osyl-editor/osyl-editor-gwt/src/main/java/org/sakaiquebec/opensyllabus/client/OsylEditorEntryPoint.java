@@ -111,7 +111,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 
 		boolean ok =
 			Window.confirm(osylController
-				.getUiMessage("saveBeforeQuit"));
+				.getUiMessage("save.saveBeforeQuit"));
 		if (ok) {
 		    osylController.onSavePushButton(null);
 		}

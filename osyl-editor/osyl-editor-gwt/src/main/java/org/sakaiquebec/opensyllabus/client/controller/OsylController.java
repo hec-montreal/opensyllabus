@@ -641,7 +641,7 @@ public class OsylController implements SavePushButtonEventHandler,
 	    alertBox.show();
 	} else {
 	    OsylUnobtrusiveAlert alert =
-		    new OsylUnobtrusiveAlert(uiMessages.getMessage("savedOK"));
+		    new OsylUnobtrusiveAlert(uiMessages.getMessage("save.savedOK"));
 	    OsylEditorEntryPoint.showWidgetOnTop(alert);
 	}
     }
@@ -1241,11 +1241,10 @@ public class OsylController implements SavePushButtonEventHandler,
 	    osylModelController.setModelDirty(false);
 	} catch (Exception e) {
 	    e.printStackTrace();
-	    // Window.alert(getUiMessages().getMessage("unableToSave",
-	    // e.toString()));
 	    final OsylAlertDialog alertBox =
 		    new OsylAlertDialog(false, true, "Alert - Error",
-			    uiMessages.getMessage("unableToSave", e.toString()));
+			    uiMessages.getMessage("save.unableToSave",
+				    e.toString()));
 	    alertBox.show();
 	}
     }
@@ -1588,8 +1587,11 @@ public class OsylController implements SavePushButtonEventHandler,
      */
     public void unableToAutoSave(Throwable error) {
 	String msg;
+	// If we auto-save failed, we check if the pinger has stopped because
+	// of too many errors. If yes we also stop the Auto Saver and warn the
+	// user.
 	if (pinger.isStopped()) {
-	    msg = uiMessages.getMessage("AutoSaveStopping");
+	    msg = uiMessages.getMessage("save.AutoSaveDisabled");
 	    autoSaver.stop();
 	} else {
 	    int MAX_MSG = 120;
@@ -1597,7 +1599,7 @@ public class OsylController implements SavePushButtonEventHandler,
 	    if (errMsg.length() > MAX_MSG) {
 		errMsg = errMsg.substring(0, MAX_MSG) + "...";
 	    }
-	    msg = uiMessages.getMessage("AutoSaveDidNotWork", errMsg);
+	    msg = uiMessages.getMessage("save.AutoSaveDidNotWork", errMsg);
 	}
 	final OsylAlertDialog alertBox =
 		new OsylAlertDialog(false, true, "Error", msg);
