@@ -33,7 +33,7 @@ public class OsylCOStructureItemLabelView extends OsylAbstractView {
     public OsylCOStructureItemLabelView(COElementAbstract model,
 	    OsylController controller, boolean isDeletable, String levelStyle) {
 	super(model, controller, controller.getOsylConfig()
-		.getSettings().isUnitViewTitleLabelEditable());
+		.getSettings().isUnitViewTitleLabelEditable(model.getType()));
 	setEditor(new OsylCOStructureItemEditor(this));
 	((OsylCOStructureItemEditor) getEditor()).setIsDeletable(isDeletable);
 	((OsylCOStructureItemEditor) getEditor()).setViewerStyle(levelStyle);
