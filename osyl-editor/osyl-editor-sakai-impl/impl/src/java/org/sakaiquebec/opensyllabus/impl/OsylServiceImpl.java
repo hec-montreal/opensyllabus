@@ -516,7 +516,7 @@ public class OsylServiceImpl implements OsylService {
 	    // Add the resource and its content
 	    ContentResourceEdit newResource =
 		    contentHostingService.addResource(resourceOutputDir,
-			    temp[0], temp[1], 3);
+			    temp[0], temp[1], 1);
 	    newResource.setContent(content);
 	    newResource.setContentType(contentType);
 	    contentHostingService.commitResource(newResource);
