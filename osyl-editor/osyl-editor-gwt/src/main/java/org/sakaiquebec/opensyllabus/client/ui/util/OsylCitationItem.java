@@ -88,7 +88,7 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 				COPropertiesType.IDENTIFIER_TYPE_NOLINK);
 	
 	if (noUrl != null && !"".equalsIgnoreCase(noUrl)
-				&& "undefined".equalsIgnoreCase(noUrl))
+				&& !"undefined".equalsIgnoreCase(noUrl))
 			return null;
 
 		if (url != null && url.trim() != "")

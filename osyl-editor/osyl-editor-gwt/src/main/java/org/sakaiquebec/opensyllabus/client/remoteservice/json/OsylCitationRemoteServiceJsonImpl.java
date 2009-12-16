@@ -56,6 +56,7 @@ public class OsylCitationRemoteServiceJsonImpl extends
      * SDATA
      */
     private static final String PREFERRED_URL = "preferredUrl";
+    private static final String NO_URL = "noUrl"; 
 
     public OsylCitationRemoteServiceJsonImpl() {
 	super();
@@ -197,6 +198,15 @@ public class OsylCitationRemoteServiceJsonImpl extends
 		    .getProperty(COPropertiesType.IDENTIFIER,
 			    COPropertiesType.IDENTIFIER_TYPE_LIBRARY)));
 	}
+
+	if (p_citation.getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_NOLINK) != null) {
+		    panel.add(FormHelper.createHiddenField("cipkeys", NO_URL));
+		    panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+			    .getProperty(COPropertiesType.IDENTIFIER,
+				    COPropertiesType.IDENTIFIER_TYPE_NOLINK)));
+		}
+
 
 	// add event handler
 	form.addSubmitCompleteHandler(new SubmitCompleteHandler() {

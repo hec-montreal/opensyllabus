@@ -17,6 +17,7 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -37,7 +38,8 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 	 * SDATA
 	 */
 	private static final String PREFERRED_URL = "preferredUrl";
-
+	private static final String NO_URL = "noUrl";
+	
 	public OsylCitationRemoteDirectoryContentCallBackAdaptator(
 			AsyncCallback<List<OsylAbstractBrowserItem>> asyncCallback) {
 		super(asyncCallback);
@@ -96,7 +98,10 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 				JSONString identifierTypeLibrary = (JSONString) properties
 						.get(COPropertiesType.IDENTIFIER_TYPE_URL);
 
-				List<String> creatorsList = new ArrayList<String>();
+				JSONString identifierTypeNoUrl = (JSONString) properties
+				.get(NO_URL);
+
+					List<String> creatorsList = new ArrayList<String>();
 				JSONValue creatorValue = properties.get("creator");
 				String creatorsString = "";
 				if (creatorValue != null) {
@@ -165,6 +170,12 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 						identifierTypeUrl == null ? "" : identifierTypeUrl
 								.stringValue());
 
+				csi.setProperty(COPropertiesType.IDENTIFIER,
+						COPropertiesType.IDENTIFIER_TYPE_NOLINK,
+						identifierTypeNoUrl == null ? "" : identifierTypeNoUrl
+								.stringValue());
+
+				
 				csi.setProperty(COPropertiesType.IDENTIFIER,
 						COPropertiesType.IDENTIFIER_TYPE_LIBRARY,
 						identifierTypeLibrary == null ? ""

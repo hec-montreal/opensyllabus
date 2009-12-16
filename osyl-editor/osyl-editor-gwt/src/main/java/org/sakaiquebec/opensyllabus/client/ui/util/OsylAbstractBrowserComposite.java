@@ -838,6 +838,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		}
 	    }
 	}
+	
 	if (!fileItemFound) {
 	    setSelectedAbstractBrowserItem(null);
 	    getFileListing().setSelectedIndex(-1);
