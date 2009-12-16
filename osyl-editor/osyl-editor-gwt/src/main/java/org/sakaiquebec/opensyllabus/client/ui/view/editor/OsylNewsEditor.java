@@ -138,10 +138,10 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
 	if (null != reqLevelIcon) {
 	    getViewerPanel().add(reqLevelIcon);
 	}
-	if (getView().isContextHidden()) {
-	    mainPanel.setVisible(false);
-	} else {
-	    mainPanel.setVisible(true);
+	if (isReadOnly()) {
+	    if (getView().isContextHidden()) {
+		mainPanel.setVisible(false);
+	    }
 	}
 
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");

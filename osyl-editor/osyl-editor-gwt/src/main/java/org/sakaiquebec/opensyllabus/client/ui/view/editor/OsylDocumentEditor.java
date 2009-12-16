@@ -48,7 +48,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.DisclosurePanel;
@@ -72,7 +71,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author <a href="mailto:Remi.Saias@hec.ca">Remi Saias</a>
  */
-public class OsylDocumentEditor extends OsylAbstractBrowserEditor{
+public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
     // Our main panel which will display the viewer and the meta-info
     private VerticalPanel mainPanel;
@@ -189,10 +188,10 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor{
 	if (getView().isContextImportant()) {
 	    htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
 	}
-	if (getView().isContextHidden()) {
-	    mainPanel.setVisible(false);
-	} else {
-	    mainPanel.setVisible(true);
+	if (isReadOnly()) {
+	    if (getView().isContextHidden()) {
+		mainPanel.setVisible(false);
+	    }
 	}
 
 	constructViewerLayout();
@@ -315,8 +314,9 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor{
 	    if (saveButton.isEnabled()) {
 		message +=
 			getUiMessage("DocumentEditor.document.PropUpdateSave");
-	    } else if(getLicence().equals(licenseListBox.getItemText(0))){
-		message += "Vous ne pouvez référencer ce document dans le plan de cours si vous n'Avez pas les droits";
+	    } else if (getLicence().equals(licenseListBox.getItemText(0))) {
+		message +=
+			"Vous ne pouvez référencer ce document dans le plan de cours si vous n'Avez pas les droits";
 	    }
 	}
 	if (message.equals("")) {
@@ -554,7 +554,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor{
 	licenseListBox.addChangeHandler(new ChangeHandler() {
 
 	    public void onChange(ChangeEvent event) {
-		if(licenseListBox.getSelectedIndex()>0){
+		if (licenseListBox.getSelectedIndex() > 0) {
 		    saveButton.setEnabled(true);
 		} else {
 		    saveButton.setEnabled(false);
@@ -641,8 +641,9 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor{
 				public void onSuccess(
 					ResourcesLicencingInfo result) {
 				    resourceLicensingInfo = result;
-				    ((OsylFileBrowser)browser).setRightsList(resourceLicensingInfo
-						.getCopyrightTypeList());
+				    ((OsylFileBrowser) browser)
+					    .setRightsList(resourceLicensingInfo
+						    .getCopyrightTypeList());
 				    // TODO Auto-generated method stub
 				    // getView().getController().handleRPCError("Sucess
 				    // while retrieving license information

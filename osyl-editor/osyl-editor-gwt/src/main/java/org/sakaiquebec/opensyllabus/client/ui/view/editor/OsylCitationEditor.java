@@ -177,10 +177,10 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	if (getView().isContextImportant()) {
 	    htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
 	}
-	if (getView().isContextHidden()) {
-	    mainPanel.setVisible(false);
-	} else {
-	    mainPanel.setVisible(true);
+	if (isReadOnly()) {
+	    if (getView().isContextHidden()) {
+		mainPanel.setVisible(false);
+	    }
 	}
 
 	constructViewerLayout();

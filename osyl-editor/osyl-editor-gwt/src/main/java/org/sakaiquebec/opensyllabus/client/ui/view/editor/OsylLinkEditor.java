@@ -174,10 +174,10 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	if (getView().isContextImportant()) {
 	    htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
 	}
-	if (getView().isContextHidden()) {
-	    getMainPanel().setVisible(false);
-	} else {
-	    getMainPanel().setVisible(true);
+	if (isReadOnly()) {
+	    if (getView().isContextHidden()) {
+		getMainPanel().setVisible(false);
+	    }
 	}
 
 	constructViewerLayout();
