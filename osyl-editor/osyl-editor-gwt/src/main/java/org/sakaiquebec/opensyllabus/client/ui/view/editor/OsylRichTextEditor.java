@@ -118,20 +118,17 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
 	setViewer(htmlViewer);
 	setViewerPanel(new HorizontalPanel());
 
-	if (isReadOnly()) {
-	    if (getView().isContextImportant()) {
-		htmlViewer
-			.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
-	    }
-	    Image reqLevelIcon = getCurrentRequirementLevelIcon();
-	    if (null != reqLevelIcon) {
-		getViewerPanel().add(reqLevelIcon);
-	    }
-	    if (getView().isContextHidden()) {
-		mainPanel.setVisible(false);
-	    } else {
-		mainPanel.setVisible(true);
-	    }
+	if (getView().isContextImportant()) {
+	    htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
+	}
+	Image reqLevelIcon = getCurrentRequirementLevelIcon();
+	if (null != reqLevelIcon) {
+	    getViewerPanel().add(reqLevelIcon);
+	}
+	if (getView().isContextHidden()) {
+	    mainPanel.setVisible(false);
+	} else {
+	    mainPanel.setVisible(true);
 	}
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewerPanel().add(getViewer());

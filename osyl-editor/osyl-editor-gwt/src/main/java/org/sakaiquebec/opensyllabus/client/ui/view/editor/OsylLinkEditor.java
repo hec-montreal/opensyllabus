@@ -171,17 +171,15 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	setViewerPanel(new HorizontalPanel());
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 
-	if (isReadOnly()) {
-	    if (getView().isContextImportant()) {
-		htmlViewer
-			.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
-	    }
-	    if (getView().isContextHidden()) {
-		getMainPanel().setVisible(false);
-	    } else {
-		getMainPanel().setVisible(true);
-	    }
+	if (getView().isContextImportant()) {
+	    htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
 	}
+	if (getView().isContextHidden()) {
+	    getMainPanel().setVisible(false);
+	} else {
+	    getMainPanel().setVisible(true);
+	}
+
 	constructViewerLayout();
     }
 
@@ -194,12 +192,12 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	// | description |
 	// |____________________________________________|
 	//
-	if (isReadOnly()) {
-	    Image reqLevelIcon = getCurrentRequirementLevelIcon();
-	    if (null != reqLevelIcon) {
-		getViewerPanel().add(reqLevelIcon);
-	    }
+
+	Image reqLevelIcon = getCurrentRequirementLevelIcon();
+	if (null != reqLevelIcon) {
+	    getViewerPanel().add(reqLevelIcon);
 	}
+
 	VerticalPanel vp = new VerticalPanel();
 	vp.setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewerPanel().add(vp);
@@ -316,10 +314,11 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     public boolean prepareForSave() {
 	String messages = "";
 	boolean ok = true;
-	if(getText().trim().equals("")){
-	    ok=false;
-	    messages+=getView().getUiMessage("Global.field.required",
-			getUiMessage("Link.label")); 
+	if (getText().trim().equals("")) {
+	    ok = false;
+	    messages +=
+		    getView().getUiMessage("Global.field.required",
+			    getUiMessage("Link.label"));
 	}
 	if (!LinkValidator.isValidLink(getLink())) {
 	    ok = false;

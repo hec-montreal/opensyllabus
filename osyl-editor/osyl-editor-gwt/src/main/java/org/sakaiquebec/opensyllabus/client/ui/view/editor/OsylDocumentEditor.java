@@ -186,17 +186,15 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor{
 	setViewerPanel(new HorizontalPanel());
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 
-	if (isReadOnly()) {
-	    if (getView().isContextImportant()) {
-		htmlViewer
-			.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
-	    }
-	    if (getView().isContextHidden()) {
-		mainPanel.setVisible(false);
-	    } else {
-		mainPanel.setVisible(true);
-	    }
+	if (getView().isContextImportant()) {
+	    htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
 	}
+	if (getView().isContextHidden()) {
+	    mainPanel.setVisible(false);
+	} else {
+	    mainPanel.setVisible(true);
+	}
+
 	constructViewerLayout();
     }
 
@@ -208,12 +206,12 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor{
 	// | description |
 	// |____________________________________________|
 	//
-	if (isReadOnly()) {
-	    Image reqLevelIcon = getCurrentRequirementLevelIcon();
-	    if (null != reqLevelIcon) {
-		getViewerPanel().add(reqLevelIcon);
-	    }
+
+	Image reqLevelIcon = getCurrentRequirementLevelIcon();
+	if (null != reqLevelIcon) {
+	    getViewerPanel().add(reqLevelIcon);
 	}
+
 	VerticalPanel vp = new VerticalPanel();
 	vp.setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewerPanel().add(vp);

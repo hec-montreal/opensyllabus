@@ -124,28 +124,26 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
 	HTML htmlViewer = new HTML();
 	htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel");
 	setTextViewer(htmlViewer);
-	
+
 	HTML timeViewer = new HTML();
 	timeViewer.setStylePrimaryName("Osyl-News-TimeStamp");
 	setTimestampViewer(timeViewer);
-	
+
 	setViewerPanel(new VerticalPanel());
 
-	if (isReadOnly()) {
-	    if (getView().isContextImportant()) {
-		htmlViewer
-			.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
-	    }
-	    Image reqLevelIcon = getCurrentRequirementLevelIcon();
-	    if (null != reqLevelIcon) {
-		getViewerPanel().add(reqLevelIcon);
-	    }
-	    if (getView().isContextHidden()) {
-		mainPanel.setVisible(false);
-	    } else {
-		mainPanel.setVisible(true);
-	    }
+	if (getView().isContextImportant()) {
+	    htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
 	}
+	Image reqLevelIcon = getCurrentRequirementLevelIcon();
+	if (null != reqLevelIcon) {
+	    getViewerPanel().add(reqLevelIcon);
+	}
+	if (getView().isContextHidden()) {
+	    mainPanel.setVisible(false);
+	} else {
+	    mainPanel.setVisible(true);
+	}
+
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewerPanel().add(getTextViewer());
 	getViewerPanel().add(getTimestampViewer());
@@ -159,13 +157,13 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
     public HTML getTextViewer() {
 	return this.textViewer;
     }
-    
+
     public HTML getTimestampViewer() {
-        return timestampViewer;
+	return timestampViewer;
     }
 
     public void setTimestampViewer(HTML timestampViewer) {
-        this.timestampViewer = timestampViewer;
+	this.timestampViewer = timestampViewer;
     }
 
     private void setViewerPanel(VerticalPanel viewerPanel) {
@@ -179,11 +177,16 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
     private String getTextFromModel() {
 	return getView().getTextFromModel();
     }
-    
+
     private String getTimeStamp() {
-	String dateString = ((OsylNewsView)getView()).getTimeStampFromModel();
+	String dateString = ((OsylNewsView) getView()).getTimeStampFromModel();
 	Date date = OsylDateUtils.getDateFromXMLDate(dateString);
-	DateTimeFormat dtf2 = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss");//TODO has to come from config
+	DateTimeFormat dtf2 = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss");// TODO
+	// has
+	// to
+	// come
+	// from
+	// config
 	return dtf2.format(date);
     }
 
@@ -272,12 +275,12 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
     public boolean isResizable() {
 	return true;
     }
-    
-    public boolean isMoveable(){
+
+    public boolean isMoveable() {
 	return true;
     }
-    
-    public String getRubricType(){
+
+    public String getRubricType() {
 	return COContentRubric.RUBRIC_TYPE_NEWS;
     }
 
@@ -286,7 +289,7 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
      * superclass.
      */
     public void setTimeStamp(String text) {
-	if (!isInEditionMode()){
+	if (!isInEditionMode()) {
 	    timestampViewer.setHTML(text);
 	}
     }

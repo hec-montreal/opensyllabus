@@ -174,17 +174,15 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	setViewerPanel(new HorizontalPanel());
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 
-	if (isReadOnly()) {
-	    if (getView().isContextImportant()) {
-		htmlViewer
-			.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
-	    }
-	    if (getView().isContextHidden()) {
-		mainPanel.setVisible(false);
-	    } else {
-		mainPanel.setVisible(true);
-	    }
+	if (getView().isContextImportant()) {
+	    htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
 	}
+	if (getView().isContextHidden()) {
+	    mainPanel.setVisible(false);
+	} else {
+	    mainPanel.setVisible(true);
+	}
+
 	constructViewerLayout();
     }
 
@@ -196,12 +194,12 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	// | description |
 	// |____________________________________________|
 	//
-	if (isReadOnly()) {
-	    Image reqLevelIcon = getCurrentRequirementLevelIcon();
-	    if (null != reqLevelIcon) {
-		getViewerPanel().add(reqLevelIcon);
-	    }
+
+	Image reqLevelIcon = getCurrentRequirementLevelIcon();
+	if (null != reqLevelIcon) {
+	    getViewerPanel().add(reqLevelIcon);
 	}
+
 	VerticalPanel vp = new VerticalPanel();
 	vp.setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewerPanel().add(vp);
@@ -268,15 +266,16 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     public boolean prepareForSave() {
 	String message = "";
 	if (getResourceURI() == null) {
-	    message+= getUiMessage("CitationEditor.save.error.citationUndefined");
+	    message +=
+		    getUiMessage("CitationEditor.save.error.citationUndefined");
 	} else if (saveButton.isEnabled()) {
-	    message+= getUiMessage("CitationEditor.ChangeUrl.Save");
-	} 
-	if(message.equals("")){
+	    message += getUiMessage("CitationEditor.ChangeUrl.Save");
+	}
+	if (message.equals("")) {
 	    return true;
-	}else{
+	} else {
 	    OsylAlertDialog oad =
-		    new OsylAlertDialog(getUiMessage("Global.error"),message);
+		    new OsylAlertDialog(getUiMessage("Global.error"), message);
 	    oad.center();
 	    oad.show();
 	    return false;
