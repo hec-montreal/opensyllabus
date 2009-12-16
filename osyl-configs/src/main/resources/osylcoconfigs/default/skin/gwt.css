@@ -9,7 +9,6 @@
 	margin:5px 2px;
 	width:85px;
 	height:30px;
-/*	background:transparent url(img/button/osyl_button_gwt.png) no-repeat; */
 	background:transparent url(images/button/osyl_button_gwt.png) no-repeat;
 	border:0;
 	cursor:pointer;
@@ -308,7 +307,6 @@
 
 .datePickerDay {
   padding: 4px;
-  cursor: hand;
   cursor: pointer;
 }
 
@@ -351,14 +349,13 @@
 .datePickerNextButton {
   font-size: 120%;
   line-height: 1em;
-  cursor: hand;
   cursor: pointer;
   padding: 0px 4px;
 }
 
 td.datePickerMonth {
   text-align: center;
-  vertical-align: center;
+  vertical-align: middle;
   white-space: nowrap;
   font-size: 70%;
   font-weight: bold;
@@ -366,7 +363,7 @@ td.datePickerMonth {
 
 .dateBoxPopup{
 	z-index: 15000;
-	
+}
 /* ---- CSS definitions overriding default GWT styles (incubator widgets) */
 
 /* Date picker styles */

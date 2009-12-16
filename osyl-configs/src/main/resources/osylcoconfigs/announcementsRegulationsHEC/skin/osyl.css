@@ -549,22 +549,14 @@
 	zoom:1;
 	overflow:hidden;
 }
+
+.Osyl-UnitView-ResPanel.Osyl-UnitView-ResPanel-ReadOnly {
+	border:1px solid #FFF;
+}
 .Osyl-ListItemView-Hyperlink .Osyl-UnitView-ResPanel {
 	color:#FFF; /*For IE6*/
 	border:1px solid transparent;
 	margin:0;
-}
-/* Content Unit Resource Panel focused */
-.Osyl-UnitView-ResPanelFocused {
-	position:relative;
-	background-color:#FDF6AF;
-	margin:0 0 5px;
-	border:1px solid transparent;
-	color:#FFF; /*For IE6*/
-	padding:3px;
-	width:auto;
-	zoom:1;
-	overflow:hidden;
 }
 
 .Osyl-UnitView-ResPanel-Hover {
@@ -597,7 +589,7 @@
 .Osyl-UnitView-UnitLabel ol, .Osyl-UnitView-UnitLabel-Important ol, .Osyl-UnitView-HtmlViewer ol {margin-left:35px}
 
 .Osyl-UnitView-UnitLabel-Important {
-	background:transparent url(images/important.gif) no-repeat top right;
+	background:transparent url(images/important.png) no-repeat top right;
 	padding:3px 26px 6px 0;
 	overflow:auto;
 	min-height:24px;
@@ -675,6 +667,9 @@
 	width:100%;
 	border:1px solid #e3f0FF;
 	margin:0 0 5px;
+}
+.Osyl-ListItemView-Table.Osyl-ListItemView-Table-ReadOnly {
+	border:1px solid #FFF;
 }
 
 .Osyl-ListItemView-labelNo {
