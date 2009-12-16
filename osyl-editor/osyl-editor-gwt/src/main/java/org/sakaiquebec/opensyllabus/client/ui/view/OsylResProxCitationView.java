@@ -28,6 +28,8 @@ import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 
+import com.google.gwt.user.client.Window;
+
 /**
  * Class providing display and edition capabilities for citations resources.
  * 
@@ -235,6 +237,16 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	String url =
 		getProperty(COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_URL);
+	
+	//We have no url associated to this citation
+	String noUrl = 
+		getProperty(COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_NOLINK);
+	Window.alert(noUrl);
+	if (noUrl != null && !"".equals(noUrl))
+		return getCitationPreview();
+	
+	//We have an url associated to this citation
 	if (url == null || url.equals(""))
 	    url =
 		    getProperty(COPropertiesType.IDENTIFIER,
@@ -266,6 +278,15 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	return false;
     }
 
+    public boolean hasLink(OsylCitationItem citationItem){
+    	String identifier =
+    		citationItem.getProperty(COPropertiesType.IDENTIFIER,
+    				COPropertiesType.IDENTIFIER_TYPE_NOLINK);
+
+    		if (identifier != null && !"".equalsIgnoreCase(identifier))
+    		    return false;
+    		return true;
+    }
     /**
      * Generate a link, if possible, with citation informations
      * 

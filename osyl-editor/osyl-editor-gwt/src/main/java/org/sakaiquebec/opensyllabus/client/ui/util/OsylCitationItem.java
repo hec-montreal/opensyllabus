@@ -82,6 +82,14 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 	String url =
 		getProperty(COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
+
+	String noUrl = 
+		getProperty(COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_NOLINK);
+	
+	if (noUrl != null && !"".equalsIgnoreCase(noUrl))
+		return null;
+
 	if (url != null && url.trim()!="")
 	    return url;
 	else
