@@ -25,9 +25,9 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -50,7 +50,7 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
     private HTML viewer;
 
     // Contains the viewer and info icons for the requirement level
-    private HorizontalPanel viewerPanel;
+    private FlexTable viewerPanel;
 
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
@@ -112,22 +112,33 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
 	HTML htmlViewer = new HTML();
 	htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel");
 	setViewer(htmlViewer);
-	setViewerPanel(new HorizontalPanel());
+
+	setViewerPanel(new FlexTable());
+	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 
 	if (getView().isContextImportant()) {
-	    getViewer().setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
+	    getViewerPanel().addStyleName("Osyl-UnitView-Important");
 	}
+
 	Image reqLevelIcon = getCurrentRequirementLevelIcon();
 	if (null != reqLevelIcon) {
-	    getViewerPanel().add(reqLevelIcon);
+	    getViewerPanel().addStyleName("Osyl-UnitView-LvlReq");
 	}
-	if (isReadOnly()) {
-	    if (getView().isContextHidden()) {
-		mainPanel.setVisible(false);
-	    }
-	}
-	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
-	getViewerPanel().add(getViewer());
+
+	getViewerPanel().setWidget(0, 0, reqLevelIcon);
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 0,
+		"Osyl-UnitView-IconLvlReq");
+
+	getViewerPanel().setWidget(0, 1,
+		new HTML(getLocalizedRequirementLevel()));
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 1,
+		"Osyl-UnitView-TextLvlReq");
+
+	getViewerPanel().setWidget(1, 0, getImportantIcon());
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(1, 0,
+		"Osyl-UnitView-IconLvlImportant");
+
+	getViewerPanel().setWidget(1, 1, getViewer());
 	mainPanel.add(getViewerPanel());
     }
 
@@ -139,11 +150,11 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
 	return this.viewer;
     }
 
-    private void setViewerPanel(HorizontalPanel viewerPanel) {
+    private void setViewerPanel(FlexTable viewerPanel) {
 	this.viewerPanel = viewerPanel;
     }
 
-    private HorizontalPanel getViewerPanel() {
+    private FlexTable getViewerPanel() {
 	return viewerPanel;
     }
 
@@ -197,18 +208,23 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
     public void enterView() {
 	// We keep track that we are now in view-mode
 	setInEditionMode(false);
-	
 	getMainPanel().clear();
-	initViewer();
+	
+	if (!(isReadOnly() && getView().isContextHidden())) {
+	    initViewer();
 
-	// We get the text to display from the model
-	setText(getTextFromModel());
+	    // We get the text to display from the model
+	    setText(getTextFromModel());
 
-	// If we are not in read-only mode, we display some meta-info and add
-	// buttons and listeners enabling edition or deletion:
-	if (!isReadOnly()) {
-	    addViewerStdButtons();
-	    getMainPanel().add(getMetaInfoLabel());
+	    // If we are not in read-only mode, we display some meta-info and
+	    // add
+	    // buttons and listeners enabling edition or deletion:
+	    if (!isReadOnly()) {
+		addViewerStdButtons();
+		getMainPanel().add(getMetaInfoLabel());
+	    }
+	} else {
+	    getMainPanel().setVisible(false);
 	}
 
     } // enterView

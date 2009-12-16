@@ -30,6 +30,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
@@ -55,7 +56,8 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
     private HTML timestampViewer;
 
     // Contains the viewer and info icons for the requirement level
-    private VerticalPanel viewerPanel;
+    private FlexTable viewerPanel;
+    private VerticalPanel viewer;
 
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
@@ -125,24 +127,46 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
 	timeViewer.setStylePrimaryName("Osyl-News-TimeStamp");
 	setTimestampViewer(timeViewer);
 
-	setViewerPanel(new VerticalPanel());
-	
-	if (isReadOnly()) {
-	    if (getView().isContextHidden()) {
-		mainPanel.setVisible(false);
-	    }
-	}
+	setViewer(new VerticalPanel());
+	getViewer().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
+	getViewer().add(getTextViewer());
+	getViewer().add(getTimestampViewer());
+
+	setViewerPanel(new FlexTable());
+	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
+
 	if (getView().isContextImportant()) {
-	    getTextViewer().setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
+	    getViewerPanel().addStyleName("Osyl-UnitView-Important");
 	}
+
 	Image reqLevelIcon = getCurrentRequirementLevelIcon();
 	if (null != reqLevelIcon) {
-	    getViewerPanel().add(reqLevelIcon);
+	    getViewerPanel().addStyleName("Osyl-UnitView-LvlReq");
 	}
-	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
-	getViewerPanel().add(getTextViewer());
-	getViewerPanel().add(getTimestampViewer());
+
+	getViewerPanel().setWidget(0, 0, reqLevelIcon);
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 0,
+		"Osyl-UnitView-IconLvlReq");
+
+	getViewerPanel().setWidget(0, 1,
+		new HTML(getLocalizedRequirementLevel()));
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 1,
+		"Osyl-UnitView-TextLvlReq");
+
+	getViewerPanel().setWidget(1, 0, getImportantIcon());
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(1, 0,
+		"Osyl-UnitView-IconLvlImportant");
+	getViewerPanel().setWidget(1, 1, getViewer());
+
 	mainPanel.add(getViewerPanel());
+    }
+
+    public VerticalPanel getViewer() {
+	return viewer;
+    }
+
+    public void setViewer(VerticalPanel viewer) {
+	this.viewer = viewer;
     }
 
     private void setTextViewer(HTML html) {
@@ -161,11 +185,11 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
 	this.timestampViewer = timestampViewer;
     }
 
-    private void setViewerPanel(VerticalPanel viewerPanel) {
+    private void setViewerPanel(FlexTable viewerPanel) {
 	this.viewerPanel = viewerPanel;
     }
 
-    private VerticalPanel getViewerPanel() {
+    private FlexTable getViewerPanel() {
 	return viewerPanel;
     }
 
@@ -232,19 +256,23 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
     public void enterView() {
 	// We keep track that we are now in view-mode
 	setInEditionMode(false);
-	
 	getMainPanel().clear();
-	initViewer();
+	if (!(isReadOnly() && getView().isContextHidden())) {
+	    initViewer();
 
-	// We get the text to display from the model
-	setText(getTextFromModel());
-	setTimeStamp(getTimeStamp());
+	    // We get the text to display from the model
+	    setText(getTextFromModel());
+	    setTimeStamp(getTimeStamp());
 
-	// If we are not in read-only mode, we display some meta-info and add
-	// buttons and listeners enabling edition or deletion:
-	if (!isReadOnly()) {
-	    addViewerStdButtons();
-	    getMainPanel().add(getMetaInfoLabel());
+	    // If we are not in read-only mode, we display some meta-info and
+	    // add
+	    // buttons and listeners enabling edition or deletion:
+	    if (!isReadOnly()) {
+		addViewerStdButtons();
+		getMainPanel().add(getMetaInfoLabel());
+	    }
+	} else {
+	    getMainPanel().setVisible(false);
 	}
 
     } // enterView

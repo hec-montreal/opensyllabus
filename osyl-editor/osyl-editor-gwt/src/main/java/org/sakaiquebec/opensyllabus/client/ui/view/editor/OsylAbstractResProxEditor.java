@@ -315,7 +315,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    } else if (COPropertiesType.REQ_LEVEL_COMPLEMENTARY
 		    .equals(reqLevel)) {
 		reqLevelIndex = 3;
-	    } else{
+	    } else {
 		reqLevelIndex = 0;
 	    }
 	    requirementListBox.setSelectedIndex(reqLevelIndex);
@@ -402,16 +402,27 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    img = getOsylImageBundle().iconeRec().createImage();
 	} else if (COPropertiesType.REQ_LEVEL_COMPLEMENTARY.equals(reqLevel)) {
 	    img = getOsylImageBundle().iconeCompl().createImage();
-	} 
-	if(img!=null)
-	    img.setTitle(getUiMessage("MetaInfo.requirement."+reqLevel));
+	}
+	if (img != null)
+	    img.setTitle(getUiMessage("MetaInfo.requirement." + reqLevel));
 	return img;
     }
-    
-    protected Image getImportantIcon(){
-	Image img = getOsylImageBundle().iconeImportant().createImage();
-	img.setTitle(getUiMessage("MetaInfo.important"));
+
+    protected Image getImportantIcon() {
+	Image img = null;
+	if (getView().isContextImportant()) {
+	    img = getOsylImageBundle().iconeImportant().createImage();
+	    img.setTitle(getUiMessage("MetaInfo.important"));
+	}
 	return img;
+    }
+
+    protected String getLocalizedRequirementLevel() {
+	if (getView().getRequirementLevel() != null) {
+	    return getView().getUiMessage(
+		    "MetaInfo.requirement." + getView().getRequirementLevel());
+	} else
+	    return "";
     }
 
     /**
@@ -572,7 +583,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
 	String metaInfoLabelStr =
 		getUiMessage("MetaInfo.audience") + ": " + diffusionLevel;
-	
+
 	if (hasHide) {
 	    String hidden =
 		    (getView().isContextHidden() ? getUiMessage("Global.yes")
@@ -580,7 +591,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    metaInfoLabelStr +=
 		    " | " + getUiMessage("MetaInfo.hidden") + ": " + hidden;
 	}
-	
+
 	if (hasImportant) {
 	    String important =
 		    (getView().isContextImportant() ? getUiMessage("Global.yes")

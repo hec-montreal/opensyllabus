@@ -31,7 +31,6 @@ import org.sakaiquebec.opensyllabus.shared.util.LinkValidator;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RichTextArea;
@@ -58,12 +57,13 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     private RichTextArea editorDesc;
 
     // Our viewers
-    private HTML viewer;
+    private VerticalPanel viewer;
+    private HTML viewerLink;
     private HTML viewerURI;
     private HTML viewerDesc;
 
     // Contains the viewer and info icons for the requirement level
-    private HorizontalPanel viewerPanel;
+    private FlexTable viewerPanel;
 
     // remember editor description height for maximizing popup
     private int originalEditorDescHeight;
@@ -147,9 +147,9 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
      * Creates and set the low-level viewer (HTML panel).
      */
     private void initViewer() {
-	HTML htmlViewer = new HTML();
-	htmlViewer.setStylePrimaryName("link");
-	setViewer(htmlViewer);
+	HTML htmlLinkViewer = new HTML();
+	htmlLinkViewer.setStylePrimaryName("link");
+	setViewerLink(htmlLinkViewer);
 
 	HTML htmlViewerDesc = new HTML();
 	htmlViewerDesc.setStylePrimaryName("description");
@@ -163,38 +163,55 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	    getViewerURI().setVisible(false);
 	}
 
-	setViewerPanel(new HorizontalPanel());
+	setViewer(new VerticalPanel());
+	getViewer().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
+	getViewer().add(getViewerLink());
+	getViewer().add(getViewerURI());
+	getViewer().add(getViewerDesc());
+
+	setViewerPanel(new FlexTable());
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 
-	if (isReadOnly()) {
-	    if (getView().isContextHidden()) {
-		getMainPanel().setVisible(false);
-	    }
-	}
-	
-	Image reqLevelIcon = getCurrentRequirementLevelIcon();
-	if (null != reqLevelIcon) {
-	    getViewerPanel().add(reqLevelIcon);
-	}
 	if (getView().isContextImportant()) {
-	    getViewer().setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
+	    getViewerPanel().addStyleName("Osyl-UnitView-Important");
 	}
 
-	VerticalPanel vp = new VerticalPanel();
-	vp.setStylePrimaryName("Osyl-UnitView-HtmlViewer");
-	getViewerPanel().add(vp);
-	vp.add(getViewer());
-	vp.add(getViewerURI());
-	vp.add(getViewerDesc());
+	Image reqLevelIcon = getCurrentRequirementLevelIcon();
+	if (null != reqLevelIcon) {
+	    getViewerPanel().addStyleName("Osyl-UnitView-LvlReq");
+	}
+
+	getViewerPanel().setWidget(0, 0, reqLevelIcon);
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 0,
+		"Osyl-UnitView-IconLvlReq");
+
+	getViewerPanel().setWidget(0, 1,
+		new HTML(getLocalizedRequirementLevel()));
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 1,
+		"Osyl-UnitView-TextLvlReq");
+
+	getViewerPanel().setWidget(1, 0, getImportantIcon());
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(1, 0,
+		"Osyl-UnitView-IconLvlImportant");
+	getViewerPanel().setWidget(1, 1, getViewer());
+
 	getMainPanel().add(getViewerPanel());
     }
 
-    private void setViewer(HTML html) {
-	this.viewer = html;
+    public VerticalPanel getViewer() {
+	return viewer;
     }
 
-    private HTML getViewer() {
-	return this.viewer;
+    public void setViewer(VerticalPanel viewer) {
+	this.viewer = viewer;
+    }
+
+    private void setViewerLink(HTML html) {
+	this.viewerLink = html;
+    }
+
+    private HTML getViewerLink() {
+	return this.viewerLink;
     }
 
     private void setViewerURI(HTML html) {
@@ -213,11 +230,11 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	return this.viewerDesc;
     }
 
-    private void setViewerPanel(HorizontalPanel viewerPanel) {
+    private void setViewerPanel(FlexTable viewerPanel) {
 	this.viewerPanel = viewerPanel;
     }
 
-    private HorizontalPanel getViewerPanel() {
+    private FlexTable getViewerPanel() {
 	return viewerPanel;
     }
 
@@ -237,7 +254,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 		editorName.setWidth("675px");
 	    }
 	} else {
-	    viewer.setHTML(text);
+	    viewerLink.setHTML(text);
 	}
     }
 
@@ -245,7 +262,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	if (isInEditionMode()) {
 	    return editorName.getText();
 	} else {
-	    return viewer.getHTML();
+	    return viewerLink.getHTML();
 	}
     }
 
@@ -256,7 +273,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 		editorLink.setWidth("675px");
 	    }
 	} else {
-	    viewer.setHTML(text);
+	    viewerLink.setHTML(text);
 	}
     }
 
@@ -264,7 +281,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	if (isInEditionMode()) {
 	    return editorLink.getText();
 	} else {
-	    return viewer.getHTML();
+	    return viewerLink.getHTML();
 	}
     }
 
@@ -332,20 +349,24 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     public void enterView() {
 	// We keep track that we are now in view-mode
 	setInEditionMode(false);
-
 	getMainPanel().clear();
-	initViewer();
-	
-	// We get the text to display from the model
-	getViewer().setHTML(getView().getTextFromModel());
-	getViewerURI().setHTML("(" + getView().getRawURI() + ")");
-	getViewerDesc().setHTML(getView().getCommentFromModel());
+	if (!(isReadOnly() && getView().isContextHidden())) {
+	    initViewer();
 
-	// If we are not in read-only mode, we display some meta-info and add
-	// buttons and listeners enabling edition or deletion:
-	if (!isReadOnly()) {
-	    getMainPanel().add(getMetaInfoLabel());
-	    addViewerStdButtons();
+	    // We get the text to display from the model
+	    getViewerLink().setHTML(getView().getTextFromModel());
+	    getViewerURI().setHTML("(" + getView().getRawURI() + ")");
+	    getViewerDesc().setHTML(getView().getCommentFromModel());
+
+	    // If we are not in read-only mode, we display some meta-info and
+	    // add
+	    // buttons and listeners enabling edition or deletion:
+	    if (!isReadOnly()) {
+		getMainPanel().add(getMetaInfoLabel());
+		addViewerStdButtons();
+	    }
+	} else {
+	    getMainPanel().setVisible(false);
 	}
     } // enterView
 

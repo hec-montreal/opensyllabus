@@ -133,10 +133,9 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public HTML getFirstNameLabel() {
 	if (firstNameLabel == null) {
 	    firstNameLabel =
-		    new HTML(
-			    getView().getCoMessage(
-				    "ResProxContactInfoView_FirstNameLabel")
-				    + OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
+		    new HTML(getView().getCoMessage(
+			    "ResProxContactInfoView_FirstNameLabel")
+			    + OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
 	    firstNameLabel.setStylePrimaryName("Osyl-ResProxView-Label");
 	    firstNameLabel.addStyleName("Osyl-ContactInfo-Label");
 	}
@@ -160,10 +159,9 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public HTML getLastNameLabel() {
 	if (lastNameLabel == null) {
 	    lastNameLabel =
-		    new HTML(
-			    getView().getCoMessage(
-				    "ResProxContactInfoView_LastNameLabel")
-				    + OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
+		    new HTML(getView().getCoMessage(
+			    "ResProxContactInfoView_LastNameLabel")
+			    + OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
 	    lastNameLabel.setStylePrimaryName("Osyl-ResProxView-Label");
 	    lastNameLabel.addStyleName("Osyl-ContactInfo-Label");
 	}
@@ -764,13 +762,15 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	if ("".equals(firstName.trim())) {
 	    messages +=
 		    getView().getCoMessage(
-			    "ResProxContactInfoView_FirstNameMandatory")+"\n";
+			    "ResProxContactInfoView_FirstNameMandatory")
+			    + "\n";
 	    error = true;
-	} 
+	}
 	if ("".equals(lastName.trim())) {
 	    messages +=
 		    getView().getCoMessage(
-			    "ResProxContactInfoView_LastNameMandatory")+"\n";
+			    "ResProxContactInfoView_LastNameMandatory")
+			    + "\n";
 	    error = true;
 	}
 	if (error) {
