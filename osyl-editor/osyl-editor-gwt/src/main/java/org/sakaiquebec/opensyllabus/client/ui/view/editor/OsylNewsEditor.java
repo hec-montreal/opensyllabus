@@ -81,10 +81,6 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
 	this.setHasRequirement(false);
 	this.setRubricMoveable(false);
 	initMainPanel();
-	if (!isReadOnly()) {
-	    initEditor();
-	}
-	initViewer();
 	initWidget(getMainPanel());
     }
 
@@ -130,20 +126,19 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
 	setTimestampViewer(timeViewer);
 
 	setViewerPanel(new VerticalPanel());
-
-	if (getView().isContextImportant()) {
-	    htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
-	}
-	Image reqLevelIcon = getCurrentRequirementLevelIcon();
-	if (null != reqLevelIcon) {
-	    getViewerPanel().add(reqLevelIcon);
-	}
+	
 	if (isReadOnly()) {
 	    if (getView().isContextHidden()) {
 		mainPanel.setVisible(false);
 	    }
 	}
-
+	if (getView().isContextImportant()) {
+	    getTextViewer().setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
+	}
+	Image reqLevelIcon = getCurrentRequirementLevelIcon();
+	if (null != reqLevelIcon) {
+	    getViewerPanel().add(reqLevelIcon);
+	}
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewerPanel().add(getTextViewer());
 	getViewerPanel().add(getTimestampViewer());
@@ -226,8 +221,8 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
     }
 
     public void enterEdit() {
-
 	setInEditionMode(true);
+	initEditor();
 	createEditBox();
 	// We get the text to edit from the model
 	setText(getTextFromModel());
@@ -237,9 +232,9 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
     public void enterView() {
 	// We keep track that we are now in view-mode
 	setInEditionMode(false);
-
+	
 	getMainPanel().clear();
-	getMainPanel().add(getViewerPanel());
+	initViewer();
 
 	// We get the text to display from the model
 	setText(getTextFromModel());

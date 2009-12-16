@@ -115,10 +115,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     public OsylCitationEditor(OsylAbstractView parent) {
 	super(parent);
 	initMainPanel();
-	if (!isReadOnly()) {
-	    initEditor();
-	}
-	initViewers();
 	initWidget(getMainPanel());
     }
 
@@ -174,46 +170,31 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	setViewerPanel(new HorizontalPanel());
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 
-	if (getView().isContextImportant()) {
-	    htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
-	}
 	if (isReadOnly()) {
 	    if (getView().isContextHidden()) {
 		mainPanel.setVisible(false);
 	    }
 	}
-
-	constructViewerLayout();
-    }
-
-    private void constructViewerLayout() {
-	// Now we add our widgets with the following layout
-	// ____________________________________________
-	// | citation |
-	// |--------------------------------------------|
-	// | description |
-	// |____________________________________________|
-	//
-
+	
+	if (getView().isContextImportant()) {
+	    getViewer()
+		    .setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
+	}
 	Image reqLevelIcon = getCurrentRequirementLevelIcon();
 	if (null != reqLevelIcon) {
 	    getViewerPanel().add(reqLevelIcon);
 	}
-
+	
 	VerticalPanel vp = new VerticalPanel();
 	vp.setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewerPanel().add(vp);
+	
 	HorizontalPanel linkAndNameHP = new HorizontalPanel();
 	vp.add(linkAndNameHP);
 	linkAndNameHP.add(getViewer());
 	vp.add(getViewerDesc());
+	
 	mainPanel.add(getViewerPanel());
-    }
-
-    // Clears the viewerPanel and calls constructViewerLayout().
-    private void reconstructViewerLayout() {
-	getViewerPanel().clear();
-	constructViewerLayout();
     }
 
     private void setViewer(HTML html) {
@@ -283,10 +264,9 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     }
 
     public void enterEdit() {
-
 	// We keep track that we are now in edition-mode
 	setInEditionMode(true);
-
+	initEditor();
 	// We get the description text to edit from the model
 	editorDesc.setHTML(getView().getCommentFromModel());
 	editorDesc.setFocus(true);
@@ -309,8 +289,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	getMainPanel().clear();
 	// If we don't reconstruct the viewer layout the new size of our HTML
 	// components will not be effective until we mouse over...
-	reconstructViewerLayout();
-	getMainPanel().add(getViewerPanel());
+	initViewers();
+	
 	getViewer().setHTML(getView().getCitationPreviewAsLink());
 	// We get the text to display from the model
 	getViewerDesc().setHTML(getView().getCommentFromModel());
@@ -319,7 +299,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	// buttons and listeners enabling edition or deletion:
 	if (!isReadOnly()) {
 	    getMainPanel().add(getMetaInfoLabel());
-
 	    addViewerStdButtons();
 	}
     } // enterView

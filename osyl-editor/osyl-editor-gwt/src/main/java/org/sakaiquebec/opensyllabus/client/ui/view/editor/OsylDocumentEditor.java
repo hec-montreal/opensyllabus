@@ -109,12 +109,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
      */
     public OsylDocumentEditor(OsylAbstractView parent) {
 	super(parent);
-
 	initMainPanel();
-	if (!isReadOnly()) {
-	    initEditor();
-	}
-	initViewers();
 	initWidget(getMainPanel());
     }
 
@@ -185,30 +180,17 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	setViewerPanel(new HorizontalPanel());
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 
-	if (getView().isContextImportant()) {
-	    htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
-	}
 	if (isReadOnly()) {
 	    if (getView().isContextHidden()) {
 		mainPanel.setVisible(false);
 	    }
 	}
-
-	constructViewerLayout();
-    }
-
-    private void constructViewerLayout() {
-	// Now we add our widgets with the following layout
-	// ____________________________________________
-	// | link to the doc | (document name) |
-	// |--------------------------------------------|
-	// | description |
-	// |____________________________________________|
-	//
-
 	Image reqLevelIcon = getCurrentRequirementLevelIcon();
 	if (null != reqLevelIcon) {
 	    getViewerPanel().add(reqLevelIcon);
+	}
+	if (getView().isContextImportant()) {
+	    getViewer().setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
 	}
 
 	VerticalPanel vp = new VerticalPanel();
@@ -220,12 +202,6 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	linkAndNameHP.add(getViewerName());
 	vp.add(getViewerDesc());
 	mainPanel.add(getViewerPanel());
-    }
-
-    // Clears the viewerPanel and calls constructViewerLayout().
-    private void reconstructViewerLayout() {
-	getViewerPanel().clear();
-	constructViewerLayout();
     }
 
     private void setViewer(HTML html) {
@@ -333,6 +309,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
     public void enterEdit() {
 	// We keep track that we are now in edition-mode
 	setInEditionMode(true);
+	initEditor();
 	// We get the text to edit from the model
 	editorLabel.setText(getView().getTextFromModel());
 	// And put the cursor at the end
@@ -366,10 +343,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	setInEditionMode(false);
 
 	getMainPanel().clear();
-	// If we don't reconstruct the viewer layout the new size of our HTML
-	// components will not be effective until we mouse over...
-	reconstructViewerLayout();
-	getMainPanel().add(getViewerPanel());
+	initViewers();
+	
 	// We get the text to display from the model
 	getViewer().setHTML(getView().getTextFromModel());
 	getViewer().addClickHandler(

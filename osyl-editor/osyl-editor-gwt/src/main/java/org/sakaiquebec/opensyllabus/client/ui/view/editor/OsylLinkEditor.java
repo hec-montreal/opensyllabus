@@ -76,12 +76,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
      */
     public OsylLinkEditor(OsylAbstractView parent) {
 	super(parent);
-
 	initMainPanel();
-	if (!isReadOnly()) {
-	    initEditor();
-	}
-	initViewer();
 	initWidget(getMainPanel());
     }
 
@@ -171,47 +166,27 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	setViewerPanel(new HorizontalPanel());
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 
-	if (getView().isContextImportant()) {
-	    htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
-	}
 	if (isReadOnly()) {
 	    if (getView().isContextHidden()) {
 		getMainPanel().setVisible(false);
 	    }
 	}
-
-	constructViewerLayout();
-    }
-
-    private void constructViewerLayout() {
-	// Now we add our widgets with the following layout
-	// ____________________________________________
-	// | link displayed as name of link |
-	// | link |
-	// |--------------------------------------------|
-	// | description |
-	// |____________________________________________|
-	//
-
+	
 	Image reqLevelIcon = getCurrentRequirementLevelIcon();
 	if (null != reqLevelIcon) {
 	    getViewerPanel().add(reqLevelIcon);
+	}
+	if (getView().isContextImportant()) {
+	    getViewer().setStylePrimaryName("Osyl-UnitView-UnitLabel-Important");
 	}
 
 	VerticalPanel vp = new VerticalPanel();
 	vp.setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewerPanel().add(vp);
-	// getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	vp.add(getViewer());
 	vp.add(getViewerURI());
 	vp.add(getViewerDesc());
 	getMainPanel().add(getViewerPanel());
-    }
-
-    // Clears the viewerPanel and calls constructViewerLayout().
-    private void reconstructViewerLayout() {
-	getViewerPanel().clear();
-	constructViewerLayout();
     }
 
     private void setViewer(HTML html) {
@@ -338,7 +313,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 
 	// We keep track that we are now in edition-mode
 	setInEditionMode(true);
-
+	initEditor();
 	createEditBox();
 
 	// We get the text to edit from the model
@@ -359,10 +334,8 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	setInEditionMode(false);
 
 	getMainPanel().clear();
-	// If we don't reconstruct the viewer layout the new size of our HTML
-	// components will not be effective until we mouse over...
-	reconstructViewerLayout();
-	getMainPanel().add(getViewerPanel());
+	initViewer();
+	
 	// We get the text to display from the model
 	getViewer().setHTML(getView().getTextFromModel());
 	getViewerURI().setHTML("(" + getView().getRawURI() + ")");
@@ -373,7 +346,6 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	if (!isReadOnly()) {
 	    getMainPanel().add(getMetaInfoLabel());
 	    addViewerStdButtons();
-
 	}
     } // enterView
 
