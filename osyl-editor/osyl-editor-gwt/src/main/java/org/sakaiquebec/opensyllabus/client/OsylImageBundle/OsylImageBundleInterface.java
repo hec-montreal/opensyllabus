@@ -106,6 +106,8 @@ public interface OsylImageBundleInterface extends ImageBundle {
 
     public AbstractImagePrototype iconeCompl();
 
+    public AbstractImagePrototype iconeImportant();
+
     public AbstractImagePrototype up_full();
     
     public AbstractImagePrototype up_empty();
