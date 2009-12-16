@@ -574,7 +574,14 @@ public class AssessmentTest extends AbstractOSYLTest{
         			"ngs\\clihec3\\Local Settings\\Temporary Int" +
         			"ernet Files\\" +
 			"Content.IE5\\K0F6YKYM\\fichier-excel[1].xlsx");
-        	session().click("document.forms[0].elements[1]");
+        	String xpathRole4 = "//div[2]/form/table/tbody/tr[5]/td/select";
+		String newText8 = getRandomOption(xpathRole4);
+		session().select(xpathRole4, newText8);
+		pause();
+		//Close window
+	    	session().click("//tr[6]/td/table/tbody/tr/td/button");
+	    	pause();
+        	//session().click("document.forms[0].elements[2]");
 	
 	}/*else {
 	    	session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
@@ -591,12 +598,18 @@ public class AssessmentTest extends AbstractOSYLTest{
 	    	session().mouseDown("//td[3]/div/img");
 	    	session().mouseUp("//td[3]/div/img");
 	    	
-	    	// Choose file and close window
+	    	// Choose file 
 	    	session().type("//input[@class=\"gwt-FileUpload\"]", "C:\\" +
 	    			"Documents and Settings\\" +
 			"clihec3\\Local Settings\\Temporary Internet Files\\" +
 			"Content.IE5\\K0F6YKYM\\powerpoint[1].ppt");
-	    	session().click("document.forms[0].elements[1]");
+	    	//We select randomly the rights field
+		String xpathRole4 = "//div[2]/form/table/tbody/tr[5]/td/select";
+		String newText8 = getRandomOption(xpathRole4);
+		session().select(xpathRole4, newText8);
+		pause();
+		//Close window
+	    	session().click("//tr[6]/td/table/tbody/tr/td/button");
 	    	pause();
 	    
 	}/*else {
@@ -617,6 +630,8 @@ public class AssessmentTest extends AbstractOSYLTest{
 	// Close Editor
 	session().click("//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/" +
 			"tbody/tr/td[1]/button");
+	
+	
 
 	//Save modifications
 	saveCourseOutline();

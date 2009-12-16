@@ -395,7 +395,14 @@ public class SeancesTest extends AbstractOSYLTest{
         		"ngs\\clihec3\\Local Settings\\Temporary Int" +
         		"ernet Files\\" +
         	"Content.IE5\\K0F6YKYM\\osyl-src[1].zip");
-        session().click("document.forms[0].elements[1]");
+        //We select randomly the rights field
+	String xpathRole4 = "//div[2]/form/table/tbody/tr[5]/td/select";
+	String newText8 = getRandomOption(xpathRole4);
+	session().select(xpathRole4, newText8);
+	pause();
+	//Close window
+    	session().click("//tr[6]/td/table/tbody/tr/td/button");
+    	pause();
         
         }/*else {
         session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
@@ -417,7 +424,14 @@ public class SeancesTest extends AbstractOSYLTest{
         		"Documents and Settings\\" +
         	"clihec3\\Local Settings\\Temporary Internet Files\\" +
         	"Content.IE5\\K0F6YKYM\\powerpoint[1].ppt");
-        session().click("document.forms[0].elements[1]");
+      //We select randomly the rights field
+	String xpathRole4 = "//div[2]/form/table/tbody/tr[5]/td/select";
+	String newText8 = getRandomOption(xpathRole4);
+	session().select(xpathRole4, newText8);
+	pause();
+	//Close window
+    	session().click("//tr[6]/td/table/tbody/tr/td/button");
+    	pause();
         
         }/*else {
         session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");	    	
