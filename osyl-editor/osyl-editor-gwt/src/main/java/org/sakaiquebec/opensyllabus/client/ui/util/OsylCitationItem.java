@@ -87,15 +87,16 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 		getProperty(COPropertiesType.IDENTIFIER,
 				COPropertiesType.IDENTIFIER_TYPE_NOLINK);
 	
-	if (noUrl != null && !"".equalsIgnoreCase(noUrl))
-		return null;
+	if (noUrl != null && !"".equalsIgnoreCase(noUrl)
+				&& "undefined".equalsIgnoreCase(noUrl))
+			return null;
 
-	if (url != null && url.trim()!="")
-	    return url;
-	else
-	    return getProperty(COPropertiesType.IDENTIFIER,
-		    COPropertiesType.IDENTIFIER_TYPE_URL);
-    }
+		if (url != null && url.trim() != "")
+			return url;
+		else
+			return getProperty(COPropertiesType.IDENTIFIER,
+					COPropertiesType.IDENTIFIER_TYPE_URL);
+	}
 
     /**
      * @return the url linked to this citation. It can be our library or any
