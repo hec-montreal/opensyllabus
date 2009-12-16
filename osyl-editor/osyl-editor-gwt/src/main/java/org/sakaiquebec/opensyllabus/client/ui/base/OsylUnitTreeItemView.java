@@ -56,17 +56,28 @@ public class OsylUnitTreeItemView extends OsylTreeItemBaseView implements
 	String rate = "";
 	COUnit itemModel = (COUnit) getModel();
 	boolean showAssessmentRate = getSettings().isTreeViewAssessmentShowRate();
+	boolean showAssessmentNumbering = getSettings().isTreeViewAssessmentNumbering();
+	boolean showSessionNumbering = getSettings().isTreeViewSessionNumbering();
+	
+	boolean showNumbering = true;
+	if((!showAssessmentNumbering && 
+	    COUnitType.ASSESSMENT_UNIT.equalsIgnoreCase(itemModel.getType()))||
+	   (!showSessionNumbering && 
+	    COUnitType.PEDAGOGICAL_UNIT.equalsIgnoreCase(itemModel.getType()))){
+			showNumbering = false;
+	}
+	
 	COElementAbstract eltAbs = itemModel.getParent();
 	if (eltAbs.isCOStructureElement()) {
 	    COStructureElement coStructElt = (COStructureElement) eltAbs;
-	    if (OsylStyleLevelChooser.getHasANumber((COUnit) getModel())) {
-		String positionString = coStructElt.getChildPosition(itemModel);
-		if (positionString.length() < 2) {
-		    positionString = "0" + positionString;
-		}
-		treeItemText = positionString + " : " + itemModel.getLabel();
+	    if (showNumbering && OsylStyleLevelChooser.getHasANumber((COUnit) getModel())) {
+	    	String positionString = coStructElt.getChildPosition(itemModel);
+	    	if (positionString.length() < 2) {
+	    		positionString = "0" + positionString;
+	    	}
+	    	treeItemText = positionString + " : " + itemModel.getLabel();
 	    } else {
-		treeItemText = itemModel.getLabel();
+	    	treeItemText = itemModel.getLabel();
 	    }
 	    
 	    if(showAssessmentRate && 

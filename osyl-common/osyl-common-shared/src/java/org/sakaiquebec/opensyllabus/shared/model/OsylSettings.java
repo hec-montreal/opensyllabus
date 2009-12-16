@@ -38,6 +38,9 @@ public class OsylSettings {
     private static final String TITLELABEL_EDITABLE = ".titlelabel.editable";
     private static final String UNITVIEW = "unitview.";
     private static final String STRUCTVIEW = "structview.";
+    private static final String TREEVIEW_ASSESSMENT_NUMBERING = "treeview.assessmentunit.numbering"; 
+	private static final String TREEVIEW_SESSION_NUMBERING = "treeview.pedagogicalunit.numbering"; 
+    
 
     private Map<String, String> settings;
 
@@ -139,4 +142,24 @@ public class OsylSettings {
 	    return checkBooleanOption(UNITVIEW + type + TITLELABEL_EDITABLE,
 		    false);
     }
+
+    /**
+     * @param key
+     * @return true if the maps contains the TREEVIEW_ASSESSMENT_NUMBERING key
+     * and it's value is set to true
+     */
+    public boolean isTreeViewAssessmentNumbering(){
+		return checkBooleanOption(TREEVIEW_ASSESSMENT_NUMBERING, true);
+    }
+
+    /**
+     * @param key
+     * @return true if the maps contains the TREEVIEW_SESSION_NUMBERING key
+     * and it's value is set to true
+     */
+    public boolean isTreeViewSessionNumbering(){
+		return checkBooleanOption(TREEVIEW_SESSION_NUMBERING, true);
+    }
+
+
 }
