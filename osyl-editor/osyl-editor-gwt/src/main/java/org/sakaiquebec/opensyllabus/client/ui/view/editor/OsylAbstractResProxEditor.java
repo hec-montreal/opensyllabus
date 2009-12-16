@@ -394,16 +394,24 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     }
 
     protected Image getCurrentRequirementLevelIcon() {
+	Image img = null;
 	String reqLevel = getView().getRequirementLevel();
 	if (COPropertiesType.REQ_LEVEL_MANDATORY.equals(reqLevel)) {
-	    return getOsylImageBundle().iconeObl().createImage();
+	    img = getOsylImageBundle().iconeObl().createImage();
 	} else if (COPropertiesType.REQ_LEVEL_RECOMMENDED.equals(reqLevel)) {
-	    return getOsylImageBundle().iconeRec().createImage();
+	    img = getOsylImageBundle().iconeRec().createImage();
 	} else if (COPropertiesType.REQ_LEVEL_COMPLEMENTARY.equals(reqLevel)) {
-	    return getOsylImageBundle().iconeCompl().createImage();
-	} else {
-	    return null;
-	}
+	    img = getOsylImageBundle().iconeCompl().createImage();
+	} 
+	if(img!=null)
+	    img.setTitle(getUiMessage("MetaInfo.requirement."+reqLevel));
+	return img;
+    }
+    
+    protected Image getImportantIcon(){
+	Image img = getOsylImageBundle().iconeImportant().createImage();
+	img.setTitle(getUiMessage("MetaInfo.important"));
+	return img;
     }
 
     /**
