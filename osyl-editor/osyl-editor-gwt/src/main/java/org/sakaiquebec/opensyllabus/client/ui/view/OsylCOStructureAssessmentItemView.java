@@ -57,7 +57,11 @@ public class OsylCOStructureAssessmentItemView extends OsylViewableComposite {
 
     protected void initView() {
 	setMainPanel(new FlexTable());
-	getMainPanel().setStylePrimaryName("Osyl-ListItemView-Table");
+	FlexTable mp = getMainPanel();
+	mp.setStylePrimaryName("Osyl-ListItemView-Table");
+	if (getController().isReadOnly()) {
+	    mp.addStyleName("Osyl-ListItemView-Table-ReadOnly");
+	}
 	COUnit coUnit = (COUnit) getModel();
 	COStructureElement coStructElt =
 		(COStructureElement) coUnit.getParent();
