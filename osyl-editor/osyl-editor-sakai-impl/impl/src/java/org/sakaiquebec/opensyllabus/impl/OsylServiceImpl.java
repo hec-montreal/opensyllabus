@@ -38,6 +38,7 @@ import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.time.api.Time;
 import org.sakaiproject.time.cover.TimeService;
 import org.sakaiquebec.opensyllabus.api.OsylService;
+import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;

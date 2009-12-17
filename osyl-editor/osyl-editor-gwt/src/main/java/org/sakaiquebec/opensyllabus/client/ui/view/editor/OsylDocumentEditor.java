@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylDisclosurePanelImageInterface;
+import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBAddFolderEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBItemSelectionEventHandler;
@@ -308,9 +309,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    if (saveButton.isEnabled()) {
 		message +=
 			getUiMessage("DocumentEditor.document.PropUpdateSave");
-	    } else if (getLicence().equals(licenseListBox.getItemText(0))) {
-		message +=
-			"Vous ne pouvez référencer ce document dans le plan de cours si vous n'Avez pas les droits";
+	    } else if(getLicence().equals(licenseListBox.getItemText(0))){
+		message += getUiMessage("DocumentEditor.document.WrongRightsStatus");
 	    }
 	}
 	if (message.equals("")) {
@@ -638,26 +638,44 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 				public void onSuccess(
 					ResourcesLicencingInfo result) {
 				    resourceLicensingInfo = result;
-				    ((OsylFileBrowser) browser)
-					    .setRightsList(resourceLicensingInfo
-						    .getCopyrightTypeList());
+				    
+				    List<String> rightsList = new ArrayList<String>();
+				    
+				    if(OsylController.getInstance().isInHostedMode()){
+					rightsList = resourceLicensingInfo.getCopyrightTypeList();
+				    } else {
+					for(String rightKey : resourceLicensingInfo.getCopyrightTypeList()){
+					    rightsList.add(getView().getUiMessage(rightKey));
+					}
+				    }
+				    ((OsylFileBrowser)browser).setRightsList(rightsList);
 				    // TODO Auto-generated method stub
 				    // getView().getController().handleRPCError("Sucess
 				    // while retrieving license information
 				    // object");
-				    buildLicenseListBox();
+				    buildLicenseListBox(rightsList);
 				}
 			    });
 	} else {
-	    buildLicenseListBox();
+	    List<String> rightsList = new ArrayList<String>();
+	    
+	    if(OsylController.getInstance().isInHostedMode()){
+		rightsList = resourceLicensingInfo.getCopyrightTypeList();
+	    } else {
+		for(String rightKey : resourceLicensingInfo.getCopyrightTypeList()){
+		    rightsList.add(getView().getUiMessage(rightKey));
+		}
+	    }
+	    ((OsylFileBrowser)browser).setRightsList(rightsList);
+	    buildLicenseListBox(rightsList);
 	}
     }
 
-    private void buildLicenseListBox() {
+    private void buildLicenseListBox(List<String> rightsList) {
 	resourceLicensingInfo.getCopyrightTypeList();
 	licenseListBox.clear();
-	for (String licence : resourceLicensingInfo.getCopyrightTypeList()) {
-	    licenseListBox.addItem(licence);
+	for (String right : rightsList) {
+	    licenseListBox.addItem(right);
 	}
 	refreshBrowsingComponents();
     }

@@ -27,46 +27,47 @@ import java.util.List;
  * ResourcesLicencingInfo is a pojo about Resources Licensing information
  * 
  * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Leprêtre</a>
- * @version $Id: ResourcesLicencingInfo.java 661 2008-05-28 15:24:39Z sacha.lepretre@crim.ca $
+ * @version $Id: ResourcesLicencingInfo.java 661 2008-05-28 15:24:39Z
+ *          sacha.lepretre@crim.ca $
  */
 public class ResourcesLicencingInfo implements java.io.Serializable {
 
     private static final long serialVersionUID = 1005876208565176631L;
 
     private List<String> copyrightTypeList;
-	private String defaultCopyright;
-	
-	/**
-	 * @return the copyrightTypeList
-	 */
-	public List<String> getCopyrightTypeList() {
-		return copyrightTypeList;
-	}
+    private String defaultCopyright;
 
-	/**
-	 * @param copyrightTypeList the copyrightTypeList to set
-	 */
-	public void setCopyrightTypeList(List<String> copyrightTypeList) {
-		this.copyrightTypeList = copyrightTypeList;
-	}
+    /**
+     * @return the copyrightTypeList
+     */
+    public List<String> getCopyrightTypeList() {
+	return copyrightTypeList;
+    }
 
-	/**
-	 * @return the defaultCopyright
-	 */
-	public String getDefaultCopyright() {
-		return defaultCopyright;
-	}
+    /**
+     * @param copyrightTypeList the copyrightTypeList to set
+     */
+    public void setCopyrightTypeList(List<String> copyrightTypeList) {
+	this.copyrightTypeList = copyrightTypeList;
+    }
 
-	/**
-	 * @param defaultCopyright the defaultCopyright to set
-	 */
-	public void setDefaultCopyright(String defaultCopyright) {
-		this.defaultCopyright = defaultCopyright;
-	}
-	
-	public ResourcesLicencingInfo(){
-		copyrightTypeList = new ArrayList<String>();
-		defaultCopyright = null;
-	}
+    /**
+     * @return the defaultCopyright
+     */
+    public String getDefaultCopyright() {
+	return defaultCopyright;
+    }
+
+    /**
+     * @param defaultCopyright the defaultCopyright to set
+     */
+    public void setDefaultCopyright(String defaultCopyright) {
+	this.defaultCopyright = defaultCopyright;
+    }
+
+    public ResourcesLicencingInfo() {
+	copyrightTypeList = new ArrayList<String>();
+	defaultCopyright = null;
+    }
 
 }
