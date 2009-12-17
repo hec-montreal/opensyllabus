@@ -76,7 +76,7 @@ final class OsylConfigServiceMessages {
                 messagesFile = new File(dir, baseFileName
                         + PROPERTIES_EXTENSION);
                 log.warn("Cannot load property file: " + baseFileName
-                        + " for locale " + locale);
+                        + " for locale '" + locale+"'");
             }
 
             FileInputStream inputStream = new FileInputStream(messagesFile);

@@ -357,7 +357,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 
 	VerticalPanel subTypePanel = new VerticalPanel();
 	subTypePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	Label l8 = new Label(getUiMessage("Assessment.subtype"));
+	Label l8 = new Label(getView().getCoMessage("Assessment.Subtype"));
 	subTypeListBox = new ListBox();
 	subTypeListBox.setName("Assessment.subtype");
 	subTypeListBox.setTitle(getUiMessage("Assessment.subtype.tooltip"));
@@ -548,7 +548,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 	submissionMode = submissionMode != null ? submissionMode : "";
 
 	String submissionModeLabel =
-		!submissionMode.equals("") ? getUiMessage("Assessment.subtype")
+		!submissionMode.equals("") ? getView().getCoMessage("Assessment.Subtype")
 			+ " : " + submissionMode : "";
 
 	Label label1 = new Label(workMode + location);

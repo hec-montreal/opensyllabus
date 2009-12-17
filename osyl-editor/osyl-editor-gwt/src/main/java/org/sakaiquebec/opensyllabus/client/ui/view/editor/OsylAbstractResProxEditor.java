@@ -256,7 +256,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	// "Important" CheckBox
 	if (hasImportant) {
 	    importantCheckBox =
-		    new CheckBox(getUiMessage("MetaInfo.important"));
+		    new CheckBox(getView().getCoMessage("MetaInfo.important"));
 	    importantCheckBox.setValue(getView().isContextImportant());
 	    importantCheckBox
 		    .setTitle(getUiMessage("MetaInfo.important.title"));
@@ -292,17 +292,16 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    requirementListBox.setWidth("100px");
 	    requirementListBox
 		    .setTitle(getUiMessage("MetaInfo.requirement.title"));
-	    requirementListBox.addItem(
-		    getUiMessage("MetaInfo.requirement.undefined"),
+	    requirementListBox.addItem("",
 		    COPropertiesType.REQ_LEVEL_UNDEFINED);
-	    requirementListBox.addItem(
-		    getUiMessage("MetaInfo.requirement.mandatory"),
+	    requirementListBox.addItem(getView().
+		    getCoMessage("MetaInfo.requirement.mandatory"),
 		    COPropertiesType.REQ_LEVEL_MANDATORY);
-	    requirementListBox.addItem(
-		    getUiMessage("MetaInfo.requirement.recommended"),
+	    requirementListBox.addItem(getView().
+		    getCoMessage("MetaInfo.requirement.recommended"),
 		    COPropertiesType.REQ_LEVEL_RECOMMENDED);
-	    requirementListBox.addItem(
-		    getUiMessage("MetaInfo.requirement.complementary"),
+	    requirementListBox.addItem(getView().
+		    getCoMessage("MetaInfo.requirement.complementary"),
 		    COPropertiesType.REQ_LEVEL_COMPLEMENTARY);
 	    requirementPanel.add(requirementListBox);
 
@@ -404,7 +403,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    img = getOsylImageBundle().iconeCompl().createImage();
 	}
 	if (img != null)
-	    img.setTitle(getUiMessage("MetaInfo.requirement." + reqLevel));
+	    img.setTitle(getView().getCoMessage("MetaInfo.requirement." + reqLevel));
 	return img;
     }
 
@@ -412,14 +411,15 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	Image img = null;
 	if (getView().isContextImportant()) {
 	    img = getOsylImageBundle().iconeImportant().createImage();
-	    img.setTitle(getUiMessage("MetaInfo.important"));
+	    img.setTitle(getView().getCoMessage("MetaInfo.important"));
 	}
 	return img;
     }
 
     protected String getLocalizedRequirementLevel() {
-	if (getView().getRequirementLevel() != null) {
-	    return getView().getUiMessage(
+	String reqLev = getView().getRequirementLevel();
+	if (reqLev != null && reqLev != COPropertiesType.REQ_LEVEL_UNDEFINED) {
+	    return getView().getCoMessage(
 		    "MetaInfo.requirement." + getView().getRequirementLevel());
 	} else
 	    return "";
@@ -597,7 +597,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		    (getView().isContextImportant() ? getUiMessage("Global.yes")
 			    : getUiMessage("Global.no"));
 	    metaInfoLabelStr +=
-		    " | " + getUiMessage("MetaInfo.important") + ": "
+		    " | " + getView().getCoMessage("MetaInfo.important") + ": "
 			    + important;
 	}
 
@@ -608,7 +608,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		reqLevelUiMsg =
 			"MetaInfo.requirement."
 				+ getView().getRequirementLevel();
-		requirementLevel = getUiMessage(reqLevelUiMsg);
+		requirementLevel = getView().getCoMessage(reqLevelUiMsg);
 		requirementLevelLabel =
 			getUiMessage("MetaInfo.requirement") + ": ";
 
