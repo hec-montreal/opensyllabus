@@ -98,26 +98,22 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	// initOffline()).
 	osylController.loadData();
 
-	Window.addCloseHandler(new CloseHandler<Window>() {
+	Window.addWindowClosingHandler(new Window.ClosingHandler() {
+	    public void onWindowClosing(Window.ClosingEvent event) {
 
-	    public void onClose(CloseEvent<Window> event) {
 		// We instruct the ViewContext to close all editors in case
 		// an editor with modified content is still open.
 		osylController.getViewContext().closeAllEditors();
-		// If we don't need to save the model we leave now
+
+		// If we don't need to save the model it is ok to leave now
 		if (!osylController.isModelDirty()) {
 		    return;
 		}
-
-		boolean ok =
-			Window.confirm(osylController
-				.getUiMessage("save.saveBeforeQuit"));
-		if (ok) {
-		    osylController.onSavePushButton(null);
-		}
+		event.setMessage(osylController
+			.getUiMessage("save.reallyQuit"));
 	    }
-	});
-
+	}); // addWindowClosingHandler
+	
     } // onModuleLoad
 
     public void initModel(COSerialized co) {
