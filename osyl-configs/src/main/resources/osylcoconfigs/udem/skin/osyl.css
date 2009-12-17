@@ -578,26 +578,16 @@
 }
 
 /* Label in a Content Unit Panel  */
-.Osyl-UnitView-UnitLabel, .Osyl-UnitView-UnitLabel-Important {
+.Osyl-UnitView-UnitLabel {
 	font-size:1em;
 	padding:3px 0;
 	width:auto;
 }
 
-.Osyl-UnitView-UnitLabel ul, .Osyl-UnitView-UnitLabel-Important ul, .Osyl-UnitView-HtmlViewer ul {margin-left:30px}
-.Osyl-UnitView-UnitLabel ol, .Osyl-UnitView-UnitLabel-Important ol, .Osyl-UnitView-HtmlViewer ol {margin-left:35px}
+.Osyl-UnitView-UnitLabel ul, .Osyl-UnitView-HtmlViewer ul {margin-left:30px}
+.Osyl-UnitView-UnitLabel ol, .Osyl-UnitView-HtmlViewer ol {margin-left:35px}
 
-.Osyl-UnitView-UnitLabel-Important {
-	background:transparent url(images/important.png) no-repeat top right;
-	padding:3px 26px 6px 0;
-	overflow:auto;
-	min-height:24px;
-	margin-bottom:15px;
-}
-
-.Osyl-UnitView-HtmlViewer {
-	width:100%;
-}
+.Osyl-UnitView-HtmlViewer {width:100%}
 
 .Osyl-UnitView-LvlReq .Osyl-UnitView-TextLvlReq, .Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq {
 	font:bold 12px Arial, Verdana, sans-serif;

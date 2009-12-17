@@ -200,7 +200,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 	getViewerPanel().setWidget(1, 0, getImportantIcon());
 	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(1, 0,
-		"Osyl-UnitView-IconLvlImportant");
+		"Osyl-UnitView-IconImportant");
 	getViewerPanel().setWidget(1, 1, getViewer());
 
 	getMainPanel().add(getViewerPanel());
