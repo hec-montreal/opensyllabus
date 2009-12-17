@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.swt.internal.ole.win32.LICINFO;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.WindowPanel;
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
@@ -161,11 +162,6 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 	rightsListBox.addChangeHandler(new ChangeHandler() {
 
 	    public void onChange(ChangeEvent event) {
-		if (rightsListBox.getSelectedIndex() > 0) {
-		    saveButton.setEnabled(true);
-		} else {
-		    saveButton.setEnabled(false);
-		}
 		setRight(rightsListBox.getItemText(rightsListBox
 			.getSelectedIndex()));
 	    }
@@ -187,7 +183,7 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 		form.submit();
 	    }
 	});
-	saveButton.setEnabled(false);
+	saveButton.setEnabled(true);
 	saveButton.setStylePrimaryName("Osyl-FileUpload-genericButton");
 
 	// Add a 'Cancel' button.
@@ -223,21 +219,23 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 		// This event is fired just before the form is submitted. We can
 		// take this opportunity to perform validation.
 		String fn = upload.getFilename();
+		String message="";
+		
 		if (fn.length() == 0) {
+		    message = uiMessages.getMessage("fileUpload.plsSelectFile");
+		} else if(rightsListBox.getSelectedIndex()==0){
+		    message = uiMessages.getMessage("fileUpload.chooseRightsStatus");
+		}
+		
+		if(message.equals("")){
+		    cancelButton.setEnabled(false);
+		    saveButton.setEnabled(false);
+		} else {
 		    final OsylAlertDialog alertBox =
-			    new OsylAlertDialog(false, true, uiMessages
-				    .getMessage("fileUpload.plsSelectFile"));
-		    // get index of file upload form to set z-index of alert window
-		    int index = new Integer(DOM.getStyleAttribute(
-		    		OsylFileUpload.this.getElement(), "zIndex"));
-		    alertBox.setZIndex(index + 1);
+		    new OsylAlertDialog(uiMessages.getMessage("Global.error"), message);
 		    alertBox.center();
 		    alertBox.show();
 		    event.setCancelled(true);
-		}
-		else {
-		    cancelButton.setEnabled(false);
-		    saveButton.setEnabled(false);
 		}
 	    }
 
