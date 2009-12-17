@@ -29,9 +29,11 @@ import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxContactInfoView;
 import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RichTextArea;
@@ -75,10 +77,6 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	this.setHasImportant(false);
 	this.setHasHide(false);
 	initMainPanel();
-	if (!isReadOnly()) {
-	    initEditor();
-	}
-	initViewer();
 	initWidget(mainPanel);
     }
 
@@ -366,16 +364,14 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 
     // Viewer widgets ------------------------------------------------
 
-    private VerticalPanel viewerContainer;
+    private VerticalPanel viewer;
 
-    public VerticalPanel getViewerContainer() {
-	if (viewerContainer == null) {
-	    viewerContainer = new VerticalPanel();
-	    // TODO : to be controlled by CSS
-	    // viewerContainer.setWidth("500px");
-	    viewerContainer.setStyleName("Osyl-ContactInfo-Viewer");
+    public VerticalPanel getViewer() {
+	if (viewer == null) {
+	    viewer = new VerticalPanel();
+	    viewer.setStyleName("Osyl-ContactInfo-Viewer");
 	}
-	return viewerContainer;
+	return viewer;
     }
 
     private HTML viewerFirstName;
@@ -474,6 +470,16 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	}
 	return viewerComments;
     }
+    
+    private FlexTable viewerPanel;
+    
+    private void setViewerPanel(FlexTable flexTable) {
+	this.viewerPanel=flexTable;
+    }
+    
+    private FlexTable getViewerPanel(){
+	return viewerPanel;
+    }
 
     /**
      * ====================== PRIVATE METHODS ======================
@@ -481,7 +487,6 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 
     private void initMainPanel() {
 	setMainPanel(new VerticalPanel());
-	mainPanel.setWidth("98%");
     }
 
     private void setMainPanel(VerticalPanel p) {
@@ -584,14 +589,14 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
      * and Comments and Label+ComboBox for the Title.
      */
     private void initViewer() {
-	getViewerContainer().clear();
+	getViewer().clear();
 	// Panels used to display information
 	if (nullOrEmpty(getView().getLastName())
 		&& nullOrEmpty(getView().getFirstName())) {
 	    HTML message =
 		    new HTML(getView().getUiMessage(
 			    "ContactInfoEditor.contact.undefined"));
-	    getViewerContainer().add(message);
+	    getViewer().add(message);
 
 	} else {
 	    SimplePanel viewerPanelFirstName = new SimplePanel();
@@ -601,22 +606,22 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	    HorizontalPanel viewerNameHzContainer = new HorizontalPanel();
 	    viewerNameHzContainer.add(viewerPanelFirstName);
 	    viewerNameHzContainer.add(viewerPanelLastName);
-	    getViewerContainer().add(viewerNameHzContainer);
+	    getViewer().add(viewerNameHzContainer);
 
 	    SimplePanel viewerPanelRole = new SimplePanel();
 	    viewerPanelRole.add(getViewerRole());
-	    getViewerContainer().add(viewerPanelRole);
+	    getViewer().add(viewerPanelRole);
 
 	    SimplePanel viewerPanelEMail = new SimplePanel();
 	    viewerPanelEMail.add(getViewerEMail());
 	    if (!nullOrEmpty(getView().getEMail())) {
-		getViewerContainer().add(viewerPanelEMail);
+		getViewer().add(viewerPanelEMail);
 	    }
 
 	    SimplePanel viewerPanelPhone = new SimplePanel();
 	    viewerPanelPhone.add(getViewerPhone());
 	    if (!nullOrEmpty(getView().getPhone())) {
-		getViewerContainer().add(viewerPanelPhone);
+		getViewer().add(viewerPanelPhone);
 	    }
 
 	    SimplePanel viewerOfficeLabelPanel = new SimplePanel();
@@ -627,7 +632,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	    viewerOfficeHzContainer.add(viewerOfficeLabelPanel);
 	    viewerOfficeHzContainer.add(viewerPanelOffice);
 	    if (!nullOrEmpty(getView().getOffice())) {
-		getViewerContainer().add(viewerOfficeHzContainer);
+		getViewer().add(viewerOfficeHzContainer);
 	    }
 
 	    SimplePanel viewerAvailabilityLabelPanel = new SimplePanel();
@@ -639,16 +644,43 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	    viewerAvailabilityHzContainer.add(viewerAvailabilityLabelPanel);
 	    viewerAvailabilityHzContainer.add(viewerPanelAvailability);
 	    if (!nullOrEmpty(getView().getAvailability())) {
-		getViewerContainer().add(viewerAvailabilityHzContainer);
+		getViewer().add(viewerAvailabilityHzContainer);
 	    }
 
 	    SimplePanel viewerPanelComments = new SimplePanel();
 	    viewerPanelComments.add(getViewerComments());
 	    if (!nullOrEmpty(getView().getComments())) {
-		getViewerContainer().add(viewerPanelComments);
+		getViewer().add(viewerPanelComments);
 	    }
+	    
+	}
+	setViewerPanel(new FlexTable());
+	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
+
+	if (getView().isContextImportant()) {
+	    getViewerPanel().addStyleName("Osyl-UnitView-Important");
 	}
 
+	Image reqLevelIcon = getCurrentRequirementLevelIcon();
+	if (null != reqLevelIcon) {
+	    getViewerPanel().addStyleName("Osyl-UnitView-LvlReq");
+	}
+
+	getViewerPanel().setWidget(0, 0, reqLevelIcon);
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 0,
+		"Osyl-UnitView-IconLvlReq");
+
+	getViewerPanel().setWidget(0, 1,
+		new HTML(getLocalizedRequirementLevel()));
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 1,
+		"Osyl-UnitView-TextLvlReq");
+
+	getViewerPanel().setWidget(1, 0, getImportantIcon());
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(1, 0,
+		"Osyl-UnitView-IconImportant");
+
+	getViewerPanel().setWidget(1, 1, getViewer());
+	mainPanel.add(getViewerPanel());
     } // initViewer
 
     private boolean nullOrEmpty(String st) {
@@ -698,6 +730,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 
 	// We keep track that we are now in edition-mode
 	setInEditionMode(true);
+	initEditor();
 
 	enterEditRole();
 	enterEdit(editorLastName, getView().getLastName());
@@ -723,7 +756,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	setInEditionMode(false);
 	getMainPanel().clear();
 	initViewer();
-	getMainPanel().add(getViewerContainer());
+	
 	getViewerRole().setHTML(getView().getRole());
 	getViewerLastName().setHTML(getView().getLastName());
 	getViewerFirstName().setHTML(getView().getFirstName());

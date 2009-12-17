@@ -33,9 +33,11 @@ import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -64,6 +66,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
     private DateBox dateEndDateBox;
 
     // Our viewer
+    private FlexTable viewerPanel;
     private HTML viewer;
 
     /**
@@ -77,10 +80,6 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 	super(parent);
 	setHasRequirement(false);
 	initMainPanel();
-	if (!isReadOnly()) {
-	    initEditor();
-	}
-	initViewer();
 	initWidget(getMainPanel());
     }
 
@@ -160,8 +159,36 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
      */
     private void initViewer() {
 	HTML htmlViewer = new HTML();
-	htmlViewer.setStylePrimaryName("Osyl-LabelEditor-View");
+	htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel");
 	setViewer(htmlViewer);
+
+	setViewerPanel(new FlexTable());
+	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
+
+	if (getView().isContextImportant()) {
+	    getViewerPanel().addStyleName("Osyl-UnitView-Important");
+	}
+
+	Image reqLevelIcon = getCurrentRequirementLevelIcon();
+	if (null != reqLevelIcon) {
+	    getViewerPanel().addStyleName("Osyl-UnitView-LvlReq");
+	}
+
+	getViewerPanel().setWidget(0, 0, reqLevelIcon);
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 0,
+		"Osyl-UnitView-IconLvlReq");
+
+	getViewerPanel().setWidget(0, 1,
+		new HTML(getLocalizedRequirementLevel()));
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 1,
+		"Osyl-UnitView-TextLvlReq");
+
+	getViewerPanel().setWidget(1, 0, getImportantIcon());
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(1, 0,
+		"Osyl-UnitView-IconImportant");
+
+	getViewerPanel().setWidget(1, 1, getViewer());
+	mainPanel.add(getViewerPanel());
     }
 
     private void setViewer(HTML html) {
@@ -170,6 +197,14 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 
     private HTML getViewer() {
 	return viewer;
+    }
+
+    public FlexTable getViewerPanel() {
+	return viewerPanel;
+    }
+
+    public void setViewerPanel(FlexTable viewerPanel) {
+	this.viewerPanel = viewerPanel;
     }
 
     /**
@@ -226,7 +261,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 		    getView().getUiMessage("Global.field.required",
 			    getUiMessage("clickable_text"))
 			    + "\n";
-	    ok=false;
+	    ok = false;
 	}
 
 	String endDateString = dateEndDateBox.getTextBox().getText();
@@ -336,11 +371,11 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
     }
 
     public void enterEdit() {
-
-	createEditBox(getUiMessage("AssignmentEditor.title"));
-
 	// We keep track that we are now in edition-mode
 	setInEditionMode(true);
+	initEditor();
+
+	createEditBox(getUiMessage("AssignmentEditor.title"));
 	// We get the text to edit from the model
 	setText(getView().getTextFromModelLink());
 	// And put the cursor at the end
@@ -356,24 +391,29 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
     } // enterEdit
 
     public void enterView() {
-
+	setInEditionMode(false);
 	// We remove any previous widget
 	getMainPanel().clear();
-	// And we put the viewer instead
-	getMainPanel().add(getViewer());
-	// We keep track that we are now in view-mode
-	setInEditionMode(false);
-	// We get the text to display from the model
-	if(getView().getDateStart()!=null)
-	    setText(getView().getTextFromModelLink());
-	else
-	    setText(getUiMessage("Assignement.undefined"));
+	if (!(isReadOnly() && getView().isContextHidden())) {
+	    initViewer();
 
-	// If we are not in read-only mode, we display some meta-info and add
-	// buttons and listeners enabling edition or deletion:
-	if (!isReadOnly()) {
-	    getMainPanel().add(getMetaInfoLabel());
-	    addViewerStdButtons();
+	    // We keep track that we are now in view-mode
+
+	    // We get the text to display from the model
+	    if (getView().getDateStart() != null)
+		setText(getView().getTextFromModelLink());
+	    else
+		setText(getUiMessage("Assignement.undefined"));
+
+	    // If we are not in read-only mode, we display some meta-info and
+	    // add
+	    // buttons and listeners enabling edition or deletion:
+	    if (!isReadOnly()) {
+		getMainPanel().add(getMetaInfoLabel());
+		addViewerStdButtons();
+	    }
+	} else {
+	    getMainPanel().setVisible(false);
 	}
 
     } // enterView
