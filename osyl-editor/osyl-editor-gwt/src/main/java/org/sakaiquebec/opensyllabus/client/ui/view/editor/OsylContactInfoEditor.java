@@ -96,8 +96,6 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public VerticalPanel getEditorContainer() {
 	if (editorContainer == null) {
 	    editorContainer = new VerticalPanel();
-	    // TODO : to be controlled by CSS
-	    // editorContainer.setWidth("500px");
 	    editorContainer.setStyleName("Osyl-ContactInfo-Editor");
 	}
 	return editorContainer;

@@ -290,22 +290,22 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 			    : (getPropertyValue(CitationSchema.CREATOR) + ". ");
 	    infos +=
 		    getPropertyValue(CitationSchema.TITLE).equals("") ? ""
-			    : (getPropertyValue(CitationSchema.TITLE) + ", ");
+			    : (getPropertyValue(CitationSchema.TITLE));
 	    infos +=
 		    getPropertyValue(CitationSchema.PUBLISHER).equals("") ? ""
-			    : (getPropertyValue(CitationSchema.PUBLISHER) + ", ");
+			    : ", " + (getPropertyValue(CitationSchema.PUBLISHER));
 	    infos +=
 		    getPropertyValue(CitationSchema.PAGES).equals("") ? ""
-			    : (getPropertyValue(CitationSchema.PAGES) + ", ");
+			    : ", pp. " + (getPropertyValue(CitationSchema.PAGES));
 	    infos +=
 		    getPropertyValue(CitationSchema.EDITOR).equals("") ? ""
-			    : (getPropertyValue(CitationSchema.EDITOR) + ", ");
+			    : ", " + (getPropertyValue(CitationSchema.EDITOR));
 	    infos +=
 		    getPropertyValue(CitationSchema.YEAR).equals("") ? ""
-			    : (getPropertyValue(CitationSchema.YEAR) + ", ");
+			    : ", " + (getPropertyValue(CitationSchema.YEAR));
 	    infos +=
 		    getPropertyValue(CitationSchema.ISN).equals("") ? ""
-			    : getPropertyValue(CitationSchema.ISN);
+			    : ", ISBN: "+getPropertyValue(CitationSchema.ISN);
 	    infos += ".";
 
 	} else if (type.equals(CitationSchema.TYPE_ARTICLE)) {
@@ -313,53 +313,53 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 	    // <numéro>, <pages>, <ISSN>, <DOI>
 	    infos +=
 		    getPropertyValue(CitationSchema.CREATOR).equals("") ? ""
-			    : (getPropertyValue(CitationSchema.CREATOR) + ". ");
+			    : getPropertyValue(CitationSchema.CREATOR) + ". ";
 	    infos +=
 		    getPropertyValue(CitationSchema.TITLE).equals("") ? ""
-			    : (getPropertyValue(CitationSchema.TITLE));
+			    : getPropertyValue(CitationSchema.TITLE);
 	    infos +=
 		    getPropertyValue(CitationSchema.SOURCE_TITLE).equals("") ? ""
-			    : (", " + getPropertyValue(CitationSchema.SOURCE_TITLE));
+			    : ", " + getPropertyValue(CitationSchema.SOURCE_TITLE);
 	    infos +=
 		    getPropertyValue(CitationSchema.DATE).equals("") ? ""
-			    : (", " + getPropertyValue(CitationSchema.DATE));
+			    : ", " + getPropertyValue(CitationSchema.DATE);
 	    infos +=
 		    getPropertyValue(CitationSchema.VOLUME).equals("") ? ""
-			    : (", " + getPropertyValue(CitationSchema.VOLUME));
+			    : ", vol. " + getPropertyValue(CitationSchema.VOLUME);
 	    infos +=
 		    getPropertyValue(CitationSchema.ISSUE).equals("") ? ""
-			    : (", " + getPropertyValue(CitationSchema.ISSUE));
+			    : "(" + getPropertyValue(CitationSchema.ISSUE)+")";
 	    infos +=
 		    getPropertyValue(CitationSchema.PAGES).equals("") ? ""
-			    : (", " + getPropertyValue(CitationSchema.PAGES));
+			    : ", pp. " + getPropertyValue(CitationSchema.PAGES);
 	    infos +=
 		    getPropertyValue(CitationSchema.ISN).equals("") ? ""
-			    : (", " + getPropertyValue(CitationSchema.ISN));
+			    : ", ISSN: " + getPropertyValue(CitationSchema.ISN);
 	    infos +=
 		    getPropertyValue(CitationSchema.DOI).equals("") ? ""
-			    : (", " + getPropertyValue(CitationSchema.DOI));
+			    : ", " + getPropertyValue(CitationSchema.DOI);
 	    infos += ".";
 	} else if (type.equals(CitationSchema.TYPE_PROCEED)) {
 	    // <auteurs>, <titre>, <conference>, <year>, <volume>,
 	    //  <pages>
 	    infos +=
 		    getPropertyValue(CitationSchema.CREATOR).equals("") ? ""
-			    : (getPropertyValue(CitationSchema.CREATOR) + ". ");
+			    : getPropertyValue(CitationSchema.CREATOR) + ". ";
 	    infos +=
 		    getPropertyValue(CitationSchema.TITLE).equals("") ? ""
-			    : (getPropertyValue(CitationSchema.TITLE));
+			    : getPropertyValue(CitationSchema.TITLE);
 	    infos +=
 		    getPropertyValue(CitationSchema.SOURCE_TITLE).equals("") ? ""
-			    : (", " + getPropertyValue(CitationSchema.SOURCE_TITLE));
+			    : ", " + getPropertyValue(CitationSchema.SOURCE_TITLE);
 	    infos +=
 		    getPropertyValue(CitationSchema.YEAR).equals("") ? ""
-			    : (", " + getPropertyValue(CitationSchema.YEAR));
+			    : ", " + getPropertyValue(CitationSchema.YEAR);
 	    infos +=
 		    getPropertyValue(CitationSchema.VOLUME).equals("") ? ""
-			    : (", " + getPropertyValue(CitationSchema.VOLUME));
+			    : ", vol. " + getPropertyValue(CitationSchema.VOLUME);
 	    infos +=
 		    getPropertyValue(CitationSchema.PAGES).equals("") ? ""
-			    : (", " + getPropertyValue(CitationSchema.PAGES));
+			    : ", pp. " + getPropertyValue(CitationSchema.PAGES);
     infos += ".";
 	}else {
 	    infos +=

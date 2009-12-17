@@ -317,20 +317,20 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 				// <auteurs>, <titre>, <édition>,<pages>, <éditeur>, <année>,
 				// <ISBN>
 				infos += getPropertyValue(COPropertiesType.AUTHOR).equals("") ? ""
-						: (getPropertyValue(COPropertiesType.AUTHOR) + ". ");
+						: getPropertyValue(COPropertiesType.AUTHOR) + ". ";
 				infos += getPropertyValue(CitationSchema.TITLE).equals("") ? ""
-						: (getPropertyValue(CitationSchema.TITLE) + ", ");
+						: getPropertyValue(CitationSchema.TITLE);
 				infos += getPropertyValue(CitationSchema.PUBLISHER).equals("") ? ""
-						: (getPropertyValue(CitationSchema.PUBLISHER) + ", ");
+						: " ,"+getPropertyValue(CitationSchema.PUBLISHER);
 				infos += getPropertyValue(CitationSchema.PAGES).equals("") ? ""
-						: (getPropertyValue(CitationSchema.PAGES) + ", ");
+						: " ,pp. "+getPropertyValue(CitationSchema.PAGES);
 				infos += getPropertyValue(CitationSchema.EDITOR).equals("") ? ""
-						: (getPropertyValue(CitationSchema.EDITOR) + ", ");
+						: " ,"+getPropertyValue(CitationSchema.EDITOR);
 				infos += getPropertyValue(CitationSchema.YEAR).equals("") ? ""
-						: (getPropertyValue(CitationSchema.YEAR) + ", ");
+						: " ,"+getPropertyValue(CitationSchema.YEAR);
 				infos += getPropertyValue(COPropertiesType.IDENTIFIER,
 						COPropertiesType.IDENTIFIER_TYPE_ISN).equals("") ? ""
-						: getPropertyValue(COPropertiesType.IDENTIFIER,
+						: " ,ISBN: "+getPropertyValue(COPropertiesType.IDENTIFIER,
 								COPropertiesType.IDENTIFIER_TYPE_ISN);
 				infos += ".";
 
@@ -338,43 +338,43 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 				// <auteurs>, <titre>, <périodique>, <date>, <volume>,
 				// <numéro>, <pages>, <ISSN>, <DOI>
 				infos += getPropertyValue(COPropertiesType.AUTHOR).equals("") ? ""
-						: (getPropertyValue(COPropertiesType.AUTHOR) + ". ");
+						: getPropertyValue(COPropertiesType.AUTHOR) + ". ";
 				infos += getPropertyValue(CitationSchema.TITLE).equals("") ? ""
 						: getPropertyValue(CitationSchema.TITLE);
 				infos += getPropertyValue(COPropertiesType.JOURNAL).equals("") ? ""
-						: (", " + getPropertyValue(COPropertiesType.JOURNAL));
+						: ", " + getPropertyValue(COPropertiesType.JOURNAL);
 				infos += getPropertyValue(CitationSchema.DATE).equals("") ? ""
-						: (", " + getPropertyValue(CitationSchema.DATE));
+						: ", " + getPropertyValue(CitationSchema.DATE);
 				infos += getPropertyValue(CitationSchema.VOLUME).equals("") ? ""
-						: (", " + getPropertyValue(CitationSchema.VOLUME));
+						: ", vol. " + getPropertyValue(CitationSchema.VOLUME);
 				infos += getPropertyValue(CitationSchema.ISSUE).equals("") ? ""
-						: (", " + getPropertyValue(CitationSchema.ISSUE));
+						: "(" + getPropertyValue(CitationSchema.ISSUE)+")";
 				infos += getPropertyValue(CitationSchema.PAGES).equals("") ? ""
-						: (", " + getPropertyValue(CitationSchema.PAGES));
+						: ", pp. " + getPropertyValue(CitationSchema.PAGES);
 				infos += getPropertyValue(COPropertiesType.IDENTIFIER,
 						COPropertiesType.IDENTIFIER_TYPE_ISN).equals("") ? ""
-						: (", " + getPropertyValue(COPropertiesType.IDENTIFIER,
-								COPropertiesType.IDENTIFIER_TYPE_ISN));
+						: ", ISSN: " + getPropertyValue(COPropertiesType.IDENTIFIER,
+								COPropertiesType.IDENTIFIER_TYPE_ISN);
 				infos += getPropertyValue(COPropertiesType.IDENTIFIER,
 						COPropertiesType.IDENTIFIER_TYPE_DOI).equals("") ? ""
-						: (", " + getPropertyValue(COPropertiesType.IDENTIFIER,
-								COPropertiesType.IDENTIFIER_TYPE_DOI));
+						: ", " + getPropertyValue(COPropertiesType.IDENTIFIER,
+								COPropertiesType.IDENTIFIER_TYPE_DOI);
 				infos += ".";
 			} else if (type.equals(CitationSchema.TYPE_PROCEED)) {
 				// <auteurs>, <titre>, <conference>, <year>, <volume>,
 				// <pages>
 				infos += getPropertyValue(COPropertiesType.AUTHOR).equals("") ? ""
-						: (getPropertyValue(COPropertiesType.AUTHOR) + ". ");
+						: getPropertyValue(COPropertiesType.AUTHOR) + ". ";
 				infos += getPropertyValue(CitationSchema.TITLE).equals("") ? ""
 						: getPropertyValue(CitationSchema.TITLE);
 				infos += getPropertyValue(COPropertiesType.JOURNAL).equals("") ? ""
-						: (", " + getPropertyValue(COPropertiesType.JOURNAL));
+						: ", " + getPropertyValue(COPropertiesType.JOURNAL);
 				infos += getPropertyValue(CitationSchema.YEAR).equals("") ? ""
-						: (", " + getPropertyValue(CitationSchema.YEAR));
+						: ", " + getPropertyValue(CitationSchema.YEAR);
 				infos += getPropertyValue(CitationSchema.VOLUME).equals("") ? ""
-						: (", " + getPropertyValue(CitationSchema.VOLUME));
+						: ", vol. " + getPropertyValue(CitationSchema.VOLUME);
 				infos += getPropertyValue(CitationSchema.PAGES).equals("") ? ""
-						: (", " + getPropertyValue(CitationSchema.PAGES));
+						: ", pp. " + getPropertyValue(CitationSchema.PAGES);
 				infos += ".";
 			} else {
 				infos += getPropertyValue(CitationSchema.TITLE).equals("") ? ""
