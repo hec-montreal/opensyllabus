@@ -596,14 +596,14 @@
 .Osyl-UnitView-LvlReq .Osyl-UnitView-TextLvlReq, .Osyl-UnitView-LvlReq.Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq{border-bottom:1px solid #999}
 .Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq {border:none}
 
-.Osyl-UnitView-IconLvlReq, .Osyl-UnitView-IconLvlImportant {
+.Osyl-UnitView-IconLvlReq, .Osyl-UnitView-IconImportant {
 	width:24px;
 	text-align:center;
 	vertical-align:top;
 	padding:0 6px 0 0;
 }
 
-.Osyl-UnitView-IconLvlImportant {padding-top:6px}
+.Osyl-UnitView-IconImportant {padding-top:6px}
 
 .Osyl-ResProxView-MetaInfo,
 .Osyl-UnitView-MetaInfo,
