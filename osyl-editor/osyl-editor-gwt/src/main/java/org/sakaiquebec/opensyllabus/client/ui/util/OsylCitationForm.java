@@ -298,7 +298,7 @@ public class OsylCitationForm extends WindowPanel implements
 	journalPanel =
 		createLabelTextboxElement(osylController
 			.getCoMessage("ResProxCitationView_journalLabel")
-			+ ":", sourceTitle, CitationSchema.SOURCE_TITLE);
+			+ RECOMMENDED_FIELD_INDICATOR + ":", sourceTitle, CitationSchema.SOURCE_TITLE);
 	mainPanel.add(journalPanel);
 
 	final TextBox proceedingSourceTitle =
@@ -708,8 +708,8 @@ public class OsylCitationForm extends WindowPanel implements
 	hp.add(FormHelper.createHiddenField("cipkeys", key));
 	hp.add(label);
 	hp.add(tb);
-	hp.setCellWidth(label, "25%");
-	hp.setCellWidth(tb, "75%");
+	hp.setCellWidth(label, "30%");
+	hp.setCellWidth(tb, "70%");
 	hp.setCellVerticalAlignment(tb, HasVerticalAlignment.ALIGN_BOTTOM);
 	hp.setStylePrimaryName("Osyl-CitationForm-genericPanel");
 	return hp;
@@ -739,10 +739,10 @@ public class OsylCitationForm extends WindowPanel implements
 	hp.add(FormHelper.createHiddenField("cipkeys", key2));
 	hp.add(lab2);
 	hp.add(tb2);
-	hp.setCellWidth(lab1, "18%");
-	hp.setCellWidth(tb1, "32%");
-	hp.setCellWidth(lab2, "18%");
-	hp.setCellWidth(tb2, "32%");
+	hp.setCellWidth(lab1, "30%");
+	hp.setCellWidth(tb1, "35%");
+	hp.setCellWidth(lab2, "30%");
+	hp.setCellWidth(tb2, "35%");
 	hp.setCellVerticalAlignment(tb1, HasVerticalAlignment.ALIGN_BOTTOM);
 	hp.setCellVerticalAlignment(tb2, HasVerticalAlignment.ALIGN_BOTTOM);
 	hp.setCellHorizontalAlignment(lab2, HasHorizontalAlignment.ALIGN_RIGHT);
