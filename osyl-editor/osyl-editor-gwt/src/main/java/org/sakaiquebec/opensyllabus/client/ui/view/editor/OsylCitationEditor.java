@@ -374,13 +374,10 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			"CitationEditor.document.details"), false);
 	metaInfoDiscPanel.setAnimationEnabled(true);
 	metaInfoDiscPanel.setStylePrimaryName("DetailsPanel");
-	HorizontalPanel metaInfoPanel = new HorizontalPanel();
+	VerticalPanel metaInfoPanel = new VerticalPanel();
 	metaInfoDiscPanel.add(metaInfoPanel);
 	metaInfoPanel.setWidth("100%");
 	browserPanel.add(metaInfoDiscPanel);
-
-	VerticalPanel descriptionPanel = new VerticalPanel();
-	metaInfoPanel.add(descriptionPanel);
 
 	OsylDisclosureListener odl =
 		new OsylDisclosureListener(getEditorPopup());
@@ -398,21 +395,20 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	citationPreviewLabel = new HTML();
 	citationPreviewLabel.setHTML(selectedFile != null ? getView()
 		.getCitationsInfosAsLink(selectedFile) : "");
-	descriptionPanel.setWidth("98%");
 	citationPreviewLabel.setWidth("100%");
-	descriptionPanel.add(citationPreviewLabel);
+	metaInfoPanel.add(citationPreviewLabel);
 
 	// Add option to remove the link to the library references
 
 	HorizontalPanel changeLinkToLibraryPanel = new HorizontalPanel();
-	descriptionPanel.add(changeLinkToLibraryPanel);
+	metaInfoPanel.add(changeLinkToLibraryPanel);
 	changeLinkToLibraryPanel.setWidth("100%");
 
 	useNoLinkCheckBox = new CheckBox(getView().getUiMessage(
 	"CitationEditor.NoLink.title"));
 	useNoLinkCheckBox.setTitle(getView().getUiMessage(
 	"CitationEditor.NoLink.Name"));
-	useNoLinkCheckBox.setWidth("60px");
+	useNoLinkCheckBox.setWidth("80px");
 
 	useLibraryLinkCheckBox =
 		new CheckBox(getView().getUiMessage(
@@ -518,8 +514,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		}
 	
 	HorizontalPanel savePanel = new HorizontalPanel();
-	savePanel.setWidth("100%");
-	changeLinkToLibraryPanel.add(savePanel);
+	savePanel.setWidth("98%");
+	metaInfoPanel.add(savePanel);
 	savePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 
 	savePanel.add(saveButton);
