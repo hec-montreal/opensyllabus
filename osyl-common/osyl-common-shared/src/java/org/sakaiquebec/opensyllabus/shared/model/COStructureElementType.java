@@ -54,7 +54,21 @@ public class COStructureElementType {
     public static final String THEMATIC_BIBLIOGRAPHY_STRUCT = "ThematicBibliographyStruct";
     public static final String LEARNING_SUPPORT_SERVICES_STRUCT = "LearningSupportServicesStruct";
     public static final String NEWS_STRUCT = "NewsStruct";
-
+    public static final String INFORMATION_OF_LESSON_STRUCT = "InformationOfLessonStruct";
+    public static final String TEACHER_STRUCT = "TeacherStruct";
+    public static final String COURSE_INTRODUCTION_STRUCT = "CourseIntroductionStruct";
+    public static final String PURPOSEFUL_STUDIES_STRUCT = "PurposefulStudiesStruct";
+    public static final String INDIVIDUAL_VALUATION_OF_STUDIES_STRUCT = "IndividualValuationOfStudiesStruct";
+    public static final String NEW_PLAGIARISM_STRUCT = "NewPlagiarismStruct";
+    public static final String PEDAGOGIC_APPROACHES_STRUCT = "PedagogicApproachesStruct";
+    public static final String PEDAGOGIC_RESOURCES_STRUCT = "PedagogicResourcesStruct";
+    public static final String ORGANIZATION_OF_LESSON_HEADER_STRUCT = "OrganizationOfLessonHeaderStruct";
+    public static final String ORGANIZATION_OF_LESSON_INTRO_STRUCT = "OrganizationOfLessonIntroStruct";  
+    public static final String PERIODE_STRUCT = "PeriodeStruct";  
+    public static final String NEW_BIBLIOGRAPHY_STRUCT = "NewBibliographyStruct";
+    public static final String DISCIPLINARY_LIBRARY_STRUCT = "DisciplinaryLibraryStruct";
+    public static final String SERVICES_OF_SUPPORT_TO_STUDY_STRUCT = "ServicesOfSupportToStudyStruct";
+    
     // public static final String LECTURES_LIST_CONTEXT_SKILLS =
     // "LecturesListContextSkills";
     //
@@ -117,7 +131,21 @@ public class COStructureElementType {
     BIBLIOGRAPHY_STRUCT,
     THEMATIC_BIBLIOGRAPHY_STRUCT,
     LEARNING_SUPPORT_SERVICES_STRUCT,
-    NEWS_STRUCT
+    NEWS_STRUCT,
+    INFORMATION_OF_LESSON_STRUCT,
+    TEACHER_STRUCT,
+    COURSE_INTRODUCTION_STRUCT,
+    PURPOSEFUL_STUDIES_STRUCT,
+    INDIVIDUAL_VALUATION_OF_STUDIES_STRUCT,
+    NEW_PLAGIARISM_STRUCT,
+    PEDAGOGIC_APPROACHES_STRUCT,
+    PEDAGOGIC_RESOURCES_STRUCT,
+    ORGANIZATION_OF_LESSON_HEADER_STRUCT,
+    ORGANIZATION_OF_LESSON_INTRO_STRUCT,  
+    PERIODE_STRUCT,
+    NEW_BIBLIOGRAPHY_STRUCT,
+    DISCIPLINARY_LIBRARY_STRUCT,
+    SERVICES_OF_SUPPORT_TO_STUDY_STRUCT
     
     };
 
