@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.swt.internal.ole.win32.LICINFO;
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.WindowPanel;
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
@@ -38,7 +37,6 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -59,8 +57,8 @@ import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
  * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
  * @version $Id: $
  */
-public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
-	FiresUploadFileEvents {
+public class OsylFileUpload extends WindowPanel implements
+	OsylViewControllable, FiresUploadFileEvents {
 
     /**
      * User interface message bundle
@@ -84,9 +82,9 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 
     private List<UploadFileEventHandler> uploadEvtHandlerList =
 	    new ArrayList<UploadFileEventHandler>();
-    
+
     private List<String> rightsList;
-    
+
     private ListBox rightsListBox;
 
     private String right;
@@ -96,14 +94,14 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
      * 
      * @param osylController
      */
-    public OsylFileUpload(OsylController osylController,String currentDirectory,
-	    List<String> rightsList) {
+    public OsylFileUpload(OsylController osylController,
+	    String currentDirectory, List<String> rightsList) {
 
 	// set some properties for WindowPanel
 	setResizable(false);
 	setAnimationEnabled(true);
 	setCaptionAction(null);
-    	
+
 	setController(osylController);
 	this.currentFolder = currentDirectory;
 	this.rightsList = rightsList;
@@ -115,7 +113,8 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 	form.setWidget(table);
 
 	if (!getController().isInHostedMode()) {
-		form.setAction(OsylRemoteServiceLocator.getUploadFileUrl(this.currentFolder));
+	    form.setAction(OsylRemoteServiceLocator
+		    .getUploadFileUrl(this.currentFolder));
 	}
 
 	// Because we're going to add a FileUpload widget, we'll need to set the
@@ -130,31 +129,31 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
 	titleLabel.setStylePrimaryName("Osyl-FileUpload-resource-title");
 
-	//display file size limit
+	// display file size limit
 	row++;
 	final Label sizeLabel =
 		new Label(uiMessages.getMessage("fileUpload.size.limit"));
 	table.setWidget(row, 0, sizeLabel);
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
 	sizeLabel.setStylePrimaryName("Osyl-FileUpload-information");
-	
+
 	// Create a FileUpload widget.
 	row++;
 	final FileUpload upload = new FileUpload();
 	upload.setName("uploadFormElement");
 	table.setWidget(row, 0, upload);
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
-	
+
 	row++;
 	final Label rightsLabel =
 		new Label(uiMessages.getMessage("fileUpload.rights"));
 	table.setWidget(row, 0, rightsLabel);
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
 	rightsLabel.setStylePrimaryName("Osyl-FileUpload-information");
-	
+
 	// Add a "choose rights status" listbox
 	rightsListBox = new ListBox();
-//TODO erreur sur la ligne 157 rightsList probablement null. 
+	// TODO erreur sur la ligne 157 rightsList probablement null.
 	for (String license : this.rightsList) {
 	    rightsListBox.addItem(license);
 	}
@@ -219,20 +218,23 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 		// This event is fired just before the form is submitted. We can
 		// take this opportunity to perform validation.
 		String fn = upload.getFilename();
-		String message="";
-		
+		String message = "";
+
 		if (fn.length() == 0) {
 		    message = uiMessages.getMessage("fileUpload.plsSelectFile");
-		} else if(rightsListBox.getSelectedIndex()==0){
-		    message = uiMessages.getMessage("fileUpload.chooseRightsStatus");
+		} else if (rightsListBox.getSelectedIndex() == 0) {
+		    message =
+			    uiMessages
+				    .getMessage("fileUpload.chooseRightsStatus");
 		}
-		
-		if(message.equals("")){
+
+		if (message.equals("")) {
 		    cancelButton.setEnabled(false);
 		    saveButton.setEnabled(false);
 		} else {
 		    final OsylAlertDialog alertBox =
-		    new OsylAlertDialog(uiMessages.getMessage("Global.error"), message);
+			    new OsylAlertDialog(uiMessages
+				    .getMessage("Global.error"), message);
 		    alertBox.center();
 		    alertBox.show();
 		    event.setCancelled(true);
@@ -250,24 +252,29 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 			    new OsylUnobtrusiveAlert(uiMessages
 				    .getMessage("fileUpload.resSaved"));
 		    OsylEditorEntryPoint.showWidgetOnTop(alert);
-		    
-		    // parse the handler list 
-		   for(Iterator<UploadFileEventHandler> it = uploadEvtHandlerList.iterator();it.hasNext();){
-			it.next().onUploadFile(new UploadFileEvent(getPath(event.getResults())));
+
+		    // parse the handler list
+		    for (Iterator<UploadFileEventHandler> it =
+			    uploadEvtHandlerList.iterator(); it.hasNext();) {
+			it.next()
+				.onUploadFile(
+					new UploadFileEvent(getPath(event
+						.getResults())));
 		    }
 
-		    
 		} else {
 		    final OsylAlertDialog alertBox =
 			    new OsylAlertDialog(
 				    false,
-				    true, 
+				    true,
 				    "Alert - Upload Error",
 				    uiMessages
 					    .getMessage("fileUpload.resNotSaved"));
-		    // get index of file upload form to set z-index of alert window
-		    int index = new Integer(DOM.getStyleAttribute(
-		    		OsylFileUpload.this.getElement(), "zIndex"));
+		    // get index of file upload form to set z-index of alert
+		    // window
+		    int index =
+			    new Integer(DOM.getStyleAttribute(
+				    OsylFileUpload.this.getElement(), "zIndex"));
 		    alertBox.setZIndex(index + 1);
 		    alertBox.center();
 		    alertBox.show();
@@ -281,12 +288,12 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 	setWidget(form);
 	setStylePrimaryName("Osyl-FileUpload-uploadForm");
     } // Constructor
-    
-    private void setRight(String right){
+
+    private void setRight(String right) {
 	this.right = right;
     }
-    
-    public String getRight(){
+
+    public String getRight() {
 	return right;
     }
 
@@ -299,17 +306,19 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
     public boolean getState(String jsonString) {
 	return (jsonString.contains("status\":\"ok"));
     }
+
     /**
      * Gets the resource name
-     *  
+     * 
      * @param jsonString
      * @return The resource name
      */
     public String getPath(String jsonString) {
-	String s = jsonString.substring(jsonString.indexOf("\"url\":\"")+7);
-	s=s.substring(0, s.indexOf("\""));
+	String s = jsonString.substring(jsonString.indexOf("\"url\":\"") + 7);
+	s = s.substring(0, s.indexOf("\""));
 	return s;
     }
+
     private void cancel() {
 	hide();
     }
@@ -331,12 +340,11 @@ public class OsylFileUpload extends WindowPanel implements OsylViewControllable,
 
     }
 
-    
-	/**
-	 * Centers window with OsylEditorEntryPoint
-	 */
-	@Override
-	public void center() {
+    /**
+     * Centers window with OsylEditorEntryPoint
+     */
+    @Override
+    public void center() {
 	OsylEditorEntryPoint.centerObject(this);
-	}
+    }
 }
