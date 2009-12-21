@@ -59,6 +59,10 @@ public class GenericDetailCoursMapFactory {
 	    catalogNbr = tokens[i++];
 	    section = tokens[i++];
 	    
+	    //Remove empty spaces
+	    if (courseId != null)
+	    	courseId = courseId.trim();
+	    
 	    key = DetailCoursMapEntry.getUniqueKey(catalogNbr, (strm + sessionCode), section);
 	    // on reprend l'entree existante
 	    if (map.containsKey(key)) {

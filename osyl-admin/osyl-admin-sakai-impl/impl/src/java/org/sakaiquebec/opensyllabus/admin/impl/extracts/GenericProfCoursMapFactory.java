@@ -108,6 +108,8 @@ public class GenericProfCoursMapFactory {
 			String role = token[i++];
 			String strmId = strm + sessionCode;
 
+			if (catalogNbr != null)
+				catalogNbr = catalogNbr.trim();
 			if (map.containsKey(emplId)) {
 				entry = map.get(emplId);
 			} else {

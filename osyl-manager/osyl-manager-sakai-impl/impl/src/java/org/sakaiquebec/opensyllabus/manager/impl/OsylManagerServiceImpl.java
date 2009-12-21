@@ -920,13 +920,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			log.warn(this + "Site realm not found", e);
 		}
 
-		boolean added = false;
+		boolean added = true;
 
-		if (siteId != null)
-			added = addParticipants(realmId, courseSectionId);
-
-		// We add the site properties
-		if (added) {
+		if (siteId != null){
+//			added = addParticipants(realmId, courseSectionId);
+//}
+//		// We add the site properties
+//		if (added) {
 			try {
 				Site site = siteService.getSite(siteId);
 				ResourcePropertiesEdit rp = site.getPropertiesEdit();
