@@ -35,11 +35,12 @@ import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.TreeListener;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -54,8 +55,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id: $
  */
 public class OsylTreeView extends OsylViewableComposite implements
-	TreeListener, ViewContextSelectionEventHandler,
-	UpdateCOStructureElementEventHandler, UpdateCOUnitEventHandler {
+	ViewContextSelectionEventHandler, UpdateCOStructureElementEventHandler,
+	UpdateCOUnitEventHandler, SelectionHandler<TreeItem> {
 
     private TreeItem root;
 
@@ -89,8 +90,7 @@ public class OsylTreeView extends OsylViewableComposite implements
 	final Tree tree = new Tree();
 	setTree(tree);
 	getTree().setStylePrimaryName("Osyl-TreeView-Tree");
-	// the listener is "this" itself
-	getTree().addTreeListener(this);
+	getTree().addSelectionHandler(this);
 	vertPan.add(getTree());
 	initWidget(vertPan);
 	refreshView();
@@ -123,7 +123,7 @@ public class OsylTreeView extends OsylViewableComposite implements
 		List<COModelInterface> subModels =
 			getController().getOsylConfig().getOsylConfigRuler()
 				.getAllowedSubModels(itemModel);
-		if (itemModel.getChildrens().size() == 1 && subModels==null) {
+		if (itemModel.getChildrens().size() == 1 && subModels == null) {
 		    COElementAbstract childOfAsmStruct =
 			    (COElementAbstract) itemModel.getChildrens().get(0);
 		    if (childOfAsmStruct.isCOUnit()) {
@@ -249,29 +249,6 @@ public class OsylTreeView extends OsylViewableComposite implements
     }
 
     /**
-     * @see TreeListener#onTreeItemSelected(TreeItem)
-     */
-    public void onTreeItemSelected(TreeItem item) {
-	if (item.getParentItem() == null) {
-	    getController().getViewContext().setContextModel(getModel());
-	} else {
-	    OsylTreeItemBaseView treeItemView =
-		    (OsylTreeItemBaseView) item.getWidget();
-	    getController().getViewContext().setContextModel(
-		    treeItemView.getModel());
-	}
-
-    }
-
-    /**
-     * @see TreeListener#onTreeItemStateChanged(TreeItem)
-     */
-    public void onTreeItemStateChanged(TreeItem item) {
-	// TODO Auto-generated method stub
-	// Window.alert("onTreeItemStateChanged");
-    }
-
-    /**
      * @see ViewContextSelectionEventHandler#onViewContextSelection(org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler.ViewContextSelectionEvent)
      */
     public void onViewContextSelection(ViewContextSelectionEvent event) {
@@ -320,6 +297,19 @@ public class OsylTreeView extends OsylViewableComposite implements
 
     public void onUpdateModel(UpdateCOUnitEvent event) {
 	refreshSubModelsViews((COElementAbstract) event.getSource());
+    }
+
+    public void onSelection(SelectionEvent<TreeItem> event) {
+	TreeItem item = event.getSelectedItem();
+	if (item.getParentItem() == null) {
+	    getController().getViewContext().setContextModel(getModel());
+	} else {
+	    OsylTreeItemBaseView treeItemView =
+		    (OsylTreeItemBaseView) item.getWidget();
+	    getController().getViewContext().setContextModel(
+		    treeItemView.getModel());
+	}
+
     }
 
 }

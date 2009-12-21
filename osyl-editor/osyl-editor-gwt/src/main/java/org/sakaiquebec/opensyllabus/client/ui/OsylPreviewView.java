@@ -285,8 +285,7 @@ public class OsylPreviewView extends OsylViewableComposite implements
 
     private COElementAbstract findStartingViewContext(COElementAbstract coe) {
 	COElementAbstract absElement = null;
-	List<COElementAbstract> childrenList =
-		(List<COElementAbstract>) coe.getChildrens();
+	List<COElementAbstract> childrenList = coe.getChildrens();
 	boolean find = false;
 	Iterator<COElementAbstract> iter = childrenList.iterator();
 	while (iter.hasNext()) {

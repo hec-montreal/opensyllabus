@@ -188,6 +188,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	return courseOutline.getCoId();
     }
     
+    @SuppressWarnings("unchecked")
     private COSerialized getSerializedVourseOutlineBySiteIdAccessAndPublished(String siteId, String access, boolean published) throws Exception{
 	List<COSerialized> results = null;
 	COSerialized courseOutline = null;
@@ -294,6 +295,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    return courseOutline;
     }
 
+    @SuppressWarnings("unchecked")
     public COSerialized getPrePublishSerializedCourseOutlineBySiteId(
 	    String siteId) throws Exception {
 	List<COSerialized> results = null;
@@ -328,6 +330,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 		    + " and published=true");
     }
 
+    @SuppressWarnings("unchecked")
     public COSerialized getPublishedSerializedCourseOutlineBySiteIdAndAccess(
 	    String siteId, String access) throws Exception {
 	List<COSerialized> results = null;

@@ -31,8 +31,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -109,11 +107,12 @@ public class OsylEditorEntryPoint implements EntryPoint {
 		if (!osylController.isModelDirty()) {
 		    return;
 		}
-		event.setMessage(osylController
-			.getUiMessage("save.reallyQuit"));
+		event
+			.setMessage(osylController
+				.getUiMessage("save.reallyQuit"));
 	    }
 	}); // addWindowClosingHandler
-	
+
     } // onModuleLoad
 
     public void initModel(COSerialized co) {
@@ -388,22 +387,21 @@ public class OsylEditorEntryPoint implements EntryPoint {
      */
     private static native int getViewportWidthNative() /*-{
 
-						       // This code is adapted from Sakai's browserSafeDocHeight
-						       if (top.innerWidth) {
-						       // all except Explorer
-						       return top.innerWidth;
-						       } else if (top.document.documentElement
-						       && top.document.documentElement.clientWidth) {
-						       // Explorer 7 and MSIE embedded in FF
-						       return top.document.documentElement.clientWidth;
-						       } else if (document.body) {
-						       // other Explorers (including GWT HostedMode)
-						       alert("Unsupported browser");
-						       // return document.body.clientWidth;
-						       return 600;
-						       }
-						       
-						       }-*/;
+	// This code is adapted from Sakai's browserSafeDocHeight
+	if (top.innerWidth) {
+		// all except Explorer
+		return top.innerWidth;
+	} else if (top.document.documentElement
+		&& top.document.documentElement.clientWidth) {
+		// Explorer 7 and MSIE embedded in FF
+		return top.document.documentElement.clientWidth;
+	} else if (document.body) {
+		// other Explorers (including GWT HostedMode)
+		alert("Unsupported browser");
+	// return document.body.clientWidth;
+		return 600;
+	}				       
+    }-*/;
 
     // Shows the y-position in a sticky label
     private void startDebugMsg() {
@@ -588,7 +586,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
      */
     public void prepareModelForSave() {
 	modeledCo.setModeledContent(getModel());
-	modeledCo.model2XML();
+	modeledCo.model2XML(false);
 	if (serializedCO == null) {
 	    // This happens if we are offline (ie: we did not receive a
 	    // COSerialized, therefore we don't have an ID! It won't save

@@ -111,7 +111,7 @@ public class COUnit extends COElementAbstract<COElementAbstract> implements
     @Override
     public void changeElementPosition(COElementAbstract coEltAbs, int action) {
 	// Nothing to do
-	// TODO when multiple coUnitStructure while be manage
+	// TODO when multiple coUnitStructure will be manage
     }
 
     @Override

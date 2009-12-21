@@ -35,7 +35,6 @@ public class COContentRubric implements COModelInterface {
     public static final boolean TRACE = false;
     
     //TODO delete this hack as soon as possible
-    @Deprecated
     public static final String RUBRIC_TYPE_NEWS = "news";
 
     /**

@@ -23,14 +23,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.ClickListenerCollection;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.MouseListener;
-import com.google.gwt.user.client.ui.MouseListenerCollection;
-import com.google.gwt.user.client.ui.SourcesClickEvents;
-import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -40,11 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:Remi.Saias@hec.ca">Remi Saias</a>
  * @version $Id: $
  */
-public abstract class OsylAbstractView extends OsylViewableComposite implements
-	SourcesMouseEvents, SourcesClickEvents {
-
-    private MouseListenerCollection mouseListeners;
-    private ClickListenerCollection clickListeners;
+public abstract class OsylAbstractView extends OsylViewableComposite {
 
     /**
      * The panel where will be added widgets either for displaying or editing
@@ -77,9 +67,9 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      */
     protected OsylAbstractView(COModelInterface model,
 	    OsylController osylController) {
-	this(model,osylController,true);
+	this(model, osylController, true);
     }
-    
+
     protected OsylAbstractView(COModelInterface model,
 	    OsylController osylController, boolean editable) {
 	super(model, osylController);
@@ -89,7 +79,6 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 
 	if (model.isEditable() && editable) {
 	    popUpMouseOverListener = new OsylEditableMouseOverListener(this);
-	    addMouseListener(popUpMouseOverListener);
 	}
     }
 
@@ -103,7 +92,8 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 
     public void setUpAndDownPanel(VerticalPanel upAndDownPanel) {
 	this.upAndDownPanel = upAndDownPanel;
-	this.upAndDownPanel.setStyleName("Osyl-MouseOverPopup-ArrowButtonPanel");
+	this.upAndDownPanel
+		.setStyleName("Osyl-MouseOverPopup-ArrowButtonPanel");
     }
 
     /**
@@ -196,7 +186,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      * Called when entering edition.
      */
     public void enterEdit() {
-	removeMouseListener(popUpMouseOverListener);
+	getMainPanel().addStyleDependentName("Hover");
 	getButtonPanel().setVisible(false);
 	getEditor().enterEdit();
     }
@@ -220,7 +210,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 
     protected void moveIfNeeded() {
 	if (getEditor().isMoveable()) {
-	    //TODO
+	    // TODO
 	}
     }
 
@@ -229,8 +219,6 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      * current context).
      */
     public void leaveEdit() {
-	if (mouseListeners == null || mouseListeners.isEmpty())
-	    addMouseListener(popUpMouseOverListener);
 	getMainPanel().removeStyleDependentName("Hover");
 	getButtonPanel().setVisible(false);
 	getUpAndDownPanel().setVisible(false);
@@ -321,50 +309,15 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      * @see Widget#onBrowserEvent(Event)
      */
     public void onBrowserEvent(Event event) {
-	switch (DOM.eventGetType(event)) {
-	case Event.ONMOUSEOVER:
-	    if (mouseListeners != null) {
-		mouseListeners.fireMouseEnter(this);
+	if (popUpMouseOverListener != null && !getEditor().isInEditionMode()) {
+	    switch (DOM.eventGetType(event)) {
+	    case Event.ONMOUSEOVER:
+		popUpMouseOverListener.onMouseOver(null);
+		break;
+	    case Event.ONMOUSEOUT:
+		popUpMouseOverListener.onMouseOut(null);
+		break;
 	    }
-	    break;
-	case Event.ONMOUSEOUT:
-	    if (mouseListeners != null) {
-		mouseListeners.fireMouseLeave(this);
-	    }
-	    break;
-	case Event.ONCLICK:
-	    if (clickListeners != null) {
-		clickListeners.fireClick(this);
-	    }
-	    break;
-	}
-    }
-
-    /** {@inheritDoc} */
-    public void addMouseListener(MouseListener listener) {
-	if (mouseListeners == null) {
-	    mouseListeners = new MouseListenerCollection();
-	}
-	mouseListeners.add(listener);
-    }
-
-    /** {@inheritDoc} */
-    public void removeMouseListener(MouseListener listener) {
-	if (mouseListeners != null) {
-	    mouseListeners.remove(listener);
-	}
-    }
-
-    public void addClickListener(ClickListener listener) {
-	if (clickListeners == null) {
-	    clickListeners = new ClickListenerCollection();
-	}
-	clickListeners.add(listener);
-    }
-
-    public void removeClickListener(ClickListener listener) {
-	if (clickListeners != null) {
-	    clickListeners.remove(listener);
 	}
     }
 
@@ -381,9 +334,9 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      * Returns the text content of current resource as stored in its model.
      * Caveat: This only applies to views responsible for a single text field as
      * the {@link OsylResProxTextView}, {@link OsylResProxDocumentView} and
-     * {@link OsylCOUnitStructureLabelView}. Return value for other views is either undefined
-     * (may throw an exception) or implicit (may be the first field of the
-     * view). Refer to the specific view documentation.
+     * {@link OsylCOUnitStructureLabelView}. Return value for other views is
+     * either undefined (may throw an exception) or implicit (may be the first
+     * field of the view). Refer to the specific view documentation.
      * 
      * @see OsylAbstractEditor#getText()
      */

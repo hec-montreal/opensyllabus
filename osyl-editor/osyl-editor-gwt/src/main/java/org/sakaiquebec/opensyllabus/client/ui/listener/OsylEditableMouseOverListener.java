@@ -24,8 +24,10 @@ import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 
-import com.google.gwt.user.client.ui.MouseListener;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 
 /**
  * Class implementing some mouse events to change css style on mouse over
@@ -34,7 +36,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @version $Id: $
  */
-public class OsylEditableMouseOverListener implements MouseListener {
+public class OsylEditableMouseOverListener implements MouseOutHandler,
+	MouseOverHandler {
 
     /**
      * We need the abstract view to get control on the view elements like the
@@ -51,57 +54,43 @@ public class OsylEditableMouseOverListener implements MouseListener {
 	this.view = view;
     }
 
-    /** {@inheritDoc} */
-    public void onMouseDown(Widget sender, int x, int y) {
+    public void onMouseOut(MouseOutEvent event) {
+	view.removeStyleDependentName("Hover");
+	view.getButtonPanel().setVisible(false);
+	view.getUpAndDownPanel().setVisible(false);
     }
 
-    /** {@inheritDoc} */
-    public void onMouseEnter(Widget sender) {
+    public void onMouseOver(MouseOverEvent event) {
 	if (!view.getEditor().isInEditionMode()
 		&& !OsylController.getInstance().isReadOnly()) {
 	    view.addStyleDependentName("Hover");
 	    view.getButtonPanel().setVisible(true);
 	    // left position of buttons is according to viewport if
 	    // width of main panel is larger than this
-	    int widthReference = OsylEditorEntryPoint.getViewportWidth() - 
-	    		view.getMainPanel().getAbsoluteLeft() <
-	    		view.getOffsetWidth() ?
-	    				OsylEditorEntryPoint.getViewportWidth() - 
-	    				view.getMainPanel().getAbsoluteLeft() :
-	    					view.getOffsetWidth();
-	    int left = (widthReference - view.getButtonPanel()
-	    		.getOffsetWidth()) / 2;
+	    int widthReference =
+		    OsylEditorEntryPoint.getViewportWidth()
+			    - view.getMainPanel().getAbsoluteLeft() < view
+			    .getOffsetWidth() ? OsylEditorEntryPoint
+			    .getViewportWidth()
+			    - view.getMainPanel().getAbsoluteLeft() : view
+			    .getOffsetWidth();
+	    int left =
+		    (widthReference - view.getButtonPanel().getOffsetWidth()) / 2;
 	    int top =
 		    (view.getOffsetHeight() - view.getButtonPanel()
 			    .getOffsetHeight()) / 2;
 	    view.getMainPanel().setWidgetPosition(view.getButtonPanel(), left,
 		    top);
-	    
+
 	    view.getUpAndDownPanel().setVisible(true);
 	    int leftUDP =
-		    (widthReference - view.getUpAndDownPanel()
-			    .getOffsetWidth()-3);
-	    int topUDP = view.getOffsetHeight() - view.getOffsetHeight()+3;
+		    (widthReference - view.getUpAndDownPanel().getOffsetWidth() - 3);
+	    int topUDP = view.getOffsetHeight() - view.getOffsetHeight() + 3;
 	    view.getMainPanel().setWidgetPosition(view.getUpAndDownPanel(),
 		    leftUDP, topUDP);
 
 	} else {
 	    view.removeStyleDependentName("Hover");
 	}
-    }
-
-    /** {@inheritDoc} */
-    public void onMouseLeave(Widget sender) {
-	view.removeStyleDependentName("Hover");
-	view.getButtonPanel().setVisible(false);
-	view.getUpAndDownPanel().setVisible(false);
-    }
-
-    /** {@inheritDoc} */
-    public void onMouseMove(Widget sender, int x, int y) {
-    }
-
-    /** {@inheritDoc} */
-    public void onMouseUp(Widget sender, int x, int y) {
     }
 }

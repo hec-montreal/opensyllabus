@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
@@ -583,16 +582,6 @@ public class COModeled extends COSerialized {
 	    coContentRubric.setType(value);
 	}
 	return coContentRubric;
-    }
-
-    /**
-     * Entry point of the model conversion to XML string.
-     * 
-     * @return the XML string generated from the model.
-     * @deprecated use model2XML(false) instead
-     */
-    public void model2XML() {
-	model2XML(false);
     }
 
     public void model2XML(boolean saveParentInfos) {

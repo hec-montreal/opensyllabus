@@ -529,7 +529,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		lb.addItem(label, targetModel.getId());
 	    }
 	} else {
-	    for (Iterator<COElementAbstract> iter =
+	    for (Iterator<COElementAbstract<COModelInterface>> iter =
 		    model.getChildrens().iterator(); iter.hasNext();) {
 		COElementAbstract coElement = iter.next();
 		fillListBoxWithAllowedCoUnits(coElement, lb);

@@ -44,6 +44,12 @@ public class COConfig {
     private List<String> evalTypeList;
 
     private OsylSettings settings;
+    
+    private String stylesheetUri ;
+
+    public String getStylesheetUri() {
+        return stylesheetUri;
+    }
 
     /**
      * Construct an COConfig and its OsylConfigRuler based on the
@@ -63,6 +69,7 @@ public class COConfig {
 	this.evalTypeList = cOConfigSerialized.getEvalTypeList();
 	this.settings = 
 		new OsylSettings(cOConfigSerialized.getSettings());
+	this.stylesheetUri = cOConfigSerialized.getCascadingStyleSheetURI();
     }
 
     /**

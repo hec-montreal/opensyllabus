@@ -40,15 +40,16 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.FlexTable.FlexCellFormatter;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 
 /**
  * Pop-up window to show a file upload form. The file is saved on the server and
@@ -212,8 +213,9 @@ public class OsylFileUpload extends WindowPanel implements
 	row++;
 
 	// Add an event handler to the form.
-	form.addFormHandler(new FormHandler() {
-	    public void onSubmit(FormSubmitEvent event) {
+	form.addSubmitHandler(new SubmitHandler() {
+	    
+	    public void onSubmit(SubmitEvent event) {
 		// filename.setValue(upload.getFilename());
 		// This event is fired just before the form is submitted. We can
 		// take this opportunity to perform validation.
@@ -237,15 +239,14 @@ public class OsylFileUpload extends WindowPanel implements
 				    .getMessage("Global.error"), message);
 		    alertBox.center();
 		    alertBox.show();
-		    event.setCancelled(true);
+		    event.cancel();
 		}
 	    }
-
-	    /*
-	     * When the form submission is successfully completed, this event is
-	     * fired. SDATA returns an event of type JSON.
-	     */
-	    public void onSubmitComplete(FormSubmitCompleteEvent event) {
+	});
+	
+	form.addSubmitCompleteHandler(new SubmitCompleteHandler() {
+	    
+	    public void onSubmitComplete(SubmitCompleteEvent event) {
 		if (getState(event.getResults())) {
 		    hide();
 		    OsylUnobtrusiveAlert alert =
@@ -282,9 +283,9 @@ public class OsylFileUpload extends WindowPanel implements
 		    saveButton.setEnabled(true);
 		    return;
 		}
-	    } // onSubmitComplete
-	}); // new FormHandler (inner class)
-
+	    }
+	});
+	
 	setWidget(form);
 	setStylePrimaryName("Osyl-FileUpload-uploadForm");
     } // Constructor

@@ -29,23 +29,15 @@ import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEve
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
-import org.sakaiquebec.opensyllabus.client.ui.OsylTreeView;
-import org.sakaiquebec.opensyllabus.client.ui.OsylRoundCornersPanel;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
-import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Label;
 
 /**
  * OsylMainView defines the OpenSyllabus main view which is composed by a
@@ -68,7 +60,7 @@ public class OsylMainView extends OsylViewableComposite {
 
     public OsylMainView(COModelInterface model, OsylController osylController) {
 	super(model, osylController);
-	
+
 	// Controller itself has a reference to the MainView
 	getController().setMainView(this);
 
@@ -93,42 +85,42 @@ public class OsylMainView extends OsylViewableComposite {
 
 	// Create and set the Main Horizontal Split Panel
 	horizontalSplitPanel = new HorizontalSplitPanel();
-	horizontalSplitPanel.setStylePrimaryName("Osyl-MainView-HorizontalSplitPanel");
+	horizontalSplitPanel
+		.setStylePrimaryName("Osyl-MainView-HorizontalSplitPanel");
 	getMainPanel().add(horizontalSplitPanel);
 
 	// Create and set the OpenSyllabus TreeView
 	setOsylTreeView(new OsylTreeView(getModel(), getController()));
 	// TODO: compute dynamically the maximum height of the TreeView
- 	horizontalSplitPanel.setSplitPosition( OsylTreeView.getInitialSplitPosition());
-// 	SimplePanel treeViewEnclosingPanel = new SimplePanel();
-	OsylRoundCornersPanel treeViewRoundCornerPanel = 
-	    	new OsylRoundCornersPanel(getOsylTreeView(),
-	    		// "Osyl-TreeView",
-	    		"",
-			"Osyl-TreeView-BottomLeft", 
-			"Osyl-TreeView-BottomRight", 
-			"Osyl-TreeView-TopLeft", 
+	horizontalSplitPanel.setSplitPosition(OsylTreeView
+		.getInitialSplitPosition());
+	// SimplePanel treeViewEnclosingPanel = new SimplePanel();
+	OsylRoundCornersPanel treeViewRoundCornerPanel =
+		new OsylRoundCornersPanel(
+			getOsylTreeView(),
+			// "Osyl-TreeView",
+			"", "Osyl-TreeView-BottomLeft",
+			"Osyl-TreeView-BottomRight", "Osyl-TreeView-TopLeft",
 			"Osyl-TreeView-TopRight");
-//	treeViewEnclosingPanel.add(treeViewRoundCornerPanel);
-//	treeEnclosingPanel.setStylePrimaryName("Osyl-TreeView");
+	// treeViewEnclosingPanel.add(treeViewRoundCornerPanel);
+	// treeEnclosingPanel.setStylePrimaryName("Osyl-TreeView");
 	treeViewRoundCornerPanel.setStylePrimaryName("Osyl-TreeView");
 	horizontalSplitPanel.setLeftWidget(treeViewRoundCornerPanel);
 
 	// Create and set the OpenSyllabus Workspace View
 	setWorkspaceView(new OsylWorkspaceView(getController()
 		.getViewContextModel(), getController()));
-// 	SimplePanel workspaceEnclosingPanel = new SimplePanel();
-	OsylRoundCornersPanel workSpaceViewRoundCornerPanel = 
-	    new OsylRoundCornersPanel(
-		    getWorkspaceView(),
-	    		// "Osyl-WorkspaceView",
-		        "",
-			"Osyl-WorkspaceView-BottomLeft", 
-			"Osyl-WorkspaceView-BottomRight", 
-			"Osyl-WorkspaceView-TopLeft", 
+	// SimplePanel workspaceEnclosingPanel = new SimplePanel();
+	OsylRoundCornersPanel workSpaceViewRoundCornerPanel =
+		new OsylRoundCornersPanel(
+			getWorkspaceView(),
+			// "Osyl-WorkspaceView",
+			"", "Osyl-WorkspaceView-BottomLeft",
+			"Osyl-WorkspaceView-BottomRight",
+			"Osyl-WorkspaceView-TopLeft",
 			"Osyl-WorkspaceView-TopRight");
-//	workspaceEnclosingPanel.add(workSpaceViewRoundCornerPanel);
-//	workspaceEnclosingPanel.setStylePrimaryName("Osyl-WorkspaceView");
+	// workspaceEnclosingPanel.add(workSpaceViewRoundCornerPanel);
+	// workspaceEnclosingPanel.setStylePrimaryName("Osyl-WorkspaceView");
 	workSpaceViewRoundCornerPanel.setStylePrimaryName("Osyl-WorkspaceView");
 	horizontalSplitPanel.setRightWidget(workSpaceViewRoundCornerPanel);
 
@@ -166,8 +158,7 @@ public class OsylMainView extends OsylViewableComposite {
 
     private COElementAbstract findStartingViewContext(COElementAbstract coe) {
 	COElementAbstract absElement = null;
-	List<COElementAbstract> childrenList =
-		(List<COElementAbstract>) coe.getChildrens();
+	List<COElementAbstract> childrenList = coe.getChildrens();
 	boolean find = false;
 	Iterator<COElementAbstract> iter = childrenList.iterator();
 	while (iter.hasNext()) {
@@ -190,7 +181,6 @@ public class OsylMainView extends OsylViewableComposite {
 	}
 	return absElement;
     }
-
 
     /**
      * Initializing the viewContext to the first structureElement of the global
