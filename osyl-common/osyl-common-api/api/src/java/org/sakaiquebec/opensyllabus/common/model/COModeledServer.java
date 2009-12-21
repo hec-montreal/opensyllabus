@@ -992,6 +992,7 @@ public class COModeledServer {
 
     }
 
+    @SuppressWarnings("unchecked")
     private void associateChild(COElementAbstract childElement,
 	    COElementAbstract parentElement) throws Exception {
 	if ((parentElement.isCourseOutlineContent() && childElement
@@ -1105,6 +1106,7 @@ public class COModeledServer {
 	}
     }
 
+    @SuppressWarnings("unchecked")
     private void prepareForFusion(COElementAbstract modelToPrepare) {
 	modelToPrepare.setEditable(false);
 	if (!modelToPrepare.isCOContentResourceProxy()) {
