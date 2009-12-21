@@ -18,34 +18,20 @@
 	<department type="UdeM"></department>
 	<parent type="UdeM"></parent>
 	<access></access>
-	<asmStructure access="public" xsi:type="NewsStruct">
-		<modified>2001-12-17T09:30:47-05:00</modified>
-		<asmUnit access="public" xsi:type="NewsUnit">
-			<label><![CDATA[Nouvelles]]></label>
-			<modified>2001-12-17T09:30:47-05:00</modified>
-			<asmUnitStructure access="public" xsi:type="NewsUnitStruct">
-				<label><![CDATA[News]]></label>
-				<modified>2001-12-17T09:30:47-05:00</modified>
-				<asmUnitContent access="public" xsi:type="NewsUnitContent">
-					<modified>2001-12-17T09:30:47-05:00</modified>
-				</asmUnitContent>
-			</asmUnitStructure>
-		</asmUnit>
-	</asmStructure>
-	<asmStructure access="public" xsi:type="OverviewStruct">
+	<asmStructure access="public" xsi:type="InformationOfLessonStruct">
 		<id type="UdeMsakai">38404736</id>
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
-		<asmUnit access="public" xsi:type="OverviewUnit">
-			<label><![CDATA[Informations sur le cours]]></label>
-			<asmUnitStructure access="public" xsi:type="OverviewUnitStruct">
-				<asmUnitContent access="public" xsi:type="CourseOfficialDescriptionUnitContent">
+		<asmUnit access="public" xsi:type="InformationOfLessonUnit">
+			<label><![CDATA[Information sur le cours]]></label>
+			<asmUnitStructure access="public" xsi:type="InformationOfLessonUnitStruct">
+				<asmUnitContent access="public" xsi:type="InformationOfLessonUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							officialdescription
+							descriptiondirectory
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -59,23 +45,16 @@
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
 							<language>fr</language>
-							<text><![CDATA[...Insérez une description...]]></text>
+							<text><![CDATA[...Insérez une description de l'annuaire...]]></text>
 						</asmResource>
 						<label />
 					</asmContext>
-				</asmUnitContent>
-			</asmUnitStructure>
-		</asmUnit>
-		<asmUnit access="public" xsi:type="SchedulePlaceUnit">
-			<label><![CDATA[Horaires et lieux]]></label>
-			<asmUnitStructure access="public" xsi:type="SchedulePlaceUnitStruct">
-				<asmUnitContent access="public" xsi:type="SchedulePlaceUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							coursebeginend
+							placetimetable
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -89,7 +68,7 @@
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
 							<language>fr</language>
-							<text><![CDATA[...Insérez les dates de début et de fin du cours...]]></text>
+							<text><![CDATA[...Insérez le horaire et lieu...]]></text>
 						</asmResource>
 						<label />
 					</asmContext>
@@ -98,30 +77,7 @@
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							courseregularschedule
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[....Insérez l'horaire régulier et le local...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-			    		<id type="UdeMsakai">805655358980</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							coursespecialevents
+							specialevent
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -143,25 +99,100 @@
 			</asmUnitStructure>
 		</asmUnit>
 	</asmStructure>	
-	<asmStructure access="public" xsi:type="StaffStruct">
+	<asmStructure access="public" xsi:type="TeacherStruct">
 		<id type="UdeMsakai">888754567</id>
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
-		<asmUnit access="public" xsi:type="StaffUnit">
-    	<label><![CDATA[Coordonnées]]></label>
-			<asmUnitStructure access="public" xsi:type="StaffUnitStruct">
-				<asmUnitContent access="public" xsi:type="StaffUnitContent">
+		<asmUnit access="public" xsi:type="TeacherUnit">
+    	<label><![CDATA[Enseignant et assistant]]></label>
+			<asmUnitStructure access="public" xsi:type="TeacherUnitStruct">
+				<asmUnitContent access="public" xsi:type="TeacherUnitContent">
 					<asmContext access="attendee" xsi:type="PeopleContext">
-                    	<label><![CDATA[Tapez votre texte ici...]]></label>
+                    	<label><![CDATA[Tapez votre responsable du cours...]]></label>
                             <importance>false</importance>
                             <visible>true</visible>
                             <semanticTag type="rubric">
-                                coursecoordinator
+                                responsibleforlesson
+                            </semanticTag>
+					</asmContext>
+					<asmContext access="attendee" xsi:type="PeopleContext">
+                    	<label><![CDATA[Tapez votre professeur...]]></label>
+                            <importance>false</importance>
+                            <visible>true</visible>
+                            <semanticTag type="rubric">
+                                professor
                             </semanticTag>
                             <availability>Du lundi au vendredi entre 9 h et 17 h</availability>
-                            <comment>Pas de commentaire&lt;br&gt;</comment>
                             <Person access="attendee">
                                 <title>Professeur titulaire</title>
+                                <surname>Nom</surname>
+                                <firstname>Prénom</firstname>
+                                <officeroom># 1234</officeroom>
+                                <tel>514-343-6111, poste 1234</tel>
+                                <email>prenom.nom@umontreal.ca</email>
+                            </Person>
+					</asmContext>
+					<asmContext access="attendee" xsi:type="PeopleContext">
+                    	<label><![CDATA[Tapez votre coordonateur...]]></label>
+                            <importance>false</importance>
+                            <visible>true</visible>
+                            <semanticTag type="rubric">
+                                coordinator
+                            </semanticTag>
+                            <availability>Du lundi au vendredi entre 9 h et 17 h</availability>
+                            <Person access="attendee">
+                                <title>Coordonnateur</title>
+                                <surname>Nom</surname>
+                                <firstname>Prénom</firstname>
+                                <officeroom># 1234</officeroom>
+                                <tel>514-343-6111, poste 1234</tel>
+                                <email>prenom.nom@umontreal.ca</email>
+                            </Person>
+					</asmContext>
+					<asmContext access="attendee" xsi:type="PeopleContext">
+                    	<label><![CDATA[Tapez votre auxiliaires d'enseignement...]]></label>
+                            <importance>false</importance>
+                            <visible>true</visible>
+                            <semanticTag type="rubric">
+                                assistantofeducation
+                            </semanticTag>
+                            <availability>Du lundi au vendredi entre 9 h et 17 h</availability>
+                            <Person access="attendee">
+                                <title>Auxiliaires d'enseignement</title>
+                                <surname>Nom</surname>
+                                <firstname>Prénom</firstname>
+                                <officeroom># 1234</officeroom>
+                                <tel>514-343-6111, poste 1234</tel>
+                                <email>prenom.nom@umontreal.ca</email>
+                            </Person>
+					</asmContext>
+					<asmContext access="attendee" xsi:type="PeopleContext">
+                    	<label><![CDATA[Tapez votre conférenciers...]]></label>
+                            <importance>false</importance>
+                            <visible>true</visible>
+                            <semanticTag type="rubric">
+                                lecturers
+                            </semanticTag>
+                            <availability>Du lundi au vendredi entre 9 h et 17 h</availability>
+                            <Person access="attendee">
+                                <title>Conférenciers</title>
+                                <surname>Nom</surname>
+                                <firstname>Prénom</firstname>
+                                <officeroom># 1234</officeroom>
+                                <tel>514-343-6111, poste 1234</tel>
+                                <email>prenom.nom@umontreal.ca</email>
+                            </Person>
+					</asmContext>
+					<asmContext access="attendee" xsi:type="PeopleContext">
+                    	<label><![CDATA[Tapez personnalisée...]]></label>
+                            <importance>false</importance>
+                            <visible>true</visible>
+                            <semanticTag type="rubric">
+                                individual
+                            </semanticTag>
+                            <availability>Du lundi au vendredi entre 9 h et 17 h</availability>
+                            <Person access="attendee">
+                                <title>Personnalisée</title>
                                 <surname>Nom</surname>
                                 <firstname>Prénom</firstname>
                                 <officeroom># 1234</officeroom>
@@ -172,22 +203,22 @@
 				</asmUnitContent>
 			</asmUnitStructure>
 		</asmUnit>
-	</asmStructure>
-	<asmStructure access="public" xsi:type="IntroductionStruct">
+	</asmStructure>	
+	<asmStructure access="public" xsi:type="CourseIntroductionStruct">
 		<id type="UdeMsakai">38404736</id>
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
-		<asmUnit access="public" xsi:type="IntroductionUnit">
+		<asmUnit access="public" xsi:type="CourseIntroductionUnit">
 			<label><![CDATA[Introduction]]></label>
-			<asmUnitStructure access="public" xsi:type="IntroductionUnitStruct">
-				<label><![CDATA[Introduction / présentation du cours]]></label>
-				<asmUnitContent access="public" xsi:type="IntroductionUnitContent">
+			<asmUnitStructure access="public" xsi:type="CourseIntroductionUnitStruct">
+				<label><![CDATA[Introduction]]></label>
+				<asmUnitContent access="public" xsi:type="CourseIntroductionUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							coursetopicspresentation
+							individual
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -201,7 +232,76 @@
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
 							<language>fr</language>
-							<text><![CDATA[...Insérez les sujets abordés...]]></text>
+							<text><![CDATA[...Pérsonalisée...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+			    	<asmContext xsi:type="InformationContext" access="public">
+			    		<id type="UdeMsakai">805655358980</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							outline
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>false</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Aperçu...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+			    	<asmContext xsi:type="InformationContext" access="public">
+			    		<id type="UdeMsakai">805655358980</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							betinsituation
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>false</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Insérez les mise en situation...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+			    	<asmContext xsi:type="InformationContext" access="public">
+			    		<id type="UdeMsakai">805655358980</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							presentationoflesson
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>false</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Insérez la présentation du cours...]]></text>
 						</asmResource>
 						<label />
 					</asmContext>
@@ -210,7 +310,7 @@
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							problematic
+							problems
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -231,22 +331,22 @@
 				</asmUnitContent>
 			</asmUnitStructure>
 		</asmUnit>
-	</asmStructure>
-	<asmStructure access="public" xsi:type="ObjectivesStruct">
+	</asmStructure>	
+	<asmStructure access="public" xsi:type="PurposefulStudiesStruct">
 		<id type="UdeMsakai">38404736</id>
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
-		<asmUnit access="public" xsi:type="ObjectivesUnit">
-			<label><![CDATA[Objectifs]]></label>
-			<asmUnitStructure access="public" xsi:type="ObjectivesUnitStruct">
-				<label><![CDATA[Objectifs du cours]]></label>
-				<asmUnitContent access="public" xsi:type="ObjectivesUnitContent">
+		<asmUnit access="public" xsi:type="PurposefulStudiesUnit">
+			<label><![CDATA[Apprentissage visé]]></label>
+			<asmUnitStructure access="public" xsi:type="PurposefulStudiesUnitStruct">
+				<label><![CDATA[Apprentissage visé]]></label>
+				<asmUnitContent access="public" xsi:type="PurposefulStudiesUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							generalobjectives
+							individual
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -260,7 +360,76 @@
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
 							<language>fr</language>
-							<text><![CDATA[...Discutez des objectifs généraux du cours...]]></text>
+							<text><![CDATA[...Pérsonalisée...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+			    	<asmContext xsi:type="InformationContext" access="public">
+			    		<id type="UdeMsakai">805655358980</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							purpose
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>false</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Insérez les buts...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+			    	<asmContext xsi:type="InformationContext" access="public">
+			    		<id type="UdeMsakai">805655358980</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							generalobjective
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>false</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Insérez l'objectif général...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+			    	<asmContext xsi:type="InformationContext" access="public">
+			    		<id type="UdeMsakai">805655358980</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							specificobjective
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>false</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Insérez les objectifs spécifiques...]]></text>
 						</asmResource>
 						<label />
 					</asmContext>
@@ -269,7 +438,7 @@
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							specificobjectives
+							competence
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -283,34 +452,102 @@
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
 							<language>fr</language>
-							<text><![CDATA[...Discutez des objectifs spécifiques du cours...]]></text>
+							<text><![CDATA[...Insérez la compétence...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+					<asmContext xsi:type="InformationContext" access="public">
+			    		<id type="UdeMsakai">805655358980</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							elementofcompetence
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>false</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Insérez les éléments de compétence...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+					<asmContext xsi:type="InformationContext" access="public">
+			    		<id type="UdeMsakai">805655358980</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							element
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>false</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Insérez les composants...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+					<asmContext xsi:type="InformationContext" access="public">
+			    		<id type="UdeMsakai">805655358980</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							skill
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>false</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Insérez les habileté...]]></text>
 						</asmResource>
 						<label />
 					</asmContext>
 				</asmUnitContent>
 			</asmUnitStructure>
 		</asmUnit>
-	</asmStructure>
-	<asmStructure access="public" xsi:type="AssessmentHeaderStruct">
+	</asmStructure>	
+	<asmStructure access="public" xsi:type="IndividualValuationOfStudiesStruct">
 		<id type="UdeMsakai">8209723049808328</id>
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
 		<description>String</description>
-		<asmStructure access="public" xsi:type="AssessmentIntroStruct">
+		<asmStructure access="public" xsi:type="InformationStruct">
 			<id type="UdeMsakai">888754567</id>
 			<modified>2001-12-17T09:30:47Z</modified>
 			<visible>true</visible>
-			<asmUnit access="public" xsi:type="AssessmentIntroUnit">
-  				<label><![CDATA[Description des évaluations]]></label>
-				<asmUnitStructure access="public" xsi:type="AssessmentIntroUnitStruct">
-					<asmUnitContent access="public" xsi:type="AssessmentIntroUnitContent">
+			<asmUnit access="public" xsi:type="InformationUnit">
+ 				<label><![CDATA[Information]]></label>
+				<asmUnitStructure access="public" xsi:type="InformationUnitStruct">
+					<asmUnitContent access="public" xsi:type="InformationUnitContent">
 						<asmContext xsi:type="InformationContext" access="public">
 							<id type="UdeMsakai">9808690780809696</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<visible>true</visible>
 							<semanticTag type="rubric">
-								description
-								
+								individual
 							</semanticTag>
 							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -324,50 +561,73 @@
 								<modified>2001-12-17T09:30:47Z</modified>
 								<identifier type="InFile">123456789</identifier>
 								<language>fr</language>
-								<text><![CDATA[...Tapez votre texte...]]></text>
+								<text><![CDATA[...Pérsonalisée...]]></text>
+							</asmResource>
+						</asmContext>
+						<asmContext xsi:type="InformationContext" access="public">
+							<id type="UdeMsakai">9808690780809696</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								outline
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>undefined</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Aperçu...]]></text>
+							</asmResource>
+						</asmContext>
+						<asmContext xsi:type="InformationContext" access="public">
+							<id type="UdeMsakai">9808690780809696</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								overview
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>undefined</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Vue d'ensemble...]]></text>
 							</asmResource>
 						</asmContext>
 					</asmUnitContent>								
 				</asmUnitStructure>
 			</asmUnit>
-		</asmStructure>
-		<asmStructure access="public" xsi:type="AssessmentStruct">
-			<id type="UdeMsakai">888754567</id>
+		</asmStructure>		
+		<asmStructure access="public" xsi:type="ModalityOfValuationStruct">
+			<id type="UdeMsakai">335345334534</id>
 			<modified>2001-12-17T09:30:47Z</modified>
-			<visible>true</visible>		
-			<asmUnit access="public" xsi:type="AssessmentUnit">
-				<label><![CDATA[Examen de mi-session]]></label>
-				<asmUnitStructure access="public" xsi:type="AssessmentUnitStruct">
-					<asmUnitContent access="public" xsi:type="AssessmentUnitContent">
-						<asmContext xsi:type="InformationContext" access="public">
-							<id type="UdeMsakai">9808690780809696</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<visible>true</visible>
-							<semanticTag type="rubric">
-								description
-								
-							</semanticTag>
-							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-							<mode>individual</mode>
-							<moment>before</moment>
-							<level>undefined</level>
-							<action>r</action>
-							<importance>false</importance>
-							<asmResource xsi:type="Text" access="public">
-								<id type="UdeMsakai">123456789</id>
-								<modified>2001-12-17T09:30:47Z</modified>
-								<identifier type="InFile">123456789</identifier>
-								<language>fr</language>
-								<text><![CDATA[...Tapez votre texte...]]></text>
-							</asmResource>
-						</asmContext>
-			    		<asmContext xsi:type="InformationContext" access="public">
+			<visible>true</visible>
+			<description>String</description>
+			<asmUnit access="public" xsi:type="ModalityOfValuationUnit">
+				<label><![CDATA[Modalité d'évaluation 1]]></label>
+				<asmUnitStructure access="public" xsi:type="ModalityOfValuationUnitStruct">
+					<label><![CDATA[Modalité d'évaluation 1]]></label>
+					<asmUnitContent access="public" xsi:type="ModalityOfValuationUnitContent">
+						<asmContext xsi:type="InformationContext" access="public">		
 				    		<id type="UdeMsakai">805655358980</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<visible>true</visible>
 							<semanticTag type="rubric">
-								ObjectivesMeasured
+								type
 							</semanticTag>
 							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -381,7 +641,260 @@
 								<modified>2001-12-17T09:30:47Z</modified>
 								<identifier type="InFile">123456789</identifier>
 								<language>fr</language>
-								<text><![CDATA[...Discutez des objectifs évalués... ]]></text>
+								<text><![CDATA[...Type...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								description
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Description...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								dateatthebeginningend
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Date et heure...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								dateofextension
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Date d'extension...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								balance
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Ponderation...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								levelofsanction
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Niveau de sanction...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								modeofrealization
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Mode de réalisation...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								modeofretroaction
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Mode de retroaction...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								criteriaofvaluation
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Critèries d'évaluation...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								production
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Production...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								modeofdelivery
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Mode de remise en classe, à la maison, en ligne...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								linktowardsinstrument
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Tapez votre texte...]]></text>
 							</asmResource>
 							<label />
 						</asmContext>
@@ -395,41 +908,19 @@
 				<opendate />
 				<closedate />
 				<submition_type />
-				<evaluation_type>Examen de mi-session</evaluation_type>
+				<evaluation_type>Examen</evaluation_type>
 			</asmUnit>
-			<asmUnit access="public" xsi:type="AssessmentUnit">
-				<label><![CDATA[Travaux pratiques]]></label>
-				<asmUnitStructure access="public" xsi:type="AssessmentUnitStruct">
-					<asmUnitContent access="public" xsi:type="AssessmentUnitContent">
-						<asmContext xsi:type="InformationContext" access="public">
-							<id type="UdeMsakai">9808690780809696</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<visible>true</visible>
-							<semanticTag type="rubric">
-								description
-								
-							</semanticTag>
-							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-							<mode>individual</mode>
-							<moment>before</moment>
-							<level>undefined</level>
-							<action>r</action>
-							<importance>false</importance>
-							<asmResource xsi:type="Text" access="public">
-								<id type="UdeMsakai">123456789</id>
-								<modified>2001-12-17T09:30:47Z</modified>
-								<identifier type="InFile">123456789</identifier>
-								<language>fr</language>
-								<text><![CDATA[...Tapez votre texte...]]></text>
-							</asmResource>
-						</asmContext>
-				    	<asmContext xsi:type="InformationContext" access="public">
+			<asmUnit access="public" xsi:type="ModalityOfValuationUnit">
+				<label><![CDATA[Modalité d'évaluation 2]]></label>
+				<asmUnitStructure access="public" xsi:type="ModalityOfValuationUnitStruct">
+					<label><![CDATA[Modalité d'évaluation 2]]></label>
+					<asmUnitContent access="public" xsi:type="ModalityOfValuationUnitContent">
+						<asmContext xsi:type="InformationContext" access="public">		
 				    		<id type="UdeMsakai">805655358980</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<visible>true</visible>
 							<semanticTag type="rubric">
-								ObjectivesMeasured
+								type
 							</semanticTag>
 							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -443,7 +934,260 @@
 								<modified>2001-12-17T09:30:47Z</modified>
 								<identifier type="InFile">123456789</identifier>
 								<language>fr</language>
-								<text><![CDATA[...Discutez des objectifs évalués... ]]></text>
+								<text><![CDATA[...Type...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								description
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Description...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								dateatthebeginningend
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Date et heure...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								dateofextension
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Date d'extension...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								balance
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Ponderation...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								levelofsanction
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Niveau de sanction...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								modeofrealization
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Mode de réalisation...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								modeofretroaction
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Mode de retroaction...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								criteriaofvaluation
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Critèries d'évaluation...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								production
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Production...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								modeofdelivery
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Mode de remise en classe, à la maison, en ligne...]]></text>
+							</asmResource>
+							<label />
+						</asmContext>
+			    		<asmContext xsi:type="InformationContext" access="public">
+				    		<id type="UdeMsakai">805655358980</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<visible>true</visible>
+							<semanticTag type="rubric">
+								linktowardsinstrument
+							</semanticTag>
+							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+							<mode>individual</mode>
+							<moment>before</moment>
+							<level>recommended</level>
+							<action>r</action>
+							<importance>false</importance>
+							<asmResource xsi:type="Text" access="public">
+								<id type="UdeMsakai">123456789</id>
+								<modified>2001-12-17T09:30:47Z</modified>
+								<identifier type="InFile">123456789</identifier>
+								<language>fr</language>
+								<text><![CDATA[...Tapez votre texte...]]></text>
 							</asmResource>
 							<label />
 						</asmContext>
@@ -459,147 +1203,23 @@
 				<submition_type />
 				<evaluation_type>Travail pratique</evaluation_type>
 			</asmUnit>
-			<asmUnit access="public" xsi:type="AssessmentUnit">
-				<label><![CDATA[Examen final - épreuve écrite]]></label>
-				<asmUnitStructure access="public" xsi:type="AssessmentUnitStruct">
-					<asmUnitContent access="public" xsi:type="AssessmentUnitContent">
-						<asmContext xsi:type="InformationContext" access="public">
-							<id type="UdeMsakai">9808690780809696</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<visible>true</visible>
-							<semanticTag type="rubric">
-								description
-								
-							</semanticTag>
-							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-							<mode>individual</mode>
-							<moment>before</moment>
-							<level>undefined</level>
-							<action>r</action>
-							<importance>false</importance>
-							<asmResource xsi:type="Text" access="public">
-								<id type="UdeMsakai">123456789</id>
-								<modified>2001-12-17T09:30:47Z</modified>
-								<identifier type="InFile">123456789</identifier>
-								<language>fr</language>
-								<text><![CDATA[Tapez votre texte...]]></text>
-							</asmResource>
-						</asmContext>
-				    	<asmContext xsi:type="InformationContext" access="public">
-				    		<id type="UdeMsakai">805655358980</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<visible>true</visible>
-							<semanticTag type="rubric">
-								ObjectivesMeasured
-							</semanticTag>
-							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-							<mode>individual</mode>
-							<moment>before</moment>
-							<level>recommended</level>
-							<action>r</action>
-							<importance>false</importance>
-							<asmResource xsi:type="Text" access="public">
-								<id type="UdeMsakai">123456789</id>
-								<modified>2001-12-17T09:30:47Z</modified>
-								<identifier type="InFile">123456789</identifier>
-								<language>fr</language>
-								<text><![CDATA[...Discutez des objectifs évalués... ]]></text>
-							</asmResource>
-							<label />
-						</asmContext>
-					</asmUnitContent>
-				</asmUnitStructure>
-				<rating>30%</rating>
-				<location>En classe</location>
-				<mode>Individuel</mode>
-				<result />
-				<scope>Obligatoire</scope>
-				<opendate />
-				<closedate />
-				<submition_type />
-				<evaluation_type>Travail de session</evaluation_type>
-			</asmUnit>
-			<asmUnit access="public" xsi:type="AssessmentUnit">
-				<label><![CDATA[Examen final - exposé oral ]]></label>
-				<asmUnitStructure access="public" xsi:type="AssessmentUnitStruct">
-					<asmUnitContent access="public" xsi:type="AssessmentUnitContent">
-						<asmContext xsi:type="InformationContext" access="public">
-							<id type="UdeMsakai">9808690780809696</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<visible>true</visible>
-							<semanticTag type="rubric">
-								description
-								
-							</semanticTag>
-							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-							<mode>individual</mode>
-							<moment>before</moment>
-							<level>undefined</level>
-							<action>r</action>
-							<importance>false</importance>
-							<asmResource xsi:type="Text" access="public">
-								<id type="UdeMsakai">123456789</id>
-								<modified>2001-12-17T09:30:47Z</modified>
-								<identifier type="InFile">123456789</identifier>
-								<language>fr</language>
-								<text><![CDATA[...Tapez votre texte...]]></text>
-							</asmResource>
-						</asmContext>
-				    	<asmContext xsi:type="InformationContext" access="public">
-				    		<id type="UdeMsakai">805655358980</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<visible>true</visible>
-							<semanticTag type="rubric">
-								ObjectivesMeasured
-							</semanticTag>
-							<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-							<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-							<mode>individual</mode>
-							<moment>before</moment>
-							<level>recommended</level>
-							<action>r</action>
-							<importance>false</importance>
-							<asmResource xsi:type="Text" access="public">
-								<id type="UdeMsakai">123456789</id>
-								<modified>2001-12-17T09:30:47Z</modified>
-								<identifier type="InFile">123456789</identifier>
-								<language>fr</language>
-								<text><![CDATA[...Discutez des objectifs évalués... ]]></text>
-							</asmResource>
-							<label />
-						</asmContext>
-					</asmUnitContent>
-				</asmUnitStructure>
-				<rating>20%</rating>
-				<location>En classe</location>
-				<mode>Individuel</mode>
-				<result />
-				<scope>Obligatoire</scope>
-				<opendate />
-				<closedate />
-				<submition_type>Papier</submition_type>
-				<evaluation_type>Examen final</evaluation_type>
-			</asmUnit>
 		</asmStructure>	
-	</asmStructure>
-	<asmStructure access="public" xsi:type="PlagiarismStruct">
+	</asmStructure>	
+	<asmStructure access="public" xsi:type="NewPlagiarismStruct">
 		<id type="UdeMsakai">38404736</id>
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
-		<asmUnit access="public" xsi:type="PlagiarismUnit">
-			<label><![CDATA[Plagiat]]></label>
-			<asmUnitStructure access="public" xsi:type="PlagiarismUnitStruct">
+		<asmUnit access="public" xsi:type="NewPlagiarismUnit">
+			<label><![CDATA[Intégrité, fraude et plagiat]]></label>
+			<asmUnitStructure access="public" xsi:type="NewPlagiarismUnitStruct">
 				<label><![CDATA[Plagiat]]></label>
-				<asmUnitContent access="public" xsi:type="PlagiarismUnitContent">
+				<asmUnitContent access="public" xsi:type="NewPlagiarismUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							description
+							individual
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -620,22 +1240,22 @@
 				</asmUnitContent>
 			</asmUnitStructure>
 		</asmUnit>
-	</asmStructure>
-	<asmStructure access="public" xsi:type="PedagogicalApproachStruct">
+	</asmStructure>	
+	<asmStructure access="public" xsi:type="PedagogicApproachesStruct">
 		<id type="UdeMsakai">38404736</id>
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
-		<asmUnit access="public" xsi:type="PedagogicalApproachUnit">
+		<asmUnit access="public" xsi:type="PedagogicApproachesUnit">
 			<label><![CDATA[Approche pédagogique]]></label>
-			<asmUnitStructure access="public" xsi:type="PedagogicalApproachUnitStruct">
+			<asmUnitStructure access="public" xsi:type="PedagogicApproachesUnitStruct">
 				<label><![CDATA[Approche pédagogique]]></label>
-				<asmUnitContent access="public" xsi:type="PedagogicalApproachUnitContent">
+				<asmUnitContent access="public" xsi:type="PedagogicApproachesUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							pedagogicaltheory
+							individual
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -649,7 +1269,7 @@
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
 							<language>fr</language>
-							<text><![CDATA[...Discutez de la théorie pédagogique...]]></text>
+							<text><![CDATA[...Pérsonalisée...]]></text>
 						</asmResource>
 						<label />
 					</asmContext>
@@ -658,7 +1278,53 @@
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							teachingstrategy
+							pedagogicintention
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>false</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Discutez des intentions pédagogique...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+					<asmContext xsi:type="InformationContext" access="public">
+			    		<id type="UdeMsakai">805655358980</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							pedagogicorientation
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>false</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Discutez de l'orientation pédagogique...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+					<asmContext xsi:type="InformationContext" access="public">
+			    		<id type="UdeMsakai">805655358980</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							modalitiesofeducation
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -681,7 +1347,7 @@
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							learningstrategy
+							modalitiesofstudy
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -704,7 +1370,7 @@
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							modusoperandi
+							modalitiesoffunctioning
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -718,29 +1384,29 @@
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
 							<language>fr</language>
-							<text><![CDATA[...Discutez des règles de fonctionnement...]]></text>
+							<text><![CDATA[...Discutez des modalités de fonctionnement...]]></text>
 						</asmResource>
 						<label />
 					</asmContext>
-				</asmUnitContent>
-			</asmUnitStructure>
-		</asmUnit>
-	</asmStructure>
-	<asmStructure access="public" xsi:type="LearningMaterialStruct">
+					</asmUnitContent>
+				</asmUnitStructure>
+			</asmUnit>
+		</asmStructure>	
+	<asmStructure access="public" xsi:type="PedagogicResourcesStruct">
 		<id type="UdeMsakai">999754567</id>
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
-		<asmUnit access="public" xsi:type="LearningMaterialUnit">
-			<label><![CDATA[Ressources pédagogiques]]></label>
-			<asmUnitStructure access="public" xsi:type="LearningMaterialUnitStruct">
-				<label><![CDATA[Ressources pédagogiques utilisées durant tout le cours]]></label>
-				<asmUnitContent access="public" xsi:type="LearningMaterialUnitContent">
+		<asmUnit access="public" xsi:type="PedagogicResourcesUnit">
+			<label><![CDATA[Ressource pédagogique]]></label>
+			<asmUnitStructure access="public" xsi:type="PedagogicResourcesUnitStruct">
+			<label><![CDATA[Ressource pédagogique]]></label>
+				<asmUnitContent access="public" xsi:type="PedagogicResourcesUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							complbibres
+							individual
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
@@ -758,118 +1424,393 @@
 						</asmResource>
 						<label />
 					</asmContext>
+				</asmUnitContent>
+			</asmUnitStructure>
+		</asmUnit>
+	</asmStructure>		
+	<asmStructure access="public" xsi:type="PeriodeStruct">
+		<id type="UdeMsakai">335345334534</id>
+		<modified>2001-12-17T09:30:47Z</modified>
+		<visible>true</visible>
+		<description>String</description>
+		<asmUnit access="public" xsi:type="PeriodeUnit">
+			<label><![CDATA[Période 1]]></label>
+			<asmUnitStructure access="public" xsi:type="PeriodeUnitStruct">
+				<label><![CDATA[Période]]></label>
+				<asmUnitContent access="public" xsi:type="PeriodeUnitContent">
 					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">805655358980</id>
+						<id type="UdeMsakai">9808690780809696</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							requiredbooks
+							objective
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
 						<moment>before</moment>
-						<level>undefined</level>
+						<level>recommended</level>
 						<action>r</action>
-						<importance>false</importance>
+						<importance>true</importance>
 						<asmResource xsi:type="Text" access="public">
 							<id type="UdeMsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
 							<language>fr</language>
-							<text><![CDATA[...Entrez le(s) livre(s) obligatoire(s)...]]></text>
+							<text><![CDATA[...Entrez l'objectif de la période...]]></text>
 						</asmResource>
 						<label />
 					</asmContext>
 					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">805655358980</id>
+						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							recommendedbooks
+							contents
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
 						<moment>before</moment>
-						<level>undefined</level>
+						<level>recommended</level>
 						<action>r</action>
-						<importance>false</importance>
+						<importance>true</importance>
 						<asmResource xsi:type="Text" access="public">
 							<id type="UdeMsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
 							<language>fr</language>
-							<text><![CDATA[...Entrez le(s) livre(s) recommandé(s)...]]></text>
+							<text><![CDATA[...Entrez la contenu de la période...]]></text>
 						</asmResource>
 						<label />
 					</asmContext>
 					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">805655358980</id>
+						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							codex
+							betinsituation
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
 						<moment>before</moment>
-						<level>undefined</level>
+						<level>recommended</level>
 						<action>r</action>
-						<importance>false</importance>
+						<importance>true</importance>
 						<asmResource xsi:type="Text" access="public">
 							<id type="UdeMsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
 							<language>fr</language>
-							<text><![CDATA[...Entrez l'information sur le recueil de textes...]]></text>
+							<text><![CDATA[...Entrez la mise en situation de la période...]]></text>
 						</asmResource>
 						<label />
 					</asmContext>
 					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">805655358980</id>
+						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							hardwaresoftware
+							outline
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
 						<moment>before</moment>
-						<level>undefined</level>
+						<level>recommended</level>
 						<action>r</action>
-						<importance>false</importance>
+						<importance>true</importance>
 						<asmResource xsi:type="Text" access="public">
 							<id type="UdeMsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
 							<language>fr</language>
-							<text><![CDATA[...Entrez l'information sur le(s) matériel(s) et le(s) logiciel(s)...]]></text>
+							<text><![CDATA[...Entrez l'aperçu de la période...]]></text>
 						</asmResource>
 						<label />
 					</asmContext>
 					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">805655358980</id>
+						<id type="UdeMsakai">999000999000999</id>
 						<modified>2001-12-17T09:30:47Z</modified>
 						<visible>true</visible>
 						<semanticTag type="rubric">
-							oldexams
+							presentation
 						</semanticTag>
 						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
 						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
 						<mode>individual</mode>
 						<moment>before</moment>
-						<level>undefined</level>
+						<level>recommended</level>
 						<action>r</action>
-						<importance>false</importance>
+						<importance>true</importance>
 						<asmResource xsi:type="Text" access="public">
 							<id type="UdeMsakai">123456789</id>
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
 							<language>fr</language>
-							<text><![CDATA[...Entrez l'information sur les anciens examens et les travaux...]]></text>
+							<text><![CDATA[...Entrez la présentation de la période...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+					<asmContext xsi:type="InformationContext" access="public">
+						<id type="UdeMsakai">999000999000999</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							problems
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>true</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Entrez la problématique de la période...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+					<asmContext xsi:type="InformationContext" access="public">
+						<id type="UdeMsakai">999000999000999</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							means
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>true</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Entrez les ressources de la période...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+					<asmContext xsi:type="InformationContext" access="public">
+						<id type="UdeMsakai">999000999000999</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							linkfordetailedperiod
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>true</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Entrez Lien pour les consignes détaillées de la période...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+				</asmUnitContent>
+			</asmUnitStructure>
+		</asmUnit>
+		<asmUnit access="public" xsi:type="PeriodeUnit">
+			<label><![CDATA[Période 2]]></label>
+			<asmUnitStructure access="public" xsi:type="PeriodeUnitStruct">
+				<label><![CDATA[Période]]></label>
+				<asmUnitContent access="public" xsi:type="PeriodeUnitContent">
+					<asmContext xsi:type="InformationContext" access="public">
+						<id type="UdeMsakai">9808690780809696</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							objective
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>true</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Entrez l'objectif de la période...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+					<asmContext xsi:type="InformationContext" access="public">
+						<id type="UdeMsakai">999000999000999</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							contents
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>true</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Entrez la contenu de la période...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+					<asmContext xsi:type="InformationContext" access="public">
+						<id type="UdeMsakai">999000999000999</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							betinsituation
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>true</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Entrez la mise en situation de la période...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+					<asmContext xsi:type="InformationContext" access="public">
+						<id type="UdeMsakai">999000999000999</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							outline
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>true</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Entrez l'aperçu de la période...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+					<asmContext xsi:type="InformationContext" access="public">
+						<id type="UdeMsakai">999000999000999</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							presentation
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>true</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Entrez la présentation de la période...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+					<asmContext xsi:type="InformationContext" access="public">
+						<id type="UdeMsakai">999000999000999</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							problems
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>true</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Entrez la problématique de la période...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+					<asmContext xsi:type="InformationContext" access="public">
+						<id type="UdeMsakai">999000999000999</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							means
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>true</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Entrez les ressources de la période...]]></text>
+						</asmResource>
+						<label />
+					</asmContext>
+					<asmContext xsi:type="InformationContext" access="public">
+						<id type="UdeMsakai">999000999000999</id>
+						<modified>2001-12-17T09:30:47Z</modified>
+						<visible>true</visible>
+						<semanticTag type="rubric">
+							linkfordetailedperiod
+						</semanticTag>
+						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
+						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
+						<mode>individual</mode>
+						<moment>before</moment>
+						<level>recommended</level>
+						<action>r</action>
+						<importance>true</importance>
+						<asmResource xsi:type="Text" access="public">
+							<id type="UdeMsakai">123456789</id>
+							<modified>2001-12-17T09:30:47Z</modified>
+							<identifier type="InFile">123456789</identifier>
+							<language>fr</language>
+							<text><![CDATA[...Entrez Lien pour les consignes détaillées de la période...]]></text>
 						</asmResource>
 						<label />
 					</asmContext>
@@ -877,2074 +1818,15 @@
 			</asmUnitStructure>
 		</asmUnit>
 	</asmStructure>	
-	<asmStructure access="public" xsi:type="PedagogicalStruct">
-		<id type="UdeMsakai">335345334534</id>
-		<modified>2001-12-17T09:30:47Z</modified>
-		<visible>true</visible>
-		<label>Liste des séances</label>
-		<description>String</description>
-		<asmUnit access="public" xsi:type="PedagogicalUnit">
-			<label><![CDATA[... Tapez le titre de la séance ...]]></label>
-			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
-				<label><![CDATA[Séance]]></label>
-				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTimePlace
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez la date, l'heure et le lieu de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							description
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une description de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureObjectives
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez les objectifs de cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureRequiredMaterial
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez le matériel requis pour cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							evaluation
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une évaluation associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTeachingActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'enseignement associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureLearningActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'apprentissage (i.e. de l'étudiant) associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-				</asmUnitContent>
-			</asmUnitStructure>
-		</asmUnit>
-		<asmUnit access="public" xsi:type="PedagogicalUnit">
-			<label><![CDATA[... Tapez le titre de la séance ...]]></label>
-			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
-				<label><![CDATA[Séance]]></label>
-				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTimePlace
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez la date, l'heure et le lieu de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							description
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une description de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureObjectives
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez les objectifs de cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureRequiredMaterial
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez le matériel requis pour cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							evaluation
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une évaluation associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTeachingActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'enseignement associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureLearningActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'apprentissage (i.e. de l'étudiant) associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-				</asmUnitContent>
-			</asmUnitStructure>
-		</asmUnit>
-		<asmUnit access="public" xsi:type="PedagogicalUnit">
-			<label><![CDATA[... Tapez le titre de la séance ...]]></label>
-			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
-				<label><![CDATA[Séance]]></label>
-				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTimePlace
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez la date, l'heure et le lieu de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							description
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une description de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureObjectives
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez les objectifs de cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureRequiredMaterial
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez le matériel requis pour cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							evaluation
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une évaluation associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTeachingActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'enseignement associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureLearningActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'apprentissage (i.e. de l'étudiant) associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-				</asmUnitContent>
-			</asmUnitStructure>
-		</asmUnit>
-		<asmUnit access="public" xsi:type="PedagogicalUnit">
-			<label><![CDATA[... Tapez le titre de la séance ...]]></label>
-			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
-				<label><![CDATA[Séance]]></label>
-				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTimePlace
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez la date, l'heure et le lieu de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							description
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une description de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureObjectives
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez les objectifs de cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureRequiredMaterial
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez le matériel requis pour cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							evaluation
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une évaluation associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTeachingActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'enseignement associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureLearningActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'apprentissage (i.e. de l'étudiant) associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-				</asmUnitContent>
-			</asmUnitStructure>
-		</asmUnit>
-		<asmUnit access="public" xsi:type="PedagogicalUnit">
-			<label><![CDATA[... Tapez le titre de la séance ...]]></label>
-			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
-				<label><![CDATA[Séance]]></label>
-				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTimePlace
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez la date, l'heure et le lieu de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							description
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une description de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureObjectives
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez les objectifs de cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureRequiredMaterial
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez le matériel requis pour cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							evaluation
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une évaluation associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTeachingActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'enseignement associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureLearningActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'apprentissage (i.e. de l'étudiant) associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-				</asmUnitContent>
-			</asmUnitStructure>
-		</asmUnit>
-		<asmUnit access="public" xsi:type="PedagogicalUnit">
-			<label><![CDATA[... Tapez le titre de la séance ...]]></label>
-			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
-				<label><![CDATA[Séance]]></label>
-				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTimePlace
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez la date, l'heure et le lieu de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							description
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une description de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureObjectives
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez les objectifs de cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureRequiredMaterial
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez le matériel requis pour cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							evaluation
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une évaluation associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTeachingActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'enseignement associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureLearningActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'apprentissage (i.e. de l'étudiant) associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-				</asmUnitContent>
-			</asmUnitStructure>
-		</asmUnit>
-		<asmUnit access="public" xsi:type="PedagogicalUnit">
-			<label><![CDATA[... Tapez le titre de la séance ...]]></label>
-			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
-				<label><![CDATA[Séance]]></label>
-				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTimePlace
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez la date, l'heure et le lieu de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							description
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une description de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureObjectives
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez les objectifs de cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureRequiredMaterial
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez le matériel requis pour cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							evaluation
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une évaluation associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTeachingActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'enseignement associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureLearningActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'apprentissage (i.e. de l'étudiant) associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-				</asmUnitContent>
-			</asmUnitStructure>
-		</asmUnit>
-		<asmUnit access="public" xsi:type="PedagogicalUnit">
-			<label><![CDATA[... Tapez le titre de la séance ...]]></label>
-			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
-				<label><![CDATA[Séance]]></label>
-				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTimePlace
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez la date, l'heure et le lieu de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							description
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une description de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureObjectives
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez les objectifs de cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureRequiredMaterial
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez le matériel requis pour cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							evaluation
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une évaluation associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTeachingActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'enseignement associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureLearningActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'apprentissage (i.e. de l'étudiant) associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-				</asmUnitContent>
-			</asmUnitStructure>
-		</asmUnit>
-		<asmUnit access="public" xsi:type="PedagogicalUnit">
-			<label><![CDATA[... Tapez le titre de la séance ...]]></label>
-			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
-				<label><![CDATA[Séance]]></label>
-				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTimePlace
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez la date, l'heure et le lieu de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							description
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une description de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureObjectives
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez les objectifs de cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureRequiredMaterial
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez le matériel requis pour cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							evaluation
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une évaluation associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTeachingActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'enseignement associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureLearningActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'apprentissage (i.e. de l'étudiant) associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-				</asmUnitContent>
-			</asmUnitStructure>
-		</asmUnit>
-		<asmUnit access="public" xsi:type="PedagogicalUnit">
-			<label><![CDATA[... Tapez le titre de la séance ...]]></label>
-			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
-				<label><![CDATA[Séance]]></label>
-				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTimePlace
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez la date, l'heure et le lieu de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							description
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une description de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureObjectives
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez les objectifs de cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureRequiredMaterial
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez le matériel requis pour cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							evaluation
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une évaluation associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTeachingActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'enseignement associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureLearningActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'apprentissage (i.e. de l'étudiant) associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-				</asmUnitContent>
-			</asmUnitStructure>
-		</asmUnit>
-		<asmUnit access="public" xsi:type="PedagogicalUnit">
-			<label><![CDATA[... Tapez le titre de la séance ...]]></label>
-			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
-				<label><![CDATA[Séance]]></label>
-				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTimePlace
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez la date, l'heure et le lieu de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							description
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une description de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureObjectives
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez les objectifs de cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureRequiredMaterial
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez le matériel requis pour cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							evaluation
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une évaluation associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTeachingActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'enseignement associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureLearningActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'apprentissage (i.e. de l'étudiant) associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-				</asmUnitContent>
-			</asmUnitStructure>
-		</asmUnit>
-		<asmUnit access="public" xsi:type="PedagogicalUnit">
-			<label><![CDATA[... Tapez le titre de la séance ...]]></label>
-			<asmUnitStructure access="public" xsi:type="PedagogicalUnitStruct">
-				<label><![CDATA[Séance]]></label>
-				<asmUnitContent access="public" xsi:type="PedagogicalUnitContent">
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTimePlace
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez la date, l'heure et le lieu de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							description
-							
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>true</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une description de la séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureObjectives
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez les objectifs de cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureRequiredMaterial
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez le matériel requis pour cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							evaluation
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une évaluation associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureTeachingActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'enseignement associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-					<asmContext xsi:type="InformationContext" access="public">
-						<id type="UdeMsakai">999000999000999</id>
-						<modified>2001-12-17T09:30:47Z</modified>
-						<visible>true</visible>
-						<semanticTag type="rubric">
-							LectureLearningActivity
-						</semanticTag>
-						<visibleStart>2001-12-17T09:30:47Z</visibleStart>
-						<visibleEnd>2001-12-17T09:30:47Z</visibleEnd>
-						<mode>individual</mode>
-						<moment>before</moment>
-						<level>recommended</level>
-						<action>r</action>
-						<importance>false</importance>
-						<asmResource xsi:type="Text" access="public">
-							<id type="UdeMsakai">123456789</id>
-							<modified>2001-12-17T09:30:47Z</modified>
-							<identifier type="InFile">123456789</identifier>
-							<language>fr</language>
-							<text><![CDATA[...Entrez une activité d'apprentissage (i.e. de l'étudiant) associée à cette séance...]]></text>
-						</asmResource>
-						<label />
-					</asmContext>
-				</asmUnitContent>
-			</asmUnitStructure>
-		</asmUnit>
-	</asmStructure>
-	<asmStructure access="public" xsi:type="BibliographyStruct">
+	<asmStructure access="public" xsi:type="NewBibliographyStruct">
 		<id type="UdeMsakai">38404736</id>
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
-		<asmUnit access="public" xsi:type="BibliographyUnit">
+		<asmUnit access="public" xsi:type="NewBibliographyUnit">
 			<label><![CDATA[Bibliographie]]></label>
-			<asmUnitStructure access="public" xsi:type="BibliographyUnitStruct">
+			<asmUnitStructure access="public" xsi:type="NewBibliographyUnitStruct">
 				<label><![CDATA[Bibliographie]]></label>
-				<asmUnitContent access="public" xsi:type="BibliographyUnitContent">
+				<asmUnitContent access="public" xsi:type="NewBibliographyUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
@@ -2971,15 +1853,16 @@
 				</asmUnitContent>
 			</asmUnitStructure>
 		</asmUnit>
-	</asmStructure>
-	<asmStructure access="public" xsi:type="ThematicBibliographyStruct">
+	</asmStructure>	
+	<asmStructure access="public" xsi:type="DisciplinaryLibraryStruct">
 		<id type="UdeMsakai">38404736</id>
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
-		<asmUnit access="public" xsi:type="ThematicBibliographyUnit">
+		<asmUnit access="public" xsi:type="DisciplinaryLibraryUnit">
 			<label><![CDATA[Bibliothèque disciplinaire]]></label>
-			<asmUnitStructure access="public" xsi:type="ThematicBibliographyUnitStruct">
-				<asmUnitContent access="public" xsi:type="ThematicBibliographyUnitContent">
+			<asmUnitStructure access="public" xsi:type="DisciplinaryLibraryUnitStruct">
+				<label><![CDATA[Bibliothèque disciplinaire]]></label>
+				<asmUnitContent access="public" xsi:type="DisciplinaryLibraryUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
@@ -2999,7 +1882,7 @@
 							<modified>2001-12-17T09:30:47Z</modified>
 							<identifier type="InFile">123456789</identifier>
 							<language>fr</language>
-							<text><![CDATA[...Insérez la bibliographie thématique...]]></text>
+							<text><![CDATA[...Insérez la bibliographie disciplinaire...]]></text>
 						</asmResource>
 						<label />
 					</asmContext>
@@ -3007,15 +1890,15 @@
 			</asmUnitStructure>
 		</asmUnit>
 	</asmStructure>
-	<asmStructure access="public" xsi:type="LearningSupportServicesStruct">
+	<asmStructure access="public" xsi:type="ServicesOfSupportToStudyStruct">
 		<id type="UdeMsakai">999754567</id>
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
-		<asmUnit access="public" xsi:type="LearningSupportServicesUnit">
-			<label><![CDATA[Support à la formation]]></label>
-			<asmUnitStructure access="public" xsi:type="LearningSupportServicesUnitStruct">
-				<label><![CDATA[Services de soutien à l'apprentissage]]></label>
-				<asmUnitContent access="public" xsi:type="LearningSupportServicesUnitContent">
+		<asmUnit access="public" xsi:type="ServicesOfSupportToStudyUnit">
+			<label><![CDATA[Service de soutien à l'apprentissage]]></label>
+			<asmUnitStructure access="public" xsi:type="ServicesOfSupportToStudyUnitStruct">
+				<label><![CDATA[Service de soutien à l'apprentissage]]></label>
+				<asmUnitContent access="public" xsi:type="ServicesOfSupportToStudyUnitContent">
 			    	<asmContext xsi:type="InformationContext" access="public">
 			    		<id type="UdeMsakai">805655358980</id>
 						<modified>2001-12-17T09:30:47Z</modified>
