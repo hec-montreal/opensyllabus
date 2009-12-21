@@ -17,16 +17,20 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.cover.AuthzGroupService;
+import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.coursemanagement.api.CanonicalCourse;
 import org.sakaiproject.coursemanagement.api.CourseManagementAdministration;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
+import org.sakaiproject.coursemanagement.api.CourseSet;
 import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Section;
+import org.sakaiproject.coursemanagement.api.SectionCategory;
 import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.event.cover.UsageSessionService;
+import org.sakaiproject.id.cover.IdManager;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.user.api.UserAlreadyDefinedException;
@@ -46,10 +50,13 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericEtudiantCoursMapF
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericExamensMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericMatriculeNomMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericProfCoursMapFactory;
+import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericServiceEnseignementMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.MatriculeNomMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.MatriculeNomMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProfCoursMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProfCoursMapEntry;
+import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMap;
+import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMapEntry;
 
 /******************************************************************************
  * $Id: $
@@ -74,7 +81,7 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProfCoursMapEntry;
 
 /**
  * The class is an implementation of the OsylCMJob as job launched by the quartz
- *
+ * 
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -84,14 +91,14 @@ public class OsylCMJobImpl implements OsylCMJob {
 	 * Directory used to store institutional data (students, teachers, courses,
 	 * sessions ...
 	 */
+	@Deprecated
 	private static final String EXTRACTS_PATH = "webapps" + File.separator
 			+ "osyl-admin-sakai-tool" + File.separator + "extracts";
 
 	/**
 	 * Map used to store information about users : name, id
 	 */
-	//private MatriculeNomMap matNomMap = null;
-
+	// private MatriculeNomMap matNomMap = null;
 	/**
 	 * Map used to store information about the courses that a teacher gives:
 	 * teacher id, course id, course session, course periode
@@ -110,6 +117,11 @@ public class OsylCMJobImpl implements OsylCMJob {
 	 */
 	private DetailCoursMap detailCoursMap = null;
 
+	/**
+	 * Map used to store information about the department which will represent
+	 * the course set
+	 */
+	private ServiceEnseignementMap seMap = null;
 	/**
 	 * Map used to store information about sessions: session id, starting date,
 	 * ending date
@@ -178,7 +190,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 	/**
 	 * Sets the <code>UserDirectoryService</code> needed to create the site in
 	 * the init() method.
-	 *
+	 * 
 	 * @param userDirService
 	 */
 	public void setUserDirService(UserDirectoryService userDirService) {
@@ -191,7 +203,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 		String courseOfferingId = "";
 		String courseSectionId = "";
 		String matricule = "";
-		Iterator cours;
+		Iterator<DetailCoursMapEntry> cours;
 		DetailCoursMapEntry detailsCours;
 
 		Iterator<ProfCoursMapEntry> profCours = profCoursMap.values()
@@ -205,33 +217,62 @@ public class OsylCMJobImpl implements OsylCMJob {
 				detailsCours = (DetailCoursMapEntry) cours.next();
 				courseOfferingId = getCourseOfferingId(detailsCours);
 				courseSectionId = getCourseSectionId(detailsCours);
-				// TODO: the role should be a final static constant
-				// TODO: the status should be decided and be a final static
-				// constant
-				// INFO: We add a membership to a course section
-				cmAdmin.addOrUpdateCourseOfferingMembership(matricule, "Instructor",
-						courseOfferingId, "active");
-				cmAdmin.addOrUpdateSectionMembership(matricule, "Instructor", courseSectionId, "active");
-				//We add the teacher as official instructor
-				EnrollmentSet enrollmentSet = cmService.getEnrollmentSet(getEnrollmentSetId(detailsCours));
-				Set instructors = new HashSet();
+
+				EnrollmentSet enrollmentSet = null;
+				Set<String> instructors = new HashSet<String>();
 				instructors.add(matricule);
+
+				// TODO: faire la difference entre un prof enseignement
+				// et un prof coordonnateur pour savoir a quel
+				// enrollmentset il faut l'ajouter
+				String enrollmentSetId = getCourseSectionEnrollmentSetId(detailsCours);
+				if (!cmService.isEnrollmentSetDefined(enrollmentSetId)) {
+					enrollmentSet = cmAdmin.createEnrollmentSet(enrollmentSetId, detailsCours
+							.getCourseTitleLong(), detailsCours
+							.getCourseTitleLong(), "", "", courseOfferingId,
+							null);
+					enrollmentSet.setOfficialInstructors(instructors);
+					Section courseSection = cmService.getSection(courseSectionId);
+					if (courseSection != null){
+						courseSection.setEnrollmentSet(enrollmentSet);
+						cmAdmin.updateSection(courseSection);
+					}
+				}
+				enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
 				enrollmentSet.setOfficialInstructors(instructors);
 				cmAdmin.updateEnrollmentSet(enrollmentSet);
 
 			}
+	
+			// INFO: We add a membership to a course section
+			
+//			if (cmService.isSectionDefined(courseSectionId))
+//				cmAdmin.addOrUpdateSectionMembership(matricule,
+//						"I", courseSectionId, "active");
+			// We add the teacher as official instructor
+
 		}
 	}
 
+	// TODO: add a method to load the services d'enseignement that will be used
+	// as course set
+	// canonical course id = course catalog_nbr [+ version]
+	// course offering id = course catalog_nbr [+ version] + session code +
+	// periode
+	// section id = course catalog_nbr [+ version] + session code + section +
+	// periode
+
 	/** {@inheritDoc} */
 	public void loadCourses() {
+
 		DetailCoursMapEntry coursEntry = null;
-		String canonicalCourseId = "", courseOfferingId = "", courseSectionId = "", enrollmentSetId = "";
+		String canonicalCourseId = "", courseOfferingId = "", courseSectionId = "", courseSetId = "";
 		String description = "";
 		String title = "";
 		AcademicSession session = null;
 		String status = "active";
 		String section = "";
+		String category;
 		Set<CanonicalCourse> cc = new HashSet<CanonicalCourse>();
 		Set<CourseOffering> courseOfferingSet = new HashSet<CourseOffering>();
 
@@ -240,15 +281,19 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 		while (cours.hasNext()) {
 			coursEntry = (DetailCoursMapEntry) cours.next();
-			canonicalCourseId = coursEntry.getUniqueKey();
+			canonicalCourseId = getCanonicalCourseId(coursEntry);
 			title = coursEntry.getCourseTitleLong();
 			description = coursEntry.getCourseTitleLong();
+			courseSetId = coursEntry.getAcadOrg();
 
 			// create the canonical course
 			if (!cmService.isCanonicalCourseDefined(canonicalCourseId)) {
 				cc.add(cmAdmin.createCanonicalCourse(canonicalCourseId, title,
 						description));
-				cmAdmin.addCanonicalCourseToCourseSet("11", canonicalCourseId);
+				if (cmService.isCourseSetDefined(courseSetId))
+					cmAdmin.addCanonicalCourseToCourseSet(courseSetId,
+							canonicalCourseId);
+				cmAdmin.setEquivalentCanonicalCourses(cc);
 
 			} else {
 				// we update
@@ -260,25 +305,25 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 			// create course offering
 			session = cmService.getAcademicSession(coursEntry.getStrmId());
-			title = title + "   " + session.getDescription();
-			if (session != null) {
+			title = title + "   " + session.getDescription() + " - "
+					+ coursEntry.getSessionCode();
+			CourseOffering courseOff;
+			if (cmService.isAcademicSessionDefined(coursEntry.getStrmId())) {
 				// TODO: This should be a final static constant
 				status = "course";
 				courseOfferingId = getCourseOfferingId(coursEntry);
 				if (!cmService.isCourseOfferingDefined(courseOfferingId)) {
-					courseOfferingSet.add(cmAdmin.createCourseOffering(
-							courseOfferingId, title, description, status,
-							session.getEid(), canonicalCourseId, session
-									.getStartDate(), session.getEndDate()));
-					cmAdmin
-							.addCourseOfferingToCourseSet("11",
-									courseOfferingId);
-					cmAdmin.addOrUpdateCourseOfferingMembership("admin",
-							"CourseAdmin", courseOfferingId, "active");
+					courseOff = cmAdmin.createCourseOffering(courseOfferingId,
+							title, description, status, session.getEid(),
+							canonicalCourseId, session.getStartDate(), session
+									.getEndDate());
+					courseOfferingSet.add(courseOff);
+					if (cmService.isCourseSetDefined(courseSetId))
+						cmAdmin.addCourseOfferingToCourseSet(courseSetId,
+								courseOfferingId);
 				} else {
 					// We update
-					CourseOffering courseOff = cmService
-							.getCourseOffering(courseOfferingId);
+					courseOff = cmService.getCourseOffering(courseOfferingId);
 					courseOff.setTitle(title);
 					courseOff.setDescription(description);
 					courseOff.setEndDate(session.getEndDate());
@@ -291,57 +336,52 @@ public class OsylCMJobImpl implements OsylCMJob {
 							"CourseAdmin", courseOfferingId, "active");
 				}
 
-				// We create the enrollmentSets
-				// We create enrollmentSets that we will assign to the
-				// course section
-				// TODO: the extracts don't give the course credit
-				// TODO: find a better way to retrieve the list of teachers
-				enrollmentSetId = getEnrollmentSetId(coursEntry);
-				System.out.println(enrollmentSetId + " is defined " + cmService.isEnrollmentSetDefined(enrollmentSetId));
-				if (!cmService.isEnrollmentSetDefined(enrollmentSetId)) {
-					cmAdmin.createEnrollmentSet(enrollmentSetId, title,
-							description, "111", "3", courseOfferingId,
-							null);
-				} else {
-					// We update
-					EnrollmentSet enrollmentSet = cmService
-							.getEnrollmentSet(enrollmentSetId);
-					enrollmentSet.setCategory("111");
-					enrollmentSet.setDefaultEnrollmentCredits("3");
-					enrollmentSet.setDescription(description);
-					enrollmentSet.setTitle(title);
-					cmAdmin.updateEnrollmentSet(enrollmentSet);
-				}
-
+				// // We create the enrollmentSets
+				// // We create enrollmentSets that we will assign to the
+				// // course section
+				// // TODO: the extracts don't give the course credit
+				// // TODO: find a better way to retrieve the list of teachers
+				// // enrollmentSetId = getEnrollmentSetId(coursEntry);
+				// // if (!cmService.isEnrollmentSetDefined(enrollmentSetId)) {
+				// // cmAdmin.createEnrollmentSet(enrollmentSetId, title,
+				// // description, "111", "3", courseOfferingId,
+				// // null);
+				// // } else {
+				// // // We update
+				// // EnrollmentSet enrollmentSet = cmService
+				// // .getEnrollmentSet(enrollmentSetId);
+				// // enrollmentSet.setCategory("111");
+				// // enrollmentSet.setDefaultEnrollmentCredits("3");
+				// // enrollmentSet.setDescription(description);
+				// // enrollmentSet.setTitle(title);
+				// // cmAdmin.updateEnrollmentSet(enrollmentSet);
+				// // }
+				//				
 				// create course section
+				title = title + " " + coursEntry.getClassSection();
 				section = coursEntry.getClassSection();
-				courseSectionId = courseOfferingId + section;
-				title = title + "  " + section;
+				category = coursEntry.getAcadOrg();
+				courseSectionId = getCourseSectionId(coursEntry);
+
 				if (!cmService.isSectionDefined(courseSectionId)) {
 
-					// TODO: Find what to match the category with
 					// TODO: check if we really need to have an enrollmentSet
 					// from here
-					cmAdmin
-							.createSection(courseSectionId, title, description,
-									"111", null, courseOfferingId,
-									enrollmentSetId);
+					cmAdmin.createSection(courseSectionId, title, description,
+							category, null, courseOfferingId, null);
 				} else {
 					// We update
 					Section courseSection = cmService
 							.getSection(courseSectionId);
-					courseSection.setCategory("111");
+					courseSection.setCategory(category);
 					courseSection.setDescription(description);
 					courseSection.setTitle(title);
-					courseSection.setEnrollmentSet(cmService
-							.getEnrollmentSet(enrollmentSetId));
 					cmAdmin.updateSection(courseSection);
 				}
 			}
 
 		}
-		cmAdmin.setEquivalentCanonicalCourses(cc);
-		cmAdmin.setEquivalentCourseOfferings(courseOfferingSet);
+
 	}
 
 	/** {@inheritDoc} */
@@ -354,12 +394,14 @@ public class OsylCMJobImpl implements OsylCMJob {
 		DetailSessionsMapEntry sessionEntry = null;
 		String eid = "", title = "", description = "";
 		Date startDate = null, endDate = null;
+
+		Date now = new Date(System.currentTimeMillis());
 		Iterator<DetailSessionsMapEntry> sessions = detailSessionMap.values()
 				.iterator();
 
 		while (sessions.hasNext()) {
 			sessionEntry = (DetailSessionsMapEntry) sessions.next();
-			eid = sessionEntry.getStrmId();
+			eid = sessionEntry.getUniqueKey();
 			title = sessionEntry.getDescAnglais();
 			description = sessionEntry.getDescAnglais();
 			try {
@@ -379,8 +421,10 @@ public class OsylCMJobImpl implements OsylCMJob {
 				// you can activate a session manually by changing to 1 //
 				// the value of is_current in the cm_academic_session_t //
 				// TODO: activate this method when running again on sakai 2.6 //
-				 cmAdmin.setCurrentAcademicSessions(Arrays
-				 .asList(new String[] { eid })); //
+				if ((now.compareTo(startDate)) >= 0
+						&& endDate.compareTo(endDate) <= 0)
+					cmAdmin.setCurrentAcademicSessions(Arrays
+							.asList(new String[] { eid })); //
 				// ////////////////////////////////////////////////////////////////
 			} else {
 				// We update
@@ -390,6 +434,10 @@ public class OsylCMJobImpl implements OsylCMJob {
 				aSession.setStartDate(startDate);
 				aSession.setTitle(title);
 				cmAdmin.updateAcademicSession(aSession);
+				if ((now.compareTo(startDate)) >= 0
+						&& endDate.compareTo(endDate) <= 0)
+					cmAdmin.setCurrentAcademicSessions(Arrays
+							.asList(new String[] { eid })); //
 
 			}
 		}
@@ -397,43 +445,44 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 	/** {@inheritDoc} */
 	public void loadUsers() {
-//		Iterator<MatriculeNomMapEntry> values = matNomMap.values().iterator();
-//		MatriculeNomMapEntry entry;
-//		Collection userExists = null;
-//		// User informations
-//		String eid, firstName, lastName, email, pw, type;
-//
-//		while (values.hasNext()) {
-//			entry = (MatriculeNomMapEntry) values.next();
-//			try {
-//				email = entry.getEmailAddress();
-//				// We check if user already in table
-//				userExists = userDirService.findUsersByEmail(email);
-//
-//				if (userExists.size() == 0) {
-//					// We create a new user
-//					eid = entry.getMatricule();
-//					firstName = entry.getFirstName();
-//					lastName = entry.getLastName();
-//					type = getType(entry.getStatus());
-//					pw = eid;
-//					userDirService.addUser(null, eid, firstName, lastName,
-//							email, pw, type, null);
-//				}
-//			} catch (UserIdInvalidException e) {
-//				log.error("Create users - user invalid id", e);
-//			} catch (UserAlreadyDefinedException e) {
-//				log.warn("Create users - user already defined");
-//			} catch (UserPermissionException e) {
-//				log.error("Create users - permission exception", e);
-//			}
-//
-//		}
+		// Iterator<MatriculeNomMapEntry> values =
+		// matNomMap.values().iterator();
+		// MatriculeNomMapEntry entry;
+		// Collection userExists = null;
+		// // User informations
+		// String eid, firstName, lastName, email, pw, type;
+		//
+		// while (values.hasNext()) {
+		// entry = (MatriculeNomMapEntry) values.next();
+		// try {
+		// email = entry.getEmailAddress();
+		// // We check if user already in table
+		// userExists = userDirService.findUsersByEmail(email);
+		//
+		// if (userExists.size() == 0) {
+		// // We create a new user
+		// eid = entry.getMatricule();
+		// firstName = entry.getFirstName();
+		// lastName = entry.getLastName();
+		// type = getType(entry.getStatus());
+		// pw = eid;
+		// userDirService.addUser(null, eid, firstName, lastName,
+		// email, pw, type, null);
+		// }
+		// } catch (UserIdInvalidException e) {
+		// log.error("Create users - user invalid id", e);
+		// } catch (UserAlreadyDefinedException e) {
+		// log.warn("Create users - user already defined");
+		// } catch (UserPermissionException e) {
+		// log.error("Create users - permission exception", e);
+		// }
+		//
+		// }
 	}
 
 	/**
 	 * This method maps the status of a user to a valid type in Sakai
-	 *
+	 * 
 	 * @param status
 	 * @return
 	 */
@@ -443,13 +492,32 @@ public class OsylCMJobImpl implements OsylCMJob {
 		return null;
 	}
 
-	private String getEnrollmentSetId(DetailCoursMapEntry cours) {
+	// Has same ID as course section
+	private String getCourseSectionEnrollmentSetId(DetailCoursMapEntry course) {
 		String enrollmentSetId = null;
 
-		if (cours != null) {
-			enrollmentSetId = cours.getClassSection()+ cours.getUniqueKey()
-					+ cours.getStrmId() + cours.getClassSection();
+		if (course != null) {
+			String coursId = course.getCatalogNbr();
+			String session = course.getStrm();
+			String periode = course.getSessionCode();
+			String section = course.getClassSection();
 
+			enrollmentSetId = coursId + session + periode + section;
+		}
+
+		return enrollmentSetId;
+	}
+
+	// Has same ID as course offering
+	private String getCourseOfferingEnrollmentSetId(DetailCoursMapEntry course) {
+		String enrollmentSetId = null;
+
+		if (course != null) {
+			String coursId = course.getCatalogNbr();
+			String session = course.getStrm();
+			String periode = course.getSessionCode();
+
+			enrollmentSetId = coursId + session + periode;
 		}
 
 		return enrollmentSetId;
@@ -457,7 +525,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 	/**
 	 * This method whether a course is linked to an enrollmentSet
-	 *
+	 * 
 	 * @param cours
 	 * @return hasEnrollmentSet
 	 */
@@ -465,7 +533,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 		boolean hasErollmentSet = false;
 		String enrollmentSetId = "";
 		if (cours != null) {
-			enrollmentSetId = getEnrollmentSetId(cours);
+			enrollmentSetId = getCourseSectionEnrollmentSetId(cours);
 			if (enrollmentSetId != null) {
 				return cmService.isEnrollmentSetDefined(enrollmentSetId);
 			}
@@ -506,9 +574,10 @@ public class OsylCMJobImpl implements OsylCMJob {
 	 * Retreives the folder where is kept the extract file. Later on we will
 	 * have a fixed values representing the place where are kept the extract
 	 * files.
-	 *
+	 * 
 	 * @param CLASSPATHTOEXTRACTS
 	 */
+	
 	private String getPathToExtracts() {
 
 		String directory = System.getProperty("catalina.home");
@@ -516,62 +585,21 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 	}
 
-	/**
-	 * {@inheritDoc} This method is for development purpose, in production we
-	 * should use quartz
-	 */
-	public void load() {
-		loginToSakai();
-
-		String directory = getPathToExtracts();
-		try {
-			detailSessionMap = GenericDetailSessionsMapFactory
-					.getInstance(directory);
-			detailSessionMap = GenericDetailSessionsMapFactory
-					.buildMap(directory);
-			// We load sessions
-			loadSessions();
-
-//			matNomMap = GenericMatriculeNomMapFactory.getInstance(directory);
-//			matNomMap = GenericMatriculeNomMapFactory.buildMap(directory);
-			// We load user
-			loadUsers();
-
-			// We add a category
-			loadCategory();
-			// We add a courseSet
-			loadCourseSets();
-			detailCoursMap = GenericDetailCoursMapFactory
-					.getInstance(directory);
-			detailCoursMap = GenericDetailCoursMapFactory.buildMap(directory);
-			// We load courses
-			loadCourses();
-
-			profCoursMap = GenericProfCoursMapFactory.getInstance(directory);
-			profCoursMap = GenericProfCoursMapFactory.buildMap(directory,
-					detailCoursMap, detailSessionMap);
-			// We assign teachers
-			loadMembership();
-
-			etudCoursMap = GenericEtudiantCoursMapFactory
-					.getInstance(directory);
-			etudCoursMap = GenericEtudiantCoursMapFactory.buildMap(directory,
-					detailCoursMap, detailSessionMap);
-			// We assign students to their classes
-			loadEnrollments();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		logoutFromSakai();
-	}
-
 	/** {@inheritDoc} */
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		loginToSakai();
 
-		String directory = getPathToExtracts();
+		String directory = ServerConfigurationService
+				.getString("coursemanagement.extract.files.path", getPathToExtracts());
+
+		if (directory == null || "".equalsIgnoreCase(directory)) {
+			log
+					.warn(
+							this,
+							new IllegalStateException(
+									"The property 'coursemanagement.extract.files.path' is not defined in the sakai.properties file"));
+			return;
+		}
 		try {
 			detailSessionMap = GenericDetailSessionsMapFactory
 					.getInstance(directory);
@@ -580,15 +608,15 @@ public class OsylCMJobImpl implements OsylCMJob {
 			// We load sessions
 			loadSessions();
 
-//			matNomMap = GenericMatriculeNomMapFactory.getInstance(directory);
-//			matNomMap = GenericMatriculeNomMapFactory.buildMap(directory);
-			// We load user
-			//loadUsers();
+			seMap = GenericServiceEnseignementMapFactory.getInstance(directory);
+			seMap = GenericServiceEnseignementMapFactory.buildMap(directory);
 
 			// We add a category
 			loadCategory();
+
 			// We add a courseSet
 			loadCourseSets();
+
 			detailCoursMap = GenericDetailCoursMapFactory
 					.getInstance(directory);
 			detailCoursMap = GenericDetailCoursMapFactory.buildMap(directory);
@@ -599,14 +627,14 @@ public class OsylCMJobImpl implements OsylCMJob {
 			profCoursMap = GenericProfCoursMapFactory.buildMap(directory,
 					detailCoursMap, detailSessionMap);
 			// We assign teachers
-			loadMembership();
+			 loadMembership();
 
-			etudCoursMap = GenericEtudiantCoursMapFactory
-					.getInstance(directory);
-			etudCoursMap = GenericEtudiantCoursMapFactory.buildMap(directory,
-					detailCoursMap, detailSessionMap);
-			// We assign students to their classes
-			loadEnrollments();
+			 etudCoursMap = GenericEtudiantCoursMapFactory
+			 .getInstance(directory);
+			 etudCoursMap = GenericEtudiantCoursMapFactory.buildMap(directory,
+			 detailCoursMap, detailSessionMap);
+			 // We assign students to their classes
+			 loadEnrollments();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -620,8 +648,11 @@ public class OsylCMJobImpl implements OsylCMJob {
 		EtudiantCoursMapEntry etudiantCoursEntry = null;
 		String userId = null;
 		String enrollmentSetId = null;
-		DetailCoursMapEntry cours;
-		Iterator<DetailCoursMapEntry> coursMap;
+		DetailCoursMapEntry cours = null;
+		Iterator<DetailCoursMapEntry> coursMap = null;
+		Section coursSection = null;
+		EnrollmentSet enrollmentSet = null;
+
 		Iterator<EtudiantCoursMapEntry> etudiantCoursMap = etudCoursMap
 				.getEtudiants();
 
@@ -631,27 +662,33 @@ public class OsylCMJobImpl implements OsylCMJob {
 			userId = etudiantCoursEntry.getMatricule();
 			while (coursMap.hasNext()) {
 				cours = coursMap.next();
-				// TODO: with this value we should make sure the enrollmentSet
-				// exists
-				enrollmentSetId = getEnrollmentSetId(cours);
 				// TODO: do something when enrollmentSetId is null
 				// TODO: we need information about the credits, gradingScheme
 				// and user status in the the course enrollment
-				//TODO: map user status to components.xml in provider
+				// TODO: map user status to components.xml in provider
 				// for now we have enrolled and wait
 				// TODO: the official teacher is assigned at the same time as
 				// the enrollmentset,
 				// move this command
+				coursSection = null;
+				
+				enrollmentSet = null;
+				enrollmentSetId = null;
 				try {
-					EnrollmentSet enrollmentSet = cmService
-							.getEnrollmentSet(enrollmentSetId);
+					coursSection = cmService
+							.getSection(getCourseSectionId(cours));
+
+					enrollmentSet = coursSection.getEnrollmentSet();
+					if (enrollmentSet != null)
+						enrollmentSetId = enrollmentSet.getEid();
+					
 				} catch (IdNotFoundException e) {
 					System.err
 							.println("Il n'y a pas d'enrollment associé pour le "
 									+ enrollmentSetId);
 				}
 
-				if (courseHasEnrollmentSet(cours))
+				if ( enrollmentSetId != null)
 					if (!cmService.isEnrolled(userId, enrollmentSetId)) {
 						cmAdmin.addOrUpdateEnrollment(userId, enrollmentSetId,
 								"enrolled ", "3", "Letter");
@@ -664,7 +701,9 @@ public class OsylCMJobImpl implements OsylCMJob {
 	private String getCourseOfferingId(DetailCoursMapEntry cours) {
 		String courseOfferingId = null;
 		if (cours != null) {
-			courseOfferingId = cours.getUniqueKey() + cours.getStrmId();
+			courseOfferingId = cours.getCatalogNbr() + cours.getStrm()
+					+ cours.getSessionCode();
+			;
 		}
 		return courseOfferingId;
 	}
@@ -673,13 +712,36 @@ public class OsylCMJobImpl implements OsylCMJob {
 		String courseSectionId = null;
 
 		if (course != null) {
-			String coursId = course.getUniqueKey();
-			String session = course.getStrmId();
+			String coursId = course.getCatalogNbr();
+			String session = course.getStrm();
+			String periode = course.getSessionCode();
 			String section = course.getClassSection();
 
-			courseSectionId = coursId + session + section;
+			courseSectionId = coursId + session + periode + section;
 		}
 		return courseSectionId;
+	}
+
+	private String getCourseSetId(DetailCoursMapEntry course) {
+		String csId = null;
+
+		if (course != null) {
+			String acadOrg = course.getAcadOrg();
+
+			csId = acadOrg;
+		}
+		return csId;
+	}
+
+	private String getCanonicalCourseId(DetailCoursMapEntry course) {
+		String ccId = null;
+
+		if (course != null) {
+			String coursId = course.getCatalogNbr();
+
+			ccId = coursId;
+		}
+		return ccId;
 	}
 
 	/**
@@ -702,15 +764,57 @@ public class OsylCMJobImpl implements OsylCMJob {
 	 */
 	// For HEC Montreal this will list the different services
 	private void loadCategory() {
-		if (cmService.getSectionCategoryDescription("111") == null)
-			cmAdmin.addSectionCategory("111", "Finance");
+		ServiceEnseignementMapEntry seEntry;
+		String categoryId = null;
+		String categoryDescription = null;
+		Iterator<ServiceEnseignementMapEntry> se = seMap.values().iterator();
+
+		while (se.hasNext()) {
+			seEntry = se.next();
+			categoryId = seEntry.getAcadOrg();
+			categoryDescription = seEntry.getDescFormal();
+			if (cmService.getSectionCategoryDescription(categoryId) == null)
+				cmAdmin.addSectionCategory(categoryId, categoryDescription);
+			else {
+				// TODO: implement update of a category
+			}
+		}
 
 	}
 
-	// For HEC Montreal, this is the institution HEC Montreal
-	private void loadCourseSets() {
-		if (!cmService.isCourseSetDefined("11"))
-			cmAdmin.createCourseSet("11", "HEC Montréal", "Montréal - Québec",
-					"111", null);
+	/**
+	 * {@inheritDoc}
+	 */
+	public void loadCourseSets() {
+
+		ServiceEnseignementMapEntry seEntry;
+		String courseSetId = null;
+		String courseSetTitle = null;
+		String courseSetDescription = null;
+		String courseSetCategory = null;
+		CourseSet courseSetParent = null;
+
+		Iterator<ServiceEnseignementMapEntry> se = seMap.values().iterator();
+
+		while (se.hasNext()) {
+			seEntry = se.next();
+			courseSetId = seEntry.getAcadOrg();
+			courseSetTitle = seEntry.getDescFormal();
+			courseSetDescription = seEntry.getDescFormal();
+
+			if (!cmService.isCourseSetDefined(courseSetId)) {
+				cmAdmin.createCourseSet(courseSetId, courseSetTitle,
+						courseSetDescription, null, null);
+			} else {
+				CourseSet cs = cmService.getCourseSet(courseSetId);
+				cs.setEid(courseSetId);
+				cs.setTitle(courseSetTitle);
+				cs.setDescription(courseSetDescription);
+				cs.setCategory(courseSetCategory);
+				cs.setParent(courseSetParent);
+				cmAdmin.updateCourseSet(cs);
+			}
+
+		}
 	}
 }

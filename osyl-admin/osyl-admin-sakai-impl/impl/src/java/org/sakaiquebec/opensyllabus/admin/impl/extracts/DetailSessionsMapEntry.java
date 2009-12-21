@@ -57,7 +57,7 @@ public class DetailSessionsMapEntry implements java.io.Serializable {
     }
 
     public String getUniqueKey() {
-	return getSessionCode();
+	return getStrmId();
     }
 
     public void setAcadCareer(String acadCareer){

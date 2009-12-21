@@ -38,10 +38,11 @@ public class GenericDetailCoursMapFactory {
 	    throw e;
 	}
 
+	InputStreamReader stream = new InputStreamReader(new FileInputStream(
+			dataDir + "/" + baseName + ".dat"), "utf8");
 	BufferedReader breader =
-		new BufferedReader(new InputStreamReader(new FileInputStream(
-			dataDir + "/" + baseName + ".dat"), "utf8"));
-	String buffer, key, courseId, strm, sessionCode, catalogNbr;	
+		new BufferedReader(stream);
+	String buffer, key, courseId, strm, sessionCode, catalogNbr, section;	
 	DetailCoursMapEntry entry;
 
 	// We remove the first line containing the title
@@ -49,16 +50,16 @@ public class GenericDetailCoursMapFactory {
 
 	// fait le tour des lignes du fichier
 	while ((buffer = breader.readLine()) != null) {
-	    String[] tokens = buffer.split(";");
+		String[] tokens = buffer.split(";");
 	    int i = 0;
-
+		
 	    courseId = tokens[i++];
 	    strm = tokens[i++];
 	    sessionCode = tokens[i++];
 	    catalogNbr = tokens[i++];
+	    section = tokens[i++];
 	    
-	    key = DetailCoursMapEntry.getUniqueKey(catalogNbr, strm, sessionCode);
-
+	    key = DetailCoursMapEntry.getUniqueKey(catalogNbr, (strm + sessionCode), section);
 	    // on reprend l'entree existante
 	    if (map.containsKey(key)) {
 		entry = map.get(key);
@@ -68,8 +69,8 @@ public class GenericDetailCoursMapFactory {
 		entry.setStrm(strm);
 		entry.setSessionCode(sessionCode);
 		entry.setCatalogNbr(catalogNbr);
+		entry.setSection(section);
 	    }
-	    entry.setSection(tokens[i++]);
 	    entry.setCourseTitleLong(tokens[i++]);
 
 	    try {
@@ -79,8 +80,10 @@ public class GenericDetailCoursMapFactory {
 		print("langue manquante pour le cours [" + courseId + "]");
 	    }
 	    entry.setAcadOrg(tokens[i++]);
-
-	    entry.setStrmId(tokens[i++]);
+//TODO: use session + periode until extract corrected
+	    entry.setStrmId(strm + sessionCode );
+//	    entry.setStrmId(tokens[i++]);
+	    
 	    map.put(entry);
 	}
 
@@ -127,18 +130,21 @@ public class GenericDetailCoursMapFactory {
 	    numeroHEL = tokens[i++];
 	    session = tokens[i++];
 	    periode = tokens[i++];
-	    key = DetailCoursMapEntry.getUniqueKey(numeroHEL, session, periode);
-
-	    // on reprend l'entree existante
-	    entry = map.get(key);
-
+	
 	    // On saute les parametres suivants
 	    // Programme
 	    i++;
 	    // NumeroRepertoire
 	    i++;
 	    // Section
-	    i++;
+	    String section = tokens[i++];
+
+	    
+	    key = DetailCoursMapEntry.getUniqueKey(numeroHEL, (session + periode), section);
+
+	    // on reprend l'entree existante
+	    entry = map.get(key);
+
 	    // Le token suivant est le coordonnateur, et il est facultatif, il
 	    // peut
 	    // donc etre vide:

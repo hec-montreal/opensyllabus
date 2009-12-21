@@ -107,7 +107,7 @@ public class GenericEtudiantCoursMapFactory {
 	    String sessionCode   = token[i++];
 	    String classSection  = token[i++];
 	    String status  = token[i++];
-	    String strmId  = token[i++];
+	    String strmId  = strm + sessionCode;
 	    
 	    if(map.containsKey(emplId)) {
 		entry = map.get(emplId);
@@ -118,21 +118,26 @@ public class GenericEtudiantCoursMapFactory {
 	    
 	    
 	    DetailCoursMapEntry cours = detailCoursMap.get(
-			catalogNbr, strm, sessionCode);
- 	    if (cours == null) {
- 		throw new IllegalStateException("cours == null pour " + buffer);
- 	    }
+			catalogNbr, strmId, classSection);
+	    //TODO: remove for tests purposes, put back after
+	    
+// 	    if (cours == null) {
+// 		throw new IllegalStateException("cours == null pour " + buffer);
+			// }
+		if (cours != null) {
 
-	    // On ajoute le cours a cet etudiant uniquement s'il ne l'a pas deja
-	    // (ce qui est le cas pour tous ses cours d'anciennes sessions).
-	    if (! entry.containsCours(cours)) {
-		entry.addCours(cours);
-	    }
+			// On ajoute le cours a cet etudiant uniquement s'il ne l'a pas
+			// deja
+			// (ce qui est le cas pour tous ses cours d'anciennes sessions).
+			if (!entry.containsCours(cours)) {
+				entry.addCours(cours);
+			}
 
-	    // et la contrepartie dans le cours...
-	    if (! cours.containsEtudiant(entry)) {
-		cours.addEtudiant(entry);
-	    }
+			// et la contrepartie dans le cours...
+			if (!cours.containsEtudiant(entry)) {
+				cours.addEtudiant(entry);
+			}
+		}
 	}
 
 	// ferme le tampon

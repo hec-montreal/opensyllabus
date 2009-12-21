@@ -56,6 +56,11 @@ public interface OsylCMJob extends Job {
 	public void loadUsers();
 
 	/**
+	 * Method used to load course sets
+	 */
+	public void loadCourseSets();
+	
+	/**
 	 * Method used to load the courses
 	 */
 	public void loadCourses();

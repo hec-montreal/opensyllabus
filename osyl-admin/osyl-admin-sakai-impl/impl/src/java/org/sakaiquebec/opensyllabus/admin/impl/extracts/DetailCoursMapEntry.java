@@ -92,7 +92,7 @@ public class DetailCoursMapEntry implements java.io.Serializable {
     }
 
     public String getUniqueKey() {
-	return getUniqueKey(getCatalogNbr(), getStrm(), getSessionCode());
+	return getUniqueKey(getCatalogNbr(), getStrmId(), getClassSection());
     }
 
     public void setStrm(String strm) {
@@ -368,9 +368,9 @@ public class DetailCoursMapEntry implements java.io.Serializable {
 			+ getCoordonnateur());
     }
 
-    public static String getUniqueKey(String catalogNbr, String session,
-	    String periode) {
-	return session + catalogNbr + periode;
+    public static String getUniqueKey(String catalogNbr, String strmId,
+	    String section) {
+	return strmId + catalogNbr + section;
     }
 
     /**

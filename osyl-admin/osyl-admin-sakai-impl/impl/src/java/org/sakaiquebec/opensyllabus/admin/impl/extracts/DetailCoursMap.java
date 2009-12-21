@@ -21,10 +21,10 @@ public class DetailCoursMap extends HashMap<String,DetailCoursMapEntry> {
 	put(entry.getUniqueKey(), entry);
     }
 
-    public DetailCoursMapEntry get(String catalogNbr, String strm,
-				   String sessionCode) {
+    public DetailCoursMapEntry get(String catalogNbr, String strmId,
+				   String section) {
 	return get(DetailCoursMapEntry.getUniqueKey(
-                                           catalogNbr, strm, sessionCode));
+                                           catalogNbr, strmId, section));
     }
 
     public DetailCoursMapEntry get(String key) {
