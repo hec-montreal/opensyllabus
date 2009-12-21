@@ -29,57 +29,59 @@ import org.sakaiquebec.opensyllabus.shared.util.UUID;
 
 /**
  * This abstract class is the superclass of <code>CourseOutlineContent</code>,
- * <code>COStructureElement</code> and <code>COContentUnit</code> classes.
- * It provides the answer for two situations. The first one is the possibility
- * of having either <code>COStructureElement</code> objects or
+ * <code>COStructureElement</code> and <code>COContentUnit</code> classes. It
+ * provides the answer for two situations. The first one is the possibility of
+ * having either <code>COStructureElement</code> objects or
  * <code>COContentUnit</code> objects in <code>CourseOutlineContent</code>
  * childs list. The second one is the possibility of having either a
- * <code>CourseOutlineContent</code> object or a
- * <code>COStructureElement</code> object as <code>COContentUnit</code>
- * parent.
- *
+ * <code>CourseOutlineContent</code> object or a <code>COStructureElement</code>
+ * object as <code>COContentUnit</code> parent.
+ * 
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
-public abstract class COElementAbstract<T extends COModelInterface> implements Serializable, COModelInterface {
+public abstract class COElementAbstract<T extends COModelInterface> implements Serializable,
+	COModelInterface {
 
     private static final long serialVersionUID = 5786482983027706074L;
 
     /**
      * The <code>CourseOutlineContent</code> class type.
      */
-    protected final String CO_CONTENT_CLASS_TYPE = "CourseOutlineContent";
+    protected static final String CO_CONTENT_CLASS_TYPE = "CourseOutlineContent";
 
     /**
      * The <code>COStructureElement</code> class type.
      */
-    protected final String CO_STRUCTURE_ELEMENT_CLASS_TYPE = "COStructureElement";
+    protected static final String CO_STRUCTURE_ELEMENT_CLASS_TYPE =
+	    "COStructureElement";
 
     /**
      * The <code>COContentUnit</code> class type.
      */
-    protected final String CO_UNIT_CONTENT_CLASS_TYPE = "COUnitContent";
-    
+    protected static final String CO_UNIT_CONTENT_CLASS_TYPE = "COUnitContent";
+
     /**
-     * The <code>COUnitStructure</code> class type. 
+     * The <code>COUnitStructure</code> class type.
      */
-    protected final String CO_UNIT_STRUCTURE_CLASS_TYPE = "COUnitStructure";
-    
+    protected static final String CO_UNIT_STRUCTURE_CLASS_TYPE = "COUnitStructure";
+
     /**
-     * The <code>COUnit</code> class type. 
+     * The <code>COUnit</code> class type.
      */
-    protected final String CO_UNIT_CLASS_TYPE = "COUnit";
-    
+    protected static final String CO_UNIT_CLASS_TYPE = "COUnit";
+
     /**
-     * The <code>COCOntentResourceProx</code> class type. 
+     * The <code>COCOntentResourceProx</code> class type.
      */
-    protected final String CO_CONTENT_RESOURCE_PROXY_CLASS_TYPE = "COContentResourceProxy";
-    
+    protected static final String CO_CONTENT_RESOURCE_PROXY_CLASS_TYPE =
+	    "COContentResourceProxy";
+
     /**
      * (ie. Course outline by competence, by lecture, by theme)
      */
     private String type;
-    
+
     /**
      * Security related to content access
      */
@@ -89,31 +91,29 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
      * The class of the object that inherits this abstract class.
      */
     private String classType;
-    
+
     /**
      * Editable or not (comming from parent or not)
      */
-    private boolean editable=true;
-    
+    private boolean editable = true;
+
     /**
      * Identifier
      */
     private String id;
-    
+
     /**
      * parent identifier
      */
     private String idParent;
-    
-    private COElementAbstract parent=null;
-    
+
+    private COElementAbstract parent = null;
+
     private COProperties properties;
-    
 
-    public static final int POSITION_CHANGE_ACTION_UP=-1;
-    
-    public static final int POSITION_CHANGE_ACTION_DOWN=1;
+    public static final int POSITION_CHANGE_ACTION_UP = -1;
 
+    public static final int POSITION_CHANGE_ACTION_DOWN = 1;
 
     /**
      * Protected constructor to prohibit instantiation of this class.
@@ -121,10 +121,11 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     protected COElementAbstract() {
 	this.id = UUID.uuid();
 	properties = new COProperties();
-	addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getNowDateAsXmlString());
+	addProperty(COPropertiesType.MODIFIED, OsylDateUtils
+		.getNowDateAsXmlString());
 	setAccess(SecurityInterface.ACCESS_PUBLIC);
     }
-    
+
     /**
      * @return the type
      */
@@ -172,7 +173,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
 
     /**
      * Tests if the object is of type <code>CourseOutlineContent</code>.
-     *
+     * 
      * @return true if the object is of type <code>CourseOutlineContent</code>,
      *         false if not.
      */
@@ -182,7 +183,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
 
     /**
      * Tests if the object is of type <code>COStructureElement</code>.
-     *
+     * 
      * @return true if the object is of type <code>COStructureElement</code>,
      *         false if not.
      */
@@ -192,40 +193,38 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
 
     /**
      * Tests if the object is of type <code>COUnitContent</code>.
-     *
-     * @return true if the object is of type <code>COUnitContent</code>,
-     *         false if not.
+     * 
+     * @return true if the object is of type <code>COUnitContent</code>, false
+     *         if not.
      */
     public boolean isCOUnitContent() {
 	return getClassType().equals(CO_UNIT_CONTENT_CLASS_TYPE);
     }
-    
+
     /**
      * Tests if the object is of type <code>COUnit</code>.
-     *
-     * @return true if the object is of type <code>CoUnit</code>,
-     *         false if not.
+     * 
+     * @return true if the object is of type <code>CoUnit</code>, false if not.
      */
     public boolean isCOUnit() {
 	return getClassType().equals(CO_UNIT_CLASS_TYPE);
     }
-    
-    
+
     /**
      * Tests if the object is of type <code>COUnitStructure</code>.
-     *
-     * @return true if the object is of type <code>CoUnitStructure</code>,
-     *         false if not.
+     * 
+     * @return true if the object is of type <code>CoUnitStructure</code>, false
+     *         if not.
      */
     public boolean isCOUnitStructure() {
 	return getClassType().equals(CO_UNIT_STRUCTURE_CLASS_TYPE);
     }
-    
+
     /**
      * Tests if the object is of type <code>COUnitStructure</code>.
-     *
-     * @return true if the object is of type <code>CoUnitStructure</code>,
-     *         false if not.
+     * 
+     * @return true if the object is of type <code>CoUnitStructure</code>, false
+     *         if not.
      */
     public boolean isCOContentResourceProxy() {
 	return getClassType().equals(CO_CONTENT_RESOURCE_PROXY_CLASS_TYPE);
@@ -239,11 +238,10 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     /**
      * Gets the label.
      * 
-     * @return
-     *         the label.
+     * @return the label.
      */
     public String getLabel() {
-        return this.getProperty(COPropertiesType.LABEL);
+	return this.getProperty(COPropertiesType.LABEL);
     }
 
     /**
@@ -253,44 +251,42 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
      */
     public void setLabel(String label) {
 	this.addProperty(COPropertiesType.LABEL, label);
-        notifyEventHandlers();
+	notifyEventHandlers();
     }
-    
+
     /**
      * {@inheritDoc}
      */
-    public boolean isEditable(){
+    public boolean isEditable() {
 	return editable;
     }
-    
+
     /**
      * {@inheritDoc}
      */
-    public void setEditable(boolean edit){
+    public void setEditable(boolean edit) {
 	this.editable = edit;
     }
-    
-    
+
     public String getId() {
-        return id;
+	return id;
     }
 
     public void setId(String id) {
-        this.id = id;
+	this.id = id;
     }
 
     public String getIdParent() {
-        return idParent;
+	return idParent;
     }
 
     public void setIdParent(String idP) {
-        this.idParent = idP;
+	this.idParent = idP;
     }
-    
-    
+
     public COElementAbstract findCOElementAbstractWithId(String idToFind) {
 	COElementAbstract result = null;
-	if (this.getId()!=null && this.getId().equals(idToFind))
+	if (this.getId() != null && this.getId().equals(idToFind))
 	    result = this;
 	else {
 	    if (this.isCOUnitContent()) {
@@ -307,10 +303,10 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
 	}
 	return result;
     }
-    
+
     public COElementAbstract findCOElementAbstractWithParentId(String idToFind) {
 	COElementAbstract result = null;
-	if (this.getIdParent()!=null && this.getIdParent().equals(idToFind))
+	if (this.getIdParent() != null && this.getIdParent().equals(idToFind))
 	    result = this;
 	else {
 	    if (this.isCOUnitContent()) {
@@ -327,38 +323,36 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
 	}
 	return result;
     }
-    
+
     /**
      * Gets the position of a structure element child.
      * 
      * @param the child
      * @return the child poistion
      */
-    public String getChildPosition(COElementAbstract coEltAbs){
-	String pos="0";
+    public String getChildPosition(COElementAbstract coEltAbs) {
+	String pos = "0";
 	List<T> children = getChildrens();
-	if(children.contains(coEltAbs)) {
-	    pos=""+(children.indexOf(coEltAbs)+1);
+	if (children.contains(coEltAbs)) {
+	    pos = "" + (children.indexOf(coEltAbs) + 1);
 	}
 	return pos;
     }
-    
+
     /**
-     * 
      * @return the parent of the courseOutline
      */
     public COElementAbstract getParent() {
-        return parent;
+	return parent;
     }
 
     /**
-     * 
      * @param parent ht eparent to set
      */
     public void setParent(COElementAbstract parent) {
-        this.parent = parent;
+	this.parent = parent;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -381,8 +375,8 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
 	properties.addProperty(key, value);
 	notifyEventHandlers();
     }
-    
-    public void addProperty(String key, String type, String value){
+
+    public void addProperty(String key, String type, String value) {
 	properties.addProperty(key, type, value);
 	notifyEventHandlers();
     }
@@ -401,40 +395,43 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     public String getProperty(String key) {
 	return properties.getProperty(key);
     }
-    
-    public String getProperty(String key, String type){
+
+    public String getProperty(String key, String type) {
 	return properties.getProperty(key, type);
     }
-    
+
     /**
      * Check the position of the element compared to other element
-     * @return -1 if the element has no successor,<br/> 
-     * 1 if he has no predecessor,<br/> 
-     * 0 if he is the only element in this structure<br/>
-     * 2 otherwise
+     * 
+     * @return -1 if the element has no successor,<br/>
+     *         1 if he has no predecessor,<br/>
+     *         0 if he is the only element in this structure<br/>
+     *         2 otherwise
      */
     abstract public int getElementPosition(T coEltAbs);
-    
+
     /**
      * Change the position of the element
+     * 
      * @param coEltAbs The element
-     * @param action COElementAbstract.POSITION_CHANGE_ACTION_UP if the element must be move to a prior position
-     * @param action COElementAbstract.POSITION_CHANGE_ACTION_DOWN if the element must be move to a posterior position
+     * @param action COElementAbstract.POSITION_CHANGE_ACTION_UP if the element
+     *            must be move to a prior position
+     * @param action COElementAbstract.POSITION_CHANGE_ACTION_DOWN if the
+     *            element must be move to a posterior position
      */
     abstract public void changeElementPosition(T coEltAbs, int action);
-    
+
     /**
-     * 
      * @return List of childrens
      */
     abstract public List<T> getChildrens();
-    
+
     abstract public void setChildrens(List<T> childs);
-    
+
     /**
-     * Adds a child to the <code>COELementAbstract</code> children list.
-     * Tests if the child could be add. If not, it rejects the child.
-     *
+     * Adds a child to the <code>COELementAbstract</code> children list. Tests
+     * if the child could be add. If not, it rejects the child.
+     * 
      * @param child the child to add
      * @return true if the child is added successfully, false if not.
      */

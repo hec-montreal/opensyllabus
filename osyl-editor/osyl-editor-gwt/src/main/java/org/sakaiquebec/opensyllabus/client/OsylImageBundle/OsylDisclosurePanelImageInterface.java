@@ -25,14 +25,10 @@ import com.google.gwt.user.client.ui.DisclosurePanelImages;
 public interface OsylDisclosurePanelImageInterface extends
 		DisclosurePanelImages {
 	
-    /**
-     * @gwt.resource expand.gif
-     */
+    @Resource("expand.gif")
     public AbstractImagePrototype disclosurePanelClosed();
 
-    /**
-     * @gwt.resource collapse.gif
-     */
+    @Resource("collapse.gif")
     public AbstractImagePrototype disclosurePanelOpen(); 
 
 }

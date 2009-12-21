@@ -37,7 +37,7 @@ public class COProperties extends HashMap<String, HashMap<String, String>> {
     /**
      * Boolean value to print trace in debug mode.
      */
-    final private boolean TRACE = false;
+    private static final boolean TRACE = false;
 
     /**
      * Default property type
