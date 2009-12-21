@@ -79,7 +79,7 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
      */
     public static COUnitContent createDefaultCOContentUnit(final String type,
 	    final OsylConfigMessages osylConfigMessages,
-	    final COElementAbstract parentModel) {
+	    final COElementAbstract<COElementAbstract> parentModel) {
 	final COUnitContent unitModel = new COUnitContent();
 	unitModel.setType(type);
 	unitModel.setParent(parentModel);

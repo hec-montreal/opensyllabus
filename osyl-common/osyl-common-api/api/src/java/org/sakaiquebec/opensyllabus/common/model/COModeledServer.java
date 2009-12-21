@@ -1071,9 +1071,12 @@ public class COModeledServer {
 	    for (int i = 0; i < parentElement.getChildrens().size(); i++) {
 		COElementAbstract coElementParent =
 			(COElementAbstract) parentElement.getChildrens().get(i);
-		COElementAbstract coElementChild =
-			(COElementAbstract) childElement.getChildrens().get(i);
-		dissociateChild(coElementChild, coElementParent);
+		if (childElement.getChildrens().size() > i) {
+		    COElementAbstract coElementChild =
+			    (COElementAbstract) childElement.getChildrens()
+				    .get(i);
+		    dissociateChild(coElementChild, coElementParent);
+		}
 	    }
 	}
     }
@@ -1114,6 +1117,7 @@ public class COModeledServer {
 	}
     }
 
+    @SuppressWarnings("unchecked")
     public void fusion(COElementAbstract child, COElementAbstract fusionned) {
 	if (child.isCOUnitContent()) {
 	    COUnitContent cu = (COUnitContent) child;

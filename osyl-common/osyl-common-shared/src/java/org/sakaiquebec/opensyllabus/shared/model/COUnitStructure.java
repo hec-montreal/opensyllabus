@@ -61,7 +61,7 @@ public class COUnitStructure extends COElementAbstract<COElementAbstract>
      */
     public static COUnitStructure createDefaultCOUnitStructure(
 	    final String type, final OsylConfigMessages osylConfigMessages,
-	    final COElementAbstract parentModel) {
+	    final COElementAbstract<COElementAbstract> parentModel) {
 	final COUnitStructure structureModel = new COUnitStructure();
 	structureModel.setType(type);
 	structureModel.setParent(parentModel);
@@ -155,6 +155,7 @@ public class COUnitStructure extends COElementAbstract<COElementAbstract>
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     public boolean hasSuccessor() {
 	if (getParent() == null)
 	    return false;
@@ -168,6 +169,7 @@ public class COUnitStructure extends COElementAbstract<COElementAbstract>
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     public boolean hasPredecessor() {
 	if (getParent() == null)
 	    return false;
@@ -181,6 +183,7 @@ public class COUnitStructure extends COElementAbstract<COElementAbstract>
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     public void moveUp() {
 	getParent().changeElementPosition(this,
 		COElementAbstract.POSITION_CHANGE_ACTION_UP);
@@ -189,6 +192,7 @@ public class COUnitStructure extends COElementAbstract<COElementAbstract>
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     public void moveDown() {
 	getParent().changeElementPosition(this,
 		COElementAbstract.POSITION_CHANGE_ACTION_DOWN);

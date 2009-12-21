@@ -443,6 +443,7 @@ public class OsylCOStructureItemEditor extends OsylAbstractEditor {
 	    this.model = model;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void onClick(ClickEvent event) {
 	    try {
 		String title = model.getLabel();

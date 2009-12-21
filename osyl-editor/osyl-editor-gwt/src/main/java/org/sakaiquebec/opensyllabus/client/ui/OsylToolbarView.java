@@ -125,6 +125,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    this.subType = subtype;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void execute() {
 	    if (parentModel.isCOStructureElement()) {
 		COUnit coU =
@@ -214,6 +215,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    this.type = type;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void execute() {
 	    COUnitStructure coUnitStructure =
 		    COUnitStructure.createDefaultCOUnitStructure(type,

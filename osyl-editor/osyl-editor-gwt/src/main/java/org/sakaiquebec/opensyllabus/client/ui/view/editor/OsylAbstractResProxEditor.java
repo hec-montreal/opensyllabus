@@ -502,6 +502,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
      * @param model
      * @param lb
      */
+    @SuppressWarnings("unchecked")
     private void fillListBoxWithAllowedCoUnits(COElementAbstract model,
 	    ListBox lb) {
 	if (model.isCOUnit() && model.getChildrens().size() == 1) {
@@ -529,7 +530,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		lb.addItem(label, targetModel.getId());
 	    }
 	} else {
-	    for (Iterator<COElementAbstract<COModelInterface>> iter =
+	    for (Iterator<COElementAbstract> iter =
 		    model.getChildrens().iterator(); iter.hasNext();) {
 		COElementAbstract coElement = iter.next();
 		fillListBoxWithAllowedCoUnits(coElement, lb);

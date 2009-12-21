@@ -68,6 +68,7 @@ public class OsylCOStructureAssessmentItemLabelView extends OsylAbstractView {
 
     }
 
+    @SuppressWarnings("unchecked")
     private void updateAssignements(COElementAbstract model) {
 	if (model.isCOContentResourceProxy()) {
 	    COContentResourceProxy contentResourceProxy =

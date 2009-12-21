@@ -96,6 +96,7 @@ public class OsylTreeView extends OsylViewableComposite implements
 	refreshView();
     }
 
+    @SuppressWarnings("unchecked")
     private void refreshSubModelsViews(COElementAbstract currentModel) {
 	// clean panel
 	// The only mean to control the padding of the root

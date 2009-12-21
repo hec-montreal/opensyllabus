@@ -283,6 +283,7 @@ public class OsylPreviewView extends OsylViewableComposite implements
 	return absElement;
     }
 
+    @SuppressWarnings("unchecked")
     private COElementAbstract findStartingViewContext(COElementAbstract coe) {
 	COElementAbstract absElement = null;
 	List<COElementAbstract> childrenList = coe.getChildrens();

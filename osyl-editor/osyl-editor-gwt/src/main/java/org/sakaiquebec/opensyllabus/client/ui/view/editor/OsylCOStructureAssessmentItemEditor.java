@@ -184,6 +184,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 	return verifyAssignementTool(getView().getModel());
     }
 
+    @SuppressWarnings("unchecked")
     private String verifyAssignementTool(COElementAbstract model) {
 	String message = "";
 	if (model.isCOContentResourceProxy()) {
