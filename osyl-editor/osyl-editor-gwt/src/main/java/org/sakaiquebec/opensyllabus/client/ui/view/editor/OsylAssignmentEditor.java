@@ -53,9 +53,6 @@ import com.google.gwt.user.datepicker.client.DateBox;
  */
 public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 
-    private static final DateBox.Format dateFormat =
-	    new DateBox.DefaultFormat(DateTimeFormat.getFormat("yyyy-MM-dd"));
-
     // Our main panel which will display the viewer
     private VerticalPanel mainPanel;
 
@@ -67,7 +64,12 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 
     // Our viewer
     private FlexTable viewerPanel;
-    private HTML viewer;
+
+    private HTML linkViewer;
+    private HTML dateViewer;
+    private VerticalPanel viewer;
+
+    private DateTimeFormat dateTimeFormat;
 
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
@@ -81,6 +83,8 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 	setHasRequirement(false);
 	initMainPanel();
 	initWidget(getMainPanel());
+	dateTimeFormat =
+		getView().getController().getSettings().getDateFormat();
     }
 
     /**
@@ -104,11 +108,14 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
     private void initEditor() {
 	VerticalPanel editorPanel = new VerticalPanel();
 
+	DateBox.DefaultFormat dateBoxFormat =
+		new DateBox.DefaultFormat(dateTimeFormat);
+
 	dateStartDateBox = new DateBox();
-	dateStartDateBox.setFormat(dateFormat);
+	dateStartDateBox.setFormat(dateBoxFormat);
 
 	dateEndDateBox = new DateBox();
-	dateEndDateBox.setFormat(dateFormat);
+	dateEndDateBox.setFormat(dateBoxFormat);
 
 	HorizontalPanel datePanel = new HorizontalPanel();
 	HTML dateStartLabel =
@@ -158,9 +165,16 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
      * Creates and set the low-level viewer (HTML panel).
      */
     private void initViewer() {
-	HTML htmlViewer = new HTML();
-	htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel");
-	setViewer(htmlViewer);
+	linkViewer = new HTML();
+	linkViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel");
+
+	dateViewer = new HTML();
+	dateViewer.setStylePrimaryName("Osyl-AssignementView-DateLabel");
+
+	setViewer(new VerticalPanel());
+	getViewer().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
+	getViewer().add(linkViewer);
+	getViewer().add(dateViewer);
 
 	setViewerPanel(new FlexTable());
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
@@ -191,11 +205,11 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 	mainPanel.add(getViewerPanel());
     }
 
-    private void setViewer(HTML html) {
-	this.viewer = html;
+    private void setViewer(VerticalPanel vp) {
+	this.viewer = vp;
     }
 
-    private HTML getViewer() {
+    private VerticalPanel getViewer() {
 	return viewer;
     }
 
@@ -226,7 +240,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 	if (isInEditionMode()) {
 	    nameEditor.setText(text);
 	} else {
-	    viewer.setHTML(text);
+	    linkViewer.setHTML(text);
 	}
     }
 
@@ -234,7 +248,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 	if (isInEditionMode()) {
 	    return nameEditor.getText();
 	} else {
-	    return viewer.getHTML();
+	    return linkViewer.getHTML();
 	}
     }
 
@@ -249,9 +263,6 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
     }
 
     public boolean prepareForSave() {
-	// ISO format yyyy-mm-dd
-	String isoRegex =
-		"^(\\d{4})\\D?(0[1-9]|1[0-2])\\D?([12]\\d|0[1-9]|3[01])$";
 	boolean ok = true;
 	String messages = "";
 	boolean errordate = false;
@@ -273,16 +284,17 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 	    ok = false;
 	    errordate = true;
 	} else {
-	    if (!endDateString.matches(isoRegex)) {
-		if (!endDateString.trim().equals("")
-			&& !endDateString.matches(isoRegex)) {
-		    messages +=
-			    getView().getUiMessage("Global.field.date.unISO",
-				    getUiMessage("Assignement.date_end"))
-				    + "\n";
-		    ok = false;
-		    errordate = true;
-		}
+	    try {
+		dateTimeFormat.parseStrict(endDateString);
+	    } catch (IllegalArgumentException e) {
+		messages +=
+			getView().getUiMessages().getMessage(
+				"Global.field.date.format",
+				getUiMessage("Assignement.date_end"),
+				dateTimeFormat.getPattern())
+				+ "\n";
+		ok = false;
+		errordate = true;
 	    }
 	}
 	String startDateString = dateStartDateBox.getTextBox().getText();
@@ -294,17 +306,19 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 	    ok = false;
 	    errordate = true;
 	} else {
-	    if (!startDateString.matches(isoRegex)) {
-		if (!startDateString.trim().equals("")
-			&& !startDateString.matches(isoRegex)) {
-		    messages +=
-			    getView().getUiMessage("Global.field.date.unISO",
-				    getUiMessage("Assignement.date_start"))
-				    + "\n";
-		    ok = false;
-		    errordate = true;
-		}
+	    try {
+		dateTimeFormat.parseStrict(startDateString);
+	    } catch (IllegalArgumentException e) {
+		messages +=
+			getView().getUiMessages().getMessage(
+				"Global.field.date.format",
+				getUiMessage("Assignement.date_start"),
+				dateTimeFormat.getPattern())
+				+ "\n";
+		ok = false;
+		errordate = true;
 	    }
+
 	}
 	if (!errordate) {
 	    if (dateEndDateBox.getValue().before(dateStartDateBox.getValue())) {
@@ -400,10 +414,12 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 	    // We keep track that we are now in view-mode
 
 	    // We get the text to display from the model
-	    if (getView().getDateStart() != null)
+	    if (getView().getDateStart() != null) {
 		setText(getView().getTextFromModelLink());
-	    else
+		setViewerDates(getView().getDateStart(), getView().getDateEnd());
+	    } else {
 		setText(getUiMessage("Assignement.undefined"));
+	    }
 
 	    // If we are not in read-only mode, we display some meta-info and
 	    // add
@@ -466,6 +482,15 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 
     public Date getDateEnd() {
 	return dateEndDateBox.getValue();
+    }
+
+    public void setViewerDates(Date dateStart, Date dateEnd) {
+	if (!isInEditionMode()) {
+	    dateViewer.setHTML(getUiMessage("Assignement.date_start") + ": "
+		    + dateTimeFormat.format(dateStart) + " "
+		    + getUiMessage("Assignement.date_end") + ": "
+		    + dateTimeFormat.format(dateEnd));
+	}
     }
 
 }

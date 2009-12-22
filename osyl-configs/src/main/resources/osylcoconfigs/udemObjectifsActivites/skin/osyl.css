@@ -1276,6 +1276,13 @@
 	font-style: italic;
 }
 
+.Osyl-AssignementView-DateLabel{
+	font-size:1em;
+	padding:3px 0;
+	width:auto;
+	font-style: italic;
+}
+
 .Osyl-Mandatory_field {
 	color:red;	
 }

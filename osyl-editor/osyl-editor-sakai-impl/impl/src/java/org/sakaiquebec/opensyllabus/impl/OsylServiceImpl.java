@@ -3,7 +3,6 @@ package org.sakaiquebec.opensyllabus.impl;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,7 +37,6 @@ import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.time.api.Time;
 import org.sakaiproject.time.cover.TimeService;
 import org.sakaiquebec.opensyllabus.api.OsylService;
-import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
@@ -182,7 +180,7 @@ public class OsylServiceImpl implements OsylService {
 //	int closeHour=cal.get(Calendar.HOUR_OF_DAY);
 //	int closeMinute=cal.get(Calendar.MINUTE);
 	int closeHour=0;
-	int closeMinute=-1;
+	int closeMinute=-5;
 	
 	if(dueDate!=null){
 	    cal.setTime(dueDate);
@@ -195,7 +193,7 @@ public class OsylServiceImpl implements OsylService {
 //	int dueHour=cal.get(Calendar.HOUR_OF_DAY);
 //	int dueMinute=cal.get(Calendar.MINUTE);
 	int dueHour=0;
-	int dueMinute=-1;
+	int dueMinute=-5;
 	
 	try {
 	    siteId = osylSiteService.getCurrentSiteId();

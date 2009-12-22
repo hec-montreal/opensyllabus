@@ -23,6 +23,8 @@ package org.sakaiquebec.opensyllabus.shared.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
+
 /**
  * @author <a href="mailto:jean-marc.bleau@umontreal.ca">Jean-Marc Bleau</a>
  * @version $Id: $
@@ -38,10 +40,13 @@ public class OsylSettings {
     private static final String TITLELABEL_EDITABLE = ".titlelabel.editable";
     private static final String UNITVIEW = "unitview.";
     private static final String STRUCTVIEW = "structview.";
-    private static final String TREEVIEW_ASSESSMENT_NUMBERING = "treeview.assessmentunit.numbering"; 
-	private static final String TREEVIEW_SESSION_NUMBERING = "treeview.pedagogicalunit.numbering"; 
+    private static final String TREEVIEW_ASSESSMENT_NUMBERING =
+	    "treeview.assessmentunit.numbering";
+    private static final String TREEVIEW_SESSION_NUMBERING =
+	    "treeview.pedagogicalunit.numbering";
+    private static final String FORMAT_DATE = "format.date";
+    private static final String FORMAT_DATE_TIME = "format.date_time";
     
-
     private Map<String, String> settings;
 
     /**
@@ -61,7 +66,7 @@ public class OsylSettings {
      * @param key
      * @return the setting String
      */
-    public String getSettingsPropertie(String key) {
+    public String getSettingsProperty(String key) {
 	String message = (String) settings.get(key);
 	if (message == null)
 	    return "Missing key: " + key;
@@ -107,7 +112,7 @@ public class OsylSettings {
     private boolean checkBooleanOption(String option, boolean defaultValue) {
 	boolean res = defaultValue;
 	if (settings.containsKey(option)) {
-	    String key = getSettingsPropertie(option);
+	    String key = getSettingsProperty(option);
 	    res = Boolean.parseBoolean(key);
 	}
 	return res;
@@ -146,20 +151,35 @@ public class OsylSettings {
     /**
      * @param key
      * @return true if the maps contains the TREEVIEW_ASSESSMENT_NUMBERING key
-     * and it's value is set to true
+     *         and it's value is set to true
      */
-    public boolean isTreeViewAssessmentNumbering(){
-		return checkBooleanOption(TREEVIEW_ASSESSMENT_NUMBERING, true);
+    public boolean isTreeViewAssessmentNumbering() {
+	return checkBooleanOption(TREEVIEW_ASSESSMENT_NUMBERING, true);
     }
 
     /**
      * @param key
-     * @return true if the maps contains the TREEVIEW_SESSION_NUMBERING key
-     * and it's value is set to true
+     * @return true if the maps contains the TREEVIEW_SESSION_NUMBERING key and
+     *         it's value is set to true
      */
-    public boolean isTreeViewSessionNumbering(){
-		return checkBooleanOption(TREEVIEW_SESSION_NUMBERING, true);
+    public boolean isTreeViewSessionNumbering() {
+	return checkBooleanOption(TREEVIEW_SESSION_NUMBERING, true);
     }
-
+    
+    public DateTimeFormat getDateFormat(){
+	String f = "dd/MM/yyyy";//default format
+	if (settings.containsKey(FORMAT_DATE)) {
+	    f = getSettingsProperty(FORMAT_DATE);
+	}
+	return DateTimeFormat.getFormat(f);
+    }
+    
+    public DateTimeFormat getDateTimeFormat(){
+	String f = "dd/MM/yyyy HH:mm:ss";//default format
+	if (settings.containsKey(FORMAT_DATE_TIME)) {
+	    f = getSettingsProperty(FORMAT_DATE_TIME);
+	}
+	return DateTimeFormat.getFormat(f);
+    }
 
 }

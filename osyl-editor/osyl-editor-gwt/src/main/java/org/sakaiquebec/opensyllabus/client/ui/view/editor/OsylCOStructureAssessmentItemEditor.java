@@ -53,11 +53,6 @@ import com.google.gwt.user.datepicker.client.DateBox;
 public class OsylCOStructureAssessmentItemEditor extends
 	OsylCOStructureItemEditor {
 
-    private static final DateTimeFormat dateTimeFormat =
-	    DateTimeFormat.getFormat("yyyy-MM-dd");
-    private static final DateBox.Format dateFormat =
-	    new DateBox.DefaultFormat(dateTimeFormat);
-
     private TextBox weightTextBox;
     private ListBox localisationListBox;
     private ListBox modeListBox;
@@ -67,6 +62,8 @@ public class OsylCOStructureAssessmentItemEditor extends
     private DateBox dateDateBox;
     private ListBox subTypeListBox;
     private ListBox typeListBox;
+
+    private DateTimeFormat dateTimeFormat;
 
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
@@ -83,6 +80,8 @@ public class OsylCOStructureAssessmentItemEditor extends
     public OsylCOStructureAssessmentItemEditor(OsylAbstractView parent,
 	    boolean isDeletable) {
 	super(parent, isDeletable);
+	dateTimeFormat =
+		getView().getController().getSettings().getDateFormat();
     }
 
     /**
@@ -94,9 +93,6 @@ public class OsylCOStructureAssessmentItemEditor extends
 	boolean ok = true;
 	String messages = "";
 	boolean errordate = false;
-	// ISO format yyyy-mm-dd
-	String isoRegex =
-		"^(\\d{4})\\D?(0[1-9]|1[0-2])\\D?([12]\\d|0[1-9]|3[01])$";
 
 	// required fields validations
 	if (getText().trim().equals("")) {
@@ -126,15 +122,19 @@ public class OsylCOStructureAssessmentItemEditor extends
 	}
 
 	String endDateString = dateDateBox.getTextBox().getText();
-	if (!endDateString.trim().equals("")
-		&& !endDateString.matches(isoRegex)) {
+	try {
+	    dateTimeFormat.parseStrict(endDateString);
+	} catch (IllegalArgumentException e) {
 	    messages +=
-		    getView().getUiMessage("Global.field.date.unISO",
-			    getUiMessage("Assessment.date"))
+		    getView().getUiMessages().getMessage(
+			    "Global.field.date.format",
+			    getUiMessage("Assessment.date"),
+			    dateTimeFormat.getPattern())
 			    + "\n";
 	    ok = false;
 	    errordate = true;
 	}
+
 	// }
 	if (typeListBox.getSelectedIndex() == 0) {
 	    messages +=
@@ -198,7 +198,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 			resource.getProperty(COPropertiesType.DATE_START);
 		String date_end =
 			resource.getProperty(COPropertiesType.DATE_END);
-		if (date_start != null && date_end != null ) {
+		if (date_start != null && date_end != null) {
 		    Date assignementStartDate =
 			    OsylDateUtils.getDateFromXMLDate(date_start);
 		    Date assignementEndDate =
@@ -349,8 +349,11 @@ public class OsylCOStructureAssessmentItemEditor extends
 	VerticalPanel endDatePanel = new VerticalPanel();
 	endDatePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
 	HTML l7 = new HTML(getUiMessage("Assessment.date"));
+	DateBox.DefaultFormat dateBoxFormat =
+		new DateBox.DefaultFormat(dateTimeFormat);
+
 	dateDateBox = new DateBox();
-	dateDateBox.setFormat(dateFormat);
+	dateDateBox.setFormat(dateBoxFormat);
 	dateDateBox.setTitle(getUiMessage("Assessment.date.tooltip"));
 	dateDateBox.setValue(getView().getDateEnd());
 	endDatePanel.add(l7);
@@ -549,7 +552,8 @@ public class OsylCOStructureAssessmentItemEditor extends
 	submissionMode = submissionMode != null ? submissionMode : "";
 
 	String submissionModeLabel =
-		!submissionMode.equals("") ? getView().getCoMessage("Assessment.Subtype")
+		!submissionMode.equals("") ? getView().getCoMessage(
+			"Assessment.Subtype")
 			+ " : " + submissionMode : "";
 
 	Label label1 = new Label(workMode + location);
