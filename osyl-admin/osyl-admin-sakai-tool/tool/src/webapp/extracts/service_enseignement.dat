@@ -1,21 +1,3 @@
-ACAD_ORG;DESCRFORMAL;DEPTID
-BAA;Programme de BAA;112
-BUR.REGIST;Bureau du registraire;120
-CERTIFICAT;Programmes de certificat;115
-DIPLOMES;Direction des diplômes;118
-DIR.PROG.; ;110
-DOCTORAT;Programme de doctorat;116
+ACAD_ORG;DESCRFORMAL;DEPTID 
 FINANCE;Finance;103
 GOL;Gestion des opérations et de la logistique;104
-GRH;Gestion - ressources humaines;102
-IEA;Institut d'économie appliquée;107
-INTERNAT;Service de l'enseignement Affaires Internationales;186
-MARKETING;Marketing;109
-MBA;Programme de MBA;113
-MNGT;Management;105
-MQG;Méthodes quantitatives;101
-MSC;Programme de M.Sc.;117
-P.ETUD.SUP;Programmes d'études supérieures;152
-QUAL.COMM.;Dir. Qualité communication;119
-SC.COMPT.;Sciences comptables;106
-TI;Technologies de l'information;108
