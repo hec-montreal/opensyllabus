@@ -21,11 +21,11 @@ public class GenericProfCoursMapFactory {
 	 * il est reutilise, et potentiellement mis a jour (par exemple ajout /
 	 * suppression de cours).<br>
 	 * <br>
-	 * 
+	 *
 	 * Ceci permet a un prof de continuer a acceder a ses forums meme lorsque la
 	 * session est finie.<br>
 	 * <br>
-	 * 
+	 *
 	 * On utilise le meme processus que pour les etudiants, meme s'il peut
 	 * sembler moins pertinent. Dans le cas ou un prof cesse de donner un cours
 	 * (par exemple: changement de personnel au debut de la session, ou juste
@@ -38,7 +38,7 @@ public class GenericProfCoursMapFactory {
 	 * du prof correspondant a la derniere session connue. Pour cette
 	 * verification on fait appel a DetailSessionsMap.getLatestSession(). <br>
 	 * <br>
-	 * 
+	 *
 	 * A noter que la derniere session connue dans le systeme est soit la
 	 * session en cours soit la session qui s'apprete a commencer. Ceci est du
 	 * au mode de generation des extracts qu'on a mis en place: 1. on exporte
@@ -46,14 +46,14 @@ public class GenericProfCoursMapFactory {
 	 * precedante sauf quand on est 2 semaines avant le debut d'une session,
 	 * dans ce cas on exporte les donnees de cette session afin de permettre aux
 	 * profs de creer leur forums avec un peu d'avance.
-	 * 
+	 *
 	 * Donc quand on est a 2 semaines ou moins du debut d'une session, on se
 	 * retrouve a chaque invocation a vider et re-remplir les cours non pas de
 	 * la session courante mais de la session a venir. C'est exactement ce qu'on
 	 * veut puisque dans ce cas, la session en cours arrivant a sa fin, il n'y a
 	 * plus d'inscription ou desinscription a faire pour elle, alors que c'est
 	 * le cas pour la session a venir.
-	 * 
+	 *
 	 */
 	public static ProfCoursMap buildMap(String dataDir, String baseName,
 			DetailCoursMap detailCoursMap, DetailSessionsMap detailSessionsMap)
@@ -102,8 +102,8 @@ public class GenericProfCoursMapFactory {
 			String sessionCode = token[i++];
 			String section = token[i++];
 			String unitMinimum = token[i++];
-			String descLong = token[i++];
-			String nDescLong = token[i++];
+			String descLong = "";
+			String nDescLong = "";
 			String acadOrg = token[i++];
 			String role = token[i++];
 			String strmId = strm + sessionCode;
@@ -118,7 +118,7 @@ public class GenericProfCoursMapFactory {
 			}
 			DetailCoursMapEntry cours = detailCoursMap.get(catalogNbr, strmId,
 					section);
-			
+
 			//TODO: removed for the purpose of the tests, put back when done
 //			if (cours == null) {
 //				// throw new IllegalStateException("cours == null pour " +
@@ -157,7 +157,7 @@ public class GenericProfCoursMapFactory {
 	 * Enleve tous les cours correspondant a la session specifiee dans chaque
 	 * prof. L'operation complementaire, c'est a dire enlever les profs des
 	 * cours correspondants est aussi effectuee afin de maintenir l'integrite.
-	 * 
+	 *
 	 */
 	private static void removeAllCours(ProfCoursMap map,
 			DetailCoursMap detailCoursMap, DetailSessionsMapEntry latestSession) {
