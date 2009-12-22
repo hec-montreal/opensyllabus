@@ -50,7 +50,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     // Current test site
     private String siteName;
     // Base name for test sites
-    public static final String TEST_SITE_BASE_NAME = "Se-";
+    public static final String TEST_SITE_BASE_NAME = "Le-";
 
     // The screenshot capture is always done on the windows machine (running
     // the test) and not on the grid. This explains the following!
@@ -130,7 +130,8 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().type("eid", "admin");
 	session().type("pw", "osyl123");
 	session().click("submit");
-	waitForPageToLoad();
+	//waitForPageToLoad();
+	session().waitForPageToLoad("300000");
 	assertFalse("Login failed", session().isElementPresent(
 		"//div[@class=\"alertMessage\"]"));
     }
@@ -161,7 +162,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().click("//button[@type='button']");
 	
 	session().type("//input[@type='text']", getCurrentTestSiteName());
-	session().select("//tr[4]/td/table/tbody/tr/td[2]/select", "index=0");
+	session().select("//tr[4]/td/table/tbody/tr/td[2]/select", "index=6");
 	session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=2");
 	if(inFireFox()){
 	session().mouseOver("//html/body/table/tbody/tr/td/table/tbody/tr[5]" +
