@@ -323,7 +323,7 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 				infos += getPropertyValue(CitationSchema.PUBLISHER).equals("") ? ""
 						: " ,"+getPropertyValue(CitationSchema.PUBLISHER);
 				infos += getPropertyValue(CitationSchema.PAGES).equals("") ? ""
-						: " ,pp. "+getPropertyValue(CitationSchema.PAGES);
+						: " ,"+getPropertyValue(CitationSchema.PAGES);
 				infos += getPropertyValue(CitationSchema.EDITOR).equals("") ? ""
 						: " ,"+getPropertyValue(CitationSchema.EDITOR);
 				infos += getPropertyValue(CitationSchema.YEAR).equals("") ? ""

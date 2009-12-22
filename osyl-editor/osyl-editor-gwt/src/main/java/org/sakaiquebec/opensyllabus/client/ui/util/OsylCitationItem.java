@@ -296,7 +296,7 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 			    : ", " + (getPropertyValue(CitationSchema.PUBLISHER));
 	    infos +=
 		    getPropertyValue(CitationSchema.PAGES).equals("") ? ""
-			    : ", pp. " + (getPropertyValue(CitationSchema.PAGES));
+			    : ", " + (getPropertyValue(CitationSchema.PAGES));
 	    infos +=
 		    getPropertyValue(CitationSchema.EDITOR).equals("") ? ""
 			    : ", " + (getPropertyValue(CitationSchema.EDITOR));
