@@ -86,7 +86,7 @@ public class GenericEtudiantCoursMapFactory {
 
 	BufferedReader breader = new BufferedReader(
 			new InputStreamReader(
-					new FileInputStream(dataDir + "/" + baseName + ".dat"),"utf8"));
+					new FileInputStream(dataDir + "/" + baseName + ".dat"),"ISO-8859-1"));
 	String buffer;
 	String[] token;
 	int i;

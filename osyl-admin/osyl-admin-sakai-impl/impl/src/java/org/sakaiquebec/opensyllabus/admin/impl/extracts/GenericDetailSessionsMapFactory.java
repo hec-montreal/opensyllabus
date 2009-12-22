@@ -40,7 +40,7 @@ public class GenericDetailSessionsMapFactory {
 
 	BufferedReader breader  = new BufferedReader(
 			new InputStreamReader(
-					new FileInputStream(dataDir + File.separator + baseName + ".dat"),"utf8"));
+					new FileInputStream(dataDir + File.separator + baseName + ".dat"),"ISO-8859-1"));
 	String buffer;
 
 	//We remove the first line containing the title

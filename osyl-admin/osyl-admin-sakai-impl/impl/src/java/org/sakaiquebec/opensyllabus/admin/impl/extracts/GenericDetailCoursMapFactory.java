@@ -39,7 +39,7 @@ public class GenericDetailCoursMapFactory {
 	}
 
 	InputStreamReader stream = new InputStreamReader(new FileInputStream(
-			dataDir + "/" + baseName + ".dat"), "utf8");
+			dataDir + "/" + baseName + ".dat"), "ISO-8859-1");
 	BufferedReader breader =
 		new BufferedReader(stream);
 	String buffer, key, courseId, strm, sessionCode, catalogNbr, section;	
@@ -119,7 +119,7 @@ public class GenericDetailCoursMapFactory {
 
 	BufferedReader breader =
 		new BufferedReader(new InputStreamReader(new FileInputStream(
-			dataDir + "/" + baseName + ".dat"), "UTF8"));
+			dataDir + "/" + baseName + ".dat"), "ISO-8859-1"));
 	String buffer, key, numeroHEL, session, periode;
 	DetailCoursMapEntry entry;
 

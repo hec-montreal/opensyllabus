@@ -45,7 +45,7 @@ public class GenericMatriculeNomMapFactory {
 */
 	    BufferedReader breader = new BufferedReader(
 				new InputStreamReader(
-						new FileInputStream(dataDir + "/" + baseName + ".dat"),"utf8"));
+						new FileInputStream(dataDir + "/" + baseName + ".dat"),"ISO-8859-1"));
 	    
 	//BufferedReader breader = MapFactory.getExtractReader(dataDir, baseName);
 	String buffer, matricule;

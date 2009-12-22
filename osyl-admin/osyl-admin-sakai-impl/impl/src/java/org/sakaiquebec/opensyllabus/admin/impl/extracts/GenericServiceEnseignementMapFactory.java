@@ -35,7 +35,7 @@ public class GenericServiceEnseignementMapFactory {
 		}
 
 		InputStreamReader stream = new InputStreamReader(new FileInputStream(
-				dataDir + "/" + baseName + ".dat"), "utf8");
+				dataDir + "/" + baseName + ".dat"), "ISO-8859-1");
 		BufferedReader breader = new BufferedReader(stream);
 		String buffer, acadOrg, descFormal, deptId;
 
