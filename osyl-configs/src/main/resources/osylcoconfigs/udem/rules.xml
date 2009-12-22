@@ -39,7 +39,7 @@
 				    		<attribute name="type" restrictionpattern="Person" />
 			    		</element>
 			    		<element name="semanticTag">
-			        		<attribute name="type" restrictionpattern="undefined|responsibleforlesson|coordinator|lecturers|professor|assistantofeducation|others" />   		
+			        		<attribute name="type" restrictionpattern="undefined|responsibleforlesson|coordinator|speakers|professor|assistantofeducation|others" />   		
 			    		</element>
 					</element>
 				</element>
