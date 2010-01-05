@@ -95,7 +95,7 @@ public interface OsylSiteService {
 	 * @return the id of the site
 	 * @throws Exception
 	 */
-	public String createSite(String siteTitle, String configId, String lang) throws Exception;
+	public String createSite(String siteTitle, String configRef, String lang) throws Exception;
 
 	/**
 	 * Returns the actual site id of this context.

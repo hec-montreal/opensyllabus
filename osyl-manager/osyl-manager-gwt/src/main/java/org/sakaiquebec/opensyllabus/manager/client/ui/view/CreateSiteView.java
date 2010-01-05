@@ -75,9 +75,10 @@ public class CreateSiteView extends OsylManagerAbstractView {
 			for (Iterator<String> configMapKeysIterator =
 				result.keySet().iterator(); configMapKeysIterator
 				.hasNext();) {
-			    String configId = configMapKeysIterator.next();	
-			    String configTitle = getController().getMessages().getString("config_" + result.get(configId) ) ;
-			    configListBox.addItem(configTitle, configId);
+			    String configId = configMapKeysIterator.next();
+			    String configRef = result.get(configId);
+			    String configTitle = getController().getMessages().getString("config_" + configRef ) ;
+			    configListBox.addItem(configTitle, configRef);
 			}
 		    }
 		}
@@ -140,10 +141,10 @@ public class CreateSiteView extends OsylManagerAbstractView {
 				.matches(".*[\\S]$"));
 		if (nameValid) {
 		    if (configListBox.getSelectedIndex() != -1) {
-			String configId =
+			String configRef =
 				configListBox.getValue(configListBox
 					.getSelectedIndex());
-			getController().createSite(name, configId, lang);
+			getController().createSite(name, configRef, lang);
 		    } else {
 			Window.alert(getController().getMessages().noConfig());
 		    }

@@ -316,7 +316,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
     /**
      * {@inheritDoc}
      */
-    public String createSite(String siteTitle, String configId, String lang)
+    public String createSite(String siteTitle, String configRef, String lang)
 	    throws Exception {
 	Site site = null;
 	if (!siteService.siteExists(siteTitle)) {
@@ -352,7 +352,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	    COSerialized co = null;
 
 	    try {
-		coConfig = configDao.getConfig(configId);
+		coConfig = configDao.getConfigByRef(configRef);
 		co =
 			new COSerialized(idManager.createUuid(),
 				lang, "shared",
