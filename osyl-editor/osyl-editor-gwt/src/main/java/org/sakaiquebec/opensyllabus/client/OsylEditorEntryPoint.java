@@ -171,10 +171,13 @@ public class OsylEditorEntryPoint implements EntryPoint {
      */
     public void setToolHeight(int h) {
 	try {
-	    if (previousHeight >= h) {
+	    if (previousHeight >= h && previousHeight<1.1*h) {
 		// This prevents costly and unneeded resizes
+		//we do not resize if actual size is within 10% greater than required size
+		//else we resize 
 		return;
 	    }
+	    h = Math.max(h,MIN_SIZE);
 	    previousHeight = h;
 
 	    // We keep track of current y-position to scroll to it after the
