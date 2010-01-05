@@ -290,9 +290,6 @@ public class OsylCMJobImpl implements OsylCMJob {
 			if (!cmService.isCanonicalCourseDefined(canonicalCourseId)) {
 				cc.add(cmAdmin.createCanonicalCourse(canonicalCourseId, title,
 						description));
-				if (cmService.isCourseSetDefined(courseSetId))
-					cmAdmin.addCanonicalCourseToCourseSet(courseSetId,
-							canonicalCourseId);
 				cmAdmin.setEquivalentCanonicalCourses(cc);
 
 			} else {
@@ -303,6 +300,12 @@ public class OsylCMJobImpl implements OsylCMJob {
 				canCourse.setTitle(title);
 			}
 
+			if (cmService.isCourseSetDefined(courseSetId)){
+				cmAdmin.removeCanonicalCourseFromCourseSet(courseSetId,
+						canonicalCourseId);
+				cmAdmin.addCanonicalCourseToCourseSet(courseSetId,
+						canonicalCourseId);
+			}
 			// create course offering
 			session = cmService.getAcademicSession(coursEntry.getStrmId());
 			title = title + "   " + session.getDescription() + " - "
@@ -318,9 +321,6 @@ public class OsylCMJobImpl implements OsylCMJob {
 							canonicalCourseId, session.getStartDate(), session
 									.getEndDate());
 					courseOfferingSet.add(courseOff);
-					if (cmService.isCourseSetDefined(courseSetId))
-						cmAdmin.addCourseOfferingToCourseSet(courseSetId,
-								courseOfferingId);
 				} else {
 					// We update
 					courseOff = cmService.getCourseOffering(courseOfferingId);
@@ -336,6 +336,10 @@ public class OsylCMJobImpl implements OsylCMJob {
 							"CourseAdmin", courseOfferingId, "active");
 				}
 
+				if (cmService.isCourseSetDefined(courseSetId)){
+					cmAdmin.removeCourseOfferingFromCourseSet(courseSetId, courseOfferingId);
+					cmAdmin.addCourseOfferingToCourseSet(courseSetId,courseOfferingId);
+				}
 				// // We create the enrollmentSets
 				// // We create enrollmentSets that we will assign to the
 				// // course section
@@ -587,8 +591,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 	/** {@inheritDoc} */
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		log.info(" Strart synchronizing PeopleSoft data extracts to the course management");
 		loginToSakai();
+		log.info(" Strart synchronizing PeopleSoft data extracts to the course management");
 
 		String directory = ServerConfigurationService
 				.getString("coursemanagement.extract.files.path", getPathToExtracts());
@@ -641,9 +645,9 @@ public class OsylCMJobImpl implements OsylCMJob {
 			e.printStackTrace();
 		}
 
+		log.info(" End synchronizing PeopleSoft data extracts to the course management");
 		logoutFromSakai();
 		
-		log.info(" End synchronizing PeopleSoft data extracts to the course management");
 	}
 
 	/** {@inheritDoc} */
