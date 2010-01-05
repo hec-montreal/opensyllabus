@@ -85,16 +85,16 @@
 				</asmUnitStructure>
 			</asmUnit>
 		</asmStructure>		
-		<asmStructure access="public" xsi:type="ModalityOfValuationStruct">
+		<asmStructure access="public" xsi:type="AssessmentStruct">
 			<id type="UdeMsakai">335345334534</id>
 			<modified>2001-12-17T09:30:47Z</modified>
 			<visible>true</visible>
 			<description>String</description>
-			<asmUnit access="public" xsi:type="ModalityOfValuationUnit">
+			<asmUnit access="public" xsi:type="AssessmentUnit">
 				<label><![CDATA[Modalité d'évaluation 1]]></label>
-				<asmUnitStructure access="public" xsi:type="ModalityOfValuationUnitStruct">
+				<asmUnitStructure access="public" xsi:type="AssessmentUnitStruct">
 					<label><![CDATA[Modalité d'évaluation 1]]></label>
-					<asmUnitContent access="public" xsi:type="ModalityOfValuationUnitContent">
+					<asmUnitContent access="public" xsi:type="AssessmentUnitContent">
 					</asmUnitContent>
 				</asmUnitStructure>
 				<rating>30%</rating>
@@ -107,11 +107,11 @@
 				<submition_type />
 				<evaluation_type>Examen</evaluation_type>
 			</asmUnit>
-			<asmUnit access="public" xsi:type="ModalityOfValuationUnit">
+			<asmUnit access="public" xsi:type="AssessmentUnit">
 				<label><![CDATA[Modalité d'évaluation 2]]></label>
-				<asmUnitStructure access="public" xsi:type="ModalityOfValuationUnitStruct">
+				<asmUnitStructure access="public" xsi:type="AssessmentUnitStruct">
 					<label><![CDATA[Modalité d'évaluation 2]]></label>
-					<asmUnitContent access="public" xsi:type="ModalityOfValuationUnitContent">
+					<asmUnitContent access="public" xsi:type="AssessmentUnitContent">
 					</asmUnitContent>
 				</asmUnitStructure>
 				<rating>20%</rating>

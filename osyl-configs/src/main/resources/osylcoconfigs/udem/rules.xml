@@ -93,7 +93,7 @@
 						<element name="asmUnitContent" >
 							<attribute name="type" restrictionpattern="InformationUnitContent" />
 							<element name="asmResource">
-								<attribute name="type" restrictionpattern="Text|Document|URL"/>
+								<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource|Assignment"/>
 							</element>
 							<element name="semanticTag">
 					    		<attribute name="type" restrictionpattern="undefined|outline|overview|others" />
@@ -103,19 +103,19 @@
 				</element>
 			</element>	
 			<element name="asmStructure">
-				<attribute name="type" restrictionpattern="ModalityOfValuationStruct" allowMultiple="false"/>
+				<attribute name="type" restrictionpattern="AssessmentStruct" allowMultiple="false"/>
 				<element name="asmUnit">
-					<attribute name="type" restrictionpattern="ModalityOfValuationUnit" allowMultiple="true"/>
+					<attribute name="type" restrictionpattern="AssessmentUnit" />
 					<element name="asmUnitStructure">
-						<attribute name="type" restrictionpattern="ModalityOfValuationUnitStruct" allowMultiple="false"/>
+						<attribute name="type" restrictionpattern="AssessmentUnitStruct"  allowMultiple="false"/>
 						<element name="asmUnitContent">
-							<attribute name="type" restrictionpattern="ModalityOfValuationUnitContent" />
+							<attribute name="type" restrictionpattern="AssessmentUnitContent" />
 							<element name="asmResource">
-								<attribute name="type" restrictionpattern="Text|Document|URL"/>
+								<attribute name="type" restrictionpattern="Text|Document|URL|Assignment"/>
 							</element>
 							<element name="semanticTag">
-					    		<attribute name="type" restrictionpattern="undefined|type|description|dateatthebeginningend|dateofextension|balance|levelofsanction|modeofrealization|modeofretroaction|criteriaofvaluation|production|modeofdelivery|linktowardsinstrument|others" />
-								</element>
+					    		<attribute name="type" restrictionpattern="undefined|type|description|dateatthebeginningend|dateofextension|balance|levelofsanction|modeofrealization|modeofretroaction|criteriaofvaluation|production|modeofdelivery|linktowardsinstrument|others" />						
+							</element>
 						</element>
 					</element>
 				</element>
