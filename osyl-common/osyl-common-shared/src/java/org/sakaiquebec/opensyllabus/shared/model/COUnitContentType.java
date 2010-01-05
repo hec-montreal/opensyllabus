@@ -57,8 +57,21 @@ public class COUnitContentType {
     public static final String BIBLIOGRAPHY_UNITCONTENT = "BibliographyUnitContent";
     public static final String THEMATIC_BIBLIOGRAPHY_UNITCONTENT = "ThematicBibliographyUnitContent";
     public static final String LEARNING_SUPPORT_SERVICES_UNITCONTENT = "LearningSupportServicesUnitContent";
-    public final static String NEWS_UNITCONTENT="NewsUnitContent";
-    
+    public final static String NEWS_UNITCONTENT="NewsUnitContent"; 
+    public static final String INFORMATION_OF_LESSON_UNITCONTENT = "InformationOfLessonUnitContent";
+    public static final String TEACHER_UNITCONTENT = "TeacherUnitContent";
+    public static final String COURSE_INTRODUCTION_UNITCONTENT = "CourseIntroductionUnitContent";
+    public static final String PURPOSEFUL_STUDIES_UNITCONTENT = "PurposefulStudiesUnitContent";
+    public static final String INFORMATION_UNITCONTENT = "InformationUnitContent";
+    public static final String MODALITY_OF_VALUATION_UNITCONTENT = "ModalityOfValuationUnitContent";
+    public static final String NEW_PLAGIARISM_UNITCONTENT = "NewPlagiarismUnitContent";
+    public static final String PEDAGOGIC_APPROACHES_UNITCONTENT = "PedagogicApproachesUnitContent";
+    public static final String PEDAGOGIC_RESOURCES_UNITCONTENT = "PedagogicResourcesUnitContent";  
+    public static final String PERIODE_UNITCONTENT = "PeriodeUnitContent";  
+    public static final String NEW_BIBLIOGRAPHY_UNITCONTENT = "NewBibliographyUnitContent";
+    public static final String DISCIPLINARY_LIBRARY_UNITCONTENT = "DisciplinaryLibraryUnitContent";
+    public static final String SERVICES_OF_SUPPORT_TO_STUDY_UNITCONTENT = "ServicesOfSupportToStudyUnitContent";
+
     // public static final String EVALUATION_INSTRUMENT =
     // "EvaluationInstrument";
     // public static final String LAB_SESSION = "labsession";
@@ -119,7 +132,20 @@ public class COUnitContentType {
 	LECTURES_ACTIVITIES_UNITCONTENT,
 	THEMATIC_BIBLIOGRAPHY_UNITCONTENT,
 	LEARNING_SUPPORT_SERVICES_UNITCONTENT,
-	NEWS_UNITCONTENT
+	NEWS_UNITCONTENT,
+	INFORMATION_OF_LESSON_UNITCONTENT,
+	TEACHER_UNITCONTENT,
+	COURSE_INTRODUCTION_UNITCONTENT,
+	PURPOSEFUL_STUDIES_UNITCONTENT,
+	INFORMATION_UNITCONTENT,
+	MODALITY_OF_VALUATION_UNITCONTENT,
+	NEW_PLAGIARISM_UNITCONTENT,
+	PEDAGOGIC_APPROACHES_UNITCONTENT,
+	PEDAGOGIC_RESOURCES_UNITCONTENT,
+	PERIODE_UNITCONTENT ,  
+	NEW_BIBLIOGRAPHY_UNITCONTENT,
+	DISCIPLINARY_LIBRARY_UNITCONTENT,
+	SERVICES_OF_SUPPORT_TO_STUDY_UNITCONTENT
 	
     };
 

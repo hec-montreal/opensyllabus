@@ -51,7 +51,20 @@ public class COUnitStructureType {
     public static final String THEMATIC_BIBLIOGRAPHY_UNITSTRUCTURE = "ThematicBibliographyUnitStruct";
     public static final String LEARNING_SUPPORT_SERVICES_UNITSTRUCTURE = "LearningSupportServicesUnitStruct";
     public final static String NEWS_UNITSTRUCTURE = "NewsUnitStruct";
-    
+    public static final String INFORMATION_OF_LESSON_UNITSTRUCTURE = "InformationOfLessonUnitStruct";
+    public static final String TEACHER_UNITSTRUCTURE = "TeacherUnitStruct";
+    public static final String COURSE_INTRODUCTION_UNITSTRUCTURE = "CourseIntroductionUnitStruct";
+    public static final String PURPOSEFUL_STUDIES_UNITSTRUCTURE = "PurposefulStudiesUnitStruct";
+    public static final String INFORMATION_UNITSTRUCTURE = "InformationUnitStruct";
+    public static final String MODALITY_OF_VALUATION_UNITSTRUCTURE = "ModalityOfValuationUnitStruct";
+    public static final String NEW_PLAGIARISM_UNITSTRUCTURE = "NewPlagiarismUnitStruct";
+    public static final String PEDAGOGIC_APPROACHES_UNITSTRUCTURE = "PedagogicApproachesUnitStruct";
+    public static final String PEDAGOGIC_RESOURCES_UNITSTRUCTURE = "PedagogicResourcesUnitStruct";  
+    public static final String PERIODE_UNITSTRUCTURE = "PeriodeUnitStruct";  
+    public static final String NEW_BIBLIOGRAPHY_UNITSTRUCTURE = "NewBibliographyUnitStruct";
+    public static final String DISCIPLINARY_LIBRARY_UNITSTRUCTURE = "DisciplinaryLibraryUnitStruct";
+    public static final String SERVICES_OF_SUPPORT_TO_STUDY_UNITSTRUCTURE = "ServicesOfSupportToStudyUnitStruct";
+
     /**
      * The list of types.
      */
@@ -76,8 +89,21 @@ public class COUnitStructureType {
     BIBLIOGRAPHY_UNITSTRUCTURE,
     THEMATIC_BIBLIOGRAPHY_UNITSTRUCTURE,
     LEARNING_SUPPORT_SERVICES_UNITSTRUCTURE,
-    NEWS_UNITSTRUCTURE
-    
+    NEWS_UNITSTRUCTURE,
+	INFORMATION_OF_LESSON_UNITSTRUCTURE,
+	TEACHER_UNITSTRUCTURE,
+	COURSE_INTRODUCTION_UNITSTRUCTURE,
+	PURPOSEFUL_STUDIES_UNITSTRUCTURE,
+	INFORMATION_UNITSTRUCTURE,
+	MODALITY_OF_VALUATION_UNITSTRUCTURE,
+	NEW_PLAGIARISM_UNITSTRUCTURE,
+	PEDAGOGIC_APPROACHES_UNITSTRUCTURE,
+	PEDAGOGIC_RESOURCES_UNITSTRUCTURE, 
+	PERIODE_UNITSTRUCTURE,
+	NEW_BIBLIOGRAPHY_UNITSTRUCTURE,
+	DISCIPLINARY_LIBRARY_UNITSTRUCTURE,
+	SERVICES_OF_SUPPORT_TO_STUDY_UNITSTRUCTURE
+
     };
 
     /**

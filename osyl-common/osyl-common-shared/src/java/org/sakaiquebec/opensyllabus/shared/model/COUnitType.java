@@ -49,6 +49,19 @@ public class COUnitType {
     public final static String THEMATIC_BIBLIOGRAPHY_UNIT = "ThematicBibliographyUnit";
     public final static String LEARNING_SUPPORT_SERVICES_UNIT = "LearningSupportServicesUnit";
     public final static String NEWS_UNIT = "NewsUnit";
+    public static final String INFORMATION_OF_LESSON_UNIT = "InformationOfLessonUnit";
+    public static final String TEACHER_UNIT = "TeacherUnit";
+    public static final String COURSE_INTRODUCTION_UNIT = "CourseIntroductionUnit";
+    public static final String PURPOSEFUL_STUDIES_UNIT = "PurposefulStudiesUnit";
+    public static final String INFORMATION_UNIT = "InformationUnit";
+    public static final String MODALITY_OF_VALUATION_UNIT = "ModalityOfValuationUnit";
+    public static final String NEW_PLAGIARISM_UNIT = "NewPlagiarismUnit";
+    public static final String PEDAGOGIC_APPROACHES_UNIT = "PedagogicApproachesUnit";
+    public static final String PEDAGOGIC_RESOURCES_UNIT = "PedagogicResourcesUnit";  
+    public static final String PERIODE_UNIT = "PeriodeUnit";  
+    public static final String NEW_BIBLIOGRAPHY_UNIT= "NewBibliographyUnit";
+    public static final String DISCIPLINARY_LIBRARY_UNIT = "DisciplinaryLibraryUnit";
+    public static final String SERVICES_OF_SUPPORT_TO_STUDY_UNIT = "ServicesOfSupportToStudyUnit";
     
     //public final static String NEWS = "news";
     // public final static String RECITATION= "recitation";
@@ -80,7 +93,20 @@ public class COUnitType {
 	BIBLIOGRAPHY_UNIT,
 	THEMATIC_BIBLIOGRAPHY_UNIT,
 	LEARNING_SUPPORT_SERVICES_UNIT,
-	NEWS_UNIT
+	NEWS_UNIT,
+	INFORMATION_OF_LESSON_UNIT,
+	TEACHER_UNIT,
+	COURSE_INTRODUCTION_UNIT,
+	PURPOSEFUL_STUDIES_UNIT,
+	INFORMATION_UNIT,
+	MODALITY_OF_VALUATION_UNIT,
+	NEW_PLAGIARISM_UNIT,
+	PEDAGOGIC_APPROACHES_UNIT,
+	PEDAGOGIC_RESOURCES_UNIT,
+	PERIODE_UNIT,
+	NEW_BIBLIOGRAPHY_UNIT,
+	DISCIPLINARY_LIBRARY_UNIT,
+	SERVICES_OF_SUPPORT_TO_STUDY_UNIT,
 
     };
 
