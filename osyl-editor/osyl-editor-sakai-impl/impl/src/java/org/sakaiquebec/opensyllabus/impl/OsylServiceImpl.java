@@ -39,6 +39,7 @@ import org.sakaiproject.time.cover.TimeService;
 import org.sakaiquebec.opensyllabus.api.OsylService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
+import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 
 public class OsylServiceImpl implements OsylService {
@@ -126,16 +127,16 @@ public class OsylServiceImpl implements OsylService {
 
     }
 
-    // private CORelationDao CORelationDao;
-    //
-    // /**
-    // * Sets the {@link CORelationDao}.
-    // *
-    // * @param coRelationDAO
-    // */
-    // public void setCORelationDao(CORelationDao coRelationDao) {
-    // this.CORelationDao = coRelationDao;
-    // }
+    private CORelationDao coRelationDao;
+
+    /**
+     * Sets the {@link CORelationDao}.
+     * 
+     * @param coRelationDAO
+     */
+    public void setCORelationDao(CORelationDao coRelationDao) {
+	this.coRelationDao = coRelationDao;
+    }
 
     /**
      * The security service to be injected by Spring
@@ -156,7 +157,8 @@ public class OsylServiceImpl implements OsylService {
 
     /** {@inheritDoc} */
     public String createOrUpdateAssignment(String assignmentId, String title,
-	    String instructions, Date openDate, Date closeDate, Date dueDate, int percentage) {
+	    String instructions, Date openDate, Date closeDate, Date dueDate,
+	    int percentage) {
 	String siteId = "";
 	String toolId = "";
 	AssignmentEdit edit = null;
@@ -164,37 +166,37 @@ public class OsylServiceImpl implements OsylService {
 
 	Calendar cal = Calendar.getInstance();
 	cal.setTime(openDate);
-	int openYear=cal.get(Calendar.YEAR);
-	int openMonth=cal.get(Calendar.MONTH)+1;
-	int openDay=cal.get(Calendar.DAY_OF_MONTH);
-//	int openHour=cal.get(Calendar.HOUR_OF_DAY);
-//	int openMinute=cal.get(Calendar.MINUTE);
-	int openHour=0;
-	int openMinute=0;
-	
+	int openYear = cal.get(Calendar.YEAR);
+	int openMonth = cal.get(Calendar.MONTH) + 1;
+	int openDay = cal.get(Calendar.DAY_OF_MONTH);
+	// int openHour=cal.get(Calendar.HOUR_OF_DAY);
+	// int openMinute=cal.get(Calendar.MINUTE);
+	int openHour = 0;
+	int openMinute = 0;
+
 	cal.setTime(closeDate);
 	cal.add(Calendar.DATE, 1);
-	int closeYear=cal.get(Calendar.YEAR);
-	int closeMonth=cal.get(Calendar.MONTH)+1;
-	int closeDay=cal.get(Calendar.DAY_OF_MONTH);
-//	int closeHour=cal.get(Calendar.HOUR_OF_DAY);
-//	int closeMinute=cal.get(Calendar.MINUTE);
-	int closeHour=0;
-	int closeMinute=-5;
-	
-	if(dueDate!=null){
+	int closeYear = cal.get(Calendar.YEAR);
+	int closeMonth = cal.get(Calendar.MONTH) + 1;
+	int closeDay = cal.get(Calendar.DAY_OF_MONTH);
+	// int closeHour=cal.get(Calendar.HOUR_OF_DAY);
+	// int closeMinute=cal.get(Calendar.MINUTE);
+	int closeHour = 0;
+	int closeMinute = -5;
+
+	if (dueDate != null) {
 	    cal.setTime(dueDate);
 	    cal.add(Calendar.DATE, 1);
 	    dueDate = cal.getTime();
 	}
-	int dueYear=cal.get(Calendar.YEAR);
-	int dueMonth=cal.get(Calendar.MONTH)+1;
-	int dueDay=cal.get(Calendar.DAY_OF_MONTH);
-//	int dueHour=cal.get(Calendar.HOUR_OF_DAY);
-//	int dueMinute=cal.get(Calendar.MINUTE);
-	int dueHour=0;
-	int dueMinute=-5;
-	
+	int dueYear = cal.get(Calendar.YEAR);
+	int dueMonth = cal.get(Calendar.MONTH) + 1;
+	int dueDay = cal.get(Calendar.DAY_OF_MONTH);
+	// int dueHour=cal.get(Calendar.HOUR_OF_DAY);
+	// int dueMinute=cal.get(Calendar.MINUTE);
+	int dueHour = 0;
+	int dueMinute = -5;
+
 	try {
 	    siteId = osylSiteService.getCurrentSiteId();
 
@@ -204,7 +206,7 @@ public class OsylServiceImpl implements OsylService {
 
 	try {
 	    // The client doesn't know the id. It must be a new item
-	    if (assignmentId==null || assignmentId.equals("")) {
+	    if (assignmentId == null || assignmentId.equals("")) {
 		edit = assignmentService.addAssignment(siteId);
 		contentEdit = assignmentService.addAssignmentContent(siteId);
 		// Ajouter le user dans le user dans le groupe de l'assignment
@@ -254,8 +256,8 @@ public class OsylServiceImpl implements OsylService {
 	    }
 	    if (dueYear != -1) {
 		Time dueTime =
-			TimeService.newTimeLocal(dueYear, dueMonth,
-				dueDay, dueHour, dueMinute, 0, 0);
+			TimeService.newTimeLocal(dueYear, dueMonth, dueDay,
+				dueHour, dueMinute, 0, 0);
 		edit.setDueTime(dueTime);
 	    }
 	    edit.setDraft(false);
@@ -722,30 +724,34 @@ public class OsylServiceImpl implements OsylService {
     }
 
     public boolean checkSitesRelation(String resourceURI) {
-	// try {
-	// String currentSiteId = osylSiteService.getCurrentSiteId();
-	/*
-	 * Site resourceSite; String parent = CORelationDao
-	 * .getParentOfCourseOutline(currentSiteId); if
-	 * (resourceURI.indexOf(parent, 0) != -1) {
-	 * System.err.println(contentHostingService
-	 * .allowGetResource(resourceURI) + " le parent est " + parent); //
-	 * temporarily allow the user to read and write from assignments //
-	 * (asn.revise permission) if
-	 * (osylSecurityService.isAllowedToEdit(parent)) {
-	 * SecurityService.pushAdvisor(new SecurityAdvisor() { public
-	 * SecurityAdvice isAllowed(String userId, String function, String
-	 * reference) { return SecurityAdvice.ALLOWED; } }); }
-	 */
-	// clear the permission
+	try {
+		String currentSiteId = osylSiteService.getCurrentSiteId();
+		String parent = coRelationDao
+				.getParentOfCourseOutline(currentSiteId);
+		if (resourceURI.indexOf(parent, 0) != -1) {
+			// temporarily allow the user to read and write from assignments
+			// (asn.revise permission)
 
-	// if (osylSecurityService.isAllowedToEdit(siteId)) {
-	// SecurityService.clearAdvisors(); }
+			if (osylSecurityService.isAllowedToEdit(parent)) {
+				SecurityService.pushAdvisor(new SecurityAdvisor() {
+					public SecurityAdvice isAllowed(String userId,
+							String function, String reference) {
+						return SecurityAdvice.ALLOWED;
+					}
+				});
 
-	/*
-	 * } } catch (Exception e) { e.printStackTrace(); }
-	 */
+			}
+
+			// clear the permission
+
+			// if (osylSecurityService.isAllowedToEdit(siteId)) {
+			// SecurityService.clearAdvisors(); }
+
+		}
+
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
 	return false;
     }
-
 }

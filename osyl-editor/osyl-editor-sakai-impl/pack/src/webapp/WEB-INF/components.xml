@@ -45,8 +45,8 @@
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
 		<property name="osylSiteService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
-		<!-- <property name="CORelationDao"
-			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" /> -->
+		<property name="CORelationDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
 		
 	</bean>
 	
