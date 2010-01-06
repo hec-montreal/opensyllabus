@@ -146,9 +146,6 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
 	getMainPanel().add(getEditor());
 	getEditor().setWidth("100%");
 	setStylePrimaryName("Osyl-UnitView-ResPanel");
-	if (getController().isReadOnly()) {
-	    addStyleName("Osyl-UnitView-ResPanel-ReadOnly");
-	}
 	getMainPanel().add(getButtonPanel());
 	getMainPanel().add(getUpAndDownPanel());
 
