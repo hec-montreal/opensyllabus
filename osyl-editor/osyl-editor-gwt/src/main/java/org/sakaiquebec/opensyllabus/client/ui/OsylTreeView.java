@@ -70,7 +70,7 @@ public class OsylTreeView extends OsylViewableComposite implements
 
     private static int maxTreeWidth = INIT_TREE_WIDTH;
 
-    public static final int DEFAULT_WIDTH = 130;
+    public static final int DEFAULT_WIDTH = 135;
 
     public OsylTreeView(COModelInterface model, OsylController osylController) {
 	super(model, osylController);
