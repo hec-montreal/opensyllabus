@@ -1,10 +1,7 @@
 ﻿/* ---- CSS definitions specific to OpenSyllabus ------------------- */
 
 /* Main panel of Osyl -----------------------------------------------------------------------------------*/
-.Osyl-MainPanel {
-	margin:0;
-	width:100%;
-}
+.Osyl-MainPanel {width:100%}
 
 /*MenuBar -----------------------------------------------------------------------------------------------*/
 .Osyl-MenuBar {
@@ -30,16 +27,16 @@
   zoom: 1;
 }
 .Osyl-MenuBar .topLeft {
-  background: url(images/ui/menubar_corner.png) no-repeat 0px 0px;
-  -background: url(images/ui/menubar_corner_ie6.png) no-repeat 0px 0px;
+  background: url(images/ui/menubar_corner.png) no-repeat 0 0;
+  -background: url(images/ui/menubar_corner_ie6.png) no-repeat 0 0;
 }
 .Osyl-MenuBar .topRight {
-  background: url(images/ui/menubar_corner.png) no-repeat -5px 0px;
-  -background: url(images/ui/menubar_corner_ie6.png) no-repeat -5px 0px;
+  background: url(images/ui/menubar_corner.png) no-repeat -5px 0;
+  -background: url(images/ui/menubar_corner_ie6.png) no-repeat -5px 0;
 }
 .Osyl-MenuBar .bottomLeft {
-  background: url(images/ui/menubar_corner.png) no-repeat 0px -5px;
-  -background: url(images/ui/menubar_corner_ie6.png) no-repeat 0px -5px;
+  background: url(images/ui/menubar_corner.png) no-repeat 0 -5px;
+  -background: url(images/ui/menubar_corner_ie6.png) no-repeat 0 -5px;
 }
 .Osyl-MenuBar .bottomRight {
   background: url(images/ui/menubar_corner.png) no-repeat -5px -5px;
@@ -53,8 +50,7 @@
   height: 5px;
   overflow: hidden;
 }
-.Osyl-MenuBar .middleCenterInner {
-}
+.Osyl-MenuBar .middleCenterInner {}
 
 .gwt-MenuBar-horizontal {
 	cursor:default;
@@ -211,7 +207,7 @@
 /*TreeView Tree */
 .Osyl-TreeView-Tree {
 	border:0;
-	margin:8px 3px 3px 0px;
+	margin:8px 3px 3px 0;
 	padding:1px;
 	font:normal 13px Arial, Verdana, sans-serif;
 	color:#058EC4;
@@ -250,13 +246,7 @@
 .Osyl-MainView-HorizontalSplitPanel .hsplitter img {display:none}
 /*Workspace View Right Zone --------------------------------------------------------------------------------*/
 
-.Osyl-WorkspaceView {
-	width:100%;
-}
-
-.Osyl-WorkspaceView-MainPanel {
-	width:100%;
-}
+.Osyl-WorkspaceView, .Osyl-WorkspaceView-MainPanel {width:100%}
 
 .Osyl-WorkspaceView .topCenter,
 .Osyl-WorkspaceView .bottomCenter {
@@ -281,16 +271,16 @@
   zoom: 1;
 }
 .Osyl-WorkspaceView .topLeft {
-  background: url(images/ui/workspace_corner.png) no-repeat 0px 0px;
-  -background: url(images/ui/workspace_corner_ie6.png) no-repeat 0px 0px;
+  background: url(images/ui/workspace_corner.png) no-repeat 0 0;
+  -background: url(images/ui/workspace_corner_ie6.png) no-repeat 0 0;
 }
 .Osyl-WorkspaceView .topRight {
-  background: url(images/ui/workspace_corner.png) no-repeat -8px 0px;
-  -background: url(images/ui/workspace_corner_ie6.png) no-repeat -8px 0px;
+  background: url(images/ui/workspace_corner.png) no-repeat -8px 0;
+  -background: url(images/ui/workspace_corner_ie6.png) no-repeat -8px 0;
 }
 .Osyl-WorkspaceView .bottomLeft {
-  background: url(images/ui/workspace_corner.png) no-repeat 0px -8px;
-  -background: url(images/ui/workspace_corner_ie6.png) no-repeat 0px -8px;
+  background: url(images/ui/workspace_corner.png) no-repeat 0 -8px;
+  -background: url(images/ui/workspace_corner_ie6.png) no-repeat 0 -8px;
 }
 .Osyl-WorkspaceView .bottomRight {
   background: url(images/ui/workspace_corner.png) no-repeat -8px -8px;
@@ -303,10 +293,6 @@
   width: 8px;
   height: 8px;
   overflow: hidden;
-}
-
-.Osyl-WorkspaceView .middleCenterInner > table {
-
 }
 
 /* End WorkspaceView Right Zone ---------------------------------------------------------------------------*/
@@ -355,7 +341,6 @@
 	text-align:center;
 	margin-bottom:10px;
 }
-
 
 /* Citation Form -----------------------------------------------------------------------------------------*/
 .Osyl-CitationForm-form {
@@ -408,7 +393,7 @@
 	border:1px solid #AAA;
 	margin:0 3px;	
 	padding:0;
-	width:340px;
+	width:320px;
 }
 
 .Osyl-CitationForm-doubleTextBox{
@@ -417,7 +402,7 @@
 	border:1px solid #AAA;
 	margin:0 3px;	
 	padding:0;
-	width:130px;
+	width:100px;
 }
 
 /*Publish View -------------------------------------------------------------------------------*/
@@ -439,16 +424,10 @@
 .Osyl-PublishView-genericButton {margin:10px}
 
 /*Unit View --------------------------------------------------------------------------------------*/
-.Osyl-UnitView-MainPanel {
-	width:100%;
-}
+.Osyl-UnitView-MainPanel {width:100%}
 
-.Osyl-TitleEditor {
-	
-}
-
-.Osyl-RubricTitle {
-}
+.Osyl-TitleEditor {}
+.Osyl-RubricTitle {}
 
 .Osyl-UnitView-Title {
 	padding:4px 0;
@@ -521,12 +500,9 @@
 	border:1px solid #878a8c;
 }
 
-.Osyl-UnitView-Title-Hover .Osyl-LabelEditor-View {
-}
+.Osyl-UnitView-Title-Hover .Osyl-LabelEditor-View {}
 
-.Osyl-UnitView-ResPanel .Osyl-LabelEditor-TextBox {
-	font-family:Arial, Verdana, Sans-serif;
-}
+.Osyl-UnitView-ResPanel .Osyl-LabelEditor-TextBox {font-family:Arial, Verdana, Sans-serif}
 
 .Osyl-UnitView-RubricName {
 	font-family:sans-serif, Arial, Verdana;
@@ -534,9 +510,7 @@
 	font-weight:bold;
 }
 
-.Osyl-UnitView-RubricImg {
-	margin:3px 4px 4px;
-}
+.Osyl-UnitView-RubricImg {margin:3px 4px 4px}
 
 /* Content Unit Resource Panel unfocused */
 .Osyl-UnitView-ResPanel, .Osyl-UnitView-ResPanel-Hover {
@@ -548,11 +522,6 @@
 	width:auto;
 	zoom:1;
 	overflow:hidden;
-}
-
-.Osyl-UnitView-ResPanel.Osyl-UnitView-ResPanel-ReadOnly {
-	border:1px solid #FFF;
-	padding:5px;
 }
 
 .Osyl-UnitView-ResPanel-Hover {
@@ -583,7 +552,6 @@
 	padding:3px 0;
 	width:auto;
 }
-
 .Osyl-UnitView-UnitLabel ul, .Osyl-UnitView-HtmlViewer ul {margin-left:30px}
 .Osyl-UnitView-UnitLabel ol, .Osyl-UnitView-HtmlViewer ol {margin-left:35px}
 
@@ -593,17 +561,17 @@
 	font:bold 12px Arial, Verdana, sans-serif;
 	padding-bottom:2px;
 }
+
 .Osyl-UnitView-LvlReq .Osyl-UnitView-TextLvlReq, .Osyl-UnitView-LvlReq.Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq{border-bottom:1px solid #999}
 .Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq {border:none}
-
 .Osyl-UnitView-IconLvlReq, .Osyl-UnitView-IconImportant {
 	width:24px;
 	text-align:center;
 	vertical-align:top;
 	padding:0 6px 0 0;
 }
-
 .Osyl-UnitView-IconImportant {padding-top:6px}
+.Osyl-UnitView-LvlReq .Osyl-UnitView-Content, .Osyl-UnitView-Important .Osyl-UnitView-Content {}
 
 .Osyl-ResProxView-MetaInfo,
 .Osyl-UnitView-MetaInfo,
@@ -636,9 +604,6 @@
 	width:100%;
 	border:1px solid #e3f0FF;
 	margin:0 0 5px;
-}
-.Osyl-ListItemView-Table.Osyl-ListItemView-Table-ReadOnly {
-	border:1px solid #FFF;
 }
 
 .Osyl-ListItemView-labelNo {
@@ -676,12 +641,8 @@
   	cursor:move;
 }
 
-.Osyl-ResourceConfigView-TabPanel {
-	margin-top:4px;
-}
-.Osyl-ResourceConfigView-TabPanel .gwt-TabPanelBottom  {
-	background-color:#FFF;
-}
+.Osyl-ResourceConfigView-TabPanel {margin-top:4px}
+.Osyl-ResourceConfigView-TabPanel .gwt-TabPanelBottom  {background-color:#FFF}
 
 .Osyl-ResourceConfigView-TabPanel .gwt-TabBar {
   font-size:10px;
@@ -774,9 +735,7 @@
 
 /* ---- CSS definitions for new classes specific to Osyl -------------- */
 
-.Osyl-UnitView-UnitPanel {
-	width:100%;
-}
+.Osyl-UnitView-UnitPanel {width:100%}
 
 .Osyl-UnitView-TextArea {
 	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
@@ -863,7 +822,7 @@
 	border:1px solid #AAA;
 	margin:2px 0;
 }
-.Osyl-ContactInfo-Panel{width:100%;border:0;margin:2px 3px;}
+.Osyl-ContactInfo-Panel{width:100%;border:0;margin:2px 3px}
 /* Fin Édition */
 .Osyl-ContactInfo-TextBox{
     width:130px;
@@ -913,9 +872,7 @@
 	border:1px solid #878a8c;
 	margin:1px 0 0 2px;
 }
-.Osyl-EditorPopup-RowEditor .Osyl-LabelEditor-TextBox {
-	width:99%;
-}
+.Osyl-EditorPopup-RowEditor .Osyl-LabelEditor-TextBox {width:99%}
 .Osyl-EditorPopup table {border-collapse:separate}
 
 .Osyl-EditorPopup .mosaic-Caption {margin:0}
@@ -1189,11 +1146,8 @@
 
 /* ------- */
 
-.Osyl-ContactInfo-Editor {
-}
-
-.Osyl-ContactInfo-Viewer {
-}
+.Osyl-ContactInfo-Editor {}
+.Osyl-ContactInfo-Viewer {}
 
 .Osyl-ContactInfo-FirstName, .Osyl-ContactInfo-LastName {
 	font-size:14px;
@@ -1223,7 +1177,6 @@
 
 .Osyl-ContactInfo-Office {
 	font-size:11px;
-	
 	padding:0 0 2px;
 	margin-left:5px;
 }	
@@ -1251,19 +1204,19 @@
 
 .Osyl-ContactInfo-Availability ul, .Osyl-ContactInfo-Availability ol{
 	margin-left:30px;
-	margin-top: 0px;
+	margin-top:0;
 }
 
 .Osyl-ContactInfo-Comments ul, .Osyl-ContactInfo-Comments ol{
 	margin-left:30px;
-	margin-top: 0px;
+	margin-top:0;
 }
 
 .Osyl-News-TimeStamp {
 	font-size:0.85em;
 	padding:3px 0;
 	width:auto;
-	font-style: italic;
+	font-style:italic;
 }
 
 .Osyl-AssignementView-DateLabel{
@@ -1273,6 +1226,4 @@
 	font-style: italic;
 }
 
-.Osyl-Mandatory_field {
-	color:red;	
-}
+.Osyl-Mandatory_field {color:red}
