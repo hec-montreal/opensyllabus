@@ -30,7 +30,6 @@ public class OsylMenuBar extends MenuBar {
 	Element menuBarDiv = this.getElement();
 	Element table = DOM.getChild(menuBarDiv, 0);
 	Element addedDiv = DOM.createDiv();
-	addedDiv.setClassName("Osyl-MenuBar-horizontal-TopRight");
 	menuBarDiv.insertBefore(addedDiv, table);
     }
 
