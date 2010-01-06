@@ -678,6 +678,8 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 		"Osyl-UnitView-IconImportant");
 
 	getViewerPanel().setWidget(1, 1, getViewer());
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(1, 1,
+		"Osyl-UnitView-Content");
 	mainPanel.add(getViewerPanel());
     } // initViewer
 

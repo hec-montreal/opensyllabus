@@ -164,6 +164,7 @@ public class OsylPreviewView extends OsylViewableComposite implements
 	// Create and set the main container panel
 	setMainPanel(new VerticalPanel());
 	getMainPanel().setStylePrimaryName("Osyl-MainPanel");
+	getMainPanel().addStyleDependentName("ReadOnly");
 	getMainPanel().setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
 
 	setOsylToolbarView(new OsylToolbarView(getModel(), getController()));
