@@ -18,6 +18,7 @@ import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylEditableMouseOverListener;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -30,7 +31,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Abstract class for edition and display of Course Outline Element.
- * 
+ *
  * @author <a href="mailto:Remi.Saias@hec.ca">Remi Saias</a>
  * @version $Id: $
  */
@@ -61,7 +62,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
     /**
      * Constructor specifying the model to be displayed and edited by this
      * OsylAbstractView. The current {@link OsylController} must be provided.
-     * 
+     *
      * @param model
      * @param osylController
      */
@@ -122,7 +123,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
     /**
      * Returns the model object being display or edited by this
      * OsylAbstractView.
-     * 
+     *
      * @return {@link COModelInterface}
      */
     public COModelInterface getModel() {
@@ -138,34 +139,45 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
      * anything. The best is to call it as the constructor's last statement.
      */
     protected void initView() {
-	// The view extends Composite therefore it is absolutely necessary to
+	/// The view extends Composite therefore it is absolutely necessary to
 	// call initWidget on our main widget
 	super.initWidget(getMainPanel());
 
 	// We add the editor and the button panel
-	getMainPanel().add(getEditor());
-	getEditor().setWidth("100%");
-	setStylePrimaryName("Osyl-UnitView-ResPanel");
-	getMainPanel().add(getButtonPanel());
-	getMainPanel().add(getUpAndDownPanel());
+	if (!("false".equals(getModel()
+		.getProperty(COPropertiesType.VISIBILITY)) && getController()
+		.isReadOnly())) {
+	    getMainPanel().add(getEditor());
+	    getEditor().setWidth("100%");
+	    setStylePrimaryName("Osyl-UnitView-ResPanel");
+	    if (getController().isReadOnly()) {
+		addStyleName("Osyl-UnitView-ResPanel-ReadOnly");
+	    } else {
+		getMainPanel().add(getButtonPanel());
+		getMainPanel().add(getUpAndDownPanel());
 
-	// We just want the ButtonPanel to be shown on MouseOver events.
-	getButtonPanel().setVisible(false);
-	getUpAndDownPanel().setVisible(false);
-	// If we don't position the button panel at 0,0 then firefox does not
-	// compute correctly the mainPanel height at first and this causes the
-	// buttonPanel to move after its apparition.
-	getMainPanel().setWidgetPosition(getButtonPanel(), 0, 0);
-	getMainPanel().setWidgetPosition(getUpAndDownPanel(), 0, 0);
-
-	// And we refresh the view for the first time
-	refreshView();
+		// We just want the ButtonPanel to be shown on MouseOver events.
+		getButtonPanel().setVisible(false);
+		getUpAndDownPanel().setVisible(false);
+		// If we don't position the button panel at 0,0 then firefox
+		// does
+		// not
+		// compute correctly the mainPanel height at first and this
+		// causes
+		// the
+		// buttonPanel to move after its apparition.
+		getMainPanel().setWidgetPosition(getButtonPanel(), 0, 0);
+		getMainPanel().setWidgetPosition(getUpAndDownPanel(), 0, 0);
+	    }
+	    // And we refresh the view for the first time
+	    refreshView();
+	}
     } // initView
 
     /**
      * Returns the main panel which is the top container for this
      * OsylAbstractView.
-     * 
+     *
      * @return {@link HorizontalPanel}
      */
     public AbsolutePanel getMainPanel() {
@@ -190,7 +202,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
 
     /**
      * Called when leaving edition and Save button was clicked.
-     * 
+     *
      * @param boolean if modification should be saved.
      */
     public void closeAndSaveEdit(boolean save) {
@@ -233,7 +245,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
     /**
      * Sets the {@link OsylAbstractEditor} providing edition and display
      * capability.
-     * 
+     *
      * @param editor
      */
     public void setEditor(OsylAbstractEditor editor) {
@@ -253,7 +265,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
      * Returns the HTML code for a link whose URI and text are specified. Can be
      * used to have an {@link HTML} component clickable. The target of this link
      * is _blank (ie: new window).
-     * 
+     *
      * @param uri
      * @param text
      * @return HTML link
@@ -265,7 +277,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
     /**
      * Returns the document name which is the part after the last slash if it is
      * a local resource, or the full URI if it looks as an external URI.
-     * 
+     *
      * @param uri
      * @return uri for presentation
      */
@@ -281,7 +293,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
     /**
      * Returns the document name which is the part after the last slash if it is
      * a local resource, or the full URI if it looks as an external URI.
-     * 
+     *
      * @param uri
      * @return uri for presentation
      */
@@ -334,7 +346,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
      * {@link OsylCOUnitStructureLabelView}. Return value for other views is
      * either undefined (may throw an exception) or implicit (may be the first
      * field of the view). Refer to the specific view documentation.
-     * 
+     *
      * @see OsylAbstractEditor#getText()
      */
     public abstract String getTextFromModel();
