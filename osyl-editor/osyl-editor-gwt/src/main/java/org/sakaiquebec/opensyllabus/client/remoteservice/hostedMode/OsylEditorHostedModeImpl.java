@@ -68,7 +68,7 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
     public void createOrUpdateAssignment(String assignmentId, String title,
 	    String instructions, Date openDate, Date closeDate, Date dueDate,
-	    int percentage, AsyncCallback<String> callback) {
+	    AsyncCallback<String> callback) {
 	callback.onSuccess("dummyCitationListId");
     }
 
@@ -94,8 +94,7 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	ress.getCopyrightTypeList().add(
 		"hosted mode : Choose a copyright status.");
 	ress.getCopyrightTypeList().add("hosted mode : I hold copyright.");
-	ress.getCopyrightTypeList().add(
-		"hosted mode : I obtained the rights.");
+	ress.getCopyrightTypeList().add("hosted mode : I obtained the rights.");
 	callback.onSuccess(ress);
 
     }
@@ -193,24 +192,24 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 		    });
 
 	    getFileByRequest(osylHostedModeInit.getSettingsPath(),
-			    new RequestCallback() {
-				public void onError(Request request, Throwable exception) {
-				    Window.alert("Error while reading "
-					    + osylHostedModeInit.getSettingsPath()
-					    + " :" + exception.toString());
-				}
+		    new RequestCallback() {
+			public void onError(Request request, Throwable exception) {
+			    Window.alert("Error while reading "
+				    + osylHostedModeInit.getSettingsPath()
+				    + " :" + exception.toString());
+			}
 
-				public void onResponseReceived(Request request,
-					Response response) {
-				    String responseTxt = response.getText();
-				    // transform text to map
-				    Map<String, String> settings =
-					    OsylHostedModeTransformUtil
-						    .propertyTxt2Map(responseTxt);
-				    configSer.setSettings(settings);				    
-				    callback.onSuccess(configSer);
-				}
-			    });
+			public void onResponseReceived(Request request,
+				Response response) {
+			    String responseTxt = response.getText();
+			    // transform text to map
+			    Map<String, String> settings =
+				    OsylHostedModeTransformUtil
+					    .propertyTxt2Map(responseTxt);
+			    configSer.setSettings(settings);
+			    callback.onSuccess(configSer);
+			}
+		    });
 
 	}
     }

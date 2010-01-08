@@ -126,8 +126,7 @@ public interface OsylEditorGwtService extends RemoteService {
      * @return String the assignment ID
      */
     public String createOrUpdateAssignment(String assignmentId, String title,
-	    String instructions, Date openDate, Date closeDate, Date dueDate,
-	    int percentage);
+	    String instructions, Date openDate, Date closeDate, Date dueDate);
 
     /**
      * Delete an existing assignment.

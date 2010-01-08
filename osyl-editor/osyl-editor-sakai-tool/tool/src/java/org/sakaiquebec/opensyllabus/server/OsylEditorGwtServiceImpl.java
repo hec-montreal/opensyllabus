@@ -347,11 +347,10 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * automatically added.
      */
     public String createOrUpdateAssignment(String assignmentId, String title,
-	    String instructions, Date openDate, Date closeDate, Date dueDate,
-	    int percentage) {
+	    String instructions, Date openDate, Date closeDate, Date dueDate) {
 	return osylServices.getOsylService().createOrUpdateAssignment(
 		assignmentId, title, instructions, openDate, closeDate,
-		dueDate, percentage);
+		dueDate);
     }
 
     /**

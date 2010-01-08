@@ -158,8 +158,7 @@ public class OsylServiceImpl implements OsylService {
 
     /** {@inheritDoc} */
     public String createOrUpdateAssignment(String assignmentId, String title,
-	    String instructions, Date openDate, Date closeDate, Date dueDate,
-	    int percentage) {
+	    String instructions, Date openDate, Date closeDate, Date dueDate) {
 	String siteId = "";
 	String toolId = "";
 	AssignmentEdit edit = null;
@@ -210,8 +209,9 @@ public class OsylServiceImpl implements OsylService {
 	    if (assignmentId == null || assignmentId.equals("")) {
 		edit = assignmentService.addAssignment(siteId);
 		contentEdit = assignmentService.addAssignmentContent(siteId);
+		contentEdit.setTypeOfGrade(Assignment.SCORE_GRADE_TYPE);
+		contentEdit.setMaxGradePoint(1000);
 		// Ajouter le user dans le user dans le groupe de l'assignment
-
 	    } else {
 		// temporarily allow the user to read and write from assignments
 		// (asn.revise permission)
@@ -233,7 +233,6 @@ public class OsylServiceImpl implements OsylService {
 		if (osylSecurityService.isAllowedToEdit(siteId)) {
 		    SecurityService.clearAdvisors();
 		}
-
 	    }
 	} catch (Exception e) {
 	    log.error("Unable to create an assignment", e);
@@ -268,14 +267,7 @@ public class OsylServiceImpl implements OsylService {
 	    }
 	    contentEdit
 		    .setTypeOfSubmission(Assignment.TEXT_AND_ATTACHMENT_ASSIGNMENT_SUBMISSION);
-	    contentEdit.setTypeOfGrade(Assignment.SCORE_GRADE_TYPE);
-
-	    if (-1 != percentage) {
-		// When we inject a value of 30 for example, Sakai accepts it
-		// as a 3.0. That is why we multiply by 10, to be sure that we
-		// have a valid value
-		contentEdit.setMaxGradePoint(percentage * 10);
-	    }
+	    
 	    edit.setContent(contentEdit);
 
 	    assignmentService.commitEdit(edit);

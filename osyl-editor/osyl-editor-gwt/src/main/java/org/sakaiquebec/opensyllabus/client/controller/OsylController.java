@@ -690,18 +690,11 @@ public class OsylController implements SavePushButtonEventHandler,
 	    if (endDateString != null) {
 		endDate = OsylDateUtils.getDateFromXMLDate(endDateString);
 	    }
-
-	    int rating = 0;
 	    COElementAbstract model = resProx;
 	    boolean found = false;
 	    String title = "";
 	    while (!found && model.getParent() != null) {
 		if (model.isCOUnit()) {
-		    if (model.getProperty(COPropertiesType.WEIGHT) != null) {
-			rating =
-				Integer.parseInt(model
-					.getProperty(COPropertiesType.WEIGHT));
-		    }
 		    title = model.getLabel();
 		    found = true;
 		} else {
@@ -712,7 +705,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
 	    if (startDate != null && endDate != null)
 		createOrUpdateAssignment(resProx, assignmentId, title,
-			instructions, startDate, endDate, null, rating);
+			instructions, startDate, endDate, null);
 	} else {
 	    final OsylAlertDialog alertBox =
 		    new OsylAlertDialog(false, true, "Assignment tool error",
@@ -723,7 +716,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     private void createOrUpdateAssignment(final COContentResourceProxy resProx,
 	    String assignmentId, String title, String instructions,
-	    Date dateStart, Date dateEnd, Date dateDue, int rating) {
+	    Date dateStart, Date dateEnd, Date dateDue) {
 
 	if (dateStart != null && dateEnd != null) {
 
@@ -747,7 +740,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
 	    OsylRemoteServiceLocator.getEditorRemoteService()
 		    .createOrUpdateAssignment(assignmentId, title,
-			    instructions, dateStart, dateEnd, dateEnd, rating,
+			    instructions, dateStart, dateEnd, dateEnd,
 			    callback);
 
 	}

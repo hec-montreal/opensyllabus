@@ -133,7 +133,7 @@ public interface OsylEditorGwtServiceAsync {
      */
     public void createOrUpdateAssignment(String assignmentId, String title,
 	    String instructions, Date openDate, Date closeDate, Date dueDate,
-	    int percentage, AsyncCallback<String> callback);
+	    AsyncCallback<String> callback);
 
     /**
      * Delete an existing assignment.
