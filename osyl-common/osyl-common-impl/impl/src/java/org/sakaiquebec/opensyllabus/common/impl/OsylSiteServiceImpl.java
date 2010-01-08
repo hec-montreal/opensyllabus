@@ -611,6 +611,8 @@ public class OsylSiteServiceImpl implements OsylSiteService {
      */
     public String updateSerializedCourseOutline(COSerialized co)
 	    throws Exception {
+	log.info("Saving course outline [" + co.getTitle()  + "]");
+
 	try {
 	    return resourceDao.createOrUpdateCourseOutline(co);
 	} catch (Exception e) {

@@ -216,6 +216,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     public void publish(String webappDir, COSerialized co) throws Exception {
 
+	log.info("Publishing course outline for site [" + co.getTitle() + "]");
 
 	SecurityService.pushAdvisor(new SecurityAdvisor() {
 		public SecurityAdvice isAllowed(String userId, String function,
