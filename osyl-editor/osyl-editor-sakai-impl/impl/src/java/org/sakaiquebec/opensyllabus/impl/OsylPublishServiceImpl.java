@@ -14,6 +14,9 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.authz.api.SecurityAdvisor;
+import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
+import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentEntity;
@@ -213,7 +216,16 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     public void publish(String webappDir, COSerialized co) throws Exception {
 
-	COModeledServer coModeled = new COModeledServer(co);
+
+	SecurityService.pushAdvisor(new SecurityAdvisor() {
+		public SecurityAdvice isAllowed(String userId, String function,
+				String reference) {
+			return SecurityAdvice.ALLOWED;
+		}
+	});
+
+		
+    COModeledServer coModeled = new COModeledServer(co);
 
 	// PRE-PUBLICATION
 	// change work directory to publish directory
@@ -250,6 +262,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	publish(co.getSiteId(), webappDir);
 
 	copyWorkToPublish(documentSecurityMap);
+	
+	SecurityService.clearAdvisors();
     }
 
     private void publish(String siteId, String webappDir) throws Exception {
