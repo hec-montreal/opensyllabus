@@ -122,17 +122,19 @@ public class OsylCOStructureAssessmentItemEditor extends
 	}
 
 	String endDateString = dateDateBox.getTextBox().getText();
-	try {
-	    dateTimeFormat.parseStrict(endDateString);
-	} catch (IllegalArgumentException e) {
-	    messages +=
-		    getView().getUiMessages().getMessage(
-			    "Global.field.date.format",
-			    getUiMessage("Assessment.date"),
-			    dateTimeFormat.getPattern())
-			    + "\n";
-	    ok = false;
-	    errordate = true;
+	if (!endDateString.trim().equals("")) {
+	    try {
+		dateTimeFormat.parseStrict(endDateString);
+	    } catch (IllegalArgumentException e) {
+		messages +=
+			getView().getUiMessages().getMessage(
+				"Global.field.date.format",
+				getUiMessage("Assessment.date"),
+				dateTimeFormat.getPattern())
+				+ "\n";
+		ok = false;
+		errordate = true;
+	    }
 	}
 
 	// }
