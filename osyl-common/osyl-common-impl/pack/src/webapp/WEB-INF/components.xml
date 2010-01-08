@@ -173,7 +173,6 @@
 		                <value>calendar.read</value>
 		                <value>chat.new</value>
 		                <value>chat.read</value>
-		                <value>content.hidden</value>
 		                <value>content.read</value>
 		                <value>dropbox.own</value>
 		                <value>gradebook.gradeSection</value>

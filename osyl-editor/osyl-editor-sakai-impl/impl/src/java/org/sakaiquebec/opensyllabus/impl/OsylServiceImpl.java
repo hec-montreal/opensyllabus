@@ -22,6 +22,7 @@ import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
 import org.sakaiproject.citation.api.Schema;
 import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.content.api.ResourceType;
@@ -579,6 +580,12 @@ public class OsylServiceImpl implements OsylService {
 	    directoryId =
 		    (osylSiteService.getCurrentSiteReference() + WORK_DIRECTORY + "/")
 			    .substring(8);
+	    
+	    //HIDE COLLECTION
+	    ContentCollectionEdit cce = contentHostingService.editCollection(directoryId);
+	    cce.setHidden();
+	    contentHostingService.commitCollection(cce);
+	    
 	    osylSecurityService.applyDirectoryPermissions(directoryId);
 
 	    // we add the default citationList
@@ -732,7 +739,7 @@ public class OsylServiceImpl implements OsylService {
 			// temporarily allow the user to read and write from assignments
 			// (asn.revise permission)
 
-			if (osylSecurityService.isAllowedToEdit(parent)) {
+			//if (osylSecurityService.isAllowedToEdit(parent)) {
 				SecurityService.pushAdvisor(new SecurityAdvisor() {
 					public SecurityAdvice isAllowed(String userId,
 							String function, String reference) {
@@ -740,7 +747,7 @@ public class OsylServiceImpl implements OsylService {
 					}
 				});
 
-			}
+			//}
 
 			// clear the permission
 
