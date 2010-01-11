@@ -1,7 +1,7 @@
-@import url("base.css") all;
-@import url("gwt.css") all;
-@import url("osyl.css") all;
-@import url("readonly.css") all;
+@import url("base.css");
+@import url("gwt.css");
+@import url("osyl.css");
+@import url("readonly.css");
 @import url("print.css") print;
 
 
