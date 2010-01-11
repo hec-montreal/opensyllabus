@@ -66,7 +66,7 @@
   vertical-align:middle;
   color:#454a4f;
   cursor:default;
-  heigth:auto;
+  height:auto;
   text-decoration:none;
 }
 
@@ -101,7 +101,6 @@
 }
 
 .gwt-MenuBar-vertical {
-
 	vertical-align:middle;
 	background-color:#FFF;
 	border:1px solid #CBD0D4;
@@ -111,8 +110,8 @@
 }
 
 .gwt-MenuBar-vertical .gwt-MenuItem {
-  text-align:left;
-  padding:4px 4px;
+	text-align:left;
+	padding:4px 4px;
 }
 
 /* Act as a hover */
@@ -138,16 +137,16 @@
 
 .Osyl-TreeView .topCenter,
 .Osyl-TreeView .bottomCenter {
-  background: url(images/ui/hborder.png) repeat-x;
-  height:8px;
+	background: url(images/ui/hborder.png) repeat-x;
+	height:8px;
 }
 .Osyl-TreeView .bottomCenter {background-position:bottom left}
 .Osyl-TreeView .topCenter {height:47px}
 
 .Osyl-TreeView .middleLeft,
 .Osyl-TreeView .middleRight {
-  background: url(images/ui/vborder.png) repeat-y;
-  width:8px;
+	background: url(images/ui/vborder.png) repeat-y;
+	width:8px;
 }
 .Osyl-TreeView .middleRight {background-position:top right}
 
@@ -155,9 +154,9 @@
 .Osyl-TreeView .topRightInner,
 .Osyl-TreeView .bottomLeftInner,
 .Osyl-TreeView .bottomRightInner {
-  width: 8px;
-  height: 8px;
-  zoom: 1;
+	width: 8px;
+	height: 8px;
+	zoom: 1;
 }
 .Osyl-TreeView .topLeftInner,
 .Osyl-TreeView .topRightInner {
@@ -172,20 +171,20 @@
 	-background: url(images/ui/treeview_corner_ie6.png) no-repeat top right;
 }
 .Osyl-TreeView .bottomLeft {
-  background: url(images/ui/treeview_corner.png) no-repeat bottom left;
-  -background: url(images/ui/treeview_corner_ie6.png) no-repeat bottom left;
+	background: url(images/ui/treeview_corner.png) no-repeat bottom left;
+	-background: url(images/ui/treeview_corner_ie6.png) no-repeat bottom left;
 }
 .Osyl-TreeView .bottomRight {
-  background: url(images/ui/treeview_corner.png) no-repeat bottom right;
-  -background: url(images/ui/treeview_corner_ie6.png) no-repeat bottom right;
+	background: url(images/ui/treeview_corner.png) no-repeat bottom right;
+	-background: url(images/ui/treeview_corner_ie6.png) no-repeat bottom right;
 }
 * html .Osyl-TreeView .topLeftInner,
 * html .Osyl-TreeView .topRightInner,
 * html .Osyl-TreeView .bottomLeftInner,
 * html .Osyl-TreeView .bottomRightInner {
-  width: 8px;
-  height: 8px;
-  overflow: hidden;
+	width: 8px;
+	height: 8px;
+	overflow: hidden;
 }
 * html .Osyl-TreeView .topLeftInner,
 * html .Osyl-TreeView .topRightInner {
@@ -248,6 +247,7 @@
 
 .Osyl-WorkspaceView, .Osyl-WorkspaceView-MainPanel {width:100%}
 
+.Osyl-WorkspaceView .middleCenterInner {margin-bottom:-5px}
 .Osyl-WorkspaceView .topCenter,
 .Osyl-WorkspaceView .bottomCenter {
   background:url(images/ui/hborder.png) repeat-x;
@@ -294,15 +294,13 @@
   height: 8px;
   overflow: hidden;
 }
-
+.Osyl-WorkspaceView .middleCenterInner {margin-bottom:-5px}
 /* End WorkspaceView Right Zone ---------------------------------------------------------------------------*/
 
 .Osyl-LongView-CourseOutline {
-	font:bold 20px Arial, Verdana, sans-serif;
+	font:bold 12px Arial, Verdana, sans-serif;
 	color:#063871;
-	text-align:center;
-	margin:2px 30px 10px 2px;
-	padding:4px 0;
+	width:100%;
 }
 
 /*Arrow buttons*/
@@ -548,7 +546,7 @@
 
 /* Label in a Content Unit Panel  */
 .Osyl-UnitView-UnitLabel {
-	font-size:1em;
+	font:normal 1em Arial, Verdana, sans-serif;
 	padding:3px 0;
 	width:auto;
 }
@@ -562,7 +560,7 @@
 	padding-bottom:2px;
 }
 
-.Osyl-UnitView-LvlReq .Osyl-UnitView-TextLvlReq, .Osyl-UnitView-LvlReq.Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq{border-bottom:1px solid #999}
+.Osyl-UnitView-LvlReq .Osyl-UnitView-TextLvlReq, .Osyl-UnitView-LvlReq.Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq{border-bottom:1px solid #CCC}
 .Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq {border:none}
 .Osyl-UnitView-IconLvlReq, .Osyl-UnitView-IconImportant {
 	width:24px;
@@ -893,19 +891,24 @@
 	font-size:11px;
 	margin:0 3px;
 }
-.Osyl-EditorPopup-RowBrowser{width:100%}
-.Osyl-EditorPopup-RowConfiguration{width:100%}
+.Osyl-EditorPopup-RowBrowser,
+.Osyl-EditorPopup-RowConfiguration,
+.Osyl-EditorPopup-RowInformation,
+.Osyl-EditorPopup-RowOptions,
+.Osyl-EditorPopup-RowButtons,
+.Osyl-EditorPopup-RowEditor,
+.Osyl-EditorPopup-RowToolBar,
+.Osyl-EditorPopup .Osyl-ResourceBrowserPanel,
+.Osyl-ResourceBrowserPanel .Osyl-ResourceBrowser, 
+.Osyl-EditorPopup .sectionLabel {
+	width:100%;
+}
 
 .Osyl-EditorPopup-OptionGroup {padding:0 12px 0 7px}
 
 .Osyl-EditorPopup-LastOptionGroup {
 	padding:0 0 0 7px;
 	border-right:0;
-}
-
-.Osyl-EditorPopup-RowInformation{
-	margin:0;
-	width:100%;
 }
 
 .Osyl-EditorPopup-RowOptions .gwt-Label,
@@ -918,19 +921,9 @@
 	padding:0;
 	margin:0 14px 6px 0;
 }
-.Osyl-EditorPopup-RowOptions .gwt-CheckBox input {
-	margin:4px 2px 0 0;
-}
 
-.Osyl-EditorPopup .gwt-ListBox {
-	font:normal 10px sans-serif, Arial, Verdana;
-}
-
-.Osyl-EditorPopup .Osyl-ResourceBrowserPanel,
-.Osyl-ResourceBrowserPanel .Osyl-ResourceBrowser, 
-.Osyl-EditorPopup .sectionLabel { 
-	width:100%;
-}
+.Osyl-EditorPopup-RowOptions .gwt-CheckBox input {margin:4px 2px 0 0}
+.Osyl-EditorPopup .gwt-ListBox {font:normal 10px sans-serif, Arial, Verdana}
 
 .Osyl-ResourceBrowserPanel .Osyl-ResourceBrowser { 
 	height:100px;
@@ -961,32 +954,12 @@
 .Osyl-EditorPopup .gwt-TextArea {margin:0 8px 3px 0}
 
 .Osyl-EditorPopup .information {
-	font-size:11px;
-	font-style:italic;
+	font:italic normal 11px Arial Verdana sans serif;
 	margin:5px 3px 3px 5px;
 }
 
-
-.Osyl-EditorPopup-RowOptions {
-	margin:0;
-	width:100%;
-}
-
-.Osyl-EditorPopup-RowButtons {
-	margin:3px 0 0;
-	width:100%;
-}
-
-.Osyl-EditorPopup-RowEditor {
-	margin:0;
-	width:100%;
-}
-
-.Osyl-EditorPopup-RowToolBar {
-	margin:0;
-	border-top:1px solid #AAA;
-	width:100%;
-}
+.Osyl-EditorPopup-RowButtons {margin:3px 0 0}
+.Osyl-EditorPopup-RowToolBar {border-top:1px solid #AAA}
 
 /* Light Box -----------------------------------------------------------------------*/
 .Osyl-LightBox-Regular,
@@ -1060,31 +1033,6 @@
 
 .Osyl-EditorPopup-Button {margin:2px}
 
-/* Test Button */
-/*.Osyl-Button {
-	font:bold 12px Arial, Verdana, sans-serif;
-	color:#444;
-    background:transparent url('images/button/osyl_button_right.png') no-repeat top right;
-	padding:0 10px 0 0;
-	height:30px;
-	cursor:pointer;
-	border:0;
-	white-space:nowrap;
-	overflow:visible;
-}
-
-.Osyl-Button > div {
-	background:transparent url('images/button/osyl_button_left.png') no-repeat;
-	line-height:20px;
-	margin-top:-1px;
-	padding:5px 0 5px 10px;
-}
-.Osyl-ImageAndTextButton > div > img {}
-
-.Osyl-Button:hover {background-position:bottom right}
-
-.Osyl-Button:hover > div{background-position:0 -30px}
-*/
 /* End Button --------------------------------------------------------------*/
 .Osyl-FileBrowserTopButton {
 	width:24px;
@@ -1160,70 +1108,35 @@
 	text-transform:uppercase;
 }	
 
-.Osyl-ContactInfo-Role {	
+.Osyl-ContactInfo-Role,
+.Osyl-ContactInfo-EMail,
+.Osyl-ContactInfo-Phone,
+.Osyl-ContactInfo-Office,
+.Osyl-ContactInfo-OfficeLabel,
+.Osyl-ContactInfo-Availability,
+.Osyl-ContactInfo-AvailabilityLabel,
+.Osyl-ContactInfo-Comments {
 	font-size:11px;
-	padding:0 0 3px 1px;
 }
 
-.Osyl-ContactInfo-EMail {
-	font-size:11px;
-	padding:0;
-}
-
-.Osyl-ContactInfo-Phone {
-	font-size:11px;
-	padding:2px 0 0;
-}
+.Osyl-ContactInfo-Role {padding:0 0 3px 1px}
+.Osyl-ContactInfo-Phone {padding:2px 0 0}
 
 .Osyl-ContactInfo-Office {
-	font-size:11px;
 	padding:0 0 2px;
 	margin-left:5px;
 }	
 
-.Osyl-ContactInfo-OfficeLabel {
-	padding:0;
-	font-size:11px;
-}
+.Osyl-ContactInfo-Availability, .Osyl-ContactInfo-AvailabilityLabel {padding:2px 0}
+.Osyl-ContactInfo-Availability {margin-left:5px}
+.Osyl-ContactInfo-Comments {padding:2px 0 3px}
+.Osyl-ContactInfo-Availability ul, .Osyl-ContactInfo-Availability ol, .Osyl-ContactInfo-Comments ul, .Osyl-ContactInfo-Comments ol{margin:0 0 0 30px}
 
-.Osyl-ContactInfo-Availability {
-	font-size:11px;
-	padding:2px 0 2px;
-	margin-left:5px;
-}
-
-.Osyl-ContactInfo-AvailabilityLabel {
-	padding:2px 0 2px;
-	font-size:11px;
-}
-
-.Osyl-ContactInfo-Comments {
-	font-size:11px;
-	padding:2px 0 3px;
-}
-
-.Osyl-ContactInfo-Availability ul, .Osyl-ContactInfo-Availability ol{
-	margin-left:30px;
-	margin-top:0;
-}
-
-.Osyl-ContactInfo-Comments ul, .Osyl-ContactInfo-Comments ol{
-	margin-left:30px;
-	margin-top:0;
-}
-
-.Osyl-News-TimeStamp {
-	font-size:0.85em;
+.Osyl-News-TimeStamp, .Osyl-AssignementView-DateLabel {
+	font:italic normal 11px Arial, Verdana, sans-serif;
 	padding:3px 0;
 	width:auto;
-	font-style:italic;
 }
 
-.Osyl-AssignementView-DateLabel{
-	font-size:1em;
-	padding:3px 0;
-	width:auto;
-	font-style: italic;
-}
-
+.Osyl-AssignementView-DateLabel{font-size:12px}
 .Osyl-Mandatory_field {color:red}
