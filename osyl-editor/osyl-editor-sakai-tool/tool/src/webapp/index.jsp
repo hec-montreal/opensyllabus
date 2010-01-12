@@ -120,8 +120,12 @@
 	    	}
 	    	String cssPath = osylMainBean.getOsylConfigService().getConfig(
 	    			configId, webappDir).getCascadingStyleSheetURI();
+	    	
+	    	String printCssPath = osylMainBean.getOsylConfigService().getConfig(
+    			configId, webappDir).getPrintCascadingStyleSheetURI();
 	    %>
 		<link rel="stylesheet" type="text/css" href="<%=cssPath%>" />
+		<link rel="stylesheet" type="text/css" href="<%=printCssPath%>" media="print"/>
 		<script>
 			function isReadOnlyUI() {
 				return true;

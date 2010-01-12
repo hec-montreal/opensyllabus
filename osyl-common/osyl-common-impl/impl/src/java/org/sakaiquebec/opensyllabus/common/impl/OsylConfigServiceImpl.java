@@ -79,6 +79,11 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
      * Css file for skin properties
      */
     private static final String CONFIG_SKIN = "osylcore.css";
+    
+    /**
+     * Css file for skin properties
+     */
+    private static final String PRINT_CONFIG_SKIN = "print.css";
 
     /**
      * Item node name for xml parsing
@@ -290,6 +295,7 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	    throws Exception {
 	String path = webappdir + CONFIG_DIR + File.separator + configRef;
 	coConfig.setCascadingStyleSheetURI(getCascadingStyleSheetURI(path));
+	coConfig.setPrintCascadingStyleSheetURI(getPrintCascadingStyleSheetURI(path));
 	coConfig.setCoreBundle(OsylConfigServiceMessages.getMessages(path,
 		CONFIG_UIMESSAGES));
 	coConfig.setRulesConfig(getRules(path));
@@ -390,11 +396,19 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
      * @return String
      */
     private static String getCascadingStyleSheetURI(String dir) {
+	return getCssPath(dir)+ CONFIG_SKIN;
+    }
+    
+    private static String getPrintCascadingStyleSheetURI(String dir){
+	return getCssPath(dir)+ PRINT_CONFIG_SKIN;
+    }
+    
+    private static String getCssPath(String dir){
 	String relativePath =
 		dir.substring(dir.indexOf("webapps") + 7, dir.length());
 	relativePath =
 		relativePath + File.separator + CONFIGS_SKIN_DIRECTORY
-			+ File.separator + CONFIG_SKIN;
+			+ File.separator;
 	relativePath = relativePath.replaceAll("\\\\", "/");
 	return relativePath;
     }

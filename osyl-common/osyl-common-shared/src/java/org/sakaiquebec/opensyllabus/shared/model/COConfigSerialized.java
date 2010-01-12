@@ -51,8 +51,6 @@ public class COConfigSerialized implements java.io.Serializable {
 	 */
 	private String configRef;
 
-
-
 	/**
 	 * xml config rules on model for the UI
 	 */
@@ -76,6 +74,11 @@ public class COConfigSerialized implements java.io.Serializable {
 	 * CSS URI, used for jsp page
 	 */
 	private String cascadingStyleSheetURI;
+	
+	/**
+	 * CSS (Print) URI, used for jsp page
+	 */
+	private String printCascadingStyleSheetURI;
 
 	/**
 	 * RolesList definition
@@ -99,10 +102,6 @@ public class COConfigSerialized implements java.io.Serializable {
 		this.settings = new HashMap<String, String>();
 	}
 
-
-
-
-
 	/**
 	 * @return the cascadingStyleSheetURI value.
 	 */
@@ -116,6 +115,14 @@ public class COConfigSerialized implements java.io.Serializable {
 	 */
 	public void setCascadingStyleSheetURI(String cascadingStyleSheetURI) {
 		this.cascadingStyleSheetURI = cascadingStyleSheetURI;
+	}
+	
+	public String getPrintCascadingStyleSheetURI() {
+	    return printCascadingStyleSheetURI;
+	}
+
+	public void setPrintCascadingStyleSheetURI(String printCascadingStyleSheetURI) {
+	    this.printCascadingStyleSheetURI = printCascadingStyleSheetURI;
 	}
 
 	/**
