@@ -389,14 +389,14 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 				contentHostingService
 					.addCollection(this_publish_directory);
 
-//			contentHostingService
-//				.commitCollection(publishContentEdit);
+			contentHostingService
+				.commitCollection(publishContentEdit);
 		    }
 		    String newId =
 			    contentHostingService.copyIntoFolder(thisEntityRef,
 				    this_publish_directory);
 		    // Permission application
-		    osylSecurityService.applyPermissions(newId, permission);
+		    //osylSecurityService.applyPermissions(newId, permission);
 		}
 	    }
 	}
