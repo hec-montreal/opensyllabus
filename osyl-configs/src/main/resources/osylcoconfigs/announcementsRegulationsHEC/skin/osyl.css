@@ -441,18 +441,17 @@
 	font:bold 25px Arial, Verdana, sans-serif;
 	margin-left:35px;
 }
-
+.Osyl-UnitView-ResPanel .Osyl-Title1, .Osyl-UnitView-TitlePanel .Osyl-Title1,
 .Osyl-UnitView-ResPanel .Osyl-Title2, .Osyl-UnitView-TitlePanel .Osyl-Title2,
 .Osyl-UnitView-ResPanel .Osyl-Title3, .Osyl-UnitView-TitlePanel .Osyl-Title3,
 .Osyl-UnitView-ResPanel .Osyl-Title4, .Osyl-UnitView-TitlePanel .Osyl-Title4,
-.Osyl-UnitView-ResPanel .Osyl-Title5, .Osyl-UnitView-TitlePanel .Osyl-Title5, {margin-left:30px}
+.Osyl-UnitView-ResPanel .Osyl-Title5, .Osyl-UnitView-TitlePanel .Osyl-Title5 {margin-left:30px}
 
 .Osyl-Title1 {
 	color:#1c4d6c;
 	font-size:25px;
 	margin-bottom:20px;
 	text-align:left;
-	margin-left:40px;
 }
 
 .Osyl-Title2 {
