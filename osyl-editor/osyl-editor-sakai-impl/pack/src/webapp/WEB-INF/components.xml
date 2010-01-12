@@ -35,10 +35,6 @@
 		<!-- Sakai dependencies -->
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />
-		<property name="userDirectoryService"
-			ref="org.sakaiproject.user.api.UserDirectoryService" />
-		<property name="authzGroupService"
-			ref="org.sakaiproject.authz.api.AuthzGroupService" />
 		<property name="assignmentService"
 			ref="org.sakaiproject.assignment.api.AssignmentService" />
 		<property name="citationService"
