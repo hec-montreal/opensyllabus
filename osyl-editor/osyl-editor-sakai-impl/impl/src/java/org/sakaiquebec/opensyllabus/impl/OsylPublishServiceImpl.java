@@ -337,10 +337,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    .hasNext();) {
 		ContentEntity next = (ContentEntity) pMbrs.next();
 		String thisEntityRef = next.getId();
-//		if (next.isCollection())
-//		    contentHostingService.removeCollection(thisEntityRef);
-//		else
-//		    contentHostingService.removeResource(thisEntityRef);
+		if (next.isCollection())
+		    contentHostingService.removeCollection(thisEntityRef);
+		else
+		    contentHostingService.removeResource(thisEntityRef);
     }
 
 	    copyWorkToPublish(workContent, documentSecurityMap);
@@ -389,8 +389,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 				contentHostingService
 					.addCollection(this_publish_directory);
 
-			contentHostingService
-				.commitCollection(publishContentEdit);
+//			contentHostingService
+//				.commitCollection(publishContentEdit);
 		    }
 		    String newId =
 			    contentHostingService.copyIntoFolder(thisEntityRef,
