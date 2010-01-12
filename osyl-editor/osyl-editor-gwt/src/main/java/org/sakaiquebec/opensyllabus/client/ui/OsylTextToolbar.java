@@ -22,6 +22,7 @@ package org.sakaiquebec.opensyllabus.client.ui;
 
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.GWT;
@@ -43,7 +44,7 @@ import com.google.gwt.user.client.ui.MenuItem;
  * @version $Id: $
  */
 public class OsylTextToolbar extends Composite {
-    
+
     private OsylController osylController;
 
     /**
@@ -52,16 +53,20 @@ public class OsylTextToolbar extends Composite {
     final OsylConfigMessages uiMessages;
 
     private MenuBar menuBar;
-    
+
     private DecoratorPanel enclosingPanel;
 
     private MenuItem homePushButton;
 
     private MenuItem savePushButton;
 
-    private MenuBar addMenuButton;
+    private MenuBar addMenuBar;
 
-    private MenuBar viewMenuButton;
+    private MenuBar viewMenuBar;
+
+    private MenuItem addMenuItem;
+
+    private MenuItem viewMenuItem;
 
     private MenuItem attendeeViewMenuItem;
 
@@ -71,11 +76,12 @@ public class OsylTextToolbar extends Composite {
 
     private MenuItem printPushButton;
 
-    private MenuItem closePreviewPushButton;
-    
+    private MenuItem closePushButton;
+
     // Image Bundle
     private OsylImageBundleInterface osylImageBundle =
-	    (OsylImageBundleInterface) GWT.create(OsylImageBundleInterface.class);
+	    (OsylImageBundleInterface) GWT
+		    .create(OsylImageBundleInterface.class);
 
     public OsylTextToolbar(OsylController osylController) {
 	// int messages
@@ -83,81 +89,99 @@ public class OsylTextToolbar extends Composite {
 	uiMessages = osylController.getUiMessages();
 
 	menuBar = new MenuBar();
-	
+
 	enclosingPanel = new DecoratorPanel();
 	enclosingPanel.setWidget(menuBar);
 	enclosingPanel.setStylePrimaryName("Osyl-MenuBar");
 
-	if (getOsylController().isInPreview()) {
-	    closePreviewPushButton =
-		    createMenuItem("ButtonCloseToolBar", 
-			    getOsylImageBundle().cross(),
-			    "ButtonCloseToolBarTooltip");
-	    menuBar.addItem(closePreviewPushButton);
-	    closePreviewPushButton.addStyleName("Osyl-MenuItem-LastChild");
-	} else {
-	    homePushButton =
-		    createMenuItem("ButtonHomeToolBar",
-			    getOsylImageBundle().home(),
-			    "ButtonHomeToolBarTooltip");
+	// if (getOsylController().isInPreview()) {
+	closePushButton =
+		createMenuItem("ButtonCloseToolBar", getOsylImageBundle()
+			.cross(), "ButtonCloseToolBarTooltip");
+	menuBar.addItem(closePushButton);
+	closePushButton.addStyleName("Osyl-MenuItem-LastChild");
+	// } else {
+	homePushButton =
+		createMenuItem("ButtonHomeToolBar",
+			getOsylImageBundle().home(), "ButtonHomeToolBarTooltip");
 
-	    savePushButton =
-		    createMenuItem("ButtonSaveToolBar",
-			    getOsylImageBundle().save(),
-			    "ButtonSaveToolBarTooltip");
+	savePushButton =
+		createMenuItem("ButtonSaveToolBar",
+			getOsylImageBundle().save(), "ButtonSaveToolBarTooltip");
 
-	    addMenuButton = new MenuBar(true);
-	    addMenuButton.setTitle(uiMessages
-		    .getMessage("ButtonAddToolBarTooltip"));
-	    addMenuButton.setAutoOpen(true);
-	    addMenuButton.addStyleName("Osyl-MenuItem-vertical");
+	addMenuBar = new MenuBar(true);
+	addMenuBar.setTitle(uiMessages.getMessage("ButtonAddToolBarTooltip"));
+	addMenuBar.setAutoOpen(true);
+	addMenuBar.addStyleName("Osyl-MenuItem-vertical");
 
-	    viewMenuButton = new MenuBar(true);
-	    viewMenuButton.setTitle(uiMessages
-		    .getMessage("ButtonViewToolBarTooltip"));
-	    viewMenuButton.setAutoOpen(true);
+	viewMenuBar = new MenuBar(true);
+	viewMenuBar.setTitle(uiMessages.getMessage("ButtonViewToolBarTooltip"));
+	viewMenuBar.setAutoOpen(true);
 
-	    publishPushButton =
-		    createMenuItem("ButtonPublishToolBar",
-			    getOsylImageBundle().publish(),
-			    "ButtonPublishToolBarTooltip");
+	publishPushButton =
+		createMenuItem("ButtonPublishToolBar", getOsylImageBundle()
+			.publish(), "ButtonPublishToolBarTooltip");
 
-	    printPushButton =
-		    createMenuItem("ButtonPrintToolBar",
-			    getOsylImageBundle().printer(),
-			    "ButtonPrintToolBarTooltip");
+	printPushButton =
+		createMenuItem("ButtonPrintToolBar", getOsylImageBundle()
+			.printer(), "ButtonPrintToolBarTooltip");
 
-	    menuBar.addItem(homePushButton);
-	    menuBar.addItem(savePushButton);
-	    // MenuBar Item with icon - nice trick...
-	    menuBar.addItem( getOsylImageBundle().plus().getHTML() +
-		    	uiMessages.getMessage("ButtonAddToolBar"),
-		    	true,
-		    	addMenuButton).addStyleName("Osyl-MenuItem-vertical");
+	menuBar.addItem(homePushButton);
+	menuBar.addItem(savePushButton);
+	// MenuBar Item with icon - nice trick...
+	addMenuItem =
+		menuBar.addItem(getOsylImageBundle().plus().getHTML()
+			+ uiMessages.getMessage("ButtonAddToolBar"), true,
+			addMenuBar);
+	addMenuItem.addStyleName("Osyl-MenuItem-vertical");
 
-	    menuBar.addItem(getOsylImageBundle().preview().getHTML() +
-		    uiMessages.getMessage("ButtonViewToolBar") ,
-		    true,
-		    viewMenuButton).addStyleName("Osyl-MenuItem-vertical");;
-	    menuBar.addItem(publishPushButton);
-	    menuBar.addItem(printPushButton);
-	    printPushButton.addStyleName("Osyl-MenuItem-LastChild");
-	}
-//	initWidget(menuBar);
+	viewMenuItem =
+		menuBar.addItem(getOsylImageBundle().preview().getHTML()
+			+ uiMessages.getMessage("ButtonViewToolBar"), true,
+			viewMenuBar);
+	viewMenuItem.addStyleName("Osyl-MenuItem-vertical");
+	addViewMenuBarItems();
+	
+	menuBar.addItem(publishPushButton);
+	menuBar.addItem(printPushButton);
+	printPushButton.addStyleName("Osyl-MenuItem-LastChild");
+	// }
 	initWidget(enclosingPanel);
 
     }
 
-    public MenuItem createMenuItem(String messageKey, 
-	    AbstractImagePrototype menuImage, 
-	    String toolTipKey) {
+    private void addViewMenuBarItems(){
+	MenuItem attendeeViewMenuItem =
+		new MenuItem(getOsylController().getUiMessages().getMessage(
+			"Preview.attendee_version"), new Command() {
+		    public void execute() {
+			new OsylPreviewView(
+				SecurityInterface.ACCESS_ATTENDEE,
+				getOsylController());
+		    }
+		});
+	MenuItem publicViewMenuItem =
+		new MenuItem(getOsylController().getUiMessages().getMessage(
+			"Preview.public_version"), new Command() {
+		    public void execute() {
+			new OsylPreviewView(
+				SecurityInterface.ACCESS_PUBLIC,
+				getOsylController());
+		    }
+		});
+	getViewMenuBar().addItem(
+		attendeeViewMenuItem);
+	getViewMenuBar()
+		.addItem(publicViewMenuItem);
+    }
+    
+    public MenuItem createMenuItem(String messageKey,
+	    AbstractImagePrototype menuImage, String toolTipKey) {
 	Command nullCommand = null;
-        MenuItem menuItem =
-		new MenuItem(menuImage.getHTML() + 
-			uiMessages.getMessage(messageKey), 
-			true, 
-			nullCommand);
-        menuItem.setTitle(uiMessages.getMessage(toolTipKey));
+	MenuItem menuItem =
+		new MenuItem(menuImage.getHTML()
+			+ uiMessages.getMessage(messageKey), true, nullCommand);
+	menuItem.setTitle(uiMessages.getMessage(toolTipKey));
 	return menuItem;
     }
 
@@ -205,20 +229,36 @@ public class OsylTextToolbar extends Composite {
 	this.savePushButton = savePushButton;
     }
 
-    public MenuBar getAddMenuButton() {
-	return addMenuButton;
+    public MenuBar getAddMenuBar() {
+	return addMenuBar;
     }
 
-    public void setAddMenuButton(MenuBar addMenuButton) {
-	this.addMenuButton = addMenuButton;
+    public void setAddMenuBar(MenuBar addMenuButton) {
+	this.addMenuBar = addMenuButton;
     }
 
-    public MenuBar getViewMenuButton() {
-	return viewMenuButton;
+    public MenuBar getViewMenuBar() {
+	return viewMenuBar;
     }
 
-    public void setViewMenuButton(MenuBar viewMenuButton) {
-	this.viewMenuButton = viewMenuButton;
+    public void setViewMenuBar(MenuBar viewMenuButton) {
+	this.viewMenuBar = viewMenuButton;
+    }
+
+    public MenuItem getAddMenuItem() {
+        return addMenuItem;
+    }
+
+    public void setAddMenuItem(MenuItem addMenuItem) {
+        this.addMenuItem = addMenuItem;
+    }
+
+    public MenuItem getViewMenuItem() {
+        return viewMenuItem;
+    }
+
+    public void setViewMenuItem(MenuItem viewMenuItem) {
+        this.viewMenuItem = viewMenuItem;
     }
 
     public MenuItem getPublishPushButton() {
@@ -237,12 +277,12 @@ public class OsylTextToolbar extends Composite {
 	this.printPushButton = printPushButton;
     }
 
-    public MenuItem getClosePreviewPushButton() {
-	return closePreviewPushButton;
+    public MenuItem getClosePushButton() {
+	return closePushButton;
     }
 
-    public void setClosePreviewPushButton(MenuItem closePreviewPushButton) {
-	this.closePreviewPushButton = closePreviewPushButton;
+    public void setClosePushButton(MenuItem closePushButton) {
+	this.closePushButton = closePushButton;
     }
 
     public MenuItem getAttendeeViewMenuItem() {

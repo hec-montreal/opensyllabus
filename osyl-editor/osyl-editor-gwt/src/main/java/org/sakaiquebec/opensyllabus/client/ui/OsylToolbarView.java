@@ -59,7 +59,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 
 /**
@@ -82,8 +81,6 @@ public class OsylToolbarView extends OsylViewableComposite implements
     private OsylLongView osylPrintView = null;
 
     private OsylViewable previousMainView;
-
-    private MenuItem closeMenuItem = null;
 
     private OsylConfigMessages uiMessages = getController().getUiMessages();
 
@@ -312,71 +309,37 @@ public class OsylToolbarView extends OsylViewableComposite implements
 			.getWorkspacePanel()
 			.add(
 				new HTML(
-					"<iframe id='__printingFrame' style='width:0;height:0;border:0'></iframe>"));
+					"<iframe id=\"__printingFrame\" style=\"width:0;height:0;border:0\"></iframe>"));
 		getController().setReadOnly(true);
 		getController().getViewContext().closeAllEditors();
 		getController().getMainView().setHorizontalSplitPanelPosition(
 			"0px");
-		final MenuItem bHome = getOsylToolbar().getHomePushButton();
-		final MenuItem bSave = getOsylToolbar().getSavePushButton();
-		final MenuBar bAdd = getOsylToolbar().getAddMenuButton();
-		final MenuBar bView = getOsylToolbar().getViewMenuButton();
-		final MenuItem bPublish =
-			getOsylToolbar().getPublishPushButton();
-		final MenuItem bPrint = getOsylToolbar().getPrintPushButton();
-		getOsylToolbar().getMenuBar().clearItems();
-		if (closeMenuItem == null) {
-		    closeMenuItem =
-			    new MenuItem(uiMessages
-				    .getMessage("ButtonCloseToolBar"),
-				    new Command() {
-					public void execute() {
-					    getController().setReadOnly(false);
-					    entryPoint.refreshView();
-					    entryPoint
-						    .setView(previousMainView);
-					    entryPoint.refreshView();
-					    getController()
-						    .getViewContext()
-						    .setContextModel(
-							    getController()
-								    .getMainView()
-								    .findStartingViewContext());
-					    ((OsylMainView) previousMainView)
-						    .refreshView();
-					    getController()
-						    .getMainView()
-						    .setHorizontalSplitPanelPosition(
-							    OsylTreeView
-								    .getInitialSplitPosition());
-					    getOsylToolbar().getMenuBar()
-						    .addItem(bHome);
-					    getOsylToolbar().getMenuBar()
-						    .addItem(bSave);
-					    getOsylToolbar()
-						    .getMenuBar()
-						    .addItem(
-							    uiMessages
-								    .getMessage("ButtonAddToolBar"),
-							    bAdd);
-					    getOsylToolbar()
-						    .getMenuBar()
-						    .addItem(
-							    uiMessages
-								    .getMessage("ButtonViewToolBar"),
-							    bView);
-					    getOsylToolbar().getMenuBar()
-						    .addItem(bPublish);
-					    getOsylToolbar().getMenuBar()
-						    .addItem(bPrint);
-					    closeMenuItem.setVisible(false);
-					}
-				    });
-		    getOsylToolbar().getMenuBar().addItem(closeMenuItem);
-		} else {
-		    closeMenuItem.setVisible(true);
-		    getOsylToolbar().getMenuBar().addItem(closeMenuItem);
-		}
+
+		getOsylToolbar().getClosePushButton().setVisible(true);
+		getOsylToolbar().getClosePushButton().setCommand(new Command() {
+		    public void execute() {
+			getController().setReadOnly(false);
+			entryPoint.refreshView();
+			entryPoint.setView(previousMainView);
+			entryPoint.refreshView();
+			getController().getViewContext().setContextModel(
+				getController().getMainView()
+					.findStartingViewContext());
+			((OsylMainView) previousMainView).refreshView();
+			getController().getMainView()
+				.setHorizontalSplitPanelPosition(
+					OsylTreeView.getInitialSplitPosition());
+			OsylToolbarView.this.refreshView();
+		    }
+		});
+		getOsylToolbar().getHomePushButton().setVisible(false);
+		getOsylToolbar().getSavePushButton().setVisible(false);
+		getOsylToolbar().getPublishPushButton().setVisible(false);
+		getOsylToolbar().getPrintPushButton().setVisible(false);
+		getOsylToolbar().getAddMenuItem().setVisible(false);
+		getOsylToolbar().getViewMenuItem().setVisible(false);
+		getOsylToolbar().getClosePushButton().setVisible(true);
+
 		final int sp = 100;
 		Timer t = new Timer() {
 		    public void run() {
@@ -399,27 +362,27 @@ public class OsylToolbarView extends OsylViewableComposite implements
      * Called when the print button is clicked!
      */
 
-    private static native void printJSNI() /*-{  
-					   window.parent.print();
-					   }-*/;
+    private static native void printJSNI()/*-{  
+					  window.parent.print();
+					  }-*/;
 
     /*
      * Draft Printing for Browser different from WebKit
      */
     private void draftPrinting() {
 	Print
-		.it(
-			"<style type=text/css media=paper> "
-				+ ".Osyl-UnitView-MainPanel { padding: 10px 5px 0px 50px; } "
-				+ ".Osyl-LongView-CourseOutline { margin: 2px 30px 10px 2px; color:#063871; text-align:center; font-size: 20px; font-weight:bold; padding-top:4px; padding-bottom:4px; font-family: sans-serif, Arial, Verdana; } "
-				+ ".Osyl-UnitView-Title { margin: 2px 30px 10px 2px; color:#063871; font-size: 16px; font-weight:bold; padding: 4px 0px 4px 1px; font-family: sans-serif, Arial, Verdana; border: 1px solid transparent; } "
-				+ ".Osyl-UnitView-Title .Osyl-LabelEditor-View { margin: 2px 30px 10px 2px; color:#063871; font-size: 16px; font-weight:bold; padding:4px; font-family: sans-serif, Arial, Verdana; } "
-				+ ".Osyl-UnitView-Title .Osyl-LabelEditor-TextBox { border: 1px solid #aaa; margin-bottom: 12px; color:#063871; font-size: 16px; font-weight:bold; padding-top:4px; padding-bottom:4px; font-family: sans-serif, Arial, Verdana; } "
-				+ ".Osyl-UnitView-RubricName { font-family: sans-serif, Arial, Verdana; font-size: 14px; font-weight:bold; } "
-				+ ".Osyl-UnitView-RubricImg { display: list-item; list-style-image: url(img/carreVert.gif); margin:3px 4px 4px 4px; } "
-				+ ".Osyl-ResProxView-MetaInfo { display: block; margin: 15px 0px 15px 0px; font-family: sans-serif, Arial, Verdana; font-size: 10px; color: #a0a0a0; }"
-				+ ".Osyl-ContactInfo { border-bottom: 1px solid #C3D9FF; } "
-				+ "</style>", osylPrintView);
+	.it(
+		"<style type=text/css media=paper> "
+			+ ".Osyl-UnitView-MainPanel { padding: 10px 5px 0px 50px; } "
+			+ ".Osyl-LongView-CourseOutline { margin: 2px 30px 10px 2px; color:#063871; text-align:center; font-size: 20px; font-weight:bold; padding-top:4px; padding-bottom:4px; font-family: sans-serif, Arial, Verdana; } "
+			+ ".Osyl-UnitView-Title { margin: 2px 30px 10px 2px; color:#063871; font-size: 16px; font-weight:bold; padding: 4px 0px 4px 1px; font-family: sans-serif, Arial, Verdana; border: 1px solid transparent; } "
+			+ ".Osyl-UnitView-Title .Osyl-LabelEditor-View { margin: 2px 30px 10px 2px; color:#063871; font-size: 16px; font-weight:bold; padding:4px; font-family: sans-serif, Arial, Verdana; } "
+			+ ".Osyl-UnitView-Title .Osyl-LabelEditor-TextBox { border: 1px solid #aaa; margin-bottom: 12px; color:#063871; font-size: 16px; font-weight:bold; padding-top:4px; padding-bottom:4px; font-family: sans-serif, Arial, Verdana; } "
+			+ ".Osyl-UnitView-RubricName { font-family: sans-serif, Arial, Verdana; font-size: 14px; font-weight:bold; } "
+			+ ".Osyl-UnitView-RubricImg { display: list-item; list-style-image: url(img/carreVert.gif); margin:3px 4px 4px 4px; } "
+			+ ".Osyl-ResProxView-MetaInfo { display: block; margin: 15px 0px 15px 0px; font-family: sans-serif, Arial, Verdana; font-size: 10px; color: #a0a0a0; }"
+			+ ".Osyl-ContactInfo { border-bottom: 1px solid #C3D9FF; } "
+			+ "</style>", osylPrintView);
     }
 
     /**
@@ -427,65 +390,43 @@ public class OsylToolbarView extends OsylViewableComposite implements
      */
     public void refreshView() {
 	if (getController().isInPreview()) {
-	    if (getOsylToolbar().getClosePreviewPushButton() != null) {
-		getOsylToolbar().getClosePreviewPushButton().setVisible(true);
-		getOsylToolbar().getClosePreviewPushButton().setCommand(
-			new Command() {
-			    public void execute() {
-				ClosePushButtonEvent event =
-					new ClosePushButtonEvent("");
-				Iterator<ClosePushButtonEventHandler> iter =
-					getCloseEventHandlerList().iterator();
-				while (iter.hasNext()) {
-				    ClosePushButtonEventHandler handler =
-					    (ClosePushButtonEventHandler) iter
-						    .next();
-				    handler.onClosePushButton(event);
-				}
-			    }
-
-			});
-	    }
+	    getOsylToolbar().getHomePushButton().setVisible(false);
+	    getOsylToolbar().getSavePushButton().setVisible(false);
+	    getOsylToolbar().getPublishPushButton().setVisible(false);
+	    getOsylToolbar().getPrintPushButton().setVisible(false);
+	    getOsylToolbar().getAddMenuItem().setVisible(false);
+	    getOsylToolbar().getViewMenuItem().setVisible(false);
+	    getOsylToolbar().getClosePushButton().setVisible(true);
+	    getOsylToolbar().getClosePushButton().setCommand(new Command() {
+		public void execute() {
+		    ClosePushButtonEvent event = new ClosePushButtonEvent("");
+		    Iterator<ClosePushButtonEventHandler> iter =
+			    getCloseEventHandlerList().iterator();
+		    while (iter.hasNext()) {
+			ClosePushButtonEventHandler handler =
+				(ClosePushButtonEventHandler) iter.next();
+			handler.onClosePushButton(event);
+		    }
+		}
+	    });
 	} else {
 	    if (getModel() != null) {
 		initButtonsCommands();
+		getOsylToolbar().getClosePushButton().setVisible(false);
 		getOsylToolbar().getHomePushButton().setVisible(true);
 		getOsylToolbar().getSavePushButton().setVisible(true);
 		getOsylToolbar().getPublishPushButton().setVisible(true);
-		getOsylToolbar().getAddMenuButton().setVisible(true);
+		getOsylToolbar().getAddMenuItem().setVisible(true);
 		getOsylToolbar().getPrintPushButton().setVisible(true);
-		getOsylToolbar().getViewMenuButton().setVisible(true);
-		getOsylToolbar().getViewMenuButton().clearItems();
-		getOsylToolbar().getAddMenuButton().clearItems();
-		MenuItem attendeeViewMenuItem =
-			new MenuItem(getUiMessages().getMessage(
-				"Preview.attendee_version"), new Command() {
-			    public void execute() {
-				new OsylPreviewView(
-					SecurityInterface.ACCESS_ATTENDEE,
-					getController());
-			    }
-			});
-		MenuItem publicViewMenuItem =
-			new MenuItem(getUiMessages().getMessage(
-				"Preview.public_version"), new Command() {
-			    public void execute() {
-				new OsylPreviewView(
-					SecurityInterface.ACCESS_PUBLIC,
-					getController());
-			    }
-			});
-		getOsylToolbar().getViewMenuButton().addItem(
-			attendeeViewMenuItem);
-		getOsylToolbar().getViewMenuButton()
-			.addItem(publicViewMenuItem);
+		getOsylToolbar().getViewMenuItem().setVisible(true);
+		getOsylToolbar().getAddMenuBar().clearItems();
 
 		// 3 big ViewContext cases
 		if (getModel().isCourseOutlineContent()) {
-		    getOsylToolbar().getAddMenuButton().setVisible(false);
+		    getOsylToolbar().getAddMenuBar().setVisible(false);
 		} else if (getModel().isCOUnit()) {
 		    // Enables or Disables buttons in this ViewContext
-		    getOsylToolbar().getAddMenuButton().setVisible(true);
+		    getOsylToolbar().getAddMenuBar().setVisible(true);
 		    // Clear menu list, and set it according to the viewcontext
 		    try {
 
@@ -497,7 +438,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    }
 		} else if (getModel().isCOUnitStructure()) {
 		    // Enables or Disables buttons in this ViewContext
-		    getOsylToolbar().getAddMenuButton().setVisible(true);
+		    getOsylToolbar().getAddMenuBar().setVisible(true);
 		    // Clear menu list, and set it according to the viewcontext
 		    try {
 			createAllowedCOUnitStructureAddAction((COUnitStructure) getModel());
@@ -525,7 +466,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 				// Header COStructure
 				String parentType = castedModel.getType();
 				if (parentType.endsWith("Header")) {
-				    getOsylToolbar().getAddMenuButton()
+				    getOsylToolbar().getAddMenuBar()
 					    .setVisible(false);
 				    return;
 				} else {
@@ -600,7 +541,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	String html =
 		"<div id=\"add" + itemType + "\">" + getCoMessage(itemType)
 			+ "</div>";
-	getOsylToolbar().getAddMenuButton().addItem(html, true, cmd);
+	getOsylToolbar().getAddMenuBar().addItem(html, true, cmd);
     }
 
     public void addEventHandler(PublishPushButtonEventHandler handler) {
