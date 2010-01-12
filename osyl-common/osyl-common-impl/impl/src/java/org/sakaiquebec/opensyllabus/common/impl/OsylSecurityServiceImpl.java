@@ -32,6 +32,7 @@ import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.entity.api.ResourceProperties;
+import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
@@ -216,24 +217,24 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 				contentHostingService.commitCollection(edit);
 			}
 
-//			else {
-//				ContentResourceEdit edit = contentHostingService
-//						.editResource(resourceId);
-//				// check if resource is in work directory
-//				if (!resourceId.contains(contentHostingService
-//						.getSiteCollection(siteId)
-//						+ OsylSiteService.WORK_DIRECTORY + "/")) {
-//					if (SecurityInterface.ACCESS_PUBLIC
-//							.equals(permission)) {
-//						edit.setPublicAccess();
-//					}
-//				} else {
-//					// resource is in work directory, no public is allowed
-//					log.warn("no public access in work directory allowed: "
-//							+ resourceId);
-//				}
-//				contentHostingService.commitResource(edit);
-//			}
+			else {
+				ContentResourceEdit edit = contentHostingService
+						.editResource(resourceId);
+				// check if resource is in work directory
+				if (!resourceId.contains(contentHostingService
+						.getSiteCollection(siteId)
+						+ OsylSiteService.WORK_DIRECTORY + "/")) {
+					if (SecurityInterface.ACCESS_PUBLIC
+							.equals(permission)) {
+						edit.setPublicAccess();
+					}
+				} else {
+					// resource is in work directory, no public is allowed
+					log.warn("no public access in work directory allowed: "
+							+ resourceId);
+				}
+				contentHostingService.commitResource(edit, NotificationService.NOTI_NONE);
+			}
 		} catch (Exception e) {
 			log.error("Unable to apply permissions", e);
 			// We wrap the exception (could be IdUnusedException,
