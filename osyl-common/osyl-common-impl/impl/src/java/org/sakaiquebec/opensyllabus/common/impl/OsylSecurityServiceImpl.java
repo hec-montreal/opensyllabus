@@ -20,9 +20,13 @@
 
 package org.sakaiquebec.opensyllabus.common.impl;
 
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzGroupService;
+import org.sakaiproject.authz.api.GroupNotDefinedException;
+import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
@@ -212,24 +216,24 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 				contentHostingService.commitCollection(edit);
 			}
 
-			else {
-				ContentResourceEdit edit = contentHostingService
-						.editResource(resourceId);
-				// check if resource is in work directory
-				if (!resourceId.contains(contentHostingService
-						.getSiteCollection(siteId)
-						+ OsylSiteService.WORK_DIRECTORY + "/")) {
-					if (SecurityInterface.ACCESS_PUBLIC
-							.equals(permission)) {
-						edit.setPublicAccess();
-					}
-				} else {
-					// resource is in work directory, no public is allowed
-					log.warn("no public access in work directory allowed: "
-							+ resourceId);
-				}
-				contentHostingService.commitResource(edit);
-			}
+//			else {
+//				ContentResourceEdit edit = contentHostingService
+//						.editResource(resourceId);
+//				// check if resource is in work directory
+//				if (!resourceId.contains(contentHostingService
+//						.getSiteCollection(siteId)
+//						+ OsylSiteService.WORK_DIRECTORY + "/")) {
+//					if (SecurityInterface.ACCESS_PUBLIC
+//							.equals(permission)) {
+//						edit.setPublicAccess();
+//					}
+//				} else {
+//					// resource is in work directory, no public is allowed
+//					log.warn("no public access in work directory allowed: "
+//							+ resourceId);
+//				}
+//				contentHostingService.commitResource(edit);
+//			}
 		} catch (Exception e) {
 			log.error("Unable to apply permissions", e);
 			// We wrap the exception (could be IdUnusedException,
@@ -245,9 +249,25 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 		// TODO: set permissions for directory
 		// differ between work and publish directory
 		if (directoryId.contains(OsylSiteService.WORK_DIRECTORY)) {
-
+		
 		} else {
 			// default folder permissions
+		}
+		if (directoryId.contains(OsylSiteService.PUBLISH_DIRECTORY)) {
+			AuthzGroup realm = null;
+			try {
+				realm = authzService.getAuthzGroup(directoryId);
+			} catch (GroupNotDefinedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// roles associated to the realm
+			if (realm != null) {
+				Role student = realm.getRole("Student");
+
+				student.disallowFunction("content.read");
+			}
+			
 		}
 	}
 
