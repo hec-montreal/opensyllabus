@@ -70,7 +70,7 @@ public class OsylTreeView extends OsylViewableComposite implements
 
     private static int maxTreeWidth = INIT_TREE_WIDTH;
 
-    public static final int DEFAULT_WIDTH = 140;
+    public static final int DEFAULT_WIDTH = 130;
 
     public OsylTreeView(COModelInterface model, OsylController osylController) {
 	super(model, osylController);
@@ -275,7 +275,7 @@ public class OsylTreeView extends OsylViewableComposite implements
 	// Tree
 	getTree().setVisible(true);
 	if (itemModel.getLabel() != null) {
-	    int currentTreeWidth = itemModel.getLabel().length();
+	    int currentTreeWidth = itemModel.getLabel().length() + 10;
 	    if (currentTreeWidth > getMaxTreeWidth()) {
 		setMaxTreeWidth(currentTreeWidth);
 	    }
