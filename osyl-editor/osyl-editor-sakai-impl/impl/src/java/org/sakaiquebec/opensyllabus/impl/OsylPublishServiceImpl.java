@@ -15,7 +15,6 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
 import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentCollectionEdit;
@@ -338,11 +337,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    .hasNext();) {
 		ContentEntity next = (ContentEntity) pMbrs.next();
 		String thisEntityRef = next.getId();
-		if (next.isCollection())
-		    contentHostingService.removeCollection(thisEntityRef);
-		else
-		    contentHostingService.removeResource(thisEntityRef);
-	    }
+//		if (next.isCollection())
+//		    contentHostingService.removeCollection(thisEntityRef);
+//		else
+//		    contentHostingService.removeResource(thisEntityRef);
+    }
 
 	    copyWorkToPublish(workContent, documentSecurityMap);
 
