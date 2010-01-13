@@ -253,22 +253,7 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 		
 		} else {
 			// default folder permissions
-		}
-		if (directoryId.contains(OsylSiteService.PUBLISH_DIRECTORY)) {
-			AuthzGroup realm = null;
-			try {
-				realm = authzService.getAuthzGroup(directoryId);
-			} catch (GroupNotDefinedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			// roles associated to the realm
-			if (realm != null) {
-				Role student = realm.getRole("Student");
-
-				student.disallowFunction("content.read");
-			}
-			
+		
 		}
 	}
 
