@@ -22,7 +22,7 @@ abstract class AbstractResourceDAOTest extends AbstractDAOTest {
 	super.onSetUp();
 	osylConfig = new COConfigSerialized();
 
-	osylConfig.setCascadingStyleSheetURI("http://acme/stylesheet.css");
+	osylConfig.setCascadingStyleSheetPath("http://acme/stylesheet.css");
 	osylConfig.setConfigRef(null);
 	osylConfig.setRulesConfig("");
 	configDAO.createConfig(osylConfig);
@@ -134,8 +134,8 @@ abstract class AbstractResourceDAOTest extends AbstractDAOTest {
     private static final void assertConfigEquals(COConfigSerialized config,
 	    COConfigSerialized otherConfig) {
 	assertEquals("CascadingStyleSheetURIs don't match.", config
-		.getCascadingStyleSheetURI(), otherConfig
-		.getCascadingStyleSheetURI());
+		.getCascadingStyleSheetPath(), otherConfig
+		.getCascadingStyleSheetPath());
 
 	assertEquals("configIDs don't match.", config.getConfigId(),
 		otherConfig.getConfigId());

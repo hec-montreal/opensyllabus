@@ -76,16 +76,6 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
     private static final String CONFIG_EVAL_TYPE_LIST = "coEvalTypeList.xml";
 
     /**
-     * Css file for skin properties
-     */
-    private static final String CONFIG_SKIN = "osylcore.css";
-    
-    /**
-     * Css file for skin properties
-     */
-    private static final String PRINT_CONFIG_SKIN = "print.css";
-
-    /**
      * Item node name for xml parsing
      */
     private static final String ITEM_NODE_NAME = "item";
@@ -294,8 +284,7 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	    String webappdir, String configRef, String configId)
 	    throws Exception {
 	String path = webappdir + CONFIG_DIR + File.separator + configRef;
-	coConfig.setCascadingStyleSheetURI(getCascadingStyleSheetURI(path));
-	coConfig.setPrintCascadingStyleSheetURI(getPrintCascadingStyleSheetURI(path));
+	coConfig.setCascadingStyleSheetPath(getCssPath(path));
 	coConfig.setCoreBundle(OsylConfigServiceMessages.getMessages(path,
 		CONFIG_UIMESSAGES));
 	coConfig.setRulesConfig(getRules(path));
@@ -387,21 +376,7 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	}
 
 	return result;
-    }
-
-    /**
-     * For a given directory returns the String representation of the URI
-     * 
-     * @param dir
-     * @return String
-     */
-    private static String getCascadingStyleSheetURI(String dir) {
-	return getCssPath(dir)+ CONFIG_SKIN;
-    }
-    
-    private static String getPrintCascadingStyleSheetURI(String dir){
-	return getCssPath(dir)+ PRINT_CONFIG_SKIN;
-    }
+    }    
     
     private static String getCssPath(String dir){
 	String relativePath =

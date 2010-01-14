@@ -59,6 +59,22 @@ public interface OsylConfigService {
     public static final String CONFIG_DIR = "osylcoconfigs";
 
     /**
+     * Css file for skin properties
+     */
+    public static final String MAIN_CSS = "osylcore.css";
+    
+    /**
+     * Css file for skin properties (print)
+     */
+    public static final String PRINT_CSS = "print.css";
+    
+    /**
+     * Css file for skin properties (readonly)
+     */
+    public static final String READONLY_CSS = "readonly.css";
+
+    
+    /**
      * Creates the following configurations: "default" -
      * "Config from HEC Montreal" "udem" - "Config udem"
      * "udemCompetencesComposantes" - "Config UdeM - Competences Composantes"

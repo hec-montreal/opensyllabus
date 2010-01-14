@@ -19,7 +19,7 @@ abstract class AbstractConfigDAOTest extends AbstractDAOTest {
 	    String id = UUID.uuid();
 		
 	    COConfigSerialized config = new COConfigSerialized();		
-		config.setCascadingStyleSheetURI("http://acme/stylesheet.css");
+		config.setCascadingStyleSheetPath("http://acme/stylesheet.css");
 		config.setConfigRef("UnitTestConfigRef#" + id);
 		config.setRulesConfig("UnitTestRulesConfig#" + id);
 		
@@ -29,8 +29,8 @@ abstract class AbstractConfigDAOTest extends AbstractDAOTest {
 	protected static final void assertEquals(COConfigSerialized config, COConfigSerialized otherConfig) {
 		assertEquals(
 				"CascadingStyleSheetURIs don't match.",
-				config.getCascadingStyleSheetURI(),
-				otherConfig.getCascadingStyleSheetURI());
+				config.getCascadingStyleSheetPath(),
+				otherConfig.getCascadingStyleSheetPath());
 		
 		assertEquals(
 				"configIDs don't match.",

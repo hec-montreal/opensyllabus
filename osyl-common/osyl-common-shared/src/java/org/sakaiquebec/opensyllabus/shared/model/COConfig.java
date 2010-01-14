@@ -45,10 +45,10 @@ public class COConfig {
 
     private OsylSettings settings;
     
-    private String stylesheetUri ;
+    private String stylesheetPath ;
 
-    public String getStylesheetUri() {
-        return stylesheetUri;
+    public String getStylesheetPath() {
+        return stylesheetPath;
     }
 
     /**
@@ -69,7 +69,7 @@ public class COConfig {
 	this.evalTypeList = cOConfigSerialized.getEvalTypeList();
 	this.settings = 
 		new OsylSettings(cOConfigSerialized.getSettings());
-	this.stylesheetUri = cOConfigSerialized.getCascadingStyleSheetURI();
+	this.stylesheetPath = cOConfigSerialized.getCascadingStyleSheetPath();
     }
 
     /**

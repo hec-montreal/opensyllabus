@@ -73,12 +73,8 @@ public class COConfigSerialized implements java.io.Serializable {
 	/**
 	 * CSS URI, used for jsp page
 	 */
-	private String cascadingStyleSheetURI;
-	
-	/**
-	 * CSS (Print) URI, used for jsp page
-	 */
-	private String printCascadingStyleSheetURI;
+	private String cascadingStyleSheetPath;
+
 
 	/**
 	 * RolesList definition
@@ -105,24 +101,16 @@ public class COConfigSerialized implements java.io.Serializable {
 	/**
 	 * @return the cascadingStyleSheetURI value.
 	 */
-	public String getCascadingStyleSheetURI() {
-		return cascadingStyleSheetURI;
+	public String getCascadingStyleSheetPath() {
+		return cascadingStyleSheetPath;
 	}
 
 	/**
-	 * @param cascadingStyleSheetURI
+	 * @param cascadingStyleSheetPath
 	 *            the new value of cascadingStyleSheetURI.
 	 */
-	public void setCascadingStyleSheetURI(String cascadingStyleSheetURI) {
-		this.cascadingStyleSheetURI = cascadingStyleSheetURI;
-	}
-	
-	public String getPrintCascadingStyleSheetURI() {
-	    return printCascadingStyleSheetURI;
-	}
-
-	public void setPrintCascadingStyleSheetURI(String printCascadingStyleSheetURI) {
-	    this.printCascadingStyleSheetURI = printCascadingStyleSheetURI;
+	public void setCascadingStyleSheetPath(String cascadingStyleSheetPath) {
+		this.cascadingStyleSheetPath = cascadingStyleSheetPath;
 	}
 
 	/**

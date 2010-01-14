@@ -40,7 +40,6 @@ import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.Print;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylLongView;
-import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
@@ -53,13 +52,11 @@ import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
-import org.sakaiquebec.opensyllabus.shared.util.BrowserUtil;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.MenuItem;
 
 /**
  * A view to the {@link OsylToolbar} displayed in the upper part of the editor.
@@ -287,13 +284,15 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	// the Webkit html rendering technology while Firefox is based on Gecko.
 	getOsylToolbar().getPrintPushButton().setCommand(new Command() {
 	    public void execute() { // Command Print
+		getController().setReadOnly(true);
 		if (osylPrintView == null) {
 		    getController().getViewContext().setContextModel(
 			    entryPoint.getModel());
 		    osylPrintView =
 			    new OsylLongView(entryPoint.getModel(),
 				    getController());
-		    osylPrintView.setStyleName("Osyl-LongView-CourseOutline");
+		    osylPrintView
+			    .setStylePrimaryName("Osyl-MainPanel-ReadOnly");
 		}
 		previousMainView = entryPoint.getView();
 		getController().getMainView().getWorkspaceView()
@@ -310,12 +309,9 @@ public class OsylToolbarView extends OsylViewableComposite implements
 			.add(
 				new HTML(
 					"<iframe id=\"__printingFrame\" style=\"width:0;height:0;border:0\"></iframe>"));
-		getController().setReadOnly(true);
 		getController().getViewContext().closeAllEditors();
 		getController().getMainView().setHorizontalSplitPanelPosition(
 			"0px");
-
-		getOsylToolbar().getClosePushButton().setVisible(true);
 		getOsylToolbar().getClosePushButton().setCommand(new Command() {
 		    public void execute() {
 			getController().setReadOnly(false);
@@ -346,11 +342,11 @@ public class OsylToolbarView extends OsylViewableComposite implements
 			int documentHeight =
 				osylPrintView.getOffsetHeight() + sp;
 			entryPoint.setToolHeight(documentHeight);
-			if (BrowserUtil.getBrowserType().equals("webkit")) {
-			    printJSNI();
-			} else {
-			    draftPrinting();
-			}
+			// if (BrowserUtil.getBrowserType().equals("webkit")) {
+			// printJSNI();
+			// } else {
+			draftPrinting();
+			// }
 		    }
 		};
 		t.schedule(250);
@@ -370,19 +366,18 @@ public class OsylToolbarView extends OsylViewableComposite implements
      * Draft Printing for Browser different from WebKit
      */
     private void draftPrinting() {
-	Print
-	.it(
-		"<style type=text/css media=paper> "
-			+ ".Osyl-UnitView-MainPanel { padding: 10px 5px 0px 50px; } "
-			+ ".Osyl-LongView-CourseOutline { margin: 2px 30px 10px 2px; color:#063871; text-align:center; font-size: 20px; font-weight:bold; padding-top:4px; padding-bottom:4px; font-family: sans-serif, Arial, Verdana; } "
-			+ ".Osyl-UnitView-Title { margin: 2px 30px 10px 2px; color:#063871; font-size: 16px; font-weight:bold; padding: 4px 0px 4px 1px; font-family: sans-serif, Arial, Verdana; border: 1px solid transparent; } "
-			+ ".Osyl-UnitView-Title .Osyl-LabelEditor-View { margin: 2px 30px 10px 2px; color:#063871; font-size: 16px; font-weight:bold; padding:4px; font-family: sans-serif, Arial, Verdana; } "
-			+ ".Osyl-UnitView-Title .Osyl-LabelEditor-TextBox { border: 1px solid #aaa; margin-bottom: 12px; color:#063871; font-size: 16px; font-weight:bold; padding-top:4px; padding-bottom:4px; font-family: sans-serif, Arial, Verdana; } "
-			+ ".Osyl-UnitView-RubricName { font-family: sans-serif, Arial, Verdana; font-size: 14px; font-weight:bold; } "
-			+ ".Osyl-UnitView-RubricImg { display: list-item; list-style-image: url(img/carreVert.gif); margin:3px 4px 4px 4px; } "
-			+ ".Osyl-ResProxView-MetaInfo { display: block; margin: 15px 0px 15px 0px; font-family: sans-serif, Arial, Verdana; font-size: 10px; color: #a0a0a0; }"
-			+ ".Osyl-ContactInfo { border-bottom: 1px solid #C3D9FF; } "
-			+ "</style>", osylPrintView);
+	String stylesheetPath =
+		getController().getOsylConfig().getStylesheetPath();
+	String cssLinks =
+		"<link href=\"" + stylesheetPath + "osylcore.css"
+			+ "\" type=\"text/css\" rel=\"stylesheet\"/>";
+	cssLinks +=
+		"\n" + "<link href=\"" + stylesheetPath + "print.css"
+			+ "\" type=\"text/css\" rel=\"stylesheet\"/>";
+	cssLinks +=
+		"\n" + "<link href=\"" + stylesheetPath + "readonly.css"
+			+ "\" type=\"text/css\" rel=\"stylesheet\"/>";
+	Print.it(cssLinks, osylPrintView);
     }
 
     /**

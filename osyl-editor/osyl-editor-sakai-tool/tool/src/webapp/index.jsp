@@ -41,7 +41,8 @@
 	String locale = sessionLocale.toString();
 %>
         
-<html>
+
+<%@page import="org.sakaiquebec.opensyllabus.common.api.OsylConfigService"%><html>
 	<head>
 
 	<!-- AJAXSLT -->
@@ -55,6 +56,7 @@
 	<!-- Sets the parameters of the EntryPoint     -->
 	<!--                                           -->
 	<%
+		boolean readonly=false;
 		if (request.getParameter("sg") != null) {
 	%>
 	    <meta name="osyl:sg" content="<%= request.getParameter("sg") %>"/>
@@ -62,14 +64,17 @@
 		}
 
 		if (("true").equalsIgnoreCase(request.getParameter("ro"))) {
+		    readonly=true;
 	%>
  			<meta name="osyl:ro" content="true"> 
     <%
      	} else if (osylMainBean.getOsylSecurityService().isAllowedToEdit(osylMainBean.getOsylSiteService().getCurrentSiteId())) {
+     	    readonly=false;
      %>
  	        <meta name="osyl:ro" content="false"> 
     <%
      	} else {
+     		readonly=true;
      %>
             <meta name="osyl:ro" content="true">
     <%
@@ -119,13 +124,13 @@
 	    		configId = osylMainBean.getOsylConfigService().getConfigByRef(configSiteProperty.toString(), webappDir).getConfigId();
 	    	}
 	    	String cssPath = osylMainBean.getOsylConfigService().getConfig(
-	    			configId, webappDir).getCascadingStyleSheetURI();
-	    	
-	    	String printCssPath = osylMainBean.getOsylConfigService().getConfig(
-    			configId, webappDir).getPrintCascadingStyleSheetURI();
+	    			configId, webappDir).getCascadingStyleSheetPath();
 	    %>
-		<link rel="stylesheet" type="text/css" href="<%=cssPath%>" />
-		<link rel="stylesheet" type="text/css" href="<%=printCssPath%>" media="print"/>
+		<link rel="stylesheet" type="text/css" href="<%=cssPath+OsylConfigService.MAIN_CSS%>" />
+		<link rel="stylesheet" type="text/css" href="<%=cssPath+OsylConfigService.PRINT_CSS%>" media="print"/>
+		<%if(readonly){%>
+			<link rel="stylesheet" type="text/css" href="<%=cssPath+OsylConfigService.READONLY_CSS%>"/>
+		<%}%>
 		<script>
 			function isReadOnlyUI() {
 				return true;
