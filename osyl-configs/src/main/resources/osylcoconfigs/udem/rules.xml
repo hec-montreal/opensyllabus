@@ -10,13 +10,13 @@
 		<!-- restriction pattern is a regexp pattern based on the value of attribute type -->
 		<attribute name="propertyType" restrictionpattern="UdeM" />
 		<element name="asmStructure">
-			<attribute name="type" restrictionpattern="InformationOfLessonStruct" allowMultiple="false" />
+			<attribute name="type" restrictionpattern="NewsStruct"  allowMultiple="true"/>
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="InformationOfLessonUnit" allowMultiple="false"/>
+				<attribute name="type" restrictionpattern="NewsUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
-					<attribute name="type" restrictionpattern="InformationOfLessonUnitStruct" allowMultiple="false"/>
+					<attribute name="type" restrictionpattern="NewsUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
-						<attribute name="type" restrictionpattern="InformationOfLessonUnitContent" />				
+						<attribute name="type" restrictionpattern="NewsUnitContent" />				
 						<element name="asmResource">
 							<attribute name="type" restrictionpattern="Text|Document|URL" />
 						</element>

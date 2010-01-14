@@ -18,14 +18,14 @@
 	<department type="UdeM"></department>
 	<parent type="UdeM"></parent>
 	<access></access>
-	<asmStructure access="public" xsi:type="InformationOfLessonStruct">
+	<asmStructure access="public" xsi:type="NewsStruct">
 		<id type="UdeMsakai">38404736</id>
 		<modified>2001-12-17T09:30:47Z</modified>
 		<visible>true</visible>
-		<asmUnit access="public" xsi:type="InformationOfLessonUnit">
+		<asmUnit access="public" xsi:type="NewsUnit">
 			<label><![CDATA[Information sur le cours]]></label>
-			<asmUnitStructure access="public" xsi:type="InformationOfLessonUnitStruct">
-				<asmUnitContent access="public" xsi:type="InformationOfLessonUnitContent">
+			<asmUnitStructure access="public" xsi:type="NewsUnitStruct">
+				<asmUnitContent access="public" xsi:type="NewsUnitContent">
 				</asmUnitContent>
 			</asmUnitStructure>
 		</asmUnit>
