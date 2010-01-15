@@ -46,6 +46,21 @@ public class COConfig {
     private OsylSettings settings;
     
     private String stylesheetPath ;
+    
+    /**
+     * Css file for skin properties
+     */
+    public static final String MAIN_CSS = "osylcore.css";
+    
+    /**
+     * Css file for skin properties (print)
+     */
+    public static final String PRINT_CSS = "print.css";
+    
+    /**
+     * Css file for skin properties (readonly)
+     */
+    public static final String READONLY_CSS = "readonly.css";
 
     public String getStylesheetPath() {
         return stylesheetPath;

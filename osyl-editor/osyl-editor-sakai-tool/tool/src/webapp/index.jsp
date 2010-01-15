@@ -42,7 +42,8 @@
 %>
         
 
-<%@page import="org.sakaiquebec.opensyllabus.common.api.OsylConfigService"%><html>
+<%@page import="org.sakaiquebec.opensyllabus.common.api.OsylConfigService"%>
+<%@page import="org.sakaiquebec.opensyllabus.shared.model.COConfig"%><html>
 	<head>
 
 	<!-- AJAXSLT -->
@@ -126,9 +127,9 @@
 	    	String cssPath = osylMainBean.getOsylConfigService().getConfig(
 	    			configId, webappDir).getCascadingStyleSheetPath();
 	    %>
-		<link rel="stylesheet" type="text/css" href="<%=cssPath+OsylConfigService.MAIN_CSS%>" />
-		<link rel="stylesheet" type="text/css" href="<%=cssPath+OsylConfigService.PRINT_CSS%>" media="print"/>
-		<link rel="stylesheet" type="text/css" href="<%=cssPath+OsylConfigService.READONLY_CSS%>"/>
+		<link rel="stylesheet" type="text/css" href="<%=cssPath+COConfig.MAIN_CSS%>" />
+		<link rel="stylesheet" type="text/css" href="<%=cssPath+COConfig.PRINT_CSS%>" media="print"/>
+		<link rel="stylesheet" type="text/css" href="<%=cssPath+COConfig.READONLY_CSS%>"/>
 		<script>
 			function isReadOnlyUI() {
 				return true;

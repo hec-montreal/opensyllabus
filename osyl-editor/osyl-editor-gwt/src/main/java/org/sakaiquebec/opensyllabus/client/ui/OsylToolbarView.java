@@ -40,6 +40,7 @@ import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.Print;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylLongView;
+import org.sakaiquebec.opensyllabus.shared.model.COConfig;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
@@ -369,13 +370,13 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	String stylesheetPath =
 		getController().getOsylConfig().getStylesheetPath();
 	String cssLinks =
-		"<link href=\"" + stylesheetPath + "osylcore.css"
+		"<link href=\"" + stylesheetPath + COConfig.MAIN_CSS
 			+ "\" type=\"text/css\" rel=\"stylesheet\"/>";
 	cssLinks +=
-		"\n" + "<link href=\"" + stylesheetPath + "print.css"
+		"\n" + "<link href=\"" + stylesheetPath + COConfig.PRINT_CSS
 			+ "\" type=\"text/css\" rel=\"stylesheet\"/>";
 	cssLinks +=
-		"\n" + "<link href=\"" + stylesheetPath + "readonly.css"
+		"\n" + "<link href=\"" + stylesheetPath + COConfig.READONLY_CSS
 			+ "\" type=\"text/css\" rel=\"stylesheet\"/>";
 	Print.it(cssLinks, osylPrintView);
     }
