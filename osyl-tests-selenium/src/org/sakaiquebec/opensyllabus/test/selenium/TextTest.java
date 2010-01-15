@@ -58,7 +58,7 @@ public class TextTest extends AbstractOSYLTest {
 
 	// If we don't have a Lecture we add one
 	int LectNb = getResourceCount();
-	if(LectNb == 0){
+	if(LectNb == 1){
             //We add a first Lecture
             clickAddItem("addPedagogicalUnit");
             pause();

@@ -182,7 +182,7 @@ public class SeancesTest extends AbstractOSYLTest{
 	if (inFireFox()) {
 	    
         	//Overview
-        	session().click("gwt-uid-6");
+        	session().click("gwt-uid-7");
         	//Attendee Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
         			"div/table/tbody/tr/td");
@@ -284,7 +284,7 @@ public class SeancesTest extends AbstractOSYLTest{
 	
 	if (inFireFox()) {
         	//Overview
-        	session().click("gwt-uid-6");
+        	session().click("gwt-uid-7");
         	//Attendee Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
         			"div/table/tbody/tr/td");
@@ -461,7 +461,7 @@ public class SeancesTest extends AbstractOSYLTest{
         if (inFireFox()) {
                         
             //Overview
-            session().click("gwt-uid-6");
+            session().click("gwt-uid-7");
             
             //Attendee Overview 
             session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +

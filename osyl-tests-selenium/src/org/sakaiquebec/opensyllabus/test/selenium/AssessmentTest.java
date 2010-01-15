@@ -75,6 +75,8 @@ public class AssessmentTest extends AbstractOSYLTest{
 	// is incremented as expected when we add one
 	int resNb = getResourceCount()-1;
 	log("We start with " + resNb + " resources");
+	
+	pause();
         
         //We add a first Assessment Unit
 	clickAddItem("addAssessmentUnit");
@@ -259,12 +261,12 @@ public class AssessmentTest extends AbstractOSYLTest{
 	
 	//We fill the assessment name field
 	String newText1 = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-	session().type("//tr[2]/td/table/tbody/tr/td[2]/table/tbody/tr[2]/td" +
+	/*session().type("//tr[2]/td/table/tbody/tr/td[2]/table/tbody/tr[2]/td" +
 			"/input", newText1);
 	
 	//We fill the assessment date field by a wrong format
-	String newText2 = timeStamp();
-	session().type("//tr[2]/td/input", newText2);
+	//String newText2 = timeStamp();
+	//session().type("//tr[2]/td/input", newText2);
 	
 	//We click OK to close assessment editor
 	session().click("//td/table/tbody/tr/td[1]/button");
@@ -286,7 +288,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	//We fill the assessment name field
 	String Name = "Evaluation" + timeStamp();
 	session().type("//input[@class=\"Osyl-LabelEditor-TextBox\"]", 
-		Name);
+		Name);*/
 
 	//We close Editor
 	session().click("//td/table/tbody/tr/td[1]/button");
@@ -354,7 +356,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	if (inFireFox()) {
 	    
         	//Overview
-        	session().click("gwt-uid-6");
+        	session().click("gwt-uid-7");
         	//Attendee Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
 		"div/table/tbody/tr/td");
@@ -383,7 +385,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 		"/tr[2]/td[2]/div/div/table/tbody/tr/td");
         	
         	//Overview
-        	session().click("gwt-uid-6");
+        	session().click("gwt-uid-7");
         	//Public Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
 		"/div/div/table/tbody/tr[2]/td");
@@ -462,7 +464,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	
 	if (inFireFox()) {
         	//Overview
-        	session().click("gwt-uid-6");
+        	session().click("gwt-uid-7");
         	//Attendee Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
         			"div/table/tbody/tr/td");
@@ -639,7 +641,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	
 	if (inFireFox()) {
         	//Overview
-        	session().click("gwt-uid-6");
+        	session().click("gwt-uid-7");
         	//Attendee Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
         			"div/table/tbody/tr/td");
