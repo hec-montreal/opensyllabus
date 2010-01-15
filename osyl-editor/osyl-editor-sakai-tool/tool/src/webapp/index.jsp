@@ -128,9 +128,7 @@
 	    %>
 		<link rel="stylesheet" type="text/css" href="<%=cssPath+OsylConfigService.MAIN_CSS%>" />
 		<link rel="stylesheet" type="text/css" href="<%=cssPath+OsylConfigService.PRINT_CSS%>" media="print"/>
-		<%if(readonly){%>
-			<link rel="stylesheet" type="text/css" href="<%=cssPath+OsylConfigService.READONLY_CSS%>"/>
-		<%}%>
+		<link rel="stylesheet" type="text/css" href="<%=cssPath+OsylConfigService.READONLY_CSS%>"/>
 		<script>
 			function isReadOnlyUI() {
 				return true;
