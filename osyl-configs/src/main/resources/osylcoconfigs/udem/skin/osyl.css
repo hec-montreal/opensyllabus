@@ -141,7 +141,7 @@
 	height:8px;
 }
 .Osyl-TreeView .bottomCenter {background-position:bottom left}
-.Osyl-TreeView .topCenter {height:47px}
+.Osyl-TreeView .topCenter {height:47px;background-position:0 -8px}
 
 .Osyl-TreeView .middleLeft,
 .Osyl-TreeView .middleRight {
@@ -247,7 +247,6 @@
 
 .Osyl-WorkspaceView, .Osyl-WorkspaceView-MainPanel {width:100%}
 
-.Osyl-WorkspaceView .middleCenterInner {margin-bottom:-5px}
 .Osyl-WorkspaceView .topCenter,
 .Osyl-WorkspaceView .bottomCenter {
   background:url(images/ui/hborder.png) repeat-x;
@@ -294,7 +293,8 @@
   height: 8px;
   overflow: hidden;
 }
-.Osyl-WorkspaceView .middleCenterInner {margin-bottom:-5px}
+.Osyl-WorkspaceView .middleCenterInner {margin:0 0 -5px 0}
+
 /* End WorkspaceView Right Zone ---------------------------------------------------------------------------*/
 
 .Osyl-LongView-CourseOutline {
@@ -429,7 +429,7 @@
 
 .Osyl-UnitView-Title {
 	padding:4px 0;
-	border:1px solid transparent;
+	border:1px solid #FFF; /*For IE6*/
 }
 
 .Osyl-UnitView-Title-Hover {
@@ -445,7 +445,16 @@
 .Osyl-UnitView-ResPanel .Osyl-Title2, .Osyl-UnitView-TitlePanel .Osyl-Title2,
 .Osyl-UnitView-ResPanel .Osyl-Title3, .Osyl-UnitView-TitlePanel .Osyl-Title3,
 .Osyl-UnitView-ResPanel .Osyl-Title4, .Osyl-UnitView-TitlePanel .Osyl-Title4,
-.Osyl-UnitView-ResPanel .Osyl-Title5, .Osyl-UnitView-TitlePanel .Osyl-Title5 {margin-left:30px}
+.Osyl-UnitView-ResPanel .Osyl-Title5, .Osyl-UnitView-TitlePanel .Osyl-Title5 {
+	margin:3px 0 3px 30px;
+}
+.Osyl-ListItemView-Table .Osyl-Title1,
+.Osyl-ListItemView-Table .Osyl-Title2,
+.Osyl-ListItemView-Table .Osyl-Title3,
+.Osyl-ListItemView-Table .Osyl-Title4,
+.Osyl-ListItemView-Table .Osyl-Title5 {
+	margin:3px 0 3px 0;
+}
 
 .Osyl-Title1 {
 	color:#1c4d6c;
@@ -579,7 +588,7 @@
 	font:normal 10px sans-serif, Arial, Verdana;
 	color:#A0A0A0;
 }
-
+.Osyl-ListItemView-Hyperlink .Osyl-UnitView-MetaInfo {margin:5px 0 0 0}
 .Osyl-UnitView-SemanticTag {margin:0 0 3px 40px}
 
 /* Link in a Content Unit Panel */
@@ -593,7 +602,7 @@
 	font-family:Arial,Verdana,sans-serif;
 	font-size:12px;
 	font-size-adjust:none;
-	margin-left:33px;
+	margin-left:30px;
 }
 /*Assessment Unit View -------------------------------------------------------------------------------*/
 
@@ -605,9 +614,9 @@
 }
 
 .Osyl-ListItemView-labelNo {
-	width:30px;
+	width:25px;
 	height:30px;
-	padding:0 5px 0 10px;
+	padding:0 0 0 5px;
 }
 
 .Osyl-ListItemView-Hyperlink {}
@@ -735,14 +744,6 @@
 
 .Osyl-UnitView-UnitPanel {width:100%}
 
-.Osyl-UnitView-TextArea {
-	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
-	background:#FFF;
-	border:1px solid #AAA;
-	margin:0;
-	width:100%;
-}
-.Osyl-UnitView-TextArea body {color:red}
 .Osyl-ResConfigView-Status-Panel {
 	margin:1px;
 	padding:2px;
@@ -864,14 +865,30 @@
 	-webkit-box-shadow:1px 1px 10px #000;
  	box-shadow:1px 1px 10px #000;
 }
-
-.Osyl-EditorPopup .Osyl-LabelEditor-TextBox {
-	border:0;
+.Osyl-LabelEditor-TextBox {
+	display:block;
+	margin:2px -6px 2px 2px;
+	width:100%;
 	border:1px solid #878a8c;
-	margin:1px 0 0 2px;
+	font:normal 12px Arial, Verdana, sans-serif;
+	padding:1px;
 }
-.Osyl-EditorPopup-RowEditor .Osyl-LabelEditor-TextBox {width:99%}
-.Osyl-EditorPopup table {border-collapse:separate}
+* html .Osyl-LabelEditor-TextBox {margin:0 -4px 0 0}
+
+.Osyl-UnitView-TextArea {
+	display:block;
+	margin:2px 0 2px 2px;
+	width:100%;
+	border:1px solid #878a8c;
+	background:#FFF;
+	font:normal 12px Arial, Verdana, sans-serif;
+}
+* html .Osyl-UnitView-TextArea {margin:0 -4px 0 0}
+
+.Osyl-EditorPopup-RowEditor td {padding:2px 6px 2px 2px}
+* html .Osyl-EditorPopup-RowEditor td {padding:1px 2px 0 2px}
+
+.Osyl-EditorPopup-RowEditor > tbody > tr > td{padding:0}
 
 .Osyl-EditorPopup .mosaic-Caption {margin:0}
 
@@ -902,6 +919,10 @@
 .Osyl-ResourceBrowserPanel .Osyl-ResourceBrowser, 
 .Osyl-EditorPopup .sectionLabel {
 	width:100%;
+}
+.Osyl-EditorPopup-RowEditor, .Osyl-EditorPopup-RowEditor table{
+	width:100%;
+	border-collapse:collapse;
 }
 
 .Osyl-EditorPopup-OptionGroup {padding:0 12px 0 7px}
@@ -1007,7 +1028,8 @@
 
 .Osyl-Button,
 .Osyl-EditorPopup-Button,
-.Osyl-FileUpload-genericButton {
+.Osyl-FileUpload-genericButton,
+.Osyl-PublishView-genericButton {
 	font:bold 12px Arial, Verdana, sans-serif;
 	white-space:nowrap;
 	color:#444;
@@ -1020,16 +1042,30 @@
 	-moz-border-radius:8px;
 	-webkit-border-radius:8px;
 }
-.Osyl-Button::-moz-focus-inner, .Osyl-EditorPopup-Button::-moz-focus-inner, .Osyl-FileUpload-genericButton::-moz-focus-inner {border:none} /* removes inner border of buttons in Firefox */
-.Osyl-Button:hover, .Osyl-EditorPopup-Button:hover, .Osyl-FileUpload-genericButton:hover {background-color:#FFF}
-.Osyl-Button:active, .Osyl-EditorPopup-Button:active, .Osyl-FileUpload-genericButton:active {
+.Osyl-Button::-moz-focus-inner,
+.Osyl-EditorPopup-Button::-moz-focus-inner,
+.Osyl-FileUpload-genericButton::-moz-focus-inner,
+.Osyl-PublishView-genericButton::-moz-focus-inner {border:none} /* removes inner border of buttons in Firefox */
+
+.Osyl-Button:hover,
+.Osyl-EditorPopup-Button:hover,
+.Osyl-FileUpload-genericButton:hover,
+.Osyl-PublishView-genericButton:hover {background-color:#FFF}
+
+.Osyl-Button:active,
+.Osyl-EditorPopup-Button:active,
+.Osyl-FileUpload-genericButton:active,
+.Osyl-PublishView-genericButton:active {
 	padding:4px 3px 2px;
 	background-color:#F0F0F0;
 }
 
-.Osyl-ImageAndTextButton > img {
-	margin:0 3px -3px 0 !important; /*needed for Firefox only*/
-} 
+.Osyl-ImageAndTextButton img,
+.Osyl-ImageAndTextButton img gwt\:clipper { /*Name space gwt:clipper for IE margin between image and text in button*/
+	vertical-align:middle;
+	margin-right:5px;
+	margin-top:-2px;
+}
 
 .Osyl-EditorPopup-Button {margin:2px}
 
