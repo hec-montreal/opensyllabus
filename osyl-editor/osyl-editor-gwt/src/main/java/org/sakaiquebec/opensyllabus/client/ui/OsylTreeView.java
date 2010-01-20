@@ -275,7 +275,7 @@ public class OsylTreeView extends OsylViewableComposite implements
 	// Tree
 	getTree().setVisible(true);
 	if (itemModel.getLabel() != null) {
-	    int currentTreeWidth = itemModel.getLabel().length() + 10;
+	    int currentTreeWidth = itemModel.getLabel().length() + 8;
 	    if (currentTreeWidth > getMaxTreeWidth()) {
 		setMaxTreeWidth(currentTreeWidth);
 	    }
