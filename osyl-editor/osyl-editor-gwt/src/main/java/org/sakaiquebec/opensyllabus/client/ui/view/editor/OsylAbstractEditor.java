@@ -324,7 +324,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	row3.setStylePrimaryName("Osyl-EditorPopup-RowEditor");
 	mainPanel.add(row3);
 	Widget editor = getEditorTopWidget();
-	editor.setWidth("99%");
+	editor.setWidth("100%");
 	row3.add(editor);
 	Widget configWidget = getConfigurationWidget();
 	if (null != configWidget) {
