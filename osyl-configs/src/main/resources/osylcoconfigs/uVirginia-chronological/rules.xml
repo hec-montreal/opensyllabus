@@ -40,7 +40,7 @@
 				    		<attribute name="type" restrictionpattern="Text|Document|URL" />
 			    		</element>
 			    		<element name="semanticTag">
-			        		<attribute name="type" restrictionpattern="undefined|description|objectives|learningstrat" />
+			        		<attribute name="type" restrictionpattern="undefined|description|objectives|learningstrat|readings|exercises|resources|miscellania" />
 			    		</element>
 					</element>
 				</element>
@@ -116,7 +116,7 @@
 							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource|News" />
 						</element>
 						<element name="semanticTag">
-				    		<attribute name="type" restrictionpattern="undefined|news|description|objectives|learningstrat|misresources|ressinclass|readinglist|exercises" />
+				    		<attribute name="type" restrictionpattern="undefined|description|objectives|learningstrat|readings|exercises|resources|miscellania" />
 						</element>
 					</element>
 				</element>
