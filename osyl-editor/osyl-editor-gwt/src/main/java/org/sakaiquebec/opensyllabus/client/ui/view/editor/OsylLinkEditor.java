@@ -113,7 +113,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	editorName = new TextBox();
 	editorName.setStylePrimaryName("Osyl-LabelEditor-TextBox");
 	editorName.addClickHandler(new ResetLabelClickListener(getView()
-		.getCoMessage("InsertYourTextHere")));
+		.getCoMessage("InsertYourHyperlinkLabelHere")));
 	flexTable.setWidget(0, 0, new HTML(getUiMessage("Link.label")
 		+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + " : "));
 	flexTable.setWidget(0, 1, editorName);

@@ -94,12 +94,24 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	    if (type.equalsIgnoreCase(COContentResourceProxyType.REFERENCE)) {
 		resProxModel.addProperty(COPropertiesType.DISPLAY_AS, "link");
 	    }
-	    if (resourceType.equalsIgnoreCase(COContentResourceType.ASSIGNMENT))
+	    if (resourceType.equalsIgnoreCase(COContentResourceType.ASSIGNMENT)) {
 		// We change the default text
 		resProxModel
 			.setLabel(osylConfigMessages.getMessage("SendWork"));
-	    else if (!resourceType
-		    .equalsIgnoreCase(COContentResourceType.BIBLIO_RESOURCE)) {
+	    } else if (resourceType
+		    .equalsIgnoreCase(COContentResourceType.TEXT)) {
+		resProxModel.setLabel(osylConfigMessages
+			.getMessage("InsertYourTextHere"));
+	    } else if (resourceType
+		    .equalsIgnoreCase(COContentResourceType.URL)) {
+		resProxModel.setLabel(osylConfigMessages
+			.getMessage("InsertYourHyperlinkLabelHere"));
+	    } else if (resourceType
+		    .equalsIgnoreCase(COContentResourceType.DOCUMENT)) {
+		resProxModel.setLabel(osylConfigMessages
+			.getMessage("InsertYourDocumentLabelHere"));
+	    } else if (resourceType
+		    .equalsIgnoreCase(COContentResourceType.NEWS)) {
 		resProxModel.setLabel(osylConfigMessages
 			.getMessage("InsertYourTextHere"));
 	    }
