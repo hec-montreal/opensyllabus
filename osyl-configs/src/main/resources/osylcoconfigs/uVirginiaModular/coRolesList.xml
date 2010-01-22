@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		List of Roles to be displayed in OpenSyllabus Warning: each value
+		specified in the list targets a corresponding key in the bundle
+		COMessages_??_??.properties files
+	-->
+<list>
+	<item value="ResProxContactInfoView_Professor" />
+	<item value="ResProxContactInfoView_AssistantProfessor" />
+	<item value="ResProxContactInfoView_AdjunctProfessor" />
+	<item value="ResProxContactInfoView_AffiliatedProfessor" />
+	<item value="ResProxContactInfoView_AssociateProfessor" />
+	<item value="ResProxContactInfoView_GuestProfessor" />
+	<item value="ResProxContactInfoView_HonoraryProfessor" />
+	<item value="ResProxContactInfoView_Full-timeFacultyLecturer" />
+	<item value="ResProxContactInfoView_Part-timeFacultyLecturer" />
+	<item value="ResProxContactInfoView_Full-timeLecturer" />
+	<item value="ResProxContactInfoView_Trainee" />
+	<item value="ResProxContactInfoView_Student" />
+	<item value="ResProxContactInfoView_Secretary" />
+</list>
