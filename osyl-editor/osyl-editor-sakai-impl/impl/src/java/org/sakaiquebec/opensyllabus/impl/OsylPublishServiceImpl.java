@@ -178,7 +178,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public COSerialized getSerializedPublishedCourseOutlineForAccessType(
 	    String accessType, String webappDir) {
 	COSerialized thisCo = null;
-	COConfigSerialized coConfig = null;
 	String siteId = "";
 	String configRef;
 	try {
@@ -189,7 +188,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 				    siteId, accessType);
 	    osylSiteService.getSiteInfo(thisCo, siteId);
 	    configRef = thisCo.getOsylConfig().getConfigRef();
-	    coConfig = configDao.getConfigByRef(configRef);
 	} catch (Exception e) {
 	    configRef = OsylConfigService.DEFAULT_CONFIG_REF;
 	    log.error("Unable to retrieve published course outline for" +
