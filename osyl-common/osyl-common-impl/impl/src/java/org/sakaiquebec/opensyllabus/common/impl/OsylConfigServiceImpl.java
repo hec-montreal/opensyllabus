@@ -219,6 +219,8 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	initConfig("udemCompetencesSeances");
 	initConfig("udemObjectifsActivites");
 	initConfig("udemObjectifsSeances");
+	initConfig("uVirginiaChronological");
+	initConfig("uVirginiaModular");
     }
 
     private void initConfig(String configref) throws Exception {
@@ -226,7 +228,7 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	    coConfigDao.getConfigByRef(configref);
 	} catch (Exception e) {
 	    log.warn("Could not find config with configref='" + configref
-		    + "'. This config will be create.");
+		    + "'. This config will be created");
 	    if (log.isInfoEnabled()) {
 		log.info("Details:");
 		e.printStackTrace();

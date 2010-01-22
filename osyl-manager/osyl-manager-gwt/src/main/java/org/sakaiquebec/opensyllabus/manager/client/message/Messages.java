@@ -115,6 +115,10 @@ public interface Messages extends ConstantsWithLookup {
    
    String config_announcementsRegulationsHEC();
    
+   String config_uVirginiaChronological();
+
+   String config_uVirginiaModular();
+
    String language_en();
    
    String language_es();
