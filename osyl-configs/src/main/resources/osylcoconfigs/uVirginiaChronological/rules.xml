@@ -93,7 +93,7 @@
 					<element name="asmUnitContent">
 						<attribute name="type" restrictionpattern="AssessmentUnitContent" />
 						<element name="asmResource">
-							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource|Assignment"/>
+							<attribute name="type" restrictionpattern="Text|Document|URL|Assignment"/>
 						</element>
 						<element name="semanticTag">
 				    		<attribute name="type" restrictionpattern="undefined|description|objectives|evalcriteria|evalpreparation|evalsubproc|misresources" />
