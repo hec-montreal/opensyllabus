@@ -295,7 +295,7 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	callback.onSuccess(null);
     }
 
-    public void publishCourseOutline(AsyncCallback<Void> callback) {
+    public void publishCourseOutline(AsyncCallback<Map<String,String>> callback) {
 	callback.onSuccess(null);
     }
 

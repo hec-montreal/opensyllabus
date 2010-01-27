@@ -22,6 +22,8 @@ package org.sakaiquebec.opensyllabus.server;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -36,10 +38,14 @@ import org.sakaiproject.tool.api.Tool;
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtService;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
+import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
+import org.sakaiquebec.opensyllabus.shared.model.COContent;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -146,11 +152,39 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * 
      * @param String id
      */
-    public void publishCourseOutline() throws Exception {
+    public Map<String,String> publishCourseOutline() throws Exception {
 	String webappDir = getServletContext().getRealPath("/");
-	osylServices.getOsylPublishService().publish(webappDir,
-		getNonFusionnedSerializedCourseOutline());
-	return;
+	TreeMap<String, String> publicationProperties =
+	    new TreeMap<String, String>();
+	try {
+	    osylServices.getOsylPublishService().publish(webappDir,
+		    getNonFusionnedSerializedCourseOutline());
+	    // change publication date
+	    COSerialized coSerialized =
+		    getNonFusionnedSerializedCourseOutline();
+	    COModeledServer coModeled = new COModeledServer(coSerialized);
+	    coModeled.XML2Model(false);
+	    COContent coContent = coModeled.getModeledContent();
+	    coContent
+		    .addProperty(
+			    COPropertiesType.PREVIOUS_PUBLISHED,
+			    coContent.getProperty(COPropertiesType.PUBLISHED) != null ? coContent
+				    .getProperty(COPropertiesType.PUBLISHED)
+				    : "");
+	    coContent.addProperty(COPropertiesType.PUBLISHED, OsylDateUtils
+		    .getNowDateAsXmlString());
+	    coModeled.model2XML();
+	    coSerialized.setContent(coModeled.getSerializedContent());
+	    osylServices.getOsylSiteService().createOrUpdateCO(coSerialized);
+
+	    publicationProperties.put(COPropertiesType.PREVIOUS_PUBLISHED,
+		    coContent.getProperty(COPropertiesType.PREVIOUS_PUBLISHED));
+	    publicationProperties.put(COPropertiesType.PUBLISHED, coContent
+		    .getProperty(COPropertiesType.PUBLISHED));
+	} catch (Exception e) {
+	    throw e;
+	}
+	return publicationProperties;
     }
 
     private COSerialized getNonFusionnedSerializedCourseOutline()
@@ -348,9 +382,9 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      */
     public String createOrUpdateAssignment(String assignmentId, String title,
 	    String instructions, Date openDate, Date closeDate, Date dueDate) {
-	return osylServices.getOsylService().createOrUpdateAssignment(
-		assignmentId, title, instructions, openDate, closeDate,
-		dueDate);
+	return osylServices.getOsylService()
+		.createOrUpdateAssignment(assignmentId, title, instructions,
+			openDate, closeDate, dueDate);
     }
 
     /**

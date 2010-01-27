@@ -409,6 +409,10 @@
 	text-align:center;
 }
 
+.Osyl-PublishView-publishedDate { font-style: italic;}
+
+.Osyl-PublishView-Label-important{font:bold;}
+
 .Osyl-PublishView-PopupPanel {
 	width:430px;
 	margin:120px 0 0 300px;

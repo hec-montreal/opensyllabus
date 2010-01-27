@@ -82,7 +82,6 @@ public class COPropertiesType {
     public static final String TITLE = "title";
     public static final String LANGUAGE = "language";
     public static final String CREATED = "created";
-    public static final String LAST_MODIFIED = "lastModified";
     public static final String CREATED_BY = "createdBy";
     public static final String LAST_MODIFIED_BY = "lastModifiedBy";
     public static final String PARENT = "parent";

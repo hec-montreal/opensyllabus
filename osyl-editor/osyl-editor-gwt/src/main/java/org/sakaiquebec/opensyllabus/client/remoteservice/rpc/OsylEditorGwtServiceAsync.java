@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.client.remoteservice.rpc;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -82,7 +83,7 @@ public interface OsylEditorGwtServiceAsync {
      * 
      * @param String id
      */
-    public void publishCourseOutline(AsyncCallback<Void> callback);
+    public void publishCourseOutline(AsyncCallback<Map<String,String>> callback);
 
     /**
      * Returns the Published CourseOutline for the group specified in parameter.

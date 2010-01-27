@@ -27,7 +27,9 @@ import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COModeled;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -95,7 +97,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	// content for development purposes (i.e: it will call
 	// initOffline()).
 	osylController.loadData();
-
+	
 	Window.addWindowClosingHandler(new Window.ClosingHandler() {
 	    public void onWindowClosing(Window.ClosingEvent event) {
 
@@ -588,6 +590,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * model. This is needed before sending the Course Outline to the server.
      */
     public void prepareModelForSave() {
+	getModel().addProperty(COPropertiesType.MODIFIED, OsylDateUtils
+		    .getNowDateAsXmlString());
 	modeledCo.setModeledContent(getModel());
 	modeledCo.model2XML(false);
 	if (serializedCO == null) {

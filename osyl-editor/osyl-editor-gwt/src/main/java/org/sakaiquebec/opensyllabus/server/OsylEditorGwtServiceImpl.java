@@ -1,6 +1,7 @@
 package org.sakaiquebec.opensyllabus.server;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtService;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
@@ -90,9 +91,9 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 
     }
 
-    public void publishCourseOutline() throws Exception {
+    public Map<String, String> publishCourseOutline() throws Exception {
 	// TODO Auto-generated method stub
-
+	return null;
     }
 
     public void removeAssignment(String assignmentId) {

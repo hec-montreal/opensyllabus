@@ -53,6 +53,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
+import org.sakaiquebec.opensyllabus.shared.util.BrowserUtil;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
@@ -343,11 +344,11 @@ public class OsylToolbarView extends OsylViewableComposite implements
 			int documentHeight =
 				osylPrintView.getOffsetHeight() + sp;
 			entryPoint.setToolHeight(documentHeight);
-			// if (BrowserUtil.getBrowserType().equals("webkit")) {
-			// printJSNI();
-			// } else {
-			draftPrinting();
-			// }
+//			if (BrowserUtil.getBrowserType().equals("webkit")) {
+//			    printJSNI();
+//			} else {
+			    draftPrinting();
+//			}
 		    }
 		};
 		t.schedule(250);
@@ -359,7 +360,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
      * Called when the print button is clicked!
      */
 
-    private static native void printJSNI()/*-{  
+    private static native void printJSNI()/*-{
 					  window.parent.print();
 					  }-*/;
 

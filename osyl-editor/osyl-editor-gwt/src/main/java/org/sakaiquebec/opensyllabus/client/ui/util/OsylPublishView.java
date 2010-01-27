@@ -21,6 +21,8 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
+import java.util.Map;
+
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewControllable;
@@ -74,8 +76,10 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	mainPanel.add(label);
 
 	osylPublishedListView = new OsylPublishedListView(getController());
+	osylPublishedListView.setWidth("100%");
 	mainPanel.add(osylPublishedListView);
-	setSize("300px", "200px");
+	mainPanel.setWidth("100%");
+	setSize("400px", "200px");
 
 	// Add a button panel
 	HorizontalPanel buttonPanel = new HorizontalPanel();
@@ -118,6 +122,10 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	setStylePrimaryName("Osyl-PublishView-PopupPanel");
     }
 
+    public void refreshView() {
+
+    }
+
     public class PublishLinkClickHandler implements ClickHandler {
 
 	public void onClick(ClickEvent event) {
@@ -134,7 +142,7 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 				    .getUiMessage("publish.error")
 				    + " : " + error.toString());
 		    alertBox.show();
-		    osylPublishedListView.verifiyPublishState();
+		    osylPublishedListView.verifiyPublishState(false);
 		}
 	    };
 	    osylController.saveCourseOutline(callback);
@@ -143,20 +151,28 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
     }
 
     private void publish() {
-	AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-	    public void onSuccess(Void serverResponse) {
-		osylPublishedListView.verifiyPublishState();
-	    }
+	AsyncCallback<Map<String, String>> callback =
+		new AsyncCallback<Map<String, String>>() {
+		    public void onSuccess(Map<String, String> serverResponse) {
+			if (serverResponse != null) {
+			    for (String key : serverResponse.keySet())
+				osylController.getMainView().getModel()
+					.addProperty(key,
+						serverResponse.get(key));
+			}
+			osylPublishedListView.verifiyPublishState(true);
+		    }
 
-	    public void onFailure(Throwable error) {
-		final OsylAlertDialog alertBox =
-			new OsylAlertDialog(false, true, getController()
-				.getUiMessage("publish.error")
-				+ " : " + error.toString());
-		alertBox.show();
-		osylPublishedListView.verifiyPublishState();
-	    }
-	};
+		    public void onFailure(Throwable error) {
+			final OsylAlertDialog alertBox =
+				new OsylAlertDialog(false, true,
+					getController().getUiMessage(
+						"publish.error")
+						+ " : " + error.toString());
+			alertBox.show();
+			osylPublishedListView.verifiyPublishState(false);
+		    }
+		};
 	osylController.publishCourseOutline(callback);
     }
 

@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.client.remoteservice.rpc;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -80,7 +81,7 @@ public interface OsylEditorGwtService extends RemoteService {
      * 
      * @param String id
      */
-    public void publishCourseOutline() throws Exception;
+    public Map<String, String> publishCourseOutline() throws Exception;
 
     /**
      * Returns the Published CourseOutline for the access type specified in

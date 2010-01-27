@@ -13,11 +13,16 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
+import java.util.Date;
+
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewControllable;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
@@ -35,6 +40,8 @@ public class OsylPublishedListView extends Composite implements
     Panel mainPanel = null;
     OsylController osylController;
     private boolean hasBeenPublished = false;
+   
+    private Label label;
 
     /**
      * User interface message bundle
@@ -54,40 +61,56 @@ public class OsylPublishedListView extends Composite implements
     }
 
     private void initView() {
-	verifiyPublishState();
+	label= new Label();
+	label.setStylePrimaryName("Osyl-PublishView-Label");
+	verifiyPublishState(false);
 	initWidget(mainPanel);
     }
 
-    private void refreshView() {
+    private void refreshView(boolean afterPublication) {
+	mainPanel.clear();
 	if (hasBeenPublished) {
-	    displayPublishedLinks();
+	    displayPublishedLinks(afterPublication);
 	} else {
 	    displayNoPublishedVersionMsg();
 	}
     }
 
     private void displayNoPublishedVersionMsg() {
-	setCurrentText(uiMessages.getMessage("noPublishedVersion"));
+	label.setText(uiMessages.getMessage("noPublishedVersion"));
+	mainPanel.add(label);
     }
 
     public void setPublishingNow() {
-	setCurrentText(uiMessages.getMessage("publishing"));
-    }
-
-    private void setCurrentText(String txt) {
 	mainPanel.clear();
-	Label infoLabel = new Label(txt);
-	infoLabel.setStylePrimaryName("Osyl-PublishView-Label");
-	mainPanel.add(infoLabel);
+	label.setText(uiMessages.getMessage("publishing"));
+	mainPanel.add(label);
     }
 
-    private void displayPublishedLinks() {
-	setCurrentText(uiMessages.getMessage("publishedVersions"));
+    private void displayPublishedLinks(boolean afterPublication) {
 
-	// TODO: the onsite group is not active for the moment
+	Date publishedDate =
+		OsylDateUtils.getDateFromXMLDate(osylController.getMainView()
+			.getModel().getProperty(COPropertiesType.PUBLISHED));
+	DateTimeFormat dtf = osylController.getSettings().getDateTimeFormat();
+	String dateTimeString = dtf.format(publishedDate);
+
+	if(afterPublication){
+	    Label pubLabel = new Label(uiMessages.getMessage("publish.ok"));
+	    pubLabel.setStylePrimaryName("Osyl-PublishView-Label-important");
+	    mainPanel.add(pubLabel);
+	}
+	mainPanel.add(label);
+	label.setText(uiMessages.getMessage("publishedVersions"));
+
 	displayPublishedLink(SecurityInterface.ACCESS_PUBLIC);
 	// displayPublishedLink(SecurityInterface.SECURITY_ACCESS_ONSITE);
 	displayPublishedLink(SecurityInterface.ACCESS_ATTENDEE);
+	Label infoLabel =
+		new Label(uiMessages.getMessage("publish.publishedDate")
+			+ " : " + dateTimeString);
+	infoLabel.setStylePrimaryName("Osyl-PublishView-publishedDate");
+	mainPanel.add(infoLabel);
     }
 
     private void displayPublishedLink(String securityGroup) {
@@ -113,11 +136,11 @@ public class OsylPublishedListView extends Composite implements
     /**
      * 
      */
-    public void verifiyPublishState() {
+    public void verifiyPublishState(final boolean newPublication) {
 	AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
 	    public void onSuccess(Boolean serverResponse) {
 		hasBeenPublished = serverResponse.booleanValue();
-		refreshView();
+		refreshView(newPublication);
 	    }
 
 	    public void onFailure(Throwable error) {

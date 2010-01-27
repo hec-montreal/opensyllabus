@@ -387,10 +387,6 @@ public class COModeledServer {
 		addProperty(coContent.getProperties(), myNode);
 	    }
 	}
-	if (isPublication) {
-	    coContent.addProperty(COPropertiesType.MODIFIED, OsylDateUtils
-		    .getNowDateAsXmlString());
-	}
 	return coContent;
     }
 
