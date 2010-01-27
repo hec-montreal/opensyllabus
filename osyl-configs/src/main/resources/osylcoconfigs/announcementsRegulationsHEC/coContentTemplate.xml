@@ -35,20 +35,7 @@
 					<asmUnitContent access="public"
 						id="2DD1F0BA-AEDF-4DE2-A2A7-A98BDCCFA300" xsi:type="NewsUnitContent">
 						<modified>2009-11-11T16:12:18-05:00</modified>
-						<asmContext access="public"
-							id="BE3EB350-8B43-4630-A2E8-2519EA84D543" xsi:type="InformationContext">
-							<modified>2009-11-11T16:14:12-05:00</modified>
-							<label><![CDATA[Insert your Text Here...]]></label>
-							<importance>false</importance>
-							<level>undefined</level>
-							<visible>true</visible>
-							<semanticTag type="rubric">flu</semanticTag>
-							<asmResource xsi:type="Text" access="public"
-								id="F6DD380F-2FAB-4F3F-B3ED-640E6C77995A">
-								<text><![CDATA[In the event of exceptional circumstances [as established by the Direction of&nbsp; Programs] beyond HEC Montréal's control, the content and/or evaluation scheme of&nbsp; the courses can be subject to change. <a href="http://www.hec.ca/en/flu/index.html" target="_blank">Learn more about H1N1 Influenza...</a>]]></text>
-								<modified>2009-11-11T16:14:12-05:00</modified>
-							</asmResource>
-						</asmContext>
+						
 						<asmContext access="public"
 							id="0FA43BC5-C09E-441C-9124-8408AFCB7AB8" xsi:type="InformationContext">
 							<modified>2009-11-11T16:12:13-05:00</modified>
