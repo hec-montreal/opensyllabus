@@ -208,6 +208,11 @@ public class COModeledServer {
     protected final static String MODIFIED_NODE_NAME = "modified";
 
     /**
+     *Name of userDefLabel attribute
+     */
+    protected final static String USERDEFLABEL_ATTRIBUTE_NAME = "userDefLabel";
+
+    /**
      * The modeledContent is a POJO filled by XML2Model
      */
     private COContent modeledContent;
@@ -688,6 +693,13 @@ public class COModeledServer {
 			.getNamedItem(TYPE_ATTRIBUTE_NAME) == null) ? null
 			: namedNodeMap.getNamedItem(TYPE_ATTRIBUTE_NAME)
 				.getNodeValue();
+	
+	String userDefLabel =
+		(namedNodeMap == null) ? null : (namedNodeMap
+				.getNamedItem(USERDEFLABEL_ATTRIBUTE_NAME) == null) ? null
+				: namedNodeMap.getNamedItem(USERDEFLABEL_ATTRIBUTE_NAME)
+					.getNodeValue();
+ 
 	if (type.equals("rubric")) {
 	    String value = "";
 
@@ -695,6 +707,10 @@ public class COModeledServer {
 		value += node.getChildNodes().item(j).getNodeValue();
 	    }
 	    coContentRubric.setType(value);
+	    if(userDefLabel!=null){
+	    	coContentRubric.setUserDefLabel(userDefLabel);
+	    }
+	
 	}
 	return coContentRubric;
     }
@@ -750,6 +766,7 @@ public class COModeledServer {
 	    element.setAttribute(XSI_TYPE_ATTRIBUTE_NAME, modelInterface
 		    .getType());
 	}
+		
 	if (modelInterface instanceof COElementAbstract) {
 	    COElementAbstract coElementAbstract =
 		    (COElementAbstract) modelInterface;
@@ -960,6 +977,9 @@ public class COModeledServer {
 	    Element coContentResourceProxyElem, COContentRubric rubric) {
 	Element coContentRubricElem = document.createElement(SEMANTIC_TAG);
 	coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME, "rubric");
+	if(rubric.getUserDefLabel()!=null && rubric.getUserDefLabel().length() > 0 ){
+		coContentRubricElem.setAttribute(USERDEFLABEL_ATTRIBUTE_NAME, rubric.getUserDefLabel());		
+	}
 
 	Text elemValue = document.createTextNode(rubric.getType());
 	coContentRubricElem.appendChild(elemValue);

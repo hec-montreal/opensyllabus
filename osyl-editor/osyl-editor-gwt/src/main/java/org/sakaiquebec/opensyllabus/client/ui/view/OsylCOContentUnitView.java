@@ -91,6 +91,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 
 	    if (subModel instanceof COContentRubric) {
 		COContentRubric coContentRubric = (COContentRubric) subModel;
+		coContentRubric.setUserDefLabel(getUserDefLabelForRubricView(coContentRubric));
 		OsylRubricView rubricView =
 			new OsylRubricView(coContentRubric, getController(), OsylStyleLevelChooser.getLevelStyle(getModel()));
 		getMainPanel().add(rubricView);
@@ -224,6 +225,11 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	    rubricView.removeResProxView(resProxView);
 	} else if (event.isMoveInRubricEvent()) {
 	    refreshRubric(rubricView);
+	} else if (event.isRubricLabelUpdateEvent()) {
+		String userDefLabel = resProx.getRubricUserDefLabel();
+		((COContentRubric)rubricView.getModel()).setUserDefLabel(userDefLabel);
+		rubricView.refreshView();
+	    refreshResProxiesRubricLabel(rubricView,userDefLabel);    
 	}
 	refreshResProxUpAndDownArrowsInSameRubric(rubricView);
     }
@@ -269,6 +275,50 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 		rubricView.addResProxView(resProxView);
 	    }
 	}
+    }
+
+    /**
+     * Update the Resource Proxy models with latest rubric label.
+     * 
+     * @param rubricView
+     */
+    private void refreshResProxiesRubricLabel(OsylRubricView rubricView,String userDefLabel) {
+	COUnitContent coContentUnit = (COUnitContent) getModel();
+	Iterator<COContentResourceProxy> iter =
+		coContentUnit.getChildrens().iterator();
+	while (iter.hasNext()) {
+	    COContentResourceProxy resProx =
+		    (COContentResourceProxy) iter.next();
+	    // And we create the rubric views
+	    if (resProx != null
+		    && resProx.getRubricType().equals(
+			    rubricView.getModel().getType())) {
+	    	resProx.getRubric().setUserDefLabel(userDefLabel);
+	    }
+	}
+    }
+
+    /**
+     * return the userDefLabel of a rubric found in a resource proxy model.
+     * 
+     * @return userDefLabel
+     */
+    private String getUserDefLabelForRubricView(COContentRubric coContentRubric) {
+    String userDefLabel = null;
+	COUnitContent coContentUnit = (COUnitContent) getModel();
+	Iterator<COContentResourceProxy> iter =
+		coContentUnit.getChildrens().iterator();
+	while (iter.hasNext()) {
+	    COContentResourceProxy resProx =
+		    (COContentResourceProxy) iter.next();
+	    // And we create the rubric views
+	    if (resProx != null
+		    && resProx.getRubricType().equals(
+			    coContentRubric.getType())) {
+	    	userDefLabel = resProx.getRubricUserDefLabel();
+	    }
+	}
+	return userDefLabel;
     }
 
     public void onUpdateModel(UpdateCOUnitContentEvent event) {

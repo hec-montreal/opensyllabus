@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlexTable;
 
 /**
  * A wrapper for displaying a rubric and the resource proxies in this rubric.
@@ -49,6 +50,9 @@ public class OsylRubricView extends OsylViewableComposite {
     private Panel mainPanel;
     private Map<COModelInterface, OsylAbstractView> resProxViewMap;
     private String style;
+    private Label rubricLabel;
+    private Label rubricUserDefLabel;
+
 
     /**
      * Public constructor to display a rubric with the specified model.
@@ -69,11 +73,20 @@ public class OsylRubricView extends OsylViewableComposite {
 
 	// Rubric section display
 	HorizontalPanel hPanel = new HorizontalPanel();
-	Label l = new Label(getCoMessages().getMessage(getModel().getType()));
-	l.setStylePrimaryName("Osyl-UnitView-Title");
-	l.addStyleName(style);
-	l.addStyleName("Osyl-RubricTitle");
-	hPanel.add(l);
+	FlexTable ft = new FlexTable();
+	rubricLabel = new Label(getCoMessages().getMessage(getModel().getType()));
+	rubricLabel.setStylePrimaryName("Osyl-UnitView-Title");
+	rubricLabel.addStyleName(style);
+	rubricLabel.addStyleName("Osyl-RubricTitle");
+	//hPanel.add(rubricLabel);
+	ft.setWidget(0, 0, rubricLabel);
+	rubricUserDefLabel = new Label();
+	rubricUserDefLabel.setStylePrimaryName("Osyl-ResProxView-MetaInfo");
+	rubricUserDefLabel.addStyleName("Osyl-RubricUserDefLabel");
+	rubricUserDefLabel.setVisible(false);
+	ft.setWidget(1, 0, rubricUserDefLabel);
+	//hPanel.add(rubricUserDefLabel);
+	hPanel.add(ft);
 	getMainPanel().add(hPanel);
 
 	initWidget(getMainPanel());
@@ -81,6 +94,27 @@ public class OsylRubricView extends OsylViewableComposite {
     }
 
     public void refreshView() {
+    if(rubricLabel != null && rubricUserDefLabel != null){
+    	
+	    if((getModel() instanceof COContentRubric) &&
+	       getSettings().isRubricDescEditable() &&
+	       ((COContentRubric)getModel()).getUserDefLabel() != null &&
+	       ((COContentRubric)getModel()).getUserDefLabel().length() > 0	){
+	    	String rubricTypeDesc = getCoMessages().getMessage(getModel().getType());
+	    	String newRubricLabel = ((COContentRubric)getModel()).getUserDefLabel();
+	    	rubricLabel.setText(newRubricLabel);
+	    	rubricUserDefLabel.setText(rubricTypeDesc);
+	    	if (getController().isReadOnly()){
+	    		rubricUserDefLabel.setVisible(false);
+	    	}else{
+	    		rubricUserDefLabel.setVisible(true);	    		
+	    	}
+	    }else{
+	    	rubricLabel.setText(getCoMessages().getMessage(getModel().getType()));
+	    	rubricUserDefLabel.setText("");
+	    	rubricUserDefLabel.setVisible(false);	    	
+	    }
+    }
 	checkVisibility();
     }
 

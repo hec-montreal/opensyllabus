@@ -23,6 +23,7 @@ import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractResProxEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
+import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
@@ -214,6 +215,14 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 	getModel().setRubricType(r);
     }
 
+    public String getRubricUserDefLabel() {
+    	return getModel().getRubricUserDefLabel();
+    }
+
+    public void setRubricUserDefLabel(String r) {
+    	getModel().setRubricUserDefLabel(r);
+    }
+
     protected void updateMetaInfo() {
 	//contextMetaInfo
 	if(getEditor().isHasImportant())
@@ -222,6 +231,7 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 	    setContextHidden(getEditor().isContextHidden());
 	setDiffusionLevel(getEditor().getDiffusionLevel());
 	setRubricType(getEditor().getRubricType());
+	setRubricUserDefLabel(getEditor().getRubricUserDefLabel());
 	getModel().addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getNowDateAsXmlString());
 	if (getEditor().isHasRequirement())
 	    setRequirementLevel(getEditor().getRequirementLevel());

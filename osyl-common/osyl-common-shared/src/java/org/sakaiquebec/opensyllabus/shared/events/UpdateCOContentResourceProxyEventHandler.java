@@ -59,6 +59,11 @@ public interface UpdateCOContentResourceProxyEventHandler {
 	 */
 	public static final int MOVE_IN_RUBRIC_EVENT_TYPE = 3;
 
+	/**
+	 * The Rubric update event type when a rubric update is done
+	 */
+	public static final int RUBRIC_LABEL_UPDATE_EVENT_TYPE = 4;
+	
 	/** The unique id for serialization */
 	private static final long serialVersionUID = 55L;
 	private int eventType = DEFAULT_EVENT_TYPE;
@@ -93,6 +98,9 @@ public interface UpdateCOContentResourceProxyEventHandler {
 	    case MOVE_IN_RUBRIC_EVENT_TYPE:
 		this.eventType = MOVE_IN_RUBRIC_EVENT_TYPE;
 		break;
+	    case RUBRIC_LABEL_UPDATE_EVENT_TYPE:
+			this.eventType = RUBRIC_LABEL_UPDATE_EVENT_TYPE;
+			break;
 	    default:
 		this.eventType = DEFAULT_EVENT_TYPE;
 		break;
@@ -104,6 +112,13 @@ public interface UpdateCOContentResourceProxyEventHandler {
 	 */
 	public boolean isRubricUpdateEvent() {
 	    return getEventType() == RUBRIC_UPDATE_EVENT_TYPE;
+	}
+	
+	/**
+	 * @return true if current eventType is a RUBRIC LABEL UPDATE
+	 */
+	public boolean isRubricLabelUpdateEvent() {
+	    return getEventType() == RUBRIC_LABEL_UPDATE_EVENT_TYPE;
 	}
 	
 	/**

@@ -42,6 +42,8 @@ public class COContentRubric implements COModelInterface {
      */
     private String type;
     
+    private String userDefLabel;
+    
     private COProperties coProperties;
 
     /**
@@ -65,7 +67,15 @@ public class COContentRubric implements COModelInterface {
 	this.type = type;
     }
 
-    public boolean isEditable() {
+    public String getUserDefLabel() {
+		return userDefLabel;
+	}
+
+	public void setUserDefLabel(String userDefLabel) {
+		this.userDefLabel = userDefLabel;
+	}
+
+	public boolean isEditable() {
 	return true;
     }
 

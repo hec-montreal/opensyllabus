@@ -249,6 +249,33 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     }
 
     /**
+     * @return the rubric userDefLabel or null if no rubric
+     */
+    public String getRubricUserDefLabel() {
+	String rubricUserDefLabel = null;
+	if (getRubric() != null) {
+	    rubricUserDefLabel = getRubric().getUserDefLabel();
+	}
+	return rubricUserDefLabel;
+    }
+    /**
+     * Creates and sets a customize rubric description and send and event, 
+     * except if it is the same as current rubric label in which case it
+     * does nothing.
+     * 
+     * @param userDefLabel
+     */
+    public void setRubricUserDefLabel(String userDefLabel) {
+	if (userDefLabel != null) {
+	    if (userDefLabel.equals(getRubricUserDefLabel())) {
+		return;
+	    }
+	    getRubric().setUserDefLabel(userDefLabel);
+		notifyEventHandlers(UpdateCOContentResourceProxyEvent.RUBRIC_LABEL_UPDATE_EVENT_TYPE);
+	}
+    }
+
+    /**
      * Adds a resourceProxy to the list of resourceProxies.
      * 
      * @param resourceProxy the resourcePRoxy to add.

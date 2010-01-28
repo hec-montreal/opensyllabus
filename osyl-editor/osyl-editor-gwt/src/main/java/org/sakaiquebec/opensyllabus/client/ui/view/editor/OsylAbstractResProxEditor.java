@@ -53,6 +53,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -66,14 +67,17 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     // TODO: document
     private CheckBox importantCheckBox;
     private CheckBox hideCheckBox;
+    private CheckBox modifyRubricDesc;
     private ListBox diffusionListBox;
     private ListBox rubricListBox;
     private ListBox requirementListBox;
+    private TextBox userDefLabel;
     private boolean hasRequirement;
     private boolean rubricMoveable;
     private boolean hasImportant;
     private boolean moveableInRubric;
     private boolean hasHide;
+    
 
     /**
      * Constructor.
@@ -213,9 +217,54 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
 		public void onChange(ChangeEvent event) {
 		    refreshTargetCoAbsractElementListBox(targetsListBox);
+		    if(rubricListBox.getSelectedIndex() > 0){
+		    	modifyRubricDesc.setEnabled(true);
+		    	modifyRubricDesc.setValue(false);
+		    	userDefLabel.setText("");
+		    	userDefLabel.setEnabled(false);	    	
+			    fillRubricUserDefLabel();
+		    }else{
+		    	modifyRubricDesc.setEnabled(false);
+		    	modifyRubricDesc.setValue(false);
+		    	userDefLabel.setText("");
+		    	userDefLabel.setEnabled(false);	    	
+		    }
 		}
-
 	    });
+	    modifyRubricDesc = new CheckBox(getUiMessage("EditorPopUp.options.rubric.check"));
+	    boolean userDefLabelSet = false;
+	    if(getView().getModel().getRubric().getUserDefLabel() != null && 
+	    		getView().getModel().getRubric().getUserDefLabel().length() > 0){
+	    	userDefLabelSet = true;
+	    }
+    	modifyRubricDesc.setEnabled(rubricListBox.getSelectedIndex() > 0);
+    	modifyRubricDesc.setValue(userDefLabelSet);
+	    modifyRubricDesc.addClickHandler(new ClickHandler(){
+	    	public void onClick(ClickEvent clickEvent){
+	    		boolean checked = ((CheckBox) clickEvent.getSource()).getValue();
+	    		if(checked){
+	    			userDefLabel.setEnabled(true);
+	    			userDefLabel.setFocus(true);
+	    		}else{
+	    			userDefLabel.setEnabled(false);
+	    			userDefLabel.setText("");	    			
+	    		}
+	    		
+	    	}
+	    });
+	    //TODO set checkbox to true if a value is found in new attribute userdeftype
+	    //modifyRubricDesc.setValue(getView().isContextHidden());
+	    userDefLabel = new TextBox();
+	    userDefLabel.setEnabled(userDefLabelSet);
+	    if(userDefLabelSet){
+	    	userDefLabel.setText(getView().getModel().getRubric().getUserDefLabel());
+	    }
+        rubricPanel.add(modifyRubricDesc);
+        rubricPanel.add(userDefLabel);
+	    if(!(getView().getSettings().isRubricDescEditable())){
+	    	modifyRubricDesc.setVisible(false);
+	    	userDefLabel.setVisible(false);
+	    }
 	    widgetList.add(rubricPanel);
 	}
 	// Diffusion Level ListBox
@@ -446,6 +495,15 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	return rubricListBox.getValue(rubricListBox.getSelectedIndex());
     }
 
+    /**
+     * Returns the user defined rubric name.
+     * 
+     * @return String
+     */
+    public String getRubricUserDefLabel() {
+    	return userDefLabel.getText();
+    }
+    
     private ListBox generateRubricList() {
 	ListBox lb = new ListBox();
 	lb.setName("listBoxFormElement");
@@ -485,6 +543,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		lb.setItemSelected(i, true);
 	    }
 	}
+	
 	return lb;
     }
 
@@ -624,6 +683,34 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
 	return metaInfoLabel;
     }
+
+    private void fillRubricUserDefLabel() {
+    	
+    if(rubricListBox.getSelectedIndex() == 0)
+    	return;
+    	
+    String listBoxRubricType = rubricListBox.getValue(rubricListBox.getSelectedIndex());
+
+    COContentResourceProxy resProx =
+   		(COContentResourceProxy) getView().getModel();
+
+    List<COContentResourceProxy> subModels = resProx.getParent().getChildrens();
+    Iterator<COContentResourceProxy> iter = subModels.listIterator();
+    boolean rubricFound = false;
+    while(iter.hasNext() && !rubricFound){
+    	COContentResourceProxy iterResProx = iter.next();
+		if(listBoxRubricType.equals(iterResProx.getRubricType())){
+			rubricFound = true;
+			if( iterResProx.getRubricUserDefLabel() != null &&
+			    iterResProx.getRubricUserDefLabel().length() > 0){
+					modifyRubricDesc.setValue(true);
+					userDefLabel.setEnabled(true);
+					userDefLabel.setText(iterResProx.getRubricUserDefLabel());
+			}
+
+		}
+    }
+	}
 
     public boolean isMoveable() {
 	return true;

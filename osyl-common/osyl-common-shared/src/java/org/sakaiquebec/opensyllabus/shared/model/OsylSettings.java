@@ -46,6 +46,7 @@ public class OsylSettings {
 	    "treeview.pedagogicalunit.numbering";
     private static final String FORMAT_DATE = "format.date";
     private static final String FORMAT_DATE_TIME = "format.date_time";
+    private static final String RUBRIC_DESCRIPTION_EDITABLE = "rubric.description.editable";
     
     private Map<String, String> settings;
 
@@ -181,5 +182,12 @@ public class OsylSettings {
 	}
 	return DateTimeFormat.getFormat(f);
     }
-
+    
+    /**
+     * @return true if the rubric description can be editable
+     */
+    public boolean isRubricDescEditable() {
+	return checkBooleanOption(RUBRIC_DESCRIPTION_EDITABLE, false);
+    }
+    
 }
