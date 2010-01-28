@@ -3,8 +3,12 @@ package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 import java.util.*;
 import java.io.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class GenericProfCoursMapFactory {
 
+	private static Log log = LogFactory.getLog(GenericProfCoursMapFactory.class);
 	private static final String DEFAULT_BASE_NAME = "prof_cours3";
 
 	public static ProfCoursMap buildMap(String dataDir,
@@ -102,8 +106,8 @@ public class GenericProfCoursMapFactory {
 			String sessionCode = token[i++];
 			String section = token[i++];
 			String unitMinimum = token[i++];
-			String descLong = "";
-			String nDescLong = "";
+			String descLong = token[i++];
+			String nDescLong = token[i++];
 			String acadOrg = token[i++];
 			String role = token[i++];
 			String strmId = strm + sessionCode;
@@ -191,6 +195,6 @@ public class GenericProfCoursMapFactory {
 	}
 
 	protected static void print(String msg) {
-		System.out.println("GenericProfCoursMapFactory: " + msg);
+		log.info("GenericProfCoursMapFactory: " + msg);
 	}
 }

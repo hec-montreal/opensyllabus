@@ -4,7 +4,12 @@ package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 import java.util.*;
 import java.io.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class GenericEtudiantCoursMapFactory {
+
+    private static Log log = LogFactory.getLog(GenericEtudiantCoursMapFactory.class);
 
     private static final String DEFAULT_BASE_NAME = "etudiant_cours3";
 
@@ -190,6 +195,6 @@ public class GenericEtudiantCoursMapFactory {
     }
 
     protected static void print(String msg) {
-	System.out.println("GenericEtudiantCoursMapFactory: " + msg);
+	log.info("GenericEtudiantCoursMapFactory: " + msg);
     }
 }

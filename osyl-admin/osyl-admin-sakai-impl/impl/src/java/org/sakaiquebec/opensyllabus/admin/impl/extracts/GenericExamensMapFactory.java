@@ -4,9 +4,13 @@ package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 import java.util.*;
 import java.io.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class GenericExamensMapFactory {
 
-    private static final String DEFAULT_BASE_NAME = "examens";
+   private static Log log = LogFactory.getLog(GenericExamensMapFactory.class);
+   private static final String DEFAULT_BASE_NAME = "examens";
 
     public static void addExamens(String dataDir,
 								  DetailCoursMap detailCoursMap)
@@ -81,7 +85,7 @@ public class GenericExamensMapFactory {
 				repartition = tokenizer.nextToken();
 				type        = tokenizer.nextToken();
 			} catch (java.util.NoSuchElementException e) {
-				System.out.println("GenericExamensMapFactory: NoSuchElementException: " + buffer);
+				log.info("GenericExamensMapFactory: NoSuchElementException: " + buffer);
 				erreurs.append(buffer).append("\n");
 				continue;
 			}
@@ -171,6 +175,6 @@ public class GenericExamensMapFactory {
 	*/
 
     protected static void print(String msg) {
-		System.out.println("GenericExamensMapFactory: " + msg);
+		log.info("GenericExamensMapFactory: " + msg);
     }
 }

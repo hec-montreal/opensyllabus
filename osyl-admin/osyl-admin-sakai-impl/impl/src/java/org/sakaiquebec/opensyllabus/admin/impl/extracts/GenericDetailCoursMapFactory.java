@@ -2,9 +2,14 @@ package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 
 import java.io.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class GenericDetailCoursMapFactory {
 
     private static final String DEFAULT_BASE_NAME = "cours";
+    
+    private static Log log = LogFactory.getLog(GenericDetailCoursMapFactory.class);
 
     public static DetailCoursMap buildMap(String dataDir)
 	    throws java.io.IOException {
@@ -166,8 +171,7 @@ public class GenericDetailCoursMapFactory {
 		// ProfCoursMap.get(...) retourne null... Donc on cree le
 		// ProfCoursMapEntry maintenant, et on le met dans la
 		// ProfCoursMap.
-		System.out
-			.println("setCoordonnateurs: creation ProfCoursMapEntry pour "
+		log.info("setCoordonnateurs: creation ProfCoursMapEntry pour "
 				+ matricule);
 		coordonnateur = new ProfCoursMapEntry(matricule);
 		profMap.put(coordonnateur);
@@ -194,6 +198,6 @@ public class GenericDetailCoursMapFactory {
     }
 
     protected static void print(String msg) {
-	System.out.println("GenericDetailCoursMapFactory: " + msg);
+	log.info("GenericDetailCoursMapFactory: " + msg);
     }
 }

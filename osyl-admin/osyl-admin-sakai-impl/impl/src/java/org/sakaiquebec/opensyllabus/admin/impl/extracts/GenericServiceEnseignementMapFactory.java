@@ -2,9 +2,13 @@ package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 
 import java.io.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class GenericServiceEnseignementMapFactory {
 
 	private static final String DEFAULT_BASE_NAME = "service_enseignement";
+	private static Log log = LogFactory.getLog(GenericServiceEnseignementMapFactory.class);
 
 	public static ServiceEnseignementMap buildMap(String dataDir)
 			throws java.io.IOException {
@@ -77,6 +81,6 @@ public class GenericServiceEnseignementMapFactory {
 	}
 
 	protected static void print(String msg) {
-		System.out.println("GenericServiceEnseignementFactory: " + msg);
+		log.info("GenericServiceEnseignementFactory: " + msg);
 	}
 }

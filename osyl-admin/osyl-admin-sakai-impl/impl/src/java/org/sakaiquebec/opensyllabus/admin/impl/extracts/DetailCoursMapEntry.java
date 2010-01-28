@@ -2,6 +2,9 @@ package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 
 import java.util.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Represente les donnees provenant de l'extract detail_cours.dat<br/>
  * <br/>
@@ -27,6 +30,8 @@ public class DetailCoursMapEntry implements java.io.Serializable {
     private Vector<String> etudiants;
     private Vector<MatriculeNomMapEntry> stagiaires;
     private Vector<ExamenMapEntry> examens;
+
+    private static Log log = LogFactory.getLog(DetailCoursMapEntry.class);
 
     /**
      * Empty constructor.
@@ -171,7 +176,7 @@ public class DetailCoursMapEntry implements java.io.Serializable {
 	} else if (langStr.equals("ESPAGNOL")) {
 	    this.lang = Constants.SPANISH;
 	} else {
-	    System.out.println("DetailCoursMapEntry [" + getCourseId()
+	    log.info("DetailCoursMapEntry [" + getCourseId()
 		    + "] setLangue: langue inconnue [" + langStr + "]");
 	    this.lang = Constants.FRENCH;
 	}
@@ -389,7 +394,7 @@ public class DetailCoursMapEntry implements java.io.Serializable {
 	    // commence par un ou plusieurs zeros un jour...
 	    return Integer.parseInt("1" + strm + courseId);
 	} catch (NumberFormatException e) {
-	    System.out.println("DetailCoursMapEntry.hashCode: " + e);
+	    log.info("DetailCoursMapEntry.hashCode: " + e);
 	    return super.hashCode();
 	}
     } // hashCode

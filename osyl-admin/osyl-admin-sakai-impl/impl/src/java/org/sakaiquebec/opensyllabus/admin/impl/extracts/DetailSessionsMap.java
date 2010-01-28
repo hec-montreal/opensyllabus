@@ -4,6 +4,9 @@ package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 
 import java.util.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 
 /**
  * Permet d'acceder aux donnees provenant de l'extract detail_sessions.dat,
@@ -15,6 +18,8 @@ public class DetailSessionsMap extends HashMap<String,DetailSessionsMapEntry> {
     // Pour assurer la compatibilite des instances serialisees meme
     // quand on change la classe...
     static final long serialVersionUID = 1489168447867453239L;
+
+    private static Log log = LogFactory.getLog(DetailSessionsMap.class);
 
     public DetailSessionsMapEntry get(String numero) {
 	return (DetailSessionsMapEntry) super.get(numero);
@@ -47,7 +52,7 @@ public class DetailSessionsMap extends HashMap<String,DetailSessionsMapEntry> {
 		sessionNo = Math.max(Integer.parseInt(session.getAcadCareer()),
 				     sessionNo);
 	    } catch (NumberFormatException e) {
-		System.out.println("DetailSessionsMapEntry.getLatestSession "
+		log.info("DetailSessionsMapEntry.getLatestSession "
 				   + "NumberFormatException: " + session);
 	    }
 	}

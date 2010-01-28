@@ -4,8 +4,12 @@ package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 import java.util.*;
 import java.io.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class GenericMatriculeNomMapFactory {
 
+	private static Log log = LogFactory.getLog(GenericMatriculeNomMapFactory.class);
     private static final String DEFAULT_BASE_NAME = "matricule_nom";
 
     public static MatriculeNomMap buildMap(String dataDir)
@@ -82,7 +86,7 @@ public class GenericMatriculeNomMapFactory {
 	while (iterator.hasNext()) {
 	    entry = (MatriculeNomMapEntry) iterator.next();
 	    if (! readItems.containsKey(entry.getMatricule())) {
-		System.out.println("Suppression de " + entry.toString());
+		log.info("Suppression de " + entry.toString());
 		iterator.remove();
 	    }
 	}
@@ -104,6 +108,6 @@ public class GenericMatriculeNomMapFactory {
     }
 
     protected static void print(String msg) {
-	System.out.println("GenericMatriculeNomMapFactory: " + msg);
+	log.info("GenericMatriculeNomMapFactory: " + msg);
     }
 }

@@ -591,8 +591,9 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 	/** {@inheritDoc} */
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		loginToSakai();
 		log.info(" Strart synchronizing PeopleSoft data extracts to the course management");
+
+		loginToSakai();
 
 		String directory = ServerConfigurationService
 				.getString("coursemanagement.extract.files.path", getPathToExtracts());
@@ -645,8 +646,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 			e.printStackTrace();
 		}
 
-		log.info(" End synchronizing PeopleSoft data extracts to the course management");
 		logoutFromSakai();
+		log.info(" End synchronizing PeopleSoft data extracts to the course management");
 		
 	}
 

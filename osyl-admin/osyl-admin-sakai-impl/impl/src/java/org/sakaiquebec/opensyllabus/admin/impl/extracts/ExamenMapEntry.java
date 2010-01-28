@@ -4,6 +4,9 @@ package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 
 import java.util.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 
 /**
  * Represente les donnees provenant de l'extract examens.dat<br/><br/>
@@ -20,6 +23,8 @@ public class ExamenMapEntry implements java.io.Serializable {
     // Pour assurer la compatibilite des instances serialisees meme
     // quand on change la classe...
     public static final long serialVersionUID = 2591692265806260051l;
+
+    private static Log log = LogFactory.getLog(ExamenMapEntry.class);
 
 	private DetailCoursMapEntry cours;
     private long beginTime, endTime;
@@ -65,7 +70,7 @@ public class ExamenMapEntry implements java.io.Serializable {
 			calendar.set(year, month, day, hr, min, 0);
 			this.endTime = calendar.getTimeInMillis();
 		} catch (Exception e) {
-			System.out.println("Impossible d'initialiser la date: " + date + " " + hrDebut + "-" + hrFin);
+			log.info("Impossible d'initialiser la date: " + date + " " + hrDebut + "-" + hrFin);
 		}
 
 	} // setDate
@@ -115,7 +120,7 @@ public class ExamenMapEntry implements java.io.Serializable {
 		} else if ("TEST".equals(type)) {
 			return "examenTest";
 		} else {
-			System.out.println("Examen de type inconnu: " + type + " (cours "
+			log.info("Examen de type inconnu: " + type + " (cours "
 							   + getCours().getUniqueKey() + ")");
 			return "examenInconnu";
 		}

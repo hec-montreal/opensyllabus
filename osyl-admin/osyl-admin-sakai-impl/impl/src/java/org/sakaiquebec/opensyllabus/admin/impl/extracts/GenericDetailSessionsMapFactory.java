@@ -3,7 +3,12 @@ package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 
 import java.io.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class GenericDetailSessionsMapFactory {
+
+    private static Log log = LogFactory.getLog(DetailSessionsMap.class);
 
     private static final String DEFAULT_BASE_NAME = "session";
 
@@ -25,6 +30,7 @@ public class GenericDetailSessionsMapFactory {
      */
     public static DetailSessionsMap buildMap(String dataDir, String baseName)
 	throws java.io.IOException {
+    
 
 	DetailSessionsMap map;
 	try {
@@ -84,6 +90,6 @@ public class GenericDetailSessionsMapFactory {
     }
 
     protected static void print(String msg) {
-	System.out.println("GenericDetailSessionsMapFactory: " + msg);
+	log.info("GenericDetailSessionsMapFactory: " + msg);
     }
 }

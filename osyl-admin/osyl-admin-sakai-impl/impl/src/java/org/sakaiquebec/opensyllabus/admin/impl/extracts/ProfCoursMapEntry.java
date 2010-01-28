@@ -2,6 +2,9 @@ package org.sakaiquebec.opensyllabus.admin.impl.extracts;
 
 import java.util.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Represente les donnees provenant de l'extract prof_cours.dat<br/>
  * <br/>
@@ -13,6 +16,7 @@ public class ProfCoursMapEntry implements java.io.Serializable {
     // Pour assurer la compatibilite des instances serialisees meme
     // quand on change la classe...
     public static final long serialVersionUID = -913935703184167796L;
+	private static Log log = LogFactory.getLog(ProfCoursMapEntry.class);
 
     private Vector<DetailCoursMapEntry> cours;
     private Map<String, DetailCoursMapEntry> coursCoordonnes;
@@ -220,7 +224,7 @@ public class ProfCoursMapEntry implements java.io.Serializable {
 	    // par un ou plusieurs zeros.
 	    return Integer.parseInt("1" + getEmplId());
 	} catch (NumberFormatException e) {
-	    System.out.println("ProfCoursMapEntry.hashCode: " + e);
+	    log.info("ProfCoursMapEntry.hashCode: " + e);
 	    return super.hashCode();
 	}
     } // hashCode
