@@ -445,7 +445,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	
 	//We type the clickable text
 	String newText11 = timeStamp();
-	session().type("//input[@type='text']", newText11);
+	session().type("//td[2]/input", newText11);
 
 	//We type the URL link
 	String newText10 = "http://webmail.hec.ca/";
