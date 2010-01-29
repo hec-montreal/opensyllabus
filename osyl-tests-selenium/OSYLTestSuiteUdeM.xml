@@ -1,0 +1,21 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="OSYLSuite-FF" verbose="10">
+   <parameter name="webSite" value="http://balbuzard.ena.umontreal.ca:8080"/>
+   <parameter name="seleniumHost" value="132.204.43.32"/>
+   <parameter name="seleniumPort" value="4444"/>
+   <parameter name="browser" value="*firefox"/>
+   <!-- parameter name="browser" value="*iexplore"/ --> 
+
+   <test name="Sakai OSYLEditor test suite for Firefox">
+      <classes>
+         <class name="org.sakaiquebec.opensyllabus.test.selenium.CitationTestUdeM"/>
+         <!--
+         <class name="org.sakaiquebec.opensyllabus.test.selenium.TextTestUdeM"/>
+         <class name="org.sakaiquebec.opensyllabus.test.selenium.PeriodeTestUdeM"/>
+		 <class name="org.sakaiquebec.opensyllabus.test.selenium.ContactInfoTestUdeM"/>
+         <class name="org.sakaiquebec.opensyllabus.test.selenium.AssessmentTestUdeM"/>
+         -->
+      </classes>
+   </test>
+</suite>
