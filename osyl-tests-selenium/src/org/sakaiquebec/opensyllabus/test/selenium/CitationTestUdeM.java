@@ -77,6 +77,7 @@ public class CitationTestUdeM extends AbstractOSYLTest{
 						"//html/body/table/tbody/tr[2]/td/div/div/div/table/tbody/tr[2]/td[2]/div/table/tbody/tr[2]/td/div/div[2]/div/div[5]/div/div");
 
 		// We keep track of how many resources are showing
+		log("Évaluation des apprentissages");
 		int resNb = getResourceCount() - 1;
 		log("We start with " + resNb + " resources");
 
@@ -93,7 +94,7 @@ public class CitationTestUdeM extends AbstractOSYLTest{
 
 		// Add citation for assessment unit
 		addCitationForUnit();
-/*		
+		
 		//-------------------------------------------------------------------------------		
 		// Open Resources Section
 		session().mouseDown(
@@ -101,6 +102,7 @@ public class CitationTestUdeM extends AbstractOSYLTest{
 						+ "td/div[contains(text(),'Ressource pédagogique')]");
 
 		// We keep track of how many resources are showing
+		log("Ressource pédagogique");		
 		resNb = getResourceCount() - 1;
 		log("We start with " + resNb + " resources");
 
@@ -125,6 +127,7 @@ public class CitationTestUdeM extends AbstractOSYLTest{
 						+ "td/div[contains(text(),'Bibliographie')]");
 
 		// We keep track of how many resources are showing
+		log("Bibliographie");		
 		resNb = getResourceCount() - 1;
 		log("We start with " + resNb + " resources");
 
@@ -149,6 +152,7 @@ public class CitationTestUdeM extends AbstractOSYLTest{
 						+ "td/div[contains(text(),'Bibliothèque')]");
 
 		// We keep track of how many resources are showing
+		log("Bibliothèque");		
 		resNb = getResourceCount() - 1;
 		log("We start with " + resNb + " resources");
 
@@ -165,8 +169,8 @@ public class CitationTestUdeM extends AbstractOSYLTest{
 
 		// Add citation for assessment unit
 		addCitationForUnit();
-*/
-		// We delete Period 1
+
+		// We delete assessment 1
 		/*
 		 * int Val1 = Val+1;
 		 * session().click("//tr["+Val1+"]/td/table/tbody/tr/td[2]/div/table[2]"
@@ -182,15 +186,7 @@ public class CitationTestUdeM extends AbstractOSYLTest{
 		// Log out
 		session().selectFrame("relative=parent");
 		logOut();
-		log("============================");		// We log in
-		logInAsAdmin(webSite);
-		try {
-			goToSite();
-		} catch (IllegalStateException e) {
-			createTestSite();
-			goToSite();
-		}
-		waitForOSYL();
+		log("============================");
 		log("testCitation: test complete");
 		log("============================");
 
@@ -209,6 +205,8 @@ public class CitationTestUdeM extends AbstractOSYLTest{
 	public void addCitationForUnit() throws Exception {
 		// open Citation resource editor
 		session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+		pause();
+		pause();
 
 		// We choose randomly a Rubric
 		String selectedRubric4 = getRandomRubric();
@@ -225,8 +223,9 @@ public class CitationTestUdeM extends AbstractOSYLTest{
 		} else {
 			session().keyPress("//td[3]/table/tbody/tr/td[3]/div", "\r");
 		}
-		pause();
 		assertTrue(session().isPromptPresent());
+		pause();
+		pause();
 		pause();
 
 		// Open Citation list
@@ -255,45 +254,21 @@ public class CitationTestUdeM extends AbstractOSYLTest{
 		// Fill the necessary fields for validation
 		Random randomNumber = new Random();
 		String token = Long.toString(Math.abs(randomNumber.nextLong()), 10);
-		//String titre = "Titre_" + token;
 		
 		if (selectedMaterial.equals(MY_CITATION_BOOK)
 				|| selectedMaterial.equals(MY_CITATION_REPORTS)) {
-			String auteur = "Auteur_" + token;
-			String annee = "19" + token.substring(2);
-			String isbn = "101010" + token.substring(1,4);
 			session().click("//tr[10]/td/table/tbody/tr/td[3]/input");
-			//session().type("//tr[10]/td/table/tbody/tr/td[3]/input", titre);
-			session().type("//tr[11]/td/table/tbody/tr/td[3]/input", auteur);
 
 		} else if (selectedMaterial.equals(MY_CITATION_ARTICLE)) {
-			String auteur = "Auteur_" + token;
-			String periodique = "Periodique_" + token;
-			Date date = new Date();
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			String volume = token.substring(4);
-			String numero = "Numero_" + token;
-			String pages = token.substring(1,3);
-			String issn = "1110" + token.substring(1,4);
-			String doi = token.substring(3);
 			session().click("//tr[10]/td/table/tbody/tr/td[3]/input");
-			//session().type("//tr[10]/td/table/tbody/tr/td[3]/input", titre);
 			
-		} else if (selectedMaterial.equals(MY_CITATION_OTHERS)) {
-			String link = "http://fr.wikipedia.org/wiki/Informatique";			
+		} else if (selectedMaterial.equals(MY_CITATION_OTHERS)) {		
 			session().click("//tr[9]/td/table/tbody/tr[3]/td/textarea");
-			//session().type("//tr[9]/td/table/tbody/tr[3]/td/textarea", titre);
 
 		} else if (selectedMaterial.equals(MY_CITATION_ACTS)) {
-			String auteur = "Auteur_" + token;
-			String annee = "19" + token.substring(2);			
-			String conference = "Conférence_" + token;
-			String volume = token.substring(4);
-			String pages = token.substring(1,3);
-			session().click("//tr[10]/td/table/tbody/tr/td[3]/input");
-			//session().type("//tr[10]/td/table/tbody/tr/td[3]/input", titre);
-			
-		}
+			session().click("//tr[10]/td/table/tbody/tr/td[3]/input");		
+
+		}	
 
 		//-----------------------------------------------------------------------
 		// Check if Opensyllabus displays a message error when the user click OK
@@ -306,6 +281,9 @@ public class CitationTestUdeM extends AbstractOSYLTest{
 					+ "] after text edition");
 		}
 
+		session().click("//tr[2]/td/table/tbody/tr/td/button");
+		pause();
+		
 		// Fill the necessary fields
 		randomNumber = new Random();
 		token = Long.toString(Math.abs(randomNumber.nextLong()), 10);
@@ -366,11 +344,15 @@ public class CitationTestUdeM extends AbstractOSYLTest{
 			session().type("//tr[18]/td/table/tbody/tr/td[3]/input", pages);
 		}
 		
-		pause();
 		// Close Window
 		session().click("//tr[22]/td/table/tbody/tr/td/button");
 		pause();
-
+		pause();
+		pause();
+//
+		pause();
+		
+		
 		// Select first resource in browser window
 		session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
 				"value= " + "(REF)   " + titre);
