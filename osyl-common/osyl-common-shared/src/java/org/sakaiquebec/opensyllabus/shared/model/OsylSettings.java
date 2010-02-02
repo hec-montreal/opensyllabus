@@ -31,8 +31,11 @@ import com.google.gwt.i18n.client.DateTimeFormat;
  */
 public class OsylSettings {
 
+    // tree rate
     private static final String TREEVIEW_SHOWRATE =
 	    "treeview.assessmentunit.showrate";
+
+    // Title editable
     private static final String UNITVIEW_ALL_TYPES_TITLELABEL_EDITABLE =
 	    "unitview.all.titlelabel.editable";
     private static final String STRUCTVIEW_ALL_TITLELABEL_EDITABLE =
@@ -40,14 +43,24 @@ public class OsylSettings {
     private static final String TITLELABEL_EDITABLE = ".titlelabel.editable";
     private static final String UNITVIEW = "unitview.";
     private static final String STRUCTVIEW = "structview.";
+
+    // numbering
     private static final String TREEVIEW_ASSESSMENT_NUMBERING =
 	    "treeview.assessmentunit.numbering";
     private static final String TREEVIEW_SESSION_NUMBERING =
 	    "treeview.pedagogicalunit.numbering";
+
+    // date format
     private static final String FORMAT_DATE = "format.date";
     private static final String FORMAT_DATE_TIME = "format.date_time";
-    private static final String RUBRIC_DESCRIPTION_EDITABLE = "rubric.description.editable";
-    
+
+    // rubric editable
+    private static final String RUBRIC_DESCRIPTION_EDITABLE =
+	    "rubric.description.editable";
+
+    // citation display
+    private static final String FORMAT_CITATION = "format.citation.";
+
     private Map<String, String> settings;
 
     /**
@@ -166,28 +179,36 @@ public class OsylSettings {
     public boolean isTreeViewSessionNumbering() {
 	return checkBooleanOption(TREEVIEW_SESSION_NUMBERING, true);
     }
-    
-    public DateTimeFormat getDateFormat(){
-	String f = "dd/MM/yyyy";//default format
-	if (settings.containsKey(FORMAT_DATE)) {
+
+    public DateTimeFormat getDateFormat() {
+	String f = "dd/MM/yyyy";// default format
+	if (settings.containsKey(FORMAT_DATE))
 	    f = getSettingsProperty(FORMAT_DATE);
-	}
+
 	return DateTimeFormat.getFormat(f);
     }
-    
-    public DateTimeFormat getDateTimeFormat(){
-	String f = "dd/MM/yyyy HH:mm:ss";//default format
-	if (settings.containsKey(FORMAT_DATE_TIME)) {
+
+    public DateTimeFormat getDateTimeFormat() {
+	String f = "dd/MM/yyyy HH:mm:ss";// default format
+	if (settings.containsKey(FORMAT_DATE_TIME))
 	    f = getSettingsProperty(FORMAT_DATE_TIME);
-	}
+
 	return DateTimeFormat.getFormat(f);
     }
-    
+
     /**
      * @return true if the rubric description can be editable
      */
     public boolean isRubricDescEditable() {
 	return checkBooleanOption(RUBRIC_DESCRIPTION_EDITABLE, false);
     }
-    
+
+    public String getCitationFormat(String type) {
+	String format = null;
+	if (settings.containsKey(FORMAT_CITATION+type))
+	    format = getSettingsProperty(FORMAT_CITATION+type);
+	return format;
+
+    }
+
 }

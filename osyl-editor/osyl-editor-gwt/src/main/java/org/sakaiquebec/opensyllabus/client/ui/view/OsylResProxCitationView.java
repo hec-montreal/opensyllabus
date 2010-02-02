@@ -21,8 +21,11 @@
 package org.sakaiquebec.opensyllabus.client.ui.view;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
+import org.sakaiquebec.opensyllabus.client.ui.util.CitationFormatter;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationItem;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCitationEditor;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
@@ -35,352 +38,305 @@ import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
  */
 public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 
-	/**
-	 * Constructor specifying the model to display and edit as well as the
-	 * current {@link OsylController}.
-	 * 
-	 * @param model
-	 * @param osylController
-	 */
-	protected OsylResProxCitationView(COModelInterface model,
-			OsylController osylController) {
-		super(model, osylController);
-		setEditor(new OsylCitationEditor(this));
-		initView();
+    /**
+     * Constructor specifying the model to display and edit as well as the
+     * current {@link OsylController}.
+     * 
+     * @param model
+     * @param osylController
+     */
+    protected OsylResProxCitationView(COModelInterface model,
+	    OsylController osylController) {
+	super(model, osylController);
+	setEditor(new OsylCitationEditor(this));
+	initView();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getTextFromModel() {
+	throw new IllegalStateException("Do not use getTextFromModel() for "
+		+ "BiblioContext.");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public OsylCitationEditor getEditor() {
+	return (OsylCitationEditor) super.getEditor();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected void updateModel() {
+	getModel().getResource().setProperties(new COProperties());
+	updateMetaInfo();
+
+	String uri = getEditor().getResourceURI();
+
+	getModel().addProperty(COPropertiesType.COMMENT,
+		getEditor().getDescription());
+
+	if (uri != null) {
+	    setProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_URI, uri
+			    + "/"
+			    + getEditor().getSelectedCitationProperty(
+				    CitationSchema.CITATIONID));
 	}
+	setModelPropertyWithEditorProperty(COPropertiesType.RESOURCE_TYPE,
+		getEditor().getSelectedCitationProperty(CitationSchema.TYPE));
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getTextFromModel() {
-		throw new IllegalStateException("Do not use getTextFromModel() for "
-				+ "BiblioContext.");
-	}
+	setModelPropertyWithEditorProperty(CitationSchema.LONGTEXT, getEditor()
+		.getSelectedCitationProperty(CitationSchema.LONGTEXT));
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public OsylCitationEditor getEditor() {
-		return (OsylCitationEditor) super.getEditor();
-	}
+	setModelPropertyWithEditorProperty(CitationSchema.SHORTTEXT,
+		getEditor().getSelectedCitationProperty(
+			CitationSchema.SHORTTEXT));
+	setModelPropertyWithEditorProperty(CitationSchema.NUMBER, getEditor()
+		.getSelectedCitationProperty(CitationSchema.NUMBER));
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected void updateModel() {
-		getModel().getResource().setProperties(new COProperties());
-		updateMetaInfo();
+	setModelPropertyWithEditorProperty(CitationSchema.YEAR, getEditor()
+		.getSelectedCitationProperty(CitationSchema.YEAR));
 
-		String uri = getEditor().getResourceURI();
+	setModelPropertyWithEditorProperty(CitationSchema.TITLE, getEditor()
+		.getSelectedCitationProperty(CitationSchema.TITLE));
 
-		getModel().addProperty(COPropertiesType.COMMENT,
-				getEditor().getDescription());
+	setModelPropertyWithEditorProperty(CitationSchema.EDITOR, getEditor()
+		.getSelectedCitationProperty(CitationSchema.EDITOR));
 
-		if (uri != null) {
-			setProperty(COPropertiesType.IDENTIFIER,
-					COPropertiesType.IDENTIFIER_TYPE_URI, uri
-							+ "/"
-							+ getEditor().getSelectedCitationProperty(
-									CitationSchema.CITATIONID));
-		}
-		setModelPropertyWithEditorProperty(COPropertiesType.RESOURCE_TYPE,
-				getEditor().getSelectedCitationProperty(CitationSchema.TYPE));
+	setModelPropertyWithEditorProperty(COPropertiesType.AUTHOR, getEditor()
+		.getSelectedCitationProperty(CitationSchema.CREATOR));
 
-		setModelPropertyWithEditorProperty(CitationSchema.LONGTEXT, getEditor()
-				.getSelectedCitationProperty(CitationSchema.LONGTEXT));
+	setModelPropertyWithEditorProperty(CitationSchema.VOLUME, getEditor()
+		.getSelectedCitationProperty(CitationSchema.VOLUME));
 
-		setModelPropertyWithEditorProperty(CitationSchema.SHORTTEXT,
-				getEditor().getSelectedCitationProperty(
-						CitationSchema.SHORTTEXT));
-		setModelPropertyWithEditorProperty(CitationSchema.NUMBER, getEditor()
-				.getSelectedCitationProperty(CitationSchema.NUMBER));
+	setModelPropertyWithEditorProperty(CitationSchema.ISSUE, getEditor()
+		.getSelectedCitationProperty(CitationSchema.ISSUE));
 
-		setModelPropertyWithEditorProperty(CitationSchema.YEAR, getEditor()
-				.getSelectedCitationProperty(CitationSchema.YEAR));
+	setModelPropertyWithEditorProperty(CitationSchema.PAGES, getEditor()
+		.getSelectedCitationProperty(CitationSchema.PAGES));
 
-		setModelPropertyWithEditorProperty(CitationSchema.TITLE, getEditor()
-				.getSelectedCitationProperty(CitationSchema.TITLE));
+	setModelPropertyWithEditorProperty(CitationSchema.PAGES, getEditor()
+		.getSelectedCitationProperty(CitationSchema.PAGES));
 
-		setModelPropertyWithEditorProperty(CitationSchema.EDITOR, getEditor()
-				.getSelectedCitationProperty(CitationSchema.EDITOR));
+	setModelPropertyWithEditorProperty(CitationSchema.PAGES, getEditor()
+		.getSelectedCitationProperty(CitationSchema.PAGES));
 
-		setModelPropertyWithEditorProperty(COPropertiesType.AUTHOR, getEditor()
-				.getSelectedCitationProperty(CitationSchema.CREATOR));
+	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_ISN, getEditor()
+			.getSelectedCitationProperty(CitationSchema.ISN));
 
-		setModelPropertyWithEditorProperty(CitationSchema.VOLUME, getEditor()
-				.getSelectedCitationProperty(CitationSchema.VOLUME));
+	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_DOI, getEditor()
+			.getSelectedCitationProperty(CitationSchema.DOI));
 
-		setModelPropertyWithEditorProperty(CitationSchema.ISSUE, getEditor()
-				.getSelectedCitationProperty(CitationSchema.ISSUE));
+	setModelPropertyWithEditorProperty(COPropertiesType.JOURNAL,
+		getEditor().getSelectedCitationProperty(
+			CitationSchema.SOURCE_TITLE));
 
-		setModelPropertyWithEditorProperty(CitationSchema.PAGES, getEditor()
-				.getSelectedCitationProperty(CitationSchema.PAGES));
-
-		setModelPropertyWithEditorProperty(CitationSchema.PAGES, getEditor()
-				.getSelectedCitationProperty(CitationSchema.PAGES));
-
-		setModelPropertyWithEditorProperty(CitationSchema.PAGES, getEditor()
-				.getSelectedCitationProperty(CitationSchema.PAGES));
-
-		setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_ISN, getEditor()
-						.getSelectedCitationProperty(CitationSchema.ISN));
-
-		setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_DOI, getEditor()
-						.getSelectedCitationProperty(CitationSchema.DOI));
-
-		setModelPropertyWithEditorProperty(COPropertiesType.JOURNAL,
-				getEditor().getSelectedCitationProperty(
-						CitationSchema.SOURCE_TITLE));
-
-		setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_LIBRARY, getEditor()
-						.getSelectedCitationProperty(
-								COPropertiesType.IDENTIFIER,
-								COPropertiesType.IDENTIFIER_TYPE_LIBRARY));
-
-		setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_URL, getEditor()
-						.getSelectedCitationProperty(
-								COPropertiesType.IDENTIFIER,
-								COPropertiesType.IDENTIFIER_TYPE_URL));
-
-		setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_NOLINK, getEditor()
-						.getSelectedCitationProperty(
-								COPropertiesType.IDENTIFIER,
-								COPropertiesType.IDENTIFIER_TYPE_NOLINK));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected void updateMetaInfo() {
-		super.updateMetaInfo();
-		setAvailableInBookstore(getEditor().isAvailableInBookstore());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getDocName() {
-		String docName = super.getDocName();
-		if (docName == null)
-			docName = getCoMessage("UndefinedCitation");
-		return docName;
-	}
-
-	public String getRawURI() {
-		String identifier_uri = getProperty(COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_URI);
-		if (identifier_uri != null) {
-			return identifier_uri.substring(0, identifier_uri.lastIndexOf("/"));
-		} else
-			return null;
-	}
-
-	/**
-	 * @return true if available in bookstore
-	 */
-	public boolean isAvailableInBookstore() {
-		return "true"
-				.equals(getModel().getProperty(COPropertiesType.BOOKSTORE));
-	}
-
-	public void setAvailableInBookstore(boolean b) {
-		String booleanValue = "" + (b);
-		getModel().addProperty(COPropertiesType.BOOKSTORE, booleanValue);
-	}
-
-	private void setModelPropertyWithEditorProperty(String property,
-			String type, String value) {
-		if (value != null && !value.equals(""))
-			setProperty(property, type, value);
-	}
-
-	private void setModelPropertyWithEditorProperty(String property,
-			String value) {
-		if (value != null && !value.equals(""))
-			setProperty(property, value);
-	}
-
-	public String getCitationId() {
-		String identifier_uri = getProperty(COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_URI);
-		if (identifier_uri != null) {
-			return identifier_uri.substring(
-					identifier_uri.lastIndexOf("/") + 1, identifier_uri
-							.length());
-		} else
-			return null;
-	}
-
-	/**
-	 * @param property
-	 * @return the property value
-	 */
-	private String getPropertyValue(String property) {
-		return getProperty(property) == null ? "" : getProperty(property);
-	}
-
-	private String getPropertyValue(String property, String type) {
-		return getProperty(property, type) == null ? "" : getProperty(property,
-				type);
-	}
-
-	/**
-	 * Generate a link, if possible, with citation informations
-	 * 
-	 * @return A link or a simple string if link could not be created
-	 */
-	public String getCitationPreviewAsLink() {
-		String link = "";
-		String url = getProperty(COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_URL);
-
-		// We have no url associated to this citation
-		String noUrl = getProperty(COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_NOLINK);
-		if (noUrl != null && !"".equals(noUrl)
-				&& !"undefined".equalsIgnoreCase(noUrl))
-			return getCitationPreview();
-
-		// We have an url associated to this citation
-		if (url == null || url.equals(""))
-			url = getProperty(COPropertiesType.IDENTIFIER,
-					COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
-
-		if (url == null || url.equals(""))
-			link = getCitationPreview();
-		else
-			link = generateHTMLLink(url, getCitationPreview());
-		return link;
-
-	}
-
-	/**
-	 * Tells us whether the registered link points to the library catalog or
-	 * another source
-	 * 
-	 * @param citationItem
-	 * @return
-	 */
-	public boolean isCitationLinkLibrary(OsylCitationItem citationItem) {
-
-		String identifier = citationItem.getProperty(
+	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_LIBRARY, getEditor()
+			.getSelectedCitationProperty(
 				COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
+				COPropertiesType.IDENTIFIER_TYPE_LIBRARY));
 
-		if (identifier != null && !"".equalsIgnoreCase(identifier))
-			return true;
-		return false;
-	}
-
-	public boolean hasLink(OsylCitationItem citationItem) {
-		String identifier = citationItem.getProperty(
+	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_URL, getEditor()
+			.getSelectedCitationProperty(
 				COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_NOLINK);
+				COPropertiesType.IDENTIFIER_TYPE_URL));
 
-		if (identifier != null && !"".equalsIgnoreCase(identifier)
-				&& !"undefined".equalsIgnoreCase(identifier))
-			return false;
-		return true;
-	}
+	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_NOLINK, getEditor()
+			.getSelectedCitationProperty(
+				COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_NOLINK));
+    }
 
-	/**
-	 * Generate a link, if possible, with citation informations
-	 * 
-	 * @return A link or a simple string if link could not be created
-	 */
-	public String getCitationsInfosAsLink(OsylCitationItem citationItem) {
-		String url = citationItem.getUrl();
-		if (url == null)
-			return citationItem.getCitationsInfos();
-		else
-			return generateHTMLLink(url, citationItem.getCitationsInfos());
+    /**
+     * {@inheritDoc}
+     */
+    protected void updateMetaInfo() {
+	super.updateMetaInfo();
+	setAvailableInBookstore(getEditor().isAvailableInBookstore());
+    }
 
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public String getDocName() {
+	String docName = super.getDocName();
+	if (docName == null)
+	    docName = getCoMessage("UndefinedCitation");
+	return docName;
+    }
 
-	/**
-	 * @return
-	 */
-	public String getCitationPreview() {
-		String infos = "";
-		String type = getProperty(COPropertiesType.RESOURCE_TYPE);
-		if (!isDocumentDefined()) {
-			return getCoMessage("UndefinedCitation");
+    public String getRawURI() {
+	String identifier_uri =
+		getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_URI);
+	if (identifier_uri != null) {
+	    return identifier_uri.substring(0, identifier_uri.lastIndexOf("/"));
+	} else
+	    return null;
+    }
+
+    /**
+     * @return true if available in bookstore
+     */
+    public boolean isAvailableInBookstore() {
+	return "true"
+		.equals(getModel().getProperty(COPropertiesType.BOOKSTORE));
+    }
+
+    public void setAvailableInBookstore(boolean b) {
+	String booleanValue = "" + (b);
+	getModel().addProperty(COPropertiesType.BOOKSTORE, booleanValue);
+    }
+
+    private void setModelPropertyWithEditorProperty(String property,
+	    String type, String value) {
+	if (value != null && !value.equals(""))
+	    setProperty(property, type, value);
+    }
+
+    private void setModelPropertyWithEditorProperty(String property,
+	    String value) {
+	if (value != null && !value.equals(""))
+	    setProperty(property, value);
+    }
+
+    public String getCitationId() {
+	String identifier_uri =
+		getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_URI);
+	if (identifier_uri != null) {
+	    return identifier_uri.substring(
+		    identifier_uri.lastIndexOf("/") + 1, identifier_uri
+			    .length());
+	} else
+	    return null;
+    }
+
+    /**
+     * @param property
+     * @return the property value
+     */
+    private String getPropertyValue(String property) {
+	return getProperty(property) == null ? "" : getProperty(property);
+    }
+
+    /**
+     * Generate a link, if possible, with citation informations
+     * 
+     * @return A link or a simple string if link could not be created
+     */
+    public String getCitationPreviewAsLink() {
+	String link = "";
+	String url =
+		getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_URL);
+
+	// We have no url associated to this citation
+	String noUrl =
+		getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_NOLINK);
+	if (noUrl != null && !"".equals(noUrl)
+		&& !"undefined".equalsIgnoreCase(noUrl))
+	    return getCitationPreview();
+
+	// We have an url associated to this citation
+	if (url == null || url.equals(""))
+	    url =
+		    getProperty(COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
+
+	if (url == null || url.equals(""))
+	    link = getCitationPreview();
+	else
+	    link = generateHTMLLink(url, getCitationPreview());
+	return link;
+
+    }
+
+    /**
+     * Tells us whether the registered link points to the library catalog or
+     * another source
+     * 
+     * @param citationItem
+     * @return
+     */
+    public boolean isCitationLinkLibrary(OsylCitationItem citationItem) {
+
+	String identifier =
+		citationItem.getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
+
+	if (identifier != null && !"".equalsIgnoreCase(identifier))
+	    return true;
+	return false;
+    }
+
+    public boolean hasLink(OsylCitationItem citationItem) {
+	String identifier =
+		citationItem.getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_NOLINK);
+
+	if (identifier != null && !"".equalsIgnoreCase(identifier)
+		&& !"undefined".equalsIgnoreCase(identifier))
+	    return false;
+	return true;
+    }
+
+    /**
+     * Generate a link, if possible, with citation informations
+     * 
+     * @return A link or a simple string if link could not be created
+     */
+    public String getCitationsInfosAsLink(OsylCitationItem citationItem) {
+	String url = citationItem.getUrl();
+	if (url == null)
+	    return citationItem.getCitationsInfos();
+	else
+	    return generateHTMLLink(url, citationItem.getCitationsInfos());
+
+    }
+
+    /**
+     * @return
+     */
+    public String getCitationPreview() {
+	String infos = "";
+	if (!isDocumentDefined()) {
+	    return getCoMessage("UndefinedCitation");
+	} else {
+	    String type = getProperty(COPropertiesType.RESOURCE_TYPE);
+	    if (!type.equals(CitationSchema.TYPE_UNKNOWN)) {
+		String format =
+			getController().getSettings().getCitationFormat(type);
+		if (format == null) {
+		    OsylAlertDialog oad =
+			    new OsylAlertDialog(getUiMessage("Global.error"),
+				    getUiMessage(
+					    "Citation.format.unknownFormat",
+					    type));
+		    oad.center();
+		    oad.show();
 		} else {
-			// 3 cases: Book, Article, Other
-			if (type.equals(CitationSchema.TYPE_BOOK)
-					|| type.equals(CitationSchema.TYPE_REPORT)) {
-				// <auteurs>, <titre>, <édition>,<pages>, <éditeur>, <année>,
-				// <ISBN>
-				infos += getPropertyValue(COPropertiesType.AUTHOR).equals("") ? ""
-						: getPropertyValue(COPropertiesType.AUTHOR) + ". ";
-				infos += getPropertyValue(CitationSchema.TITLE).equals("") ? ""
-						: getPropertyValue(CitationSchema.TITLE);
-				infos += getPropertyValue(CitationSchema.PUBLISHER).equals("") ? ""
-						: " ,"+getPropertyValue(CitationSchema.PUBLISHER);
-				infos += getPropertyValue(CitationSchema.PAGES).equals("") ? ""
-						: " ,"+getPropertyValue(CitationSchema.PAGES);
-				infos += getPropertyValue(CitationSchema.EDITOR).equals("") ? ""
-						: " ,"+getPropertyValue(CitationSchema.EDITOR);
-				infos += getPropertyValue(CitationSchema.YEAR).equals("") ? ""
-						: " ,"+getPropertyValue(CitationSchema.YEAR);
-				infos += getPropertyValue(COPropertiesType.IDENTIFIER,
-						COPropertiesType.IDENTIFIER_TYPE_ISN).equals("") ? ""
-						: " ,ISBN: "+getPropertyValue(COPropertiesType.IDENTIFIER,
-								COPropertiesType.IDENTIFIER_TYPE_ISN);
-				infos += ".";
-
-			} else if (type.equals(CitationSchema.TYPE_ARTICLE)) {
-				// <auteurs>, <titre>, <périodique>, <date>, <volume>,
-				// <numéro>, <pages>, <ISSN>, <DOI>
-				infos += getPropertyValue(COPropertiesType.AUTHOR).equals("") ? ""
-						: getPropertyValue(COPropertiesType.AUTHOR) + ". ";
-				infos += getPropertyValue(CitationSchema.TITLE).equals("") ? ""
-						: getPropertyValue(CitationSchema.TITLE);
-				infos += getPropertyValue(COPropertiesType.JOURNAL).equals("") ? ""
-						: ", " + getPropertyValue(COPropertiesType.JOURNAL);
-				infos += getPropertyValue(CitationSchema.DATE).equals("") ? ""
-						: ", " + getPropertyValue(CitationSchema.DATE);
-				infos += getPropertyValue(CitationSchema.VOLUME).equals("") ? ""
-						: ", vol. " + getPropertyValue(CitationSchema.VOLUME);
-				infos += getPropertyValue(CitationSchema.ISSUE).equals("") ? ""
-						: "(" + getPropertyValue(CitationSchema.ISSUE)+")";
-				infos += getPropertyValue(CitationSchema.PAGES).equals("") ? ""
-						: ", pp. " + getPropertyValue(CitationSchema.PAGES);
-				infos += getPropertyValue(COPropertiesType.IDENTIFIER,
-						COPropertiesType.IDENTIFIER_TYPE_ISN).equals("") ? ""
-						: ", ISSN: " + getPropertyValue(COPropertiesType.IDENTIFIER,
-								COPropertiesType.IDENTIFIER_TYPE_ISN);
-				infos += getPropertyValue(COPropertiesType.IDENTIFIER,
-						COPropertiesType.IDENTIFIER_TYPE_DOI).equals("") ? ""
-						: ", " + getPropertyValue(COPropertiesType.IDENTIFIER,
-								COPropertiesType.IDENTIFIER_TYPE_DOI);
-				infos += ".";
-			} else if (type.equals(CitationSchema.TYPE_PROCEED)) {
-				// <auteurs>, <titre>, <conference>, <year>, <volume>,
-				// <pages>
-				infos += getPropertyValue(COPropertiesType.AUTHOR).equals("") ? ""
-						: getPropertyValue(COPropertiesType.AUTHOR) + ". ";
-				infos += getPropertyValue(CitationSchema.TITLE).equals("") ? ""
-						: getPropertyValue(CitationSchema.TITLE);
-				infos += getPropertyValue(COPropertiesType.JOURNAL).equals("") ? ""
-						: ", " + getPropertyValue(COPropertiesType.JOURNAL);
-				infos += getPropertyValue(CitationSchema.YEAR).equals("") ? ""
-						: ", " + getPropertyValue(CitationSchema.YEAR);
-				infos += getPropertyValue(CitationSchema.VOLUME).equals("") ? ""
-						: ", vol. " + getPropertyValue(CitationSchema.VOLUME);
-				infos += getPropertyValue(CitationSchema.PAGES).equals("") ? ""
-						: ", pp. " + getPropertyValue(CitationSchema.PAGES);
-				infos += ".";
-			} else {
-				infos += getPropertyValue(CitationSchema.TITLE).equals("") ? ""
-						: (getPropertyValue(CitationSchema.TITLE));
-			}
+		    infos =
+			    CitationFormatter.format(
+				    (COContentResource) getModel()
+					    .getResource(), format);
 		}
-		return infos;
+	    } else {
+		infos +=
+			getPropertyValue(CitationSchema.TITLE).equals("") ? ""
+				: (getPropertyValue(CitationSchema.TITLE));
+	    }
 	}
+	return infos;
+    }
 }

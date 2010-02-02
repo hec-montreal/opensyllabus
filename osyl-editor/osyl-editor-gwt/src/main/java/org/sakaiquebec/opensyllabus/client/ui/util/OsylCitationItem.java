@@ -22,6 +22,8 @@ package org.sakaiquebec.opensyllabus.client.ui.util;
 
 import java.io.Serializable;
 
+import org.sakaiquebec.opensyllabus.client.controller.OsylController;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
@@ -83,20 +85,20 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 		getProperty(COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
 
-	String noUrl = 
+	String noUrl =
 		getProperty(COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_NOLINK);
-	
-	if (noUrl != null && !"".equalsIgnoreCase(noUrl)
-				&& !"undefined".equalsIgnoreCase(noUrl))
-			return null;
+			COPropertiesType.IDENTIFIER_TYPE_NOLINK);
 
-		if (url != null && url.trim() != "")
-			return url;
-		else
-			return getProperty(COPropertiesType.IDENTIFIER,
-					COPropertiesType.IDENTIFIER_TYPE_URL);
-	}
+	if (noUrl != null && !"".equalsIgnoreCase(noUrl)
+		&& !"undefined".equalsIgnoreCase(noUrl))
+	    return null;
+
+	if (url != null && url.trim() != "")
+	    return url;
+	else
+	    return getProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_URL);
+    }
 
     /**
      * @return the url linked to this citation. It can be our library or any
@@ -279,90 +281,23 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 
     public String getCitationsInfos() {
 	String infos = "";
-	// 3 cases: Book, Article, Other
 	String type = getProperty(CitationSchema.TYPE);
-	if (type.equals(CitationSchema.TYPE_BOOK)
-		|| type.equals(CitationSchema.TYPE_REPORT)) {
-	    // <auteurs>, <titre>, <édition>,<pages>, <éditeur>, <année>,
-	    // <ISBN>
-	    infos +=
-		    getPropertyValue(CitationSchema.CREATOR).equals("") ? ""
-			    : (getPropertyValue(CitationSchema.CREATOR) + ". ");
-	    infos +=
-		    getPropertyValue(CitationSchema.TITLE).equals("") ? ""
-			    : (getPropertyValue(CitationSchema.TITLE));
-	    infos +=
-		    getPropertyValue(CitationSchema.PUBLISHER).equals("") ? ""
-			    : ", " + (getPropertyValue(CitationSchema.PUBLISHER));
-	    infos +=
-		    getPropertyValue(CitationSchema.PAGES).equals("") ? ""
-			    : ", " + (getPropertyValue(CitationSchema.PAGES));
-	    infos +=
-		    getPropertyValue(CitationSchema.EDITOR).equals("") ? ""
-			    : ", " + (getPropertyValue(CitationSchema.EDITOR));
-	    infos +=
-		    getPropertyValue(CitationSchema.YEAR).equals("") ? ""
-			    : ", " + (getPropertyValue(CitationSchema.YEAR));
-	    infos +=
-		    getPropertyValue(CitationSchema.ISN).equals("") ? ""
-			    : ", ISBN: "+getPropertyValue(CitationSchema.ISN);
-	    infos += ".";
-
-	} else if (type.equals(CitationSchema.TYPE_ARTICLE)) {
-	    // <auteurs>, <titre>, <périodique>, <date>, <volume>,
-	    // <numéro>, <pages>, <ISSN>, <DOI>
-	    infos +=
-		    getPropertyValue(CitationSchema.CREATOR).equals("") ? ""
-			    : getPropertyValue(CitationSchema.CREATOR) + ". ";
-	    infos +=
-		    getPropertyValue(CitationSchema.TITLE).equals("") ? ""
-			    : getPropertyValue(CitationSchema.TITLE);
-	    infos +=
-		    getPropertyValue(CitationSchema.SOURCE_TITLE).equals("") ? ""
-			    : ", " + getPropertyValue(CitationSchema.SOURCE_TITLE);
-	    infos +=
-		    getPropertyValue(CitationSchema.DATE).equals("") ? ""
-			    : ", " + getPropertyValue(CitationSchema.DATE);
-	    infos +=
-		    getPropertyValue(CitationSchema.VOLUME).equals("") ? ""
-			    : ", vol. " + getPropertyValue(CitationSchema.VOLUME);
-	    infos +=
-		    getPropertyValue(CitationSchema.ISSUE).equals("") ? ""
-			    : "(" + getPropertyValue(CitationSchema.ISSUE)+")";
-	    infos +=
-		    getPropertyValue(CitationSchema.PAGES).equals("") ? ""
-			    : ", pp. " + getPropertyValue(CitationSchema.PAGES);
-	    infos +=
-		    getPropertyValue(CitationSchema.ISN).equals("") ? ""
-			    : ", ISSN: " + getPropertyValue(CitationSchema.ISN);
-	    infos +=
-		    getPropertyValue(CitationSchema.DOI).equals("") ? ""
-			    : ", " + getPropertyValue(CitationSchema.DOI);
-	    infos += ".";
-	} else if (type.equals(CitationSchema.TYPE_PROCEED)) {
-	    // <auteurs>, <titre>, <conference>, <year>, <volume>,
-	    //  <pages>
-	    infos +=
-		    getPropertyValue(CitationSchema.CREATOR).equals("") ? ""
-			    : getPropertyValue(CitationSchema.CREATOR) + ". ";
-	    infos +=
-		    getPropertyValue(CitationSchema.TITLE).equals("") ? ""
-			    : getPropertyValue(CitationSchema.TITLE);
-	    infos +=
-		    getPropertyValue(CitationSchema.SOURCE_TITLE).equals("") ? ""
-			    : ", " + getPropertyValue(CitationSchema.SOURCE_TITLE);
-	    infos +=
-		    getPropertyValue(CitationSchema.YEAR).equals("") ? ""
-			    : ", " + getPropertyValue(CitationSchema.YEAR);
-	    infos +=
-		    getPropertyValue(CitationSchema.VOLUME).equals("") ? ""
-			    : ", vol. " + getPropertyValue(CitationSchema.VOLUME);
-	    infos +=
-		    getPropertyValue(CitationSchema.PAGES).equals("") ? ""
-			    : ", pp. " + getPropertyValue(CitationSchema.PAGES);
-    infos += ".";
-	}else {
-	    infos +=
+	OsylController controller = OsylController.getInstance();
+	if (!type.equals(CitationSchema.TYPE_UNKNOWN)) {
+	    String format = controller.getSettings().getCitationFormat(type);
+	    if (format == null) {
+		OsylAlertDialog oad =
+			new OsylAlertDialog(controller
+				.getUiMessage("Global.error"), controller
+				.getUiMessages().getMessage(
+					"Citation.format.unknownFormat", type));
+		oad.center();
+		oad.show();
+	    } else {
+		infos = CitationFormatter.format(this, format);
+	    }
+	} else {
+	    infos =
 		    getPropertyValue(CitationSchema.TITLE).equals("") ? ""
 			    : (getPropertyValue(CitationSchema.TITLE));
 	}
