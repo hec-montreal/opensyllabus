@@ -501,7 +501,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
      * @return String
      */
     public String getRubricUserDefLabel() {
-    	return userDefLabel.getText();
+    	return userDefLabel!=null?userDefLabel.getText():null;
     }
     
     private ListBox generateRubricList() {
