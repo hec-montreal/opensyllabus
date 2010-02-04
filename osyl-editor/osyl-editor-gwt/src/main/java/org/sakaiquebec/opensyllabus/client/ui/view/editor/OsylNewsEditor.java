@@ -201,8 +201,7 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
     private String getTimeStamp() {
 	String dateString = ((OsylNewsView) getView()).getTimeStampFromModel();
 	Date date = OsylDateUtils.getDateFromXMLDate(dateString);
-	DateTimeFormat dtf =
-		getView().getController().getSettings().getDateTimeFormat();
+	DateTimeFormat dtf = getController().getSettings().getDateTimeFormat();
 	return dtf.format(date);
     }
 

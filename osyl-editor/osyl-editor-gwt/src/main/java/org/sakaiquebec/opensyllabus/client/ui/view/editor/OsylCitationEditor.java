@@ -101,9 +101,9 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     private CheckBox useLibraryLinkCheckBox;
     private TextBox editorOtherLink;
 
-    //Remove any link associated to this citation
+    // Remove any link associated to this citation
     private CheckBox useNoLinkCheckBox;
-    
+
     // Additional Widget;
     private CheckBox bookstoreCheckBox;
 
@@ -350,12 +350,11 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 	// SAKAI MODE
 	String basePath = getView().getDocPath();
-	String siteId = getView().getController().getSiteId();
+	String siteId = getController().getSiteId();
 	String resourcesPath = "group/" + siteId + "/";
 	basePath =
 		basePath == null ? resourcesPath
-			+ getView().getController().getDocFolderName()
-			: basePath;
+			+ getController().getDocFolderName() : basePath;
 	browser =
 		new OsylCitationBrowser(basePath, getView().getCitationId(),
 			getView().getDocPath() + "/" + getView().getDocName());
@@ -405,10 +404,11 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	metaInfoPanel.add(changeLinkToLibraryPanel);
 	changeLinkToLibraryPanel.setWidth("100%");
 
-	useNoLinkCheckBox = new CheckBox(getView().getUiMessage(
-	"CitationEditor.NoLink.title"));
+	useNoLinkCheckBox =
+		new CheckBox(getView().getUiMessage(
+			"CitationEditor.NoLink.title"));
 	useNoLinkCheckBox.setTitle(getView().getUiMessage(
-	"CitationEditor.NoLink.Name"));
+		"CitationEditor.NoLink.Name"));
 	useNoLinkCheckBox.setWidth("80px");
 
 	useLibraryLinkCheckBox =
@@ -435,85 +435,88 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	saveButton.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
-			final OsylCitationItem selectedFile =
-				(OsylCitationItem) browser
-					.getSelectedAbstractBrowserItem();
-			String otherLink;
-			if (useNoLinkCheckBox.getValue()){
-				selectedFile.setProperty(COPropertiesType.IDENTIFIER,
-					    COPropertiesType.IDENTIFIER_TYPE_NOLINK, "noLink");
-				
-			}else{
-				selectedFile.removeProperty(COPropertiesType.IDENTIFIER,
-					    COPropertiesType.IDENTIFIER_TYPE_NOLINK);
-				
-				if (!useLibraryLinkCheckBox.getValue()) {
-				    selectedFile.removeProperty(COPropertiesType.IDENTIFIER,
-					    COPropertiesType.IDENTIFIER_TYPE_URL);
-				} else {
-				    otherLink = editorOtherLink.getText();
-				    selectedFile.removeProperty(COPropertiesType.IDENTIFIER,
-					    COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
-				    selectedFile.setProperty(COPropertiesType.IDENTIFIER,
-					    COPropertiesType.IDENTIFIER_TYPE_URL, otherLink);
-				}
-			}
-			
-			OsylRemoteServiceLocator.getCitationRemoteService()
-				.createOrUpdateCitation(
-					getBrowser().getCurrentDirectory()
-						.getDirectoryPath(), selectedFile,
-					new AsyncCallback<String>() {
-					    public void onFailure(Throwable caught) {
-						OsylUnobtrusiveAlert failure =
-							new OsylUnobtrusiveAlert(
-								getView().getUiMessage(
-									"Global.error")
-									+ ": "
-									+ getView()
-										.getUiMessage(
-											"CitationEditor.document.PropUpdateError"));
-						OsylEditorEntryPoint
-							.showWidgetOnTop(failure);
-					    }
+		final OsylCitationItem selectedFile =
+			(OsylCitationItem) browser
+				.getSelectedAbstractBrowserItem();
+		String otherLink;
+		if (useNoLinkCheckBox.getValue()) {
+		    selectedFile.setProperty(COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_NOLINK, "noLink");
 
-					    public void onSuccess(String result) {
-						OsylUnobtrusiveAlert alert =
-							new OsylUnobtrusiveAlert(
-								getUiMessage("CitationEditor.document.PropUpdateSuccess"));
-						OsylEditorEntryPoint
-							.showWidgetOnTop(alert);
-						getBrowser().refreshCitationsInList();
-					    }
-					});
-			
+		} else {
+		    selectedFile.removeProperty(COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_NOLINK);
 
-			saveButton.setEnabled(false);
-
+		    if (!useLibraryLinkCheckBox.getValue()) {
+			selectedFile.removeProperty(
+				COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_URL);
+		    } else {
+			otherLink = editorOtherLink.getText();
+			selectedFile.removeProperty(
+				COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
+			selectedFile
+				.setProperty(COPropertiesType.IDENTIFIER,
+					COPropertiesType.IDENTIFIER_TYPE_URL,
+					otherLink);
 		    }
-		});
+		}
+
+		OsylRemoteServiceLocator.getCitationRemoteService()
+			.createOrUpdateCitation(
+				getBrowser().getCurrentDirectory()
+					.getDirectoryPath(), selectedFile,
+				new AsyncCallback<String>() {
+				    public void onFailure(Throwable caught) {
+					OsylUnobtrusiveAlert failure =
+						new OsylUnobtrusiveAlert(
+							getView().getUiMessage(
+								"Global.error")
+								+ ": "
+								+ getView()
+									.getUiMessage(
+										"CitationEditor.document.PropUpdateError"));
+					OsylEditorEntryPoint
+						.showWidgetOnTop(failure);
+				    }
+
+				    public void onSuccess(String result) {
+					OsylUnobtrusiveAlert alert =
+						new OsylUnobtrusiveAlert(
+							getUiMessage("CitationEditor.document.PropUpdateSuccess"));
+					OsylEditorEntryPoint
+						.showWidgetOnTop(alert);
+					getBrowser().refreshCitationsInList();
+				    }
+				});
+
+		saveButton.setEnabled(false);
+
+	    }
+	});
 
 	saveButton.setEnabled(false);
 	if (selectedFile != null)
-		if (!getView().hasLink(selectedFile)){
-			useLibraryLinkCheckBox.setValue(false);
-			editorOtherLink.setText("");
-			editorOtherLink.setEnabled(false);
-			useNoLinkCheckBox.setValue(true);		
-		}else{
-		    if (getView().isCitationLinkLibrary(selectedFile)) {
-			useLibraryLinkCheckBox.setValue(false);
-			editorOtherLink.setText("");
-			editorOtherLink.setEnabled(false);
-			useNoLinkCheckBox.setValue(false);		
-		    } else {
-			useLibraryLinkCheckBox.setValue(true);
-			editorOtherLink.setText(selectedFile.getUrl());
-			editorOtherLink.setEnabled(true);
-			useNoLinkCheckBox.setValue(false);		
-		    }
+	    if (!getView().hasLink(selectedFile)) {
+		useLibraryLinkCheckBox.setValue(false);
+		editorOtherLink.setText("");
+		editorOtherLink.setEnabled(false);
+		useNoLinkCheckBox.setValue(true);
+	    } else {
+		if (getView().isCitationLinkLibrary(selectedFile)) {
+		    useLibraryLinkCheckBox.setValue(false);
+		    editorOtherLink.setText("");
+		    editorOtherLink.setEnabled(false);
+		    useNoLinkCheckBox.setValue(false);
+		} else {
+		    useLibraryLinkCheckBox.setValue(true);
+		    editorOtherLink.setText(selectedFile.getUrl());
+		    editorOtherLink.setEnabled(true);
+		    useNoLinkCheckBox.setValue(false);
 		}
-	
+	    }
+
 	HorizontalPanel savePanel = new HorizontalPanel();
 	savePanel.setWidth("98%");
 	metaInfoPanel.add(savePanel);
@@ -523,42 +526,42 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 	useNoLinkCheckBox.addClickHandler(new ClickHandler() {
 
-		public void onClick(ClickEvent e) {
-			saveButton.setEnabled(true);
-			useLibraryLinkCheckBox.setValue(false);
-			editorOtherLink.setEnabled(false);
-			editorOtherLink.setText("");
-		}
+	    public void onClick(ClickEvent e) {
+		saveButton.setEnabled(true);
+		useLibraryLinkCheckBox.setValue(false);
+		editorOtherLink.setEnabled(false);
+		editorOtherLink.setText("");
+	    }
 	});
 
 	useLibraryLinkCheckBox.addClickHandler(new ClickHandler() {
 
-		public void onClick(ClickEvent event) {
-			final OsylCitationItem selectedFile = (OsylCitationItem) browser
-					.getSelectedAbstractBrowserItem();
-			
-			
-			useNoLinkCheckBox.setValue(false);
-			
-			// If the citation is of type unknow we tell the user he can not
-			// change the url type
-			if (selectedFile.getProperty(CitationSchema.TYPE)
-					.equalsIgnoreCase(CitationSchema.TYPE_UNKNOWN)) {
-				Window
-						.alert(getUiMessage("CitationEditor.ChangeUrl.InvalidChange"));
-				useLibraryLinkCheckBox.setValue(true);
-				editorOtherLink.setText(selectedFile.getUrl());
+	    public void onClick(ClickEvent event) {
+		final OsylCitationItem selectedFile =
+			(OsylCitationItem) browser
+				.getSelectedAbstractBrowserItem();
 
-			} else {
-				saveButton.setEnabled(true);
-				if (useLibraryLinkCheckBox.getValue()) {
-					editorOtherLink.setEnabled(true);
-				} else {
-					editorOtherLink.setText("");
-					editorOtherLink.setEnabled(false);
-				}
-			}
+		useNoLinkCheckBox.setValue(false);
+
+		// If the citation is of type unknow we tell the user he can not
+		// change the url type
+		if (selectedFile.getProperty(CitationSchema.TYPE)
+			.equalsIgnoreCase(CitationSchema.TYPE_UNKNOWN)) {
+		    Window
+			    .alert(getUiMessage("CitationEditor.ChangeUrl.InvalidChange"));
+		    useLibraryLinkCheckBox.setValue(true);
+		    editorOtherLink.setText(selectedFile.getUrl());
+
+		} else {
+		    saveButton.setEnabled(true);
+		    if (useLibraryLinkCheckBox.getValue()) {
+			editorOtherLink.setEnabled(true);
+		    } else {
+			editorOtherLink.setText("");
+			editorOtherLink.setEnabled(false);
+		    }
 		}
+	    }
 	});
 
 	editorOtherLink.addKeyPressHandler(new KeyPressHandler() {
@@ -588,7 +591,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     }
 
     protected String getResourcesPath() {
-	if (getView().getController().isInHostedMode()) {
+	if (getController().isInHostedMode()) {
 	    return "";
 	} else {
 	    String uri = GWT.getModuleBaseURL();
@@ -713,27 +716,27 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			selectedFile));
 		editorOtherLink.setText(selectedFile.getUrl());
 
-		if (!getView().hasLink(selectedFile)){
-			useLibraryLinkCheckBox.setValue(false);
-			editorOtherLink.setText("");
-			editorOtherLink.setEnabled(false);
-			useNoLinkCheckBox.setValue(true);		
-		}else{
+		if (!getView().hasLink(selectedFile)) {
+		    useLibraryLinkCheckBox.setValue(false);
+		    editorOtherLink.setText("");
+		    editorOtherLink.setEnabled(false);
+		    useNoLinkCheckBox.setValue(true);
+		} else {
 		    if (getView().isCitationLinkLibrary(selectedFile)) {
 			useLibraryLinkCheckBox.setValue(false);
 			editorOtherLink.setText("");
 			editorOtherLink.setEnabled(false);
-			useNoLinkCheckBox.setValue(false);		
+			useNoLinkCheckBox.setValue(false);
 		    } else {
 			useLibraryLinkCheckBox.setValue(true);
 			editorOtherLink.setText(selectedFile.getUrl());
 			editorOtherLink.setEnabled(true);
-			useNoLinkCheckBox.setValue(false);		
+			useNoLinkCheckBox.setValue(false);
 		    }
 		}
 
-	isFound = true;
-    }
+		isFound = true;
+	    }
 	}
 	if (!isFound) {
 	    citationPreviewLabel.setHTML("");

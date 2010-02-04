@@ -25,8 +25,11 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylOkCancelDialog;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylLabelEditClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -48,11 +51,17 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     private VerticalPanel mainPanel;
 
     // Our editor
-    private VerticalPanel editorPanel;
+    protected VerticalPanel editorPanel;
     private TextBox nameEditor;
 
     // Our viewer
     private HTML viewer;
+
+    protected boolean isDeletable;
+
+    public OsylLabelEditor(OsylAbstractView parent) {
+	this(parent, false);
+    }
 
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
@@ -61,8 +70,9 @@ public class OsylLabelEditor extends OsylAbstractEditor {
      * 
      * @param parent
      */
-    public OsylLabelEditor(OsylAbstractView parent) {
+    public OsylLabelEditor(OsylAbstractView parent, boolean isDeleteable) {
 	super(parent);
+	this.isDeletable = isDeleteable;
 	initMainPanel();
 	if (!isReadOnly()) {
 	    initEditor();
@@ -87,7 +97,7 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     /**
      * Creates and set the low-level editor (TextBox).
      */
-    private void initEditor() {
+    protected void initEditor() {
 	editorPanel = new VerticalPanel();
 	editorPanel.setWidth("98%");
 
@@ -98,7 +108,7 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 	nameEditor = new TextBox();
 	nameEditor.setStylePrimaryName("Osyl-LabelEditor-TextBox");
 	nameEditor.addClickHandler(new ResetLabelClickListener(getView()
-		.getCoMessage(getView().getModel().getType())));
+		.getCoMessage(getModel().getType())));
 
 	if (getNameTooltip() != null) {
 	    nameEditor.setTitle(getUiMessage("Assessment.name.tooltip"));
@@ -109,7 +119,7 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     /**
      * Creates and set the low-level viewer (HTML panel).
      */
-    private void initViewer() {
+    protected void initViewer() {
 	HTML htmlViewer = new HTML();
 	htmlViewer.setStylePrimaryName("Osyl-LabelEditor-View");
 	setViewer(htmlViewer);
@@ -143,12 +153,15 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     protected void refreshButtonPanel() {
 	// We only create an edit button (as delete is not allowed) and add it:
 	String title = getView().getUiMessage("edit");
-	ClickHandler listener = new OsylLabelEditClickListener(getView());
+	ClickHandler handler = new OsylLabelEditClickListener(getView());
 	AbstractImagePrototype imgEditButton = getOsylImageBundle().edit();
-	ImageAndTextButton pbEdit =
-		createButton(imgEditButton, title, listener);
+	ImageAndTextButton pbEdit = createButton(imgEditButton, title, handler);
 	getView().getButtonPanel().clear();
 	getView().getButtonPanel().add(pbEdit);
+	if (isDeletable) {
+	    getView().getButtonPanel().add(createButtonDelete());
+	    refreshUpAndDownPanel();
+	}
     }
 
     /**
@@ -274,7 +287,7 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     protected Widget getMetaInfoLabel() {
 	return null;
     }
-    
+
     @Override
     public boolean isMoveable() {
 	return false;
@@ -288,5 +301,83 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     /**
      * ==================== ADDED CLASSES or METHODS ====================
      */
+    protected ImageAndTextButton createButtonDelete() {
+	AbstractImagePrototype imgDeleteButton = getOsylImageBundle().delete();
+	String title = getView().getUiMessage("delete");
+	ClickHandler handler =
+		new MyDeletePushButtonListener((COElementAbstract) getView()
+			.getModel());
+	return createButton(imgDeleteButton, title, handler);
+    }
+
+    /**
+     * Class to manage click on the delete button
+     */
+    public class MyDeletePushButtonListener implements ClickHandler {
+
+	// Model variables (we use either one or the other). We could also use
+	// a generic variable and cast it when needed...
+	private COElementAbstract model;
+
+	public MyDeletePushButtonListener(COElementAbstract model) {
+	    this.model = model;
+	}
+
+	public void onClick(ClickEvent event) {
+	    try {
+		// Here, we create a dialog box to confirm delete
+		OsylOkCancelDialog osylOkCancelDialog =
+			new OsylOkCancelDialog(getView().getUiMessage(
+				"OsylOkCancelDialog_Delete_Title"), getView()
+				.getUiMessage(
+					"OsylOkCancelDialog_Delete_Content"));
+		osylOkCancelDialog
+			.addOkButtonCLickHandler(new MyOkCancelDialogListener(
+				this.model));
+		osylOkCancelDialog
+			.addCancelButtonClickHandler(getCancelButtonClickListener());
+		osylOkCancelDialog.show();
+		osylOkCancelDialog.centerAndFocus();
+	    } catch (Exception e) {
+		com.google.gwt.user.client.Window
+			.alert("Unable to delete object. Error=" + e);
+	    }
+	}
+    }
+
+    // The click listener that perform delete action if confirm button pushed
+    public class MyOkCancelDialogListener implements ClickHandler {
+
+	private COElementAbstract model;
+
+	public MyOkCancelDialogListener(COElementAbstract model) {
+	    this.model = model;
+	}
+
+	@SuppressWarnings("unchecked")
+	public void onClick(ClickEvent event) {
+	    try {
+		String title =
+			(model.getLabel() != null) ? model.getLabel()
+				: getView().getCoMessage(model.getType());
+		model.getParent().removeChild(model);
+		OsylUnobtrusiveAlert info =
+			new OsylUnobtrusiveAlert(getView().getUiMessages()
+				.getMessage("RemovedContentUnit", title));
+		OsylEditorEntryPoint.showWidgetOnTop(info);
+	    } catch (Exception e) {
+		com.google.gwt.user.client.Window
+			.alert("Unable to delete object. Error=" + e);
+	    }
+	}
+    }
+    
+    public void setIsDeletable(boolean isDeletable) {
+	this.isDeletable = isDeletable;
+    }
+
+    public boolean isDeletable() {
+	return isDeletable;
+    }
 
 }

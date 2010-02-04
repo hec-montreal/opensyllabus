@@ -16,18 +16,13 @@ package org.sakaiquebec.opensyllabus.client.ui.view;
 import org.adamtacy.client.ui.NEffectPanel;
 import org.adamtacy.client.ui.effects.impl.CollapseVertically;
 import org.adamtacy.client.ui.effects.impl.Fade;
-import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
-import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractResProxEditor;
-import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
-import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
-import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.user.client.Timer;
@@ -78,7 +73,7 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 		getResizingPanel().setHeight(height + "px");
 	    } else {
 		this.cancel();
-		getModel().remove();
+		getModel().removeMeFromMyParent();
 	    }
 	}
 
@@ -151,17 +146,17 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     protected void setProperty(String key, String val) {
 	getModel().getResource().addProperty(key, val);
     }
-    
-    protected void setProperty(String key, String type, String val){
+
+    protected void setProperty(String key, String type, String val) {
 	getModel().getResource().addProperty(key, type, val);
     }
 
     protected String getProperty(String key) {
 	return getModel().getResource().getProperty(key);
     }
-    
+
     protected String getProperty(String key, String type) {
-	return getModel().getResource().getProperty(key,type);
+	return getModel().getResource().getProperty(key, type);
     }
 
     public void setContextImportant(boolean b) {
@@ -217,53 +212,29 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     }
 
     public String getRubricUserDefLabel() {
-    	return getModel().getRubricUserDefLabel();
+	return getModel().getRubricUserDefLabel();
     }
 
     public void setRubricUserDefLabel(String r) {
-    	getModel().setRubricUserDefLabel(r);
+	getModel().setRubricUserDefLabel(r);
     }
 
     protected void updateMetaInfo() {
-	//contextMetaInfo
-	if(getEditor().isHasImportant())
+	// contextMetaInfo
+	if (getEditor().isHasImportant())
 	    setContextImportant(getEditor().isContextImportant());
-	if(getEditor().isHasHide())
+	if (getEditor().isHasHide())
 	    setContextHidden(getEditor().isContextHidden());
 	setDiffusionLevel(getEditor().getDiffusionLevel());
 	setRubricType(getEditor().getRubricType());
 	setRubricUserDefLabel(getEditor().getRubricUserDefLabel());
-	getModel().addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getNowDateAsXmlString());
+	getModel().addProperty(COPropertiesType.MODIFIED,
+		OsylDateUtils.getNowDateAsXmlString());
 	if (getEditor().isHasRequirement())
 	    setRequirementLevel(getEditor().getRequirementLevel());
-	//resourceMetaInfo
-	if(getModel().getResource()!=null){
-	     updateResourceMetaInfo();
-	}
-    }
-
-    protected void moveTo(String targetUuid) {
-	COUnitContent targetCoUnitContent =
-		(COUnitContent) ((COContent) getController().getMainView()
-			.getModel()).findCOElementAbstractWithId(targetUuid);
-	getModel().getParent().removeChild(getModel());
-	getModel().setParent(targetCoUnitContent);
-	getModel().remove();
-	targetCoUnitContent.addChild(getModel());
-	// affichage du message
-	OsylUnobtrusiveAlert alert =
-		new OsylUnobtrusiveAlert(getUiMessage("element.moved"));
-	OsylEditorEntryPoint.showWidgetOnTop(alert);
-
-    }
-
-    protected void moveIfNeeded() {
-	if (getEditor().isMoveable()) {
-	    String targetUuid = getEditor().getMoveToTarget();
-	    if (!targetUuid.equals("")
-		    && !targetUuid.equals(getModel().getParent().getId())) {
-		moveTo(targetUuid);
-	    }
+	// resourceMetaInfo
+	if (getModel().getResource() != null) {
+	    updateResourceMetaInfo();
 	}
     }
 
@@ -287,8 +258,8 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     public String getTextFromModelDesc() {
 	return null;
     }
-    
-    public void updateResourceMetaInfo(){
+
+    public void updateResourceMetaInfo() {
 	getModel().getResource().setAccess(getModel().getAccess());
     }
 

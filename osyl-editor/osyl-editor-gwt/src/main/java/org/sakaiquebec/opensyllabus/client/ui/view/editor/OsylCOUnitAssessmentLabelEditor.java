@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
-import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureAssessmentItemLabelView;
+import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOUnitAssessmentLabelView;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
@@ -50,8 +50,7 @@ import com.google.gwt.user.datepicker.client.DateBox;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylCOStructureAssessmentItemEditor extends
-	OsylCOStructureItemEditor {
+public class OsylCOUnitAssessmentLabelEditor extends OsylLabelEditor {
 
     private TextBox weightTextBox;
     private ListBox localisationListBox;
@@ -72,16 +71,15 @@ public class OsylCOStructureAssessmentItemEditor extends
      * 
      * @param parent
      */
-    public OsylCOStructureAssessmentItemEditor(OsylAbstractView parent) {
+    public OsylCOUnitAssessmentLabelEditor(OsylAbstractView parent) {
 	this(parent, false);
 
     }
 
-    public OsylCOStructureAssessmentItemEditor(OsylAbstractView parent,
+    public OsylCOUnitAssessmentLabelEditor(OsylAbstractView parent,
 	    boolean isDeletable) {
 	super(parent, isDeletable);
-	dateTimeFormat =
-		getView().getController().getSettings().getDateFormat();
+	dateTimeFormat = getController().getSettings().getDateFormat();
     }
 
     /**
@@ -183,7 +181,7 @@ public class OsylCOStructureAssessmentItemEditor extends
     }
 
     private String verifyAssignementTool() {
-	return verifyAssignementTool(getView().getModel());
+	return verifyAssignementTool((COElementAbstract) getModel());
     }
 
     @SuppressWarnings("unchecked")
@@ -239,14 +237,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 
     public void enterView() {
 
-	// We remove any previous widget
-	getMainPanel().clear();
-	// And we put the viewer instead
-	getMainPanel().add(getViewer());
-	// We keep track that we are now in view-mode
-	setInEditionMode(false);
-	// We get the text to display from the model
-	setText(getView().getTextFromModel());
+	super.enterView();
 
 	String rating =
 		(getView().getWeight() != null && !getView().getWeight()
@@ -388,7 +379,7 @@ public class OsylCOStructureAssessmentItemEditor extends
 	typeListBox.setTitle(getUiMessage("Assessment.type.tooltip"));
 	typeListBox.addItem("");
 	List<String> evalTypeList =
-		getView().getController().getOsylConfig().getEvalTypeList();
+		getController().getOsylConfig().getEvalTypeList();
 	if (evalTypeList != null) {
 	    for (String evalTypeKey : evalTypeList) {
 		typeListBox.addItem(getView().getCoMessage(evalTypeKey));
@@ -449,8 +440,8 @@ public class OsylCOStructureAssessmentItemEditor extends
 	return new Widget[] { vp };
     }
 
-    protected OsylCOStructureAssessmentItemLabelView getView() {
-	return (OsylCOStructureAssessmentItemLabelView) super.getView();
+    protected OsylCOUnitAssessmentLabelView getView() {
+	return (OsylCOUnitAssessmentLabelView) super.getView();
     }
 
     public void closeEditor() {

@@ -32,8 +32,8 @@ public class OsylCOStructureAssessmentView extends OsylCOStructureView {
     }
 
     protected void addListItemView(COUnit itemModel) {
-	OsylCOStructureAssessmentItemView listItemView =
-		new OsylCOStructureAssessmentItemView(itemModel,
+	OsylCOUnitAssessmentHyperlinkView listItemView =
+		new OsylCOUnitAssessmentHyperlinkView(itemModel,
 			getController());
 	getMainPanel().add(listItemView);
     }

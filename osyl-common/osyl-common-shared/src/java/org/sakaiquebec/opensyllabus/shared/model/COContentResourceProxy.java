@@ -369,11 +369,9 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	}
     }
 
-    /**
-     * Removes itself from its parent.
-     */
-    public void remove() {
-	getParent().removeChild(this);
+    @Override
+    public void removeMeFromMyParent() {
+	super.removeMeFromMyParent();
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.DELETE_EVENT_TYPE);
 	if (updateCOContentResourceProxyEventHandlers != null)
 	    updateCOContentResourceProxyEventHandlers.clear();

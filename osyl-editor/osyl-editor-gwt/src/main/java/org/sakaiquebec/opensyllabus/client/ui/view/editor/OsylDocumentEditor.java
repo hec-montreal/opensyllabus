@@ -416,11 +416,11 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 	// SAKAI MODE
 	String basePath = getView().getDocPath();
-	String siteId = getView().getController().getSiteId();
+	String siteId = getController().getSiteId();
 	String resourcesPath = "group/" + siteId + "/";
 	basePath =
 		basePath == null ? resourcesPath
-			+ getView().getController().getDocFolderName()
+			+ getController().getDocFolderName()
 			: basePath;
 
 	browser =
@@ -631,7 +631,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 				public void onFailure(Throwable caught) {
 				    // TODO Auto-generated method stub
-				    // getView().getController().handleRPCError("Error
+				    // getController().handleRPCError("Error
 				    // while retrieving license information
 				    // object");
 				}
@@ -651,7 +651,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 				    }
 				    ((OsylFileBrowser)browser).setRightsList(rightsList);
 				    // TODO Auto-generated method stub
-				    // getView().getController().handleRPCError("Sucess
+				    // getController().handleRPCError("Sucess
 				    // while retrieving license information
 				    // object");
 				    buildLicenseListBox(rightsList);

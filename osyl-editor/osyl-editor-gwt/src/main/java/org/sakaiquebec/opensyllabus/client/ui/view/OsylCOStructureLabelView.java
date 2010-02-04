@@ -21,7 +21,7 @@
 package org.sakaiquebec.opensyllabus.client.ui.view;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
-import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCOStructureItemEditor;
+import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCOStructureLabelEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 
@@ -29,53 +29,63 @@ import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylCOStructureLabelView extends OsylAbstractView {
+public class OsylCOStructureLabelView extends OsylLabelView {
 
-	public OsylCOStructureLabelView(COElementAbstract model,
-			OsylController controller, boolean isDeletable, String levelStyle) {
-		super(model, controller, controller.getOsylConfig()
-				.getSettings().isStructViewTitleLabelEditable(model.getType()));
-		setEditor(new OsylCOStructureItemEditor(this));
-		((OsylCOStructureItemEditor) getEditor()).setIsDeletable(isDeletable);
-		((OsylCOStructureItemEditor) getEditor()).setViewerStyle(levelStyle);
-		initView();
+    public OsylCOStructureLabelView(COElementAbstract model,
+	    OsylController controller, boolean isDeletable, String levelStyle) {
+	super(model, controller, isDeletable, levelStyle, false);
+	setEditor(new OsylCOStructureLabelEditor(this, isDeletable));
+	((OsylCOStructureLabelEditor) getEditor()).setViewerStyle(levelStyle);
+	initView();
+    }
+
+    /**
+     * ===================== OVERRIDEN METHODS ===================== See
+     * superclass for javadoc!
+     */
+
+    public COElementAbstract getModel() {
+	return (COElementAbstract) super.getModel();
+    }
+
+    public String getTextFromModel() {
+	String label = getModel().getLabel();
+	if (label == null) {
+	    label = getTextFromType();
 	}
+	return label;
+    }
 
-	/**
-	 * ===================== OVERRIDEN METHODS ===================== See
-	 * superclass for javadoc!
-	 */
+    public String getDescriptionFromModel() {
+	String desc = getModel().getProperty(COPropertiesType.DESCRIPTION);
+	if (desc != null)
+	    return desc;
+	else
+	    return "";
+    }
 
-	public COElementAbstract getModel() {
-		return (COElementAbstract) super.getModel();
+    private String getTextFromType() {
+	return getCoMessage(getModel().getType());
+    }
+
+    protected void updateModel() {
+	String newLabel = getEditor().getText();
+	// Note: update of label is not required if label text is based on type
+	// information. i.e. we don't want to override the text based on the
+	// type with a label with an
+	// equivalent string.
+	if (!newLabel.equals(getTextFromType())) {
+	    // here an update is required
+	    getModel().setLabel(newLabel);
+	} else {
+	    // here we restore the label to null, (i.e. we remove the
+	    // property)...
+	    String label = getModel().getLabel();
+	    if (label != null) {
+		getModel().removeProperty(COPropertiesType.LABEL);
+	    }
 	}
-
-	public String getTextFromModel() {
-		String label = getModel().getLabel();
-		if (label == null) {
-			label = getTextFromType();
-		}
-		return label;
-	}
-
-	private String getTextFromType() {
-		return getCoMessage(getModel().getType());
-	}
-
-	protected void updateModel() {
-		String newLabel = getEditor().getText();
-		// Note: update of label is not required if label text is based on type
-		// information. i.e. we don't want to override the text based on the type with a label with an 
-		// equivalent string.
-		if (!newLabel.equals(getTextFromType())) {
-			// here an update is required
-			getModel().setLabel(newLabel);
-		} else {
-			// here we restore the label to null, (i.e. we remove the property)...
-			String label = getModel().getLabel();
-			if (label != null) {
-				getModel().removeProperty(COPropertiesType.LABEL);
-			}
-		}
-	}
+	getModel().addProperty(COPropertiesType.DESCRIPTION,
+		((OsylCOStructureLabelEditor) getEditor()).getDescription());
+    }
 }

@@ -70,6 +70,10 @@ public class OsylConfigRuler {
     protected static final String TYPE_ATTRIBUTE_NAME = "type";
     protected static final String ALLOW_MULTIPLE_ATTRIBUTE_NAME =
 	    "allowMultiple";
+    // protected static final String ALLOW_NESTED_ATTRIBUTE_NAME =
+    // "allowNested";
+    protected static final String NESTING_LEVEL_ALLOWED_ATTRIBUTE_NAME =
+	    "nestingLevelAllowed";
 
     private String rulesConfigContent;
     private Document dom = null;
@@ -110,12 +114,27 @@ public class OsylConfigRuler {
 	return myNode;
     }
 
+    private String getCOElementAbstractNodeName(COElementAbstract coe) {
+	String nodeName = UNDEFINED_NODE_NAME;
+	if (coe.isCourseOutlineContent()) {
+	    nodeName = COModeled.CO_NODE_NAME;
+	} else if (coe.isCOStructureElement()) {
+	    nodeName = COModeled.CO_STRUCTURE_NODE_NAME;
+	} else if (coe.isCOUnit()) {
+	    nodeName = COModeled.CO_UNIT_NODE_NAME;
+	} else if (coe.isCOUnitStructure()) {
+	    nodeName = COModeled.CO_UNIT_STRUCTURE_NODE_NAME;
+	} else if (coe.isCOUnitContent()) {
+	    nodeName = COModeled.CO_UNIT_CONTENT_NODE_NAME;
+	}
+	return nodeName;
+    }
+
     private Node findNode(List<COElementAbstract> path) {
 	Node node = null;
 	if (path != null) {
 	    int pathPosition = 0;
-	    COElementAbstract rootPath =
-		    (COElementAbstract) path.get(pathPosition);
+	    COElementAbstract rootPath = path.get(pathPosition);
 
 	    // the root path must be a CourseOutlineContent
 	    if (rootPath.isCourseOutlineContent()) {
@@ -130,7 +149,33 @@ public class OsylConfigRuler {
 		// find the correct rule
 		int pathPositionEnd = path.size() - 1;
 		while (pathPosition <= pathPositionEnd) {
-		    elementPath = (COElementAbstract) path.get(pathPosition);
+		    elementPath = path.get(pathPosition);
+
+		    if (nodeName != null && !("".equals(nodeName))
+			    && nodeName.equalsIgnoreCase(ELEMENT_NODE_NAME)) {
+			// nested elements
+			if (getCOElementAbstractNodeName(elementPath).equals(
+				getNameAttributeValue(node))) {
+			    Node attributeTypeNode =
+				    findingAttributeTypeNode(node);
+			    boolean allowNested =
+				    getNestingLevelAllowedAttributeValue(attributeTypeNode) > 0;
+			    String type =
+				    getRestrictionPatternAttributeValue(attributeTypeNode);
+			    if (allowNested) {
+				while (pathPosition <= pathPositionEnd) {
+				    elementPath=path.get(pathPosition);
+				    if (elementPath.getType().equals(type))
+					pathPosition++;
+				    else
+					break;
+				}
+				if (pathPosition > pathPositionEnd)
+				    break;
+			    }
+			}
+		    }
+
 		    // Retrieve children: can be Element
 		    NodeList nodeChildren = node.getChildNodes();
 		    for (int i = 0; i < nodeChildren.getLength(); i++) {
@@ -143,24 +188,8 @@ public class OsylConfigRuler {
 
 			    if (nameAttribute != null) {
 
-				// Identification of elementPathName, based on
-				// classtypes
-				String elementPathName = UNDEFINED_NODE_NAME;
-				if (elementPath.isCourseOutlineContent()) {
-				    elementPathName = COModeled.CO_NODE_NAME;
-				} else if (elementPath.isCOStructureElement()) {
-				    elementPathName =
-					    COModeled.CO_STRUCTURE_NODE_NAME;
-				} else if (elementPath.isCOUnit()) {
-				    elementPathName =
-					    COModeled.CO_UNIT_NODE_NAME;
-				} else if (elementPath.isCOUnitStructure()) {
-				    elementPathName =
-					    COModeled.CO_UNIT_STRUCTURE_NODE_NAME;
-				} else if (elementPath.isCOUnitContent()) {
-				    elementPathName =
-					    COModeled.CO_UNIT_CONTENT_NODE_NAME;
-				}
+				String elementPathName =
+					getCOElementAbstractNodeName(elementPath);
 
 				// if nameAttribute matches, then retrieving its
 				// restrictionPattern
@@ -174,11 +203,11 @@ public class OsylConfigRuler {
 					// checking on type if
 					// restrictionpattern
 					// matches also
-					Node attributeTypeNode =
+					Node attributeTypeNode2 =
 						findingAttributeTypeNode(node);
 
 					String restrictionPattern =
-						getRestrictionPatternAttributeValue(attributeTypeNode);
+						getRestrictionPatternAttributeValue(attributeTypeNode2);
 
 					// check if the restriction pattern
 					// matches...
@@ -209,11 +238,27 @@ public class OsylConfigRuler {
     }
 
     private List<COModelInterface> getAllowedSubModels(
-	    List<COElementAbstract> path, boolean hasNoChild) {
-	List<COModelInterface> allowedSubModels = null;
+	    List<COElementAbstract> path) {
+	COElementAbstract currentModel = path.get(path.size() - 1);
+	boolean currentModelHasNoChild = currentModel.getChildrens().isEmpty();
+	int currentNestingLevel = currentModel.getNestingLevel();
+
+	List<COModelInterface> allowedSubModels =
+		new ArrayList<COModelInterface>();
 	Node node = findNode(path);
 
 	if (node != null) {
+	    Node attributeTypeNode = findingAttributeTypeNode(node);
+	    int nestingLevelAllowed =
+		    getNestingLevelAllowedAttributeValue(attributeTypeNode);
+	    if (currentNestingLevel < nestingLevelAllowed) {
+		String nameAttribute = getNameAttributeValue(node);
+		String type =
+			getRestrictionPatternAttributeValue(attributeTypeNode);
+		COModelInterface modelInstance =
+			createModelInstance(nameAttribute, type);
+		allowedSubModels.add(modelInstance);
+	    }
 
 	    // Secondly, identify the available possibilities(rules)
 	    NodeList nodeChildren = node.getChildNodes();
@@ -224,15 +269,15 @@ public class OsylConfigRuler {
 		if (myNodeName.equalsIgnoreCase(ELEMENT_NODE_NAME)) {
 		    String nameAttribute = getNameAttributeValue(myNode);
 
-		    Node attributeTypeNode = findingAttributeTypeNode(myNode);
+		    Node myAttributeTypeNode = findingAttributeTypeNode(myNode);
 
 		    String restrictionPattern =
-			    getRestrictionPatternAttributeValue(attributeTypeNode);
+			    getRestrictionPatternAttributeValue(myAttributeTypeNode);
 
 		    boolean allowMultiple =
-			    getAllowMultipleAttributeValue(attributeTypeNode);
+			    getAllowMultipleAttributeValue(myAttributeTypeNode);
 
-		    if (hasNoChild || allowMultiple) {
+		    if (currentModelHasNoChild || allowMultiple) {
 			if (restrictionPattern.indexOf("|") > 0) {
 			    String[] typesStringArray =
 				    restrictionPattern.split("\\|");
@@ -244,10 +289,6 @@ public class OsylConfigRuler {
 				COModelInterface modelInstance =
 					createModelInstance(nameAttribute, type);
 				if (modelInstance != null) {
-				    if (allowedSubModels == null) {
-					allowedSubModels =
-						new ArrayList<COModelInterface>();
-				    }
 				    allowedSubModels.add(modelInstance);
 				}
 			    }
@@ -258,10 +299,6 @@ public class OsylConfigRuler {
 			    COModelInterface modelInstance =
 				    createModelInstance(nameAttribute,
 					    restrictionPattern);
-			    if (allowedSubModels == null) {
-				allowedSubModels =
-					new ArrayList<COModelInterface>();
-			    }
 			    allowedSubModels.add(modelInstance);
 			}
 		    }
@@ -304,16 +341,20 @@ public class OsylConfigRuler {
     }
 
     private String getNameAttributeValue(Node myNode) {
-	String attributeValue =
-		myNode.getAttributes().getNamedItem(NAME_ATTRIBUTE_NAME)
-			.getNodeValue();
+	Node node = myNode.getAttributes().getNamedItem(NAME_ATTRIBUTE_NAME);
+	String attributeValue = null;
+	if (node != null)
+	    attributeValue = node.getNodeValue();
 	return attributeValue;
     }
 
     private String getRestrictionPatternAttributeValue(Node myNode) {
-	String attributeValue =
+	Node node =
 		myNode.getAttributes().getNamedItem(
-			RESTRICTION_PATTERN_ATTRIBUTE_NAME).getNodeValue();
+			RESTRICTION_PATTERN_ATTRIBUTE_NAME);
+	String attributeValue = null;
+	if (node != null)
+	    attributeValue = node.getNodeValue();
 	return attributeValue;
     }
 
@@ -325,6 +366,28 @@ public class OsylConfigRuler {
 	    return Boolean.parseBoolean(node.getNodeValue());
 	} else {
 	    return true;
+	}
+    }
+
+    // private boolean getAllowNestedAttributeValue(Node myNode) {
+    // Node node =
+    // myNode.getAttributes().getNamedItem(
+    // ALLOW_NESTED_ATTRIBUTE_NAME);
+    // if (node != null && node.getNodeValue() != null) {
+    // return Boolean.parseBoolean(node.getNodeValue());
+    // } else {
+    // return false;
+    // }
+    // }
+
+    private int getNestingLevelAllowedAttributeValue(Node myNode) {
+	Node node =
+		myNode.getAttributes().getNamedItem(
+			NESTING_LEVEL_ALLOWED_ATTRIBUTE_NAME);
+	if (node != null && node.getNodeValue() != null) {
+	    return Integer.parseInt(node.getNodeValue());
+	} else {
+	    return 0;
 	}
     }
 
@@ -341,14 +404,11 @@ public class OsylConfigRuler {
 	    // tree)
 	    List<COElementAbstract> path = findModelPath(model);
 
-	    boolean hasNoChild = model.getChildrens().isEmpty();
-
 	    // Then check for subelements possibilities(rules) for this path
-	    allowedSubModels = getAllowedSubModels(path, hasNoChild);
+	    allowedSubModels = getAllowedSubModels(path);
 	}
 	return allowedSubModels;
     }
-
 
     /**
      * Finds the path (node sequence) of COElementAbstract elements starting

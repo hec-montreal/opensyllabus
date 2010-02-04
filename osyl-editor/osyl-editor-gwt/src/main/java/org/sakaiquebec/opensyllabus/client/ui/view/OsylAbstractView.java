@@ -13,10 +13,13 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.view;
 
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylEditableMouseOverListener;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 
@@ -31,7 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Abstract class for edition and display of Course Outline Element.
- *
+ * 
  * @author <a href="mailto:Remi.Saias@hec.ca">Remi Saias</a>
  * @version $Id: $
  */
@@ -62,7 +65,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
     /**
      * Constructor specifying the model to be displayed and edited by this
      * OsylAbstractView. The current {@link OsylController} must be provided.
-     *
+     * 
      * @param model
      * @param osylController
      */
@@ -123,7 +126,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
     /**
      * Returns the model object being display or edited by this
      * OsylAbstractView.
-     *
+     * 
      * @return {@link COModelInterface}
      */
     public COModelInterface getModel() {
@@ -139,7 +142,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
      * anything. The best is to call it as the constructor's last statement.
      */
     protected void initView() {
-	/// The view extends Composite therefore it is absolutely necessary to
+	// / The view extends Composite therefore it is absolutely necessary to
 	// call initWidget on our main widget
 	super.initWidget(getMainPanel());
 
@@ -175,7 +178,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
     /**
      * Returns the main panel which is the top container for this
      * OsylAbstractView.
-     *
+     * 
      * @return {@link HorizontalPanel}
      */
     public AbsolutePanel getMainPanel() {
@@ -200,7 +203,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
 
     /**
      * Called when leaving edition and Save button was clicked.
-     *
+     * 
      * @param boolean if modification should be saved.
      */
     public void closeAndSaveEdit(boolean save) {
@@ -217,8 +220,38 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
 
     protected void moveIfNeeded() {
 	if (getEditor().isMoveable()) {
-	    // TODO
+	    COElementAbstract model = (COElementAbstract) getModel();
+	    String targetUuid = getEditor().getMoveToTarget();
+	    if (!targetUuid.equals("")
+		    && !targetUuid.equals(model.getParent().getId())) {
+		moveTo(targetUuid);
+	    }
 	}
+    }
+
+    /**
+     * Move an element to the element with sepecified id
+     * @param targetUuid
+     */
+    @SuppressWarnings("unchecked")
+    protected void moveTo(String targetUuid) {
+	COElementAbstract model = (COElementAbstract) getModel();
+	//search target parent element
+	COElementAbstract targetModel =
+		((COElementAbstract) getController().getMainView().getModel())
+			.findCOElementAbstractWithId(targetUuid);
+	
+	//move element
+	model.getParent().removeChild(getModel());
+	model.setParent(targetModel);
+	model.removeMeFromMyParent();
+	targetModel.addChild(getModel());
+	
+	// display message
+	OsylUnobtrusiveAlert alert =
+		new OsylUnobtrusiveAlert(getUiMessage("element.moved"));
+	OsylEditorEntryPoint.showWidgetOnTop(alert);
+
     }
 
     /**
@@ -243,7 +276,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
     /**
      * Sets the {@link OsylAbstractEditor} providing edition and display
      * capability.
-     *
+     * 
      * @param editor
      */
     public void setEditor(OsylAbstractEditor editor) {
@@ -263,7 +296,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
      * Returns the HTML code for a link whose URI and text are specified. Can be
      * used to have an {@link HTML} component clickable. The target of this link
      * is _blank (ie: new window).
-     *
+     * 
      * @param uri
      * @param text
      * @return HTML link
@@ -275,7 +308,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
     /**
      * Returns the document name which is the part after the last slash if it is
      * a local resource, or the full URI if it looks as an external URI.
-     *
+     * 
      * @param uri
      * @return uri for presentation
      */
@@ -291,7 +324,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
     /**
      * Returns the document name which is the part after the last slash if it is
      * a local resource, or the full URI if it looks as an external URI.
-     *
+     * 
      * @param uri
      * @return uri for presentation
      */
@@ -344,7 +377,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
      * {@link OsylCOUnitStructureLabelView}. Return value for other views is
      * either undefined (may throw an exception) or implicit (may be the first
      * field of the view). Refer to the specific view documentation.
-     *
+     * 
      * @see OsylAbstractEditor#getText()
      */
     public abstract String getTextFromModel();

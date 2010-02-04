@@ -27,7 +27,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -45,7 +44,7 @@ public class OsylCOStructureView extends OsylViewableComposite implements
     private VerticalPanel mainPanel;
 
     private OsylCOStructureLabelView editableTitleLabel;
-    
+
     private boolean showTitleOnly = false;
 
     public VerticalPanel getMainPanel() {
@@ -58,17 +57,16 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 
     public OsylCOStructureView(COModelInterface model,
 	    OsylController osylController) {
-	super(model, osylController);
-	initView();
+	this(model, osylController, false);
     }
 
     public OsylCOStructureView(COModelInterface model,
-			OsylController osylController, boolean showTitleOnly) {
-		super(model, osylController);
-		this.showTitleOnly = showTitleOnly;
-		initView();
-	}
-    
+	    OsylController osylController, boolean showTitleOnly) {
+	super(model, osylController);
+	this.showTitleOnly = showTitleOnly;
+	initView();
+    }
+
     protected void initView() {
 	setMainPanel(new VerticalPanel());
 	getMainPanel().setStylePrimaryName("Osyl-WorkspaceView-MainPanel");
@@ -76,26 +74,27 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 	initWidget(getMainPanel());
     }
 
-    public void refreshView() {	
+    public void refreshView() {
 	getMainPanel().clear();
-	editableTitleLabel = new OsylCOStructureLabelView(getModel(), getController(),
+	editableTitleLabel =
+		new OsylCOStructureLabelView(getModel(), getController(),
 			false, OsylStyleLevelChooser.getLevelStyle(getModel()));
 	getMainPanel().add(editableTitleLabel);
 	if (getShowTitleOnly() == false) {
-			// displaying all sub views
-			List<COElementAbstract> children = null;
-			children = ((COStructureElement) getModel()).getChildrens();
-			displayChildren(children);
-		}
+	    // displaying all sub views
+	    List<COElementAbstract> children = null;
+	    children = ((COStructureElement) getModel()).getChildrens();
+	    displayChildren(children);
+	}
     }
-    
+
     /**
      * @return true if the view displays only the title
      */
-    private boolean getShowTitleOnly(){
-    	return showTitleOnly;
+    private boolean getShowTitleOnly() {
+	return showTitleOnly;
     }
-    
+
     public void displayChildren(List<COElementAbstract> children) {
 	if (children == null) {
 	    if (TRACE)
@@ -120,7 +119,9 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 					    absElement);
 		    COStructureElement newCOStructEl =
 			    (COStructureElement) absElement;
-		    if (!(absElement.getChildrens().size() == 1 && subModels == null)) {
+		    newCOStructEl.addEventHandler(this);
+		    if (!(absElement.getChildrens().size() == 1 && subModels
+			    .isEmpty())) {
 			addListItemView(newCOStructEl);
 		    }
 		    children = newCOStructEl.getChildrens();
@@ -146,17 +147,16 @@ public class OsylCOStructureView extends OsylViewableComposite implements
     }
 
     protected void addListItemView(COUnit itemModel) {
-	OsylCOStructureItemView listItemView =
-		new OsylCOStructureItemView(itemModel, getController());
+	OsylCOUnitHyperlinkView listItemView =
+		new OsylCOUnitHyperlinkView(itemModel, getController());
 	getMainPanel().add(listItemView);
     }
 
     protected void addListItemView(COStructureElement itemModel) {
-	Label COStructTitleLabel = new Label(getCoMessage(itemModel.getType()));
-	COStructTitleLabel.setStylePrimaryName("Osyl-UnitView-Title");
-	COStructTitleLabel.addStyleName(OsylStyleLevelChooser
-		.getLevelStyle(itemModel));
-	getMainPanel().add(COStructTitleLabel);
+	OsylCOStructureLabelView v =
+		new OsylCOStructureLabelView(itemModel, getController(), true,
+			OsylStyleLevelChooser.getLevelStyle(itemModel));
+	getMainPanel().add(v);
     }
 
     public COStructureElement getModel() {

@@ -352,7 +352,12 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     public void setParent(COElementAbstract parent) {
 	this.parent = parent;
     }
-
+    
+    
+    @SuppressWarnings("unchecked")
+    public void removeMeFromMyParent() {
+	getParent().removeChild(this);
+    }
     /**
      * {@inheritDoc}
      */
@@ -400,6 +405,23 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
 	return properties.getProperty(key, type);
     }
 
+    public boolean isNested(){
+	if(getParent()==null)
+	    return false;
+	return this.getType().equals(getParent().getType());
+    }
+    
+    public int getNestingLevel(){
+	int l=0;
+	COElementAbstract p=getParent();
+	while(p!=null && this.getType().equals(p.getType())){
+	    l++;
+	    p = p.getParent();
+	}
+	return l;
+    }
+    
+    
     /**
      * Check the position of the element compared to other element
      * 

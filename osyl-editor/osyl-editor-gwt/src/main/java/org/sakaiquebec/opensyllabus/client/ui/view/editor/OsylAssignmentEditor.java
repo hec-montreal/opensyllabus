@@ -83,8 +83,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 	setHasRequirement(false);
 	initMainPanel();
 	initWidget(getMainPanel());
-	dateTimeFormat =
-		getView().getController().getSettings().getDateFormat();
+	dateTimeFormat = getController().getSettings().getDateFormat();
     }
 
     /**
@@ -333,7 +332,7 @@ public class OsylAssignmentEditor extends OsylAbstractResProxEditor {
 		ok = false;
 	    }
 
-	    COElementAbstract model = getView().getModel();
+	    COElementAbstract model = getModel();
 	    boolean found = false;
 	    Date dueDate = null;
 	    while (!found && model.getParent() != null) {

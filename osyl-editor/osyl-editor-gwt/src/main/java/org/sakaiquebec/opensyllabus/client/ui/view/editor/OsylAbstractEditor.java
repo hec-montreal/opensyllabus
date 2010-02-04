@@ -31,11 +31,15 @@ import org.gwt.mosaic.ui.client.WindowPanel.WindowState;
 import org.gwt.mosaic.ui.client.WindowPanel.WindowStateListener;
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
+import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
+import org.sakaiquebec.opensyllabus.client.ui.base.OsylPushButton;
 import org.sakaiquebec.opensyllabus.client.ui.base.OsylWindowPanel;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylCloseClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylEditClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
+import org.sakaiquebec.opensyllabus.shared.model.COElementMoveable;
+import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -92,7 +96,7 @@ public abstract class OsylAbstractEditor extends Composite {
     protected ListBox targetsListBox;
 
     public static final String MANDATORY_FIELD_INDICATOR =
-    "<span class=\"Osyl-Mandatory_field\"> *</span>";
+	    "<span class=\"Osyl-Mandatory_field\"> *</span>";
 
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
@@ -173,6 +177,14 @@ public abstract class OsylAbstractEditor extends Composite {
 
     public int getOriginalEditorPopupHeight() {
 	return originalEditorPopupHeight;
+    }
+    
+    public OsylController getController(){
+	return getView().getController();
+    }
+    
+    public COModelInterface getModel(){
+	return getView().getModel();
     }
 
     /**
@@ -266,13 +278,13 @@ public abstract class OsylAbstractEditor extends Composite {
 	mainPanel.setWidth("100%");
 
 	Widget informationWidget = getInformationWidget();
-	if(informationWidget!=null){
+	if (informationWidget != null) {
 	    HorizontalPanel row00 = new HorizontalPanel();
 	    row00.setStylePrimaryName("Osyl-EditorPopup-RowInformation");
 	    mainPanel.add(row00);
 	    row00.add(informationWidget);
 	}
-	
+
 	Widget browserWidget = getBrowserWidget();
 	if (null != browserWidget) {
 	    // row 0 (if applicable): the resource browser
@@ -425,7 +437,10 @@ public abstract class OsylAbstractEditor extends Composite {
      *         move to operation.
      */
     protected void generateTargetCoAbstractElementListBox(ListBox lb) {
-	// nothing to do (for the moment)
+    }
+
+    public String getMoveToTarget() {
+	return targetsListBox.getValue(targetsListBox.getSelectedIndex());
     }
 
     public void closeEditor() {
@@ -446,6 +461,86 @@ public abstract class OsylAbstractEditor extends Composite {
      */
     public void setInEditionMode(boolean isInEditionMode) {
 	this.isInEditionMode = isInEditionMode;
+    }
+
+    protected OsylPushButton createButtonUp() {
+	OsylPushButton upButton = null;
+	if (getModel() instanceof COElementMoveable) {
+	    final COElementMoveable coem = (COElementMoveable) getModel();
+	    if (coem.hasPredecessor()) {
+		upButton =
+			new OsylPushButton(getOsylImageBundle().up_full()
+				.createImage(), getOsylImageBundle().up_full()
+				.createImage(), getOsylImageBundle().up_full()
+				.createImage());
+		upButton.setTitle(getUiMessage("UpButton.title"));
+		upButton.setEnabledButton();
+		upButton.addClickHandler(new ClickHandler() {
+
+		    public void onClick(ClickEvent event) {
+			getView().leaveEdit();
+			coem.moveUp();
+		    }
+
+		});
+	    } else {
+		upButton =
+			new OsylPushButton(getOsylImageBundle().up_empty()
+				.createImage(), getOsylImageBundle().up_empty()
+				.createImage(), getOsylImageBundle().up_empty()
+				.createImage());
+		upButton.setDisabledButton();
+	    }
+	    upButton.setVisible(true);
+	}
+	return upButton;
+    }
+
+    protected OsylPushButton createButtonDown() {
+	OsylPushButton downButton = null;
+	if (getModel() instanceof COElementMoveable) {
+	    final COElementMoveable coem = (COElementMoveable) getModel();
+	    if (coem.hasSuccessor()) {
+		downButton =
+			new OsylPushButton(getOsylImageBundle().down_full()
+				.createImage(), getOsylImageBundle()
+				.down_full().createImage(),
+				getOsylImageBundle().down_full().createImage());
+		downButton.setTitle(getUiMessage("DownButton.title"));
+		downButton.setEnabledButton();
+		downButton.addClickHandler(new ClickHandler() {
+
+		    public void onClick(ClickEvent event) {
+			getView().leaveEdit();
+			coem.moveDown();
+		    }
+
+		});
+	    } else {
+		downButton =
+			new OsylPushButton(getOsylImageBundle().down_empty()
+				.createImage(), getOsylImageBundle()
+				.down_empty().createImage(),
+				getOsylImageBundle().down_empty().createImage());
+		downButton.setDisabledButton();
+	    }
+	}
+	return downButton;
+    }
+    
+    /**
+     * Used to refresh up and down arrows
+     */
+    public void refreshUpAndDownPanel() {
+	OsylPushButton upButton = createButtonUp();
+	OsylPushButton downButton = createButtonDown();
+	getView().getUpAndDownPanel().clear();
+	if (upButton != null) {
+	    getView().getUpAndDownPanel().add(upButton);
+	}
+	if (downButton != null) {
+	    getView().getUpAndDownPanel().add(downButton);
+	}
     }
 
     /**
@@ -534,7 +629,7 @@ public abstract class OsylAbstractEditor extends Composite {
     protected abstract List<FocusWidget> getEditionFocusWidgets();
 
     public abstract Widget getInformationWidget();
-    
+
     /**
      * ====================== ADDED METHODS =======================
      */
@@ -549,9 +644,10 @@ public abstract class OsylAbstractEditor extends Composite {
     public class FocusWidgetFocusHandler implements FocusHandler {
 
 	public void onFocus(FocusEvent event) {
-	    
+
 	    if (event.getSource().getClass().equals(RichTextArea.class)) {
-		osylFormattingToolbar.setRichText((RichTextArea) event.getSource());
+		osylFormattingToolbar.setRichText((RichTextArea) event
+			.getSource());
 	    } else {
 		if (null != osylFormattingToolbar) {
 		    osylFormattingToolbar.setRichText(null);

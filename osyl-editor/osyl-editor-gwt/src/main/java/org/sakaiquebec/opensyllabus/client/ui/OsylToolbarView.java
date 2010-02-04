@@ -49,11 +49,11 @@ import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
+import org.sakaiquebec.opensyllabus.shared.model.COStructureElementType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
-import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
-import org.sakaiquebec.opensyllabus.shared.util.BrowserUtil;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Timer;
@@ -80,8 +80,6 @@ public class OsylToolbarView extends OsylViewableComposite implements
     private OsylLongView osylPrintView = null;
 
     private OsylViewable previousMainView;
-
-    private OsylConfigMessages uiMessages = getController().getUiMessages();
 
     private List<SavePushButtonEventHandler> saveEventHandlerList;
     private List<PublishPushButtonEventHandler> publishEventHandlerList;
@@ -124,43 +122,54 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	@SuppressWarnings("unchecked")
 	public void execute() {
 	    if (parentModel.isCOStructureElement()) {
-		COUnit coU =
-			COUnit.createDefaultCOUnit(type, getCoMessages(),
-				parentModel);
-		try {
-		    List<COModelInterface> coUnitSubModels =
-			    getController().getOsylConfig()
-				    .getOsylConfigRuler().getAllowedSubModels(
-					    coU);
-		    if (!coUnitSubModels.isEmpty()) {
-			COUnitStructure coUnitStructure =
-				COUnitStructure.createDefaultCOUnitStructure(
-					coUnitSubModels.get(0).getType(),
-					getCoMessages(), coU);
-			List<COModelInterface> coUnitStructureSubModels =
+
+		if (COStructureElementType.getTypesList().contains(type)) {
+		    COStructureElement cose= COStructureElement.createDefaultCOStructureElement(type,
+			    getCoMessages(), parentModel);
+		    cose.setLabel(getUiMessage("ASMStructure.label.default"));
+		} else if (COUnitType.getTypesList().contains(type)) {
+		    COUnit coU =
+			    COUnit.createDefaultCOUnit(type, getCoMessages(),
+				    parentModel);
+		    try {
+			List<COModelInterface> coUnitSubModels =
 				getController().getOsylConfig()
 					.getOsylConfigRuler()
-					.getAllowedSubModels(coUnitStructure);
-			if (!coUnitStructureSubModels.isEmpty())
-			    COUnitContent.createDefaultCOContentUnit(
-				    coUnitStructureSubModels.get(0).getType(),
-				    getCoMessages(), coUnitStructure);
-		    }
+					.getAllowedSubModels(coU);
+			if (!coUnitSubModels.isEmpty()) {
+			    COUnitStructure coUnitStructure =
+				    COUnitStructure
+					    .createDefaultCOUnitStructure(
+						    coUnitSubModels.get(0)
+							    .getType(),
+						    getCoMessages(), coU);
+			    List<COModelInterface> coUnitStructureSubModels =
+				    getController().getOsylConfig()
+					    .getOsylConfigRuler()
+					    .getAllowedSubModels(
+						    coUnitStructure);
+			    if (!coUnitStructureSubModels.isEmpty())
+				COUnitContent.createDefaultCOContentUnit(
+					coUnitStructureSubModels.get(0)
+						.getType(), getCoMessages(),
+					coUnitStructure);
+			}
 
-		} catch (RuntimeException e) {
-		    // TODO: handle exception
+		    } catch (RuntimeException e) {
+			// TODO: handle exception
+		    }
 		}
 
 	    } else if (parentModel.isCOUnit()) {
 		// TODO change this when multiple coUnitContent under one COUnit
-		// will be authorized
+		// will be allowed
 		COUnitContent coUnitContent =
 			(COUnitContent) parentModel.getChildrens().get(0);
 		createASMContext(coUnitContent);
 
 	    } else if (parentModel.isCOUnitStructure()) {
 		// TODO change this when multiple coUnitContent under one COUnit
-		// will be authorized
+		// will be allowed
 		COUnitContent coUnitContent =
 			(COUnitContent) parentModel.getChildrens().get(0);
 		createASMContext(coUnitContent);
@@ -344,11 +353,11 @@ public class OsylToolbarView extends OsylViewableComposite implements
 			int documentHeight =
 				osylPrintView.getOffsetHeight() + sp;
 			entryPoint.setToolHeight(documentHeight);
-//			if (BrowserUtil.getBrowserType().equals("webkit")) {
-//			    printJSNI();
-//			} else {
-			    draftPrinting();
-//			}
+			// if (BrowserUtil.getBrowserType().equals("webkit")) {
+			// printJSNI();
+			// } else {
+			draftPrinting();
+			// }
 		    }
 		};
 		t.schedule(250);
@@ -453,24 +462,21 @@ public class OsylToolbarView extends OsylViewableComposite implements
 				getController().getOsylConfig()
 					.getOsylConfigRuler()
 					.getAllowedSubModels(getModel());
-			if (subModels != null) {
-			    Iterator<COModelInterface> iter =
-				    subModels.iterator();
-			    while (iter.hasNext()) {
-				COModelInterface subModel =
-					(COModelInterface) iter.next();
-				// Special case : No addition is allowable under
-				// Header COStructure
-				String parentType = castedModel.getType();
-				if (parentType.endsWith("Header")) {
-				    getOsylToolbar().getAddMenuBar()
-					    .setVisible(false);
-				    return;
-				} else {
-				    addAddMenuItem(subModel.getType(),
-					    new AddMenuCommand(castedModel,
-						    subModel.getType()));
-				}
+			Iterator<COModelInterface> iter = subModels.iterator();
+			while (iter.hasNext()) {
+			    COModelInterface subModel =
+				    (COModelInterface) iter.next();
+			    // Special case : No addition is allowable under
+			    // Header COStructure
+			    String parentType = castedModel.getType();
+			    if (parentType.endsWith("Header")) {
+				getOsylToolbar().getAddMenuBar().setVisible(
+					false);
+				return;
+			    } else {
+				addAddMenuItem(subModel.getType(),
+					new AddMenuCommand(castedModel,
+						subModel.getType()));
 			    }
 			}
 		    } catch (RuntimeException e) {
@@ -514,13 +520,11 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	List<COModelInterface> subModels =
 		getController().getOsylConfig().getOsylConfigRuler()
 			.getAllowedSubModels(model);
-	if (subModels != null) {
-	    Iterator<COModelInterface> iter = subModels.iterator();
-	    while (iter.hasNext()) {
-		COModelInterface subModel = (COModelInterface) iter.next();
-		addAddMenuItem(subModel.getType(), new AddUnitStructureCommand(
-			model, subModel.getType()));
-	    }
+	Iterator<COModelInterface> iter = subModels.iterator();
+	while (iter.hasNext()) {
+	    COModelInterface subModel = (COModelInterface) iter.next();
+	    addAddMenuItem(subModel.getType(), new AddUnitStructureCommand(
+		    model, subModel.getType()));
 	}
 	if (getModel().getChildrens().size() == 1) {
 	    if ((COUnitStructure) model.getChildrens().get(0) != null) {

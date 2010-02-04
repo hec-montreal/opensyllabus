@@ -124,7 +124,7 @@ public class OsylTreeView extends OsylViewableComposite implements
 		List<COModelInterface> subModels =
 			getController().getOsylConfig().getOsylConfigRuler()
 				.getAllowedSubModels(itemModel);
-		if (itemModel.getChildrens().size() == 1 && subModels == null) {
+		if (itemModel.getChildrens().size() == 1 && subModels.isEmpty()) {
 		    COElementAbstract childOfAsmStruct =
 			    (COElementAbstract) itemModel.getChildrens().get(0);
 		    if (childOfAsmStruct.isCOUnit()) {

@@ -32,7 +32,7 @@ import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventH
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
 public class COStructureElement extends COElementAbstract<COElementAbstract>
-	implements COModelInterface {
+	implements COModelInterface, COElementMoveable {
 
     private static final long serialVersionUID = 1701561339679430501L;
 
@@ -56,6 +56,19 @@ public class COStructureElement extends COElementAbstract<COElementAbstract>
 	super();
 	setClassType(CO_STRUCTURE_ELEMENT_CLASS_TYPE);
 	childrens = new ArrayList<COElementAbstract>();
+    }
+    
+    public static COStructureElement createDefaultCOStructureElement(final String type,
+	    final OsylConfigMessages osylConfigMessages,
+	    final COElementAbstract<COElementAbstract> parentModel) {
+	final COStructureElement structureElement = new COStructureElement();
+	structureElement.setType(type);
+	structureElement.setParent(parentModel);
+
+	// Add child (a model notification should fire)
+	parentModel.addChild(structureElement);
+
+	return structureElement;
     }
 
     /**
@@ -173,6 +186,40 @@ public class COStructureElement extends COElementAbstract<COElementAbstract>
 	    childrens.set(ind, temp);
 	}
 	notifyEventHandlers();
+    }
+
+    @SuppressWarnings("unchecked")
+    public boolean hasPredecessor() {
+	if (getParent() == null)
+	    return false;
+	int i = getParent().getElementPosition(this);
+	if (i != 1 && i != 0)
+	    return true;
+	else
+	    return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    public boolean hasSuccessor() {
+	if (getParent() == null)
+	    return false;
+	int i = getParent().getElementPosition(this);
+	if (i != -1 && i != 0)
+	    return true;
+	else
+	    return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void moveDown() {
+	getParent().changeElementPosition(this,
+		COElementAbstract.POSITION_CHANGE_ACTION_DOWN);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void moveUp() {
+	getParent().changeElementPosition(this,
+		COElementAbstract.POSITION_CHANGE_ACTION_UP);
     }
 
 }

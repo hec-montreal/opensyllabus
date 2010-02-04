@@ -74,9 +74,10 @@ public class OsylCOUnitStructureView extends OsylViewableComposite implements
 	mainPanel = new VerticalPanel();
 	getMainPanel().setStylePrimaryName("Osyl-UnitView-UnitPanel");
 	if (showLabel) {
-	    OsylCOUnitStructureLabelView lbv =
-		    new OsylCOUnitStructureLabelView(
-			    (COUnitStructure) getModel(), getController(), OsylStyleLevelChooser.getLevelStyle(getModel()));
+	    OsylLabelView lbv =
+		    new OsylLabelView((COUnitStructure) getModel(),
+			    getController(), true, OsylStyleLevelChooser
+				    .getLevelStyle(getModel()));
 	    getMainPanel().add(lbv);
 	}
 	List<COElementAbstract> childrens = null;
@@ -162,10 +163,10 @@ public class OsylCOUnitStructureView extends OsylViewableComposite implements
 	getMainPanel().add(coUnitStructureView);
     }
 
-    public COUnitStructure getModel(){
-	return (COUnitStructure)super.getModel();
+    public COUnitStructure getModel() {
+	return (COUnitStructure) super.getModel();
     }
-    
+
     public void onUpdateModel(UpdateCOUnitStructureEvent event) {
 	refreshView();
     }

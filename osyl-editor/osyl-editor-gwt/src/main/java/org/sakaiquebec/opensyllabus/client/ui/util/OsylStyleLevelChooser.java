@@ -35,7 +35,7 @@ public class OsylStyleLevelChooser {
 		List<COModelInterface> subModels =
 			controller.getOsylConfig().getOsylConfigRuler()
 				.getAllowedSubModels(model);
-		if (subModels == null && model.getChildrens().size() < 2)
+		if (subModels.isEmpty() && model.getChildrens().size() < 2)
 		    i--;
 	    }
 	    i++;

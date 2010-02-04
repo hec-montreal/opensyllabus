@@ -192,8 +192,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	ListBox lb = new ListBox();
 	lb.setName("listBoxContactInfoRole");
 	lb.setStylePrimaryName("Osyl-ContactInfo-ListBox");
-	List<String> rolesList =
-		getView().getController().getOsylConfig().getRolesList();
+	List<String> rolesList = getController().getOsylConfig().getRolesList();
 	TreeSet<String> sortedRoleSet =
 		new TreeSet<String>(LocalizedStringComparator.getInstance());
 	for (String roleKey : rolesList) {
@@ -468,14 +467,14 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	}
 	return viewerComments;
     }
-    
+
     private FlexTable viewerPanel;
-    
+
     private void setViewerPanel(FlexTable flexTable) {
-	this.viewerPanel=flexTable;
+	this.viewerPanel = flexTable;
     }
-    
-    private FlexTable getViewerPanel(){
+
+    private FlexTable getViewerPanel() {
 	return viewerPanel;
     }
 
@@ -650,7 +649,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	    if (!nullOrEmpty(getView().getComments())) {
 		getViewer().add(viewerPanelComments);
 	    }
-	    
+
 	}
 	setViewerPanel(new FlexTable());
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
@@ -756,7 +755,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	setInEditionMode(false);
 	getMainPanel().clear();
 	initViewer();
-	
+
 	getViewerRole().setHTML(getView().getRole());
 	getViewerLastName().setHTML(getView().getLastName());
 	getViewerFirstName().setHTML(getView().getFirstName());

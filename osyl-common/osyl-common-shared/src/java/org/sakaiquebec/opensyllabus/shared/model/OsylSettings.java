@@ -43,6 +43,7 @@ public class OsylSettings {
     private static final String TITLELABEL_EDITABLE = ".titlelabel.editable";
     private static final String UNITVIEW = "unitview.";
     private static final String STRUCTVIEW = "structview.";
+    private static final String NESTED = "nested.";
 
     // numbering
     private static final String TREEVIEW_ASSESSMENT_NUMBERING =
@@ -151,6 +152,21 @@ public class OsylSettings {
     }
 
     /**
+     * Check if title of nested structure of specified type is editable
+     * 
+     * @param type
+     * @return
+     */
+    public boolean isNestedStructViewTitleLabelEditable(String type) {
+	if (isStructViewTitleLabelEditable(type)) {
+	    return true;
+	} else {
+	    return checkBooleanOption(STRUCTVIEW + NESTED + type
+		    + TITLELABEL_EDITABLE, false);
+	}
+    }
+
+    /**
      * @param type the type of the unit
      * @return true if the UnitView TitleLabel can be editable
      */
@@ -160,6 +176,19 @@ public class OsylSettings {
 	else
 	    return checkBooleanOption(UNITVIEW + type + TITLELABEL_EDITABLE,
 		    false);
+    }
+
+    public boolean isModelTitleEditable(COElementAbstract model) {
+	String type = model.getType();
+	if (model.isCOUnit())
+	    return isUnitViewTitleLabelEditable(type);
+	if (model.isCOStructureElement()) {
+	    if (model.isNested())
+		return isNestedStructViewTitleLabelEditable(type);
+	    else
+		return isStructViewTitleLabelEditable(type);
+	} else
+	    return false;
     }
 
     /**
@@ -205,8 +234,8 @@ public class OsylSettings {
 
     public String getCitationFormat(String type) {
 	String format = null;
-	if (settings.containsKey(FORMAT_CITATION+type))
-	    format = getSettingsProperty(FORMAT_CITATION+type);
+	if (settings.containsKey(FORMAT_CITATION + type))
+	    format = getSettingsProperty(FORMAT_CITATION + type);
 	return format;
 
     }

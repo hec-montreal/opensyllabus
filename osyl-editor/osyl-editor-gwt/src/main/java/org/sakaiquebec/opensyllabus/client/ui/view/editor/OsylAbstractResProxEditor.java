@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
-import org.sakaiquebec.opensyllabus.client.ui.base.OsylPushButton;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylDeleteClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractResProxView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
@@ -77,7 +76,6 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     private boolean hasImportant;
     private boolean moveableInRubric;
     private boolean hasHide;
-    
 
     /**
      * Constructor.
@@ -109,65 +107,6 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	return createButton(imgDeleteButton, title, listener);
     }
 
-    protected OsylPushButton createButtonUp() {
-	OsylPushButton upButton;
-	if (getView().getModel().hasPredecessor()) {
-	    upButton =
-		    new OsylPushButton(getOsylImageBundle().up_full()
-			    .createImage(), getOsylImageBundle().up_full()
-			    .createImage(), getOsylImageBundle().up_full()
-			    .createImage());
-	    upButton.setTitle(getUiMessage("UpButton.title"));
-	    upButton.setEnabledButton();
-	    upButton.addClickHandler(new ClickHandler() {
-
-		public void onClick(ClickEvent event) {
-		    getView().leaveEdit();
-		    getView().getModel().moveUp();
-		}
-
-	    });
-	} else {
-	    upButton =
-		    new OsylPushButton(getOsylImageBundle().up_empty()
-			    .createImage(), getOsylImageBundle().up_empty()
-			    .createImage(), getOsylImageBundle().up_empty()
-			    .createImage());
-	    upButton.setDisabledButton();
-	}
-	upButton.setVisible(true);
-	return upButton;
-    }
-
-    protected OsylPushButton createButtonDown() {
-	OsylPushButton downButton;
-	if (getView().getModel().hasSuccessor()) {
-	    downButton =
-		    new OsylPushButton(getOsylImageBundle().down_full()
-			    .createImage(), getOsylImageBundle().down_full()
-			    .createImage(), getOsylImageBundle().down_full()
-			    .createImage());
-	    downButton.setTitle(getUiMessage("DownButton.title"));
-	    downButton.setEnabledButton();
-	    downButton.addClickHandler(new ClickHandler() {
-
-		public void onClick(ClickEvent event) {
-		    getView().leaveEdit();
-		    getView().getModel().moveDown();
-		}
-
-	    });
-	} else {
-	    downButton =
-		    new OsylPushButton(getOsylImageBundle().down_empty()
-			    .createImage(), getOsylImageBundle().down_empty()
-			    .createImage(), getOsylImageBundle().down_empty()
-			    .createImage());
-	    downButton.setDisabledButton();
-	}
-	return downButton;
-    }
-
     public boolean isRubricMoveable() {
 	return rubricMoveable;
     }
@@ -187,6 +126,10 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     protected OsylAbstractResProxView getView() {
 	return (OsylAbstractResProxView) super.getView();
     }
+    
+    public COContentResourceProxy getModel() {
+	return getView().getModel();
+    } 
 
     /**
      * {@inheritDoc}
@@ -217,53 +160,59 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
 		public void onChange(ChangeEvent event) {
 		    refreshTargetCoAbsractElementListBox(targetsListBox);
-		    if(rubricListBox.getSelectedIndex() > 0){
-		    	modifyRubricDesc.setEnabled(true);
-		    	modifyRubricDesc.setValue(false);
-		    	userDefLabel.setText("");
-		    	userDefLabel.setEnabled(false);	    	
-			    fillRubricUserDefLabel();
-		    }else{
-		    	modifyRubricDesc.setEnabled(false);
-		    	modifyRubricDesc.setValue(false);
-		    	userDefLabel.setText("");
-		    	userDefLabel.setEnabled(false);	    	
+		    if (rubricListBox.getSelectedIndex() > 0) {
+			modifyRubricDesc.setEnabled(true);
+			modifyRubricDesc.setValue(false);
+			userDefLabel.setText("");
+			userDefLabel.setEnabled(false);
+			fillRubricUserDefLabel();
+		    } else {
+			modifyRubricDesc.setEnabled(false);
+			modifyRubricDesc.setValue(false);
+			userDefLabel.setText("");
+			userDefLabel.setEnabled(false);
 		    }
 		}
 	    });
-	    modifyRubricDesc = new CheckBox(getUiMessage("EditorPopUp.options.rubric.check"));
+	    modifyRubricDesc =
+		    new CheckBox(
+			    getUiMessage("EditorPopUp.options.rubric.check"));
 	    boolean userDefLabelSet = false;
-	    if(getView().getModel().getRubric().getUserDefLabel() != null && 
-	    		getView().getModel().getRubric().getUserDefLabel().length() > 0){
-	    	userDefLabelSet = true;
+	    if (getModel().getRubric().getUserDefLabel() != null
+		    && getModel().getRubric().getUserDefLabel()
+			    .length() > 0) {
+		userDefLabelSet = true;
 	    }
-    	modifyRubricDesc.setEnabled(rubricListBox.getSelectedIndex() > 0);
-    	modifyRubricDesc.setValue(userDefLabelSet);
-	    modifyRubricDesc.addClickHandler(new ClickHandler(){
-	    	public void onClick(ClickEvent clickEvent){
-	    		boolean checked = ((CheckBox) clickEvent.getSource()).getValue();
-	    		if(checked){
-	    			userDefLabel.setEnabled(true);
-	    			userDefLabel.setFocus(true);
-	    		}else{
-	    			userDefLabel.setEnabled(false);
-	    			userDefLabel.setText("");	    			
-	    		}
-	    		
-	    	}
+	    modifyRubricDesc.setEnabled(rubricListBox.getSelectedIndex() > 0);
+	    modifyRubricDesc.setValue(userDefLabelSet);
+	    modifyRubricDesc.addClickHandler(new ClickHandler() {
+		public void onClick(ClickEvent clickEvent) {
+		    boolean checked =
+			    ((CheckBox) clickEvent.getSource()).getValue();
+		    if (checked) {
+			userDefLabel.setEnabled(true);
+			userDefLabel.setFocus(true);
+		    } else {
+			userDefLabel.setEnabled(false);
+			userDefLabel.setText("");
+		    }
+
+		}
 	    });
-	    //TODO set checkbox to true if a value is found in new attribute userdeftype
-	    //modifyRubricDesc.setValue(getView().isContextHidden());
+	    // TODO set checkbox to true if a value is found in new attribute
+	    // userdeftype
+	    // modifyRubricDesc.setValue(getView().isContextHidden());
 	    userDefLabel = new TextBox();
 	    userDefLabel.setEnabled(userDefLabelSet);
-	    if(userDefLabelSet){
-	    	userDefLabel.setText(getView().getModel().getRubric().getUserDefLabel());
+	    if (userDefLabelSet) {
+		userDefLabel.setText(getModel().getRubric()
+			.getUserDefLabel());
 	    }
-        rubricPanel.add(modifyRubricDesc);
-        rubricPanel.add(userDefLabel);
-	    if(!(getView().getSettings().isRubricDescEditable())){
-	    	modifyRubricDesc.setVisible(false);
-	    	userDefLabel.setVisible(false);
+	    rubricPanel.add(modifyRubricDesc);
+	    rubricPanel.add(userDefLabel);
+	    if (!(getView().getSettings().isRubricDescEditable())) {
+		modifyRubricDesc.setVisible(false);
+		userDefLabel.setVisible(false);
 	    }
 	    widgetList.add(rubricPanel);
 	}
@@ -341,16 +290,16 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    requirementListBox.setWidth("100px");
 	    requirementListBox
 		    .setTitle(getUiMessage("MetaInfo.requirement.title"));
-	    requirementListBox.addItem("",
-		    COPropertiesType.REQ_LEVEL_UNDEFINED);
-	    requirementListBox.addItem(getView().
-		    getCoMessage("MetaInfo.requirement.mandatory"),
+	    requirementListBox
+		    .addItem("", COPropertiesType.REQ_LEVEL_UNDEFINED);
+	    requirementListBox.addItem(getView().getCoMessage(
+		    "MetaInfo.requirement.mandatory"),
 		    COPropertiesType.REQ_LEVEL_MANDATORY);
-	    requirementListBox.addItem(getView().
-		    getCoMessage("MetaInfo.requirement.recommended"),
+	    requirementListBox.addItem(getView().getCoMessage(
+		    "MetaInfo.requirement.recommended"),
 		    COPropertiesType.REQ_LEVEL_RECOMMENDED);
-	    requirementListBox.addItem(getView().
-		    getCoMessage("MetaInfo.requirement.complementary"),
+	    requirementListBox.addItem(getView().getCoMessage(
+		    "MetaInfo.requirement.complementary"),
 		    COPropertiesType.REQ_LEVEL_COMPLEMENTARY);
 	    requirementPanel.add(requirementListBox);
 
@@ -396,19 +345,6 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
      */
 
     /**
-     * Used to refresh up and down arrows
-     */
-    public void refreshUpAndDownPanel() {
-	getView().getUpAndDownPanel().clear();
-	if (isMoveableInRubric()) {
-	    OsylPushButton upButton = createButtonUp();
-	    OsylPushButton downButton = createButtonDown();
-	    getView().getUpAndDownPanel().add(upButton);
-	    getView().getUpAndDownPanel().add(downButton);
-	}
-    }
-
-    /**
      * Returns whether the checkBox "important" is checked.
      * 
      * @return boolean
@@ -452,7 +388,8 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    img = getOsylImageBundle().iconeCompl().createImage();
 	}
 	if (img != null)
-	    img.setTitle(getView().getCoMessage("MetaInfo.requirement." + reqLevel));
+	    img.setTitle(getView().getCoMessage(
+		    "MetaInfo.requirement." + reqLevel));
 	return img;
     }
 
@@ -501,18 +438,17 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
      * @return String
      */
     public String getRubricUserDefLabel() {
-    	return userDefLabel!=null?userDefLabel.getText():null;
+	return userDefLabel != null ? userDefLabel.getText() : null;
     }
-    
+
     private ListBox generateRubricList() {
 	ListBox lb = new ListBox();
 	lb.setName("listBoxFormElement");
 
-	COContentResourceProxy resProx =
-		(COContentResourceProxy) getView().getModel();
+	COContentResourceProxy resProx = getModel();
 
 	List<COModelInterface> subModels =
-		getView().getController().getOsylConfig().getOsylConfigRuler()
+		getController().getOsylConfig().getOsylConfigRuler()
 			.getAllowedSubModels(resProx.getParent());
 
 	Vector<String> rubricTypes = new Vector<String>();
@@ -543,15 +479,15 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		lb.setItemSelected(i, true);
 	    }
 	}
-	
+
 	return lb;
     }
 
     protected void generateTargetCoAbstractElementListBox(ListBox lb) {
 	lb.clear();
 	lb.addItem("");
-	fillListBoxWithAllowedCoUnits((COContent) getView().getController()
-		.getMainView().getModel(), lb);
+	fillListBoxWithAllowedCoUnits((COContent) getController().getMainView()
+		.getModel(), lb);
 
     }
 
@@ -601,7 +537,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	boolean rubricAllowed = false;
 	boolean resourceTypeAllowed = false;
 	List<COModelInterface> subModels =
-		getView().getController().getOsylConfig().getOsylConfigRuler()
+		getController().getOsylConfig().getOsylConfigRuler()
 			.getAllowedSubModels(targetModel);
 	for (Iterator<COModelInterface> iter = subModels.iterator(); iter
 		.hasNext();) {
@@ -612,17 +548,13 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    }
 	    if (coi instanceof COContentResource) {
 		if (coi.getType().equals(
-			getView().getModel().getResource().getType())) {
+			getModel().getResource().getType())) {
 		    resourceTypeAllowed = true;
 		}
 
 	    }
 	}
 	return (rubricAllowed && resourceTypeAllowed);
-    }
-
-    public String getMoveToTarget() {
-	return targetsListBox.getValue(targetsListBox.getSelectedIndex());
     }
 
     /**
@@ -685,32 +617,33 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     }
 
     private void fillRubricUserDefLabel() {
-    	
-    if(rubricListBox.getSelectedIndex() == 0)
-    	return;
-    	
-    String listBoxRubricType = rubricListBox.getValue(rubricListBox.getSelectedIndex());
 
-    COContentResourceProxy resProx =
-   		(COContentResourceProxy) getView().getModel();
+	if (rubricListBox.getSelectedIndex() == 0)
+	    return;
 
-    List<COContentResourceProxy> subModels = resProx.getParent().getChildrens();
-    Iterator<COContentResourceProxy> iter = subModels.listIterator();
-    boolean rubricFound = false;
-    while(iter.hasNext() && !rubricFound){
-    	COContentResourceProxy iterResProx = iter.next();
-		if(listBoxRubricType.equals(iterResProx.getRubricType())){
-			rubricFound = true;
-			if( iterResProx.getRubricUserDefLabel() != null &&
-			    iterResProx.getRubricUserDefLabel().length() > 0){
-					modifyRubricDesc.setValue(true);
-					userDefLabel.setEnabled(true);
-					userDefLabel.setText(iterResProx.getRubricUserDefLabel());
-			}
+	String listBoxRubricType =
+		rubricListBox.getValue(rubricListBox.getSelectedIndex());
 
+	COContentResourceProxy resProx = getModel();
+
+	List<COContentResourceProxy> subModels =
+		resProx.getParent().getChildrens();
+	Iterator<COContentResourceProxy> iter = subModels.listIterator();
+	boolean rubricFound = false;
+	while (iter.hasNext() && !rubricFound) {
+	    COContentResourceProxy iterResProx = iter.next();
+	    if (listBoxRubricType.equals(iterResProx.getRubricType())) {
+		rubricFound = true;
+		if (iterResProx.getRubricUserDefLabel() != null
+			&& iterResProx.getRubricUserDefLabel().length() > 0) {
+		    modifyRubricDesc.setValue(true);
+		    userDefLabel.setEnabled(true);
+		    userDefLabel.setText(iterResProx.getRubricUserDefLabel());
 		}
-    }
+
+	    }
 	}
+    }
 
     public boolean isMoveable() {
 	return true;

@@ -2,7 +2,7 @@
  * $Id: $
  ******************************************************************************
  *
- * Copyright (c) 2009 The Sakai Foundation, The Sakai Quebec Team.
+ * Copyright (c) 2010 The Sakai Foundation, The Sakai Quebec Team.
  *
  * Licensed under the Educational Community License, Version 1.0
  * (the "License"); you may not use this file except in compliance with the
@@ -22,27 +22,27 @@ package org.sakaiquebec.opensyllabus.client.ui.view;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylLabelEditor;
-import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylCOUnitStructureLabelView extends OsylAbstractView {
+public class OsylLabelView extends OsylAbstractView {
 
-    public OsylCOUnitStructureLabelView(COUnitStructure model,
-	    OsylController controller) {
-	super(model, controller);
-	setEditor(new OsylLabelEditor(this));
-	initView();
+    public OsylLabelView(COElementAbstract model, OsylController controller,
+	    boolean isDeletable, String levelStyle) {
+	this(model, controller, isDeletable, levelStyle, true);
     }
     
-    public OsylCOUnitStructureLabelView(COUnitStructure model,
-	    OsylController controller, String styleLevel) {
-	super(model, controller);
-	setEditor(new OsylLabelEditor(this));
-	initView();
-	((OsylLabelEditor)getEditor()).setViewerStyle(styleLevel);
+    public OsylLabelView(COElementAbstract model, OsylController controller,
+	    boolean isDeletable, String levelStyle, boolean initView){
+	super(model, controller, controller.getOsylConfig().getSettings()
+		.isModelTitleEditable(model));
+	setEditor(new OsylLabelEditor(this, isDeletable));
+	((OsylLabelEditor) getEditor()).setViewerStyle(levelStyle);
+	if(initView)
+	    initView();
     }
 
     /**
@@ -50,12 +50,16 @@ public class OsylCOUnitStructureLabelView extends OsylAbstractView {
      * superclass for javadoc!
      */
 
+    public COElementAbstract getModel() {
+	return (COElementAbstract) super.getModel();
+    }
+
     public String getTextFromModel() {
-	return ((COUnitStructure) getModel()).getLabel();
+	return getModel().getLabel();
     }
 
     protected void updateModel() {
-	((COUnitStructure) getModel()).setLabel(getEditor().getText());
+	getModel().setLabel(getEditor().getText());
 	setModifiedDateToNow();
     }
 }
