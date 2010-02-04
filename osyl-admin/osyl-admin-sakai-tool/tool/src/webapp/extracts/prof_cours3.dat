@@ -1,67 +1,67 @@
-EMPLID;CATALOG_NBR;STRM;SESSION_CODE;CLASS_SECTION;UNITS_MINIMUM;DESCRLONG;N_DESCRLONG;ACAD_ORG;ROLE;STRM_ID 
-00003276;5195102;2093;P1;C03;1.5;;;SC.COMPT.;Enseignant;2093P1
-00003800;490396;2093;1;DF1;3;Cours réservé au DESS en comptabilité publique / Inscription par le registrariat seulement / Les étudiants à temps plein seront inscrits automatiquement / Les autres devront soumettre leur demande en écrivant à desscp@hec.ca;Cours réservé au DESS en comptabilité publique / Inscription par le registrariat seulement / Les étudiants à temps plein seront inscrits automatiquement / Les autres devront soumettre leur demande en écrivant à desscp@hec.ca;SC.COMPT.;Enseignant;20931
-00003800;    TMAGE;2093;1;TM5;0;;;BUR.REGIST;Enseignant;20931
-00004525;210000;2093;1;A01;3;Pour version anglaise voir 2-108-00 / Pour version espagnole voir 2-109-00;Pour version anglaise voir 2-108-00 / Pour version espagnole voir 2-109-00;MARKETING;Enseignant;20931
-00005711;3010082;2093;1;F01;3;;;MARKETING;Enseignant;20931
-00006798;5190202;2093;P2;A01;1.5;;;SC.COMPT.;Enseignant;2093P2
-00007355;490396;2093;1;E05;3;Cours réservé au DESS en comptabilité publique / Inscription par le registrariat seulement / Les étudiants à temps plein seront inscrits automatiquement / Les autres devront soumettre leur demande en écrivant à desscp@hec.ca;Cours réservé au DESS en comptabilité publique / Inscription par le registrariat seulement / Les étudiants à temps plein seront inscrits automatiquement / Les autres devront soumettre leur demande en écrivant à desscp@hec.ca;SC.COMPT.;Enseignant;20931
-00007738;190106;2093;1;B02;3;;;SC.COMPT.;Enseignant;20931
-00007796;5070100;2093;P1;F01;1;;;TI;Enseignant;2093P1
-00008701;5220108;2093;P3;A01;1.5;Cours réservé aux étudiants ayant complété les cours de l'étape 1.;Cours réservé aux étudiants ayant complété les cours de l'étape 1.;FINANCE;Enseignant;2093P3
-00010566;140496;2093;1;D04;3;;;MNGT;Enseignant;20931
-00010566;490396;2093;1;F06;3;Cours réservé au DESS en comptabilité publique / Inscription par le registrariat seulement / Les étudiants à temps plein seront inscrits automatiquement / Les autres devront soumettre leur demande en écrivant à desscp@hec.ca;Cours réservé au DESS en comptabilité publique / Inscription par le registrariat seulement / Les étudiants à temps plein seront inscrits automatiquement / Les autres devront soumettre leur demande en écrivant à desscp@hec.ca;SC.COMPT.;Enseignant;20931
-00010566;    ANGL-H;2093;1;E05;0;;;QUAL.COMM.;Enseignant;20931
-00010901;3610299;2093;1;J01;3;Test de classement obligatoire ou HECTOPE depuis moins d'un an.;Compulsory placement test or HECTOPE taken within a year.;QUAL.COMM.;Enseignant;20931
-00010901;3610299;2093;1;J20;3;Test de classement obligatoire ou HECTOPE depuis moins d'un an.;Compulsory placement test or HECTOPE taken within a year.;QUAL.COMM.;Enseignant;20931
-00010901;190106;2093;1;B02;3;;;SC.COMPT.;Enseignant;20931
-00011176;5140102;2093;P1;A01;1.5;;;MNGT;Enseignant;2093P1
-00011735;140496;2093;1;C03;3;;;MNGT;Enseignant;20931
-00011877;140496;2093;1;A01;3;;;MNGT;Enseignant;20931
-00011877;490396;2093;1;A01;3;Cours réservé au DESS en comptabilité publique / Inscription par le registrariat seulement / Les étudiants à temps plein seront inscrits automatiquement / Les autres devront soumettre leur demande en écrivant à desscp@hec.ca;Cours réservé au DESS en comptabilité publique / Inscription par le registrariat seulement / Les étudiants à temps plein seront inscrits automatiquement / Les autres devront soumettre leur demande en écrivant à desscp@hec.ca;SC.COMPT.;Enseignant;20931
-00011877;    ANGL-H;2093;1;E05;0;;;QUAL.COMM.;Enseignant;20931
-00011877;    ANGL-H;2093;1;X01;0;;;QUAL.COMM.;Enseignant;20931
-00011877;    TMAGE;2093;1;TM2;0;;;BUR.REGIST;Enseignant;20931
-00012306;5195102;2093;P1;C03;1.5;;;SC.COMPT.;Enseignant;2093P1
-11000024;250009;2093;1;A01;3;Pour version anglaise voir 2-508-09 / Pour version espagnole voir 2-509-09;Pour version anglaise voir 2-508-09 / Pour version espagnole voir 2-509-09;GOL;Enseignant;20931
-11000024;250809;2093;1;A01;3;Version anglaise du cours 2-500-09;English version of the course 2-500-09;GOL;Enseignant;20931
-11000024;3040092;2093;1;F01;3;;;MNGT;Enseignant;20931
-11000024;490004;2093;1;F01;3;;;SC.COMPT.;Enseignant;20931
-11000610;5090196;2093;P1;J01;1;;;SC.COMPT.;Enseignant;2093P1
-11000610;5090196;2093;P1;S01;1;;;SC.COMPT.;Enseignant;2093P1
-11000610;5090199;2093;P1;J01;1;;;SC.COMPT.;Enseignant;2093P1
-11000610;5090199;2093;P1;J02;1;;;SC.COMPT.;Enseignant;2093P1
-11000610;5195102;2093;P1;C03;1.5;;;SC.COMPT.;Enseignant;2093P1
-11008599;190106;2093;1;C03;3;;;SC.COMPT.;Enseignant;20931
-11036191;490396;2093;1;D04;3;Cours réservé au DESS en comptabilité publique / Inscription par le registrariat seulement / Les étudiants à temps plein seront inscrits automatiquement / Les autres devront soumettre leur demande en écrivant à desscp@hec.ca;Cours réservé au DESS en comptabilité publique / Inscription par le registrariat seulement / Les étudiants à temps plein seront inscrits automatiquement / Les autres devront soumettre leur demande en écrivant à desscp@hec.ca;SC.COMPT.;Enseignant;20931
-11053084;5190102;2093;P1;A01;1.5;;;SC.COMPT.;Enseignant;2093P1
-11053084;5190102;2093;P1;DF1;1.5;;;SC.COMPT.;Enseignant;2093P1
-11053084;5190102;2093;P1;K41;1.5;;;SC.COMPT.;Enseignant;2093P1
-11053084;5190102;2093;P1;K42;1.5;;;SC.COMPT.;Enseignant;2093P1
-11054700;490396;2093;1;C03;3;Cours réservé au DESS en comptabilité publique / Inscription par le registrariat seulement / Les étudiants à temps plein seront inscrits automatiquement / Les autres devront soumettre leur demande en écrivant à desscp@hec.ca;Cours réservé au DESS en comptabilité publique / Inscription par le registrariat seulement / Les étudiants à temps plein seront inscrits automatiquement / Les autres devront soumettre leur demande en écrivant à desscp@hec.ca;SC.COMPT.;Enseignant;20931
-11061677;190106;2093;1;A01;3;;;SC.COMPT.;Enseignant;20931
-11076390;140496;2093;1;DF1;3;;;MNGT;Enseignant;20931
-11076390;5195102;2093;P1;C03;1.5;;;SC.COMPT.;Enseignant;2093P1
-11091150;5070100;2093;P1;F01;1;;;TI;Enseignant;2093P1
-11091770;    TMAGE;2093;1;TM4;0;;;BUR.REGIST;Enseignant;20931
-11092521;190106;2093;1;D04;3;;;SC.COMPT.;Enseignant;20931
-11123161;140496;2093;1;B02;3;;;MNGT;Enseignant;20931
-11123161;140700;2093;1;A01;3;;;MNGT;Enseignant;20931
-11123161;490396;2093;1;B02;3;Cours réservé au DESS en comptabilité publique / Inscription par le registrariat seulement / Les étudiants à temps plein seront inscrits automatiquement / Les autres devront soumettre leur demande en écrivant à desscp@hec.ca;Cours réservé au DESS en comptabilité publique / Inscription par le registrariat seulement / Les étudiants à temps plein seront inscrits automatiquement / Les autres devront soumettre leur demande en écrivant à desscp@hec.ca;SC.COMPT.;Enseignant;20931
-11123161;    ANGL-H;2093;1;E05;0;;;QUAL.COMM.;Enseignant;20931
-11123161;    TMAGE;2093;1;TM1;0;;;BUR.REGIST;Enseignant;20931
-89125331;5070100;2093;P1;F01;1;;;TI;Enseignant;2093P1
-89125331;5140202;2093;P1;A01;1.5;;;MNGT;Enseignant;2093P1
-96343018;    ANGL-H;2093;1;E05;0;;;QUAL.COMM.;Enseignant;20931
-98308782;    TMAGE;2093;1;TM3;0;;;BUR.REGIST;Enseignant;20931
-99301176;140700;2093;1;B02;3;;;MNGT;Enseignant;20931
-00003276;5090196;2093;P1;J01;1;;;SC.COMPT.;Coordonnateur;2093P1
-00003276;5090196;2093;P1;S01;1;;;SC.COMPT.;Coordonnateur;2093P1
-00003276;5090199;2093;P1;J01;1;;;SC.COMPT.;Coordonnateur;2093P1
-00004525;210000;2093;1;A01;3;Pour version anglaise voir 2-108-00 / Pour version espagnole voir 2-109-00;Pour version anglaise voir 2-108-00 / Pour version espagnole voir 2-109-00;MARKETING;Coordonnateur;20931
-00005711;490004;2093;1;F01;3;;;SC.COMPT.;Coordonnateur;20931
-11000024;250009;2093;1;A01;3;Pour version anglaise voir 2-508-09 / Pour version espagnole voir 2-509-09;Pour version anglaise voir 2-508-09 / Pour version espagnole voir 2-509-09;GOL;Coordonnateur;20931
-11000024;250009;2093;1;B01;3;Pour version anglaise voir 2-508-09 / Pour version espagnole voir 2-509-09;Pour version anglaise voir 2-508-09 / Pour version espagnole voir 2-509-09;GOL;Coordonnateur;20931
-00004525;250809;2093;1;A01;3;Version anglaise du cours 2-500-09;English version of the course 2-500-09;GOL;Coordonnateur;20931
-11078730;5483408;2093;P1;S01;1.5;Cours réservé aux étudiants ayant complété l'étape 3 du programme.;Cours réservé aux étudiants ayant complété l'étape 3 du programme.;IEA;Coordonnateur;2093P1
-00005711;3010082;2093;1;F01;3;;;MARKETING;Coordonnateur;20931
+EMPLID;CATALOG_NBR;STRM;SESSION_CODE;CLASS_SECTION;UNITS_MINIMUM;ACAD_ORG;ROLE;STRM_ID 
+3276;5195102;2093;P1;C03;1.5;SC.COMPT.;Enseignant;2093P1
+3800;490396;2093;1;DF1;3;SC.COMPT.;Enseignant;20931
+3800;    TMAGE;2093;1;TM5;0;BUR.REGIST;Enseignant;20931
+4525;210000;2093;1;A01;3;MARKETING;Enseignant;20931
+5711;3010082;2093;1;F01;3;MARKETING;Enseignant;20931
+6798;5190202;2093;P2;A01;1.5;SC.COMPT.;Enseignant;2093P2
+7355;490396;2093;1;E05;3;SC.COMPT.;Enseignant;20931
+7738;190106;2093;1;B02;3;SC.COMPT.;Enseignant;20931
+7796;5070100;2093;P1;F01;1;TI;Enseignant;2093P1
+8701;5220108;2093;P3;A01;1.5;FINANCE;Enseignant;2093P3
+10566;140496;2093;1;D04;3;MNGT;Enseignant;20931
+10566;490396;2093;1;F06;3;SC.COMPT.;Enseignant;20931
+10566;    ANGL-H;2093;1;E05;0;QUAL.COMM.;Enseignant;20931
+10901;3610299;2093;1;J01;3;QUAL.COMM.;Enseignant;20931
+10901;3610299;2093;1;J20;3;QUAL.COMM.;Enseignant;20931
+10901;190106;2093;1;B02;3;SC.COMPT.;Enseignant;20931
+11176;5140102;2093;P1;A01;1.5;MNGT;Enseignant;2093P1
+11735;140496;2093;1;C03;3;MNGT;Enseignant;20931
+11877;140496;2093;1;A01;3;MNGT;Enseignant;20931
+11877;490396;2093;1;A01;3;SC.COMPT.;Enseignant;20931
+11877;    ANGL-H;2093;1;E05;0;QUAL.COMM.;Enseignant;20931
+11877;    ANGL-H;2093;1;X01;0;QUAL.COMM.;Enseignant;20931
+11877;    TMAGE;2093;1;TM2;0;BUR.REGIST;Enseignant;20931
+12306;5195102;2093;P1;C03;1.5;SC.COMPT.;Enseignant;2093P1
+11000024;250009;2093;1;A01;3;GOL;Enseignant;20931
+11000024;250809;2093;1;A01;3;GOL;Enseignant;20931
+11000024;3040092;2093;1;F01;3;MNGT;Enseignant;20931
+11000024;490004;2093;1;F01;3;SC.COMPT.;Enseignant;20931
+11000610;5090196;2093;P1;J01;1;SC.COMPT.;Enseignant;2093P1
+11000610;5090196;2093;P1;S01;1;SC.COMPT.;Enseignant;2093P1
+11000610;5090199;2093;P1;J01;1;SC.COMPT.;Enseignant;2093P1
+11000610;5090199;2093;P1;J02;1;SC.COMPT.;Enseignant;2093P1
+11000610;5195102;2093;P1;C03;1.5;SC.COMPT.;Enseignant;2093P1
+11008599;190106;2093;1;C03;3;SC.COMPT.;Enseignant;20931
+11036191;490396;2093;1;D04;3;SC.COMPT.;Enseignant;20931
+11053084;5190102;2093;P1;A01;1.5;SC.COMPT.;Enseignant;2093P1
+11053084;5190102;2093;P1;DF1;1.5;SC.COMPT.;Enseignant;2093P1
+11053084;5190102;2093;P1;K41;1.5;SC.COMPT.;Enseignant;2093P1
+11053084;5190102;2093;P1;K42;1.5;SC.COMPT.;Enseignant;2093P1
+11054700;490396;2093;1;C03;3;SC.COMPT.;Enseignant;20931
+11061677;190106;2093;1;A01;3;SC.COMPT.;Enseignant;20931
+11076390;140496;2093;1;DF1;3;MNGT;Enseignant;20931
+11076390;5195102;2093;P1;C03;1.5;SC.COMPT.;Enseignant;2093P1
+11091150;5070100;2093;P1;F01;1;TI;Enseignant;2093P1
+11091770;    TMAGE;2093;1;TM4;0;BUR.REGIST;Enseignant;20931
+11092521;190106;2093;1;D04;3;SC.COMPT.;Enseignant;20931
+11123161;140496;2093;1;B02;3;MNGT;Enseignant;20931
+11123161;140700;2093;1;A01;3;MNGT;Enseignant;20931
+11123161;490396;2093;1;B02;3;SC.COMPT.;Enseignant;20931
+11123161;    ANGL-H;2093;1;E05;0;QUAL.COMM.;Enseignant;20931
+11123161;    TMAGE;2093;1;TM1;0;BUR.REGIST;Enseignant;20931
+89125331;5070100;2093;P1;F01;1;TI;Enseignant;2093P1
+89125331;5140202;2093;P1;A01;1.5;MNGT;Enseignant;2093P1
+96343018;    ANGL-H;2093;1;E05;0;QUAL.COMM.;Enseignant;20931
+98308782;    TMAGE;2093;1;TM3;0;BUR.REGIST;Enseignant;20931
+99301176;140700;2093;1;B02;3;MNGT;Enseignant;20931
+3276;5090196;2093;P1;J01;1;SC.COMPT.;Coordonnateur;2093P1
+3276;5090196;2093;P1;S01;1;SC.COMPT.;Coordonnateur;2093P1
+3276;5090199;2093;P1;J01;1;SC.COMPT.;Coordonnateur;2093P1
+4525;210000;2093;1;A01;3;MARKETING;Coordonnateur;20931
+5711;490004;2093;1;F01;3;SC.COMPT.;Coordonnateur;20931
+11000024;250009;2093;1;A01;3;GOL;Coordonnateur;20931
+11000024;250009;2093;1;B01;3;GOL;Coordonnateur;20931
+4525;250809;2093;1;A01;3;GOL;Coordonnateur;20931
+11078730;5483408;2093;P1;S01;1.5;IEA;Coordonnateur;2093P1
+5711;3010082;2093;1;F01;3;MARKETING;Coordonnateur;20931

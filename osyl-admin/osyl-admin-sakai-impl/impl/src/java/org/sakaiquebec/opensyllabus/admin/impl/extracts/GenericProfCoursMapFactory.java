@@ -106,8 +106,6 @@ public class GenericProfCoursMapFactory {
 			String sessionCode = token[i++];
 			String section = token[i++];
 			String unitMinimum = token[i++];
-			String descLong = token[i++];
-			String nDescLong = token[i++];
 			String acadOrg = token[i++];
 			String role = token[i++];
 			String strmId = strm + sessionCode;
@@ -130,8 +128,6 @@ public class GenericProfCoursMapFactory {
 //			}
 
 			entry.setUnitMinimum(unitMinimum);
-			entry.setDescLong(descLong);
-			entry.setNDescLong(nDescLong);
 			entry.setAcadOrg(acadOrg);
 			entry.setRole(role);
 			entry.setStrmId(strmId);
