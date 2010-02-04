@@ -70,8 +70,6 @@ public class OsylConfigRuler {
     protected static final String TYPE_ATTRIBUTE_NAME = "type";
     protected static final String ALLOW_MULTIPLE_ATTRIBUTE_NAME =
 	    "allowMultiple";
-    // protected static final String ALLOW_NESTED_ATTRIBUTE_NAME =
-    // "allowNested";
     protected static final String NESTING_LEVEL_ALLOWED_ATTRIBUTE_NAME =
 	    "nestingLevelAllowed";
 
@@ -368,17 +366,6 @@ public class OsylConfigRuler {
 	    return true;
 	}
     }
-
-    // private boolean getAllowNestedAttributeValue(Node myNode) {
-    // Node node =
-    // myNode.getAttributes().getNamedItem(
-    // ALLOW_NESTED_ATTRIBUTE_NAME);
-    // if (node != null && node.getNodeValue() != null) {
-    // return Boolean.parseBoolean(node.getNodeValue());
-    // } else {
-    // return false;
-    // }
-    // }
 
     private int getNestingLevelAllowedAttributeValue(Node myNode) {
 	Node node =

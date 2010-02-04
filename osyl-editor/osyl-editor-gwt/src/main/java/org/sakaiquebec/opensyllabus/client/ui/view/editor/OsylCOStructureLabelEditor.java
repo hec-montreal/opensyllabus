@@ -24,12 +24,9 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureLabelView;
-import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
-import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextArea;
 
 /**
@@ -65,7 +62,7 @@ public class OsylCOStructureLabelEditor extends OsylLabelEditor {
 			"ASMStructure.description"));
 	editorPanel.add(l);
 	descriptionTextArea = new TextArea();
-	descriptionTextArea.setWidth("99%");
+	descriptionTextArea.setWidth("100%");
 	descriptionTextArea.setHeight("40px");
 	editorPanel.add(descriptionTextArea);
     }
@@ -93,29 +90,6 @@ public class OsylCOStructureLabelEditor extends OsylLabelEditor {
 	List<FocusWidget> focusWidgetList = super.getEditionFocusWidgets();
 	focusWidgetList.add(descriptionTextArea);
 	return focusWidgetList;
-    }
-
-    @Override
-    public boolean isMoveable() {
-	if (!isDeletable)
-	    return false;
-	else
-	    return ((COElementAbstract) getModel()).getParent().isNested();
-
-    }
-
-    @Override
-    protected void generateTargetCoAbstractElementListBox(ListBox lb) {
-	lb.clear();
-	lb.addItem("");
-	COStructureElement parent =
-		(COStructureElement) ((COElementAbstract) getModel())
-			.getParent();
-	for (COElementAbstract coe : ((COStructureElement) parent.getParent())
-		.getChildrens()) {
-	    if (coe.isCOStructureElement())
-		lb.addItem(coe.getLabel(), coe.getId());
-	}
     }
 
     /**

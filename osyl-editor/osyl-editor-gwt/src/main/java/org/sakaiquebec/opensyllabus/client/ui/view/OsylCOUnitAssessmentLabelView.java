@@ -36,12 +36,12 @@ import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylCOUnitAssessmentLabelView extends OsylLabelView {
+public class OsylCOUnitAssessmentLabelView extends OsylCOUnitLabelView {
 
     public OsylCOUnitAssessmentLabelView(COUnit model,
-	    OsylController controller, boolean isInList, String levelStyle) {
-	super(model, controller, isInList, levelStyle, false);
-	setEditor(new OsylCOUnitAssessmentLabelEditor(this, isInList));
+	    OsylController controller, boolean isDeletable, String levelStyle) {
+	super(model, controller, isDeletable, levelStyle, false);
+	setEditor(new OsylCOUnitAssessmentLabelEditor(this, isDeletable));
 	((OsylCOUnitAssessmentLabelEditor) getEditor())
 		.setViewerStyle(levelStyle);
 	initView();
@@ -52,9 +52,6 @@ public class OsylCOUnitAssessmentLabelView extends OsylLabelView {
      * superclass for javadoc!
      */
 
-    public COUnit getModel() {
-	return (COUnit) super.getModel();
-    }
 
     protected void updateModel() {
 	super.updateModel();

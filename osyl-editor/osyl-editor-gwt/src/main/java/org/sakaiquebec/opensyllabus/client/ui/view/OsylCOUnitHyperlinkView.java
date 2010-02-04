@@ -48,7 +48,7 @@ public class OsylCOUnitHyperlinkView extends OsylViewableComposite {
 
     // View Constructor
     public OsylCOUnitHyperlinkView(COUnit model, OsylController controller) {
-	this(model, controller, new OsylLabelView(model, controller, true,
+	this(model, controller, new OsylCOUnitLabelView(model, controller, true,
 		OsylStyleLevelChooser.getLevelStyle(model)));
     }
 

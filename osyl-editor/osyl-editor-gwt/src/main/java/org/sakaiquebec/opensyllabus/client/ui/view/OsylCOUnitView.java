@@ -70,21 +70,22 @@ public class OsylCOUnitView extends OsylViewableComposite implements
 	// If we are editing a lecture or theme we allow to edit the title
 	// otherwise we don't (presentation, contact info, etc.)
 
+	OsylLabelView lbv = null;
 	if (COUnitType.ASSESSMENT_UNIT.equals(getModel().getType())) {
 	    // do not allow to delete the title and therefore the evaluation
 	    // within the COContentUnit (only at COStructure)
-	    OsylCOUnitAssessmentLabelView lbv =
+	    lbv =
 		    new OsylCOUnitAssessmentLabelView((COUnit) getModel(),
 			    getController(), false, OsylStyleLevelChooser
 				    .getLevelStyle(getModel()));
-	    getMainPanel().add(lbv);
 	} else {
-	    OsylLabelView lbv =
-		    new OsylLabelView((COUnit) getModel(), getController(),
-			    false, OsylStyleLevelChooser
+	    lbv =
+		    new OsylCOUnitLabelView((COUnit) getModel(),
+			    getController(), false, OsylStyleLevelChooser
 				    .getLevelStyle(getModel()));
-	    getMainPanel().add(lbv);
+
 	}
+	getMainPanel().add(lbv);
 	List<COElementAbstract> childrens = null;
 	childrens = ((COUnit) getModel()).getChildrens();
 	displayChildrens(childrens);

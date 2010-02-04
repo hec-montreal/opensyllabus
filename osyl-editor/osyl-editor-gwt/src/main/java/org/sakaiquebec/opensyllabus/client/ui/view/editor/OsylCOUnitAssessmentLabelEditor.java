@@ -50,7 +50,7 @@ import com.google.gwt.user.datepicker.client.DateBox;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylCOUnitAssessmentLabelEditor extends OsylLabelEditor {
+public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 
     private TextBox weightTextBox;
     private ListBox localisationListBox;
