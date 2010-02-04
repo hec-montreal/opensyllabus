@@ -230,7 +230,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 					enrollmentSet = cmAdmin.createEnrollmentSet(enrollmentSetId, detailsCours
 							.getCourseTitleLong(), detailsCours
 							.getCourseTitleLong(), "", "", courseOfferingId,
-							null);
+							"");
 					enrollmentSet.setOfficialInstructors(instructors);
 					Section courseSection = cmService.getSection(courseSectionId);
 					if (courseSection != null){
