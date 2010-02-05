@@ -104,11 +104,13 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
     	
     	
     	//Fill the opening date field
-    	session().type("//input[@type='text']", new SimpleDateFormat
-    		("yyyy-MM-dd").format(new Date()));
+    	session().type("//td[2]/input", new SimpleDateFormat
+    		("dd/MM/yyyy").format(new Date()));
     	//Fill the expiry date field
+    	log("Date: " + new SimpleDateFormat
+    		("dd/MM/yyyy").format(ExpireDate.getTime()));
     	session().type("//td[4]/input", new SimpleDateFormat
-    		("yyyy-MM-dd").format(ExpireDate.getTime()));
+    		("dd/MM/yyyy").format(ExpireDate.getTime()));
     	//type the text that the student must click to submit his work
     	session().type("//tr[3]/td/input", "Cliquez ici pour remettre votre" +
     			" travail"+ timeStamp());
@@ -117,11 +119,11 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
     	pause();
     	
     	//Save modifications
-	saveCourseOutline();
-	pause(); 
+	//saveCourseOutline();
+	//pause(); 
 	
 	//Publish
-	session().click("gwt-uid-3");
+	session().click("gwt-uid-4");
 	pause();
 	session().click("//td/table/tbody/tr/td[1]/button");
 	pause();
@@ -141,7 +143,7 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
 	session().click("//html/body/div/form/table/tbody/tr[2]/td[2]/div/a");
 	pause();
 	session().click("allowResToggle");
-	session().select("allow_resubmit_number", "label=3");
+	session().select("allow_resubmit_number", "label=1");
 	session().click("post");
 	pause();
 	session().click("post");
@@ -149,7 +151,7 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
 	
 	//Log as student
 	AddStudent();
- 	LogAsStudent();
+ 	LogInAsStudent();
 	
  	session().open("http://osyldev.hec.ca:12345/portal/site/" + getCurrentTestSiteName());
  	waitForPageToLoad();
@@ -178,6 +180,7 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
  	session().click("post");
  	pause();
     	session().click("eventSubmit_doConfirm_assignment_submission");
+    	log("First submission");
  	 	
     	session().selectFrame("relative=parent");
     	session().click("//div[@id='toolMenu']/ul/li[1]/a/span");
@@ -206,9 +209,25 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
  	session().click("post");
  	pause();
     	session().click("eventSubmit_doConfirm_assignment_submission");
+    	log("Second submission");
     	
-
     	
+    	session().selectFrame("relative=parent");
+    	session().click("//div[@id='toolMenu']/ul/li[1]/a/span");
+    	pause();
+    	
+    	//Open Submission tools
+    	session().selectFrame("relative=parent");
+    	session().click("//div[@id='toolMenu']/ul/li[2]/a/span");
+    	pause();
+    	//Open Submission form
+    	session().click("//html/body/div/form/table/tbody/tr[2]/td[2]/h4/a");
+    	waitForPageToLoad();
+    	
+    	if(session().isElementPresent("post")){
+    	    logAndFail("KO: user can send his work once again");
+	}
+	log("OK: user does not have rights to send his work once again");
 	
 	//Log out
 	session().selectFrame("relative=parent");
@@ -230,8 +249,6 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
     
     private void AddStudent() throws Exception {
 	log("Add Student " + getStudent());
-	//session().open("http://osyldev.hec.ca:12345/portal/site/" + getCurrentTestSiteName());
-	//waitForPageToLoad();
 	session().selectFrame("relative=parent");
 	session().click("//div[@id='toolMenu']/ul/li[4]/a/span");
 	waitForPageToLoad();
@@ -256,7 +273,7 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
         	pause();
 	}
     }
-    private void LogAsStudent() throws Exception {
+    private void LogInAsStudent() throws Exception {
 	session().selectFrame("relative=parent");
 	logOut();
 	session().type("eid", getStudent());
@@ -265,12 +282,10 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
 	pause();
 	session().click("submit");
 	pause();
+	log("Log in as Student");
     }
     private int getElectronicCount() {
 	return session().getXpathCount(
 		"//div[@class=\"itemAction\"]").intValue();
     }
-    
-    
-
 }
