@@ -61,7 +61,7 @@ public class SeancesTest extends AbstractOSYLTest{
 
 	//Open Lectures Section
         session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-        		"td/div[contains(text(),'ances')]");
+        		"td/div[contains(text(),'Organisation')]");
         pause();
         
         // We keep track of how many resources are showing
@@ -127,7 +127,7 @@ public class SeancesTest extends AbstractOSYLTest{
     
 	//Open Lectures Section
 	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-	"td/div[contains(text(),'ances')]");
+	"td/div[contains(text(),'Organisation')]");
         pause();
 	
 	//We edit the last Lecture
@@ -190,7 +190,7 @@ public class SeancesTest extends AbstractOSYLTest{
                 
         	//Open Lectures Section
         	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-			"td/div[contains(text(),'ances')]");
+			"td/div[contains(text(),'Organisation')]");
                 pause();
         	//Open the last Lecture unit
         	session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
@@ -216,7 +216,7 @@ public class SeancesTest extends AbstractOSYLTest{
         	
         	//Open Lectures Section
         	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-        		"td/div[contains(text(),'ances')]");
+        		"td/div[contains(text(),'Organisation')]");
                 pause();
         	//Open the last Lecture unit
         	session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
@@ -240,7 +240,7 @@ public class SeancesTest extends AbstractOSYLTest{
 	
 	//Open Lectures Section
 	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-		"td/div[contains(text(),'ances')]");
+		"td/div[contains(text(),'Organisation')]");
         pause();
 	//Open the last Lecture unit 
         if(Val < 10){
@@ -292,7 +292,7 @@ public class SeancesTest extends AbstractOSYLTest{
 
         	//Open Lectures Section
         	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-			"td/div[contains(text(),'ances')]");
+			"td/div[contains(text(),'Organisation')]");
                 pause();
         	//Open the last Lecture unit 
         	session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
@@ -342,7 +342,7 @@ public class SeancesTest extends AbstractOSYLTest{
 //---------------------------------------------------------------------------//
 	//Open Lectures Section
 	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-		"td/div[contains(text(),'ances')]");
+		"td/div[contains(text(),'Organisation')]");
         pause();
 	//Open the last Lecture unit 
         if(Val < 10){
@@ -470,7 +470,7 @@ public class SeancesTest extends AbstractOSYLTest{
             
             //Open Lectures Section
             session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-		"td/div[contains(text(),'ances')]");
+		"td/div[contains(text(),'Organisation')]");
             pause();
             //Open the last Lecture unit 
             session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
@@ -503,7 +503,7 @@ public class SeancesTest extends AbstractOSYLTest{
             
             //Open Lectures Section
             session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-        		"td/div[contains(text(),'ances')]");
+        		"td/div[contains(text(),'Organisation')]");
             pause();
             //Open the last Lecture unit 
             session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
@@ -534,7 +534,7 @@ public class SeancesTest extends AbstractOSYLTest{
 
         //Open Lectures Section
         session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-	"td/div[contains(text(),'ances')]");
+	"td/div[contains(text(),'Organisation')]");
         pause();
         
         //Click last Lecture  
@@ -632,7 +632,7 @@ public class SeancesTest extends AbstractOSYLTest{
         
         //Open Lectures Section
         session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-		"td/div[contains(text(),'ances')]");
+		"td/div[contains(text(),'Organisation')]");
         pause();
         
         // We switch the 1st and 2nd Lecture 

@@ -53,7 +53,7 @@ public class TextTest extends AbstractOSYLTest {
 	
 	//Open Seances Section
 	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-	"td/div[contains(text(),'ances')]");
+	"td/div[contains(text(),'Organisation')]");
         pause();
 
 	// If we don't have a Lecture we add one
