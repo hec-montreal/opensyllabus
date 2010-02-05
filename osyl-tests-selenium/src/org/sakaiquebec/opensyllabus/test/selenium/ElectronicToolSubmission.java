@@ -176,7 +176,7 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
  	session().click("attachButton");
  	log("File loaded");
  	pause();
- 	waitForPageToLoad();
+ 	pause();
  	session().click("Assignment.view_submission_honor_pledge_yes");
  	
  	//Send work for the first time
