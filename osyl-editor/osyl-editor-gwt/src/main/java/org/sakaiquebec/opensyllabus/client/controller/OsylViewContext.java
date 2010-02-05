@@ -21,7 +21,6 @@
 package org.sakaiquebec.opensyllabus.client.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,15 +33,10 @@ import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractResProxView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
-import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
-import org.sakaiquebec.opensyllabus.shared.model.COContentType;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
-import org.sakaiquebec.opensyllabus.shared.model.COStructureElementType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
-import org.sakaiquebec.opensyllabus.shared.model.COUnitStructureType;
-import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
 
 /**
  * ViewContext is used to keep track of the current context, i.e.: the type of

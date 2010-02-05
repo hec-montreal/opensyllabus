@@ -59,7 +59,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
-import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.sakaiquebec.opensyllabus.shared.util.UUID;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -693,13 +692,15 @@ public class COModeledServer {
 			.getNamedItem(TYPE_ATTRIBUTE_NAME) == null) ? null
 			: namedNodeMap.getNamedItem(TYPE_ATTRIBUTE_NAME)
 				.getNodeValue();
-	
+
 	String userDefLabel =
-		(namedNodeMap == null) ? null : (namedNodeMap
+		(namedNodeMap == null) ? null
+			: (namedNodeMap
 				.getNamedItem(USERDEFLABEL_ATTRIBUTE_NAME) == null) ? null
-				: namedNodeMap.getNamedItem(USERDEFLABEL_ATTRIBUTE_NAME)
+				: namedNodeMap.getNamedItem(
+					USERDEFLABEL_ATTRIBUTE_NAME)
 					.getNodeValue();
- 
+
 	if (type.equals("rubric")) {
 	    String value = "";
 
@@ -707,10 +708,10 @@ public class COModeledServer {
 		value += node.getChildNodes().item(j).getNodeValue();
 	    }
 	    coContentRubric.setType(value);
-	    if(userDefLabel!=null){
-	    	coContentRubric.setUserDefLabel(userDefLabel);
+	    if (userDefLabel != null) {
+		coContentRubric.setUserDefLabel(userDefLabel);
 	    }
-	
+
 	}
 	return coContentRubric;
     }
@@ -766,7 +767,7 @@ public class COModeledServer {
 	    element.setAttribute(XSI_TYPE_ATTRIBUTE_NAME, modelInterface
 		    .getType());
 	}
-		
+
 	if (modelInterface instanceof COElementAbstract) {
 	    COElementAbstract coElementAbstract =
 		    (COElementAbstract) modelInterface;
@@ -977,8 +978,10 @@ public class COModeledServer {
 	    Element coContentResourceProxyElem, COContentRubric rubric) {
 	Element coContentRubricElem = document.createElement(SEMANTIC_TAG);
 	coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME, "rubric");
-	if(rubric.getUserDefLabel()!=null && rubric.getUserDefLabel().length() > 0 ){
-		coContentRubricElem.setAttribute(USERDEFLABEL_ATTRIBUTE_NAME, rubric.getUserDefLabel());		
+	if (rubric.getUserDefLabel() != null
+		&& rubric.getUserDefLabel().length() > 0) {
+	    coContentRubricElem.setAttribute(USERDEFLABEL_ATTRIBUTE_NAME,
+		    rubric.getUserDefLabel());
 	}
 
 	Text elemValue = document.createTextNode(rubric.getType());

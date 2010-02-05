@@ -37,7 +37,6 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -215,7 +214,7 @@ public class OsylFileUpload extends WindowPanel implements
 
 	// Add an event handler to the form.
 	form.addSubmitHandler(new SubmitHandler() {
-	    
+
 	    public void onSubmit(SubmitEvent event) {
 		// filename.setValue(upload.getFilename());
 		// This event is fired just before the form is submitted. We can
@@ -244,9 +243,9 @@ public class OsylFileUpload extends WindowPanel implements
 		}
 	    }
 	});
-	
+
 	form.addSubmitCompleteHandler(new SubmitCompleteHandler() {
-	    
+
 	    public void onSubmitComplete(SubmitCompleteEvent event) {
 		if (getState(event.getResults())) {
 		    hide();
@@ -286,7 +285,7 @@ public class OsylFileUpload extends WindowPanel implements
 		}
 	    }
 	});
-	
+
 	setWidget(form);
 	setStylePrimaryName("Osyl-FileUpload-uploadForm");
     } // Constructor

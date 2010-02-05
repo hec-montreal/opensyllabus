@@ -20,9 +20,6 @@
 
 package org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,8 +42,7 @@ public class OsylHostedModeTransformUtil {
     /**
      * Transforms property file text to Map
      * 
-     * @param propertyTxt
-     *            : bundle property file style text
+     * @param propertyTxt : bundle property file style text
      * @return message Map
      */
     public static Map<String, String> propertyTxt2Map(String propertyTxt) {
@@ -54,7 +50,7 @@ public class OsylHostedModeTransformUtil {
 	String[] lines = propertyTxt.split("\\n");
 	for (String line : lines) {
 	    String isoLine = unescapeJava(line);
-//	    String isoLine = line;
+	    // String isoLine = line;
 	    String lineTrim = isoLine.trim();
 	    if (lineTrim.length() > 0) {
 		if (!(lineTrim.charAt(0) == '#')) {
@@ -73,8 +69,7 @@ public class OsylHostedModeTransformUtil {
     /**
      * Transforms xml file text (rolesList xml style file) to List
      * 
-     * @param xmlTxt
-     *            : xml text
+     * @param xmlTxt : xml text
      * @return List object
      * @throws Exception
      */
@@ -96,8 +91,10 @@ public class OsylHostedModeTransformUtil {
 		    for (int i = 0; i < nodeList.getLength(); i++) {
 			Node node = nodeList.item(i);
 			if (node.getNodeName().equalsIgnoreCase(ITEM_NODE_NAME)) {
-			    String value = node.getAttributes().getNamedItem(
-				    VALUE_ATTRIBUTE_NAME).getNodeValue();
+			    String value =
+				    node.getAttributes().getNamedItem(
+					    VALUE_ATTRIBUTE_NAME)
+					    .getNodeValue();
 			    list.add(value);
 			}
 		    }
@@ -163,15 +160,14 @@ public class OsylHostedModeTransformUtil {
 		case 'b':
 		    outputStringBuffer.append('\b');
 		    break;
-		case 'u':
-		{
+		case 'u': {
 		    // uh-oh, we're in unicode country....
 		    inUnicode = true;
 		    break;
 		}
-		default :
+		default:
 		    outputStringBuffer.append(ch);
-		break;
+		    break;
 		}
 		continue;
 	    } else if (ch == '\\') {
@@ -186,7 +182,7 @@ public class OsylHostedModeTransformUtil {
 	    outputStringBuffer.append('\\');
 	}
 	String outputString = outputStringBuffer.toString();
-	
+
 	outputString = outputString.replaceAll("00\\w(\\D{1})\\d", "$1");
 	outputString = outputString.replaceAll("201’9", "'");
 	return outputString;

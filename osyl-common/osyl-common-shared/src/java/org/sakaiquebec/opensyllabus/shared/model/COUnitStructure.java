@@ -148,7 +148,7 @@ public class COUnitStructure extends COElementAbstract<COElementAbstract>
 
     @Override
     public void setChildrens(List<COElementAbstract> childs) {
-	this.childrens = childrens;
+	this.childrens = childs;
 	notifyEventHandlers();
     }
 

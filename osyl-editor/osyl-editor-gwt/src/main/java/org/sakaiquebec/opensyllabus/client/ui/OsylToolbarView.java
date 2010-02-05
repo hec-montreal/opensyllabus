@@ -124,8 +124,9 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    if (parentModel.isCOStructureElement()) {
 
 		if (COStructureElementType.getTypesList().contains(type)) {
-		    COStructureElement cose= COStructureElement.createDefaultCOStructureElement(type,
-			    getCoMessages(), parentModel);
+		    COStructureElement cose =
+			    COStructureElement.createDefaultCOStructureElement(
+				    type, getCoMessages(), parentModel);
 		    cose.setLabel(getUiMessage("ASMStructure.label.default"));
 		} else if (COUnitType.getTypesList().contains(type)) {
 		    COUnit coU =
@@ -143,12 +144,12 @@ public class OsylToolbarView extends OsylViewableComposite implements
 						    coUnitSubModels.get(0)
 							    .getType(),
 						    getCoMessages(), coU);
-			    cous.setLabel(getUiMessage("ASMUnitStructure.label.default"));
+			    cous
+				    .setLabel(getUiMessage("ASMUnitStructure.label.default"));
 			    List<COModelInterface> coUnitStructureSubModels =
 				    getController().getOsylConfig()
 					    .getOsylConfigRuler()
-					    .getAllowedSubModels(
-						    cous);
+					    .getAllowedSubModels(cous);
 			    if (!coUnitStructureSubModels.isEmpty())
 				COUnitContent.createDefaultCOContentUnit(
 					coUnitStructureSubModels.get(0)
@@ -202,10 +203,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    }
 		}
 	    }
-	    COContentResourceProxy resProxModel =
-		    COContentResourceProxy.createDefaultResProxy(type,
-			    getCoMessages(), coUnitContent, subType,
-			    defaultRubric);
+	    COContentResourceProxy.createDefaultResProxy(type, getCoMessages(),
+		    coUnitContent, subType, defaultRubric);
 	}
 
     }

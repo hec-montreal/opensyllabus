@@ -21,7 +21,6 @@ import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractResProxEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
-import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 

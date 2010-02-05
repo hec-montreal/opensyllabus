@@ -95,11 +95,6 @@ public class OsylController implements SavePushButtonEventHandler,
      */
     private OsylConfigMessages coMessages, uiMessages;
 
-    /**
-     * osyl general settings
-     */
-    private OsylSettings settings;
-
     private OsylPublishView osylPublishView = null;
 
     // Sakai ID of current site

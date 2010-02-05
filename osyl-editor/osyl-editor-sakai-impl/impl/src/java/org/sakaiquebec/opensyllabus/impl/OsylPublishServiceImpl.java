@@ -31,7 +31,6 @@ import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
-import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
 public class OsylPublishServiceImpl implements OsylPublishService {
@@ -190,8 +189,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    configRef = thisCo.getOsylConfig().getConfigRef();
 	} catch (Exception e) {
 	    configRef = OsylConfigService.DEFAULT_CONFIG_REF;
-	    log.error("Unable to retrieve published course outline for" +
-	    		" access type [" + accessType + "]", e);
+	    log.error("Unable to retrieve published course outline for"
+		    + " access type [" + accessType + "]", e);
 	}
 	try {
 	    thisCo =
@@ -215,14 +214,13 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	log.info("Publishing course outline for site [" + co.getTitle() + "]");
 
 	SecurityService.pushAdvisor(new SecurityAdvisor() {
-		public SecurityAdvice isAllowed(String userId, String function,
-				String reference) {
-			return SecurityAdvice.ALLOWED;
-		}
+	    public SecurityAdvice isAllowed(String userId, String function,
+		    String reference) {
+		return SecurityAdvice.ALLOWED;
+	    }
 	});
 
-		
-    COModeledServer coModeled = new COModeledServer(co);
+	COModeledServer coModeled = new COModeledServer(co);
 
 	// PRE-PUBLICATION
 	// change work directory to publish directory
@@ -259,7 +257,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	publish(co.getSiteId(), webappDir);
 
 	copyWorkToPublish(documentSecurityMap);
-	
+
 	SecurityService.clearAdvisors();
     }
 
@@ -338,7 +336,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    contentHostingService.removeCollection(thisEntityRef);
 		else
 		    contentHostingService.removeResource(thisEntityRef);
-    }
+	    }
 
 	    copyWorkToPublish(workContent, documentSecurityMap);
 

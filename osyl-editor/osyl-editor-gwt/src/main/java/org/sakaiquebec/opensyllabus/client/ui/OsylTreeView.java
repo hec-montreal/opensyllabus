@@ -287,7 +287,7 @@ public class OsylTreeView extends OsylViewableComposite implements
     }
 
     public void setMaxTreeWidth(int newMaxTreeWidth) {
-	this.maxTreeWidth = newMaxTreeWidth;
+	OsylTreeView.maxTreeWidth = newMaxTreeWidth;
     }
 
     public static String getInitialSplitPosition() {
