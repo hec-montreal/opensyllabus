@@ -54,7 +54,7 @@ public class COStructureElement extends COElementAbstract<COElementAbstract>
      */
     public COStructureElement() {
 	super();
-	setClassType(CO_STRUCTURE_ELEMENT_CLASS_TYPE);
+	setClassType(ASM_STRUCTURE_CLASS_TYPE);
 	childrens = new ArrayList<COElementAbstract>();
     }
     

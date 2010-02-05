@@ -40,42 +40,43 @@ import org.sakaiquebec.opensyllabus.shared.util.UUID;
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
-public abstract class COElementAbstract<T extends COModelInterface> implements Serializable,
-	COModelInterface {
+public abstract class COElementAbstract<T extends COModelInterface> implements
+	Serializable, COModelInterface {
 
     private static final long serialVersionUID = 5786482983027706074L;
 
     /**
      * The <code>CourseOutlineContent</code> class type.
      */
-    protected static final String CO_CONTENT_CLASS_TYPE = "CourseOutlineContent";
+    protected static final String CO_CONTENT_CLASS_TYPE = "CO";
 
     /**
      * The <code>COStructureElement</code> class type.
      */
-    protected static final String CO_STRUCTURE_ELEMENT_CLASS_TYPE =
-	    "COStructureElement";
+    protected static final String ASM_STRUCTURE_CLASS_TYPE = "asmStructure";
 
     /**
      * The <code>COContentUnit</code> class type.
      */
-    protected static final String CO_UNIT_CONTENT_CLASS_TYPE = "COUnitContent";
+    protected static final String ASM_UNIT_CONTENT_CLASS_TYPE =
+	    "asmUnitContent";
 
     /**
      * The <code>COUnitStructure</code> class type.
      */
-    protected static final String CO_UNIT_STRUCTURE_CLASS_TYPE = "COUnitStructure";
+    protected static final String ASM_UNIT_STRUCTURE_CLASS_TYPE =
+	    "asmUnitStructure";
 
     /**
      * The <code>COUnit</code> class type.
      */
-    protected static final String CO_UNIT_CLASS_TYPE = "COUnit";
+    protected static final String ASM_UNIT_CLASS_TYPE = "asmUnit";
 
     /**
      * The <code>COCOntentResourceProx</code> class type.
      */
     protected static final String CO_CONTENT_RESOURCE_PROXY_CLASS_TYPE =
-	    "COContentResourceProxy";
+	    "asmContext";
 
     /**
      * (ie. Course outline by competence, by lecture, by theme)
@@ -188,7 +189,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
      *         false if not.
      */
     public boolean isCOStructureElement() {
-	return getClassType().equals(CO_STRUCTURE_ELEMENT_CLASS_TYPE);
+	return getClassType().equals(ASM_STRUCTURE_CLASS_TYPE);
     }
 
     /**
@@ -198,7 +199,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
      *         if not.
      */
     public boolean isCOUnitContent() {
-	return getClassType().equals(CO_UNIT_CONTENT_CLASS_TYPE);
+	return getClassType().equals(ASM_UNIT_CONTENT_CLASS_TYPE);
     }
 
     /**
@@ -207,7 +208,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
      * @return true if the object is of type <code>CoUnit</code>, false if not.
      */
     public boolean isCOUnit() {
-	return getClassType().equals(CO_UNIT_CLASS_TYPE);
+	return getClassType().equals(ASM_UNIT_CLASS_TYPE);
     }
 
     /**
@@ -217,7 +218,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
      *         if not.
      */
     public boolean isCOUnitStructure() {
-	return getClassType().equals(CO_UNIT_STRUCTURE_CLASS_TYPE);
+	return getClassType().equals(ASM_UNIT_STRUCTURE_CLASS_TYPE);
     }
 
     /**
@@ -352,12 +353,12 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
     public void setParent(COElementAbstract parent) {
 	this.parent = parent;
     }
-    
-    
+
     @SuppressWarnings("unchecked")
     public void removeMeFromMyParent() {
 	getParent().removeChild(this);
     }
+
     /**
      * {@inheritDoc}
      */
@@ -405,23 +406,22 @@ public abstract class COElementAbstract<T extends COModelInterface> implements S
 	return properties.getProperty(key, type);
     }
 
-    public boolean isNested(){
-	if(getParent()==null)
+    public boolean isNested() {
+	if (getParent() == null)
 	    return false;
 	return this.getType().equals(getParent().getType());
     }
-    
-    public int getNestingLevel(){
-	int l=0;
-	COElementAbstract p=getParent();
-	while(p!=null && this.getType().equals(p.getType())){
+
+    public int getNestingLevel() {
+	int l = 0;
+	COElementAbstract p = getParent();
+	while (p != null && this.getType().equals(p.getType())) {
 	    l++;
 	    p = p.getParent();
 	}
 	return l;
     }
-    
-    
+
     /**
      * Check the position of the element compared to other element
      * 

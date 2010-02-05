@@ -32,24 +32,16 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 public class OsylSettings {
 
     // tree rate
-    private static final String TREEVIEW_SHOWRATE =
-	    "treeview.assessmentunit.showrate";
+    private static final String SHOWRATE = ".showrate";
 
     // Title editable
-    private static final String UNITVIEW_ALL_TYPES_TITLELABEL_EDITABLE =
-	    "unitview.all.titlelabel.editable";
-    private static final String STRUCTVIEW_ALL_TITLELABEL_EDITABLE =
-	    "structview.all.titlelabel.editable";
+    private static final String ALL = "all";
     private static final String TITLELABEL_EDITABLE = ".titlelabel.editable";
-    private static final String UNITVIEW = "unitview.";
-    private static final String STRUCTVIEW = "structview.";
     private static final String NESTED = "nested.";
 
     // numbering
-    private static final String TREEVIEW_ASSESSMENT_NUMBERING =
-	    "treeview.assessmentunit.numbering";
-    private static final String TREEVIEW_SESSION_NUMBERING =
-	    "treeview.pedagogicalunit.numbering";
+    private static final String TREEVIEW = "treeview.";
+    private static final String NUMBERING = ".numbering";
 
     // date format
     private static final String FORMAT_DATE = "format.date";
@@ -136,77 +128,28 @@ public class OsylSettings {
     /**
      * @return true if the treeview rate showing for assessment is set
      */
-    public boolean isTreeViewAssessmentShowRate() {
-	return checkBooleanOption(TREEVIEW_SHOWRATE, false);
-    }
-
-    /**
-     * @return true if the StructView TitleLabel can be editable
-     */
-    public boolean isStructViewTitleLabelEditable(String type) {
-	if (checkBooleanOption(STRUCTVIEW_ALL_TITLELABEL_EDITABLE, false))
-	    return true;
-	else
-	    return checkBooleanOption(STRUCTVIEW + type + TITLELABEL_EDITABLE,
-		    false);
-    }
-
-    /**
-     * Check if title of nested structure of specified type is editable
-     * 
-     * @param type
-     * @return
-     */
-    public boolean isNestedStructViewTitleLabelEditable(String type) {
-	if (isStructViewTitleLabelEditable(type)) {
-	    return true;
-	} else {
-	    return checkBooleanOption(STRUCTVIEW + NESTED + type
-		    + TITLELABEL_EDITABLE, false);
-	}
-    }
-
-    /**
-     * @param type the type of the unit
-     * @return true if the UnitView TitleLabel can be editable
-     */
-    public boolean isUnitViewTitleLabelEditable(String type) {
-	if (checkBooleanOption(UNITVIEW_ALL_TYPES_TITLELABEL_EDITABLE, false))
-	    return true;
-	else
-	    return checkBooleanOption(UNITVIEW + type + TITLELABEL_EDITABLE,
-		    false);
+    public boolean isTreeViewAssessmentShowRate(COElementAbstract model) {
+	return checkBooleanOption(TREEVIEW + model.getType() + SHOWRATE, false);
     }
 
     public boolean isModelTitleEditable(COElementAbstract model) {
 	String type = model.getType();
-	if (model.isCOUnit())
-	    return isUnitViewTitleLabelEditable(type);
-	if (model.isCOStructureElement()) {
-	    if (model.isNested())
-		return isNestedStructViewTitleLabelEditable(type);
-	    else
-		return isStructViewTitleLabelEditable(type);
-	} else
+	String classType = model.getClassType();
+	if (checkBooleanOption(classType + "." + ALL + TITLELABEL_EDITABLE,
+		false))
+	    return true;
+	else if (checkBooleanOption(classType + "." + type
+		+ TITLELABEL_EDITABLE, false))
+	    return true;
+	else if (model.isNested())
+	    return checkBooleanOption(classType + "." + NESTED + type
+		    + TITLELABEL_EDITABLE, false);
+	else
 	    return false;
     }
 
-    /**
-     * @param key
-     * @return true if the maps contains the TREEVIEW_ASSESSMENT_NUMBERING key
-     *         and it's value is set to true
-     */
-    public boolean isTreeViewAssessmentNumbering() {
-	return checkBooleanOption(TREEVIEW_ASSESSMENT_NUMBERING, true);
-    }
-
-    /**
-     * @param key
-     * @return true if the maps contains the TREEVIEW_SESSION_NUMBERING key and
-     *         it's value is set to true
-     */
-    public boolean isTreeViewSessionNumbering() {
-	return checkBooleanOption(TREEVIEW_SESSION_NUMBERING, true);
+    public boolean isTreeViewNumbering(COElementAbstract model) {
+	return checkBooleanOption(TREEVIEW + model.getType() + NUMBERING, true);
     }
 
     public DateTimeFormat getDateFormat() {

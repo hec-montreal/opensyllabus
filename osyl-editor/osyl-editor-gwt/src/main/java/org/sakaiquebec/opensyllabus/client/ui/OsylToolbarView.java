@@ -137,22 +137,23 @@ public class OsylToolbarView extends OsylViewableComposite implements
 					.getOsylConfigRuler()
 					.getAllowedSubModels(coU);
 			if (!coUnitSubModels.isEmpty()) {
-			    COUnitStructure coUnitStructure =
+			    COUnitStructure cous =
 				    COUnitStructure
 					    .createDefaultCOUnitStructure(
 						    coUnitSubModels.get(0)
 							    .getType(),
 						    getCoMessages(), coU);
+			    cous.setLabel(getUiMessage("ASMUnitStructure.label.default"));
 			    List<COModelInterface> coUnitStructureSubModels =
 				    getController().getOsylConfig()
 					    .getOsylConfigRuler()
 					    .getAllowedSubModels(
-						    coUnitStructure);
+						    cous);
 			    if (!coUnitStructureSubModels.isEmpty())
 				COUnitContent.createDefaultCOContentUnit(
 					coUnitStructureSubModels.get(0)
 						.getType(), getCoMessages(),
-					coUnitStructure);
+					cous);
 			}
 
 		    } catch (RuntimeException e) {
@@ -222,16 +223,17 @@ public class OsylToolbarView extends OsylViewableComposite implements
 
 	@SuppressWarnings("unchecked")
 	public void execute() {
-	    COUnitStructure coUnitStructure =
+	    COUnitStructure cous =
 		    COUnitStructure.createDefaultCOUnitStructure(type,
 			    getCoMessages(), parentModel);
+	    cous.setLabel(getUiMessage("ASMUnitStructure.label.default"));
 	    try {
 		List<COModelInterface> subModels =
 			getController().getOsylConfig().getOsylConfigRuler()
-				.getAllowedSubModels(coUnitStructure);
+				.getAllowedSubModels(cous);
 		if (!subModels.isEmpty()) {
 		    COUnitContent.createDefaultCOContentUnit(subModels.get(0)
-			    .getType(), getCoMessages(), coUnitStructure);
+			    .getType(), getCoMessages(), cous);
 		}
 	    } catch (RuntimeException e) {
 		e.printStackTrace();

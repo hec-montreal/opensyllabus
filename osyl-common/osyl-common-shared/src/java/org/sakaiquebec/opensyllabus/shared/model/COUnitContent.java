@@ -64,7 +64,7 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
      */
     public COUnitContent() {
 	super();
-	setClassType(CO_UNIT_CONTENT_CLASS_TYPE);
+	setClassType(ASM_UNIT_CONTENT_CLASS_TYPE);
 	resourceProxies = new ArrayList<COContentResourceProxy>();
     }
 

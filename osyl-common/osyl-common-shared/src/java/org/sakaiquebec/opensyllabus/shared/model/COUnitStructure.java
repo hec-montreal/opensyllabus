@@ -46,7 +46,7 @@ public class COUnitStructure extends COElementAbstract<COElementAbstract>
 
     public COUnitStructure() {
 	super();
-	setClassType(CO_UNIT_STRUCTURE_CLASS_TYPE);
+	setClassType(ASM_UNIT_STRUCTURE_CLASS_TYPE);
 	childrens = new ArrayList<COElementAbstract>();
     }
 
