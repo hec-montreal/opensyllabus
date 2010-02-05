@@ -95,18 +95,16 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 	return showTitleOnly;
     }
 
-    public void displayChildren(List<COElementAbstract> children) {
-	if (children == null) {
+    public void displayChildren(List<COElementAbstract> childrens) {
+	if (childrens == null) {
 	    if (TRACE)
 		Window.alert("OsylCOStructureView 91 : No more children ");
 	    return;
 	} else {
 	    if (TRACE)
 		Window.alert("OsylCOStructureView 95 : There are children! ");
-	    Iterator<COElementAbstract> iter = children.iterator();
+	    Iterator<COElementAbstract> iter = childrens.iterator();
 	    while (iter.hasNext()) {
-		// this can be a Lecture leaf
-		// COContentUnit itemModel = (COContentUnit) iter.next();
 		COElementAbstract absElement = iter.next();
 		if (absElement.isCOStructureElement()) {
 		    if (TRACE)
@@ -124,10 +122,8 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 			    .isEmpty())) {
 			addListItemView(newCOStructEl);
 		    }
-		    children = newCOStructEl.getChildrens();
-		    // if ( children.size() == 1 ) {
-		    displayChildren(children);
-		    // }
+		    childrens = newCOStructEl.getChildrens();
+		    displayChildren(childrens);
 		} else if (absElement.isCOUnit()) {
 		    if (TRACE)
 			Window

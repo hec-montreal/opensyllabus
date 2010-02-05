@@ -88,8 +88,6 @@ public class OsylController implements SavePushButtonEventHandler,
     private COConfig osylConfig;
 
     private boolean inPreview = false;
-
-    private String citationListId;
     /**
      * Course outline and user interface message bundle
      */
@@ -1630,11 +1628,4 @@ public class OsylController implements SavePushButtonEventHandler,
     public void setInPreview(boolean inPreview) {
 	this.inPreview = inPreview;
     }
-
-    // TODO: this method is not used and no longer needed, it should be removed
-    // - Awa
-    public String getTemporaryCitationList() {
-	return citationListId;
-    }
-
 }

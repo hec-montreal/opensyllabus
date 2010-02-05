@@ -26,7 +26,6 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
-import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
@@ -118,36 +117,21 @@ public class OsylLongView extends OsylViewableComposite {
 
 		    children = newCOStructEl.getChildrens();
 		    List<COModelInterface> subModels =
-			getController().getOsylConfig().getOsylConfigRuler()
-				.getAllowedSubModels(newCOStructEl);
-		    if (!subModels.isEmpty() || children.size()>1){
-			//addListItemView(newCOStructEl);
-		    	displayCOStructureElement(newCOStructEl);
+			    getController().getOsylConfig()
+				    .getOsylConfigRuler().getAllowedSubModels(
+					    newCOStructEl);
+		    if (!subModels.isEmpty() || children.size() > 1) {
+			displayCOStructureElement(newCOStructEl);
 		    }
 		    displayChildren(children);
 		} else if (absElement.isCOUnit()) {
 		    COUnit itemModel = (COUnit) absElement;
-		    // addListItemView(itemModel);
 		    displayCOUnit(itemModel);
 		} else {
 		    return;
 		}
 	    }
 	}
-    }
-
-    private void addListItemView(COUnit itemModel) {
-	OsylCOUnitHyperlinkView listItemView =
-		new OsylCOUnitHyperlinkView(itemModel, getController());
-	getMainPanel().add(listItemView);
-    }
-
-    private void addListItemView(COStructureElement itemModel) {
-	Label COStructTitleLabel = new Label(getCoMessage(itemModel.getType()));
-	COStructTitleLabel.setStylePrimaryName("Osyl-UnitView-Title");
-	COStructTitleLabel.addStyleName(OsylStyleLevelChooser
-		.getLevelStyle(itemModel));
-	getMainPanel().add(COStructTitleLabel);
     }
 
     /**
@@ -166,7 +150,8 @@ public class OsylLongView extends OsylViewableComposite {
      * @param structureElement
      */
     private void displayCOStructureElement(COStructureElement structureElement) {
-	OsylCOStructureView view = new OsylCOStructureView(structureElement, getController(), true);	
+	OsylCOStructureView view =
+		new OsylCOStructureView(structureElement, getController(), true);
 	getMainPanel().add(view);
     }
 

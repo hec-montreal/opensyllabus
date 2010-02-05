@@ -280,7 +280,6 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
     public void getXslForGroup(String group, AsyncCallback<String> callback) {
 	// TODO Auto-generated method stub
-
     }
 
     public void hasBeenPublished(AsyncCallback<Boolean> callback) {

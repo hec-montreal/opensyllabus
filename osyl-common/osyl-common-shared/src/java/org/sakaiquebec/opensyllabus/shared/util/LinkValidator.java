@@ -32,7 +32,7 @@ public class LinkValidator {
      * @return true if the link is valid
      */
     public static boolean isValidLink(String link){
-	if(link!=null && !link.trim().equals("")) //TODO make this more robust
+	if(link!=null && !link.trim().equals(""))
 	    return true;
 	else return false;
     }

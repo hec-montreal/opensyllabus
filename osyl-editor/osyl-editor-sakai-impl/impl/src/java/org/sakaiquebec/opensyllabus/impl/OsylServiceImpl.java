@@ -267,7 +267,7 @@ public class OsylServiceImpl implements OsylService {
 	    }
 	    contentEdit
 		    .setTypeOfSubmission(Assignment.TEXT_AND_ATTACHMENT_ASSIGNMENT_SUBMISSION);
-	    
+
 	    edit.setContent(contentEdit);
 
 	    assignmentService.commitEdit(edit);
@@ -572,18 +572,19 @@ public class OsylServiceImpl implements OsylService {
 	    directoryId =
 		    (osylSiteService.getCurrentSiteReference() + WORK_DIRECTORY + "/")
 			    .substring(8);
-	    
-	    //HIDE COLLECTION
-	    ContentCollectionEdit cce = contentHostingService.editCollection(directoryId);
+
+	    // HIDE COLLECTION
+	    ContentCollectionEdit cce =
+		    contentHostingService.editCollection(directoryId);
 	    cce.setHidden();
 	    contentHostingService.commitCollection(cce);
-	    
+
 	    osylSecurityService.applyDirectoryPermissions(directoryId);
 
 	    // we add the default citationList
-
-	    String citationListName = "Références bibliographiques du cours";// TODO
-	    // I18N
+	    // TODO I18N
+	    String citationListName = "Références bibliographiques du cours";
+	    
 	    CitationCollection citationList = citationService.addCollection();
 
 	    ContentResourceEdit cre =
@@ -724,32 +725,32 @@ public class OsylServiceImpl implements OsylService {
 
     public boolean checkSitesRelation(String resourceURI) {
 	try {
-		String currentSiteId = osylSiteService.getCurrentSiteId();
-		String parent = coRelationDao
-				.getParentOfCourseOutline(currentSiteId);
-		if (resourceURI.indexOf(parent, 0) != -1) {
-			// temporarily allow the user to read and write from assignments
-			// (asn.revise permission)
+	    String currentSiteId = osylSiteService.getCurrentSiteId();
+	    String parent =
+		    coRelationDao.getParentOfCourseOutline(currentSiteId);
+	    if (resourceURI.indexOf(parent, 0) != -1) {
+		// temporarily allow the user to read and write from assignments
+		// (asn.revise permission)
 
-			//if (osylSecurityService.isAllowedToEdit(parent)) {
-				SecurityService.pushAdvisor(new SecurityAdvisor() {
-					public SecurityAdvice isAllowed(String userId,
-							String function, String reference) {
-						return SecurityAdvice.ALLOWED;
-					}
-				});
+		// if (osylSecurityService.isAllowedToEdit(parent)) {
+		SecurityService.pushAdvisor(new SecurityAdvisor() {
+		    public SecurityAdvice isAllowed(String userId,
+			    String function, String reference) {
+			return SecurityAdvice.ALLOWED;
+		    }
+		});
 
-			//}
+		// }
 
-			// clear the permission
+		// clear the permission
 
-			// if (osylSecurityService.isAllowedToEdit(siteId)) {
-			// SecurityService.clearAdvisors(); }
+		// if (osylSecurityService.isAllowedToEdit(siteId)) {
+		// SecurityService.clearAdvisors(); }
 
-		}
+	    }
 
 	} catch (Exception e) {
-		e.printStackTrace();
+	    e.printStackTrace();
 	}
 	return false;
     }

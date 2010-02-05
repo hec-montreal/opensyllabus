@@ -704,10 +704,6 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 			(OsylFileItem) browser.getSelectedAbstractBrowserItem();
 		descriptionTextArea.setText(selectedFile.getDescription());
 
-		// TODO We have to wait until licenceListReady is set to true
-		// before
-		// selecting an item in the licenceListBox
-		// The licence list is scrolled only if it is ready.
 		for (int i = 0; i < licenseListBox.getItemCount(); i++) {
 		    String item = licenseListBox.getValue(i);
 

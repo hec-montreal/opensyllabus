@@ -383,7 +383,6 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 
     @Override
     public Widget getBrowserWidget() {
-	// TODO: return the hyperlink browser here
 	return null;
     }
 
