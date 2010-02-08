@@ -40,6 +40,8 @@ public class OsylCOStructureLabelEditor extends OsylLabelEditor {
 
     private int nestingLevelAllowed = 0;
 
+    private TextArea descriptionTextArea;
+
     public OsylCOStructureLabelEditor(OsylAbstractView parent) {
 	super(parent);
     }
@@ -48,9 +50,6 @@ public class OsylCOStructureLabelEditor extends OsylLabelEditor {
 	    boolean isDeletable) {
 	super(parent, isDeletable);
     }
-
-    // Our editor
-    private TextArea descriptionTextArea;
 
     /**
      * ===================== OVERRIDEN METHODS ===================== See
@@ -99,22 +98,38 @@ public class OsylCOStructureLabelEditor extends OsylLabelEditor {
 
     @Override
     public boolean isMoveable() {
-	    return ((COElementAbstract)getModel()).isNested();
+	return ((COElementAbstract) getModel()).isNested();
     }
 
     @Override
     protected void generateTargetCoAbstractElementListBox(ListBox lb) {
 	lb.clear();
 	lb.addItem("");
+	COStructureElement mod = (COStructureElement) getModel();
 	nestingLevelAllowed =
 		getController().getOsylConfig().getOsylConfigRuler()
-			.getNestingLevelAllowed((COElementAbstract) getModel());
-	COStructureElement m =
-		(COStructureElement) ((COElementAbstract) getModel())
-			.getParent();
-	while (m.getParent().isCOStructureElement())
-	    m = (COStructureElement) m.getParent();
-	fillListBoxWithAllowedCOStructure(m, lb);
+			.getNestingLevelAllowed(mod);
+	nestingLevelAllowed =
+		nestingLevelAllowed - calculateChildNestingLevel(mod);
+	COStructureElement modParent = (COStructureElement) (mod).getParent();
+	while (modParent.getParent().isCOStructureElement())
+	    modParent = (COStructureElement) modParent.getParent();
+	fillListBoxWithAllowedCOStructure(modParent, lb);
+    }
+
+    /**
+     * ==================== ADDED CLASSES or METHODS ====================
+     */
+    private int calculateChildNestingLevel(COStructureElement cose) {
+	int childNestingLevel = 0;
+	for (COElementAbstract coe : cose.getChildrens()) {
+	    int cnl=0;
+	    if (coe.isNested())
+		cnl =
+			calculateChildNestingLevel((COStructureElement) coe) + 1;
+	    childNestingLevel = Math.max(cnl, childNestingLevel);
+	}
+	return childNestingLevel;
     }
 
     private void fillListBoxWithAllowedCOStructure(COStructureElement cse,
@@ -133,9 +148,6 @@ public class OsylCOStructureLabelEditor extends OsylLabelEditor {
 	}
     }
 
-    /**
-     * ==================== ADDED CLASSES or METHODS ====================
-     */
     public String getDescription() {
 	return descriptionTextArea.getText();
     }

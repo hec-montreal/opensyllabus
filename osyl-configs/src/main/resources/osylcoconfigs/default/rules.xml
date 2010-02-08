@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com) -->
 <!-- 
  Rules for content display
   @author <a href="mailto:sacha.Lepretre@crim.ca">Sacha Lepretre</a>
   @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
- -->
+-->
 <schema>
 	<element name="CO">
 		<!-- restriction pattern is a regexp pattern based on the value of attribute type -->
