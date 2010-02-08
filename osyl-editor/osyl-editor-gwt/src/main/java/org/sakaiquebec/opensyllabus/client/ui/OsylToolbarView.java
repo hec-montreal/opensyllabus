@@ -475,9 +475,15 @@ public class OsylToolbarView extends OsylViewableComposite implements
 					false);
 				return;
 			    } else {
-				addAddMenuItem(subModel.getType(),
-					new AddMenuCommand(castedModel,
-						subModel.getType()));
+				if (subModel instanceof COStructureElement)
+				    addAddMenuItem(
+					    getUiMessage("ASMStructure"),
+					    new AddMenuCommand(castedModel,
+						    subModel.getType()));
+				else
+				    addAddMenuItem(getCoMessage(subModel
+					    .getType()), new AddMenuCommand(
+					    castedModel, subModel.getType()));
 			    }
 			}
 		    } catch (RuntimeException e) {
@@ -511,8 +517,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		} else {
 		    type = COContentResourceProxyType.REFERENCE;
 		}
-		addAddMenuItem(subModel.getType(), new AddMenuCommand(model,
-			type, subModel.getType()));
+		addAddMenuItem(getCoMessage(subModel.getType()),
+			new AddMenuCommand(model, type, subModel.getType()));
 	    }
 	}
     }
@@ -524,8 +530,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	Iterator<COModelInterface> iter = subModels.iterator();
 	while (iter.hasNext()) {
 	    COModelInterface subModel = (COModelInterface) iter.next();
-	    addAddMenuItem(subModel.getType(), new AddUnitStructureCommand(
-		    model, subModel.getType()));
+	    addAddMenuItem(getCoMessage(subModel.getType()),
+		    new AddUnitStructureCommand(model, subModel.getType()));
 	}
 	if (getModel().getChildrens().size() == 1) {
 	    if ((COUnitStructure) model.getChildrens().get(0) != null) {
@@ -540,9 +546,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
     }
 
     private void addAddMenuItem(String itemType, Command cmd) {
-	String html =
-		"<div id=\"add" + itemType + "\">" + getCoMessage(itemType)
-			+ "</div>";
+	String html = "<div id=\"add" + itemType + "\">" + itemType + "</div>";
 	getOsylToolbar().getAddMenuBar().addItem(html, true, cmd);
     }
 
