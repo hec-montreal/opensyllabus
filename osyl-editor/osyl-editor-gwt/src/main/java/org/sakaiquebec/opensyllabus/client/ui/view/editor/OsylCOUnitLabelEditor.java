@@ -42,10 +42,7 @@ public class OsylCOUnitLabelEditor extends OsylLabelEditor {
 
     @Override
     public boolean isMoveable() {
-	if (!isDeletable)
-	    return false;
-	else
-	    return ((COElementAbstract) getModel()).getParent().isNested();
+	return ((COElementAbstract) getModel()).getParent().isNested();
     }
 
     @Override

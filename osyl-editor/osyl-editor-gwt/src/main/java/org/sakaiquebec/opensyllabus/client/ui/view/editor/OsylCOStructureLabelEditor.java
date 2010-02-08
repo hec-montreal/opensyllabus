@@ -99,10 +99,7 @@ public class OsylCOStructureLabelEditor extends OsylLabelEditor {
 
     @Override
     public boolean isMoveable() {
-	if (!isDeletable)
-	    return false;
-	else
-	    return true;
+	    return ((COElementAbstract)getModel()).isNested();
     }
 
     @Override
