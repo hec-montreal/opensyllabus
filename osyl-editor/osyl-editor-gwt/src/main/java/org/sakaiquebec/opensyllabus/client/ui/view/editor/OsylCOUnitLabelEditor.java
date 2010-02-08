@@ -27,21 +27,19 @@ import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import com.google.gwt.user.client.ui.ListBox;
 
 /**
- *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
 public class OsylCOUnitLabelEditor extends OsylLabelEditor {
 
-    
     public OsylCOUnitLabelEditor(OsylAbstractView parent) {
 	this(parent, false);
     }
-    
+
     public OsylCOUnitLabelEditor(OsylAbstractView parent, boolean isDeleteable) {
 	super(parent, isDeleteable);
     }
-    
+
     @Override
     public boolean isMoveable() {
 	if (!isDeletable)
@@ -49,20 +47,29 @@ public class OsylCOUnitLabelEditor extends OsylLabelEditor {
 	else
 	    return ((COElementAbstract) getModel()).getParent().isNested();
     }
-    
+
     @Override
     protected void generateTargetCoAbstractElementListBox(ListBox lb) {
 	lb.clear();
 	lb.addItem("");
-	COStructureElement parent =
+	COStructureElement m =
 		(COStructureElement) ((COElementAbstract) getModel())
 			.getParent();
-	for (COElementAbstract coe : ((COStructureElement) parent.getParent())
-		.getChildrens()) {
+	while (m.getParent().isCOStructureElement())
+	    m = (COStructureElement) m.getParent();
+	fillListBoxWithCOStructure(m, lb);
+    }
+
+    private void fillListBoxWithCOStructure(COStructureElement cse, ListBox lb) {
+	String label =
+		(cse.getLabel() == null || cse.getLabel().trim().equals("")) ? getView()
+			.getCoMessage(cse.getType())
+			: cse.getLabel();
+	lb.addItem(label, cse.getId());
+	for (COElementAbstract coe : cse.getChildrens()) {
 	    if (coe.isCOStructureElement())
-		lb.addItem(coe.getLabel(), coe.getId());
+		fillListBoxWithCOStructure((COStructureElement) coe, lb);
 	}
     }
 
 }
-

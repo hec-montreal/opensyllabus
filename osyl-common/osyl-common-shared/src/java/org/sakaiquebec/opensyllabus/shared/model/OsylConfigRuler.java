@@ -162,7 +162,7 @@ public class OsylConfigRuler {
 				    getRestrictionPatternAttributeValue(attributeTypeNode);
 			    if (allowNested) {
 				while (pathPosition <= pathPositionEnd) {
-				    elementPath=path.get(pathPosition);
+				    elementPath = path.get(pathPosition);
 				    if (elementPath.getType().equals(type))
 					pathPosition++;
 				    else
@@ -395,6 +395,19 @@ public class OsylConfigRuler {
 	    allowedSubModels = getAllowedSubModels(path);
 	}
 	return allowedSubModels;
+    }
+
+    
+    public int getNestingLevelAllowed(COElementAbstract model) {
+	if (model != null) {
+	    List<COElementAbstract> path = findModelPath(model);
+	    Node attributeTypeNode = findingAttributeTypeNode(findNode(path));
+	    int nestingLevelAllowed =
+		    getNestingLevelAllowedAttributeValue(attributeTypeNode);
+	    return nestingLevelAllowed;
+	} else {
+	    return 0;
+	}
     }
 
     /**

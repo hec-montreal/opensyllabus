@@ -24,9 +24,12 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureLabelView;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
+import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextArea;
 
 /**
@@ -34,6 +37,8 @@ import com.google.gwt.user.client.ui.TextArea;
  * @version $Id: $
  */
 public class OsylCOStructureLabelEditor extends OsylLabelEditor {
+
+    private static int nestingLevelAllowed = 0;
 
     public OsylCOStructureLabelEditor(OsylAbstractView parent) {
 	super(parent);
@@ -90,6 +95,45 @@ public class OsylCOStructureLabelEditor extends OsylLabelEditor {
 	List<FocusWidget> focusWidgetList = super.getEditionFocusWidgets();
 	focusWidgetList.add(descriptionTextArea);
 	return focusWidgetList;
+    }
+
+    @Override
+    public boolean isMoveable() {
+	if (!isDeletable)
+	    return false;
+	else
+	    return true;
+    }
+
+    @Override
+    protected void generateTargetCoAbstractElementListBox(ListBox lb) {
+	lb.clear();
+	lb.addItem("");
+	nestingLevelAllowed =
+		getController().getOsylConfig().getOsylConfigRuler()
+			.getNestingLevelAllowed((COElementAbstract) getModel());
+	COStructureElement m =
+		(COStructureElement) ((COElementAbstract) getModel())
+			.getParent();
+	while (m.getParent().isCOStructureElement())
+	    m = (COStructureElement) m.getParent();
+	fillListBoxWithAllowedCOStructure(m, lb);
+    }
+
+    private void fillListBoxWithAllowedCOStructure(COStructureElement cse,
+	    ListBox lb) {
+	if (cse.getNestingLevel() < nestingLevelAllowed) {
+	    String label =
+		    (cse.getLabel() == null || cse.getLabel().trim().equals("")) ? getView()
+			    .getCoMessage(cse.getType())
+			    : cse.getLabel();
+	    lb.addItem(label, cse.getId());
+	    for (COElementAbstract coe : cse.getChildrens()) {
+		if (coe.isCOStructureElement())
+		    fillListBoxWithAllowedCOStructure((COStructureElement) coe,
+			    lb);
+	    }
+	}
     }
 
     /**
