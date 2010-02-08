@@ -38,7 +38,7 @@ import com.google.gwt.user.client.ui.TextArea;
  */
 public class OsylCOStructureLabelEditor extends OsylLabelEditor {
 
-    private static int nestingLevelAllowed = 0;
+    private int nestingLevelAllowed = 0;
 
     public OsylCOStructureLabelEditor(OsylAbstractView parent) {
 	super(parent);
