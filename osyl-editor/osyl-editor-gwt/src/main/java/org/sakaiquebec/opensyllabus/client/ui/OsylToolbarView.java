@@ -476,13 +476,12 @@ public class OsylToolbarView extends OsylViewableComposite implements
 				return;
 			    } else {
 				if (subModel instanceof COStructureElement)
-				    addAddMenuItem(
-					    getUiMessage("ASMStructure"),
+				    addAddUIMenuItem(subModel.getType(),
 					    new AddMenuCommand(castedModel,
 						    subModel.getType()));
 				else
-				    addAddMenuItem(getCoMessage(subModel
-					    .getType()), new AddMenuCommand(
+				    addAddCOMenuItem(subModel
+					    .getType(), new AddMenuCommand(
 					    castedModel, subModel.getType()));
 			    }
 			}
@@ -517,7 +516,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		} else {
 		    type = COContentResourceProxyType.REFERENCE;
 		}
-		addAddMenuItem(getCoMessage(subModel.getType()),
+		addAddCOMenuItem(subModel.getType(),
 			new AddMenuCommand(model, type, subModel.getType()));
 	    }
 	}
@@ -530,7 +529,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	Iterator<COModelInterface> iter = subModels.iterator();
 	while (iter.hasNext()) {
 	    COModelInterface subModel = (COModelInterface) iter.next();
-	    addAddMenuItem(getCoMessage(subModel.getType()),
+	    addAddCOMenuItem(subModel.getType(),
 		    new AddUnitStructureCommand(model, subModel.getType()));
 	}
 	if (getModel().getChildrens().size() == 1) {
@@ -545,8 +544,13 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	return osylToolbar;
     }
 
-    private void addAddMenuItem(String itemType, Command cmd) {
-	String html = "<div id=\"add" + itemType + "\">" + itemType + "</div>";
+    private void addAddCOMenuItem(String itemType, Command cmd) {
+	String html = "<div id=\"add" + itemType + "\">" + getCoMessage(itemType) + "</div>";
+	getOsylToolbar().getAddMenuBar().addItem(html, true, cmd);
+    }
+    
+    private void addAddUIMenuItem(String itemType, Command cmd) {
+	String html = "<div id=\"add" + itemType + "\">" + getUiMessage(itemType) + "</div>";
 	getOsylToolbar().getAddMenuBar().addItem(html, true, cmd);
     }
 
