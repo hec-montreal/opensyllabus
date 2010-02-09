@@ -229,8 +229,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 				if (!cmService.isEnrollmentSetDefined(enrollmentSetId)) {
 					enrollmentSet = cmAdmin.createEnrollmentSet(enrollmentSetId, detailsCours
 							.getCourseTitleLong(), detailsCours
-							.getCourseTitleLong(), "", "", courseOfferingId,
-							new HashSet());
+							.getCourseTitleLong(), profCoursEntry.getAcadOrg(), profCoursEntry.getUnitMinimum(), courseOfferingId,
+							null);
 					enrollmentSet.setOfficialInstructors(instructors);
 					Section courseSection = cmService.getSection(courseSectionId);
 					if (courseSection != null){
