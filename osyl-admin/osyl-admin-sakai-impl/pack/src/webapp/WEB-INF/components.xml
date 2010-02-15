@@ -235,6 +235,14 @@
 		<property name="cmService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
 	</bean>
+	<bean id="osylcmjobudem" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImplUdeM" >
+		<property name="userDirService"
+			ref="org.sakaiproject.user.api.UserDirectoryService" />
+		<property name="cmAdmin"
+			ref="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
+		<property name="cmService"
+			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+	</bean>
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylcmjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
@@ -246,6 +254,24 @@
 		
 		<property name="jobName">
 			<value>OpenSyllabus Course Management Job Synchronizer</value>
+		</property>
+		
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+		
+	</bean>	
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylcmjobudem"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		
+	
+		<property name="beanId">
+			<value>osylcmjobudem</value>
+		</property>
+		
+		<property name="jobName">
+			<value>UdeM OpenSyllabus Course Management Job Synchronizer</value>
 		</property>
 		
 		<property name="schedulerManager">
