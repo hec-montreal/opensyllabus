@@ -757,15 +757,23 @@
 }
 
 .Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up, 
-.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down, 
 .Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up-hovering, 
-.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down-hovering, 
 .Osyl-EditorToolbar-TopPanel .gwt-PushButton-up, 
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-up-hovering {
+	background:#FCFCFC url(images/button/editor-toolbar-button-up.gif) no-repeat left top;
+	height:20px;
+	width:20px;
+	padding:2px;
+	margin:1px;
+	cursor:pointer;
+	border:0;
+}
+
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down, 
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down-hovering, 
 .Osyl-EditorToolbar-TopPanel .gwt-PushButton-down, 
-.Osyl-EditorToolbar-TopPanel .gwt-PushButton-down, 
-.Osyl-EditorToolbar-TopPanel .gwt-PushButton-up-hovering, 
 .Osyl-EditorToolbar-TopPanel .gwt-PushButton-down-hovering {
-	background:#FCFCFC url(images/button/editor-toolbar-button.gif) no-repeat left top;
+	background:#FCFCFC url(images/button/editor-toolbar-button-down.gif) no-repeat left top;
 	height:20px;
 	width:20px;
 	padding:2px;
