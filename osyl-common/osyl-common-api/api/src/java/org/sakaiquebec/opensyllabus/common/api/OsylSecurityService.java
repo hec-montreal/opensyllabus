@@ -20,6 +20,8 @@
 
 package org.sakaiquebec.opensyllabus.common.api;
 
+import org.sakaiproject.authz.cover.SecurityService;
+
 /**
  * OsylSecurityService defines all calls related to security and context. It
  * should offer a minimal interface to the actual session. If several entry
@@ -37,19 +39,30 @@ public interface OsylSecurityService {
     public static final String SECURITY_ROLE_PROJECT_ACCESS = "access";
 
     /**
-     * Course access role value.
-     */
-    public static final String SECURITY_ROLE_COURSE_ACCESS = "Student";
-
-    /**
      * Project maintain role  value.
      */
     public static final String SECURITY_ROLE_PROJECT_MAINTAIN = "maintain";
-
+    
     /**
-     * Course maintain role  value.
+     * Course strudent role value.
      */
-    public static final String SECURITY_ROLE_COURSE_MAINTAIN = "Instructor";
+    public static final String SECURITY_ROLE_COURSE_STUDENT = "Student";
+    
+    /**
+     * Course instructor role  value.
+     */
+    public static final String SECURITY_ROLE_COURSE_INSTRUCTOR = "Instructor";
+    
+    /**
+     * Course general assistant role  value.
+     */
+    public static final String SECURITY_ROLE_COURSE_GENERAL_ASSISTANT = "General Assistant";
+    
+    /**
+     * Course teaching assistant role  value.
+     */
+    public static final String SECURITY_ROLE_COURSE_TEACHING_ASSISTANT = "Teaching Assistant";
+   
     
     /**
      * Takes an XML file and strips tags based on a user role

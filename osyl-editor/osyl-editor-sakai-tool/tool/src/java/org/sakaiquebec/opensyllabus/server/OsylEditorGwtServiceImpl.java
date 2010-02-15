@@ -259,7 +259,11 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 			    .getSerializedCourseOutline(webappDir);
 	} else {
 	    if (getCurrentUserRole().equals(
-		    OsylSecurityService.SECURITY_ROLE_COURSE_ACCESS)
+		    OsylSecurityService.SECURITY_ROLE_COURSE_GENERAL_ASSISTANT)
+		    || getCurrentUserRole().equals(
+		    OsylSecurityService.SECURITY_ROLE_COURSE_TEACHING_ASSISTANT)
+		    || getCurrentUserRole().equals(
+		    OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)
 		    || getCurrentUserRole().equals(
 			    OsylSecurityService.SECURITY_ROLE_PROJECT_ACCESS))
 		thisCo =

@@ -272,8 +272,18 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 		    }
 		}
 	    } else {
-		if (osylSecurityService.getCurrentUserRole().equals(
-			OsylSecurityService.SECURITY_ROLE_COURSE_ACCESS)
+		if (osylSecurityService
+			.getCurrentUserRole()
+			.equals(
+				OsylSecurityService.SECURITY_ROLE_COURSE_GENERAL_ASSISTANT)
+			|| osylSecurityService
+				.getCurrentUserRole()
+				.equals(
+					OsylSecurityService.SECURITY_ROLE_COURSE_TEACHING_ASSISTANT)
+			|| osylSecurityService
+				.getCurrentUserRole()
+				.equals(
+					OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)
 			|| osylSecurityService
 				.getCurrentUserRole()
 				.equals(
@@ -354,11 +364,10 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	    try {
 		coConfig = configDao.getConfigByRef(configRef);
 		co =
-			new COSerialized(idManager.createUuid(),
-				lang, "shared",
-				"", site.getId(), "sectionId", coConfig, null,
-				"shortDescription", "description", "title",
-				false);
+			new COSerialized(idManager.createUuid(), lang,
+				"shared", "", site.getId(), "sectionId",
+				coConfig, null, "shortDescription",
+				"description", "title", false);
 		resourceDao.createOrUpdateCourseOutline(co);
 
 	    } catch (Exception e) {
@@ -540,9 +549,10 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 			new COSerialized(idManager.createUuid(),
 				osylConfigService.getCurrentLocale(), "shared",
 				"", siteId, "sectionId", coConfig,
-				getXmlStringFromFile(coConfig,osylConfigService.getCurrentLocale(),webappDir),
-				"shortDescription", "description", "title",
-				false);
+				getXmlStringFromFile(coConfig,
+					osylConfigService.getCurrentLocale(),
+					webappDir), "shortDescription",
+				"description", "title", false);
 		// reinitilaisation des uuids
 		COModeledServer coModeled = new COModeledServer(thisCo);
 		coModeled.XML2Model();
@@ -553,7 +563,8 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 		resourceDao.createOrUpdateCourseOutline(thisCo);
 	    } else if (thisCo.getContent() == null) {
 		coConfig = thisCo.getOsylConfig();
-		thisCo.setContent(getXmlStringFromFile(coConfig, thisCo.getLang(), webappDir));
+		thisCo.setContent(getXmlStringFromFile(coConfig, thisCo
+			.getLang(), webappDir));
 		// reinitilaisation des uuids
 		COModeledServer coModeled = new COModeledServer(thisCo);
 		coModeled.XML2Model();
@@ -611,7 +622,7 @@ public class OsylSiteServiceImpl implements OsylSiteService {
      */
     public String updateSerializedCourseOutline(COSerialized co)
 	    throws Exception {
-	log.info("Saving course outline [" + co.getTitle()  + "]");
+	log.info("Saving course outline [" + co.getTitle() + "]");
 
 	try {
 	    return resourceDao.createOrUpdateCourseOutline(co);
@@ -685,8 +696,8 @@ public class OsylSiteServiceImpl implements OsylSiteService {
      * @param webappDir The path to the webapp directory
      * @return
      */
-    private String getXmlStringFromFile(COConfigSerialized coConfig,String lang,
-	    String webappDir) {
+    private String getXmlStringFromFile(COConfigSerialized coConfig,
+	    String lang, String webappDir) {
 	StringBuilder fileData = new StringBuilder(1000);
 	try {
 
@@ -720,12 +731,12 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	String templateFileName = "";
 	try {
 	    templateFileName =
-		    CO_CONTENT_TEMPLATE + "_"
-			    + lang
+		    CO_CONTENT_TEMPLATE + "_" + lang
 			    + OsylSiteService.XML_FILE_EXTENSION;
 	    coXmlFilePath =
-		    webappDir + OsylConfigService.CONFIG_DIR + File.separator + coConfig.getConfigRef()
-			    + File.separator + templateFileName;
+		    webappDir + OsylConfigService.CONFIG_DIR + File.separator
+			    + coConfig.getConfigRef() + File.separator
+			    + templateFileName;
 	    coXmlFile = new File(coXmlFilePath);
 	    reader =
 		    new BufferedReader(new InputStreamReader(
@@ -741,7 +752,8 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 				+ OsylSiteService.XML_FILE_EXTENSION;
 		;
 		coXmlFilePath =
-			webappDir + OsylConfigService.CONFIG_DIR + File.separator + coConfig.getConfigRef()
+			webappDir + OsylConfigService.CONFIG_DIR
+				+ File.separator + coConfig.getConfigRef()
 				+ File.separator + templateFileName;
 		coXmlFile = new File(coXmlFilePath);
 		reader =
@@ -759,7 +771,8 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 			    osylConfigService.getCurrentConfig(webappDir)
 				    .getConfigRef();
 		    coXmlFilePath =
-			    webappDir + OsylConfigService.CONFIG_DIR + File.separator + defaultConfigRef
+			    webappDir + OsylConfigService.CONFIG_DIR
+				    + File.separator + defaultConfigRef
 				    + File.separator + templateFileName;
 		    coXmlFile = new File(coXmlFilePath);
 		    reader =

@@ -24,6 +24,7 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.OsylMainView;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COModeled;

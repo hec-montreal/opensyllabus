@@ -29,7 +29,7 @@
 	if (osylMainBean.getOsylSecurityService().isAllowedToEdit(osylMainBean.getOsylSiteService().getCurrentSiteId())
 			|| OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN
 					.equals(userRole)
-			|| OsylSecurityService.SECURITY_ROLE_COURSE_MAINTAIN
+			|| OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR
 					.equals(userRole)) {
 		osylMainBean.getOsylService().initService();
 	}
