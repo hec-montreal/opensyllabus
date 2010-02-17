@@ -24,6 +24,12 @@
 	<name>Sakai Quebec OpenSyllabus ManagerGWT Project</name>
 
 	<dependencies>
+	    <!-- sakai -->
+	<dependency>
+	  <groupId>org.sakaiproject.kernel</groupId>
+	  <artifactId>sakai-kernel-api</artifactId>
+	</dependency>
+ 
 		<!-- gwt -->
 		<dependency>
 			<groupId>org.sakaiquebec.opensyllabus</groupId>
