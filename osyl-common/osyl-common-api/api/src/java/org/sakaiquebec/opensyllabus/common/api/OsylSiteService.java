@@ -1,5 +1,7 @@
 package org.sakaiquebec.opensyllabus.common.api;
 
+import org.sakaiproject.entity.api.Entity;
+import org.sakaiproject.entity.api.EntityProducer;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
@@ -34,8 +36,12 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public interface OsylSiteService {
+public interface OsylSiteService extends EntityProducer{
 
+	//Arguments used by the entity broker
+	public static final String REFERENCE_ROOT = Entity.SEPARATOR + "osyl";
+	public static final String APPLICATION_ID = "sakai:osyl";
+	
 	public static final String XSLT_DIRECTORY = "xslt";
 
 	public static final String XML_FILE_EXTENSION = ".xml";
@@ -150,6 +156,7 @@ public interface OsylSiteService {
 	 */
 	public COSerialized getSerializedCourseOutlineBySiteId(String siteId);
 
+	public String  getSerializedCourseOutlineContentBySiteId(String siteId);
 	/**
 	 * Returns the CourseOutline of the current context.
 	 * 

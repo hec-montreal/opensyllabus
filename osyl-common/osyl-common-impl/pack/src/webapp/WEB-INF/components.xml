@@ -61,6 +61,8 @@
 			ref="org.sakaiproject.id.api.IdManager"/>
 		<property name="toolManager"
 			ref="org.sakaiproject.tool.api.ToolManager" />
+		<property name="entityManager" 
+			ref="org.sakaiproject.entity.api.EntityManager"/>
 				
 		<!-- Osyl dependencies -->
 		<property name="securityService"

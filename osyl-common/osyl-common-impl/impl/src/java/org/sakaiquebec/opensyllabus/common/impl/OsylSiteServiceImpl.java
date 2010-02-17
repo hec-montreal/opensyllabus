@@ -26,11 +26,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
+import org.sakaiproject.entity.api.Entity;
+import org.sakaiproject.entity.api.EntityManager;
+import org.sakaiproject.entity.api.EntityTransferrer;
+import org.sakaiproject.entity.api.HttpAccess;
+import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.exception.IdUnusedException;
@@ -53,6 +64,8 @@ import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Implementation of the <code>OsylSiteService</code>
@@ -60,7 +73,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public class OsylSiteServiceImpl implements OsylSiteService {
+public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     private static final String CO_CONTENT_TEMPLATE = "coContentTemplate";
 
@@ -110,6 +123,21 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	this.idManager = idManager;
     }
 
+	/** Dependency: EntityManager. */
+	protected EntityManager entityManager = null;
+
+	/**
+	 * Dependency: EntityManager.
+	 * 
+	 * @param service
+	 *        The EntityManager.
+	 */
+	public void setEntityManager(EntityManager entityManager)
+	{
+		this.entityManager = entityManager;
+	}
+
+	
     /**
      * Sets the {@link OsylSecurityService}.
      * 
@@ -199,6 +227,10 @@ public class OsylSiteServiceImpl implements OsylSiteService {
      */
     public void init() {
 	log.info("INIT from OsylSite service");
+	
+	//We register the entity manager
+	entityManager.registerEntityProducer(this, REFERENCE_ROOT);
+	
     }
 
     /** Destroy method to be called by Spring */
@@ -237,6 +269,15 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 
 	return coModeled;
     }
+    
+    public String getSerializedCourseOutlineContentBySiteId(String siteId) {
+    	String content = null;
+    	
+    	COSerialized co = getSerializedCourseOutlineBySiteId(siteId);
+    	content = co.getContent();
+    	
+    	return content;
+    }
 
     /**
      * {@inheritDoc}
@@ -272,6 +313,15 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 		    }
 		}
 	    } else {
+	    	if (osylSecurityService.getCurrentUserRole() == null){
+	    		co =
+				    resourceDao
+					    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+						    siteId,
+						    SecurityInterface.ACCESS_PUBLIC);
+	    		return co;
+		    }
+		    
 		if (osylSecurityService
 			.getCurrentUserRole()
 			.equals(
@@ -869,4 +919,149 @@ public class OsylSiteServiceImpl implements OsylSiteService {
 	    throw e;
 	}
     }
+
+	public String archive(String arg0, Document arg1, Stack arg2, String arg3,
+			List arg4) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Entity getEntity(Reference arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Collection getEntityAuthzGroups(Reference ref, String userId) {
+		Collection rv = new Vector();
+
+		try
+		{
+
+			if ("osyl".equals(ref.getSubType()))
+			{
+				rv.add(ref.getReference());
+				
+				ref.addSiteContextAuthzGroup(rv);
+			}
+		}
+		catch (Exception e) 
+		{
+			log.error("OsylSiteServiceImpl:getEntityAuthzGroups - " + e);
+			e.printStackTrace();
+		}
+
+		return rv;
+	}
+
+	public String getEntityDescription(Reference ref) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ResourceProperties getEntityResourceProperties(Reference arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getEntityUrl(Reference arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public HttpAccess getHttpAccess() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getLabel() {		
+		return "opensyllabus";
+	}
+
+	public String merge(String arg0, Element arg1, String arg2, String arg3,
+			Map arg4, Map arg5, Set arg6) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * from StringUtil.java
+	 */
+	protected String[] split(String source, String splitter)
+	{
+		// hold the results as we find them
+		Vector rv = new Vector();
+		int last = 0;
+		int next = 0;
+		do
+		{
+			// find next splitter in source
+			next = source.indexOf(splitter, last);
+			if (next != -1)
+			{
+				// isolate from last thru before next
+				rv.add(source.substring(last, next));
+				last = next + splitter.length();
+			}
+		}
+		while (next != -1);
+		if (last < source.length())
+		{
+			rv.add(source.substring(last, source.length()));
+		}
+
+		// convert to array
+		return (String[]) rv.toArray(new String[rv.size()]);
+
+	} // split
+
+	public boolean parseEntityReference(String reference, Reference ref) {
+		if (reference.startsWith(REFERENCE_ROOT))
+		{
+			//Looks like /osyl/siteid/osylId
+			String[] parts = split(reference, Entity.SEPARATOR);
+
+			String subType = null;
+			String context = null;
+			String id = null;
+			String container = null;
+
+			if (parts.length > 2)
+			{
+				// the site/context
+				context = parts[2];
+
+				// the id
+				if (parts.length > 3)
+				{
+					id = parts[3];
+				}
+			}
+
+			ref.set(APPLICATION_ID, subType, id, container, context);
+
+			return true;
+		}
+		return false;
+	}
+
+	public boolean willArchiveMerge() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public String[] myToolIds() {
+		String[] toolIds = { "sakai.openSyllabus" };
+		return toolIds;
+	}
+
+	public void transferCopyEntities(String fromContext, String toContext, List ids) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void transferCopyEntities(String fromContext, String toContext, List ids, boolean cleanup)
+			 {
+		// TODO Auto-generated method stub
+		
+	}
 }
