@@ -235,6 +235,12 @@
 		<property name="cmService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
 	</bean>
+	
+	<bean id="osylhcojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylHierarchicalCourseOutlineJobImpl" >
+		<property name="userDirService"
+			ref="org.sakaiproject.user.api.UserDirectoryService" />
+	</bean>
+
 	<bean id="osylcmjobudem" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImplUdeM" >
 		<property name="userDirService"
 			ref="org.sakaiproject.user.api.UserDirectoryService" />
@@ -279,4 +285,24 @@
 		</property>
 		
 	</bean>	
+	
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylhcojob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		
+	
+		<property name="beanId">
+			<value>osylhcojob</value>
+		</property>
+		
+		<property name="jobName">
+			<value>OpenSyllabus Hierarchical Course Outline Job Synchronizer</value>
+		</property>
+		
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+		
+	</bean>	
+	
 </beans>

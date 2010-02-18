@@ -46,6 +46,24 @@
 			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
 	</bean>
 
+	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService"
+		class="org.sakaiquebec.opensyllabus.common.impl.OsylHierarchyServiceImpl"
+		init-method="init"
+		destroy-method="destroy" 
+		singleton="true">
+
+		<!-- Sakai dependencies -->
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+		<property name="siteService"
+			ref="org.sakaiproject.site.api.SiteService" />
+		<property name="authzGroupService"
+			ref="org.sakaiproject.authz.api.AuthzGroupService" />
+					
+		<property name="coRelationDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
+	</bean>
+
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylSiteService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylSiteServiceImpl"
 		init-method="init"
@@ -71,6 +89,8 @@
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylConfigService" />	
 		<property name="osylRealmService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylRealmService.osylEditor" />	
+		<property name="osylHierarchyService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService" />	
 		<property name="resourceDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
 		<property name="configDao"

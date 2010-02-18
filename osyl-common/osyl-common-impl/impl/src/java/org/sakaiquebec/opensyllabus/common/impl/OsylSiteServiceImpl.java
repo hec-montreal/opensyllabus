@@ -54,6 +54,7 @@ import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.tool.api.Tool;
 import org.sakaiproject.tool.api.ToolManager;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
+import org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService;
 import org.sakaiquebec.opensyllabus.common.api.OsylRealmService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
@@ -94,6 +95,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /** The Osyl realm service to be injected by Spring */
     private OsylRealmService osylRealmService;
+
+    /** The hierarchy service to be injected by Spring */
+    private OsylHierarchyService osylHierarchyService;
 
     /** The site service to be injected by Spring */
     private SiteService siteService;
@@ -145,6 +149,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      */
     public void setSecurityService(OsylSecurityService securityService) {
 	this.osylSecurityService = securityService;
+    }
+
+    /**
+     * Sets the {@link OsylSecurityService}.
+     * 
+     * @param securityService
+     */
+    public void setOsylHierarchyService(OsylHierarchyService hierarchyService) {
+	this.osylHierarchyService = hierarchyService;
     }
 
     /**
@@ -879,6 +892,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			co.setContent(coModelChild.getSerializedContent());
 			resourceDao.createOrUpdateCourseOutline(co);
 			coRelationDao.createRelation(siteId, parentId);
+			
+			//We update the users
+			osylHierarchyService.addUsers(parentId, siteId);
 		    } else {
 			throw new Exception("Parent course outline is null");
 		    }
@@ -912,6 +928,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			resourceDao.createOrUpdateCourseOutline(co);
 		    }
 		    coRelationDao.removeRelation(siteId, parentId);
+		    
+		    //We remove the users
+		    osylHierarchyService.removeUsers(parentId, siteId);
 		}
 	    }
 	} catch (Exception e) {
