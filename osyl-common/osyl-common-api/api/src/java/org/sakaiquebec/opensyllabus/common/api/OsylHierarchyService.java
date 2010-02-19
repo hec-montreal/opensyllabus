@@ -55,7 +55,7 @@ public interface OsylHierarchyService {
      * @param parentSiteId
      * @param childSiteId
      */
-    public void addUsers(String parentSiteId, String childSiteId);
+    public void addOrUpdateUsers(String parentSiteId, String childSiteId);
     
     /**
      * This method will remove all the users from the parent site that come

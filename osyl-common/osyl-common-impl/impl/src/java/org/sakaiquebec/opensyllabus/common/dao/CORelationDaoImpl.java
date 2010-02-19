@@ -132,4 +132,10 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 	return true;
     }
 
+   
+    /** {@inheritDoc} */
+    public List<CORelation> getAllLinkedCourseOutlines() {
+	return getHibernateTemplate().loadAll(CORelation.class);
+    }
+
 }

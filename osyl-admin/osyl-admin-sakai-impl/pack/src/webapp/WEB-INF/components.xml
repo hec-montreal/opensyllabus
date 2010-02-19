@@ -237,8 +237,10 @@
 	</bean>
 	
 	<bean id="osylhcojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylHierarchicalCourseOutlineJobImpl" >
-		<property name="userDirService"
-			ref="org.sakaiproject.user.api.UserDirectoryService" />
+		<property name="coRelationDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
+		<property name="osylHierarchyService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService" />	
 	</bean>
 
 	<bean id="osylcmjobudem" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImplUdeM" >

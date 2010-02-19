@@ -62,4 +62,12 @@ public interface CORelationDao {
      */
     public List<CORelation> getRelationsWithParentsCourseOutlineId(String coId) throws Exception;
 
+    
+    /**
+     * Returns the content of the osyl_co_relation table representing all the
+     * linked course outlines.
+     * 
+     * @return
+     */
+    public List<CORelation> getAllLinkedCourseOutlines ();
 }

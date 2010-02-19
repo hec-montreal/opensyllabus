@@ -894,7 +894,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			coRelationDao.createRelation(siteId, parentId);
 			
 			//We update the users
-			osylHierarchyService.addUsers(parentId, siteId);
+			osylHierarchyService.addOrUpdateUsers(parentId, siteId);
 		    } else {
 			throw new Exception("Parent course outline is null");
 		    }

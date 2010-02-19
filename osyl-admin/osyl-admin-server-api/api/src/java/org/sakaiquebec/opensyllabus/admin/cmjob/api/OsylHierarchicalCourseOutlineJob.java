@@ -1,5 +1,7 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
+import org.quartz.Job;
+
 /******************************************************************************
  * $Id: $
  ******************************************************************************
@@ -26,7 +28,7 @@ package org.sakaiquebec.opensyllabus.admin.cmjob.api;
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public interface OsylHierarchicalCourseOutlineJob {
+public interface OsylHierarchicalCourseOutlineJob extends Job {
 
     
 }

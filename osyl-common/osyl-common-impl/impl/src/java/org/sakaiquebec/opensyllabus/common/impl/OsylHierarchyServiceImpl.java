@@ -159,7 +159,7 @@ public class OsylHierarchyServiceImpl implements OsylHierarchyService {
     }
 
     /** {@inheritDoc} */
-    public void addUsers(String parentSiteId, String childSiteId) {
+    public void addOrUpdateUsers(String parentSiteId, String childSiteId) {
 	// We check if the parent has the child role, if not, we add it
 	if (!hasChildRole(parentSiteId))
 	    addChildRole(parentSiteId);
@@ -184,7 +184,6 @@ public class OsylHierarchyServiceImpl implements OsylHierarchyService {
 		// him with the role CHILD
 		if (parentSiteGroup.getMember(user) == null)
 		    parentSiteGroup.addMember(user, CHILD_ROLE, true, false);
-		System.out.println("le user est " + user);
 	    }
 
 	    authzService.save(parentSiteGroup);

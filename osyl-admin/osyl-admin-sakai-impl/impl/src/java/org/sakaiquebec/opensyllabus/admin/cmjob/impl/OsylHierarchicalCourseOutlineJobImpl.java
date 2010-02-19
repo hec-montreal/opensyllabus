@@ -1,7 +1,16 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
-import org.sakaiproject.user.api.UserDirectoryService;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylHierarchicalCourseOutlineJob;
+import org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService;
+import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
+import org.sakaiquebec.opensyllabus.common.dao.CORelation;
+import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 
 /******************************************************************************
  * $Id: $
@@ -31,26 +40,51 @@ import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylHierarchicalCourseOutlin
  */
 public class OsylHierarchicalCourseOutlineJobImpl implements OsylHierarchicalCourseOutlineJob {
 
-	/**
-	 * The user service injected by the Spring
-	 */
-	private UserDirectoryService userDirService;
+    
+    private static final Log log =
+	    LogFactory.getLog(OsylHierarchicalCourseOutlineJobImpl.class);
 
-	/**
-	 * Sets the <code>UserDirectoryService</code> needed to create the site in
-	 * the init() method.
-	 * 
-	 * @param userDirService
-	 */
-	public void setUserDirService(UserDirectoryService userDirService) {
-		this.userDirService = userDirService;
+
+    /** The hierarchy service to be injected by Spring */
+    private OsylHierarchyService osylHierarchyService;
+
+    /**
+     * Sets the {@link OsylSecurityService}.
+     * 
+     * @param securityService
+     */
+    public void setOsylHierarchyService(OsylHierarchyService hierarchyService) {
+	this.osylHierarchyService = hierarchyService;
+    }
+
+    /**
+     * Injection of the CORelationDao
+     */
+    private CORelationDao coRelationDao;
+
+    /**
+     * Sets the {@link CORelationDao}.
+     * 
+     * @param configDao
+     */
+    public void setCoRelationDao(CORelationDao relationDao) {
+	this.coRelationDao = relationDao;
+    }
+
+    /** {@inheritDoc} */
+    public void execute(JobExecutionContext arg0) throws JobExecutionException {
+	List<CORelation> allRelations = coRelationDao.getAllLinkedCourseOutlines();
+
+	CORelation relation = null;
+	String parentSiteId = null;
+	String childSiteId = null;
+	
+	for ( int i=0; i < allRelations.size(); i++){
+	    relation = allRelations.get(i);
+	    parentSiteId = relation.getParent();
+	    childSiteId = relation.getChild();
+	    
+	    osylHierarchyService.addOrUpdateUsers(parentSiteId, childSiteId);
 	}
-
-	public void adduser() {
-	}
-
-	public String getRealmId() {
-	    return null;
-	}
-
+    }
 }
