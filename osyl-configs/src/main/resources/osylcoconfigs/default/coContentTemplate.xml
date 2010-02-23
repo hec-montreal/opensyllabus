@@ -8,13 +8,12 @@
 	<title type="HEC">Title of course at HEC</title>
 	<language>ENG</language>
 	<created>2001-12-17T09:30:47-05:00</created>
-	<creator></creator>
+	<creator>HEC Montréal</creator>
 	<modifiedBy></modifiedBy>
 	<parent type="HEC"></parent>
 	<children type="HEC"></children>
 	<previousPublished></previousPublished>
 	<lastPublished></lastPublished>
-	<createdBy>HEC Montréal</createdBy>
 	<courseId type="HEC">Course Id</courseId>
 	<department type="HEC"></department>
 	<asmStructure access="public" xsi:type="NewsStruct">

@@ -8,10 +8,10 @@
 	<identifier type="UdeM">Identifiant du cours</identifier>
 	<language>FR-CA</language>
 	<created>2009-10-04</created>
+	<creator>Université de Montréal</creator>
 	<lastModified></lastModified>
 	<previousPublished></previousPublished>
 	<lastPublished></lastPublished>
-	<createdBy>UdeM</createdBy>
 	<lastModifiedBy></lastModifiedBy>
 	<courseId type="UdeM">Id du cours</courseId>
 	<childs type="UdeM"></childs>
