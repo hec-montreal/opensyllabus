@@ -183,7 +183,7 @@
 					<element name="asmUnitContent">
 						<attribute name="type" restrictionpattern="PeriodeUnitContent" />
 						<element name="asmResource">
-							<attribute name="type" restrictionpattern="Text|Document|URL"/>
+							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource"/>
 						</element>
 						<element name="semanticTag">
 				    		<attribute name="type" restrictionpattern="undefined|LectureTimePlace|description|instructions|LectureObjectives|LectureRequiredMaterial|evaluation|LectureTeachingActivity|LectureLearningActivity|misresources|ressinclass|readinglist|exercises" />
