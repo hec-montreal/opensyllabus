@@ -242,7 +242,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	log.info("INIT from OsylSite service");
 	
 	//We register the entity manager
-	entityManager.registerEntityProducer(this, REFERENCE_ROOT);
+	//entityManager.registerEntityProducer(this, REFERENCE_ROOT);
 	
     }
 
@@ -894,7 +894,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			coRelationDao.createRelation(siteId, parentId);
 			
 			//We update the users
-			osylHierarchyService.addOrUpdateUsers(parentId, siteId);
+			osylHierarchyService.addOrUpdateUsers(siteId);
 		    } else {
 			throw new Exception("Parent course outline is null");
 		    }
@@ -927,10 +927,11 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			co.setContent(coModelChild.getSerializedContent());
 			resourceDao.createOrUpdateCourseOutline(co);
 		    }
-		    coRelationDao.removeRelation(siteId, parentId);
-		    
 		    //We remove the users
 		    osylHierarchyService.removeUsers(parentId, siteId);
+
+		    coRelationDao.removeRelation(siteId, parentId);
+		    
 		}
 	    }
 	} catch (Exception e) {
