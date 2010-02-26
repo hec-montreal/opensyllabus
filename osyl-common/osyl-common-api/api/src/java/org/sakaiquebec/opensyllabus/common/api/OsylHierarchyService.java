@@ -48,14 +48,13 @@ public interface OsylHierarchyService {
     public static final String REALM_ID_PREFIX = "/site/";
     
     /**
-     * This method is used to add the user of the child site to the parent site 
-     * with the CHILD role. If the user already exists in the parent site, he
-     * will not be added.
+     * This method is used to add the user of the child site to all its ancestors
+     * sites with the CHILD role. If the user already exists in the parent site, 
+     * he will not be added.
      * 
-     * @param parentSiteId
-     * @param childSiteId
+     * @param siteId
      */
-    public void addOrUpdateUsers(String parentSiteId, String childSiteId);
+    public void addOrUpdateUsers(String siteId);
     
     /**
      * This method will remove all the users from the parent site that come
@@ -81,5 +80,21 @@ public interface OsylHierarchyService {
      */
     public void addChildRole(String siteId);
 
+    
+	/**
+	 * This method is used to add the user of the child site to the parent site 
+     * with the CHILD role. If the user already exists in the parent site, he
+     * will not be added.
+     * 
+	 * @param parentSiteId
+	 * @param childSiteId
+	 */
+	public void addUsersWithChildRole (String parentSiteId, String childSiteId);
+	
+	
+	/**
+	 * @param parentSiteId
+	 */
+	public void removeUsersWithChildRole(String parentSiteId);
 }
 

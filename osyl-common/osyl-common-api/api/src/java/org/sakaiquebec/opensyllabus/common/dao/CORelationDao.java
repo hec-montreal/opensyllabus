@@ -60,7 +60,7 @@ public interface CORelationDao {
      * @param coId
      * @return
      */
-    public List<CORelation> getRelationsWithParentsCourseOutlineId(String coId) throws Exception;
+    public List<CORelation> getCourseOutlineChildren(String coId) throws Exception;
 
     
     /**
@@ -70,4 +70,24 @@ public interface CORelationDao {
      * @return
      */
     public List<CORelation> getAllLinkedCourseOutlines ();
+    
+    /**
+     * Method used to retrieve all the ancestors of a course outline in the 
+     * hierarchy.
+     * 
+     * @param coId
+     * @return
+     */
+    public List<CORelation> getCourseOutlineAncestors(String coId);
+    
+    /**
+     * Method used to retrieve all the descendants of a course outline in the 
+     * hierarchy.
+     * 
+     * @param coId
+     * @return
+     */
+    public List<CORelation> getCORelationDescendants (String coId);
+    
+  
 }
