@@ -289,7 +289,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	try {
 	    coRelationList =
 		    coRelationDao
-			    .getRelationsWithParentsCourseOutlineId(siteId);
+			    .getCourseOutlineChildren(siteId);
 	    for (Iterator<CORelation> coRelationIter =
 		    coRelationList.iterator(); coRelationIter.hasNext();) {
 		String childId = coRelationIter.next().getChild();
