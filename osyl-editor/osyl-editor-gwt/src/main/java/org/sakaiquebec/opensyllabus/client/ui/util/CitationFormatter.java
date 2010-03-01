@@ -52,9 +52,10 @@ public class CitationFormatter {
 	String formatString = replaceKeysByMessage(format);
 	COProperties cop = oci.getProperties();
 
-	formatString =
-		replace(formatString, YEAR_IDENTIFIER, getProperty(cop,
-			CitationSchema.YEAR));
+	String year = getProperty(cop, CitationSchema.YEAR);
+	year = (year.equals("n.d.")) ? "" : year;
+	formatString = replace(formatString, YEAR_IDENTIFIER, year);
+	
 	formatString =
 		replace(formatString, ISN_IDENTIFIER, getProperty(cop,
 			CitationSchema.ISN));
@@ -73,18 +74,20 @@ public class CitationFormatter {
 	formatString =
 		replace(formatString, ISSUE_IDENTIFIER, getProperty(cop,
 			CitationSchema.ISSUE));
-	formatString =
-		replace(formatString, PUBLISHER_IDENTIFIER, getProperty(cop,
-			CitationSchema.PUBLISHER));
+
+	String publisher = getProperty(cop, CitationSchema.PUBLISHER);
+	publisher = (publisher.equals("s.n.")) ? "" : publisher;
+	formatString = replace(formatString, PUBLISHER_IDENTIFIER, publisher);
 
 	String creator = getProperty(cop, CitationSchema.CREATOR);
 	if (creator.indexOf("&") != -1)
 	    creator = creator.substring(0, creator.indexOf("&")) + "et al.";
 	formatString = replace(formatString, CREATOR_IDENTIFIER, creator);
-	
+
+	String city = getProperty(cop, CitationSchema.PUBLICATION_LOCATION);
+	city = (city.equals("S.l.")) ? "" : city;
 	formatString =
-		replace(formatString, PUBLICATION_LOCATION_IDENTIFIER,
-			getProperty(cop, CitationSchema.PUBLICATION_LOCATION));
+		replace(formatString, PUBLICATION_LOCATION_IDENTIFIER, city);
 	formatString =
 		replace(formatString, TITLE_IDENTIFIER, getProperty(cop,
 			CitationSchema.TITLE));
@@ -97,9 +100,11 @@ public class CitationFormatter {
     public static String format(COContentResource ressource, String format) {
 	String formatString = replaceKeysByMessage(format);
 	COProperties cop = ressource.getProperties();
-	formatString =
-		replace(formatString, YEAR_IDENTIFIER, getProperty(cop,
-			CitationSchema.YEAR));
+	
+	String year = getProperty(cop, CitationSchema.YEAR);
+	year = (year.equals("n.d.")) ? "" : year;
+	formatString = replace(formatString, YEAR_IDENTIFIER, year);
+	
 	formatString =
 		replace(formatString, ISN_IDENTIFIER, getProperty(cop,
 			COPropertiesType.IDENTIFIER,
@@ -120,18 +125,21 @@ public class CitationFormatter {
 	formatString =
 		replace(formatString, ISSUE_IDENTIFIER, getProperty(cop,
 			CitationSchema.ISSUE));
-	formatString =
-		replace(formatString, PUBLISHER_IDENTIFIER, getProperty(cop,
-			CitationSchema.PUBLISHER));
+
+	String publisher = getProperty(cop, CitationSchema.PUBLISHER);
+	publisher = (publisher.equals("s.n.")) ? "" : publisher;
+	formatString = replace(formatString, PUBLISHER_IDENTIFIER, publisher);
 
 	String creator = getProperty(cop, COPropertiesType.AUTHOR);
 	if (creator.indexOf("&") != -1)
 	    creator = creator.substring(0, creator.indexOf("&")) + "et al.";
 	formatString = replace(formatString, CREATOR_IDENTIFIER, creator);
-	
+
+	String city = getProperty(cop, CitationSchema.PUBLICATION_LOCATION);
+	city = (city.equals("S.l.")) ? "" : city;
 	formatString =
-		replace(formatString, PUBLICATION_LOCATION_IDENTIFIER,
-			getProperty(cop, CitationSchema.PUBLICATION_LOCATION));
+		replace(formatString, PUBLICATION_LOCATION_IDENTIFIER, city);
+
 	formatString =
 		replace(formatString, TITLE_IDENTIFIER, getProperty(cop,
 			CitationSchema.TITLE));
