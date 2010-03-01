@@ -56,7 +56,7 @@ public class OsylCitationRemoteServiceJsonImpl extends
      * SDATA
      */
     private static final String PREFERRED_URL = "preferredUrl";
-    private static final String NO_URL = "noUrl"; 
+    private static final String NO_URL = "noUrl";
 
     public OsylCitationRemoteServiceJsonImpl() {
 	super();
@@ -182,6 +182,16 @@ public class OsylCitationRemoteServiceJsonImpl extends
 	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
 		.getProperty(CitationSchema.DOI)));
 
+	panel.add(FormHelper.createHiddenField("cipkeys",
+		CitationSchema.PUBLISHER));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getProperty(CitationSchema.PUBLISHER)));
+
+	panel.add(FormHelper.createHiddenField("cipkeys",
+		CitationSchema.PUBLICATION_LOCATION));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		.getProperty(CitationSchema.PUBLICATION_LOCATION)));
+
 	if (p_citation.getProperty(COPropertiesType.IDENTIFIER,
 		COPropertiesType.IDENTIFIER_TYPE_URL) != null) {
 	    panel.add(FormHelper.createHiddenField("cipkeys", PREFERRED_URL));
@@ -200,13 +210,12 @@ public class OsylCitationRemoteServiceJsonImpl extends
 	}
 
 	if (p_citation.getProperty(COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_NOLINK) != null) {
-		    panel.add(FormHelper.createHiddenField("cipkeys", NO_URL));
-		    panel.add(FormHelper.createHiddenField("cipvalues", p_citation
-			    .getProperty(COPropertiesType.IDENTIFIER,
-				    COPropertiesType.IDENTIFIER_TYPE_NOLINK)));
-		}
-
+		COPropertiesType.IDENTIFIER_TYPE_NOLINK) != null) {
+	    panel.add(FormHelper.createHiddenField("cipkeys", NO_URL));
+	    panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		    .getProperty(COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_NOLINK)));
+	}
 
 	// add event handler
 	form.addSubmitCompleteHandler(new SubmitCompleteHandler() {

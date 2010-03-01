@@ -122,7 +122,6 @@ public class OsylCitationForm extends WindowPanel implements
     
     private HorizontalPanel volumePanel;
     
-
     private HorizontalPanel datePanel;
 
     private HorizontalPanel volIssuePanel;
@@ -130,6 +129,10 @@ public class OsylCitationForm extends WindowPanel implements
     private HorizontalPanel pagePanel;
 
     private HorizontalPanel doiPanel;
+    
+    private HorizontalPanel publisherPanel;
+    
+    private HorizontalPanel publicationLocationPanel;
 
     private VerticalPanel urlPanel;
     private TextBox urlTextBox;
@@ -205,7 +208,7 @@ public class OsylCitationForm extends WindowPanel implements
 	mainPanel.add(hiddenDisplayName);
 
 	mainPanel.add(new HTML(OsylAbstractEditor.MANDATORY_FIELD_INDICATOR
-		+ uiMessages.getMessage("Global.fields.mandatory")));
+		+ osylController.getUiMessage("Global.fields.mandatory")));
 	mainPanel.add(new HTML(uiMessages
 		.getMessage("CitationForm.recommendedFields")));
 	// Create a listbox for the citation type.
@@ -236,7 +239,7 @@ public class OsylCitationForm extends WindowPanel implements
 	citationPanel.add(FormHelper.createHiddenField("cipkeys",
 		CitationSchema.TITLE));
 	citationPanel.add(createNewLabel(osylController
-		.getCoMessage("ResProxCitationView_citationLabel")
+		.getUiMessage("ResProxCitationView.citation.label")
 		+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + ":"));
 	citationField =
 		FormHelper.createTextArea((citation == null || citation
@@ -257,7 +260,7 @@ public class OsylCitationForm extends WindowPanel implements
 				"Osyl-CitationForm-textBox");
 	titlePanel =
 		createLabelTextboxElement(osylController
-			.getCoMessage("ResProxCitationView_titleLabel")
+			.getUiMessage("ResProxCitationView.title.label")
 			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + ":",
 			titleField, CitationSchema.TITLE);
 
@@ -270,7 +273,7 @@ public class OsylCitationForm extends WindowPanel implements
 			"Osyl-CitationForm-textBox");
 	authorLabel =
 		createNewLabel(osylController
-			.getCoMessage("ResProxCitationView_authorLabel")
+			.getUiMessage("ResProxCitationView.author.label")
 			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + ":");
 	authorPanel =
 		createLabelTextboxElement(authorLabel, authorField,
@@ -285,9 +288,33 @@ public class OsylCitationForm extends WindowPanel implements
 			"Osyl-CitationForm-textBox");
 	yearPanel =
 		createLabelTextboxElement(osylController
-			.getCoMessage("ResProxCitationView_yearLabel")
+			.getUiMessage("ResProxCitationView.year.label")
 			+ ":", yearTextBox, CitationSchema.YEAR);
 	mainPanel.add(yearPanel);
+	
+	// Create a textbox for the year.
+	final TextBox publisherBox =
+		FormHelper.createTextBox((citation == null || citation
+			.getProperty(CitationSchema.PUBLISHER) == null) ? ""
+			: citation.getProperty(CitationSchema.PUBLISHER),
+			"Osyl-CitationForm-textBox");
+	publisherPanel =
+		createLabelTextboxElement(osylController
+			.getUiMessage("ResProxCitationView.publisher.label")
+			+ ":", publisherBox, CitationSchema.PUBLISHER);
+	mainPanel.add(publisherPanel);
+	
+	// Create a textbox for the publisher.
+	final TextBox publicationLocationTextBox =
+		FormHelper.createTextBox((citation == null || citation
+			.getProperty(CitationSchema.PUBLICATION_LOCATION) == null) ? ""
+			: citation.getProperty(CitationSchema.PUBLICATION_LOCATION),
+			"Osyl-CitationForm-textBox");
+	publicationLocationPanel =
+		createLabelTextboxElement(osylController
+			.getUiMessage("ResProxCitationView.publicationLocation.label")
+			+ ":", publicationLocationTextBox, CitationSchema.PUBLICATION_LOCATION);
+	mainPanel.add(publicationLocationPanel);
 
 	// Create a textbox for the journal.
 	final TextBox sourceTitle =
@@ -297,7 +324,7 @@ public class OsylCitationForm extends WindowPanel implements
 			"Osyl-CitationForm-textBox");
 	journalPanel =
 		createLabelTextboxElement(osylController
-			.getCoMessage("ResProxCitationView_journalLabel")
+			.getUiMessage("ResProxCitationView.journal.label")
 			+ RECOMMENDED_FIELD_INDICATOR + ":", sourceTitle, CitationSchema.SOURCE_TITLE);
 	mainPanel.add(journalPanel);
 
@@ -308,7 +335,7 @@ public class OsylCitationForm extends WindowPanel implements
 		"Osyl-CitationForm-textBox");
 
 			proceedingPanel = createLabelTextboxElement(osylController
-			.getCoMessage("ResProxCitationView_proceedingLabel")
+			.getUiMessage("ResProxCitationView.proceeding.label")
 			+ ":", proceedingSourceTitle, CitationSchema.SOURCE_TITLE);
 	mainPanel.add(proceedingPanel);
 	
@@ -320,7 +347,7 @@ public class OsylCitationForm extends WindowPanel implements
 			"Osyl-CitationForm-textBox");
 	datePanel =
 		createLabelTextboxElement(osylController
-			.getCoMessage("ResProxCitationView_dateLabel")
+			.getUiMessage("ResProxCitationView.date.label")
 			+ RECOMMENDED_FIELD_INDICATOR + ":", dateTextBox,
 			CitationSchema.DATE);
 	mainPanel.add(datePanel);
@@ -338,10 +365,10 @@ public class OsylCitationForm extends WindowPanel implements
 			"Osyl-CitationForm-doubleTextBox");
 	volIssuePanel =
 		createDoubleLabelTextboxElement(osylController
-			.getCoMessage("ResProxCitationView_volumeLabel")
+			.getUiMessage("ResProxCitationView.volume.label")
 			+ RECOMMENDED_FIELD_INDICATOR + ":", volumeTextBox,
 			CitationSchema.VOLUME, osylController
-				.getCoMessage("ResProxCitationView_issueLabel")
+				.getUiMessage("ResProxCitationView.issue.label")
 				+ RECOMMENDED_FIELD_INDICATOR + ":",
 			issueTextBox, CitationSchema.ISSUE);
 	mainPanel.add(volIssuePanel);
@@ -357,7 +384,7 @@ public class OsylCitationForm extends WindowPanel implements
 	
 	volumePanel =
 		createLabelTextboxElement(osylController
-			.getCoMessage("ResProxCitationView_volumeLabel")
+			.getUiMessage("ResProxCitationView.volume.label")
 			+ RECOMMENDED_FIELD_INDICATOR + ":", proceedVolumeTextBox,
 			CitationSchema.VOLUME);
 	mainPanel.add(volumePanel);
@@ -370,7 +397,7 @@ public class OsylCitationForm extends WindowPanel implements
 			"Osyl-CitationForm-textBox");
 	pagePanel =
 		createLabelTextboxElement(osylController
-			.getCoMessage("ResProxCitationView_pagesLabel")
+			.getUiMessage("ResProxCitationView.pages.label")
 			+ RECOMMENDED_FIELD_INDICATOR + ":", pagesTextBox,
 			CitationSchema.PAGES);
 
@@ -379,7 +406,7 @@ public class OsylCitationForm extends WindowPanel implements
 	// Create a textbox for ISSN or ISBN.
 	isnLabel =
 		createNewLabel(osylController
-			.getCoMessage("ResProxCitationView_isbnLabel")
+			.getUiMessage("ResProxCitationView.isbn.label")
 			+ ":");
 	final TextBox isnTextBox =
 		FormHelper.createTextBox((citation == null || citation
@@ -399,7 +426,7 @@ public class OsylCitationForm extends WindowPanel implements
 			"Osyl-CitationForm-textBox");
 	doiPanel =
 		createLabelTextboxElement(osylController
-			.getCoMessage("ResProxCitationView_doiLabel")
+			.getUiMessage("ResProxCitationView.doi.label")
 			+ ":", doiTextBox, CitationSchema.DOI);
 	mainPanel.add(doiPanel);
 
@@ -410,7 +437,7 @@ public class OsylCitationForm extends WindowPanel implements
 	urlPanel.add(FormHelper
 		.createHiddenField("cipkeys", CitationSchema.URL));
 	urlPanel.add(createNewLabel(osylController
-		.getCoMessage("ResProxCitationView_urlLabel")
+		.getUiMessage("ResProxCitationView.url.label")
 		+ ":"));
 	urlTextBox =
 		FormHelper.createTextBox(
@@ -496,6 +523,8 @@ public class OsylCitationForm extends WindowPanel implements
 		// citation.setProperty(CitationSchema.URL, );
 		citation.setProperty(CitationSchema.SOURCE_TITLE, sourceTitle
 			.getText());
+		citation.setProperty(CitationSchema.PUBLISHER, publisherBox.getText());
+		citation.setProperty(CitationSchema.PUBLICATION_LOCATION, publicationLocationTextBox.getText());
 		// citation.setResourceName(listname == null ? "" : listname);
 
 		// We add the corresponding identifier
@@ -795,15 +824,17 @@ public class OsylCitationForm extends WindowPanel implements
 	if (newType.equals(CitationSchema.TYPE_BOOK)
 		|| newType.equals(CitationSchema.TYPE_REPORT)) {
 	    authorLabel.setHTML(osylController
-		    .getCoMessage("ResProxCitationView_authorLabel")
+		    .getUiMessage("ResProxCitationView.author.label")
 		    + OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + ":");
 	    isnLabel.setText(osylController
-		    .getCoMessage("ResProxCitationView_isbnLabel")
+		    .getUiMessage("ResProxCitationView.isbn.label")
 		    + ":");
 	    titlePanel.setVisible(true);
 	    authorPanel.setVisible(true);
 	    yearPanel.setVisible(true);
 	    isnPanel.setVisible(true);
+	    publisherPanel.setVisible(true);
+	    publicationLocationPanel.setVisible(true);
 	    citationPanel.setVisible(false);
 	    journalPanel.setVisible(false);
 	    proceedingPanel.setVisible(false);
@@ -815,10 +846,10 @@ public class OsylCitationForm extends WindowPanel implements
 	    urlPanel.setVisible(false);
 	} else if (newType.equals(CitationSchema.TYPE_ARTICLE)) {
 	    authorLabel.setHTML(osylController
-		    .getCoMessage("ResProxCitationView_authorLabel")
+		    .getUiMessage("ResProxCitationView.author.label")
 		    + ":");
 	    isnLabel.setText(osylController
-		    .getCoMessage("ResProxCitationView_issnLabel")
+		    .getUiMessage("ResProxCitationView.issn.label")
 		    + ":");
 	    titlePanel.setVisible(true);
 	    authorPanel.setVisible(true);
@@ -833,15 +864,19 @@ public class OsylCitationForm extends WindowPanel implements
 	    yearPanel.setVisible(false);
 	    citationPanel.setVisible(false);
 	    urlPanel.setVisible(false);
+	    publisherPanel.setVisible(false);
+	    publicationLocationPanel.setVisible(false);
 	} else if (newType.equals(CitationSchema.TYPE_PROCEED)) {
 	    authorLabel.setHTML(osylController
-			    .getCoMessage("ResProxCitationView_authorLabel")
+			    .getUiMessage("ResProxCitationView.author.label")
 			    + ":");
 		    isnLabel.setText(osylController
-			    .getCoMessage("ResProxCitationView_issnLabel")
+			    .getUiMessage("ResProxCitationView.issn.label")
 			    + ":");
 		    titlePanel.setVisible(true);
 		    authorPanel.setVisible(true);
+		    publisherPanel.setVisible(true);
+		    publicationLocationPanel.setVisible(true);
 		    isnPanel.setVisible(false);
 		    journalPanel.setVisible(false);
 		    proceedingPanel.setVisible(true);
@@ -866,6 +901,8 @@ public class OsylCitationForm extends WindowPanel implements
 	    volIssuePanel.setVisible(false);
 	    pagePanel.setVisible(false);
 	    doiPanel.setVisible(false);
+	    publisherPanel.setVisible(false);
+	    publicationLocationPanel.setVisible(false);
 	    urlPanel.setVisible(true);
 	}
 	layout();

@@ -92,7 +92,8 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 		JSONString doi =
 			(JSONString) properties.get(CitationSchema.DOI);
 		JSONString publicationLocation =
-			(JSONString) properties.get(CitationSchema.PUBLICATION_LOCATION);
+			(JSONString) properties
+				.get(CitationSchema.PUBLICATION_LOCATION);
 		JSONString sourceTitle =
 			(JSONString) properties
 				.get(CitationSchema.SOURCE_TITLE);
@@ -156,9 +157,9 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 		csi.setProperty(CitationSchema.ISN, isn == null ? "" : isn
 			.stringValue());
 		csi.setProperty(CitationSchema.CREATOR,
-			creatorsString == null ? "" : creatorsString);// TODO
+			creatorsString == null ? "" : creatorsString);
 		csi.setProperty(CitationSchema.EDITOR,
-			editorsString == null ? "" : editorsString);// TODO
+			editorsString == null ? "" : editorsString);
 		csi.setProperty(CitationSchema.VOLUME, volume == null ? ""
 			: volume.stringValue());
 		csi.setProperty(CitationSchema.ISSUE, issue == null ? ""
@@ -173,8 +174,9 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 			.stringValue());
 		csi.setProperty(CitationSchema.DOI, doi == null ? "" : doi
 			.stringValue());
-		csi.setProperty(CitationSchema.PUBLICATION_LOCATION, publicationLocation == null ? "" : publicationLocation
-			.stringValue());
+		csi.setProperty(CitationSchema.PUBLICATION_LOCATION,
+			publicationLocation == null ? "" : publicationLocation
+				.stringValue());
 
 		csi.setProperty(COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_URL,

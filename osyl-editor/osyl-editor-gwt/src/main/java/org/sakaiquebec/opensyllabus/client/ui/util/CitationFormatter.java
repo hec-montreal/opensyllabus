@@ -36,7 +36,6 @@ public class CitationFormatter {
 
     private static final String TITLE_IDENTIFIER = "%t";
     private static final String CREATOR_IDENTIFIER = "%c";
-    private static final String EDITOR_IDENTIFIER = "%e";
     private static final String VOLUME_IDENTIFIER = "%v";
     private static final String ISSUE_IDENTIFIER = "%i";
     private static final String SOURCE_TITLE_IDENTIFIER = "%o";
