@@ -38,48 +38,52 @@ import org.sakaiproject.coursemanagement.api.SectionCategory;
  * teachers. This class can be used to implement the methods to provide the job
  * used to populate tables and a service to request or send information to the
  * course management.
- *
+ * 
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
 public interface OsylCMJob extends Job {
 
+    /**
+     * Method used to create the sessions
+     */
+    public void loadSessions();
 
-	/**
-	 * Method used to create the sessions
-	 */
-	public void loadSessions();
+    /**
+     * Method used to create users
+     * 
+     * @deprecated Users are now retrieved with ldap.
+     */
+    public void loadUsers();
 
-	/**
-	 * Method used to create users
-	 */
-	public void loadUsers();
+    /**
+     * Method used to load course sets
+     */
+    public void loadCourseSets();
 
-	/**
-	 * Method used to load course sets
-	 */
-	public void loadCourseSets();
-	
-	/**
-	 * Method used to load the courses
-	 */
-	public void loadCourses();
+    /**
+     * Method used to load the courses
+     */
+    public void loadCourses();
 
-	/**
-	 * This method is used to load teachers, secretaries, interns .... For now
-	 * it is used just for teachers
-	 */
-	public void loadMembership();
+    /**
+     * This method is used to load teachers, secretaries, interns .... For now
+     * it is used just for teachers and secretaries. Each secretary will be
+     * automatically added to all the courses of the service she is associated
+     * to;
+     */
+    public void loadMembership();
 
-	/**
-	 * This method is used to assign students to their given course section
-	 */
-	public void loadEnrollments();
+    /**
+     * This method is used to assign students to their given course section
+     */
+    public void loadEnrollments();
 
-	/**
-	 * This method is used to automatically register mid-term and final exams.
-	 * It can also be used for any prescheduled meeting
-	 */
-	public void loadMeetings();
+    /**
+     * This method is used to automatically register mid-term and final exams.
+     * It can also be used for any prescheduled meeting
+     */
+    public void loadMeetings();
+
 
 }

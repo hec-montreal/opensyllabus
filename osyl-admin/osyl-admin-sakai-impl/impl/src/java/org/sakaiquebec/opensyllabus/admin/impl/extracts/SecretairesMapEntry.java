@@ -22,67 +22,102 @@ package org.sakaiquebec.opensyllabus.admin.impl.extracts;
  *****************************************************************************/
 
 /**
- * This entry represents a SE.
+ * This entry repsents a secretary
  * 
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public class ServiceEnseignementMapEntry implements java.io.Serializable {
+public class SecretairesMapEntry implements java.io.Serializable {
 
     public static final long serialVersionUID = -5942666321016168578l;
 
-    private String acadOrg;
-    private String descFormal;
+    private String emplId;
+    private String role;
     private String deptId;
+    private String empl_status;
+    private String jobCode;
 
     /**
      * Empty constructor.
      */
-    public ServiceEnseignementMapEntry() {
+    public SecretairesMapEntry() {
     }
 
-    public String getAcadOrg() {
-	return acadOrg;
+    /**
+     * @return the emplId
+     */
+    public String getEmplId() {
+	return emplId;
     }
 
-    public void setAcadOrg(String acadOrg) {
-	this.acadOrg = acadOrg;
+    /**
+     * @param emplId the emplId to set
+     */
+    public void setEmplId(String emplId) {
+	this.emplId = emplId;
     }
 
+    /**
+     * @return the role
+     */
+    public String getRole() {
+	return role;
+    }
+
+    /**
+     * @param role the role to set
+     */
+    public void setRole(String role) {
+	this.role = role;
+    }
+
+    /**
+     * @return the deptId
+     */
     public String getDeptId() {
 	return deptId;
     }
 
+    /**
+     * @param deptId the deptId to set
+     */
     public void setDeptId(String deptId) {
 	this.deptId = deptId;
     }
 
     /**
-     * @return the descFormal
+     * @return the empl_status
      */
-    public String getDescFormal() {
-	return descFormal;
+    public String getEmpl_status() {
+	return empl_status;
     }
 
     /**
-     * @param descFormal the descFormal to set
+     * @param empl_status the empl_status to set
      */
-    public void setDescFormal(String descFormal) {
-	this.descFormal = descFormal;
+    public void setEmpl_status(String empl_status) {
+	this.empl_status = empl_status;
     }
 
-    public boolean equals(Object o) {
-	if (o == null) {
-	    return false;
-	} else if (!o.getClass().getName().equals(
-		"ca.hec.peoplesoft.ServiceEnseignementMapEntry")) {
-	    return false;
-	} else {
-	    if (o.hashCode() == hashCode()) {
-		return true;
-	    } else {
-		return false;
-	    }
-	}
-    } // equals
+    /**
+     * @return the jobCode
+     */
+    public String getJobCode() {
+	return jobCode;
+    }
+
+    /**
+     * @param jobCode the jobCode to set
+     */
+    public void setJobCode(String jobCode) {
+	this.jobCode = jobCode;
+    }
+
+    /**
+     * @return the serialVersionUID
+     */
+    public static long getSerialVersionUID() {
+	return serialVersionUID;
+    }
+
 }

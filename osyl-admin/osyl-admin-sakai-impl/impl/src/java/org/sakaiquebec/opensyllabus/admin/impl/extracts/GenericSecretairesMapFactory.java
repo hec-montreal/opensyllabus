@@ -27,34 +27,40 @@ import org.apache.commons.logging.LogFactory;
  *****************************************************************************/
 
 /**
- * This class loads the content of the extract file service_enseignement.dat in
- * the POJO and map.
+ * This class loads of extract file secretaires_serv_ens.dat in the POJO and
+ * map.
  * 
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public class GenericServiceEnseignementMapFactory {
+public class GenericSecretairesMapFactory {
 
-    private static final String DEFAULT_BASE_NAME = "service_enseignement";
+    private static final String DEFAULT_BASE_NAME = "secretaires_serv_ens";
     private static Log log =
-	    LogFactory.getLog(GenericServiceEnseignementMapFactory.class);
+	    LogFactory.getLog(GenericSecretairesMapFactory.class);
 
-    public static ServiceEnseignementMap buildMap(String dataDir)
+    public static SecretairesMap buildMap(String dataDir)
 	    throws java.io.IOException {
 
 	return buildMap(dataDir, DEFAULT_BASE_NAME);
     }
 
-    public static ServiceEnseignementMap buildMap(String dataDir,
-	    String baseName) throws java.io.IOException {
+    /**
+     * @param dataDir
+     * @param baseName
+     * @return
+     * @throws java.io.IOException
+     */
+    public static SecretairesMap buildMap(String dataDir, String baseName)
+	    throws java.io.IOException {
 
-	ServiceEnseignementMap map;
+	SecretairesMap map;
 	try {
 	    map = getInstance(dataDir);
 	    print("Mise a jour de la map...");
 	} catch (FileNotFoundException e) {
 	    print("La map n'a pas ete trouvee, on la recree au complet.");
-	    map = new ServiceEnseignementMap();
+	    map = new SecretairesMap();
 	} catch (IOException e) {
 	    print("buildMap: exception dans getInstance: " + e);
 	    throw e;
@@ -64,25 +70,29 @@ public class GenericServiceEnseignementMapFactory {
 		new InputStreamReader(new FileInputStream(dataDir + "/"
 			+ baseName + ".dat"), "ISO-8859-1");
 	BufferedReader breader = new BufferedReader(stream);
-	String buffer, acadOrg, descFormal, deptId;
+	String buffer, emplid, role, deptId;
+	String emplStatus, jobCode;
 
 	// We remove the first line containing the title
 	breader.readLine();
 
 	// fait le tour des lignes du fichier
 	while ((buffer = breader.readLine()) != null) {
-	    ServiceEnseignementMapEntry entry =
-		    new ServiceEnseignementMapEntry();
+	    SecretairesMapEntry entry = new SecretairesMapEntry();
 	    String[] tokens = buffer.split(";");
 	    int i = 0;
 
-	    acadOrg = tokens[i++];
-	    descFormal = tokens[i++];
+	    emplid = tokens[i++];
+	    role = tokens[i++];
 	    deptId = tokens[i++];
+	    emplStatus = tokens[i++];
+	    jobCode = tokens[i++];
 
-	    entry.setAcadOrg(acadOrg);
+	    entry.setEmplId(emplid);
 	    entry.setDeptId(deptId);
-	    entry.setDescFormal(descFormal);
+	    entry.setRole(role);
+	    entry.setEmpl_status(emplStatus);
+	    entry.setJobCode(jobCode);
 	    map.put(entry);
 	}
 
@@ -92,19 +102,32 @@ public class GenericServiceEnseignementMapFactory {
 	return map;
     } // buildMap
 
-    public static ServiceEnseignementMap getInstance(String dataDir)
-	    throws IOException {
+    /**
+     * @param dataDir
+     * @return
+     * @throws IOException
+     */
+    public static SecretairesMap getInstance(String dataDir) throws IOException {
 
 	return getInstance(dataDir, DEFAULT_BASE_NAME);
     }
 
-    private static ServiceEnseignementMap getInstance(String dataDir,
-	    String mapName) throws IOException {
+    /**
+     * @param dataDir
+     * @param mapName
+     * @return
+     * @throws IOException
+     */
+    private static SecretairesMap getInstance(String dataDir, String mapName)
+	    throws IOException {
 
-	return new ServiceEnseignementMap();
+	return new SecretairesMap();
     }
 
+    /**
+     * @param msg
+     */
     protected static void print(String msg) {
-	log.info("GenericServiceEnseignementFactory: " + msg);
+	log.info("GenericSecretairesFactory: " + msg);
     }
 }

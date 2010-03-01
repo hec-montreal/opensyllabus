@@ -24,42 +24,26 @@ import java.util.*;
  *****************************************************************************/
 
 /**
- * This map contains all the SE of HEC.
+ * This map contains the necessary information to complete the registration of the
+ * secretaries.
  * 
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public class ServiceEnseignementMap extends
-	HashMap<String, ServiceEnseignementMapEntry> {
+public class SecretairesMap extends HashMap<String, SecretairesMapEntry> {
 
     public static final long serialVersionUID = 5386630822650707643l;
 
-    public void put(ServiceEnseignementMapEntry entry) {
-	put(entry.getAcadOrg(), entry);
+    public void put(SecretairesMapEntry entry) {
+	put(entry.getEmplId(), entry);
     }
 
-    public ServiceEnseignementMapEntry get(String key) {
-	return (ServiceEnseignementMapEntry) super.get(key);
+    public SecretairesMapEntry get(String key) {
+	return (SecretairesMapEntry) super.get(key);
     }
 
-    public void remove(ServiceEnseignementMapEntry entry) {
-	remove(entry.getAcadOrg());
-    }
-
-    public Iterator<ServiceEnseignementMapEntry> getAllServices() {
-
-	return values().iterator();
-    }
-
-    public ServiceEnseignementMapEntry getByDeptId(String deptId) {
-	ServiceEnseignementMapEntry se = null;
-	Iterator<ServiceEnseignementMapEntry> seIterator= this.values().iterator();
-	while (seIterator.hasNext()){
-	    se = seIterator.next();
-	    if(deptId.equalsIgnoreCase(se.getDeptId()))
-		return se;
-	}
-	return null;
+    public void remove(SecretairesMapEntry entry) {
+	remove(entry.getEmplId());
     }
 
 }
