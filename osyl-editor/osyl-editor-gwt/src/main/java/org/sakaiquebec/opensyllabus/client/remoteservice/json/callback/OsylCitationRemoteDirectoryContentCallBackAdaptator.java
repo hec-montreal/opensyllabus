@@ -91,6 +91,8 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 			(JSONString) properties.get(CitationSchema.DATE);
 		JSONString doi =
 			(JSONString) properties.get(CitationSchema.DOI);
+		JSONString publicationLocation =
+			(JSONString) properties.get(CitationSchema.PUBLICATION_LOCATION);
 		JSONString sourceTitle =
 			(JSONString) properties
 				.get(CitationSchema.SOURCE_TITLE);
@@ -114,12 +116,12 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 				((JSONString) creatorsArrays.get(i))
 					.stringValue();
 			creatorsList.add(creatorString);
-			creatorsString += creatorString + ", ";
+			creatorsString += creatorString + " & ";
 		    }
 		    if (!creatorsString.equals(""))
 			creatorsString =
 				creatorsString.substring(0, creatorsString
-					.length() - 2);
+					.length() - 3);
 		}
 
 		List<String> editorsList = new ArrayList<String>();
@@ -170,6 +172,8 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 		csi.setProperty(CitationSchema.DATE, date == null ? "" : date
 			.stringValue());
 		csi.setProperty(CitationSchema.DOI, doi == null ? "" : doi
+			.stringValue());
+		csi.setProperty(CitationSchema.PUBLICATION_LOCATION, publicationLocation == null ? "" : publicationLocation
 			.stringValue());
 
 		csi.setProperty(COPropertiesType.IDENTIFIER,

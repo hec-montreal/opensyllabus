@@ -46,6 +46,7 @@ public class CitationFormatter {
     private static final String YEAR_IDENTIFIER = "%y";
     private static final String ISN_IDENTIFIER = "%s";
     private static final String DOI_IDENTIFIER = "%d";
+    private static final String PUBLICATION_LOCATION_IDENTIFIER = "%l";
 
     public static String format(OsylCitationItem oci, String format) {
 	String formatString = replaceKeysByMessage(format);
@@ -73,14 +74,17 @@ public class CitationFormatter {
 		replace(formatString, ISSUE_IDENTIFIER, getProperty(cop,
 			CitationSchema.ISSUE));
 	formatString =
-		replace(formatString, EDITOR_IDENTIFIER, getProperty(cop,
-			CitationSchema.EDITOR));
-	formatString =
 		replace(formatString, PUBLISHER_IDENTIFIER, getProperty(cop,
 			CitationSchema.PUBLISHER));
+
+	String creator = getProperty(cop, CitationSchema.CREATOR);
+	if (creator.indexOf("&") != -1)
+	    creator = creator.substring(0, creator.indexOf("&")) + "et al.";
+	formatString = replace(formatString, CREATOR_IDENTIFIER, creator);
+	
 	formatString =
-		replace(formatString, CREATOR_IDENTIFIER, getProperty(cop,
-			CitationSchema.CREATOR));
+		replace(formatString, PUBLICATION_LOCATION_IDENTIFIER,
+			getProperty(cop, CitationSchema.PUBLICATION_LOCATION));
 	formatString =
 		replace(formatString, TITLE_IDENTIFIER, getProperty(cop,
 			CitationSchema.TITLE));
@@ -117,14 +121,17 @@ public class CitationFormatter {
 		replace(formatString, ISSUE_IDENTIFIER, getProperty(cop,
 			CitationSchema.ISSUE));
 	formatString =
-		replace(formatString, EDITOR_IDENTIFIER, getProperty(cop,
-			CitationSchema.EDITOR));
-	formatString =
 		replace(formatString, PUBLISHER_IDENTIFIER, getProperty(cop,
 			CitationSchema.PUBLISHER));
+
+	String creator = getProperty(cop, COPropertiesType.AUTHOR);
+	if (creator.indexOf("&") != -1)
+	    creator = creator.substring(0, creator.indexOf("&")) + "et al.";
+	formatString = replace(formatString, CREATOR_IDENTIFIER, creator);
+	
 	formatString =
-		replace(formatString, CREATOR_IDENTIFIER, getProperty(cop,
-			COPropertiesType.AUTHOR));
+		replace(formatString, PUBLICATION_LOCATION_IDENTIFIER,
+			getProperty(cop, CitationSchema.PUBLICATION_LOCATION));
 	formatString =
 		replace(formatString, TITLE_IDENTIFIER, getProperty(cop,
 			CitationSchema.TITLE));

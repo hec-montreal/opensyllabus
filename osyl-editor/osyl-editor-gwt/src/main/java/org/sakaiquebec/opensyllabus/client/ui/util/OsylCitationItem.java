@@ -322,5 +322,4 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 	    return false;
 	}
     }
-
 }

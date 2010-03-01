@@ -104,8 +104,8 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	setModelPropertyWithEditorProperty(CitationSchema.TITLE, getEditor()
 		.getSelectedCitationProperty(CitationSchema.TITLE));
 
-	setModelPropertyWithEditorProperty(CitationSchema.EDITOR, getEditor()
-		.getSelectedCitationProperty(CitationSchema.EDITOR));
+	setModelPropertyWithEditorProperty(CitationSchema.PUBLISHER, getEditor()
+		.getSelectedCitationProperty(CitationSchema.PUBLISHER));
 
 	setModelPropertyWithEditorProperty(COPropertiesType.AUTHOR, getEditor()
 		.getSelectedCitationProperty(CitationSchema.CREATOR));
@@ -136,6 +136,10 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	setModelPropertyWithEditorProperty(COPropertiesType.JOURNAL,
 		getEditor().getSelectedCitationProperty(
 			CitationSchema.SOURCE_TITLE));
+	
+	setModelPropertyWithEditorProperty(CitationSchema.PUBLICATION_LOCATION,
+		getEditor().getSelectedCitationProperty(
+			CitationSchema.PUBLICATION_LOCATION));
 
 	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
 		COPropertiesType.IDENTIFIER_TYPE_LIBRARY, getEditor()
