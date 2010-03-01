@@ -32,7 +32,7 @@ public class CORelationDAOGetRelationsWithParentsCourseOutlineIdRelationTest
     public void testGetNull() throws Exception{
 	getCoRelationDao().createRelation("childId", "parentId");
 	try {
-	    getCoRelationDao().getRelationsWithParentsCourseOutlineId(null);
+	    getCoRelationDao().getCourseOutlineChildren(null);
 	    fail("Should not be able get relation with null id.");
 
 	} catch (NullPointerException e) {
@@ -45,7 +45,7 @@ public class CORelationDAOGetRelationsWithParentsCourseOutlineIdRelationTest
 
     public void testGetNoRelations() throws Exception {
 	List<CORelation> relations =
-		getCoRelationDao().getRelationsWithParentsCourseOutlineId(
+		getCoRelationDao().getCourseOutlineChildren(
 			"unexistingId");
 
 	// We've not added any data yet
@@ -56,7 +56,7 @@ public class CORelationDAOGetRelationsWithParentsCourseOutlineIdRelationTest
     public void testGetOneRelation() throws Exception {
 	getCoRelationDao().createRelation("0", "1");
 	List<CORelation> configs =
-		getCoRelationDao().getRelationsWithParentsCourseOutlineId("1");
+		getCoRelationDao().getCourseOutlineChildren("1");
 	assertEquals("One COConfigSerialized was created.", 1, configs.size());
     }
 
@@ -70,7 +70,7 @@ public class CORelationDAOGetRelationsWithParentsCourseOutlineIdRelationTest
 	    getCoRelationDao().createRelation("" + i, "parentId");
 	}
 	configs =
-		getCoRelationDao().getRelationsWithParentsCourseOutlineId(
+		getCoRelationDao().getCourseOutlineChildren(
 			"parentId");
 	assertEquals("Invalid number of configs returned by getConfigs().",
 		SIZE, configs.size());
@@ -78,7 +78,7 @@ public class CORelationDAOGetRelationsWithParentsCourseOutlineIdRelationTest
 	// still works if I delete one?
 	getCoRelationDao().removeRelation("0", "parentId");
 	configs =
-		getCoRelationDao().getRelationsWithParentsCourseOutlineId(
+		getCoRelationDao().getCourseOutlineChildren(
 			"parentId");
 	assertEquals("Invalid number of configs returned by getConfigs().",
 		SIZE - 1, configs.size());
