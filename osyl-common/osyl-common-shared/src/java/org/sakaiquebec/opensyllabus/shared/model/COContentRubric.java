@@ -27,14 +27,14 @@ package org.sakaiquebec.opensyllabus.shared.model;
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
-public class COContentRubric implements COModelInterface {
+public class COContentRubric implements COModelInterface{
 
     /**
      * Boolean value to print trace in debug mode.
      */
     public static final boolean TRACE = false;
-    
-    //TODO delete this hack as soon as possible
+
+    // TODO delete this hack as soon as possible
     public static final String RUBRIC_TYPE_NEWS = "news";
 
     /**
@@ -42,15 +42,14 @@ public class COContentRubric implements COModelInterface {
      */
     private String type;
     
+    private String key;
+
     private String userDefLabel;
-    
-    private COProperties coProperties;
 
     /**
      * Constructor.
      */
     public COContentRubric() {
-	coProperties=new COProperties();
     }
 
     /**
@@ -68,14 +67,14 @@ public class COContentRubric implements COModelInterface {
     }
 
     public String getUserDefLabel() {
-		return userDefLabel;
-	}
+	return userDefLabel;
+    }
 
-	public void setUserDefLabel(String userDefLabel) {
-		this.userDefLabel = userDefLabel;
-	}
+    public void setUserDefLabel(String userDefLabel) {
+	this.userDefLabel = userDefLabel;
+    }
 
-	public boolean isEditable() {
+    public boolean isEditable() {
 	return true;
     }
 
@@ -86,51 +85,47 @@ public class COContentRubric implements COModelInterface {
      * {@inheritDoc}
      */
     public void addProperty(String key, String value) {
-	coProperties.addProperty(key, value);
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public void addProperty(String key, String type, String value) {
-	coProperties.addProperty(key, type, value);
     }
 
     /**
      * {@inheritDoc}
      */
     public COProperties getProperties() {
-	return coProperties;
+	return null;
     }
 
     /**
      * {@inheritDoc}
      */
     public String getProperty(String key) {
-	return coProperties.getProperty(key);
+	return null;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public String getProperty(String key, String type) {
-	return coProperties.getProperty(key, type);
+	return null;
     }
 
     /**
      * {@inheritDoc}
      */
     public void removeProperty(String key) {
-	coProperties.remove(key);
     }
 
     /**
      * {@inheritDoc}
      */
     public void setProperties(COProperties coProperties) {
-	this.coProperties=coProperties;
     }
-    
+
     public String getId() {
 	return null;
     }
@@ -143,5 +138,13 @@ public class COContentRubric implements COModelInterface {
     }
 
     public void setAccess(String access) {
+    }
+
+    public void setKey(String key) {
+	this.key = key;
+    }
+
+    public String getKey() {
+	return key;
     }
 }

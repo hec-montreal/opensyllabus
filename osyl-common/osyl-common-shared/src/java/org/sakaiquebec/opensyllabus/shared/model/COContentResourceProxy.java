@@ -21,9 +21,12 @@
 package org.sakaiquebec.opensyllabus.shared.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.shared.events.FiresUpdateCOContentResourceProxyEvents;
@@ -66,9 +69,9 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     private List<COContentResourceProxy> nestedCOResourceProxies;
 
     /**
-     * The rubric to put the resource proxy in.
+     * Rubric to put the resource proxy in.
      */
-    private COContentRubric rubric;
+    private Map<String, COContentRubric> rubrics;
 
     private Set<UpdateCOContentResourceProxyEventHandler> updateCOContentResourceProxyEventHandlers;
 
@@ -79,12 +82,13 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	super();
 	setClassType(CO_CONTENT_RESOURCE_PROXY_CLASS_TYPE);
 	nestedCOResourceProxies = new ArrayList<COContentResourceProxy>();
+	rubrics=new HashMap<String, COContentRubric>();
     }
 
     public static COContentResourceProxy createDefaultResProxy(
 	    final String type, final OsylConfigMessages osylConfigMessages,
 	    final COElementAbstract parentModel, final String resourceType,
-	    String defaultRubric) {
+	    String defaultRubric,String propertyType) {
 
 	final COContentResourceProxy resProxModel =
 		new COContentResourceProxy();
@@ -117,7 +121,7 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	    }
 	}
 
-	resProxModel.setRubricType(defaultRubric);
+	resProxModel.setRubricType(defaultRubric,propertyType);
 
 	// Default resource
 	final COContentResource resModel =
@@ -193,12 +197,13 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     public void setParent(COUnitContent coContentUnitParent) {
 	super.setParent(coContentUnitParent);
     }
-
-    /**
-     * @return the rubric
-     */
-    public COContentRubric getRubric() {
-	return rubric;
+    
+    public COContentRubric getRubric(String key){
+	return rubrics.get(key);
+    }
+    
+    public Map<String, COContentRubric> getRubrics(){
+	return rubrics;
     }
 
     /**
@@ -207,8 +212,8 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     public void setRubric(COContentRubric rubric) {
 
 	if (rubric != null) {
-	    this.rubric = rubric;
-	    moveToTheBottomOfTheRubric();
+	    rubrics.put(rubric.getKey(), rubric);
+	    moveToTheBottomOfTheRubric(rubric.getKey());
 	}
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.RUBRIC_UPDATE_EVENT_TYPE);
     }
@@ -216,10 +221,10 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     /**
      * @return the rubric type or null if no rubric
      */
-    public String getRubricType() {
+    public String getRubricType(String key) {
 	String rubricType = null;
-	if (getRubric() != null) {
-	    rubricType = getRubric().getType();
+	if (getRubric(key) != null) {
+	    rubricType = getRubric(key).getType();
 	}
 	return rubricType;
     }
@@ -231,17 +236,18 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
      * 
      * @param rubricType
      */
-    public void setRubricType(String rubricType) {
+    public void setRubricType(String rubricType, String key) {
 	if (rubricType != null) {
-	    if (rubricType.equals(getRubricType())) {
+	    if (rubricType.equals(getRubricType(key))) {
 		return;
 	    }
 	    COContentRubric rub = new COContentRubric();
 	    rub.setType(rubricType);
+	    rub.setKey(key);
 	    // set the Rubric, notifyEventHandlers() will be called
 	    setRubric(rub);
 	} else {
-	    if (null == getRubricType()) {
+	    if (null == getRubricType(key)) {
 		return;
 	    }
 	    setRubric(null);
@@ -251,10 +257,10 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     /**
      * @return the rubric userDefLabel or null if no rubric
      */
-    public String getRubricUserDefLabel() {
+    public String getRubricUserDefLabel(String key) {
 	String rubricUserDefLabel = null;
-	if (getRubric() != null) {
-	    rubricUserDefLabel = getRubric().getUserDefLabel();
+	if (getRubric(key) != null) {
+	    rubricUserDefLabel = getRubric(key).getUserDefLabel();
 	}
 	return rubricUserDefLabel;
     }
@@ -265,12 +271,12 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
      * 
      * @param userDefLabel
      */
-    public void setRubricUserDefLabel(String userDefLabel) {
+    public void setRubricUserDefLabel(String userDefLabel,String key) {
 	if (userDefLabel != null) {
-	    if (userDefLabel.equals(getRubricUserDefLabel())) {
+	    if (userDefLabel.equals(getRubricUserDefLabel(key))) {
 		return;
 	    }
-	    getRubric().setUserDefLabel(userDefLabel);
+	    getRubric(key).setUserDefLabel(userDefLabel);
 		notifyEventHandlers(UpdateCOContentResourceProxyEvent.RUBRIC_LABEL_UPDATE_EVENT_TYPE);
 	}
     }
@@ -380,10 +386,10 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     /**
      * {@inheritDoc}
      */
-    public boolean hasSuccessor() {
+    public boolean hasSuccessor(String propertyKey) {
 	if (getParent() == null)
 	    return false;
-	int i = getParent().getElementPosition(this);
+	int i = getParent().getElementPosition(this,propertyKey);
 	if (i != -1 && i != 0)
 	    return true;
 	else
@@ -393,10 +399,10 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     /**
      * {@inheritDoc}
      */
-    public boolean hasPredecessor() {
+    public boolean hasPredecessor(String propertyKey) {
 	if (getParent() == null)
 	    return false;
-	int i = getParent().getElementPosition(this);
+	int i = getParent().getElementPosition(this,propertyKey);
 	if (i != 1 && i != 0)
 	    return true;
 	else
@@ -406,31 +412,31 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     /**
      * {@inheritDoc}
      */
-    public void moveUp() {
+    public void moveUp(String propertyKey) {
 	getParent().changeElementPosition(this,
-		COElementAbstract.POSITION_CHANGE_ACTION_UP);
+		COElementAbstract.POSITION_CHANGE_ACTION_UP,propertyKey);
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.MOVE_IN_RUBRIC_EVENT_TYPE);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void moveDown() {
+    public void moveDown(String propertyKey) {
 	getParent().changeElementPosition(this,
-		COElementAbstract.POSITION_CHANGE_ACTION_DOWN);
+		COElementAbstract.POSITION_CHANGE_ACTION_DOWN,propertyKey);
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.MOVE_IN_RUBRIC_EVENT_TYPE);
     }
 
-    public void moveToTheBottomOfTheRubric() {
-	while (hasSuccessor())
+    public void moveToTheBottomOfTheRubric(String propertyKey) {
+	while (hasSuccessor(propertyKey))
 	    getParent().changeElementPosition(this,
-		    COElementAbstract.POSITION_CHANGE_ACTION_DOWN);
+		    COElementAbstract.POSITION_CHANGE_ACTION_DOWN,propertyKey);
     }
 
-    public void moveToTheTopOfTheRubric() {
-	while (hasPredecessor())
+    public void moveToTheTopOfTheRubric(String propertyKey) {
+	while (hasPredecessor(propertyKey))
 	    getParent().changeElementPosition(this,
-		    COElementAbstract.POSITION_CHANGE_ACTION_UP);
+		    COElementAbstract.POSITION_CHANGE_ACTION_UP,propertyKey);
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.MOVE_IN_RUBRIC_EVENT_TYPE);
     }
 

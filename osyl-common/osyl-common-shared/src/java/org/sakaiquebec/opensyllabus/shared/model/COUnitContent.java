@@ -173,6 +173,17 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
     @Override
     public void changeElementPosition(COContentResourceProxy resourceProxy,
 	    int action) {
+	
+    }
+
+    @Override
+    public int getElementPosition(COContentResourceProxy resourceProxy) {
+	return 0;
+    }
+    
+    
+    public void changeElementPosition(COContentResourceProxy resourceProxy,
+	    int action,String propertyKey) {
 	Iterator<COContentResourceProxy> resourceProxiesIter =
 		getChildrens().iterator();
 	boolean isFound = false;
@@ -190,12 +201,12 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
 		idRP = i;
 	    } else {
 		if (!isFound
-			&& thisResourceProxy.getRubricType().equals(
-				resourceProxy.getRubricType()))
+			&& thisResourceProxy.getRubricType(propertyKey).equals(
+				resourceProxy.getRubricType(propertyKey)))
 		    indPredecessor = i;
 		if (isFound
-			&& thisResourceProxy.getRubricType().equals(
-				resourceProxy.getRubricType())) {
+			&& thisResourceProxy.getRubricType(propertyKey).equals(
+				resourceProxy.getRubricType(propertyKey))) {
 		    indSuccessor = i;
 		    break;
 		}
@@ -215,8 +226,8 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
 	}
     }
 
-    @Override
-    public int getElementPosition(COContentResourceProxy resourceProxy) {
+    
+    public int getElementPosition(COContentResourceProxy resourceProxy,String propertyKey) {
 	boolean isFound = false;
 	boolean hasPredecessor = false;
 	boolean hasSuccessor = false;
@@ -232,12 +243,12 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
 		isFound = true;
 	    } else {
 		if (!isFound
-			&& thisResourceProxy.getRubricType().equals(
-				resourceProxy.getRubricType()))
+			&& thisResourceProxy.getRubricType(propertyKey).equals(
+				resourceProxy.getRubricType(propertyKey)))
 		    hasPredecessor = true;
 		if (isFound
-			&& thisResourceProxy.getRubricType().equals(
-				resourceProxy.getRubricType())) {
+			&& thisResourceProxy.getRubricType(propertyKey).equals(
+				resourceProxy.getRubricType(propertyKey))) {
 		    hasSuccessor = true;
 		    break;
 		}

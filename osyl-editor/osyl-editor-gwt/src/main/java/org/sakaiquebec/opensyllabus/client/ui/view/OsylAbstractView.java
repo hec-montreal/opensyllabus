@@ -61,6 +61,8 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
     private VerticalPanel upAndDownPanel;
 
     protected OsylEditableMouseOverListener popUpMouseOverListener;
+    
+    protected String propertyType;
 
     /**
      * Constructor specifying the model to be displayed and edited by this
@@ -77,6 +79,9 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
     protected OsylAbstractView(COModelInterface model,
 	    OsylController osylController, boolean editable) {
 	super(model, osylController);
+	
+	propertyType = getController().getOsylConfig().getOsylConfigRuler().getPropertyType();
+	
 	setMainPanel(new AbsolutePanel());
 	setButtonPanel(new HorizontalPanel());
 	setUpAndDownPanel(new VerticalPanel());

@@ -30,35 +30,35 @@ import java.io.Serializable;
  *          sacha.lepretre@crim.ca $
  */
 public interface CitationSchema extends Serializable {
-    
-    public static final String CITATION_TYPE_PREFIX = "Citation.type.";
-	public static final String TYPE_UNKNOWN = "unknown";
-	public static final String TYPE_BOOK = "book";
-	public static final String TYPE_CHAPTER = "chapter";
-	public static final String TYPE_ARTICLE = "article";
-	public static final String TYPE_REPORT = "report";
-	public static final String TYPE_PROCEED = "proceed";
-    
-	public static final String CITATION_IDENTIFIER = "sakai:url_string";
-	public static final String CITATION_IDENTIFIER_TYPE = "type_url";
-	
-	public static final String CITATIONID="citationId";
-	public static final String TYPE="type";
-	public static final String LONGTEXT = "longtext";
-	public static final String SHORTTEXT = "shorttext";
-	public static final String NUMBER = "number";
-	public static final String DATE = "date";
 
-	public static final String TITLE = "title";
-	public static final String EDITOR = "editor";
-	public static final String CREATOR = "creator";
-	public static final String VOLUME = "volume";
-	public static final String ISSUE = "issue";
-	public static final String PAGES = "pages";
-	public static final String PUBLISHER = "publisher";
-	public static final String YEAR = "year";
-	public static final String ISN = "isnIdentifier";
-	public static final String DOI = "doi";
-	public static final String SOURCE_TITLE = "sourceTitle";
-	public static final String URL = "url";
+    public static final String CITATION_TYPE_PREFIX = "Citation.type.";
+    public static final String TYPE_UNKNOWN = "unknown";
+    public static final String TYPE_BOOK = "book";
+    public static final String TYPE_CHAPTER = "chapter";
+    public static final String TYPE_ARTICLE = "article";
+    public static final String TYPE_REPORT = "report";
+    public static final String TYPE_PROCEED = "proceed";
+
+    public static final String CITATION_IDENTIFIER = "sakai:url_string";
+    public static final String CITATION_IDENTIFIER_TYPE = "type_url";
+
+    public static final String CITATIONID = "citationId";
+    public static final String TYPE = "type";
+    public static final String LONGTEXT = "longtext";
+    public static final String SHORTTEXT = "shorttext";
+    public static final String NUMBER = "number";
+    public static final String DATE = "date";
+
+    public static final String TITLE = "title";
+    public static final String EDITOR = "editor";
+    public static final String CREATOR = "creator";
+    public static final String VOLUME = "volume";
+    public static final String ISSUE = "issue";
+    public static final String PAGES = "pages";
+    public static final String PUBLISHER = "publisher";
+    public static final String YEAR = "year";
+    public static final String ISN = "isnIdentifier";
+    public static final String DOI = "doi";
+    public static final String SOURCE_TITLE = "sourceTitle";
+    public static final String URL = "url";
 }

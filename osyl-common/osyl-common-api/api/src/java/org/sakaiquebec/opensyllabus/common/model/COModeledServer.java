@@ -700,19 +700,16 @@ public class COModeledServer {
 				: namedNodeMap.getNamedItem(
 					USERDEFLABEL_ATTRIBUTE_NAME)
 					.getNodeValue();
+	String value = "";
 
-	if (type.equals("rubric")) {
-	    String value = "";
-
-	    for (int j = 0; j < node.getChildNodes().getLength(); j++) {
-		value += node.getChildNodes().item(j).getNodeValue();
-	    }
-	    coContentRubric.setType(value);
-	    if (userDefLabel != null) {
-		coContentRubric.setUserDefLabel(userDefLabel);
-	    }
-
+	for (int j = 0; j < node.getChildNodes().getLength(); j++) {
+	    value += node.getChildNodes().item(j).getNodeValue();
 	}
+	coContentRubric.setType(value);
+	if (userDefLabel != null) {
+	    coContentRubric.setUserDefLabel(userDefLabel);
+	}
+	coContentRubric.setKey(type);
 	return coContentRubric;
     }
 
@@ -917,10 +914,9 @@ public class COModeledServer {
 				.getNestedCOContentResourceProxies().get(i));
 	    }
 	}
-	// We may not have a rubric for exams for example
-	if (child.getRubric() != null) {
+	for (String rubricKey : child.getRubrics().keySet()) {
 	    createCOCOntentRubricChild(document, coContentResourceProxyElem,
-		    child.getRubric());
+		    child.getRubric(rubricKey));
 	}
 	parent.appendChild(coContentResourceProxyElem);
 	if (child.getResource() instanceof COContentResource) {
@@ -977,7 +973,7 @@ public class COModeledServer {
     private void createCOCOntentRubricChild(Document document,
 	    Element coContentResourceProxyElem, COContentRubric rubric) {
 	Element coContentRubricElem = document.createElement(SEMANTIC_TAG);
-	coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME, "rubric");
+	coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME, rubric.getKey());
 	if (rubric.getUserDefLabel() != null
 		&& rubric.getUserDefLabel().length() > 0) {
 	    coContentRubricElem.setAttribute(USERDEFLABEL_ATTRIBUTE_NAME,

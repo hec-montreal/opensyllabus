@@ -155,7 +155,7 @@ public class COUnit extends COElementAbstract<COElementAbstract> implements
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public boolean hasSuccessor() {
+    public boolean hasSuccessor(String propertyKey) {
 	if (getParent() == null)
 	    return false;
 	int i = getParent().getElementPosition(this);
@@ -169,7 +169,7 @@ public class COUnit extends COElementAbstract<COElementAbstract> implements
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public boolean hasPredecessor() {
+    public boolean hasPredecessor(String propertyKey) {
 	if (getParent() == null)
 	    return false;
 	int i = getParent().getElementPosition(this);
@@ -183,7 +183,7 @@ public class COUnit extends COElementAbstract<COElementAbstract> implements
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public void moveUp() {
+    public void moveUp(String propertyKey) {
 	getParent().changeElementPosition(this,
 		COElementAbstract.POSITION_CHANGE_ACTION_UP);
     }
@@ -192,7 +192,7 @@ public class COUnit extends COElementAbstract<COElementAbstract> implements
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public void moveDown() {
+    public void moveDown(String propertyKey) {
 	getParent().changeElementPosition(this,
 		COElementAbstract.POSITION_CHANGE_ACTION_DOWN);
     }

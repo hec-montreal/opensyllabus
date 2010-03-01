@@ -204,7 +204,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		}
 	    }
 	    COContentResourceProxy.createDefaultResProxy(type, getCoMessages(),
-		    coUnitContent, subType, defaultRubric);
+		    coUnitContent, subType, defaultRubric,getController().getOsylConfig().getOsylConfigRuler().getPropertyType());
 	}
 
     }

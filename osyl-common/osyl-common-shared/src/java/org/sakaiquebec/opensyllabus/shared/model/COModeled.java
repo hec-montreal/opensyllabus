@@ -578,24 +578,25 @@ public class COModeled extends COSerialized {
 			.getNamedItem(TYPE_ATTRIBUTE_NAME) == null) ? null
 			: namedNodeMap.getNamedItem(TYPE_ATTRIBUTE_NAME)
 				.getNodeValue();
-	
-	String userDefLabel =
-		(namedNodeMap == null) ? null : (namedNodeMap
-				.getNamedItem(USERDEFLABEL_ATTRIBUTE_NAME) == null) ? null
-				: namedNodeMap.getNamedItem(USERDEFLABEL_ATTRIBUTE_NAME)
-					.getNodeValue();
- 
-	if (type.equals("rubric")) {
-	    String value = "";
 
-	    for (int j = 0; j < node.getChildNodes().getLength(); j++) {
-		value += node.getChildNodes().item(j).getNodeValue();
-	    }
-	    coContentRubric.setType(value);
-	    if(userDefLabel!=null){
-	    	coContentRubric.setUserDefLabel(userDefLabel);
-	    }
+	String userDefLabel =
+		(namedNodeMap == null) ? null
+			: (namedNodeMap
+				.getNamedItem(USERDEFLABEL_ATTRIBUTE_NAME) == null) ? null
+				: namedNodeMap.getNamedItem(
+					USERDEFLABEL_ATTRIBUTE_NAME)
+					.getNodeValue();
+
+	String value = "";
+
+	for (int j = 0; j < node.getChildNodes().getLength(); j++) {
+	    value += node.getChildNodes().item(j).getNodeValue();
 	}
+	coContentRubric.setType(value);
+	if (userDefLabel != null) {
+	    coContentRubric.setUserDefLabel(userDefLabel);
+	}
+	coContentRubric.setKey(type);
 	return coContentRubric;
     }
 
@@ -774,10 +775,9 @@ public class COModeled extends COSerialized {
 			    saveParentInfos);
 		}
 	    }
-	    // We may not have a rubric for exams for example
-	    if (child.getRubric() != null) {
+	    for (String rubricKey : child.getRubrics().keySet()) {
 		createCOCOntentRubricChild(document,
-			coContentResourceProxyElem, child.getRubric());
+			coContentResourceProxyElem, child.getRubric(rubricKey));
 	    }
 	    parent.appendChild(coContentResourceProxyElem);
 	    if (child.getResource() instanceof COContentResource) {
@@ -836,9 +836,11 @@ public class COModeled extends COSerialized {
     private void createCOCOntentRubricChild(Document document,
 	    Element coContentResourceProxyElem, COContentRubric rubric) {
 	Element coContentRubricElem = document.createElement(SEMANTIC_TAG);
-	coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME, "rubric");
-	if(rubric.getUserDefLabel()!=null && rubric.getUserDefLabel().length() > 0 ){
-		coContentRubricElem.setAttribute(USERDEFLABEL_ATTRIBUTE_NAME, rubric.getUserDefLabel());		
+	coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME, rubric.getKey());
+	if (rubric.getUserDefLabel() != null
+		&& rubric.getUserDefLabel().length() > 0) {
+	    coContentRubricElem.setAttribute(USERDEFLABEL_ATTRIBUTE_NAME,
+		    rubric.getUserDefLabel());
 	}
 
 	Text elemValue = document.createTextNode(rubric.getType());

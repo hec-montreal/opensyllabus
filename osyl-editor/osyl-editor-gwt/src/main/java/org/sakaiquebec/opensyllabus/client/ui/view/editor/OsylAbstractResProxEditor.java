@@ -62,7 +62,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:Remi.Saias@hec.ca">Remi Saias</a>
  */
 public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
-
+    
     // TODO: document
     private CheckBox importantCheckBox;
     private CheckBox hideCheckBox;
@@ -178,8 +178,8 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 		    new CheckBox(
 			    getUiMessage("EditorPopUp.options.rubric.check"));
 	    boolean userDefLabelSet = false;
-	    if (getModel().getRubric().getUserDefLabel() != null
-		    && getModel().getRubric().getUserDefLabel()
+	    if (getModel().getRubric(propertyType).getUserDefLabel() != null
+		    && getModel().getRubric(propertyType).getUserDefLabel()
 			    .length() > 0) {
 		userDefLabelSet = true;
 	    }
@@ -205,7 +205,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    userDefLabel = new TextBox();
 	    userDefLabel.setEnabled(userDefLabelSet);
 	    if (userDefLabelSet) {
-		userDefLabel.setText(getModel().getRubric()
+		userDefLabel.setText(getModel().getRubric(propertyType)
 			.getUserDefLabel());
 	    }
 	    rubricPanel.add(modifyRubricDesc);
@@ -475,7 +475,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    String rubricType = choices[i];
 	    lb.addItem(getView().getCoMessages().getShortMessage(rubricType),
 		    rubricType);
-	    if (rubricType.equalsIgnoreCase(resProx.getRubricType())) {
+	    if (rubricType.equalsIgnoreCase(resProx.getRubricType(propertyType))) {
 		lb.setItemSelected(i, true);
 	    }
 	}
@@ -632,13 +632,13 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	boolean rubricFound = false;
 	while (iter.hasNext() && !rubricFound) {
 	    COContentResourceProxy iterResProx = iter.next();
-	    if (listBoxRubricType.equals(iterResProx.getRubricType())) {
+	    if (listBoxRubricType.equals(iterResProx.getRubricType(propertyType))) {
 		rubricFound = true;
-		if (iterResProx.getRubricUserDefLabel() != null
-			&& iterResProx.getRubricUserDefLabel().length() > 0) {
+		if (iterResProx.getRubricUserDefLabel(propertyType) != null
+			&& iterResProx.getRubricUserDefLabel(propertyType).length() > 0) {
 		    modifyRubricDesc.setValue(true);
 		    userDefLabel.setEnabled(true);
-		    userDefLabel.setText(iterResProx.getRubricUserDefLabel());
+		    userDefLabel.setText(iterResProx.getRubricUserDefLabel(propertyType));
 		}
 
 	    }

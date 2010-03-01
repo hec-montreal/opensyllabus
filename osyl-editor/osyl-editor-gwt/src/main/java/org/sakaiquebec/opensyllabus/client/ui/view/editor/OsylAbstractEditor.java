@@ -97,6 +97,8 @@ public abstract class OsylAbstractEditor extends Composite {
 
     public static final String MANDATORY_FIELD_INDICATOR =
 	    "<span class=\"Osyl-Mandatory_field\"> *</span>";
+    
+    protected String propertyType;
 
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
@@ -106,6 +108,7 @@ public abstract class OsylAbstractEditor extends Composite {
      */
     public OsylAbstractEditor(OsylAbstractView view) {
 	setView(view);
+	propertyType = getController().getOsylConfig().getOsylConfigRuler().getPropertyType();
 	setReadOnly(view.getController().isReadOnly());
     }
 
@@ -467,7 +470,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	OsylPushButton upButton = null;
 	if (getModel() instanceof COElementMoveable) {
 	    final COElementMoveable coem = (COElementMoveable) getModel();
-	    if (coem.hasPredecessor()) {
+	    if (coem.hasPredecessor(propertyType)) {
 		upButton =
 			new OsylPushButton(getOsylImageBundle().up_full()
 				.createImage(), getOsylImageBundle().up_full()
@@ -479,7 +482,7 @@ public abstract class OsylAbstractEditor extends Composite {
 
 		    public void onClick(ClickEvent event) {
 			getView().leaveEdit();
-			coem.moveUp();
+			coem.moveUp(propertyType);
 		    }
 
 		});
@@ -500,7 +503,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	OsylPushButton downButton = null;
 	if (getModel() instanceof COElementMoveable) {
 	    final COElementMoveable coem = (COElementMoveable) getModel();
-	    if (coem.hasSuccessor()) {
+	    if (coem.hasSuccessor(propertyType)) {
 		downButton =
 			new OsylPushButton(getOsylImageBundle().down_full()
 				.createImage(), getOsylImageBundle()
@@ -512,7 +515,7 @@ public abstract class OsylAbstractEditor extends Composite {
 
 		    public void onClick(ClickEvent event) {
 			getView().leaveEdit();
-			coem.moveDown();
+			coem.moveDown(propertyType);
 		    }
 
 		});

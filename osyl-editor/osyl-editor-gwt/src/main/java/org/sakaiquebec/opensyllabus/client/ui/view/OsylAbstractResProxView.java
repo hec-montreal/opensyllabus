@@ -38,7 +38,7 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     private static final int SHRINK_BY_STEP_FACTOR = 8;
     private static final int INITIAL_SHRINK_DURATION = 30; // milliseconds
     private static final int ENDING_SHRINK_DURATION = 10; // milliseconds
-
+    
     /**
      * Internal class to manage the shrinking of the view when it is deleted. At
      * the end the resource proxy is removed from the model.
@@ -203,19 +203,19 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     }
 
     public String getRubricType() {
-	return getModel().getRubricType();
+	return getModel().getRubricType(propertyType);
     }
 
     public void setRubricType(String r) {
-	getModel().setRubricType(r);
+	getModel().setRubricType(r,propertyType);
     }
 
     public String getRubricUserDefLabel() {
-	return getModel().getRubricUserDefLabel();
+	return getModel().getRubricUserDefLabel(propertyType);
     }
 
     public void setRubricUserDefLabel(String r) {
-	getModel().setRubricUserDefLabel(r);
+	getModel().setRubricUserDefLabel(r,propertyType);
     }
 
     protected void updateMetaInfo() {
