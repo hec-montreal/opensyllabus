@@ -118,7 +118,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	if (editorFirstName == null) {
 	    editorFirstName = new TextBox();
 	    editorFirstName.setStylePrimaryName("Osyl-ContactInfo-TextBox");
-	    editorFirstName.setTitle(getView().getCoMessage(
+	    editorFirstName.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_FirstNameLabel"));
 	}
 	return editorFirstName;
@@ -129,7 +129,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public HTML getFirstNameLabel() {
 	if (firstNameLabel == null) {
 	    firstNameLabel =
-		    new HTML(getView().getCoMessage(
+		    new HTML(getView().getUiMessage(
 			    "ResProxContactInfoView_FirstNameLabel")
 			    + OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
 	    firstNameLabel.setStylePrimaryName("Osyl-ResProxView-Label");
@@ -144,7 +144,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	if (editorLastName == null) {
 	    editorLastName = new TextBox();
 	    editorLastName.setStylePrimaryName("Osyl-ContactInfo-TextBox");
-	    editorLastName.setTitle(getView().getCoMessage(
+	    editorLastName.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_LastNameLabel"));
 	}
 	return editorLastName;
@@ -155,7 +155,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public HTML getLastNameLabel() {
 	if (lastNameLabel == null) {
 	    lastNameLabel =
-		    new HTML(getView().getCoMessage(
+		    new HTML(getView().getUiMessage(
 			    "ResProxContactInfoView_LastNameLabel")
 			    + OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
 	    lastNameLabel.setStylePrimaryName("Osyl-ResProxView-Label");
@@ -169,7 +169,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public ListBox getEditorRole() {
 	if (editorRole == null) {
 	    editorRole = createRoleListBox();
-	    editorRole.setTitle(getView().getCoMessage(
+	    editorRole.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_TitleLabel"));
 	}
 	return editorRole;
@@ -180,7 +180,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public HTML getRoleLabel() {
 	if (roleLabel == null) {
 	    roleLabel =
-		    new HTML(getView().getCoMessage(
+		    new HTML(getView().getUiMessage(
 			    "ResProxContactInfoView_TitleLabel"));
 	    roleLabel.setStylePrimaryName("Osyl-ResProxView-Label");
 	    roleLabel.addStyleName("Osyl-ContactInfo-Label");
@@ -213,7 +213,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	if (editorEMail == null) {
 	    editorEMail = new TextBox();
 	    editorEMail.setStylePrimaryName("Osyl-ContactInfo-TextBox");
-	    editorEMail.setTitle(getView().getCoMessage(
+	    editorEMail.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_EMailLabel"));
 	}
 	return editorEMail;
@@ -224,7 +224,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public Label getEMailLabel() {
 	if (eMailLabel == null) {
 	    eMailLabel =
-		    new Label(getView().getCoMessage(
+		    new Label(getView().getUiMessage(
 			    "ResProxContactInfoView_EMailLabel"));
 	    eMailLabel.setStylePrimaryName("Osyl-ResProxView-Label");
 	    eMailLabel.addStyleName("Osyl-ContactInfo-Label");
@@ -237,7 +237,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public TextBox getEditorPhone() {
 	if (editorPhone == null) {
 	    editorPhone = new TextBox();
-	    editorPhone.setTitle(getView().getCoMessage(
+	    editorPhone.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_PhoneLabel"));
 	    editorPhone.setStylePrimaryName("Osyl-ContactInfo-TextBox");
 	}
@@ -249,7 +249,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public Label getPhoneLabel() {
 	if (phoneLabel == null) {
 	    phoneLabel =
-		    new Label(getView().getCoMessage(
+		    new Label(getView().getUiMessage(
 			    "ResProxContactInfoView_PhoneLabel"));
 	    phoneLabel.setStylePrimaryName("Osyl-ResProxView-Label");
 	    phoneLabel.addStyleName("Osyl-ContactInfo-Label");
@@ -263,7 +263,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	if (editorOffice == null) {
 	    editorOffice = new TextBox();
 	    editorOffice.setStylePrimaryName("Osyl-ContactInfo-TextBox");
-	    editorOffice.setTitle(getView().getCoMessage(
+	    editorOffice.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_OfficeLabel"));
 	}
 	return editorOffice;
@@ -274,7 +274,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public Label getOfficeLabel() {
 	if (officeLabel == null) {
 	    officeLabel =
-		    new Label(getView().getCoMessage(
+		    new Label(getView().getUiMessage(
 			    "ResProxContactInfoView_OfficeLabel"));
 	    officeLabel.setStylePrimaryName("Osyl-ResProxView-Label");
 	    officeLabel.addStyleName("Osyl-ContactInfo-Label");
@@ -287,7 +287,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public Label getOfficeLabelViewer() {
 	if (officeLabelViewer == null) {
 	    officeLabelViewer =
-		    new Label(getView().getCoMessage(
+		    new Label(getView().getUiMessage(
 			    "ResProxContactInfoView_OfficeLabel"));
 	    officeLabelViewer.addStyleName("Osyl-ContactInfo-OfficeLabel");
 	}
@@ -301,7 +301,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	    editorAvailability = new RichTextArea();
 	    editorAvailability.setHeight("7em");
 	    editorAvailability.setStylePrimaryName("Osyl-UnitView-TextArea");
-	    editorAvailability.setTitle(getView().getCoMessage(
+	    editorAvailability.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_AvailabilityLabel"));
 	}
 	return editorAvailability;
@@ -312,7 +312,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public Label getAvailabilityLabel() {
 	if (availabilityLabel == null) {
 	    availabilityLabel =
-		    new Label(getView().getCoMessage(
+		    new Label(getView().getUiMessage(
 			    "ResProxContactInfoView_AvailabilityLabel"));
 	    availabilityLabel.setStylePrimaryName("Osyl-ResProxView-Label");
 	    availabilityLabel.addStyleName("Osyl-ContactInfo-Label");
@@ -325,7 +325,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public Label getAvailabilityLabelViewer() {
 	if (availabilityLabelViewer == null) {
 	    availabilityLabelViewer =
-		    new Label(getView().getCoMessage(
+		    new Label(getView().getUiMessage(
 			    "ResProxContactInfoView_AvailabilityLabel"));
 	    availabilityLabelViewer
 		    .addStyleName("Osyl-ContactInfo-AvailabilityLabel");
@@ -340,7 +340,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	    editorComments = new RichTextArea();
 	    editorComments.setHeight("7em");
 	    editorComments.setStylePrimaryName("Osyl-UnitView-TextArea");
-	    editorComments.setTitle(getView().getCoMessage(
+	    editorComments.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_CommentsLabel"));
 	}
 	return editorComments;
@@ -351,7 +351,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
     public Label getCommentsLabel() {
 	if (commentsLabel == null) {
 	    commentsLabel =
-		    new Label(getView().getCoMessage(
+		    new Label(getView().getUiMessage(
 			    "ResProxContactInfoView_CommentsLabel"));
 	    commentsLabel.setStylePrimaryName("Osyl-ResProxView-Label");
 	    commentsLabel.addStyleName("Osyl-ContactInfo-Label");
@@ -377,7 +377,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	if (viewerFirstName == null) {
 	    viewerFirstName = new HTML();
 	    viewerFirstName.setStylePrimaryName("Osyl-ContactInfo-FirstName");
-	    viewerFirstName.setTitle(getView().getCoMessage(
+	    viewerFirstName.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_FirstNameLabel"));
 	}
 	return viewerFirstName;
@@ -389,7 +389,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	if (viewerLastName == null) {
 	    viewerLastName = new HTML();
 	    viewerLastName.setStylePrimaryName("Osyl-ContactInfo-LastName");
-	    viewerLastName.setTitle(getView().getCoMessage(
+	    viewerLastName.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_LastNameLabel"));
 	}
 	return viewerLastName;
@@ -401,7 +401,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	if (viewerRole == null) {
 	    viewerRole = new HTML();
 	    viewerRole.setStylePrimaryName("Osyl-ContactInfo-Role");
-	    viewerRole.setTitle(getView().getCoMessage(
+	    viewerRole.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_TitleLabel"));
 	}
 	return viewerRole;
@@ -413,7 +413,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	if (viewerEMail == null) {
 	    viewerEMail = new HTML();
 	    viewerEMail.setStylePrimaryName("Osyl-ContactInfo-EMail");
-	    viewerEMail.setTitle(getView().getCoMessage(
+	    viewerEMail.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_EMailLabel"));
 	}
 	return viewerEMail;
@@ -425,7 +425,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	if (viewerPhone == null) {
 	    viewerPhone = new HTML();
 	    viewerPhone.setStylePrimaryName("Osyl-ContactInfo-Phone");
-	    viewerPhone.setTitle(getView().getCoMessage(
+	    viewerPhone.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_PhoneLabel"));
 	}
 	return viewerPhone;
@@ -437,7 +437,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	if (viewerOffice == null) {
 	    viewerOffice = new HTML();
 	    viewerOffice.setStylePrimaryName("Osyl-ContactInfo-Office");
-	    viewerOffice.setTitle(getView().getCoMessage(
+	    viewerOffice.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_OfficeLabel"));
 	}
 	return viewerOffice;
@@ -450,7 +450,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	    viewerAvailability = new HTML();
 	    viewerAvailability
 		    .setStylePrimaryName("Osyl-ContactInfo-Availability");
-	    viewerAvailability.setTitle(getView().getCoMessage(
+	    viewerAvailability.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_AvailabilityLabel"));
 	}
 	return viewerAvailability;
@@ -462,7 +462,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	if (viewerComments == null) {
 	    viewerComments = new HTML();
 	    viewerComments.setStylePrimaryName("Osyl-ContactInfo-Comments");
-	    viewerComments.setTitle(getView().getCoMessage(
+	    viewerComments.setTitle(getView().getUiMessage(
 		    "ResProxContactInfoView_CommentsLabel"));
 	}
 	return viewerComments;
@@ -793,14 +793,14 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	boolean error = false;
 	if ("".equals(firstName.trim())) {
 	    messages +=
-		    getView().getCoMessage(
+		    getView().getUiMessage(
 			    "ResProxContactInfoView_FirstNameMandatory")
 			    + "\n";
 	    error = true;
 	}
 	if ("".equals(lastName.trim())) {
 	    messages +=
-		    getView().getCoMessage(
+		    getView().getUiMessage(
 			    "ResProxContactInfoView_LastNameMandatory")
 			    + "\n";
 	    error = true;
@@ -887,7 +887,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	} else {
 	    if (null == text || text.length() == 0) {
 		text =
-			getView().getCoMessage(
+			getView().getUiMessage(
 				"ResProxContactInfoView_PleaseChoose");
 	    }
 	    viewerRole.setHTML(text);
