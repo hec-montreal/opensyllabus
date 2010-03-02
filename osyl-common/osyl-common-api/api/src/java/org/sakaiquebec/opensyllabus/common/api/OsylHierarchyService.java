@@ -21,6 +21,9 @@
 package org.sakaiquebec.opensyllabus.common.api;
 
 import java.io.File;
+import java.util.List;
+
+import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 
 /**
  * The OsylHierarchyService manages access to the sites that have a hierarchical 
@@ -95,6 +98,6 @@ public interface OsylHierarchyService {
 	/**
 	 * @param parentSiteId
 	 */
-	public void removeUsersWithChildRole(String parentSiteId);
+	public void removeUsersWithChildRole(List<CORelation> ancestors);
 }
 

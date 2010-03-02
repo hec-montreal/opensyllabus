@@ -20,6 +20,7 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.common.impl;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -205,7 +206,6 @@ public class OsylHierarchyServiceImpl implements OsylHierarchyService {
 			relation = ancestors.get(i);
 			parent = relation.getParent();
 			child = relation.getChild();
-			System.out.println("parent " + parent + " child " + child);
 
 			// We check if the parent has the child role, if not, we add it
 			if (!hasChildRole(parent))
@@ -219,74 +219,107 @@ public class OsylHierarchyServiceImpl implements OsylHierarchyService {
 	/** {@inheritDoc} */
 	public void removeUsers(String parentSiteId, String childSiteId) {
 
-		// We retrieve the ancestors or parent site where the following actions will be
+		// We retrieve the ancestors or parent site where the following actions
+		// will be
 		// performed
 		List<CORelation> ancestors = coRelationDao
 				.getCourseOutlineAncestors(childSiteId);
-		List<CORelation> children = null;
 		CORelation relation = null;
-		CORelation childParent = null;
-		for (int i = 0; i < ancestors.size(); i++) {
-			relation = ancestors.get(i);
-			System.out.println(" parent " + relation.getParent() + " child " + relation.getChild());
-			// We remove all the users that have CHILD role in the parent site
-			removeUsersWithChildRole(relation.getParent());
-			
-			// We retrieve all the children of the parent site
-			try {
-				children = coRelationDao.getCourseOutlineChildren(relation.getParent());
-			} catch (Exception e) {
-				log.error(e.getMessage());
-			}
-			
-			System.out.println(" enfants " + children.size());
-			
-			// For all the chidren of the parent site (except the child to be
-			// removed) we add the users to the parent site
-			for (int j=0; j<children.size(); j++){
-				childParent = children.get(j);
-				if (!childParent.getChild().equals(childSiteId)){
-					System.out.println(" enfant " + childParent.getChild());
-					addUsersWithChildRole(parentSiteId, childSiteId);
-				}
-				
-			}
-		}
+
+		// We remove all the users that have CHILD role in the parent site
+		removeUsersWithChildRole(ancestors);
 
 	}
 
-	public void removeUsersWithChildRole(String parentSiteId) {
+	public void removeUsersWithChildRole(List<CORelation> ancestors) {
 
-		try {
+		CORelation relation = null;
+		String siteId = null;
+		String userId = null;
+		Member member = null;
+		String memberRoleId = null;
+		List<String> childSiteUsersToRemove = new ArrayList<String>();
+		List<String> childSiteUsers = null;
+		List<String> usersToRemove = null;
+		List<CORelation> children = null;
+		AuthzGroup parentSiteGroup;
+		AuthzGroup childSiteGroup;
+		String parentSiteId = null;
+		String childSiteId = null;
 
-			AuthzGroup parentSiteGroup = authzService
-					.getAuthzGroup(getRealmId(parentSiteId));
+		for (int l = 0; l < ancestors.size(); l++) {
+			relation = ancestors.get(l);
 
-			// We retrieve all the ACTIVE users of the current site
-			Set<String> parentSiteUsers = parentSiteGroup.getUsers();
-			for (Iterator<String> users = parentSiteUsers.iterator(); users
-					.hasNext();) {
-				String user = (String) users.next();
-				Member member = parentSiteGroup.getMember(user);
-				String memberRoleId = null;
+			System.out.println(" parent " + relation.getParent() + " child "
+					+ relation.getChild());
 
-				// If the user is not already of the parent site we add
-				// him with the role CHILD
-				if (parentSiteGroup.getMember(user) != null) {
-					memberRoleId = member.getRole().getId();
-					if (CHILD_ROLE.equals(memberRoleId)) {
-						parentSiteGroup.removeMember(user);
+			parentSiteId = relation.getParent();
+			childSiteId = relation.getChild();
+
+			try {
+
+				childSiteUsers = new ArrayList<String>();
+				usersToRemove = new ArrayList<String>();
+
+				children = coRelationDao.getCourseOutlineChildren(parentSiteId);
+
+				parentSiteGroup = authzService
+						.getAuthzGroup(getRealmId(parentSiteId));
+
+				for (int i = 0; i < children.size(); i++) {
+					siteId = (children.get(i)).getChild();
+
+					childSiteGroup = authzService
+							.getAuthzGroup(getRealmId(siteId));
+
+					if (siteId.equalsIgnoreCase(childSiteId)) {
+						childSiteUsersToRemove
+								.addAll(childSiteGroup.getUsers());
+					} else {
+						childSiteUsers.addAll(childSiteGroup.getUsers());
+					}
+
+				}
+
+				for (int j = 0; j < childSiteUsersToRemove.size(); j++) {
+					userId = childSiteUsersToRemove.get(j);
+
+					if (!childSiteUsers.contains(userId)) {
+						usersToRemove.add(userId);
 					}
 				}
+
+				for (int k = 0; k < usersToRemove.size(); k++) {
+					userId = usersToRemove.get(k);
+					member = parentSiteGroup.getMember(userId);
+
+					// If the user is not already of the parent site we add
+					// him with the role CHILD
+					if (member != null) {
+						memberRoleId = member.getRole().getId();
+						if (CHILD_ROLE.equals(memberRoleId)) {
+							parentSiteGroup.removeMember(userId);
+						}
+					}
+
+				}
+				authzService.save(parentSiteGroup);
+
+				System.out.println("nb enfants: " + children.size());
+				System.out.println("les utilisateurs a comparer "
+						+ childSiteUsers.size() + " et "
+						+ childSiteUsersToRemove.size());
+				System.out.println("les utilisateurs a enlever "
+						+ usersToRemove.size());
+			} catch (GroupNotDefinedException e) {
+				log.error(e.getMessage());
+			} catch (AuthzPermissionException e) {
+				log.error(e.getMessage());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-
-			authzService.save(parentSiteGroup);
-		} catch (GroupNotDefinedException e) {
-			log.error(e.getMessage());
-		} catch (AuthzPermissionException e) {
-			log.error(e.getMessage());
 		}
-
 	}
 
 }
