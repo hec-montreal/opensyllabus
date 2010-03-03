@@ -28,6 +28,8 @@ import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.FireOsylManagerEvents;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
+import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
+import org.sakaiquebec.opensyllabus.manager.client.imageBundle.ManagerImageBundleInterface;
 import org.sakaiquebec.opensyllabus.manager.client.message.Messages;
 
 import com.google.gwt.core.client.GWT;
@@ -58,7 +60,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     private int state = OsylManagerController.STATE_CREATION_FORM;
 
-    private List<OsylManagerEventHandler> siteCreationHandlersList =
+    private List<OsylManagerEventHandler> managerEventHandlersList =
 	    new ArrayList<OsylManagerEventHandler>();
 
     private Map<String, String> osylSitesMap;
@@ -66,6 +68,12 @@ public class OsylManagerController implements FireOsylManagerEvents {
     private Map<String, String> coursesMap;
 
     private String osylPackageUrl;
+
+    private ManagerImageBundleInterface imageBundle =
+	    (ManagerImageBundleInterface) GWT
+		    .create(ManagerImageBundleInterface.class);
+    
+    private List<String> selectSiteIDs = new ArrayList<String>();
 
     /**
      * @return instance of this class
@@ -80,7 +88,6 @@ public class OsylManagerController implements FireOsylManagerEvents {
      * Private constructor use to implements singleton
      */
     private OsylManagerController() {
-	OsylManagerRPCController.getInstance().getOsylSitesMap(this);
     }
 
     /**
@@ -149,21 +156,39 @@ public class OsylManagerController implements FireOsylManagerEvents {
     }
 
     public void setCoursesMap(Map<String, String> coursesMap) {
-    	this.coursesMap = coursesMap ;
-        }
+	this.coursesMap = coursesMap;
+    }
 
-    //SERVER CALLS
+    public ManagerImageBundleInterface getImageBundle() {
+	return imageBundle;
+    }
+
+    public void setImageBundle(ManagerImageBundleInterface imageBundle) {
+	this.imageBundle = imageBundle;
+    }
+    
+    public void setSelectSiteIDs(List<String> selectSiteIDs) {
+	this.selectSiteIDs = selectSiteIDs;
+	OsylManagerEvent event = new OsylManagerEvent(null, OsylManagerEvent.SITES_SELECTION_EVENT);
+	notifyManagerEventHandler(event);
+    }
+
+    public List<String> getSelectSiteIDs() {
+	return selectSiteIDs;
+    }
+
+    // SERVER CALLS
     /**
      * Create site with the given name
      * 
      * @param name
      */
     public void createSite(String name, String configRef, String lang) {
-	OsylManagerRPCController.getInstance().createSite(this, name, configRef, lang);
+	OsylManagerRPCController.getInstance().createSite(this, name,
+		configRef, lang);
     }
-    
-    
-    public void getOsylConfigs(AsyncCallback<Map<String, String>> callback){
+
+    public void getOsylConfigs(AsyncCallback<Map<String, String>> callback) {
 	OsylManagerRPCController.getInstance().getOsylConfigs(callback);
     }
 
@@ -195,7 +220,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
      */
     public void readCB() {
 	state = OsylManagerController.STATE_FINISH;
-	notifySiteCreationEventHandler();
+	//notifyManagerEventHandler();
     }
 
     /**
@@ -209,7 +234,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	} else {
 	    setSiteId(id);
 	    state = OsylManagerController.STATE_UPLOAD_FORM;
-	    notifySiteCreationEventHandler();
+	    //notifyManagerEventHandler();
 	}
     }
 
@@ -219,7 +244,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	} else {
 	    this.setOsylPackageUrl(url);
 	    state = OsylManagerController.STATE_FILE_DOWNLOAD;
-	    notifySiteCreationEventHandler();
+	    //notifyManagerEventHandler();
 	}
     }
 
@@ -228,50 +253,61 @@ public class OsylManagerController implements FireOsylManagerEvents {
      * {@inheritDoc}
      */
     public void addEventHandler(OsylManagerEventHandler handler) {
-	siteCreationHandlersList.add(handler);
+	managerEventHandlersList.add(handler);
     }
 
     /**
      * {@inheritDoc}
      */
     public void removeEventHandler(OsylManagerEventHandler handler) {
-	siteCreationHandlersList.remove(handler);
+	managerEventHandlersList.remove(handler);
     }
 
-    private void notifySiteCreationEventHandler() {
+    private void notifyManagerEventHandler(OsylManagerEvent event) {
 	for (Iterator<OsylManagerEventHandler> iter =
-		siteCreationHandlersList.iterator(); iter.hasNext();) {
-	    OsylManagerEventHandler siteCreationEventHandler =
+		managerEventHandlersList.iterator(); iter.hasNext();) {
+	    OsylManagerEventHandler osylManagerEventHandler =
 		    (OsylManagerEventHandler) iter.next();
-	    siteCreationEventHandler.onOsylManagerEvent();
+	    osylManagerEventHandler.onOsylManagerEvent(event);
 	}
     }
-    
-    public void getParent(String siteId,AsyncCallback<String> callback){
-	OsylManagerRPCController.getInstance().getParent(siteId,callback);
-    }
-    
-    public void getOsylSites(String siteId,AsyncCallback<Map<String,String>> callback){
-	OsylManagerRPCController.getInstance().getOsylSites(siteId,callback);
-    }
-    
-    public void associate(String siteId, String parentId, AsyncCallback<Void> callback){
-	OsylManagerRPCController.getInstance().associate(siteId, parentId, callback);
-    }
-    
-    public void dissociate(String siteId, String parentId, AsyncCallback<Void> callback){
-	OsylManagerRPCController.getInstance().dissociate(siteId, parentId, callback);
+
+    public void getParent(String siteId, AsyncCallback<String> callback) {
+	OsylManagerRPCController.getInstance().getParent(siteId, callback);
     }
 
-    public void associateToCM (String courseSectionId, String siteId, AsyncCallback<Boolean> callback){
-    OsylManagerRPCController.getInstance().associateToCM(courseSectionId, siteId, callback);	
+    public void getOsylSites(String siteId,
+	    AsyncCallback<Map<String, String>> callback) {
+	OsylManagerRPCController.getInstance().getOsylSites(siteId, callback);
     }
-    
-    public Map<String, String> getCMCourses(){
-    	return coursesMap;
+
+    public void associate(String siteId, String parentId,
+	    AsyncCallback<Void> callback) {
+	OsylManagerRPCController.getInstance().associate(siteId, parentId,
+		callback);
     }
-    
-    public void getCMCourses(AsyncCallback<Map<String,String>> callback){
-    	OsylManagerRPCController.getInstance().getCMCourses(callback);
+
+    public void dissociate(String siteId, String parentId,
+	    AsyncCallback<Void> callback) {
+	OsylManagerRPCController.getInstance().dissociate(siteId, parentId,
+		callback);
+    }
+
+    public void associateToCM(String courseSectionId, String siteId,
+	    AsyncCallback<Boolean> callback) {
+	OsylManagerRPCController.getInstance().associateToCM(courseSectionId,
+		siteId, callback);
+    }
+
+    public Map<String, String> getCMCourses() {
+	return coursesMap;
+    }
+
+    public void getCMCourses(AsyncCallback<Map<String, String>> callback) {
+	OsylManagerRPCController.getInstance().getCMCourses(callback);
+    }
+
+    public void getOsylSitesMap(AsyncCallback<Map<String, String>> callback) {
+	OsylManagerRPCController.getInstance().getOsylSitesMap(callback);
     }
 }

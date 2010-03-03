@@ -27,6 +27,7 @@ import java.util.TreeMap;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
+import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
 import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
@@ -110,7 +111,7 @@ public class ExportCOView extends OsylManagerAbstractView implements
     }
 
     /** {@inheritDoc} */
-    public void onOsylManagerEvent() {
+    public void onOsylManagerEvent(OsylManagerEvent e) {
 	if (getController().getState() == OsylManagerController.STATE_FILE_DOWNLOAD) {
 	    String url = GWT.getModuleBaseURL();
 	    String cleanUrl = url.substring(0, url.indexOf("/", 8));

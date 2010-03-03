@@ -22,114 +22,109 @@
 package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
-import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
+import org.sakaiquebec.opensyllabus.manager.client.ui.RoundCornerPanel;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylManagerMainView extends OsylManagerAbstractView implements
-	OsylManagerEventHandler {
+public class OsylManagerMainView extends OsylManagerAbstractView {
 
     private VerticalPanel mainPanel;
 
+    private TabPanel tabPanel;
+
+    private CourseInfoView courseInfoView;
+
     public OsylManagerMainView(OsylManagerController controller) {
 	super(controller);
-	controller.addEventHandler(this);
 	mainPanel = new VerticalPanel();
 	initWidget(mainPanel);
 	initView();
     }
 
     private void initView() {
-	Label title = new Label(getController().getMessages().optionsTitle());
-	title.setStylePrimaryName("OsylManager-form-title");
 
-	final RadioButton createRadioButton =
-		new RadioButton("choix", getController().getMessages()
-			.createOption());
-	final RadioButton exportRadioButton =
-		new RadioButton("choix", getController().getMessages()
-			.exportOption());
-	final RadioButton associateRadioButton =
-		new RadioButton("choix", getController().getMessages()
-			.associateDissociate());
-	final RadioButton associateCMRadioButton =
-		new RadioButton("choix", getController().getMessages()
-			.associateDissociateCM());
+	mainPanel
+		.add(new Label(getController().getMessages().mainView_label()));
 
-	Button valid = new Button();
-	valid.setText(getController().getMessages().valid());
-	valid.addClickHandler(new ClickHandler() {
-	    public void onClick(ClickEvent event) {
-		if (createRadioButton.getValue()) {
-		    setView(new CreateSiteView(getController()));
-		} else if (exportRadioButton.getValue()) {
-		    setView(new ExportCOView(getController()));
-		} else if (associateRadioButton.getValue()) {
-		    setView(new AssociateView(getController()));
-		} else if (associateCMRadioButton.getValue()) {
-		    setView(new AssociateToCMView(getController()));
-		}
-	    }
-	});
+	HorizontalPanel hPanel = new HorizontalPanel();
 
-	mainPanel.add(title);
-	mainPanel.add(createRadioButton);
-	mainPanel.add(exportRadioButton);
-	mainPanel.add(associateRadioButton);
-	mainPanel.add(associateCMRadioButton);
-	mainPanel.add(valid);
-    }
+	hPanel.add(new CreateSiteAction(getController()));
+	hPanel.add(new HTML("&nbsp;"
+		+ getController().getMessages().mainView_or() + "&nbsp;"));
+	hPanel.add(new ImportAction(getController()));
 
-    public void setView(OsylManagerAbstractView newView) {
-	mainPanel.clear();
-	mainPanel.add(newView);
-    }
+	mainPanel.add(hPanel);
 
-    public VerticalPanel getMainPanel() {
-	return mainPanel;
-    }
+	mainPanel.add(new Label(getController().getMessages()
+		.mainView_operationsOnExistingSites()));
 
-    public void setMainPanel(VerticalPanel mainPanel) {
-	this.mainPanel = mainPanel;
-    }
+	HorizontalPanel hzPanel = new HorizontalPanel();
 
-    /**
-     * Refreshes the <code>OsylManagerMainView</code> view.
-     */
-    public void refreshView() {
-	switch (getController().getState()) {
-	case OsylManagerController.STATE_CREATION_FORM:
-	    setView(new CreateSiteView(getController()));
-	    break;
-	case OsylManagerController.STATE_UPLOAD_FORM:
-	    setView(new ImportCOView(getController()));
-	    break;
-	case OsylManagerController.STATE_FINISH:
-	    setView(new FinishView(getController()));
-	    break;
-	case OsylManagerController.STATE_FILE_DOWNLOAD:
-	    break;
-	default:
-	    initView();
-	    break;
-	}
-    }
+	tabPanel = new TabPanel();
+	tabPanel.add(new CourseListView(getController()), getController()
+		.getMessages().mainView_tabs_all());
+	tabPanel.add(new HTML("//TODO"), "Spécifiques");// TODO
+	tabPanel.add(new HTML("//TODO"), "Partageables");// TODO
+	tabPanel.add(new HTML("//TODO"), "Génériques");// TODO
+	tabPanel.add(new HTML("//TODO"), "Favoris");// TODO
+	tabPanel.selectTab(0);
+	tabPanel.addStyleName("OsylManager-mainView-tabPanel");
 
-    /**
-     * {@inheritDoc}
-     */
-    public void onOsylManagerEvent() {
-	refreshView();
+	hzPanel.add(tabPanel);
+
+	VerticalPanel rightPanel = new VerticalPanel();
+	HorizontalPanel hz1 = new HorizontalPanel();
+	hz1.add(new EditAction(getController()));
+	hz1.add(new PublishAction(getController()));
+	hz1.add(new UnpublishAction(getController()));
+	hz1.add(new CopyAction(getController()));
+	hz1.setStyleName("OsylManager-mainView-actionList");
+	rightPanel.add(hz1);
+
+	HorizontalPanel hz2 = new HorizontalPanel();
+	hz2.add(new AttachAction(getController()));
+	hz2.add(new UnattachAction(getController()));
+	hz2.setStyleName("OsylManager-mainView-actionList");
+	rightPanel.add(hz2);
+
+	HorizontalPanel hz3 = new HorizontalPanel();
+	hz3.add(new AssociateAction(getController()));
+	hz3.add(new DissociateAction(getController()));
+	hz3.setStyleName("OsylManager-mainView-actionList");
+	rightPanel.add(hz3);
+
+	HorizontalPanel hz4 = new HorizontalPanel();
+	hz4.add(new ExportAction(getController()));
+	hz4.add(new CleanAction(getController()));
+	hz4.add(new DeleteAction(getController()));
+	hz4.setStyleName("OsylManager-mainView-actionList");
+	rightPanel.add(hz4);
+
+	courseInfoView = new CourseInfoView(getController());
+	RoundCornerPanel ivRoundCornerPanel =
+		new RoundCornerPanel(
+			courseInfoView,
+			"", "OsylManager-infoView-BottomLeft",
+			"OsylManager-infoView-BottomRight",
+			"OsylManager-infoView-TopLeft",
+			"OsylManager-infoView-TopRight");
+	ivRoundCornerPanel.setStylePrimaryName("OsylManager-infoView");
+
+	rightPanel.add(ivRoundCornerPanel);
+
+	hzPanel.add(rightPanel);
+
+	mainPanel.add(hzPanel);
+
     }
 
 }

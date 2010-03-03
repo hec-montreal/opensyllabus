@@ -43,8 +43,6 @@ public interface Messages extends ConstantsWithLookup {
     
     String importXML();
     
-    String rpcFailure();
-    
     String siteIdUnable();
     
     String createSiteTitle();
@@ -66,8 +64,6 @@ public interface Messages extends ConstantsWithLookup {
     String exportOption();
     
     String valid();
-    
-    String noCOSite();
     
     String unableToExportCO();
     
@@ -124,5 +120,55 @@ public interface Messages extends ConstantsWithLookup {
    String language_es();
    
    String language_fr_CA();
+   
+   //
+   String infoView_associatedCourse();
+
+   String infoView_label();
+
+   String infoView_lastPublished();
+
+   String infoView_lastSave();
+
+   String infoView_parentSite();
+   
+   String mainView_label();
+   
+   String mainView_operationsOnExistingSites();
+   
+   String mainView_or();
+   
+   String mainView_action_createSite();
+
+   String mainView_action_importSite();
+   
+   String mainView_action_edit();
+   
+   String mainView_action_associate();
+   
+   String mainView_action_attach();
+   
+   String mainView_action_clean();
+   
+   String mainView_action_copy();
+   
+   String mainView_action_delete();
+   
+   String mainView_action_dissociate();
+   
+   String mainView_action_export();
+   
+   String mainView_action_publish();
+   
+   String mainView_action_unattach();
+   
+   String mainView_action_unpublish();
+   
+   String mainView_tabs_all();
+   
+   String rpcFailure();
+   
+   String noCOSite();
+
 
 }

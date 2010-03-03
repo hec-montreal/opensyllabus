@@ -27,6 +27,7 @@ import java.util.TreeMap;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
+import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
 import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
@@ -278,7 +279,7 @@ public class AssociateView extends OsylManagerAbstractView implements
     }
 
     /** {@inheritDoc} */
-    public void onOsylManagerEvent() {
+    public void onOsylManagerEvent(OsylManagerEvent e) {
 
     }
 

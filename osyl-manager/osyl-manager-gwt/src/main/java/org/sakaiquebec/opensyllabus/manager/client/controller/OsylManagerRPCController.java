@@ -134,24 +134,8 @@ public class OsylManagerRPCController {
 	};
 	serviceProxy.readZip(url, siteId, callback);
     }
-
-    /**
-     * Get Map<id,title> o site with osyl tool;
-     * 
-     * @param osylManagerController
-     */
-    public void getOsylSitesMap(OsylManagerController osylManagerController) {
-	final OsylManagerController caller = osylManagerController;
-	AsyncCallback<Map<String, String>> callback =
-		new AsyncCallback<Map<String, String>>() {
-		    public void onSuccess(Map<String, String> serverResponse) {
-			caller.setOsylSitesMap(serverResponse);
-		    }
-
-		    public void onFailure(Throwable error) {
-			Window.alert(caller.getMessages().rpcFailure());
-		    }
-		};
+    
+    public void getOsylSitesMap(AsyncCallback<Map<String, String>> callback) {
 	serviceProxy.getOsylSitesMap(callback);
     }
 

@@ -228,7 +228,7 @@ public class AssociateToCMView extends OsylManagerAbstractView implements
     }
 
     /** {@inheritDoc} */
-    public void onOsylManagerEvent() {
+    public void onOsylManagerEvent(OsylManagerEvent e) {
 
     }
 

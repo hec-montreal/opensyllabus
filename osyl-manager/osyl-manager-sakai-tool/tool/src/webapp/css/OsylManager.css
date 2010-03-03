@@ -18,3 +18,121 @@
 .OsylManager-form-button {
 	text-align: center;
 }
+
+.OsylManager-action a{
+	font-size: 14px;
+}
+
+.OsylManager-action a:HOVER{
+	cursor: pointer;
+}
+
+.OsylManager-action-disable a{
+	color: #bbbbff
+}
+
+.OsylManager-action-disable a:HOVER{
+	color: #bbbbff;
+	cursor: text
+}
+
+.OsylManager-infoView{}
+
+.OsylManager-infoView .topCenter,
+.OsylManager-infoView .bottomCenter {
+  background:url(images/hborder.png) repeat-x;
+  height:8px;
+  background-color: #f2f2f2
+}
+.OsylManager-infoView .bottomCenter {background-position:bottom left}
+
+.OsylManager-infoView .topCenter {background-position:top left}
+
+.OsylManager-infoView .middleLeft,
+.OsylManager-infoView .middleRight {
+  background:url(images/vborder.png) repeat-y;
+  width:8px;
+  background-color: #f2f2f2
+}
+.OsylManager-infoView .middleRight {background-position:top right}
+
+.OsylManager-infoView .topLeftInner,
+.OsylManager-infoView .topRightInner,
+.OsylManager-infoView .bottomLeftInner,
+.OsylManager-infoView .bottomRightInner {
+  width: 8px;
+  height: 8px;
+  zoom: 1;
+}
+.OsylManager-infoView .topLeft {
+  background: url(images/workspace_corner.png) no-repeat 0 0;
+  -background: url(images/workspace_corner_ie6.png) no-repeat 0 0;
+}
+.OsylManager-infoView .topRight {
+  background: url(images/workspace_corner.png) no-repeat -8px 0;
+  -background: url(images/workspace_corner_ie6.png) no-repeat -8px 0;
+}
+.OsylManager-infoView .bottomLeft {
+  background: url(images/workspace_corner.png) no-repeat 0 -8px;
+  -background: url(images/workspace_corner_ie6.png) no-repeat 0 -8px;
+}
+.OsylManager-infoView .bottomRight {
+  background: url(images/workspace_corner.png) no-repeat -8px -8px;
+  -background: url(images/workspace_corner_ie6.png) no-repeat -8px -8px;
+}
+* html .OsylManager-infoView .topLeftInner,
+* html .OsylManager-infoView .topRightInner,
+* html .OsylManager-infoView .bottomLeftInner,
+* html .OsylManager-infoView .bottomRightInner {
+  width: 8px;
+  height: 8px;
+  overflow: hidden;
+}
+.OsylManager-infoView .middleCenterInner {	
+	margin:0 0 -5px 0;
+	background-color: #f2f2f2
+}
+
+.OsylManager-mainView-actionList td{
+	padding-right: 5px;
+	padding-bottom: 1px;
+}
+
+
+.gwt-TabBar {}
+
+.gwt-TabBar .gwt-TabBarItem-wrapper {}
+
+.gwt-TabBar .gwt-TabBarItem-wrapper-selected { }
+
+.gwt-TabBar .gwt-TabBarFirst {
+width:0px;
+}
+.gwt-TabBar .gwt-TabBarRest {
+}
+.gwt-TabBar .gwt-TabBarItem {
+background:none repeat scroll 0 0 #f2f2f2;
+color:#a2a2a2;
+cursor:pointer;
+font-weight:normal;
+margin-left:6px;
+padding:3px 6px;
+text-align:center;
+}
+.gwt-TabBar .gwt-TabBarItem-selected {
+background:none repeat scroll 0 0 #f2f2f2;
+cursor:default;
+color: black;
+}
+.gwt-TabBar .gwt-TabBarItem-disabled {
+color:#999999;
+cursor:default;
+}
+
+.gwt-TabPanelBottom {
+border-color:#bbbbff;
+border-style:solid;
+border-width:3px 2px 2px;
+overflow:hidden;
+padding:6px;
+}

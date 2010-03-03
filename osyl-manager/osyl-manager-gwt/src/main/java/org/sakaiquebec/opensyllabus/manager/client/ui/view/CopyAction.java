@@ -2,7 +2,7 @@
  * $Id: $
  ******************************************************************************
  *
- * Copyright (c) 2008 The Sakai Foundation, The Sakai Quebec Team.
+ * Copyright (c) 2010 The Sakai Foundation, The Sakai Quebec Team.
  *
  * Licensed under the Educational Community License, Version 1.0
  * (the "License"); you may not use this file except in compliance with the
@@ -18,38 +18,37 @@
  * limitations under the License.
  *
  ******************************************************************************/
+package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
-package org.sakaiquebec.opensyllabus.manager.client.controller.event;
+import java.util.List;
 
-import java.util.EventObject;
+import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
+import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
+
+import com.google.gwt.user.client.Window;
 
 /**
+ *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public interface OsylManagerEventHandler {
+public class CopyAction extends OsylManagerAbstractAction {
 
-    public class OsylManagerEvent extends EventObject {
-
-	public static int SITES_SELECTION_EVENT = 0;
-
-	public static final long serialVersionUID = 55L;
-
-	private int type;
-
-	public OsylManagerEvent(Object source, int type) {
-	    super(source);
-	    this.setType(type);
-	}
-
-	public void setType(int type) {
-	    this.type = type;
-	}
-
-	public int getType() {
-	    return type;
-	}
+    public CopyAction(OsylManagerController controller) {
+	super(controller, "mainView_action_copy");
     }
 
-    public void onOsylManagerEvent(OsylManagerEvent e);
+    @Override
+    public boolean isActionEnableForSites(List<String> siteIds) {
+	if(siteIds.size()==1)
+	    return true;
+	else return false;
+    }
+
+    @Override
+    public void onClick(List<String> siteIds) {
+	Window.alert("copy");
+    }
+
 }
+
