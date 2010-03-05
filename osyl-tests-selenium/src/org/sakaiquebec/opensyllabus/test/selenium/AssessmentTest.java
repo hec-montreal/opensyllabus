@@ -774,7 +774,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         session().type("//tr[17]/td/table/tbody/tr/td[3]/input", ISBN);
         
         //Close Window
-        session().click("//tr[22]/td/table/tbody/tr/td/button");
+        session().click("//tr[24]/td/table/tbody/tr/td/button");
         pause();
         pause();
  

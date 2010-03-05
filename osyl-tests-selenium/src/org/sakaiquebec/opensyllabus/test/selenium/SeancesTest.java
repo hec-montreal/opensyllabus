@@ -552,7 +552,7 @@ public class SeancesTest extends AbstractOSYLTest{
         session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
         
         //We select attendee on dissemination level
-	session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select","index=0");
+        session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select","index=0");
         
         // We choose randomly a Rubric
         String selectedRubric4 = getRandomRubric();
@@ -593,22 +593,22 @@ public class SeancesTest extends AbstractOSYLTest{
         String Auteur = "Auteur"+ timeStamp();
         session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Auteur);
         String Periodique = "Periodique"+ timeStamp();
-        session().type("//tr[13]/td/table/tbody/tr/td[3]/input", Periodique);
+        session().type("//tr[15]/td/table/tbody/tr/td[3]/input", Periodique);
         String Date = "Date"+ timeStamp();
-        session().type("//tr[15]/td/table/tbody/tr/td[3]/input", Date);
+        session().type("//tr[17]/td/table/tbody/tr/td[3]/input", Date);
         String Volume = "Volume"+ timeStamp();
-        session().type("//tr[16]/td/table/tbody/tr/td[3]/input", Volume);
+        session().type("//tr[18]/td/table/tbody/tr/td[3]/input", Volume);
         String Numero = "Numero"+ timeStamp();
-        session().type("//tr[16]/td/table/tbody/tr/td[6]/input", Numero);
+        session().type("//tr[18]/td/table/tbody/tr/td[6]/input", Numero);
         String Pages = "Pages"+ timeStamp();
-        session().type("//tr[18]/td/table/tbody/tr/td[3]/input", Pages);
+        session().type("//tr[20]/td/table/tbody/tr/td[3]/input", Pages);
         String ISSN = "ISSN"+ timeStamp();
-        session().type("//tr[19]/td/table/tbody/tr/td[3]/input", ISSN);
+        session().type("//tr[21]/td/table/tbody/tr/td[3]/input", ISSN);
         String DOI = "DOI"+ timeStamp();
-        session().type("//tr[20]/td/table/tbody/tr/td[3]/input", DOI);
+        session().type("//tr[22]/td/table/tbody/tr/td[3]/input", DOI);
         
         //Close Window
-        session().click("//tr[22]/td/table/tbody/tr/td/button");
+        session().click("//tr[24]/td/table/tbody/tr/td/button");
         pause();
         pause();
         // Select first resource in browser window
