@@ -20,6 +20,8 @@
 
 package org.sakaiquebec.opensyllabus.api;
 
+import org.sakaiproject.citation.api.CitationCollection;
+
 import java.util.Date;
 
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
@@ -104,6 +106,16 @@ public interface OsylService {
      * Delete a citation from the course outline citation list
      */
     public void removeCitation(String citationId);
+
+    /**
+     * Links a collection of citations to a site
+     * 
+     * @param collection
+     * @param siteId
+     * @return the saved collection
+     */
+    public CitationCollection linkCitationsToSite(
+	    CitationCollection collection, String siteId, String citationTitle);
 
     /**
      * Add or updates a citation in the course outline citation list

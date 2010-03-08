@@ -120,8 +120,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     public void readZip(String zipReference, String siteId) {
 	osylManagerServices.getOsylManagerService().readZip(zipReference,
 		siteId);
-	importFilesInSite(zipReference, siteId);
-    }
+   }
 
     /**
      * {@inheritDoc}
@@ -131,30 +130,6 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		siteId);
     }
 
-    /**
-     * Import file contains in the osylPackage to sakai ressources
-     * 
-     * @param zipReference
-     * @param siteId
-     */
-    private void importFilesInSite(String zipReference, String siteId) {
-	// TODO: Valider la corrrection apport�e pour la compilation
-	Map<File, String> fileMap =
-		(Map<File, String>) osylManagerServices.getOsylManagerService()
-			.getImportedFiles();
-	Set<File> files = fileMap.keySet();
-	for (File file : files) {
-	    try {
-		String fileNameToUse = fileMap.get(file);
-		InputStream inputStream = new FileInputStream(file);
-		osylManagerServices.getOsylManagerService().addRessource(
-			fileNameToUse, inputStream,
-			servletContext.getMimeType(file.getName()), siteId);
-	    } catch (Exception e) {
-		log.error(e);
-	    }
-	}
-    }
 
     public Map<String, String> getOsylSites(String siteId) {
 	return osylManagerServices.getOsylManagerService().getOsylSites(siteId);

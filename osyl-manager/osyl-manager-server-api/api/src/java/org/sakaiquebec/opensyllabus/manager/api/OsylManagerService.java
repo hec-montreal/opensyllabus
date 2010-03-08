@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
 
+
 /**
  * This is the service that provides the necessary methods to manage a course
  * outline (change course outline language ...). It also gives access to some
@@ -57,6 +58,14 @@ public interface OsylManagerService {
      */
     public static final String CO_XML_FILENAME = "syllabus.xml";
 
+    
+    /**
+     * Tag used in the RIS file to save the citation id
+     */
+    public static final String CITATION_TAG = "CITATION_ID  - ";
+    
+    
+    
     /**
      * Create a Course outline using the xml reference
      * 
@@ -83,6 +92,7 @@ public interface OsylManagerService {
      */
     public Map<File, String> getImportedFiles();
 
+    
     /**
      * A method that allows us to add a new resource in site resource tool
      * 
@@ -98,7 +108,7 @@ public interface OsylManagerService {
     // cette
     // methode et passer par le service correspondant
     public String addRessource(String name, InputStream content,
-	    String contentType, String siteId) throws Exception;
+	    String contentType, String siteId, String resourceOutputDir) throws Exception;
 
     /**
      * Get Map<id,name> of sites with OsylTool

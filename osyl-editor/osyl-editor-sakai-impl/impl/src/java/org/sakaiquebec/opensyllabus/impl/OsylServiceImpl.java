@@ -1,5 +1,7 @@
 package org.sakaiquebec.opensyllabus.impl;
 
+
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -349,9 +351,6 @@ public class OsylServiceImpl implements OsylService {
     public String createOrUpdateCitation(String citationListId,
 	    String citation, String author, String type, String isbnIssn,
 	    String link) {
-	ContentResourceEdit resource = null;
-	String resourceDir =
-		getResourceReference() + OsylSiteService.WORK_DIRECTORY + "/";
 	CitationCollection citationCollection = null;
 	Citation newCitation = null;
 	String siteId = null;
@@ -399,11 +398,22 @@ public class OsylServiceImpl implements OsylService {
 	newCitation.setDisplayName(citationTitle);
 	newCitation.setAdded(true);
 
+	citationCollection = linkCitationsToSite(citationCollection, siteId, citationTitle);
+
+	return citationCollection.getId();
+    }
+
+    /** {@inheritDoc} */
+    public CitationCollection linkCitationsToSite(
+	    CitationCollection collection, String siteId, String citationTitle) {
+
+	ContentResourceEdit resource = null;
+	String resourceDir =
+		getResourceReference(siteId) + OsylSiteService.WORK_DIRECTORY + "/";
 	try {
-	    String resourceId = resourceDir + citationCollection.getId();
+	    String resourceId = resourceDir + citationTitle;
 	    // temporarily allow the user to read and write resources
-	    siteId = osylSiteService.getCurrentSiteId();
-	    if (osylSecurityService.isAllowedToEdit(siteId)) {
+	     if (osylSecurityService.isAllowedToEdit(siteId)) {
 		SecurityService.pushAdvisor(new SecurityAdvisor() {
 		    public SecurityAdvice isAllowed(String userId,
 			    String function, String reference) {
@@ -423,20 +433,18 @@ public class OsylServiceImpl implements OsylService {
 			contentHostingService
 				.addResource(
 					resourceDir,
-					citationCollection.getId(),
+					citationTitle,
 					null,
 					ContentHostingService.MAXIMUM_ATTEMPTS_FOR_UNIQUENESS);
 	    } catch (Exception e2) {
 		log.error(
 			"Create or update citation list - Exception while adding"
 				+ " resource: ", e2);
-		return "failed";
 	    }
 	} catch (Exception e1) {
 	    log.error(
 		    "Create or update citation list - Exception while getting"
 			    + " resource: ", e1);
-	    return "failed";
 	} finally {
 	    // clear the permission
 	    if (osylSecurityService.isAllowedToEdit(siteId)) {
@@ -457,9 +465,9 @@ public class OsylServiceImpl implements OsylService {
 	props.addProperty(ResourceProperties.PROP_DISPLAY_NAME, citationTitle);
 
 	try {
-	    citationService.save(citationCollection);
+	    citationService.save(collection);
 
-	    resource.setContent(citationCollection.getId().getBytes());
+	    resource.setContent(collection.getId().getBytes());
 	    contentHostingService.commitResource(resource);
 
 	} catch (RuntimeException e) {
@@ -468,7 +476,7 @@ public class OsylServiceImpl implements OsylService {
 	    log.error("Error while saving citation list to resources: ", e);
 	}
 
-	return citationCollection.getId();
+	return collection;
     }
 
     private void createOrUpdateCitationProperty(String property,
@@ -584,7 +592,7 @@ public class OsylServiceImpl implements OsylService {
 	    // we add the default citationList
 	    // TODO I18N
 	    String citationListName = "Références bibliographiques du cours";
-	    
+
 	    CitationCollection citationList = citationService.addCollection();
 
 	    ContentResourceEdit cre =
@@ -626,6 +634,15 @@ public class OsylServiceImpl implements OsylService {
      */
     public String getResourceReference() {
 	String refString = osylSiteService.getCurrentSiteReference();
+	refString = refString.substring(OsylSiteService.CONTENT.length());
+	return refString;
+    }
+
+    private String getResourceReference(String siteId) {
+
+	String val2 = contentHostingService.getSiteCollection(siteId);
+	String refString = contentHostingService.getReference(val2);
+
 	refString = refString.substring(OsylSiteService.CONTENT.length());
 	return refString;
     }

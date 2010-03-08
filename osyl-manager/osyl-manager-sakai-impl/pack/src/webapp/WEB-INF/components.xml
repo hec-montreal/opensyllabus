@@ -49,6 +49,8 @@
 			ref="org.sakaiproject.tool.api.SessionManager" />
 		<property name="siteService"
 			ref="org.sakaiproject.site.api.SiteService" />
+		<property name="osylService"
+			ref="org.sakaiquebec.opensyllabus.api.OsylService" />
 		<property name="osylSiteService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
 		<property name="osylSecurityService"
