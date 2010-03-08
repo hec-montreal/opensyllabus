@@ -232,9 +232,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	if (id == null) {
 	    Window.alert(messages.siteNotCreated());
 	} else {
-	    setSiteId(id);
-	    state = OsylManagerController.STATE_UPLOAD_FORM;
-	    //notifyManagerEventHandler();
+	    notifyManagerEventHandler(new OsylManagerEvent(id, OsylManagerEvent.SITE_CREATION_EVENT));
 	}
     }
 

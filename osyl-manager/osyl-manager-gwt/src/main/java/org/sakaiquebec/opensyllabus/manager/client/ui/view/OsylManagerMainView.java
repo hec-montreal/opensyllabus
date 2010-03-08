@@ -77,7 +77,8 @@ public class OsylManagerMainView extends OsylManagerAbstractView {
 	tabPanel.add(new HTML("//TODO"), "Génériques");// TODO
 	tabPanel.add(new HTML("//TODO"), "Favoris");// TODO
 	tabPanel.selectTab(0);
-	tabPanel.addStyleName("OsylManager-mainView-tabPanel");
+	tabPanel.getTabBar().setStylePrimaryName("OsylManager-mainView-tabBar");
+	tabPanel.setStylePrimaryName("OsylManager-mainView-tabPanel");
 
 	hzPanel.add(tabPanel);
 

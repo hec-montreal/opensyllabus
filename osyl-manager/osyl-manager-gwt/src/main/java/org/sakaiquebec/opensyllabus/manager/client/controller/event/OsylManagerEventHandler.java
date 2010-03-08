@@ -32,6 +32,7 @@ public interface OsylManagerEventHandler {
     public class OsylManagerEvent extends EventObject {
 
 	public static int SITES_SELECTION_EVENT = 0;
+	public static int SITE_CREATION_EVENT = 1;
 
 	public static final long serialVersionUID = 55L;
 

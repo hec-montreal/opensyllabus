@@ -3,18 +3,6 @@
 	font-weight: bold;
 }
 
-.OsylManager-form-label {
-	width: 130px;
-	height: 30px;
-	padding: 0px 5px 0px 10px;
-}
-
-.OsylManager-form-element {
-	width: 150px;
-	height: 30px;
-	padding: 0px 5px 0px 10px;
-}
-
 .OsylManager-form-button {
 	text-align: center;
 }
@@ -99,18 +87,42 @@
 }
 
 
-.gwt-TabBar {}
+.OsylManager-form-CreateSiteForm{
+	padding:4px;
+	font:normal 100% Arial, Verdana, sans-serif;
+	color:#000;
+	background-color:#FFF;
+	border:2px outset;
+	width: 600px;
+}
 
-.gwt-TabBar .gwt-TabBarItem-wrapper {}
+.OsylManager-form-title{
+	font:bold 14px Arial,Verdana,sans-serif;
+	margin-bottom:10px;
+	text-align:center;
+}
 
-.gwt-TabBar .gwt-TabBarItem-wrapper-selected { }
+.OsylManager-form-label{
+	font:bold 12px Arial,Verdana,sans-serif;
+}
 
-.gwt-TabBar .gwt-TabBarFirst {
+.OsylManager-form-genericPanel{
+	margin:3px;
+	width:600px;
+}
+
+.OsylManager-mainView-tabBar {}
+
+.OsylManager-mainView-tabBar .gwt-TabBarItem-wrapper {}
+
+.OsylManager-mainView-tabBar .gwt-TabBarItem-wrapper-selected { }
+
+.OsylManager-mainView-tabBar .gwt-TabBarFirst {
 width:0px;
 }
-.gwt-TabBar .gwt-TabBarRest {
+.OsylManager-mainView-tabBar .gwt-TabBarRest {
 }
-.gwt-TabBar .gwt-TabBarItem {
+.OsylManager-mainView-tabBar .gwt-TabBarItem {
 background:none repeat scroll 0 0 #f2f2f2;
 color:#a2a2a2;
 cursor:pointer;
@@ -119,18 +131,19 @@ margin-left:6px;
 padding:3px 6px;
 text-align:center;
 }
-.gwt-TabBar .gwt-TabBarItem-selected {
+.OsylManager-mainView-tabBar .gwt-TabBarItem-selected {
 background:none repeat scroll 0 0 #f2f2f2;
 cursor:default;
 color: black;
+font-weight: bold;
 }
-.gwt-TabBar .gwt-TabBarItem-disabled {
+.OsylManager-mainView-tabBar .gwt-TabBarItem-disabled {
 color:#999999;
 cursor:default;
 }
 
-.gwt-TabPanelBottom {
-border-color:#bbbbff;
+.OsylManager-mainView-tabPanel .gwt-TabPanelBottom {
+border-color:#d6dbdf;
 border-style:solid;
 border-width:3px 2px 2px;
 overflow:hidden;

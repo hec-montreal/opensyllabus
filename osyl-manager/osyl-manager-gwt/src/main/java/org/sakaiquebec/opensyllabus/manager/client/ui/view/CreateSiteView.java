@@ -132,8 +132,6 @@ public class CreateSiteView extends OsylManagerAbstractView {
 		boolean nameValid = false;
 		String name = nameTextBox.getText();
 		String lang = langListBox.getValue(langListBox.getSelectedIndex());
-		//TODO Maybe we should make a blacklist of forbidden characters
-		//instead of a whitelist of authorized characters
 		nameValid =
 			(name != null
 				&& name

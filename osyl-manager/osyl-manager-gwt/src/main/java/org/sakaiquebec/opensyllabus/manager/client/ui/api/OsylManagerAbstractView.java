@@ -58,7 +58,7 @@ public class OsylManagerAbstractView extends Composite {
      * @param widget
      * @return
      */
-    protected FlexTable createFormElement(Label label, Widget widget) {
+    static public FlexTable createFormElement(Label label, Widget widget) {
 	FlexTable flexTable = new FlexTable();
 	flexTable.setWidget(0, 0, label);
 	flexTable.getFlexCellFormatter().setAlignment(0, 0,

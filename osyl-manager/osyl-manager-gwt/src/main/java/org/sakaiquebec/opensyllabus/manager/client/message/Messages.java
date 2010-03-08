@@ -49,8 +49,6 @@ public interface Messages extends ConstantsWithLookup {
     
     String importCOTitle();
     
-    String finishMessage();
-    
     String exportCOTitle();
     
     String exportCO();
@@ -169,6 +167,14 @@ public interface Messages extends ConstantsWithLookup {
    String rpcFailure();
    
    String noCOSite();
+   
+   String siteForm_create_ok();
+   
+   String form_close();
+   
+   String courseListView_loading();
+   
+   String createForm_edit();
 
 
 }

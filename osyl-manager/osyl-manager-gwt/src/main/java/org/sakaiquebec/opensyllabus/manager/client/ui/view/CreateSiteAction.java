@@ -25,10 +25,7 @@ import java.util.List;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
 
-import com.google.gwt.user.client.Window;
-
 /**
- *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
@@ -46,8 +43,8 @@ public class CreateSiteAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(List<String> siteIds) {
-	Window.alert("create site");
+	CreateSiteForm createSiteForm = new CreateSiteForm(controller);
+	createSiteForm.showModal();
     }
 
 }
-

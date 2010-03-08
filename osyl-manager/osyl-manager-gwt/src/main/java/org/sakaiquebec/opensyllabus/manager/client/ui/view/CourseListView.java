@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
+import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
 import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
@@ -35,6 +36,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -42,7 +44,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class CourseListView extends OsylManagerAbstractView {
+public class CourseListView extends OsylManagerAbstractView implements
+	OsylManagerEventHandler {
 
     private VerticalPanel mainPanel;
 
@@ -57,6 +60,7 @@ public class CourseListView extends OsylManagerAbstractView {
 
 		public void onSuccess(Map<String, String> result) {
 		    mainPanel.clear();
+		    siteListBox.clear();
 		    if (result == null || result.isEmpty()) {
 			Window.alert(getController().getMessages().noCOSite());
 		    } else {
@@ -77,9 +81,8 @@ public class CourseListView extends OsylManagerAbstractView {
 			    String siteId = sortedMap.get(siteTitle);
 			    siteListBox.addItem(siteTitle, siteId);
 			}
-			mainPanel.add(siteListBox);
-
 		    }
+		    mainPanel.add(siteListBox);
 
 		}
 	    };
@@ -89,33 +92,41 @@ public class CourseListView extends OsylManagerAbstractView {
 	initView();
 	initWidget(mainPanel);
 	refresh();
+	controller.addEventHandler(this);
     }
 
     private void initView() {
 	mainPanel = new VerticalPanel();
 	mainPanel.setWidth("100%");
 	mainPanel.setHeight("200px");
-	Image im = new Image(GWT.getModuleBaseURL() + "images/ajaxLoader.gif");
-	mainPanel.add(im);
+
 	siteListBox = new ListBox(true);
 	siteListBox.setHeight("275px");
 	siteListBox.setWidth("100%");
 	siteListBox.addChangeHandler(new ChangeHandler() {
 	    public void onChange(ChangeEvent event) {
 		ArrayList<String> list = new ArrayList<String>();
-		for(int i = 0;i<siteListBox.getItemCount();i++){
-		    if(siteListBox.isItemSelected(i))
+		for (int i = 0; i < siteListBox.getItemCount(); i++) {
+		    if (siteListBox.isItemSelected(i))
 			list.add(siteListBox.getValue(i));
 		}
 		getController().setSelectSiteIDs(list);
 	    }
 	});
     }
-    
-    public void refresh(){
+
+    public void refresh() {
+	mainPanel.clear();
+	mainPanel.add(new Label(getController().getMessages()
+		.courseListView_loading()));
+	Image im = new Image(GWT.getModuleBaseURL() + "images/ajaxLoader.gif");
+	mainPanel.add(im);
 	getController().getOsylSitesMap(asyncCallback);
     }
-    
-    
+
+    public void onOsylManagerEvent(OsylManagerEvent e) {
+	if (e.getType() == OsylManagerEvent.SITE_CREATION_EVENT)
+	    refresh();
+    }
 
 }
