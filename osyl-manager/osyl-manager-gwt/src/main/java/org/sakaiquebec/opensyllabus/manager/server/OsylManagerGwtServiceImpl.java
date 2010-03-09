@@ -29,6 +29,7 @@ import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtService;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -145,4 +146,13 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     public Map<String, String> getCMCourses() {
 	return osylManagerServices.getOsylManagerService().getCMCourses();
     }
+    
+    public COSite getCoAndSiteInfo(String siteId){
+	return null;
+    }
+
+    public List<COSite> getCoAndSiteInfo(){
+	return null;
+    }
+
 }

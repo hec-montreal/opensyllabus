@@ -24,6 +24,9 @@ package org.sakaiquebec.opensyllabus.manager.client.rpc;
 import java.util.List;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 /**
@@ -66,4 +69,24 @@ public interface OsylManagerGwtService extends RemoteService {
     public Boolean associateToCM (String courseSectionId, String siteId);
     
     public Map<String, String> getCMCourses() ;
+    
+    /**
+     * Retrieve all the informations of the specified site and the course
+     * outline it contains. The information is saved in a POJO.
+     * 
+     * @param siteId
+     * @return
+     */
+    public COSite getCoAndSiteInfo(String siteId);
+
+    /**
+     * Retrieve the informations of all the sites the current user has access
+     * to.
+     * 
+     * @return
+     */
+    public List<COSite> getCoAndSiteInfo();
+
+
+ 
 }

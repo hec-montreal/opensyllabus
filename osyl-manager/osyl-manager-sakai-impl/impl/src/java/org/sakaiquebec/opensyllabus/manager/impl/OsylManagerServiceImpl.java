@@ -38,9 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
@@ -55,8 +53,6 @@ import org.apache.tika.sax.BodyContentHandler;
 import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
-import org.sakaiproject.authz.api.GroupProvider;
-import org.sakaiproject.authz.api.Member;
 import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.cover.AuthzGroupService;
@@ -66,7 +62,6 @@ import org.sakaiproject.citation.api.Citation;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
 import org.sakaiproject.component.api.ServerConfigurationService;
-import org.sakaiproject.component.cover.ComponentManager;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentEntity;
@@ -74,13 +69,14 @@ import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
+import org.sakaiproject.coursemanagement.api.CanonicalCourse;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.CourseSet;
-import org.sakaiproject.coursemanagement.api.Enrollment;
 import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Section;
-import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
+import org.sakaiproject.entity.api.EntityManager;
+import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.exception.IdInvalidException;
@@ -101,10 +97,10 @@ import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.api.OsylService;
-import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.xml.sax.ContentHandler;
 
 /**
@@ -133,10 +129,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public void setOsylManagerSiteName(String osylManagerSiteName) {
 	this.osylManagerSiteName = osylManagerSiteName;
     }
-
-    private GroupProvider groupProvider =
-	    (org.sakaiproject.authz.api.GroupProvider) ComponentManager
-		    .get(org.sakaiproject.authz.api.GroupProvider.class);
 
     /**
      * The name of the realm associated to the opensyllabusManager
@@ -225,13 +217,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	this.osylService = osylService;
     }
 
-    /**
-     * The Osyl resource service to be injected by Spring
-     */
-    private OsylSecurityService osylSecurityService;
+    private EntityManager entityManager;
 
-    public void setOsylSecurityService(OsylSecurityService osylSecurityService) {
-	this.osylSecurityService = osylSecurityService;
+    public void setEntityManager(EntityManager entityManager) {
+	this.entityManager = entityManager;
     }
 
     /**
@@ -857,12 +846,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     }
 
-    // Filter all slash, backslash, double and simple quote and replace by
-    // underscore
-    private String filterCitationName(String rawName) {
-	return (rawName.replaceAll("\\/|\\\\|\"|'", "_"));
-    }
-
     private void writeToZip(ZipOutputStream zos, String fileName,
 	    InputStream inputStream) throws IOException {
 	ZipEntry zipEntry = new ZipEntry(fileName);
@@ -1011,13 +994,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public Boolean associateToCM(String courseSectionId, String siteId) {
 	// TODO: est-ce qu'on change le nom du site après que le lien soit créé
 
-	String realmId = siteService.siteReference(siteId);
-	try {
-	    AuthzGroup realm = AuthzGroupService.getAuthzGroup(realmId);
-	} catch (GroupNotDefinedException e) {
-	    log.warn(this + "Site realm not found", e);
-	}
-
 	boolean added = true;
 
 	if (siteId != null) {
@@ -1152,6 +1128,153 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	}
 
+    }
+
+    /** {@inheritDoc} */
+    public COSite getCoAndSiteInfo(String siteId) {
+	Site site = null;
+	COSerialized co = null;
+	COSite info = new COSite();
+
+	try {
+	    site = osylSiteService.getSite(siteId);
+	    co = osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
+	} catch (IdUnusedException e) {
+	    log.error(e.getMessage());
+	}
+
+	if (site != null) {
+	    // Retrieve site info
+	    info.setSiteName(site.getTitle());
+	    info.setSiteDescription(site.getDescription());
+	    info.setSiteShortDescription(site.getShortDescription());
+	    info.setSiteOwnerLastName(site.getCreatedBy().getLastName());
+	    info.setSiteOwnerName(site.getCreatedBy().getFirstName());
+
+	    // Retrieve CM info
+	    String siteProviderId = site.getProviderGroupId();
+	    if (courseManagementService.isSectionDefined(siteProviderId)) {
+		Section section =
+			courseManagementService.getSection(siteProviderId);
+
+		// Retrieve official instructors
+		EnrollmentSet enrollmentSet = section.getEnrollmentSet();
+
+		if (enrollmentSet != null) {
+		    Set<String> instructors =
+			    enrollmentSet.getOfficialInstructors();
+		    User user = null;
+		    String name = null;
+		    for (String instructor : instructors) {
+			try {
+			    user = UserDirectoryService.getUser(instructor);
+			    name = user.getDisplayName();
+			    info.addCourseInstructor(name);
+			} catch (UserNotDefinedException e) {
+			    e.printStackTrace();
+			}
+		    }
+		}
+
+		// Retrieve course number
+		CourseOffering courseOff =
+			courseManagementService.getCourseOffering(section
+				.getCourseOfferingEid());
+		CanonicalCourse canCourse =
+			courseManagementService.getCanonicalCourse(courseOff
+				.getCanonicalCourseEid());
+
+		info.setCourseNumber(canCourse.getEid());
+		info.setCourseName(section.getTitle());
+		info.setCourseSection(siteProviderId.substring(siteProviderId
+			.length() - 3));
+		info
+			.setCourseSession(courseOff.getAcademicSession()
+				.getTitle());
+
+		// TODO: the coordinator is not saved in the cm. Correct this
+		// when done.
+		info.setCourseCoordinator(null);
+
+	    }
+	    // Retrieve course outline info
+	    if (co != null) {
+		// TODO: corriger avec la tache SAKAI-1357
+		info.setLastModifiedDate(null);
+		info.setLastPublicationDate(null);
+	    }
+
+	    // Retrieve parent site
+	    String parentSite = null;
+
+	    try {
+		parentSite = osylSiteService.getParent(siteId);
+	    } catch (Exception e) {
+		log.error(e.getMessage());
+	    }
+
+	    info.setParentSite(parentSite);
+	}
+	return info;
+    }
+
+    /** {@inheritDoc} */
+    public List<COSite> getCoAndSiteInfo() {
+	List<COSite> allSitesInfo = null;
+	COSite info = null;
+	String currentUser = sessionManager.getCurrentSessionUserId();
+
+	List<String> accessedSites =
+		getSitesForUser(currentUser, SiteService.SITE_VISIT);
+
+	if (accessedSites != null && accessedSites.size() > 0) {
+	    allSitesInfo = new ArrayList<COSite>();
+	    for (int i = 0; i < accessedSites.size(); i++) {
+		info = getCoAndSiteInfo(accessedSites.get(i));
+		if (info != null)
+		    allSitesInfo.add(info);
+	    }
+	}
+
+	System.out.println(currentUser);
+	// = new ArrayList<COSite>();
+
+	return allSitesInfo;
+    }
+
+    private static final String SAKAI_SITE_TYPE = SiteService.SITE_SUBTYPE;
+
+    @SuppressWarnings("unchecked")
+    protected List<String> getSitesForUser(String userId, String permission) {
+	log.debug("userId: " + userId + ", permission: " + permission);
+
+	List<String> l = new ArrayList<String>();
+
+	// get the groups from Sakai
+	Set<String> authzGroupIds =
+		AuthzGroupService.getAuthzGroupsIsAllowed(userId, permission,
+			null);
+	Iterator<String> it = authzGroupIds.iterator();
+	while (it.hasNext()) {
+	    String authzGroupId = it.next();
+	    Reference r = entityManager.newReference(authzGroupId);
+	    if (r.isKnownType()) {
+		// check if this is a Sakai Site or Group
+		if (r.getType().equals(SiteService.APPLICATION_ID)) {
+		    String type = r.getSubType();
+		    if (SAKAI_SITE_TYPE.equals(type)) {
+			// this is a Site
+			String siteId = r.getId();
+			l.add(siteId);
+		    }
+		}
+	    }
+	}
+
+	if (l.isEmpty())
+	    log.info("Empty list of siteIds for user:" + userId
+		    + ", permission: " + permission);
+	return l;
     }
 
 }

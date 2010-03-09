@@ -26,11 +26,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerRPCController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.FireOsylManagerEvents;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.imageBundle.ManagerImageBundleInterface;
 import org.sakaiquebec.opensyllabus.manager.client.message.Messages;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
+
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -233,6 +236,14 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     public Map<String, String> getCMCourses() {
 	return coursesMap;
+    }
+
+    public void getCoAndSiteInfo(String siteId, AsyncCallback<String> callback){
+	 OsylManagerRPCController.getInstance().getCoAndSiteInfo(siteId, callback);
+    }
+
+    public void getCoAndSiteInfo(AsyncCallback<List<String>> callback){
+	OsylManagerRPCController.getInstance().getCoAndSiteInfo(callback);
     }
 
     public void getCMCourses(AsyncCallback<Map<String, String>> callback) {

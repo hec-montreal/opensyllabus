@@ -73,4 +73,12 @@ public interface OsylManagerGwtServiceAsync {
     public void associateToCM (String courseSectionId, String siteId, AsyncCallback<Boolean> callback);
     
     public void getCMCourses( AsyncCallback<Map<String, String>> callback) ;
+    
+    public void getCoAndSiteInfo(String siteId, AsyncCallback<String> callback);
+
+    
+    public void getCoAndSiteInfo(AsyncCallback<List<String>> callback);
+
+
+    
 }

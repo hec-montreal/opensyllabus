@@ -37,5 +37,10 @@
       <artifactId>generic-dao</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+    	<groupId>org.sakaiquebec.opensyllabus</groupId>
+    	<artifactId>osyl-common-shared</artifactId>
+    	<version>2.6.1</version>
+    </dependency>
   </dependencies>
 </project>

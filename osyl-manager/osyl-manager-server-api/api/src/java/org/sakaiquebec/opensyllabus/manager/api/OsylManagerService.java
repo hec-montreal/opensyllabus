@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 /**
  * This is the service that provides the necessary methods to manage a course
@@ -59,14 +60,11 @@ public interface OsylManagerService {
      */
     public static final String CO_XML_FILENAME = "syllabus.xml";
 
-    
     /**
      * Tag used in the RIS file to save the citation id
      */
     public static final String CITATION_TAG = "CITATION_ID  - ";
-    
-    
-    
+
     /**
      * Create a Course outline using the xml reference
      * 
@@ -93,7 +91,6 @@ public interface OsylManagerService {
      */
     public Map<File, String> getImportedFiles();
 
-    
     /**
      * A method that allows us to add a new resource in site resource tool
      * 
@@ -109,7 +106,8 @@ public interface OsylManagerService {
     // cette
     // methode et passer par le service correspondant
     public String addRessource(String name, InputStream content,
-	    String contentType, String siteId, String resourceOutputDir) throws Exception;
+	    String contentType, String siteId, String resourceOutputDir)
+	    throws Exception;
 
     /**
      * Get Map<id,name> of sites with OsylTool
@@ -151,4 +149,21 @@ public interface OsylManagerService {
      *         published course outline
      */
     public Map<String, String> getPublishedOsylSites();
+
+    /**
+     * Retrieve all the informations of the specified site and the course
+     * outline it contains. The information is saved in a POJO.
+     * 
+     * @param siteId
+     * @return
+     */
+    public COSite getCoAndSiteInfo(String siteId);
+
+    /**
+     * Retrieve the informations of all the sites the current user has access
+     * to.
+     * 
+     * @return
+     */
+    public List<COSite> getCoAndSiteInfo();
 }
