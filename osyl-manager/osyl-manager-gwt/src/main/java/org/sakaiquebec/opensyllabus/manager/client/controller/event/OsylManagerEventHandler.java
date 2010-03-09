@@ -33,6 +33,7 @@ public interface OsylManagerEventHandler {
 
 	public static int SITES_SELECTION_EVENT = 0;
 	public static int SITE_CREATION_EVENT = 1;
+	public static int SITE_IMPORT_EVENT = 2;
 
 	public static final long serialVersionUID = 55L;
 

@@ -46,19 +46,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     private Messages messages = GWT.create(Messages.class);
 
-    private String siteId;
-
     public static final String WORK_FOLDER_NAME = "work";
-
-    public static final int STATE_CREATION_FORM = 0;
-
-    public static final int STATE_UPLOAD_FORM = 1;
-
-    public static final int STATE_FILE_DOWNLOAD = 2;
-
-    public static final int STATE_FINISH = 99;
-
-    private int state = OsylManagerController.STATE_CREATION_FORM;
 
     private List<OsylManagerEventHandler> managerEventHandlersList =
 	    new ArrayList<OsylManagerEventHandler>();
@@ -115,36 +103,12 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	return messages;
     }
 
-    /**
-     * Set the siteID
-     * 
-     * @param siteId
-     */
-    public void setSiteId(String siteId) {
-	this.siteId = siteId;
-    }
-
-    public int getState() {
-	return state;
-    }
-
-    public void setState(int state) {
-	this.state = state;
-    }
-
     public String getOsylPackageUrl() {
 	return osylPackageUrl;
     }
 
     public void setOsylPackageUrl(String osylPackageUrl) {
 	this.osylPackageUrl = osylPackageUrl;
-    }
-
-    /**
-     * @return the id of the site
-     */
-    public String getSiteId() {
-	return siteId;
     }
 
     public Map<String, String> getOsylSitesMap() {
@@ -193,22 +157,13 @@ public class OsylManagerController implements FireOsylManagerEvents {
     }
 
     /**
-     * read and create a CO given the url of an xml file on the server
-     * 
-     * @param url
-     */
-    public void readXML(String url) {
-	OsylManagerRPCController.getInstance().readXML(this, url, siteId);
-    }
-
-    /**
      * read and create a CO (with attach documents) given the url of an zip file
      * on the server
      * 
      * @param url
      */
-    public void readZip(String url) {
-	OsylManagerRPCController.getInstance().readZip(this, url, siteId);
+    public void importData(String url,String siteId) {
+	OsylManagerRPCController.getInstance().importData(this, url, siteId);
     }
 
     public void getOsylPackage(String siteId) {
@@ -219,8 +174,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
      * Callback for read (zip or xml) functions
      */
     public void readCB() {
-	state = OsylManagerController.STATE_FINISH;
-	//notifyManagerEventHandler();
+	notifyManagerEventHandler(new OsylManagerEvent(null, OsylManagerEvent.SITE_IMPORT_EVENT));
     }
 
     /**
@@ -241,7 +195,6 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	    Window.alert(getMessages().unableToExportCO());
 	} else {
 	    this.setOsylPackageUrl(url);
-	    state = OsylManagerController.STATE_FILE_DOWNLOAD;
 	    //notifyManagerEventHandler();
 	}
     }

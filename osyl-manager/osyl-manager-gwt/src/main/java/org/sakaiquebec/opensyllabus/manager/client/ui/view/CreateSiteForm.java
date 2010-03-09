@@ -25,41 +25,34 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.gwt.mosaic.ui.client.WindowPanel;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
-import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
+import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
+import org.sakaiquebec.opensyllabus.manager.client.ui.helper.ActionHelper;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class CreateSiteForm extends WindowPanel implements
+public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 	OsylManagerEventHandler {
 
     private static List<String> supportedLang =
 	    Arrays.asList(new String[] { "en", "es", "fr_CA" });// TODO to be
     // parameterized
 
-    private static final int FORM_WIDTH = 600;
-
-    private VerticalPanel mainPanel;
+    private static final int FORM_WIDTH = 580;
 
     private TextBox nameTextBox;
 
@@ -68,8 +61,6 @@ public class CreateSiteForm extends WindowPanel implements
     private ListBox langListBox;
 
     private PushButton createSite;
-
-    private OsylManagerController controller;
 
     AsyncCallback<Map<String, String>> configListAsyncCallback =
 	    new AsyncCallback<Map<String, String>>() {
@@ -100,13 +91,7 @@ public class CreateSiteForm extends WindowPanel implements
 	    };
 
     public CreateSiteForm(final OsylManagerController controller) {
-	super();
-	this.controller = controller;
-	setResizable(true);
-	setAnimationEnabled(true);
-	setCaptionAction(null);
-
-	mainPanel = new VerticalPanel();
+	super(controller);
 
 	Label l = new Label(controller.getMessages().createSiteTitle());
 	l.setStylePrimaryName("OsylManager-form-title");
@@ -114,8 +99,7 @@ public class CreateSiteForm extends WindowPanel implements
 
 	Label title = new Label(controller.getMessages().courseName());
 	nameTextBox = new TextBox();
-	mainPanel.add(createPanel(title,
-		nameTextBox));
+	mainPanel.add(createPanel(title, nameTextBox));
 
 	Label langTitle = new Label(controller.getMessages().chooseLang());
 	langListBox = new ListBox();
@@ -125,14 +109,12 @@ public class CreateSiteForm extends WindowPanel implements
 	    langListBox.addItem(controller.getMessages().getString(
 		    "language_" + lang), lang);
 	}
-	mainPanel.add(createPanel(langTitle,
-		langListBox));
+	mainPanel.add(createPanel(langTitle, langListBox));
 
 	Label configTitle = new Label(controller.getMessages().chooseConfig());
 	configListBox = new ListBox();
 	controller.getOsylConfigs(configListAsyncCallback);
-	mainPanel.add(createPanel(configTitle,
-		configListBox));
+	mainPanel.add(createPanel(configTitle, configListBox));
 
 	createSite = new PushButton(controller.getMessages().create());
 	createSite.setWidth("30px");
@@ -165,25 +147,11 @@ public class CreateSiteForm extends WindowPanel implements
 	mainPanel.setCellHorizontalAlignment(createSite,
 		HasHorizontalAlignment.ALIGN_CENTER);
 	mainPanel.setWidth(FORM_WIDTH + "px");
-	setWidget(mainPanel);
-	setStylePrimaryName("OsylManager-form-CreateSiteForm");
+
 	controller.addEventHandler(this);
 
     }
 
-    private HorizontalPanel createPanel(Label l, Widget w){
-	HorizontalPanel hp = new HorizontalPanel();
-	hp.add(l);
-	l.setStylePrimaryName("OsylManager-form-label");
-	hp.add(w);
-	w.setStylePrimaryName("OsylManager-form-element");
-	hp.setCellWidth(l, "30%");
-	hp.setCellWidth(w, "70%");
-	hp.setCellVerticalAlignment(w, HasVerticalAlignment.ALIGN_BOTTOM);
-	hp.setStylePrimaryName("OsylManager-form-genericPanel");
-	return hp;
-    }
-    
     public void onOsylManagerEvent(final OsylManagerEvent e) {
 	if (e.getType() == OsylManagerEvent.SITE_CREATION_EVENT) {
 	    mainPanel.clear();
@@ -196,15 +164,15 @@ public class CreateSiteForm extends WindowPanel implements
 	    edit.setText(controller.getMessages().createForm_edit());
 	    edit.setStylePrimaryName("OsylManager-action");
 	    edit.addClickHandler(new ClickHandler() {
-	        
-	        public void onClick(ClickEvent event) {
-	            String serverId = GWT.getModuleBaseURL().split("\\s*/portal/tool/\\s*")[0];
-	            Window.open(serverId+ "/portal/site/"+(String)e.getSource(), "_blank", "");
-	        }
+
+		public void onClick(ClickEvent event) {
+		    ActionHelper.editSite((String) e.getSource());
+		}
 	    });
 	    mainPanel.add(edit);
-	    
-	    PushButton closeButton = new PushButton(controller.getMessages().form_close());	    
+
+	    PushButton closeButton =
+		    new PushButton(controller.getMessages().form_close());
 	    closeButton.setWidth("40px");
 	    closeButton.addClickHandler(new ClickHandler() {
 		public void onClick(ClickEvent event) {
@@ -212,6 +180,8 @@ public class CreateSiteForm extends WindowPanel implements
 		}
 	    });
 	    mainPanel.add(closeButton);
+	    mainPanel.setCellHorizontalAlignment(closeButton,
+			HasHorizontalAlignment.ALIGN_CENTER);
 	}
     }
 

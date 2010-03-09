@@ -21,11 +21,7 @@
 
 package org.sakaiquebec.opensyllabus.manager.server;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletContext;
 
@@ -102,25 +98,18 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     /**
      * {@inheritDoc}
      */
-    public void readXML(String xmlReference, String siteId) {
-	osylManagerServices.getOsylManagerService().readXML(xmlReference,
-		siteId);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public Map<String, String> getOsylSitesMap() {
 	return osylManagerServices.getOsylManagerService().getOsylSitesMap();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void readZip(String zipReference, String siteId) {
-	osylManagerServices.getOsylManagerService().readZip(zipReference,
-		siteId);
-   }
+    public void importData(String fileReference, String siteId) {
+	if (fileReference.endsWith(".zip"))
+	    osylManagerServices.getOsylManagerService().readZip(fileReference,
+		    siteId);
+	else
+	    osylManagerServices.getOsylManagerService().readXML(fileReference,
+		    siteId);
+    }
 
     /**
      * {@inheritDoc}
@@ -129,7 +118,6 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	return osylManagerServices.getOsylManagerService().getOsylPackage(
 		siteId);
     }
-
 
     public Map<String, String> getOsylSites(String siteId) {
 	return osylManagerServices.getOsylManagerService().getOsylSites(siteId);

@@ -90,36 +90,13 @@ public class OsylManagerRPCController {
     }
 
     /**
-     * Read the xml file and create CO
-     * 
-     * @param osylManagerController
-     * @param url
-     * @param siteId
-     */
-    public void readXML(OsylManagerController osylManagerController,
-	    String url, String siteId) {
-	final OsylManagerController caller = osylManagerController;
-	// We first create a call-back for this method call
-	AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-	    public void onSuccess(Void serverResponse) {
-		caller.readCB();
-	    }
-
-	    public void onFailure(Throwable error) {
-		Window.alert(caller.getMessages().rpcFailure());
-	    }
-	};
-	serviceProxy.readXML(url, siteId, callback);
-    }
-
-    /**
      * Read the zip file and create CO (and ressource)
      * 
      * @param osylManagerController
      * @param url
      * @param siteId
      */
-    public void readZip(OsylManagerController osylManagerController,
+    public void importData(OsylManagerController osylManagerController,
 	    String url, String siteId) {
 	final OsylManagerController caller = osylManagerController;
 	// We first create a call-back for this method call
@@ -132,7 +109,7 @@ public class OsylManagerRPCController {
 		Window.alert(caller.getMessages().rpcFailure());
 	    }
 	};
-	serviceProxy.readZip(url, siteId, callback);
+	serviceProxy.importData(url, siteId, callback);
     }
     
     public void getOsylSitesMap(AsyncCallback<Map<String, String>> callback) {

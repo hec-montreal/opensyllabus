@@ -43,15 +43,6 @@ public interface OsylManagerGwtServiceAsync {
     
     public void getOsylConfigs(AsyncCallback<Map<String, String>> callback);
     
-    /**
-     * Reads the XML data and creates a course outline form it.
-     * 
-     * @param xmlReference
-     * @param siteId
-     * @param callback
-     */
-    public void readXML(String xmlReference, String siteId,
-	    AsyncCallback<Void> callback);
 
     /**
      * Reads a archive file.
@@ -60,7 +51,7 @@ public interface OsylManagerGwtServiceAsync {
      * @param siteId
      * @param callback
      */
-    public void readZip(String xmlReference, String siteId,
+    public void importData(String fileReference, String siteId,
 	    AsyncCallback<Void> callback);
 
     public void getOsylSitesMap(AsyncCallback<Map<String, String>> callback);

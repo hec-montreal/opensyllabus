@@ -25,29 +25,27 @@ import java.util.List;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
 
-import com.google.gwt.user.client.Window;
-
 /**
- *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
 public class ImportAction extends OsylManagerAbstractAction {
 
     public ImportAction(OsylManagerController controller) {
-	super(controller, "mainView_action_importSite");
-	setEnabled(true);
+	super(controller, "mainView_action_import");
     }
 
     @Override
     public boolean isActionEnableForSites(List<String> siteIds) {
-	return true;
+	if (siteIds.size() == 1)
+	    return true;
+	return false;
     }
 
     @Override
     public void onClick(List<String> siteIds) {
-	Window.alert("import site");
+	ImportForm isf = new ImportForm(controller, siteIds.get(0));
+	isf.showModal();
     }
 
 }
-

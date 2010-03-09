@@ -24,16 +24,18 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
-import org.sakaiquebec.opensyllabus.manager.client.ui.helper.ActionHelper;
+
+import com.google.gwt.user.client.Window;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class EditAction extends OsylManagerAbstractAction {
+public class ImportNewSiteAction extends OsylManagerAbstractAction {
 
-    public EditAction(OsylManagerController controller) {
-	super(controller, "mainView_action_edit");
+    public ImportNewSiteAction(OsylManagerController controller) {
+	super(controller, "mainView_action_importSite");
+	setEnabled(true);
     }
 
     @Override
@@ -43,9 +45,6 @@ public class EditAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(List<String> siteIds) {
-	for (String siteId : siteIds) {
-	    ActionHelper.editSite(siteId);
-	}
+	Window.alert("import");
     }
-
 }

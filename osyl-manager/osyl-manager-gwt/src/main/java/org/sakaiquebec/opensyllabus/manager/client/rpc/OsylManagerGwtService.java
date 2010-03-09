@@ -43,20 +43,12 @@ public interface OsylManagerGwtService extends RemoteService {
     public Map<String, String> getOsylConfigs();
 
     /**
-     * Reads the XML and creates a course outline.
-     * 
-     * @param xmlReference
-     * @param siteId
-     */
-    public void readXML(String xmlReference, String siteId);
-
-    /**
      * Reads the archive file.
      * 
      * @param xmlReference
      * @param siteId
      */
-    public void readZip(String xmlReference, String siteId);
+    public void importData(String xmlReference, String siteId);
 
     public Map<String, String> getOsylSitesMap();
 

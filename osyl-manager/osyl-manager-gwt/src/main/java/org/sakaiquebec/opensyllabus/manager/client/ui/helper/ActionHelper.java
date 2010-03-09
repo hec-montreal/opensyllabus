@@ -18,34 +18,21 @@
  * limitations under the License.
  *
  ******************************************************************************/
-package org.sakaiquebec.opensyllabus.manager.client.ui.view;
+package org.sakaiquebec.opensyllabus.manager.client.ui.helper;
 
-import java.util.List;
-
-import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
-import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
-import org.sakaiquebec.opensyllabus.manager.client.ui.helper.ActionHelper;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class EditAction extends OsylManagerAbstractAction {
+public class ActionHelper {
 
-    public EditAction(OsylManagerController controller) {
-	super(controller, "mainView_action_edit");
-    }
-
-    @Override
-    public boolean isActionEnableForSites(List<String> siteIds) {
-	return true;
-    }
-
-    @Override
-    public void onClick(List<String> siteIds) {
-	for (String siteId : siteIds) {
-	    ActionHelper.editSite(siteId);
-	}
+    public static void editSite(String siteId) {
+	String serverId =
+		GWT.getModuleBaseURL().split("\\s*/portal/tool/\\s*")[0];
+	Window.open(serverId + "/portal/site/" + siteId, "_blank", "");
     }
 
 }

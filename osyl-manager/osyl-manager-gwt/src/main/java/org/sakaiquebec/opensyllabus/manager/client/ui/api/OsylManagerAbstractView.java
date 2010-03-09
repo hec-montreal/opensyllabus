@@ -58,6 +58,7 @@ public class OsylManagerAbstractView extends Composite {
      * @param widget
      * @return
      */
+    @Deprecated
     static public FlexTable createFormElement(Label label, Widget widget) {
 	FlexTable flexTable = new FlexTable();
 	flexTable.setWidget(0, 0, label);

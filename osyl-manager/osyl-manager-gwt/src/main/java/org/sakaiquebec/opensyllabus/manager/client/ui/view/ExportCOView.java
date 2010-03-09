@@ -112,7 +112,7 @@ public class ExportCOView extends OsylManagerAbstractView implements
 
     /** {@inheritDoc} */
     public void onOsylManagerEvent(OsylManagerEvent e) {
-	if (getController().getState() == OsylManagerController.STATE_FILE_DOWNLOAD) {
+//	if (getController().getState() == OsylManagerController.STATE_FILE_DOWNLOAD) {
 	    String url = GWT.getModuleBaseURL();
 	    String cleanUrl = url.substring(0, url.indexOf("/", 8));
 	    String downloadUrl =
@@ -122,6 +122,6 @@ public class ExportCOView extends OsylManagerAbstractView implements
 			    downloadUrl,
 			    "_self",
 			    "location=no,menubar=no,scrollbars=no,resize=no,resizable=no,status=no,toolbar=no,directories=no,width=5,height=5,top=0,left=0'");
-	}
+//	}
     }
 }

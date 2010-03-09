@@ -56,11 +56,13 @@ public class OsylManagerMainView extends OsylManagerAbstractView {
 		.add(new Label(getController().getMessages().mainView_label()));
 
 	HorizontalPanel hPanel = new HorizontalPanel();
+	
+	
 
 	hPanel.add(new CreateSiteAction(getController()));
 	hPanel.add(new HTML("&nbsp;"
 		+ getController().getMessages().mainView_or() + "&nbsp;"));
-	hPanel.add(new ImportAction(getController()));
+	hPanel.add(new ImportNewSiteAction(getController()));
 
 	mainPanel.add(hPanel);
 
@@ -68,6 +70,7 @@ public class OsylManagerMainView extends OsylManagerAbstractView {
 		.mainView_operationsOnExistingSites()));
 
 	HorizontalPanel hzPanel = new HorizontalPanel();
+	hzPanel.setStylePrimaryName("OsylManager-mainView-mainPanel");
 
 	tabPanel = new TabPanel();
 	tabPanel.add(new CourseListView(getController()), getController()
@@ -104,6 +107,7 @@ public class OsylManagerMainView extends OsylManagerAbstractView {
 	rightPanel.add(hz3);
 
 	HorizontalPanel hz4 = new HorizontalPanel();
+	hz4.add(new ImportAction(getController()));
 	hz4.add(new ExportAction(getController()));
 	hz4.add(new CleanAction(getController()));
 	hz4.add(new DeleteAction(getController()));

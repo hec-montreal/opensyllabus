@@ -162,6 +162,8 @@ public interface Messages extends ConstantsWithLookup {
    
    String mainView_action_unpublish();
    
+   String mainView_action_import();
+   
    String mainView_tabs_all();
    
    String rpcFailure();
@@ -169,6 +171,8 @@ public interface Messages extends ConstantsWithLookup {
    String noCOSite();
    
    String siteForm_create_ok();
+   
+   String importForm_import_ok();
    
    String form_close();
    
