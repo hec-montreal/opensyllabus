@@ -21,6 +21,7 @@
 
 package org.sakaiquebec.opensyllabus.manager.server;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -119,8 +120,8 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		siteId);
     }
 
-    public Map<String, String> getOsylSites(String siteId) {
-	return osylManagerServices.getOsylManagerService().getOsylSites(siteId);
+    public Map<String, String> getOsylSites(List<String> siteIds) {
+	return osylManagerServices.getOsylManagerService().getOsylSites(siteIds);
     }
 
     public String getParent(String siteId) throws Exception {

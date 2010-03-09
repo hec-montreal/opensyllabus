@@ -446,8 +446,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     private void addCitations(File file, String siteId, String resourceOutputDir)
 	    throws IOException {
-	List<String> oldReferences = new ArrayList();
-	List<String> newReferences = new ArrayList();
+	List<String> oldReferences = new ArrayList<String>();
+	List<String> newReferences = new ArrayList<String>();
 
 	CitationCollection importCollection =
 		org.sakaiproject.citation.cover.CitationService.addCollection();
@@ -684,7 +684,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return siteMap;
     }
 
-    public Map<String, String> getOsylSites(String siteId) {
+    public Map<String, String> getOsylSites(List<String> siteIds) {
 
 	Map<String, String> siteMap = new HashMap<String, String>();
 	@SuppressWarnings("unchecked")
@@ -702,15 +702,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			new String[] { "sakai.opensyllabus.tool" }).isEmpty()) {
 		    if (osylSiteService.hasBeenPublished(site.getId())) {
 			boolean isInHierarchy = false;
-			String parentId = site.getId();
-			while (parentId != null && !isInHierarchy) {
-			    if (parentId.equals(siteId))
-				isInHierarchy = true;
-			    try {
-				parentId = osylSiteService.getParent(parentId);
-			    } catch (Exception e) {
-				parentId = null;
-			    }
+			for (String siteId : siteIds) {
+			    isInHierarchy = isInHierarchy || isSiteinSiteHierarchy(site.getId(), siteId);
 			}
 			if (!isInHierarchy)
 			    siteMap.put(site.getId(), site.getTitle());
@@ -720,6 +713,20 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	}
 	return siteMap;
+    }
+    
+    private boolean isSiteinSiteHierarchy(String siteId, String siteId2){
+	boolean isInHierarchy = false;
+	while (siteId != null && !isInHierarchy) {
+	    if (siteId.equals(siteId2))
+		isInHierarchy = true;
+	    try {
+		siteId = osylSiteService.getParent(siteId);
+	    } catch (Exception e) {
+		siteId = null;
+	    }
+	}
+	return isInHierarchy;
     }
 
     public Map<String, String> getPublishedOsylSites() {

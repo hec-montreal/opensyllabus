@@ -25,14 +25,39 @@ import java.util.List;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.StatusCodeException;
 
 /**
- *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
 public class ExportAction extends OsylManagerAbstractAction {
+
+    private AsyncCallback<String> callback = new AsyncCallback<String>() {
+	public void onSuccess(String fileUrl) {
+	    openDownloadLink(fileUrl);
+	}
+
+	public void onFailure(Throwable error) {
+	    Window.alert(controller.getMessages().rpcFailure());
+	    Window.alert(error.toString());
+	}
+    };
+    
+    private class ExportCallBack implements AsyncCallback<String>{
+
+	public void onSuccess(String fileUrl) {
+	    openDownloadLink(fileUrl);
+	}
+
+	public void onFailure(Throwable error) {
+	    Window.alert(controller.getMessages().rpcFailure());
+	}
+	
+    }
 
     public ExportAction(OsylManagerController controller) {
 	super(controller, "mainView_action_export");
@@ -45,8 +70,22 @@ public class ExportAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(List<String> siteIds) {
-	Window.alert("export");
+	for (String siteId : siteIds) {
+	    ExportCallBack callB = new ExportCallBack();
+	    controller.getOsylPackage(siteId, callB);
+	}
+	
+    }
+
+    private void openDownloadLink(String d_url) {
+	String url = GWT.getModuleBaseURL();
+	String cleanUrl = url.substring(0, url.indexOf("/", 8));
+	String downloadUrl = cleanUrl + "/sdata/c" + d_url;
+	Window
+		.open(
+			downloadUrl,
+			"_self",
+			"location=no,menubar=no,scrollbars=no,resize=no,resizable=no,status=no,toolbar=no,directories=no,width=5,height=5,top=0,left=0'");
     }
 
 }
-

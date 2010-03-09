@@ -134,7 +134,6 @@ public class ImportForm extends OsylManagerAbstractWindowPanel implements
 
     public void onOsylManagerEvent(final OsylManagerEvent e) {
 	if (e.getType() == OsylManagerEvent.SITE_IMPORT_EVENT) {
-	    setWidget(mainPanel);
 	    mainPanel.clear();
 	    Label l = new Label(controller.getMessages().importCOTitle());
 	    l.setStylePrimaryName("OsylManager-form-title");
@@ -162,6 +161,7 @@ public class ImportForm extends OsylManagerAbstractWindowPanel implements
 	    mainPanel.add(closeButton);
 	    mainPanel.setCellHorizontalAlignment(closeButton,
 		    HasHorizontalAlignment.ALIGN_CENTER);
+	    setWidget(mainPanel);
 	}
 
     }

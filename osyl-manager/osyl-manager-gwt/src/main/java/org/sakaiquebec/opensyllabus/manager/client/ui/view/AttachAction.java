@@ -25,10 +25,7 @@ import java.util.List;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
 
-import com.google.gwt.user.client.Window;
-
 /**
- *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
@@ -40,15 +37,13 @@ public class AttachAction extends OsylManagerAbstractAction {
 
     @Override
     public boolean isActionEnableForSites(List<String> siteIds) {
-	if(siteIds.size()==1)
-	    return true;
-	else return false;
+	return true;// TODO verify if sites are already attach
     }
 
     @Override
     public void onClick(List<String> siteIds) {
-	Window.alert("attach");
+	AttachForm attachForm = new AttachForm(controller, siteIds);
+	attachForm.showModal();
     }
 
 }
-

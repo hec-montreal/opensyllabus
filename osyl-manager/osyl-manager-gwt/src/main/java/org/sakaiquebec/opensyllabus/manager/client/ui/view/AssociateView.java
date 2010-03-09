@@ -240,8 +240,8 @@ public class AssociateView extends OsylManagerAbstractView implements
 	int selectedIndex = siteList.getSelectedIndex();
 	if (selectedIndex != -1) {
 	    siteSelectedId = siteList.getValue(selectedIndex);
-	    getController().getOsylSites(siteSelectedId,
-		    parentListAsyncCallback);
+//	    getController().getOsylSites(siteSelectedId,
+//		    parentListAsyncCallback);
 	    getController().getParent(siteSelectedId, parentAsyncCallback);
 	}
     }

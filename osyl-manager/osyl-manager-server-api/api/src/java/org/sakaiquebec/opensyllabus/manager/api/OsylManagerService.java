@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.manager.api;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 
@@ -124,7 +125,7 @@ public interface OsylManagerService {
      */
     public String getOsylPackage(String siteId);
 
-    public Map<String, String> getOsylSites(String siteId);
+    public Map<String, String> getOsylSites(List<String> siteIds);
 
     public String getParent(String siteId) throws Exception;
 

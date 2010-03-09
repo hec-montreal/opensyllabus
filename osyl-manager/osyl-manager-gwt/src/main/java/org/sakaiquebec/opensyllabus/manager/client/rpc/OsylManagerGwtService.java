@@ -21,6 +21,7 @@
 
 package org.sakaiquebec.opensyllabus.manager.client.rpc;
 
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -54,7 +55,7 @@ public interface OsylManagerGwtService extends RemoteService {
 
     public String getOsylPackage(String siteId);
 
-    public Map<String, String> getOsylSites(String siteId);
+    public Map<String, String> getOsylSites(List<String> siteIds);
 
     public String getParent(String siteId) throws Exception;
 

@@ -55,8 +55,6 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     private Map<String, String> coursesMap;
 
-    private String osylPackageUrl;
-
     private ManagerImageBundleInterface imageBundle =
 	    (ManagerImageBundleInterface) GWT
 		    .create(ManagerImageBundleInterface.class);
@@ -101,14 +99,6 @@ public class OsylManagerController implements FireOsylManagerEvents {
      */
     public Messages getMessages() {
 	return messages;
-    }
-
-    public String getOsylPackageUrl() {
-	return osylPackageUrl;
-    }
-
-    public void setOsylPackageUrl(String osylPackageUrl) {
-	this.osylPackageUrl = osylPackageUrl;
     }
 
     public Map<String, String> getOsylSitesMap() {
@@ -166,8 +156,8 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	OsylManagerRPCController.getInstance().importData(this, url, siteId);
     }
 
-    public void getOsylPackage(String siteId) {
-	OsylManagerRPCController.getInstance().getOsylPackage(this, siteId);
+    public void getOsylPackage(String siteId, AsyncCallback<String> cb) {
+	OsylManagerRPCController.getInstance().getOsylPackage(this, siteId,cb);
     }
 
     /**
@@ -187,15 +177,6 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	    Window.alert(messages.siteNotCreated());
 	} else {
 	    notifyManagerEventHandler(new OsylManagerEvent(id, OsylManagerEvent.SITE_CREATION_EVENT));
-	}
-    }
-
-    public void getOsylPackageCB(String url) {
-	if (url == null) {
-	    Window.alert(getMessages().unableToExportCO());
-	} else {
-	    this.setOsylPackageUrl(url);
-	    //notifyManagerEventHandler();
 	}
     }
 
@@ -227,9 +208,9 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	OsylManagerRPCController.getInstance().getParent(siteId, callback);
     }
 
-    public void getOsylSites(String siteId,
+    public void getOsylSites(List<String> siteIds,
 	    AsyncCallback<Map<String, String>> callback) {
-	OsylManagerRPCController.getInstance().getOsylSites(siteId, callback);
+	OsylManagerRPCController.getInstance().getOsylSites(siteIds, callback);
     }
 
     public void associate(String siteId, String parentId,

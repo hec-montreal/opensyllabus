@@ -179,6 +179,14 @@ public interface Messages extends ConstantsWithLookup {
    String courseListView_loading();
    
    String createForm_edit();
+   
+   String select_parent_site();
+   
+   String attachForm_attach_ok();
+   
+   String attachForm_attach_error();
+   
+   String attachForm_attach_error_detail();
 
 
 }

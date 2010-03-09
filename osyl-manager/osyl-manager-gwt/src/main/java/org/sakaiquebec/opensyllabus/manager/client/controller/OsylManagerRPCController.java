@@ -21,6 +21,7 @@
 
 package org.sakaiquebec.opensyllabus.manager.client.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtService;
@@ -117,17 +118,7 @@ public class OsylManagerRPCController {
     }
 
     public void getOsylPackage(OsylManagerController osylManagerController,
-	    String siteId) {
-	final OsylManagerController caller = osylManagerController;
-	AsyncCallback<String> callback = new AsyncCallback<String>() {
-	    public void onSuccess(String fileUrl) {
-		caller.getOsylPackageCB(fileUrl);
-	    }
-
-	    public void onFailure(Throwable error) {
-		Window.alert(caller.getMessages().rpcFailure());
-	    }
-	};
+	    String siteId, AsyncCallback<String> callback) {
 	serviceProxy.getOsylPackage(siteId, callback);
     }
 
@@ -135,9 +126,9 @@ public class OsylManagerRPCController {
 	serviceProxy.getParent(siteId, callback);
     }
 
-    public void getOsylSites(String siteId,
+    public void getOsylSites(List<String> siteIds,
 	    AsyncCallback<Map<String, String>> callback) {
-	serviceProxy.getOsylSites(siteId, callback);
+	serviceProxy.getOsylSites(siteIds, callback);
     }
 
     public void associate(String siteId, String parentId,
