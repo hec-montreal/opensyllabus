@@ -97,6 +97,7 @@ import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.api.OsylService;
+import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -243,6 +244,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	this.courseManagementService = courseManagementService;
     }
 
+    /**
+     * The Osyl resource service to be injected by Spring
+     */
+    private OsylSecurityService osylSecurityService;
+
+    public void setOsylSecurityService(OsylSecurityService osylSecurityService) {
+	this.osylSecurityService = osylSecurityService;
+    }
+    
     /**
      * The type of site we are creating
      */
