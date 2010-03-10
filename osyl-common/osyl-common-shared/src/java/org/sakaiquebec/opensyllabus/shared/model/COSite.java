@@ -31,10 +31,11 @@ import java.util.List;
  * @version $Id: $
  */
 public class COSite implements java.io.Serializable{
+    
+    private static final long serialVersionUID = 7458511802764084049L;
 
-    private static final long serialVersionUID = 3500746463914597287L;
-
-
+    private String siteId;
+    
     /**
      * The name of the site
      */
@@ -327,5 +328,13 @@ public class COSite implements java.io.Serializable{
      */
     public void setLastModifiedDate(String lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public void setSiteId(String siteId) {
+	this.siteId = siteId;
+    }
+
+    public String getSiteId() {
+	return siteId;
     }
 }

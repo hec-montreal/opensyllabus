@@ -24,28 +24,17 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.StatusCodeException;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
 public class ExportAction extends OsylManagerAbstractAction {
-
-    private AsyncCallback<String> callback = new AsyncCallback<String>() {
-	public void onSuccess(String fileUrl) {
-	    openDownloadLink(fileUrl);
-	}
-
-	public void onFailure(Throwable error) {
-	    Window.alert(controller.getMessages().rpcFailure());
-	    Window.alert(error.toString());
-	}
-    };
     
     private class ExportCallBack implements AsyncCallback<String>{
 
@@ -64,15 +53,15 @@ public class ExportAction extends OsylManagerAbstractAction {
     }
 
     @Override
-    public boolean isActionEnableForSites(List<String> siteIds) {
+    public boolean isActionEnableForSites(List<COSite> siteIds) {
 	return true;
     }
 
     @Override
-    public void onClick(List<String> siteIds) {
-	for (String siteId : siteIds) {
+    public void onClick(List<COSite> siteIds) {
+	for (COSite cosite : siteIds) {
 	    ExportCallBack callB = new ExportCallBack();
-	    controller.getOsylPackage(siteId, callB);
+	    controller.getOsylPackage(cosite.getSiteId(), callB);
 	}
 	
     }

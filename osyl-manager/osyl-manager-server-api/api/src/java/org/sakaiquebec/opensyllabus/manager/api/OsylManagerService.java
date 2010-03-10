@@ -110,13 +110,6 @@ public interface OsylManagerService {
 	    throws Exception;
 
     /**
-     * Get Map<id,name> of sites with OsylTool
-     * 
-     * @return
-     */
-    public Map<String, String> getOsylSitesMap();
-
-    /**
      * Construct a package which contains course Outline and files
      * 
      * @return url of the package file

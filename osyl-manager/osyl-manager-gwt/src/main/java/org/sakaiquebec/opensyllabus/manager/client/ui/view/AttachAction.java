@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -36,12 +37,18 @@ public class AttachAction extends OsylManagerAbstractAction {
     }
 
     @Override
-    public boolean isActionEnableForSites(List<String> siteIds) {
-	return true;// TODO verify if sites are already attach
+    public boolean isActionEnableForSites(List<COSite> siteIds) {
+	boolean b=true;
+	for(COSite cosite : siteIds){
+	    String parentSite=cosite.getParentSite();
+	    if(parentSite!=null && !parentSite.equals(""))
+		b=false;
+	}
+	return b;
     }
 
     @Override
-    public void onClick(List<String> siteIds) {
+    public void onClick(List<COSite> siteIds) {
 	AttachForm attachForm = new AttachForm(controller, siteIds);
 	attachForm.showModal();
     }

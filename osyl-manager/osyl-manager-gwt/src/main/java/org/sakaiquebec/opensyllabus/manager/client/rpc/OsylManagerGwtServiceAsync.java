@@ -24,6 +24,8 @@ package org.sakaiquebec.opensyllabus.manager.client.rpc;
 import java.util.List;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -55,8 +57,6 @@ public interface OsylManagerGwtServiceAsync {
     public void importData(String fileReference, String siteId,
 	    AsyncCallback<Void> callback);
 
-    public void getOsylSitesMap(AsyncCallback<Map<String, String>> callback);
-
     public void getOsylPackage(String siteId, AsyncCallback<String> callback);
 
     public void getOsylSites(List<String> siteIds,
@@ -77,7 +77,7 @@ public interface OsylManagerGwtServiceAsync {
     public void getCoAndSiteInfo(String siteId, AsyncCallback<String> callback);
 
     
-    public void getCoAndSiteInfo(AsyncCallback<List<String>> callback);
+    public void getCoAndSiteInfo(AsyncCallback<List<COSite>> callback);
 
 
     

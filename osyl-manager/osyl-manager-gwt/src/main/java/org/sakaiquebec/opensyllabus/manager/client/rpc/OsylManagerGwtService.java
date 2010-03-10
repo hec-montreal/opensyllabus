@@ -53,9 +53,7 @@ public interface OsylManagerGwtService extends RemoteService {
      * @param siteId
      */
     public void importData(String xmlReference, String siteId);
-
-    public Map<String, String> getOsylSitesMap();
-
+    
     public String getOsylPackage(String siteId);
 
     public Map<String, String> getOsylSites(List<String> siteIds);

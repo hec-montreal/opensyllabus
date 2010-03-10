@@ -191,7 +191,8 @@ public class AssociateView extends OsylManagerAbstractView implements
 	adButton = new Button();
 	adButton.setText(getController().getMessages().associate());
 
-	Map<String, String> sitesMap = getController().getOsylSitesMap();
+	//TODO Map<String, String> sitesMap = getController().getOsylSitesMap();
+	Map<String, String> sitesMap =null;
 	if (sitesMap == null || sitesMap.isEmpty()) {
 	    Window.alert(getController().getMessages().noCOSite());
 	} else {

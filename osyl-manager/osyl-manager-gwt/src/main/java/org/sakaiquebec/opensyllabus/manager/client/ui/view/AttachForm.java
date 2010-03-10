@@ -28,7 +28,7 @@ import java.util.TreeMap;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
-import org.sakaiquebec.opensyllabus.manager.client.ui.helper.ActionHelper;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -36,7 +36,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
@@ -47,18 +46,18 @@ import com.google.gwt.user.client.ui.PushButton;
  */
 public class AttachForm extends OsylManagerAbstractWindowPanel {
 
-    private static List<String> siteIds;
+    private static List<COSite> coSites;
 
     private ListBox parentSiteList;
 
     private PushButton attButton;
-    
-    private static List<String> messages=new ArrayList<String>();
-    
-    private static int asynCB_return=0;
-    
-    private static int asynCB_OK=0;
-    
+
+    private static List<String> messages = new ArrayList<String>();
+
+    private static int asynCB_return = 0;
+
+    private static int asynCB_OK = 0;
+
     AsyncCallback<Map<String, String>> parentListAsyncCallback =
 	    new AsyncCallback<Map<String, String>>() {
 
@@ -94,44 +93,43 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 		}
 
 	    };
-	    
-	  
-	    
-	    private class AssociateAsyncCallback implements AsyncCallback<Void>{
 
-		private String siteId;
-		
-		public AssociateAsyncCallback(String siteId) {
-		    super();
-		    this.siteId = siteId;
-		}
+    private class AssociateAsyncCallback implements AsyncCallback<Void> {
 
-		public void onFailure(Throwable caught) {
-		    AttachForm.messages.add(siteId);
-		    responseReceive();
-		}
+	private String siteId;
 
-		public void onSuccess(Void result) {
-		    AttachForm.asynCB_OK++;
-		    responseReceive();
+	public AssociateAsyncCallback(String siteId) {
+	    super();
+	    this.siteId = siteId;
+	}
+
+	public void onFailure(Throwable caught) {
+	    AttachForm.messages.add(siteId);
+	    responseReceive();
+	}
+
+	public void onSuccess(Void result) {
+	    AttachForm.asynCB_OK++;
+	    responseReceive();
+	}
+
+	private void responseReceive() {
+	    AttachForm.asynCB_return++;
+	    if (AttachForm.asynCB_return == AttachForm.coSites.size()) {
+		if (AttachForm.asynCB_OK == AttachForm.coSites.size()) {
+		    AttachForm.this.onSuccess();
+		} else {
+		    AttachForm.this.onFailure();
 		}
-		
-		private void responseReceive(){
-		    AttachForm.asynCB_return++;
-		    if(AttachForm.asynCB_return==AttachForm.siteIds.size()){
-			if(AttachForm.asynCB_OK==AttachForm.siteIds.size()){
-			    AttachForm.this.onSuccess();
-			}else{
-			    AttachForm.this.onFailure();
-			}
-		    }
-		}
-		
 	    }
+	}
 
-    public AttachForm(final OsylManagerController controller, final List<String> siteIds) {
+    }
+
+    public AttachForm(final OsylManagerController controller,
+	    final List<COSite> cosites) {
 	super(controller);
-	AttachForm.siteIds = siteIds;
+	AttachForm.coSites = cosites;
 
 	Label title =
 		new Label(controller.getMessages().mainView_action_attach());
@@ -146,15 +144,15 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	attButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		int selectedIndex = parentSiteList.getSelectedIndex();
-		    if (selectedIndex != -1) {
-			String pId = parentSiteList.getValue(selectedIndex);
-			for (String siteId : siteIds) {
-			    AssociateAsyncCallback aac = new AssociateAsyncCallback(siteId);
-			    controller.associate(siteId, pId,
-					aac);
-			}
-			
+		if (selectedIndex != -1) {
+		    String pId = parentSiteList.getValue(selectedIndex);
+		    for (COSite cosite : cosites) {
+			AssociateAsyncCallback aac =
+				new AssociateAsyncCallback(cosite.getSiteId());
+			controller.associate(cosite.getSiteId(), pId, aac);
 		    }
+
+		}
 	    }
 	});
 	attButton.setWidth("70px");
@@ -162,57 +160,62 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	mainPanel.add(attButton);
 	mainPanel.setCellHorizontalAlignment(attButton,
 		HasHorizontalAlignment.ALIGN_CENTER);
-	
 
+	List<String> siteIds = new ArrayList<String>();
+	for (COSite cosi : cosites)
+	    siteIds.add(cosi.getSiteId());
 	controller.getOsylSites(siteIds, parentListAsyncCallback);
     }
-    
-    public void onSuccess(){
-	mainPanel.clear();
-	    Label l = new Label(controller.getMessages().mainView_action_attach());
-	    l.setStylePrimaryName("OsylManager-form-title");
-	    mainPanel.add(l);
-	    mainPanel.add(new Label(controller.getMessages()
-		    .attachForm_attach_ok()));
 
-	    PushButton closeButton =
-		    new PushButton(controller.getMessages().form_close());
-	    closeButton.setWidth("40px");
-	    closeButton.addClickHandler(new ClickHandler() {
-		public void onClick(ClickEvent event) {
-		    AttachForm.super.hide();
-		}
-	    });
-	    mainPanel.add(closeButton);
-	    mainPanel.setCellHorizontalAlignment(closeButton,
-			HasHorizontalAlignment.ALIGN_CENTER);
-    }
-    
-    public void onFailure(){
-	    mainPanel.clear();
-	    Label l = new Label(controller.getMessages().mainView_action_attach());
-	    l.setStylePrimaryName("OsylManager-form-title");
-	    mainPanel.add(l);
-	    mainPanel.add(new Label(controller.getMessages()
-		    .attachForm_attach_error()));
-	    
-	    for (String id : messages) {
-		Label l1 = new Label(id + controller.getMessages().attachForm_attach_error_detail());
-		mainPanel.add(l1);
+    public void onSuccess() {
+	mainPanel.clear();
+	Label l = new Label(controller.getMessages().mainView_action_attach());
+	l.setStylePrimaryName("OsylManager-form-title");
+	mainPanel.add(l);
+	mainPanel
+		.add(new Label(controller.getMessages().attachForm_attach_ok()));
+
+	PushButton closeButton =
+		new PushButton(controller.getMessages().form_close());
+	closeButton.setWidth("40px");
+	closeButton.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
+		AttachForm.super.hide();
 	    }
-	    
-	    PushButton closeButton =
-		    new PushButton(controller.getMessages().form_close());
-	    closeButton.setWidth("40px");
-	    closeButton.addClickHandler(new ClickHandler() {
-		public void onClick(ClickEvent event) {
-		    AttachForm.super.hide();
-		}
-	    });
-	    mainPanel.add(closeButton);
-	    mainPanel.setCellHorizontalAlignment(closeButton,
-			HasHorizontalAlignment.ALIGN_CENTER);
-	    setWidget(mainPanel);
+	});
+	mainPanel.add(closeButton);
+	mainPanel.setCellHorizontalAlignment(closeButton,
+		HasHorizontalAlignment.ALIGN_CENTER);
+    }
+
+    public void onFailure() {
+	mainPanel.clear();
+	Label l = new Label(controller.getMessages().mainView_action_attach());
+	l.setStylePrimaryName("OsylManager-form-title");
+	mainPanel.add(l);
+	mainPanel.add(new Label(controller.getMessages()
+		.attachForm_attach_error()));
+
+	for (String id : messages) {
+	    Label l1 =
+		    new Label(id
+			    + controller.getMessages()
+				    .attachForm_attach_error_detail());
+	    mainPanel.add(l1);
+	}
+
+	PushButton closeButton =
+		new PushButton(controller.getMessages().form_close());
+	closeButton.setWidth("40px");
+	closeButton.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
+		AttachForm.super.hide();
+	    }
+	});
+	mainPanel.add(closeButton);
+	mainPanel.setCellHorizontalAlignment(closeButton,
+		HasHorizontalAlignment.ALIGN_CENTER);
+	setWidget(mainPanel);
     }
 
 }

@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.user.client.Window;
 
@@ -39,12 +40,12 @@ public class DeleteAction extends OsylManagerAbstractAction {
     }
 
     @Override
-    public boolean isActionEnableForSites(List<String> siteIds) {
+    public boolean isActionEnableForSites(List<COSite> siteIds) {
 	return true;
     }
 
     @Override
-    public void onClick(List<String> siteIds) {
+    public void onClick(List<COSite> siteIds) {
 	Window.alert("delete");
     }
 

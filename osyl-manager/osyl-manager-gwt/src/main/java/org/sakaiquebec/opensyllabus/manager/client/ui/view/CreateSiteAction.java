@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -37,12 +38,12 @@ public class CreateSiteAction extends OsylManagerAbstractAction {
     }
 
     @Override
-    public boolean isActionEnableForSites(List<String> siteIds) {
+    public boolean isActionEnableForSites(List<COSite> siteIds) {
 	return true;
     }
 
     @Override
-    public void onClick(List<String> siteIds) {
+    public void onClick(List<COSite> siteIds) {
 	CreateSiteForm createSiteForm = new CreateSiteForm(controller);
 	createSiteForm.showModal();
     }

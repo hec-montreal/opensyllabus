@@ -164,7 +164,8 @@ public class AssociateToCMView extends OsylManagerAbstractView implements
 
 	// We retreive all the sites that the current user has access to
 
-	Map<String, String> sitesMap = getController().getOsylSitesMap();
+	//TODO Map<String, String> sitesMap = getController().getOsylSitesMap();
+	Map<String, String> sitesMap=null;
 	if (sitesMap == null || sitesMap.isEmpty()) {
 	    Window.alert(getController().getMessages().noCOSite());
 	} else {

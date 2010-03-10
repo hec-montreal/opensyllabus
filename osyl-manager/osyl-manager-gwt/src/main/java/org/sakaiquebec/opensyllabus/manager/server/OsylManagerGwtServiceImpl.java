@@ -97,13 +97,6 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Map<String, String> getOsylSitesMap() {
-	return osylManagerServices.getOsylManagerService().getOsylSitesMap();
-    }
-
     public void importData(String fileReference, String siteId) {
 	if (fileReference.endsWith(".zip"))
 	    osylManagerServices.getOsylManagerService().readZip(fileReference,
@@ -148,11 +141,11 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     }
     
     public COSite getCoAndSiteInfo(String siteId){
-	return null;
+	return osylManagerServices.getOsylManagerService().getCoAndSiteInfo(siteId);
     }
 
     public List<COSite> getCoAndSiteInfo(){
-	return null;
+	return osylManagerServices.getOsylManagerService().getCoAndSiteInfo();
     }
 
 }

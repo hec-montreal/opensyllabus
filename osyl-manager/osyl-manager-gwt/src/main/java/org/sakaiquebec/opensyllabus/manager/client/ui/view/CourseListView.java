@@ -22,12 +22,15 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
+import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
 import com.google.gwt.core.client.GWT;
@@ -50,15 +53,18 @@ public class CourseListView extends OsylManagerAbstractView implements
     private VerticalPanel mainPanel;
 
     private ListBox siteListBox;
+    
+    private List<COSite> cosites;
 
-    private AsyncCallback<Map<String, String>> asyncCallback =
-	    new AsyncCallback<Map<String, String>>() {
+    private AsyncCallback<List<COSite>> asyncCallback =
+	    new AsyncCallback<List<COSite>>() {
 
 		public void onFailure(Throwable caught) {
 		    Window.alert(getController().getMessages().rpcFailure());
 		}
 
-		public void onSuccess(Map<String, String> result) {
+		public void onSuccess(List<COSite> result) {
+		    cosites=result;
 		    mainPanel.clear();
 		    siteListBox.clear();
 		    if (result == null || result.isEmpty()) {
@@ -67,11 +73,12 @@ public class CourseListView extends OsylManagerAbstractView implements
 			TreeMap<String, String> sortedMap =
 				new TreeMap<String, String>(
 					LocalizedStringComparator.getInstance());
-			for (Iterator<String> sitesMapKeysIterator =
-				result.keySet().iterator(); sitesMapKeysIterator
+			for (Iterator<COSite> coSiteIter =
+				result.iterator(); coSiteIter
 				.hasNext();) {
-			    String siteId = sitesMapKeysIterator.next();
-			    String siteTitle = result.get(siteId);
+			    COSite cos = coSiteIter.next();
+			    String siteId = cos.getSiteId();
+			    String siteTitle = cos.getSiteName();
 			    sortedMap.put(siteTitle, siteId);
 			}
 			for (Iterator<String> sortedSiteIterator =
@@ -105,12 +112,20 @@ public class CourseListView extends OsylManagerAbstractView implements
 	siteListBox.setWidth("100%");
 	siteListBox.addChangeHandler(new ChangeHandler() {
 	    public void onChange(ChangeEvent event) {
-		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<COSite> list = new ArrayList<COSite>();
 		for (int i = 0; i < siteListBox.getItemCount(); i++) {
 		    if (siteListBox.isItemSelected(i))
-			list.add(siteListBox.getValue(i));
+			list.add(getCOSiteFromList(siteListBox.getValue(i)));
 		}
-		getController().setSelectSiteIDs(list);
+		getController().setSelectSites(list);
+	    }
+	    
+	    private COSite getCOSiteFromList(String siteId){
+		for(COSite cosite:cosites){
+		    if(cosite.getSiteId().equals(siteId))
+			return cosite;
+		}
+		return null;
 	    }
 	});
     }
@@ -121,7 +136,7 @@ public class CourseListView extends OsylManagerAbstractView implements
 		.courseListView_loading()));
 	Image im = new Image(GWT.getModuleBaseURL() + "images/ajaxLoader.gif");
 	mainPanel.add(im);
-	getController().getOsylSitesMap(asyncCallback);
+	getController().getCoAndSiteInfo(asyncCallback);
     }
 
     public void onOsylManagerEvent(OsylManagerEvent e) {

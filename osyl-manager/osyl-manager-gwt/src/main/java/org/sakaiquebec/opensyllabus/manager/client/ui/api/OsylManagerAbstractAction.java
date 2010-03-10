@@ -25,6 +25,7 @@ import java.util.MissingResourceException;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -46,10 +47,10 @@ public abstract class OsylManagerAbstractAction extends Hyperlink implements
 	super();
 	this.controller = controller;
 	String t;
-	try{
+	try {
 	    t = controller.getMessages().getString(key);
-	}catch (MissingResourceException  e) {
-	    t = "missing key:"+key;
+	} catch (MissingResourceException e) {
+	    t = "missing key:" + key;
 	}
 	this.setText(t);
 	this.addClickHandler(this);
@@ -64,27 +65,27 @@ public abstract class OsylManagerAbstractAction extends Hyperlink implements
 
     public void setEnabled(boolean enabled) {
 	this.enabled = enabled;
-	if(enabled){
+	if (enabled) {
 	    this.removeStyleDependentName("disable");
-	}else{
+	} else {
 	    this.addStyleDependentName("disable");
 	}
     }
 
     public void onOsylManagerEvent(OsylManagerEvent e) {
 	if (e.getType() == OsylManagerEvent.SITES_SELECTION_EVENT) {
-	    setEnabled(isActionEnableForSites(controller.getSelectSiteIDs()));
+	    setEnabled(isActionEnableForSites(controller.getSelectSites()));
 	}
 
     }
 
     public void onClick(ClickEvent e) {
 	if (isEnabled())
-	    onClick(controller.getSelectSiteIDs());
+	    onClick(controller.getSelectSites());
     }
 
-    public abstract void onClick(List<String> siteIds);
+    public abstract void onClick(List<COSite> siteIds);
 
-    public abstract boolean isActionEnableForSites(List<String> siteIds);
+    public abstract boolean isActionEnableForSites(List<COSite> siteIds);
 
 }

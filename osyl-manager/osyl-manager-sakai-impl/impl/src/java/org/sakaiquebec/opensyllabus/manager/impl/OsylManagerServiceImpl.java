@@ -655,34 +655,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	});
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Map<String, String> getOsylSitesMap() {
-
-	Map<String, String> siteMap = new HashMap<String, String>();
-	@SuppressWarnings("unchecked")
-	List<Site> sites =
-		siteService.getSites(SiteService.SelectionType.ACCESS, null,
-			null, null, SiteService.SortType.TITLE_ASC, null);
-	for (Iterator<Site> siteIterator = sites.iterator(); siteIterator
-		.hasNext();) {
-	    Site site = (Site) siteIterator.next();
-	    @SuppressWarnings("unchecked")
-	    List<SitePage> pagelist = site.getPages();
-	    for (Iterator<SitePage> iter = pagelist.iterator(); iter.hasNext();) {
-		SitePage sitePage = (SitePage) iter.next();
-		if (!sitePage.getTools(
-			new String[] { "sakai.opensyllabus.tool" }).isEmpty()) {
-		    siteMap.put(site.getId(), site.getTitle());
-		    break;
-		}
-	    }
-	}
-	deleteExpiredTemporaryExportFiles(siteMap);
-	return siteMap;
-    }
-
     public Map<String, String> getOsylSites(List<String> siteIds) {
 
 	Map<String, String> siteMap = new HashMap<String, String>();
@@ -921,12 +893,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     /**
      * Delete temporary files and the temporary directory created when export CO
      */
-    private void deleteExpiredTemporaryExportFiles(Map<String, String> siteMap) {
+    private void deleteExpiredTemporaryExportFiles(List<COSite> cosites) {
 	int timeOut = getTimeOut();
-	for (Iterator<String> iter = siteMap.keySet().iterator(); iter
+	for (Iterator<COSite> iter = cosites.iterator(); iter
 		.hasNext();) {
 	    try {
-		Site site = siteService.getSite((String) iter.next());
+		Site site = siteService.getSite(((COSite) iter.next()).getSiteId());
 		String id = getSiteReference(site) + TEMP_DIRECTORY;
 		id = id.substring(8) + "/";
 		if (collectionExist(id)) {
@@ -1245,10 +1217,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    allSitesInfo.add(info);
 	    }
 	}
-
-	System.out.println(currentUser);
-	// = new ArrayList<COSite>();
-
+	
+	deleteExpiredTemporaryExportFiles(allSitesInfo);
 	return allSitesInfo;
     }
 

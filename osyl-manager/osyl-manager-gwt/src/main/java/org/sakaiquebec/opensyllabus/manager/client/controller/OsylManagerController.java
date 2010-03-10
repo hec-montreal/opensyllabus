@@ -62,7 +62,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	    (ManagerImageBundleInterface) GWT
 		    .create(ManagerImageBundleInterface.class);
     
-    private List<String> selectSiteIDs = new ArrayList<String>();
+    private List<COSite> selectSites = new ArrayList<COSite>();
 
     /**
      * @return instance of this class
@@ -104,14 +104,6 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	return messages;
     }
 
-    public Map<String, String> getOsylSitesMap() {
-	return osylSitesMap;
-    }
-
-    public void setOsylSitesMap(Map<String, String> osylSitesMap) {
-	this.osylSitesMap = osylSitesMap;
-    }
-
     public void setCoursesMap(Map<String, String> coursesMap) {
 	this.coursesMap = coursesMap;
     }
@@ -124,14 +116,14 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	this.imageBundle = imageBundle;
     }
     
-    public void setSelectSiteIDs(List<String> selectSiteIDs) {
-	this.selectSiteIDs = selectSiteIDs;
+    public void setSelectSites(List<COSite> selectSiteIDs) {
+	this.selectSites = selectSiteIDs;
 	OsylManagerEvent event = new OsylManagerEvent(null, OsylManagerEvent.SITES_SELECTION_EVENT);
 	notifyManagerEventHandler(event);
     }
 
-    public List<String> getSelectSiteIDs() {
-	return selectSiteIDs;
+    public List<COSite> getSelectSites() {
+	return selectSites;
     }
 
     // SERVER CALLS
@@ -242,15 +234,11 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	 OsylManagerRPCController.getInstance().getCoAndSiteInfo(siteId, callback);
     }
 
-    public void getCoAndSiteInfo(AsyncCallback<List<String>> callback){
+    public void getCoAndSiteInfo(AsyncCallback<List<COSite>> callback){
 	OsylManagerRPCController.getInstance().getCoAndSiteInfo(callback);
     }
 
     public void getCMCourses(AsyncCallback<Map<String, String>> callback) {
 	OsylManagerRPCController.getInstance().getCMCourses(callback);
-    }
-
-    public void getOsylSitesMap(AsyncCallback<Map<String, String>> callback) {
-	OsylManagerRPCController.getInstance().getOsylSitesMap(callback);
     }
 }

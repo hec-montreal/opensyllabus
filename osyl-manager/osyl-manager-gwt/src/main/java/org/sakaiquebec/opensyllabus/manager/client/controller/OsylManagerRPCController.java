@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtService;
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtServiceAsync;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 
 import com.google.gwt.core.client.GWT;
@@ -114,10 +115,6 @@ public class OsylManagerRPCController {
 	serviceProxy.importData(url, siteId, callback);
     }
     
-    public void getOsylSitesMap(AsyncCallback<Map<String, String>> callback) {
-	serviceProxy.getOsylSitesMap(callback);
-    }
-
     public void getOsylPackage(OsylManagerController osylManagerController,
 	    String siteId, AsyncCallback<String> callback) {
 	serviceProxy.getOsylPackage(siteId, callback);
@@ -155,7 +152,7 @@ public class OsylManagerRPCController {
 	serviceProxy.getCoAndSiteInfo(siteId, callback);
     }
 
-    public void getCoAndSiteInfo(AsyncCallback< java.util.List<String>> callback){
+    public void getCoAndSiteInfo(AsyncCallback< java.util.List<COSite>> callback){
 	serviceProxy.getCoAndSiteInfo(callback);
     }
 

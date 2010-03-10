@@ -25,6 +25,7 @@ import java.util.List;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -103,13 +104,13 @@ public class CourseInfoView extends OsylManagerAbstractView implements
     }
 
     public void refreshView() {
-	List<String> list = getController().getSelectSiteIDs();
+	List<COSite> list = getController().getSelectSites();
 	if (list.size() == 1) {
-	    String id = list.get(0);
-	    lastPublishInfo = new Label(id);
-	    lastSaveInfo = new Label(id);
-	    associatedCourseInfo = new Label(id);
-	    parentSiteInfo = new Label(id);
+	    COSite cosite = list.get(0);
+	    lastPublishInfo = new Label(cosite.getLastPublicationDate());
+	    lastSaveInfo = new Label(cosite.getLastPublicationDate());
+	    associatedCourseInfo = new Label(cosite.getCourseName());
+	    parentSiteInfo = new Label(cosite.getParentSite());
 	} else {
 	    lastPublishInfo = new Label("");
 	    lastSaveInfo = new Label("");
