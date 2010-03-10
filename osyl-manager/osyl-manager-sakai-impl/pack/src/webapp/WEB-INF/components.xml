@@ -60,7 +60,9 @@
 		<property name="serverConfigurationService"
 			ref="org.sakaiproject.component.api.ServerConfigurationService" />
 		<property name="courseManagementService"
-			ref="org.sakaiproject.coursemanagement.api.CourseManagementService"/>	
+			ref="org.sakaiproject.coursemanagement.api.CourseManagementService"/>
+		<property name="entityManager" 
+			ref="org.sakaiproject.entity.api.EntityManager"/>	
 	</bean>
 
 </beans>

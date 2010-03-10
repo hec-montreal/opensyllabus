@@ -32,7 +32,7 @@ public class ActionHelper {
     public static void editSite(String siteId) {
 	String serverId =
 		GWT.getModuleBaseURL().split("\\s*/portal/tool/\\s*")[0];
-	Window.open(serverId + "/portal/site/" + siteId, "_blank", "");
+	Window.open(serverId + "/portal/site/" + siteId+"/page/opensyllabus", "_blank", "");
     }
 
 }
