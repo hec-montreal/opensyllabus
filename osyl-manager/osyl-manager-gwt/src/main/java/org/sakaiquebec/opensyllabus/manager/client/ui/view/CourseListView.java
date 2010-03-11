@@ -23,12 +23,10 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
-import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;

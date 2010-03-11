@@ -1120,13 +1120,17 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	try {
 	    site = osylSiteService.getSite(siteId);
-	    co = osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
+	    if (osylSiteService.hasCourseOutline(siteId)){
+		co = osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
+		System.out.println("le site est : " + siteId);
+	    }
 	} catch (IdUnusedException e) {
 	    log.error(e.getMessage());
 	}
 
 	if (site != null) {
 	    // Retrieve site info
+	    info.setSiteId(siteId);
 	    info.setSiteName(site.getTitle());
 	    info.setSiteDescription(site.getDescription());
 	    info.setSiteShortDescription(site.getShortDescription());
@@ -1218,7 +1222,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	}
 	
-	deleteExpiredTemporaryExportFiles(allSitesInfo);
+	//deleteExpiredTemporaryExportFiles(allSitesInfo);
 	return allSitesInfo;
     }
 

@@ -230,7 +230,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	return coursesMap;
     }
 
-    public void getCoAndSiteInfo(String siteId, AsyncCallback<String> callback){
+    public void getCoAndSiteInfo(String siteId, AsyncCallback<COSite> callback){
 	 OsylManagerRPCController.getInstance().getCoAndSiteInfo(siteId, callback);
     }
 

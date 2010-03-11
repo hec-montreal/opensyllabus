@@ -39,6 +39,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
+@SuppressWarnings("serial")
 public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	OsylManagerGwtService {
 

@@ -26,7 +26,6 @@ import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 /**
