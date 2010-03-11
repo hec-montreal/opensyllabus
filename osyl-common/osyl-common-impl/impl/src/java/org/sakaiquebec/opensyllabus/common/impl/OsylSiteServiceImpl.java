@@ -587,6 +587,11 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    return false;
 	}
     }
+    
+    /** {@inheritDoc} */
+    public boolean hasCourseOutline(String siteId){
+	return resourceDao.hasCourseOutiline(siteId);
+    }
 
     /**
      * {@inheritDoc}

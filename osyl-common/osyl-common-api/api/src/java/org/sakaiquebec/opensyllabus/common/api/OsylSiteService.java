@@ -129,6 +129,13 @@ public interface OsylSiteService extends EntityProducer{
 	public boolean hasBeenPublished();
 
 	/**
+	 * Check if a Co in edition exists for the give site
+	 * 
+	 * @return true if course line exists
+	 */
+	public boolean hasCourseOutline(String siteId);
+
+	/**
 	 * Check if the Co with the siteId has been published
 	 * 
 	 * @return true if published

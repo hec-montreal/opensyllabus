@@ -272,6 +272,30 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    return false;
     }
 
+    /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
+    public boolean hasCourseOutiline(String siteId){
+	List<COSerialized> results = null;
+	
+	if (siteId == null )
+	    return false;
+	else{
+	    try{
+	    results =
+		    getHibernateTemplate()
+			    .find(
+				    "from COSerialized where siteId= ? and published=0",
+				    new Object[] { siteId });
+	} catch (Exception e) {
+	   return false;
+	}
+	if (results.size() > 0) {
+	    return true;
+	} else
+	    return false;
+	}
+   }
+    
     @SuppressWarnings("unchecked")
     public COSerialized isPublished(String siteId, String access)
 	    throws Exception {

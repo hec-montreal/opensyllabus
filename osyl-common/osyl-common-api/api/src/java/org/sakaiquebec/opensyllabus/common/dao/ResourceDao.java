@@ -111,4 +111,13 @@ public interface ResourceDao {
      */
     public boolean hasBeenPublished(String siteId) throws Exception;
 
+
+    /**
+     * Check if a Co for edition exists for the siteId 
+     * 
+     * @param siteId
+     * @return true if a CO in edition exists
+     */
+    public boolean hasCourseOutiline(String siteId) ;
+
 }

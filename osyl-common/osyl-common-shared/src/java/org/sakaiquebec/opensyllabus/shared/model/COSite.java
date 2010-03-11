@@ -79,7 +79,7 @@ public class COSite implements java.io.Serializable{
      * The instructors of the course associated to the site. The information comes
      * from the course management.
      */
-    private List<String> courseInstructors;
+    private ArrayList<String> courseInstructors;
 
     /**
      * The coordinator of the course associated to the site. The information comes
@@ -225,14 +225,14 @@ public class COSite implements java.io.Serializable{
     /**
      * @return the courseInstructor value.
      */
-    public List<String> getCourseInstructors() {
+    public ArrayList<String> getCourseInstructors() {
         return courseInstructors;
     }
 
     /**
      * @param courseInstructors the new value of courseInstructors.
      */
-    public void setCourseInstructors(List<String> courseInstructors) {
+    public void setCourseInstructors(ArrayList<String> courseInstructors) {
         this.courseInstructors.addAll(courseInstructors);
     }
 
