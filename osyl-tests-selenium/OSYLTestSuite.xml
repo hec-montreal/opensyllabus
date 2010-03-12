@@ -1,7 +1,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="OSYLSuite-FF" verbose="10">
-   <parameter name="webSite" value="http://osyldev.hec.ca:12345/"/>
+   <!-- webSite is not defined here as it specified on command line to avoid
+        having too many xml suite files. -->
    <parameter name="seleniumHost" value="seleniumrc.hec.ca"/>
    <parameter name="seleniumPort" value="5556"/>
    <parameter name="browser" value="*firefox"/>
