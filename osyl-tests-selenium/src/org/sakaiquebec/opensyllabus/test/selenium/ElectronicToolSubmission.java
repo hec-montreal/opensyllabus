@@ -35,17 +35,8 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
  * Tests all the features in the section Electronic tool submission. The exact
  * steps are: log in as admin, creates a new site if needed, load it 
  * (OpenSyllabus is the first and only page), enters in the Assessment section, 
- * enters in the first assessment, Add electronic tool submission, edit it,
- * the last assessment, delete the first assessment unit,check if 
- * OpenSyllabus displays a error message if a mandatory fields are not filled  
- * or filled with wrong values,Add text in the last assessment, and check if 
- * the text is visible in attendee overview and not visible in the public 
- * overview, add a hyperlink and check if the hyperlink is visible in attendee 
- * overview and not visible in the public overview, add a document and check if
- * the document is visible in attendee overview and not visible in the public 
- * overview, add a citation list and check if the new citation is visible in 
- * attendee overview and not visible in the public overview, switch the two 
- * last assessments, delete the last assessment, save all modifications,
+ * enters in the first assessment, Add electronic tool submission, edit it, 
+ * save all modifications,
  * log out.
  * 
  * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
@@ -74,7 +65,7 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
     	
     	// If we don't have a Assessment we add one
 	int LectNb = getResourceCount();
-	if(LectNb == 0){
+	if(LectNb == 1){
             //We add a first Lecture
             clickAddItem("addAssessmentUnit");
             pause();
@@ -117,10 +108,6 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
     	//Click OK to close editor
     	session().click("//td/table/tbody/tr/td[1]/button");
     	pause();
-    	
-    	//Save modifications
-	//saveCourseOutline();
-	//pause(); 
 	
 	//Publish
 	session().click("gwt-uid-4");
@@ -170,9 +157,9 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
     	pause();
     	session().type("upload", "C:\\Documents and Settings\\clihec3\\Local" +
     			" Settings\\Temporary Internet Files\\Content.IE5\\" +
-    			"B1AO9TBK\\fichier-excel[4].xlsx");
- 	pause();
- 	if(!session().isElementPresent("link=fichier-excel[4].xlsx")){
+    			"VOXJFB1N\\fichier-excel[5].xlsx");
+    	pause();
+ 	if(!session().isElementPresent("link=fichier-excel[5].xlsx")){
  	   logAndFail("File not found!");
  	}
  	log("File found");
@@ -182,8 +169,6 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
   	   logAndFail("File not loaded!");
   	}
  	log("File loaded");
- 	pause();
- 	pause();
  	session().click("Assignment.view_submission_honor_pledge_yes");
  	
  	//Send work for the first time
@@ -209,10 +194,19 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
     	pause();
     	session().type("upload", "C:\\Documents and Settings\\clihec3\\Local" +
     			" Settings\\Temporary Internet Files\\Content.IE5\\" +
-    			"B1AO9TBK\\fichier-excel[4].xlsx");
+    			"VOXJFB1N\\fichier-excel[5].xlsx");
  	pause();
+ 	if(!session().isElementPresent("link=fichier-excel[5].xlsx"))
+ 		{
+  	   logAndFail("File not found!");
+  	}
+  	log("File found");
  	session().click("attachButton");
  	pause();
+ 	if(!session().isElementPresent("Assignment.view_submission_honor_pledge_yes")){
+   	   logAndFail("File not loaded!");
+   	}
+  	log("File loaded");
  	session().click("Assignment.view_submission_honor_pledge_yes");
  	
  	//Send work for the second time
