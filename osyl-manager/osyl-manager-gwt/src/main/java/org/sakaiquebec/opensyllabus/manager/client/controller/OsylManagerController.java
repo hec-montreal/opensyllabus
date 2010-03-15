@@ -190,7 +190,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	managerEventHandlersList.remove(handler);
     }
 
-    private void notifyManagerEventHandler(OsylManagerEvent event) {
+    public void notifyManagerEventHandler(OsylManagerEvent event) {
 	for (Iterator<OsylManagerEventHandler> iter =
 		managerEventHandlersList.iterator(); iter.hasNext();) {
 	    OsylManagerEventHandler osylManagerEventHandler =

@@ -187,6 +187,11 @@ public interface Messages extends ConstantsWithLookup {
    String attachForm_attach_error();
    
    String attachForm_attach_error_detail();
+   
+   String unattachAction_unattach_error();
+   
+   String unattachAction_unattach_error_detail();
+   
 
 
 }

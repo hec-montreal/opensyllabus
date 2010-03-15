@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
+import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
@@ -121,6 +122,7 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 		} else {
 		    AttachForm.this.onFailure();
 		}
+		controller.notifyManagerEventHandler(new OsylManagerEvent(null, OsylManagerEvent.SITE_INFO_CHANGE));
 	    }
 	}
 
