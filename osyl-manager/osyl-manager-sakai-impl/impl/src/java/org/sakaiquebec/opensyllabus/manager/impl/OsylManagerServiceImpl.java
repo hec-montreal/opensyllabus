@@ -508,8 +508,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			file.getName().length() - CITATION_EXTENSION.length());
 	osylService.linkCitationsToSite(collection, siteId, collectionName);
 
-	System.out.println("Anciens ids: " + oldReferences.toString());
-	System.out.println("Nouveaux ids: " + newReferences.toString());
 	COSerialized co =
 		osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
 	String xml = co.getContent();
@@ -1122,7 +1120,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    site = osylSiteService.getSite(siteId);
 	    if (osylSiteService.hasCourseOutline(siteId)){
 		co = osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
-		System.out.println("le site est : " + siteId);
 	    }
 	} catch (IdUnusedException e) {
 	    log.error(e.getMessage());
