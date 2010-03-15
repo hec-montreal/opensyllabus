@@ -79,6 +79,7 @@ import org.sakaiproject.entity.api.EntityManager;
 import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.exception.IdInvalidException;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.IdUsedException;
@@ -755,7 +756,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    newResource.setContent(new BufferedInputStream(new FileInputStream(
 		    zipFile)));
 	    newResource.setContentType("application/zip");
-	    contentHostingService.commitResource(newResource);
+	    contentHostingService.commitResource(newResource, NotificationService.NOTI_NONE);
 	    zipFile.delete();
 	    url = resourceOutputDir + filename;
 	} catch (Exception e) {
