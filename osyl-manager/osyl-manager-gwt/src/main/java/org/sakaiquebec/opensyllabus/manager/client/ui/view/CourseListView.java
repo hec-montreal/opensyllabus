@@ -51,7 +51,7 @@ public class CourseListView extends OsylManagerAbstractView implements
     private VerticalPanel mainPanel;
 
     private ListBox siteListBox;
-    
+
     private List<COSite> cosites;
 
     private AsyncCallback<List<COSite>> asyncCallback =
@@ -62,7 +62,7 @@ public class CourseListView extends OsylManagerAbstractView implements
 		}
 
 		public void onSuccess(List<COSite> result) {
-		    cosites=result;
+		    cosites = result;
 		    mainPanel.clear();
 		    siteListBox.clear();
 		    if (result == null || result.isEmpty()) {
@@ -71,8 +71,7 @@ public class CourseListView extends OsylManagerAbstractView implements
 			TreeMap<String, String> sortedMap =
 				new TreeMap<String, String>(
 					LocalizedStringComparator.getInstance());
-			for (Iterator<COSite> coSiteIter =
-				result.iterator(); coSiteIter
+			for (Iterator<COSite> coSiteIter = result.iterator(); coSiteIter
 				.hasNext();) {
 			    COSite cos = coSiteIter.next();
 			    String siteId = cos.getSiteId();
@@ -86,6 +85,21 @@ public class CourseListView extends OsylManagerAbstractView implements
 			    String siteId = sortedMap.get(siteTitle);
 			    siteListBox.addItem(siteTitle, siteId);
 			}
+		    }
+		    if (!getController().getSelectSites().isEmpty()) {
+			List<COSite> newCOSites = new ArrayList<COSite>();
+			for (COSite cos : getController().getSelectSites()) {
+			    String cosId = cos.getSiteId();
+			    for (int i = 0; i < siteListBox.getItemCount(); i++) {
+				if (siteListBox.getValue(i).equals(cosId)) {
+				    siteListBox.setItemSelected(i, true);
+				    newCOSites.add(cos);
+				    break;
+				} 
+			    }
+			    
+			}
+			setControllerSelectedSitesWithListBoxSelectedSites();
 		    }
 		    mainPanel.add(siteListBox);
 
@@ -110,21 +124,9 @@ public class CourseListView extends OsylManagerAbstractView implements
 	siteListBox.setWidth("100%");
 	siteListBox.addChangeHandler(new ChangeHandler() {
 	    public void onChange(ChangeEvent event) {
-		ArrayList<COSite> list = new ArrayList<COSite>();
-		for (int i = 0; i < siteListBox.getItemCount(); i++) {
-		    if (siteListBox.isItemSelected(i))
-			list.add(getCOSiteFromList(siteListBox.getValue(i)));
-		}
-		getController().setSelectSites(list);
+		setControllerSelectedSitesWithListBoxSelectedSites();
 	    }
-	    
-	    private COSite getCOSiteFromList(String siteId){
-		for(COSite cosite:cosites){
-		    if(cosite.getSiteId().equals(siteId))
-			return cosite;
-		}
-		return null;
-	    }
+
 	});
     }
 
@@ -138,8 +140,26 @@ public class CourseListView extends OsylManagerAbstractView implements
     }
 
     public void onOsylManagerEvent(OsylManagerEvent e) {
-	if (e.getType() == OsylManagerEvent.SITE_CREATION_EVENT)
+	if (e.getType() == OsylManagerEvent.SITE_CREATION_EVENT
+		|| e.getType() == OsylManagerEvent.SITE_INFO_CHANGE)
 	    refresh();
+    }
+
+    private void setControllerSelectedSitesWithListBoxSelectedSites() {
+	ArrayList<COSite> list = new ArrayList<COSite>();
+	for (int i = 0; i < siteListBox.getItemCount(); i++) {
+	    if (siteListBox.isItemSelected(i))
+		list.add(getCOSiteFromList(siteListBox.getValue(i)));
+	}
+	getController().setSelectSites(list);
+    }
+
+    private COSite getCOSiteFromList(String siteId) {
+	for (COSite cosite : cosites) {
+	    if (cosite.getSiteId().equals(siteId))
+		return cosite;
+	}
+	return null;
     }
 
 }

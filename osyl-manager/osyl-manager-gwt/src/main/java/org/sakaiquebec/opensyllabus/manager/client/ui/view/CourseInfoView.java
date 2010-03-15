@@ -112,16 +112,22 @@ public class CourseInfoView extends OsylManagerAbstractView implements
 	    associatedCourseInfo = new Label(cosite.getCourseName());
 	    parentSiteInfo = new Label(cosite.getParentSite());
 	} else {
+	    String parentSiteInfoString = list.get(0).getParentSite();
+	    for(COSite cosite : list){
+		if(!cosite.getParentSite().equals(parentSiteInfoString))
+		    parentSiteInfoString="";
+	    }
 	    lastPublishInfo = new Label("");
 	    lastSaveInfo = new Label("");
 	    associatedCourseInfo = new Label("");
-	    parentSiteInfo = new Label("");
+	    parentSiteInfo = new Label(parentSiteInfoString);
 	}
 	initView();
     }
 
     public void onOsylManagerEvent(OsylManagerEvent e) {
-	if (e.getType() == OsylManagerEvent.SITES_SELECTION_EVENT)
+	if (e.getType() == OsylManagerEvent.SITES_SELECTION_EVENT
+		|| e.getType() == OsylManagerEvent.SITE_INFO_CHANGE)
 	    refreshView();
     }
 
