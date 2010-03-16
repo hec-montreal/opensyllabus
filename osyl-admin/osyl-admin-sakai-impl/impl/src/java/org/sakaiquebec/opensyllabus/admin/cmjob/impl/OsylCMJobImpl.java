@@ -323,9 +323,6 @@ public class OsylCMJobImpl implements OsylCMJob {
 	    }
 	    // create course offering
 	    session = cmService.getAcademicSession(coursEntry.getStrmId());
-	    title =
-		    title + "   " + session.getDescription() + " - "
-			    + coursEntry.getSessionCode();
 	    CourseOffering courseOff;
 	    if (cmService.isAcademicSessionDefined(coursEntry.getStrmId())) {
 		// TODO: This should be a final static constant
@@ -380,7 +377,6 @@ public class OsylCMJobImpl implements OsylCMJob {
 		// // }
 		//				
 		// create course section
-		title = title + " " + coursEntry.getClassSection();
 		section = coursEntry.getClassSection();
 		category = coursEntry.getAcadOrg();
 		courseSectionId = getCourseSectionId(coursEntry);
@@ -730,7 +726,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 		if (enrollmentSetId != null)
 		    if (!cmService.isEnrolled(userId, enrollmentSetId)) {
 			cmAdmin.addOrUpdateEnrollment(userId, enrollmentSetId,
-				"enrolled ", "3", "Letter");
+				"enrolled", "3", "Letter");
 		    }
 	    }
 
