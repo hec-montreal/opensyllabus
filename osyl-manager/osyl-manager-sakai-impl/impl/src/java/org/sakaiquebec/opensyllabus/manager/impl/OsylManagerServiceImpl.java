@@ -423,7 +423,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			    fileName, fileExtension, 3);
 	    newResource.setContent(content);
 	    newResource.setContentType(contentType);
-	    contentHostingService.commitResource(newResource);
+	    contentHostingService.commitResource(newResource, NotificationService.NOTI_NONE);
 
 	    String resourceName = resourceOutputDir + name;
 	    // osylSecurityService.applyPermissions(resourceName, permission);
