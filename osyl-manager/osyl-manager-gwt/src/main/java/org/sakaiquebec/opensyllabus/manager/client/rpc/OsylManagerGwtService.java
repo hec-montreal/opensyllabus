@@ -24,6 +24,7 @@ package org.sakaiquebec.opensyllabus.manager.client.rpc;
 import java.util.List;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
@@ -64,9 +65,11 @@ public interface OsylManagerGwtService extends RemoteService {
 
     public void dissociate(String siteId, String parentId) throws Exception;
     
-    public Boolean associateToCM (String courseSectionId, String siteId);
+    public void associateToCM (String courseSectionId, String siteId) throws Exception;
     
-    public Map<String, String> getCMCourses() ;
+    public void dissociateFromCM(String siteId) throws Exception;
+    
+    public List<CMCourse> getCMCourses() ;
     
     /**
      * Retrieve all the informations of the specified site and the course

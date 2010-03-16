@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtService;
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtServiceAsync;
+import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 
@@ -140,11 +141,15 @@ public class OsylManagerRPCController {
     }
 
     public void associateToCM(String courseSectionId, String siteId,
-	    AsyncCallback<Boolean> callback) {
+	    AsyncCallback<Void> callback) {
 	serviceProxy.associateToCM(courseSectionId, siteId, callback);
     }
+    
+    public void dissociateFromCM(String siteId, AsyncCallback<Void> callback){
+	serviceProxy.dissociateFromCM(siteId, callback);
+    }
 
-    public void getCMCourses(AsyncCallback<Map<String, String>> callback) {
+    public void getCMCourses(AsyncCallback<List<CMCourse>> callback) {
 	serviceProxy.getCMCourses(callback);
     }
     

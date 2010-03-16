@@ -32,6 +32,7 @@ import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerE
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.imageBundle.ManagerImageBundleInterface;
 import org.sakaiquebec.opensyllabus.manager.client.message.Messages;
+import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 
@@ -221,11 +222,15 @@ public class OsylManagerController implements FireOsylManagerEvents {
     }
 
     public void associateToCM(String courseSectionId, String siteId,
-	    AsyncCallback<Boolean> callback) {
+	    AsyncCallback<Void> callback) {
 	OsylManagerRPCController.getInstance().associateToCM(courseSectionId,
 		siteId, callback);
     }
 
+    public void dissociateFromCM(String siteId, AsyncCallback<Void> callback){
+	OsylManagerRPCController.getInstance().dissociateFromCM(siteId, callback);
+    }
+    
     public Map<String, String> getCMCourses() {
 	return coursesMap;
     }
@@ -238,7 +243,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	OsylManagerRPCController.getInstance().getCoAndSiteInfo(callback);
     }
 
-    public void getCMCourses(AsyncCallback<Map<String, String>> callback) {
+    public void getCMCourses(AsyncCallback<List<CMCourse>> callback) {
 	OsylManagerRPCController.getInstance().getCMCourses(callback);
     }
 }

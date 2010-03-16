@@ -24,6 +24,7 @@ package org.sakaiquebec.opensyllabus.manager.client.rpc;
 import java.util.List;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -70,9 +71,11 @@ public interface OsylManagerGwtServiceAsync {
     public void dissociate(String siteId, String parentId,
 	    AsyncCallback<Void> callback);
     
-    public void associateToCM (String courseSectionId, String siteId, AsyncCallback<Boolean> callback);
+    public void associateToCM (String courseSectionId, String siteId, AsyncCallback<Void> callback);
     
-    public void getCMCourses( AsyncCallback<Map<String, String>> callback) ;
+    public void dissociateFromCM(String siteId, AsyncCallback<Void> callback);
+    
+    public void getCMCourses( AsyncCallback<List<CMCourse>> callback) ;
     
     public void getCoAndSiteInfo(String siteId, AsyncCallback<COSite> callback);
 

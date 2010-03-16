@@ -38,160 +38,184 @@ public interface Messages extends ConstantsWithLookup {
     String create();
 
     String siteCreated();
-    
+
     String siteNotCreated();
-    
+
     String importXML();
-    
+
     String siteIdUnable();
-    
+
     String createSiteTitle();
-    
+
     String importCOTitle();
-    
+
     String exportCOTitle();
-    
+
     String exportCO();
-    
+
     String osylSitesList();
-    
+
     String optionsTitle();
-    
+
     String createOption();
-    
+
     String exportOption();
-    
+
     String valid();
-    
+
     String unableToExportCO();
-    
+
     String associateDissociate();
-    
+
     String associateDissociateCM();
-    
+
     String associate();
-    
+
     String associateToCM();
-    
+
     String associateToCMSuccess();
-    
+
     String associateToCMFailure();
-    
+
     String associateToCMChooseSite();
-    
+
     String associateToCMChooseCourse();
-    
+
     String unexistingCMcourse();
-    
+
     String dissociate();
-    
+
     String noAssociableCOSite();
-    
+
     String chooseConfig();
-    
+
     String chooseLang();
-    
+
     String siteNameNotValid();
-    
+
     String noConfig();
-    
+
     String config_default();
-    
+
     String config_udem();
-    
+
     String config_udemCompetencesComposantes();
-    
+
     String config_udemCompetencesSeances();
+
+    String config_udemObjectifsActivites();
+
+    String config_udemObjectifsSeances();
+
+    String config_announcementsRegulationsHEC();
+
+    String config_uVirginiaChronological();
+
+    String config_uVirginiaModular();
+
+    String language_en();
+
+    String language_es();
+
+    String language_fr_CA();
+
+    //
+    String infoView_associatedCourse();
+
+    String infoView_label();
+
+    String infoView_lastPublished();
+
+    String infoView_lastSave();
+
+    String infoView_parentSite();
+
+    String mainView_label();
+
+    String mainView_operationsOnExistingSites();
+
+    String mainView_or();
+
+    String mainView_action_createSite();
+
+    String mainView_action_importSite();
+
+    String mainView_action_edit();
+
+    String mainView_action_associate();
+
+    String mainView_action_attach();
+
+    String mainView_action_clean();
+
+    String mainView_action_copy();
+
+    String mainView_action_delete();
+
+    String mainView_action_dissociate();
+
+    String mainView_action_export();
+
+    String mainView_action_publish();
+
+    String mainView_action_unattach();
+
+    String mainView_action_unpublish();
+
+    String mainView_action_import();
+
+    String mainView_tabs_all();
+
+    String rpcFailure();
+
+    String noCOSite();
+
+    String siteForm_create_ok();
+
+    String importForm_import_ok();
+
+    String form_close();
+
+    String courseListView_loading();
+
+    String createForm_edit();
+
+    String select_parent_site();
+
+    String attachForm_attach_ok();
+
+    String attachForm_attach_error();
+
+    String attachForm_attach_error_detail();
+
+    String unattachAction_unattach_error();
+
+    String unattachAction_unattach_error_detail();
+
+    String cminfoView_label();
+
+    String cminfoView_name();
+
+    String cminfoView_session();
+
+    String cminfoView_instructor();
+
+    String cminfoView_studentNumber();
+
+    String associateForm_instruction();
     
-   String config_udemObjectifsActivites();
-   
-   String config_udemObjectifsSeances();
-   
-   String config_announcementsRegulationsHEC();
-   
-   String config_uVirginiaChronological();
+    String associateForm_courseIdentifier();
 
-   String config_uVirginiaModular();
+    String associateForm_courseName();
 
-   String language_en();
-   
-   String language_es();
-   
-   String language_fr_CA();
-   
-   //
-   String infoView_associatedCourse();
+    String associateForm_ok();
 
-   String infoView_label();
-
-   String infoView_lastPublished();
-
-   String infoView_lastSave();
-
-   String infoView_parentSite();
-   
-   String mainView_label();
-   
-   String mainView_operationsOnExistingSites();
-   
-   String mainView_or();
-   
-   String mainView_action_createSite();
-
-   String mainView_action_importSite();
-   
-   String mainView_action_edit();
-   
-   String mainView_action_associate();
-   
-   String mainView_action_attach();
-   
-   String mainView_action_clean();
-   
-   String mainView_action_copy();
-   
-   String mainView_action_delete();
-   
-   String mainView_action_dissociate();
-   
-   String mainView_action_export();
-   
-   String mainView_action_publish();
-   
-   String mainView_action_unattach();
-   
-   String mainView_action_unpublish();
-   
-   String mainView_action_import();
-   
-   String mainView_tabs_all();
-   
-   String rpcFailure();
-   
-   String noCOSite();
-   
-   String siteForm_create_ok();
-   
-   String importForm_import_ok();
-   
-   String form_close();
-   
-   String courseListView_loading();
-   
-   String createForm_edit();
-   
-   String select_parent_site();
-   
-   String attachForm_attach_ok();
-   
-   String attachForm_attach_error();
-   
-   String attachForm_attach_error_detail();
-   
-   String unattachAction_unattach_error();
-   
-   String unattachAction_unattach_error_detail();
-   
-
+    String associateForm_cancel();
+    
+    String dissociateAction_dissociate_error();
+    
+    String dissociateAction_dissociate_error_detail();
+    
+    
 
 }

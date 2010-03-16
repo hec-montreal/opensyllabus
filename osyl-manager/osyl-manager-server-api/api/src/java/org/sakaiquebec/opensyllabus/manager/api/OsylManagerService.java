@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 /**
@@ -124,7 +125,9 @@ public interface OsylManagerService {
 
     public void dissociate(String siteId, String parentId) throws Exception;
 
-    public Boolean associateToCM(String courseSectionId, String siteId);
+    public void associateToCM(String courseSectionId, String siteId) throws Exception;
+    
+    public void dissociateFromCM(String siteId) throws Exception;
 
     /**
      * This method retrieves all the course sections registered in the course
@@ -132,7 +135,7 @@ public interface OsylManagerService {
      * 
      * @return list of the course sections
      */
-    public Map<String, String> getCMCourses();
+    public List<CMCourse> getCMCourses();
 
     /**
      * This method retrieves all sites that contains an OpenSyllabus tool and a

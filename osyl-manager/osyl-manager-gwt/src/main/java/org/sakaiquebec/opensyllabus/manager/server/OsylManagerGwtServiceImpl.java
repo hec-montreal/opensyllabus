@@ -29,6 +29,7 @@ import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtService;
+import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -132,12 +133,16 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		.dissociate(siteId, parentId);
     }
 
-    public Boolean associateToCM(String courseSectionId, String siteId) {
-	return osylManagerServices.getOsylManagerService().associateToCM(
+    public void associateToCM(String courseSectionId, String siteId) throws Exception{
+	osylManagerServices.getOsylManagerService().associateToCM(
 		courseSectionId, siteId);
     }
+    
+    public void dissociateFromCM(String siteId) throws Exception{
+	osylManagerServices.getOsylManagerService().dissociateFromCM(siteId);
+    }
 
-    public Map<String, String> getCMCourses() {
+    public List<CMCourse> getCMCourses() {
 	return osylManagerServices.getOsylManagerService().getCMCourses();
     }
     

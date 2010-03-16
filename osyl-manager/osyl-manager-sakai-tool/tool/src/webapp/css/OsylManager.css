@@ -165,3 +165,44 @@ padding:6px;
 }
 /*----------------------------------------------------------------------------------------------------------------*/
 
+.OsylManager-SuggestBox
+{
+    border: 1px solid #666;
+    text-align: left;
+    width: 400px;
+}
+.OsylManager-SuggestBoxPopup
+{
+    text-align: left;
+    cursor: pointer;
+    cursor: hand;
+    border: 1px solid #666;
+    border-top: 0;
+    background-color: #fff;
+    z-index: 11001;
+
+}
+.OsylManager-SuggestBoxPopup .item{ }
+
+.OsylManager-SuggestBoxPopup .item-selected
+{
+    background-color:#ffc;
+}
+
+.OsylManager-SuggestBoxPopup .suggestPopupTopLeftInner{}
+	
+.OsylManager-SuggestBoxPopup .suggestPopupTopCenter  {}
+	
+.OsylManager-SuggestBoxPopup .suggestPopupTopRightInner {}
+
+.OsylManager-SuggestBoxPopup .suggestPopupMiddleLeft {}
+
+.OsylManager-SuggestBoxPopup .suggestPopupMiddleRight {}
+
+.OsylManager-SuggestBoxPopup .suggestPopupBottomLeftInner {}
+
+.OsylManager-SuggestBoxPopup .suggestPopupBottomCenter {}
+
+.OsylManager-SuggestBoxPopup .suggestPopupBottomRightInner {}
+
+

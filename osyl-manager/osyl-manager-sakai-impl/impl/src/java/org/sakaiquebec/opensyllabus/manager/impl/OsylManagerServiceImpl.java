@@ -73,6 +73,7 @@ import org.sakaiproject.coursemanagement.api.CanonicalCourse;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.CourseSet;
+import org.sakaiproject.coursemanagement.api.Enrollment;
 import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.EntityManager;
@@ -101,6 +102,7 @@ import org.sakaiquebec.opensyllabus.api.OsylService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
+import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.xml.sax.ContentHandler;
@@ -253,7 +255,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public void setOsylSecurityService(OsylSecurityService osylSecurityService) {
 	this.osylSecurityService = osylSecurityService;
     }
-    
+
     /**
      * The type of site we are creating
      */
@@ -673,7 +675,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    if (osylSiteService.hasBeenPublished(site.getId())) {
 			boolean isInHierarchy = false;
 			for (String siteId : siteIds) {
-			    isInHierarchy = isInHierarchy || isSiteinSiteHierarchy(site.getId(), siteId);
+			    isInHierarchy =
+				    isInHierarchy
+					    || isSiteinSiteHierarchy(site
+						    .getId(), siteId);
 			}
 			if (!isInHierarchy)
 			    siteMap.put(site.getId(), site.getTitle());
@@ -684,8 +689,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 	return siteMap;
     }
-    
-    private boolean isSiteinSiteHierarchy(String siteId, String siteId2){
+
+    private boolean isSiteinSiteHierarchy(String siteId, String siteId2) {
 	boolean isInHierarchy = false;
 	while (siteId != null && !isInHierarchy) {
 	    if (siteId.equals(siteId2))
@@ -756,7 +761,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    newResource.setContent(new BufferedInputStream(new FileInputStream(
 		    zipFile)));
 	    newResource.setContentType("application/zip");
-	    contentHostingService.commitResource(newResource, NotificationService.NOTI_NONE);
+	    contentHostingService.commitResource(newResource,
+		    NotificationService.NOTI_NONE);
 	    zipFile.delete();
 	    url = resourceOutputDir + filename;
 	} catch (Exception e) {
@@ -894,10 +900,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      */
     private void deleteExpiredTemporaryExportFiles(List<COSite> cosites) {
 	int timeOut = getTimeOut();
-	for (Iterator<COSite> iter = cosites.iterator(); iter
-		.hasNext();) {
+	for (Iterator<COSite> iter = cosites.iterator(); iter.hasNext();) {
 	    try {
-		Site site = siteService.getSite(((COSite) iter.next()).getSiteId());
+		Site site =
+			siteService.getSite(((COSite) iter.next()).getSiteId());
 		String id = getSiteReference(site) + TEMP_DIRECTORY;
 		id = id.substring(8) + "/";
 		if (collectionExist(id)) {
@@ -972,17 +978,14 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	osylSiteService.dissociate(siteId, parentId);
     }
 
-    public Boolean associateToCM(String courseSectionId, String siteId) {
+    public void associateToCM(String courseSectionId, String siteId) throws Exception{
 	// TODO: est-ce qu'on change le nom du site après que le lien soit créé
-
-	boolean added = true;
 
 	if (siteId != null) {
 	    // added = addParticipants(realmId, courseSectionId);
 	    // }
 	    // // We add the site properties
 	    // if (added) {
-	    try {
 		Site site = siteService.getSite(siteId);
 		ResourcePropertiesEdit rp = site.getPropertiesEdit();
 		Section courseSection =
@@ -997,21 +1000,22 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 		site.setProviderGroupId(courseSectionId);
 		siteService.save(site);
-
-	    } catch (IdUnusedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    } catch (PermissionException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    }
 	}
-
-	return added;
+    }
+    
+    public void dissociateFromCM(String siteId) throws Exception{
+	if(siteId!=null){
+		Site site = siteService.getSite(siteId);
+		ResourcePropertiesEdit rp = site.getPropertiesEdit();
+		rp.addProperty(PROP_SITE_TERM, null);
+		rp.addProperty(PROP_SITE_TERM_EID, null);
+		site.setProviderGroupId(null);
+		siteService.save(site);
+	}
     }
 
-    public Map<String, String> getCMCourses() {
-	Map<String, String> cmCourses = new HashMap<String, String>();
+    public List<CMCourse> getCMCourses() {
+	List<CMCourse> cmCourses = new ArrayList<CMCourse>();
 	Set<CourseSet> courseSets = courseManagementService.getCourseSets();
 	Set<CourseOffering> courseOffs = null;
 	Set<Section> sections = null;
@@ -1039,9 +1043,46 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    String section =
 			    courseSTitle.substring(courseSTitle.length() - 3,
 				    courseSTitle.length());
-		    // Info sur la section pas dans le CM
+
+		    String instructorsString = "";
+		    int studentNumber=-1;
+		    EnrollmentSet enrollmentSet = courseS.getEnrollmentSet();
+		    if (enrollmentSet != null) {
+			// Retrieve official instructors
+			Set<String> instructors =
+				enrollmentSet.getOfficialInstructors();
+			User user = null;
+			String name = null;
+			for (String instructor : instructors) {
+			    try {
+				user = UserDirectoryService.getUserByEid(instructor);
+				name = user.getDisplayName();
+				instructorsString += name + " & ";
+			    } catch (UserNotDefinedException e) {
+				e.printStackTrace();
+			    }
+			}
+			// retrieve student number
+			Set<Enrollment> enrollments =
+				courseManagementService
+					.getEnrollments(enrollmentSet.getEid());
+			if (enrollments != null)
+			    studentNumber = enrollments.size();
+		    }
+		    if (!instructorsString.equals(""))
+			instructorsString =
+				instructorsString.substring(0,
+					instructorsString.length() - 3);
+
 		    value = sigle + " " + session + " " + section;
-		    cmCourses.put(courseS.getEid(), value);
+		    CMCourse cmCourse = new CMCourse();
+		    cmCourse.setId(courseS.getEid());
+		    cmCourse.setSession(session);
+		    cmCourse.setName(courseSTitle);
+		    cmCourse.setSigle(value);
+		    cmCourse.setInstructor(instructorsString);
+		    cmCourse.setStudentNumber(studentNumber);
+		    cmCourses.add(cmCourse);
 		}
 
 	    }
@@ -1119,7 +1160,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	try {
 	    site = osylSiteService.getSite(siteId);
-	    if (osylSiteService.hasCourseOutline(siteId)){
+	    if (osylSiteService.hasCourseOutline(siteId)) {
 		co = osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
 	    }
 	} catch (IdUnusedException e) {
@@ -1151,7 +1192,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    String name = null;
 		    for (String instructor : instructors) {
 			try {
-			    user = UserDirectoryService.getUser(instructor);
+			    user = UserDirectoryService.getUserByEid(instructor);
 			    name = user.getDisplayName();
 			    info.addCourseInstructor(name);
 			} catch (UserNotDefinedException e) {
@@ -1219,8 +1260,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    allSitesInfo.add(info);
 	    }
 	}
-	
-	//deleteExpiredTemporaryExportFiles(allSitesInfo);
+
+	deleteExpiredTemporaryExportFiles(allSitesInfo);
 	return allSitesInfo;
     }
 
