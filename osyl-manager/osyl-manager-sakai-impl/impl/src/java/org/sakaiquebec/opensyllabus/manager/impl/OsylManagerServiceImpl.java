@@ -1037,12 +1037,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			courseManagementService.getSections(courseOff.getEid());
 		for (Iterator<Section> cSs = sections.iterator(); cSs.hasNext();) {
 		    courseS = cSs.next();
-		    String courseSTitle = courseS.getTitle();
+		    String courseTitle = courseManagementService.getCanonicalCourse(courseOff.getCanonicalCourseEid()).getTitle();
+		    String courseSId = courseS.getEid();
 		    String session = courseOff.getAcademicSession().getTitle();
 		    String sigle = courseOff.getCanonicalCourseEid();
 		    String section =
-			    courseSTitle.substring(courseSTitle.length() - 3,
-				    courseSTitle.length());
+			    courseSId.substring(courseSId.length() - 3,
+				    courseSId.length());
 
 		    String instructorsString = "";
 		    int studentNumber=-1;
@@ -1074,12 +1075,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 				instructorsString.substring(0,
 					instructorsString.length() - 3);
 
-		    value = sigle + " " + session + " " + section;
 		    CMCourse cmCourse = new CMCourse();
 		    cmCourse.setId(courseS.getEid());
 		    cmCourse.setSession(session);
-		    cmCourse.setName(courseSTitle);
-		    cmCourse.setSigle(value);
+		    cmCourse.setName(courseTitle);
+		    cmCourse.setSigle(sigle);
+		    cmCourse.setSection(section);
 		    cmCourse.setInstructor(instructorsString);
 		    cmCourse.setStudentNumber(studentNumber);
 		    cmCourses.add(cmCourse);

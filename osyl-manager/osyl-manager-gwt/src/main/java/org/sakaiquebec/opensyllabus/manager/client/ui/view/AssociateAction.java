@@ -38,8 +38,14 @@ public class AssociateAction extends OsylManagerAbstractAction {
 
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
-	if (siteIds.size() == 1)
-	    return true;
+	if (siteIds.size() == 1) {
+	    String siteName = siteIds.get(0).getCourseName();
+	    if (siteName != null && !siteName.equals(""))
+		return false;
+	    else
+		return true;
+	}
+
 	else
 	    return false;
     }

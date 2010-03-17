@@ -215,6 +215,10 @@ public interface Messages extends ConstantsWithLookup {
     String dissociateAction_dissociate_error();
     
     String dissociateAction_dissociate_error_detail();
+
+    String associateForm_confirmation();
+
+    String cminfoView_section();
     
     
 

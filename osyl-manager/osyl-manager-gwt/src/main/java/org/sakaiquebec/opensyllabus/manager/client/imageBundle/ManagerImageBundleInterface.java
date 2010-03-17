@@ -25,6 +25,8 @@ import com.google.gwt.user.client.ui.ImageBundle;
 public interface ManagerImageBundleInterface extends ImageBundle {
     
     public AbstractImagePrototype info();
+    
+    public AbstractImagePrototype check();
 
 
     

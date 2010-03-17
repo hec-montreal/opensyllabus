@@ -105,10 +105,12 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 		    sigleCourseMap = new HashMap<String, CMCourse>();
 		    nameCourseMap = new HashMap<String, CMCourse>();
 		    for (CMCourse course : result) {
-			sigleOracle.add(course.getSigle());
-			sigleCourseMap.put(course.getSigle(), course);
-			nameOracle.add(course.getName());
-			nameCourseMap.put(course.getName(), course);
+			String sigleValue = course.getSigle() + " " + course.getSession() + " " + course.getSection();
+			sigleOracle.add(sigleValue);
+			sigleCourseMap.put(sigleValue, course);
+			String nameValue = course.getName() +" "+course.getSession()+" "+course.getSection();
+			nameOracle.add(nameValue);
+			nameCourseMap.put(nameValue, course);
 
 		    }
 		}
@@ -121,10 +123,9 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	}
 
 	public void onSuccess(Void result) {
-	    Window.alert(controller.getMessages().associateToCMSuccess());
 	    controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 		    OsylManagerEvent.SITE_INFO_CHANGE));
-
+	    AssociateForm.this.onAssociationEnd();
 	}
 
     };
@@ -174,7 +175,10 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	mainPanel.setCellHorizontalAlignment(ivRoundCornerPanel,
 		HasHorizontalAlignment.ALIGN_CENTER);
 
+	
 	okButton = new PushButton(controller.getMessages().associateForm_ok());
+	okButton.setWidth("25px");
+	okButton.setEnabled(false);
 	okButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		AssociateForm.this.controller.associateToCM(selectedCourse
@@ -182,8 +186,6 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 			associateToCMAsyncCallback);
 	    }
 	});
-	okButton.setWidth("25px");
-	okButton.setEnabled(false);
 
 	PushButton cancelButton =
 		new PushButton(controller.getMessages().associateForm_cancel());
@@ -197,6 +199,8 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	HorizontalPanel hz = new HorizontalPanel();
 	hz.add(okButton);
 	hz.add(cancelButton);
+
+	
 	mainPanel.add(hz);
 	mainPanel.setCellHorizontalAlignment(hz,
 		HasHorizontalAlignment.ALIGN_CENTER);
@@ -216,6 +220,41 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	    }
 	});
 	return suggestBox;
+    }
+    
+    protected void onAssociationEnd() {
+	mainPanel.clear();
+
+	Label title =
+		new Label(controller.getMessages().mainView_action_associate());
+	title.setStylePrimaryName("OsylManager-form-title");
+	mainPanel.add(title);
+
+	Label conf =
+		new Label(controller.getMessages().associateForm_confirmation());
+	mainPanel.add(conf);
+	
+	cmCourseInfoView.setImage(controller.getImageBundle().check().createImage());
+	RoundCornerPanel ivRoundCornerPanel =
+		new RoundCornerPanel(cmCourseInfoView, "",
+			"OsylManager-infoView-BottomLeft",
+			"OsylManager-infoView-BottomRight",
+			"OsylManager-infoView-TopLeft",
+			"OsylManager-infoView-TopRight");
+	ivRoundCornerPanel.setStylePrimaryName("OsylManager-infoView");
+	mainPanel.add(ivRoundCornerPanel);
+	mainPanel.setCellHorizontalAlignment(ivRoundCornerPanel,
+		HasHorizontalAlignment.ALIGN_CENTER);
+	
+	okButton.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
+		AssociateForm.super.hide();
+	    }
+	});
+	mainPanel.add(okButton);
+	mainPanel.setCellHorizontalAlignment(okButton,
+		HasHorizontalAlignment.ALIGN_CENTER);
+
     }
 
 }

@@ -33,6 +33,7 @@ public class CMCourse implements java.io.Serializable{
     private String name;
     private String session;
     private String instructor;
+    private String section;
     private int studentNumber;
     
     public CMCourse() {
@@ -84,6 +85,14 @@ public class CMCourse implements java.io.Serializable{
 
     public void setSession(String session) {
         this.session = session;
+    }
+
+    public void setSection(String section) {
+	this.section = section;
+    }
+
+    public String getSection() {
+	return section;
     }
     
     
