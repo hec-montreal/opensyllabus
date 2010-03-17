@@ -30,6 +30,7 @@ import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.content.api.ResourceType;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.OverQuotaException;
@@ -468,7 +469,7 @@ public class OsylServiceImpl implements OsylService {
 	    citationService.save(collection);
 
 	    resource.setContent(collection.getId().getBytes());
-	    contentHostingService.commitResource(resource);
+	    contentHostingService.commitResource(resource, NotificationService.NOTI_NONE);
 
 	} catch (RuntimeException e) {
 	    log.error("Remove citation list - Runtime service exception", e);
@@ -521,7 +522,7 @@ public class OsylServiceImpl implements OsylService {
 			    temp[0], temp[1], 1);
 	    newResource.setContent(content);
 	    newResource.setContentType(contentType);
-	    contentHostingService.commitResource(newResource);
+	    contentHostingService.commitResource(newResource, NotificationService.NOTI_NONE);
 
 	    String resourceName = resourceOutputDir + name;
 	    return resourceName;
@@ -613,7 +614,7 @@ public class OsylServiceImpl implements OsylService {
 		    citationListName);
 
 	    cre.setContent(citationList.getId().getBytes());
-	    contentHostingService.commitResource(cre);
+	    contentHostingService.commitResource(cre, NotificationService.NOTI_NONE);
 	    // Permission application
 	    // osylSecurityService.applyPermissions(newId,SecurityInterface.ACCESS_PUBLIC);
 	}
