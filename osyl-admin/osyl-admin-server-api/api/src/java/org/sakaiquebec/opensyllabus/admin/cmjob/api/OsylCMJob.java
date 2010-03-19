@@ -50,13 +50,6 @@ public interface OsylCMJob extends Job {
     public void loadSessions();
 
     /**
-     * Method used to create users
-     * 
-     * @deprecated Users are now retrieved with ldap.
-     */
-    public void loadUsers();
-
-    /**
      * Method used to load course sets
      */
     public void loadCourseSets();

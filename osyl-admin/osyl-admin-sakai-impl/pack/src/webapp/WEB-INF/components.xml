@@ -228,14 +228,21 @@
 	</bean>
 	
 	<bean id="osylcmjob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImpl" >
-		<property name="userDirService"
-			ref="org.sakaiproject.user.api.UserDirectoryService" />
 		<property name="cmAdmin"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
 		<property name="cmService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
 	</bean>
 	
+	<bean id="offSitesjob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OfficialSitesJobImpl" >
+		<property name="cmService"
+			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		<property name="siteService"
+			ref="org.sakaiproject.site.api.SiteService" />
+		<property name="toolManager"
+			ref="org.sakaiproject.tool.api.ToolManager" />
+	</bean>
+
 	<bean id="osylhcojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylHierarchicalCourseOutlineJobImpl" >
 		<property name="coRelationDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
@@ -269,6 +276,26 @@
 		</property>
 		
 	</bean>	
+
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.offSitesjob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		
+	
+		<property name="beanId">
+			<value>offSitesjob</value>
+		</property>
+		
+		<property name="jobName">
+			<value>Official Sites Creation Job</value>
+		</property>
+		
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+		
+	</bean>	
+
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylcmjobudem"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
