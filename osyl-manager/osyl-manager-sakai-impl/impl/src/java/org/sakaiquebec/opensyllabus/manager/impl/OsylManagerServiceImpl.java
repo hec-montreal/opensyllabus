@@ -1015,6 +1015,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     public List<CMCourse> getCMCourses() {
+	log.info("Debut de getCMCourses");
 	List<CMCourse> cmCourses = new ArrayList<CMCourse>();
 	Set<CourseSet> courseSets = courseManagementService.getCourseSets();
 	Set<CourseOffering> courseOffs = null;
@@ -1088,6 +1089,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    }
 	}
+	log.info("F de getCMCourses");
 	return cmCourses;
     }
 
