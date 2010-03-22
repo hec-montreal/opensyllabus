@@ -1089,7 +1089,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    }
 	}
-	log.info("F de getCMCourses");
+	log.info("Fin de getCMCourses");
 	return cmCourses;
     }
 
