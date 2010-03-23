@@ -25,6 +25,12 @@ package org.sakaiquebec.opensyllabus.shared.util;
  * @version $Id: $
  */
 public class LinkValidator {
+    
+    private final static String LINK_PREFIX = "http://";
+    
+    private final static String MAIL_PREFIX = "mailto:";
+    
+    private final static String LINK_CONTENT = "://";
 
     /**
      * 
@@ -37,5 +43,17 @@ public class LinkValidator {
 	else return false;
     }
     
+    public static String parseLink(String link){
+	String newLink = link;
+	
+	if(!link.contains(LINK_CONTENT) && !link.startsWith(MAIL_PREFIX)){
+	    newLink = addLinkPrefix(link);
+	}
+	return newLink;
+    }
+    
+    public static String addLinkPrefix(String link){
+	return LINK_PREFIX + link;
+    }
 }
 

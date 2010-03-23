@@ -42,6 +42,7 @@ import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxCitationView;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
+import org.sakaiquebec.opensyllabus.shared.util.LinkValidator;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -452,6 +453,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 				COPropertiesType.IDENTIFIER,
 				COPropertiesType.IDENTIFIER_TYPE_URL);
 		    } else {
+			editorOtherLink.setText(LinkValidator.parseLink(editorOtherLink.getText()));
 			otherLink = editorOtherLink.getText();
 			selectedFile.removeProperty(
 				COPropertiesType.IDENTIFIER,

@@ -143,7 +143,7 @@ public class OsylRealmServiceImpl implements OsylRealmService {
 	            }
 	            else {
 	            	// copy an existing AuthzGroup 
-	            	newRealm = authService.addAuthzGroup(newRealmName, parent, null);
+	            	newRealm = authService.addAuthzGroup(newRealmName, parent, "admin");
 	            }
 	            addRoles(newRealm);
 	            addPermissions(newRealm);

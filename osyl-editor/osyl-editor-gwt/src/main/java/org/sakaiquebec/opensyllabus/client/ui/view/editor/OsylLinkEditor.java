@@ -323,6 +323,8 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 			    messages);
 	    osylAlertDialog.center();
 	    osylAlertDialog.show();
+	} else {
+	    setLink(LinkValidator.parseLink(getLink()));
 	}
 	return ok;
     }

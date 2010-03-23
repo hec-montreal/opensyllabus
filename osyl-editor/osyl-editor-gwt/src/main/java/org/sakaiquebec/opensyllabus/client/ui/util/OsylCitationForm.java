@@ -33,6 +33,7 @@ import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
+import org.sakaiquebec.opensyllabus.shared.util.LinkValidator;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -546,8 +547,8 @@ public class OsylCitationForm extends WindowPanel implements
 		if (CitationSchema.TYPE_UNKNOWN
 			.equalsIgnoreCase(tempCitationType)) {
 		    citation.setProperty(COPropertiesType.IDENTIFIER,
-			    COPropertiesType.IDENTIFIER_TYPE_URL, urlTextBox
-				    .getText());
+			    COPropertiesType.IDENTIFIER_TYPE_URL,
+			    LinkValidator.parseLink(urlTextBox.getText()));
 		}
 
 		citation.setFileName(titleField.getText());

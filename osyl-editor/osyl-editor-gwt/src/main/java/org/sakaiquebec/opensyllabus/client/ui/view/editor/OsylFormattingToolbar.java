@@ -95,6 +95,7 @@ public class OsylFormattingToolbar extends Composite {
 			osylAlertDialog.center();
 			osylAlertDialog.show();
 		    } else {
+			url = LinkValidator.parseLink(url);
 			extended.createLink(url);
 		    }
 		}
