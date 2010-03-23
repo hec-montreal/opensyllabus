@@ -91,7 +91,9 @@ public interface OsylSiteService extends EntityProducer{
 	public String getSiteConfigProperty(String siteId);
 
 	/**
-	 * From the information given by the user, we create a new Site
+	 * From the information given by the user, we create a new Site that will contain
+	 * a course outline that will be associated to a course of the course management
+	 *  or will be a work site.
 	 * 
 	 * @param siteId
 	 * @param siteTitle
@@ -103,6 +105,19 @@ public interface OsylSiteService extends EntityProducer{
 	 */
 	public String createSite(String siteTitle, String configRef, String lang) throws Exception;
 
+	/**
+	 * From the information given by the user, we create a new Site that will contain
+	 * a sharable course outline.
+	 * 
+	 * @param siteId
+	 * @param siteTitle
+	 * @param siteSession
+	 * @param siteGroup
+	 * @param siteProf
+	 * @return the id of the site
+	 * @throws Exception
+	 */
+	public String createSharableSite(String siteTitle, String configRef, String lang) throws Exception;
 	/**
 	 * Returns the actual site id of this context.
 	 * 

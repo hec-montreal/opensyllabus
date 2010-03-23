@@ -448,6 +448,66 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public String createSharableSite(String siteTitle, String configRef, String lang)
+	    throws Exception {
+	Site site = null;
+	if (!siteService.siteExists(siteTitle)) {
+	    site = siteService.addSite(siteTitle, "osylEditor");
+	    site.setTitle(siteTitle);
+	    site.setPublished(true);
+	    site.setJoinable(false);
+
+	    // we add the tools
+	    addTool(site, "sakai.opensyllabus.tool");
+	    addTool(site, "sakai.resources");
+	    addTool(site, "sakai.siteinfo");
+
+	    siteService.save(site);
+
+	    // we add the directories
+	    String directoryId;
+	    addCollection(WORK_DIRECTORY, site);
+	    directoryId =
+		    contentHostingService.getSiteCollection(site.getId())
+			    + WORK_DIRECTORY + "/";
+	    osylSecurityService.applyDirectoryPermissions(directoryId);
+
+	    addCollection(PUBLISH_DIRECTORY, site);
+
+	    directoryId =
+		    contentHostingService.getSiteCollection(site.getId())
+			    + PUBLISH_DIRECTORY + "/";
+	    osylSecurityService.applyDirectoryPermissions(directoryId);
+
+	    COConfigSerialized coConfig = null;
+	    COSerialized co = null;
+
+	    try {
+		coConfig = configDao.getConfigByRef(configRef);
+		co =
+			new COSerialized(idManager.createUuid(), lang,
+				"shared", "", site.getId(), "sectionId",
+				coConfig, null, "shortDescription",
+				"description", "title", false);
+		resourceDao.createOrUpdateCourseOutline(co);
+
+	    } catch (Exception e) {
+		log.error("createSite", e);
+	    }
+
+	} else {
+	    log.error("Could not create site because site with title='"
+		    + siteTitle + "' already exists");
+	    throw new Exception(
+		    "Could not create site because site with title='"
+			    + siteTitle + "' already exists");
+	}
+	return site.getId();
+    }
+
+    /**
      * Returns the site type of the realm service if there is one otherwise the
      * default site type
      * 

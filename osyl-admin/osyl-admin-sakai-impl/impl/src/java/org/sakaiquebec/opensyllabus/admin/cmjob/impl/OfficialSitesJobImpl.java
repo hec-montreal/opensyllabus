@@ -210,6 +210,11 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 			    sections =
 				    cmService.getSections(courseOff.getEid());
 
+			    // Create sharable site if necessary
+			    if (hasSharable(sections))
+				createShareable(courseOff);
+
+			    // Create site for section
 			    if (sections != null) {
 				for (Section section : sections) {
 				    siteName = getSiteName(section);
@@ -238,13 +243,30 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
     }
 
     private boolean hasSharable(Set<Section> sections) {
-	boolean create = false;
+	int nbSections = 0;
+	String sectionId = null;
 
-	return create;
+	for (Section section : sections) {
+	    sectionId = section.getEid();
+	    if (!sectionId.endsWith(DIFFERED_GROUP))
+		nbSections++;
+	}
+
+	if (nbSections > 1)
+	    return true;
+	else
+	    return false;
     }
 
     private void createShareable(CourseOffering course) {
+	String siteName = getSharableSiteName(course);
 
+	try {
+	    osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG,
+		    TEMPORARY_LANG);
+	} catch (Exception e) {
+	    log.error(e.getMessage());
+	}
     }
 
     private List<AcademicSession> getSessions(Date startDate, Date endDate) {
@@ -335,6 +357,54 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	    siteName =
 		    courseId + "_" + groupe + "_" + sessionTitle + "_"
 			    + periode;
+
+	return siteName;
+    }
+
+    private String getSharableSiteName(CourseOffering courseOff) {
+	String siteName = null;
+	String courseOffId = courseOff.getEid();
+	String canCourseId = (courseOff.getCanonicalCourseEid()).trim();
+	AcademicSession session = courseOff.getAcademicSession();
+	String sessionId = session.getEid();
+
+	String courseId = null;
+	String courseIdFront = null;
+	String courseIdMiddle = null;
+	String courseIdBack = null;
+
+	String sessionTitle = null;
+	String periode = null;
+
+	if (canCourseId.length() == 7) {
+	    courseIdFront = canCourseId.substring(0, 2);
+	    courseIdMiddle = canCourseId.substring(2, 5);
+	    courseIdBack = canCourseId.substring(5, 7);
+	    courseId =
+		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
+	} else if (canCourseId.length() == 6) {
+	    courseIdFront = canCourseId.substring(0, 1);
+	    courseIdMiddle = canCourseId.substring(1, 4);
+	    courseIdBack = canCourseId.substring(4, 6);
+	    courseId =
+		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
+	} else {
+	    courseId = canCourseId;
+	}
+
+	if (canCourseId.matches(".*[^0-9].*")) {
+	    courseId = canCourseId;
+	}
+	sessionTitle = getSessionName(session);
+
+	if (sessionId.matches(".*[pP].*")) {
+	    periode = sessionId.substring(sessionId.length() - 2);
+	}
+
+	if (periode == null)
+	    siteName = courseId + "_" + sessionTitle;
+	else
+	    siteName = courseId + "_" + sessionTitle + "_" + periode;
 
 	return siteName;
     }

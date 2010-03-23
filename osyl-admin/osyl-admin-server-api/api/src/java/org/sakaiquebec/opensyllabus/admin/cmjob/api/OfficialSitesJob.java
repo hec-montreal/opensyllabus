@@ -38,5 +38,7 @@ public interface OfficialSitesJob extends Job {
     public final static String WINTER = "H";
     
     public final static String FALL = "A";
+    
+    public static final String DIFFERED_GROUP = "DF1";
 }
 
