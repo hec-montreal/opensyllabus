@@ -95,7 +95,7 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
 	// We get the URI from the model
 	String uri = getRawURI();
 
-	if (uri.matches("^(https?|ftp|mailto)://.+")) {
+	if (uri.matches("^((https?|ftp)://.+)|(mailto:[^/]+)|(mailto://.+)$")) {
 	    // If it's an external link we return it as is
 	    return uri;
 	} else {

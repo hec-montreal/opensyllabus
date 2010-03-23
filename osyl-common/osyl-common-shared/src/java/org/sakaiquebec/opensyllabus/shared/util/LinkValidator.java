@@ -19,6 +19,7 @@
  *
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.shared.util;
+
 /**
  *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -26,11 +27,25 @@ package org.sakaiquebec.opensyllabus.shared.util;
  */
 public class LinkValidator {
     
+    /**
+     * This is the link prefix to add to a link if it is missing.
+     */
     private final static String LINK_PREFIX = "http://";
     
+    /**
+     * This is the mail prefix to match.
+     */
     private final static String MAIL_PREFIX = "mailto:";
     
+    /**
+     * String that should be found in a valid link.
+     */
     private final static String LINK_CONTENT = "://";
+    
+    /**
+     * Regular expression to match if the link is of mail type.
+     */
+    private final static String REGEX = "^[\\w._%+-]+@[\\w.-]+\\.[A-Za-z]{2,}$";
 
     /**
      * 
@@ -43,17 +58,30 @@ public class LinkValidator {
 	else return false;
     }
     
+    /**
+     * Parses a link and adds prefix if needed.
+     * @param link the link to parse
+     * @return the new link
+     */
     public static String parseLink(String link){
 	String newLink = link;
 	
 	if(!link.contains(LINK_CONTENT) && !link.startsWith(MAIL_PREFIX)){
-	    newLink = addLinkPrefix(link);
+	    if(link.matches(REGEX)){
+		newLink = addMailPrefix(link);
+	    } else {
+		newLink = addLinkPrefix(link);
+	    }
 	}
 	return newLink;
     }
     
-    public static String addLinkPrefix(String link){
+    private static String addLinkPrefix(String link){
 	return LINK_PREFIX + link;
+    }
+    
+    private static String addMailPrefix(String link){
+	return MAIL_PREFIX + link;
     }
 }
 
