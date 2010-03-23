@@ -49,12 +49,14 @@ import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
+import org.sakaiproject.tool.api.Tool;
 import org.sakaiproject.user.api.UserAlreadyDefinedException;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.user.api.UserEdit;
 import org.sakaiproject.user.api.UserIdInvalidException;
 import org.sakaiproject.user.api.UserPermissionException;
 import org.sakaiproject.tool.api.SessionManager;
+import org.sakaiproject.tool.cover.ToolManager;
 
 import org.sakaiquebec.opensyllabus.admin.api.OsylAdminService;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericMatriculeNomMapFactory;
@@ -290,11 +292,11 @@ public class OsylAdminServiceImpl implements OsylAdminService {
 		Session s = sessionManager.getCurrentSession();
 		s.setUserId(UserDirectoryService.ADMIN_ID);
 
-		Site osylManagerSite =
+		Site osylAdminSite =
 			siteService.addSite(this.osylAdminSiteName, "project");
-		osylManagerSite.setTitle("OpenSyllabus Admin");
-		osylManagerSite.setPublished(true);
-		osylManagerSite.setJoinable(false);
+		osylAdminSite.setTitle("OpenSyllabus Admin");
+		osylAdminSite.setPublished(true);
+		osylAdminSite.setJoinable(false);
 
 		AuthzGroup currentGroup =
 			AuthzGroupService.getInstance().getAuthzGroup(
@@ -321,12 +323,19 @@ public class OsylAdminServiceImpl implements OsylAdminService {
 		}
 		AuthzGroupService.save(currentGroup);
 
-		// add Resources tool
-		SitePage page = osylManagerSite.addPage();
+		//add Resources tool
+		SitePage page2 = osylAdminSite.addPage();
+		page2.setTitle("Resources");
+		page2.addTool("sakai.resources");
+		
+		// add OsylAdmin tool
+		SitePage page = osylAdminSite.addPage();
 		page.setTitle(this.osylAdminSiteName);
 		page.addTool("sakai.opensyllabus.admin.tool");
 
-		siteService.save(osylManagerSite);
+		siteService.save(osylAdminSite);
+		
+
 		log.debug("init() site " + this.osylAdminSiteName
 			+ " has been created");
 	    } catch (IdInvalidException e) {

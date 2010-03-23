@@ -334,4 +334,36 @@
 		
 	</bean>	
 	
+
+
+  <!-- ConfigurationService bean handles institution-specific configuration
+       for the Citations Helper -->
+  <bean id="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService"
+    class="org.sakaiquebec.opensyllabus.admin.impl.ConfigurationServiceImpl"
+    init-method="init"
+    destroy-method="destroy"
+    singleton="true">
+
+<!--    <property name="adminSiteName"><value>opensyllabusAdmin</value></property>-->
+<!--    <property name="configFolder"><value>config</value></property>-->
+<!--    <property name="configXmlfILE"><value>config.xml</value></property>-->
+
+
+	<!-- Beginning of the interval of of time to be considered in the official sites creation-->
+    <property name="startDate"><value></value></property>
+
+	<!--End of the interval of of time to be considered in the official sites creation-->
+    <property name="endDate"><value></value></property>
+
+	<!--List of course to be created in the given interval
+		if empty, all the course in the extract files will be considered.
+		Separate courses in list with with comma-->
+    <property name="courses"><value></value></property>
+
+    <property name="contentHostingService">
+    	<ref bean="org.sakaiproject.content.api.ContentHostingService"/>
+    </property>
+ 
+  </bean>
+
 </beans>
