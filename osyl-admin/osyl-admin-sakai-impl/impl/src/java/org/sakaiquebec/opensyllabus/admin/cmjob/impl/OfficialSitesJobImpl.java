@@ -60,6 +60,7 @@ import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
+import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
@@ -79,6 +80,13 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	    new HashSet<CanonicalCourse>();;
 
     private Set<Section> sections = null;
+
+    private OsylManagerService osylManagerService;
+
+    public void setOsylManagerService(OsylManagerService osylManagerService) {
+	this.osylManagerService = osylManagerService;
+    }
+
     /**
      *Course management service integration.
      */
@@ -211,6 +219,8 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 							siteName,
 							OSYL_CO_CONFIG,
 							TEMPORARY_LANG));
+					osylManagerService.associateToCM(
+						section.getEid(), siteName);
 				    } catch (Exception e) {
 					log.debug(e.getMessage());
 				    }
@@ -262,9 +272,8 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	String sessionName = null;
 	String sessionId = session.getEid();
 	Date startDate = session.getStartDate();
-	String year =
-		startDate.toString().substring(0,4);
-	
+	String year = startDate.toString().substring(0, 4);
+
 	if ((sessionId.charAt(3)) == '1')
 	    sessionName = WINTER + year;
 	if ((sessionId.charAt(3)) == '2')

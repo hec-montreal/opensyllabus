@@ -245,6 +245,8 @@
 			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
 		<property name="osylSiteService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
+		<property name="osylManagerService"
+			ref="org.sakaiquebec.opensyllabus.manager.api.OsylManagerService" />
 			
 	</bean>
 
