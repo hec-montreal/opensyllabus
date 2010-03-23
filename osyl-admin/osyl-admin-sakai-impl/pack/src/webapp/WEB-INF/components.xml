@@ -241,6 +241,11 @@
 			ref="org.sakaiproject.site.api.SiteService" />
 		<property name="toolManager"
 			ref="org.sakaiproject.tool.api.ToolManager" />
+		<property name="adminConfigService"
+			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
+		<property name="osylSiteService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
+			
 	</bean>
 
 	<bean id="osylhcojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylHierarchicalCourseOutlineJobImpl" >
@@ -349,10 +354,13 @@
 <!--    <property name="configXmlfILE"><value>config.xml</value></property>-->
 
 
-	<!-- Beginning of the interval of of time to be considered in the official sites creation-->
+	<!-- Beginning of the interval of of time to be considered in the official sites creation
+		format: yyyy/MM/dd-->
+	
     <property name="startDate"><value></value></property>
 
-	<!--End of the interval of of time to be considered in the official sites creation-->
+	<!--End of the interval of of time to be considered in the official sites creation
+		Format: yyyy/MM/dd-->
     <property name="endDate"><value></value></property>
 
 	<!--List of course to be created in the given interval

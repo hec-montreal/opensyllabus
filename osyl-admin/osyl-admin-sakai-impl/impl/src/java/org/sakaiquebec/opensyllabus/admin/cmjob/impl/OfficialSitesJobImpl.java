@@ -20,6 +20,10 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -28,14 +32,18 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
+import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.component.cover.ComponentManager;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
+import org.sakaiproject.coursemanagement.api.CanonicalCourse;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.CourseSet;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.Section;
+import org.sakaiproject.event.cover.EventTrackingService;
+import org.sakaiproject.event.cover.UsageSessionService;
 import org.sakaiproject.exception.IdInvalidException;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.IdUsedException;
@@ -49,7 +57,9 @@ import org.sakaiproject.tool.api.Tool;
 import org.sakaiproject.tool.api.ToolManager;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.user.api.UserDirectoryService;
+import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob;
+import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
@@ -59,14 +69,18 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
     private static Log log = LogFactory.getLog(OfficialSitesJobImpl.class);
 
-    // TODO: Configure Value
-    private String session = "20931";
+    private final static String TEMPORARY_LANG = "fr_CA";
+
+    private final static String OSYL_CO_CONFIG = "default";
 
     private Set<CourseSet> allCourseSets = null;
 
     private CourseSet aCourseSet = null;
 
     private Set<CourseOffering> courseOffs = null;
+
+    private Set<CanonicalCourse> canonicalCourses =
+	    new HashSet<CanonicalCourse>();;
 
     private Set<Section> sections = null;
     /**
@@ -79,6 +93,30 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
      */
     public void setCmService(CourseManagementService cmService) {
 	this.cmService = cmService;
+    }
+
+    /**
+     * Integration of the OsylSiteService
+     */
+    private OsylSiteService osylSiteService;
+
+    /**
+     * @param osylSiteService
+     */
+    public void setOsylSiteService(OsylSiteService osylSiteService) {
+	this.osylSiteService = osylSiteService;
+    }
+
+    /**
+     * Administration ConfigurationService injection
+     */
+    private ConfigurationService adminConfigService;
+
+    /**
+     * @param adminConfigService
+     */
+    public void setAdminConfigService(ConfigurationService adminConfigService) {
+	this.adminConfigService = adminConfigService;
     }
 
     /**
@@ -102,42 +140,126 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
     }
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
-	AcademicSession academicSession = cmService.getAcademicSession(session);
-	String siteName = null;
-	// Retrieve all the course sets
-	allCourseSets = cmService.getCourseSets();
 
-	System.out.println("on est dedans");
-	for (CourseSet courseSet : allCourseSets) {
+	loginToSakai();
+	Date startDateInterval = adminConfigService.getIntervalStartDate();
+	Date endDateInterval = adminConfigService.getIntervalEndDate();
+
+	// If we have a list of courses, we will create only those one. If we
+	// don't we create
+	// any course defined in the given sessions
+	List<String> courses = adminConfigService.getCourses();
+
+	// If we have an interval of time, we take the courses defined in that
+	// period of time
+	// If we don't have any interval, we take the courses defined in the
+	// active sessions.
+	List<AcademicSession> allSessions =
+		getSessions(startDateInterval, endDateInterval);
+
+	String siteName = null;
+
+	if (courses != null && courses.size() > 0) {
+	    for (String courseId : courses) {
+		if (cmService.isCanonicalCourseDefined(courseId))
+		    canonicalCourses
+			    .add(cmService.getCanonicalCourse(courseId));
+	    }
+	} else {
+	    // Retrieve all the course sets
+	    allCourseSets = cmService.getCourseSets();
+
+	    for (CourseSet courseSet : allCourseSets) {
+
+		// Retrieve the canonical courses
+		canonicalCourses =
+			cmService.getCanonicalCourses(courseSet.getEid());
+	    }
+	}
+
+	String canCourseId = null;
+
+	for (CanonicalCourse canCourse : canonicalCourses) {
+	    canCourseId = canCourse.getEid();
+
+	    // Check if it is in the list of courses to be created
+	    // If the list is not empty and the course is not inside, we
+	    // don't create it
+	    if (courses != null)
+		if (!courses.contains(canCourseId.trim()))
+		    continue;
 
 	    // Retrieve the course offerings
 	    courseOffs =
-		    cmService.getCourseOfferingsInCourseSet(courseSet.getEid());
+		    cmService.getCourseOfferingsInCanonicalCourse(canCourseId);
 
 	    if (courseOffs != null) {
-		int i= 0;
+		int i = 0;
 		for (CourseOffering courseOff : courseOffs) {
 
 		    // Check if we have the good session
-		    if ((courseOff.getAcademicSession().getEid())
-			    .equals(academicSession.getEid())) {
+		    for (AcademicSession academicSession : allSessions) {
+			if ((courseOff.getAcademicSession().getEid())
+				.equals(academicSession.getEid())) {
 
-			// Retrieve the sections to be created
-			sections = cmService.getSections(courseOff.getEid());
+			    // Retrieve the sections to be created
+			    sections =
+				    cmService.getSections(courseOff.getEid());
 
-			if (sections != null) {
-			    for (Section section : sections) {
-				if (i < 3){
-				    createSite(getSiteName(section), section);
-				    i++;
+			    if (sections != null) {
+				for (Section section : sections) {
+				    siteName = getSiteName(section);
+				    try {
+					System.out.println("le site cree est "
+						+ osylSiteService.createSite(
+							siteName,
+							OSYL_CO_CONFIG,
+							TEMPORARY_LANG));
+				    } catch (Exception e) {
+					log.debug(e.getMessage());
+				    }
+
 				}
 			    }
-			}
 
+			}
 		    }
 		}
 	    }
 	}
+
+	logoutFromSakai();
+    }
+
+    private boolean hasSharable(Set<Section> sections) {
+	boolean create = false;
+
+	return create;
+    }
+
+    private void createShareable(CourseOffering course) {
+
+    }
+
+    private List<AcademicSession> getSessions(Date startDate, Date endDate) {
+	List<AcademicSession> sessions = new ArrayList<AcademicSession>();
+
+	if (startDate == null || endDate == null)
+	    sessions.addAll(cmService.getCurrentAcademicSessions());
+	else {
+	    // AcademicSession session = null;
+	    List<AcademicSession> allSessions = cmService.getAcademicSessions();
+	    Date sessionStartDate, sessionEndDate;
+	    for (AcademicSession session : allSessions) {
+		sessionStartDate = session.getStartDate();
+		sessionEndDate = session.getEndDate();
+		if (startDate.compareTo(sessionStartDate) <= 0
+			&& endDate.compareTo(sessionEndDate) >= 0)
+		    sessions.add(session);
+	    }
+	}
+
+	return sessions;
     }
 
     private String getSiteName(Section section) {
@@ -174,13 +296,12 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	    courseId = canCourseId;
 	}
 
-	if (canCourseId.matches("[^0-9]")) {
-	    System.out.println("contient des lettres " + sectionId);
+	if (canCourseId.matches(".*[^0-9].*")) {
 	    courseId = canCourseId;
 	}
 	sessionTitle = session.getTitle();
 
-	if (sessionId.matches(".[p|P].")) {
+	if (sessionId.matches(".*[pP].*")) {
 	    periode = sessionId.substring(sessionId.length() - 2);
 	}
 
@@ -196,75 +317,32 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	return siteName;
     }
 
-    private void createSite(String siteName, Section section) {
+    /**
+     * Logs in the sakai environment
+     */
+    protected void loginToSakai() {
+	Session sakaiSession = SessionManager.getCurrentSession();
+	sakaiSession.setUserId("admin");
+	sakaiSession.setUserEid("admin");
 
-	if (siteService.siteExists(siteName))
-	    System.out.println("Le site existe déjà");
-	else {
-	    try {
-		enableSecurityAdvisor();
-		Session s = SessionManager.getCurrentSession();
-		s.setUserId(UserDirectoryService.ADMIN_ID);
+	// establish the user's session
+	UsageSessionService.startSession("admin", "127.0.0.1", "CMSync");
 
-		Site osylSite = siteService.addSite(siteName, "osylEditor");
-		osylSite.setTitle(siteName);
-		osylSite.setPublished(true);
-		osylSite.setJoinable(false);
+	// update the user's externally provided realm definitions
+	AuthzGroupService.refreshUser("admin");
 
-		// we add the tools
-		addTool(osylSite, "sakai.opensyllabus.tool");
-		addTool(osylSite, "sakai.assignment.grades");
-		addTool(osylSite, "sakai.resources");
-		addTool(osylSite, "sakai.siteinfo");
-
-		osylSite.setProviderGroupId(section.getEid());
-		
-		//TODO: Add properties from the course management to the site
-		siteService.save(osylSite);
-
-	    } catch (IdInvalidException e) {
-		e.printStackTrace();
-	    } catch (IdUsedException e) {
-		e.printStackTrace();
-	    } catch (PermissionException e) {
-		e.printStackTrace();
-	    } catch (IdUnusedException e) {
-		e.printStackTrace();
-	    }
-
-	}
-
+	// post the login event
+	EventTrackingService.post(EventTrackingService.newEvent(
+		UsageSessionService.EVENT_LOGIN, null, true));
     }
 
-    public void addTool(Site site, String toolId) {
-	SitePage page = site.addPage();
-	Tool tool = toolManager.getTool(toolId);
-	page.setTitle(tool.getTitle());
-	page.setLayout(SitePage.LAYOUT_SINGLE_COL);
-	ToolConfiguration toolConf = page.addTool();
-	toolConf.setTool(toolId, tool);
-	toolConf.setTitle(tool.getTitle());
-	toolConf.setLayoutHints("0,0");
-
-	try {
-	    siteService.save(site);
-	} catch (IdUnusedException e) {
-	    log.error("Add tool - Unused id exception", e);
-	} catch (PermissionException e) {
-	    log.error("Add tool - Permission exception", e);
-	}
-
+    /**
+     * Logs out of the sakai environment
+     */
+    protected void logoutFromSakai() {
+	// post the logout event
+	EventTrackingService.post(EventTrackingService.newEvent(
+		UsageSessionService.EVENT_LOGOUT, null, true));
     }
 
-    private void enableSecurityAdvisor() {
-	// put in a security advisor so we can create citationAdmin site without
-	// need
-	// of further permissions
-	SecurityService.pushAdvisor(new SecurityAdvisor() {
-	    public SecurityAdvice isAllowed(String userId, String function,
-		    String reference) {
-		return SecurityAdvice.ALLOWED;
-	    }
-	});
-    }
 }

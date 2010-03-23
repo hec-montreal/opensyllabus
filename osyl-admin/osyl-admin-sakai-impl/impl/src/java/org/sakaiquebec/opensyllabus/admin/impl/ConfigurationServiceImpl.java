@@ -36,6 +36,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.authz.api.SecurityAdvisor;
+import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
+import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.Reference;
@@ -79,6 +82,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	log.info("initialize OsylAdmin configuration service");
 
 	EventTrackingService.addObserver(this);
+	
+	updateConfig(CONFIGREF);
 
     }
 
@@ -86,27 +91,27 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	log.info("destroy OsylAdmin configuration service");
     }
 
-    private String getStartDateInString() {
+    private String getStartDate() {
 	return startDate;
     }
 
-    public Date getStartDate() {
-	return getDate(getStartDateInString());
+    public Date getIntervalStartDate() {
+	return getDate(getStartDate());
     }
 
-    private void setStartDate(String startDate) {
+    public void setStartDate(String startDate) {
 	this.startDate = startDate;
     }
 
-    private String getEndDateInString() {
+    private String getEndDate() {
 	return endDate;
     }
 
-    public Date getEndDate() {
-	return getDate(getEndDateInString());
+    public Date getIntervalEndDate() {
+	return getDate(getEndDate());
     }
 
-    private void setEndDate(String endDate) {
+    public void setEndDate(String endDate) {
 	this.endDate = endDate;
     }
 
@@ -131,8 +136,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
 	    if (event.getModify()) {
 		String referenceString = event.getResource();
-		System.out.println("test configuration " + referenceString);
-
 		if (referenceString.contains(CONFIGFILE)) {
 
 		    log.info("Updating config from " + CONFIGFILE);
@@ -150,9 +153,19 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    ContentResource resource = null;
 
 	    try {
+		//We allow access to the file
+		SecurityService.pushAdvisor(new SecurityAdvisor() {
+			public SecurityAdvice isAllowed(String userId,
+				String function, String reference) {
+			    return SecurityAdvice.ALLOWED;
+			}
+		    });
+		
 		resource = contentHostingService.getResource(reference.getId());
 		if (resource != null)
 		    retrieveConfigs(fileReference, resource.streamContent());
+		//We remove access to the resource 
+		SecurityService.clearAdvisors();
 	    } catch (PermissionException e) {
 		e.printStackTrace();
 	    } catch (IdUnusedException e) {

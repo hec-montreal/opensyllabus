@@ -38,10 +38,12 @@ public interface ConfigurationService {
     public final static String CONFIGFORLDER = "config";
 
     public final static String CONFIGFILE = "config.xml";
+    
+    public final static String CONFIGREF = "/content/group/opensyllabusAdmin/config/config.xml";
 
-    public Date getStartDate();
+    public Date getIntervalStartDate();
 
-    public Date getEndDate();
+    public Date getIntervalEndDate();
 
     public List<String> getCourses();
 
