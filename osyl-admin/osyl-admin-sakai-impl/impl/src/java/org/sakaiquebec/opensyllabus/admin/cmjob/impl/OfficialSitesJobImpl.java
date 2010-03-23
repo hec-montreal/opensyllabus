@@ -69,10 +69,6 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
     private static Log log = LogFactory.getLog(OfficialSitesJobImpl.class);
 
-    private final static String TEMPORARY_LANG = "fr_CA";
-
-    private final static String OSYL_CO_CONFIG = "default";
-
     private Set<CourseSet> allCourseSets = null;
 
     private CourseSet aCourseSet = null;
@@ -262,6 +258,23 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	return sessions;
     }
 
+    private String getSessionName(AcademicSession session) {
+	String sessionName = null;
+	String sessionId = session.getEid();
+	Date startDate = session.getStartDate();
+	String year =
+		startDate.toString().substring(0,4);
+	
+	if ((sessionId.charAt(3)) == '1')
+	    sessionName = WINTER + year;
+	if ((sessionId.charAt(3)) == '2')
+	    sessionName = SUMMER + year;
+	if ((sessionId.charAt(3)) == '3')
+	    sessionName = FALL + year;
+
+	return sessionName;
+    }
+
     private String getSiteName(Section section) {
 	String siteName = null;
 	String sectionId = section.getEid();
@@ -299,7 +312,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	if (canCourseId.matches(".*[^0-9].*")) {
 	    courseId = canCourseId;
 	}
-	sessionTitle = session.getTitle();
+	sessionTitle = getSessionName(session);
 
 	if (sessionId.matches(".*[pP].*")) {
 	    periode = sessionId.substring(sessionId.length() - 2);
@@ -326,7 +339,8 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	sakaiSession.setUserEid("admin");
 
 	// establish the user's session
-	UsageSessionService.startSession("admin", "127.0.0.1", "CMSync");
+	UsageSessionService.startSession("admin", "127.0.0.1",
+		"OfficialSitesSync");
 
 	// update the user's externally provided realm definitions
 	AuthzGroupService.refreshUser("admin");

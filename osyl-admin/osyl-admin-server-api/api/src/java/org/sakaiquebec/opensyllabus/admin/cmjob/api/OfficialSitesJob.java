@@ -29,5 +29,14 @@ import org.quartz.Job;
  */
 public interface OfficialSitesJob extends Job {
 
+    public final static String TEMPORARY_LANG = "fr_CA";
+
+    public final static String OSYL_CO_CONFIG = "default";
+    
+    public final static String SUMMER = "E";
+    
+    public final static String WINTER = "H";
+    
+    public final static String FALL = "A";
 }
 
