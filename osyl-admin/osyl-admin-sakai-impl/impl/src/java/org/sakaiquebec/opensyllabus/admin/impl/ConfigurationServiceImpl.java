@@ -37,7 +37,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
 import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
@@ -233,7 +232,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
      * @param name Parameter name
      */
     private void saveParameter(org.w3c.dom.Document document,
-	    Map parameterMap, String name) {
+	    Map<String, String> parameterMap, String name) {
 	String value;
 	if ((value = getText(document.getDocumentElement(), name)) != null) {
 	    parameterMap.put(name, value);
