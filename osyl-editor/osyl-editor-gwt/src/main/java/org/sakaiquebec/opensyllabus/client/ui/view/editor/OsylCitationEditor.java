@@ -192,7 +192,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 	if (getView().getCitationLibraryLink() != null) {
 	    HorizontalPanel libLinkPanel = new HorizontalPanel();
-	    libLinkPanel.setStylePrimaryName("Osyl-ResProxCitationView-linkPanel");
+	    libLinkPanel
+		    .setStylePrimaryName("Osyl-ResProxCitationView-linkPanel");
 	    HTML h = new HTML();
 	    h.setStylePrimaryName("Osyl-ResProxCitationView-libraryImage");
 	    libLinkPanel.add(h);
@@ -207,7 +208,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 	if (getView().getCitationBookstoreLink() != null) {
 	    HorizontalPanel libLinkPanel = new HorizontalPanel();
-	    libLinkPanel.setStylePrimaryName("Osyl-ResProxCitationView-linkPanel");
+	    libLinkPanel
+		    .setStylePrimaryName("Osyl-ResProxCitationView-linkPanel");
 	    HTML h = new HTML();
 	    h.setStylePrimaryName("Osyl-ResProxCitationView-bookstoreImage");
 	    libLinkPanel.add(h);
@@ -223,7 +225,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 	if (getView().getCitationOtherLink() != null) {
 	    HorizontalPanel libLinkPanel = new HorizontalPanel();
-	    libLinkPanel.setStylePrimaryName("Osyl-ResProxCitationView-linkPanel");
+	    libLinkPanel
+		    .setStylePrimaryName("Osyl-ResProxCitationView-linkPanel");
 	    HTML h = new HTML();
 	    h.setStylePrimaryName("Osyl-ResProxCitationView-otherImage");
 	    libLinkPanel.add(h);
@@ -786,7 +789,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 		disableLibraryLinkCheckBox.setValue(!hasLink(selectedFile));
 		libraryLink.setHTML(getView().generateHTMLLink(
-			getView().getCitationLibraryLink(),
+			getIdentifierType(selectedFile,
+				COPropertiesType.IDENTIFIER_TYPE_LIBRARY),
 			getUiMessage("ResProxCitationView.link.label")));
 		if (hasIdentifierType(selectedFile,
 			COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE)) {

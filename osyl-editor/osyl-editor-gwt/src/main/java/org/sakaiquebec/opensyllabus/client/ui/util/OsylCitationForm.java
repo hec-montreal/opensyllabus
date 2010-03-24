@@ -566,10 +566,9 @@ public class OsylCitationForm extends WindowPanel implements
 		    citation.setProperty(COPropertiesType.IDENTIFIER,
 			    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
 			    LinkValidator.parseLink(urlTextBox.getText()));
+		    citation.setProperty(COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_NOLINK, "noLink");
 		}
-		citation.setProperty(COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_NOLINK, "noLink");
-
 		citation.setFileName(titleField.getText());
 
 		OsylRemoteServiceLocator.getCitationRemoteService()
