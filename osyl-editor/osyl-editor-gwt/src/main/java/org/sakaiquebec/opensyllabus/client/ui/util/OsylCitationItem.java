@@ -25,7 +25,6 @@ import java.io.Serializable;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.shared.model.COProperties;
-import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 
@@ -75,38 +74,6 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
     public String getId() {
 	return id;
     }
-
-    /**
-     * @return the url linked to this citation. It can be our library or any
-     *         other address
-     */
-    public String getUrl() {
-	String url =
-		getProperty(COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
-
-	String noUrl =
-		getProperty(COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_NOLINK);
-
-	if (noUrl != null && !"".equalsIgnoreCase(noUrl)
-		&& !"undefined".equalsIgnoreCase(noUrl))
-	    return null;
-
-	if (url != null && url.trim() != "")
-	    return url;
-	else
-	    return getProperty(COPropertiesType.IDENTIFIER,
-		    COPropertiesType.IDENTIFIER_TYPE_URL);
-    }
-
-    /**
-     * @return the url linked to this citation. It can be our library or any
-     *         other address
-     */
-    // public String getUrl() {
-    // return getProperty(CitationSchema.URL);
-    // }
 
     /**
      * @param Id the Id to set (citationListId)

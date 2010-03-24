@@ -51,7 +51,7 @@ public class OsylCitationRemoteServiceHostedModeImpl extends
 	    citation.setFilePath("work/HostedModeCitationListPath");
 	    citation.setResourceId("dummyId"+i);
 	    citation.setResourceName("ressourceName");
-	    citation.setProperty(COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_URL,"dummyURL" );
+	    citation.setProperty(COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_LIBRARY,"dummyURL" );
 	    citation.setProperty(CitationSchema.CITATIONID, "dummyId"+i);
 	    citation.setProperty(CitationSchema.TYPE, "Other");
 	    citation.setProperty(CitationSchema.TITLE, "ma citation"+i);

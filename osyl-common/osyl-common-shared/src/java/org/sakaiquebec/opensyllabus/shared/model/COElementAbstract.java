@@ -394,6 +394,11 @@ public abstract class COElementAbstract<T extends COModelInterface> implements
 	properties.removeProperty(key);
 	notifyEventHandlers();
     }
+    
+    public void removeProperty(String key, String type){
+	properties.removeProperty(key, type);
+	notifyEventHandlers();
+    }
 
     /**
      * {@inheritDoc}

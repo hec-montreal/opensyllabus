@@ -71,8 +71,9 @@ public class COPropertiesType {
     public static final String AUTHOR="author";
     public static final String JOURNAL="journal";
     public static final String RESOURCE_TYPE="resourceType";
-    public static final String IDENTIFIER_TYPE_URL = "url";
     public static final String IDENTIFIER_TYPE_LIBRARY = "library";
+    public static final String IDENTIFIER_TYPE_BOOKSTORE = "bookstore";
+    public static final String IDENTIFIER_TYPE_OTHERLINK = "other_link";
     public static final String IDENTIFIER_TYPE_NOLINK = "nolink"; 
     public static final String IDENTIFIER_TYPE_DOI = "doi";
     public static final String IDENTIFIER_TYPE_ISN = "isn";

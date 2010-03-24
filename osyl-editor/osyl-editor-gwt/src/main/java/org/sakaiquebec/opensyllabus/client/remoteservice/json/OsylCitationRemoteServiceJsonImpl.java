@@ -56,7 +56,9 @@ public class OsylCitationRemoteServiceJsonImpl extends
      * SDATA
      */
     private static final String PREFERRED_URL = "preferredUrl";
+    private static final String BOOKSTORE_URL = "bookstoreUrl";
     private static final String NO_URL = "noUrl";
+    private static final String URL="url";
 
     public OsylCitationRemoteServiceJsonImpl() {
 	super();
@@ -193,22 +195,31 @@ public class OsylCitationRemoteServiceJsonImpl extends
 		.getProperty(CitationSchema.PUBLICATION_LOCATION)));
 
 	if (p_citation.getProperty(COPropertiesType.IDENTIFIER,
-		COPropertiesType.IDENTIFIER_TYPE_URL) != null) {
+		COPropertiesType.IDENTIFIER_TYPE_OTHERLINK) != null) {
 	    panel.add(FormHelper.createHiddenField("cipkeys", PREFERRED_URL));
 	    panel.add(FormHelper.createHiddenField("cipvalues", p_citation
 		    .getProperty(COPropertiesType.IDENTIFIER,
-			    COPropertiesType.IDENTIFIER_TYPE_URL)));
+			    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK)));
 	}
-
+	
 	if (p_citation.getProperty(COPropertiesType.IDENTIFIER,
 		COPropertiesType.IDENTIFIER_TYPE_LIBRARY) != null) {
 	    panel.add(FormHelper.createHiddenField("cipkeys",
-		    COPropertiesType.IDENTIFIER_TYPE_URL));
+		    URL));
 	    panel.add(FormHelper.createHiddenField("cipvalues", p_citation
 		    .getProperty(COPropertiesType.IDENTIFIER,
 			    COPropertiesType.IDENTIFIER_TYPE_LIBRARY)));
 	}
-
+	
+	if (p_citation.getProperty(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE) != null) {
+	    panel.add(FormHelper.createHiddenField("cipkeys",
+		    BOOKSTORE_URL));
+	    panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		    .getProperty(COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE)));
+	}
+	
 	if (p_citation.getProperty(COPropertiesType.IDENTIFIER,
 		COPropertiesType.IDENTIFIER_TYPE_NOLINK) != null) {
 	    panel.add(FormHelper.createHiddenField("cipkeys", NO_URL));
@@ -216,7 +227,7 @@ public class OsylCitationRemoteServiceJsonImpl extends
 		    .getProperty(COPropertiesType.IDENTIFIER,
 			    COPropertiesType.IDENTIFIER_TYPE_NOLINK)));
 	}
-
+	
 	// add event handler
 	form.addSubmitCompleteHandler(new SubmitCompleteHandler() {
 
@@ -230,9 +241,6 @@ public class OsylCitationRemoteServiceJsonImpl extends
 	    }
 
 	    private String getPath(String preJson) {
-		// String st = null;
-		// String json =
-		// preJson.substring(preJson.indexOf('{'),preJson.lastIndexOf('}'));
 		String s =
 			preJson.substring(preJson.indexOf("\"path\":\"") + 8);
 		s = s.substring(0, s.indexOf("\""));

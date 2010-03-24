@@ -306,7 +306,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
      * @param text
      * @return HTML link
      */
-    protected String generateHTMLLink(String uri, String text) {
+    public String generateHTMLLink(String uri, String text) {
 	return "<a href=\"" + uri + "\" target=\"_blank\">" + text + "</a>";
     }
 

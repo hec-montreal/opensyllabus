@@ -160,6 +160,11 @@ public class COContentResource implements COModelInterface,
 	getProperties().removeProperty(key);
 	notifyEventHandlers();
     }
+    
+    public void removeProperty(String key,String type) {
+	getProperties().removeProperty(key,type);
+	notifyEventHandlers();
+    }
 
     public String getProperty(String key) {
 	return getProperties().getProperty(key);

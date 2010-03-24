@@ -23,13 +23,14 @@ package org.sakaiquebec.opensyllabus.client.ui.view;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.util.CitationFormatter;
-import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationItem;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCitationEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
+
+import com.google.gwt.user.client.Window;
 
 /**
  * Class providing display and edition capabilities for citations resources.
@@ -104,8 +105,9 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	setModelPropertyWithEditorProperty(CitationSchema.TITLE, getEditor()
 		.getSelectedCitationProperty(CitationSchema.TITLE));
 
-	setModelPropertyWithEditorProperty(CitationSchema.PUBLISHER, getEditor()
-		.getSelectedCitationProperty(CitationSchema.PUBLISHER));
+	setModelPropertyWithEditorProperty(CitationSchema.PUBLISHER,
+		getEditor().getSelectedCitationProperty(
+			CitationSchema.PUBLISHER));
 
 	setModelPropertyWithEditorProperty(COPropertiesType.AUTHOR, getEditor()
 		.getSelectedCitationProperty(CitationSchema.CREATOR));
@@ -136,28 +138,44 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	setModelPropertyWithEditorProperty(COPropertiesType.JOURNAL,
 		getEditor().getSelectedCitationProperty(
 			CitationSchema.SOURCE_TITLE));
-	
+
 	setModelPropertyWithEditorProperty(CitationSchema.PUBLICATION_LOCATION,
 		getEditor().getSelectedCitationProperty(
 			CitationSchema.PUBLICATION_LOCATION));
 
-	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
-		COPropertiesType.IDENTIFIER_TYPE_LIBRARY, getEditor()
-			.getSelectedCitationProperty(
-				COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_LIBRARY));
+	String hasLink =
+		getEditor().getSelectedCitationProperty(
+			COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_NOLINK);
+	if (hasLink != null && !hasLink.equals("")) {
+	    getModel().getResource().removeProperty(
+		    COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
+	} else {
+	    setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_LIBRARY, getEditor()
+			    .getSelectedCitationProperty(
+				    COPropertiesType.IDENTIFIER,
+				    COPropertiesType.IDENTIFIER_TYPE_LIBRARY));
+	}
 
 	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
-		COPropertiesType.IDENTIFIER_TYPE_URL, getEditor()
+		COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE, getEditor()
 			.getSelectedCitationProperty(
 				COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_URL));
+				COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE));
 
 	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
-		COPropertiesType.IDENTIFIER_TYPE_NOLINK, getEditor()
+		COPropertiesType.IDENTIFIER_TYPE_OTHERLINK, getEditor()
 			.getSelectedCitationProperty(
 				COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_NOLINK));
+				COPropertiesType.IDENTIFIER_TYPE_OTHERLINK));
+
+	// setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
+	// COPropertiesType.IDENTIFIER_TYPE_NOLINK, getEditor()
+	// .getSelectedCitationProperty(
+	// COPropertiesType.IDENTIFIER,
+	// COPropertiesType.IDENTIFIER_TYPE_NOLINK));
     }
 
     /**
@@ -233,79 +251,36 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	return getProperty(property) == null ? "" : getProperty(property);
     }
 
-    /**
-     * Generate a link, if possible, with citation informations
-     * 
-     * @return A link or a simple string if link could not be created
-     */
-    public String getCitationPreviewAsLink() {
-	String link = "";
+    public String getCitationLibraryLink() {
 	String url =
 		getProperty(COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_URL);
-
-	// We have no url associated to this citation
-	String noUrl =
-		getProperty(COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_NOLINK);
-	if (noUrl != null && !"".equals(noUrl)
-		&& !"undefined".equalsIgnoreCase(noUrl))
-	    return getCitationPreview();
-
-	// We have an url associated to this citation
-	if (url == null || url.equals(""))
-	    url =
-		    getProperty(COPropertiesType.IDENTIFIER,
-			    COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
-
-	if (url == null || url.equals(""))
-	    link = getCitationPreview();
-	else
-	    link = generateHTMLLink(url, getCitationPreview());
-	return link;
-
-    }
-
-    /**
-     * Tells us whether the registered link points to the library catalog or
-     * another source
-     * 
-     * @param citationItem
-     * @return
-     */
-    public boolean isCitationLinkLibrary(OsylCitationItem citationItem) {
-
-	String identifier =
-		citationItem.getProperty(COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
-
-	if (identifier != null && !"".equalsIgnoreCase(identifier))
-	    return true;
-	return false;
-    }
-
-    public boolean hasLink(OsylCitationItem citationItem) {
-	String identifier =
-		citationItem.getProperty(COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_NOLINK);
-
-	if (identifier != null && !"".equalsIgnoreCase(identifier)
-		&& !"undefined".equalsIgnoreCase(identifier))
-	    return false;
-	return true;
-    }
-
-    /**
-     * Generate a link, if possible, with citation informations
-     * 
-     * @return A link or a simple string if link could not be created
-     */
-    public String getCitationsInfosAsLink(OsylCitationItem citationItem) {
-	String url = citationItem.getUrl();
-	if (url == null)
-	    return citationItem.getCitationsInfos();
+	if (url == null || url.equals(""))
+	    return null;
 	else
-	    return generateHTMLLink(url, citationItem.getCitationsInfos());
+	    return url;
+
+    }
+
+    public String getCitationBookstoreLink() {
+	String url =
+		getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE);
+	if (url == null || url.equals(""))
+	    return null;
+	else
+	    return url;
+
+    }
+
+    public String getCitationOtherLink() {
+	String url =
+		getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK);
+	if (url == null || url.equals(""))
+	    return null;
+	else
+	    return url;
 
     }
 

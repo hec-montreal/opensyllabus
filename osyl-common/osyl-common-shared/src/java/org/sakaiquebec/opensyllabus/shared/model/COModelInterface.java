@@ -91,6 +91,8 @@ public interface COModelInterface {
     
     public String getProperty(String key, String type);
     
+    public void removeProperty(String key, String type);
+    
     public String getId() ;
 
     public void setId(String id) ;

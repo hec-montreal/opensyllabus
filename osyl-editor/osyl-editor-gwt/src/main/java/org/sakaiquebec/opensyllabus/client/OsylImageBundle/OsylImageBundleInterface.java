@@ -133,7 +133,5 @@ public interface OsylImageBundleInterface extends ImageBundle {
     public AbstractImagePrototype publish();
     
     public AbstractImagePrototype save();
-
-
     
 }

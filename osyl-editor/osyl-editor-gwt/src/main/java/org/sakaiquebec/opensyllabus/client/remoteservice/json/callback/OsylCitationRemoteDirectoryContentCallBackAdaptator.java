@@ -37,7 +37,9 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
      * SDATA
      */
     private static final String PREFERRED_URL = "preferredUrl";
+    private static final String BOOKSTORE_URL = "bookstoreUrl";
     private static final String NO_URL = "noUrl";
+    private static final String URL="url";
 
     public OsylCitationRemoteDirectoryContentCallBackAdaptator(
 	    AsyncCallback<List<OsylAbstractBrowserItem>> asyncCallback) {
@@ -102,7 +104,9 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 			(JSONString) properties.get(PREFERRED_URL);
 		JSONString identifierTypeLibrary =
 			(JSONString) properties
-				.get(COPropertiesType.IDENTIFIER_TYPE_URL);
+				.get(URL);
+		JSONString identifierTypeBookstore =
+			(JSONString) properties.get(BOOKSTORE_URL);
 
 		JSONString identifierTypeNoUrl =
 			(JSONString) properties.get(NO_URL);
@@ -179,7 +183,7 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 				.stringValue());
 
 		csi.setProperty(COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_URL,
+			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
 			identifierTypeUrl == null ? "" : identifierTypeUrl
 				.stringValue());
 
@@ -192,6 +196,11 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 			COPropertiesType.IDENTIFIER_TYPE_LIBRARY,
 			identifierTypeLibrary == null ? ""
 				: identifierTypeLibrary.stringValue());
+
+		csi.setProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE,
+			identifierTypeBookstore == null ? ""
+				: identifierTypeBookstore.stringValue());
 
 		csi.setProperty(CitationSchema.SOURCE_TITLE,
 			sourceTitle == null ? "" : sourceTitle.stringValue());

@@ -866,6 +866,36 @@
 	margin:6px 0 0 10px;
 }
 
+.Osyl-ResProxCitationView-libraryImage{
+	 background: transparent url(images/library_link.gif) no-repeat 0 0; 
+	 width:44px;
+	 height:20px;
+}
+
+.Osyl-ResProxCitationView-bookstoreImage{
+	 background: transparent url(images/bookstore_link.gif) no-repeat 0 0; 
+	 width:44px;
+	 height:20px;
+}
+
+.Osyl-ResProxCitationView-otherImage{
+	 background: transparent url(images/other_link.gif) no-repeat 0 0; 
+	 width:44px;
+	 height:20px;
+}
+
+td > .Osyl-ResProxCitationView-linkCheckbox{
+	width:80px;
+}
+
+.Osyl-ResProxCitationView-linkTextbox{
+	width:320px;
+}
+
+.Osyl-ResProxCitationView-linkPanel{
+	width:100%;
+}
+
 /* Endcontact -----------------------------------*/
 
 .Osyl-ajaxSpinner {

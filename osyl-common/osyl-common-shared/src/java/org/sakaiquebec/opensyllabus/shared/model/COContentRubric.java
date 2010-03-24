@@ -119,6 +119,12 @@ public class COContentRubric implements COModelInterface{
      */
     public void removeProperty(String key) {
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void removeProperty(String key,String type) {
+    }
 
     /**
      * {@inheritDoc}
