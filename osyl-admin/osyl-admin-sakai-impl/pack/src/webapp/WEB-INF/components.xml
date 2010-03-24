@@ -237,10 +237,6 @@
 	<bean id="offSitesjob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OfficialSitesJobImpl" >
 		<property name="cmService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
-		<property name="siteService"
-			ref="org.sakaiproject.site.api.SiteService" />
-		<property name="toolManager"
-			ref="org.sakaiproject.tool.api.ToolManager" />
 		<property name="adminConfigService"
 			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
 		<property name="osylSiteService"

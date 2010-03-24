@@ -30,12 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
 import org.sakaiproject.authz.cover.AuthzGroupService;
-import org.sakaiproject.authz.cover.SecurityService;
-import org.sakaiproject.component.cover.ComponentManager;
-import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.coursemanagement.api.CanonicalCourse;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
@@ -44,19 +39,8 @@ import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.event.cover.UsageSessionService;
-import org.sakaiproject.exception.IdInvalidException;
-import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.exception.IdUsedException;
-import org.sakaiproject.exception.PermissionException;
-import org.sakaiproject.site.api.Site;
-import org.sakaiproject.site.api.SitePage;
-import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.tool.api.Session;
-import org.sakaiproject.tool.api.Tool;
-import org.sakaiproject.tool.api.ToolManager;
 import org.sakaiproject.tool.cover.SessionManager;
-import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
@@ -72,7 +56,6 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
     private Set<CourseSet> allCourseSets = null;
 
-    private CourseSet aCourseSet = null;
 
     private Set<CourseOffering> courseOffs = null;
 
@@ -123,25 +106,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	this.adminConfigService = adminConfigService;
     }
 
-    /**
-     * The site service used to create new sites: Spring injection
-     */
-    private SiteService siteService;
-
-    /**
-     * Sets the <code>SiteService</code> needed to create a new site in Sakai.
-     * 
-     * @param siteService
-     */
-    public void setSiteService(SiteService siteService) {
-	this.siteService = siteService;
-    }
-
-    private ToolManager toolManager;
-
-    public void setToolManager(ToolManager toolManager) {
-	this.toolManager = toolManager;
-    }
+ 
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
@@ -198,7 +163,6 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 		    cmService.getCourseOfferingsInCanonicalCourse(canCourseId);
 
 	    if (courseOffs != null) {
-		int i = 0;
 		for (CourseOffering courseOff : courseOffs) {
 
 		    // Check if we have the good session
@@ -223,7 +187,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 						+ osylSiteService.createSite(
 							siteName,
 							OSYL_CO_CONFIG,
-							TEMPORARY_LANG));
+							section.getLang()));
 					osylManagerService.associateToCM(
 						section.getEid(), siteName);
 				    } catch (Exception e) {
@@ -363,7 +327,6 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
     private String getSharableSiteName(CourseOffering courseOff) {
 	String siteName = null;
-	String courseOffId = courseOff.getEid();
 	String canCourseId = (courseOff.getCanonicalCourseEid()).trim();
 	AcademicSession session = courseOff.getAcademicSession();
 	String sessionId = session.getEid();

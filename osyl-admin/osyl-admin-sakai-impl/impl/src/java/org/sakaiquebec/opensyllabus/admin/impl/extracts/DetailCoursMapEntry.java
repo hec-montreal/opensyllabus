@@ -24,7 +24,7 @@ public class DetailCoursMapEntry implements java.io.Serializable {
     private String classSection;
     private String courseTitleLong;
     private String strmId;
-    private int lang;
+    private String lang;
     private ProfCoursMapEntry coordonnateur;
     private Vector<ProfCoursMapEntry> professeurs;
     private Vector<String> etudiants;
@@ -182,11 +182,8 @@ public class DetailCoursMapEntry implements java.io.Serializable {
 	}
     }
 
-    public void setLangue(int lang) {
-	this.lang = lang;
-    }
 
-    public int getLangue() {
+    public String getLangue() {
 	return lang;
     }
 

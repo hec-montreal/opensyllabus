@@ -265,7 +265,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 			title = coursEntry.getCourseTitleLong();
 			description = coursEntry.getCourseTitleLong();
 			courseSetId = coursEntry.getAcadOrg();
-
+			String lang = coursEntry.getLangue();
 			// create the canonical course
 			if (!cmService.isCanonicalCourseDefined(canonicalCourseId)) {
 				cc.add(cmAdmin.createCanonicalCourse(canonicalCourseId, title,
@@ -299,7 +299,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 					courseOff = cmAdmin.createCourseOffering(courseOfferingId,
 							title, description, status, session.getEid(),
 							canonicalCourseId, session.getStartDate(), session
-									.getEndDate());
+									.getEndDate(), lang);
 					courseOfferingSet.add(courseOff);
 				} else {
 					// We update
@@ -350,7 +350,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 					// TODO: check if we really need to have an enrollmentSet
 					// from here
 					cmAdmin.createSection(courseSectionId, title, description,
-							category, null, courseOfferingId, null);
+							category, null, courseOfferingId, null, lang);
 				} else {
 					// We update
 					Section courseSection = 

@@ -259,6 +259,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 		"", courseSetId = "";
 	String description = "";
 	String title = "";
+	String lang = "";
 	AcademicSession session = null;
 	String category;
 	Set<CanonicalCourse> cc = new HashSet<CanonicalCourse>();
@@ -299,13 +300,14 @@ public class OsylCMJobImpl implements OsylCMJob {
 	    CourseOffering courseOff;
 	    if (cmService.isAcademicSessionDefined(coursEntry.getStrmId())) {
 		courseOfferingId = getCourseOfferingId(coursEntry);
+		lang = coursEntry.getLangue();
 		if (!cmService.isCourseOfferingDefined(courseOfferingId)) {
 		    courseOff =
 			    cmAdmin.createCourseOffering(courseOfferingId,
 				    title, description, COURSE_OFF_STATUS,
 				    session.getEid(), canonicalCourseId,
 				    session.getStartDate(), session
-					    .getEndDate());
+					    .getEndDate(), lang);
 		    courseOfferingSet.add(courseOff);
 		} else {
 		    // We update
@@ -336,7 +338,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 		    // TODO: check if we really need to have an enrollmentSet
 		    // from here
 		    cmAdmin.createSection(courseSectionId, title, description,
-			    category, null, courseOfferingId, null);
+			    category, null, courseOfferingId, null, lang);
 		} else {
 		    // We update
 		    Section courseSection =

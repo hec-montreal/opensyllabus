@@ -167,13 +167,13 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		//We remove access to the resource 
 		SecurityService.clearAdvisors();
 	    } catch (PermissionException e) {
-		e.printStackTrace();
+		log.error(e.getMessage());
 	    } catch (IdUnusedException e) {
-		e.printStackTrace();
+		log.warn("There is no " + fileReference + " file ");
 	    } catch (TypeException e) {
-		e.printStackTrace();
+		log.error(e.getMessage());
 	    } catch (ServerOverloadException e) {
-		e.printStackTrace();
+		log.error(e.getMessage());
 	    }
 	}
     }
