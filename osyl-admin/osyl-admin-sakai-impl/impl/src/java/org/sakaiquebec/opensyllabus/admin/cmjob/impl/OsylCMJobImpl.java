@@ -319,6 +319,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 		    courseOff.setStatus(COURSE_OFF_STATUS);
 		    courseOff.setAcademicSession(session);
 		    courseOfferingSet.add(courseOff);
+		    courseOff.setLang(lang);
 		    cmAdmin.updateCourseOffering(courseOff);
 		}
 
@@ -346,6 +347,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 		    courseSection.setCategory(category);
 		    courseSection.setDescription(description);
 		    courseSection.setTitle(title);
+		    courseSection.setLang(lang);
 		    cmAdmin.updateSection(courseSection);
 		}
 	    }
