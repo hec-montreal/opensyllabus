@@ -1,11 +1,11 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <registration>
 
 	<tool
 		id="sakai.opensyllabus.tool"
 		title="OpenSyllabus"
-		description="Pour \u00E9diter, publier et consulter un plan de cours hyperm\u00E9dia">
+		description="Pour &#201;diter, publier et consulter un plan de cours hyperm&#233;dia">
 		
 		<configuration name="help.id" value="sakai.opensyllabus.tool" type="final" />
 		<category name="course" />
