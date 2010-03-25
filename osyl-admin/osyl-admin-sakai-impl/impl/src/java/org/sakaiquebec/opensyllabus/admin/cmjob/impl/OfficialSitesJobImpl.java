@@ -246,7 +246,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	    Site sharable = osylSiteService.getSite(siteName);
 	    
 	    for (Membership member: sectionMembers){
-		sharable.addMember(member.getUserId(), member.getRole(), true, false);
+		sharable.addMember(member.getUserId(), "Instructor", true, false);
 	    }
 	    
 	    SiteService.save(sharable);
