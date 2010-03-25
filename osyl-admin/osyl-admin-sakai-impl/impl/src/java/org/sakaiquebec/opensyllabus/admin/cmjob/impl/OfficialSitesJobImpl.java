@@ -36,9 +36,12 @@ import org.sakaiproject.coursemanagement.api.CanonicalCourse;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.CourseSet;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
+import org.sakaiproject.coursemanagement.api.Membership;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.event.cover.UsageSessionService;
+import org.sakaiproject.site.api.Site;
+import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
@@ -224,10 +227,29 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
     private void createShareable(CourseOffering course) {
 	String siteName = getSharableSiteName(course);
-
+	Set<Membership> sectionMembers = new HashSet<Membership>();
+	
+	//Retrieve the members of the course sections associated to
+	//this course offering
+	Set<Section> sections = cmService.getSections(course.getEid());
+	Set<Membership> members = null;
+	
+	for (Section section: sections){
+	    members = cmService.getSectionMemberships(section.getEid());
+	    sectionMembers.addAll(members);
+	}
+	
 	try {
 	    osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG,
 		    TEMPORARY_LANG);
+	    //TODO: add users to sites
+	    Site sharable = osylSiteService.getSite(siteName);
+	    
+	    for (Membership member: sectionMembers){
+		sharable.addMember(member.getUserId(), member.getRole(), true, false);
+	    }
+	    
+	    SiteService.save(sharable);
 	} catch (Exception e) {
 	    log.error(e.getMessage());
 	}
