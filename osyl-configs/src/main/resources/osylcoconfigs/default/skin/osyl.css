@@ -892,9 +892,7 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	width:320px;
 }
 
-.Osyl-ResProxCitationView-linkPanel{
-	width:100%;
-}
+.Osyl-ResProxCitationView-linkPanel{}
 
 /* Endcontact -----------------------------------*/
 
