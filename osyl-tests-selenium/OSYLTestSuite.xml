@@ -13,7 +13,7 @@
          <class name="org.sakaiquebec.opensyllabus.test.selenium.ContactInfoTest"/>
          <class name="org.sakaiquebec.opensyllabus.test.selenium.AssessmentTest"/>
          <class name="org.sakaiquebec.opensyllabus.test.selenium.SeancesTest"/>
-         <!--class name="org.sakaiquebec.opensyllabus.test.selenium.ElectronicToolSubmission"/-->
+         <class name="org.sakaiquebec.opensyllabus.test.selenium.ElectronicToolSubmission"/>
          <class name="org.sakaiquebec.opensyllabus.test.selenium.NewsTest"/> 
          <class name="org.sakaiquebec.opensyllabus.test.selenium.PresentationOfCourse"/>   
          <class name="org.sakaiquebec.opensyllabus.test.selenium.TeachingMaterial"/>
