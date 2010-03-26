@@ -54,6 +54,10 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	}
 	waitForOSYL();
 	
+//---------------------------------------------------------------------------//
+//				Add Contact		                     //
+//---------------------------------------------------------------------------//
+	
 	//Click Contact Information
         session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td/" 
         		+ "div[contains(text(),'Coordo')]");
@@ -61,7 +65,9 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	//Add Contact Information
 	clickAddItem("addPerson");
 	
-	
+//---------------------------------------------------------------------------//
+//				Modify Contact		                     //
+//---------------------------------------------------------------------------//	
 	//Edit Contact Information
 	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
 	pause();
@@ -167,10 +173,13 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	pause();
 	
 	//Overview
-	session().click("gwt-uid-6");
+	session().click("gwt-uid-7");
 	pause();
+	session().click("//td[2]/div/div/table/tbody/tr[2]/td");
+	pause();
+	//session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
 	//Will be tested when the problem is resolved(public & attendee)
-	session().click("//td[@class=\"gwt-MenuItem\"]");
+	//session().click("//td[@class=\"gwt-MenuItem\"]");
 	
 	
 	//Click on Contact Informations
@@ -179,6 +188,7 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	pause();
 	
 	// check if the new rubric is visible.
+	
 	if (!session().isTextPresent(newText1)) {
 	    logAndFail("Expected to see text [" + newText1 
 		    + "] after text edition");
@@ -200,6 +210,54 @@ public class ContactInfoTest extends AbstractOSYLTest {
 		    + "] after text edition");
 	}
 	log("OK: Selected rubric is visible");
+	pause();
+	session().click("//tr[2]/td[2]/div/div/table/tbody/tr/td");
+	
+//---------------------------------------------------------------------------//
+//				Delete Contact		                     //
+//---------------------------------------------------------------------------//	
+	
+	//Click Contact Information
+        session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td/" 
+        		+ "div[contains(text(),'Coordo')]");
+	
+	//Add Contact Information
+	clickAddItem("addPerson");
+	
+	//Edit Contact Information
+	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+	pause();
+	
+	//Select required fields
+	session().select(xpathRole, newText);
+	
+	//Fill in the required informations (FirstName, Last Name and Title) 
+	session().type("//input[@class=\"Osyl-ContactInfo-TextBox\"]", newText1);
+	
+	session().type("//input[@title=\"Nom:\"]", newText2);
+	pause();
+
+	if (inFireFox()) {
+        	session().selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
+        	session().type("//html/body", newText3);
+		session().selectFrame("relative=parent");
+	}	
+	
+	session().click("//td/table/tbody/tr/td[1]/button");
+	pause();
+	
+	//We delete new contact 
+        session().click("//tr[2]/td/div/table[2]/tbody/tr/td[2]/button");
+        pause();
+        
+        session().click("//tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
+        pause();
+        log("Contact deleted");
+        pause();
+        
+        //Save modifications
+	saveCourseOutline();
+	pause();
 	
 	//Log out
 	session().selectFrame("relative=parent");
