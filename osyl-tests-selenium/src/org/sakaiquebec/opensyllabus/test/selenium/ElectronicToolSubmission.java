@@ -159,6 +159,7 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
     			" Settings\\Temporary Internet Files\\Content.IE5\\" +
     			"VOXJFB1N\\fichier-excel[5].xlsx");
     	pause();
+    	pause();
  	if(!session().isElementPresent("link=fichier-excel[5].xlsx")){
  	   logAndFail("File not found!");
  	}
