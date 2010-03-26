@@ -61,7 +61,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
         //				Add Text 			     	     //
         //---------------------------------------------------------------------------//
         
-        //Open Lectures Section
+        //Open Teaching Material Section
         session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
         "td/div[contains(text(),'dagogique')]");
         pause();
@@ -144,7 +144,38 @@ public class TeachingMaterial extends AbstractOSYLTest {
         saveCourseOutline();
         pause();
         
+        //---------------------------------------------------------------------------//
+        //				Add, Modify and delete Hyperlink 	     //
+        //---------------------------------------------------------------------------//
         
+        //Add Hyperlink 
+        clickAddItem("addURL");
+        
+        //We edit the new Hyperlink rubric
+        session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+        
+        //We type the clickable text
+        session().type("//td[2]/input", newText11);
+        pause();
+        
+        //We type the URL link
+        session().type("//tr[2]/td[2]/input", newText10);
+        pause();
+        
+        //We click OK to close editor
+        session().click("//td/table/tbody/tr/td[1]/button");
+        pause();
+        
+        //We delete new hyperlink 
+        session().click("//tr[2]/td/div/table[2]/tbody/tr/td[2]/button");
+        pause();
+        
+        session().click("//tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
+        pause();
+        
+        //Save modifications
+        saveCourseOutline();
+        pause();
         //---------------------------------------------------------------------------//
         //				Add Document               		     //
         //---------------------------------------------------------------------------//
@@ -256,7 +287,8 @@ public class TeachingMaterial extends AbstractOSYLTest {
         //      			Add Citation                   		     //
         //---------------------------------------------------------------------------//
         
-        //Add new Citation
+	
+	//Add new Citation
         clickAddItem("addBiblioResource");
         
         // open Citation resource editor
@@ -324,6 +356,78 @@ public class TeachingMaterial extends AbstractOSYLTest {
         saveCourseOutline();
         pause();
         
+        //---------------------------------------------------------------------------//
+        //      		Add, Modify and delete Citation       		     //
+        //---------------------------------------------------------------------------//
+        
+        //Add new Citation
+        clickAddItem("addBiblioResource");
+        
+        // open Citation resource editor
+        session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+        
+
+        //Create a new citation list
+        session().answerOnNextPrompt("NewListe"+ newText1);
+        if (inFireFox()) {
+        session().mouseOver("//td[3]/div/img");
+        session().mouseDown("//td[3]/div/img");
+        session().mouseUp("//td[3]/div/img");
+        }else{
+        session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
+        }
+        pause();
+        assertTrue(session().isPromptPresent());
+        
+        //Open Citation list
+        session().focus("//tr[2]/td/table/tbody/tr[2]/td/select/option/");
+        session().click("//tr[2]/td/table/tbody/tr[2]/td/select/option");
+        session().select("//tr[2]/td/table/tbody/tr[2]/td/select","index=0");
+        session().doubleClick("//tr[2]/td/table/tbody/tr[2]/td/select/option/");
+        
+        //Open form to upload a first Citation (Book)
+        if (inFireFox()) {
+        session().mouseOver("//td[3]/div/img");
+        session().mouseDown("//td[3]/div/img");
+        session().mouseUp("//td[3]/div/img");
+        }else{
+        session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
+        }
+        
+        //Fill the necessary fields
+        session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Titre );        
+        session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Auteur);
+        session().type("//tr[12]/td/table/tbody/tr/td[3]/input", Annee);
+        session().type("//tr[17]/td/table/tbody/tr/td[3]/input", ISBN);
+        
+        //Close Window
+        session().click("//tr[24]/td/table/tbody/tr/td/button");
+        pause();
+        pause();
+        
+        // Select first resource in browser window
+        session().focus("//option[@value=' (REF)   " + Titre +"']");
+        session().select("//tr[2]/td/table/tbody/tr[2]/td/select","value= " +
+        	"(REF)   "+ Titre);
+        session().mouseOver("//option[@value=' (REF)   " + Titre +"']");
+        session().click("//option[@value=' (REF)   " + Titre +"']");
+        pause();
+        
+        // Close Editor
+        session().click("//tr/td[2]/table/tbody/tr/td/table/tbody/tr/td/button");
+        pause();
+        
+        //We delete new citation 
+        session().click("//tr[2]/td/div/table[2]/tbody/tr/td[2]/button");
+        pause();
+        
+        session().click("//tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
+        pause();
+        
+        
+        //Save modifications
+        saveCourseOutline();
+        pause();
         
         session().selectFrame("relative=parent");
         logOut();
