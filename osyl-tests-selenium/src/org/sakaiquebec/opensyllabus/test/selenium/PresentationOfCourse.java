@@ -140,8 +140,10 @@ public class PresentationOfCourse extends AbstractOSYLTest {
         //We delete the new text Lecture
         session().click("//tr[2]/td/div/table[2]/tbody/tr/td[2]/button");
         pause();
-        
+                
         session().click("//tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
+        pause();
+        log("Text deleted");
         pause();
         
         //Save modifications

@@ -612,6 +612,8 @@ public class SeancesTest extends AbstractOSYLTest{
         
         session().click("//tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
         pause();
+        log("Document deleted");
+        pause();
         
         //Save modifications
         saveCourseOutline();

@@ -172,6 +172,8 @@ public class TeachingMaterial extends AbstractOSYLTest {
         
         session().click("//tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
         pause();
+        log("Hyperlink deleted");
+        pause();
         
         //Save modifications
         saveCourseOutline();
@@ -422,6 +424,8 @@ public class TeachingMaterial extends AbstractOSYLTest {
         pause();
         
         session().click("//tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
+        pause();
+        log("Citation deleted");
         pause();
         
         
