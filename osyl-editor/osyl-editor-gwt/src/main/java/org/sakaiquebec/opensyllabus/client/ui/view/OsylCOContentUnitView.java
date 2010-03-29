@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
@@ -52,7 +53,9 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	UpdateCOContentResourceProxyEventHandler,
 	UpdateCOUnitContentEventHandler {
 
-    private String propertyType = getController().getOsylConfig().getOsylConfigRuler().getPropertyType();
+    private String propertyType =
+	    getController().getOsylConfig().getOsylConfigRuler()
+		    .getPropertyType();
     // View variables
     private VerticalPanel mainPanel;
     private Label mainTitleLabel;
@@ -92,9 +95,11 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 
 	    if (subModel instanceof COContentRubric) {
 		COContentRubric coContentRubric = (COContentRubric) subModel;
-		coContentRubric.setUserDefLabel(getUserDefLabelForRubricView(coContentRubric));
+		coContentRubric
+			.setUserDefLabel(getUserDefLabelForRubricView(coContentRubric));
 		OsylRubricView rubricView =
-			new OsylRubricView(coContentRubric, getController(), OsylStyleLevelChooser.getLevelStyle(getModel()));
+			new OsylRubricView(coContentRubric, getController(),
+				OsylStyleLevelChooser.getLevelStyle(getModel()));
 		getMainPanel().add(rubricView);
 		rubricViewsMap.put(coContentRubric.getType(), rubricView);
 	    }
@@ -210,8 +215,8 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	// view.
 	if (event.isRubricUpdateEvent()) {
 	    OsylRubricView newDestRubricView =
-		    (OsylRubricView) rubricViewsMap
-			    .get(resProx.getRubricType(propertyType));
+		    (OsylRubricView) rubricViewsMap.get(resProx
+			    .getRubricType(propertyType));
 	    // remove old resprox view from the rubricView
 	    rubricView.removeResProxView(resProxView);
 	    // move it to the new dest rubricview
@@ -227,10 +232,11 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	} else if (event.isMoveInRubricEvent()) {
 	    refreshRubric(rubricView);
 	} else if (event.isRubricLabelUpdateEvent()) {
-		String userDefLabel = resProx.getRubricUserDefLabel(propertyType);
-		((COContentRubric)rubricView.getModel()).setUserDefLabel(userDefLabel);
-		rubricView.refreshView();
-	    refreshResProxiesRubricLabel(rubricView,userDefLabel);    
+	    String userDefLabel = resProx.getRubricUserDefLabel(propertyType);
+	    ((COContentRubric) rubricView.getModel())
+		    .setUserDefLabel(userDefLabel);
+	    rubricView.refreshView();
+	    refreshResProxiesRubricLabel(rubricView, userDefLabel);
 	}
 	refreshResProxUpAndDownArrowsInSameRubric(rubricView);
     }
@@ -283,7 +289,8 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
      * 
      * @param rubricView
      */
-    private void refreshResProxiesRubricLabel(OsylRubricView rubricView,String userDefLabel) {
+    private void refreshResProxiesRubricLabel(OsylRubricView rubricView,
+	    String userDefLabel) {
 	COUnitContent coContentUnit = (COUnitContent) getModel();
 	Iterator<COContentResourceProxy> iter =
 		coContentUnit.getChildrens().iterator();
@@ -294,7 +301,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	    if (resProx != null
 		    && resProx.getRubricType(propertyType).equals(
 			    rubricView.getModel().getType())) {
-	    	resProx.getRubric(propertyType).setUserDefLabel(userDefLabel);
+		resProx.getRubric(propertyType).setUserDefLabel(userDefLabel);
 	    }
 	}
     }
@@ -305,7 +312,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
      * @return userDefLabel
      */
     private String getUserDefLabelForRubricView(COContentRubric coContentRubric) {
-    String userDefLabel = null;
+	String userDefLabel = null;
 	COUnitContent coContentUnit = (COUnitContent) getModel();
 	Iterator<COContentResourceProxy> iter =
 		coContentUnit.getChildrens().iterator();
@@ -316,7 +323,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	    if (resProx != null
 		    && resProx.getRubricType(propertyType).equals(
 			    coContentRubric.getType())) {
-	    	userDefLabel = resProx.getRubricUserDefLabel(propertyType);
+		userDefLabel = resProx.getRubricUserDefLabel(propertyType);
 	    }
 	}
 	return userDefLabel;
@@ -329,16 +336,20 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	    COContentResourceProxy resProx =
 		    (COContentResourceProxy) proxies.get(proxies.size() - 1);
 	    addResProxToRubricView(resProx);
-	    if (resProx.getRubricType(propertyType)
-		    .equals(COContentRubric.RUBRIC_TYPE_NEWS)) {
+	    if (resProx.getRubricType(propertyType).equals(
+		    COContentRubric.RUBRIC_TYPE_NEWS)) {
 		resProx.moveToTheTopOfTheRubric(propertyType);
 	    }
+	    // /////////////////////////////////////////////
+	    OsylEditorEntryPoint.getInstance().setToolHeight(
+		    getOffsetHeight() + 100);
 	}
     }
 
     private void addResProxToRubricView(COContentResourceProxy resProx) {
 	OsylRubricView newDestRubricView =
-		(OsylRubricView) rubricViewsMap.get(resProx.getRubricType(propertyType));
+		(OsylRubricView) rubricViewsMap.get(resProx
+			.getRubricType(propertyType));
 	if (newDestRubricView != null)
 	    newDestRubricView.addResProxView(resProx);
 	resProx.addEventHandler(this);
