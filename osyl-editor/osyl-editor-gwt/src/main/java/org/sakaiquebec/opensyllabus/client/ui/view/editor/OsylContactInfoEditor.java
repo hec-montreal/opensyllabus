@@ -502,6 +502,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 
     private void initEditor() {
 
+	editorContainer=null;
 	// Panels used to edit each information
 
 	SimplePanel firstNameLabelPanel = new SimplePanel();
