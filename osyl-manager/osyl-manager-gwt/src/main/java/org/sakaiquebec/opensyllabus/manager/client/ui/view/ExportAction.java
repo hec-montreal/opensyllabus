@@ -36,6 +36,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public class ExportAction extends OsylManagerAbstractAction {
     
+    /**
+     * Sites index to remember position in sites list.
+     */
+    private int sitesIndex = 0;
+    
     private class ExportCallBack implements AsyncCallback<String>{
 
 	public void onSuccess(String fileUrl) {
@@ -59,11 +64,27 @@ public class ExportAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(List<COSite> siteIds) {
-	for (COSite cosite : siteIds) {
-	    ExportCallBack callB = new ExportCallBack();
-	    controller.getOsylPackage(cosite.getSiteId(), callB);
-	}
+	//index reset when clicking on export link.
+	sitesIndex = 0;
+	getOsylPackage();
+    }
+    
+    /**
+     * This method is used to create the zip package of the course outline.  It
+     * is called by the onClick method of the export link and after the window
+     * to download the previous zip package is opened.  This means that for now
+     * the zip package are created sequentially instead of being created all at
+     * the same time.  This is done to fix a RPC problem related to the
+     * asynchronous communication between the client and the server.
+     */
+    private void getOsylPackage(){
+	List<COSite> siteIds = controller.getSelectSites();
 	
+	if(sitesIndex < siteIds.size()){
+	    ExportCallBack callB = new ExportCallBack();
+	    controller.getOsylPackage(siteIds.get(sitesIndex).getSiteId(), callB);
+	    sitesIndex++;
+	}
     }
 
     private void openDownloadLink(String d_url) {
@@ -75,6 +96,8 @@ public class ExportAction extends OsylManagerAbstractAction {
 			downloadUrl,
 			"_self",
 			"location=no,menubar=no,scrollbars=no,resize=no,resizable=no,status=no,toolbar=no,directories=no,width=5,height=5,top=0,left=0'");
+	
+	//method called to create the next zip package.
+	getOsylPackage();
     }
-
 }
