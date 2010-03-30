@@ -12,6 +12,7 @@ body {
 	font-family:Arial, Verdana, sans-serif;
 	font-weight:normal;
 	padding:5px 0 0;
+	overflow: hidden;
 }
 p {
 	color:#000;
