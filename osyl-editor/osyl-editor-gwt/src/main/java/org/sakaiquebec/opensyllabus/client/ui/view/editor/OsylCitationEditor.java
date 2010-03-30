@@ -188,6 +188,30 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	setViewer(new VerticalPanel());
 	getViewer().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewer().add(getViewerLink());
+
+	String isn =
+		getView().getModel().getResource().getProperty(
+			COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_ISN);
+	if (isn != null && !isn.trim().equals("")) {
+	    HTML isbn_issnLabel;
+	    String type =
+		    getView().getModel().getResource().getProperty(
+			    COPropertiesType.RESOURCE_TYPE);
+	    if (type.equals(CitationSchema.TYPE_BOOK)
+		    || type.equals(CitationSchema.TYPE_REPORT))
+		isbn_issnLabel =
+			new HTML(
+				getUiMessage("ResProxCitationView.isbn.label")
+					+ ":" + isn);
+	    else
+		isbn_issnLabel =
+			new HTML(
+				getUiMessage("ResProxCitationView.issn.label")
+					+ ":" + isn);
+	    getViewer().add(isbn_issnLabel);
+	}
+
 	getViewer().add(getViewerDesc());
 
 	if (getView().getCitationLibraryLink() != null) {
