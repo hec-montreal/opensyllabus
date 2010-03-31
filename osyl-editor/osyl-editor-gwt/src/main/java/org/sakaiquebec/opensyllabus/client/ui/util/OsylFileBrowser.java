@@ -75,7 +75,7 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 
 	public void onClick(ClickEvent event) {
 	    osylFileUpload =
-		    new OsylFileUpload(getController(), getCurrentDirectory()
+		    new OsylFileUpload(getController().getUiMessages().getMessage("fileUpload.addResource"), getController(), getCurrentDirectory()
 			    .getDirectoryPath(), rightsList);
 	    osylFileUpload.addEventHandler(OsylFileBrowser.this);
 	    osylFileUpload.showModal();

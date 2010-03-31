@@ -95,18 +95,18 @@ public class OsylFileUpload extends WindowPanel implements
      * 
      * @param osylController
      */
-    public OsylFileUpload(OsylController osylController,
+    public OsylFileUpload(String title, OsylController osylController,
 	    String currentDirectory, List<String> rightsList) {
-
+	super(title);
 	// set some properties for WindowPanel
 	setResizable(false);
 	setAnimationEnabled(true);
 	setCaptionAction(null);
-
 	setController(osylController);
 	this.currentFolder = currentDirectory;
 	this.rightsList = rightsList;
 	uiMessages = osylController.getUiMessages();
+
 	table = new FlexTable();
 
 	// Create a FormPanel and point it at a service.
@@ -123,15 +123,8 @@ public class OsylFileUpload extends WindowPanel implements
 	form.setEncoding(FormPanel.ENCODING_MULTIPART);
 	form.setMethod(FormPanel.METHOD_POST);
 
-	final Label titleLabel =
-		new Label(uiMessages.getMessage("fileUpload.addResource"));
-	int row = 0;
-	table.setWidget(row, 0, titleLabel);
-	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
-	titleLabel.setStylePrimaryName("Osyl-FileUpload-resource-title");
-
 	// display file size limit
-	row++;
+	int row = 0;
 	final Label sizeLabel =
 		new Label(uiMessages.getMessage("fileUpload.size.limit"));
 	table.setWidget(row, 0, sizeLabel);

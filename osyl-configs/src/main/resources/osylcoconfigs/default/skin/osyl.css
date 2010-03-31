@@ -315,28 +315,17 @@
 /* File Upload ------------------------------------------------------------------------------------------*/
 
 .Osyl-FileUpload-uploadForm {
-	background-color:#FCFCFC;
-	border:3px solid #454a4f; 
+	background-color:transparent;
 	font:normal 100% Arial, Verdana, sans-serif;
-	padding:4px;
-	-moz-box-shadow:0 0 10px #000;
-	-webkit-box-shadow:1px 1px 10px #000;
- 	box-shadow:1px 1px 10px #000;
-	
 }
+.Osyl-FileUpload-uploadForm .mosaic-LayoutPanel {padding-top:10px}
 .Osyl-FileUpload-uploadForm .mosaic-Caption {}
 
-.Osyl-FileUpload-resource-title {
-	font:bold 14px Arial, Verdana, sans-serif;
-	color:#333;
-	text-align:center;
-	margin-bottom:10px;
-}
 
 .Osyl-FileUpload-information {
 	font:normal 12px Arial, Verdana, sans-serif;
 	color:#333;
-	text-align:center;
+	text-align:left;
 	margin-bottom:10px;
 }
 
@@ -414,13 +403,16 @@
 .Osyl-PublishView-Label-important{font:bold;}
 
 .Osyl-PublishView-PopupPanel {
-	width:430px;
+	width:400px;
 	margin:120px 0 0 300px;
 	padding:10px;
 	font:normal 100% Arial, Verdana, sans-serif;
 	color:#000;
 	background-color:#FFF;
-	border:2px outset;
+	border:3px solid #454A4F;
+	border-radius:8px;
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
 }
 
 .Osyl-PublishView-genericButton {margin:10px}
@@ -911,67 +903,67 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 }
 
 
-.Osyl-EditorPopup .popupTopCenter,
-.Osyl-EditorPopup .popupBottomCenter {
+.popupTopCenter,
+.popupBottomCenter {
 	background: url(images/ui/hborder.png) repeat-x;
 	height:6px;
 }
-.Osyl-EditorPopup .popupBottomCenter {background-position:bottom left}
-.Osyl-EditorPopup .popupTopCenter {background-position:0 -55px}
+.popupBottomCenter {background-position:bottom left}
+.popupTopCenter {background-position:0 -55px}
 
-.Osyl-EditorPopup .popupMiddleLeft,
-.Osyl-EditorPopup .popupMiddleRight {
+.popupMiddleLeft,
+.popupMiddleRight {
 	background: url(images/ui/vborder.png) repeat-y;
 	width:6px;
 }
-.Osyl-EditorPopup .popupMiddleLeft {background-position:-16px 0}
-.Osyl-EditorPopup .popupMiddleRight {background-position:top right}
+.popupMiddleLeft {background-position:-16px 0}
+.popupMiddleRight {background-position:top right}
 
-.Osyl-EditorPopup .popupTopLeftInner,
-.Osyl-EditorPopup .popupTopRightInner,
+.popupTopLeftInner,
+.popupTopRightInner,
 .Osyl-EditorPopup .bottomLeftInner,
 .Osyl-EditorPopup .bottomRightInner {
 	width: 6px;
 	height: 6px;
 	zoom: 1;
 }
-.Osyl-EditorPopup .popupTopCenter,
-.Osyl-EditorPopup .popupTopLeftInner,
-.Osyl-EditorPopup .popupTopRightInner {
+.popupTopCenter,
+.popupTopLeftInner,
+.popupTopRightInner {
 	height:27px;
 }
-.Osyl-EditorPopup .popupTopLeft {
+.popupTopLeft {
 	background: url(images/ui/popup_corner.png) no-repeat top left;
 	-background: url(images/ui/popup_corner.gif) no-repeat top left;
 }
-.Osyl-EditorPopup .popupTopRight {
+.popupTopRight {
 	background: url(images/ui/popup_corner.png) no-repeat top right;
 	-background: url(images/ui/popup_corner.gif) no-repeat top right;
 }
-.Osyl-EditorPopup .popupBottomLeft {
+.popupBottomLeft {
 	background: url(images/ui/popup_corner.png) no-repeat bottom left;
 	-background: url(images/ui/popup_corner.gif) no-repeat bottom left;
 }
-.Osyl-EditorPopup .popupBottomRight {
+.popupBottomRight {
 	background: url(images/ui/popup_corner.png) no-repeat bottom right;
 	-background: url(images/ui/popup_corner.gif) no-repeat bottom right;
 }
-* html .Osyl-EditorPopup .popupTopLeftInner,
-* html .Osyl-EditorPopup .popupTopRightInner,
-* html .Osyl-EditorPopup .popupBottomLeftInner,
-* html .Osyl-EditorPopup .popupBottomRightInner {
+* html .popupTopLeftInner,
+* html .popupTopRightInner,
+* html .popupBottomLeftInner,
+* html .popupBottomRightInner {
 	width: 6px;
 	height: 6px;
 	overflow: hidden;
 }
-* html .Osyl-EditorPopup .popupTopLeftInner,
-* html .Osyl-EditorPopup .popupTopRightInner {
+* html .popupTopLeftInner,
+* html .popupTopRightInner {
 	height:27px;
 }
-.Osyl-EditorPopup .popupMiddleCenterInner {
+.popupMiddleCenterInner {
 	position:relative;
 	margin:-21px 0 0 0;
-	background:#FFF;
+	background:#FFF url(images/ui/popup_head.gif) repeat-x top left;
 	zoom: 1;
 	overflow:auto;
 }
@@ -1003,14 +995,14 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 
 .Osyl-EditorPopup .mosaic-Caption {background:#454a4f}
 
-.Osyl-EditorPopup .mosaic-Caption-text {
+.mosaic-Caption-text {
 	padding:2px 2px 4px;
 	height:18px;
 	font:bold 12px Arial, Verdana, sans-serif;
 	color:#FFF;
 	margin:0;
 }
-.Osyl-EditorPopup .mosaic-ImageButton {margin:0 0 5px 0}
+.mosaic-ImageButton {margin:0 0 5px}
 .Osyl-EditorPopup-OptionGroup, 
 .Osyl-EditorPopup-LastOptionGroup, 
 .Osyl-EditorPopup-RowOptions .gwt-Label, 
@@ -1154,6 +1146,7 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	-moz-border-radius:8px;
 	-webkit-border-radius:8px;
 }
+.Osyl-FileUpload-genericButton {margin:5px}
 .Osyl-Button::-moz-focus-inner,
 .Osyl-EditorPopup-Button::-moz-focus-inner,
 .Osyl-FileUpload-genericButton::-moz-focus-inner,

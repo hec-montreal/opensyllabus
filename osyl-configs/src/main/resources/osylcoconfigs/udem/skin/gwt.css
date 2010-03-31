@@ -1,11 +1,6 @@
 /* ---- CSS definitions overriding default GWT styles -------------- */
 
 .gwt-Button {
-	/*background:transparent;
-	border-color:#AAA #DDD #DDD #AAA;
-	padding:2px;
-	width:80px;
-	height:26px;*/
 	margin:5px 2px;
 	width:85px;
 	height:30px;
@@ -27,13 +22,76 @@
 }
 
 .gwt-DialogBox {
-	background-color:#FCFCFC;
-	border:3px solid #454a4f;
-	-moz-box-shadow:0 0 10px #000;
-	-webkit-box-shadow:1px 1px 10px #000;
- 	box-shadow:1px 1px 10px #000;
+	background:transparent;
+	padding:0;
 }
-.gwt-DialogBox .dialogTopCenter {background-color:#454a4f;}
+
+.gwt-DialogBox .dialogTopCenter,
+.gwt-DialogBox .dialogBottomCenter {
+	background: url(images/ui/hborder.png) repeat-x;
+	height:6px;
+}
+.gwt-DialogBox .dialogBottomCenter {background-position:bottom left}
+.gwt-DialogBox .dialogTopCenter {background-position:0 -55px}
+
+.gwt-DialogBox .dialogMiddleLeft,
+.gwt-DialogBox .dialogMiddleRight {
+	background: url(images/ui/vborder.png) repeat-y;
+	width:6px;
+}
+.gwt-DialogBox .dialogMiddleLeft {background-position:-16px 0}
+.gwt-DialogBox .dialogMiddleRight {background-position:top right}
+
+.gwt-DialogBox .dialogTopLeftInner,
+.gwt-DialogBox .dialogTopRightInner,
+.gwt-DialogBox .bottomLeftInner,
+.gwt-DialogBox .bottomRightInner {
+	width: 6px;
+	height: 6px;
+	zoom: 1;
+}
+.gwt-DialogBox .dialogTopCenter,
+.gwt-DialogBox .dialogTopLeftInner,
+.gwt-DialogBox .dialogTopRightInner {
+	height:27px;
+}
+.gwt-DialogBox .dialogTopLeft {
+	background: url(images/ui/popup_corner.png) no-repeat top left;
+	-background: url(images/ui/popup_corner.gif) no-repeat top left;
+}
+.gwt-DialogBox .dialogTopRight {
+	background: url(images/ui/popup_corner.png) no-repeat top right;
+	-background: url(images/ui/popup_corner.gif) no-repeat top right;
+}
+.gwt-DialogBox .dialogBottomLeft {
+	background: url(images/ui/popup_corner.png) no-repeat bottom left;
+	-background: url(images/ui/popup_corner.gif) no-repeat bottom left;
+}
+.gwt-DialogBox .dialogBottomRight {
+	background: url(images/ui/popup_corner.png) no-repeat bottom right;
+	-background: url(images/ui/popup_corner.gif) no-repeat bottom right;
+}
+* html .gwt-DialogBox .dialogTopLeftInner,
+* html .gwt-DialogBox .dialogTopRightInner,
+* html .gwt-DialogBox .dialogBottomLeftInner,
+* html .gwt-DialogBox .dialogBottomRightInner {
+	width: 6px;
+	height: 6px;
+	overflow: hidden;
+}
+* html .gwt-DialogBox .dialogTopLeftInner,
+* html .gwt-DialogBox .dialogTopRightInner {
+	height:27px;
+}
+.gwt-DialogBox .dialogMiddleCenter {background:#FFF}
+.gwt-DialogBox .dialogMiddleCenterInner {
+	position:relative;
+	margin:0;
+	background:#FFF;
+	zoom: 1;
+	overflow:auto;
+}
+
 .gwt-DialogBox .Caption, .gwt-DialogBox .mosaic-Caption {
   padding:4px 4px 8px;
   cursor:default;
@@ -45,7 +103,6 @@
   	font-weight:bold;
 	color:#FFF;
 	margin:0;
-	background-color:#454a4f;
 }
 
 .gwt-FileUpload {
@@ -106,10 +163,8 @@
 }
 
 .gwt-PushButton-up {
-/*   background-color:#C3D9FF; */
   padding:3px;
   border:1px solid transparent;
-/*   border-color:#E8F1FF rgb(157, 174, 205) rgb(157, 174, 205) rgb(232, 241, 255); */
   cursor:pointer;
 }
 
@@ -120,18 +175,14 @@
 }
 
 .gwt-PushButton-down {
-/*   background-color:#FCFCFC; */
   padding:3px;
   border:1px solid #FCFCFC;
-/*   border-color:#9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205); */
   cursor:pointer;
 }
 
 .gwt-PushButton-down-hovering {
-/*   background-color:#FCFCFC; */
   padding:3px;
   border:1px solid #FCFCFC;
-/*   border-color:#9DAECD rgb(232, 241, 255) rgb(232, 241, 255) rgb(157, 174, 205); */
   cursor:pointer;
 }
 
@@ -238,17 +289,14 @@
   background-color:#FFF;
   cursor:e-resize;
 }
-/*Cette classe à été ajoutée*/
+
 .gwt-HorizontalSplitPanel .left {
   background-color:#E8EEF7;
 }
-/*Cette classe à été ajoutée*/
+
 .gwt-HorizontalSplitPanel .right {
   background-color:#E8EEF7;
 }
-
-/*.gwt-VerticalSplitPanel {
-}*/
 
 .gwt-VerticalSplitPanel .splitter {
   background-color:#FCFCFC;
