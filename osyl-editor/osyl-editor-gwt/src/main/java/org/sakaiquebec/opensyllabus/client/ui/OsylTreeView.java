@@ -81,7 +81,8 @@ public class OsylTreeView extends OsylViewableComposite implements
     private void initView() {
 
 	VerticalPanel vertPan = new VerticalPanel();
-	Label treeHeaderLabel = new Label("Pages");
+	Label treeHeaderLabel = new Label(this.getUiMessage("OsylTreeView.title"));
+	
 	treeHeaderLabel.setStylePrimaryName("Osyl-TreeView-Header");
 	vertPan.add(treeHeaderLabel);
 
