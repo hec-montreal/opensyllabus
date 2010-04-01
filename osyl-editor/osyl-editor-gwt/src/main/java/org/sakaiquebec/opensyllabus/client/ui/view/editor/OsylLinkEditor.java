@@ -132,8 +132,8 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	Label label = new Label(getView().getUiMessage("comment"));
 	editorPanel.add(label);
 	editorDesc = new RichTextArea();
-	editorDesc.setWidth("99%");
 	editorDesc.setHeight("120px");
+	editorDesc.setStylePrimaryName("Osyl-UnitView-TextArea");
 	editorPanel.add(editorDesc);
 
 	setEditor(editorPanel);

@@ -92,19 +92,21 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
     }
 
     private void initEditor() {
+	mainPanel = new VerticalPanel();
 	RichTextArea rta = new RichTextArea();
 	rta.setStylePrimaryName("Osyl-UnitView-TextArea");
 	rta.addClickHandler(new ResetLabelClickListener(getView().getCoMessage(
 		"InsertYourTextHere")));
 	setEditor(rta);
+	mainPanel.add(editor);
     }
 
     private void setEditor(RichTextArea rta) {
 	this.editor = rta;
     }
 
-    public RichTextArea getEditorTopWidget() {
-	return this.editor;
+    public VerticalPanel getEditorTopWidget() {
+	return this.mainPanel;
     }
 
     private void initViewer() {
@@ -188,10 +190,6 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
 	if (isInEditionMode()) {
 	    editor.setFocus(b);
 	}
-    }
-
-    public Widget getWidget() {
-	return editor;
     }
 
     public boolean prepareForSave() {

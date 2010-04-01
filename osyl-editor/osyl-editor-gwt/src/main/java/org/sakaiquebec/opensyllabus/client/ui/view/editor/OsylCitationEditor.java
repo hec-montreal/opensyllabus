@@ -164,8 +164,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	Label l2 = new Label(getView().getUiMessage("comment"));
 	editorPanel.add(l2);
 	editorDesc = new RichTextArea();
-	editorDesc.setWidth("99%");
 	editorDesc.setHeight("80px");
+	editorDesc.setStylePrimaryName("Osyl-UnitView-TextArea");
 	editorPanel.add(editorDesc);
     }
 
