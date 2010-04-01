@@ -88,7 +88,7 @@ public abstract class OsylAbstractBrowserEditor extends
 			removeStyleName("Osyl-RemoteFileBrowser-WaitingState");
 			final OsylAlertDialog alertBox = new OsylAlertDialog(false, true, OsylController
 					.getInstance().getUiMessage("Global.error"), OsylController.getInstance()
-					.getUiMessage("fileUpload.unableReadRemoteDir") + caught.getMessage() );
+					.getUiMessage("fileUpload.unableReadRemoteDir", caught.getMessage()));
 			alertBox.center();
 			alertBox.show();
 		}
