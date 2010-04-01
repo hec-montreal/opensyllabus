@@ -86,8 +86,8 @@ public abstract class OsylAbstractBrowserEditor extends
 	AsyncCallback<Void> asyncCallback = new AsyncCallback<Void>() {
 		public void onFailure(Throwable caught) {
 			removeStyleName("Osyl-RemoteFileBrowser-WaitingState");
-			final OsylAlertDialog alertBox = new OsylAlertDialog(false, true, OsylController
-					.getInstance().getUiMessage("Global.error"), OsylController.getInstance()
+			final OsylAlertDialog alertBox = new OsylAlertDialog(false, true,
+					getView().getUiMessage("Global.error"), getView()
 					.getUiMessage("fileUpload.unableReadRemoteDir", caught.getMessage()));
 			alertBox.center();
 			alertBox.show();
