@@ -91,7 +91,8 @@ public class OsylWindowPanel extends WindowPanel {
 	    }
 	    final Dimension dim = DOM.getClientSize(boundaryPanel.getElement());
 	    final Dimension dim2 = DOM.getBoxSize(getElement());
-	    final Dimension dim3 = DOM.getBoxSize(getLayoutPanel().getElement());
+	    final Dimension dim3 =
+		    DOM.getBoxSize(getLayoutPanel().getElement());
 	    setPopupPosition(0, 0);
 	    setContentSize(dim.width - (dim2.width - dim3.width), dim.height
 		    - (dim2.height - dim3.height));
@@ -104,7 +105,7 @@ public class OsylWindowPanel extends WindowPanel {
      * current position of maximized window
      * 
      * @param oldState
-     */    
+     */
     protected void restore(WindowState oldState) {
 	final Widget boundaryPanel = RootPanel.get();
 	final int[] borders = DOM.getBorderSizes(boundaryPanel.getElement());

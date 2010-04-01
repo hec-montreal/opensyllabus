@@ -200,11 +200,11 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     }
 
     public void enterEdit() {
-
-	createEditBox();
-
 	// We keep track that we are now in edition-mode
 	setInEditionMode(true);
+	
+	createEditBox();
+
 	// We get the text to edit from the model
 	setText(getView().getTextFromModel());
 	// And put the cursor at the end
@@ -253,17 +253,6 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     @Override
     public boolean isResizable() {
 	return true;
-    }
-
-    @Override
-    public void maximizeEditor() {
-	getEditorPopup().setHeight(getOriginalEditorPopupHeight() + "px");
-	OsylEditorEntryPoint.centerObject(getEditorPopup());
-    }
-
-    @Override
-    public void normalizeEditorWindowState() {
-	// do nothing as editor height has not been changed
     }
 
     @Override

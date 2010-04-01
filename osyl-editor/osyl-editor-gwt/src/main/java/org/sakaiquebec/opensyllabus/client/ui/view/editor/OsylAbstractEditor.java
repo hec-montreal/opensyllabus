@@ -97,7 +97,7 @@ public abstract class OsylAbstractEditor extends Composite {
 
     public static final String MANDATORY_FIELD_INDICATOR =
 	    "<span class=\"Osyl-Mandatory_field\"> *</span>";
-    
+
     protected String propertyType;
 
     /**
@@ -108,7 +108,9 @@ public abstract class OsylAbstractEditor extends Composite {
      */
     public OsylAbstractEditor(OsylAbstractView view) {
 	setView(view);
-	propertyType = getController().getOsylConfig().getOsylConfigRuler().getPropertyType();
+	propertyType =
+		getController().getOsylConfig().getOsylConfigRuler()
+			.getPropertyType();
 	setReadOnly(view.getController().isReadOnly());
     }
 
@@ -181,12 +183,12 @@ public abstract class OsylAbstractEditor extends Composite {
     public int getOriginalEditorPopupHeight() {
 	return originalEditorPopupHeight;
     }
-    
-    public OsylController getController(){
+
+    public OsylController getController() {
 	return getView().getController();
     }
-    
-    public COModelInterface getModel(){
+
+    public COModelInterface getModel() {
 	return getView().getModel();
     }
 
@@ -256,7 +258,6 @@ public abstract class OsylAbstractEditor extends Composite {
      * @param title
      */
     protected void createEditBox(String title) {
-	;
 	pop = new OsylWindowPanel(title, this);
 	pop.setStylePrimaryName("Osyl-EditorPopup");
 
@@ -406,14 +407,6 @@ public abstract class OsylAbstractEditor extends Composite {
 	// Sizes the pop-up to fit the preferred size of the its subcomponents,
 	// shows it modal and centers it.
 	pop.showModal(true);
-	// set minimum width of pop-up
-	if (pop.getContentWidth() < 400)
-	    pop.setWidth("" + 400);
-	// set maximum width of pop-up
-	if (pop.getContentWidth() > 750) {
-	    pop.setHeight("" + 750);
-	    getEditorTopWidget().setWidth("735px");
-	}
 
 	// remember original height
 	originalEditorPopupHeight = pop.getOffsetHeight();
@@ -530,7 +523,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	}
 	return downButton;
     }
-    
+
     /**
      * Used to refresh up and down arrows
      */
