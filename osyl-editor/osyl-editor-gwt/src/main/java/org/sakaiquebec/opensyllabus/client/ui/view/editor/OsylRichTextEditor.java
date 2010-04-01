@@ -42,6 +42,8 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
 
     // Our main panel which will either display the editor or the viewer
     private VerticalPanel mainPanel;
+    
+    private VerticalPanel editorPanel;
 
     // Our editor
     private RichTextArea editor;
@@ -92,13 +94,13 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
     }
 
     private void initEditor() {
-	mainPanel = new VerticalPanel();
+	editorPanel = new VerticalPanel();
 	RichTextArea rta = new RichTextArea();
 	rta.setStylePrimaryName("Osyl-UnitView-TextArea");
 	rta.addClickHandler(new ResetLabelClickListener(getView().getCoMessage(
 		"InsertYourTextHere")));
 	setEditor(rta);
-	mainPanel.add(editor);
+	editorPanel.add(editor);
     }
 
     private void setEditor(RichTextArea rta) {
@@ -106,7 +108,7 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
     }
 
     public VerticalPanel getEditorTopWidget() {
-	return this.mainPanel;
+	return this.editorPanel;
     }
 
     private void initViewer() {
