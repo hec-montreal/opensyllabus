@@ -123,8 +123,6 @@ public class OsylCitationForm extends WindowPanel implements
 
     private HorizontalPanel volumePanel;
 
-    private HorizontalPanel datePanel;
-
     private HorizontalPanel volIssuePanel;
 
     private HorizontalPanel pagePanel;
@@ -348,19 +346,6 @@ public class OsylCitationForm extends WindowPanel implements
 			CitationSchema.SOURCE_TITLE);
 	mainPanel.add(proceedingPanel);
 
-	// Create a textbox for the date.
-	final TextBox dateTextBox =
-		FormHelper.createTextBox((citation == null || citation
-			.getProperty(CitationSchema.DATE) == null) ? ""
-			: citation.getProperty(CitationSchema.DATE),
-			"Osyl-CitationForm-textBox");
-	datePanel =
-		createLabelTextboxElement(osylController
-			.getUiMessage("ResProxCitationView.date.label")
-			+ RECOMMENDED_FIELD_INDICATOR + ":", dateTextBox,
-			CitationSchema.DATE);
-	mainPanel.add(datePanel);
-
 	// Create two textboxes for the volume and issue.
 	final TextBox volumeTextBox =
 		FormHelper.createTextBox((citation == null || citation
@@ -526,18 +511,14 @@ public class OsylCitationForm extends WindowPanel implements
 		citation.setProperty(CitationSchema.ISN, isnTextBox.getText());
 		citation.setProperty(CitationSchema.CREATOR, authorField
 			.getText());
-		// citation.setProperty(CitationSchema.EDITOR, );
 		citation.setProperty(CitationSchema.VOLUME, volumeTextBox
 			.getText());
 		citation.setProperty(CitationSchema.ISSUE, issueTextBox
 			.getText());
 		citation.setProperty(CitationSchema.PAGES, pagesTextBox
 			.getText());
-		// citation.setProperty(CitationSchema.PUBLISHER, );
 		citation
 			.setProperty(CitationSchema.YEAR, yearTextBox.getText());
-		citation
-			.setProperty(CitationSchema.DATE, dateTextBox.getText());
 		citation.setProperty(CitationSchema.DOI, doiTextBox.getText());
 		// citation.setProperty(CitationSchema.URL, );
 		citation.setProperty(CitationSchema.SOURCE_TITLE, sourceTitle
@@ -858,7 +839,6 @@ public class OsylCitationForm extends WindowPanel implements
 	    journalPanel.setVisible(false);
 	    proceedingPanel.setVisible(false);
 	    volumePanel.setVisible(false);
-	    datePanel.setVisible(false);
 	    volIssuePanel.setVisible(false);
 	    pagePanel.setVisible(false);
 	    doiPanel.setVisible(false);
@@ -876,11 +856,10 @@ public class OsylCitationForm extends WindowPanel implements
 	    journalPanel.setVisible(true);
 	    proceedingPanel.setVisible(false);
 	    volumePanel.setVisible(false);
-	    datePanel.setVisible(true);
 	    volIssuePanel.setVisible(true);
 	    pagePanel.setVisible(true);
 	    doiPanel.setVisible(true);
-	    yearPanel.setVisible(false);
+	    yearPanel.setVisible(true);
 	    citationPanel.setVisible(false);
 	    urlPanel.setVisible(false);
 	    publisherPanel.setVisible(false);
@@ -900,7 +879,6 @@ public class OsylCitationForm extends WindowPanel implements
 	    journalPanel.setVisible(false);
 	    proceedingPanel.setVisible(true);
 	    volumePanel.setVisible(true);
-	    datePanel.setVisible(false);
 	    volIssuePanel.setVisible(false);
 	    pagePanel.setVisible(true);
 	    doiPanel.setVisible(false);
@@ -916,7 +894,6 @@ public class OsylCitationForm extends WindowPanel implements
 	    journalPanel.setVisible(false);
 	    proceedingPanel.setVisible(false);
 	    volumePanel.setVisible(false);
-	    datePanel.setVisible(false);
 	    volIssuePanel.setVisible(false);
 	    pagePanel.setVisible(false);
 	    doiPanel.setVisible(false);
