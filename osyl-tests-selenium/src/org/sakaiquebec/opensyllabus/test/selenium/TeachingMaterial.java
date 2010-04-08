@@ -227,12 +227,12 @@ public class TeachingMaterial extends AbstractOSYLTest {
         	"ernet Files\\" +
         "Content.IE5\\K0F6YKYM\\osyl-src[1].zip");
         //We select randomly the rights field
-        String xpathRole4 = "//div[2]/form/table/tbody/tr[5]/td/select";
+        String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
         String newText8 = getRandomOption(xpathRole4);
         session().select(xpathRole4, newText8);
         pause();
         //Close window
-        session().click("//tr[6]/td/table/tbody/tr/td/button");
+        session().click("//tr[5]/td/table/tbody/tr/td/button");
         pause();
         
         }/*else {
@@ -256,12 +256,12 @@ public class TeachingMaterial extends AbstractOSYLTest {
         "clihec3\\Local Settings\\Temporary Internet Files\\" +
         "Content.IE5\\K0F6YKYM\\powerpoint[1].ppt");
         //We select randomly the rights field
-        String xpathRole4 = "//div[2]/form/table/tbody/tr[5]/td/select";
+        String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
         String newText8 = getRandomOption(xpathRole4);
         session().select(xpathRole4, newText8);
         pause();
         //Close window
-        session().click("//tr[6]/td/table/tbody/tr/td/button");
+        session().click("//tr[5]/td/table/tbody/tr/td/button");
         pause();
         
         }/*else {
@@ -336,11 +336,16 @@ public class TeachingMaterial extends AbstractOSYLTest {
         session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Auteur);
         String Annee = "Annee"+ timeStamp();
         session().type("//tr[12]/td/table/tbody/tr/td[3]/input", Annee);
+        String Editeur = "Editeur"+ timeStamp();
+        session().type("//tr[13]/td/table/tbody/tr/td[3]/input", Editeur);
+        String Lieu = "Lieu"+ timeStamp();
+        session().type("//tr[14]/td/table/tbody/tr/td[3]/input", Lieu);
         String ISBN = "ISBN"+ timeStamp();
-        session().type("//tr[17]/td/table/tbody/tr/td[3]/input", ISBN);
+        session().type("//tr[20]/td/table/tbody/tr/td[3]/input", ISBN);
+        
         
         //Close Window
-        session().click("//tr[24]/td/table/tbody/tr/td/button");
+        session().click("//tr[23]/td/table/tbody/tr/td/button");
         pause();
         pause();
         
@@ -400,10 +405,12 @@ public class TeachingMaterial extends AbstractOSYLTest {
         session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Titre );        
         session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Auteur);
         session().type("//tr[12]/td/table/tbody/tr/td[3]/input", Annee);
+        session().type("//tr[13]/td/table/tbody/tr/td[3]/input", Editeur);
+        session().type("//tr[14]/td/table/tbody/tr/td[3]/input", Lieu);
         session().type("//tr[17]/td/table/tbody/tr/td[3]/input", ISBN);
         
         //Close Window
-        session().click("//tr[24]/td/table/tbody/tr/td/button");
+        session().click("//tr[23]/td/table/tbody/tr/td/button");
         pause();
         pause();
         

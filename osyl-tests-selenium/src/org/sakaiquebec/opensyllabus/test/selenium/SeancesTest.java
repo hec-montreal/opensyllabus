@@ -396,12 +396,12 @@ public class SeancesTest extends AbstractOSYLTest{
         		"ernet Files\\" +
         	"Content.IE5\\K0F6YKYM\\osyl-src[1].zip");
         //We select randomly the rights field
-	String xpathRole4 = "//div[2]/form/table/tbody/tr[5]/td/select";
+	String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
 	String newText8 = getRandomOption(xpathRole4);
 	session().select(xpathRole4, newText8);
 	pause();
 	//Close window
-    	session().click("//tr[6]/td/table/tbody/tr/td/button");
+    	session().click("//tr[5]/td/table/tbody/tr/td/button");
     	pause();
         
         }/*else {
@@ -425,12 +425,12 @@ public class SeancesTest extends AbstractOSYLTest{
         	"clihec3\\Local Settings\\Temporary Internet Files\\" +
         	"Content.IE5\\K0F6YKYM\\powerpoint[1].ppt");
       //We select randomly the rights field
-	String xpathRole4 = "//div[2]/form/table/tbody/tr[5]/td/select";
+	String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
 	String newText8 = getRandomOption(xpathRole4);
 	session().select(xpathRole4, newText8);
 	pause();
 	//Close window
-    	session().click("//tr[6]/td/table/tbody/tr/td/button");
+    	session().click("//tr[5]/td/table/tbody/tr/td/button");
     	pause();
         
         }/*else {
@@ -577,12 +577,12 @@ public class SeancesTest extends AbstractOSYLTest{
         "ernet Files\\" +
         "Content.IE5\\K0F6YKYM\\osyl-src[1].zip");
         //We select randomly the rights field
-        String xpathRole4 = "//div[2]/form/table/tbody/tr[5]/td/select";
+        String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
         String newText8 = getRandomOption(xpathRole4);
         session().select(xpathRole4, newText8);
         pause();
         //Close window
-        session().click("//tr[6]/td/table/tbody/tr/td/button");
+        session().click("//tr[5]/td/table/tbody/tr/td/button");
         pause();
         
         }/*else {
@@ -686,23 +686,23 @@ public class SeancesTest extends AbstractOSYLTest{
         session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Titre );
         String Auteur = "Auteur"+ timeStamp();
         session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Auteur);
+        String Annee = "Annee"+ timeStamp();
+        session().type("//tr[12]/td/table/tbody/tr/td[3]/input", Annee);
         String Periodique = "Periodique"+ timeStamp();
         session().type("//tr[15]/td/table/tbody/tr/td[3]/input", Periodique);
-        String Date = "Date"+ timeStamp();
-        session().type("//tr[17]/td/table/tbody/tr/td[3]/input", Date);
         String Volume = "Volume"+ timeStamp();
-        session().type("//tr[18]/td/table/tbody/tr/td[3]/input", Volume);
+        session().type("//tr[17]/td/table/tbody/tr/td[3]/input", Volume);
         String Numero = "Numero"+ timeStamp();
-        session().type("//tr[18]/td/table/tbody/tr/td[6]/input", Numero);
+        session().type("//tr[17]/td/table/tbody/tr/td[6]/input", Numero);
         String Pages = "Pages"+ timeStamp();
-        session().type("//tr[20]/td/table/tbody/tr/td[3]/input", Pages);
+        session().type("//tr[19]/td/table/tbody/tr/td[3]/input", Pages);
         String ISSN = "ISSN"+ timeStamp();
-        session().type("//tr[21]/td/table/tbody/tr/td[3]/input", ISSN);
+        session().type("//tr[20]/td/table/tbody/tr/td[3]/input", ISSN);
         String DOI = "DOI"+ timeStamp();
-        session().type("//tr[22]/td/table/tbody/tr/td[3]/input", DOI);
+        session().type("//tr[21]/td/table/tbody/tr/td[3]/input", DOI);
         
         //Close Window
-        session().click("//tr[24]/td/table/tbody/tr/td/button");
+        session().click("//tr[23]/td/table/tbody/tr/td/button");
         pause();
         pause();
         // Select first resource in browser window
