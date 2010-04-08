@@ -55,179 +55,181 @@ import org.w3c.dom.NodeList;
  */
 public class OsylPackage {
 
-    private final String CO_RESOURCE = "COResource";
-    private final String URI_TYPE = "type";
-    private final String URI_VALUE = "document";
-    private final String URI_TAGNAME = "uri";
-    private DocumentBuilderFactory factory;
-    private DocumentBuilder build;
-    private Document root;
-    private String xmlData;
-    private File unzipDir = null;
-    private Map<File, String> fileMap = new HashMap<File, String>();
+	private final String CO_RESOURCE = "COResource";
+	private final String URI_TYPE = "type";
+	private final String URI_VALUE = "document";
+	private final String URI_TAGNAME = "uri";
+	private DocumentBuilderFactory factory;
+	private DocumentBuilder build;
+	private Document root;
+	private String xmlData;
+	private File unzipDir = null;
+	private Map<File, String> fileMap = new HashMap<File, String>();
 
-    public String getXml() {
-	return xmlData;
-    }
-
-    public void setXml(String xmlData) {
-	this.xmlData = xmlData;
-    }
-
-    /**
-     * @return File for key, FileName (to use) for value
-     */
-    public Map<File, String> getImportedFiles() {
-	return fileMap;
-    }
-
-    /**
-     * Constructor.
-     */
-    public OsylPackage() {
-	unzipDir =
-		new File(new File(System.getProperty("java.io.tmpdir")),
-			"osyl-import-unpack" + System.currentTimeMillis());
-    }
-
-    private void findFiles(InputStream stream) {
-	try {
-	    factory = DocumentBuilderFactory.newInstance();
-	    build = factory.newDocumentBuilder();
-
-	    root = build.parse(stream);
-
-	    // Clean nodes
-	    cleanNodes(root);
-
-	    // renderXML(root);
-
-	} catch (Exception e) {
-	    e.printStackTrace();
+	public String getXml() {
+		return xmlData;
 	}
 
-    }
+	public void setXml(String xmlData) {
+		this.xmlData = xmlData;
+	}
 
-    private void cleanNodes(Document root) {
-	NodeList list = root.getElementsByTagName(CO_RESOURCE);
-	NodeList children;
-	Element element;
-	int i = 0;
-	String elementType;
-	Node node;
+	/**
+	 * @return File for key, FileName (to use) for value
+	 */
+	public Map<File, String> getImportedFiles() {
+		return fileMap;
+	}
 
-	while (i < list.getLength()) {
-	    element = (Element) list.item(i);
-	    elementType = element.getAttribute(URI_TYPE);
-	    if (URI_VALUE.equals(elementType)) {
-		children = element.getElementsByTagName(URI_TAGNAME);
-		node = children.item(0).getFirstChild();
-		if (node != null) {
-		    node.setNodeValue(node.getNodeValue().trim());
+	/**
+	 * Constructor.
+	 */
+	public OsylPackage() {
+		unzipDir = new File(new File(System.getProperty("java.io.tmpdir")),
+				"osyl-import-unpack" + System.currentTimeMillis());
+	}
+
+	private void findFiles(InputStream stream) {
+		try {
+			factory = DocumentBuilderFactory.newInstance();
+			build = factory.newDocumentBuilder();
+
+			root = build.parse(stream);
+
+			// Clean nodes
+			cleanNodes(root);
+
+			// renderXML(root);
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-	    }
-	    i++;
+
 	}
 
-    }
+	private void cleanNodes(Document root) {
+		NodeList list = root.getElementsByTagName(CO_RESOURCE);
+		NodeList children;
+		Element element;
+		int i = 0;
+		String elementType;
+		Node node;
 
-    /**
-     * Performs an XSLT transformation, sending the results to a temporary file.
-     */
-
-    private File renderXML(Document doc, String fileName) {
-	TransformerFactory factory = TransformerFactory.newInstance();
-	Transformer transform;
-	File xmlDataFile = new File(System.getProperty("java.io.tmpdir")+File.separator+fileName);
-	try {
-		
-	    transform = factory.newTransformer();
-	    DOMSource source = new DOMSource(doc);
-	    StreamResult result = new StreamResult(xmlDataFile);
-	    transform.transform(source, result);
-
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
-	return xmlDataFile;
-
-    }
-
-    /**
-     * Reads the file content into XML.
-     * 
-     * @param doc
-     * @param fileName
-     * @return
-     */
-    public String renderXmlData(Document doc, String fileName) {
-	String xmlData = "";
-	File xmlFile = renderXML(doc, fileName);
-
-	try {
-	    BufferedReader input = new BufferedReader(new FileReader(xmlFile));
-	    try {
-		String line = null;
-		while ((line = input.readLine()) != null) {
-		    xmlData += new String(line.getBytes(), "UTF-8");
-		}
-	    } finally {
-		input.close();
-	    }
-	} catch (IOException ex) {
-	    ex.printStackTrace();
-	}
-
-	xmlFile.delete();
-
-	return xmlData;
-    }
-
-    /**
-     * Unzips the archive file.
-     * 
-     * @param zip
-     */
-    public void unzip(File zip) {
-	ZipFile zipFile;
-	Enumeration<? extends ZipEntry> entries;
-	ZipEntry entry;
-	InputStream inputStream;
-	OutputStream outputStream;
-	File newFile;
-	try {
-	    zipFile = new ZipFile(zip);
-	    entries = zipFile.entries();
-	    while (entries.hasMoreElements()) {
-		entry = (ZipEntry) entries.nextElement();
-		inputStream = zipFile.getInputStream(entry);
-
-		// Retrieving the course outline xml file AND all resources
-		// files
-		if (entry.getName().equals(OsylManagerService.CO_XML_FILENAME)) {
-		    findFiles(inputStream);
-		    xmlData = renderXmlData(root, entry.getName());
-		} else {
-		    newFile = new File(unzipDir, entry.getName());
-		    if (!entry.isDirectory()) {
-			File newFileDir = newFile.getParentFile();
-			if (!newFileDir.exists()) {
-			    newFileDir.mkdirs();
+		while (i < list.getLength()) {
+			element = (Element) list.item(i);
+			elementType = element.getAttribute(URI_TYPE);
+			if (URI_VALUE.equals(elementType)) {
+				children = element.getElementsByTagName(URI_TAGNAME);
+				node = children.item(0).getFirstChild();
+				if (node != null) {
+					node.setNodeValue(node.getNodeValue().trim());
+				}
 			}
-			outputStream = new FileOutputStream(newFile);
-			IOUtils.copy(inputStream, outputStream);
-		    }
-		    fileMap.put(newFile, entry.getName());
+			i++;
 		}
 
-	    }
-
-	    zipFile.close();
-	} catch (ZipException e) {
-	    e.printStackTrace();
-	} catch (IOException e) {
-	    e.printStackTrace();
 	}
-    }
+
+	/**
+	 * Performs an XSLT transformation, sending the results to a temporary file.
+	 */
+
+	private File renderXML(Document doc, String fileName) {
+		TransformerFactory factory = TransformerFactory.newInstance();
+		Transformer transform;
+		File xmlDataFile = new File(System.getProperty("java.io.tmpdir")
+				+ File.separator + fileName);
+		try {
+
+			transform = factory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(xmlDataFile);
+			transform.transform(source, result);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return xmlDataFile;
+
+	}
+
+	/**
+	 * Reads the file content into XML.
+	 * 
+	 * @param doc
+	 * @param fileName
+	 * @return
+	 */
+	public String renderXmlData(Document doc, String fileName) {
+		String xmlData = "";
+		File xmlFile = renderXML(doc, fileName);
+
+		try {
+			BufferedReader input = new BufferedReader(new FileReader(xmlFile));
+			try {
+				String line = null;
+				while ((line = input.readLine()) != null) {
+					xmlData += new String(line.getBytes(), "UTF-8");
+				}
+			} finally {
+				input.close();
+			}
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
+		xmlFile.delete();
+
+		return xmlData;
+	}
+
+	/**
+	 * Unzips the archive file.
+	 * 
+	 * @param zip
+	 */
+	public void unzip(File zip) {
+		ZipFile zipFile;
+		Enumeration<? extends ZipEntry> entries;
+		ZipEntry entry;
+		InputStream inputStream;
+		OutputStream outputStream;
+		File newFile;
+		try {
+			zipFile = new ZipFile(zip);
+			entries = zipFile.entries();
+			while (entries.hasMoreElements()) {
+				entry = (ZipEntry) entries.nextElement();
+				inputStream = zipFile.getInputStream(entry);
+
+				// Retrieving the course outline xml file AND all resources
+				// files
+				if (entry.getName().equals(OsylManagerService.CO_XML_FILENAME)) {
+					findFiles(inputStream);
+					xmlData = renderXmlData(root, entry.getName());
+				} else {
+					newFile = new File(unzipDir, entry.getName());
+					if (!entry.isDirectory()) {
+						File newFileDir = newFile.getParentFile();
+						if (!newFileDir.exists()) {
+							newFileDir.mkdirs();
+						}
+						outputStream = new FileOutputStream(newFile);
+						IOUtils.copy(inputStream, outputStream);
+						outputStream.close();
+						inputStream.close();
+					}
+					fileMap.put(newFile, entry.getName());
+				}
+
+			}
+
+			zipFile.close();
+		} catch (ZipException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

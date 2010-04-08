@@ -49,6 +49,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.Parser;
+import org.apache.tika.parser.pdf.PDFParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzPermissionException;
@@ -627,9 +628,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    String xml = osylPackage.getXml();
 
 	    osylSiteService.importDataInCO(xml, siteId);
+	    importFilesInSite(zipReference, siteId);
 	    contentHostingService.removeResource(zipReference);
 	    zipTempfile.delete();
-	    importFilesInSite(zipReference, siteId);
 	} catch (Exception e) {
 	    log.error(e);
 	}
@@ -1138,7 +1139,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		metadata.set(Metadata.RESOURCE_NAME_KEY, file.getName());
 		parser = new AutoDetectParser();
 		parser.parse(inputStream, handler, metadata);
-
+		
+		//We need to close the inputstream and rebuild it after the parsing here, 
+		//otherwise the inputstream in unusable
+		inputStream.close();
+		inputStream = new FileInputStream(file);
+		
 		if (CITATION_EXTENSION.equals(fileExtension)) {
 		    // read input stream of file to get properties of citation
 		    addCitations(file, siteId, resourceOutputDir);
@@ -1147,6 +1153,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    addRessource(fileNameToUse, inputStream, metadata
 			    .get(Metadata.CONTENT_TYPE), siteId,
 			    resourceOutputDir);
+		    inputStream.close();
 		}
 	    } catch (Exception e) {
 		log.error(e);
