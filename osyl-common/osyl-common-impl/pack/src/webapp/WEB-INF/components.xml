@@ -230,4 +230,26 @@
 		<property name="autoDdl"><value>${auto.ddl}</value></property>
 	</bean>
 	
+	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylRealmService.osylEditorUser"
+		class="org.sakaiquebec.opensyllabus.common.impl.OsylRealmServiceImpl"
+		init-method="init"
+		destroy-method="destroy"
+		singleton="true">
+		
+		<property name="functionManager"
+			ref="org.sakaiproject.authz.api.FunctionManager"/>
+			
+		<property name="authzGroupService"
+			ref="org.sakaiproject.authz.api.AuthzGroupService"/>
+
+		<property name="sessionManager"
+			ref="org.sakaiproject.tool.api.SessionManager"/>
+			
+		<!-- let parentRealm null to create empty realm -->
+		<property name="parentRealm" value="!user.template.registered"/>
+		<property name="newRealmName" value="!user.template.osylEditor"/>
+		<property name="recreate"><value>false</value></property>
+		<property name="autoDdl"><value>${auto.ddl}</value></property>
+	</bean>
+	
 </beans>
