@@ -1,15 +1,8 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
-import java.util.Date;
-import java.util.Set;
+import java.io.File;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.sakaiproject.coursemanagement.api.EnrollmentSet;
-import org.sakaiproject.coursemanagement.api.SectionCategory;
 
 /******************************************************************************
  * $Id: $
@@ -43,6 +36,42 @@ import org.sakaiproject.coursemanagement.api.SectionCategory;
  * @version $Id: $
  */
 public interface OsylCMJob extends Job {
+
+    /**
+     * Directory used to store institutional data (students, teachers, courses,
+     * sessions ...
+     */
+    @Deprecated
+    public static final String EXTRACTS_PATH =
+	    "webapps" + File.separator + "osyl-admin-sakai-tool"
+		    + File.separator + "extracts";
+
+    public final static String SECRETARY_ROLE = "I";
+
+    public final static String SECRETARY_ACTIVE_STATUS = "active";
+
+    /**
+     * Value used to represent the credits associated to this course. This is a
+     * default value.
+     */
+    // TODO: Implement correct retrieval of the credits associated to the
+    // course.
+    public final static String CREDITS = "3";
+
+    /**
+     * Grading process
+     */
+    public final static String GRADING_SCHEME = "Letter";
+
+    /**
+     * Status of all the students currently enrolled and active
+     */
+    public final static String ENROLLMENT_STATUS = "enrolled";
+
+    /**
+     * Mapping to the type of site asociated to this course in Sakai.
+     */
+    public final static String COURSE_OFF_STATUS = "course";
 
     /**
      * Method used to create the sessions
