@@ -20,8 +20,6 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.shared.model;
 
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -42,6 +40,8 @@ public class COUnitType {
     public final static String PEDAGOGICAL_APPROACH_UNIT = "PedagogicalApproachUnit";
     public final static String LEARNING_MATERIAL_UNIT = "LearningMaterialUnit";
     public final static String PEDAGOGICAL_UNIT = "PedagogicalUnit";
+    public final static String PEDAGOGICAL_UNIT_LECTURE="Lecture";
+    public final static String PEDAGOGICAL_UNIT_WORKSESSION="WorkSession";
     public final static String SKILLS_COMPONENTS_UNIT = "SkillsComponentsUnit";
     public final static String SKILLS_LECTURES_UNIT = "SkillsLecturesUnit";
     public final static String LECTURES_ACTIVITIES_UNIT = "LecturesActivitiesUnit";
@@ -62,67 +62,4 @@ public class COUnitType {
     public static final String NEW_BIBLIOGRAPHY_UNIT= "NewBibliographyUnit";
     public static final String DISCIPLINARY_LIBRARY_UNIT = "DisciplinaryLibraryUnit";
     public static final String SERVICES_OF_SUPPORT_TO_STUDY_UNIT = "ServicesOfSupportToStudyUnit";
-    
-    //public final static String NEWS = "news";
-    // public final static String RECITATION= "recitation";
-    // public final static String MODULE= "module";
-//    public final static String LABORATORY = "laboratory";
-//    public final static String FAQ = "faq";
-
-    /**
-     * The list of types.
-     */
-    private static final String[] types = {
-
-	OVERVIEW_UNIT, 
-	SCHEDULEPLACE_UNIT, 
-	STAFF_UNIT, 
-	INTRODUCTION_UNIT,
-	OBJECTIVES_UNIT,
-	SKILLS_UNIT,
-	ASSESSMENT_HEADER_UNIT,
-	ASSESSMENT_INTRO_UNIT,
-	ASSESSMENT_UNIT, 
-	PLAGIARISM_UNIT,
-	PEDAGOGICAL_APPROACH_UNIT,
-	LEARNING_MATERIAL_UNIT, 
-	PEDAGOGICAL_UNIT,
-	SKILLS_COMPONENTS_UNIT,
-	SKILLS_LECTURES_UNIT,
-	LECTURES_ACTIVITIES_UNIT,
-	BIBLIOGRAPHY_UNIT,
-	THEMATIC_BIBLIOGRAPHY_UNIT,
-	LEARNING_SUPPORT_SERVICES_UNIT,
-	NEWS_UNIT,
-	INFORMATION_OF_LESSON_UNIT,
-	TEACHER_UNIT,
-	COURSE_INTRODUCTION_UNIT,
-	PURPOSEFUL_STUDIES_UNIT,
-	INFORMATION_UNIT,
-	MODALITY_OF_VALUATION_UNIT,
-	NEW_PLAGIARISM_UNIT,
-	PEDAGOGIC_APPROACHES_UNIT,
-	PEDAGOGIC_RESOURCES_UNIT,
-	PERIODE_UNIT,
-	NEW_BIBLIOGRAPHY_UNIT,
-	DISCIPLINARY_LIBRARY_UNIT,
-	SERVICES_OF_SUPPORT_TO_STUDY_UNIT,
-
-    };
-
-    /**
-     * @return string array of types
-     */
-    public static final String[] getTypes() {
-	return types;
-    }
-
-    /**
-     * Gets the list of all possible <code>COUnit</code> types.
-     * 
-     * @return a list of all possible types.
-     */
-    public static final List<String> getTypesList() {
-	return Arrays.asList(types);
-    }
 }

@@ -103,34 +103,34 @@ public class OsylToolbarView extends OsylViewableComposite implements
     class AddMenuCommand implements Command {
 
 	private COElementAbstract parentModel;
-	private String type;
-	private String subType;
+	private COModelInterface aModel;
+	private COModelInterface aSubModel;
 
-	public AddMenuCommand(final COElementAbstract parentModel, String type) {
+	public AddMenuCommand(final COElementAbstract parentModel, COModelInterface m) {
 	    this.parentModel = parentModel;
-	    this.type = type;
-	    this.subType = null;
+	    this.aModel=m;
+	    this.aSubModel = null;
 	}
 
-	public AddMenuCommand(final COElementAbstract parentModel, String type,
-		String subtype) {
+	public AddMenuCommand(final COElementAbstract parentModel, COModelInterface m,
+		COModelInterface subM) {
 	    this.parentModel = parentModel;
-	    this.type = type;
-	    this.subType = subtype;
+	    this.aModel=m;
+	    this.aSubModel = subM;
 	}
 
 	@SuppressWarnings("unchecked")
 	public void execute() {
 	    if (parentModel.isCOStructureElement()) {
 
-		if (COStructureElementType.getTypesList().contains(type)) {
+		if (aModel instanceof COStructureElement) {
 		    COStructureElement cose =
 			    COStructureElement.createDefaultCOStructureElement(
-				    type, getCoMessages(), parentModel);
+				    aModel.getType(), getCoMessages(), parentModel);
 		    cose.setLabel(getUiMessage("ASMStructure.label.default"));
-		} else if (COUnitType.getTypesList().contains(type)) {
+		} else if (aModel instanceof COUnit) {
 		    COUnit coU =
-			    COUnit.createDefaultCOUnit(type, getCoMessages(),
+			    COUnit.createDefaultCOUnit(aModel.getType(), getCoMessages(),
 				    parentModel);
 		    try {
 			List<COModelInterface> coUnitSubModels =
@@ -182,7 +182,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    String defaultRubric = "";
 
 	    // NEWS HACK
-	    if (subType.equals(COContentResourceType.NEWS)) {
+	    if (aSubModel.getType().equals(COContentResourceType.NEWS)) {
 		defaultRubric = COContentRubric.RUBRIC_TYPE_NEWS;
 	    } else {
 		List<COModelInterface> coUnitSubModels =
@@ -203,8 +203,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    }
 		}
 	    }
-	    COContentResourceProxy.createDefaultResProxy(type, getCoMessages(),
-		    coUnitContent, subType, defaultRubric,getController().getOsylConfig().getOsylConfigRuler().getPropertyType());
+	    COContentResourceProxy.createDefaultResProxy(aModel.getType(), getCoMessages(),
+		    coUnitContent, aSubModel.getType(), defaultRubric,getController().getOsylConfig().getOsylConfigRuler().getPropertyType());
 	}
 
     }
@@ -478,11 +478,11 @@ public class OsylToolbarView extends OsylViewableComposite implements
 				if (subModel instanceof COStructureElement)
 				    addAddUIMenuItem(subModel.getType(),
 					    new AddMenuCommand(castedModel,
-						    subModel.getType()));
+						    subModel));
 				else
 				    addAddCOMenuItem(subModel
 					    .getType(), new AddMenuCommand(
-					    castedModel, subModel.getType()));
+					    castedModel, subModel));
 			    }
 			}
 		    } catch (RuntimeException e) {
@@ -516,8 +516,10 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		} else {
 		    type = COContentResourceProxyType.REFERENCE;
 		}
+		COContentResourceProxy cocrp = new COContentResourceProxy();
+		cocrp.setType(type);
 		addAddCOMenuItem(subModel.getType(),
-			new AddMenuCommand(model, type, subModel.getType()));
+			new AddMenuCommand(model, cocrp, subModel));
 	    }
 	}
     }

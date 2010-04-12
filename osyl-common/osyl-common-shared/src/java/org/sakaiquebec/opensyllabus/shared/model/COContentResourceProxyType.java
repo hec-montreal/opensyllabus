@@ -31,27 +31,5 @@ public class COContentResourceProxyType {
     public static final String INFORMATION="InformationContext";
     public static final String BIBLIO="BiblioContext";
     public static final String REFERENCE="ReferenceContext";
-    public static final String PEOPLE="PeopleContext";
-
-    /**
-     * The list of types.
-     */
-    private static final String[] types = { 
-	INFORMATION,BIBLIO,REFERENCE,PEOPLE
-    };
-
-    /**
-     * @return string array of types
-     */
-    public static final String[] getTypes() {
-	return types;
-    }
-    
-    /**
-     * @return List of types
-     */
-    public static final List<String> getTypesList(){
-	return Arrays.asList(types);
-    }
-    
+    public static final String PEOPLE="PeopleContext";    
 }

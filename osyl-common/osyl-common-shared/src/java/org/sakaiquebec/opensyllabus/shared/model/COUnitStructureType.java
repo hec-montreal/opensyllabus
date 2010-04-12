@@ -20,8 +20,6 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.shared.model;
 
-import java.util.Arrays;
-import java.util.List;
 
 /**
  *
@@ -64,60 +62,5 @@ public class COUnitStructureType {
     public static final String NEW_BIBLIOGRAPHY_UNITSTRUCTURE = "NewBibliographyUnitStruct";
     public static final String DISCIPLINARY_LIBRARY_UNITSTRUCTURE = "DisciplinaryLibraryUnitStruct";
     public static final String SERVICES_OF_SUPPORT_TO_STUDY_UNITSTRUCTURE = "ServicesOfSupportToStudyUnitStruct";
-
-    /**
-     * The list of types.
-     */
-    private static final String[] types = {
-
-    OVERVIEW_UNITSTRUCTURE, 
-    SCHEDULEPLACE_UNITSTRUCTURE, 
-    STAFF_UNITSTRUCTURE, 
-    INTRODUCTION_UNITSTRUCTURE,
-    OBJECTIVES_UNITSTRUCTURE, 
-    SKILLS_UNITSTRUCTURE,
-    ASSESSMENT_HEADER_UNITSTRUCTURE,
-    ASSESSMENT_INTRO_UNITSTRUCTURE,
-    ASSESSMENT_UNITSTRUCTURE,
-    PLAGIARISM_UNITSTRUCTURE,
-    PEDAGOGICAL_APPROACH_UNITSTRUCTURE,
-    LEARNING_MATERIAL_UNITSTRUCTURE,
-    PEDAGOGICAL_UNITSTRUCTURE,
-    SKILLS_COMPONENTS_UNITSTRUCTURE,
-    SKILLS_LECTURES_UNITSTRUCTURE,
-    LECTURES_ACTIVITIES_UNITSTRUCTURE,
-    BIBLIOGRAPHY_UNITSTRUCTURE,
-    THEMATIC_BIBLIOGRAPHY_UNITSTRUCTURE,
-    LEARNING_SUPPORT_SERVICES_UNITSTRUCTURE,
-    NEWS_UNITSTRUCTURE,
-	INFORMATION_OF_LESSON_UNITSTRUCTURE,
-	TEACHER_UNITSTRUCTURE,
-	COURSE_INTRODUCTION_UNITSTRUCTURE,
-	PURPOSEFUL_STUDIES_UNITSTRUCTURE,
-	INFORMATION_UNITSTRUCTURE,
-	MODALITY_OF_VALUATION_UNITSTRUCTURE,
-	NEW_PLAGIARISM_UNITSTRUCTURE,
-	PEDAGOGIC_APPROACHES_UNITSTRUCTURE,
-	PEDAGOGIC_RESOURCES_UNITSTRUCTURE, 
-	PERIODE_UNITSTRUCTURE,
-	NEW_BIBLIOGRAPHY_UNITSTRUCTURE,
-	DISCIPLINARY_LIBRARY_UNITSTRUCTURE,
-	SERVICES_OF_SUPPORT_TO_STUDY_UNITSTRUCTURE
-
-    };
-
-    /**
-     * @return string array of types
-     */
-    public static final String[] getTypes() {
-	return types;
-    }
-
-    /**
-     * @return List of types
-     */
-    public static final List<String> getTypesList() {
-	return Arrays.asList(types);
-    }
 }
 

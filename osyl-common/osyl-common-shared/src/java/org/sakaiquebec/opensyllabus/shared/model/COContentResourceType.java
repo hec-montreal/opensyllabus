@@ -20,8 +20,6 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.shared.model;
 
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -36,28 +34,4 @@ public class COContentResourceType {
     public static final String URL="URL";
     public static final String PERSON="Person";
     public static final String NEWS="News";
-
-
-    /**
-     * The list of types.
-     */
-    private static final String[] types =
-	    { TEXT, BIBLIO_RESOURCE, DOCUMENT, ASSIGNMENT, URL, PERSON, NEWS };
-
-    /**
-     * @return string array of types
-     */
-    public static final String[] getTypes() {
-	return types;
-    }
-
-
-
-    /**
-     * @return List of types
-     */
-    public static final List<String> getTypesList() {
-	return Arrays.asList(types);
-    }
-
 }

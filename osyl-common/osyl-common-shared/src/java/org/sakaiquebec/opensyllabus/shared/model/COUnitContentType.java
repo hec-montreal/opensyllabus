@@ -20,8 +20,6 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * This class contains the list of all the possible content unit type in a
@@ -71,107 +69,4 @@ public class COUnitContentType {
     public static final String NEW_BIBLIOGRAPHY_UNITCONTENT = "NewBibliographyUnitContent";
     public static final String DISCIPLINARY_LIBRARY_UNITCONTENT = "DisciplinaryLibraryUnitContent";
     public static final String SERVICES_OF_SUPPORT_TO_STUDY_UNITCONTENT = "ServicesOfSupportToStudyUnitContent";
-
-    // public static final String EVALUATION_INSTRUMENT =
-    // "EvaluationInstrument";
-    // public static final String LAB_SESSION = "labsession";
-    // public static final String WEEK_LESSON = "weeklesson";
-    // public static final String DAY_SEMINAR = "dayseminar";
-    // public static final String THEME = "Theme";
-    // public static final String FACPROGIDENT = "facprogident";
-    // public static final String COURSEIDENT = "courseident";
-    // public static final String ACTIVITY = "Activity";
-    // public static final String LECTURE_CONTEXT_SKILLS =
-    // "LectureContextSkills";
-    // public static final String COURSEOFFICIALDESCRIPTION =
-    // "courseofficialdescription";
-    // public static final String COURSE_IN_CURRICULUM = "CourseInCurriculum";
-    // public static final String COURSEINTRO = "courseintro";
-    // public static final String COURSESCHEDULEPLACE = "coursescheduleplace";
-    // public static final String COURSE_OBJECTIVES = "CourseObjectives";
-    // public static final String COURSE_SKILLS = "CourseSkills";
-    // public static final String PEDAGOGICAL_APPROACH = "PedagogicalApproach";
-    // public static final String PEDAGOGICAL_APPROACH_SPECIFIC=
-    // "PedagogicalApproachSpecific";
-    // public static final String ASSESMENTDESCRIPTION = "assesmentdescription";
-    // public static final String PLAGIARISM = "plagiarism";
-    // public static final String LECTURE_TEACHING_ACTIVITY =
-    // "LectureTeachingActivity";
-    // public static final String LECTURE_LEARNING_ACTIVITY =
-    // "LectureLearningActivity";
-    // public static final String THEME_TEACHING_ACTIVITY =
-    // "ThemeTeachingActivity";
-    // public static final String THEME_LEARNING_ACTIVITY =
-    // "ThemeLearningActivity";
-    // public static final String BIBLIOGRAPHY = "Bibliography";
-    // public static final String THEMATIC_BIBLIOGRAPHY =
-    // "ThematicBibliography";
-    // public static final String LEARNING_SUPPORT_SERVICES =
-    // "LearningSupportServices";
-
-    /**
-     * The list of types.
-     */
-    private static final String[] types = {
-
-	OVERVIEW_UNITCONTENT, 
-	COURSE_OFFICIALDESCRIPTION_UNITCONTENT, 
-	SCHEDULEPLACE_UNITCONTENT, 
-	STAFF_UNITCONTENT, 
-	INTRODUCTION_UNITCONTENT,
-	OBJECTIVES_UNITCONTENT,
-	SKILLS_UNITCONTENT,
-	ASSESSMENT_UNITCONTENT,
-	ASSESSMENT_INTRO_UNITCONTENT,
-	PLAGIARISM_UNITCONTENT,
-	PEDAGOGICAL_APPROACH_UNITCONTENT,
-	LEARNING_MATERIAL_UNITCONTENT, 
-	PEDAGOGICAL_UNITCONTENT, 
-	SKILLS_COMPONENTS_UNITCONTENT,
-	SKILLS_LECTURES_UNITCONTENT,
-	LECTURES_ACTIVITIES_UNITCONTENT,
-	THEMATIC_BIBLIOGRAPHY_UNITCONTENT,
-	LEARNING_SUPPORT_SERVICES_UNITCONTENT,
-	NEWS_UNITCONTENT,
-	INFORMATION_OF_LESSON_UNITCONTENT,
-	TEACHER_UNITCONTENT,
-	COURSE_INTRODUCTION_UNITCONTENT,
-	PURPOSEFUL_STUDIES_UNITCONTENT,
-	INFORMATION_UNITCONTENT,
-	MODALITY_OF_VALUATION_UNITCONTENT,
-	NEW_PLAGIARISM_UNITCONTENT,
-	PEDAGOGIC_APPROACHES_UNITCONTENT,
-	PEDAGOGIC_RESOURCES_UNITCONTENT,
-	PERIODE_UNITCONTENT ,  
-	NEW_BIBLIOGRAPHY_UNITCONTENT,
-	DISCIPLINARY_LIBRARY_UNITCONTENT,
-	SERVICES_OF_SUPPORT_TO_STUDY_UNITCONTENT
-	
-    };
-
-    /*
-     * , EVALUATION_INSTRUMENT , LAB_SESSION , WEEK_LESSON , DAY_SEMINAR , THEME
-     * , FACPROGIDENT , COURSEIDENT , COURSEOFFICIALDESCRIPTION ,
-     * COURSE_IN_CURRICULUM , COURSESCHEDULEPLACE , COURSEINTRO ,
-     * COURSE_OBJECTIVES , COURSE_SKILLS , PEDAGOGICAL_APPROACH ,
-     * PEDAGOGICAL_APPROACH_SPECIFIC , ASSESMENTDESCRIPTION , PLAGIARISM ,
-     * LECTURE_TEACHING_ACTIVITY , LECTURE_LEARNING_ACTIVITY ,
-     * THEME_TEACHING_ACTIVITY , THEME_LEARNING_ACTIVITY , BIBLIOGRAPHY ,
-     * THEMATIC_BIBLIOGRAPHY , LEARNING_SUPPORT_SERVICES ,
-     * LECTURE_CONTEXT_SKILLS , ACTIVITY
-     */
-
-    /**
-     * @return string array of types
-     */
-    public static final String[] getTypes() {
-	return types;
-    }
-
-    /**
-     * @return List of types
-     */
-    public static final List<String> getTypesList() {
-	return Arrays.asList(types);
-    }
 }
