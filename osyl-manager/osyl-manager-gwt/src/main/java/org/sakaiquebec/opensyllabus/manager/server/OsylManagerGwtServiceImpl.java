@@ -154,4 +154,8 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	return osylManagerServices.getOsylManagerService().getCoAndSiteInfo();
     }
 
+    public void publish(String siteId) throws Exception {
+	//TODO osylManagerServices.getOsylPublishService().publish(, co);
+    }
+
 }

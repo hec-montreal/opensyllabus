@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
-import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -43,7 +42,8 @@ public interface OsylManagerGwtService extends RemoteService {
      * @param siteTitle
      * @return
      */
-    public String createSite(String siteTitle, String configId, String lang) throws Exception;
+    public String createSite(String siteTitle, String configId, String lang)
+	    throws Exception;
 
     public Map<String, String> getOsylConfigs();
 
@@ -54,7 +54,7 @@ public interface OsylManagerGwtService extends RemoteService {
      * @param siteId
      */
     public void importData(String xmlReference, String siteId);
-    
+
     public String getOsylPackage(String siteId);
 
     public Map<String, String> getOsylSites(List<String> siteIds);
@@ -64,13 +64,14 @@ public interface OsylManagerGwtService extends RemoteService {
     public void associate(String siteId, String parentId) throws Exception;
 
     public void dissociate(String siteId, String parentId) throws Exception;
-    
-    public void associateToCM (String courseSectionId, String siteId) throws Exception;
-    
+
+    public void associateToCM(String courseSectionId, String siteId)
+	    throws Exception;
+
     public void dissociateFromCM(String siteId) throws Exception;
-    
-    public List<CMCourse> getCMCourses() ;
-    
+
+    public List<CMCourse> getCMCourses();
+
     /**
      * Retrieve all the informations of the specified site and the course
      * outline it contains. The information is saved in a POJO.
@@ -88,6 +89,6 @@ public interface OsylManagerGwtService extends RemoteService {
      */
     public List<COSite> getCoAndSiteInfo();
 
+    public void publish(String siteId) throws Exception;
 
- 
 }

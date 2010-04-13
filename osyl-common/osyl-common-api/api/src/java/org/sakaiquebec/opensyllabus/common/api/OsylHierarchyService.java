@@ -20,7 +20,6 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.common.api;
 
-import java.io.File;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.common.dao.CORelation;

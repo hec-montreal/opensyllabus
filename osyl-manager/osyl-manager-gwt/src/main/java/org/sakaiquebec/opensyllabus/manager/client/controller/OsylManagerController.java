@@ -231,6 +231,10 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	OsylManagerRPCController.getInstance().dissociateFromCM(siteId, callback);
     }
     
+    public void publish(String siteId, AsyncCallback<Void> callback){
+	OsylManagerRPCController.getInstance().publish(siteId,callback);
+    }
+    
     public Map<String, String> getCMCourses() {
 	return coursesMap;
     }

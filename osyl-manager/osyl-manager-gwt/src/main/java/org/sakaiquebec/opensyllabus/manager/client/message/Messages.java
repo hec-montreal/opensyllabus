@@ -219,6 +219,10 @@ public interface Messages extends ConstantsWithLookup {
     String associateForm_confirmation();
 
     String cminfoView_section();
+
+    String publishAction_publish_error();
+
+    String publishAction_publish_error_detail();
     
     
 

@@ -161,4 +161,8 @@ public class OsylManagerRPCController {
 	serviceProxy.getCoAndSiteInfo(callback);
     }
 
+    public void publish(String siteId, AsyncCallback<Void> callback) {
+	serviceProxy.publish(siteId,callback);
+    }
+
 }

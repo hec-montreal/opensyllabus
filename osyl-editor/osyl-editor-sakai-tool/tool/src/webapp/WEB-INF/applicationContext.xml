@@ -14,7 +14,7 @@
 		<property name="osylSiteService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />			
 		<property name="osylPublishService"
-			ref="org.sakaiquebec.opensyllabus.api.OsylPublishService" />
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylPublishService" />
 		<property name="osylSecurityService" 
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
 		<property name="osylConfigService" 

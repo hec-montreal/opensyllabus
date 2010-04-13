@@ -20,6 +20,7 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
@@ -27,13 +28,65 @@ import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAct
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
 public class PublishAction extends OsylManagerAbstractAction {
+
+    private static List<String> messages = new ArrayList<String>();
+
+    private static List<COSite> coSites;
+
+    private static int asynCB_return = 0;
+
+    private static int asynCB_OK = 0;
+
+    private class PublishAsynCallBack implements AsyncCallback<Void> {
+
+	private String siteId;
+
+	public PublishAsynCallBack(String siteId) {
+	    super();
+	    this.siteId = siteId;
+	}
+
+	public void onFailure(Throwable caught) {
+	    PublishAction.messages.add(siteId);
+	    responseReceive();
+	}
+
+	public void onSuccess(Void result) {
+	    PublishAction.asynCB_OK++;
+	    responseReceive();
+	}
+
+	private void responseReceive() {
+	    PublishAction.asynCB_return++;
+	    if (PublishAction.asynCB_return == PublishAction.coSites.size()) {
+		if (PublishAction.asynCB_OK != PublishAction.coSites.size()) {
+		    String msg =
+			    controller.getMessages()
+				    .publishAction_publish_error()
+				    + "\n";
+		    for (String id : messages) {
+			msg +=
+				id
+					+ controller
+						.getMessages()
+						.publishAction_publish_error_detail()
+					+ "\n";
+		    }
+		    Window.alert(msg);
+		}
+		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
+			OsylManagerEvent.SITE_INFO_CHANGE));
+	    }
+	}
+
+    }
 
     public PublishAction(OsylManagerController controller) {
 	super(controller, "mainView_action_publish");
@@ -46,8 +99,15 @@ public class PublishAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(List<COSite> siteIds) {
+//	coSites = siteIds;
+//	asynCB_return = 0;
+//	asynCB_OK = 0;
+//	messages = new ArrayList<String>();
+//	for (COSite coSite : siteIds) {
+//	    controller.publish(coSite.getSiteId(), new PublishAsynCallBack(
+//		    coSite.getSiteId()));
+//	}
 	Window.alert("publish");
     }
 
 }
-

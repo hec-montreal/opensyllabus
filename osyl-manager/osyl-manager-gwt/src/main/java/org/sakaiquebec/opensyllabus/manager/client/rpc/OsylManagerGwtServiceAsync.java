@@ -78,10 +78,9 @@ public interface OsylManagerGwtServiceAsync {
     public void getCMCourses( AsyncCallback<List<CMCourse>> callback) ;
     
     public void getCoAndSiteInfo(String siteId, AsyncCallback<COSite> callback);
-
     
     public void getCoAndSiteInfo(AsyncCallback<List<COSite>> callback);
 
-
+    public void publish(String siteId, AsyncCallback<Void> callback);
     
 }

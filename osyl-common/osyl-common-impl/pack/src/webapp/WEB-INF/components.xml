@@ -63,6 +63,31 @@
 		<property name="coRelationDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
 	</bean>
+	
+	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylPublishService"
+		class="org.sakaiquebec.opensyllabus.common.impl.OsylPublishServiceImpl"
+		init-method="init" singleton="true">
+		
+		<!-- Osyl dependencies -->
+		<property name="osylSiteService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
+		<property name="resourceDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
+		<property name="configDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
+		<property name="securityService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
+		<property name="configService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylConfigService" />
+		<property name="coRelationDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />		
+
+		<!-- Sakai dependencies -->
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+		<!-- <property name="toolManager"
+			ref="org.sakaiproject.tool.api.ToolManager" /> -->
+	</bean>
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylSiteService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylSiteServiceImpl"

@@ -158,7 +158,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	    new TreeMap<String, String>();
 	try {
 	    osylServices.getOsylPublishService().publish(webappDir,
-		    getNonFusionnedSerializedCourseOutline());
+		    osylServices.getOsylSiteService().getCurrentSiteId());
 	    // change publication date
 	    COSerialized coSerialized =
 		    getNonFusionnedSerializedCourseOutline();

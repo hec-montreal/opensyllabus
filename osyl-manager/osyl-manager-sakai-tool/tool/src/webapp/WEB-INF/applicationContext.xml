@@ -14,5 +14,7 @@
 				ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
 			<property name="osylConfigService"
 				ref="org.sakaiquebec.opensyllabus.common.api.OsylConfigService" />
+			<property name="osylPublishService"
+				ref="org.sakaiquebec.opensyllabus.common.api.OsylPublishService" />
 		</bean>
 </beans>

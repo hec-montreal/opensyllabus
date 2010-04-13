@@ -18,7 +18,7 @@
  *
  ******************************************************************************/
 
-package org.sakaiquebec.opensyllabus.api;
+package org.sakaiquebec.opensyllabus.common.api;
 
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
@@ -75,7 +75,7 @@ public interface OsylPublishService {
     /**
      * Publish the actual course plan in the web application directory
      */
-    public void publish(String webappDir, COSerialized co) throws Exception;
+    public void publish(String webappDir, String siteId) throws Exception;
 
     /**
      * Make an xsl transformation of the specified xml for the specified group

@@ -1,4 +1,4 @@
-package org.sakaiquebec.opensyllabus.impl;
+package org.sakaiquebec.opensyllabus.common.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -21,8 +21,8 @@ import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentEntity;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.id.cover.IdManager;
-import org.sakaiquebec.opensyllabus.api.OsylPublishService;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
+import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
@@ -209,9 +209,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * 
      * @param String webapp dir (absolute pathname !?)
      */
-    public void publish(String webappDir, COSerialized co) throws Exception {
-
-	log.info("Publishing course outline for site [" + co.getTitle() + "]");
+    public void publish(String webappDir, String siteId) throws Exception {
 
 	SecurityService.pushAdvisor(new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
@@ -220,6 +218,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    }
 	});
 
+	COSerialized co = osylSiteService.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
+	log.info("Publishing course outline for site [" + co.getTitle() + "]");
 	COModeledServer coModeled = new COModeledServer(co);
 
 	// PRE-PUBLICATION
@@ -254,14 +254,14 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	Map<String, String> documentSecurityMap =
 		coModeled.getDocumentSecurityMap();
 
-	publish(co.getSiteId(), webappDir);
+	publication(co.getSiteId(), webappDir);
 
 	copyWorkToPublish(documentSecurityMap);
 
 	SecurityService.clearAdvisors();
     }
 
-    private void publish(String siteId, String webappDir) throws Exception {
+    private void publication(String siteId, String webappDir) throws Exception {
 
 	COSerialized hierarchyFussionedCO =
 		osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
@@ -293,7 +293,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    for (Iterator<CORelation> coRelationIter =
 		    coRelationList.iterator(); coRelationIter.hasNext();) {
 		String childId = coRelationIter.next().getChild();
-		publish(childId, webappDir);
+		publication(childId, webappDir);
 	    }
 	} catch (Exception e) {
 	    e.printStackTrace();
