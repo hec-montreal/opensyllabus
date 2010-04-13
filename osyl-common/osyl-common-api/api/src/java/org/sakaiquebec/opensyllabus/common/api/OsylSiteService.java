@@ -1,5 +1,7 @@
 package org.sakaiquebec.opensyllabus.common.api;
 
+import java.util.Map;
+
 import org.sakaiproject.entity.api.Entity;
 import org.sakaiproject.entity.api.EntityProducer;
 import org.sakaiproject.exception.IdUnusedException;
@@ -230,7 +232,7 @@ public interface OsylSiteService extends EntityProducer{
 	 * @param xmlData
 	 * @return
 	 */
-	public COSerialized importDataInCO(String xmlData, String siteId);
+	public COSerialized importDataInCO(String xmlData, String siteId, Map<String,String> filenameChangesMap);
 
 	public Site getSite(String siteId) throws IdUnusedException;
 	

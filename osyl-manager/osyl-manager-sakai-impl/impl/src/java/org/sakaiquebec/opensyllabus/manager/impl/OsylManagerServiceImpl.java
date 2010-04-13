@@ -426,10 +426,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			    fileName, fileExtension, 3);
 	    newResource.setContent(content);
 	    newResource.setContentType(contentType);
+	    String resourceName = (String) newResource.getProperties().get("DAV:displayname");
 	    contentHostingService.commitResource(newResource, NotificationService.NOTI_NONE);
-
-	    String resourceName = resourceOutputDir + name;
-	    // osylSecurityService.applyPermissions(resourceName, permission);
 	    return resourceName;
 	} catch (ServerOverloadException e) {
 	    e.printStackTrace();
@@ -597,7 +595,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	    xml = writer.toString();
 	    xml = new String(xml.getBytes(), "UTF-8");
-	    osylSiteService.importDataInCO(xml, siteId);
+	    osylSiteService.importDataInCO(xml, siteId, null);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
@@ -627,8 +625,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    osylPackage.unzip(zipTempfile);
 	    String xml = osylPackage.getXml();
 
-	    osylSiteService.importDataInCO(xml, siteId);
-	    importFilesInSite(zipReference, siteId);
+	    Map<String, String> filenameChangesMap =  importFilesInSite(zipReference, siteId);
+	    
+	    osylSiteService.importDataInCO(xml, siteId, filenameChangesMap);
+	    
 	    contentHostingService.removeResource(zipReference);
 	    zipTempfile.delete();
 	} catch (Exception e) {
@@ -1100,10 +1100,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * @param zipReference
      * @param siteId
      */
-    public void importFilesInSite(String zipReference, String siteId) {
-	// TODO: Valider la corrrection apport�e pour la compilation
+    public Map<String, String> importFilesInSite(String zipReference, String siteId) {
 	Map<File, String> fileMap = (Map<File, String>) getImportedFiles();
-
+	Map<String,String> fileNameChangesMap = new HashMap<String, String>();
 	// Vars used to retreive metadata
 	ContentHandler handler = null;
 	Metadata metadata = null;
@@ -1148,18 +1147,19 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		if (CITATION_EXTENSION.equals(fileExtension)) {
 		    // read input stream of file to get properties of citation
 		    addCitations(file, siteId, resourceOutputDir);
-
 		} else {
-		    addRessource(fileNameToUse, inputStream, metadata
+		    String s = addRessource(fileNameToUse, inputStream, metadata
 			    .get(Metadata.CONTENT_TYPE), siteId,
 			    resourceOutputDir);
-		    inputStream.close();
+		    if(!fileNameToUse.equals(s))
+			fileNameChangesMap.put(fileNameToUse,s);
 		}
+		inputStream.close();
 	    } catch (Exception e) {
 		log.error(e);
 	    }
 	}
-
+	return fileNameChangesMap;
     }
 
     /** {@inheritDoc} */

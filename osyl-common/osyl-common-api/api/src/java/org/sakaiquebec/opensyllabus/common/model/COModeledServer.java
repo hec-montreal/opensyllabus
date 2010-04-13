@@ -1215,31 +1215,45 @@ public class COModeledServer {
 	return hasChild;
     }
 
-    public void resetXML() {
-	resetXML(this.getModeledContent());
+    public void resetXML(Map<String, String> filenameChangesMap) {
+	resetXML(this.getModeledContent(), filenameChangesMap);
     }
 
-    private void resetXML(COElementAbstract element) {
+    private void resetXML(COElementAbstract element,
+	    Map<String, String> filenameChangesMap) {
 	element.setId(UUID.uuid());
 	element.setIdParent(null);
 	if (element.isCOContentResourceProxy()) {
-	    changeDocumentsUrlsToFitNewSiteName((COContentResourceProxy)element);
+	    changeDocumentsUrlsToFitNewSiteName(
+		    (COContentResourceProxy) element, filenameChangesMap);
 	} else {
 	    for (int i = 0; i < element.getChildrens().size(); i++) {
 		COElementAbstract childElement =
 			(COElementAbstract) element.getChildrens().get(i);
-		resetXML(childElement);
+		resetXML(childElement, filenameChangesMap);
 	    }
 	}
     }
-    
-    private void changeDocumentsUrlsToFitNewSiteName(COContentResourceProxy cocrp){
-	String uri = cocrp.getResource().getProperty(COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_URI);
-	if(uri!=null && !uri.equals("")){
-	    String oldSiteName = uri.substring(uri.indexOf("group/")+6);
+
+    private void changeDocumentsUrlsToFitNewSiteName(
+	    COContentResourceProxy cocrp, Map<String, String> filenameChangesMap) {
+	String uri =
+		cocrp.getResource().getProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_URI);
+	if (uri != null && !uri.equals("")) {
+	    String oldSiteName = uri.substring(uri.indexOf("group/") + 6);
 	    oldSiteName = oldSiteName.substring(0, oldSiteName.indexOf("/"));
-	    uri = changeDocumentsUrls(uri, oldSiteName, coSerialized.getSiteId());
-	    cocrp.getResource().addProperty(COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_URI, uri);
+	    uri =
+		    changeDocumentsUrls(uri, oldSiteName, coSerialized
+			    .getSiteId());
+	    if (filenameChangesMap != null) {
+		String filename = uri.substring(uri.lastIndexOf("/")+1);
+		String newFilename = filenameChangesMap.get(filename);
+		if (newFilename != null)
+		    uri = changeDocumentsUrls(uri, filename, newFilename);
+	    }
+	    cocrp.getResource().addProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_URI, uri);
 	}
     }
 
