@@ -684,7 +684,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		// reinitilaisation des uuids
 		COModeledServer coModeled = new COModeledServer(thisCo);
 		coModeled.XML2Model();
-		coModeled.resetUuid();
+		coModeled.resetXML();
 		coModeled.model2XML();
 		thisCo.setContent(coModeled.getSerializedContent());
 
@@ -696,7 +696,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		// reinitilaisation des uuids
 		COModeledServer coModeled = new COModeledServer(thisCo);
 		coModeled.XML2Model();
-		coModeled.resetUuid();
+		coModeled.resetXML();
 		coModeled.model2XML();
 		thisCo.setContent(coModeled.getSerializedContent());
 
@@ -801,7 +801,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		co.setContent(xmlData);
 		COModeledServer coModeledServer = new COModeledServer(co);
 		coModeledServer.XML2Model();
-		coModeledServer.resetUuid();
+		coModeledServer.resetXML();
 		coModeledServer.model2XML();
 		co.setContent(coModeledServer.getSerializedContent());
 		resourceDao.createOrUpdateCourseOutline(co);

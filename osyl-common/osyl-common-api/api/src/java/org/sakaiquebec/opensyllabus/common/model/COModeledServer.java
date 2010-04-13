@@ -1215,21 +1215,31 @@ public class COModeledServer {
 	return hasChild;
     }
 
-    public void resetUuid() {
-	resetUuid(this.getModeledContent());
+    public void resetXML() {
+	resetXML(this.getModeledContent());
     }
 
-    private void resetUuid(COElementAbstract element) {
+    private void resetXML(COElementAbstract element) {
 	element.setId(UUID.uuid());
 	element.setIdParent(null);
 	if (element.isCOContentResourceProxy()) {
-	    // Nothing to do
+	    changeDocumentsUrlsToFitNewSiteName((COContentResourceProxy)element);
 	} else {
 	    for (int i = 0; i < element.getChildrens().size(); i++) {
 		COElementAbstract childElement =
 			(COElementAbstract) element.getChildrens().get(i);
-		resetUuid(childElement);
+		resetXML(childElement);
 	    }
+	}
+    }
+    
+    private void changeDocumentsUrlsToFitNewSiteName(COContentResourceProxy cocrp){
+	String uri = cocrp.getResource().getProperty(COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_URI);
+	if(uri!=null && !uri.equals("")){
+	    String oldSiteName = uri.substring(uri.indexOf("group/")+6);
+	    oldSiteName = oldSiteName.substring(0, oldSiteName.indexOf("/"));
+	    uri = changeDocumentsUrls(uri, oldSiteName, coSerialized.getSiteId());
+	    cocrp.getResource().addProperty(COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_URI, uri);
 	}
     }
 
