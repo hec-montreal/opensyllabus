@@ -155,7 +155,8 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     }
 
     public void publish(String siteId) throws Exception {
-	//TODO osylManagerServices.getOsylPublishService().publish(, co);
+	String webappDir = getServletContext().getRealPath("/");
+	osylManagerServices.getOsylPublishService().publish(webappDir, siteId);
     }
 
 }

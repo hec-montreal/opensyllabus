@@ -218,7 +218,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    }
 	});
 
-	COSerialized co = osylSiteService.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
+	COSerialized co =
+		osylSiteService
+			.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
 	log.info("Publishing course outline for site [" + co.getTitle() + "]");
 	COModeledServer coModeled = new COModeledServer(co);
 
@@ -256,7 +258,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	publication(co.getSiteId(), webappDir);
 
-	copyWorkToPublish(documentSecurityMap);
+	copyWorkToPublish(siteId, documentSecurityMap);
 
 	SecurityService.clearAdvisors();
     }
@@ -287,9 +289,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     private void publishChild(String siteId, String webappDir) {
 	List<CORelation> coRelationList;
 	try {
-	    coRelationList =
-		    coRelationDao
-			    .getCourseOutlineChildren(siteId);
+	    coRelationList = coRelationDao.getCourseOutlineChildren(siteId);
 	    for (Iterator<CORelation> coRelationIter =
 		    coRelationList.iterator(); coRelationIter.hasNext();) {
 		String childId = coRelationIter.next().getChild();
@@ -310,13 +310,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     /**
      * Copies work's folder content to publish folder.
      */
-    private void copyWorkToPublish(Map<String, String> documentSecurityMap)
-	    throws Exception {
-	String currentSiteRef = osylSiteService.getCurrentSiteReference();
-	String id_work = (currentSiteRef + WORK_DIRECTORY + "/").substring(8);
-	String id_publish =
-		(currentSiteRef + PUBLISH_DIRECTORY + "/").substring(8);
-
+    private void copyWorkToPublish(String siteId,
+	    Map<String, String> documentSecurityMap) throws Exception {
+	String val2 = contentHostingService.getSiteCollection(siteId);
+	String refString = contentHostingService.getReference(val2).substring(8);
+	String id_work = (refString + WORK_DIRECTORY + "/");
+	String id_publish = (refString + PUBLISH_DIRECTORY + "/");
 	try {
 	    ContentCollection workContent =
 		    contentHostingService.getCollection(id_work);
@@ -338,7 +337,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    contentHostingService.removeResource(thisEntityRef);
 	    }
 
-	    copyWorkToPublish(workContent, documentSecurityMap);
+	    copyWorkToPublish(refString, workContent, documentSecurityMap);
 
 	} catch (Exception e) {
 	    log.error(
@@ -349,10 +348,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     }
 
     @SuppressWarnings("unchecked")
-    private void copyWorkToPublish(ContentCollection directory,
+    private void copyWorkToPublish(String siteRef, ContentCollection directory,
 	    Map<String, String> documentSecurityMap) throws Exception {
-	String currentSiteRef =
-		osylSiteService.getCurrentSiteReference().substring(8);
+	
 	List<ContentEntity> members = directory.getMemberResources();
 	for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
 		.hasNext();) {
@@ -361,7 +359,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	    if (next.isCollection()) {
 		ContentCollection collection = (ContentCollection) next;
-		copyWorkToPublish(collection, documentSecurityMap);
+		copyWorkToPublish(siteRef, collection, documentSecurityMap);
 	    } else {
 		String permission = documentSecurityMap.get(thisEntityRef);
 		if (permission != null) {
@@ -369,11 +367,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    String this_work_id = directory.getId();
 
 		    String this_publish_directory =
-			    currentSiteRef
+			    siteRef
 				    + PUBLISH_DIRECTORY
 				    + this_work_id.substring(this_work_id
-					    .lastIndexOf(currentSiteRef)
-					    + currentSiteRef.length()
+					    .lastIndexOf(siteRef)
+					    + siteRef.length()
 					    + WORK_DIRECTORY.length(),
 					    this_work_id.length());
 

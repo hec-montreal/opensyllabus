@@ -99,15 +99,14 @@ public class PublishAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(List<COSite> siteIds) {
-//	coSites = siteIds;
-//	asynCB_return = 0;
-//	asynCB_OK = 0;
-//	messages = new ArrayList<String>();
-//	for (COSite coSite : siteIds) {
-//	    controller.publish(coSite.getSiteId(), new PublishAsynCallBack(
-//		    coSite.getSiteId()));
-//	}
-	Window.alert("publish");
+	coSites = siteIds;
+	asynCB_return = 0;
+	asynCB_OK = 0;
+	messages = new ArrayList<String>();
+	for (COSite coSite : siteIds) {
+	    controller.publish(coSite.getSiteId(), new PublishAsynCallBack(
+		    coSite.getSiteId()));
+	}
     }
 
 }
