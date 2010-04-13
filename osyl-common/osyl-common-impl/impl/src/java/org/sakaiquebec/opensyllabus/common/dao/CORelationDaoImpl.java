@@ -130,6 +130,7 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 	}
 
 	/** {@inheritDoc} */
+	@SuppressWarnings("unchecked")
 	public List<CORelation> getAllLinkedCourseOutlines() {
 		List<CORelation> loadAll = getHibernateTemplate().loadAll(
 				CORelation.class);
@@ -148,10 +149,10 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 		return descendants;
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<CORelation> getCORelationDescendants(String coId,
 			List<CORelation> allDescendants) throws Exception {
 		List<CORelation> descendants = null;
-		CORelation relation = null;
 		if (coId == null)
 			throw new IllegalArgumentException();
 		try {
@@ -160,9 +161,6 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 
 			if (descendants != null) {
 				allDescendants.addAll(descendants);
-				for (int i = 0; i < descendants.size(); i++) {
-					relation = descendants.get(i);
-				}
 				getCORelationDescendants(coId, allDescendants);
 			} else
 				return allDescendants;
@@ -186,6 +184,7 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 		return ancestors;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<CORelation> getCourseOutlineAncestors(String coId,
 			List<CORelation> allAncestors) throws Exception {
 		List<CORelation> ancestors = null;

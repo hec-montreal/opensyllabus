@@ -160,6 +160,7 @@ public class OsylHierarchyServiceImpl implements OsylHierarchyService {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public void addUsersWithChildRole(String parentSiteId, String childSiteId) {
 		// We retrieve all the users in the child site
 		Set<String> childSiteUsers = null;
@@ -224,13 +225,13 @@ public class OsylHierarchyServiceImpl implements OsylHierarchyService {
 		// performed
 		List<CORelation> ancestors = coRelationDao
 				.getCourseOutlineAncestors(childSiteId);
-		CORelation relation = null;
 
 		// We remove all the users that have CHILD role in the parent site
 		removeUsersWithChildRole(ancestors);
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public void removeUsersWithChildRole(List<CORelation> ancestors) {
 
 		CORelation relation = null;

@@ -49,7 +49,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.Parser;
-import org.apache.tika.parser.pdf.PDFParser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzPermissionException;
@@ -426,8 +425,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			    fileName, fileExtension, 3);
 	    newResource.setContent(content);
 	    newResource.setContentType(contentType);
-	    String resourceName = (String) newResource.getProperties().get("DAV:displayname");
-	    contentHostingService.commitResource(newResource, NotificationService.NOTI_NONE);
+	    String resourceName =
+		    (String) newResource.getProperties().get("DAV:displayname");
+	    contentHostingService.commitResource(newResource,
+		    NotificationService.NOTI_NONE);
 	    return resourceName;
 	} catch (ServerOverloadException e) {
 	    e.printStackTrace();
@@ -625,10 +626,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    osylPackage.unzip(zipTempfile);
 	    String xml = osylPackage.getXml();
 
-	    Map<String, String> filenameChangesMap =  importFilesInSite(zipReference, siteId);
-	    
+	    Map<String, String> filenameChangesMap =
+		    importFilesInSite(zipReference, siteId);
+
 	    osylSiteService.importDataInCO(xml, siteId, filenameChangesMap);
-	    
+
 	    contentHostingService.removeResource(zipReference);
 	    zipTempfile.delete();
 	} catch (Exception e) {
@@ -979,7 +981,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	osylSiteService.dissociate(siteId, parentId);
     }
 
-    public void associateToCM(String courseSectionId, String siteId) throws Exception{
+    public void associateToCM(String courseSectionId, String siteId)
+	    throws Exception {
 	// TODO: est-ce qu'on change le nom du site après que le lien soit créé
 
 	if (siteId != null) {
@@ -987,31 +990,31 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    // }
 	    // // We add the site properties
 	    // if (added) {
-		Site site = siteService.getSite(siteId);
-		ResourcePropertiesEdit rp = site.getPropertiesEdit();
-		Section courseSection =
-			courseManagementService.getSection(courseSectionId);
-		CourseOffering courseOff =
-			courseManagementService.getCourseOffering(courseSection
-				.getCourseOfferingEid());
-		AcademicSession term = courseOff.getAcademicSession();
+	    Site site = siteService.getSite(siteId);
+	    ResourcePropertiesEdit rp = site.getPropertiesEdit();
+	    Section courseSection =
+		    courseManagementService.getSection(courseSectionId);
+	    CourseOffering courseOff =
+		    courseManagementService.getCourseOffering(courseSection
+			    .getCourseOfferingEid());
+	    AcademicSession term = courseOff.getAcademicSession();
 
-		rp.addProperty(PROP_SITE_TERM, term.getTitle());
-		rp.addProperty(PROP_SITE_TERM_EID, term.getEid());
+	    rp.addProperty(PROP_SITE_TERM, term.getTitle());
+	    rp.addProperty(PROP_SITE_TERM_EID, term.getEid());
 
-		site.setProviderGroupId(courseSectionId);
-		siteService.save(site);
+	    site.setProviderGroupId(courseSectionId);
+	    siteService.save(site);
 	}
     }
-    
-    public void dissociateFromCM(String siteId) throws Exception{
-	if(siteId!=null){
-		Site site = siteService.getSite(siteId);
-		ResourcePropertiesEdit rp = site.getPropertiesEdit();
-		rp.addProperty(PROP_SITE_TERM, null);
-		rp.addProperty(PROP_SITE_TERM_EID, null);
-		site.setProviderGroupId(null);
-		siteService.save(site);
+
+    public void dissociateFromCM(String siteId) throws Exception {
+	if (siteId != null) {
+	    Site site = siteService.getSite(siteId);
+	    ResourcePropertiesEdit rp = site.getPropertiesEdit();
+	    rp.addProperty(PROP_SITE_TERM, null);
+	    rp.addProperty(PROP_SITE_TERM_EID, null);
+	    site.setProviderGroupId(null);
+	    siteService.save(site);
 	}
     }
 
@@ -1039,7 +1042,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			courseManagementService.getSections(courseOff.getEid());
 		for (Iterator<Section> cSs = sections.iterator(); cSs.hasNext();) {
 		    courseS = cSs.next();
-		    String courseTitle = courseManagementService.getCanonicalCourse(courseOff.getCanonicalCourseEid()).getTitle();
+		    String courseTitle =
+			    courseManagementService.getCanonicalCourse(
+				    courseOff.getCanonicalCourseEid())
+				    .getTitle();
 		    String courseSId = courseS.getEid();
 		    String session = courseOff.getAcademicSession().getTitle();
 		    String sigle = courseOff.getCanonicalCourseEid();
@@ -1048,7 +1054,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 				    courseSId.length());
 
 		    String instructorsString = "";
-		    int studentNumber=-1;
+		    int studentNumber = -1;
 		    EnrollmentSet enrollmentSet = courseS.getEnrollmentSet();
 		    if (enrollmentSet != null) {
 			// Retrieve official instructors
@@ -1058,7 +1064,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			String name = null;
 			for (String instructor : instructors) {
 			    try {
-				user = UserDirectoryService.getUserByEid(instructor);
+				user =
+					UserDirectoryService
+						.getUserByEid(instructor);
 				name = user.getDisplayName();
 				instructorsString += name + " & ";
 			    } catch (UserNotDefinedException e) {
@@ -1100,9 +1108,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * @param zipReference
      * @param siteId
      */
-    public Map<String, String> importFilesInSite(String zipReference, String siteId) {
+    public Map<String, String> importFilesInSite(String zipReference,
+	    String siteId) {
 	Map<File, String> fileMap = (Map<File, String>) getImportedFiles();
-	Map<String,String> fileNameChangesMap = new HashMap<String, String>();
+	Map<String, String> fileNameChangesMap = new HashMap<String, String>();
 	// Vars used to retreive metadata
 	ContentHandler handler = null;
 	Metadata metadata = null;
@@ -1138,21 +1147,23 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		metadata.set(Metadata.RESOURCE_NAME_KEY, file.getName());
 		parser = new AutoDetectParser();
 		parser.parse(inputStream, handler, metadata);
-		
-		//We need to close the inputstream and rebuild it after the parsing here, 
-		//otherwise the inputstream in unusable
+
+		// We need to close the inputstream and rebuild it after the
+		// parsing here,
+		// otherwise the inputstream in unusable
 		inputStream.close();
 		inputStream = new FileInputStream(file);
-		
+
 		if (CITATION_EXTENSION.equals(fileExtension)) {
 		    // read input stream of file to get properties of citation
 		    addCitations(file, siteId, resourceOutputDir);
 		} else {
-		    String s = addRessource(fileNameToUse, inputStream, metadata
-			    .get(Metadata.CONTENT_TYPE), siteId,
-			    resourceOutputDir);
-		    if(!fileNameToUse.equals(s))
-			fileNameChangesMap.put(fileNameToUse,s);
+		    String s =
+			    addRessource(fileNameToUse, inputStream, metadata
+				    .get(Metadata.CONTENT_TYPE), siteId,
+				    resourceOutputDir);
+		    if (!fileNameToUse.equals(s))
+			fileNameChangesMap.put(fileNameToUse, s);
 		}
 		inputStream.close();
 	    } catch (Exception e) {
@@ -1202,7 +1213,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    String name = null;
 		    for (String instructor : instructors) {
 			try {
-			    user = UserDirectoryService.getUserByEid(instructor);
+			    user =
+				    UserDirectoryService
+					    .getUserByEid(instructor);
 			    name = user.getDisplayName();
 			    info.addCourseInstructor(name);
 			} catch (UserNotDefinedException e) {
