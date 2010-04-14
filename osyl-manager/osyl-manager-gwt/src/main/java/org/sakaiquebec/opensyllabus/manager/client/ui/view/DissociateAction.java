@@ -68,8 +68,9 @@ public class DissociateAction extends OsylManagerAbstractAction {
 	private void responseReceive() {
 	    DissociateAction.asynCB_return++;
 	    if (DissociateAction.asynCB_return == DissociateAction.coSites.size()) {
+		String msg="";
 		if (DissociateAction.asynCB_OK != DissociateAction.coSites.size()) {
-		    String msg =
+		    msg =
 			    controller.getMessages()
 				    .dissociateAction_dissociate_error()
 				    + "\n";
@@ -81,10 +82,15 @@ public class DissociateAction extends OsylManagerAbstractAction {
 						.dissociateAction_dissociate_error_detail()
 					+ "\n";
 		    }
-		    Window.alert(msg);
+		    
+		}else{
+		    msg =
+			    controller.getMessages()
+				    .dissociateAction_dissociate_ok();
 		}
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
+		Window.alert(msg);
 	    }
 	}
 

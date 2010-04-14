@@ -66,8 +66,9 @@ public class PublishAction extends OsylManagerAbstractAction {
 	private void responseReceive() {
 	    PublishAction.asynCB_return++;
 	    if (PublishAction.asynCB_return == PublishAction.coSites.size()) {
+		String msg="";
 		if (PublishAction.asynCB_OK != PublishAction.coSites.size()) {
-		    String msg =
+		    msg =
 			    controller.getMessages()
 				    .publishAction_publish_error()
 				    + "\n";
@@ -79,10 +80,15 @@ public class PublishAction extends OsylManagerAbstractAction {
 						.publishAction_publish_error_detail()
 					+ "\n";
 		    }
-		    Window.alert(msg);
+		    
+		}else{
+		    msg =
+			    controller.getMessages()
+				    .publishAction_publish_ok();
 		}
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
+		Window.alert(msg);
 	    }
 	}
 

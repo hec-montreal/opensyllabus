@@ -66,8 +66,9 @@ public class UnattachAction extends OsylManagerAbstractAction {
 	private void responseReceive() {
 	    UnattachAction.asynCB_return++;
 	    if (UnattachAction.asynCB_return == UnattachAction.coSites.size()) {
+		String msg="";
 		if (UnattachAction.asynCB_OK != UnattachAction.coSites.size()) {
-		    String msg =
+		    msg =
 			    controller.getMessages()
 				    .unattachAction_unattach_error()
 				    + "\n";
@@ -79,10 +80,15 @@ public class UnattachAction extends OsylManagerAbstractAction {
 						.unattachAction_unattach_error_detail()
 					+ "\n";
 		    }
-		    Window.alert(msg);
+		    
+		}else{
+		    msg =
+			    controller.getMessages()
+				    .unattachAction_unattach_ok();
 		}
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
+		Window.alert(msg);
 	    }
 	}
 

@@ -191,6 +191,8 @@ public interface Messages extends ConstantsWithLookup {
     String unattachAction_unattach_error();
 
     String unattachAction_unattach_error_detail();
+    
+    String unattachAction_unattach_ok();
 
     String cminfoView_label();
 
@@ -215,6 +217,8 @@ public interface Messages extends ConstantsWithLookup {
     String dissociateAction_dissociate_error();
     
     String dissociateAction_dissociate_error_detail();
+    
+    String dissociateAction_dissociate_ok();
 
     String associateForm_confirmation();
 
@@ -223,6 +227,12 @@ public interface Messages extends ConstantsWithLookup {
     String publishAction_publish_error();
 
     String publishAction_publish_error_detail();
+
+    String publishAction_publish_ok();
+
+    
+
+    
     
     
 
