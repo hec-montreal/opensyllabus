@@ -635,6 +635,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    zipTempfile.delete();
 	} catch (Exception e) {
 	    log.error(e);
+	    e.printStackTrace();
 	}
 
     }
@@ -892,6 +893,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    retrieveFiles(zos, workContent, resourceDir);
 	} catch (Exception e) {
 	    log.error(e);
+	    e.printStackTrace();
 	    throw new Exception("Cannot retrieve files in site for zipping", e);
 	}
 	zos.close();
@@ -1127,6 +1129,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    mkdirCollection(resourceOutputDir, WORK_DIRECTORY);
 	} catch (Exception e1) {
 	    log.error(e1.getMessage());
+	    e1.printStackTrace();
 	}
 
 	Set<File> files = fileMap.keySet();
@@ -1168,6 +1171,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		inputStream.close();
 	    } catch (Exception e) {
 		log.error(e);
+		e.printStackTrace();
 	    }
 	}
 	return fileNameChangesMap;
@@ -1186,6 +1190,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	} catch (IdUnusedException e) {
 	    log.error(e.getMessage());
+	    e.printStackTrace();
 	}
 
 	if (site != null) {
@@ -1259,6 +1264,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		parentSite = osylSiteService.getParent(siteId);
 	    } catch (Exception e) {
 		log.error(e.getMessage());
+		e.printStackTrace();
 	    }
 
 	    info.setParentSite(parentSite);
