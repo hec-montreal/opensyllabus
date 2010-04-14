@@ -55,6 +55,7 @@
 .gwt-MenuBar-horizontal {
 	cursor:default;
 	background:#d6dbdf;
+	background:#transparent;
 	position:relative;
 	margin:0 -2px 0;
 	overflow:visible;
@@ -199,7 +200,7 @@
 /*TreeView Header */
 .Osyl-TreeView-Header {
 	font:bold 15px Arial, Verdana, sans-serif;
-	color:#878A8C;
+	color:#76787a;
 	padding:14px 0 8px 35px;
 	background:transparent url(images/tree_logo.png) no-repeat 12px 14px;
 }
@@ -560,31 +561,55 @@
 
 .Osyl-UnitView-HtmlViewer {width:100%}
 
-.Osyl-UnitView-LvlReq .Osyl-UnitView-TextLvlReq, .Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq {
-	font:bold 12px Arial, Verdana, sans-serif;
-	padding-bottom:2px;
+.Osyl-UnitView-Important .Osyl-UnitView-TextImportant {
+	background:#B6BEC4;
+	padding-left:4px;
+	padding-right:4px;
+	border-left:2px solid #B6BEC4;
+	border-right:2px solid #B6BEC4;
 }
-
-.Osyl-UnitView-LvlReq .Osyl-UnitView-TextLvlReq, .Osyl-UnitView-LvlReq.Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq{border-bottom:1px solid #CCC}
-.Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq {border:none}
-.Osyl-UnitView-IconLvlReq, .Osyl-UnitView-IconImportant {
+.Osyl-UnitView-Important .Osyl-UnitView-TextImportant .gwt-HTML {
+	font:bold 12px Arial, Verdana, sans-serif;
+	color:#FFF;
+}
+.Osyl-UnitView-IconLvlReq {
 	width:24px;
 	text-align:center;
 	vertical-align:top;
 	padding:0 6px 0 0;
 }
-.Osyl-UnitView-IconImportant {padding-top:6px}
-.Osyl-UnitView-LvlReq .Osyl-UnitView-Content, .Osyl-UnitView-Important .Osyl-UnitView-Content {}
+
+.Osyl-UnitView-LvlReq .Osyl-UnitView-Content, .Osyl-UnitView-Important .Osyl-UnitView-Content {
+	background-color:#eff2f4;
+	padding:0 4px;
+}
+.Osyl-UnitView-Important .Osyl-UnitView-Content {
+	border:2px solid #B6BEC4;
+	padding:0 4px;
+}
 
 .Osyl-ResProxView-MetaInfo,
 .Osyl-UnitView-MetaInfo,
 .Osyl-UnitView-SemanticTag {
 	display:block;
-	margin:5px 0 0 30px;
+	margin:0 0 0 30px;
+	padding:5px 0 0 0;
 	font:normal 10px sans-serif, Arial, Verdana;
 	color:#A0A0A0;
 }
-.Osyl-ListItemView-Hyperlink .Osyl-UnitView-MetaInfo {margin:5px 0 0 0}
+.Osyl-ResProxView-MetaInfo-Important,
+.Osyl-UnitView-MetaInfo-Important,
+.Osyl-UnitView-SemanticTag-Important {
+	padding:5px 6px 0 6px;
+}
+
+.Osyl-ResProxView-MetaInfo-Requirement,
+.Osyl-UnitView-MetaInfo-Requirement,
+.Osyl-UnitView-SemanticTag-Requirement {
+	padding:5px 4px 0 4px;
+}
+
+.Osyl-ListItemView-Hyperlink .Osyl-UnitView-MetaInfo {padding:5px 0 0 0}
 .Osyl-UnitView-SemanticTag {margin:0 0 3px 40px}
 
 /* Link in a Content Unit Panel */
@@ -1226,13 +1251,13 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 
 .mosaic-CaptionLayoutPanel .dragdrop-handle {cursor:move}
 .mosaic-WindowPanel .Resize-nw {cursor:nw-resize}
-.mosaic-WindowPanel .Resize-n {cursor:n-resize;background-color:transparent}
+.mosaic-WindowPanel .Resize-n {cursor:n-resize}
 .mosaic-WindowPanel .Resize-ne {cursor:ne-resize}
-.mosaic-WindowPanel .Resize-e {cursor:e-resize;background-color:transparent}
+.mosaic-WindowPanel .Resize-e {cursor:e-resize}
 .mosaic-WindowPanel .Resize-se {cursor:se-resize}
-.mosaic-WindowPanel .Resize-s {cursor:s-resize;background-color:transparent}
+.mosaic-WindowPanel .Resize-s {cursor:s-resize}
 .mosaic-WindowPanel .Resize-sw {cursor:sw-resize}
-.mosaic-WindowPanel .Resize-w {cursor:w-resize;background-color:transparent}
+.mosaic-WindowPanel .Resize-w {cursor:w-resize}
 
 /* ------- */
 

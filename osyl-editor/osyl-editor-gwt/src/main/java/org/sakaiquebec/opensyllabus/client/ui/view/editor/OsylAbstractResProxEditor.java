@@ -40,6 +40,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -379,36 +380,19 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
     protected Image getCurrentRequirementLevelIcon() {
 	Image img = null;
+	String dir = GWT.getModuleBaseURL()+"resources/images/";
 	String reqLevel = getView().getRequirementLevel();
 	if (COPropertiesType.REQ_LEVEL_MANDATORY.equals(reqLevel)) {
-	    img = getOsylImageBundle().iconeObl().createImage();
+	    img = new Image(dir + "mandatory.png");
 	} else if (COPropertiesType.REQ_LEVEL_RECOMMENDED.equals(reqLevel)) {
-	    img = getOsylImageBundle().iconeRec().createImage();
+	    img = new Image(dir + "recommended.png");
 	} else if (COPropertiesType.REQ_LEVEL_COMPLEMENTARY.equals(reqLevel)) {
-	    img = getOsylImageBundle().iconeCompl().createImage();
+	    img = new Image(dir + "complementary.png");
 	}
 	if (img != null)
 	    img.setTitle(getView().getCoMessage(
 		    "MetaInfo.requirement." + reqLevel));
 	return img;
-    }
-
-    protected Image getImportantIcon() {
-	Image img = null;
-	if (getView().isContextImportant()) {
-	    img = getOsylImageBundle().iconeImportant().createImage();
-	    img.setTitle(getView().getCoMessage("MetaInfo.important"));
-	}
-	return img;
-    }
-
-    protected String getLocalizedRequirementLevel() {
-	String reqLev = getView().getRequirementLevel();
-	if (reqLev != null && reqLev != COPropertiesType.REQ_LEVEL_UNDEFINED) {
-	    return getView().getCoMessage(
-		    "MetaInfo.requirement." + getView().getRequirementLevel());
-	} else
-	    return "";
     }
 
     /**
@@ -575,7 +559,9 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
 	String metaInfoLabelStr =
 		getUiMessage("MetaInfo.audience") + ": " + diffusionLevel;
-
+	
+	metaInfoLabel.setStylePrimaryName("Osyl-ResProxView-MetaInfo");
+	
 	if (hasHide) {
 	    String hidden =
 		    (getView().isContextHidden() ? getUiMessage("Global.yes")
@@ -591,6 +577,11 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	    metaInfoLabelStr +=
 		    " | " + getView().getCoMessage("MetaInfo.important") + ": "
 			    + important;
+	    if (getView().isContextImportant()) {
+		metaInfoLabel.addStyleDependentName("Important");
+	    }else{
+		metaInfoLabel.removeStyleDependentName("Important");
+	    }
 	}
 
 	if (hasRequirement) {
@@ -606,13 +597,15 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
 		metaInfoLabelStr +=
 			" | " + requirementLevelLabel + requirementLevel;
-
+		metaInfoLabel.addStyleDependentName("Requirement");
+	    }else{
+		metaInfoLabel.removeStyleDependentName("Requirement");
 	    }
+	}else{
+	    metaInfoLabel.removeStyleDependentName("Requirement");
 	}
+	
 	metaInfoLabel.setText(metaInfoLabelStr);
-
-	metaInfoLabel.setStylePrimaryName("Osyl-ResProxView-MetaInfo");
-
 	return metaInfoLabel;
     }
 

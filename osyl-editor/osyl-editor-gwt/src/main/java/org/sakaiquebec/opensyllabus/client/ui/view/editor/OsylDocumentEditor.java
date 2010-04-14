@@ -188,12 +188,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	setViewerPanel(new FlexTable());
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 
-	if (getView().isContextImportant()) {
-	    getViewerPanel().addStyleName("Osyl-UnitView-Important");
-	}
-
 	Image reqLevelIcon = getCurrentRequirementLevelIcon();
-	if (null != reqLevelIcon) {
+	if (reqLevelIcon != null) {
 	    getViewerPanel().addStyleName("Osyl-UnitView-LvlReq");
 	}
 
@@ -201,16 +197,17 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 0,
 		"Osyl-UnitView-IconLvlReq");
 
-	getViewerPanel().setWidget(0, 1,
-		new HTML(getLocalizedRequirementLevel()));
-	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 1,
-		"Osyl-UnitView-TextLvlReq");
-
-	getViewerPanel().setWidget(1, 0, getImportantIcon());
-	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(1, 0,
-		"Osyl-UnitView-IconImportant");
-	getViewerPanel().setWidget(1, 1, getViewer());
-	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(1, 1,
+	int column = 0;
+	if (getView().isContextImportant()) {
+	    getViewerPanel().addStyleName("Osyl-UnitView-Important");
+	    getViewerPanel().setWidget(0, 1,
+		new HTML(getView().getCoMessage("MetaInfo.important")));
+	    getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 1,
+		"Osyl-UnitView-TextImportant");
+	    column = 1;
+	}
+	getViewerPanel().setWidget(column, 1,getViewer());
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(column, 1,
 		"Osyl-UnitView-Content");
 	getMainPanel().add(getViewerPanel());
 
