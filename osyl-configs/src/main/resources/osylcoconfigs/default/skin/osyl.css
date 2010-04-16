@@ -55,7 +55,7 @@
 .gwt-MenuBar-horizontal {
 	cursor:default;
 	background:#d6dbdf;
-	background:#transparent;
+/*	background:#transparent; */
 	position:relative;
 	margin:0 -2px 0;
 	overflow:visible;
