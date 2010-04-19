@@ -82,9 +82,9 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 	getMainPanel().add(editableTitleLabel);
 	if (getShowTitleOnly() == false) {
 	    // displaying all sub views
-	    List<COElementAbstract> children = null;
-	    children = ((COStructureElement) getModel()).getChildrens();
-	    displayChildren(children);
+	    List<COElementAbstract> childrens = null;
+	    childrens = ((COStructureElement) getModel()).getChildrens();
+	    displayChildrens(childrens);
 	}
     }
 
@@ -95,7 +95,7 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 	return showTitleOnly;
     }
 
-    public void displayChildren(List<COElementAbstract> childrens) {
+    public void displayChildrens(List<COElementAbstract> childrens) {
 	if (childrens == null) {
 	    if (TRACE)
 		Window.alert("OsylCOStructureView 91 : No more children ");
@@ -123,7 +123,7 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 			addListItemView(newCOStructEl);
 		    }
 		    childrens = newCOStructEl.getChildrens();
-		    displayChildren(childrens);
+		    displayChildrens(childrens);
 		} else if (absElement.isCOUnit()) {
 		    if (TRACE)
 			Window

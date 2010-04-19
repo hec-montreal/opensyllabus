@@ -40,6 +40,7 @@ import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.Print;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylLongView;
+import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COConfig;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
@@ -71,7 +72,7 @@ import com.google.gwt.user.client.ui.HTML;
 
 public class OsylToolbarView extends OsylViewableComposite implements
 	FiresSavePushButtonEvents, FiresPublishPushButtonEvents,
-	ViewContextSelectionEventHandler, FiresClosePushButtonEvents {
+	ViewContextSelectionEventHandler, FiresClosePushButtonEvents, UpdateCOStructureElementEventHandler {
 
     private OsylTextToolbar osylToolbar;
 
@@ -455,6 +456,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		} else if (getModel().isCOStructureElement()) {
 		    COStructureElement castedModel =
 			    (COStructureElement) getModel();
+		    castedModel.addEventHandler(this);
 		    // Clear menu list, and set it according to the viewcontext
 		    try {
 			List<COModelInterface> subModels =
@@ -621,5 +623,11 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    List<ClosePushButtonEventHandler> closeEventHandlerList) {
 	this.closeEventHandlerList = closeEventHandlerList;
     }
+
+    public void onUpdateModel(UpdateCOStructureElementEvent event) {
+	refreshView();
+    }
+
+   
 
 }

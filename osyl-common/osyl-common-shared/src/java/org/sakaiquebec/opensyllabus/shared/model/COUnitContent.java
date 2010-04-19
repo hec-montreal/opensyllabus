@@ -140,7 +140,8 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
 	    updateCOUnitContentEventHandler =
 		    new HashSet<UpdateCOUnitContentEventHandler>();
 	}
-	updateCOUnitContentEventHandler.add(handler);
+	if(!updateCOUnitContentEventHandler.contains(handler))
+	    updateCOUnitContentEventHandler.add(handler);
     }
 
     /** {@inheritDoc} */

@@ -26,7 +26,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.shared.events.FiresUpdateCOContentResourceProxyEvents;
@@ -82,13 +81,13 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	super();
 	setClassType(CO_CONTENT_RESOURCE_PROXY_CLASS_TYPE);
 	nestedCOResourceProxies = new ArrayList<COContentResourceProxy>();
-	rubrics=new HashMap<String, COContentRubric>();
+	rubrics = new HashMap<String, COContentRubric>();
     }
 
     public static COContentResourceProxy createDefaultResProxy(
 	    final String type, final OsylConfigMessages osylConfigMessages,
 	    final COElementAbstract parentModel, final String resourceType,
-	    String defaultRubric,String propertyType) {
+	    String defaultRubric, String propertyType) {
 
 	final COContentResourceProxy resProxModel =
 		new COContentResourceProxy();
@@ -106,8 +105,7 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 		    .equalsIgnoreCase(COContentResourceType.TEXT)) {
 		resProxModel.setLabel(osylConfigMessages
 			.getMessage("InsertYourTextHere"));
-	    } else if (resourceType
-		    .equalsIgnoreCase(COContentResourceType.URL)) {
+	    } else if (resourceType.equalsIgnoreCase(COContentResourceType.URL)) {
 		resProxModel.setLabel(osylConfigMessages
 			.getMessage("InsertYourHyperlinkLabelHere"));
 	    } else if (resourceType
@@ -121,7 +119,7 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	    }
 	}
 
-	resProxModel.setRubricType(defaultRubric,propertyType);
+	resProxModel.setRubricType(defaultRubric, propertyType);
 
 	// Default resource
 	final COContentResource resModel =
@@ -197,12 +195,12 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     public void setParent(COUnitContent coContentUnitParent) {
 	super.setParent(coContentUnitParent);
     }
-    
-    public COContentRubric getRubric(String key){
+
+    public COContentRubric getRubric(String key) {
 	return rubrics.get(key);
     }
-    
-    public Map<String, COContentRubric> getRubrics(){
+
+    public Map<String, COContentRubric> getRubrics() {
 	return rubrics;
     }
 
@@ -213,7 +211,7 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 
 	if (rubric != null) {
 	    rubrics.put(rubric.getKey(), rubric);
-	    moveToTheBottomOfTheRubric(rubric.getKey());
+	    moveToTheBottomOfTheRubric();
 	}
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.RUBRIC_UPDATE_EVENT_TYPE);
     }
@@ -264,20 +262,21 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	}
 	return rubricUserDefLabel;
     }
+
     /**
-     * Creates and sets a customize rubric description and send and event, 
-     * except if it is the same as current rubric label in which case it
-     * does nothing.
+     * Creates and sets a customize rubric description and send and event,
+     * except if it is the same as current rubric label in which case it does
+     * nothing.
      * 
      * @param userDefLabel
      */
-    public void setRubricUserDefLabel(String userDefLabel,String key) {
+    public void setRubricUserDefLabel(String userDefLabel, String key) {
 	if (userDefLabel != null) {
 	    if (userDefLabel.equals(getRubricUserDefLabel(key))) {
 		return;
 	    }
 	    getRubric(key).setUserDefLabel(userDefLabel);
-		notifyEventHandlers(UpdateCOContentResourceProxyEvent.RUBRIC_LABEL_UPDATE_EVENT_TYPE);
+	    notifyEventHandlers(UpdateCOContentResourceProxyEvent.RUBRIC_LABEL_UPDATE_EVENT_TYPE);
 	}
     }
 
@@ -330,7 +329,8 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	    updateCOContentResourceProxyEventHandlers =
 		    new HashSet<UpdateCOContentResourceProxyEventHandler>();
 	}
-	updateCOContentResourceProxyEventHandlers.add(handler);
+	if (!updateCOContentResourceProxyEventHandlers.contains(handler))
+	    updateCOContentResourceProxyEventHandlers.add(handler);
     }
 
     /** {@inheritDoc} */
@@ -386,10 +386,11 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     /**
      * {@inheritDoc}
      */
-    public boolean hasSuccessor(String propertyKey) {
+    public boolean hasSuccessor() {
+	String propertyKey = OsylConfigRuler.getInstance().getPropertyType();
 	if (getParent() == null)
 	    return false;
-	int i = getParent().getElementPosition(this,propertyKey);
+	int i = getParent().getElementPosition(this, propertyKey);
 	if (i != -1 && i != 0)
 	    return true;
 	else
@@ -399,10 +400,11 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     /**
      * {@inheritDoc}
      */
-    public boolean hasPredecessor(String propertyKey) {
+    public boolean hasPredecessor() {
+	String propertyKey = OsylConfigRuler.getInstance().getPropertyType();
 	if (getParent() == null)
 	    return false;
-	int i = getParent().getElementPosition(this,propertyKey);
+	int i = getParent().getElementPosition(this, propertyKey);
 	if (i != 1 && i != 0)
 	    return true;
 	else
@@ -412,31 +414,35 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
     /**
      * {@inheritDoc}
      */
-    public void moveUp(String propertyKey) {
+    public void moveUp() {
+	String propertyKey = OsylConfigRuler.getInstance().getPropertyType();
 	getParent().changeElementPosition(this,
-		COElementAbstract.POSITION_CHANGE_ACTION_UP,propertyKey);
+		COElementAbstract.POSITION_CHANGE_ACTION_UP, propertyKey);
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.MOVE_IN_RUBRIC_EVENT_TYPE);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void moveDown(String propertyKey) {
+    public void moveDown() {
+	String propertyKey = OsylConfigRuler.getInstance().getPropertyType();
 	getParent().changeElementPosition(this,
-		COElementAbstract.POSITION_CHANGE_ACTION_DOWN,propertyKey);
+		COElementAbstract.POSITION_CHANGE_ACTION_DOWN, propertyKey);
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.MOVE_IN_RUBRIC_EVENT_TYPE);
     }
 
-    public void moveToTheBottomOfTheRubric(String propertyKey) {
-	while (hasSuccessor(propertyKey))
+    public void moveToTheBottomOfTheRubric() {
+	String propertyKey = OsylConfigRuler.getInstance().getPropertyType();
+	while (hasSuccessor())
 	    getParent().changeElementPosition(this,
-		    COElementAbstract.POSITION_CHANGE_ACTION_DOWN,propertyKey);
+		    COElementAbstract.POSITION_CHANGE_ACTION_DOWN, propertyKey);
     }
 
-    public void moveToTheTopOfTheRubric(String propertyKey) {
-	while (hasPredecessor(propertyKey))
+    public void moveToTheTopOfTheRubric() {
+	String propertyKey = OsylConfigRuler.getInstance().getPropertyType();
+	while (hasPredecessor())
 	    getParent().changeElementPosition(this,
-		    COElementAbstract.POSITION_CHANGE_ACTION_UP,propertyKey);
+		    COElementAbstract.POSITION_CHANGE_ACTION_UP, propertyKey);
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.MOVE_IN_RUBRIC_EVENT_TYPE);
     }
 

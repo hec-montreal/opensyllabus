@@ -179,7 +179,8 @@ public class COContentResource implements COModelInterface,
 	    updateCOContentResourceEventHandlers =
 		    new HashSet<UpdateCOContentResourceEventHandler>();
 	}
-	updateCOContentResourceEventHandlers.add(handler);
+	if(!updateCOContentResourceEventHandlers.contains(handler))
+		updateCOContentResourceEventHandlers.add(handler);
     }
 
     public void removeEventHandler(UpdateCOContentResourceEventHandler handler) {

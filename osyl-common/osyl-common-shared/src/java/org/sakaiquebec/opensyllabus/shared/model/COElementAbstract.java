@@ -426,6 +426,15 @@ public abstract class COElementAbstract<T extends COModelInterface> implements
 	}
 	return l;
     }
+    
+    public boolean hasNestedChild(){
+	for(COModelInterface com : getChildrens()){
+	    if(com.getType().equals(this.getType())){
+		return true;
+	    }
+	}
+	return false;
+    }
 
     /**
      * Check the position of the element compared to other element

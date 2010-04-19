@@ -463,7 +463,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	OsylPushButton upButton = null;
 	if (getModel() instanceof COElementMoveable) {
 	    final COElementMoveable coem = (COElementMoveable) getModel();
-	    if (coem.hasPredecessor(propertyType)) {
+	    if (coem.hasPredecessor()) {
 		upButton =
 			new OsylPushButton(getOsylImageBundle().up_full()
 				.createImage(), getOsylImageBundle().up_full()
@@ -475,7 +475,7 @@ public abstract class OsylAbstractEditor extends Composite {
 
 		    public void onClick(ClickEvent event) {
 			getView().leaveEdit();
-			coem.moveUp(propertyType);
+			coem.moveUp();
 		    }
 
 		});
@@ -496,7 +496,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	OsylPushButton downButton = null;
 	if (getModel() instanceof COElementMoveable) {
 	    final COElementMoveable coem = (COElementMoveable) getModel();
-	    if (coem.hasSuccessor(propertyType)) {
+	    if (coem.hasSuccessor()) {
 		downButton =
 			new OsylPushButton(getOsylImageBundle().down_full()
 				.createImage(), getOsylImageBundle()
@@ -508,7 +508,7 @@ public abstract class OsylAbstractEditor extends Composite {
 
 		    public void onClick(ClickEvent event) {
 			getView().leaveEdit();
-			coem.moveDown(propertyType);
+			coem.moveDown();
 		    }
 
 		});

@@ -75,7 +75,7 @@ public class OsylNewsView extends OsylAbstractResProxView {
 	super.updateResourceMetaInfo();
 	getModel().getResource().addProperty(COPropertiesType.MODIFIED,
 		OsylDateUtils.getNowDateAsXmlString());
-	getModel().moveToTheTopOfTheRubric(propertyType);
+	getModel().moveToTheTopOfTheRubric();
     }
 
 }

@@ -384,7 +384,7 @@ public class COModeledServer {
 
 	    if (nodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
 		COStructureElement coStructElt = new COStructureElement();
-		coContent.addChild(createCOStructureElementPOJO(myNode,
+		coContent.getChildrens().add(createCOStructureElementPOJO(myNode,
 			coStructElt, coContent, isPublication));
 
 	    } else {
@@ -512,7 +512,7 @@ public class COModeledServer {
 
 	    if (sNodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
 		COStructureElement coChildStructElt = new COStructureElement();
-		coStructElt.addChild(createCOStructureElementPOJO(sNode,
+		coStructElt.getChildrens().add(createCOStructureElementPOJO(sNode,
 			coChildStructElt, coStructElt, isPublication));
 	    } else if (sNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
 		COUnit coUnit = new COUnit();

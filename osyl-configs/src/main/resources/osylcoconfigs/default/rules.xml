@@ -103,7 +103,7 @@
 		</element>
 		<!-- list of element structureElement allowed at this level -->
 		<element name="asmStructure">
-			<attribute name="type" restrictionpattern="PedagogicalStruct" nestingLevelAllowed="2"/>
+			<attribute name="type" restrictionpattern="PedagogicalStruct" nestingLevelAllowed="2" allowMixedContent="false"/>
 			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
 			<element name="asmUnit">
 				<attribute name="type" restrictionpattern="PedagogicalUnit" allowMultiple="true" />

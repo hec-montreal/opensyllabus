@@ -338,7 +338,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	    addResProxToRubricView(resProx);
 	    if (resProx.getRubricType(propertyType).equals(
 		    COContentRubric.RUBRIC_TYPE_NEWS)) {
-		resProx.moveToTheTopOfTheRubric(propertyType);
+		resProx.moveToTheTopOfTheRubric();
 	    }
 	    OsylEditorEntryPoint.getInstance().setToolHeight(
 		    getOffsetHeight() + 100);

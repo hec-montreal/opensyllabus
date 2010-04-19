@@ -30,23 +30,23 @@ public interface COElementMoveable {
      * Test if the current element has successor in the structure (element of same level)
      * @return true if the element has successor, false otherwise
      */
-    public boolean hasSuccessor(String propertyKey) ;
+    public boolean hasSuccessor() ;
     
     /**
      * Test if the current element has predecessor in the structure (element of same level)
      * @return true if the element has predecessor, false otherwise
      */
-    public boolean hasPredecessor(String propertyKey) ;
+    public boolean hasPredecessor() ;
 
     /**
      * Move the element up (in the xml and in the page)
      */
-    public void moveUp(String propertyKey) ;
+    public void moveUp() ;
 
     /**
      * Move the element down (in the xml and in the page)
      */
-    public void moveDown(String propertyKey) ;
+    public void moveDown() ;
     
 }
 

@@ -57,9 +57,9 @@ public class COStructureElement extends COElementAbstract<COElementAbstract>
 	setClassType(ASM_STRUCTURE_CLASS_TYPE);
 	childrens = new ArrayList<COElementAbstract>();
     }
-    
-    public static COStructureElement createDefaultCOStructureElement(final String type,
-	    final OsylConfigMessages osylConfigMessages,
+
+    public static COStructureElement createDefaultCOStructureElement(
+	    final String type, final OsylConfigMessages osylConfigMessages,
 	    final COElementAbstract<COElementAbstract> parentModel) {
 	final COStructureElement structureElement = new COStructureElement();
 	structureElement.setType(type);
@@ -86,10 +86,19 @@ public class COStructureElement extends COElementAbstract<COElementAbstract>
 	notifyEventHandlers();
     }
 
-    /**
-     * <{@inheritDoc}
-     */
+    @SuppressWarnings("unchecked")
     public boolean addChild(COElementAbstract child) {
+	if (OsylConfigRuler.getInstance() != null) {
+	    if (!OsylConfigRuler.getInstance().istMixedContentAllowed(this)
+		    && child.isCOStructureElement() && !hasNestedChild()) {
+		while (!childrens.isEmpty()) {
+		    COElementAbstract coe = childrens.get(0);
+		    childrens.remove(0);
+		    coe.setParent(child);
+		    child.getChildrens().add(coe);
+		}
+	    }
+	}
 	boolean res = getChildrens().add(child);
 	notifyEventHandlers();
 	return res;
@@ -98,8 +107,29 @@ public class COStructureElement extends COElementAbstract<COElementAbstract>
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     public boolean removeChild(COElementAbstract child) {
+	COElementAbstract newContainerCoStructureElement = null;
+	if (child.isCOStructureElement()) {
+	    COStructureElement cosChild = (COStructureElement) child;
+	    if (cosChild.hasPredecessor()) {
+		newContainerCoStructureElement =
+			childrens.get(childrens.indexOf(cosChild) - 1);
+	    } else if (cosChild.hasSuccessor()) {
+		newContainerCoStructureElement =
+			childrens.get(childrens.indexOf(cosChild) + 1);
+	    } else {
+		newContainerCoStructureElement = this;
+	    }
+	}
 	boolean res = getChildrens().remove(child);
+	if (newContainerCoStructureElement != null) {
+	    for (COElementAbstract el : ((COStructureElement) child)
+		    .getChildrens()) {
+		el.setParent(newContainerCoStructureElement);
+		newContainerCoStructureElement.getChildrens().add(el);
+	    }
+	}
 	notifyEventHandlers();
 	return res;
     }
@@ -115,7 +145,8 @@ public class COStructureElement extends COElementAbstract<COElementAbstract>
 	    updateCOStructureElementEventHandler =
 		    new HashSet<UpdateCOStructureElementEventHandler>();
 	}
-	updateCOStructureElementEventHandler.add(handler);
+	if (!updateCOStructureElementEventHandler.contains(handler))
+	    updateCOStructureElementEventHandler.add(handler);
     }
 
     /**
@@ -189,7 +220,7 @@ public class COStructureElement extends COElementAbstract<COElementAbstract>
     }
 
     @SuppressWarnings("unchecked")
-    public boolean hasPredecessor(String propertyKey) {
+    public boolean hasPredecessor() {
 	if (getParent() == null)
 	    return false;
 	int i = getParent().getElementPosition(this);
@@ -200,7 +231,7 @@ public class COStructureElement extends COElementAbstract<COElementAbstract>
     }
 
     @SuppressWarnings("unchecked")
-    public boolean hasSuccessor(String propertyKey) {
+    public boolean hasSuccessor() {
 	if (getParent() == null)
 	    return false;
 	int i = getParent().getElementPosition(this);
@@ -211,13 +242,13 @@ public class COStructureElement extends COElementAbstract<COElementAbstract>
     }
 
     @SuppressWarnings("unchecked")
-    public void moveDown(String propertyKey) {
+    public void moveDown() {
 	getParent().changeElementPosition(this,
 		COElementAbstract.POSITION_CHANGE_ACTION_DOWN);
     }
 
     @SuppressWarnings("unchecked")
-    public void moveUp(String propertyKey) {
+    public void moveUp() {
 	getParent().changeElementPosition(this,
 		COElementAbstract.POSITION_CHANGE_ACTION_UP);
     }

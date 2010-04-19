@@ -15,6 +15,7 @@ package org.sakaiquebec.opensyllabus.shared.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.xml.client.Document;
@@ -72,18 +73,31 @@ public class OsylConfigRuler {
 	    "allowMultiple";
     protected static final String NESTING_LEVEL_ALLOWED_ATTRIBUTE_NAME =
 	    "nestingLevelAllowed";
+    protected static final String ALLOW_MIXED_CONTENT_ATTRIBUTE_NAME =
+	    "allowMixedContent";
 
     private String rulesConfigContent;
     private Document dom = null;
+    
+    private static OsylConfigRuler instance=null;
 
     /**
      * Creates a new Ruler based on the xml content passed
      * 
      * @param rulesConfigContent the xml content for rules
      */
-    public OsylConfigRuler(String rulesConfigContent) {
+    private OsylConfigRuler(String rulesConfigContent) {
 	this.setRulesConfigContent(rulesConfigContent);
 	initDom();
+    }
+    
+    public static OsylConfigRuler createInstance(String rcc){
+	instance = new OsylConfigRuler(rcc);
+	return instance;
+    }
+    
+    public static OsylConfigRuler getInstance(){
+	return instance;
     }
 
     private void initDom() {
@@ -257,30 +271,36 @@ public class OsylConfigRuler {
 			createModelInstance(nameAttribute, type);
 		allowedSubModels.add(modelInstance);
 	    }
+	   
+	    if (getMixedContentAllowed(attributeTypeNode) || currentModelHasNoChild || !currentModel.hasNestedChild() ) {
+		// Secondly, identify the available possibilities(rules)
+		NodeList nodeChildren = node.getChildNodes();
+		for (int i = 0; i < nodeChildren.getLength(); i++) {
+		    Node myNode = nodeChildren.item(i);
+		    String myNodeName = myNode.getNodeName();
 
-	    // Secondly, identify the available possibilities(rules)
-	    NodeList nodeChildren = node.getChildNodes();
-	    for (int i = 0; i < nodeChildren.getLength(); i++) {
-		Node myNode = nodeChildren.item(i);
-		String myNodeName = myNode.getNodeName();
+		    if (myNodeName.equalsIgnoreCase(ELEMENT_NODE_NAME)) {
+			String nameAttribute = getNameAttributeValue(myNode);
 
-		if (myNodeName.equalsIgnoreCase(ELEMENT_NODE_NAME)) {
-		    String nameAttribute = getNameAttributeValue(myNode);
+			Node myAttributeTypeNode =
+				findingAttributeTypeNode(myNode);
 
-		    Node myAttributeTypeNode = findingAttributeTypeNode(myNode);
+			String restrictionPattern =
+				getRestrictionPatternAttributeValue(myAttributeTypeNode);
 
-		    String restrictionPattern =
-			    getRestrictionPatternAttributeValue(myAttributeTypeNode);
+			boolean allowMultiple =
+				getAllowMultipleAttributeValue(myAttributeTypeNode);
 
-		    boolean allowMultiple =
-			    getAllowMultipleAttributeValue(myAttributeTypeNode);
+			if (currentModelHasNoChild || allowMultiple) {
 
-		    if (currentModelHasNoChild || allowMultiple) {
-			if (restrictionPattern.indexOf("|") > 0) {
-			    String[] typesStringArray =
-				    restrictionPattern.split("\\|");
-			    for (int j = 0; j < typesStringArray.length; j++) {
-				String type = typesStringArray[j].trim();
+			    String[] types;
+			    if (restrictionPattern.indexOf("|") > 0) {
+				types = restrictionPattern.split("\\|");
+			    } else {
+				types = new String[] { restrictionPattern };
+			    }
+			    for (int j = 0; j < types.length; j++) {
+				String type = types[j].trim();
 				// create a new model instance based on name
 				// and
 				// type
@@ -290,18 +310,11 @@ public class OsylConfigRuler {
 				    allowedSubModels.add(modelInstance);
 				}
 			    }
-			} else if (restrictionPattern.indexOf("*") > 0) {
-			    // TODO: here list all available types for this
-			    // nameAttribute
-			} else {
-			    COModelInterface modelInstance =
-				    createModelInstance(nameAttribute,
-					    restrictionPattern);
-			    allowedSubModels.add(modelInstance);
 			}
 		    }
 		}
 	    }
+
 	}
 
 	return allowedSubModels;
@@ -378,6 +391,17 @@ public class OsylConfigRuler {
 	}
     }
 
+    private boolean getMixedContentAllowed(Node myNode) {
+	Node node =
+		myNode.getAttributes().getNamedItem(
+			ALLOW_MIXED_CONTENT_ATTRIBUTE_NAME);
+	if (node != null && node.getNodeValue() != null) {
+	    return Boolean.parseBoolean(node.getNodeValue());
+	} else {
+	    return true;
+	}
+    }
+
     /**
      * List all allowed submodels (based on rules) of the model passed
      * 
@@ -397,7 +421,6 @@ public class OsylConfigRuler {
 	return allowedSubModels;
     }
 
-    
     public int getNestingLevelAllowed(COElementAbstract model) {
 	if (model != null) {
 	    List<COElementAbstract> path = findModelPath(model);
@@ -407,6 +430,18 @@ public class OsylConfigRuler {
 	    return nestingLevelAllowed;
 	} else {
 	    return 0;
+	}
+    }
+    
+    public boolean istMixedContentAllowed(COElementAbstract model){
+	if (model != null) {
+	    List<COElementAbstract> path = findModelPath(model);
+	    Node attributeTypeNode = findingAttributeTypeNode(findNode(path));
+	    boolean mixedContentAllowed =
+		    getMixedContentAllowed(attributeTypeNode);
+	    return mixedContentAllowed;
+	} else {
+	    return true;
 	}
     }
 

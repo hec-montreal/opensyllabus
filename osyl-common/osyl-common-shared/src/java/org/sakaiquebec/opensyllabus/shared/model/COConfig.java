@@ -78,8 +78,7 @@ public class COConfig {
 		new OsylConfigMessages(this.cOConfigSerialized
 			.getI18nMessages());
 	// init ruler
-	this.osylConfigRuler =
-		new OsylConfigRuler(this.cOConfigSerialized.getRulesConfig());
+	this.osylConfigRuler =OsylConfigRuler.createInstance(this.cOConfigSerialized.getRulesConfig());
 	this.rolesList = cOConfigSerialized.getRolesList();
 	this.evalTypeList = cOConfigSerialized.getEvalTypeList();
 	this.settings = 

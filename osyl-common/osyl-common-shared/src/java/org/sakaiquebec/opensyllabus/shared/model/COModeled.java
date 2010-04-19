@@ -300,7 +300,7 @@ public class COModeled extends COSerialized {
 
 	    if (nodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
 		COStructureElement coStructElt = new COStructureElement();
-		coContent.addChild(createCOStructureElementPOJO(myNode,
+		coContent.getChildrens().add(createCOStructureElementPOJO(myNode,
 			coStructElt, coContent));
 
 	    } else {
@@ -428,7 +428,7 @@ public class COModeled extends COSerialized {
 
 	    if (sNodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
 		COStructureElement coChildStructElt = new COStructureElement();
-		coStructElt.addChild(createCOStructureElementPOJO(sNode,
+		coStructElt.getChildrens().add(createCOStructureElementPOJO(sNode,
 			coChildStructElt, coStructElt));
 	    } else if (sNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
 		COUnit coUnit = new COUnit();
