@@ -59,8 +59,7 @@ public class OsylDirectoryRemoteServiceJsonImpl implements
 
     protected void initRemoteUri() {
 	this.remoteUri =
-		serverId + "/sdata/c/group/"
-			+ OsylController.getInstance().getSiteId() + "/";
+		serverId + "/sdata/c";
 	this.remoteUri =
 		OsylAbstractBrowserComposite.uriSlashCorrection(this.remoteUri);
     }

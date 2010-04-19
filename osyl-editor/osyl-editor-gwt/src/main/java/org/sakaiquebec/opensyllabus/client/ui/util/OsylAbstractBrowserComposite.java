@@ -167,8 +167,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     public OsylAbstractBrowserComposite(String newResDirName,
 	    OsylAbstractBrowserItem fileToSelect) {
 	setBrowsedSiteId(extractRessourceSiteId(newResDirName));
-	String path = extractRessourceFolder(newResDirName);
-	setCurrentDirectory(new OsylDirectory(path, path, "",
+	setCurrentDirectory(new OsylDirectory(newResDirName, newResDirName, "",
 		new ArrayList<OsylAbstractBrowserItem>()));
 
 	setInitialDirPath(getCurrentDirectory().getDirectoryPath());
@@ -448,17 +447,20 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	    if (index >= 0) {
 		getFileListing().addStyleName(
 			"Osyl-RemoteFileBrowser-WaitingState");
-		String newFilePath =
-			getCurrentDirectory().getDirectoryPath()
-				+ "/"
-				+ getCurrentDirectory().getFilesList().get(
-					index).getFileName();
-		newFilePath = uriSlashCorrection(newFilePath);
+		
 		OsylAbstractBrowserItem selectedFile =
 			getCurrentDirectory().getFilesList().get(index);
 		setSelectedAbstractBrowserItem(selectedFile);
 
 		if (selectedFile.isFolder()) {
+//		    String newFilePath =
+//			getCurrentDirectory().getDirectoryPath()
+//				+ "/"
+//				+ getCurrentDirectory().getFilesList().get(
+//					index).getFilePath();
+		    String newFilePath = selectedFile.getFilePath();
+		    newFilePath = uriSlashCorrection(newFilePath);
+		    Window.alert(" "+newFilePath);
 		    getCurrentDirectory().setDirectoryPath(newFilePath);
 		    setCurrentDirectory((OsylDirectory) getCurrentDirectory()
 			    .getFilesList().get(index));
@@ -843,18 +845,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	    setSelectedAbstractBrowserItem(null);
 	    getFileListing().setSelectedIndex(-1);
 	}
-    }
-
-    /**
-     * Returns the document path which is the part before the last slash
-     * 
-     * @param uri
-     * @return uri for presentation
-     */
-    protected String extractRessourceFolder(String uri) {
-	String resourcesPath = "/group/" + getBrowsedSiteId() + "/";
-	return uri.substring(uri.indexOf(resourcesPath)
-		+ resourcesPath.length(), uri.length());
     }
 
     /**

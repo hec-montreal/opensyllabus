@@ -73,8 +73,7 @@ public class OsylCitationRemoteServiceJsonImpl extends
     @Override
     protected void initRemoteUri() {
 	this.remoteUri =
-		serverId + "/sdata/ci/group/"
-			+ OsylController.getInstance().getSiteId() + "/";
+		serverId + "/sdata/ci";
 	this.remoteUri =
 		OsylAbstractBrowserComposite.uriSlashCorrection(this.remoteUri);
     }
@@ -98,7 +97,7 @@ public class OsylCitationRemoteServiceJsonImpl extends
 	String listname;
 	if (p_citation.getId() != null) {
 	    // update case
-	    action = serverId + "/sdata/ci" + p_citation.getResourceId();
+	    action = remoteUri + p_citation.getResourceId();
 
 	    // create hidden field to define put(update) method
 	    panel.add(FormHelper.createHiddenField("method", "put"));
@@ -284,7 +283,7 @@ public class OsylCitationRemoteServiceJsonImpl extends
 	String listname;
 	if (lCitation.getResourceId() != null) {
 	    // update case
-	    action = serverId + "/sdata/ci" + lCitation.getResourceId();
+	    action = remoteUri + lCitation.getResourceId();
 
 	    // create hidden field to define put(update) method
 	    panel.add(FormHelper.createHiddenField("method", "put"));

@@ -428,7 +428,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	// SAKAI MODE
 	String basePath = getView().getDocPath();
 	String siteId = getController().getSiteId();
-	String resourcesPath = "group/" + siteId + "/";
+	String resourcesPath = "/group/" + siteId + "/";
 	basePath =
 		basePath == null ? resourcesPath
 			+ getController().getDocFolderName() : basePath;
