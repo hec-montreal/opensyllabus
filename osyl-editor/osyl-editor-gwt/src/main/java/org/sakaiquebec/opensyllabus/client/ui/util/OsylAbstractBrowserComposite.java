@@ -453,14 +453,8 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		setSelectedAbstractBrowserItem(selectedFile);
 
 		if (selectedFile.isFolder()) {
-//		    String newFilePath =
-//			getCurrentDirectory().getDirectoryPath()
-//				+ "/"
-//				+ getCurrentDirectory().getFilesList().get(
-//					index).getFilePath();
 		    String newFilePath = selectedFile.getFilePath();
 		    newFilePath = uriSlashCorrection(newFilePath);
-		    Window.alert(" "+newFilePath);
 		    getCurrentDirectory().setDirectoryPath(newFilePath);
 		    setCurrentDirectory((OsylDirectory) getCurrentDirectory()
 			    .getFilesList().get(index));
