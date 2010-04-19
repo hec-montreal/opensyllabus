@@ -8,11 +8,13 @@ import com.google.gwt.user.client.rpc.RemoteService;
 
 public interface OsylDirectoryRemoteService extends RemoteService {
 
-	public void createNewRemoteDirectory(String newFolderName, String relativePathFolder);
+    public void createNewRemoteDirectory(String newFolderName,
+	    String relativePathFolder);
 
-	public List<OsylAbstractBrowserItem> getRemoteDirectoryContent(String relativePathFolder);
+    public List<OsylAbstractBrowserItem> getRemoteDirectoryContent(
+	    String relativePathFolder);
 
-	public void updateRemoteFileInfo(String fileName, String relativePathFolder,
-			String description, String copyright);
+    public void updateRemoteFileInfo(String fileName, String description,
+	    String copyright);
 
 }

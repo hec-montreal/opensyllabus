@@ -120,8 +120,7 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 	OsylRemoteServiceLocator
 		.getDirectoryRemoteService()
 		.updateRemoteFileInfo(
-			((OsylFileItem) getItemToSelect()).getFileName(),
-			this.getCurrentDirectory().getDirectoryPath(),
+			((OsylFileItem) getItemToSelect()).getFilePath(),
 			"",
 			osylFileUpload
 			.getRight(),

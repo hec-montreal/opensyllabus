@@ -58,8 +58,7 @@ public class OsylDirectoryRemoteServiceJsonImpl implements
     }
 
     protected void initRemoteUri() {
-	this.remoteUri =
-		serverId + "/sdata/c";
+	this.remoteUri = serverId + "/sdata/c";
 	this.remoteUri =
 		OsylAbstractBrowserComposite.uriSlashCorrection(this.remoteUri);
     }
@@ -92,7 +91,8 @@ public class OsylDirectoryRemoteServiceJsonImpl implements
 	resourceDirectoryPath += "?nocache=" + new Date().getTime();
 
 	RequestBuilder requestBuilder =
-		new RequestBuilder(RequestBuilder.GET, URL.encode(resourceDirectoryPath));
+		new RequestBuilder(RequestBuilder.GET, URL
+			.encode(resourceDirectoryPath));
 	requestBuilder.setCallback(requestCallback);
 	try {
 	    if (TRACE) {
@@ -118,8 +118,7 @@ public class OsylDirectoryRemoteServiceJsonImpl implements
     /**
      * {@inheritDoc}
      */
-    public void updateRemoteFileInfo(String fileName,
-	    String relativePathFolder, String description, String copyright,
+    public void updateRemoteFileInfo(String filePath, String description, String copyright,
 	    final AsyncCallback<Void> callback) {
 
 	String requestParams =
@@ -128,12 +127,11 @@ public class OsylDirectoryRemoteServiceJsonImpl implements
 			+ URL.encode(description) + "&fp="
 			+ URL.encode("CHEF:copyrightchoice") + "&fv="
 			+ URL.encode(copyright);
-
-	String resourceDirectoryPath =
-		getRessourceUri(relativePathFolder) + fileName;
+	String resourceDirectoryPath = remoteUri + filePath;
 
 	RequestBuilder requestBuilder =
-		new RequestBuilder(RequestBuilder.POST, URL.encode(resourceDirectoryPath));
+		new RequestBuilder(RequestBuilder.POST, URL
+			.encode(resourceDirectoryPath));
 	requestBuilder.setHeader("Content-type",
 		"application/x-www-form-urlencoded");
 
@@ -167,7 +165,8 @@ public class OsylDirectoryRemoteServiceJsonImpl implements
 	postData.append(URL.encode("f")).append("=").append(URL.encode("cf"));
 
 	RequestBuilder requestBuilder =
-		new RequestBuilder(RequestBuilder.POST, URL.encode(resourceDirectoryPath));
+		new RequestBuilder(RequestBuilder.POST, URL
+			.encode(resourceDirectoryPath));
 	requestBuilder.setCallback(requestCallback);
 	requestBuilder.setHeader("Content-type",
 		"application/x-www-form-urlencoded");

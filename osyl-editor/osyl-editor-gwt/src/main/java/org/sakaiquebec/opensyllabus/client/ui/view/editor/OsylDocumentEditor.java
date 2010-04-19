@@ -201,12 +201,12 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	if (getView().isContextImportant()) {
 	    getViewerPanel().addStyleName("Osyl-UnitView-Important");
 	    getViewerPanel().setWidget(0, 1,
-		new HTML(getView().getCoMessage("MetaInfo.important")));
+		    new HTML(getView().getCoMessage("MetaInfo.important")));
 	    getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 1,
-		"Osyl-UnitView-TextImportant");
+		    "Osyl-UnitView-TextImportant");
 	    column = 1;
 	}
-	getViewerPanel().setWidget(column, 1,getViewer());
+	getViewerPanel().setWidget(column, 1, getViewer());
 	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(column, 1,
 		"Osyl-UnitView-Content");
 	getMainPanel().add(getViewerPanel());
@@ -307,8 +307,9 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    if (saveButton.isEnabled()) {
 		message +=
 			getUiMessage("DocumentEditor.document.PropUpdateSave");
-	    } else if(getLicence().equals(licenseListBox.getItemText(0))){
-		message += getUiMessage("DocumentEditor.document.WrongRightsStatus");
+	    } else if (getLicence().equals(licenseListBox.getItemText(0))) {
+		message +=
+			getUiMessage("DocumentEditor.document.WrongRightsStatus");
 	    }
 	}
 	if (message.equals("")) {
@@ -417,8 +418,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	String resourcesPath = "/group/" + siteId + "/";
 	basePath =
 		basePath == null ? resourcesPath
-			+ getController().getDocFolderName()
-			: basePath;
+			+ getController().getDocFolderName() : basePath;
 
 	browser =
 		new OsylFileBrowser(basePath, getView().getDocPath() + "/"
@@ -517,10 +517,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		    OsylRemoteServiceLocator
 			    .getDirectoryRemoteService()
 			    .updateRemoteFileInfo(
-				    selectedFile.getFileName(),
-				    OsylDocumentEditor.this.browser
-					    .getCurrentDirectory()
-					    .getDirectoryPath(),
+				    selectedFile.getFilePath(),
 				    selectedFile.getDescription(),
 				    selectedFile.getCopyrightChoice(),
 				    OsylDocumentEditor.this.fileUpdateRequestHandler);
@@ -636,17 +633,24 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 				public void onSuccess(
 					ResourcesLicencingInfo result) {
 				    resourceLicensingInfo = result;
-				    
-				    List<String> rightsList = new ArrayList<String>();
-				    
-				    if(OsylController.getInstance().isInHostedMode()){
-					rightsList = resourceLicensingInfo.getCopyrightTypeList();
+
+				    List<String> rightsList =
+					    new ArrayList<String>();
+
+				    if (OsylController.getInstance()
+					    .isInHostedMode()) {
+					rightsList =
+						resourceLicensingInfo
+							.getCopyrightTypeList();
 				    } else {
-					for(String rightKey : resourceLicensingInfo.getCopyrightTypeList()){
-					    rightsList.add(getView().getUiMessage(rightKey));
+					for (String rightKey : resourceLicensingInfo
+						.getCopyrightTypeList()) {
+					    rightsList.add(getView()
+						    .getUiMessage(rightKey));
 					}
 				    }
-				    ((OsylFileBrowser)browser).setRightsList(rightsList);
+				    ((OsylFileBrowser) browser)
+					    .setRightsList(rightsList);
 				    // TODO Auto-generated method stub
 				    // getController().handleRPCError("Sucess
 				    // while retrieving license information
@@ -656,15 +660,16 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 			    });
 	} else {
 	    List<String> rightsList = new ArrayList<String>();
-	    
-	    if(OsylController.getInstance().isInHostedMode()){
+
+	    if (OsylController.getInstance().isInHostedMode()) {
 		rightsList = resourceLicensingInfo.getCopyrightTypeList();
 	    } else {
-		for(String rightKey : resourceLicensingInfo.getCopyrightTypeList()){
+		for (String rightKey : resourceLicensingInfo
+			.getCopyrightTypeList()) {
 		    rightsList.add(getView().getUiMessage(rightKey));
 		}
 	    }
-	    ((OsylFileBrowser)browser).setRightsList(rightsList);
+	    ((OsylFileBrowser) browser).setRightsList(rightsList);
 	    buildLicenseListBox(rightsList);
 	}
     }

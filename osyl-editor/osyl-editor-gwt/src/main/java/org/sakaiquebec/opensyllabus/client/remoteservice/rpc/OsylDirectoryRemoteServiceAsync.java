@@ -32,7 +32,7 @@ public interface OsylDirectoryRemoteServiceAsync {
 	 *            copyright to update
 	 * @param callback
 	 */
-	public void updateRemoteFileInfo(String fileName, String relativePathFolder,
+	public void updateRemoteFileInfo(String fileName,
 			String description, String copyright, final AsyncCallback<Void> callback);
 
 	/**

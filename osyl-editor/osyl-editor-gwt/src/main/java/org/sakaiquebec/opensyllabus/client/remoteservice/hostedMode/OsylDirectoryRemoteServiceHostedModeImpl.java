@@ -84,12 +84,11 @@ public class OsylDirectoryRemoteServiceHostedModeImpl implements OsylDirectoryRe
 	/**
 	 * {@inheritDoc}
 	 */
-	public void updateRemoteFileInfo(String fileName, String relativePathFolder,
+	public void updateRemoteFileInfo(String fileName, 
 			String description, String copyright, final AsyncCallback<Void> callback) {
 
 		try {
-			List<OsylAbstractBrowserItem> list = findDirectoryByRelativePath(relativePathFolder);
-			OsylFileItem file = (OsylFileItem) findItembyByName(false, fileName, list);
+			OsylFileItem file = (OsylFileItem) findItembyByName(false, fileName);
 			file.setDescription(description);
 			file.setCopyrightChoice(copyright);
 			callback.onSuccess(null);
@@ -134,7 +133,7 @@ public class OsylDirectoryRemoteServiceHostedModeImpl implements OsylDirectoryRe
 		// can't use a StringTokenizer with gwt :-(
 		String[] dir = relativePathFolder.split("/");
 		for (int i = 0; i < dir.length; i++) {
-			OsylAbstractBrowserItem item = findItembyByName(true, dir[i], list);
+			OsylAbstractBrowserItem item = findItembyByName(true, dir[i]);
 			if (item != null) {
 				list = ((OsylDirectory) item).getFilesList();
 			}else{
@@ -152,13 +151,12 @@ public class OsylDirectoryRemoteServiceHostedModeImpl implements OsylDirectoryRe
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	protected OsylAbstractBrowserItem findItembyByName(boolean directory, String name,
-			List<OsylAbstractBrowserItem> currentDirectory) throws IllegalArgumentException {
-		if (name == null || !(name.length() > 0)) {
+	protected OsylAbstractBrowserItem findItembyByName(boolean directory, String path) throws IllegalArgumentException {
+		if (path == null || !(path.length() > 0)) {
 			return null;
 		}
-		for (OsylAbstractBrowserItem item : currentDirectory) {
-			if (item.getFileName().equals(name)) {
+		for (OsylAbstractBrowserItem item : this.hostedModelist) {
+			if (item.getFilePath().equals(path)) {
 				// match by name
 				if (directory == item.isFolder()) {
 					// match by type
