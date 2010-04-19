@@ -211,7 +211,7 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 
 	if (rubric != null) {
 	    rubrics.put(rubric.getKey(), rubric);
-	    moveToTheBottomOfTheRubric();
+	    moveToTheBottomOfTheRubric(rubric.getKey());
 	}
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.RUBRIC_UPDATE_EVENT_TYPE);
     }
@@ -388,6 +388,10 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
      */
     public boolean hasSuccessor() {
 	String propertyKey = OsylConfigRuler.getInstance().getPropertyType();
+	return hasSuccessor(propertyKey);
+    }
+    
+    public boolean hasSuccessor(String propertyKey) {
 	if (getParent() == null)
 	    return false;
 	int i = getParent().getElementPosition(this, propertyKey);
@@ -402,6 +406,10 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
      */
     public boolean hasPredecessor() {
 	String propertyKey = OsylConfigRuler.getInstance().getPropertyType();
+	return hasPredecessor(propertyKey);
+    }
+    
+    public boolean hasPredecessor(String propertyKey) {
 	if (getParent() == null)
 	    return false;
 	int i = getParent().getElementPosition(this, propertyKey);
@@ -433,14 +441,18 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 
     public void moveToTheBottomOfTheRubric() {
 	String propertyKey = OsylConfigRuler.getInstance().getPropertyType();
-	while (hasSuccessor())
+	moveToTheBottomOfTheRubric(propertyKey);
+    }
+    
+    public void moveToTheBottomOfTheRubric(String propertyKey){
+	while (hasSuccessor(propertyKey))
 	    getParent().changeElementPosition(this,
 		    COElementAbstract.POSITION_CHANGE_ACTION_DOWN, propertyKey);
     }
 
     public void moveToTheTopOfTheRubric() {
 	String propertyKey = OsylConfigRuler.getInstance().getPropertyType();
-	while (hasPredecessor())
+	while (hasPredecessor(propertyKey))
 	    getParent().changeElementPosition(this,
 		    COElementAbstract.POSITION_CHANGE_ACTION_UP, propertyKey);
 	notifyEventHandlers(UpdateCOContentResourceProxyEvent.MOVE_IN_RUBRIC_EVENT_TYPE);
