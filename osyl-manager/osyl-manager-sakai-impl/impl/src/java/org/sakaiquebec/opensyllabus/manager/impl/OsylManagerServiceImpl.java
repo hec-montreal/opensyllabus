@@ -48,6 +48,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.sakaiproject.authz.api.AuthzGroup;
@@ -1149,8 +1150,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		metadata = new Metadata();
 		metadata.set(Metadata.RESOURCE_NAME_KEY, file.getName());
 		parser = new AutoDetectParser();
-		parser.parse(inputStream, handler, metadata);
-
+		parser.parse(inputStream, handler, metadata, new ParseContext());
+		
 		// We need to close the inputstream and rebuild it after the
 		// parsing here,
 		// otherwise the inputstream in unusable

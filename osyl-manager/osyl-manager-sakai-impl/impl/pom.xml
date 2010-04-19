@@ -1,130 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-   <parent>
-      <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>osyl-manager</artifactId>
-      <version>2.6.1</version>
-    <relativePath>../../pom.xml</relativePath>
-   </parent>
+	<parent>
+		<groupId>org.sakaiquebec.opensyllabus</groupId>
+		<artifactId>osyl-manager</artifactId>
+		<version>2.6.1</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
 
-   <groupId>org.sakaiquebec.opensyllabus</groupId>
-   <artifactId>osyl-manager-sakai-impl</artifactId>
-   <packaging>jar</packaging>
+	<groupId>org.sakaiquebec.opensyllabus</groupId>
+	<artifactId>osyl-manager-sakai-impl</artifactId>
+	<packaging>jar</packaging>
 
-   <name>osyl-manager-sakai-impl</name>
-   <description>OpenSyllabus Manager implementation</description>
+	<name>osyl-manager-sakai-impl</name>
+	<description>OpenSyllabus Manager implementation</description>
 
-   <properties>
-      <deploy.target />
-   </properties>
+	<properties>
+		<deploy.target />
+	</properties>
 
-  <dependencies>
-      <!--  opensyllabus -->
-    <dependency>
-      <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>osyl-manager-server-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>osyl-editor-server-api</artifactId>
-    </dependency>
-  <dependency>
-      <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>osyl-common-shared</artifactId>
-    </dependency>
-      <!--  sakai -->
-	<dependency>
-	  <groupId>org.sakaiproject.kernel</groupId>
-	  <artifactId>sakai-kernel-api</artifactId>
-	</dependency>
-    <dependency>
-	  <groupId>org.sakaiproject.kernel</groupId>
-	  <artifactId>sakai-component-manager</artifactId>
-	</dependency>
-	<dependency>
-      <groupId>org.sakaiproject</groupId>
-      <artifactId>sakai-citations-api</artifactId>
-    </dependency>
+	<dependencies>
+		<!--  opensyllabus -->
+		<dependency>
+			<groupId>org.sakaiquebec.opensyllabus</groupId>
+			<artifactId>osyl-manager-server-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiquebec.opensyllabus</groupId>
+			<artifactId>osyl-editor-server-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiquebec.opensyllabus</groupId>
+			<artifactId>osyl-common-shared</artifactId>
+		</dependency>
+		<!--  sakai -->
+		<dependency>
+			<groupId>org.sakaiproject.kernel</groupId>
+			<artifactId>sakai-kernel-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject.kernel</groupId>
+			<artifactId>sakai-component-manager</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
+			<artifactId>sakai-citations-api</artifactId>
+		</dependency>
 
-     <!-- spring and hibernate -->
-    <dependency>
-      <groupId>${sakai.spring.groupId}</groupId>
-      <artifactId>${sakai.spring.artifactId}</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>${sakai.hibernate.groupId}</groupId>
-      <artifactId>${sakai.hibernate.artifactId}</artifactId>
-      <scope>provided</scope>
-    </dependency>
+		<!-- spring and hibernate -->
+		<dependency>
+			<groupId>${sakai.spring.groupId}</groupId>
+			<artifactId>${sakai.spring.artifactId}</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>${sakai.hibernate.groupId}</groupId>
+			<artifactId>${sakai.hibernate.artifactId}</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
-    <!-- misc -->
-    <dependency>
-      <groupId>hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>jta</groupId>
-      <artifactId>jta</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>cglib</groupId>
-      <artifactId>cglib-nodep</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-codec</groupId>
-      <artifactId>commons-codec</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>net.sf.ehcache</groupId>
-      <artifactId>ehcache</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>easymock</groupId>
-      <artifactId>easymock</artifactId>
-    </dependency>
+		<!-- misc -->
+		<dependency>
+			<groupId>hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>jta</groupId>
+			<artifactId>jta</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>easymock</groupId>
+			<artifactId>easymock</artifactId>
+		</dependency>
 
-      <!-- test -->
-    <dependency>
-      <groupId>${sakai.spring.groupId}</groupId>
-      <artifactId>${sakai.spring.mock.artifactId}</artifactId>
-    </dependency>
-    <dependency>
-    	<groupId>commons-io</groupId>
-    	<artifactId>commons-io</artifactId>
-    	<version>1.2</version>
-    	<type>jar</type>
-    	<scope>provided</scope>
-    </dependency>
+		<!-- test -->
+		<dependency>
+			<groupId>${sakai.spring.groupId}</groupId>
+			<artifactId>${sakai.spring.mock.artifactId}</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.2</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
 
-    <dependency>
-    	<groupId>org.sakaiproject</groupId>
-    	<artifactId>sakai-coursemanagement-api</artifactId>
-    	<version>${sakai.version}</version>
-    </dependency>
-    <dependency>
-    	<groupId>commons-io</groupId>
-    	<artifactId>commons-io</artifactId>
-    </dependency>
-    <dependency>
-    	<groupId>org.apache.tika</groupId>
-    	<artifactId>tika</artifactId>
-    	<version>0.3</version>
-    </dependency>
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
+			<artifactId>sakai-coursemanagement-api</artifactId>
+			<version>${sakai.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-core</artifactId>
+			<version>0.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-parsers</artifactId>
+			<version>0.7</version>
+		</dependency>
 
-  </dependencies>
+	</dependencies>
 </project>
