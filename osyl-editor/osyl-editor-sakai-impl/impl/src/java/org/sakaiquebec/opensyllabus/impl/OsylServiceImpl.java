@@ -327,82 +327,7 @@ public class OsylServiceImpl implements OsylService {
 	}
     }
 
-    /**
-     * Delete a citation from the course outline citation list
-     */
-    public void removeCitation(String citationListId) {
-	CitationCollection citationCollection = null;
-	try {
-	    citationCollection = citationService.getCollection(citationListId);
-	    citationService.removeCollection(citationCollection);
-	} catch (IdUnusedException e) {
-	    log.error("Remove citation list - Id unused exception", e);
-	}
-
-    }
-
-    /**
-     * Add or updates a citation in the course outline citation list Here are
-     * the available properties for a citation. These may not map directly with
-     * OpenSyllabus, but they can be used id necessary creator title sourceTitle
-     * year date volume issue pages startPage endPage abstract note
-     * isnIdentifier subject Language locIdentifier dateRetrieved openURL doi
-     * rights
-     */
-    public String createOrUpdateCitation(String citationListId,
-	    String citation, String author, String type, String isbnIssn,
-	    String link) {
-	CitationCollection citationCollection = null;
-	Citation newCitation = null;
-	String siteId = null;
-
-	// get temporary list of citation
-	try {
-	    if (citationListId == null || "".equalsIgnoreCase(citationListId))
-		citationCollection = citationService.addCollection();
-	    else
-		citationCollection =
-			citationService.getCollection(citationListId);
-	} catch (IdUnusedException e) {
-	    log.warn("Create or update citation list - Id unused exception", e);
-	    return "failed";
-	}
-
-	try {
-	    // temporary list of citation includes only one citation
-	    if (citationCollection.getCitations().size() == 0) {
-		newCitation = citationService.addCitation(type);
-		citationCollection.add(newCitation);
-	    } else {
-		newCitation =
-			(Citation) citationCollection.getCitations().get(0);
-		updateCitationType(newCitation, type);
-	    }
-	} catch (NullPointerException e) {
-	    log.warn("Create or update citation list - Id unused exception: ",
-		    e);
-	} catch (Exception e) {
-	    log.warn("Create or update citation list - Exception while getting"
-		    + " or adding resource: ", e);
-	}
-	// TODO: work around pour fournir un titre et et un nom à la citation
-	String citationTitle;
-	if (citation.length() > 30)
-	    citationTitle = citation.substring(0, 30);
-	else
-	    citationTitle = citation;
-
-	createOrUpdateCitationProperty(Schema.TITLE, newCitation, citation);
-	createOrUpdateCitationProperty(Schema.ISN, newCitation, isbnIssn);
-	createOrUpdateCitationProperty(Schema.CREATOR, newCitation, author);
-
-	newCitation.setDisplayName(citationTitle);
-	newCitation.setAdded(true);
-
-	citationCollection = linkCitationsToSite(citationCollection, siteId, citationTitle);
-
-	return citationCollection.getId();
-    }
+    
 
     /** {@inheritDoc} */
     public CitationCollection linkCitationsToSite(
@@ -480,67 +405,6 @@ public class OsylServiceImpl implements OsylService {
 	return collection;
     }
 
-    private void createOrUpdateCitationProperty(String property,
-	    Citation citation, String value) {
-	List<String> values = new Vector<String>();
-	values.add(value);
-
-	if (citation.getCitationProperty(property) != "")
-	    citation.updateCitationProperty(property, values);
-	else
-	    citation.setCitationProperty(property, value);
-    }
-
-    private void updateCitationType(Citation citation, String type) {
-	Schema schema = citationService.getSchema(type);
-	if (schema == null) {
-	    schema = citationService.getSchema(CitationService.UNKNOWN_TYPE);
-	}
-	citation.setSchema(schema);
-    }
-
-    /**
-     * Adds a new resource to the current context. Path must have a final slash.
-     * 
-     * @return String a string of the new unique url.
-     */
-    public String addRessource(String name, byte[] content, String contentType,
-	    String siteId, String role) throws Exception {
-	try {
-	    // Generation of a valid resourceOutput directory
-	    String resourceOutputDir =
-		    contentHostingService.getSiteCollection(siteId)
-			    + OsylSiteService.WORK_DIRECTORY + "/";
-
-	    // Extraction of name and extension
-	    String[] temp;
-	    temp = name.split(OsylSiteService.FILE_DELIMITER);
-
-	    // Add the resource and its content
-	    ContentResourceEdit newResource =
-		    contentHostingService.addResource(resourceOutputDir,
-			    temp[0], temp[1], 1);
-	    newResource.setContent(content);
-	    newResource.setContentType(contentType);
-	    contentHostingService.commitResource(newResource, NotificationService.NOTI_NONE);
-
-	    String resourceName = resourceOutputDir + name;
-	    return resourceName;
-	} catch (ServerOverloadException e) {
-	    log.error("Add resource - Server overload exception", e);
-	    // We wrap the exception in a java.lang.Exception.
-	    // This way our "client" doesn't have to know about
-	    // this Sakai exception.
-	    throw new Exception(e);
-	} catch (OverQuotaException e) {
-	    log.error("Add resource - Over quota exception", e);
-	    // see previous comment
-	    throw new Exception(e);
-	} catch (Exception e) {
-	    log.error("Unable to add a new resource", e);
-	    throw e;
-	}
-    }
 
     /**
      * {@inheritDoc}
@@ -698,28 +562,6 @@ public class OsylServiceImpl implements OsylService {
 	    return false;
 	}
 	return true;
-    }
-
-    /**
-     * Creates a temporary citation that will be the citation created. With this
-     * we won't need another callback from the server to retrieve the citationid
-     * to be saved in the XML. If the user cancels his creation process, we
-     * remove this citation list
-     * 
-     * @return citationId : the id of the new citation
-     */
-    private Citation createEmptyCitation() {
-	return citationService.getTemporaryCitation();
-    }
-
-    /** {@inheritDoc} */
-    public String createTemporaryCitationList() {
-	CitationCollection citationList = citationService.addCollection();
-
-	citationList.add(createEmptyCitation());
-
-	return citationList.getId();
-
     }
 
     /** {@inheritDoc} */

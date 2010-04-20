@@ -81,13 +81,6 @@ public interface OsylService {
      */
     public String getXslForGroup(String group, String webappdir);
 
-    /**
-     * Adds a new resource to the current context EDITOR
-     * 
-     * @return a String the id of the new resource
-     */
-    public String addRessource(String name, byte[] content, String contentType,
-	    String path, String role) throws Exception;
 
     /**
      * Adds or update an assignment to the site. This method checks whether the
@@ -102,10 +95,6 @@ public interface OsylService {
      */
     public void removeAssignment(String assignmentId);
 
-    /**
-     * Delete a citation from the course outline citation list
-     */
-    public void removeCitation(String citationId);
 
     /**
      * Links a collection of citations to a site
@@ -117,22 +106,6 @@ public interface OsylService {
     public CitationCollection linkCitationsToSite(
 	    CitationCollection collection, String siteId, String citationTitle);
 
-    /**
-     * Add or updates a citation in the course outline citation list
-     */
-    public String createOrUpdateCitation(String citationListId,
-	    String citation, String author, String type, String isbnIssn,
-	    String link);
-
-    /**
-     * Creates a temporary citation list that will contain the citation created.
-     * With this we won't need another callback from the server to retrieve the
-     * citationlistid to be saved in the XML. If the user cancels his creation
-     * process, we remove this citation list
-     * 
-     * @return citationListId : the id of the new citation list
-     */
-    public String createTemporaryCitationList();
 
     /**
      * @return a ResourcesLicencingInfo object which contains informations about

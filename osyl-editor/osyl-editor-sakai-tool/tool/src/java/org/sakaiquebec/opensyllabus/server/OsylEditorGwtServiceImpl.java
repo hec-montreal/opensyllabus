@@ -399,23 +399,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     }
 
     /**
-     * Add or updates a citation in the course outline citation list
-     */
-    public String createOrUpdateCitation(String citationListId,
-	    String citation, String author, String type, String isbnIssn,
-	    String link) {
-	return osylServices.getOsylService().createOrUpdateCitation(
-		citationListId, citation, author, type, isbnIssn, link);
-    }
-
-    /**
-     * Delete a citation from the course outline citation list
-     */
-    public void removeCitation(String citationId) {
-	osylServices.getOsylService().removeCitation(citationId);
-    }
-
-    /**
      * {@inheritDoc}
      */
     public boolean hasBeenPublished() throws Exception {
@@ -438,10 +421,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     public String getXslForGroup(String group) {
 	String webappDir = getServletContext().getRealPath("/");
 	return osylServices.getOsylService().getXslForGroup(group, webappDir);
-    }
-
-    public String createTemporaryCitationList() {
-	return osylServices.getOsylService().createTemporaryCitationList();
     }
 
     /**

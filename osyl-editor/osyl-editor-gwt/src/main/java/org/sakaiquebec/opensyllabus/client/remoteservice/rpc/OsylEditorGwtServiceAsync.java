@@ -143,24 +143,6 @@ public interface OsylEditorGwtServiceAsync {
 	    AsyncCallback<Void> callback);
 
     /**
-     * Delete a citation from the course outline citation list
-     */
-    public void removeCitation(String citationId, AsyncCallback<Void> callback);
-
-    /**
-     * Add or updates a citation in the course outline citation list
-     */
-    public void createOrUpdateCitation(String citationListId, String citation,
-	    String author, String type, String isbnIssn, String link,
-	    AsyncCallback<String> callback);
-
-    /**
-     * @param callback
-     * @return
-     */
-    public void createTemporaryCitationList(AsyncCallback<String> callback);
-
-    /**
      * Pings the server to keep user session alive as long as its client
      * interface is running.
      */

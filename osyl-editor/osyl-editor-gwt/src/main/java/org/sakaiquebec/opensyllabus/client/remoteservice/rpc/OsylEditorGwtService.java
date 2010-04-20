@@ -135,28 +135,6 @@ public interface OsylEditorGwtService extends RemoteService {
     public void removeAssignment(String assignmentId);
 
     /**
-     * Delete a citation from the course outline citation list
-     */
-    public void removeCitation(String citationId);
-
-    /**
-     * Add or updates a citation in the course outline citation list
-     */
-    public String createOrUpdateCitation(String citationListId,
-	    String citation, String author, String type, String isbnIssn,
-	    String link);
-
-    /**
-     * Creates a temporary citation list that will contain the citation created.
-     * With this we won't need another callback from the server to retrieve the
-     * citationlistid to be saved in the XML. If the user cancels his creation
-     * process, we remove this citation list
-     * 
-     * @return citationListId : the id of the new citation list
-     */
-    public String createTemporaryCitationList();
-
-    /**
      * Pings the server to keep user session alive as long as its client
      * interface is running.
      */
