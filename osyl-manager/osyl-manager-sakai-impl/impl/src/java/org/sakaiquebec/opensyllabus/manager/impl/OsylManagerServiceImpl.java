@@ -26,7 +26,6 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -119,9 +118,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     private final static String PROP_SITE_TERM = "term";
 
     private final static String PROP_SITE_TERM_EID = "term_eid";
-    
-    private final static String SCHEMA_DIRECTORY = "schema";
-    private final static String SCHEMA_FILENAME = "osyl.xsd";
 
     private static final Log log =
 	    LogFactory.getLog(OsylManagerServiceImpl.class);
