@@ -655,6 +655,8 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	setViewerPanel(new FlexTable());
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 
+	// We can't have a requirement level in a Contact Info but we have
+	// to keep this otherwise the alignment is incorrect!
 	Image reqLevelIcon = getCurrentRequirementLevelIcon();
 	if (reqLevelIcon != null) {
 	    getViewerPanel().addStyleName("Osyl-UnitView-LvlReq");
@@ -664,17 +666,8 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 0,
 		"Osyl-UnitView-IconLvlReq");
 
-	int column = 0;
-	if (getView().isContextImportant()) {
-	    getViewerPanel().addStyleName("Osyl-UnitView-Important");
-	    getViewerPanel().setWidget(0, 1,
-		new HTML(getView().getCoMessage("MetaInfo.important")));
-	    getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 1,
-		"Osyl-UnitView-TextImportant");
-	    column = 1;
-	}
-	getViewerPanel().setWidget(column, 1,getViewer());
-	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(column, 1,
+	getViewerPanel().setWidget(0, 1, getViewer());
+	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 1,
 		"Osyl-UnitView-Content");
 	mainPanel.add(getViewerPanel());
     } // initViewer
