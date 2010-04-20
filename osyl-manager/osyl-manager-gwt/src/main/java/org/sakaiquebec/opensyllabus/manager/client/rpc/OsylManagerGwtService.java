@@ -53,7 +53,7 @@ public interface OsylManagerGwtService extends RemoteService {
      * @param xmlReference
      * @param siteId
      */
-    public void importData(String xmlReference, String siteId);
+    public void importData(String xmlReference, String siteId) throws Exception;
 
     public String getOsylPackage(String siteId);
 

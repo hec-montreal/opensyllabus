@@ -26,6 +26,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -118,6 +119,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     private final static String PROP_SITE_TERM = "term";
 
     private final static String PROP_SITE_TERM_EID = "term_eid";
+    
+    private final static String SCHEMA_DIRECTORY = "schema";
+    private final static String SCHEMA_FILENAME = "osyl.xsd";
 
     private static final Log log =
 	    LogFactory.getLog(OsylManagerServiceImpl.class);
@@ -582,7 +586,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     /**
      * {@inheritDoc}
      */
-    public void readXML(String xmlReference, String siteId) {
+    public void readXML(String xmlReference, String siteId, String webapp) throws Exception {
 	String xml;
 	try {
 	    InputStream is =
@@ -597,7 +601,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	    xml = writer.toString();
 	    xml = new String(xml.getBytes(), "UTF-8");
-	    osylSiteService.importDataInCO(xml, siteId, null);
+	    osylSiteService.importDataInCO(xml, siteId, null, getXsd(webapp));
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
@@ -606,6 +610,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    contentHostingService.removeResource(xmlReference);
 	} catch (Exception e) {
 	    e.printStackTrace();
+	    throw e;
 	}
 
     }
@@ -613,7 +618,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     /**
      * {@inheritDoc}
      */
-    public void readZip(String zipReference, String siteId) {
+    public void readZip(String zipReference, String siteId, String webapp) throws Exception {
 	try {
 	    File zipTempfile =
 		    File.createTempFile("osyl-package-import", ".zip");
@@ -630,13 +635,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    Map<String, String> filenameChangesMap =
 		    importFilesInSite(zipReference, siteId);
 
-	    osylSiteService.importDataInCO(xml, siteId, filenameChangesMap);
+	    osylSiteService.importDataInCO(xml, siteId, filenameChangesMap, getXsd(webapp));
 
 	    contentHostingService.removeResource(zipReference);
 	    zipTempfile.delete();
 	} catch (Exception e) {
 	    log.error(e);
-	    e.printStackTrace();
+	    throw e;
 	}
 
     }
@@ -1328,6 +1333,32 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    log.info("Empty list of siteIds for user:" + userId
 		    + ", permission: " + permission);
 	return l;
+    }
+    
+    private String getXsd(String webappdir){
+	String xsd=null;
+	// Retrieve xml and xsl from the webapps/xslt
+	File coXslFile =
+		new File(webappdir + File.separator
+			+ OsylSiteService.SCHEMA_DIRECTORY + File.separator,
+			OsylSiteService.SCHEMA_FILENAME);
+	
+	InputStreamReader inputStreamReader;
+	try {
+	    inputStreamReader = new InputStreamReader(new FileInputStream(coXslFile));
+	    StringWriter writer = new StringWriter();
+	    BufferedReader buffer = new BufferedReader(inputStreamReader);
+	    String line = "";
+	    while (null != (line = buffer.readLine())) {
+		writer.write(line);
+	    }
+	    xsd = writer.toString();
+	    xsd = new String(xsd.getBytes(), "UTF-8");
+	    
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+	return xsd;
     }
 
 }

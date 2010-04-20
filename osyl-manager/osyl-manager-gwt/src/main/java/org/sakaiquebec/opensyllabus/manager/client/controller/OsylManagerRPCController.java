@@ -110,7 +110,7 @@ public class OsylManagerRPCController {
 	    }
 
 	    public void onFailure(Throwable error) {
-		Window.alert(caller.getMessages().rpcFailure());
+		Window.alert(error.getMessage());
 	    }
 	};
 	serviceProxy.importData(url, siteId, callback);

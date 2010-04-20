@@ -210,11 +210,15 @@ public class COModeledServer {
      *Name of userDefLabel attribute
      */
     protected final static String USERDEFLABEL_ATTRIBUTE_NAME = "userDefLabel";
+    
+    protected final static String SCHEMA_VERSION_ATTRIBUTE_NAME="schemaVersion";
 
     /**
      * The modeledContent is a POJO filled by XML2Model
      */
     private COContent modeledContent;
+    
+    private String schemaVersion ;
 
     protected final static List<String> CDATA_NODE_NAMES =
 	    Arrays.asList(new String[] { COPropertiesType.LABEL,
@@ -360,6 +364,8 @@ public class COModeledServer {
 	Node myRoot = null;
 
 	NodeList nodeList = messageDom.getDocumentElement().getChildNodes();
+	
+	schemaVersion = messageDom.getDocumentElement().getAttribute(SCHEMA_VERSION_ATTRIBUTE_NAME);
 
 	for (int i = 0; i < nodeList.getLength(); i++) {
 	    Node node = nodeList.item(i);
@@ -1260,6 +1266,14 @@ public class COModeledServer {
     public String changeDocumentsUrls(String url, String originalDirectory,
 	    String newDirectory) {
 	return url.replaceFirst(originalDirectory, newDirectory);
+    }
+
+    public void setSchemaVersion(String schemaVersion) {
+	this.schemaVersion = schemaVersion;
+    }
+
+    public String getSchemaVersion() {
+	return schemaVersion;
     }
 
 }

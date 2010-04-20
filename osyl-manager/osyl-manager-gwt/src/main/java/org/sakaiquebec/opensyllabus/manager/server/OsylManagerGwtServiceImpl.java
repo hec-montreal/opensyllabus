@@ -99,13 +99,14 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	return null;
     }
 
-    public void importData(String fileReference, String siteId) {
+    public void importData(String fileReference, String siteId) throws Exception {
+	String webappDir = getServletContext().getRealPath("/");
 	if (fileReference.endsWith(".zip"))
 	    osylManagerServices.getOsylManagerService().readZip(fileReference,
-		    siteId);
+		    siteId,webappDir);
 	else
 	    osylManagerServices.getOsylManagerService().readXML(fileReference,
-		    siteId);
+		    siteId,webappDir);
     }
 
     /**

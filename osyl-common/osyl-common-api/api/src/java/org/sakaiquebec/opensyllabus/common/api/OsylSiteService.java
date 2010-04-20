@@ -45,10 +45,12 @@ public interface OsylSiteService extends EntityProducer{
 	public static final String APPLICATION_ID = "sakai:osyl";
 	
 	public static final String XSLT_DIRECTORY = "xslt";
+	public static final String SCHEMA_DIRECTORY="schema";
 
 	public static final String XML_FILE_EXTENSION = ".xml";
 	public static final String XSL_FILE_EXTENSION = ".xsl";
 	public static final String HTML_FILE_EXTENSION = ".html";
+	public static final String SCHEMA_FILENAME="osyl.xsd";
 
 	public static final String XSL_PREFIX = "security_";
 
@@ -232,7 +234,7 @@ public interface OsylSiteService extends EntityProducer{
 	 * @param xmlData
 	 * @return
 	 */
-	public COSerialized importDataInCO(String xmlData, String siteId, Map<String,String> filenameChangesMap);
+	public COSerialized importDataInCO(String xmlData, String siteId, Map<String,String> filenameChangesMap, String xsd) throws Exception;
 
 	public Site getSite(String siteId) throws IdUnusedException;
 	

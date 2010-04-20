@@ -72,7 +72,7 @@ public interface OsylManagerService {
      * @param xmlReference
      * @param siteId
      */
-    public void readXML(String xmlReference, String siteId);
+    public void readXML(String xmlReference, String siteId, String webapp) throws Exception;
 
     /**
      * Create a Course outline using the zip reference
@@ -80,7 +80,7 @@ public interface OsylManagerService {
      * @param zipReference
      * @param siteId
      */
-    public void readZip(String zipReference, String siteId);
+    public void readZip(String zipReference, String siteId, String webapp) throws Exception;
 
     /**
      * This method return a list of the files contained in the same zip file as

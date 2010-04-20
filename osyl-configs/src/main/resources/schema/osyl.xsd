@@ -1,0 +1,665 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 rel. 2 (http://www.altova.com) by Carl Duranceau (HEC Montréal) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<xs:element name="OSYL">
+		<xs:annotation>
+			<xs:documentation>Contains one or more Course Outlines</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="CO" type="CoType" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="access" type="accessType">
+				<xs:annotation>
+					<xs:documentation>Defines who can access (read and/or write depending on other permission) this piece of information</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="schemaVersion" type="xs:decimal" use="required" fixed="1.0"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="identifierType">
+		<xs:annotation>
+			<xs:documentation>An identifier allows to identify the object that carries it. The "type" attributes allows the object to have many identifier and to differentiate between them.</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="type" type="xs:string"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:simpleType name="accessType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="public"/>
+			<xs:enumeration value="university"/>
+			<xs:enumeration value="faculty"/>
+			<xs:enumeration value="department"/>
+			<xs:enumeration value="attendee"/>
+			<xs:enumeration value="courseteam"/>
+			<xs:enumeration value="owner"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="actionType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="r"/>
+			<xs:enumeration value="rw"/>
+			<xs:enumeration value="rx"/>
+			<xs:enumeration value="rwx"/>
+			<xs:enumeration value="w"/>
+			<xs:enumeration value="wx"/>
+			<xs:enumeration value="x"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="modeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="individual"/>
+			<xs:enumeration value="team"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="roleType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Coordonator"/>
+			<xs:enumeration value="Secretary"/>
+			<xs:enumeration value="Teacher"/>
+			<xs:enumeration value="Teaching assistant"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="semanticType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:complexType name="ASMObject" abstract="true">
+		<xs:sequence>
+			<xs:element name="modified" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Date and time of last modification</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Unique id of object, should never change</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="access" type="accessType">
+			<xs:annotation>
+				<xs:documentation>Defines who can access (read and/or write depending on other permission) this piece of information</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="editable" type="xs:boolean">
+			<xs:annotation>
+				<xs:documentation>Indicates if the object is editable or read-only</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="ASMContext" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="ASMObject">
+				<xs:sequence>
+					<xs:element name="visible" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="semanticTag" type="semanticTagType"/>
+					<xs:element name="asmRef" type="identifierType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>reference to a object in the system or in the file</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ASMReferencableUnit" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="ASMUnit">
+				<xs:sequence>
+					<xs:element name="code" type="xs:string"/>
+					<xs:element name="dateStart" type="xs:dateTime"/>
+					<xs:element name="dateEnd" type="xs:dateTime"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ASMResource" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="ASMObject">
+				<xs:sequence>
+					<xs:element name="identifier" type="identifierType" maxOccurs="unbounded"/>
+					<xs:element name="language" type="xs:language" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ASMRoot">
+		<xs:complexContent>
+			<xs:extension base="ASMObject">
+				<xs:sequence>
+					<xs:element name="identifier" type="identifierType"/>
+					<xs:element name="template" type="templateType" maxOccurs="unbounded"/>
+					<xs:element name="title" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:string">
+									<xs:attribute name="type" type="xs:string"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="language" type="xs:language"/>
+					<xs:element name="created" type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation>system provided, non editable</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="creator" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>Person or entities who crated the document. should be system provided, non editable</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="modifiedBy" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>system provided, non editable</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="parent" type="identifierType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Identifier of parent ASMRoot</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="children" type="identifierType" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Identifiers  of child ASMROOT of current</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="asmStructure" type="ASMStructure" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="id_parent" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>id of parent ASMRoot</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ASMStructure" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="ASMObject">
+				<xs:sequence>
+					<xs:element name="visible" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="label" type="xs:string" minOccurs="0"/>
+					<xs:element name="description" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>For future implementation. Displayed and editable if and only if ASMStructure has child structure</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="asmStructure" type="ASMStructure" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="asmUnit" type="ASMUnit" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="id_parent" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>id of parent  ASMStructure</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ASMUnit" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="ASMObject">
+				<xs:sequence>
+					<xs:element name="visible" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="label" type="xs:string"/>
+					<xs:element name="asmUnitStructure" type="ASMUnitStructure" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="id_parent" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>id of parent ASMUnit</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ASMUnitContent" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="ASMObject">
+				<xs:sequence>
+					<xs:element name="asmContext" type="ASMContext" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:attribute name="id_parent" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>id of parent ASMUnitContent</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ASMUnitStructure">
+		<xs:complexContent>
+			<xs:extension base="ASMObject">
+				<xs:sequence>
+					<xs:element name="visible" type="xs:boolean" minOccurs="0"/>
+					<xs:element name="label" type="xs:string"/>
+					<xs:element name="description" type="xs:string" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>For future implementation. Displayed and editable if and only if ASMUnitStructure has child structure</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:choice>
+						<xs:element name="asmUnitContent" type="ASMUnitContent"/>
+						<xs:element name="asmUnitStructure" type="ASMUnitStructure"/>
+					</xs:choice>
+				</xs:sequence>
+				<xs:attribute name="id_parent" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>id of parent ASMUnitStructure</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AssessmentStruct">
+		<xs:complexContent>
+			<xs:extension base="ASMStructure"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AssessmentUnit">
+		<xs:complexContent>
+			<xs:extension base="TimeRefUnit">
+				<xs:sequence>
+					<xs:element name="weight" type="xs:string"/>
+					<xs:element name="assessmentType">
+						<xs:annotation>
+							<xs:documentation>modifiable by user</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="homework"/>
+								<xs:enumeration value="mid-term"/>
+								<xs:enumeration value="end-term"/>
+								<xs:enumeration value="participation"/>
+								<xs:enumeration value="list to be completed"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="location" default="inClass" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>modifiable by user</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="home"/>
+								<xs:enumeration value="inClass"/>
+								<xs:enumeration value="list to be completed"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="mode">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="individual"/>
+								<xs:enumeration value="team"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="submission_mode" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AssessmentUnitContent">
+		<xs:complexContent>
+			<xs:extension base="ASMUnitContent"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AssessmentUnitStruct">
+		<xs:complexContent>
+			<xs:extension base="ASMUnitStructure"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Assignment">
+		<xs:complexContent>
+			<xs:extension base="ASMResource">
+				<xs:sequence>
+					<xs:element name="date-start" type="xs:dateTime"/>
+					<xs:element name="date-end" type="xs:dateTime"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="BiblioContext">
+		<xs:complexContent>
+			<xs:extension base="ResourceContext">
+				<xs:sequence>
+					<xs:element name="library" type="xs:boolean" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>available at institution library</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="bookstore" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>available at institution bookstore</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="comment" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="BiblioResource">
+		<xs:complexContent>
+			<xs:extension base="ASMResource">
+				<xs:sequence>
+					<xs:element name="bibliographicCitation" type="xs:string" minOccurs="0"/>
+					<xs:element name="description" type="descriptionType" minOccurs="0"/>
+					<xs:element name="resourceType" type="xs:string"/>
+					<xs:element name="author" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="title" type="xs:string" minOccurs="0"/>
+					<xs:element name="editor" minOccurs="0"/>
+					<xs:element name="pages" minOccurs="0"/>
+					<xs:element name="year" minOccurs="0"/>
+					<xs:element name="volume" minOccurs="0"/>
+					<xs:element name="issue" minOccurs="0"/>
+					<xs:element name="journal" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CoType">
+		<xs:complexContent>
+			<xs:extension base="ASMRoot">
+				<xs:sequence>
+					<xs:element name="previousPublished" type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation>system provided, non editable</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="lastPublished" type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation>system provided, non editable</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="courseId" type="identifierType" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="department" type="identifierType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="descriptionType">
+		<xs:sequence>
+			<xs:element name="description">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="lang" type="xs:language"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Document">
+		<xs:complexContent>
+			<xs:extension base="ASMResource">
+				<xs:sequence>
+					<xs:element name="title" type="xs:string"/>
+					<xs:element name="type" type="xs:string"/>
+					<xs:element name="creator" type="xs:string"/>
+					<xs:element name="license" type="xs:string"/>
+					<xs:element name="rights" type="xs:string"/>
+					<xs:element name="format" type="xs:string"/>
+					<xs:element name="description" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="InformationContext">
+		<xs:complexContent>
+			<xs:extension base="ResourceContext">
+				<xs:sequence>
+					<xs:element name="label" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="InFileResources">
+		<xs:sequence>
+			<xs:element name="text" type="Text" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="document" type="Document" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="biblioResource" type="BiblioResource" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="person" type="Person" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LearningMaterialUnit">
+		<xs:complexContent>
+			<xs:extension base="ASMUnit"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="LearningMaterialUnitContent">
+		<xs:complexContent>
+			<xs:extension base="ASMUnitContent"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="LearningMaterialUnitStruct">
+		<xs:complexContent>
+			<xs:extension base="ASMUnitStructure"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="LearningMaterialStruct">
+		<xs:complexContent>
+			<xs:extension base="ASMStructure"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Lecture">
+		<xs:complexContent>
+			<xs:extension base="PedagogicalUnit"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="OverviewStruct">
+		<xs:complexContent>
+			<xs:extension base="ASMStructure"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="OverviewUnit">
+		<xs:complexContent>
+			<xs:extension base="ASMUnit"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="OverviewUnitContent">
+		<xs:complexContent>
+			<xs:extension base="ASMUnitContent"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="OverviewUnitStruct">
+		<xs:complexContent>
+			<xs:extension base="ASMUnitStructure"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PedagogicalStruct">
+		<xs:complexContent>
+			<xs:extension base="ASMStructure"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PedagogicalUnit">
+		<xs:complexContent>
+			<xs:extension base="TimeRefUnit"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PedagogicalUnitContent">
+		<xs:complexContent>
+			<xs:extension base="ASMUnitContent"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PedagogicalUnitStruct">
+		<xs:complexContent>
+			<xs:extension base="ASMUnitStructure"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PeopleContext">
+		<xs:complexContent>
+			<xs:extension base="ASMContext">
+				<xs:sequence>
+					<xs:element name="role" minOccurs="0" maxOccurs="unbounded">
+						<xs:simpleType>
+							<xs:restriction base="roleType"/>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="availability" type="xs:string" minOccurs="0"/>
+					<xs:element name="person" type="Person" minOccurs="0"/>
+					<xs:element name="comment" type="xs:string" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Person">
+		<xs:complexContent>
+			<xs:extension base="ASMObject">
+				<xs:sequence>
+					<xs:element name="identifier" type="identifierType"/>
+					<xs:element name="title" type="xs:string" minOccurs="0"/>
+					<xs:element name="firstname" type="xs:string"/>
+					<xs:element name="surname" type="xs:string"/>
+					<xs:element name="email" type="xs:string"/>
+					<xs:element name="officeroom" type="xs:string"/>
+					<xs:element name="tel" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ReferenceContext">
+		<xs:complexContent>
+			<xs:extension base="ResourceContext">
+				<xs:sequence>
+					<xs:element name="label" type="xs:string"/>
+					<xs:element name="comment" type="xs:string"/>
+					<xs:element name="displayAs" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>defines how the refered object is randered in the applicaiton . For example: inline, link, ...</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ResourceContext" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="ASMContext">
+				<xs:sequence>
+					<xs:element name="visibleStart" type="xs:dateTime" minOccurs="0"/>
+					<xs:element name="visibleEnd" type="xs:dateTime" minOccurs="0"/>
+					<xs:element name="mode" type="modeType" minOccurs="0"/>
+					<xs:element name="moment" minOccurs="0">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="before"/>
+								<xs:enumeration value="during"/>
+								<xs:enumeration value="after"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="level" minOccurs="0">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="mandatory"/>
+								<xs:enumeration value="recommended"/>
+								<xs:enumeration value="go-further"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="action" minOccurs="0" maxOccurs="unbounded">
+						<xs:simpleType>
+							<xs:restriction base="actionType"/>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="importance" type="xs:string"/>
+					<xs:choice minOccurs="0">
+						<xs:element name="asmResource" type="ASMResource"/>
+						<xs:element name="asmUnit" type="ASMUnit"/>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="semanticTagType">
+		<xs:attribute name="type" type="semanticType" use="required"/>
+		<xs:attribute name="userDefLabel">
+			<xs:annotation>
+				<xs:documentation>User defined label, which can replace default label. If defined, overwrite default label associated semantictag, shown beside or other options</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="StaffStruct">
+		<xs:complexContent>
+			<xs:extension base="ASMStructure"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StaffUnitStruct">
+		<xs:complexContent>
+			<xs:extension base="ASMUnitStructure"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StaffUnit">
+		<xs:complexContent>
+			<xs:extension base="ASMUnit"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="StaffUnitContent">
+		<xs:complexContent>
+			<xs:extension base="ASMUnitContent"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="templateType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="type">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="HEC"/>
+							<xs:enumeration value="UdeM"/>
+							<xs:enumeration value="list to be completed"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attribute name="version" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Version of the template</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="TimeRefUnit" abstract="true">
+		<xs:annotation>
+			<xs:documentation>ASM unit that can be time referencable</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="ASMUnit">
+				<xs:sequence>
+					<xs:element name="dateStart" type="xs:dateTime" minOccurs="0"/>
+					<xs:element name="dateEnd" type="xs:dateTime" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Text">
+		<xs:annotation>
+			<xs:documentation>text resource</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="ASMResource">
+				<xs:sequence>
+					<xs:element name="text" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="URL">
+		<xs:complexContent>
+			<xs:extension base="ASMResource">
+				<xs:sequence>
+					<xs:element name="type" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="WorkSession">
+		<xs:complexContent>
+			<xs:extension base="PedagogicalUnit"/>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>
