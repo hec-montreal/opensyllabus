@@ -401,8 +401,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    addTool(site, "sakai.resources");
 	    addTool(site, "sakai.siteinfo");
 
-	    siteService.save(site);
-
 	    // we add the directories
 	    String directoryId;
 	    addCollection(WORK_DIRECTORY, site);
@@ -411,13 +409,22 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			    + WORK_DIRECTORY + "/";
 	    osylSecurityService.applyDirectoryPermissions(directoryId);
 
+	    // HIDE COLLECTION
+	    ContentCollectionEdit cce =
+		    contentHostingService.editCollection(directoryId);
+	    cce.setHidden();
+	    contentHostingService.commitCollection(cce);
+	    
+	    
+	    
+	    
 	    addCollection(PUBLISH_DIRECTORY, site);
-
 	    directoryId =
 		    contentHostingService.getSiteCollection(site.getId())
 			    + PUBLISH_DIRECTORY + "/";
 	    osylSecurityService.applyDirectoryPermissions(directoryId);
 
+	    siteService.save(site);
 	    COConfigSerialized coConfig = null;
 	    COSerialized co = null;
 
@@ -553,11 +560,12 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      * @param a String of the collection id.
      * @return boolean whether the collection exists
      */
-    private boolean collectionExist(String siteId) {
-	String collection = contentHostingService.getSiteCollection(siteId);
-
-	if (collection == null)
+    private boolean collectionExist(String id) {
+	try {
+	    contentHostingService.getCollection(id);
+	} catch (Exception e) {
 	    return false;
+	}
 	return true;
     }
 
