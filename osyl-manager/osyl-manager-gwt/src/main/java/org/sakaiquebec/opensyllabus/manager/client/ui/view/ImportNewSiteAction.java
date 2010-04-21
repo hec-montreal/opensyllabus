@@ -26,8 +26,6 @@ import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerControl
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
-import com.google.gwt.user.client.Window;
-
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
@@ -46,6 +44,7 @@ public class ImportNewSiteAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(List<COSite> siteIds) {
-	Window.alert("import");
+	ImportNewSiteForm importNewSiteForm = new ImportNewSiteForm(controller);
+	importNewSiteForm.showModal();
     }
 }
