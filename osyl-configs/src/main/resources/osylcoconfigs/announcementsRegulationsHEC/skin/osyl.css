@@ -1179,7 +1179,7 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 
 /* ------- */
 
-.Osyl-ContactInfo-Editor {}
+.Osyl-ContactInfo-Editor {width: auto}
 .Osyl-ContactInfo-Viewer {}
 
 .Osyl-ContactInfo-FirstName, .Osyl-ContactInfo-LastName {

@@ -505,75 +505,59 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	editorContainer=null;
 	// Panels used to edit each information
 
-	SimplePanel firstNameLabelPanel = new SimplePanel();
-	firstNameLabelPanel.add(getFirstNameLabel());
 	SimplePanel editorPanelFirstName = new SimplePanel();
 	editorPanelFirstName.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	editorPanelFirstName.add(getEditorFirstName());
-	SimplePanel lastNameLabelPanel = new SimplePanel();
-	lastNameLabelPanel.add(getLastNameLabel());
 	SimplePanel editorPanelLastName = new SimplePanel();
 	editorPanelLastName.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	editorPanelLastName.add(getEditorLastName());
 	HorizontalPanel nameHzContainer = new HorizontalPanel();
-	nameHzContainer.add(firstNameLabelPanel);
+	nameHzContainer.add(getFirstNameLabel());
 	nameHzContainer.add(editorPanelFirstName);
-	nameHzContainer.add(lastNameLabelPanel);
+	nameHzContainer.add(getLastNameLabel());
 	nameHzContainer.add(editorPanelLastName);
 	getEditorContainer().add(nameHzContainer);
 
 	// Osyl-ContactInfoView-
-	SimplePanel roleLabelPanel = new SimplePanel();
-	roleLabelPanel.add(getRoleLabel());
 	SimplePanel editorPanelRole = new SimplePanel();
 	editorPanelRole.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	editorPanelRole.add(getEditorRole());
 	HorizontalPanel roleHzContainer = new HorizontalPanel();
-	roleHzContainer.add(roleLabelPanel);
+	roleHzContainer.add(getRoleLabel());
 	roleHzContainer.add(editorPanelRole);
 	getEditorContainer().add(roleHzContainer);
 
-	SimplePanel emailLabelPanel = new SimplePanel();
-	emailLabelPanel.add(getEMailLabel());
 	SimplePanel editorPanelEMail = new SimplePanel();
 	editorPanelEMail.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	editorPanelEMail.add(getEditorEMail());
 	HorizontalPanel emailHzContainer = new HorizontalPanel();
-	emailHzContainer.add(emailLabelPanel);
+	emailHzContainer.add(getEMailLabel());
 	emailHzContainer.add(editorPanelEMail);
 	getEditorContainer().add(emailHzContainer);
 
-	SimplePanel phoneLabelPanel = new SimplePanel();
-	phoneLabelPanel.add(getPhoneLabel());
 	SimplePanel editorPanelPhone = new SimplePanel();
 	editorPanelPhone.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	editorPanelPhone.add(getEditorPhone());
 	HorizontalPanel phoneHzContainer = new HorizontalPanel();
-	phoneHzContainer.add(phoneLabelPanel);
+	phoneHzContainer.add(getPhoneLabel());
 	phoneHzContainer.add(editorPanelPhone);
 	getEditorContainer().add(phoneHzContainer);
 
-	SimplePanel officeLabelPanel = new SimplePanel();
-	officeLabelPanel.add(getOfficeLabel());
 	SimplePanel editorPanelOffice = new SimplePanel();
 	editorPanelOffice.add(getEditorOffice());
 	editorPanelOffice.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	HorizontalPanel officeHzContainer = new HorizontalPanel();
-	officeHzContainer.add(officeLabelPanel);
+	officeHzContainer.add(getOfficeLabel());
 	officeHzContainer.add(editorPanelOffice);
 	getEditorContainer().add(officeHzContainer);
 
-	SimplePanel availabilityLabelPanel = new SimplePanel();
-	availabilityLabelPanel.add(getAvailabilityLabel());
-	getEditorContainer().add(availabilityLabelPanel);
+	getEditorContainer().add(getAvailabilityLabel());
 	SimplePanel editorPanelAvailability = new SimplePanel();
 	editorPanelAvailability.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	editorPanelAvailability.add(getEditorAvailability());
 	getEditorContainer().add(editorPanelAvailability);
 
-	SimplePanel commentsLabelPanel = new SimplePanel();
-	commentsLabelPanel.add(getCommentsLabel());
-	getEditorContainer().add(commentsLabelPanel);
+	getEditorContainer().add(getCommentsLabel());
 	SimplePanel editorPanelComments = new SimplePanel();
 	editorPanelComments.setStylePrimaryName("Osyl-ContactInfo-Panel");
 	editorPanelComments.add(getEditorComments());
