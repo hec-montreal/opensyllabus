@@ -332,12 +332,11 @@
 
 /* Citation Form -----------------------------------------------------------------------------------------*/
 .Osyl-CitationForm-form {
-	padding:4px;
+	padding:0;
 	font:normal 100% Arial, Verdana, sans-serif;
 	color:#000;
-	background-color:#FFF;
-	border:2px outset;
-	width: 450px;
+	background-color:transparent;
+	border:none;
 }
 
 .Osyl-CitationForm-title {
