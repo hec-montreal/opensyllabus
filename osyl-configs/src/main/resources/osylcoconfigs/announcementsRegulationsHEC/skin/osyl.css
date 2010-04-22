@@ -55,6 +55,7 @@
 .gwt-MenuBar-horizontal {
 	cursor:default;
 	background:#d6dbdf;
+/*	background:#transparent; */
 	position:relative;
 	margin:0 -2px 0;
 	overflow:visible;
@@ -140,15 +141,15 @@
 	background: url(images/ui/hborder.png) repeat-x;
 	height:8px;
 }
-.Osyl-TreeView .bottomCenter {background-position:bottom left}
-.Osyl-TreeView .topCenter {height:47px;background-position:0 -8px}
+.Osyl-TreeView .bottomCenter {background-position:0 -47px}
+.Osyl-TreeView .topCenter {height:47px;background-position:0 0}
 
 .Osyl-TreeView .middleLeft,
 .Osyl-TreeView .middleRight {
 	background: url(images/ui/vborder.png) repeat-y;
 	width:8px;
 }
-.Osyl-TreeView .middleRight {background-position:top right}
+.Osyl-TreeView .middleRight {background-position:-8px 0}
 
 .Osyl-TreeView .topLeftInner,
 .Osyl-TreeView .topRightInner,
@@ -199,7 +200,7 @@
 /*TreeView Header */
 .Osyl-TreeView-Header {
 	font:bold 15px Arial, Verdana, sans-serif;
-	color:#878A8C;
+	color:#76787a;
 	padding:14px 0 8px 35px;
 	background:transparent url(images/tree_logo.png) no-repeat 12px 14px;
 }
@@ -252,14 +253,14 @@
   background:url(images/ui/hborder.png) repeat-x;
   height:8px;
 }
-.Osyl-WorkspaceView .bottomCenter {background-position:bottom left}
+.Osyl-WorkspaceView .bottomCenter {background-position:0 -47px}
 
 .Osyl-WorkspaceView .middleLeft,
 .Osyl-WorkspaceView .middleRight {
   background:url(images/ui/vborder.png) repeat-y;
   width:8px;
 }
-.Osyl-WorkspaceView .middleRight {background-position:top right}
+.Osyl-WorkspaceView .middleRight {background-position:-8px 0}
 
 .Osyl-WorkspaceView .topLeftInner,
 .Osyl-WorkspaceView .topRightInner,
@@ -315,28 +316,17 @@
 /* File Upload ------------------------------------------------------------------------------------------*/
 
 .Osyl-FileUpload-uploadForm {
-	background-color:#FCFCFC;
-	border:3px solid #454a4f; 
+	background-color:transparent;
 	font:normal 100% Arial, Verdana, sans-serif;
-	padding:4px;
-	-moz-box-shadow:0 0 10px #000;
-	-webkit-box-shadow:1px 1px 10px #000;
- 	box-shadow:1px 1px 10px #000;
-	
 }
+.Osyl-FileUpload-uploadForm .mosaic-LayoutPanel {padding-top:10px}
 .Osyl-FileUpload-uploadForm .mosaic-Caption {}
 
-.Osyl-FileUpload-resource-title {
-	font:bold 14px Arial, Verdana, sans-serif;
-	color:#333;
-	text-align:center;
-	margin-bottom:10px;
-}
 
 .Osyl-FileUpload-information {
 	font:normal 12px Arial, Verdana, sans-serif;
 	color:#333;
-	text-align:center;
+	text-align:left;
 	margin-bottom:10px;
 }
 
@@ -414,13 +404,16 @@
 .Osyl-PublishView-Label-important{font:bold;}
 
 .Osyl-PublishView-PopupPanel {
-	width:430px;
+	width:400px;
 	margin:120px 0 0 300px;
 	padding:10px;
 	font:normal 100% Arial, Verdana, sans-serif;
 	color:#000;
 	background-color:#FFF;
-	border:2px outset;
+	border:3px solid #454A4F;
+	border-radius:8px;
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
 }
 
 .Osyl-PublishView-genericButton {margin:10px}
@@ -568,31 +561,55 @@
 
 .Osyl-UnitView-HtmlViewer {width:100%}
 
-.Osyl-UnitView-LvlReq .Osyl-UnitView-TextLvlReq, .Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq {
-	font:bold 12px Arial, Verdana, sans-serif;
-	padding-bottom:2px;
+.Osyl-UnitView-Important .Osyl-UnitView-TextImportant {
+	background:#B6BEC4;
+	padding-left:4px;
+	padding-right:4px;
+	border-left:2px solid #B6BEC4;
+	border-right:2px solid #B6BEC4;
 }
-
-.Osyl-UnitView-LvlReq .Osyl-UnitView-TextLvlReq, .Osyl-UnitView-LvlReq.Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq{border-bottom:1px solid #CCC}
-.Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq {border:none}
-.Osyl-UnitView-IconLvlReq, .Osyl-UnitView-IconImportant {
+.Osyl-UnitView-Important .Osyl-UnitView-TextImportant .gwt-HTML {
+	font:bold 12px Arial, Verdana, sans-serif;
+	color:#FFF;
+}
+.Osyl-UnitView-IconLvlReq {
 	width:24px;
 	text-align:center;
 	vertical-align:top;
 	padding:0 6px 0 0;
 }
-.Osyl-UnitView-IconImportant {padding-top:6px}
-.Osyl-UnitView-LvlReq .Osyl-UnitView-Content, .Osyl-UnitView-Important .Osyl-UnitView-Content {}
+
+.Osyl-UnitView-LvlReq .Osyl-UnitView-Content, .Osyl-UnitView-Important .Osyl-UnitView-Content {
+	background-color:#eff2f4;
+	padding:0 4px;
+}
+.Osyl-UnitView-Important .Osyl-UnitView-Content {
+	border:2px solid #B6BEC4;
+	padding:0 4px;
+}
 
 .Osyl-ResProxView-MetaInfo,
 .Osyl-UnitView-MetaInfo,
 .Osyl-UnitView-SemanticTag {
 	display:block;
-	margin:5px 0 0 30px;
+	margin:0 0 0 30px;
+	padding:5px 0 0 0;
 	font:normal 10px sans-serif, Arial, Verdana;
 	color:#A0A0A0;
 }
-.Osyl-ListItemView-Hyperlink .Osyl-UnitView-MetaInfo {margin:5px 0 0 0}
+.Osyl-ResProxView-MetaInfo-Important,
+.Osyl-UnitView-MetaInfo-Important,
+.Osyl-UnitView-SemanticTag-Important {
+	padding:5px 6px 0 6px;
+}
+
+.Osyl-ResProxView-MetaInfo-Requirement,
+.Osyl-UnitView-MetaInfo-Requirement,
+.Osyl-UnitView-SemanticTag-Requirement {
+	padding:5px 4px 0 4px;
+}
+
+.Osyl-ListItemView-Hyperlink .Osyl-UnitView-MetaInfo {padding:5px 0 0 0}
 .Osyl-UnitView-SemanticTag {margin:0 0 3px 40px}
 
 /* Link in a Content Unit Panel */
@@ -906,23 +923,86 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 .Osyl-EditorPopup {
 	font-family:Arial, Verdana, sans-serif;
 	font-size:12px;
-	background:#FCFCFC url(images/ui/popup_head.gif) repeat-x;
-	border:3px solid #454a4f;
+	background:transparent;
 	padding:0;
-	-moz-box-shadow:0 0 10px #000;
-	-webkit-box-shadow:1px 1px 10px #000;
- 	box-shadow:1px 1px 10px #000;
 }
+
+
+.popupTopCenter,
+.popupBottomCenter {
+	background: url(images/ui/hborder.png) repeat-x;
+	height:6px;
+}
+.popupBottomCenter {background-position:bottom left}
+.popupTopCenter {background-position:0 -55px}
+
+.popupMiddleLeft,
+.popupMiddleRight {
+	background: url(images/ui/vborder.png) repeat-y;
+	width:6px;
+}
+.popupMiddleLeft {background-position:-16px 0}
+.popupMiddleRight {background-position:top right}
+
+.popupTopLeftInner,
+.popupTopRightInner,
+.Osyl-EditorPopup .bottomLeftInner,
+.Osyl-EditorPopup .bottomRightInner {
+	width: 6px;
+	height: 6px;
+	zoom: 1;
+}
+.popupTopCenter,
+.popupTopLeftInner,
+.popupTopRightInner {
+	height:27px;
+}
+.popupTopLeft {
+	background: url(images/ui/popup_corner.png) no-repeat top left;
+	-background: url(images/ui/popup_corner.gif) no-repeat top left;
+}
+.popupTopRight {
+	background: url(images/ui/popup_corner.png) no-repeat top right;
+	-background: url(images/ui/popup_corner.gif) no-repeat top right;
+}
+.popupBottomLeft {
+	background: url(images/ui/popup_corner.png) no-repeat bottom left;
+	-background: url(images/ui/popup_corner.gif) no-repeat bottom left;
+}
+.popupBottomRight {
+	background: url(images/ui/popup_corner.png) no-repeat bottom right;
+	-background: url(images/ui/popup_corner.gif) no-repeat bottom right;
+}
+* html .popupTopLeftInner,
+* html .popupTopRightInner,
+* html .popupBottomLeftInner,
+* html .popupBottomRightInner {
+	width: 6px;
+	height: 6px;
+	overflow: hidden;
+}
+* html .popupTopLeftInner,
+* html .popupTopRightInner {
+	height:27px;
+}
+.popupMiddleCenterInner {
+	position:relative;
+	margin:-21px 0 0 0;
+	background:#FFF url(images/ui/popup_head.gif) repeat-x top left;
+	zoom: 1;
+	overflow:auto;
+}
+
 .Osyl-LabelEditor-TextBox {
 	display:block;
-	margin:2px -6px 2px 2px;
+	margin:2px 0;
 	width:100%;
 	min-width:250px;
 	border:1px solid #878a8c;
 	font:normal 12px Arial, Verdana, sans-serif;
 	padding:1px;
 }
-* html .Osyl-LabelEditor-TextBox {margin:0 -4px 0 0}
+* html .Osyl-LabelEditor-TextBox {margin:0}
 
 .Osyl-UnitView-TextArea {
 	display:block;
@@ -932,28 +1012,29 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	background:#FFF;
 	font:normal 12px Arial, Verdana, sans-serif;
 }
-* html .Osyl-UnitView-TextArea {margin:0 -4px 0 0}
+* html .Osyl-UnitView-TextArea {margin:0 0 0 0}
 
-.Osyl-EditorPopup-RowEditor td {padding:2px 6px 2px 2px}
-* html .Osyl-EditorPopup-RowEditor td {padding:1px 2px 0 2px}
+.Osyl-EditorPopup-RowEditor td {padding:2px 0}
+* html .Osyl-EditorPopup-RowEditor td {padding:1px 0}
 
 .Osyl-EditorPopup-RowEditor > tbody > tr > td{padding:0}
 
-.Osyl-EditorPopup .mosaic-Caption {margin:0}
+.Osyl-EditorPopup .mosaic-Caption {background:#454a4f}
 
-.Osyl-EditorPopup .mosaic-Caption-text {
-	padding:2px 4px 4px;
+.mosaic-Caption-text {
+	padding:2px 2px 4px;
 	height:18px;
 	font:bold 12px Arial, Verdana, sans-serif;
 	color:#FFF;
+	margin:0;
 }
-
+.mosaic-ImageButton {margin:0 0 5px}
 .Osyl-EditorPopup-OptionGroup, 
 .Osyl-EditorPopup-LastOptionGroup, 
 .Osyl-EditorPopup-RowOptions .gwt-Label, 
 .Osyl-EditorPopup-RowOptions .gwt-HTML, 
 .Osyl-EditorPopup-RowOptions .gwt-CheckBox {
-	background-color:#FCFCFC;
+	background-color:#FFF;
 	font-size:11px;
 	margin:0 3px;
 }
@@ -984,7 +1065,7 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 .Osyl-EditorPopup-RowOptions .gwt-Label,
 .Osyl-EditorPopup-RowOptions .gwt-HTML {
 	color:#454A4f;
-	margin:3px 0 0 3px;
+	margin:3px 0 0 1px;
 }
 
 .Osyl-EditorPopup-RowOptions .gwt-CheckBox {
@@ -1018,10 +1099,10 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 .Osyl-EditorPopup .gwt-HTML {
 	font-size:11px;
 	color:#454a4f;
-	margin:3px 0 0 3px;
+	margin:3px 0 0 1px;
 }
 
-.Osyl-EditorPopup .gwt-TextArea {margin:0 8px 3px 0}
+.Osyl-EditorPopup .gwt-TextArea {margin:0 6px 3px 0}
 
 .Osyl-EditorPopup .information {
 	font:italic normal 11px Arial Verdana sans serif;
@@ -1091,6 +1172,7 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	-moz-border-radius:8px;
 	-webkit-border-radius:8px;
 }
+.Osyl-FileUpload-genericButton {margin:5px}
 .Osyl-Button::-moz-focus-inner,
 .Osyl-EditorPopup-Button::-moz-focus-inner,
 .Osyl-FileUpload-genericButton::-moz-focus-inner,
@@ -1154,32 +1236,32 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 
 /* CSS for GWT-Mosaic */
 .mosaic-GlassPanel-default, .mosaic-GlassPanel-invisible {
-	background-color:#EEE !important;
+	background-color:#000 !important;
 	background-repeat:repeat;
 	/* Override glass panel to 0% opacity (= 100% transparency) */
-	filter :alpha(opacity=25) !important; /* IE */
-	-moz-opacity :.25 !important; /* FF */
-	opacity :0.25 !important; /* default */
+	filter :alpha(opacity=20) !important; /* IE */
+	-moz-opacity :.20 !important; /* FF */
+	opacity :0.20 !important; /* default */
 }
 
 .mosaic-Caption-iconBoxRight {
-	padding:0 2px 0 0;
+	margin:0 3px 0 0;
 	cursor:default;
 }
 
 .mosaic-CaptionLayoutPanel .dragdrop-handle {cursor:move}
 .mosaic-WindowPanel .Resize-nw {cursor:nw-resize}
-.mosaic-WindowPanel .Resize-n {cursor:n-resize;background-color:transparent}
+.mosaic-WindowPanel .Resize-n {cursor:n-resize}
 .mosaic-WindowPanel .Resize-ne {cursor:ne-resize}
-.mosaic-WindowPanel .Resize-e {cursor:e-resize;background-color:transparent}
+.mosaic-WindowPanel .Resize-e {cursor:e-resize}
 .mosaic-WindowPanel .Resize-se {cursor:se-resize}
-.mosaic-WindowPanel .Resize-s {cursor:s-resize;background-color:transparent}
+.mosaic-WindowPanel .Resize-s {cursor:s-resize}
 .mosaic-WindowPanel .Resize-sw {cursor:sw-resize}
-.mosaic-WindowPanel .Resize-w {cursor:w-resize;background-color:transparent}
+.mosaic-WindowPanel .Resize-w {cursor:w-resize}
 
 /* ------- */
 
-.Osyl-ContactInfo-Editor {width: auto}
+.Osyl-ContactInfo-Editor {}
 .Osyl-ContactInfo-Viewer {}
 
 .Osyl-ContactInfo-FirstName, .Osyl-ContactInfo-LastName {

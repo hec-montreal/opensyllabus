@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com) -->
 <OSYL access="public" schemaVersion="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <CO access="public">
 	<modified></modified>
-	<identifier type="HEC">Identifiant du cours</identifier>
+	<identifier type="HEC">Identifier of course</identifier>
 	<template type="HEC">TemplateHec</template>
-	<title type="HEC">Titre du cours à HEC</title>
-	<language>FR-CA</language>
+	<title type="HEC">Title of course at HEC</title>
+	<language>ES</language>
 	<created>2001-12-17T09:30:47-05:00</created>
 	<creator>HEC Montréal</creator>
 	<modifiedBy></modifiedBy>
@@ -14,15 +14,15 @@
 	<children type="HEC"></children>
 	<previousPublished></previousPublished>
 	<lastPublished></lastPublished>
-	<courseId type="HEC">Id du cours</courseId>
+	<courseId type="HEC">Course Id</courseId>
 	<department type="HEC"></department>
 	<asmStructure access="public" xsi:type="NewsStruct">
 		<modified>2001-12-17T09:30:47-05:00</modified>
 		<asmUnit access="public" xsi:type="NewsUnit">
-			<label><![CDATA[Nouvelles et règlements]]></label>
+			<label><![CDATA[Novedades y Reglamentos]]></label>
 			<modified>2001-12-17T09:30:47-05:00</modified>
 			<asmUnitStructure access="public" xsi:type="NewsUnitStruct">
-				<label><![CDATA[Nouvelles et règlements]]></label>
+				<label><![CDATA[Novedades y Reglamentos]]></label>
 				<modified>2001-12-17T09:30:47-05:00</modified>
 				<asmUnitContent access="public" xsi:type="NewsUnitContent">
 					<modified>2001-12-17T09:30:47-05:00</modified>
@@ -33,10 +33,10 @@
 	<asmStructure access="public" xsi:type="OverviewStruct">
 		<modified>2001-12-17T09:30:47-05:00</modified>
 		<asmUnit access="public" xsi:type="OverviewUnit">
-			<label><![CDATA[Présentation du cours]]></label>
+			<label><![CDATA[Presentación]]></label>
 			<modified>2001-12-17T09:30:47-05:00</modified>
 			<asmUnitStructure access="public" xsi:type="OverviewUnitStruct">
-				<label><![CDATA[Présentation du cours]]></label>
+				<label><![CDATA[Presentación]]></label>
 				<modified>2001-12-17T09:30:47-05:00</modified>
 				<asmUnitContent access="public" xsi:type="OverviewUnitContent">
 					<modified>2001-12-17T09:30:47-05:00</modified>
@@ -47,10 +47,10 @@
 	<asmStructure access="public" xsi:type="StaffStruct">
 		<modified>2001-12-17T09:30:47-05:00</modified>
 		<asmUnit access="public" xsi:type="StaffUnit">
-			<label><![CDATA[Coordonnées]]></label>
+			<label><![CDATA[Datos personales]]></label>
 			<modified>2001-12-17T09:30:47-05:00</modified>
 			<asmUnitStructure access="public" xsi:type="StaffUnitStruct">
-				<label><![CDATA[Coordonnées]]></label>
+				<label><![CDATA[Datos personales]]></label>
 				<modified>2001-12-17T09:30:47-05:00</modified>
 				<asmUnitContent access="public" xsi:type="StaffUnitContent">
 					<modified>2001-12-17T09:30:47-05:00</modified>
@@ -61,10 +61,10 @@
 	<asmStructure access="public" xsi:type="LearningMaterialStruct">
 		<modified>2001-12-17T09:30:47-05:00</modified>
 		<asmUnit access="public" xsi:type="LearningMaterialUnit">
-			<label><![CDATA[Matériel pédagogique]]></label>
+			<label><![CDATA[Material pedagógico]]></label>
 			<modified>2001-12-17T09:30:47-05:00</modified>
 			<asmUnitStructure access="public" xsi:type="LearningMaterialUnitStruct">
-				<label><![CDATA[Matériel pédagogique]]></label>
+				<label><![CDATA[Material pedagógico]]></label>
 				<modified>2001-12-17T09:30:47-05:00</modified>
 				<asmUnitContent access="public" xsi:type="LearningMaterialUnitContent">
 					<modified>2001-12-17T09:30:47-05:00</modified>
