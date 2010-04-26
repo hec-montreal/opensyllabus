@@ -597,7 +597,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	    xml = writer.toString();
 	    xml = new String(xml.getBytes(), "UTF-8");
-	    osylSiteService.importDataInCO(xml, siteId, null, getXsd(webapp));
+	    osylSiteService.importDataInCO(xml, siteId, null, webapp);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
@@ -631,7 +631,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    Map<String, String> filenameChangesMap =
 		    importFilesInSite(zipReference, siteId);
 
-	    osylSiteService.importDataInCO(xml, siteId, filenameChangesMap, getXsd(webapp));
+	    osylSiteService.importDataInCO(xml, siteId, filenameChangesMap, webapp);
 
 	    contentHostingService.removeResource(zipReference);
 	    zipTempfile.delete();
@@ -1330,31 +1330,4 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    + ", permission: " + permission);
 	return l;
     }
-    
-    private String getXsd(String webappdir){
-	String xsd=null;
-	// Retrieve xml and xsl from the webapps/xslt
-	File coXslFile =
-		new File(webappdir + File.separator
-			+ OsylSiteService.SCHEMA_DIRECTORY + File.separator,
-			OsylSiteService.SCHEMA_FILENAME);
-	
-	InputStreamReader inputStreamReader;
-	try {
-	    inputStreamReader = new InputStreamReader(new FileInputStream(coXslFile));
-	    StringWriter writer = new StringWriter();
-	    BufferedReader buffer = new BufferedReader(inputStreamReader);
-	    String line = "";
-	    while (null != (line = buffer.readLine())) {
-		writer.write(line);
-	    }
-	    xsd = writer.toString();
-	    xsd = new String(xsd.getBytes(), "UTF-8");
-	    
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
-	return xsd;
-    }
-
 }

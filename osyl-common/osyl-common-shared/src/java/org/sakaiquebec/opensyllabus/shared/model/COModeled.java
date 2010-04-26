@@ -174,6 +174,8 @@ public class COModeled extends COSerialized {
      *Name of person node
      */
     protected final static String PERSON_NODE_NAME = "Person";
+    
+    private static final String XML_VERSION_ATTRIBUTE = "schemaVersion";
 
     protected final static List<String> CDATA_NODE_NAMES =
 	    Arrays.asList(new String[] { COPropertiesType.LABEL,
@@ -185,6 +187,8 @@ public class COModeled extends COSerialized {
      * The modeledContent is a POJO filled by XML2Model
      */
     private COContent modeledContent;
+    
+    private String schemaVersion;
 
     /**
      *Name of userDefLabel attribute
@@ -230,7 +234,9 @@ public class COModeled extends COSerialized {
 	try {
 	    // XMLtoDOM
 	    messageDom = XMLParser.parse(getContent());
-
+	    
+	    schemaVersion = messageDom.getDocumentElement().getAttribute(XML_VERSION_ATTRIBUTE);
+	    
 	    // DOMtoModel
 	    coContent = createCOContentPOJO(messageDom, coContent);
 	} catch (Exception e) {
@@ -644,7 +650,7 @@ public class COModeled extends COSerialized {
 	Element osylElement = document.createElement("OSYL");
 	osylElement.setAttribute(ACCESS_ATTRIBUTE_NAME,
 		SecurityInterface.ACCESS_PUBLIC);
-	osylElement.setAttribute("schemaVersion", "1.0");
+	osylElement.setAttribute("schemaVersion", schemaVersion);
 	osylElement.setAttribute("xmlns:xsi",
 		"http://www.w3.org/2001/XMLSchema-instance");
 	Element courseOutlineContentElem = document.createElement(CO_NODE_NAME);

@@ -772,22 +772,17 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /** {@inheritDoc} */
     public COSerialized importDataInCO(String xmlData, String siteId,
-	    Map<String, String> filenameChangesMap, String xsd) throws Exception {
+	    Map<String, String> filenameChangesMap, String webapp) throws Exception {
 	COSerialized co = null;
 
-	SchemaHelper schemaHelper = new SchemaHelper(xsd);
-	String schemaVersion = schemaHelper.getSchemaVersion();
-	
-	
+	SchemaHelper schemaHelper = new SchemaHelper(webapp);
+	xmlData = schemaHelper.verifyAndConvert(xmlData);
 	try {
 	    co = getSerializedCourseOutlineBySiteId(siteId);
 	    if (co != null) {
 		co.setContent(xmlData);
 		COModeledServer coModeledServer = new COModeledServer(co);
 		coModeledServer.XML2Model();
-		if(!coModeledServer.getSchemaVersion().equals(schemaVersion))
-		    throw new Exception("XSD version and XML version are not compatible");
-		
 		coModeledServer.resetXML(filenameChangesMap);
 		coModeledServer.model2XML();
 		co.setContent(coModeledServer.getSerializedContent());

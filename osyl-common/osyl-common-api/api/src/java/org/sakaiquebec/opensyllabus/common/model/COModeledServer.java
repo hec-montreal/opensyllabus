@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -210,15 +211,15 @@ public class COModeledServer {
      *Name of userDefLabel attribute
      */
     protected final static String USERDEFLABEL_ATTRIBUTE_NAME = "userDefLabel";
-    
-    protected final static String SCHEMA_VERSION_ATTRIBUTE_NAME="schemaVersion";
+
+    private static final String XML_VERSION_ATTRIBUTE = "schemaVersion";;
 
     /**
      * The modeledContent is a POJO filled by XML2Model
      */
     private COContent modeledContent;
-    
-    private String schemaVersion ;
+
+    private String schemaVersion;
 
     protected final static List<String> CDATA_NODE_NAMES =
 	    Arrays.asList(new String[] { COPropertiesType.LABEL,
@@ -289,6 +290,10 @@ public class COModeledServer {
 	    try {
 		// XMLtoDOM
 		messageDom = parseXml(coSerialized.getContent());
+
+		schemaVersion =
+			messageDom.getDocumentElement().getAttribute(
+				XML_VERSION_ATTRIBUTE);
 
 		// DOMtoModel
 		coContent =
@@ -364,8 +369,6 @@ public class COModeledServer {
 	Node myRoot = null;
 
 	NodeList nodeList = messageDom.getDocumentElement().getChildNodes();
-	
-	schemaVersion = messageDom.getDocumentElement().getAttribute(SCHEMA_VERSION_ATTRIBUTE_NAME);
 
 	for (int i = 0; i < nodeList.getLength(); i++) {
 	    Node node = nodeList.item(i);
@@ -390,8 +393,9 @@ public class COModeledServer {
 
 	    if (nodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
 		COStructureElement coStructElt = new COStructureElement();
-		coContent.getChildrens().add(createCOStructureElementPOJO(myNode,
-			coStructElt, coContent, isPublication));
+		coContent.getChildrens().add(
+			createCOStructureElementPOJO(myNode, coStructElt,
+				coContent, isPublication));
 
 	    } else {
 		addProperty(coContent.getProperties(), myNode);
@@ -518,8 +522,9 @@ public class COModeledServer {
 
 	    if (sNodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
 		COStructureElement coChildStructElt = new COStructureElement();
-		coStructElt.getChildrens().add(createCOStructureElementPOJO(sNode,
-			coChildStructElt, coStructElt, isPublication));
+		coStructElt.getChildrens().add(
+			createCOStructureElementPOJO(sNode, coChildStructElt,
+				coStructElt, isPublication));
 	    } else if (sNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
 		COUnit coUnit = new COUnit();
 		coStructElt.addChild(createCOUnitPOJO(sNode, coUnit,
@@ -798,9 +803,9 @@ public class COModeledServer {
 	Element osylElement = document.createElement("OSYL");
 	osylElement.setAttribute(ACCESS_ATTRIBUTE_NAME,
 		SecurityInterface.ACCESS_PUBLIC);
-	osylElement.setAttribute("schemaVersion", "1.0");
+	osylElement.setAttribute("schemaVersion", schemaVersion);
 	osylElement.setAttribute("xmlns:xsi",
-		"http://www.w3.org/2001/XMLSchema-instance");
+		XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
 	Element courseOutlineContentElem = document.createElement(CO_NODE_NAME);
 
 	setCommonAttributesAndProperties(courseOutlineContentElem, coContent,
@@ -1253,7 +1258,7 @@ public class COModeledServer {
 		    changeDocumentsUrls(uri, oldSiteName, coSerialized
 			    .getSiteId());
 	    if (filenameChangesMap != null) {
-		String filename = uri.substring(uri.lastIndexOf("/")+1);
+		String filename = uri.substring(uri.lastIndexOf("/") + 1);
 		String newFilename = filenameChangesMap.get(filename);
 		if (newFilename != null)
 		    uri = changeDocumentsUrls(uri, filename, newFilename);
@@ -1266,14 +1271,6 @@ public class COModeledServer {
     public String changeDocumentsUrls(String url, String originalDirectory,
 	    String newDirectory) {
 	return url.replaceFirst(originalDirectory, newDirectory);
-    }
-
-    public void setSchemaVersion(String schemaVersion) {
-	this.schemaVersion = schemaVersion;
-    }
-
-    public String getSchemaVersion() {
-	return schemaVersion;
     }
 
 }
