@@ -266,8 +266,6 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	VerticalPanel vp = new VerticalPanel();
 	vp.setStylePrimaryName("Osyl-EditorPopup-OptionGroup-Row");
 	vp.setSpacing(7);
-	HorizontalPanel ligne1 = new HorizontalPanel();
-	HorizontalPanel ligne2 = new HorizontalPanel();
 
 	VerticalPanel ponderationPanel = new VerticalPanel();
 	ponderationPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
@@ -417,6 +415,16 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	typePanel.add(l9);
 	typePanel.add(typeListBox);
 
+	HorizontalPanel ligneSuper = new HorizontalPanel();
+	HorizontalPanel ligne1 = new HorizontalPanel();
+	HorizontalPanel ligne2 = new HorizontalPanel();
+
+	if (super.getOptionWidgets() != null) {
+	    for (Widget w : super.getOptionWidgets()) {
+		ligneSuper.add(w);
+	    }
+	    vp.add(ligneSuper);
+	}
 	if (isDeletable()) {
 	    ligne1.add(typePanel);
 	    ligne1.add(ponderationPanel);

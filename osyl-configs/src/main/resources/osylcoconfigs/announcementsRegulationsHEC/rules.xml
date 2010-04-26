@@ -10,9 +10,9 @@
 		<attribute name="propertyType" restrictionpattern="HEC" />
 		<!-- list of element asmUnit allowed at this level -->
 		<element name="asmStructure">
-			<attribute name="type" restrictionpattern="NewsStruct" titleEditable="false"/>
+			<attribute name="type" restrictionpattern="NewsStruct"/>
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="NewsUnit" allowMultiple="false" titleEditable="false"/>
+				<attribute name="type" restrictionpattern="NewsUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="NewsUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -28,9 +28,9 @@
 			</element>
 		</element>
 		<element name="asmStructure">
-			<attribute name="type" restrictionpattern="OverviewStruct" titleEditable="false"/>
+			<attribute name="type" restrictionpattern="OverviewStruct"/>
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="OverviewUnit" allowMultiple="false" titleEditable="false"/>
+				<attribute name="type" restrictionpattern="OverviewUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="OverviewUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -46,9 +46,9 @@
 			</element>
 		</element>
 		<element name="asmStructure">
-			<attribute name="type" restrictionpattern="StaffStruct" titleEditable="false"/>
+			<attribute name="type" restrictionpattern="StaffStruct"/>
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="StaffUnit" allowMultiple="false" titleEditable="false"/>
+				<attribute name="type" restrictionpattern="StaffUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="StaffUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -64,9 +64,9 @@
 			</element>
 		</element>
 		<element name="asmStructure">
-			<attribute name="type" restrictionpattern="LearningMaterialStruct" titleEditable="false"/>
+			<attribute name="type" restrictionpattern="LearningMaterialStruct"/>
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="LearningMaterialUnit" allowMultiple="false" titleEditable="false"/>
+				<attribute name="type" restrictionpattern="LearningMaterialUnit" allowMultiple="false"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="LearningMaterialUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -83,10 +83,10 @@
 		</element>
 		<!-- list of element structureElement allowed at this level -->
 		<element name="asmStructure">
-			<attribute name="type" restrictionpattern="AssessmentStruct" titleEditable="false"/>
+			<attribute name="type" restrictionpattern="AssessmentStruct"/>
 			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="AssessmentUnit" allowMultiple="true" titleEditable="true"/>
+				<attribute name="type" restrictionpattern="AssessmentUnit" allowMultiple="true"/>
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="AssessmentUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">
@@ -103,10 +103,10 @@
 		</element>
 		<!-- list of element structureElement allowed at this level -->
 		<element name="asmStructure">
-			<attribute name="type" restrictionpattern="PedagogicalStruct" nestingLevelAllowed="1" titleEditable="false" allowMixedContent="false"/>
+			<attribute name="type" restrictionpattern="PedagogicalStruct" nestingLevelAllowed="1" allowMixedContent="false"/>
 			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="PedagogicalUnit" allowMultiple="true" titleEditable="true"/>
+				<attribute name="type" restrictionpattern="Lecture|WorkSession" allowMultiple="true" />
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="PedagogicalUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">

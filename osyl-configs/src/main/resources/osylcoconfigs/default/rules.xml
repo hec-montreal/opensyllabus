@@ -106,7 +106,7 @@
 			<attribute name="type" restrictionpattern="PedagogicalStruct" nestingLevelAllowed="1" allowMixedContent="false"/>
 			<!-- list of element contentUnit allowed at this level (only one at the moment) -->
 			<element name="asmUnit">
-				<attribute name="type" restrictionpattern="PedagogicalUnit" allowMultiple="true" />
+				<attribute name="type" restrictionpattern="Lecture|WorkSession" allowMultiple="true" />
 				<element name="asmUnitStructure">
 					<attribute name="type" restrictionpattern="PedagogicalUnitStruct" allowMultiple="false"/>
 					<element name="asmUnitContent">

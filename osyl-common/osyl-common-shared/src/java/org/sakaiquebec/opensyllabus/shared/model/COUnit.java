@@ -198,4 +198,22 @@ public class COUnit extends COElementAbstract<COElementAbstract> implements
 		COElementAbstract.POSITION_CHANGE_ACTION_DOWN);
     }
 
+    public void setSameTypeElementPrefixWithCurrentPosition(){
+	COElementAbstract coe = this;
+	int level = 0;
+	int p=0;
+	while (!coe.isCourseOutlineContent()) {
+	    level++;
+	    coe=coe.getParent();
+	}
+	List<COElementAbstract> l = new ArrayList<COElementAbstract>();
+	getSameTypeElement(coe, 0, level, l);
+	int i=1;
+	for(COElementAbstract coe2 : l){
+	    coe2.addProperty(COPropertiesType.PREFIX, ""+i);
+	    i++;
+	}
+	
+    }
+    
 }

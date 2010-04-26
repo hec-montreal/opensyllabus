@@ -12,19 +12,19 @@ public class OsylStyleLevelChooser {
 
     private static final String OSYL_TITLE = "Osyl-Title";
 
-    public static boolean getHasANumber(COUnit model) {
-	COUnit unit = model;
-	COElementAbstract eltAbs = unit.getParent();
-	if (eltAbs.isCOStructureElement()) {
-	    COStructureElement parent = (COStructureElement) unit.getParent();
-	    String parentTypeString = parent.getType();
-	    if ((parent.getChildrens().size() > 1)
-		    && (!parentTypeString.endsWith("Header"))) {
-		return true;
-	    }
-	}
-	return false;
-    }
+//    public static boolean getHasANumber(COUnit model) {
+//	COUnit unit = model;
+//	COElementAbstract eltAbs = unit.getParent();
+//	if (eltAbs.isCOStructureElement()) {
+//	    COStructureElement parent = (COStructureElement) unit.getParent();
+//	    String parentTypeString = parent.getType();
+//	    if ((parent.getChildrens().size() > 1)
+//		    && (!parentTypeString.endsWith("Header"))) {
+//		return true;
+//	    }
+//	}
+//	return false;
+//    }
 
     public static String getLevelStyle(COElementAbstract model) {
 	OsylController controller = OsylController.getInstance();

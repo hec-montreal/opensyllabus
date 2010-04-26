@@ -420,6 +420,10 @@
 /*Unit View --------------------------------------------------------------------------------------*/
 .Osyl-UnitView-MainPanel {width:100%}
 
+.Osyl-ASMUnit-numberTextBox {
+	width:50px;
+}
+
 .Osyl-TitleEditor {}
 .Osyl-RubricTitle {}
 
@@ -1060,6 +1064,8 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	padding:0 0 0 7px;
 	border-right:0;
 }
+
+.Osyl-EditorPopup-OptionGroup-Row table{width:100%}
 
 .Osyl-EditorPopup-RowOptions .gwt-Label,
 .Osyl-EditorPopup-RowOptions .gwt-HTML {

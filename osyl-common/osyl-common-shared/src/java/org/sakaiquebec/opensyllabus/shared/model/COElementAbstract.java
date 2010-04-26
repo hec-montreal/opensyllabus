@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.shared.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
@@ -329,15 +330,36 @@ public abstract class COElementAbstract<T extends COModelInterface> implements
      * Gets the position of a structure element child.
      * 
      * @param the child
-     * @return the child poistion
+     * @return the child position
      */
-    public String getChildPosition(COElementAbstract coEltAbs) {
-	String pos = "0";
-	List<T> children = getChildrens();
-	if (children.contains(coEltAbs)) {
-	    pos = "" + (children.indexOf(coEltAbs) + 1);
+    public String getPosition() {
+	COElementAbstract coe = this;
+	int level = 0;
+	int p=0;
+	while (!coe.isCourseOutlineContent()) {
+	    level++;
+	    coe=coe.getParent();
 	}
-	return pos;
+	List<COElementAbstract> l = new ArrayList<COElementAbstract>();
+	getSameTypeElement(coe, 0, level, l);
+	return ""+(l.indexOf(this)+1);
+    }
+   
+    
+    protected void getSameTypeElement(COElementAbstract coe, int level, int thisLevel, List<COElementAbstract> l){
+	level++;
+	for (Object o : coe.getChildrens()) {
+	    if (o instanceof COElementAbstract) {
+		COElementAbstract coe2 = (COElementAbstract) o;
+		if (level == thisLevel) {
+		    if (coe2.getType().equals(this.getType()))
+			l.add(coe2);
+		} else {
+		    getSameTypeElement(coe2, level, thisLevel,l);
+		}
+
+	    }
+	}
     }
 
     /**
@@ -394,8 +416,8 @@ public abstract class COElementAbstract<T extends COModelInterface> implements
 	properties.removeProperty(key);
 	notifyEventHandlers();
     }
-    
-    public void removeProperty(String key, String type){
+
+    public void removeProperty(String key, String type) {
 	properties.removeProperty(key, type);
 	notifyEventHandlers();
     }
@@ -426,10 +448,10 @@ public abstract class COElementAbstract<T extends COModelInterface> implements
 	}
 	return l;
     }
-    
-    public boolean hasNestedChild(){
-	for(COModelInterface com : getChildrens()){
-	    if(com.getType().equals(this.getType())){
+
+    public boolean hasNestedChild() {
+	for (COModelInterface com : getChildrens()) {
+	    if (com.getType().equals(this.getType())) {
 		return true;
 	    }
 	}

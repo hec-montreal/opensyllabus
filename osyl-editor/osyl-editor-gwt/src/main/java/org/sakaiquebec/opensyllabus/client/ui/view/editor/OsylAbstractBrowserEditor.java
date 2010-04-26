@@ -78,30 +78,34 @@ public abstract class OsylAbstractBrowserEditor extends
 			    "DocumentEditor.AddFolderPromt.Promt"),
 			    newFolderName);
 	}
-	
-	
-	final OsylAbstractBrowserComposite fileBrowser = browser;
-	
-	AsyncCallback<Void> asyncCallback = new AsyncCallback<Void>() {
-		public void onFailure(Throwable caught) {
-			removeStyleName("Osyl-RemoteFileBrowser-WaitingState");
-			final OsylAlertDialog alertBox = new OsylAlertDialog(false, true,
-					getView().getUiMessage("Global.error"), getView()
-					.getUiMessage("fileUpload.unableReadRemoteDir", caught.getMessage()));
-			alertBox.center();
-			alertBox.show();
-		}
 
-		public void onSuccess(Void result) {
-			// Call to RemoFileBrowser in order to refresh its content
-			browser.getRemoteDirectoryListing(browser.getCurrentDirectory().getDirectoryPath());
-		}
+	final OsylAbstractBrowserComposite fileBrowser = browser;
+
+	AsyncCallback<Void> asyncCallback = new AsyncCallback<Void>() {
+	    public void onFailure(Throwable caught) {
+		removeStyleName("Osyl-RemoteFileBrowser-WaitingState");
+		final OsylAlertDialog alertBox =
+			new OsylAlertDialog(false, true, getView()
+				.getUiMessage("Global.error"), getView()
+				.getUiMessage("fileUpload.unableReadRemoteDir",
+					caught.getMessage()));
+		alertBox.center();
+		alertBox.show();
+	    }
+
+	    public void onSuccess(Void result) {
+		// Call to RemoFileBrowser in order to refresh its content
+		browser.getRemoteDirectoryListing(browser.getCurrentDirectory()
+			.getDirectoryPath());
+	    }
 	};
 
 	// create the new Folder
-	OsylRemoteServiceLocator.getDirectoryRemoteService().createNewRemoteDirectory(
-			newFolderName, fileBrowser.getCurrentDirectory().getDirectoryPath(), asyncCallback);
-	
+	OsylRemoteServiceLocator.getDirectoryRemoteService()
+		.createNewRemoteDirectory(newFolderName,
+			fileBrowser.getCurrentDirectory().getDirectoryPath(),
+			asyncCallback);
+
     }
 
     public void onItemSelectionEvent(RFBItemSelectionEvent event) {
@@ -119,24 +123,22 @@ public abstract class OsylAbstractBrowserEditor extends
     }
 
     native boolean validateFolderNameJSregExp(String newFolderName)/*-{
-    	// ...implemented with JavaScript
-   	var regExp = /^[^\\\/\?\*\"\'\>\<\:\|]*$/;
-   	return regExp.test(newFolderName);
-    }-*/;
+								   // ...implemented with JavaScript
+								   var regExp = /^[^\\\/\?\*\"\'\>\<\:\|]*$/;
+								   return regExp.test(newFolderName);
+								   }-*/;
 
     public String getResourceURI() {
-	OsylAbstractBrowserItem item =
-		browser.getSelectedAbstractBrowserItem();
+	OsylAbstractBrowserItem item = browser.getSelectedAbstractBrowserItem();
 	if (item == null || item instanceof OsylDirectory) {
 	    return null;
 	} else {
 	    return item.getFilePath();
 	}
     }
-    
-    public String getLastModifiedDateString(){
-	OsylAbstractBrowserItem item =
-		browser.getSelectedAbstractBrowserItem();
+
+    public String getLastModifiedDateString() {
+	OsylAbstractBrowserItem item = browser.getSelectedAbstractBrowserItem();
 	if (item == null || item instanceof OsylDirectory) {
 	    return null;
 	} else {
@@ -150,10 +152,9 @@ public abstract class OsylAbstractBrowserEditor extends
      */
     protected abstract void initBrowser();
 
-
     /**
      * Refresh browser (and the metadata information coming from the browser
      */
     protected abstract void refreshBrowsingComponents();
-    
+
 }

@@ -155,7 +155,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	COElementAbstract eltAbs = unit.getParent();
 	if (eltAbs.isCOStructureElement()) {
 	    COStructureElement parent = (COStructureElement) unit.getParent();
-	    position = parent.getChildPosition(unit);
+	    position = unit.getPosition();
 	}
 	return position;
     }

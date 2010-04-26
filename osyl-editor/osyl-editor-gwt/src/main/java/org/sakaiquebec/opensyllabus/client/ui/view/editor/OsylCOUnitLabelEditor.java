@@ -21,16 +21,27 @@
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
+import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOUnitLabelView;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
+import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
 public class OsylCOUnitLabelEditor extends OsylLabelEditor {
+
+    private boolean automaticNumbering = true;
+    private TextBox prefixTextBox;
 
     public OsylCOUnitLabelEditor(OsylAbstractView parent) {
 	this(parent, false);
@@ -78,6 +89,50 @@ public class OsylCOUnitLabelEditor extends OsylLabelEditor {
 	    if (coe.isCOStructureElement())
 		fillListBoxWithCOStructure((COStructureElement) coe, lb);
 	}
+    }
+
+    public void enterEdit() {
+	super.enterEdit();
+
+	String prefix = ((OsylCOUnitLabelView) getView()).getPrefixFromModel();
+	if (prefix != null) {
+	    automaticNumbering = false;
+	    prefixTextBox.setText(prefix);
+	}
+    }
+
+    public Widget[] getOptionWidgets() {
+	if (getView().getController().getSettings().isTreeViewNumbering(
+		(COUnit) getModel())) {
+	    VerticalPanel vp = new VerticalPanel();
+	    vp.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
+	    prefixTextBox = new TextBox();
+	    prefixTextBox.addChangeHandler(new ChangeHandler() {
+		public void onChange(ChangeEvent event) {
+		    if (automaticNumbering) {
+			((COUnit) getModel())
+				.setSameTypeElementPrefixWithCurrentPosition();
+		    }
+		    automaticNumbering = false;
+		}
+	    });
+	    prefixTextBox.setMaxLength(5);
+	    prefixTextBox.setStylePrimaryName("Osyl-ASMUnit-numberTextBox");
+	    Label l =
+		    new Label(getController().getUiMessage("ASMUnit.numbering"));
+	    vp.add(l);
+	    vp.add(prefixTextBox);
+	    return new Widget[] { vp };
+	} else {
+	    return null;
+	}
+    }
+
+    public String getPrefix() {
+	if (automaticNumbering)
+	    return null;
+	else
+	    return prefixTextBox.getText();
     }
 
 }

@@ -100,5 +100,8 @@ public class COPropertiesType {
     //Specific to Document resource
     public static final String LICENSE = "license";
     public static final String RIGHTS = "rights";
+    
+    //Specific to ASMUnit
+    public static final String PREFIX = "prefix";
 
 }

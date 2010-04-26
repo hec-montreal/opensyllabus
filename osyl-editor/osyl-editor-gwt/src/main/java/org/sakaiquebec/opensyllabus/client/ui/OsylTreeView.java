@@ -265,7 +265,7 @@ public class OsylTreeView extends OsylViewableComposite implements
     }
 
     public void onUpdateModel(UpdateCOStructureElementEvent event) {
-	refreshSubModelsViews((COElementAbstract) event.getSource());
+	refreshView();
     }
 
     /**

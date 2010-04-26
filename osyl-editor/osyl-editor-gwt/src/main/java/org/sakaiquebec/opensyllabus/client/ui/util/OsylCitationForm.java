@@ -68,7 +68,7 @@ public class OsylCitationForm extends WindowPanel implements
 	OsylViewControllable {
 
     private static final int FORM_WIDTH = 450;
-    private static final String RECOMMENDED_FIELD_INDICATOR = " <sup>+</sup>";
+    private static final String RECOMMENDED_FIELD_INDICATOR = "&nbsp;<sup>+</sup>";
 
     /**
      * Information about citation which is updated

@@ -21,12 +21,10 @@
 package org.sakaiquebec.opensyllabus.client.ui.base;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
-import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
-import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
 
@@ -60,14 +58,12 @@ public class OsylUnitTreeItemView extends OsylTreeItemBaseView implements
 
 	COElementAbstract eltAbs = itemModel.getParent();
 	if (eltAbs.isCOStructureElement()) {
-	    COStructureElement coStructElt = (COStructureElement) eltAbs;
-	    if (showNumbering
-		    && OsylStyleLevelChooser.getHasANumber((COUnit) getModel())) {
-		String positionString = coStructElt.getChildPosition(itemModel);
-		if (positionString.length() < 2) {
-		    positionString = "0" + positionString;
-		}
-		treeItemText = positionString + " : " + itemModel.getLabel();
+	    if (showNumbering) {
+		String p = itemModel.getProperty(COPropertiesType.PREFIX);
+		if (p == null)
+		    p = itemModel.getPosition();
+		p = p + (!p.trim().equals("") ? " : " : "");
+		treeItemText = p + itemModel.getLabel();
 	    } else {
 		treeItemText = itemModel.getLabel();
 	    }

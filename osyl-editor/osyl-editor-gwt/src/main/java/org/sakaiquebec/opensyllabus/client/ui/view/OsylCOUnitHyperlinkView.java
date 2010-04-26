@@ -24,7 +24,8 @@ package org.sakaiquebec.opensyllabus.client.ui.view;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
-import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
+import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitEventHandler;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -40,20 +41,21 @@ import com.google.gwt.user.client.ui.Hyperlink;
  * 
  * @version $Id: $
  */
-public class OsylCOUnitHyperlinkView extends OsylViewableComposite {
+public class OsylCOUnitHyperlinkView extends OsylViewableComposite implements
+	UpdateCOUnitEventHandler {
 
     private FlexTable mainPanel;
     private Hyperlink coUnitHyperlink;
-    private OsylLabelView coUnitLabel;
+    private OsylCOUnitLabelView coUnitLabel;
 
     // View Constructor
     public OsylCOUnitHyperlinkView(COUnit model, OsylController controller) {
-	this(model, controller, new OsylCOUnitLabelView(model, controller, true,
-		OsylStyleLevelChooser.getLevelStyle(model)));
+	this(model, controller, new OsylCOUnitLabelView(model, controller,
+		true, OsylStyleLevelChooser.getLevelStyle(model)));
     }
 
     public OsylCOUnitHyperlinkView(COUnit model, OsylController controller,
-	    OsylLabelView lv) {
+	    OsylCOUnitLabelView lv) {
 	super(model, controller);
 	setCoUnitLabel(lv);
 	initView();
@@ -63,9 +65,11 @@ public class OsylCOUnitHyperlinkView extends OsylViewableComposite {
 	setMainPanel(new FlexTable());
 	getMainPanel().setStylePrimaryName("Osyl-ListItemView-Table");
 	COUnit coUnit = (COUnit) getModel();
-	COStructureElement coStructElt =
-		(COStructureElement) coUnit.getParent();
-	addCoUnitLink(coStructElt.getChildPosition(coUnit));
+	coUnit.addEventHandler(this);
+	String p = coUnit.getProperty(COPropertiesType.PREFIX);
+	if (p == null)
+	    p = coUnit.getPosition();
+	addCoUnitLink(p);
 
 	addCoUnitLabel();
 
@@ -73,10 +77,8 @@ public class OsylCOUnitHyperlinkView extends OsylViewableComposite {
     }
 
     private void addCoUnitLink(String position) {
-	if (position.length() < 2) {
-	    position = "0" + position;
-	}
-	setCoUnitHyperlink(new Hyperlink(position + " - ", null));
+	position = position + (!position.trim().equals("") ? "-" : "");
+	setCoUnitHyperlink(new Hyperlink(position, null));
 	getCoUnitHyperlink().addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		getController().getViewContext().setContextModel(
@@ -117,12 +119,20 @@ public class OsylCOUnitHyperlinkView extends OsylViewableComposite {
 	this.mainPanel = mainPanel;
     }
 
-    public OsylLabelView getCoUnitLabel() {
+    public OsylCOUnitLabelView getCoUnitLabel() {
 	return coUnitLabel;
     }
 
-    public void setCoUnitLabel(OsylLabelView coUnitLabel) {
+    public void setCoUnitLabel(OsylCOUnitLabelView coUnitLabel) {
 	this.coUnitLabel = coUnitLabel;
+    }
+
+    public void onUpdateModel(UpdateCOUnitEvent event) {
+	COUnit counit = (COUnit) getModel();
+	String p = counit.getProperty(COPropertiesType.PREFIX);
+	if (p == null)
+	    p = counit.getPosition();
+	addCoUnitLink(p);
     }
 
 }

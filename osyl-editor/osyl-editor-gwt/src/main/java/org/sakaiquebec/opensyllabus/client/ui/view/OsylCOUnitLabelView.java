@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.client.ui.view;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCOUnitLabelEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
 /**
@@ -48,6 +49,17 @@ public class OsylCOUnitLabelView extends OsylLabelView {
 
     public COUnit getModel() {
 	return (COUnit) super.getModel();
+    }
+    
+    protected void updateModel() {
+	super.updateModel();
+	String prefix = ((OsylCOUnitLabelEditor)getEditor()).getPrefix();
+	if(prefix!=null)
+	    getModel().addProperty(COPropertiesType.PREFIX, prefix);
+    }
+    
+    public String getPrefixFromModel(){
+	return getModel().getProperty(COPropertiesType.PREFIX);
     }
 
 }

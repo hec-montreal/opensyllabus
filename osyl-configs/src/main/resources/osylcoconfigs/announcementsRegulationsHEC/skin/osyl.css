@@ -332,12 +332,11 @@
 
 /* Citation Form -----------------------------------------------------------------------------------------*/
 .Osyl-CitationForm-form {
-	padding:4px;
+	padding:0;
 	font:normal 100% Arial, Verdana, sans-serif;
 	color:#000;
-	background-color:#FFF;
-	border:2px outset;
-	width: 450px;
+	background-color:transparent;
+	border:none;
 }
 
 .Osyl-CitationForm-title {
@@ -420,6 +419,10 @@
 
 /*Unit View --------------------------------------------------------------------------------------*/
 .Osyl-UnitView-MainPanel {width:100%}
+
+.Osyl-ASMUnit-numberTextBox {
+	width:50px;
+}
 
 .Osyl-TitleEditor {}
 .Osyl-RubricTitle {}
@@ -1062,6 +1065,8 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	border-right:0;
 }
 
+.Osyl-EditorPopup-OptionGroup-Row table{width:100%}
+
 .Osyl-EditorPopup-RowOptions .gwt-Label,
 .Osyl-EditorPopup-RowOptions .gwt-HTML {
 	color:#454A4f;
@@ -1261,7 +1266,7 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 
 /* ------- */
 
-.Osyl-ContactInfo-Editor {}
+.Osyl-ContactInfo-Editor table {width:auto}
 .Osyl-ContactInfo-Viewer {}
 
 .Osyl-ContactInfo-FirstName, .Osyl-ContactInfo-LastName {

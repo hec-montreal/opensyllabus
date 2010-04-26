@@ -96,7 +96,7 @@ public abstract class OsylAbstractEditor extends Composite {
     protected ListBox targetsListBox;
 
     public static final String MANDATORY_FIELD_INDICATOR =
-	    "<span class=\"Osyl-Mandatory_field\"> *</span>";
+	    "<span class=\"Osyl-Mandatory_field\">&nbsp;*</span>";
 
     protected String propertyType;
 
