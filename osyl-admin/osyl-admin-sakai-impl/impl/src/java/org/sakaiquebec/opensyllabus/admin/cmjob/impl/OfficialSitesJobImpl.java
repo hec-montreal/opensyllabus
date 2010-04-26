@@ -59,7 +59,6 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
     private Set<CourseSet> allCourseSets = null;
 
-
     private Set<CourseOffering> courseOffs = null;
 
     private Set<CanonicalCourse> canonicalCourses =
@@ -109,8 +108,6 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	this.adminConfigService = adminConfigService;
     }
 
- 
-
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
 	loginToSakai();
@@ -150,6 +147,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	}
 
 	String canCourseId = null;
+	String lang = null;
 
 	for (CanonicalCourse canCourse : canonicalCourses) {
 	    canCourseId = canCourse.getEid();
@@ -186,11 +184,12 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 				for (Section section : sections) {
 				    siteName = getSiteName(section);
 				    try {
-					System.out.println("le site cree est "
-						+ osylSiteService.createSite(
-							siteName,
-							OSYL_CO_CONFIG,
-							section.getLang()));
+					if (section.getLang() == null)
+					    lang = TEMPORARY_LANG;
+					else
+					    lang = section.getLang();
+					osylSiteService.createSite(siteName,
+						OSYL_CO_CONFIG, lang);
 					osylManagerService.associateToCM(
 						section.getEid(), siteName);
 				    } catch (Exception e) {
@@ -228,27 +227,31 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
     private void createShareable(CourseOffering course) {
 	String siteName = getSharableSiteName(course);
 	Set<Membership> sectionMembers = new HashSet<Membership>();
-	
-	//Retrieve the members of the course sections associated to
-	//this course offering
+
+	// Retrieve the members of the course sections associated to
+	// this course offering
 	Set<Section> sections = cmService.getSections(course.getEid());
 	Set<Membership> members = null;
-	
-	for (Section section: sections){
+	String lang = null;
+	for (Section section : sections) {
 	    members = cmService.getSectionMemberships(section.getEid());
 	    sectionMembers.addAll(members);
+	    if (section.getLang() == null)
+		lang = TEMPORARY_LANG;
+	    else
+		lang = section.getLang();
 	}
-	
+
 	try {
-	    osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG,
-		    TEMPORARY_LANG);
-	    //TODO: add users to sites
+	    osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG, lang);
+	    // TODO: add users to sites
 	    Site sharable = osylSiteService.getSite(siteName);
-	    
-	    for (Membership member: sectionMembers){
-		sharable.addMember(member.getUserId(), "Instructor", true, false);
+
+	    for (Membership member : sectionMembers) {
+		sharable.addMember(member.getUserId(), "Instructor", true,
+			false);
 	    }
-	    
+
 	    SiteService.save(sharable);
 	} catch (Exception e) {
 	    log.error(e.getMessage());
