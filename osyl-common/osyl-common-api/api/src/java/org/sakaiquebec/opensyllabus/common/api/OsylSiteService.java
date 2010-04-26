@@ -54,6 +54,9 @@ public interface OsylSiteService extends EntityProducer{
 
 	public static final String XSL_PREFIX = "security_";
 
+	public final static String SITE_TYPE = "course";
+
+
 	/**
 	 * Name of the chs folder in which the course outline content will be
 	 * stored.

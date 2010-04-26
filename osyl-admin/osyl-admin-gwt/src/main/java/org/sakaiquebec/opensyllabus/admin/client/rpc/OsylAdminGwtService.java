@@ -43,40 +43,4 @@ public interface OsylAdminGwtService extends RemoteService{
      */
     public void createUsers(String fileDirectory);
 
-    /**
-     * Returns all defined roles of the realm template
-     * 
-     * @return a Set containing the IDs of the roles
-     */
-    public Set<String> getTemplateRoles();
-    
-    /**
-     * Returns the functions with the lists of allowed roles 
-     * of the realm template
-     * 
-     * @return a HashMap containing the function as key and the
-     * 		list with the allowed roles as value
-     */
-    public HashMap<String, List<String>> getTemplateFunctionsWithAllowedRoles();
-    
-    /**
-     * Gives all roles in the given list the permission for this
-     * function. Roles not included in the list lose the
-     * permission.
-     * 
-     * @param function the name of the function to update
-     * @param allowedRoles names of the roles which have permission 
-     * 		for this function
-     */
-    public void updateTemplateFunction(String function, Set<String> allowedRoles);
-    
-    /**
-     * Gives all roles in the given list the permission for the
-     * functions which are the key values of the HashMap. 
-     * Roles not included in the list lose the permission.
-     * 
-     * @param functions the updated functions keys and the allowed
-     * 		roles as values
-     */
-    public void updateTemplateFunctions(HashMap<String, Set<String>> functions);
- }
+  }

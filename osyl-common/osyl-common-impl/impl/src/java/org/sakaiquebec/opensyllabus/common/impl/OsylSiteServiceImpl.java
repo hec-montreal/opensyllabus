@@ -55,7 +55,6 @@ import org.sakaiproject.tool.api.Tool;
 import org.sakaiproject.tool.api.ToolManager;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService;
-import org.sakaiquebec.opensyllabus.common.api.OsylRealmService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
@@ -77,7 +76,7 @@ import org.w3c.dom.Element;
 public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     private static final String CO_CONTENT_TEMPLATE = "coContentTemplate";
-
+    
     private static final Log log = LogFactory.getLog(OsylSiteServiceImpl.class);
 
     private ToolManager toolManager;
@@ -92,9 +91,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /** The chs to be injected by Spring */
     private ContentHostingService contentHostingService;
-
-    /** The Osyl realm service to be injected by Spring */
-    private OsylRealmService osylRealmService;
 
     /** The hierarchy service to be injected by Spring */
     private OsylHierarchyService osylHierarchyService;
@@ -203,14 +199,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	this.siteService = siteService;
     }
 
-    /**
-     * Sets the <code>OsylRealmService</code>.
-     * 
-     * @param osylRealmService
-     */
-    public void setOsylRealmService(OsylRealmService osylRealmService) {
-	this.osylRealmService = osylRealmService;
-    }
 
     /**
      * @inherited
@@ -390,7 +378,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    throws Exception {
 	Site site = null;
 	if (!siteService.siteExists(siteTitle)) {
-	    site = siteService.addSite(siteTitle, "osylEditor");
+	    site = siteService.addSite(siteTitle, SITE_TYPE);
 	    site.setTitle(siteTitle);
 	    site.setPublished(true);
 	    site.setJoinable(false);
@@ -458,7 +446,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    String lang) throws Exception {
 	Site site = null;
 	if (!siteService.siteExists(siteTitle)) {
-	    site = siteService.addSite(siteTitle, "osylEditor");
+	    site = siteService.addSite(siteTitle, SITE_TYPE);
 	    site.setTitle(siteTitle);
 	    site.setPublished(true);
 	    site.setJoinable(false);
@@ -511,21 +499,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return site.getId();
     }
 
-    /**
-     * Returns the site type of the realm service if there is one otherwise the
-     * default site type
-     * 
-     * @return String the type of the site
-     */
-    private String getSiteType() {
-	if (osylRealmService == null) {
-	    return DEFAULT_SITE_TYPE;
-	} else {
-	    return osylRealmService.getSiteType();
-	}
-    }
-
-    /**
+     /**
      * Add a collection (similar to a sub-directory) under the resource tool.
      * 
      * @param dir name of collection

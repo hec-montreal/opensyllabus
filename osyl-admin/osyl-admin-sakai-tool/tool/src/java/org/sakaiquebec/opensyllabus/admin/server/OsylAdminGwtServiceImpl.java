@@ -80,38 +80,5 @@ public class OsylAdminGwtServiceImpl extends RemoteServiceServlet implements
 	osylAdminServices.getOsylAdminService().createUsers(servletContext.getRealPath("/"));
     }
 
-    /** {@inheritDoc} */
-	public HashMap<String, List<String>> getTemplateFunctionsWithAllowedRoles() {
-		HashMap<String, List<String>> result = null;
-		if (osylAdminServices != null) {
-			result = osylAdminServices.getOsylRealmService().
-				getFunctionsWithAllowedRoles();
-		}
-		return result;
-	}
-
-	/** {@inheritDoc} */
-	public Set<String> getTemplateRoles() {
-		Set<String> result = null;
-		if (osylAdminServices != null) {
-			result = osylAdminServices.getOsylRealmService().getRoles();
-		}
-		return result;
-	}
-
-	/** {@inheritDoc} */
-	public void updateTemplateFunction(String function, Set<String> allowedRoles) {
-		osylAdminServices.getOsylRealmService().updateFunction(function, allowedRoles);
-	}
-	
-	/** {@inheritDoc} */
-	public void updateTemplateFunctions(HashMap<String, Set<String>> functions) {
-		for (Iterator<Entry<String, Set<String>>> iFunctions =
-				functions.entrySet().iterator(); iFunctions.hasNext();) {
-			Entry<String, Set<String>> entry = iFunctions.next();
-			osylAdminServices.getOsylRealmService().
-				updateFunction(entry.getKey(), entry.getValue());
-		}
-	}
 
  }

@@ -10,7 +10,7 @@
 		<configuration name="help.id" value="sakai.opensyllabus.tool" type="final" />
 		<category name="course" />
 		<category name="project" />
-
+	
 		<keyword name="GWT" />
 
 	</tool>

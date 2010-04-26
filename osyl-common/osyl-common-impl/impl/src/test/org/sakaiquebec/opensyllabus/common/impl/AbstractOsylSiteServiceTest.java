@@ -2,7 +2,6 @@ package org.sakaiquebec.opensyllabus.common.impl;
 
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
-import org.sakaiquebec.opensyllabus.common.api.OsylRealmService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
@@ -34,7 +33,6 @@ public abstract class AbstractOsylSiteServiceTest extends AbstractServiceTest {
         serviceImpl.setIdManager(getMockery().newIdManager());
         
         serviceImpl.setConfigService(getMockery().mock(OsylConfigService.class));
-        serviceImpl.setOsylRealmService(getMockery().mock(OsylRealmService.class));
         serviceImpl.setSecurityService(getMockery().mock(OsylSecurityService.class));
         
         serviceImpl.init();

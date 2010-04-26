@@ -23,7 +23,6 @@ package org.sakaiquebec.opensyllabus.admin.server;
 
 import org.sakaiquebec.opensyllabus.admin.api.*;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
-import org.sakaiquebec.opensyllabus.common.api.OsylRealmService;
 
 /**
  * A bean that acts as a concentrator for OSYL admin services, to be used in JSP
@@ -58,26 +57,6 @@ public class OsylAdminBackingBean {
         this.osylAdminService = osylAdminService;
     }
 
-    private OsylRealmService osylRealmService;
-
-    /**
-     * Gets the {@link OsylRealmService}.
-     *
-     * @return
-     *         the {@link OsylRealmService}
-     */
-    public OsylRealmService getOsylRealmService() {
-        return osylRealmService;
-    }
-
-    /**
-     * Sets the {@link OsylRealmService}.
-     *
-     * @param osylRealmService
-     */
-    public void setOsylRealmService(OsylRealmService osylRealmService) {
-        this.osylRealmService = osylRealmService;
-    }
 
     /**
      * Init method called at initialization of the bean.
