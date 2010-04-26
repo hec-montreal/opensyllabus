@@ -246,6 +246,32 @@
 			
 	</bean>
 
+	<bean id="helpdeskSynchrojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.HelpdeskSynchronisationJobImpl" >
+		<property name="userDirService"
+			ref="org.sakaiproject.user.api.UserDirectoryService" />
+		<property name="siteService"
+			ref="org.sakaiproject.site.api.SiteService" />			
+	</bean>
+
+	<bean id="libraryStaffSynchrojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.LibraryStaffSynchronisationJobImpl" >
+		<property name="userDirService"
+			ref="org.sakaiproject.user.api.UserDirectoryService" />
+		<property name="siteService"
+			ref="org.sakaiproject.site.api.SiteService" />			
+	</bean>
+
+	<bean id="bibliServPretSynchrojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.BibliServPretSynchronisationJobImpl" >
+		<property name="userDirService"
+			ref="org.sakaiproject.user.api.UserDirectoryService" />
+		<property name="siteService"
+			ref="org.sakaiproject.site.api.SiteService" />			
+	</bean>
+
+	<bean id="changeOsylEditorSiteTypejob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.ChangeOsylEditorSiteTypeJobImpl" >
+		<property name="siteService"
+			ref="org.sakaiproject.site.api.SiteService" />			
+	</bean>
+
 	<bean id="osylhcojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylHierarchicalCourseOutlineJobImpl" >
 		<property name="coRelationDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
@@ -299,6 +325,86 @@
 		
 	</bean>	
 
+
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.helpdeskSynchrojob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		
+	
+		<property name="beanId">
+			<value>helpdeskSynchrojob</value>
+		</property>
+		
+		<property name="jobName">
+			<value>Helpdesk Synchronisation Job</value>
+		</property>
+		
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+		
+	</bean>	
+
+
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.libraryStaffSynchrojob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		
+	
+		<property name="beanId">
+			<value>libraryStaffSynchrojob</value>
+		</property>
+		
+		<property name="jobName">
+			<value>Library Staff Synchronisation Job</value>
+		</property>
+		
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+		
+	</bean>	
+
+
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.bibliServPretSynchrojob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		
+	
+		<property name="beanId">
+			<value>bibliServPretSynchrojob</value>
+		</property>
+		
+		<property name="jobName">
+			<value>Bibli Serv Pret Synchronisation Job</value>
+		</property>
+		
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+		
+	</bean>	
+
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.changeOsylEditorSiteTypejob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		
+	
+		<property name="beanId">
+			<value>changeOsylEditorSiteTypejob</value>
+		</property>
+		
+		<property name="jobName">
+			<value>Change 'osylEditor' Site to 'course' Site Job</value>
+		</property>
+		
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+		
+	</bean>	
+	
+	
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylcmjobudem"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
