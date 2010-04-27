@@ -210,7 +210,8 @@ public class COUnit extends COElementAbstract<COElementAbstract> implements
 	getSameTypeElement(coe, 0, level, l);
 	int i=1;
 	for(COElementAbstract coe2 : l){
-	    coe2.addProperty(COPropertiesType.PREFIX, ""+i);
+	    if(coe2.getProperty(COPropertiesType.PREFIX)==null)
+		coe2.addProperty(COPropertiesType.PREFIX, ""+i);
 	    i++;
 	}
 	
