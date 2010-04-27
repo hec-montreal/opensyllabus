@@ -235,7 +235,7 @@ public class OsylCitationRemoteServiceJsonImpl extends
 		    Window.alert("call back from the server : "
 			    + event.getResults());
 		}
-		RootPanel.detachNow(form);
+		RootPanel.get().remove(form);
 		callback.onSuccess(getPath(event.getResults()));
 	    }
 
@@ -311,7 +311,7 @@ public class OsylCitationRemoteServiceJsonImpl extends
 		    Window.alert("call back from the server : "
 			    + event.getResults());
 		}
-		RootPanel.detachNow(form);
+		RootPanel.get().remove(form);
 		callback.onSuccess(null);
 	    }
 
