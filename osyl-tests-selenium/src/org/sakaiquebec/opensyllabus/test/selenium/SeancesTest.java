@@ -68,12 +68,12 @@ public class SeancesTest extends AbstractOSYLTest{
         int resNb = getResourceCount()-1;
         log("We start with " + resNb + " resources");
         
-        //We add a first Assessment Unit
-        clickAddItem("addPedagogicalUnit");
+        //We add a first Lecture
+        clickAddItem("addLecture");
         pause();
         
-        //We add a first Assessment Unit
-        clickAddItem("addPedagogicalUnit");
+        //We add another one
+        clickAddItem("addLecture");
         pause();
         
 //---------------------------------------------------------------------------//

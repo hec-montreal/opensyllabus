@@ -117,11 +117,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	
 	//We open the last assessment
 	int Val = resNb + 2;
-	if(Val < 10){
-	    session().click("link=0" + Val + " -");
-	}else{
-	    session().click("link=" + Val + " -");
-	}
+	session().click("link=" + Val + "-");
 	
 	//We edit the last assessment
 	session().click("//table/tbody/tr/td/div/table[2]/tbody/tr/td/button");
