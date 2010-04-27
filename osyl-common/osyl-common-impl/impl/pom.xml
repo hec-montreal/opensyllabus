@@ -1,132 +1,138 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.sakaiquebec.opensyllabus</groupId>
-    <artifactId>osyl-common</artifactId>
-    <version>2.6.1</version>
-    <relativePath>../../pom.xml</relativePath>
-  </parent>
+	<parent>
+		<groupId>org.sakaiquebec.opensyllabus</groupId>
+		<artifactId>osyl-common</artifactId>
+		<version>2.6.1</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
 
-  <groupId>org.sakaiquebec.opensyllabus</groupId>
-  <artifactId>osyl-common-impl</artifactId>
-  <packaging>jar</packaging>
+	<groupId>org.sakaiquebec.opensyllabus</groupId>
+	<artifactId>osyl-common-impl</artifactId>
+	<packaging>jar</packaging>
 
-  <name>osyl-common-impl</name>
+	<name>osyl-common-impl</name>
 
-  <properties>
-    <deploy.target></deploy.target>
-  </properties>
+	<properties>
+		<deploy.target></deploy.target>
+	</properties>
 
-  <dependencies>
-    <!--  opensyllabus -->
-    <dependency>
-      <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>osyl-common-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.sakaiquebec.opensyllabus</groupId>
-      <artifactId>osyl-common-shared</artifactId>
-    </dependency>
+	<dependencies>
+		<!--  opensyllabus -->
+		<dependency>
+			<groupId>org.sakaiquebec.opensyllabus</groupId>
+			<artifactId>osyl-common-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiquebec.opensyllabus</groupId>
+			<artifactId>osyl-common-shared</artifactId>
+		</dependency>
 
-    <!--  sakai -->
-	<dependency>
-	  <groupId>org.sakaiproject.kernel</groupId>
-	  <artifactId>sakai-kernel-api</artifactId>
-	</dependency>
-    <dependency>
-	  <groupId>org.sakaiproject.kernel</groupId>
-	  <artifactId>sakai-component-manager</artifactId>
-	</dependency>
-    <dependency>
-      <groupId>org.sakaiproject.kernel</groupId>
-      <artifactId>sakai-kernel-util</artifactId>
-    </dependency>
-
-    <!-- spring and hibernate -->
-    <dependency>
-      <groupId>${sakai.spring.groupId}</groupId>
-      <artifactId>${sakai.spring.artifactId}</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>${sakai.hibernate.groupId}</groupId>
-      <artifactId>${sakai.hibernate.artifactId}</artifactId>
-      <scope>provided</scope>
+		<!--  sakai -->
+		<dependency>
+			<groupId>org.sakaiproject.kernel</groupId>
+			<artifactId>sakai-kernel-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject.kernel</groupId>
+			<artifactId>sakai-component-manager</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject.kernel</groupId>
+			<artifactId>sakai-kernel-util</artifactId>
+		</dependency>
+		<dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-citations-api</artifactId>
     </dependency>
 
-    <!-- misc -->
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-    </dependency>
-	<dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-    </dependency>
-    <!-- Test classes dependencies -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-    	<groupId>org.jmock</groupId>
-    	<artifactId>jmock-junit3</artifactId>
-    	<scope>test</scope>
-	</dependency>
-	<dependency>
-    	<groupId>org.jmock</groupId>
-    	<artifactId>jmock-legacy</artifactId>
-    	<scope>test</scope>
-	</dependency>
-	<!--  Test runtime dependencies -->
-	<dependency>
-   		<groupId>hsqldb</groupId>
-   		<artifactId>hsqldb</artifactId>
-   		<scope>test</scope>
-	</dependency>
-	<dependency>
-    	<groupId>javax.servlet</groupId>
-    	<artifactId>servlet-api</artifactId>
-    	<scope>test</scope>
-	</dependency>
-    <dependency>
-      <groupId>${sakai.spring.groupId}</groupId>
-      <artifactId>${sakai.spring.mock.artifactId}</artifactId>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
+		<!-- spring and hibernate -->
+		<dependency>
+			<groupId>${sakai.spring.groupId}</groupId>
+			<artifactId>${sakai.spring.artifactId}</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>${sakai.hibernate.groupId}</groupId>
+			<artifactId>${sakai.hibernate.artifactId}</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
-  <build>
-    <resources>
-      <!--  TODO -->
-      <resource>
-        <directory>${basedir}/src/java</directory>
-        <includes>
-          <include>**/*.xml</include>
-        </includes>
-        <filtering>false</filtering>
-      </resource>
-    </resources>
-    <testResources>
-      <testResource>
-      	<!--
-      		FIXME: remove this band-aid please!
-      		The IMPL package should be self-contained and not depend on a runtime component. -->
-        <directory>${basedir}/../pack/src/webapp/WEB-INF</directory>
-        <includes>
-          <include>spring-hibernate.xml</include>
-        </includes>
-      </testResource>
-      <!--  Use the IMPL hibernate settings -->
-      <testResource>
-        <directory>${basedir}/src/test</directory>
-        <includes>
-          <include>**/*.xml</include>
-          <include>**/*.properties</include>
-        </includes>
-      </testResource>
-    </testResources>
-  </build>
+		<!-- misc -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+		</dependency>
+		<!-- Test classes dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock-junit3</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock-legacy</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!--  Test runtime dependencies -->
+		<dependency>
+			<groupId>hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>${sakai.spring.groupId}</groupId>
+			<artifactId>${sakai.spring.mock.artifactId}</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<resources>
+			<!--  TODO -->
+			<resource>
+				<directory>${basedir}/src/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<!--
+					FIXME: remove this band-aid please! The IMPL package should be
+					self-contained and not depend on a runtime component.
+				-->
+				<directory>${basedir}/../pack/src/webapp/WEB-INF</directory>
+				<includes>
+					<include>spring-hibernate.xml</include>
+				</includes>
+			</testResource>
+			<!--  Use the IMPL hibernate settings -->
+			<testResource>
+				<directory>${basedir}/src/test</directory>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+				</includes>
+			</testResource>
+		</testResources>
+	</build>
 </project>

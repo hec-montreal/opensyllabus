@@ -106,6 +106,8 @@
 			ref="org.sakaiproject.tool.api.ToolManager" />
 		<property name="entityManager" 
 			ref="org.sakaiproject.entity.api.EntityManager"/>
+		<property name="citationService"
+			ref="org.sakaiproject.citation.api.CitationService" />
 				
 		<!-- Osyl dependencies -->
 		<property name="securityService"

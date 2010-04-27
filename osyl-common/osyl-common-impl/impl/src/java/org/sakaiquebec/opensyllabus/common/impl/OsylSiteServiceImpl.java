@@ -35,8 +35,12 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.citation.api.CitationCollection;
+import org.sakaiproject.citation.api.CitationService;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
+import org.sakaiproject.content.api.ContentResourceEdit;
+import org.sakaiproject.content.api.ResourceType;
 import org.sakaiproject.entity.api.Entity;
 import org.sakaiproject.entity.api.EntityManager;
 import org.sakaiproject.entity.api.EntityTransferrer;
@@ -44,6 +48,7 @@ import org.sakaiproject.entity.api.HttpAccess;
 import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.id.api.IdManager;
@@ -105,6 +110,18 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /** The configDao to be injected by Spring */
     private COConfigDao configDao;
+    
+    private CitationService citationService;
+
+    /**
+     * Sets the <code>CitationService</code>.
+     * 
+     * @param citationService
+     * @uml.property name="citationService"
+     */
+    public void setCitationService(CitationService citationService) {
+	this.citationService = citationService;
+    }
 
     /**
      * Sets the {@link OsylConfigService}.
@@ -403,7 +420,32 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    cce.setHidden();
 	    contentHostingService.commitCollection(cce);
 	    
-	    
+	    // we add the default citationList
+	    // TODO I18N
+	    String citationListName = "Références bibliographiques du cours";
+
+	    CitationCollection citationList = citationService.addCollection();
+
+	    ContentResourceEdit cre =
+		    contentHostingService.addResource(directoryId,
+			    citationListName, null, 1);
+
+	    cre.setResourceType(CitationService.CITATION_LIST_ID);
+	    cre.setContentType(ResourceType.MIME_TYPE_HTML);
+
+	    ResourcePropertiesEdit props = cre.getPropertiesEdit();
+	    props
+		    .addProperty(
+			    ContentHostingService.PROP_ALTERNATE_REFERENCE,
+			    org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
+	    props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
+		    ResourceType.MIME_TYPE_HTML);
+	    props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
+		    citationListName);
+
+	    cre.setContent(citationList.getId().getBytes());
+	    contentHostingService.commitResource(cre, NotificationService.NOTI_NONE);
+
 	    
 	    
 	    addCollection(PUBLISH_DIRECTORY, site);
