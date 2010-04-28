@@ -18,32 +18,17 @@
  * limitations under the License.
  *
  ******************************************************************************/
-package org.sakaiquebec.opensyllabus.common.impl;
+package org.sakaiquebec.opensyllabus.common.helper;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -52,8 +37,6 @@ import org.xml.sax.SAXException;
  * @version $Id: $
  */
 public class SchemaHelper {
-
-    private static Log log = LogFactory.getLog(SchemaHelper.class);
 
     public static final String SCHEMA_DIRECTORY = "schema";
     public static final String SCHEMA_FILENAME = "osyl.xsd";
@@ -73,7 +56,7 @@ public class SchemaHelper {
     }
 
     private String getSchemaVersion() {
-	Document doc = parseXml(xsd);
+	Document doc = XmlHelper.parseXml(xsd);
 	return doc.getDocumentElement().getAttribute(VERSION_ATTRIBUTE);
     }
 
@@ -83,7 +66,7 @@ public class SchemaHelper {
 	if (xml != null) {
 	    try {
 		// XMLtoDOM
-		messageDom = parseXml(xml);
+		messageDom = XmlHelper.parseXml(xml);
 		schemaVersion =
 			messageDom.getDocumentElement().getAttribute(
 				XML_VERSION_ATTRIBUTE);
@@ -108,13 +91,13 @@ public class SchemaHelper {
     }
 
     public boolean isValid(String xml) {
-	DOMSource domSource = new DOMSource(parseXml(xsd));
+	DOMSource domSource = new DOMSource(XmlHelper.parseXml(xsd));
 	SchemaFactory sf =
 		SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 	try {
 	    Schema s = sf.newSchema(domSource);
 	    Validator v = s.newValidator();
-	    v.validate(new DOMSource(parseXml(xml)));
+	    v.validate(new DOMSource(XmlHelper.parseXml(xml)));
 	} catch (SAXException e) {
 	    System.out.println("XML is not valid because ");
 	    System.out.println(e.getMessage());
@@ -126,37 +109,11 @@ public class SchemaHelper {
 	return true;
     }
 
-    private Document parseXml(String xml) {
-	// get the factory
-	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-	Document dom = null;
-	try {
-
-	    // Using factory get an instance of document builder
-	    DocumentBuilder db = dbf.newDocumentBuilder();
-
-	    // parse using builder to get DOM representation of the XML file
-	    byte[] byteArray = xml.getBytes("UTF-8");
-	    ByteArrayInputStream byteArrayInputStream =
-		    new ByteArrayInputStream(byteArray);
-
-	    dom = db.parse(byteArrayInputStream);
-
-	} catch (ParserConfigurationException pce) {
-	    pce.printStackTrace();
-	} catch (SAXException se) {
-	    se.printStackTrace();
-	} catch (IOException ioe) {
-	    ioe.printStackTrace();
-	}
-	return dom;
-    }
-
     /**
      * Convert xml to actual version
      * 
      * @param xml
-     * @throws Exception 
+     * @throws Exception
      */
     public String verifyAndConvert(String xml) throws Exception {
 	if (getMajorXMLSchemaVersion(xml).equals(getMajorSchemaVersion())) {
@@ -180,8 +137,9 @@ public class SchemaHelper {
 		return xml;
 	    }
 
-	}else{
-	    throw new Exception("XSD version and XML version are not compatible");
+	} else {
+	    throw new Exception(
+		    "XSD version and XML version are not compatible");
 	}
 	return xml;
     }
@@ -201,72 +159,26 @@ public class SchemaHelper {
 	String xsdFilePath =
 		webappdir + File.separator + SCHEMA_DIRECTORY + File.separator
 			+ SCHEMA_FILENAME;
-	return getFileContent(xsdFilePath);
-    }
-
-    private String getFileContent(String filepath) {
-	String fileContent = null;
-	InputStreamReader inputStreamReader;
-	File coXslFile = new File(filepath);
-	try {
-	    inputStreamReader =
-		    new InputStreamReader(new FileInputStream(coXslFile));
-	    StringWriter writer = new StringWriter();
-	    BufferedReader buffer = new BufferedReader(inputStreamReader);
-	    String line = "";
-	    while (null != (line = buffer.readLine())) {
-		writer.write(line);
-	    }
-	    fileContent = writer.toString();
-	    fileContent = new String(fileContent.getBytes(), "UTF-8");
-
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
-	return fileContent;
+	return FileHelper.getFileContent(xsdFilePath);
     }
 
     public String transformXml(String content, String xslFilePath)
 	    throws Exception {
-	return applyXsl(content, getFileContent(xslFilePath));
+	return XmlHelper.applyXsl(content, FileHelper
+		.getFileContent(xslFilePath));
     }
 
-    private String applyXsl(String xml, String xsl) throws Exception {
-	TransformerFactory tFactory = TransformerFactory.newInstance();
-	try {
-	    // retrieve the Xml source
-	    StreamSource coXmlContentSource =
-		    new StreamSource(new ByteArrayInputStream(xml
-			    .getBytes("UTF-8")));
-	    // retrieve the Xsl source
-	    StreamSource coXslContentSource =
-		    new StreamSource(new ByteArrayInputStream(xsl
-			    .getBytes("UTF-8")));
-	    // we use a ByteArrayOutputStream to avoid using a file
-	    ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
-	    StreamResult xmlResult = new StreamResult(out);
-
-	    Transformer transformerXml =
-		    tFactory.newTransformer(coXslContentSource);
-	    transformerXml.transform(coXmlContentSource, xmlResult);
-	    return out.toString("UTF-8");
-	} catch (Exception e) {
-	    log.error("Unable to transform XML", e);
-	    throw e;
-	}
-    }
-
-    private String updateXmlSchemaVersion(String xml,
-	    String newVersion) throws Exception {
+    private String updateXmlSchemaVersion(String xml, String newVersion)
+	    throws Exception {
 	String xslPath =
 		webappdir + File.separator + SCHEMA_DIRECTORY + File.separator
 			+ CONVERSION_DIRECTORY + File.separator
 			+ UPDATE_VERSION_FILENAME;
 
-	String xsl = getFileContent(xslPath);
+	String xsl = FileHelper.getFileContent(xslPath);
 	xsl = xsl.replace("{0}", newVersion);
 
-	return applyXsl(xml, xsl);
+	return XmlHelper.applyXsl(xml, xsl);
 
     }
 

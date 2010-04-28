@@ -8,6 +8,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -94,6 +95,10 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     }
 
     public String transformXmlForGroup(String xml, String group) {
+	return null;
+    }
+    
+    public String print(String xml){
 	return null;
     }
 

@@ -190,6 +190,8 @@ public class COModeled extends COSerialized {
     
     private String schemaVersion;
 
+    
+
     /**
      *Name of userDefLabel attribute
      */
@@ -220,6 +222,14 @@ public class COModeled extends COSerialized {
      */
     public void setModeledContent(COContent modeledContent) {
 	this.modeledContent = modeledContent;
+    }
+    
+    public String getSchemaVersion() {
+        return schemaVersion;
+    }
+
+    public void setSchemaVersion(String schemaVersion) {
+        this.schemaVersion = schemaVersion;
     }
 
     /**

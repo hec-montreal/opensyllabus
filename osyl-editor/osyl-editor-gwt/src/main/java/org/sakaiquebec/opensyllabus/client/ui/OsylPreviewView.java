@@ -85,7 +85,7 @@ public class OsylPreviewView extends OsylViewableComposite implements
 	this.controller = controller;
 	entryPoint.prepareModelForSave();
 	coSerializedForGroup =
-		new COSerialized(entryPoint.getPreviewSerializeCourseOutline());
+		new COSerialized(entryPoint.getUpdatedSerializedCourseOutline());
 	
 	
 

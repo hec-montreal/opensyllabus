@@ -29,6 +29,8 @@ import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
 import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
+import org.sakaiquebec.opensyllabus.common.helper.FileHelper;
+import org.sakaiquebec.opensyllabus.common.helper.XmlHelper;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -425,30 +427,17 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     public String transformXmlForGroup(String content, String group,
 	    String webappDir) throws Exception {
-	TransformerFactory tFactory = TransformerFactory.newInstance();
 	String xslFileName =
 		OsylSiteService.XSL_PREFIX + group
 			+ OsylSiteService.XSL_FILE_EXTENSION;
 	// Retrieve xml and xsl from the webapps/xslt
-	File coXslFile =
-		new File(webappDir + File.separator
-			+ OsylSiteService.XSLT_DIRECTORY + File.separator,
-			xslFileName);
+	String coXslFilePath =webappDir + File.separator
+			+ OsylSiteService.XSLT_DIRECTORY + File.separator+
+			xslFileName;
+	String xsl = FileHelper.getFileContent(coXslFilePath);
+	
 	try {
-	    // retrieve the Xml source
-	    StreamSource coXmlContentSource =
-		    new StreamSource(new ByteArrayInputStream(content
-			    .getBytes("UTF-8")));
-	    // retrieve the Xsl source
-	    StreamSource coXslContentSource = new StreamSource(coXslFile);
-	    // we use a ByteArrayOutputStream to avoid using a file
-	    ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
-	    StreamResult xmlResult = new StreamResult(out);
-
-	    Transformer transformerXml =
-		    tFactory.newTransformer(coXslContentSource);
-	    transformerXml.transform(coXmlContentSource, xmlResult);
-	    return out.toString("UTF-8");
+	    return XmlHelper.applyXsl(content, xsl);
 	} catch (Exception e) {
 	    log.error("Unable to transform XML", e);
 	    throw e;

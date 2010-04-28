@@ -1628,4 +1628,28 @@ public class OsylController implements SavePushButtonEventHandler,
     public void setInPreview(boolean inPreview) {
 	this.inPreview = inPreview;
     }
+    
+    public void print(){
+	String xml = OsylEditorEntryPoint.getInstance().getUpdatedSerializedCourseOutline().getContent();
+	AsyncCallback<String> cb = new AsyncCallback<String>() {
+
+	    public void onFailure(Throwable caught) {
+		//TODO
+		Window.alert(caught.toString());
+	    }
+
+	    public void onSuccess(String result) {
+		String url = GWT.getModuleBaseURL();
+		String cleanUrl = url.substring(0, url.indexOf("/", 8));
+		String downloadUrl = cleanUrl + "/sdata/c" + result;
+		Window
+		.open(
+			downloadUrl,
+			"_blank",
+			"location=no,menubar=no,scrollbars=no,resize=no,resizable=no,status=no,toolbar=no,directories=no,width=5,height=5,top=0,left=0'");
+	    }
+	    
+	};
+	OsylRemoteServiceLocator.getEditorRemoteService().print(xml, cb);
+    }
 }

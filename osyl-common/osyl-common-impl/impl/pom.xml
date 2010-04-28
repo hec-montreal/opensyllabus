@@ -101,6 +101,11 @@
 			<artifactId>${sakai.spring.mock.artifactId}</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>fop</artifactId>
+			<version>0.95</version>
+		</dependency>
 	</dependencies>
 
 	<build>

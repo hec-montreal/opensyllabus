@@ -576,8 +576,9 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	return serializedCO;
     }
 
-    public COSerialized getPreviewSerializeCourseOutline() {
+    public COSerialized getUpdatedSerializedCourseOutline() {
 	COModeled comodeled = new COModeled();
+	comodeled.setSchemaVersion(this.modeledCo.getSchemaVersion());
 	comodeled.setModeledContent(getModel());
 	comodeled.model2XML(true);
 	COSerialized cos = new COSerialized();

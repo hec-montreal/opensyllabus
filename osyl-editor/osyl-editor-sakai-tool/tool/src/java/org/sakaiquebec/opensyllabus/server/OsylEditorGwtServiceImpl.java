@@ -49,6 +49,7 @@ import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -439,6 +440,12 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	String webappDir = getServletContext().getRealPath("/");
 	return osylServices.getOsylPublishService().transformXmlForGroup(xml,
 		group, webappDir);
+    }
+    
+    public String print(String xml){
+	String webappDir = getServletContext().getRealPath("/");
+	return osylServices.getOsylSiteService().print(xml, webappDir);
+	
     }
 
 }

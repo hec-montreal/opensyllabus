@@ -319,7 +319,11 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
     public void transformXmlForGroup(String xml, String group,
 	    AsyncCallback<String> callback) {
-	// TODO Auto-generated method stub
+	callback.onSuccess(null);
+    }
+
+    public void print(String xml, AsyncCallback<String> callback) {
+	callback.onSuccess(null);
     }
 
 }
