@@ -174,7 +174,5 @@ public interface OsylEditorGwtService extends RemoteService {
      */
     public String transformXmlForGroup(String xml, String group)
 	    throws Exception;
-    
-    public String print(String xml);
 
 }

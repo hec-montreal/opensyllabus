@@ -184,12 +184,4 @@ public interface OsylEditorGwtServiceAsync {
     public void transformXmlForGroup(String xml, String group,
 	    AsyncCallback<String> callback);
 
-    /**
-     * Call XSL-FO transformation
-     * @param xml
-     * @param callback
-     * @return url of pdf
-     */
-    public void print(String xml, AsyncCallback<String> callback);
-    
 }

@@ -20,7 +20,6 @@
  *****************************************************************************/
 package org.sakaiquebec.opensyllabus.common.impl;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,10 +33,8 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
-import org.apache.batik.util.MimeTypeConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.fop.apps.MimeConstants;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
 import org.sakaiproject.content.api.ContentCollectionEdit;
@@ -53,7 +50,6 @@ import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.exception.IdUsedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.id.api.IdManager;
 import org.sakaiproject.site.api.Site;
@@ -69,8 +65,6 @@ import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
-import org.sakaiquebec.opensyllabus.common.helper.FOPHelper;
-import org.sakaiquebec.opensyllabus.common.helper.FileHelper;
 import org.sakaiquebec.opensyllabus.common.helper.SchemaHelper;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
@@ -90,8 +84,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     private static final String CO_CONTENT_TEMPLATE = "coContentTemplate";
 
     private static final Log log = LogFactory.getLog(OsylSiteServiceImpl.class);
-
-    private static final String TEMP_DIRECTORY = "temp";
 
     private ToolManager toolManager;
 
@@ -1036,47 +1028,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    log.error(e.getLocalizedMessage(), e);
 	    throw e;
 	}
-    }
-
-    public String print(String xml, String webapp) {
-
-	String xslt =
-		FileHelper.getFileContent(webapp + File.separator
-			+ OsylSiteService.PRINT_DIRECTORY + File.separator
-			+ XSLFO_PRINT_FILENAME);
-
-	try {
-	    File f = FOPHelper.convertXML2FO(xml, xslt);
-	    String siteId = getCurrentSiteId();
-	    Site site = siteService.getSite(siteId);
-	    String resourceOutputDir =
-		    contentHostingService.getSiteCollection(siteId);
-
-	    try{
-		addCollection(TEMP_DIRECTORY, site);
-	    }catch (IdUsedException e) {
-	    }
-
-	    resourceOutputDir += TEMP_DIRECTORY + "/";
-
-	    
-	    ContentResourceEdit newResource =
-		    contentHostingService.addResource(resourceOutputDir, "osylPrintVersion"+System.currentTimeMillis(), ".pdf", 10);
-	    String ressourceUrl = newResource.getUrl();
-	    String filename =
-		    ressourceUrl.substring(ressourceUrl.lastIndexOf("/") + 1,
-			    ressourceUrl.length());
-	    newResource.setContent(new BufferedInputStream(new FileInputStream(
-		    f)));
-	    newResource.setContentType(MimeConstants.MIME_PDF);
-	    contentHostingService.commitResource(newResource,
-		    NotificationService.NOTI_NONE);
-	    f.delete();
-	    return resourceOutputDir + filename;
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
-	return null;
     }
 
     public String archive(String arg0, Document arg1, Stack arg2, String arg3,

@@ -63,6 +63,8 @@ public interface OsylPublishService {
      * published.
      */
     public static final String PUBLISH_DIRECTORY = "publish";
+    
+    public static final String PRINT_VERSION_FILENAME="osylPrintVersion.pdf";
 
     /**
      * Returns the unique URL for the published course plan

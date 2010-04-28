@@ -1,25 +1,23 @@
 package org.sakaiquebec.opensyllabus.common.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.fop.apps.MimeConstants;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentEntity;
 import org.sakaiproject.content.api.ContentHostingService;
+import org.sakaiproject.content.api.ContentResourceEdit;
+import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.id.cover.IdManager;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
@@ -29,6 +27,7 @@ import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
 import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
+import org.sakaiquebec.opensyllabus.common.helper.FOPHelper;
 import org.sakaiquebec.opensyllabus.common.helper.FileHelper;
 import org.sakaiquebec.opensyllabus.common.helper.XmlHelper;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
@@ -262,7 +261,43 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	copyWorkToPublish(siteId, documentSecurityMap);
 
+	createPrintVersion(webappDir);
+
 	SecurityService.clearAdvisors();
+    }
+
+    private void createPrintVersion(String webappdir) {
+	COSerialized coSerializedAttendee =
+		getSerializedPublishedCourseOutlineForAccessType(
+			SecurityInterface.ACCESS_ATTENDEE, webappdir);
+
+	String xslt =
+		FileHelper.getFileContent(webappdir + File.separator
+			+ OsylSiteService.PRINT_DIRECTORY + File.separator
+			+ OsylSiteService.XSLFO_PRINT_FILENAME);
+
+	try {
+	    File f =
+		    FOPHelper.convertXML2FO(coSerializedAttendee.getContent(),
+			    xslt);
+	    String siteId = coSerializedAttendee.getSiteId();
+	    String resourceOutputDir =
+		    contentHostingService.getSiteCollection(siteId);
+
+	    resourceOutputDir += PUBLISH_DIRECTORY + "/";
+
+	    ContentResourceEdit newResource =
+		    contentHostingService.addResource(resourceOutputDir,
+			    PRINT_VERSION_FILENAME.substring(0, PRINT_VERSION_FILENAME.lastIndexOf(".")),  PRINT_VERSION_FILENAME.substring(PRINT_VERSION_FILENAME.lastIndexOf(".")), 10);
+	    newResource.setContent(new BufferedInputStream(new FileInputStream(
+		    f)));
+	    newResource.setContentType(MimeConstants.MIME_PDF);
+	    contentHostingService.commitResource(newResource,
+		    NotificationService.NOTI_NONE);
+	    f.delete();
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
     }
 
     private void publication(String siteId, String webappDir) throws Exception {
@@ -315,7 +350,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     private void copyWorkToPublish(String siteId,
 	    Map<String, String> documentSecurityMap) throws Exception {
 	String val2 = contentHostingService.getSiteCollection(siteId);
-	String refString = contentHostingService.getReference(val2).substring(8);
+	String refString =
+		contentHostingService.getReference(val2).substring(8);
 	String id_work = (refString + WORK_DIRECTORY + "/");
 	String id_publish = (refString + PUBLISH_DIRECTORY + "/");
 	try {
@@ -352,7 +388,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     @SuppressWarnings("unchecked")
     private void copyWorkToPublish(String siteRef, ContentCollection directory,
 	    Map<String, String> documentSecurityMap) throws Exception {
-	
+
 	List<ContentEntity> members = directory.getMemberResources();
 	for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
 		.hasNext();) {
@@ -431,11 +467,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		OsylSiteService.XSL_PREFIX + group
 			+ OsylSiteService.XSL_FILE_EXTENSION;
 	// Retrieve xml and xsl from the webapps/xslt
-	String coXslFilePath =webappDir + File.separator
-			+ OsylSiteService.XSLT_DIRECTORY + File.separator+
-			xslFileName;
+	String coXslFilePath =
+		webappDir + File.separator + OsylSiteService.XSLT_DIRECTORY
+			+ File.separator + xslFileName;
 	String xsl = FileHelper.getFileContent(coXslFilePath);
-	
+
 	try {
 	    return XmlHelper.applyXsl(content, xsl);
 	} catch (Exception e) {

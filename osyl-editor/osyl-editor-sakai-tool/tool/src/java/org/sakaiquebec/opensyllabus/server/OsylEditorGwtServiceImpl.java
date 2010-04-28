@@ -441,11 +441,4 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	return osylServices.getOsylPublishService().transformXmlForGroup(xml,
 		group, webappDir);
     }
-    
-    public String print(String xml){
-	String webappDir = getServletContext().getRealPath("/");
-	return osylServices.getOsylSiteService().print(xml, webappDir);
-	
-    }
-
 }

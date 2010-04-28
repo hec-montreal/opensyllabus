@@ -249,6 +249,4 @@ public interface OsylSiteService extends EntityProducer{
 	
 	public COModeledServer getFusionnedPrePublishedHierarchy(String siteId);
 	
-	public String print(String xml, String webapp);
-	
 }

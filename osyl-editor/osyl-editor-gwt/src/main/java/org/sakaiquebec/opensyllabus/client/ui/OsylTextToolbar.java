@@ -27,6 +27,7 @@ import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -126,6 +127,25 @@ public class OsylTextToolbar extends Composite {
 		createMenuItem("ButtonPrintToolBar", getOsylImageBundle()
 			.printer(), "ButtonPrintToolBarTooltip");
 
+	printPushButton.setCommand(new Command() {
+
+	    public void execute() {
+		String url = GWT.getModuleBaseURL();
+		String serverId = url.split("\\s*/portal/tool/\\s*")[0];
+		String siteId = OsylController.getInstance().getSiteId();
+		String downloadUrl =
+			serverId + "/access/content/group/" + siteId + "/"
+				+ OsylController.PUBLISH_FOLDER_NAME + "/"
+				+ OsylController.PRINT_VERSION_FILENAME;
+
+		Window
+			.open(
+				downloadUrl,
+				"_blank",
+				"location=no,menubar=no,scrollbars=no,resize=no,resizable=no,status=no,toolbar=no,directories=no,width=5,height=5,top=0,left=0'");
+	    }
+	});
+
 	menuBar.addItem(homePushButton);
 	menuBar.addItem(savePushButton);
 	// MenuBar Item with icon - nice trick...
@@ -141,7 +161,7 @@ public class OsylTextToolbar extends Composite {
 			viewMenuBar);
 	viewMenuItem.addStyleName("Osyl-MenuItem-vertical");
 	addViewMenuBarItems();
-	
+
 	menuBar.addItem(publishPushButton);
 	menuBar.addItem(printPushButton);
 	printPushButton.addStyleName("Osyl-MenuItem-LastChild");
@@ -150,13 +170,12 @@ public class OsylTextToolbar extends Composite {
 
     }
 
-    private void addViewMenuBarItems(){
+    private void addViewMenuBarItems() {
 	MenuItem attendeeViewMenuItem =
 		new MenuItem(getOsylController().getUiMessages().getMessage(
 			"Preview.attendee_version"), new Command() {
 		    public void execute() {
-			new OsylPreviewView(
-				SecurityInterface.ACCESS_ATTENDEE,
+			new OsylPreviewView(SecurityInterface.ACCESS_ATTENDEE,
 				getOsylController());
 		    }
 		});
@@ -164,17 +183,14 @@ public class OsylTextToolbar extends Composite {
 		new MenuItem(getOsylController().getUiMessages().getMessage(
 			"Preview.public_version"), new Command() {
 		    public void execute() {
-			new OsylPreviewView(
-				SecurityInterface.ACCESS_PUBLIC,
+			new OsylPreviewView(SecurityInterface.ACCESS_PUBLIC,
 				getOsylController());
 		    }
 		});
-	getViewMenuBar().addItem(
-		attendeeViewMenuItem);
-	getViewMenuBar()
-		.addItem(publicViewMenuItem);
+	getViewMenuBar().addItem(attendeeViewMenuItem);
+	getViewMenuBar().addItem(publicViewMenuItem);
     }
-    
+
     public MenuItem createMenuItem(String messageKey,
 	    AbstractImagePrototype menuImage, String toolTipKey) {
 	Command nullCommand = null;
@@ -246,19 +262,19 @@ public class OsylTextToolbar extends Composite {
     }
 
     public MenuItem getAddMenuItem() {
-        return addMenuItem;
+	return addMenuItem;
     }
 
     public void setAddMenuItem(MenuItem addMenuItem) {
-        this.addMenuItem = addMenuItem;
+	this.addMenuItem = addMenuItem;
     }
 
     public MenuItem getViewMenuItem() {
-        return viewMenuItem;
+	return viewMenuItem;
     }
 
     public void setViewMenuItem(MenuItem viewMenuItem) {
-        this.viewMenuItem = viewMenuItem;
+	this.viewMenuItem = viewMenuItem;
     }
 
     public MenuItem getPublishPushButton() {

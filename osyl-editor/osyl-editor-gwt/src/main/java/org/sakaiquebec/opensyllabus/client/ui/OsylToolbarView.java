@@ -38,10 +38,8 @@ import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEve
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler.SavePushButtonEvent;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
-import org.sakaiquebec.opensyllabus.client.ui.util.Print;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylLongView;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler;
-import org.sakaiquebec.opensyllabus.shared.model.COConfig;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
@@ -55,9 +53,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTML;
 
 /**
  * A view to the {@link OsylToolbar} displayed in the upper part of the editor.
@@ -72,7 +68,8 @@ import com.google.gwt.user.client.ui.HTML;
 
 public class OsylToolbarView extends OsylViewableComposite implements
 	FiresSavePushButtonEvents, FiresPublishPushButtonEvents,
-	ViewContextSelectionEventHandler, FiresClosePushButtonEvents, UpdateCOStructureElementEventHandler {
+	ViewContextSelectionEventHandler, FiresClosePushButtonEvents,
+	UpdateCOStructureElementEventHandler {
 
     private OsylTextToolbar osylToolbar;
 
@@ -105,16 +102,17 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	private COModelInterface aModel;
 	private COModelInterface aSubModel;
 
-	public AddMenuCommand(final COElementAbstract parentModel, COModelInterface m) {
+	public AddMenuCommand(final COElementAbstract parentModel,
+		COModelInterface m) {
 	    this.parentModel = parentModel;
-	    this.aModel=m;
+	    this.aModel = m;
 	    this.aSubModel = null;
 	}
 
-	public AddMenuCommand(final COElementAbstract parentModel, COModelInterface m,
-		COModelInterface subM) {
+	public AddMenuCommand(final COElementAbstract parentModel,
+		COModelInterface m, COModelInterface subM) {
 	    this.parentModel = parentModel;
-	    this.aModel=m;
+	    this.aModel = m;
 	    this.aSubModel = subM;
 	}
 
@@ -125,12 +123,13 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		if (aModel instanceof COStructureElement) {
 		    COStructureElement cose =
 			    COStructureElement.createDefaultCOStructureElement(
-				    aModel.getType(), getCoMessages(), parentModel);
+				    aModel.getType(), getCoMessages(),
+				    parentModel);
 		    cose.setLabel(getUiMessage("ASMStructure.label.default"));
 		} else if (aModel instanceof COUnit) {
 		    COUnit coU =
-			    COUnit.createDefaultCOUnit(aModel.getType(), getCoMessages(),
-				    parentModel);
+			    COUnit.createDefaultCOUnit(aModel.getType(),
+				    getCoMessages(), parentModel);
 		    try {
 			List<COModelInterface> coUnitSubModels =
 				getController().getOsylConfig()
@@ -202,8 +201,10 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    }
 		}
 	    }
-	    COContentResourceProxy.createDefaultResProxy(aModel.getType(), getCoMessages(),
-		    coUnitContent, aSubModel.getType(), defaultRubric,getController().getOsylConfig().getOsylConfigRuler().getPropertyType());
+	    COContentResourceProxy.createDefaultResProxy(aModel.getType(),
+		    getCoMessages(), coUnitContent, aSubModel.getType(),
+		    defaultRubric, getController().getOsylConfig()
+			    .getOsylConfigRuler().getPropertyType());
 	}
 
     }
@@ -285,110 +286,6 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		}
 	    }
 	});
-	// TODO: cleanup! Do a separate command to remove all this code which
-	// should not be in initButtonsCommands
-	// Print Button
-	// This method works for Chrome and Safari Browsers
-	// but it doesn't work well with FireFox
-	// With FireFox, it prints using a text format in a DRAFT format
-	// Maybe, it's related to the fact that Safari and Chrome are based on
-	// the Webkit html rendering technology while Firefox is based on Gecko.
-	getOsylToolbar().getPrintPushButton().setCommand(new Command() {
-	    public void execute() { // Command Print
-		getController().setReadOnly(true);
-		if (osylPrintView == null) {
-		    getController().getViewContext().setContextModel(
-			    entryPoint.getModel());
-		    osylPrintView =
-			    new OsylLongView(entryPoint.getModel(),
-				    getController());
-		    osylPrintView
-			    .setStylePrimaryName("Osyl-MainPanel-ReadOnly");
-		}
-		previousMainView = entryPoint.getView();
-		getController().getMainView().getWorkspaceView()
-			.getWorkspacePanel().clear();
-		getController().getMainView().getWorkspaceView()
-			.getWorkspacePanel().add(osylPrintView);
-		// Invisible iFrame that should be added to HTML page
-		// in order to print Widgets using Print class from Andre
-		// Freller
-		getController()
-			.getMainView()
-			.getWorkspaceView()
-			.getWorkspacePanel()
-			.add(
-				new HTML(
-					"<iframe id=\"__printingFrame\" style=\"width:0;height:0;border:0\"></iframe>"));
-		getController().getViewContext().closeAllEditors();
-		getController().getMainView().setHorizontalSplitPanelPosition(
-			"0px");
-		getOsylToolbar().getClosePushButton().setCommand(new Command() {
-		    public void execute() {
-			getController().setReadOnly(false);
-			entryPoint.refreshView();
-			entryPoint.setView(previousMainView);
-			entryPoint.refreshView();
-			getController().getViewContext().setContextModel(
-				getController().getMainView()
-					.findStartingViewContext());
-			((OsylMainView) previousMainView).refreshView();
-			getController().getMainView()
-				.setHorizontalSplitPanelPosition(
-					OsylTreeView.getInitialSplitPosition());
-			OsylToolbarView.this.refreshView();
-		    }
-		});
-		getOsylToolbar().getHomePushButton().setVisible(false);
-		getOsylToolbar().getSavePushButton().setVisible(false);
-		getOsylToolbar().getPublishPushButton().setVisible(false);
-		getOsylToolbar().getPrintPushButton().setVisible(false);
-		getOsylToolbar().getAddMenuItem().setVisible(false);
-		getOsylToolbar().getViewMenuItem().setVisible(false);
-		getOsylToolbar().getClosePushButton().setVisible(true);
-
-		final int sp = 100;
-		Timer t = new Timer() {
-		    public void run() {
-			int documentHeight =
-				osylPrintView.getOffsetHeight() + sp;
-			entryPoint.setToolHeight(documentHeight);
-			// if (BrowserUtil.getBrowserType().equals("webkit")) {
-			// printJSNI();
-			// } else {
-			draftPrinting();
-			// }
-		    }
-		};
-		t.schedule(250);
-	    }
-	});
-    }
-
-    /**
-     * Called when the print button is clicked!
-     */
-
-    private static native void printJSNI()/*-{
-					  window.parent.print();
-					  }-*/;
-
-    /*
-     * Draft Printing for Browser different from WebKit
-     */
-    private void draftPrinting() {
-	String stylesheetPath =
-		getController().getOsylConfig().getStylesheetPath();
-	String cssLinks =
-		"<link href=\"" + stylesheetPath + COConfig.MAIN_CSS
-			+ "\" type=\"text/css\" rel=\"stylesheet\"/>";
-	cssLinks +=
-		"\n" + "<link href=\"" + stylesheetPath + COConfig.PRINT_CSS
-			+ "\" type=\"text/css\" rel=\"stylesheet\"/>";
-	cssLinks +=
-		"\n" + "<link href=\"" + stylesheetPath + COConfig.READONLY_CSS
-			+ "\" type=\"text/css\" rel=\"stylesheet\"/>";
-	Print.it(cssLinks, osylPrintView);
     }
 
     /**
@@ -480,9 +377,9 @@ public class OsylToolbarView extends OsylViewableComposite implements
 					    new AddMenuCommand(castedModel,
 						    subModel));
 				else
-				    addAddCOMenuItem(subModel
-					    .getType(), new AddMenuCommand(
-					    castedModel, subModel));
+				    addAddCOMenuItem(subModel.getType(),
+					    new AddMenuCommand(castedModel,
+						    subModel));
 			    }
 			}
 		    } catch (RuntimeException e) {
@@ -518,8 +415,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		}
 		COContentResourceProxy cocrp = new COContentResourceProxy();
 		cocrp.setType(type);
-		addAddCOMenuItem(subModel.getType(),
-			new AddMenuCommand(model, cocrp, subModel));
+		addAddCOMenuItem(subModel.getType(), new AddMenuCommand(model,
+			cocrp, subModel));
 	    }
 	}
     }
@@ -531,8 +428,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	Iterator<COModelInterface> iter = subModels.iterator();
 	while (iter.hasNext()) {
 	    COModelInterface subModel = (COModelInterface) iter.next();
-	    addAddCOMenuItem(subModel.getType(),
-		    new AddUnitStructureCommand(model, subModel.getType()));
+	    addAddCOMenuItem(subModel.getType(), new AddUnitStructureCommand(
+		    model, subModel.getType()));
 	}
 	if (getModel().getChildrens().size() == 1) {
 	    if ((COUnitStructure) model.getChildrens().get(0) != null) {
@@ -547,12 +444,16 @@ public class OsylToolbarView extends OsylViewableComposite implements
     }
 
     private void addAddCOMenuItem(String itemType, Command cmd) {
-	String html = "<div id=\"add" + itemType + "\">" + getCoMessage(itemType) + "</div>";
+	String html =
+		"<div id=\"add" + itemType + "\">" + getCoMessage(itemType)
+			+ "</div>";
 	getOsylToolbar().getAddMenuBar().addItem(html, true, cmd);
     }
-    
+
     private void addAddUIMenuItem(String itemType, Command cmd) {
-	String html = "<div id=\"add" + itemType + "\">" + getUiMessage(itemType) + "</div>";
+	String html =
+		"<div id=\"add" + itemType + "\">" + getUiMessage(itemType)
+			+ "</div>";
 	getOsylToolbar().getAddMenuBar().addItem(html, true, cmd);
     }
 
@@ -627,7 +528,5 @@ public class OsylToolbarView extends OsylViewableComposite implements
     public void onUpdateModel(UpdateCOStructureElementEvent event) {
 	refreshView();
     }
-
-   
 
 }
