@@ -142,7 +142,7 @@ public class OsylTextToolbar extends Composite {
 			.open(
 				downloadUrl,
 				"_blank",
-				"location=no,menubar=no,scrollbars=no,resize=no,resizable=no,status=no,toolbar=no,directories=no,width=5,height=5,top=0,left=0'");
+				"");
 	    }
 	});
 
