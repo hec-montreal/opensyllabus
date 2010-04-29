@@ -74,7 +74,7 @@ public class ChangeOsylEditorSiteTypeJobImpl implements Job {
 	loginToSakai();
 
 	allSites =
-		siteService.getSites(SiteService.SelectionType.ANY, "course",
+		siteService.getSites(SiteService.SelectionType.ANY, SITE_TYPE,
 			null, null, SiteService.SortType.NONE, null);
 
 	Site site = null;
