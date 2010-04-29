@@ -209,8 +209,9 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	    String accessType) throws Exception {
 	// Check security permission for this method
 	String webappdir = getServletContext().getRealPath("/");
+	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
 	return osylServices.getOsylPublishService()
-		.getSerializedPublishedCourseOutlineForAccessType(accessType,
+		.getSerializedPublishedCourseOutlineForAccessType(siteId, accessType,
 			webappdir);
     }
 

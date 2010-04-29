@@ -71,7 +71,7 @@ public interface OsylPublishService {
      * 
      * @return a String that is the published course plan URL
      */
-    public COSerialized getSerializedPublishedCourseOutlineForAccessType(
+    public COSerialized getSerializedPublishedCourseOutlineForAccessType(String siteId,
 	    String accessType, String webappdir);
 
     /**

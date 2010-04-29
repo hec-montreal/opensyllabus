@@ -138,11 +138,7 @@ public class OsylTextToolbar extends Composite {
 				+ OsylController.PUBLISH_FOLDER_NAME + "/"
 				+ OsylController.PRINT_VERSION_FILENAME;
 
-		Window
-			.open(
-				downloadUrl,
-				"_blank",
-				"");
+		Window.open(downloadUrl, "_blank", "");
 	    }
 	});
 

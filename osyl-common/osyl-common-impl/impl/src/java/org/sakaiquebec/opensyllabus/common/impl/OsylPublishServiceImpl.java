@@ -176,12 +176,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * {@inheritDoc}
      */
     public COSerialized getSerializedPublishedCourseOutlineForAccessType(
-	    String accessType, String webappDir) {
+	    String siteId, String accessType, String webappDir) {
 	COSerialized thisCo = null;
-	String siteId = "";
 	String configRef;
 	try {
-	    siteId = osylSiteService.getCurrentSiteId();
 	    thisCo =
 		    resourceDao
 			    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
@@ -257,18 +255,16 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	Map<String, String> documentSecurityMap =
 		coModeled.getDocumentSecurityMap();
 
-	publication(co.getSiteId(), webappDir);
-
 	copyWorkToPublish(siteId, documentSecurityMap);
 
-	createPrintVersion(webappDir);
+	publication(co.getSiteId(), webappDir);
 
 	SecurityService.clearAdvisors();
     }
 
-    private void createPrintVersion(String webappdir) {
+    private void createPrintVersion(String siteId, String webappdir) {
 	COSerialized coSerializedAttendee =
-		getSerializedPublishedCourseOutlineForAccessType(
+		getSerializedPublishedCourseOutlineForAccessType(siteId,
 			SecurityInterface.ACCESS_ATTENDEE, webappdir);
 
 	String xslt =
@@ -280,15 +276,26 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    File f =
 		    FOPHelper.convertXML2FO(coSerializedAttendee.getContent(),
 			    xslt);
-	    String siteId = coSerializedAttendee.getSiteId();
 	    String resourceOutputDir =
 		    contentHostingService.getSiteCollection(siteId);
 
 	    resourceOutputDir += PUBLISH_DIRECTORY + "/";
 
+	    try {
+		contentHostingService.getResource(resourceOutputDir
+			+ PRINT_VERSION_FILENAME);
+		contentHostingService.removeResource(resourceOutputDir
+			+ PRINT_VERSION_FILENAME);
+	    } catch (Exception e) {
+
+	    }
 	    ContentResourceEdit newResource =
 		    contentHostingService.addResource(resourceOutputDir,
-			    PRINT_VERSION_FILENAME.substring(0, PRINT_VERSION_FILENAME.lastIndexOf(".")),  PRINT_VERSION_FILENAME.substring(PRINT_VERSION_FILENAME.lastIndexOf(".")), 10);
+			    PRINT_VERSION_FILENAME.substring(0,
+				    PRINT_VERSION_FILENAME.lastIndexOf(".")),
+			    PRINT_VERSION_FILENAME
+				    .substring(PRINT_VERSION_FILENAME
+					    .lastIndexOf(".")), 1);
 	    newResource.setContent(new BufferedInputStream(new FileInputStream(
 		    f)));
 	    newResource.setContentType(MimeConstants.MIME_PDF);
@@ -318,6 +325,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    // Create a course outline with security attendee
 	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_ATTENDEE,
 		    webappDir);
+
+	    createPrintVersion(siteId, webappDir);
 
 	    publishChild(siteId, webappDir);
 	}
