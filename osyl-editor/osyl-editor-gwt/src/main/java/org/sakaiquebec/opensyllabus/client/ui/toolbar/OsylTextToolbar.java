@@ -18,10 +18,11 @@
  *
  ******************************************************************************/
 
-package org.sakaiquebec.opensyllabus.client.ui;
+package org.sakaiquebec.opensyllabus.client.ui.toolbar;
 
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
+import org.sakaiquebec.opensyllabus.client.ui.OsylPreviewView;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 

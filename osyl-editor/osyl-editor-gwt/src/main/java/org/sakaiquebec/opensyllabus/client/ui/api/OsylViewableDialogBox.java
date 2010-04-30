@@ -23,13 +23,13 @@ package org.sakaiquebec.opensyllabus.client.ui.api;
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
-import org.sakaiquebec.opensyllabus.client.ui.OsylToolbarView;
 import org.sakaiquebec.opensyllabus.client.ui.OsylTreeView;
 import org.sakaiquebec.opensyllabus.client.ui.OsylWorkspaceView;
+import org.sakaiquebec.opensyllabus.client.ui.toolbar.OsylToolbarView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitContentEventHandler;
-import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.GWT;
@@ -39,8 +39,9 @@ import com.google.gwt.user.client.ui.DialogBox;
  * OsylViewable is the interface that every viewable part of the OpenSyllabus
  * editor should implement. It provides access to the {@link OsylController}
  * needed to operate within the editor and the {@link COModelInterface} instance
- * being edited.<br/><br/> <b>General information about how to add new views
- * in OSYL Editor:</b><br/>
+ * being edited.<br/>
+ * <br/>
+ * <b>General information about how to add new views in OSYL Editor:</b><br/>
  * <ul>
  * <li>Any view should implement <code>OsylViewable</code> and extend
  * {@link com.google.gwt.user.client.ui.Composite} or another GWT layout
@@ -57,8 +58,7 @@ import com.google.gwt.user.client.ui.DialogBox;
  * from an object to another.</li>
  * <li>It could also implement {@link UpdateCOUnitContentEventHandler} and
  * register as a listener by calling
- * {@link COUnitContent#addEventHandler(UpdateCOUnitContentEventHandler)}.
- * </li>
+ * {@link COUnitContent#addEventHandler(UpdateCOUnitContentEventHandler)}.</li>
  * </ul>
  * The general layout is as follows (TODO: this is outdated):
  * 
@@ -185,8 +185,7 @@ public abstract class OsylViewableDialogBox extends DialogBox implements
     }
 
     /**
-     * @return
-     *         the <code>OsylAbstractView</code>é
+     * @return the <code>OsylAbstractView</code>é
      */
     public OsylAbstractView getView() {
 	return view;
@@ -216,8 +215,8 @@ public abstract class OsylViewableDialogBox extends DialogBox implements
     }
 
     /**
-     * Returns the User Interface related message corresponding to the
-     * specified key.
+     * Returns the User Interface related message corresponding to the specified
+     * key.
      * 
      * @param key
      * @return String
@@ -227,11 +226,11 @@ public abstract class OsylViewableDialogBox extends DialogBox implements
     }
 
     /**
-     * Returns the User Interface related message corresponding to the
-     * specified key and using one argument.
+     * Returns the User Interface related message corresponding to the specified
+     * key and using one argument.
      * 
      * @param key
-     * @param arg Argument 
+     * @param arg Argument
      * @return String
      */
     public String getUiMessage(String key, String arg) {
@@ -253,8 +252,8 @@ public abstract class OsylViewableDialogBox extends DialogBox implements
     }
 
     /**
-     * Returns the Course Outline related message corresponding to the
-     * specified key.
+     * Returns the Course Outline related message corresponding to the specified
+     * key.
      * 
      * @param key
      * @return String
@@ -264,11 +263,11 @@ public abstract class OsylViewableDialogBox extends DialogBox implements
     }
 
     /**
-     * Returns the Course Outline related message corresponding to the
-     * specified key and using one argument.
+     * Returns the Course Outline related message corresponding to the specified
+     * key and using one argument.
      * 
      * @param key
-     * @param arg Argument 
+     * @param arg Argument
      * @return String
      */
     public String getCoMessage(String key, String arg) {

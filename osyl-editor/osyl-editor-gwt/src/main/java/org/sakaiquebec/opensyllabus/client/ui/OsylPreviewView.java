@@ -29,6 +29,7 @@ import org.sakaiquebec.opensyllabus.client.controller.event.ClosePushButtonEvent
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
+import org.sakaiquebec.opensyllabus.client.ui.toolbar.OsylToolbarView;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
@@ -67,7 +68,7 @@ public class OsylPreviewView extends OsylViewableComposite implements
     private OsylTreeView osylTree;
     private OsylWorkspaceView osylWorkspaceView;
     private OsylToolbarView osylToolbarView;
-    
+
     private COSerialized coSerializedForGroup;
 
     public OsylToolbarView getOsylToolbarView() {
@@ -86,8 +87,6 @@ public class OsylPreviewView extends OsylViewableComposite implements
 	entryPoint.prepareModelForSave();
 	coSerializedForGroup =
 		new COSerialized(entryPoint.getUpdatedSerializedCourseOutline());
-	
-	
 
 	if (getController().isInHostedMode()) {
 	    String xsl = "";
@@ -100,7 +99,8 @@ public class OsylPreviewView extends OsylViewableComposite implements
 	    }
 	    initModelWithXsl(xsl);
 	} else {
-	    //For ie (version 7 and 8 at least), xsl transformation client-side is too long, we make it server-side
+	    // For ie (version 7 and 8 at least), xsl transformation client-side
+	    // is too long, we make it server-side
 	    if (BrowserUtil.getBrowserType().equals("ie6")) {
 		AsyncCallback<String> asyncallback =
 			new AsyncCallback<String>() {
@@ -119,7 +119,10 @@ public class OsylPreviewView extends OsylViewableComposite implements
 			    }
 
 			};
-			getController().transformXmlForGroup(coSerializedForGroup.getContent(), access, asyncallback);
+		getController()
+			.transformXmlForGroup(
+				coSerializedForGroup.getContent(), access,
+				asyncallback);
 	    } else {
 		AsyncCallback<String> asyncallback =
 			new AsyncCallback<String>() {
@@ -142,13 +145,13 @@ public class OsylPreviewView extends OsylViewableComposite implements
 	    }
 	}
     }
-    
-    private void initModelWithXsl(String xsl){
+
+    private void initModelWithXsl(String xsl) {
 	initViewWithXmlModel(getController().xslTransform(
 		coSerializedForGroup.getContent(), xsl));
     }
-    
-    private void initViewWithXmlModel(String xml){
+
+    private void initViewWithXmlModel(String xml) {
 	coSerializedForGroup.setContent(xml);
 	COModeled model = new COModeled(coSerializedForGroup);
 	model.XML2Model();

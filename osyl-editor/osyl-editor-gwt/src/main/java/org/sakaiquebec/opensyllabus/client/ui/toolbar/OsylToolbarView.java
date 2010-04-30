@@ -18,13 +18,12 @@
  *
  ******************************************************************************/
 
-package org.sakaiquebec.opensyllabus.client.ui;
+package org.sakaiquebec.opensyllabus.client.ui.toolbar;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.ClosePushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresClosePushButtonEvents;
@@ -36,20 +35,16 @@ import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelection
 import org.sakaiquebec.opensyllabus.client.controller.event.ClosePushButtonEventHandler.ClosePushButtonEvent;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler.PublishPushButtonEvent;
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler.SavePushButtonEvent;
-import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
-import org.sakaiquebec.opensyllabus.client.ui.view.OsylLongView;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
-import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
-import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 
 import com.google.gwt.user.client.Command;
@@ -73,16 +68,9 @@ public class OsylToolbarView extends OsylViewableComposite implements
 
     private OsylTextToolbar osylToolbar;
 
-    private OsylLongView osylPrintView = null;
-
-    private OsylViewable previousMainView;
-
     private List<SavePushButtonEventHandler> saveEventHandlerList;
     private List<PublishPushButtonEventHandler> publishEventHandlerList;
     private List<ClosePushButtonEventHandler> closeEventHandlerList;
-
-    private OsylEditorEntryPoint entryPoint =
-	    OsylEditorEntryPoint.getInstance();
 
     public static boolean TRACE = false;
 
@@ -94,152 +82,6 @@ public class OsylToolbarView extends OsylViewableComposite implements
 
     public COElementAbstract getModel() {
 	return (COElementAbstract) super.getModel();
-    }
-
-    class AddMenuCommand implements Command {
-
-	private COElementAbstract parentModel;
-	private COModelInterface aModel;
-	private COModelInterface aSubModel;
-
-	public AddMenuCommand(final COElementAbstract parentModel,
-		COModelInterface m) {
-	    this.parentModel = parentModel;
-	    this.aModel = m;
-	    this.aSubModel = null;
-	}
-
-	public AddMenuCommand(final COElementAbstract parentModel,
-		COModelInterface m, COModelInterface subM) {
-	    this.parentModel = parentModel;
-	    this.aModel = m;
-	    this.aSubModel = subM;
-	}
-
-	@SuppressWarnings("unchecked")
-	public void execute() {
-	    if (parentModel.isCOStructureElement()) {
-
-		if (aModel instanceof COStructureElement) {
-		    COStructureElement cose =
-			    COStructureElement.createDefaultCOStructureElement(
-				    aModel.getType(), getCoMessages(),
-				    parentModel);
-		    cose.setLabel(getUiMessage("ASMStructure.label.default"));
-		} else if (aModel instanceof COUnit) {
-		    COUnit coU =
-			    COUnit.createDefaultCOUnit(aModel.getType(),
-				    getCoMessages(), parentModel);
-		    try {
-			List<COModelInterface> coUnitSubModels =
-				getController().getOsylConfig()
-					.getOsylConfigRuler()
-					.getAllowedSubModels(coU);
-			if (!coUnitSubModels.isEmpty()) {
-			    COUnitStructure cous =
-				    COUnitStructure
-					    .createDefaultCOUnitStructure(
-						    coUnitSubModels.get(0)
-							    .getType(),
-						    getCoMessages(), coU);
-			    cous
-				    .setLabel(getUiMessage("ASMUnitStructure.label.default"));
-			    List<COModelInterface> coUnitStructureSubModels =
-				    getController().getOsylConfig()
-					    .getOsylConfigRuler()
-					    .getAllowedSubModels(cous);
-			    if (!coUnitStructureSubModels.isEmpty())
-				COUnitContent.createDefaultCOContentUnit(
-					coUnitStructureSubModels.get(0)
-						.getType(), getCoMessages(),
-					cous);
-			}
-
-		    } catch (RuntimeException e) {
-			// TODO: handle exception
-		    }
-		}
-
-	    } else if (parentModel.isCOUnit()) {
-		// TODO change this when multiple coUnitContent under one COUnit
-		// will be allowed
-		COUnitContent coUnitContent =
-			(COUnitContent) parentModel.getChildrens().get(0);
-		createASMContext(coUnitContent);
-
-	    } else if (parentModel.isCOUnitStructure()) {
-		// TODO change this when multiple coUnitContent under one COUnit
-		// will be allowed
-		COUnitContent coUnitContent =
-			(COUnitContent) parentModel.getChildrens().get(0);
-		createASMContext(coUnitContent);
-	    }
-	}
-
-	private void createASMContext(COUnitContent coUnitContent) {
-	    String defaultRubric = "";
-
-	    // NEWS HACK
-	    if (aSubModel.getType().equals(COContentResourceType.NEWS)) {
-		defaultRubric = COContentRubric.RUBRIC_TYPE_NEWS;
-	    } else {
-		List<COModelInterface> coUnitSubModels =
-			getController().getOsylConfig().getOsylConfigRuler()
-				.getAllowedSubModels(coUnitContent);
-
-		for (int i = 0; i < coUnitSubModels.size(); i++) {
-		    Object subModel = coUnitSubModels.get(i);
-
-		    if (subModel instanceof COContentRubric) {
-			COContentRubric coContentRubric =
-				(COContentRubric) subModel;
-			if (!coContentRubric.getType().equals(
-				COContentRubric.RUBRIC_TYPE_NEWS)) {
-			    defaultRubric = coContentRubric.getType();
-			    break;
-			}
-		    }
-		}
-	    }
-	    COContentResourceProxy.createDefaultResProxy(aModel.getType(),
-		    getCoMessages(), coUnitContent, aSubModel.getType(),
-		    defaultRubric, getController().getOsylConfig()
-			    .getOsylConfigRuler().getPropertyType());
-	}
-
-    }
-
-    class AddUnitStructureCommand implements Command {
-
-	private COElementAbstract parentModel;
-	private String type;
-
-	public AddUnitStructureCommand(final COElementAbstract parentModel,
-		String type) {
-	    this.parentModel = parentModel;
-	    this.type = type;
-	}
-
-	@SuppressWarnings("unchecked")
-	public void execute() {
-	    COUnitStructure cous =
-		    COUnitStructure.createDefaultCOUnitStructure(type,
-			    getCoMessages(), parentModel);
-	    cous.setLabel(getUiMessage("ASMUnitStructure.label.default"));
-	    try {
-		List<COModelInterface> subModels =
-			getController().getOsylConfig().getOsylConfigRuler()
-				.getAllowedSubModels(cous);
-		if (!subModels.isEmpty()) {
-		    COUnitContent.createDefaultCOContentUnit(subModels.get(0)
-			    .getType(), getCoMessages(), cous);
-		}
-	    } catch (RuntimeException e) {
-		e.printStackTrace();
-		Window.alert("Error while parsing rules: " + e);
-	    }
-
-	}
     }
 
     public void onViewContextSelection(ViewContextSelectionEvent event) {
