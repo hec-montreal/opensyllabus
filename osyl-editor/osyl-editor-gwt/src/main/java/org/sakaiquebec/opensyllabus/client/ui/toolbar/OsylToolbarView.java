@@ -208,21 +208,15 @@ public class OsylToolbarView extends OsylViewableComposite implements
 				    (COModelInterface) iter.next();
 			    // Special case : No addition is allowable under
 			    // Header COStructure
-			    String parentType = castedModel.getType();
-			    if (parentType.endsWith("Header")) {
-				getOsylToolbar().getAddMenuBar().setVisible(
-					false);
-				return;
-			    } else {
-				if (subModel instanceof COStructureElement)
-				    addAddUIMenuItem(subModel.getType(),
-					    new AddMenuCommand(castedModel,
-						    subModel));
-				else
-				    addAddCOMenuItem(subModel.getType(),
-					    new AddMenuCommand(castedModel,
-						    subModel));
-			    }
+			    if (subModel instanceof COStructureElement)
+				addAddUIMenuItem(subModel.getType(),
+					new AddMenuCommand(castedModel,
+						subModel));
+			    else
+				addAddCOMenuItem(subModel.getType(),
+					new AddMenuCommand(castedModel,
+						subModel));
+
 			}
 		    } catch (RuntimeException e) {
 			e.printStackTrace();
