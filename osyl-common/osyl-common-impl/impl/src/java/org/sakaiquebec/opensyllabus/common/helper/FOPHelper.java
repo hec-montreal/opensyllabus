@@ -46,7 +46,7 @@ import org.apache.fop.apps.MimeConstants;
 
 public class FOPHelper {
     
-    public static File convertXML2FO(String xml, String xslt) throws IOException,
+    public static File convertXml2Pdf(String xml, String xslt) throws IOException,
 	    TransformerException {
 	File pdffile = File.createTempFile("osyl-fop-print", ".pdf");
 	try {

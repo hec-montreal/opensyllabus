@@ -274,7 +274,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	try {
 	    File f =
-		    FOPHelper.convertXML2FO(coSerializedAttendee.getContent(),
+		    FOPHelper.convertXml2Pdf(coSerializedAttendee.getContent(),
 			    xslt);
 	    String resourceOutputDir =
 		    contentHostingService.getSiteCollection(siteId);

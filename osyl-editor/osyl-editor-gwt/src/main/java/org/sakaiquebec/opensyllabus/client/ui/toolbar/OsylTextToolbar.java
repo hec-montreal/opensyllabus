@@ -23,12 +23,14 @@ package org.sakaiquebec.opensyllabus.client.ui.toolbar;
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.OsylPreviewView;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
@@ -85,7 +87,7 @@ public class OsylTextToolbar extends Composite {
 	    (OsylImageBundleInterface) GWT
 		    .create(OsylImageBundleInterface.class);
 
-    public OsylTextToolbar(OsylController osylController) {
+    public OsylTextToolbar(final OsylController osylController) {
 	// int messages
 	setOsylController(osylController);
 	uiMessages = osylController.getUiMessages();
@@ -131,15 +133,34 @@ public class OsylTextToolbar extends Composite {
 	printPushButton.setCommand(new Command() {
 
 	    public void execute() {
-		String url = GWT.getModuleBaseURL();
-		String serverId = url.split("\\s*/portal/tool/\\s*")[0];
-		String siteId = OsylController.getInstance().getSiteId();
-		String downloadUrl =
-			serverId + "/access/content/group/" + siteId + "/"
-				+ OsylController.PUBLISH_FOLDER_NAME + "/"
-				+ OsylController.PRINT_VERSION_FILENAME;
 
-		Window.open(downloadUrl, "_blank", "");
+		AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+		    public void onSuccess(Boolean serverResponse) {
+			if (serverResponse) {
+			    OsylTextToolbar.this.openDownloadPrintLink();
+			} else {
+			    OsylAlertDialog oad =
+				    new OsylAlertDialog(
+					    uiMessages
+						    .getMessage("Global.error"),
+					    uiMessages
+						    .getMessage("ButtonPrintToolBar.printVersionUnavailable"));
+			    oad.center();
+			    oad.show();
+			}
+
+		    }
+
+		    public void onFailure(Throwable error) {
+			Window.alert("RPC FAILURE - hasBeenPublished : "
+				+ error.toString());
+		    }
+		};
+		if (osylController.isReadOnly())
+		    openDownloadPrintLink();
+		else
+		    osylController.hasBeenPublished(callback);
+
 	    }
 	});
 
@@ -312,5 +333,17 @@ public class OsylTextToolbar extends Composite {
 
     public void setPublicViewMenuItem(MenuItem publicViewMenuItem) {
 	this.publicViewMenuItem = publicViewMenuItem;
+    }
+
+    private void openDownloadPrintLink() {
+	String url = GWT.getModuleBaseURL();
+	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
+	String siteId = OsylController.getInstance().getSiteId();
+	String downloadUrl =
+		serverId + "/access/content/group/" + siteId + "/"
+			+ OsylController.PUBLISH_FOLDER_NAME + "/"
+			+ OsylController.PRINT_VERSION_FILENAME;
+
+	Window.open(downloadUrl, "_blank", "");
     }
 }
