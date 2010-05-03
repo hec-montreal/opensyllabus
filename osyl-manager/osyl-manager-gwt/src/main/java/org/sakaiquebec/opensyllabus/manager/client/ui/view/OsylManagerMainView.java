@@ -22,9 +22,9 @@
 package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
-import org.sakaiquebec.opensyllabus.manager.client.ui.RoundCornerPanel;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
 
+import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -56,8 +56,6 @@ public class OsylManagerMainView extends OsylManagerAbstractView {
 		.add(new Label(getController().getMessages().mainView_label()));
 
 	HorizontalPanel hPanel = new HorizontalPanel();
-	
-	
 
 	hPanel.add(new CreateSiteAction(getController()));
 	hPanel.add(new HTML("&nbsp;"
@@ -115,16 +113,10 @@ public class OsylManagerMainView extends OsylManagerAbstractView {
 	rightPanel.add(hz4);
 
 	courseInfoView = new CourseInfoView(getController());
-	RoundCornerPanel ivRoundCornerPanel =
-		new RoundCornerPanel(
-			courseInfoView,
-			"", "OsylManager-infoView-BottomLeft",
-			"OsylManager-infoView-BottomRight",
-			"OsylManager-infoView-TopLeft",
-			"OsylManager-infoView-TopRight");
-	ivRoundCornerPanel.setStylePrimaryName("OsylManager-infoView");
-
-	rightPanel.add(ivRoundCornerPanel);
+	DecoratorPanel ivDecoratorPanel = new DecoratorPanel();
+	ivDecoratorPanel.setWidget(courseInfoView);
+	ivDecoratorPanel.setStylePrimaryName("OsylManager-infoView");
+	rightPanel.add(ivDecoratorPanel);
 
 	hzPanel.add(rightPanel);
 

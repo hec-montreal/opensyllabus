@@ -144,6 +144,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	// We create our main view
 	OsylMainView editorMainView =
 		new OsylMainView(getModel(), osylController);
+	editorMainView.initView();
 	// And we instruct it about its size. We use the slot's width but
 	// the height cannot be computed as we are in Sakai's iFrame.
 	// We subtract 16px to the slot width for a perfect alignment

@@ -26,7 +26,6 @@ import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
-import org.sakaiquebec.opensyllabus.manager.client.ui.RoundCornerPanel;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
@@ -39,6 +38,7 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -105,10 +105,14 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 		    sigleCourseMap = new HashMap<String, CMCourse>();
 		    nameCourseMap = new HashMap<String, CMCourse>();
 		    for (CMCourse course : result) {
-			String sigleValue = course.getSigle() + " " + course.getSession() + " " + course.getSection();
+			String sigleValue =
+				course.getSigle() + " " + course.getSession()
+					+ " " + course.getSection();
 			sigleOracle.add(sigleValue);
 			sigleCourseMap.put(sigleValue, course);
-			String nameValue = course.getName() +" "+course.getSession()+" "+course.getSection();
+			String nameValue =
+				course.getName() + " " + course.getSession()
+					+ " " + course.getSection();
 			nameOracle.add(nameValue);
 			nameCourseMap.put(nameValue, course);
 
@@ -164,18 +168,13 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	controller.getCMCourses(coursesListAsyncCallback);
 
 	cmCourseInfoView = new CMCourseInfoView(controller);
-	RoundCornerPanel ivRoundCornerPanel =
-		new RoundCornerPanel(cmCourseInfoView, "",
-			"OsylManager-infoView-BottomLeft",
-			"OsylManager-infoView-BottomRight",
-			"OsylManager-infoView-TopLeft",
-			"OsylManager-infoView-TopRight");
-	ivRoundCornerPanel.setStylePrimaryName("OsylManager-infoView");
-	mainPanel.add(ivRoundCornerPanel);
-	mainPanel.setCellHorizontalAlignment(ivRoundCornerPanel,
+	DecoratorPanel ivDecoratorPanel = new DecoratorPanel();
+	ivDecoratorPanel.setWidget(cmCourseInfoView);
+	ivDecoratorPanel.setStylePrimaryName("OsylManager-infoView");
+	mainPanel.add(ivDecoratorPanel);
+	mainPanel.setCellHorizontalAlignment(ivDecoratorPanel,
 		HasHorizontalAlignment.ALIGN_CENTER);
 
-	
 	okButton = new PushButton(controller.getMessages().associateForm_ok());
 	okButton.setWidth("25px");
 	okButton.setEnabled(false);
@@ -200,7 +199,6 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	hz.add(okButton);
 	hz.add(cancelButton);
 
-	
 	mainPanel.add(hz);
 	mainPanel.setCellHorizontalAlignment(hz,
 		HasHorizontalAlignment.ALIGN_CENTER);
@@ -221,7 +219,7 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	});
 	return suggestBox;
     }
-    
+
     protected void onAssociationEnd() {
 	mainPanel.clear();
 
@@ -233,19 +231,16 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	Label conf =
 		new Label(controller.getMessages().associateForm_confirmation());
 	mainPanel.add(conf);
-	
-	cmCourseInfoView.setImage(controller.getImageBundle().check().createImage());
-	RoundCornerPanel ivRoundCornerPanel =
-		new RoundCornerPanel(cmCourseInfoView, "",
-			"OsylManager-infoView-BottomLeft",
-			"OsylManager-infoView-BottomRight",
-			"OsylManager-infoView-TopLeft",
-			"OsylManager-infoView-TopRight");
-	ivRoundCornerPanel.setStylePrimaryName("OsylManager-infoView");
-	mainPanel.add(ivRoundCornerPanel);
-	mainPanel.setCellHorizontalAlignment(ivRoundCornerPanel,
+
+	cmCourseInfoView.setImage(controller.getImageBundle().check()
+		.createImage());
+	DecoratorPanel ivDecoratorPanel = new DecoratorPanel();
+	ivDecoratorPanel.setWidget(cmCourseInfoView);
+	ivDecoratorPanel.setStylePrimaryName("OsylManager-infoView");
+	mainPanel.add(ivDecoratorPanel);
+	mainPanel.setCellHorizontalAlignment(ivDecoratorPanel,
 		HasHorizontalAlignment.ALIGN_CENTER);
-	
+
 	okButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		AssociateForm.super.hide();
