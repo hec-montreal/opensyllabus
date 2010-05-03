@@ -29,15 +29,18 @@ import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEve
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
+import org.sakaiquebec.opensyllabus.client.ui.listener.SplitterEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.toolbar.OsylToolbarView;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
 
+import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
+import com.google.gwt.user.client.ui.OsylHorizontalSplitPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -49,7 +52,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id: $
  * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
  */
-public class OsylMainView extends OsylViewableComposite {
+public class OsylMainView extends OsylViewableComposite implements
+	SplitterEventHandler {
 
     // View variables
     private VerticalPanel mainPanel;
@@ -58,6 +62,7 @@ public class OsylMainView extends OsylViewableComposite {
     private final HorizontalSplitPanel horizontalSplitPanel;
 
     private OsylToolbarView osylToolbarView;
+    private boolean resize = false;
 
     public OsylMainView(COModelInterface model, OsylController osylController) {
 	super(model, osylController);
@@ -68,7 +73,7 @@ public class OsylMainView extends OsylViewableComposite {
 	// Create and set the main container panel
 	setMainPanel(new VerticalPanel());
 	getMainPanel().setStylePrimaryName("Osyl-MainPanel");
-	if(getController().isReadOnly())
+	if (getController().isReadOnly())
 	    getMainPanel().addStyleDependentName("ReadOnly");
 	getMainPanel().setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
 
@@ -87,10 +92,13 @@ public class OsylMainView extends OsylViewableComposite {
 	}
 
 	// Create and set the Main Horizontal Split Panel
-	horizontalSplitPanel = new HorizontalSplitPanel();
+	OsylHorizontalSplitPanel ohsp = new OsylHorizontalSplitPanel(this);
+	horizontalSplitPanel = ohsp.getSplitPanel();
+
+	// horizontalSplitPanel = new HorizontalSplitPanel();
 	horizontalSplitPanel
 		.setStylePrimaryName("Osyl-MainView-HorizontalSplitPanel");
-	getMainPanel().add(horizontalSplitPanel);
+	getMainPanel().add(ohsp);
 
 	// Create and set the OpenSyllabus TreeView
 	setOsylTreeView(new OsylTreeView(getModel(), getController()));
@@ -239,6 +247,23 @@ public class OsylMainView extends OsylViewableComposite {
 
     public void setHorizontalSplitPanelPosition(String newPosition) {
 	horizontalSplitPanel.setSplitPosition(newPosition);
+    }
+
+    public void onMouseMove(MouseMoveEvent event) {
+	boolean isResizing = horizontalSplitPanel.isResizing();
+	if (resize) {
+	    if (!isResizing) {
+		resize();
+		resize = false;
+	    }
+	} else {
+	    if (isResizing)
+		resize = true;
+	}
+    }
+
+    private void resize() {
+	
     }
 
 }
