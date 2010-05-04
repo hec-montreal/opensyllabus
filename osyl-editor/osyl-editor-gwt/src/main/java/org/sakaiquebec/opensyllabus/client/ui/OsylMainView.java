@@ -37,6 +37,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
 
 import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
@@ -60,7 +61,7 @@ public class OsylMainView extends OsylViewableComposite implements
     protected VerticalPanel mainPanel;
     protected OsylTreeView osylTree;
     protected OsylWorkspaceView osylWorkspaceView;
-    protected HorizontalSplitPanel horizontalSplitPanel;
+    protected OsylHorizontalSplitPanel osylHorizontalSplitPanel;
     protected OsylToolbarView osylToolbarView;
 
     protected OsylDecoratorPanel treeDecoratorPanel;
@@ -96,13 +97,14 @@ public class OsylMainView extends OsylViewableComposite implements
 	}
 
 	// Create and set the Main Horizontal Split Panel
-	OsylHorizontalSplitPanel ohsp = new OsylHorizontalSplitPanel(this);
-	horizontalSplitPanel = ohsp.getSplitPanel();
+	osylHorizontalSplitPanel = new OsylHorizontalSplitPanel(this);
+	HorizontalSplitPanel horizontalSplitPanel =
+		osylHorizontalSplitPanel.getSplitPanel();
 
 	// horizontalSplitPanel = new HorizontalSplitPanel();
 	horizontalSplitPanel
 		.setStylePrimaryName("Osyl-MainView-HorizontalSplitPanel");
-	getMainPanel().add(ohsp);
+	getMainPanel().add(osylHorizontalSplitPanel);
 
 	// Create and set the OpenSyllabus TreeView
 	setOsylTreeView(new OsylTreeView(getModel(), getController()));
@@ -231,18 +233,27 @@ public class OsylMainView extends OsylViewableComposite implements
 	this.osylWorkspaceView = (OsylWorkspaceView) workspaceView;
     }
 
-    public void setHorizontalSplitPanelPosition(String newPosition) {
-	horizontalSplitPanel.setSplitPosition(newPosition);
-    }
-
     public void onMouseMove(MouseMoveEvent event) {
-	boolean isResizing = horizontalSplitPanel.isResizing();
+	boolean isResizing =
+		osylHorizontalSplitPanel.getSplitPanel().isResizing();
 	if (isResizing) {
 	    resize();
 	}
     }
 
     private void resize() {
+	int treeWidth = osylHorizontalSplitPanel.getSplitterPosition();
+	DOM.setStyleAttribute(treeDecoratorPanel.getCell(1, 1), "width",
+		treeWidth - 16 + "px");
+	int splitterWidth =
+		osylHorizontalSplitPanel.getSplitElement().getOffsetWidth();
+	String toolSizeString = DOM.getStyleAttribute(getElement(), "width");
+	int toolSize =
+		Integer.parseInt(toolSizeString.substring(0, toolSizeString
+			.indexOf("px")));
+	int workspaceWidth = toolSize - treeWidth - splitterWidth;
+	DOM.setStyleAttribute(workspaceDecoratorPanel.getCell(1, 1), "width",
+		workspaceWidth - 16 + "px");
     }
 
 }

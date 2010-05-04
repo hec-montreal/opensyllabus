@@ -25,6 +25,8 @@ import org.sakaiquebec.opensyllabus.client.ui.listener.SplitterEventHandler;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -68,6 +70,19 @@ public class OsylHorizontalSplitPanel extends Composite {
 
     public HorizontalSplitPanel getSplitPanel() {
 	return horizontalSplitPanel;
+    }
+
+    public int getSplitterPosition() {
+	try {
+	    String widthString =
+		    DOM.getStyleAttribute(horizontalSplitPanel.getElement(0),
+			    "width");
+	    return Integer.parseInt(widthString.substring(0, widthString
+		    .indexOf("px")));
+	} catch (NumberFormatException e) {
+	    Window.alert(e.toString());
+	    return -1;
+	}
     }
 
 }
