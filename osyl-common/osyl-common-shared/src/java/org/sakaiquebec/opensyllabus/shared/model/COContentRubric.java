@@ -153,4 +153,8 @@ public class COContentRubric implements COModelInterface{
     public String getKey() {
 	return key;
     }
+
+    public COProperty getCOProperty(String key, String type) {
+	return null;
+    }
 }

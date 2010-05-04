@@ -25,6 +25,7 @@ import java.io.Serializable;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.shared.model.COProperties;
+import org.sakaiquebec.opensyllabus.shared.model.COProperty;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 
@@ -135,6 +136,10 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 
     public String getProperty(String key, String type) {
 	return properties.getProperty(key, type);
+    }
+    
+    public COProperty getCOProperty(String key, String type) {
+	return properties.getCOProperty(key, type);
     }
 
     /**

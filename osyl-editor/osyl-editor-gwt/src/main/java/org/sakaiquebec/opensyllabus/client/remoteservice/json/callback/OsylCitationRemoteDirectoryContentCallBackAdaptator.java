@@ -36,6 +36,7 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
      * Value used to map the citation IDENTIFIER_TYPE_URL to preferredUrl of
      * SDATA
      */
+    private static final String PREFERRED_URL_LABEL = "sakai:url_label";
     private static final String PREFERRED_URL = "preferredUrl";
     private static final String BOOKSTORE_URL = "bookstoreUrl";
     private static final String NO_URL = "noUrl";
@@ -100,6 +101,9 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 			(JSONString) properties
 				.get(CitationSchema.SOURCE_TITLE);
 
+		JSONString identifierTypeUrlLabel =
+		    (JSONString) properties.get(PREFERRED_URL_LABEL);
+		
 		JSONString identifierTypeUrl =
 			(JSONString) properties.get(PREFERRED_URL);
 		JSONString identifierTypeLibrary =
@@ -186,6 +190,13 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
 			identifierTypeUrl == null ? "" : identifierTypeUrl
 				.stringValue());
+		
+		csi.getCOProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK)
+			.addAttribute(
+			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL,
+			identifierTypeUrlLabel == null ? "" :
+			    identifierTypeUrlLabel.stringValue());
 
 		csi.setProperty(COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_NOLINK,

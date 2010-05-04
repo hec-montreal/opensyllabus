@@ -55,6 +55,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+import org.sakaiquebec.opensyllabus.shared.model.COProperty;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
@@ -422,6 +423,20 @@ public class COModeledServer {
 		coProperties.addProperty(key, value);
 	    else
 		coProperties.addProperty(key, type, value);
+	    addAttributes(coProperties, namedNodeMap, key, type);
+	}
+    }
+    
+    private void addAttributes(COProperties coProperties,
+	    NamedNodeMap namedNodeMap, String key, String type){
+	if(type == null){
+	    type = COProperties.DEFAULT_PROPERTY_TYPE;
+	}
+	COProperty coProperty = coProperties.getCOProperty(key, type);
+	
+	for(int i=0; i<namedNodeMap.getLength(); i++){
+	    Node item = namedNodeMap.item(i);
+	    coProperty.addAttribute(item.getNodeName(), item.getNodeValue());
 	}
     }
 
@@ -871,7 +886,7 @@ public class COModeledServer {
 	    String propElemName = (String) iter.next();
 	    if (!propElemName.equals("#text")) { // TODO find why there is
 		// properties named #text
-		HashMap<String, String> map = properties.get(propElemName);
+		HashMap<String, COProperty> map = properties.get(propElemName);
 		for (Iterator<String> iterMap = map.keySet().iterator(); iterMap
 			.hasNext();) {
 		    Element propElem = document.createElement(propElemName);
@@ -880,12 +895,13 @@ public class COModeledServer {
 		    Text propElemValue = null;
 		    if (!type.equals(COProperties.DEFAULT_PROPERTY_TYPE)) {
 			propElem.setAttribute(TYPE_ATTRIBUTE_NAME, type);
-			value =
-				(String) properties.getProperty(propElemName,
+			value = properties.getProperty(propElemName,
 					type);
 		    } else {
-			value = (String) properties.getProperty(propElemName);
+			value = properties.getProperty(propElemName);
 		    }
+		    createPropElemAttributes(map.get(type), propElem);
+		    
 		    if (CDATA_NODE_NAMES.contains(propElemName)) {
 			propElemValue = document.createCDATASection(value);
 		    } else {
@@ -895,6 +911,13 @@ public class COModeledServer {
 		    parent.appendChild(propElem);
 		}
 	    }
+	}
+    }
+    
+    private void createPropElemAttributes(COProperty coProperty,
+	    Element propElem){
+	for(String key : coProperty.getAttributes().keySet()){
+	    propElem.setAttribute(key, coProperty.getAttribute(key));
 	}
     }
 

@@ -32,7 +32,7 @@ import java.util.HashMap;
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
-public class COProperties extends HashMap<String, HashMap<String, String>> {
+public class COProperties extends HashMap<String, HashMap<String, COProperty>> {
 
     /**
      * Boolean value to print trace in debug mode.
@@ -71,11 +71,18 @@ public class COProperties extends HashMap<String, HashMap<String, String>> {
      * @param value the property value
      */
     public void addProperty(String key, String type, String value) {
-	HashMap<String, String> map = get(key);
+	HashMap<String, COProperty> map = get(key);
 	if(map==null){
-	    map = new HashMap<String, String>();
+	    map = new HashMap<String, COProperty>();
 	}
-	map.put(type, value);
+	COProperty coProperty = map.get(type);
+	
+	if(coProperty == null){
+	    coProperty = new COProperty();
+	}
+	
+	coProperty.setValue(value);
+	map.put(type, coProperty);
 	put(key, map);
 	if (TRACE)
 	    System.out.println("*** TRACE *** UPDATE THE MODEL COProperties "
@@ -97,7 +104,7 @@ public class COProperties extends HashMap<String, HashMap<String, String>> {
      * @param type
      */
     public void removeProperty(String key, String type){
-    	HashMap<String, String> map = get(key);
+    	HashMap<String, COProperty> map = get(key);
     	if(map!=null){
     	    map.remove(type);
     	}
@@ -128,13 +135,21 @@ public class COProperties extends HashMap<String, HashMap<String, String>> {
      * @return the property associated to the key.
      */
     public String getProperty(String key, String type) {
-	HashMap<String, String> map = get(key);
-	String value=null;
-	if(map!=null){
-		value =  map.get(type);
-		if(value==null)
-			value = ((HashMap<String, String>) get(key)).get(DEFAULT_PROPERTY_TYPE);
+	HashMap<String, COProperty> map = get(key);
+	COProperty coProperty = null;
+	String value = null;
+
+	if (map != null) {
+	    coProperty = map.get(type);
+	    if (coProperty != null) {
+		value = coProperty.getValue();
+	    }
 	}
 	return value;
+    }
+    
+    public COProperty getCOProperty(String key, String type){
+	HashMap<String, COProperty> map = get(key);
+	return map.get(type);
     }
 }

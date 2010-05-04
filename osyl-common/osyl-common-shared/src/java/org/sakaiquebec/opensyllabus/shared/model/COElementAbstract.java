@@ -432,6 +432,10 @@ public abstract class COElementAbstract<T extends COModelInterface> implements
     public String getProperty(String key, String type) {
 	return properties.getProperty(key, type);
     }
+    
+    public COProperty getCOProperty(String key, String type) {
+	return getProperties().getCOProperty(key, type);
+    }
 
     public boolean isNested() {
 	if (getParent() == null)

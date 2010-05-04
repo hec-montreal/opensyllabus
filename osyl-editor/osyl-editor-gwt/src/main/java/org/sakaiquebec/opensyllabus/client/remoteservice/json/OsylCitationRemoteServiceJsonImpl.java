@@ -56,6 +56,7 @@ public class OsylCitationRemoteServiceJsonImpl extends
      * SDATA
      */
     private static final String PREFERRED_URL = "preferredUrl";
+    private static final String PREFERRED_URL_LABEL = "sakai:url_label";
     private static final String BOOKSTORE_URL = "bookstoreUrl";
     private static final String NO_URL = "noUrl";
     private static final String URL="url";
@@ -195,6 +196,13 @@ public class OsylCitationRemoteServiceJsonImpl extends
 
 	if (p_citation.getProperty(COPropertiesType.IDENTIFIER,
 		COPropertiesType.IDENTIFIER_TYPE_OTHERLINK) != null) {
+	    panel.add(FormHelper.createHiddenField("cipkeys", PREFERRED_URL_LABEL));
+	    panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		    .getCOProperty(COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK)
+			    .getAttribute(
+			    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL)));
+	    
 	    panel.add(FormHelper.createHiddenField("cipkeys", PREFERRED_URL));
 	    panel.add(FormHelper.createHiddenField("cipvalues", p_citation
 		    .getProperty(COPropertiesType.IDENTIFIER,

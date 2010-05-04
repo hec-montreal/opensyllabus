@@ -174,7 +174,7 @@ public class COModeled extends COSerialized {
      *Name of person node
      */
     protected final static String PERSON_NODE_NAME = "Person";
-    
+
     private static final String XML_VERSION_ATTRIBUTE = "schemaVersion";
 
     protected final static List<String> CDATA_NODE_NAMES =
@@ -187,10 +187,8 @@ public class COModeled extends COSerialized {
      * The modeledContent is a POJO filled by XML2Model
      */
     private COContent modeledContent;
-    
-    private String schemaVersion;
 
-    
+    private String schemaVersion;
 
     /**
      *Name of userDefLabel attribute
@@ -223,13 +221,13 @@ public class COModeled extends COSerialized {
     public void setModeledContent(COContent modeledContent) {
 	this.modeledContent = modeledContent;
     }
-    
+
     public String getSchemaVersion() {
-        return schemaVersion;
+	return schemaVersion;
     }
 
     public void setSchemaVersion(String schemaVersion) {
-        this.schemaVersion = schemaVersion;
+	this.schemaVersion = schemaVersion;
     }
 
     /**
@@ -244,9 +242,11 @@ public class COModeled extends COSerialized {
 	try {
 	    // XMLtoDOM
 	    messageDom = XMLParser.parse(getContent());
-	    
-	    schemaVersion = messageDom.getDocumentElement().getAttribute(XML_VERSION_ATTRIBUTE);
-	    
+
+	    schemaVersion =
+		    messageDom.getDocumentElement().getAttribute(
+			    XML_VERSION_ATTRIBUTE);
+
 	    // DOMtoModel
 	    coContent = createCOContentPOJO(messageDom, coContent);
 	} catch (Exception e) {
@@ -316,8 +316,9 @@ public class COModeled extends COSerialized {
 
 	    if (nodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
 		COStructureElement coStructElt = new COStructureElement();
-		coContent.getChildrens().add(createCOStructureElementPOJO(myNode,
-			coStructElt, coContent));
+		coContent.getChildrens().add(
+			createCOStructureElementPOJO(myNode, coStructElt,
+				coContent));
 
 	    } else {
 		addProperty(coContent.getProperties(), myNode);
@@ -417,6 +418,20 @@ public class COModeled extends COSerialized {
 		coProperties.addProperty(key, value);
 	    else
 		coProperties.addProperty(key, type, value);
+	    addAttributes(coProperties, namedNodeMap, key, type);
+	}
+    }
+
+    private void addAttributes(COProperties coProperties,
+	    NamedNodeMap namedNodeMap, String key, String type) {
+	if (type == null) {
+	    type = COProperties.DEFAULT_PROPERTY_TYPE;
+	}
+	COProperty coProperty = coProperties.getCOProperty(key, type);
+
+	for (int i = 0; i < namedNodeMap.getLength(); i++) {
+	    Node item = namedNodeMap.item(i);
+	    coProperty.addAttribute(item.getNodeName(), item.getNodeValue());
 	}
     }
 
@@ -444,8 +459,9 @@ public class COModeled extends COSerialized {
 
 	    if (sNodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
 		COStructureElement coChildStructElt = new COStructureElement();
-		coStructElt.getChildrens().add(createCOStructureElementPOJO(sNode,
-			coChildStructElt, coStructElt));
+		coStructElt.getChildrens().add(
+			createCOStructureElementPOJO(sNode, coChildStructElt,
+				coStructElt));
 	    } else if (sNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
 		COUnit coUnit = new COUnit();
 		coStructElt.addChild(createCOUnitPOJO(sNode, coUnit,
@@ -732,7 +748,7 @@ public class COModeled extends COSerialized {
 	    if (!propElemName.equals("#text")) { // TODO find why there is
 		// properties named #text
 
-		HashMap<String, String> map = properties.get(propElemName);
+		HashMap<String, COProperty> map = properties.get(propElemName);
 		for (Iterator<String> iterMap = map.keySet().iterator(); iterMap
 			.hasNext();) {
 		    Element propElem = document.createElement(propElemName);
@@ -741,12 +757,12 @@ public class COModeled extends COSerialized {
 		    Text propElemValue = null;
 		    if (!type.equals(COProperties.DEFAULT_PROPERTY_TYPE)) {
 			propElem.setAttribute(TYPE_ATTRIBUTE_NAME, type);
-			value =
-				(String) properties.getProperty(propElemName,
-					type);
+			value = properties.getProperty(propElemName, type);
 		    } else {
-			value = (String) properties.getProperty(propElemName);
+			value = properties.getProperty(propElemName);
 		    }
+		    createPropElemAttributes(map.get(type), propElem);
+
 		    if (CDATA_NODE_NAMES.contains(propElemName)) {
 			propElemValue = document.createCDATASection(value);
 
@@ -757,6 +773,13 @@ public class COModeled extends COSerialized {
 		    parent.appendChild(propElem);
 		}
 	    }
+	}
+    }
+
+    private void createPropElemAttributes(COProperty coProperty,
+	    Element propElem) {
+	for (String key : coProperty.getAttributes().keySet()) {
+	    propElem.setAttribute(key, coProperty.getAttribute(key));
 	}
     }
 

@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
-import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**

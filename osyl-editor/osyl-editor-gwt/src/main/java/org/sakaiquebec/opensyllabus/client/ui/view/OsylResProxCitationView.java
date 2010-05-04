@@ -28,6 +28,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+import org.sakaiquebec.opensyllabus.shared.model.COProperty;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 
 import com.google.gwt.user.client.Window;
@@ -170,6 +171,13 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 			.getSelectedCitationProperty(
 				COPropertiesType.IDENTIFIER,
 				COPropertiesType.IDENTIFIER_TYPE_OTHERLINK));
+	
+	addAttribute(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
+		COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL,
+		getEditor().getSelectedCitationPropertyAttr(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
+			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL));
 
 	// setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
 	// COPropertiesType.IDENTIFIER_TYPE_NOLINK, getEditor()
@@ -283,7 +291,20 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	    return url;
 
     }
-
+    
+    public String getCitationOtherLinkLabel() {
+	String urlLabel = null;
+	
+	COProperty coProperty = getCOProperty(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_OTHERLINK);
+	
+	if(coProperty != null){
+	    urlLabel = coProperty.getAttribute(
+		    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL);
+	}
+	return urlLabel;
+    }
+    
     /**
      * @return
      */

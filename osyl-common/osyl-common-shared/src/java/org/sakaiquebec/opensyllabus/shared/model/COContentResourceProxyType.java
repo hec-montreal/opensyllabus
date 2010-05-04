@@ -13,8 +13,6 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * This class contains the list of all the possible ressource proxies in a course outline.

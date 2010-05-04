@@ -173,6 +173,10 @@ public class COContentResource implements COModelInterface,
     public String getProperty(String key, String type) {
 	return getProperties().getProperty(key, type);
     }
+    
+    public COProperty getCOProperty(String key, String type) {
+	return getProperties().getCOProperty(key, type);
+    }
 
     public void addEventHandler(UpdateCOContentResourceEventHandler handler) {
 	if (updateCOContentResourceEventHandlers == null) {

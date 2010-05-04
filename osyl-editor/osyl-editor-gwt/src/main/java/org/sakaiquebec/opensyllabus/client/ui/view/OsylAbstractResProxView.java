@@ -22,6 +22,7 @@ import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractResProxEdi
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+import org.sakaiquebec.opensyllabus.shared.model.COProperty;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.user.client.Timer;
@@ -149,6 +150,10 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     protected void setProperty(String key, String type, String val) {
 	getModel().getResource().addProperty(key, type, val);
     }
+    
+    protected void addAttribute(String key, String type, String attrKey, String attrVal){
+	getCOProperty(key, type).addAttribute(attrKey, attrVal);
+    }
 
     protected String getProperty(String key) {
 	return getModel().getResource().getProperty(key);
@@ -156,6 +161,10 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 
     protected String getProperty(String key, String type) {
 	return getModel().getResource().getProperty(key, type);
+    }
+    
+    protected COProperty getCOProperty(String key, String type) {
+	return getModel().getResource().getCOProperty(key, type);
     }
 
     public void setContextImportant(boolean b) {

@@ -67,7 +67,7 @@ public interface COModelInterface {
     /**
      * Adds a property to the <code>COProperties</code> structure.
      * 
-     * @param key the proerty key used to retrieve the value.
+     * @param key the property key used to retrieve the value.
      * @param value the value of this property.
      */
     public void addProperty(String key, String value);
@@ -90,6 +90,8 @@ public interface COModelInterface {
     public void addProperty(String key, String type, String value);
     
     public String getProperty(String key, String type);
+    
+    public COProperty getCOProperty(String key, String type);
     
     public void removeProperty(String key, String type);
     

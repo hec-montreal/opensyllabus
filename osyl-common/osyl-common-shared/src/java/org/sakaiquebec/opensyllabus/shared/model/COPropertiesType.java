@@ -74,6 +74,7 @@ public class COPropertiesType {
     public static final String IDENTIFIER_TYPE_LIBRARY = "library";
     public static final String IDENTIFIER_TYPE_BOOKSTORE = "bookstore";
     public static final String IDENTIFIER_TYPE_OTHERLINK = "other_link";
+    public static final String IDENTIFIER_TYPE_OTHERLINK_LABEL = "label";
     public static final String IDENTIFIER_TYPE_NOLINK = "nolink"; 
     public static final String IDENTIFIER_TYPE_DOI = "doi";
     public static final String IDENTIFIER_TYPE_ISN = "isn";
