@@ -25,6 +25,7 @@ import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOUnitLabelView;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
+import org.sakaiquebec.opensyllabus.shared.model.OsylConfigRuler;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -84,7 +85,8 @@ public class OsylCOUnitLabelEditor extends OsylLabelEditor {
 		(cse.getLabel() == null || cse.getLabel().trim().equals("")) ? getView()
 			.getCoMessage(cse.getType())
 			: cse.getLabel();
-	lb.addItem(label, cse.getId());
+	if(cse.hasNestedChild() && OsylConfigRuler.getInstance().isMixedContentAllowed(cse))
+	    lb.addItem(label, cse.getId());
 	for (COElementAbstract coe : cse.getChildrens()) {
 	    if (coe.isCOStructureElement())
 		fillListBoxWithCOStructure((COStructureElement) coe, lb);

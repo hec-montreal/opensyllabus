@@ -433,7 +433,7 @@ public class OsylConfigRuler {
 	}
     }
     
-    public boolean istMixedContentAllowed(COElementAbstract model){
+    public boolean isMixedContentAllowed(COElementAbstract model){
 	if (model != null) {
 	    List<COElementAbstract> path = findModelPath(model);
 	    Node attributeTypeNode = findingAttributeTypeNode(findNode(path));

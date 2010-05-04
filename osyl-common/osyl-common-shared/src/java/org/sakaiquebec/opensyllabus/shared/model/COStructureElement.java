@@ -89,7 +89,7 @@ public class COStructureElement extends COElementAbstract<COElementAbstract>
     @SuppressWarnings("unchecked")
     public boolean addChild(COElementAbstract child) {
 	if (OsylConfigRuler.getInstance() != null) {
-	    if (!OsylConfigRuler.getInstance().istMixedContentAllowed(this)
+	    if (!OsylConfigRuler.getInstance().isMixedContentAllowed(this)
 		    && child.isCOStructureElement() && !hasNestedChild()) {
 		while (!childrens.isEmpty()) {
 		    COElementAbstract coe = childrens.get(0);
