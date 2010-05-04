@@ -243,8 +243,12 @@ public class OsylMainView extends OsylViewableComposite implements
 
     private void resize() {
 	int treeWidth = osylHorizontalSplitPanel.getSplitterPosition();
-	DOM.setStyleAttribute(treeDecoratorPanel.getCell(1, 1), "width",
-		treeWidth - 16 + "px");
+	DOM
+		.setStyleAttribute(treeDecoratorPanel.getCell(1, 1), "width",
+			treeWidth
+				- (treeDecoratorPanel.getCell(1, 0)
+					.getOffsetWidth() + treeDecoratorPanel
+					.getCell(1, 2).getOffsetWidth()) + "px");
 	int splitterWidth =
 		osylHorizontalSplitPanel.getSplitElement().getOffsetWidth();
 	String toolSizeString = DOM.getStyleAttribute(getElement(), "width");
@@ -253,7 +257,10 @@ public class OsylMainView extends OsylViewableComposite implements
 			.indexOf("px")));
 	int workspaceWidth = toolSize - treeWidth - splitterWidth;
 	DOM.setStyleAttribute(workspaceDecoratorPanel.getCell(1, 1), "width",
-		workspaceWidth - 16 + "px");
+		workspaceWidth
+			- (workspaceDecoratorPanel.getCell(1, 0)
+				.getOffsetWidth() + workspaceDecoratorPanel
+				.getCell(1, 2).getOffsetWidth()) + "px");
     }
 
 }
