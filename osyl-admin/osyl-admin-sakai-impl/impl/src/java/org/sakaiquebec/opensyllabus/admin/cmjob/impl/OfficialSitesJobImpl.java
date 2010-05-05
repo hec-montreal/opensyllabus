@@ -181,21 +181,25 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
 			    // Create site for section
 			    if (sections != null) {
+				String sectionId = null;
 				for (Section section : sections) {
-				    siteName = getSiteName(section);
-				    try {
-					if (section.getLang() == null)
-					    lang = TEMPORARY_LANG;
-					else
-					    lang = section.getLang();
-					osylSiteService.createSite(siteName,
-						OSYL_CO_CONFIG, lang);
-					osylManagerService.associateToCM(
-						section.getEid(), siteName);
-				    } catch (Exception e) {
-					log.debug(e.getMessage());
+				    sectionId = section.getEid();
+				    if (!sectionId.matches(".*[Dd][Ff][1-9]")) {
+					siteName = getSiteName(section);
+					try {
+					    if (section.getLang() == null)
+						lang = TEMPORARY_LANG;
+					    else
+						lang = section.getLang();
+					    osylSiteService.createSite(
+						    siteName, OSYL_CO_CONFIG,
+						    lang);
+					    osylManagerService.associateToCM(
+						    section.getEid(), siteName);
+					} catch (Exception e) {
+					    log.debug(e.getMessage());
+					}
 				    }
-
 				}
 			    }
 
@@ -214,7 +218,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
 	for (Section section : sections) {
 	    sectionId = section.getEid();
-	    if (!sectionId.endsWith(DIFFERED_GROUP))
+	    if (!sectionId.matches(".*[Dd][Ff][1-9]"))
 		nbSections++;
 	}
 
@@ -248,8 +252,8 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	    Site sharable = osylSiteService.getSite(siteName);
 
 	    for (Membership member : sectionMembers) {
-		sharable.addMember(member.getUserId(), "Instructor", true,
-			false);
+		sharable.addMember(member.getUserId(),
+			MEMBERS_ROLE_IN_SHARABLE, true, false);
 	    }
 
 	    SiteService.save(sharable);
@@ -341,11 +345,11 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	groupe = sectionId.substring(courseOffId.length());
 
 	if (periode == null)
-	    siteName = courseId + "_" + groupe + "_" + sessionTitle;
+	    siteName = courseId + "." + sessionTitle+ "." + groupe ;
 	else
 	    siteName =
-		    courseId + "_" + groupe + "_" + sessionTitle + "_"
-			    + periode;
+		    courseId + "." + sessionTitle + "." + periode + "."
+			    + groupe;
 
 	return siteName;
     }
@@ -390,9 +394,9 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	}
 
 	if (periode == null)
-	    siteName = courseId + "_" + sessionTitle;
+	    siteName = courseId + "." + sessionTitle;
 	else
-	    siteName = courseId + "_" + sessionTitle + "_" + periode;
+	    siteName = courseId + "." + sessionTitle + "." + periode;
 
 	return siteName;
     }

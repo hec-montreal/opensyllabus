@@ -39,6 +39,7 @@ public interface OfficialSitesJob extends Job {
     
     public final static String FALL = "A";
     
-    public static final String DIFFERED_GROUP = "DF1";
+    public final static String MEMBERS_ROLE_IN_SHARABLE = "Instructor";
+    
 }
 
