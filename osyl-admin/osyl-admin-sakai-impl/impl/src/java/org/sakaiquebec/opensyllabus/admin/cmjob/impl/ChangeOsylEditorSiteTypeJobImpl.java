@@ -85,7 +85,6 @@ public class ChangeOsylEditorSiteTypeJobImpl implements Job {
 	    if (site != null) {
 		try {
 		    siteTools = getSiteTools(site);
-		    System.out.println(siteTools.size());
 		    site.setType(NEW_SITE_TYPE);
 
 		    siteService.save(site);
