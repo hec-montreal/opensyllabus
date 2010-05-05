@@ -115,7 +115,7 @@ public class ChangeOsylEditorSiteTypeJobImpl implements Job {
     private void validateTools(Site site) {
 	List<ToolConfiguration> newSiteTools = getSiteTools(site);
 
-	if ((siteTools != newSiteTools) || (newSiteTools.size() == 0)) {
+	if ((siteTools.size() != newSiteTools.size()) || (newSiteTools.size() == 0)) {
 	    String[] toolsToAdd;
 	    if (siteTools.size() == 0)
 		toolsToAdd = DEFAULT_TOOLS;
@@ -128,7 +128,8 @@ public class ChangeOsylEditorSiteTypeJobImpl implements Job {
 	    }
 
 	    for (int i=0; i<toolsToAdd.length; i++){
-		addTool(site, toolsToAdd[i]);
+		if (site.getTool(toolsToAdd[i]) == null)
+		    addTool(site, toolsToAdd[i]);
 	    }
 	    try {
 		siteService.save(site);
