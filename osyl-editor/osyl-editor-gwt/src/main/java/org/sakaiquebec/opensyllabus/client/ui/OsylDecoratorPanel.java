@@ -18,9 +18,10 @@
  * limitations under the License.
  *
  ******************************************************************************/
-package com.google.gwt.user.client.ui;
+package org.sakaiquebec.opensyllabus.client.ui;
 
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.DecoratorPanel;
 
 /**
  *

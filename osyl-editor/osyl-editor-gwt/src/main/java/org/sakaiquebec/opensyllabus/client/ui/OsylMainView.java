@@ -41,7 +41,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
-import com.google.gwt.user.client.ui.OsylDecoratorPanel;
 import com.google.gwt.user.client.ui.OsylHorizontalSplitPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 

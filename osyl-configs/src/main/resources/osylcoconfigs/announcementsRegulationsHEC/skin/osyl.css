@@ -240,7 +240,7 @@
   background-color:transparent;
   vertical-align:middle;
   cursor:e-resize;
-  width:5px;
+  width:8px;
 }
 
 .Osyl-MainView-HorizontalSplitPanel .hsplitter img {display:none}
@@ -1313,3 +1313,30 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 .Osyl-AssignementView-DateLabel{font-size:12px}
 .Osyl-Mandatory_field {color:red}
 .Osyl-RubricUserDefLabel {padding-left: 7px}
+
+a.Osyl-collapseButton {
+	background:url("images/ui/menu_control.png") no-repeat scroll 0 0 transparent;
+	display:block;
+	height:48px;
+	width:8px;
+	cursor: pointer;
+}
+
+a.Osyl-collapseButton:hover  {
+	background-position:-8px 0;
+}
+a.Osyl-collapseButton:active  {
+	background-position:-16px 0;
+}
+
+a.Osyl-collapseButton.collapse {
+	background-position:-24px 0;
+}
+
+a.Osyl-collapseButton.collapse:hover  {
+	background-position:-32px 0;
+}
+
+a.Osyl-collapseButton.collapse:active  {
+	background-position:-40px 0;
+}

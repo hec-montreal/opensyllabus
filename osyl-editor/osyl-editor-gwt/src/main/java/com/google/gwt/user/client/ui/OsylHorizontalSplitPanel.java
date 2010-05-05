@@ -20,12 +20,14 @@
  ******************************************************************************/
 package com.google.gwt.user.client.ui;
 
+import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.listener.SplitterEventHandler;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 
 /**
@@ -37,6 +39,12 @@ public class OsylHorizontalSplitPanel extends Composite {
     private SplitterEventHandler handler = null;
     private HorizontalSplitPanel horizontalSplitPanel = null;
     private Element splitElement = null;
+    private boolean leftElementVisible = true;
+    private int leftElementLastPosition;
+    private Element collapseElement = null;
+    private Anchor collapseAnchor = null;
+
+    private boolean collapseMouseDown = false;
 
     public Element getSplitElement() {
 	return splitElement;
@@ -47,9 +55,11 @@ public class OsylHorizontalSplitPanel extends Composite {
 
 	horizontalSplitPanel = new HorizontalSplitPanel();
 
-	initWidget(horizontalSplitPanel);
-
 	splitElement = horizontalSplitPanel.getSplitElement();
+
+	createSplitter();
+
+	initWidget(horizontalSplitPanel);
     }
 
     /**
@@ -65,7 +75,6 @@ public class OsylHorizontalSplitPanel extends Composite {
 	    }
 
 	}, MouseMoveEvent.getType());
-
     }
 
     public HorizontalSplitPanel getSplitPanel() {
@@ -83,6 +92,55 @@ public class OsylHorizontalSplitPanel extends Composite {
 	    Window.alert(e.toString());
 	    return -1;
 	}
+    }
+
+    protected void createSplitter() {
+	collapseAnchor = new Anchor();
+	collapseAnchor.setStylePrimaryName("Osyl-collapseButton");
+	collapseAnchor.setTitle(OsylController.getInstance().getUiMessage(
+		"OsylTreeView.collapse"));
+	collapseElement = collapseAnchor.getElement();
+	Element e =
+		DOM.getChild(DOM.getChild(DOM.getChild(DOM.getChild(
+			splitElement, 0), 0), 0), 0);
+	e.setInnerHTML("");
+	e.appendChild(collapseElement);
+    }
+
+    public void onBrowserEvent(Event event) {
+	switch (DOM.eventGetType(event)) {
+
+	case Event.ONMOUSEDOWN: {
+	    Element target = DOM.eventGetTarget(event);
+	    if (DOM.isOrHasChild(collapseElement, target)) {
+		collapseMouseDown = true;
+	    }
+	    break;
+	}
+
+	case Event.ONMOUSEUP: {
+	    if (collapseMouseDown) {
+		if (leftElementVisible) {
+		    leftElementLastPosition = getSplitterPosition();
+		    horizontalSplitPanel.setSplitPosition("0px");
+		    collapseAnchor.addStyleName("collapse");
+		    collapseAnchor.setTitle(OsylController.getInstance()
+			    .getUiMessage("OsylTreeView.uncollapse"));
+		} else {
+		    horizontalSplitPanel
+			    .setSplitPosition(leftElementLastPosition + "px");
+		    collapseAnchor.removeStyleName("collapse");
+		    collapseAnchor.setTitle(OsylController.getInstance()
+			    .getUiMessage("OsylTreeView.collapse"));
+		}
+		leftElementVisible = !leftElementVisible;
+		collapseMouseDown = false;
+		handler.onMouseMove(null);
+	    }
+	    break;
+	}
+	}
+	super.onBrowserEvent(event);
     }
 
 }
