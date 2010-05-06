@@ -84,7 +84,7 @@ public class OsylHierarchicalCourseOutlineJobImpl implements OsylHierarchicalCou
 	    parentSiteId = relation.getParent();
 	    childSiteId = relation.getChild();
 	    
-	    osylHierarchyService.addOrUpdateUsers(parentSiteId);
+	    osylHierarchyService.addOrUpdateUsers(childSiteId);
 	}
     }
 }
