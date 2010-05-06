@@ -191,9 +191,12 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 						lang = TEMPORARY_LANG;
 					    else
 						lang = section.getLang();
-					    osylSiteService.createSite(
+					    if (! osylSiteService.siteExists(
+						    siteName)) {
+						osylSiteService.createSite(
 						    siteName, OSYL_CO_CONFIG,
 						    lang);
+					    }
 					    osylManagerService.associateToCM(
 						    section.getEid(), siteName);
 					} catch (Exception e) {
@@ -210,7 +213,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	}
 
 	logoutFromSakai();
-    }
+    } // execute
 
     private boolean hasSharable(Set<Section> sections) {
 	int nbSections = 0;
