@@ -107,6 +107,15 @@ public interface OsylSiteService extends EntityProducer{
 	public String getSiteConfigProperty(String siteId);
 
 	/**
+	 * Returns whether a site with the specified title exists.
+	 * 
+	 * @param siteTitle
+	 * @return true or false
+	 * @throws Exception
+	 */
+	public boolean siteExists(String siteTitle) throws Exception;
+
+	/**
 	 * From the information given by the user, we create a new Site that will contain
 	 * a course outline that will be associated to a course of the course management
 	 *  or will be a work site.

@@ -247,10 +247,12 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	}
 
 	try {
-	    osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG, lang);
-	    // TODO: add users to sites
+	    if (! osylSiteService.siteExists(siteName)) {
+		osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG, lang);
+	    }
 	    Site sharable = osylSiteService.getSite(siteName);
 
+	    // We add users with a specific role for shareable sites
 	    for (Membership member : sectionMembers) {
 		sharable.addMember(member.getUserId(),
 			MEMBERS_ROLE_IN_SHARABLE, true, false);

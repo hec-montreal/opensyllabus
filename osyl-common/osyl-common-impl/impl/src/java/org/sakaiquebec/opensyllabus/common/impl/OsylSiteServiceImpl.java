@@ -405,6 +405,20 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return null;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean siteExists(String siteTitle) {
+	try {
+	    return siteService.siteExists(siteTitle);
+	} catch (Exception e) {
+	    log.error(e.getMessage());
+	    e.printStackTrace();
+	    return false;
+	}
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -496,6 +510,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
 	return site.getId();
     }
+
 
     /**
      * {@inheritDoc}
