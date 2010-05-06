@@ -79,7 +79,16 @@ public interface OsylSiteService extends EntityProducer{
 	 */
 	public static final String DEFAULT_SITE_TYPE = "course";
 
-	/**
+    /** 
+     * use to generate course management title	
+     */
+    public final static String SUMMER = "E";
+    
+    public final static String WINTER = "H";
+    
+    public final static String FALL = "A";
+
+    /**
 	 * Get a valid resource reference base site URL to be used in later calls.
 	 * Will get deprecated very soon!
 	 * 
@@ -248,5 +257,7 @@ public interface OsylSiteService extends EntityProducer{
 	public void dissociate(String siteId, String parentId)throws Exception;
 	
 	public COModeledServer getFusionnedPrePublishedHierarchy(String siteId);
-	
+
+	public COSerialized updateCOContentTitle(String siteId, String webappDir) throws Exception;
+
 }

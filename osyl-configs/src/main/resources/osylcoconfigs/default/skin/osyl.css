@@ -4,6 +4,18 @@
 	width: 100%
 }
 
+.Osyl-MainPanel-Title {
+	font:bold 20px Arial, Verdana, sans-serif;
+}
+
+.Osyl-MainPanel-Title-TD {
+	height: 30px;
+}
+
+.Osyl-MainPanel-ToolBar-TD {
+	height: 21px;
+}
+
 /*MenuBar -----------------------------------------------------------------------------------------------*/
 .Osyl-MenuBar {
 	margin-bottom: 5px;

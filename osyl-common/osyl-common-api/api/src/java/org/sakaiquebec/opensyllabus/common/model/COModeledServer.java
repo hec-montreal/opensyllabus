@@ -44,8 +44,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COConfig;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
@@ -53,6 +55,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
 import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COModeled;
 import org.sakaiquebec.opensyllabus.shared.model.COProperties;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COProperty;
@@ -61,7 +64,9 @@ import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
+import org.sakaiquebec.opensyllabus.shared.model.OsylConfigRuler;
 import org.sakaiquebec.opensyllabus.shared.util.UUID;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -220,6 +225,33 @@ public class COModeledServer {
      */
     private COContent modeledContent;
 
+    /**
+     *Name of element node in rules.xml
+     */
+    protected static final String ELEMENT_NODE_NAME = "element";
+    
+    /**
+     *Name of restriction pattern attribute in rules.xml
+     */
+    protected static final String RESTRICTION_PATTERN_ATTRIBUTE_NAME =
+	    "restrictionpattern";
+    
+    /**
+     *Name of attribute name in rules.xml
+     */
+    protected static final String NAME_ATTRIBUTE_NAME = "name";
+    
+    /**
+     *Name of attribute node in rules.xml
+     */
+    protected static final String ATTRIBUTE_NODE_NAME = "attribute";
+    
+    /**
+     *Name of property type attribute in rules.xml
+     */
+    protected static final String PROPERTY_TYPE_ATTRIBUTE_NAME = "propertyType";
+
+   
     private String schemaVersion;
 
     protected final static List<String> CDATA_NODE_NAMES =
@@ -1295,5 +1327,72 @@ public class COModeledServer {
 	    String newDirectory) {
 	return url.replaceFirst(originalDirectory, newDirectory);
     }
+
+    public void setCOContentTitle(String coTitle){
+        String rulesXML = coSerialized.getOsylConfig().getRulesConfig();
+        if(coTitle != null && rulesXML != null){
+        	Document rulesDom = this.parseXml(rulesXML);
+        	String propertyType = getRulesConfigPropertyType(rulesDom);
+        	COContent content = this.getModeledContent();
+        	COProperties coProperties  = content.getProperties();
+        	coProperties.addProperty(COPropertiesType.TITLE, propertyType, coTitle);        	
+        }
+    }
+
+    public void setCOContentIdentifier(String identifier){
+        String rulesXML = coSerialized.getOsylConfig().getRulesConfig();
+        if(identifier != null && rulesXML != null){
+        	Document rulesDom = this.parseXml(rulesXML);
+        	String propertyType = getRulesConfigPropertyType(rulesDom);
+        	COContent content = this.getModeledContent();
+        	COProperties coProperties  = content.getProperties();
+        	coProperties.addProperty(COPropertiesType.IDENTIFIER, propertyType, identifier);        	
+        }
+    }
+    public String getRulesConfigPropertyType(Document rulesDom) {
+    	String type = null;
+    	Element nodeElement = rulesDom.getDocumentElement();
+    	String nodeName = "";
+    	NodeList nodeList = nodeElement.getChildNodes();
+    	for (int i = 0; i < nodeList.getLength(); i++) {
+    	    Node myNode = nodeList.item(i);
+    	    nodeName = myNode.getNodeName();
+    	    if (nodeName.equals(ELEMENT_NODE_NAME)
+    		    && getNameAttributeValue(myNode).equals(
+    			    CO_NODE_NAME)) {
+    		NodeList coNodeList = myNode.getChildNodes();
+    		for (int j = 0; j < coNodeList.getLength(); j++) {
+    		    Node myCONode = coNodeList.item(j);
+    		    nodeName = myCONode.getNodeName();
+    		    if (nodeName.equals(ATTRIBUTE_NODE_NAME)
+    			    && getNameAttributeValue(myCONode).equals(
+    				    PROPERTY_TYPE_ATTRIBUTE_NAME)) {
+    			type = getRestrictionPatternAttributeValue(myCONode);
+    			break;
+    		    }
+    		}
+    		break;
+    	    }
+    	}
+    	return type;
+        }
+
+    private String getNameAttributeValue(Node myNode) {
+    	Node node = myNode.getAttributes().getNamedItem(NAME_ATTRIBUTE_NAME);
+    	String attributeValue = null;
+    	if (node != null)
+    	    attributeValue = node.getNodeValue();
+    	return attributeValue;
+        }
+
+    private String getRestrictionPatternAttributeValue(Node myNode) {
+    	Node node =
+    		myNode.getAttributes().getNamedItem(
+    			RESTRICTION_PATTERN_ATTRIBUTE_NAME);
+    	String attributeValue = null;
+    	if (node != null)
+    	    attributeValue = node.getNodeValue();
+    	return attributeValue;
+        }
 
 }

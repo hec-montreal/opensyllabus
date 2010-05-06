@@ -115,7 +115,7 @@ public interface OsylManagerService {
      * 
      * @return url of the package file
      */
-    public String getOsylPackage(String siteId);
+    public String getOsylPackage(String siteId, String webappDir);
 
     public Map<String, String> getOsylSites(List<String> siteIds);
 
@@ -126,8 +126,10 @@ public interface OsylManagerService {
     public void dissociate(String siteId, String parentId) throws Exception;
 
     public void associateToCM(String courseSectionId, String siteId) throws Exception;
+    public void associateToCM(String courseSectionId, String siteId, String webappDir) throws Exception;
     
     public void dissociateFromCM(String siteId) throws Exception;
+    public void dissociateFromCM(String siteId, String webappDir) throws Exception;
 
     /**
      * This method retrieves all the course sections registered in the course

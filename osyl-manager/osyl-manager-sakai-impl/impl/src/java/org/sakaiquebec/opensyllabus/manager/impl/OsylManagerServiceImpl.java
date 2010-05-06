@@ -742,11 +742,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     /**
      * {@inheritDoc}
      */
-    public String getOsylPackage(String siteId) {
+    public String getOsylPackage(String siteId, String webappDir) {
 	String url = null;
 
 	try {
-	    File zipFile = exportAndZip(siteId);
+	    File zipFile = exportAndZip(siteId,webappDir);
 	    Site site = siteService.getSite(siteId);
 	    String title = site.getTitle();
 	    String resourceOutputDir =
@@ -870,7 +870,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * @return zipFile a temporary zip file...
      * @throws IOException
      */
-    private File exportAndZip(String siteId) throws Exception {
+    private File exportAndZip(String siteId, String webappDir) throws Exception {
 	// opening a new temporary zipfile
 	File zipFile = File.createTempFile("osyl-package-export", ".zip");
 	ZipOutputStream zos =
@@ -879,7 +879,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	// retrieving the xml file
 	COSerialized coSerialized =
 		osylSiteService
-			.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
+			.updateCOContentTitle(siteId, webappDir);
 
 	byte[] xmlBytes = coSerialized.getContent().getBytes("UTF-8");
 	writeToZip(zos, OsylManagerService.CO_XML_FILENAME, xmlBytes);
@@ -1011,6 +1011,29 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
     }
 
+    public void associateToCM(String courseSectionId, String siteId, String webappDir)
+    throws Exception {
+	
+	if (siteId != null) {
+	    Site site = siteService.getSite(siteId);
+	    ResourcePropertiesEdit rp = site.getPropertiesEdit();
+	    Section courseSection =
+		    courseManagementService.getSection(courseSectionId);
+	    CourseOffering courseOff =
+		    courseManagementService.getCourseOffering(courseSection
+			    .getCourseOfferingEid());
+	    AcademicSession term = courseOff.getAcademicSession();
+	
+	    rp.addProperty(PROP_SITE_TERM, term.getTitle());
+	    rp.addProperty(PROP_SITE_TERM_EID, term.getEid());
+	
+	    site.setProviderGroupId(courseSectionId);
+	    siteService.save(site);
+	    osylSiteService.updateCOContentTitle(siteId,webappDir);
+	   	    
+	}
+	}
+    
     public void dissociateFromCM(String siteId) throws Exception {
 	if (siteId != null) {
 	    Site site = siteService.getSite(siteId);
@@ -1021,6 +1044,18 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    siteService.save(site);
 	}
     }
+
+    public void dissociateFromCM(String siteId, String webappDir) throws Exception {
+    	if (siteId != null) {
+    	    Site site = siteService.getSite(siteId);
+    	    ResourcePropertiesEdit rp = site.getPropertiesEdit();
+    	    rp.addProperty(PROP_SITE_TERM, null);
+    	    rp.addProperty(PROP_SITE_TERM_EID, null);
+    	    site.setProviderGroupId(null);
+    	    siteService.save(site);
+    	    osylSiteService.updateCOContentTitle(siteId,webappDir);
+    	}
+        }
 
     public List<CMCourse> getCMCourses() {
 	log.info("Debut de getCMCourses");

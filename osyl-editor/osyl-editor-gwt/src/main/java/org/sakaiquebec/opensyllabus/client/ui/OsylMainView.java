@@ -39,10 +39,10 @@ import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.OsylHorizontalSplitPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.FlexTable;
 
 /**
  * OsylMainView defines the OpenSyllabus main view which is composed by a
@@ -57,7 +57,7 @@ public class OsylMainView extends OsylViewableComposite implements
 	SplitterEventHandler {
 
     // View variables
-    protected VerticalPanel mainPanel;
+    protected FlexTable mainPanel;
     protected OsylTreeView osylTree;
     protected OsylWorkspaceView osylWorkspaceView;
     protected OsylHorizontalSplitPanel osylHorizontalSplitPanel;
@@ -65,7 +65,7 @@ public class OsylMainView extends OsylViewableComposite implements
 
     protected OsylDecoratorPanel treeDecoratorPanel;
     protected OsylDecoratorPanel workspaceDecoratorPanel;
-
+    protected Label courseTitle;
     public OsylMainView(COModelInterface model, OsylController osylController) {
 	super(model, osylController);
     } // constructor
@@ -75,13 +75,36 @@ public class OsylMainView extends OsylViewableComposite implements
 	getController().setMainView(this);
 
 	// Create and set the main container panel
-	setMainPanel(new VerticalPanel());
+	setMainPanel(new FlexTable());
+	int row = 0;
 	getMainPanel().setStylePrimaryName("Osyl-MainPanel");
 	if (getController().isReadOnly())
 	    getMainPanel().addStyleDependentName("ReadOnly");
-	getMainPanel().setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
 
-	if (!getController().isReadOnly() || getController().isInPreview()) {
+	String coTitle = null;
+	try {
+	    coTitle = getController().getCOSerialized().getTitle();
+	} catch (NullPointerException e) {
+	    coTitle = null;
+	}
+	// If we don't have a controller or a COSerialized (in hosted mode for
+	// instance), or an empty title, we simply display "Course Outline".
+	if (null == coTitle || "".equals(coTitle)) {
+	    coTitle = getCoMessage("courseoutline");
+	}
+    String suffix = "";
+    if(!getController().isReadOnly()){
+    	suffix = getUiMessage("edition_suffix");
+    }else if(getController().isInPreview()){
+    	suffix = getUiMessage("preview_suffix");
+    }
+	courseTitle = new Label(coTitle + " " + suffix );
+	courseTitle.setStylePrimaryName("Osyl-MainPanel-Title");
+    getMainPanel().setWidget(row, 0, courseTitle);
+	getMainPanel().getCellFormatter().setStylePrimaryName(row, 0, "Osyl-MainPanel-Title-TD");
+
+    row++;
+	if (!getController().isReadOnly() || getController().isInPreview()){
 	    // Create and set the OpenSyllabus ToolBar
 	    setOsylToolbarView(new OsylToolbarView(getController()
 		    .getViewContextModel(), getController()));
@@ -91,8 +114,9 @@ public class OsylMainView extends OsylViewableComposite implements
 		    (PublishPushButtonEventHandler) getController());
 	    getOsylToolbarView().refreshView();
 	    getOsylToolbarView().setTitle(getUiMessage("OsylToolbar"));
-	    getMainPanel().add(getOsylToolbarView());
-	    getMainPanel().setCellHeight(getOsylToolbarView(), "21px");
+	    getMainPanel().setWidget(row, 0, getOsylToolbarView());
+		getMainPanel().getCellFormatter().setStylePrimaryName(row, 0, "Osyl-MainPanel-ToolBar-TD");
+	    row++;
 	}
 
 	// Create and set the Main Horizontal Split Panel
@@ -103,7 +127,8 @@ public class OsylMainView extends OsylViewableComposite implements
 	// horizontalSplitPanel = new HorizontalSplitPanel();
 	horizontalSplitPanel
 		.setStylePrimaryName("Osyl-MainView-HorizontalSplitPanel");
-	getMainPanel().add(osylHorizontalSplitPanel);
+    getMainPanel().setWidget(row, 0, osylHorizontalSplitPanel);
+    row++;
 
 	// Create and set the OpenSyllabus TreeView
 	setOsylTreeView(new OsylTreeView(getModel(), getController()));
@@ -216,14 +241,22 @@ public class OsylMainView extends OsylViewableComposite implements
 	return osylToolbarView;
     }
 
-    public VerticalPanel getMainPanel() {
+/*    public VerticalPanel getMainPanel() {
 	return mainPanel;
     }
 
     public void setMainPanel(VerticalPanel newPanel) {
 	this.mainPanel = newPanel;
     }
+*/
+    public FlexTable getMainPanel() {
+    	return mainPanel;
+    }
 
+    public void setMainPanel(FlexTable newPanel) {
+    	this.mainPanel = newPanel;
+    }
+    
     public OsylWorkspaceView getWorkspaceView() {
 	return osylWorkspaceView;
     }

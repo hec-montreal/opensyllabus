@@ -112,8 +112,9 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
      * {@inheritDoc}
      */
     public String getOsylPackage(String siteId) {
+   	String webappDir = getServletContext().getRealPath("/");
 	return osylManagerServices.getOsylManagerService().getOsylPackage(
-		siteId);
+		siteId, webappDir);
     }
 
     public Map<String, String> getOsylSites(List<String> siteIds) {
@@ -135,7 +136,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 
     public void associateToCM(String courseSectionId, String siteId) throws Exception{
 	osylManagerServices.getOsylManagerService().associateToCM(
-		courseSectionId, siteId);
+		courseSectionId, siteId,servletContext.getRealPath("/"));
     }
     
     public void dissociateFromCM(String siteId) throws Exception{

@@ -59,6 +59,10 @@
 			<artifactId>${sakai.hibernate.artifactId}</artifactId>
 			<scope>provided</scope>
 		</dependency>
+    <dependency>
+      <groupId>org.sakaiproject</groupId>
+      <artifactId>sakai-coursemanagement-api</artifactId>
+    </dependency>
 
 		<!-- misc -->
 		<dependency>
