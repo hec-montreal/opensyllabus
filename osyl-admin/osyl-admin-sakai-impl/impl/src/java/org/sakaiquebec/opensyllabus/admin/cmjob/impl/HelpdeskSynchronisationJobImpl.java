@@ -69,13 +69,13 @@ public class HelpdeskSynchronisationJobImpl implements
      * List of the users that will added to the sites of type osyleditor with
      * role helpdesk
      */
-    private String[] usersIdAdded = { "11060533" };
+    private String[] usersIdAdded = { "11060533", "11091096" };
 
     /**
      * List of the users with the role Helpdesk that will be removed from the
      * sites of type osylEditor.
      */
-    private String[] usersIdRemoved = { "11091096", "11127242" };
+    private String[] usersIdRemoved = { "11127242" };
 
     @SuppressWarnings("unchecked")
     public void execute(JobExecutionContext arg0) throws JobExecutionException {

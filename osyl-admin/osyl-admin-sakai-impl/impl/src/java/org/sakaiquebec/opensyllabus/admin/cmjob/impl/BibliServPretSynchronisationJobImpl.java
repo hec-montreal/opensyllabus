@@ -67,13 +67,13 @@ BibliServPretSynchronizationJob {
      * List of the users that will added to the sites of type osyleditor with
      * role helpdesk
      */
-    private String[] usersIdAdded = { "11091096" };
+    private String[] usersIdAdded = { "11127242" };
 
     /**
      * List of the users with the role Helpdesk that will be removed from the
      * sites of type osylEditor.
      */
-    private String[] usersIdRemoved = { "11060533" , "11127242" };
+    private String[] usersIdRemoved = { "11060533" };
 
     @SuppressWarnings("unchecked")
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
