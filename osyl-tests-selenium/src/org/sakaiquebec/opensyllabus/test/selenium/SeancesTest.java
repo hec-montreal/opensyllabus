@@ -68,11 +68,11 @@ public class SeancesTest extends AbstractOSYLTest{
         int resNb = getResourceCount()-1;
         log("We start with " + resNb + " resources");
         
-        //We add a first Lecture
+        //We add a first Assessment Unit 
         clickAddItem("addLecture");
         pause();
         
-        //We add another one
+        //We add a first Assessment Unit 
         clickAddItem("addLecture");
         pause();
         
@@ -88,7 +88,7 @@ public class SeancesTest extends AbstractOSYLTest{
 	
 	//Rename the last Lecture unit
 	String newText1 = "FirstSeanceName" + timeStamp();
-	session().type("//table/tbody/tr/td/table/tbody/tr/td/input", newText1);
+	session().type("//tr[2]/td/table/tbody/tr/td/table/tbody/tr/td/input", newText1);
 	pause();
 	
 	//Click OK to close Editor
@@ -103,15 +103,11 @@ public class SeancesTest extends AbstractOSYLTest{
 	
 	// Now we rename the lecture from inside
 	int Val = resNb +2;
-	if(Val < 10){
-	    session().click("link=0" + Val + " -");
-	}else{
-	    session().click("link=" + Val + " -");
-	}
+	session().click("link=" + Val + "-");
 	pause();
 	String newText2 = "SeanceReNamed" + timeStamp();
 	session().click("//tr/td/div/table[2]/tbody/tr/td/button");
-	session().type("//input[@type='text']", newText2);
+	session().type("//tr[2]/td/table/tbody/tr/td/table/tbody/tr/td/input", newText2);
 	// Click OK
 	session().click("//td/table/tbody/tr/td[1]/button");
 	// Ensure the new name is visible
@@ -131,11 +127,7 @@ public class SeancesTest extends AbstractOSYLTest{
         pause();
 	
 	//We edit the last Lecture
-        if(Val < 10){
-	    session().click("link=0" + Val + " -");
-	}else{
-	    session().click("link=" + Val + " -");
-	}
+        session().click("link=" + Val + "-");
 	pause();
 	
 	//Add Text in the last Lecture Unit
@@ -243,11 +235,7 @@ public class SeancesTest extends AbstractOSYLTest{
 		"td/div[contains(text(),'Organisation')]");
         pause();
 	//Open the last Lecture unit 
-        if(Val < 10){
-	    session().click("link=0" + Val + " -");
-	}else{
-	    session().click("link=" + Val + " -");
-	}
+        session().click("link=" + Val + "-");
 	pause();
        
 	//Add Hyperlink in the last Lecture Unit
@@ -345,11 +333,7 @@ public class SeancesTest extends AbstractOSYLTest{
 		"td/div[contains(text(),'Organisation')]");
         pause();
 	//Open the last Lecture unit 
-        if(Val < 10){
-	    session().click("link=0" + Val + " -");
-	}else{
-	    session().click("link=" + Val + " -");
-	}
+        session().click("link=" + Val + "-");
 	pause();
         
         //Add new document
@@ -536,11 +520,7 @@ public class SeancesTest extends AbstractOSYLTest{
         "td/div[contains(text(),'Organisation')]");
         pause();
         //Open the last Lecture unit 
-        if(Val < 10){
-        session().click("link=0" + Val + " -");
-        }else{
-        session().click("link=" + Val + " -");
-        }
+        session().click("link=" + Val + "-");
         pause();
         
         //Add new document
@@ -632,11 +612,7 @@ public class SeancesTest extends AbstractOSYLTest{
         pause();
         
         //Click last Lecture  
-        if(Val < 10){
-	    session().click("link=0" + Val + " -");
-	}else{
-	    session().click("link=" + Val + " -");
-	}
+        session().click("link=" + Val + "-");
         pause();
         
         //Add new Citation

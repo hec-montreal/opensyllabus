@@ -96,10 +96,11 @@ public class AssessmentTest extends AbstractOSYLTest{
 	
 	//We fill the weighting field
 	String newText3 = "20";
-	session().type("//input[@type='text']", newText3);
-	
+	session().type("//tr[2]/td/table/tbody/tr/td/input", newText3);
+		
 	//We select randomly the assessment type field
 	String xpathRole1 = "//select[@class=\"gwt-ListBox\"]";
+	
 	String newText5 = getRandomOption(xpathRole1);
 	session().select(xpathRole1, newText5);
 	
@@ -118,7 +119,6 @@ public class AssessmentTest extends AbstractOSYLTest{
 	//We open the last assessment
 	int Val = resNb + 2;
 	session().click("link=" + Val + "-");
-	
 	//We edit the last assessment
 	session().click("//table/tbody/tr/td/div/table[2]/tbody/tr/td/button");
 	pause();
@@ -128,7 +128,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	//--------------------------------------------------------------------//
 	
 	//We empty the fields "Weighting"
-	session().type("//input[@type='text']", "");
+	session().type("//tr[2]/td/table/tbody/tr/td/input", "");
 	
 	//We empty the the assessment type field
 	session().select(xpathRole1, "label=");
@@ -153,16 +153,16 @@ public class AssessmentTest extends AbstractOSYLTest{
 	//--------------------------------------------------------------------//
 	
 	//We fill the weighting field
-	session().type("//input[@type='text']", newText3);	
+	session().type("//tr[2]/td/table/tbody/tr/td/input", newText3);	
 	
 	//We select randomly the location field
-	String xpathRole2 = "//tr/td/table/tbody/tr/td[3]/table/tbody/tr[2]/td/select";
+	String xpathRole2 = "//tr[2]/td/table/tbody/tr/td[3]/table/tbody/tr[2]/td/select";
 	String newText6 = getRandomOption(xpathRole2);
 	session().select(xpathRole2, newText6);
 	pause();
 	
 	//We select randomly the work mode field
-	String xpathRole3 = "//tr[2]/td/table/tbody/tr/td/table/tbody/tr[2]/td/select";
+	String xpathRole3 = "//tr[3]/td/table/tbody/tr/td/table/tbody/tr[2]/td/select";
 	String newText7 = getRandomOption(xpathRole3);
 	session().select(xpathRole3, newText7);
 	pause();
@@ -233,7 +233,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	session().select(xpathRole3, newText7);
 	
 	//We empty the fields "Weighting"
-	session().type("//input[@type='text']", "");
+	session().type("//tr[2]/td/table/tbody/tr/td/input", "");
 	
 	//We click OK to close assessment editor
 	session().click("//td/table/tbody/tr/td[1]/button");
@@ -253,7 +253,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	//-------------------------------------------------------------------//
 	
 	//We fill the weighting field
-	session().type("//input[@type='text']", newText3);
+	session().type("//tr[2]/td/table/tbody/tr/td/input", newText3);
 	
 	//We fill the assessment name field
 	String newText1 = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
@@ -305,11 +305,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td" +
 		"/div[contains(text(),'valuations')]");
 	//Open last Assessment unit
-	if(Val < 10){
-	    session().click("link=0" + Val + " -");
-	}else{
-	    session().click("link=" + Val + " -");
-	}
+	session().click("link=" + Val + "-");
 	//Add Text in Assessment Unit
 	clickAddItem("addText");
 
@@ -363,11 +359,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 		"/div[contains(text(),'valuations')]");
                 
         	//Open last Assessment unit
-        	if(Val < 10){
-        	    session().click("link=0" + Val + " -");
-        	}else{
-        	    session().click("link=" + Val + " -");
-        	}
+        	session().click("link=" + Val + "-");
         	pause();
                         	
         	if (!session().isTextPresent(selectedRubric1)) {
@@ -392,11 +384,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         		"/div[contains(text(),'valuations')]");
                 
         	//Open last Assessment unit
-        	if(Val < 10){
-        	    session().click("link=0" + Val + " -");
-        	}else{
-        	    session().click("link=" + Val + " -");
-        	}
+        	session().click("link=" + Val + "-");
         	        	
                 if (!(session().isTextPresent(selectedRubric1))) {
                     logAndFail("Expected to see rubric [" + selectedRubric1
@@ -419,11 +407,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	"/div[contains(text(),'valuations')]");
         
         //Edit first Assessment unit
-	if(Val < 10){
-	    session().click("link=0" + Val + " -");
-	}else{
-	    session().click("link=" + Val + " -");
-	}
+	session().click("link=" + Val + "-");
 	
 	//Add Hyperlink in Assessment Unit
 	clickAddItem("addURL");
@@ -471,11 +455,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 		"/div[contains(text(),'valuations')]");
 
         	//Edit the last Assessment unit
-        	if(Val < 10){
-        	    session().click("link=0" + Val + " -");
-        	}else{
-        	    session().click("link=" + Val + " -");
-        	}
+        	session().click("link=" + Val + "-");
         
         	if (!session().isTextPresent(selectedRubric2)) {
         	    logAndFail("Expected to see rubric [" + selectedRubric2
@@ -524,11 +504,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	"/div[contains(text(),'valuations')]");
         
 	//Edit first Assessment unit
-	if(Val < 10){
-	    session().click("link=0" + Val + " -");
-	}else{
-	    session().click("link=" + Val + " -");
-	}
+	session().click("link=" + Val + "-");
 
 	//Add new document
 	clickAddItem("addDocument");
@@ -647,11 +623,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 		"/div[contains(text(),'valuations')]");
 
         	//Edit first Assessment unit
-        	if(Val < 10){
-        	    session().click("link=0" + Val + " -");
-        	}else{
-        	    session().click("link=" + Val + " -");
-        	}
+        	session().click("link=" + Val + "-");
         
         	if (!session().isTextPresent(selectedRubric3)) {
         	    logAndFail("Expected to see rubric [" + selectedRubric3
@@ -715,11 +687,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         		"/div[contains(text(),'valuations')]");
         
 	//Edit first Assessment unit
-	if(Val < 10){
-	    session().click("link=0" + Val + " -");
-	}else{
-	    session().click("link=" + Val + " -");
-	}
+	session().click("link=" + Val + "-");
 
 	//Add new Citation
 	clickAddItem("addBiblioResource");
