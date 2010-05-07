@@ -290,7 +290,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
         //---------------------------------------------------------------------------//
         
 	
-	//Add new Citation
+	/*/Add new Citation
         clickAddItem("addBiblioResource");
         
         // open Citation resource editor
@@ -438,7 +438,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
         
         //Save modifications
         saveCourseOutline();
-        pause();
+        pause();*/
         
         session().selectFrame("relative=parent");
         logOut();

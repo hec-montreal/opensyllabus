@@ -211,7 +211,8 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	}
 	log("OK: Selected rubric is visible");
 	pause();
-	session().click("//tr[2]/td[2]/div/div/table/tbody/tr/td");
+	//Close Overview
+	session().click("//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
 	
 //---------------------------------------------------------------------------//
 //				Delete Contact		                     //

@@ -369,8 +369,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         	log("OK: Selected rubric is visible");
         	
         	//Close Overview
-        	session().click("//html/body/table/tbody/tr/td/table/tbody" +
-		"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+        	session().click("//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
         	
         	//Overview
         	session().click("gwt-uid-7");
@@ -393,8 +392,7 @@ public class AssessmentTest extends AbstractOSYLTest{
                 log("OK: Selected rubric is visible");
         	        	
         	//Close Overview
-                session().click("//html/body/table/tbody/tr/td/table/tbody" +
-		"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+                session().click("//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
 	}
 	
 	
@@ -464,8 +462,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         	log("OK: Selected rubric is visible");
         	
         	//Close Overview
-        	session().click("//html/body/table/tbody/tr/td/table/tbody" +
-        			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+        	session().click("//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
         	pause();
         	
         	/*/Overview
@@ -638,8 +635,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         	log("OK: Text is visible");
         	
         	//Close Overview
-        	session().click("//html/body/table/tbody/tr/td/table/tbody" +
-        			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+        	session().click("//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
         	pause();
         	
         	/*/Overview
@@ -682,7 +678,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 //                          Add Citation in Assessment Unit                  //
 //---------------------------------------------------------------------------//
 	
-	//Click Assessment section 
+	/*/Click Assessment section 
 	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td" +
         		"/div[contains(text(),'valuations')]");
         
@@ -758,7 +754,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         
        //Save modifications
 	saveCourseOutline();
-	pause();
+	pause();*/
 	
 	/*/Overview
 	session().click("gwt-uid-6");
@@ -837,31 +833,31 @@ public class AssessmentTest extends AbstractOSYLTest{
         		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
         		"tbody/tr["+Val1+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
         		"tbody/tr[2]/td/table/tbody/tr/td/div", "\r");
-        		
+      
         } else {
         session().mouseOver(
-        		"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
+        		"//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
         		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
         		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div");
         session().mouseOver(
-        		"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
+        		"//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
         		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
-        		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div/table[3]");
+        		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div");
         session().mouseOver(
-        		"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
-        		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
-        		"tbody/tr["+Val1+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
-        		"tbody/tr[2]/td/table/tbody/tr/td/div");
+        		"//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
+        		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
+        		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div"+
+        		"/table[3]/tbody/tr[2]/td/table/tbody/tr/td/div");
         session().mouseDown(
-        		"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
-        		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
-        		"tbody/tr["+Val1+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
-        		"tbody/tr[2]/td/table/tbody/tr/td/div");
+                	"//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
+        		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
+        		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div"+
+        		"/table[3]/tbody/tr[2]/td/table/tbody/tr/td/div");
         session().mouseUp(
-        		"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
-        		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
-        		"tbody/tr["+Val1+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
-        		"tbody/tr[2]/td/table/tbody/tr/td/div");
+                	"//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
+        		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
+        		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div"+
+        		"/table[3]/tbody/tr[2]/td/table/tbody/tr/td/div");
         }
         
 //---------------------------------------------------------------------------//

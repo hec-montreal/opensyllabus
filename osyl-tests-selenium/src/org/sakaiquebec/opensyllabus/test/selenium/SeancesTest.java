@@ -195,8 +195,7 @@ public class SeancesTest extends AbstractOSYLTest{
         	log("OK: Selected rubric is visible");
         	
         	//Close Overview
-        	session().click("//html/body/table/tbody/tr/td/table/tbody" +
-        			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+        	session().click("//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
         	pause();
         	
         	/*/Overview
@@ -293,8 +292,7 @@ public class SeancesTest extends AbstractOSYLTest{
         	log("OK: Selected rubric is visible");
         	
         	//Close Overview
-        	session().click("//html/body/table/tbody/tr/td/table/tbody" +
-        			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+        	session().click("//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
         	pause();
         	
         	/*/Overview
@@ -473,8 +471,7 @@ public class SeancesTest extends AbstractOSYLTest{
             log("OK: Text is visible");
             
             //Close Overview
-            session().click("//html/body/table/tbody/tr/td/table/tbody" +
-        			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+            session().click("//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
             pause();
             
             /*/Overview
@@ -606,7 +603,7 @@ public class SeancesTest extends AbstractOSYLTest{
 //      			Add Citation in Lecture Unit                  //
 //---------------------------------------------------------------------------//
 
-        //Open Lectures Section
+        /*/Open Lectures Section
         session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
 	"td/div[contains(text(),'Organisation')]");
         pause();
@@ -627,7 +624,7 @@ public class SeancesTest extends AbstractOSYLTest{
         // We choose randomly a Rubric
         String selectedRubric4 = getRandomRubric();
         log("Selecting rubric [" + selectedRubric4 + "]");
-        changeRubric(selectedRubric4);
+        changeRubric(selectedRubric4);*/
         
         /*/Create a new citation list
         session().answerOnNextPrompt("NewListe"+ newText1);
@@ -641,7 +638,7 @@ public class SeancesTest extends AbstractOSYLTest{
         pause();
         assertTrue(session().isPromptPresent());*/
         
-        //Open Citation list
+        /*/Open Citation list
         session().focus("//tr[2]/td/table/tbody/tr[2]/td/select/option");
         session().click("//tr[2]/td/table/tbody/tr[2]/td/select/option");
         session().select("//tr[2]/td/table/tbody/tr[2]/td/select","index=0");
@@ -693,7 +690,7 @@ public class SeancesTest extends AbstractOSYLTest{
         
         //Save modifications
         saveCourseOutline();
-        pause();
+        pause();*/
 
         
 //---------------------------------------------------------------------------//
@@ -705,47 +702,47 @@ public class SeancesTest extends AbstractOSYLTest{
 		"td/div[contains(text(),'Organisation')]");
         pause();
         
-        // We switch the 1st and 2nd Lecture 
+     // We switch the 1st and 2nd assessment 
+        int Val1 = resNb +2;
         if (inInternetExplorer()) {
-            session().keyPress("//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
-            		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
-            		"tbody/tr["+Val+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
-            		"tbody/tr[2]/td/table/tbody/tr/td/div", "\r");
-            		
-            } else {
-            session().mouseOver(
-            		"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
-            		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
-            		"/tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div");
-            session().mouseOver(
-        	    	"//html/body/table/tbody/tr[2]/td/div/div/div[3]" +
-            		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
-            		"/tbody/tr["+Val+"]/td/table/tbody/tr/td[2]/div/table[3]");
-            session().mouseOver(
-        	    	"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
-            		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
-            		"tbody/tr["+Val+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
-            		"tbody/tr[2]/td/table/tbody/tr/td/div");
-            session().mouseDown(
-        	    	"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
-            		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
-            		"tbody/tr["+Val+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
-            		"tbody/tr[2]/td/table/tbody/tr/td/div");
-            session().mouseUp(
-        	    	"//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
-            		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
-            		"tbody/tr["+Val+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
-            		"tbody/tr[2]/td/table/tbody/tr/td/div");
-            }
-
+        session().keyPress("//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
+        		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
+        		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div"+
+        		"/table[3]/tbody/tr[2]/td/table/tbody/tr/td/div", "\r");
+      
+        } else {
+        session().mouseOver(
+        		"//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
+        		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
+        		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div");
+        session().mouseOver(
+        		"//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
+        		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
+        		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div");
+        session().mouseOver(
+        		"//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
+        		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
+        		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div"+
+        		"/table[3]/tbody/tr[2]/td/table/tbody/tr/td/div");
+        session().mouseDown(
+                	"//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
+        		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
+        		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div"+
+        		"/table[3]/tbody/tr[2]/td/table/tbody/tr/td/div");
+        session().mouseUp(
+                	"//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
+        		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
+        		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div"+
+        		"/table[3]/tbody/tr[2]/td/table/tbody/tr/td/div");
+        }
 //---------------------------------------------------------------------------//
 //			Delete Lecture Unit		                     //
 //---------------------------------------------------------------------------//
 
        
         //We delete Lecture 1
-        int Val1 = Val+1;
-        session().click("//tr["+Val1+"]/td/table/tbody/tr/td[2]/div/table[2]" +
+        int Val2 = Val1+1;
+        session().click("//tr["+Val2+"]/td/table/tbody/tr/td[2]/div/table[2]" +
         	"/tbody/tr/td[2]/button");
         
         session().click("//tr[2]/td/table/tbody/tr/td/button");
