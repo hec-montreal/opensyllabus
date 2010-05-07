@@ -1,1603 +1,1286 @@
 ﻿/* ---- CSS definitions specific to OpenSyllabus ------------------- */
-	/* Main panel of Osyl -----------------------------------------------------------------------------------*/
-.Osyl-MainPanel {
-	width: 100%
-}
+
+/* Main panel of Osyl -----------------------------------------------------------------------------------*/
+.Osyl-MainPanel {width:100%}
+
+/* Main Title -------------------------------------------------------------------------------------------*/
 
 .Osyl-MainPanel-Title {
-	font:bold 20px Arial, Verdana, sans-serif;
+	font:bold 22px Arial, Verdana, sans-serif;
+	color:#454a4f;
 }
-
-.Osyl-MainPanel-Title-TD {
-	height: 30px;
-}
-
-.Osyl-MainPanel-ToolBar-TD {
-	height: 21px;
-}
-
+.Osyl-MainPanel-Title-TD {height:30px}
+.Osyl-MainPanel-ToolBar-TD {height:21px}
 /*MenuBar -----------------------------------------------------------------------------------------------*/
 .Osyl-MenuBar {
-	margin-bottom: 5px;
-}
-
-.Osyl-MenuBar .topCenter,.Osyl-MenuBar .bottomCenter {
-	background: #d6dbdf;
-	height: 5px;
-}
-
-.Osyl-MenuBar .middleLeft,.Osyl-MenuBar .middleRight {
-	background: #d6dbdf;
-	width: 5px;
-}
-
-.Osyl-MenuBar .topLeftInner,.Osyl-MenuBar .topRightInner,.Osyl-MenuBar .bottomLeftInner,.Osyl-MenuBar .bottomRightInner
-	{
-	width: 5px;
-	height: 5px;
-	zoom: 1;
-}
-
-.Osyl-MenuBar .topLeft {
-	background: url(images/ui/menubar_corner.png) no-repeat 0 0;
-	-background: url(images/ui/menubar_corner_ie6.png) no-repeat 0 0;
-}
-
-.Osyl-MenuBar .topRight {
-	background: url(images/ui/menubar_corner.png) no-repeat -5px 0;
-	-background: url(images/ui/menubar_corner_ie6.png) no-repeat -5px 0;
-}
-
-.Osyl-MenuBar .bottomLeft {
-	background: url(images/ui/menubar_corner.png) no-repeat 0 -5px;
-	-background: url(images/ui/menubar_corner_ie6.png) no-repeat 0 -5px;
-}
-
-.Osyl-MenuBar .bottomRight {
-	background: url(images/ui/menubar_corner.png) no-repeat -5px -5px;
-	-background: url(images/ui/menubar_corner_ie6.png) no-repeat -5px -5px;
-}
-
-* html .Osyl-MenuBar .topLeftInner,* html .Osyl-MenuBar .topRightInner,* html .Osyl-MenuBar .bottomLeftInner,* html .Osyl-MenuBar .bottomRightInner
-	{
-	width: 5px;
-	height: 5px;
-	overflow: hidden;
-}
-
-.Osyl-MenuBar .middleCenterInner {
-	
+	position:relative;
+	overflow:visible;
+	width:100%;
+	zoom:1;
+	z-index:1000;
 }
 
 .gwt-MenuBar-horizontal {
-	cursor: default;
-	background: #d6dbdf;
-	/*	background:#transparent; */
-	position: relative;
-	margin: 0 -2px 0;
-	overflow: visible;
+	cursor:default;
+	background:transparent;
+	margin:0;
+}
+.gwt-MenuBar-Left {
+	float:left;
+	margin-left:4px;
+}
+.gwt-MenuBar-Right {float:right}
+.gwt-MenuBar-Section {
+	position:absolute;
+	top:33px;
+	right:8px;
+	
 }
 
-.gwt-MenuBar-horizontal .gwt-MenuItem,.gwt-MenuBar-vertical .gwt-MenuItem
-	{
-	font: bold 0.9em Arial, Verdana, sans-serif;
-	vertical-align: middle;
-	color: #454a4f;
-	cursor: default;
-	height: auto;
-	text-decoration: none;
+.gwt-MenuBar-horizontal .gwt-MenuItem,
+.gwt-MenuBar-vertical .gwt-MenuItem {
+  font:bold 0.9em Arial, Verdana, sans-serif;
+  vertical-align:middle;
+  color:#454a4f;
+  cursor:default;
+  height:auto;
+  text-decoration:none;
 }
 
 .gwt-MenuBar-horizontal .gwt-MenuItem {
-	text-align: center;
-	padding: 1px 10px;
-	background: transparent url(images/ui/opt_separator.gif) no-repeat right
-		center;
+  text-align:center;
+  padding:1px 10px;
+  background:transparent;
+  height:24px;
 }
 
 .gwt-MenuBar-horizontal .gwt-MenuItem.Osyl-MenuItem-vertical {
-	padding: 1px 21px 1px 10px;
-	background-image: url(images/ui/menuitem_vertical-arrow.gif);
+	padding:0 21px 0 10px;
+	width:71px;
+	background:transparent url(images/ui/menu-vertical.png) no-repeat;
+	-background:transparent url(images/ui/menu-vertical.gif) no-repeat;
+	/*border:1px solid transparent;*/
+}
+.gwt-MenuBar-horizontal .gwt-MenuItem.Osyl-MenuItem-vertical.Osyl-MenuItem-Add {background-position:0 -24px}
+
+/*.gwt-MenuBar-horizontal .gwt-MenuItem.gwt-MenuItem-selected.Osyl-MenuItem-vertical {
+	background-color:#FFF;
+	border:1px solid #CBD0D4;
+}*/
+
+.gwt-MenuBarPopup {z-index:1001}
+.Osyl-MenuBar-Add {z-index:999}
+
+.gwt-MenuItemSeparator .menuSeparatorInner {
+	width:1px;
+	height:11px;
+	margin:0 2px;
+	background:#898C8E;
 }
 
-.gwt-MenuBar-horizontal .gwt-MenuItem.gwt-MenuItem-selected.Osyl-MenuItem-vertical
-	{
-	background-image: url(images/ui/menuitem_vertical-arrow_select.gif);
-}
 
-.gwt-MenuBar-horizontal .gwt-MenuItem.gwt-MenuItem.Osyl-MenuItem-LastChild.Osyl-MenuItem-vertical
-	{
-	padding: 1px 20px 1px 10px;
-	background-image: url(images/ui/menuitem_vertical-arrow_last.gif);
-}
-
-.gwt-MenuBar-horizontal .gwt-MenuItem.gwt-MenuItem.Osyl-MenuItem-LastChild.gwt-MenuItem-selected.Osyl-MenuItem-vertical
-	{
-	background-image: url(images/ui/menuitem_vertical-arrow_last_select.gif)
-		;
-}
-
-.gwt-MenuBar-horizontal .gwt-MenuItem.Osyl-MenuItem-LastChild {
-	background-image: none
-}  /* Remove right border of the last element */
-.gwt-MenuBar-horizontal .gwt-MenuItem img,.gwt-MenuBar-horizontal .gwt-MenuItem gwt\:clipper
-	{
-	/*Name space gwt:clipper for IE margin between image and text in menu*/
-	vertical-align: middle;
-	margin-right: 5px;
-	margin-top: -2px;
+.gwt-MenuBar-horizontal .gwt-MenuItem img,
+.gwt-MenuBar-horizontal .gwt-MenuItem gwt\:clipper { /*Name space gwt:clipper for IE margin between image and text in menu*/
+	vertical-align:middle;
+	margin-right:5px;
+	margin-top:-2px;
 }
 
 .gwt-MenuBar-vertical {
-	vertical-align: middle;
-	background-color: #FFF;
-	border: 1px solid #CBD0D4;
-	padding: 2px;
-	cursor: default;
-	margin-left: 24px;
+	vertical-align:middle;
+	background-color:#FFF;
+	border:1px solid #CBD0D4;
+	padding:2px;
+	cursor:default;
+	margin:0;
+	min-width:98px;
 }
 
 .gwt-MenuBar-vertical .gwt-MenuItem {
-	text-align: left;
-	padding: 4px 4px;
+	text-align:left;
+	padding:4px 4px;
 }
 
 /* Act as a hover */
-.gwt-MenuBar .gwt-MenuItem-selected {
-	text-decoration: underline;
-	cursor: pointer;
+.gwt-MenuBar td.gwt-MenuItem:hover, .gwt-MenuBar td.td.gwt-MenuItem-selected {
+	text-decoration:underline;
+  	cursor:pointer;
 }
-
-.gwt-MenuBar-vertical .gwt-MenuItem-selected {
-	text-decoration: none;
-	background-color: #DCEFFD;
+.gwt-MenuBar-vertical td.gwt-MenuItem-selected, .gwt-MenuBar-vertical td.gwt-MenuItem-selected:hover  {
+	text-decoration:none;
+	background-color:#DCEFFD;
+	min-width:94px;
 }
 
 /* Horizontal Split Panel , parent of the left, middle and right Zone -------------------------------------*/
 .Osyl-MainView-HorizontalSplitPanel {
-	margin: 0;
-	overflow: hidden;
+	margin:0;
+	overflow:hidden;
 }
 
-/*TreeView Left Zone --------------------------------------------------------------------------------------*/
-.Osyl-TreeView {
-	font-size: 12px;
-	width: 100%;
-}
+/*Decoration Panel Zone --------------------------------------------------------------------------------------*/
+.Osyl-MainView-HorizontalSplitPanel .middleCenter {vertical-align:top}
 
-.Osyl-TreeView .topCenter,.Osyl-TreeView .bottomCenter {
+.Osyl-MainView-HorizontalSplitPanel .topCenter,
+.Osyl-MainView-HorizontalSplitPanel .bottomCenter {
 	background: url(images/ui/hborder.png) repeat-x;
-	height: 8px;
+	height:8px;
 }
+.Osyl-MainView-HorizontalSplitPanel .bottomCenter {background-position:0 -47px}
+.Osyl-MainView-HorizontalSplitPanel .topCenter {height:47px;background-position:0 0}
 
-.Osyl-TreeView .bottomCenter {
-	background-position: 0 -47px
-}
-
-.Osyl-TreeView .topCenter {
-	height: 47px;
-	background-position: 0 0
-}
-
-.Osyl-TreeView .middleLeft,.Osyl-TreeView .middleRight {
+.Osyl-MainView-HorizontalSplitPanel .middleLeft,
+.Osyl-MainView-HorizontalSplitPanel .middleRight {
 	background: url(images/ui/vborder.png) repeat-y;
-	width: 8px;
+	width:8px;
 }
+.Osyl-MainView-HorizontalSplitPanel .middleRight {background-position:-8px 0}
 
-.Osyl-TreeView .middleRight {
-	background-position: -8px 0
-}
-
-.Osyl-TreeView .topLeftInner,.Osyl-TreeView .topRightInner,.Osyl-TreeView .bottomLeftInner,.Osyl-TreeView .bottomRightInner
-	{
+.Osyl-MainView-HorizontalSplitPanel .topLeftInner,
+.Osyl-MainView-HorizontalSplitPanel .topRightInner,
+.Osyl-MainView-HorizontalSplitPanel .bottomLeftInner,
+.Osyl-MainView-HorizontalSplitPanel .bottomRightInner {
 	width: 8px;
 	height: 8px;
+
 	zoom: 1;
 }
-
-.Osyl-TreeView .topLeftInner,.Osyl-TreeView .topRightInner {
-	height: 47px;
+.Osyl-MainView-HorizontalSplitPanel .topLeftInner,
+.Osyl-MainView-HorizontalSplitPanel .topRightInner {
+	height:47px;
 }
-
-.Osyl-TreeView .topLeft {
+.Osyl-MainView-HorizontalSplitPanel .topLeft {
 	background: url(images/ui/treeview_corner.png) no-repeat top left;
 	-background: url(images/ui/treeview_corner_ie6.png) no-repeat top left;
 }
-
-.Osyl-TreeView .topRight {
+.Osyl-MainView-HorizontalSplitPanel .topRight {
 	background: url(images/ui/treeview_corner.png) no-repeat top right;
 	-background: url(images/ui/treeview_corner_ie6.png) no-repeat top right;
 }
-
-.Osyl-TreeView .bottomLeft {
+.Osyl-MainView-HorizontalSplitPanel .bottomLeft {
 	background: url(images/ui/treeview_corner.png) no-repeat bottom left;
-	-background: url(images/ui/treeview_corner_ie6.png) no-repeat bottom
-		left;
+	-background: url(images/ui/treeview_corner_ie6.png) no-repeat bottom left;
 }
-
-.Osyl-TreeView .bottomRight {
+.Osyl-MainView-HorizontalSplitPanel .bottomRight {
 	background: url(images/ui/treeview_corner.png) no-repeat bottom right;
-	-background: url(images/ui/treeview_corner_ie6.png) no-repeat bottom
-		right;
+	-background: url(images/ui/treeview_corner_ie6.png) no-repeat bottom right;
 }
-
-* html .Osyl-TreeView .topLeftInner,* html .Osyl-TreeView .topRightInner,* html .Osyl-TreeView .bottomLeftInner,* html .Osyl-TreeView .bottomRightInner
-	{
+* html .Osyl-MainView-HorizontalSplitPanel .topLeftInner,
+* html .Osyl-MainView-HorizontalSplitPanel .topRightInner,
+* html .Osyl-MainView-HorizontalSplitPanel .bottomLeftInner,
+* html .Osyl-MainView-HorizontalSplitPanel .bottomRightInner {
 	width: 8px;
 	height: 8px;
 	overflow: hidden;
 }
-
-* html .Osyl-TreeView .topLeftInner,* html .Osyl-TreeView .topRightInner
-	{
-	height: 47px;
+* html .Osyl-MainView-HorizontalSplitPanel .topLeftInner,
+* html .Osyl-MainView-HorizontalSplitPanel .topRightInner {
+	 height: 47px;
+}
+.Osyl-MainView-HorizontalSplitPanel .middleCenterInner {
+	position:relative;
+	margin:-47px 0 0 0;
+	zoom: 1;
+	overflow:auto;
 }
 
-.Osyl-TreeView .middleCenterInner {
-	position: relative;
-	margin: -47px 0 0 0;
-	zoom: 1;
-	overflow: auto;
+/*TreeView Left Zone --------------------------------------------------------------------------------------*/
+
+.Osyl-TreeView {
+	font-size:12px;
+	width:100%;
+	/*height:100%*/
 }
 
 /*TreeView Header */
 .Osyl-TreeView-Header {
-	font: bold 15px Arial, Verdana, sans-serif;
-	color: #76787a;
-	padding: 14px 0 8px 35px;
-	background: transparent url(images/tree_logo.png) no-repeat 12px 14px;
+	font:bold 15px Arial, Verdana, sans-serif;
+	color:#76787a;
+	padding:14px 0 8px 35px;
+	background:transparent url(images/tree_logo.png) no-repeat 12px 14px;
 }
-
 /*TreeView Tree */
 .Osyl-TreeView-Tree {
-	border: 0;
-	margin: 8px 3px 3px 0;
-	padding: 1px;
-	font: normal 13px Arial, Verdana, sans-serif;
-	color: #058EC4;
+	border:0;
+	margin:0;
+	padding:1px;
+	font:normal 13px Arial, Verdana, sans-serif;
+	color:#058EC4;
 }
 
-.Osyl-TreeView-Tree table {
-	border-collapse: separate
-}  /*Restore default alignment */
-.Osyl-TreeView-Tree img {
-	margin: 1px
-}  /* Correct the alignment */
+.Osyl-TreeView-Tree table {border-collapse:separate} /*Restore default alignment */
+.Osyl-TreeView-Tree img {margin:1px} /* Correct the alignment */
+
 .Osyl-TreeView-Tree .gwt-TreeItem {
-	cursor: pointer;
-	color: #058EC4;
+	cursor:pointer;
+	color:#058EC4;
 }
-
 .Osyl-TreeView-Tree .gwt-TreeItem .Osyl-TreeLabel {
-	margin: 1px 5px;
-	font-size: 12px;
-	color: #058EC4;
-	text-decoration: none;
+	margin:1px 5px;
+	font-size:12px;
+	color:#058EC4;
+	text-decoration:none;
+}
+.Osyl-TreeView-Tree div.gwt-TreeItem:hover{text-decoration:underline}
+
+.Osyl-TreeView-Tree div.gwt-TreeItem-selected {cursor:default;font-weight:bold;color:#666} /* TreeView item selected zone*/
+.Osyl-TreeView-Tree div.gwt-TreeItem-selected:hover {text-decoration:none}
+
+.Osyl-TreeView-Tree .gwt-TreeItem-selected .Osyl-TreeItem-HorizontalPanel .Osyl-TreeLabel{font-weight:bold;color:#666}/* TreeView item selected text */
+
+/*End TreeView ---------------------------------------------------------------------------------------------*/
+
+/*Split Pannel Middle Zone ---------------------------------------------------------------------------------*/
+
+.Osyl-MainView-HorizontalSplitPanel table.hsplitter {
+	background-color:transparent;
+	vertical-align:middle;
+	cursor:e-resize;
+	cursor:col-resize;
+	margin:2px;
 }
 
-.Osyl-TreeView-Tree div.gwt-TreeItem:hover {
-	text-decoration: underline
-}
-
-.Osyl-TreeView-Tree div.gwt-TreeItem-selected {
-	cursor: default;
-	font-weight: bold;
-	color: #666
-}  /* TreeView item selected zone*/
-.Osyl-TreeView-Tree div.gwt-TreeItem-selected:hover {
-	text-decoration: none
-}
-
-.Osyl-TreeView-Tree .gwt-TreeItem-selected .Osyl-TreeItem-HorizontalPanel .Osyl-TreeLabel
-	{
-	font-weight: bold;
-	color: #666
-}  /* TreeView item selected text */
-	/*End TreeView ---------------------------------------------------------------------------------------------*/
-	/*Split Pannel Middle Zone ---------------------------------------------------------------------------------*/
-.Osyl-MainView-HorizontalSplitPanel .hsplitter {
-	background-color: transparent;
-	vertical-align: middle;
-	cursor: e-resize;
-	width: 8px;
-}
-
-.Osyl-MainView-HorizontalSplitPanel .hsplitter img {
-	display: none
-}
-
+.Osyl-MainView-HorizontalSplitPanel .hsplitter td {vertical-align:middle}
+.Osyl-MainView-HorizontalSplitPanel .hsplitter img {display:none}
 /*Workspace View Right Zone --------------------------------------------------------------------------------*/
-.Osyl-WorkspaceView,.Osyl-WorkspaceView-MainPanel {
-	width: 100%
-}
 
-.Osyl-WorkspaceView .topCenter,.Osyl-WorkspaceView .bottomCenter {
-	background: url(images/ui/hborder.png) repeat-x;
-	height: 8px;
+.Osyl-WorkspaceView, .Osyl-WorkspaceView-MainPanel {width:100%}
+.Osyl-WorkspaceView {
+	/*height:100%;*/
+	overflow:hidden;
 }
-
-.Osyl-WorkspaceView .bottomCenter {
-	background-position: 0 -47px
-}
-
-.Osyl-WorkspaceView .middleLeft,.Osyl-WorkspaceView .middleRight {
-	background: url(images/ui/vborder.png) repeat-y;
-	width: 8px;
-}
-
-.Osyl-WorkspaceView .middleRight {
-	background-position: -8px 0
-}
-
-.Osyl-WorkspaceView .topLeftInner,.Osyl-WorkspaceView .topRightInner,.Osyl-WorkspaceView .bottomLeftInner,.Osyl-WorkspaceView .bottomRightInner
-	{
-	width: 8px;
-	height: 8px;
-	zoom: 1;
-}
-
-.Osyl-WorkspaceView .topLeft {
-	background: url(images/ui/workspace_corner.png) no-repeat 0 0;
-	-background: url(images/ui/workspace_corner_ie6.png) no-repeat 0 0;
-}
-
-.Osyl-WorkspaceView .topRight {
-	background: url(images/ui/workspace_corner.png) no-repeat -8px 0;
-	-background: url(images/ui/workspace_corner_ie6.png) no-repeat -8px 0;
-}
-
-.Osyl-WorkspaceView .bottomLeft {
-	background: url(images/ui/workspace_corner.png) no-repeat 0 -8px;
-	-background: url(images/ui/workspace_corner_ie6.png) no-repeat 0 -8px;
-}
-
-.Osyl-WorkspaceView .bottomRight {
-	background: url(images/ui/workspace_corner.png) no-repeat -8px -8px;
-	-background: url(images/ui/workspace_corner_ie6.png) no-repeat -8px -8px
-		;
-}
-
-* html .Osyl-WorkspaceView .topLeftInner,* html .Osyl-WorkspaceView .topRightInner,* html .Osyl-WorkspaceView .bottomLeftInner,* html .Osyl-WorkspaceView .bottomRightInner
-	{
-	width: 8px;
-	height: 8px;
-	overflow: hidden;
-}
-
-.Osyl-WorkspaceView .middleCenterInner {
-	margin: 0 0 -5px 0
-}
+.Osyl-WorkspaceView .middleCenterInner {margin:0 0 -5px 0}
 
 /* End WorkspaceView Right Zone ---------------------------------------------------------------------------*/
+
 .Osyl-LongView-CourseOutline {
-	font: bold 12px Arial, Verdana, sans-serif;
-	color: #063871;
-	width: 100%;
+	font:bold 12px Arial, Verdana, sans-serif;
+	color:#063871;
+	width:100%;
 }
 
 /*Arrow buttons*/
 .Osyl-PushButton {
-	padding: 2px;
-	cursor: pointer;
+	padding:2px;
+	cursor:pointer;
 }
+.Osyl-MouseOverPopup-ArrowButtonPanel .Osyl-PushButton.Osyl-PushButton-up img {}
 
-.Osyl-MouseOverPopup-ArrowButtonPanel .Osyl-PushButton.Osyl-PushButton-up img
-	{
-	
-}
+.Osyl-PushButton-up-disabled, .Osyl-PushButton-down-disabled {display:none} /* Hide disabled arrows*/
 
-.Osyl-PushButton-up-disabled,.Osyl-PushButton-down-disabled {
-	display: none
-}  /* Hide disabled arrows*/
-	/* File Upload ------------------------------------------------------------------------------------------*/
+/* File Upload ------------------------------------------------------------------------------------------*/
+
 .Osyl-FileUpload-uploadForm {
-	background-color: transparent;
-	font: normal 100% Arial, Verdana, sans-serif;
+	background-color:transparent;
+	font:normal 100% Arial, Verdana, sans-serif;
 }
+.Osyl-FileUpload-uploadForm .mosaic-LayoutPanel {padding-top:10px}
+.Osyl-FileUpload-uploadForm .mosaic-Caption {}
 
-.Osyl-FileUpload-uploadForm .mosaic-LayoutPanel {
-	padding-top: 10px
-}
-
-.Osyl-FileUpload-uploadForm .mosaic-Caption {
-	
-}
 
 .Osyl-FileUpload-information {
-	font: normal 12px Arial, Verdana, sans-serif;
-	color: #333;
-	text-align: left;
-	margin-bottom: 10px;
+	font:normal 12px Arial, Verdana, sans-serif;
+	color:#333;
+	text-align:left;
+	margin-bottom:10px;
 }
 
 /* Citation Form -----------------------------------------------------------------------------------------*/
 .Osyl-CitationForm-form {
-	padding: 0;
-	font: normal 100% Arial, Verdana, sans-serif;
-	color: #000;
-	background-color: transparent;
-	border: none;
+	padding:0;
+	font:normal 100% Arial, Verdana, sans-serif;
+	color:#000;
+	background-color:transparent;
+	border:none;
 }
 
 .Osyl-CitationForm-title {
-	font: bold 14px Arial, Verdana, sans-serif;
-	text-align: center;
-	margin-bottom: 10px;
+	font:bold 14px Arial, Verdana, sans-serif;
+	text-align:center;
+	margin-bottom:10px;
 }
 
 .Osyl-CitationForm-typeField {
-	text-align: center;
-	margin: 20px;
+	text-align:center;
+	margin:20px;
 }
 
 .Osyl-CitationForm-genericPanel {
-	margin: 3px;
-	width: 415px;
+	margin:3px;
+	width:415px;
 }
 
-.Osyl-CitationForm-textArea {
-	font-family: Arial, Verdana, sans serif; /* Doesn't work in MSIE */
-	background: #FFF;
-	border: 1px solid #AAA;
-	margin: 0 3px;
-	padding: 0;
-	width: 415px;
+.Osyl-CitationForm-textArea{
+	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
+	background:#FFF;
+	border:1px solid #AAA;
+	margin:0 3px;	
+	padding:0;
+	width:415px;
 	height: 110px;
 }
 
-.Osyl-CitationForm-longTextBox {
-	font-family: Arial, Verdana, sans serif; /* Doesn't work in MSIE */
-	background: #FFF;
-	border: 1px solid #AAA;
-	margin: 0 3px;
-	padding: 0;
-	width: 415px;
+.Osyl-CitationForm-longTextBox{
+	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
+	background:#FFF;
+	border:1px solid #AAA;
+	margin:0 3px;	
+	padding:0;
+	width:415px;
 }
 
-.Osyl-CitationForm-textBox {
-	font-family: Arial, Verdana, sans serif; /* Doesn't work in MSIE */
-	background: #FFF;
-	border: 1px solid #AAA;
-	margin: 0 3px;
-	padding: 0;
-	width: 320px;
+.Osyl-CitationForm-textBox{
+	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
+	background:#FFF;
+	border:1px solid #AAA;
+	margin:0 3px;	
+	padding:0;
+	width:320px;
 }
 
-.Osyl-CitationForm-doubleTextBox {
-	font-family: Arial, Verdana, sans serif; /* Doesn't work in MSIE */
-	background: #FFF;
-	border: 1px solid #AAA;
-	margin: 0 3px;
-	padding: 0;
-	width: 100px;
+.Osyl-CitationForm-doubleTextBox{
+	font-family:Arial, Verdana, sans serif; /* Doesn't work in MSIE */
+	background:#FFF;
+	border:1px solid #AAA;
+	margin:0 3px;	
+	padding:0;
+	width:100px;
 }
 
 /*Publish View -------------------------------------------------------------------------------*/
-.Osyl-PublishView-Title {
-	font: bold 14px Arial, Verdana, sans-serif;
-	text-align: center;
+.Osyl-PublishView-Title { 
+	font:bold 14px Arial, Verdana, sans-serif;
+	text-align:center;
 }
 
-.Osyl-PublishView-publishedDate {
-	font-style: italic;
-}
+.Osyl-PublishView-publishedDate { font-style: italic;}
 
-.Osyl-PublishView-Label-important {
-	font: bold;
-}
+.Osyl-PublishView-Label-important{font:bold;}
 
 .Osyl-PublishView-PopupPanel {
-	width: 400px;
-	margin: 120px 0 0 300px;
-	padding: 10px;
-	font: normal 100% Arial, Verdana, sans-serif;
-	color: #000;
-	background-color: #FFF;
-	border: 3px solid #454A4F;
-	border-radius: 8px;
-	-moz-border-radius: 8px;
-	-webkit-border-radius: 8px;
+	width:400px;
+	margin:120px 0 0 300px;
+	padding:10px;
+	font:normal 100% Arial, Verdana, sans-serif;
+	color:#000;
+	background-color:#FFF;
+	border:3px solid #454A4F;
+	border-radius:8px;
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
 }
 
-.Osyl-PublishView-genericButton {
-	margin: 10px
-}
+.Osyl-PublishView-genericButton {margin:10px}
 
 /*Unit View --------------------------------------------------------------------------------------*/
-.Osyl-UnitView-MainPanel {
-	width: 100%
-}
+.Osyl-UnitView-MainPanel {width:100%}
 
 .Osyl-ASMUnit-numberTextBox {
-	width: 50px;
+	width:50px;
 }
 
-.Osyl-TitleEditor {
-	
-}
-
-.Osyl-RubricTitle {
-	
-}
+.Osyl-TitleEditor {}
+.Osyl-RubricTitle {}
 
 .Osyl-UnitView-Title {
-	padding: 4px 0;
-	border: 1px solid #FFF; /*For IE6*/
+	padding:4px 0;
+	border:1px solid #FFF; /*For IE6*/
 }
 
 .Osyl-UnitView-Title-Hover {
-	border: 1px solid #808080;
-	background-color: #EEE;
+	border:1px solid #808080;
+	background-color:#EEE;
 }
 
-.Osyl-Title1,.Osyl-Title2,.Osyl-Title3,.Osyl-Title4,.Osyl-Title5 {
-	font: bold 25px Arial, Verdana, sans-serif;
-	margin-left: 35px;
+.Osyl-Title1, .Osyl-Title2, .Osyl-Title3, .Osyl-Title4, .Osyl-Title5 {
+	font:bold 25px Arial, Verdana, sans-serif;
+	margin-left:35px;
 }
-
-.Osyl-UnitView-ResPanel .Osyl-Title1,.Osyl-UnitView-TitlePanel .Osyl-Title1,.Osyl-UnitView-ResPanel .Osyl-Title2,.Osyl-UnitView-TitlePanel .Osyl-Title2,.Osyl-UnitView-ResPanel .Osyl-Title3,.Osyl-UnitView-TitlePanel .Osyl-Title3,.Osyl-UnitView-ResPanel .Osyl-Title4,.Osyl-UnitView-TitlePanel .Osyl-Title4,.Osyl-UnitView-ResPanel .Osyl-Title5,.Osyl-UnitView-TitlePanel .Osyl-Title5
-	{
-	margin: 3px 0 3px 30px;
+.Osyl-UnitView-ResPanel .Osyl-Title1, .Osyl-UnitView-TitlePanel .Osyl-Title1,
+.Osyl-UnitView-ResPanel .Osyl-Title2, .Osyl-UnitView-TitlePanel .Osyl-Title2,
+.Osyl-UnitView-ResPanel .Osyl-Title3, .Osyl-UnitView-TitlePanel .Osyl-Title3,
+.Osyl-UnitView-ResPanel .Osyl-Title4, .Osyl-UnitView-TitlePanel .Osyl-Title4,
+.Osyl-UnitView-ResPanel .Osyl-Title5, .Osyl-UnitView-TitlePanel .Osyl-Title5 {
+	margin:3px 0 3px 30px;
 }
-
-.Osyl-ListItemView-Table .Osyl-Title1,.Osyl-ListItemView-Table .Osyl-Title2,.Osyl-ListItemView-Table .Osyl-Title3,.Osyl-ListItemView-Table .Osyl-Title4,.Osyl-ListItemView-Table .Osyl-Title5
-	{
-	margin: 3px 0 3px 0;
+.Osyl-ListItemView-Table .Osyl-Title1,
+.Osyl-ListItemView-Table .Osyl-Title2,
+.Osyl-ListItemView-Table .Osyl-Title3,
+.Osyl-ListItemView-Table .Osyl-Title4,
+.Osyl-ListItemView-Table .Osyl-Title5 {
+	margin:3px 0 3px 0;
 }
 
 .Osyl-Title1 {
-	color: #1c4d6c;
-	font-size: 25px;
-	margin-bottom: 20px;
-	text-align: left;
+	color:#1c4d6c;
+	font-size:25px;
+	margin-bottom:20px;
+	text-align:left;
 }
 
 .Osyl-Title2 {
-	color: #454a4f;
-	font-size: 22px;
+	color:#454a4f;
+	font-size:22px;
 }
 
 .Osyl-Title3 {
-	color: #5a6a7c;
-	font-size: 17px;
+	color:#5a6a7c;
+	font-size:17px;
 }
 
 .Osyl-Title4 {
-	color: #878a8c;
-	font-size: 15px;
+	color:#878a8c;
+	font-size:15px;
 }
 
 .Osyl-Title5 {
-	color: #454a4f;
-	font-size: 13px;
-	border: 0;
+	color:#454a4f;
+	font-size:13px;
+	border:0;
 }
 
 /* Generic GWT textBox (i.e.:no style specified) */
 .Osyl-UnitView-TextBox {
-	font: normal 1em Arial, Verdana, sans-serif;
-	height: 25px;
-	padding: 3px;
+	font:normal 1em Arial, Verdana, sans-serif;
+	height:25px;
+	padding:3px;
 }
 
-.Osyl-UnitView-Title .Osyl-LabelEditor-View,.Osyl-UnitView-Title .Osyl-LabelEditor-TextBox,.Osyl-UnitView-Title-Hover .Osyl-LabelEditor-View
-	{
-	color: #333;
-	font: normal 12px Arial, Verdana, sans-serif;
-	padding: 5px 0;
-}
-
-.Osyl-LabelEditor-View {
-	
-}
-
-.Osyl-UnitView-TextBox,.Osyl-UnitView-Title .Osyl-LabelEditor-TextBox,.Osyl-UnitView-ResPanel .Osyl-LabelEditor-TextBox
-	{
-	border: 1px solid #878a8c;
-}
-
+.Osyl-UnitView-Title .Osyl-LabelEditor-View,
+.Osyl-UnitView-Title .Osyl-LabelEditor-TextBox,
 .Osyl-UnitView-Title-Hover .Osyl-LabelEditor-View {
-	
+	color:#333;
+	font:normal 12px Arial, Verdana, sans-serif;
+	padding:5px 0;
 }
 
+.Osyl-LabelEditor-View {}
+
+.Osyl-UnitView-TextBox,
+.Osyl-UnitView-Title .Osyl-LabelEditor-TextBox,
 .Osyl-UnitView-ResPanel .Osyl-LabelEditor-TextBox {
-	font-family: Arial, Verdana, Sans-serif
+	border:1px solid #878a8c;
 }
+
+.Osyl-UnitView-Title-Hover .Osyl-LabelEditor-View {}
+
+.Osyl-UnitView-ResPanel .Osyl-LabelEditor-TextBox {font-family:Arial, Verdana, Sans-serif}
 
 .Osyl-UnitView-RubricName {
-	font-family: sans-serif, Arial, Verdana;
-	font-size: 14px;
-	font-weight: bold;
+	font-family:sans-serif, Arial, Verdana;
+	font-size:14px;
+	font-weight:bold;
 }
 
-.Osyl-UnitView-RubricImg {
-	margin: 3px 4px 4px
-}
+.Osyl-UnitView-RubricImg {margin:3px 4px 4px}
 
 /* Content Unit Resource Panel unfocused */
-.Osyl-UnitView-ResPanel,.Osyl-UnitView-ResPanel-Hover {
-	position: relative;
-	vertical-align: middle;
-	margin: 0 0 5px;
-	padding: 5px 20px 5px 5px;
-	border: 1px solid #e3f0FF;
-	width: auto;
-	zoom: 1;
-	overflow: hidden;
+.Osyl-UnitView-ResPanel, .Osyl-UnitView-ResPanel-Hover {
+	position:relative;
+	vertical-align:middle;
+	margin:0 0 5px;
+	padding:5px 20px 5px 5px;
+	border:1px solid #FFF;
+	border-top-color:#e3f0FF;
+	width:auto;
+	zoom:1;
+	overflow:hidden;
 }
 
 .Osyl-UnitView-ResPanel-Hover {
-	vertical-align: top;
-	border: 1px solid #B0B0B0;
-	background-color: #EEE;
-	overflow: visible;
+	vertical-align:top;
+	border-color:#B0B0B0 #EEE #EEE #EEE;
+	background-color:#EEE;
+	overflow:visible;
 }
 
 .Osyl-ListItemView-Hyperlink .Osyl-UnitView-ResPanel {
-	color: #FFF; /*For IE6*/
-	border: 1px solid transparent;
-	margin: 0;
+	color:#FFF; /*For IE6*/
+	border:1px solid transparent;
+	margin:0;
 }
 
 .Osyl-ListItemView-Hyperlink .Osyl-UnitView-ResPanel-Hover {
-	border: 1px solid #B0B0B0;
-	margin: 0;
+	border-color:#B0B0B0 #EEE #EEE #EEE;
+	margin:0;
 }
-
-.Osyl-UnitView-ResEditor,.Osyl-UnitView-ResEditorFocused {
-	padding: 0;
-	margin: 0;
+.Osyl-UnitView-ResEditor, .Osyl-UnitView-ResEditorFocused {
+	padding:0;	
+	margin:0;
 }
 
 /* Label in a Content Unit Panel  */
 .Osyl-UnitView-UnitLabel {
-	font: normal 1em Arial, Verdana, sans-serif;
-	padding: 3px 0;
-	width: auto;
+	font:normal 1em Arial, Verdana, sans-serif;
+	padding:3px 0;
+	width:auto;
 }
+.Osyl-UnitView-UnitLabel ul, .Osyl-UnitView-HtmlViewer ul {margin-left:30px}
+.Osyl-UnitView-UnitLabel ol, .Osyl-UnitView-HtmlViewer ol {margin-left:35px}
 
-.Osyl-UnitView-UnitLabel ul,.Osyl-UnitView-HtmlViewer ul {
-	margin-left: 30px
-}
-
-.Osyl-UnitView-UnitLabel ol,.Osyl-UnitView-HtmlViewer ol {
-	margin-left: 35px
-}
-
-.Osyl-UnitView-HtmlViewer {
-	width: 100%
-}
+.Osyl-UnitView-HtmlViewer {width:100%}
 
 .Osyl-UnitView-Important .Osyl-UnitView-TextImportant {
-	background: #B6BEC4;
-	padding-left: 4px;
-	padding-right: 4px;
-	border-left: 2px solid #B6BEC4;
-	border-right: 2px solid #B6BEC4;
+	background:#B6BEC4;
+	padding-left:4px;
+	padding-right:4px;
+	border-left:2px solid #B6BEC4;
+	border-right:2px solid #B6BEC4;
 }
-
 .Osyl-UnitView-Important .Osyl-UnitView-TextImportant .gwt-HTML {
-	font: bold 12px Arial, Verdana, sans-serif;
-	color: #FFF;
+	font:bold 12px Arial, Verdana, sans-serif;
+	color:#FFF;
 }
-
 .Osyl-UnitView-IconLvlReq {
-	width: 24px;
-	text-align: center;
-	vertical-align: top;
-	padding: 0 6px 0 0;
+	width:24px;
+	text-align:center;
+	vertical-align:top;
+	padding:0 6px 0 0;
 }
 
-.Osyl-UnitView-LvlReq .Osyl-UnitView-Content,.Osyl-UnitView-Important .Osyl-UnitView-Content
-	{
-	background-color: #eff2f4;
-	padding: 0 4px;
+.Osyl-UnitView-LvlReq .Osyl-UnitView-Content, .Osyl-UnitView-Important .Osyl-UnitView-Content {
+	background-color:#eff2f4;
+	padding:0 4px;
 }
-
 .Osyl-UnitView-Important .Osyl-UnitView-Content {
-	border: 2px solid #B6BEC4;
-	padding: 0 4px;
+	border:2px solid #B6BEC4;
+	padding:0 4px;
 }
 
-.Osyl-ResProxView-MetaInfo,.Osyl-UnitView-MetaInfo,.Osyl-UnitView-SemanticTag
-	{
-	display: block;
-	margin: 0 0 0 30px;
-	padding: 5px 0 0 0;
-	font: normal 10px sans-serif, Arial, Verdana;
-	color: #A0A0A0;
-}
-
-.Osyl-ResProxView-MetaInfo-Important,.Osyl-UnitView-MetaInfo-Important,.Osyl-UnitView-SemanticTag-Important
-	{
-	padding: 5px 6px 0 6px;
-}
-
-.Osyl-ResProxView-MetaInfo-Requirement,.Osyl-UnitView-MetaInfo-Requirement,.Osyl-UnitView-SemanticTag-Requirement
-	{
-	padding: 5px 4px 0 4px;
-}
-
-.Osyl-ListItemView-Hyperlink .Osyl-UnitView-MetaInfo {
-	padding: 5px 0 0 0
-}
-
+.Osyl-ResProxView-MetaInfo,
+.Osyl-UnitView-MetaInfo,
 .Osyl-UnitView-SemanticTag {
-	margin: 0 0 3px 40px
+	display:block;
+	margin:0 0 0 30px;
+	padding:5px 0 0 0;
+	font:normal 10px sans-serif, Arial, Verdana;
+	color:#A0A0A0;
 }
+.Osyl-ResProxView-MetaInfo-Important,
+.Osyl-UnitView-MetaInfo-Important,
+.Osyl-UnitView-SemanticTag-Important {
+	padding:5px 6px 0 6px;
+}
+
+.Osyl-ResProxView-MetaInfo-Requirement,
+.Osyl-UnitView-MetaInfo-Requirement,
+.Osyl-UnitView-SemanticTag-Requirement {
+	padding:5px 4px 0 4px;
+}
+
+.Osyl-ListItemView-Hyperlink .Osyl-UnitView-MetaInfo {padding:5px 0 0 0}
+.Osyl-UnitView-SemanticTag {margin:0 0 3px 40px}
 
 /* Link in a Content Unit Panel */
-.Osyl-UnitView-UnitLink {
-	margin-left: 30px;
+.Osyl-UnitView-UnitLink{
+	margin-left:30px;
 }
-
 /*End Unit View --------------------------------------------------------------------------------------*/
-	/*Assessment Item View -------------------------------------------------------------------------------*/
+/*Assessment Item View -------------------------------------------------------------------------------*/
 .Osyl-AssessmentView-AdditionalInfos {
-	-x-system-font: none;
-	font-family: Arial, Verdana, sans-serif;
-	font-size: 12px;
-	font-size-adjust: none;
-	margin-left: 30px;
+	-x-system-font:none;
+	font-family:Arial,Verdana,sans-serif;
+	font-size:12px;
+	font-size-adjust:none;
+	margin-left:30px;
 }
-
 /*Assessment Unit View -------------------------------------------------------------------------------*/
-.Osyl-ASMStructure-description {
-	-x-system-font: none;
-	font-family: Arial, Verdana, sans-serif;
-	font-size: 12px;
-	font-size-adjust: none;
-	margin-left: 30px;
+
+.Osyl-ASMStructure-description{
+	-x-system-font:none;
+	font-family:Arial,Verdana,sans-serif;
+	font-size:12px;
+	font-size-adjust:none;
+	margin-left:30px;
 }
 
 /*List Item View --------------------------------------------------------------------------------------*/
 .Osyl-ListItemView-Table {
-	width: 100%;
-	border: 1px solid #e3f0FF;
-	margin: 0 0 5px;
+	width:100%;
+	border:1px solid #e3f0FF;
+	margin:0 0 5px;
 }
 
 .Osyl-ListItemView-labelNo {
-	width: 25px;
-	height: 30px;
-	padding: 0 0 0 5px;
+	width:25px;
+	height:30px;
+	padding:0 0 0 5px;
 }
 
-.Osyl-ListItemView-Hyperlink {
-	
-}
-
+.Osyl-ListItemView-Hyperlink {}
 /*End List Item View --------------------------------------------------------------------------------------*/
-	/*Res ProxDocument --------------------------------------------------------------------------------------*/
+
+/*Res ProxDocument --------------------------------------------------------------------------------------*/
 .Osyl-ResProxDocument {
-	font-family: sans-serif, Arial, Verdana;
-	font-size: 1em;
+	font-family:sans-serif, Arial, Verdana;
+	font-size:1em;
 }
 
-.Osyl-ResProxDocument .name,.Osyl-ResProxLink .uri {
-	color: #A0A0A0
-}
-
-.Osyl-ResProxDocument .name {
-	margin-left: 5px
-}
-
-.Osyl-ResProxLink .uri,.Osyl-ResProxDocument .description,.Osyl-ResProxLink .description
-	{
-	margin-top: 5px
-}
+.Osyl-ResProxDocument .name, .Osyl-ResProxLink .uri {color:#A0A0A0}
+.Osyl-ResProxDocument .name {margin-left:5px}
+.Osyl-ResProxLink .uri, .Osyl-ResProxDocument .description, .Osyl-ResProxLink .description {margin-top:5px}
 
 /*End Res ProxDocument --------------------------------------------------------------------------------------*/
+
 .Osyl-ResourceConfigView-DialogBox {
-	background: #FCFCFC url(images/editor_bg.gif) repeat-x;
-	font-family: sans-serif, Arial, Verdana;
-	border: 2px outset;
+	background:#FCFCFC url(images/editor_bg.gif) repeat-x;
+  	font-family:sans-serif, Arial, Verdana;
+  	border:2px outset;
 }
 
 .Osyl-ResourceConfigView-DialogBox .Caption {
-	background-color: #FCFCFC;
-	padding: 2px;
-	margin: 2px;
-	font-size: 9px;
-	cursor: move;
+  	background-color:#FCFCFC;
+  	padding:2px;
+  	margin:2px;
+	font-size:9px;
+  	cursor:move;
 }
 
-.Osyl-ResourceConfigView-TabPanel {
-	margin-top: 4px
-}
-
-.Osyl-ResourceConfigView-TabPanel .gwt-TabPanelBottom {
-	background-color: #FFF
-}
+.Osyl-ResourceConfigView-TabPanel {margin-top:4px}
+.Osyl-ResourceConfigView-TabPanel .gwt-TabPanelBottom  {background-color:#FFF}
 
 .Osyl-ResourceConfigView-TabPanel .gwt-TabBar {
-	font-size: 10px;
-	padding: 0;
-	border-bottom: 4px solid #FCFCFC;
-	background-color: #FFF;
+  font-size:10px;
+  padding:0;
+  border-bottom:4px solid #FCFCFC;
+  background-color:#FFF;
 }
-
 .Osyl-ResourceConfigView-TabPanel .gwt-TabBarItem {
-	padding: 4px;
-	cursor: pointer;
-	background-color: #E8EEF7;
-	border-bottom: 2px solid #FFF;
-	margin-right: 2px;
+  padding:4px;
+  cursor:pointer;
+  background-color:#E8EEF7;
+  border-bottom:2px solid #FFF;
+  margin-right:2px;
 }
 
 .Osyl-ResourceConfigView-TabPanel .gwt-TabBarItem-selected {
-	padding: 4px;
-	font-weight: bold;
-	cursor: default;
-	background-color: #FCFCFC;
-	border-bottom: 4px solid #FCFCFC;
-	margin-right: 2px;
+  padding:4px;
+  font-weight:bold;
+  cursor:default;
+  background-color:#FCFCFC;
+  border-bottom:4px solid #FCFCFC;
+  margin-right:2px;
 }
-
 .Osyl-ResourceConfigView-Tree {
-	margin: 1px;
-	padding: 1px;
-	font: normal 10px sans-serif, Arial, Verdana;
+	margin:1px;
+	padding:1px;
+	font:normal 10px sans-serif, Arial, Verdana;
 }
 
 .Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem {
-	font-size: 10px;
-	background-color: #FFF;
+	font-size:10px;
+	background-color:#FFF;
 }
 
-.Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem .Osyl-ResourceConfigView-Tree-NodeContainer,.Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem-selected .Osyl-ResourceConfigView-Tree-NodeContainer,.Osyl-ResourceConfigView-Tree .gwt-TreeItem .Osyl-ResourceConfigView-Tree-NodeContainer,.Osyl-ResourceConfigView-Tree .gwt-TreeItem-selected .Osyl-ResourceConfigView-Tree-NodeContainer
-	{
-	cursor: pointer;
+.Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem .Osyl-ResourceConfigView-Tree-NodeContainer,
+.Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem-selected .Osyl-ResourceConfigView-Tree-NodeContainer,
+.Osyl-ResourceConfigView-Tree .gwt-TreeItem .Osyl-ResourceConfigView-Tree-NodeContainer,
+.Osyl-ResourceConfigView-Tree .gwt-TreeItem-selected .Osyl-ResourceConfigView-Tree-NodeContainer {
+	cursor:pointer;
 }
 
-.Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem .Osyl-ResourceConfigView-Tree-NodeContainer
-	{
-	background-color: #FFF
-}
-
-.Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem-selected .Osyl-ResourceConfigView-Tree-NodeContainer
-	{
-	background-color: #DCEFFD
-}
+.Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem .Osyl-ResourceConfigView-Tree-NodeContainer{background-color:#FFF}
+.Osyl-ResourceConfigView-Tree .Osyl-gwt-TreeItem-selected .Osyl-ResourceConfigView-Tree-NodeContainer{background-color:#DCEFFD}
 
 .Osyl-EditorToolbar-DialogBox {
-	font-family: sans-serif, Arial, Verdana;
-	border: 1px outset;
-	background-color: #FFF;
+  	font-family:sans-serif, Arial, Verdana;
+  	border:1px outset;
+  	background-color:#FFF;
 }
 
 .Osyl-EditorToolbar-DialogBox .Caption {
-	background-color: #FCFCFC;
-	padding: 2px;
-	margin: 2px;
-	font-size: 9px;
-	cursor: move;
+  	background-color:#FCFCFC;
+  	padding:2px;
+  	margin:2px;
+	font-size:9px;
+  	cursor:move;
 }
 
 .Osyl-EditorToolbar-TopPanel {
-	text-align: left;
-	margin: 0 2px;
-	background-color: #FCFCFC;
-	padding: 0;
+  text-align:left;
+  margin:0 2px;
+  background-color:#FCFCFC;
+  padding:0;
 }
 
-.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up,.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up-hovering,.Osyl-EditorToolbar-TopPanel .gwt-PushButton-up,.Osyl-EditorToolbar-TopPanel .gwt-PushButton-up-hovering
-	{
-	background: #FCFCFC url(images/button/editor-toolbar-button-up.gif)
-		no-repeat left top;
-	height: 20px;
-	width: 20px;
-	padding: 2px;
-	margin: 1px;
-	cursor: pointer;
-	border: 0;
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up, 
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up-hovering, 
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-up, 
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-up-hovering {
+	background:#FCFCFC url(images/button/editor-toolbar-button-up.gif) no-repeat left top;
+	height:20px;
+	width:20px;
+	padding:2px;
+	margin:1px;
+	cursor:pointer;
+	border:0;
 }
 
-.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down,.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down-hovering,.Osyl-EditorToolbar-TopPanel .gwt-PushButton-down,.Osyl-EditorToolbar-TopPanel .gwt-PushButton-down-hovering
-	{
-	background: #FCFCFC url(images/button/editor-toolbar-button-down.gif)
-		no-repeat left top;
-	height: 20px;
-	width: 20px;
-	padding: 2px;
-	margin: 1px;
-	cursor: pointer;
-	border: 0;
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down, 
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down-hovering, 
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-down, 
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-down-hovering {
+	background:#FCFCFC url(images/button/editor-toolbar-button-down.gif) no-repeat left top;
+	height:20px;
+	width:20px;
+	padding:2px;
+	margin:1px;
+	cursor:pointer;
+	border:0;
 }
 
-.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up-hovering,.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down-hovering,.Osyl-EditorToolbar-TopPanel .gwt-PushButton-up-hovering,.Osyl-EditorToolbar-TopPanel .gwt-PushButton-down-hovering
-	{
-	background-position: left bottom;
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up-hovering, 
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down-hovering, 
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-up-hovering, 
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-down-hovering {
+	background-position:left bottom;
 }
 
 /* ---- CSS definitions for new classes specific to Osyl -------------- */
-.Osyl-UnitView-UnitPanel {
-	width: 100%
-}
+
+.Osyl-UnitView-UnitPanel {width:100%}
 
 .Osyl-ResConfigView-Status-Panel {
-	margin: 1px;
-	padding: 2px;
-	border: 1px solid #FCFCFC;
+	margin:1px;
+	padding:2px;
+  	border:1px solid #FCFCFC;
 }
-
-.Osyl-ResConfigView-Status-Label,.Osyl-ResConfigView-Status-RadioButton,.Osyl-ResConfigView-Status-CheckBox,.Osyl-ResConfigView-RubricList,.Osyl-ResProxAssignmentView-Label,.Osyl-ResProxCitationView-Label
-	{
-	font: normal 10px sans-serif, Arial, Verdana;
+.Osyl-ResConfigView-Status-Label, 
+.Osyl-ResConfigView-Status-RadioButton, 
+.Osyl-ResConfigView-Status-CheckBox, 
+.Osyl-ResConfigView-RubricList, 
+.Osyl-ResProxAssignmentView-Label, 
+.Osyl-ResProxCitationView-Label {
+	font:normal 10px sans-serif, Arial, Verdana;
 }
-
-.Osyl-ResProxAssignmentView-Label,.Osyl-ResProxCitationView-Label {
-	font-size: 12px
-}
-
-.Osyl-ResProxAssignmentView-Label,.Osyl-ResConfigView-Status-Label {
-	font-weight: bold
-}
-
+.Osyl-ResProxAssignmentView-Label, .Osyl-ResProxCitationView-Label {font-size:12px}
+.Osyl-ResProxAssignmentView-Label, .Osyl-ResConfigView-Status-Label {font-weight:bold}
 .Osyl-RemoteFileBrowser {
-	margin: 4px 0 4px 3px;
-	font-size: 13px;
-	background-color: #FCFCFC;
+  margin:4px 0 4px 3px;
+  font-size:13px;
+  background-color:#FCFCFC;
 }
-
 .Osyl-RemoteFileBrowser-TitleLabel {
-	margin: 0;
-	padding: 3px 0 0;
-	font: bold 13px sans-serif, Arial, Verdana;
+	margin:0;
+	padding:3px 0 0;
+	font:bold 13px sans-serif, Arial, Verdana;
 }
-
 .Osyl-RemoteFileBrowser .gwt-TextBox {
-	margin-right: 8px;
-	font: normal 11px sans-serif, Arial, Verdana;
+	margin-right:8px;
+  	font:normal 11px sans-serif, Arial, Verdana;
 }
-
 .Osyl-RemoteFileBrowser-FileListing {
-	font-family: monospace, courier;
-	font-size: 8pt;
-	margin-bottom: 6px;
-	width: 99%;
+  font-family:monospace, courier;
+  font-size:8pt;
+  margin-bottom:6px;
+  width:99%;
 }
-
 .Osyl-RemoteFileBrowser-WaitingState {
-	cursor: wait;
-	background-color: #666;
+	cursor:wait;
+ 	background-color:#666;
 }
-
-.Osyl-RemoteFileBrowser-SelectedFileLabel,.Osyl-RemoteFileBrowser-SelectedFile
-	{
-	font-size: 10pt;
-	margin: 2px 0;
+.Osyl-RemoteFileBrowser-SelectedFileLabel, .Osyl-RemoteFileBrowser-SelectedFile {
+	font-size:10pt;
+	margin:2px 0;
 }
-
-.Osyl-RemoteFileBrowser-SelectedFile {
-	margin-bottom: 4px
-}
-
-.Osyl-DialogBox-ContentLabel {
-	padding: 20px 5px 5px
-}
+.Osyl-RemoteFileBrowser-SelectedFile {margin-bottom:4px}
+.Osyl-DialogBox-ContentLabel {padding:20px 5px 5px}
 
 /* UnobtrusiveAlert -----------------------------------*/
 .Osyl-UnobtrusiveAlert {
-	background-color: #FFF;
-	border: 1px solid #454A4F;
-	padding: 3px;
-	-moz-box-shadow: 0 0 10px #000;
-	-webkit-box-shadow: 1px 1px 10px #000;
-	box-shadow: 1px 1px 10px #000;
-	z-index: 99999;
+	background-color:#FFF;
+	border:1px solid #454A4F;
+	padding:3px;
+	-moz-box-shadow:0 0 10px #000;
+	-webkit-box-shadow:1px 1px 10px #000;
+	box-shadow:1px 1px 10px #000;
+	z-index:99999;
 }
-
 .Osyl-UnobtrusiveAlert .gwt-Label {
-	background-color: #DCEFFD;
-	color: #333;
-	padding: 4px;
-	font-size: 12px;
-	font-weight: bold;
+	background-color:#DCEFFD;
+	color:#333;
+	padding:4px;
+	font-size:12px;
+	font-weight:bold;
 }
-
 /* End UnobtrusiveAlert -----------------------------------*/
-	/*Contact Info-----------------------------------------------------*/
-.Osyl-ContactInfo {
-	border: 1px solid #EEE
-}
 
-.Osyl-ContactInfo>tbody>tr td {
-	padding-left: 2px
-}
+/*Contact Info-----------------------------------------------------*/
+.Osyl-ContactInfo {border:1px solid #EEE}
+.Osyl-ContactInfo > tbody > tr td{padding-left:2px}
 
 /* Édition */
-.Osyl-ContactInfo-TextBox,.Osyl-ContactInfo-ListBox,.Osyl-ContactInfo-Panel
-	{
-	font: normal 11px Arial, Verdana, sans-serif;
-	border: 1px solid #AAA;
-	margin: 2px 0;
-}
-
+.Osyl-ContactInfo-TextBox, 
+.Osyl-ContactInfo-ListBox, 
 .Osyl-ContactInfo-Panel {
-	width: 100%;
-	border: 0;
-	margin: 2px 3px
+	font:normal 11px Arial, Verdana, sans-serif;
+	border:1px solid #AAA;
+	margin:2px 0;
 }
-
+.Osyl-ContactInfo-Panel{width:100%;border:0;margin:2px 3px}
 /* Fin Édition */
-.Osyl-ContactInfo-TextBox {
-	width: 130px;
-	/*  width:250px; ??? */
+.Osyl-ContactInfo-TextBox{
+    width:130px;
+/*  width:250px; ??? */
 }
-
 .Osyl-ResProxView-Label {
-	font: bold 10px Arial, Verdana, sans-serif;
-	margin: 5px 2px 0 5px;
+	font:bold 10px Arial, Verdana, sans-serif;
+	margin:5px 2px 0 5px;
 }
-
-.Osyl-ContactInfo-Label {
-	width: 60px
-}
-
+.Osyl-ContactInfo-Label {width:60px}
 .Osyl-ResProxView-LabelValue {
-	font-size: 10px;
-	margin: 6px 0 0 10px;
+	font-size:10px;
+	margin:6px 0 0 10px;
 }
 
 .Osyl-ResProxCitationView-LabelValue {
-	padding: 0;
-	width: 100%;
+	padding:0;
+	width:100%;
 }
-
 .Osyl-ResProxView-NameValue {
-	font: bold 11px Arial, Verdana, sans-serif;
-	margin: 6px 0 0 10px;
+	font:bold 11px Arial, Verdana, sans-serif;
+	margin:6px 0 0 10px;
 }
 
-.Osyl-ResProxCitationView-libraryImage {
-	background: transparent url(images/library_link.gif) no-repeat 0 0;
-	width: 44px;
-	height: 20px;
+.Osyl-ResProxCitationView-libraryImage{
+	 background: transparent url(images/library_link.gif) no-repeat 0 0; 
+	 width:44px;
+	 height:20px;
 }
 
-.Osyl-ResProxCitationView-bookstoreImage {
-	background: transparent url(images/bookstore_link.gif) no-repeat 0 0;
-	width: 44px;
-	height: 20px;
+.Osyl-ResProxCitationView-bookstoreImage{
+	 background: transparent url(images/bookstore_link.gif) no-repeat 0 0; 
+	 width:44px;
+	 height:20px;
 }
 
-.Osyl-ResProxCitationView-otherImage {
-	background: transparent url(images/other_link.gif) no-repeat 0 0;
-	width: 44px;
-	height: 20px;
+.Osyl-ResProxCitationView-otherImage{
+	 background: transparent url(images/other_link.gif) no-repeat 0 0; 
+	 width:44px;
+	 height:20px;
 }
 
-td>.Osyl-ResProxCitationView-linkCheckbox {
-	width: 80px;
+td > .Osyl-ResProxCitationView-linkCheckbox{
+	width:80px;
 }
 
-.Osyl-ResProxCitationView-linkTextbox {
-	width: 320px;
+.Osyl-ResProxCitationView-linkTextbox{
+	width:320px;
 }
 
-.Osyl-ResProxCitationView-linkPanel {
-	
-}
+.Osyl-ResProxCitationView-linkPanel{}
 
 /* Endcontact -----------------------------------*/
+
 .Osyl-ajaxSpinner {
-	background: transparent url(images/ajaxSpinner.gif) no-repeat 50% 50%;
-	margin: 2px;
-	padding: 2px;
-	border: medium;
+	background:transparent url(images/ajaxSpinner.gif) no-repeat 50% 50%;
+	margin:2px;
+	padding:2px;
+	border:medium;
 }
 
 .Osyl-EditorPopup {
-	font-family: Arial, Verdana, sans-serif;
-	font-size: 12px;
-	background: transparent;
-	padding: 0;
+	font-family:Arial, Verdana, sans-serif;
+	font-size:12px;
+	background:transparent;
+	padding:0;
 }
 
-.popupTopCenter,.popupBottomCenter {
-	background: url(images/ui/hborder.png) repeat-x;
-	height: 6px;
-}
 
+.popupTopCenter,
 .popupBottomCenter {
-	background-position: bottom left
+	background: url(images/ui/hborder.png) repeat-x;
+	height:6px;
 }
+.popupBottomCenter {background-position:bottom left}
+.popupTopCenter {background-position:0 -55px}
 
-.popupTopCenter {
-	background-position: 0 -55px
-}
-
-.popupMiddleLeft,.popupMiddleRight {
-	background: url(images/ui/vborder.png) repeat-y;
-	width: 6px;
-}
-
-.popupMiddleLeft {
-	background-position: -16px 0
-}
-
+.popupMiddleLeft,
 .popupMiddleRight {
-	background-position: top right
+	background: url(images/ui/vborder.png) repeat-y;
+	width:6px;
 }
+.popupMiddleLeft {background-position:-16px 0}
+.popupMiddleRight {background-position:top right}
 
-.popupTopLeftInner,.popupTopRightInner,.Osyl-EditorPopup .bottomLeftInner,.Osyl-EditorPopup .bottomRightInner
-	{
+.popupTopLeftInner,
+.popupTopRightInner,
+.Osyl-EditorPopup .bottomLeftInner,
+.Osyl-EditorPopup .bottomRightInner {
 	width: 6px;
 	height: 6px;
 	zoom: 1;
 }
-
-.popupTopCenter,.popupTopLeftInner,.popupTopRightInner {
-	height: 27px;
+.popupTopCenter,
+.popupTopLeftInner,
+.popupTopRightInner {
+	height:27px;
 }
-
 .popupTopLeft {
 	background: url(images/ui/popup_corner.png) no-repeat top left;
 	-background: url(images/ui/popup_corner.gif) no-repeat top left;
 }
-
 .popupTopRight {
 	background: url(images/ui/popup_corner.png) no-repeat top right;
 	-background: url(images/ui/popup_corner.gif) no-repeat top right;
 }
-
 .popupBottomLeft {
 	background: url(images/ui/popup_corner.png) no-repeat bottom left;
 	-background: url(images/ui/popup_corner.gif) no-repeat bottom left;
 }
-
 .popupBottomRight {
 	background: url(images/ui/popup_corner.png) no-repeat bottom right;
 	-background: url(images/ui/popup_corner.gif) no-repeat bottom right;
 }
-
-* html .popupTopLeftInner,* html .popupTopRightInner,* html .popupBottomLeftInner,* html .popupBottomRightInner
-	{
+* html .popupTopLeftInner,
+* html .popupTopRightInner,
+* html .popupBottomLeftInner,
+* html .popupBottomRightInner {
 	width: 6px;
 	height: 6px;
 	overflow: hidden;
 }
-
-* html .popupTopLeftInner,* html .popupTopRightInner {
-	height: 27px;
+* html .popupTopLeftInner,
+* html .popupTopRightInner {
+	height:27px;
 }
-
 .popupMiddleCenterInner {
-	position: relative;
-	margin: -21px 0 0 0;
-	background: #FFF url(images/ui/popup_head.gif) repeat-x top left;
+	position:relative;
+	margin:-21px 0 0 0;
+	background:#FFF url(images/ui/popup_head.gif) repeat-x top left;
 	zoom: 1;
-	overflow: auto;
+	overflow:auto;
 }
 
 .Osyl-LabelEditor-TextBox {
-	display: block;
-	margin: 2px 0;
-	width: 100%;
-	min-width: 250px;
-	border: 1px solid #878a8c;
-	font: normal 12px Arial, Verdana, sans-serif;
-	padding: 1px;
+	display:block;
+	margin:2px 0;
+	width:100%;
+	min-width:250px;
+	border:1px solid #878a8c;
+	font:normal 12px Arial, Verdana, sans-serif;
+	padding:1px;
 }
-
-* html .Osyl-LabelEditor-TextBox {
-	margin: 0
-}
+* html .Osyl-LabelEditor-TextBox {margin:0}
 
 .Osyl-UnitView-TextArea {
-	display: block;
-	margin: 2px 0 2px 2px;
-	width: 99%;
-	border: 1px solid #878a8c;
-	background: #FFF;
-	font: normal 12px Arial, Verdana, sans-serif;
+	display:block;
+	margin:2px 0 2px 2px;
+	width:99%;
+	border:1px solid #878a8c;
+	background:#FFF;
+	font:normal 12px Arial, Verdana, sans-serif;
 }
+* html .Osyl-UnitView-TextArea {margin:0 0 0 0}
 
-* html .Osyl-UnitView-TextArea {
-	margin: 0 0 0 0
-}
+.Osyl-EditorPopup-RowEditor td {padding:2px 0}
+* html .Osyl-EditorPopup-RowEditor td {padding:1px 0}
 
-.Osyl-EditorPopup-RowEditor td {
-	padding: 2px 0
-}
+.Osyl-EditorPopup-RowEditor > tbody > tr > td{padding:0}
 
-* html .Osyl-EditorPopup-RowEditor td {
-	padding: 1px 0
-}
-
-.Osyl-EditorPopup-RowEditor>tbody>tr>td {
-	padding: 0
-}
-
-.Osyl-EditorPopup .mosaic-Caption {
-	background: #454a4f
-}
+.Osyl-EditorPopup .mosaic-Caption {background:#454a4f}
 
 .mosaic-Caption-text {
-	padding: 2px 2px 4px;
-	height: 18px;
-	font: bold 12px Arial, Verdana, sans-serif;
-	color: #FFF;
-	margin: 0;
+	padding:2px 2px 4px;
+	height:18px;
+	font:bold 12px Arial, Verdana, sans-serif;
+	color:#FFF;
+	margin:0;
+}
+.mosaic-ImageButton {margin:0 0 5px}
+.Osyl-EditorPopup-OptionGroup, 
+.Osyl-EditorPopup-LastOptionGroup, 
+.Osyl-EditorPopup-RowOptions .gwt-Label, 
+.Osyl-EditorPopup-RowOptions .gwt-HTML, 
+.Osyl-EditorPopup-RowOptions .gwt-CheckBox {
+	background-color:#FFF;
+	font-size:11px;
+	margin:0 3px;
+}
+.Osyl-EditorPopup-RowBrowser,
+.Osyl-EditorPopup-RowConfiguration,
+.Osyl-EditorPopup-RowInformation,
+.Osyl-EditorPopup-RowOptions,
+.Osyl-EditorPopup-RowButtons,
+.Osyl-EditorPopup-RowEditor,
+.Osyl-EditorPopup-RowToolBar,
+.Osyl-EditorPopup .Osyl-ResourceBrowserPanel,
+.Osyl-ResourceBrowserPanel .Osyl-ResourceBrowser, 
+.Osyl-EditorPopup .sectionLabel {
+	width:100%;
+}
+.Osyl-EditorPopup-RowEditor, .Osyl-EditorPopup-RowEditor table{
+	width:100%;
+	border-collapse:collapse;
 }
 
-.mosaic-ImageButton {
-	margin: 0 0 5px
-}
-
-.Osyl-EditorPopup-OptionGroup,.Osyl-EditorPopup-LastOptionGroup,.Osyl-EditorPopup-RowOptions .gwt-Label,.Osyl-EditorPopup-RowOptions .gwt-HTML,.Osyl-EditorPopup-RowOptions .gwt-CheckBox
-	{
-	background-color: #FFF;
-	font-size: 11px;
-	margin: 0 3px;
-}
-
-.Osyl-EditorPopup-RowBrowser,.Osyl-EditorPopup-RowConfiguration,.Osyl-EditorPopup-RowInformation,.Osyl-EditorPopup-RowOptions,.Osyl-EditorPopup-RowButtons,.Osyl-EditorPopup-RowEditor,.Osyl-EditorPopup-RowToolBar,.Osyl-EditorPopup .Osyl-ResourceBrowserPanel,.Osyl-ResourceBrowserPanel .Osyl-ResourceBrowser,.Osyl-EditorPopup .sectionLabel
-	{
-	width: 100%;
-}
-
-.Osyl-EditorPopup-RowEditor,.Osyl-EditorPopup-RowEditor table {
-	width: 100%;
-	border-collapse: collapse;
-}
-
-.Osyl-EditorPopup-OptionGroup {
-	padding: 0 12px 0 7px
-}
+.Osyl-EditorPopup-OptionGroup {padding:0 12px 0 7px}
 
 .Osyl-EditorPopup-LastOptionGroup {
-	padding: 0 0 0 7px;
-	border-right: 0;
+	padding:0 0 0 7px;
+	border-right:0;
 }
 
-.Osyl-EditorPopup-OptionGroup-Row table {
-	width: 100%
-}
+.Osyl-EditorPopup-OptionGroup-Row table{width:100%}
 
-.Osyl-EditorPopup-RowOptions .gwt-Label,.Osyl-EditorPopup-RowOptions .gwt-HTML
-	{
-	color: #454A4f;
-	margin: 3px 0 0 1px;
+.Osyl-EditorPopup-RowOptions .gwt-Label,
+.Osyl-EditorPopup-RowOptions .gwt-HTML {
+	color:#454A4f;
+	margin:3px 0 0 1px;
 }
 
 .Osyl-EditorPopup-RowOptions .gwt-CheckBox {
-	padding: 0;
-	margin: 0 14px 6px 0;
+	padding:0;
+	margin:0 14px 6px 0;
 }
 
-.Osyl-EditorPopup-RowOptions .gwt-CheckBox input {
-	margin: 4px 2px 0 0
-}
+.Osyl-EditorPopup-RowOptions .gwt-CheckBox input {margin:4px 2px 0 0}
+.Osyl-EditorPopup .gwt-ListBox {font:normal 10px sans-serif, Arial, Verdana}
 
-.Osyl-EditorPopup .gwt-ListBox {
-	font: normal 10px sans-serif, Arial, Verdana
-}
-
-.Osyl-ResourceBrowserPanel .Osyl-ResourceBrowser {
-	height: 100px;
-	background-color: #DDD;
-	text-align: center;
-	padding: 0;
-	margin: 5px;
+.Osyl-ResourceBrowserPanel .Osyl-ResourceBrowser { 
+	height:100px;
+	background-color:#DDD;
+	text-align:center;
+	padding:0;
+	margin:5px;
 }
 
 .Osyl-EditorPopup .sectionLabel {
-	background-color: #D6DBDF;
-	font: bold 11px Arial, Verdana, sans-serif;
-	color: #006E96;
-	margin: 0;
-	padding: 3px 0;
+	background-color:#D6DBDF;
+	font:bold 11px Arial, Verdana, sans-serif;
+	color:#006E96;
+	margin:0;
+	padding:3px 0;
+}
+.Osyl-EditorPopup .sectionLabel {width:100%}
+.Osyl-EditorPopup .Osyl-ResourceBrowserPanel {margin:0}
+.Osyl-EditorPopup .Osyl-ResourceBrowserPanel .gwt-Label, 
+.Osyl-EditorPopup .gwt-Label,
+.Osyl-EditorPopup .Osyl-ResourceBrowserPanel .gwt-HTML, 
+.Osyl-EditorPopup .gwt-HTML {
+	font-size:11px;
+	color:#454a4f;
+	margin:3px 0 0 1px;
 }
 
-.Osyl-EditorPopup .sectionLabel {
-	width: 100%
-}
-
-.Osyl-EditorPopup .Osyl-ResourceBrowserPanel {
-	margin: 0
-}
-
-.Osyl-EditorPopup .Osyl-ResourceBrowserPanel .gwt-Label,.Osyl-EditorPopup .gwt-Label,.Osyl-EditorPopup .Osyl-ResourceBrowserPanel .gwt-HTML,.Osyl-EditorPopup .gwt-HTML
-	{
-	font-size: 11px;
-	color: #454a4f;
-	margin: 3px 0 0 1px;
-}
-
-.Osyl-EditorPopup .gwt-TextArea {
-	margin: 0 6px 3px 0
-}
+.Osyl-EditorPopup .gwt-TextArea {margin:0 6px 3px 0}
 
 .Osyl-EditorPopup .information {
-	font: italic normal 11px Arial Verdana sans serif;
-	margin: 5px 3px 3px 5px;
+	font:italic normal 11px Arial Verdana sans serif;
+	margin:5px 3px 3px 5px;
 }
 
-.Osyl-EditorPopup-RowButtons {
-	margin: 3px 0 0
-}
-
-.Osyl-EditorPopup-RowToolBar {
-	border-top: 1px solid #AAA
-}
+.Osyl-EditorPopup-RowButtons {margin:3px 0 0}
+.Osyl-EditorPopup-RowToolBar {border-top:1px solid #AAA}
 
 /* Light Box -----------------------------------------------------------------------*/
-.Osyl-LightBox-Regular,.Osyl-LightBox-Processing,.Osyl-LightBox-Red {
+.Osyl-LightBox-Regular,
+.Osyl-LightBox-Processing, 
+.Osyl-LightBox-Red {
 	/* Override glass panel to 40% opacity (= 60% transparency) */
-	filter: alpha(opacity = 40) !important; /* IE */
-	-moz-opacity: 0.4 !important; /* FF */
-	opacity: 0.4 !important; /* default */
+
+	filter :alpha(opacity=40) !important; /* IE */
+	-moz-opacity :0.4 !important; /* FF */
+	opacity :0.4 !important; /* default */
 }
 
-.Osyl-LightBox-Regular {
-	background-color: #000 !important;
-}  /* Glass panel color. Keep !important for IE */
-.Osyl-LightBox-Processing {
-	background-color: #FDF6AF !important;
-}  /* Glass panel color. Keep !important for IE */
-.Osyl-LightBox-Red {
-	background-color: #F00 !important;
-}  /* Glass panel color. Keep !important for IE */
-.Osyl-LightBox-Clear { /* Glass panel color */
-	background-color: transparent !important; /* Keep !important for IE */
-	/* Override glass panel to 0% opacity (= 100% transparency) */
-	filter: alpha(opacity = 0) !important; /* IE */
-	-moz-opacity: 0 !important; /* FF */
-	opacity: 0 !important; /* default */
+.Osyl-LightBox-Regular { background-color:#000 !important;} /* Glass panel color. Keep !important for IE */
+.Osyl-LightBox-Processing { background-color:#FDF6AF !important;} /* Glass panel color. Keep !important for IE */
+.Osyl-LightBox-Red { background-color:#F00 !important;} /* Glass panel color. Keep !important for IE */
+
+.Osyl-LightBox-Clear {
+   /* Glass panel color */
+    background-color:transparent !important; /* Keep !important for IE */
+    /* Override glass panel to 0% opacity (= 100% transparency) */
+	filter :alpha(opacity=0) !important; /* IE */
+	-moz-opacity :0 !important; /* FF */
+	opacity :0 !important; /* default */
 }
 
 .Osyl-MouseOverPopUp {
-	/* Override glass panel to 75% opacity (= 25% transparency) */
-	filter: alpha(opacity = 75) !important; /* IE */
-	-moz-opacity: .75 !important; /* FF */
-	opacity: 0.75 !important; /* default */
+    /* Override glass panel to 75% opacity (= 25% transparency) */
+    filter :alpha(opacity=75) !important; /* IE */
+	-moz-opacity :.75 !important; /* FF */
+	opacity :0.75 !important; /* default */
 }
 
 .Osyl-MouseOverPopUp .MainPanel {
-	color: #000;
-	text-align: center;
-	vertical-align: middle;
-}
+	color:#000;
+	text-align:center;
+	vertical-align:middle;
+} 
 
 /* Panel for buttons edit/delete/validate/cancel */
 .Osyl-MouseOverPopup-ButtonPanel {
-	margin: 0;
-	padding: 0;
+	margin:0;
+	padding:0;
 }
 
 /* Button -------------------------------------------------------------------------------- */
-.Osyl-Button,.Osyl-EditorPopup-Button,.Osyl-FileUpload-genericButton,.Osyl-PublishView-genericButton
-	{
-	font: bold 12px Arial, Verdana, sans-serif;
-	white-space: nowrap;
-	color: #444;
-	background-color: #F7F7F7;
-	border: 1px solid #999;
-	margin: 0 5px;
-	padding: 3px;
-	cursor: pointer;
-	overflow: visible; /* removes extra side padding in IE */
-	-moz-border-radius: 8px;
-	-webkit-border-radius: 8px;
+
+.Osyl-Button,
+.Osyl-EditorPopup-Button,
+.Osyl-FileUpload-genericButton,
+.Osyl-PublishView-genericButton {
+	font:bold 12px Arial, Verdana, sans-serif;
+	white-space:nowrap;
+	color:#444;
+	background-color:#F7F7F7;
+	border:1px solid #999;
+	margin:0 5px;
+	padding:3px;
+	cursor:pointer;
+	overflow:visible;/* removes extra side padding in IE */
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+}
+.Osyl-FileUpload-genericButton {margin:5px}
+.Osyl-Button::-moz-focus-inner,
+.Osyl-EditorPopup-Button::-moz-focus-inner,
+.Osyl-FileUpload-genericButton::-moz-focus-inner,
+.Osyl-PublishView-genericButton::-moz-focus-inner {border:none} /* removes inner border of buttons in Firefox */
+
+.Osyl-Button:hover,
+.Osyl-EditorPopup-Button:hover,
+.Osyl-FileUpload-genericButton:hover,
+.Osyl-PublishView-genericButton:hover {background-color:#FFF}
+
+.Osyl-Button:active,
+.Osyl-EditorPopup-Button:active,
+.Osyl-FileUpload-genericButton:active,
+.Osyl-PublishView-genericButton:active {
+	padding:4px 3px 2px;
+	background-color:#F0F0F0;
 }
 
-.Osyl-FileUpload-genericButton {
-	margin: 5px
+.Osyl-ImageAndTextButton img,
+.Osyl-ImageAndTextButton img gwt\:clipper { /*Name space gwt:clipper for IE margin between image and text in button*/
+	vertical-align:middle;
+	margin-right:5px;
+	margin-top:-2px;
 }
 
-.Osyl-Button::-moz-focus-inner,.Osyl-EditorPopup-Button::-moz-focus-inner,.Osyl-FileUpload-genericButton::-moz-focus-inner,.Osyl-PublishView-genericButton::-moz-focus-inner
-	{
-	border: none
-}  /* removes inner border of buttons in Firefox */
-.Osyl-Button:hover,.Osyl-EditorPopup-Button:hover,.Osyl-FileUpload-genericButton:hover,.Osyl-PublishView-genericButton:hover
-	{
-	background-color: #FFF
-}
-
-.Osyl-Button:active,.Osyl-EditorPopup-Button:active,.Osyl-FileUpload-genericButton:active,.Osyl-PublishView-genericButton:active
-	{
-	padding: 4px 3px 2px;
-	background-color: #F0F0F0;
-}
-
-.Osyl-ImageAndTextButton img,.Osyl-ImageAndTextButton img gwt\:clipper {
-	/*Name space gwt:clipper for IE margin between image and text in button*/
-	vertical-align: middle;
-	margin-right: 5px;
-	margin-top: -2px;
-}
-
-.Osyl-EditorPopup-Button {
-	margin: 2px
-}
+.Osyl-EditorPopup-Button {margin:2px}
 
 /* End Button --------------------------------------------------------------*/
 .Osyl-FileBrowserTopButton {
-	width: 24px;
-	height: 24px;
-	padding: 3px 0 0 3px;
-	background-color: #FCFCFC;
-	margin: 0 1px 3px 0;
-	border: 1px solid transparent;
-	color: #FFF; /*For IE6*/
+	width:24px;
+	height:24px;
+	padding:3px 0 0 3px;
+	background-color:#FCFCFC;
+	margin:0 1px 3px 0;
+	border:1px solid transparent;
+	color:#FFF; /*For IE6*/
 }
 
 .Osyl-FileBrowserTopButton-up-hovering {
-	border: 1px solid;
-	border-color: #E8F1FF #9DAECC #9DAECC #E8F1FF;
-	cursor: pointer;
+	border:1px solid;
+  	border-color:#E8F1FF #9DAECC #9DAECC #E8F1FF;
+	cursor:pointer;
 }
 
 .Osyl-EditorPopup .DetailsPanel {
-	margin-left: 4px;
-	font-size: 10px;
-	width: 100%;
+	margin-left:4px;
+	font-size:10px;
+	width:100%;
 }
 
 .Osyl-EditorPopup .DetailsPanel .header {
-	text-decoration: none;
-	/* Doesn't work so we put a color which will make it invisible! */
-	color: #FCFCFC;
-	cursor: pointer;
+	text-decoration:none; /* Doesn't work so we put a color which will make it invisible! */
+	color:#FCFCFC;
+	cursor:pointer;
 }
 
 .Osyl-EditorPopup .DetailsPanel .header td {
-	font: normal 11px sans-serif, Arial, Verdana;
-	color: #808080;
+	font:normal 11px sans-serif, Arial, Verdana;
+	color:#808080;
 }
 
 /* CSS for GWT-Mosaic */
-.mosaic-GlassPanel-default,.mosaic-GlassPanel-invisible {
-	background-color: #000 !important;
-	background-repeat: repeat;
+.mosaic-GlassPanel-default, .mosaic-GlassPanel-invisible {
+	background-color:#000 !important;
+	background-repeat:repeat;
 	/* Override glass panel to 0% opacity (= 100% transparency) */
-	filter: alpha(opacity = 20) !important; /* IE */
-	-moz-opacity: .20 !important; /* FF */
-	opacity: 0.20 !important; /* default */
+	filter :alpha(opacity=20) !important; /* IE */
+	-moz-opacity :.20 !important; /* FF */
+	opacity :0.20 !important; /* default */
 }
 
 .mosaic-Caption-iconBoxRight {
-	margin: 0 3px 0 0;
-	cursor: default;
+	margin:0 3px 0 0;
+	cursor:default;
 }
 
-.mosaic-CaptionLayoutPanel .dragdrop-handle {
-	cursor: move
-}
-
-.mosaic-WindowPanel .Resize-nw {
-	cursor: nw-resize
-}
-
-.mosaic-WindowPanel .Resize-n {
-	cursor: n-resize
-}
-
-.mosaic-WindowPanel .Resize-ne {
-	cursor: ne-resize
-}
-
-.mosaic-WindowPanel .Resize-e {
-	cursor: e-resize
-}
-
-.mosaic-WindowPanel .Resize-se {
-	cursor: se-resize
-}
-
-.mosaic-WindowPanel .Resize-s {
-	cursor: s-resize
-}
-
-.mosaic-WindowPanel .Resize-sw {
-	cursor: sw-resize
-}
-
-.mosaic-WindowPanel .Resize-w {
-	cursor: w-resize
-}
+.mosaic-CaptionLayoutPanel .dragdrop-handle {cursor:move}
+.mosaic-WindowPanel .Resize-nw {cursor:nw-resize}
+.mosaic-WindowPanel .Resize-n {cursor:n-resize}
+.mosaic-WindowPanel .Resize-ne {cursor:ne-resize}
+.mosaic-WindowPanel .Resize-e {cursor:e-resize}
+.mosaic-WindowPanel .Resize-se {cursor:se-resize}
+.mosaic-WindowPanel .Resize-s {cursor:s-resize}
+.mosaic-WindowPanel .Resize-sw {cursor:sw-resize}
+.mosaic-WindowPanel .Resize-w {cursor:w-resize}
 
 /* ------- */
-.Osyl-ContactInfo-Editor table {
-	width: auto
-}
 
-.Osyl-ContactInfo-Viewer {
-	
-}
+.Osyl-ContactInfo-Editor table {width:auto}
+.Osyl-ContactInfo-Viewer {}
 
-.Osyl-ContactInfo-FirstName,.Osyl-ContactInfo-LastName {
-	font-size: 14px;
-	color: #444;
-	font-weight: bold;
-	padding: 1px 0 0;
+.Osyl-ContactInfo-FirstName, .Osyl-ContactInfo-LastName {
+	font-size:14px;
+	color:#444;
+	font-weight:bold;
+	padding:1px 0 0;
 }
-
 .Osyl-ContactInfo-LastName {
-	margin-left: 5px;
-	text-transform: uppercase;
+	margin-left:5px;
+	text-transform:uppercase;
+}	
+
+.Osyl-ContactInfo-Role,
+.Osyl-ContactInfo-EMail,
+.Osyl-ContactInfo-Phone,
+.Osyl-ContactInfo-Office,
+.Osyl-ContactInfo-OfficeLabel,
+.Osyl-ContactInfo-Availability,
+.Osyl-ContactInfo-AvailabilityLabel,
+.Osyl-ContactInfo-Comments {
+	font-size:11px;
 }
 
-.Osyl-ContactInfo-Role,.Osyl-ContactInfo-EMail,.Osyl-ContactInfo-Phone,.Osyl-ContactInfo-Office,.Osyl-ContactInfo-OfficeLabel,.Osyl-ContactInfo-Availability,.Osyl-ContactInfo-AvailabilityLabel,.Osyl-ContactInfo-Comments
-	{
-	font-size: 11px;
-}
-
-.Osyl-ContactInfo-Role {
-	padding: 0 0 3px 1px
-}
-
-.Osyl-ContactInfo-Phone {
-	padding: 2px 0 0
-}
+.Osyl-ContactInfo-Role {padding:0 0 3px 1px}
+.Osyl-ContactInfo-Phone {padding:2px 0 0}
 
 .Osyl-ContactInfo-Office {
-	padding: 0 0 2px;
-	margin-left: 5px;
+	padding:0 0 2px;
+	margin-left:5px;
+}	
+
+.Osyl-ContactInfo-Availability, .Osyl-ContactInfo-AvailabilityLabel {padding:2px 0}
+.Osyl-ContactInfo-Availability {margin-left:5px}
+.Osyl-ContactInfo-Comments {padding:2px 0 3px}
+.Osyl-ContactInfo-Availability ul, .Osyl-ContactInfo-Availability ol, .Osyl-ContactInfo-Comments ul, .Osyl-ContactInfo-Comments ol{margin:0 0 0 30px}
+
+.Osyl-News-TimeStamp, .Osyl-AssignementView-DateLabel {
+	font:italic normal 11px Arial, Verdana, sans-serif;
+	padding:3px 0;
+	width:auto;
 }
 
-.Osyl-ContactInfo-Availability,.Osyl-ContactInfo-AvailabilityLabel {
-	padding: 2px 0
-}
-
-.Osyl-ContactInfo-Availability {
-	margin-left: 5px
-}
-
-.Osyl-ContactInfo-Comments {
-	padding: 2px 0 3px
-}
-
-.Osyl-ContactInfo-Availability ul,.Osyl-ContactInfo-Availability ol,.Osyl-ContactInfo-Comments ul,.Osyl-ContactInfo-Comments ol
-	{
-	margin: 0 0 0 30px
-}
-
-.Osyl-News-TimeStamp,.Osyl-AssignementView-DateLabel {
-	font: italic normal 11px Arial, Verdana, sans-serif;
-	padding: 3px 0;
-	width: auto;
-}
-
-.Osyl-AssignementView-DateLabel {
-	font-size: 12px
-}
-
-.Osyl-Mandatory_field {
-	color: red
-}
-
-.Osyl-RubricUserDefLabel {
-	padding-left: 7px
-}
+.Osyl-AssignementView-DateLabel{font-size:12px}
+.Osyl-Mandatory_field {color:red}
+.Osyl-RubricUserDefLabel {padding-left: 7px}
 
 a.Osyl-collapseButton {
-	background: url("images/ui/menu_control.png") no-repeat scroll 0 0
-		transparent;
-	display: block;
-	height: 48px;
-	width: 8px;
-	cursor: pointer;
+	background:transparent url(images/ui/menu_control.png) no-repeat;
+	display:block;
+	height:48px;
+	width:8px;
+	cursor:pointer;
 }
 
-a.Osyl-collapseButton:hover {
-	background-position: -8px 0;
-}
-
-a.Osyl-collapseButton:active {
-	background-position: -16px 0;
-}
-
-a.Osyl-collapseButton.collapse {
-	background-position: -24px 0;
-}
-
-a.Osyl-collapseButton.collapse:hover {
-	background-position: -32px 0;
-}
-
-a.Osyl-collapseButton.collapse:active {
-	background-position: -40px 0;
-}
+a.Osyl-collapseButton:hover {background-position: -8px 0}
+a.Osyl-collapseButton.down {background-position: -16px 0}
+a.Osyl-collapseButton.collapse {background-position: -24px 0}
+a.Osyl-collapseButton.collapse:hover {background-position: -32px 0}
+a.Osyl-collapseButton.collapse.down {background-position: -40px 0}
