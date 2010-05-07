@@ -42,7 +42,8 @@ public class SecretairesMap extends HashMap<String, SecretairesMapEntry> {
 	    "Secrétaire aux activités prof";
 
     public void put(SecretairesMapEntry entry) {
-	put(entry.getEmplId(), entry);
+	String key = entry.getEmplId() + entry.getDeptId();
+	put(key, entry);
     }
 
     public SecretairesMapEntry get(String key) {
