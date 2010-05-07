@@ -1374,17 +1374,17 @@ public class OsylController implements SavePushButtonEventHandler,
 	return moduleBaseURL;
     }
 
-    private void displayMessage(String msg) {
+    public void displayMessage(String msg) {
 	// Window.alert(msg);
 	final OsylAlertDialog alertBox =
-		new OsylAlertDialog(false, true, "Alert - Message", msg);
+		new OsylAlertDialog(false, true, "Message", msg);
 	alertBox.show();
     }
 
-    private void displayError(String msg) {
+    public void displayError(String msg) {
 	// Window.alert(msg);
 	final OsylAlertDialog alertBox =
-		new OsylAlertDialog(false, true, "Alert - Error", msg);
+		new OsylAlertDialog(false, true, "Error", msg);
 	alertBox.show();
     }
 
