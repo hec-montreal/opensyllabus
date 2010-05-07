@@ -235,7 +235,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
     }
 
     /**
-     * Move an element to the element with sepecified id
+     * Move an element to the element with specified id
      * @param targetUuid
      */
     @SuppressWarnings("unchecked")

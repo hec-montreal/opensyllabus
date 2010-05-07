@@ -171,14 +171,23 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 			.getSelectedCitationProperty(
 				COPropertiesType.IDENTIFIER,
 				COPropertiesType.IDENTIFIER_TYPE_OTHERLINK));
-	
-	addAttribute(COPropertiesType.IDENTIFIER,
-		COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
-		COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL,
-		getEditor().getSelectedCitationPropertyAttr(COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
-			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL));
 
+	try {
+	    String otherLinkLbl = getEditor().getSelectedCitationPropertyAttr(
+		    COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
+		    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL);
+
+	    if (otherLinkLbl != null) {
+		addAttribute(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
+			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL,
+			otherLinkLbl);
+	    }
+	} catch (Exception e) {
+	    // The property is probably null - See SAKAI-1560
+	    //getController().displayError("Erreur " + e.getMessage());
+	}
 	// setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
 	// COPropertiesType.IDENTIFIER_TYPE_NOLINK, getEditor()
 	// .getSelectedCitationProperty(

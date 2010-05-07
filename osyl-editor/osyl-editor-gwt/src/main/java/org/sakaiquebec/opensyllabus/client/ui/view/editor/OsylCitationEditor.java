@@ -912,7 +912,11 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	    String attrKey){
 	OsylCitationItem selectedFile =
 		(OsylCitationItem) browser.getSelectedAbstractBrowserItem();
-	return selectedFile.getCOProperty(key, type).getAttribute(attrKey);
+	try {
+	    return selectedFile.getCOProperty(key, type).getAttribute(attrKey);
+	} catch (Exception e) {
+	    return null;
+	}
     }
 
     public ImageAndTextButton getSaveButton() {
