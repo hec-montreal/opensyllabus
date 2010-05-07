@@ -93,7 +93,9 @@ public class GenericSecretairesMapFactory {
 	    entry.setRole(role);
 	    entry.setEmpl_status(emplStatus);
 	    entry.setJobCode(jobCode);
-	    map.put(entry);
+	    if (role.equalsIgnoreCase(map.SECRETAIRES_ACTIVITES_PROF)
+		    || role.equalsIgnoreCase(map.SECRETAIRES_CERTIFICAT))
+		map.put(entry);
 	}
 
 	// ferme le reader

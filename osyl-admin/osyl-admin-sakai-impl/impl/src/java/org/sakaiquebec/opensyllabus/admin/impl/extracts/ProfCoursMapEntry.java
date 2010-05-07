@@ -16,7 +16,13 @@ public class ProfCoursMapEntry implements java.io.Serializable {
     // Pour assurer la compatibilite des instances serialisees meme
     // quand on change la classe...
     public static final long serialVersionUID = -913935703184167796L;
-	private static Log log = LogFactory.getLog(ProfCoursMapEntry.class);
+	
+    public static final String ENSEIGNANT = "Enseignant";
+    
+    public static final String COORDONNATEUR = "Coordonnateur";
+
+
+    private static Log log = LogFactory.getLog(ProfCoursMapEntry.class);
 
     private Vector<DetailCoursMapEntry> cours;
     private Map<String, DetailCoursMapEntry> coursCoordonnes;
@@ -65,6 +71,13 @@ public class ProfCoursMapEntry implements java.io.Serializable {
         return role;
     }
 
+    public boolean isEnseignant (){
+	if (role == null)
+	    return false;
+	else 
+	    return ENSEIGNANT.equalsIgnoreCase(role);
+    }
+    
     public void setRole(String role) {
         this.role = role;
     }

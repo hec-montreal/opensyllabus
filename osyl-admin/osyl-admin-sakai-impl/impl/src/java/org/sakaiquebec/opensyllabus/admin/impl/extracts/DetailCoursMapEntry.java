@@ -25,11 +25,13 @@ public class DetailCoursMapEntry implements java.io.Serializable {
     private String courseTitleLong;
     private String strmId;
     private String lang;
+    private String acadCareer;
     private ProfCoursMapEntry coordonnateur;
     private Vector<ProfCoursMapEntry> professeurs;
     private Vector<String> etudiants;
     private Vector<MatriculeNomMapEntry> stagiaires;
     private Vector<ExamenMapEntry> examens;
+    
 
     private static Log log = LogFactory.getLog(DetailCoursMapEntry.class);
 
@@ -55,6 +57,11 @@ public class DetailCoursMapEntry implements java.io.Serializable {
 	return acadOrg;
     }
 
+
+    public String getAcadCareer() {
+	return acadCareer;
+    }
+    
     /**
      * Retourne vrai si le cours est au MBA.<br>
      * <br>
@@ -114,6 +121,10 @@ public class DetailCoursMapEntry implements java.io.Serializable {
 
     public void setAcadOrg(String acadOrg) {
 	this.acadOrg = acadOrg;
+    }
+
+    public void setAcaCareer(String acadCareer) {
+	this.acadCareer = acadCareer;
     }
 
     public void setSessionCode(String sessionCode) {

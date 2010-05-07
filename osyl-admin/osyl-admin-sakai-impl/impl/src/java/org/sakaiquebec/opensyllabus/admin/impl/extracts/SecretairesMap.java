@@ -24,8 +24,8 @@ import java.util.*;
  *****************************************************************************/
 
 /**
- * This map contains the necessary information to complete the registration of the
- * secretaries.
+ * This map contains the necessary information to complete the registration of
+ * the secretaries.
  * 
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
@@ -33,6 +33,13 @@ import java.util.*;
 public class SecretairesMap extends HashMap<String, SecretairesMapEntry> {
 
     public static final long serialVersionUID = 5386630822650707643l;
+
+    public static final String SECRETAIRES_CERTIFICAT = "Agent aux activités";
+
+    public static final String SECRETAIRES_CERTIFICAT_SERV_ENS = "115";
+
+    public static final String SECRETAIRES_ACTIVITES_PROF =
+	    "Secrétaire aux activités prof";
 
     public void put(SecretairesMapEntry entry) {
 	put(entry.getEmplId(), entry);
@@ -44,6 +51,57 @@ public class SecretairesMap extends HashMap<String, SecretairesMapEntry> {
 
     public void remove(SecretairesMapEntry entry) {
 	remove(entry.getEmplId());
+    }
+
+    /**
+     * Liste des secretaires de type agent aux activités. Elles correspondent
+     * aux secretaires du certificat.
+     * 
+     * @return
+     */
+    public List<String> getSecretairesCertificat() {
+	List<String> secretaires = new ArrayList<String>();
+	SecretairesMapEntry entry = null;
+	String role = null;
+	String deptId = null;
+
+	Set<String> keys = this.keySet();
+
+	for (String key : keys) {
+	    entry = this.get(key);
+	    role = entry.getRole();
+	    deptId = entry.getDeptId();
+	    if (role.equalsIgnoreCase(SECRETAIRES_CERTIFICAT)
+		    && deptId.equalsIgnoreCase(SECRETAIRES_CERTIFICAT_SERV_ENS))
+		secretaires.add(entry.getEmplId());
+	}
+
+	return secretaires;
+    }
+
+    /**
+     * Liste des secretaires selon le service d'enseignement. On n'inclue pas
+     * les secretaires du certificat.
+     * 
+     * @param deptId
+     * @return
+     */
+    public List<String> getSecretairesByAcadOrg(int deptId) {
+	List<String> secretaires = new ArrayList<String>();
+	SecretairesMapEntry entry = null;
+	int department = 0;
+	Set<String> keys = this.keySet();
+
+	for (String key : keys) {
+	    entry = this.get(key);
+	    department = Integer.parseInt(entry.getDeptId());
+	    if (department == deptId
+		    && !entry.getRole()
+			    .equalsIgnoreCase(SECRETAIRES_CERTIFICAT))
+		secretaires.add(entry.getEmplId());
+	}
+
+	return secretaires;
     }
 
 }

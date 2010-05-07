@@ -253,6 +253,13 @@
 			ref="org.sakaiproject.site.api.SiteService" />			
 	</bean>
 
+
+	<bean id="changePermSynchrojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.ChangePermissionsSynchronisationJobImpl" >
+		<property name="siteService"
+			ref="org.sakaiproject.site.api.SiteService" />			
+	</bean>
+
+
 	<bean id="libraryStaffSynchrojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.LibraryStaffSynchronisationJobImpl" >
 		<property name="userDirService"
 			ref="org.sakaiproject.user.api.UserDirectoryService" />
@@ -345,7 +352,24 @@
 		
 	</bean>	
 
-
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.changePermSynchrojob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		
+	
+		<property name="beanId">
+			<value>changePermSynchrojob</value>
+		</property>
+		
+		<property name="jobName">
+			<value>Change Permissions Synchronisation Job</value>
+		</property>
+		
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+		
+	</bean>	
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.libraryStaffSynchrojob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">

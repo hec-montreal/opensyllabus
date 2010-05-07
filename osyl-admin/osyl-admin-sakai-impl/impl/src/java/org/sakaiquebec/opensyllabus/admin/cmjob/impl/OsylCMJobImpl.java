@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -80,644 +81,686 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMapEn
  */
 public class OsylCMJobImpl implements OsylCMJob {
 
-	/**
-	 * Map used to store information about the courses that a teacher gives:
-	 * teacher id, course id, course session, course periode
-	 */
-	private ProfCoursMap profCoursMap = null;
+    /**
+     * Map used to store information about the courses that a teacher gives:
+     * teacher id, course id, course session, course periode
+     */
+    private ProfCoursMap profCoursMap = null;
 
-	/**
-	 * Map used to store information about the courses taken by a student:
-	 * student id, course id, course session, course period
-	 */
-	private EtudiantCoursMap etudCoursMap = null;
+    /**
+     * Map used to store information about the courses taken by a student:
+     * student id, course id, course session, course period
+     */
+    private EtudiantCoursMap etudCoursMap = null;
 
-	/**
-	 * Map used to store information about course details : course id,
-	 * description, language, session, group, period, department
-	 */
-	private DetailCoursMap detailCoursMap = null;
+    /**
+     * Map used to store information about course details : course id,
+     * description, language, session, group, period, department
+     */
+    private DetailCoursMap detailCoursMap = null;
 
-	/**
-	 * Map used to store information about the department which will represent
-	 * the course set
-	 */
-	private ServiceEnseignementMap seMap = null;
-	/**
-	 * Map used to store information about sessions: session id, starting date,
-	 * ending date
-	 */
-	private DetailSessionsMap detailSessionMap = null;
+    /**
+     * Map used to store information about the department which will represent
+     * the course set
+     */
+    private ServiceEnseignementMap seMap = null;
+    /**
+     * Map used to store information about sessions: session id, starting date,
+     * ending date
+     */
+    private DetailSessionsMap detailSessionMap = null;
 
-	/**
-	 * Map used to store information about the secretaries.
-	 */
-	private SecretairesMap secretairesMap = null;
+    /**
+     * Map used to store information about the secretaries.
+     */
+    private SecretairesMap secretairesMap = null;
 
-	/**
-	 * Map used to store information about the exam dates
-	 */
-	private GenericExamensMapFactory examenMap = null;
+    /**
+     * Map used to store information about the departments.
+     */
+    private ServiceEnseignementMap servEnsMap = null;
 
-	/**
-	 * Our logger
-	 */
-	private static Log log = LogFactory.getLog(OsylCMJobImpl.class);
+    /**
+     * Map used to store information about the exam dates
+     */
+    private GenericExamensMapFactory examenMap = null;
 
-	/**
+    /**
+     * Our logger
+     */
+    private static Log log = LogFactory.getLog(OsylCMJobImpl.class);
+
+    /**
      *
      */
-	private CourseManagementAdministration cmAdmin;
+    private CourseManagementAdministration cmAdmin;
 
-	/**
-	 * @param cmAdmin
-	 */
-	public void setCmAdmin(CourseManagementAdministration cmAdmin) {
-		this.cmAdmin = cmAdmin;
-	}
+    /**
+     * @param cmAdmin
+     */
+    public void setCmAdmin(CourseManagementAdministration cmAdmin) {
+	this.cmAdmin = cmAdmin;
+    }
 
-	/**
+    /**
      *
      */
-	private CourseManagementService cmService;
+    private CourseManagementService cmService;
 
-	/**
-	 * @param cmService
-	 */
-	public void setCmService(CourseManagementService cmService) {
-		this.cmService = cmService;
-	}
+    /**
+     * @param cmService
+     */
+    public void setCmService(CourseManagementService cmService) {
+	this.cmService = cmService;
+    }
 
-	/* load the instructors and assigns them to their courses */
-	private void assignTeachers() {
-		ProfCoursMapEntry profCoursEntry = null;
-		String matricule = "";
-		Iterator<DetailCoursMapEntry> cours;
-		DetailCoursMapEntry detailsCours;
+    /* load the instructors and assigns them to their courses */
+    private void assignTeachers() {
+	ProfCoursMapEntry profCoursEntry = null;
+	String matricule = "";
+	Iterator<DetailCoursMapEntry> cours;
+	DetailCoursMapEntry detailsCours;
+	CourseOffering courseOff = null;
+	String courseOffId = null;
+	Iterator<ProfCoursMapEntry> profCours =
+		profCoursMap.values().iterator();
 
-		Iterator<ProfCoursMapEntry> profCours = profCoursMap.values()
-				.iterator();
+	while (profCours.hasNext()) {
+	    profCoursEntry = (ProfCoursMapEntry) profCours.next();
+	    matricule = profCoursEntry.getEmplId();
+	    cours = profCoursEntry.getCours();
+	    while (cours.hasNext()) {
+		detailsCours = (DetailCoursMapEntry) cours.next();
 
-		while (profCours.hasNext()) {
-			profCoursEntry = (ProfCoursMapEntry) profCours.next();
-			matricule = profCoursEntry.getEmplId();
-			cours = profCoursEntry.getCours();
-			while (cours.hasNext()) {
-				detailsCours = (DetailCoursMapEntry) cours.next();
-			
-				EnrollmentSet enrollmentSet = null;
-				Set<String> instructors = new HashSet<String>();
-				instructors.add(matricule);
-
-				// TODO: faire la difference entre un prof enseignement
-				// et un prof coordonnateur pour savoir a quel
-				// enrollmentset il faut l'ajouter
-				String enrollmentSetId = getCourseSectionEnrollmentSetId(detailsCours);
-
-				enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
-				enrollmentSet.setDefaultEnrollmentCredits(profCoursEntry
-						.getUnitMinimum());
-				enrollmentSet.setOfficialInstructors(instructors);
-				cmAdmin.updateEnrollmentSet(enrollmentSet);
-
-			}
-
-		}
-	}
-
-	/** {@inheritDoc} */
-	public void loadCourses() {
-
-		DetailCoursMapEntry coursEntry = null;
-		String canonicalCourseId = "", courseOfferingId = "", courseSectionId = "", courseSetId = "";
-		String description = "";
-		String title = "";
-		String lang = "";
-		AcademicSession session = null;
-		String category;
-		Set<CanonicalCourse> cc = new HashSet<CanonicalCourse>();
-		Set<CourseOffering> courseOfferingSet = new HashSet<CourseOffering>();
-
-		Iterator<DetailCoursMapEntry> cours = detailCoursMap.values()
-				.iterator();
-
-		while (cours.hasNext()) {
-			coursEntry = (DetailCoursMapEntry) cours.next();
-			canonicalCourseId = getCanonicalCourseId(coursEntry);
-			title = coursEntry.getCourseTitleLong();
-			description = coursEntry.getCourseTitleLong();
-			courseSetId = coursEntry.getAcadOrg();
-
-			// create the canonical course
-			if (!cmService.isCanonicalCourseDefined(canonicalCourseId)) {
-				cc.add(cmAdmin.createCanonicalCourse(canonicalCourseId, title,
-						description));
-				cmAdmin.setEquivalentCanonicalCourses(cc);
-
-			} else {
-				// we update
-				CanonicalCourse canCourse = cmService
-						.getCanonicalCourse(canonicalCourseId);
-				canCourse.setDescription(description);
-				canCourse.setTitle(title);
-			}
-
-			if (cmService.isCourseSetDefined(courseSetId)) {
-				cmAdmin.removeCanonicalCourseFromCourseSet(courseSetId,
-						canonicalCourseId);
-				cmAdmin.addCanonicalCourseToCourseSet(courseSetId,
-						canonicalCourseId);
-			}
-			// create course offering
-			session = cmService.getAcademicSession(coursEntry.getStrmId());
-			CourseOffering courseOff;
-			if (cmService.isAcademicSessionDefined(coursEntry.getStrmId())) {
-				courseOfferingId = getCourseOfferingId(coursEntry);
-				lang = coursEntry.getLangue();
-				if (!cmService.isCourseOfferingDefined(courseOfferingId)) {
-					courseOff = cmAdmin
-							.createCourseOffering(courseOfferingId, title,
-									description, COURSE_OFF_STATUS, session
-											.getEid(), canonicalCourseId,
-									session.getStartDate(), session
-											.getEndDate(), lang);
-					courseOfferingSet.add(courseOff);
-				} else {
-					// We update
-					courseOff = cmService.getCourseOffering(courseOfferingId);
-					courseOff.setTitle(title);
-					courseOff.setDescription(description);
-					courseOff.setEndDate(session.getEndDate());
-					courseOff.setStartDate(session.getStartDate());
-					courseOff.setStatus(COURSE_OFF_STATUS);
-					courseOff.setAcademicSession(session);
-					courseOfferingSet.add(courseOff);
-					courseOff.setLang(lang);
-					cmAdmin.updateCourseOffering(courseOff);
-				}
-
-				if (cmService.isCourseSetDefined(courseSetId)) {
-					cmAdmin.removeCourseOfferingFromCourseSet(courseSetId,
-							courseOfferingId);
-					cmAdmin.addCourseOfferingToCourseSet(courseSetId,
-							courseOfferingId);
-				}
-
-				// create course section
-				category = coursEntry.getAcadOrg();
-				courseSectionId = getCourseSectionId(coursEntry);
-				Section newSection = null;
-				if (!cmService.isSectionDefined(courseSectionId)) {
-
-					 newSection = cmAdmin.createSection(courseSectionId,
-							title, description, category, null,
-							courseOfferingId, null, lang);
-
-			
-				} else {
-					// We update
-					newSection = cmService
-							.getSection(courseSectionId);
-					newSection.setCategory(category);
-					newSection.setDescription(description);
-					newSection.setTitle(title);
-					newSection.setLang(lang);
-					cmAdmin.updateSection(newSection);
-				}
-
-				// INFO: Create the enrollment set as soon as the section
-				// exists so the students
-				// can see the site even though the teacher is not in the
-				// system yet.
-				String enrollmentSetId = getCourseSectionEnrollmentSetId(coursEntry);
-				if (newSection.getEnrollmentSet() == null) {
-
-					// Create the enrollment set
-					EnrollmentSet enrollmentSet = null;
-					
-					if (!cmService.isEnrollmentSetDefined(enrollmentSetId)) {
-						try{
-							enrollmentSet = cmAdmin.createEnrollmentSet(
-								enrollmentSetId, title, description, courseSetId,
-								CREDITS, courseOfferingId, new HashSet<String>());
-						}
-						catch (IdExistsException e){
-							e.printStackTrace();
-						}
-					}
-					else
-						enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
-					newSection.setEnrollmentSet(enrollmentSet);
-					cmAdmin.updateSection(newSection);
-				}
-
-			}
-
-		}
-
-	}
-	
-
-	/** {@inheritDoc} */
-	// INFO: the existing methods of the course management service and
-	// administration does not allow to do everything we want to do: these 2
-	// classes doesn't permit to mark a session as current, create a web service
-	// that will talk to the hibernate to mark a session as current.
-	// Please note that Sakai 2.6 already has that method
-	public void loadSessions() {
-		DetailSessionsMapEntry sessionEntry = null;
-		String eid = "", title = "", description = "";
-		Date startDate = null, endDate = null;
-
-		Date now = new Date(System.currentTimeMillis());
-		Iterator<DetailSessionsMapEntry> sessions = detailSessionMap.values()
-				.iterator();
-
-		while (sessions.hasNext()) {
-			sessionEntry = (DetailSessionsMapEntry) sessions.next();
-			eid = sessionEntry.getUniqueKey();
-			title = sessionEntry.getDescAnglais();
-			description = sessionEntry.getDescAnglais();
-			try {
-				startDate = DateFormat.getDateInstance().parse(
-						sessionEntry.getBeginDate());
-				endDate = DateFormat.getDateInstance().parse(
-						sessionEntry.getEndDate());
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-
-			if (!cmService.isAcademicSessionDefined(eid)) {
-				cmAdmin.createAcademicSession(eid, title, description,
-						startDate, endDate);
-				// ///////////////////////////////////////////////////////////////
-				// this method is not available for sakai 2.5 //
-				// you can activate a session manually by changing to 1 //
-				// the value of is_current in the cm_academic_session_t //
-				// TODO: activate this method when running again on sakai 2.6 //
-				if ((now.compareTo(startDate)) >= 0
-						&& endDate.compareTo(endDate) <= 0)
-					cmAdmin.setCurrentAcademicSessions(Arrays
-							.asList(new String[] { eid })); //
-				// ////////////////////////////////////////////////////////////////
-			} else {
-				// We update
-				AcademicSession aSession = cmService.getAcademicSession(eid);
-				aSession.setDescription(description);
-				aSession.setEndDate(endDate);
-				aSession.setStartDate(startDate);
-				aSession.setTitle(title);
-				cmAdmin.updateAcademicSession(aSession);
-				if ((now.compareTo(startDate)) >= 0
-						&& endDate.compareTo(endDate) <= 0)
-					cmAdmin.setCurrentAcademicSessions(Arrays
-							.asList(new String[] { eid })); //
-
-			}
-		}
-	}
-
-	// Has same ID as course section
-	private String getCourseSectionEnrollmentSetId(DetailCoursMapEntry course) {
-		String enrollmentSetId = null;
-
-		if (course != null) {
-			String coursId = course.getCatalogNbr();
-			String session = course.getStrm();
-			String periode = course.getSessionCode();
-			String section = course.getClassSection();
-
-			enrollmentSetId = coursId + session + periode + section;
-		}
-
-		return enrollmentSetId;
-	}
-
-
-
-	/**
-	 * Logs in the sakai environment
-	 */
-	protected void loginToSakai() {
-		Session sakaiSession = SessionManager.getCurrentSession();
-		sakaiSession.setUserId("admin");
-		sakaiSession.setUserEid("admin");
-
-		// establish the user's session
-		UsageSessionService.startSession("admin", "127.0.0.1", "CMSync");
-
-		// update the user's externally provided realm definitions
-		AuthzGroupService.refreshUser("admin");
-
-		// post the login event
-		EventTrackingService.post(EventTrackingService.newEvent(
-				UsageSessionService.EVENT_LOGIN, null, true));
-	}
-
-	/**
-	 * Logs out of the sakai environment
-	 */
-	protected void logoutFromSakai() {
-		// post the logout event
-		EventTrackingService.post(EventTrackingService.newEvent(
-				UsageSessionService.EVENT_LOGOUT, null, true));
-	}
-
-	/**
-	 * Retreives the folder where is kept the extract file. Later on we will
-	 * have a fixed values representing the place where are kept the extract
-	 * files.
-	 * 
-	 * @param CLASSPATHTOEXTRACTS
-	 */
-
-	private String getPathToExtracts() {
-
-		String directory = System.getProperty("catalina.home");
-		return directory + File.separator + EXTRACTS_PATH;
-
-	}
-
-	/** {@inheritDoc} */
-	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		log
-				.info(" Strart synchronizing PeopleSoft data extracts to the course management");
-
-		loginToSakai();
-
-		String directory = ServerConfigurationService.getString(
-				"coursemanagement.extract.files.path", getPathToExtracts());
-
-		if (directory == null || "".equalsIgnoreCase(directory)) {
-			log
-					.warn(
-							this,
-							new IllegalStateException(
-									"The property 'coursemanagement.extract.files.path' is not defined in the sakai.properties file"));
-			return;
-		}
-		try {
-			detailSessionMap = GenericDetailSessionsMapFactory
-					.getInstance(directory);
-			detailSessionMap = GenericDetailSessionsMapFactory
-					.buildMap(directory);
-			// We load sessions
-			loadSessions();
-
-			seMap = GenericServiceEnseignementMapFactory.getInstance(directory);
-			seMap = GenericServiceEnseignementMapFactory.buildMap(directory);
-
-			// We add a category
-			loadCategory();
-
-			// We add a courseSet
-			loadCourseSets();
-
-			detailCoursMap = GenericDetailCoursMapFactory
-					.getInstance(directory);
-			detailCoursMap = GenericDetailCoursMapFactory.buildMap(directory);
-			// We load courses
-			loadCourses();
-
-			profCoursMap = GenericProfCoursMapFactory.getInstance(directory);
-			profCoursMap = GenericProfCoursMapFactory.buildMap(directory,
-					detailCoursMap, detailSessionMap);
-
-			secretairesMap = GenericSecretairesMapFactory
-					.getInstance(directory);
-			secretairesMap = GenericSecretairesMapFactory.buildMap(directory);
-
-			// We assign teachers and the secretaries
-			loadMembership();
-
-			etudCoursMap = GenericEtudiantCoursMapFactory
-					.getInstance(directory);
-			etudCoursMap = GenericEtudiantCoursMapFactory.buildMap(directory,
-					detailCoursMap, detailSessionMap);
-			// We assign students to their classes
-			loadEnrollments();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		logoutFromSakai();
-		log
-				.info(" End synchronizing PeopleSoft data extracts to the course management");
-
-	}
-
-	/** {@inheritDoc} */
-	public void loadEnrollments() {
-		EtudiantCoursMapEntry etudiantCoursEntry = null;
-		String userId = null;
-		String enrollmentSetId = null;
-		DetailCoursMapEntry cours = null;
-		Iterator<DetailCoursMapEntry> coursMap = null;
-		Section coursSection = null;
 		EnrollmentSet enrollmentSet = null;
+		Set<String> instructors = new HashSet<String>();
+		instructors.add(matricule);
 
-		Iterator<EtudiantCoursMapEntry> etudiantCoursMap = etudCoursMap
-				.getEtudiants();
 
-		while (etudiantCoursMap.hasNext()) {
-			etudiantCoursEntry = etudiantCoursMap.next();
-			coursMap = etudiantCoursEntry.getCours();
-			userId = etudiantCoursEntry.getMatricule();
-			while (coursMap.hasNext()) {
-				cours = coursMap.next();
-				// TODO: do something when enrollmentSetId is null
-				// TODO: we need information about the credits, gradingScheme
-				// and user status in the the course enrollment
-				// TODO: map user status to components.xml in provider
-				// for now we have enrolled and wait
-				// TODO: the official teacher is assigned at the same time as
-				// the enrollmentset,
-				// move this command
-				coursSection = null;
+		// On a un enseignant
+		String enrollmentSetId =
+			getCourseSectionEnrollmentSetId(detailsCours);
 
-				enrollmentSet = null;
-				enrollmentSetId = null;
-				try {
-					coursSection = cmService
-							.getSection(getCourseSectionId(cours));
+		enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
+		enrollmentSet.setDefaultEnrollmentCredits(profCoursEntry
+			.getUnitMinimum());
+		enrollmentSet.setOfficialInstructors(instructors);
+		cmAdmin.updateEnrollmentSet(enrollmentSet);
 
-					enrollmentSet = coursSection.getEnrollmentSet();
-					if (enrollmentSet != null)
-						enrollmentSetId = enrollmentSet.getEid();
+		// On a un coordonnateur
+		if (detailsCours.getCoordonnateur() != null) {
+		    matricule = detailsCours.getCoordonnateur().getEmplId();
+		    courseOffId = getCourseOfferingId(detailsCours);
+		    courseOff = cmService.getCourseOffering(courseOffId);
 
-				} catch (IdNotFoundException e) {
-					log.error("Il n'y a pas d'enrollment associe pour le "
-							+ enrollmentSetId);
-				}
+		    cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
+			    COORDONNATEUR_ROLE, courseOffId, ACTIVE_STATUS);
+		    cmAdmin.updateCourseOffering(courseOff);
 
-				if (enrollmentSetId != null)
-					if (!cmService.isEnrolled(userId, enrollmentSetId)) {
-						cmAdmin.addOrUpdateEnrollment(userId, enrollmentSetId,
-								ENROLLMENT_STATUS, CREDITS, GRADING_SCHEME);
-					}
+		}
+	    }
+
+	}
+    }
+
+    /** {@inheritDoc} */
+    public void loadCourses() {
+
+	DetailCoursMapEntry coursEntry = null;
+	String canonicalCourseId = "", courseOfferingId = "", courseSectionId =
+		"", courseSetId = "";
+	String description = "";
+	String title = "";
+	String lang = "";
+	AcademicSession session = null;
+	String category;
+	Set<CanonicalCourse> cc = new HashSet<CanonicalCourse>();
+	Set<CourseOffering> courseOfferingSet = new HashSet<CourseOffering>();
+
+	Iterator<DetailCoursMapEntry> cours =
+		detailCoursMap.values().iterator();
+
+	while (cours.hasNext()) {
+	    coursEntry = (DetailCoursMapEntry) cours.next();
+	    canonicalCourseId = getCanonicalCourseId(coursEntry);
+	    title = coursEntry.getCourseTitleLong();
+	    description = coursEntry.getCourseTitleLong();
+	    courseSetId = coursEntry.getAcadOrg();
+
+	    // create the canonical course
+	    if (!cmService.isCanonicalCourseDefined(canonicalCourseId)) {
+		cc.add(cmAdmin.createCanonicalCourse(canonicalCourseId, title,
+			description));
+		cmAdmin.setEquivalentCanonicalCourses(cc);
+
+	    } else {
+		// we update
+		CanonicalCourse canCourse =
+			cmService.getCanonicalCourse(canonicalCourseId);
+		canCourse.setDescription(description);
+		canCourse.setTitle(title);
+	    }
+
+	    if (cmService.isCourseSetDefined(courseSetId)) {
+		cmAdmin.removeCanonicalCourseFromCourseSet(courseSetId,
+			canonicalCourseId);
+		cmAdmin.addCanonicalCourseToCourseSet(courseSetId,
+			canonicalCourseId);
+	    }
+	    // create course offering
+	    session = cmService.getAcademicSession(coursEntry.getStrmId());
+	    CourseOffering courseOff;
+	    if (cmService.isAcademicSessionDefined(coursEntry.getStrmId())) {
+		courseOfferingId = getCourseOfferingId(coursEntry);
+		lang = coursEntry.getLangue();
+		if (!cmService.isCourseOfferingDefined(courseOfferingId)) {
+		    courseOff =
+			    cmAdmin.createCourseOffering(courseOfferingId,
+				    title, description, COURSE_OFF_STATUS,
+				    session.getEid(), canonicalCourseId,
+				    session.getStartDate(), session
+					    .getEndDate(), lang);
+		    courseOfferingSet.add(courseOff);
+		} else {
+		    // We update
+		    courseOff = cmService.getCourseOffering(courseOfferingId);
+		    courseOff.setTitle(title);
+		    courseOff.setDescription(description);
+		    courseOff.setEndDate(session.getEndDate());
+		    courseOff.setStartDate(session.getStartDate());
+		    courseOff.setStatus(COURSE_OFF_STATUS);
+		    courseOff.setAcademicSession(session);
+		    courseOfferingSet.add(courseOff);
+		    courseOff.setLang(lang);
+		    cmAdmin.updateCourseOffering(courseOff);
+		}
+
+		if (coursEntry.getCoordonnateur() != null) {
+		    String offInstructor =
+			    coursEntry.getCoordonnateur().getEmplId();
+		    cmAdmin.addOrUpdateCourseOfferingMembership(offInstructor,
+			    COORDONNATEUR_ROLE, courseOff.getEid(),
+			    ACTIVE_STATUS);
+
+		}
+
+		if (cmService.isCourseSetDefined(courseSetId)) {
+		    cmAdmin.removeCourseOfferingFromCourseSet(courseSetId,
+			    courseOfferingId);
+		    cmAdmin.addCourseOfferingToCourseSet(courseSetId,
+			    courseOfferingId);
+		}
+
+		// create course section
+		category = coursEntry.getAcadOrg();
+		courseSectionId = getCourseSectionId(coursEntry);
+		Section newSection = null;
+		if (!cmService.isSectionDefined(courseSectionId)) {
+
+		    newSection =
+			    cmAdmin.createSection(courseSectionId, title,
+				    description, category, null,
+				    courseOfferingId, null, lang);
+
+		} else {
+		    // We update
+		    newSection = cmService.getSection(courseSectionId);
+		    newSection.setCategory(category);
+		    newSection.setDescription(description);
+		    newSection.setTitle(title);
+		    newSection.setLang(lang);
+		    cmAdmin.updateSection(newSection);
+		}
+
+		// INFO: Create the enrollment set as soon as the section
+		// exists so the students
+		// can see the site even though the teacher is not in the
+		// system yet.
+		String enrollmentSetId =
+			getCourseSectionEnrollmentSetId(coursEntry);
+		if (newSection.getEnrollmentSet() == null) {
+
+		    // Create the enrollment set
+		    EnrollmentSet enrollmentSet = null;
+
+		    if (!cmService.isEnrollmentSetDefined(enrollmentSetId)) {
+			try {
+			    enrollmentSet =
+				    cmAdmin.createEnrollmentSet(
+					    enrollmentSetId, title,
+					    description, courseSetId, CREDITS,
+					    courseOfferingId,
+					    new HashSet<String>());
+			} catch (IdExistsException e) {
+			    e.printStackTrace();
 			}
-
-		}
-	}
-
-	private String getCourseOfferingId(DetailCoursMapEntry cours) {
-		String courseOfferingId = null;
-		if (cours != null) {
-			courseOfferingId = cours.getCatalogNbr() + cours.getStrm()
-					+ cours.getSessionCode();
-			;
-		}
-		return courseOfferingId;
-	}
-
-	private String getCourseSectionId(DetailCoursMapEntry course) {
-		String courseSectionId = null;
-
-		if (course != null) {
-			String coursId = course.getCatalogNbr();
-			String session = course.getStrm();
-			String periode = course.getSessionCode();
-			String section = course.getClassSection();
-
-			courseSectionId = coursId + session + periode + section;
-		}
-		return courseSectionId;
-	}
-
-
-	private String getCanonicalCourseId(DetailCoursMapEntry course) {
-		String ccId = null;
-
-		if (course != null) {
-			String coursId = course.getCatalogNbr();
-
-			ccId = coursId;
-		}
-		return ccId;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void loadMembership() {
-		assignTeachers();
-		assignSecretaries();
-	}
-
-	/** {@inheritDoc} */
-	public void loadMeetings() {
-		// TODO: create class ExamenMap and the method getInstance in the class
-		// GenericExamenMapFactory to be able to retrieve and register
-		// information
-	}
-
-	/**
-	 * This method is created to load a bogus category that will be used in the
-	 * Worksite Setup
-	 */
-	// For HEC Montreal this will list the different services
-	private void loadCategory() {
-		ServiceEnseignementMapEntry seEntry;
-		String categoryId = null;
-		String categoryDescription = null;
-		Iterator<ServiceEnseignementMapEntry> se = seMap.values().iterator();
-
-		while (se.hasNext()) {
-			seEntry = se.next();
-			categoryId = seEntry.getAcadOrg();
-			categoryDescription = seEntry.getDescFormal();
-			if (cmService.getSectionCategoryDescription(categoryId) == null)
-				cmAdmin.addSectionCategory(categoryId, categoryDescription);
-			else {
-				// TODO: implement update of a category
-			}
+		    } else
+			enrollmentSet =
+				cmService.getEnrollmentSet(enrollmentSetId);
+		    newSection.setEnrollmentSet(enrollmentSet);
+		    cmAdmin.updateSection(newSection);
 		}
 
+	    }
+
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void loadCourseSets() {
+    }
 
-		ServiceEnseignementMapEntry seEntry;
-		String courseSetId = null;
-		String courseSetTitle = null;
-		String courseSetDescription = null;
-		String courseSetCategory = null;
-		CourseSet courseSetParent = null;
+    /** {@inheritDoc} */
+    // INFO: the existing methods of the course management service and
+    // administration does not allow to do everything we want to do: these 2
+    // classes doesn't permit to mark a session as current, create a web service
+    // that will talk to the hibernate to mark a session as current.
+    // Please note that Sakai 2.6 already has that method
+    public void loadSessions() {
+	DetailSessionsMapEntry sessionEntry = null;
+	String eid = "", title = "", description = "";
+	Date startDate = null, endDate = null;
 
-		Iterator<ServiceEnseignementMapEntry> se = seMap.values().iterator();
+	Date now = new Date(System.currentTimeMillis());
+	Iterator<DetailSessionsMapEntry> sessions =
+		detailSessionMap.values().iterator();
 
-		while (se.hasNext()) {
-			seEntry = se.next();
-			courseSetId = seEntry.getAcadOrg();
-			courseSetTitle = seEntry.getDescFormal();
-			courseSetDescription = seEntry.getDescFormal();
+	while (sessions.hasNext()) {
+	    sessionEntry = (DetailSessionsMapEntry) sessions.next();
+	    eid = sessionEntry.getUniqueKey();
+	    title = sessionEntry.getDescAnglais();
+	    description = sessionEntry.getDescAnglais();
+	    try {
+		startDate =
+			DateFormat.getDateInstance().parse(
+				sessionEntry.getBeginDate());
+		endDate =
+			DateFormat.getDateInstance().parse(
+				sessionEntry.getEndDate());
+	    } catch (ParseException e) {
+		e.printStackTrace();
+	    }
 
-			if (!cmService.isCourseSetDefined(courseSetId)) {
-				cmAdmin.createCourseSet(courseSetId, courseSetTitle,
-						courseSetDescription, null, null);
-			} else {
-				CourseSet cs = cmService.getCourseSet(courseSetId);
-				cs.setEid(courseSetId);
-				cs.setTitle(courseSetTitle);
-				cs.setDescription(courseSetDescription);
-				cs.setCategory(courseSetCategory);
-				cs.setParent(courseSetParent);
-				cmAdmin.updateCourseSet(cs);
-			}
+	    if (!cmService.isAcademicSessionDefined(eid)) {
+		cmAdmin.createAcademicSession(eid, title, description,
+			startDate, endDate);
+		// ///////////////////////////////////////////////////////////////
+		// this method is not available for sakai 2.5 //
+		// you can activate a session manually by changing to 1 //
+		// the value of is_current in the cm_academic_session_t //
+		// TODO: activate this method when running again on sakai 2.6 //
+		if ((now.compareTo(startDate)) >= 0
+			&& endDate.compareTo(endDate) <= 0)
+		    cmAdmin.setCurrentAcademicSessions(Arrays
+			    .asList(new String[] { eid })); //
+		// ////////////////////////////////////////////////////////////////
+	    } else {
+		// We update
+		AcademicSession aSession = cmService.getAcademicSession(eid);
+		aSession.setDescription(description);
+		aSession.setEndDate(endDate);
+		aSession.setStartDate(startDate);
+		aSession.setTitle(title);
+		cmAdmin.updateAcademicSession(aSession);
+		if ((now.compareTo(startDate)) >= 0
+			&& endDate.compareTo(endDate) <= 0)
+		    cmAdmin.setCurrentAcademicSessions(Arrays
+			    .asList(new String[] { eid })); //
 
+	    }
+	}
+    }
+
+    // Has same ID as course section
+    private String getCourseSectionEnrollmentSetId(DetailCoursMapEntry course) {
+	String enrollmentSetId = null;
+
+	if (course != null) {
+	    String coursId = course.getCatalogNbr();
+	    String session = course.getStrm();
+	    String periode = course.getSessionCode();
+	    String section = course.getClassSection();
+
+	    enrollmentSetId = coursId + session + periode + section;
+	}
+
+	return enrollmentSetId;
+    }
+
+    /**
+     * Logs in the sakai environment
+     */
+    protected void loginToSakai() {
+	Session sakaiSession = SessionManager.getCurrentSession();
+	sakaiSession.setUserId("admin");
+	sakaiSession.setUserEid("admin");
+
+	// establish the user's session
+	UsageSessionService.startSession("admin", "127.0.0.1", "CMSync");
+
+	// update the user's externally provided realm definitions
+	AuthzGroupService.refreshUser("admin");
+
+	// post the login event
+	EventTrackingService.post(EventTrackingService.newEvent(
+		UsageSessionService.EVENT_LOGIN, null, true));
+    }
+
+    /**
+     * Logs out of the sakai environment
+     */
+    protected void logoutFromSakai() {
+	// post the logout event
+	EventTrackingService.post(EventTrackingService.newEvent(
+		UsageSessionService.EVENT_LOGOUT, null, true));
+    }
+
+    /**
+     * Retreives the folder where is kept the extract file. Later on we will
+     * have a fixed values representing the place where are kept the extract
+     * files.
+     * 
+     * @param CLASSPATHTOEXTRACTS
+     */
+
+    private String getPathToExtracts() {
+
+	String directory = System.getProperty("catalina.home");
+	return directory + File.separator + EXTRACTS_PATH;
+
+    }
+
+    /** {@inheritDoc} */
+    public void execute(JobExecutionContext arg0) throws JobExecutionException {
+	log
+		.info(" Strart synchronizing PeopleSoft data extracts to the course management");
+
+	loginToSakai();
+
+	String directory =
+		ServerConfigurationService.getString(
+			"coursemanagement.extract.files.path",
+			getPathToExtracts());
+
+	if (directory == null || "".equalsIgnoreCase(directory)) {
+	    log
+		    .warn(
+			    this,
+			    new IllegalStateException(
+				    "The property 'coursemanagement.extract.files.path' is not defined in the sakai.properties file"));
+	    return;
+	}
+	try {
+	    detailSessionMap =
+		    GenericDetailSessionsMapFactory.getInstance(directory);
+	    detailSessionMap =
+		    GenericDetailSessionsMapFactory.buildMap(directory);
+	    servEnsMap =
+		    GenericServiceEnseignementMapFactory.buildMap(directory);
+
+	    seMap = GenericServiceEnseignementMapFactory.getInstance(directory);
+	    seMap = GenericServiceEnseignementMapFactory.buildMap(directory);
+
+	    detailCoursMap =
+		    GenericDetailCoursMapFactory.getInstance(directory);
+	    detailCoursMap = GenericDetailCoursMapFactory.buildMap(directory);
+
+	    profCoursMap = GenericProfCoursMapFactory.getInstance(directory);
+	    profCoursMap =
+		    GenericProfCoursMapFactory.buildMap(directory,
+			    detailCoursMap, detailSessionMap);
+
+	    secretairesMap =
+		    GenericSecretairesMapFactory.getInstance(directory);
+	    secretairesMap = GenericSecretairesMapFactory.buildMap(directory);
+
+	    etudCoursMap =
+		    GenericEtudiantCoursMapFactory.getInstance(directory);
+	    etudCoursMap =
+		    GenericEtudiantCoursMapFactory.buildMap(directory,
+			    detailCoursMap, detailSessionMap);
+
+	    // We load sessions
+	    loadSessions();
+
+	    // We add a category
+	    loadCategory();
+
+	    // We add a courseSet
+	    loadCourseSets();
+
+	    // We load courses
+	    loadCourses();
+
+	    // We assign teachers and the secretaries
+	    loadMembership();
+
+	    // We assign students to their classes
+	    loadEnrollments();
+
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+
+	logoutFromSakai();
+	log
+		.info(" End synchronizing PeopleSoft data extracts to the course management");
+
+    }
+
+    /** {@inheritDoc} */
+    public void loadEnrollments() {
+	EtudiantCoursMapEntry etudiantCoursEntry = null;
+	String userId = null;
+	String enrollmentSetId = null;
+	DetailCoursMapEntry cours = null;
+	Iterator<DetailCoursMapEntry> coursMap = null;
+	Section coursSection = null;
+	EnrollmentSet enrollmentSet = null;
+
+	Iterator<EtudiantCoursMapEntry> etudiantCoursMap =
+		etudCoursMap.getEtudiants();
+
+	while (etudiantCoursMap.hasNext()) {
+	    etudiantCoursEntry = etudiantCoursMap.next();
+	    coursMap = etudiantCoursEntry.getCours();
+	    userId = etudiantCoursEntry.getMatricule();
+	    while (coursMap.hasNext()) {
+		cours = coursMap.next();
+		// TODO: do something when enrollmentSetId is null
+		// TODO: we need information about the credits, gradingScheme
+		// and user status in the the course enrollment
+		// TODO: map user status to components.xml in provider
+		// for now we have enrolled and wait
+		// TODO: the official teacher is assigned at the same time as
+		// the enrollmentset,
+		// move this command
+		coursSection = null;
+
+		enrollmentSet = null;
+		enrollmentSetId = null;
+		try {
+		    coursSection =
+			    cmService.getSection(getCourseSectionId(cours));
+
+		    enrollmentSet = coursSection.getEnrollmentSet();
+		    if (enrollmentSet != null)
+			enrollmentSetId = enrollmentSet.getEid();
+
+		} catch (IdNotFoundException e) {
+		    log.error("Il n'y a pas d'enrollment associe pour le "
+			    + enrollmentSetId);
 		}
+
+		if (enrollmentSetId != null)
+		    if (!cmService.isEnrolled(userId, enrollmentSetId)) {
+			cmAdmin.addOrUpdateEnrollment(userId, enrollmentSetId,
+				ENROLLMENT_STATUS, CREDITS, GRADING_SCHEME);
+		    }
+	    }
+
+	}
+    }
+
+    private String getCourseOfferingId(DetailCoursMapEntry cours) {
+	String courseOfferingId = null;
+	if (cours != null) {
+	    courseOfferingId =
+		    cours.getCatalogNbr() + cours.getStrm()
+			    + cours.getSessionCode();
+	    ;
+	}
+	return courseOfferingId;
+    }
+
+    private String getCourseSectionId(DetailCoursMapEntry course) {
+	String courseSectionId = null;
+
+	if (course != null) {
+	    String coursId = course.getCatalogNbr();
+	    String session = course.getStrm();
+	    String periode = course.getSessionCode();
+	    String section = course.getClassSection();
+
+	    courseSectionId = coursId + session + periode + section;
+	}
+	return courseSectionId;
+    }
+
+    private String getCanonicalCourseId(DetailCoursMapEntry course) {
+	String ccId = null;
+
+	if (course != null) {
+	    String coursId = course.getCatalogNbr();
+
+	    ccId = coursId;
+	}
+	return ccId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void loadMembership() {
+	assignTeachers();
+	assignSecretaries();
+    }
+
+    /** {@inheritDoc} */
+    public void loadMeetings() {
+	// TODO: create class ExamenMap and the method getInstance in the class
+	// GenericExamenMapFactory to be able to retrieve and register
+	// information
+    }
+
+    /**
+     * This method is created to load a bogus category that will be used in the
+     * Worksite Setup
+     */
+    // For HEC Montreal this will list the different services
+    private void loadCategory() {
+	ServiceEnseignementMapEntry seEntry;
+	String categoryId = null;
+	String categoryDescription = null;
+	Iterator<ServiceEnseignementMapEntry> se = seMap.values().iterator();
+
+	while (se.hasNext()) {
+	    seEntry = se.next();
+	    categoryId = seEntry.getAcadOrg();
+	    categoryDescription = seEntry.getDescFormal();
+	    if (cmService.getSectionCategoryDescription(categoryId) == null)
+		cmAdmin.addSectionCategory(categoryId, categoryDescription);
+	    else {
+		// TODO: implement update of a category
+	    }
 	}
 
-	/*
-	 * Loads the secretaries and assigns them to the courses in their associated
-	 * SE.
-	 */
-	private void assignSecretaries() {
+    }
 
-		SecretairesMapEntry entry = null;
-		String deptId = null;
-		Iterator<SecretairesMapEntry> secretaries = secretairesMap.values()
-				.iterator();
+    /**
+     * {@inheritDoc}
+     */
+    public void loadCourseSets() {
 
-		ServiceEnseignementMapEntry seEntry = null;
-		CourseSet courseS = null;
-		Iterator<CourseOffering> courseOffs = null;
-		Iterator<Section> sections = null;
-		CourseOffering courseOff = null;
-		Section section = null;
+	ServiceEnseignementMapEntry seEntry;
+	String courseSetId = null;
+	String courseSetTitle = null;
+	String courseSetDescription = null;
+	String courseSetCategory = null;
+	CourseSet courseSetParent = null;
 
-		while (secretaries.hasNext()) {
-			entry = secretaries.next();
-			deptId = entry.getDeptId();
-			seEntry = seMap.getByDeptId(deptId);
+	Iterator<ServiceEnseignementMapEntry> se = seMap.values().iterator();
 
-			if (seEntry != null) {
-				courseS = cmService.getCourseSet(seEntry.getAcadOrg());
+	while (se.hasNext()) {
+	    seEntry = se.next();
+	    courseSetId = seEntry.getAcadOrg();
+	    courseSetTitle = seEntry.getDescFormal();
+	    courseSetDescription = seEntry.getDescFormal();
 
-				if (courseS != null) {
-					courseOffs = cmService.getCourseOfferingsInCourseSet(
-							courseS.getEid()).iterator();
+	    if (!cmService.isCourseSetDefined(courseSetId)) {
+		cmAdmin.createCourseSet(courseSetId, courseSetTitle,
+			courseSetDescription, null, null);
+	    } else {
+		CourseSet cs = cmService.getCourseSet(courseSetId);
+		cs.setEid(courseSetId);
+		cs.setTitle(courseSetTitle);
+		cs.setDescription(courseSetDescription);
+		cs.setCategory(courseSetCategory);
+		cs.setParent(courseSetParent);
+		cmAdmin.updateCourseSet(cs);
+	    }
 
-					while (courseOffs.hasNext()) {
-
-						courseOff = courseOffs.next();
-						sections = cmService.getSections(courseOff.getEid())
-								.iterator();
-
-						while (sections.hasNext()) {
-							section = sections.next();
-
-							cmAdmin.addOrUpdateSectionMembership(entry
-									.getEmplId(), SECRETARY_ROLE, section
-									.getEid(), SECRETARY_ACTIVE_STATUS);
-						}
-					}
-				}
-			}
-		}
 	}
+    }
+
+    private void addSecretariesToMembership(List<String> secretaries,
+	    List<DetailCoursMapEntry> cours) {
+	String sectionId = null;
+
+	for (DetailCoursMapEntry course : cours) {
+	    sectionId = getCourseSectionId(course);
+
+	    for (String secretary : secretaries) {
+		cmAdmin.addOrUpdateSectionMembership(secretary, SECRETARY_ROLE,
+			sectionId, ACTIVE_STATUS);
+	    }
+	}
+
+    }
+
+    /*
+     * Loads the secretaries and assigns them to the courses in their associated
+     * SE.
+     */
+    private void assignSecretaries() {
+
+	SecretairesMapEntry entry = null;
+	String deptId = null;
+	String acadOrg = null;
+	List<String> secretaries = null;
+	List<DetailCoursMapEntry> cours = null;
+	ServiceEnseignementMapEntry servEnsEntry = null;
+
+	Set<String> keys = servEnsMap.keySet();
+
+	// les cours du certificat
+	secretaries = secretairesMap.getSecretairesCertificat();
+	cours = detailCoursMap.getCoursByAcadCareer(CERTIFICAT);
+
+	addSecretariesToMembership(secretaries, cours);
+	// /////////////////////////////////////////
+
+	// les cours qui ne sont pas du certificat
+	for (String key : keys) {
+	    servEnsEntry = servEnsMap.get(key);
+	    deptId = servEnsEntry.getDeptId();
+	    acadOrg = servEnsEntry.getAcadOrg();
+
+	    secretaries =
+		    secretairesMap.getSecretairesByAcadOrg(Integer
+			    .parseInt(deptId));
+	    cours = detailCoursMap.getNonCERTFCoursByAcadOrg(acadOrg);
+
+	    addSecretariesToMembership(secretaries, cours);
+	}
+	// ////////////////////////////////////////
+
+    }
 }

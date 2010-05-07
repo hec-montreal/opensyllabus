@@ -16,7 +16,7 @@ public class ProfCoursMap extends HashMap<String,ProfCoursMapEntry> {
     // Pour assurer la compatibilite des instances serialisees meme
     // quand on change la classe...
     public static final long serialVersionUID = -505521782889381739L;
-
+    
     public ProfCoursMapEntry get(String matricule) {
 	return (ProfCoursMapEntry) super.get(matricule);
     }

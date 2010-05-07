@@ -48,7 +48,10 @@ public interface OsylCMJob extends Job {
 
     public final static String SECRETARY_ROLE = "I";
 
-    public final static String SECRETARY_ACTIVE_STATUS = "active";
+    public final static String ACTIVE_STATUS = "active";
+
+    public final static String COORDONNATEUR_ROLE = "I";
+
 
     /**
      * Value used to represent the credits associated to this course. This is a
@@ -73,6 +76,10 @@ public interface OsylCMJob extends Job {
      */
     public final static String COURSE_OFF_STATUS = "course";
 
+    /**
+     * Le programme du certificat
+     */
+    public final static String CERTIFICAT = "CERT";
     /**
      * Method used to create the sessions
      */

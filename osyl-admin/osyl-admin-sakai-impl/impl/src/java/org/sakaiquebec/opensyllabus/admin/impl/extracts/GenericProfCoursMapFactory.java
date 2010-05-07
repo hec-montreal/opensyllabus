@@ -132,7 +132,7 @@ public class GenericProfCoursMapFactory {
 			entry.setRole(role);
 			entry.setStrmId(strmId);
 			if (cours != null && "Enseignant".equalsIgnoreCase(role.trim())) {
-				// On ajoute le cours a cet etudiant uniquement s'il ne l'a pas
+				// On ajoute le cours a cet prof uniquement s'il ne l'a pas
 				// deja
 				// (ce qui est le cas pour tous ses cours d'anciennes sessions).
 				if (!entry.containsCours(cours)) {
@@ -144,6 +144,11 @@ public class GenericProfCoursMapFactory {
 					cours.addProfesseur(entry);
 				}
 
+			}
+			
+			//Si c'est un coordonnateur on l'ajoute comme tel dans le cours
+			if (!entry.isEnseignant() && cours != null){
+			    cours.setCoordonnateur(entry);
 			}
 		}
 
