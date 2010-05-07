@@ -114,6 +114,7 @@ public class OsylHorizontalSplitPanel extends Composite {
 	    Element target = DOM.eventGetTarget(event);
 	    if (DOM.isOrHasChild(collapseElement, target)) {
 		collapseMouseDown = true;
+		collapseAnchor.addStyleName("down");
 		DOM.eventPreventDefault(event);
 	    }
 	    break;
@@ -136,6 +137,7 @@ public class OsylHorizontalSplitPanel extends Composite {
 		}
 		leftElementVisible = !leftElementVisible;
 		collapseMouseDown = false;
+		collapseAnchor.removeStyleName("down");
 		handler.onMouseMove(null);
 		DOM.eventPreventDefault(event);
 	    }
