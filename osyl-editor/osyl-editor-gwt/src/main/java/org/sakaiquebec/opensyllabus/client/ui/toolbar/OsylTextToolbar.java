@@ -33,9 +33,10 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.MenuItemSeparator;
 
 /**
  * A toolBar displayed in the upper part of the editor. the OsylToolbar
@@ -55,10 +56,14 @@ public class OsylTextToolbar extends Composite {
      * User interface message bundle
      */
     final OsylConfigMessages uiMessages;
-
-    private MenuBar menuBar;
-
-    private DecoratorPanel enclosingPanel;
+    
+    private MenuBar leftMenuBar;
+    
+    private MenuBar rightMenuBar;
+    
+    private MenuBar sectionMenuBar;
+    
+    private FlowPanel menuBar;
 
     private MenuItem homePushButton;
 
@@ -81,6 +86,12 @@ public class OsylTextToolbar extends Composite {
     private MenuItem printPushButton;
 
     private MenuItem closePushButton;
+    
+    private MenuItemSeparator previewSeparator;
+    
+    private MenuItemSeparator editionSeparator;
+    
+    
 
     // Image Bundle
     private OsylImageBundleInterface osylImageBundle =
@@ -92,19 +103,24 @@ public class OsylTextToolbar extends Composite {
 	setOsylController(osylController);
 	uiMessages = osylController.getUiMessages();
 
-	menuBar = new MenuBar();
-
-	enclosingPanel = new DecoratorPanel();
-	enclosingPanel.setWidget(menuBar);
-	enclosingPanel.setStylePrimaryName("Osyl-MenuBar");
-
-	// if (getOsylController().isInPreview()) {
+	leftMenuBar = new MenuBar();
+	rightMenuBar = new MenuBar();
+	sectionMenuBar = new MenuBar();
+	menuBar = new FlowPanel();
+	menuBar.add(leftMenuBar);
+	menuBar.add(rightMenuBar);
+	menuBar.add(sectionMenuBar);
+	menuBar.setStylePrimaryName("Osyl-MenuBar");
+	leftMenuBar.addStyleDependentName("Left");
+	rightMenuBar.addStyleDependentName("Right");
+	sectionMenuBar.addStyleDependentName("Section");
 	closePushButton =
 		createMenuItem("ButtonCloseToolBar", getOsylImageBundle()
 			.cross(), "ButtonCloseToolBarTooltip");
-	menuBar.addItem(closePushButton);
-	closePushButton.addStyleName("Osyl-MenuItem-LastChild");
-	// } else {
+	rightMenuBar.addItem(closePushButton);
+	
+	previewSeparator = new MenuItemSeparator();
+	rightMenuBar.addSeparator(previewSeparator);
 	homePushButton =
 		createMenuItem("ButtonHomeToolBar",
 			getOsylImageBundle().home(), "ButtonHomeToolBarTooltip");
@@ -116,11 +132,14 @@ public class OsylTextToolbar extends Composite {
 	addMenuBar = new MenuBar(true);
 	addMenuBar.setTitle(uiMessages.getMessage("ButtonAddToolBarTooltip"));
 	addMenuBar.setAutoOpen(true);
-	addMenuBar.addStyleName("Osyl-MenuItem-vertical");
-
+	addMenuBar.addStyleName("Osyl-MenuBar-vertical");
+	addMenuBar.addStyleName("Osyl-MenuBar-Add");
+	
 	viewMenuBar = new MenuBar(true);
 	viewMenuBar.setTitle(uiMessages.getMessage("ButtonViewToolBarTooltip"));
 	viewMenuBar.setAutoOpen(true);
+	viewMenuBar.addStyleName("Osyl-MenuBar-vertical");
+	viewMenuBar.addStyleName("Osyl-MenuBar-View");
 
 	publishPushButton =
 		createMenuItem("ButtonPublishToolBar", getOsylImageBundle()
@@ -129,7 +148,6 @@ public class OsylTextToolbar extends Composite {
 	printPushButton =
 		createMenuItem("ButtonPrintToolBar", getOsylImageBundle()
 			.printer(), "ButtonPrintToolBarTooltip");
-
 	printPushButton.setCommand(new Command() {
 
 	    public void execute() {
@@ -164,27 +182,32 @@ public class OsylTextToolbar extends Composite {
 	    }
 	});
 
-	menuBar.addItem(homePushButton);
-	menuBar.addItem(savePushButton);
+	leftMenuBar.addItem(homePushButton);
+	rightMenuBar.addItem(savePushButton);
 	// MenuBar Item with icon - nice trick...
 	addMenuItem =
-		menuBar.addItem(getOsylImageBundle().plus().getHTML()
+		sectionMenuBar.addItem(getOsylImageBundle().plus().getHTML()
 			+ uiMessages.getMessage("ButtonAddToolBar"), true,
 			addMenuBar);
+	
 	addMenuItem.addStyleName("Osyl-MenuItem-vertical");
-
+	addMenuItem.addStyleName("Osyl-MenuItem-Add");
+	
 	viewMenuItem =
-		menuBar.addItem(getOsylImageBundle().preview().getHTML()
+		rightMenuBar.addItem(getOsylImageBundle().preview().getHTML()
 			+ uiMessages.getMessage("ButtonViewToolBar"), true,
 			viewMenuBar);
 	viewMenuItem.addStyleName("Osyl-MenuItem-vertical");
+	viewMenuItem.addStyleName("Osyl-MenuItem-View");
+	
 	addViewMenuBarItems();
 
-	menuBar.addItem(publishPushButton);
-	menuBar.addItem(printPushButton);
-	printPushButton.addStyleName("Osyl-MenuItem-LastChild");
-	// }
-	initWidget(enclosingPanel);
+	rightMenuBar.addItem(publishPushButton);
+	editionSeparator = new MenuItemSeparator();
+	rightMenuBar.addSeparator(editionSeparator);
+	rightMenuBar.addItem(printPushButton);
+
+	initWidget(menuBar);
 
     }
 
@@ -238,13 +261,41 @@ public class OsylTextToolbar extends Composite {
     public OsylImageBundleInterface getOsylImageBundle() {
 	return osylImageBundle;
     }
-
-    public MenuBar getMenuBar() {
-	return menuBar;
+    
+    public MenuBar getLeftMenuBar() {
+    	return leftMenuBar;
     }
 
-    public void setMenuBar(MenuBar menuBar) {
-	this.menuBar = menuBar;
+    public void setLeftMenuBar(MenuBar leftMenuBar) {
+    	this.leftMenuBar = leftMenuBar;
+    }
+
+    public MenuBar getRightMenuBar() {
+    	return rightMenuBar;
+    }
+    
+    public MenuBar getSectionMenuBar() {
+    	return sectionMenuBar;
+    }
+
+    public void setSectionMenuBar(MenuBar sectionMenuBar) {
+    	this.sectionMenuBar = sectionMenuBar;
+    }
+
+    public MenuItemSeparator getPreviewSeparator() {
+    return previewSeparator;
+    }
+
+    public void setPreviewSeparator(MenuItemSeparator previewSeparator) {
+    this.previewSeparator = previewSeparator;
+    }
+    
+    public MenuItemSeparator getEditionSeparator() {
+    return editionSeparator;
+    }
+
+    public void setEditionSeparator(MenuItemSeparator editionSeparator) {
+    this.editionSeparator = editionSeparator;
     }
 
     public MenuItem getHomePushButton() {
