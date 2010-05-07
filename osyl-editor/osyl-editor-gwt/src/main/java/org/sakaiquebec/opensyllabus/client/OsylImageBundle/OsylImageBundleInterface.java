@@ -99,14 +99,6 @@ public interface OsylImageBundleInterface extends ImageBundle {
     public AbstractImagePrototype rtt_underline();
 
     public AbstractImagePrototype visible();
-    
-    public AbstractImagePrototype iconeObl();
-
-    public AbstractImagePrototype iconeRec();
-
-    public AbstractImagePrototype iconeCompl();
-
-    public AbstractImagePrototype iconeImportant();
 
     public AbstractImagePrototype up_full();
     
@@ -122,6 +114,8 @@ public interface OsylImageBundleInterface extends ImageBundle {
     public AbstractImagePrototype cross();
 
     public AbstractImagePrototype home();
+    
+    public AbstractImagePrototype view_all();
 
     // icon for adding item
     public AbstractImagePrototype plus();
@@ -129,9 +123,15 @@ public interface OsylImageBundleInterface extends ImageBundle {
     public AbstractImagePrototype preview();
 
     public AbstractImagePrototype printer();
+    
+    public AbstractImagePrototype pdf_export();
+    
+    public AbstractImagePrototype options();
 
     public AbstractImagePrototype publish();
     
     public AbstractImagePrototype save();
+    
+    public AbstractImagePrototype save_disabled();
     
 }
