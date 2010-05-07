@@ -1,7 +1,6 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,8 +14,6 @@ import org.sakaiproject.authz.api.RoleAlreadyDefinedException;
 import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.event.cover.UsageSessionService;
-import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
@@ -69,7 +66,9 @@ public class HelpdeskSynchronisationJobImpl implements
      * List of the users that will added to the sites of type osyleditor with
      * role helpdesk
      */
-    private String[] usersIdAdded = { "11060533", "11091096" };
+    private String[] usersIdAdded = { "11132879",
+	    "11133027", "00003335", "11098954", "11101075", "11103177",
+	    "00007677", "11133206" };
 
     /**
      * List of the users with the role Helpdesk that will be removed from the
@@ -202,6 +201,8 @@ public class HelpdeskSynchronisationJobImpl implements
 		try {
 		    userId = userDirService.getUserId(user);
 		    if (realm.hasRole(userId, HELPDESK_ROLE)) {
+			log.info("Removing user " + userId + " from role "
+				+ HELPDESK_ROLE);
 			realm.removeMember(userId);
 		    }
 		    AuthzGroupService.save(realm);
@@ -232,6 +233,8 @@ public class HelpdeskSynchronisationJobImpl implements
 		    userId = userDirService.getUserId(user);
 
 		    if (realm.getMember(userId) == null) {
+			log.info("Adding user " + userId + " to role "
+				+ HELPDESK_ROLE);
 			realm.addMember(userId, HELPDESK_ROLE, true, false);
 		    }
 
