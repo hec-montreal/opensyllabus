@@ -42,7 +42,7 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
 public class SeancesTest extends AbstractOSYLTest{
     
     @Test(groups = "OSYL-Suite", description =
-	"OSYLEditor test. Add a contact resource, edit it and save the changes")
+	"OSYLEditor test. Add a lecture, edit it and save the changes")
 	@Parameters( { "webSite" })
 	public void TestAddSeance(String webSite) throws Exception {
 	// We log in
