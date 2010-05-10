@@ -64,14 +64,10 @@
 	overflow:auto;
 	zoom:1;
 }
-
-.gwt-MenuBar-horizontal .gwt-MenuItem.Osyl-MenuItem-vertical.Osyl-MenuItem-View {z-index:5}
-.gwt-MenuBar-horizontal .gwt-MenuItem.Osyl-MenuItem-vertical.Osyl-MenuItem-Add {background-position:0 -24px}
-
-/*.gwt-MenuBar-horizontal .gwt-MenuItem.gwt-MenuItem-selected.Osyl-MenuItem-View {background-position:0 -48px}
-.gwt-MenuBar-horizontal .gwt-MenuItem.gwt-MenuItem-selected.Osyl-MenuItem-Add {background-position:0 -72px}*/
-
-
+/** html .gwt-MenuBar-horizontal td.Osyl-MenuItem-vertical {padding:1px 0 0 10px;}*/
+.gwt-MenuBar-horizontal td.gwt-MenuItem.Osyl-MenuItem-vertical.Osyl-MenuItem-Add {background-position:0 -24px}
+/*.gwt-MenuBar-horizontal td.gwt-MenuItem.gwt-MenuItem-selected.Osyl-MenuItem-View {background-position:0 -48px}
+.gwt-MenuBar-horizontal td.gwt-MenuItem.gwt-MenuItem-selected.Osyl-MenuItem-Add {background-position:0 -72px}*/
 
 .gwt-MenuItemSeparator .menuSeparatorInner {
 	width:1px;
@@ -81,13 +77,21 @@
 }
 
 
-.gwt-MenuBar-horizontal .gwt-MenuItem img,
-.gwt-MenuBar-horizontal .gwt-MenuItem gwt\:clipper { /*Name space gwt:clipper for IE margin between image and text in menu*/
+.gwt-MenuBar-horizontal .gwt-MenuItem img { /*Name space gwt:clipper for IE margin between image and text in menu*/
 	vertical-align:middle;
 	margin-right:5px;
 	margin-top:-2px;
 }
-
+.gwt-MenuBar-horizontal .gwt-MenuItem gwt\:clipper {
+	vertical-align:middle;
+	margin-right:5px;
+	margin-top:-2px;
+}
+.gwt-MenuBarPopup {
+	z-index:2;
+	border-collapse:collapse;
+	
+}
 .gwt-MenuBar-vertical {
 	position:relative;
 	vertical-align:middle;
@@ -99,13 +103,17 @@
 	min-width:98px;
 	overflow:auto;
 	zoom:1;
+	/*background:#FFF url(images/ui/menu-vertical_bg.gif) repeat-x;
+	border-top:none;
+	padding-top:3px;*/
 }
-.gwt-MenuBar-vertical.Osyl-MenuBar-View {z-index:4}
-.gwt-MenuBar-vertical.Osyl-MenuBar-Add {z-index:2}
-
+/*.gwt-MenuBar-vertical.Osyl-MenuBar-Add {
+	margin:-2px 0 0 0;
+}*/
 .gwt-MenuBar-vertical .gwt-MenuItem {
 	text-align:left;
 	padding:4px 4px;
+	min-width:94px;
 }
 
 /* Act as a hover */
@@ -149,7 +157,6 @@
 .Osyl-MainView-HorizontalSplitPanel .bottomRightInner {
 	width: 8px;
 	height: 8px;
-
 	zoom: 1;
 }
 .Osyl-MainView-HorizontalSplitPanel .topLeftInner,
@@ -589,6 +596,7 @@
 	font-family:Arial,Verdana,sans-serif;
 	font-size:12px;
 	font-size-adjust:none;
+
 	margin-left:30px;
 }
 /*Assessment Unit View -------------------------------------------------------------------------------*/
