@@ -85,8 +85,11 @@ public class OsylCOUnitLabelEditor extends OsylLabelEditor {
 		(cse.getLabel() == null || cse.getLabel().trim().equals("")) ? getView()
 			.getCoMessage(cse.getType())
 			: cse.getLabel();
-	if(!cse.hasNestedChild() || OsylConfigRuler.getInstance().isMixedContentAllowed(cse))
-	    lb.addItem(label, cse.getId());
+	if (!cse.hasNestedChild()
+		|| OsylConfigRuler.getInstance().isMixedContentAllowed(cse)) {
+	    if (!cse.equals(((COElementAbstract) getModel()).getParent()))
+		lb.addItem(label, cse.getId());
+	}
 	for (COElementAbstract coe : cse.getChildrens()) {
 	    if (coe.isCOStructureElement())
 		fillListBoxWithCOStructure((COStructureElement) coe, lb);

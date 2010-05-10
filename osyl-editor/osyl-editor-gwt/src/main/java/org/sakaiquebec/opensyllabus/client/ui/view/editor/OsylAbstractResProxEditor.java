@@ -538,7 +538,10 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
 	    }
 	}
-	return (rubricAllowed && resourceTypeAllowed);
+	if(!targetModel.equals(getModel().getParent()))
+	    return (rubricAllowed && resourceTypeAllowed);
+	else
+	    return false;
     }
 
     /**

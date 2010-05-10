@@ -361,17 +361,19 @@ public abstract class OsylAbstractEditor extends Composite {
 	mainPanel.add(row5);
 
 	if (isMoveable()) {
-	    HorizontalPanel leftPanel = new HorizontalPanel();
-	    leftPanel.setWidth("100%");
-	    leftPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
-	    row5.add(leftPanel);
-
-	    Label label = new Label(getUiMessage("editor.moveTo"));
-	    leftPanel.add(label);
-
 	    targetsListBox = new ListBox();
 	    refreshTargetCoAbsractElementListBox(targetsListBox);
-	    leftPanel.add(targetsListBox);
+	    if (targetsListBox.getItemCount() != 1) {
+		HorizontalPanel leftPanel = new HorizontalPanel();
+		leftPanel.setWidth("100%");
+		leftPanel
+			.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+		row5.add(leftPanel);
+
+		Label label = new Label(getUiMessage("editor.moveTo"));
+		leftPanel.add(label);
+		leftPanel.add(targetsListBox);
+	    }
 	}
 
 	HorizontalPanel rightPanel = new HorizontalPanel();

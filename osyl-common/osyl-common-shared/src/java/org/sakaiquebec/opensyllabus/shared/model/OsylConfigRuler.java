@@ -15,7 +15,6 @@ package org.sakaiquebec.opensyllabus.shared.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.xml.client.Document;
@@ -78,8 +77,8 @@ public class OsylConfigRuler {
 
     private String rulesConfigContent;
     private Document dom = null;
-    
-    private static OsylConfigRuler instance=null;
+
+    private static OsylConfigRuler instance = null;
 
     /**
      * Creates a new Ruler based on the xml content passed
@@ -90,13 +89,13 @@ public class OsylConfigRuler {
 	this.setRulesConfigContent(rulesConfigContent);
 	initDom();
     }
-    
-    public static OsylConfigRuler createInstance(String rcc){
+
+    public static OsylConfigRuler createInstance(String rcc) {
 	instance = new OsylConfigRuler(rcc);
 	return instance;
     }
-    
-    public static OsylConfigRuler getInstance(){
+
+    public static OsylConfigRuler getInstance() {
 	return instance;
     }
 
@@ -271,8 +270,9 @@ public class OsylConfigRuler {
 			createModelInstance(nameAttribute, type);
 		allowedSubModels.add(modelInstance);
 	    }
-	   
-	    if (getMixedContentAllowed(attributeTypeNode) || currentModelHasNoChild || !currentModel.hasNestedChild() ) {
+
+	    if (getMixedContentAllowed(attributeTypeNode)
+		    || currentModelHasNoChild || !currentModel.hasNestedChild()) {
 		// Secondly, identify the available possibilities(rules)
 		NodeList nodeChildren = node.getChildNodes();
 		for (int i = 0; i < nodeChildren.getLength(); i++) {
@@ -432,8 +432,8 @@ public class OsylConfigRuler {
 	    return 0;
 	}
     }
-    
-    public boolean isMixedContentAllowed(COElementAbstract model){
+
+    public boolean isMixedContentAllowed(COElementAbstract model) {
 	if (model != null) {
 	    List<COElementAbstract> path = findModelPath(model);
 	    Node attributeTypeNode = findingAttributeTypeNode(findNode(path));
