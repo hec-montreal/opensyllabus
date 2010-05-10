@@ -81,7 +81,7 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 			0,
 			getCurrentDirectory().getDirectoryPath().lastIndexOf(
 				"/"));
-	getCurrentDirectoryTextBox().setText(citationListDirectory);
+	getCurrentDirectoryTextBox().setText(extractRessourceUri(citationListDirectory));
 	getCurrentDirectory().setDirectoryPath(citationListDirectory);
 	getRemoteDirectoryListing(citationListDirectory);
     }

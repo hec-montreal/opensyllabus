@@ -74,6 +74,8 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 
     protected static final boolean TRACE = false;
 
+    private static final String RESSOURCE_URI_PREFIX = "/group/";
+
     // Number of elements shown in the file listing
     private static final int LISTING_ITEM_NUMBER = 6;
 
@@ -204,7 +206,8 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	// 1st row, 2nd widget: Folder TextBox
 	TextBox folderName = new TextBox();
 	if (currentDirectory.getDirectoryName() != null)
-	    folderName.setText(currentDirectory.getDirectoryName());
+	    folderName.setText(extractRessourceUri(currentDirectory
+		    .getDirectoryName()));
 	setCurrentDirectoryTextBox(folderName);
 	getCurrentDirectoryTextBox().setWidth("315px");
 	// To disallow direct edition of the file path, set to true:
@@ -296,7 +299,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 
     protected PushButton createTopButton(AbstractImagePrototype img,
 	    String tooltip) {
-	// TODO: Bug with ImageBundle, we have to use AbstractImagePrototype
 	PushButton button = new PushButton(img.createImage());
 	button.setTitle(tooltip);
 	button.setStylePrimaryName("Osyl-FileBrowserTopButton");
@@ -427,6 +429,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		RFBItemSelectionEventHandler.RFBItemSelectionEvent event =
 			new RFBItemSelectionEventHandler.RFBItemSelectionEvent(
 				getBaseDirectoryPath()
+					+ RESSOURCE_URI_PREFIX
 					+ getCurrentDirectoryTextBox()
 						.getText() + "/"
 					+ selectedFile.getFileName());
@@ -447,7 +450,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	    if (index >= 0) {
 		getFileListing().addStyleName(
 			"Osyl-RemoteFileBrowser-WaitingState");
-		
+
 		OsylAbstractBrowserItem selectedFile =
 			getCurrentDirectory().getFilesList().get(index);
 		setSelectedAbstractBrowserItem(selectedFile);
@@ -462,7 +465,8 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		    getRemoteDirectoryListing(newFilePath);
 		    getFileListing().removeStyleName(
 			    "Osyl-RemoteFileBrowser-WaitingState");
-		    getCurrentDirectoryTextBox().setText(newFilePath);
+		    getCurrentDirectoryTextBox().setText(
+			    extractRessourceUri(newFilePath));
 		    getCurrentSelectionTextBox().setText("");
 		    getCurrentDirectory().setDirectoryPath(newFilePath);
 		    // Trick to avoid selection of the first item at
@@ -475,6 +479,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		RFBItemSelectionEventHandler.RFBItemSelectionEvent event =
 			new RFBItemSelectionEventHandler.RFBItemSelectionEvent(
 				getBaseDirectoryPath()
+					+ RESSOURCE_URI_PREFIX
 					+ getCurrentDirectoryTextBox()
 						.getText() + "/"
 					+ selectedFile.getFileName());
@@ -498,7 +503,8 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 
 	public void onBlur(BlurEvent event) {
 	    getCurrentDirectoryTextBox().setText(
-		    getCurrentDirectory().getDirectoryPath());
+		    extractRessourceUri(getCurrentDirectory()
+			    .getDirectoryPath()));
 	}
     }
 
@@ -511,7 +517,8 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		try {
 		    getRemoteDirectoryListing(newFilePath);
 		    getCurrentDirectoryTextBox().setText(
-			    getCurrentDirectory().getDirectoryPath());
+			    extractRessourceUri(getCurrentDirectory()
+				    .getDirectoryPath()));
 		    getCurrentSelectionTextBox().setText("");
 		    int nbrElements =
 			    getCurrentDirectory().getFilesList().size();
@@ -563,7 +570,8 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	    // Fill the listing
 	    getFileListing().clear();
 	    getRemoteDirectoryListing(newFilePath);
-	    getCurrentDirectoryTextBox().setText(newFilePath);
+	    getCurrentDirectoryTextBox().setText(
+		    extractRessourceUri(newFilePath));
 	    getCurrentSelectionTextBox().setText("");
 	    getFileListing().removeStyleName(
 		    "Osyl-RemoteFileBrowser-WaitingState");
@@ -577,7 +585,8 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	    // call the onClickAddFolderButton on each one
 	    RFBAddFolderEventHandler.RFBAddFolderEvent rFBevent =
 		    new RFBAddFolderEventHandler.RFBAddFolderEvent(
-			    getCurrentDirectoryTextBox().getText());
+			    RESSOURCE_URI_PREFIX
+				    + getCurrentDirectoryTextBox().getText());
 	    if (getRFBAddFolderEventHandlerList() != null) {
 		Iterator<RFBAddFolderEventHandler> iter =
 			getRFBAddFolderEventHandlerList().iterator();
@@ -824,7 +833,8 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		    getFileListing().setSelectedIndex(i);
 		    getFileListing().setFocus(true);
 		    getCurrentDirectoryTextBox().setText(
-			    getCurrentDirectory().getDirectoryPath());
+			    extractRessourceUri(getCurrentDirectory()
+				    .getDirectoryPath()));
 		    if (fileItem.isFolder()) {
 			getCurrentSelectionTextBox().setText("");
 		    } else {
@@ -834,11 +844,18 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		}
 	    }
 	}
-	
+
 	if (!fileItemFound) {
 	    setSelectedAbstractBrowserItem(null);
 	    getFileListing().setSelectedIndex(-1);
 	}
+    }
+
+    protected String extractRessourceUri(String uri) {
+	String uu =
+		uri.substring(uri.indexOf(RESSOURCE_URI_PREFIX)
+			+ RESSOURCE_URI_PREFIX.length());
+	return uu;
     }
 
     /**
@@ -848,10 +865,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
      * @return uri for presentation
      */
     protected String extractRessourceSiteId(String uri) {
-	String resourcesPath = "/group/";
-	String uu =
-		uri.substring(uri.indexOf(resourcesPath)
-			+ resourcesPath.length());
+	String uu = extractRessourceUri(uri);
 	return uu.substring(0, uu.indexOf("/"));
     }
 
