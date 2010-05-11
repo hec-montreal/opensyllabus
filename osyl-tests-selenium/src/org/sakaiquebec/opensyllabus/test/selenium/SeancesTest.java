@@ -69,11 +69,11 @@ public class SeancesTest extends AbstractOSYLTest{
         log("We start with " + resNb + " resources");
         
         //We add a first Assessment Unit 
-        clickAddItem("addLecture");
+        clickAddItem("addPedagogicalUnit");
         pause();
         
         //We add a first Assessment Unit 
-        clickAddItem("addLecture");
+        clickAddItem("addPedagogicalUnit");
         pause();
         
 //---------------------------------------------------------------------------//
