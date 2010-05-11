@@ -5,17 +5,17 @@
 <!--  =========================================================================== -->
 
 	<xsl:template match="/">
-		<xsl:apply-templates select="/*[@access='public' or @access='onsite']|*[not(@access)]" />
+		<xsl:apply-templates select="/*[(@access='public' or @access='onsite') and not(./visible='false')]|*[not(@access) and not(./visible='false')]" />
 	</xsl:template>
 	
-	<xsl:template match="@*|node()[@access='public' or @access='onsite']">
+	<xsl:template match="@*|node()[(@access='public' or @access='onsite') and not(./visible='false')]">
 	  <xsl:copy>
 	  	<xsl:copy-of select="@*"/> 
-	    <xsl:apply-templates select="@*|*[@access='public' or @access='onsite']|text()|*[not(@access)]"/>
+	    <xsl:apply-templates select="@*|*[(@access='public' or @access='onsite') and not(./visible='false')]|text()|*[not(@access) and not(./visible='false')]"/>
 	  </xsl:copy>
 	</xsl:template>
 	
-	<xsl:template match="@*|text()|*[not(@access)]">
+	<xsl:template match="@*|text()|*[not(@access) and not(./visible='false')]">
 	  <xsl:copy-of select="."/>
 	</xsl:template>
 	
