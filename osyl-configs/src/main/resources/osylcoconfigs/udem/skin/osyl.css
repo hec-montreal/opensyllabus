@@ -1358,7 +1358,7 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 .Osyl-RubricUserDefLabel {padding-left: 7px}
 
 a.Osyl-collapseButton {
-	background:transparent url(images/ui/menu_control.png) no-repeat;
+	background:transparent url(images/ui/osyl_sprite.png) no-repeat;
 	display:block;
 	height:48px;
 	width:8px;
