@@ -1,13 +1,14 @@
 ﻿/* ---- CSS definitions specific to OpenSyllabus ------------------- */
 
 /* Main panel of Osyl -----------------------------------------------------------------------------------*/
-.Osyl-MainPanel {width:100%}
+.Osyl-MainPanel {width:100%;z-index:0}
 
 /* Main Title -------------------------------------------------------------------------------------------*/
 
 .Osyl-MainPanel-Title {
 	font:bold 22px Arial, Verdana, sans-serif;
 	color:#454a4f;
+	margin-left:12px;
 }
 .Osyl-MainPanel-Title-TD {height:30px}
 .Osyl-MainPanel-ToolBar-TD {height:21px}
@@ -27,7 +28,7 @@
 }
 .gwt-MenuBar-Left {
 	float:left;
-	margin-left:4px;
+	margin-left:2px;
 }
 .gwt-MenuBar-Right {float:right}
 .gwt-MenuBar-Section {
@@ -54,20 +55,23 @@
   height:24px;
 }
 
-.gwt-MenuBar-horizontal td.gwt-MenuItem.Osyl-MenuItem-vertical {
+.gwt-MenuBar-horizontal .Osyl-MenuItem-vertical {
 	position:relative;
 	padding:0 0 0 10px;
 	width:100px;
 	text-align:left;
-	background:transparent url(images/ui/menu-vertical.png) no-repeat;
-	-background:transparent url(images/ui/menu-vertical.gif) no-repeat;
+	background:transparent url(images/ui/osyl_sprite.png) no-repeat -49px 0;
 	overflow:auto;
 	zoom:1;
 }
-/** html .gwt-MenuBar-horizontal td.Osyl-MenuItem-vertical {padding:1px 0 0 10px;}*/
-.gwt-MenuBar-horizontal td.gwt-MenuItem.Osyl-MenuItem-vertical.Osyl-MenuItem-Add {background-position:0 -24px}
-/*.gwt-MenuBar-horizontal td.gwt-MenuItem.gwt-MenuItem-selected.Osyl-MenuItem-View {background-position:0 -48px}
-.gwt-MenuBar-horizontal td.gwt-MenuItem.gwt-MenuItem-selected.Osyl-MenuItem-Add {background-position:0 -72px}*/
+* html .gwt-MenuBar-horizontal .Osyl-MenuItem-vertical {background:transparent url(images/ui/osyl_sprite.gif) no-repeat -49px 0}
+
+.gwt-MenuBar-horizontal td.Osyl-MenuItem-Add {background-position:-49px -32px}
+
+/*.gwt-MenuBar-horizontal td.gwt-MenuItem-selected.Osyl-MenuItem-View {background-position:-49px -64px}
+.gwt-MenuBar-horizontal td.gwt-MenuItem-selected.Osyl-MenuItem-Add {background-position:-49px -96px}*/
+
+
 
 .gwt-MenuItemSeparator .menuSeparatorInner {
 	width:1px;
@@ -77,21 +81,79 @@
 }
 
 
-.gwt-MenuBar-horizontal .gwt-MenuItem img { /*Name space gwt:clipper for IE margin between image and text in menu*/
+.gwt-MenuBar-horizontal .gwt-MenuItem img,
+.gwt-MenuBar-horizontal .gwt-MenuItem gwt\:clipper { /*Name space gwt:clipper for IE margin between image and text in menu*/
 	vertical-align:middle;
 	margin-right:5px;
 	margin-top:-2px;
 }
-.gwt-MenuBar-horizontal .gwt-MenuItem gwt\:clipper {
-	vertical-align:middle;
-	margin-right:5px;
-	margin-top:-2px;
+.gwt-MenuBarPopup {margin:0;z-index:2}
+
+.gwt-MenuBarPopup .menuPopupMiddleCenter {vertical-align:top}
+
+.gwt-MenuBarPopup .menuPopupTopCenter,
+.gwt-MenuBarPopup .menuPopupBottomCenter {
+	background: url(images/ui/hborder.png) repeat-x;
+	height:8px;
 }
-.gwt-MenuBarPopup {
-	z-index:2;
-	border-collapse:collapse;
-	
+
+.gwt-MenuBarPopup .menuPopupBottomCenter {background-position:0 -96px}
+.gwt-MenuBarPopup .menuPopupTopCenter {background-position:0 -88px}
+
+.gwt-MenuBarPopup .menuPopupMiddleLeft,
+.gwt-MenuBarPopup .menuPopupMiddleRight {
+	background: url(images/ui/vborder.png) repeat-y;
+	width:8px;
 }
+
+.gwt-MenuBarPopup .menuPopupmiddleLeft {background-position:-28px 0}
+.gwt-MenuBarPopup .menuPopupmiddleRight {background-position:-36px 0}
+
+.gwt-MenuBarPopup .menuPopupTopLeftInner,
+.gwt-MenuBarPopup .menuPopupTopRightInner,
+.gwt-MenuBarPopup .menuPopupBottomLeftInner,
+.gwt-MenuBarPopup .menuPopupBottomRightInner {
+	width: 8px;
+	height: 8px;
+	zoom: 1;
+}
+.gwt-MenuBarPopup .menuPopupTopLeft {background: url(images/ui/osyl_sprite.png) no-repeat -22px -81px}
+.gwt-MenuBarPopup .menuPopupTopRight {background: url(images/ui/osyl_sprite.png) no-repeat -30px -81px}
+.gwt-MenuBarPopup .menuPopupBottomLeft {background: url(images/ui/osyl_sprite.png) no-repeat -22px -89px}
+.gwt-MenuBarPopup .menuPopupBottomRight {background: url(images/ui/osyl_sprite.png) no-repeat -30px -89px}
+
+* html .gwt-MenuBarPopup .menuPopupTopCenter,
+* html .gwt-MenuBarPopup .menuPopupBottomCenter,
+* html .gwt-MenuBarPopup .menuPopupMiddleLeft,
+* html .gwt-MenuBarPopup .menuPopupMiddleRight,
+* html .gwt-MenuBarPopup .menuPopupTopLeft,
+* html .gwt-MenuBarPopup .menuPopupTopRight,
+* html .gwt-MenuBarPopup .menuPopupBottomLeft,
+* html .gwt-MenuBarPopup .menuPopupBottomRight {
+	background:#000;
+	filter: alpha(opacity=50);
+}
+
+* html .gwt-MenuBarPopup .menuPopupTopLeftInner,
+* html .gwt-MenuBarPopup .menuPopupTopRightInner,
+* html .gwt-MenuBarPopup .menuPopupBottomLeftInner,
+* html .gwt-MenuBarPopup .menuPopupBottomRightInner {
+	width: 3px;
+	height: 3px;
+	overflow: hidden;
+}
+* html .gwt-MenuBarPopup .menuPopupMiddleLeft, * html .gwt-MenuBarPopup .menuPopupMiddleRight {width:3px}
+* html .gwt-MenuBarPopup .menuPopupTopCenter, * html .gwt-MenuBarPopup .menuPopupBottomCenter {height:3px}
+
+.gwt-MenuBarPopup .menuPopupMiddleCenterInner {
+	position:relative;
+	margin:-8px 0 0 -7px;
+	zoom: 1;
+	overflow:auto;
+}
+* html .gwt-MenuBarPopup .menuPopupMiddleCenterInner {margin:-6px 0 0 -6px}
+* html .gwt-MenuBarPopup {margin:3px 0 0 3px}
+
 .gwt-MenuBar-vertical {
 	position:relative;
 	vertical-align:middle;
@@ -164,20 +226,20 @@
 	height:47px;
 }
 .Osyl-MainView-HorizontalSplitPanel .topLeft {
-	background: url(images/ui/treeview_corner.png) no-repeat top left;
-	-background: url(images/ui/treeview_corner_ie6.png) no-repeat top left;
+	background: url(images/ui/osyl_sprite.png) no-repeat 0 -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat 0 -48px;
 }
 .Osyl-MainView-HorizontalSplitPanel .topRight {
-	background: url(images/ui/treeview_corner.png) no-repeat top right;
-	-background: url(images/ui/treeview_corner_ie6.png) no-repeat top right;
+	background: url(images/ui/osyl_sprite.png) no-repeat -14px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -14px -48px;
 }
 .Osyl-MainView-HorizontalSplitPanel .bottomLeft {
-	background: url(images/ui/treeview_corner.png) no-repeat bottom left;
-	-background: url(images/ui/treeview_corner_ie6.png) no-repeat bottom left;
+	background: url(images/ui/osyl_sprite.png) no-repeat 0 -97px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat 0 -97px;
 }
 .Osyl-MainView-HorizontalSplitPanel .bottomRight {
-	background: url(images/ui/treeview_corner.png) no-repeat bottom right;
-	-background: url(images/ui/treeview_corner_ie6.png) no-repeat bottom right;
+	background: url(images/ui/osyl_sprite.png) no-repeat -14px -97px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -14px -97px;
 }
 * html .Osyl-MainView-HorizontalSplitPanel .topLeftInner,
 * html .Osyl-MainView-HorizontalSplitPanel .topRightInner,
@@ -197,7 +259,7 @@
 	zoom: 1;
 	overflow:auto;
 }
-
+.Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .middleCenterInner {overflow-x:hidden}
 /*TreeView Left Zone --------------------------------------------------------------------------------------*/
 
 .Osyl-TreeView {
@@ -242,17 +304,19 @@
 
 .Osyl-TreeView-Tree .gwt-TreeItem-selected .Osyl-TreeItem-HorizontalPanel .Osyl-TreeLabel{font-weight:bold;color:#666}/* TreeView item selected text */
 
+
+
 /*End TreeView ---------------------------------------------------------------------------------------------*/
 
 /*Split Pannel Middle Zone ---------------------------------------------------------------------------------*/
 
-.Osyl-MainView-HorizontalSplitPanel table.hsplitter {
+.Osyl-MainView-HorizontalSplitPanel .hsplitter {
 	background-color:transparent;
 	vertical-align:middle;
-	cursor:e-resize;
-	cursor:col-resize;
 	margin:2px;
+	cursor:e-resize;
 }
+.Osyl-MainView-HorizontalSplitPanel .hsplitter-down {cursor:e-resize;cursor:col-resize !important;}
 
 .Osyl-MainView-HorizontalSplitPanel .hsplitter td {vertical-align:middle}
 .Osyl-MainView-HorizontalSplitPanel .hsplitter img {display:none}
@@ -264,6 +328,7 @@
 	overflow:hidden;
 }
 .Osyl-WorkspaceView .middleCenterInner {margin:0 0 -5px 0}
+
 
 /* End WorkspaceView Right Zone ---------------------------------------------------------------------------*/
 
@@ -596,7 +661,6 @@
 	font-family:Arial,Verdana,sans-serif;
 	font-size:12px;
 	font-size-adjust:none;
-
 	margin-left:30px;
 }
 /*Assessment Unit View -------------------------------------------------------------------------------*/
@@ -912,7 +976,7 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	background: url(images/ui/hborder.png) repeat-x;
 	height:6px;
 }
-.popupBottomCenter {background-position:bottom left}
+.popupBottomCenter {background-position:0 -82px}
 .popupTopCenter {background-position:0 -55px}
 
 .popupMiddleLeft,
@@ -921,12 +985,12 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	width:6px;
 }
 .popupMiddleLeft {background-position:-16px 0}
-.popupMiddleRight {background-position:top right}
+.popupMiddleRight {background-position:-22px 0}
 
 .popupTopLeftInner,
 .popupTopRightInner,
-.Osyl-EditorPopup .bottomLeftInner,
-.Osyl-EditorPopup .bottomRightInner {
+.bottomLeftInner,
+.bottomRightInner {
 	width: 6px;
 	height: 6px;
 	zoom: 1;
@@ -936,22 +1000,24 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 .popupTopRightInner {
 	height:27px;
 }
+
 .popupTopLeft {
-	background: url(images/ui/popup_corner.png) no-repeat top left;
-	-background: url(images/ui/popup_corner.gif) no-repeat top left;
+	background: url(images/ui/osyl_sprite.png) no-repeat -22px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -22px -48px;
 }
 .popupTopRight {
-	background: url(images/ui/popup_corner.png) no-repeat top right;
-	-background: url(images/ui/popup_corner.gif) no-repeat top right;
+	background: url(images/ui/osyl_sprite.png) no-repeat -28px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -28px -48px;
 }
 .popupBottomLeft {
-	background: url(images/ui/popup_corner.png) no-repeat bottom left;
-	-background: url(images/ui/popup_corner.gif) no-repeat bottom left;
+	background: url(images/ui/osyl_sprite.png) no-repeat -22px -75px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -22px -75px;
 }
 .popupBottomRight {
-	background: url(images/ui/popup_corner.png) no-repeat bottom right;
-	-background: url(images/ui/popup_corner.gif) no-repeat bottom right;
+	background: url(images/ui/osyl_sprite.png) no-repeat -28px -75px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -28px -75px;
 }
+
 * html .popupTopLeftInner,
 * html .popupTopRightInner,
 * html .popupBottomLeftInner,

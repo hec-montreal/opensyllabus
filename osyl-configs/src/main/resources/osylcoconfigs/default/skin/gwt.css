@@ -31,7 +31,7 @@
 	background: url(images/ui/hborder.png) repeat-x;
 	height:6px;
 }
-.gwt-DialogBox .dialogBottomCenter {background-position:bottom left}
+.gwt-DialogBox .dialogBottomCenter {background-position:0 -82px}
 .gwt-DialogBox .dialogTopCenter {background-position:0 -55px}
 
 .gwt-DialogBox .dialogMiddleLeft,
@@ -40,7 +40,7 @@
 	width:6px;
 }
 .gwt-DialogBox .dialogMiddleLeft {background-position:-16px 0}
-.gwt-DialogBox .dialogMiddleRight {background-position:top right}
+.gwt-DialogBox .dialogMiddleRight {background-position:-22px 0}
 
 .gwt-DialogBox .dialogTopLeftInner,
 .gwt-DialogBox .dialogTopRightInner,
@@ -55,22 +55,25 @@
 .gwt-DialogBox .dialogTopRightInner {
 	height:27px;
 }
+
 .gwt-DialogBox .dialogTopLeft {
-	background: url(images/ui/popup_corner.png) no-repeat top left;
-	-background: url(images/ui/popup_corner.gif) no-repeat top left;
+	background: url(images/ui/osyl_sprite.png) no-repeat -22px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -22px -48px;
 }
 .gwt-DialogBox .dialogTopRight {
-	background: url(images/ui/popup_corner.png) no-repeat top right;
-	-background: url(images/ui/popup_corner.gif) no-repeat top right;
+	background: url(images/ui/osyl_sprite.png) no-repeat -28px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -28px -48px;
 }
 .gwt-DialogBox .dialogBottomLeft {
-	background: url(images/ui/popup_corner.png) no-repeat bottom left;
-	-background: url(images/ui/popup_corner.gif) no-repeat bottom left;
+	background: url(images/ui/osyl_sprite.png) no-repeat -22px -75px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -22px -75px;
 }
 .gwt-DialogBox .dialogBottomRight {
-	background: url(images/ui/popup_corner.png) no-repeat bottom right;
-	-background: url(images/ui/popup_corner.gif) no-repeat bottom right;
+	background: url(images/ui/osyl_sprite.png) no-repeat -28px -75px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -28px -75px;
 }
+
+
 * html .gwt-DialogBox .dialogTopLeftInner,
 * html .gwt-DialogBox .dialogTopRightInner,
 * html .gwt-DialogBox .dialogBottomLeftInner,
