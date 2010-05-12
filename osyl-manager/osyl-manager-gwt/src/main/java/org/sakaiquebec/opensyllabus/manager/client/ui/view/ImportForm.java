@@ -29,10 +29,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
@@ -140,7 +140,7 @@ public class ImportForm extends OsylManagerAbstractWindowPanel implements
 	    mainPanel.add(l);
 	    mainPanel.add(new Label(controller.getMessages()
 		    .importForm_import_ok()));
-	    Hyperlink edit = new Hyperlink();
+	    Anchor edit = new Anchor();
 	    edit.setText(controller.getMessages().createForm_edit());
 	    edit.setStylePrimaryName("OsylManager-action");
 	    edit.addClickHandler(new ClickHandler() {

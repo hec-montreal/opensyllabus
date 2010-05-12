@@ -29,18 +29,16 @@ import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.PushButton;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public abstract class OsylManagerAbstractAction extends Hyperlink implements
+public abstract class OsylManagerAbstractAction extends PushButton implements
 	ClickHandler, OsylManagerEventHandler {
 
     protected OsylManagerController controller;
-
-    protected boolean enabled;
 
     public OsylManagerAbstractAction(OsylManagerController controller,
 	    String key) {
@@ -59,18 +57,6 @@ public abstract class OsylManagerAbstractAction extends Hyperlink implements
 	controller.addEventHandler(this);
     }
 
-    public boolean isEnabled() {
-	return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-	this.enabled = enabled;
-	if (enabled) {
-	    this.removeStyleDependentName("disable");
-	} else {
-	    this.addStyleDependentName("disable");
-	}
-    }
 
     public void onOsylManagerEvent(OsylManagerEvent e) {
 	if (e.getType() == OsylManagerEvent.SITES_SELECTION_EVENT) {

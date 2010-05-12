@@ -34,6 +34,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.PushButton;
 
 /**
  * This view is used to display a COContentUnit in a list view, for instance a
@@ -45,7 +46,7 @@ public class OsylCOUnitHyperlinkView extends OsylViewableComposite implements
 	UpdateCOUnitEventHandler {
 
     private FlexTable mainPanel;
-    private Hyperlink coUnitHyperlink;
+    private PushButton coUnitHyperlink;
     private OsylCOUnitLabelView coUnitLabel;
 
     // View Constructor
@@ -78,7 +79,9 @@ public class OsylCOUnitHyperlinkView extends OsylViewableComposite implements
 
     private void addCoUnitLink(String position) {
 	position = position + (!position.trim().equals("") ? "-" : "");
-	setCoUnitHyperlink(new Hyperlink(position, null));
+	setCoUnitHyperlink(new PushButton());
+	getCoUnitHyperlink().setText(position);
+	getCoUnitHyperlink().setStylePrimaryName("Osyl-ListItemView-labelNoPushButton");
 	getCoUnitHyperlink().addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		getController().getViewContext().setContextModel(
@@ -103,11 +106,11 @@ public class OsylCOUnitHyperlinkView extends OsylViewableComposite implements
 		HasVerticalAlignment.ALIGN_MIDDLE);
     }
 
-    public Hyperlink getCoUnitHyperlink() {
+    public PushButton getCoUnitHyperlink() {
 	return coUnitHyperlink;
     }
 
-    public void setCoUnitHyperlink(Hyperlink CoUnitHyperlink) {
+    public void setCoUnitHyperlink(PushButton CoUnitHyperlink) {
 	this.coUnitHyperlink = CoUnitHyperlink;
     }
 

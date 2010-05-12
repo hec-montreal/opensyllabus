@@ -7,19 +7,13 @@
 	text-align: center;
 }
 /*----------------------------------------------------------------------------------------------------------------*/
-.OsylManager-action a{
+.OsylManager-action{
+	color : #006e96;
 	font-size: 14px;
-}
-
-.OsylManager-action a:HOVER{
 	cursor: pointer;
 }
 
-.OsylManager-action-disable a{
-	color: #bbbbff
-}
-
-.OsylManager-action-disable a:HOVER{
+.OsylManager-action-up-disabled{
 	color: #bbbbff;
 	cursor: text
 }

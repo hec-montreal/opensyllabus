@@ -623,6 +623,11 @@
 }
 
 .Osyl-ListItemView-Hyperlink {}
+
+.Osyl-ListItemView-labelNoPushButton div{
+	color : #006e96;
+	cursor: pointer;
+}
 /*End List Item View --------------------------------------------------------------------------------------*/
 
 /*Res ProxDocument --------------------------------------------------------------------------------------*/
