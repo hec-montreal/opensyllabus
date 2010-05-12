@@ -1,75 +1,41 @@
 ﻿/* ---- CSS definitions specific to OpenSyllabus ------------------- */
 
 /* Main panel of Osyl -----------------------------------------------------------------------------------*/
-.Osyl-MainPanel {width:100%}
+.Osyl-MainPanel {width:100%;z-index:0}
+
+/* Main Title -------------------------------------------------------------------------------------------*/
 
 .Osyl-MainPanel-Title {
-	font:bold 20px Arial, Verdana, sans-serif;
+	font:bold 22px Arial, Verdana, sans-serif;
+	color:#454a4f;
+	margin-left:12px;
 }
-
-.Osyl-MainPanel-Title-TD {
-	height: 30px;
-}
-
-.Osyl-MainPanel-ToolBar-TD {
-	height: 21px;
-}
-
+.Osyl-MainPanel-Title-TD {height:30px}
+.Osyl-MainPanel-ToolBar-TD {height:21px}
 /*MenuBar -----------------------------------------------------------------------------------------------*/
 .Osyl-MenuBar {
-	margin-bottom:5px;
+	position:relative;
+	overflow:visible;
+	width:100%;
+	zoom:1;
+	z-index:1;
 }
-
-.Osyl-MenuBar .topCenter,
-.Osyl-MenuBar .bottomCenter {
-  background:#d6dbdf;
-  height:5px;
-}
-.Osyl-MenuBar .middleLeft,
-.Osyl-MenuBar .middleRight {
-  background:#d6dbdf;
-  width:5px;
-}
-.Osyl-MenuBar .topLeftInner,
-.Osyl-MenuBar .topRightInner,
-.Osyl-MenuBar .bottomLeftInner,
-.Osyl-MenuBar .bottomRightInner {
-  width: 5px;
-  height: 5px;
-  zoom: 1;
-}
-.Osyl-MenuBar .topLeft {
-  background: url(images/ui/menubar_corner.png) no-repeat 0 0;
-  -background: url(images/ui/menubar_corner_ie6.png) no-repeat 0 0;
-}
-.Osyl-MenuBar .topRight {
-  background: url(images/ui/menubar_corner.png) no-repeat -5px 0;
-  -background: url(images/ui/menubar_corner_ie6.png) no-repeat -5px 0;
-}
-.Osyl-MenuBar .bottomLeft {
-  background: url(images/ui/menubar_corner.png) no-repeat 0 -5px;
-  -background: url(images/ui/menubar_corner_ie6.png) no-repeat 0 -5px;
-}
-.Osyl-MenuBar .bottomRight {
-  background: url(images/ui/menubar_corner.png) no-repeat -5px -5px;
-  -background: url(images/ui/menubar_corner_ie6.png) no-repeat -5px -5px;
-}
-* html .Osyl-MenuBar .topLeftInner,
-* html .Osyl-MenuBar .topRightInner,
-* html .Osyl-MenuBar .bottomLeftInner,
-* html .Osyl-MenuBar .bottomRightInner {
-  width: 5px;
-  height: 5px;
-  overflow: hidden;
-}
-.Osyl-MenuBar .middleCenterInner {}
 
 .gwt-MenuBar-horizontal {
 	cursor:default;
-	background:#d6dbdf;
-	position:relative;
-	margin:0 -2px 0;
-	overflow:visible;
+	background:transparent;
+	margin:0;
+}
+.gwt-MenuBar-Left {
+	float:left;
+	margin-left:2px;
+}
+.gwt-MenuBar-Right {float:right}
+.gwt-MenuBar-Section {
+	position:absolute;
+	top:33px;
+	right:8px;
+	z-index:3;
 }
 
 .gwt-MenuBar-horizontal .gwt-MenuItem,
@@ -85,24 +51,34 @@
 .gwt-MenuBar-horizontal .gwt-MenuItem {
   text-align:center;
   padding:1px 10px;
-  background:transparent url(images/ui/opt_separator.gif) no-repeat right center;
+  background:transparent;
+  height:24px;
 }
 
-.gwt-MenuBar-horizontal .gwt-MenuItem.Osyl-MenuItem-vertical {
-	padding:1px 21px 1px 10px;
-	background-image:url(images/ui/menuitem_vertical-arrow.gif);
+.gwt-MenuBar-horizontal .Osyl-MenuItem-vertical {
+	position:relative;
+	padding:0 0 0 10px;
+	width:100px;
+	text-align:left;
+	background:transparent url(images/ui/osyl_sprite.png) no-repeat -49px 0;
+	overflow:auto;
+	zoom:1;
 }
-.gwt-MenuBar-horizontal .gwt-MenuItem.gwt-MenuItem-selected.Osyl-MenuItem-vertical {
-	background-image:url(images/ui/menuitem_vertical-arrow_select.gif);
+* html .gwt-MenuBar-horizontal .Osyl-MenuItem-vertical {background:transparent url(images/ui/osyl_sprite.gif) no-repeat -49px 0}
+
+.gwt-MenuBar-horizontal td.Osyl-MenuItem-Add {background-position:-49px -32px}
+
+/*.gwt-MenuBar-horizontal td.gwt-MenuItem-selected.Osyl-MenuItem-View {background-position:-49px -64px}
+.gwt-MenuBar-horizontal td.gwt-MenuItem-selected.Osyl-MenuItem-Add {background-position:-49px -96px}*/
+
+
+
+.gwt-MenuItemSeparator .menuSeparatorInner {
+	width:1px;
+	height:11px;
+	margin:0 2px;
+	background:#898C8E;
 }
-.gwt-MenuBar-horizontal .gwt-MenuItem.gwt-MenuItem.Osyl-MenuItem-LastChild.Osyl-MenuItem-vertical {
-	padding:1px 20px 1px 10px;
-	background-image:url(images/ui/menuitem_vertical-arrow_last.gif);
-}
-.gwt-MenuBar-horizontal .gwt-MenuItem.gwt-MenuItem.Osyl-MenuItem-LastChild.gwt-MenuItem-selected.Osyl-MenuItem-vertical {
-	background-image:url(images/ui/menuitem_vertical-arrow_last_select.gif);
-}
-.gwt-MenuBar-horizontal .gwt-MenuItem.Osyl-MenuItem-LastChild {background-image:none} /* Remove right border of the last element */
 
 
 .gwt-MenuBar-horizontal .gwt-MenuItem img,
@@ -111,29 +87,106 @@
 	margin-right:5px;
 	margin-top:-2px;
 }
+.gwt-MenuBarPopup {margin:0;z-index:2}
+
+.gwt-MenuBarPopup .menuPopupMiddleCenter {vertical-align:top}
+
+.gwt-MenuBarPopup .menuPopupTopCenter,
+.gwt-MenuBarPopup .menuPopupBottomCenter {
+	background: url(images/ui/hborder.png) repeat-x;
+	height:8px;
+}
+
+.gwt-MenuBarPopup .menuPopupBottomCenter {background-position:0 -96px}
+.gwt-MenuBarPopup .menuPopupTopCenter {background-position:0 -88px}
+
+.gwt-MenuBarPopup .menuPopupMiddleLeft,
+.gwt-MenuBarPopup .menuPopupMiddleRight {
+	background: url(images/ui/vborder.png) repeat-y;
+	width:8px;
+}
+
+.gwt-MenuBarPopup .menuPopupmiddleLeft {background-position:-28px 0}
+.gwt-MenuBarPopup .menuPopupmiddleRight {background-position:-36px 0}
+
+.gwt-MenuBarPopup .menuPopupTopLeftInner,
+.gwt-MenuBarPopup .menuPopupTopRightInner,
+.gwt-MenuBarPopup .menuPopupBottomLeftInner,
+.gwt-MenuBarPopup .menuPopupBottomRightInner {
+	width: 8px;
+	height: 8px;
+	zoom: 1;
+}
+.gwt-MenuBarPopup .menuPopupTopLeft {background: url(images/ui/osyl_sprite.png) no-repeat -22px -81px}
+.gwt-MenuBarPopup .menuPopupTopRight {background: url(images/ui/osyl_sprite.png) no-repeat -30px -81px}
+.gwt-MenuBarPopup .menuPopupBottomLeft {background: url(images/ui/osyl_sprite.png) no-repeat -22px -89px}
+.gwt-MenuBarPopup .menuPopupBottomRight {background: url(images/ui/osyl_sprite.png) no-repeat -30px -89px}
+
+* html .gwt-MenuBarPopup .menuPopupTopCenter,
+* html .gwt-MenuBarPopup .menuPopupBottomCenter,
+* html .gwt-MenuBarPopup .menuPopupMiddleLeft,
+* html .gwt-MenuBarPopup .menuPopupMiddleRight,
+* html .gwt-MenuBarPopup .menuPopupTopLeft,
+* html .gwt-MenuBarPopup .menuPopupTopRight,
+* html .gwt-MenuBarPopup .menuPopupBottomLeft,
+* html .gwt-MenuBarPopup .menuPopupBottomRight {
+	background:#000;
+	filter: alpha(opacity=50);
+}
+
+* html .gwt-MenuBarPopup .menuPopupTopLeftInner,
+* html .gwt-MenuBarPopup .menuPopupTopRightInner,
+* html .gwt-MenuBarPopup .menuPopupBottomLeftInner,
+* html .gwt-MenuBarPopup .menuPopupBottomRightInner {
+	width: 3px;
+	height: 3px;
+	overflow: hidden;
+}
+* html .gwt-MenuBarPopup .menuPopupMiddleLeft, * html .gwt-MenuBarPopup .menuPopupMiddleRight {width:3px}
+* html .gwt-MenuBarPopup .menuPopupTopCenter, * html .gwt-MenuBarPopup .menuPopupBottomCenter {height:3px}
+
+.gwt-MenuBarPopup .menuPopupMiddleCenterInner {
+	position:relative;
+	margin:-8px 0 0 -7px;
+	zoom: 1;
+	overflow:auto;
+}
+* html .gwt-MenuBarPopup .menuPopupMiddleCenterInner {margin:-6px 0 0 -6px}
+* html .gwt-MenuBarPopup {margin:3px 0 0 3px}
 
 .gwt-MenuBar-vertical {
+	position:relative;
 	vertical-align:middle;
 	background-color:#FFF;
 	border:1px solid #CBD0D4;
 	padding:2px;
 	cursor:default;
-	margin-left:24px;
+	margin:0;
+	min-width:98px;
+	overflow:auto;
+	zoom:1;
+	/*background:#FFF url(images/ui/menu-vertical_bg.gif) repeat-x;
+	border-top:none;
+	padding-top:3px;*/
 }
-
+/*.gwt-MenuBar-vertical.Osyl-MenuBar-Add {
+	margin:-2px 0 0 0;
+}*/
 .gwt-MenuBar-vertical .gwt-MenuItem {
 	text-align:left;
 	padding:4px 4px;
+	min-width:94px;
 }
 
 /* Act as a hover */
-.gwt-MenuBar .gwt-MenuItem-selected {
+.gwt-MenuBar td.gwt-MenuItem:hover, .gwt-MenuBar td.td.gwt-MenuItem-selected {
 	text-decoration:underline;
   	cursor:pointer;
 }
-.gwt-MenuBar-vertical .gwt-MenuItem-selected {
+.gwt-MenuBar-vertical td.gwt-MenuItem-selected, .gwt-MenuBar-vertical td.gwt-MenuItem-selected:hover  {
 	text-decoration:none;
 	background-color:#DCEFFD;
+	min-width:94px;
 }
 
 /* Horizontal Split Panel , parent of the left, middle and right Zone -------------------------------------*/
@@ -141,88 +194,98 @@
 	margin:0;
 	overflow:hidden;
 }
-/*TreeView Left Zone --------------------------------------------------------------------------------------*/
-.Osyl-TreeView {
-	font-size:12px;
-	width:100%;
-}
 
-.Osyl-TreeView .topCenter,
-.Osyl-TreeView .bottomCenter {
+/*Decoration Panel Zone --------------------------------------------------------------------------------------*/
+.Osyl-MainView-HorizontalSplitPanel .middleCenter {vertical-align:top}
+
+.Osyl-MainView-HorizontalSplitPanel .topCenter,
+.Osyl-MainView-HorizontalSplitPanel .bottomCenter {
 	background: url(images/ui/hborder.png) repeat-x;
 	height:8px;
 }
-.Osyl-TreeView .bottomCenter {background-position:0 -47px}
-.Osyl-TreeView .topCenter {height:47px;background-position:0 0}
+.Osyl-MainView-HorizontalSplitPanel .bottomCenter {background-position:0 -47px}
+.Osyl-MainView-HorizontalSplitPanel .topCenter {height:47px;background-position:0 0}
 
-.Osyl-TreeView .middleLeft,
-.Osyl-TreeView .middleRight {
+.Osyl-MainView-HorizontalSplitPanel .middleLeft,
+.Osyl-MainView-HorizontalSplitPanel .middleRight {
 	background: url(images/ui/vborder.png) repeat-y;
 	width:8px;
 }
-.Osyl-TreeView .middleRight {background-position:-8px 0}
+.Osyl-MainView-HorizontalSplitPanel .middleRight {background-position:-8px 0}
 
-.Osyl-TreeView .topLeftInner,
-.Osyl-TreeView .topRightInner,
-.Osyl-TreeView .bottomLeftInner,
-.Osyl-TreeView .bottomRightInner {
+.Osyl-MainView-HorizontalSplitPanel .topLeftInner,
+.Osyl-MainView-HorizontalSplitPanel .topRightInner,
+.Osyl-MainView-HorizontalSplitPanel .bottomLeftInner,
+.Osyl-MainView-HorizontalSplitPanel .bottomRightInner {
 	width: 8px;
 	height: 8px;
 	zoom: 1;
 }
-.Osyl-TreeView .topLeftInner,
-.Osyl-TreeView .topRightInner {
+.Osyl-MainView-HorizontalSplitPanel .topLeftInner,
+.Osyl-MainView-HorizontalSplitPanel .topRightInner {
 	height:47px;
 }
-.Osyl-TreeView .topLeft {
-	background: url(images/ui/treeview_corner.png) no-repeat top left;
-	-background: url(images/ui/treeview_corner_ie6.png) no-repeat top left;
+.Osyl-MainView-HorizontalSplitPanel .topLeft {
+	background: url(images/ui/osyl_sprite.png) no-repeat 0 -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat 0 -48px;
 }
-.Osyl-TreeView .topRight {
-	background: url(images/ui/treeview_corner.png) no-repeat top right;
-	-background: url(images/ui/treeview_corner_ie6.png) no-repeat top right;
+.Osyl-MainView-HorizontalSplitPanel .topRight {
+	background: url(images/ui/osyl_sprite.png) no-repeat -14px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -14px -48px;
 }
-.Osyl-TreeView .bottomLeft {
-	background: url(images/ui/treeview_corner.png) no-repeat bottom left;
-	-background: url(images/ui/treeview_corner_ie6.png) no-repeat bottom left;
+.Osyl-MainView-HorizontalSplitPanel .bottomLeft {
+	background: url(images/ui/osyl_sprite.png) no-repeat 0 -97px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat 0 -97px;
 }
-.Osyl-TreeView .bottomRight {
-	background: url(images/ui/treeview_corner.png) no-repeat bottom right;
-	-background: url(images/ui/treeview_corner_ie6.png) no-repeat bottom right;
+.Osyl-MainView-HorizontalSplitPanel .bottomRight {
+	background: url(images/ui/osyl_sprite.png) no-repeat -14px -97px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -14px -97px;
 }
-* html .Osyl-TreeView .topLeftInner,
-* html .Osyl-TreeView .topRightInner,
-* html .Osyl-TreeView .bottomLeftInner,
-* html .Osyl-TreeView .bottomRightInner {
+* html .Osyl-MainView-HorizontalSplitPanel .topLeftInner,
+* html .Osyl-MainView-HorizontalSplitPanel .topRightInner,
+* html .Osyl-MainView-HorizontalSplitPanel .bottomLeftInner,
+* html .Osyl-MainView-HorizontalSplitPanel .bottomRightInner {
 	width: 8px;
 	height: 8px;
 	overflow: hidden;
 }
-* html .Osyl-TreeView .topLeftInner,
-* html .Osyl-TreeView .topRightInner {
+* html .Osyl-MainView-HorizontalSplitPanel .topLeftInner,
+* html .Osyl-MainView-HorizontalSplitPanel .topRightInner {
 	 height: 47px;
 }
-.Osyl-TreeView .middleCenterInner {
+.Osyl-MainView-HorizontalSplitPanel .middleCenterInner {
 	position:relative;
 	margin:-47px 0 0 0;
 	zoom: 1;
 	overflow:auto;
 }
+.Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .middleCenterInner {overflow-x:hidden}
+/*TreeView Left Zone --------------------------------------------------------------------------------------*/
+
+.Osyl-TreeView {
+	font-size:12px;
+	width:100%;
+	/*height:100%*/
+}
+
 /*TreeView Header */
 .Osyl-TreeView-Header {
 	font:bold 15px Arial, Verdana, sans-serif;
-	color:#878A8C;
+	color:#76787a;
 	padding:14px 0 8px 35px;
 	background:transparent url(images/tree_logo.png) no-repeat 12px 14px;
 }
 /*TreeView Tree */
 .Osyl-TreeView-Tree {
 	border:0;
-	margin:8px 3px 3px 0;
+	margin:0;
 	padding:1px;
 	font:normal 13px Arial, Verdana, sans-serif;
 	color:#058EC4;
 }
+
+.Osyl-TreeView-Tree table {border-collapse:separate} /*Restore default alignment */
+.Osyl-TreeView-Tree img {margin:1px} /* Correct the alignment */
 
 .Osyl-TreeView-Tree .gwt-TreeItem {
 	cursor:pointer;
@@ -234,78 +297,38 @@
 	color:#058EC4;
 	text-decoration:none;
 }
-.Osyl-TreeView-Tree .gwt-TreeItem .Osyl-TreeLabel:hover{text-decoration:underline}
+.Osyl-TreeView-Tree div.gwt-TreeItem:hover{text-decoration:underline}
 
-.Osyl-TreeView-Tree .gwt-TreeItem-selected {cursor:default;font-weight:bold;color:#666} /* TreeView item selected zone*/
-.Osyl-TreeView-Tree .gwt-TreeItem-selected .Osyl-TreeItem-HorizontalPanel {}/* TreeView item selected container */
+.Osyl-TreeView-Tree div.gwt-TreeItem-selected {cursor:default;font-weight:bold;color:#666} /* TreeView item selected zone*/
+.Osyl-TreeView-Tree div.gwt-TreeItem-selected:hover {text-decoration:none}
 
 .Osyl-TreeView-Tree .gwt-TreeItem-selected .Osyl-TreeItem-HorizontalPanel .Osyl-TreeLabel{font-weight:bold;color:#666}/* TreeView item selected text */
 
-.Osyl-TreeView-Tree table {border-collapse:separate} /*Restore default alignment */
-.Osyl-TreeView-Tree img {margin:1px} /* Correct the alignment */
+
 
 /*End TreeView ---------------------------------------------------------------------------------------------*/
 
 /*Split Pannel Middle Zone ---------------------------------------------------------------------------------*/
-.Osyl-MainView-HorizontalSplitPanel .hsplitter {
-  background-color:transparent;
-  vertical-align:middle;
-  cursor:e-resize;
-  width:8px;
-}
 
+.Osyl-MainView-HorizontalSplitPanel .hsplitter {
+	background-color:transparent;
+	vertical-align:middle;
+	margin:2px;
+	cursor:e-resize;
+}
+.Osyl-MainView-HorizontalSplitPanel .hsplitter-down {cursor:e-resize;cursor:col-resize !important;}
+
+.Osyl-MainView-HorizontalSplitPanel .hsplitter td {vertical-align:middle}
 .Osyl-MainView-HorizontalSplitPanel .hsplitter img {display:none}
 /*Workspace View Right Zone --------------------------------------------------------------------------------*/
 
 .Osyl-WorkspaceView, .Osyl-WorkspaceView-MainPanel {width:100%}
-
-.Osyl-WorkspaceView .topCenter,
-.Osyl-WorkspaceView .bottomCenter {
-  background:url(images/ui/hborder.png) repeat-x;
-  height:8px;
-}
-.Osyl-WorkspaceView .bottomCenter {background-position:0 -47px}
-
-.Osyl-WorkspaceView .middleLeft,
-.Osyl-WorkspaceView .middleRight {
-  background:url(images/ui/vborder.png) repeat-y;
-  width:8px;
-}
-.Osyl-WorkspaceView .middleRight {background-position:-8px 0}
-
-.Osyl-WorkspaceView .topLeftInner,
-.Osyl-WorkspaceView .topRightInner,
-.Osyl-WorkspaceView .bottomLeftInner,
-.Osyl-WorkspaceView .bottomRightInner {
-  width: 8px;
-  height: 8px;
-  zoom: 1;
-}
-.Osyl-WorkspaceView .topLeft {
-  background: url(images/ui/workspace_corner.png) no-repeat 0 0;
-  -background: url(images/ui/workspace_corner_ie6.png) no-repeat 0 0;
-}
-.Osyl-WorkspaceView .topRight {
-  background: url(images/ui/workspace_corner.png) no-repeat -8px 0;
-  -background: url(images/ui/workspace_corner_ie6.png) no-repeat -8px 0;
-}
-.Osyl-WorkspaceView .bottomLeft {
-  background: url(images/ui/workspace_corner.png) no-repeat 0 -8px;
-  -background: url(images/ui/workspace_corner_ie6.png) no-repeat 0 -8px;
-}
-.Osyl-WorkspaceView .bottomRight {
-  background: url(images/ui/workspace_corner.png) no-repeat -8px -8px;
-  -background: url(images/ui/workspace_corner_ie6.png) no-repeat -8px -8px;
-}
-* html .Osyl-WorkspaceView .topLeftInner,
-* html .Osyl-WorkspaceView .topRightInner,
-* html .Osyl-WorkspaceView .bottomLeftInner,
-* html .Osyl-WorkspaceView .bottomRightInner {
-  width: 8px;
-  height: 8px;
-  overflow: hidden;
+.Osyl-WorkspaceView {
+	/*height:100%;*/
+	overflow:hidden;
 }
 .Osyl-WorkspaceView .middleCenterInner {margin:0 0 -5px 0}
+
 
 /* End WorkspaceView Right Zone ---------------------------------------------------------------------------*/
 
@@ -343,12 +366,11 @@
 
 /* Citation Form -----------------------------------------------------------------------------------------*/
 .Osyl-CitationForm-form {
-	padding:4px;
+	padding:0;
 	font:normal 100% Arial, Verdana, sans-serif;
 	color:#000;
-	background-color:#FFF;
-	border:2px outset;
-	width: 450px;
+	background-color:transparent;
+	border:none;
 }
 
 .Osyl-CitationForm-title {
@@ -537,7 +559,8 @@
 	vertical-align:middle;
 	margin:0 0 5px;
 	padding:5px 20px 5px 5px;
-	border:1px solid #e3f0FF;
+	border:1px solid #FFF;
+	border-top-color:#e3f0FF;
 	width:auto;
 	zoom:1;
 	overflow:hidden;
@@ -545,7 +568,7 @@
 
 .Osyl-UnitView-ResPanel-Hover {
 	vertical-align:top;
-	border:1px solid #B0B0B0;
+	border-color:#B0B0B0 #EEE #EEE #EEE;
 	background-color:#EEE;
 	overflow:visible;
 }
@@ -557,7 +580,7 @@
 }
 
 .Osyl-ListItemView-Hyperlink .Osyl-UnitView-ResPanel-Hover {
-	border:1px solid #B0B0B0;
+	border-color:#B0B0B0 #EEE #EEE #EEE;
 	margin:0;
 }
 .Osyl-UnitView-ResEditor, .Osyl-UnitView-ResEditorFocused {
@@ -576,31 +599,55 @@
 
 .Osyl-UnitView-HtmlViewer {width:100%}
 
-.Osyl-UnitView-LvlReq .Osyl-UnitView-TextLvlReq, .Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq {
-	font:bold 12px Arial, Verdana, sans-serif;
-	padding-bottom:2px;
+.Osyl-UnitView-Important .Osyl-UnitView-TextImportant {
+	background:#B6BEC4;
+	padding-left:4px;
+	padding-right:4px;
+	border-left:2px solid #B6BEC4;
+	border-right:2px solid #B6BEC4;
 }
-
-.Osyl-UnitView-LvlReq .Osyl-UnitView-TextLvlReq, .Osyl-UnitView-LvlReq.Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq{border-bottom:1px solid #CCC}
-.Osyl-UnitView-Important .Osyl-UnitView-TextLvlReq {border:none}
-.Osyl-UnitView-IconLvlReq, .Osyl-UnitView-IconImportant {
+.Osyl-UnitView-Important .Osyl-UnitView-TextImportant .gwt-HTML {
+	font:bold 12px Arial, Verdana, sans-serif;
+	color:#FFF;
+}
+.Osyl-UnitView-IconLvlReq {
 	width:24px;
 	text-align:center;
 	vertical-align:top;
 	padding:0 6px 0 0;
 }
-.Osyl-UnitView-IconImportant {padding-top:6px}
-.Osyl-UnitView-LvlReq .Osyl-UnitView-Content, .Osyl-UnitView-Important .Osyl-UnitView-Content {}
+
+.Osyl-UnitView-LvlReq .Osyl-UnitView-Content, .Osyl-UnitView-Important .Osyl-UnitView-Content {
+	background-color:#eff2f4;
+	padding:0 4px;
+}
+.Osyl-UnitView-Important .Osyl-UnitView-Content {
+	border:2px solid #B6BEC4;
+	padding:0 4px;
+}
 
 .Osyl-ResProxView-MetaInfo,
 .Osyl-UnitView-MetaInfo,
 .Osyl-UnitView-SemanticTag {
 	display:block;
-	margin:5px 0 0 30px;
+	margin:0 0 0 30px;
+	padding:5px 0 0 0;
 	font:normal 10px sans-serif, Arial, Verdana;
 	color:#A0A0A0;
 }
-.Osyl-ListItemView-Hyperlink .Osyl-UnitView-MetaInfo {margin:5px 0 0 0}
+.Osyl-ResProxView-MetaInfo-Important,
+.Osyl-UnitView-MetaInfo-Important,
+.Osyl-UnitView-SemanticTag-Important {
+	padding:5px 6px 0 6px;
+}
+
+.Osyl-ResProxView-MetaInfo-Requirement,
+.Osyl-UnitView-MetaInfo-Requirement,
+.Osyl-UnitView-SemanticTag-Requirement {
+	padding:5px 4px 0 4px;
+}
+
+.Osyl-ListItemView-Hyperlink .Osyl-UnitView-MetaInfo {padding:5px 0 0 0}
 .Osyl-UnitView-SemanticTag {margin:0 0 3px 40px}
 
 /* Link in a Content Unit Panel */
@@ -929,7 +976,7 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	background: url(images/ui/hborder.png) repeat-x;
 	height:6px;
 }
-.popupBottomCenter {background-position:bottom left}
+.popupBottomCenter {background-position:0 -82px}
 .popupTopCenter {background-position:0 -55px}
 
 .popupMiddleLeft,
@@ -938,12 +985,12 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	width:6px;
 }
 .popupMiddleLeft {background-position:-16px 0}
-.popupMiddleRight {background-position:top right}
+.popupMiddleRight {background-position:-22px 0}
 
 .popupTopLeftInner,
 .popupTopRightInner,
-.Osyl-EditorPopup .bottomLeftInner,
-.Osyl-EditorPopup .bottomRightInner {
+.bottomLeftInner,
+.bottomRightInner {
 	width: 6px;
 	height: 6px;
 	zoom: 1;
@@ -953,22 +1000,24 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 .popupTopRightInner {
 	height:27px;
 }
+
 .popupTopLeft {
-	background: url(images/ui/popup_corner.png) no-repeat top left;
-	-background: url(images/ui/popup_corner.gif) no-repeat top left;
+	background: url(images/ui/osyl_sprite.png) no-repeat -22px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -22px -48px;
 }
 .popupTopRight {
-	background: url(images/ui/popup_corner.png) no-repeat top right;
-	-background: url(images/ui/popup_corner.gif) no-repeat top right;
+	background: url(images/ui/osyl_sprite.png) no-repeat -28px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -28px -48px;
 }
 .popupBottomLeft {
-	background: url(images/ui/popup_corner.png) no-repeat bottom left;
-	-background: url(images/ui/popup_corner.gif) no-repeat bottom left;
+	background: url(images/ui/osyl_sprite.png) no-repeat -22px -75px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -22px -75px;
 }
 .popupBottomRight {
-	background: url(images/ui/popup_corner.png) no-repeat bottom right;
-	-background: url(images/ui/popup_corner.gif) no-repeat bottom right;
+	background: url(images/ui/osyl_sprite.png) no-repeat -28px -75px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -28px -75px;
 }
+
 * html .popupTopLeftInner,
 * html .popupTopRightInner,
 * html .popupBottomLeftInner,
@@ -1058,6 +1107,8 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	border-right:0;
 }
 
+.Osyl-EditorPopup-OptionGroup-Row table{width:100%}
+
 .Osyl-EditorPopup-RowOptions .gwt-Label,
 .Osyl-EditorPopup-RowOptions .gwt-HTML {
 	color:#454A4f;
@@ -1068,8 +1119,6 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	padding:0;
 	margin:0 14px 6px 0;
 }
-
-.Osyl-EditorPopup-OptionGroup-Row table{width:100%}
 
 .Osyl-EditorPopup-RowOptions .gwt-CheckBox input {margin:4px 2px 0 0}
 .Osyl-EditorPopup .gwt-ListBox {font:normal 10px sans-serif, Arial, Verdana}
@@ -1115,6 +1164,7 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 .Osyl-LightBox-Processing, 
 .Osyl-LightBox-Red {
 	/* Override glass panel to 40% opacity (= 60% transparency) */
+
 	filter :alpha(opacity=40) !important; /* IE */
 	-moz-opacity :0.4 !important; /* FF */
 	opacity :0.4 !important; /* default */
@@ -1249,17 +1299,17 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 
 .mosaic-CaptionLayoutPanel .dragdrop-handle {cursor:move}
 .mosaic-WindowPanel .Resize-nw {cursor:nw-resize}
-.mosaic-WindowPanel .Resize-n {cursor:n-resize;background-color:transparent}
+.mosaic-WindowPanel .Resize-n {cursor:n-resize}
 .mosaic-WindowPanel .Resize-ne {cursor:ne-resize}
-.mosaic-WindowPanel .Resize-e {cursor:e-resize;background-color:transparent}
+.mosaic-WindowPanel .Resize-e {cursor:e-resize}
 .mosaic-WindowPanel .Resize-se {cursor:se-resize}
-.mosaic-WindowPanel .Resize-s {cursor:s-resize;background-color:transparent}
+.mosaic-WindowPanel .Resize-s {cursor:s-resize}
 .mosaic-WindowPanel .Resize-sw {cursor:sw-resize}
-.mosaic-WindowPanel .Resize-w {cursor:w-resize;background-color:transparent}
+.mosaic-WindowPanel .Resize-w {cursor:w-resize}
 
 /* ------- */
 
-.Osyl-ContactInfo-Editor {width: auto}
+.Osyl-ContactInfo-Editor table {width:auto}
 .Osyl-ContactInfo-Viewer {}
 
 .Osyl-ContactInfo-FirstName, .Osyl-ContactInfo-LastName {
@@ -1308,28 +1358,15 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 .Osyl-RubricUserDefLabel {padding-left: 7px}
 
 a.Osyl-collapseButton {
-	background:url("images/ui/menu_control.png") no-repeat scroll 0 0 transparent;
+	background:transparent url(images/ui/menu_control.png) no-repeat;
 	display:block;
 	height:48px;
 	width:8px;
-	cursor: pointer;
+	cursor:pointer;
 }
 
-a.Osyl-collapseButton:hover  {
-	background-position:-8px 0;
-}
-a.Osyl-collapseButton:active  {
-	background-position:-16px 0;
-}
-
-a.Osyl-collapseButton.collapse {
-	background-position:-24px 0;
-}
-
-a.Osyl-collapseButton.collapse:hover  {
-	background-position:-32px 0;
-}
-
-a.Osyl-collapseButton.collapse:active  {
-	background-position:-40px 0;
-}
+a.Osyl-collapseButton:hover {background-position: -8px 0}
+a.Osyl-collapseButton.down {background-position: -16px 0}
+a.Osyl-collapseButton.collapse {background-position: -24px 0}
+a.Osyl-collapseButton.collapse:hover {background-position: -32px 0}
+a.Osyl-collapseButton.collapse.down {background-position: -40px 0}
