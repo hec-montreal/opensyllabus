@@ -27,6 +27,8 @@ import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 import org.sakaiquebec.opensyllabus.shared.util.LinkValidator;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -59,23 +61,23 @@ public class OsylFormattingToolbar extends Composite {
 	public void onClick(ClickEvent event) {
 	    Widget sender = (Widget) event.getSource();
 	    if (sender == bold) {
-		basic.toggleBold();
+		formatter.toggleBold();
 	    } else if (sender == italic) {
-		basic.toggleItalic();
+		formatter.toggleItalic();
 	    } else if (sender == underline) {
-		basic.toggleUnderline();
+		formatter.toggleUnderline();
 	    } else if (sender == strikethrough) {
-		extended.toggleStrikethrough();
+		formatter.toggleStrikethrough();
 	    } else if (sender == indent) {
-		extended.rightIndent();
+		formatter.rightIndent();
 	    } else if (sender == outdent) {
-		extended.leftIndent();
+		formatter.leftIndent();
 	    } else if (sender == justifyLeft) {
-		basic.setJustification(RichTextArea.Justification.LEFT);
+		formatter.setJustification(RichTextArea.Justification.LEFT);
 	    } else if (sender == justifyCenter) {
-		basic.setJustification(RichTextArea.Justification.CENTER);
+		formatter.setJustification(RichTextArea.Justification.CENTER);
 	    } else if (sender == justifyRight) {
-		basic.setJustification(RichTextArea.Justification.RIGHT);
+		formatter.setJustification(RichTextArea.Justification.RIGHT);
 	    } else if (sender == createLink) {
 		String url =
 			Window.prompt(uiMessages.getMessage("enterLinkURL"),
@@ -95,18 +97,17 @@ public class OsylFormattingToolbar extends Composite {
 			osylAlertDialog.center();
 			osylAlertDialog.show();
 		    } else {
-			url = LinkValidator.parseLink(url);
-			extended.createLink(url);
+			createHTMLLink(LinkValidator.parseLink(url));
 		    }
 		}
 	    } else if (sender == removeLink) {
-		extended.removeLink();
+		formatter.removeLink();
 	    } else if (sender == ol) {
-		extended.insertOrderedList();
+		formatter.insertOrderedList();
 	    } else if (sender == ul) {
-		extended.insertUnorderedList();
+		formatter.insertUnorderedList();
 	    } else if (sender == removeFormat) {
-		extended.removeFormat();
+		formatter.removeFormat();
 	    } else if (sender == richText) {
 		// We use the RichTextArea's onKeyUp event to update the toolbar
 		// status.
@@ -149,8 +150,7 @@ public class OsylFormattingToolbar extends Composite {
     private EventListener listener = new EventListener();
 
     private RichTextArea richText;
-    private RichTextArea.BasicFormatter basic;
-    private RichTextArea.ExtendedFormatter extended;
+    private RichTextArea.Formatter formatter;
 
     private HorizontalPanel topPanel;
     private ToggleButton bold;
@@ -189,51 +189,62 @@ public class OsylFormattingToolbar extends Composite {
 	topPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 	topPanel.setStylePrimaryName("Osyl-EditorToolbar-TopPanel");
 
-	if (basic != null) {
+	if (formatter != null) {
 	    topPanel.add(bold =
-		    createToggleButton(osylImageBundle.rtt_bold(), uiMessages
+		    createToggleButton(AbstractImagePrototype.create(
+			    osylImageBundle.rtt_bold()), uiMessages
 			    .getMessage("rtt_bold")));
 	    topPanel.add(italic =
-		    createToggleButton(osylImageBundle.rtt_italic(), uiMessages
+		    createToggleButton(AbstractImagePrototype.create(
+			    osylImageBundle.rtt_italic()), uiMessages
 			    .getMessage("rtt_italic")));
 	    topPanel.add(underline =
-		    createToggleButton(osylImageBundle.rtt_underline(),
+		    createToggleButton(AbstractImagePrototype.create(
+			    osylImageBundle.rtt_underline()),
 			    uiMessages.getMessage("rtt_underline")));
 	    topPanel.add(justifyLeft =
-		    createPushButton(osylImageBundle.rtt_justifyLeft(),
+		    createPushButton(AbstractImagePrototype.create(
+			    osylImageBundle.rtt_justifyLeft()),
 			    uiMessages.getMessage("rtt_justifyLeft")));
 	    topPanel.add(justifyCenter =
-		    createPushButton(osylImageBundle.rtt_justifyCenter(),
+		    createPushButton(AbstractImagePrototype.create(
+			    osylImageBundle.rtt_justifyCenter()),
 			    uiMessages.getMessage("rtt_justifyCenter")));
 	    topPanel.add(justifyRight =
-		    createPushButton(osylImageBundle.rtt_justifyRight(),
+		    createPushButton(AbstractImagePrototype.create(
+			    osylImageBundle.rtt_justifyRight()),
 			    uiMessages.getMessage("rtt_justifyRight")));
-	}
-
-	if (extended != null) {
 	    topPanel.add(strikethrough =
-		    createToggleButton(osylImageBundle.rtt_strikeThrough(),
+		    createToggleButton(AbstractImagePrototype.create(
+			    osylImageBundle.rtt_strikeThrough()),
 			    uiMessages.getMessage("rtt_strikeThrough")));
 	    topPanel.add(indent =
-		    createPushButton(osylImageBundle.rtt_indent(), uiMessages
+		    createPushButton(AbstractImagePrototype.create(
+			    osylImageBundle.rtt_indent()), uiMessages
 			    .getMessage("rtt_indent")));
 	    topPanel.add(outdent =
-		    createPushButton(osylImageBundle.rtt_outdent(), uiMessages
+		    createPushButton(AbstractImagePrototype.create(
+			    osylImageBundle.rtt_outdent()), uiMessages
 			    .getMessage("rtt_outdent")));
 	    topPanel.add(ol =
-		    createPushButton(osylImageBundle.rtt_ol(), uiMessages
+		    createPushButton(AbstractImagePrototype.create(
+			    osylImageBundle.rtt_ol()), uiMessages
 			    .getMessage("rtt_ol")));
 	    topPanel.add(ul =
-		    createPushButton(osylImageBundle.rtt_ul(), uiMessages
+		    createPushButton(AbstractImagePrototype.create(
+			    osylImageBundle.rtt_ul()), uiMessages
 			    .getMessage("rtt_ul")));
 	    topPanel.add(createLink =
-		    createPushButton(osylImageBundle.rtt_createLink(),
+		    createPushButton(AbstractImagePrototype.create(
+			    osylImageBundle.rtt_createLink()),
 			    uiMessages.getMessage("rtt_createLink")));
 	    topPanel.add(removeLink =
-		    createPushButton(osylImageBundle.rtt_removeLink(),
+		    createPushButton(AbstractImagePrototype.create(
+			    osylImageBundle.rtt_removeLink()),
 			    uiMessages.getMessage("rtt_removeLink")));
 	    topPanel.add(removeFormat =
-		    createPushButton(osylImageBundle.rtt_removeFormat(),
+		    createPushButton(AbstractImagePrototype.create(
+			    osylImageBundle.rtt_removeFormat()),
 			    uiMessages.getMessage("rtt_removeFormat")));
 	}
 
@@ -273,14 +284,11 @@ public class OsylFormattingToolbar extends Composite {
      * Updates the status of all the stateful buttons.
      */
     private void updateStatus() {
-	if (basic != null) {
-	    bold.setDown(basic.isBold());
-	    italic.setDown(basic.isItalic());
-	    underline.setDown(basic.isUnderlined());
-	}
-
-	if (extended != null) {
-	    strikethrough.setDown(extended.isStrikethrough());
+	if (formatter != null) {
+	    bold.setDown(formatter.isBold());
+	    italic.setDown(formatter.isItalic());
+	    underline.setDown(formatter.isUnderlined());
+	    strikethrough.setDown(formatter.isStrikethrough());
 	}
     }
 
@@ -291,12 +299,44 @@ public class OsylFormattingToolbar extends Composite {
     public void setRichText(RichTextArea richText) {
 	this.richText = richText;
 	if (richText != null) {
-	    this.basic = richText.getBasicFormatter();
-	    this.extended = richText.getExtendedFormatter();
+	    this.formatter = richText.getFormatter();
 	} else {
-	    this.basic = null;
-	    this.extended = null;
+	    this.formatter = null;
 	}
     }
 
+    /**
+     * Native JavaScript that returns the selected text and position of the
+     * start
+     **/
+    public static native JsArrayString getSelection(Element elem) /*-{
+    var txt = "";
+       	var pos = 0;
+       	var range;
+       	var parentElement;
+       	var container;
+
+    if (elem.contentWindow.getSelection) {
+    	txt = elem.contentWindow.getSelection();
+          		pos = elem.contentWindow.getSelection().getRangeAt(0).startOffset;
+           } else if (elem.contentWindow.document.getSelection) {
+          		txt = elem.contentWindow.document.getSelection();
+    	pos = elem.contentWindow.document.getSelection().getRangeAt(0).startOffset;
+       	} else if (elem.contentWindow.document.selection) {
+       		range = elem.contentWindow.document.selection.createRange();
+          		txt = range.text;
+          		parentElement = range.parentElement();
+          		container = range.duplicate();
+          		container.moveToElementText(parentElement);
+          		container.setEndPoint('EndToEnd', range);
+          		pos = container.text.length - range.text.length;
+           }
+       	return [""+txt,""+pos];
+       }-*/;
+
+    private void createHTMLLink(String url) {
+	url = LinkValidator.parseLink(url);
+	formatter.insertHTML("<a target=\"_blank\" href=\"" + url + "\">"
+		+ getSelection(richText.getElement()).get(0) + "</a>");
+    }
 }

@@ -14,124 +14,128 @@
 
 package org.sakaiquebec.opensyllabus.client.OsylImageBundle;
 
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ImageBundle;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * The image bundle interface
  * 
  * @version $Id: $
  */
-public interface OsylImageBundleInterface extends ImageBundle {
+public interface OsylImageBundleInterface extends ClientBundle {
 
-    public AbstractImagePrototype action_validate();
+    public ImageResource action_validate();
 
-    public AbstractImagePrototype action_cancel();
+    public ImageResource action_cancel();
 
-    public AbstractImagePrototype action_OneLevelUp();
+    public ImageResource action_OneLevelUp();
 
-    public AbstractImagePrototype cancelEdit();
+    public ImageResource cancelEdit();
 
-    public AbstractImagePrototype carreVert();
+    public ImageResource carreVert();
 
-    public AbstractImagePrototype delete();
+    public ImageResource delete();
     
-    public AbstractImagePrototype document_add();
+    public ImageResource document_add();
     
-    public AbstractImagePrototype document_edit();
+    public ImageResource document_edit();
 
-    public AbstractImagePrototype edit();
+    public ImageResource edit();
 
-    public AbstractImagePrototype folder_add();
+    public ImageResource folder_add();
 
-    public AbstractImagePrototype notImportant();
+    public ImageResource notImportant();
 
-    public AbstractImagePrototype notVisible();
+    public ImageResource notVisible();
      
-    public AbstractImagePrototype rtt_backColors();
+    public ImageResource rtt_backColors();
 
-    public AbstractImagePrototype rtt_bold();
+    public ImageResource rtt_bold();
 
-    public AbstractImagePrototype rtt_createLink();
+    public ImageResource rtt_createLink();
 
-    public AbstractImagePrototype rtt_fonts();
+    public ImageResource rtt_fonts();
 
-    public AbstractImagePrototype rtt_fontSizes();
+    public ImageResource rtt_fontSizes();
 
-    public AbstractImagePrototype rtt_foreColors();
+    public ImageResource rtt_foreColors();
 
-    public AbstractImagePrototype rtt_hr();
+    public ImageResource rtt_hr();
 
-    public AbstractImagePrototype rtt_indent();
+    public ImageResource rtt_indent();
 
-    public AbstractImagePrototype rtt_insertImage();
+    public ImageResource rtt_insertImage();
 
-    public AbstractImagePrototype rtt_italic();
+    public ImageResource rtt_italic();
 
-    public AbstractImagePrototype rtt_justifyCenter();
+    public ImageResource rtt_justifyCenter();
 
-    public AbstractImagePrototype rtt_justifyLeft();
+    public ImageResource rtt_justifyLeft();
 
-    public AbstractImagePrototype rtt_justifyRight();
+    public ImageResource rtt_justifyRight();
 
-    public AbstractImagePrototype rtt_ol();
+    public ImageResource rtt_ol();
 
-    public AbstractImagePrototype rtt_outdent();
+    public ImageResource rtt_outdent();
 
-    public AbstractImagePrototype rtt_removeFormat();
+    public ImageResource rtt_removeFormat();
 
-    public AbstractImagePrototype rtt_removeLink();
+    public ImageResource rtt_removeLink();
 
-    public AbstractImagePrototype rtt_strikeThrough();
+    public ImageResource rtt_strikeThrough();
 
-    public AbstractImagePrototype rtt_subscript();
+    public ImageResource rtt_subscript();
 
-    public AbstractImagePrototype rtt_superscript();
+    public ImageResource rtt_superscript();
 
-    public AbstractImagePrototype rtt_ul();
+    public ImageResource rtt_ul();
     
-    public AbstractImagePrototype treeClosed();
+    public ImageResource treeClosed();
 
-    public AbstractImagePrototype treeLeaf();
+    public ImageResource treeLeaf();
 
-    public AbstractImagePrototype treeOpen();
+    public ImageResource treeOpen();
 
-    public AbstractImagePrototype rtt_underline();
+    public ImageResource rtt_underline();
 
-    public AbstractImagePrototype visible();
+    public ImageResource visible();
 
-    public AbstractImagePrototype up_full();
+    public ImageResource up_full();
     
-    public AbstractImagePrototype up_empty();
+    public ImageResource up_empty();
 
-    public AbstractImagePrototype down_full();
+    public ImageResource down_full();
     
-    public AbstractImagePrototype down_empty();
+    public ImageResource down_empty();
     
     // Specific Methods for the MenuBar
     
     // icon for close button
-    public AbstractImagePrototype cross();
+    public ImageResource cross();
 
-    public AbstractImagePrototype home();
+    public ImageResource home();
     
-    public AbstractImagePrototype view_all();
+    public ImageResource view_all();
 
     // icon for adding item
-    public AbstractImagePrototype plus();
+    public ImageResource plus();
 
-    public AbstractImagePrototype preview();
+    public ImageResource preview();
 
-    public AbstractImagePrototype printer();
+    public ImageResource printer();
     
-    public AbstractImagePrototype pdf_export();
+    public ImageResource pdf_export();
     
-    public AbstractImagePrototype options();
+    public ImageResource options();
 
-    public AbstractImagePrototype publish();
+    public ImageResource publish();
     
-    public AbstractImagePrototype save();
+    public ImageResource save();
     
-    public AbstractImagePrototype save_disabled();
+    public ImageResource save_disabled();
     
+    //DisclosurePanel images
+    public ImageResource expand();
+
+    public ImageResource collapse();    
 }

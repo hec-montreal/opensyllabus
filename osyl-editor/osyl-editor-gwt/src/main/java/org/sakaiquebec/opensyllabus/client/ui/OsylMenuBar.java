@@ -16,12 +16,12 @@ public class OsylMenuBar extends MenuBar {
 	addDiv();
     }
 
-    public OsylMenuBar(boolean vertical, MenuBarImages images) {
+    public OsylMenuBar(boolean vertical, Resources images) {
 	super(vertical, images);
 	addDiv();
     }
 
-    public OsylMenuBar(MenuBarImages images) {
+    public OsylMenuBar(Resources images) {
 	super(images);
 	addDiv();
     }

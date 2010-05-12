@@ -89,7 +89,8 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	// final Button publishButton =
 	// new Button(uiMessages.getMessage("publish"),
 	// new PublishLinkClickListener());
-	AbstractImagePrototype imgPublishButton = osylImageBundle.publish();
+	AbstractImagePrototype imgPublishButton = 
+	    AbstractImagePrototype.create(osylImageBundle.publish());
 	ImageAndTextButton publishButton = new ImageAndTextButton(
 	// TODO: Bug with ImageBundle, we have to use
 		// AbstractImagePrototype
@@ -105,7 +106,8 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	// hide();
 	// }
 	// });
-	AbstractImagePrototype imgCloseButton = osylImageBundle.action_cancel();
+	AbstractImagePrototype imgCloseButton = 
+	    AbstractImagePrototype.create(osylImageBundle.action_cancel());
 	ImageAndTextButton cancelButton = new ImageAndTextButton(
 	// TODO: Bug with ImageBundle, we have to use
 		// AbstractImagePrototype

@@ -47,7 +47,7 @@ public class CMCourseInfoView extends OsylManagerAbstractView {
     public CMCourseInfoView(OsylManagerController controller) {
 	super(controller);
 	mainPanel = new HorizontalPanel();
-	image = getController().getImageBundle().info().createImage();
+	image = new Image(getController().getImageBundle().info());
 	initView();
 	initWidget(mainPanel);
     }

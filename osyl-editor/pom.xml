@@ -19,7 +19,7 @@
     <module>osyl-editor-server-api/api</module>
     <module>osyl-editor-sakai-impl/impl</module>
     <module>osyl-editor-sakai-impl/pack</module>
-	<module>osyl-editor-sakai-tool/tool</module>
-	<module>osyl-editor-sakai-help</module>
+    <module>osyl-editor-sakai-tool/tool</module>
+    <module>osyl-editor-sakai-help</module>
   </modules>
 </project>

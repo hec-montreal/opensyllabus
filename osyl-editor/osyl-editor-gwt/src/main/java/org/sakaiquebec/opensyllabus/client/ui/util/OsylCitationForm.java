@@ -452,7 +452,7 @@ public class OsylCitationForm extends WindowPanel implements
 	mainPanel.add(urlPanel);
 
 	// Add a 'save' button.
-	AbstractImagePrototype imgSaveButton = osylImageBundle.save();
+	AbstractImagePrototype imgSaveButton = AbstractImagePrototype.create(osylImageBundle.save());
 	saveButton = new ImageAndTextButton(
 	// TODO: Bug with ImageBundle, we have to use
 		// AbstractImagePrototype
@@ -611,7 +611,7 @@ public class OsylCitationForm extends WindowPanel implements
 
 	// Add a 'Cancel' button.
 	AbstractImagePrototype imgCancelButton =
-		osylImageBundle.action_cancel();
+	    AbstractImagePrototype.create(osylImageBundle.action_cancel());
 	cancelButton = new ImageAndTextButton(
 	// TODO: Bug with ImageBundle, we have to use
 		// AbstractImagePrototype

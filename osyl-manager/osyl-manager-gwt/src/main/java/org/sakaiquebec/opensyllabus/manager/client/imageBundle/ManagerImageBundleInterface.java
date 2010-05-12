@@ -14,20 +14,17 @@
 
 package org.sakaiquebec.opensyllabus.manager.client.imageBundle;
 
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.google.gwt.user.client.ui.ImageBundle;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * The image bundle interface
  * 
  * @version $Id: $
  */
-public interface ManagerImageBundleInterface extends ImageBundle {
+public interface ManagerImageBundleInterface extends ClientBundle {
     
-    public AbstractImagePrototype info();
+    public ImageResource info();
     
-    public AbstractImagePrototype check();
-
-
-    
+    public ImageResource check();
 }

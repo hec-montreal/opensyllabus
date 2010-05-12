@@ -57,10 +57,10 @@
                     <goal>install-file</goal>
                   </goals>
                   <configuration>
-                    <file>${project.basedir}/lib/gwt-fx-4.0.0.jar</file>
+                    <file>${project.basedir}/lib/GWT FX v0.5.0 MS 1.jar</file>
                     <groupId>com.google.gwt-fx</groupId>
                     <artifactId>gwt-fx</artifactId>
-                    <version>4.0.0</version>
+                    <version>0.5.0-MS1</version>
                     <packaging>jar</packaging>
                     <generatePom>true</generatePom>
                   </configuration>
@@ -72,10 +72,10 @@
                     <goal>install-file</goal>
                   </goals>
                   <configuration>
-                    <file>${project.basedir}/lib/gwt-mosaic-0.2.3.jar</file>
+                    <file>${project.basedir}/lib/gwt-mosaic-0.4.0-rc4.jar</file>
                     <groupId>org.gwt.mosaic</groupId>
                     <artifactId>gwt-mosaic</artifactId>
-                    <version>0.2.3</version>
+                    <version>0.4.0-rc4</version>
                     <packaging>jar</packaging>
                     <generatePom>true</generatePom>
                   </configuration>
@@ -88,10 +88,10 @@
                     <goal>install-file</goal>
                   </goals>
                   <configuration>
-                    <file>${project.basedir}/lib/gwt-dnd-2.6.5.jar</file>
+                    <file>${project.basedir}/lib/gwt-dnd-3.0.0.jar</file>
                     <groupId>org.gwt.mosaic</groupId>
                     <artifactId>gwt-dnd</artifactId>
-                    <version>2.6.5</version>
+                    <version>3.0.0</version>
                     <packaging>jar</packaging>
                     <generatePom>true</generatePom>
                   </configuration>
@@ -103,10 +103,10 @@
                     <goal>install-file</goal>
                   </goals>
                   <configuration>
-                    <file>${project.basedir}/lib/gwt-beansbinding-0.2.4.jar</file>
+                    <file>${project.basedir}/lib/gwt-beans-binding-0.3.jar</file>
                     <groupId>org.gwt.mosaic</groupId>
                     <artifactId>gwt-beansbinding</artifactId>
-                    <version>0.2.4</version>
+                    <version>0.3</version>
                     <packaging>jar</packaging>
                     <generatePom>true</generatePom>
                   </configuration>
@@ -118,10 +118,10 @@
                     <goal>install-file</goal>
                   </goals>
                   <configuration>
-                    <file>${project.basedir}/lib/gwtx-1.5.2.jar</file>
+                    <file>${project.basedir}/lib/gwtx-1.5.4-SNAPSHOT.jar</file>
                     <groupId>org.gwt.mosaic</groupId>
                     <artifactId>gwtx</artifactId>
-                    <version>1.5.2</version>
+                    <version>1.5.4-SNAPSHOT</version>
                     <packaging>jar</packaging>
                     <generatePom>true</generatePom>
                   </configuration>
@@ -133,10 +133,10 @@
                     <goal>install-file</goal>
                   </goals>
                   <configuration>
-                    <file>${project.basedir}/lib/gwt-incubator-trunk-r1684.jar</file>
+                    <file>${project.basedir}/lib/gwt-incubator-20100204-r1747.jar</file>
                     <groupId>org.gwt.mosaic</groupId>
                     <artifactId>gwt-incubator</artifactId>
-                    <version>trunk-r1684</version>
+                    <version>20100204-r1747</version>
                     <packaging>jar</packaging>
                     <generatePom>true</generatePom>
                   </configuration>

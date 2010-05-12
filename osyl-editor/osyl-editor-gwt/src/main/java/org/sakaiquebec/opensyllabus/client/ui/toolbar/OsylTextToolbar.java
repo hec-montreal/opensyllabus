@@ -28,6 +28,7 @@ import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -186,7 +187,7 @@ public class OsylTextToolbar extends Composite {
 	rightMenuBar.addItem(savePushButton);
 	// MenuBar Item with icon - nice trick...
 	addMenuItem =
-		sectionMenuBar.addItem(getOsylImageBundle().plus().getHTML()
+		sectionMenuBar.addItem(AbstractImagePrototype.create(getOsylImageBundle().plus()).getHTML()
 			+ uiMessages.getMessage("ButtonAddToolBar"), true,
 			addMenuBar);
 	
@@ -194,7 +195,7 @@ public class OsylTextToolbar extends Composite {
 	addMenuItem.addStyleName("Osyl-MenuItem-Add");
 	
 	viewMenuItem =
-		rightMenuBar.addItem(getOsylImageBundle().preview().getHTML()
+		rightMenuBar.addItem(AbstractImagePrototype.create(getOsylImageBundle().preview()).getHTML()
 			+ uiMessages.getMessage("ButtonViewToolBar"), true,
 			viewMenuBar);
 	viewMenuItem.addStyleName("Osyl-MenuItem-vertical");
@@ -233,10 +234,10 @@ public class OsylTextToolbar extends Composite {
     }
 
     public MenuItem createMenuItem(String messageKey,
-	    AbstractImagePrototype menuImage, String toolTipKey) {
+	    ImageResource menuImage, String toolTipKey) {
 	Command nullCommand = null;
 	MenuItem menuItem =
-		new MenuItem(menuImage.getHTML()
+		new MenuItem(AbstractImagePrototype.create(menuImage).getHTML()
 			+ uiMessages.getMessage(messageKey), true, nullCommand);
 	menuItem.setTitle(uiMessages.getMessage(toolTipKey));
 	return menuItem;

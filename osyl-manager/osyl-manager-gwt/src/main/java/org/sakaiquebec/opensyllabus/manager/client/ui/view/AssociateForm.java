@@ -41,6 +41,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PushButton;
@@ -232,8 +233,7 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 		new Label(controller.getMessages().associateForm_confirmation());
 	mainPanel.add(conf);
 
-	cmCourseInfoView.setImage(controller.getImageBundle().check()
-		.createImage());
+	cmCourseInfoView.setImage(new Image(controller.getImageBundle().check()));
 	DecoratorPanel ivDecoratorPanel = new DecoratorPanel();
 	ivDecoratorPanel.setWidget(cmCourseInfoView);
 	ivDecoratorPanel.setStylePrimaryName("OsylManager-infoView");

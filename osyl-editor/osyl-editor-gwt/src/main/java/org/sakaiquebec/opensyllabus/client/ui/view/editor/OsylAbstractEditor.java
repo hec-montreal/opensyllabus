@@ -216,7 +216,8 @@ public abstract class OsylAbstractEditor extends Composite {
     }
 
     protected ImageAndTextButton createButtonEdit() {
-	AbstractImagePrototype imgEditButton = getOsylImageBundle().edit();
+	AbstractImagePrototype imgEditButton = 
+	    AbstractImagePrototype.create(getOsylImageBundle().edit());
 	String title = getView().getUiMessage("edit");
 	ClickHandler listener = new OsylEditClickListener(getView());
 	return createButton(imgEditButton, title, listener);
@@ -385,7 +386,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	rightPanel.add(okCancelPanel);
 
 	AbstractImagePrototype imgOkButton =
-		getOsylImageBundle().action_validate();
+	    AbstractImagePrototype.create(getOsylImageBundle().action_validate());
 	ImageAndTextButton okButton = new ImageAndTextButton(
 	// TODO: Bug with ImageBundle, we have to use
 		// AbstractImagePrototype
@@ -394,7 +395,7 @@ public abstract class OsylAbstractEditor extends Composite {
 	okCancelPanel.add(okButton);
 
 	AbstractImagePrototype imgCancelButton =
-		getOsylImageBundle().action_cancel();
+	    AbstractImagePrototype.create(getOsylImageBundle().action_cancel());
 	ImageAndTextButton cancelButton = new ImageAndTextButton(
 	// TODO: Bug with ImageBundle, we have to use
 		// AbstractImagePrototype
@@ -467,10 +468,9 @@ public abstract class OsylAbstractEditor extends Composite {
 	    final COElementMoveable coem = (COElementMoveable) getModel();
 	    if (coem.hasPredecessor()) {
 		upButton =
-			new OsylPushButton(getOsylImageBundle().up_full()
-				.createImage(), getOsylImageBundle().up_full()
-				.createImage(), getOsylImageBundle().up_full()
-				.createImage());
+			new OsylPushButton(new Image(getOsylImageBundle().up_full()),
+				new Image(getOsylImageBundle().up_full()),
+				new Image(getOsylImageBundle().up_full()));
 		upButton.setTitle(getUiMessage("UpButton.title"));
 		upButton.setEnabledButton();
 		upButton.addClickHandler(new ClickHandler() {
@@ -483,10 +483,9 @@ public abstract class OsylAbstractEditor extends Composite {
 		});
 	    } else {
 		upButton =
-			new OsylPushButton(getOsylImageBundle().up_empty()
-				.createImage(), getOsylImageBundle().up_empty()
-				.createImage(), getOsylImageBundle().up_empty()
-				.createImage());
+			new OsylPushButton(new Image(getOsylImageBundle().up_empty()),
+				new Image(getOsylImageBundle().up_empty()),
+				new Image(getOsylImageBundle().up_empty()));
 		upButton.setDisabledButton();
 	    }
 	    upButton.setVisible(true);
@@ -500,10 +499,9 @@ public abstract class OsylAbstractEditor extends Composite {
 	    final COElementMoveable coem = (COElementMoveable) getModel();
 	    if (coem.hasSuccessor()) {
 		downButton =
-			new OsylPushButton(getOsylImageBundle().down_full()
-				.createImage(), getOsylImageBundle()
-				.down_full().createImage(),
-				getOsylImageBundle().down_full().createImage());
+			new OsylPushButton(new Image(getOsylImageBundle().down_full()),
+				new Image(getOsylImageBundle().down_full()),
+				new Image(getOsylImageBundle().down_full()));
 		downButton.setTitle(getUiMessage("DownButton.title"));
 		downButton.setEnabledButton();
 		downButton.addClickHandler(new ClickHandler() {
@@ -516,10 +514,9 @@ public abstract class OsylAbstractEditor extends Composite {
 		});
 	    } else {
 		downButton =
-			new OsylPushButton(getOsylImageBundle().down_empty()
-				.createImage(), getOsylImageBundle()
-				.down_empty().createImage(),
-				getOsylImageBundle().down_empty().createImage());
+			new OsylPushButton(new Image(getOsylImageBundle().down_empty()),
+				new Image(getOsylImageBundle().down_empty()),
+				new Image(getOsylImageBundle().down_empty()));
 		downButton.setDisabledButton();
 	    }
 	}

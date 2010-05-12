@@ -47,14 +47,6 @@
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-dev</artifactId>
-			<classifier>${platform}</classifier>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-dev</artifactId>
-			<classifier>${platform}-libs</classifier>
-			<type>zip</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -179,6 +171,7 @@
 						<configuration>
 							<module>${gwtModule}</module>
 							<webappDirectory>war</webappDirectory>
+							<soyc>false</soyc>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -211,6 +204,7 @@
 							<module>${gwtModule}</module>
 							<runTarget>${gwtHostedEntryPointPage}</runTarget>
 							<webappDirectory>war</webappDirectory>
+							<soyc>false</soyc>
 						</configuration>
 					</plugin>
 					<plugin>

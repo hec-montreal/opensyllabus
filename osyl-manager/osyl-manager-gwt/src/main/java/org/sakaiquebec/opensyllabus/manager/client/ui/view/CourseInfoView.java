@@ -28,6 +28,7 @@ import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractVie
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -57,7 +58,7 @@ public class CourseInfoView extends OsylManagerAbstractView implements
 
 	mainPanel.clear();
 
-	mainPanel.add(getController().getImageBundle().info().createImage());
+	mainPanel.add(new Image(getController().getImageBundle().info()));
 
 	VerticalPanel infoPanel = new VerticalPanel();
 

@@ -19,6 +19,6 @@
     <module>osyl-manager-server-api/api</module>
     <module>osyl-manager-sakai-impl/impl</module>
     <module>osyl-manager-sakai-impl/pack</module>
-	<module>osyl-manager-sakai-tool/tool</module>
+    <module>osyl-manager-sakai-tool/tool</module>
   </modules>
 </project>

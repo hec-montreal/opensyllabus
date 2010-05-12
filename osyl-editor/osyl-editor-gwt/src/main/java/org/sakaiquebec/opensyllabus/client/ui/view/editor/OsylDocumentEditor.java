@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
-import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylDisclosurePanelImageInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBAddFolderEventHandler;
@@ -42,7 +41,6 @@ import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxDocumentView;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -52,7 +50,6 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.DisclosurePanel;
-import com.google.gwt.user.client.ui.DisclosurePanelImages;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
@@ -431,12 +428,10 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	browserPanel.add(browser);
 	browser.setWidth("100%");
 
-	DisclosurePanelImages disclosureImages =
-		(DisclosurePanelImages) GWT
-			.create(OsylDisclosurePanelImageInterface.class);
 	DisclosurePanel metaInfoDiscPanel =
-		new DisclosurePanel(disclosureImages, getView().getUiMessage(
-			"DocumentEditor.document.details"), false);
+		new DisclosurePanel(getOsylImageBundle().expand(),
+			getOsylImageBundle().collapse(), getView().getUiMessage(
+			"DocumentEditor.document.details"));
 	metaInfoDiscPanel.setAnimationEnabled(true);
 	metaInfoDiscPanel.setStylePrimaryName("DetailsPanel");
 	HorizontalPanel metaInfoPanel = new HorizontalPanel();
@@ -485,7 +480,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	rightsAndSavePanel.add(savePanel);
 	savePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 
-	AbstractImagePrototype imgSaveButton = getOsylImageBundle().save();
+	AbstractImagePrototype imgSaveButton = 
+	    AbstractImagePrototype.create(getOsylImageBundle().save());
 	saveButton =
 		new ImageAndTextButton(
 		// TODO: Bug with ImageBundle, we have to use

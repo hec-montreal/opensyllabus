@@ -46,16 +46,17 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
@@ -297,9 +298,9 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	this.itemToSelect = item;
     }
 
-    protected PushButton createTopButton(AbstractImagePrototype img,
+    protected PushButton createTopButton(ImageResource img,
 	    String tooltip) {
-	PushButton button = new PushButton(img.createImage());
+	PushButton button = new PushButton(new Image(img));
 	button.setTitle(tooltip);
 	button.setStylePrimaryName("Osyl-FileBrowserTopButton");
 	button.setSize("24px", "24px");

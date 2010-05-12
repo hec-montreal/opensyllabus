@@ -93,7 +93,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     }
 
     protected PushButton createPushButtonDelete() {
-	Image img = getOsylImageBundle().delete().createImage();
+	Image img = new Image(getOsylImageBundle().delete());
 	String title = getUiMessage("delete");
 	ClickHandler listener =
 		new OsylDeleteClickListener((OsylAbstractResProxView) getView());
@@ -101,7 +101,8 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     }
 
     protected ImageAndTextButton createButtonDelete() {
-	AbstractImagePrototype imgDeleteButton = getOsylImageBundle().delete();
+	AbstractImagePrototype imgDeleteButton = 
+	    AbstractImagePrototype.create(getOsylImageBundle().delete());
 	String title = getUiMessage("delete");
 	ClickHandler listener =
 		new OsylDeleteClickListener((OsylAbstractResProxView) getView());

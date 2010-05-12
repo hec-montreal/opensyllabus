@@ -35,11 +35,11 @@
       <groupId>org.sakaiquebec.opensyllabus</groupId>
       <artifactId>osyl-configs</artifactId>
     </dependency>
-      <!--  sakai -->
-	<dependency>
-	  <groupId>org.sakaiproject.kernel</groupId>
-	  <artifactId>sakai-kernel-api</artifactId>
-	</dependency>
+    <!--  sakai -->
+    <dependency>
+      <groupId>org.sakaiproject.kernel</groupId>
+      <artifactId>sakai-kernel-api</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.sakaiproject.kernel</groupId>
       <artifactId>sakai-kernel-util</artifactId>

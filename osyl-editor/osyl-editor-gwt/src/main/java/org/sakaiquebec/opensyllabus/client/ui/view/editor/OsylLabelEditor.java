@@ -154,7 +154,8 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 	// We only create an edit button (as delete is not allowed) and add it:
 	String title = getView().getUiMessage("edit");
 	ClickHandler handler = new OsylLabelEditClickListener(getView());
-	AbstractImagePrototype imgEditButton = getOsylImageBundle().edit();
+	AbstractImagePrototype imgEditButton = 
+	    AbstractImagePrototype.create(getOsylImageBundle().edit());
 	ImageAndTextButton pbEdit = createButton(imgEditButton, title, handler);
 	getView().getButtonPanel().clear();
 	getView().getButtonPanel().add(pbEdit);
@@ -291,7 +292,8 @@ public class OsylLabelEditor extends OsylAbstractEditor {
      * ==================== ADDED CLASSES or METHODS ====================
      */
     protected ImageAndTextButton createButtonDelete() {
-	AbstractImagePrototype imgDeleteButton = getOsylImageBundle().delete();
+	AbstractImagePrototype imgDeleteButton = 
+	    AbstractImagePrototype.create(getOsylImageBundle().delete());
 	String title = getView().getUiMessage("delete");
 	ClickHandler handler =
 		new MyDeletePushButtonListener((COElementAbstract) getView()

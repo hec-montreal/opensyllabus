@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
-import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylDisclosurePanelImageInterface;
 import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBAddFolderEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBItemSelectionEventHandler;
@@ -55,7 +54,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DisclosurePanel;
-import com.google.gwt.user.client.ui.DisclosurePanelImages;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
@@ -450,12 +448,10 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	browserPanel.add(browser);
 	browser.setWidth("100%");
 
-	DisclosurePanelImages disclosureImages =
-		(DisclosurePanelImages) GWT
-			.create(OsylDisclosurePanelImageInterface.class);
 	metaInfoDiscPanel =
-		new DisclosurePanel(disclosureImages, getView().getUiMessage(
-			"CitationEditor.document.details"), false);
+		new DisclosurePanel(getOsylImageBundle().expand(),
+			getOsylImageBundle().collapse(), getView().getUiMessage(
+			"CitationEditor.document.details"));
 	metaInfoDiscPanel.setAnimationEnabled(true);
 	metaInfoDiscPanel.setStylePrimaryName("DetailsPanel");
 	VerticalPanel metaInfoPanel = new VerticalPanel();
@@ -588,7 +584,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		.setStylePrimaryName("Osyl-ResProxCitationView-linkTextbox");
 	linksPanel.setWidget(3, 3, editorOtherLink);
 
-	AbstractImagePrototype imgSaveButton = getOsylImageBundle().save();
+	AbstractImagePrototype imgSaveButton = 
+	    AbstractImagePrototype.create(getOsylImageBundle().save());
 	saveButton =
 		new ImageAndTextButton(imgSaveButton, getView().getUiMessage(
 			"DocumentEditor.save.name"));

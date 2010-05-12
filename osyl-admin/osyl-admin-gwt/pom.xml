@@ -33,7 +33,6 @@
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-dev</artifactId>
-			<classifier>${platform}</classifier>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -118,6 +117,7 @@
 						<configuration>
 							<module>${gwtModule}</module>
 							<webappDirectory>war</webappDirectory>
+							<soyc>false</soyc>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -150,6 +150,7 @@
 							<module>${gwtModule}</module>
 							<runTarget>${gwtHostedEntryPointPage}</runTarget>
 							<webappDirectory>war</webappDirectory>
+							<soyc>false</soyc>
 						</configuration>
 					</plugin>
 					<plugin>
