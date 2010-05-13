@@ -118,12 +118,14 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 
 	// Add a Fade effect to the effect panel
 	Fade fadeEffect = new Fade();
+	fadeEffect.init(effectPanel);
 	effectPanel.addEffect(fadeEffect);
 
 	// Add a Collapse effect to the effect panel
 	CollapseVertically collapseEffect = new CollapseVertically();
+	collapseEffect.init(effectPanel);
 	effectPanel.addEffect(collapseEffect);
-
+	
 	// Set the duration of the effects
 	effectPanel.setEffectsLength(1);
 
