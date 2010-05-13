@@ -329,7 +329,7 @@ public class OsylCitationForm extends WindowPanel implements
 	journalPanel =
 		createLabelTextboxElement(osylController
 			.getUiMessage("ResProxCitationView.journal.label")
-			+ RECOMMENDED_FIELD_INDICATOR + ":", sourceTitle,
+			+ ":", sourceTitle,
 			CitationSchema.SOURCE_TITLE);
 	mainPanel.add(journalPanel);
 
@@ -361,12 +361,12 @@ public class OsylCitationForm extends WindowPanel implements
 		createDoubleLabelTextboxElement(
 			osylController
 				.getUiMessage("ResProxCitationView.volume.label")
-				+ RECOMMENDED_FIELD_INDICATOR + ":",
+				+ ":",
 			volumeTextBox,
 			CitationSchema.VOLUME,
 			osylController
 				.getUiMessage("ResProxCitationView.issue.label")
-				+ RECOMMENDED_FIELD_INDICATOR + ":",
+				+ ":",
 			issueTextBox, CitationSchema.ISSUE);
 	mainPanel.add(volIssuePanel);
 
@@ -382,7 +382,7 @@ public class OsylCitationForm extends WindowPanel implements
 	volumePanel =
 		createLabelTextboxElement(osylController
 			.getUiMessage("ResProxCitationView.volume.label")
-			+ RECOMMENDED_FIELD_INDICATOR + ":",
+			+ ":",
 			proceedVolumeTextBox, CitationSchema.VOLUME);
 	mainPanel.add(volumePanel);
 
@@ -395,7 +395,7 @@ public class OsylCitationForm extends WindowPanel implements
 	pagePanel =
 		createLabelTextboxElement(osylController
 			.getUiMessage("ResProxCitationView.pages.label")
-			+ RECOMMENDED_FIELD_INDICATOR + ":", pagesTextBox,
+			+ ":", pagesTextBox,
 			CitationSchema.PAGES);
 
 	mainPanel.add(pagePanel);
@@ -852,13 +852,13 @@ public class OsylCitationForm extends WindowPanel implements
 		    + ":");
 	    titlePanel.setVisible(true);
 	    authorPanel.setVisible(true);
-	    isnPanel.setVisible(true);
+	    isnPanel.setVisible(false);
 	    journalPanel.setVisible(true);
 	    proceedingPanel.setVisible(false);
 	    volumePanel.setVisible(false);
 	    volIssuePanel.setVisible(true);
 	    pagePanel.setVisible(true);
-	    doiPanel.setVisible(true);
+	    doiPanel.setVisible(false);
 	    yearPanel.setVisible(true);
 	    citationPanel.setVisible(false);
 	    urlPanel.setVisible(false);
