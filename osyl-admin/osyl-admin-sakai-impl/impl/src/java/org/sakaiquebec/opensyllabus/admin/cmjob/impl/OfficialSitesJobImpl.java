@@ -111,8 +111,8 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
 	loginToSakai();
-	Date startDateInterval = adminConfigService.getIntervalStartDate();
-	Date endDateInterval = adminConfigService.getIntervalEndDate();
+	Date startDateInterval = adminConfigService.getStartDate();
+	Date endDateInterval = adminConfigService.getEndDate();
 
 	// If we have a list of courses, we will create only those one. If we
 	// don't we create

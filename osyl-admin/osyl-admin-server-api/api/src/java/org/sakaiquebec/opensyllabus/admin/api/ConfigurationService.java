@@ -22,6 +22,7 @@ package org.sakaiquebec.opensyllabus.admin.api;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class is used to retrieved informations saved in the config.xml file.
@@ -33,18 +34,69 @@ import java.util.List;
  */
 public interface ConfigurationService {
 
+    // Tags used in the xml files
+    // For the official sites xml configuration file
+    public final static String COURSES = "courses";
+
+    public final static String STARTDATE = "startDate";
+
+    public final static String ENDDATE = "endDate";
+
+    // For adding or removing users with a specific role or removing a role in
+    // all the course sites
+    public final static String ROLE = "role";
+
+    public final static String ADDEDUSERS = "addedUsers";
+
+    public final static String REMOVEDUSERS = "removedUsers";
+
+    public final static String FUNCTIONS = "FUNCTIONS";
+    
+    
+    //For adding a role with
+    
+    public final static String FUNCTIONS_ROLE = "role";
+    
+    public final static String ALLOWED_FUNCTIONS = "allowed_functions";
+
+    public final static String DISALLOWED_FUNCTIONS = "disallowed_functions";
+
+    public final static String REMOVED_ROLE = "removedRole";
+
     public final static String ADMINSITENAME = "opensyllabusAdmin";
 
-    public final static String CONFIGFORLDER = "config";
+    /**
+     * Folder that contains all the configuration files
+     */
+    public final static String CONFIGFORLDER =
+	    "/content/group/opensyllabusAdmin/config/";
 
-    public final static String CONFIGFILE = "config.xml";
-    
-    public final static String CONFIGREF = "/content/group/opensyllabusAdmin/config/config.xml";
+    /**
+     * This folder contains all the configuration files that modify
+     * (add-remove-update) a role.
+     */
+    public final static String ROLEFOLDER =
+	    "/content/group/opensyllabusAdmin/config/role/";
 
-    public Date getIntervalStartDate();
+    public final static String OFFSITESCONFIGFILE = "offSitesConfig.xml";
 
-    public Date getIntervalEndDate();
+    public final static String FUNCTIONSSCONFIGFILE = "functionsConfig.xml";
+
+    // Parameters used in the official sites synchronisation job
+    public Date getEndDate();
+
+    public Date getStartDate();
 
     public List<String> getCourses();
+
+    public Map<String, Map<String, Object>> getUdatedRoles();
+    
+    public String getFunctionsRole();
+    
+    public String getRoleToRemove();
+    
+    public List<String> getAllowedFunctions();
+    
+    public List<String> getDisallowedFunctions();
 
 }

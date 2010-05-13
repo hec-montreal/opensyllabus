@@ -1,6 +1,7 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,10 +19,11 @@ import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.cover.SessionManager;
-import org.sakaiquebec.opensyllabus.admin.cmjob.api.ChangePermissionsSynchronizationJob;
+import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
+import org.sakaiquebec.opensyllabus.admin.cmjob.api.FunctionsSynchronizationJob;
 
-public class ChangePermissionsSynchronisationJobImpl implements
-	ChangePermissionsSynchronizationJob {
+public class FunctionsSynchronisationJobImpl implements
+	FunctionsSynchronizationJob {
 
     private List<Site> allSites;
 
@@ -29,7 +31,7 @@ public class ChangePermissionsSynchronisationJobImpl implements
      * Our logger
      */
     private static Log log =
-	    LogFactory.getLog(ChangePermissionsSynchronisationJobImpl.class);
+	    LogFactory.getLog(FunctionsSynchronisationJobImpl.class);
 
     /**
      * The site service used to create new sites: Spring injection
@@ -46,21 +48,26 @@ public class ChangePermissionsSynchronisationJobImpl implements
     }
 
     /**
-     * List of the permissions that will added to the role in the course sites.
+     * Administration ConfigurationService injection
      */
-    private String[] permAdded = { "site.viewRoster" };
+    private ConfigurationService adminConfigService;
 
     /**
-     * List of the permissions that will be removed from the role.
+     * @param adminConfigService
      */
-    private String[] permRemoved = { "site.add" };
-
-    private String modifiedRole = "Instructor";
+    public void setAdminConfigService(ConfigurationService adminConfigService) {
+	this.adminConfigService = adminConfigService;
+    }
 
     @SuppressWarnings("unchecked")
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
 	loginToSakai();
+
+	String roleToRemove = adminConfigService.getRoleToRemove();
+
+	String functionsRole = adminConfigService.getFunctionsRole();
+
 	// Check role in template realm
 	try {
 	    AuthzGroup realm = AuthzGroupService.getAuthzGroup(TEMPLATE_ID);
@@ -69,9 +76,17 @@ public class ChangePermissionsSynchronisationJobImpl implements
 		AuthzGroupService.save(realm);
 	    } else {
 
-		Role role = realm.getRole(modifiedRole);
-		addPermissions(role);
-		removePermissions(role);
+		if (functionsRole != null) {
+		    Role role =
+			    realm
+				    .getRole(adminConfigService
+					    .getFunctionsRole());
+		    addPermissions(role);
+		    removePermissions(role);
+		}
+		// We remove the role
+		if (roleToRemove != null)
+		    removeRole(realm, roleToRemove);
 		AuthzGroupService.save(realm);
 	    }
 	} catch (GroupNotDefinedException e) {
@@ -103,22 +118,30 @@ public class ChangePermissionsSynchronisationJobImpl implements
 	    if (siteRealm != null) {
 
 		try {
-		    // We check if the role helpdesk with the required
-		    // permissions
-		    // exists in the site
-		    roleExists = isRoleInRealm(siteRealm);
-		    if (!roleExists) {
-			addRole(siteRealm);
-			AuthzGroupService.save(siteRealm);
-		    } else {
+		    if (functionsRole != null) {
+			// We check if the role helpdesk with the required
+			// permissions
+			// exists in the site
+			roleExists = isRoleInRealm(siteRealm);
+			if (!roleExists) {
+			    addRole(siteRealm);
+			    AuthzGroupService.save(siteRealm);
+			} else {
 
-			Role role = siteRealm.getRole(modifiedRole);
-			// We add the new permissions
-			addPermissions(role);
+			    Role role =
+				    siteRealm.getRole(adminConfigService
+					    .getFunctionsRole());
+			    // We add the new permissions
+			    addPermissions(role);
 
-			// We remove the specified users
-			removePermissions(role);
+			    // We remove the specified users
+			    removePermissions(role);
+			}
+			// We remove the role
+			if (roleToRemove != null)
+			    removeRole(siteRealm, roleToRemove);
 			AuthzGroupService.save(siteRealm);
+
 		    }
 		} catch (GroupNotDefinedException e) {
 		    log.error(e.getMessage());
@@ -138,16 +161,23 @@ public class ChangePermissionsSynchronisationJobImpl implements
      */
     private void addRole(AuthzGroup realm) {
 	try {
-	    Role role = realm.getRole(modifiedRole);
+	    String functionsRole = adminConfigService.getFunctionsRole();
+	    Role role = realm.getRole(functionsRole);
 
 	    if (role == null)
-		role = realm.addRole(modifiedRole);
-	    for (Object function : permAdded) {
+		role = realm.addRole(functionsRole);
+
+	    List<String> functionsAdded =
+		    adminConfigService.getAllowedFunctions();
+	    List<String> functionsRemoved =
+		    adminConfigService.getDisallowedFunctions();
+
+	    for (Object function : functionsAdded) {
 		if (!role.isAllowed((String) function))
 		    role.allowFunction((String) function);
 	    }
 
-	    for (Object function : permRemoved) {
+	    for (Object function : functionsRemoved) {
 		if (role.isAllowed((String) function))
 		    role.disallowFunction((String) function);
 	    }
@@ -164,7 +194,7 @@ public class ChangePermissionsSynchronisationJobImpl implements
     }
 
     private boolean isRoleInRealm(AuthzGroup realm) {
-	Role role = realm.getRole(modifiedRole);
+	Role role = realm.getRole(adminConfigService.getFunctionsRole());
 	if (role == null)
 	    return false;
 	else
@@ -172,8 +202,10 @@ public class ChangePermissionsSynchronisationJobImpl implements
     }
 
     private void removePermissions(Role role) {
-	if (permRemoved.length > 0) {
-	    for (String permission : permRemoved) {
+	List<String> functionsRemoved =
+		adminConfigService.getDisallowedFunctions();
+	if (functionsRemoved.size() > 0) {
+	    for (String permission : functionsRemoved) {
 		if (role.isAllowed(permission)) {
 		    role.disallowFunction(permission);
 		}
@@ -182,8 +214,9 @@ public class ChangePermissionsSynchronisationJobImpl implements
     }
 
     private void addPermissions(Role role) {
-	if (permAdded.length > 0) {
-	    for (String perm : permAdded) {
+	List<String> functionsAdded = adminConfigService.getAllowedFunctions();
+	if (functionsAdded.size() > 0) {
+	    for (String perm : functionsAdded) {
 
 		if (!role.isAllowed(perm)) {
 		    role.allowFunction(perm);
@@ -210,6 +243,25 @@ public class ChangePermissionsSynchronisationJobImpl implements
 	// post the login event
 	EventTrackingService.post(EventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGIN, null, true));
+    }
+
+    private void removeRole(AuthzGroup realm, String role) {
+	try {
+	    Set<String> users = realm.getUsersHasRole(role);
+
+	    for (String userId : users) {
+		realm.removeMember(userId);
+	    }
+	    realm.removeRole(role);
+
+	    AuthzGroupService.save(realm);
+
+	} catch (GroupNotDefinedException e) {
+	    log.error(e.getMessage());
+	} catch (AuthzPermissionException e) {
+	    log.error(e.getMessage());
+	}
+
     }
 
     /**

@@ -227,6 +227,21 @@
 			
 	</bean>
 	
+	  <!-- ConfigurationService bean handles institution-specific configuration
+       for the Citations Helper -->
+  <bean id="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService"
+    class="org.sakaiquebec.opensyllabus.admin.impl.ConfigurationServiceImpl"
+    init-method="init"
+    destroy-method="destroy"
+    singleton="true">
+
+    <property name="contentHostingService">
+    	<ref bean="org.sakaiproject.content.api.ContentHostingService"/>
+    </property>
+ 
+  </bean>
+	
+	
 	<bean id="osylcmjob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImpl" >
 		<property name="cmAdmin"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
@@ -246,32 +261,20 @@
 			
 	</bean>
 
-	<bean id="helpdeskSynchrojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.HelpdeskSynchronisationJobImpl" >
+	<bean id="roleSynchrojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.RolesSynchronisationJobImpl" >
 		<property name="userDirService"
 			ref="org.sakaiproject.user.api.UserDirectoryService" />
 		<property name="siteService"
 			ref="org.sakaiproject.site.api.SiteService" />			
+		<property name="adminConfigService"
+			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
 	</bean>
 
-
-	<bean id="changePermSynchrojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.ChangePermissionsSynchronisationJobImpl" >
+	<bean id="changePermSynchrojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.FunctionsSynchronisationJobImpl" >
 		<property name="siteService"
 			ref="org.sakaiproject.site.api.SiteService" />			
-	</bean>
-
-
-	<bean id="libraryStaffSynchrojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.LibraryStaffSynchronisationJobImpl" >
-		<property name="userDirService"
-			ref="org.sakaiproject.user.api.UserDirectoryService" />
-		<property name="siteService"
-			ref="org.sakaiproject.site.api.SiteService" />			
-	</bean>
-
-	<bean id="bibliServPretSynchrojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.BibliServPretSynchronisationJobImpl" >
-		<property name="userDirService"
-			ref="org.sakaiproject.user.api.UserDirectoryService" />
-		<property name="siteService"
-			ref="org.sakaiproject.site.api.SiteService" />			
+		<property name="adminConfigService"
+			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
 	</bean>
 
 	<bean id="changeOsylEditorSiteTypejob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.ChangeOsylEditorSiteTypeJobImpl" >
@@ -333,17 +336,17 @@
 	</bean>	
 
 
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.helpdeskSynchrojob"
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.roleSynchrojob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
 		
 	
 		<property name="beanId">
-			<value>helpdeskSynchrojob</value>
+			<value>roleSynchrojob</value>
 		</property>
 		
 		<property name="jobName">
-			<value>Helpdesk Synchronisation Job</value>
+			<value>Role Synchronisation Job</value>
 		</property>
 		
 		<property name="schedulerManager">
@@ -363,44 +366,6 @@
 		
 		<property name="jobName">
 			<value>Change Permissions Synchronisation Job</value>
-		</property>
-		
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-		
-	</bean>	
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.libraryStaffSynchrojob"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
-		
-	
-		<property name="beanId">
-			<value>libraryStaffSynchrojob</value>
-		</property>
-		
-		<property name="jobName">
-			<value>Library Staff Synchronisation Job</value>
-		</property>
-		
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-		
-	</bean>	
-
-
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.bibliServPretSynchrojob"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
-		
-	
-		<property name="beanId">
-			<value>bibliServPretSynchrojob</value>
-		</property>
-		
-		<property name="jobName">
-			<value>Bibli Serv Pret Synchronisation Job</value>
 		</property>
 		
 		<property name="schedulerManager">
@@ -469,37 +434,5 @@
 	
 
 
-  <!-- ConfigurationService bean handles institution-specific configuration
-       for the Citations Helper -->
-  <bean id="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService"
-    class="org.sakaiquebec.opensyllabus.admin.impl.ConfigurationServiceImpl"
-    init-method="init"
-    destroy-method="destroy"
-    singleton="true">
-
-<!--    <property name="adminSiteName"><value>opensyllabusAdmin</value></property>-->
-<!--    <property name="configFolder"><value>config</value></property>-->
-<!--    <property name="configXmlfILE"><value>config.xml</value></property>-->
-
-
-	<!-- Beginning of the interval of of time to be considered in the official sites creation
-		format: yyyy/MM/dd-->
-	
-    <property name="startDate"><value></value></property>
-
-	<!--End of the interval of of time to be considered in the official sites creation
-		Format: yyyy/MM/dd-->
-    <property name="endDate"><value></value></property>
-
-	<!--List of course to be created in the given interval
-		if empty, all the course in the extract files will be considered.
-		Separate courses in list with with comma-->
-    <property name="courses"><value></value></property>
-
-    <property name="contentHostingService">
-    	<ref bean="org.sakaiproject.content.api.ContentHostingService"/>
-    </property>
- 
-  </bean>
 
 </beans>

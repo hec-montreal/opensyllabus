@@ -38,6 +38,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.cover.SecurityService;
+import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.Reference;
@@ -60,15 +61,30 @@ import org.w3c.dom.NodeList;
  */
 public class ConfigurationServiceImpl implements ConfigurationService, Observer {
 
-    public final static String COURSES_DELIMITER = ",";
+    public final static String LIST_DELIMITER = ",";
 
     private Log log = LogFactory.getLog(ConfigurationServiceImpl.class);
 
     private String startDate = null;
 
     private String endDate = null;
+    
+    private List<String> allowedFunctions = null;
+    
+    private List<String> disallowedFunctions = null;
+    
+    private String removedRole = null;
+    
+    private String functionsRole = null;
 
     private List<String> courses = null;
+
+    private Map<String, Map<String, Object>> updatedRoles = null;
+
+    private String role;
+    private List<String> functions;
+    private List<String> addedUsers;
+    private List<String> removedUsers;
 
     protected ContentHostingService contentHostingService = null;
 
@@ -81,45 +97,75 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	log.info("initialize OsylAdmin configuration service");
 
 	EventTrackingService.addObserver(this);
-	
-	updateConfig(CONFIGREF);
 
+	 updateConfig(CONFIGFORLDER +OFFSITESCONFIGFILE);
+	 updateConfig(ROLEFOLDER);
+	 updateConfig(CONFIGFORLDER+FUNCTIONSSCONFIGFILE);
+
+    }
+
+    public String getFunctionsRole() {
+        return functionsRole;
+    }
+
+    private void setFunctionsRole(String functionsRole) {
+        this.functionsRole = functionsRole;
+    }
+
+    public List<String> getAllowedFunctions() {
+        return allowedFunctions;
+    }
+
+    private void setAllowedFunctions(String allowedFunctions) {
+	this.allowedFunctions = new ArrayList<String>();
+	if (allowedFunctions != null && allowedFunctions.length() > 0) {
+	    String[] allowedFunctionsTable = allowedFunctions.split(LIST_DELIMITER);
+	    for (int i = 0; i < allowedFunctionsTable.length; i++) {
+		this.allowedFunctions.add(allowedFunctionsTable[i].trim());
+	    }
+	}
+    }
+
+    public List<String> getDisallowedFunctions() {
+        return disallowedFunctions;
+    }
+
+    private void setDisallowedFunctions(String disallowedFunctions) {
+	this.disallowedFunctions = new ArrayList<String>();
+	if (disallowedFunctions != null && disallowedFunctions.length() > 0) {
+	    String[] disallowedFunctionsTable = disallowedFunctions.split(LIST_DELIMITER);
+	    for (int i = 0; i < disallowedFunctionsTable.length; i++) {
+		this.disallowedFunctions.add(disallowedFunctionsTable[i].trim());
+	    }
+	}
+    }
+
+    public String getRemovedRole() {
+        return removedRole;
+    }
+
+    private void setRemovedRole(String removedRole) {
+        this.removedRole = removedRole;
     }
 
     public void destroy() {
 	log.info("destroy OsylAdmin configuration service");
     }
 
-    private String getStartDate() {
-	return startDate;
+    public Date getStartDate() {
+	return getDate(startDate);
     }
 
-    public Date getIntervalStartDate() {
-	return getDate(getStartDate());
-    }
-
-    public void setStartDate(String startDate) {
+    private void setStartDate(String startDate) {
 	this.startDate = startDate;
     }
 
-    private String getEndDate() {
-	return endDate;
-    }
-
-    public Date getIntervalEndDate() {
-	return getDate(getEndDate());
-    }
-
-    public void setEndDate(String endDate) {
+    private void setEndDate(String endDate) {
 	this.endDate = endDate;
     }
 
-    public List<String> getCourses() {
-	return courses;
-    }
-
-    public void setCourses(List<String> courses) {
-	this.courses = courses;
+    public Date getEndDate() {
+	return getDate(endDate);
     }
 
     /**
@@ -135,44 +181,94 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
 	    if (event.getModify()) {
 		String referenceString = event.getResource();
-		if (referenceString.contains(CONFIGFILE)) {
 
-		    log.info("Updating config from " + CONFIGFILE);
+		// If the offSitesConfig.xml update, we update the values
+		if (referenceString.contains(OFFSITESCONFIGFILE)) {
+		    log.info("Updating official sites config from "
+			    + referenceString);
+		    updateConfig(referenceString);
+		}
+
+		// If the content of the role folder update, we update the
+		// values
+		if (referenceString.contains(ROLEFOLDER)) {
+		    log.info("Updating roles config files from "
+			    + referenceString);
+		    if (updatedRoles == null)
+			updatedRoles =
+				new HashMap<String, Map<String, Object>>();
+		    updateConfig(referenceString);
+		}
+		
+		// If the functions files updated we change the values
+		if (referenceString.contains(FUNCTIONSSCONFIGFILE)) {
+		    log.info("Updating roles config files from "
+			    + referenceString);
+		    if (updatedRoles == null)
+			updatedRoles =
+				new HashMap<String, Map<String, Object>>();
 		    updateConfig(referenceString);
 		}
 	    }
 	}
     }
 
-    private void updateConfig(String fileReference) {
-	Reference reference = EntityManager.newReference(fileReference);
+    private void updateConfig(String fileName) {
+
+	Reference reference = EntityManager.newReference(fileName);
+	
 
 	if (reference != null) {
 
 	    ContentResource resource = null;
 
 	    try {
-		//We allow access to the file
+		// We allow access to the file
 		SecurityService.pushAdvisor(new SecurityAdvisor() {
-			public SecurityAdvice isAllowed(String userId,
-				String function, String reference) {
-			    return SecurityAdvice.ALLOWED;
-			}
-		    });
-		
-		resource = contentHostingService.getResource(reference.getId());
-		if (resource != null)
-		    retrieveConfigs(fileReference, resource.streamContent());
-		//We remove access to the resource 
+		    public SecurityAdvice isAllowed(String userId,
+			    String function, String reference) {
+			return SecurityAdvice.ALLOWED;
+		    }
+		});
+		if (fileName.contains(ROLEFOLDER)) {
+		    ContentCollection collection;
+		    if (!contentHostingService.isCollection(reference.getId())){
+			  resource =
+			    contentHostingService
+				    .getResource(reference.getId());
+
+			  collection =
+			    resource.getContainingCollection();
+		    }
+		    else{
+			collection = contentHostingService.getCollection(reference.getId());
+		    }
+		    List<ContentResource> resources =
+			    contentHostingService.getAllResources(collection
+				    .getId());
+
+		    for (ContentResource ress : resources) {
+			if (ress != null)
+			    retrieveConfigs(ress.getReference(), ress
+				    .streamContent());
+		    }
+		} else {
+		    resource =
+			    contentHostingService
+				    .getResource(reference.getId());
+		    if (resource != null)
+			retrieveConfigs(fileName, resource.streamContent());
+		}
+		// We remove access to the resource
 		SecurityService.clearAdvisors();
 	    } catch (PermissionException e) {
-		log.error(e.getMessage());
+		log.info("You are not allowed to access this resource");
 	    } catch (IdUnusedException e) {
-		log.warn("There is no " + fileReference + " file ");
+		log.warn("There is no " + fileName + " file ");
 	    } catch (TypeException e) {
-		log.error(e.getMessage());
+		log.info("The resource requested has the wrong type");
 	    } catch (ServerOverloadException e) {
-		log.error(e.getMessage());
+		log.info(e.getMessage());
 	    }
 	}
     }
@@ -188,16 +284,50 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	}
 
 	synchronized (this) {
-	    Map<String, String> parameterMap = new HashMap<String, String>();
+	    if (configurationXml.contains(OFFSITESCONFIGFILE)) {
 
-	    saveParameter(document, parameterMap, "startDate");
-	    saveParameter(document, parameterMap, "endDate");
-	    saveParameter(document, parameterMap, "courses");
+		String courses = retrieveParameter(document, COURSES);
+		String endDate = retrieveParameter(document, ENDDATE);
+		String startDate = retrieveParameter(document, STARTDATE);
 
-	    setStartDate(parameterMap.get("startDate"));
-	    setEndDate(parameterMap.get("endDate"));
-	    setCourses(getCourses(parameterMap.get("courses")));
+		setCourses(courses);
+		setStartDate(startDate);
+		setEndDate(endDate);
+	    }
 
+	    if (configurationXml.contains(ROLEFOLDER)) {
+
+		Map<String, Object> values = new HashMap<String, Object>();
+
+		String role = retrieveParameter(document, ROLE);
+		String addedUsers = retrieveParameter(document, ADDEDUSERS);
+		String removedUsers = retrieveParameter(document, REMOVEDUSERS);
+		String functions = retrieveParameter(document, FUNCTIONS);
+
+		setRole(role);
+		setAddedUsers(addedUsers);
+		setRemovedUsers(removedUsers);
+		setFunctions(functions);
+
+		values.put(ADDEDUSERS, this.addedUsers);
+		values.put(REMOVEDUSERS, this.removedUsers);
+		values.put(FUNCTIONS, this.functions);
+
+		updatedRoles.put(role, values);
+	    }
+
+	    if (configurationXml.contains(FUNCTIONSSCONFIGFILE)) {
+		
+		String fuctionsRole = retrieveParameter(document, ROLE);
+		String removedRole = retrieveParameter(document, REMOVED_ROLE);
+		String allowedFunctions = retrieveParameter(document, ALLOWED_FUNCTIONS);
+		String disallowedFunctions = retrieveParameter(document, DISALLOWED_FUNCTIONS);
+		
+		setFunctionsRole(fuctionsRole);
+		setRemovedRole(removedRole);
+		setAllowedFunctions(allowedFunctions);
+		setDisallowedFunctions(disallowedFunctions);
+	    }
 	}
 
     }
@@ -214,29 +344,68 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     }
 
-    private List<String> getCourses(String courses) {
+    private void setCourses(String courses) {
 	List<String> allCourses = new ArrayList<String>();
-	String[] coursesTable = courses.split(COURSES_DELIMITER);
-	for (int i = 0; i < coursesTable.length; i++) {
-	    allCourses.add(coursesTable[i].trim());
+	if (courses != null && courses.length() > 0) {
+	    String[] coursesTable = courses.split(LIST_DELIMITER);
+	    for (int i = 0; i < coursesTable.length; i++) {
+		allCourses.add(coursesTable[i].trim());
+	    }
 	}
+	this.courses = allCourses;
+    }
 
-	return allCourses;
+    public List<String> getCourses() {
+	return courses;
+    }
+
+    private void setRole(String role) {
+	this.role = role;
+    }
+
+
+    private void setFunctions(String functions) {
+	this.functions = new ArrayList<String>();
+	if (functions != null && functions.length() > 0) {
+	    String[] functionsTable = functions.split(LIST_DELIMITER);
+	    for (int i = 0; i < functionsTable.length; i++) {
+		this.functions.add(functionsTable[i].trim());
+	    }
+	}
+    }
+
+    private void setAddedUsers(String addedUsers) {
+	this.addedUsers = new ArrayList<String>();
+	if (addedUsers != null && addedUsers.length() > 0) {
+	    String[] addedUsersTable = addedUsers.split(LIST_DELIMITER);
+	    for (int i = 0; i < addedUsersTable.length; i++) {
+		this.addedUsers.add(addedUsersTable[i].trim());
+	    }
+	}
+    }
+
+    private void setRemovedUsers(String removedUsers) {
+	this.removedUsers = new ArrayList<String>();
+	if (removedUsers != null && removedUsers.length() > 0) {
+	    String[] removedUsersTable = removedUsers.split(LIST_DELIMITER);
+	    for (int i = 0; i < removedUsersTable.length; i++) {
+		this.removedUsers.add(removedUsersTable[i].trim());
+	    }
+	}
     }
 
     /**
-     * Lookup and save one dynamic configuration parameter
+     * Lookup and rerieve one dynamic configuration parameter
      * 
      * @param Configuration XML
-     * @param parameterMap Parameter name=value pairs
      * @param name Parameter name
      */
-    private void saveParameter(org.w3c.dom.Document document,
-	    Map<String, String> parameterMap, String name) {
-	String value;
-	if ((value = getText(document.getDocumentElement(), name)) != null) {
-	    parameterMap.put(name, value);
-	}
+    private String retrieveParameter(org.w3c.dom.Document document, String name) {
+	String value = getText(document.getDocumentElement(), name);
+	if ((value) != null) {
+	    return value;
+	} else
+	    return null;
     }
 
     /**
@@ -316,6 +485,14 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    log.warn("XML parse on \"" + stream + "\" failed: " + exception);
 	}
 	return null;
+    }
+
+    public Map<String, Map<String, Object>> getUdatedRoles() {
+	return updatedRoles;
+    }
+
+    public String getRoleToRemove() {
+	return removedRole;
     }
 
 }
