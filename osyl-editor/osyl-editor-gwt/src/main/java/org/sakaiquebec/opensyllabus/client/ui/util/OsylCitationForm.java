@@ -208,8 +208,8 @@ public class OsylCitationForm extends WindowPanel implements
 
 	mainPanel.add(new HTML(OsylAbstractEditor.MANDATORY_FIELD_INDICATOR
 		+ osylController.getUiMessage("Global.fields.mandatory")));
-	mainPanel.add(new HTML(uiMessages
-		.getMessage("CitationForm.recommendedFields")));
+//	mainPanel.add(new HTML(uiMessages
+//		.getMessage("CitationForm.recommendedFields")));
 	// Create a listbox for the citation type.
 	citationType = FormHelper.createListBox("Osyl-UnitView-TextArea");
 	citationType.setName("cipvalues");
