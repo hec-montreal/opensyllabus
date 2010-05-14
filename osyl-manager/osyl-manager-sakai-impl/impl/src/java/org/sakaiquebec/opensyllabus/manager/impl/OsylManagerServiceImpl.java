@@ -1214,12 +1214,20 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return fileNameChangesMap;
     }
 
+
+    // only to improve readability while profiling
+    private static String elapsed(long start) {
+	return ": elapsed : " + (System.currentTimeMillis() - start) + " ms "; 	
+    }
+    
     /** {@inheritDoc} */
     public COSite getCoAndSiteInfo(String siteId) {
+	long start = System.currentTimeMillis();
 	Site site = null;
 	COSerialized co = null;
 	COSite info = new COSite();
 
+	log.debug("getCoAndSiteInfo 1" + elapsed(start));
 	try {
 	    site = osylSiteService.getSite(siteId);
 	    if (osylSiteService.hasCourseOutline(siteId)) {
@@ -1230,6 +1238,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    e.printStackTrace();
 	}
 
+	log.debug("getCoAndSiteInfo 2" + elapsed(start));
 	if (site != null) {
 	    // Retrieve site info
 	    info.setSiteId(siteId);
@@ -1239,15 +1248,18 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    info.setSiteOwnerLastName(site.getCreatedBy().getLastName());
 	    info.setSiteOwnerName(site.getCreatedBy().getFirstName());
 
+	log.debug("getCoAndSiteInfo 3" + elapsed(start));
 	    // Retrieve CM info
 	    String siteProviderId = site.getProviderGroupId();
 	    if (courseManagementService.isSectionDefined(siteProviderId)) {
 		Section section =
 			courseManagementService.getSection(siteProviderId);
 
+	log.debug("getCoAndSiteInfo 4" + elapsed(start));
 		// Retrieve official instructors
 		EnrollmentSet enrollmentSet = section.getEnrollmentSet();
 
+	log.debug("getCoAndSiteInfo 5" + elapsed(start));
 		if (enrollmentSet != null) {
 		    Set<String> instructors =
 			    enrollmentSet.getOfficialInstructors();
@@ -1265,6 +1277,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			}
 		    }
 		}
+	log.debug("getCoAndSiteInfo 6" + elapsed(start));
 
 		// Retrieve course number
 		CourseOffering courseOff =
@@ -1287,6 +1300,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		info.setCourseCoordinator(null);
 
 	    }
+	log.debug("getCoAndSiteInfo 7" + elapsed(start));
 	    // Retrieve course outline info
 	    if (co != null) {
 		// TODO: corriger avec la tache SAKAI-1357
@@ -1294,6 +1308,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		info.setLastPublicationDate(null);
 	    }
 
+	log.debug("getCoAndSiteInfo 8" + elapsed(start));
 	    // Retrieve parent site
 	    String parentSite = null;
 
@@ -1303,31 +1318,43 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		log.error(e.getMessage());
 		e.printStackTrace();
 	    }
+	log.debug("getCoAndSiteInfo 9" + elapsed(start));
 
 	    info.setParentSite(parentSite);
 	}
+	log.debug("getCoAndSiteInfo  " + elapsed(start) + " FINI");
 	return info;
     }
 
     /** {@inheritDoc} */
     public List<COSite> getCoAndSiteInfo() {
+	long start = System.currentTimeMillis();
 	List<COSite> allSitesInfo = null;
 	COSite info = null;
 	String currentUser = sessionManager.getCurrentSessionUserId();
+	int siteCount = 0;
 
+	log.debug("getCoAndSiteInfo (Site List ##### START #####)" + elapsed(start));
 	List<String> accessedSites =
 		getSitesForUser(currentUser, SiteService.SITE_VISIT);
+
+	log.debug("getCoAndSiteInfo (Site List ##### SITES #####)" + elapsed(start));
 
 	if (accessedSites != null && accessedSites.size() > 0) {
 	    allSitesInfo = new ArrayList<COSite>();
 	    for (int i = 0; i < accessedSites.size(); i++) {
 		info = getCoAndSiteInfo(accessedSites.get(i));
-		if (info != null)
+		if (info != null) {
 		    allSitesInfo.add(info);
+		    siteCount++;
+		}
 	    }
 	}
+	log.debug("getCoAndSiteInfo (Site List ##### INFOS #####)" + elapsed(start));
 
-	deleteExpiredTemporaryExportFiles(allSitesInfo);
+	deleteExpiredTemporaryExportFiles(allSitesInfo); // Takes up to 300 ms
+	log.debug("getCoAndSiteInfo (Site List ###### END ######)" + elapsed(start)
+		+ " for " + siteCount +  " sites");
 	return allSitesInfo;
     }
 
