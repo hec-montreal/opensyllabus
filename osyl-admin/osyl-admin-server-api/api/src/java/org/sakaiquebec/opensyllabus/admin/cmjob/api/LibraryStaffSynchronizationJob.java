@@ -31,7 +31,7 @@ import edu.emory.mathcs.backport.java.util.Arrays;
  * This job adds the role library staff with the correct permissions to all the
  * sites of type course. All the sites will be checked to make sure the role has
  * at least the specified permissions.
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -42,9 +42,9 @@ public interface LibraryStaffSynchronizationJob extends Job {
      * any other function the job will try to remove it.
      */
     public final static List FUNCTIONS_TO_ALLOW =
-	    Arrays.asList(new String[] { "site.visit", "site.viewRoster",
-		    "content.delete.own", "content.new", "content.revise.any",
-		    "content.revise.own", "content.read" });
+	    Arrays.asList(new String[] { "content.delete.own", "content.hidden",
+		    "content.new", "content.read", "content.revise.any",
+		    "content.revise.own", "dropbox.maintain","section.role.instructor","site.visit" });
 
     public final static String LIBRARYSTAFF_ROLE = "libraryStaff";
 
