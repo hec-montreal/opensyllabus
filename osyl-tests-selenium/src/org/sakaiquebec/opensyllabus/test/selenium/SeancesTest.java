@@ -102,8 +102,11 @@ public class SeancesTest extends AbstractOSYLTest{
 	log("OK: Lecture renamed");
 	
 	// Now we rename the lecture from inside
-	int Val = resNb +2;
-	session().click("link=" + Val + "-");
+	int Val = resNb +3;
+	session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	//session().click("link=" + Val + "-");
 	pause();
 	String newText2 = "SeanceReNamed" + timeStamp();
 	session().click("//tr/td/div/table[2]/tbody/tr/td/button");
@@ -127,7 +130,10 @@ public class SeancesTest extends AbstractOSYLTest{
         pause();
 	
 	//We edit the last Lecture
-        session().click("link=" + Val + "-");
+        session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        //session().click("link=" + Val + "-");
 	pause();
 	
 	//Add Text in the last Lecture Unit
@@ -185,7 +191,10 @@ public class SeancesTest extends AbstractOSYLTest{
 			"td/div[contains(text(),'Organisation')]");
                 pause();
         	//Open the last Lecture unit
-        	session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
+                session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+                //session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
         	pause();
                         	
         	if (!session().isTextPresent(selectedRubric1)) {
@@ -234,7 +243,10 @@ public class SeancesTest extends AbstractOSYLTest{
 		"td/div[contains(text(),'Organisation')]");
         pause();
 	//Open the last Lecture unit 
-        session().click("link=" + Val + "-");
+        session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        //session().click("link=" + Val + "-");
 	pause();
        
 	//Add Hyperlink in the last Lecture Unit
@@ -282,7 +294,10 @@ public class SeancesTest extends AbstractOSYLTest{
 			"td/div[contains(text(),'Organisation')]");
                 pause();
         	//Open the last Lecture unit 
-        	session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
+                session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+                //session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
         	pause();
         
         	if (!session().isTextPresent(selectedRubric2)) {
@@ -331,7 +346,10 @@ public class SeancesTest extends AbstractOSYLTest{
 		"td/div[contains(text(),'Organisation')]");
         pause();
 	//Open the last Lecture unit 
-        session().click("link=" + Val + "-");
+        session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        //session().click("link=" + Val + "-");
 	pause();
         
         //Add new document
@@ -455,7 +473,10 @@ public class SeancesTest extends AbstractOSYLTest{
 		"td/div[contains(text(),'Organisation')]");
             pause();
             //Open the last Lecture unit 
-            session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
+            session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+    	    session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+    	    session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+            //session().click("//tr["+Position +"]/td/table/tbody/tr/td/div");
     	    pause();
             
             if (!session().isTextPresent(selectedRubric3)) {
@@ -517,7 +538,10 @@ public class SeancesTest extends AbstractOSYLTest{
         "td/div[contains(text(),'Organisation')]");
         pause();
         //Open the last Lecture unit 
-        session().click("link=" + Val + "-");
+        session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        //session().click("link=" + Val + "-");
         pause();
         
         //Add new document
@@ -603,13 +627,16 @@ public class SeancesTest extends AbstractOSYLTest{
 //      			Add Citation in Lecture Unit                  //
 //---------------------------------------------------------------------------//
 
-        /*/Open Lectures Section
+        //Open Lectures Section
         session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
 	"td/div[contains(text(),'Organisation')]");
         pause();
         
         //Click last Lecture  
-        session().click("link=" + Val + "-");
+        session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        //session().click("link=" + Val + "-");
         pause();
         
         //Add new Citation
@@ -624,7 +651,7 @@ public class SeancesTest extends AbstractOSYLTest{
         // We choose randomly a Rubric
         String selectedRubric4 = getRandomRubric();
         log("Selecting rubric [" + selectedRubric4 + "]");
-        changeRubric(selectedRubric4);*/
+        changeRubric(selectedRubric4);
         
         /*/Create a new citation list
         session().answerOnNextPrompt("NewListe"+ newText1);
@@ -638,7 +665,7 @@ public class SeancesTest extends AbstractOSYLTest{
         pause();
         assertTrue(session().isPromptPresent());*/
         
-        /*/Open Citation list
+        //Open Citation list
         session().focus("//tr[2]/td/table/tbody/tr[2]/td/select/option");
         session().click("//tr[2]/td/table/tbody/tr[2]/td/select/option");
         session().select("//tr[2]/td/table/tbody/tr[2]/td/select","index=0");
@@ -656,26 +683,26 @@ public class SeancesTest extends AbstractOSYLTest{
         //Fill the mandatory fields
         session().select("//select[@name='cipvalues']", "label=Article");
         String Titre = "Titre"+ timeStamp();
-        session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Titre );
+        session().type("//tr[9]/td/table/tbody/tr/td[3]/input", Titre );
         String Auteur = "Auteur"+ timeStamp();
-        session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Auteur);
+        session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Auteur);
         String Annee = "Annee"+ timeStamp();
-        session().type("//tr[12]/td/table/tbody/tr/td[3]/input", Annee);
+        session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Annee);
         String Periodique = "Periodique"+ timeStamp();
-        session().type("//tr[15]/td/table/tbody/tr/td[3]/input", Periodique);
+        session().type("//tr[14]/td/table/tbody/tr/td[3]/input", Periodique);
         String Volume = "Volume"+ timeStamp();
-        session().type("//tr[17]/td/table/tbody/tr/td[3]/input", Volume);
+        session().type("//tr[16]/td/table/tbody/tr/td[3]/input", Volume);
         String Numero = "Numero"+ timeStamp();
-        session().type("//tr[17]/td/table/tbody/tr/td[6]/input", Numero);
+        session().type("//tr[16]/td/table/tbody/tr/td[6]/input", Numero);
         String Pages = "Pages"+ timeStamp();
-        session().type("//tr[19]/td/table/tbody/tr/td[3]/input", Pages);
-        String ISSN = "ISSN"+ timeStamp();
-        session().type("//tr[20]/td/table/tbody/tr/td[3]/input", ISSN);
-        String DOI = "DOI"+ timeStamp();
-        session().type("//tr[21]/td/table/tbody/tr/td[3]/input", DOI);
+        session().type("//tr[18]/td/table/tbody/tr/td[3]/input", Pages);
+        //String ISSN = "ISSN"+ timeStamp();
+        //session().type("//tr[20]/td/table/tbody/tr/td[3]/input", ISSN);
+        //String DOI = "DOI"+ timeStamp();
+        //session().type("//tr[21]/td/table/tbody/tr/td[3]/input", DOI);
         
         //Close Window
-        session().click("//tr[23]/td/table/tbody/tr/td/button");
+        session().click("//tr[22]/td/table/tbody/tr/td/button");
         pause();
         pause();
         // Select first resource in browser window
@@ -690,7 +717,7 @@ public class SeancesTest extends AbstractOSYLTest{
         
         //Save modifications
         saveCourseOutline();
-        pause();*/
+        pause();
 
         
 //---------------------------------------------------------------------------//
@@ -706,9 +733,9 @@ public class SeancesTest extends AbstractOSYLTest{
         int Val1 = resNb +2;
         if (inInternetExplorer()) {
         session().keyPress("//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
-        		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
-        		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div"+
-        		"/table[3]/tbody/tr[2]/td/table/tbody/tr/td/div", "\r");
+			"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
+			"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div"+
+			"/table[3]/tbody/tr[2]/td/table/tbody/tr/td/div", "\r");
       
         } else {
         session().mouseOver(

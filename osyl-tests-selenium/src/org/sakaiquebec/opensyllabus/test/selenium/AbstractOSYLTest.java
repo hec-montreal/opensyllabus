@@ -158,31 +158,31 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	
 	session().open("/portal/site/opensyllabusManager");
 	pause();	
-	session().click("gwt-uid-1");
-	session().click("//button[@type='button']");
+	session().click("//html/body/table/tbody/tr[2]/td/table/tbody/tr/td/div/a");
+	pause();
+	//session().click("//button[@type='button']");
 	
 	session().type("//input[@type='text']", getCurrentTestSiteName());
-	session().select("//tr[4]/td/table/tbody/tr/td[2]/select", "index=0");
+	pause();
+	session().select("//tr[4]/td/table/tbody/tr/td[2]/select", "value=default");
+	pause();
 	session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=2");
+	pause();
 	if(inFireFox()){
-	session().mouseOver("//html/body/table/tbody/tr/td/table/tbody/tr[5]" +
-				"/td/div/div");
-	session().mouseDown("//html/body/table/tbody/tr/td/table/tbody/tr[5]" +
-				"/td/div/div");
-	session().mouseUp("//html/body/table/tbody/tr/td/table/tbody/tr[5]/" +
-				"td/div/div");
+	session().mouseOver("//tr[5]/td/div/div");
+	session().mouseDown("//tr[5]/td/div/div");
+	session().mouseUp("//tr[5]/td/div/div");
 	pause();
 	}else{
-	    	session().keyPress("//html/body/table/tbody/tr/td/table/tbody/tr" +
-	    	    		"[5]/td/div/div", "\r");
+	    	session().keyPress("//tr[4]/td/div", "\r");
 	}
 	
 	if(inFireFox()){
-		session().mouseOver("//html/body/table/tbody/tr/td/form/table/tbody/tr[5]/td/div/div");
-		session().mouseDown("//html/body/table/tbody/tr/td/form/table/tbody/tr[5]/td/div/div");
-		session().mouseUp("//html/body/table/tbody/tr/td/form/table/tbody/tr[5]/td/div/div");
+		session().mouseOver("//tr[4]/td/div/div");
+		session().mouseDown("//tr[4]/td/div/div");
+		session().mouseUp("//tr[4]/td/div/div");
 	}else{
-		session().keyPress("//tr[4]/td/div", "\r");
+		session().keyPress("//tr[4]/td/div/div", "\r");
 	}
 	pause();
 	    
@@ -359,10 +359,16 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      */
     public void enterFirstLecture() throws Exception {
 	// enter first lecture
-	session().click(
+	session().mouseOver(
 		"//table[@class=\"Osyl-WorkspaceView-MainPanel\"]"
-			+ "/tbody/tr/td/table/tbody/tr/td/div/a");
-    } // enterFirstLecture
+			+ "/tbody/tr[2]/td/table/tbody/tr/td/div");
+	session().mouseDown(
+		"//table[@class=\"Osyl-WorkspaceView-MainPanel\"]"
+			+ "/tbody/tr[2]/td/table/tbody/tr/td/div");
+	session().mouseUp(
+		"//table[@class=\"Osyl-WorkspaceView-MainPanel\"]"
+			+ "/tbody/tr[2]/td/table/tbody/tr/td/div");
+	    } // enterFirstLecture
 
     /**
      * Clicks on the Home button in OpenSyllabus. It expects to see at least one

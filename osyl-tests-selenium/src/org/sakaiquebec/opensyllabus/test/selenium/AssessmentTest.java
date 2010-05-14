@@ -117,8 +117,11 @@ public class AssessmentTest extends AbstractOSYLTest{
 //---------------------------------------------------------------------------//	
 	
 	//We open the last assessment
-	int Val = resNb + 2;
-	session().click("link=" + Val + "-");
+	int Val = resNb + 3;
+	session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	//session().click("link=" + Val + "-");
 	//We edit the last assessment
 	session().click("//table/tbody/tr/td/div/table[2]/tbody/tr/td/button");
 	pause();
@@ -305,7 +308,10 @@ public class AssessmentTest extends AbstractOSYLTest{
 	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td" +
 		"/div[contains(text(),'valuations')]");
 	//Open last Assessment unit
-	session().click("link=" + Val + "-");
+	session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	//session().click("link=" + Val + "-");
 	//Add Text in Assessment Unit
 	clickAddItem("addText");
 
@@ -359,7 +365,10 @@ public class AssessmentTest extends AbstractOSYLTest{
 		"/div[contains(text(),'valuations')]");
                 
         	//Open last Assessment unit
-        	session().click("link=" + Val + "-");
+        	session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	//session().click("link=" + Val + "-");
         	pause();
                         	
         	if (!session().isTextPresent(selectedRubric1)) {
@@ -383,7 +392,10 @@ public class AssessmentTest extends AbstractOSYLTest{
         		"/div[contains(text(),'valuations')]");
                 
         	//Open last Assessment unit
-        	session().click("link=" + Val + "-");
+        	session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	//session().click("link=" + Val + "-");
         	        	
                 if (!(session().isTextPresent(selectedRubric1))) {
                     logAndFail("Expected to see rubric [" + selectedRubric1
@@ -405,7 +417,10 @@ public class AssessmentTest extends AbstractOSYLTest{
 	"/div[contains(text(),'valuations')]");
         
         //Edit first Assessment unit
-	session().click("link=" + Val + "-");
+	session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	//session().click("link=" + Val + "-");
 	
 	//Add Hyperlink in Assessment Unit
 	clickAddItem("addURL");
@@ -453,7 +468,10 @@ public class AssessmentTest extends AbstractOSYLTest{
 		"/div[contains(text(),'valuations')]");
 
         	//Edit the last Assessment unit
-        	session().click("link=" + Val + "-");
+        	session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	//session().click("link=" + Val + "-");
         
         	if (!session().isTextPresent(selectedRubric2)) {
         	    logAndFail("Expected to see rubric [" + selectedRubric2
@@ -501,7 +519,10 @@ public class AssessmentTest extends AbstractOSYLTest{
 	"/div[contains(text(),'valuations')]");
         
 	//Edit first Assessment unit
-	session().click("link=" + Val + "-");
+	session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	//session().click("link=" + Val + "-");
 
 	//Add new document
 	clickAddItem("addDocument");
@@ -620,7 +641,10 @@ public class AssessmentTest extends AbstractOSYLTest{
 		"/div[contains(text(),'valuations')]");
 
         	//Edit first Assessment unit
-        	session().click("link=" + Val + "-");
+        	session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+        	//session().click("link=" + Val + "-");
         
         	if (!session().isTextPresent(selectedRubric3)) {
         	    logAndFail("Expected to see rubric [" + selectedRubric3
@@ -678,12 +702,15 @@ public class AssessmentTest extends AbstractOSYLTest{
 //                          Add Citation in Assessment Unit                  //
 //---------------------------------------------------------------------------//
 	
-	/*/Click Assessment section 
+	//Click Assessment section 
 	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td" +
         		"/div[contains(text(),'valuations')]");
         
 	//Edit first Assessment unit
-	session().click("link=" + Val + "-");
+	session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	//session().click("link=" + Val + "-");
 
 	//Add new Citation
 	clickAddItem("addBiblioResource");
@@ -725,20 +752,20 @@ public class AssessmentTest extends AbstractOSYLTest{
         
         //Fill the necessary fields
         String Titre = "Titre"+ timeStamp();
-        session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Titre );        
+        session().type("//tr[9]/td/table/tbody/tr/td[3]/input", Titre );        
         String Auteur = "Auteur"+ timeStamp();
-        session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Auteur);
+        session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Auteur);
         String Annee = "Annee"+ timeStamp();
-        session().type("//tr[12]/td/table/tbody/tr/td[3]/input", Annee);
+        session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Annee);
         String Editeur = "Editeur"+ timeStamp();
-        session().type("//tr[13]/td/table/tbody/tr/td[3]/input", Editeur);
+        session().type("//tr[12]/td/table/tbody/tr/td[3]/input", Editeur);
         String Lieu = "Lieu"+ timeStamp();
-        session().type("//tr[14]/td/table/tbody/tr/td[3]/input", Lieu);
+        session().type("//tr[13]/td/table/tbody/tr/td[3]/input", Lieu);
         String ISBN = "ISBN"+ timeStamp();
-        session().type("//tr[20]/td/table/tbody/tr/td[3]/input", ISBN);
+        session().type("//tr[19]/td/table/tbody/tr/td[3]/input", ISBN);
         
         //Close Window
-        session().click("//tr[23]/td/table/tbody/tr/td/button");
+        session().click("//tr[22]/td/table/tbody/tr/td/button");
         pause();
         pause();
  
@@ -754,21 +781,23 @@ public class AssessmentTest extends AbstractOSYLTest{
         
        //Save modifications
 	saveCourseOutline();
-	pause();*/
-	
-	/*/Overview
-	session().click("gwt-uid-6");
 	pause();
+	
+	//Overview
+	session().click("gwt-uid-7");
 	//Attendee Overview 
 	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
-        			"div/table/tbody/tr/td");
-        pause();
+			"div/table/tbody/tr/td");
+	pause();
 	//Click Assessment section 
 	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td" +
-        		"/div[contains(text(),'valuations')]");
-        pause();
-        //Open Assessment 1
-	session().click("link=Evaluation 1 -");
+	"/div[contains(text(),'valuations')]");
+
+	//Edit first Assessment unit
+	session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	//session().click("link=" + Val + "-");
 	
 	if (!session().isTextPresent(selectedRubric4)) {
 	    logAndFail("Expected to see rubric [" + selectedRubric4
@@ -776,17 +805,17 @@ public class AssessmentTest extends AbstractOSYLTest{
 	}
 	log("OK: Selected rubric is visible");
 	
-	if (!session().isTextPresent(Auteur+"."+Titre+"."+Annee+"."+ISBN)) {
-	    logAndFail("Expected to see text [" + Auteur+"."+Titre+"."+Annee+"."
-		    +ISBN + "] after text edition");
+	if (!session().isTextPresent(Auteur/*+" ("+Annee+")."+Titre+","+Editeur+","+Lieu+"."*/)) {
+	    logAndFail("Expected to see text [" + Auteur+" ("+Annee+")."+Titre+","+Editeur+","+
+		    Lieu+"."+"] after text edition");
 	}
 	log("OK: Text is visible");
 	
 	//Close Overview
-	session().click("//html/body/table/tbody/tr/td/table/tbody" +
-        			"/tr[2]/td[2]/div/div/table/tbody/tr/td");
+	session().click("//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
+	pause();
 	
-	//Overview
+	/*/Overview
 	session().click("gwt-uid-6");
 	pause();
 	//Public Overview 
@@ -829,10 +858,10 @@ public class AssessmentTest extends AbstractOSYLTest{
         // We switch the 1st and 2nd assessment 
         int Val1 = resNb +2;
         if (inInternetExplorer()) {
-        session().keyPress("//html/body/table/tbody/tr[2]/td/div/div/div[3]/" +
-        		"table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table/" +
-        		"tbody/tr["+Val1+"]//td/table/tbody/tr/td[2]/div/table[3]/" +
-        		"tbody/tr[2]/td/table/tbody/tr/td/div", "\r");
+        session().keyPress("//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
+			"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
+			"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div"+
+			"/table[3]/tbody/tr[2]/td/table/tbody/tr/td/div", "\r");
       
         } else {
         session().mouseOver(
@@ -865,7 +894,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 //---------------------------------------------------------------------------//
 
         //We delete Assessment 1
-        int Val2 = Val+1;
+        int Val2 = Val;
         session().click("//tr["+Val2+"]/td/table/tbody/tr/td[2]/div/table[2]" +
         		"/tbody/tr/td[2]/button");
         
