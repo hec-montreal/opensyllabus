@@ -365,19 +365,15 @@ public class DetailCoursMapEntry implements java.io.Serializable {
     }
 
     public String toString() {
-	return "Cours "
+	return "Course "
 		+ getCatalogNbr()
 		+ "_"
 		+ getClassSection()
-		+ " donn&eacute; par "
+		+ " profs: "
 		+ getProfesseursVector()
-		+ " au "
-		+ getAcadOrg()
-		+ ("MBA".equals(getAcadOrg()) ? " (p&eacute;riode "
-			+ getSessionCode() + ")" : "")
-		+ " pendant la session "
+		+ " trim: "
 		+ getStrm()
-		+ (null == getCoordonnateur() ? "" : " coordonn&eacute; par "
+		+ (null == getCoordonnateur() ? "" : " coord: "
 			+ getCoordonnateur());
     }
 

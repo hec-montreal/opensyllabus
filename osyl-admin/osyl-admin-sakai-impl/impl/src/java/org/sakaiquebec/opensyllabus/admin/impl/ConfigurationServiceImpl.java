@@ -270,6 +270,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    } catch (ServerOverloadException e) {
 		log.info(e.getMessage());
 	    }
+	} else {
+	    log.warn("There is no " + fileName + " file ");
 	}
     }
 
