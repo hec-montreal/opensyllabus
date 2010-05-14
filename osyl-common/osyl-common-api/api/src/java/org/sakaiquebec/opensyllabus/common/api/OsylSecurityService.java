@@ -47,6 +47,11 @@ public interface OsylSecurityService {
     public static final String SECURITY_ROLE_COURSE_STUDENT = "Student";
 
     /**
+     * Course strudent role value.
+     */
+    public static final String SECURITY_ROLE_COURSE_HELPDESK = "helpdesk";
+
+    /**
      * Course instructor role value.
      */
     public static final String SECURITY_ROLE_COURSE_INSTRUCTOR = "Instructor";

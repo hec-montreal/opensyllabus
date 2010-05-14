@@ -369,6 +369,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			|| osylSecurityService
 				.getCurrentUserRole()
 				.equals(
+					OsylSecurityService.SECURITY_ROLE_COURSE_HELPDESK)
+			|| osylSecurityService
+				.getCurrentUserRole()
+				.equals(
 					OsylSecurityService.SECURITY_ROLE_PROJECT_ACCESS))
 		    co =
 			    resourceDao
