@@ -186,6 +186,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 			.getUnitMinimum());
 		enrollmentSet.setOfficialInstructors(instructors);
 		cmAdmin.updateEnrollmentSet(enrollmentSet);
+		log.info("Instructors for " + detailsCours.getUniqueKey() +
+			": " + instructors.toString());
 
 		// On a un coordonnateur
 		if (detailsCours.getCoordonnateur() != null) {
@@ -195,6 +197,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 		    cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
 			    COORDONNATEUR_ROLE, courseOffId, ACTIVE_STATUS);
+		    log.info("Coordinator for " + detailsCours.getUniqueKey()
+			    	+ ": " + matricule);
 		    cmAdmin.updateCourseOffering(courseOff);
 
 		}
@@ -470,7 +474,7 @@ public class OsylCMJobImpl implements OsylCMJob {
     /** {@inheritDoc} */
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 	log
-		.info(" Strart synchronizing PeopleSoft data extracts to the course management");
+		.info(" Start synchronizing PeopleSoft data extracts to the course management");
 
 	loginToSakai();
 
@@ -711,12 +715,15 @@ public class OsylCMJobImpl implements OsylCMJob {
     }
 
     private void addSecretariesToMembership(List<String> secretaries,
-	    List<DetailCoursMapEntry> cours) {
+	    List<DetailCoursMapEntry> courses) {
 	String sectionId = null;
 
-	for (DetailCoursMapEntry course : cours) {
+	for (DetailCoursMapEntry course : courses) {
 	    sectionId = getCourseSectionId(course);
 
+	    log.info("Adding Secretaries for [" + course + "]: "
+			+ secretaries.toString());
+	    
 	    for (String secretary : secretaries) {
 		cmAdmin.addOrUpdateSectionMembership(secretary, SECRETARY_ROLE,
 			sectionId, ACTIVE_STATUS);
