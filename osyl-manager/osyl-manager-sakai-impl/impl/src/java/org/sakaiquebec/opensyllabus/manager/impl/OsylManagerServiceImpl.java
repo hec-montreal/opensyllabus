@@ -1057,15 +1057,19 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     	}
         }
 
+    /**
+     * Returns the list of all courses defined in the CM so that the user can
+     * associate a site to a specific course.
+     */
     public List<CMCourse> getCMCourses() {
-	log.info("Debut de getCMCourses");
+	long start = System.currentTimeMillis();
+	log.info("getCMCourses ##### START #####");
 	List<CMCourse> cmCourses = new ArrayList<CMCourse>();
 	Set<CourseSet> courseSets = courseManagementService.getCourseSets();
 	Set<CourseOffering> courseOffs = null;
 	Set<Section> sections = null;
 	CourseSet courseSet = null;
 	CourseOffering courseOff = null;
-	String value = "";
 	Section courseS = null;
 	if (courseSets == null)
 	    return null;
@@ -1137,9 +1141,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    }
 	}
-	log.info("Fin de getCMCourses");
+	log.info("getCMCourses ###### END ######" + elapsed(start)
+		+ " for " + cmCourses.size() +  " courses");
 	return cmCourses;
-    }
+    } // getCMCourses
 
     /**
      * Import file contains in the osylPackage to sakai ressources
@@ -1224,10 +1229,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public COSite getCoAndSiteInfo(String siteId) {
 	long start = System.currentTimeMillis();
 	Site site = null;
+	// Not really needed for now and very expensive (3 times longer to get
+	// the site list) - SAKAI-1489
 //	COSerialized co = null;
 	COSite info = new COSite();
 
-	log.debug("getCoAndSiteInfo 1" + elapsed(start));
 	try {
 	    site = osylSiteService.getSite(siteId);
 //	    if (osylSiteService.hasCourseOutline(siteId)) {
@@ -1238,7 +1244,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    e.printStackTrace();
 	}
 
-	log.debug("getCoAndSiteInfo 2" + elapsed(start));
 	if (site != null) {
 	    // Retrieve site info
 	    info.setSiteId(siteId);
@@ -1248,18 +1253,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    info.setSiteOwnerLastName(site.getCreatedBy().getLastName());
 	    info.setSiteOwnerName(site.getCreatedBy().getFirstName());
 
-	log.debug("getCoAndSiteInfo 3" + elapsed(start));
 	    // Retrieve CM info
 	    String siteProviderId = site.getProviderGroupId();
 	    if (courseManagementService.isSectionDefined(siteProviderId)) {
 		Section section =
 			courseManagementService.getSection(siteProviderId);
 
-	log.debug("getCoAndSiteInfo 4" + elapsed(start));
 		// Retrieve official instructors
 		EnrollmentSet enrollmentSet = section.getEnrollmentSet();
 
-	log.debug("getCoAndSiteInfo 5" + elapsed(start));
 		if (enrollmentSet != null) {
 		    Set<String> instructors =
 			    enrollmentSet.getOfficialInstructors();
@@ -1277,7 +1279,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			}
 		    }
 		}
-	log.debug("getCoAndSiteInfo 6" + elapsed(start));
 
 		// Retrieve course number
 		CourseOffering courseOff =
@@ -1300,15 +1301,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		info.setCourseCoordinator(null);
 
 	    }
-	log.debug("getCoAndSiteInfo 7" + elapsed(start));
+	    //log.debug("getCoAndSiteInfo 7" + elapsed(start));
 	    // Retrieve course outline info
+	    // See comment above - SAKAI-1489
 //	    if (co != null) {
 		// TODO: corriger avec la tache SAKAI-1357
 		info.setLastModifiedDate(null);
 		info.setLastPublicationDate(null);
 //	    }
 
-	log.debug("getCoAndSiteInfo 8" + elapsed(start));
 	    // Retrieve parent site
 	    String parentSite = null;
 
@@ -1318,13 +1319,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		log.error(e.getMessage());
 		e.printStackTrace();
 	    }
-	log.debug("getCoAndSiteInfo 9" + elapsed(start));
 
 	    info.setParentSite(parentSite);
 	}
-	log.debug("getCoAndSiteInfo  " + elapsed(start) + " FINI");
+	log.debug("getCoAndSiteInfo  " + elapsed(start) + "DONE " + siteId);
 	return info;
-    }
+    } // getCoAndSiteInfo
 
     /** {@inheritDoc} */
     public List<COSite> getCoAndSiteInfo() {
@@ -1352,7 +1352,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 	log.debug("getCoAndSiteInfo (Site List ##### INFOS #####)" + elapsed(start));
 
-	deleteExpiredTemporaryExportFiles(allSitesInfo); // Takes up to 300 ms
+	deleteExpiredTemporaryExportFiles(allSitesInfo); // Takes 10 to 30% more time - SAKAI-1613
 	log.debug("getCoAndSiteInfo (Site List ###### END ######)" + elapsed(start)
 		+ " for " + siteCount +  " sites");
 	return allSitesInfo;
