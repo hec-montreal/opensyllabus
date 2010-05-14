@@ -1224,15 +1224,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public COSite getCoAndSiteInfo(String siteId) {
 	long start = System.currentTimeMillis();
 	Site site = null;
-	COSerialized co = null;
+//	COSerialized co = null;
 	COSite info = new COSite();
 
 	log.debug("getCoAndSiteInfo 1" + elapsed(start));
 	try {
 	    site = osylSiteService.getSite(siteId);
-	    if (osylSiteService.hasCourseOutline(siteId)) {
-		co = osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
-	    }
+//	    if (osylSiteService.hasCourseOutline(siteId)) {
+//		co = osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
+//	    }
 	} catch (IdUnusedException e) {
 	    log.error(e.getMessage());
 	    e.printStackTrace();
@@ -1302,11 +1302,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	log.debug("getCoAndSiteInfo 7" + elapsed(start));
 	    // Retrieve course outline info
-	    if (co != null) {
+//	    if (co != null) {
 		// TODO: corriger avec la tache SAKAI-1357
 		info.setLastModifiedDate(null);
 		info.setLastPublicationDate(null);
-	    }
+//	    }
 
 	log.debug("getCoAndSiteInfo 8" + elapsed(start));
 	    // Retrieve parent site
