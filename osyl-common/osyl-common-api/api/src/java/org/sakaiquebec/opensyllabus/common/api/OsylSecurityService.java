@@ -42,12 +42,12 @@ public interface OsylSecurityService {
     public static final String SECURITY_ROLE_PROJECT_MAINTAIN = "maintain";
 
     /**
-     * Course strudent role value.
+     * Course student role value.
      */
     public static final String SECURITY_ROLE_COURSE_STUDENT = "Student";
 
     /**
-     * Course strudent role value.
+     * HelpDesk user role value.
      */
     public static final String SECURITY_ROLE_COURSE_HELPDESK = "helpdesk";
 
