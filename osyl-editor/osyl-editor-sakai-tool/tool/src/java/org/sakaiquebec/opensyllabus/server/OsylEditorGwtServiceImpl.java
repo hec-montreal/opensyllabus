@@ -265,7 +265,9 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 		    || getCurrentUserRole().equals(
 		    OsylSecurityService.SECURITY_ROLE_COURSE_TEACHING_ASSISTANT)
 		    || getCurrentUserRole().equals(
-		    OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)
+			    OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)
+		    || getCurrentUserRole().equals(
+			    OsylSecurityService.SECURITY_ROLE_COURSE_HELPDESK)
 		    || getCurrentUserRole().equals(
 			    OsylSecurityService.SECURITY_ROLE_PROJECT_ACCESS))
 		thisCo =
