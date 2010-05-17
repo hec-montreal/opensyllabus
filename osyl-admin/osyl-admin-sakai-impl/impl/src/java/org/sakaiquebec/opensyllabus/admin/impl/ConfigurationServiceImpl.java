@@ -68,13 +68,13 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private String startDate = null;
 
     private String endDate = null;
-    
+
     private List<String> allowedFunctions = null;
-    
+
     private List<String> disallowedFunctions = null;
-    
+
     private String removedRole = null;
-    
+
     private String functionsRole = null;
 
     private List<String> courses = null;
@@ -98,28 +98,29 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
 	EventTrackingService.addObserver(this);
 
-	 updateConfig(CONFIGFORLDER +OFFSITESCONFIGFILE);
-	 updateConfig(ROLEFOLDER);
-	 updateConfig(CONFIGFORLDER+FUNCTIONSSCONFIGFILE);
+	updateConfig(CONFIGFORLDER + OFFSITESCONFIGFILE);
+	updateConfig(ROLEFOLDER);
+	updateConfig(CONFIGFORLDER + FUNCTIONSSCONFIGFILE);
 
     }
 
     public String getFunctionsRole() {
-        return functionsRole;
+	return functionsRole;
     }
 
     private void setFunctionsRole(String functionsRole) {
-        this.functionsRole = functionsRole;
+	this.functionsRole = functionsRole;
     }
 
     public List<String> getAllowedFunctions() {
-        return allowedFunctions;
+	return allowedFunctions;
     }
 
     private void setAllowedFunctions(String allowedFunctions) {
 	this.allowedFunctions = new ArrayList<String>();
 	if (allowedFunctions != null && allowedFunctions.length() > 0) {
-	    String[] allowedFunctionsTable = allowedFunctions.split(LIST_DELIMITER);
+	    String[] allowedFunctionsTable =
+		    allowedFunctions.split(LIST_DELIMITER);
 	    for (int i = 0; i < allowedFunctionsTable.length; i++) {
 		this.allowedFunctions.add(allowedFunctionsTable[i].trim());
 	    }
@@ -127,25 +128,27 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     }
 
     public List<String> getDisallowedFunctions() {
-        return disallowedFunctions;
+	return disallowedFunctions;
     }
 
     private void setDisallowedFunctions(String disallowedFunctions) {
 	this.disallowedFunctions = new ArrayList<String>();
 	if (disallowedFunctions != null && disallowedFunctions.length() > 0) {
-	    String[] disallowedFunctionsTable = disallowedFunctions.split(LIST_DELIMITER);
+	    String[] disallowedFunctionsTable =
+		    disallowedFunctions.split(LIST_DELIMITER);
 	    for (int i = 0; i < disallowedFunctionsTable.length; i++) {
-		this.disallowedFunctions.add(disallowedFunctionsTable[i].trim());
+		this.disallowedFunctions
+			.add(disallowedFunctionsTable[i].trim());
 	    }
 	}
     }
 
     public String getRemovedRole() {
-        return removedRole;
+	return removedRole;
     }
 
     private void setRemovedRole(String removedRole) {
-        this.removedRole = removedRole;
+	this.removedRole = removedRole;
     }
 
     public void destroy() {
@@ -194,19 +197,13 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		if (referenceString.contains(ROLEFOLDER)) {
 		    log.info("Updating roles config files from "
 			    + referenceString);
-		    if (updatedRoles == null)
-			updatedRoles =
-				new HashMap<String, Map<String, Object>>();
 		    updateConfig(referenceString);
 		}
-		
+
 		// If the functions files updated we change the values
 		if (referenceString.contains(FUNCTIONSSCONFIGFILE)) {
-		    log.info("Updating roles config files from "
+		    log.info("Updating permissions config files from "
 			    + referenceString);
-		    if (updatedRoles == null)
-			updatedRoles =
-				new HashMap<String, Map<String, Object>>();
 		    updateConfig(referenceString);
 		}
 	    }
@@ -216,7 +213,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private void updateConfig(String fileName) {
 
 	Reference reference = EntityManager.newReference(fileName);
-	
 
 	if (reference != null) {
 
@@ -232,16 +228,16 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		});
 		if (fileName.contains(ROLEFOLDER)) {
 		    ContentCollection collection;
-		    if (!contentHostingService.isCollection(reference.getId())){
-			  resource =
-			    contentHostingService
-				    .getResource(reference.getId());
+		    if (!contentHostingService.isCollection(reference.getId())) {
+			resource =
+				contentHostingService.getResource(reference
+					.getId());
 
-			  collection =
-			    resource.getContainingCollection();
-		    }
-		    else{
-			collection = contentHostingService.getCollection(reference.getId());
+			collection = resource.getContainingCollection();
+		    } else {
+			collection =
+				contentHostingService.getCollection(reference
+					.getId());
 		    }
 		    List<ContentResource> resources =
 			    contentHostingService.getAllResources(collection
@@ -315,16 +311,24 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		values.put(REMOVEDUSERS, this.removedUsers);
 		values.put(FUNCTIONS, this.functions);
 
-		updatedRoles.put(role, values);
+		if (role != null) {
+		    if (updatedRoles == null)
+			updatedRoles =
+				new HashMap<String, Map<String, Object>>();
+
+		    updatedRoles.put(role, values);
+		}
 	    }
 
 	    if (configurationXml.contains(FUNCTIONSSCONFIGFILE)) {
-		
+
 		String fuctionsRole = retrieveParameter(document, ROLE);
 		String removedRole = retrieveParameter(document, REMOVED_ROLE);
-		String allowedFunctions = retrieveParameter(document, ALLOWED_FUNCTIONS);
-		String disallowedFunctions = retrieveParameter(document, DISALLOWED_FUNCTIONS);
-		
+		String allowedFunctions =
+			retrieveParameter(document, ALLOWED_FUNCTIONS);
+		String disallowedFunctions =
+			retrieveParameter(document, DISALLOWED_FUNCTIONS);
+
 		setFunctionsRole(fuctionsRole);
 		setRemovedRole(removedRole);
 		setAllowedFunctions(allowedFunctions);
@@ -364,7 +368,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private void setRole(String role) {
 	this.role = role;
     }
-
 
     private void setFunctions(String functions) {
 	this.functions = new ArrayList<String>();
