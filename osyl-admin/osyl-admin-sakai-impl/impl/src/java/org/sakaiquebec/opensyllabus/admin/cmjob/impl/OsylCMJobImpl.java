@@ -456,39 +456,23 @@ public class OsylCMJobImpl implements OsylCMJob {
 		UsageSessionService.EVENT_LOGOUT, null, true));
     }
 
-    /**
-     * Retreives the folder where is kept the extract file. Later on we will
-     * have a fixed values representing the place where are kept the extract
-     * files.
-     * 
-     * @param CLASSPATHTOEXTRACTS
-     */
-
-    private String getPathToExtracts() {
-
-	String directory = System.getProperty("catalina.home");
-	return directory + File.separator + EXTRACTS_PATH;
-
-    }
-
     /** {@inheritDoc} */
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
-	log
-		.info(" Start synchronizing PeopleSoft data extracts to the course management");
+	long start = System.currentTimeMillis();
+	
+	log.info("Start synchronizing PeopleSoft extracts to the" +
+			" course management");
 
 	loginToSakai();
 
-	String directory =
-		ServerConfigurationService.getString(
-			"coursemanagement.extract.files.path",
-			getPathToExtracts());
+	String directory = ServerConfigurationService.getString(
+		EXTRACTS_PATH_CONFIG_KEY, null);
 
 	if (directory == null || "".equalsIgnoreCase(directory)) {
-	    log
-		    .warn(
-			    this,
-			    new IllegalStateException(
-				    "The property 'coursemanagement.extract.files.path' is not defined in the sakai.properties file"));
+	    log.warn(this,
+		    new IllegalStateException(
+			    "The property '" + EXTRACTS_PATH_CONFIG_KEY +
+			    "' is not defined in the sakai.properties file"));
 	    return;
 	}
 	try {
@@ -521,32 +505,39 @@ public class OsylCMJobImpl implements OsylCMJob {
 		    GenericEtudiantCoursMapFactory.buildMap(directory,
 			    detailCoursMap, detailSessionMap);
 
+	    log.info("Finished reading extracts. Now updating the Course Management");
+
 	    // We load sessions
 	    loadSessions();
+	    log.info("Sessions updated successfully");
 
 	    // We add a category
 	    loadCategory();
+	    log.info("Categories updated successfully");
 
 	    // We add a courseSet
 	    loadCourseSets();
+	    log.info("CourseSets updated successfully");
 
 	    // We load courses
 	    loadCourses();
+	    log.info("Courses updated successfully");
 
 	    // We assign teachers and the secretaries
 	    loadMembership();
+	    log.info("Membership updated successfully");
 
 	    // We assign students to their classes
 	    loadEnrollments();
+	    log.info("Enrollments updated successfully");
 
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
 
 	logoutFromSakai();
-	log
-		.info(" End synchronizing PeopleSoft data extracts to the course management");
-
+	int minutes = (int) ((System.currentTimeMillis() - start) / 60000); 
+	log.info("Synchronization completed in " + minutes + " minutes");
     }
 
     /** {@inheritDoc} */

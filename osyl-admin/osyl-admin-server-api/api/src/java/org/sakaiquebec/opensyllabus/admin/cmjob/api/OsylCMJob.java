@@ -37,14 +37,8 @@ import org.quartz.Job;
  */
 public interface OsylCMJob extends Job {
 
-    /**
-     * Directory used to store institutional data (students, teachers, courses,
-     * sessions ...
-     */
-    @Deprecated
-    public static final String EXTRACTS_PATH =
-	    "webapps" + File.separator + "osyl-admin-sakai-tool"
-		    + File.separator + "extracts";
+    public final static String EXTRACTS_PATH_CONFIG_KEY =
+	"coursemanagement.extract.files.path";
 
     public final static String SECRETARY_ROLE = "I";
 
