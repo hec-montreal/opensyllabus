@@ -358,8 +358,11 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	getMainPanel().clear();
 	if (!(isReadOnly() && getView().isContextHidden())) {
 	    initViewer();
-
+	    //TODO Hack to remove bad links to resources inserted in the XML.  Remove this
+	    //as soon as the cause is found and corrected.
+	    
 	    // We get the text to display from the model
+	    getModel().setLabel(getView().validateLinkLabel(getModel().getLabel()));
 	    getViewerLink().setHTML(getView().getTextFromModel());
 	    getViewerLink().addClickHandler(
 		    new OsylLinkClickListener(getView(), getView()
@@ -430,8 +433,9 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 	DisclosurePanel metaInfoDiscPanel =
 		new DisclosurePanel(getOsylImageBundle().expand(),
-			getOsylImageBundle().collapse(), getView().getUiMessage(
-			"DocumentEditor.document.details"));
+			getOsylImageBundle().collapse(),
+			getView().getUiMessage(
+				"DocumentEditor.document.details"));
 	metaInfoDiscPanel.setAnimationEnabled(true);
 	metaInfoDiscPanel.setStylePrimaryName("DetailsPanel");
 	HorizontalPanel metaInfoPanel = new HorizontalPanel();
@@ -480,8 +484,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	rightsAndSavePanel.add(savePanel);
 	savePanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 
-	AbstractImagePrototype imgSaveButton = 
-	    AbstractImagePrototype.create(getOsylImageBundle().save());
+	AbstractImagePrototype imgSaveButton =
+		AbstractImagePrototype.create(getOsylImageBundle().save());
 	saveButton =
 		new ImageAndTextButton(
 		// TODO: Bug with ImageBundle, we have to use

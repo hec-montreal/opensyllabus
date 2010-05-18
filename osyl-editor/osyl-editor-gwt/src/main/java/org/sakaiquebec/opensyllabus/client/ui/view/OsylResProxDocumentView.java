@@ -20,6 +20,8 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.view;
 
+import java.util.StringTokenizer;
+
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylDocumentEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
@@ -84,5 +86,24 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 	getModel().getResource().addProperty(COPropertiesType.DESCRIPTION,
 		getEditor().getResourceDescription());
     }
-
+    
+  //TODO Hack to remove bad links to resources inserted in the XML.  Remove this
+  //as soon as the cause is found and corrected.
+    public String validateLinkLabel(String link){
+	
+	if(link.contains("><")){
+	    link = link.substring(link.indexOf("><"), link.length()-5);
+	}
+	String linkLabel = link;
+	StringTokenizer linkTokenizer = new StringTokenizer(link, "><");
+	
+	if(linkTokenizer.hasMoreTokens()){
+	    linkTokenizer.nextToken();
+	}
+	
+	if(linkTokenizer.hasMoreTokens()){
+	    linkLabel = linkTokenizer.nextToken();
+	}
+	return linkLabel;
+    }
 }
