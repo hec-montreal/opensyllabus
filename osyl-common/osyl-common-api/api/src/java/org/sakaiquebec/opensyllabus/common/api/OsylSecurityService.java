@@ -127,5 +127,7 @@ public interface OsylSecurityService {
 	    String permission) throws Exception;
 
     public void applyDirectoryPermissions(String directoryId) throws Exception;
+    
+    public String getCurrentUserId();
 
 }
