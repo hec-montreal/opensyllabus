@@ -63,7 +63,8 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-    public COSerialized getSerializedCourseOutlineBySiteId(String siteId) throws Exception {
+    public COSerialized getSerializedCourseOutlineBySiteId(String siteId)
+	    throws Exception {
 	List<COSerialized> results = null;
 	COSerialized courseOutline = null;
 
@@ -165,8 +166,9 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	COSerialized cos = null;
 	try {
 	    cos =
-		getSerializedVourseOutlineBySiteIdAccessAndPublished(courseOutline
-			    .getSiteId(), courseOutline.getAccess(), courseOutline.isPublished());
+		    getSerializedVourseOutlineBySiteIdAccessAndPublished(
+			    courseOutline.getSiteId(), courseOutline
+				    .getAccess(), courseOutline.isPublished());
 	    if (!cos.getCoId().equals(courseOutline.getCoId()))
 		alreadyExist = true;
 
@@ -176,9 +178,10 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    throw new Exception(
 		    "A course outline with same siteId and groupName already exists in database");
 	// to avoid org.springframework.orm.hibernate3.HibernateSystemException:
-	// a different object with the same identifier value was already associated with the session
+	// a different object with the same identifier value was already
+	// associated with the session
 	getHibernateTemplate().evict(cos);
-	
+
 	try {
 	    getHibernateTemplate().saveOrUpdate(courseOutline);
 	} catch (Exception e) {
@@ -187,29 +190,31 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	}
 	return courseOutline.getCoId();
     }
-    
+
     @SuppressWarnings("unchecked")
-    private COSerialized getSerializedVourseOutlineBySiteIdAccessAndPublished(String siteId, String access, boolean published) throws Exception{
+    private COSerialized getSerializedVourseOutlineBySiteIdAccessAndPublished(
+	    String siteId, String access, boolean published) throws Exception {
 	List<COSerialized> results = null;
 	COSerialized courseOutline = null;
 
 	if (siteId == null || access == null)
 	    throw new IllegalArgumentException();
 	try {
-		if ("oracle".equalsIgnoreCase(SqlService.getVendor()) && access.equals("")) {
-		    results =
-			    getHibernateTemplate()
-				    .find(
-					    "from COSerialized where siteId= ? and published= ? and access is null",
-					    new Object[] { siteId, published });
-		}
-		else {
-			results =
-			    getHibernateTemplate()
-				    .find(
-					    "from COSerialized where siteId= ? and access= ? and published= ?",
-					    new Object[] { siteId, access, published });
-		}
+	    if ("oracle".equalsIgnoreCase(SqlService.getVendor())
+		    && access.equals("")) {
+		results =
+			getHibernateTemplate()
+				.find(
+					"from COSerialized where siteId= ? and published= ? and access is null",
+					new Object[] { siteId, published });
+	    } else {
+		results =
+			getHibernateTemplate()
+				.find(
+					"from COSerialized where siteId= ? and access= ? and published= ?",
+					new Object[] { siteId, access,
+						published });
+	    }
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by its siteId", e);
 	    throw e;
@@ -274,28 +279,28 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
-    public boolean hasCourseOutiline(String siteId){
+    public boolean hasCourseOutiline(String siteId) {
 	List<COSerialized> results = null;
-	
-	if (siteId == null )
+
+	if (siteId == null)
 	    return false;
-	else{
-	    try{
-	    results =
-		    getHibernateTemplate()
-			    .find(
-				    "from COSerialized where siteId= ? and published=0",
-				    new Object[] { siteId });
-	} catch (Exception e) {
-	   return false;
+	else {
+	    try {
+		results =
+			getHibernateTemplate()
+				.find(
+					"from COSerialized where siteId= ? and published=0",
+					new Object[] { siteId });
+	    } catch (Exception e) {
+		return false;
+	    }
+	    if (results.size() > 0) {
+		return true;
+	    } else
+		return false;
 	}
-	if (results.size() > 0) {
-	    return true;
-	} else
-	    return false;
-	}
-   }
-    
+    }
+
     @SuppressWarnings("unchecked")
     public COSerialized isPublished(String siteId, String access)
 	    throws Exception {
@@ -328,20 +333,19 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	if (siteId == null)
 	    throw new IllegalArgumentException();
 	try {
-		if ("oracle".equalsIgnoreCase(SqlService.getVendor())) {
-		    results =
-			    getHibernateTemplate()
-				    .find(
-					    "from COSerialized where siteId= ? and published=1 and access is null",
-					    new Object[] { siteId });
-		}
-		else {
-			results =
-			    getHibernateTemplate()
-				    .find(
-					    "from COSerialized where siteId= ? and published=1 and access= ?",
-					    new Object[] { siteId, "" });
-		}	
+	    if ("oracle".equalsIgnoreCase(SqlService.getVendor())) {
+		results =
+			getHibernateTemplate()
+				.find(
+					"from COSerialized where siteId= ? and published=1 and access is null",
+					new Object[] { siteId });
+	    } else {
+		results =
+			getHibernateTemplate()
+				.find(
+					"from COSerialized where siteId= ? and published=1 and access= ?",
+					new Object[] { siteId, "" });
+	    }
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by its siteId", e);
 	    throw e;
@@ -364,10 +368,9 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    throw new IllegalArgumentException();
 	try {
 	    results =
-		    getHibernateTemplate()
-			    .find(
-				    "from COSerialized where siteId= ? and access= ?",
-				    new Object[] { siteId, access });
+		    getHibernateTemplate().find(
+			    "from COSerialized where siteId= ? and access= ?",
+			    new Object[] { siteId, access });
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by its siteId", e);
 	    throw e;
@@ -380,4 +383,10 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 		    + " and access=" + access);
     }
 
+    public void clearLocksForSession(String sessionId) {
+	getHibernateTemplate().bulkUpdate(
+		"update COSerialized set lockedBy=null where lockedBy= ?",
+		new Object[] { sessionId });
+
+    }
 }

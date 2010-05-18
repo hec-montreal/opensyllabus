@@ -83,7 +83,7 @@ public interface OsylEditorGwtServiceAsync {
      * 
      * @param String id
      */
-    public void publishCourseOutline(AsyncCallback<Map<String,String>> callback);
+    public void publishCourseOutline(AsyncCallback<Map<String, String>> callback);
 
     /**
      * Returns the Published CourseOutline for the group specified in parameter.
@@ -183,5 +183,11 @@ public interface OsylEditorGwtServiceAsync {
      */
     public void transformXmlForGroup(String xml, String group,
 	    AsyncCallback<String> callback);
+
+    /**
+     * Method used to release lock that the current user have on the current
+     * site course outline
+     */
+    public void releaseLock(AsyncCallback<Void> callback);
 
 }

@@ -321,4 +321,8 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	    AsyncCallback<String> callback) {
 	callback.onSuccess(null);
     }
+
+    public void releaseLock(AsyncCallback<Void> callback) {
+	callback.onSuccess(null);
+    }
 }

@@ -77,8 +77,8 @@ public class OsylController implements SavePushButtonEventHandler,
      * Work folder name for documents in sakai
      */
     public static final String WORK_FOLDER_NAME = "work";
-    
-    public static final String PRINT_VERSION_FILENAME= "osylPrintVersion.pdf";
+
+    public static final String PRINT_VERSION_FILENAME = "osylPrintVersion.pdf";
 
     // Singleton instance
     private static OsylController _instance;
@@ -104,10 +104,10 @@ public class OsylController implements SavePushButtonEventHandler,
 
     // Instance of pinger to keep the session alive.
     private Pinger pinger;
-    
+
     // Instance of AutoSaver to save current course outline automatically
     private AutoSaver autoSaver;
-    
+
     // Our Model Controller
     private OsylModelController osylModelController;
 
@@ -477,6 +477,17 @@ public class OsylController implements SavePushButtonEventHandler,
      * @param COSerialized returned by the server
      */
     public void getSerializedCourseOutlineCB(COSerialized co) {
+	if (!co.isEditable()) {
+	    readOnly = true;
+	    pinger.stop();
+	    autoSaver.stop();
+	    OsylAlertDialog alertBox =
+		    new OsylAlertDialog(false, true, uiMessages
+			    .getMessage("Global.warning"), uiMessages
+			    .getMessage("courseOutline.lockedBy", co
+				    .getLockedBy()));
+	    alertBox.show();
+	}
 	// keep track of co messages
 	setCoMessages(new OsylConfigMessages(co.getMessages()));
 
@@ -637,7 +648,8 @@ public class OsylController implements SavePushButtonEventHandler,
 	    alertBox.show();
 	} else {
 	    OsylUnobtrusiveAlert alert =
-		    new OsylUnobtrusiveAlert(uiMessages.getMessage("save.savedOK"));
+		    new OsylUnobtrusiveAlert(uiMessages
+			    .getMessage("save.savedOK"));
 	    OsylEditorEntryPoint.showWidgetOnTop(alert);
 	}
     }
@@ -648,7 +660,7 @@ public class OsylController implements SavePushButtonEventHandler,
      * 
      * @param String ID of the requested CourseOutlineXML
      */
-    public void publishCourseOutline(AsyncCallback<Map<String,String>> callback) {
+    public void publishCourseOutline(AsyncCallback<Map<String, String>> callback) {
 	OsylRemoteServiceLocator.getEditorRemoteService().publishCourseOutline(
 		callback);
     }
@@ -734,10 +746,10 @@ public class OsylController implements SavePushButtonEventHandler,
 		}
 	    };
 
-	    OsylRemoteServiceLocator.getEditorRemoteService()
+	    OsylRemoteServiceLocator
+		    .getEditorRemoteService()
 		    .createOrUpdateAssignment(assignmentId, title,
-			    instructions, dateStart, dateEnd, dateEnd,
-			    callback);
+			    instructions, dateStart, dateEnd, dateEnd, callback);
 
 	}
     }
@@ -1206,14 +1218,14 @@ public class OsylController implements SavePushButtonEventHandler,
     public void saveCourseOutline(AsyncCallback<String> callBack) {
 	saveCourseOutline(callBack, false);
     }
-    
+
     public void saveCourseOutline(AsyncCallback<String> callBack,
 	    boolean autoSave) {
 	try {
 	    // 1. Unless we are performing an auto-save, we instruct the
 	    // ViewContext to close all editors in case an editor with modified
 	    // content is still open.
-	    if (! autoSave) {
+	    if (!autoSave) {
 		getViewContext().closeAllEditors();
 	    }
 
@@ -1232,8 +1244,8 @@ public class OsylController implements SavePushButtonEventHandler,
 	    e.printStackTrace();
 	    final OsylAlertDialog alertBox =
 		    new OsylAlertDialog(false, true, "Alert - Error",
-			    uiMessages.getMessage("save.unableToSave",
-				    e.toString()));
+			    uiMessages.getMessage("save.unableToSave", e
+				    .toString()));
 	    alertBox.show();
 	}
     }
@@ -1302,9 +1314,10 @@ public class OsylController implements SavePushButtonEventHandler,
     /**
      * @return the general settings object.
      */
-    public OsylSettings getSettings() {  
-    return getOsylConfig().getSettings();
+    public OsylSettings getSettings() {
+	return getOsylConfig().getSettings();
     }
+
     /**
      * Returns the UI message corresponding to the specified key
      * 
@@ -1504,7 +1517,6 @@ public class OsylController implements SavePushButtonEventHandler,
 	alertBox.show();
     }
 
-
     private class AutoSaver {
 	private Timer t;
 
@@ -1529,7 +1541,6 @@ public class OsylController implements SavePushButtonEventHandler,
 	    t.cancel();
 	}
     } // class AutoSaver
-
 
     /**
      * AutoSaves current course outline.
@@ -1593,8 +1604,6 @@ public class OsylController implements SavePushButtonEventHandler,
 	alertBox.show();
     } // unableToAutoSave
 
-
-
     public native String xslTransform(String xml, String xsl)/*-{
 							     var xml = $wnd.xmlParse(xml);
 							     var xslt = $wnd.xmlParse(xsl);
@@ -1630,5 +1639,15 @@ public class OsylController implements SavePushButtonEventHandler,
     public void setInPreview(boolean inPreview) {
 	this.inPreview = inPreview;
     }
-    
+
+    public void releaseLock() {
+	AsyncCallback<Void> cb = new AsyncCallback<Void>() {
+	    public void onFailure(Throwable caught) {
+	    }
+	    public void onSuccess(Void result) {
+	    }
+	};
+	OsylRemoteServiceLocator.getEditorRemoteService().releaseLock(cb);
+    }
+
 }

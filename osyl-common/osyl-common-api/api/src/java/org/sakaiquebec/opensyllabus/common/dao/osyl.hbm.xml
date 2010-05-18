@@ -39,6 +39,10 @@
     	<property name="published" type="boolean">
             <column name="PUBLISHED" />
         </property>
+        
+        <property name="lockedBy" type="string">
+        	<column name="LOCKED_BY" />
+        </property>
 
   	</class>
 

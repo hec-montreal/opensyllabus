@@ -27,12 +27,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
-import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,13 +42,13 @@ import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
-import org.sakaiproject.coursemanagement.api.AcademicSession;
-import org.sakaiproject.coursemanagement.api.CourseOffering;
-import org.sakaiproject.coursemanagement.api.CourseManagementService;
-import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
-import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.content.api.ResourceType;
+import org.sakaiproject.coursemanagement.api.AcademicSession;
+import org.sakaiproject.coursemanagement.api.CourseManagementService;
+import org.sakaiproject.coursemanagement.api.CourseOffering;
+import org.sakaiproject.coursemanagement.api.Section;
+import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
 import org.sakaiproject.entity.api.Entity;
 import org.sakaiproject.entity.api.EntityManager;
 import org.sakaiproject.entity.api.EntityTransferrer;
@@ -54,16 +56,23 @@ import org.sakaiproject.entity.api.HttpAccess;
 import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+import org.sakaiproject.event.api.Event;
+import org.sakaiproject.event.api.EventTrackingService;
+import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.id.api.IdManager;
+import org.sakaiproject.presence.api.PresenceService;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.ToolConfiguration;
+import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.tool.api.Tool;
 import org.sakaiproject.tool.api.ToolManager;
+import org.sakaiproject.user.api.User;
+import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
@@ -107,6 +116,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     /** The hierarchy service to be injected by Spring */
     private OsylHierarchyService osylHierarchyService;
 
+    private EventTrackingService eventTrackingService;
+
     /** The site service to be injected by Spring */
     private SiteService siteService;
 
@@ -119,6 +130,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     private COConfigDao configDao;
 
     private CitationService citationService;
+
+    private SessionManager sessionManager;
+
+    private UserDirectoryService userDirectoryService;
 
     /**
      * Sets the <code>CitationService</code>.
@@ -140,8 +155,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      */
     public void setCmService(CourseManagementService cmService) {
 	this.cmService = cmService;
-    }    
-   /**
+    }
+
+    /**
      * Sets the {@link OsylConfigService}.
      * 
      * @param osylConfigService
@@ -177,6 +193,11 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      */
     public void setSecurityService(OsylSecurityService securityService) {
 	this.osylSecurityService = securityService;
+    }
+
+    public void setEventTrackingService(
+	    EventTrackingService eventTrackingService) {
+	this.eventTrackingService = eventTrackingService;
     }
 
     /**
@@ -234,6 +255,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	this.siteService = siteService;
     }
 
+    public void setSessionManager(SessionManager sessionManager) {
+	this.sessionManager = sessionManager;
+    }
+
+    public void setUserDirectoryService(
+	    UserDirectoryService userDirectoryService) {
+	this.userDirectoryService = userDirectoryService;
+    }
+
     /**
      * @inherited
      */
@@ -259,6 +289,35 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      */
     public void init() {
 	log.info("INIT from OsylSite service");
+
+	eventTrackingService.addObserver(new Observer() {
+
+	    public void update(Observable o, Object arg) {
+		Event e = (Event) arg;
+		if (e.getEvent().equals(UsageSessionService.EVENT_LOGOUT)) {
+		    resourceDao.clearLocksForSession(sessionManager
+			    .getCurrentSession().getId());
+		} else if (e.getEvent().equals(PresenceService.EVENT_ABSENCE)) {
+		    //we leave the sakai site, so we can unlock the CO
+		    String res = e.getResource();
+		    String siteId =
+			    res.substring(res.lastIndexOf("/") + 1, res
+				    .lastIndexOf("-"));
+		    try {
+			COSerialized cos =
+				resourceDao
+					.getSerializedCourseOutlineBySiteId(siteId);
+			if (cos.getLockedBy().equals(
+				sessionManager.getCurrentSession().getId())) {
+			    cos.setLockedBy(null);
+			    resourceDao.createOrUpdateCourseOutline(cos);
+			}
+		    } catch (Exception ex) {
+		    }
+
+		}
+	    }
+	});
 
 	// We register the entity manager
 	// entityManager.registerEntityProducer(this, REFERENCE_ROOT);
@@ -409,7 +468,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return null;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -514,7 +572,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
 	return site.getId();
     }
-
 
     /**
      * {@inheritDoc}
@@ -667,28 +724,29 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /** {@inheritDoc} */
     public void getSiteInfo(COSerialized co, String siteId) throws Exception {
-    	try {
-    	    Site site = getSite(siteId);
-    	    co.setTitle(site.getTitle());
-    	    if(this.isCOLinkedToCourseManagement(siteId)){
-    	    	String cmTitle = getCourseManagementTitle(siteId);
-    	    	String cmCourseNo = getCourseManagementCourseNo(siteId);
-    	    	if(cmTitle != null && cmCourseNo != null){
-    	    		co.setTitle(cmCourseNo + " - " + cmTitle);
-    	    	}
-    	    }
-    	    co.setShortDescription(site.getShortDescription());
-    	    co.setDescription(site.getDescription());
-    	} catch (IdUnusedException e) {
-    	    log.error("Get site info - Id unused exception", e);
-    	    // We wrap the exception in a java.lang.Exception. This way our
-    	    // "client" doesn't have to know about IdUnusedException.
-    	    throw new Exception(e);
-    	} catch (IdNotFoundException e) {
-    	    log.warn("Get site info - Id Not Found exception", e);
-    	    log.warn("Get site info - Fail to retreive course management title");
-    	}
-        }
+	try {
+	    Site site = getSite(siteId);
+	    co.setTitle(site.getTitle());
+	    if (this.isCOLinkedToCourseManagement(siteId)) {
+		String cmTitle = getCourseManagementTitle(siteId);
+		String cmCourseNo = getCourseManagementCourseNo(siteId);
+		if (cmTitle != null && cmCourseNo != null) {
+		    co.setTitle(cmCourseNo + " - " + cmTitle);
+		}
+	    }
+	    co.setShortDescription(site.getShortDescription());
+	    co.setDescription(site.getDescription());
+	} catch (IdUnusedException e) {
+	    log.error("Get site info - Id unused exception", e);
+	    // We wrap the exception in a java.lang.Exception. This way our
+	    // "client" doesn't have to know about IdUnusedException.
+	    throw new Exception(e);
+	} catch (IdNotFoundException e) {
+	    log.warn("Get site info - Id Not Found exception", e);
+	    log
+		    .warn("Get site info - Fail to retreive course management title");
+	}
+    }
 
     /**
      * {@inheritDoc}
@@ -722,7 +780,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     /**
      * {@inheritDoc}
      */
-    public COSerialized getSerializedCourseOutline(String webappDir) {
+    public synchronized COSerialized getSerializedCourseOutline(String webappDir) {
 	COSerialized thisCo = null;
 	COConfigSerialized coConfig = null;
 	String siteId = "";
@@ -757,24 +815,28 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		resourceDao.createOrUpdateCourseOutline(thisCo);
 	    } else if (thisCo.getContent() == null) {
 		coConfig = thisCo.getOsylConfig();
-		//at the first call we got only the config id and ref. We need to fill the rules so the next call is used to get it.
+		// at the first call we got only the config id and ref. We need
+		// to fill the rules so the next call is used to get it.
 		coConfig =
-			osylConfigService.getConfigByRef(coConfig.getConfigRef(),webappDir);
-        thisCo.setOsylConfig(coConfig);
+			osylConfigService.getConfigByRef(coConfig
+				.getConfigRef(), webappDir);
+		thisCo.setOsylConfig(coConfig);
 		thisCo.setContent(getXmlStringFromFile(coConfig, thisCo
 			.getLang(), webappDir));
-	    String title = getSite(siteId).getTitle();
-	    String identifier = "";
-	    if(this.isCOLinkedToCourseManagement(getCurrentSiteId())){
-	    	String cmTitle = getCourseManagementTitle(getCurrentSiteId());
-	    	String cmIdentifier = getCourseManagementCourseNo(getCurrentSiteId());
-	    	if(cmTitle != null){
-	    		title = cmTitle;
-	    	}
-	    	if(cmIdentifier != null){
-	    		identifier = cmIdentifier;
-	    	}
-	    }
+		String title = getSite(siteId).getTitle();
+		String identifier = "";
+		if (this.isCOLinkedToCourseManagement(getCurrentSiteId())) {
+		    String cmTitle =
+			    getCourseManagementTitle(getCurrentSiteId());
+		    String cmIdentifier =
+			    getCourseManagementCourseNo(getCurrentSiteId());
+		    if (cmTitle != null) {
+			title = cmTitle;
+		    }
+		    if (cmIdentifier != null) {
+			identifier = cmIdentifier;
+		    }
+		}
 		// reinitilaisation des uuids et ajout titre et identifier
 		COModeledServer coModeled = new COModeledServer(thisCo);
 		coModeled.XML2Model();
@@ -794,13 +856,42 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			    configDao.getConfigByRef(configSiteProperty
 				    .toString());
 	    }
-
+	    String lockedBy = thisCo.getLockedBy();
+	    boolean lockFree = false;
+	    if (lockedBy == null || lockedBy.equals("")) {
+		lockFree = true;
+	    } else {
+		long d =
+			System.currentTimeMillis()
+				- (sessionManager.getSession(lockedBy)!=null?sessionManager.getSession(lockedBy)
+					.getLastAccessedTime():0);
+		if (d > (15 * 60 * 1000))//we invalidate lock after 15 mins of inactivity
+		    lockFree = true;
+	    }
+	    if (lockFree) {
+		thisCo.setLockedBy(sessionManager.getCurrentSession().getId());
+		resourceDao.createOrUpdateCourseOutline(thisCo);
+	    } else if (!lockedBy.equals(sessionManager.getCurrentSession()
+		    .getId())) {
+		try {
+		    // CO is already in edition
+		    thisCo.setEditable(false);
+		    //we set the name of the proprietary of the co to diplay to users
+		    User u =
+			    userDirectoryService.getUser(sessionManager
+				    .getSession(thisCo.getLockedBy())
+				    .getUserId());
+		    thisCo
+			    .setLockedBy(u.getFirstName() + " "
+				    + u.getLastName());
+		} catch (Exception ex) {
+		}
+	    }
 	    thisCo =
 		    osylConfigService.fillCo(webappDir
 			    + OsylConfigService.CONFIG_DIR + File.separator
 			    + coConfig.getConfigRef(), thisCo);
 	    getSiteInfo(thisCo, thisCo.getSiteId());
-	    // System.err.println("siteId : "+siteId);
 
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline", e);
@@ -1228,159 +1319,177 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     }
 
-    public COSerialized updateCOContentTitle(String siteId, String webappDir) throws Exception{
-    	COSerialized co = getSerializedCourseOutlineBySiteId(siteId);
-		COConfigSerialized coConfig = co.getOsylConfig();
-		//at the first call we got only the config id and ref. We need to fill the rules so the next call is used to get it.
-		coConfig =
-			osylConfigService.getConfigByRef(coConfig.getConfigRef(),webappDir);
-        co.setOsylConfig(coConfig);
-        updateCOContentTitle(siteId, co);
+    public COSerialized updateCOContentTitle(String siteId, String webappDir)
+	    throws Exception {
+	COSerialized co = getSerializedCourseOutlineBySiteId(siteId);
+	COConfigSerialized coConfig = co.getOsylConfig();
+	// at the first call we got only the config id and ref. We need to fill
+	// the rules so the next call is used to get it.
+	coConfig =
+		osylConfigService.getConfigByRef(coConfig.getConfigRef(),
+			webappDir);
+	co.setOsylConfig(coConfig);
+	updateCOContentTitle(siteId, co);
 
-        return co;
-    }    
-    
-    public void updateCOContentTitle(String siteId, COSerialized co) throws Exception{
-	    Site site = getSite(siteId);
-	    String title = site.getTitle();
-	    String identifier = "";
-	    try{
-		    if(this.isCOLinkedToCourseManagement(siteId)){
-		    	String cmTitle = getCourseManagementTitle(siteId);
-		    	String cmIdentifier = getCourseManagementCourseNo(siteId);
-		    	if(cmTitle != null){
-		    		title = cmTitle;
-		    	}
-		    	if(cmIdentifier != null){
-		    		identifier = cmIdentifier;
-		    	}
-		    }
-			COModeledServer coModeled = new COModeledServer(co);
-			coModeled.XML2Model();
-			coModeled.setCOContentTitle(title);
-			coModeled.setCOContentIdentifier(identifier);
-			coModeled.model2XML();
-			co.setContent(coModeled.getSerializedContent());
-			resourceDao.createOrUpdateCourseOutline(co);
-    	} catch (IdUnusedException e) {
-    	    log.warn("updateCOContentTitle - Id unused exception", e);
-    	    log.warn("updateCOContentTitle - Failed to retreive course management title");
-    	    // We wrap the exception in a java.lang.Exception. This way our
-    	    // "client" doesn't have to know about IdUnusedException.
-    	    throw new Exception(e);
-    	}
-		
-    	
+	return co;
     }
-	private boolean isCOLinkedToCourseManagement(String siteId) throws Exception{
-		return (getSite(siteId).getProviderGroupId() != null && 
-				getSite(siteId).getProviderGroupId().length() > 0);
-	}
-	
-	private String getCourseManagementCourseNo(String siteId) throws Exception{
-		String courseNo = null;
-		
-		String Eid = getSite(siteId).getProviderGroupId();
-	    if (cmService.isSectionDefined(Eid)) {
-	    	Section section =
-	    		cmService.getSection(Eid);
-			courseNo = getSiteName(section);
+
+    public void updateCOContentTitle(String siteId, COSerialized co)
+	    throws Exception {
+	Site site = getSite(siteId);
+	String title = site.getTitle();
+	String identifier = "";
+	try {
+	    if (this.isCOLinkedToCourseManagement(siteId)) {
+		String cmTitle = getCourseManagementTitle(siteId);
+		String cmIdentifier = getCourseManagementCourseNo(siteId);
+		if (cmTitle != null) {
+		    title = cmTitle;
+		}
+		if (cmIdentifier != null) {
+		    identifier = cmIdentifier;
+		}
 	    }
-		
-		return courseNo;
-		
+	    COModeledServer coModeled = new COModeledServer(co);
+	    coModeled.XML2Model();
+	    coModeled.setCOContentTitle(title);
+	    coModeled.setCOContentIdentifier(identifier);
+	    coModeled.model2XML();
+	    co.setContent(coModeled.getSerializedContent());
+	    resourceDao.createOrUpdateCourseOutline(co);
+	} catch (IdUnusedException e) {
+	    log.warn("updateCOContentTitle - Id unused exception", e);
+	    log
+		    .warn("updateCOContentTitle - Failed to retreive course management title");
+	    // We wrap the exception in a java.lang.Exception. This way our
+	    // "client" doesn't have to know about IdUnusedException.
+	    throw new Exception(e);
 	}
-	
-	private String getCourseManagementTitle(String siteId) throws Exception{
-		String courseManageMentTitle = null;
-		
-		String Eid = getSite(siteId).getProviderGroupId();
-	    if (cmService.isSectionDefined(Eid)) {
-	    	Section section =
-	    		cmService.getSection(Eid);
-    		courseManageMentTitle = section.getTitle();
-    	}		
-	    
-		return courseManageMentTitle;
+
+    }
+
+    private boolean isCOLinkedToCourseManagement(String siteId)
+	    throws Exception {
+	return (getSite(siteId).getProviderGroupId() != null && getSite(siteId)
+		.getProviderGroupId().length() > 0);
+    }
+
+    private String getCourseManagementCourseNo(String siteId) throws Exception {
+	String courseNo = null;
+
+	String Eid = getSite(siteId).getProviderGroupId();
+	if (cmService.isSectionDefined(Eid)) {
+	    Section section = cmService.getSection(Eid);
+	    courseNo = getSiteName(section);
 	}
-	
+
+	return courseNo;
+
+    }
+
+    private String getCourseManagementTitle(String siteId) throws Exception {
+	String courseManageMentTitle = null;
+
+	String Eid = getSite(siteId).getProviderGroupId();
+	if (cmService.isSectionDefined(Eid)) {
+	    Section section = cmService.getSection(Eid);
+	    courseManageMentTitle = section.getTitle();
+	}
+
+	return courseManageMentTitle;
+    }
+
     private String getSiteName(Section section) {
-    	StringBuilder siteName = new StringBuilder();
-    	String sectionId = section.getEid();
-    	String courseOffId = section.getCourseOfferingEid();
-    	CourseOffering courseOff = cmService.getCourseOffering(courseOffId);
-    	String canCourseId = (courseOff.getCanonicalCourseEid()).trim();
-    	AcademicSession session = courseOff.getAcademicSession();
-    	String sessionId = session.getEid();
+	StringBuilder siteName = new StringBuilder();
+	String sectionId = section.getEid();
+	String courseOffId = section.getCourseOfferingEid();
+	CourseOffering courseOff = cmService.getCourseOffering(courseOffId);
+	String canCourseId = (courseOff.getCanonicalCourseEid()).trim();
+	AcademicSession session = courseOff.getAcademicSession();
+	String sessionId = session.getEid();
 
-    	String courseId = null;
-    	String courseIdFront = null;
-    	String courseIdMiddle = null;
-    	String courseIdBack = null;
+	String courseId = null;
+	String courseIdFront = null;
+	String courseIdMiddle = null;
+	String courseIdBack = null;
 
-    	String sessionTitle = null;
-    	String periode = null;
-    	String groupe = null;
+	String sessionTitle = null;
+	String periode = null;
+	String groupe = null;
 
-    	if (canCourseId.length() == 7) {
-    	    courseIdFront = canCourseId.substring(0, 2);
-    	    courseIdMiddle = canCourseId.substring(2, 5);
-    	    courseIdBack = canCourseId.substring(5, 7);
-    	    courseId =
-    		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
-    	} else if (canCourseId.length() == 6) {
-    	    courseIdFront = canCourseId.substring(0, 1);
-    	    courseIdMiddle = canCourseId.substring(1, 4);
-    	    courseIdBack = canCourseId.substring(4, 6);
-    	    courseId =
-    		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
-    	} else {
-    	    courseId = canCourseId;
-    	}
+	if (canCourseId.length() == 7) {
+	    courseIdFront = canCourseId.substring(0, 2);
+	    courseIdMiddle = canCourseId.substring(2, 5);
+	    courseIdBack = canCourseId.substring(5, 7);
+	    courseId =
+		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
+	} else if (canCourseId.length() == 6) {
+	    courseIdFront = canCourseId.substring(0, 1);
+	    courseIdMiddle = canCourseId.substring(1, 4);
+	    courseIdBack = canCourseId.substring(4, 6);
+	    courseId =
+		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
+	} else {
+	    courseId = canCourseId;
+	}
 
-    	if (canCourseId.matches(".*[^0-9].*")) {
-    	    courseId = canCourseId;
-    	}
-    	sessionTitle = getSessionName(session);
+	if (canCourseId.matches(".*[^0-9].*")) {
+	    courseId = canCourseId;
+	}
+	sessionTitle = getSessionName(session);
 
-    	if (sessionId.matches(".*[pP].*")) {
-    	    periode = sessionId.substring(sessionId.length() - 2);
-    	}
+	if (sessionId.matches(".*[pP].*")) {
+	    periode = sessionId.substring(sessionId.length() - 2);
+	}
 
-    	groupe = sectionId.substring(courseOffId.length());
-    	
-   	    siteName.append(courseId);
-   	    if(groupe != null && groupe.length() > 0){
-   	    siteName.append("_");
-   	    siteName.append(groupe);
-   	    }
-   	    if(sessionTitle != null && sessionTitle.length() > 0){
-   	    siteName.append("-");
-   	    siteName.append(sessionTitle);
-   	    }
-   	    if(periode != null && periode.length() > 0){
-   	    	siteName.append(":");
-   	    	siteName.append(periode);
-   	    }
+	groupe = sectionId.substring(courseOffId.length());
 
-    	return siteName.toString();
-        }
+	siteName.append(courseId);
+	if (groupe != null && groupe.length() > 0) {
+	    siteName.append("_");
+	    siteName.append(groupe);
+	}
+	if (sessionTitle != null && sessionTitle.length() > 0) {
+	    siteName.append("-");
+	    siteName.append(sessionTitle);
+	}
+	if (periode != null && periode.length() > 0) {
+	    siteName.append(":");
+	    siteName.append(periode);
+	}
+
+	return siteName.toString();
+    }
 
     private String getSessionName(AcademicSession session) {
-    	String sessionName = null;
-    	String sessionId = session.getEid();
-    	Date startDate = session.getStartDate();
-    	String year = startDate.toString().substring(0, 4);
+	String sessionName = null;
+	String sessionId = session.getEid();
+	Date startDate = session.getStartDate();
+	String year = startDate.toString().substring(0, 4);
 
-    	if ((sessionId.charAt(3)) == '1')
-    	    sessionName = WINTER + year;
-    	if ((sessionId.charAt(3)) == '2')
-    	    sessionName = SUMMER + year;
-    	if ((sessionId.charAt(3)) == '3')
-    	    sessionName = FALL + year;
+	if ((sessionId.charAt(3)) == '1')
+	    sessionName = WINTER + year;
+	if ((sessionId.charAt(3)) == '2')
+	    sessionName = SUMMER + year;
+	if ((sessionId.charAt(3)) == '3')
+	    sessionName = FALL + year;
 
-    	return sessionName;
-        }
+	return sessionName;
+    }
 
-    
+    public void releaseLock() {
+	String siteId;
+	try {
+	    siteId = getCurrentSiteId();
+	    COSerialized thisCo = getSerializedCourseOutlineBySiteId(siteId);
+	    if (thisCo.getLockedBy().equals(
+		    sessionManager.getCurrentSession().getId())) {
+		thisCo.setLockedBy(null);
+		resourceDao.createOrUpdateCourseOutline(thisCo);
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+
+    }
 }

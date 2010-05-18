@@ -104,7 +104,9 @@ public class COSerialized implements java.io.Serializable{
     /**
      * is editable or not
      */
-    private boolean editable;
+    private boolean editable=true;
+    
+    private String lockedBy ;
 
     /**
      * Default constructor
@@ -398,5 +400,13 @@ public class COSerialized implements java.io.Serializable{
 
     public void setEditable(boolean edit) {
 	this.editable = edit;
+    }
+
+    public void setLockedBy(String lockedBy) {
+	this.lockedBy = lockedBy;
+    }
+
+    public String getLockedBy() {
+	return lockedBy;
     }
 }

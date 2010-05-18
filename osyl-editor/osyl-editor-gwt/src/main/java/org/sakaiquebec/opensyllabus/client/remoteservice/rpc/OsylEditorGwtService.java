@@ -174,4 +174,10 @@ public interface OsylEditorGwtService extends RemoteService {
     public String transformXmlForGroup(String xml, String group)
 	    throws Exception;
 
+    /**
+     * Method used to release lock that the current user have on the current
+     * site course outline
+     */
+    public void releaseLock();
+
 }

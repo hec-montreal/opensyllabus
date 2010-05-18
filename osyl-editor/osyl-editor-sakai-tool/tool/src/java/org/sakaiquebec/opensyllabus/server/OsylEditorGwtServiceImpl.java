@@ -275,18 +275,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	    else
 		thisCo =
 			getSerializedPublishedCourseOutlineForAccessType(SecurityInterface.ACCESS_PUBLIC);
-	    if (thisCo == null) {
-		// FIXME: Gracefully inform the user (a student) that he has
-		// nothing to do in
-		// opensyllabus while the course outline is not publish. For
-		// example, hide the
-		// tool page for the users.
-		// We are not suppose to have to tell to the user that the
-		// course outline is not
-		// available. If there is no course outline, the corresponding
-		// site should not be
-		// available.
-	    }
 	}
 	return thisCo;
     }
@@ -443,5 +431,9 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	String webappDir = getServletContext().getRealPath("/");
 	return osylServices.getOsylPublishService().transformXmlForGroup(xml,
 		group, webappDir);
+    }
+
+    public void releaseLock() {
+	osylServices.getOsylSiteService().releaseLock();
     }
 }

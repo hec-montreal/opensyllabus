@@ -268,5 +268,10 @@ public interface OsylSiteService extends EntityProducer{
 	public COModeledServer getFusionnedPrePublishedHierarchy(String siteId);
 
 	public COSerialized updateCOContentTitle(String siteId, String webappDir) throws Exception;
+	
+	/**
+	 * Method used to release lock that the current user have on the current site course outline
+	 */
+	public void releaseLock();
 
 }

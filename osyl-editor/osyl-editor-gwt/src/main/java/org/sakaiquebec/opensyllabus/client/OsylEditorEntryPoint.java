@@ -33,6 +33,8 @@ import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -114,6 +116,15 @@ public class OsylEditorEntryPoint implements EntryPoint {
 				.getUiMessage("save.reallyQuit"));
 	    }
 	}); // addWindowClosingHandler
+	
+	Window.addCloseHandler(new CloseHandler<Window>() {
+	    
+	    public void onClose(CloseEvent<Window> event) {
+		if(!osylController.isReadOnly()){
+		    osylController.releaseLock();
+		}
+	    }
+	});
 
     } // onModuleLoad
 

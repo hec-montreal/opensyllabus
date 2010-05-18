@@ -96,4 +96,8 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     public String transformXmlForGroup(String xml, String group) {
 	return null;
     }
+    
+    public void releaseLock(){
+	
+    }
 }

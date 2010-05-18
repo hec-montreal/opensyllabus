@@ -28,6 +28,7 @@ import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.entity.api.ResourceProperties;
+import org.sakaiproject.event.api.Event;
 import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
@@ -264,6 +265,10 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
      */
     private String getSiteRealmID() {
 	return ("/site/" + toolManager.getCurrentPlacement().getContext());
+    }
+
+    public String getCurrentUserId() {
+	return sessionManager.getCurrentSessionUserId();
     }
 
 }

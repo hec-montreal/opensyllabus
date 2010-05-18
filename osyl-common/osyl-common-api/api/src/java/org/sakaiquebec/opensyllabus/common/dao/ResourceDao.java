@@ -119,5 +119,11 @@ public interface ResourceDao {
      * @return true if a CO in edition exists
      */
     public boolean hasCourseOutiline(String siteId) ;
+    
+    /**
+     * release lock made with session identified by sessionId
+     * @param sessionId
+     */
+    public void clearLocksForSession(String sessionId);
 
 }
