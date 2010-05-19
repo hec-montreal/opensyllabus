@@ -81,11 +81,6 @@ public class OsylTreeView extends OsylViewableComposite implements
     private void initView() {
 
 	VerticalPanel vertPan = new VerticalPanel();
-	Label treeHeaderLabel = new Label(this.getUiMessage("OsylTreeView.title"));
-	
-	treeHeaderLabel.setStylePrimaryName("Osyl-TreeView-Header");
-	vertPan.add(treeHeaderLabel);
-
 	setMaxTreeWidth(INIT_TREE_WIDTH);
 
 	final Tree tree = new Tree();
@@ -101,7 +96,6 @@ public class OsylTreeView extends OsylViewableComposite implements
     private void refreshSubModelsViews(COElementAbstract currentModel) {
 	// clean panel
 	// The only mean to control the padding of the root
-	DOM.setStyleAttribute(root.getElement(), "padding", "10px");
 	TreeItem currentTreeItem = (TreeItem) itemModelMap.get(currentModel);
 	currentTreeItem.removeItems();
 
@@ -179,11 +173,13 @@ public class OsylTreeView extends OsylViewableComposite implements
 	if (null == treeItemTitle || "".equals(treeItemTitle)) {
 	    treeItemTitle = getCoMessage("courseoutline");
 	}
-	setRoot(new TreeItem(treeItemTitle));
+	TreeItem treeItemRoot = new TreeItem();
+	setRoot(treeItemRoot);
 	itemModelMap.put(getModel(), getRoot());
 	getTree().addItem(getRoot());
-
 	refreshSubModelsViews(co);
+	//hide the root of the tree
+	DOM.getChild(DOM.getChild(getTree().getElement(),1),0).setClassName("Osyl-TreeView-TreeRoot");
 
 	// The tree is expanded by default
 	getRoot().setState(true);

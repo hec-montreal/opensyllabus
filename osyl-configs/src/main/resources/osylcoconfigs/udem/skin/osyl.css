@@ -255,7 +255,7 @@
 }
 .Osyl-MainView-HorizontalSplitPanel .middleCenterInner {
 	position:relative;
-	margin:-47px 0 0 0;
+	margin: 0;
 	zoom: 1;
 	overflow:auto;
 }
@@ -275,6 +275,11 @@
 	padding:14px 0 8px 35px;
 	background:transparent url(images/tree_logo.png) no-repeat 12px 14px;
 }
+
+.Osyl-TreeView-TreeRoot {
+	display: none;
+}
+
 /*TreeView Tree */
 .Osyl-TreeView-Tree {
 	border:0;

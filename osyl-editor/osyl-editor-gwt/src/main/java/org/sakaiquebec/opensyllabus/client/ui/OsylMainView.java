@@ -137,6 +137,10 @@ public class OsylMainView extends OsylViewableComposite implements
 	treeDecoratorPanel = new OsylDecoratorPanel();
 	treeDecoratorPanel.setWidget(getOsylTreeView());
 	treeDecoratorPanel.setStylePrimaryName("Osyl-TreeView");
+	
+	Label treeHeaderLabel = new Label(this.getUiMessage("OsylTreeView.title"));
+	treeHeaderLabel.setStylePrimaryName("Osyl-TreeView-Header");
+	treeDecoratorPanel.setTitle(treeHeaderLabel);
 	horizontalSplitPanel.setLeftWidget(treeDecoratorPanel);
 
 	// Create and set the OpenSyllabus Workspace View
