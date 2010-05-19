@@ -117,6 +117,9 @@ public class OsylHorizontalSplitPanel extends Composite {
 		collapseAnchor.addStyleName("down");
 		DOM.eventPreventDefault(event);
 	    }
+	    if (DOM.isOrHasChild(splitElement, target)) {
+	    	splitElement.getFirstChildElement().setClassName("hsplitter hsplitter-down");
+	    }
 	    break;
 	}
 
@@ -141,6 +144,7 @@ public class OsylHorizontalSplitPanel extends Composite {
 		handler.onMouseMove(null);
 		DOM.eventPreventDefault(event);
 	    }
+	    splitElement.getFirstChildElement().setClassName("hsplitter");
 	    break;
 	}
 	}
