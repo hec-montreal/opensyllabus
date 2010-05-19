@@ -67,6 +67,8 @@ public class OsylTextToolbar extends Composite {
     private FlowPanel menuBar;
 
     private MenuItem homePushButton;
+    
+    private MenuItem viewAllPushButton;
 
     private MenuItem savePushButton;
 
@@ -89,6 +91,8 @@ public class OsylTextToolbar extends Composite {
     private MenuItem closePushButton;
     
     private MenuItemSeparator previewSeparator;
+    
+    private MenuItemSeparator viewSeparator;
     
     private MenuItemSeparator editionSeparator;
     
@@ -125,6 +129,11 @@ public class OsylTextToolbar extends Composite {
 	homePushButton =
 		createMenuItem("ButtonHomeToolBar",
 			getOsylImageBundle().home(), "ButtonHomeToolBarTooltip");
+
+	viewSeparator = new MenuItemSeparator();
+	viewAllPushButton =
+		createMenuItem("ButtonViewAllToolBar",
+			getOsylImageBundle().view_all(), "ButtonViewAllToolBarTooltip");
 
 	savePushButton =
 		createMenuItem("ButtonSaveToolBar",
@@ -182,8 +191,10 @@ public class OsylTextToolbar extends Composite {
 
 	    }
 	});
-
+	
 	leftMenuBar.addItem(homePushButton);
+	leftMenuBar.addSeparator(viewSeparator);
+	leftMenuBar.addItem(viewAllPushButton);
 	rightMenuBar.addItem(savePushButton);
 	// MenuBar Item with icon - nice trick...
 	addMenuItem =
@@ -291,6 +302,14 @@ public class OsylTextToolbar extends Composite {
     this.previewSeparator = previewSeparator;
     }
     
+    public MenuItemSeparator getViewSeparator() {
+    	return viewSeparator;
+    }
+
+    public void setViewSeparator(MenuItemSeparator viewSeparator) {
+    	this.viewSeparator = viewSeparator;
+    }
+    
     public MenuItemSeparator getEditionSeparator() {
     return editionSeparator;
     }
@@ -306,7 +325,15 @@ public class OsylTextToolbar extends Composite {
     public void setHomePushButton(MenuItem homePushButton) {
 	this.homePushButton = homePushButton;
     }
-
+    
+    public MenuItem getViewAllPushButton() {
+    return viewAllPushButton;
+    }
+    
+    public void setViewAllPushButton(MenuItem viewAllPushButton) {
+    this.viewAllPushButton = viewAllPushButton;
+    }
+    
     public MenuItem getSavePushButton() {
 	return savePushButton;
     }

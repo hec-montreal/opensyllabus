@@ -115,6 +115,14 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		getController().getViewContext().setContextModel(homeModel);
 	    }
 	});
+	// Home Button
+	getOsylToolbar().getViewAllPushButton().setCommand(new Command() {
+	    public void execute() {
+		// set to the starting viewContext
+		getController().getViewContext().setContextModel(getController().getMainView().getModel());
+	    }
+	});
+	
 	// Publish Button
 	getOsylToolbar().getPublishPushButton().setCommand(new Command() {
 	    public void execute() {
@@ -136,6 +144,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
     public void refreshView() {
 	if (getController().isInPreview()) {
 	    getOsylToolbar().getHomePushButton().setVisible(false);
+	    getOsylToolbar().getViewSeparator().setVisible(true);
+	    getOsylToolbar().getViewAllPushButton().setVisible(true);
 	    getOsylToolbar().getSavePushButton().setVisible(false);
 	    getOsylToolbar().getPublishPushButton().setVisible(false);
 	    getOsylToolbar().getEditionSeparator().setVisible(false);
@@ -162,6 +172,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		getOsylToolbar().getClosePushButton().setVisible(false);
 		getOsylToolbar().getPreviewSeparator().setVisible(false);
 		getOsylToolbar().getHomePushButton().setVisible(true);
+		getOsylToolbar().getViewSeparator().setVisible(true);
+	    getOsylToolbar().getViewAllPushButton().setVisible(true);
 		getOsylToolbar().getSavePushButton().setVisible(true);
 		getOsylToolbar().getPublishPushButton().setVisible(true);
 		getOsylToolbar().getAddMenuItem().setVisible(true);
