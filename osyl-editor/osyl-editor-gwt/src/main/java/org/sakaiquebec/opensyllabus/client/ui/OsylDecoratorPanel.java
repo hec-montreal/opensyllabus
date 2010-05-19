@@ -22,6 +22,7 @@ package org.sakaiquebec.opensyllabus.client.ui;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  *
@@ -30,9 +31,14 @@ import com.google.gwt.user.client.ui.DecoratorPanel;
  */
 public class OsylDecoratorPanel extends DecoratorPanel {
 
+	
     public Element getCell(int r, int c){
 	return super.getCellElement(r, c);
     }
     
+    public void setTitle(Widget title) {
+        getCellElement(0, 1).appendChild(title.getElement());
+    }
+
 }
 
