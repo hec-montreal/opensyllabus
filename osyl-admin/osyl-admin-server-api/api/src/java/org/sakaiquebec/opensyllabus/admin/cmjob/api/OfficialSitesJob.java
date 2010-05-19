@@ -41,5 +41,8 @@ public interface OfficialSitesJob extends Job {
     
     public final static String MEMBERS_ROLE_IN_SHARABLE = "Instructor";
     
+    //FIXME: SAKAI-1550
+    public final static String NOTIFICATION_MESSAGE_HEADER = "Avertissement";
+    
 }
 

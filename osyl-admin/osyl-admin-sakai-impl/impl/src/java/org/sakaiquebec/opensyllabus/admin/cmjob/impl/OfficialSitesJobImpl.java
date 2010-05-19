@@ -25,12 +25,14 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.cover.AuthzGroupService;
+import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.coursemanagement.api.CanonicalCourse;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
@@ -38,6 +40,7 @@ import org.sakaiproject.coursemanagement.api.CourseSet;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.Membership;
 import org.sakaiproject.coursemanagement.api.Section;
+import org.sakaiproject.email.cover.EmailService;
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.event.cover.UsageSessionService;
 import org.sakaiproject.site.api.Site;
@@ -60,6 +63,10 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
     private Set<CourseSet> allCourseSets = null;
 
     private Set<CourseOffering> courseOffs = null;
+
+    private List<String> existingCO = null;
+
+    private List<String> newCO = null;
 
     private Set<CanonicalCourse> canonicalCourses =
 	    new HashSet<CanonicalCourse>();;
@@ -191,11 +198,11 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 						lang = TEMPORARY_LANG;
 					    else
 						lang = section.getLang();
-					    if (! osylSiteService.siteExists(
-						    siteName)) {
+					    if (!osylSiteService
+						    .siteExists(siteName)) {
 						osylSiteService.createSite(
-						    siteName, OSYL_CO_CONFIG,
-						    lang);
+							siteName,
+							OSYL_CO_CONFIG, lang);
 					    }
 					    osylManagerService.associateToCM(
 						    section.getEid(), siteName);
@@ -250,8 +257,9 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	}
 
 	try {
-	    if (! osylSiteService.siteExists(siteName)) {
-		osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG, lang);
+	    if (!osylSiteService.siteExists(siteName)) {
+		osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG,
+			lang);
 	    }
 	    Site sharable = osylSiteService.getSite(siteName);
 
@@ -262,9 +270,79 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	    }
 
 	    SiteService.save(sharable);
+
+	    // After we are sure the sharable course outline has been created,
+	    // We check if we have to send a message telling there is already a
+	    // course section that might need to be transferred
+
+	    //FIXME: SAKAI-1550
+	    existingCourseOutlineSections(course);
+	    if (existingCO != null) {
+		Vector<String> receivers = new Vector<String>();
+		receivers.add(ServerConfigurationService.getString("setup.request"));
+		
+		String message = getNotificationMessages(existingCO.toString());
+		
+		EmailService.sendToUsers(receivers, null, message);
+	    }
+
 	} catch (Exception e) {
 	    log.error(e.getMessage());
 	}
+    }
+
+    //FIXME: SAKAI:1550
+    private void existingCourseOutlineSections(CourseOffering courseOff) {
+
+	Set<Section> sections = cmService.getSections(courseOff.getEid());
+
+	existingCO = null;
+	newCO = null;
+
+	String sectionId;
+
+	for (Section section : sections) {
+	    sectionId = section.getEid();
+	    if (SiteService.siteExists(sectionId)) {
+		if (existingCO == null) {
+		    existingCO = new ArrayList<String>();
+		}
+		existingCO.add(getSiteName(section));
+	    } else {
+		if (newCO == null) {
+		    newCO = new ArrayList<String>();
+		}
+		newCO.add(getSiteName(section));
+	    }
+	}
+    }
+
+    //FIXME: SAKAI:1550
+    private String getNotificationMessages(String existingSections) {
+	StringBuilder message = new StringBuilder();
+	String plainTextContent = " le contenu en texte";
+	String htmlContent = " le contenu en html";
+	String subject = "sujet du message " + existingSections;
+
+	message.append("This message is for MIME-compliant mail readers.");
+	message.append("\n\n--======sakai-multi-part-boundary======\n");
+	message.append("Content-Type: text/plain\n\n");
+	message.append(plainTextContent);
+	message.append("\n\n--======sakai-multi-part-boundary======\n");
+	message.append("Content-Type: text/html\n\n");
+	message
+		.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n");
+	message.append("    \"http://www.w3.org/TR/html4/loose.dtd\">\n");
+	message.append("<html>\n");
+	message.append("  <head><title>");
+	message.append(subject);
+	message.append("</title></head>\n");
+	message.append("  <body>\n");
+	message.append(htmlContent);
+	message.append("\n  </body>\n</html>\n");
+	message.append("\n\n--======sakai-multi-part-boundary======--\n\n");
+
+	return message.toString();
     }
 
     private List<AcademicSession> getSessions(Date startDate, Date endDate) {
@@ -350,7 +428,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	groupe = sectionId.substring(courseOffId.length());
 
 	if (periode == null)
-	    siteName = courseId + "." + sessionTitle+ "." + groupe ;
+	    siteName = courseId + "." + sessionTitle + "." + groupe;
 	else
 	    siteName =
 		    courseId + "." + sessionTitle + "." + periode + "."
