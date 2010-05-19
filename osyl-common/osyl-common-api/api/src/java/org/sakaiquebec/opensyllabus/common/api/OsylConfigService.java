@@ -189,4 +189,5 @@ public interface OsylConfigService {
      */
     public Map<String, String> getSettings(String path, String baseFileName) throws Exception;
 
+	public String getDefaultConfig();
 }

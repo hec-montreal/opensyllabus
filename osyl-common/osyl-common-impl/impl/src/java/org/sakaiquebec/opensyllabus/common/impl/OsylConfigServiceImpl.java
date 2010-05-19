@@ -89,6 +89,8 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
      * Injection of the ConfigDao
      */
     private COConfigDao coConfigDao;
+    
+    private String defaultConfig;
 
     /**
      * Constructor.
@@ -398,6 +400,17 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
     public Map<String, String> getSettings(String path, String baseFileName) throws Exception {
 	return OsylConfigSettingsService.getSettings(path, baseFileName);
     }
+
+	public String getDefaultConfig() {
+		if(defaultConfig == null || defaultConfig.length() == 0){
+			defaultConfig = DEFAULT_CONFIG_REF;
+		}
+		return defaultConfig;
+	}
+
+	public void setDefaultConfig(String defaultConfig) {
+		this.defaultConfig = defaultConfig;
+	}
 
 
 }

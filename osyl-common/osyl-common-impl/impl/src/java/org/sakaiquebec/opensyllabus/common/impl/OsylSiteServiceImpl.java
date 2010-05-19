@@ -795,7 +795,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		coConfig =
 			osylConfigService
 				.getConfigByRef(
-					OsylConfigService.DEFAULT_CONFIG_REF,
+						osylConfigService.getDefaultConfig(),
 					webappDir);
 		thisCo =
 			new COSerialized(idManager.createUuid(),

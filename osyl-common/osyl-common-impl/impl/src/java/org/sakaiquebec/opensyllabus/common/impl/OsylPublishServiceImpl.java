@@ -187,7 +187,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    osylSiteService.getSiteInfo(thisCo, siteId);
 	    configRef = thisCo.getOsylConfig().getConfigRef();
 	} catch (Exception e) {
-	    configRef = OsylConfigService.DEFAULT_CONFIG_REF;
+	    configRef = osylConfigService.getDefaultConfig();
 	    log.error("Unable to retrieve published course outline for"
 		    + " access type [" + accessType + "]", e);
 	}
