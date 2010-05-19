@@ -347,7 +347,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 		cfg =
 			osylServices.getOsylConfigService()
 				.getConfig(
-					OsylConfigService.DEFAULT_CONFIG_REF,
+					osylServices.getOsylConfigService().getDefaultConfig(),
 					webappDir);
 	    else
 		configSiteProperty =
