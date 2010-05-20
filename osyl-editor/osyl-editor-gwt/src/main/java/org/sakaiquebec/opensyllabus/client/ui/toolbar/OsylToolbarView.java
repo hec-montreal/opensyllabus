@@ -143,7 +143,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
      */
     public void refreshView() {
 	if (getController().isInPreview()) {
-	    getOsylToolbar().getHomePushButton().setVisible(false);
+	    getOsylToolbar().getHomePushButton().setVisible(true);
 	    getOsylToolbar().getViewSeparator().setVisible(true);
 	    getOsylToolbar().getViewAllPushButton().setVisible(true);
 	    getOsylToolbar().getSavePushButton().setVisible(false);
@@ -176,7 +176,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    getOsylToolbar().getViewAllPushButton().setVisible(true);
 		getOsylToolbar().getSavePushButton().setVisible(true);
 		getOsylToolbar().getPublishPushButton().setVisible(true);
-		getOsylToolbar().getAddMenuItem().setVisible(false);
+		getOsylToolbar().getAddMenuItem().setVisible(true);
 		getOsylToolbar().getPrintPushButton().setVisible(true);
 		getOsylToolbar().getViewMenuItem().setVisible(true);
 		getOsylToolbar().getEditionSeparator().setVisible(true);
@@ -184,13 +184,10 @@ public class OsylToolbarView extends OsylViewableComposite implements
 
 		// 3 big ViewContext cases
 		if (getModel().isCourseOutlineContent()) {
-		    getOsylToolbar().getAddMenuBar().setVisible(false);
+			getOsylToolbar().getAddMenuItem().setVisible(false);
 		} else if (getModel().isCOUnit()) {
 		    // Enables or Disables buttons in this ViewContext
-			if (getModel().getChildrens().size() > 0) {
-				getOsylToolbar().getAddMenuItem().setVisible(true);
-			    getOsylToolbar().getAddMenuBar().setVisible(true);
-			}
+		    getOsylToolbar().getAddMenuBar().setVisible(true);
 		    // Clear menu list, and set it according to the viewcontext
 		    try {
 
@@ -202,11 +199,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    }
 		} else if (getModel().isCOUnitStructure()) {
 		    // Enables or Disables buttons in this ViewContext
-		    
-		    if (getModel().getChildrens().size() > 0) {
-		    	getOsylToolbar().getAddMenuItem().setVisible(true);
-		    	getOsylToolbar().getAddMenuBar().setVisible(true);
-		    }
+		    getOsylToolbar().getAddMenuBar().setVisible(true);
 		    // Clear menu list, and set it according to the viewcontext
 		    try {
 			createAllowedCOUnitStructureAddAction((COUnitStructure) getModel());
@@ -219,6 +212,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    COStructureElement castedModel =
 			    (COStructureElement) getModel();
 		    castedModel.addEventHandler(this);
+		    
 		    // Clear menu list, and set it according to the viewcontext
 		    try {
 			List<COModelInterface> subModels =
@@ -255,6 +249,10 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		getController().getOsylConfig().getOsylConfigRuler()
 			.getAllowedSubModels(model.getChildrens().get(0));
 	Iterator<COModelInterface> iter = subModels.iterator();
+	// Enables or Disables buttons in this ViewContext
+	/*if (iter.hasNext() == false) {
+		getOsylToolbar().getAddMenuItem().setVisible(false);
+	}*/
 	while (iter.hasNext()) {
 	    COModelInterface subModel = (COModelInterface) iter.next();
 	    if (subModel instanceof COContentResource) {
@@ -285,6 +283,9 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		getController().getOsylConfig().getOsylConfigRuler()
 			.getAllowedSubModels(model);
 	Iterator<COModelInterface> iter = subModels.iterator();
+	/*if (iter.hasNext() == false) {
+		getOsylToolbar().getAddMenuItem().setVisible(false);
+	}*/
 	while (iter.hasNext()) {
 	    COModelInterface subModel = (COModelInterface) iter.next();
 	    addAddCOMenuItem(subModel.getType(), new AddUnitStructureCommand(
