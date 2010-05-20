@@ -40,6 +40,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 
 /**
  * The "Main Class" (EntryPoint in GWT) of the OpenSyllabus Editor.
@@ -59,7 +61,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
     private COSerialized serializedCO;
 
     // View variables
-    private RootPanel rootPanel;;
+    private RootPanel rootPanel;
+    private OsylMainView editorMainView;
     static private OsylEditorEntryPoint singleton;
     private OsylViewable editorEntryPointView;
     static private int yPosition;
@@ -126,8 +129,16 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	    }
 	});
 
-    } // onModuleLoad
-
+    Window.addResizeHandler(new ResizeHandler() {
+        public void onResize(ResizeEvent event) {
+        	int width = Math.max(rootPanel.getOffsetWidth(), 500);
+      		editorMainView.setWidth(width + "px");
+      		editorMainView.resize();
+        }
+      });
+    
+	} // onModuleLoad
+    
     public void initModel(COSerialized co) {
 	// This is absolutely required to get the ID:
 	this.serializedCO = co;
@@ -153,14 +164,15 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	rootPanel = RootPanel.get();
 	osylController.setCOSerialized(getSerializedCourseOutline());
 	// We create our main view
-	OsylMainView editorMainView =
+	editorMainView =
 		new OsylMainView(getModel(), osylController);
 	editorMainView.initView();
+	
 	// And we instruct it about its size. We use the slot's width but
 	// the height cannot be computed as we are in Sakai's iFrame.
 	// We subtract 16px to the slot width for a perfect alignment
 	// (optimized for FireFox).
-	int width = Math.max(rootPanel.getOffsetWidth() - 16, 500);
+	int width = Math.max(rootPanel.getOffsetWidth(), 500);
 	editorMainView.setWidth(width + "px");
 	this.setView(editorMainView);
 	rootPanel.add((Widget) this.getView());

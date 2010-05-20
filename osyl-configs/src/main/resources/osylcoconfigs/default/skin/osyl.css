@@ -1,7 +1,10 @@
 ﻿/* ---- CSS definitions specific to OpenSyllabus ------------------- */
 
 /* Main panel of Osyl -----------------------------------------------------------------------------------*/
-.Osyl-MainPanel {width:100%;z-index:0}
+.Osyl-MainPanel {
+	width:100%;
+	z-index:0;
+}
 
 /* Main Title -------------------------------------------------------------------------------------------*/
 
@@ -49,21 +52,21 @@
 }
 
 .gwt-MenuBar-horizontal .gwt-MenuItem {
-  text-align:center;
-  padding:1px 10px;
-  background:transparent;
-  height:24px;
+	text-align:center;
+	padding:0 10px;
+	background:transparent;
+	height:24px;
+	vertical-align:middle;
+	line-height:16px;
 }
 
 .gwt-MenuBar-horizontal .Osyl-MenuItem-vertical {
-	position:relative;
 	padding:0 0 0 10px;
 	width:100px;
 	text-align:left;
 	background:transparent url(images/ui/osyl_sprite.png) no-repeat -49px 0;
-	overflow:auto;
-	zoom:1;
 }
+
 * html .gwt-MenuBar-horizontal .Osyl-MenuItem-vertical {background:transparent url(images/ui/osyl_sprite.gif) no-repeat -49px 0}
 
 .gwt-MenuBar-horizontal td.Osyl-MenuItem-Add {background-position:-49px -32px}
@@ -73,20 +76,33 @@
 
 
 
-.gwt-MenuItemSeparator .menuSeparatorInner {
+td.gwt-MenuItemSeparator div.menuSeparatorInner {
+	position:relative;
+	margin:8px 2px;
 	width:1px;
-	height:11px;
-	margin:0 2px;
+	height:10px;
 	background:#898C8E;
+	overflow:auto;
+	zoom:1;
+	
 }
-
-
+* html td.gwt-MenuItemSeparator div.menuSeparatorInner {
+	margin:9px 2px 7px;
+	filter:alpha(opacity=100);
+}
 .gwt-MenuBar-horizontal .gwt-MenuItem img,
 .gwt-MenuBar-horizontal .gwt-MenuItem gwt\:clipper { /*Name space gwt:clipper for IE margin between image and text in menu*/
 	vertical-align:middle;
-	margin-right:5px;
 	margin-top:-2px;
+	margin-right:5px;
+
 }
+* html .gwt-MenuBar-horizontal .gwt-MenuItem img,
+* html .gwt-MenuBar-horizontal .gwt-MenuItem gwt\:clipper { /*Name space gwt:clipper for IE margin between image and text in menu*/
+	vertical-align:top;
+	margin-top:0;
+}
+
 .gwt-MenuBarPopup {margin:0;z-index:2}
 
 .gwt-MenuBarPopup .menuPopupMiddleCenter {vertical-align:top}
@@ -106,8 +122,8 @@
 	width:8px;
 }
 
-.gwt-MenuBarPopup .menuPopupmiddleLeft {background-position:-28px 0}
-.gwt-MenuBarPopup .menuPopupmiddleRight {background-position:-36px 0}
+.gwt-MenuBarPopup .menuPopupmiddleLeft {background-position:-40px 0}
+.gwt-MenuBarPopup .menuPopupmiddleRight {background-position:-48px 0}
 
 .gwt-MenuBarPopup .menuPopupTopLeftInner,
 .gwt-MenuBarPopup .menuPopupTopRightInner,
@@ -117,10 +133,10 @@
 	height: 8px;
 	zoom: 1;
 }
-.gwt-MenuBarPopup .menuPopupTopLeft {background: url(images/ui/osyl_sprite.png) no-repeat -22px -81px}
-.gwt-MenuBarPopup .menuPopupTopRight {background: url(images/ui/osyl_sprite.png) no-repeat -30px -81px}
-.gwt-MenuBarPopup .menuPopupBottomLeft {background: url(images/ui/osyl_sprite.png) no-repeat -22px -89px}
-.gwt-MenuBarPopup .menuPopupBottomRight {background: url(images/ui/osyl_sprite.png) no-repeat -30px -89px}
+.gwt-MenuBarPopup .menuPopupTopLeft {background: url(images/ui/osyl_sprite.png) no-repeat -12px -105px}
+.gwt-MenuBarPopup .menuPopupTopRight {background: url(images/ui/osyl_sprite.png) no-repeat -20px -105px}
+.gwt-MenuBarPopup .menuPopupBottomLeft {background: url(images/ui/osyl_sprite.png) no-repeat -12px -113px}
+.gwt-MenuBarPopup .menuPopupBottomRight {background: url(images/ui/osyl_sprite.png) no-repeat -20px -113px}
 
 * html .gwt-MenuBarPopup .menuPopupTopCenter,
 * html .gwt-MenuBarPopup .menuPopupBottomCenter,
@@ -208,10 +224,10 @@
 
 .Osyl-MainView-HorizontalSplitPanel .middleLeft,
 .Osyl-MainView-HorizontalSplitPanel .middleRight {
-	background: url(images/ui/vborder.png) repeat-y;
+	background: url(images/ui/vborder.png) repeat-y -12px 0;
 	width:8px;
 }
-.Osyl-MainView-HorizontalSplitPanel .middleRight {background-position:-8px 0}
+.Osyl-MainView-HorizontalSplitPanel .middleRight {background-position:-20px 0}
 
 .Osyl-MainView-HorizontalSplitPanel .topLeftInner,
 .Osyl-MainView-HorizontalSplitPanel .topRightInner,
@@ -226,20 +242,20 @@
 	height:47px;
 }
 .Osyl-MainView-HorizontalSplitPanel .topLeft {
-	background: url(images/ui/osyl_sprite.png) no-repeat 0 -48px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat 0 -48px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -12px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -12px -48px;
 }
 .Osyl-MainView-HorizontalSplitPanel .topRight {
-	background: url(images/ui/osyl_sprite.png) no-repeat -14px -48px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -14px -48px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -26px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -26px -48px;
 }
 .Osyl-MainView-HorizontalSplitPanel .bottomLeft {
-	background: url(images/ui/osyl_sprite.png) no-repeat 0 -97px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat 0 -97px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -12px -97px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -12px -97px;
 }
 .Osyl-MainView-HorizontalSplitPanel .bottomRight {
-	background: url(images/ui/osyl_sprite.png) no-repeat -14px -97px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -14px -97px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -26px -97px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -26px -97px;
 }
 * html .Osyl-MainView-HorizontalSplitPanel .topLeftInner,
 * html .Osyl-MainView-HorizontalSplitPanel .topRightInner,
@@ -249,13 +265,39 @@
 	height: 8px;
 	overflow: hidden;
 }
+
+.Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .middleLeft  {
+	background-position:0 0;
+	width:20px;
+}
+
+.Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .topLeftInner,
+.Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .bottomLeftInner {
+	width:20px;
+}
+
+.Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .topLeft {
+	background-position:0 -48px;
+	-background-position:0 -48px;
+}
+
+.Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .bottomLeft {
+	background-position:0 -97px;
+	-background-position:0 -97px;
+}
+
+* html .Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .topLeftInner,
+* html .Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .bottomLeftInner {
+	width: 20px;
+}
+
 * html .Osyl-MainView-HorizontalSplitPanel .topLeftInner,
 * html .Osyl-MainView-HorizontalSplitPanel .topRightInner {
 	 height: 47px;
 }
 .Osyl-MainView-HorizontalSplitPanel .middleCenterInner {
 	position:relative;
-	margin: 0;
+	margin:0;
 	zoom: 1;
 	overflow:auto;
 }
@@ -268,6 +310,8 @@
 	/*height:100%*/
 }
 
+.Osyl-TreeView-TreeRoot {display:none}
+
 /*TreeView Header */
 .Osyl-TreeView-Header {
 	font:bold 15px Arial, Verdana, sans-serif;
@@ -275,12 +319,6 @@
 	padding:14px 0 8px 35px;
 	background:transparent url(images/tree_logo.png) no-repeat 12px 14px;
 }
-
-.Osyl-TreeView-TreeRoot {
-	display: none;
-}
-
-
 /*TreeView Tree */
 .Osyl-TreeView-Tree {
 	border:0;
@@ -322,7 +360,7 @@
 	margin:2px;
 	cursor:e-resize;
 }
-.Osyl-MainView-HorizontalSplitPanel .hsplitter-down {cursor:e-resize;cursor:col-resize !important;}
+.Osyl-MainView-HorizontalSplitPanel .hsplitter-down {}
 
 .Osyl-MainView-HorizontalSplitPanel .hsplitter td {vertical-align:middle}
 .Osyl-MainView-HorizontalSplitPanel .hsplitter img {display:none}
@@ -793,11 +831,15 @@
   padding:0;
 }
 
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down, 
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down-hovering, 
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-down, 
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-down-hovering,
 .Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up, 
 .Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up-hovering, 
 .Osyl-EditorToolbar-TopPanel .gwt-PushButton-up, 
 .Osyl-EditorToolbar-TopPanel .gwt-PushButton-up-hovering {
-	background:#FCFCFC url(images/button/editor-toolbar-button-up.gif) no-repeat left top;
+	background:#FCFCFC url(images/ui/osyl_sprite.gif) no-repeat -166px 0;
 	height:20px;
 	width:20px;
 	padding:2px;
@@ -810,20 +852,17 @@
 .Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down-hovering, 
 .Osyl-EditorToolbar-TopPanel .gwt-PushButton-down, 
 .Osyl-EditorToolbar-TopPanel .gwt-PushButton-down-hovering {
-	background:#FCFCFC url(images/button/editor-toolbar-button-down.gif) no-repeat left top;
-	height:20px;
-	width:20px;
-	padding:2px;
-	margin:1px;
-	cursor:pointer;
-	border:0;
+	background-position:-166px -48px;
 }
 
 .Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up-hovering, 
-.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down-hovering, 
-.Osyl-EditorToolbar-TopPanel .gwt-PushButton-up-hovering, 
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-up-hovering {
+	background-position:-166px -24px;
+}
+
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down-hovering,  
 .Osyl-EditorToolbar-TopPanel .gwt-PushButton-down-hovering {
-	background-position:left bottom;
+	background-position:-166px -72px;
 }
 
 /* ---- CSS definitions for new classes specific to Osyl -------------- */
@@ -881,9 +920,6 @@
 	background-color:#FFF;
 	border:1px solid #454A4F;
 	padding:3px;
-	-moz-box-shadow:0 0 10px #000;
-	-webkit-box-shadow:1px 1px 10px #000;
-	box-shadow:1px 1px 10px #000;
 	z-index:99999;
 }
 .Osyl-UnobtrusiveAlert .gwt-Label {
@@ -990,8 +1026,8 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	background: url(images/ui/vborder.png) repeat-y;
 	width:6px;
 }
-.popupMiddleLeft {background-position:-16px 0}
-.popupMiddleRight {background-position:-22px 0}
+.popupMiddleLeft {background-position:-28px 0}
+.popupMiddleRight {background-position:-34px 0}
 
 .popupTopLeftInner,
 .popupTopRightInner,
@@ -1008,20 +1044,20 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 }
 
 .popupTopLeft {
-	background: url(images/ui/osyl_sprite.png) no-repeat -22px -48px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -22px -48px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -34px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -34px -48px;
 }
 .popupTopRight {
-	background: url(images/ui/osyl_sprite.png) no-repeat -28px -48px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -28px -48px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -40px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -40px -48px;
 }
 .popupBottomLeft {
-	background: url(images/ui/osyl_sprite.png) no-repeat -22px -75px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -22px -75px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -34px -75px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -34px -75px;
 }
 .popupBottomRight {
-	background: url(images/ui/osyl_sprite.png) no-repeat -28px -75px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -28px -75px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -40px -75px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -40px -75px;
 }
 
 * html .popupTopLeftInner,
@@ -1223,6 +1259,7 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	padding:3px;
 	cursor:pointer;
 	overflow:visible;/* removes extra side padding in IE */
+	border-radius:8px;
 	-moz-border-radius:8px;
 	-webkit-border-radius:8px;
 }
@@ -1243,6 +1280,7 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 .Osyl-PublishView-genericButton:active {
 	padding:4px 3px 2px;
 	background-color:#F0F0F0;
+	outline:1px dotted #444;
 }
 
 .Osyl-ImageAndTextButton img,

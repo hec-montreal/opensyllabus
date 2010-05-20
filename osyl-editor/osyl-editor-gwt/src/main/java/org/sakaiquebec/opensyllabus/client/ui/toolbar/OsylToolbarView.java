@@ -176,7 +176,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    getOsylToolbar().getViewAllPushButton().setVisible(true);
 		getOsylToolbar().getSavePushButton().setVisible(true);
 		getOsylToolbar().getPublishPushButton().setVisible(true);
-		getOsylToolbar().getAddMenuItem().setVisible(true);
+		getOsylToolbar().getAddMenuItem().setVisible(false);
 		getOsylToolbar().getPrintPushButton().setVisible(true);
 		getOsylToolbar().getViewMenuItem().setVisible(true);
 		getOsylToolbar().getEditionSeparator().setVisible(true);
@@ -187,7 +187,10 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    getOsylToolbar().getAddMenuBar().setVisible(false);
 		} else if (getModel().isCOUnit()) {
 		    // Enables or Disables buttons in this ViewContext
-		    getOsylToolbar().getAddMenuBar().setVisible(true);
+			if (getModel().getChildrens().size() > 0) {
+				getOsylToolbar().getAddMenuItem().setVisible(true);
+			    getOsylToolbar().getAddMenuBar().setVisible(true);
+			}
 		    // Clear menu list, and set it according to the viewcontext
 		    try {
 
@@ -199,7 +202,11 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    }
 		} else if (getModel().isCOUnitStructure()) {
 		    // Enables or Disables buttons in this ViewContext
-		    getOsylToolbar().getAddMenuBar().setVisible(true);
+		    
+		    if (getModel().getChildrens().size() > 0) {
+		    	getOsylToolbar().getAddMenuItem().setVisible(true);
+		    	getOsylToolbar().getAddMenuBar().setVisible(true);
+		    }
 		    // Clear menu list, and set it according to the viewcontext
 		    try {
 			createAllowedCOUnitStructureAddAction((COUnitStructure) getModel());

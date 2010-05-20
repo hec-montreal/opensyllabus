@@ -277,7 +277,7 @@ public class OsylMainView extends OsylViewableComposite implements
 	}
     }
 
-    private void resize() {
+    public void resize() {
 	int treeWidth = osylHorizontalSplitPanel.getSplitterPosition();
 	DOM
 		.setStyleAttribute(treeDecoratorPanel.getCell(1, 1), "width",
