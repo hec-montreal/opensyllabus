@@ -31,6 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
@@ -47,6 +48,8 @@ import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.cover.SessionManager;
+import org.sakaiproject.user.api.User;
+import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
@@ -261,16 +264,19 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 		osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG,
 			lang);
 	    }
-	    Site sharable = osylSiteService.getSite(siteName);
-
+	    
+	    Site sharable = SiteService.getSite(siteName);
+	    
+	    User user ;
 	    // We add users with a specific role for shareable sites
 	    for (Membership member : sectionMembers) {
-		sharable.addMember(member.getUserId(),
+		user = UserDirectoryService.getUserByEid(member.getUserId());
+		sharable.addMember(user.getId(),
 			MEMBERS_ROLE_IN_SHARABLE, true, false);
 	    }
 
 	    SiteService.save(sharable);
-
+	    
 	    // After we are sure the sharable course outline has been created,
 	    // We check if we have to send a message telling there is already a
 	    // course section that might need to be transferred

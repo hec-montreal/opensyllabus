@@ -110,16 +110,19 @@ public class GenericProfCoursMapFactory {
 			String role = token[i++];
 			String strmId = strm + sessionCode;
 
+			DetailCoursMapEntry cours = detailCoursMap.get(catalogNbr, strmId,
+				section);
+
+	
 			if (catalogNbr != null)
 				catalogNbr = catalogNbr.trim();
 			if (map.containsKey(emplId)) {
 				entry = map.get(emplId);
 			} else {
 				entry = new ProfCoursMapEntry(emplId);
-				map.put(entry);
+				if (cours != null)
+				    map.put(entry);
 			}
-			DetailCoursMapEntry cours = detailCoursMap.get(catalogNbr, strmId,
-					section);
 
 			//TODO: removed for the purpose of the tests, put back when done
 //			if (cours == null) {
