@@ -6,14 +6,16 @@
 	color:#444;
 	background-color:#F7F7F7;
 	border:1px solid #999;
-	margin:0 5px;
+	margin:5px 0;
 	padding:3px;
 	cursor:pointer;
 	overflow:visible;/* removes extra side padding in IE */
 	border-radius:8px;
 	-moz-border-radius:8px;
 	-webkit-border-radius:8px;
+	outline:1px solid #FFF;
 }
+.gwt-Button::-moz-focus-inner {border:none}
 .gwt-Button:hover {
 	background-color:#FFF;
 }
@@ -21,7 +23,6 @@
 	padding:4px 3px 2px;
 	background-color:#F0F0F0;
 	outline:1px dotted #444;
-	margin:0 4px;
 }
 
 .gwt-Button[disabled] {

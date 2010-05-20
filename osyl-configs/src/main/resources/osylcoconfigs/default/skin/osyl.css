@@ -316,7 +316,10 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 .Osyl-TreeView-Header {
 	font:bold 15px Arial, Verdana, sans-serif;
 	color:#76787a;
-	padding:14px 0 8px 35px;
+	padding:12px 0 15px 33px;
+	line-height:20px;
+	overflow:hidden;
+	white-space:nowrap;
 	background:transparent url(images/tree_logo.png) no-repeat 12px 14px;
 }
 /*TreeView Tree */
@@ -371,7 +374,7 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	/*height:100%;*/
 	overflow:hidden;
 }
-.Osyl-WorkspaceView .middleCenterInner {margin:0 0 -5px 0}
+.Osyl-WorkspaceView .middleCenterInner {margin:0}
 
 
 /* End WorkspaceView Right Zone ---------------------------------------------------------------------------*/
