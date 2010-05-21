@@ -31,7 +31,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
@@ -44,6 +43,7 @@ import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.email.cover.EmailService;
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.event.cover.UsageSessionService;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.tool.api.Session;
@@ -264,32 +264,35 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 		osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG,
 			lang);
 	    }
-	    
+
 	    Site sharable = SiteService.getSite(siteName);
-	    
-	    User user ;
+
+	    User user;
 	    // We add users with a specific role for shareable sites
 	    for (Membership member : sectionMembers) {
 		user = UserDirectoryService.getUserByEid(member.getUserId());
-		sharable.addMember(user.getId(),
-			MEMBERS_ROLE_IN_SHARABLE, true, false);
+		sharable.addMember(user.getId(), MEMBERS_ROLE_IN_SHARABLE,
+			true, false);
 	    }
 
 	    SiteService.save(sharable);
-	    
+
 	    // After we are sure the sharable course outline has been created,
 	    // We check if we have to send a message telling there is already a
 	    // course section that might need to be transferred
 
-	    //FIXME: SAKAI-1550
+	    // FIXME: SAKAI-1550
 	    existingCourseOutlineSections(course);
 	    if (existingCO != null) {
-		Vector<String> receivers = new Vector<String>();
-		receivers.add(ServerConfigurationService.getString("setup.request"));
 		
+		Vector<User> receivers = new Vector<User>();
+		//Add the users that will receive the mail
+		receivers.add(UserDirectoryService.getUserByEid("admin"));
+
 		String message = getNotificationMessages(existingCO.toString());
-		
-		EmailService.sendToUsers(receivers, null, message);
+		if (receivers.size() > 0)
+		    EmailService.sendToUsers(receivers, getHeaders(null,
+			    "test d'envoi", receivers.toString()), message);
 	    }
 
 	} catch (Exception e) {
@@ -297,7 +300,28 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	}
     }
 
-    //FIXME: SAKAI:1550
+    protected List<String> getHeaders(String receiverEmail, String subject,
+	    String from) {
+	List<String> rv = new Vector<String>();
+
+	rv.add("MIME-Version: 1.0");
+	rv
+		.add("Content-Type: multipart/alternative; boundary=\"======sakai-multi-part-boundary======\"");
+	// set the subject
+	rv.add(subject);
+
+	// from
+	rv.add(from);
+
+	// to
+	if (StringUtil.trimToNull(receiverEmail) != null) {
+	    rv.add("To: " + receiverEmail);
+	}
+
+	return rv;
+    }
+
+    // FIXME: SAKAI:1550
     private void existingCourseOutlineSections(CourseOffering courseOff) {
 
 	Set<Section> sections = cmService.getSections(courseOff.getEid());
@@ -305,25 +329,25 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	existingCO = null;
 	newCO = null;
 
-	String sectionId;
+	String siteSectionId;
 
 	for (Section section : sections) {
-	    sectionId = section.getEid();
-	    if (SiteService.siteExists(sectionId)) {
+	    siteSectionId = getSiteName(section);
+	    if (SiteService.siteExists(siteSectionId)) {
 		if (existingCO == null) {
 		    existingCO = new ArrayList<String>();
 		}
-		existingCO.add(getSiteName(section));
+		existingCO.add(siteSectionId);
 	    } else {
 		if (newCO == null) {
 		    newCO = new ArrayList<String>();
 		}
-		newCO.add(getSiteName(section));
+		newCO.add(siteSectionId);
 	    }
 	}
     }
 
-    //FIXME: SAKAI:1550
+    // FIXME: SAKAI:1550
     private String getNotificationMessages(String existingSections) {
 	StringBuilder message = new StringBuilder();
 	String plainTextContent = " le contenu en texte";
