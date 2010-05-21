@@ -131,7 +131,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 
     Window.addResizeHandler(new ResizeHandler() {
         public void onResize(ResizeEvent event) {
-        	int width = Math.max(rootPanel.getOffsetWidth(), 500);
+        	int width = Math.max(rootPanel.getOffsetWidth() - 16, 500);
       		editorMainView.setWidth(width + "px");
       		editorMainView.resize();
         }
@@ -172,7 +172,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	// the height cannot be computed as we are in Sakai's iFrame.
 	// We subtract 16px to the slot width for a perfect alignment
 	// (optimized for FireFox).
-	int width = Math.max(rootPanel.getOffsetWidth(), 500);
+	int width = Math.max(rootPanel.getOffsetWidth() - 16, 500);
 	editorMainView.setWidth(width + "px");
 	this.setView(editorMainView);
 	rootPanel.add((Widget) this.getView());
