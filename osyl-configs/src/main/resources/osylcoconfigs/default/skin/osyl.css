@@ -11,7 +11,7 @@
 .Osyl-MainPanel-Title {
 	font:bold 22px Arial, Verdana, sans-serif;
 	color:#454a4f;
-	margin-left:12px;
+	margin:2px 0 12px 12px;
 }
 .Osyl-MainPanel-Title-TD {height:30px}
 .Osyl-MainPanel-ToolBar-TD {height:21px}
@@ -27,18 +27,22 @@
 .gwt-MenuBar-horizontal {
 	cursor:default;
 	background:transparent;
-	margin:0;
+	margin:0 0 2px;
 }
 .gwt-MenuBar-Left {
 	float:left;
 	margin-left:2px;
 }
-.gwt-MenuBar-Right {float:right}
+.gwt-MenuBar-Right {
+	float:right;
+	margin-right:5px;
+}
 .gwt-MenuBar-Section {
 	position:absolute;
-	top:33px;
-	right:8px;
+	top:41px;
+	right:9px;
 	z-index:3;
+	margin:0;
 }
 
 .gwt-MenuBar-horizontal .gwt-MenuItem,
@@ -217,63 +221,63 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 .Osyl-MainView-HorizontalSplitPanel .topCenter,
 .Osyl-MainView-HorizontalSplitPanel .bottomCenter {
 	background: url(images/ui/hborder.png) repeat-x;
-	height:8px;
+	height:6px;
 }
-.Osyl-MainView-HorizontalSplitPanel .bottomCenter {background-position:0 -47px}
+.Osyl-MainView-HorizontalSplitPanel .bottomCenter {background-position:0 -49px}
 .Osyl-MainView-HorizontalSplitPanel .topCenter {height:47px;background-position:0 0}
 
 .Osyl-MainView-HorizontalSplitPanel .middleLeft,
 .Osyl-MainView-HorizontalSplitPanel .middleRight {
 	background: url(images/ui/vborder.png) repeat-y -12px 0;
-	width:8px;
+	width:6px;
 }
-.Osyl-MainView-HorizontalSplitPanel .middleRight {background-position:-20px 0}
+.Osyl-MainView-HorizontalSplitPanel .middleRight {background-position:-22px 0}
 
 .Osyl-MainView-HorizontalSplitPanel .topLeftInner,
 .Osyl-MainView-HorizontalSplitPanel .topRightInner,
 .Osyl-MainView-HorizontalSplitPanel .bottomLeftInner,
 .Osyl-MainView-HorizontalSplitPanel .bottomRightInner {
-	width: 8px;
-	height: 8px;
+	width: 6px;
+	height: 6px;
 	zoom: 1;
 }
 .Osyl-MainView-HorizontalSplitPanel .topLeftInner,
 .Osyl-MainView-HorizontalSplitPanel .topRightInner {
-	height:47px;
+	height:50px;
 }
 .Osyl-MainView-HorizontalSplitPanel .topLeft {
 	background: url(images/ui/osyl_sprite.png) no-repeat -12px -48px;
 	-background: url(images/ui/osyl_sprite.gif) no-repeat -12px -48px;
 }
 .Osyl-MainView-HorizontalSplitPanel .topRight {
-	background: url(images/ui/osyl_sprite.png) no-repeat -26px -48px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -26px -48px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -18px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -18px -48px;
 }
 .Osyl-MainView-HorizontalSplitPanel .bottomLeft {
-	background: url(images/ui/osyl_sprite.png) no-repeat -12px -97px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -12px -97px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -12px -98px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -12px -98px;
 }
 .Osyl-MainView-HorizontalSplitPanel .bottomRight {
-	background: url(images/ui/osyl_sprite.png) no-repeat -26px -97px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -26px -97px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -18px -98px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -18px -98px;
 }
 * html .Osyl-MainView-HorizontalSplitPanel .topLeftInner,
 * html .Osyl-MainView-HorizontalSplitPanel .topRightInner,
 * html .Osyl-MainView-HorizontalSplitPanel .bottomLeftInner,
 * html .Osyl-MainView-HorizontalSplitPanel .bottomRightInner {
-	width: 8px;
-	height: 8px;
+	width: 6px;
+	height: 6px;
 	overflow: hidden;
 }
 
 .Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .middleLeft  {
 	background-position:0 0;
-	width:20px;
+	width:18px;
 }
 
 .Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .topLeftInner,
 .Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .bottomLeftInner {
-	width:20px;
+	width:18px;
 }
 
 .Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .topLeft {
@@ -282,18 +286,18 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 }
 
 .Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .bottomLeft {
-	background-position:0 -97px;
-	-background-position:0 -97px;
+	background-position:0 -98px;
+	-background-position:0 -98px;
 }
 
 * html .Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .topLeftInner,
 * html .Osyl-MainView-HorizontalSplitPanel .Osyl-TreeView .bottomLeftInner {
-	width: 20px;
+	width: 18px;
 }
 
 * html .Osyl-MainView-HorizontalSplitPanel .topLeftInner,
 * html .Osyl-MainView-HorizontalSplitPanel .topRightInner {
-	 height: 47px;
+	 height: 50px;
 }
 .Osyl-MainView-HorizontalSplitPanel .middleCenterInner {
 	position:relative;
@@ -311,22 +315,20 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 }
 
 .Osyl-TreeView-TreeRoot {display:none}
-
+.Osyl-TreeView-TreeContent {margin-left:-8px}
 /*TreeView Header */
 .Osyl-TreeView-Header {
 	font:bold 15px Arial, Verdana, sans-serif;
 	color:#76787a;
-	padding:12px 0 15px 33px;
+	padding:14px 0 15px 35px;
 	line-height:20px;
 	overflow:hidden;
 	white-space:nowrap;
-	background:transparent url(images/tree_logo.png) no-repeat 12px 14px;
+	background:transparent url(images/tree_logo.png) no-repeat 9px 16px;
 }
 /*TreeView Tree */
 .Osyl-TreeView-Tree {
 	border:0;
-	margin:0;
-	padding:1px;
 	font:normal 13px Arial, Verdana, sans-serif;
 	color:#058EC4;
 }

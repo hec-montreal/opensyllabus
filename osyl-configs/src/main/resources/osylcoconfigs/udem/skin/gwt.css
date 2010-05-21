@@ -1,18 +1,28 @@
 /* ---- CSS definitions overriding default GWT styles -------------- */
 
 .gwt-Button {
-	margin:5px 2px;
-	width:85px;
-	height:30px;
-	background:transparent url(images/button/osyl_button_gwt.png) no-repeat;
-	border:0;
+	font:bold 12px Arial, Verdana, sans-serif;
+	white-space:nowrap;
+	color:#444;
+	background-color:#F7F7F7;
+	border:1px solid #999;
+	margin:5px 0;
+	padding:3px;
 	cursor:pointer;
+	overflow:visible;/* removes extra side padding in IE */
+	border-radius:8px;
+	-moz-border-radius:8px;
+	-webkit-border-radius:8px;
+	outline:1px solid #FFF;
 }
+.gwt-Button::-moz-focus-inner {border:none}
 .gwt-Button:hover {
-	background-position:left bottom;
+	background-color:#FFF;
 }
 .gwt-Button:active {
-  border-color:#AAA #CCC #CCC #AAA;
+	padding:4px 3px 2px;
+	background-color:#F0F0F0;
+	outline:1px dotted #444;
 }
 
 .gwt-Button[disabled] {
@@ -39,8 +49,8 @@
 	background: url(images/ui/vborder.png) repeat-y;
 	width:6px;
 }
-.gwt-DialogBox .dialogMiddleLeft {background-position:-16px 0}
-.gwt-DialogBox .dialogMiddleRight {background-position:-22px 0}
+.gwt-DialogBox .dialogMiddleLeft {background-position:-28px 0}
+.gwt-DialogBox .dialogMiddleRight {background-position:-34px 0}
 
 .gwt-DialogBox .dialogTopLeftInner,
 .gwt-DialogBox .dialogTopRightInner,
@@ -57,20 +67,20 @@
 }
 
 .gwt-DialogBox .dialogTopLeft {
-	background: url(images/ui/osyl_sprite.png) no-repeat -22px -48px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -22px -48px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -34px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -34px -48px;
 }
 .gwt-DialogBox .dialogTopRight {
-	background: url(images/ui/osyl_sprite.png) no-repeat -28px -48px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -28px -48px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -40px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -40px -48px;
 }
 .gwt-DialogBox .dialogBottomLeft {
-	background: url(images/ui/osyl_sprite.png) no-repeat -22px -75px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -22px -75px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -34px -75px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -34px -75px;
 }
 .gwt-DialogBox .dialogBottomRight {
-	background: url(images/ui/osyl_sprite.png) no-repeat -28px -75px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -28px -75px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -40px -75px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -40px -75px;
 }
 
 
@@ -514,4 +524,3 @@ td.datePickerMonth {
 .selected-date {
 	background-color:#FCFCFC;
 }
-	
