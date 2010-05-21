@@ -104,20 +104,18 @@ public class OsylMainView extends OsylViewableComposite implements
 	getMainPanel().getCellFormatter().setStylePrimaryName(row, 0, "Osyl-MainPanel-Title-TD");
 
     row++;
-	if (!getController().isReadOnly() || getController().isInPreview()){
-	    // Create and set the OpenSyllabus ToolBar
-	    setOsylToolbarView(new OsylToolbarView(getController()
-		    .getViewContextModel(), getController()));
-	    getOsylToolbarView().addEventHandler(
-		    (SavePushButtonEventHandler) getController());
-	    getOsylToolbarView().addEventHandler(
-		    (PublishPushButtonEventHandler) getController());
-	    getOsylToolbarView().refreshView();
-	    getOsylToolbarView().setTitle(getUiMessage("OsylToolbar"));
-	    getMainPanel().setWidget(row, 0, getOsylToolbarView());
-		getMainPanel().getCellFormatter().setStylePrimaryName(row, 0, "Osyl-MainPanel-ToolBar-TD");
-	    row++;
-	}
+    // Create and set the OpenSyllabus ToolBar
+    setOsylToolbarView(new OsylToolbarView(getController()
+	    .getViewContextModel(), getController()));
+    getOsylToolbarView().addEventHandler(
+	    (SavePushButtonEventHandler) getController());
+    getOsylToolbarView().addEventHandler(
+	    (PublishPushButtonEventHandler) getController());
+    getOsylToolbarView().refreshView();
+    getOsylToolbarView().setTitle(getUiMessage("OsylToolbar"));
+    getMainPanel().setWidget(row, 0, getOsylToolbarView());
+	getMainPanel().getCellFormatter().setStylePrimaryName(row, 0, "Osyl-MainPanel-ToolBar-TD");
+    row++;
 
 	// Create and set the Main Horizontal Split Panel
 	osylHorizontalSplitPanel = new OsylHorizontalSplitPanel(this);

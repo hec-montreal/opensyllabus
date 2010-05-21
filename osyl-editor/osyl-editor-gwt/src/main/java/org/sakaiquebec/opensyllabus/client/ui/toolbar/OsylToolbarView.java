@@ -92,52 +92,6 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	}
     }
 
-    private void initButtonsCommands() {
-	// Save Button
-	getOsylToolbar().getSavePushButton().setCommand(new Command() {
-	    public void execute() {
-		SavePushButtonEvent event = new SavePushButtonEvent("");
-		Iterator<SavePushButtonEventHandler> iter =
-			getSaveEventHandlerList().iterator();
-		while (iter.hasNext()) {
-		    SavePushButtonEventHandler handler =
-			    (SavePushButtonEventHandler) iter.next();
-		    handler.onSavePushButton(event);
-		}
-	    }
-	});
-	// Home Button
-	getOsylToolbar().getHomePushButton().setCommand(new Command() {
-	    public void execute() {
-		// set to the starting viewContext
-		COModelInterface homeModel =
-			getController().getMainView().findStartingViewContext();
-		getController().getViewContext().setContextModel(homeModel);
-	    }
-	});
-	// Home Button
-	getOsylToolbar().getViewAllPushButton().setCommand(new Command() {
-	    public void execute() {
-		// set to the starting viewContext
-		getController().getViewContext().setContextModel(getController().getMainView().getModel());
-	    }
-	});
-	
-	// Publish Button
-	getOsylToolbar().getPublishPushButton().setCommand(new Command() {
-	    public void execute() {
-		PublishPushButtonEvent event = new PublishPushButtonEvent("");
-		Iterator<PublishPushButtonEventHandler> iter =
-			getPublishEventHandlerList().iterator();
-		while (iter.hasNext()) {
-		    PublishPushButtonEventHandler handler =
-			    (PublishPushButtonEventHandler) iter.next();
-		    handler.onPublishPushButton(event);
-		}
-	    }
-	});
-    }
-
     /**
      * refresh this whole view
      */
@@ -154,21 +108,29 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    getOsylToolbar().getViewMenuItem().setVisible(false);
 	    getOsylToolbar().getClosePushButton().setVisible(true);
 	    getOsylToolbar().getPreviewSeparator().setVisible(false);
-	    getOsylToolbar().getClosePushButton().setCommand(new Command() {
-		public void execute() {
-		    ClosePushButtonEvent event = new ClosePushButtonEvent("");
-		    Iterator<ClosePushButtonEventHandler> iter =
-			    getCloseEventHandlerList().iterator();
-		    while (iter.hasNext()) {
-			ClosePushButtonEventHandler handler =
-				(ClosePushButtonEventHandler) iter.next();
-			handler.onClosePushButton(event);
-		    }
-		}
-	    });
+	    setClosePushButtonCommand();
+	    setHomePushButtonCommand();
+	    setViewAllPushButtonCommand();
+	} else if (getController().isReadOnly()) {
+	    getOsylToolbar().getHomePushButton().setVisible(true);
+	    getOsylToolbar().getViewSeparator().setVisible(true);
+	    getOsylToolbar().getViewAllPushButton().setVisible(true);
+	    getOsylToolbar().getSavePushButton().setVisible(false);
+	    getOsylToolbar().getPublishPushButton().setVisible(false);
+	    getOsylToolbar().getEditionSeparator().setVisible(false);
+	    getOsylToolbar().getPrintPushButton().setVisible(true);
+	    getOsylToolbar().getAddMenuItem().setVisible(false);
+	    getOsylToolbar().getViewMenuItem().setVisible(false);
+	    getOsylToolbar().getClosePushButton().setVisible(false);
+	    getOsylToolbar().getPreviewSeparator().setVisible(false);
+	    setHomePushButtonCommand();
+	    setViewAllPushButtonCommand();
 	} else {
 	    if (getModel() != null) {
-		initButtonsCommands();
+	    setSavePushButtonCommand();
+	    setHomePushButtonCommand();
+	    setViewAllPushButtonCommand();
+	    setPublishPushButtonCommand();
 		getOsylToolbar().getClosePushButton().setVisible(false);
 		getOsylToolbar().getPreviewSeparator().setVisible(false);
 		getOsylToolbar().getHomePushButton().setVisible(true);
@@ -317,6 +279,74 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	getOsylToolbar().getAddMenuBar().addItem(html, true, cmd);
     }
 
+    private void setSavePushButtonCommand(){
+    getOsylToolbar().getSavePushButton().setCommand(new Command() {
+	    public void execute() {
+		SavePushButtonEvent event = new SavePushButtonEvent("");
+		Iterator<SavePushButtonEventHandler> iter =
+			getSaveEventHandlerList().iterator();
+		while (iter.hasNext()) {
+		    SavePushButtonEventHandler handler =
+			    (SavePushButtonEventHandler) iter.next();
+		    handler.onSavePushButton(event);
+		}
+	    }
+	});
+    }
+    
+    private void setHomePushButtonCommand(){
+	// Home Button
+	getOsylToolbar().getHomePushButton().setCommand(new Command() {
+	    public void execute() {
+		// set to the starting viewContext
+		COModelInterface homeModel =
+			getController().getMainView().findStartingViewContext();
+		getController().getViewContext().setContextModel(homeModel);
+	    }
+	});
+    }
+    
+    private void setViewAllPushButtonCommand(){
+	// View All Button
+	getOsylToolbar().getViewAllPushButton().setCommand(new Command() {
+	    public void execute() {
+		// set to the starting viewContext
+		getController().getViewContext().setContextModel(getController().getMainView().getModel());
+	    }
+	});
+    }
+    
+    private void setPublishPushButtonCommand(){
+	// Publish Button
+	getOsylToolbar().getPublishPushButton().setCommand(new Command() {
+	    public void execute() {
+		PublishPushButtonEvent event = new PublishPushButtonEvent("");
+		Iterator<PublishPushButtonEventHandler> iter =
+			getPublishEventHandlerList().iterator();
+		while (iter.hasNext()) {
+		    PublishPushButtonEventHandler handler =
+			    (PublishPushButtonEventHandler) iter.next();
+		    handler.onPublishPushButton(event);
+		}
+	    }
+	});
+    }
+    
+    private void setClosePushButtonCommand(){
+    getOsylToolbar().getClosePushButton().setCommand(new Command() {
+		public void execute() {
+		    ClosePushButtonEvent event = new ClosePushButtonEvent("");
+		    Iterator<ClosePushButtonEventHandler> iter =
+			    getCloseEventHandlerList().iterator();
+		    while (iter.hasNext()) {
+			ClosePushButtonEventHandler handler =
+				(ClosePushButtonEventHandler) iter.next();
+			handler.onClosePushButton(event);
+		    }
+		}
+	    });
+
+    }
     public void addEventHandler(PublishPushButtonEventHandler handler) {
 	if (publishEventHandlerList == null) {
 	    publishEventHandlerList =
