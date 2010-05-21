@@ -180,7 +180,7 @@ public class OsylTreeView extends OsylViewableComposite implements
 	refreshSubModelsViews(co);
 	//hide the root of the tree
 	DOM.getChild(DOM.getChild(getTree().getElement(),1),0).setClassName("Osyl-TreeView-TreeRoot");
-
+	DOM.getChild(DOM.getChild(getTree().getElement(),1),1).setClassName("Osyl-TreeView-TreeContent");
 	// The tree is expanded by default
 	getRoot().setState(true);
     }
