@@ -63,7 +63,7 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 	getModel().setLabel(getEditor().getText());
 	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());
-	// This is a workaround. Should be deleted after we have a way to
+	//FIXME This is a workaround. Should be deleted after we have a way to
 	// display the fileBrowser showing the previously selected file.
 	String uri = getEditor().getResourceURI();
 	if (uri != null) {

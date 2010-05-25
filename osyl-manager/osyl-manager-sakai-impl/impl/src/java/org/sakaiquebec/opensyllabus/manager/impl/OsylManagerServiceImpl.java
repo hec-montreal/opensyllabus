@@ -85,6 +85,7 @@ import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.exception.IdInvalidException;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.IdUsedException;
+import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.OverQuotaException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
@@ -102,10 +103,17 @@ import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.api.OsylService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
+import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
+import org.sakaiquebec.opensyllabus.shared.util.UUID;
 import org.xml.sax.ContentHandler;
 
 /**
@@ -631,8 +639,23 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    Map<String, String> filenameChangesMap =
 		    importFilesInSite(zipReference, siteId);
 
-	    osylSiteService.importDataInCO(xml, siteId, filenameChangesMap, webapp);
+//	    osylSiteService.importDataInCO(xml, siteId, filenameChangesMap,
+//		    webapp);
 
+	    /**
+	     * FIXME Task SAKAI-1609.  This code is used to update description
+	     * and license of Sakai resource.  It should be removed from there 
+	     * to the end of fixme.  And the commented code above should be
+	     * uncommented.
+	     */
+	    COModeledServer coModeledServer = new COModeledServer(
+		    osylSiteService.importDataInCO(xml, siteId,
+			    filenameChangesMap, webapp));
+	    
+	    coModeledServer.XML2Model();
+	    updateResourceMetaInfo(coModeledServer.getModeledContent());
+	    //End of FIXME
+	    
 	    contentHostingService.removeResource(zipReference);
 	    zipTempfile.delete();
 	} catch (Exception e) {
@@ -640,6 +663,53 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    throw e;
 	}
 
+    }
+    
+    /**
+     * FIXME Task SAKAI-1609.  This method is used to update the description
+     * and the license of the Sakai resource during importation of a course
+     * outline in a new site.  It should be removed after the migration.
+     * @param element
+     */
+    private void updateResourceMetaInfo(COElementAbstract element) {
+	element.setId(UUID.uuid());
+	element.setIdParent(null);
+	if (element.isCOContentResourceProxy()) {
+	    COContentResourceProxy coResProxy = (COContentResourceProxy) element;
+	    ContentResourceEdit newResource;
+	    try {
+		String uri = coResProxy.getResource().getProperty(
+			COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_URI);
+		newResource = contentHostingService.editResource(uri);
+	    
+	    newResource.getPropertiesEdit().addProperty(ResourceProperties.PROP_DESCRIPTION,
+		    coResProxy.getResource().getProperty(COPropertiesType.DESCRIPTION));
+	    newResource.getPropertiesEdit().addProperty(ResourceProperties.PROP_COPYRIGHT_CHOICE,
+		    coResProxy.getResource().getProperty(COPropertiesType.LICENSE));
+	    
+	    contentHostingService.commitResource(newResource,
+		    NotificationService.NOTI_NONE);
+	    } catch (PermissionException e) {
+		e.printStackTrace();
+	    } catch (IdUnusedException e) {
+		e.printStackTrace();
+	    } catch (TypeException e) {
+		e.printStackTrace();
+	    } catch (InUseException e) {
+		e.printStackTrace();
+	    } catch (OverQuotaException e) {
+		e.printStackTrace();
+	    } catch (ServerOverloadException e) {
+		e.printStackTrace();
+	    }
+	} else {
+	    for (int i = 0; i < element.getChildrens().size(); i++) {
+		COElementAbstract childElement =
+			(COElementAbstract) element.getChildrens().get(i);
+		updateResourceMetaInfo(childElement);
+	    }
+	}
     }
 
     public Map<File, String> getImportedFiles() {
@@ -1218,8 +1288,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 	return fileNameChangesMap;
     }
-
-
+    
     // only to improve readability while profiling
     private static String elapsed(long start) {
 	return ": elapsed : " + (System.currentTimeMillis() - start) + " ms "; 	
