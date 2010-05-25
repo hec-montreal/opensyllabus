@@ -217,12 +217,6 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	initConfig("default");
 	initConfig("announcementsRegulationsHEC");
 	initConfig("udem");
-	initConfig("udemCompetencesComposantes");
-	initConfig("udemCompetencesSeances");
-	initConfig("udemObjectifsActivites");
-	initConfig("udemObjectifsSeances");
-	initConfig("uVirginiaChronological");
-	initConfig("uVirginiaModular");
     }
 
     private void initConfig(String configref) throws Exception {

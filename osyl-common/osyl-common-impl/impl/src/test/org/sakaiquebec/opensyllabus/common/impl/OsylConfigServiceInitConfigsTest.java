@@ -5,8 +5,8 @@ public final class OsylConfigServiceInitConfigsTest extends
 	AbstractOsylConfigServiceTest {
 
     // The OsylServiceConfig interface says:
-    // Temporary method to automatically create 9 configs (2 for HEC, 5 for
-    // UdeM, 2 for uVa) in the corresponding table.
+    // Temporary method to automatically create 9 configs (2 for HEC, 1 for
+    // UdeM) in the corresponding table.
     // Let's verify that...
     public void testInitConfigs() throws Exception {
 	// DO NOT CALL initConfigs(), the IMPL does it already through init()
@@ -17,6 +17,6 @@ public final class OsylConfigServiceInitConfigsTest extends
 	assertEquals(
 		"OsylServiceConfig.initConfigs() didn't created the number of "
 			+ "COConfigSerialized that the documentation says it does.",
-		9, getService().getConfigs().size());
+		3, getService().getConfigs().size());
     }
 }
