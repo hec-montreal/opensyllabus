@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,7 +33,10 @@ import org.sakaiquebec.opensyllabus.common.helper.FileHelper;
 import org.sakaiquebec.opensyllabus.common.helper.XmlHelper;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COContent;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 public class OsylPublishServiceImpl implements OsylPublishService {
 
@@ -208,7 +212,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * 
      * @param String webapp dir (absolute pathname !?)
      */
-    public void publish(String webappDir, String siteId) throws Exception {
+    public Map<String,String> publish(String webappDir, String siteId) throws Exception {
 
 	SecurityService.pushAdvisor(new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
@@ -259,7 +263,32 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	publication(co.getSiteId(), webappDir);
 
+	//
+	// change publication date
+	TreeMap<String, String> publicationProperties =
+	    new TreeMap<String, String>();
+	    COSerialized coSerialized = osylSiteService.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
+	    COModeledServer coModeledServer = new COModeledServer(coSerialized);
+	    coModeledServer.XML2Model(false);
+	    COContent coContent = coModeledServer.getModeledContent();
+	    coContent
+		    .addProperty(
+			    COPropertiesType.PREVIOUS_PUBLISHED,
+			    coContent.getProperty(COPropertiesType.PUBLISHED) != null ? coContent
+				    .getProperty(COPropertiesType.PUBLISHED)
+				    : "");
+	    coContent.addProperty(COPropertiesType.PUBLISHED, OsylDateUtils
+		    .getNowDateAsXmlString());
+	    coModeledServer.model2XML();
+	    coSerialized.setContent(coModeledServer.getSerializedContent());
+	    resourceDao.createOrUpdateCourseOutline(coSerialized);
+	    
+	    publicationProperties.put(COPropertiesType.PREVIOUS_PUBLISHED,
+		    coContent.getProperty(COPropertiesType.PREVIOUS_PUBLISHED));
+	    publicationProperties.put(COPropertiesType.PUBLISHED, coContent
+		    .getProperty(COPropertiesType.PUBLISHED));
 	SecurityService.clearAdvisors();
+	return publicationProperties;
     }
 
     private void createPrintVersion(String siteId, String webappdir) {
@@ -312,8 +341,13 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	COSerialized hierarchyFussionedCO =
 		osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
 
-	COModeledServer coModeled =
+	COModeledServer coModeled = null;
+	try{
+	coModeled =
 		osylSiteService.getFusionnedPrePublishedHierarchy(siteId);
+	}catch (Exception e) {
+	    // there is no published version of co for siteid
+	}
 	if (coModeled != null) {
 	    coModeled.model2XML();
 	    hierarchyFussionedCO.setContent(coModeled.getSerializedContent());

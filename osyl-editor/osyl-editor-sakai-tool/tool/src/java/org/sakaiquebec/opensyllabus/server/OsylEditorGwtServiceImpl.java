@@ -36,20 +36,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.tool.api.Tool;
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtService;
-import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
-import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
-import org.sakaiquebec.opensyllabus.shared.model.COContent;
-import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
-import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -153,49 +147,20 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * 
      * @param String id
      */
-    public Map<String,String> publishCourseOutline() throws Exception {
+    public Map<String, String> publishCourseOutline() throws Exception {
 	String webappDir = getServletContext().getRealPath("/");
-	TreeMap<String, String> publicationProperties =
-	    new TreeMap<String, String>();
+	Map<String, String> publicationProperties =
+		new TreeMap<String, String>();
 	try {
-	    osylServices.getOsylPublishService().publish(webappDir,
-		    osylServices.getOsylSiteService().getCurrentSiteId());
-	    // change publication date
-	    COSerialized coSerialized =
-		    getNonFusionnedSerializedCourseOutline();
-	    COModeledServer coModeled = new COModeledServer(coSerialized);
-	    coModeled.XML2Model(false);
-	    COContent coContent = coModeled.getModeledContent();
-	    coContent
-		    .addProperty(
-			    COPropertiesType.PREVIOUS_PUBLISHED,
-			    coContent.getProperty(COPropertiesType.PUBLISHED) != null ? coContent
-				    .getProperty(COPropertiesType.PUBLISHED)
-				    : "");
-	    coContent.addProperty(COPropertiesType.PUBLISHED, OsylDateUtils
-		    .getNowDateAsXmlString());
-	    coModeled.model2XML();
-	    coSerialized.setContent(coModeled.getSerializedContent());
-	    osylServices.getOsylSiteService().createOrUpdateCO(coSerialized);
-
-	    publicationProperties.put(COPropertiesType.PREVIOUS_PUBLISHED,
-		    coContent.getProperty(COPropertiesType.PREVIOUS_PUBLISHED));
-	    publicationProperties.put(COPropertiesType.PUBLISHED, coContent
-		    .getProperty(COPropertiesType.PUBLISHED));
+	    publicationProperties =
+		    osylServices.getOsylPublishService().publish(
+			    webappDir,
+			    osylServices.getOsylSiteService()
+				    .getCurrentSiteId());
 	} catch (Exception e) {
 	    throw e;
 	}
 	return publicationProperties;
-    }
-
-    private COSerialized getNonFusionnedSerializedCourseOutline()
-	    throws Exception {
-	COSerialized thisCo;
-	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
-	thisCo =
-		osylServices.getOsylSiteService()
-			.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
-	return thisCo;
     }
 
     /**
@@ -211,8 +176,8 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	String webappdir = getServletContext().getRealPath("/");
 	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
 	return osylServices.getOsylPublishService()
-		.getSerializedPublishedCourseOutlineForAccessType(siteId, accessType,
-			webappdir);
+		.getSerializedPublishedCourseOutlineForAccessType(siteId,
+			accessType, webappdir);
     }
 
     /**
@@ -262,8 +227,9 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	} else {
 	    if (getCurrentUserRole().equals(
 		    OsylSecurityService.SECURITY_ROLE_COURSE_GENERAL_ASSISTANT)
-		    || getCurrentUserRole().equals(
-		    OsylSecurityService.SECURITY_ROLE_COURSE_TEACHING_ASSISTANT)
+		    || getCurrentUserRole()
+			    .equals(
+				    OsylSecurityService.SECURITY_ROLE_COURSE_TEACHING_ASSISTANT)
 		    || getCurrentUserRole().equals(
 			    OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)
 		    || getCurrentUserRole().equals(
@@ -345,10 +311,9 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 			    .getSerializedCourseOutline(webappDir);
 	    if (thisCo == null)
 		cfg =
-			osylServices.getOsylConfigService()
-				.getConfig(
-					osylServices.getOsylConfigService().getDefaultConfig(),
-					webappDir);
+			osylServices.getOsylConfigService().getConfig(
+				osylServices.getOsylConfigService()
+					.getDefaultConfig(), webappDir);
 	    else
 		configSiteProperty =
 			osylServices.getOsylSiteService()
