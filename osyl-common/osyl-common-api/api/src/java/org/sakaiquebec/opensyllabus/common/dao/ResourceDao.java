@@ -125,5 +125,9 @@ public interface ResourceDao {
      * @param sessionId
      */
     public void clearLocksForSession(String sessionId);
+    
+    public void clearLocksForCoId(String coId);
+    
+    public void setLockedBy(String coId, String sessionId);
 
 }

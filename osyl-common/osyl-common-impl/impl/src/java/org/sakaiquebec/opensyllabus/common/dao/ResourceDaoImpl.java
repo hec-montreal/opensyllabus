@@ -389,4 +389,17 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 		new Object[] { sessionId });
 
     }
+    
+    public void clearLocksForCoId(String coid){
+	getHibernateTemplate().bulkUpdate(
+		"update COSerialized set lockedBy=null where coId= ?",
+		new Object[] { coid });
+    }
+    
+    public void setLockedBy(String coId, String sessionId){
+	getHibernateTemplate().bulkUpdate(
+		"update COSerialized set lockedBy=? where coId= ?",
+		new Object[] { sessionId, coId });
+    }
+    
 }

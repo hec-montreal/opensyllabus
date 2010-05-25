@@ -870,7 +870,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    }
 	    if (lockFree) {
 		thisCo.setLockedBy(sessionManager.getCurrentSession().getId());
-		resourceDao.createOrUpdateCourseOutline(thisCo);
+		resourceDao.setLockedBy(thisCo.getCoId(), sessionManager.getCurrentSession().getId());
 	    } else if (!lockedBy.equals(sessionManager.getCurrentSession()
 		    .getId())) {
 		try {
@@ -1484,8 +1484,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    COSerialized thisCo = getSerializedCourseOutlineBySiteId(siteId);
 	    if (thisCo.getLockedBy().equals(
 		    sessionManager.getCurrentSession().getId())) {
-		thisCo.setLockedBy(null);
-		resourceDao.createOrUpdateCourseOutline(thisCo);
+		resourceDao.clearLocksForCoId(thisCo.getCoId());
 	    }
 	} catch (Exception e) {
 	    e.printStackTrace();
