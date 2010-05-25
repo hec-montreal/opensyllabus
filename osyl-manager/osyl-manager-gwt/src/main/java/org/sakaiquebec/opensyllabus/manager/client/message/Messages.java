@@ -33,8 +33,6 @@ public interface Messages extends ConstantsWithLookup {
 
     String file();
 
-    String isZip();
-
     String create();
 
     String siteCreated();
@@ -99,19 +97,7 @@ public interface Messages extends ConstantsWithLookup {
 
     String config_udem();
 
-    String config_udemCompetencesComposantes();
-
-    String config_udemCompetencesSeances();
-
-    String config_udemObjectifsActivites();
-
-    String config_udemObjectifsSeances();
-
     String config_announcementsRegulationsHEC();
-
-    String config_uVirginiaChronological();
-
-    String config_uVirginiaModular();
 
     String language_en();
 
