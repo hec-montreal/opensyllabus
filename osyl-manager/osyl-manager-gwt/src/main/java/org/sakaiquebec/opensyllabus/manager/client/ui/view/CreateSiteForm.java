@@ -80,10 +80,13 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 				.hasNext();) {
 			    String configId = configMapKeysIterator.next();
 			    String configRef = result.get(configId);
+			    try{
 			    String configTitle =
 				    controller.getMessages().getString(
 					    "config_" + configRef);
 			    configListBox.addItem(configTitle, configRef);
+			    }catch (Exception e) {
+			    }
 			}
 		    }
 		}
