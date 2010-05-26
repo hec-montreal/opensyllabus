@@ -824,7 +824,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		disableBookstoreLinkCheckBox.setEnabled(false);
 		disableOtherLinkCheckBox.setEnabled(false);
 		disableOtherLinkCheckBox.setValue(false);
-		
+		saveButton.setEnabled(false);
 	    } else {
 		disableLibraryLinkCheckBox.setEnabled(true);
 		disableBookstoreLinkCheckBox.setEnabled(true);
