@@ -66,6 +66,7 @@ public class OsylMainView extends OsylViewableComposite implements
     protected OsylDecoratorPanel treeDecoratorPanel;
     protected OsylDecoratorPanel workspaceDecoratorPanel;
     protected Label courseTitle;
+    private Label treeHeaderLabel;
     public OsylMainView(COModelInterface model, OsylController osylController) {
 	super(model, osylController);
     } // constructor
@@ -136,7 +137,7 @@ public class OsylMainView extends OsylViewableComposite implements
 	treeDecoratorPanel.setWidget(getOsylTreeView());
 	treeDecoratorPanel.setStylePrimaryName("Osyl-TreeView");
 	
-	Label treeHeaderLabel = new Label(this.getUiMessage("OsylTreeView.title"));
+	treeHeaderLabel = new Label(this.getUiMessage("OsylTreeView.title"));
 	treeHeaderLabel.setStylePrimaryName("Osyl-TreeView-Header");
 	treeDecoratorPanel.setTitle(treeHeaderLabel);
 	horizontalSplitPanel.setLeftWidget(treeDecoratorPanel);
@@ -277,24 +278,29 @@ public class OsylMainView extends OsylViewableComposite implements
 
     public void resize() {
 	int treeWidth = osylHorizontalSplitPanel.getSplitterPosition();
-	DOM
-		.setStyleAttribute(treeDecoratorPanel.getCell(1, 1), "width",
-			treeWidth
-				- (treeDecoratorPanel.getCell(1, 0)
-					.getOffsetWidth() + treeDecoratorPanel
-					.getCell(1, 2).getOffsetWidth()) + "px");
+	int treeInnerWidth = treeWidth
+	- (treeDecoratorPanel.getCell(1, 0)
+			.getOffsetWidth() + treeDecoratorPanel
+			.getCell(1, 2).getOffsetWidth());
+	DOM.setStyleAttribute(treeDecoratorPanel.getCell(0, 1), "width",
+			treeInnerWidth + "px");
+	DOM.setStyleAttribute(treeDecoratorPanel.getCell(1, 1), "width",
+			treeInnerWidth + "px");
+	treeHeaderLabel.setWidth(treeInnerWidth - 35 + "px");
 	int splitterWidth =
 		osylHorizontalSplitPanel.getSplitElement().getOffsetWidth();
 	String toolSizeString = DOM.getStyleAttribute(getElement(), "width");
 	int toolSize =
 		Integer.parseInt(toolSizeString.substring(0, toolSizeString
 			.indexOf("px")));
+	
 	int workspaceWidth = toolSize - treeWidth - splitterWidth;
+	int workspaceInnerWidth = workspaceWidth
+	- (workspaceDecoratorPanel.getCell(1, 0)
+			.getOffsetWidth() + workspaceDecoratorPanel
+			.getCell(1, 2).getOffsetWidth());
 	DOM.setStyleAttribute(workspaceDecoratorPanel.getCell(1, 1), "width",
-		workspaceWidth
-			- (workspaceDecoratorPanel.getCell(1, 0)
-				.getOffsetWidth() + workspaceDecoratorPanel
-				.getCell(1, 2).getOffsetWidth()) + "px");
+			workspaceInnerWidth + "px");
     }
 
 }

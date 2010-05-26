@@ -325,6 +325,9 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	overflow:hidden;
 	white-space:nowrap;
 	background:transparent url(images/tree_logo.png) no-repeat 9px 16px;
+	text-overflow:ellipsis;
+	-o-text-overflow: ellipsis;
+	-moz-binding: url('ellipsis.xml#ellipsis');
 }
 /*TreeView Tree */
 .Osyl-TreeView-Tree {
