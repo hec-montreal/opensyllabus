@@ -90,13 +90,15 @@ public class OsylTextToolbar extends Composite {
 
     private MenuItem closePushButton;
     
-    private MenuItemSeparator previewSeparator;
-    
     private MenuItemSeparator viewSeparator;
     
-    private MenuItemSeparator editionSeparator;
+    private MenuItemSeparator previewSeparator;
     
+    private MenuItemSeparator publishSeparator;
     
+    private MenuItemSeparator printSeparator;
+    
+   
 
     // Image Bundle
     private OsylImageBundleInterface osylImageBundle =
@@ -111,6 +113,10 @@ public class OsylTextToolbar extends Composite {
 	leftMenuBar = new MenuBar();
 	rightMenuBar = new MenuBar();
 	sectionMenuBar = new MenuBar();
+	viewSeparator = new MenuItemSeparator();
+	previewSeparator = new MenuItemSeparator();
+	publishSeparator = new MenuItemSeparator();
+	printSeparator = new MenuItemSeparator();
 	menuBar = new FlowPanel();
 	menuBar.add(leftMenuBar);
 	menuBar.add(rightMenuBar);
@@ -123,14 +129,10 @@ public class OsylTextToolbar extends Composite {
 		createMenuItem("ButtonCloseToolBar", getOsylImageBundle()
 			.cross(), "ButtonCloseToolBarTooltip");
 	rightMenuBar.addItem(closePushButton);
-	
-	previewSeparator = new MenuItemSeparator();
-	rightMenuBar.addSeparator(previewSeparator);
 	homePushButton =
 		createMenuItem("ButtonHomeToolBar",
 			getOsylImageBundle().home(), "ButtonHomeToolBarTooltip");
 
-	viewSeparator = new MenuItemSeparator();
 	viewAllPushButton =
 		createMenuItem("ButtonViewAllToolBar",
 			getOsylImageBundle().view_all(), "ButtonViewAllToolBarTooltip");
@@ -196,6 +198,7 @@ public class OsylTextToolbar extends Composite {
 	leftMenuBar.addSeparator(viewSeparator);
 	leftMenuBar.addItem(viewAllPushButton);
 	rightMenuBar.addItem(savePushButton);
+	rightMenuBar.addSeparator(previewSeparator);
 	// MenuBar Item with icon - nice trick...
 	addMenuItem =
 		sectionMenuBar.addItem(AbstractImagePrototype.create(getOsylImageBundle().plus()).getHTML()
@@ -213,10 +216,9 @@ public class OsylTextToolbar extends Composite {
 	viewMenuItem.addStyleName("Osyl-MenuItem-View");
 	
 	addViewMenuBarItems();
-
+	rightMenuBar.addSeparator(publishSeparator);
 	rightMenuBar.addItem(publishPushButton);
-	editionSeparator = new MenuItemSeparator();
-	rightMenuBar.addSeparator(editionSeparator);
+	rightMenuBar.addSeparator(printSeparator);
 	rightMenuBar.addItem(printPushButton);
 
 	initWidget(menuBar);
@@ -293,14 +295,6 @@ public class OsylTextToolbar extends Composite {
     public void setSectionMenuBar(MenuBar sectionMenuBar) {
     	this.sectionMenuBar = sectionMenuBar;
     }
-
-    public MenuItemSeparator getPreviewSeparator() {
-    return previewSeparator;
-    }
-
-    public void setPreviewSeparator(MenuItemSeparator previewSeparator) {
-    this.previewSeparator = previewSeparator;
-    }
     
     public MenuItemSeparator getViewSeparator() {
     	return viewSeparator;
@@ -310,12 +304,29 @@ public class OsylTextToolbar extends Composite {
     	this.viewSeparator = viewSeparator;
     }
     
-    public MenuItemSeparator getEditionSeparator() {
-    return editionSeparator;
+    public MenuItemSeparator getPreviewSeparator() {
+    	return previewSeparator;
     }
 
-    public void setEditionSeparator(MenuItemSeparator editionSeparator) {
-    this.editionSeparator = editionSeparator;
+    public void setPreviewSeparator(MenuItemSeparator previewSeparator) {
+    	this.previewSeparator = previewSeparator;
+    }
+    
+    public MenuItemSeparator getPublishSeparator() {
+        return publishSeparator;
+    }
+
+    public void setPublishSeparator(MenuItemSeparator publishSeparator) {
+        this.publishSeparator = publishSeparator;
+    }
+    
+    
+    public MenuItemSeparator getPrintSeparator() {
+    	return printSeparator;
+    }
+
+    public void setPrintSeparator(MenuItemSeparator printSeparator) {
+    	this.printSeparator = printSeparator;
     }
 
     public MenuItem getHomePushButton() {
