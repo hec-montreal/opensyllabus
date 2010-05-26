@@ -37,6 +37,7 @@ import org.sakaiquebec.opensyllabus.client.ui.listener.OsylDisclosureListener;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylAbstractBrowserComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationBrowser;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationItem;
+import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationListItem;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxCitationView;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
@@ -811,9 +812,23 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		citationPreviewLabel.getOffsetHeight();
 
 	if (browser.getSelectedAbstractBrowserItem() != null) {
-	    if (browser.getSelectedAbstractBrowserItem().isFolder()) {
+	    if (browser.getSelectedAbstractBrowserItem().isFolder() || browser.getSelectedAbstractBrowserItem() instanceof OsylCitationListItem) {
 		citationPreviewLabel.setHTML("");
+		bookStoreLink.setText("");
+		bookStoreLink.setEnabled(false);
+		editorOtherLink.setText("");
+		editorOtherLink.setEnabled(false);
+		disableLibraryLinkCheckBox.setValue(false);
+		disableLibraryLinkCheckBox.setEnabled(false);
+		disableBookstoreLinkCheckBox.setValue(false);
+		disableBookstoreLinkCheckBox.setEnabled(false);
+		disableOtherLinkCheckBox.setEnabled(false);
+		disableOtherLinkCheckBox.setValue(false);
+		
 	    } else {
+		disableLibraryLinkCheckBox.setEnabled(true);
+		disableBookstoreLinkCheckBox.setEnabled(true);
+		disableOtherLinkCheckBox.setEnabled(true);
 		OsylCitationItem selectedFile =
 			(OsylCitationItem) browser
 				.getSelectedAbstractBrowserItem();
