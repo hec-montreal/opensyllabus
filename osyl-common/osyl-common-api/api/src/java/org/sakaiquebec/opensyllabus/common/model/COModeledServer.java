@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -1325,7 +1326,7 @@ public class COModeledServer {
 
     public String changeDocumentsUrls(String url, String originalDirectory,
 	    String newDirectory) {
-	return url.replaceFirst(originalDirectory, newDirectory);
+	return url.replaceFirst(Pattern.quote(originalDirectory), newDirectory);
     }
 
     public void setCOContentTitle(String coTitle){
