@@ -38,6 +38,7 @@ import org.sakaiquebec.opensyllabus.client.ui.listener.OsylLinkClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylFileBrowser;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxDocumentView;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
@@ -358,11 +359,13 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	getMainPanel().clear();
 	if (!(isReadOnly() && getView().isContextHidden())) {
 	    initViewer();
-	    //TODO Hack to remove bad links to resources inserted in the XML.  Remove this
-	    //as soon as the cause is found and corrected.
-	    
+	    // TODO Hack to remove bad links to resources inserted in the XML.
+	    // Remove this
+	    // as soon as the cause is found and corrected.
+
 	    // We get the text to display from the model
-	    getModel().setLabel(getView().validateLinkLabel(getModel().getLabel()));
+	    getModel().getProperties().addProperty(COPropertiesType.LABEL,
+		    getView().validateLinkLabel(getModel().getLabel()));
 	    getViewerLink().setHTML(getView().getTextFromModel());
 	    getViewerLink().addClickHandler(
 		    new OsylLinkClickListener(getView(), getView()
