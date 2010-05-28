@@ -295,7 +295,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	}
     }
 
-    private OsylTextToolbar getOsylToolbar() {
+    public OsylTextToolbar getOsylToolbar() {
 	return osylToolbar;
     }
 

@@ -133,6 +133,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
         public void onResize(ResizeEvent event) {
         	int width = Math.max(rootPanel.getOffsetWidth() - 16, 500);
       		editorMainView.setWidth(width + "px");
+      		editorMainView.setSectionToolbarTopPosition();
       		editorMainView.resize();
         }
       });
@@ -177,6 +178,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	this.setView(editorMainView);
 	rootPanel.add((Widget) this.getView());
 	// We start with an arbitrary 800px high area. It will be updated after.
+	editorMainView.setSectionToolbarTopPosition();
 	setToolHeight(MIN_SIZE);
 	// Uncomment this display debug messages specified with setDebugMsg().
 	// startDebugMsg();

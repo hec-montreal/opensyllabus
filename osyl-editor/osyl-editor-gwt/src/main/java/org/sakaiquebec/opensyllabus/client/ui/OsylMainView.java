@@ -252,6 +252,11 @@ public class OsylMainView extends OsylViewableComposite implements
 	this.mainPanel = newPanel;
     }
 */
+    public void setSectionToolbarTopPosition() {
+    	DOM.setStyleAttribute(osylToolbarView.getOsylToolbar().getSectionMenuBar().getElement(),
+  				"top", (osylWorkspaceView.getAbsoluteTop() - 78) + "px");
+    }
+    
     public FlexTable getMainPanel() {
     	return mainPanel;
     }

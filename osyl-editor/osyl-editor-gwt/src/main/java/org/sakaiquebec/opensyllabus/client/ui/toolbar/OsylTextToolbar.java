@@ -424,7 +424,15 @@ public class OsylTextToolbar extends Composite {
     public void setPublicViewMenuItem(MenuItem publicViewMenuItem) {
 	this.publicViewMenuItem = publicViewMenuItem;
     }
-
+    
+    public void setPublicSectionMenuBar(MenuBar sectionMenuBar) {
+    this.sectionMenuBar = sectionMenuBar;
+    }
+    
+    public MenuBar getPublicSectionMenuBar() {
+    return sectionMenuBar;
+    }
+    
     private void openDownloadPrintLink() {
 	String url = GWT.getModuleBaseURL();
 	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
