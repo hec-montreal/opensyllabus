@@ -1,6 +1,8 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -152,7 +154,7 @@ public class OsylCMJobImpl implements OsylCMJob {
     /**
      * Any person currently registed as member of a site in the system.
      */
-    private Set<Membership> actualCourseMembers;
+    private HashMap<String, Membership> actualCourseMembers;
 
     /**
      * Our logger
@@ -614,9 +616,24 @@ public class OsylCMJobImpl implements OsylCMJob {
 	Set<EnrollmentSet> enrollmentSets = new HashSet<EnrollmentSet>();
 	Set<EnrollmentSet> enrollmentS = null;
 
+	Set<Section> sections = null;
+	String sectionId = null;
+	Set<Membership> memberships = null;
+
 	actualStudents = new HashMap<String, Enrollment>();
 	actualEnrollmentSets = new HashSet<EnrollmentSet>();
+	actualCourseMembers = new HashMap<String, Membership>();
+	actualCoursesSection = new HashSet<Section>();
 	Set<Enrollment> enrollments = null;
+
+	FileWriter outFile = null;
+	PrintWriter out = null;
+	try {
+	    outFile = new FileWriter("out.txt");
+	    out = new PrintWriter(outFile);
+	} catch (IOException e1) {
+	    e1.printStackTrace();
+	}
 
 	for (CourseSet courseSet : courseSets) {
 	    courseSetId = courseSet.getEid();
@@ -628,9 +645,28 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 		for (CourseOffering course : courseOff) {
 		    courseOfferingId = course.getEid();
+		    // We retrieve the sections and the memberships in the
+		    // sections
+		    sections = cmService.getSections(courseOfferingId);
+		    for (Section section : sections) {
+			sectionId = section.getEid();
+			actualCoursesSection.add(section);
+
+			memberships =
+				cmService.getSectionMemberships(sectionId);
+			for (Membership member : memberships) {
+			    actualCourseMembers.put(member.getUserId()
+				    + sectionId, member);
+			    if (out != null)
+				out.println(member.getUserId() + "   "
+					+ sectionId);
+			}
+		    }
+		    // We retrieve the enrollments sets and enrollments
 		    enrollmentS = cmService.getEnrollmentSets(courseOfferingId);
 		    enrollmentSets.addAll(enrollmentS);
 		    actualEnrollmentSets.addAll(enrollmentSets);
+
 		    for (EnrollmentSet es : enrollmentS) {
 			enrollmentSetId = es.getEid();
 			enrollments = cmService.getEnrollments(enrollmentSetId);
@@ -797,7 +833,7 @@ public class OsylCMJobImpl implements OsylCMJob {
      */
     public void loadMembership() {
 	assignTeachers();
-	assignSecretaries();
+	syncSecretaries();
     }
 
     /**
@@ -870,6 +906,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 	}
     }
 
+    int i = 0;
+
     private void addSecretariesToMembership(List<String> secretaries,
 	    List<DetailCoursMapEntry> courses) {
 	String sectionId = null;
@@ -883,6 +921,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 	    for (String secretary : secretaries) {
 		cmAdmin.addOrUpdateSectionMembership(secretary, SECRETARY_ROLE,
 			sectionId, ACTIVE_STATUS);
+		actualCourseMembers.remove(secretary + sectionId);
 	    }
 	}
 
@@ -892,8 +931,8 @@ public class OsylCMJobImpl implements OsylCMJob {
      * Loads the secretaries and assigns them to the courses in their associated
      * SE.
      */
-    private void assignSecretaries() {
-
+    private void syncSecretaries() {
+	i = 0;
 	SecretairesMapEntry entry = null;
 	String deptId = null;
 	String acadOrg = null;
@@ -925,6 +964,18 @@ public class OsylCMJobImpl implements OsylCMJob {
 	}
 	// ////////////////////////////////////////
 
+	Set<String> acmKeys = actualCourseMembers.keySet();
+	Membership member = null;
+	String sectionId = null;
+	String userId = null;
+	for (String key : acmKeys) {
+	    member = actualCourseMembers.get(key);
+	    userId = member.getUserId();
+	    sectionId = key.substring(member.getUserId().length());
+	    cmAdmin.removeSectionMembership(userId, sectionId);
+	    log.info("L'utilisateur " + userId + " n'est plus membre du cours "
+		    + sectionId);
+	}
     }
 
 }
