@@ -316,6 +316,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			updatedRoles =
 				new HashMap<String, Map<String, Object>>();
 
+		    if (updatedRoles.containsKey(role))
+			updatedRoles.remove(role);
 		    updatedRoles.put(role, values);
 		}
 	    }

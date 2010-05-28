@@ -196,21 +196,29 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 				    sectionId = section.getEid();
 				    if (!sectionId.matches(".*[Dd][Ff][1-9]")) {
 					siteName = getSiteName(section);
+					if (section.getLang() == null)
+					    lang = TEMPORARY_LANG;
+					else
+					    lang = section.getLang();
 					try {
-					    if (section.getLang() == null)
-						lang = TEMPORARY_LANG;
-					    else
-						lang = section.getLang();
 					    if (!osylSiteService
 						    .siteExists(siteName)) {
 						osylSiteService.createSite(
 							siteName,
 							OSYL_CO_CONFIG, lang);
 					    }
+					} catch (Exception e) {
+					    log
+						    .debug("The site creation had the following problem: "
+							    + e.getMessage());
+					}
+					try {
 					    osylManagerService.associateToCM(
 						    section.getEid(), siteName);
 					} catch (Exception e) {
-					    log.debug(e.getMessage());
+					    log
+						    .debug("The association of the site to a course of the course management has not been successful: "
+							    + e.getMessage());
 					}
 				    }
 				}
@@ -284,9 +292,9 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	    // FIXME: SAKAI-1550
 	    existingCourseOutlineSections(course);
 	    if (existingCO != null) {
-		
+
 		Vector<User> receivers = new Vector<User>();
-		//Add the users that will receive the mail
+		// Add the users that will receive the mail
 		receivers.add(UserDirectoryService.getUserByEid("admin"));
 
 		String message = getNotificationMessages(existingCO.toString());

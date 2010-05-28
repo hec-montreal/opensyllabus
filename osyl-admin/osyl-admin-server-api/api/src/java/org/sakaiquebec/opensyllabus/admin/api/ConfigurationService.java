@@ -50,7 +50,7 @@ public interface ConfigurationService {
 
     public final static String REMOVEDUSERS = "removedUsers";
 
-    public final static String FUNCTIONS = "FUNCTIONS";
+    public final static String FUNCTIONS = "functions";
     
     
     //For adding a role with

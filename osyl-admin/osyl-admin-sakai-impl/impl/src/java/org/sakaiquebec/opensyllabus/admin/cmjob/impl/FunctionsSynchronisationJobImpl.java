@@ -71,12 +71,12 @@ public class FunctionsSynchronisationJobImpl implements
 	// Check role in template realm
 	try {
 	    AuthzGroup realm = AuthzGroupService.getAuthzGroup(TEMPLATE_ID);
-	    if (!isRoleInRealm(realm)) {
-		addRole(realm);
-		AuthzGroupService.save(realm);
-	    } else {
+	    if (functionsRole != null) {
+		if (!isRoleInRealm(realm)) {
+		    addRole(realm);
+		    AuthzGroupService.save(realm);
+		} else {
 
-		if (functionsRole != null) {
 		    Role role =
 			    realm
 				    .getRole(adminConfigService
@@ -84,11 +84,12 @@ public class FunctionsSynchronisationJobImpl implements
 		    addPermissions(role);
 		    removePermissions(role);
 		}
-		// We remove the role
-		if (roleToRemove != null)
-		    removeRole(realm, roleToRemove);
-		AuthzGroupService.save(realm);
 	    }
+	    // We remove the role
+	    if (roleToRemove != null)
+		removeRole(realm, roleToRemove);
+	    AuthzGroupService.save(realm);
+
 	} catch (GroupNotDefinedException e) {
 	    log.error(e.getMessage());
 	} catch (AuthzPermissionException e) {
@@ -137,12 +138,13 @@ public class FunctionsSynchronisationJobImpl implements
 			    // We remove the specified users
 			    removePermissions(role);
 			}
-			// We remove the role
-			if (roleToRemove != null)
-			    removeRole(siteRealm, roleToRemove);
-			AuthzGroupService.save(siteRealm);
-
 		    }
+		    
+		    // We remove the role
+		    if (roleToRemove != null)
+			removeRole(siteRealm, roleToRemove);
+		    AuthzGroupService.save(siteRealm);
+
 		} catch (GroupNotDefinedException e) {
 		    log.error(e.getMessage());
 		} catch (AuthzPermissionException e) {
@@ -162,28 +164,29 @@ public class FunctionsSynchronisationJobImpl implements
     private void addRole(AuthzGroup realm) {
 	try {
 	    String functionsRole = adminConfigService.getFunctionsRole();
-	    Role role = realm.getRole(functionsRole);
+	    if (functionsRole != null) {
+		Role role = realm.getRole(functionsRole);
 
-	    if (role == null)
-		role = realm.addRole(functionsRole);
+		if (role == null)
+		    role = realm.addRole(functionsRole);
 
-	    List<String> functionsAdded =
-		    adminConfigService.getAllowedFunctions();
-	    List<String> functionsRemoved =
-		    adminConfigService.getDisallowedFunctions();
+		List<String> functionsAdded =
+			adminConfigService.getAllowedFunctions();
+		List<String> functionsRemoved =
+			adminConfigService.getDisallowedFunctions();
 
-	    for (Object function : functionsAdded) {
-		if (!role.isAllowed((String) function))
-		    role.allowFunction((String) function);
+		for (Object function : functionsAdded) {
+		    if (!role.isAllowed((String) function))
+			role.allowFunction((String) function);
+		}
+
+		for (Object function : functionsRemoved) {
+		    if (role.isAllowed((String) function))
+			role.disallowFunction((String) function);
+		}
+
+		AuthzGroupService.save(realm);
 	    }
-
-	    for (Object function : functionsRemoved) {
-		if (role.isAllowed((String) function))
-		    role.disallowFunction((String) function);
-	    }
-
-	    AuthzGroupService.save(realm);
-
 	} catch (GroupNotDefinedException e) {
 	    log.error(e.getMessage());
 	} catch (AuthzPermissionException e) {
@@ -191,6 +194,7 @@ public class FunctionsSynchronisationJobImpl implements
 	} catch (RoleAlreadyDefinedException e) {
 	    log.error(e.getMessage());
 	}
+
     }
 
     private boolean isRoleInRealm(AuthzGroup realm) {
