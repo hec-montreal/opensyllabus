@@ -265,26 +265,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     }
 
     /**
-     * @inherited
-     */
-    public String getSiteConfigProperty(String siteId) {
-	Object configSiteProperty = "";
-
-	try {
-	    configSiteProperty =
-		    siteService.getSite(siteId).getPropertiesEdit().get(
-			    "configuration");
-	} catch (Exception e) {
-	    log.error("Unable to retrieve config site property", e);
-	}
-	// FIXME: this will never return null since it's initialized to "".
-	if (configSiteProperty == null)
-	    return null;
-	else
-	    return configSiteProperty.toString();
-    }
-
-    /**
      * Init method called at initialization of the bean.
      */
     public void init() {
@@ -838,13 +818,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 		resourceDao.createOrUpdateCourseOutline(thisCo);
 	    } else {
-		configSiteProperty = getSiteConfigProperty(thisCo.getSiteId());
-		if (configSiteProperty == null)
 		    coConfig = thisCo.getOsylConfig();
-		else
-		    coConfig =
-			    configDao.getConfigByRef(configSiteProperty
-				    .toString());
 	    }
 	    String lockedBy = thisCo.getLockedBy();
 	    boolean lockFree = false;
@@ -1476,7 +1450,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	String siteId;
 	try {
 	    siteId = getCurrentSiteId();
-	    COSerialized thisCo = getSerializedCourseOutlineBySiteId(siteId);
+	    COSerialized thisCo = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
 	    if (thisCo.getLockedBy().equals(
 		    sessionManager.getCurrentSession().getId())) {
 		resourceDao.clearLocksForCoId(thisCo.getCoId());
@@ -1484,5 +1458,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	} catch (Exception e) {
 	}
 
+    }
+
+    public String getOsylConfigIdForSiteId(String siteId) {
+	String configId = null;
+	try {
+	    COSerialized thisCo = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
+	    configId = thisCo.getOsylConfig().getConfigId();
+	} catch (Exception e) {
+	}
+	return configId;
     }
 }

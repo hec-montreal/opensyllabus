@@ -303,31 +303,21 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      */
     public COConfigSerialized getSerializedConfig() throws Exception {
 	String webappDir = getServletContext().getRealPath("/");
+	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
+	String cfgId =
+		osylServices.getOsylSiteService().getOsylConfigIdForSiteId(
+			siteId);
 	COConfigSerialized cfg = null;
-	Object configSiteProperty = "";
 	try {
-	    COSerialized thisCo =
-		    osylServices.getOsylSiteService()
-			    .getSerializedCourseOutline(webappDir);
-	    if (thisCo == null)
+	    if (cfgId == null)
 		cfg =
 			osylServices.getOsylConfigService().getConfig(
 				osylServices.getOsylConfigService()
 					.getDefaultConfig(), webappDir);
 	    else
-		configSiteProperty =
-			osylServices.getOsylSiteService()
-				.getSiteConfigProperty(thisCo.getSiteId());
-	    if (configSiteProperty == null)
 		cfg =
-			osylServices.getOsylConfigService()
-				.getConfig(
-					thisCo.getOsylConfig().getConfigId(),
-					webappDir);
-	    else
-		cfg =
-			osylServices.getOsylConfigService().getConfigByRef(
-				configSiteProperty.toString(), webappDir);
+			osylServices.getOsylConfigService().getConfig(cfgId,
+				webappDir);
 
 	} catch (Exception e) {
 	    log.error("Unable to retrieve serialized config", e);

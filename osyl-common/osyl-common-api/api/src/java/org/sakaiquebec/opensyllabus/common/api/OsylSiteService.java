@@ -95,16 +95,7 @@ public interface OsylSiteService extends EntityProducer{
 	 * @return a String of the base URL
 	 */
 	public String getCurrentSiteReference();
-
-	/**
-	 * Returns the value of the configuration property linked to the site
-	 * representing the course outline and used to choose the skin and message
-	 * bundle
-	 * 
-	 * @param
-	 * @return String value of the configuration
-	 */
-	public String getSiteConfigProperty(String siteId);
+	
 
 	/**
 	 * Returns whether a site with the specified title exists.
@@ -272,5 +263,12 @@ public interface OsylSiteService extends EntityProducer{
 	 * Method used to release lock that the current user have on the current site course outline
 	 */
 	public void releaseLock();
+	
+	/**
+	 * Get the id of the config used by site identified by siteId
+	 * @param siteId
+	 * @return
+	 */
+	public String getOsylConfigIdForSiteId(String siteId);
 
 }

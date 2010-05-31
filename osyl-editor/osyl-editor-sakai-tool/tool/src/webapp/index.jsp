@@ -117,13 +117,7 @@
 	    	//This script gets the right css from the database considering the config.
 	    	COSerialized co = osylMainBean.getOsylSiteService()
 	    			.getSerializedCourseOutline(webappDir);
-	    	Object configSiteProperty = osylMainBean.getOsylSiteService().getSiteConfigProperty(co.getSiteId());
-	    	String configId = "";
-	    	if (configSiteProperty == null) {
-	    		configId = co.getOsylConfig().getConfigId();
-	    	} else {
-	    		configId = osylMainBean.getOsylConfigService().getConfigByRef(configSiteProperty.toString(), webappDir).getConfigId();
-	    	}
+	    	String configId = co.getOsylConfig().getConfigId();
 	    	String cssPath = osylMainBean.getOsylConfigService().getConfig(
 	    			configId, webappDir).getCascadingStyleSheetPath();
 	    %>
