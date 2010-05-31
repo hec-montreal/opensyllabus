@@ -1487,7 +1487,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		resourceDao.clearLocksForCoId(thisCo.getCoId());
 	    }
 	} catch (Exception e) {
-	    e.printStackTrace();
 	}
 
     }
