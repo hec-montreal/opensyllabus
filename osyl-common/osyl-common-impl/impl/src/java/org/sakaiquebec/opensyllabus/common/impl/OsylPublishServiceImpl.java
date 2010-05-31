@@ -19,6 +19,7 @@ import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentEntity;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResourceEdit;
+import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.id.cover.IdManager;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
@@ -261,7 +262,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	Map<String, String> documentSecurityMap =
 		coModeled.getDocumentSecurityMap();
 
-	copyWorkToPublish(siteId, documentSecurityMap);
+	Map<String, String> documentVisibilityMap =
+		coModeled.getDocumentVisibilityMap();
+
+	
+	copyWorkToPublish(siteId, documentSecurityMap, documentVisibilityMap);
 
 	publication(co.getSiteId(), webappDir);
 
@@ -396,7 +401,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * Copies work's folder content to publish folder.
      */
     private void copyWorkToPublish(String siteId,
-	    Map<String, String> documentSecurityMap) throws Exception {
+	    Map<String, String> documentSecurityMap,
+	    Map<String, String> documentVisibilityMap) throws Exception {
 	String val2 = contentHostingService.getSiteCollection(siteId);
 	String refString =
 		contentHostingService.getReference(val2).substring(8);
@@ -423,7 +429,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    contentHostingService.removeResource(thisEntityRef);
 	    }
 
-	    copyWorkToPublish(refString, workContent, documentSecurityMap);
+	    copyWorkToPublish(refString, workContent, documentSecurityMap,
+		    documentVisibilityMap);
 
 	} catch (Exception e) {
 	    log.error(
@@ -435,7 +442,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     @SuppressWarnings("unchecked")
     private void copyWorkToPublish(String siteRef, ContentCollection directory,
-	    Map<String, String> documentSecurityMap) throws Exception {
+	    Map<String, String> documentSecurityMap,
+	    Map<String, String> documentVisibilityMap) throws Exception {
 
 	List<ContentEntity> members = directory.getMemberResources();
 	for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
@@ -445,9 +453,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	    if (next.isCollection()) {
 		ContentCollection collection = (ContentCollection) next;
-		copyWorkToPublish(siteRef, collection, documentSecurityMap);
+		copyWorkToPublish(siteRef, collection, documentSecurityMap,
+			documentVisibilityMap);
 	    } else {
 		String permission = documentSecurityMap.get(thisEntityRef);
+		String visibility = null;
 		if (permission != null) {
 		    // doc exists in CO
 		    String this_work_id = directory.getId();
@@ -474,6 +484,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    String newId =
 			    contentHostingService.copyIntoFolder(thisEntityRef,
 				    this_publish_directory);
+
+		    visibility = documentVisibilityMap.get(newId);
+		    if (visibility != null && visibility.equals("false")) {
+			applyVisibility(newId);
+		    }
 		    // Permission application
 		    osylSecurityService.applyPermissions(newId, permission);
 		}
@@ -482,6 +497,41 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     }
 
+    
+    private void applyVisibility(String referenceId){
+	try {
+	    ResourceProperties properties =
+		    contentHostingService.getProperties(referenceId);
+	    boolean isCollection = false;
+
+	    try {
+		isCollection =
+			properties
+				.getBooleanProperty(ResourceProperties.PROP_IS_COLLECTION);
+	    } catch (Exception e) {
+		// assume isCollection is false if property is not set
+	    }
+
+	    if (isCollection) {
+		ContentCollectionEdit edit =
+			contentHostingService.editCollection(referenceId);
+		edit.setHidden();
+		contentHostingService.commitCollection(edit);
+	    }
+
+	    else {
+		ContentResourceEdit edit =
+			contentHostingService.editResource(referenceId);
+		edit.setHidden();
+		contentHostingService.commitResource(edit,
+			NotificationService.NOTI_NONE);
+	    }
+	} catch (Exception e) {
+	    log.error("Unable to apply visibility", e);
+	}
+
+    }
+    
     private void publish(COSerialized co, String access, String webappDir)
 	    throws Exception {
 	COSerialized publishedCO = null;

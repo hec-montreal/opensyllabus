@@ -269,6 +269,15 @@ public class COModeledServer {
      */
     private Map<String, String> documentSecurityMap;
 
+    
+    /**
+     * Map<name,visibility> of visibility applied to ressources
+     * 
+     * @uml.property name="documentVisibilityMap"
+     * @uml.associationEnd qualifier="trim:java.lang.String java.lang.String"
+     */
+    private Map<String, String> documentVisibilityMap;
+   
     /**
      * @uml.property name="coSerialized"
      * @uml.associationEnd
@@ -319,6 +328,7 @@ public class COModeledServer {
 	COContent coContent = null;
 	Document messageDom = null;
 	documentSecurityMap = new HashMap<String, String>();
+	documentVisibilityMap = new HashMap<String, String>();
 	if (coSerialized.getContent() != null) {
 	    coContent = new COContent();
 	    try {
@@ -660,7 +670,21 @@ public class COModeledServer {
 	    } else {
 		addProperty(coContentResProxy.getProperties(), prNode);
 	    }
+	    
 	}
+	
+	    String uri =
+		coContentResProxy.getResource().getProperty(COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_URI);
+	    
+	    String visibility = coContentResProxy.getProperty(COPropertiesType.VISIBILITY);
+
+	    if (coContentResProxy.getResource().getType().equals(COContentResourceType.DOCUMENT))
+		documentVisibilityMap.put(uri.trim(), visibility);
+	    else if (coContentResProxy.getResource().getType().equals(COContentResourceType.BIBLIO_RESOURCE))
+		documentVisibilityMap.put(uri
+			.substring(0, uri.lastIndexOf("/")), visibility);
+    
 	return coContentResProxy;
     }
 
@@ -670,6 +694,11 @@ public class COModeledServer {
      * @param node the node from the DOM representing that Course Outline
      *            Content Resource
      * @return the created Content resource
+     */
+    /**
+     * @param node
+     * @param isPublication
+     * @return
      */
     private COContentResource createCOContentResourcePOJO(Node node,
 	    boolean isPublication) {
@@ -707,10 +736,12 @@ public class COModeledServer {
 	    String uri =
 		    coContentRes.getProperty(COPropertiesType.IDENTIFIER,
 			    COPropertiesType.IDENTIFIER_TYPE_URI);
-	    if (uri != null)
+	    if (uri != null) {
 		documentSecurityMap.put(uri.substring(0, uri.lastIndexOf("/")),
 			coContentRes.getAccess());
+	    }
 	}
+	
 	return coContentRes;
     }
 
@@ -1057,8 +1088,17 @@ public class COModeledServer {
 	return documentSecurityMap;
     }
 
+    
     public void setDocumentSecurityMap(Map<String, String> documentSecurityMap) {
 	this.documentSecurityMap = documentSecurityMap;
+    }
+
+    public Map<String, String> getDocumentVisibilityMap() {
+        return documentVisibilityMap;
+    }
+
+    public void setDocumentVisibilityMap(Map<String, String> documentVisibilityMap) {
+        this.documentVisibilityMap = documentVisibilityMap;
     }
 
     public void associate(COModeledServer parent) throws Exception {
