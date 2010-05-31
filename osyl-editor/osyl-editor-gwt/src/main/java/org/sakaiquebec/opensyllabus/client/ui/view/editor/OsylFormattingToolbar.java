@@ -52,6 +52,11 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class OsylFormattingToolbar extends Composite {
 
+    
+    private static final String BR = "MARKUP_BR";
+    private static final String P1 = "MARKUP_P_BEGIN";
+    private static final String P2 = "MARKUP_P_END";
+    
     /**
      * We use an inner EventListener class to avoid exposing event methods on
      * the RichTextToolbar itself.
@@ -107,7 +112,21 @@ public class OsylFormattingToolbar extends Composite {
 	    } else if (sender == ul) {
 		formatter.insertUnorderedList();
 	    } else if (sender == removeFormat) {
-		formatter.removeFormat();
+		String t = getSelectedHTML(richText.getElement());
+		t=t.replaceAll("<!--[\\s\\S]+?-->", "");
+		t=t.replaceAll("&lt;!--[\\s\\S]+?--&gt;", "");
+		t=t.replaceAll("<style[\\s\\S]+?</style>", "");
+		t=t.replaceAll("<[pP]>|<[pP][\\s\\S]+?>", P1);
+		t=t.replaceAll("</[pP]>", P2);
+		t=t.replaceAll("<br[\\s\\S]+?/?>|<BR[\\s\\S]+?/?>", BR);
+		t=t.replaceAll("<[\\s\\S]+?>", "");
+		t=t.replaceAll(BR, "<br>");
+		t=t.replaceAll(P1,"<p>");
+		t=t.replaceAll(P2,"</p>");
+		clearSelection(richText.getElement(), t);
+		formatter.insertHTML(t);
+		//formatter.removeFormat();
+		
 	    } else if (sender == richText) {
 		// We use the RichTextArea's onKeyUp event to update the toolbar
 		// status.
@@ -193,59 +212,59 @@ public class OsylFormattingToolbar extends Composite {
 	    topPanel.add(bold =
 		    createToggleButton(AbstractImagePrototype.create(
 			    osylImageBundle.rtt_bold()), uiMessages
-			    .getMessage("rtt_bold")));
+			    .getMessage("FormattingToolbar.bold")));
 	    topPanel.add(italic =
 		    createToggleButton(AbstractImagePrototype.create(
 			    osylImageBundle.rtt_italic()), uiMessages
-			    .getMessage("rtt_italic")));
+			    .getMessage("FormattingToolbar.italic")));
 	    topPanel.add(underline =
 		    createToggleButton(AbstractImagePrototype.create(
 			    osylImageBundle.rtt_underline()),
-			    uiMessages.getMessage("rtt_underline")));
+			    uiMessages.getMessage("FormattingToolbar.underline")));
 	    topPanel.add(justifyLeft =
 		    createPushButton(AbstractImagePrototype.create(
 			    osylImageBundle.rtt_justifyLeft()),
-			    uiMessages.getMessage("rtt_justifyLeft")));
+			    uiMessages.getMessage("FormattingToolbar.justifyLeft")));
 	    topPanel.add(justifyCenter =
 		    createPushButton(AbstractImagePrototype.create(
 			    osylImageBundle.rtt_justifyCenter()),
-			    uiMessages.getMessage("rtt_justifyCenter")));
+			    uiMessages.getMessage("FormattingToolbar.justifyCenter")));
 	    topPanel.add(justifyRight =
 		    createPushButton(AbstractImagePrototype.create(
 			    osylImageBundle.rtt_justifyRight()),
-			    uiMessages.getMessage("rtt_justifyRight")));
+			    uiMessages.getMessage("FormattingToolbar.justifyRight")));
 	    topPanel.add(strikethrough =
 		    createToggleButton(AbstractImagePrototype.create(
 			    osylImageBundle.rtt_strikeThrough()),
-			    uiMessages.getMessage("rtt_strikeThrough")));
+			    uiMessages.getMessage("FormattingToolbar.strikeThrough")));
 	    topPanel.add(indent =
 		    createPushButton(AbstractImagePrototype.create(
 			    osylImageBundle.rtt_indent()), uiMessages
-			    .getMessage("rtt_indent")));
+			    .getMessage("FormattingToolbar.indent")));
 	    topPanel.add(outdent =
 		    createPushButton(AbstractImagePrototype.create(
 			    osylImageBundle.rtt_outdent()), uiMessages
-			    .getMessage("rtt_outdent")));
+			    .getMessage("FormattingToolbar.outdent")));
 	    topPanel.add(ol =
 		    createPushButton(AbstractImagePrototype.create(
 			    osylImageBundle.rtt_ol()), uiMessages
-			    .getMessage("rtt_ol")));
+			    .getMessage("FormattingToolbar.ol")));
 	    topPanel.add(ul =
 		    createPushButton(AbstractImagePrototype.create(
 			    osylImageBundle.rtt_ul()), uiMessages
-			    .getMessage("rtt_ul")));
+			    .getMessage("FormattingToolbar.ul")));
 	    topPanel.add(createLink =
 		    createPushButton(AbstractImagePrototype.create(
 			    osylImageBundle.rtt_createLink()),
-			    uiMessages.getMessage("rtt_createLink")));
+			    uiMessages.getMessage("FormattingToolbar.createLink")));
 	    topPanel.add(removeLink =
 		    createPushButton(AbstractImagePrototype.create(
 			    osylImageBundle.rtt_removeLink()),
-			    uiMessages.getMessage("rtt_removeLink")));
+			    uiMessages.getMessage("FormattingToolbar.removeLink")));
 	    topPanel.add(removeFormat =
 		    createPushButton(AbstractImagePrototype.create(
 			    osylImageBundle.rtt_removeFormat()),
-			    uiMessages.getMessage("rtt_removeFormat")));
+			    uiMessages.getMessage("FormattingToolbar.removeFormat")));
 	}
 
 	initWidget(topPanel);
@@ -309,7 +328,7 @@ public class OsylFormattingToolbar extends Composite {
      * Native JavaScript that returns the selected text and position of the
      * start
      **/
-    public static native JsArrayString getSelection(Element elem) /*-{
+    private static native JsArrayString getSelection(Element elem) /*-{
     var txt = "";
        	var pos = 0;
        	var range;
@@ -333,7 +352,53 @@ public class OsylFormattingToolbar extends Composite {
            }
        	return [""+txt,""+pos];
        }-*/;
+    
+    private static native String getSelectedHTML(Element elem) /*-{
+     	var rng=null,html="";                  
+       if (elem.contentWindow.document.selection && elem.contentWindow.document.selection.createRange)      
+       {         
+            rng=elem.contentWindow.document.selection.createRange();      
+            if( rng.htmlText )       
+            {       
+               html=rng.htmlText;       
+            }       
+            else if(rng.length >= 1)       
+            {       
+               html=rng.item(0).outerHTML;       
+            }      
+       }      
+       else if (elem.contentWindow.getSelection)      
+       {      
+             rng=elem.contentWindow.getSelection();      
+             if (rng.rangeCount > 0 && window.XMLSerializer)      
+             {      
+                   rng=rng.getRangeAt(0);      
+                   html=new XMLSerializer().serializeToString(rng.cloneContents()); 
+                   //html=new XMLSerializer().serializeToString(rng.extractContents());       
+             }      
+       }      
+       return html;      
+    }-*/;
 
+    
+    private static native void clearSelection(Element elem, String html) /*-{                  
+       if (elem.contentWindow.document.selection)      
+       {      
+             //ie
+             elem.contentWindow.document.selection.clear();      
+       }      
+       else if (elem.contentWindow.getSelection)      
+       {      
+       	     //other browser
+             var rng=elem.contentWindow.getSelection();      
+             if (rng.rangeCount > 0)      
+             {      
+                   rng=rng.getRangeAt(0);      
+                   rng.deleteContents();         
+             }      
+       }           
+   }-*/;
+    
     private void createHTMLLink(String url) {
 	url = LinkValidator.parseLink(url);
 	formatter.insertHTML("<a target=\"_blank\" href=\"" + url + "\">"
