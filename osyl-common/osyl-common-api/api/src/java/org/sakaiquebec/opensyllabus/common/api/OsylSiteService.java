@@ -202,8 +202,7 @@ public interface OsylSiteService extends EntityProducer{
 	 * @throws Exception
 	 */
 	public COSerialized getSerializedCourseOutlineBySiteId(String siteId);
-
-	public String  getSerializedCourseOutlineContentBySiteId(String siteId);
+	
 	/**
 	 * Returns the CourseOutline of the current context.
 	 * 

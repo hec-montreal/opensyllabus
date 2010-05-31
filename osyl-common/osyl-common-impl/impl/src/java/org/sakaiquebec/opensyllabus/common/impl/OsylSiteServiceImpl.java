@@ -298,7 +298,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    resourceDao.clearLocksForSession(sessionManager
 			    .getCurrentSession().getId());
 		} else if (e.getEvent().equals(PresenceService.EVENT_ABSENCE)) {
-		    //we leave the sakai site, so we can unlock the CO
+		    // we leave the sakai site, so we can unlock the CO
 		    String res = e.getResource();
 		    String siteId =
 			    res.substring(res.lastIndexOf("/") + 1, res
@@ -331,15 +331,16 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     public COModeledServer getFusionnedPrePublishedHierarchy(String siteId) {
 	COModeledServer coModeled = null;
+	COSerialized co = null;
+	String parentId = null;
 	try {
-	    COSerialized co =
+	    co =
 		    resourceDao
 			    .getPrePublishSerializedCourseOutlineBySiteId(siteId);
-	    String parentId = null;
-	    try {
-		parentId = coRelationDao.getParentOfCourseOutline(siteId);
-	    } catch (Exception e) {
-	    }
+	    parentId = coRelationDao.getParentOfCourseOutline(siteId);
+	} catch (Exception e) {
+	}
+	try {
 	    coModeled = (co == null) ? null : new COModeledServer(co);
 	    if (parentId == null) {
 		if (coModeled != null)
@@ -359,15 +360,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
 
 	return coModeled;
-    }
-
-    public String getSerializedCourseOutlineContentBySiteId(String siteId) {
-	String content = null;
-
-	COSerialized co = getSerializedCourseOutlineBySiteId(siteId);
-	content = co.getContent();
-
-	return content;
     }
 
     /**
@@ -793,10 +785,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	    if (thisCo == null) {
 		coConfig =
-			osylConfigService
-				.getConfigByRef(
-						osylConfigService.getDefaultConfig(),
-					webappDir);
+			osylConfigService.getConfigByRef(osylConfigService
+				.getDefaultConfig(), webappDir);
 		thisCo =
 			new COSerialized(idManager.createUuid(),
 				osylConfigService.getCurrentLocale(), "shared",
@@ -863,20 +853,25 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    } else {
 		long d =
 			System.currentTimeMillis()
-				- (sessionManager.getSession(lockedBy)!=null?sessionManager.getSession(lockedBy)
-					.getLastAccessedTime():0);
-		if (d > (15 * 60 * 1000))//we invalidate lock after 15 mins of inactivity
+				- (sessionManager.getSession(lockedBy) != null ? sessionManager
+					.getSession(lockedBy)
+					.getLastAccessedTime()
+					: 0);
+		if (d > (15 * 60 * 1000))// we invalidate lock after 15 mins of
+		    // inactivity
 		    lockFree = true;
 	    }
 	    if (lockFree) {
 		thisCo.setLockedBy(sessionManager.getCurrentSession().getId());
-		resourceDao.setLockedBy(thisCo.getCoId(), sessionManager.getCurrentSession().getId());
+		resourceDao.setLockedBy(thisCo.getCoId(), sessionManager
+			.getCurrentSession().getId());
 	    } else if (!lockedBy.equals(sessionManager.getCurrentSession()
 		    .getId())) {
 		try {
 		    // CO is already in edition
 		    thisCo.setEditable(false);
-		    //we set the name of the proprietary of the co to diplay to users
+		    // we set the name of the proprietary of the co to diplay to
+		    // users
 		    User u =
 			    userDirectoryService.getUser(sessionManager
 				    .getSession(thisCo.getLockedBy())

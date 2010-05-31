@@ -3,6 +3,7 @@ package org.sakaiquebec.opensyllabus.common.impl;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -212,7 +213,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * 
      * @param String webapp dir (absolute pathname !?)
      */
-    public Map<String,String> publish(String webappDir, String siteId) throws Exception {
+    public Map<String, String> publish(String webappDir, String siteId)
+	    throws Exception {
 
 	SecurityService.pushAdvisor(new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
@@ -266,27 +268,26 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	//
 	// change publication date
 	TreeMap<String, String> publicationProperties =
-	    new TreeMap<String, String>();
-	    COSerialized coSerialized = osylSiteService.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
-	    COModeledServer coModeledServer = new COModeledServer(coSerialized);
-	    coModeledServer.XML2Model(false);
-	    COContent coContent = coModeledServer.getModeledContent();
-	    coContent
-		    .addProperty(
-			    COPropertiesType.PREVIOUS_PUBLISHED,
-			    coContent.getProperty(COPropertiesType.PUBLISHED) != null ? coContent
-				    .getProperty(COPropertiesType.PUBLISHED)
-				    : "");
-	    coContent.addProperty(COPropertiesType.PUBLISHED, OsylDateUtils
-		    .getNowDateAsXmlString());
-	    coModeledServer.model2XML();
-	    coSerialized.setContent(coModeledServer.getSerializedContent());
-	    resourceDao.createOrUpdateCourseOutline(coSerialized);
-	    
-	    publicationProperties.put(COPropertiesType.PREVIOUS_PUBLISHED,
-		    coContent.getProperty(COPropertiesType.PREVIOUS_PUBLISHED));
-	    publicationProperties.put(COPropertiesType.PUBLISHED, coContent
-		    .getProperty(COPropertiesType.PUBLISHED));
+		new TreeMap<String, String>();
+	COSerialized coSerialized =
+		osylSiteService
+			.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
+	COModeledServer coModeledServer = new COModeledServer(coSerialized);
+	coModeledServer.XML2Model(false);
+	COContent coContent = coModeledServer.getModeledContent();
+	coContent.addProperty(COPropertiesType.PREVIOUS_PUBLISHED, coContent
+		.getProperty(COPropertiesType.PUBLISHED) != null ? coContent
+		.getProperty(COPropertiesType.PUBLISHED) : "");
+	coContent.addProperty(COPropertiesType.PUBLISHED, OsylDateUtils
+		.getNowDateAsXmlString());
+	coModeledServer.model2XML();
+	coSerialized.setContent(coModeledServer.getSerializedContent());
+	resourceDao.createOrUpdateCourseOutline(coSerialized);
+
+	publicationProperties.put(COPropertiesType.PREVIOUS_PUBLISHED,
+		coContent.getProperty(COPropertiesType.PREVIOUS_PUBLISHED));
+	publicationProperties.put(COPropertiesType.PUBLISHED, coContent
+		.getProperty(COPropertiesType.PUBLISHED));
 	SecurityService.clearAdvisors();
 	return publicationProperties;
     }
@@ -342,13 +343,13 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
 
 	COModeledServer coModeled = null;
-	try{
-	coModeled =
-		osylSiteService.getFusionnedPrePublishedHierarchy(siteId);
-	}catch (Exception e) {
+	try {
+	    coModeled =
+		    osylSiteService.getFusionnedPrePublishedHierarchy(siteId);
+	} catch (Exception e) {
 	    // there is no published version of co for siteid
 	}
-	if (coModeled != null) {
+	if (hierarchyFussionedCO != null && coModeled != null) {
 	    coModeled.model2XML();
 	    hierarchyFussionedCO.setContent(coModeled.getSerializedContent());
 
@@ -370,15 +371,19 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	List<CORelation> coRelationList;
 	try {
 	    coRelationList = coRelationDao.getCourseOutlineChildren(siteId);
-	    for (Iterator<CORelation> coRelationIter =
-		    coRelationList.iterator(); coRelationIter.hasNext();) {
-		String childId = coRelationIter.next().getChild();
-		publication(childId, webappDir);
-	    }
-	} catch (Exception e) {
-	    e.printStackTrace();
+	} catch (Exception e1) {
+	    e1.printStackTrace();
+	    coRelationList = new ArrayList<CORelation>();
 	}
-
+	for (Iterator<CORelation> coRelationIter = coRelationList.iterator(); coRelationIter
+		.hasNext();) {
+	    String childId = coRelationIter.next().getChild();
+	    try {
+		publication(childId, webappDir);
+	    } catch (Exception e) {
+		e.printStackTrace();
+	    }
+	}
     }
 
     /*
