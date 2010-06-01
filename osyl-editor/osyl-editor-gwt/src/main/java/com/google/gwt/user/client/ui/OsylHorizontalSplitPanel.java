@@ -108,17 +108,20 @@ public class OsylHorizontalSplitPanel extends Composite {
     }
 
     public void onBrowserEvent(Event event) {
+	Element target = DOM.eventGetTarget(event);
+	boolean isCollapseElementTarget =
+		DOM.isOrHasChild(collapseElement, target);
 	switch (DOM.eventGetType(event)) {
 
 	case Event.ONMOUSEDOWN: {
-	    Element target = DOM.eventGetTarget(event);
-	    if (DOM.isOrHasChild(collapseElement, target)) {
+	    if (isCollapseElementTarget) {
 		collapseMouseDown = true;
 		collapseAnchor.addStyleName("down");
 		DOM.eventPreventDefault(event);
 	    }
-	    if (DOM.isOrHasChild(splitElement, target)) {
-	    	splitElement.getFirstChildElement().setClassName("hsplitter hsplitter-down");
+	    if (DOM.isOrHasChild(splitElement, target) && leftElementVisible) {
+		splitElement.getFirstChildElement().setClassName(
+			"hsplitter hsplitter-down");
 	    }
 	    break;
 	}
@@ -131,12 +134,16 @@ public class OsylHorizontalSplitPanel extends Composite {
 		    collapseAnchor.addStyleName("collapse");
 		    collapseAnchor.setTitle(OsylController.getInstance()
 			    .getUiMessage("OsylTreeView.uncollapse"));
+		    splitElement.getFirstChildElement().setClassName(
+			"hsplitter hsplitter-disable");
 		} else {
 		    horizontalSplitPanel
 			    .setSplitPosition(leftElementLastPosition + "px");
 		    collapseAnchor.removeStyleName("collapse");
 		    collapseAnchor.setTitle(OsylController.getInstance()
 			    .getUiMessage("OsylTreeView.collapse"));
+		    splitElement.getFirstChildElement().setClassName(
+			"hsplitter");
 		}
 		leftElementVisible = !leftElementVisible;
 		collapseMouseDown = false;
@@ -144,11 +151,10 @@ public class OsylHorizontalSplitPanel extends Composite {
 		handler.onMouseMove(null);
 		DOM.eventPreventDefault(event);
 	    }
-	    splitElement.getFirstChildElement().setClassName("hsplitter");
 	    break;
 	}
 	}
-	super.onBrowserEvent(event);
+	if(leftElementVisible && !collapseMouseDown)
+	    super.onBrowserEvent(event);
     }
-
 }

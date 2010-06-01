@@ -370,6 +370,8 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 }
 .Osyl-MainView-HorizontalSplitPanel .hsplitter-down {}
 
+.Osyl-MainView-HorizontalSplitPanel .hsplitter-disable {cursor:default;}
+
 .Osyl-MainView-HorizontalSplitPanel .hsplitter td {vertical-align:middle}
 .Osyl-MainView-HorizontalSplitPanel .hsplitter img {display:none}
 /*Workspace View Right Zone --------------------------------------------------------------------------------*/
