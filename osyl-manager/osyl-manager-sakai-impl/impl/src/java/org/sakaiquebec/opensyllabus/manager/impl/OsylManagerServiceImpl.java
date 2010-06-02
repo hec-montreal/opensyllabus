@@ -1419,11 +1419,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		}
 	    }
 	}
-	log.debug("getCoAndSiteInfo (Site List ##### INFOS #####)" + elapsed(start));
 
-	deleteExpiredTemporaryExportFiles(allSitesInfo); // Takes 10 to 30% more time - SAKAI-1613
-	log.debug("getCoAndSiteInfo (Site List ###### END ######)" + elapsed(start)
-		+ " for " + siteCount +  " sites");
+	new DeleteExpiredTemporaryExportFiles(allSitesInfo, siteCount).start();
 	return allSitesInfo;
     }
 
@@ -1461,4 +1458,32 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    + ", permission: " + permission);
 	return l;
     }
+    
+    class DeleteExpiredTemporaryExportFiles extends Thread {
+
+	List<COSite> allSitesInfo;
+	long start = System.currentTimeMillis();
+	int siteCount;
+	
+	public DeleteExpiredTemporaryExportFiles(List<COSite> allSitesInfo, int siteCount) {
+	    this.allSitesInfo = allSitesInfo;
+	    this.siteCount = siteCount;
+	}
+
+	public void run() {
+	    int time = 180000;
+	    log.debug("deleteExpiredTemporaryExportFiles (All Sites Info ##### START #####)"
+		    + elapsed(start));
+
+	    try {
+		sleep(time);
+	    } catch (InterruptedException e) {
+	    }
+	    deleteExpiredTemporaryExportFiles(allSitesInfo);
+		log.debug("deleteExpiredTemporaryExportFiles (All Sites Info ###### END ######)" + elapsed(start)
+			+ " for " + siteCount +  " sites");
+	}
+    }
+
 }
+
