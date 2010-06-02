@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com) -->
-<OSYL access="public" schemaVersion="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<OSYL access="public" schemaVersion="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <CO access="public">
 	<modified></modified>
 	<identifier type="HEC">Identifiant du cours</identifier>

@@ -55,7 +55,7 @@ public class SchemaHelper {
 	this.xsd = getXsd();
     }
 
-    private String getSchemaVersion() {
+    public String getSchemaVersion() {
 	Document doc = XmlHelper.parseXml(xsd);
 	return doc.getDocumentElement().getAttribute(VERSION_ATTRIBUTE);
     }

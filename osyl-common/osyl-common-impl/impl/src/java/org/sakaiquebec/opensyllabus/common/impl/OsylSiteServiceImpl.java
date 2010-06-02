@@ -756,7 +756,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	COSerialized thisCo = null;
 	COConfigSerialized coConfig = null;
 	String siteId = "";
-	Object configSiteProperty = "";
 
 	try {
 
@@ -776,9 +775,11 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 					webappDir), "shortDescription",
 				"description", "title", false);
 		// reinitilaisation des uuids
+		SchemaHelper sh = new SchemaHelper(webappDir);
 		COModeledServer coModeled = new COModeledServer(thisCo);
 		coModeled.XML2Model();
 		coModeled.resetXML(null);
+		coModeled.setSchemaVersion(sh.getSchemaVersion());
 		coModeled.model2XML();
 		thisCo.setContent(coModeled.getSerializedContent());
 
@@ -808,11 +809,13 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    }
 		}
 		// reinitilaisation des uuids et ajout titre et identifier
+		SchemaHelper sh = new SchemaHelper(webappDir);
 		COModeledServer coModeled = new COModeledServer(thisCo);
 		coModeled.XML2Model();
 		coModeled.resetXML(null);
 		coModeled.setCOContentTitle(title);
 		coModeled.setCOContentIdentifier(identifier);
+		coModeled.setSchemaVersion(sh.getSchemaVersion());
 		coModeled.model2XML();
 		thisCo.setContent(coModeled.getSerializedContent());
 

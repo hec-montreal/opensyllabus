@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com) -->
-<OSYL schemaVersion="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<OSYL schemaVersion="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 <CO access="public">
 	<template type="UdeM">TemplateUdeM</template>
 	<title type="HEC">Titre du cours à HEC</title>
