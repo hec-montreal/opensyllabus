@@ -1469,4 +1469,16 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
 	return configId;
     }
+
+    public void convertAndSave(String webapp, COSerialized co) throws Exception {
+	SchemaHelper schemaHelper = new SchemaHelper(webapp);
+	String xmlData = schemaHelper.verifyAndConvert(co.getContent());
+	co.setContent(xmlData);
+	resourceDao.createOrUpdateCourseOutline(co);
+	
+    }
+
+    public List<COSerialized> getAllCO() {
+	return resourceDao.getCourseOutlines();
+    }
 }

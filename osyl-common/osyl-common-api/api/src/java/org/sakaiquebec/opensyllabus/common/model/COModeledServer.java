@@ -1108,8 +1108,12 @@ public class COModeledServer {
 	if (contentChild == null) {
 	    copyStructureOnly(contentParent);
 	    this.setModeledContent(contentParent);
+	    this.schemaVersion = parent.schemaVersion;
 	} else {
-	    associateChild(contentChild, contentParent);
+	    if(this.schemaVersion.equals(parent.schemaVersion))
+		associateChild(contentChild, contentParent);
+	    else
+		throw new Exception("COuld not associate: child schema version != parent schema version");
 	}
 
     }
@@ -1436,4 +1440,12 @@ public class COModeledServer {
     	return attributeValue;
         }
 
+    public String getSchemaVersion() {
+        return schemaVersion;
+    }
+
+    public void setSchemaVersion(String schemaVersion) {
+        this.schemaVersion = schemaVersion;
+    }
+    
 }

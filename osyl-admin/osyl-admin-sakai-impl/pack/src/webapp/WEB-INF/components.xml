@@ -297,6 +297,13 @@
 		<property name="cmService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
 	</bean>
+	
+	<bean id="osylconvjob" class="org.sakaiquebec.opensyllabus.admin.conversionJob.impl.OsylConversionJobImpl" >
+		<property name="osylSiteService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
+	</bean>
+	
+	
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylcmjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
@@ -424,6 +431,25 @@
 		
 		<property name="jobName">
 			<value>OpenSyllabus Hierarchical Course Outline Job Synchronizer</value>
+		</property>
+		
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+		
+	</bean>	
+	
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylconvjob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		
+	
+		<property name="beanId">
+			<value>osylconvjob</value>
+		</property>
+		
+		<property name="jobName">
+			<value>OpenSyllabus Course Outline Conversion Job</value>
 		</property>
 		
 		<property name="schedulerManager">

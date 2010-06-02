@@ -70,6 +70,8 @@ public class SchemaHelper {
 		schemaVersion =
 			messageDom.getDocumentElement().getAttribute(
 				XML_VERSION_ATTRIBUTE);
+		if(schemaVersion==null || schemaVersion.equals(""))
+		    schemaVersion="1.0";
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    }

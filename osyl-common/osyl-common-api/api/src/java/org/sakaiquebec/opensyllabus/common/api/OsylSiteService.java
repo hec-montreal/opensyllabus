@@ -1,5 +1,6 @@
 package org.sakaiquebec.opensyllabus.common.api;
 
+import java.util.List;
 import java.util.Map;
 
 import org.sakaiproject.entity.api.Entity;
@@ -270,5 +271,17 @@ public interface OsylSiteService extends EntityProducer{
 	 * @return
 	 */
 	public String getOsylConfigIdForSiteId(String siteId);
+	
+	/**
+	 * 
+	 * @return list of all Course outlines of the system
+	 */
+	public List<COSerialized> getAllCO();
+	
+	/**
+	 * Convert the co to the most up to date version of osyl
+	 * @param co
+	 */
+	public void convertAndSave(String webapp, COSerialized co) throws Exception;
 
 }
