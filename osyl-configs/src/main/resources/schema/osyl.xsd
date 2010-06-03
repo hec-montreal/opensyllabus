@@ -648,6 +648,18 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="SakaiEntity">
+		<xs:annotation>
+			<xs:documentation>Link to a Sakai Entity</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="ASMResource">
+				<xs:sequence>
+					<xs:element name="sakaiEntity" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="URL">
 		<xs:complexContent>
 			<xs:extension base="ASMResource">
