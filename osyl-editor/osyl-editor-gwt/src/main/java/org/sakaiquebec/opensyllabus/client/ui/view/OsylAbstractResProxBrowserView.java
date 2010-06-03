@@ -49,7 +49,7 @@ public abstract class OsylAbstractResProxBrowserView extends
 	if (getEditor().isInEditionMode()) {
 	    return text;
 	} else {
-	    return generateHTMLLink(getRawURI(), text);
+	    return generateHTMLLink(getLinkURI(), text);
 	}
     }
 
