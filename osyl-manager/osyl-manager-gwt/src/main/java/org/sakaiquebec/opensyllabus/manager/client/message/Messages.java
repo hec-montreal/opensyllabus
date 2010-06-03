@@ -118,7 +118,13 @@ public interface Messages extends ConstantsWithLookup {
 
     String mainView_label();
 
+    String mainView_creationOfNewSite();
+    
     String mainView_operationsOnExistingSites();
+    
+    String mainView_searchForExistingSites();
+    
+    String mainView_searchForExistingSites_input();
 
     String mainView_or();
 
@@ -143,6 +149,8 @@ public interface Messages extends ConstantsWithLookup {
     String mainView_action_export();
 
     String mainView_action_publish();
+    
+    String mainView_action_search();
 
     String mainView_action_unattach();
 

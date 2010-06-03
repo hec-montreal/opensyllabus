@@ -153,12 +153,12 @@ public class OsylManagerRPCController {
 	serviceProxy.getCMCourses(callback);
     }
     
-    public void getCoAndSiteInfo(String siteId, AsyncCallback<COSite> callback){
-	serviceProxy.getCoAndSiteInfo(siteId, callback);
+    public void getCoAndSiteInfo(String siteId, String searchTerm, AsyncCallback<COSite> callback){
+	serviceProxy.getCoAndSiteInfo(siteId, searchTerm, callback);
     }
 
-    public void getCoAndSiteInfo(AsyncCallback< java.util.List<COSite>> callback){
-	serviceProxy.getCoAndSiteInfo(callback);
+    public void getAllCoAndSiteInfo(String searchTerm, AsyncCallback< java.util.List<COSite>> callback){
+	serviceProxy.getAllCoAndSiteInfo(searchTerm, callback);
     }
 
     public void publish(String siteId, AsyncCallback<Void> callback) {

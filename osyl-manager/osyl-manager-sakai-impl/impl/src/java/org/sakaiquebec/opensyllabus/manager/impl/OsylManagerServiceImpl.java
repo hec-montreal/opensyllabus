@@ -1295,7 +1295,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
     
     /** {@inheritDoc} */
-    public COSite getCoAndSiteInfo(String siteId) {
+    public COSite getCoAndSiteInfo(String siteId, String searchTerm) {
 	long start = System.currentTimeMillis();
 	Site site = null;
 	// Not really needed for now and very expensive (3 times longer to get
@@ -1313,7 +1313,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    e.printStackTrace();
 	}
 
-	if (site != null) {
+	if (site != null && searchTerm!=null && site.getTitle().contains(searchTerm)) {
 	    // Retrieve site info
 	    info.setSiteId(siteId);
 	    info.setSiteName(site.getTitle());
@@ -1390,13 +1390,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 
 	    info.setParentSite(parentSite);
+	} else {
+	    info = null;
 	}
 	log.debug("getCoAndSiteInfo  " + elapsed(start) + "DONE " + siteId);
 	return info;
     } // getCoAndSiteInfo
 
     /** {@inheritDoc} */
-    public List<COSite> getCoAndSiteInfo() {
+    public List<COSite> getAllCoAndSiteInfo(String searchTerm) {
 	long start = System.currentTimeMillis();
 	List<COSite> allSitesInfo = null;
 	COSite info = null;
@@ -1412,14 +1414,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	if (accessedSites != null && accessedSites.size() > 0) {
 	    allSitesInfo = new ArrayList<COSite>();
 	    for (int i = 0; i < accessedSites.size(); i++) {
-		info = getCoAndSiteInfo(accessedSites.get(i));
+		info = getCoAndSiteInfo(accessedSites.get(i), searchTerm);
 		if (info != null) {
 		    allSitesInfo.add(info);
 		    siteCount++;
 		}
 	    }
 	}
-
 	new DeleteExpiredTemporaryExportFiles(allSitesInfo, siteCount).start();
 	return allSitesInfo;
     }

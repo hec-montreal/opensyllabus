@@ -155,7 +155,7 @@ public interface OsylManagerService {
      * @param siteId
      * @return
      */
-    public COSite getCoAndSiteInfo(String siteId);
+    public COSite getCoAndSiteInfo(String siteId, String searchTerm);
 
     /**
      * Retrieve the informations of all the sites the current user has access
@@ -163,6 +163,6 @@ public interface OsylManagerService {
      * 
      * @return
      */
-    public List<COSite> getCoAndSiteInfo();
+    public List<COSite> getAllCoAndSiteInfo(String searchTerm);
     
 }

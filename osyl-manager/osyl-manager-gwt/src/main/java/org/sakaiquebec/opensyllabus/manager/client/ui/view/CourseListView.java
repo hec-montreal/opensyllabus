@@ -53,6 +53,8 @@ public class CourseListView extends OsylManagerAbstractView implements
     private ListBox siteListBox;
 
     private List<COSite> cosites;
+    
+    private String searchTerm;
 
     private AsyncCallback<List<COSite>> asyncCallback =
 	    new AsyncCallback<List<COSite>>() {
@@ -106,8 +108,9 @@ public class CourseListView extends OsylManagerAbstractView implements
 		}
 	    };
 
-    public CourseListView(OsylManagerController controller) {
+    public CourseListView(OsylManagerController controller, String searchTerm) {
 	super(controller);
+	setSearchTerm(searchTerm);
 	initView();
 	initWidget(mainPanel);
 	refresh();
@@ -121,7 +124,7 @@ public class CourseListView extends OsylManagerAbstractView implements
 
 	siteListBox = new ListBox(true);
 	siteListBox.setHeight("275px");
-	siteListBox.setWidth("100%");
+	siteListBox.setWidth("250px");
 	siteListBox.addChangeHandler(new ChangeHandler() {
 	    public void onChange(ChangeEvent event) {
 		setControllerSelectedSitesWithListBoxSelectedSites();
@@ -136,7 +139,7 @@ public class CourseListView extends OsylManagerAbstractView implements
 		.courseListView_loading()));
 	Image im = new Image(GWT.getModuleBaseURL() + "images/ajaxLoader.gif");
 	mainPanel.add(im);
-	getController().getCoAndSiteInfo(asyncCallback);
+	getController().getAllCoAndSiteInfo(getSearchTerm(), asyncCallback);
     }
 
     public void onOsylManagerEvent(OsylManagerEvent e) {
@@ -162,4 +165,11 @@ public class CourseListView extends OsylManagerAbstractView implements
 	return null;
     }
 
+    public String getSearchTerm() {
+        return searchTerm;
+    }
+
+    public void setSearchTerm(String searchTerm) {
+        this.searchTerm = searchTerm;
+    }
 }

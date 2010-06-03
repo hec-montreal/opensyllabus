@@ -239,12 +239,12 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	return coursesMap;
     }
 
-    public void getCoAndSiteInfo(String siteId, AsyncCallback<COSite> callback){
-	 OsylManagerRPCController.getInstance().getCoAndSiteInfo(siteId, callback);
+    public void getCoAndSiteInfo(String siteId, String searchTerm, AsyncCallback<COSite> callback){
+	 OsylManagerRPCController.getInstance().getCoAndSiteInfo(siteId, searchTerm, callback);
     }
 
-    public void getCoAndSiteInfo(AsyncCallback<List<COSite>> callback){
-	OsylManagerRPCController.getInstance().getCoAndSiteInfo(callback);
+    public void getAllCoAndSiteInfo(String searchTerm, AsyncCallback<List<COSite>> callback){
+	OsylManagerRPCController.getInstance().getAllCoAndSiteInfo(searchTerm, callback);
     }
 
     public void getCMCourses(AsyncCallback<List<CMCourse>> callback) {

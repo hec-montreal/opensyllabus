@@ -79,7 +79,7 @@ public interface OsylManagerGwtService extends RemoteService {
      * @param siteId
      * @return
      */
-    public COSite getCoAndSiteInfo(String siteId);
+    public COSite getCoAndSiteInfo(String siteId, String searchTerm);
 
     /**
      * Retrieve the informations of all the sites the current user has access
@@ -87,7 +87,7 @@ public interface OsylManagerGwtService extends RemoteService {
      * 
      * @return
      */
-    public List<COSite> getCoAndSiteInfo();
+    public List<COSite> getAllCoAndSiteInfo(String searchTerm);
 
     public void publish(String siteId) throws Exception;
 

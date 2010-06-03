@@ -147,12 +147,12 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	return osylManagerServices.getOsylManagerService().getCMCourses();
     }
     
-    public COSite getCoAndSiteInfo(String siteId){
-	return osylManagerServices.getOsylManagerService().getCoAndSiteInfo(siteId);
+    public COSite getCoAndSiteInfo(String siteId, String searchTerm){
+	return osylManagerServices.getOsylManagerService().getCoAndSiteInfo(siteId, searchTerm);
     }
 
-    public List<COSite> getCoAndSiteInfo(){
-	return osylManagerServices.getOsylManagerService().getCoAndSiteInfo();
+    public List<COSite> getAllCoAndSiteInfo(String searchTerm){
+	return osylManagerServices.getOsylManagerService().getAllCoAndSiteInfo(searchTerm);
     }
 
     public void publish(String siteId) throws Exception {

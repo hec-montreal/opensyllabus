@@ -117,6 +117,12 @@ cursor:pointer;
 }
 /*----------------------------------------------------------------------------------------------------------------*/
 .OsylManager-mainView-mainPanel{
+	width:100%;
+}
+
+.OsylManager-mainView-label{
+	font-weight: bold;
+	font-size: medium;
 }
 
 .OsylManager-mainView-tabBar {}
@@ -148,6 +154,10 @@ font-weight: bold;
 .OsylManager-mainView-tabBar .gwt-TabBarItem-disabled {
 color:#a2a2a2;
 cursor:default;
+}
+
+.OsylManager-mainView-tabPanel{
+	width: 100%;
 }
 
 .OsylManager-mainView-tabPanel .gwt-TabPanelBottom {
