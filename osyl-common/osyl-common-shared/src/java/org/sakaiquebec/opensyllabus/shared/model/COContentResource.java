@@ -98,6 +98,10 @@ public class COContentResource implements COModelInterface,
 	    resModel.addProperty(COPropertiesType.IDENTIFIER,
 		    COPropertiesType.IDENTIFIER_TYPE_URI,
 		    "http://www.google.ca/search?q=opensyllabus");
+	} else if (type.equalsIgnoreCase(COContentResourceType.ENTITY)) {
+	    resModel.addProperty(COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_URI,
+		    "http://www.hec.ca");
 	} else if (type.equalsIgnoreCase(COContentResourceType.DOCUMENT)) {
 	    resModel.addProperty(COPropertiesType.IDENTIFIER,
 		    COPropertiesType.IDENTIFIER_TYPE_URI, "");

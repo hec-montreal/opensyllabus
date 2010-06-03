@@ -325,4 +325,17 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
     public void releaseLock(AsyncCallback<Void> callback) {
 	callback.onSuccess(null);
     }
+
+    public void getMySites(AsyncCallback<Map<String, String>> callback) {
+	callback.onSuccess(null);
+    }
+    
+   public void getAllowedProviders(AsyncCallback<Map<String, String>> callback){
+	callback.onSuccess(null);
+   }
+    
+    public void getExistingEntities(String siteId, AsyncCallback<Map<String, String>> callback){
+	callback.onSuccess(null);
+    }
+
 }

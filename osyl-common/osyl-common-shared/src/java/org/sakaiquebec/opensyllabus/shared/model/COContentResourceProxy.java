@@ -108,7 +108,10 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	    } else if (resourceType.equalsIgnoreCase(COContentResourceType.URL)) {
 		resProxModel.setLabel(osylConfigMessages
 			.getMessage("InsertYourHyperlinkLabelHere"));
-	    } else if (resourceType
+	    }else if (resourceType.equalsIgnoreCase(COContentResourceType.ENTITY)) {
+		resProxModel.setLabel(osylConfigMessages
+			.getMessage("InsertYourSakaiEntityLabelHere"));
+	    }  else if (resourceType
 		    .equalsIgnoreCase(COContentResourceType.DOCUMENT)) {
 		resProxModel.setLabel(osylConfigMessages
 			.getMessage("InsertYourDocumentLabelHere"));

@@ -22,6 +22,7 @@ package org.sakaiquebec.opensyllabus.server;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -345,6 +346,12 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	osylServices.getOsylService().removeAssignment(assignmentId);
     }
 
+    public Map<String, String> getMySites(){
+	return osylServices.getOsylService().getMySites();
+    }
+    
+    
+   
     /**
      * {@inheritDoc}
      */
@@ -390,5 +397,13 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 
     public void releaseLock() {
 	osylServices.getOsylSiteService().releaseLock();
+    }
+
+    public Map<String, String> getAllowedProviders() {
+	return osylServices.getOsylService().getAllowedProviders();
+    }
+
+    public Map<String, String> getExistingEntities(String siteId) {
+	return osylServices.getOsylService().getExistingEntities(siteId);
     }
 }

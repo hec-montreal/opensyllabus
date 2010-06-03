@@ -20,8 +20,12 @@
 
 package org.sakaiquebec.opensyllabus.client.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler;
@@ -1139,6 +1143,49 @@ public class OsylController implements SavePushButtonEventHandler,
 	}
     }
 
+    public void getMySites(AsyncCallback<Map<String, String>> callback) {
+
+	OsylRemoteServiceLocator.getEditorRemoteService().getMySites(callback);
+    }
+
+    private   Map<String, String> myCourseSites;
+    private Map<String, String> allowedProviders;
+    private Map<String, String> existingEntities;
+
+    public Map<String, String> getAllowedProviders() {
+	return allowedProviders;
+    }
+
+    public void setAllowedProviders(Map<String, String> allowedProviders) {
+	this.allowedProviders = allowedProviders;
+    }
+
+    public void getAllowedProviders(AsyncCallback<Map<String, String>> callback) {
+
+	OsylRemoteServiceLocator.getEditorRemoteService().getAllowedProviders(callback);
+    }
+
+    public Map<String, String> getExistingEntities(String siteId) {
+	return existingEntities;
+    }
+
+    public void setExistingEntities(Map<String, String> existingEntities) {
+	this.existingEntities = existingEntities;
+    }
+
+    public void getExistingEntities(String siteId, AsyncCallback<Map<String, String>> callback) {
+
+	OsylRemoteServiceLocator.getEditorRemoteService().getExistingEntities(siteId, callback);
+    }
+
+    public void setMyCourseSites(Map<String, String> mySites) {
+	this.myCourseSites = mySites;
+    }
+
+    public Map<String, String> getMyCourseSites() {
+	return myCourseSites;
+    }
+
     /**
      * Call-back method for receiving the configuration downloaded from the
      * server. It is invoked only if the RPC call was successful. In this case
@@ -1644,6 +1691,7 @@ public class OsylController implements SavePushButtonEventHandler,
 	AsyncCallback<Void> cb = new AsyncCallback<Void>() {
 	    public void onFailure(Throwable caught) {
 	    }
+
 	    public void onSuccess(Void result) {
 	    }
 	};

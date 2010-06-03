@@ -24,11 +24,15 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresItemListingAcquiredEvents;
+import org.sakaiquebec.opensyllabus.client.controller.event.FiresMySitesListingAcquiredEvents;
 import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredEventHandler;
+import org.sakaiquebec.opensyllabus.client.controller.event.MySitesListingAcquiredEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBAddFolderEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBItemSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.UploadFileEventHandler;
@@ -61,6 +65,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -71,7 +77,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $Id: $
  */
 public abstract class OsylAbstractBrowserComposite extends Composite implements
-	UploadFileEventHandler, FiresItemListingAcquiredEvents {
+	UploadFileEventHandler, FiresItemListingAcquiredEvents,
+	FiresMySitesListingAcquiredEvents {
 
     protected static final boolean TRACE = false;
 
@@ -79,6 +86,10 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 
     // Number of elements shown in the file listing
     private static final int LISTING_ITEM_NUMBER = 6;
+
+    private String entityUri;
+
+    private String entityText;
 
     private OsylDirectory currentDirectory = null;
 
@@ -88,7 +99,15 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 
     private String browsedSiteId;
 
+    private Map<String, String> mySites;
+
+    // private ListBox mySitesListBox;
+
+    private TextBox currentSiteTextBox;
     private TextBox currentDirectoryTextBox;
+
+    // And the html content
+    HTML currentSelectionHtml = new HTML();
 
     private DoubleClickListBox fileListing;
 
@@ -131,11 +150,88 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		}
 	    };
 
+    private AsyncCallback<Map<String, String>> siteProvidersCallback =
+	    new AsyncCallback<Map<String, String>>() {
+		public void onSuccess(Map<String, String> sitesProviders) {
+		    try {
+			getController().setAllowedProviders(sitesProviders);
+		    } catch (Exception error) {
+			Window
+				.alert("Error - Unable to getAllowedProviders(...) on RPC Success: "
+					+ error.toString());
+		    }
+		}
+
+		// And we define the behavior in case of failure
+		public void onFailure(Throwable error) {
+		    System.out
+			    .println("RPC FAILURE - getAllowedProviders(...): "
+				    + error.toString()
+				    + " Hint: Check GWT version");
+		    Window.alert("RPC FAILURE - getAllowedProviders(...): "
+			    + error.toString() + " Hint: Check GWT version");
+		}
+	    };
+
+    private Tree providers;
+
+    public Tree getProviders() {
+	return providers;
+    }
+
+    public void setProviders(Tree providers) {
+	this.providers = providers;
+    }
+
+    public AsyncCallback<Map<String, String>> getSiteProvidersCallback() {
+	return siteProvidersCallback;
+    }
+
+    public void setSiteProvidersCallback(
+	    AsyncCallback<Map<String, String>> siteProvidersCallback) {
+	this.siteProvidersCallback = siteProvidersCallback;
+    }
+
+    private AsyncCallback<Map<String, String>> sitesEntitiesCallback =
+	    new AsyncCallback<Map<String, String>>() {
+		public void onSuccess(Map<String, String> sitesEntites) {
+		    try {
+			getController().setExistingEntities(sitesEntites);
+			refreshSitesEntitiesListing(getController().getSiteId());
+		    } catch (Exception error) {
+			Window
+				.alert("Error - Unable to getExistingEntities(...) on RPC Success: "
+					+ error.toString());
+		    }
+		}
+
+		// And we define the behavior in case of failure
+		public void onFailure(Throwable error) {
+		    System.out
+			    .println("RPC FAILURE - getExistingEntities(...): "
+				    + error.toString()
+				    + " Hint: Check GWT version");
+		    Window.alert("RPC FAILURE - getExistingEntities(...): "
+			    + error.toString() + " Hint: Check GWT version");
+		}
+	    };
+
+    public AsyncCallback<Map<String, String>> getSitesEntitiesCallback() {
+	return sitesEntitiesCallback;
+    }
+
+    public void setSitesEntitiesCallback(
+	    AsyncCallback<Map<String, String>> sitesEntitiesCallback) {
+	this.sitesEntitiesCallback = sitesEntitiesCallback;
+    }
+
     private ArrayList<RFBAddFolderEventHandler> RFBAddFolderEventHandlerList;
 
     private ArrayList<RFBItemSelectionEventHandler> RFBFileSelectionEventHandlerList;
 
     private ArrayList<ItemListingAcquiredEventHandler> fileListingAcquiredEventHandlerList;
+
+    private ArrayList<MySitesListingAcquiredEventHandler> mySitesAcquiredEventHandlerList;
 
     private PushButton folderAddButton;
 
@@ -298,8 +394,37 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	this.itemToSelect = item;
     }
 
-    protected PushButton createTopButton(ImageResource img,
-	    String tooltip) {
+    public Map<String, String> getMySites() {
+	return mySites;
+    }
+
+    protected void updateCurrentSelectionHtml(String entity) {
+	getCurrentSelectionHtml().setHTML(entity);
+
+    }
+
+    public HTML getCurrentSelectionHtml() {
+	return currentSelectionHtml;
+    }
+
+    public void setCurrentSelectionHtml(HTML currentSelectionHtml) {
+	this.currentSelectionHtml = currentSelectionHtml;
+    }
+
+    // public AsyncCallback<Map<String, String>> getMySitesCallback() {
+    // return mySitesCallback;
+    // }
+    //
+    // public void setMySitesCallback(
+    // AsyncCallback<Map<String, String>> mySitesCallback) {
+    // this.mySitesCallback = mySitesCallback;
+    // }
+
+    public void setMySites(Map<String, String> mySites) {
+	this.mySites = mySites;
+    }
+
+    protected PushButton createTopButton(ImageResource img, String tooltip) {
 	PushButton button = new PushButton(new Image(img));
 	button.setTitle(tooltip);
 	button.setStylePrimaryName("Osyl-FileBrowserTopButton");
@@ -630,6 +755,15 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	return remoteDirListingRespHandler;
     }
 
+    public ArrayList<MySitesListingAcquiredEventHandler> getMySitesAcquiredEventHandlerList() {
+	return mySitesAcquiredEventHandlerList;
+    }
+
+    public void setMySitesAcquiredEventHandlerList(
+	    ArrayList<MySitesListingAcquiredEventHandler> mySitesAcquiredEventHandlerList) {
+	this.mySitesAcquiredEventHandlerList = mySitesAcquiredEventHandlerList;
+    }
+
     public OsylDirectory getCurrentDirectory() {
 	return currentDirectory;
     }
@@ -646,6 +780,14 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	this.currentDirectoryTextBox = currentDirectoryTextBox;
     }
 
+    public TextBox getCurrentSiteTextBox() {
+	return currentSiteTextBox;
+    }
+
+    public void setCurrentSiteTextBox(TextBox currentSiteTextBox) {
+	this.currentSiteTextBox = currentSiteTextBox;
+    }
+
     public DoubleClickListBox getFileListing() {
 	return fileListing;
     }
@@ -657,6 +799,14 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     public TextBox getCurrentSelectionTextBox() {
 	return currentSelectionTextBox;
     }
+
+    // public ListBox getMySitesListBox() {
+    // return mySitesListBox;
+    // }
+    //
+    // public void setMySitesListBox(ListBox mySitesListBox) {
+    // this.mySitesListBox = mySitesListBox;
+    // }
 
     public void setCurrentSelectionTextBox(TextBox currentSelectionTextBox) {
 	this.currentSelectionTextBox = currentSelectionTextBox;
@@ -715,6 +865,14 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	return this.RFBAddFolderEventHandlerList;
     }
 
+    public String getEntityUri() {
+	return entityUri;
+    }
+
+    public void setEntityUri(String entityUri) {
+	this.entityUri = entityUri;
+    }
+
     /**
      * @param arrayList the new value of rFBFileSelectionEventHandlerList.
      */
@@ -728,6 +886,14 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
      */
     public ArrayList<RFBItemSelectionEventHandler> getRFBFileSelectionEventHandlerList() {
 	return this.RFBFileSelectionEventHandlerList;
+    }
+
+    public String getEntityText() {
+	return entityText;
+    }
+
+    public void setEntityText(String entityText) {
+	this.entityText = entityText;
     }
 
     /**
@@ -791,6 +957,21 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		setFileListingAcquiredEventHandlerList(new ArrayList<ItemListingAcquiredEventHandler>());
 	    }
 	    getFileListingAcquiredEventHandlerList().add(handler);
+	}
+    }
+
+    public void addEventHandler(MySitesListingAcquiredEventHandler handler) {
+	if (handler != null) {
+	    if (getMySitesAcquiredEventHandlerList() == null) {
+		setMySitesAcquiredEventHandlerList(new ArrayList<MySitesListingAcquiredEventHandler>());
+	    }
+	    getMySitesAcquiredEventHandlerList().add(handler);
+	}
+    }
+
+    public void removeEventHandler(MySitesListingAcquiredEventHandler handler) {
+	if (getMySitesAcquiredEventHandlerList() != null) {
+	    getMySitesAcquiredEventHandlerList().remove(handler);
 	}
     }
 
@@ -868,6 +1049,45 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     protected String extractRessourceSiteId(String uri) {
 	String uu = extractRessourceUri(uri);
 	return uu.substring(0, uu.indexOf("/"));
+    }
+
+    public void refreshSitesEntitiesListing(String selectedSite) {
+	if (selectedSite != null) {
+	    getProviders().clear();
+
+	    int countProviders = 0;
+	    Map<String, String> entities =
+		    getController().getExistingEntities(selectedSite);
+	    Map<String, String> allowedProviders =
+		    getController().getAllowedProviders();
+	    TreeItem providers = new TreeItem();
+	    Set<String> entitiesKeys = entities.keySet();
+	    Set<String> providersKeys = allowedProviders.keySet();
+
+	    for (String pkey : providersKeys) {
+		providers = new TreeItem(pkey.toUpperCase());
+		for (String key : entitiesKeys) {
+		    if (key.contains(pkey)) {
+			providers.addItem(entities.get(key));
+			countProviders++;
+		    }
+		}
+		if (providers.getChildCount() > 0) {
+		    getProviders().addItem(providers);
+
+		}
+
+	    }
+
+	    if (countProviders == 0) {
+		// TODO: internationaliser le message
+		providers =
+			new TreeItem("This site contains no entities"
+				.toUpperCase());
+		getProviders().addItem(providers);
+
+	    }
+	}
     }
 
     protected void refreshFileListing(List<OsylAbstractBrowserItem> dirListing) {

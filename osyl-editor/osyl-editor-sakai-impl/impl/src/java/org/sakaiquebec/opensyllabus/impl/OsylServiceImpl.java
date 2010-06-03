@@ -1,14 +1,16 @@
 package org.sakaiquebec.opensyllabus.impl;
 
-
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,14 +29,17 @@ import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.content.api.ResourceType;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+import org.sakaiproject.entitybroker.EntityBroker;
 import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.InUseException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.api.Site;
+import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.time.api.Time;
 import org.sakaiproject.time.cover.TimeService;
+import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiquebec.opensyllabus.api.OsylService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
@@ -42,6 +47,24 @@ import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 
 public class OsylServiceImpl implements OsylService {
+
+    /*
+     * FIXME: les listes de sites, de providers et d'entites devraient etre dans
+     * un POJO. J'avais des problèmes de serialization c'est pour cela qu'ils
+     * son des listes.
+     */
+
+    /** the site service to be injected by Spring */
+    private SiteService siteService;
+
+    /**
+     * Sets the <code>SiteService</code>.
+     * 
+     * @param siteService
+     */
+    public void setSiteService(SiteService siteService) {
+	this.siteService = siteService;
+    }
 
     /**
      * The chs to be injected by Spring
@@ -64,6 +87,24 @@ public class OsylServiceImpl implements OsylService {
 
     protected static final String ASSIGNMENT_TOOL_ID =
 	    "sakai.assignment.grades";
+
+    /** the session manager to be injected by Spring */
+    private SessionManager sessionManager;
+
+    private EntityBroker entityBroker;
+
+    public void setEntityBroker(EntityBroker entityBroker) {
+	this.entityBroker = entityBroker;
+    }
+
+    /**
+     * Sets the <code>SessionManager</code>.
+     * 
+     * @param sessionManager
+     */
+    public void setSessionManager(SessionManager sessionManager) {
+	this.sessionManager = sessionManager;
+    }
 
     /**
      * The assignment service to be injected by Spring
@@ -322,19 +363,18 @@ public class OsylServiceImpl implements OsylService {
 	}
     }
 
-    
-
     /** {@inheritDoc} */
     public CitationCollection linkCitationsToSite(
 	    CitationCollection collection, String siteId, String citationTitle) {
 
 	ContentResourceEdit resource = null;
 	String resourceDir =
-		getResourceReference(siteId) + OsylSiteService.WORK_DIRECTORY + "/";
+		getResourceReference(siteId) + OsylSiteService.WORK_DIRECTORY
+			+ "/";
 	try {
 	    String resourceId = resourceDir + citationTitle;
 	    // temporarily allow the user to read and write resources
-	     if (osylSecurityService.isAllowedToEdit(siteId)) {
+	    if (osylSecurityService.isAllowedToEdit(siteId)) {
 		SecurityService.pushAdvisor(new SecurityAdvisor() {
 		    public SecurityAdvice isAllowed(String userId,
 			    String function, String reference) {
@@ -389,7 +429,8 @@ public class OsylServiceImpl implements OsylService {
 	    citationService.save(collection);
 
 	    resource.setContent(collection.getId().getBytes());
-	    contentHostingService.commitResource(resource, NotificationService.NOTI_NONE);
+	    contentHostingService.commitResource(resource,
+		    NotificationService.NOTI_NONE);
 
 	} catch (RuntimeException e) {
 	    log.error("Remove citation list - Runtime service exception", e);
@@ -399,7 +440,6 @@ public class OsylServiceImpl implements OsylService {
 
 	return collection;
     }
-
 
     /**
      * {@inheritDoc}
@@ -473,7 +513,8 @@ public class OsylServiceImpl implements OsylService {
 		    citationListName);
 
 	    cre.setContent(citationList.getId().getBytes());
-	    contentHostingService.commitResource(cre, NotificationService.NOTI_NONE);
+	    contentHostingService.commitResource(cre,
+		    NotificationService.NOTI_NONE);
 	    // Permission application
 	    // osylSecurityService.applyPermissions(newId,SecurityInterface.ACCESS_PUBLIC);
 	}
@@ -609,4 +650,140 @@ public class OsylServiceImpl implements OsylService {
 	}
 	return false;
     }
+
+    public Map<String, String> getMySites() {
+	Map<String, String> mySites = new HashMap<String, String>();
+	// Retrieve sites user has access to
+	List<Site> sites =
+		siteService
+			.getSites(
+				org.sakaiproject.site.api.SiteService.SelectionType.ACCESS,
+				null,
+				null,
+				null,
+				org.sakaiproject.site.api.SiteService.SortType.TITLE_ASC,
+				null);
+
+	Collections.sort(sites);
+	// ++++++++++++++ Retrieve providers
+	for (Site site : sites) {
+	    mySites.put(site.getId(), site.getTitle());
+	}
+	System.out.println("taille " + mySites.size());
+	return mySites;
+    }
+
+    public Map<String, String> getAllowedProviders() {
+	Map<String, String> providersMap = new HashMap<String, String>();
+
+	// By default we only hide Forum messages and topics, should probably be
+	// a new capability interface
+	String[] hiddenProviders = { "forum_message", "forum_topic" };
+	// End Retrieve sites user has access to
+	Set<String> providers = entityBroker.getRegisteredPrefixes();
+
+	// ------------------------------------------ Retrieve allowed providers
+	// for each site
+	for (String provider : providers) {
+	    // Check if this provider is hidden or not
+	    boolean skip = false;
+	    if (ServerConfigurationService
+		    .getString("entity-browser.hiddenProviders") != null
+		    && !"".equals(ServerConfigurationService
+			    .getString("entity-browser.hiddenProviders")))
+		hiddenProviders =
+			ServerConfigurationService.getString(
+				"entity-browser.hiddenProviders").split(",");
+
+	    for (int i = 0; i < hiddenProviders.length; i++) {
+		if (provider.equals(hiddenProviders[i]))
+		    skip = true;
+	    }
+
+	    // If the provider is not hidden and is among the ones the user has
+	    // access to we retrieve the entity reference
+	    if (!skip) {
+		providersMap.put(provider, provider);
+		System.out.println("les pr " + provider);
+	    }
+	}
+	return providersMap;
+
+    }
+
+    public Map<String, String> getExistingEntities(String siteId) {
+	Map<String, String> entitiesMap = new HashMap<String, String>();
+	String currentUserId = sessionManager.getCurrentSessionUserId();
+	List<String> entities, theSiteEntities;
+	String title;
+	Map<String, String> siteEntities = null;
+
+	// By default we only hide Forum messages and topics, should probably be
+	// a new capability interface
+	String[] hiddenProviders = { "forum_message", "forum_topic" };
+	List<String> allowedProviders = new ArrayList<String>();
+	// End Retrieve sites user has access to
+	Set<String> providers = entityBroker.getRegisteredPrefixes();
+
+	// ------------------------------------------ Retrieve allowed providers
+	// for each site
+	for (String provider : providers) {
+	    // Check if this provider is hidden or not
+	    boolean skip = false;
+	    if (ServerConfigurationService
+		    .getString("entity-browser.hiddenProviders") != null
+		    && !"".equals(ServerConfigurationService
+			    .getString("entity-browser.hiddenProviders")))
+		hiddenProviders =
+			ServerConfigurationService.getString(
+				"entity-browser.hiddenProviders").split(",");
+
+	    for (int i = 0; i < hiddenProviders.length; i++) {
+		if (provider.equals(hiddenProviders[i]))
+		    skip = true;
+	    }
+
+	    // If the provider is not hidden and is among the ones the user has
+	    // access to we retrieve the entity reference
+	    if (!skip) {
+		allowedProviders.add(provider);
+		System.out.println("les pr " + provider);
+	    }
+	}
+	// ------------------------------------------ End Retrieve allowed
+	// providers for each site
+
+	// ++++++++++++++ Retrieve providers
+
+	Site site;
+	try {
+	    site = siteService.getSite(siteId);
+	    if (siteEntities == null)
+		siteEntities = new HashMap<String, String>();
+	    siteEntities.put(siteId, site.getTitle());
+	    theSiteEntities = new ArrayList<String>();
+
+	    for (String provider : allowedProviders) {
+		entities =
+			entityBroker.findEntityRefs(new String[] { provider },
+				new String[] { "context", "userId" },
+				new String[] { siteId, currentUserId }, true);
+		if (entities != null) {
+		    theSiteEntities.addAll(entities);
+
+		    for (String ent : entities) {
+			title = entityBroker.getPropertyValue(ent, "title");
+			entitiesMap.put(ent, title);
+			System.out.println("l'entite est " + title);
+		    }
+		}
+	    }
+	} catch (IdUnusedException e) {
+	    e.printStackTrace();
+	}
+
+	return entitiesMap;
+
+    }
+
 }

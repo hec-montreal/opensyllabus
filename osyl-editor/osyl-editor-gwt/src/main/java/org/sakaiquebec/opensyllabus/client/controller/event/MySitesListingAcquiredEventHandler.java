@@ -18,21 +18,29 @@
  * limitations under the License.
  *
  ******************************************************************************/
-package org.sakaiquebec.opensyllabus.shared.model;
+package org.sakaiquebec.opensyllabus.client.controller.event;
 
+import java.util.EventObject;
 
 /**
- * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
+ * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @version $Id: $
  */
-public class COContentResourceType {
+public interface MySitesListingAcquiredEventHandler {
 
-    public static final String TEXT = "Text";
-    public static final String BIBLIO_RESOURCE = "BiblioResource";
-    public static final String DOCUMENT = "Document";
-    public static final String ASSIGNMENT = "Assignment";
-    public static final String URL="URL";
-    public static final String PERSON="Person";
-    public static final String NEWS="News";
-    public static final String ENTITY="SakaiEntity";
+    public class MySitesListingAcquiredEvent extends EventObject {
+
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param source
+	 */
+	public MySitesListingAcquiredEvent(Object source) {
+	    super(source);
+	}
+    }
+    
+    void onMySitesListingAcquired(MySitesListingAcquiredEvent event);
 }

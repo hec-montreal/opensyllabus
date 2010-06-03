@@ -23,6 +23,8 @@ package org.sakaiquebec.opensyllabus.api;
 import org.sakaiproject.citation.api.CitationCollection;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 
@@ -124,5 +126,11 @@ public interface OsylService {
      * @return
      */
     public boolean checkSitesRelation(String resourceURI);
+
+    public Map<String, String> getMySites();
+    
+    public Map<String, String> getAllowedProviders();
+    
+    public Map<String, String> getExistingEntities(String siteId);
 
 }

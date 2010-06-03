@@ -141,7 +141,9 @@ public class OsylRubricView extends OsylViewableComposite {
 	    } else if (resource.getType().equals(
 		    COContentResourceType.ASSIGNMENT)) {
 		oe = new OsylResProxAssignmentView(resProx, getController());
-	    } else if (resource.getType().equals(
+	    } else if (resource.getType().equals(COContentResourceType.ENTITY)){
+		oe = new OsylResProxEntityView(resProx, getController());
+	    }else if (resource.getType().equals(
 		    COContentResourceType.BIBLIO_RESOURCE)) {
 		oe = new OsylResProxCitationView(resProx, getController());
 	    } else if(resource.getType().equals(COContentResourceType.NEWS)){

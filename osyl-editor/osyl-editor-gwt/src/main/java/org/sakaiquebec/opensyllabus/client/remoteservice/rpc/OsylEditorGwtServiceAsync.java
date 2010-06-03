@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.client.remoteservice.rpc;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
@@ -142,7 +143,15 @@ public interface OsylEditorGwtServiceAsync {
     public void removeAssignment(String assignmentId,
 	    AsyncCallback<Void> callback);
 
+    public void getMySites(AsyncCallback<Map<String, String>> callback);
+    
+   public void getAllowedProviders(AsyncCallback<Map<String, String>> callback);
+    
+    public void getExistingEntities(String siteId, AsyncCallback<Map<String, String>> callback);
+
+    
     /**
+     * 
      * Pings the server to keep user session alive as long as its client
      * interface is running.
      */

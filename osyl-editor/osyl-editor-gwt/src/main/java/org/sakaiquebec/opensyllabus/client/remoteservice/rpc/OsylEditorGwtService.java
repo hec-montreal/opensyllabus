@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.client.remoteservice.rpc;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
@@ -133,6 +134,12 @@ public interface OsylEditorGwtService extends RemoteService {
      * Delete an existing assignment.
      */
     public void removeAssignment(String assignmentId);
+
+    public Map<String, String> getMySites();
+
+   public Map<String, String> getAllowedProviders();
+    
+    public Map<String, String> getExistingEntities(String siteId);
 
     /**
      * Pings the server to keep user session alive as long as its client
