@@ -113,7 +113,6 @@ public class CourseListView extends OsylManagerAbstractView implements
 	setSearchTerm(searchTerm);
 	initView();
 	initWidget(mainPanel);
-	refresh();
 	controller.addEventHandler(this);
     }
 
@@ -131,6 +130,7 @@ public class CourseListView extends OsylManagerAbstractView implements
 	    }
 
 	});
+	mainPanel.add(siteListBox);
     }
 
     public void refresh() {
