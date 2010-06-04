@@ -157,6 +157,8 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		public void onSuccess(Map<String, String> sitesProviders) {
 		    try {
 			getController().setAllowedProviders(sitesProviders);
+			getController().getExistingEntities(getController().getSiteId(), getSitesEntitiesCallback());
+
 		    } catch (Exception error) {
 			Window
 				.alert("Error - Unable to getAllowedProviders(...) on RPC Success: "
