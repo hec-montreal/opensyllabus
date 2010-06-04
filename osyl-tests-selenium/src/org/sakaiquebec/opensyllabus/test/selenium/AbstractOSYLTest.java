@@ -158,10 +158,15 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	
 	session().open("/portal/site/opensyllabusManager");
 	pause();
-	session().mouseOver("//tr[7]/td/table/tbody/tr/td[1]/div");
-	session().mouseDown("//tr[7]/td/table/tbody/tr/td[1]/div");
-	session().mouseUp("//tr[7]/td/table/tbody/tr/td[1]/div");
-	pause();
+	
+	if (inFireFox()) {
+        	session().mouseOver("//tr[7]/td/table/tbody/tr/td[1]/div");
+        	session().mouseDown("//tr[7]/td/table/tbody/tr/td[1]/div");
+        	session().mouseUp("//tr[7]/td/table/tbody/tr/td[1]/div");
+        	pause();
+	}else{
+            session().keyPress("//tr[7]/td/table/tbody/tr/td[1]/div","\r");
+        }
 
 	
 	session().type("//td[2]/input", getCurrentTestSiteName());
@@ -176,7 +181,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().mouseUp("//tr[5]/td/div/div");
 	pause();
 	}else{
-	    	session().keyPress("//tr[4]/td/div", "\r");
+	    	session().keyPress("//tr[5]/td/div/div", "\r");
 	}
 	
 	if(inFireFox()){
@@ -244,10 +249,6 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	if (!session().isVisible("gwt-uid-4") ) {
 	    log("Course outline locked: waiting 5 minutes");
 	    pause(300000);
-	    session().selectFrame("relative=parent");
-	    logOut();
-	    pause();
-	    logInAsAdmin("/portal/site/" + getCurrentTestSiteName());
 	}
 	pause();
 	if (!session().isVisible("gwt-uid-4")) {
