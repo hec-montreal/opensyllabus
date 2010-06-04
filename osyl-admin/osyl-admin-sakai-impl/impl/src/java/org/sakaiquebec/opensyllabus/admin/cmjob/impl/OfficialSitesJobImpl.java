@@ -123,7 +123,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	loginToSakai();
 	Date startDateInterval = adminConfigService.getStartDate();
 	Date endDateInterval = adminConfigService.getEndDate();
-
+	boolean all = false;
 	// If we have a list of courses, we will create only those one. If we
 	// don't we create
 	// any course defined in the given sessions
@@ -147,12 +147,16 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	} else {
 	    // Retrieve all the course sets
 	    allCourseSets = cmService.getCourseSets();
-
+	   
 	    for (CourseSet courseSet : allCourseSets) {
 
 		// Retrieve the canonical courses
 		canonicalCourses =
 			cmService.getCanonicalCourses(courseSet.getEid());
+		for (CanonicalCourse canCourse: canonicalCourses){
+		    courses.add(canCourse.getEid());
+		}
+		
 	    }
 	}
 
@@ -166,8 +170,8 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	    // If the list is not empty and the course is not inside, we
 	    // don't create it
 	    if (courses != null)
-		if (!courses.contains(canCourseId.trim()))
-		    continue;
+		    if (!courses.contains(canCourseId.trim()))
+			continue;
 
 	    // Retrieve the course offerings
 	    courseOffs =
