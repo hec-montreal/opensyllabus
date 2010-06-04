@@ -236,8 +236,24 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	if(session().isTextPresent("Site Unavailable")) {
 	    throw new IllegalStateException("Got 'Site Unavailable' !");
 	}
+	pause();
+	session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
+	pause();
+	if (!session().isVisible("gwt-uid-4") ) {
+	    log("Course outline locked: waiting 5 minutes");
+	    pause(30000);
+	    session().selectFrame("relative=parent");
+	    logOut();
+	    pause();
+	    logInAsAdmin("/portal/site/" + getCurrentTestSiteName());
+	}
+	pause();
+	if (!session().isVisible("gwt-uid-4")) {
+	    logAndFail("Course outline still locked after 5 minutes");
+	}
+	pause();
+	
     }
-
     /**
      * Deletes the test site. Will fail if the operation is unsuccessful.
      */
@@ -321,7 +337,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      */
     public void waitForOSYL() throws Exception {
 
-	session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
+	//session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
 	for (int second = 0;; second++) {
 	    if (second >= 60) {
 		
@@ -441,7 +457,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * for now).
      */
     public void clickAddButton() {
-	session().click("gwt-uid-6");
+	session().click("gwt-uid-7");
     }
     
     /**
@@ -512,7 +528,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     }
 
     private void clickSaveButton() {
-	session().click("gwt-uid-3");
+	session().click("gwt-uid-4");
     }
 
     /**
@@ -550,6 +566,12 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     protected void logAndFail(String msg) {
 	log(msg);
 	captureScreenShotFailure(msg);
+	try {
+	    logOut();
+	} catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
 	fail(msg);
     }
 
