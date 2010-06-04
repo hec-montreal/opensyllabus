@@ -243,7 +243,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	pause();
 	if (!session().isVisible("gwt-uid-4") ) {
 	    log("Course outline locked: waiting 5 minutes");
-	    pause(30000);
+	    pause(300000);
 	    session().selectFrame("relative=parent");
 	    logOut();
 	    pause();
