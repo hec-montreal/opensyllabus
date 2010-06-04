@@ -180,7 +180,7 @@ public class SeancesTest extends AbstractOSYLTest{
 	if (inFireFox()) {
 	    
         	//Overview
-        	session().click("gwt-uid-7");
+        	session().click("gwt-uid-8");
         	//Attendee Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
         			"div/table/tbody/tr/td");
@@ -208,7 +208,7 @@ public class SeancesTest extends AbstractOSYLTest{
         	pause();
         	
         	/*/Overview
-        	session().click("gwt-uid-6");
+        	session().click("gwt-uid-8");
         	//Public Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
         			"/div/div/table/tbody/tr[2]/td");
@@ -283,7 +283,7 @@ public class SeancesTest extends AbstractOSYLTest{
 	
 	if (inFireFox()) {
         	//Overview
-        	session().click("gwt-uid-7");
+        	session().click("gwt-uid-8");
         	//Attendee Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
         			"div/table/tbody/tr/td");
@@ -311,7 +311,7 @@ public class SeancesTest extends AbstractOSYLTest{
         	pause();
         	
         	/*/Overview
-        	session().click("gwt-uid-6");
+        	session().click("gwt-uid-8");
         	
         	//Public Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
@@ -461,7 +461,7 @@ public class SeancesTest extends AbstractOSYLTest{
         if (inFireFox()) {
                         
             //Overview
-            session().click("gwt-uid-7");
+            session().click("gwt-uid-8");
             
             //Attendee Overview 
             session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
@@ -496,7 +496,7 @@ public class SeancesTest extends AbstractOSYLTest{
             pause();
             
             /*/Overview
-            session().click("gwt-uid-6");
+            session().click("gwt-uid-8");
             
             //Public Overview 
             session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
@@ -756,8 +756,8 @@ public class SeancesTest extends AbstractOSYLTest{
         		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
         		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div"+
         		"/table[3]/tbody/tr[2]/td/table/tbody/tr/td/div");
-        session().mouseUp(
-                	"//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
+        
+        session().mouseUp("//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
         		"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +
         		"/tbody/tr["+Val1+"]/td/table/tbody/tr/td[2]/div"+
         		"/table[3]/tbody/tr[2]/td/table/tbody/tr/td/div");

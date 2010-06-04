@@ -54,10 +54,6 @@ public class NewsTest extends AbstractOSYLTest {
 	}
 	waitForOSYL();
 	
-	/*/Click Contact Information
-        session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td/" 
-        		+ "div[contains(text(),'Nouvelles')]");
-        pause();*/
 	
         // We keep track of how many resources are showing to check that it
 	// is incremented as expected when we add one

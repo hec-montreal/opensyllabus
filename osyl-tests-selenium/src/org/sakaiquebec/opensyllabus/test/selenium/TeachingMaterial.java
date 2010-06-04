@@ -290,7 +290,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
         //---------------------------------------------------------------------------//
         
 	
-	/*/Add new Citation
+	//Add new Citation
         clickAddItem("addBiblioResource");
         
         // open Citation resource editor
@@ -329,23 +329,23 @@ public class TeachingMaterial extends AbstractOSYLTest {
         session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
         }
         
-        //Fill the necessary fields
+      //Fill the necessary fields
         String Titre = "Titre"+ timeStamp();
-        session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Titre );        
+        session().type("//tr[9]/td/table/tbody/tr/td[3]/input", Titre );        
         String Auteur = "Auteur"+ timeStamp();
-        session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Auteur);
+        session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Auteur);
         String Annee = "Annee"+ timeStamp();
-        session().type("//tr[12]/td/table/tbody/tr/td[3]/input", Annee);
+        session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Annee);
         String Editeur = "Editeur"+ timeStamp();
-        session().type("//tr[13]/td/table/tbody/tr/td[3]/input", Editeur);
+        session().type("//tr[12]/td/table/tbody/tr/td[3]/input", Editeur);
         String Lieu = "Lieu"+ timeStamp();
-        session().type("//tr[14]/td/table/tbody/tr/td[3]/input", Lieu);
+        session().type("//tr[13]/td/table/tbody/tr/td[3]/input", Lieu);
         String ISBN = "ISBN"+ timeStamp();
-        session().type("//tr[20]/td/table/tbody/tr/td[3]/input", ISBN);
+        session().type("//tr[19]/td/table/tbody/tr/td[3]/input", ISBN);
         
         
-        //Close Window
-        session().click("//tr[23]/td/table/tbody/tr/td/button");
+      //Close Window
+        session().click("//tr[22]/td/table/tbody/tr/td/button");
         pause();
         pause();
         
@@ -410,7 +410,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
         session().type("//tr[17]/td/table/tbody/tr/td[3]/input", ISBN);
         
         //Close Window
-        session().click("//tr[23]/td/table/tbody/tr/td/button");
+        session().click("//tr[22]/td/table/tbody/tr/td/button");
         pause();
         pause();
         
@@ -433,7 +433,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
         session().click("//tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
         pause();
         log("Citation deleted");
-        pause();*/
+        pause();
         
         
         //Save modifications

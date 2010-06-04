@@ -157,12 +157,14 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		session().isTextPresent(getCurrentTestSiteName()));
 	
 	session().open("/portal/site/opensyllabusManager");
-	pause();	
-	session().click("//html/body/table/tbody/tr[2]/td/table/tbody/tr/td/div/a");
 	pause();
-	//session().click("//button[@type='button']");
+	session().mouseOver("//tr[7]/td/table/tbody/tr/td[1]/div");
+	session().mouseDown("//tr[7]/td/table/tbody/tr/td[1]/div");
+	session().mouseUp("//tr[7]/td/table/tbody/tr/td[1]/div");
+	pause();
+
 	
-	session().type("//input[@type='text']", getCurrentTestSiteName());
+	session().type("//td[2]/input", getCurrentTestSiteName());
 	pause();
 	session().select("//tr[4]/td/table/tbody/tr/td[2]/select", "value=default");
 	pause();

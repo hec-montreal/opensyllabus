@@ -84,7 +84,7 @@ public class TextTest extends AbstractOSYLTest {
 	    log ("OK Text resource added");
 	}
 	saveCourseOutline();
-
+	
 	// open text resource editor
 	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
 
