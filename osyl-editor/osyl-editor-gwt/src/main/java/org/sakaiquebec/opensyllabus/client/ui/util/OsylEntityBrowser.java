@@ -21,6 +21,7 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
+import java.io.ObjectInputStream.GetField;
 import java.util.Map;
 import java.util.Set;
 
@@ -68,11 +69,8 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite {
      * @param model
      * @param newController
      */
-    public OsylEntityBrowser(String newResDirName, String uri) {
-	super();
-	setEntityUri(uri);
-	if (getEntityUri() != null)
-	    Window.alert(getEntityUri());
+    public OsylEntityBrowser(String entity, boolean isEntity) {
+	super(entity, isEntity);
 
     }
 
@@ -178,32 +176,20 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite {
 	currentSelectionLabel.setWidth("130px");
 	entitySelectionSubPanel.add(currentSelectionLabel);
 	
-	if (getEntityUri() == null)
-	    setCurrentSelectionHtml(new HTML());
+	setCurrentSelectionHtml(new HTML());
 	getCurrentSelectionHtml().addStyleName("Osyl-RemoteEntityBrowser-EntityListing");
 	getCurrentSelectionHtml().setWidth("315px");
 	entitySelectionSubPanel.add(getCurrentSelectionHtml());
 	// Give the overall composite a style name
 	this.setStylePrimaryName("Osyl-RemoteFileBrowser");
 
-   }
+  }
 
     @Override
     protected void onFileDoubleClicking() {
 	// Nothing to do
     }
 
-    private String getLinkURI(String uri, String text) {
-	// We get the URI from the model
-	String link;
-
-	// Otherwise we have to prepend Sakai stuff in the URI
-	String url = GWT.getModuleBaseURL();
-	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
-	link = serverId + "/direct" + uri;
-
-	return "<a href=\"" + link + "\" target=\"_blank\">" + text + "</a>";
-    } // getLinkURI
 
     
     private String getRawURI(String uri) {

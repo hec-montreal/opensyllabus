@@ -98,6 +98,8 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     private String initialDirPath;
 
     private String browsedSiteId;
+    
+    private String oldSelectedEntity;
 
     private Map<String, String> mySites;
 
@@ -197,7 +199,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		public void onSuccess(Map<String, String> sitesEntites) {
 		    try {
 			getController().setExistingEntities(sitesEntites);
-			refreshSitesEntitiesListing(getController().getSiteId());
+			refreshSitesEntitiesListing(getEntityUri());
 		    } catch (Exception error) {
 			Window
 				.alert("Error - Unable to getExistingEntities(...) on RPC Success: "
@@ -255,6 +257,13 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     public OsylAbstractBrowserComposite(String newDirPath) {
 	super();
 	setInitialDirPath(newDirPath);
+    }
+
+    public OsylAbstractBrowserComposite(String entity, boolean isEntity) {
+	super();
+	if (isEntity)
+	    setEntityUri(entity);
+	initView();
     }
 
     /**
@@ -1033,6 +1042,14 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	}
     }
 
+    public String getOldSelectedEntity() {
+        return oldSelectedEntity;
+    }
+
+    public void setOldSelectedEntity(String oldSelectedEntity) {
+        this.oldSelectedEntity = oldSelectedEntity;
+    }
+
     protected String extractRessourceUri(String uri) {
 	String uu =
 		uri.substring(uri.indexOf(RESSOURCE_URI_PREFIX)
@@ -1051,44 +1068,84 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	return uu.substring(0, uu.indexOf("/"));
     }
 
-    public void refreshSitesEntitiesListing(String selectedSite) {
-	if (selectedSite != null) {
-	    getProviders().clear();
+    public void refreshSitesEntitiesListing(String selectedEntity) {
+	getProviders().clear();
 
-	    int countProviders = 0;
-	    Map<String, String> entities =
-		    getController().getExistingEntities(selectedSite);
-	    Map<String, String> allowedProviders =
-		    getController().getAllowedProviders();
-	    TreeItem providers = new TreeItem();
-	    Set<String> entitiesKeys = entities.keySet();
-	    Set<String> providersKeys = allowedProviders.keySet();
-
-	    for (String pkey : providersKeys) {
-		providers = new TreeItem(pkey.toUpperCase());
-		for (String key : entitiesKeys) {
-		    if (key.contains(pkey)) {
-			providers.addItem(entities.get(key));
-			countProviders++;
+	int countProviders = 0;
+	Map<String, String> entities =
+		getController()
+			.getExistingEntities(getController().getSiteId());
+	Map<String, String> allowedProviders =
+		getController().getAllowedProviders();
+	TreeItem providers = new TreeItem();
+	Set<String> entitiesKeys = entities.keySet();
+	Set<String> providersKeys = allowedProviders.keySet();
+	TreeItem selected = null;
+	for (String pkey : providersKeys) {
+	    providers = new TreeItem(pkey.toUpperCase());
+	    for (String key : entitiesKeys) {
+		if (key.contains(pkey)) {
+		    selected = providers.addItem(entities.get(key));
+		    if (selectedEntity != null && selectedEntity.contains(key)) {
+			providers.setState(true, true);
+			selected.setSelected(true);
+			selected.addStyleName("Osyl-RemoteEntityBrowser-SelectedEntity");
+			updateSelectedEntity(selectedEntity);
+			updateCurrentSelectionHtml(getLinkURI(selectedEntity,
+				entities.get(key)));
 		    }
+		    countProviders++;
 		}
-		if (providers.getChildCount() > 0) {
-		    getProviders().addItem(providers);
-
-		}
-
 	    }
-
-	    if (countProviders == 0) {
-		// TODO: internationaliser le message
-		providers =
-			new TreeItem("This site contains no entities"
-				.toUpperCase());
+	    if (providers.getChildCount() > 0) {
 		getProviders().addItem(providers);
 
 	    }
+
+	}
+
+	if (countProviders == 0) {
+	    // TODO: internationaliser le message
+	    providers =
+		    new TreeItem("This site contains no entities".toUpperCase());
+	    getProviders().addItem(providers);
+
 	}
     }
+
+    protected void updateSelectedEntity(String entity ){
+	TreeItem item, subItem;
+	String oldEntity = getOldSelectedEntity();
+	int count = getProviders().getItemCount();
+	for(int i=0; i<count; i++){
+	    item = getProviders().getItem(i);
+	    for (int j=0; j< item.getChildCount(); j++){
+		subItem = item.getChild(j);
+	    if (oldEntity != null)
+		if (oldEntity.contains(subItem.getText()))
+		    item.removeStyleName("Osyl-RemoteEntityBrowser-SelectedEntity");
+	    if (entity != null)
+		if(entity.contains(subItem.getText())){
+		    item.addStyleName("Osyl-RemoteEntityBrowser-SelectedEntity");
+		    setOldSelectedEntity(entity);
+		}
+	    
+	    }
+	}
+    }
+    
+    
+    protected  String getLinkURI(String uri, String text) {
+	// We get the URI from the model
+	String link;
+
+	// Otherwise we have to prepend Sakai stuff in the URI
+	String url = GWT.getModuleBaseURL();
+	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
+	link = serverId + "/direct" + uri;
+
+	return "<a href=\"" + link + "\" target=\"_blank\">" + text + "</a>";
+    } // getLinkURI
 
     protected void refreshFileListing(List<OsylAbstractBrowserItem> dirListing) {
 	getFileListing().clear();

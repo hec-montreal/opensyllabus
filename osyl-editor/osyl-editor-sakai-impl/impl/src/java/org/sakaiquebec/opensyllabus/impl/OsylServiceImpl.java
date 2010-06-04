@@ -747,7 +747,6 @@ public class OsylServiceImpl implements OsylService {
 	    // access to we retrieve the entity reference
 	    if (!skip) {
 		allowedProviders.add(provider);
-		System.out.println("les pr " + provider);
 	    }
 	}
 	// ------------------------------------------ End Retrieve allowed
@@ -774,7 +773,6 @@ public class OsylServiceImpl implements OsylService {
 		    for (String ent : entities) {
 			title = entityBroker.getPropertyValue(ent, "title");
 			entitiesMap.put(ent, title);
-			System.out.println("l'entite est " + title);
 		    }
 		}
 	    }

@@ -387,15 +387,9 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
 	browserPanel.add(label1);
 
 	// SAKAI MODE
-	String basePath = getView().getDocPath();
-	String siteId = getController().getSiteId();
-	String resourcesPath = "/group/" + siteId + "/";
-	basePath =
-		basePath == null ? resourcesPath
-			+ getController().getDocFolderName() : basePath;
 
 	browser =
-		new OsylEntityBrowser(basePath, getView().getLinkURI());
+		new OsylEntityBrowser(getView().getLinkURI(), true);
 
 	browser.addEventHandler((RFBItemSelectionEventHandler) this);
 	browser.addEventHandler((RFBAddFolderEventHandler) this);
