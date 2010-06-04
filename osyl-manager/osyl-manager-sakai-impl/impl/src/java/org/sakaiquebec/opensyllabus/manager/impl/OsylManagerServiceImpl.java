@@ -1313,7 +1313,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    e.printStackTrace();
 	}
 
-	if (site != null && searchTerm!=null && site.getTitle().contains(searchTerm)) {
+	if (site != null && searchTerm!=null && site.getTitle().toLowerCase().
+		contains(searchTerm.toLowerCase())) {
 	    // Retrieve site info
 	    info.setSiteId(siteId);
 	    info.setSiteName(site.getTitle());

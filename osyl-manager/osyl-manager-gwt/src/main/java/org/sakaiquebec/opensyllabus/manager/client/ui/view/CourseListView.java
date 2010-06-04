@@ -143,8 +143,7 @@ public class CourseListView extends OsylManagerAbstractView implements
     }
 
     public void onOsylManagerEvent(OsylManagerEvent e) {
-	if (e.getType() == OsylManagerEvent.SITE_CREATION_EVENT
-		|| e.getType() == OsylManagerEvent.SITE_INFO_CHANGE)
+	if (e.getType() == OsylManagerEvent.SITE_INFO_CHANGE)
 	    refresh();
     }
 
