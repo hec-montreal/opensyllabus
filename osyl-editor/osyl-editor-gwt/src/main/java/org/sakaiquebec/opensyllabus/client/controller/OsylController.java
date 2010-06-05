@@ -1171,6 +1171,16 @@ public class OsylController implements SavePushButtonEventHandler,
 
     public void setExistingEntities(Map<String, String> existingEntities) {
 	this.existingEntities = existingEntities;
+	if (existingEntities != null) {
+	    Set<String> entityKeys = existingEntities.keySet();
+	    Map<String, String> providers = new HashMap<String, String>();
+	    String provider;
+	    for (String entityUri : entityKeys) {
+		provider = entityUri.substring(1, entityUri.indexOf("/",1));
+		providers.put(provider, provider);
+	    }
+	    setAllowedProviders(providers);
+	}
     }
 
     public void getExistingEntities(String siteId, AsyncCallback<Map<String, String>> callback) {

@@ -128,9 +128,8 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite {
 	getProvidersPanel().add(getProviders());
 	mainContentPanel.add(getProvidersPanel());
 
-	getController().getAllowedProviders(getSiteProvidersCallback());
 	getController().getExistingEntities(getController().getSiteId(), getSitesEntitiesCallback());
-
+	
 	// 3rd row: File field (first a label then a TextBox)
 	// /////////////////////////////////////////////////
 	HorizontalPanel entitySelectionSubPanel = new HorizontalPanel();
