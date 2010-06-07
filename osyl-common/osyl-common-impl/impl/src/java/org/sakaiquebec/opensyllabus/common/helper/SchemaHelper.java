@@ -29,6 +29,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -38,6 +40,7 @@ import org.xml.sax.SAXException;
  */
 public class SchemaHelper {
 
+    private static Log log = LogFactory.getLog(SchemaHelper.class);
     public static final String SCHEMA_DIRECTORY = "schema";
     public static final String SCHEMA_FILENAME = "osyl.xsd";
     private static final String VERSION_ATTRIBUTE = "version";
@@ -70,8 +73,8 @@ public class SchemaHelper {
 		schemaVersion =
 			messageDom.getDocumentElement().getAttribute(
 				XML_VERSION_ATTRIBUTE);
-		if(schemaVersion==null || schemaVersion.equals(""))
-		    schemaVersion="1.0";
+		if (schemaVersion == null || schemaVersion.equals(""))
+		    schemaVersion = "1.0";
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    }
@@ -118,30 +121,32 @@ public class SchemaHelper {
      * @throws Exception
      */
     public String verifyAndConvert(String xml) throws Exception {
-	if (getMajorXMLSchemaVersion(xml).equals(getMajorSchemaVersion())) {
-	    String xmlVersionString = getXMLSchemaVersion(xml);
-	    String schemaVersionString = getSchemaVersion();
-	    float actualVersion = Float.valueOf(xmlVersionString);
-	    float schemaVersion = Float.valueOf(schemaVersionString);
-	    try {
-		while (actualVersion != schemaVersion) {
-		    float nextVersion = (float) (actualVersion + 0.1);
+	if (xml != null && !xml.trim().equals("")) {
+	    if (getMajorXMLSchemaVersion(xml).equals(getMajorSchemaVersion())) {
+		String xmlVersionString = getXMLSchemaVersion(xml);
+		String schemaVersionString = getSchemaVersion();
+		float actualVersion = Float.valueOf(xmlVersionString);
+		float schemaVersion = Float.valueOf(schemaVersionString);
+		try {
+		    while (actualVersion != schemaVersion) {
+			float nextVersion = (float) (actualVersion + 0.1);
 
-		    xml =
-			    convert(xml, Float.toString(actualVersion), Float
-				    .toString(nextVersion));
+			xml =
+				convert(xml, Float.toString(actualVersion),
+					Float.toString(nextVersion));
 
-		    actualVersion = nextVersion;
+			actualVersion = nextVersion;
+		    }
+		    xml = updateXmlSchemaVersion(xml, schemaVersionString);
+		} catch (Exception e) {
+		    e.printStackTrace();
+		    return xml;
 		}
-		xml = updateXmlSchemaVersion(xml, schemaVersionString);
-	    } catch (Exception e) {
-		e.printStackTrace();
-		return xml;
-	    }
 
-	} else {
-	    throw new Exception(
-		    "XSD version and XML version are not compatible");
+	    } else {
+		throw new Exception(
+			"XSD version and XML version are not compatible");
+	    }
 	}
 	return xml;
     }

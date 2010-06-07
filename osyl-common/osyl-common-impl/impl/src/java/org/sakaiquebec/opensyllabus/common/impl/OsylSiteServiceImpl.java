@@ -821,7 +821,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 		resourceDao.createOrUpdateCourseOutline(thisCo);
 	    } else {
-		    coConfig = thisCo.getOsylConfig();
+		coConfig = thisCo.getOsylConfig();
 	    }
 	    String lockedBy = thisCo.getLockedBy();
 	    boolean lockFree = false;
@@ -1453,7 +1453,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	String siteId;
 	try {
 	    siteId = getCurrentSiteId();
-	    COSerialized thisCo = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
+	    COSerialized thisCo =
+		    resourceDao.getSerializedCourseOutlineBySiteId(siteId);
 	    if (thisCo.getLockedBy().equals(
 		    sessionManager.getCurrentSession().getId())) {
 		resourceDao.clearLocksForCoId(thisCo.getCoId());
@@ -1466,7 +1467,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public String getOsylConfigIdForSiteId(String siteId) {
 	String configId = null;
 	try {
-	    COSerialized thisCo = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
+	    COSerialized thisCo =
+		    resourceDao.getSerializedCourseOutlineBySiteId(siteId);
 	    configId = thisCo.getOsylConfig().getConfigId();
 	} catch (Exception e) {
 	}
@@ -1476,9 +1478,13 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public void convertAndSave(String webapp, COSerialized co) throws Exception {
 	SchemaHelper schemaHelper = new SchemaHelper(webapp);
 	String xmlData = schemaHelper.verifyAndConvert(co.getContent());
-	co.setContent(xmlData);
-	resourceDao.createOrUpdateCourseOutline(co);
-	
+	if (xmlData == null || xmlData.trim().equals("")) {
+	    log.warn("CO with co_id:"+co.getCoId()+" is null or void. Nothing to convert");
+	} else {
+	    co.setContent(xmlData);
+	    resourceDao.createOrUpdateCourseOutline(co);
+	}
+
     }
 
     public List<COSerialized> getAllCO() {
