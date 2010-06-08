@@ -252,6 +252,8 @@ public interface OsylSiteService extends EntityProducer{
 	
 	public String getParent(String siteId) throws Exception;
 	
+	public List<String> getChildren (String siteId) throws Exception;
+	
 	public void associate(String siteId, String parentId) throws Exception;
 	
 	public void dissociate(String siteId, String parentId)throws Exception;

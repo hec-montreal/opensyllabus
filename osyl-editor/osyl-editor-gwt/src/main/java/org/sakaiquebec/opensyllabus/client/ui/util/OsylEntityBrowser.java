@@ -28,6 +28,7 @@ import java.util.Set;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
+import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
 import com.google.gwt.core.client.GWT;
@@ -145,8 +146,9 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite {
 		if (item.getChildCount() == 0) {
 		    String selectedSite = getController().getSiteId();
 		    
-		    Map<String, String> entities =
-			    getController().getExistingEntities(selectedSite);
+		    SakaiEntities sakaiEntities = getController().getExistingEntities(selectedSite); 
+		    Map<String, String> entities = sakaiEntities.getEntities();
+			    
 		    Set<String> entitiesKeys = entities.keySet();
 		    String entity;
 		    for (String key : entitiesKeys) {

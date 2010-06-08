@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
+import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 
 /**
  * This interface intents to replace the resource service interface. It lists
@@ -127,10 +128,6 @@ public interface OsylService {
      */
     public boolean checkSitesRelation(String resourceURI);
 
-    public Map<String, String> getMySites();
-    
-    public Map<String, String> getAllowedProviders();
-    
-    public Map<String, String> getExistingEntities(String siteId);
+    public SakaiEntities getExistingEntities(String siteId);
 
 }

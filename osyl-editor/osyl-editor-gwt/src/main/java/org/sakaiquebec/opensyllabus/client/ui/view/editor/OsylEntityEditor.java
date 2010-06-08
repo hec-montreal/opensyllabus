@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredEventHandler;
-import org.sakaiquebec.opensyllabus.client.controller.event.MySitesListingAcquiredEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBAddFolderEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBItemSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.base.Dimension;
@@ -394,7 +393,6 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
 	browser.addEventHandler((RFBItemSelectionEventHandler) this);
 	browser.addEventHandler((RFBAddFolderEventHandler) this);
 	browser.addEventHandler((ItemListingAcquiredEventHandler) this);
-	browser.addEventHandler((MySitesListingAcquiredEventHandler)this);
 
 	browserPanel.add(browser);
 	browser.setWidth("100%");

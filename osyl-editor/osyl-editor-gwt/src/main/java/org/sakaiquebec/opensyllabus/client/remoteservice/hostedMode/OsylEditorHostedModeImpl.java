@@ -31,6 +31,7 @@ import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtServic
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
+import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
@@ -326,15 +327,7 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	callback.onSuccess(null);
     }
 
-    public void getMySites(AsyncCallback<Map<String, String>> callback) {
-	callback.onSuccess(null);
-    }
-    
-   public void getAllowedProviders(AsyncCallback<Map<String, String>> callback){
-	callback.onSuccess(null);
-   }
-    
-    public void getExistingEntities(String siteId, AsyncCallback<Map<String, String>> callback){
+    public void getExistingEntities(String siteId, AsyncCallback<SakaiEntities> callback){
 	callback.onSuccess(null);
     }
 

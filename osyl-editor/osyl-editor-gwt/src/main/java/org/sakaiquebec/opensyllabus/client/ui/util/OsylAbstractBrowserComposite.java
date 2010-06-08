@@ -30,15 +30,14 @@ import java.util.Set;
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresItemListingAcquiredEvents;
-import org.sakaiquebec.opensyllabus.client.controller.event.FiresMySitesListingAcquiredEvents;
 import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredEventHandler;
-import org.sakaiquebec.opensyllabus.client.controller.event.MySitesListingAcquiredEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBAddFolderEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBItemSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.UploadFileEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredEventHandler.ItemListingAcquiredEvent;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
+import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylDirectory;
 
@@ -77,8 +76,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $Id: $
  */
 public abstract class OsylAbstractBrowserComposite extends Composite implements
-	UploadFileEventHandler, FiresItemListingAcquiredEvents,
-	FiresMySitesListingAcquiredEvents {
+	UploadFileEventHandler, FiresItemListingAcquiredEvents {
 
     protected static final boolean TRACE = false;
 
@@ -152,31 +150,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		}
 	    };
 
-    private AsyncCallback<Map<String, String>> siteProvidersCallback =
-	    new AsyncCallback<Map<String, String>>() {
-		public void onSuccess(Map<String, String> sitesProviders) {
-		    try {
-			getController().setAllowedProviders(sitesProviders);
-			getController().getExistingEntities(getController().getSiteId(), getSitesEntitiesCallback());
-
-		    } catch (Exception error) {
-			Window
-				.alert("Error - Unable to getAllowedProviders(...) on RPC Success: "
-					+ error.toString());
-		    }
-		}
-
-		// And we define the behavior in case of failure
-		public void onFailure(Throwable error) {
-		    System.out
-			    .println("RPC FAILURE - getAllowedProviders(...): "
-				    + error.toString()
-				    + " Hint: Check GWT version");
-		    Window.alert("RPC FAILURE - getAllowedProviders(...): "
-			    + error.toString() + " Hint: Check GWT version");
-		}
-	    };
-
+ 
     private Tree providers;
 
     public Tree getProviders() {
@@ -187,18 +161,10 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	this.providers = providers;
     }
 
-    public AsyncCallback<Map<String, String>> getSiteProvidersCallback() {
-	return siteProvidersCallback;
-    }
 
-    public void setSiteProvidersCallback(
-	    AsyncCallback<Map<String, String>> siteProvidersCallback) {
-	this.siteProvidersCallback = siteProvidersCallback;
-    }
-
-    private AsyncCallback<Map<String, String>> sitesEntitiesCallback =
-	    new AsyncCallback<Map<String, String>>() {
-		public void onSuccess(Map<String, String> sitesEntites) {
+    private AsyncCallback<SakaiEntities> sitesEntitiesCallback =
+	    new AsyncCallback<SakaiEntities>() {
+		public void onSuccess(SakaiEntities sitesEntites) {
 		    try {
 			getController().setExistingEntities(sitesEntites);
 			refreshSitesEntitiesListing(getEntityUri());
@@ -220,12 +186,12 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		}
 	    };
 
-    public AsyncCallback<Map<String, String>> getSitesEntitiesCallback() {
+    public AsyncCallback<SakaiEntities> getSitesEntitiesCallback() {
 	return sitesEntitiesCallback;
     }
 
     public void setSitesEntitiesCallback(
-	    AsyncCallback<Map<String, String>> sitesEntitiesCallback) {
+	    AsyncCallback<SakaiEntities> sitesEntitiesCallback) {
 	this.sitesEntitiesCallback = sitesEntitiesCallback;
     }
 
@@ -235,7 +201,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 
     private ArrayList<ItemListingAcquiredEventHandler> fileListingAcquiredEventHandlerList;
 
-    private ArrayList<MySitesListingAcquiredEventHandler> mySitesAcquiredEventHandlerList;
 
     private PushButton folderAddButton;
 
@@ -405,10 +370,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	this.itemToSelect = item;
     }
 
-    public Map<String, String> getMySites() {
-	return mySites;
-    }
-
     protected void updateCurrentSelectionHtml(String entity) {
 	getCurrentSelectionHtml().setHTML(entity);
 
@@ -422,18 +383,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	this.currentSelectionHtml = currentSelectionHtml;
     }
 
-    // public AsyncCallback<Map<String, String>> getMySitesCallback() {
-    // return mySitesCallback;
-    // }
-    //
-    // public void setMySitesCallback(
-    // AsyncCallback<Map<String, String>> mySitesCallback) {
-    // this.mySitesCallback = mySitesCallback;
-    // }
-
-    public void setMySites(Map<String, String> mySites) {
-	this.mySites = mySites;
-    }
 
     protected PushButton createTopButton(ImageResource img, String tooltip) {
 	PushButton button = new PushButton(new Image(img));
@@ -766,15 +715,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	return remoteDirListingRespHandler;
     }
 
-    public ArrayList<MySitesListingAcquiredEventHandler> getMySitesAcquiredEventHandlerList() {
-	return mySitesAcquiredEventHandlerList;
-    }
-
-    public void setMySitesAcquiredEventHandlerList(
-	    ArrayList<MySitesListingAcquiredEventHandler> mySitesAcquiredEventHandlerList) {
-	this.mySitesAcquiredEventHandlerList = mySitesAcquiredEventHandlerList;
-    }
-
     public OsylDirectory getCurrentDirectory() {
 	return currentDirectory;
     }
@@ -810,14 +750,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     public TextBox getCurrentSelectionTextBox() {
 	return currentSelectionTextBox;
     }
-
-    // public ListBox getMySitesListBox() {
-    // return mySitesListBox;
-    // }
-    //
-    // public void setMySitesListBox(ListBox mySitesListBox) {
-    // this.mySitesListBox = mySitesListBox;
-    // }
 
     public void setCurrentSelectionTextBox(TextBox currentSelectionTextBox) {
 	this.currentSelectionTextBox = currentSelectionTextBox;
@@ -971,21 +903,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	}
     }
 
-    public void addEventHandler(MySitesListingAcquiredEventHandler handler) {
-	if (handler != null) {
-	    if (getMySitesAcquiredEventHandlerList() == null) {
-		setMySitesAcquiredEventHandlerList(new ArrayList<MySitesListingAcquiredEventHandler>());
-	    }
-	    getMySitesAcquiredEventHandlerList().add(handler);
-	}
-    }
-
-    public void removeEventHandler(MySitesListingAcquiredEventHandler handler) {
-	if (getMySitesAcquiredEventHandlerList() != null) {
-	    getMySitesAcquiredEventHandlerList().remove(handler);
-	}
-    }
-
     public void removeEventHandler(ItemListingAcquiredEventHandler handler) {
 	if (getFileListingAcquiredEventHandlerList() != null) {
 	    getFileListingAcquiredEventHandlerList().remove(handler);
@@ -1074,11 +991,12 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	getProviders().clear();
 
 	int countProviders = 0;
-	Map<String, String> entities =
-		getController()
-			.getExistingEntities(getController().getSiteId());
-	Map<String, String> allowedProviders =
-		getController().getAllowedProviders();
+	SakaiEntities sakaiEntities = 		getController()
+	.getExistingEntities(getController().getSiteId());
+
+	Map<String, String> entities = sakaiEntities.getEntities();
+	Map<String, String> allowedProviders = sakaiEntities.getProviders();
+		
 	TreeItem providers = new TreeItem();
 	Set<String> entitiesKeys = entities.keySet();
 	Set<String> providersKeys = allowedProviders.keySet();

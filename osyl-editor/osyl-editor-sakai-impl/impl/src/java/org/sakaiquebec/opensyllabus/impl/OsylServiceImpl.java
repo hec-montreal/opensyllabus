@@ -45,6 +45,7 @@ import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
+import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 
 public class OsylServiceImpl implements OsylService {
 
@@ -651,72 +652,13 @@ public class OsylServiceImpl implements OsylService {
 	return false;
     }
 
-    public Map<String, String> getMySites() {
-	Map<String, String> mySites = new HashMap<String, String>();
-	// Retrieve sites user has access to
-	List<Site> sites =
-		siteService
-			.getSites(
-				org.sakaiproject.site.api.SiteService.SelectionType.ACCESS,
-				null,
-				null,
-				null,
-				org.sakaiproject.site.api.SiteService.SortType.TITLE_ASC,
-				null);
-
-	Collections.sort(sites);
-	// ++++++++++++++ Retrieve providers
-	for (Site site : sites) {
-	    mySites.put(site.getId(), site.getTitle());
-	}
-	System.out.println("taille " + mySites.size());
-	return mySites;
-    }
-
-    public Map<String, String> getAllowedProviders() {
-	Map<String, String> providersMap = new HashMap<String, String>();
-
-	// By default we only hide Forum messages and topics, should probably be
-	// a new capability interface
-	String[] hiddenProviders = { "forum_message", "forum_topic" };
-	// End Retrieve sites user has access to
-	Set<String> providers = entityBroker.getRegisteredPrefixes();
-
-	// ------------------------------------------ Retrieve allowed providers
-	// for each site
-	for (String provider : providers) {
-	    // Check if this provider is hidden or not
-	    boolean skip = false;
-	    if (ServerConfigurationService
-		    .getString("entity-browser.hiddenProviders") != null
-		    && !"".equals(ServerConfigurationService
-			    .getString("entity-browser.hiddenProviders")))
-		hiddenProviders =
-			ServerConfigurationService.getString(
-				"entity-browser.hiddenProviders").split(",");
-
-	    for (int i = 0; i < hiddenProviders.length; i++) {
-		if (provider.equals(hiddenProviders[i]))
-		    skip = true;
-	    }
-
-	    // If the provider is not hidden and is among the ones the user has
-	    // access to we retrieve the entity reference
-	    if (!skip) {
-		providersMap.put(provider, provider);
-		System.out.println("les pr " + provider);
-	    }
-	}
-	return providersMap;
-
-    }
-
-    public Map<String, String> getExistingEntities(String siteId) {
-	Map<String, String> entitiesMap = new HashMap<String, String>();
+    public SakaiEntities getExistingEntities(String siteId) {
+	SakaiEntities sakaiEntities = new SakaiEntities();
 	String currentUserId = sessionManager.getCurrentSessionUserId();
 	List<String> entities, theSiteEntities;
 	String title;
-	Map<String, String> siteEntities = null;
+	Map<String, String> siteEntities = new HashMap<String, String>();
+	Map<String, String> siteProviders = new HashMap<String, String>();
 
 	// By default we only hide Forum messages and topics, should probably be
 	// a new capability interface
@@ -747,6 +689,7 @@ public class OsylServiceImpl implements OsylService {
 	    // access to we retrieve the entity reference
 	    if (!skip) {
 		allowedProviders.add(provider);
+		siteProviders.put(provider, provider);
 	    }
 	}
 	// ------------------------------------------ End Retrieve allowed
@@ -757,10 +700,6 @@ public class OsylServiceImpl implements OsylService {
 	Site site;
 	try {
 	    site = siteService.getSite(siteId);
-	    if (siteEntities == null)
-		siteEntities = new HashMap<String, String>();
-	    siteEntities.put(siteId, site.getTitle());
-	    theSiteEntities = new ArrayList<String>();
 
 	    for (String provider : allowedProviders) {
 		entities =
@@ -768,11 +707,10 @@ public class OsylServiceImpl implements OsylService {
 				new String[] { "context", "userId" },
 				new String[] { siteId, currentUserId }, true);
 		if (entities != null) {
-		    theSiteEntities.addAll(entities);
 
 		    for (String ent : entities) {
 			title = entityBroker.getPropertyValue(ent, "title");
-			entitiesMap.put(ent, title);
+			siteEntities.put(ent, title);
 		    }
 		}
 	    }
@@ -780,7 +718,9 @@ public class OsylServiceImpl implements OsylService {
 	    e.printStackTrace();
 	}
 
-	return entitiesMap;
+	sakaiEntities.setEntities(siteEntities);
+	sakaiEntities.setProviders(siteProviders);
+	return sakaiEntities;
 
     }
 

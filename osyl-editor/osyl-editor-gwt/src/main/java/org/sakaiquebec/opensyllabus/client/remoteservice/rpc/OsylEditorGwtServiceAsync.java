@@ -27,6 +27,7 @@ import java.util.Map;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
+import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -143,11 +144,7 @@ public interface OsylEditorGwtServiceAsync {
     public void removeAssignment(String assignmentId,
 	    AsyncCallback<Void> callback);
 
-    public void getMySites(AsyncCallback<Map<String, String>> callback);
-    
-   public void getAllowedProviders(AsyncCallback<Map<String, String>> callback);
-    
-    public void getExistingEntities(String siteId, AsyncCallback<Map<String, String>> callback);
+    public void getExistingEntities(String siteId, AsyncCallback<SakaiEntities> callback);
 
     
     /**

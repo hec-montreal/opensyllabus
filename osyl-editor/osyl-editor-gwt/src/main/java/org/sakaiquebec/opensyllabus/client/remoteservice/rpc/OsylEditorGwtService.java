@@ -27,6 +27,7 @@ import java.util.Map;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
+import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
@@ -135,11 +136,7 @@ public interface OsylEditorGwtService extends RemoteService {
      */
     public void removeAssignment(String assignmentId);
 
-    public Map<String, String> getMySites();
-
-   public Map<String, String> getAllowedProviders();
-    
-    public Map<String, String> getExistingEntities(String siteId);
+    public SakaiEntities getExistingEntities(String siteId);
 
     /**
      * Pings the server to keep user session alive as long as its client

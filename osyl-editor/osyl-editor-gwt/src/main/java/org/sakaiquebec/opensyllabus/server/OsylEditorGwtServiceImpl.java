@@ -8,6 +8,7 @@ import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtServic
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
+import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -81,16 +82,8 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 
     public void removeAssignment(String assignmentId) {
     }
-
-    public Map<String, String> getMySites(){
-	return null;
-    }
-    
-    public Map<String,String> getAllowedProviders() {
-	return null;
-    }
-
-    public Map<String, String> getExistingEntities(String siteId) {
+  
+    public SakaiEntities getExistingEntities(String siteId) {
         return null;
     }
 

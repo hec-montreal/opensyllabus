@@ -26,7 +26,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +80,7 @@ import org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
+import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
 import org.sakaiquebec.opensyllabus.common.helper.SchemaHelper;
@@ -145,7 +148,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	this.citationService = citationService;
     }
 
-    /**
+     /**
      *Course management service integration.
      */
     private CourseManagementService cmService;
@@ -166,6 +169,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	this.osylConfigService = osylConfigService;
     }
 
+ 
     public void setToolManager(ToolManager toolManager) {
 	this.toolManager = toolManager;
     }
@@ -613,7 +617,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      * @return boolean whether the collection was added or not
      * @throws Exception
      */
-    private void addCollection(String dir, Site site) throws Exception {
+    private void addCollection(String dir, Site site)  {
 	ContentCollectionEdit collection = null;
 	String id = null;
 
@@ -629,8 +633,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		contentHostingService.commitCollection(collection);
 	    }
 	} catch (Exception e) {
-	    log.error("Unable to add a collection", e);
-	    throw e;
+	    log.warn("Unable to add a collection", e);
+	    
 	}
     }
 
@@ -644,6 +648,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	try {
 	    contentHostingService.getCollection(id);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    return false;
 	}
 	return true;
@@ -1082,6 +1087,17 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    return null;
 	}
     }
+    
+    /** {@inheritDoc} */
+    public List<String> getChildren (String siteId) throws Exception{
+	List<String> children = new ArrayList<String>();
+	List<CORelation> courseOutlines = coRelationDao.getCourseOutlineChildren(siteId);
+	
+	for (CORelation co: courseOutlines){
+	    children.add(co.getChild());
+	}
+	return children;
+    }
 
     public void associate(String siteId, String parentId) throws Exception {
 	COSerialized co;
@@ -1448,6 +1464,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	return sessionName;
     }
+
+
 
     public void releaseLock() {
 	String siteId;

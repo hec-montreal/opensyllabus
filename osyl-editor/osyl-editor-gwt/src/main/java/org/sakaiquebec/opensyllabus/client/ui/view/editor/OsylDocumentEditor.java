@@ -754,4 +754,6 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		    OsylDocumentEditor.this.saveButton.setEnabled(false);
 		}
 	    };
+
+    
 }

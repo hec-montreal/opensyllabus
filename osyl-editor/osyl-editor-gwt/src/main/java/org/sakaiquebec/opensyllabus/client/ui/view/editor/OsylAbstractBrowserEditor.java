@@ -21,10 +21,8 @@
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
 import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredEventHandler;
-import org.sakaiquebec.opensyllabus.client.controller.event.MySitesListingAcquiredEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBAddFolderEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBItemSelectionEventHandler;
-import org.sakaiquebec.opensyllabus.client.controller.event.MySitesListingAcquiredEventHandler.MySitesListingAcquiredEvent;
 import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylAbstractBrowserComposite;
@@ -46,7 +44,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class OsylAbstractBrowserEditor extends
 	OsylAbstractResProxEditor implements RFBItemSelectionEventHandler,
-	RFBAddFolderEventHandler, ItemListingAcquiredEventHandler, MySitesListingAcquiredEventHandler {
+	RFBAddFolderEventHandler, ItemListingAcquiredEventHandler{
 
     // The panel containing the document browser
     protected VerticalPanel browserPanel;
@@ -114,10 +112,6 @@ public abstract class OsylAbstractBrowserEditor extends
 	refreshBrowsingComponents();
     }
     
-    public void onMySitesListingAcquired(MySitesListingAcquiredEvent event) {
-	refreshBrowsingComponents();
-    }
-
     public void onItemListingAcquired(ItemListingAcquiredEvent event) {
 	refreshBrowsingComponents();
     }

@@ -42,6 +42,7 @@ import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
+import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -346,12 +347,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	osylServices.getOsylService().removeAssignment(assignmentId);
     }
 
-    public Map<String, String> getMySites(){
-	return osylServices.getOsylService().getMySites();
-    }
-    
-    
-   
     /**
      * {@inheritDoc}
      */
@@ -399,11 +394,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	osylServices.getOsylSiteService().releaseLock();
     }
 
-    public Map<String, String> getAllowedProviders() {
-	return osylServices.getOsylService().getAllowedProviders();
-    }
-
-    public Map<String, String> getExistingEntities(String siteId) {
+    public SakaiEntities getExistingEntities(String siteId) {
 	return osylServices.getOsylService().getExistingEntities(siteId);
     }
 }

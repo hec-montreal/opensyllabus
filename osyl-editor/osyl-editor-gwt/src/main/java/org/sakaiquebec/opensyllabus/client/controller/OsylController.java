@@ -47,6 +47,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 import org.sakaiquebec.opensyllabus.shared.model.OsylSettings;
+import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -1143,59 +1144,40 @@ public class OsylController implements SavePushButtonEventHandler,
 	}
     }
 
-    public void getMySites(AsyncCallback<Map<String, String>> callback) {
 
-	OsylRemoteServiceLocator.getEditorRemoteService().getMySites(callback);
+    private Map<String, String> providers;
+    private Map<String, String> entities;
+    private SakaiEntities sakaiEntities;
+
+    public Map<String, String> getProviders() {
+	return providers;
     }
 
-    private   Map<String, String> myCourseSites;
-    private Map<String, String> allowedProviders;
-    private Map<String, String> existingEntities;
-
-    public Map<String, String> getAllowedProviders() {
-	return allowedProviders;
+    public void setProviders(Map<String, String> providers) {
+	this.providers = providers;
     }
 
-    public void setAllowedProviders(Map<String, String> allowedProviders) {
-	this.allowedProviders = allowedProviders;
+
+    public SakaiEntities getExistingEntities(String siteId) {
+	return sakaiEntities;
     }
 
-    public void getAllowedProviders(AsyncCallback<Map<String, String>> callback) {
-
-	OsylRemoteServiceLocator.getEditorRemoteService().getAllowedProviders(callback);
-    }
-
-    public Map<String, String> getExistingEntities(String siteId) {
-	return existingEntities;
-    }
-
-    public void setExistingEntities(Map<String, String> existingEntities) {
-	this.existingEntities = existingEntities;
-	if (existingEntities != null) {
-	    Set<String> entityKeys = existingEntities.keySet();
-	    Map<String, String> providers = new HashMap<String, String>();
-	    String provider;
-	    for (String entityUri : entityKeys) {
-		provider = entityUri.substring(1, entityUri.indexOf("/",1));
-		providers.put(provider, provider);
-	    }
-	    setAllowedProviders(providers);
+    
+    public void setExistingEntities(SakaiEntities sakaiEntities) {
+	this.sakaiEntities = sakaiEntities;
+	if (sakaiEntities != null) {
+	    providers = sakaiEntities.getProviders();
+	    entities = sakaiEntities.getEntities();
+	   
 	}
     }
 
-    public void getExistingEntities(String siteId, AsyncCallback<Map<String, String>> callback) {
+    public void getExistingEntities(String siteId, AsyncCallback<SakaiEntities> callback) {
 
 	OsylRemoteServiceLocator.getEditorRemoteService().getExistingEntities(siteId, callback);
     }
 
-    public void setMyCourseSites(Map<String, String> mySites) {
-	this.myCourseSites = mySites;
-    }
-
-    public Map<String, String> getMyCourseSites() {
-	return myCourseSites;
-    }
-
+ 
     /**
      * Call-back method for receiving the configuration downloaded from the
      * server. It is invoked only if the RPC call was successful. In this case
