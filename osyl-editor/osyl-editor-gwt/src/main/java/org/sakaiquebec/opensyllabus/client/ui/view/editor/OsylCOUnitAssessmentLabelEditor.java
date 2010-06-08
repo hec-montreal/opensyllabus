@@ -112,7 +112,6 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	    try {
 		NumberFormat nf = NumberFormat.getDecimalFormat();
 		double w = nf.parse(weight);
-		//float w = Float.parseFloat(weight);
 		if (w < 0 || w > 100)
 		    throw new Exception();
 	    } catch (Exception e) {
