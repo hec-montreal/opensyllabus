@@ -37,6 +37,7 @@ import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -109,7 +110,9 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	    ok = false;
 	} else {
 	    try {
-		int w = Integer.parseInt(weight);
+		NumberFormat nf = NumberFormat.getDecimalFormat();
+		double w = nf.parse(weight);
+		//float w = Float.parseFloat(weight);
 		if (w < 0 || w > 100)
 		    throw new Exception();
 	    } catch (Exception e) {
