@@ -28,6 +28,7 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
+import org.sakaiquebec.opensyllabus.client.controller.event.EditPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.listener.SplitterEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.toolbar.OsylToolbarView;
@@ -60,6 +61,7 @@ public class OsylMainView extends OsylViewableComposite implements
     protected FlexTable mainPanel;
     protected OsylTreeView osylTree;
     protected OsylWorkspaceView osylWorkspaceView;
+    protected OsylWorkspaceTitleView osylWorkspaceTitleView;
     protected OsylHorizontalSplitPanel osylHorizontalSplitPanel;
     protected OsylToolbarView osylToolbarView;
 
@@ -145,13 +147,15 @@ public class OsylMainView extends OsylViewableComposite implements
 	// Create and set the OpenSyllabus Workspace View
 	setWorkspaceView(new OsylWorkspaceView(getController()
 		.getViewContextModel(), getController()));
+	setWorkspaceTitleView( new OsylWorkspaceTitleView(getController()
+		.getViewContextModel(), getController()));
 	workspaceDecoratorPanel = new OsylDecoratorPanel();
 	workspaceDecoratorPanel.setWidget(getWorkspaceView());
 	workspaceDecoratorPanel.setStylePrimaryName("Osyl-WorkspaceView");
+	workspaceDecoratorPanel.setTitle(getWorkspaceTitleView());
 	horizontalSplitPanel.setRightWidget(workspaceDecoratorPanel);
 
 	subscribeChildrenViewsToLocalHandlers();
-
 	initWidget(getMainPanel());
 	initViewContext();
 	getWorkspaceView().refreshView();
@@ -161,6 +165,7 @@ public class OsylMainView extends OsylViewableComposite implements
 	getOsylTreeView().refreshView();
 	getOsylToolbarView().refreshView();
 	getWorkspaceView().refreshView();
+	getWorkspaceTitleView().refreshView();
     }
 
     /**
@@ -225,6 +230,8 @@ public class OsylMainView extends OsylViewableComposite implements
 	getController().getViewContext().addEventHandler(
 		(ViewContextSelectionEventHandler) getWorkspaceView());
 	getController().getViewContext().addEventHandler(
+			(ViewContextSelectionEventHandler) getWorkspaceTitleView());
+	getController().getViewContext().addEventHandler(
 		(ViewContextSelectionEventHandler) getOsylTreeView());
     }
 
@@ -240,7 +247,7 @@ public class OsylMainView extends OsylViewableComposite implements
 	this.osylToolbarView = osylToolbarView;
     }
 
-    protected OsylToolbarView getOsylToolbarView() {
+    public OsylToolbarView getOsylToolbarView() {
 	return osylToolbarView;
     }
 
@@ -307,5 +314,14 @@ public class OsylMainView extends OsylViewableComposite implements
 	DOM.setStyleAttribute(workspaceDecoratorPanel.getCell(1, 1), "width",
 			workspaceInnerWidth + "px");
     }
+
+	public OsylWorkspaceTitleView getWorkspaceTitleView() {
+		return osylWorkspaceTitleView;
+	}
+
+	public void setWorkspaceTitleView(
+			OsylWorkspaceTitleView osylWorkspaceTitleView) {
+		this.osylWorkspaceTitleView = osylWorkspaceTitleView;
+	}
 
 }

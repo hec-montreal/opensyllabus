@@ -33,12 +33,17 @@ public class OsylCOStructureLabelView extends OsylLabelView {
 
     public OsylCOStructureLabelView(COElementAbstract model,
 	    OsylController controller, boolean isDeletable, String levelStyle) {
-	super(model, controller, isDeletable, levelStyle, false);
-	setEditor(new OsylCOStructureLabelEditor(this, isDeletable));
-	((OsylCOStructureLabelEditor) getEditor()).setViewerStyle(levelStyle);
-	initView();
+	this(model, controller, isDeletable, levelStyle, false);
     }
 
+    public OsylCOStructureLabelView(COElementAbstract model,
+    	    OsylController controller, boolean isDeletable, String levelStyle, boolean viewFirstElement) {
+    	super(model, controller, isDeletable, levelStyle, false, viewFirstElement);
+    	setEditor(new OsylCOStructureLabelEditor(this, isDeletable));
+    	((OsylCOStructureLabelEditor) getEditor()).setViewerStyle(levelStyle);
+    	initView();
+        }
+    
     /**
      * ===================== OVERRIDEN METHODS ===================== See
      * superclass for javadoc!
@@ -49,11 +54,17 @@ public class OsylCOStructureLabelView extends OsylLabelView {
     }
 
     public String getTextFromModel() {
-	String label = getModel().getLabel();
-	if (label == null) {
-	    label = getTextFromType();
-	}
-	return label;
+    String label = null;
+    if(!isViewFirstElement() && !getEditor().isInEditionMode() ){
+    	label = getModel().getLabel();
+    	if (label == null) {
+    		label = getTextFromType();
+    	}
+    }else{
+    	label = "";
+    }
+
+    return label;
     }
 
     public String getDescriptionFromModel() {

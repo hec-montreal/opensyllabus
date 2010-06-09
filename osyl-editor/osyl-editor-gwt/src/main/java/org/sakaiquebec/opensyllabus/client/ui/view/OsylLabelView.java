@@ -30,15 +30,17 @@ import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
  */
 public class OsylLabelView extends OsylAbstractView {
 
+	private boolean viewFirstElement = false;
     public OsylLabelView(COElementAbstract model, OsylController controller,
 	    boolean isDeletable, String levelStyle) {
-	this(model, controller, isDeletable, levelStyle, true);
+	this(model, controller, isDeletable, levelStyle, true, false);
     }
     
     public OsylLabelView(COElementAbstract model, OsylController controller,
-	    boolean isDeletable, String levelStyle, boolean initView){
+	    boolean isDeletable, String levelStyle, boolean initView, boolean viewFirstElement){
 	super(model, controller, controller.getOsylConfig().getSettings()
-		.isModelTitleEditable(model));
+		.isModelTitleEditable(model),viewFirstElement);
+	setViewFirstElement(viewFirstElement);
 	setEditor(new OsylLabelEditor(this, isDeletable));
 	((OsylLabelEditor) getEditor()).setViewerStyle(levelStyle);
 	if(initView)
@@ -55,11 +57,22 @@ public class OsylLabelView extends OsylAbstractView {
     }
 
     public String getTextFromModel() {
-	return getModel().getLabel();
+    if(!isViewFirstElement() && !getEditor().isInEditionMode() )
+    	return getModel().getLabel();
+    else
+    	return "";
     }
 
     protected void updateModel() {
 	getModel().setLabel(getEditor().getText());
 	setModifiedDateToNow();
     }
+
+	public boolean isViewFirstElement() {
+		return viewFirstElement;
+	}
+
+	public void setViewFirstElement(boolean viewFirstElement) {
+		this.viewFirstElement = viewFirstElement;
+	}
 }

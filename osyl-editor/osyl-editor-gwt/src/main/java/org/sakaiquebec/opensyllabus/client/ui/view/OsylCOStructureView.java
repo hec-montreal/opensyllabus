@@ -46,6 +46,7 @@ public class OsylCOStructureView extends OsylViewableComposite implements
     private OsylCOStructureLabelView editableTitleLabel;
 
     private boolean showTitleOnly = false;
+    private boolean viewFirstElement = false;
 
     public VerticalPanel getMainPanel() {
 	return mainPanel;
@@ -57,13 +58,14 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 
     public OsylCOStructureView(COModelInterface model,
 	    OsylController osylController) {
-	this(model, osylController, false);
+	this(model, osylController, false, false);
     }
 
     public OsylCOStructureView(COModelInterface model,
-	    OsylController osylController, boolean showTitleOnly) {
+	    OsylController osylController, boolean showTitleOnly, boolean viewFirstElement) {
 	super(model, osylController);
 	this.showTitleOnly = showTitleOnly;
+	this.setViewFirstElement(viewFirstElement);
 	initView();
     }
 
@@ -78,8 +80,11 @@ public class OsylCOStructureView extends OsylViewableComposite implements
 	getMainPanel().clear();
 	editableTitleLabel =
 		new OsylCOStructureLabelView(getModel(), getController(),
-			false, OsylStyleLevelChooser.getLevelStyle(getModel()));
+			false, OsylStyleLevelChooser.getLevelStyle(getModel()),isViewFirstElement());
 	getMainPanel().add(editableTitleLabel);
+	if(isViewFirstElement()){
+		getController().getMainView().getOsylToolbarView().addEventHandler(editableTitleLabel);
+	}
 	if (getShowTitleOnly() == false) {
 	    // displaying all sub views
 	    List<COElementAbstract> childrens = null;
@@ -167,5 +172,13 @@ public class OsylCOStructureView extends OsylViewableComposite implements
     public void onUpdateModel(UpdateCOStructureElementEvent event) {
 	refreshView();
     }
+
+	public boolean isViewFirstElement() {
+		return viewFirstElement;
+	}
+
+	public void setViewFirstElement(boolean viewFirstElement) {
+		this.viewFirstElement = viewFirstElement;
+	}
 
 }

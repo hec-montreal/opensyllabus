@@ -27,8 +27,13 @@ import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 public class OsylCOStructureAssessmentView extends OsylCOStructureView {
 
     public OsylCOStructureAssessmentView(COModelInterface model,
-	    OsylController osylController) {
-	super(model, osylController);
+    	    OsylController osylController) {
+    super(model, osylController, false, false);
+    }
+
+    public OsylCOStructureAssessmentView(COModelInterface model,
+	    OsylController osylController, boolean viewFirstElement) {
+	super(model, osylController, false, viewFirstElement);
     }
 
     protected void addListItemView(COUnit itemModel) {

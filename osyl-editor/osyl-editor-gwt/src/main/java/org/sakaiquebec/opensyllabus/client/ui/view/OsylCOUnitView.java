@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
+import org.sakaiquebec.opensyllabus.client.controller.event.EditPushButtonEventHandler.EditPushButtonEvent;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylStyleLevelChooser;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitEventHandler;
@@ -44,6 +45,7 @@ public class OsylCOUnitView extends OsylViewableComposite implements
 	UpdateCOUnitEventHandler {
 
     private VerticalPanel mainPanel;
+    private boolean viewFirstElement;
 
     public VerticalPanel getMainPanel() {
 	return mainPanel;
@@ -54,8 +56,13 @@ public class OsylCOUnitView extends OsylViewableComposite implements
     }
 
     public OsylCOUnitView(COModelInterface model, OsylController osylController) {
-	super(model, osylController);
-	initView();
+	this(model, osylController, false);
+    }
+
+    public OsylCOUnitView(COModelInterface model, OsylController osylController, boolean viewFirstElement) {
+   	super(model, osylController);
+   	setViewFirstElement(viewFirstElement);
+   	initView();
     }
 
     private void initView() {
@@ -77,13 +84,16 @@ public class OsylCOUnitView extends OsylViewableComposite implements
 	    lbv =
 		    new OsylCOUnitAssessmentLabelView((COUnit) getModel(),
 			    getController(), false, OsylStyleLevelChooser
-				    .getLevelStyle(getModel()));
+				    .getLevelStyle(getModel()),isViewFirstElement());
 	} else {
 	    lbv =
 		    new OsylCOUnitLabelView((COUnit) getModel(),
 			    getController(), false, OsylStyleLevelChooser
-				    .getLevelStyle(getModel()));
+				    .getLevelStyle(getModel()),true, isViewFirstElement());
 
+	}
+	if(isViewFirstElement()){
+		getController().getMainView().getOsylToolbarView().addEventHandler(lbv);
 	}
 	getMainPanel().add(lbv);
 	List<COElementAbstract> childrens = null;
@@ -126,5 +136,14 @@ public class OsylCOUnitView extends OsylViewableComposite implements
     public COUnit getModel() {
 	return (COUnit) super.getModel();
     }
+
+	public boolean isViewFirstElement() {
+		return viewFirstElement;
+	}
+
+	public void setViewFirstElement(boolean viewFirstElement) {
+		this.viewFirstElement = viewFirstElement;
+	}
+
 
 }

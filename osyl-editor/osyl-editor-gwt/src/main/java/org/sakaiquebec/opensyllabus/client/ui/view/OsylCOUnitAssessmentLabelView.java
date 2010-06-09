@@ -40,13 +40,17 @@ public class OsylCOUnitAssessmentLabelView extends OsylCOUnitLabelView {
 
     public OsylCOUnitAssessmentLabelView(COUnit model,
 	    OsylController controller, boolean isDeletable, String levelStyle) {
-	super(model, controller, isDeletable, levelStyle, false);
-	setEditor(new OsylCOUnitAssessmentLabelEditor(this, isDeletable));
-	((OsylCOUnitAssessmentLabelEditor) getEditor())
-		.setViewerStyle(levelStyle);
-	initView();
+	this(model, controller, isDeletable, levelStyle, false);
     }
 
+    public OsylCOUnitAssessmentLabelView(COUnit model,
+    	    OsylController controller, boolean isDeletable, String levelStyle, boolean viewFirstElement) {
+    	super(model, controller, isDeletable, levelStyle, false, viewFirstElement);
+    	setEditor(new OsylCOUnitAssessmentLabelEditor(this, isDeletable));
+    	((OsylCOUnitAssessmentLabelEditor) getEditor())
+    		.setViewerStyle(levelStyle);
+    	initView();
+        }
     /**
      * ===================== OVERRIDEN METHODS ===================== See
      * superclass for javadoc!

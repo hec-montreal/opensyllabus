@@ -381,6 +381,12 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	/*height:100%;*/
 	overflow:hidden;
 }
+
+.Osyl-WorkspaceView-Header {
+	padding:4px 0;
+	border:1px solid #FFF; /*For IE6*/
+}
+
 .Osyl-WorkspaceView .middleCenterInner {margin:0}
 
 
@@ -625,6 +631,10 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	border-color:#B0B0B0 #EEE #EEE #EEE;
 	background-color:#EEE;
 	overflow:visible;
+}
+
+.Osyl-UnitView-ResPanel.Osyl-firstElementOfView {
+	border-top-color:#FFF;
 }
 
 .Osyl-ListItemView-Hyperlink .Osyl-UnitView-ResPanel {

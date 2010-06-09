@@ -29,12 +29,16 @@ import org.sakaiquebec.opensyllabus.client.controller.event.ClosePushButtonEvent
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresClosePushButtonEvents;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresPublishPushButtonEvents;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresSavePushButtonEvents;
+import org.sakaiquebec.opensyllabus.client.controller.event.FiresEditPushButtonEvents;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
+import org.sakaiquebec.opensyllabus.client.controller.event.EditPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ClosePushButtonEventHandler.ClosePushButtonEvent;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler.PublishPushButtonEvent;
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler.SavePushButtonEvent;
+import org.sakaiquebec.opensyllabus.client.controller.event.EditPushButtonEventHandler.EditPushButtonEvent;
+
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
@@ -64,13 +68,14 @@ import com.google.gwt.user.client.Window;
 public class OsylToolbarView extends OsylViewableComposite implements
 	FiresSavePushButtonEvents, FiresPublishPushButtonEvents,
 	ViewContextSelectionEventHandler, FiresClosePushButtonEvents,
-	UpdateCOStructureElementEventHandler {
+	FiresEditPushButtonEvents, UpdateCOStructureElementEventHandler {
 
     private OsylTextToolbar osylToolbar;
 
     private List<SavePushButtonEventHandler> saveEventHandlerList;
     private List<PublishPushButtonEventHandler> publishEventHandlerList;
     private List<ClosePushButtonEventHandler> closeEventHandlerList;
+    private List<EditPushButtonEventHandler> editEventHandlerList;
 
     public static boolean TRACE = false;
 
@@ -118,7 +123,10 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    
 	    /* Add menu button */
 	    getOsylToolbar().getAddMenuItem().setVisible(false);
-	    
+
+	    /* Edit menu button */
+	    getOsylToolbar().getEditPushButton().setVisible(false);
+
 	    setClosePushButtonCommand();
 	    setHomePushButtonCommand();
 	    setViewAllPushButtonCommand();
@@ -145,7 +153,9 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    
 	    /* Add menu button */
 	    getOsylToolbar().getAddMenuItem().setVisible(false);
-	    
+
+	    /* Edit menu button */
+	    getOsylToolbar().getEditPushButton().setVisible(false);
 	    setHomePushButtonCommand();
 	    setViewAllPushButtonCommand();
 	} else {
@@ -177,7 +187,12 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		/* Add menu button */
 		getOsylToolbar().getAddMenuItem().setVisible(true);
 		getOsylToolbar().getAddMenuBar().clearItems();
-		
+		if(getController().getOsylConfig().getSettings().isModelTitleEditable(getModel())){
+			setEditPushButtonCommand();
+			getOsylToolbar().getEditPushButton().setVisible(true);
+		}else{
+			getOsylToolbar().getEditPushButton().setVisible(false);
+		}
 		// 3 big ViewContext cases
 		if (getModel().isCourseOutlineContent()) {
 			getOsylToolbar().getAddMenuItem().setVisible(false);
@@ -381,6 +396,23 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    });
 
     }
+
+    private void setEditPushButtonCommand(){
+    	// Publish Button
+    	getOsylToolbar().getEditPushButton().setCommand(new Command() {
+    	    public void execute() {
+    		EditPushButtonEvent event = new EditPushButtonEvent("");
+    		Iterator<EditPushButtonEventHandler> iter =
+    			getEditEventHandlerList().iterator();
+    		while (iter.hasNext()) {
+    		    EditPushButtonEventHandler handler =
+    			    (EditPushButtonEventHandler) iter.next();
+    		    handler.onEditPushButton(event);
+    		}
+    	    }
+    	});
+    }
+     
     public void addEventHandler(PublishPushButtonEventHandler handler) {
 	if (publishEventHandlerList == null) {
 	    publishEventHandlerList =
@@ -422,6 +454,17 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	}
     }
 
+    public void addEventHandler(EditPushButtonEventHandler handler) {
+    editEventHandlerList = new ArrayList<EditPushButtonEventHandler>();
+	editEventHandlerList.add(handler);
+    }
+
+    public void removeEventHandler(EditPushButtonEventHandler handler) {
+	if (editEventHandlerList != null) {
+	    editEventHandlerList.remove(handler);
+	}
+    }
+
     public List<SavePushButtonEventHandler> getSaveEventHandlerList() {
 	return saveEventHandlerList;
     }
@@ -447,6 +490,15 @@ public class OsylToolbarView extends OsylViewableComposite implements
     public void setCloseEventHandlerList(
 	    List<ClosePushButtonEventHandler> closeEventHandlerList) {
 	this.closeEventHandlerList = closeEventHandlerList;
+    }
+
+    public List<EditPushButtonEventHandler> getEditEventHandlerList() {
+  	return editEventHandlerList;
+    }
+
+    public void setEditEventHandlerList(
+   	    List<EditPushButtonEventHandler> editEventHandlerList) {
+   	this.editEventHandlerList = editEventHandlerList;
     }
 
     public void onUpdateModel(UpdateCOStructureElementEvent event) {

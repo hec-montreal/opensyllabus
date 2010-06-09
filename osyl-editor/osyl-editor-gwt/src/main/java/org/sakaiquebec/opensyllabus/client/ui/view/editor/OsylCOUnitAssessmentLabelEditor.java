@@ -241,15 +241,18 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 
 	super.enterView();
 
-	String rating =
-		(getView().getWeight() != null && !getView().getWeight()
-			.equals("")) ? " (" + getView().getWeight() + "%)" : "";
-
-	String date =
-		(getView().getDateEnd() != null) ? ("  " + dateTimeFormat
-			.format(getView().getDateEnd())) : "";
-
-	setText(getView().getTextFromModel() + rating + date);
+	if(getView().getTextFromModel()!= null &&
+	   getView().getTextFromModel().length() > 0){
+		String rating =
+			(getView().getWeight() != null && !getView().getWeight()
+				.equals("")) ? " (" + getView().getWeight() + "%)" : "";
+	
+		String date =
+			(getView().getDateEnd() != null) ? ("  " + dateTimeFormat
+				.format(getView().getDateEnd())) : "";
+	
+		setText(getView().getTextFromModel() + rating + date);
+	}
 	// If we are in read-only mode, we return now to not add buttons and
 	// listeners enabling edition or deletion:
 

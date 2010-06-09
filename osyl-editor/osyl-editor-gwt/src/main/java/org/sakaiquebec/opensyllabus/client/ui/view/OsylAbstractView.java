@@ -15,6 +15,7 @@ package org.sakaiquebec.opensyllabus.client.ui.view;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
+import org.sakaiquebec.opensyllabus.client.controller.event.EditPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylEditableMouseOverListener;
@@ -38,7 +39,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author <a href="mailto:Remi.Saias@hec.ca">Remi Saias</a>
  * @version $Id: $
  */
-public abstract class OsylAbstractView extends OsylViewableComposite {
+public abstract class OsylAbstractView extends OsylViewableComposite implements
+ EditPushButtonEventHandler{
 
     /**
      * The panel where will be added widgets either for displaying or editing
@@ -63,6 +65,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
     protected OsylEditableMouseOverListener popUpMouseOverListener;
     
     protected String propertyType;
+    protected boolean viewFirstElement;
 
     /**
      * Constructor specifying the model to be displayed and edited by this
@@ -73,20 +76,20 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
      */
     protected OsylAbstractView(COModelInterface model,
 	    OsylController osylController) {
-	this(model, osylController, true);
+	this(model, osylController, true, false);
     }
 
     protected OsylAbstractView(COModelInterface model,
-	    OsylController osylController, boolean editable) {
+	    OsylController osylController, boolean editable, boolean viewFirstElement) {
 	super(model, osylController);
-	
+	this.viewFirstElement = viewFirstElement;
 	propertyType = getController().getOsylConfig().getOsylConfigRuler().getPropertyType();
 	
 	setMainPanel(new AbsolutePanel());
 	setButtonPanel(new HorizontalPanel());
 	setUpAndDownPanel(new VerticalPanel());
 
-	if (model.isEditable() && editable) {
+	if (model.isEditable() && editable && !viewFirstElement) {
 	    popUpMouseOverListener = new OsylEditableMouseOverListener(this);
 	}
     }
@@ -158,6 +161,9 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
 	    getMainPanel().add(getEditor());
 	    getEditor().setWidth("100%");
 	    setStylePrimaryName("Osyl-UnitView-ResPanel");
+	    if(viewFirstElement){
+	    	this.addStyleName("Osyl-firstElementOfView");
+	    }
 	    if (!getController().isReadOnly()) {
 		getMainPanel().add(getButtonPanel());
 		getMainPanel().add(getUpAndDownPanel());
@@ -365,6 +371,14 @@ public abstract class OsylAbstractView extends OsylViewableComposite {
 	    }
 	}
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void onEditPushButton(EditPushButtonEvent event) {
+    	enterEdit();
+    }
+
 
     /**
      * ==================== ABSTRACT METHODS =====================

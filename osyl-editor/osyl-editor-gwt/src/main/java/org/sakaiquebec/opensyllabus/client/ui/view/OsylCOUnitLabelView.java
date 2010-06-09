@@ -34,13 +34,13 @@ public class OsylCOUnitLabelView extends OsylLabelView {
 
     public OsylCOUnitLabelView(COElementAbstract model,
 	    OsylController controller, boolean isDeletable, String levelStyle) {
-	this(model, controller, isDeletable, levelStyle, true);
+	this(model, controller, isDeletable, levelStyle, true, false);
     }
 
     public OsylCOUnitLabelView(COElementAbstract model,
 	    OsylController controller, boolean isDeletable, String levelStyle,
-	    boolean initView) {
-	super(model, controller, isDeletable, levelStyle, false);
+	    boolean initView, boolean viewFirstElement) {
+	super(model, controller, isDeletable, levelStyle, false, viewFirstElement);
 	setEditor(new OsylCOUnitLabelEditor(this, isDeletable));
 	((OsylCOUnitLabelEditor) getEditor()).setViewerStyle(levelStyle);
 	if (initView)

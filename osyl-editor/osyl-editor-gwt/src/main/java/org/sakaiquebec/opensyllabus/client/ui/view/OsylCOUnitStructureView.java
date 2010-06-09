@@ -78,6 +78,7 @@ public class OsylCOUnitStructureView extends OsylViewableComposite implements
 		    new OsylLabelView((COUnitStructure) getModel(),
 			    getController(), true, OsylStyleLevelChooser
 				    .getLevelStyle(getModel()));
+	    getController().getMainView().getOsylToolbarView().addEventHandler(lbv);
 	    getMainPanel().add(lbv);
 	}
 	List<COElementAbstract> childrens = null;

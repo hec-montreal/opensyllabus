@@ -83,21 +83,6 @@ public class OsylLongView extends OsylViewableComposite {
 	COContent content = (COContent) this.getModel();
 	getMainPanel().clear();
 
-	try {
-	    if (null != getController().getCOSerialized().getTitle()
-		    && !"".equals(getController().getCOSerialized().getTitle())) {
-		titleLabel =
-			new Label(getController().getCOSerialized().getTitle());
-	    } else {
-		titleLabel = new Label(getCoMessage("courseoutline"));
-	    }
-
-	} catch (Exception e) {
-	    titleLabel = new Label(getCoMessage("courseoutline"));
-	}
-	titleLabel.setStylePrimaryName("Osyl-UnitView-Title");
-	titleLabel.addStyleName("Osyl-Title1");
-	getMainPanel().add(titleLabel);
 	// displaying all sub views
 	List<COElementAbstract> children = content.getChildrens();
 	displayChildren(children);
@@ -151,7 +136,7 @@ public class OsylLongView extends OsylViewableComposite {
      */
     private void displayCOStructureElement(COStructureElement structureElement) {
 	OsylCOStructureView view =
-		new OsylCOStructureView(structureElement, getController(), true);
+		new OsylCOStructureView(structureElement, getController(), true, false);
 	getMainPanel().add(view);
     }
 

@@ -90,6 +90,8 @@ public class OsylTextToolbar extends Composite {
 
     private MenuItem closePushButton;
     
+    private MenuItem editPushButton;
+    
     private MenuItemSeparator viewSeparator;
     
     private MenuItemSeparator previewSeparator;
@@ -199,6 +201,11 @@ public class OsylTextToolbar extends Composite {
 	leftMenuBar.addItem(viewAllPushButton);
 	rightMenuBar.addItem(savePushButton);
 	rightMenuBar.addSeparator(previewSeparator);
+    editPushButton =
+		createMenuItem("ButtonEditToolBar", getOsylImageBundle()
+			.edit(), "ButtonEditToolBarTooltip");
+    sectionMenuBar.addItem(editPushButton);
+    
 	// MenuBar Item with icon - nice trick...
 	addMenuItem =
 		sectionMenuBar.addItem(AbstractImagePrototype.create(getOsylImageBundle().plus()).getHTML()
@@ -433,7 +440,16 @@ public class OsylTextToolbar extends Composite {
     return sectionMenuBar;
     }
     
-    private void openDownloadPrintLink() {
+
+    public MenuItem getEditPushButton() {
+		return editPushButton;
+	}
+
+	public void setEditPushButton(MenuItem editPushButton) {
+		this.editPushButton = editPushButton;
+	}
+
+	private void openDownloadPrintLink() {
 	String url = GWT.getModuleBaseURL();
 	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
 	String siteId = OsylController.getInstance().getSiteId();

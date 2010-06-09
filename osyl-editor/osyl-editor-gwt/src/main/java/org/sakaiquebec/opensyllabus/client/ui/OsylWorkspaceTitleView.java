@@ -20,30 +20,31 @@
 
 package org.sakaiquebec.opensyllabus.client.ui;
 
-import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
+import java.util.Date;
+
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
-import org.sakaiquebec.opensyllabus.client.controller.event.ClosePushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
-import org.sakaiquebec.opensyllabus.client.controller.event.EditPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
-import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureAssessmentView;
-import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureView;
-import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOUnitStructureView;
-import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOUnitView;
-import org.sakaiquebec.opensyllabus.client.ui.view.OsylLongView;
+import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler;
+import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitEventHandler;
+import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler.UpdateCOStructureElementEvent;
+import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitEventHandler.UpdateCOUnitEvent;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElementType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
+import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * OsylWorkspaceView is the main area in OpenSyllabus editor.<br/>
@@ -55,22 +56,24 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @version $Id: $
  */
-public class OsylWorkspaceView extends OsylViewableComposite implements
-	ViewContextSelectionEventHandler  {
+public class OsylWorkspaceTitleView extends OsylViewableComposite implements
+	ViewContextSelectionEventHandler, UpdateCOStructureElementEventHandler,
+	UpdateCOUnitEventHandler {
 
     // View variables
     private VerticalPanel workspacePanel;
     private Widget currentView;
+    private DateTimeFormat dateTimeFormat;
 
     // View Constructor
-    public OsylWorkspaceView(COModelInterface model, OsylController controller) {
+    public OsylWorkspaceTitleView(COModelInterface model, OsylController controller) {
 	super(model, controller);
 	setWorkspacePanel(new VerticalPanel());
 	getWorkspacePanel().setSize("100%", "100%");
 	getWorkspacePanel().setHorizontalAlignment(
-		HasHorizontalAlignment.ALIGN_CENTER);
+		HasHorizontalAlignment.ALIGN_LEFT);
 	initWidget(getWorkspacePanel());
-	
+	dateTimeFormat = getController().getSettings().getDateFormat();
     }
 
     public COElementAbstract getModel() {
@@ -100,77 +103,55 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
      * Refreshes the current view according to current model object.
      */
     public void refreshView() {
-	int scrollPrevent = 0;
-	boolean viewFirstElement = true;
+	getWorkspacePanel().clear();
+	Label workspaceTitleLabel = new Label();
+	workspaceTitleLabel.setStylePrimaryName("Osyl-WorkspaceView-Header");
+	workspaceTitleLabel.setStyleName("Osyl-Title2");
+	String titleLabel = "";
 	if (getModel() != null) {
 	    if (getModel().isCourseOutlineContent()) {
-		getWorkspacePanel().clear();
-		OsylLongView newView =
-			new OsylLongView(getModel(), getController());
-		currentView = newView;
-		getWorkspacePanel().add(currentView);
-		scrollPrevent = 100;
-	    } else if (getModel().isCOUnit()) {
-		// Display a COContentUnit
-		getWorkspacePanel().clear();
-		OsylCOUnitView newView =
-			new OsylCOUnitView(getModel(), getController(), viewFirstElement);
-		((COUnit)getModel()).addEventHandler(newView);
-		currentView = newView;
-		getWorkspacePanel().add(currentView);
-		// A bit more space to allow content addition without getting
-		// nasty double-scrollbars!
-		scrollPrevent = 100;
-	    } else if (getModel().isCOStructureElement()) {
-		// Display a COStructureElement
-		getWorkspacePanel().clear();
+			try {
+			    if (null != getController().getCOSerialized().getTitle()
+				    && !"".equals(getController().getCOSerialized().getTitle())) {
+				titleLabel =
+					getController().getCOSerialized().getTitle();
+			    } else {
+				titleLabel = getCoMessage("courseoutline");
+			    }
 		
-		// Special case: evaluation
-		if (COStructureElementType.ASSESSMENT_STRUCT
-			.equals(((COStructureElement) getModel()).getType())) {
-		    OsylCOStructureAssessmentView newView =
-			    new OsylCOStructureAssessmentView(getModel(),
-				    getController(),viewFirstElement);
-		    currentView = newView;
-		}// end special case
-		else{
-			OsylCOStructureView newView =
-				new OsylCOStructureView(getModel(), getController(),false, viewFirstElement);
-			currentView = newView; 
-		}
-		getWorkspacePanel().add(currentView);
-		scrollPrevent = 100;
-	    } else if(getModel().isCOUnitStructure()){
-		getWorkspacePanel().clear();
-		OsylCOUnitStructureView newView =
-			new OsylCOUnitStructureView(getModel(), getController());
-		currentView = newView;
-		getWorkspacePanel().add(currentView);
-		// A bit more space to allow content addition without getting
-		// nasty double-scrollbars!
-		scrollPrevent = 100;
+			} catch (Exception e) {
+			    titleLabel = getCoMessage("courseoutline");
+			}
+	    } else if (getModel().isCOUnit() && (COUnitType.ASSESSMENT_UNIT.equals(getModel().getType()))) { 
+	    	
+	    	String rating =
+	    		(getWeight() != null && !getWeight()
+	    			.equals("")) ? " (" + getWeight() + "%)" : "";
+
+	    	String date =
+	    		(getDateEnd() != null) ? ("  " + dateTimeFormat
+	    			.format(getDateEnd())) : "";
+
+	    	titleLabel = getModel().getLabel() + rating + date;
+	    	
+		} else {
+			
+	    	titleLabel = getModel().getLabel();
+	    	if (titleLabel == null) {
+	    	    titleLabel = getCoMessage(getModel().getType());
+	    	}
+
 	    }
-	    // We leave 250ms for the view to generate before setting the
-	    // height, otherwise its height is 0px. This allows us to specify
-	    // the current global height of our application. This is needed to
-	    // have correct scroll-bars (i.e.: to avoid having two vertical
-	    // scrollbars, which is both ugly and non-intuitive).
-	    final int sp = scrollPrevent;
-	    Timer t = new Timer() {
-		public void run() {
-		    OsylEditorEntryPoint.getInstance().setToolHeight(
-			    currentView.getOffsetHeight() + sp);
-
-		}
-	    };
-	    // TODO: maybe we should use repeatSchedule. It could help if the
-	    // user types a lot of text and makes the view significantly longer
-	    // than computed previously...
-	    t.schedule(250);
-	} else {
-	    Window.alert("owv : modele null");
+	    
+	    
+	    if(getModel().isCOUnit()){
+	    	((COUnit)getModel()).addEventHandler(this);
+	    } else if (getModel().isCOStructureElement()){
+	    	((COStructureElement)getModel()).addEventHandler(this);
+	    }
 	}
-
+	workspaceTitleLabel.setText(titleLabel);
+	getWorkspacePanel().add(workspaceTitleLabel);
     }
 
     public void setBorderWidth(int i) {
@@ -185,8 +166,36 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 	getWorkspacePanel().add(contentView);
     }
 
-    public OsylWorkspaceView getWorkspaceView() {
+    public OsylWorkspaceTitleView getWorkspaceView() {
 	return this;
     }
+    
+    public String getWeight() {
+    	String reqLevel = null;
+    	if (!"undefined"
+    		.equals(getModel().getProperty(COPropertiesType.WEIGHT))
+    		|| null != getModel().getProperty(COPropertiesType.WEIGHT)) {
+    	    reqLevel = getModel().getProperty(COPropertiesType.WEIGHT);
+    	}
+    	return reqLevel;
+        }
+
+    public Date getDateEnd() {
+    	String dateString = getModel().getProperty(COPropertiesType.DATE_END);
+    	Date date = null;
+    	if (dateString != null && !dateString.trim().equals("")) {
+    	    date = OsylDateUtils.getDateFromXMLDate(dateString);
+    	}
+    	return date;
+        }
+
+    public void onUpdateModel(UpdateCOStructureElementEvent event) {
+    	refreshView();
+        }
+
+    public void onUpdateModel(UpdateCOUnitEvent event) {
+    	refreshView();
+        }    
+ 
 
 }
