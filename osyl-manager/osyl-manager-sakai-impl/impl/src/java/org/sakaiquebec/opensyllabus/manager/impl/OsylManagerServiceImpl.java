@@ -911,25 +911,29 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     private void writeToZip(ZipOutputStream zos, String fileName,
 	    InputStream inputStream) throws IOException {
+	log.debug("writeToZip: adding file to zip: " + fileName);
 	ZipEntry zipEntry = new ZipEntry(fileName);
-	zos.putNextEntry(zipEntry);
-	BufferedOutputStream bos = new BufferedOutputStream(zos);
-	IOUtils.copy(inputStream, bos);
-	bos.flush();
+	try {
+	    zos.putNextEntry(zipEntry);
+	    BufferedOutputStream bos = new BufferedOutputStream(zos);
+	    IOUtils.copy(inputStream, bos);
+	    bos.flush();
+	} catch (ZipException e) {
+	    log.error("writeToZip: Could not add file to zip: " + fileName);
+	    e.printStackTrace();
+	}
     }
 
     private void writeToZip(ZipOutputStream zos, String fileName, byte[] bytes)
 	    throws IOException {
+	log.debug("writeToZip: adding file to zip: " + fileName);
 	ZipEntry zipEntry = new ZipEntry(fileName);
 	try {
 	    zos.putNextEntry(zipEntry);
 	    zos.write((byte[]) bytes);
 	} catch (ZipException e) {
-	    log.warn(fileName + " could not be add to zipfile.");
-	    if (log.isInfoEnabled()) {
-		log.info("Details");
-		e.printStackTrace();
-	    }
+	    log.error("writeToZip: Could not add file to zip:"  + fileName);
+	    e.printStackTrace();
 	}
     }
 
@@ -941,6 +945,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * @throws IOException
      */
     private File exportAndZip(String siteId, String webappDir) throws Exception {
+	log.info("exportAndZip: exporting site: " + siteId);
+
 	// opening a new temporary zipfile
 	File zipFile = File.createTempFile("osyl-package-export", ".zip");
 	ZipOutputStream zos =
@@ -1412,9 +1418,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	log.debug("getCoAndSiteInfo (Site List ##### SITES #####)" + elapsed(start));
 
-	if (accessedSites != null && accessedSites.size() > 0) {
+	if (accessedSites != null) {
 	    allSitesInfo = new ArrayList<COSite>();
-	    for (int i = 0; i < accessedSites.size(); i++) {
+	    int accessedSitesSize = accessedSites.size();
+	    for (int i = 0; i < accessedSitesSize; i++) {
 		info = getCoAndSiteInfo(accessedSites.get(i), searchTerm);
 		if (info != null) {
 		    allSitesInfo.add(info);
