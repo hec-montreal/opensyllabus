@@ -130,8 +130,14 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     private static final Log log =
 	    LogFactory.getLog(OsylManagerServiceImpl.class);
 
-    final static int TIMEOUT = 30;
+    // Key to define the delay (in minutes) to wait before deleting export zip
+    // files in sakai.properties
+    public final static String EXPORT_DELETE_DELAY_MINUTES_KEY =
+	"opensyllabus.manager.deleteExportAfter";
 
+    // default value: time in minutes to wait before deleting export zip files
+    final static int EXPORT_DELETE_DELAY_MINUTES = 30;
+    
     // private static Log log = LogFactory.getLog(OsylManagerServiceImpl.class);
 
     /**
@@ -982,7 +988,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * Delete temporary files and the temporary directory created when export CO
      */
     private void deleteExpiredTemporaryExportFiles(List<COSite> cosites) {
-	int timeOut = getTimeOut();
+	int timeOut = getDeleteExportDelay();
 	for (Iterator<COSite> iter = cosites.iterator(); iter.hasNext();) {
 	    try {
 		Site site =
@@ -1032,22 +1038,23 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     /**
-     * Get the timeout define in the sakai.properties
+     * Get the delay (in minutes) to wait before deleting export zip defined
+     * in the sakai.properties
      * 
      * @return
      */
-    private int getTimeOut() {
+    private int getDeleteExportDelay() {
 	int timeout = 0;
 
 	// TODO Check first in sakai.properties, then in the components.xml as
 	// a bean property and then use the constant.
 	String timeOutString =
 		serverConfigurationService
-			.getString("opensyllabus.manager.timeOut");
+			.getString(EXPORT_DELETE_DELAY_MINUTES_KEY);
 	if (timeOutString != null && !"".equals(timeOutString)) {
 	    timeout = Integer.parseInt(timeOutString);
 	} else if (timeOutString == null) {
-	    timeout = TIMEOUT;
+	    timeout = EXPORT_DELETE_DELAY_MINUTES;
 	}
 	return timeout;
 
@@ -1429,7 +1436,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		}
 	    }
 	}
-	new DeleteExpiredTemporaryExportFiles(allSitesInfo, siteCount).start();
+
+	// TODO: move this to the end of getOsylPackage() with a specific
+	// path instead of iterating through all the sites!!!   
+	new DeleteExpiredTemporaryExportFiles(allSitesInfo).start();
 	return allSitesInfo;
     }
 
@@ -1472,16 +1482,14 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	List<COSite> allSitesInfo;
 	long start = System.currentTimeMillis();
-	int siteCount;
 	
-	public DeleteExpiredTemporaryExportFiles(List<COSite> allSitesInfo, int siteCount) {
+	public DeleteExpiredTemporaryExportFiles(List<COSite> allSitesInfo) {
 	    this.allSitesInfo = allSitesInfo;
-	    this.siteCount = siteCount;
 	}
 
 	public void run() {
 	    int time = 180000;
-	    log.debug("deleteExpiredTemporaryExportFiles (All Sites Info ##### START #####)"
+	    log.debug("deleteExpiredTemporaryExportFiles (##### START #####)"
 		    + elapsed(start));
 
 	    try {
@@ -1489,8 +1497,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    } catch (InterruptedException e) {
 	    }
 	    deleteExpiredTemporaryExportFiles(allSitesInfo);
-		log.debug("deleteExpiredTemporaryExportFiles (All Sites Info ###### END ######)" + elapsed(start)
-			+ " for " + siteCount +  " sites");
+		log.debug("deleteExpiredTemporaryExportFiles (###### END ######)"
+			+ elapsed(start));
 	}
     }
 
