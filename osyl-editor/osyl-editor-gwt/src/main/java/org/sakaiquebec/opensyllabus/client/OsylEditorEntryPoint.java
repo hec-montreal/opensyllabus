@@ -35,19 +35,20 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 
 /**
  * The "Main Class" (EntryPoint in GWT) of the OpenSyllabus Editor.
  * 
  * @author <a href="mailto:claude.coulombe@umontreal.ca">Claude Coulombe</a>
  * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
+ * @author <a href="mailto:gilles-philippe.leblanc@umontreal.ca">Gilles-Philippe Leblanc</a>
  */
 public class OsylEditorEntryPoint implements EntryPoint {
 
@@ -65,12 +66,12 @@ public class OsylEditorEntryPoint implements EntryPoint {
     private OsylMainView editorMainView;
     static private OsylEditorEntryPoint singleton;
     private OsylViewable editorEntryPointView;
-    static private int yPosition;
-    static private int previousHeight;
+    // static private int yPosition;
+    // static private int previousHeight;
 
     public static String execmode = "prod";
 
-    private static final int MIN_SIZE = 800;
+    private static final int MIN_SIZE = 200;
 
     // Default Constructor. We ensure that our singleton instance is the same as
     // the one initialized by the GWT framework!
@@ -128,19 +129,13 @@ public class OsylEditorEntryPoint implements EntryPoint {
 		}
 	    }
 	});
-
-    Window.addResizeHandler(new ResizeHandler() {
-        public void onResize(ResizeEvent event) {
-        	int width = Math.max(rootPanel.getOffsetWidth() - 16, 500);
-      		editorMainView.setWidth(width + "px");
-      		editorMainView.setSectionToolbarTopPosition();
-      		editorMainView.resize();
-        }
-      });
+	
+    
     
 	} // onModuleLoad
     
-    public void initModel(COSerialized co) {
+
+	public void initModel(COSerialized co) {
 	// This is absolutely required to get the ID:
 	this.serializedCO = co;
 
@@ -168,83 +163,173 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	editorMainView =
 		new OsylMainView(getModel(), osylController);
 	editorMainView.initView();
+
 	
-	// And we instruct it about its size. We use the slot's width but
-	// the height cannot be computed as we are in Sakai's iFrame.
-	// We subtract 16px to the slot width for a perfect alignment
-	// (optimized for FireFox).
-	int width = Math.max(rootPanel.getOffsetWidth() - 16, 500);
-	editorMainView.setWidth(width + "px");
 	this.setView(editorMainView);
 	rootPanel.add((Widget) this.getView());
-	// We start with an arbitrary 800px high area. It will be updated after.
-	editorMainView.setSectionToolbarTopPosition();
-	setToolHeight(MIN_SIZE);
+	setBrowserEvents(this);
+	setToolSize();
+	Timer t = new Timer() {
+		public void run() {
+			setToolSize();
+			setSakaiScrollBar("auto");
+		}
+	};
+	setSakaiScrollBar("hidden");
+	
+		
+	t.schedule(500);
+	if (OsylController.getInstance().isInHostedMode()) {
+		DOM.setStyleAttribute(getRootPanel().getElement(), "fontSize", "12px");
+	}
+	
 	// Uncomment this display debug messages specified with setDebugMsg().
 	// startDebugMsg();
     }
-
+    
+    private native void setSakaiScrollBar(String value) /*-{
+    	$wnd.parent.document.body.style.overflow = value;
+	}-*/;
+    
+    
     public void refreshView() {
-	rootPanel.clear();
-	rootPanel.add((Widget) this.getView());
-	previousHeight = 0;
-	int width = Math.max(rootPanel.getOffsetWidth() - 16, 500);
-	((OsylViewableComposite) this.getView()).setWidth(width + "px");
+    	rootPanel.clear();
+    	rootPanel.add((Widget) this.getView());
+    	setToolSize();
     }
-
+    
     /**
-     * We call this whenever a view is displayed to avoid scroll-bars.
+     * Set the size of the tool.
+     * We call this when the Window's Browser is resized.
      * 
      * @param h the new tool height
      */
-    public void setToolHeight(int h) {
-	try {
-	    if (previousHeight >= h && previousHeight<1.1*h) {
-		// This prevents costly and unneeded resizes
-		//we do not resize if actual size is within 10% greater than required size
-		//else we resize 
-		return;
-	    }
-	    h = Math.max(h,MIN_SIZE);
-	    previousHeight = h;
-
-	    // We keep track of current y-position to scroll to it after the
-	    // resize. This makes the interface kind of flash... not very nice
-	    // but it's better than getting back to the top.
-	    yPosition = getYPosition();
-	    getRootPanel().setHeight(h + "px");
-	    ((OsylViewableComposite) getView()).setHeight(h + "px");
-	    if (OsylController.getInstance().isInHostedMode()) {
-		return;
-	    }
-	    // We resize the Sakai iFrame
-	    String frameId = getSakaiFrameId();
-	    if (!resizeSakaiIFrame(frameId)) {
-		// sometimes the ID provided in current URL is invalid!
-		// All "-" (dash character) needs to be replaced by "x"!!!
-		if (!resizeSakaiIFrame(frameId.replaceAll("-", "x"))) {
-		    // Either we have a version of setMainFrameHeightNow which
-		    // doesn't return a boolean or we could not resize our main
-		    // frame for real. Too bad.
-		}
-	    }
-	    scrollToYPosition(yPosition);
-	} catch (Exception e) {
-	    com.google.gwt.user.client.Window.alert("Error setToolHeight " + h
-		    + " : " + e);
-	}
+    public void setToolSize() {
+    	int h  = getDesiredToolHeight();
+    	if (isInSakai()){
+    		setSakaiIFrameHeight(h);
+    	}
+    	((OsylViewableComposite) getView()).setHeight((h - 12) + "px");
+    	getRootPanel().setHeight(h + "px");
+  		editorMainView.resize();
     }
-
     /**
-     * Calls a Sakai JavaScript method (located in headscripts.js) to resize the
-     * iFrame containing the OpenSyllabus application. Originally
-     * setMainFrameHeightNow does not return a boolean. It still works but is
-     * called twice in this case (see setToolHeight).
+     * Returns, in pixels, the total height of the Sakai footer section.
+     * If the tool isn't in Sakai environment (stand alone), return 0.
+     * 
+     * @return number of pixels for the height of the Sakai footer.
      */
-    private static native boolean resizeSakaiIFrame(String id) /*-{
-							       return parent.setMainFrameHeightNow(id);
-							       }-*/;
-
+    
+    public static native int getSakaiFooterHeight() /*-{
+    	return ($wnd.parent != $wnd ? $wnd.parent.document.getElementById("footer").parentNode.offsetHeight:0);
+	}-*/;
+    
+    /**
+     * Returns, in pixels, the desired total height of the tool section based on
+	 * viewport height less the header and the footer of Sakai.
+     * If the tool isn't in Sakai environment (stand alone), return the viewport height.
+     * 
+     * @return number of pixels for the desired height for the tool.
+     */
+    private int getDesiredToolHeight() {
+    	return Math.max((getViewportHeight() - getToolYOffset() - getSakaiFooterHeight()),MIN_SIZE);
+    }
+    /**
+     * Returns the current viewport height. This is the height of current
+     * visible area.
+     * 
+     * @return int viewport height in pixel
+     */
+    public static native int getViewportHeight() /*-{
+    	var o = $wnd.top;
+  		myHeight = 0;
+  		if( typeof( o.innerHeight ) == 'number' ) {
+    		//Non-IE
+    		myHeight = o.innerHeight;
+  		} else if( o.document.documentElement && o.document.documentElement.clientHeight) {
+    		//IE 6+ in 'standards compliant mode'
+    		myHeight = o.document.documentElement.clientHeight;
+  		} else if( o.document.body && o.document.body.clientHeight) {
+    		//IE 4 compatible
+    		myHeight = o.document.body.clientHeight;
+  		}
+  		return myHeight;
+    }-*/;
+    
+    /**
+     * Returns the current viewport width. This is the width of current
+     * visible area.
+     * 
+     * @return int viewport width in pixel
+     */
+    public static native int getViewportWidth() /*-{
+    	var o = $wnd.top;
+  		var myWidth = 0
+  		if( typeof( o.innerWidth ) == 'number' ) {
+    		//Non-IE
+    		myWidth = o.innerWidth;
+  		} else if( o.document.documentElement && o.document.documentElement.clientWidth) {
+    		//IE 6+ in 'standards compliant mode'
+    		myWidth = o.document.documentElement.clientWidth;
+  		} else if( o.document.body && o.document.body.clientWidth) {
+    		//IE 4 compatible
+    		myWidth = o.document.body.clientWidth;
+  		}
+  		return myWidth;
+    }-*/;
+    
+    /**
+     * set Events for the browser, resize and scroll.
+     * As Osyl is in use in a iframe, GWT don't provide correct implementation
+     * for listening the Browser events, only iframe Events.
+     * 
+     */
+    private static native void setBrowserEvents(OsylEditorEntryPoint o) /*-{
+		function addEvent(obj, type, fn, par) {
+			if(obj.addEventListener){
+				obj.addEventListener(type, function(event){
+		  			return fn.call(obj, event, par);
+				}, false );
+			}else if(obj.attachEvent){
+				obj.attachEvent("on"+type, function(e){
+		  			if (!e) var e = $wnd.event;
+		  			return fn.call(obj, e, par);
+				});
+			}
+		}
+		function resize() {
+			o.@org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint::setToolSize()();
+		}
+		addEvent($wnd.top,'resize',resize);
+		if ($wnd != $wnd.parent) $wnd.parent.document.getElementById($wnd.name).style.marginBottom = "0";
+		
+	}-*/;
+    
+    private static native void setSakaiIFrameHeight(int h) /*-{
+		if ($wnd != $wnd.parent) $wnd.parent.document.getElementById($wnd.name).style.height = h + "px";
+	}-*/;
+    
+    /**
+     * If Osyl is currently loaded in Sakai environment or is is stand alone.
+     * 
+     * @return Boolean state if is in Sakai.
+     */
+    
+    private static native boolean isInSakai() /*-{
+		return $wnd != $wnd.parent;
+	}-*/;
+    
+    /**
+     * If the current Browser is Internet Explorer.
+     * 
+     * @return Boolean state if is in IE.
+     */
+    public static native boolean isInternetExplorer() /*-{
+    	return($doc.all ? true: false);
+    }-*/;
+    
+    
+    
     /**
      * Returns the current vertical scroll position in browser (ie: for the
      * whole Sakai page).
@@ -260,41 +345,34 @@ public class OsylEditorEntryPoint implements EntryPoint {
 						  return top.pageYOffset;
 						  } 
 						  }-*/;
-
+    
     /**
      * Returns, in pixels, the space above the tool (The Sakai navigation
      * header).
+     * If the tool isn't in Sakai environment (stand alone), return 0.
      * 
      * @return number of pixels above the tool
      */
-    private static int getToolYOffset() {
-	// TODO: find a way for this to work
-	// Doesn't work!
-	// return getInstance().getRootPanel().getAbsoluteTop()
-
-	// Instead we have hard coded the following values
-	if (isInternetExplorer()) {
-	    return 177; // 177 ok for MSIE 6/7 with default Sakai 2.5 Skin
-	} else {
-	    return 163; // 163 ok for FF3 with default Sakai 2.5 Skin
-	}
-    }
-
-    private static native boolean isInternetExplorer() /*-{
-						       if (document.all) {
-						       return true;
-						       } else {
-						       return false;
-						       }
-						       }-*/;
-
+    public static native int getToolYOffset()  /*-{
+		var curtop = 0;
+		if ($wnd.name != "") {
+			var obj = $wnd.parent.document.getElementById($wnd.name);
+			if (obj.offsetParent) {
+    			do {
+        			curtop += obj.offsetTop;
+    			} while (obj = obj.offsetParent);
+			}
+		}
+		return curtop;
+	}-*/;
+    
     /**
      * Returns the current vertical scroll position in OSYL.
      * 
      * @return int number of pixel from top
      */
     public static int getYPosition() {
-	if (OsylController.getInstance().isInHostedMode()) {
+	if (!isInSakai()) {
 	    return getInstance().getRootPanel().getAbsoluteTop();
 	} else {
 	    int global = getGlobalYPosition();
@@ -310,14 +388,14 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * @return int number of pixel from left
      */
     public static native int getGlobalXPosition() /*-{
-						  if (document.all) {
-						  // We are In MSIE.
-						  return top.document.documentElement.scrollLeft;
-						  } else {
-						  // In Firefox
-						  return top.pageXOffset;
-						  } 
-						  }-*/;
+		if ($wnd.document.all) {
+			// We are In MSIE.
+			return $wnd.top.document.documentElement.scrollLeft;
+		} else {
+			// In Firefox
+			return $wnd.top.pageXOffset;
+		} 
+	}-*/;
 
     /**
      * Returns, in pixel, the space to the left of the tool (The Sakai
@@ -325,12 +403,18 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * 
      * @return
      */
-    private static int getToolXOffset() {
-	// TODO: find a way for this to work
-	// Doesn't work!
-	// return getInstance().getRootPanel().getAbsoluteLeft();
-	return 120;
-    }
+    private static native int getToolXOffset() /*-{
+		var curleft = 0;
+		if ($wnd.name != "") {
+			var obj = $wnd.parent.document.getElementById($wnd.name);
+			if (obj.offsetParent) {
+				do {
+    				curleft += obj.offsetLeft;
+				} while (obj = obj.offsetParent);
+			}
+		}
+		return curleft;
+	}-*/;
 
     /**
      * Returns the current horizontal scroll position.
@@ -343,96 +427,6 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	return Math.max(0, (global - toolOffset));
     }
 
-    /**
-     * Returns the current page height. This is not the window viewPort (visible
-     * area) height but the height of complete page including Sakai
-     * navigation...
-     * 
-     * @return int height in pixel
-     */
-    public static native int getPageHeight() /*-{
-					     // This is a Sakai method (located in headscripts.js)
-					     return parent.browserSafeDocHeight();
-					     }-*/;
-
-    /**
-     * Returns the current viewport height. This is the height of current
-     * visible area.
-     * 
-     * @return int viewport height in pixel
-     */
-    public static int getViewportHeight() {
-	if (OsylController.getInstance().isInHostedMode()) {
-	    return Window.getClientHeight();
-	} else {
-	    return getViewportHeightNative();
-	}
-    }
-
-    /**
-     * Returns the current viewport height. This is the height of current
-     * visible area.
-     * 
-     * @return int viewport height in pixel
-     */
-    private static native int getViewportHeightNative() /*-{
-
-							// This code is adapted from Sakai's browserSafeDocHeight
-							if (top.innerHeight) {
-							// all except Explorer
-							return top.innerHeight;
-							} else if (top.document.documentElement
-							&& top.document.documentElement.clientHeight) {
-							// Explorer 7 and MSIE embedded in FF
-							return top.document.documentElement.clientHeight;
-							} else if (document.body) {
-							// other Explorers (including GWT HostedMode)
-							alert("Unsupported browser");
-							// return document.body.clientHeight;
-							return 400;
-							}
-							
-							}-*/;
-
-    /**
-     * Returns the current viewport width. This is the width of current visible
-     * area.
-     * 
-     * @return int viewport width in pixel
-     */
-    public static int getViewportWidth() {
-	// Oddly enough, this works in hosted mode as well as in Sakai! (FF &
-	// IE)
-	// if (OsylController.getInstance().isInHostedMode()) {
-	return Window.getClientWidth();
-	// } else {
-	// return getViewportWidthNative();
-	// }
-    }
-
-    /**
-     * Returns the current viewport width. This is the width of current visible
-     * area.
-     * 
-     * @return int viewport width in pixel
-     */
-    private static native int getViewportWidthNative() /*-{
-
-	// This code is adapted from Sakai's browserSafeDocHeight
-	if (top.innerWidth) {
-		// all except Explorer
-		return top.innerWidth;
-	} else if (top.document.documentElement
-		&& top.document.documentElement.clientWidth) {
-		// Explorer 7 and MSIE embedded in FF
-		return top.document.documentElement.clientWidth;
-	} else if (document.body) {
-		// other Explorers (including GWT HostedMode)
-		alert("Unsupported browser");
-	// return document.body.clientWidth;
-		return 600;
-	}				       
-    }-*/;
 
     // Shows the y-position in a sticky label
     private void startDebugMsg() {
@@ -504,7 +498,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     }
 
     private static void setTopMostPosition(PopupPanel p) {
-	setTopMostPosition(p, -100 + getViewportWidth() / 2);
+	setTopMostPosition(p, -100 + Window.getClientHeight() / 2);
     }
 
     private static void setTopMostPosition(PopupPanel p, int x) {
@@ -518,13 +512,13 @@ public class OsylEditorEntryPoint implements EntryPoint {
      */
     private static int getTopMostPosition() {
 	if (OsylController.getInstance().isInHostedMode()) {
-	    return 62;
+	    return 130;
 	} else {
 	    // We return 26px (24 for the toolBar + 2 for its borders)
-	    return 47; // Is OK for MSIE 6/7 and Firefox
+	    return 115; // Is OK for MSIE 6/7 and Firefox
 	}
     }
-
+    
     /**
      * Centers the specified {@link PopupPanel} on the current view. This method
      * takes into account the current position in OSYLEditor, as well as the
@@ -537,8 +531,11 @@ public class OsylEditorEntryPoint implements EntryPoint {
     public static void centerObject(PopupPanel widget) {
 	int width = widget.getOffsetWidth();
 	int height = widget.getOffsetHeight();
-	widget.setPopupPosition(getXPosition() + (getViewportWidth() - width)
-		/ 2, getYPosition() + (getViewportHeight() - height) / 2);
+	width = Math.max(0 , (Window.getClientWidth() - width)
+		/ 2);
+	height = Math.max(0 , (Window.getClientHeight() - height)
+		/ 2);
+	widget.setPopupPosition(width, height);
     }
 
     /**
@@ -548,8 +545,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * @param y pixels from the top
      */
     public static native void scrollToYPosition(int y) /*-{
-						       top.scrollTo(0,y);
-						       }-*/;
+		$wnd.top.scrollTo(0,y);
+	}-*/;
 
     /**
      * Returns the RootPanel's width.
@@ -557,23 +554,17 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * @return int width in pixel
      */
     public int getToolWidth() {
-	return getRootPanel().getOffsetWidth();
+    	return getRootPanel().getOffsetWidth();
     }
 
     /**
-     * Returns the Sakai iFrame ID based on current URL. WARNING: sometimes the
-     * ID provided in URL is invalid: all "-" (dash character) needs to be
-     * replaced by "x"!
+     * Returns the Sakai iFrame ID based on current URL.
      * 
      * @return current iFrame ID
      */
-    public static String getSakaiFrameId() {
-	String url = GWT.getModuleBaseURL();
-	String tool = "/tool/";
-	int toolPos = url.indexOf(tool) + tool.length();
-	int nextSlash = url.indexOf('/', toolPos);
-	return "Main" + url.substring(toolPos, nextSlash);
-    }
+    public static native String getSakaiFrameId() /*-{
+		return $wnd.name;
+	}-*/;
 
     public OsylViewable getView() {
 	return editorEntryPointView;
@@ -633,5 +624,21 @@ public class OsylEditorEntryPoint implements EntryPoint {
     public static String getExecMode() {
 	return execmode;
     }
-
+    
+    /**
+     * Returns the computed current css style for the element.
+     * Call only if you need the CSS stylesheet style, not the DOM style.
+     * @param el - The Element which we will call the style.
+     * @param cssprop - The Element's CSS property.
+     * @return The property's value of the style.
+     */
+    
+    public static native String getStyle(Element el, String cssprop) /*-{
+		if (el.currentStyle) //IE
+			return el.currentStyle[cssprop];
+		else if ($doc.defaultView && $doc.defaultView.getComputedStyle) //Firefox
+			return $doc.defaultView.getComputedStyle(el, "")[cssprop];
+		else //try and get inline style
+			return el.style[cssprop];
+	}-*/;
 }

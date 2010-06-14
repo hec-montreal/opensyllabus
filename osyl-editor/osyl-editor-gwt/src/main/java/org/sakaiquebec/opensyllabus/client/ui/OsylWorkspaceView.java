@@ -100,7 +100,6 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
      * Refreshes the current view according to current model object.
      */
     public void refreshView() {
-	int scrollPrevent = 0;
 	boolean viewFirstElement = true;
 	if (getModel() != null) {
 	    if (getModel().isCourseOutlineContent()) {
@@ -109,7 +108,6 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 			new OsylLongView(getModel(), getController());
 		currentView = newView;
 		getWorkspacePanel().add(currentView);
-		scrollPrevent = 100;
 	    } else if (getModel().isCOUnit()) {
 		// Display a COContentUnit
 		getWorkspacePanel().clear();
@@ -118,9 +116,6 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 		((COUnit)getModel()).addEventHandler(newView);
 		currentView = newView;
 		getWorkspacePanel().add(currentView);
-		// A bit more space to allow content addition without getting
-		// nasty double-scrollbars!
-		scrollPrevent = 100;
 	    } else if (getModel().isCOStructureElement()) {
 		// Display a COStructureElement
 		getWorkspacePanel().clear();
@@ -139,38 +134,16 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 			currentView = newView; 
 		}
 		getWorkspacePanel().add(currentView);
-		scrollPrevent = 100;
 	    } else if(getModel().isCOUnitStructure()){
 		getWorkspacePanel().clear();
 		OsylCOUnitStructureView newView =
 			new OsylCOUnitStructureView(getModel(), getController());
 		currentView = newView;
 		getWorkspacePanel().add(currentView);
-		// A bit more space to allow content addition without getting
-		// nasty double-scrollbars!
-		scrollPrevent = 100;
 	    }
-	    // We leave 250ms for the view to generate before setting the
-	    // height, otherwise its height is 0px. This allows us to specify
-	    // the current global height of our application. This is needed to
-	    // have correct scroll-bars (i.e.: to avoid having two vertical
-	    // scrollbars, which is both ugly and non-intuitive).
-	    final int sp = scrollPrevent;
-	    Timer t = new Timer() {
-		public void run() {
-		    OsylEditorEntryPoint.getInstance().setToolHeight(
-			    currentView.getOffsetHeight() + sp);
-
-		}
-	    };
-	    // TODO: maybe we should use repeatSchedule. It could help if the
-	    // user types a lot of text and makes the view significantly longer
-	    // than computed previously...
-	    t.schedule(250);
 	} else {
 	    Window.alert("owv : modele null");
 	}
-
     }
 
     public void setBorderWidth(int i) {

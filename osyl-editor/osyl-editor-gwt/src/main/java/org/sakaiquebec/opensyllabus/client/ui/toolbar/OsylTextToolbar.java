@@ -20,6 +20,7 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.toolbar;
 
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.OsylPreviewView;
@@ -30,12 +31,13 @@ import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.OsylMenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
 
@@ -58,11 +60,11 @@ public class OsylTextToolbar extends Composite {
      */
     final OsylConfigMessages uiMessages;
     
-    private MenuBar leftMenuBar;
+    private OsylMenuBar leftMenuBar;
     
-    private MenuBar rightMenuBar;
+    private OsylMenuBar rightMenuBar;
     
-    private MenuBar sectionMenuBar;
+    private OsylMenuBar sectionMenuBar;
     
     private FlowPanel menuBar;
 
@@ -72,9 +74,9 @@ public class OsylTextToolbar extends Composite {
 
     private MenuItem savePushButton;
 
-    private MenuBar addMenuBar;
+    private OsylMenuBar addMenuBar;
 
-    private MenuBar viewMenuBar;
+    private OsylMenuBar viewMenuBar;
 
     private MenuItem addMenuItem;
 
@@ -100,6 +102,7 @@ public class OsylTextToolbar extends Composite {
     
     private MenuItemSeparator printSeparator;
     
+    private MenuItemSeparator editSeparator;
    
 
     // Image Bundle
@@ -112,13 +115,14 @@ public class OsylTextToolbar extends Composite {
 	setOsylController(osylController);
 	uiMessages = osylController.getUiMessages();
 
-	leftMenuBar = new MenuBar();
-	rightMenuBar = new MenuBar();
-	sectionMenuBar = new MenuBar();
+	leftMenuBar = new OsylMenuBar(false);
+	rightMenuBar = new OsylMenuBar(false);
+	sectionMenuBar = new OsylMenuBar(false);
 	viewSeparator = new MenuItemSeparator();
 	previewSeparator = new MenuItemSeparator();
 	publishSeparator = new MenuItemSeparator();
 	printSeparator = new MenuItemSeparator();
+	editSeparator = new MenuItemSeparator();
 	menuBar = new FlowPanel();
 	menuBar.add(leftMenuBar);
 	menuBar.add(rightMenuBar);
@@ -143,13 +147,13 @@ public class OsylTextToolbar extends Composite {
 		createMenuItem("ButtonSaveToolBar",
 			getOsylImageBundle().save(), "ButtonSaveToolBarTooltip");
 
-	addMenuBar = new MenuBar(true);
+	addMenuBar = new OsylMenuBar(true);
 	addMenuBar.setTitle(uiMessages.getMessage("ButtonAddToolBarTooltip"));
 	addMenuBar.setAutoOpen(true);
 	addMenuBar.addStyleName("Osyl-MenuBar-vertical");
 	addMenuBar.addStyleName("Osyl-MenuBar-Add");
 	
-	viewMenuBar = new MenuBar(true);
+	viewMenuBar = new OsylMenuBar(true);
 	viewMenuBar.setTitle(uiMessages.getMessage("ButtonViewToolBarTooltip"));
 	viewMenuBar.setAutoOpen(true);
 	viewMenuBar.addStyleName("Osyl-MenuBar-vertical");
@@ -205,7 +209,7 @@ public class OsylTextToolbar extends Composite {
 		createMenuItem("ButtonEditToolBar", getOsylImageBundle()
 			.edit(), "ButtonEditToolBarTooltip");
     sectionMenuBar.addItem(editPushButton);
-    
+    sectionMenuBar.addSeparator(editSeparator);
 	// MenuBar Item with icon - nice trick...
 	addMenuItem =
 		sectionMenuBar.addItem(AbstractImagePrototype.create(getOsylImageBundle().plus()).getHTML()
@@ -221,6 +225,11 @@ public class OsylTextToolbar extends Composite {
 			viewMenuBar);
 	viewMenuItem.addStyleName("Osyl-MenuItem-vertical");
 	viewMenuItem.addStyleName("Osyl-MenuItem-View");
+	
+	if (OsylEditorEntryPoint.isInternetExplorer()) {
+		DOM.setStyleAttribute(viewMenuItem.getElement(), 
+			"backgroundPosition", "-49px 0");
+	}
 	
 	addViewMenuBarItems();
 	rightMenuBar.addSeparator(publishSeparator);
@@ -283,23 +292,23 @@ public class OsylTextToolbar extends Composite {
 	return osylImageBundle;
     }
     
-    public MenuBar getLeftMenuBar() {
+    public OsylMenuBar getLeftMenuBar() {
     	return leftMenuBar;
     }
 
-    public void setLeftMenuBar(MenuBar leftMenuBar) {
+    public void setLeftMenuBar(OsylMenuBar leftMenuBar) {
     	this.leftMenuBar = leftMenuBar;
     }
 
-    public MenuBar getRightMenuBar() {
+    public OsylMenuBar getRightMenuBar() {
     	return rightMenuBar;
     }
     
-    public MenuBar getSectionMenuBar() {
+    public OsylMenuBar getSectionMenuBar() {
     	return sectionMenuBar;
     }
 
-    public void setSectionMenuBar(MenuBar sectionMenuBar) {
+    public void setSectionMenuBar(OsylMenuBar sectionMenuBar) {
     	this.sectionMenuBar = sectionMenuBar;
     }
     
@@ -335,7 +344,15 @@ public class OsylTextToolbar extends Composite {
     public void setPrintSeparator(MenuItemSeparator printSeparator) {
     	this.printSeparator = printSeparator;
     }
+    
+    public MenuItemSeparator getEditSeparator() {
+    	return editSeparator;
+    }
 
+    public void setEditSeparator(MenuItemSeparator editSeparator) {
+    	this.editSeparator = editSeparator;
+    }
+    
     public MenuItem getHomePushButton() {
 	return homePushButton;
     }
@@ -360,19 +377,19 @@ public class OsylTextToolbar extends Composite {
 	this.savePushButton = savePushButton;
     }
 
-    public MenuBar getAddMenuBar() {
+    public OsylMenuBar getAddMenuBar() {
 	return addMenuBar;
     }
 
-    public void setAddMenuBar(MenuBar addMenuButton) {
+    public void setAddMenuBar(OsylMenuBar addMenuButton) {
 	this.addMenuBar = addMenuButton;
     }
 
-    public MenuBar getViewMenuBar() {
+    public OsylMenuBar getViewMenuBar() {
 	return viewMenuBar;
     }
 
-    public void setViewMenuBar(MenuBar viewMenuButton) {
+    public void setViewMenuBar(OsylMenuBar viewMenuButton) {
 	this.viewMenuBar = viewMenuButton;
     }
 
@@ -432,11 +449,11 @@ public class OsylTextToolbar extends Composite {
 	this.publicViewMenuItem = publicViewMenuItem;
     }
     
-    public void setPublicSectionMenuBar(MenuBar sectionMenuBar) {
+    public void setPublicSectionMenuBar(OsylMenuBar sectionMenuBar) {
     this.sectionMenuBar = sectionMenuBar;
     }
     
-    public MenuBar getPublicSectionMenuBar() {
+    public OsylMenuBar getPublicSectionMenuBar() {
     return sectionMenuBar;
     }
     

@@ -24,6 +24,7 @@ package org.sakaiquebec.opensyllabus.client.ui;
 import java.util.Iterator;
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler;
@@ -39,6 +40,8 @@ import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
 
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.OsylHorizontalSplitPanel;
@@ -83,7 +86,8 @@ public class OsylMainView extends OsylViewableComposite implements
 	getMainPanel().setStylePrimaryName("Osyl-MainPanel");
 	if (getController().isReadOnly())
 	    getMainPanel().addStyleDependentName("ReadOnly");
-
+	
+	
 	String coTitle = null;
 	try {
 	    coTitle = getController().getCOSerialized().getTitle();
@@ -154,7 +158,8 @@ public class OsylMainView extends OsylViewableComposite implements
 	workspaceDecoratorPanel.setStylePrimaryName("Osyl-WorkspaceView");
 	workspaceDecoratorPanel.setTitle(getWorkspaceTitleView());
 	horizontalSplitPanel.setRightWidget(workspaceDecoratorPanel);
-
+	setScrollBar(DOM.getChild(DOM.getChild(horizontalSplitPanel.getElement(), 0),0),"hidden");
+	setScrollBar(DOM.getChild(DOM.getChild(horizontalSplitPanel.getElement(), 0),2),"hidden");
 	subscribeChildrenViewsToLocalHandlers();
 	initWidget(getMainPanel());
 	initViewContext();
@@ -166,8 +171,13 @@ public class OsylMainView extends OsylViewableComposite implements
 	getOsylToolbarView().refreshView();
 	getWorkspaceView().refreshView();
 	getWorkspaceTitleView().refreshView();
+	
     }
-
+    
+    private void setScrollBar(Element e,String value){
+    	DOM.setStyleAttribute(e, "overflow", value);
+    }
+    
     /**
      * Returns the model entry-point, i.e.: the top-level element. This may be
      * used to return to the initial state.
@@ -259,7 +269,7 @@ public class OsylMainView extends OsylViewableComposite implements
 	this.mainPanel = newPanel;
     }
 */
-    public void setSectionToolbarTopPosition() {
+    private void setSectionToolbarTopPosition() {
     	DOM.setStyleAttribute(osylToolbarView.getOsylToolbar().getSectionMenuBar().getElement(),
   				"top", (osylWorkspaceView.getAbsoluteTop() - 78) + "px");
     }
@@ -275,11 +285,11 @@ public class OsylMainView extends OsylViewableComposite implements
     public OsylWorkspaceView getWorkspaceView() {
 	return osylWorkspaceView;
     }
-
+    
     public void setWorkspaceView(Composite workspaceView) {
 	this.osylWorkspaceView = (OsylWorkspaceView) workspaceView;
     }
-
+    
     public void onMouseMove(MouseMoveEvent event) {
 	boolean isResizing =
 		osylHorizontalSplitPanel.getSplitPanel().isResizing();
@@ -289,39 +299,59 @@ public class OsylMainView extends OsylViewableComposite implements
     }
 
     public void resize() {
+    int toolWidth = Window.getClientWidth();
+    if (OsylEditorEntryPoint.isInternetExplorer()) {
+    	DOM.setStyleAttribute(getElement(), "width", toolWidth + "px");
+    }
+    // Set The tree width
 	int treeWidth = osylHorizontalSplitPanel.getSplitterPosition();
 	int treeInnerWidth = treeWidth
-	- (treeDecoratorPanel.getCell(1, 0)
+		- (treeDecoratorPanel.getCell(1, 0)
 			.getOffsetWidth() + treeDecoratorPanel
 			.getCell(1, 2).getOffsetWidth());
 	DOM.setStyleAttribute(treeDecoratorPanel.getCell(0, 1), "width",
 			treeInnerWidth + "px");
 	DOM.setStyleAttribute(treeDecoratorPanel.getCell(1, 1), "width",
 			treeInnerWidth + "px");
-	treeHeaderLabel.setWidth(treeInnerWidth - 35 + "px");
+	int treeHeaderLabelLeftPadding = parsePixels(OsylEditorEntryPoint.getStyle(treeHeaderLabel.getElement(), "paddingLeft"));
+	treeHeaderLabel.setWidth(treeInnerWidth - treeHeaderLabelLeftPadding + "px");
 	int splitterWidth =
 		osylHorizontalSplitPanel.getSplitElement().getOffsetWidth();
-	String toolSizeString = DOM.getStyleAttribute(getElement(), "width");
-	int toolSize =
-		Integer.parseInt(toolSizeString.substring(0, toolSizeString
-			.indexOf("px")));
 	
-	int workspaceWidth = toolSize - treeWidth - splitterWidth;
+	 // Set The workspace width
+	
+	int workspaceWidth = toolWidth - treeWidth - splitterWidth;
 	int workspaceInnerWidth = workspaceWidth
-	- (workspaceDecoratorPanel.getCell(1, 0)
-			.getOffsetWidth() + workspaceDecoratorPanel
-			.getCell(1, 2).getOffsetWidth());
-	DOM.setStyleAttribute(workspaceDecoratorPanel.getCell(1, 1), "width",
-			workspaceInnerWidth + "px");
+		- (workspaceDecoratorPanel.getCell(1, 0).getOffsetWidth()
+		+ workspaceDecoratorPanel.getCell(1, 2).getOffsetWidth());
+	
+	int menubarWidth = osylToolbarView.getOsylToolbar().getSectionMenuBar().getOffsetWidth();
+	int osylWorkspaceLabelLeftPadding = 
+		parsePixels(OsylEditorEntryPoint.getStyle(osylWorkspaceTitleView.getWorkspaceTitleLabel().getElement(), "paddingLeft"));
+	osylWorkspaceTitleView.getWorkspaceTitleLabel().setWidth(workspaceInnerWidth -
+			(menubarWidth + osylWorkspaceLabelLeftPadding + 3) +"px");
+	DOM.setStyleAttribute(workspaceDecoratorPanel.getCell(1, 1), "width",workspaceInnerWidth + "px");
+	setSectionToolbarTopPosition();
+	 // Set The tree height and the workspace height
+	
+	int toolHeight = parsePixels(DOM.getStyleAttribute(getElement(), "height"));
+	
+	// TODO Find a way to compute offsetHeight of the top and bottom decorativePanel (doesn't work use 56 instead).
+	int innerHeight = toolHeight - osylHorizontalSplitPanel.getAbsoluteTop() - 56;
+    DOM.setStyleAttribute(treeDecoratorPanel.getCell(1, 1), "height", innerHeight + "px");
+	DOM.setStyleAttribute(workspaceDecoratorPanel.getCell(1, 1), "height", innerHeight + "px");
     }
-
 	public OsylWorkspaceTitleView getWorkspaceTitleView() {
 		return osylWorkspaceTitleView;
 	}
 
-	public void setWorkspaceTitleView(
-			OsylWorkspaceTitleView osylWorkspaceTitleView) {
+	public void setWorkspaceTitleView(OsylWorkspaceTitleView osylWorkspaceTitleView) {
 		this.osylWorkspaceTitleView = osylWorkspaceTitleView;
 	}
-
+	public static int parsePixels(String value) {
+		int pos = value.indexOf("px");
+		if (pos != -1)
+			value = value.substring(0,pos);
+		return Integer.parseInt(value);
+	}
 }

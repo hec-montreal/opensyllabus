@@ -45,7 +45,7 @@ public class OsylHorizontalSplitPanel extends Composite {
     private Anchor collapseAnchor = null;
 
     private boolean collapseMouseDown = false;
-
+    private boolean isMouseDownOnSplitter = false;
     public Element getSplitElement() {
 	return splitElement;
     }
@@ -109,19 +109,33 @@ public class OsylHorizontalSplitPanel extends Composite {
 
     public void onBrowserEvent(Event event) {
 	Element target = DOM.eventGetTarget(event);
+	
 	boolean isCollapseElementTarget =
 		DOM.isOrHasChild(collapseElement, target);
+	boolean isSplitElementTarget =
+		DOM.isOrHasChild(splitElement, target);
 	switch (DOM.eventGetType(event)) {
-
+	case Event.ONMOUSEMOVE: {
+			if (isMouseDownOnSplitter) {
+	    		setCursor("col-resize");
+	    	}
+	    break;
+	}
 	case Event.ONMOUSEDOWN: {
 	    if (isCollapseElementTarget) {
 		collapseMouseDown = true;
 		collapseAnchor.addStyleName("down");
 		DOM.eventPreventDefault(event);
 	    }
-	    if (DOM.isOrHasChild(splitElement, target) && leftElementVisible) {
-		splitElement.getFirstChildElement().setClassName(
+	    if (isSplitElementTarget && leftElementVisible) {
+	    	splitElement.getFirstChildElement().setClassName(
 			"hsplitter hsplitter-down");
+	    	if (!isCollapseElementTarget) {
+	    		setCursor("col-resize");
+	    		isMouseDownOnSplitter = true;
+	    	}else{
+	    		setCursor("");
+	    	}
 	    }
 	    break;
 	}
@@ -145,16 +159,24 @@ public class OsylHorizontalSplitPanel extends Composite {
 		    splitElement.getFirstChildElement().setClassName(
 			"hsplitter");
 		}
+		OsylController.getInstance().getMainView().resize();
 		leftElementVisible = !leftElementVisible;
 		collapseMouseDown = false;
 		collapseAnchor.removeStyleName("down");
 		handler.onMouseMove(null);
+		
 		DOM.eventPreventDefault(event);
 	    }
+	    setCursor("");
+	    isMouseDownOnSplitter = false;
 	    break;
 	}
 	}
 	if(leftElementVisible && !collapseMouseDown)
 	    super.onBrowserEvent(event);
     }
+    private static native void setCursor(String cursor) /*-{
+    	var o = $wnd.document.body;
+		if (o.style.cursor != cursor) o.style.cursor = cursor;
+	}-*/;
 }

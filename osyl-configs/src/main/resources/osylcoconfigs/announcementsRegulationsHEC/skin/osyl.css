@@ -75,25 +75,27 @@
 
 .gwt-MenuBar-horizontal td.Osyl-MenuItem-Add {background-position:-49px -32px}
 
-/*.gwt-MenuBar-horizontal td.gwt-MenuItem-selected.Osyl-MenuItem-View {background-position:-49px -64px}
-.gwt-MenuBar-horizontal td.gwt-MenuItem-selected.Osyl-MenuItem-Add {background-position:-49px -96px}*/
+.gwt-MenuBar-horizontal td.Osyl-MenuItem-View.gwt-MenuItem-OpenedSubMenu {background-position:-49px -64px}
+.gwt-MenuBar-horizontal td.Osyl-MenuItem-Add.gwt-MenuItem-OpenedSubMenu {background-position:-49px -96px}
 
 
 
 td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	position:relative;
-	margin:8px 2px;
+	margin:8px 2px 6px;
 	width:1px;
 	height:10px;
 	background:#898C8E;
 	overflow:auto;
 	zoom:1;
-	
 }
 * html td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	margin:9px 2px 7px;
 	filter:alpha(opacity=100);
 }
+
+.gwt-MenuBar-Section td.gwt-MenuItemSeparator div.menuSeparatorInner {margin-right:12px}
+
 .gwt-MenuBar-horizontal .gwt-MenuItem img,
 .gwt-MenuBar-horizontal .gwt-MenuItem gwt\:clipper { /*Name space gwt:clipper for IE margin between image and text in menu*/
 	vertical-align:middle;
@@ -107,7 +109,7 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	margin-top:0;
 }
 
-.gwt-MenuBarPopup {margin:0;z-index:2}
+.gwt-MenuBarPopup {margin:0 0 0 -1px;z-index:2}
 
 .gwt-MenuBarPopup .menuPopupMiddleCenter {vertical-align:top}
 
@@ -173,7 +175,7 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 }
 * html .gwt-MenuBarPopup .menuPopupMiddleCenterInner {margin:-6px 0 0 -6px}
 * html .gwt-MenuBarPopup {margin:3px 0 0 3px}
-
+* html .Osyl-MenuBar-Add {width:110px}
 .gwt-MenuBar-vertical {
 	position:relative;
 	vertical-align:middle;
@@ -182,22 +184,21 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	padding:2px;
 	cursor:default;
 	margin:0;
-	min-width:98px;
 	overflow:auto;
 	zoom:1;
-	/*background:#FFF url(images/ui/menu-vertical_bg.gif) repeat-x;
+	background:#FFF url(images/ui/menu-vertical_bg.gif) repeat-x;
 	border-top:none;
-	padding-top:3px;*/
+	padding-top:3px;
 }
-/*.gwt-MenuBar-vertical.Osyl-MenuBar-Add {
-	margin:-2px 0 0 0;
-}*/
+
 .gwt-MenuBar-vertical .gwt-MenuItem {
 	text-align:left;
 	padding:4px 4px;
-	min-width:94px;
+	min-width:96px;
 }
-
+* html .Osyl-MenuBar-Add .gwt-MenuItem {
+	width:100px;
+}
 /* Act as a hover */
 .gwt-MenuBar td.gwt-MenuItem:hover, .gwt-MenuBar td.td.gwt-MenuItem-selected {
 	text-decoration:underline;
@@ -206,9 +207,11 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 .gwt-MenuBar-vertical td.gwt-MenuItem-selected, .gwt-MenuBar-vertical td.gwt-MenuItem-selected:hover  {
 	text-decoration:none;
 	background-color:#DCEFFD;
-	min-width:94px;
+	min-width:96px;
 }
-
+* html .Osyl-MenuBar-Add td.gwt-MenuItem-selected, * html .Osyl-MenuBar-Add td.gwt-MenuItem:hover {
+	width:100px;
+}
 /* Horizontal Split Panel , parent of the left, middle and right Zone -------------------------------------*/
 .Osyl-MainView-HorizontalSplitPanel {
 	margin:0;
@@ -225,6 +228,7 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 }
 .Osyl-MainView-HorizontalSplitPanel .bottomCenter {background-position:0 -49px}
 .Osyl-MainView-HorizontalSplitPanel .topCenter {height:47px;background-position:0 0}
+.Osyl-MainView-HorizontalSplitPanel .topCenterInner {overflow:hidden}
 
 .Osyl-MainView-HorizontalSplitPanel .middleLeft,
 .Osyl-MainView-HorizontalSplitPanel .middleRight {
@@ -316,7 +320,9 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 
 .Osyl-TreeView-TreeRoot {display:none}
 .Osyl-TreeView-TreeContent {margin-left:-8px}
+
 /*TreeView Header */
+
 .Osyl-TreeView-Header {
 	font:bold 15px Arial, Verdana, sans-serif;
 	color:#76787a;
@@ -376,15 +382,25 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 .Osyl-MainView-HorizontalSplitPanel .hsplitter img {display:none}
 /*Workspace View Right Zone --------------------------------------------------------------------------------*/
 
+/*TreeView Header */
+.Osyl-WorkspaceView-Header {
+	font:bold 15px Arial, Verdana, sans-serif;
+	color:#76787a;
+	padding:14px 0 15px 37px;
+	line-height:20px;
+	overflow:hidden;
+	white-space:nowrap;
+	background:transparent;
+	text-overflow:ellipsis;
+	-o-text-overflow: ellipsis;
+	-moz-binding: url('ellipsis.xml#ellipsis');
+}
+
+
 .Osyl-WorkspaceView, .Osyl-WorkspaceView-MainPanel {width:100%}
 .Osyl-WorkspaceView {
 	/*height:100%;*/
 	overflow:hidden;
-}
-
-.Osyl-WorkspaceView-Header {
-	padding:4px 0;
-	border:1px solid #FFF; /*For IE6*/
 }
 
 .Osyl-WorkspaceView .middleCenterInner {margin:0}
@@ -620,7 +636,7 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	margin:0 0 5px;
 	padding:5px 20px 5px 5px;
 	border:1px solid #FFF;
-	border-top-color:#e3f0FF;
+	border-color:#E3F0FF #FFF #FFF #FFF;
 	width:auto;
 	zoom:1;
 	overflow:hidden;
@@ -633,13 +649,14 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	overflow:visible;
 }
 
-.Osyl-UnitView-ResPanel.Osyl-firstElementOfView {
-	border-top-color:#FFF;
+div.Osyl-firstElementOfView {
+	display:none;
 }
 
 .Osyl-ListItemView-Hyperlink .Osyl-UnitView-ResPanel {
 	color:#FFF; /*For IE6*/
 	border:1px solid transparent;
+	border-top-color:#E3F0FF;
 	margin:0;
 }
 
@@ -699,6 +716,9 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	font:normal 10px sans-serif, Arial, Verdana;
 	color:#A0A0A0;
 }
+
+.Osyl-ListItemView-Table .Osyl-UnitView-MetaInfo {margin:0}
+
 .Osyl-ResProxView-MetaInfo-Important,
 .Osyl-UnitView-MetaInfo-Important,
 .Osyl-UnitView-SemanticTag-Important {
@@ -740,7 +760,7 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 /*List Item View --------------------------------------------------------------------------------------*/
 .Osyl-ListItemView-Table {
 	width:100%;
-	border:1px solid #e3f0FF;
+	border:1px solid #FFF;
 	margin:0 0 5px;
 }
 
@@ -1244,6 +1264,8 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	filter :alpha(opacity=40) !important; /* IE */
 	-moz-opacity :0.4 !important; /* FF */
 	opacity :0.4 !important; /* default */
+	height:100%;
+	width:100%;
 }
 
 .Osyl-LightBox-Regular { background-color:#000 !important;} /* Glass panel color. Keep !important for IE */
@@ -1368,6 +1390,8 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	filter :alpha(opacity=20) !important; /* IE */
 	-moz-opacity :.20 !important; /* FF */
 	opacity :0.20 !important; /* default */
+	width:100%;
+	height:100%;
 }
 
 .mosaic-Caption-iconBoxRight {

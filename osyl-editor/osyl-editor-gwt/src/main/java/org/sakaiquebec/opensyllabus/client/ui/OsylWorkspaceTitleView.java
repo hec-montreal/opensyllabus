@@ -64,6 +64,7 @@ public class OsylWorkspaceTitleView extends OsylViewableComposite implements
     private VerticalPanel workspacePanel;
     private Widget currentView;
     private DateTimeFormat dateTimeFormat;
+    private Label workspaceTitleLabel;
 
     // View Constructor
     public OsylWorkspaceTitleView(COModelInterface model, OsylController controller) {
@@ -104,9 +105,8 @@ public class OsylWorkspaceTitleView extends OsylViewableComposite implements
      */
     public void refreshView() {
 	getWorkspacePanel().clear();
-	Label workspaceTitleLabel = new Label();
+	workspaceTitleLabel = new Label();
 	workspaceTitleLabel.setStylePrimaryName("Osyl-WorkspaceView-Header");
-	workspaceTitleLabel.setStyleName("Osyl-Title2");
 	String titleLabel = "";
 	if (getModel() != null) {
 	    if (getModel().isCourseOutlineContent()) {
@@ -168,6 +168,14 @@ public class OsylWorkspaceTitleView extends OsylViewableComposite implements
 
     public OsylWorkspaceTitleView getWorkspaceView() {
 	return this;
+    }
+    
+    public Label getWorkspaceTitleLabel() {
+    	return workspaceTitleLabel;
+    }
+    
+    public void setWorkspaceTitleLabel(Label workspaceTitleLabel) {
+    	this.workspaceTitleLabel = workspaceTitleLabel;
     }
     
     public String getWeight() {

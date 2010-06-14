@@ -118,13 +118,14 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    getOsylToolbar().getPublishPushButton().setVisible(false);
 	    
 	    /* Print menu button */
-	    getOsylToolbar().getPrintSeparator().setVisible(false);
-	    getOsylToolbar().getPrintPushButton().setVisible(false);
+	    getOsylToolbar().getPrintSeparator().setVisible(false); //TODO true when printing is ready
+	    getOsylToolbar().getPrintPushButton().setVisible(false); //TODO true when printing is ready
 	    
 	    /* Add menu button */
 	    getOsylToolbar().getAddMenuItem().setVisible(false);
 
 	    /* Edit menu button */
+	    getOsylToolbar().getEditSeparator().setVisible(false);
 	    getOsylToolbar().getEditPushButton().setVisible(false);
 
 	    setClosePushButtonCommand();
@@ -148,14 +149,18 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    getOsylToolbar().getPublishPushButton().setVisible(false);
 	    
 	    /* Print menu button */
-	    getOsylToolbar().getPrintSeparator().setVisible(false);
-	    getOsylToolbar().getPrintPushButton().setVisible(false);//TODO true when printing is ready
+	    getOsylToolbar().getPrintSeparator().setVisible(false); //TODO true when printing is ready
+	    getOsylToolbar().getPrintPushButton().setVisible(false); //TODO true when printing is ready
+	    
+	    /* Edit menu button */
+	    getOsylToolbar().getEditSeparator().setVisible(false);
+	    getOsylToolbar().getEditPushButton().setVisible(false);
 	    
 	    /* Add menu button */
 	    getOsylToolbar().getAddMenuItem().setVisible(false);
 
-	    /* Edit menu button */
-	    getOsylToolbar().getEditPushButton().setVisible(false);
+	    
+	    
 	    setHomePushButtonCommand();
 	    setViewAllPushButtonCommand();
 	} else {
@@ -181,16 +186,18 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		getOsylToolbar().getPublishPushButton().setVisible(true);
 		
 		/* Print menu button */
-		getOsylToolbar().getPrintSeparator().setVisible(true);
-		getOsylToolbar().getPrintPushButton().setVisible(false);//TODO true when printing is ready
+		getOsylToolbar().getPrintSeparator().setVisible(false); //TODO true when printing is ready
+		getOsylToolbar().getPrintPushButton().setVisible(false); //TODO true when printing is ready
 		
 		/* Add menu button */
 		getOsylToolbar().getAddMenuItem().setVisible(true);
 		getOsylToolbar().getAddMenuBar().clearItems();
 		if(getController().getOsylConfig().getSettings().isModelTitleEditable(getModel())){
 			setEditPushButtonCommand();
+			getOsylToolbar().getEditSeparator().setVisible(true);
 			getOsylToolbar().getEditPushButton().setVisible(true);
 		}else{
+			getOsylToolbar().getEditSeparator().setVisible(false);
 			getOsylToolbar().getEditPushButton().setVisible(false);
 		}
 		// 3 big ViewContext cases

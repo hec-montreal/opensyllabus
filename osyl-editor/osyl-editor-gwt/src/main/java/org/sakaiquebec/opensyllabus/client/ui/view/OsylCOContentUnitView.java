@@ -340,8 +340,7 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 		    COContentRubric.RUBRIC_TYPE_NEWS)) {
 		resProx.moveToTheTopOfTheRubric();
 	    }
-	    OsylEditorEntryPoint.getInstance().setToolHeight(
-		    getOffsetHeight() + 100);
+	    //OsylEditorEntryPoint.getInstance().setToolHeight(getOffsetHeight() + 100);
 	}
     }
 

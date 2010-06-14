@@ -410,11 +410,11 @@ public abstract class OsylAbstractEditor extends Composite {
 	// Sizes the pop-up to fit the preferred size of the its subcomponents,
 	// shows it modal and centers it.
 	pop.showModal(true);
-
+	
 	// remember original height
 	originalEditorPopupHeight = pop.getOffsetHeight();
 	originalEditorWidgetHeight = getEditorTopWidget().getOffsetHeight();
-
+	
 	// And we give the focus to the editor using a deferred command
 	// (otherwise it doesn't always work)
 	DeferredCommand.addCommand(new Command() {
