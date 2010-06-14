@@ -221,7 +221,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
      */
     
     public static native int getSakaiFooterHeight() /*-{
-    	return ($wnd.parent != $wnd ? $wnd.parent.document.getElementById("footer").parentNode.offsetHeight:0);
+    	var n = $wnd.parent.document.getElementById("footer");
+    	return ($wnd.parent != $wnd && n != null ? n.parentNode.offsetHeight:0);
 	}-*/;
     
     /**
@@ -301,12 +302,14 @@ public class OsylEditorEntryPoint implements EntryPoint {
 			o.@org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint::setToolSize()();
 		}
 		addEvent($wnd.top,'resize',resize);
-		if ($wnd != $wnd.parent) $wnd.parent.document.getElementById($wnd.name).style.marginBottom = "0";
+		var n = $wnd.parent.document.getElementById($wnd.name);
+		if ($wnd != $wnd.parent && n != null) n.style.marginBottom = "0";
 		
 	}-*/;
     
     private static native void setSakaiIFrameHeight(int h) /*-{
-		if ($wnd != $wnd.parent) $wnd.parent.document.getElementById($wnd.name).style.height = h + "px";
+    	var n = $wnd.parent.document.getElementById($wnd.name);
+		if ($wnd != $wnd.parent && n != null) n.style.height = h + "px";
 	}-*/;
     
     /**
@@ -337,7 +340,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * @return int number of pixels from top
      */
     public static native int getGlobalYPosition() /*-{
-						  if (document.all) {
+						  if ($doc.all) {
 						  // We are In MSIE.
 						  return top.document.documentElement.scrollTop;
 						  } else {
@@ -355,8 +358,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
      */
     public static native int getToolYOffset()  /*-{
 		var curtop = 0;
-		if ($wnd.name != "") {
-			var obj = $wnd.parent.document.getElementById($wnd.name);
+		var obj = $wnd.parent.document.getElementById($wnd.name);
+		if ($wnd.name != "" && obj != null) {
 			if (obj.offsetParent) {
     			do {
         			curtop += obj.offsetTop;
@@ -388,7 +391,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * @return int number of pixel from left
      */
     public static native int getGlobalXPosition() /*-{
-		if ($wnd.document.all) {
+		if ($doc.all) {
 			// We are In MSIE.
 			return $wnd.top.document.documentElement.scrollLeft;
 		} else {
@@ -405,8 +408,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
      */
     private static native int getToolXOffset() /*-{
 		var curleft = 0;
-		if ($wnd.name != "") {
-			var obj = $wnd.parent.document.getElementById($wnd.name);
+		var obj = $wnd.parent.document.getElementById($wnd.name);
+		if ($wnd.name != "" && obj != null) {
 			if (obj.offsetParent) {
 				do {
     				curleft += obj.offsetLeft;
