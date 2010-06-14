@@ -35,12 +35,12 @@
 }
 .gwt-MenuBar-Right {
 	float:right;
-	margin-right:5px;
+	margin-right:8px;
 }
 .gwt-MenuBar-Section {
 	position:absolute;
 	top:41px;
-	right:9px;
+	right:21px;
 	z-index:3;
 	margin:0;
 }
@@ -128,8 +128,8 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	width:8px;
 }
 
-.gwt-MenuBarPopup .menuPopupmiddleLeft {background-position:-40px 0}
-.gwt-MenuBarPopup .menuPopupmiddleRight {background-position:-48px 0}
+.gwt-MenuBarPopup .menuPopupmiddleLeft {background-position:-52px 0}
+.gwt-MenuBarPopup .menuPopupmiddleRight {background-position:-60px 0}
 
 .gwt-MenuBarPopup .menuPopupTopLeftInner,
 .gwt-MenuBarPopup .menuPopupTopRightInner,
@@ -401,6 +401,16 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 .Osyl-WorkspaceView {
 	/*height:100%;*/
 	overflow:hidden;
+}
+
+.Osyl-MainView-HorizontalSplitPanel .Osyl-WorkspaceView .middleRight  {
+	background-position:-22px 0;
+	width:18px;
+}
+
+.Osyl-MainView-HorizontalSplitPanel .Osyl-WorkspaceView .topRightInner,
+.Osyl-MainView-HorizontalSplitPanel .Osyl-WorkspaceView .bottomRightInner {
+	width:18px;
 }
 
 .Osyl-WorkspaceView .middleCenterInner {margin:0}
@@ -1080,8 +1090,8 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	background: url(images/ui/vborder.png) repeat-y;
 	width:6px;
 }
-.popupMiddleLeft {background-position:-28px 0}
-.popupMiddleRight {background-position:-34px 0}
+.popupMiddleLeft {background-position:-40px 0}
+.popupMiddleRight {background-position:-46px 0}
 
 .popupTopLeftInner,
 .popupTopRightInner,
@@ -1098,20 +1108,20 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 }
 
 .popupTopLeft {
-	background: url(images/ui/osyl_sprite.png) no-repeat -34px -48px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -34px -48px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -36px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -36px -48px;
 }
 .popupTopRight {
-	background: url(images/ui/osyl_sprite.png) no-repeat -40px -48px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -40px -48px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -42px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -42px -48px;
 }
 .popupBottomLeft {
-	background: url(images/ui/osyl_sprite.png) no-repeat -34px -75px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -34px -75px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -36px -75px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -36px -75px;
 }
 .popupBottomRight {
-	background: url(images/ui/osyl_sprite.png) no-repeat -40px -75px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -40px -75px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -42px -75px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -42px -75px;
 }
 
 * html .popupTopLeftInner,

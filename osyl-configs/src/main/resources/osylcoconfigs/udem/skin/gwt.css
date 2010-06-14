@@ -49,8 +49,8 @@
 	background: url(images/ui/vborder.png) repeat-y;
 	width:6px;
 }
-.gwt-DialogBox .dialogMiddleLeft {background-position:-28px 0}
-.gwt-DialogBox .dialogMiddleRight {background-position:-34px 0}
+.gwt-DialogBox .dialogMiddleLeft {background-position:-40px 0}
+.gwt-DialogBox .dialogMiddleRight {background-position:-46px 0}
 
 .gwt-DialogBox .dialogTopLeftInner,
 .gwt-DialogBox .dialogTopRightInner,
@@ -67,20 +67,20 @@
 }
 
 .gwt-DialogBox .dialogTopLeft {
-	background: url(images/ui/osyl_sprite.png) no-repeat -34px -48px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -34px -48px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -36px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -36px -48px;
 }
 .gwt-DialogBox .dialogTopRight {
-	background: url(images/ui/osyl_sprite.png) no-repeat -40px -48px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -40px -48px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -42px -48px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -42px -48px;
 }
 .gwt-DialogBox .dialogBottomLeft {
-	background: url(images/ui/osyl_sprite.png) no-repeat -34px -75px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -34px -75px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -36px -75px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -36px -75px;
 }
 .gwt-DialogBox .dialogBottomRight {
-	background: url(images/ui/osyl_sprite.png) no-repeat -40px -75px;
-	-background: url(images/ui/osyl_sprite.gif) no-repeat -40px -75px;
+	background: url(images/ui/osyl_sprite.png) no-repeat -42px -75px;
+	-background: url(images/ui/osyl_sprite.gif) no-repeat -42px -75px;
 }
 
 
