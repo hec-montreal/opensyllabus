@@ -130,8 +130,6 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	    }
 	});
 	
-    
-    
 	} // onModuleLoad
     
 
@@ -211,7 +209,12 @@ public class OsylEditorEntryPoint implements EntryPoint {
     	}
     	((OsylViewableComposite) getView()).setHeight((h - 12) + "px");
     	getRootPanel().setHeight(h + "px");
-  		editorMainView.resize();
+    	if (OsylController.getInstance().isInPreview()) {
+    		OsylController.getInstance().getMainView().resize();
+    	}else{
+    		editorMainView.resize();
+    	}
+    	
     }
     /**
      * Returns, in pixels, the total height of the Sakai footer section.
