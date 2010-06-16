@@ -37,6 +37,14 @@
 			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
 	</bean>
 
+	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylTransformToZCCO"
+		class="org.sakaiquebec.opensyllabus.common.impl.OsylTransformToZCCOImpl"
+		init-method="init" destroy-method="destroy" singleton="true">
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+	</bean>
+
+
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylHierarchyServiceImpl"
 		init-method="init" destroy-method="destroy" singleton="true">
