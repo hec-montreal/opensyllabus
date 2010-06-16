@@ -109,10 +109,6 @@ public class GenericProfCoursMapFactory {
 			String acadOrg = token[i++];
 			String role = token[i++];
 			String strmId = strm + sessionCode;
-
-			DetailCoursMapEntry cours = detailCoursMap.get(catalogNbr, strmId,
-				section);
-
 	
 			if (catalogNbr != null)
 				catalogNbr = catalogNbr.trim();
@@ -120,15 +116,18 @@ public class GenericProfCoursMapFactory {
 				entry = map.get(emplId);
 			} else {
 				entry = new ProfCoursMapEntry(emplId);
-				if (cours != null)
 				    map.put(entry);
-			}
+						}
 
 			//TODO: removed for the purpose of the tests, put back when done
 //			if (cours == null) {
 //				// throw new IllegalStateException("cours == null pour " +
 //				// buffer);
 //			}
+
+
+			DetailCoursMapEntry cours = detailCoursMap.get(catalogNbr, strmId,
+				section);
 
 			entry.setUnitMinimum(unitMinimum);
 			entry.setAcadOrg(acadOrg);

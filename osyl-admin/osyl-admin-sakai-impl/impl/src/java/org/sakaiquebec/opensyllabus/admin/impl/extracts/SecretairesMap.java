@@ -34,7 +34,9 @@ public class SecretairesMap extends HashMap<String, SecretairesMapEntry> {
 
     public static final long serialVersionUID = 5386630822650707643l;
 
-    public static final String SECRETAIRES_CERTIFICAT = "Agent aux activités";
+    public static final String SECRETAIRES_CERTIFICAT_PREFIX = "Agent";
+
+    public static final String SECRETAIRES_CERTIFICAT_SUFFIX = "Agent";
 
     public static final String SECRETAIRES_CERTIFICAT_SERV_ENS = "115";
 
@@ -52,6 +54,11 @@ public class SecretairesMap extends HashMap<String, SecretairesMapEntry> {
 
     public void remove(SecretairesMapEntry entry) {
 	remove(entry.getEmplId());
+    }
+
+    public boolean secretaireCertificat(String role) {
+	return role.contains(SECRETAIRES_CERTIFICAT_PREFIX)
+		&& role.contains(SECRETAIRES_CERTIFICAT_SUFFIX);
     }
 
     /**
@@ -72,7 +79,7 @@ public class SecretairesMap extends HashMap<String, SecretairesMapEntry> {
 	    entry = this.get(key);
 	    role = entry.getRole();
 	    deptId = entry.getDeptId();
-	    if (role.equalsIgnoreCase(SECRETAIRES_CERTIFICAT)
+	    if (secretaireCertificat(role)
 		    && deptId.equalsIgnoreCase(SECRETAIRES_CERTIFICAT_SERV_ENS))
 		secretaires.add(entry.getEmplId());
 	}
@@ -96,9 +103,7 @@ public class SecretairesMap extends HashMap<String, SecretairesMapEntry> {
 	for (String key : keys) {
 	    entry = this.get(key);
 	    department = Integer.parseInt(entry.getDeptId());
-	    if (department == deptId
-		    && !entry.getRole()
-			    .equalsIgnoreCase(SECRETAIRES_CERTIFICAT))
+	    if (department == deptId && !secretaireCertificat(entry.getRole()))
 		secretaires.add(entry.getEmplId());
 	}
 
