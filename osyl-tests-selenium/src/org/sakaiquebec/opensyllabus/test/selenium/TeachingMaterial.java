@@ -402,12 +402,12 @@ public class TeachingMaterial extends AbstractOSYLTest {
         }
         
         //Fill the necessary fields
-        session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Titre );        
-        session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Auteur);
-        session().type("//tr[12]/td/table/tbody/tr/td[3]/input", Annee);
-        session().type("//tr[13]/td/table/tbody/tr/td[3]/input", Editeur);
-        session().type("//tr[14]/td/table/tbody/tr/td[3]/input", Lieu);
-        session().type("//tr[17]/td/table/tbody/tr/td[3]/input", ISBN);
+        session().type("//tr[9]/td/table/tbody/tr/td[3]/input", Titre );        
+        session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Auteur);
+        session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Annee);
+        session().type("//tr[12]/td/table/tbody/tr/td[3]/input", Editeur);
+        session().type("//tr[13]/td/table/tbody/tr/td[3]/input", Lieu);
+        session().type("//tr[19]/td/table/tbody/tr/td[3]/input", ISBN);
         
         //Close Window
         session().click("//tr[22]/td/table/tbody/tr/td/button");
@@ -423,7 +423,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
         pause();
         
         // Close Editor
-        session().click("//tr/td[2]/table/tbody/tr/td/table/tbody/tr/td/button");
+        session().click("//td/table/tbody/tr/td[1]/button");
         pause();
         
         //We delete new citation 

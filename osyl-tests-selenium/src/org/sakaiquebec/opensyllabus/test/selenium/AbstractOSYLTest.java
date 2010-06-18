@@ -460,7 +460,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * for now).
      */
     public void clickAddButton() {
-	session().click("gwt-uid-7");
+	session().click("gwt-uid-8");
     }
     
     /**

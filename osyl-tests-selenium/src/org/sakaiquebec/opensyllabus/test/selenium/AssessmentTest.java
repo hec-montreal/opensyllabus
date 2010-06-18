@@ -354,7 +354,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	if (inFireFox()) {
 	    
         	//Overview
-        	session().click("gwt-uid-8");
+        	session().click("gwt-uid-9");
         	//Attendee Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
 		"div/table/tbody/tr/td");
@@ -381,7 +381,7 @@ public class AssessmentTest extends AbstractOSYLTest{
         	session().click("//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
         	
         	//Overview
-        	session().click("gwt-uid-8");
+        	session().click("gwt-uid-9");
         	//Public Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
 		"/div/div/table/tbody/tr[2]/td");
@@ -457,7 +457,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	
 	if (inFireFox()) {
         	//Overview
-        	session().click("gwt-uid-8");
+        	session().click("gwt-uid-9");
         	//Attendee Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
         			"div/table/tbody/tr/td");
@@ -631,7 +631,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	
 	if (inFireFox()) {
         	//Overview
-        	session().click("gwt-uid-8");
+        	session().click("gwt-uid-9");
         	//Attendee Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
         			"div/table/tbody/tr/td");
@@ -856,7 +856,7 @@ public class AssessmentTest extends AbstractOSYLTest{
 	pause();
         
         // We switch the 1st and 2nd assessment 
-        int Val1 = resNb +2;
+        int Val1 = resNb +3;
         if (inInternetExplorer()) {
         session().keyPress("//html/body/table/tbody/tr[3]/td/div/div/div[3]" +
 			"/table/tbody/tr[2]/td[2]/div/table/tbody/tr/td/table" +

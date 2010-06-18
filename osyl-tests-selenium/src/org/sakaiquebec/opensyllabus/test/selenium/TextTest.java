@@ -52,9 +52,13 @@ public class TextTest extends AbstractOSYLTest {
 	waitForOSYL();
 	
 	//Open Seances Section
-	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-	"td/div[contains(text(),'Organisation')]");
-        pause();
+	if(inFireFox()){
+        	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
+        	"td/div[contains(text(),'Organisation')]");
+                pause();
+	}else{
+	    	session().click("gwt-uid-16");
+	}
 
 	// If we don't have a Lecture we add one
 	int LectNb = getResourceCount();

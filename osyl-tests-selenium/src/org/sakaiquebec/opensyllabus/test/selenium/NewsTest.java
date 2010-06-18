@@ -57,14 +57,14 @@ public class NewsTest extends AbstractOSYLTest {
 	
         // We keep track of how many resources are showing to check that it
 	// is incremented as expected when we add one
-	int resNb = getResourceCount()-1;
+	int resNb = getResourceCount();
 	log("We start with " + resNb + " resources");
         
 	//Add News
 	clickAddItem("addNews");
 	
 	// We check that our news was added
-	int resNb2 = getResourceCount()-1 ;
+	int resNb2 = getResourceCount() ;
 	log("We now have " + resNb2 + " resources");
 	if ( 1+ resNb != resNb2) {
 	    logAndFail("Resource count not incremented as expected!");

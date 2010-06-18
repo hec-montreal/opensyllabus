@@ -69,11 +69,11 @@ public class SeancesTest extends AbstractOSYLTest{
         log("We start with " + resNb + " resources");
         
         //We add a first Assessment Unit 
-        clickAddItem("addPedagogicalUnit");
+        clickAddItem("addLecture");
         pause();
         
         //We add a first Assessment Unit 
-        clickAddItem("addPedagogicalUnit");
+        clickAddItem("addLecture");
         pause();
         
 //---------------------------------------------------------------------------//
@@ -180,7 +180,7 @@ public class SeancesTest extends AbstractOSYLTest{
 	if (inFireFox()) {
 	    
         	//Overview
-        	session().click("gwt-uid-8");
+        	session().click("gwt-uid-9");
         	//Attendee Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
         			"div/table/tbody/tr/td");
@@ -208,7 +208,7 @@ public class SeancesTest extends AbstractOSYLTest{
         	pause();
         	
         	/*/Overview
-        	session().click("gwt-uid-8");
+        	session().click("gwt-uid-9");
         	//Public Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
         			"/div/div/table/tbody/tr[2]/td");
@@ -283,7 +283,7 @@ public class SeancesTest extends AbstractOSYLTest{
 	
 	if (inFireFox()) {
         	//Overview
-        	session().click("gwt-uid-8");
+        	session().click("gwt-uid-9");
         	//Attendee Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
         			"div/table/tbody/tr/td");
@@ -311,7 +311,7 @@ public class SeancesTest extends AbstractOSYLTest{
         	pause();
         	
         	/*/Overview
-        	session().click("gwt-uid-8");
+        	session().click("gwt-uid-9");
         	
         	//Public Overview 
         	session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
@@ -461,7 +461,7 @@ public class SeancesTest extends AbstractOSYLTest{
         if (inFireFox()) {
                         
             //Overview
-            session().click("gwt-uid-8");
+            session().click("gwt-uid-9");
             
             //Attendee Overview 
             session().click("//html/body/div/div/table/tbody/tr[2]/td[2]/div/" +
@@ -496,7 +496,7 @@ public class SeancesTest extends AbstractOSYLTest{
             pause();
             
             /*/Overview
-            session().click("gwt-uid-8");
+            session().click("gwt-uid-9");
             
             //Public Overview 
             session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +

@@ -173,7 +173,7 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	pause();
 	
 	//Overview
-	session().click("gwt-uid-8");
+	session().click("gwt-uid-9");
 	pause();
 	session().click("//td[2]/div/div/table/tbody/tr[2]/td");
 	pause();
