@@ -193,6 +193,16 @@ public class OsylMainView extends OsylViewableComposite implements
 	if (absElement == null && root.getChildrens() != null
 		&& root.getChildrens().size() > 0) {
 	    absElement = (COElementAbstract) root.getChildrens().get(0);
+	    //if COStructure element Contains a COUnit, return the COUnit element
+		if (absElement != null && absElement.getChildrens() != null
+				&& absElement.getChildrens().get(0) != null){
+			COElementAbstract childElement = (COElementAbstract)absElement.getChildrens().get(0);
+			if(childElement.isCOUnit()){
+				absElement = childElement;
+			}
+			
+		}
+	    
 	}
 	return absElement;
     }
