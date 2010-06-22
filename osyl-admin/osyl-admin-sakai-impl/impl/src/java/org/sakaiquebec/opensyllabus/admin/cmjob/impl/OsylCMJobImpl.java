@@ -220,18 +220,19 @@ public class OsylCMJobImpl implements OsylCMJob {
 			+ ": " + instructors.toString());
 
 		// On a un coordonnateur
-		if (detailsCours.getCoordonnateur() != null) {
-		    matricule = detailsCours.getCoordonnateur().getEmplId();
-		    courseOffId = getCourseOfferingId(detailsCours);
-		    courseOff = cmService.getCourseOffering(courseOffId);
-
-		    cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
-			    COORDONNATEUR_ROLE, courseOffId, ACTIVE_STATUS);
-		    log.info("Coordinator for " + detailsCours.getUniqueKey()
-			    + ": " + matricule);
-		    cmAdmin.updateCourseOffering(courseOff);
-
-		}
+		//SAKAI-1582
+//		if (detailsCours.getCoordonnateur() != null) {
+//		    matricule = detailsCours.getCoordonnateur().getEmplId();
+//		    courseOffId = getCourseOfferingId(detailsCours);
+//		    courseOff = cmService.getCourseOffering(courseOffId);
+//
+//		    cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
+//			    COORDONNATEUR_ROLE, courseOffId, ACTIVE_STATUS);
+//		    log.info("Coordinator for " + detailsCours.getUniqueKey()
+//			    + ": " + matricule);
+//		    cmAdmin.updateCourseOffering(courseOff);
+//
+//		}
 	    }
 
 	}
