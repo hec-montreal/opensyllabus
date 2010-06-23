@@ -18,10 +18,13 @@
  * limitations under the License.
  *
  ******************************************************************************/
-package org.sakaiquebec.opensyllabus.common.api;
+package org.sakaiquebec.opensyllabus.common.api.portal;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
+import java.util.Map;
+
+import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
 /**
  * This class takes the public course outline created at the publishing of a
@@ -34,20 +37,34 @@ import java.util.List;
  */
 public interface OsylTransformToZCCO {
 
-    public final static String XSLT_FILE_PATH = "";
-
-    public final static String XSLT_FILE_NAME= "";
+    public final static String ANNUAIRE_KOID_PREFIX = "a-";
     
     public final static String PUBLISH_COLL_PREFIX = "/group/";
     
     public final static String PUBLISH_COLL_SUFFIX = "/publish/";
+    
+    public static final String WORK_DIR = "work";
+    
+    public static final String PUBLISH_DIR = "publish";
+    
+    public final static String SUMMER = "E";
+    
+    public final static String WINTER = "H";
+    
+    public final static String FALL = "A";
+    
+    public static final String SITE_PREFIX = "/site/";
+    
+
 
     /**
      * Creates a XML course outline ZoneCours compatible and sends it to the
      * ZoneCours database.
+     * @param documentSecurityMap TODO
+     * @param documentVisibilityMap TODO
      *
      * @return
      */
-    public boolean sendXml(String siteId, String osylCoXml);
+    public boolean sendXmlAndDoc(COSerialized published, Map<String, String> documentSecurityMap, Map<String, String> documentVisibilityMap);
 
 }

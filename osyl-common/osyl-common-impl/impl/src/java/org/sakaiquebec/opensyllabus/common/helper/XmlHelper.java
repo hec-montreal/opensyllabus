@@ -29,6 +29,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -70,6 +71,28 @@ public class XmlHelper {
     
     public static String applyXsl(String xml, String xsl) throws Exception {
 	TransformerFactory tFactory = TransformerFactory.newInstance();
+	// retrieve the Xml source
+	StreamSource coXmlContentSource =
+		new StreamSource(
+			new ByteArrayInputStream(xml.getBytes("UTF-8")));
+	// retrieve the Xsl source
+	StreamSource coXslContentSource =
+		new StreamSource(
+			new ByteArrayInputStream(xsl.getBytes("UTF-8")));
+	// we use a ByteArrayOutputStream to avoid using a file
+	ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+	StreamResult xmlResult = new StreamResult(out);
+
+	Transformer transformerXml =
+		tFactory.newTransformer(coXslContentSource);
+	transformerXml.transform(coXmlContentSource, xmlResult);
+	return out.toString("UTF-8");
+    }
+
+    public static String applyXsl(String xml, String xsl, URIResolver uriResolver) throws Exception {
+	TransformerFactory tFactory = TransformerFactory.newInstance();
+	tFactory.setURIResolver(uriResolver);
+
 	// retrieve the Xml source
 	StreamSource coXmlContentSource =
 		new StreamSource(

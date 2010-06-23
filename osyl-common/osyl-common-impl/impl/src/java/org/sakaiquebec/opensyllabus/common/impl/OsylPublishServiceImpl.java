@@ -26,6 +26,7 @@ import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
+import org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
 import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
@@ -60,6 +61,17 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public void setSecurityService(OsylSecurityService securityService) {
 	this.osylSecurityService = securityService;
     }
+
+    /**
+     * Maps the visibility of the documents published, hidden or not
+     */
+    Map<String, String> documentVisibilityMap;
+
+    /**
+     * Map the security associated to the document published, access to public
+     * users or not
+     */
+    Map<String, String> documentSecurityMap;
 
     /**
      * The chs to be injected by Spring
@@ -147,6 +159,23 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     public void setConfigService(OsylConfigService configService) {
 	this.osylConfigService = configService;
+    }
+
+    /**
+     * The transformation and transfer service to be injected by Spring
+     * 
+     * @uml.property name="osylTransformToZCCO"
+     * @uml.associationEnd
+     */
+    private OsylTransformToZCCO osylTransformToZCCO;
+
+    /**
+     * Sets the {@link OsylTransformToZCCO}.
+     * 
+     * @param osylTransformToZCCO
+     */
+    public void setOsylTransformToZCCO(OsylTransformToZCCO osylTransformToZCCO) {
+	this.osylTransformToZCCO = osylTransformToZCCO;
     }
 
     /**
@@ -259,14 +288,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// PUBLICATION
 	// TODO verify hierarchy compatibility and publish only if compatible
 
-	Map<String, String> documentSecurityMap =
-		coModeled.getDocumentSecurityMap();
+	 setDocumentSecurityMap(coModeled.getDocumentSecurityMap());
 
-	Map<String, String> documentVisibilityMap =
-		coModeled.getDocumentVisibilityMap();
+	 setDocumentVisibilityMap(coModeled.getDocumentVisibilityMap());
 
-	
-	copyWorkToPublish(siteId, documentSecurityMap, documentVisibilityMap);
+	copyWorkToPublish(siteId, getDocumentSecurityMap(), getDocumentVisibilityMap());
 
 	publication(co.getSiteId(), webappDir);
 
@@ -370,6 +396,22 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	    publishChild(siteId, webappDir);
 	}
+    }
+
+    private Map<String, String> getDocumentVisibilityMap() {
+        return documentVisibilityMap;
+    }
+
+    private void setDocumentVisibilityMap(Map<String, String> documentVisibilityMap) {
+        this.documentVisibilityMap = documentVisibilityMap;
+    }
+
+    private Map<String, String> getDocumentSecurityMap() {
+        return documentSecurityMap;
+    }
+
+    private void setDocumentSecurityMap(Map<String, String> documentSecurityMap) {
+        this.documentSecurityMap = documentSecurityMap;
     }
 
     private void publishChild(String siteId, String webappDir) {
@@ -497,8 +539,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     }
 
-    
-    private void applyVisibility(String referenceId){
+    private void applyVisibility(String referenceId) {
 	try {
 	    ResourceProperties properties =
 		    contentHostingService.getProperties(referenceId);
@@ -531,7 +572,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	}
 
     }
-    
+
     private void publish(COSerialized co, String access, String webappDir)
 	    throws Exception {
 	COSerialized publishedCO = null;
@@ -552,11 +593,18 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    publishedCO.setAccess(access);
 	    publishedCO.setPublished(true);
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
+
 	} else {
 	    publishedCO.setContent(transformXmlForGroup(co.getContent(),
 		    access, webappDir));
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
 	}
+
+	// TODO: We check if the site is associated to a section or a canonical
+	// course in the course management and if the the course outline is
+	// public and transfer it to the public portal if it is the case.
+//	if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC))
+//	    osylTransformToZCCO.sendXmlAndDoc(publishedCO, getDocumentSecurityMap(), getDocumentVisibilityMap());
     }
 
     public String transformXmlForGroup(String content, String group,

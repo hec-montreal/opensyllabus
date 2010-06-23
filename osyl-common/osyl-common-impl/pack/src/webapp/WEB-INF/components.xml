@@ -37,11 +37,18 @@
 			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
 	</bean>
 
-	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylTransformToZCCO"
-		class="org.sakaiquebec.opensyllabus.common.impl.OsylTransformToZCCOImpl"
+	<bean id="org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO"
+		class="org.sakaiquebec.opensyllabus.common.impl.portal.OsylTransformToZCCOImpl"
 		init-method="init" destroy-method="destroy" singleton="true">
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />
+		
+		<property name="cmService"
+			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+
+		<property name="siteService" 
+			ref="org.sakaiproject.site.api.SiteService" />
+		
 	</bean>
 
 
@@ -76,6 +83,8 @@
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylConfigService" />
 		<property name="coRelationDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
+		<property name="osylTransformToZCCO"
+			ref="org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO" />
 
 		<!-- Sakai dependencies -->
 		<property name="contentHostingService"
