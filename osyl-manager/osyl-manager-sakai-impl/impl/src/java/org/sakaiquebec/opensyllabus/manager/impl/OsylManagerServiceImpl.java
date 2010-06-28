@@ -924,7 +924,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    BufferedOutputStream bos = new BufferedOutputStream(zos);
 	    IOUtils.copy(inputStream, bos);
 	    bos.flush();
-	} catch (ZipException e) {
+	} catch (Exception e) {
 	    log.error("writeToZip: Could not add file to zip: " + fileName);
 	    e.printStackTrace();
 	}
@@ -937,7 +937,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	try {
 	    zos.putNextEntry(zipEntry);
 	    zos.write((byte[]) bytes);
-	} catch (ZipException e) {
+	} catch (Exception e) {
 	    log.error("writeToZip: Could not add file to zip:"  + fileName);
 	    e.printStackTrace();
 	}
