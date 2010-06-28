@@ -64,29 +64,28 @@ public class OsylEditorEntryPoint implements EntryPoint {
     // View variables
     private RootPanel rootPanel;
     private OsylMainView editorMainView;
-    static private OsylEditorEntryPoint singleton;
+    private static OsylEditorEntryPoint singleton;
     private OsylViewable editorEntryPointView;
-    // static private int yPosition;
-    // static private int previousHeight;
 
     public static String execmode = "prod";
 
-    private static final int MIN_SIZE = 200;
+    private static final int MIN_TOOL_HEIGHT = 200;
+    private static final int MIN_TOOL_WIDTH = 800;
 
     // Default Constructor. We ensure that our singleton instance is the same as
     // the one initialized by the GWT framework!
     public OsylEditorEntryPoint() {
-	singleton = this;
+    	singleton = this;
     }
 
     public static OsylEditorEntryPoint getInstance() {
-	return singleton;
+    	return singleton;
     }
 
     // static private final Images images = (Images) GWT.create(Images.class);
 
     public RootPanel getRootPanel() {
-	return rootPanel;
+    	return rootPanel;
     }
 
     /**
@@ -165,6 +164,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	
 	this.setView(editorMainView);
 	rootPanel.add((Widget) this.getView());
+	
 	setBrowserEvents(this);
 	setToolSize();
 	Timer t = new Timer() {
@@ -174,8 +174,6 @@ public class OsylEditorEntryPoint implements EntryPoint {
 		}
 	};
 	setSakaiScrollBar("hidden");
-	
-		
 	t.schedule(500);
 	if (OsylController.getInstance().isInHostedMode()) {
 		DOM.setStyleAttribute(getRootPanel().getElement(), "fontSize", "12px");
@@ -184,10 +182,6 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	// Uncomment this display debug messages specified with setDebugMsg().
 	// startDebugMsg();
     }
-    
-    private native void setSakaiScrollBar(String value) /*-{
-    	$wnd.parent.document.body.style.overflow = value;
-	}-*/;
     
     
     public void refreshView() {
@@ -209,6 +203,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     	}
     	((OsylViewableComposite) getView()).setHeight((h - 12) + "px");
     	getRootPanel().setHeight(h + "px");
+    	
     	if (OsylController.getInstance().isInPreview()) {
     		OsylController.getInstance().getMainView().resize();
     	}else{
@@ -216,28 +211,109 @@ public class OsylEditorEntryPoint implements EntryPoint {
     	}
     	
     }
+    
+    private static void setSakaiScrollBar(String value) {
+    	DOM.setStyleAttribute(getSakaiToolIframe(),"overflow",value);
+	};
+	
+    /**
+     * Returns the Sakai current iframe containing the tool.
+     * If the tool isn't in Sakai environment (stand alone),
+     * return current window.
+     * 
+     * @return the Sakai iframe element.
+     */
+    public static native Element getSakaiToolIframe() /*-{
+    	var elm = $wnd.parent.document.getElementById($wnd.name);
+    	return (elm != null ? elm : $wnd.document.body);
+	}-*/;
+    
+    /**
+     * Returns the Sakai footer DOM's element.
+     * If the tool isn't in Sakai environment (stand alone), return nothing.
+     * 
+     * @return the Sakai footer element.
+     */
+    public static native Element getSakaiFooter() /*-{
+    	return $wnd.parent.document.getElementById("footer");
+	}-*/;
+
+    /**
+     * Returns the Sakai footer DOM's element.
+     * If the tool isn't in Sakai environment (stand alone), return nothing.
+     * 
+     * @return the Sakai footer element.
+     */
+    public static native Element getSakaiLeftMenu() /*-{
+    	return $wnd.parent.document.getElementById("toolMenuWrap");
+	}-*/;
+    
+    /**
+     * Returns, in pixels, the total height of the Sakai left menu section.
+     * If the tool isn't in Sakai environment (stand alone), return 0.
+     * 
+     * @return number of pixels for the height of the Sakai left menu.
+     */
+    public static int getSakaiLeftMenuHeight() {
+    	Element elm = getSakaiLeftMenu();
+    	return (elm != null ? elm.getOffsetHeight()+ elm.getAbsoluteTop():0);
+    }
+    
     /**
      * Returns, in pixels, the total height of the Sakai footer section.
      * If the tool isn't in Sakai environment (stand alone), return 0.
      * 
      * @return number of pixels for the height of the Sakai footer.
      */
-    
-    public static native int getSakaiFooterHeight() /*-{
-    	var n = $wnd.parent.document.getElementById("footer");
-    	return ($wnd.parent != $wnd && n != null ? n.parentNode.offsetHeight:0);
-	}-*/;
-    
+    public static int getSakaiFooterHeight() {
+    	Element elm = getSakaiFooter();
+    	return (elm != null ? elm.getOffsetHeight():0);
+    }
     /**
      * Returns, in pixels, the desired total height of the tool section based on
 	 * viewport height less the header and the footer of Sakai.
+	 * The height is also based on the presence of scrollbar du
+	 * to left Sakai menu height and the scrollY of the Window.
      * If the tool isn't in Sakai environment (stand alone), return the viewport height.
      * 
      * @return number of pixels for the desired height for the tool.
      */
-    private int getDesiredToolHeight() {
-    	return Math.max((getViewportHeight() - getToolYOffset() - getSakaiFooterHeight()),MIN_SIZE);
+    private static int getDesiredToolHeight() {
+    	int viewportHeight = getViewportHeight();
+    	int diff = 0;
+    	Element sakaiLeftMenu = getSakaiLeftMenu();
+    	if (sakaiLeftMenu != null) {
+    		int totalHeight = getTotalHeight();
+    		int footerHeight = getSakaiFooterHeight();
+    		int scrollY = getGlobalScrollY();
+    		int sakaiLeftMenuMaxHeight = sakaiLeftMenu.getOffsetHeight() + sakaiLeftMenu.getAbsoluteTop();
+    		if (viewportHeight > sakaiLeftMenuMaxHeight) {
+    			if (viewportHeight < (sakaiLeftMenuMaxHeight + footerHeight)) {
+    				int bottom = totalHeight - scrollY - viewportHeight;
+    				if (bottom < footerHeight) {
+    					diff -= bottom + scrollY;
+    				}
+    				/* Sometimes a space is inserted between the Sakai footer
+    				 *  and the left menu this fix remove it. */
+    				int fix = Math.max(totalHeight - (sakaiLeftMenuMaxHeight+footerHeight), 0);
+        			if (fix > 0) {
+        				diff += fix;
+    				}
+        			
+    			}
+    			diff += footerHeight;
+    		}
+    		if (sakaiLeftMenuMaxHeight >= (scrollY + viewportHeight)) {
+    			diff -= scrollY;
+        	}else{
+        		if (viewportHeight < sakaiLeftMenuMaxHeight) {
+        			diff -= (sakaiLeftMenuMaxHeight - viewportHeight);
+        		}
+        	}
+    	}
+    	return Math.max(viewportHeight - getToolAbsoluteTop() - diff,MIN_TOOL_HEIGHT);
     }
+    
     /**
      * Returns the current viewport height. This is the height of current
      * visible area.
@@ -258,6 +334,26 @@ public class OsylEditorEntryPoint implements EntryPoint {
     		myHeight = o.document.body.clientHeight;
   		}
   		return myHeight;
+    }-*/;
+    
+    /**
+     * Returns the current total page's height.
+     * This is the total height of all objects in the page, including Sakai.
+     * @return int total page height in pixel
+     */
+    public static native int  getTotalHeight() /*-{
+    	var o = $wnd.top;
+    	// FIREFOX
+    	var height = o.document.documentElement.scrollHeight;
+    	// IE7+ & OPERA
+    	if(o.document.documentElement.clientHeight > height ) {
+    		height  = o.document.documentElement.clientHeight;
+    	}
+    	// SAFARI
+    	if(o.document.body.scrollHeight > height) {
+    		height = o.document.body.scrollHeight;
+    	}
+    	return height;
     }-*/;
     
     /**
@@ -305,15 +401,15 @@ public class OsylEditorEntryPoint implements EntryPoint {
 			o.@org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint::setToolSize()();
 		}
 		addEvent($wnd.top,'resize',resize);
+		addEvent($wnd.top,'scroll',resize);
 		var n = $wnd.parent.document.getElementById($wnd.name);
 		if ($wnd != $wnd.parent && n != null) n.style.marginBottom = "0";
 		
 	}-*/;
     
-    private static native void setSakaiIFrameHeight(int h) /*-{
-    	var n = $wnd.parent.document.getElementById($wnd.name);
-		if ($wnd != $wnd.parent && n != null) n.style.height = h + "px";
-	}-*/;
+    private static void setSakaiIFrameHeight(int h) {
+    	DOM.setStyleAttribute(getSakaiToolIframe(),"height",h + "px");
+	}
     
     /**
      * If Osyl is currently loaded in Sakai environment or is is stand alone.
@@ -342,15 +438,31 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * 
      * @return int number of pixels from top
      */
-    public static native int getGlobalYPosition() /*-{
-						  if ($doc.all) {
-						  // We are In MSIE.
-						  return top.document.documentElement.scrollTop;
-						  } else {
-						  // In Firefox
-						  return top.pageYOffset;
-						  } 
-						  }-*/;
+    private static native int getGlobalScrollY() /*-{
+		 if ($doc.all) {
+			// We are In MSIE.
+			return top.document.documentElement.scrollTop;
+		} else {
+			// In Firefox
+			return top.pageYOffset;
+		} 
+	}-*/;
+    
+    /**
+     * Returns the current horizontal scroll position in browser (ie: for the
+     * whole Sakai page).
+     * 
+     * @return int number of pixel from left
+     */
+    public static native int getGlobalScrollX() /*-{
+		if ($doc.all) {
+			// We are In MSIE.
+			return $wnd.top.document.documentElement.scrollLeft;
+		} else {
+			// In Firefox
+			return $wnd.top.pageXOffset;
+		} 
+	}-*/;
     
     /**
      * Returns, in pixels, the space above the tool (The Sakai navigation
@@ -359,18 +471,22 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * 
      * @return number of pixels above the tool
      */
-    public static native int getToolYOffset()  /*-{
-		var curtop = 0;
-		var obj = $wnd.parent.document.getElementById($wnd.name);
-		if ($wnd.name != "" && obj != null) {
-			if (obj.offsetParent) {
-    			do {
-        			curtop += obj.offsetTop;
-    			} while (obj = obj.offsetParent);
-			}
-		}
-		return curtop;
-	}-*/;
+    public static int getToolAbsoluteTop() {
+		return getSakaiToolIframe().getAbsoluteTop();
+	}
+    
+    /**
+     * Returns, in pixel, the space to the left of the tool (The Sakai
+     * navigation left column).
+     * If the tool isn't in Sakai environment (stand alone), return 0.
+     * 
+     * @return number of pixels before the tool
+     */
+    public static int getToolAbsoluteLeft() {
+		return getSakaiToolIframe().getAbsoluteLeft();
+	}
+    
+    
     
     /**
      * Returns the current vertical scroll position in OSYL.
@@ -381,46 +497,11 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	if (!isInSakai()) {
 	    return getInstance().getRootPanel().getAbsoluteTop();
 	} else {
-	    int global = getGlobalYPosition();
-	    int toolOffset = getToolYOffset();
+	    int global = getGlobalScrollY();
+	    int toolOffset = getToolAbsoluteTop();
 	    return Math.max(0, (global - toolOffset));
 	}
     }
-
-    /**
-     * Returns the current horizontal scroll position in browser (ie: for the
-     * whole Sakai page).
-     * 
-     * @return int number of pixel from left
-     */
-    public static native int getGlobalXPosition() /*-{
-		if ($doc.all) {
-			// We are In MSIE.
-			return $wnd.top.document.documentElement.scrollLeft;
-		} else {
-			// In Firefox
-			return $wnd.top.pageXOffset;
-		} 
-	}-*/;
-
-    /**
-     * Returns, in pixel, the space to the left of the tool (The Sakai
-     * navigation left column).
-     * 
-     * @return
-     */
-    private static native int getToolXOffset() /*-{
-		var curleft = 0;
-		var obj = $wnd.parent.document.getElementById($wnd.name);
-		if ($wnd.name != "" && obj != null) {
-			if (obj.offsetParent) {
-				do {
-    				curleft += obj.offsetLeft;
-				} while (obj = obj.offsetParent);
-			}
-		}
-		return curleft;
-	}-*/;
 
     /**
      * Returns the current horizontal scroll position.
@@ -428,8 +509,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * @return int number of pixel from left
      */
     public static int getXPosition() {
-	int global = getGlobalXPosition();
-	int toolOffset = getToolXOffset();
+	int global = getGlobalScrollX();
+	int toolOffset = getToolAbsoluteLeft();
 	return Math.max(0, (global - toolOffset));
     }
 
@@ -456,8 +537,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
 
     private static String getDebugMsg() {
 	if (debugMsg == null) {
-	    return "global x/y=" + getGlobalXPosition() + "/"
-		    + getGlobalYPosition() + " Osyl x/y=" + getXPosition()
+	    return "global x/y=" + getGlobalScrollX() + "/"
+		    + getGlobalScrollY() + " Osyl x/y=" + getXPosition()
 		    + "/" + getYPosition() + " VP w/h=" + getViewportWidth()
 		    + "/" + getViewportHeight() + " Client w/h="
 		    + Window.getClientWidth() + "/" + Window.getClientHeight();
@@ -517,10 +598,11 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * context. There is surely a better way to do this.
      */
     private static int getTopMostPosition() {
+    	/* TODO compute this two values */
 	if (OsylController.getInstance().isInHostedMode()) {
 	    return 130;
 	} else {
-	    // We return 26px (24 for the toolBar + 2 for its borders)
+	    // We return 115px (for the toolBar and the title)
 	    return 115; // Is OK for MSIE 6/7 and Firefox
 	}
     }
@@ -562,15 +644,19 @@ public class OsylEditorEntryPoint implements EntryPoint {
     public int getToolWidth() {
     	return getRootPanel().getOffsetWidth();
     }
-
-    /**
-     * Returns the Sakai iFrame ID based on current URL.
-     * 
-     * @return current iFrame ID
-     */
-    public static native String getSakaiFrameId() /*-{
-		return $wnd.name;
+    
+    public static native void writeInfos(String value)/*-{
+    	var root = $wnd.top.document;
+		var elm = root.getElementById("INFOS");
+		if (elm == null) {
+			var infos = root.body.createElement("DIV");
+			infos.id = "INFOS";
+			root.body.appendChild(infos);
+			elm = root.getElementById("INFOS");
+		}
+		elm.innerHTML = value;
 	}-*/;
+    
 
     public OsylViewable getView() {
 	return editorEntryPointView;
@@ -647,4 +733,11 @@ public class OsylEditorEntryPoint implements EntryPoint {
 		else //try and get inline style
 			return el.style[cssprop];
 	}-*/;
+    
+    public static int parsePixels(String value) {
+		int pos = value.indexOf("px");
+		if (pos != -1)
+			value = value.substring(0,pos);
+		return Integer.parseInt(value);
+	}
 }

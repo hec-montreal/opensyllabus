@@ -46,6 +46,13 @@ public class OsylHorizontalSplitPanel extends Composite {
 
     private boolean collapseMouseDown = false;
     private boolean isMouseDownOnSplitter = false;
+    
+    private static int MIN_TOOL_WIDTH = 500;
+    private static int INITIAL_SPLITTER_POS = 30;
+    private static int CURRENT_SPLITTER_POS;
+    private static int MIN_SPLITTER_POS = 30;
+    private static int MAX_SPLITTER_POS = 300;
+    
     public Element getSplitElement() {
 	return splitElement;
     }
@@ -175,8 +182,19 @@ public class OsylHorizontalSplitPanel extends Composite {
 	if(leftElementVisible && !collapseMouseDown)
 	    super.onBrowserEvent(event);
     }
+    
     private static native void setCursor(String cursor) /*-{
     	var o = $wnd.document.body;
 		if (o.style.cursor != cursor) o.style.cursor = cursor;
 	}-*/;
+    
+    public static int getInitialSplitPosition() {
+		
+		return Math.max(Math.min(200, MAX_SPLITTER_POS), MIN_SPLITTER_POS);
+		
+		
+	}
+	private int computeSplitterPosition(){
+		return 0;
+	}
 }

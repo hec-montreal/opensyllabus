@@ -35,6 +35,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 
+import com.google.gwt.user.client.Element;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.DOM;
@@ -309,5 +310,36 @@ public class OsylTreeView extends OsylViewableComposite implements
 	}
 
     }
-
+    
+    public native void setTreeItemsWidth(int treeWidth, Element elm) /*-{
+    	function findAbsoluteLeft(obj) {
+			var curleft = 0;
+			if (obj.offsetParent) {
+				do {
+					curleft += obj.offsetLeft;
+				} while (obj = obj.offsetParent);
+			}
+			return curleft;
+		}
+    	function getElementsByClassName(className, tag, elm){
+			var testClass = new RegExp("(^|\\s)" + className + "(\\s|$)");
+			var tag = tag || "*";
+			var elm = elm || $doc;
+			var elements = (tag == "*" && elm.all)? elm.all : elm.getElementsByTagName(tag);
+			var returnElements = [];
+			var current;
+			var length = elements.length;
+			for(var i=0; i<length; i++){
+				current = elements[i];
+				if(testClass.test(current.className)){
+					returnElements.push(current);
+				}
+			}
+			return returnElements;
+		}
+		var a = getElementsByClassName("Osyl-TreeLabel", "div", elm);
+		for (var i=0; i<a.length;i++) {
+			a[i].style.width = treeWidth - findAbsoluteLeft(a[i]) +"px";
+		}
+    }-*/;
 }

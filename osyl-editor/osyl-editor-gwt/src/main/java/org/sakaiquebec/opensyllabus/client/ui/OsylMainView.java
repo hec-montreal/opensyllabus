@@ -137,8 +137,7 @@ public class OsylMainView extends OsylViewableComposite implements
 
 	// Create and set the OpenSyllabus TreeView
 	setOsylTreeView(new OsylTreeView(getModel(), getController()));
-	horizontalSplitPanel.setSplitPosition(OsylTreeView
-		.getInitialSplitPosition());
+	horizontalSplitPanel.setSplitPosition(osylHorizontalSplitPanel.getInitialSplitPosition()+"px");
 	treeDecoratorPanel = new OsylDecoratorPanel();
 	treeDecoratorPanel.setWidget(getOsylTreeView());
 	treeDecoratorPanel.setStylePrimaryName("Osyl-TreeView");
@@ -309,6 +308,9 @@ public class OsylMainView extends OsylViewableComposite implements
     }
 
     public void resize() {
+    
+    // Set the splitter position
+    	
     int toolWidth = Window.getClientWidth();
     if (OsylEditorEntryPoint.isInternetExplorer()) {
     	DOM.setStyleAttribute(getElement(), "width", toolWidth + "px");
@@ -323,12 +325,17 @@ public class OsylMainView extends OsylViewableComposite implements
 			treeInnerWidth + "px");
 	DOM.setStyleAttribute(treeDecoratorPanel.getCell(1, 1), "width",
 			treeInnerWidth + "px");
-	int treeHeaderLabelLeftPadding = parsePixels(OsylEditorEntryPoint.getStyle(treeHeaderLabel.getElement(), "paddingLeft"));
+	int treeHeaderLabelLeftPadding = 
+		OsylEditorEntryPoint.parsePixels(OsylEditorEntryPoint.getStyle(treeHeaderLabel.getElement(), "paddingLeft"));
 	treeHeaderLabel.setWidth(treeInnerWidth - treeHeaderLabelLeftPadding + "px");
 	int splitterWidth =
 		osylHorizontalSplitPanel.getSplitElement().getOffsetWidth();
 	
-	 // Set The workspace width
+	// Set the treeItems width
+	int scrollbarWidth = (osylTree.getTree().getOffsetHeight() 
+			> treeDecoratorPanel.getCell(1, 1).getOffsetHeight()? 16 : 0);
+	osylTree.setTreeItemsWidth(treeInnerWidth + treeDecoratorPanel.getCell(1, 0)
+			.getOffsetWidth() - scrollbarWidth,osylTree.getElement());
 	
 	int workspaceWidth = toolWidth - treeWidth - splitterWidth;
 	int workspaceInnerWidth = workspaceWidth
@@ -337,14 +344,14 @@ public class OsylMainView extends OsylViewableComposite implements
 	
 	int menubarWidth = osylToolbarView.getOsylToolbar().getSectionMenuBar().getOffsetWidth();
 	int osylWorkspaceLabelLeftPadding = 
-		parsePixels(OsylEditorEntryPoint.getStyle(osylWorkspaceTitleView.getWorkspaceTitleLabel().getElement(), "paddingLeft"));
+		OsylEditorEntryPoint.parsePixels(OsylEditorEntryPoint.getStyle(osylWorkspaceTitleView.getWorkspaceTitleLabel().getElement(), "paddingLeft"));
 	osylWorkspaceTitleView.getWorkspaceTitleLabel().setWidth(workspaceInnerWidth -
 			(menubarWidth + osylWorkspaceLabelLeftPadding + 3) +"px");
 	DOM.setStyleAttribute(workspaceDecoratorPanel.getCell(1, 1), "width",workspaceInnerWidth + "px");
 	setSectionToolbarTopPosition();
 	 // Set The tree height and the workspace height
 	
-	int toolHeight = parsePixels(DOM.getStyleAttribute(getElement(), "height"));
+	int toolHeight = OsylEditorEntryPoint.parsePixels(DOM.getStyleAttribute(getElement(), "height"));
 	
 	// TODO Find a way to compute offsetHeight of the top and bottom decorativePanel (doesn't work use 56 instead).
 	int innerHeight = toolHeight - osylHorizontalSplitPanel.getAbsoluteTop() - 56;
@@ -358,10 +365,5 @@ public class OsylMainView extends OsylViewableComposite implements
 	public void setWorkspaceTitleView(OsylWorkspaceTitleView osylWorkspaceTitleView) {
 		this.osylWorkspaceTitleView = osylWorkspaceTitleView;
 	}
-	public static int parsePixels(String value) {
-		int pos = value.indexOf("px");
-		if (pos != -1)
-			value = value.substring(0,pos);
-		return Integer.parseInt(value);
-	}
+	
 }

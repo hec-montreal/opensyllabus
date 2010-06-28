@@ -68,7 +68,7 @@ public class OsylMenuBar extends MenuBar {
     		subMenuOpener = item;
         	subMenuOpener.addStyleName(OPENER_STYLE_NAME);
         	// Hard coded value for the background position for IE <=7 ... sorry!
-        	// TODO: Find a way to do it in stylesheet possible with one unique css class
+        	// TODO: Find a way to do it in stylesheet possibly with one unique css class
         	if (OsylEditorEntryPoint.isInternetExplorer() &&
         		hasStyle(item, "Osyl-MenuItem-View")){
         			DOM.setStyleAttribute(subMenuOpener.getElement(), 

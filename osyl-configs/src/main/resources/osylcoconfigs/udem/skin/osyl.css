@@ -350,10 +350,16 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	color:#058EC4;
 }
 .Osyl-TreeView-Tree .gwt-TreeItem .Osyl-TreeLabel {
-	margin:1px 5px;
+	margin:1px 0;
 	font-size:12px;
 	color:#058EC4;
 	text-decoration:none;
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	-o-text-overflow: ellipsis;
+	-moz-binding: url('ellipsis.xml#ellipsis');
+	
 }
 .Osyl-TreeView-Tree div.gwt-TreeItem:hover{text-decoration:underline}
 
