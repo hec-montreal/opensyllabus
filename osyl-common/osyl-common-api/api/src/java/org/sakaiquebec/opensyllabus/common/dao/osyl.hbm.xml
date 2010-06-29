@@ -44,6 +44,12 @@
         	<column name="LOCKED_BY" />
         </property>
 
+		<property name="publicationDate" column="CREATION_DATE"
+			type="java.util.Date" />
+
+		<property name="modificationDate" column="MODIFICATION_DATE"
+			type="java.util.Date" />
+
   	</class>
 
 

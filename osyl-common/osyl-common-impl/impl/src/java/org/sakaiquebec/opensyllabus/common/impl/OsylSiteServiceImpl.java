@@ -532,7 +532,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			new COSerialized(idManager.createUuid(), lang,
 				"shared", "", site.getId(), "sectionId",
 				coConfig, null, "shortDescription",
-				"description", "title", false);
+				"description", "title", false, null, null);
 		resourceDao.createOrUpdateCourseOutline(co);
 
 	    } catch (Exception e) {
@@ -592,7 +592,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			new COSerialized(idManager.createUuid(), lang,
 				"shared", "", site.getId(), "sectionId",
 				coConfig, null, "shortDescription",
-				"description", "title", false);
+				"description", "title", false, null, null);
 		resourceDao.createOrUpdateCourseOutline(co);
 
 	    } catch (Exception e) {
@@ -778,7 +778,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 				getXmlStringFromFile(coConfig,
 					osylConfigService.getCurrentLocale(),
 					webappDir), "shortDescription",
-				"description", "title", false);
+				"description", "title", false, null, null);
 		// reinitilaisation des uuids
 		SchemaHelper sh = new SchemaHelper(webappDir);
 		COModeledServer coModeled = new COModeledServer(thisCo);

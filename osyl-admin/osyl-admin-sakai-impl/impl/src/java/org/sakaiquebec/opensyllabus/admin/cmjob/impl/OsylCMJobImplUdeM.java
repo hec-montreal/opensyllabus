@@ -627,7 +627,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 				 GenericEtudiantCoursMapFactory.buildMap(directory,
 						 detailCoursMap, detailSessionMap);
 			 // We assign students to their classes
-			 loadEnrollments();
+			 syncEnrollmentSets();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -639,7 +639,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 	}
 
 	/** {@inheritDoc} */
-	public void loadEnrollments() {
+	public void syncEnrollmentSets() {
 		EtudiantCoursMapEntry etudiantCoursEntry = null;
 		String userId = null;
 		String enrollmentSetId = null;

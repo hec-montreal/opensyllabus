@@ -183,6 +183,8 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	getHibernateTemplate().evict(cos);
 
 	try {
+	    courseOutline.setModificationDate(new java.util.Date(System
+		    .currentTimeMillis()));
 	    getHibernateTemplate().saveOrUpdate(courseOutline);
 	} catch (Exception e) {
 	    log.error("Unable to create or update course outline", e);

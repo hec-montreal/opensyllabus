@@ -20,6 +20,7 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -32,7 +33,7 @@ import java.util.Map;
  * @author <a href="mailto:tom.landry@crim.ca>Tom Landry</a>
  * @version $Id: $
  */
-public class COSerialized implements java.io.Serializable{
+public class COSerialized implements java.io.Serializable {
 
     private static final long serialVersionUID = 3500746463914797287L;
 
@@ -104,9 +105,13 @@ public class COSerialized implements java.io.Serializable{
     /**
      * is editable or not
      */
-    private boolean editable=true;
-    
-    private String lockedBy ;
+    private boolean editable = true;
+
+    private String lockedBy;
+
+    private Date publicationDate;
+
+    private Date modificationDate;
 
     /**
      * Default constructor
@@ -133,7 +138,9 @@ public class COSerialized implements java.io.Serializable{
 		courseOutlineXML.getContent(), courseOutlineXML
 			.getShortDescription(), courseOutlineXML
 			.getDescription(), courseOutlineXML.getTitle(),
-		courseOutlineXML.isPublished());
+		courseOutlineXML.isPublished(), courseOutlineXML
+			.getPublicationDate(), courseOutlineXML
+			.getModificationDate());
     }
 
     /**
@@ -144,7 +151,8 @@ public class COSerialized implements java.io.Serializable{
     public COSerialized(String coId, String lang, String type, String access,
 	    String siteId, String sectionId, COConfigSerialized osylConfigId,
 	    String content, String shortDescription, String description,
-	    String title, boolean published) {
+	    String title, boolean published, Date creationDate,
+	    Date modificationDate) {
 	this.setCoId(coId);
 	this.setLang(lang);
 	this.setType(type);
@@ -157,6 +165,8 @@ public class COSerialized implements java.io.Serializable{
 	this.setDescription(description);
 	this.setTitle(title);
 	this.setPublished(published);
+	this.setPublicationDate(creationDate);
+	this.setModificationDate(modificationDate);
 
     }
 
@@ -212,6 +222,22 @@ public class COSerialized implements java.io.Serializable{
      */
     public void setTitle(String title) {
 	this.title = title;
+    }
+
+    public Date getPublicationDate() {
+	return publicationDate;
+    }
+
+    public void setPublicationDate(Date creationDate) {
+	this.publicationDate = creationDate;
+    }
+
+    public Date getModificationDate() {
+	return modificationDate;
+    }
+
+    public void setModificationDate(Date modificationDate) {
+	this.modificationDate = modificationDate;
     }
 
     /**

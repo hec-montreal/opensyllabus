@@ -600,11 +600,16 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
 	}
 
+	// We save the published date in the course outline in edition
+	co.setPublicationDate(new java.util.Date(System.currentTimeMillis()));
+	resourceDao.createOrUpdateCourseOutline(co);
+
 	// TODO: We check if the site is associated to a section or a canonical
 	// course in the course management and if the the course outline is
 	// public and transfer it to the public portal if it is the case.
 //	if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC))
-//	    osylTransformToZCCO.sendXmlAndDoc(publishedCO, getDocumentSecurityMap(), getDocumentVisibilityMap());
+//	    osylTransformToZCCO.sendXmlAndDoc(publishedCO,
+//		    getDocumentSecurityMap(), getDocumentVisibilityMap());
     }
 
     public String transformXmlForGroup(String content, String group,
