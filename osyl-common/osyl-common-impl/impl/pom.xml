@@ -112,13 +112,13 @@
 			<groupId>org.apache.xmlgraphics</groupId>
 			<artifactId>fop</artifactId>
 			<version>0.95</version>
-		</dependency>
-<dependency>
-    <groupId>com.oracle</groupId>
-    <artifactId>ojdbc14</artifactId>
-    <version>10.2.0.4.0</version>
-</dependency>
-	</dependencies>
+		</dependency><!--
+	<dependency>
+	    <groupId>com.oracle</groupId>
+	    <artifactId>ojdbc14</artifactId>
+	    <version>10.2.0.4.0</version>
+	</dependency>
+	--></dependencies>
 
 	<build>
 		<resources>
