@@ -20,13 +20,14 @@
 	String userRole = osylMainBean.getOsylSecurityService()
 			.getCurrentUserRole();
 	String webappDir = getServletContext().getRealPath("/");
-
+	String siteId = osylMainBean.getOsylSiteService().getCurrentSiteId();
+	
 	ResourceLoader rb = new ResourceLoader();
 
 	// This initialization procedures should have been done at the site creation.
 	// We need a full maintain access to call them. Since they're called at each tool access,
 	// let's make sure that only a user with maintain rights will init the tool
-	if (osylMainBean.getOsylSecurityService().isAllowedToEdit(osylMainBean.getOsylSiteService().getCurrentSiteId())
+	if (osylMainBean.getOsylSecurityService().isAllowedToEdit(siteId)
 			|| OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN
 					.equals(userRole)
 			|| OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR
@@ -69,7 +70,7 @@
 	%>
  			<meta name="osyl:ro" content="true"> 
     <%
-     	} else if (osylMainBean.getOsylSecurityService().isAllowedToEdit(osylMainBean.getOsylSiteService().getCurrentSiteId())) {
+     	} else if (osylMainBean.getOsylSecurityService().isAllowedToEdit(siteId)) {
      	    readonly=false;
      %>
  	        <meta name="osyl:ro" content="false"> 
@@ -115,11 +116,14 @@
 
 	    <%
 	    	//This script gets the right css from the database considering the config.
-	    	COSerialized co = osylMainBean.getOsylSiteService()
+/*	    	COSerialized co = osylMainBean.getOsylSiteService()
 	    			.getSerializedCourseOutline(webappDir);
 	    	String configId = co.getOsylConfig().getConfigId();
 	    	String cssPath = osylMainBean.getOsylConfigService().getConfig(
 	    			configId, webappDir).getCascadingStyleSheetPath();
+	    	*/
+	    	String configId = osylMainBean.getOsylSiteService().getOsylConfigIdForSiteId(siteId);
+	    	String cssPath = osylMainBean.getOsylConfigService().getCssPathFromConfigId(webappDir, configId);
 	    %>
 		<link rel="stylesheet" type="text/css" href="<%=cssPath+COConfig.MAIN_CSS%>" />
 		<link rel="stylesheet" type="text/css" href="<%=cssPath+COConfig.PRINT_CSS%>" media="print"/>

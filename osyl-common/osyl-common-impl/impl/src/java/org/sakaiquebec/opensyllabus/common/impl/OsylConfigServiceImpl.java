@@ -281,8 +281,8 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
     private static COConfigSerialized fillConfig(COConfigSerialized coConfig,
 	    String webappdir, String configRef, String configId)
 	    throws Exception {
-	String path = webappdir + CONFIG_DIR + File.separator + configRef;
-	coConfig.setCascadingStyleSheetPath(getCssPath(path));
+	String path = getConfigAbsolutePath(webappdir, configRef);
+	coConfig.setCascadingStyleSheetPath(getCssPath(webappdir, coConfig));
 	coConfig.setCoreBundle(OsylConfigServiceMessages.getMessages(path,
 		CONFIG_UIMESSAGES));
 	coConfig.setRulesConfig(getRules(path));
@@ -291,6 +291,11 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	coConfig.setSettings(OsylConfigSettingsService.getSettings(path, 
 			CONFIG_SETTINGS));
 	return coConfig;
+    }
+
+    private static String getConfigAbsolutePath(
+	    String webappdir, String configRef) {
+	return webappdir + CONFIG_DIR + File.separator + configRef;
     }
 
     /**
@@ -375,17 +380,24 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 
 	return result;
     }    
-    
-    private static String getCssPath(String dir){
-	String relativePath =
-		dir.substring(dir.indexOf("webapps") + 7, dir.length());
-	relativePath =
-		relativePath + File.separator + CONFIGS_SKIN_DIRECTORY
-			+ File.separator;
+
+    private static String getCssPath(String webAppDir,
+	    COConfigSerialized coConfig) throws Exception {
+	String webAppRelativeDir = webAppDir.substring(
+		webAppDir.indexOf("webapps") + 7);
+	String relativePath = webAppRelativeDir
+	    	+ CONFIG_DIR + File.separator
+		+ coConfig.getConfigRef() + File.separator
+		+ CONFIGS_SKIN_DIRECTORY + File.separator;
 	relativePath = relativePath.replaceAll("\\\\", "/");
 	return relativePath;
     }
-
+    
+    public String getCssPathFromConfigId(String webAppDir, String configId)
+    		throws Exception {
+	return getCssPath(webAppDir, coConfigDao.getConfig(configId));
+    }
+    
     /**
      * {@inheritDoc}
      * 
@@ -395,16 +407,16 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	return OsylConfigSettingsService.getSettings(path, baseFileName);
     }
 
-	public String getDefaultConfig() {
-		if(defaultConfig == null || defaultConfig.length() == 0){
-			defaultConfig = DEFAULT_CONFIG_REF;
-		}
-		return defaultConfig;
+    public String getDefaultConfig() {
+	if(defaultConfig == null || defaultConfig.length() == 0){
+	    defaultConfig = DEFAULT_CONFIG_REF;
 	}
+	return defaultConfig;
+    }
 
-	public void setDefaultConfig(String defaultConfig) {
-		this.defaultConfig = defaultConfig;
-	}
+    public void setDefaultConfig(String defaultConfig) {
+	this.defaultConfig = defaultConfig;
+    }
 
 
 }
