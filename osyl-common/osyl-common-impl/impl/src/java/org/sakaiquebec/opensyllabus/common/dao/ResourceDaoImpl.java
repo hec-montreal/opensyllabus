@@ -46,10 +46,10 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
     /** Our logger */
     private static Log log = LogFactory.getLog(ResourceDaoImpl.class);
 
-    private HibernateTemplate myHT;
+    // This HibernateTemplate is dedicated to requests expecting only one
+    // row as results. This showed an average 5-15% speed increase.
+    private HibernateTemplate singleRowHT;
 
-    // The cache for published Course Outlines
-    private static HashMap<String, COSerialized> publishedCoCache;
     // The cache for serialized configurations
     private static HashMap<String, COConfigSerialized> configCache;
     // Whether the cache is used (value should be set from sakai.properties)
@@ -57,12 +57,10 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 
     /** The init method called by Spring */
     public void init() {
-	//log.warn("Init from DAO");
-        log.warn("Init from DAO FetchSize=" + getHibernateTemplate().getFetchSize());
-        //getHibernateTemplate().setFetchSize(5);
-        myHT = new HibernateTemplate(getSessionFactory());
-        myHT.setFetchSize(1);
-        myHT.setMaxResults(1);
+        log.debug("Init from DAO");
+        singleRowHT = new HibernateTemplate(getSessionFactory());
+        singleRowHT.setFetchSize(1);
+        singleRowHT.setMaxResults(1);
 
         initCache();
     }
@@ -74,7 +72,6 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
     private void initCache() {
 	if (EXPERIMENTAL_CACHE_ENABLED) {
 	    log.info("Initializing caches");
-	    publishedCoCache = new HashMap<String, COSerialized>();
 	    configCache = new HashMap<String, COConfigSerialized>();
 	} else {
 	    log.info("Experimental cache is disabled");	    
@@ -148,7 +145,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    throws Exception {
 	COConfigSerialized cfg = null;
 	if (EXPERIMENTAL_CACHE_ENABLED && configCache.containsKey(idCo)) {
-//	    log.debug("config cache hit");
+	    log.debug("config cache hit");
 	    cfg = configCache.get(idCo);
 	} else {
 	    COSerialized courseOutline = null;
@@ -207,7 +204,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	COSerialized cos = null;
 	try {
 	    cos =
-		    getSerializedVourseOutlineBySiteIdAccessAndPublished(
+		    getSerializedCourseOutlineBySiteIdAccessAndPublished(
 			    courseOutline.getSiteId(), courseOutline
 				    .getAccess(), courseOutline.isPublished());
 	    if (!cos.getCoId().equals(courseOutline.getCoId()))
@@ -235,7 +232,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
     }
 
     @SuppressWarnings("unchecked")
-    private COSerialized getSerializedVourseOutlineBySiteIdAccessAndPublished(
+    private COSerialized getSerializedCourseOutlineBySiteIdAccessAndPublished(
 	    String siteId, String access, boolean published) throws Exception {
 	List<COSerialized> results = null;
 	COSerialized courseOutline = null;
@@ -246,7 +243,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    if ("oracle".equalsIgnoreCase(SqlService.getVendor())
 		    && access.equals("")) {
 		results =
-			myHT
+			singleRowHT
 				.find(
 					"from COSerialized where siteId= ? and published= ? and access is null",
 					new Object[] { siteId, published });

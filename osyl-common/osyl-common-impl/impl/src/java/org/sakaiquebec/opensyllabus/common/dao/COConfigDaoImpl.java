@@ -26,7 +26,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
-import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -47,7 +46,7 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
      * Init method called at initialization of the bean.
      */
     public void init() {
-	log.info("Init from COConfig DAO");
+	log.debug("Init from COConfig DAO");
         initCache();
     }
 
