@@ -187,7 +187,11 @@ public class OsylMainView extends OsylViewableComposite implements
 
 	COElementAbstract root = (COContent) getModel();
 
-	COElementAbstract absElement = findStartingViewContext(root);
+	COElementAbstract absElement = null;
+	String startingViewType = this.getSettings().getSettingsProperty("mainview.startingViewType");
+	if(startingViewType != null ){
+		absElement = findStartingViewContext(root, startingViewType);		
+	}
 
 	if (absElement == null && root.getChildrens() != null
 		&& root.getChildrens().size() > 0) {
@@ -207,7 +211,7 @@ public class OsylMainView extends OsylViewableComposite implements
     }
 
     @SuppressWarnings("unchecked")
-    private COElementAbstract findStartingViewContext(COElementAbstract coe) {
+    private COElementAbstract findStartingViewContext(COElementAbstract coe, String startingViewType) {
 	COElementAbstract absElement = null;
 	List<COElementAbstract> childrenList = coe.getChildrens();
 	boolean find = false;
@@ -215,12 +219,12 @@ public class OsylMainView extends OsylViewableComposite implements
 	while (iter.hasNext()) {
 	    absElement = (COElementAbstract) iter.next();
 	    if (absElement.isCOUnit()) {
-		if (absElement.getType().equalsIgnoreCase(COUnitType.NEWS_UNIT)) {
+		if (absElement.getType().equalsIgnoreCase(startingViewType)) {
 		    find = true;
 		    break;
 		}
 	    } else {
-		absElement = findStartingViewContext(absElement);
+		absElement = findStartingViewContext(absElement,startingViewType);
 		if (absElement != null) {
 		    find = true;
 		    break;
