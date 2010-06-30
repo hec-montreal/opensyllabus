@@ -137,13 +137,13 @@ public class OsylCOUnitView extends OsylViewableComposite implements
 	return (COUnit) super.getModel();
     }
 
-	public boolean isViewFirstElement() {
-		return viewFirstElement;
-	}
+    public boolean isViewFirstElement() {
+	return viewFirstElement;
+    }
 
-	public void setViewFirstElement(boolean viewFirstElement) {
-		this.viewFirstElement = viewFirstElement;
-	}
+    public void setViewFirstElement(boolean viewFirstElement) {
+	this.viewFirstElement = viewFirstElement;
+    }
 
 
 }
