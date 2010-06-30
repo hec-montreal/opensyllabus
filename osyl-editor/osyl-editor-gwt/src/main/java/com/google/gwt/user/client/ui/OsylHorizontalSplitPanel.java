@@ -189,12 +189,10 @@ public class OsylHorizontalSplitPanel extends Composite {
 	}-*/;
     
     public static int getInitialSplitPosition() {
-		
-		return Math.max(Math.min(200, MAX_SPLITTER_POS), MIN_SPLITTER_POS);
-		
-		
-	}
-	private int computeSplitterPosition(){
-		return 0;
-	}
+	return Math.max(Math.min(200, MAX_SPLITTER_POS), MIN_SPLITTER_POS);
+    }
+	
+    private int computeSplitterPosition(){
+	return 0;
+    }
 }
