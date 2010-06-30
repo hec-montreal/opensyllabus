@@ -350,6 +350,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      * {@inheritDoc}
      */
     public COSerialized getSerializedCourseOutlineBySiteId(String siteId) {
+	long start = System.currentTimeMillis();
+
 	try {
 	    COSerialized co;
 	    if (osylSecurityService.isAllowedToEdit(siteId)) {
@@ -357,7 +359,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		if (co != null) {
 		    getSiteInfo(co, siteId);
 		    COModeledServer coModelChild = new COModeledServer(co);
-		    // récupération des parents
+		    // Fetch the parent
 		    String parentId = null;
 		    try {
 			parentId =
@@ -425,9 +427,11 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    return co;
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by siteId", e);
+	} finally {
+	    log.debug("getSerializedCourseOutlineBySiteId  " + siteId + elapsed(start));
 	}
 	return null;
-    }
+    } // getSerializedCourseOutlineBySiteId
 
     /**
      * {@inheritDoc}
@@ -758,6 +762,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      * {@inheritDoc}
      */
     public synchronized COSerialized getSerializedCourseOutline(String webappDir) {
+	long start = System.currentTimeMillis();
 	COSerialized thisCo = null;
 	COConfigSerialized coConfig = null;
 	String siteId = "";
@@ -874,6 +879,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    log.error("Unable to retrieve course outline", e);
 	}
 
+	log.debug("getSerializedCourseOutline" + elapsed(start) + siteId);
 	return thisCo;
     }
 
@@ -1489,6 +1495,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    resourceDao.getSerializedCourseOutlineBySiteId(siteId);
 	    configId = thisCo.getOsylConfig().getConfigId();
 	} catch (Exception e) {
+	    log.debug("getOsylConfigIdForSiteId: " + e);
 	}
 	return configId;
     }
@@ -1508,4 +1515,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public List<COSerialized> getAllCO() {
 	return resourceDao.getCourseOutlines();
     }
+    
+    // only to improve readability while profiling
+    private static String elapsed(long start) {
+	return ": elapsed : " + (System.currentTimeMillis() - start) + " ms "; 	
+    }
+
 }
