@@ -23,7 +23,6 @@ package org.sakaiquebec.opensyllabus.common.dao;
 import java.util.Date;
 import java.util.List;
 
-import oracle.sql.DATE;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
