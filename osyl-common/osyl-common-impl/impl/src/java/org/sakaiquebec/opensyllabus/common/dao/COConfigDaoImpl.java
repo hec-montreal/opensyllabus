@@ -20,11 +20,13 @@
 
 package org.sakaiquebec.opensyllabus.common.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
+import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -37,11 +39,25 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
 
     private static Log log = LogFactory.getLog(COConfigDaoImpl.class);
 
+    private static HashMap<String, COConfigSerialized> configCache;
+    // Whether the cache is used (value should be set from sakai.properties)
+    private static boolean EXPERIMENTAL_CACHE_ENABLED = false;
+
     /**
      * Init method called at initialization of the bean.
      */
     public void init() {
 	log.info("Init from COConfig DAO");
+        initCache();
+    }
+
+    private void initCache() {
+	if (EXPERIMENTAL_CACHE_ENABLED) {
+	    log.info("Initializing caches");
+	    configCache = new HashMap<String, COConfigSerialized>();
+	} else {
+	    log.info("Experimental cache is disabled");	    
+	}
     }
 
     /** {@inheritDoc} */
@@ -61,26 +77,36 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     public String getConfigRef(String configId) throws Exception {
-	List<COConfigSerialized> results = null;
+	COConfigSerialized cfg = null;
+	if (EXPERIMENTAL_CACHE_ENABLED && configCache.containsKey(configId)) {
+	    cfg = configCache.get(configId);
+	} else {
 
-	try {
-	    results =
+	    List<COConfigSerialized> results = null;
+
+	    try {
+		results =
 		    getHibernateTemplate().find(
 			    "from COConfigSerialized where configId= ? ",
 			    new String[] { configId });
-	} catch (Exception e) {
-	    log.error("Unable to retrieve config", e);
-	    throw e;
-	}
+	    } catch (Exception e) {
+		log.error("Unable to retrieve config", e);
+		throw e;
+	    }
 
-	if (results.size() == 1) {
-	    COConfigSerialized coConfig = results.get(0);
-	    return coConfig.getConfigRef();
-	} else if (results.size() == 0) {
-	    throw new Exception("Unexisting config id = " + configId);
-	} else {
-	    throw new Exception("Too many configs with id = " + configId);
+	    if (results.size() == 1) {
+		cfg = results.get(0);
+
+		if (EXPERIMENTAL_CACHE_ENABLED) {
+		    configCache.put(configId, cfg);			
+		}
+	    } else if (results.size() == 0) {
+		throw new Exception("Unexisting config id = " + configId);
+	    } else {
+		throw new Exception("Too many configs with id = " + configId);
+	    }
 	}
+	return cfg.getConfigRef();
     }
 
     /** {@inheritDoc} */
@@ -106,13 +132,24 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
 
     /** {@inheritDoc} */
     public COConfigSerialized getConfig(String configId) throws Exception {
-	COConfigSerialized returned =
-		(COConfigSerialized) getHibernateTemplate().get(
+	COConfigSerialized cfg = null;
+	if (EXPERIMENTAL_CACHE_ENABLED && configCache.containsKey(configId)) {
+	    // Warning: these returns the same COConfigSerialized for each call
+	    // some side effects might happen!
+	    cfg = configCache.get(configId);
+	} else {
+	    cfg = (COConfigSerialized) getHibernateTemplate().get(
 			COConfigSerialized.class, configId);
-	if (null == returned) {
-	    throw new Exception("Unexisting config id= " + configId);
+
+	    if (null == cfg) {
+		throw new Exception("Unexisting config id= " + configId);
+	    }
+	    
+	    if (EXPERIMENTAL_CACHE_ENABLED) {
+		configCache.put(configId, cfg);			
+	    }
 	}
-	return returned;
+	return cfg;
     }
 
     /** {@inheritDoc} */

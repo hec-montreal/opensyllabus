@@ -2,7 +2,7 @@
  * $Id: $
  **********************************************************************************
  *
- * Copyright (c) 2008 The Sakai Foundation, The Sakai Qu�bec Team. and OpenSyllabus Project
+ * Copyright (c) 2008 The Sakai Foundation, The Sakai Québec Team. and OpenSyllabus Project
  *
  * Licensed under the Educational Community License, Version 1.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ package org.sakaiquebec.opensyllabus.server;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -81,6 +81,13 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 
     private static Log log = LogFactory.getLog(OsylEditorGwtServiceImpl.class);
 
+    // The cache for published Course Outlines
+    private static HashMap<String, COSerialized> publishedCoCache;
+    // The cache for serialized configurations
+    private static HashMap<String, COConfigSerialized> configCache;
+    // Whether the cache is used (value set from sakai.properties)
+    private static boolean cacheEnabled = true;
+        
     /**
      * Constructor.
      */
@@ -91,6 +98,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     /** {@inheritDoc} */
     public void init() {
 
+	log.info("initializing");
 	servletContext = getServletContext();
 	webAppContext =
 		WebApplicationContextUtils
@@ -102,13 +110,26 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	    osylServices =
 		    (OsylBackingBean) webAppContext.getBean("osylMainBean");
 	}
+	
+	initCache();
 
     }
 
+    private void initCache() {
+	cacheEnabled = osylServices.getOsylService().isCacheEnabled();
+	if (cacheEnabled) {
+	    log.info("Initializing caches");
+	    publishedCoCache = new HashMap<String, COSerialized>();
+	    configCache = new HashMap<String, COConfigSerialized>();
+	} else {
+	    log.info("Experimental cache is disabled");	    
+	}
+    }
+        
     @Override
     protected void doGet(HttpServletRequest request,
 	    HttpServletResponse response) throws ServletException, IOException {
-
+	log.debug("doGet");
 	final String contextPath = request.getContextPath();
 	request.setAttribute(Tool.NATIVE_URL, Tool.NATIVE_URL);
 	HttpServletRequest wrappedRequest =
@@ -153,12 +174,15 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	String webappDir = getServletContext().getRealPath("/");
 	Map<String, String> publicationProperties =
 		new TreeMap<String, String>();
+	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
 	try {
 	    publicationProperties =
 		    osylServices.getOsylPublishService().publish(
-			    webappDir,
-			    osylServices.getOsylSiteService()
-				    .getCurrentSiteId());
+			    webappDir, siteId);
+	    // We invalidate the cached published CO for this siteId
+	    if (cacheEnabled) {
+		publishedCoCache.remove(siteId);
+	    }
 	} catch (Exception e) {
 	    throw e;
 	}
@@ -174,12 +198,24 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      */
     public COSerialized getSerializedPublishedCourseOutlineForAccessType(
 	    String accessType) throws Exception {
+	long start = System.currentTimeMillis();
 	// Check security permission for this method
-	String webappdir = getServletContext().getRealPath("/");
 	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
-	return osylServices.getOsylPublishService()
+	String webappdir = getServletContext().getRealPath("/");
+	COSerialized cos;
+	if (cacheEnabled && publishedCoCache.containsKey(siteId)) {
+	    cos = publishedCoCache.get(siteId);
+	} else {
+	    cos = osylServices.getOsylPublishService()
 		.getSerializedPublishedCourseOutlineForAccessType(siteId,
 			accessType, webappdir);
+	    if (cacheEnabled) {
+		publishedCoCache.put(siteId, cos);
+	    }
+	}
+	log.debug("getSerializedPublishedCourseOutlineForAccessType"
+		+ elapsed(start) + siteId);
+	return cos;
     }
 
     /**
@@ -218,32 +254,37 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      *         context
      */
     public COSerialized getSerializedCourseOutline() throws Exception {
-	String webappDir = getServletContext().getRealPath("/");
+	long start = System.currentTimeMillis();
 	COSerialized thisCo;
 	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
 
 	if (osylServices.getOsylSecurityService().isAllowedToEdit(siteId)) {
+	    String webappDir = getServletContext().getRealPath("/");
 	    thisCo =
 		    osylServices.getOsylSiteService()
 			    .getSerializedCourseOutline(webappDir);
 	} else {
-	    if (getCurrentUserRole().equals(
+	    String currentUserRole = getCurrentUserRole();
+	    if (currentUserRole.equals(
 		    OsylSecurityService.SECURITY_ROLE_COURSE_GENERAL_ASSISTANT)
-		    || getCurrentUserRole()
-			    .equals(
-				    OsylSecurityService.SECURITY_ROLE_COURSE_TEACHING_ASSISTANT)
-		    || getCurrentUserRole().equals(
+		    || currentUserRole.equals(
+			    OsylSecurityService.SECURITY_ROLE_COURSE_TEACHING_ASSISTANT)
+		    || currentUserRole.equals(
 			    OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)
-		    || getCurrentUserRole().equals(
+		    || currentUserRole.equals(
 			    OsylSecurityService.SECURITY_ROLE_COURSE_HELPDESK)
-		    || getCurrentUserRole().equals(
-			    OsylSecurityService.SECURITY_ROLE_PROJECT_ACCESS))
+		    || currentUserRole.equals(
+			    OsylSecurityService.SECURITY_ROLE_PROJECT_ACCESS)) {
 		thisCo =
-			getSerializedPublishedCourseOutlineForAccessType(SecurityInterface.ACCESS_ATTENDEE);
-	    else
+			getSerializedPublishedCourseOutlineForAccessType(
+				SecurityInterface.ACCESS_ATTENDEE);
+	    } else {
 		thisCo =
-			getSerializedPublishedCourseOutlineForAccessType(SecurityInterface.ACCESS_PUBLIC);
+			getSerializedPublishedCourseOutlineForAccessType(
+				SecurityInterface.ACCESS_PUBLIC);
+	    }
 	}
+	log.debug("getSerializedCourseOutline" + elapsed(start) + siteId);
 	return thisCo;
     }
 
@@ -304,27 +345,37 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * @return COConfigSerialized
      */
     public COConfigSerialized getSerializedConfig() throws Exception {
-	String webappDir = getServletContext().getRealPath("/");
+	long start = System.currentTimeMillis();
+	COConfigSerialized cfg = null;
 	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
-	String cfgId =
+	if (cacheEnabled && configCache.containsKey(siteId)) {
+	    cfg = configCache.get(siteId);
+	} else {
+
+	    String webappDir = getServletContext().getRealPath("/");
+	    String cfgId =
 		osylServices.getOsylSiteService().getOsylConfigIdForSiteId(
 			siteId);
-	COConfigSerialized cfg = null;
-	try {
-	    if (cfgId == null)
-		cfg =
+	    try {
+		if (cfgId == null)
+		    cfg =
 			osylServices.getOsylConfigService().getConfig(
 				osylServices.getOsylConfigService()
-					.getDefaultConfig(), webappDir);
-	    else
-		cfg =
+				.getDefaultConfig(), webappDir);
+		else
+		    cfg =
 			osylServices.getOsylConfigService().getConfig(cfgId,
 				webappDir);
 
-	} catch (Exception e) {
-	    log.error("Unable to retrieve serialized config", e);
-	    throw e;
+	    } catch (Exception e) {
+		log.error("Unable to retrieve serialized config", e);
+		throw e;
+	    }
+	    if (cacheEnabled) {
+		configCache.put(siteId, cfg);
+	    }
 	}
+	log.debug("getSerializedConfig " + elapsed(start) + siteId);
 	return cfg;
     }
 
@@ -396,5 +447,10 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 
     public SakaiEntities getExistingEntities(String siteId) {
 	return osylServices.getOsylService().getExistingEntities(siteId);
+    }
+
+    // only to improve readability while profiling
+    private static String elapsed(long start) {
+	return ": elapsed : " + (System.currentTimeMillis() - start) + " ms "; 	
     }
 }

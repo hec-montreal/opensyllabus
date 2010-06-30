@@ -20,6 +20,7 @@
 
 package org.sakaiquebec.opensyllabus.common.dao;
 
+import java.util.HashMap;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import org.hibernate.HibernateException;
 import org.sakaiproject.db.cover.SqlService;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -44,13 +46,39 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
     /** Our logger */
     private static Log log = LogFactory.getLog(ResourceDaoImpl.class);
 
+    private HibernateTemplate myHT;
+
+    // The cache for published Course Outlines
+    private static HashMap<String, COSerialized> publishedCoCache;
+    // The cache for serialized configurations
+    private static HashMap<String, COConfigSerialized> configCache;
+    // Whether the cache is used (value should be set from sakai.properties)
+    private static boolean EXPERIMENTAL_CACHE_ENABLED = false;
+
     /** The init method called by Spring */
     public void init() {
-	log.warn("Init from DAO");
+	//log.warn("Init from DAO");
+        log.warn("Init from DAO FetchSize=" + getHibernateTemplate().getFetchSize());
+        //getHibernateTemplate().setFetchSize(5);
+        myHT = new HibernateTemplate(getSessionFactory());
+        myHT.setFetchSize(1);
+        myHT.setMaxResults(1);
+
+        initCache();
     }
 
     /** Default constructor */
     public ResourceDaoImpl() {
+    }
+
+    private void initCache() {
+	if (EXPERIMENTAL_CACHE_ENABLED) {
+	    log.info("Initializing caches");
+	    publishedCoCache = new HashMap<String, COSerialized>();
+	    configCache = new HashMap<String, COConfigSerialized>();
+	} else {
+	    log.info("Experimental cache is disabled");	    
+	}
     }
 
     /** {@inheritDoc} */
@@ -118,15 +146,26 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
      */
     public COConfigSerialized getCourseOutlineOsylConfig(String idCo)
 	    throws Exception {
-	COSerialized courseOutline = null;
-	try {
-	    courseOutline = getSerializedCourseOutline(idCo);
-	} catch (Exception e) {
-	    log.error("Unable to retrieve course outline", e);
-	    throw e;
-	}
+	COConfigSerialized cfg = null;
+	if (EXPERIMENTAL_CACHE_ENABLED && configCache.containsKey(idCo)) {
+//	    log.debug("config cache hit");
+	    cfg = configCache.get(idCo);
+	} else {
+	    COSerialized courseOutline = null;
+	    try {
+		courseOutline = getSerializedCourseOutline(idCo);
+	    } catch (Exception e) {
+		log.error("Unable to retrieve course outline", e);
+		throw e;
+	    }
 
-	return courseOutline.getOsylConfig();
+	    cfg = courseOutline.getOsylConfig();
+
+	    if (EXPERIMENTAL_CACHE_ENABLED) {
+		configCache.put(idCo, cfg);
+	    }
+	}
+	return cfg;
     }
 
     /**
@@ -207,7 +246,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    if ("oracle".equalsIgnoreCase(SqlService.getVendor())
 		    && access.equals("")) {
 		results =
-			getHibernateTemplate()
+			myHT
 				.find(
 					"from COSerialized where siteId= ? and published= ? and access is null",
 					new Object[] { siteId, published });
