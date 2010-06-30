@@ -148,8 +148,7 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 		contentHostingService
 			.allowUpdateCollection(contentHostingService
 				.getSiteCollection(siteId));
-	log.info("is allowed to edit - result: " + result + " siteId: "
-		+ siteId);
+	log.debug("is allowed to edit: " + result + " siteId: " + siteId);
 	return result;
     }
 
