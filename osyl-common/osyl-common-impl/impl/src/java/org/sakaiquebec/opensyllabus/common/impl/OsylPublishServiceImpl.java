@@ -14,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.cover.SecurityService;
+import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentEntity;
@@ -288,11 +289,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// PUBLICATION
 	// TODO verify hierarchy compatibility and publish only if compatible
 
-	 setDocumentSecurityMap(coModeled.getDocumentSecurityMap());
+	setDocumentSecurityMap(coModeled.getDocumentSecurityMap());
 
-	 setDocumentVisibilityMap(coModeled.getDocumentVisibilityMap());
+	setDocumentVisibilityMap(coModeled.getDocumentVisibilityMap());
 
-	copyWorkToPublish(siteId, getDocumentSecurityMap(), getDocumentVisibilityMap());
+	copyWorkToPublish(siteId, getDocumentSecurityMap(),
+		getDocumentVisibilityMap());
 
 	publication(co.getSiteId(), webappDir);
 
@@ -399,19 +401,20 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     }
 
     private Map<String, String> getDocumentVisibilityMap() {
-        return documentVisibilityMap;
+	return documentVisibilityMap;
     }
 
-    private void setDocumentVisibilityMap(Map<String, String> documentVisibilityMap) {
-        this.documentVisibilityMap = documentVisibilityMap;
+    private void setDocumentVisibilityMap(
+	    Map<String, String> documentVisibilityMap) {
+	this.documentVisibilityMap = documentVisibilityMap;
     }
 
     private Map<String, String> getDocumentSecurityMap() {
-        return documentSecurityMap;
+	return documentSecurityMap;
     }
 
     private void setDocumentSecurityMap(Map<String, String> documentSecurityMap) {
-        this.documentSecurityMap = documentSecurityMap;
+	this.documentSecurityMap = documentSecurityMap;
     }
 
     private void publishChild(String siteId, String webappDir) {
@@ -602,14 +605,18 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	// We save the published date in the course outline in edition
 	co.setPublicationDate(new java.util.Date(System.currentTimeMillis()));
-	resourceDao.createOrUpdateCourseOutline(co);
+	resourceDao.setPublicationDate(co.getCoId(), co.getPublicationDate());
 
 	// TODO: We check if the site is associated to a section or a canonical
 	// course in the course management and if the the course outline is
 	// public and transfer it to the public portal if it is the case.
-//	if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC))
-//	    osylTransformToZCCO.sendXmlAndDoc(publishedCO,
-//		    getDocumentSecurityMap(), getDocumentVisibilityMap());
+//	String portalActivated =
+//		ServerConfigurationService.getString("hec.portail.activated");
+//
+//	if (portalActivated != null && portalActivated.equalsIgnoreCase("true"))
+//	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC))
+//		osylTransformToZCCO.sendXmlAndDoc(publishedCO,
+//			getDocumentSecurityMap(), getDocumentVisibilityMap());
     }
 
     public String transformXmlForGroup(String content, String group,

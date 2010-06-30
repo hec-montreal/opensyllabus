@@ -20,7 +20,10 @@
 
 package org.sakaiquebec.opensyllabus.common.dao;
 
+import java.util.Date;
 import java.util.List;
+
+import oracle.sql.DATE;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -404,4 +407,11 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 		new Object[] { sessionId, coId });
     }
     
+    public void setPublicationDate(String coId, Date pubDate){
+	getHibernateTemplate().bulkUpdate(
+		"update COSerialized set publicationDate=? where coId= ?",
+		new Object[] { pubDate, coId });
+    }
+
+
 }

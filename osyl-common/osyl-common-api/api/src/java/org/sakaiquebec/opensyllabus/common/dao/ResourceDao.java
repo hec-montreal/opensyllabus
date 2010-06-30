@@ -20,6 +20,7 @@
 
 package org.sakaiquebec.opensyllabus.common.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -129,5 +130,8 @@ public interface ResourceDao {
     public void clearLocksForCoId(String coId);
     
     public void setLockedBy(String coId, String sessionId);
+    
+    public void setPublicationDate(String coId, Date pubDate);
+    
 
 }
