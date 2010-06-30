@@ -75,6 +75,9 @@ public interface OsylService {
     public static final String PROP_CITATION_COLLECTION_ID =
 	    "citation_collection_id";
 
+    public static final String CACHE_ENABLED_CONFIG_KEY =
+	"opensyllabus.cache.enabled";
+    
     /**
      * retourne le xsl au client pour permettre une prévisualisation du plan de
      * cours avec le xml
@@ -129,5 +132,13 @@ public interface OsylService {
     public boolean checkSitesRelation(String resourceURI);
 
     public SakaiEntities getExistingEntities(String siteId);
+
+    /**
+     * Returns true if cache is enabled in the sakai.properties file. This is
+     * an experimental optimization.
+     * 
+     * @return whether cache is enabled
+     */
+    public boolean isCacheEnabled();
 
 }

@@ -724,4 +724,14 @@ public class OsylServiceImpl implements OsylService {
 
     }
 
+    /** {@inheritDoc} */
+    public boolean isCacheEnabled() {
+	String cfg = ServerConfigurationService.getString(
+		CACHE_ENABLED_CONFIG_KEY);
+	if (cfg != null && cfg.equalsIgnoreCase("true")) {
+	    return true;
+	} else {
+	    return false;
+	}
+    }
 }
