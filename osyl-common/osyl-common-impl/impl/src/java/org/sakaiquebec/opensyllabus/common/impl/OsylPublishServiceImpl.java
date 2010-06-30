@@ -213,6 +213,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     public COSerialized getSerializedPublishedCourseOutlineForAccessType(
 	    String siteId, String accessType, String webappDir) {
+	long start = System.currentTimeMillis();
 	COSerialized thisCo = null;
 	String configRef;
 	try {
@@ -235,6 +236,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	} catch (Exception e) {
 	    log.error("Unable to fill course outline", e);
 	}
+	log.debug("getSerializedPublishedCourseOutlineForAccessType"
+		+ elapsed(start) + siteId);
 	return thisCo;
     }
 
@@ -636,6 +639,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    log.error("Unable to transform XML", e);
 	    throw e;
 	}
+    }
+
+    // only to improve readability while profiling
+    private static String elapsed(long start) {
+	return ": elapsed : " + (System.currentTimeMillis() - start) + " ms "; 	
     }
 
 }
