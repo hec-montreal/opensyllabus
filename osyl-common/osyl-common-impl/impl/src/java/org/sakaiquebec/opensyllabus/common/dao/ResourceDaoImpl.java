@@ -204,7 +204,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	COSerialized cos = null;
 	try {
 	    cos =
-		    getSerializedCourseOutlineBySiteIdAccessAndPublished(
+		    getSerializedVourseOutlineBySiteIdAccessAndPublished(
 			    courseOutline.getSiteId(), courseOutline
 				    .getAccess(), courseOutline.isPublished());
 	    if (!cos.getCoId().equals(courseOutline.getCoId()))
@@ -232,7 +232,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
     }
 
     @SuppressWarnings("unchecked")
-    private COSerialized getSerializedCourseOutlineBySiteIdAccessAndPublished(
+    private COSerialized getSerializedVourseOutlineBySiteIdAccessAndPublished(
 	    String siteId, String access, boolean published) throws Exception {
 	List<COSerialized> results = null;
 	COSerialized courseOutline = null;

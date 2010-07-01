@@ -43,6 +43,7 @@ import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiquebec.opensyllabus.api.OsylService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
+import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
@@ -88,6 +89,13 @@ public class OsylServiceImpl implements OsylService {
 
     protected static final String ASSIGNMENT_TOOL_ID =
 	    "sakai.assignment.grades";
+
+    
+    // Whether the experimental cache is enabled or not
+    private static boolean CACHE_ENABLED = false;
+
+    // Whether we have read if the cache configuration  
+    private static boolean CACHE_CFG_INITIALIZED = false;
 
     /** the session manager to be injected by Spring */
     private SessionManager sessionManager;
@@ -179,6 +187,17 @@ public class OsylServiceImpl implements OsylService {
 	this.coRelationDao = coRelationDao;
     }
 
+    private COConfigDao coConfigDao;
+
+    /**
+     * Sets the {@link COConfigDao}.
+     * 
+     * @param coConfigDAO
+     */
+    public void setCOConfigDao(COConfigDao coConfigDao) {
+	this.coConfigDao = coConfigDao;
+    }
+
     /**
      * The security service to be injected by Spring
      * 
@@ -186,6 +205,7 @@ public class OsylServiceImpl implements OsylService {
      * @uml.associationEnd
      */
     private OsylSecurityService osylSecurityService;
+
 
     /**
      * Sets the {@link OsylSecurityService}.
@@ -724,14 +744,25 @@ public class OsylServiceImpl implements OsylService {
 
     }
 
-    /** {@inheritDoc} */
-    public boolean isCacheEnabled() {
+    private void initCache() {
 	String cfg = ServerConfigurationService.getString(
 		CACHE_ENABLED_CONFIG_KEY);
 	if (cfg != null && cfg.equalsIgnoreCase("true")) {
-	    return true;
+	    CACHE_ENABLED = true;
 	} else {
-	    return false;
+	    CACHE_ENABLED = false;
 	}
+	// We have to inject this config to the DAO
+	coConfigDao.setCacheEnabled(CACHE_ENABLED);
+	CACHE_CFG_INITIALIZED = true;
     }
+    
+    /** {@inheritDoc} */
+    public boolean isCacheEnabled() {
+	if (! CACHE_CFG_INITIALIZED) {
+	    initCache();
+	}
+	return CACHE_ENABLED;
+    }
+
 }

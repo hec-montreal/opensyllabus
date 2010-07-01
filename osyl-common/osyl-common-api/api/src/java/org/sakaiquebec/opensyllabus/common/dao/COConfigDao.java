@@ -34,6 +34,13 @@ import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 public interface COConfigDao {
 
     /**
+     * Enables/disables the experimental cache mechanism.
+     * 
+     * @param boolean
+     */
+    public void setCacheEnabled(boolean b);
+
+    /**
      * All the configs saved in the DB
      * 
      * @param cOConfig

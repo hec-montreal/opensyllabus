@@ -39,7 +39,8 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
     private static Log log = LogFactory.getLog(COConfigDaoImpl.class);
 
     private static HashMap<String, COConfigSerialized> configCache;
-    // Whether the cache is used (value should be set from sakai.properties)
+
+    // Whether the cache is used (value is set from sakai.properties)
     private static boolean EXPERIMENTAL_CACHE_ENABLED = false;
 
     /**
@@ -47,7 +48,6 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
      */
     public void init() {
 	log.debug("Init from COConfig DAO");
-        initCache();
     }
 
     private void initCache() {
@@ -57,6 +57,12 @@ public class COConfigDaoImpl extends HibernateDaoSupport implements COConfigDao 
 	} else {
 	    log.info("Experimental cache is disabled");	    
 	}
+    }
+    
+    /** {@inheritDoc} */
+    public void setCacheEnabled(boolean b) {
+	EXPERIMENTAL_CACHE_ENABLED = b;
+	initCache();
     }
 
     /** {@inheritDoc} */
