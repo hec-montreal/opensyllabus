@@ -20,7 +20,6 @@
 
 package org.sakaiquebec.opensyllabus.common.dao;
 
-import java.util.HashMap;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +28,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.sakaiproject.db.cover.SqlService;
-import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -50,32 +48,16 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
     // row as results. This showed an average 5-15% speed increase.
     private HibernateTemplate singleRowHT;
 
-    // The cache for serialized configurations
-    private static HashMap<String, COConfigSerialized> configCache;
-    // Whether the cache is used (value should be set from sakai.properties)
-    private static boolean EXPERIMENTAL_CACHE_ENABLED = false;
-
     /** The init method called by Spring */
     public void init() {
         log.debug("Init from DAO");
         singleRowHT = new HibernateTemplate(getSessionFactory());
         singleRowHT.setFetchSize(1);
         singleRowHT.setMaxResults(1);
-
-        initCache();
     }
 
     /** Default constructor */
     public ResourceDaoImpl() {
-    }
-
-    private void initCache() {
-	if (EXPERIMENTAL_CACHE_ENABLED) {
-	    log.info("Initializing caches");
-	    configCache = new HashMap<String, COConfigSerialized>();
-	} else {
-	    log.info("Experimental cache is disabled");	    
-	}
     }
 
     /** {@inheritDoc} */
@@ -134,35 +116,6 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	if (coXml == null)
 	    throw new Exception("No course outline with id=" + idCO);
 	return coXml;
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @throws Exception
-     */
-    public COConfigSerialized getCourseOutlineOsylConfig(String idCo)
-	    throws Exception {
-	COConfigSerialized cfg = null;
-	if (EXPERIMENTAL_CACHE_ENABLED && configCache.containsKey(idCo)) {
-	    log.debug("config cache hit");
-	    cfg = configCache.get(idCo);
-	} else {
-	    COSerialized courseOutline = null;
-	    try {
-		courseOutline = getSerializedCourseOutline(idCo);
-	    } catch (Exception e) {
-		log.error("Unable to retrieve course outline", e);
-		throw e;
-	    }
-
-	    cfg = courseOutline.getOsylConfig();
-
-	    if (EXPERIMENTAL_CACHE_ENABLED) {
-		configCache.put(idCo, cfg);
-	    }
-	}
-	return cfg;
     }
 
     /**
