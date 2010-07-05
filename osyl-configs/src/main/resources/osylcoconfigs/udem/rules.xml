@@ -175,7 +175,7 @@
 			</element>
 		</element>		
 		<element name="asmStructure">
-			<attribute name="type" restrictionpattern="PeriodeStruct"/>
+			<attribute name="type" restrictionpattern="PeriodeStruct" nestingLevelAllowed="1" allowMixedContent="false"/>
 			<element name="asmUnit">
 				<attribute name="type" restrictionpattern="PeriodeUnit" allowMultiple="true"/>
 				<element name="asmUnitStructure">
