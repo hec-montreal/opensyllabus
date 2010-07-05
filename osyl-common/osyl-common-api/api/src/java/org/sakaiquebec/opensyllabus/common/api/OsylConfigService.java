@@ -94,6 +94,15 @@ public interface OsylConfigService {
     	    throws Exception;
     
     /**
+     * Returns the relative path for CSS files given the configuration Ref.
+     * 
+     * @return css path
+     * @throws Exception
+     */
+    public String getCssPathFromConfigRef(String webappDir, String configRef)
+    	    throws Exception;
+    
+    /**
      * Returns all configs avaiable
      * 
      * @return A Map<Id,Description>

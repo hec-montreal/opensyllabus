@@ -398,6 +398,11 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	return getCssPath(webAppDir, coConfigDao.getConfig(configId));
     }
     
+    public String getCssPathFromConfigRef(String webAppDir, String configRef)
+	throws Exception {
+    	return getCssPath(webAppDir, coConfigDao.getConfigByRef(configRef));
+    }
+
     /**
      * {@inheritDoc}
      * 

@@ -359,7 +359,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	    try {
 		if (cfgId == null)
 		    cfg =
-			osylServices.getOsylConfigService().getConfig(
+			osylServices.getOsylConfigService().getConfigByRef(
 				osylServices.getOsylConfigService()
 				.getDefaultConfig(), webappDir);
 		else

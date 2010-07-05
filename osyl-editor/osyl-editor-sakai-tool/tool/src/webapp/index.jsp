@@ -122,8 +122,15 @@
 	    	String cssPath = osylMainBean.getOsylConfigService().getConfig(
 	    			configId, webappDir).getCascadingStyleSheetPath();
 	    	*/
+	    	String cssPath = null;
+	    	String configRef = null;
 	    	String configId = osylMainBean.getOsylSiteService().getOsylConfigIdForSiteId(siteId);
-	    	String cssPath = osylMainBean.getOsylConfigService().getCssPathFromConfigId(webappDir, configId);
+	    	if(configId == null || configId.length() == 0){
+	    		configRef = osylMainBean.getOsylConfigService().getDefaultConfig();
+	    		cssPath = osylMainBean.getOsylConfigService().getCssPathFromConfigRef(webappDir, configRef);
+	    	}else{
+	    		cssPath = osylMainBean.getOsylConfigService().getCssPathFromConfigId(webappDir, configId);
+	    	}
 	    %>
 		<link rel="stylesheet" type="text/css" href="<%=cssPath+COConfig.MAIN_CSS%>" />
 		<link rel="stylesheet" type="text/css" href="<%=cssPath+COConfig.PRINT_CSS%>" media="print"/>
