@@ -20,6 +20,7 @@
  ******************************************************************************/
 package com.google.gwt.user.client.ui;
 
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.listener.SplitterEventHandler;
 
@@ -46,12 +47,10 @@ public class OsylHorizontalSplitPanel extends Composite {
 
     private boolean collapseMouseDown = false;
     private boolean isMouseDownOnSplitter = false;
-    
-    private static int MIN_TOOL_WIDTH = 500;
-    private static int INITIAL_SPLITTER_POS = 30;
-    private static int CURRENT_SPLITTER_POS;
-    private static int MIN_SPLITTER_POS = 30;
-    private static int MAX_SPLITTER_POS = 300;
+    private boolean isResizable = true;
+    private int minSplitPosition = 130;
+    private int maxSplitPosition = 300;
+    private int initialSplitPercentPosition = 50;
     
     public Element getSplitElement() {
 	return splitElement;
@@ -87,20 +86,33 @@ public class OsylHorizontalSplitPanel extends Composite {
     public HorizontalSplitPanel getSplitPanel() {
 	return horizontalSplitPanel;
     }
+    
+    
 
-    public int getSplitterPosition() {
-	try {
-	    String widthString =
+    public int getSplitPosition() {
+    	String widthString =
 		    DOM.getStyleAttribute(horizontalSplitPanel.getElement(0),
 			    "width");
 	    return Integer.parseInt(widthString.substring(0, widthString
 		    .indexOf("px")));
-	} catch (NumberFormatException e) {
-	    Window.alert(e.toString());
-	    return -1;
-	}
     }
-
+    
+    public void setSplitPosition(int pos) {
+    	horizontalSplitPanel.setSplitPosition(pos +"px");
+    }
+    
+    public int getComputedSplitPosition() {
+    	return Math.max(
+    	    Math.min(getSplitPosition(),
+    	    	getMaxSplitPosition()),
+    	    		getMinSplitPosition());
+    }
+    
+    public Boolean isResizable() {
+    	return getSplitPosition() <= getMaxSplitPosition() &&
+    	getSplitPosition() >= getMinSplitPosition();
+    }
+    
     protected void createSplitter() {
 	collapseAnchor = new Anchor();
 	collapseAnchor.setStylePrimaryName("Osyl-collapseButton");
@@ -150,16 +162,15 @@ public class OsylHorizontalSplitPanel extends Composite {
 	case Event.ONMOUSEUP: {
 	    if (collapseMouseDown) {
 		if (leftElementVisible) {
-		    leftElementLastPosition = getSplitterPosition();
-		    horizontalSplitPanel.setSplitPosition("0px");
+		    leftElementLastPosition = getComputedSplitPosition();
+		    setSplitPosition(0);
 		    collapseAnchor.addStyleName("collapse");
 		    collapseAnchor.setTitle(OsylController.getInstance()
 			    .getUiMessage("OsylTreeView.uncollapse"));
 		    splitElement.getFirstChildElement().setClassName(
 			"hsplitter hsplitter-disable");
 		} else {
-		    horizontalSplitPanel
-			    .setSplitPosition(leftElementLastPosition + "px");
+			setSplitPosition(leftElementLastPosition);
 		    collapseAnchor.removeStyleName("collapse");
 		    collapseAnchor.setTitle(OsylController.getInstance()
 			    .getUiMessage("OsylTreeView.collapse"));
@@ -177,22 +188,52 @@ public class OsylHorizontalSplitPanel extends Composite {
 	    setCursor("");
 	    isMouseDownOnSplitter = false;
 	    break;
+		}
 	}
+	if(leftElementVisible && !collapseMouseDown) {
+		super.onBrowserEvent(event);
 	}
-	if(leftElementVisible && !collapseMouseDown)
-	    super.onBrowserEvent(event);
-    }
-    
+	
+	if (DOM.eventGetType(event) == Event.ONMOUSEMOVE &&
+			!isResizable() && leftElementVisible) {
+		setSplitPosition(getComputedSplitPosition());
+	}
+	
+	}
+	
     private static native void setCursor(String cursor) /*-{
     	var o = $wnd.document.body;
 		if (o.style.cursor != cursor) o.style.cursor = cursor;
 	}-*/;
     
-    public static int getInitialSplitPosition() {
-	return Math.max(Math.min(200, MAX_SPLITTER_POS), MIN_SPLITTER_POS);
-    }
+    public int getInitialSplitPosition() {
+    	int maxToolWidth = Window.getClientWidth() / 100
+    		* initialSplitPercentPosition;
+    	int maxItemWidth = 
+    		OsylController.getInstance().getMainView().
+    		getOsylTreeView().getMaxTreeWidth();
+		return Math.max(
+				Math.min(maxItemWidth, maxToolWidth), 
+				minSplitPosition);
+	}
+    
+	public int getMaxSplitPosition() {
+		int max = this.getOffsetWidth() - 
+		splitElement.getOffsetWidth() - maxSplitPosition;
+		return max;
+	}
+	public void setMaxSplitPosition(int maxSplitPosition) {
+		this.maxSplitPosition = maxSplitPosition;
+	}
 	
-    private int computeSplitterPosition(){
-	return 0;
-    }
+	public int getMinSplitPosition() {
+		return minSplitPosition;
+	}
+	public void setMinSplitPosition(int minSplitPosition) {
+		this.minSplitPosition = minSplitPosition;
+	}
+	
+	public Boolean isResizing() {
+		return isResizable && horizontalSplitPanel.isResizing();
+	}
 }

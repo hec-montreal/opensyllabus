@@ -194,18 +194,18 @@ public class OsylEditorEntryPoint implements EntryPoint {
      * @param h the new tool height
      */
     public void setToolSize() {
-	int h = getDesiredToolHeight();
-	if (isInSakai()) {
-	    setSakaiIFrameHeight(h);
-	}
-	((OsylViewableComposite) getView()).setHeight((h - 12) + "px");
-	getRootPanel().setHeight(h + "px");
-	if (OsylController.getInstance().isInPreview()) {
-	    OsylController.getInstance().getMainView().resize();
-	} else {
-	    editorMainView.resize();
-	}
-
+    	int h  = getDesiredToolHeight();
+    	if (isInSakai()){
+    		setSakaiIFrameHeight(h);
+    	}
+    	((OsylViewableComposite) getView()).setHeight((h - 12) + "px");
+    	getRootPanel().setHeight(h + "px");
+    	
+    	if (OsylController.getInstance().isInPreview()) {
+    		OsylController.getInstance().getMainView().resize();
+    	}else{
+    		editorMainView.resize();
+    	}
     }
 
     private static void setSakaiScrollBar(String value) {
@@ -605,6 +605,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	}
     }
 
+
+    
     /**
      * Centers the specified {@link PopupPanel} on the current view. This method
      * takes into account the current position in OSYLEditor, as well as the
@@ -641,17 +643,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	return getRootPanel().getOffsetWidth();
     }
 
-    public static native void writeInfos(String value)/*-{
-						      var root = $wnd.top.document;
-						      var elm = root.getElementById("INFOS");
-						      if (elm == null) {
-						      var infos = root.body.createElement("DIV");
-						      infos.id = "INFOS";
-						      root.body.appendChild(infos);
-						      elm = root.getElementById("INFOS");
-						      }
-						      elm.innerHTML = value;
-						      }-*/;
+    
+    
 
     public OsylViewable getView() {
 	return editorEntryPointView;
@@ -736,4 +729,35 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	    value = value.substring(0, pos);
 	return Integer.parseInt(value);
     }
+    
+    private static Element[] createElements(int len) { 
+    	return new Element[len];
+    } 
+    
+    private static void setElement(Element[] container, int pos, Element value) {
+        container[pos] = value;
+    }
+    
+    
+    public static native Element[] getElementsByClass(String searchClass,Element node,String tag) /*-{
+        var classElements = [];
+        if ( node == null ) node = $doc;
+        if ( tag == null ) tag = '*';
+        var els = node.getElementsByTagName(tag);
+        var elsLen = els.length;
+        var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
+        for (i = 0, j = 0; i < elsLen; i++) {
+        	if ( pattern.test(els[i].className) ) {
+        		classElements[j] = els[i];
+        		j++;
+        	}
+        }
+        var newElements = 
+        	@org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint::createElements(I)(classElements.length);
+        for (i = 0;i < classElements.length; i++) {
+        	@org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint::setElement([Lcom/google/gwt/user/client/Element;ILcom/google/gwt/user/client/Element;)(newElements, i, classElements[i]); 
+        }
+        return newElements;
+	}-*/;
+    
 }

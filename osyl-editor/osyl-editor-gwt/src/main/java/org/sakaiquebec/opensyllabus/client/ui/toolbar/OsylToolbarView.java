@@ -118,8 +118,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    getOsylToolbar().getPublishPushButton().setVisible(false);
 	    
 	    /* Print menu button */
-	    getOsylToolbar().getPrintSeparator().setVisible(false); //TODO true when printing is ready
-	    getOsylToolbar().getPrintPushButton().setVisible(false); //TODO true when printing is ready
+	    getOsylToolbar().getPrintSeparator().setVisible(true);
+	    getOsylToolbar().getPrintPushButton().setVisible(true);
 	    
 	    /* Add menu button */
 	    getOsylToolbar().getAddMenuItem().setVisible(false);
@@ -149,8 +149,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    getOsylToolbar().getPublishPushButton().setVisible(false);
 	    
 	    /* Print menu button */
-	    getOsylToolbar().getPrintSeparator().setVisible(false); //TODO true when printing is ready
-	    getOsylToolbar().getPrintPushButton().setVisible(false); //TODO true when printing is ready
+	    getOsylToolbar().getPrintSeparator().setVisible(true);
+	    getOsylToolbar().getPrintPushButton().setVisible(true);
 	    
 	    /* Edit menu button */
 	    getOsylToolbar().getEditSeparator().setVisible(false);
@@ -186,8 +186,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		getOsylToolbar().getPublishPushButton().setVisible(true);
 		
 		/* Print menu button */
-		getOsylToolbar().getPrintSeparator().setVisible(false); //TODO true when printing is ready
-		getOsylToolbar().getPrintPushButton().setVisible(false); //TODO true when printing is ready
+		getOsylToolbar().getPrintSeparator().setVisible(true);
+		getOsylToolbar().getPrintPushButton().setVisible(true);
 		
 		/* Add menu button */
 		getOsylToolbar().getAddMenuItem().setVisible(true);
@@ -200,7 +200,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 			getOsylToolbar().getEditSeparator().setVisible(false);
 			getOsylToolbar().getEditPushButton().setVisible(false);
 		}
-		// 3 big ViewContext cases
+		//3 big ViewContext cases
+		
 		if (getModel().isCourseOutlineContent()) {
 			getOsylToolbar().getAddMenuItem().setVisible(false);
 		} else if (getModel().isCOUnit()) {

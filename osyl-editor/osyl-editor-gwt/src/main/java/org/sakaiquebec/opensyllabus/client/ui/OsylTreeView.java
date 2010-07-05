@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
@@ -39,7 +40,6 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -64,14 +64,16 @@ public class OsylTreeView extends OsylViewableComposite implements
     private String rootTitle;
 
     private Tree osylTree;
+    
+    private Element[] currentTreeItemElements;
 
     private Map<COModelInterface, TreeItem> itemModelMap;
-
-    public static final int INIT_TREE_WIDTH = 20;
-
-    private static int maxTreeWidth = INIT_TREE_WIDTH;
-
+    
     public static final int DEFAULT_WIDTH = 130;
+    
+    private static int maxTreeWidth = DEFAULT_WIDTH;
+
+    
 
     public OsylTreeView(COModelInterface model, OsylController osylController) {
 	super(model, osylController);
@@ -82,8 +84,7 @@ public class OsylTreeView extends OsylViewableComposite implements
     private void initView() {
 
 	VerticalPanel vertPan = new VerticalPanel();
-	setMaxTreeWidth(INIT_TREE_WIDTH);
-
+	
 	final Tree tree = new Tree();
 	setTree(tree);
 	getTree().setStylePrimaryName("Osyl-TreeView-Tree");
@@ -115,7 +116,7 @@ public class OsylTreeView extends OsylViewableComposite implements
 	    // this can be a Lecture leaf
 	    COElementAbstract itemModel = (COElementAbstract) iter.next();
 	    // Compute the maximum tree width
-	    computeMaxTreeWidth(itemModel);
+	    
 	    if (itemModel.isCOStructureElement()) {
 		List<COModelInterface> subModels =
 			getController().getOsylConfig().getOsylConfigRuler()
@@ -183,8 +184,11 @@ public class OsylTreeView extends OsylViewableComposite implements
 	DOM.getChild(DOM.getChild(getTree().getElement(),1),0).setClassName("Osyl-TreeView-TreeRoot");
 	DOM.getChild(DOM.getChild(getTree().getElement(),1),1).setClassName("Osyl-TreeView-TreeContent");
 	// The tree is expanded by default
+	setCurrentTreeItemsElement();
+	computeMaxTreeWidth();
 	getRoot().setState(true);
-    }
+	
+	}
 
     private void addUnitTreeItem(TreeItem parentTreeItem, COUnit itemModel) {
 	OsylUnitTreeItemView treeItemView =
@@ -265,22 +269,32 @@ public class OsylTreeView extends OsylViewableComposite implements
 	refreshView();
     }
 
-    /**
-     * @param itemModel
-     */
-    private void computeMaxTreeWidth(COElementAbstract itemModel) {
-	// Computation of the initial split position based on max width of the
-	// Tree
-	getTree().setVisible(true);
-	if (itemModel.getLabel() != null) {
-	    int currentTreeWidth = itemModel.getLabel().length() + 8;
+    public Element[] getCurrentTreeItemsElement() {
+    	return currentTreeItemElements;
+    }
+    
+    public void setCurrentTreeItemsElement() {
+    	currentTreeItemElements = 
+    		OsylEditorEntryPoint.getElementsByClass("Osyl-TreeLabel", this.getElement(), "DIV");
+    }
+    
+    private void computeMaxTreeWidth() {
+	// Computation of the initial split position based on longest label 
+    // in the tree items.
+    Element[] elms = getCurrentTreeItemsElement();
+    int currentTreeWidth;
+    int left = 0;
+	for (int i=0; i<elms.length;i++) {
+		// TODO: Find a way to obtain the getAbsoluteLeft of the Element at the initial loading of the page;
+		left = elms[i].getAbsoluteLeft();
+		currentTreeWidth = elms[i].getInnerText().length() * 7 + (left == 0 ? 49:left);
 	    if (currentTreeWidth > getMaxTreeWidth()) {
-		setMaxTreeWidth(currentTreeWidth);
+	    	setMaxTreeWidth(currentTreeWidth);
 	    }
 	}
     }
 
-    public static int getMaxTreeWidth() {
+    public int getMaxTreeWidth() {
 	return maxTreeWidth;
     }
 
@@ -288,58 +302,29 @@ public class OsylTreeView extends OsylViewableComposite implements
 	OsylTreeView.maxTreeWidth = newMaxTreeWidth;
     }
 
-    public static String getInitialSplitPosition() {
-	int splitterPosition =
-		getMaxTreeWidth() * 4 + OsylTreeView.DEFAULT_WIDTH;
-	return splitterPosition + "px";
-    }
 
     public void onUpdateModel(UpdateCOUnitEvent event) {
 	refreshSubModelsViews((COElementAbstract) event.getSource());
     }
 
     public void onSelection(SelectionEvent<TreeItem> event) {
-	TreeItem item = event.getSelectedItem();
-	if (item.getParentItem() == null) {
-	    getController().getViewContext().setContextModel(getModel());
-	} else {
-	    OsylTreeItemBaseView treeItemView =
-		    (OsylTreeItemBaseView) item.getWidget();
-	    getController().getViewContext().setContextModel(
-		    treeItemView.getModel());
-	}
-
+    	TreeItem item = event.getSelectedItem();
+    	if (item.getParentItem() == null) {
+    		getController().getViewContext().setContextModel(getModel());
+    	} else {
+    		OsylTreeItemBaseView treeItemView =
+    			(OsylTreeItemBaseView) item.getWidget();
+    		getController().getViewContext().setContextModel(
+    				treeItemView.getModel());
+    	}
+    	OsylController.getInstance().getMainView().resize();
     }
     
-    public native void setTreeItemsWidth(int treeWidth, Element elm) /*-{
-    	function findAbsoluteLeft(obj) {
-			var curleft = 0;
-			if (obj.offsetParent) {
-				do {
-					curleft += obj.offsetLeft;
-				} while (obj = obj.offsetParent);
-			}
-			return curleft;
+    public void setTreeItemsWidth(int treeWidth) {
+		Element[] elms = getCurrentTreeItemsElement();
+		for (int i = 0; i < elms.length; i++) {
+			DOM.setStyleAttribute(elms[i],"width",(treeWidth - elms[i].getAbsoluteLeft())+ "px");
 		}
-    	function getElementsByClassName(className, tag, elm){
-			var testClass = new RegExp("(^|\\s)" + className + "(\\s|$)");
-			var tag = tag || "*";
-			var elm = elm || $doc;
-			var elements = (tag == "*" && elm.all)? elm.all : elm.getElementsByTagName(tag);
-			var returnElements = [];
-			var current;
-			var length = elements.length;
-			for(var i=0; i<length; i++){
-				current = elements[i];
-				if(testClass.test(current.className)){
-					returnElements.push(current);
-				}
-			}
-			return returnElements;
-		}
-		var a = getElementsByClassName("Osyl-TreeLabel", "div", elm);
-		for (var i=0; i<a.length;i++) {
-			a[i].style.width = treeWidth - findAbsoluteLeft(a[i]) +"px";
-		}
-    }-*/;
+	}
+    
 }

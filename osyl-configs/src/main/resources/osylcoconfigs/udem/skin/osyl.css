@@ -665,9 +665,7 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	overflow:visible;
 }
 
-div.Osyl-firstElementOfView {
-	display:none;
-}
+div.Osyl-firstElementOfView {}
 
 .Osyl-ListItemView-Hyperlink .Osyl-UnitView-ResPanel {
 	color:#FFF; /*For IE6*/
