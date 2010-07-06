@@ -163,11 +163,6 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 	    setStylePrimaryName("Osyl-UnitView-ResPanel");
 	    if(viewFirstElement){
 	    	this.addStyleName("Osyl-firstElementOfView");
-		    //if no description exist
-		    if( getModel().getProperty(COPropertiesType.DESCRIPTION) == null ||
-		        getModel().getProperty(COPropertiesType.DESCRIPTION).length() == 0	){
-		    	DOM.setStyleAttribute(this.getElement(), "display", "none");
-		    }
 	    }
 	    if (!getController().isReadOnly()) {
 		getMainPanel().add(getButtonPanel());
