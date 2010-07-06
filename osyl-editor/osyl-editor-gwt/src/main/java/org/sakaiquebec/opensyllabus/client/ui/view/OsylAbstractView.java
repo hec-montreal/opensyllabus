@@ -59,7 +59,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      * The editor for this view. Handles both the edition and display modes.
      */
     private OsylAbstractEditor editor;
-
+    private Boolean editable;
     private VerticalPanel upAndDownPanel;
 
     protected OsylEditableMouseOverListener popUpMouseOverListener;
@@ -88,10 +88,11 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 	setMainPanel(new AbsolutePanel());
 	setButtonPanel(new HorizontalPanel());
 	setUpAndDownPanel(new VerticalPanel());
-
 	if (model.isEditable() && editable && !viewFirstElement) {
 	    popUpMouseOverListener = new OsylEditableMouseOverListener(this);
 	}
+	this.editable = model.isEditable() && editable;
+
     }
 
     /**
@@ -161,9 +162,13 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 	    getMainPanel().add(getEditor());
 	    getEditor().setWidth("100%");
 	    setStylePrimaryName("Osyl-UnitView-ResPanel");
-	    if(viewFirstElement){
+	    if(viewFirstElement) {
 	    	this.addStyleName("Osyl-firstElementOfView");
 	    }
+	    if (!editable) {
+	    	this.addStyleName("Osyl-UnitView-ResPanel-ReadOnly");
+	    }
+	    
 	    if (!getController().isReadOnly()) {
 		getMainPanel().add(getButtonPanel());
 		getMainPanel().add(getUpAndDownPanel());

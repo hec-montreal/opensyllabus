@@ -328,7 +328,7 @@ public class OsylMainView extends OsylViewableComposite implements
     }
     // Set The tree width
 	int treeWidth = osylHorizontalSplitPanel.getComputedSplitPosition();
-	if (osylHorizontalSplitPanel.getSplitPosition() == 0) treeWidth = 0;
+	
 	int treeInnerWidth = Math.max(0, treeWidth
 			- (treeDecoratorPanel.getCell(1, 0).getOffsetWidth() + treeDecoratorPanel
 					.getCell(1, 2).getOffsetWidth()));
@@ -351,7 +351,7 @@ public class OsylMainView extends OsylViewableComposite implements
 			.getOffsetWidth() - scrollbarWidth);
 	
 	
-	int workspaceWidth = toolWidth - treeWidth - splitterWidth;
+	int workspaceWidth = toolWidth - (osylHorizontalSplitPanel.getSplitPosition() == 0 ? 0:treeWidth) - splitterWidth;
 	int workspaceInnerWidth =
 		workspaceWidth
 			- (workspaceDecoratorPanel.getCell(1, 0)
