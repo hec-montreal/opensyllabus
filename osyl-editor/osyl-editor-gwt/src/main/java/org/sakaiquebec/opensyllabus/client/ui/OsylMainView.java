@@ -328,10 +328,11 @@ public class OsylMainView extends OsylViewableComposite implements
     }
     // Set The tree width
 	int treeWidth = osylHorizontalSplitPanel.getComputedSplitPosition();
-	int treeInnerWidth =
-		treeWidth
+	if (osylHorizontalSplitPanel.getSplitPosition() == 0) treeWidth = 0;
+	int treeInnerWidth = Math.max(0, treeWidth
 			- (treeDecoratorPanel.getCell(1, 0).getOffsetWidth() + treeDecoratorPanel
-				.getCell(1, 2).getOffsetWidth());
+					.getCell(1, 2).getOffsetWidth()));
+		
 	DOM.setStyleAttribute(treeDecoratorPanel.getCell(0, 1), "width",
 		treeInnerWidth + "px");
 	DOM.setStyleAttribute(treeDecoratorPanel.getCell(1, 1), "width",
@@ -339,7 +340,7 @@ public class OsylMainView extends OsylViewableComposite implements
 	int treeHeaderLabelLeftPadding =
 		OsylEditorEntryPoint.parsePixels(OsylEditorEntryPoint.getStyle(
 			treeHeaderLabel.getElement(), "paddingLeft"));
-	treeHeaderLabel.setWidth(treeInnerWidth - treeHeaderLabelLeftPadding
+	treeHeaderLabel.setWidth(Math.max(0,treeInnerWidth - treeHeaderLabelLeftPadding)
 		+ "px");
 	int splitterWidth =
 		osylHorizontalSplitPanel.getSplitElement().getOffsetWidth();
@@ -392,4 +393,23 @@ public class OsylMainView extends OsylViewableComposite implements
 	public void setWorkspaceTitleView(OsylWorkspaceTitleView osylWorkspaceTitleView) {
 		this.osylWorkspaceTitleView = osylWorkspaceTitleView;
 	}
+	
+	public static native void writeInfos(String value)/*-{
+	var root = $wnd.top.document;
+	var elm = root.getElementById("INFOS");
+	if (elm == null) {
+		var infos = root.createElement("DIV");
+		infos.id = "INFOS";
+		root.body.appendChild(infos);
+		elm = root.getElementById("INFOS");
+		elm.style.position = "fixed";
+		elm.style.top = "0";
+		elm.style.left = "0";
+		elm.style.border = "2px solid #000";
+		elm.style.padding = "4px";
+		elm.style.zIndex = "100000";
+		elm.style.backgroundColor = "#FFF";
+	}
+	elm.innerHTML = value;
+}-*/;
 }

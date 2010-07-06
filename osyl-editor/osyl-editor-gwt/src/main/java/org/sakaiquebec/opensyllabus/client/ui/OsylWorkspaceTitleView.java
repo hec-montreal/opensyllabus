@@ -25,25 +25,19 @@ import java.util.Date;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
-import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureAssessmentView;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitEventHandler;
-import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler.UpdateCOStructureElementEvent;
-import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitEventHandler.UpdateCOUnitEvent;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
-import org.sakaiquebec.opensyllabus.shared.model.COStructureElementType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitType;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Label;
 
 /**
@@ -61,18 +55,14 @@ public class OsylWorkspaceTitleView extends OsylViewableComposite implements
 	UpdateCOUnitEventHandler {
 
     // View variables
-    private VerticalPanel workspacePanel;
-    private Widget currentView;
+    private SimplePanel workspacePanel;
     private DateTimeFormat dateTimeFormat;
     private Label workspaceTitleLabel;
 
     // View Constructor
     public OsylWorkspaceTitleView(COModelInterface model, OsylController controller) {
 	super(model, controller);
-	setWorkspacePanel(new VerticalPanel());
-	getWorkspacePanel().setSize("100%", "100%");
-	getWorkspacePanel().setHorizontalAlignment(
-		HasHorizontalAlignment.ALIGN_LEFT);
+	setWorkspacePanel(new SimplePanel());
 	initWidget(getWorkspacePanel());
 	dateTimeFormat = getController().getSettings().getDateFormat();
     }
@@ -81,11 +71,11 @@ public class OsylWorkspaceTitleView extends OsylViewableComposite implements
 	return (COElementAbstract) super.getModel();
     }
 
-    public VerticalPanel getWorkspacePanel() {
+    public SimplePanel getWorkspacePanel() {
 	return workspacePanel;
     }
 
-    private void setWorkspacePanel(VerticalPanel workspacePanel) {
+    private void setWorkspacePanel(SimplePanel workspacePanel) {
 	this.workspacePanel = workspacePanel;
     }
 
@@ -154,10 +144,6 @@ public class OsylWorkspaceTitleView extends OsylViewableComposite implements
 	getWorkspacePanel().add(workspaceTitleLabel);
     }
 
-    public void setBorderWidth(int i) {
-	getWorkspacePanel().setBorderWidth(i);
-    }
-
     public void setSize(String width, String height) {
 	getWorkspacePanel().setSize(width, height);
     }
@@ -199,11 +185,9 @@ public class OsylWorkspaceTitleView extends OsylViewableComposite implements
 
     public void onUpdateModel(UpdateCOStructureElementEvent event) {
     	refreshView();
-        }
+    }
 
     public void onUpdateModel(UpdateCOUnitEvent event) {
     	refreshView();
-        }    
- 
-
+    }
 }

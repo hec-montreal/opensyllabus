@@ -20,13 +20,9 @@
 
 package org.sakaiquebec.opensyllabus.client.ui;
 
-import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
-import org.sakaiquebec.opensyllabus.client.controller.event.ClosePushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
-import org.sakaiquebec.opensyllabus.client.controller.event.EditPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
-import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureAssessmentView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOStructureView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOUnitStructureView;
@@ -38,11 +34,9 @@ import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElementType;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -59,16 +53,14 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 	ViewContextSelectionEventHandler  {
 
     // View variables
-    private VerticalPanel workspacePanel;
+    private SimplePanel workspacePanel;
     private Widget currentView;
 
     // View Constructor
     public OsylWorkspaceView(COModelInterface model, OsylController controller) {
 	super(model, controller);
-	setWorkspacePanel(new VerticalPanel());
+	setWorkspacePanel(new SimplePanel());
 	getWorkspacePanel().setSize("100%", "100%");
-	getWorkspacePanel().setHorizontalAlignment(
-		HasHorizontalAlignment.ALIGN_CENTER);
 	initWidget(getWorkspacePanel());
 	
     }
@@ -77,11 +69,11 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 	return (COElementAbstract) super.getModel();
     }
 
-    public VerticalPanel getWorkspacePanel() {
+    public SimplePanel getWorkspacePanel() {
 	return workspacePanel;
     }
 
-    private void setWorkspacePanel(VerticalPanel workspacePanel) {
+    private void setWorkspacePanel(SimplePanel workspacePanel) {
 	this.workspacePanel = workspacePanel;
     }
 
@@ -144,10 +136,6 @@ public class OsylWorkspaceView extends OsylViewableComposite implements
 	} else {
 	    Window.alert("owv : modele null");
 	}
-    }
-
-    public void setBorderWidth(int i) {
-	getWorkspacePanel().setBorderWidth(i);
     }
 
     public void setSize(String width, String height) {
