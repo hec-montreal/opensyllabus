@@ -49,7 +49,7 @@ public class OsylHorizontalSplitPanel extends Composite {
     private boolean isMouseDownOnSplitter = false;
     private boolean isResizable = true;
     private int minSplitPosition = 130;
-    private int maxSplitPosition = 300;
+    private int maxSplitPosition = 400;
     private int initialSplitPercentPosition = 50;
     
     public Element getSplitElement() {
@@ -207,8 +207,8 @@ public class OsylHorizontalSplitPanel extends Composite {
 	}-*/;
     
     public int getInitialSplitPosition() {
-    	int maxToolWidth = Window.getClientWidth() / 100
-    		* initialSplitPercentPosition;
+    	int maxToolWidth = Math.round(Window.getClientWidth() / 100
+        		* initialSplitPercentPosition) - (splitElement.getOffsetWidth() / 2);
     	int maxItemWidth = 
     		OsylController.getInstance().getMainView().
     		getOsylTreeView().getMaxTreeWidth();
