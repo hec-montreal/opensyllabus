@@ -388,34 +388,45 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 		typeListBox.addItem(getView().getCoMessage(evalTypeKey));
 	    }
 	}
-	typeListBox.addChangeHandler(new ChangeHandler() {
-
-	    public void onChange(ChangeEvent event) {
-		int selectedIndex = typeListBox.getSelectedIndex();
-		setText(typeListBox.getItemText(selectedIndex));
-		typeListBox.setSelectedIndex(selectedIndex);
-		if (getText().equals(
-			getView().getCoMessage("Assessment.Type.intra_exam"))
-			|| getText().equals(
-				getView().getCoMessage(
-					"Assessment.Type.final_exam"))) {
+	
+	boolean editExamDate = false; 
+	if(getController().getOsylConfig().getSettings().containsKey("assessement.exam.date.editable") &&
+	   getController().getOsylConfig().getSettings().getSettingsProperty("assessement.exam.date.editable").equals("true")){
+		editExamDate = true;
+	}
+	
+	if(!editExamDate){
+		typeListBox.addChangeHandler(new ChangeHandler() {
+	
+		    public void onChange(ChangeEvent event) {
+			int selectedIndex = typeListBox.getSelectedIndex();
+			setText(typeListBox.getItemText(selectedIndex));
+			typeListBox.setSelectedIndex(selectedIndex);
+			if (getText().equals(
+				getView().getCoMessage("Assessment.Type.intra_exam"))
+				|| getText().equals(
+					getView().getCoMessage(
+						"Assessment.Type.final_exam"))) {
+			    dateDateBox.setValue(null);
+			    dateDateBox.setEnabled(false);
+			} else {
+			    dateDateBox.setEnabled(true);
+			}
+		    }
+	
+		});
+	}
+	selectItemListBox(typeListBox, getView().getAssessmentType());
+	if(!editExamDate){
+		if (getView().getAssessmentType() != null
+			&& (getView().getAssessmentType().equals(
+				getView().getCoMessage("Assessment.Type.intra_exam")) || getView()
+				.getAssessmentType().equals(
+					getView().getCoMessage(
+						"Assessment.Type.final_exam")))) {
 		    dateDateBox.setValue(null);
 		    dateDateBox.setEnabled(false);
-		} else {
-		    dateDateBox.setEnabled(true);
 		}
-	    }
-
-	});
-	selectItemListBox(typeListBox, getView().getAssessmentType());
-	if (getView().getAssessmentType() != null
-		&& (getView().getAssessmentType().equals(
-			getView().getCoMessage("Assessment.Type.intra_exam")) || getView()
-			.getAssessmentType().equals(
-				getView().getCoMessage(
-					"Assessment.Type.final_exam")))) {
-	    dateDateBox.setValue(null);
-	    dateDateBox.setEnabled(false);
 	}
 	typePanel.add(l9);
 	typePanel.add(typeListBox);
