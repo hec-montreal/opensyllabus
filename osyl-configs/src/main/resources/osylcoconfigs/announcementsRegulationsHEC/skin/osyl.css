@@ -665,14 +665,12 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	overflow:visible;
 }
 
-div.Osyl-firstElementOfView {
-	border-top-color:#FFF;
-}
-
 div.Osyl-firstElementOfView .Osyl-LabelEditor-View {
 	display:none;
 }
-
+div.Osyl-UnitView-ResPanel-ReadOnly {
+	border-top-color:#FFF;
+}
 .Osyl-ListItemView-Hyperlink .Osyl-UnitView-ResPanel {
 	color:#FFF; /*For IE6*/
 	border:1px solid transparent;
@@ -1322,6 +1320,7 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 
 /* Button -------------------------------------------------------------------------------- */
 
+
 .Osyl-Button,
 .Osyl-EditorPopup-Button,
 .Osyl-FileUpload-genericButton,
@@ -1492,3 +1491,13 @@ a.Osyl-collapseButton.down {background-position: -16px 0}
 a.Osyl-collapseButton.collapse {background-position: -24px 0}
 a.Osyl-collapseButton.collapse:hover {background-position: -32px 0}
 a.Osyl-collapseButton.collapse.down {background-position: -40px 0}
+
+#INFOS {
+	position:fixed;
+	top:0;
+	left:0;
+	border: 2px solid #000;
+	padding:4px;
+	z-index:100000;
+	background-color:#FFF;
+}
