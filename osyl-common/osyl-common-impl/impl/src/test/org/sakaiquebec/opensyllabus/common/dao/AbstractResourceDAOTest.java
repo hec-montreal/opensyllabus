@@ -81,6 +81,8 @@ abstract class AbstractResourceDAOTest extends AbstractDAOTest {
 	course.setShortDescription("ShortDescription " + id);
 	course.setTitle("Title " + id);
 	course.setType("T");
+	course.setPublicationDate(new java.util.Date(System.currentTimeMillis()));
+	course.setModificationDate(null);
 
 	// FIXME: not setting an ID on this bean gives:
 	// org.springframework.orm.hibernate3.HibernateSystemException:

@@ -21,6 +21,9 @@
 package org.sakaiquebec.opensyllabus.common.impl.portal;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -37,6 +40,9 @@ import javax.xml.transform.Source;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 
+import oracle.jdbc.OracleResultSet;
+import oracle.sql.BLOB;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.authz.api.AuthzGroup;
@@ -46,17 +52,25 @@ import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
+import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.content.api.GroupAwareEntity.AccessMode;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.ResourceProperties;
+import org.sakaiproject.exception.IdInvalidException;
 import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.exception.InUseException;
+import org.sakaiproject.exception.OverQuotaException;
 import org.sakaiproject.exception.PermissionException;
+import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.exception.TypeException;
+import org.sakaiproject.id.cover.IdManager;
 import org.sakaiproject.site.api.SiteService;
+import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO;
+import org.sakaiquebec.opensyllabus.common.api.portal.publish3.ZCPublisherService;
 import org.sakaiquebec.opensyllabus.common.helper.FileHelper;
 import org.sakaiquebec.opensyllabus.common.helper.XmlHelper;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -79,6 +93,12 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      */
     public void setSiteService(SiteService siteService) {
 	this.siteService = siteService;
+    }
+
+    private ZCPublisherService zcPublisherService;
+
+    public void setZcPublierService(ZCPublisherService zcPublierService) {
+	this.zcPublisherService = zcPublierService;
     }
 
     /**
@@ -123,16 +143,16 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
     private void connect() {
 	driverName =
 		ServerConfigurationService
-			.getString("hec.oracle.conn.portail.driver.name");
+			.getString("hec.zonecours.conn.portail.driver.name");
 	url =
 		ServerConfigurationService
-			.getString("hec.oracle,conn.portail.url");
+			.getString("hec.zonecours.conn.portail.url");
 	user =
 		ServerConfigurationService
-			.getString("hec.oracle.conn.portail.user");
+			.getString("hec.zonecours.conn.portail.user");
 	password =
 		ServerConfigurationService
-			.getString("hec.oracle.conn.portail.password");
+			.getString("hec.zonecours.conn.portail.password");
 
 	if (driverName == null || url == null || user == null
 		|| password == null) {
@@ -199,7 +219,9 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		rSet = ps.executeQuery();
 		written = true;
 		rSet.close();
+		ps.close();
 
+		log.debug("The XML " + koId + " has been transferred.");
 	    } catch (SQLException e) {
 		e.printStackTrace();
 	    }
@@ -214,6 +236,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		rSet = ps.executeQuery();
 		written = true;
 		rSet.close();
+
+		log.debug("The XML " + koId + " has been transferred.");
 
 	    } catch (SQLException e) {
 		e.printStackTrace();
@@ -267,25 +291,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	String acces = null;
 	String visibilite = null;
 	String ressType = null;
-	String ressId = null;
-
-	// String publishCollId =
-	// PUBLISH_COLL_PREFIX + siteId + PUBLISH_COLL_SUFFIX;
-	//
-	// ContentCollection publishColl = null;
-	//
-	// try {
-	// publishColl = contentHostingService.getCollection(publishCollId);
-	// } catch (IdUnusedException e) {
-	// e.printStackTrace();
-	// } catch (TypeException e) {
-	// e.printStackTrace();
-	// } catch (PermissionException e) {
-	// e.printStackTrace();
-	// }
-	//
-	// List<ContentResource> resources =
-	// contentHostingService.getAllResources(publishCollId);
+	byte[] ressContent = null;
+	int ressSize = 0;
 
 	Set<String> docSecKeyValues = documentSecurityMap.keySet();
 	String docVisKey = null;
@@ -293,47 +300,146 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	for (String docSecKey : docSecKeyValues) {
 	    acces = documentSecurityMap.get(docSecKey);
 
-	    System.out.print("la ressource " + docSecKey + " acces " + acces);
 	    docVisKey =
 		    docSecKey
 			    .replaceFirst(Pattern.quote(WORK_DIR), PUBLISH_DIR);
 	    visibilite = documentVisibityMap.get(docVisKey);
 
-	    try {
-		ContentResource content =
-			contentHostingService.getResource(docVisKey);
-		//TODO: verifier les types des documents sont compatibles dans ZoneCours
-		ressType = content.getContentType();
-		
-		//Si la ressource n'a pas de uuid le chs lui en cree un
-		ressId = contentHostingService.getUuid(docVisKey);
-		
-		//On prend les 30 premiers caracteres
-		ressId = ressId.substring(0, 30);
-		
-	    } catch (PermissionException e) {
-		log.error(e.getMessage());
-	    } catch (IdUnusedException e) {
-		log.error(e.getMessage());
-	    } catch (TypeException e) {
-		log.error(e.getMessage());
-	    }
+	    if ("public".equals(acces) && "true".equals(visibilite)) {
+		try {
+		    ContentResource content =
+			    contentHostingService.getResource(docVisKey);
+		    // TODO: verifier les types des documents sont compatibles
+		    // dans
+		    // ZoneCours
+		    ressType = content.getContentType();
 
-	    System.out.println(" la visibilite " + visibilite + " type "
-		    + ressType);
-	    // TODO: traiter les documents de facon recursive pour prendre en
-	    // compte les dossiers
-	    // if public document we proceed
+		    ressContent = content.getContent();
+
+		    ressSize = content.getContentLength() / 1024;
+
+		    writeDocInZcDb(docVisKey, lang, acces, ressType, ressSize,
+			    content.streamContent(), ressContent, siteId);
+		} catch (PermissionException e) {
+		    e.printStackTrace();
+		} catch (IdUnusedException e) {
+		    e.printStackTrace();
+		} catch (TypeException e) {
+		    e.printStackTrace();
+		} catch (ServerOverloadException e) {
+		    e.printStackTrace();
+		}
+		written = true;
+	    }
 
 	}
 
 	return written;
     }
 
+    private void writeDocInZcDb(String koId, String lang, String acces,
+	    String ressType, int ressSize, InputStream ressContent,
+	    byte[] content, String siteId) {
+	String requete = null;
+	PreparedStatement ps = null;
+	ResultSet rSet = null;
+	boolean exist = false;
+	requete = "select * from doczone where koId like ?";
+	try {
+	    ps = getConn().prepareStatement(requete);
+	    ps.setString(1, koId);
+	    rSet = ps.executeQuery();
+
+	    if (rSet.next())
+		exist = true;
+
+	    ps.close();
+	    rSet.close();
+	} catch (SQLException e) {
+	    e.printStackTrace();
+	}
+
+	// Check if the record is already on the table
+	if (!exist) {
+	    requete =
+		    "INSERT INTO DocZone (koId, lang, nivSecu, ressType, docContent, dateMAJ, filesizeko) VALUES(?,?,?,?,?,sysdate,?)";
+	    try {
+		ps = getConn().prepareStatement(requete);
+		ps.setString(1, koId);
+		ps.setString(2, lang);
+		ps.setString(3, "0");
+		ps.setBinaryStream(5, ressContent, ressSize);
+		ps.setString(4, ressType);
+		ps.setInt(6, ressSize);
+		rSet = ps.executeQuery();
+		rSet.close();
+		ps.close();
+		log.debug("The resource " + koId + " has been transferred.");
+	    } catch (SQLException e) {
+		e.printStackTrace();
+	    }
+
+	    // Add the information to the relational table
+	    // Link the document to the xml
+	    String xmlKoId = getKoId(siteId);
+
+	    requete =
+		    "insert into docsecu (koId, nivSecu, planId) values (?, ?, ?)";
+	    try {
+		ps = getConn().prepareStatement(requete);
+		ps.setString(1, koId);
+		ps.setInt(2, 0);
+		ps.setString(3, xmlKoId);
+		rSet = ps.executeQuery();
+
+		ps.close();
+		rSet.close();
+	    } catch (SQLException e) {
+		e.printStackTrace();
+	    }
+
+	} else {
+
+	    // Add the document content in the record
+	    requete =
+		    "update DocZone set docContent = ?, datemaj= sysdate  WHERE koId=? ";
+	    try {
+		ps = getConn().prepareStatement(requete);
+		ps.setBinaryStream(1, ressContent, ressSize);
+		ps.setString(2, koId);
+		rSet = ps.executeQuery();
+
+		ps.close();
+		rSet.close();
+
+		log.debug("The resource " + koId + " has been transferred.");
+	    } catch (SQLException e) {
+		e.printStackTrace();
+	    }
+
+	}
+    }
+
     /** {@inheritDoc} */
     public boolean sendXmlAndDoc(COSerialized published,
 	    Map<String, String> documentSecurityMap,
 	    Map<String, String> documentVisibilityMap) {
+
+	try {
+	    AuthzGroup realm =
+		    AuthzGroupService.getAuthzGroup(SITE_PREFIX + published.getSiteId());
+	    String provider = realm.getProviderGroupId();
+	    if (provider == null || !cmService.isSectionDefined(provider)) {
+		log
+			.info("The course outline "
+				+ published.getSiteId()
+				+ " is not associated to a section in the course management,"
+				+ " it will not be transferred to ZoneCours public.");
+		return false;
+	    }
+	} catch (GroupNotDefinedException e) {
+	    e.printStackTrace();
+	}
 
 	String siteId = published.getSiteId();
 	String osylCoXml = published.getContent();
@@ -353,7 +459,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	if (zcco != null) {
 	    // We save the course outline in the zonecours database
 	    // The siteId is used as koID
-	    koId = siteId;
+	    koId = getKoId(siteId);
 	    lang = published.getLang().substring(0, 2);
 	    sent = writeXmlInZC(zcco, koId, lang);
 	    //
@@ -362,7 +468,10 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		    sent
 			    && writeDocumentsInZC(siteId, lang,
 				    documentSecurityMap, documentVisibilityMap);
-	    System.out.println(sent);
+	    if (sent)
+		log
+			.debug("The transfer to the ZoneCours database is complete and successful");
+	    zcPublisherService.publier(koId, lang);
 	}
 	return sent;
     }

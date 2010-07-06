@@ -613,13 +613,13 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// TODO: We check if the site is associated to a section or a canonical
 	// course in the course management and if the the course outline is
 	// public and transfer it to the public portal if it is the case.
-//	String portalActivated =
-//		ServerConfigurationService.getString("hec.portail.activated");
-//
-//	if (portalActivated != null && portalActivated.equalsIgnoreCase("true"))
-//	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC))
-//		osylTransformToZCCO.sendXmlAndDoc(publishedCO,
-//			getDocumentSecurityMap(), getDocumentVisibilityMap());
+	String portalActivated =
+		ServerConfigurationService.getString("hec.portail.activated");
+
+	if (portalActivated != null && portalActivated.equalsIgnoreCase("true"))
+	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC))
+		osylTransformToZCCO.sendXmlAndDoc(publishedCO,
+			getDocumentSecurityMap(), getDocumentVisibilityMap());
     }
 
     public String transformXmlForGroup(String content, String group,

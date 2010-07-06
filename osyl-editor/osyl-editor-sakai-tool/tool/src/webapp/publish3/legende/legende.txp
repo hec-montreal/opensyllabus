@@ -1,0 +1,40 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="fr-ca">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Légende des ressources de ZoneCo</title>
+</head>
+
+<body>
+
+<table border="0" width="95%" id="table6" style="border: 1px solid #66CCFF; padding-left: 4px; padding-right: 4px; padding-top: 1px; padding-bottom: 1px">
+	<tr>
+		<td bgcolor="#CCCCFF"><b><FONT face=Calibri COLOR=#000066 SIZE=2>Légende des ressources de ZoneCours</FONT></b></td>
+	</tr>
+	<tr>
+		<td>
+			<TABLE WIDTH="98%" BORDER=0 CELLPADDING=1 CELLSPACING=0  id="table7"><TR><TD>
+				<FONT COLOR=#000000 SIZE=2 face="Calibri">
+	<img src="../../../zoneEtudiant/img/iconeObl.gif" align=left border=0 width="20" height="20">Obligatoire</FONT></TD></TR>
+		</td>
+	</tr>
+	<tr>
+		<td><FONT COLOR=#000000 SIZE=2 face="Calibri">
+			<img src="../../../zoneEtudiant/img/iconeComp.gif" align=left border=0 width="20" height="20">Complémentaire</FONT></td>
+	</tr>
+	<tr>
+		<td><FONT COLOR=#000000 SIZE=2 face="Calibri">
+			<img src="../../../zoneEtudiant/img/iconeBiblio.gif" align=left border=0 width="44" height="11">Disponible 
+		à la bibliothèque</FONT></td>
+	</tr>
+	<tr>
+		<td><FONT COLOR=#000000 SIZE=2 face="Calibri">
+			<img src="../../../zoneEtudiant/img/iconeCoop.gif" align=left border=0 width="44" height="11">Disponible 
+		à la COOP HEC Montréal</FONT></td>
+	</tr>
+</table>
+
+</body>
+
+</html>

@@ -37,6 +37,7 @@
 			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
 	</bean>
 
+
 	<bean id="org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO"
 		class="org.sakaiquebec.opensyllabus.common.impl.portal.OsylTransformToZCCOImpl"
 		init-method="init" destroy-method="destroy" singleton="true">
@@ -49,8 +50,14 @@
 		<property name="siteService" 
 			ref="org.sakaiproject.site.api.SiteService" />
 		
+		<property name="zcPublierService" 
+			ref="org.sakaiquebec.opensyllabus.common.api.portal.publish3.ZCPublisherService" />
 	</bean>
 
+	<bean id="org.sakaiquebec.opensyllabus.common.api.portal.publish3.ZCPublisherService"
+		class="org.sakaiquebec.opensyllabus.common.impl.portal.publish3.ZCPublisherServiceImpl"
+		init-method="init" destroy-method="destroy" singleton="true">
+	</bean>
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylHierarchyServiceImpl"
