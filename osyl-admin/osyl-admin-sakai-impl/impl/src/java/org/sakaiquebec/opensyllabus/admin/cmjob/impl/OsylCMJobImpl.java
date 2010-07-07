@@ -1,8 +1,6 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -14,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,6 +37,10 @@ import org.sakaiproject.coursemanagement.api.exception.IdExistsException;
 import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.event.cover.UsageSessionService;
+import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.exception.PermissionException;
+import org.sakaiproject.site.api.Site;
+import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.user.api.UserNotDefinedException;
@@ -152,6 +155,25 @@ public class OsylCMJobImpl implements OsylCMJob {
     private Set<Section> actualCoursesSection;
 
     /**
+     * The site service used to create new sites: Spring injection
+     */
+    private SiteService siteService;
+
+    /**
+     * Sets the <code>SiteService</code> needed to create a new site in Sakai.
+     * 
+     * @param siteService
+     */
+    public void setSiteService(SiteService siteService) {
+	this.siteService = siteService;
+    }
+
+    /**
+     * All the sharable sites available
+     */
+    private Map<String, Site> sharableSites;
+
+    /**
      * Any person currently registed as member of a site in the system.
      */
     private HashMap<String, Membership> actualCourseMembers;
@@ -191,10 +213,10 @@ public class OsylCMJobImpl implements OsylCMJob {
 	String matricule = "";
 	Iterator<DetailCoursMapEntry> cours;
 	DetailCoursMapEntry detailsCours;
-	CourseOffering courseOff = null;
-	String courseOffId = null;
 	Iterator<ProfCoursMapEntry> profCours =
 		profCoursMap.values().iterator();
+	String courseOffId;
+	Site site;
 
 	while (profCours.hasNext()) {
 	    profCoursEntry = (ProfCoursMapEntry) profCours.next();
@@ -220,19 +242,42 @@ public class OsylCMJobImpl implements OsylCMJob {
 			+ ": " + instructors.toString());
 
 		// On a un coordonnateur
-		//SAKAI-1582
-//		if (detailsCours.getCoordonnateur() != null) {
-//		    matricule = detailsCours.getCoordonnateur().getEmplId();
-//		    courseOffId = getCourseOfferingId(detailsCours);
-//		    courseOff = cmService.getCourseOffering(courseOffId);
-//
-//		    cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
-//			    COORDONNATEUR_ROLE, courseOffId, ACTIVE_STATUS);
-//		    log.info("Coordinator for " + detailsCours.getUniqueKey()
-//			    + ": " + matricule);
-//		    cmAdmin.updateCourseOffering(courseOff);
-//
-//		}
+		// SAKAI-1582
+		// if (detailsCours.getCoordonnateur() != null) {
+		// matricule = detailsCours.getCoordonnateur().getEmplId();
+		// courseOffId = getCourseOfferingId(detailsCours);
+		// courseOff = cmService.getCourseOffering(courseOffId);
+		//
+		// cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
+		// COORDONNATEUR_ROLE, courseOffId, ACTIVE_STATUS);
+		// log.info("Coordinator for " + detailsCours.getUniqueKey()
+		// + ": " + matricule);
+		// cmAdmin.updateCourseOffering(courseOff);
+		//
+		// }
+
+		// Ajouter le coordonnateur dans le site du plan de cours
+		// partageable
+
+		if (detailsCours.getCoordonnateur() != null) {
+		    matricule = detailsCours.getCoordonnateur().getEmplId();
+		    courseOffId = getCourseOfferingId(detailsCours);
+		    site = sharableSites.get(courseOffId);
+		    if (site != null) {
+			try {
+			    site.addMember(UserDirectoryService
+				    .getUserId(matricule),
+				    COORDONNATEUR_ROLE_SHARABLE, true, false);
+			    siteService.save(site);
+			} catch (UserNotDefinedException e) {
+			    log.error(e);
+			} catch (IdUnusedException e) {
+			    log.error(e);
+			} catch (PermissionException e) {
+			    log.error(e);
+			}
+		    }
+		}
 	    }
 
 	}
@@ -545,6 +590,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 	    retrieveCurrentCMContent();
 
+	    retrieveSharableSites();
+
 	    // We load sessions
 	    loadSessions();
 	    log.info("Sessions updated successfully");
@@ -578,12 +625,84 @@ public class OsylCMJobImpl implements OsylCMJob {
 	log.info("Synchronization completed in " + minutes + " minutes");
     }
 
+    private void retrieveSharableSites() {
+	sharableSites = new HashMap<String, Site>();
+	log
+		.info("Looking for the existing sites containing sharable course outline");
+	List<Site> allSites =
+		siteService.getSites(SiteService.SelectionType.ANY, "course",
+			null, null, SiteService.SortType.NONE, null);
+
+	String siteId;
+	String courseId, sessionTitle, periodId, sessionId;
+	StringTokenizer token;
+	String courseOffId;
+	AuthzGroup realm;
+	for (Site site : allSites) {
+	    courseId = null;
+	    sessionTitle = null;
+	    periodId = null;
+	    courseOffId = null;
+	    sessionId = null;
+	    realm = null;
+
+	    siteId = site.getId();
+	    try {
+		realm = AuthzGroupService.getAuthzGroup("/site/" + siteId);
+	    } catch (GroupNotDefinedException e) {
+		e.printStackTrace();
+	    }
+
+	    token = new StringTokenizer(siteId, ".");
+	    if (token.hasMoreTokens())
+		courseId = token.nextToken();
+	    if (token.hasMoreTokens())
+		sessionTitle = token.nextToken();
+	    if (token.hasMoreTokens())
+		periodId = token.nextToken();
+
+	    if (courseId != null && sessionTitle != null) {
+		courseId = courseId.replaceAll("-", "");
+		if (periodId == null)
+		    courseOffId = courseId + getSessionId(sessionTitle) + "1";
+		else if (periodId != null && periodId.contains("P"))
+		    courseOffId =
+			    courseId + getSessionId(sessionTitle) + periodId;
+
+		if (cmService.isCourseOfferingDefined(courseOffId)
+			&& realm.getProviderGroupId() == null) {
+		    System.out.println("site " + siteId);
+		    sharableSites.put(courseOffId, site);
+		}
+	    }
+
+	}
+	System.out.println("le nb de cours partageables "
+		+ sharableSites.size());
+    }
+
+    private String getSessionId(String sessionName) {
+	String sessionId = null;
+	AcademicSession session;
+	String year = sessionName.substring(1);
+	if ((sessionName.charAt(0)) == 'H')
+	    sessionName = year.charAt(0) + year.substring(2, 4) + "1";
+	if ((sessionName.charAt(0)) == 'E')
+	    sessionName = year.charAt(0) + year.substring(2, 4) + "2";
+	if ((sessionName.charAt(0)) == 'A')
+	    sessionName = year.charAt(0) + year.substring(2, 4) + "3";
+
+	return sessionName;
+    }
+
     /*
      * We retrieve the content of the course management for the same period as
      * the extracts we are synchronizing (period read in the session.dat file)
      */
     private void retrieveCurrentCMContent() {
 
+	log
+		.info("Retrieving the current content of the course management tables");
 	// We retrieve informations for the same sessions as the ones in the
 	// extract
 	DetailSessionsMapEntry sessionEntry = null;
@@ -627,15 +746,6 @@ public class OsylCMJobImpl implements OsylCMJob {
 	actualCoursesSection = new HashSet<Section>();
 	Set<Enrollment> enrollments = null;
 
-	FileWriter outFile = null;
-	PrintWriter out = null;
-	try {
-	    outFile = new FileWriter("out.txt");
-	    out = new PrintWriter(outFile);
-	} catch (IOException e1) {
-	    e1.printStackTrace();
-	}
-
 	for (CourseSet courseSet : courseSets) {
 	    courseSetId = courseSet.getEid();
 	    for (AcademicSession session : academicSessions) {
@@ -658,9 +768,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 			for (Membership member : memberships) {
 			    actualCourseMembers.put(member.getUserId()
 				    + sectionId, member);
-			    if (out != null)
-				out.println(member.getUserId() + "   "
-					+ sectionId);
+
+			    log.debug(member.getUserId() + "   " + sectionId);
 			}
 		    }
 		    // We retrieve the enrollments sets and enrollments
@@ -912,16 +1021,40 @@ public class OsylCMJobImpl implements OsylCMJob {
     private void addSecretariesToMembership(List<String> secretaries,
 	    List<DetailCoursMapEntry> courses) {
 	String sectionId = null;
+	String courseOffId;
+	Site site;
 
 	for (DetailCoursMapEntry course : courses) {
 	    sectionId = getCourseSectionId(course);
+	    courseOffId = getCourseOfferingId(course);
+	    site = sharableSites.get(courseOffId);
 
 	    log.info("Adding Secretaries for [" + course + "]: "
 		    + secretaries.toString());
+	    if (site != null)
+		log.info("Adding Secretaries for site " + courseOffId + ": "
+			+ secretaries.toString());
 
 	    for (String secretary : secretaries) {
 		cmAdmin.addOrUpdateSectionMembership(secretary, SECRETARY_ROLE,
 			sectionId, ACTIVE_STATUS);
+		if (site != null) {
+		    try {
+			System.out.println("le site " + site.getId()
+				+ " la secretaire " + secretary);
+			site.addMember(UserDirectoryService
+				.getUserId(secretary), SECRETARY_ROLE_SHARABLE,
+				true, false);
+			siteService.save(site);
+		    } catch (UserNotDefinedException e) {
+			log.error(e);
+		    } catch (IdUnusedException e) {
+			log.error(e);
+		    } catch (PermissionException e) {
+			log.error(e);
+		    }
+		}
+
 		actualCourseMembers.remove(secretary + sectionId);
 	    }
 	}
@@ -934,7 +1067,6 @@ public class OsylCMJobImpl implements OsylCMJob {
      */
     private void syncSecretaries() {
 	i = 0;
-	SecretairesMapEntry entry = null;
 	String deptId = null;
 	String acadOrg = null;
 	List<String> secretaries = null;
@@ -969,10 +1101,29 @@ public class OsylCMJobImpl implements OsylCMJob {
 	Membership member = null;
 	String sectionId = null;
 	String userId = null;
+	String courseOffId = null;
+	Site site = null;
+
 	for (String key : acmKeys) {
 	    member = actualCourseMembers.get(key);
 	    userId = member.getUserId();
 	    sectionId = key.substring(member.getUserId().length());
+
+	    courseOffId =
+		    (cmService.getSection(sectionId)).getCourseOfferingEid();
+	    if (courseOffId != null) {
+		site = sharableSites.get(courseOffId);
+		if (site != null) {
+		    site.removeMember(userId);
+		    try {
+			siteService.save(site);
+		    } catch (IdUnusedException e) {
+			log.error(e);
+		    } catch (PermissionException e) {
+			log.error(e);
+		    }
+		}
+	    }
 	    cmAdmin.removeSectionMembership(userId, sectionId);
 	    log.info("L'utilisateur " + userId + " n'est plus membre du cours "
 		    + sectionId);

@@ -247,6 +247,8 @@
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
 		<property name="cmService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		<property name="siteService"
+			ref="org.sakaiproject.site.api.SiteService" />			
 	</bean>
 	
 	<bean id="offSitesjob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OfficialSitesJobImpl" >
