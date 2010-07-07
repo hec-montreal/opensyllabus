@@ -132,7 +132,7 @@ public class OsylHierarchyServiceImpl implements OsylHierarchyService {
 			if (group.getRole(CHILD_ROLE) != null)
 				hasRole = true;
 		} catch (GroupNotDefinedException e) {
-			log.error(e.getMessage());
+			log.error("hasChildRole: " + e);
 		}
 
 		return hasRole;
@@ -151,11 +151,11 @@ public class OsylHierarchyServiceImpl implements OsylHierarchyService {
 			}
 
 		} catch (GroupNotDefinedException e) {
-			log.error(e.getMessage());
+			log.error("addChildRole: " + e);
 		} catch (RoleAlreadyDefinedException e) {
-			log.error(e.getMessage());
+			log.error("addChildRole: " + e);
 		} catch (AuthzPermissionException e) {
-			log.error(e.getMessage());
+			log.error("addChildRole: " + e);
 		}
 
 	}
@@ -186,15 +186,17 @@ public class OsylHierarchyServiceImpl implements OsylHierarchyService {
 
 			authzService.save(parentSiteGroup);
 		} catch (GroupNotDefinedException e) {
-			log.error(e.getMessage());
+			log.error("addUsersWithChildRole: " + e);
 		} catch (AuthzPermissionException e) {
-			log.error(e.getMessage());
+			log.error("addUsersWithChildRole: " + e);
 		}
 
 	}
 
 	/** {@inheritDoc} */
 	public void addOrUpdateUsers(String siteId) {
+
+		log.debug("addOrUpdateUsers:" + siteId);
 
 		// We retrieve the ancestors of the course outline
 		List<CORelation> ancestors = coRelationDao
@@ -313,11 +315,11 @@ public class OsylHierarchyServiceImpl implements OsylHierarchyService {
 				System.out.println("les utilisateurs a enlever "
 						+ usersToRemove.size());
 			} catch (GroupNotDefinedException e) {
-				log.error(e.getMessage());
+				log.error("removeUsersWithChildRole:" + e);
 			} catch (AuthzPermissionException e) {
-				log.error(e.getMessage());
+				log.error("removeUsersWithChildRole:" + e);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				log.error("removeUsersWithChildRole:" + e);
 				e.printStackTrace();
 			}
 		}
