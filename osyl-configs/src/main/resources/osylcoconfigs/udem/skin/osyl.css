@@ -664,13 +664,9 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	background-color:#EEE;
 	overflow:visible;
 }
+div.Osyl-UnitView-ResPanel-ReadOnly, div.Osyl-firstElementOfView {border-top-color:#FFF}
+div.Osyl-firstElementOfView .Osyl-LabelEditor-View {display:none}
 
-div.Osyl-firstElementOfView .Osyl-LabelEditor-View {
-	display:none;
-}
-div.Osyl-UnitView-ResPanel-ReadOnly {
-	border-top-color:#FFF;
-}
 .Osyl-ListItemView-Hyperlink .Osyl-UnitView-ResPanel {
 	color:#FFF; /*For IE6*/
 	border:1px solid transparent;
@@ -1319,7 +1315,6 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 }
 
 /* Button -------------------------------------------------------------------------------- */
-
 
 .Osyl-Button,
 .Osyl-EditorPopup-Button,
