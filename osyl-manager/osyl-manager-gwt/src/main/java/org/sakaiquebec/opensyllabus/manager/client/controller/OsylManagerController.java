@@ -87,10 +87,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
      */
     public boolean isInHostedMode() {
 	String url = GWT.getHostPageBaseURL();
-
-	if (url.startsWith("http://localhost:8888/")
-		&& (url
-			.indexOf("org.sakaiquebec.opensyllabus.manager.OsylManagerEntryPoint") != -1))
+	if (url.startsWith("http://127.0.0.1:8888/"))
 	    return true;
 	else
 	    return false;
@@ -121,6 +118,10 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	this.selectSites = selectSiteIDs;
 	OsylManagerEvent event = new OsylManagerEvent(null, OsylManagerEvent.SITES_SELECTION_EVENT);
 	notifyManagerEventHandler(event);
+    }
+    
+    public void addSelectedSite(COSite cosite){
+	selectSites.add(cosite);
     }
 
     public List<COSite> getSelectSites() {

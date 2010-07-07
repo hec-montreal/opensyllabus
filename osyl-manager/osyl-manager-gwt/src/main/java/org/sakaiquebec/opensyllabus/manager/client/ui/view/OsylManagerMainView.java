@@ -54,8 +54,8 @@ public class OsylManagerMainView extends OsylManagerAbstractView {
 	super(controller);
 	mainPanel = new VerticalPanel();
 	courseListView = new CourseListView(getController(), null);
-	initWidget(mainPanel);
 	initView();
+	initWidget(mainPanel);
     }
 
     private void initView() {
@@ -101,19 +101,7 @@ public class OsylManagerMainView extends OsylManagerAbstractView {
 	hzPanel1.add(selectSiteActionBtn);
 	vPanel1.add(hzPanel1);
 	
-	courseListPanel = new VerticalPanel();
-	
-	courseListPanel.add(courseListView);
-	courseListPanel.setStylePrimaryName("OsylManager-mainView-tabPanel");
-	hzPanel2.add(courseListPanel);
-	
-	VerticalPanel infoPanel = new VerticalPanel();
-	courseInfoView = new CourseInfoView(getController());
-	DecoratorPanel ivDecoratorPanel = new DecoratorPanel();
-	ivDecoratorPanel.setWidget(courseInfoView);
-	ivDecoratorPanel.setStylePrimaryName("OsylManager-infoView");
-	infoPanel.add(ivDecoratorPanel);
-	hzPanel2.add(infoPanel);
+	hzPanel2.add(courseListView);
 
 	VerticalPanel commandsPanel = new VerticalPanel();
 

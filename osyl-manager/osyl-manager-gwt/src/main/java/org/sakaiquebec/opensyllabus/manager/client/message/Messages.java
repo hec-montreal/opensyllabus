@@ -223,11 +223,13 @@ public interface Messages extends ConstantsWithLookup {
     String publishAction_publish_error_detail();
 
     String publishAction_publish_ok();
-
     
-
-    
-    
-    
-
+    String CourseListView_scSiteList_col0();
+    String CourseListView_scSiteList_col1();
+    String CourseListView_scSiteList_col2();
+    String CourseListView_scSiteList_col3();
+    String CourseListView_scSiteList_col4();
+    String CourseListView_scSiteList_col5();
+    String CourseListView_scSiteList_col6();
+    String CourseListView_scSiteList_col7();
 }

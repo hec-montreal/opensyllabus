@@ -167,6 +167,22 @@ border-width:3px 2px 2px;
 overflow:hidden;
 padding:6px;
 }
+
+.OsylManager-scrollTable-row{
+background-color:#ffffff;
+cursor:pointer;
+}
+
+.OsylManager-scrollTable-row-hover{
+background-color:#ccccff;
+cursor:pointer;
+}
+
+.OsylManager-scrollTable-row-selected{
+color:#ffffff;
+background-color:#000066;
+cursor:pointer;
+}
 /*----------------------------------------------------------------------------------------------------------------*/
 
 .OsylManager-SuggestBox
