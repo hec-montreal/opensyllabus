@@ -652,7 +652,6 @@ public class OsylCMJobImpl implements OsylCMJob {
 	    } catch (GroupNotDefinedException e) {
 		e.printStackTrace();
 	    }
-
 	    token = new StringTokenizer(siteId, ".");
 	    if (token.hasMoreTokens())
 		courseId = token.nextToken();
@@ -671,13 +670,12 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 		if (cmService.isCourseOfferingDefined(courseOffId)
 			&& realm.getProviderGroupId() == null) {
-		    System.out.println("site " + siteId);
 		    sharableSites.put(courseOffId, site);
 		}
 	    }
 
 	}
-	System.out.println("le nb de cours partageables "
+	log.info("le nb de cours partageables "
 		+ sharableSites.size());
     }
 
@@ -1040,8 +1038,6 @@ public class OsylCMJobImpl implements OsylCMJob {
 			sectionId, ACTIVE_STATUS);
 		if (site != null) {
 		    try {
-			System.out.println("le site " + site.getId()
-				+ " la secretaire " + secretary);
 			site.addMember(UserDirectoryService
 				.getUserId(secretary), SECRETARY_ROLE_SHARABLE,
 				true, false);
