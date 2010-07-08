@@ -64,6 +64,16 @@ public class ExportAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(List<COSite> siteIds) {
+	// TODO: i18n
+	String pw = Window.prompt("Mot de passe / Password ?", "");
+	String okPw = "osyl" + "123";
+	if (null == pw) {
+	    return;
+	} else if (!okPw.equals(pw)) {
+	    // TODO: i18n
+	    Window.alert("L'opération est refusée. Veuillez contacter le centre d'assistance.");
+	    return;
+	}
 	//index reset when clicking on export link.
 	sitesIndex = 0;
 	getOsylPackage();
