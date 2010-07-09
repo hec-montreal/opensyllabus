@@ -177,11 +177,17 @@ public class OsylHierarchyServiceImpl implements OsylHierarchyService {
 			for (Iterator<String> users = childSiteUsers.iterator(); users
 					.hasNext();) {
 				String user = (String) users.next();
-
+				if (null == user) {
+				    // TODO: should we remove the null user from the child site?
+				    log.debug("addUsersWithChildRole: user null in child site "
+					    + childSiteId);
+				    continue;
+				}
 				// If the user is not already of the parent site we add
 				// him with the role CHILD
-				if (parentSiteGroup.getMember(user) == null)
+				if (parentSiteGroup.getMember(user) == null) {
 					parentSiteGroup.addMember(user, CHILD_ROLE, true, false);
+				}
 			}
 
 			authzService.save(parentSiteGroup);
