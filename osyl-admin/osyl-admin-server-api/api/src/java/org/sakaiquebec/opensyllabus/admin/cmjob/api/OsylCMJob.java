@@ -45,10 +45,6 @@ public interface OsylCMJob extends Job {
     public final static String ACTIVE_STATUS = "active";
 
     public final static String COORDONNATEUR_ROLE = "I";
-    
-    public final static String COORDONNATEUR_ROLE_SHARABLE = "Instructor";
-    
-    public final static String SECRETARY_ROLE_SHARABLE = "Instructor";
 
 
     /**
