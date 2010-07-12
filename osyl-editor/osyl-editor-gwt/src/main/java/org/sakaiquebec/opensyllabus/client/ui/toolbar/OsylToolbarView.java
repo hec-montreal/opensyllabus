@@ -245,7 +245,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 			    // Special case : No addition is allowable under
 			    // Header COStructure
 			    if (subModel instanceof COStructureElement)
-				addAddUIMenuItem(subModel.getType(),
+				addAddCOStructureMenuItem(subModel.getType(),
 					new AddMenuCommand(castedModel,
 						subModel));
 			    else
@@ -329,9 +329,9 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	getOsylToolbar().getAddMenuBar().addItem(html, true, cmd);
     }
 
-    private void addAddUIMenuItem(String itemType, Command cmd) {
+    private void addAddCOStructureMenuItem(String itemType, Command cmd) {
 	String html =
-		"<div id=\"add" + itemType + "\">" + getUiMessage(itemType)
+		"<div id=\"add" + itemType + "\">" + getCoMessage(itemType+".toolbar.title")
 			+ "</div>";
 	getOsylToolbar().getAddMenuBar().addItem(html, true, cmd);
     }
