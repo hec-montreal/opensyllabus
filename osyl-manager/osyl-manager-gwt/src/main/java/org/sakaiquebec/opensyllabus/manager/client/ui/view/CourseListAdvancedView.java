@@ -115,12 +115,8 @@ implements OsylManagerEventHandler {
 			    scSiteList.getDataTable().setHTML(rowNum, 4, coSite.getParentSite());
 			    if(coSite.getLastPublicationDate()!=null)
 				scSiteList.getDataTable().setHTML(rowNum, 5, dtf.format(coSite.getLastPublicationDate()));
-//			    else
-//				scSiteList.getDataTable().setHTML(rowNum, 5, "");
 			    if(coSite.getLastModifiedDate()!=null)
 				scSiteList.getDataTable().setHTML(rowNum, 6, dtf.format(coSite.getLastModifiedDate()));
-//			    else
-//				scSiteList.getDataTable().setHTML(rowNum, 6, "");
 			    scSiteList.getDataTable().setWidget(rowNum, 7, new CheckBox());
 			    i++;
 			}

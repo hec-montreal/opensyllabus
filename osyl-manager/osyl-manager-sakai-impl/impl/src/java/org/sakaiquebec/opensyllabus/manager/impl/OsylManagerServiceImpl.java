@@ -1394,15 +1394,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		info.setCourseCoordinator(null);
 
 	    }
-	    // log.debug("getCoAndSiteInfo 7" + elapsed(start));
-	    // Retrieve course outline info
-	    // See comment above - SAKAI-1489
 	    if (co != null) {
-	    // TODO: corriger avec la tache SAKAI-1357
 		info.setLastModifiedDate(co.getModificationDate());
 		info.setLastPublicationDate(co.getPublicationDate());
 	    }
-
 	    // Retrieve parent site
 	    String parentSite = null;
 
