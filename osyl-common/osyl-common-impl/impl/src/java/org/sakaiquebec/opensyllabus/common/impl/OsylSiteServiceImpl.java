@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -148,7 +147,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	this.citationService = citationService;
     }
 
-     /**
+    /**
      *Course management service integration.
      */
     private CourseManagementService cmService;
@@ -169,7 +168,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	this.osylConfigService = osylConfigService;
     }
 
- 
     public void setToolManager(ToolManager toolManager) {
 	this.toolManager = toolManager;
     }
@@ -428,7 +426,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by siteId", e);
 	} finally {
-	    log.debug("getSerializedCourseOutlineBySiteId  " + siteId + elapsed(start));
+	    log.debug("getSerializedCourseOutlineBySiteId  " + siteId
+		    + elapsed(start));
 	}
 	return null;
     } // getSerializedCourseOutlineBySiteId
@@ -621,7 +620,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      * @return boolean whether the collection was added or not
      * @throws Exception
      */
-    private void addCollection(String dir, Site site)  {
+    private void addCollection(String dir, Site site) {
 	ContentCollectionEdit collection = null;
 	String id = null;
 
@@ -638,7 +637,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    }
 	} catch (Exception e) {
 	    log.warn("Unable to add a collection", e);
-	    
+
 	}
     }
 
@@ -1093,13 +1092,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    return null;
 	}
     }
-    
+
     /** {@inheritDoc} */
-    public List<String> getChildren (String siteId) throws Exception{
+    public List<String> getChildren(String siteId) throws Exception {
 	List<String> children = new ArrayList<String>();
-	List<CORelation> courseOutlines = coRelationDao.getCourseOutlineChildren(siteId);
-	
-	for (CORelation co: courseOutlines){
+	List<CORelation> courseOutlines =
+		coRelationDao.getCourseOutlineChildren(siteId);
+
+	for (CORelation co : courseOutlines) {
 	    children.add(co.getChild());
 	}
 	return children;
@@ -1439,19 +1439,18 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	groupe = sectionId.substring(courseOffId.length());
 
 	siteName.append(courseId);
-	if (groupe != null && groupe.length() > 0) {
-	    siteName.append("_");
-	    siteName.append(groupe);
-	}
 	if (sessionTitle != null && sessionTitle.length() > 0) {
-	    siteName.append("-");
+	    siteName.append(".");
 	    siteName.append(sessionTitle);
 	}
 	if (periode != null && periode.length() > 0) {
-	    siteName.append(":");
+	    siteName.append(".");
 	    siteName.append(periode);
 	}
-
+	if (groupe != null && groupe.length() > 0) {
+	    siteName.append(".");
+	    siteName.append(groupe);
+	}
 	return siteName.toString();
     }
 
@@ -1470,8 +1469,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	return sessionName;
     }
-
-
 
     public void releaseLock() {
 	String siteId;
@@ -1504,7 +1501,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	SchemaHelper schemaHelper = new SchemaHelper(webapp);
 	String xmlData = schemaHelper.verifyAndConvert(co.getContent());
 	if (xmlData == null || xmlData.trim().equals("")) {
-	    log.warn("CO with co_id:"+co.getCoId()+" is null or void. Nothing to convert");
+	    log.warn("CO with co_id:" + co.getCoId()
+		    + " is null or void. Nothing to convert");
 	} else {
 	    co.setContent(xmlData);
 	    resourceDao.createOrUpdateCourseOutline(co);
@@ -1515,10 +1513,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public List<COSerialized> getAllCO() {
 	return resourceDao.getCourseOutlines();
     }
-    
+
     // only to improve readability while profiling
     private static String elapsed(long start) {
-	return ": elapsed : " + (System.currentTimeMillis() - start) + " ms "; 	
+	return ": elapsed : " + (System.currentTimeMillis() - start) + " ms ";
     }
 
 }
