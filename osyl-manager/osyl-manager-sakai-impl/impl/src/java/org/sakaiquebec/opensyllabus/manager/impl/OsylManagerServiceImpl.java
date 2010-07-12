@@ -40,7 +40,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
@@ -107,8 +106,6 @@ import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
-import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxyType;
-import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -133,11 +130,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     // Key to define the delay (in minutes) to wait before deleting export zip
     // files in sakai.properties
     public final static String EXPORT_DELETE_DELAY_MINUTES_KEY =
-	"opensyllabus.manager.deleteExportAfter";
+	    "opensyllabus.manager.deleteExportAfter";
 
     // default value: time in minutes to wait before deleting export zip files
     final static int EXPORT_DELETE_DELAY_MINUTES = 30;
-    
+
     // private static Log log = LogFactory.getLog(OsylManagerServiceImpl.class);
 
     /**
@@ -596,7 +593,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     /**
      * {@inheritDoc}
      */
-    public void readXML(String xmlReference, String siteId, String webapp) throws Exception {
+    public void readXML(String xmlReference, String siteId, String webapp)
+	    throws Exception {
 	String xml;
 	try {
 	    InputStream is =
@@ -628,7 +626,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     /**
      * {@inheritDoc}
      */
-    public void readZip(String zipReference, String siteId, String webapp) throws Exception {
+    public void readZip(String zipReference, String siteId, String webapp)
+	    throws Exception {
 	try {
 	    File zipTempfile =
 		    File.createTempFile("osyl-package-import", ".zip");
@@ -645,23 +644,23 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    Map<String, String> filenameChangesMap =
 		    importFilesInSite(zipReference, siteId);
 
-//	    osylSiteService.importDataInCO(xml, siteId, filenameChangesMap,
-//		    webapp);
+	    // osylSiteService.importDataInCO(xml, siteId, filenameChangesMap,
+	    // webapp);
 
 	    /**
-	     * FIXME Task SAKAI-1609.  This code is used to update description
-	     * and license of Sakai resource.  It should be removed from there 
-	     * to the end of fixme.  And the commented code above should be
+	     * FIXME Task SAKAI-1609. This code is used to update description
+	     * and license of Sakai resource. It should be removed from there to
+	     * the end of fixme. And the commented code above should be
 	     * uncommented.
 	     */
-	    COModeledServer coModeledServer = new COModeledServer(
-		    osylSiteService.importDataInCO(xml, siteId,
-			    filenameChangesMap, webapp));
-	    
+	    COModeledServer coModeledServer =
+		    new COModeledServer(osylSiteService.importDataInCO(xml,
+			    siteId, filenameChangesMap, webapp));
+
 	    coModeledServer.XML2Model();
 	    updateResourceMetaInfo(coModeledServer.getModeledContent());
-	    //End of FIXME
-	    
+	    // End of FIXME
+
 	    contentHostingService.removeResource(zipReference);
 	    zipTempfile.delete();
 	} catch (Exception e) {
@@ -670,32 +669,39 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 
     }
-    
+
     /**
-     * FIXME Task SAKAI-1609.  This method is used to update the description
-     * and the license of the Sakai resource during importation of a course
-     * outline in a new site.  It should be removed after the migration.
+     * FIXME Task SAKAI-1609. This method is used to update the description and
+     * the license of the Sakai resource during importation of a course outline
+     * in a new site. It should be removed after the migration.
+     * 
      * @param element
      */
     private void updateResourceMetaInfo(COElementAbstract element) {
 	element.setId(UUID.uuid());
 	element.setIdParent(null);
 	if (element.isCOContentResourceProxy()) {
-	    COContentResourceProxy coResProxy = (COContentResourceProxy) element;
+	    COContentResourceProxy coResProxy =
+		    (COContentResourceProxy) element;
 	    ContentResourceEdit newResource;
 	    try {
-		String uri = coResProxy.getResource().getProperty(
-			COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_URI);
+		String uri =
+			coResProxy.getResource().getProperty(
+				COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_URI);
 		newResource = contentHostingService.editResource(uri);
-	    
-	    newResource.getPropertiesEdit().addProperty(ResourceProperties.PROP_DESCRIPTION,
-		    coResProxy.getResource().getProperty(COPropertiesType.DESCRIPTION));
-	    newResource.getPropertiesEdit().addProperty(ResourceProperties.PROP_COPYRIGHT_CHOICE,
-		    coResProxy.getResource().getProperty(COPropertiesType.LICENSE));
-	    
-	    contentHostingService.commitResource(newResource,
-		    NotificationService.NOTI_NONE);
+
+		newResource.getPropertiesEdit().addProperty(
+			ResourceProperties.PROP_DESCRIPTION,
+			coResProxy.getResource().getProperty(
+				COPropertiesType.DESCRIPTION));
+		newResource.getPropertiesEdit().addProperty(
+			ResourceProperties.PROP_COPYRIGHT_CHOICE,
+			coResProxy.getResource().getProperty(
+				COPropertiesType.LICENSE));
+
+		contentHostingService.commitResource(newResource,
+			NotificationService.NOTI_NONE);
 	    } catch (PermissionException e) {
 		e.printStackTrace();
 	    } catch (IdUnusedException e) {
@@ -822,7 +828,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	String url = null;
 
 	try {
-	    File zipFile = exportAndZip(siteId,webappDir);
+	    File zipFile = exportAndZip(siteId, webappDir);
 	    Site site = siteService.getSite(siteId);
 	    String title = site.getTitle();
 	    String resourceOutputDir =
@@ -938,7 +944,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    zos.putNextEntry(zipEntry);
 	    zos.write((byte[]) bytes);
 	} catch (Exception e) {
-	    log.error("writeToZip: Could not add file to zip:"  + fileName);
+	    log.error("writeToZip: Could not add file to zip:" + fileName);
 	    e.printStackTrace();
 	}
     }
@@ -960,8 +966,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	// retrieving the xml file
 	COSerialized coSerialized =
-		osylSiteService
-			.updateCOContentTitle(siteId, webappDir);
+		osylSiteService.updateCOContentTitle(siteId, webappDir);
 
 	byte[] xmlBytes = coSerialized.getContent().getBytes("UTF-8");
 	writeToZip(zos, OsylManagerService.CO_XML_FILENAME, xmlBytes);
@@ -1038,8 +1043,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     /**
-     * Get the delay (in minutes) to wait before deleting export zip defined
-     * in the sakai.properties
+     * Get the delay (in minutes) to wait before deleting export zip defined in
+     * the sakai.properties
      * 
      * @return
      */
@@ -1094,9 +1099,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
     }
 
-    public void associateToCM(String courseSectionId, String siteId, String webappDir)
-    throws Exception {
-	
+    public void associateToCM(String courseSectionId, String siteId,
+	    String webappDir) throws Exception {
+
 	if (siteId != null) {
 	    Site site = siteService.getSite(siteId);
 	    ResourcePropertiesEdit rp = site.getPropertiesEdit();
@@ -1106,17 +1111,17 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    courseManagementService.getCourseOffering(courseSection
 			    .getCourseOfferingEid());
 	    AcademicSession term = courseOff.getAcademicSession();
-	
+
 	    rp.addProperty(PROP_SITE_TERM, term.getTitle());
 	    rp.addProperty(PROP_SITE_TERM_EID, term.getEid());
-	
+
 	    site.setProviderGroupId(courseSectionId);
 	    siteService.save(site);
-	    osylSiteService.updateCOContentTitle(siteId,webappDir);
-	   	    
+	    osylSiteService.updateCOContentTitle(siteId, webappDir);
+
 	}
-	}
-    
+    }
+
     public void dissociateFromCM(String siteId) throws Exception {
 	if (siteId != null) {
 	    Site site = siteService.getSite(siteId);
@@ -1128,17 +1133,18 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
     }
 
-    public void dissociateFromCM(String siteId, String webappDir) throws Exception {
-    	if (siteId != null) {
-    	    Site site = siteService.getSite(siteId);
-    	    ResourcePropertiesEdit rp = site.getPropertiesEdit();
-    	    rp.addProperty(PROP_SITE_TERM, null);
-    	    rp.addProperty(PROP_SITE_TERM_EID, null);
-    	    site.setProviderGroupId(null);
-    	    siteService.save(site);
-    	    osylSiteService.updateCOContentTitle(siteId,webappDir);
-    	}
-        }
+    public void dissociateFromCM(String siteId, String webappDir)
+	    throws Exception {
+	if (siteId != null) {
+	    Site site = siteService.getSite(siteId);
+	    ResourcePropertiesEdit rp = site.getPropertiesEdit();
+	    rp.addProperty(PROP_SITE_TERM, null);
+	    rp.addProperty(PROP_SITE_TERM_EID, null);
+	    site.setProviderGroupId(null);
+	    siteService.save(site);
+	    osylSiteService.updateCOContentTitle(siteId, webappDir);
+	}
+    }
 
     /**
      * Returns the list of all courses defined in the CM so that the user can
@@ -1224,8 +1230,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    }
 	}
-	log.info("getCMCourses ###### END ######" + elapsed(start)
-		+ " for " + cmCourses.size() +  " courses");
+	log.info("getCMCourses ###### END ######" + elapsed(start) + " for "
+		+ cmCourses.size() + " courses");
 	return cmCourses;
     } // getCMCourses
 
@@ -1274,8 +1280,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		metadata = new Metadata();
 		metadata.set(Metadata.RESOURCE_NAME_KEY, file.getName());
 		parser = new AutoDetectParser();
-		parser.parse(inputStream, handler, metadata, new ParseContext());
-		
+		parser
+			.parse(inputStream, handler, metadata,
+				new ParseContext());
+
 		// We need to close the inputstream and rebuild it after the
 		// parsing here,
 		// otherwise the inputstream in unusable
@@ -1301,33 +1309,35 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 	return fileNameChangesMap;
     }
-    
+
     // only to improve readability while profiling
     private static String elapsed(long start) {
-	return ": elapsed : " + (System.currentTimeMillis() - start) + " ms "; 	
+	return ": elapsed : " + (System.currentTimeMillis() - start) + " ms ";
     }
-    
+
     /** {@inheritDoc} */
     public COSite getCoAndSiteInfo(String siteId, String searchTerm) {
 	long start = System.currentTimeMillis();
 	Site site = null;
 	// Not really needed for now and very expensive (3 times longer to get
 	// the site list) - SAKAI-1489
-//	COSerialized co = null;
+	COSerialized co = null;
 	COSite info = new COSite();
 
 	try {
 	    site = osylSiteService.getSite(siteId);
-//	    if (osylSiteService.hasCourseOutline(siteId)) {
-//		co = osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
-//	    }
+	    if (osylSiteService.hasCourseOutline(siteId)) {
+		co = osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
+	    }
 	} catch (IdUnusedException e) {
 	    log.error(e.getMessage());
 	    e.printStackTrace();
 	}
 
-	if (site != null && searchTerm!=null && site.getTitle().toLowerCase().
-		contains(searchTerm.toLowerCase())) {
+	if (site != null
+		&& searchTerm != null
+		&& site.getTitle().toLowerCase().contains(
+			searchTerm.toLowerCase())) {
 	    // Retrieve site info
 	    info.setSiteId(siteId);
 	    info.setSiteName(site.getTitle());
@@ -1384,14 +1394,14 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		info.setCourseCoordinator(null);
 
 	    }
-	    //log.debug("getCoAndSiteInfo 7" + elapsed(start));
+	    // log.debug("getCoAndSiteInfo 7" + elapsed(start));
 	    // Retrieve course outline info
 	    // See comment above - SAKAI-1489
-//	    if (co != null) {
-		// TODO: corriger avec la tache SAKAI-1357
-		info.setLastModifiedDate(null);
-		info.setLastPublicationDate(null);
-//	    }
+	    if (co != null) {
+	    // TODO: corriger avec la tache SAKAI-1357
+		info.setLastModifiedDate(co.getModificationDate());
+		info.setLastPublicationDate(co.getPublicationDate());
+	    }
 
 	    // Retrieve parent site
 	    String parentSite = null;
@@ -1419,11 +1429,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	String currentUser = sessionManager.getCurrentSessionUserId();
 	int siteCount = 0;
 
-	log.debug("getCoAndSiteInfo (Site List ##### START #####)" + elapsed(start));
+	log.debug("getCoAndSiteInfo (Site List ##### START #####)"
+		+ elapsed(start));
 	List<String> accessedSites =
 		getSitesForUser(currentUser, SiteService.SITE_VISIT);
 
-	log.debug("getCoAndSiteInfo (Site List ##### SITES #####)" + elapsed(start));
+	log.debug("getCoAndSiteInfo (Site List ##### SITES #####)"
+		+ elapsed(start));
 
 	if (accessedSites != null) {
 	    allSitesInfo = new ArrayList<COSite>();
@@ -1438,7 +1450,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 
 	// TODO: move this to the end of getOsylPackage() with a specific
-	// path instead of iterating through all the sites!!!   
+	// path instead of iterating through all the sites!!!
 	new DeleteExpiredTemporaryExportFiles(allSitesInfo).start();
 	return allSitesInfo;
     }
@@ -1477,12 +1489,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    + ", permission: " + permission);
 	return l;
     }
-    
+
     class DeleteExpiredTemporaryExportFiles extends Thread {
 
 	List<COSite> allSitesInfo;
 	long start = System.currentTimeMillis();
-	
+
 	public DeleteExpiredTemporaryExportFiles(List<COSite> allSitesInfo) {
 	    this.allSitesInfo = allSitesInfo;
 	}
@@ -1497,10 +1509,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    } catch (InterruptedException e) {
 	    }
 	    deleteExpiredTemporaryExportFiles(allSitesInfo);
-		log.debug("deleteExpiredTemporaryExportFiles (###### END ######)"
-			+ elapsed(start));
+	    log.debug("deleteExpiredTemporaryExportFiles (###### END ######)"
+		    + elapsed(start));
 	}
     }
 
 }
-

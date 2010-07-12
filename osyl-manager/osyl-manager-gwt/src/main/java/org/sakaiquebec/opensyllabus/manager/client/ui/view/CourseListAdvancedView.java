@@ -44,6 +44,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -99,7 +100,7 @@ implements OsylManagerEventHandler {
 			}
 			int i =0;
 			int rowNum = i;
-
+			DateTimeFormat dtf = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss");
 			for (Iterator<String> sortedSiteIterator =
 				sortedMap.keySet().iterator(); sortedSiteIterator
 				.hasNext();) {
@@ -112,8 +113,14 @@ implements OsylManagerEventHandler {
 			    scSiteList.getDataTable().setHTML(rowNum, 2, coSite.getCourseSession());
 			    scSiteList.getDataTable().setHTML(rowNum, 3, siteTitle);
 			    scSiteList.getDataTable().setHTML(rowNum, 4, coSite.getParentSite());
-			    scSiteList.getDataTable().setHTML(rowNum, 5, coSite.getLastPublicationDate());
-			    scSiteList.getDataTable().setHTML(rowNum, 6, coSite.getLastModifiedDate());
+			    if(coSite.getLastPublicationDate()!=null)
+				scSiteList.getDataTable().setHTML(rowNum, 5, dtf.format(coSite.getLastPublicationDate()));
+//			    else
+//				scSiteList.getDataTable().setHTML(rowNum, 5, "");
+			    if(coSite.getLastModifiedDate()!=null)
+				scSiteList.getDataTable().setHTML(rowNum, 6, dtf.format(coSite.getLastModifiedDate()));
+//			    else
+//				scSiteList.getDataTable().setHTML(rowNum, 6, "");
 			    scSiteList.getDataTable().setWidget(rowNum, 7, new CheckBox());
 			    i++;
 			}

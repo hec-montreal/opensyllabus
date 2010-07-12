@@ -27,6 +27,7 @@ import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerE
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -106,10 +107,11 @@ public class CourseInfoView extends OsylManagerAbstractView implements
 
     public void refreshView() {
 	List<COSite> list = getController().getSelectSites();
+	DateTimeFormat dtf = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss");
 	if (list.size() == 1) {
 	    COSite cosite = list.get(0);
-	    lastPublishInfo = new Label(cosite.getLastPublicationDate());
-	    lastSaveInfo = new Label(cosite.getLastPublicationDate());
+	    lastPublishInfo = new Label(dtf.format(cosite.getLastPublicationDate()));
+	    lastSaveInfo = new Label(dtf.format(cosite.getLastPublicationDate()));
 	    associatedCourseInfo = new Label(cosite.getCourseName());
 	    parentSiteInfo = new Label(cosite.getParentSite());
 	} else {
