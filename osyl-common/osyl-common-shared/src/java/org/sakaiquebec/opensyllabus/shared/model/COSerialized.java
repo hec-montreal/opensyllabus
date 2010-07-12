@@ -113,6 +113,7 @@ public class COSerialized implements java.io.Serializable {
 
     private Date modificationDate;
 
+    private String courseId;
     /**
      * Default constructor
      */
@@ -409,6 +410,14 @@ public class COSerialized implements java.io.Serializable {
      */
     public void setPublished(boolean published) {
 	this.published = published;
+    }
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
     }
 
     /**

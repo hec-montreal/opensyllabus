@@ -12,7 +12,10 @@ import java.util.TreeMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.fop.apps.MimeConstants;
+import org.sakaiproject.authz.api.AuthzGroup;
+import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.SecurityAdvisor;
+import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentCollection;
@@ -249,6 +252,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     public Map<String, String> publish(String webappDir, String siteId)
 	    throws Exception {
+	String courseId = null;
 
 	SecurityService.pushAdvisor(new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
@@ -263,6 +267,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	log.info("Publishing course outline for site [" + co.getTitle() + "]");
 	COModeledServer coModeled = new COModeledServer(co);
 
+	courseId = co.getCourseId();
+	if (courseId == null)
+	    co = updateCourseId(co);
+	
 	// PRE-PUBLICATION
 	// change work directory to publish directory
 	coModeled.XML2Model(true);
@@ -328,6 +336,32 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return publicationProperties;
     }
 
+    private COSerialized updateCourseId (COSerialized co){
+	String siteName = null;
+	String providerId = null;
+	String siteId = co.getSiteId();
+	try {
+	    AuthzGroup realm = AuthzGroupService.getAuthzGroup(REALM_ID_PREFIX + siteId);
+	    if (realm != null){
+		providerId = realm.getProviderGroupId();
+	    }
+	    if (providerId != null)
+		siteName = osylSiteService.getSiteName(providerId);
+	} catch (GroupNotDefinedException e) {
+	    log.error(e);
+	}
+	
+	if (siteName != null){
+		COModeledServer coModeledServer = new COModeledServer(co);
+		coModeledServer.XML2Model(false);
+		COContent coContent = coModeledServer.getModeledContent();
+		coContent.addProperty(COPropertiesType.COURSE_ID, siteName);
+		coModeledServer.model2XML();
+		co.setContent(coModeledServer.getSerializedContent());
+
+	}
+	return co;
+    }
     private void createPrintVersion(String siteId, String webappdir) {
 	COSerialized coSerializedAttendee =
 		getSerializedPublishedCourseOutlineForAccessType(siteId,

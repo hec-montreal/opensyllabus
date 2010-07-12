@@ -39,251 +39,261 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public interface OsylSiteService extends EntityProducer{
+public interface OsylSiteService extends EntityProducer {
 
-	//Arguments used by the entity broker
-	public static final String REFERENCE_ROOT = Entity.SEPARATOR + "osyl";
-	public static final String APPLICATION_ID = "sakai:osyl";
-	
-	public static final String XSLT_DIRECTORY = "xslt";
-	public static final String PRINT_DIRECTORY = "print";
+    // Arguments used by the entity broker
+    public static final String REFERENCE_ROOT = Entity.SEPARATOR + "osyl";
+    public static final String APPLICATION_ID = "sakai:osyl";
 
-	public static final String XML_FILE_EXTENSION = ".xml";
-	public static final String XSL_FILE_EXTENSION = ".xsl";
-	public static final String HTML_FILE_EXTENSION = ".html";
+    public static final String XSLT_DIRECTORY = "xslt";
+    public static final String PRINT_DIRECTORY = "print";
 
-	public static final String XSL_PREFIX = "security_";
+    public static final String XML_FILE_EXTENSION = ".xml";
+    public static final String XSL_FILE_EXTENSION = ".xsl";
+    public static final String HTML_FILE_EXTENSION = ".html";
 
-	public final static String SITE_TYPE = "course";
-	public static final String XSLFO_PRINT_FILENAME = "printOSYLFO.xslt";
+    public static final String XSL_PREFIX = "security_";
 
+    public final static String SITE_TYPE = "course";
+    public static final String XSLFO_PRINT_FILENAME = "printOSYLFO.xslt";
 
-	/**
-	 * Name of the chs folder in which the course outline content will be
-	 * stored.
-	 */
-	public static final String WORK_DIRECTORY = "work";
+    /**
+     * Name of the chs folder in which the course outline content will be
+     * stored.
+     */
+    public static final String WORK_DIRECTORY = "work";
 
-	/**
-	 * Name of the chs folder in which the course outline content will be
-	 * published.
-	 */
-	public static final String PUBLISH_DIRECTORY = "publish";
+    /**
+     * Name of the chs folder in which the course outline content will be
+     * published.
+     */
+    public static final String PUBLISH_DIRECTORY = "publish";
 
-	/** A simple string used to format Urls. */
-	public static final String CONTENT = "/content";
+    /** A simple string used to format Urls. */
+    public static final String CONTENT = "/content";
 
-	public static final String FILE_DELIMITER = "\\.";
+    public static final String FILE_DELIMITER = "\\.";
 
-	/**
-	 * The default type of site we are creating
-	 */
-	public static final String DEFAULT_SITE_TYPE = "course";
+    /**
+     * The default type of site we are creating
+     */
+    public static final String DEFAULT_SITE_TYPE = "course";
 
-    /** 
-     * use to generate course management title	
+    /**
+     * use to generate course management title
      */
     public final static String SUMMER = "E";
-    
+
     public final static String WINTER = "H";
-    
+
     public final static String FALL = "A";
 
     /**
-	 * Get a valid resource reference base site URL to be used in later calls.
-	 * Will get deprecated very soon!
-	 * 
-	 * @return a String of the base URL
-	 */
-	public String getCurrentSiteReference();
-	
+     * Get a valid resource reference base site URL to be used in later calls.
+     * Will get deprecated very soon!
+     * 
+     * @return a String of the base URL
+     */
+    public String getCurrentSiteReference();
 
-	/**
-	 * Returns whether a site with the specified title exists.
-	 * 
-	 * @param siteTitle
-	 * @return true or false
-	 * @throws Exception
-	 */
-	public boolean siteExists(String siteTitle) throws Exception;
+    /**
+     * Returns whether a site with the specified title exists.
+     * 
+     * @param siteTitle
+     * @return true or false
+     * @throws Exception
+     */
+    public boolean siteExists(String siteTitle) throws Exception;
 
-	/**
-	 * From the information given by the user, we create a new Site that will contain
-	 * a course outline that will be associated to a course of the course management
-	 *  or will be a work site.
-	 * 
-	 * @param siteId
-	 * @param siteTitle
-	 * @param siteSession
-	 * @param siteGroup
-	 * @param siteProf
-	 * @return the id of the site
-	 * @throws Exception
-	 */
-	public String createSite(String siteTitle, String configRef, String lang) throws Exception;
+    /**
+     * From the information given by the user, we create a new Site that will
+     * contain a course outline that will be associated to a course of the
+     * course management or will be a work site.
+     * 
+     * @param siteId
+     * @param siteTitle
+     * @param siteSession
+     * @param siteGroup
+     * @param siteProf
+     * @return the id of the site
+     * @throws Exception
+     */
+    public String createSite(String siteTitle, String configRef, String lang)
+	    throws Exception;
 
-	/**
-	 * From the information given by the user, we create a new Site that will contain
-	 * a sharable course outline.
-	 * 
-	 * @param siteId
-	 * @param siteTitle
-	 * @param siteSession
-	 * @param siteGroup
-	 * @param siteProf
-	 * @return the id of the site
-	 * @throws Exception
-	 */
-	public String createSharableSite(String siteTitle, String configRef, String lang) throws Exception;
-	/**
-	 * Returns the actual site id of this context.
-	 * 
-	 * @return a String of the current site id.
-	 */
-	public String getCurrentSiteId() throws Exception;
+    /**
+     * From the information given by the user, we create a new Site that will
+     * contain a sharable course outline.
+     * 
+     * @param siteId
+     * @param siteTitle
+     * @param siteSession
+     * @param siteGroup
+     * @param siteProf
+     * @return the id of the site
+     * @throws Exception
+     */
+    public String createSharableSite(String siteTitle, String configRef,
+	    String lang) throws Exception;
 
-	/**
-	 * This method adds site info to the COSerialized.
-	 * 
-	 * @param co
-	 *            the COSerialized
-	 * @param siteId
-	 *            The current site id.
-	 * @throws Exception
-	 */
-	public void getSiteInfo(COSerialized co, String siteId) throws Exception;
+    /**
+     * Returns the actual site id of this context.
+     * 
+     * @return a String of the current site id.
+     */
+    public String getCurrentSiteId() throws Exception;
 
-	/**
-	 * Check if the Co of the current context has been published
-	 * 
-	 * @return true if published
-	 */
-	public boolean hasBeenPublished();
+    /**
+     * This method adds site info to the COSerialized.
+     * 
+     * @param co the COSerialized
+     * @param siteId The current site id.
+     * @throws Exception
+     */
+    public void getSiteInfo(COSerialized co, String siteId) throws Exception;
 
-	/**
-	 * Check if a Co in edition exists for the give site
-	 * 
-	 * @return true if course line exists
-	 */
-	public boolean hasCourseOutline(String siteId);
+    /**
+     * Check if the Co of the current context has been published
+     * 
+     * @return true if published
+     */
+    public boolean hasBeenPublished();
 
-	/**
-	 * Check if the Co with the siteId has been published
-	 * 
-	 * @return true if published
-	 */
-	public boolean hasBeenPublished(String siteId);
-	
-	/**
-	 * Returns the CourseOutline whose ID is specified.
-	 * 
-	 * @param String
-	 *            the course outline ID
-	 * @return the CourseOutline POJO corresponding to the specified ID
-	 * @throws Exception
-	 */
-	public COSerialized getSerializedCourseOutline(String coId, String webappDir)
-			throws Exception;
+    /**
+     * Check if a Co in edition exists for the give site
+     * 
+     * @return true if course line exists
+     */
+    public boolean hasCourseOutline(String siteId);
 
-	/**
-	 * Returns the CourseOutline whose site ID is specified.
-	 * 
-	 * @param String
-	 *            the site ID
-	 * @return the CourseOutline POJO corresponding to the specified siteID
-	 * @throws Exception
-	 */
-	public COSerialized getSerializedCourseOutlineBySiteId(String siteId);
-	
-	/**
-	 * Returns the CourseOutline of the current context.
-	 * 
-	 * @return the CourseOutline POJO corresponding to the current context.
-	 */
-	public COSerialized getSerializedCourseOutline(String webappDir);
+    /**
+     * Check if the Co with the siteId has been published
+     * 
+     * @return true if published
+     */
+    public boolean hasBeenPublished(String siteId);
 
-	/**
-	 * Returns the CourseOutline of the current context (version unfusionned).
-	 * 
-	 * @return the CourseOutline POJO corresponding to the current context.
-	 */
-	public COSerialized getUnfusionnedSerializedCourseOutlineBySiteId(String id);
-	
-	/**
-	 * Creates or update a new course outline
-	 * 
-	 * @return
-	 */
-	public String createOrUpdateCO(COSerialized co);
+    /**
+     * Returns the CourseOutline whose ID is specified.
+     * 
+     * @param String the course outline ID
+     * @return the CourseOutline POJO corresponding to the specified ID
+     * @throws Exception
+     */
+    public COSerialized getSerializedCourseOutline(String coId, String webappDir)
+	    throws Exception;
 
-	/**
-	 * Saves the CourseOutline specified. The ID is returned. This is useful if
-	 * this instance has never been saved before (i.e.: its ID is -1). In this
-	 * case, it is the responsibility of the client application to keep track of
-	 * this new ID, notably to save it again at a later time.
-	 * 
-	 * @param COSerialized
-	 *            POJO
-	 * @return the CourseOutline ID
-	 * @throws Exception
-	 */
-	public String updateSerializedCourseOutline(COSerialized co)
-			throws Exception;
+    /**
+     * Returns the CourseOutline whose site ID is specified.
+     * 
+     * @param String the site ID
+     * @return the CourseOutline POJO corresponding to the specified siteID
+     * @throws Exception
+     */
+    public COSerialized getSerializedCourseOutlineBySiteId(String siteId);
 
-	/**
-	 * Adds the tool to the site. This method is used in the process of
-	 * integrating a sakai tool to OpenSyllabus. If the tool is not present in
-	 * the site, we add it before creating a reference
-	 * 
-	 * @param site
-	 * @param toolId
-	 */
-	public void addTool(Site site, String toolId);
+    /**
+     * Returns the CourseOutline of the current context.
+     * 
+     * @return the CourseOutline POJO corresponding to the current context.
+     */
+    public COSerialized getSerializedCourseOutline(String webappDir);
 
-	/**
-	 * We create a new course outline from a xmlContent
-	 * 
-	 * @param xmlData
-	 * @return
-	 */
-	public COSerialized importDataInCO(String xmlData, String siteId, Map<String,String> filenameChangesMap, String webapp) throws Exception;
+    /**
+     * Returns the CourseOutline of the current context (version unfusionned).
+     * 
+     * @return the CourseOutline POJO corresponding to the current context.
+     */
+    public COSerialized getUnfusionnedSerializedCourseOutlineBySiteId(String id);
 
-	public Site getSite(String siteId) throws IdUnusedException;
-	
-	public String getParent(String siteId) throws Exception;
-	
-	public List<String> getChildren (String siteId) throws Exception;
-	
-	public void associate(String siteId, String parentId) throws Exception;
-	
-	public void dissociate(String siteId, String parentId)throws Exception;
-	
-	public COModeledServer getFusionnedPrePublishedHierarchy(String siteId);
+    /**
+     * Creates or update a new course outline
+     * 
+     * @return
+     */
+    public String createOrUpdateCO(COSerialized co);
 
-	public COSerialized updateCOContentTitle(String siteId, String webappDir) throws Exception;
-	
-	/**
-	 * Method used to release lock that the current user have on the current site course outline
-	 */
-	public void releaseLock();
-	
-	/**
-	 * Get the id of the config used by site identified by siteId
-	 * @param siteId
-	 * @return
-	 */
-	public String getOsylConfigIdForSiteId(String siteId);
-	
-	/**
-	 * 
-	 * @return list of all Course outlines of the system
-	 */
-	public List<COSerialized> getAllCO();
-	
-	/**
-	 * Convert the co to the most up to date version of osyl
-	 * @param co
-	 */
-	public void convertAndSave(String webapp, COSerialized co) throws Exception;
+    /**
+     * Saves the CourseOutline specified. The ID is returned. This is useful if
+     * this instance has never been saved before (i.e.: its ID is -1). In this
+     * case, it is the responsibility of the client application to keep track of
+     * this new ID, notably to save it again at a later time.
+     * 
+     * @param COSerialized POJO
+     * @return the CourseOutline ID
+     * @throws Exception
+     */
+    public String updateSerializedCourseOutline(COSerialized co)
+	    throws Exception;
+
+    /**
+     * Adds the tool to the site. This method is used in the process of
+     * integrating a sakai tool to OpenSyllabus. If the tool is not present in
+     * the site, we add it before creating a reference
+     * 
+     * @param site
+     * @param toolId
+     */
+    public void addTool(Site site, String toolId);
+
+    /**
+     * We create a new course outline from a xmlContent
+     * 
+     * @param xmlData
+     * @return
+     */
+    public COSerialized importDataInCO(String xmlData, String siteId,
+	    Map<String, String> filenameChangesMap, String webapp)
+	    throws Exception;
+
+    public Site getSite(String siteId) throws IdUnusedException;
+
+    public String getParent(String siteId) throws Exception;
+
+    public List<String> getChildren(String siteId) throws Exception;
+
+    public void associate(String siteId, String parentId) throws Exception;
+
+    public void dissociate(String siteId, String parentId) throws Exception;
+
+    public COModeledServer getFusionnedPrePublishedHierarchy(String siteId);
+
+    public COSerialized updateCOContentTitle(String siteId, String webappDir)
+	    throws Exception;
+
+    /**
+     * Method used to release lock that the current user have on the current
+     * site course outline
+     */
+    public void releaseLock();
+
+    /**
+     * Get the id of the config used by site identified by siteId
+     * 
+     * @param siteId
+     * @return
+     */
+    public String getOsylConfigIdForSiteId(String siteId);
+
+    /**
+     * @return list of all Course outlines of the system
+     */
+    public List<COSerialized> getAllCO();
+
+    /**
+     * Convert the co to the most up to date version of osyl
+     * 
+     * @param co
+     */
+    public void convertAndSave(String webapp, COSerialized co) throws Exception;
+
+    /**
+     * Retrieves the site name that represents the association between the site
+     * and the course management.
+     * 
+     * @param sectionId
+     * @return
+     */
+    public String getSiteName(String sectionId);
 
 }

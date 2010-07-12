@@ -823,6 +823,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		coModeled.XML2Model();
 		coModeled.resetXML(null);
 		coModeled.setCOContentTitle(title);
+		coModeled.setCOContentCourseId(identifier);
 		coModeled.setCOContentIdentifier(identifier);
 		coModeled.setSchemaVersion(sh.getSchemaVersion());
 		coModeled.model2XML();
@@ -1393,6 +1394,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return courseManageMentTitle;
     }
 
+    public String getSiteName (String sectionId){
+	return getSiteName(cmService.getSection(sectionId));
+    }
     private String getSiteName(Section section) {
 	StringBuilder siteName = new StringBuilder();
 	String sectionId = section.getEid();

@@ -1382,6 +1382,18 @@ public class COModeledServer {
 	}
     }
 
+    public void setCOContentCourseId(String courseId) {
+	String rulesXML = coSerialized.getOsylConfig().getRulesConfig();
+	if (courseId != null && rulesXML != null) {
+	    Document rulesDom = this.parseXml(rulesXML);
+	    String propertyType = getRulesConfigPropertyType(rulesDom);
+	    COContent content = this.getModeledContent();
+	    COProperties coProperties = content.getProperties();
+	    coProperties.addProperty(COPropertiesType.COURSE_ID, propertyType,
+		    courseId);
+	}
+    }
+
     public void setCOContentIdentifier(String identifier) {
 	String rulesXML = coSerialized.getOsylConfig().getRulesConfig();
 	if (identifier != null && rulesXML != null) {

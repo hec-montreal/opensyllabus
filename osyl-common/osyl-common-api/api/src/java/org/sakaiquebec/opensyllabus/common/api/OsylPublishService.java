@@ -67,6 +67,11 @@ public interface OsylPublishService {
     public static final String PUBLISH_DIRECTORY = "publish";
     
     public static final String PRINT_VERSION_FILENAME="osylPrintVersion.pdf";
+    
+    /**
+     * Prefix of the site realm id.
+     */
+    public static final String REALM_ID_PREFIX = "/site/";
 
     /**
      * Returns the unique URL for the published course plan
