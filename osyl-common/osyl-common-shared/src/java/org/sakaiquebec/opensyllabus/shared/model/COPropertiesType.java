@@ -84,16 +84,16 @@ public class COPropertiesType {
     public static final String TITLE = "title";
     public static final String LANGUAGE = "language";
     public static final String CREATED = "created";
-    public static final String CREATED_BY = "createdBy";
     public static final String LAST_MODIFIED_BY = "lastModifiedBy";
     public static final String PARENT = "parent";
+    public static final String CREATOR="creator";
 
     // CO type
     public static final String PUBLISHED = "published";
     public static final String PREVIOUS_PUBLISHED = "previousPublished";
     public static final String CHILDS = "childs";
     public static final String COURSE_ID = "courseId";
-    public static final String DEPARTEMENT = "departement";
+    public static final String DEPARTMENT = "department";
 
     //Specific to  Reference context
     public static final String DISPLAY_AS = "displayAs";

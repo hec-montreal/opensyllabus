@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
@@ -23,6 +24,9 @@ import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentEntity;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResourceEdit;
+import org.sakaiproject.coursemanagement.api.CourseManagementService;
+import org.sakaiproject.coursemanagement.api.EnrollmentSet;
+import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.id.cover.IdManager;
@@ -58,6 +62,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * @uml.associationEnd
      */
     private OsylSecurityService osylSecurityService;
+    
+    private CourseManagementService cmService;
 
     /**
      * Sets the {@link OsylSecurityService}.
@@ -269,10 +275,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	log.info("Publishing course outline for site [" + co.getTitle() + "]");
 	COModeledServer coModeled = new COModeledServer(co);
 
-	courseId = co.getCourseId();
-	if (courseId == null)
-	    co = updateCourseId(co, webappDir);
-
 	// PRE-PUBLICATION
 	// change work directory to publish directory
 	coModeled.XML2Model(true);
@@ -298,9 +300,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    publishedCO.setContent(co.getContent());
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
 	}
-
-	// PUBLICATION
-	// TODO verify hierarchy compatibility and publish only if compatible
 
 	setDocumentSecurityMap(coModeled.getDocumentSecurityMap());
 
@@ -338,18 +337,31 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return publicationProperties;
     }
 
-    private COSerialized updateCourseId(COSerialized co, String webappDir) {
+    private COSerialized updateCourseInformations(COSerialized co, String webappDir) {
 	String siteName = null;
 	String providerId = null;
 	String siteId = co.getSiteId();
+	String creator="";
+	String dept="";
 	try {
 	    AuthzGroup realm =
 		    AuthzGroupService.getAuthzGroup(REALM_ID_PREFIX + siteId);
 	    if (realm != null) {
 		providerId = realm.getProviderGroupId();
 	    }
-	    if (providerId != null)
+	    if (providerId != null){
 		siteName = osylSiteService.getSiteName(providerId);
+		Section s= cmService.getSection(providerId);
+		dept = cmService.getSectionCategoryDescription(s.getCategory());
+		EnrollmentSet es = s.getEnrollmentSet();
+		if(es!=null){
+		    Set<String>t = es.getOfficialInstructors();
+		    if(t!=null && !t.isEmpty()){
+			
+		    }
+		}
+	    }
+		
 	} catch (GroupNotDefinedException e) {
 	    log.error(e);
 	}
@@ -367,6 +379,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		COContent coContent = coModeledServer.getModeledContent();
 		coContent.addProperty(COPropertiesType.COURSE_ID, propertyType,
 			siteName);
+		
+		
+		coContent.addProperty(COPropertiesType.CREATOR, "");//TODO
+		coContent.addProperty(COPropertiesType.DEPARTMENT, propertyType,dept);
 		coModeledServer.model2XML();
 		co.setContent(coModeledServer.getSerializedContent());
 
@@ -440,6 +456,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	if (hierarchyFussionedCO != null && coModeled != null) {
 	    coModeled.model2XML();
 	    hierarchyFussionedCO.setContent(coModeled.getSerializedContent());
+	    
+	    updateCourseInformations(hierarchyFussionedCO, webappDir);
 
 	    // Create a course outline with security public
 	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_PUBLIC,
@@ -696,6 +714,14 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     // only to improve readability while profiling
     private static String elapsed(long start) {
 	return ": elapsed : " + (System.currentTimeMillis() - start) + " ms ";
+    }
+
+    public void setCmService(CourseManagementService cmService) {
+	this.cmService = cmService;
+    }
+
+    public CourseManagementService getCmService() {
+	return cmService;
     }
 
 }
