@@ -9,11 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.fop.apps.MimeConstants;
@@ -365,7 +360,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			osylConfigService.getConfigByRef(co.getOsylConfig()
 				.getConfigRef(), webappDir);
 		Document d = XmlHelper.parseXml(cocs.getRulesConfig());
-		String propertyType =COModeledServer.getRulesConfigPropertyType(d);
+		String propertyType =
+			COModeledServer.getRulesConfigPropertyType(d);
 		COModeledServer coModeledServer = new COModeledServer(co);
 		coModeledServer.XML2Model(false);
 		COContent coContent = coModeledServer.getModeledContent();
