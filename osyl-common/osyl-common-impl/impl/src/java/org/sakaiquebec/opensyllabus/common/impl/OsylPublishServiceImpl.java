@@ -9,6 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.fop.apps.MimeConstants;
@@ -40,10 +45,12 @@ import org.sakaiquebec.opensyllabus.common.helper.FileHelper;
 import org.sakaiquebec.opensyllabus.common.helper.XmlHelper;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
+import org.w3c.dom.Document;
 
 public class OsylPublishServiceImpl implements OsylPublishService {
 
@@ -269,8 +276,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	courseId = co.getCourseId();
 	if (courseId == null)
-	    co = updateCourseId(co);
-	
+	    co = updateCourseId(co, webappDir);
+
 	// PRE-PUBLICATION
 	// change work directory to publish directory
 	coModeled.XML2Model(true);
@@ -336,13 +343,14 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return publicationProperties;
     }
 
-    private COSerialized updateCourseId (COSerialized co){
+    private COSerialized updateCourseId(COSerialized co, String webappDir) {
 	String siteName = null;
 	String providerId = null;
 	String siteId = co.getSiteId();
 	try {
-	    AuthzGroup realm = AuthzGroupService.getAuthzGroup(REALM_ID_PREFIX + siteId);
-	    if (realm != null){
+	    AuthzGroup realm =
+		    AuthzGroupService.getAuthzGroup(REALM_ID_PREFIX + siteId);
+	    if (realm != null) {
 		providerId = realm.getProviderGroupId();
 	    }
 	    if (providerId != null)
@@ -350,18 +358,37 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	} catch (GroupNotDefinedException e) {
 	    log.error(e);
 	}
-	
-	if (siteName != null){
+
+	if (siteName != null) {
+	    try {
+		COConfigSerialized cocs =
+			osylConfigService.getConfigByRef(co.getOsylConfig()
+				.getConfigRef(), webappDir);
+		Document d = XmlHelper.parseXml(cocs.getRulesConfig());
+		XPathFactory factory = XPathFactory.newInstance();
+		XPath xpath = factory.newXPath();
+		XPathExpression expr =
+			xpath
+				.compile("//schema/element[@name='CO']/attribute[@name='propertyType']/@restrictionpattern");
+		String propertyType =
+			(String) expr.evaluate(d, XPathConstants.STRING);
 		COModeledServer coModeledServer = new COModeledServer(co);
 		coModeledServer.XML2Model(false);
 		COContent coContent = coModeledServer.getModeledContent();
-		coContent.addProperty(COPropertiesType.COURSE_ID, siteName);
+		coContent.addProperty(COPropertiesType.COURSE_ID,propertyType, siteName);
 		coModeledServer.model2XML();
 		co.setContent(coModeledServer.getSerializedContent());
+
+	    } catch (Exception e) {
+		log.error("Unable to put courseId in XML"
+			+ co.getOsylConfig().getConfigRef());
+		log.error(e);
+	    }
 
 	}
 	return co;
     }
+
     private void createPrintVersion(String siteId, String webappdir) {
 	COSerialized coSerializedAttendee =
 		getSerializedPublishedCourseOutlineForAccessType(siteId,
@@ -677,7 +704,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     // only to improve readability while profiling
     private static String elapsed(long start) {
-	return ": elapsed : " + (System.currentTimeMillis() - start) + " ms "; 	
+	return ": elapsed : " + (System.currentTimeMillis() - start) + " ms ";
     }
 
 }
