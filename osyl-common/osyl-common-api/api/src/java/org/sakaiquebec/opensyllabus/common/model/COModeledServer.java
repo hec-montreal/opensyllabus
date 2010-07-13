@@ -44,6 +44,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
@@ -270,6 +275,8 @@ public class COModeledServer {
      * @uml.associationEnd qualifier="trim:java.lang.String java.lang.String"
      */
     private Map<String, String> documentVisibilityMap;
+    
+    private String propertyType;
 
     /**
      * @uml.property name="coSerialized"
@@ -1371,10 +1378,8 @@ public class COModeledServer {
     }
 
     public void setCOContentTitle(String coTitle) {
-	String rulesXML = coSerialized.getOsylConfig().getRulesConfig();
-	if (coTitle != null && rulesXML != null) {
-	    Document rulesDom = this.parseXml(rulesXML);
-	    String propertyType = getRulesConfigPropertyType(rulesDom);
+	if (coTitle != null) {
+	    String propertyType =  getPropertyType();
 	    COContent content = this.getModeledContent();
 	    COProperties coProperties = content.getProperties();
 	    coProperties.addProperty(COPropertiesType.TITLE, propertyType,
@@ -1383,10 +1388,8 @@ public class COModeledServer {
     }
 
     public void setCOContentCourseId(String courseId) {
-	String rulesXML = coSerialized.getOsylConfig().getRulesConfig();
-	if (courseId != null && rulesXML != null) {
-	    Document rulesDom = this.parseXml(rulesXML);
-	    String propertyType = getRulesConfigPropertyType(rulesDom);
+	if (courseId != null) {
+	    String propertyType = getPropertyType();
 	    COContent content = this.getModeledContent();
 	    COProperties coProperties = content.getProperties();
 	    coProperties.addProperty(COPropertiesType.COURSE_ID, propertyType,
@@ -1395,10 +1398,8 @@ public class COModeledServer {
     }
 
     public void setCOContentIdentifier(String identifier) {
-	String rulesXML = coSerialized.getOsylConfig().getRulesConfig();
-	if (identifier != null && rulesXML != null) {
-	    Document rulesDom = this.parseXml(rulesXML);
-	    String propertyType = getRulesConfigPropertyType(rulesDom);
+	if (identifier != null) {
+	    String propertyType = getPropertyType();
 	    COContent content = this.getModeledContent();
 	    COProperties coProperties = content.getProperties();
 	    coProperties.addProperty(COPropertiesType.IDENTIFIER, propertyType,
@@ -1406,49 +1407,22 @@ public class COModeledServer {
 	}
     }
 
-    public String getRulesConfigPropertyType(Document rulesDom) {
-	String type = null;
-	Element nodeElement = rulesDom.getDocumentElement();
-	String nodeName = "";
-	NodeList nodeList = nodeElement.getChildNodes();
-	for (int i = 0; i < nodeList.getLength(); i++) {
-	    Node myNode = nodeList.item(i);
-	    nodeName = myNode.getNodeName();
-	    if (nodeName.equals(ELEMENT_NODE_NAME)
-		    && getNameAttributeValue(myNode).equals(CO_NODE_NAME)) {
-		NodeList coNodeList = myNode.getChildNodes();
-		for (int j = 0; j < coNodeList.getLength(); j++) {
-		    Node myCONode = coNodeList.item(j);
-		    nodeName = myCONode.getNodeName();
-		    if (nodeName.equals(ATTRIBUTE_NODE_NAME)
-			    && getNameAttributeValue(myCONode).equals(
-				    PROPERTY_TYPE_ATTRIBUTE_NAME)) {
-			type = getRestrictionPatternAttributeValue(myCONode);
-			break;
-		    }
-		}
-		break;
-	    }
+    public static String getRulesConfigPropertyType(Document d) {
+	String propertyType = "";
+	try {
+	    XPathFactory factory = XPathFactory.newInstance();
+	    XPath xpath = factory.newXPath();
+	    XPathExpression expr;
+
+	    expr =
+		    xpath
+			    .compile("//schema/element[@name='CO']/attribute[@name='propertyType']/@restrictionpattern");
+
+	    propertyType = (String) expr.evaluate(d, XPathConstants.STRING);
+	} catch (XPathExpressionException e) {
+	    e.printStackTrace();
 	}
-	return type;
-    }
-
-    private String getNameAttributeValue(Node myNode) {
-	Node node = myNode.getAttributes().getNamedItem(NAME_ATTRIBUTE_NAME);
-	String attributeValue = null;
-	if (node != null)
-	    attributeValue = node.getNodeValue();
-	return attributeValue;
-    }
-
-    private String getRestrictionPatternAttributeValue(Node myNode) {
-	Node node =
-		myNode.getAttributes().getNamedItem(
-			RESTRICTION_PATTERN_ATTRIBUTE_NAME);
-	String attributeValue = null;
-	if (node != null)
-	    attributeValue = node.getNodeValue();
-	return attributeValue;
+	return propertyType;
     }
 
     public String getSchemaVersion() {
@@ -1457,6 +1431,15 @@ public class COModeledServer {
 
     public void setSchemaVersion(String schemaVersion) {
 	this.schemaVersion = schemaVersion;
+    }
+
+    public String getPropertyType() {
+	if(propertyType==null || propertyType.equals("")){
+	    String rulesXML = coSerialized.getOsylConfig().getRulesConfig();
+	    Document rulesDom = this.parseXml(rulesXML);
+	    propertyType = getRulesConfigPropertyType(rulesDom);
+	}
+	return propertyType;
     }
 
 }

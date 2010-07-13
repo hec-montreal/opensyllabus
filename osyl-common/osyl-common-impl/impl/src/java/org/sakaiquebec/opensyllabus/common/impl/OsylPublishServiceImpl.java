@@ -365,17 +365,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			osylConfigService.getConfigByRef(co.getOsylConfig()
 				.getConfigRef(), webappDir);
 		Document d = XmlHelper.parseXml(cocs.getRulesConfig());
-		XPathFactory factory = XPathFactory.newInstance();
-		XPath xpath = factory.newXPath();
-		XPathExpression expr =
-			xpath
-				.compile("//schema/element[@name='CO']/attribute[@name='propertyType']/@restrictionpattern");
-		String propertyType =
-			(String) expr.evaluate(d, XPathConstants.STRING);
+		String propertyType =COModeledServer.getRulesConfigPropertyType(d);
 		COModeledServer coModeledServer = new COModeledServer(co);
 		coModeledServer.XML2Model(false);
 		COContent coContent = coModeledServer.getModeledContent();
-		coContent.addProperty(COPropertiesType.COURSE_ID,propertyType, siteName);
+		coContent.addProperty(COPropertiesType.COURSE_ID, propertyType,
+			siteName);
 		coModeledServer.model2XML();
 		co.setContent(coModeledServer.getSerializedContent());
 
