@@ -149,7 +149,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    getOsylToolbar().getPublishPushButton().setVisible(false);
 	    
 	    /* Print menu button */
-	    getOsylToolbar().getPrintSeparator().setVisible(true);
+	    getOsylToolbar().getPrintSeparator().setVisible(false);
 	    getOsylToolbar().getPrintPushButton().setVisible(true);
 	    
 	    /* Edit menu button */
@@ -512,5 +512,5 @@ public class OsylToolbarView extends OsylViewableComposite implements
     public void onUpdateModel(UpdateCOStructureElementEvent event) {
 	refreshView();
     }
-
+    
 }

@@ -71,7 +71,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     public static String execmode = "prod";
 
     private static final int MIN_TOOL_HEIGHT = 200;
-    private static final int MIN_TOOL_WIDTH = 800;
+    public static final int MIN_TOOL_WIDTH = 600;
 
     // Default Constructor. We ensure that our singleton instance is the same as
     // the one initialized by the GWT framework!
@@ -204,8 +204,9 @@ public class OsylEditorEntryPoint implements EntryPoint {
     	if (OsylController.getInstance().isInPreview()) {
     		OsylController.getInstance().getMainView().resize();
     	}else{
-    		editorMainView.resize();
+    		editorMainView.resize(true);
     	}
+    	setToolWidth();
     }
 
     private static void setSakaiScrollBar(String value) {
@@ -642,7 +643,11 @@ public class OsylEditorEntryPoint implements EntryPoint {
     public int getToolWidth() {
 	return getRootPanel().getOffsetWidth();
     }
-
+    
+    public void setToolWidth() {
+    	String width = Window.getClientWidth() > MIN_TOOL_WIDTH ? "auto" : MIN_TOOL_WIDTH +"px";
+    	getRootPanel().setWidth(width);
+    }
     
     
 

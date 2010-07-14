@@ -137,6 +137,7 @@ public class OsylMainView extends OsylViewableComposite implements
 
 	// Create and set the OpenSyllabus TreeView
 	setOsylTreeView(new OsylTreeView(getModel(), getController()));
+	osylHorizontalSplitPanel.setTempSplitPosition(osylHorizontalSplitPanel.getInitialSplitPosition());
 	osylHorizontalSplitPanel.setSplitPosition(
 			osylHorizontalSplitPanel.getInitialSplitPosition());
 	treeDecoratorPanel = new OsylDecoratorPanel();
@@ -311,24 +312,28 @@ public class OsylMainView extends OsylViewableComposite implements
     }
 
     public void onMouseMove(MouseMoveEvent event) {
-    	if (osylHorizontalSplitPanel.isResizing()) resize();
     }
-
     public void resize() {
-    
+    	resize(false);
+    }
+    public void resize(Boolean isWindowResized) {
+
+    int treeWidth = osylHorizontalSplitPanel.getComputedSplitPosition();
     // Set the splitter position
-    	if (!osylHorizontalSplitPanel.isResizable() && osylHorizontalSplitPanel.getSplitPosition() != 0) {
-    		osylHorizontalSplitPanel.setSplitPosition(
-        			osylHorizontalSplitPanel.getComputedSplitPosition());
-    	}
+    if (isWindowResized) {
+    	treeWidth = osylHorizontalSplitPanel.getComputedSplitPosition(
+    			osylHorizontalSplitPanel.getSplitPosition());
+    	osylHorizontalSplitPanel.setSplitPosition(treeWidth);
+    }
     
-    int toolWidth = Window.getClientWidth();
+    int toolWidth = OsylEditorEntryPoint.getInstance().getToolWidth();
+    
     if (OsylEditorEntryPoint.isInternetExplorer()) {
     	DOM.setStyleAttribute(getElement(), "width", toolWidth + "px");
     }
     // Set The tree width
-	int treeWidth = osylHorizontalSplitPanel.getComputedSplitPosition();
 	
+    
 	int treeInnerWidth = Math.max(0, treeWidth
 			- (treeDecoratorPanel.getCell(1, 0).getOffsetWidth() + treeDecoratorPanel
 					.getCell(1, 2).getOffsetWidth()));
@@ -352,6 +357,8 @@ public class OsylMainView extends OsylViewableComposite implements
 	
 	
 	int workspaceWidth = toolWidth - (osylHorizontalSplitPanel.getSplitPosition() == 0 ? 0:treeWidth) - splitterWidth;
+	
+	
 	int workspaceInnerWidth =
 		workspaceWidth
 			- (workspaceDecoratorPanel.getCell(1, 0)
@@ -394,22 +401,4 @@ public class OsylMainView extends OsylViewableComposite implements
 		this.osylWorkspaceTitleView = osylWorkspaceTitleView;
 	}
 	
-	public static native void writeInfos(String value)/*-{
-	var root = $wnd.top.document;
-	var elm = root.getElementById("INFOS");
-	if (elm == null) {
-		var infos = root.createElement("DIV");
-		infos.id = "INFOS";
-		root.body.appendChild(infos);
-		elm = root.getElementById("INFOS");
-		elm.style.position = "fixed";
-		elm.style.top = "0";
-		elm.style.left = "0";
-		elm.style.border = "2px solid #000";
-		elm.style.padding = "4px";
-		elm.style.zIndex = "100000";
-		elm.style.backgroundColor = "#FFF";
-	}
-	elm.innerHTML = value;
-}-*/;
 }
