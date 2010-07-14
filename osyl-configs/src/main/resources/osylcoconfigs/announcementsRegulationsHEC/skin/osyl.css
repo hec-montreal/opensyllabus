@@ -358,7 +358,7 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	white-space:nowrap;
 	text-overflow:ellipsis;
 	-o-text-overflow: ellipsis;
-	-moz-binding: url('ellipsis.xml#ellipsis');
+	/*-moz-binding: url('ellipsis.xml#ellipsis');*/
 	
 }
 .Osyl-TreeView-Tree div.gwt-TreeItem:hover{text-decoration:underline}
@@ -664,9 +664,13 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	background-color:#EEE;
 	overflow:visible;
 }
-div.Osyl-UnitView-ResPanel-ReadOnly, div.Osyl-firstElementOfView {border-top-color:#FFF}
-div.Osyl-firstElementOfView .Osyl-LabelEditor-View {display:none}
 
+div.Osyl-firstElementOfView .Osyl-LabelEditor-View {
+	display:none;
+}
+div.Osyl-UnitView-ResPanel-ReadOnly {
+	border-top-color:#FFF;
+}
 .Osyl-ListItemView-Hyperlink .Osyl-UnitView-ResPanel {
 	color:#FFF; /*For IE6*/
 	border:1px solid transparent;
@@ -1486,13 +1490,3 @@ a.Osyl-collapseButton.down {background-position: -16px 0}
 a.Osyl-collapseButton.collapse {background-position: -24px 0}
 a.Osyl-collapseButton.collapse:hover {background-position: -32px 0}
 a.Osyl-collapseButton.collapse.down {background-position: -40px 0}
-
-#INFOS {
-	position:fixed;
-	top:0;
-	left:0;
-	border: 2px solid #000;
-	padding:4px;
-	z-index:100000;
-	background-color:#FFF;
-}
