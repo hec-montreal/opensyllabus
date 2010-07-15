@@ -38,10 +38,13 @@ public class SecretairesMap extends HashMap<String, SecretairesMapEntry> {
 
     public static final String SECRETAIRES_PRINCIPALE = "Secrétaire principale";
 
-    public static final String SECRETAIRES_CERTIFICAT_SERV_ENS = "115";
+    public static final String CERTIFICAT_SERV_ENS = "115";
 
     public static final String SECRETAIRES_ACTIVITES_PROF =
 	    "Secrétaire aux activités prof";
+    
+    public static final String SECRETAIRES_ACTIVITES_ENS =
+	    "Secrétaire aux activités ens";
 
     public void put(SecretairesMapEntry entry) {
 	String key = entry.getEmplId() + entry.getDeptId();
@@ -58,8 +61,9 @@ public class SecretairesMap extends HashMap<String, SecretairesMapEntry> {
 
     public boolean secretaireCertificat(String role, String deptId) {
 	return (role.contains(SECRETAIRES_CERTIFICAT_PREFIX)
-		|| role.contains(SECRETAIRES_PRINCIPALE))
-		&& deptId.equalsIgnoreCase(SECRETAIRES_CERTIFICAT_SERV_ENS);
+		|| role.contains(SECRETAIRES_PRINCIPALE)
+		|| role.contains(SECRETAIRES_ACTIVITES_ENS))
+		&& deptId.equalsIgnoreCase(CERTIFICAT_SERV_ENS);
     }
 
     /**
@@ -81,7 +85,7 @@ public class SecretairesMap extends HashMap<String, SecretairesMapEntry> {
 	    role = entry.getRole();
 	    deptId = entry.getDeptId();
 	    if (secretaireCertificat(role, deptId)
-		    && deptId.equalsIgnoreCase(SECRETAIRES_CERTIFICAT_SERV_ENS))
+		    && deptId.equalsIgnoreCase(CERTIFICAT_SERV_ENS))
 		secretaires.add(entry.getEmplId());
 	}
 
@@ -89,7 +93,7 @@ public class SecretairesMap extends HashMap<String, SecretairesMapEntry> {
     }
 
     /**
-     * Liste des secretaires selon le service d'enseignement. On n'inclue pas
+     * Liste des secretaires selon le service d'enseignement. On n'inclut pas
      * les secretaires du certificat.
      * 
      * @param deptId
