@@ -46,10 +46,11 @@ public class OsylHorizontalSplitPanel extends Composite {
     private Anchor collapseAnchor = null;
 
     private boolean collapseMouseDown = false;
-    private boolean isMouseDownOnSplitter = false;
-    private boolean isResizable = true;
+    public boolean isMouseDownOnSplitter = false;
     private int minSplitPosition = 130;
     private int maxSplitPosition = 300;
+    private int tempSplitPosition = 0;
+    private int diffSplitPosition = 0;
     private int initialSplitPercentPosition = 50;
     
     public Element getSplitElement() {
@@ -86,15 +87,9 @@ public class OsylHorizontalSplitPanel extends Composite {
     public HorizontalSplitPanel getSplitPanel() {
 	return horizontalSplitPanel;
     }
-    
-    
 
     public int getSplitPosition() {
-    	String widthString =
-		    DOM.getStyleAttribute(horizontalSplitPanel.getElement(0),
-			    "width");
-	    return Integer.parseInt(widthString.substring(0, widthString
-		    .indexOf("px")));
+    	return horizontalSplitPanel.getElement(0).getOffsetWidth();
     }
     
     public void setSplitPosition(int pos) {
@@ -102,15 +97,19 @@ public class OsylHorizontalSplitPanel extends Composite {
     }
     
     public int getComputedSplitPosition() {
+    	return getComputedSplitPosition(getTempSplitPosition());
+    }
+    
+    public int getComputedSplitPosition(int pos) {
     	return Math.max(
-    	    Math.min(getSplitPosition(),
+    	    Math.min(pos,
     	    	getMaxSplitPosition()),
     	    		getMinSplitPosition());
     }
     
-    public Boolean isResizable() {
-    	return getSplitPosition() <= getMaxSplitPosition() &&
-    	getSplitPosition() >= getMinSplitPosition();
+    private Boolean isResizable() {
+    	return getTempSplitPosition() <= getMaxSplitPosition() &&
+    	getTempSplitPosition() >= getMinSplitPosition();
     }
     
     protected void createSplitter() {
@@ -125,80 +124,90 @@ public class OsylHorizontalSplitPanel extends Composite {
 	e.setInnerHTML("");
 	e.appendChild(collapseElement);
     }
-
+    
     public void onBrowserEvent(Event event) {
-	Element target = DOM.eventGetTarget(event);
-	
-	boolean isCollapseElementTarget =
-		DOM.isOrHasChild(collapseElement, target);
-	boolean isSplitElementTarget =
-		DOM.isOrHasChild(splitElement, target);
-	switch (DOM.eventGetType(event)) {
-	case Event.ONMOUSEMOVE: {
+		Element target = DOM.eventGetTarget(event);
+		boolean isCollapseElementTarget = DOM.isOrHasChild(collapseElement,
+				target);
+		boolean isSplitElementTarget = DOM.isOrHasChild(splitElement, target);
+		switch (DOM.eventGetType(event)) {
+		case Event.ONMOUSEMOVE: {
 			if (isMouseDownOnSplitter) {
-	    		setCursor("col-resize");
-	    	}
-	    break;
-	}
-	case Event.ONMOUSEDOWN: {
-	    if (isCollapseElementTarget) {
-		collapseMouseDown = true;
-		collapseAnchor.addStyleName("down");
-		DOM.eventPreventDefault(event);
-	    }
-	    if (isSplitElementTarget && leftElementVisible) {
-	    	splitElement.getFirstChildElement().setClassName(
-			"hsplitter hsplitter-down");
-	    	if (!isCollapseElementTarget) {
-	    		setCursor("col-resize");
-	    		isMouseDownOnSplitter = true;
-	    	}else{
-	    		setCursor("");
-	    	}
-	    }
-	    break;
-	}
+				setCursor("col-resize");
+				setTempSplitPosition(DOM.eventGetClientX(event)
+						- getAbsoluteLeft() - diffSplitPosition);
+				setSplitPosition(getComputedSplitPosition());
+				OsylController.getInstance().getMainView().resize();
+			}
+			break;
+		}
+		case Event.ONMOUSEDOWN: {
+			if (isCollapseElementTarget) {
+				collapseMouseDown = true;
+				collapseAnchor.addStyleName("down");
+				DOM.eventPreventDefault(event);
+			}
+			if (isSplitElementTarget && leftElementVisible) {
+				splitElement.getFirstChildElement().setClassName(
+						"hsplitter hsplitter-down");
+				if (!isCollapseElementTarget) {
+					setCursor("col-resize");
+					isMouseDownOnSplitter = true;
 
-	case Event.ONMOUSEUP: {
-	    if (collapseMouseDown) {
-		if (leftElementVisible) {
-		    leftElementLastPosition = getComputedSplitPosition();
-		    setSplitPosition(0);
-		    collapseAnchor.addStyleName("collapse");
-		    collapseAnchor.setTitle(OsylController.getInstance()
-			    .getUiMessage("OsylTreeView.uncollapse"));
-		    splitElement.getFirstChildElement().setClassName(
-			"hsplitter hsplitter-disable");
-		} else {
-			setSplitPosition(leftElementLastPosition);
-		    collapseAnchor.removeStyleName("collapse");
-		    collapseAnchor.setTitle(OsylController.getInstance()
-			    .getUiMessage("OsylTreeView.collapse"));
-		    splitElement.getFirstChildElement().setClassName(
-			"hsplitter");
+					diffSplitPosition = DOM.eventGetClientX(event)
+							- getAbsoluteLeft() - getSplitPosition();
+				} else {
+					setCursor("");
+				}
+			}
+			break;
 		}
-		OsylController.getInstance().getMainView().resize();
-		leftElementVisible = !leftElementVisible;
-		collapseMouseDown = false;
-		collapseAnchor.removeStyleName("down");
-		handler.onMouseMove(null);
+
+		case Event.ONMOUSEUP: {
+			
+				if (collapseMouseDown) {
+					if (leftElementVisible) {
+						leftElementLastPosition = getComputedSplitPosition();
+						setSplitPosition(0);
+						collapseAnchor.addStyleName("collapse");
+						collapseAnchor.setTitle(OsylController.getInstance()
+								.getUiMessage("OsylTreeView.uncollapse"));
+						splitElement.getFirstChildElement().setClassName(
+								"hsplitter hsplitter-disable");
+					} else {
+						setSplitPosition(getComputedSplitPosition(leftElementLastPosition));
+						collapseAnchor.removeStyleName("collapse");
+						collapseAnchor.setTitle(OsylController.getInstance()
+								.getUiMessage("OsylTreeView.collapse"));
+						splitElement.getFirstChildElement().setClassName(
+								"hsplitter");
+					}
+
+					OsylController.getInstance().getMainView().resize();
+					leftElementVisible = !leftElementVisible;
+					collapseMouseDown = false;
+					collapseAnchor.removeStyleName("down");
+					handler.onMouseMove(null);
+					DOM.eventPreventDefault(event);
+					
+				}else {
+					if (isMouseDownOnSplitter) {
+						setTempSplitPosition(getComputedSplitPosition());
+						setSplitPosition(getComputedSplitPosition());
+					}
+				}
+				setTempSplitPosition(getComputedSplitPosition());
+				isMouseDownOnSplitter = false;
+				setCursor("");
+				break;
+			
+		}
+		}
+
+		if (leftElementVisible && !collapseMouseDown && isResizable()) {
+			super.onBrowserEvent(event);
+		}
 		
-		DOM.eventPreventDefault(event);
-	    }
-	    setCursor("");
-	    isMouseDownOnSplitter = false;
-	    break;
-		}
-	}
-	if(leftElementVisible && !collapseMouseDown) {
-		super.onBrowserEvent(event);
-	}
-	
-	if (DOM.eventGetType(event) == Event.ONMOUSEMOVE &&
-			!isResizable() && leftElementVisible) {
-		setSplitPosition(getComputedSplitPosition());
-	}
-	
 	}
 	
     private static native void setCursor(String cursor) /*-{
@@ -213,7 +222,7 @@ public class OsylHorizontalSplitPanel extends Composite {
     		OsylController.getInstance().getMainView().
     		getOsylTreeView().getMaxTreeWidth();
 		return Math.max(
-				Math.min(maxItemWidth, maxToolWidth), 
+				Math.min(maxItemWidth, maxToolWidth),
 				minSplitPosition);
 	}
     
@@ -233,7 +242,33 @@ public class OsylHorizontalSplitPanel extends Composite {
 		this.minSplitPosition = minSplitPosition;
 	}
 	
-	public Boolean isResizing() {
-		return isResizable && horizontalSplitPanel.isResizing();
+	public int getTempSplitPosition() {
+		return tempSplitPosition;
 	}
+	public void setTempSplitPosition(int tempSplitPosition) {
+		this.tempSplitPosition = Math.max(0,tempSplitPosition);
+	}
+
+	public Boolean isResizing() {
+		return isResizable() && horizontalSplitPanel.isResizing();
+	}
+	
+	public static native void writeInfos(String value)/*-{
+	var root = $wnd.top.document;
+	var elm = root.getElementById("INFOS");
+	if (elm == null) {
+		var infos = root.createElement("DIV");
+		infos.id = "INFOS";
+		root.body.appendChild(infos);
+		elm = root.getElementById("INFOS");
+		elm.style.position = "fixed";
+		elm.style.top = "0";
+		elm.style.left = "0";
+		elm.style.border = "2px solid #000";
+		elm.style.padding = "4px";
+		elm.style.zIndex = "100000";
+		elm.style.backgroundColor = "#FFF";
+	}
+	elm.innerHTML = value;
+}-*/;
 }
