@@ -29,6 +29,7 @@ import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
 /**
@@ -44,7 +45,7 @@ public class OsylHorizontalSplitPanel extends Composite {
     private int leftElementLastPosition;
     private Element collapseElement = null;
     private Anchor collapseAnchor = null;
-
+    
     private boolean collapseMouseDown = false;
     public boolean isMouseDownOnSplitter = false;
     private int minSplitPosition = 130;
@@ -134,10 +135,19 @@ public class OsylHorizontalSplitPanel extends Composite {
 		case Event.ONMOUSEMOVE: {
 			if (isMouseDownOnSplitter) {
 				setCursor("col-resize");
+				Boolean oldResizable = isResizable();
 				setTempSplitPosition(DOM.eventGetClientX(event)
 						- getAbsoluteLeft() - diffSplitPosition);
 				setSplitPosition(getComputedSplitPosition());
 				OsylController.getInstance().getMainView().resize();
+				if (!isResizable() && oldResizable != isResizable()) {
+					Timer t = new Timer() {
+						public void run() {
+							setSplitPosition(getComputedSplitPosition());
+						}
+		    		};
+		    		t.schedule(21);
+				}
 			}
 			break;
 		}
