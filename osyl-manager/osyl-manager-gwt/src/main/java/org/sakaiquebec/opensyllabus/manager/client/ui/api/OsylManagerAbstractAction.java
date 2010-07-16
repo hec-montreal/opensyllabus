@@ -25,6 +25,7 @@ import java.util.MissingResourceException;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -39,10 +40,15 @@ public abstract class OsylManagerAbstractAction extends PushButton implements
 	ClickHandler, OsylManagerEventHandler {
 
     protected OsylManagerController controller;
+    protected OsylCancelDialog diag;
+
 
     public OsylManagerAbstractAction(OsylManagerController controller,
 	    String key) {
 	super();
+	diag = new OsylCancelDialog(false, true , controller.getMessages()
+		.OsylCancelDialog_Title(), controller.getMessages()
+		.OsylCancelDialog_Content());
 	this.controller = controller;
 	String t;
 	try {
@@ -56,8 +62,7 @@ public abstract class OsylManagerAbstractAction extends PushButton implements
 	this.setEnabled(false);
 	controller.addEventHandler(this);
     }
-
-
+        
     public void onOsylManagerEvent(OsylManagerEvent e) {
 	if (e.getType() == OsylManagerEvent.SITES_SELECTION_EVENT) {
 	    setEnabled(isActionEnableForSites(controller.getSelectSites()));

@@ -121,6 +121,7 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 
 	createSite = new PushButton(controller.getMessages().create());
 	createSite.setWidth("30px");
+	createSite.setStylePrimaryName("Osyl-Button");
 	createSite.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		boolean nameValid = false;
@@ -149,7 +150,7 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 	mainPanel.add(createSite);
 	mainPanel.setCellHorizontalAlignment(createSite,
 		HasHorizontalAlignment.ALIGN_CENTER);
-	mainPanel.setWidth(FORM_WIDTH + "px");
+//	mainPanel.setWidth(FORM_WIDTH + "px");
 
 	controller.addEventHandler(this);
 

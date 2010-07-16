@@ -232,4 +232,15 @@ public interface Messages extends ConstantsWithLookup {
     String CourseListView_scSiteList_col5();
     String CourseListView_scSiteList_col6();
     String CourseListView_scSiteList_col7();
+    
+    String OsylAlertDialog_Title();
+    String OsylAlertDialog_Ok_Button();
+    
+    String OsylOKCancelDialog_Ok_Button();
+    String OsylOKCancelDialog_Cancel_Button();
+    String OsylOkCancelDialog_Title();
+    
+    String OsylCancelDialog_Cancel_Button();
+    String OsylCancelDialog_Title();
+    String OsylCancelDialog_Content();
 }

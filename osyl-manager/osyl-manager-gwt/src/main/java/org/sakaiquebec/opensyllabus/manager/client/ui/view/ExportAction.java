@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.core.client.GWT;
@@ -44,10 +45,12 @@ public class ExportAction extends OsylManagerAbstractAction {
     private class ExportCallBack implements AsyncCallback<String>{
 
 	public void onSuccess(String fileUrl) {
+	    diag.hide();
 	    openDownloadLink(fileUrl);
 	}
 
 	public void onFailure(Throwable error) {
+	    diag.hide(true);
 	    Window.alert(controller.getMessages().rpcFailure());
 	}
 	
@@ -76,6 +79,8 @@ public class ExportAction extends OsylManagerAbstractAction {
 	}
 	//index reset when clicking on export link.
 	sitesIndex = 0;
+	diag.show();
+	diag.centerAndFocus();
 	getOsylPackage();
     }
     

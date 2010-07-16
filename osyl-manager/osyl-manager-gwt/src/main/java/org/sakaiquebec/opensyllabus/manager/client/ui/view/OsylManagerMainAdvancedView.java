@@ -89,6 +89,7 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	});
 	PushButton selectSiteActionBtn = new PushButton(getController().
 		getMessages().mainView_action_search());
+	selectSiteActionBtn.setStylePrimaryName("Osyl-Button");
 	selectSiteActionBtn.addClickHandler(new ClickHandler(){
 
 	    public void onClick(ClickEvent event) {

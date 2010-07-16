@@ -27,6 +27,8 @@ import org.sakaiquebec.opensyllabus.manager.client.ui.view.OsylManagerMainAdvanc
 import org.sakaiquebec.opensyllabus.manager.client.ui.view.OsylManagerMainView;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
 /**
@@ -52,4 +54,22 @@ public class OsylManagerEntryPoint implements EntryPoint {
 	rootPanel.add(view);
 	rootPanel.setHeight("600px");
     }
+    
+    /**
+     * Centers the specified {@link PopupPanel} on the current view. This method
+     * takes into account the current position in OSYLEditor, as well as the
+     * Sakai navigation header to ensure the centering of the specified pop-up.
+     * Warning: the widget must already be visible otherwise its dimensions may
+     * not be available! You should ensure that widget.show() is called before.
+     * 
+     * @param widget the pop-up to center
+     */
+    public static void centerObject(PopupPanel widget) {
+	int width = widget.getOffsetWidth();
+	int height = widget.getOffsetHeight();
+	width = Math.max(0, (Window.getClientWidth() - width) / 2);
+	height = Math.max(0, (Window.getClientHeight() - height) / 2);
+	widget.setPopupPosition(width, height);
+    }
+
 }

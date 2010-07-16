@@ -11,10 +11,11 @@
 	<inherits name='org.gwt.mosaic.Mosaic' />
 	<inherits name='org.gwt.mosaic.actions.Actions' />
 
+
 	<!-- Inherit the default GWT style sheet.  You can change       -->
 	<!-- the theme of your GWT application by uncommenting          -->
 	<!-- any one of the following lines.                            -->
-	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+<!-- <inherits name='com.google.gwt.user.theme.standard.Standard' /> -->
 	
 	<!-- Other module inherits                                      -->
 	<inherits name='org.sakaiquebec.opensyllabus.shared' />
@@ -31,6 +32,6 @@
 	<!-- now moved to web.xml -->
 
 	<!-- Specify the application specific style sheet.              -->
-	<stylesheet src='OsylManager.css' />
+<!-- <stylesheet src='OsylManager.css' /> -->
 
 </module>

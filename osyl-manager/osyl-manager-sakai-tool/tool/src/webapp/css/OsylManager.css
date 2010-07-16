@@ -1,12 +1,3 @@
-.OsylManager-form-title {
-	font-size: 14px;
-	font-weight: bold;
-}
-
-.OsylManager-form-button {
-	text-align: center;
-}
-/*----------------------------------------------------------------------------------------------------------------*/
 .OsylManager-action{
 	color : #006e96;
 	font-size: 14px;
@@ -24,7 +15,7 @@
 
 .OsylManager-infoView .topCenter,
 .OsylManager-infoView .bottomCenter {
-  background:url(images/hborder.png) repeat-x;
+  background:url(images/ui/hborder.png) repeat-x;
   height:8px;
   background-color: #f2f2f2
 }
@@ -32,7 +23,7 @@
 
 .OsylManager-infoView .middleLeft,
 .OsylManager-infoView .middleRight {
-  background:url(images/vborder.png) repeat-y;
+  background:url(images/ui/vborder.png) repeat-y;
   width:8px;
   background-color: #f2f2f2
 }
@@ -89,12 +80,14 @@
 
 /*----------------------------------------------------------------------------------------------------------------*/
 .OsylManager-form{
-	padding:4px;
+	padding:0px;
 	font:normal 100% Arial, Verdana, sans-serif;
 	color:#000;
-	background-color:#FFF;
-	border:2px outset;
-	width: 600px;
+	background-color:transparent;
+}
+
+.OsylManager-form-button {
+	text-align: center;
 }
 
 .OsylManager-form .dragdrop-handle {
@@ -168,6 +161,17 @@ overflow:hidden;
 padding:6px;
 }
 
+.OsylManager-scrollTable{
+border:1px solid;
+width:750px;
+height:400px;
+padding:3px;
+}
+
+OsylManager-scrollTable-Cell{
+border : 1px solid black;
+}
+
 .OsylManager-scrollTable-row{
 background-color:#ffffff;
 cursor:pointer;
@@ -182,6 +186,10 @@ cursor:pointer;
 color:#ffffff;
 background-color:#000066;
 cursor:pointer;
+}
+
+.OsylManager-headerTable{
+background-color : #cccccc;
 }
 /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -224,5 +232,3 @@ cursor:pointer;
 .OsylManager-SuggestBoxPopup .suggestPopupBottomCenter {}
 
 .OsylManager-SuggestBoxPopup .suggestPopupBottomRightInner {}
-
-

@@ -841,7 +841,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    ContentResourceEdit newResource =
 		    contentHostingService.addResource(resourceOutputDir, title
-			    + "_" + siteId, ".zip", 10);
+			    + "_" + siteId, ".zip", 30);
 	    String ressourceUrl = newResource.getUrl();
 	    String filename =
 		    ressourceUrl.substring(ressourceUrl.lastIndexOf("/") + 1,
@@ -1345,6 +1345,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    info.setSiteShortDescription(site.getShortDescription());
 	    info.setSiteOwnerLastName(site.getCreatedBy().getLastName());
 	    info.setSiteOwnerName(site.getCreatedBy().getFirstName());
+	    info.setCourseNumber(co!=null?co.getTitle():"");
+	    info.setCourseSection(co!=null?co.getSection():"");
+	    //info.setCourseSession(co!=null?co.get():"");
 
 	    // Retrieve CM info
 	    String siteProviderId = site.getProviderGroupId();

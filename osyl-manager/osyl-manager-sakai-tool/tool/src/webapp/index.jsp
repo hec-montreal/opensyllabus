@@ -33,7 +33,11 @@
  		} // else fr
  	%>
 <title>OpenSyllabus Manager</title>
-<link rel="stylesheet" type="text/css" href="/osyl-manager-sakai-tool/css/OsylManager.css" />
+
+		<!-- Headers from Sakai                        -->
+		<%=request.getAttribute("sakai.html.head")%>
+
+<link rel="stylesheet" type="text/css" href="/osyl-manager-sakai-tool/css/osylcore.css" />
 
 <!-- This script loads our GWT compiled module.        -->
 <!-- Any GWT meta tags must be added before this line. -->
@@ -44,15 +48,17 @@
 	}
 
 	<%
+	/*
 	String bodyonload = (String)request.getAttribute("sakai.html.body.onload");
 	String element = bodyonload.substring(bodyonload.indexOf('\'')+1, bodyonload.lastIndexOf('\''));
+	*/
 	%>
-	window.parent.document.getElementById("<%=element%>").style.height="600px";
+<!--	window.parent.document.getElementById("<%="element"%>").style.height="600px"; -->
 </script>
-
 </head>
 <body onload="myLoad()">
-<div class="portletBody">
+<!--  <div class="portletBody">
 </div>
+-->
 </body>
 </html>
