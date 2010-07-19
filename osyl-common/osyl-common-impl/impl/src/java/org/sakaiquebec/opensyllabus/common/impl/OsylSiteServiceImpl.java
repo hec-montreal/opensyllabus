@@ -1523,4 +1523,22 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return ": elapsed : " + (System.currentTimeMillis() - start) + " ms ";
     }
 
+    public Date getCoLastModifiedDate(String siteId) {
+	try {
+	    return resourceDao.getModifiedDate(siteId);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    return null;
+	}
+    }
+
+    public Date getCoLastPublicationDate(String siteId) {
+	try {
+	    return resourceDao.getPublicationDate(siteId);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    return null;
+	}
+    }
+
 }

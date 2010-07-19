@@ -1319,16 +1319,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public COSite getCoAndSiteInfo(String siteId, String searchTerm) {
 	long start = System.currentTimeMillis();
 	Site site = null;
-	// Not really needed for now and very expensive (3 times longer to get
-	// the site list) - SAKAI-1489
-	COSerialized co = null;
 	COSite info = new COSite();
 
 	try {
 	    site = osylSiteService.getSite(siteId);
-	    if (osylSiteService.hasCourseOutline(siteId)) {
-		co = osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
-	    }
 	} catch (IdUnusedException e) {
 	    log.error(e.getMessage());
 	    e.printStackTrace();
@@ -1345,8 +1339,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    info.setSiteShortDescription(site.getShortDescription());
 	    info.setSiteOwnerLastName(site.getCreatedBy().getLastName());
 	    info.setSiteOwnerName(site.getCreatedBy().getFirstName());
-	    info.setCourseNumber(co!=null?co.getTitle():"");
-	    info.setCourseSection(co!=null?co.getSection():"");
+//	    info.setCourseNumber(co!=null?co.getTitle():"");
+//	    info.setCourseSection(co!=null?co.getSection():"");
 	    //info.setCourseSession(co!=null?co.get():"");
 
 	    // Retrieve CM info
@@ -1397,10 +1391,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		info.setCourseCoordinator(null);
 
 	    }
-	    if (co != null) {
-		info.setLastModifiedDate(co.getModificationDate());
-		info.setLastPublicationDate(co.getPublicationDate());
-	    }
+	    info.setLastModifiedDate(osylSiteService.getCoLastModifiedDate(siteId));
+	    info.setLastPublicationDate(osylSiteService.getCoLastPublicationDate(siteId));
+	    
 	    // Retrieve parent site
 	    String parentSite = null;
 

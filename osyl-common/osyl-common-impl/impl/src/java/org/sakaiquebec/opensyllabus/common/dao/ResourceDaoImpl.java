@@ -401,5 +401,53 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 		new Object[] { pubDate, coId });
     }
 
+    public Date getModifiedDate(String siteId)throws Exception {
+	List<Date> results = null;
+	Date res = null;
+
+	if (siteId == null)
+	    throw new IllegalArgumentException();
+	try {
+	    results =
+		    getHibernateTemplate()
+			    .find(
+				    "select modificationDate from COSerialized where siteId= ? and published=0",
+				    new Object[] { siteId });
+	} catch (Exception e) {
+	    log.error("Unable to retrieve course outline by its siteId", e);
+	    throw e;
+	}
+	if (results.size() >= 1) {
+	    res = (Date) results.get(0);
+	    return res;
+	} else
+	    throw new Exception("No course outline with site id= " + siteId
+		    + " and published=false");
+    }
+
+    public Date getPublicationDate(String siteId) throws Exception{
+	List<Date> results = null;
+	Date res = null;
+
+	if (siteId == null)
+	    throw new IllegalArgumentException();
+	try {
+	    results =
+		    getHibernateTemplate()
+			    .find(
+				    "select publicationDate from COSerialized where siteId= ? and published=0",
+				    new Object[] { siteId });
+	} catch (Exception e) {
+	    log.error("Unable to retrieve course outline by its siteId", e);
+	    throw e;
+	}
+	if (results.size() >= 1) {
+	    res = (Date) results.get(0);
+	    return res;
+	} else
+	    throw new Exception("No course outline with site id= " + siteId
+		    + " and published=false");
+    }
+
 
 }

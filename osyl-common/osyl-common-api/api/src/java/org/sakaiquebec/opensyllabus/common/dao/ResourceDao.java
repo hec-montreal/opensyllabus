@@ -133,5 +133,9 @@ public interface ResourceDao {
     
     public void setPublicationDate(String coId, Date pubDate);
     
+    public Date getPublicationDate(String siteId) throws Exception;
+    
+    public Date getModifiedDate(String siteId) throws Exception;
+    
 
 }

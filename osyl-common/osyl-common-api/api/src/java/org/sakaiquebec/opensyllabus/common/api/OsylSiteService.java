@@ -1,5 +1,6 @@
 package org.sakaiquebec.opensyllabus.common.api;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -295,5 +296,10 @@ public interface OsylSiteService extends EntityProducer {
      * @return
      */
     public String getSiteName(String sectionId);
+    
+    public Date getCoLastPublicationDate(String siteId);
+    
+    public Date getCoLastModifiedDate(String siteId);
+     
 
 }
