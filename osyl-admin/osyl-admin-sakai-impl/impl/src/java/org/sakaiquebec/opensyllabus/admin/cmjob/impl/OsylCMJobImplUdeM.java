@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -376,7 +377,9 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 		DetailSessionsMapEntry sessionEntry = null;
 		String eid = "", title = "", description = "";
 		Date startDate = null, endDate = null;
-
+		
+		List<String> currentSessions = new ArrayList<String>(); 
+		
 		Date now = new Date(System.currentTimeMillis());
 		Iterator<DetailSessionsMapEntry> sessions = 
 			detailSessionMap.values().iterator();
@@ -403,10 +406,8 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 				// you can activate a session manually by changing to 1 //
 				// the value of is_current in the cm_academic_session_t //
 				// TODO: activate this method when running again on sakai 2.6 //
-				if ((now.compareTo(startDate)) >= 0
-						&& endDate.compareTo(endDate) <= 0)
-					cmAdmin.setCurrentAcademicSessions(Arrays
-							.asList(new String[] { eid })); //
+				if (now.compareTo(endDate) <= 0)
+					currentSessions.add(eid);
 				// ////////////////////////////////////////////////////////////////
 			} else {
 				// We update
@@ -416,13 +417,12 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 				aSession.setStartDate(startDate);
 				aSession.setTitle(title);
 				cmAdmin.updateAcademicSession(aSession);
-				if ((now.compareTo(startDate)) >= 0
-						&& endDate.compareTo(endDate) <= 0)
-					cmAdmin.setCurrentAcademicSessions(Arrays
-							.asList(new String[] { eid })); //
+				if (now.compareTo(endDate) <= 0)
+					currentSessions.add(eid); //
 
 			}
 		}
+		cmAdmin.setCurrentAcademicSessions(currentSessions);
 	}
 
 	/** {@inheritDoc} */
@@ -725,7 +725,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 
 			courseSectionId = coursId + session + periode + section;
 		}
-		return courseSectionId;
+		return courseSectionId.trim();
 	}
 
 	private String getCourseSectionTitle(DetailCoursMapEntry course) {
@@ -742,7 +742,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 			else
 				courseSectionId = coursId + "-" + section + " " + session;
 		}
-		return courseSectionId;
+		return courseSectionId.trim();
 	}
 
 	
