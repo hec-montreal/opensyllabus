@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -269,8 +270,14 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		FileHelper.getFileContent(xsltFileDirectory + File.separator
 			+ xsltFileName);
 	try {
+	    String osylCoISO88591="";
+		try {
+		    osylCoISO88591 = new String ( osylCo.getBytes("UTF-8"), "ISO-8859-1" );
+		} catch (UnsupportedEncodingException e1) {
+		    e1.printStackTrace();
+		}
 	    zcco =
-		    XmlHelper.applyXsl(osylCo, xslt, new MyResolver(
+		    XmlHelper.applyXsl(osylCoISO88591, xslt, new MyResolver(
 			    xsltFileDirectory));
 	} catch (Exception e) {
 	    log.error("Unable to transform XML", e);
