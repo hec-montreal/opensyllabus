@@ -75,6 +75,9 @@ public interface OsylConfigService {
      */
     public static final String DEFAULT_CONFIG_REF = "default";
 
+    public static final String PRINT_DIRECTORY="print";
+    public static final String PRINT_XSLFO_FILENAME = "printOSYLFO.xslt";
+    
     /**
      * Returns the configurations related to the id
      * 

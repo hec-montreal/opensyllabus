@@ -1441,5 +1441,26 @@ public class COModeledServer {
 	}
 	return propertyType;
     }
+    
+    public static Node replaceSemanticTagsWithI18NMessage(Node d,Map<String, String> messages){
+	try {
+	    XPathFactory factory = XPathFactory.newInstance();
+	    XPath xpath = factory.newXPath();
+	    XPathExpression expr;
+
+	    expr =
+		    xpath
+			    .compile("//semanticTag");
+
+	    NodeList nodes = (NodeList) expr.evaluate(d, XPathConstants.NODESET);
+	    for(int i = 0;i<nodes.getLength();i++){
+		Node node = nodes.item(i);
+		node.setTextContent(messages.get(node.getTextContent()));
+	    }
+	} catch (XPathExpressionException e) {
+	    e.printStackTrace();
+	}
+	return d;
+    }
 
 }

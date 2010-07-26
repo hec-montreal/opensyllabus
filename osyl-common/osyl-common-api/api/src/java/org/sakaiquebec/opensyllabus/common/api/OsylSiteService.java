@@ -47,7 +47,7 @@ public interface OsylSiteService extends EntityProducer {
     public static final String APPLICATION_ID = "sakai:osyl";
 
     public static final String XSLT_DIRECTORY = "xslt";
-    public static final String PRINT_DIRECTORY = "print";
+    public static final String PRINT_COMMON_DIRECTORY = "print_common";
 
     public static final String XML_FILE_EXTENSION = ".xml";
     public static final String XSL_FILE_EXTENSION = ".xsl";
@@ -56,7 +56,7 @@ public interface OsylSiteService extends EntityProducer {
     public static final String XSL_PREFIX = "security_";
 
     public final static String SITE_TYPE = "course";
-    public static final String XSLFO_PRINT_FILENAME = "printOSYLFO.xslt";
+    public static final String PRINT_REMOVE_CDATA_FILENAME="removeCData.xslt";
 
     /**
      * Name of the chs folder in which the course outline content will be

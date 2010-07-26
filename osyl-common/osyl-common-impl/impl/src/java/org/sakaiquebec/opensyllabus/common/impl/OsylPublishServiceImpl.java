@@ -3,12 +3,22 @@ package org.sakaiquebec.opensyllabus.common.impl;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,6 +60,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 public class OsylPublishServiceImpl implements OsylPublishService {
 
@@ -401,15 +412,32 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		getSerializedPublishedCourseOutlineForAccessType(siteId,
 			SecurityInterface.ACCESS_ATTENDEE, webappdir);
 
-	String xslt =
-		FileHelper.getFileContent(webappdir + File.separator
-			+ OsylSiteService.PRINT_DIRECTORY + File.separator
-			+ OsylSiteService.XSLFO_PRINT_FILENAME);
-
+	
+	String xml = coSerializedAttendee.getContent();
+	Node d= XmlHelper.parseXml(xml);
+	
+	
 	try {
+	    //change keys for i18n messages
+	    d = COModeledServer.replaceSemanticTagsWithI18NMessage(d, coSerializedAttendee.getMessages());
+	    
+	    //remove cdata sections
+	    String cDataXsl = FileHelper.getFileContent(webappdir + File.separator + OsylSiteService.PRINT_COMMON_DIRECTORY + File.separator +
+			OsylSiteService.PRINT_REMOVE_CDATA_FILENAME);
+	    d = XmlHelper.applyXsl(d, cDataXsl);
+	    
+	    //convert html in former cdata section in xhtml
+	    //TODO
+	    
+	    //transform xml -> pdf
+	    String configRef  = coSerializedAttendee.getOsylConfig().getConfigRef();
+	    String xsltXmltoPdf =
+		FileHelper.getFileContent(webappdir + File.separator + OsylConfigService.CONFIG_DIR + File.separator +
+			configRef +File.separator+ OsylConfigService.PRINT_DIRECTORY + File.separator
+			+ OsylConfigService.PRINT_XSLFO_FILENAME);
 	    File f =
-		    FOPHelper.convertXml2Pdf(coSerializedAttendee.getContent(),
-			    xslt);
+		    FOPHelper.convertXml2Pdf(d,
+			    xsltXmltoPdf);
 	    String resourceOutputDir =
 		    contentHostingService.getSiteCollection(siteId);
 
@@ -439,6 +467,23 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
+    }
+    
+    public static String xmlToString(Node node) {
+        try {
+            Source source = new DOMSource(node);
+            StringWriter stringWriter = new StringWriter();
+            Result result = new StreamResult(stringWriter);
+            TransformerFactory factory = TransformerFactory.newInstance();
+            Transformer transformer = factory.newTransformer();
+            transformer.transform(source, result);
+            return stringWriter.getBuffer().toString();
+        } catch (TransformerConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void publication(String siteId, String webappDir) throws Exception {

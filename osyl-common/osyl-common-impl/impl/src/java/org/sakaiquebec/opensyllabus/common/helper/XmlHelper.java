@@ -30,10 +30,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.URIResolver;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
@@ -67,6 +70,26 @@ public class XmlHelper {
 	    ioe.printStackTrace();
 	}
 	return dom;
+    }
+    
+    public static Node applyXsl(Node d, String xsl) throws Exception{
+	TransformerFactory tFactory = TransformerFactory.newInstance();
+	// retrieve the Xml source
+	DOMSource coXmlContentSource = new DOMSource(d);
+	
+	// retrieve the Xsl source
+	StreamSource coXslContentSource =
+		new StreamSource(
+			new ByteArrayInputStream(xsl.getBytes("UTF-8")));
+	
+	// we use a ByteArrayOutputStream to avoid using a file
+	ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+	DOMResult domResult = new DOMResult();
+
+	Transformer transformerXml =
+		tFactory.newTransformer(coXslContentSource);
+	transformerXml.transform(coXmlContentSource, domResult);
+	return domResult.getNode();
     }
     
     public static String applyXsl(String xml, String xsl) throws Exception {

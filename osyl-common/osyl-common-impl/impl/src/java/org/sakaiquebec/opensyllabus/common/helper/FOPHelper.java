@@ -36,6 +36,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -43,50 +44,109 @@ import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 public class FOPHelper {
-    
-    public static File convertXml2Pdf(String xml, String xslt) throws IOException,
-	    TransformerException {
+
+    public static File convertXml2Pdf(String xml, String xslt)
+	    throws IOException, TransformerException {
 	File pdffile = File.createTempFile("osyl-fop-print", ".pdf");
 	try {
-            // configure fopFactory as desired
-            FopFactory fopFactory = FopFactory.newInstance();
+	    // configure fopFactory as desired
+	    FopFactory fopFactory = FopFactory.newInstance();
 
-            FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
-            // configure foUserAgent as desired
+	    FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
+	    // configure foUserAgent as desired
 
-            // Setup output
-            OutputStream out = new java.io.FileOutputStream(pdffile);
-            out = new java.io.BufferedOutputStream(out);
-            
-            try {
-                // Construct fop with desired output format
-                Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, out);
-    
-                // Setup XSLT
-                TransformerFactory factory = TransformerFactory.newInstance();
-                Transformer transformer = factory.newTransformer(new StreamSource(new ByteArrayInputStream(xslt.getBytes("UTF-8"))));
-                
-                // Set the value of a <param> in the stylesheet
-                transformer.setParameter("versionParam", "2.0");
-            
-                // Setup input for XSLT transformation
-                Source src = new StreamSource(new ByteArrayInputStream(xml.getBytes("UTF-8")));
-            
-                // Resulting SAX events (the generated FO) must be piped through to FOP
-                Result res = new SAXResult(fop.getDefaultHandler());
-    
-                // Start XSLT transformation and FOP processing
-                transformer.transform(src, res);
-            } finally {
-                out.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
-        return pdffile;
+	    // Setup output
+	    OutputStream out = new java.io.FileOutputStream(pdffile);
+	    out = new java.io.BufferedOutputStream(out);
+
+	    try {
+		// Construct fop with desired output format
+		Fop fop =
+			fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent,
+				out);
+
+		// Setup XSLT
+		TransformerFactory factory = TransformerFactory.newInstance();
+		Transformer transformer =
+			factory
+				.newTransformer(new StreamSource(
+					new ByteArrayInputStream(xslt
+						.getBytes("UTF-8"))));
+
+		// Set the value of a <param> in the stylesheet
+		transformer.setParameter("versionParam", "2.0");
+
+		// Setup input for XSLT transformation
+		Source src =
+			new StreamSource(new ByteArrayInputStream(xml
+				.getBytes("UTF-8")));
+
+		// Resulting SAX events (the generated FO) must be piped through
+		// to FOP
+		Result res = new SAXResult(fop.getDefaultHandler());
+
+		// Start XSLT transformation and FOP processing
+		transformer.transform(src, res);
+	    } finally {
+		out.close();
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace(System.err);
+	}
+	return pdffile;
     }
-    
+
+    public static File convertXml2Pdf(Node d, String xslt)
+	    throws IOException, TransformerException {
+	File pdffile = File.createTempFile("osyl-fop-print", ".pdf");
+	try {
+	    // configure fopFactory as desired
+	    FopFactory fopFactory = FopFactory.newInstance();
+
+	    FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
+	    // configure foUserAgent as desired
+
+	    // Setup output
+	    OutputStream out = new java.io.FileOutputStream(pdffile);
+	    out = new java.io.BufferedOutputStream(out);
+
+	    try {
+		// Construct fop with desired output format
+		Fop fop =
+			fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent,
+				out);
+
+		// Setup XSLT
+		TransformerFactory factory = TransformerFactory.newInstance();
+		Transformer transformer =
+			factory
+				.newTransformer(new StreamSource(
+					new ByteArrayInputStream(xslt
+						.getBytes("UTF-8"))));
+
+		// Set the value of a <param> in the stylesheet
+		transformer.setParameter("versionParam", "2.0");
+
+		// Setup input for XSLT transformation
+		Source src =new DOMSource(d);
+
+		// Resulting SAX events (the generated FO) must be piped through
+		// to FOP
+		Result res = new SAXResult(fop.getDefaultHandler());
+
+		// Start XSLT transformation and FOP processing
+		transformer.transform(src, res);
+	    } finally {
+		out.close();
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace(System.err);
+	}
+	return pdffile;
+    }
 
 }
