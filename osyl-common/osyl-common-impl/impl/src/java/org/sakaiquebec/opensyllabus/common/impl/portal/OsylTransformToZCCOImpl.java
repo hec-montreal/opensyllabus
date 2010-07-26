@@ -508,7 +508,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    CourseOffering courseOff =
 		    cmService.getCourseOffering(section.getCourseOfferingEid());
 	    AcademicSession session = courseOff.getAcademicSession();
-	    koId = getKoIdPrefix(session) + "-" + siteId;
+	    koId = getKoIdPrefix(session) + "-" + courseOff.getCanonicalCourseEid()+ "-"+getGroup(section, courseOff);
 
 	}
 
@@ -516,12 +516,25 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
     }
 
+    private String getGroup(Section s, CourseOffering c){
+	return s.getEid().substring(c.getEid().length());
+    }
+    
     private String getKoIdPrefix(AcademicSession session) {
+	return getSession(session) + "-" + getPeriod(session);
+    }
+    
+    private String getPeriod(AcademicSession session) {
+	String sessionId = session.getEid();
+	String period = sessionId.substring(4, sessionId.length());
+	return period;
+    }
+    
+    private String getSession(AcademicSession session){
 	String sessionName = null;
 	String sessionId = session.getEid();
 	Date startDate = session.getStartDate();
 	String year = startDate.toString().substring(0, 4);
-	String period = sessionId.substring(4, sessionId.length());
 
 	if ((sessionId.charAt(3)) == '1')
 	    sessionName = WINTER + year;
@@ -529,8 +542,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    sessionName = SUMMER + year;
 	if ((sessionId.charAt(3)) == '3')
 	    sessionName = FALL + year;
-
-	return sessionName + "-" + period;
+	
+	return sessionName;
     }
 
     class MyResolver implements URIResolver {
