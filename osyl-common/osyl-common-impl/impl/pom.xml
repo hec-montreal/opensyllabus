@@ -113,18 +113,22 @@
 			<artifactId>fop</artifactId>
 			<version>0.95</version>
 		</dependency>
-		
 		<dependency>
-		  <groupId>com.oracle</groupId>
-		  <artifactId>ojdbc14</artifactId>
-		  <version>10.2.0.4.0</version>
-		</dependency> 
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc14</artifactId>
+			<version>10.2.0.4.0</version>
+		</dependency>
+		<dependency>
+		<groupId>org.w3c</groupId>
+		<artifactId>jtidy</artifactId>
+		<version>r938</version>
+	</dependency>
 	</dependencies>
 
 	<repositories>
 		<repository>
-		    <id>mesir-repo</id>
-		    <url>http://mesir.googlecode.com/svn/trunk/mavenrepo</url>
+			<id>mesir-repo</id>
+			<url>http://mesir.googlecode.com/svn/trunk/mavenrepo</url>
 		</repository>
 	</repositories>
 	<build>
@@ -159,4 +163,39 @@
 			</testResource>
 		</testResources>
 	</build>
+	<profiles>
+		<profile>
+			<id>osyl</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules />
+			<build>
+				<defaultGoal>validate</defaultGoal>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-install-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>a2jruntime</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>install-file</goal>
+								</goals>
+								<configuration>
+									<file>${project.basedir}/lib/jtidy-r938.jar</file>
+									<groupId>org.w3c</groupId>
+									<artifactId>jtidy</artifactId>
+									<version>r938</version>
+									<packaging>jar</packaging>
+									<generatePom>true</generatePom>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

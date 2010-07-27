@@ -177,12 +177,6 @@ public class COModeled extends COSerialized {
 
     private static final String XML_VERSION_ATTRIBUTE = "schemaVersion";
 
-    protected final static List<String> CDATA_NODE_NAMES =
-	    Arrays.asList(new String[] { COPropertiesType.LABEL,
-		    COPropertiesType.IDENTIFIER, COPropertiesType.DESCRIPTION,
-		    COPropertiesType.TEXT, COPropertiesType.COMMENT,
-		    COPropertiesType.AVAILABILITY });
-
     /**
      * The modeledContent is a POJO filled by XML2Model
      */
@@ -763,7 +757,7 @@ public class COModeled extends COSerialized {
 		    }
 		    createPropElemAttributes(map.get(type), propElem);
 
-		    if (CDATA_NODE_NAMES.contains(propElemName)) {
+		    if (COPropertiesType.CDATA_NODE_NAMES.contains(propElemName)) {
 			propElemValue = document.createCDATASection(value);
 
 		    } else {

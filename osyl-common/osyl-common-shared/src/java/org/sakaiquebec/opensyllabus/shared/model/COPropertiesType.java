@@ -13,6 +13,9 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * This class contains the list of all the possible properties in a course
  * outline. TODO: when GWT 1.5 release will be used, replace this class with
@@ -104,5 +107,10 @@ public class COPropertiesType {
     
     //Specific to ASMUnit
     public static final String PREFIX = "prefix";
+    
+    public final static List<String> CDATA_NODE_NAMES =
+	    Arrays.asList(new String[] { COPropertiesType.DESCRIPTION,
+		    COPropertiesType.TEXT, COPropertiesType.COMMENT,
+		    COPropertiesType.AVAILABILITY });
 
 }

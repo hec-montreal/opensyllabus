@@ -254,11 +254,6 @@ public class COModeledServer {
 
     private String schemaVersion;
 
-    protected final static List<String> CDATA_NODE_NAMES =
-	    Arrays.asList(new String[] { COPropertiesType.LABEL,
-		    COPropertiesType.IDENTIFIER, COPropertiesType.DESCRIPTION,
-		    COPropertiesType.TEXT, COPropertiesType.COMMENT,
-		    COPropertiesType.AVAILABILITY });
 
     /**
      * Map<name,permissions> of permissions applied to ressources
@@ -275,7 +270,7 @@ public class COModeledServer {
      * @uml.associationEnd qualifier="trim:java.lang.String java.lang.String"
      */
     private Map<String, String> documentVisibilityMap;
-    
+
     private String propertyType;
 
     /**
@@ -969,7 +964,7 @@ public class COModeledServer {
 		    }
 		    createPropElemAttributes(map.get(type), propElem);
 
-		    if (CDATA_NODE_NAMES.contains(propElemName)) {
+		    if (COPropertiesType.CDATA_NODE_NAMES.contains(propElemName)) {
 			propElemValue = document.createCDATASection(value);
 		    } else {
 			propElemValue = document.createTextNode(value);
@@ -1379,7 +1374,7 @@ public class COModeledServer {
 
     public void setCOContentTitle(String coTitle) {
 	if (coTitle != null) {
-	    String propertyType =  getPropertyType();
+	    String propertyType = getPropertyType();
 	    COContent content = this.getModeledContent();
 	    COProperties coProperties = content.getProperties();
 	    coProperties.addProperty(COPropertiesType.TITLE, propertyType,
@@ -1434,33 +1429,11 @@ public class COModeledServer {
     }
 
     public String getPropertyType() {
-	if(propertyType==null || propertyType.equals("")){
+	if (propertyType == null || propertyType.equals("")) {
 	    String rulesXML = coSerialized.getOsylConfig().getRulesConfig();
 	    Document rulesDom = this.parseXml(rulesXML);
 	    propertyType = getRulesConfigPropertyType(rulesDom);
 	}
 	return propertyType;
     }
-    
-    public static Node replaceSemanticTagsWithI18NMessage(Node d,Map<String, String> messages){
-	try {
-	    XPathFactory factory = XPathFactory.newInstance();
-	    XPath xpath = factory.newXPath();
-	    XPathExpression expr;
-
-	    expr =
-		    xpath
-			    .compile("//semanticTag");
-
-	    NodeList nodes = (NodeList) expr.evaluate(d, XPathConstants.NODESET);
-	    for(int i = 0;i<nodes.getLength();i++){
-		Node node = nodes.item(i);
-		node.setTextContent(messages.get(node.getTextContent()));
-	    }
-	} catch (XPathExpressionException e) {
-	    e.printStackTrace();
-	}
-	return d;
-    }
-
 }

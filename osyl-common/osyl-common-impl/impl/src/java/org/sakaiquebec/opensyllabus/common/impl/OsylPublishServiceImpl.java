@@ -3,6 +3,7 @@ package org.sakaiquebec.opensyllabus.common.impl;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,6 +20,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,6 +67,8 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.tidy.Tidy;
 
 public class OsylPublishServiceImpl implements OsylPublishService {
 
@@ -419,15 +427,15 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	
 	try {
 	    //change keys for i18n messages
-	    d = COModeledServer.replaceSemanticTagsWithI18NMessage(d, coSerializedAttendee.getMessages());
+	    d = replaceSemanticTagsWithI18NMessage(d, coSerializedAttendee.getMessages());
 	    
 	    //remove cdata sections
-	    String cDataXsl = FileHelper.getFileContent(webappdir + File.separator + OsylSiteService.PRINT_COMMON_DIRECTORY + File.separator +
-			OsylSiteService.PRINT_REMOVE_CDATA_FILENAME);
-	    d = XmlHelper.applyXsl(d, cDataXsl);
+//	    String cDataXsl = FileHelper.getFileContent(webappdir + File.separator + OsylSiteService.PRINT_COMMON_DIRECTORY + File.separator +
+//			OsylSiteService.PRINT_REMOVE_CDATA_FILENAME);
+//	    d = XmlHelper.applyXsl(d, cDataXsl);
 	    
-	    //convert html in former cdata section in xhtml
-	    //TODO
+	    //convert html in xhtml
+	    d = convertHtmlToXhtml(d);
 	    
 	    //transform xml -> pdf
 	    String configRef  = coSerializedAttendee.getOsylConfig().getConfigRef();
@@ -469,21 +477,58 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	}
     }
     
-    public static String xmlToString(Node node) {
-        try {
-            Source source = new DOMSource(node);
-            StringWriter stringWriter = new StringWriter();
-            Result result = new StreamResult(stringWriter);
-            TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer transformer = factory.newTransformer();
-            transformer.transform(source, result);
-            return stringWriter.getBuffer().toString();
-        } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
-        } catch (TransformerException e) {
-            e.printStackTrace();
-        }
-        return null;
+    
+    public static Node convertHtmlToXhtml(Node d){
+	try {
+	    XPathFactory factory = XPathFactory.newInstance();
+	    XPath xpath = factory.newXPath();
+	    XPathExpression expr;
+	    Tidy t = new Tidy();
+	    t.setPrintBodyOnly(true);
+	    t.setXHTML(true);
+	    t.setQuiet(true);
+	    t.setEscapeCdata(true);
+	    t.setBreakBeforeBR(false);
+	    t.setShowWarnings(false);
+	    t.setShowErrors(1);
+
+	    expr =
+		    xpath
+			    .compile("//text | //comment | //description | //availability | //label | //identifier");
+
+	    NodeList nodes = (NodeList) expr.evaluate(d, XPathConstants.NODESET);
+	    for(int i = 0;i<nodes.getLength();i++){
+		Node node = nodes.item(i);
+        	StringReader reader = new StringReader(node.getTextContent());
+        	StringWriter writer = new StringWriter();
+        	t.parseDOM(reader, writer);
+        	node.setTextContent(writer.toString());
+	    }
+	} catch (XPathExpressionException e) {
+	    e.printStackTrace();
+	}
+	return d;
+    }
+    
+    public static Node replaceSemanticTagsWithI18NMessage(Node d,Map<String, String> messages){
+	try {
+	    XPathFactory factory = XPathFactory.newInstance();
+	    XPath xpath = factory.newXPath();
+	    XPathExpression expr;
+
+	    expr =
+		    xpath
+			    .compile("//semanticTag");
+
+	    NodeList nodes = (NodeList) expr.evaluate(d, XPathConstants.NODESET);
+	    for(int i = 0;i<nodes.getLength();i++){
+		Node node = nodes.item(i);
+		node.setTextContent(messages.get(node.getTextContent()));
+	    }
+	} catch (XPathExpressionException e) {
+	    e.printStackTrace();
+	}
+	return d;
     }
 
     private void publication(String siteId, String webappDir) throws Exception {
