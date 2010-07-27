@@ -100,7 +100,7 @@ public class FOPHelper {
 	return pdffile;
     }
 
-    public static File convertXml2Pdf(Node d, String xslt)
+    public static File convertXml2Pdf(Node d, String xslt, String webappdir)
 	    throws IOException, TransformerException {
 	File pdffile = File.createTempFile("osyl-fop-print", ".pdf");
 	try {
@@ -130,6 +130,7 @@ public class FOPHelper {
 
 		// Set the value of a <param> in the stylesheet
 		transformer.setParameter("versionParam", "2.0");
+		transformer.setParameter("ppath", webappdir);
 
 		// Setup input for XSLT transformation
 		Source src =new DOMSource(d);

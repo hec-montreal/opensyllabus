@@ -118,11 +118,6 @@
 			<artifactId>ojdbc14</artifactId>
 			<version>10.2.0.4.0</version>
 		</dependency>
-		<dependency>
-		<groupId>org.w3c</groupId>
-		<artifactId>jtidy</artifactId>
-		<version>r938</version>
-	</dependency>
 	</dependencies>
 
 	<repositories>
@@ -132,6 +127,7 @@
 		</repository>
 	</repositories>
 	<build>
+		<defaultGoal>validate</defaultGoal>
 		<resources>
 			<!--  TODO -->
 			<resource>
@@ -163,39 +159,4 @@
 			</testResource>
 		</testResources>
 	</build>
-	<profiles>
-		<profile>
-			<id>osyl</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<modules />
-			<build>
-				<defaultGoal>validate</defaultGoal>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-install-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>a2jruntime</id>
-								<phase>validate</phase>
-								<goals>
-									<goal>install-file</goal>
-								</goals>
-								<configuration>
-									<file>${project.basedir}/lib/jtidy-r938.jar</file>
-									<groupId>org.w3c</groupId>
-									<artifactId>jtidy</artifactId>
-									<version>r938</version>
-									<packaging>jar</packaging>
-									<generatePom>true</generatePom>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 </project>

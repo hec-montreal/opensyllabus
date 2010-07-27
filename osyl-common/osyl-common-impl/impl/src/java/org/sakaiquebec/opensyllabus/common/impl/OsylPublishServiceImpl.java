@@ -3,8 +3,6 @@ package org.sakaiquebec.opensyllabus.common.impl;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,14 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -68,7 +58,6 @@ import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.tidy.Tidy;
 
 public class OsylPublishServiceImpl implements OsylPublishService {
 
@@ -445,7 +434,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			+ OsylConfigService.PRINT_XSLFO_FILENAME);
 	    File f =
 		    FOPHelper.convertXml2Pdf(d,
-			    xsltXmltoPdf);
+			    xsltXmltoPdf,webappdir);
 	    String resourceOutputDir =
 		    contentHostingService.getSiteCollection(siteId);
 
@@ -479,34 +468,34 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     
     
     public static Node convertHtmlToXhtml(Node d){
-	try {
-	    XPathFactory factory = XPathFactory.newInstance();
-	    XPath xpath = factory.newXPath();
-	    XPathExpression expr;
-	    Tidy t = new Tidy();
-	    t.setPrintBodyOnly(true);
-	    t.setXHTML(true);
-	    t.setQuiet(true);
-	    t.setEscapeCdata(true);
-	    t.setBreakBeforeBR(false);
-	    t.setShowWarnings(false);
-	    t.setShowErrors(1);
-
-	    expr =
-		    xpath
-			    .compile("//text | //comment | //description | //availability | //label | //identifier");
-
-	    NodeList nodes = (NodeList) expr.evaluate(d, XPathConstants.NODESET);
-	    for(int i = 0;i<nodes.getLength();i++){
-		Node node = nodes.item(i);
-        	StringReader reader = new StringReader(node.getTextContent());
-        	StringWriter writer = new StringWriter();
-        	t.parseDOM(reader, writer);
-        	node.setTextContent(writer.toString());
-	    }
-	} catch (XPathExpressionException e) {
-	    e.printStackTrace();
-	}
+	// try {
+	// XPathFactory factory = XPathFactory.newInstance();
+	// XPath xpath = factory.newXPath();
+	// XPathExpression expr;
+	// Tidy t = new Tidy();
+	// t.setPrintBodyOnly(true);
+	// t.setXHTML(true);
+	// t.setQuiet(true);
+	// t.setEscapeCdata(true);
+	// t.setBreakBeforeBR(false);
+	// t.setShowWarnings(false);
+	// t.setShowErrors(1);
+	//
+	// expr =
+	// xpath
+	// .compile("//text | //comment | //description | //availability | //label | //identifier");
+	//
+	// NodeList nodes = (NodeList) expr.evaluate(d, XPathConstants.NODESET);
+	// for(int i = 0;i<nodes.getLength();i++){
+	// Node node = nodes.item(i);
+	// StringReader reader = new StringReader(node.getTextContent());
+	// StringWriter writer = new StringWriter();
+	// t.parseDOM(reader, writer);
+	// node.setTextContent(writer.toString());
+	// }
+	// } catch (XPathExpressionException e) {
+	// e.printStackTrace();
+	// }
 	return d;
     }
     
