@@ -15,10 +15,6 @@
 
 	<name>osyl-common-impl</name>
 
-	<properties>
-		<deploy.target></deploy.target>
-	</properties>
-
 	<dependencies>
 		<!--  opensyllabus -->
 		<dependency>
@@ -117,6 +113,11 @@
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc14</artifactId>
 			<version>10.2.0.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.w3c</groupId>
+			<artifactId>jtidy</artifactId>
+			<version>r938</version>
 		</dependency>
 	</dependencies>
 
