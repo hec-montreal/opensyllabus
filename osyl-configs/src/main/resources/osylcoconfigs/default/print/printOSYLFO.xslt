@@ -46,7 +46,7 @@
           <fo:block border-top-color="black" border-top-style="solid" border-top-width="thin" margin-right="-5pt" margin-left="-5pt" padding-after="2pt"/>
 					<fo:block font-size="8pt" font-style="italic" color="grey">Généré le 22/04/2010 à 11 :40 :02 à partir d’OpenSyllabus est n’est peut-être pas à jour avec la version enligne.</fo:block>
 					<fo:block>©HEC Montréal 2010, Tous droits réservés</fo:block>
-					<fo:block text-align="right" margin-top="-10pt"><fo:page-number/>/</fo:block>
+					<fo:block text-align="right" margin-top="-10pt"><fo:page-number/>/<fo:page-number-citation ref-id="last-page"/></fo:block>
 				</fo:static-content>
 
 				<fo:flow flow-name="xsl-region-body" font-size="10pt" font-family="serif">
@@ -57,6 +57,7 @@
 					<xsl:apply-templates select="//asmStructure[@xsi:type='AssessmentStruct']"/>
 					<xsl:apply-templates select="//asmStructure[@xsi:type='PedagogicalStruct'][asmStructure/node()]"/>
 					<xsl:apply-templates select="//asmUnit[@xsi:type='NewsUnit']"/>
+					<fo:block id="last-page"/>
 				</fo:flow>
 
 			</fo:page-sequence>
