@@ -91,7 +91,6 @@ public class FOPHelper {
 		escapeString = escapeString.replaceAll("&lt;", "<");
 		escapeString = escapeString.replaceAll("&gt;", ">");
 		escapeString = escapeString.replaceAll("&nbsp;", " ");
-		System.out.println(escapeString);
 		Source src =
 			new StreamSource(new ByteArrayInputStream(escapeString
 				.getBytes("UTF-8")));
