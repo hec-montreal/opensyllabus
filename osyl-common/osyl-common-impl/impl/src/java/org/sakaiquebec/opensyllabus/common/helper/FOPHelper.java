@@ -43,13 +43,10 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.batik.css.engine.value.css2.SrcManager;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 public class FOPHelper {
@@ -113,26 +110,26 @@ public class FOPHelper {
     public static File convertXml2Pdf(Node d, String xslt, String webappdir)
 	    throws IOException, TransformerException {
 
-		// Setup input for XSLT transformation
-		String s = xmlToString(d);		
-		return convertXml2Pdf(s, xslt, webappdir);
+	// Setup input for XSLT transformation
+	String s = xmlToString(d);
+	return convertXml2Pdf(s, xslt, webappdir);
     }
-    
+
     public static String xmlToString(Node node) {
-        try {
-            Source source = new DOMSource(node);
-            StringWriter stringWriter = new StringWriter();
-            Result result = new StreamResult(stringWriter);
-            TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer transformer = factory.newTransformer();
-            transformer.transform(source, result);
-            return stringWriter.toString();
-        } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
-        } catch (TransformerException e) {
-            e.printStackTrace();
-        }
-        return null;
+	try {
+	    Source source = new DOMSource(node);
+	    StringWriter stringWriter = new StringWriter();
+	    Result result = new StreamResult(stringWriter);
+	    TransformerFactory factory = TransformerFactory.newInstance();
+	    Transformer transformer = factory.newTransformer();
+	    transformer.transform(source, result);
+	    return stringWriter.toString();
+	} catch (TransformerConfigurationException e) {
+	    e.printStackTrace();
+	} catch (TransformerException e) {
+	    e.printStackTrace();
+	}
+	return null;
     }
 
 }
