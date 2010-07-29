@@ -49,6 +49,7 @@ public class XmlHelper {
     public static Document parseXml(String xml) {
 	// get the factory
 	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	dbf.setNamespaceAware(true);
 	Document dom = null;
 	try {
 

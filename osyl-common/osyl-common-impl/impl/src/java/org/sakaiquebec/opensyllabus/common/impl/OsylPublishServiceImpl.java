@@ -3,6 +3,8 @@ package org.sakaiquebec.opensyllabus.common.impl;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -56,8 +58,10 @@ import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.tidy.Tidy;
 
 public class OsylPublishServiceImpl implements OsylPublishService {
 
@@ -70,7 +74,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * @uml.associationEnd
      */
     private OsylSecurityService osylSecurityService;
-    
+
     private CourseManagementService cmService;
 
     /**
@@ -268,7 +272,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     public Map<String, String> publish(String webappDir, String siteId)
 	    throws Exception {
-	String courseId = null;
 
 	SecurityService.pushAdvisor(new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
@@ -345,31 +348,32 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return publicationProperties;
     }
 
-    private COSerialized updateCourseInformations(COSerialized co, String webappDir) {
+    private COSerialized updateCourseInformations(COSerialized co,
+	    String webappDir) {
 	String siteName = null;
 	String providerId = null;
 	String siteId = co.getSiteId();
-	String creator="";
-	String dept="";
+	String creator = "";
+	String dept = "";
 	try {
 	    AuthzGroup realm =
 		    AuthzGroupService.getAuthzGroup(REALM_ID_PREFIX + siteId);
 	    if (realm != null) {
 		providerId = realm.getProviderGroupId();
 	    }
-	    if (providerId != null){
+	    if (providerId != null) {
 		siteName = osylSiteService.getSiteName(providerId);
-		Section s= cmService.getSection(providerId);
+		Section s = cmService.getSection(providerId);
 		dept = cmService.getSectionCategoryDescription(s.getCategory());
 		EnrollmentSet es = s.getEnrollmentSet();
-		if(es!=null){
-		    Set<String>t = es.getOfficialInstructors();
-		    if(t!=null && !t.isEmpty()){
-			
+		if (es != null) {
+		    Set<String> t = es.getOfficialInstructors();
+		    if (t != null && !t.isEmpty()) {
+
 		    }
 		}
 	    }
-		
+
 	} catch (GroupNotDefinedException e) {
 	    log.error(e);
 	}
@@ -387,10 +391,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		COContent coContent = coModeledServer.getModeledContent();
 		coContent.addProperty(COPropertiesType.COURSE_ID, propertyType,
 			siteName);
-		
-		
-		coContent.addProperty(COPropertiesType.CREATOR, "");//TODO
-		coContent.addProperty(COPropertiesType.DEPARTMENT, propertyType,dept);
+
+		coContent.addProperty(COPropertiesType.CREATOR, "");// TODO
+		coContent.addProperty(COPropertiesType.DEPARTMENT,
+			propertyType, dept);
 		coModeledServer.model2XML();
 		co.setContent(coModeledServer.getSerializedContent());
 
@@ -409,32 +413,34 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		getSerializedPublishedCourseOutlineForAccessType(siteId,
 			SecurityInterface.ACCESS_ATTENDEE, webappdir);
 
-	
 	String xml = coSerializedAttendee.getContent();
-	Node d= XmlHelper.parseXml(xml);
-	
-	
+	Node d = XmlHelper.parseXml(xml);
+
 	try {
-	    //change keys for i18n messages
-	    d = replaceSemanticTagsWithI18NMessage(d, coSerializedAttendee.getMessages());
-	    
-	    //remove cdata sections
-//	    String cDataXsl = FileHelper.getFileContent(webappdir + File.separator + OsylSiteService.PRINT_COMMON_DIRECTORY + File.separator +
-//			OsylSiteService.PRINT_REMOVE_CDATA_FILENAME);
-//	    d = XmlHelper.applyXsl(d, cDataXsl);
-	    
-	    //convert html in xhtml
+	    // change keys for i18n messages
+	    d =
+		    replaceSemanticTagsWithI18NMessage(d, coSerializedAttendee
+			    .getMessages());
+
+	    // convert html in xhtml
 	    d = convertHtmlToXhtml(d);
-	    
-	    //transform xml -> pdf
-	    String configRef  = coSerializedAttendee.getOsylConfig().getConfigRef();
+
+	    // transform xml -> pdf
+	    String configRef =
+		    coSerializedAttendee.getOsylConfig().getConfigRef();
 	    String xsltXmltoPdf =
-		FileHelper.getFileContent(webappdir + File.separator + OsylConfigService.CONFIG_DIR + File.separator +
-			configRef +File.separator+ OsylConfigService.PRINT_DIRECTORY + File.separator
-			+ OsylConfigService.PRINT_XSLFO_FILENAME);
+		    FileHelper.getFileContent(webappdir + File.separator
+			    + OsylConfigService.CONFIG_DIR + File.separator
+			    + configRef + File.separator
+			    + OsylConfigService.PRINT_DIRECTORY
+			    + File.separator
+			    + OsylConfigService.PRINT_XSLFO_FILENAME);
 	    File f =
-		    FOPHelper.convertXml2Pdf(d,
-			    xsltXmltoPdf,webappdir);
+		    FOPHelper.convertXml2Pdf(d, xsltXmltoPdf, webappdir
+			    + OsylConfigService.CONFIG_DIR + File.separator
+			    + configRef + File.separator
+			    + OsylConfigService.PRINT_DIRECTORY
+			    + File.separator);
 	    String resourceOutputDir =
 		    contentHostingService.getSiteCollection(siteId);
 
@@ -465,54 +471,73 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    e.printStackTrace();
 	}
     }
-    
-    
-    public static Node convertHtmlToXhtml(Node d){
-	// try {
-	// XPathFactory factory = XPathFactory.newInstance();
-	// XPath xpath = factory.newXPath();
-	// XPathExpression expr;
-	// Tidy t = new Tidy();
-	// t.setPrintBodyOnly(true);
-	// t.setXHTML(true);
-	// t.setQuiet(true);
-	// t.setEscapeCdata(true);
-	// t.setBreakBeforeBR(false);
-	// t.setShowWarnings(false);
-	// t.setShowErrors(1);
-	//
-	// expr =
-	// xpath
-	// .compile("//text | //comment | //description | //availability | //label | //identifier");
-	//
-	// NodeList nodes = (NodeList) expr.evaluate(d, XPathConstants.NODESET);
-	// for(int i = 0;i<nodes.getLength();i++){
-	// Node node = nodes.item(i);
-	// StringReader reader = new StringReader(node.getTextContent());
-	// StringWriter writer = new StringWriter();
-	// t.parseDOM(reader, writer);
-	// node.setTextContent(writer.toString());
-	// }
-	// } catch (XPathExpressionException e) {
-	// e.printStackTrace();
-	// }
+
+    public static Node convertHtmlToXhtml(Node d) {
+	try {
+	    XPathFactory factory = XPathFactory.newInstance();
+	    XPath xpath = factory.newXPath();
+	    XPathExpression expr;
+	    Tidy t = new Tidy();
+	    t.setPrintBodyOnly(true);
+	    t.setXHTML(true);
+	    t.setQuiet(true);
+	    t.setEscapeCdata(true);
+	    t.setInputEncoding("UTF-8");
+	    t.setOutputEncoding("UTF-8");
+	    t.setBreakBeforeBR(false);
+	    t.setShowWarnings(false);
+	    t.setShowErrors(1);
+	    t.setMakeClean(true);
+
+	    expr =
+		    xpath
+			    .compile("//text | //comment | //description | //availability | //label | //identifier");
+
+	    NodeList nodes =
+		    (NodeList) expr.evaluate(d, XPathConstants.NODESET);
+	    for (int i = 0; i < nodes.getLength(); i++) {
+		Node node = nodes.item(i);
+		StringReader reader = new StringReader(node.getTextContent());
+		StringWriter writer = new StringWriter();
+		t.parseDOM(reader, writer);
+		String s = writer.toString();
+		node.setTextContent(s);
+	    }
+	} catch (XPathExpressionException e) {
+	    e.printStackTrace();
+	}
 	return d;
     }
-    
-    public static Node replaceSemanticTagsWithI18NMessage(Node d,Map<String, String> messages){
+
+    public static Node replaceSemanticTagsWithI18NMessage(Node d,
+	    Map<String, String> messages) {
 	try {
 	    XPathFactory factory = XPathFactory.newInstance();
 	    XPath xpath = factory.newXPath();
 	    XPathExpression expr;
 
-	    expr =
-		    xpath
-			    .compile("//semanticTag");
+	    expr = xpath.compile("//semanticTag");
 
-	    NodeList nodes = (NodeList) expr.evaluate(d, XPathConstants.NODESET);
-	    for(int i = 0;i<nodes.getLength();i++){
+	    NodeList nodes =
+		    (NodeList) expr.evaluate(d, XPathConstants.NODESET);
+	    for (int i = 0; i < nodes.getLength(); i++) {
 		Node node = nodes.item(i);
-		node.setTextContent(messages.get(node.getTextContent()));
+		String userDefLabel =
+			(node.getAttributes() == null) ? null
+				: (node
+					.getAttributes()
+					.getNamedItem(
+						COPropertiesType.SEMANTIC_TAG_USERDEFLABEL) == null) ? null
+					: node
+						.getAttributes()
+						.getNamedItem(
+							COPropertiesType.SEMANTIC_TAG_USERDEFLABEL)
+						.getNodeValue();
+		if (userDefLabel == null || userDefLabel.equals("")) {
+		    Element e = (Element) node;
+		    e.setAttribute(COPropertiesType.SEMANTIC_TAG_USERDEFLABEL,
+			    messages.get(node.getTextContent()));
+		}
 	    }
 	} catch (XPathExpressionException e) {
 	    e.printStackTrace();
@@ -535,7 +560,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	if (hierarchyFussionedCO != null && coModeled != null) {
 	    coModeled.model2XML();
 	    hierarchyFussionedCO.setContent(coModeled.getSerializedContent());
-	    
+
 	    updateCourseInformations(hierarchyFussionedCO, webappDir);
 
 	    // Create a course outline with security public

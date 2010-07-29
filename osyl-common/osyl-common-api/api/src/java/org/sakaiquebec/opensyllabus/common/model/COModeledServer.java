@@ -119,11 +119,6 @@ public class COModeledServer {
     protected final static String CO_RES_NODE_NAME = "asmResource";
 
     /**
-     * The COContentRubric node name in the xml DOM.
-     */
-    protected final static String SEMANTIC_TAG = "semanticTag";
-
-    /**
      * Name of the text property node.
      */
     protected final static String CO_PROPERTIES_TEXT_NODE_NAME = "text";
@@ -213,11 +208,6 @@ public class COModeledServer {
      *Name of modified node
      */
     protected final static String MODIFIED_NODE_NAME = "modified";
-
-    /**
-     *Name of userDefLabel attribute
-     */
-    protected final static String USERDEFLABEL_ATTRIBUTE_NAME = "userDefLabel";
 
     private static final String XML_VERSION_ATTRIBUTE = "schemaVersion";;
 
@@ -646,7 +636,7 @@ public class COModeledServer {
 	    prNode = resProxyChildren.item(j);
 	    prNodeName = prNode.getNodeName();
 
-	    if (prNodeName.equalsIgnoreCase(SEMANTIC_TAG)) {
+	    if (prNodeName.equalsIgnoreCase(COPropertiesType.SEMANTIC_TAG)) {
 		coContentResProxy.setRubric(createCOContentRubricPOJO(prNode));
 	    } else if (prNodeName.equalsIgnoreCase(CO_RES_NODE_NAME)) {
 		coContentResProxy.setResource(createCOContentResourcePOJO(
@@ -785,9 +775,9 @@ public class COModeledServer {
 	String userDefLabel =
 		(namedNodeMap == null) ? null
 			: (namedNodeMap
-				.getNamedItem(USERDEFLABEL_ATTRIBUTE_NAME) == null) ? null
+				.getNamedItem(COPropertiesType.SEMANTIC_TAG_USERDEFLABEL) == null) ? null
 				: namedNodeMap.getNamedItem(
-					USERDEFLABEL_ATTRIBUTE_NAME)
+					COPropertiesType.SEMANTIC_TAG_USERDEFLABEL)
 					.getNodeValue();
 	String value = "";
 
@@ -1068,11 +1058,11 @@ public class COModeledServer {
      */
     private void createCOCOntentRubricChild(Document document,
 	    Element coContentResourceProxyElem, COContentRubric rubric) {
-	Element coContentRubricElem = document.createElement(SEMANTIC_TAG);
+	Element coContentRubricElem = document.createElement(COPropertiesType.SEMANTIC_TAG);
 	coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME, rubric.getKey());
 	if (rubric.getUserDefLabel() != null
 		&& rubric.getUserDefLabel().length() > 0) {
-	    coContentRubricElem.setAttribute(USERDEFLABEL_ATTRIBUTE_NAME,
+	    coContentRubricElem.setAttribute(COPropertiesType.SEMANTIC_TAG_USERDEFLABEL,
 		    rubric.getUserDefLabel());
 	}
 

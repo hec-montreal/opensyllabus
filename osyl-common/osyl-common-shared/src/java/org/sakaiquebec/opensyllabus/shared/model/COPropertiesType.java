@@ -108,6 +108,9 @@ public class COPropertiesType {
     //Specific to ASMUnit
     public static final String PREFIX = "prefix";
     
+    public final static String SEMANTIC_TAG = "semanticTag";
+    public final static String SEMANTIC_TAG_USERDEFLABEL="userDefLabel";
+    
     public final static List<String> CDATA_NODE_NAMES =
 	    Arrays.asList(new String[] { COPropertiesType.DESCRIPTION,
 		    COPropertiesType.TEXT, COPropertiesType.COMMENT,
