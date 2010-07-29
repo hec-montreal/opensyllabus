@@ -401,6 +401,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 		new Object[] { pubDate, coId });
     }
 
+    @SuppressWarnings("unchecked")
     public Date getModifiedDate(String siteId)throws Exception {
 	List<Date> results = null;
 	Date res = null;
@@ -425,6 +426,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 		    + " and published=false");
     }
 
+    @SuppressWarnings("unchecked")
     public Date getPublicationDate(String siteId) throws Exception{
 	List<Date> results = null;
 	Date res = null;
