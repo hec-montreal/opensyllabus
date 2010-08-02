@@ -151,6 +151,8 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 		    for (COSite cosite : cosites) {
 			AssociateAsyncCallback aac =
 				new AssociateAsyncCallback(cosite.getSiteId());
+			asynCB_OK=0;
+			asynCB_return=0;
 			controller.associate(cosite.getSiteId(), pId, aac);
 		    }
 
