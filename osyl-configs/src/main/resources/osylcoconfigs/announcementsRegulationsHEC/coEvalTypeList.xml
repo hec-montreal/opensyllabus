@@ -10,5 +10,6 @@
 	<item value="Assessment.Type.final_exam" />
 	<item value="Assessment.Type.session_work" />
 	<item value="Assessment.Type.participation" />
+	<item value="Assessment.Type.quiz"/>
 	<item value="Assessment.Type.other" />
 </list>
