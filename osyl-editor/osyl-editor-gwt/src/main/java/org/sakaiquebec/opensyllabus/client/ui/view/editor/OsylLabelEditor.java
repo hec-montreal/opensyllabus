@@ -197,7 +197,7 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     }
 
     public boolean prepareForSave() {
-	return true;
+	return !getText().equals("");
     }
 
     public void enterEdit() {
