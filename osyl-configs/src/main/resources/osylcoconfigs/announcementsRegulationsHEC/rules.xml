@@ -75,7 +75,7 @@
 				    		<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource" />
 			    		</element>
 			    		<element name="semanticTag">
-			        		<attribute name="type" restrictionpattern="undefined|bibliographicres|complbibres|misresources|tools|pastexams" />
+			        		<attribute name="type" restrictionpattern="undefined|bibliographicres|complbibres|misresources|case|tools|pastexams" />
 			    		</element>
 					</element>
 				</element>
@@ -115,7 +115,7 @@
 							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource|News" />
 						</element>
 						<element name="semanticTag">
-				    		<attribute name="type" restrictionpattern="undefined|news|description|objectives|learningstrat|misresources|ressinclass|readinglist|exercises" />
+				    		<attribute name="type" restrictionpattern="undefined|news|description|objectives|learningstrat|misresources|ressinclass|case|readinglist|exercises" />
 						</element>
 					</element>
 				</element>
