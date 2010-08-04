@@ -378,7 +378,7 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	background-color:transparent;
 	vertical-align:middle;
 	margin:2px;
-	cursor:e-resize;
+	cursor:col-resize;
 }
 .Osyl-MainView-HorizontalSplitPanel .hsplitter-down {}
 
@@ -404,10 +404,7 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 
 
 .Osyl-WorkspaceView, .Osyl-WorkspaceView-MainPanel {width:100%}
-.Osyl-WorkspaceView {
-	/*height:100%;*/
-	overflow:hidden;
-}
+.Osyl-WorkspaceView {overflow:hidden}
 
 .Osyl-MainView-HorizontalSplitPanel .Osyl-WorkspaceView .middleRight  {
 	background-position:-22px 0;
@@ -632,6 +629,11 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 .Osyl-UnitView-ResPanel .Osyl-LabelEditor-TextBox {
 	border:1px solid #878a8c;
 }
+.Osyl-UnitView-TextBox:focus,
+.Osyl-UnitView-Title .Osyl-LabelEditor-TextBox:focus,
+.Osyl-UnitView-ResPanel .Osyl-LabelEditor-TextBox:focus {
+	border-color:#454A4F;
+}
 
 .Osyl-UnitView-Title-Hover .Osyl-LabelEditor-View {}
 
@@ -664,7 +666,7 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	background-color:#EEE;
 	overflow:visible;
 }
-
+div.Osyl-firstElementOfView {border-top-color:#FFF}
 div.Osyl-firstElementOfView .Osyl-LabelEditor-View {
 	display:none;
 }
@@ -906,6 +908,18 @@ div.Osyl-UnitView-ResPanel-ReadOnly {
 	border:0;
 }
 
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down:focus, 
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down-hovering:focus, 
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-down:focus, 
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-down-hovering:focus,
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up:focus, 
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up-hovering:focus, 
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-up:focus, 
+.Osyl-EditorToolbar-TopPanel .gwt-PushButton-up-hovering:focus {
+	outline:1px dotted #444;
+}
+
+
 .Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down, 
 .Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-down-hovering, 
 .Osyl-EditorToolbar-TopPanel .gwt-PushButton-down, 
@@ -913,7 +927,7 @@ div.Osyl-UnitView-ResPanel-ReadOnly {
 	background-position:-166px -48px;
 }
 
-.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up-hovering, 
+.Osyl-EditorToolbar-TopPanel .gwt-ToggleButton-up-hovering,
 .Osyl-EditorToolbar-TopPanel .gwt-PushButton-up-hovering {
 	background-position:-166px -24px;
 }
@@ -974,8 +988,12 @@ div.Osyl-UnitView-ResPanel-ReadOnly {
   width:99%;
   border:1px solid #878a8c;
   background:#FFF;
-
 }
+
+.Osyl-RemoteEntityBrowser-EntityListing:focus {
+	border-color:#454A4F;
+}
+
 .Osyl-RemoteFileBrowser-WaitingState {
 	cursor:wait;
  	background-color:#666;
@@ -1161,6 +1179,9 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	font:normal 12px Arial, Verdana, sans-serif;
 	padding:1px;
 }
+.Osyl-LabelEditor-TextBox:focus {
+	border-color:#454A4F;
+}
 * html .Osyl-LabelEditor-TextBox {margin:0}
 
 .Osyl-UnitView-TextArea {
@@ -1171,6 +1192,10 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	background:#FFF;
 	font:normal 12px Arial, Verdana, sans-serif;
 }
+.Osyl-UnitView-TextArea:focus {
+	border-color:#454a4f;
+}
+
 * html .Osyl-UnitView-TextArea {margin:0 0 0 0}
 
 .Osyl-EditorPopup-RowEditor td {padding:2px 0}
@@ -1187,7 +1212,7 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	color:#FFF;
 	margin:0;
 }
-.mosaic-ImageButton {margin:0 0 5px}
+.mosaic-ImageButton {margin:0 0 5px;cursor:pointer}
 .Osyl-EditorPopup-OptionGroup, 
 .Osyl-EditorPopup-LastOptionGroup, 
 .Osyl-EditorPopup-RowOptions .gwt-Label, 
@@ -1263,7 +1288,13 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	margin:3px 0 0 1px;
 }
 
-.Osyl-EditorPopup .gwt-TextArea {margin:0 6px 3px 0}
+.Osyl-EditorPopup .gwt-TextArea {
+	margin:0 6px 3px 0;
+	border:1px solid #878a8c;
+}
+.Osyl-EditorPopup .gwt-TextArea:focus {
+	border-color:#454a4f;
+}
 
 .Osyl-EditorPopup .information {
 	font:italic normal 11px Arial Verdana sans serif;
@@ -1327,16 +1358,25 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 	font:bold 12px Arial, Verdana, sans-serif;
 	white-space:nowrap;
 	color:#444;
-	background-color:#F7F7F7;
-	border:1px solid #999;
+	background: transparent url(images/ui/button_bg.gif) repeat-x 0 -60px;
+	border:1px solid #CCC;
 	margin:0 5px;
 	padding:3px;
 	cursor:pointer;
 	overflow:visible;/* removes extra side padding in IE */
-	border-radius:8px;
-	-moz-border-radius:8px;
-	-webkit-border-radius:8px;
+	border-radius:6px;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
 }
+
+.Osyl-Button:focus,
+.Osyl-EditorPopup-Button:focus,
+.Osyl-FileUpload-genericButton:focus,
+.Osyl-PublishView-genericButton:focus {
+	background-position:0 -60px;
+	outline:1px dotted #444;
+}
+
 .Osyl-FileUpload-genericButton {margin:5px}
 .Osyl-Button::-moz-focus-inner,
 .Osyl-EditorPopup-Button::-moz-focus-inner,
@@ -1346,15 +1386,26 @@ td > .Osyl-ResProxCitationView-linkCheckbox{
 .Osyl-Button:hover,
 .Osyl-EditorPopup-Button:hover,
 .Osyl-FileUpload-genericButton:hover,
-.Osyl-PublishView-genericButton:hover {background-color:#FFF}
+.Osyl-PublishView-genericButton:hover {
+	background-position:0 -30px;
+	border:1px solid #BBB;
+}
 
 .Osyl-Button:active,
 .Osyl-EditorPopup-Button:active,
 .Osyl-FileUpload-genericButton:active,
 .Osyl-PublishView-genericButton:active {
 	padding:4px 3px 2px;
-	background-color:#F0F0F0;
+	background-position:0 0;
 	outline:1px dotted #444;
+}
+.Osyl-Button[disabled],
+.Osyl-EditorPopup-Button[disabled],
+.Osyl-FileUpload-genericButton[disabled],
+.Osyl-PublishView-genericButton[disabled] {
+	background:#CCC;
+	border-color:#999 #CCC #CCC #999;
+	color:#888;
 }
 
 .Osyl-ImageAndTextButton img,

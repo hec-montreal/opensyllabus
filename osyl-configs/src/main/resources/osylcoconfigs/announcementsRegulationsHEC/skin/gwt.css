@@ -1,27 +1,34 @@
 /* ---- CSS definitions overriding default GWT styles -------------- */
-
 .gwt-Button {
 	font:bold 12px Arial, Verdana, sans-serif;
 	white-space:nowrap;
 	color:#444;
-	background-color:#F7F7F7;
-	border:1px solid #999;
-	margin:5px 0;
+	background: transparent url(images/ui/button_bg.gif) repeat-x 0 -60px;
+	border:1px solid #CCC;
+	margin:1px 5px;
 	padding:3px;
 	cursor:pointer;
 	overflow:visible;/* removes extra side padding in IE */
-	border-radius:8px;
-	-moz-border-radius:8px;
-	-webkit-border-radius:8px;
-	outline:1px solid #FFF;
+	border-radius:6px;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
 }
-.gwt-Button::-moz-focus-inner {border:none}
+
+.gwt-Button:focus {
+	background-position:0 -60px;
+	outline:1px dotted #444;
+}
+
+.gwt-Button::-moz-focus-inner {border:none} /* removes inner border of buttons in Firefox */
+
 .gwt-Button:hover {
-	background-color:#FFF;
+	background-position:0 -30px;
+	border:1px solid #BBB;
 }
+
 .gwt-Button:active {
 	padding:4px 3px 2px;
-	background-color:#F0F0F0;
+	background-position:0 0;
 	outline:1px dotted #444;
 }
 
@@ -216,7 +223,6 @@
 }
 
 .gwt-ToggleButton-down {
-  /*background-color:#FCFCFC;*/
   padding:2px;
   background-color:#E8F1FF;
   border:2px solid transparent;
@@ -225,7 +231,6 @@
 }
 
 .gwt-ToggleButton-down-hovering {
-  /*background-color:#FCFCFC;*/
   padding:2px;
   background-color:#E8F1FF;
   border:2px solid transparent;
@@ -237,6 +242,10 @@
   border:1px solid #878A8C;
   background-color:#FFF;
   margin:2px 0 0 2px;
+}
+
+.gwt-RichTextArea:focus {
+	border-color:#454a4f;
 }
 
 .gwt-RichTextToolbar {
@@ -314,7 +323,6 @@
 .gwt-VerticalSplitPanel .splitter {
   background-color:#FCFCFC;
   height:8px;
-  /*cursor:move;*/
 }
 
 .gwt-SuggestBoxPopup {
