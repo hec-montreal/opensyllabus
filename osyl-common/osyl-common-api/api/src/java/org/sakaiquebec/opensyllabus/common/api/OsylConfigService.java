@@ -79,9 +79,13 @@ public interface OsylConfigService {
     public static final String PRINT_XSLFO_FILENAME = "printOSYLFO.xslt";
     
     /**
-     * Returns the configurations related to the id
+     * Returns the configuration corresponding to the specified id (should not
+     * be mistaken with the config ref which is the only one human-readable).
      * 
-     * @return A COConfig
+     * The configId is usually composed of 32 chars (hexadecimal).
+     * 
+     * @param configId
+     * @return COConfigSerialized
      * @throws Exception
      */
     public COConfigSerialized getConfig(String configId, String webappDir)
@@ -114,10 +118,11 @@ public interface OsylConfigService {
     public Map<String, String> getConfigs() throws Exception;
 
     /**
-     * Returns the config
+     * Returns the config corresponding to the specified configuration
+     * reference (ie: directory name for that config, for instance 'default').
      * 
-     * @param configId
-     * @return A String representation of the xml config
+     * @param configRef
+     * @return COConfigSerialized
      * @throws Exception
      */
     public COConfigSerialized getConfigByRef(String configRef, String webappDir)
