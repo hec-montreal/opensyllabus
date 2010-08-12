@@ -181,7 +181,10 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 			    webappDir, siteId);
 	    // We invalidate the cached published CO for this siteId
 	    if (cacheEnabled) {
-		publishedCoCache.remove(siteId);
+		publishedCoCache.remove(siteId
+			+ SecurityInterface.ACCESS_ATTENDEE);
+		publishedCoCache.remove(siteId
+			+ SecurityInterface.ACCESS_PUBLIC);
 	    }
 	} catch (Exception e) {
 	    throw e;
@@ -203,18 +206,19 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
 	String webappdir = getServletContext().getRealPath("/");
 	COSerialized cos;
-	if (cacheEnabled && publishedCoCache.containsKey(siteId)) {
-	    cos = publishedCoCache.get(siteId);
+	String cacheKey = siteId + accessType;
+	if (cacheEnabled && publishedCoCache.containsKey(cacheKey)) {
+	    cos = publishedCoCache.get(cacheKey);
 	} else {
 	    cos = osylServices.getOsylPublishService()
 		.getSerializedPublishedCourseOutlineForAccessType(siteId,
 			accessType, webappdir);
 	    if (cacheEnabled) {
-		publishedCoCache.put(siteId, cos);
+		publishedCoCache.put(cacheKey, cos);
 	    }
 	}
-	log.debug("getSerializedPublishedCourseOutlineForAccessType"
-		+ elapsed(start) + siteId);
+	log.debug("getSerializedPublishedCourseOutlineForAccessType "
+		+ accessType + " " + elapsed(start) + siteId);
 	return cos;
     }
 
