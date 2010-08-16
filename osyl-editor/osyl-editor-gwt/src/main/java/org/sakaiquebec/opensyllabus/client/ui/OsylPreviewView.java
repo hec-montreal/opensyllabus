@@ -158,6 +158,7 @@ public class OsylPreviewView extends OsylMainView implements
 	getController().setInPreview(false);
 	entryPoint.setView(previousMainView);
 	entryPoint.refreshView();
+	getController().setMainView((OsylMainView) previousMainView);
 	getController().getViewContext().setContextModel(findStartingViewContext());
 	((OsylMainView) previousMainView).refreshView();
     }
