@@ -9,8 +9,27 @@
 
 <xsl:output method="xml" indent="yes" />
 <xsl:param name="ppath"></xsl:param>
+<xsl:param name="spath"></xsl:param>
+<xsl:param name="currentDateTime">2010-08-03T11:37:48-04:00</xsl:param>
+
+	<xsl:variable name='lang'>
+		<xsl:value-of select="substring(/OSYL/CO/language,1,2)"/>
+	</xsl:variable>
 
   <xsl:template match="/">
+		<xsl:variable name='courseCode'>
+			<xsl:value-of select="substring-before(/OSYL/CO/identifier,'_')"/>
+		</xsl:variable>
+		<xsl:variable name='session_group'>
+			<xsl:value-of select="substring-after(/OSYL/CO/identifier,'_')"/>
+		</xsl:variable>
+		<xsl:variable name='session'>
+			<xsl:value-of select="substring-after($session_group,'-')"/>
+		</xsl:variable>
+		<xsl:variable name='group'>
+			<xsl:value-of select="substring-before($session_group,'-')"/>
+		</xsl:variable>
+
     <fo:root>
 			<fo:layout-master-set>
         <fo:simple-page-master master-name="first" page-height="11in" page-width="8.5in" margin-left="3cm" margin-right="3cm" margin-top="2.5cm" margin-bottom="1cm">
@@ -37,25 +56,122 @@
 			<fo:page-sequence master-reference="document">
 
 				<fo:static-content flow-name="header-rest" font-size="11pt" font-family="serif">
-					<fo:block>Plan de cours : <xsl:value-of select="/OSYL/CO/identifier"/></fo:block>
-					<fo:block text-align="right" margin-top="-15pt"><xsl:value-of select="/OSYL/CO/identifier"/></fo:block>
+					<fo:block>
+						<fo:inline>
+							<xsl:choose>
+								<xsl:when test="$lang = 'FR'">
+									<xsl:text>Plan de cours : </xsl:text>
+								</xsl:when>
+								<xsl:when test="$lang = 'EN'">
+									<xsl:text>Cours outline </xsl:text>
+								</xsl:when>
+								<xsl:when test="$lang = 'ES'">
+									<xsl:text>Plano de curso </xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+								</xsl:otherwise>
+							</xsl:choose>
+						</fo:inline>
+						<fo:inline><xsl:value-of select="$courseCode"/> (<xsl:value-of select="$group"/>)</fo:inline>
+					</fo:block>
+					<fo:block text-align="right" margin-top="-15pt"><xsl:value-of select="$session"/></fo:block>
           <fo:block border-top-color="lightgrey" border-top-style="solid" border-top-width="1.5px" space-before="5pt"/>
 				</fo:static-content>
 
 				<fo:static-content flow-name="Footer" font-size="9pt" font-family="serif">
           <fo:block border-top-color="black" border-top-style="solid" border-top-width="thin" margin-right="-5pt" margin-left="-5pt" padding-after="2pt"/>
-					<fo:block font-size="8pt" font-style="italic" color="grey">Généré le 22/04/2010 à 11 :40 :02 à partir d’OpenSyllabus est n’est peut-être pas à jour avec la version enligne.</fo:block>
-					<fo:block>©HEC Montréal 2010, Tous droits réservés</fo:block>
+					<fo:block font-size="8pt" font-style="italic" color="grey">
+						<fo:inline>
+							<xsl:choose>
+								<xsl:when test="$lang = 'FR'">
+									<xsl:text>Généré le </xsl:text>
+								</xsl:when>
+								<xsl:when test="$lang = 'EN'">
+									<xsl:text>Generated on the </xsl:text>
+								</xsl:when>
+								<xsl:when test="$lang = 'ES'">
+									<xsl:text>Generado el </xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+								</xsl:otherwise>
+							</xsl:choose>
+						</fo:inline>
+						<fo:inline>
+							<xsl:call-template name="printDate">
+								<xsl:with-param name="date"><xsl:value-of select="substring-before($currentDateTime,'T')"/></xsl:with-param>
+							</xsl:call-template>
+						</fo:inline>
+						<fo:inline>
+							<xsl:choose>
+								<xsl:when test="$lang = 'FR'">
+									<xsl:text> à </xsl:text>
+								</xsl:when>
+								<xsl:when test="$lang = 'EN'">
+									<xsl:text> at </xsl:text>
+								</xsl:when>
+								<xsl:when test="$lang = 'ES'">
+									<xsl:text> a las </xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+								</xsl:otherwise>
+							</xsl:choose>
+						</fo:inline>
+						<fo:inline><xsl:value-of select="substring-before(substring-after($currentDateTime,'T'),'-')"/></fo:inline>
+						<fo:inline>
+							<xsl:choose>
+								<xsl:when test="$lang = 'FR'">
+									<xsl:text> à partir de ZoneCours2 et n’est peut-être pas à jour avec la version en ligne.</xsl:text>
+								</xsl:when>
+								<xsl:when test="$lang = 'EN'">
+									<xsl:text> from ZoneCours2 and may not be up to date with the online version.</xsl:text>
+								</xsl:when>
+								<xsl:when test="$lang = 'ES'">
+									<xsl:text> a partir de ZoneCours2 y posiblemente no está al día con la versión en línea.</xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+								</xsl:otherwise>
+							</xsl:choose>
+						</fo:inline>
+					</fo:block>
+					<fo:block>
+						<xsl:choose>
+							<xsl:when test="$lang = 'FR'">
+								<xsl:text>©HEC Montréal 2010, Tous droits réservés</xsl:text>
+							</xsl:when>
+							<xsl:when test="$lang = 'EN'">
+								<xsl:text>©HEC Montréal 2010, All rights reserved</xsl:text>
+							</xsl:when>
+							<xsl:when test="$lang = 'ES'">
+								<xsl:text>©HEC Montréal 2010, Reservados todos los derechos</xsl:text>
+							</xsl:when>
+							<xsl:otherwise>
+							</xsl:otherwise>
+						</xsl:choose>
+					</fo:block>
 					<fo:block text-align="right" margin-top="-10pt"><fo:page-number/>/<fo:page-number-citation ref-id="last-page"/></fo:block>
 				</fo:static-content>
 
 				<fo:flow flow-name="xsl-region-body" font-size="10pt" font-family="serif">
-					<xsl:call-template name="FirtPageHeader"/>
+					<xsl:call-template name="FirtPageHeader">
+						<xsl:with-param name="courseCode"><xsl:value-of select="$courseCode"/></xsl:with-param>
+						<xsl:with-param name="session"><xsl:value-of select="$session"/></xsl:with-param>
+						<xsl:with-param name="group"><xsl:value-of select="$group"/></xsl:with-param>
+					</xsl:call-template>
 					<xsl:apply-templates select="//asmUnit[@xsi:type='StaffUnit']"/>
 					<xsl:apply-templates select="//asmUnit[@xsi:type='OverviewUnit']"/>
 					<xsl:apply-templates select="//asmUnit[@xsi:type='LearningMaterialUnit']"/>
 					<xsl:apply-templates select="//asmStructure[@xsi:type='AssessmentStruct']"/>
-					<xsl:apply-templates select="//asmStructure[@xsi:type='PedagogicalStruct'][asmStructure/node()]"/>
+					<xsl:if test="/OSYL/CO/asmStructure[@xsi:type='PedagogicalStruct']/node()">
+						<xsl:call-template name="StructTitle">
+							<xsl:with-param name="label">PedagogicalStruct</xsl:with-param>
+						</xsl:call-template>
+						<xsl:for-each select="//asmUnit[@xsi:type='Lecture' or @xsi:type='WorkSession']">
+							<xsl:apply-templates select='.'>
+								<xsl:with-param name="pos"><xsl:value-of select="position()"/></xsl:with-param>
+								<xsl:with-param name="preceding-sibling-parentId"><xsl:value-of select="preceding-sibling::asmUnit[1]/@id"/></xsl:with-param>
+							</xsl:apply-templates>
+						</xsl:for-each>
+					</xsl:if>
 					<xsl:apply-templates select="//asmUnit[@xsi:type='NewsUnit']"/>
 					<fo:block id="last-page"/>
 				</fo:flow>
@@ -70,17 +186,20 @@
 <!-- ===================================== -->
 
 <xsl:template name="FirtPageHeader">
+  <xsl:param name="courseCode"/>
+  <xsl:param name="session"/>
+  <xsl:param name="group"/>
 		<fo:block>
 			<fo:external-graphic content-height="41px" vertical-align="middle" padding-top="-10pt">
-				<xsl:attribute name="src"><xsl:value-of select="$ppath"/>img/hecLogo.jpg</xsl:attribute>
+				<xsl:attribute name="src"><xsl:value-of select="$ppath"/>img/hecmontreal.gif</xsl:attribute>
 			</fo:external-graphic>
 		</fo:block>
-		<fo:block text-align="right" margin-top="-20pt" font-size="14pt" padding-left="0pt" font-weight="bold">DESS</fo:block>
+		<fo:block text-align="right" margin-top="-20pt" font-size="14pt" padding-left="0pt" font-weight="bold">D.E.S.S</fo:block>
 		<fo:block border-top-color="#555599" border-top-style="solid" border-top-width="3px" margin-right="0pt" margin-left="0pt" padding-before="10pt" padding-after="2pt"/>
 		<fo:block font-size="14pt" font-weight="bold" space-before="16pt" text-align='center'><xsl:value-of select="/OSYL/CO/department"/></fo:block>
 		<fo:block font-size="14pt" font-weight="bold" space-before="16pt" text-align='center'>
 			<fo:inline><xsl:value-of select="/OSYL/CO/title"/> - </fo:inline>
-			<fo:inline><xsl:value-of select="/OSYL/CO/identifier"/></fo:inline>
+			<fo:inline><xsl:value-of select="$courseCode"/></fo:inline>
 		</fo:block>
 
 		<fo:table width="100%" table-layout="fixed" space-before="10pt">
@@ -88,14 +207,29 @@
 			<fo:table-column column-width="50%" column-number="2" />
 			<fo:table-body >
 				<fo:table-row>
-					<fo:table-cell padding="5px" padding-bottom="3px" border-bottom="1.5px solid black" display-align="center">
+					<fo:table-cell padding-left="5px" padding-bottom="2px" border-bottom="1.5px solid black" display-align="center">
 						<fo:block text-align="left" font-size="14pt" font-weight="bold">
-							<xsl:value-of select="/OSYL/CO/identifier"/>
+							<xsl:value-of select="$session"/>
 						</fo:block>
 					</fo:table-cell>
-					<fo:table-cell padding="5px" padding-bottom="3px" border-bottom="1.5px solid black" display-align="center">
+					<fo:table-cell padding-right="5px" padding-bottom="2px" border-bottom="1.5px solid black" display-align="center">
 						<fo:block text-align="right" font-size="14pt" font-weight="bold">
-							<xsl:value-of select="/OSYL/CO/identifier"/>
+							<fo:inline>
+								<xsl:choose>
+									<xsl:when test="$lang = 'FR'">
+										<xsl:text>Groupe </xsl:text>
+									</xsl:when>
+									<xsl:when test="$lang = 'EN'">
+										<xsl:text>Group </xsl:text>
+									</xsl:when>
+									<xsl:when test="$lang = 'ES'">
+										<xsl:text>Grupo </xsl:text>
+									</xsl:when>
+									<xsl:otherwise>
+									</xsl:otherwise>
+								</xsl:choose>
+							</fo:inline>
+							<fo:inline><xsl:value-of select="$group"/></fo:inline>
 						</fo:block>
 					</fo:table-cell>
 				</fo:table-row>
@@ -108,51 +242,102 @@
 <!-- =================================== -->
 <xsl:template match="asmStructure[@xsi:type='AssessmentStruct']">
 	<xsl:call-template name="StructTitle">
-		<xsl:with-param name="label">Évaluations</xsl:with-param>
+		<xsl:with-param name="label">AssessmentStruct</xsl:with-param>
 	</xsl:call-template>
 	<fo:block font-size="13pt" font-weight="bold" space-before="15pt" space-after="5pt">
-		Sommaires des évaluations
+		<xsl:choose>
+			<xsl:when test="$lang = 'FR'">
+				<xsl:text>Sommaires des évaluations</xsl:text>
+			</xsl:when>
+			<xsl:when test="$lang = 'EN'">
+				<xsl:text>Assessment Summary</xsl:text>
+			</xsl:when>
+			<xsl:when test="$lang = 'ES'">
+				<xsl:text>Resumen de la evaluación</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+			</xsl:otherwise>
+		</xsl:choose>
 	</fo:block>
+	<xsl:for-each select="asmUnit">
+		<fo:table width="100%" table-layout="fixed" font-size="10pt" space-before="0pt">
+			<fo:table-column column-width="30%" column-number="1" />
+			<fo:table-column column-width="20%" column-number="2" />
+			<fo:table-column column-width="50%" column-number="3" />
+			<fo:table-body >
+				<fo:table-row>
+					<fo:table-cell padding="0px" display-align="center">
+						<fo:block text-align="left"><xsl:value-of select="assessmentType"/></fo:block>
+					</fo:table-cell>
+					<fo:table-cell padding="0px" display-align="center">
+						<fo:block text-align="left"><xsl:value-of select="weight"/> %</fo:block>
+					</fo:table-cell>
+					<fo:table-cell padding="0px" display-align="center">
+						<fo:block text-align="left">
+							<xsl:call-template name="printAssessmentDate">
+								<xsl:with-param name="date"><xsl:value-of select="substring-before(date-start,'T')"/></xsl:with-param>
+							</xsl:call-template>
+						</fo:block>
+					</fo:table-cell>
+				</fo:table-row>
+			</fo:table-body>
+		</fo:table>
+	</xsl:for-each>
 	<xsl:apply-templates select="//asmUnit[@xsi:type='AssessmentUnit']"/>
-</xsl:template>
-
-<xsl:template match="asmStructure[@xsi:type='PedagogicalStruct'][asmStructure/node()]">
-	<xsl:call-template name="StructTitle">
-		<xsl:with-param name="label">Organisation du cours</xsl:with-param>
-	</xsl:call-template>
-	<xsl:apply-templates select="asmStructure[@xsi:type='PedagogicalStruct']"/>
-</xsl:template>
-
-<xsl:template match="asmStructure[@xsi:type='PedagogicalStruct'][asmUnit/node()]">
-	<xsl:call-template name="SubPedagogicalStructTitle">
-		<xsl:with-param name="label"><xsl:value-of select="label"/></xsl:with-param>
-		<xsl:with-param name="description"><xsl:value-of select="description"/></xsl:with-param>
-	</xsl:call-template>
-	<xsl:apply-templates select="asmUnit[@xsi:type='Lecture']|asmUnit[@xsi:type='WorkSession']"/>
 </xsl:template>
 
 <!-- =================================== -->
 <!-- ========== asmUnit ================ -->
 <!-- =================================== -->
 <xsl:template match="asmUnit[@xsi:type='StaffUnit']">
-					<fo:block font-size="9pt" text-align='right' space-before="3pt" margin-right="-5pt">
-						<fo:inline>Date :</fo:inline>
-						<fo:inline padding-left="5pt"><xsl:value-of select="/OSYL/CO/modified"/></fo:inline>
-					</fo:block>
+	<xsl:if test=".//asmContext[semanticTag='lecturers']/node()">
+		<xsl:call-template name="StaffUnitTitle">
+			<xsl:with-param name="label">lecturers</xsl:with-param>
+		</xsl:call-template>
+		<xsl:call-template name="Staff">
+			<xsl:with-param name="role">lecturers</xsl:with-param>
+		</xsl:call-template>
+	</xsl:if>
+	<xsl:if test=".//asmContext[semanticTag='coordinators']/node()">
+		<xsl:call-template name="StaffUnitSubtitle">
+			<xsl:with-param name="label">coordinators</xsl:with-param>
+		</xsl:call-template>
+		<xsl:call-template name="Staff">
+			<xsl:with-param name="role">coordinators</xsl:with-param>
+		</xsl:call-template>
+	</xsl:if>
+	<xsl:if test=".//asmContext[semanticTag='secretaries']/node()">
+		<xsl:call-template name="StaffUnitSubtitle">
+			<xsl:with-param name="label">secretaries</xsl:with-param>
+		</xsl:call-template>
+		<xsl:call-template name="Staff">
+			<xsl:with-param name="role">secretaries</xsl:with-param>
+		</xsl:call-template>
+	</xsl:if>
 </xsl:template>
 
 <xsl:template match="asmUnit[@xsi:type='OverviewUnit']">
 	<xsl:call-template name="StructTitle">
 		<xsl:with-param name="label"><xsl:value-of select="label"/></xsl:with-param>
 	</xsl:call-template>
-	<xsl:apply-templates select=".//asmResource"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='description']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='objectives']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='learningstrat']"/>
+
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='undefined']"/>
 </xsl:template>
 
 <xsl:template match="asmUnit[@xsi:type='LearningMaterialUnit']">
 	<xsl:call-template name="StructTitle">
 		<xsl:with-param name="label"><xsl:value-of select="label"/></xsl:with-param>
 	</xsl:call-template>
-	<xsl:apply-templates select=".//asmResource"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='bibliographicres']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='complbibres']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='misresources']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='tools']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='pastexams']"/>
+
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='undefined']"/>
 </xsl:template>
 
 <xsl:template match="asmUnit[@xsi:type='AssessmentUnit']">
@@ -169,7 +354,9 @@
 				</fo:table-cell>
 				<fo:table-cell padding="0px" border-bottom="1px solid black" display-align="center">
 					<fo:block text-align="left" font-size="13pt" font-weight="bold">
-						<xsl:value-of select="date-start"/>
+						<xsl:call-template name="printAssessmentDate">
+							<xsl:with-param name="date"><xsl:value-of select="substring-before(date-end,'T')"/></xsl:with-param>
+						</xsl:call-template>
 					</fo:block>
 				</fo:table-cell>
 			</fo:table-row>
@@ -180,39 +367,430 @@
 		<fo:inline><xsl:value-of select="location"/></fo:inline>
 	</fo:block>
 	<fo:block font-size="10pt" space-before="0pt" space-after="0pt">
-		<fo:inline><xsl:text>Mode de remise : </xsl:text></fo:inline>
+		<fo:inline>
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Mode de remise : </xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Submission method: </xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Forma de entrega: </xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</fo:inline>
 		<fo:inline><xsl:value-of select="submition_type"/></fo:inline>
 	</fo:block>
 
- 	<xsl:apply-templates select=".//asmResource"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='description']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='objectives']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='evalcriteria']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='evalpreparation']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='evalsubproc']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='misresources']"/>
+
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='undefined']"/>
 </xsl:template>
 
-<xsl:template match="asmUnit[@xsi:type='Lecture']|asmUnit[@xsi:type='WorkSession']">
+<xsl:template match="asmUnit[@xsi:type='Lecture' or @xsi:type='WorkSession']">
+	<xsl:param name="pos"/>
+	<xsl:param name="preceding-sibling-parentId"/>
+
+  <xsl:if test="$preceding-sibling-parentId = ''">
+		<xsl:call-template name="SubPedagogicalStructTitle">
+			<xsl:with-param name="label"><xsl:value-of select="../label"/></xsl:with-param>
+			<xsl:with-param name="description"><xsl:value-of select="../description"/></xsl:with-param>
+		</xsl:call-template>
+  </xsl:if>
+
 	<xsl:call-template name="PedagogicalUnitTitle">
+		<xsl:with-param name="pos"><xsl:value-of select="$pos"/></xsl:with-param>
 		<xsl:with-param name="label"><xsl:value-of select="label"/></xsl:with-param>
 	</xsl:call-template>
-	<xsl:apply-templates select=".//asmResource"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='description']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='objectives']"/>
+
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='readinglist']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='ressinclass']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='exercises']"/>
+
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='undefined']"/>
 </xsl:template>
 
 <xsl:template match="asmUnit[@xsi:type='NewsUnit']">
 	<xsl:call-template name="StructTitle">
 		<xsl:with-param name="label"><xsl:value-of select="label"/></xsl:with-param>
 	</xsl:call-template>
-	<xsl:apply-templates select=".//asmResource[@xsi:type='News']"/>
-	<xsl:apply-templates select=".//asmResource[@xsi:type='Text']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='news']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='plagiarism']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='calculators']"/>
+
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='undefined']"/>
+</xsl:template>
+
+<!-- ===================================== -->
+<!-- ========== Contextes ================ -->
+<!-- ===================================== -->
+
+<xsl:template match="asmContext[../@xsi:type != 'StaffUnitContent']">
+	<xsl:if test="position()=1">
+		<xsl:call-template name="RubricTitle">
+			<xsl:with-param name="label"><xsl:value-of select="semanticTag"/></xsl:with-param>
+		</xsl:call-template>
+	</xsl:if>
+	<xsl:choose>
+		<xsl:when test="(level/text()) and (level != 'undefined')">
+			<fo:block>
+				<fo:external-graphic content-height="20px" vertical-align="middle" padding-left="-30pt" padding-top="0pt">
+					<xsl:attribute name="src"><xsl:value-of select="$ppath"/>img/<xsl:value-of select="level"/>.png</xsl:attribute>
+				</fo:external-graphic>
+			</fo:block>
+			<fo:block padding-top="-15pt">
+				<xsl:call-template name="Ressources"/>
+			</fo:block>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:call-template name="Ressources"/>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<xsl:template name="Staff">
+  <xsl:param name="role"/>
+	<xsl:variable name="threshold" select="(count(.//asmContext[semanticTag=$role]) + 1) div 2"/>
+	<fo:table width="100%" table-layout="fixed" space-before="5pt">
+		<fo:table-column column-width="50%" column-number="1" />
+		<fo:table-column column-width="50%" column-number="2" />
+		<fo:table-body >
+			<fo:table-row>
+				<fo:table-cell padding="5px">
+					<fo:block>
+					<xsl:apply-templates select=".//asmContext[semanticTag=$role][(position() &lt;= $threshold)]"/>
+					</fo:block>
+				</fo:table-cell>
+				<fo:table-cell padding="5px">
+					<fo:block>
+					<xsl:apply-templates select=".//asmContext[semanticTag=$role][(position() &gt; $threshold)]"/>
+					</fo:block>
+				</fo:table-cell>
+			</fo:table-row>
+		</fo:table-body>
+	</fo:table>
+</xsl:template>
+
+<xsl:template match="asmContext[@xsi:type='PeopleContext']">
+	<fo:block font-size="10pt" space-before="5pt">
+		<fo:inline><xsl:value-of select="Person/firstname"/><xsl:text> </xsl:text></fo:inline>
+		<fo:inline><xsl:value-of select="Person/surname"/></fo:inline>
+	</fo:block>
+	<fo:block font-size="8pt">
+		<xsl:value-of select="Person/title"/>
+	</fo:block>
+	<fo:block font-size="8pt" color="blue" text-decoration="underline">
+		<xsl:value-of select="Person/email"/>
+	</fo:block>
+	<fo:block font-size="8pt">
+		<xsl:value-of select="Person/tel"/>
+	</fo:block>
+	<xsl:if test="availability != null">
+		<fo:block font-size="8pt">
+			<fo:inline>
+				<xsl:choose>
+					<xsl:when test="$lang = 'FR'">
+						<xsl:text>Disponibilité : </xsl:text>
+					</xsl:when>
+					<xsl:when test="$lang = 'EN'">
+						<xsl:text>Availability :</xsl:text>
+					</xsl:when>
+					<xsl:when test="$lang = 'ES'">
+						<xsl:text>Disponibilidad : </xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+					</xsl:otherwise>
+				</xsl:choose>
+			</fo:inline>
+			<fo:inline><xsl:value-of select="Person/availability"/></fo:inline>
+		</fo:block>
+	</xsl:if>
+	<xsl:if test="comment != null">
+		<fo:block font-size="8pt" space-before="15pt">
+			<xsl:value-of select="Person/comment"/>
+		</fo:block>
+	</xsl:if>
+</xsl:template>
+
+<!-- ===================================== -->
+<!-- ========== Ressources =============== -->
+<!-- ===================================== -->
+
+<xsl:template name="Ressources">
+	<xsl:choose>
+		<xsl:when test="importance = 'true'">
+			<fo:block font-size="10pt" margin-left="-1px" margin-right="0px" padding-left="5px" padding-top="3px" padding-bottom="2px" space-before="0pt" space-after="0pt" background-color="lightgrey">
+				<xsl:choose>
+					<xsl:when test="$lang = 'FR'">
+						<xsl:text>IMPORTANT</xsl:text>
+					</xsl:when>
+					<xsl:when test="$lang = 'EN'">
+						<xsl:text>IMPORTANT</xsl:text>
+					</xsl:when>
+					<xsl:when test="$lang = 'ES'">
+						<xsl:text>IMPORTANTE</xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+					</xsl:otherwise>
+				</xsl:choose>
+			</fo:block>
+			<fo:table width="100%" table-layout="fixed" space-before="0pt">
+				<fo:table-column column-width="100%" column-number="1" />
+				<fo:table-body >
+					<fo:table-row>
+						<fo:table-cell padding="10pt" padding-top="3px" border="1px solid lightgrey">
+							<xsl:apply-templates select="./asmResource"/>
+						</fo:table-cell>
+					</fo:table-row>
+				</fo:table-body>
+			</fo:table>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:apply-templates select="./asmResource"/>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<xsl:template match="asmResource[@xsi:type='Text']">
+	<fo:block>
+		<xsl:apply-templates select="text/node()"/>
+	</fo:block>
+</xsl:template>
+
+<xsl:template match="asmResource[@xsi:type='News']">
+	<fo:block>
+		<xsl:apply-templates select="text/node()"/>
+	</fo:block>
+	<fo:block>
+		<fo:inline>
+			<xsl:call-template name="printDate">
+				<xsl:with-param name="date"><xsl:value-of select="substring-before(../modified,'T')"/></xsl:with-param>
+			</xsl:call-template>
+		</fo:inline>
+		<fo:inline padding-left="5px">
+			<xsl:value-of select="substring-before(substring-after(../modified,'T'),'-')"/>
+		</fo:inline>
+	</fo:block>
+</xsl:template>
+
+<xsl:template match="asmResource[@xsi:type='URL']">
+	<fo:block font-size="10pt" color="blue" text-decoration="underline">
+		<fo:basic-link>
+				<xsl:attribute name="external-destination"><xsl:value-of select="identifier"/></xsl:attribute>
+			<xsl:value-of select="../label"/>
+		</fo:basic-link>
+	</fo:block>
+	<fo:block font-size="10pt" color="gray">
+		(<xsl:value-of select="identifier"/>)
+	</fo:block>
+	<fo:block font-size="10pt" space-before="15pt" space-after="15pt">
+		<xsl:value-of select="../comment"/>
+	</fo:block>
+</xsl:template>
+
+<xsl:template match="asmResource[@xsi:type='SakaiEntity']">
+	<fo:block font-size="10pt">
+		<fo:inline color="blue" text-decoration="underline">
+			<fo:basic-link>
+					<xsl:attribute name="external-destination"><xsl:value-of select="identifier"/></xsl:attribute>
+				<xsl:value-of select="../label"/>
+			</fo:basic-link>
+		</fo:inline>
+		<fo:inline color="gray">
+			(<xsl:value-of select="identifier"/>)
+		</fo:inline>
+	</fo:block>
+	<fo:block font-size="10pt" space-before="15pt" space-after="15pt">
+		<xsl:value-of select="../comment"/>
+	</fo:block>
+</xsl:template>
+
+<xsl:template match="asmResource[@xsi:type='Document']">
+	<xsl:variable name='file'>
+		<xsl:call-template name="lastIndexOf">
+			 <xsl:with-param name="string" select="identifier"/>
+			 <xsl:with-param name="char">/</xsl:with-param>
+		</xsl:call-template>
+	</xsl:variable>
+
+	<fo:block font-size="10pt">
+		<fo:inline color="blue" text-decoration="underline">
+			<fo:basic-link>
+					<xsl:attribute name="external-destination"><xsl:value-of select="$spath"/><xsl:value-of select="identifier"/></xsl:attribute>
+				<xsl:value-of select="../label"/>
+			</fo:basic-link>
+		</fo:inline>
+		<fo:inline color="gray">
+			(<xsl:value-of select="$file"/>)
+		</fo:inline>
+	</fo:block>
+	<fo:block font-size="10pt" space-before="15pt" space-after="15pt">
+		<xsl:value-of select="../comment"/>
+	</fo:block>
+</xsl:template>
+
+<xsl:template match="asmResource[@xsi:type='BiblioResource']">
+	<fo:block font-size="10pt">
+		<xsl:choose>
+			<xsl:when test="resourceType='article'">
+				<fo:inline><xsl:value-of select="author"/></fo:inline>
+				<fo:inline> (<xsl:value-of select="year"/>). </fo:inline>
+				<fo:inline font-style="italic">. «<xsl:value-of select="title"/>»</fo:inline>
+				<fo:inline>, <xsl:value-of select="journal"/></fo:inline>
+				<fo:inline>, vol.<xsl:value-of select="volume"/></fo:inline>
+				<fo:inline>, no.<xsl:value-of select="issue"/></fo:inline>
+				<fo:inline>, p.<xsl:value-of select="pages"/></fo:inline>
+				<fo:inline>.</fo:inline>
+			</xsl:when>
+			<xsl:otherwise>
+				<fo:inline><xsl:value-of select="author"/></fo:inline>
+				<fo:inline> (<xsl:value-of select="year"/>)</fo:inline>
+				<fo:inline font-style="italic">. <xsl:value-of select="title"/></fo:inline>
+				<fo:inline>, <xsl:value-of select="publisher"/></fo:inline>
+				<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>
+				<fo:inline>.</fo:inline>
+				<xsl:if test="identifier[@type='isn'] != null">
+					<fo:block>
+						<fo:inline>ISBN:<xsl:value-of select="identifier[@type='isn']"/></fo:inline>
+					</fo:block>
+				</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
+	</fo:block>
+	<fo:block font-size="10pt" space-before="15pt" space-after="15pt">
+		<xsl:value-of select="../comment"/>
+	</fo:block>
+	<xsl:if test="identifier/@type='library'">
+		<xsl:call-template name="BiblioResource_link">
+			 <xsl:with-param name="img">library_link</xsl:with-param>
+			 <xsl:with-param name="link_text">library_link_text</xsl:with-param>
+			 <xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='library']"/></xsl:with-param>
+		</xsl:call-template>
+	</xsl:if>
+	<xsl:if test="identifier/@type='bookstore'">
+		<xsl:call-template name="BiblioResource_link">
+			 <xsl:with-param name="img">bookstore_link</xsl:with-param>
+			 <xsl:with-param name="link_text">bookstore_link_text</xsl:with-param>
+			 <xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='bookstore']"/></xsl:with-param>
+		</xsl:call-template>
+	</xsl:if>
+	<xsl:if test="identifier/@type='other_link'">
+		<xsl:call-template name="BiblioResource_link">
+			 <xsl:with-param name="img">other_link</xsl:with-param>
+			 <xsl:with-param name="link_text">other_link_text</xsl:with-param>
+			 <xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='other_link']"/></xsl:with-param>
+		</xsl:call-template>
+	</xsl:if>
+</xsl:template>
+
+<xsl:template name="BiblioResource_link">
+  <xsl:param name="img"/>
+  <xsl:param name="link_text"/>
+  <xsl:param name="identifier"/>
+	<fo:table width="100%" table-layout="fixed" space-before="10pt">
+		<fo:table-column column-width="10%" column-number="1" />
+		<fo:table-column column-width="90%" column-number="2" />
+		<fo:table-body >
+			<fo:table-row>
+				<fo:table-cell padding="0px" display-align="center">
+					<fo:block text-align="left">
+						<fo:external-graphic content-height="10px" vertical-align="middle" padding-left="0pt" padding-top="0pt">
+							<xsl:attribute name="src"><xsl:value-of select="$ppath"/>img/<xsl:value-of select="$img"/>.gif</xsl:attribute>
+						</fo:external-graphic>
+					</fo:block>
+				</fo:table-cell>
+				<fo:table-cell padding="0px" display-align="center">
+					<fo:block text-align="left" font-size="10pt" color="blue" text-decoration="underline">
+						<fo:basic-link>
+								<xsl:attribute name="external-destination"><xsl:value-of select="$identifier"/></xsl:attribute>
+							<xsl:call-template name="TextByLang">
+								<xsl:with-param name="label"><xsl:value-of select="$link_text"/></xsl:with-param>
+							</xsl:call-template>
+						</fo:basic-link>
+					</fo:block>
+				</fo:table-cell>
+			</fo:table-row>
+		</fo:table-body>
+	</fo:table>
+</xsl:template>
+
+<xsl:template match="asmResource[@xsi:type='Assignment']">
+	<fo:block font-size="10pt" color="blue" text-decoration="underline">
+		<fo:basic-link>
+				<xsl:attribute name="external-destination"><xsl:value-of select="identifier"/></xsl:attribute>
+			<xsl:value-of select="../label"/>
+		</fo:basic-link>
+	</fo:block>
+	<fo:block font-size="10pt" font-style="italic">
+		<fo:inline>
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Date d'ouverture: </xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Opening date: </xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Fecha de apertura: </xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</fo:inline>
+		<fo:inline>
+			<xsl:call-template name="printDate">
+				<xsl:with-param name="date"><xsl:value-of select="substring-before(date-start,'T')"/></xsl:with-param>
+			</xsl:call-template>
+		</fo:inline>
+		<fo:inline padding-left="5px">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Date d'échéance: </xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Deadline: </xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Plazo: </xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</fo:inline>
+		<fo:inline>
+			<xsl:call-template name="printDate">
+				<xsl:with-param name="date"><xsl:value-of select="substring-before(date-end,'T')"/></xsl:with-param>
+			</xsl:call-template>
+		</fo:inline>
+	</fo:block>
 </xsl:template>
 
 <!-- ===================================== -->
 <xsl:template name="AssessmentHeader">
   <xsl:param name="label"/>
 	<fo:block font-size="14pt" font-weight="bold" space-before="15pt" space-after="5pt" background-color="lightgrey">
-		<xsl:value-of select="$label"/></fo:block>
+		<xsl:call-template name="TextByLang">
+			<xsl:with-param name="label"><xsl:value-of select="$label"/></xsl:with-param>
+		</xsl:call-template>
+	</fo:block>
 </xsl:template>
 
 <xsl:template name="StructTitle">
   <xsl:param name="label"/>
 	<fo:block font-size="14pt" font-weight="bold" space-before="24pt" space-after="0pt" background-color="lightgrey">
-		<xsl:value-of select="$label"/>
+		<xsl:call-template name="TextByLang">
+			<xsl:with-param name="label"><xsl:value-of select="$label"/></xsl:with-param>
+		</xsl:call-template>
 	</fo:block>
 </xsl:template>
 
@@ -237,40 +815,523 @@
 </xsl:template>
 
 <xsl:template name="PedagogicalUnitTitle">
+  <xsl:param name="pos"/>
   <xsl:param name="label"/>
 	<fo:block font-size="13pt" font-weight="bold" space-before="24pt" space-after="0pt" border-bottom="1px solid black">
-		<xsl:value-of select="$label"/></fo:block>
+		<xsl:value-of select="$pos"/> - <xsl:value-of select="$label"/>
+	</fo:block>
 </xsl:template>
 
-<!-- ===================================== -->
-<!-- ========== Ressource Text =========== -->
-<!-- ===================================== -->
-
-<xsl:template match="asmResource[@xsi:type='Text']">
+<xsl:template name="RubricTitle">
+  <xsl:param name="label"/>
 	<fo:block font-size="13pt" font-weight="bold" space-before="10pt" space-after="10pt">
-		<xsl:value-of select="../label"/>
-	</fo:block>
-	<fo:block>
-		<xsl:apply-templates select="text/node()"/>
-	</fo:block>
-</xsl:template>
-
-<!-- ===================================== -->
-<!-- ========== Ressource News =========== -->
-<!-- ===================================== -->
-
-<xsl:template match="asmResource[@xsi:type='News']">
-	<fo:block font-size="13pt" font-weight="bold" space-before="10pt" space-after="10pt">
-		<xsl:value-of select="../label"/>
-	</fo:block>
-	<fo:block>
-		<xsl:apply-templates select="text/node()"/>
-	</fo:block>
-	<fo:block>
-		<xsl:value-of select="../modified"/>
+		<xsl:call-template name="TextByLang">
+			<xsl:with-param name="label"><xsl:value-of select="$label"/></xsl:with-param>
+		</xsl:call-template>
 	</fo:block>
 </xsl:template>
 
+<xsl:template name="StaffUnitTitle">
+  <xsl:param name="label"/>
+	<fo:block font-size="12pt" font-weight="bold" margin-left="0px" padding-left="5px" padding-top="3px" padding-bottom="2px" space-before="15pt" space-after="5pt" background-color="lightgrey">
+		<xsl:call-template name="TextByLang">
+			<xsl:with-param name="label"><xsl:value-of select="$label"/></xsl:with-param>
+		</xsl:call-template>
+	</fo:block>
+</xsl:template>
+
+<xsl:template name="StaffUnitSubtitle">
+  <xsl:param name="label"/>
+	<fo:block font-size="12pt" font-weight="bold" margin-left="0px" padding-left="5px" space-before="10pt" space-after="5pt" background-color="lightgrey">
+		<xsl:call-template name="TextByLang">
+			<xsl:with-param name="label"><xsl:value-of select="$label"/></xsl:with-param>
+		</xsl:call-template>
+	</fo:block>
+</xsl:template>
+
+<!-- ======================================================================= -->
+<!-- ===================================== -->
+
+<xsl:template name="TextByLang">
+  <xsl:param name="label"/>
+
+	<xsl:choose>
+		<xsl:when test="$label = 'description'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Description</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Description</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Descripción</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'objectives'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Objectifs</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Objectives</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Objetivos</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'lecturers'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Enseignant(s)</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Lecturer(s)</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Profesor</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'coordinators'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Coordonnateur</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Coordinator</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Coordinador</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'secretaries'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Secrétaire(s)</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Secretary(ies)</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Secretaria(s)</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'learningstrat'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Approche pédagogique</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Learning Strategy</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Estrategia de aprendizaje</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'bibliographicres'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Ressources bibliographiques</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Bibliographic resources</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Referencias bibliográfica</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'complbibres'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Ressources bibliographiques complémentaires</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Complementary Bibliographical Resources</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Recursos bibliográficos complementarios</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'misresources'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Ressources générales</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Miscellaneous Resources</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Varios recursos</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'tools'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Outils</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Tools</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Herramientas</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'pastexams'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Anciens examens</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Past Exams</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Pasado exámenes</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'evalpreparation'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Préparation à l'évaluation</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Preparation to Evaluation</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Preparación para la evaluación</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'evalsubproc'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Modalités de remise et pénalités</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Submission Procedures and Penalities</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Procedimientos de presentación y penalidades</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'evalcriteria'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Critères d'évaluation</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Evaluation Criteria</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Criterios de evaluación</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'readinglist'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Lectures</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Readings</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Lecturas</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'ressinclass'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Ressources utilisées pendant la séance</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Resources Used in Class</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Recursos utilizados durante la clase</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'exercises'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Exercices</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Exercises</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Ejercicios</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'news'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Nouvelle</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>News</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Novedades</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'plagiarism'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Plagiat</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Plagiarism</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Plagiarism</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'calculators'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Calculatrices</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Calculators</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Calculadoras</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'undefined'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Non défini</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Undefined</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Indefinido</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'library_link_text'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Disponible à la bibliothèque</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Available at the library</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Disponible en la biblioteca</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'bookstore_link_text'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Disponible à la coop HEC</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Available at the coop HEC</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Disponible en la coop HEC</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'other_link_text'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Version libre de droit en ligne</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Free legal online version</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Versión en línea</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'PedagogicalStruct'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Organisation du cours</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Course Organisation</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Organización del curso</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'AssessmentStruct'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Évaluations</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Evaluations</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Evaluaciones</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="$label"/>
+		</xsl:otherwise>
+	</xsl:choose>
+
+</xsl:template>
+
+<xsl:template name="printAssessmentDate">
+  <xsl:param name="date"/>
+
+	<xsl:choose>
+		<xsl:when test="$date=''">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<fo:inline>Voir </fo:inline>
+					<fo:inline font-style="italic">HEC en ligne</fo:inline>
+					<fo:inline> pour date</fo:inline>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<fo:inline>See </fo:inline>
+					<fo:inline font-style="italic">HEC en ligne</fo:inline>
+					<fo:inline> for date</fo:inline>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<fo:inline>Ver </fo:inline>
+					<fo:inline font-style="italic">HEC en ligne</fo:inline>
+					<fo:inline> para fecha</fo:inline>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:call-template name="printDate">
+				<xsl:with-param name="date"><xsl:value-of select="$date"/></xsl:with-param>
+			</xsl:call-template>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<xsl:template name="getDay">
+	<xsl:param name="date"></xsl:param>
+
+	<xsl:variable name="dateWithoutYear" select="substring-after(normalize-space($date),'-')"/>
+	<xsl:choose>
+		<xsl:when test="substring-before(substring-after(normalize-space($dateWithoutYear),'-'), ' ') != ''">
+			<xsl:value-of select="substring-before(substring-after(normalize-space($dateWithoutYear),'-'), ' ')"/>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="substring-after(normalize-space($dateWithoutYear),'-')"/>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<xsl:template name="getMonth">
+	<xsl:param name="date"></xsl:param>
+
+	<xsl:variable name="dateWithoutYear" select="substring-after(normalize-space($date),'-')"/>
+	<xsl:value-of select="substring-before($dateWithoutYear,'-')"/>
+
+</xsl:template>
+
+<xsl:template name="getYear">
+	<xsl:param name="date"></xsl:param>
+
+	<xsl:value-of select="substring-before($date,'-')"/>
+</xsl:template>
+
+<xsl:template name="printDate">
+	<xsl:param name="date"></xsl:param>
+
+	<xsl:call-template name="getDay">
+		<xsl:with-param name="date" select="$date"/>							
+	</xsl:call-template>
+	<xsl:text disable-output-escaping="yes">/</xsl:text>
+	<xsl:call-template name="getMonth">
+		<xsl:with-param name="date" select="$date"/>							
+	</xsl:call-template>
+	<xsl:text disable-output-escaping="yes">/</xsl:text>
+	<xsl:call-template name="getYear">
+		<xsl:with-param name="date" select="$date"/>							
+	</xsl:call-template>
+
+</xsl:template>
+
+<!-- ===================================== -->
 <!-- ===================================== -->
 
 <xsl:template match="span">
@@ -318,8 +1379,7 @@
 </xsl:template>
 
 <xsl:template match="ul|ol">
-  <fo:list-block provisional-distance-between-starts="0.5cm"
-    provisional-label-separation="0.5cm">
+  <fo:list-block provisional-distance-between-starts="0.5cm" provisional-label-separation="0.5cm">
     <xsl:attribute name="space-after">
       <xsl:choose>
         <xsl:when test="ancestor::ul or ancestor::ol">
@@ -334,10 +1394,10 @@
       <xsl:variable name="ancestors">
         <xsl:choose>
           <xsl:when test="count(ancestor::ol) or count(ancestor::ul)">
-            <xsl:value-of select="1 + (count(ancestor::ol) + count(ancestor::ul)) * 1"/>
+            <xsl:value-of select="0 + (count(ancestor::ol) + count(ancestor::ul)) * 1"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:text>1</xsl:text>
+            <xsl:text>0</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
@@ -424,10 +1484,10 @@
 					<xsl:variable name="ancestors">
 						<xsl:choose>
 							<xsl:when test="count(ancestor::ol) or count(ancestor::ul)">
-								<xsl:value-of select="1 + (count(ancestor::ol) + count(ancestor::ul)) * 1"/>
+								<xsl:value-of select="0 + (count(ancestor::ol) + count(ancestor::ul)) * 1"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:text>1</xsl:text>
+								<xsl:text>0</xsl:text>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
@@ -439,6 +1499,31 @@
 	</fo:list-item>
 </xsl:template>
 
+<xsl:template match="a">
+  <xsl:choose>
+    <xsl:when test="@href">
+      <fo:basic-link color="blue" text-decoration="underline">
+        <xsl:choose>
+          <xsl:when test="starts-with(@href, '#')">
+            <xsl:attribute name="internal-destination">
+              <xsl:value-of select="substring(@href, 2)"/>
+            </xsl:attribute>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:attribute name="external-destination">
+              <xsl:value-of select="@href"/>
+            </xsl:attribute>
+          </xsl:otherwise>
+        </xsl:choose>
+        <xsl:apply-templates select="*|text()"/>
+      </fo:basic-link>
+      <xsl:if test="starts-with(@href, '#')">
+        <fo:page-number-citation ref-id="{substring(@href, 2)}"/>
+      </xsl:if>
+    </xsl:when>
+  </xsl:choose>
+</xsl:template>
+  
 <!-- ===================================== -->
 <xsl:template name="lastIndexOf">
    <xsl:param name="string" />
