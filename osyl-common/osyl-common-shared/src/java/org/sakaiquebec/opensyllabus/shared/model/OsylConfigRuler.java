@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
@@ -127,18 +128,25 @@ public class OsylConfigRuler {
 
     private String getCOElementAbstractNodeName(COElementAbstract coe) {
 	String nodeName = UNDEFINED_NODE_NAME;
-	if (coe.isCourseOutlineContent()) {
-	    nodeName = COModeled.CO_NODE_NAME;
-	} else if (coe.isCOStructureElement()) {
-	    nodeName = COModeled.CO_STRUCTURE_NODE_NAME;
-	} else if (coe.isCOUnit()) {
-	    nodeName = COModeled.CO_UNIT_NODE_NAME;
-	} else if (coe.isCOUnitStructure()) {
-	    nodeName = COModeled.CO_UNIT_STRUCTURE_NODE_NAME;
-	} else if (coe.isCOUnitContent()) {
-	    nodeName = COModeled.CO_UNIT_CONTENT_NODE_NAME;
+	try {
+	    if (coe.isCourseOutlineContent()) {
+		nodeName = COModeled.CO_NODE_NAME;
+	    } else if (coe.isCOStructureElement()) {
+		nodeName = COModeled.CO_STRUCTURE_NODE_NAME;
+	    } else if (coe.isCOUnit()) {
+		nodeName = COModeled.CO_UNIT_NODE_NAME;
+	    } else if (coe.isCOUnitStructure()) {
+		nodeName = COModeled.CO_UNIT_STRUCTURE_NODE_NAME;
+	    } else if (coe.isCOUnitContent()) {
+		nodeName = COModeled.CO_UNIT_CONTENT_NODE_NAME;
+	    }
+	} catch (Exception e) {
+	    Window.alert("An error has been detected in getCOElementNodeName "
+		    + e.toString());
+	    e.printStackTrace();
 	}
 	return nodeName;
+
     }
 
     private Node findNode(List<COElementAbstract> path) {
@@ -323,30 +331,42 @@ public class OsylConfigRuler {
     private COModelInterface createModelInstance(String nameAttribute,
 	    String type) {
 	COModelInterface modelInstance = null;
-	if (COModeled.CO_NODE_NAME.equalsIgnoreCase(nameAttribute)) {
-	    modelInstance = new COContent();
-	} else if (COModeled.CO_STRUCTURE_NODE_NAME
-		.equalsIgnoreCase(nameAttribute)) {
-	    modelInstance = new COStructureElement();
-	} else if (COModeled.CO_UNIT_NODE_NAME.equalsIgnoreCase(nameAttribute)) {
-	    modelInstance = new COUnit();
-	} else if (COModeled.CO_UNIT_STRUCTURE_NODE_NAME
-		.equalsIgnoreCase(nameAttribute)) {
-	    modelInstance = new COUnitStructure();
-	} else if (COModeled.CO_UNIT_CONTENT_NODE_NAME
-		.equalsIgnoreCase(nameAttribute)) {
-	    modelInstance = new COUnitContent();
-	} else if (COModeled.CO_RES_NODE_NAME.equalsIgnoreCase(nameAttribute)) {
-	    modelInstance = new COContentResource();
-	} else if (COPropertiesType.SEMANTIC_TAG.equalsIgnoreCase(nameAttribute)) {
-	    modelInstance = new COContentRubric();
-	} else if (COModeled.CO_RES_NODE_NAME.equalsIgnoreCase(nameAttribute)) {
-	    modelInstance = new COContentResource();
-	} else {
-	    // TODO: this is forbidden, throw an exception
-	}
-	if (modelInstance != null) {
-	    modelInstance.setType(type);
+	try {
+	    if (COModeled.CO_NODE_NAME.equalsIgnoreCase(nameAttribute)) {
+		modelInstance = new COContent();
+	    } else if (COModeled.CO_STRUCTURE_NODE_NAME
+		    .equalsIgnoreCase(nameAttribute)) {
+		modelInstance = new COStructureElement();
+	    } else if (COModeled.CO_UNIT_NODE_NAME
+		    .equalsIgnoreCase(nameAttribute)) {
+		modelInstance = new COUnit();
+	    } else if (COModeled.CO_UNIT_STRUCTURE_NODE_NAME
+		    .equalsIgnoreCase(nameAttribute)) {
+		modelInstance = new COUnitStructure();
+	    } else if (COModeled.CO_UNIT_CONTENT_NODE_NAME
+		    .equalsIgnoreCase(nameAttribute)) {
+		modelInstance = new COUnitContent();
+	    } else if (COModeled.CO_RES_NODE_NAME
+		    .equalsIgnoreCase(nameAttribute)) {
+		modelInstance = new COContentResource();
+	    } else if (COPropertiesType.SEMANTIC_TAG
+		    .equalsIgnoreCase(nameAttribute)) {
+		modelInstance = new COContentRubric();
+	    } else if (COModeled.CO_RES_NODE_NAME
+		    .equalsIgnoreCase(nameAttribute)) {
+		modelInstance = new COContentResource();
+	    } else {
+		System.err.println("this is forbidden, throw an exception");
+		// TODO: this is forbidden, throw an exception
+	    }
+	    if (modelInstance != null) {
+		modelInstance.setType(type);
+	    }
+
+	} catch (Exception e) {
+	    Window.alert("An error has been detected in createModelInstance "
+		    + e.toString());
+	    e.printStackTrace();
 	}
 	return modelInstance;
     }

@@ -29,6 +29,7 @@ import java.util.Set;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.util.UUID;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.NamedNodeMap;
@@ -297,17 +298,23 @@ public class COModeled extends COSerialized {
 	for (int i = 0; i < rootChildren.getLength(); i++) {
 	    myNode = rootChildren.item(i);
 	    nodeName = myNode.getNodeName();
+	    try {
+		if (nodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
+		    COStructureElement coStructElt = new COStructureElement();
+		    coContent.getChildrens().add(
+			    createCOStructureElementPOJO(myNode, coStructElt,
+				    coContent));
 
-	    if (nodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
-		COStructureElement coStructElt = new COStructureElement();
-		coContent.getChildrens().add(
-			createCOStructureElementPOJO(myNode, coStructElt,
-				coContent));
+		} else {
+		    addProperty(coContent.getProperties(), myNode);
+		}
+	    } catch (Exception e) {
+		Window
+			.alert("An error has been detected in createCOContentPOJO "
+				+ e.toString());
+		e.printStackTrace();
 
-	    } else {
-		addProperty(coContent.getProperties(), myNode);
 	    }
-
 	}
 	return coContent;
     }
@@ -440,18 +447,26 @@ public class COModeled extends COSerialized {
 	for (int i = 0; i < strucEltChildren.getLength(); i++) {
 	    sNode = strucEltChildren.item(i);
 	    sNodeName = sNode.getNodeName();
+	    try {
+		if (sNodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
+		    COStructureElement coChildStructElt =
+			    new COStructureElement();
+		    coStructElt.getChildrens().add(
+			    createCOStructureElementPOJO(sNode,
+				    coChildStructElt, coStructElt));
+		} else if (sNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
+		    COUnit coUnit = new COUnit();
+		    coStructElt.addChild(createCOUnitPOJO(sNode, coUnit,
+			    coStructElt));
+		} else {
+		    addProperty(coStructElt.getProperties(), sNode);
+		}
 
-	    if (sNodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
-		COStructureElement coChildStructElt = new COStructureElement();
-		coStructElt.getChildrens().add(
-			createCOStructureElementPOJO(sNode, coChildStructElt,
-				coStructElt));
-	    } else if (sNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
-		COUnit coUnit = new COUnit();
-		coStructElt.addChild(createCOUnitPOJO(sNode, coUnit,
-			coStructElt));
-	    } else {
-		addProperty(coStructElt.getProperties(), sNode);
+	    } catch (Exception e) {
+		Window
+			.alert("An error has been detected in createCOStructureElementPOJO "
+				+ e.toString());
+		e.printStackTrace();
 	    }
 	}
 	return coStructElt;
@@ -513,6 +528,7 @@ public class COModeled extends COSerialized {
 	    prNode = resProxyChildren.item(j);
 	    prNodeName = prNode.getNodeName();
 
+	    try{
 	    if (prNodeName.equalsIgnoreCase(COPropertiesType.SEMANTIC_TAG)) {
 		coContentResProxy.setRubric(createCOContentRubricPOJO(prNode));
 	    } else if (prNodeName.equalsIgnoreCase(CO_RES_NODE_NAME)) {
@@ -531,6 +547,13 @@ public class COModeled extends COSerialized {
 			coContentResProxy));
 	    } else {
 		addProperty(coContentResProxy.getProperties(), prNode);
+	    }
+	    
+	    } catch (Exception e) {
+		Window
+			.alert("An error has been detected in createCOContentResourceProxyPOJO "
+				+ e.toString());
+		e.printStackTrace();
 	    }
 	}
 	return coContentResProxy;
@@ -692,6 +715,8 @@ public class COModeled extends COSerialized {
      */
     private void createChildElement(Document document, Element parent,
 	    COElementAbstract child, boolean saveParentInfos) {
+	
+	try{
 	if (child instanceof COContentResourceProxy) {
 	    createChildElement(document, parent,
 		    (COContentResourceProxy) child, saveParentInfos);
@@ -716,6 +741,13 @@ public class COModeled extends COSerialized {
 	    }
 	    parent.appendChild(element);
 	}
+	
+	    } catch (Exception e) {
+		Window
+			.alert("An error has been detected in createChildElement "
+				+ e.toString());
+		e.printStackTrace();
+	    }
     }
 
     /**
