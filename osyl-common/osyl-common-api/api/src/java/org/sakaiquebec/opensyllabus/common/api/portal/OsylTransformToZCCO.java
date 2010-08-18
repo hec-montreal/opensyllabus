@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.common.api.portal;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +65,9 @@ public interface OsylTransformToZCCO {
      * @param documentVisibilityMap TODO
      *
      * @return
+     * @throws IOException 
+     * @throws Exception 
      */
-    public boolean sendXmlAndDoc(COSerialized published, Map<String, String> documentSecurityMap, Map<String, String> documentVisibilityMap);
+    public boolean sendXmlAndDoc(COSerialized published, Map<String, String> documentSecurityMap, Map<String, String> documentVisibilityMap) throws IOException, Exception;
 
 }
