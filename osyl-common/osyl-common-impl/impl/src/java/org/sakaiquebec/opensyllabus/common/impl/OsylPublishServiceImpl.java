@@ -784,9 +784,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	co.setPublicationDate(new java.util.Date(System.currentTimeMillis()));
 	resourceDao.setPublicationDate(co.getCoId(), co.getPublicationDate());
 
-	// TODO: We check if the site is associated to a section or a canonical
-	// course in the course management and if the the course outline is
-	// public and transfer it to the public portal if it is the case.
 	String portalActivated =
 		ServerConfigurationService.getString("hec.portail.activated");
 
