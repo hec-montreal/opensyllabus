@@ -101,7 +101,7 @@ implements OsylManagerEventHandler {
 			}
 			int i =0;
 			int rowNum = i;
-			DateTimeFormat dtf = DateTimeFormat.getFormat("dd/MM/yyyy HH:mm:ss");
+			DateTimeFormat dtf = DateTimeFormat.getFormat("yyyy/MM/dd HH:mm:ss");
 			for (Iterator<String> sortedSiteIterator =
 				sortedMap.keySet().iterator(); sortedSiteIterator
 				.hasNext();) {
