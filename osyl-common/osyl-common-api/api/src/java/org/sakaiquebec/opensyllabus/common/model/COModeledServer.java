@@ -670,7 +670,7 @@ public class COModeledServer {
 		COContentResourceType.DOCUMENT))
 	    documentVisibilityMap.put(uri.trim(), visibility);
 	else if (coContentResProxy.getResource().getType().equals(
-		COContentResourceType.BIBLIO_RESOURCE))
+		COContentResourceType.BIBLIO_RESOURCE) && uri!=null)
 	    documentVisibilityMap.put(uri.substring(0, uri.lastIndexOf("/")),
 		    visibility);
 
@@ -806,12 +806,13 @@ public class COModeledServer {
 	    DocumentBuilder db = dbf.newDocumentBuilder();
 
 	    dom = db.newDocument();
+	    createRootElement(dom, getModeledContent());
+	    coSerialized.setContent(xmlToString(dom));
 
 	} catch (ParserConfigurationException pce) {
 	    pce.printStackTrace();
 	}
-	createRootElement(dom, getModeledContent());
-	coSerialized.setContent(xmlToString(dom));
+	
     }
 
     private String xmlToString(Document doc) {
