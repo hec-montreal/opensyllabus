@@ -235,6 +235,10 @@ public class COModeled extends COSerialized {
 	    // DOMtoModel
 	    coContent = createCOContentPOJO(messageDom, coContent);
 	} catch (Exception e) {
+		Window
+		.alert("An error has been detected in xmlToModel "
+			+ e.toString());
+
 	    e.printStackTrace();
 	}
 	setModeledContent(coContent);
