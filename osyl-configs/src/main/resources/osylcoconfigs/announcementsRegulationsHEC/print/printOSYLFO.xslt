@@ -323,8 +323,6 @@
  	<xsl:apply-templates select=".//asmContext[semanticTag='description']"/>
  	<xsl:apply-templates select=".//asmContext[semanticTag='objectives']"/>
  	<xsl:apply-templates select=".//asmContext[semanticTag='learningstrat']"/>
-
- 	<xsl:apply-templates select=".//asmContext[semanticTag='undefined']"/>
 </xsl:template>
 
 <xsl:template match="asmUnit[@xsi:type='LearningMaterialUnit']">
@@ -334,10 +332,9 @@
  	<xsl:apply-templates select=".//asmContext[semanticTag='bibliographicres']"/>
  	<xsl:apply-templates select=".//asmContext[semanticTag='complbibres']"/>
  	<xsl:apply-templates select=".//asmContext[semanticTag='misresources']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='case']"/>
  	<xsl:apply-templates select=".//asmContext[semanticTag='tools']"/>
  	<xsl:apply-templates select=".//asmContext[semanticTag='pastexams']"/>
-
- 	<xsl:apply-templates select=".//asmContext[semanticTag='undefined']"/>
 </xsl:template>
 
 <xsl:template match="asmUnit[@xsi:type='AssessmentUnit']">
@@ -391,8 +388,6 @@
  	<xsl:apply-templates select=".//asmContext[semanticTag='evalpreparation']"/>
  	<xsl:apply-templates select=".//asmContext[semanticTag='evalsubproc']"/>
  	<xsl:apply-templates select=".//asmContext[semanticTag='misresources']"/>
-
- 	<xsl:apply-templates select=".//asmContext[semanticTag='undefined']"/>
 </xsl:template>
 
 <xsl:template match="asmUnit[@xsi:type='Lecture' or @xsi:type='WorkSession']">
@@ -412,12 +407,12 @@
 	</xsl:call-template>
  	<xsl:apply-templates select=".//asmContext[semanticTag='description']"/>
  	<xsl:apply-templates select=".//asmContext[semanticTag='objectives']"/>
-
- 	<xsl:apply-templates select=".//asmContext[semanticTag='readinglist']"/>
+	<xsl:apply-templates select=".//asmContext[semanticTag='learningstrat']"/>
+	<xsl:apply-templates select=".//asmContext[semanticTag='misresources']"/>
  	<xsl:apply-templates select=".//asmContext[semanticTag='ressinclass']"/>
+	<xsl:apply-templates select=".//asmContext[semanticTag='case']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag='readinglist']"/>
  	<xsl:apply-templates select=".//asmContext[semanticTag='exercises']"/>
-
- 	<xsl:apply-templates select=".//asmContext[semanticTag='undefined']"/>
 </xsl:template>
 
 <xsl:template match="asmUnit[@xsi:type='NewsUnit']">
@@ -427,8 +422,6 @@
  	<xsl:apply-templates select=".//asmContext[semanticTag='news']"/>
  	<xsl:apply-templates select=".//asmContext[semanticTag='plagiarism']"/>
  	<xsl:apply-templates select=".//asmContext[semanticTag='calculators']"/>
-
- 	<xsl:apply-templates select=".//asmContext[semanticTag='undefined']"/>
 </xsl:template>
 
 <!-- ===================================== -->
