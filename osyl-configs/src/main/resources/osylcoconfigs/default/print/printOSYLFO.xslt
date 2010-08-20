@@ -10,7 +10,7 @@
 <xsl:output method="xml" indent="yes" />
 <xsl:param name="ppath"></xsl:param>
 <xsl:param name="spath"></xsl:param>
-<xsl:param name="currentDateTime">2010-08-03T11:37:48-04:00</xsl:param>
+<xsl:param name="currentDateTime"></xsl:param>
 
 	<xsl:variable name='lang'>
 		<xsl:value-of select="substring(/OSYL/CO/language,1,2)"/>

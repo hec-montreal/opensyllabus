@@ -47,6 +47,7 @@ import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.w3c.dom.Node;
 
 public class FOPHelper {
@@ -82,9 +83,11 @@ public class FOPHelper {
 		// Set the value of a <param> in the stylesheet
 		transformer.setParameter("versionParam", "2.0");
 		transformer.setParameter("ppath", webappdir);
+		transformer.setParameter("currentDateTime", OsylDateUtils.getNowDateAsXmlString());
 
 		// Setup input for XSLT transformation
 		String escapeString = xml.replaceAll("&amp;", "&");
+		//escapeString = escapeString.replaceAll("&amp;", "&");
 		escapeString = escapeString.replaceAll("&lt;", "<");
 		escapeString = escapeString.replaceAll("&gt;", ">");
 		escapeString = escapeString.replaceAll("&nbsp;", " ");
