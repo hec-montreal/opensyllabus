@@ -419,15 +419,18 @@ public class COModeledServer {
 	for (int i = 0; i < rootChildren.getLength(); i++) {
 	    myNode = rootChildren.item(i);
 	    nodeName = myNode.getNodeName();
+	    try {
+		if (nodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
+		    COStructureElement coStructElt = new COStructureElement();
+		    coContent.getChildrens().add(
+			    createCOStructureElementPOJO(myNode, coStructElt,
+				    coContent, isPublication));
 
-	    if (nodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
-		COStructureElement coStructElt = new COStructureElement();
-		coContent.getChildrens().add(
-			createCOStructureElementPOJO(myNode, coStructElt,
-				coContent, isPublication));
-
-	    } else {
-		addProperty(coContent.getProperties(), myNode);
+		} else {
+		    addProperty(coContent.getProperties(), myNode);
+		}
+	    } catch (Exception e) {
+		e.printStackTrace();
 	    }
 	}
 	return coContent;
@@ -489,13 +492,16 @@ public class COModeledServer {
 	for (int i = 0; i < unitChildren.getLength(); i++) {
 	    sNode = unitChildren.item(i);
 	    sNodeName = sNode.getNodeName();
-
-	    if (sNodeName.equalsIgnoreCase(CO_UNIT_STRUCTURE_NODE_NAME)) {
-		COUnitStructure coUnitStruct = new COUnitStructure();
-		coUnit.addChild(createCOUnitStructurePOJO(sNode, coUnitStruct,
-			coUnit, isPublication));
-	    } else {
-		addProperty(coUnit.getProperties(), sNode);
+	    try {
+		if (sNodeName.equalsIgnoreCase(CO_UNIT_STRUCTURE_NODE_NAME)) {
+		    COUnitStructure coUnitStruct = new COUnitStructure();
+		    coUnit.addChild(createCOUnitStructurePOJO(sNode,
+			    coUnitStruct, coUnit, isPublication));
+		} else {
+		    addProperty(coUnit.getProperties(), sNode);
+		}
+	    } catch (Exception e) {
+		e.printStackTrace();
 	    }
 	}
 	return coUnit;
@@ -523,18 +529,22 @@ public class COModeledServer {
 	for (int i = 0; i < unitChildren.getLength(); i++) {
 	    sNode = unitChildren.item(i);
 	    sNodeName = sNode.getNodeName();
-
-	    if (sNodeName.equalsIgnoreCase(CO_UNIT_STRUCTURE_NODE_NAME)) {
-		COUnitStructure coUnitStructure2 = new COUnitStructure();
-		coUnitStructure.addChild(createCOUnitStructurePOJO(sNode,
-			coUnitStructure2, coUnitStructure, isPublication));
-	    } else if (sNodeName.equalsIgnoreCase(CO_UNIT_CONTENT_NODE_NAME)) {
-		COUnitContent coContentUnit = new COUnitContent();
-		coUnitStructure.addChild(createCOContentUnitPOJO(sNode,
-			coContentUnit, coUnitStructure, isPublication));
-	    } else {
-		// properties
-		addProperty(coUnitStructure.getProperties(), sNode);
+	    try {
+		if (sNodeName.equalsIgnoreCase(CO_UNIT_STRUCTURE_NODE_NAME)) {
+		    COUnitStructure coUnitStructure2 = new COUnitStructure();
+		    coUnitStructure.addChild(createCOUnitStructurePOJO(sNode,
+			    coUnitStructure2, coUnitStructure, isPublication));
+		} else if (sNodeName
+			.equalsIgnoreCase(CO_UNIT_CONTENT_NODE_NAME)) {
+		    COUnitContent coContentUnit = new COUnitContent();
+		    coUnitStructure.addChild(createCOContentUnitPOJO(sNode,
+			    coContentUnit, coUnitStructure, isPublication));
+		} else {
+		    // properties
+		    addProperty(coUnitStructure.getProperties(), sNode);
+		}
+	    } catch (Exception e) {
+		e.printStackTrace();
 	    }
 	}
 	return coUnitStructure;
@@ -562,18 +572,23 @@ public class COModeledServer {
 	for (int i = 0; i < strucEltChildren.getLength(); i++) {
 	    sNode = strucEltChildren.item(i);
 	    sNodeName = sNode.getNodeName();
-
-	    if (sNodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
-		COStructureElement coChildStructElt = new COStructureElement();
-		coStructElt.getChildrens().add(
-			createCOStructureElementPOJO(sNode, coChildStructElt,
-				coStructElt, isPublication));
-	    } else if (sNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
-		COUnit coUnit = new COUnit();
-		coStructElt.addChild(createCOUnitPOJO(sNode, coUnit,
-			coStructElt, isPublication));
-	    } else {
-		addProperty(coStructElt.getProperties(), sNode);
+	    try {
+		if (sNodeName.equalsIgnoreCase(CO_STRUCTURE_NODE_NAME)) {
+		    COStructureElement coChildStructElt =
+			    new COStructureElement();
+		    coStructElt.getChildrens().add(
+			    createCOStructureElementPOJO(sNode,
+				    coChildStructElt, coStructElt,
+				    isPublication));
+		} else if (sNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
+		    COUnit coUnit = new COUnit();
+		    coStructElt.addChild(createCOUnitPOJO(sNode, coUnit,
+			    coStructElt, isPublication));
+		} else {
+		    addProperty(coStructElt.getProperties(), sNode);
+		}
+	    } catch (Exception e) {
+		e.printStackTrace();
 	    }
 	}
 	return coStructElt;
@@ -601,12 +616,15 @@ public class COModeledServer {
 	for (int i = 0; i < coContentUnitChildren.getLength(); i++) {
 	    coNode = coContentUnitChildren.item(i);
 	    coNodeName = coContentUnitChildren.item(i).getNodeName();
-
-	    if (coNodeName.equalsIgnoreCase(CO_RES_PROXY_NODE_NAME)) {
-		coContentUnit.addChild(createCOContentResourceProxyPOJO(coNode,
-			coContentUnit, isPublication));
-	    } else {
-		addProperty(coContentUnit.getProperties(), coNode);
+	    try {
+		if (coNodeName.equalsIgnoreCase(CO_RES_PROXY_NODE_NAME)) {
+		    coContentUnit.addChild(createCOContentResourceProxyPOJO(
+			    coNode, coContentUnit, isPublication));
+		} else {
+		    addProperty(coContentUnit.getProperties(), coNode);
+		}
+	    } catch (Exception e) {
+		e.printStackTrace();
 	    }
 	}
 	return coContentUnit;
@@ -627,52 +645,57 @@ public class COModeledServer {
 
 	COContentResourceProxy coContentResProxy = new COContentResourceProxy();
 
-	setCommonAttributes(coContentResProxy, node);
+	try {
+	    setCommonAttributes(coContentResProxy, node);
 
-	coContentResProxy.setParent(coContentUnitParent);
+	    coContentResProxy.setParent(coContentUnitParent);
 
-	NodeList resProxyChildren = node.getChildNodes();
-	for (int j = 0; j < resProxyChildren.getLength(); j++) {
-	    prNode = resProxyChildren.item(j);
-	    prNodeName = prNode.getNodeName();
+	    NodeList resProxyChildren = node.getChildNodes();
+	    for (int j = 0; j < resProxyChildren.getLength(); j++) {
+		prNode = resProxyChildren.item(j);
+		prNodeName = prNode.getNodeName();
+		if (prNodeName.equalsIgnoreCase(COPropertiesType.SEMANTIC_TAG)) {
+		    coContentResProxy
+			    .setRubric(createCOContentRubricPOJO(prNode));
+		} else if (prNodeName.equalsIgnoreCase(CO_RES_NODE_NAME)) {
+		    coContentResProxy.setResource(createCOContentResourcePOJO(
+			    prNode, isPublication));
+		} else if (prNodeName.equalsIgnoreCase(PERSON_NODE_NAME)) {
+		    coContentResProxy
+			    .setResource(createCOContentResourcePersonPOJO(prNode));
+		} else if (prNodeName.equalsIgnoreCase(CO_RES_PROXY_NODE_NAME)) {
+		    coContentResProxy
+			    .addNestedResourceProxy(createCOContentResourceProxyPOJO(
+				    prNode, coContentUnitParent, isPublication));
+		} else if (prNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
+		    COUnit coUnit = new COUnit();
+		    coContentResProxy.setResource(createCOUnitPOJO(prNode,
+			    coUnit, coContentResProxy, isPublication));
+		} else {
+		    addProperty(coContentResProxy.getProperties(), prNode);
+		}
 
-	    if (prNodeName.equalsIgnoreCase(COPropertiesType.SEMANTIC_TAG)) {
-		coContentResProxy.setRubric(createCOContentRubricPOJO(prNode));
-	    } else if (prNodeName.equalsIgnoreCase(CO_RES_NODE_NAME)) {
-		coContentResProxy.setResource(createCOContentResourcePOJO(
-			prNode, isPublication));
-	    } else if (prNodeName.equalsIgnoreCase(PERSON_NODE_NAME)) {
-		coContentResProxy
-			.setResource(createCOContentResourcePersonPOJO(prNode));
-	    } else if (prNodeName.equalsIgnoreCase(CO_RES_PROXY_NODE_NAME)) {
-		coContentResProxy
-			.addNestedResourceProxy(createCOContentResourceProxyPOJO(
-				prNode, coContentUnitParent, isPublication));
-	    } else if (prNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
-		COUnit coUnit = new COUnit();
-		coContentResProxy.setResource(createCOUnitPOJO(prNode, coUnit,
-			coContentResProxy, isPublication));
-	    } else {
-		addProperty(coContentResProxy.getProperties(), prNode);
 	    }
 
+	    String uri =
+		    coContentResProxy.getResource().getProperty(
+			    COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_URI);
+
+	    String visibility =
+		    coContentResProxy.getProperty(COPropertiesType.VISIBILITY);
+
+	    if (coContentResProxy.getResource().getType().equals(
+		    COContentResourceType.DOCUMENT))
+		documentVisibilityMap.put(uri.trim(), visibility);
+	    else if (coContentResProxy.getResource().getType().equals(
+		    COContentResourceType.BIBLIO_RESOURCE)
+		    && uri != null)
+		documentVisibilityMap.put(uri
+			.substring(0, uri.lastIndexOf("/")), visibility);
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
-
-	String uri =
-		coContentResProxy.getResource().getProperty(
-			COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_URI);
-
-	String visibility =
-		coContentResProxy.getProperty(COPropertiesType.VISIBILITY);
-
-	if (coContentResProxy.getResource().getType().equals(
-		COContentResourceType.DOCUMENT))
-	    documentVisibilityMap.put(uri.trim(), visibility);
-	else if (coContentResProxy.getResource().getType().equals(
-		COContentResourceType.BIBLIO_RESOURCE) && uri!=null)
-	    documentVisibilityMap.put(uri.substring(0, uri.lastIndexOf("/")),
-		    visibility);
 
 	return coContentResProxy;
     }
@@ -695,42 +718,53 @@ public class COModeledServer {
 	COContentResource coContentRes = new COContentResource();
 
 	setCommonAttributes(coContentRes, node);
+	try {
+	    NodeList resChildren = node.getChildNodes();
+	    for (int z = 0; z < resChildren.getLength(); z++) {
+		Node rNode = resChildren.item(z);
+		addProperty(coContentRes.getProperties(), rNode);
+	    }
 
-	NodeList resChildren = node.getChildNodes();
-	for (int z = 0; z < resChildren.getLength(); z++) {
-	    Node rNode = resChildren.item(z);
-	    addProperty(coContentRes.getProperties(), rNode);
-	}
-
-	if (coContentRes.getType().equals(COContentResourceType.DOCUMENT)) {
-	    String uri =
-		    coContentRes.getProperty(COPropertiesType.IDENTIFIER,
-			    COPropertiesType.IDENTIFIER_TYPE_URI);
-	    if (uri != null) {
-		documentSecurityMap.put(uri.trim(), coContentRes.getAccess());
-		if (isPublication) {
-		    COProperties copProperties = coContentRes.getProperties();
-		    copProperties.addProperty(COPropertiesType.IDENTIFIER,
-			    COPropertiesType.IDENTIFIER_TYPE_URI,
-			    this.changeDocumentsUrls(coContentRes.getProperty(
-				    COPropertiesType.IDENTIFIER,
-				    COPropertiesType.IDENTIFIER_TYPE_URI)
-				    .trim(), OsylSiteService.WORK_DIRECTORY,
-				    OsylSiteService.PUBLISH_DIRECTORY));
-		    coContentRes.setProperties(copProperties);
+	    if (coContentRes.getType().equals(COContentResourceType.DOCUMENT)) {
+		String uri =
+			coContentRes.getProperty(COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_URI);
+		if (uri != null) {
+		    documentSecurityMap.put(uri.trim(), coContentRes
+			    .getAccess());
+		    if (isPublication) {
+			COProperties copProperties =
+				coContentRes.getProperties();
+			copProperties
+				.addProperty(
+					COPropertiesType.IDENTIFIER,
+					COPropertiesType.IDENTIFIER_TYPE_URI,
+					this
+						.changeDocumentsUrls(
+							coContentRes
+								.getProperty(
+									COPropertiesType.IDENTIFIER,
+									COPropertiesType.IDENTIFIER_TYPE_URI)
+								.trim(),
+							OsylSiteService.WORK_DIRECTORY,
+							OsylSiteService.PUBLISH_DIRECTORY));
+			coContentRes.setProperties(copProperties);
+		    }
+		}
+	    } else if (coContentRes.getType().equals(
+		    COContentResourceType.BIBLIO_RESOURCE)) {
+		String uri =
+			coContentRes.getProperty(COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_URI);
+		if (uri != null) {
+		    documentSecurityMap.put(uri.substring(0, uri
+			    .lastIndexOf("/")), coContentRes.getAccess());
 		}
 	    }
-	} else if (coContentRes.getType().equals(
-		COContentResourceType.BIBLIO_RESOURCE)) {
-	    String uri =
-		    coContentRes.getProperty(COPropertiesType.IDENTIFIER,
-			    COPropertiesType.IDENTIFIER_TYPE_URI);
-	    if (uri != null) {
-		documentSecurityMap.put(uri.substring(0, uri.lastIndexOf("/")),
-			coContentRes.getAccess());
-	    }
-	}
 
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
 	return coContentRes;
     }
 
@@ -749,10 +783,14 @@ public class COModeledServer {
 
 	coContentRes.setType(COContentResourceType.PERSON);
 
-	NodeList resChildren = node.getChildNodes();
-	for (int z = 0; z < resChildren.getLength(); z++) {
-	    Node rNode = resChildren.item(z);
-	    addProperty(coContentRes.getProperties(), rNode);
+	try {
+	    NodeList resChildren = node.getChildNodes();
+	    for (int z = 0; z < resChildren.getLength(); z++) {
+		Node rNode = resChildren.item(z);
+		addProperty(coContentRes.getProperties(), rNode);
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
 	return coContentRes;
     }
@@ -766,29 +804,35 @@ public class COModeledServer {
     private COContentRubric createCOContentRubricPOJO(Node node) {
 	COContentRubric coContentRubric = new COContentRubric();
 	NamedNodeMap namedNodeMap = node.getAttributes();
-	String type =
-		(namedNodeMap == null) ? null : (namedNodeMap
-			.getNamedItem(TYPE_ATTRIBUTE_NAME) == null) ? null
-			: namedNodeMap.getNamedItem(TYPE_ATTRIBUTE_NAME)
-				.getNodeValue();
+	try {
+	    String type =
+		    (namedNodeMap == null) ? null : (namedNodeMap
+			    .getNamedItem(TYPE_ATTRIBUTE_NAME) == null) ? null
+			    : namedNodeMap.getNamedItem(TYPE_ATTRIBUTE_NAME)
+				    .getNodeValue();
 
-	String userDefLabel =
-		(namedNodeMap == null) ? null
-			: (namedNodeMap
-				.getNamedItem(COPropertiesType.SEMANTIC_TAG_USERDEFLABEL) == null) ? null
-				: namedNodeMap.getNamedItem(
-					COPropertiesType.SEMANTIC_TAG_USERDEFLABEL)
-					.getNodeValue();
-	String value = "";
+	    String userDefLabel =
+		    (namedNodeMap == null) ? null
+			    : (namedNodeMap
+				    .getNamedItem(COPropertiesType.SEMANTIC_TAG_USERDEFLABEL) == null) ? null
+				    : namedNodeMap
+					    .getNamedItem(
+						    COPropertiesType.SEMANTIC_TAG_USERDEFLABEL)
+					    .getNodeValue();
+	    String value = "";
 
-	for (int j = 0; j < node.getChildNodes().getLength(); j++) {
-	    value += node.getChildNodes().item(j).getNodeValue();
+	    for (int j = 0; j < node.getChildNodes().getLength(); j++) {
+		value += node.getChildNodes().item(j).getNodeValue();
+	    }
+	    coContentRubric.setType(value);
+	    if (userDefLabel != null) {
+		coContentRubric.setUserDefLabel(userDefLabel);
+	    }
+	    coContentRubric.setKey(type);
+
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
-	coContentRubric.setType(value);
-	if (userDefLabel != null) {
-	    coContentRubric.setUserDefLabel(userDefLabel);
-	}
-	coContentRubric.setKey(type);
 	return coContentRubric;
     }
 
@@ -835,30 +879,35 @@ public class COModeledServer {
     private void setCommonAttributesAndProperties(Element element,
 	    COModelInterface modelInterface, Document document) {
 
-	element.setAttribute(ACCESS_ATTRIBUTE_NAME, modelInterface.getAccess());
-	element.setAttribute(ID_ATTRIBUTE_NAME, modelInterface.getId());
-	element.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
-		+ modelInterface.isEditable());
+	try {
+	    element.setAttribute(ACCESS_ATTRIBUTE_NAME, modelInterface
+		    .getAccess());
+	    element.setAttribute(ID_ATTRIBUTE_NAME, modelInterface.getId());
+	    element.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
+		    + modelInterface.isEditable());
 
-	if (modelInterface.getType() != null) {
-	    element.setAttribute(XSI_TYPE_ATTRIBUTE_NAME, modelInterface
-		    .getType());
-	}
+	    if (modelInterface.getType() != null) {
+		element.setAttribute(XSI_TYPE_ATTRIBUTE_NAME, modelInterface
+			.getType());
+	    }
 
-	if (modelInterface instanceof COElementAbstract) {
-	    COElementAbstract coElementAbstract =
-		    (COElementAbstract) modelInterface;
-	    if (coElementAbstract.getIdParent() != null)
-		element.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
-			coElementAbstract.getIdParent());
-	}
-	// Properties
-	if (modelInterface.getProperties() != null
-		&& !modelInterface.getProperties().isEmpty()) {
-	    createPropertiesElem(document, element, modelInterface
-		    .getProperties());
-	}
+	    if (modelInterface instanceof COElementAbstract) {
+		COElementAbstract coElementAbstract =
+			(COElementAbstract) modelInterface;
+		if (coElementAbstract.getIdParent() != null)
+		    element.setAttribute(ID_PARENT_ATTRIBUTE_NAME,
+			    coElementAbstract.getIdParent());
+	    }
+	    // Properties
+	    if (modelInterface.getProperties() != null
+		    && !modelInterface.getProperties().isEmpty()) {
+		createPropertiesElem(document, element, modelInterface
+			.getProperties());
+	    }
 
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
     }
 
     /**
@@ -877,16 +926,21 @@ public class COModeledServer {
 		XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
 	Element courseOutlineContentElem = document.createElement(CO_NODE_NAME);
 
-	setCommonAttributesAndProperties(courseOutlineContentElem, coContent,
-		document);
+	try {
+	    setCommonAttributesAndProperties(courseOutlineContentElem,
+		    coContent, document);
 
-	osylElement.appendChild(courseOutlineContentElem);
-	document.appendChild(osylElement);
+	    osylElement.appendChild(courseOutlineContentElem);
+	    document.appendChild(osylElement);
 
-	for (int i = 0; i < coContent.getChildrens().size(); i++) {
-	    createChildElement(document, courseOutlineContentElem,
-		    (COElementAbstract) coContent.getChildrens().get(i));
+	    for (int i = 0; i < coContent.getChildrens().size(); i++) {
+		createChildElement(document, courseOutlineContentElem,
+			(COElementAbstract) coContent.getChildrens().get(i));
 
+	    }
+
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
     }
 
@@ -902,28 +956,36 @@ public class COModeledServer {
      */
     private void createChildElement(Document document, Element parent,
 	    COElementAbstract child) {
-	if (child instanceof COContentResourceProxy) {
-	    createChildElement(document, parent, (COContentResourceProxy) child);
-	} else {
-	    Element element = null;
-	    if (child.isCOStructureElement()) {
-		element = document.createElement(CO_STRUCTURE_NODE_NAME);
-	    } else if (child.isCOUnit()) {
-		element = document.createElement(CO_UNIT_NODE_NAME);
+	
+	try {
+	    if (child instanceof COContentResourceProxy) {
+		createChildElement(document, parent,
+			(COContentResourceProxy) child);
+	    } else {
+		Element element = null;
+		if (child.isCOStructureElement()) {
+		    element = document.createElement(CO_STRUCTURE_NODE_NAME);
+		} else if (child.isCOUnit()) {
+		    element = document.createElement(CO_UNIT_NODE_NAME);
 
-	    } else if (child.isCOUnitStructure()) {
-		element = document.createElement(CO_UNIT_STRUCTURE_NODE_NAME);
+		} else if (child.isCOUnitStructure()) {
+		    element =
+			    document.createElement(CO_UNIT_STRUCTURE_NODE_NAME);
 
-	    } else if (child.isCOUnitContent()) {
-		element = document.createElement(CO_UNIT_CONTENT_NODE_NAME);
+		} else if (child.isCOUnitContent()) {
+		    element = document.createElement(CO_UNIT_CONTENT_NODE_NAME);
+		}
+		setCommonAttributesAndProperties(element, child, document);
+
+		for (int i = 0; i < child.getChildrens().size(); i++) {
+		    createChildElement(document, element,
+			    (COElementAbstract) child.getChildrens().get(i));
+		}
+		parent.appendChild(element);
 	    }
-	    setCommonAttributesAndProperties(element, child, document);
 
-	    for (int i = 0; i < child.getChildrens().size(); i++) {
-		createChildElement(document, element, (COElementAbstract) child
-			.getChildrens().get(i));
-	    }
-	    parent.appendChild(element);
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
     }
 
@@ -936,41 +998,53 @@ public class COModeledServer {
 	    COProperties properties) {
 	Set<String> propertiesSet = properties.keySet();
 	Iterator<String> iter = propertiesSet.iterator();
-	while (iter.hasNext()) {
-	    String propElemName = (String) iter.next();
-	    if (!propElemName.equals("#text")) { // TODO find why there is
-		// properties named #text
-		HashMap<String, COProperty> map = properties.get(propElemName);
-		for (Iterator<String> iterMap = map.keySet().iterator(); iterMap
-			.hasNext();) {
-		    Element propElem = document.createElement(propElemName);
-		    String type = iterMap.next();
-		    String value = "";
-		    Text propElemValue = null;
-		    if (!type.equals(COProperties.DEFAULT_PROPERTY_TYPE)) {
-			propElem.setAttribute(TYPE_ATTRIBUTE_NAME, type);
-			value = properties.getProperty(propElemName, type);
-		    } else {
-			value = properties.getProperty(propElemName);
-		    }
-		    createPropElemAttributes(map.get(type), propElem);
+	
+	try {
+	    while (iter.hasNext()) {
+		String propElemName = (String) iter.next();
+		if (!propElemName.equals("#text")) { // TODO find why there is
+		    // properties named #text
+		    HashMap<String, COProperty> map =
+			    properties.get(propElemName);
+		    for (Iterator<String> iterMap = map.keySet().iterator(); iterMap
+			    .hasNext();) {
+			Element propElem = document.createElement(propElemName);
+			String type = iterMap.next();
+			String value = "";
+			Text propElemValue = null;
+			if (!type.equals(COProperties.DEFAULT_PROPERTY_TYPE)) {
+			    propElem.setAttribute(TYPE_ATTRIBUTE_NAME, type);
+			    value = properties.getProperty(propElemName, type);
+			} else {
+			    value = properties.getProperty(propElemName);
+			}
+			createPropElemAttributes(map.get(type), propElem);
 
-		    if (COPropertiesType.CDATA_NODE_NAMES.contains(propElemName)) {
-			propElemValue = document.createCDATASection(value);
-		    } else {
-			propElemValue = document.createTextNode(value);
+			if (COPropertiesType.CDATA_NODE_NAMES
+				.contains(propElemName)) {
+			    propElemValue = document.createCDATASection(value);
+			} else {
+			    propElemValue = document.createTextNode(value);
+			}
+			propElem.appendChild(propElemValue);
+			parent.appendChild(propElem);
 		    }
-		    propElem.appendChild(propElemValue);
-		    parent.appendChild(propElem);
 		}
 	    }
+
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
     }
 
     private void createPropElemAttributes(COProperty coProperty,
 	    Element propElem) {
-	for (String key : coProperty.getAttributes().keySet()) {
-	    propElem.setAttribute(key, coProperty.getAttribute(key));
+	try {
+	    for (String key : coProperty.getAttributes().keySet()) {
+		propElem.setAttribute(key, coProperty.getAttribute(key));
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
     }
 
@@ -993,27 +1067,32 @@ public class COModeledServer {
 	setCommonAttributesAndProperties(coContentResourceProxyElem, child,
 		document);
 
-	if (child.getNestedCOContentResourceProxies() != null) {
-	    for (int i = 0; i < child.getNestedCOContentResourceProxies()
-		    .size(); i++) {
-		createChildElement(document, coContentResourceProxyElem,
-			(COContentResourceProxy) child
-				.getNestedCOContentResourceProxies().get(i));
+	try {
+	    if (child.getNestedCOContentResourceProxies() != null) {
+		for (int i = 0; i < child.getNestedCOContentResourceProxies()
+			.size(); i++) {
+		    createChildElement(document, coContentResourceProxyElem,
+			    (COContentResourceProxy) child
+				    .getNestedCOContentResourceProxies().get(i));
+		}
 	    }
-	}
-	for (String rubricKey : child.getRubrics().keySet()) {
-	    createCOCOntentRubricChild(document, coContentResourceProxyElem,
-		    child.getRubric(rubricKey));
-	}
-	parent.appendChild(coContentResourceProxyElem);
-	if (child.getResource() instanceof COContentResource) {
-	    COContentResource coContentResource =
-		    (COContentResource) child.getResource();
-	    createCOContentResourceChild(document, coContentResourceProxyElem,
-		    coContentResource);
-	} else {
-	    COUnit coUnit = (COUnit) child.getResource();
-	    createChildElement(document, coContentResourceProxyElem, coUnit);
+	    for (String rubricKey : child.getRubrics().keySet()) {
+		createCOCOntentRubricChild(document,
+			coContentResourceProxyElem, child.getRubric(rubricKey));
+	    }
+	    parent.appendChild(coContentResourceProxyElem);
+	    if (child.getResource() instanceof COContentResource) {
+		COContentResource coContentResource =
+			(COContentResource) child.getResource();
+		createCOContentResourceChild(document,
+			coContentResourceProxyElem, coContentResource);
+	    } else {
+		COUnit coUnit = (COUnit) child.getResource();
+		createChildElement(document, coContentResourceProxyElem, coUnit);
+	    }
+
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
     }
 
@@ -1029,23 +1108,32 @@ public class COModeledServer {
     private void createCOContentResourceChild(Document document,
 	    Element coContentResourceProxyElem, COContentResource resource) {
 	Element coContentResourceElem = null;
-	if (resource.getType().equals(COContentResourceType.PERSON)) {
-	    coContentResourceElem = document.createElement(PERSON_NODE_NAME);
-	} else {
-	    coContentResourceElem = document.createElement(CO_RES_NODE_NAME);
-	    coContentResourceElem.setAttribute(XSI_TYPE_ATTRIBUTE_NAME,
-		    resource.getType());
+	
+	try {
+	    if (resource.getType().equals(COContentResourceType.PERSON)) {
+		coContentResourceElem =
+			document.createElement(PERSON_NODE_NAME);
+	    } else {
+		coContentResourceElem =
+			document.createElement(CO_RES_NODE_NAME);
+		coContentResourceElem.setAttribute(XSI_TYPE_ATTRIBUTE_NAME,
+			resource.getType());
 
+	    }
+	    coContentResourceElem.setAttribute(ACCESS_ATTRIBUTE_NAME, resource
+		    .getAccess());
+	    coContentResourceElem.setAttribute(ID_ATTRIBUTE_NAME, resource
+		    .getId());
+	    if (resource.getProperties() != null
+		    && !resource.getProperties().isEmpty()) {
+		createPropertiesElem(document, coContentResourceElem, resource
+			.getProperties());
+	    }
+	    coContentResourceProxyElem.appendChild(coContentResourceElem);
+
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
-	coContentResourceElem.setAttribute(ACCESS_ATTRIBUTE_NAME, resource
-		.getAccess());
-	coContentResourceElem.setAttribute(ID_ATTRIBUTE_NAME, resource.getId());
-	if (resource.getProperties() != null
-		&& !resource.getProperties().isEmpty()) {
-	    createPropertiesElem(document, coContentResourceElem, resource
-		    .getProperties());
-	}
-	coContentResourceProxyElem.appendChild(coContentResourceElem);
     }
 
     /**
@@ -1060,17 +1148,25 @@ public class COModeledServer {
     private void createCOCOntentRubricChild(Document document,
 	    Element coContentResourceProxyElem, COContentRubric rubric) {
 	Element coContentRubricElem = document.createElement(COPropertiesType.SEMANTIC_TAG);
-	coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME, rubric.getKey());
-	if (rubric.getUserDefLabel() != null
-		&& rubric.getUserDefLabel().length() > 0) {
-	    coContentRubricElem.setAttribute(COPropertiesType.SEMANTIC_TAG_USERDEFLABEL,
-		    rubric.getUserDefLabel());
+	
+	try {
+	    coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME, rubric
+		    .getKey());
+	    if (rubric.getUserDefLabel() != null
+		    && rubric.getUserDefLabel().length() > 0) {
+		coContentRubricElem.setAttribute(
+			COPropertiesType.SEMANTIC_TAG_USERDEFLABEL, rubric
+				.getUserDefLabel());
+	    }
+
+	    Text elemValue = document.createTextNode(rubric.getType());
+	    coContentRubricElem.appendChild(elemValue);
+
+	    coContentResourceProxyElem.appendChild(coContentRubricElem);
+
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
-
-	Text elemValue = document.createTextNode(rubric.getType());
-	coContentRubricElem.appendChild(elemValue);
-
-	coContentResourceProxyElem.appendChild(coContentRubricElem);
     }
 
     public Map<String, String> getDocumentSecurityMap() {
@@ -1209,16 +1305,21 @@ public class COModeledServer {
     public void fusion(COModeledServer parent) {
 	COContent contentChild = this.getModeledContent();
 	COContent contentfusionned = parent.getModeledContent();
-	if (contentChild.getIdParent() != null
-		&& !contentChild.getIdParent().equals("")) {
+	
+	try {
+	    if (contentChild.getIdParent() != null
+		    && !contentChild.getIdParent().equals("")) {
 
-	    prepareForFusion(contentfusionned);
-	    if (contentfusionned != null) {
-		contentfusionned.setIdParent(contentfusionned.getId());
-		contentfusionned.setId(contentChild.getId());
+		prepareForFusion(contentfusionned);
+		if (contentfusionned != null) {
+		    contentfusionned.setIdParent(contentfusionned.getId());
+		    contentfusionned.setId(contentChild.getId());
+		}
+		fusion(contentChild, contentfusionned);
+		setModeledContent(contentfusionned);
 	    }
-	    fusion(contentChild, contentfusionned);
-	    setModeledContent(contentfusionned);
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
     }
 
@@ -1237,50 +1338,57 @@ public class COModeledServer {
 
     @SuppressWarnings("unchecked")
     public void fusion(COElementAbstract child, COElementAbstract fusionned) {
-	if (child.isCOUnitContent()) {
-	    COUnitContent cu = (COUnitContent) child;
-	    COUnitContent parentCU = (COUnitContent) fusionned;
-	    for (int i = 0; i < cu.getChildrens().size(); i++) {
-		COContentResourceProxy rp = cu.getChildrens().get(i);
-		parentCU.addChild(rp);
-	    }
-	} else {
-	    int j = 0;
-	    for (int i = 0; i < child.getChildrens().size(); i++) {
-		COElementAbstract childElement =
-			(COElementAbstract) child.getChildrens().get(i);
-		if (childElement.getIdParent() != null
-			&& !childElement.getIdParent().equals("")) {
-		    COElementAbstract parentElement =
-			    fusionned
-				    .findCOElementAbstractWithParentId(childElement
-					    .getIdParent());
-		    if (parentElement != null) {
-			parentElement.setId(childElement.getId());
-			fusion(childElement, parentElement);
-		    } else {
-			// L'enfant référence qqchose qui n'existe PLUS dans le
-			// parent
-			if (!hasResProx(childElement)) {
-			    // il n'a pas d'infos propres, on l'efface
-			    child.removeChild(childElement);
-			    i--;
-			    j--;
-			} else {
-			    // on supprime les uuidParent et on ajoute le
-			    // contenu à la
-			    // bonne place
-			    deleteParentUuids(childElement);
-			    fusionned.getChildrens().add(j, childElement);
-			}
-		    }
-		} else {
-		    // L'enfant référence qqchose qui n'existe PAS dans le
-		    // parent
-		    fusionned.getChildrens().add(j, childElement);
+	
+	try {
+	    if (child.isCOUnitContent()) {
+		COUnitContent cu = (COUnitContent) child;
+		COUnitContent parentCU = (COUnitContent) fusionned;
+		for (int i = 0; i < cu.getChildrens().size(); i++) {
+		    COContentResourceProxy rp = cu.getChildrens().get(i);
+		    parentCU.addChild(rp);
 		}
-		j++;
+	    } else {
+		int j = 0;
+		for (int i = 0; i < child.getChildrens().size(); i++) {
+		    COElementAbstract childElement =
+			    (COElementAbstract) child.getChildrens().get(i);
+		    if (childElement.getIdParent() != null
+			    && !childElement.getIdParent().equals("")) {
+			COElementAbstract parentElement =
+				fusionned
+					.findCOElementAbstractWithParentId(childElement
+						.getIdParent());
+			if (parentElement != null) {
+			    parentElement.setId(childElement.getId());
+			    fusion(childElement, parentElement);
+			} else {
+			    // L'enfant référence qqchose qui n'existe PLUS dans
+			    // le
+			    // parent
+			    if (!hasResProx(childElement)) {
+				// il n'a pas d'infos propres, on l'efface
+				child.removeChild(childElement);
+				i--;
+				j--;
+			    } else {
+				// on supprime les uuidParent et on ajoute le
+				// contenu à la
+				// bonne place
+				deleteParentUuids(childElement);
+				fusionned.getChildrens().add(j, childElement);
+			    }
+			}
+		    } else {
+			// L'enfant référence qqchose qui n'existe PAS dans le
+			// parent
+			fusionned.getChildrens().add(j, childElement);
+		    }
+		    j++;
+		}
 	    }
+
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
     }
 
@@ -1322,17 +1430,22 @@ public class COModeledServer {
 
     private void resetXML(COElementAbstract element,
 	    Map<String, String> filenameChangesMap) {
-	element.setId(UUID.uuid());
-	element.setIdParent(null);
-	if (element.isCOContentResourceProxy()) {
-	    changeDocumentsUrlsToFitNewSiteName(
-		    (COContentResourceProxy) element, filenameChangesMap);
-	} else {
-	    for (int i = 0; i < element.getChildrens().size(); i++) {
-		COElementAbstract childElement =
-			(COElementAbstract) element.getChildrens().get(i);
-		resetXML(childElement, filenameChangesMap);
+	try {
+	    element.setId(UUID.uuid());
+	    element.setIdParent(null);
+	    if (element.isCOContentResourceProxy()) {
+		changeDocumentsUrlsToFitNewSiteName(
+			(COContentResourceProxy) element, filenameChangesMap);
+	    } else {
+		for (int i = 0; i < element.getChildrens().size(); i++) {
+		    COElementAbstract childElement =
+			    (COElementAbstract) element.getChildrens().get(i);
+		    resetXML(childElement, filenameChangesMap);
+		}
 	    }
+
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
     }
 
