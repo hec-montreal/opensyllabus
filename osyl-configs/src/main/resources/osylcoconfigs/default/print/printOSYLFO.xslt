@@ -194,7 +194,7 @@
 				<xsl:attribute name="src"><xsl:value-of select="$ppath"/>img/hecmontreal.gif</xsl:attribute>
 			</fo:external-graphic>
 		</fo:block>
-		<fo:block text-align="right" margin-top="-20pt" font-size="14pt" padding-left="0pt" font-weight="bold">D.E.S.S</fo:block>
+		<!--<fo:block text-align="right" margin-top="-20pt" font-size="14pt" padding-left="0pt" font-weight="bold">D.E.S.S</fo:block>-->
 		<fo:block border-top-color="#555599" border-top-style="solid" border-top-width="3px" margin-right="0pt" margin-left="0pt" padding-before="10pt" padding-after="2pt"/>
 		<fo:block font-size="14pt" font-weight="bold" space-before="16pt" text-align='center'><xsl:value-of select="/OSYL/CO/department"/></fo:block>
 		<fo:block font-size="14pt" font-weight="bold" space-before="16pt" text-align='center'>
@@ -797,6 +797,7 @@
 <xsl:template name="SubPedagogicalStructTitle">
   <xsl:param name="label"/>
   <xsl:param name="description"/>
+  <xsl:if test="$label != '' ">
 	<fo:table width="100%" table-layout="fixed" space-before="24pt" space-after="10pt">
 		<fo:table-column column-width="100%" column-number="1" />
 		<fo:table-body >
@@ -812,6 +813,7 @@
 			</fo:table-row>
 		</fo:table-body>
 	</fo:table>
+  </xsl:if>
 </xsl:template>
 
 <xsl:template name="PedagogicalUnitTitle">
