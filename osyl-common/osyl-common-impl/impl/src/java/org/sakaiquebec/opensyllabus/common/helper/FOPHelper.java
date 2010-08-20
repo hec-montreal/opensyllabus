@@ -83,6 +83,7 @@ public class FOPHelper {
 		// Set the value of a <param> in the stylesheet
 		transformer.setParameter("versionParam", "2.0");
 		transformer.setParameter("ppath", webappdir);
+		transformer.setParameter("spath", "/access/content");
 		transformer.setParameter("currentDateTime", OsylDateUtils.getNowDateAsXmlString());
 
 		// Setup input for XSLT transformation
