@@ -18,16 +18,16 @@
 
   <xsl:template match="/">
 		<xsl:variable name='courseCode'>
-			<xsl:value-of select="substring-before(/OSYL/CO/identifier,'_')"/>
+			<xsl:value-of select="substring-before(/OSYL/CO/courseId,'.')"/>
 		</xsl:variable>
 		<xsl:variable name='session_group'>
-			<xsl:value-of select="substring-after(/OSYL/CO/identifier,'_')"/>
+			<xsl:value-of select="substring-after(/OSYL/CO/courseId,'.')"/>
 		</xsl:variable>
 		<xsl:variable name='session'>
-			<xsl:value-of select="substring-after($session_group,'-')"/>
+			<xsl:value-of select="substring-before($session_group,'.')"/>
 		</xsl:variable>
 		<xsl:variable name='group'>
-			<xsl:value-of select="substring-before($session_group,'-')"/>
+			<xsl:value-of select="substring-after($session_group,'.')"/>
 		</xsl:variable>
 
     <fo:root>
