@@ -835,8 +835,18 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    contentHostingService.getSiteCollection(siteId);
 	    try {
 		addCollection(TEMP_DIRECTORY, site);
+
 	    } catch (Exception e) {
 	    }
+	    String directoryId =
+		    contentHostingService.getSiteCollection(site.getId())
+			    + TEMP_DIRECTORY + "/";
+	    // HIDE COLLECTION
+	    ContentCollectionEdit cce =
+		    contentHostingService.editCollection(directoryId);
+	    cce.setHidden();
+	    contentHostingService.commitCollection(cce);
+
 	    resourceOutputDir += TEMP_DIRECTORY + "/";
 
 	    ContentResourceEdit newResource =
@@ -1339,9 +1349,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    info.setSiteShortDescription(site.getShortDescription());
 	    info.setSiteOwnerLastName(site.getCreatedBy().getLastName());
 	    info.setSiteOwnerName(site.getCreatedBy().getFirstName());
-//	    info.setCourseNumber(co!=null?co.getTitle():"");
-//	    info.setCourseSection(co!=null?co.getSection():"");
-	    //info.setCourseSession(co!=null?co.get():"");
+	    // info.setCourseNumber(co!=null?co.getTitle():"");
+	    // info.setCourseSection(co!=null?co.getSection():"");
+	    // info.setCourseSession(co!=null?co.get():"");
 
 	    // Retrieve CM info
 	    String siteProviderId = site.getProviderGroupId();
@@ -1391,9 +1401,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		info.setCourseCoordinator(null);
 
 	    }
-	    info.setLastModifiedDate(osylSiteService.getCoLastModifiedDate(siteId));
-	    info.setLastPublicationDate(osylSiteService.getCoLastPublicationDate(siteId));
-	    
+	    info.setLastModifiedDate(osylSiteService
+		    .getCoLastModifiedDate(siteId));
+	    info.setLastPublicationDate(osylSiteService
+		    .getCoLastPublicationDate(siteId));
+
 	    // Retrieve parent site
 	    String parentSite = null;
 
