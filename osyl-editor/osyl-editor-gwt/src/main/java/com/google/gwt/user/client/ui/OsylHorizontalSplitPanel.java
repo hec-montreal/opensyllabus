@@ -20,7 +20,6 @@
  ******************************************************************************/
 package com.google.gwt.user.client.ui;
 
-import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.listener.SplitterEventHandler;
 
@@ -59,15 +58,15 @@ public class OsylHorizontalSplitPanel extends Composite {
     }
 
     public OsylHorizontalSplitPanel(SplitterEventHandler handler) {
-	this.handler = handler;
+    	this.handler = handler;
 
-	horizontalSplitPanel = new HorizontalSplitPanel();
+    	horizontalSplitPanel = new HorizontalSplitPanel();
 
-	splitElement = horizontalSplitPanel.getSplitElement();
+    	splitElement = horizontalSplitPanel.getSplitElement();
 
-	createSplitter();
+    	createSplitter();
 
-	initWidget(horizontalSplitPanel);
+    	initWidget(horizontalSplitPanel);
     }
 
     /**
@@ -75,14 +74,12 @@ public class OsylHorizontalSplitPanel extends Composite {
      */
     @Override
     protected void onLoad() {
-	super.onLoad();
-
-	getSplitPanel().addHandler(new MouseMoveHandler() {
-	    public void onMouseMove(MouseMoveEvent event) {
-		handler.onMouseMove(event);
-	    }
-
-	}, MouseMoveEvent.getType());
+    	super.onLoad();
+    	getSplitPanel().addHandler(new MouseMoveHandler() {
+    		public void onMouseMove(MouseMoveEvent event) {
+    			handler.onMouseMove(event);
+    		}
+    	}, MouseMoveEvent.getType());
     }
 
     public HorizontalSplitPanel getSplitPanel() {
@@ -174,7 +171,7 @@ public class OsylHorizontalSplitPanel extends Composite {
 		}
 
 		case Event.ONMOUSEUP: {
-			
+				
 				if (collapseMouseDown) {
 					if (leftElementVisible) {
 						leftElementLastPosition = getComputedSplitPosition();
@@ -217,7 +214,6 @@ public class OsylHorizontalSplitPanel extends Composite {
 		if (leftElementVisible && !collapseMouseDown && isResizable()) {
 			super.onBrowserEvent(event);
 		}
-		
 	}
 	
     private static native void setCursor(String cursor) /*-{
@@ -262,23 +258,4 @@ public class OsylHorizontalSplitPanel extends Composite {
 	public Boolean isResizing() {
 		return isResizable() && horizontalSplitPanel.isResizing();
 	}
-	
-	public static native void writeInfos(String value)/*-{
-	var root = $wnd.top.document;
-	var elm = root.getElementById("INFOS");
-	if (elm == null) {
-		var infos = root.createElement("DIV");
-		infos.id = "INFOS";
-		root.body.appendChild(infos);
-		elm = root.getElementById("INFOS");
-		elm.style.position = "fixed";
-		elm.style.top = "0";
-		elm.style.left = "0";
-		elm.style.border = "2px solid #000";
-		elm.style.padding = "4px";
-		elm.style.zIndex = "100000";
-		elm.style.backgroundColor = "#FFF";
-	}
-	elm.innerHTML = value;
-}-*/;
 }
