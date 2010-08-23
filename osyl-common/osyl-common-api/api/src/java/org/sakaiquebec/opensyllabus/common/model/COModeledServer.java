@@ -24,10 +24,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -243,7 +241,6 @@ public class COModeledServer {
     protected static final String PROPERTY_TYPE_ATTRIBUTE_NAME = "propertyType";
 
     private String schemaVersion;
-
 
     /**
      * Map<name,permissions> of permissions applied to ressources
@@ -856,7 +853,7 @@ public class COModeledServer {
 	} catch (ParserConfigurationException pce) {
 	    pce.printStackTrace();
 	}
-	
+
     }
 
     private String xmlToString(Document doc) {
@@ -956,7 +953,7 @@ public class COModeledServer {
      */
     private void createChildElement(Document document, Element parent,
 	    COElementAbstract child) {
-	
+
 	try {
 	    if (child instanceof COContentResourceProxy) {
 		createChildElement(document, parent,
@@ -998,7 +995,7 @@ public class COModeledServer {
 	    COProperties properties) {
 	Set<String> propertiesSet = properties.keySet();
 	Iterator<String> iter = propertiesSet.iterator();
-	
+
 	try {
 	    while (iter.hasNext()) {
 		String propElemName = (String) iter.next();
@@ -1108,7 +1105,7 @@ public class COModeledServer {
     private void createCOContentResourceChild(Document document,
 	    Element coContentResourceProxyElem, COContentResource resource) {
 	Element coContentResourceElem = null;
-	
+
 	try {
 	    if (resource.getType().equals(COContentResourceType.PERSON)) {
 		coContentResourceElem =
@@ -1147,8 +1144,9 @@ public class COModeledServer {
      */
     private void createCOCOntentRubricChild(Document document,
 	    Element coContentResourceProxyElem, COContentRubric rubric) {
-	Element coContentRubricElem = document.createElement(COPropertiesType.SEMANTIC_TAG);
-	
+	Element coContentRubricElem =
+		document.createElement(COPropertiesType.SEMANTIC_TAG);
+
 	try {
 	    coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME, rubric
 		    .getKey());
@@ -1305,7 +1303,7 @@ public class COModeledServer {
     public void fusion(COModeledServer parent) {
 	COContent contentChild = this.getModeledContent();
 	COContent contentfusionned = parent.getModeledContent();
-	
+
 	try {
 	    if (contentChild.getIdParent() != null
 		    && !contentChild.getIdParent().equals("")) {
@@ -1339,7 +1337,7 @@ public class COModeledServer {
 
     @SuppressWarnings("unchecked")
     public void fusion(COElementAbstract child, COElementAbstract fusionned) {
-	
+
 	try {
 	    if (child.isCOUnitContent()) {
 		COUnitContent cu = (COUnitContent) child;
