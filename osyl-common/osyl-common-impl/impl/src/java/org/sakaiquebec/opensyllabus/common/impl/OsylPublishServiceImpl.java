@@ -316,7 +316,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		.getProperty(COPropertiesType.PUBLISHED) != null ? coContent
 		.getProperty(COPropertiesType.PUBLISHED) : "");
 	coContent.addProperty(COPropertiesType.PUBLISHED, OsylDateUtils
-		.getNowDateAsXmlString());
+		.getCurrentDateAsXmlString());
 	coModeledServer.model2XML();
 	coSerialized.setContent(coModeledServer.getSerializedContent());
 	resourceDao.createOrUpdateCourseOutline(coSerialized);

@@ -711,7 +711,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	 */
 	public void prepareModelForSave() {
 		getModel().addProperty(COPropertiesType.MODIFIED,
-				OsylDateUtils.getNowDateAsXmlString());
+				OsylDateUtils.getCurrentDateAsXmlString());
 		modeledCo.setModeledContent(getModel());
 		modeledCo.model2XML(false);
 		if (serializedCO == null) {

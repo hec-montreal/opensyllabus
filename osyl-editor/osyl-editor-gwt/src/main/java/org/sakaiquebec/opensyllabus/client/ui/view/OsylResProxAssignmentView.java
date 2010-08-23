@@ -167,7 +167,7 @@ public class OsylResProxAssignmentView extends OsylAbstractResProxView {
 				.getDateAsXmlString(((OsylAssignmentEditor) getEditor())
 					.getDateEnd()));
 	getModel().getResource().addProperty(COPropertiesType.MODIFIED,
-		OsylDateUtils.getNowDateAsXmlString());
+		OsylDateUtils.getCurrentDateAsXmlString());
     }
 
     public Date getDateStart() {

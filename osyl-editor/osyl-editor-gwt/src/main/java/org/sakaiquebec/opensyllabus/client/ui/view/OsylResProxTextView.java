@@ -74,7 +74,7 @@ public class OsylResProxTextView extends OsylAbstractResProxView {
     public void updateResourceMetaInfo() {
 	super.updateResourceMetaInfo();
 	getModel().getResource().addProperty(COPropertiesType.MODIFIED,
-		OsylDateUtils.getNowDateAsXmlString());
+		OsylDateUtils.getCurrentDateAsXmlString());
     }
 
 }

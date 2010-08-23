@@ -124,7 +124,7 @@ public abstract class COElementAbstract<T extends COModelInterface> implements
 	this.id = UUID.uuid();
 	properties = new COProperties();
 	addProperty(COPropertiesType.MODIFIED, OsylDateUtils
-		.getNowDateAsXmlString());
+		.getCurrentDateAsXmlString());
 	setAccess(SecurityInterface.ACCESS_PUBLIC);
     }
 

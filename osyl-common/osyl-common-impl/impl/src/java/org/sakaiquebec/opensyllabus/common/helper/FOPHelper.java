@@ -84,7 +84,7 @@ public class FOPHelper {
 		transformer.setParameter("versionParam", "2.0");
 		transformer.setParameter("ppath", webappdir);
 		transformer.setParameter("spath", "/access/content");
-		transformer.setParameter("currentDateTime", OsylDateUtils.getNowDateAsXmlString());
+		transformer.setParameter("currentDateTime", OsylDateUtils.getCurrentDateAsXmlString());
 
 		// Setup input for XSLT transformation
 		String escapeString = xml.replaceAll("&amp;", "&#38;");

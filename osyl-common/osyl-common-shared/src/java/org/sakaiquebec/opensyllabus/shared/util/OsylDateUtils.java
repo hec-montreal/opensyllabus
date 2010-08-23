@@ -36,7 +36,7 @@ public class OsylDateUtils {
      * @return A String represents the present date and time (format example:
      *         2002-05-30T09:30:10-06:00)
      */
-    public static String getNowDateAsXmlString() {
+    public static String getCurrentDateAsXmlString() {
 	Date now = new Date();
 	return getDateAsXmlString(now);
     }

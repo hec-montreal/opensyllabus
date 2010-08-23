@@ -114,7 +114,7 @@ public class COContentResource implements COModelInterface,
 	    resModel.addProperty(COPropertiesType.TEXT, osylConfigMessages
 		    .getMessage("InsertYourTextHere"));
 	    resModel.addProperty(COPropertiesType.MODIFIED, OsylDateUtils
-		    .getNowDateAsXmlString());
+		    .getCurrentDateAsXmlString());
 	    resModel.addProperty(COPropertiesType.IDENTIFIER,
 		    COPropertiesType.NON_APPLICABLE,
 		    COPropertiesType.NON_APPLICABLE);

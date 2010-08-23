@@ -239,7 +239,7 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 	setRubricType(getEditor().getRubricType());
 	setRubricUserDefLabel(getEditor().getRubricUserDefLabel());
 	getModel().addProperty(COPropertiesType.MODIFIED,
-		OsylDateUtils.getNowDateAsXmlString());
+		OsylDateUtils.getCurrentDateAsXmlString());
 	if (getEditor().isHasRequirement())
 	    setRequirementLevel(getEditor().getRequirementLevel());
 	// resourceMetaInfo

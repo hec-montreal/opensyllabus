@@ -256,7 +256,7 @@ public abstract class OsylViewableComposite extends Composite implements
      * Change the modified date of the model to this moment
      */
     public void setModifiedDateToNow(){
-	getModel().getProperties().addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getNowDateAsXmlString());
+	getModel().getProperties().addProperty(COPropertiesType.MODIFIED, OsylDateUtils.getCurrentDateAsXmlString());
     }
 
     
