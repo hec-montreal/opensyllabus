@@ -39,7 +39,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
@@ -174,7 +173,7 @@ public class OsylMainView extends OsylViewableComposite implements
 	getOsylToolbarView().refreshView();
 	getWorkspaceView().refreshView();
 	getWorkspaceTitleView().refreshView();
-
+	
     }
     
     private void setScrollBar(Element e, String value){
@@ -326,14 +325,14 @@ public class OsylMainView extends OsylViewableComposite implements
     	osylHorizontalSplitPanel.setSplitPosition(treeWidth);
     }
     
-    int toolWidth = OsylEditorEntryPoint.getInstance().getToolWidth();
+    int toolWidth = Math.max(OsylEditorEntryPoint.MIN_TOOL_WIDTH,
+    		OsylEditorEntryPoint.getInstance().getToolWidth());
     
     if (OsylEditorEntryPoint.isInternetExplorer()) {
     	DOM.setStyleAttribute(getElement(), "width", toolWidth + "px");
     }
     // Set The tree width
-	
-    
+
 	int treeInnerWidth = Math.max(0, treeWidth
 			- (treeDecoratorPanel.getCell(1, 0).getOffsetWidth() + treeDecoratorPanel
 					.getCell(1, 2).getOffsetWidth()));
@@ -357,13 +356,11 @@ public class OsylMainView extends OsylViewableComposite implements
 	
 	
 	int workspaceWidth = toolWidth - (osylHorizontalSplitPanel.getSplitPosition() == 0 ? 0:treeWidth) - splitterWidth;
-	
-	
-	int workspaceInnerWidth =
-		workspaceWidth
+	int workspaceInnerWidth = Math.max(0,
+			workspaceWidth
 			- (workspaceDecoratorPanel.getCell(1, 0)
 				.getOffsetWidth() + workspaceDecoratorPanel
-				.getCell(1, 2).getOffsetWidth());
+				.getCell(1, 2).getOffsetWidth()));
 
 	int menubarWidth =
 		osylToolbarView.getOsylToolbar().getSectionMenuBar()
@@ -372,10 +369,10 @@ public class OsylMainView extends OsylViewableComposite implements
 		OsylEditorEntryPoint.parsePixels(OsylEditorEntryPoint.getStyle(
 			osylWorkspaceTitleView.getWorkspaceTitleLabel()
 				.getElement(), "paddingLeft"));
-	osylWorkspaceTitleView.getWorkspaceTitleLabel().setWidth(
-		workspaceInnerWidth
-			- (menubarWidth + osylWorkspaceLabelLeftPadding + 3)
-			+ "px");
+	int t = Math.max(0,workspaceInnerWidth
+	- (menubarWidth + osylWorkspaceLabelLeftPadding + 3));
+	osylWorkspaceTitleView.getWorkspaceTitleLabel().setWidth(t + "px");
+
 	DOM.setStyleAttribute(workspaceDecoratorPanel.getCell(1, 1), "width",
 		workspaceInnerWidth + "px");
 	setSectionToolbarTopPosition();
@@ -400,5 +397,4 @@ public class OsylMainView extends OsylViewableComposite implements
 	public void setWorkspaceTitleView(OsylWorkspaceTitleView osylWorkspaceTitleView) {
 		this.osylWorkspaceTitleView = osylWorkspaceTitleView;
 	}
-	
 }
