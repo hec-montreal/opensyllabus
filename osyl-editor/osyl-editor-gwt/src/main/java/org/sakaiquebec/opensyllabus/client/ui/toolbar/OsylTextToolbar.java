@@ -441,23 +441,6 @@ public class OsylTextToolbar extends Composite {
 	this.attendeeViewMenuItem = attendeeViewMenuItem;
     }
 
-    public MenuItem getPublicViewMenuItem() {
-	return publicViewMenuItem;
-    }
-
-    public void setPublicViewMenuItem(MenuItem publicViewMenuItem) {
-	this.publicViewMenuItem = publicViewMenuItem;
-    }
-    
-    public void setPublicSectionMenuBar(OsylMenuBar sectionMenuBar) {
-    this.sectionMenuBar = sectionMenuBar;
-    }
-    
-    public OsylMenuBar getPublicSectionMenuBar() {
-    return sectionMenuBar;
-    }
-    
-
     public MenuItem getEditPushButton() {
 		return editPushButton;
 	}
