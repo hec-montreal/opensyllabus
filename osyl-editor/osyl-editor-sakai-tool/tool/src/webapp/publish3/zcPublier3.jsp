@@ -185,9 +185,11 @@ if (v == 2) {
 		n = Integer.parseInt(request.getParameter("n"));
 
 	//Local
-	String xsltDirName = getServletContext().getRealPath("/")+"\\publish3\\xslt\\";
+	String xsltDirName = getServletContext().getRealPath("/")
+		+ File.separator + "publish3" + File.separator + "xslt"
+		+ File.separator;
 
-	//String xsltDirName = getServletContext().getRealPath(".")+"\\xslt\\";
+	//String xsltDirName = getServletContext().getRealPath(".") + File.separator + "xslt" + File.separator;
 	String[] xsltNamesTable = {
 		  "securite0.xsl"		// 0
 		, "securite1.xsl"		// 1
