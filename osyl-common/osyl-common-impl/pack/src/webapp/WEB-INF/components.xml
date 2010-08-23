@@ -82,8 +82,6 @@
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
 		<property name="resourceDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
-		<property name="configDao"
-			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
 		<property name="securityService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
 		<property name="configService"

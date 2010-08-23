@@ -43,7 +43,6 @@ import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO;
-import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
 import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
@@ -148,24 +147,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     public void setResourceDao(ResourceDao resourceDao) {
 	this.resourceDao = resourceDao;
-    }
-
-    /**
-     * The configDao to be injected by Spring
-     * 
-     * @uml.property name="configDao"
-     * @uml.associationEnd
-     */
-    private COConfigDao configDao;
-
-    /**
-     * Sets the {@link COConfigDao} .
-     * 
-     * @param configDao
-     * @uml.property name="configDao"
-     */
-    public void setConfigDao(COConfigDao configDao) {
-	this.configDao = configDao;
     }
 
     /**
@@ -353,7 +334,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	String siteName = null;
 	String providerId = null;
 	String siteId = co.getSiteId();
-	String creator = "";
 	String dept = "";
 	try {
 	    AuthzGroup realm =
