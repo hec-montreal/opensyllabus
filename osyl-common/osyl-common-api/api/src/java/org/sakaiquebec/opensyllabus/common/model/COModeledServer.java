@@ -1316,6 +1316,7 @@ public class COModeledServer {
 		    contentfusionned.setId(contentChild.getId());
 		}
 		fusion(contentChild, contentfusionned);
+		contentfusionned.setProperties(contentChild.getProperties());
 		setModeledContent(contentfusionned);
 	    }
 	} catch (Exception e) {
