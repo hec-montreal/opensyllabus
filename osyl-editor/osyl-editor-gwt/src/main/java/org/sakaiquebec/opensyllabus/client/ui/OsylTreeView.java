@@ -37,6 +37,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.DOM;
@@ -92,6 +93,12 @@ public class OsylTreeView extends OsylViewableComposite implements
 	vertPan.add(getTree());
 	initWidget(vertPan);
 	refreshView();
+	Timer t = new Timer() {
+		public void run() {
+			computeMaxTreeWidth();
+		}
+	};
+	t.schedule(100);
     }
 
     @SuppressWarnings("unchecked")
@@ -187,7 +194,6 @@ public class OsylTreeView extends OsylViewableComposite implements
 	setCurrentTreeItemsElement();
 	computeMaxTreeWidth();
 	getRoot().setState(true);
-	
 	}
 
     private void addUnitTreeItem(TreeItem parentTreeItem, COUnit itemModel) {
@@ -326,5 +332,4 @@ public class OsylTreeView extends OsylViewableComposite implements
 			DOM.setStyleAttribute(elms[i],"width",(treeWidth - elms[i].getAbsoluteLeft())+ "px");
 		}
 	}
-    
 }
