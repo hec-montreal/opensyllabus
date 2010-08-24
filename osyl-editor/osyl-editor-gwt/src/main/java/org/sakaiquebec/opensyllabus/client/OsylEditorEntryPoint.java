@@ -71,7 +71,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	public static String execmode = "prod";
 
 	private static final int MIN_TOOL_HEIGHT = 200;
-	public static final int MIN_TOOL_WIDTH = 600;
+	public static final int MIN_TOOL_WIDTH = 640;
 
 	// Default Constructor. We ensure that our singleton instance is the same as
 	// the one initialized by the GWT framework!
@@ -216,7 +216,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 		if (isInSakai()) {
 			Element col1 = getElementById("col1");
 			Element portlet = getElementsByClass("portletMainWrap", col1, "DIV")[0];
-			DOM.setStyleAttribute(col1, "paddingRight", "0.3em");
+			DOM.setStyleAttribute(col1, "paddingRight", "0");
 			DOM.setStyleAttribute(portlet, "width", "100%");
 			setSakaiScrollBar("auto");
 		}
