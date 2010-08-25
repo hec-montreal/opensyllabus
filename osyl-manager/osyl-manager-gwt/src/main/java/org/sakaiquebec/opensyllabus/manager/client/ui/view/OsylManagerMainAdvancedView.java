@@ -26,7 +26,6 @@ import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractVie
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -41,10 +40,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 
     private VerticalPanel mainPanel;
-
-    private VerticalPanel courseListPanel;
-
-    private CourseInfoView courseInfoView;
     
     private CourseListAdvancedView courseListView;
     
@@ -59,20 +54,23 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
     }
 
     private void initView() {
-
-	mainPanel
-		.add(new Label(getController().getMessages().mainView_label()));
+	Label mainLabel = new Label(getController().getMessages().mainView_label());
+	mainLabel.setStylePrimaryName("OsylManager-mainView-label");
+	mainPanel.add(mainLabel);
 
 	VerticalPanel vPanel1 = new VerticalPanel();
 	
 	HorizontalPanel hzPanel1 = new HorizontalPanel();
+	hzPanel1.setStylePrimaryName("OsylManager-panel");
 
 	HorizontalPanel hzPanel2 = new HorizontalPanel();
 	hzPanel2.setStylePrimaryName("OsylManager-mainView-mainPanel");
 
 	HorizontalPanel hzPanel3 = new HorizontalPanel();
+	hzPanel3.setStylePrimaryName("OsylManager-panel");
 	
 	HorizontalPanel hzPanel4 = new HorizontalPanel();
+	hzPanel4.setStylePrimaryName("OsylManager-panel");
 
 	Label selectSiteLabel = new Label(getController().getMessages().
 		mainView_searchForExistingSites());
@@ -97,7 +95,8 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 		courseListView.refresh();
 	    }
 	});
-	vPanel1.add(selectSiteLabel);
+//	vPanel1.add(selectSiteLabel);
+	hzPanel1.add(selectSiteLabel);
 	hzPanel1.add(selectSiteInput);
 	hzPanel1.add(selectSiteActionBtn);
 	vPanel1.add(hzPanel1);
