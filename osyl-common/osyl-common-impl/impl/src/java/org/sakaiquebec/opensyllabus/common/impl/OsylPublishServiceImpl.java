@@ -294,7 +294,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
 	}
 
-	
+
 	//Retrieve documents associated to the course outline and its parents
 	setDocumentSecurityMap(coModeled.getDocumentSecurityMap());
 
@@ -332,7 +332,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return publicationProperties;
     }
 
-     
+
     private COSerialized updateCourseInformations(COSerialized co,
 	    String webappDir) {
 	String siteName = null;
@@ -340,6 +340,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	String siteId = co.getSiteId();
 	String dept = "";
 	String program ="";
+	String title="";
 	try {
 	    AuthzGroup realm =
 		    AuthzGroupService.getAuthzGroup(REALM_ID_PREFIX + siteId);
@@ -353,6 +354,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		CourseOffering courseOff = cmService.getCourseOffering(courseOffId);
 		program = courseOff.getAcademicCareer();
 		dept = cmService.getSectionCategoryDescription(s.getCategory());
+		title = s.getTitle();
 		EnrollmentSet es = s.getEnrollmentSet();
 		if (es != null) {
 		    Set<String> t = es.getOfficialInstructors();
@@ -383,7 +385,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		coContent.addProperty(COPropertiesType.CREATOR, "");// TODO
 		coContent.addProperty(COPropertiesType.DEPARTMENT,
 			propertyType, dept);
-		coContent.addProperty(COPropertiesType.PROGRAM,propertyType,program);
+		if(program!=null)
+			coContent.addProperty(COPropertiesType.PROGRAM,propertyType,program);
+		coContent.addProperty(COPropertiesType.TITLE, propertyType, title);
 		coModeledServer.model2XML();
 		co.setContent(coModeledServer.getSerializedContent());
 
@@ -413,7 +417,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	    // convert html in xhtml
 	    d = convertHtmlToXhtml(d);
-    
+
 	    // transform xml -> pdf
 	    String configRef =
 		    coSerializedAttendee.getOsylConfig().getConfigRef();
@@ -552,7 +556,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	    updateCourseInformations(hierarchyFussionedCO, webappDir);
 
-	    
+
 	    // Create a course outline with security public
 	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_PUBLIC,
 		    webappDir);
@@ -775,7 +779,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	co.setPublicationDate(new java.util.Date(System.currentTimeMillis()));
 	resourceDao.setPublicationDate(co.getCoId(), co.getPublicationDate());
 
-		    
+
 	String portalActivated =
 		ServerConfigurationService.getString("hec.portail.activated");
 
