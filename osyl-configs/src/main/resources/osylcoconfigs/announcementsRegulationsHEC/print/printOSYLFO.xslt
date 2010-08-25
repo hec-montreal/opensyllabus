@@ -194,11 +194,11 @@
 				<xsl:attribute name="src"><xsl:value-of select="$ppath"/>img/hecmontreal.gif</xsl:attribute>
 			</fo:external-graphic>
 		</fo:block>
-		<fo:block text-align="right" margin-top="-20pt" font-size="14pt" padding-left="0pt" font-weight="bold"><xsl:value-of select="/OSYL/CO/program"/></fo:block>
+		<fo:block text-align="right" margin-top="-20pt" font-size="14pt" padding-left="0pt" font-weight="bold"><xsl:value-of select="/OSYL/CO/program[@type='HEC']"/></fo:block>
 		<fo:block border-top-color="#555599" border-top-style="solid" border-top-width="3px" margin-right="0pt" margin-left="0pt" padding-before="10pt" padding-after="2pt"/>
-		<fo:block font-size="14pt" font-weight="bold" space-before="16pt" text-align='center'><xsl:value-of select="/OSYL/CO/department"/></fo:block>
+		<fo:block font-size="14pt" font-weight="bold" space-before="16pt" text-align='center'><xsl:value-of select="/OSYL/CO/department[@type='HEC']"/></fo:block>
 		<fo:block font-size="14pt" font-weight="bold" space-before="16pt" text-align='center'>
-			<fo:inline><xsl:value-of select="/OSYL/CO/title"/> - </fo:inline>
+			<fo:inline><xsl:value-of select="/OSYL/CO/title[@type='HEC']"/> - </fo:inline>
 			<fo:inline><xsl:value-of select="$courseCode"/></fo:inline>
 		</fo:block>
 
@@ -267,7 +267,7 @@
 			<fo:table-body >
 				<fo:table-row>
 					<fo:table-cell padding="0px" display-align="center">
-						<fo:block text-align="left"><xsl:value-of select="assessmentType"/></fo:block>
+						<fo:block text-align="left"><xsl:value-of select="label"/></fo:block>
 					</fo:table-cell>
 					<fo:table-cell padding="0px" display-align="center">
 						<fo:block text-align="left"><xsl:value-of select="weight"/> %</fo:block>
@@ -290,7 +290,7 @@
 <!-- ========== asmUnit ================ -->
 <!-- =================================== -->
 <xsl:template match="asmUnit[@xsi:type='StaffUnit']">
-	<xsl:if test=".//asmContext[semanticTag='lecturers']/node()">
+	<xsl:if test=".//asmContext[semanticTag[@type='HEC']='lecturers']/node()">
 		<xsl:call-template name="StaffUnitTitle">
 			<xsl:with-param name="label">lecturers</xsl:with-param>
 		</xsl:call-template>
@@ -298,7 +298,7 @@
 			<xsl:with-param name="role">lecturers</xsl:with-param>
 		</xsl:call-template>
 	</xsl:if>
-	<xsl:if test=".//asmContext[semanticTag='coordinators']/node()">
+	<xsl:if test=".//asmContext[semanticTag[@type='HEC']='coordinators']/node()">
 		<xsl:call-template name="StaffUnitSubtitle">
 			<xsl:with-param name="label">coordinators</xsl:with-param>
 		</xsl:call-template>
@@ -306,7 +306,7 @@
 			<xsl:with-param name="role">coordinators</xsl:with-param>
 		</xsl:call-template>
 	</xsl:if>
-	<xsl:if test=".//asmContext[semanticTag='secretaries']/node()">
+	<xsl:if test=".//asmContext[semanticTag[@type='HEC']='secretaries']/node()">
 		<xsl:call-template name="StaffUnitSubtitle">
 			<xsl:with-param name="label">secretaries</xsl:with-param>
 		</xsl:call-template>
@@ -320,21 +320,21 @@
 	<xsl:call-template name="StructTitle">
 		<xsl:with-param name="label"><xsl:value-of select="label"/></xsl:with-param>
 	</xsl:call-template>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='description']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='objectives']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='learningstrat']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='description']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='objectives']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='learningstrat']"/>
 </xsl:template>
 
 <xsl:template match="asmUnit[@xsi:type='LearningMaterialUnit']">
 	<xsl:call-template name="StructTitle">
 		<xsl:with-param name="label"><xsl:value-of select="label"/></xsl:with-param>
 	</xsl:call-template>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='bibliographicres']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='complbibres']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='misresources']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='case']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='tools']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='pastexams']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='bibliographicres']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='complbibres']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='misresources']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='case']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='tools']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='pastexams']"/>
 </xsl:template>
 
 <xsl:template match="asmUnit[@xsi:type='AssessmentUnit']">
@@ -345,7 +345,7 @@
 			<fo:table-row>
 				<fo:table-cell padding="0px" border-bottom="1px solid black" display-align="center">
 					<fo:block text-align="left" font-size="13pt" font-weight="bold">
-						<fo:inline><xsl:value-of select="assessmentType"/><xsl:text> </xsl:text></fo:inline>
+						<fo:inline><xsl:value-of select="label"/><xsl:text> </xsl:text></fo:inline>
 						<fo:inline>(<xsl:value-of select="weight"/> %)</fo:inline>
 					</fo:block>
 				</fo:table-cell>
@@ -382,12 +382,12 @@
 		<fo:inline><xsl:value-of select="submition_type"/></fo:inline>
 	</fo:block>
 
- 	<xsl:apply-templates select=".//asmContext[semanticTag='description']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='objectives']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='evalcriteria']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='evalpreparation']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='evalsubproc']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='misresources']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='description']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='objectives']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='evalcriteria']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='evalpreparation']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='evalsubproc']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='misresources']"/>
 </xsl:template>
 
 <xsl:template match="asmUnit[@xsi:type='Lecture' or @xsi:type='WorkSession']">
@@ -405,23 +405,23 @@
 		<xsl:with-param name="pos"><xsl:value-of select="$pos"/></xsl:with-param>
 		<xsl:with-param name="label"><xsl:value-of select="label"/></xsl:with-param>
 	</xsl:call-template>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='description']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='objectives']"/>
-	<xsl:apply-templates select=".//asmContext[semanticTag='learningstrat']"/>
-	<xsl:apply-templates select=".//asmContext[semanticTag='misresources']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='ressinclass']"/>
-	<xsl:apply-templates select=".//asmContext[semanticTag='case']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='readinglist']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='exercises']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='description']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='objectives']"/>
+	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='learningstrat']"/>
+	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='misresources']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='ressinclass']"/>
+	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='case']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='readinglist']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='exercises']"/>
 </xsl:template>
 
 <xsl:template match="asmUnit[@xsi:type='NewsUnit']">
 	<xsl:call-template name="StructTitle">
 		<xsl:with-param name="label"><xsl:value-of select="label"/></xsl:with-param>
 	</xsl:call-template>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='news']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='plagiarism']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag='calculators']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='news']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='plagiarism']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='calculators']"/>
 </xsl:template>
 
 <!-- ===================================== -->
@@ -431,7 +431,7 @@
 <xsl:template match="asmContext[../@xsi:type != 'StaffUnitContent']">
 	<xsl:if test="position()=1">
 		<xsl:call-template name="RubricTitle">
-			<xsl:with-param name="label"><xsl:value-of select="semanticTag"/></xsl:with-param>
+			<xsl:with-param name="label"><xsl:value-of select="semanticTag[@type='HEC']/@userDefLabel"/></xsl:with-param>
 		</xsl:call-template>
 	</xsl:if>
 	<xsl:choose>
@@ -453,7 +453,7 @@
 
 <xsl:template name="Staff">
   <xsl:param name="role"/>
-	<xsl:variable name="threshold" select="(count(.//asmContext[semanticTag=$role]) + 1) div 2"/>
+	<xsl:variable name="threshold" select="(count(.//asmContext[semanticTag[@type='HEC']=$role]) + 1) div 2"/>
 	<fo:table width="100%" table-layout="fixed" space-before="5pt">
 		<fo:table-column column-width="50%" column-number="1" />
 		<fo:table-column column-width="50%" column-number="2" />
@@ -461,12 +461,12 @@
 			<fo:table-row>
 				<fo:table-cell padding="5px">
 					<fo:block>
-					<xsl:apply-templates select=".//asmContext[semanticTag=$role][(position() &lt;= $threshold)]"/>
+					<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']=$role][(position() &lt;= $threshold)]"/>
 					</fo:block>
 				</fo:table-cell>
 				<fo:table-cell padding="5px">
 					<fo:block>
-					<xsl:apply-templates select=".//asmContext[semanticTag=$role][(position() &gt; $threshold)]"/>
+					<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']=$role][(position() &gt; $threshold)]"/>
 					</fo:block>
 				</fo:table-cell>
 			</fo:table-row>
@@ -851,36 +851,6 @@
   <xsl:param name="label"/>
 
 	<xsl:choose>
-		<xsl:when test="$label = 'description'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Description</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Description</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Descripción</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'objectives'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Objectifs</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Objectives</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Objetivos</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
 		<xsl:when test="$label = 'lecturers'">
 			<xsl:choose>
 				<xsl:when test="$lang = 'FR'">
@@ -921,246 +891,6 @@
 				</xsl:when>
 				<xsl:when test="$lang = 'ES'">
 					<xsl:text>Secretaria(s)</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'learningstrat'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Approche pédagogique</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Learning Strategy</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Estrategia de aprendizaje</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'bibliographicres'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Ressources bibliographiques</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Bibliographic resources</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Referencias bibliográfica</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'complbibres'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Ressources bibliographiques complémentaires</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Complementary Bibliographical Resources</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Recursos bibliográficos complementarios</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'misresources'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Ressources générales</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Miscellaneous Resources</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Varios recursos</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'tools'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Outils</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Tools</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Herramientas</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'pastexams'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Anciens examens</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Past Exams</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Pasado exámenes</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'evalpreparation'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Préparation à l'évaluation</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Preparation to Evaluation</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Preparación para la evaluación</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'evalsubproc'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Modalités de remise et pénalités</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Submission Procedures and Penalities</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Procedimientos de presentación y penalidades</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'evalcriteria'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Critères d'évaluation</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Evaluation Criteria</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Criterios de evaluación</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'readinglist'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Lectures</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Readings</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Lecturas</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'ressinclass'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Ressources utilisées pendant la séance</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Resources Used in Class</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Recursos utilizados durante la clase</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'exercises'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Exercices</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Exercises</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Ejercicios</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'news'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Nouvelle</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>News</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Novedades</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'plagiarism'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Plagiat</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Plagiarism</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Plagiarism</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'calculators'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Calculatrices</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Calculators</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Calculadoras</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'undefined'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Non défini</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Undefined</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Indefinido</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
 				</xsl:otherwise>
