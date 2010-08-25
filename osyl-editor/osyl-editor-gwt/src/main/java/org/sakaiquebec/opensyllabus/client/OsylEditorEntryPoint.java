@@ -662,6 +662,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
 
 	public void setToolWidth() {
 		String width = ToolWidthMinReached() ? MIN_TOOL_WIDTH +"px" : "auto";
+		DOM.setStyleAttribute(getSakaiToolIframe(), "overflowX", 
+				ToolWidthMinReached()?"auto":"hidden");
 		getRootPanel().setWidth(width);
 	}
 
