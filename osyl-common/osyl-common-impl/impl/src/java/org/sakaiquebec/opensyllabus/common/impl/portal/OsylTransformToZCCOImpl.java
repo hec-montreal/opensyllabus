@@ -988,7 +988,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			for (int i = 1; i < nbDocExts + 1; i++) {
 				boolean nouveau = true;
 				Element ressource = (Element) docExts.item(i - 1);
-				String ressourceId = ressource.getAttribute("koId");
+				String ressourceId = ressource.getAttribute("koId");  
 				String type = ressource.getAttribute("type");
 				String nivSecu = ressource.getAttribute("securite");
 				String fileName = "<font color='red'>ERREUR - pas de fichier ou d'url associe au document</font>";

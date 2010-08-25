@@ -57,7 +57,7 @@ public interface OsylTransformToZCCO {
     public static final String SITE_PREFIX = "/site/";
     
 
-
+    
     /**
      * Creates a XML course outline ZoneCours compatible and sends it to the
      * ZoneCours database.

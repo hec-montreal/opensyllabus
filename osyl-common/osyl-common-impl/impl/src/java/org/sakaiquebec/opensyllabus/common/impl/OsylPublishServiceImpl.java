@@ -407,7 +407,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	    // convert html in xhtml
 	    d = convertHtmlToXhtml(d);
-
+    
 	    // transform xml -> pdf
 	    String configRef =
 		    coSerializedAttendee.getOsylConfig().getConfigRef();
