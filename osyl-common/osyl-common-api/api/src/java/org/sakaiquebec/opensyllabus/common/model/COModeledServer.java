@@ -244,7 +244,7 @@ public class COModeledServer {
 
     /**
      * Map<name,permissions> of permissions applied to ressources
-     * 
+     *
      * @uml.property name="documentSecurityMap"
      * @uml.associationEnd qualifier="trim:java.lang.String java.lang.String"
      */
@@ -252,7 +252,7 @@ public class COModeledServer {
 
     /**
      * Map<name,visibility> of visibility applied to ressources
-     * 
+     *
      * @uml.property name="documentVisibilityMap"
      * @uml.associationEnd qualifier="trim:java.lang.String java.lang.String"
      */
@@ -385,7 +385,7 @@ public class COModeledServer {
 
     /**
      * Creates a COContent POJO from the root of the xml document.
-     * 
+     *
      * @param document the document being created
      * @param coContent the POJO to be created from the root element.
      */
@@ -470,7 +470,7 @@ public class COModeledServer {
 
     /**
      * Creates a CoUnit POJO from the DOM.
-     * 
+     *
      * @param node the node from the DOM representing that structure element
      * @param coUnit the POJO to be created from the DOM.
      * @param parent the parent of the Structure element
@@ -506,7 +506,7 @@ public class COModeledServer {
 
     /**
      * Creates a CoUnit POJO from the DOM.
-     * 
+     *
      * @param node the node from the DOM representing that structure element
      * @param coUnitStructure the POJO to be created from the DOM.
      * @param parent the parent of the Structure element
@@ -549,7 +549,7 @@ public class COModeledServer {
 
     /**
      * Creates a StructureElement POJO from the DOM.
-     * 
+     *
      * @param node the node from the DOM representing that structure element
      * @param coStructElt the POJO to be created from the DOM.
      * @param coContent the parent of the Structure element
@@ -593,7 +593,7 @@ public class COModeledServer {
 
     /**
      * Creates a Course Outline content unit POJO from the DOM.
-     * 
+     *
      * @param node the node from the DOM representing that Course Outline
      *            content
      * @param coContentUnit the POJO to be created from the DOM.
@@ -630,7 +630,7 @@ public class COModeledServer {
     /**
      * Creates a Course Outline Resource Proxy POJO from the DOM. (for proxies
      * which belong directly to the contentUnit)
-     * 
+     *
      * @param node the node from the DOM representing that Resource Proxy
      * @return the created Course Outline Resource Proxy POJO
      */
@@ -699,7 +699,7 @@ public class COModeledServer {
 
     /**
      * Creates a Course Outline Resource POJO from the DOM.
-     * 
+     *
      * @param node the node from the DOM representing that Course Outline
      *            Content Resource
      * @return the created Content resource
@@ -767,7 +767,7 @@ public class COModeledServer {
 
     /**
      * Creates a Course Outline Resource POJO of type person from the DOM.
-     * 
+     *
      * @param node the node from the DOM representing that Course Outline
      *            Content Resource
      * @return the created Content resource
@@ -794,7 +794,7 @@ public class COModeledServer {
 
     /**
      * Creates a Course OutlineContent rubric POJO from the DOM.
-     * 
+     *
      * @param node the node from the DOM representing that Resource Proxy
      * @return the created Course Outline Resource Proxy POJO
      */
@@ -835,7 +835,7 @@ public class COModeledServer {
 
     /**
      * Entry point of the model conversion to XML string.
-     * 
+     *
      * @return the XML string generated from the model.
      */
     public void model2XML() {
@@ -909,7 +909,7 @@ public class COModeledServer {
 
     /**
      * Creates the root element of the document.
-     * 
+     *
      * @param document the document being created
      * @param coContent the POJO needed to create the root element.
      */
@@ -946,7 +946,7 @@ public class COModeledServer {
      * in the model. The parent can only be <code>CourseOutlineContent</code>
      * objects or <code>COStructureElement</code> objects following model
      * restrictions.
-     * 
+     *
      * @param document the document being created.
      * @param parent the parent element to append child element being created.
      * @param child the POJO from which the element is created.
@@ -1049,7 +1049,7 @@ public class COModeledServer {
      * Creates all the children elements of a <code>COContentUnit</code> or a
      * <code>COContentResourceProxy</code>. The children elements are created
      * from a <code>COContentResourceProxy</code>
-     * 
+     *
      * @param document the document being created.
      * @param parent the parent element (created from a
      *            <code>COContentUnit</code> object or a
@@ -1095,7 +1095,7 @@ public class COModeledServer {
 
     /**
      * Creates a "resource" node child.
-     * 
+     *
      * @param document the document being created.
      * @param coContentResourceProxyElem the node containing the resource
      *            element.
@@ -1135,7 +1135,7 @@ public class COModeledServer {
 
     /**
      * Creates a "rubric" element.
-     * 
+     *
      * @param document the document being created.
      * @param coContentResourceProxyElem The lement containing this rubric
      *            element.
@@ -1503,6 +1503,16 @@ public class COModeledServer {
 	    coProperties.addProperty(COPropertiesType.IDENTIFIER, propertyType,
 		    identifier);
 	}
+    }
+
+    public void setCOProgram(String p){
+		if (p != null) {
+		    String propertyType = getPropertyType();
+		    COContent content = this.getModeledContent();
+		    COProperties coProperties = content.getProperties();
+		    coProperties.addProperty(COPropertiesType.PROGRAM, propertyType,
+			    p);
+		}
     }
 
     public static String getRulesConfigPropertyType(Document d) {

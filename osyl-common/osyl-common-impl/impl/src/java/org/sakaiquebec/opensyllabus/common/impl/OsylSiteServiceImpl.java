@@ -92,7 +92,7 @@ import org.w3c.dom.Element;
 
 /**
  * Implementation of the <code>OsylSiteService</code>
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -139,7 +139,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>CitationService</code>.
-     * 
+     *
      * @param citationService
      * @uml.property name="citationService"
      */
@@ -161,7 +161,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylConfigService}.
-     * 
+     *
      * @param osylConfigService
      */
     public void setConfigService(OsylConfigService osylConfigService) {
@@ -181,7 +181,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Dependency: EntityManager.
-     * 
+     *
      * @param service The EntityManager.
      */
     public void setEntityManager(EntityManager entityManager) {
@@ -190,7 +190,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylSecurityService}.
-     * 
+     *
      * @param securityService
      */
     public void setSecurityService(OsylSecurityService securityService) {
@@ -204,7 +204,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylSecurityService}.
-     * 
+     *
      * @param securityService
      */
     public void setOsylHierarchyService(OsylHierarchyService hierarchyService) {
@@ -213,7 +213,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>ContentHostingService</code>.
-     * 
+     *
      * @param contentHostingService
      */
     public void setContentHostingService(
@@ -223,7 +223,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link CORelationDao}.
-     * 
+     *
      * @param configDao
      */
     public void setCoRelationDao(CORelationDao relationDao) {
@@ -232,7 +232,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link ResourceDao}.
-     * 
+     *
      * @param resourceDao
      */
     public void setResourceDao(ResourceDao resourceDao) {
@@ -241,7 +241,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link COConfigDao}.
-     * 
+     *
      * @param configDao
      */
     public void setConfigDao(COConfigDao configDao) {
@@ -250,7 +250,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>SiteService</code>.
-     * 
+     *
      * @param siteService
      */
     public void setSiteService(SiteService siteService) {
@@ -614,7 +614,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Add a collection (similar to a sub-directory) under the resource tool.
-     * 
+     *
      * @param dir name of collection
      * @param parent where to create it (null means top-level)
      * @return boolean whether the collection was added or not
@@ -643,7 +643,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Tells if a collection is already created in sakai.
-     * 
+     *
      * @param a String of the collection id.
      * @return boolean whether the collection exists
      */
@@ -659,7 +659,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Get a valid resource reference base site URL to be used in later calls.
-     * 
+     *
      * @return a String of the base URL
      */
     private String getSiteReference(Site site) {
@@ -805,16 +805,22 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			.getLang(), webappDir));
 		String title = getSite(siteId).getTitle();
 		String identifier = "";
+		String program = "";
 		if (this.isCOLinkedToCourseManagement(getCurrentSiteId())) {
 		    String cmTitle =
 			    getCourseManagementTitle(getCurrentSiteId());
 		    String cmIdentifier =
 			    getCourseManagementCourseNo(getCurrentSiteId());
+			String cmProgram =
+			    getCourseManagementProgram(getCurrentSiteId());
 		    if (cmTitle != null) {
 			title = cmTitle;
 		    }
 		    if (cmIdentifier != null) {
 			identifier = cmIdentifier;
+		    }
+		    if(cmProgram != null){
+			program = cmProgram;
 		    }
 		}
 		// reinitilaisation des uuids et ajout titre et identifier
@@ -826,6 +832,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		coModeled.setCOContentCourseId(identifier);
 		coModeled.setCOContentIdentifier(identifier);
 		coModeled.setSchemaVersion(sh.getSchemaVersion());
+		coModeled.setCOProgram(program);
 		coModeled.model2XML();
 		thisCo.setContent(coModeled.getSerializedContent());
 
@@ -885,7 +892,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @throws Exception
      */
     public COSerialized getSerializedCourseOutline(String id, String webappDir)
@@ -903,7 +910,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @throws Exception
      */
     public String updateSerializedCourseOutline(COSerialized co)
@@ -983,7 +990,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     /**
      * Reads the course outline xml template from a file located in the
      * osylcoconfigs directory.
-     * 
+     *
      * @param webappDir The path to the webapp directory
      * @return
      */
@@ -1010,7 +1017,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     /**
      * Checks if the file of the co template exists, if not it takes the default
      * template file, and return a buffered reader on the file.
-     * 
+     *
      * @param webappDir the location of the webapp
      * @return a BufferedReader on the appropriate template file.
      */
@@ -1382,6 +1389,18 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     }
 
+    private String getCourseManagementProgram(String siteId) throws Exception {
+		String program = "";
+
+		String Eid = getSite(siteId).getProviderGroupId();
+		if (cmService.isSectionDefined(Eid)) {
+		    Section section = cmService.getSection(Eid);
+		    program = getProgram(section);
+		}
+
+		return program;
+    }
+
     private String getCourseManagementTitle(String siteId) throws Exception {
 	String courseManageMentTitle = null;
 
@@ -1456,6 +1475,12 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    siteName.append(groupe);
 	}
 	return siteName.toString();
+    }
+
+    private String getProgram(Section section) {
+		String courseOffId = section.getCourseOfferingEid();
+		CourseOffering courseOff = cmService.getCourseOffering(courseOffId);
+		return courseOff.getAcademicCareer();
     }
 
     private String getSessionName(AcademicSession session) {

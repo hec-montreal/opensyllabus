@@ -85,7 +85,7 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMapEn
 
 /**
  * The class is an implementation of the OsylCMJob as job launched by the quartz
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -96,8 +96,8 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 	 * sessions ...
 	 */
 	@Deprecated
-	private static final String EXTRACTS_PATH = 
-		"webapps" + File.separator	+ "osyl-admin-sakai-tool" 
+	private static final String EXTRACTS_PATH =
+		"webapps" + File.separator	+ "osyl-admin-sakai-tool"
 			+ File.separator + "extracts";
 
 	/**
@@ -137,7 +137,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
      * Map used to store information about the secretaries.
      */
     private SecretairesMap secretairesMap = null;
-	
+
 	/**
 	 * Map used to store information about the exam dates
 	 */
@@ -200,7 +200,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 	/**
 	 * Sets the <code>UserDirectoryService</code> needed to create the site in
 	 * the init() method.
-	 * 
+	 *
 	 * @param userDirService
 	 */
 	public void setUserDirService(UserDirectoryService userDirService) {
@@ -216,7 +216,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 		Iterator<DetailCoursMapEntry> cours;
 		DetailCoursMapEntry detailsCours;
 
-		Iterator<ProfCoursMapEntry> profCours = 
+		Iterator<ProfCoursMapEntry> profCours =
 			profCoursMap.values().iterator();
 
 		while (profCours.hasNext()) {
@@ -226,7 +226,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 			while (cours.hasNext()) {
 				detailsCours = (DetailCoursMapEntry) cours.next();
 				courseOfferingId = getCourseOfferingId(detailsCours);
-				courseSectionId = getCourseSectionId(detailsCours);		
+				courseSectionId = getCourseSectionId(detailsCours);
 
 				if (cmService.isSectionDefined(courseSectionId))
 					cmAdmin.addOrUpdateSectionMembership(matricule,
@@ -254,10 +254,11 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 		String status = "active";
 		String section = "";
 		String category;
+		String program="";
 		Set<CanonicalCourse> cc = new HashSet<CanonicalCourse>();
 		Set<CourseOffering> courseOfferingSet = new HashSet<CourseOffering>();
 
-		Iterator<DetailCoursMapEntry> cours = 
+		Iterator<DetailCoursMapEntry> cours =
 			detailCoursMap.values().iterator();
 
 		while (cours.hasNext()) {
@@ -275,7 +276,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 
 			} else {
 				// we update
-				CanonicalCourse canCourse = 
+				CanonicalCourse canCourse =
 					cmService.getCanonicalCourse(canonicalCourseId);
 				canCourse.setDescription(description);
 				canCourse.setTitle(title);
@@ -300,7 +301,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 					courseOff = cmAdmin.createCourseOffering(courseOfferingId,
 							title, description, status, session.getEid(),
 							canonicalCourseId, session.getStartDate(), session
-									.getEndDate(), lang);
+									.getEndDate(), lang, program);
 					courseOfferingSet.add(courseOff);
 				} else {
 					// We update
@@ -339,7 +340,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 				// // enrollmentSet.setTitle(title);
 				// // cmAdmin.updateEnrollmentSet(enrollmentSet);
 				// // }
-				//				
+				//
 				// create course section
 				section = coursEntry.getClassSection();
 				category = coursEntry.getAcadOrg();
@@ -354,7 +355,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 							category, null, courseOfferingId, null, lang);
 				} else {
 					// We update
-					Section courseSection = 
+					Section courseSection =
 						cmService.getSection(courseSectionId);
 					courseSection.setCategory(category);
 					courseSection.setDescription(description);
@@ -377,11 +378,11 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 		DetailSessionsMapEntry sessionEntry = null;
 		String eid = "", title = "", description = "";
 		Date startDate = null, endDate = null;
-		
-		List<String> currentSessions = new ArrayList<String>(); 
-		
+
+		List<String> currentSessions = new ArrayList<String>();
+
 		Date now = new Date(System.currentTimeMillis());
-		Iterator<DetailSessionsMapEntry> sessions = 
+		Iterator<DetailSessionsMapEntry> sessions =
 			detailSessionMap.values().iterator();
 
 		while (sessions.hasNext()) {
@@ -464,7 +465,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 
 	/**
 	 * This method maps the status of a user to a valid type in Sakai
-	 * 
+	 *
 	 * @param status
 	 * @return
 	 */
@@ -507,7 +508,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 
 	/**
 	 * This method whether a course is linked to an enrollmentSet
-	 * 
+	 *
 	 * @param cours
 	 * @return hasEnrollmentSet
 	 */
@@ -556,10 +557,10 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 	 * Retreives the folder where is kept the extract file. Later on we will
 	 * have a fixed values representing the place where are kept the extract
 	 * files.
-	 * 
+	 *
 	 * @param CLASSPATHTOEXTRACTS
 	 */
-	
+
 	private String getPathToExtracts() {
 
 		String directory = System.getProperty("catalina.home");
@@ -573,9 +574,9 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 
 		loginToSakai();
 
-		String directory = 
+		String directory =
 			ServerConfigurationService.getString(
-					"coursemanagement.extract.files.path", 
+					"coursemanagement.extract.files.path",
 					getPathToExtracts());
 
 		if (directory == null || "".equalsIgnoreCase(directory)) {
@@ -587,9 +588,9 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 			return;
 		}
 		try {
-			detailSessionMap = 
+			detailSessionMap =
 				GenericDetailSessionsMapFactory.getInstance(directory);
-			detailSessionMap = 
+			detailSessionMap =
 				GenericDetailSessionsMapFactory.buildMap(directory);
 			// We load sessions
 			loadSessions();
@@ -603,27 +604,27 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 			// We add a courseSet
 			loadCourseSets();
 
-			detailCoursMap = 
+			detailCoursMap =
 				GenericDetailCoursMapFactory.getInstance(directory);
 			detailCoursMap = GenericDetailCoursMapFactory.buildMap(directory);
 			// We load courses
 			loadCourses();
 
 			profCoursMap = GenericProfCoursMapFactory.getInstance(directory);
-			profCoursMap = 
+			profCoursMap =
 				GenericProfCoursMapFactory.buildMap(directory,
 					detailCoursMap, detailSessionMap);
-			
+
 		    // secretairesMap =
 			//    GenericSecretairesMapFactory.getInstance(directory);
 		    // secretairesMap = GenericSecretairesMapFactory.buildMap(directory);
-		    
+
 			// We assign teachers and the secretaries
 			 loadMembership();
 
-			 etudCoursMap = 
+			 etudCoursMap =
 				 GenericEtudiantCoursMapFactory.getInstance(directory);
-			 etudCoursMap = 
+			 etudCoursMap =
 				 GenericEtudiantCoursMapFactory.buildMap(directory,
 						 detailCoursMap, detailSessionMap);
 			 // We assign students to their classes
@@ -635,7 +636,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 
 		logoutFromSakai();
 		log.info(" End synchronizing PeopleSoft data extracts to the course management");
-		
+
 	}
 
 	/** {@inheritDoc} */
@@ -649,7 +650,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 		Section coursSection = null;
 		EnrollmentSet enrollmentSet = null;
 
-		Iterator<EtudiantCoursMapEntry> etudiantCoursMap = 
+		Iterator<EtudiantCoursMapEntry> etudiantCoursMap =
 			etudCoursMap.getEtudiants();
 
 		while (etudiantCoursMap.hasNext()) {
@@ -668,11 +669,11 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 				// move this command
 				coursSection = null;
 				coursSectionId = null;
-				
+
 				enrollmentSet = null;
 				enrollmentSetId = null;
 				try {
-					coursSection = 
+					coursSection =
 						cmService.getSection(getCourseSectionId(cours));
 					if (coursSection != null)
 						coursSectionId = coursSection.getEid();
@@ -680,7 +681,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 					enrollmentSet = coursSection.getEnrollmentSet();
 					if (enrollmentSet != null)
 						enrollmentSetId = enrollmentSet.getEid();
-					
+
 				} catch (IdNotFoundException e) {
 					System.err
 							.println("Il n'y a pas d'enrollment associé pour le "
@@ -704,7 +705,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 		}
 		return courseOfferingId;
 	}
-	
+
 	private String getCourseOfferingTitle(DetailCoursMapEntry cours) {
 		String courseOfferingId = null;
 		if (cours != null) {
@@ -745,7 +746,7 @@ public class OsylCMJobImplUdeM implements OsylCMJob {
 		return courseSectionId.trim();
 	}
 
-	
+
 	private String getCourseSetId(DetailCoursMapEntry course) {
 		String csId = null;
 

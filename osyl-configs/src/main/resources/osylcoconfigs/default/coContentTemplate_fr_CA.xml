@@ -16,6 +16,7 @@
 	<lastPublished></lastPublished>
 	<courseId type="HEC">Id du cours</courseId>
 	<department type="HEC"></department>
+	<program type="HEC"></program>
 	<asmStructure access="public" xsi:type="NewsStruct">
 		<modified>2001-12-17T09:30:47-05:00</modified>
 		<asmUnit access="public" xsi:type="NewsUnit">

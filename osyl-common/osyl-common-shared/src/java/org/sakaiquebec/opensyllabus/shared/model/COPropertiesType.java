@@ -20,7 +20,7 @@ import java.util.List;
  * This class contains the list of all the possible properties in a course
  * outline. TODO: when GWT 1.5 release will be used, replace this class with
  * enum types
- * 
+ *
  * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Leprêtre</a>
  * @version $Id: COContentUnitType.java 525 2008-05-22 04:30:56Z
  *          sacha.lepretre@crim.ca $
@@ -44,7 +44,7 @@ public class COPropertiesType {
     public final static String REQ_LEVEL_RECOMMENDED = "recommended";
     public final static String REQ_LEVEL_COMPLEMENTARY = "complementary";
     public final static String REQ_LEVEL_UNDEFINED = "undefined";
-    
+
     // Specific to assignments/evaluations
     public static final String WEIGHT = "weight";
     public static final String DATE_START = "date-start";
@@ -78,7 +78,7 @@ public class COPropertiesType {
     public static final String IDENTIFIER_TYPE_BOOKSTORE = "bookstore";
     public static final String IDENTIFIER_TYPE_OTHERLINK = "other_link";
     public static final String IDENTIFIER_TYPE_OTHERLINK_LABEL = "label";
-    public static final String IDENTIFIER_TYPE_NOLINK = "nolink"; 
+    public static final String IDENTIFIER_TYPE_NOLINK = "nolink";
     public static final String IDENTIFIER_TYPE_DOI = "doi";
     public static final String IDENTIFIER_TYPE_ISN = "isn";
 
@@ -97,6 +97,7 @@ public class COPropertiesType {
     public static final String CHILDS = "childs";
     public static final String COURSE_ID = "courseId";
     public static final String DEPARTMENT = "department";
+    public static final String PROGRAM="program";
 
     //Specific to  Reference context
     public static final String DISPLAY_AS = "displayAs";
@@ -104,13 +105,13 @@ public class COPropertiesType {
     //Specific to Document resource
     public static final String LICENSE = "license";
     public static final String RIGHTS = "rights";
-    
+
     //Specific to ASMUnit
     public static final String PREFIX = "prefix";
-    
+
     public final static String SEMANTIC_TAG = "semanticTag";
     public final static String SEMANTIC_TAG_USERDEFLABEL="userDefLabel";
-    
+
     public final static List<String> CDATA_NODE_NAMES =
 	    Arrays.asList(new String[] { COPropertiesType.DESCRIPTION,
 		    COPropertiesType.TEXT, COPropertiesType.COMMENT,

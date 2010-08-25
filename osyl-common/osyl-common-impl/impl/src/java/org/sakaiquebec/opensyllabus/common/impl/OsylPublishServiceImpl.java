@@ -33,6 +33,7 @@ import org.sakaiproject.content.api.ContentEntity;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
+import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.ResourceProperties;
@@ -68,7 +69,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The security service to be injected by Spring
-     * 
+     *
      * @uml.property name="osylSecurityService"
      * @uml.associationEnd
      */
@@ -78,7 +79,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link OsylSecurityService}.
-     * 
+     *
      * @param securityService
      */
     public void setSecurityService(OsylSecurityService securityService) {
@@ -98,7 +99,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The chs to be injected by Spring
-     * 
+     *
      * @uml.property name="contentHostingService"
      * @uml.associationEnd multiplicity="(0 -1)" ordering="true"
      *                     elementType="org.sakaiproject.content.api.ContentEntity"
@@ -109,7 +110,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the <code>ContentHostingService</code>.
-     * 
+     *
      * @param contentHostingService
      * @uml.property name="contentHostingService"
      */
@@ -133,7 +134,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     /**
      * The resouceDao to be injected by Spring
-     * 
+     *
      * @uml.property name="resourceDao"
      * @uml.associationEnd
      */
@@ -141,7 +142,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link ResourceDao} .
-     * 
+     *
      * @param resourceDao
      * @uml.property name="resourceDao"
      */
@@ -151,7 +152,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The config service to be injected by Spring
-     * 
+     *
      * @uml.property name="osylConfigService"
      * @uml.associationEnd
      */
@@ -159,7 +160,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link OsylConfigService}.
-     * 
+     *
      * @param configService
      */
     public void setConfigService(OsylConfigService configService) {
@@ -168,7 +169,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The transformation and transfer service to be injected by Spring
-     * 
+     *
      * @uml.property name="osylTransformToZCCO"
      * @uml.associationEnd
      */
@@ -176,7 +177,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link OsylTransformToZCCO}.
-     * 
+     *
      * @param osylTransformToZCCO
      */
     public void setOsylTransformToZCCO(OsylTransformToZCCO osylTransformToZCCO) {
@@ -185,7 +186,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The OsylSite service to be injected by Spring
-     * 
+     *
      * @uml.property name="osylSiteService"
      * @uml.associationEnd
      */
@@ -193,7 +194,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link OsylSiteService} .
-     * 
+     *
      * @param osylSiteService
      * @uml.property name="osylSiteService"
      */
@@ -205,7 +206,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link CORelationDao}.
-     * 
+     *
      * @param configDao
      */
     public void setCoRelationDao(CORelationDao relationDao) {
@@ -248,7 +249,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     /**
      * Creates or updates the corresponding entries in the database and copies
      * the ressources
-     * 
+     *
      * @param String webapp dir (absolute pathname !?)
      */
     public Map<String, String> publish(String webappDir, String siteId)
@@ -338,6 +339,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	String providerId = null;
 	String siteId = co.getSiteId();
 	String dept = "";
+	String program ="";
 	try {
 	    AuthzGroup realm =
 		    AuthzGroupService.getAuthzGroup(REALM_ID_PREFIX + siteId);
@@ -347,6 +349,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    if (providerId != null) {
 		siteName = osylSiteService.getSiteName(providerId);
 		Section s = cmService.getSection(providerId);
+		String courseOffId = s.getCourseOfferingEid();
+		CourseOffering courseOff = cmService.getCourseOffering(courseOffId);
+		program = courseOff.getAcademicCareer();
 		dept = cmService.getSectionCategoryDescription(s.getCategory());
 		EnrollmentSet es = s.getEnrollmentSet();
 		if (es != null) {
@@ -378,6 +383,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		coContent.addProperty(COPropertiesType.CREATOR, "");// TODO
 		coContent.addProperty(COPropertiesType.DEPARTMENT,
 			propertyType, dept);
+		coContent.addProperty(COPropertiesType.PROGRAM,propertyType,program);
 		coModeledServer.model2XML();
 		co.setContent(coModeledServer.getSerializedContent());
 

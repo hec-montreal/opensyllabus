@@ -16,6 +16,7 @@
 	<courseId type="UdeM">Id du cours</courseId>
 	<childs type="UdeM"></childs>
 	<department type="UdeM"></department>
+	<program type="UdeM"></program>
 	<parent type="UdeM"></parent>
 	<access></access>
 	<asmStructure access="public" xsi:type="InformationOfLessonStruct">

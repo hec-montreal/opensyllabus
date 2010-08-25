@@ -43,6 +43,7 @@ import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
+import org.sakaiquebec.opensyllabus.admin.impl.extracts.Constants;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailCoursMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailCoursMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailSessionsMap;
@@ -54,10 +55,13 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericDetailSessionsMap
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericEtudiantCoursMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericExamensMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericProfCoursMapFactory;
+import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericProgrammeEtudesMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericSecretairesMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericServiceEnseignementMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProfCoursMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProfCoursMapEntry;
+import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProgrammeEtudesMap;
+import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProgrammeEtudesMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.SecretairesMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.SecretairesMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMap;
@@ -86,7 +90,7 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMapEn
 
 /**
  * The class is an implementation of the OsylCMJob as job launched by the quartz
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -130,6 +134,12 @@ public class OsylCMJobImpl implements OsylCMJob {
      * Map used to store information about the departments.
      */
     private ServiceEnseignementMap servEnsMap = null;
+
+    /**
+	 * Map used to store information about the programs
+	 */
+	private ProgrammeEtudesMap programmeEtudesMap = null;
+
 
     /**
      * Map used to store information about the exam dates
@@ -247,6 +257,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 	String description = "";
 	String title = "";
 	String lang = "";
+	String career ="";
 	AcademicSession session = null;
 	String category;
 	Set<CanonicalCourse> cc = new HashSet<CanonicalCourse>();
@@ -288,13 +299,17 @@ public class OsylCMJobImpl implements OsylCMJob {
 	    if (cmService.isAcademicSessionDefined(coursEntry.getStrmId())) {
 		courseOfferingId = getCourseOfferingId(coursEntry);
 		lang = coursEntry.getLangue();
+		ProgrammeEtudesMapEntry programmeEtudesMapEntry = programmeEtudesMap.get(coursEntry.getAcadCareer());
+		if(Constants.ENGLISH.equals(lang))
+			career=programmeEtudesMapEntry.getDescEng();
+		else career=programmeEtudesMapEntry.getDescFr();
 		if (!cmService.isCourseOfferingDefined(courseOfferingId)) {
 		    courseOff =
 			    cmAdmin.createCourseOffering(courseOfferingId,
 				    title, description, COURSE_OFF_STATUS,
 				    session.getEid(), canonicalCourseId,
 				    session.getStartDate(), session
-					    .getEndDate(), lang);
+					    .getEndDate(), lang,career);
 		    courseOfferingSet.add(courseOff);
 		} else {
 		    // We update
@@ -307,6 +322,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 		    courseOff.setAcademicSession(session);
 		    courseOfferingSet.add(courseOff);
 		    courseOff.setLang(lang);
+		    courseOff.setAcademicCareer(career);
 		    cmAdmin.updateCourseOffering(courseOff);
 		}
 
@@ -537,6 +553,9 @@ public class OsylCMJobImpl implements OsylCMJob {
 	    etudCoursMap =
 		    GenericEtudiantCoursMapFactory.buildMap(directory,
 			    detailCoursMap, detailSessionMap);
+
+		programmeEtudesMap = GenericProgrammeEtudesMapFactory.getInstance(directory);
+	    programmeEtudesMap = GenericProgrammeEtudesMapFactory.buildMap(directory);
 
 	    // We first retrieve the current values in the system for the same
 	    log

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2010 rel. 2 (http://www.altova.com) by Carl Duranceau (HEC Montréal) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.1">
 	<xs:element name="OSYL">
@@ -376,6 +376,7 @@
 					</xs:element>
 					<xs:element name="courseId" type="identifierType" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="department" type="identifierType" maxOccurs="unbounded"/>
+					<xs:element name="program" type="identifierType" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
