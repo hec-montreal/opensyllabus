@@ -391,7 +391,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		    if (content != null) {
 			ressType = content.getContentType();
 			ressContent = content.getContent();
-			ressSize = content.getContentLength() / 1024;
+			ressSize = content.getContentLength() ;
 			if (hache.get("documents/" + fileName) != null)
 			    docId =
 				    hache.get("documents/" + fileName)
