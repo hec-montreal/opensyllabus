@@ -68,6 +68,6 @@ public interface OsylTransformToZCCO {
      * @throws IOException 
      * @throws Exception 
      */
-    public boolean sendXmlAndDoc(COSerialized published, Map<String, String> documentSecurityMap, Map<String, String> documentVisibilityMap) throws IOException, Exception;
+    public boolean sendXmlAndDoc(COSerialized published) throws IOException, Exception;
 
 }

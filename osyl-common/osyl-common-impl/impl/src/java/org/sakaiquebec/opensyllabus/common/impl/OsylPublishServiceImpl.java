@@ -293,6 +293,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
 	}
 
+	
+	//Retrieve documents associated to the course outline and its parents
 	setDocumentSecurityMap(coModeled.getDocumentSecurityMap());
 
 	setDocumentVisibilityMap(coModeled.getDocumentVisibilityMap());
@@ -329,6 +331,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return publicationProperties;
     }
 
+     
     private COSerialized updateCourseInformations(COSerialized co,
 	    String webappDir) {
 	String siteName = null;
@@ -543,6 +546,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	    updateCourseInformations(hierarchyFussionedCO, webappDir);
 
+	    
 	    // Create a course outline with security public
 	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_PUBLIC,
 		    webappDir);
@@ -736,6 +740,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     private void publish(COSerialized co, String access, String webappDir)
 	    throws Exception {
 	COSerialized publishedCO = null;
+
 	try {
 	    publishedCO =
 		    resourceDao
@@ -764,13 +769,15 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	co.setPublicationDate(new java.util.Date(System.currentTimeMillis()));
 	resourceDao.setPublicationDate(co.getCoId(), co.getPublicationDate());
 
+		    
 	String portalActivated =
 		ServerConfigurationService.getString("hec.portail.activated");
 
 	if (portalActivated != null && portalActivated.equalsIgnoreCase("true"))
-	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC))
-		osylTransformToZCCO.sendXmlAndDoc(publishedCO,
-			getDocumentSecurityMap(), getDocumentVisibilityMap());
+	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)) {
+		osylTransformToZCCO.sendXmlAndDoc(publishedCO);
+
+	    }
     }
 
     public String transformXmlForGroup(String content, String group,

@@ -79,6 +79,7 @@ import org.sakaiquebec.opensyllabus.common.api.portal.publish3.ZCPublisherServic
 import org.sakaiquebec.opensyllabus.common.helper.FileHelper;
 import org.sakaiquebec.opensyllabus.common.helper.XmlHelper;
 import org.sakaiquebec.opensyllabus.common.impl.portal.javazonecours.Publication;
+import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -340,83 +341,85 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	 * 
 	 * @return true if all documents have been written successfully
 	 */
-	private boolean writeDocumentsInZC(String siteId, String lang,
-			Map<String, String> documentSecurityMap,
-			Map<String, String> documentVisibityMap, String zcco)
-			throws Exception {
-		// TODO: ajouter osylPrinVersion.pdf aux documents transferes
+    private boolean writeDocumentsInZC(String siteId, String lang,
+	    Map<String, String> documentSecurityMap,
+	    Map<String, String> documentVisibityMap, String zcco)
+	    throws Exception {
+	// TODO: ajouter osylPrinVersion.pdf aux documents transferes
 
-		System.out.println("Writing documents of site " + siteId
-				+ "in public portal database...");
+	System.out.println("Writing documents of site " + siteId
+		+ "in public portal database...");
 
-		boolean written = false;
-		String acces = null;
-		String visibilite = null;
-		String ressType = null;
-		byte[] ressContent = null;
-		int ressSize = 0;
-		String docId = null;
-		String fileName = null;
-		StringBuffer outTrace = null;
-		Publication p = new Publication();
+	boolean written = false;
+	String acces = null;
+	String visibilite = null;
+	String ressType = null;
+	byte[] ressContent = null;
+	int ressSize = 0;
+	String docId = null;
+	String fileName = null;
+	StringBuffer outTrace = null;
+	Publication p = new Publication();
 
-		Document xmlSourceDoc = null;
+	Document xmlSourceDoc = null;
 
-		if (null != zcco && !("".equals(zcco))) {
-			xmlSourceDoc = p.buildDOM(zcco);
-		}
-
-		Set<String> docSecKeyValues = documentSecurityMap.keySet();
-		String docVisKey = null;
-		HashMap hache = getDocsIds(getConn(), lang, xmlSourceDoc, outTrace,
-				false);
-
-		for (String docSecKey : docSecKeyValues) {
-			acces = documentSecurityMap.get(docSecKey);
-			docId = documentSecurityMap.keySet().toString();
-			docVisKey = docSecKey.replaceFirst(Pattern.quote(WORK_DIR),
-					PUBLISH_DIR);
-			visibilite = documentVisibityMap.get(docVisKey);
-			// Exclude the string "/publish" itsself to get the real filename
-			fileName = docVisKey.substring(docVisKey.indexOf("/publish") + 9);
-			if ("public".equals(acces) && "true".equals(visibilite)) {
-				try {
-					ContentResource content = contentHostingService
-							.getResource(docVisKey);
-					// TODO: verifier les types des documents sont compatibles
-					// dans
-					// ZoneCours
-					if (content != null) {
-						ressType = content.getContentType();
-						ressContent = content.getContent();
-						ressSize = content.getContentLength() / 1024;
-						if (hache.get("documents/" + fileName) != null)
-							docId = hache.get("documents/" + fileName)
-									.toString();
-						System.out.println("Writing documents of site "
-								+ siteId + "in public portal database...6");
-						if (docId != null)
-							writeDocInZcDb(docId, lang, acces, ressType,
-									ressSize, content.streamContent(),
-									ressContent, siteId);
-					}
-				} catch (PermissionException e) {
-					e.printStackTrace();
-				} catch (IdUnusedException e) {
-					e.printStackTrace();
-				} catch (TypeException e) {
-					e.printStackTrace();
-				} catch (ServerOverloadException e) {
-					e.printStackTrace();
-				}
-				written = true;
-			}
-
-		}
-		System.out.println("All public documents of site " + siteId
-				+ "have been written in public portal database...");
-		return written;
+	if (null != zcco && !("".equals(zcco))) {
+	    xmlSourceDoc = p.buildDOM(zcco);
 	}
+
+	Set<String> docSecKeyValues = documentSecurityMap.keySet();
+	String docVisKey = null;
+	HashMap hache =
+		getDocsIds(getConn(), lang, xmlSourceDoc, outTrace, false);
+
+	for (String docSecKey : docSecKeyValues) {
+	    acces = documentSecurityMap.get(docSecKey);
+	    docId = docSecKey;
+	    docVisKey =
+		    docSecKey
+			    .replaceFirst(Pattern.quote(WORK_DIR), PUBLISH_DIR);
+	    visibilite = documentVisibityMap.get(docVisKey);
+	    // Exclude the string "/publish" itsself to get the real filename
+	    fileName = docVisKey.substring(docVisKey.indexOf("/publish") + 9);
+	    fileName = fileName.replaceAll("/", "_");
+	    if ("public".equals(acces) && "true".equals(visibilite)) {
+		try {
+		    ContentResource content =
+			    contentHostingService.getResource(docVisKey);
+		    // TODO: verifier les types des documents sont compatibles
+		    // dans ZoneCours
+		    if (content != null) {
+			ressType = content.getContentType();
+			ressContent = content.getContent();
+			ressSize = content.getContentLength() / 1024;
+			if (hache.get("documents/" + fileName) != null)
+			    docId =
+				    hache.get("documents/" + fileName)
+					    .toString();
+			System.out.println("Writing documents of site "
+				+ siteId + "in public portal database...6");
+			if (docId != null)
+			    writeDocInZcDb(docId, lang, acces, ressType,
+				    ressSize, content.streamContent(),
+				    ressContent, siteId);
+		    }
+		} catch (PermissionException e) {
+		    e.printStackTrace();
+		} catch (IdUnusedException e) {
+		    e.printStackTrace();
+		} catch (TypeException e) {
+		    e.printStackTrace();
+		} catch (ServerOverloadException e) {
+		    e.printStackTrace();
+		}
+		written = true;
+	    }
+
+	}
+	System.out.println("All public documents of site " + siteId
+		+ "have been written in public portal database...");
+	return written;
+    }
 
 	/**
 	 * Writes one document in the public portal database
@@ -766,10 +769,19 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	 * @see org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO#sendXmlAndDoc(org.sakaiquebec.opensyllabus.shared.model.COSerialized,
 	 *      java.util.Map, java.util.Map)
 	 */
-	public boolean sendXmlAndDoc(COSerialized published,
-			Map<String, String> documentSecurityMap,
-			Map<String, String> documentVisibilityMap) throws Exception {
+	public boolean sendXmlAndDoc(COSerialized published) throws Exception {
 
+		Map<String, String> documentSecurityMap;
+		Map<String, String> documentVisibilityMap;
+		
+		COModeledServer coModeled = new COModeledServer(published);
+		
+		coModeled.XML2Model();
+		coModeled.model2XML();
+		
+		documentSecurityMap = coModeled.getDocumentSecurityMap();
+		documentVisibilityMap = coModeled.getDocumentVisibilityMap();
+		
 		try {
 			AuthzGroup realm = AuthzGroupService.getAuthzGroup(SITE_PREFIX
 					+ published.getSiteId());
