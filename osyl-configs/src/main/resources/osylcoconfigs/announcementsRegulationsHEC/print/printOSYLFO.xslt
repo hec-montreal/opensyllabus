@@ -1097,6 +1097,27 @@
   <fo:block line-height="3pt"><fo:inline><xsl:text>&#160;</xsl:text></fo:inline></fo:block>
 </xsl:template>
 
+<xsl:template match="strong">
+	<fo:inline>
+		<xsl:attribute name="font-weight">bold</xsl:attribute>
+		<xsl:apply-templates select="*|text()"/>
+	</fo:inline>
+</xsl:template>
+
+<xsl:template match="em">
+	<fo:inline>
+		<xsl:attribute name="font-style">italic</xsl:attribute>
+		<xsl:apply-templates select="*|text()"/>
+	</fo:inline>
+</xsl:template>
+
+<xsl:template match="u">
+	<fo:inline>
+		<xsl:attribute name="text-decoration">underline</xsl:attribute>
+		<xsl:apply-templates select="*|text()"/>
+	</fo:inline>
+</xsl:template>
+
 <xsl:template match="p">
   <fo:block space-before="5pt" space-after="5pt">
 		<xsl:apply-templates select="*|text()"/>
