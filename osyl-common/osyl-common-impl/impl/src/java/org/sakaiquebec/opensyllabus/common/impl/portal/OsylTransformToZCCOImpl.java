@@ -185,9 +185,9 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			setConn(DriverManager.getConnection(url, user, password));
 
 		} catch (ClassNotFoundException e) {
-			log.error(e.getMessage());
+		    log.error("connect(): " + e);
 		} catch (SQLException e) {
-			log.error(e.getMessage());
+		    log.error("connect(): " + e);
 		}
 	}
 
@@ -221,7 +221,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			rSet.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+		    log.error("containsZCCo(): " + e);
 		}
 
 		return hasZCCo;
@@ -260,7 +260,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 				log.debug("The XML " + koId + " has been transferred.");
 			} catch (SQLException e) {
-				e.printStackTrace();
+			    log.error("writeXmlInZC(): " + e);
 			}
 		} else {
 			requete = "insert into plancoursxml (koId,xml,dateMAJ,lang) VALUES(?,?,sysdate,?)";
@@ -276,7 +276,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 				log.debug("The XML " + koId + " has been transferred.");
 
 			} catch (SQLException e) {
-				e.printStackTrace();
+			    log.error("writeXmlInZC(): " + e);
 			}
 		}
 		return written;
@@ -316,12 +316,12 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 				osylCoISO88591 = new String(osylCo.getBytes("UTF-8"),
 						"ISO-8859-1");
 			} catch (UnsupportedEncodingException e1) {
-				e1.printStackTrace();
+			    log.error("transform(): " + e1);
 			}
 			zcco = XmlHelper.applyXsl(osylCoISO88591, xslt, new MyResolver(
 					xsltFileDirectory));
 		} catch (Exception e) {
-			log.error("Unable to transform XML", e);
+			log.error("Unable to transform XML" + e);
 		}
 		return zcco;
 	}
@@ -378,41 +378,46 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    docVisKey =
 		    docSecKey
 			    .replaceFirst(Pattern.quote(WORK_DIR), PUBLISH_DIR);
-	    visibilite = documentVisibityMap.get(docVisKey);
-	    // Exclude the string "/publish" itsself to get the real filename
-	    fileName = docVisKey.substring(docVisKey.indexOf("/publish") + 9);
-	    fileName = fileName.replaceAll("/", "_");
-	    if ("public".equals(acces) && "true".equals(visibilite)) {
-		try {
-		    ContentResource content =
-			    contentHostingService.getResource(docVisKey);
-		    // TODO: verifier les types des documents sont compatibles
-		    // dans ZoneCours
-		    if (content != null) {
-			ressType = content.getContentType();
-			ressContent = content.getContent();
-			ressSize = content.getContentLength() ;
-			if (hache.get("documents/" + fileName) != null)
-			    docId =
-				    hache.get("documents/" + fileName)
-					    .toString();
-			System.out.println("Writing documents of site "
-				+ siteId + "in public portal database...6");
-			if (docId != null)
-			    writeDocInZcDb(docId, lang, acces, ressType,
-				    ressSize, content.streamContent(),
-				    ressContent, siteId);
+	    if (docId != null && !"".equalsIgnoreCase(docId)) {
+		visibilite = documentVisibityMap.get(docVisKey);
+		// Exclude the string "/publish" itsself to get the real
+		// filename
+		fileName =
+			docVisKey.substring(docVisKey.indexOf("/publish") + 9);
+		fileName = fileName.replaceAll("/", "_");
+		if ("public".equals(acces) && "true".equals(visibilite)) {
+		    try {
+			ContentResource content =
+				contentHostingService.getResource(docVisKey);
+			// TODO: verifier les types des documents sont
+			// compatibles
+			// dans ZoneCours
+			if (content != null) {
+			    ressType = content.getContentType();
+			    ressContent = content.getContent();
+			    ressSize = content.getContentLength();
+			    if (hache.get("documents/" + fileName) != null)
+				docId =
+					hache.get("documents/" + fileName)
+						.toString();
+			    System.out.println("Writing documents of site "
+				    + siteId + "in public portal database...6");
+			    if (docId != null)
+				writeDocInZcDb(docId, lang, acces, ressType,
+					ressSize, content.streamContent(),
+					ressContent, siteId);
+			}
+		    } catch (PermissionException e) {
+			log.error("writeDocumentsInZC(): " + e);
+		    } catch (IdUnusedException e) {
+			log.error("writeDocumentsInZC(): " + e);
+		    } catch (TypeException e) {
+			log.error("writeDocumentsInZC(): " + e);
+		    } catch (ServerOverloadException e) {
+			log.error("writeDocumentsInZC(): " + e);
 		    }
-		} catch (PermissionException e) {
-		    e.printStackTrace();
-		} catch (IdUnusedException e) {
-		    e.printStackTrace();
-		} catch (TypeException e) {
-		    e.printStackTrace();
-		} catch (ServerOverloadException e) {
-		    e.printStackTrace();
+		    written = true;
 		}
-		written = true;
 	    }
 
 	}
@@ -520,7 +525,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			ps_select.close();
 			rSet_select.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+		    log.error("selectDocInDocZone(): " + e);
 		}
 		return isthere;
 	}
@@ -602,7 +607,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			log.debug("The resource " + koId + " has been transferred.");
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+		    log.error("insertDocInDocZone(): " + e);
 		} finally {
 			Statement stmt = getConn().createStatement();
 			stmt.execute("commit");
@@ -698,8 +703,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			ps_sec.setString(3, nivSecu);
 			ps_sec.execute();
 		} catch (Exception e) {
-			System.err
-					.println("Erreur dans insertRessourceSecuriteDB() : " + e);
+		    log.error("Erreur dans insertRessourceSecuriteDB() : " + e);
 		}
 
 		finally {
@@ -755,7 +759,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 			log.debug("The resource " + koId + " has been transferred.");
 		} catch (SQLException e) {
-			e.printStackTrace();
+		    log.error("updateDocZone(): " + e);
 		}
 
 		System.out.println("The document " + koId + " has been updated");
@@ -795,7 +799,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 				return false;
 			}
 		} catch (GroupNotDefinedException e) {
-			e.printStackTrace();
+		    log.error("sendXmlAndDoc(): " + e);
 		}
 
 		String siteId = published.getSiteId();
@@ -851,7 +855,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		try {
 			realm = AuthzGroupService.getAuthzGroup(SITE_PREFIX + siteId);
 		} catch (GroupNotDefinedException e) {
-			e.printStackTrace();
+		    log.error("getKoId(): " + e);
 		}
 
 		if (realm != null)
