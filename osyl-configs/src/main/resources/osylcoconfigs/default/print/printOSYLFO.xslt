@@ -635,19 +635,19 @@
 <xsl:template match="asmResource[@xsi:type='BiblioResource']">
 	<fo:block font-size="10pt">
 		<xsl:choose>
-			<xsl:when test="resourceType='article'">
+			<xsl:when test="resourceType='article' or resourceType='proceed'">
 				<fo:inline><xsl:value-of select="author"/></fo:inline>
-				<fo:inline> (<xsl:value-of select="year"/>). </fo:inline>
-				<fo:inline font-style="italic">. «<xsl:value-of select="title"/>»</fo:inline>
-				<fo:inline>, <xsl:value-of select="journal"/></fo:inline>
+				<fo:inline>(<xsl:value-of select="year"/>). </fo:inline>
+				<fo:inline>«<xsl:value-of select="title"/>»</fo:inline>
+				<fo:inline font-style="italic">, <xsl:value-of select="journal"/></fo:inline>
 				<fo:inline>, vol.<xsl:value-of select="volume"/></fo:inline>
 				<fo:inline>, no.<xsl:value-of select="issue"/></fo:inline>
 				<fo:inline>, p.<xsl:value-of select="pages"/></fo:inline>
 				<fo:inline>.</fo:inline>
 			</xsl:when>
-			<xsl:otherwise>
+			<xsl:when  test="resourceType='book' or resourceType='report'">
 				<fo:inline><xsl:value-of select="author"/></fo:inline>
-				<fo:inline> (<xsl:value-of select="year"/>)</fo:inline>
+				<fo:inline>(<xsl:value-of select="year"/>)</fo:inline>
 				<fo:inline font-style="italic">. <xsl:value-of select="title"/></fo:inline>
 				<fo:inline>, <xsl:value-of select="publisher"/></fo:inline>
 				<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>
@@ -657,7 +657,11 @@
 						<fo:inline>ISBN:<xsl:value-of select="identifier[@type='isn']"/></fo:inline>
 					</fo:block>
 				</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				<fo:inline><xsl:value-of select="title"/></fo:inline>
 			</xsl:otherwise>
+			
 		</xsl:choose>
 	</fo:block>
 	<fo:block font-size="10pt" space-before="15pt" space-after="15pt">
@@ -678,9 +682,15 @@
 		</xsl:call-template>
 	</xsl:if>
 	<xsl:if test="identifier/@type='other_link'">
+		<xsl:variable name="other_link_label">
+			<xsl:choose>
+				<xsl:when test="identifier/@label!='' "><xsl:value-of select="identifier/@label"/></xsl:when>
+				<xsl:otherwise>other_link_text</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:call-template name="BiblioResource_link">
 			 <xsl:with-param name="img">other_link</xsl:with-param>
-			 <xsl:with-param name="link_text">other_link_text</xsl:with-param>
+			 <xsl:with-param name="link_text"><xsl:value-of select="$other_link_label"/></xsl:with-param>
 			 <xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='other_link']"/></xsl:with-param>
 		</xsl:call-template>
 	</xsl:if>
