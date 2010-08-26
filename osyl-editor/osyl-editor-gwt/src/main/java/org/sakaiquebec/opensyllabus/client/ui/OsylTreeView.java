@@ -278,20 +278,19 @@ public class OsylTreeView extends OsylViewableComposite implements
     }
     
     private void computeMaxTreeWidth() {
-	// Computation of the initial split position based on longest label 
-    // in the tree items.
-    Element[] elms = getCurrentTreeItemsElement();
-    int currentTreeWidth;
-    int left = 0;
-	for (int i=0; i<elms.length;i++) {
-		// TODO: Find a way to obtain the getAbsoluteLeft of the Element at the initial loading of the page;
-		left = elms[i].getAbsoluteLeft();
-		currentTreeWidth = elms[i].getInnerText().length() * 7 + (left == 0 ? 49:left);
-	    if (currentTreeWidth > getMaxTreeWidth()) {
-	    	setMaxTreeWidth(currentTreeWidth);
-	    }
-	}
-	setTreeItemsWidth(getMaxTreeWidth());
+    	// Computation of the initial split position based on longest label 
+    	// in the tree items.
+    	Element[] elms = getCurrentTreeItemsElement();
+    	int currentTreeWidth;
+    	int left = 0;
+    	for (int i=0; i<elms.length;i++) {
+    		// TODO: Find a way to obtain the getAbsoluteLeft of the Element at the initial loading of the page;
+    		left = elms[i].getAbsoluteLeft();
+    		currentTreeWidth = elms[i].getInnerText().length() * 7 + (left == 0 ? 49:left);
+    		if (currentTreeWidth > getMaxTreeWidth()) {
+    			setMaxTreeWidth(currentTreeWidth);
+    		}
+    	}
     }
 
     public int getMaxTreeWidth() {
