@@ -326,7 +326,7 @@ public class OsylMainView extends OsylViewableComposite implements
     }
     
     int toolWidth = Math.max(OsylEditorEntryPoint.MIN_TOOL_WIDTH,
-    		OsylEditorEntryPoint.getInstance().getToolWidth());
+    		OsylEditorEntryPoint.getInstance().getToolWidth() - 1);
     
     if (OsylEditorEntryPoint.isInternetExplorer()) {
     	DOM.setStyleAttribute(getElement(), "width", toolWidth + "px");
@@ -350,7 +350,7 @@ public class OsylMainView extends OsylViewableComposite implements
 		osylHorizontalSplitPanel.getSplitElement().getOffsetWidth();
 	// Set the treeItems width
 	int scrollbarWidth = (osylTree.getTree().getOffsetHeight() 
-			> treeDecoratorPanel.getCell(1, 1).getOffsetHeight()? 16 : 0);
+			> treeDecoratorPanel.getCell(1, 1).getOffsetHeight()? 18 : 0);
 	osylTree.setTreeItemsWidth(treeInnerWidth + treeDecoratorPanel.getCell(1, 0)
 			.getOffsetWidth() - scrollbarWidth);
 	
