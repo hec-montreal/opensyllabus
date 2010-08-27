@@ -265,7 +265,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	COSerialized co =
 		osylSiteService
 			.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
-	log.info("Publishing course outline for site [" + co.getTitle() + "]");
+	log.info("Publishing course outline for site [" + (co.getTitle()==null?siteId:co.getTitle()) + "]");
 	COModeledServer coModeled = new COModeledServer(co);
 
 	// PRE-PUBLICATION
