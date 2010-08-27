@@ -161,7 +161,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	 * Credentials to Access Public Portal's Database configured in
 	 * sakai.properties
 	 */
-	private Connection connect() {
+	private Connection connect() throws Exception {
 		driverName = ServerConfigurationService
 				.getString("hec.zonecours.conn.portail.driver.name");
 		url = ServerConfigurationService
@@ -183,10 +183,9 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			Class.forName(driverName);
 			return DriverManager.getConnection(url, user, password);
 
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 		    log.error("connect(): " + e);
-		} catch (SQLException e) {
-		    log.error("connect(): " + e);
+		    throw e;
 		}
 	}
 
@@ -276,7 +275,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	}
 
 	/**
-	 * Trnaforms OpenSyllabus XML to Zonecours 1 format for publication in
+	 * Transforms OpenSyllabus XML to Zonecours 1 format for publication in
 	 * public portal
 	 * 
 	 * @param osylCo
@@ -803,14 +802,15 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		String koId = null;
 		String lang = null;
 
-		// Check the properties in sakai.properties first than connect to the
-		// database
-		Connection dbConn = connect();
-
 		// Transform the course outline
 		zcco = transform(osylCoXml);
 
 		if (zcco != null) {
+
+			// Connect to the database using config defined in
+		    	// sakai.properties  
+			Connection dbConn = connect();
+
 			// Save the course outline in the zonecours database
 			// The siteId is used as koID
 			koId = getKoId(siteId);
@@ -828,6 +828,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			System.out
 					.println("The transfer to the ZoneCours database is complete and successful");
 			zcPublisherService.publier(koId, lang);
+			dbConn.close();
 		}
 		return sent;
 	}
