@@ -149,8 +149,6 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 	private String password = null;
 
-	private Connection conn;
-
 	private Object put;
 
 	private Document xmlSourceDoc;
@@ -163,7 +161,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	 * Credentials to Access Public Portal's Database configured in
 	 * sakai.properties
 	 */
-	private void connect() {
+	private Connection connect() {
 		driverName = ServerConfigurationService
 				.getString("hec.zonecours.conn.portail.driver.name");
 		url = ServerConfigurationService
@@ -175,28 +173,21 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 		if (driverName == null || url == null || user == null
 				|| password == null) {
-			log
-					.error("Please configure access to ZoneCours database in the sakai.properties file");
-			return;
+		    String msg = "Please configure access to ZoneCours " +
+		    		"database in the sakai.properties file";
+			log.error(msg);
+			throw new IllegalStateException(msg);
 		}
 
 		try {
 			Class.forName(driverName);
-			setConn(DriverManager.getConnection(url, user, password));
+			return DriverManager.getConnection(url, user, password);
 
 		} catch (ClassNotFoundException e) {
 		    log.error("connect(): " + e);
 		} catch (SQLException e) {
 		    log.error("connect(): " + e);
 		}
-	}
-
-	public Connection getConn() {
-		return conn;
-	}
-
-	public void setConn(Connection conn) {
-		this.conn = conn;
 	}
 
 	/**
@@ -207,12 +198,12 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	 *            The identifier of the course outline
 	 * @return true if the DB contains it false if not
 	 */
-	private boolean containsZCCo(String koId) {
+	private boolean containsZCCo(String koId, Connection dbConn) {
 		boolean hasZCCo = false;
 		ResultSet rSet = null;
 
 		try {
-			Statement smnt = getConn().createStatement();
+			Statement smnt = dbConn.createStatement();
 			rSet = smnt
 					.executeQuery("select * from plancoursxml where koid like '"
 							+ koId + "'");
@@ -239,17 +230,18 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	 *            The course outline language
 	 * @return true if it is written successfully false if not
 	 */
-	private boolean writeXmlInZC(String zcco, String koId, String lang) {
+	private boolean writeXmlInZC(String zcco, String koId, String lang,
+		Connection dbConn) {
 		boolean written = false;
 		PreparedStatement ps = null;
 		ResultSet rSet = null;
 
 		String requete = null;
 
-		if (containsZCCo(koId)) {
+		if (containsZCCo(koId, dbConn)) {
 			requete = "update plancoursxml set xml = ?, dateMAJ = sysdate, lang = ? where koid like ?";
 			try {
-				ps = getConn().prepareStatement(requete);
+				ps = dbConn.prepareStatement(requete);
 				ps.setString(1, zcco);
 				ps.setString(2, lang);
 				ps.setString(3, koId);
@@ -265,7 +257,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		} else {
 			requete = "insert into plancoursxml (koId,xml,dateMAJ,lang) VALUES(?,?,sysdate,?)";
 			try {
-				ps = getConn().prepareStatement(requete);
+				ps = dbConn.prepareStatement(requete);
 				ps.setString(1, koId);
 				ps.setString(2, zcco);
 				ps.setString(3, lang);
@@ -343,7 +335,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	 */
     private boolean writeDocumentsInZC(String siteId, String lang,
 	    Map<String, String> documentSecurityMap,
-	    Map<String, String> documentVisibityMap, String zcco)
+	    Map<String, String> documentVisibityMap, String zcco,
+	    Connection dbConn)
 	    throws Exception {
 	// TODO: ajouter osylPrinVersion.pdf aux documents transferes
 
@@ -370,7 +363,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	Set<String> docSecKeyValues = documentSecurityMap.keySet();
 	String docVisKey = null;
 	HashMap hache =
-		getDocsIds(getConn(), lang, xmlSourceDoc, outTrace, false);
+		getDocsIds(dbConn, lang, xmlSourceDoc, outTrace, false);
 
 	for (String docSecKey : docSecKeyValues) {
 	    acces = documentSecurityMap.get(docSecKey);
@@ -405,7 +398,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			    if (docId != null)
 				writeDocInZcDb(docId, lang, acces, ressType,
 					ressSize, content.streamContent(),
-					ressContent, siteId);
+					ressContent, siteId, dbConn);
 			}
 		    } catch (PermissionException e) {
 			log.error("writeDocumentsInZC(): " + e);
@@ -449,35 +442,35 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	 */
 	private void writeDocInZcDb(String koId, String lang, String acces,
 			String ressType, int ressSize, InputStream ressContent,
-			byte[] content, String siteId) throws Exception {
+			byte[] content, String siteId, Connection dbConn)
+		throws Exception {
 		System.out.println("Writing document  " + koId
 				+ "in public portal database...");
-		Connection con = getConn();
 
 		boolean exist = selectDocInDocZone(koId, lang, acces, ressType,
-				ressSize, ressContent, content, siteId);
+				ressSize, ressContent, content, siteId, dbConn);
 
 		// Check if the record is already on the table
 		if (!exist) {
 
-			insertDocInDocZone(con, koId, lang, acces, ressType, ressSize,
+			insertDocInDocZone(dbConn, koId, lang, acces, ressType, ressSize,
 					ressContent, content, siteId);
 			// Add the information to the relational table
 			// Clean the place to avoid unique constraint violation
-			deleteRessourceSecuriteDB(con, koId, siteId);
+			deleteRessourceSecuriteDB(dbConn, koId, siteId);
 			// By default, security is zero for all documents belonging to
 			// portal
-			insertRessourceSecuriteDB(con, koId, siteId, "0");
+			insertRessourceSecuriteDB(dbConn, koId, siteId, "0");
 
 		} else {
 
-			updateDocZone(con, koId, lang, acces, ressType, ressSize,
+			updateDocZone(dbConn, koId, lang, acces, ressType, ressSize,
 					ressContent, content, siteId);
 			// Clean the place to avoid unique constraint violation
-			deleteRessourceSecuriteDB(con, koId, siteId);
+			deleteRessourceSecuriteDB(dbConn, koId, siteId);
 			// By default, security is zero for all documents belonging to
 			// portal
-			insertRessourceSecuriteDB(con, koId, siteId, "0");
+			insertRessourceSecuriteDB(dbConn, koId, siteId, "0");
 
 		}
 		System.out.println("Document " + koId
@@ -507,7 +500,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	 */
 	private boolean selectDocInDocZone(String koId, String lang, String acces,
 			String ressType, int ressSize, InputStream ressContent,
-			byte[] content, String siteId) {
+			byte[] content, String siteId, Connection dbConn) {
 		boolean isthere = false;
 		String requete_select = null;
 		PreparedStatement ps_select = null;
@@ -515,7 +508,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 		requete_select = "select * from doczone where koId like ?";
 		try {
-			ps_select = getConn().prepareStatement(requete_select);
+			ps_select = dbConn.prepareStatement(requete_select);
 			ps_select.setString(1, koId);
 			rSet_select = ps_select.executeQuery();
 
@@ -533,7 +526,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	/**
 	 * Inserts a document in the public portal database
 	 * 
-	 * @param con
+	 * @param dbConn
 	 *            The connection to the public portal database
 	 * @param koId
 	 *            The document identifier
@@ -554,7 +547,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	 * @throws IOException
 	 * @throws Exception
 	 */
-	private void insertDocInDocZone(Connection con, String koId, String lang,
+	private void insertDocInDocZone(Connection dbConn, String koId, String lang,
 			String acces, String ressType, int ressSize,
 			InputStream ressContent, byte[] content, String siteId)
 			throws IOException, Exception {
@@ -572,7 +565,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		try {
 
 			requete_ins = "INSERT INTO DocZone (koId, lang, nivSecu, ressType, dateMAJ, docContent) VALUES(?,?,?,?,sysdate,empty_blob())";
-			ps_ins = con.prepareStatement(requete_ins);
+			ps_ins = dbConn.prepareStatement(requete_ins);
 			ps_ins.setString(1, koId);
 			ps_ins.setString(2, lang);
 			ps_ins.setString(3, "0");
@@ -581,7 +574,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			ps_ins.close();
 
 			requeteSQL = "SELECT docContent FROM DocZone WHERE koId=? FOR UPDATE";
-			ps = con.prepareStatement(requeteSQL);
+			ps = dbConn.prepareStatement(requeteSQL);
 			ps.setString(1, koId);
 
 			rset = ps.executeQuery();
@@ -609,7 +602,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		} catch (SQLException e) {
 		    log.error("insertDocInDocZone(): " + e);
 		} finally {
-			Statement stmt = getConn().createStatement();
+			Statement stmt = dbConn.createStatement();
 			stmt.execute("commit");
 			rset.close();
 			ps.close();
@@ -717,7 +710,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	/**
 	 * Updates a document content in the public portal database
 	 * 
-	 * @param con
+	 * @param dbConn
 	 *            The connection to the public portal database
 	 * @param koId
 	 *            The document identifier
@@ -737,7 +730,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	 *            The identifier of the site containing the document
 	 */
 
-	private void updateDocZone(Connection con, String koId, String lang,
+	private void updateDocZone(Connection dbConn, String koId, String lang,
 			String acces, String ressType, int ressSize,
 			InputStream ressContent, byte[] content, String siteId) {
 
@@ -750,7 +743,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		// Add the document content in the record
 		requete_upd = "update doczone set doccontent = ?, datemaj= sysdate  WHERE koId=? ";
 		try {
-			ps_upd = con.prepareStatement(requete_upd);
+			ps_upd = dbConn.prepareStatement(requete_upd);
 			ps_upd.setBinaryStream(1, ressContent, ressSize);
 			ps_upd.setString(2, koId);
 			ps_upd.execute();
@@ -812,7 +805,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 		// Check the properties in sakai.properties first than connect to the
 		// database
-		connect();
+		Connection dbConn = connect();
 
 		// Transform the course outline
 		zcco = transform(osylCoXml);
@@ -822,11 +815,13 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			// The siteId is used as koID
 			koId = getKoId(siteId);
 			lang = published.getLang().substring(0, 2);
-			sent = writeXmlInZC(zcco, koId, lang);
+			sent = writeXmlInZC(zcco, koId, lang, dbConn);
 			// Save the documents in the zonecours database
 			sent = sent
-					&& writeDocumentsInZC(siteId, lang, documentSecurityMap,
-							documentVisibilityMap, zcco);
+					&& writeDocumentsInZC(siteId, lang,
+						documentSecurityMap,
+						documentVisibilityMap, zcco,
+						dbConn);
 			if (sent)
 				log
 						.debug("The transfer to the ZoneCours database is complete and successful");
