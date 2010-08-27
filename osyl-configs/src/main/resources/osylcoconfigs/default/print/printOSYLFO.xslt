@@ -16,7 +16,7 @@
 		<xsl:value-of select="substring(/OSYL/CO/language,1,2)"/>
 	</xsl:variable>
 
-  <xsl:template match="/">
+  	<xsl:template match="/">
 		<xsl:variable name='courseCode'>
 			<xsl:value-of select="substring-before(/OSYL/CO/courseId[@type='HEC'],'.')"/>
 		</xsl:variable>
@@ -30,15 +30,15 @@
 			<xsl:value-of select="substring-after($session_group,'.')"/>
 		</xsl:variable>
 
-    <fo:root>
+    	<fo:root>
 			<fo:layout-master-set>
-        <fo:simple-page-master master-name="first" page-height="11in" page-width="8.5in" margin-left="3cm" margin-right="3cm" margin-top="2.5cm" margin-bottom="1cm">
-          <fo:region-body margin-bottom="2cm"/>
+        		<fo:simple-page-master master-name="first" page-height="11in" page-width="8.5in" margin-left="3cm" margin-right="3cm" margin-top="2.5cm" margin-bottom="1cm">
+          			<fo:region-body margin-bottom="2cm"/>
 					<fo:region-after region-name="Footer" extent="1.5cm" />
 				</fo:simple-page-master>
 
-        <fo:simple-page-master master-name="rest" page-height="11in" page-width="8.5in" margin-left="3cm" margin-right="3cm" margin-top="1.5cm" margin-bottom="1.25cm">
-					<fo:region-body margin-top="1cm" margin-bottom="2cm"/>
+        		<fo:simple-page-master master-name="rest" page-height="11in" page-width="8.5in" margin-left="3cm" margin-right="3cm" margin-top="1.5cm" margin-bottom="1.25cm">
+					<fo:region-body margin-top="1.5cm" margin-bottom="2cm"/>
 					<fo:region-before region-name="header-rest" extent="1cm"/>
 					<fo:region-after region-name="Footer" extent="1.5cm"/>
 				</fo:simple-page-master>
@@ -47,10 +47,9 @@
 					<fo:repeatable-page-master-alternatives>
 						<fo:conditional-page-master-reference master-reference="first" page-position="first" />
 						<fo:conditional-page-master-reference master-reference="rest" page-position="rest"  />
-		        <fo:conditional-page-master-reference master-reference="rest"/>
+		        		<fo:conditional-page-master-reference master-reference="rest"/>
 					</fo:repeatable-page-master-alternatives>
 				</fo:page-sequence-master>
-
 			</fo:layout-master-set>
 
 			<fo:page-sequence master-reference="document">
@@ -75,11 +74,11 @@
 						<fo:inline><xsl:value-of select="$courseCode"/> (<xsl:value-of select="$group"/>)</fo:inline>
 					</fo:block>
 					<fo:block text-align="right" margin-top="-15pt"><xsl:value-of select="$session"/></fo:block>
-          <fo:block border-top-color="lightgrey" border-top-style="solid" border-top-width="1.5px" space-before="5pt"/>
+          			<fo:block border-top-color="lightgrey" border-top-style="solid" border-top-width="1.5px" space-before="5pt"/>
 				</fo:static-content>
 
 				<fo:static-content flow-name="Footer" font-size="9pt" font-family="serif">
-          <fo:block border-top-color="black" border-top-style="solid" border-top-width="thin" margin-right="-5pt" margin-left="-5pt" padding-after="2pt"/>
+          			<fo:block border-top-color="black" border-top-style="solid" border-top-width="thin" margin-right="-5pt" margin-left="-5pt" padding-after="2pt"/>
 					<fo:block font-size="8pt" font-style="italic" color="grey">
 						<fo:inline>
 							<xsl:choose>
@@ -854,7 +853,8 @@
 	</fo:block>
 </xsl:template>
 
-<!-- ======================================================================= -->
+<!-- =======================================================================
+-->
 <!-- ===================================== -->
 
 <xsl:template name="TextByLang">
