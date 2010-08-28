@@ -255,6 +255,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public Map<String, String> publish(String webappDir, String siteId)
 	    throws Exception {
 
+	long start = System.currentTimeMillis();
+
 	SecurityService.pushAdvisor(new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
 		    String reference) {
@@ -329,6 +331,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	publicationProperties.put(COPropertiesType.PUBLISHED, coContent
 		.getProperty(COPropertiesType.PUBLISHED));
 	SecurityService.clearAdvisors();
+
+	log.info("Finished publishing course outline for site ["
+		+ (co.getTitle()==null?siteId:co.getTitle()) + "] in "
+		+ (System.currentTimeMillis() - start) + " ms");
+
 	return publicationProperties;
     }
 
