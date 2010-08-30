@@ -22,6 +22,7 @@ package org.sakaiquebec.opensyllabus.client.ui;
 
 import java.util.Date;
 
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
@@ -139,9 +140,11 @@ public class OsylWorkspaceTitleView extends OsylViewableComposite implements
 	    } else if (getModel().isCOStructureElement()){
 	    	((COStructureElement)getModel()).addEventHandler(this);
 	    }
+	    
 	}
 	workspaceTitleLabel.setText(titleLabel);
 	getWorkspacePanel().add(workspaceTitleLabel);
+	setWorkspaceTitleWidth();
     }
 
     public void setSize(String width, String height) {
@@ -154,6 +157,21 @@ public class OsylWorkspaceTitleView extends OsylViewableComposite implements
 
     public OsylWorkspaceTitleView getWorkspaceView() {
 	return this;
+    }
+    
+    public void setWorkspaceTitleWidth() {
+    	OsylMainView mainView = OsylController.getInstance().getMainView();
+    	int menubarWidth =
+    		mainView.getOsylToolbarView()
+    		.getOsylToolbar().getSectionMenuBar()
+    		.getOffsetWidth();
+    	int osylWorkspaceLabelLeftPadding =
+    		OsylEditorEntryPoint.parsePixels(OsylEditorEntryPoint.getStyle(
+    			getWorkspaceTitleLabel()
+    				.getElement(), "paddingLeft"));
+    	int t = Math.max(0,mainView.getWorkspaceInnerWidth()
+    	- (menubarWidth + osylWorkspaceLabelLeftPadding + 3));
+    	getWorkspaceTitleLabel().setWidth(t + "px");
     }
     
     public Label getWorkspaceTitleLabel() {
