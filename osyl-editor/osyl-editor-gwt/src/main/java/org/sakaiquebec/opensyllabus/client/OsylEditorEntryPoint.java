@@ -729,6 +729,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
 		return execmode;
 	}
 
+	// TODO: Move function used by the browser in the file BrowserUtil.java
+	
 	/**
 	 * Returns the computed current css style for the element. Call only if you
 	 * need the CSS stylesheet style, not the DOM style.
