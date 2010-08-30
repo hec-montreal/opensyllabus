@@ -284,17 +284,6 @@ public class OsylMainView extends OsylViewableComposite implements
 	return osylToolbarView;
     }
 
-    /*
-     * public VerticalPanel getMainPanel() { return mainPanel; } public void
-     * setMainPanel(VerticalPanel newPanel) { this.mainPanel = newPanel; }
-     */
-    private void setSectionToolbarTopPosition() {
-	DOM.setStyleAttribute(osylToolbarView.getOsylToolbar()
-		.getSectionMenuBar().getElement(), "top", (osylWorkspaceView
-		.getAbsoluteTop() - 78)
-		+ "px");
-    }
-
     public FlexTable getMainPanel() {
 	return mainPanel;
     }
@@ -353,9 +342,7 @@ public class OsylMainView extends OsylViewableComposite implements
 	int workspaceWidth = toolWidth - (osylHorizontalSplitPanel.getSplitPosition() == 0 ? 0:treeWidth) - splitterWidth;
 	setWorkspaceInnerWidth(workspaceWidth);
 	
-	
 	osylWorkspaceTitleView.setWorkspaceTitleWidth();
-	setSectionToolbarTopPosition();
 	// Set The tree height and the workspace height
 	int toolHeight =
 		OsylEditorEntryPoint.parsePixels(DOM.getStyleAttribute(
