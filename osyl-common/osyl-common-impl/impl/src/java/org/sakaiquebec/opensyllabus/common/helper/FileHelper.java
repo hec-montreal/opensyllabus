@@ -34,6 +34,10 @@ import java.io.StringWriter;
 public class FileHelper {
 
     public static String getFileContent(String filepath) {
+	return getFileContent(filepath, "UTF-8");
+    }
+
+    public static String getFileContent(String filepath, String encoding) {
 	String fileContent = null;
 	InputStreamReader inputStreamReader;
 	File coXslFile = new File(filepath);
@@ -47,13 +51,13 @@ public class FileHelper {
 		writer.write(line);
 	    }
 	    fileContent = writer.toString();
-	    fileContent = new String(fileContent.getBytes(), "UTF-8");
+	    fileContent = new String(fileContent.getBytes(), encoding);
 
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
 	return fileContent;
     }
-    
+
 }
 

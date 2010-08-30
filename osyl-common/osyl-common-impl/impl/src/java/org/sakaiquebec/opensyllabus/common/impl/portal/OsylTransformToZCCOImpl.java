@@ -89,7 +89,7 @@ import org.w3c.dom.NodeList;
  * ** OsylTransformToZCCOImpl transforms Opensyllabus's XML to a readable HTML.
  * Helps to publish in HEC Montreal's public portal Works very closely with
  * Publication
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @author <a href="mailto:yvette.lapa-dessap@hec.ca">Yvette Lapa Dessap</a>
  * @version $Id: $
@@ -103,7 +103,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 	/**
 	 * Sets the <code>SiteService</code>.
-	 * 
+	 *
 	 * @param siteService
 	 */
 	public void setSiteService(SiteService siteService) {
@@ -192,7 +192,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	/**
 	 * Verifies if Public Portal's Database Contains the XML of a specific
 	 * course outline
-	 * 
+	 *
 	 * @param koId
 	 *            The identifier of the course outline
 	 * @return true if the DB contains it false if not
@@ -220,7 +220,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	/**
 	 * Writes the XML of a specific course outline in the Public Portal's
 	 * Database
-	 * 
+	 *
 	 * @param zcco
 	 *            The XML to be written
 	 * @param koId
@@ -277,7 +277,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	/**
 	 * Transforms OpenSyllabus XML to Zonecours 1 format for publication in
 	 * public portal
-	 * 
+	 *
 	 * @param osylCo
 	 *            Opensyllabus XML
 	 * @return the transformed XML in Zonecours 1 version
@@ -300,7 +300,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		}
 
 		String xslt = FileHelper.getFileContent(xsltFileDirectory
-				+ File.separator + xsltFileName);
+				+ File.separator + xsltFileName,"ISO-8859-1");
 		try {
 			String osylCoISO88591 = "";
 			try {
@@ -310,7 +310,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			    log.error("transform(): " + e1);
 			}
 			zcco = XmlHelper.applyXsl(osylCoISO88591, xslt, new MyResolver(
-					xsltFileDirectory));
+					xsltFileDirectory),"ISO-8859-1");
 		} catch (Exception e) {
 			log.error("Unable to transform XML" + e);
 		}
@@ -320,16 +320,16 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	/*
 	 * Retrieve documents with security level set to 'public' in one sakai's
 	 * site publish folder and write them in Public portal database
-	 * 
+	 *
 	 * @param siteId The identifier of the site where documents are retrieved
-	 * 
+	 *
 	 * @param lang The language of the course outline of this site
-	 * 
+	 *
 	 * @param documentSecurityMap The Map containing security level of documents
-	 * 
+	 *
 	 * @param documentVisibityMap The Map containing visibility level of
 	 * documents
-	 * 
+	 *
 	 * @return true if all documents have been written successfully
 	 */
     private boolean writeDocumentsInZC(String siteId, String lang,
@@ -420,7 +420,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 	/**
 	 * Writes one document in the public portal database
-	 * 
+	 *
 	 * @param koId
 	 *            The identifier of the document
 	 * @param lang
@@ -478,7 +478,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 	/**
 	 * Tells if a document is already in the database
-	 * 
+	 *
 	 * @param koId
 	 *            The document identifier
 	 * @param lang
@@ -524,7 +524,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 	/**
 	 * Inserts a document in the public portal database
-	 * 
+	 *
 	 * @param dbConn
 	 *            The connection to the public portal database
 	 * @param koId
@@ -615,7 +615,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	// ---------------------------------------------------
 	/**
 	 * Deletes the security level of a document in the public portal database.
-	 * 
+	 *
 	 * @param connexion
 	 *            The connection to public portal database
 	 * @param koId
@@ -644,7 +644,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	// ---------------------------------------------------
 	/**
 	 * Deletes a document in the public portal database.
-	 * 
+	 *
 	 * @param connexion
 	 *            The connection to public portal database
 	 * @param koId
@@ -668,7 +668,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	// ---------------------------------------------------
 	/**
 	 * Inserts the security level of a document in the public portal database.
-	 * 
+	 *
 	 * @param connexion
 	 *            The connection to public portal database
 	 * @param koId
@@ -708,7 +708,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 	/**
 	 * Updates a document content in the public portal database
-	 * 
+	 *
 	 * @param dbConn
 	 *            The connection to the public portal database
 	 * @param koId
@@ -759,7 +759,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @throws Exception
 	 *             (non-Javadoc)
 	 * @see org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO#sendXmlAndDoc(org.sakaiquebec.opensyllabus.shared.model.COSerialized,
@@ -769,15 +769,15 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 		Map<String, String> documentSecurityMap;
 		Map<String, String> documentVisibilityMap;
-		
+
 		COModeledServer coModeled = new COModeledServer(published);
-		
+
 		coModeled.XML2Model();
 		coModeled.model2XML();
-		
+
 		documentSecurityMap = coModeled.getDocumentSecurityMap();
 		documentVisibilityMap = coModeled.getDocumentVisibilityMap();
-		
+
 		try {
 			AuthzGroup realm = AuthzGroupService.getAuthzGroup(SITE_PREFIX
 					+ published.getSiteId());
@@ -808,7 +808,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		if (zcco != null) {
 
 			// Connect to the database using config defined in
-		    	// sakai.properties  
+		    	// sakai.properties
 			Connection dbConn = connect();
 
 			// Save the course outline in the zonecours database
@@ -836,7 +836,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	/**
 	 * Gets the course outline identifier from siteId and Course Management
 	 * Information
-	 * 
+	 *
 	 * @param siteId
 	 *            The site Identifier in sakai
 	 * @return the course outline identifier
@@ -875,7 +875,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 	/**
 	 * Gets group from Course Management
-	 * 
+	 *
 	 * @param s
 	 *            The section
 	 * @param c
@@ -888,7 +888,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 	/**
 	 * Gets a part of the course outline identifier
-	 * 
+	 *
 	 * @param session
 	 *            The session
 	 * @return
@@ -899,7 +899,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 	/**
 	 * Gets the period associated to the course
-	 * 
+	 *
 	 * @param session
 	 *            The session
 	 * @return The period
@@ -912,7 +912,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 	/**
 	 * Gets the session in a specific format
-	 * 
+	 *
 	 * @param session
 	 *            the raw session
 	 * @return the session in a specific format
@@ -935,7 +935,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 	/**
 	 * To resolve URIs
-	 * 
+	 *
 	 */
 	class MyResolver implements URIResolver {
 		String fullPath;
@@ -959,7 +959,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	/**
 	 * Gets all identifier associated to all documents in a course outline. Gets
 	 * them from the public portal XML
-	 * 
+	 *
 	 * @param connexion
 	 *            The connection to the public portal database
 	 * @param lang
@@ -988,7 +988,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			for (int i = 1; i < nbDocExts + 1; i++) {
 				boolean nouveau = true;
 				Element ressource = (Element) docExts.item(i - 1);
-				String ressourceId = ressource.getAttribute("koId");  
+				String ressourceId = ressource.getAttribute("koId");
 				String type = ressource.getAttribute("type");
 				String nivSecu = ressource.getAttribute("securite");
 				String fileName = "<font color='red'>ERREUR - pas de fichier ou d'url associe au document</font>";

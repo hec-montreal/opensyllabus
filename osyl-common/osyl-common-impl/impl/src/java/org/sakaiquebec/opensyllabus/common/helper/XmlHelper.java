@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  */
 public class XmlHelper {
 
-    
+
     public static Document parseXml(String xml) {
 	// get the factory
 	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -72,19 +72,16 @@ public class XmlHelper {
 	}
 	return dom;
     }
-    
+
     public static Node applyXsl(Node d, String xsl) throws Exception{
 	TransformerFactory tFactory = TransformerFactory.newInstance();
 	// retrieve the Xml source
 	DOMSource coXmlContentSource = new DOMSource(d);
-	
+
 	// retrieve the Xsl source
 	StreamSource coXslContentSource =
 		new StreamSource(
 			new ByteArrayInputStream(xsl.getBytes("UTF-8")));
-	
-	// we use a ByteArrayOutputStream to avoid using a file
-	ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
 	DOMResult domResult = new DOMResult();
 
 	Transformer transformerXml =
@@ -92,39 +89,28 @@ public class XmlHelper {
 	transformerXml.transform(coXmlContentSource, domResult);
 	return domResult.getNode();
     }
-    
-    public static String applyXsl(String xml, String xsl) throws Exception {
-	TransformerFactory tFactory = TransformerFactory.newInstance();
-	// retrieve the Xml source
-	StreamSource coXmlContentSource =
-		new StreamSource(
-			new ByteArrayInputStream(xml.getBytes("UTF-8")));
-	// retrieve the Xsl source
-	StreamSource coXslContentSource =
-		new StreamSource(
-			new ByteArrayInputStream(xsl.getBytes("UTF-8")));
-	// we use a ByteArrayOutputStream to avoid using a file
-	ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
-	StreamResult xmlResult = new StreamResult(out);
 
-	Transformer transformerXml =
-		tFactory.newTransformer(coXslContentSource);
-	transformerXml.transform(coXmlContentSource, xmlResult);
-	return out.toString("UTF-8");
+    public static String applyXsl(String xml, String xsl) throws Exception {
+	return applyXsl(xml, xsl, null);
     }
 
     public static String applyXsl(String xml, String xsl, URIResolver uriResolver) throws Exception {
+	return applyXsl(xml, xsl, uriResolver, "UTF-8");
+    }
+
+    public static String applyXsl(String xml, String xsl, URIResolver uriResolver,String encoding) throws Exception{
 	TransformerFactory tFactory = TransformerFactory.newInstance();
-	tFactory.setURIResolver(uriResolver);
+	if(uriResolver!=null)
+	    tFactory.setURIResolver(uriResolver);
 
 	// retrieve the Xml source
 	StreamSource coXmlContentSource =
 		new StreamSource(
-			new ByteArrayInputStream(xml.getBytes("UTF-8")));
+			new ByteArrayInputStream(xml.getBytes(encoding)));
 	// retrieve the Xsl source
 	StreamSource coXslContentSource =
 		new StreamSource(
-			new ByteArrayInputStream(xsl.getBytes("UTF-8")));
+			new ByteArrayInputStream(xsl.getBytes(encoding)));
 	// we use a ByteArrayOutputStream to avoid using a file
 	ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
 	StreamResult xmlResult = new StreamResult(out);
@@ -132,7 +118,7 @@ public class XmlHelper {
 	Transformer transformerXml =
 		tFactory.newTransformer(coXslContentSource);
 	transformerXml.transform(coXmlContentSource, xmlResult);
-	return out.toString("UTF-8");
+	return out.toString(encoding);
     }
 
 }
