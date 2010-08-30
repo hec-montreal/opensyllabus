@@ -101,6 +101,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	/** The site service to be injected by Spring */
 	private SiteService siteService;
 
+	private String courseNumber;
 	/**
 	 * Sets the <code>SiteService</code>.
 	 *
@@ -304,7 +305,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		try {
 			String osylCoISO88591 = "";
 			try {
-				osylCo = osylCo.replaceAll("’", "'");
+				osylCo = osylCo.replaceAll("ï¿½", "'");
 				osylCoISO88591 = new String(osylCo.getBytes("UTF-8"),
 						"ISO-8859-1");
 			} catch (UnsupportedEncodingException e1) {
@@ -335,7 +336,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	 */
     private boolean writeDocumentsInZC(String siteId, String lang,
 	    Map<String, String> documentSecurityMap,
-	    Map<String, String> documentVisibityMap, String zcco,
+	    Map<String, String> documentVisibityMap,
+	    Map<String, String> documents, String zcco,
 	    Connection dbConn)
 	    throws Exception {
 	// TODO: ajouter osylPrinVersion.pdf aux documents transferes
@@ -353,6 +355,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	String fileName = null;
 	StringBuffer outTrace = null;
 	Publication p = new Publication();
+	String courseNumber = getCourseNumber();
 
 	Document xmlSourceDoc = null;
 
@@ -362,6 +365,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 	Set<String> docSecKeyValues = documentSecurityMap.keySet();
 	String docVisKey = null;
+	String doc = null;
 	HashMap hache =
 		getDocsIds(dbConn, lang, xmlSourceDoc, outTrace, false);
 
@@ -371,6 +375,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    docVisKey =
 		    docSecKey
 			    .replaceFirst(Pattern.quote(WORK_DIR), PUBLISH_DIR);
+	    
+	    doc = documents.get(docSecKey);
 	    if (docId != null && !"".equalsIgnoreCase(docId)) {
 		visibilite = documentVisibityMap.get(docVisKey);
 		// Exclude the string "/publish" itsself to get the real
@@ -381,7 +387,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		if ("public".equals(acces) && "true".equals(visibilite)) {
 		    try {
 			ContentResource content =
-				contentHostingService.getResource(docVisKey);
+				contentHostingService.getResource(doc);
 			// TODO: verifier les types des documents sont
 			// compatibles
 			// dans ZoneCours
@@ -389,14 +395,11 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			    ressType = content.getContentType();
 			    ressContent = content.getContent();
 			    ressSize = content.getContentLength();
-			    if (hache.get("documents/" + fileName) != null)
-				docId =
-					hache.get("documents/" + fileName)
-						.toString();
+
 			    System.out.println("Writing documents of site "
 				    + siteId + "in public portal database...6");
-			    if (docId != null)
-				writeDocInZcDb(docId, lang, acces, ressType,
+			    if (docId != null && hache.get(courseNumber + "_" + docId) != null)
+				writeDocInZcDb(courseNumber + "_" + docId, lang, acces, ressType,
 					ressSize, content.streamContent(),
 					ressContent, siteId, dbConn);
 			}
@@ -770,14 +773,16 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 		Map<String, String> documentSecurityMap;
 		Map<String, String> documentVisibilityMap;
-
+		Map<String, String> documents;
+		
 		COModeledServer coModeled = new COModeledServer(published);
 
 		coModeled.XML2Model();
 		coModeled.model2XML();
 
-		documentSecurityMap = coModeled.getDocumentSecurityMap();
-		documentVisibilityMap = coModeled.getDocumentVisibilityMap();
+		documentSecurityMap = coModeled.getAllDocumentsSecurityMap();
+		documentVisibilityMap = coModeled.getAllDocumentsVisibilityMap();
+		documents = coModeled.getAllDocuments();
 
 		try {
 			AuthzGroup realm = AuthzGroupService.getAuthzGroup(SITE_PREFIX
@@ -821,7 +826,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			sent = sent
 					&& writeDocumentsInZC(siteId, lang,
 						documentSecurityMap,
-						documentVisibilityMap, zcco,
+						documentVisibilityMap, 
+						documents, zcco,
 						dbConn);
 			if (sent)
 				log
@@ -858,15 +864,21 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		if (realm != null)
 			provider = realm.getProviderGroupId();
 
-		if (provider == null)
+		if (provider == null){
 			koId = siteId;
-		else if (cmService.isCanonicalCourseDefined(provider))
+			setCourseNumber(siteId);
+		}
+		else if (cmService.isCanonicalCourseDefined(provider)){
 			koId = ANNUAIRE_KOID_PREFIX + siteId;
+			setCourseNumber(siteId);
+		}
 		else if (cmService.isSectionDefined(provider)) {
 			Section section = cmService.getSection(provider);
 			CourseOffering courseOff = cmService.getCourseOffering(section
 					.getCourseOfferingEid());
 			AcademicSession session = courseOff.getAcademicSession();
+			String canCourseEid = courseOff.getCanonicalCourseEid();
+			setCourseNumber(canCourseEid);
 			koId = getKoIdPrefix(session) + "-"
 					+ courseOff.getCanonicalCourseEid() + "-"
 					+ getGroup(section, courseOff);
@@ -909,6 +921,14 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		String sessionId = session.getEid();
 		String period = sessionId.substring(4, sessionId.length());
 		return period;
+	}
+
+	public String getCourseNumber() {
+	    return courseNumber;
+	}
+
+	public void setCourseNumber(String courseNumber) {
+	    this.courseNumber = courseNumber;
 	}
 
 	/**
@@ -1008,7 +1028,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 									.item(0);
 							fileName = text.getData();
 						}
-						docs.put(fileName, ressourceId);
+						docs.put(ressourceId, fileName );
 					}
 				}
 			}

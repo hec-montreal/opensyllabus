@@ -251,6 +251,18 @@ public class COModeledServer {
     private Map<String, String> documentSecurityMap;
 
     /**
+     * Map containing all the documents in the xml
+     */
+    private Map<String, String> allDocumentsSecurityMap;
+    
+    /**
+     * Map containing all the documents in the xml
+     */
+    private Map<String, String> allDocumentsVisibilityMap;
+    
+    private Map<String, String> allDocuments;
+    
+    /**
      * Map<name,visibility> of visibility applied to ressources
      *
      * @uml.property name="documentVisibilityMap"
@@ -311,6 +323,9 @@ public class COModeledServer {
 	Document messageDom = null;
 	documentSecurityMap = new HashMap<String, String>();
 	documentVisibilityMap = new HashMap<String, String>();
+	allDocumentsSecurityMap = new HashMap<String, String>();
+	allDocuments = new HashMap<String, String>();
+	allDocumentsVisibilityMap = new HashMap<String, String>();
 	if (coSerialized.getContent() != null) {
 	    coContent = new COContent();
 	    try {
@@ -330,6 +345,32 @@ public class COModeledServer {
 	    }
 	}
 	setModeledContent(coContent);
+    }
+
+    public Map<String, String> getAllDocumentsSecurityMap() {
+        return allDocumentsSecurityMap;
+    }
+
+    public void setAllDocumentsSecurityMap(
+    	Map<String, String> allDocumentsSecurityMap) {
+        this.allDocumentsSecurityMap = allDocumentsSecurityMap;
+    }
+
+    public Map<String, String> getAllDocumentsVisibilityMap() {
+        return allDocumentsVisibilityMap;
+    }
+
+    public void setAllDocumentsVisibilityMap(
+    	Map<String, String> allDocumentsVisibilityMap) {
+        this.allDocumentsVisibilityMap = allDocumentsVisibilityMap;
+    }
+
+    public Map<String, String> getAllDocuments() {
+        return allDocuments;
+    }
+
+    public void setAllDocuments(Map<String, String> allDocuments) {
+        this.allDocuments = allDocuments;
     }
 
     private Document parseXml(String xml) {
@@ -683,13 +724,16 @@ public class COModeledServer {
 		    coContentResProxy.getProperty(COPropertiesType.VISIBILITY);
 
 	    if (coContentResProxy.getResource().getType().equals(
-		    COContentResourceType.DOCUMENT))
+		    COContentResourceType.DOCUMENT)){
 		documentVisibilityMap.put(uri.trim(), visibility);
-	    else if (coContentResProxy.getResource().getType().equals(
+		allDocumentsVisibilityMap.put(coContentResProxy.getResource().getId(), visibility);
+	    } else if (coContentResProxy.getResource().getType().equals(
 		    COContentResourceType.BIBLIO_RESOURCE)
-		    && uri != null)
+		    && uri != null){
 		documentVisibilityMap.put(uri
 			.substring(0, uri.lastIndexOf("/")), visibility);
+		allDocumentsVisibilityMap.put(coContentResProxy.getResource().getId(), visibility);
+	    }
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
@@ -729,6 +773,9 @@ public class COModeledServer {
 		if (uri != null) {
 		    documentSecurityMap.put(uri.trim(), coContentRes
 			    .getAccess());
+		    allDocuments.put(coContentRes.getId(),uri.trim());
+		    allDocumentsSecurityMap.put(coContentRes.getId(),
+			    coContentRes.getAccess());
 		    if (isPublication) {
 			COProperties copProperties =
 				coContentRes.getProperties();
@@ -756,6 +803,9 @@ public class COModeledServer {
 		if (uri != null) {
 		    documentSecurityMap.put(uri.substring(0, uri
 			    .lastIndexOf("/")), coContentRes.getAccess());
+		    allDocuments.put(coContentRes.getId(),uri.substring(0, uri
+			    .lastIndexOf("/")));
+		    allDocumentsSecurityMap.put(coContentRes.getId(), coContentRes.getAccess());
 		}
 	    }
 
