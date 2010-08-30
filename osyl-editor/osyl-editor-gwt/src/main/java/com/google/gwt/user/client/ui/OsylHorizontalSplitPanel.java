@@ -48,7 +48,7 @@ public class OsylHorizontalSplitPanel extends Composite {
     private boolean collapseMouseDown = false;
     public boolean isMouseDownOnSplitter = false;
     private int minSplitPosition = 130;
-    private int maxSplitPosition = 300;
+    private int maxSplitPosition = 340;
     private int tempSplitPosition = 0;
     private int diffSplitPosition = 0;
     private int initialSplitPercentPosition = 50;
