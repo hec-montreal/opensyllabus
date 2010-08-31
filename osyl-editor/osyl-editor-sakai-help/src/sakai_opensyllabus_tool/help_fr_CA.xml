@@ -4,7 +4,7 @@
 <beans>
    <bean id="opensyllabusOverview" class="org.sakaiproject.component.app.help.model.ResourceBean">
       <property name="docId"><value>osyl_fr_CA</value></property>
-      <property name="name"><value>OpenSyllabus: Présentation</value></property>
+      <property name="name"><value>Aide OpenSyllabus </value></property>
       <property name="location"><value>/sakai_opensyllabus_tool/osyl_fr_CA.html</value></property>
       <property name="defaultForTool"><value>sakai.opensyllabus.tool</value></property>
    </bean>
