@@ -6,6 +6,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.sakaiproject.authz.api.SecurityAdvisor;
+import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
+import org.sakaiproject.authz.cover.AuthzGroupService;
+import org.sakaiproject.authz.cover.SecurityService;
+import org.sakaiproject.event.cover.EventTrackingService;
+import org.sakaiproject.event.cover.UsageSessionService;
+import org.sakaiproject.tool.api.Session;
+import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylHierarchicalCourseOutlineJob;
 import org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
@@ -73,18 +81,53 @@ public class OsylHierarchicalCourseOutlineJobImpl implements OsylHierarchicalCou
 
     /** {@inheritDoc} */
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
-	List<CORelation> allRelations = coRelationDao.getAllLinkedCourseOutlines();
+	List<CORelation> allRelations =
+		coRelationDao.getAllLinkedCourseOutlines();
 
 	CORelation relation = null;
 	String parentSiteId = null;
 	String childSiteId = null;
-	
-	for ( int i=0; i < allRelations.size(); i++){
+
+	loginToSakai();
+
+	for (int i = 0; i < allRelations.size(); i++) {
 	    relation = allRelations.get(i);
 	    parentSiteId = relation.getParent();
 	    childSiteId = relation.getChild();
-	    
+
 	    osylHierarchyService.addOrUpdateUsers(childSiteId);
 	}
+
+	logoutFromSakai();
     }
+    
+    
+    /**
+     * Logs in the sakai environment
+     */
+    protected void loginToSakai() {
+	Session sakaiSession = SessionManager.getCurrentSession();
+	sakaiSession.setUserId("admin");
+	sakaiSession.setUserEid("admin");
+
+	// establish the user's session
+	UsageSessionService.startSession("admin", "127.0.0.1", "CMSync");
+
+	// update the user's externally provided realm definitions
+	AuthzGroupService.refreshUser("admin");
+
+	// post the login event
+	EventTrackingService.post(EventTrackingService.newEvent(
+		UsageSessionService.EVENT_LOGIN, null, true));
+    }
+
+    /**
+     * Logs out of the sakai environment
+     */
+    protected void logoutFromSakai() {
+	// post the logout event
+	EventTrackingService.post(EventTrackingService.newEvent(
+		UsageSessionService.EVENT_LOGOUT, null, true));
+    }
+
 }
