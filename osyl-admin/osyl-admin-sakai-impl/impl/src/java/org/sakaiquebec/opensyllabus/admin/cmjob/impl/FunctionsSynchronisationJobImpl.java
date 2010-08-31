@@ -2,7 +2,8 @@ package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
 import java.util.List;
 import java.util.Set;
-
+import java.util.Collection;
+import java.util.Iterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
@@ -17,6 +18,7 @@ import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.event.cover.UsageSessionService;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
+import org.sakaiproject.site.api.Group;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
@@ -68,7 +70,7 @@ public class FunctionsSynchronisationJobImpl implements
 
 	String functionsRole = adminConfigService.getFunctionsRole();
 
-	// Check role in template realm
+	// Check role in site template realm
 	try {
 	    AuthzGroup realm = AuthzGroupService.getAuthzGroup(TEMPLATE_ID);
 	    if (functionsRole != null) {
@@ -96,6 +98,35 @@ public class FunctionsSynchronisationJobImpl implements
 	    log.error(e.getMessage());
 	}
 
+	// Check role in group template realm
+	try {
+	    AuthzGroup realm = AuthzGroupService.getAuthzGroup(GROUP_TEMPLATE_ID);
+	    if (functionsRole != null) {
+		if (!isRoleInRealm(realm)) {
+		    addRole(realm);
+		    AuthzGroupService.save(realm);
+		} else {
+
+		    Role role =
+			    realm
+				    .getRole(adminConfigService
+					    .getFunctionsRole());
+		    addPermissions(role);
+		    removePermissions(role);
+		}
+	    }
+	    // We remove the role
+	    if (roleToRemove != null)
+		removeRole(realm, roleToRemove);
+	    AuthzGroupService.save(realm);
+
+	} catch (GroupNotDefinedException e) {
+	    log.error(e.getMessage());
+	} catch (AuthzPermissionException e) {
+	    log.error(e.getMessage());
+	}
+
+	//check all course site realms
 	allSites =
 		siteService.getSites(SiteService.SelectionType.ANY, SITE_TYPE,
 			null, null, SiteService.SortType.NONE, null);
@@ -120,24 +151,23 @@ public class FunctionsSynchronisationJobImpl implements
 
 		try {
 		    if (functionsRole != null) {
-			// We check if the role helpdesk with the required
-			// permissions
-			// exists in the site
-			roleExists = isRoleInRealm(siteRealm);
-			if (!roleExists) {
-			    addRole(siteRealm);
-			    AuthzGroupService.save(siteRealm);
-			} else {
-
-			    Role role =
-				    siteRealm.getRole(adminConfigService
-					    .getFunctionsRole());
-			    // We add the new permissions
-			    addPermissions(role);
-
-			    // We remove the specified users
-			    removePermissions(role);
-			}
+				// We check if the role with the required
+				// permissions exists in the site
+				roleExists = isRoleInRealm(siteRealm);
+				if (!roleExists) {
+				    addRole(siteRealm);
+				    AuthzGroupService.save(siteRealm);
+				} else {
+	
+				    Role role =
+					    siteRealm.getRole(adminConfigService
+						    .getFunctionsRole());
+				    // We add the new permissions
+				    addPermissions(role);
+	
+				    // We remove the specified users
+				    removePermissions(role);
+				}
 		    }
 		    
 		    // We remove the role
@@ -151,7 +181,56 @@ public class FunctionsSynchronisationJobImpl implements
 		    log.error(e.getMessage());
 		}
 	    }
+	    
+	    //look if we have a group for the current site
+	    Collection groups = site.getGroups();
+	    if(groups != null && groups.size() > 0){
+	    	Iterator<Group> groupIter = groups.iterator();
+	    	while( groupIter.hasNext()){
+		    	Group group = groupIter.next();
+			    if (group != null) {
+			    	String groupId = group.getId();
+			    	AuthzGroup groupRealm = null;
+				    try {
+						groupRealm =
+							AuthzGroupService.getAuthzGroup(REALM_PREFIX
+								+ site.getId()
+								+ GROUP_REALM_PREFIX
+								+ groupId);
 
+						if (functionsRole != null) {
+							// We check if the role with the required
+							// permissions exists in the group
+							roleExists = isRoleInRealm(groupRealm);
+							if (!roleExists) {
+							    addRole(groupRealm);
+							    AuthzGroupService.save(groupRealm);
+							} else {
+	
+							    Role role =
+							    	groupRealm.getRole(adminConfigService
+									    .getFunctionsRole());
+							    // We add the new permissions
+							    addPermissions(role);
+	
+							    // We remove the specified users
+							    removePermissions(role);
+							}
+					    }
+					    
+					    // We remove the role
+					    if (roleToRemove != null)
+						removeRole(groupRealm, roleToRemove);
+					    AuthzGroupService.save(groupRealm);
+
+					} catch (GroupNotDefinedException e) {
+					    log.error(e.getMessage());
+					} catch (AuthzPermissionException e) {
+					    log.error(e.getMessage());
+					}  
+			    }	
+	    	}	
+	    }
 	}
 	logoutFromSakai();
     }
