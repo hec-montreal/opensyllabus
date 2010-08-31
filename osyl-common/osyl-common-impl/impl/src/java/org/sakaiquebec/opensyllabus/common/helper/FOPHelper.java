@@ -90,8 +90,8 @@ public class FOPHelper {
 		String escapeString = xml.replaceAll("&amp;", "&#38;");
 		escapeString = escapeString.replaceAll("&#38;amp;", "&#38;");
 		escapeString = escapeString.replaceAll("\u0000", "");
-		escapeString = escapeString.replaceAll("\n", "");
-		escapeString = escapeString.replaceAll("\r", "");
+		escapeString = escapeString.replaceAll("\n", " ");
+		escapeString = escapeString.replaceAll("\r", " ");
 		escapeString = escapeString.replaceAll("&lt;", "<");
 		escapeString = escapeString.replaceAll("&gt;", ">");
 		escapeString = escapeString.replaceAll("&nbsp;", " ");
