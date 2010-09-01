@@ -89,7 +89,6 @@ public class FOPHelper {
 		// Setup input for XSLT transformation
 		String escapeString = xml.replaceAll("&amp;", "&#38;");
 		escapeString = escapeString.replaceAll("&#38;amp;", "&#38;");
-		escapeString = escapeString.replaceAll("\u0000", "");
 		escapeString = escapeString.replaceAll("\n", " ");
 		escapeString = escapeString.replaceAll("\r", " ");
 		escapeString = escapeString.replaceAll("&lt;", "<");
@@ -97,6 +96,7 @@ public class FOPHelper {
 		escapeString = escapeString.replaceAll("&nbsp;", " ");
 		escapeString = escapeString.replaceAll("&#38;nbsp;", " ");
 		escapeString = escapeString.replaceAll("&#13;", "");
+		escapeString = escapeString.replaceAll("&#0;", "");
 		Source src =
 			new StreamSource(new ByteArrayInputStream(escapeString
 				.getBytes("UTF-8")));
