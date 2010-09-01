@@ -305,7 +305,9 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		try {
 			String osylCoISO88591 = "";
 			try {
-				osylCo = osylCo.replaceAll("�", "'");
+			    	osylCo = osylCo.replaceAll("’", "'");
+			    	osylCo = osylCo.replaceAll("œ", "&oelig;");
+			    	osylCo = osylCo.replaceAll("Œ", "&OElig;");
 				osylCoISO88591 = new String(osylCo.getBytes("UTF-8"),
 						"ISO-8859-1");
 			} catch (UnsupportedEncodingException e1) {
