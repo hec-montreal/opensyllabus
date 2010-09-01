@@ -719,12 +719,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
     @Override
     protected Widget[] getAdditionalOptionWidgets() {
-	// Bookstore
-	bookstoreCheckBox = new CheckBox(getUiMessage("MetaInfo.bookstore"));
-	bookstoreCheckBox.setValue(getView().isAvailableInBookstore());
-	bookstoreCheckBox.setTitle(getUiMessage("MetaInfo.bookstore.title"));
 
-	Widget[] additional = { bookstoreCheckBox };
+	Widget[] additional = { };
 
 	return additional;
     }
@@ -756,9 +752,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 	String label = metaInfoLabel.getText();
 
-	label =
-		label + " | " + getUiMessage("MetaInfo.bookstore") + ": "
-			+ bookstore;
 
 	metaInfoLabel.setText(label);
 	return metaInfoLabel;
