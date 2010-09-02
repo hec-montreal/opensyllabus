@@ -331,9 +331,7 @@ public class OsylMainView extends OsylViewableComposite implements
 		treeInnerWidth + "px");
 	DOM.setStyleAttribute(treeDecoratorPanel.getCell(1, 1), "width",
 		treeInnerWidth + "px");
-	int treeHeaderLabelLeftPadding =
-		OsylEditorEntryPoint.parsePixels(OsylEditorEntryPoint.getStyle(
-			treeHeaderLabel.getElement(), "paddingLeft"));
+	int treeHeaderLabelLeftPadding = 35;
 	treeHeaderLabel.setWidth(Math.max(0,treeInnerWidth - treeHeaderLabelLeftPadding)
 		+ "px");
 	int splitterWidth =
@@ -375,10 +373,12 @@ public class OsylMainView extends OsylViewableComposite implements
     
     public void setTreeItemsWidth() {
     	// Set the treeItems width
-    	int width = treeDecoratorPanel
+    	Boolean haveScroll = false;
+    	int width = 250;
+    	width = treeDecoratorPanel
 		.getCell(1, 0).getOffsetWidth() + treeDecoratorPanel
 		.getCell(1, 1).getOffsetWidth();
-    	Boolean haveScroll = osylTree.getTree().getOffsetHeight() >
+    	haveScroll = osylTree.getTree().getOffsetHeight() >
     		treeDecoratorPanel.getCell(1, 1).getOffsetHeight();
     	osylTree.setTreeItemsWidth(width - (haveScroll? 19 : 0));
     }

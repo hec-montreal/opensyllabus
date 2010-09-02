@@ -165,12 +165,9 @@ public class OsylWorkspaceTitleView extends OsylViewableComposite implements
     		mainView.getOsylToolbarView()
     		.getOsylToolbar().getSectionMenuBar()
     		.getOffsetWidth();
-    	int osylWorkspaceLabelLeftPadding =
-    		OsylEditorEntryPoint.parsePixels(OsylEditorEntryPoint.getStyle(
-    			getWorkspaceTitleLabel()
-    				.getElement(), "paddingLeft"));
+    	int osylWorkspaceLabelLeftPadding = 40;
     	int t = Math.max(0,mainView.getWorkspaceInnerWidth()
-    	- (menubarWidth + osylWorkspaceLabelLeftPadding + 3));
+    	- (menubarWidth + osylWorkspaceLabelLeftPadding));
     	getWorkspaceTitleLabel().setWidth(t + "px");
     }
     
