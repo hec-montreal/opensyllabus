@@ -111,9 +111,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     private CheckBox disableLibraryLinkCheckBox;
     private HTML libraryLink;
 
-    // Additional Widget;
-    private CheckBox bookstoreCheckBox;
-
     private int originalEditorDescHeight;
 
     private DisclosurePanel metaInfoDiscPanel;
@@ -719,10 +716,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
     @Override
     protected Widget[] getAdditionalOptionWidgets() {
-
-	Widget[] additional = { };
-
-	return additional;
+	return null;
     }
 
     @Override
@@ -746,12 +740,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     @Override
     protected Widget getMetaInfoLabel() {
 	Label metaInfoLabel = (Label) super.getMetaInfoLabel();
-	String bookstore =
-		(getView().isAvailableInBookstore() ? getUiMessage("Global.yes")
-			: getUiMessage("Global.no"));
-
 	String label = metaInfoLabel.getText();
-
 
 	metaInfoLabel.setText(label);
 	return metaInfoLabel;
@@ -781,15 +770,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	} else {
 	    return viewerDesc.getHTML();
 	}
-    }
-
-    /**
-     * Returns whether the checkBox "AvailableInBookstore" is checked.
-     * 
-     * @return boolean
-     */
-    public boolean isAvailableInBookstore() {
-	return bookstoreCheckBox.getValue();
     }
 
     /**

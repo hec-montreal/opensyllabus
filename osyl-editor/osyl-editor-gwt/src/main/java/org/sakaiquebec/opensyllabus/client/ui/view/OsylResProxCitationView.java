@@ -198,14 +198,6 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
     /**
      * {@inheritDoc}
      */
-    protected void updateMetaInfo() {
-	super.updateMetaInfo();
-	setAvailableInBookstore(getEditor().isAvailableInBookstore());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public String getDocName() {
 	String docName = super.getDocName();
 	if (docName == null)
@@ -221,19 +213,6 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	    return identifier_uri.substring(0, identifier_uri.lastIndexOf("/"));
 	} else
 	    return null;
-    }
-
-    /**
-     * @return true if available in bookstore
-     */
-    public boolean isAvailableInBookstore() {
-	return "true"
-		.equals(getModel().getProperty(COPropertiesType.BOOKSTORE));
-    }
-
-    public void setAvailableInBookstore(boolean b) {
-	String booleanValue = "" + (b);
-	getModel().addProperty(COPropertiesType.BOOKSTORE, booleanValue);
     }
 
     private void setModelPropertyWithEditorProperty(String property,
