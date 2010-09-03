@@ -258,4 +258,7 @@ public class OsylHorizontalSplitPanel extends Composite {
 	public Boolean isResizing() {
 		return isResizable() && horizontalSplitPanel.isResizing();
 	}
+	public Boolean isLeftElementVisible(){
+		return leftElementVisible;
+	}
 }

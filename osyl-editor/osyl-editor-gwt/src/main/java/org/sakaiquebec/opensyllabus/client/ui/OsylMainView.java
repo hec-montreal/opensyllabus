@@ -310,9 +310,13 @@ public class OsylMainView extends OsylViewableComposite implements
     int treeWidth = osylHorizontalSplitPanel.getComputedSplitPosition();
     // Set the splitter position
     if (isWindowResized) {
-    	treeWidth = osylHorizontalSplitPanel.getComputedSplitPosition(
+    	if (osylHorizontalSplitPanel.isLeftElementVisible()) {
+    		treeWidth = osylHorizontalSplitPanel.getComputedSplitPosition(
     			osylHorizontalSplitPanel.getSplitPosition());
-    	osylHorizontalSplitPanel.setSplitPosition(treeWidth);
+    		osylHorizontalSplitPanel.setSplitPosition(treeWidth);
+    	}else {
+    		treeWidth = 0;
+    	}
     }
     
     int toolWidth = Math.max(OsylEditorEntryPoint.MIN_TOOL_WIDTH,
