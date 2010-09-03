@@ -453,13 +453,14 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 				+ "in public portal database...");
 
 		boolean exist = selectDocInDocZone(koId, lang, acces, ressType,
-				ressSize, ressContent, content, siteId, dbConn);
+				ressSize, content, siteId, dbConn);
 
 		// Check if the record is already on the table
 		if (!exist) {
 
 			insertDocInDocZone(dbConn, koId, lang, acces, ressType, ressSize,
 					ressContent, content, siteId);
+			ressContent.close();
 			// Add the information to the relational table
 			// Clean the place to avoid unique constraint violation
 			deleteRessourceSecuriteDB(dbConn, koId, siteId);
@@ -471,6 +472,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 			updateDocZone(dbConn, koId, lang, acces, ressType, ressSize,
 					ressContent, content, siteId);
+			ressContent.close();
 			// Clean the place to avoid unique constraint violation
 			deleteRessourceSecuriteDB(dbConn, koId, siteId);
 			// By default, security is zero for all documents belonging to
@@ -504,7 +506,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	 * @return true if the document is in the database false otherwise
 	 */
 	private boolean selectDocInDocZone(String koId, String lang, String acces,
-			String ressType, int ressSize, InputStream ressContent,
+			String ressType, int ressSize,
 			byte[] content, String siteId, Connection dbConn) {
 		boolean isthere = false;
 		String requete_select = null;
@@ -754,6 +756,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			ps_upd.execute();
 
 			ps_upd.close();
+			ressContent.close();
 
 			log.debug("The resource " + koId + " has been transferred.");
 		} catch (SQLException e) {
