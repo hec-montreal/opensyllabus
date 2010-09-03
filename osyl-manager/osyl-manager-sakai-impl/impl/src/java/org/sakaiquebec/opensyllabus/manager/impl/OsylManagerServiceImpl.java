@@ -940,6 +940,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    BufferedOutputStream bos = new BufferedOutputStream(zos);
 	    IOUtils.copy(inputStream, bos);
 	    bos.flush();
+	    inputStream.close();
 	} catch (Exception e) {
 	    log.error("writeToZip: Could not add file to zip: " + fileName);
 	    e.printStackTrace();
