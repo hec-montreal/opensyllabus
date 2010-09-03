@@ -15,6 +15,7 @@
 	<item value="ResProxContactInfoView_Full-timeFacultyLecturer" />
 	<item value="ResProxContactInfoView_Part-timeFacultyLecturer" />
 	<item value="ResProxContactInfoView_Full-timeLecturer" />
+	<item value="ResProxContactInfoView_Part-timeLecturer" />
 	<item value="ResProxContactInfoView_Trainee" />
 	<item value="ResProxContactInfoView_Student" />
 	<item value="ResProxContactInfoView_Secretary" />
