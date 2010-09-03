@@ -89,7 +89,7 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 		String line;
 		
 		while ((line = br.readLine()) != null){
-		    System.out.println(line);
+		    log.trace(line);
 		}
 		
 		request.close();

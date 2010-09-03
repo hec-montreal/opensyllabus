@@ -344,7 +344,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    throws Exception {
 	// TODO: ajouter osylPrinVersion.pdf aux documents transferes
 
-	System.out.println("Writing documents of site " + siteId
+	log.debug("Writing documents of site " + siteId
 		+ "in public portal database...");
 
 	boolean written = false;
@@ -398,8 +398,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			    ressContent = content.getContent();
 			    ressSize = content.getContentLength();
 
-			    System.out.println("Writing documents of site "
-				    + siteId + "in public portal database...6");
+			    log.debug("Writing documents of site "
+				    + siteId + "in public portal database...");
 			    if (docId != null && hache.get(courseNumber + "_" + docId) != null)
 				writeDocInZcDb(courseNumber + "_" + docId, lang, acces, ressType,
 					ressSize, content.streamContent(),
@@ -419,7 +419,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    }
 
 	}
-	System.out.println("All public documents of site " + siteId
+	log.debug("All public documents of site " + siteId
 		+ "have been written in public portal database...");
 	return written;
     }
@@ -449,7 +449,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			String ressType, int ressSize, InputStream ressContent,
 			byte[] content, String siteId, Connection dbConn)
 		throws Exception {
-		System.out.println("Writing document  " + koId
+		log.debug("Writing document  " + koId
 				+ "in public portal database...");
 
 		boolean exist = selectDocInDocZone(koId, lang, acces, ressType,
@@ -478,7 +478,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			insertRessourceSecuriteDB(dbConn, koId, siteId, "0");
 
 		}
-		System.out.println("Document " + koId
+		log.debug("Document " + koId
 				+ " has been written in the database");
 	}
 
@@ -556,7 +556,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			String acces, String ressType, int ressSize,
 			InputStream ressContent, byte[] content, String siteId)
 			throws IOException, Exception {
-		System.out.println("insertDocInDocZone - debut");
+		log.debug("insertDocInDocZone - debut");
 
 		String requete_ins = null;
 		PreparedStatement ps_ins = null;
@@ -595,7 +595,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 				while ((nread = ressContent.read(buffer)) != -1) {
 					blobOutput.write(buffer, 0, nread);
 
-					System.out.print(nread);
+					log.trace(nread);
 				}
 				ressContent.close();
 				blobOutput.close();
@@ -614,7 +614,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			stmt.close();
 
 		}
-		System.out.println("The document " + koId + " has been transferred");
+		log.debug("The document " + koId + " has been transferred");
 
 	}
 
@@ -640,9 +640,9 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 		requeteSQL_del = " DELETE FROM DocSecu WHERE koId = '" + koId
 				+ "' AND planId='" + xmlKoId + "'";
-		System.out.println("<br>" + requeteSQL_del + " ...");
+		log.debug(requeteSQL_del + " ...");
 		stmt_del.execute(requeteSQL_del);
-		System.out.println(" ok");
+		log.debug("request ok: " + requeteSQL_del);
 
 		stmt_del.close();
 	}
@@ -664,9 +664,9 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		Statement stmt_delRess = connexion.createStatement();
 
 		requeteSQL_delRess = " DELETE FROM DocZone WHERE koId = '" + koId + "'";
-		System.out.println("<br>" + requeteSQL_delRess + " ...");
+		log.debug(requeteSQL_delRess + " ...");
 		stmt_delRess.execute(requeteSQL_delRess);
-		System.out.println(" ok_delRess");
+		log.debug("request ok: " + requeteSQL_delRess);
 
 		stmt_delRess.close();
 	}
@@ -760,7 +760,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		    log.error("updateDocZone(): " + e);
 		}
 
-		System.out.println("The document " + koId + " has been updated");
+		log.debug("The document " + koId + " has been updated");
 	}
 
 	/**
@@ -831,11 +831,10 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 						documentVisibilityMap, 
 						documents, zcco,
 						dbConn);
-			if (sent)
-				log
-						.debug("The transfer to the ZoneCours database is complete and successful");
-			System.out
-					.println("The transfer to the ZoneCours database is complete and successful");
+			if (sent) {
+				log.debug("The transfer to the ZoneCours " +
+					"database is complete and successful");
+			}
 			zcPublisherService.publier(koId, lang);
 			dbConn.close();
 		}
@@ -1007,7 +1006,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		NodeList docExts = xml.getElementsByTagName("ressource");
 		if (xml != null) {
 			int nbDocExts = docExts.getLength();
-			System.out.println("Nombre de ressources : " + nbDocExts);
+			log.debug("Nombre de ressources : " + nbDocExts);
 			for (int i = 1; i < nbDocExts + 1; i++) {
 				boolean nouveau = true;
 				Element ressource = (Element) docExts.item(i - 1);
@@ -1024,7 +1023,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 					if (url != null && url.hasChildNodes()) {
 						NodeList children = url.getChildNodes();
 						if (children.item(0) instanceof org.w3c.dom.CharacterData) {
-							System.out.println("--- document " + i + ": "
+							log.debug("--- document " + i + ": "
 									+ ressourceId + " ---");
 							org.w3c.dom.CharacterData text = (org.w3c.dom.CharacterData) children
 									.item(0);
