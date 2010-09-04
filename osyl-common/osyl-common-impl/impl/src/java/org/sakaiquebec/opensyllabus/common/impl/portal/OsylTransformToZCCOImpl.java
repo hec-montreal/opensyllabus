@@ -756,7 +756,11 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			ps_upd.execute();
 
 			ps_upd.close();
-			ressContent.close();
+			try {
+			    ressContent.close();
+			} catch (IOException e) {
+			    log.warn("updateDocZone: Unable to close stream");
+			}
 
 			log.debug("The resource " + koId + " has been transferred.");
 		} catch (SQLException e) {
