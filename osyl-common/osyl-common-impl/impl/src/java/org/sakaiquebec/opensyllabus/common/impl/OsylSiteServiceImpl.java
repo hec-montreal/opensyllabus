@@ -949,8 +949,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     
     /**
      * Writes the XML into a temp file. This is a temporary measure.
-     * TODO: find a better way to backup course outlines, possibly computing
-     * differences and limiting how long and how many copies are kept.
+     * TODO SAKAI-1932: find a better way to backup course outlines, possibly
+     * computing differences and limiting how long and how many copies are
+     * kept.
      * 
      * @param co
      * @throws IOException
