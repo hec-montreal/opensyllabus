@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
-import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.user.client.Window;
@@ -65,7 +64,7 @@ public class AssociateAction extends OsylManagerAbstractAction {
 	    Window.alert("L'opération est refusée. Veuillez contacter le centre d'assistance.");
 	    return;
 	}
-	AssociateForm as = new AssociateForm(controller, siteIds.get(0));
+	AssociateForm as = new AssociateForm(controller, siteIds.get(0), diag);
 	as.showModal();
     }
 

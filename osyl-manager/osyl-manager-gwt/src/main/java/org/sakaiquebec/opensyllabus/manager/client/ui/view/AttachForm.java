@@ -29,12 +29,13 @@ import java.util.TreeMap;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Label;
@@ -53,11 +54,13 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 
     private PushButton attButton;
 
-    private static List<String> messages = new ArrayList<String>();
+    private static List<String> lMsg = new ArrayList<String>();
 
     private static int asynCB_return = 0;
 
     private static int asynCB_OK = 0;
+    
+    private final OsylCancelDialog diag;
 
     AsyncCallback<Map<String, String>> parentListAsyncCallback =
 	    new AsyncCallback<Map<String, String>>() {
@@ -68,8 +71,11 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 
 		public void onSuccess(Map<String, String> result) {
 		    if (result == null || result.isEmpty()) {
-			Window.alert(controller.getMessages()
-				.noAssociableCOSite());
+			OsylOkCancelDialog warning = new OsylOkCancelDialog(
+				false, true, messages.OsylWarning_Title(),
+				messages.noAssociableCOSite(), true, false);
+			warning.show();
+			warning.centerAndFocus();
 			attButton.setEnabled(false);
 		    } else {
 			TreeMap<String, String> sortedMap =
@@ -105,11 +111,13 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	}
 
 	public void onFailure(Throwable caught) {
-	    AttachForm.messages.add(siteId);
+	    diag.hide();
+	    AttachForm.lMsg.add(siteId);
 	    responseReceive();
 	}
 
 	public void onSuccess(Void result) {
+	    diag.hide();
 	    AttachForm.asynCB_OK++;
 	    responseReceive();
 	}
@@ -129,9 +137,10 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
     }
 
     public AttachForm(final OsylManagerController controller,
-	    final List<COSite> cosites) {
+	    final List<COSite> cosites, OsylCancelDialog aDiag) {
 	super(controller);
 	AttachForm.coSites = cosites;
+	this.diag = aDiag;
 
 	Label title =
 		new Label(controller.getMessages().mainView_action_attach());
@@ -145,6 +154,8 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	attButton = new PushButton(controller.getMessages().associate());
 	attButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
+		diag.show();
+		diag.centerAndFocus();
 		int selectedIndex = parentSiteList.getSelectedIndex();
 		if (selectedIndex != -1) {
 		    String pId = parentSiteList.getValue(selectedIndex);
@@ -200,7 +211,7 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	mainPanel.add(new Label(controller.getMessages()
 		.attachForm_attach_error()));
 
-	for (String id : messages) {
+	for (String id : lMsg) {
 	    Label l1 =
 		    new Label(id
 			    + controller.getMessages()

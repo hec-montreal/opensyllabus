@@ -28,6 +28,7 @@ import java.util.Map;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.helper.ActionHelper;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -52,8 +53,6 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 	    Arrays.asList(new String[] { "en", "es", "fr_CA" });// TODO to be
     // parameterized
 
-    private static final int FORM_WIDTH = 580;
-
     private TextBox nameTextBox;
 
     private ListBox configListBox;
@@ -71,8 +70,11 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 
 		public void onSuccess(Map<String, String> result) {
 		    if (result == null || result.isEmpty()) {
-			Window.alert(controller.getMessages()
-				.noAssociableCOSite());
+			OsylOkCancelDialog warning = new OsylOkCancelDialog(
+				false, true, messages.OsylWarning_Title(),
+				messages.noAssociableCOSite(), true, false);
+			warning.show();
+			warning.centerAndFocus();
 			createSite.setEnabled(false);
 		    } else {
 			for (Iterator<String> configMapKeysIterator =

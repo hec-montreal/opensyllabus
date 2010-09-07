@@ -27,6 +27,8 @@ import java.util.Map;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
@@ -36,7 +38,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -76,6 +77,8 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
     private Map<String, CMCourse> sigleCourseMap;
 
     private Map<String, CMCourse> nameCourseMap;
+    
+    private final OsylCancelDialog diag;
 
     private SelectionHandler<Suggestion> suggestBoxSelectionHandler =
 	    new SelectionHandler<Suggestion>() {
@@ -99,7 +102,11 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	    new AsyncCallback<List<CMCourse>>() {
 
 		public void onFailure(Throwable caught) {
-		    Window.alert(controller.getMessages().rpcFailure());
+		    OsylOkCancelDialog warning = new OsylOkCancelDialog(false,
+			    true, messages.OsylWarning_Title(),
+			    messages.rpcFailure(), false, true);
+		    warning.show();
+		    warning.centerAndFocus();
 		}
 
 		public void onSuccess(List<CMCourse> result) {
@@ -124,10 +131,16 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
     AsyncCallback<Void> associateToCMAsyncCallback = new AsyncCallback<Void>() {
 
 	public void onFailure(Throwable caught) {
-	    Window.alert(controller.getMessages().rpcFailure());
+	    diag.hide();
+	    OsylOkCancelDialog alert = new OsylOkCancelDialog(false, true,
+		    messages.OsylWarning_Title(), messages.rpcFailure(),
+		    true, false);
+	    alert.show();
+	    alert.centerAndFocus();
 	}
 
 	public void onSuccess(Void result) {
+	    diag.hide();
 	    controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 		    OsylManagerEvent.SITE_INFO_CHANGE));
 	    AssociateForm.this.onAssociationEnd();
@@ -135,9 +148,11 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 
     };
 
-    public AssociateForm(OsylManagerController controller, COSite site) {
+    public AssociateForm(OsylManagerController controller, COSite site, OsylCancelDialog aDiag) {
 	super(controller);
+	messages = this.controller.getMessages();
 	this.selectedSite = site;
+	this.diag = aDiag;
 
 	Label title =
 		new Label(controller.getMessages().mainView_action_associate());
@@ -181,6 +196,8 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	okButton.setEnabled(false);
 	okButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
+		diag.show();
+		diag.centerAndFocus();
 		AssociateForm.this.controller.associateToCM(selectedCourse
 			.getId(), selectedSite.getSiteId(),
 			associateToCMAsyncCallback);

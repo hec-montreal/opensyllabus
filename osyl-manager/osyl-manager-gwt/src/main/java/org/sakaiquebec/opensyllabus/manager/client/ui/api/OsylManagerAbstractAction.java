@@ -25,6 +25,7 @@ import java.util.MissingResourceException;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
+import org.sakaiquebec.opensyllabus.manager.client.message.Messages;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
@@ -41,18 +42,20 @@ public abstract class OsylManagerAbstractAction extends PushButton implements
 
     protected OsylManagerController controller;
     protected OsylCancelDialog diag;
+    protected Messages messages;
 
 
     public OsylManagerAbstractAction(OsylManagerController controller,
 	    String key) {
 	super();
-	diag = new OsylCancelDialog(false, true , controller.getMessages()
-		.OsylCancelDialog_Title(), controller.getMessages()
-		.OsylCancelDialog_Content());
 	this.controller = controller;
+	messages = this.controller.getMessages();
+	diag = new OsylCancelDialog(false, true , messages
+		.OsylCancelDialog_Title(), messages
+		.OsylCancelDialog_Content());
 	String t;
 	try {
-	    t = controller.getMessages().getString(key);
+	    t = messages.getString(key);
 	} catch (MissingResourceException e) {
 	    t = "missing key:" + key;
 	}

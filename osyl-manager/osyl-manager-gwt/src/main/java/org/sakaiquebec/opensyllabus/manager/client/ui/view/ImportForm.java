@@ -23,12 +23,13 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.helper.ActionHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -52,11 +53,14 @@ public class ImportForm extends OsylManagerAbstractWindowPanel implements
     private PushButton importSiteButton;
 
     private String siteId;
+    
+    private final OsylCancelDialog diag;
 
     public ImportForm(final OsylManagerController controller,
-	    final String siteId) {
+	    final String siteId, OsylCancelDialog adiag) {
 	super(controller);
 	this.siteId = siteId;
+	this.diag = adiag;
 	final FormPanel formPanel = new FormPanel();
 	formPanel.setWidget(mainPanel);
 	formPanel.setWidth("95%");
@@ -77,6 +81,8 @@ public class ImportForm extends OsylManagerAbstractWindowPanel implements
 	importSiteButton.setWidth("50px");
 	importSiteButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
+		diag.show();
+		diag.centerAndFocus();
 		formPanel.setAction(getFormAction());
 		formPanel.submit();
 	    }
@@ -109,12 +115,17 @@ public class ImportForm extends OsylManagerAbstractWindowPanel implements
 	     * fired. SDATA returns an event of type JSON.
 	     */
 	    public void onSubmitComplete(SubmitCompleteEvent event) {
+		diag.hide(true);
 		String retourJSON = event.getResults();
 		if (getState(event.getResults())) {
 		    String url = getURL(retourJSON);
 		    controller.importData(url, siteId);
 		} else {
-		    Window.alert(controller.getMessages().siteNotCreated());
+		    OsylOkCancelDialog warning = new OsylOkCancelDialog(false,
+			    true, messages.OsylWarning_Title(),
+			    messages.siteNotCreated(), true, false);
+		    warning.show();
+		    warning.centerAndFocus();
 		    return;
 		}
 	    }
@@ -135,13 +146,12 @@ public class ImportForm extends OsylManagerAbstractWindowPanel implements
     public void onOsylManagerEvent(final OsylManagerEvent e) {
 	if (e.getType() == OsylManagerEvent.SITE_IMPORT_EVENT) {
 	    mainPanel.clear();
-	    Label l = new Label(controller.getMessages().importCOTitle());
+	    Label l = new Label(messages.importCOTitle());
 	    l.setStylePrimaryName("OsylManager-form-title");
 	    mainPanel.add(l);
-	    mainPanel.add(new Label(controller.getMessages()
-		    .importForm_import_ok()));
+	    mainPanel.add(new Label(messages.importForm_import_ok()));
 	    Anchor edit = new Anchor();
-	    edit.setText(controller.getMessages().createForm_edit());
+	    edit.setText(messages.createForm_edit());
 	    edit.setStylePrimaryName("OsylManager-action");
 	    edit.addClickHandler(new ClickHandler() {
 		public void onClick(ClickEvent event) {
@@ -151,7 +161,7 @@ public class ImportForm extends OsylManagerAbstractWindowPanel implements
 	    mainPanel.add(edit);
 
 	    PushButton closeButton =
-		    new PushButton(controller.getMessages().form_close());
+		    new PushButton(messages.form_close());
 	    closeButton.setWidth("40px");
 	    closeButton.addClickHandler(new ClickHandler() {
 		public void onClick(ClickEvent event) {

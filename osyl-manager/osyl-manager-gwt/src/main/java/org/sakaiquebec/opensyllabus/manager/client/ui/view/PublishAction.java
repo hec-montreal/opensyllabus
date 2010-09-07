@@ -25,11 +25,12 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
-import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.DialogBox;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -37,13 +38,15 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public class PublishAction extends OsylManagerAbstractAction {
 
-    private static List<String> messages = new ArrayList<String>();
+    private static List<String> lMsg = new ArrayList<String>();
 
     private static List<COSite> coSites;
 
     private static int asynCB_return = 0;
 
     private static int asynCB_OK = 0;
+    
+    private DialogBox alert;
 
     private class PublishAsynCallBack implements AsyncCallback<Void> {
 
@@ -55,46 +58,47 @@ public class PublishAction extends OsylManagerAbstractAction {
 	}
 
 	public void onFailure(Throwable caught) {
-	    PublishAction.messages.add(siteId);
+	    diag.hide();
+	    PublishAction.lMsg.add(siteId);
 	    responseReceive();
 	}
 
 	public void onSuccess(Void result) {
+	    diag.hide();
 	    PublishAction.asynCB_OK++;
 	    responseReceive();
 	}
-
+	
 	private void responseReceive() {
 	    PublishAction.asynCB_return++;
 	    if (PublishAction.asynCB_return == PublishAction.coSites.size()) {
-		String msg="";
+		String msg = "";
 		if (PublishAction.asynCB_OK != PublishAction.coSites.size()) {
 		    msg =
-			    controller.getMessages()
-				    .publishAction_publish_error()
+			    messages.publishAction_publish_error()
 				    + "\n";
-		    for (String id : messages) {
+		    for (String id : lMsg) {
 			msg +=
 				id
-					+ controller
-						.getMessages()
+					+ " "
+					+ messages
 						.publishAction_publish_error_detail()
 					+ "\n";
 		    }
-		    
-		}else{
-		    msg =
-			    controller.getMessages()
-				    .publishAction_publish_ok();
+		    alert = new OsylOkCancelDialog(false, true,
+		     messages.OsylWarning_Title(), msg, true, false);
+		    ((OsylOkCancelDialog)alert).show();
+		    ((OsylOkCancelDialog)alert).centerAndFocus();
+		} else {
+		    msg = messages.publishAction_publish_ok();
+		    alert = new OsylUnobtrusiveAlert(msg);
 		}
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
-		Window.alert(msg);
 	    }
 	}
-
     }
-
+    
     public PublishAction(OsylManagerController controller) {
 	super(controller, "mainView_action_publish");
     }
@@ -106,14 +110,16 @@ public class PublishAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(List<COSite> siteIds) {
+	diag.show();
+	diag.centerAndFocus();
 	coSites = siteIds;
 	asynCB_return = 0;
 	asynCB_OK = 0;
-	messages = new ArrayList<String>();
+	lMsg = new ArrayList<String>();
+	
 	for (COSite coSite : siteIds) {
 	    controller.publish(coSite.getSiteId(), new PublishAsynCallBack(
 		    coSite.getSiteId()));
 	}
     }
-
 }

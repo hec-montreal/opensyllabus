@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
-import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 /**
@@ -46,7 +45,7 @@ public class ImportAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(List<COSite> siteIds) {
-	ImportForm isf = new ImportForm(controller, siteIds.get(0).getSiteId());
+	ImportForm isf = new ImportForm(controller, siteIds.get(0).getSiteId(), diag);
 	isf.showModal();
     }
 

@@ -24,9 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
-import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
-import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.user.client.Window;
@@ -38,15 +37,16 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public class DissociateAction extends OsylManagerAbstractAction {
 
-    private static List<String> messages = new ArrayList<String>();
+    private static List<String> lMsg = new ArrayList<String>();
 
     private static List<COSite> coSites;
 
     private static int asynCB_return = 0;
 
     private static int asynCB_OK = 0;
-    
-    
+
+    private OsylUnobtrusiveAlert alert;
+
     private class DissociateAsynCallBack implements AsyncCallback<Void> {
 
 	private String siteId;
@@ -57,41 +57,39 @@ public class DissociateAction extends OsylManagerAbstractAction {
 	}
 
 	public void onFailure(Throwable caught) {
-	    DissociateAction.messages.add(siteId);
+	    diag.hide();
+	    DissociateAction.lMsg.add(siteId);
 	    responseReceive();
 	}
 
 	public void onSuccess(Void result) {
+	    diag.hide();
 	    DissociateAction.asynCB_OK++;
 	    responseReceive();
 	}
 
 	private void responseReceive() {
 	    DissociateAction.asynCB_return++;
-	    if (DissociateAction.asynCB_return == DissociateAction.coSites.size()) {
-		String msg="";
-		if (DissociateAction.asynCB_OK != DissociateAction.coSites.size()) {
-		    msg =
-			    controller.getMessages()
-				    .dissociateAction_dissociate_error()
-				    + "\n";
-		    for (String id : messages) {
+	    if (DissociateAction.asynCB_return == DissociateAction.coSites
+		    .size()) {
+		String msg = "";
+		if (DissociateAction.asynCB_OK != DissociateAction.coSites
+			.size()) {
+		    msg = messages.dissociateAction_dissociate_error() + "\n";
+		    for (String id : lMsg) {
 			msg +=
 				id
-					+ controller
-						.getMessages()
+					+ messages
 						.dissociateAction_dissociate_error_detail()
 					+ "\n";
 		    }
-		    
-		}else{
-		    msg =
-			    controller.getMessages()
-				    .dissociateAction_dissociate_ok();
+
+		} else {
+		    msg = messages.dissociateAction_dissociate_ok();
 		}
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
-		Window.alert(msg);
+		alert = new OsylUnobtrusiveAlert(msg);
 	    }
 	}
 
@@ -115,15 +113,21 @@ public class DissociateAction extends OsylManagerAbstractAction {
 	    return;
 	} else if (!okPw.equals(pw)) {
 	    // TODO: i18n
-	    Window.alert("L'opération est refusée. Veuillez contacter le centre d'assistance.");
+	    Window
+		    .alert("L'opération est refusée. Veuillez contacter le centre d'assistance.");
 	    return;
 	}
+
+	diag.show();
+	diag.centerAndFocus();
 	coSites = siteIds;
 	asynCB_return = 0;
 	asynCB_OK = 0;
-	messages = new ArrayList<String>();
+	lMsg = new ArrayList<String>();
+
 	for (COSite coSite : siteIds) {
-	    controller.dissociateFromCM(coSite.getSiteId(), new DissociateAsynCallBack(coSite.getSiteId()));
+	    controller.dissociateFromCM(coSite.getSiteId(),
+		    new DissociateAsynCallBack(coSite.getSiteId()));
 	}
     }
 }

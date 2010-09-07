@@ -22,6 +22,7 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.api;
 
 import org.gwt.mosaic.ui.client.WindowPanel;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
+import org.sakaiquebec.opensyllabus.manager.client.message.Messages;
 
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -40,9 +41,12 @@ public abstract class OsylManagerAbstractWindowPanel extends WindowPanel{
     
     protected  VerticalPanel mainPanel;
     
+    protected Messages messages;
+    
     public OsylManagerAbstractWindowPanel(OsylManagerController controller) {
 	super();
 	this.controller=controller;
+	messages = this.controller.getMessages();
 	setResizable(true);
 	setAnimationEnabled(true);
 	setCaptionAction(null);

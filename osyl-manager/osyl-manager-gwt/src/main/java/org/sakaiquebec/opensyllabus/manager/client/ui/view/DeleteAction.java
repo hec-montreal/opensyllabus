@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
-import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.user.client.Window;
@@ -38,7 +37,6 @@ public class DeleteAction extends OsylManagerAbstractAction {
 
     public DeleteAction(OsylManagerController controller) {
 	super(controller, "mainView_action_delete");
-	diag = new OsylCancelDialog(true, true, "dialog_title", "dialog_content");
     }
 
     @Override
@@ -49,6 +47,7 @@ public class DeleteAction extends OsylManagerAbstractAction {
     @Override
     public void onClick(List<COSite> siteIds) {
 	Window.alert("delete");
+	//TODO implement "delete" action methods.
     }
 
 }

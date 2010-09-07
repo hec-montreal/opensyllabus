@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
-import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.core.client.GWT;
@@ -51,7 +51,11 @@ public class ExportAction extends OsylManagerAbstractAction {
 
 	public void onFailure(Throwable error) {
 	    diag.hide(true);
-	    Window.alert(controller.getMessages().rpcFailure());
+	    OsylOkCancelDialog warning = new OsylOkCancelDialog(false, true,
+		    messages.OsylWarning_Title(), messages.rpcFailure(), true,
+		    false);
+	    warning.show();
+	    warning.centerAndFocus();
 	}
 	
     }

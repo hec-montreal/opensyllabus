@@ -25,10 +25,10 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
-import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -37,13 +37,15 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public class UnattachAction extends OsylManagerAbstractAction {
 
-    private static List<String> messages = new ArrayList<String>();
+    private static List<String> lMsg = new ArrayList<String>();
 
     private static List<COSite> coSites;
 
     private static int asynCB_return = 0;
 
     private static int asynCB_OK = 0;
+    
+    private OsylUnobtrusiveAlert alert;
 
     private class UnattachAsyncCallback implements AsyncCallback<Void> {
 
@@ -55,7 +57,7 @@ public class UnattachAction extends OsylManagerAbstractAction {
 	}
 
 	public void onFailure(Throwable caught) {
-	    UnattachAction.messages.add(siteId);
+	    UnattachAction.lMsg.add(siteId);
 	    responseReceive();
 	}
 
@@ -69,27 +71,25 @@ public class UnattachAction extends OsylManagerAbstractAction {
 	    if (UnattachAction.asynCB_return == UnattachAction.coSites.size()) {
 		String msg="";
 		if (UnattachAction.asynCB_OK != UnattachAction.coSites.size()) {
-		    msg =
-			    controller.getMessages()
-				    .unattachAction_unattach_error()
+		    msg = messages.unattachAction_unattach_error()
 				    + "\n";
-		    for (String id : messages) {
+		    for (String id : lMsg) {
 			msg +=
 				id
-					+ controller
-						.getMessages()
-						.unattachAction_unattach_error_detail()
+					+ messages.unattachAction_unattach_error_detail()
 					+ "\n";
 		    }
-		    
+		    OsylOkCancelDialog warning = new OsylOkCancelDialog(false,
+			    true, messages.OsylWarning_Title(), msg, true,
+			    false);
+		    warning.show();
+		    warning.centerAndFocus();
 		}else{
-		    msg =
-			    controller.getMessages()
-				    .unattachAction_unattach_ok();
+		    msg = messages.unattachAction_unattach_ok();
+		    alert = new OsylUnobtrusiveAlert(msg);
 		}
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
-		Window.alert(msg);
 	    }
 	}
 
@@ -114,7 +114,7 @@ public class UnattachAction extends OsylManagerAbstractAction {
 	coSites = siteIds;
 	asynCB_return = 0;
 	asynCB_OK = 0;
-	messages = new ArrayList<String>();
+	lMsg = new ArrayList<String>();
 	for (COSite cos : siteIds) {
 	    String cosId = cos.getSiteId();
 	    controller.dissociate(cosId, cos.getParentSite(),

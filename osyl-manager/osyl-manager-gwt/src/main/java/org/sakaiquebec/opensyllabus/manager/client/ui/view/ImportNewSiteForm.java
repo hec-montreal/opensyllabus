@@ -28,12 +28,12 @@ import java.util.Map;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.helper.ActionHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -72,6 +72,8 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
     private String siteId;
     
     private final FormPanel formPanel;
+    
+    private final OsylOkCancelDialog warning;
 
     AsyncCallback<Map<String, String>> configListAsyncCallback =
 	    new AsyncCallback<Map<String, String>>() {
@@ -82,8 +84,11 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 
 		public void onSuccess(Map<String, String> result) {
 		    if (result == null || result.isEmpty()) {
-			Window.alert(controller.getMessages()
-				.noAssociableCOSite());
+			OsylOkCancelDialog warning = new OsylOkCancelDialog(
+				false, true, messages.OsylWarning_Title(),
+				messages.noAssociableCOSite(), true, false);
+			warning.show();
+			warning.centerAndFocus();
 			importSiteButton.setEnabled(false);
 		    } else {
 			for (Iterator<String> configMapKeysIterator =
@@ -93,7 +98,7 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 			    String configRef = result.get(configId);
 			    try{
 			    String configTitle =
-				    controller.getMessages().getString(
+				    messages.getString(
 					    "config_" + configRef);
 			    configListBox.addItem(configTitle, configRef);
 			    }catch (Exception e) {
@@ -106,6 +111,9 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 
     public ImportNewSiteForm(final OsylManagerController controller) {
 	super(controller);
+	
+	warning = new OsylOkCancelDialog(false, true, messages.OsylWarning_Title(),
+		"", true, false);
 
 	Label l = new Label(controller.getMessages().createSiteTitle());
 	l.setStylePrimaryName("OsylManager-form-title");
@@ -181,9 +189,9 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 			    String url = getURL(retourJSON);
 			    controller.importData(url, siteId);
 			} else {
-			    Window.alert(controller
-				    .getMessages()
-				    .siteNotCreated());
+			    warning.setText(messages.siteNotCreated());
+			    warning.show();
+			    warning.centerAndFocus();
 			    return;
 			}
 		    }
@@ -207,11 +215,13 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 					.getSelectedIndex());
 			controller.createSite(name, configRef, lang);
 		    } else {
-			Window.alert(controller.getMessages().noConfig());
+			warning.setText(messages.noConfig());
 		    }
 		} else {
-		    Window.alert(controller.getMessages().siteNameNotValid());
+		    warning.setText(messages.siteNameNotValid());
 		}
+		warning.show();
+		warning.centerAndFocus();
 	    }
 	});
 	mainPanel.add(importSiteButton);
