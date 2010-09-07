@@ -595,6 +595,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      */
     public void readXML(String xmlReference, String siteId, String webapp)
 	    throws Exception {
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] imports XML [" + xmlReference + "] into site " + siteId);
 	String xml;
 	try {
 	    InputStream is =
@@ -628,6 +630,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      */
     public void readZip(String zipReference, String siteId, String webapp)
 	    throws Exception {
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] imports zip [" + zipReference + "] into site " + siteId);
+	
 	try {
 	    File zipTempfile =
 		    File.createTempFile("osyl-package-import", ".zip");
@@ -968,7 +973,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * @throws IOException
      */
     private File exportAndZip(String siteId, String webappDir) throws Exception {
-	log.info("exportAndZip: exporting site: " + siteId);
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] exports site: [" + siteId +"]");
 
 	// opening a new temporary zipfile
 	File zipFile = File.createTempFile("osyl-package-export", ".zip");
@@ -1077,15 +1083,22 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     public void associate(String siteId, String parentId) throws Exception {
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] associates [" + siteId + "] to parent [" + parentId + "]");
 	osylSiteService.associate(siteId, parentId);
     }
 
     public void dissociate(String siteId, String parentId) throws Exception {
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] dissociates [" + siteId + "] from parent [" + parentId + "]");
 	osylSiteService.dissociate(siteId, parentId);
     }
 
     public void associateToCM(String courseSectionId, String siteId)
 	    throws Exception {
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] associates [" + siteId + "] to course [" + courseSectionId + "]");
+
 	// TODO: est-ce qu'on change le nom du site après que le lien soit créé
 
 	if (siteId != null) {
@@ -1113,6 +1126,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public void associateToCM(String courseSectionId, String siteId,
 	    String webappDir) throws Exception {
 
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] associates [" + siteId + "] to course [" + courseSectionId + "]");
+
 	if (siteId != null) {
 	    Site site = siteService.getSite(siteId);
 	    ResourcePropertiesEdit rp = site.getPropertiesEdit();
@@ -1134,6 +1150,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     public void dissociateFromCM(String siteId) throws Exception {
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] dissociates [" + siteId + "] from course management");
+
 	if (siteId != null) {
 	    Site site = siteService.getSite(siteId);
 	    ResourcePropertiesEdit rp = site.getPropertiesEdit();
@@ -1146,6 +1165,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     public void dissociateFromCM(String siteId, String webappDir)
 	    throws Exception {
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] dissociates [" + siteId + "] from course management");
+
 	if (siteId != null) {
 	    Site site = siteService.getSite(siteId);
 	    ResourcePropertiesEdit rp = site.getPropertiesEdit();
@@ -1163,7 +1185,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      */
     public List<CMCourse> getCMCourses() {
 	long start = System.currentTimeMillis();
-	log.info("getCMCourses ##### START #####");
+	log.debug("getCMCourses ##### START #####");
 	List<CMCourse> cmCourses = new ArrayList<CMCourse>();
 	Set<CourseSet> courseSets = courseManagementService.getCourseSets();
 	Set<CourseOffering> courseOffs = null;
@@ -1241,13 +1263,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    }
 	}
-	log.info("getCMCourses ###### END ######" + elapsed(start) + " for "
+	log.debug("getCMCourses ###### END ######" + elapsed(start) + " for "
 		+ cmCourses.size() + " courses");
 	return cmCourses;
     } // getCMCourses
 
     /**
-     * Import file contains in the osylPackage to sakai ressources
+     * Import files contained in the osylPackage to Sakai resources
      *
      * @param zipReference
      * @param siteId
@@ -1421,7 +1443,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	} else {
 	    info = null;
 	}
-	log.debug("getCoAndSiteInfo  " + elapsed(start) + "DONE " + siteId);
+	log.trace("getCoAndSiteInfo  " + elapsed(start) + "DONE " + siteId);
 	return info;
     } // getCoAndSiteInfo
 
@@ -1433,12 +1455,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	String currentUser = sessionManager.getCurrentSessionUserId();
 	int siteCount = 0;
 
-	log.debug("getCoAndSiteInfo (Site List ##### START #####)"
+	log.trace("getCoAndSiteInfo (Site List ##### START #####)"
 		+ elapsed(start));
 	List<String> accessedSites =
 		getSitesForUser(currentUser, SiteService.SITE_VISIT);
 
-	log.debug("getCoAndSiteInfo (Site List ##### SITES #####)"
+	log.trace("getCoAndSiteInfo (Site List ##### SITES #####)"
 		+ elapsed(start));
 
 	if (accessedSites != null) {
@@ -1463,7 +1485,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     @SuppressWarnings("unchecked")
     protected List<String> getSitesForUser(String userId, String permission) {
-	log.debug("userId: " + userId + ", permission: " + permission);
+	log.debug("getSitesForUser ["
+		+ sessionManager.getCurrentSession().getUserEid() + "/"
+		+ permission + "]");
 
 	List<String> l = new ArrayList<String>();
 
@@ -1488,16 +1512,16 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	}
 
-	if (l.isEmpty())
+	if (l.isEmpty()) {
 	    log.info("Empty list of siteIds for user:" + userId
 		    + ", permission: " + permission);
+	}
 	return l;
     }
 
     class DeleteExpiredTemporaryExportFiles extends Thread {
 
 	List<COSite> allSitesInfo;
-	long start = System.currentTimeMillis();
 
 	public DeleteExpiredTemporaryExportFiles(List<COSite> allSitesInfo) {
 	    this.allSitesInfo = allSitesInfo;
@@ -1505,15 +1529,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	public void run() {
 	    int time = 180000;
-	    log.debug("deleteExpiredTemporaryExportFiles (##### START #####)"
-		    + elapsed(start));
 
 	    try {
 		sleep(time);
 	    } catch (InterruptedException e) {
 	    }
+	    long start = System.currentTimeMillis();
+	    log.debug("deleteExpiredTemporaryExportFiles");
 	    deleteExpiredTemporaryExportFiles(allSitesInfo);
-	    log.debug("deleteExpiredTemporaryExportFiles (###### END ######)"
+	    log.debug("deleteExpiredTemporaryExportFiles complete"
 		    + elapsed(start));
 	}
     }

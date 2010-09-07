@@ -82,6 +82,7 @@ import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
 import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
+import org.sakaiquebec.opensyllabus.common.helper.FileHelper;
 import org.sakaiquebec.opensyllabus.common.helper.SchemaHelper;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
@@ -928,14 +929,36 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      */
     public String updateSerializedCourseOutline(COSerialized co)
 	    throws Exception {
-	log.info("Saving course outline [" + co.getTitle() + "]");
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] saves CO [" + co.getTitle() + "]");
 
+	try {
+	    backupCo(co);
+	} catch (IOException e) {
+	    log.error("Unable to backup course outline", e);
+	    throw e;
+	}
+	
 	try {
 	    return resourceDao.createOrUpdateCourseOutline(co);
 	} catch (Exception e) {
 	    log.error("Unable to update course outline", e);
 	    throw e;
 	}
+    }
+    
+    /**
+     * Writes the XML into a temp file. This is a temporary measure.
+     * TODO: find a better way to backup course outlines, possibly computing
+     * differences and limiting how long and how many copies are kept.
+     * 
+     * @param co
+     * @throws IOException
+     */
+    private void backupCo(COSerialized co) throws IOException {
+	File backup = File.createTempFile("osyl-co-" + co.getSiteId() + "_",
+		".xml");
+	FileHelper.writeFileContent(backup, co.getContent());
     }
 
     public String createOrUpdateCO(COSerialized co) {

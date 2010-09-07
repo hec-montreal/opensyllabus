@@ -21,9 +21,13 @@
 package org.sakaiquebec.opensyllabus.common.helper;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 
 /**
@@ -32,9 +36,11 @@ import java.io.StringWriter;
  * @version $Id: $
  */
 public class FileHelper {
+    
+    public static final String DEFAULT_CHARSET = "UTF-8";
 
     public static String getFileContent(String filepath) {
-	return getFileContent(filepath, "UTF-8");
+	return getFileContent(filepath, DEFAULT_CHARSET);
     }
 
     public static String getFileContent(String filepath, String encoding) {
@@ -57,6 +63,24 @@ public class FileHelper {
 	    e.printStackTrace();
 	}
 	return fileContent;
+    }
+    
+    public static void writeFileContent(String filepath, String content)
+    	throws IOException {
+	
+	writeFileContent(new File(filepath), content);
+    }
+    
+    public static void writeFileContent(File file, String content)
+    	throws IOException {
+
+	OutputStreamWriter outputStreamWriter;
+	outputStreamWriter =
+	    new OutputStreamWriter(new FileOutputStream(file), DEFAULT_CHARSET);
+	BufferedWriter buffer = new BufferedWriter(outputStreamWriter);
+	buffer.write(content);
+	buffer.close();
+	
     }
 
 }
