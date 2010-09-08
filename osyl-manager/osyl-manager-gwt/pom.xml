@@ -243,5 +243,72 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<!--
+				Launching hosted mode by profile call, ex: mvn clean install
+				-Phosted
+			-->
+			<id>debug</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+				      <plugin>
+				        <artifactId>maven-resources-plugin</artifactId>
+				        <version>2.4.3</version>
+				        <executions>
+				          <execution>
+				            <id>copy-resources</id>
+				            <!-- here the phase you need -->
+				            <phase>validate</phase>
+				            <goals>
+				              <goal>copy-resources</goal>
+				            </goals>
+				            <configuration>
+				              <outputDirectory>${basedir}/war/css</outputDirectory>
+				              <resources>          
+				                <resource>
+				                  <directory>../osyl-manager-sakai-tool/tool/src/webapp/css</directory>
+				                  <filtering>true</filtering>
+				                </resource>
+				              </resources>              
+				            </configuration>            
+				          </execution>
+				        </executions>
+				      </plugin>
+
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>hosted-gwt</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>debug</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<module>${gwtModule}</module>
+							<runTarget>${gwtHostedEntryPointPage}</runTarget>
+							<webappDirectory>war</webappDirectory>
+							<debugPort>9000</debugPort>
+							<soyc>false</soyc>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.0.2</version>
+						<configuration>
+							<warSourceDirectory>war</warSourceDirectory>
+							<webXml>war/WEB-INF/web.xml</webXml>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 </project>
