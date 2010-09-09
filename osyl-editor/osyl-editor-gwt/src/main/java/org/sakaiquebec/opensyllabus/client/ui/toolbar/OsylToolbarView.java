@@ -190,7 +190,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		getOsylToolbar().getPrintPushButton().setVisible(true);
 
 		/* Add menu button */
-		getOsylToolbar().getAddMenuItem().setVisible(true);
+		getOsylToolbar().getAddMenuItem().setVisible(false);
 		getOsylToolbar().getAddMenuBar().clearItems();
 		if(getController().getOsylConfig().getSettings().isModelTitleEditable(getModel()) && getModel().isEditable()){
 			setEditPushButtonCommand();
@@ -206,7 +206,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 			getOsylToolbar().getAddMenuItem().setVisible(false);
 		} else if (getModel().isCOUnit()) {
 		    // Enables or Disables buttons in this ViewContext
-		    getOsylToolbar().getAddMenuBar().setVisible(true);
+		     getOsylToolbar().getAddMenuItem().setVisible(true);
 		    // Clear menu list, and set it according to the viewcontext
 		    try {
 
@@ -218,7 +218,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    }
 		} else if (getModel().isCOUnitStructure()) {
 		    // Enables or Disables buttons in this ViewContext
-		    getOsylToolbar().getAddMenuBar().setVisible(true);
+		     getOsylToolbar().getAddMenuItem().setVisible(true);
 		    // Clear menu list, and set it according to the viewcontext
 		    try {
 			createAllowedCOUnitStructureAddAction((COUnitStructure) getModel());
@@ -239,6 +239,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 					.getOsylConfigRuler()
 					.getAllowedSubModels(getModel());
 			Iterator<COModelInterface> iter = subModels.iterator();
+			boolean toolbarVisible=false;
 			while (iter.hasNext()) {
 			    COModelInterface subModel =
 				    (COModelInterface) iter.next();
@@ -247,15 +248,19 @@ public class OsylToolbarView extends OsylViewableComposite implements
 								boolean hasUneditableChild = false;
 								for(COElementAbstract c : childrens)
 								    if(!c.isEditable()) hasUneditableChild=true;
-								if(!hasUneditableChild)
+								if(!hasUneditableChild){
+									toolbarVisible=true;
 				        				addAddCOStructureMenuItem(subModel.getType(),
 				        					new AddMenuCommand(castedModel,
 				        						subModel));
+									}
 							    }else{
+									toolbarVisible=true;
 								addAddCOMenuItem(subModel.getType(),
 									new AddMenuCommand(castedModel,
 										subModel));
-			    }
+								}
+			    getOsylToolbar().getAddMenuItem().setVisible(toolbarVisible);
 
 			}
 		    } catch (RuntimeException e) {
