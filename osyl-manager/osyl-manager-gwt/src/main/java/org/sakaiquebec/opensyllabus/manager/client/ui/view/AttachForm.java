@@ -143,15 +143,15 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	this.diag = aDiag;
 
 	Label title =
-		new Label(controller.getMessages().mainView_action_attach());
+		new Label(messages.mainView_action_attach());
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);
 
-	Label l = new Label(controller.getMessages().select_parent_site());
+	Label l = new Label(messages.select_parent_site());
 	parentSiteList = new ListBox();
 	mainPanel.add(createPanel(l, parentSiteList));
 
-	attButton = new PushButton(controller.getMessages().associate());
+	attButton = new PushButton(messages.associate());
 	attButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		diag.show();
@@ -184,15 +184,16 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 
     public void onSuccess() {
 	mainPanel.clear();
-	Label l = new Label(controller.getMessages().mainView_action_attach());
+	Label l = new Label(messages.mainView_action_attach());
 	l.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(l);
 	mainPanel
-		.add(new Label(controller.getMessages().attachForm_attach_ok()));
+		.add(new Label(messages.attachForm_attach_ok()));
 
 	PushButton closeButton =
-		new PushButton(controller.getMessages().form_close());
-	closeButton.setWidth("40px");
+		new PushButton(messages.form_close());
+	closeButton.setStylePrimaryName("Osyl-Button");
+	//closeButton.setWidth("40px");
 	closeButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		AttachForm.super.hide();
@@ -205,22 +206,22 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 
     public void onFailure() {
 	mainPanel.clear();
-	Label l = new Label(controller.getMessages().mainView_action_attach());
+	Label l = new Label(messages.mainView_action_attach());
 	l.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(l);
-	mainPanel.add(new Label(controller.getMessages()
+	mainPanel.add(new Label(messages
 		.attachForm_attach_error()));
 
 	for (String id : lMsg) {
 	    Label l1 =
 		    new Label(id
-			    + controller.getMessages()
+			    + messages
 				    .attachForm_attach_error_detail());
 	    mainPanel.add(l1);
 	}
 
 	PushButton closeButton =
-		new PushButton(controller.getMessages().form_close());
+		new PushButton(messages.form_close());
 	closeButton.setWidth("40px");
 	closeButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {

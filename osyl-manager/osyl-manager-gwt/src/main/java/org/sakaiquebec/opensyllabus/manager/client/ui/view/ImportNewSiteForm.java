@@ -115,38 +115,38 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 	warning = new OsylOkCancelDialog(false, true, messages.OsylWarning_Title(),
 		"", true, false);
 
-	Label l = new Label(controller.getMessages().createSiteTitle());
+	Label l = new Label(messages.createSiteTitle());
 	l.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(l);
 
-	Label title = new Label(controller.getMessages().courseName());
+	Label title = new Label(messages.courseName());
 	nameTextBox = new TextBox();
 	mainPanel.add(createPanel(title, nameTextBox));
 
-	Label langTitle = new Label(controller.getMessages().chooseLang());
+	Label langTitle = new Label(messages.chooseLang());
 	langListBox = new ListBox();
 	
 	for (Iterator<String> langIter = supportedLang.iterator(); langIter
 		.hasNext();) {
 	    String lang = langIter.next();
-	    langListBox.addItem(controller.getMessages().getString(
+	    langListBox.addItem(messages.getString(
 		    "language_" + lang), lang);
 	}
 	mainPanel.add(createPanel(langTitle, langListBox));
 
-	Label configTitle = new Label(controller.getMessages().chooseConfig());
+	Label configTitle = new Label(messages.chooseConfig());
 	configListBox = new ListBox();
 	controller.getOsylConfigs(configListAsyncCallback);
 	mainPanel.add(createPanel(configTitle, configListBox));
 	
-	Label fileUploadLabel = new Label(controller.getMessages().file());
+	Label fileUploadLabel = new Label(messages.file());
 
 	fileUpload = new FileUpload();
 	fileUpload.setName("uploadFormElement");
 	mainPanel.add(createPanel(fileUploadLabel, fileUpload));
-	importSiteButton = new PushButton(controller.getMessages().create());
-	importSiteButton.setWidth("30px");
-	
+	importSiteButton = new PushButton(messages.create());
+	importSiteButton.setWidth("50px");
+	importSiteButton.setStylePrimaryName("Osyl-Button");
 	formPanel = new FormPanel();
 	formPanel.setWidget(mainPanel);
 	formPanel.setWidth("95%");
@@ -242,13 +242,13 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 	} else if (e.getType() == OsylManagerEvent.SITE_IMPORT_EVENT) {
 	    
 	    mainPanel.clear();
-	    Label l = new Label(controller.getMessages().createSiteTitle());
+	    Label l = new Label(messages.createSiteTitle());
 	    l.setStylePrimaryName("OsylManager-form-title");
 	    mainPanel.add(l);
-	    mainPanel.add(new Label(controller.getMessages()
+	    mainPanel.add(new Label(messages
 		    .siteForm_create_ok()));
 	    Anchor edit = new Anchor();
-	    edit.setText(controller.getMessages().createForm_edit());
+	    edit.setText(messages.createForm_edit());
 	    edit.setStylePrimaryName("OsylManager-action");
 	    edit.addClickHandler(new ClickHandler() {
 
@@ -259,7 +259,7 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 	    mainPanel.add(edit);
 
 	    PushButton closeButton =
-		    new PushButton(controller.getMessages().form_close());
+		    new PushButton(messages.form_close());
 	    closeButton.setWidth("40px");
 	    closeButton.addClickHandler(new ClickHandler() {
 		public void onClick(ClickEvent event) {

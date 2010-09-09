@@ -150,22 +150,21 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 
     public AssociateForm(OsylManagerController controller, COSite site, OsylCancelDialog aDiag) {
 	super(controller);
-	messages = this.controller.getMessages();
 	this.selectedSite = site;
 	this.diag = aDiag;
 
 	Label title =
-		new Label(controller.getMessages().mainView_action_associate());
+		new Label(messages.mainView_action_associate());
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);
 
 	Label instruction =
-		new Label(controller.getMessages().associateForm_instruction()
+		new Label(messages.associateForm_instruction()
 			.replace("{0}", selectedSite.getSiteId()));
 	mainPanel.add(instruction);
 
 	Label l =
-		new Label(controller.getMessages()
+		new Label(messages
 			.associateForm_courseIdentifier());
 	sigleSuggestBox = createSuggestBoxWithOracle(sigleOracle);
 	HorizontalPanel hsigle = createPanel(l, sigleSuggestBox);
@@ -174,7 +173,7 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 		HasHorizontalAlignment.ALIGN_CENTER);
 
 	Label l2 =
-		new Label(controller.getMessages().associateForm_courseName());
+		new Label(messages.associateForm_courseName());
 	nomSuggestBox = createSuggestBoxWithOracle(nameOracle);
 	HorizontalPanel hnom = createPanel(l2, nomSuggestBox);
 	mainPanel.add(hnom);
@@ -191,8 +190,9 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	mainPanel.setCellHorizontalAlignment(ivDecoratorPanel,
 		HasHorizontalAlignment.ALIGN_CENTER);
 
-	okButton = new PushButton(controller.getMessages().associateForm_ok());
-	okButton.setWidth("25px");
+	okButton = new PushButton(messages.associateForm_ok());
+	okButton.setStylePrimaryName("Osyl-Button");
+	okButton.setWidth("50px");
 	okButton.setEnabled(false);
 	okButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
@@ -205,7 +205,9 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	});
 
 	PushButton cancelButton =
-		new PushButton(controller.getMessages().associateForm_cancel());
+		new PushButton(messages.associateForm_cancel());
+	cancelButton.setStylePrimaryName("Osyl-Button");
+	cancelButton.setWidth("50px");
 	cancelButton.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
@@ -242,12 +244,12 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	mainPanel.clear();
 
 	Label title =
-		new Label(controller.getMessages().mainView_action_associate());
+		new Label(messages.mainView_action_associate());
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);
 
 	Label conf =
-		new Label(controller.getMessages().associateForm_confirmation());
+		new Label(messages.associateForm_confirmation());
 	mainPanel.add(conf);
 
 	cmCourseInfoView.setImage(new Image(controller.getImageBundle().check()));

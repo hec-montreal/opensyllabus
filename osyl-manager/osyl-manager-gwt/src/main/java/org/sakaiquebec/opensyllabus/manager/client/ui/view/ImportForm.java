@@ -67,17 +67,18 @@ public class ImportForm extends OsylManagerAbstractWindowPanel implements
 	formPanel.setEncoding(FormPanel.ENCODING_MULTIPART);
 	formPanel.setMethod(FormPanel.METHOD_POST);
 
-	Label title = new Label(controller.getMessages().importCOTitle());
+	Label title = new Label(messages.importCOTitle());
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);
 
-	Label fileUploadLabel = new Label(controller.getMessages().file());
+	Label fileUploadLabel = new Label(messages.file());
 
 	fileUpload = new FileUpload();
 	fileUpload.setName("uploadFormElement");
 	mainPanel.add(createPanel(fileUploadLabel, fileUpload));
 
-	importSiteButton = new PushButton(controller.getMessages().importXML());
+	importSiteButton = new PushButton(messages.importXML());
+	importSiteButton.setStylePrimaryName("Osyl-Button");
 	importSiteButton.setWidth("50px");
 	importSiteButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {

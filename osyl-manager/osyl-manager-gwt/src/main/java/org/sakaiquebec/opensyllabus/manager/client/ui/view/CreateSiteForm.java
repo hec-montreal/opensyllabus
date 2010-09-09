@@ -98,31 +98,31 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
     public CreateSiteForm(final OsylManagerController controller) {
 	super(controller);
 
-	Label l = new Label(controller.getMessages().createSiteTitle());
+	Label l = new Label(messages.createSiteTitle());
 	l.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(l);
 
-	Label title = new Label(controller.getMessages().courseName());
+	Label title = new Label(messages.courseName());
 	nameTextBox = new TextBox();
 	mainPanel.add(createPanel(title, nameTextBox));
 
-	Label langTitle = new Label(controller.getMessages().chooseLang());
+	Label langTitle = new Label(messages.chooseLang());
 	langListBox = new ListBox();
 	for (Iterator<String> langIter = supportedLang.iterator(); langIter
 		.hasNext();) {
 	    String lang = langIter.next();
-	    langListBox.addItem(controller.getMessages().getString(
+	    langListBox.addItem(messages.getString(
 		    "language_" + lang), lang);
 	}
 	mainPanel.add(createPanel(langTitle, langListBox));
 
-	Label configTitle = new Label(controller.getMessages().chooseConfig());
+	Label configTitle = new Label(messages.chooseConfig());
 	configListBox = new ListBox();
 	controller.getOsylConfigs(configListAsyncCallback);
 	mainPanel.add(createPanel(configTitle, configListBox));
 
-	createSite = new PushButton(controller.getMessages().create());
-	createSite.setWidth("30px");
+	createSite = new PushButton(messages.create());
+	createSite.setWidth("40px");
 	createSite.setStylePrimaryName("Osyl-Button");
 	createSite.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
@@ -142,10 +142,10 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 					.getSelectedIndex());
 			controller.createSite(name, configRef, lang);
 		    } else {
-			Window.alert(controller.getMessages().noConfig());
+			Window.alert(messages.noConfig());
 		    }
 		} else {
-		    Window.alert(controller.getMessages().siteNameNotValid());
+		    Window.alert(messages.siteNameNotValid());
 		}
 	    }
 	});
