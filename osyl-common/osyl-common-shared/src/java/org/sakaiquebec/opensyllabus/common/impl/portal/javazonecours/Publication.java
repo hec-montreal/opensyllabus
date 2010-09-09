@@ -2615,6 +2615,16 @@ public class Publication {
 		fin = ressId.indexOf(".", debut);
 		if (fin > 0 && !ressId.startsWith(".pce", debut))
 			sectionCours = ressId.substring(debut, fin);
+		
+		//Pour les cours de MBA, il se pourrait qu'à ce niveau ce soit la période qu'on a récupéré
+		//on recommence pour avoir la section qui est à la fin de la String
+		if(sectionCours.length()==2){
+			debut = fin + 1;
+			fin = ressId.indexOf(".", debut);
+			if (fin > 0 && !ressId.startsWith(".pce", debut))
+				sectionCours = ressId.substring(debut, fin);
+		}
+		
 		// ---- programme, service, credit et exigences
 		if (trace)
 			outTrace
