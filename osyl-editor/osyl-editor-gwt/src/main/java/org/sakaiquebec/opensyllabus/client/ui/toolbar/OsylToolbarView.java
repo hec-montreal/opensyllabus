@@ -192,7 +192,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		/* Add menu button */
 		getOsylToolbar().getAddMenuItem().setVisible(true);
 		getOsylToolbar().getAddMenuBar().clearItems();
-		if(getController().getOsylConfig().getSettings().isModelTitleEditable(getModel())){
+		if(getController().getOsylConfig().getSettings().isModelTitleEditable(getModel()) && getModel().isEditable()){
 			setEditPushButtonCommand();
 			getOsylToolbar().getEditSeparator().setVisible(true);
 			getOsylToolbar().getEditPushButton().setVisible(true);
