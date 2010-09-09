@@ -198,7 +198,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 			setSakaiIFrameHeight(h);
 		}
 		((OsylViewableComposite) getView()).setHeight((h - 16) + "px");
-		if (!isInternetExplorer() && ToolWidthMinReached()) sc = 16;
+		if (!isInternetExplorer() && ToolWidthMinReached()) sc = 18;
 		getRootPanel().setHeight((h -sc)+ "px");
 		
 		if (OsylController.getInstance().isInPreview()) {
@@ -600,29 +600,21 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	}
 
 	private static void setTopMostPosition(PopupPanel p) {
-		setTopMostPosition(p, -100 + Window.getClientHeight() / 2);
+		setTopMostPosition(p, (Window.getClientWidth() - p.getOffsetWidth()) / 2);
 	}
 
 	private static void setTopMostPosition(PopupPanel p, int x) {
-		p.setPopupPosition(x, Math.max(getTopMostPosition(), getYPosition()));
+		p.setPopupPosition(x, getTopMostPosition());
 	}
 
 	/**
-	 * getTopMostPosition returns the toolBar height including every possible
-	 * margin. We return different hardCoded values according to the current
-	 * context. There is surely a better way to do this.
+	 * getTopMostPosition returns the top most position.
+	 * Since Osyl have the title, there is no need to place this value below the tool menu.
+	 * So we simply put it with the course title.
 	 */
 	private static int getTopMostPosition() {
-		/* TODO compute this two values */
-		if (OsylController.getInstance().isInHostedMode()) {
-			return 130;
-		} else {
-			// We return 115px (for the toolBar and the title)
-			return 115; // Is OK for MSIE 6/7 and Firefox
-		}
+		return Window.getScrollTop() + 2;
 	}
-
-
 
 	/**
 	 * Centers the specified {@link PopupPanel} on the current view. This method
@@ -636,8 +628,8 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	public static void centerObject(PopupPanel widget) {
 		int width = widget.getOffsetWidth();
 		int height = widget.getOffsetHeight();
-		width = Math.max(0, (Window.getClientWidth() - width) / 2);
-		height = Math.max(0, (Window.getClientHeight() - height) / 2);
+		width = Math.max(Window.getScrollLeft(), (Window.getClientWidth() - width) / 2);
+		height = Math.max(Window.getScrollTop(), (Window.getClientHeight() - height) / 2);
 		widget.setPopupPosition(width, height);
 	}
 
