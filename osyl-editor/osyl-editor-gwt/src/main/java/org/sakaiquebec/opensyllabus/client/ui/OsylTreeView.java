@@ -42,7 +42,6 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * OsylTreeView displays the tree structure of current course outline in
@@ -82,16 +81,12 @@ public class OsylTreeView extends OsylViewableComposite implements
     }
 
     private void initView() {
-
-	VerticalPanel vertPan = new VerticalPanel();
-	
-	final Tree tree = new Tree();
-	setTree(tree);
-	getTree().setStylePrimaryName("Osyl-TreeView-Tree");
-	getTree().addSelectionHandler(this);
-	vertPan.add(getTree());
-	initWidget(vertPan);
-	refreshView();
+    	final Tree tree = new Tree();
+    	setTree(tree);
+    	getTree().setStylePrimaryName("Osyl-TreeView-Tree");
+    	getTree().addSelectionHandler(this);
+    	initWidget(getTree());
+    	refreshView();
     }
 
     @SuppressWarnings("unchecked")
@@ -284,7 +279,6 @@ public class OsylTreeView extends OsylViewableComposite implements
     	int currentTreeWidth;
     	int left = 0;
     	for (int i=0; i<elms.length;i++) {
-    		// TODO: Find a way to obtain the getAbsoluteLeft of the Element at the initial loading of the page;
     		left = elms[i].getAbsoluteLeft();
     		currentTreeWidth = elms[i].getInnerText().length() * 7 + (left == 0 ? 49:left);
     		if (currentTreeWidth > getMaxTreeWidth()) {
@@ -303,7 +297,8 @@ public class OsylTreeView extends OsylViewableComposite implements
 
 
     public void onUpdateModel(UpdateCOUnitEvent event) {
-	refreshSubModelsViews((COElementAbstract) event.getSource());
+    	refreshSubModelsViews((COElementAbstract) event.getSource());
+    	OsylController.getInstance().getMainView().setTreeItemsWidth();
     }
 
     public void onSelection(SelectionEvent<TreeItem> event) {
@@ -316,7 +311,6 @@ public class OsylTreeView extends OsylViewableComposite implements
     		getController().getViewContext().setContextModel(
     				treeItemView.getModel());
     	}
-    	OsylController.getInstance().getMainView().resize();
     }
     
     public void setTreeItemsWidth(int treeWidth) {
