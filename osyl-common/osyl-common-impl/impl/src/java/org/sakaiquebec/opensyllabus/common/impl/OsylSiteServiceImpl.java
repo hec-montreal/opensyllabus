@@ -641,7 +641,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	id = getSiteReference(site) + dir;
 	id = id.substring(8);
 	try {
-	    if (!collectionExist(id)) {
+	    if (!collectionExists(id)) {
 		collection = contentHostingService.addCollection(id);
 		ResourcePropertiesEdit fileProperties =
 			collection.getPropertiesEdit();
@@ -661,11 +661,11 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      * @param a String of the collection id.
      * @return boolean whether the collection exists
      */
-    private boolean collectionExist(String id) {
+    private boolean collectionExists(String id) {
 	try {
 	    contentHostingService.getCollection(id);
 	} catch (Exception e) {
-	    e.printStackTrace();
+	    log.debug("collectionExists [" + id + "]:" + e);
 	    return false;
 	}
 	return true;
