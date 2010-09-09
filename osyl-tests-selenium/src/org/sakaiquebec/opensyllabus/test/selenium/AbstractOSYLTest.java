@@ -169,7 +169,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
         }
 
 	
-	session().type("//td[2]/input", getCurrentTestSiteName());
+	session().type("//tr[2]/td/table/tbody/tr/td[2]/input", getCurrentTestSiteName());
 	pause();
 	session().select("//tr[4]/td/table/tbody/tr/td[2]/select", "value=default");
 	pause();
