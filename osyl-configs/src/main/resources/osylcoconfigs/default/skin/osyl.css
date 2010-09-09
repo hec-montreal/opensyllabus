@@ -358,7 +358,7 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	white-space:nowrap;
 	text-overflow:ellipsis;
 	-o-text-overflow: ellipsis;
-	/*-moz-binding: url('ellipsis.xml#ellipsis');*/
+	-moz-binding: url('ellipsis.xml#ellipsis');
 	
 }
 .Osyl-TreeView-Tree div.gwt-TreeItem:hover{text-decoration:underline}

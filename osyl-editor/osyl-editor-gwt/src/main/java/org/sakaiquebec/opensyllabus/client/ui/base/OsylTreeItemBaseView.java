@@ -24,8 +24,8 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
  * The Base Tree Item View usable for the Osyl tree view
@@ -36,7 +36,7 @@ import com.google.gwt.user.client.ui.Label;
  */
 public abstract class OsylTreeItemBaseView extends OsylViewableComposite {
 
-    private HorizontalPanel panel;
+    private SimplePanel panel;
     private Label label;
 
     protected OsylTreeItemBaseView(COModelInterface model,
@@ -46,7 +46,7 @@ public abstract class OsylTreeItemBaseView extends OsylViewableComposite {
     }
 
     protected void initView() {
-	panel = new HorizontalPanel();
+    panel = new SimplePanel();
 	label = new Label("");
 	label.setWordWrap(false);
 	label.setStylePrimaryName("Osyl-TreeLabel");
@@ -57,12 +57,15 @@ public abstract class OsylTreeItemBaseView extends OsylViewableComposite {
     }
 
     /**
-     * Refreshes the view
+     * Refreshes the view. remove and read label to the panel
+     * to refresh the title when using ellipsis.xml (Firefox Only)
      */
     public void refreshView() {
 	String treeItemText = createTreeItemText();
 	label.setText(treeItemText);
+	label.removeFromParent();
 	setTitle(treeItemText);
+	panel.add(label);
     }
 
     abstract String createTreeItemText();
