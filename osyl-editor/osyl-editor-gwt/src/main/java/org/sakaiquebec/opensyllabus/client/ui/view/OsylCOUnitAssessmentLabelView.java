@@ -86,7 +86,7 @@ public class OsylCOUnitAssessmentLabelView extends OsylCOUnitLabelView {
 		contentResourceProxy.getResource().getProperty(
 			COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_URI);
-			if (uri != null && uri.equals("")) {
+			if (uri != null && !uri.equals("")) {
 		String rawAssignmentId = uri.split("\\s*/a/\\s*")[1];
 		rawAssignmentId = rawAssignmentId.split("\\s*/\\s*")[1];
 		String assignmentId = rawAssignmentId.split("\\s*&panel=\\s*")[0];
