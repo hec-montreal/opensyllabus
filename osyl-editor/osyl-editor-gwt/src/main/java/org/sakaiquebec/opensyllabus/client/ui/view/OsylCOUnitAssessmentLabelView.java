@@ -86,15 +86,17 @@ public class OsylCOUnitAssessmentLabelView extends OsylCOUnitLabelView {
 		contentResourceProxy.getResource().getProperty(
 			COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_URI);
-	String rawAssignmentId = uri.split("\\s*/a/\\s*")[1];
-	rawAssignmentId = rawAssignmentId.split("\\s*/\\s*")[1];
-	String assignmentId = rawAssignmentId.split("\\s*&panel=\\s*")[0];
-	if (!getController().isInHostedMode()) {
+			if (uri != null && uri.equals("")) {
+		String rawAssignmentId = uri.split("\\s*/a/\\s*")[1];
+		rawAssignmentId = rawAssignmentId.split("\\s*/\\s*")[1];
+		String assignmentId = rawAssignmentId.split("\\s*&panel=\\s*")[0];
+		if (!getController().isInHostedMode()) {
 
-	    // And at last, the RPC call
-	    getController().createOrUpdateAssignment(contentResourceProxy,
+	   		// And at last, the RPC call
+	    	getController().createOrUpdateAssignment(contentResourceProxy,
 		    assignmentId);
-	}
+			}
+		}
     }
 
     private void updateMetaInfo() {
