@@ -20,14 +20,32 @@
 		<xsl:variable name='courseCode'>
 			<xsl:value-of select="substring-before(/OSYL/CO/courseId[@type='HEC'],'.')"/>
 		</xsl:variable>
-		<xsl:variable name='session_group'>
+		<xsl:variable name='session_period_group'>
 			<xsl:value-of select="substring-after(/OSYL/CO/courseId[@type='HEC'],'.')"/>
 		</xsl:variable>
 		<xsl:variable name='session'>
-			<xsl:value-of select="substring-before($session_group,'.')"/>
+			<xsl:value-of select="substring-before($session_period_group,'.')"/>
+		</xsl:variable>
+		<xsl:variable name='period_group'>
+			<xsl:value-of select="substring-after($session_period_group,'.')"/>
+		</xsl:variable>
+		<xsl:variable name='period'>
+			<xsl:choose>
+				<xsl:when test="contains($period_group,'.')">
+					<xsl:value-of select="substring-before($period_group,'.')"/>
+				</xsl:when>
+				<xsl:otherwise></xsl:otherwise>
+			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name='group'>
-			<xsl:value-of select="substring-after($session_group,'.')"/>
+			<xsl:choose>
+				<xsl:when test="contains($period_group,'.')">
+					<xsl:value-of select="substring-after($period_group,'.')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$period_group"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:variable>
 
     	<fo:root>
@@ -155,6 +173,7 @@
 						<xsl:with-param name="courseCode"><xsl:value-of select="$courseCode"/></xsl:with-param>
 						<xsl:with-param name="session"><xsl:value-of select="$session"/></xsl:with-param>
 						<xsl:with-param name="group"><xsl:value-of select="$group"/></xsl:with-param>
+						<xsl:with-param name="period"><xsl:value-of select="$period"/></xsl:with-param>
 					</xsl:call-template>
 					<xsl:apply-templates select="//asmUnit[@xsi:type='StaffUnit']"/>
 					<xsl:apply-templates select="//asmUnit[@xsi:type='OverviewUnit']"/>
@@ -188,6 +207,7 @@
   <xsl:param name="courseCode"/>
   <xsl:param name="session"/>
   <xsl:param name="group"/>
+  <xsl:param name="period"/>
 		<fo:block>
 			<fo:external-graphic content-height="41px" vertical-align="middle" padding-top="-10pt">
 				<xsl:attribute name="src"><xsl:value-of select="$ppath"/>img/hecmontreal.gif</xsl:attribute>
@@ -208,7 +228,7 @@
 				<fo:table-row>
 					<fo:table-cell padding-left="5px" padding-bottom="2px" border-bottom="1.5px solid black" display-align="center">
 						<fo:block text-align="left" font-size="14pt" font-weight="bold">
-							<xsl:value-of select="$session"/>
+							<xsl:value-of select="$session"/><xsl:if test="$period!=''">.<xsl:value-of select="$period"/></xsl:if>
 						</fo:block>
 					</fo:table-cell>
 					<fo:table-cell padding-right="5px" padding-bottom="2px" border-bottom="1.5px solid black" display-align="center">
