@@ -219,30 +219,35 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public COSerialized getSerializedPublishedCourseOutlineForAccessType(
 	    String siteId, String accessType, String webappDir) {
 	long start = System.currentTimeMillis();
-	COSerialized thisCo = null;
-	String configRef;
-	try {
-	    thisCo =
-		    resourceDao
-			    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
-				    siteId, accessType);
-	    osylSiteService.getSiteInfo(thisCo, siteId);
-	    configRef = thisCo.getOsylConfig().getConfigRef();
-	} catch (Exception e) {
-	    configRef = osylConfigService.getDefaultConfig();
-	    log.error("Unable to retrieve published course outline for"
-		    + " access type [" + accessType + "]", e);
-	}
-	try {
-	    thisCo =
-		    osylConfigService.fillCo(webappDir
-			    + OsylConfigService.CONFIG_DIR + File.separator
-			    + configRef, thisCo);
-	} catch (Exception e) {
-	    log.error("Unable to fill course outline", e);
-	}
-	log.debug("getSerializedPublishedCourseOutlineForAccessType"
-		+ elapsed(start) + siteId);
+		COSerialized thisCo = null;
+		String configRef;
+		try {
+		    thisCo =
+			    resourceDao
+				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+					    siteId, accessType);
+		} catch (Exception e) {
+		}
+		if (thisCo != null) {
+		    try {
+			osylSiteService.getSiteInfo(thisCo, siteId);
+			configRef = thisCo.getOsylConfig().getConfigRef();
+		    } catch (Exception e) {
+			configRef = osylConfigService.getDefaultConfig();
+			log.error("Unable to retrieve published course outline for"
+				+ " access type [" + accessType + "]", e);
+		    }
+		    try {
+			thisCo =
+				osylConfigService.fillCo(webappDir
+					+ OsylConfigService.CONFIG_DIR + File.separator
+					+ configRef, thisCo);
+		    } catch (Exception e) {
+			log.error("Unable to fill course outline", e);
+		    }
+		}
+		log.debug("getSerializedPublishedCourseOutlineForAccessType"
+			+ elapsed(start) + siteId);
 	return thisCo;
     }
 
