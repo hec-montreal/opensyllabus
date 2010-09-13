@@ -671,7 +671,7 @@
 				<fo:inline>, <xsl:value-of select="publisher"/></fo:inline>
 				<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>
 				<fo:inline>.</fo:inline>
-				<xsl:if test="identifier[@type='isn'] != null">
+				<xsl:if test="identifier[@type='isn']">
 					<fo:block>
 						<fo:inline>ISBN:<xsl:value-of select="identifier[@type='isn']"/></fo:inline>
 					</fo:block>
