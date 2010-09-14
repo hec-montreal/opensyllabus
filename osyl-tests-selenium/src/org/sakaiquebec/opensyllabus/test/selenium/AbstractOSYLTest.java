@@ -24,7 +24,6 @@ package org.sakaiquebec.opensyllabus.test.selenium;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
- 
 
 import com.thoughtworks.selenium.SeleneseTestCase;
 
@@ -61,11 +60,11 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
     // Formatter for timeStamps
     private SimpleDateFormat timeStampFormatter;
-    
+
     protected String fileServer;
 
     @BeforeClass(alwaysRun = true)
-    @Parameters({"seleniumHost", "seleniumPort", "browser", "webSite"})
+    @Parameters( { "seleniumHost", "seleniumPort", "browser", "webSite" })
     public void setUp(String seleniumHost, int seleniumPort, String browser,
 	    String webSite) {
 
@@ -90,8 +89,10 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     }
 
     private void initCurrentTestSiteName() {
-	siteName = TEST_SITE_BASE_NAME +
-	    (new SimpleDateFormat("yyyy-MM-dd")).format(new Date());
+	siteName =
+		TEST_SITE_BASE_NAME
+			+ (new SimpleDateFormat("yyyy-MM-dd"))
+				.format(new Date());
 	log("Test site is " + siteName);
     }
 
@@ -100,7 +101,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * for instance).
      */
     public String timeStamp() {
-	return timeStampFormatter.format(new Date());	
+	return timeStampFormatter.format(new Date());
     }
 
     /**
@@ -120,7 +121,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().setTimeout("180000");
 	session().open(url);
 	session().setTimeout("300000");
-	if (! session().isElementPresent("eid")
+	if (!session().isElementPresent("eid")
 		&& session().isElementPresent("loginLink1")) {
 	    // We seem to be logged in already. This happens when RC fails to
 	    // close MSIE after a test.
@@ -130,7 +131,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().type("eid", "admin");
 	session().type("pw", "osyl123");
 	session().click("submit");
-	//waitForPageToLoad();
+	// waitForPageToLoad();
 	session().waitForPageToLoad("300000");
 	assertFalse("Login failed", session().isElementPresent(
 		"//div[@class=\"alertMessage\"]"));
@@ -147,45 +148,46 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     public void createTestSite() throws Exception {
 	log("Creating site " + getCurrentTestSiteName());
 	session().open("/portal/site/opensyllabusManager");
-	
+
 	session().answerOnNextPrompt("osyl123");
 	if (inFireFox()) {
-        	session().mouseOver("//tr[7]/td/table/tbody/tr/td[1]/div");
-        	session().mouseDown("//tr[7]/td/table/tbody/tr/td[1]/div");
-        	session().mouseUp("//tr[7]/td/table/tbody/tr/td[1]/div");
-        	pause();
-	}else{
-            session().keyPress("//tr[7]/td/table/tbody/tr/td[1]/div","\r");
-        }
+	    session().mouseOver("//tr[7]/td/table/tbody/tr/td[1]/div");
+	    session().mouseDown("//tr[7]/td/table/tbody/tr/td[1]/div");
+	    session().mouseUp("//tr[7]/td/table/tbody/tr/td[1]/div");
+	    pause();
+	} else {
+	    session().keyPress("//tr[7]/td/table/tbody/tr/td[1]/div", "\r");
+	}
 
-	
-	session().type("//tr[2]/td/table/tbody/tr/td[2]/input", getCurrentTestSiteName());
-	session().select("//tr[4]/td/table/tbody/tr/td[2]/select", "value=default");
+	session().type("//tr[2]/td/table/tbody/tr/td[2]/input",
+		getCurrentTestSiteName());
+	session().select("//tr[4]/td/table/tbody/tr/td[2]/select",
+		"value=default");
 	session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=2");
 
-	if(inFireFox()){
-	session().mouseOver("//tr[5]/td/div/div");
-	session().mouseDown("//tr[5]/td/div/div");
-	session().mouseUp("//tr[5]/td/div/div");
-	pause();
-	}else{
-	    	session().keyPress("//tr[5]/td/div/div", "\r");
+	if (inFireFox()) {
+	    session().mouseOver("//tr[5]/td/div/div");
+	    session().mouseDown("//tr[5]/td/div/div");
+	    session().mouseUp("//tr[5]/td/div/div");
+	    pause();
+	} else {
+	    session().keyPress("//tr[5]/td/div/div", "\r");
 	}
-	
-	if(inFireFox()){
-		session().mouseOver("//tr[4]/td/div/div");
-		session().mouseDown("//tr[4]/td/div/div");
-		session().mouseUp("//tr[4]/td/div/div");
-	}else{
-		session().keyPress("//tr[4]/td/div/div", "\r");
+
+	if (inFireFox()) {
+	    session().mouseOver("//tr[4]/td/div/div");
+	    session().mouseDown("//tr[4]/td/div/div");
+	    session().mouseUp("//tr[4]/td/div/div");
+	} else {
+	    session().keyPress("//tr[4]/td/div/div", "\r");
 	}
-	    
+
     } // createTestSite
 
     public String getCurrentTestSiteName() {
 	return siteName;
     }
-    
+
     /**
      * Loads the test site. Assumes we are already logged-in. A failure occurs
      * if the site does not exist.
@@ -193,15 +195,15 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     public void goToSite() throws Exception {
 	session().open("/portal/site/" + getCurrentTestSiteName());
 	waitForPageToLoad();
-	if(session().isTextPresent("Site Unavailable")) {
+	if (session().isTextPresent("Site Unavailable")) {
 	    throw new IllegalStateException("Got 'Site Unavailable' !");
 	}
 
 	session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
-	if (!session().isVisible("gwt-uid-4") ) {
+	if (!session().isVisible("gwt-uid-4")) {
 	    log("Course outline locked: waiting 15 minutes");
 	    pause(900000);
-		session().refresh();
+	    session().refresh();
 	    waitForPageToLoad();
 	}
 	if (!session().isVisible("gwt-uid-4")) {
@@ -293,10 +295,10 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      */
     public void waitForOSYL() throws Exception {
 
-	//session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
+	// session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
 	for (int second = 0;; second++) {
 	    if (second >= 60) {
-		
+
 		fail("Timeout waiting for Osyl-UnitView-UnitPanel sub-structure:"
 			+ " __Was OpenSyllabus added to the site?__");
 	    }
@@ -330,17 +332,22 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * the lecture list (initial view). This method was not thoroughly tested!
      */
     public void enterFirstLecture() throws Exception {
-	// enter first lecture
-	session().mouseOver(
-		"//table[@class=\"Osyl-WorkspaceView-MainPanel\"]"
-			+ "/tbody/tr[2]/td/table/tbody/tr/td/div");
-	session().mouseDown(
-		"//table[@class=\"Osyl-WorkspaceView-MainPanel\"]"
-			+ "/tbody/tr[2]/td/table/tbody/tr/td/div");
-	session().mouseUp(
-		"//table[@class=\"Osyl-WorkspaceView-MainPanel\"]"
-			+ "/tbody/tr[2]/td/table/tbody/tr/td/div");
-	    } // enterFirstLecture
+	try {
+	    // enter first lecture
+	    session().mouseOver(
+		    "//table[@class=\"Osyl-WorkspaceView-MainPanel\"]"
+			    + "/tbody/tr[2]/td/table/tbody/tr/td/div");
+	    session().mouseDown(
+		    "//table[@class=\"Osyl-WorkspaceView-MainPanel\"]"
+			    + "/tbody/tr[2]/td/table/tbody/tr/td/div");
+	    session().mouseUp(
+		    "//table[@class=\"Osyl-WorkspaceView-MainPanel\"]"
+			    + "/tbody/tr[2]/td/table/tbody/tr/td/div");
+	} catch (Exception e) {
+	    logAndFail("Unable to enter first lecture: " + e);
+	}
+
+    } // enterFirstLecture
 
     /**
      * Clicks on the Home button in OpenSyllabus. It expects to see at least one
@@ -365,20 +372,20 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     } // clickHomeButton
 
     /**
-     * Calls clickAddButton and clicks on the item whose id is specified
-     * (case sensitive). This ID uses the pattern addType. For instance addText
-     * or addPedagogicalUnit. Calls logAndFail if the item is not found.
-     *  
+     * Calls clickAddButton and clicks on the item whose id is specified (case
+     * sensitive). This ID uses the pattern addType. For instance addText or
+     * addPedagogicalUnit. Calls logAndFail if the item is not found.
+     * 
      * @param itemText to click
      */
     public void clickAddItem(String itemText) {
 	log("Entering clickAddItem " + itemText);
 
-	// Click the add button
-	clickAddButton();
-
-	// Click the item or fail if it is not found
 	try {
+	    // Click the add button
+	    clickAddButton();
+
+	    // Click the item or fail if it is not found
 	    session().click("//div[@id=\"" + itemText + "\"]");
 	} catch (Exception e) {
 	    logAndFail("clickAddButton(" + itemText + ") FAILED: " + e);
@@ -386,8 +393,8 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     } // clickAddItem(String)
 
     /**
-     * Calls clickAddButton and clicks on the item at the specified index.
-     * Calls logAndFail if the index is out of bounds. Using this method is
+     * Calls clickAddButton and clicks on the item at the specified index. Calls
+     * logAndFail if the index is out of bounds. Using this method is
      * discouraged as it doesn't allow to click on a specific known item.
      * 
      * @param index of item to click
@@ -395,14 +402,14 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     public void clickAddItem(int index) {
 	log("Entering clickAddItem " + index);
 
-	// Click the add button
-	clickAddButton();
-
-	// Click the item or fail if it is not found
 	try {
+	    // Click the add button
+	    clickAddButton();
+
+	    // Click the item or fail if it is not found
 	    session().click(
 		    "//div[@class=\"gwt-MenuBar gwt-MenuBar-vertical\"]"
-		    + "/table/tbody/tr[" + index + "]/td");
+			    + "/table/tbody/tr[" + index + "]/td");
 	} catch (Exception e) {
 	    logAndFail("clickAddButton(" + index + ") FAILED: " + e);
 	}
@@ -415,7 +422,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     public void clickAddButton() {
 	session().click("gwt-uid-8");
     }
-    
+
     /**
      * Clicks on the Save button in OpenSyllabus. It expects to see an
      * UnobtrusiveAlert in the next 60 seconds. We can safely assume that it
@@ -429,7 +436,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	String origSpeed = session().getSpeed();
 	session().setSpeed("30");
 	long start = System.currentTimeMillis();
-	
+
 	clickSaveButton();
 	for (int second = 0;; second++) {
 	    if (System.currentTimeMillis() - start >= 60000) {
@@ -463,7 +470,8 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		    // slow enough!)
 		    log("saveCourseOutline: trying again...");
 		    clickSaveButton();
-		    // TODO: après trois fois on pourrait assumer que le save a fonctionné!
+		    // TODO: après trois fois on pourrait assumer que le save a
+		    // fonctionné!
 		} else {
 		    Thread.sleep(100);
 		}
@@ -478,8 +486,8 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	} else {
 	    return session().isElementPresent(
 		    "//div[@class=\"Osyl-UnobtrusiveAlert\"]")
-		&& session().isVisible(
-		    "//div[@class=\"Osyl-UnobtrusiveAlert\"]");
+		    && session().isVisible(
+			    "//div[@class=\"Osyl-UnobtrusiveAlert\"]");
 	}
     }
 
@@ -532,16 +540,16 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     }
 
     /**
-     * Returns the screenshot file name corresponding to the specified
-     * message, removing forbidden chars and adding ".png".
-     */    
+     * Returns the screenshot file name corresponding to the specified message,
+     * removing forbidden chars and adding ".png".
+     */
     private static String getScreenShotFileName(String msg) {
 	return SCREENSHOT_DIR + msg.replaceAll("[/\\:\\?\\!\\|><\"\\*]", "_")
 		+ ".png";
     }
 
     /**
-     * Ensures the directory for screenshots exists.    
+     * Ensures the directory for screenshots exists.
      */
     private static void ensureScreenShotDirOK() {
 	File dir = new File(SCREENSHOT_DIR);
@@ -550,14 +558,14 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    fail("Unable to create screenshot dir: " + SCREENSHOT_DIR);
 	}
     }
-    
+
     /**
      * Captures a screenShot to document current failure. Use the specified
      * error message to generate the file name. Warning: this method performs a
      * selectFrame("relative=parent") to capture the whole page, therefore if
-     * the test procedure is not stopped right after its invocation, it may
-     * fail as the context is changed.
-     */    
+     * the test procedure is not stopped right after its invocation, it may fail
+     * as the context is changed.
+     */
     protected void captureScreenShotFailure(String msg) {
 	// If we are in FF we do a screenshot capture
 	if (inFireFox()) {
@@ -573,21 +581,20 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    }
 	}
     }
-    
+
     /**
      * Captures a screenshot of current page as PNG file whose name is
      * specified. Only works in Firefox.
-     */    
+     */
     protected void captureScreenShot(String fileName) {
 	if (inInternetExplorer()) {
-	    log ("Cannot capture a screenshot in Internet Explorer: "
-		    + fileName);
+	    log("Cannot capture a screenshot in Internet Explorer: " + fileName);
 	    return;
 	}
 	ensureScreenShotDirOK();
 	session().captureEntirePageScreenshot(fileName, "background=white");
     }
-    
+
     /**
      * Returns true if we are running in Internet Explorer.
      */
@@ -596,7 +603,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	// return *iexplore!
 	return browserString.equals("*iexplore");
     }
-    
+
     /**
      * Returns true if we are running in Firefox.
      */
@@ -605,7 +612,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	// return *iexplore!
 	return browserString.equals("*firefox");
     }
-    
+
     /**
      * Verifies the specified boolean is true (if we are in MSIE), asserts it
      * otherwise. This method is handy for tests which can't be fixed in MSIE.
@@ -627,11 +634,10 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	}
     } // assertOrVerify
 
-
     /**
      * Given a select menu whose XPath is specified, returns a String
-     * corresponding to a random option. The select menu must be visible
-     * before calling this method.
+     * corresponding to a random option. The select menu must be visible before
+     * calling this method.
      * 
      * @return random option
      */
@@ -653,13 +659,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * @return random rubric
      */
     protected String getRandomRubric() {
-    	return getRandomOption("//select[@name=\"listBoxFormElement\"]");
+	return getRandomOption("//select[@name=\"listBoxFormElement\"]");
     }
 
     /**
-     * Changes the rubric in the resource being edited. The corresponding
-     * select menu (name=listBoxFormElement) must be visible before calling
-     * this method.
+     * Changes the rubric in the resource being edited. The corresponding select
+     * menu (name=listBoxFormElement) must be visible before calling this
+     * method.
      * 
      * @param rubricLabel
      */
