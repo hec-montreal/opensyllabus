@@ -8,7 +8,7 @@
 	<title type="HEC">Title of course at HEC</title>
 	<language>ENG</language>
 	<created>2001-12-17T09:30:47-05:00</created>
-	<creator>HEC MontrÃ©al</creator>
+	<creator>HEC Montréal</creator>
 	<modifiedBy></modifiedBy>
 	<parent type="HEC"></parent>
 	<children type="HEC"></children>
@@ -27,6 +27,30 @@
 				<modified>2001-12-17T09:30:47-05:00</modified>
 				<asmUnitContent access="public" xsi:type="NewsUnitContent">
 					<modified>2001-12-17T09:30:47-05:00</modified>
+					<asmContext access="public" xsi:type="InformationContext">
+							<modified>2009-11-11T16:12:13-05:00</modified>
+							<label><![CDATA[Insert your Text Here...]]></label>
+							<importance>false</importance>
+							<level>undefined</level>
+							<visible>true</visible>
+							<semanticTag type="rubric">plagiarism</semanticTag>
+							<asmResource xsi:type="Text" access="public">
+								<text><![CDATA[Please consult the acts and gestures that are considered plagiarism or another academic violation, along with the applicable procedure and sanctions, which range up to suspension and even expulsion from HEC Montréal. Violations are analyzed&nbsp; based on the facts and circumstances, and sanctions are applied accordingly.&nbsp; <a href="http://www.hec.ca/en/programs_training/plagiarism.html" target="_blank">Learn more about plagiarism .</a><br>]]></text>
+								<modified>2009-11-11T16:12:13-05:00</modified>
+							</asmResource>
+						</asmContext>
+						<asmContext access="public" xsi:type="InformationContext">
+							<modified>2009-11-11T16:14:23-05:00</modified>
+							<label><![CDATA[Insert your Text Here...]]></label>
+							<importance>false</importance>
+							<level>undefined</level>
+							<visible>true</visible>
+							<semanticTag type="rubric">calculators</semanticTag>
+							<asmResource xsi:type="Text" access="public">
+								<text><![CDATA[Please consult the <a href="http://www.hec.ca/etudiant_actuel/technologies/calculatrices.html" target="_blank">calculator usage policy (in French)</a> during exams when&nbsp; applicable.]]></text>
+								<modified>2009-11-11T16:14:23-05:00</modified>
+							</asmResource>
+						</asmContext>
 				</asmUnitContent>
 			</asmUnitStructure>
 		</asmUnit>

@@ -59,11 +59,11 @@ import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Abstract class defining common methods for Resource Proxy editors.
- * 
+ *
  * @author <a href="mailto:Remi.Saias@hec.ca">Remi Saias</a>
  */
 public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
-    
+
     // TODO: document
     private CheckBox importantCheckBox;
     private CheckBox hideCheckBox;
@@ -80,7 +80,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
     /**
      * Constructor.
-     * 
+     *
      * @param view
      */
     public OsylAbstractResProxEditor(OsylAbstractView view) {
@@ -101,7 +101,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     }
 
     protected ImageAndTextButton createButtonDelete() {
-	AbstractImagePrototype imgDeleteButton = 
+	AbstractImagePrototype imgDeleteButton =
 	    AbstractImagePrototype.create(getOsylImageBundle().delete());
 	String title = getUiMessage("delete");
 	ClickHandler listener =
@@ -128,10 +128,10 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     protected OsylAbstractResProxView getView() {
 	return (OsylAbstractResProxView) super.getView();
     }
-    
+
     public COContentResourceProxy getModel() {
 	return getView().getModel();
-    } 
+    }
 
     /**
      * {@inheritDoc}
@@ -348,7 +348,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
     /**
      * Returns whether the checkBox "important" is checked.
-     * 
+     *
      * @return boolean
      */
     public boolean isContextImportant() {
@@ -357,7 +357,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
     /**
      * Returns whether the checkBox "hidden" is checked.
-     * 
+     *
      * @return boolean
      */
     public boolean isContextHidden() {
@@ -371,7 +371,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     /**
      * Returns the selected requirement level (Mandatory, Recommended or
      * Complementary)
-     * 
+     *
      * @return String
      */
     public String getRequirementLevel() {
@@ -401,7 +401,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
      * {@link SecurityInterface#SECURITY_GROUP_PUBLIC},
      * {@link SecurityInterface#SECURITY_GROUP_ATTENDEE} or
      * {@link SecurityInterface#SECURITY_GROUP_ONSITE}.
-     * 
+     *
      * @return String
      */
     public String getDiffusionLevel() {
@@ -410,7 +410,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
     /**
      * Returns the selected rubric.
-     * 
+     *
      * @return String
      */
     public String getRubricType() {
@@ -419,7 +419,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
     /**
      * Returns the user defined rubric name.
-     * 
+     *
      * @return String
      */
     public String getRubricUserDefLabel() {
@@ -456,13 +456,15 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
 	String undefinedRubricType = choices[0];
 	lb.addItem(getUiMessage("selectRubric"), undefinedRubricType);
-	for (int i = 1; i < choices.length; i++) {
+	for (int i = 0; i < choices.length; i++) {
 	    String rubricType = choices[i];
-	    lb.addItem(getView().getCoMessages().getShortMessage(rubricType),
-		    rubricType);
-	    if (rubricType.equalsIgnoreCase(resProx.getRubricType(propertyType))) {
-		lb.setItemSelected(i, true);
-	    }
+	    if (!COContentRubric.RUBRIC_TYPE_UNDEFINED.equals(rubricType)) {
+			lb.addItem(getView().getCoMessages().getShortMessage(rubricType),
+				rubricType);
+			if (rubricType.equalsIgnoreCase(resProx.getRubricType(propertyType))) {
+			lb.setItemSelected(i, true);
+			}
+		}
 	}
 
 	return lb;
@@ -478,7 +480,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
     /**
      * Create a list of potential coUnit targets considering the model type.
-     * 
+     *
      * @param model
      * @param lb
      */
@@ -548,7 +550,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
     /**
      * Returns a Widget displaying the meta-information for current resProx. The
      * requirement level is blank by default and is not displayed if not set.
-     * 
+     *
      * @return Widget
      */
     protected Widget getMetaInfoLabel() {
@@ -563,9 +565,9 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
 	String metaInfoLabelStr =
 		getUiMessage("MetaInfo.audience") + ": " + diffusionLevel;
-	
+
 	metaInfoLabel.setStylePrimaryName("Osyl-ResProxView-MetaInfo");
-	
+
 	if (hasHide) {
 	    String hidden =
 		    (getView().isContextHidden() ? getUiMessage("Global.yes")
@@ -608,7 +610,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	}else{
 	    metaInfoLabel.removeStyleDependentName("Requirement");
 	}
-	
+
 	metaInfoLabel.setText(metaInfoLabelStr);
 	return metaInfoLabel;
     }

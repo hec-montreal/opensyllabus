@@ -27,6 +27,38 @@
 				<modified>2001-12-17T09:30:47-05:00</modified>
 				<asmUnitContent access="public" xsi:type="NewsUnitContent">
 					<modified>2001-12-17T09:30:47-05:00</modified>
+					<asmContext access="public" xsi:type="InformationContext">
+							<modified>2009-11-11T11:05:48-05:00</modified>
+							<label><![CDATA[Tapez votre texte ici...]]></label>
+							<importance>false</importance>
+							<level>undefined</level>
+							<visible>true</visible>
+							<semanticTag type="rubric">calculators</semanticTag>
+							<asmResource xsi:type="Text" access="public">
+								<text><![CDATA[Les étudiants sont priés de prendre connaissance de la
+													politique d'utilisation de calculatrices lors d'examens lorsque
+													celles-ci sont autorisées. <a href="http://www.hec.ca/etudiant_actuel/technologies/calculatrices.html" target="_blank">En savoir plus sur la politique d'usage de calculatrices...</a><br>]]></text>
+								<modified>2009-11-11T11:05:48-05:00</modified>
+							</asmResource>
+						</asmContext>
+						<asmContext access="public" xsi:type="InformationContext">
+							<modified>2009-11-11T11:04:30-05:00</modified>
+							<label><![CDATA[Tapez votre texte ici...]]></label>
+							<importance>false</importance>
+							<level>undefined</level>
+							<visible>true</visible>
+							<semanticTag type="rubric">plagiarism</semanticTag>
+							<asmResource xsi:type="Text" access="public">
+								<text><![CDATA[Les étudiants sont priés de prendre connaissance des actes et des
+												gestes qui sont considérés comme étant du plagiat ou une autre
+												infraction de nature pédagogique, de la procédure et des sanctions, qui
+												peuvent aller jusqu'à la suspension et même l'expulsion de HEC Montréal.
+												Toute infraction sera analysée en fonction des faits et des
+												circonstances, et une sanction sera appliquée en conséquence. <a href="http://www.hec.ca/programmes_formations/plagiat.html" target="_blank">En savoir
+												plus sur le plagiat...</a>]]></text>
+								<modified>2009-11-11T11:04:30-05:00</modified>
+							</asmResource>
+						</asmContext>
 				</asmUnitContent>
 			</asmUnitStructure>
 		</asmUnit>

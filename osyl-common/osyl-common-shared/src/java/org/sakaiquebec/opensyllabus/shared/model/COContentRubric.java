@@ -23,7 +23,7 @@ package org.sakaiquebec.opensyllabus.shared.model;
 /**
  * Represents the rubrics objects. The resources are associated to rubrics in
  * the XML tree.
- * 
+ *
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
@@ -34,6 +34,8 @@ public class COContentRubric implements COModelInterface{
      */
     public static final boolean TRACE = false;
 
+    public static final String RUBRIC_TYPE_UNDEFINED = "undefined";
+
     // TODO delete this hack as soon as possible
     public static final String RUBRIC_TYPE_NEWS = "news";
 
@@ -41,7 +43,7 @@ public class COContentRubric implements COModelInterface{
      * Rubric type.
      */
     private String type;
-    
+
     private String key;
 
     private String userDefLabel;
@@ -119,7 +121,7 @@ public class COContentRubric implements COModelInterface{
      */
     public void removeProperty(String key) {
     }
-    
+
     /**
      * {@inheritDoc}
      */
