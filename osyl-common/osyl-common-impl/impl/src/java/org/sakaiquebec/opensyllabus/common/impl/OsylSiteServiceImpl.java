@@ -938,7 +938,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    log.error("Unable to backup course outline", e);
 	    throw e;
 	}
-	
+
 	try {
 	    return resourceDao.createOrUpdateCourseOutline(co);
 	} catch (Exception e) {
@@ -946,13 +946,13 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    throw e;
 	}
     }
-    
+
     /**
      * Writes the XML into a temp file. This is a temporary measure.
      * TODO SAKAI-1932: find a better way to backup course outlines, possibly
      * computing differences and limiting how long and how many copies are
      * kept.
-     * 
+     *
      * @param co
      * @throws IOException
      */
@@ -1360,7 +1360,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     public COSerialized updateCOContentTitle(String siteId, String webappDir)
 	    throws Exception {
-	COSerialized co = getSerializedCourseOutlineBySiteId(siteId);
+	COSerialized co = getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
 	COConfigSerialized coConfig = co.getOsylConfig();
 	// at the first call we got only the config id and ref. We need to fill
 	// the rules so the next call is used to get it.
