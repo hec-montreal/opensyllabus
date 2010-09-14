@@ -192,7 +192,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * Loads the test site. Assumes we are already logged-in. A failure occurs
      * if the site does not exist.
      */
-    public void goToSite() throws Exception {
+    public void goToSite() throws IllegalStateException {
 	try {
 	    session().open("/portal/site/" + getCurrentTestSiteName());
 	    waitForPageToLoad();
@@ -211,6 +211,8 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    if (!session().isVisible("gwt-uid-4")) {
 	        logAndFail("Course outline still locked after 15 minutes");
 	    }
+	} catch (IllegalStateException e) {
+	    throw e;
 	} catch (Exception e) {
 	    logAndFail("goToSite: " + e);
 	}
