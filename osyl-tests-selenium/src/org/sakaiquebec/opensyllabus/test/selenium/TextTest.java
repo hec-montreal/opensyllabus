@@ -37,8 +37,7 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
  */
 public class TextTest extends AbstractOSYLTest {
 
-    @Test(groups = "OSYL-Suite", description =
-	"OSYLEditor test. Add a text resource, edit it and save the changes")
+    @Test(groups = "OSYL-Suite", description = "OSYLEditor test. Add a text resource, edit it and save the changes")
     @Parameters( { "webSite" })
     public void testAddText(String webSite) throws Exception {
 	// We log in
@@ -50,31 +49,33 @@ public class TextTest extends AbstractOSYLTest {
 	    goToSite();
 	}
 	waitForOSYL();
-	
-	//Open Seances Section
-	if(inFireFox()){
-        	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-        	"td/div[contains(text(),'Organisation')]");
-                pause();
-	}else{
-	    	session().click("gwt-uid-16");
+
+	// Open Seances Section
+	if (inFireFox()) {
+	    session().mouseDown(
+		    "//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/"
+			    + "td/div[contains(text(),'Organisation')]");
+	    pause();
+	} else {
+	    // This doesn't seem to work anymore
+	    session().click("gwt-uid-16");
 	}
 
 	// If we don't have a Lecture we add one
-	int LectNb = getResourceCount();
-	if(LectNb == 1){
-            //We add a first Lecture
-            clickAddItem("addPedagogicalUnit");
-            pause();
-        }
-	
+	int lectNb = getResourceCount();
+	log("getResourceCount returned " + lectNb);
+	if (lectNb == 0) {
+	    // We add a first Lecture
+	    clickAddItem("addLecture");
+	    pause();
+	}
+
 	enterFirstLecture();
-	
+
 	// We keep track of how many resources are showing to check that it
 	// is incremented as expected when we add one
 	int resNb = getResourceCount();
 	log("We start with " + resNb + " resources");
-	
 
 	// Click menu Add/Text
 	clickAddItem("addText");
@@ -82,13 +83,13 @@ public class TextTest extends AbstractOSYLTest {
 	// We check that our new text was added
 	int resNb2 = getResourceCount();
 	log("We now have " + resNb2 + " resources");
-	if (1+resNb != resNb2) {
+	if (1 + resNb != resNb2) {
 	    logAndFail("Resource count not incremented as expected!");
 	} else {
-	    log ("OK Text resource added");
+	    log("OK Text resource added");
 	}
 	saveCourseOutline();
-	
+
 	// open text resource editor
 	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
 
@@ -99,10 +100,12 @@ public class TextTest extends AbstractOSYLTest {
 	// Type some text in the rich-text area
 	if (inFireFox()) {
 	    // type text
-	    session().selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
-	    String newText = "this is a text resource typed by "
-		+ "selenium, hope it works and you see it. Added on "
-		+ timeStamp() + " in Firefox";
+	    session()
+		    .selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
+	    String newText =
+		    "this is a text resource typed by "
+			    + "selenium, hope it works and you see it. Added on "
+			    + timeStamp() + " in Firefox";
 
 	    session().type("//html/body", newText);
 	    // close editor
@@ -110,7 +113,7 @@ public class TextTest extends AbstractOSYLTest {
 	    session().click("//td/table/tbody/tr/td[1]/button");
 	    // check if text is visible
 	    if (!session().isTextPresent(newText)) {
-		logAndFail("Expected to see text [" + newText 
+		logAndFail("Expected to see text [" + newText
 			+ "] after text edition");
 	    }
 	    log("OK: Text resource edited");
@@ -124,7 +127,7 @@ public class TextTest extends AbstractOSYLTest {
 	// check if the new rubric is visible.
 	if (!session().isTextPresent(selectedRubric)) {
 	    logAndFail("Expected to see rubric [" + selectedRubric
-		+ "] after text edition");
+		    + "] after text edition");
 	}
 	log("OK: Selected rubric is visible");
 
@@ -132,7 +135,7 @@ public class TextTest extends AbstractOSYLTest {
 	logOut();
 	log("testAddText: test complete");
     } // testAddText
-    
+
     private int getResourceCount() {
 	return session().getXpathCount(
 		"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();

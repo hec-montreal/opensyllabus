@@ -193,21 +193,26 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * if the site does not exist.
      */
     public void goToSite() throws Exception {
-	session().open("/portal/site/" + getCurrentTestSiteName());
-	waitForPageToLoad();
-	if (session().isTextPresent("Site Unavailable")) {
-	    throw new IllegalStateException("Got 'Site Unavailable' !");
-	}
-
-	session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
-	if (!session().isVisible("gwt-uid-4")) {
-	    log("Course outline locked: waiting 15 minutes");
-	    pause(900000);
-	    session().refresh();
+	try {
+	    session().open("/portal/site/" + getCurrentTestSiteName());
 	    waitForPageToLoad();
-	}
-	if (!session().isVisible("gwt-uid-4")) {
-	    logAndFail("Course outline still locked after 15 minutes");
+	    if (session().isTextPresent("Site Unavailable")) {
+	        throw new IllegalStateException("Got 'Site Unavailable' !");
+	    }
+
+	    session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
+	    pause();
+	    if (!session().isVisible("gwt-uid-4")) {
+	        log("Course outline locked: waiting 15 minutes");
+	        pause(900000);
+	        session().refresh();
+	        waitForPageToLoad();
+	    }
+	    if (!session().isVisible("gwt-uid-4")) {
+	        logAndFail("Course outline still locked after 15 minutes");
+	    }
+	} catch (Exception e) {
+	    logAndFail("goToSite: " + e);
 	}
     }
 
