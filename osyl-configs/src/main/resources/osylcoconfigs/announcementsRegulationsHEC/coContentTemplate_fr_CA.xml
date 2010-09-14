@@ -37,7 +37,7 @@
 							<asmResource xsi:type="Text" access="public">
 								<text><![CDATA[Les étudiants sont priés de prendre connaissance de la
 													politique d'utilisation de calculatrices lors d'examens lorsque
-													celles-ci sont autorisées. <a href="http://www.hec.ca/etudiant_actuel/technologies/calculatrices.html" target="_blank">En savoir plus sur la politique d'usage de calculatrices...</a><br>]]></text>
+													celles-ci sont autorisées. <a href="http://www.hec.ca/etudiant_actuel/technologies/calculatrices_autorisees/calculatrices.html" target="_blank">En savoir plus sur la politique d'usage de calculatrices...</a><br>]]></text>
 								<modified>2009-11-11T11:05:48-05:00</modified>
 							</asmResource>
 						</asmContext>
