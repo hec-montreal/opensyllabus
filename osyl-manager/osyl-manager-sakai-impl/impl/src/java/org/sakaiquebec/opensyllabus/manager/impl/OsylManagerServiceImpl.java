@@ -296,8 +296,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    // need to create
 	    try {
 		enableSecurityAdvisor();
-		Session s = sessionManager.getCurrentSession();
-		s.setUserId(UserDirectoryService.ADMIN_ID);
+//		Session s = sessionManager.getCurrentSession();
+//		s.setUserId(UserDirectoryService.ADMIN_ID);
 
 		Site osylManagerSite =
 			siteService
@@ -367,6 +367,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		e.printStackTrace();
 	    } catch (AuthzPermissionException e) {
 		e.printStackTrace();
+	    } finally {
+		SecurityService.popAdvisor();
 	    }
 	}
     }
@@ -585,6 +587,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	try {
 	    contentHostingService.getCollection(id);
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    return false;
 	}
 	return true;
@@ -1017,6 +1020,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			siteService.getSite(((COSite) iter.next()).getSiteId());
 		String id = getSiteReference(site) + TEMP_DIRECTORY;
 		id = id.substring(8) + "/";
+		enableSecurityAdvisor();
+		
 		if (collectionExist(id)) {
 		    ContentCollection contentCollection =
 			    contentHostingService.getCollection(id);
@@ -1053,6 +1058,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			contentHostingService.removeCollection(id);
 		    }
 		}
+		SecurityService.popAdvisor();
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    }
@@ -1356,6 +1362,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	try {
 	    site = osylSiteService.getSite(siteId);
+	    
+	    if (osylSiteService.hasCourseOutline(siteId)) {
+		COSerialized co = osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
+	    }
 	} catch (IdUnusedException e) {
 	    log.error(e.getMessage());
 	    e.printStackTrace();
@@ -1478,6 +1488,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	// TODO: move this to the end of getOsylPackage() with a specific
 	// path instead of iterating through all the sites!!!
 	new DeleteExpiredTemporaryExportFiles(allSitesInfo).start();
+	//deleteExpiredTemporaryExportFiles(allSitesInfo);
 	return allSitesInfo;
     }
 
@@ -1534,6 +1545,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		sleep(time);
 	    } catch (InterruptedException e) {
 	    }
+	    Session s = sessionManager.getCurrentSession();
+	    s.setUserId(UserDirectoryService.ADMIN_ID);
+	    
 	    long start = System.currentTimeMillis();
 	    log.debug("deleteExpiredTemporaryExportFiles");
 	    deleteExpiredTemporaryExportFiles(allSitesInfo);
