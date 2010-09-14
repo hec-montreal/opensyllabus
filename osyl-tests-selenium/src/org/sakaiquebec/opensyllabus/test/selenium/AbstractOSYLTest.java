@@ -146,19 +146,9 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      */
     public void createTestSite() throws Exception {
 	log("Creating site " + getCurrentTestSiteName());
-	session().open("/portal/site/%7Eadmin");
-	waitForPageToLoad();
-	// Click on Sites, the 4th item in the list menu
-	session().click("//div[@id='toolMenu']/ul/li[4]/a/span");
-	waitForPageToLoad();
-	session().selectFrame("Mainxadminx310");
-	// Ensure the site doesn't already exist
-	assertFalse("Site '" + getCurrentTestSiteName() + "' already exists!",
-		session().isTextPresent(getCurrentTestSiteName()));
-	
 	session().open("/portal/site/opensyllabusManager");
-	pause();
 	
+	session().answerOnNextPrompt("osyl123");
 	if (inFireFox()) {
         	session().mouseOver("//tr[7]/td/table/tbody/tr/td[1]/div");
         	session().mouseDown("//tr[7]/td/table/tbody/tr/td[1]/div");
@@ -170,11 +160,9 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 	
 	session().type("//tr[2]/td/table/tbody/tr/td[2]/input", getCurrentTestSiteName());
-	pause();
 	session().select("//tr[4]/td/table/tbody/tr/td[2]/select", "value=default");
-	pause();
 	session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=2");
-	pause();
+
 	if(inFireFox()){
 	session().mouseOver("//tr[5]/td/div/div");
 	session().mouseDown("//tr[5]/td/div/div");
@@ -191,42 +179,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	}else{
 		session().keyPress("//tr[4]/td/div/div", "\r");
 	}
-	pause();
 	    
-	/*session().click("link=Nouveau site");
-	waitForPageToLoad();
-	session().type("id", getCurrentTestSiteName());
-	session().type("title", getCurrentTestSiteName());
-	session().type("type", "project");
-	session().type(
-		"shortDescription",
-		"This site is created automatically while running "
-			+ "Selenium tests. It will be deleted as soon as the "
-			+ "test suite is completed.");
-	session().click("publishedtrue");
-	session().click("eventSubmit_doPages");
-	waitForPageToLoad();
-	// Ensure the site doesn't already exist or another error
-	assertFalse("Received Alert when creating Site '"
-		+ getCurrentTestSiteName() + "'", session().isElementPresent(
-		"//div[@class=\"alertMessage\"]"));
-	session().click("link=Nouvelle page");
-	waitForPageToLoad();
-	session().type("title", "OpenSyllabus");
-	session().click("eventSubmit_doTools");
-	waitForPageToLoad();
-	session().click("link=Nouvel outil");
-	waitForPageToLoad();
-	session().click("//input[@value=\"sakai.opensyllabus.tool\"]");
-	waitForPageToLoad();
-	session().click("eventSubmit_doSave_tool");
-	waitForPageToLoad();*/
-
-	// Warning: we leave the "Sites" tool otherwise a future test might fail
-	// when trying to click on it!
-	//session().selectFrame("relative=parent");
-	//session().click("//div[@id='toolMenu']/ul/li[1]/a/span");
-	//waitForPageToLoad();
     } // createTestSite
 
     public String getCurrentTestSiteName() {
@@ -243,20 +196,19 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	if(session().isTextPresent("Site Unavailable")) {
 	    throw new IllegalStateException("Got 'Site Unavailable' !");
 	}
-	pause();
+
 	session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
-	pause();
 	if (!session().isVisible("gwt-uid-4") ) {
-	    log("Course outline locked: waiting 5 minutes");
-	    pause(300000);
+	    log("Course outline locked: waiting 15 minutes");
+	    pause(900000);
+		session().refresh();
+	    waitForPageToLoad();
 	}
-	pause();
 	if (!session().isVisible("gwt-uid-4")) {
-	    logAndFail("Course outline still locked after 5 minutes");
+	    logAndFail("Course outline still locked after 15 minutes");
 	}
-	pause();
-	
     }
+
     /**
      * Deletes the test site. Will fail if the operation is unsuccessful.
      */
@@ -318,6 +270,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * the click, we expect to see element eid (user ID input field).
      */
     public void logOut() throws Exception {
+	session().selectFrame("relative=parent");
 	session().click("loginLink1");
 	waitForPageToLoad();
 	for (int second = 0;; second++) {
@@ -567,7 +520,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * screenShot capture is taken if possible.
      */
     protected void logAndFail(String msg) {
-	log(msg);
+	log("logAndFail: " + msg);
 	captureScreenShotFailure(msg);
 	try {
 	    logOut();
