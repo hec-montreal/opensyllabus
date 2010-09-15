@@ -216,12 +216,14 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 			controller.createSite(name, configRef, lang);
 		    } else {
 			warning.setText(messages.noConfig());
+			warning.show();
+			warning.centerAndFocus();
 		    }
 		} else {
 		    warning.setText(messages.siteNameNotValid());
+		    warning.show();
+		    warning.centerAndFocus();
 		}
-		warning.show();
-		warning.centerAndFocus();
 	    }
 	});
 	mainPanel.add(importSiteButton);
@@ -261,6 +263,7 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 	    PushButton closeButton =
 		    new PushButton(messages.form_close());
 	    closeButton.setWidth("40px");
+	    closeButton.setStylePrimaryName("Osyl-Button");
 	    closeButton.addClickHandler(new ClickHandler() {
 		public void onClick(ClickEvent event) {
 		    ImportNewSiteForm.super.hide();

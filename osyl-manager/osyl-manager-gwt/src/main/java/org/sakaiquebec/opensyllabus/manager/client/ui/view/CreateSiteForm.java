@@ -180,6 +180,7 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 	    PushButton closeButton =
 		    new PushButton(controller.getMessages().form_close());
 	    closeButton.setWidth("40px");
+	    closeButton.setStylePrimaryName("Osyl-Button");
 	    closeButton.addClickHandler(new ClickHandler() {
 		public void onClick(ClickEvent event) {
 		    CreateSiteForm.super.hide();

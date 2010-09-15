@@ -587,7 +587,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	try {
 	    contentHostingService.getCollection(id);
 	} catch (Exception e) {
-	    e.printStackTrace();
 	    return false;
 	}
 	return true;
@@ -1363,9 +1362,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	try {
 	    site = osylSiteService.getSite(siteId);
 	    
-	    if (osylSiteService.hasCourseOutline(siteId)) {
-		COSerialized co = osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
-	    }
+//	    if (osylSiteService.hasCourseOutline(siteId)) {
+//		COSerialized co = osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
+//	    }
 	} catch (IdUnusedException e) {
 	    log.error(e.getMessage());
 	    e.printStackTrace();
@@ -1373,7 +1372,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	if (site != null
 		&& searchTerm != null
-		&& site.getTitle().toLowerCase().contains(
+		&& site.getTitle().toLowerCase().startsWith(
 			searchTerm.toLowerCase())) {
 	    // Retrieve site info
 	    info.setSiteId(siteId);
