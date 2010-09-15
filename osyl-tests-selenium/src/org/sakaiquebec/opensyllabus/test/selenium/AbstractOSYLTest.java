@@ -306,7 +306,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	for (int second = 0;; second++) {
 	    if (second >= 60) {
 
-		fail("Timeout waiting for Osyl-UnitView-UnitPanel sub-structure:"
+		fail("Timeout waiting for Osyl-TreeItem-HorizontalPanel sub-structure:"
 			+ " __Was OpenSyllabus added to the site?__");
 	    }
 	    if (session().isTextPresent("Exception")
@@ -317,7 +317,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    }
 	    try {
 		if (session().isElementPresent(
-			"//table[@class=\"Osyl-TreeItem-HorizontalPanel\"]")) {
+			"//div[@class=\"Osyl-TreeItem-HorizontalPanel\"]")) {
 		    break;
 		}
 	    } catch (Exception e) {

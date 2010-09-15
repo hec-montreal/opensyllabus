@@ -53,8 +53,8 @@ public class TextTest extends AbstractOSYLTest {
 	// Open Seances Section
 	if (inFireFox()) {
 	    session().mouseDown(
-		    "//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/"
-			    + "td/div[contains(text(),'Organisation')]");
+		    "//div[@class=\"gwt-TreeItem\"]/div/"
+			    + "div[contains(text(),'Organisation du cours')]");
 	    pause();
 	} else {
 	    // This doesn't seem to work anymore
