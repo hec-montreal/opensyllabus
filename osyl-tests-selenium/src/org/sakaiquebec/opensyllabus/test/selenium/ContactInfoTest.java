@@ -57,10 +57,8 @@ public class ContactInfoTest extends AbstractOSYLTest {
 //---------------------------------------------------------------------------//
 //				Add Contact		                     //
 //---------------------------------------------------------------------------//
-	
-	//Click Contact Information
-        session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td/" 
-        		+ "div[contains(text(),'Coordo')]");
+        
+	openContactInfoSection();
 	
 	//Add Contact Information
 	clickAddItem("addPerson");
@@ -175,7 +173,7 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	//Overview
 	session().click("gwt-uid-9");
 	pause();
-	session().click("//td[2]/div/div/table/tbody/tr[2]/td");
+	session().click("gwt-uid-11");
 	pause();
 	//session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
 	//Will be tested when the problem is resolved(public & attendee)
@@ -183,8 +181,8 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	
 	
 	//Click on Contact Informations
-	session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-			"td/div[contains(text(),'Coordo')]");
+	openContactInfoSection();
+	
 	pause();
 	
 	// check if the new rubric is visible.
@@ -219,8 +217,7 @@ public class ContactInfoTest extends AbstractOSYLTest {
 //---------------------------------------------------------------------------//	
 	
 	//Click Contact Information
-        session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td/" 
-        		+ "div[contains(text(),'Coordo')]");
+	openContactInfoSection();
 	
 	//Add Contact Information
 	clickAddItem("addPerson");
@@ -265,5 +262,18 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	logOut();
 	log("testAddContactInfo: test complete");
     } // testAddContactInfo
+    
+    private void openContactInfoSection(){
+	// Open Coordo Section
+	if (inFireFox()) {
+	    session().mouseDown(
+		    "//div[@class=\"gwt-TreeItem\"]/div/"
+			    + "div[contains(text(),'Coordo')]");
+	    pause();
+	} else {
+	    // This doesn't seem to work anymore
+	    session().click("gwt-uid-16");
+	}
+    }
         
 }
