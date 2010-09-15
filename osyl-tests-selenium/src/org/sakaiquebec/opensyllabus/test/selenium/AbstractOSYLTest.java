@@ -202,6 +202,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 	    session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
 	    pause();
+	    // gwt-uid-4 is button Save
 	    if (!session().isVisible("gwt-uid-4")) {
 	        log("Course outline locked: waiting 15 minutes");
 	        pause(900000);
