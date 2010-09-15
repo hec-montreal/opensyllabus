@@ -21,7 +21,7 @@
 				    		<attribute name="type" restrictionpattern="News|Text" />
 			    		</element>
 			    		<element name="semanticTag">
-			        		<attribute name="type" restrictionpattern="news|plagiarism|calculators" />
+			        		<attribute name="type" restrictionpattern="undefined|news|plagiarism|calculators" />
 			    		</element>
 					</element>
 				</element>
