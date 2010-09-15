@@ -203,6 +203,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		//3 big ViewContext cases
 
 		if (getModel().isCourseOutlineContent()) {
+			getOsylToolbar().getEditSeparator().setVisible(false);
 			getOsylToolbar().getAddMenuItem().setVisible(false);
 		} else if (getModel().isCOUnit()) {
 		    // Enables or Disables buttons in this ViewContext
