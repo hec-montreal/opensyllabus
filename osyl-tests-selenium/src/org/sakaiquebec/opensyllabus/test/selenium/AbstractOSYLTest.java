@@ -368,6 +368,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 	// Click the button
 	session().click("gwt-uid-1");
+	openOrganisationSection();
 
 	// We check that we see at least one LectureNo label. Actually there
 	// could be zero such label if all lectures have been deleted!
@@ -680,6 +681,19 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     protected void changeRubric(String rubricLabel) {
 	session().select("//select[@name=\"listBoxFormElement\"]",
 		"label=" + rubricLabel);
+    }
+    
+    protected void openOrganisationSection(){
+	// Open Seances Section
+	if (inFireFox()) {
+	    session().mouseDown(
+		    "//div[@class=\"gwt-TreeItem\"]/div/"
+			    + "div[contains(text(),'Organisation du cours')]");
+	    pause();
+	} else {
+	    // This doesn't seem to work anymore
+	    session().click("gwt-uid-16");
+	}
     }
 
 }

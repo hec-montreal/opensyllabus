@@ -50,16 +50,7 @@ public class TextTest extends AbstractOSYLTest {
 	}
 	waitForOSYL();
 
-	// Open Seances Section
-	if (inFireFox()) {
-	    session().mouseDown(
-		    "//div[@class=\"gwt-TreeItem\"]/div/"
-			    + "div[contains(text(),'Organisation du cours')]");
-	    pause();
-	} else {
-	    // This doesn't seem to work anymore
-	    session().click("gwt-uid-16");
-	}
+	openOrganisationSection();
 
 	// If we don't have a Lecture we add one
 	int lectNb = getResourceCount();
