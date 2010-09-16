@@ -200,10 +200,10 @@
 				              <goal>copy-resources</goal>
 				            </goals>
 				            <configuration>
-				              <outputDirectory>${basedir}/war/css</outputDirectory>
+				              <outputDirectory>${basedir}/war/skin</outputDirectory>
 				              <resources>          
 				                <resource>
-				                  <directory>../osyl-manager-sakai-tool/tool/src/webapp/css</directory>
+				                  <directory>../osyl-manager-sakai-tool/tool/src/webapp/skin</directory>
 				                  <filtering>true</filtering>
 				                </resource>
 				              </resources>              
@@ -266,10 +266,10 @@
 				              <goal>copy-resources</goal>
 				            </goals>
 				            <configuration>
-				              <outputDirectory>${basedir}/war/css</outputDirectory>
+				              <outputDirectory>${basedir}/war/skin</outputDirectory>
 				              <resources>          
 				                <resource>
-				                  <directory>../osyl-manager-sakai-tool/tool/src/webapp/css</directory>
+				                  <directory>../osyl-manager-sakai-tool/tool/src/webapp/skin</directory>
 				                  <filtering>true</filtering>
 				                </resource>
 				              </resources>              

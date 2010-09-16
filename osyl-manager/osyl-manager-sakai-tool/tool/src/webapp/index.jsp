@@ -37,7 +37,7 @@
 		<!-- Headers from Sakai                        -->
 		<%=request.getAttribute("sakai.html.head")%>
 
-<link rel="stylesheet" type="text/css" href="/osyl-manager-sakai-tool/css/osylcore.css" />
+<link rel="stylesheet" type="text/css" href="/osyl-manager-sakai-tool/skin/osylcore.css" />
 
 <!-- This script loads our GWT compiled module.        -->
 <!-- Any GWT meta tags must be added before this line. -->
