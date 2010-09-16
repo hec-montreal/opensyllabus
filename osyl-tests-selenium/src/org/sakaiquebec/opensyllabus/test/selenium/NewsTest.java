@@ -108,8 +108,5 @@ public class NewsTest extends AbstractOSYLTest {
 	logOut();
 	log("TestAddNews: test complete");
     } // TestAddNews
-    private int getResourceCount() {
-	return session().getXpathCount(
-		"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
-    }
+    
 }

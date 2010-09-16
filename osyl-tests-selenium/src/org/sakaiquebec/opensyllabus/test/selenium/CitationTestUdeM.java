@@ -191,12 +191,6 @@ public class CitationTestUdeM extends AbstractOSYLTest{
 		log("============================");
 
 	}
-
-	private int getResourceCount() {
-		return session().getXpathCount(
-				"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
-
-	}
        	
     /**
      * Shortcut for addCitation on Assessment-Information Unit and others

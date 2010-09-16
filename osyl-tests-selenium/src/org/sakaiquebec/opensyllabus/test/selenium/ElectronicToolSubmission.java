@@ -241,11 +241,6 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
 
 
     }
-    private int getResourceCount() {
-	return session().getXpathCount(
-		"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
-
-	}
     
     private String getStudent() {
 	String Matricule= "11135614";

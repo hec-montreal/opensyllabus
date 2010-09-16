@@ -695,5 +695,10 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    session().click("gwt-uid-22");
 	}
     }
+    
+    protected int getResourceCount() {
+	return session().getXpathCount(
+		"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
+    }
 
 }

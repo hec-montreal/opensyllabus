@@ -923,10 +923,4 @@ public class AssessmentTestUdeM extends AbstractOSYLTest{
 	log("AssessmentTest: test complete");
 	log("=============================");	
     }
-
-	private int getResourceCount() {
-	return session().getXpathCount(
-		"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
-
-	}
 }

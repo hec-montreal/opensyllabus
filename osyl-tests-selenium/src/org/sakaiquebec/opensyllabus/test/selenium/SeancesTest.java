@@ -783,11 +783,4 @@ public class SeancesTest extends AbstractOSYLTest {
 	log("TestAddSeance: test complete");
 
     }
-
-    private int getResourceCount() {
-	return session().getXpathCount(
-		"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
-
-    }
-
 }

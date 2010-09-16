@@ -691,10 +691,5 @@ AH */
         log("=========================");        
 	
     }
-       	private int getResourceCount() {
-	return session().getXpathCount(
-		"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
-
-	}
     
 }

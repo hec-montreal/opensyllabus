@@ -126,9 +126,4 @@ public class TextTest extends AbstractOSYLTest {
 	logOut();
 	log("testAddText: test complete");
     } // testAddText
-
-    private int getResourceCount() {
-	return session().getXpathCount(
-		"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
-    }
 }

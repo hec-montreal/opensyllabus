@@ -899,12 +899,6 @@ public class AssessmentTest extends AbstractOSYLTest {
 	log("AssessmentTest: test complete");
     }
 
-    private int getResourceCount() {
-	return session().getXpathCount(
-		"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
-
-    }
-
     private void openEvaluationsSection() {
 	// Click Assessment section
 	if (inFireFox()) {

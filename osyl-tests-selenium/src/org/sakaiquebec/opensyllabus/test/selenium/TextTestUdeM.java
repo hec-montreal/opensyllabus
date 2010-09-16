@@ -130,9 +130,4 @@ public class TextTestUdeM extends AbstractOSYLTest {
 		log("testAddText: test complete");
 		log("==========================");		
 	} // testAddText
-
-	private int getResourceCount() {
-		return session().getXpathCount(
-				"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
-	}
 }
