@@ -688,11 +688,11 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	if (inFireFox()) {
 	    session().mouseDown(
 		    "//div[@class=\"gwt-TreeItem\"]/div/"
-			    + "div[contains(text(),'Organisation du cours')]");
+			    + "div[contains(text(),'Organisation')]");
 	    pause();
 	} else {
 	    // This doesn't seem to work anymore
-	    session().click("gwt-uid-16");
+	    session().click("gwt-uid-22");
 	}
     }
 

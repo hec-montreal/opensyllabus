@@ -9,6 +9,7 @@
 
    <test name="Sakai OSYLEditor test suite for Firefox">
       <classes>
+      	 <class name="org.sakaiquebec.opensyllabus.test.selenium.LectureTest"/>
          <class name="org.sakaiquebec.opensyllabus.test.selenium.TextTest"/>
          <class name="org.sakaiquebec.opensyllabus.test.selenium.ContactInfoTest"/>
          <class name="org.sakaiquebec.opensyllabus.test.selenium.AssessmentTest"/>
