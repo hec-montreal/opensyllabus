@@ -62,8 +62,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
         //---------------------------------------------------------------------------//
         
         //Open Teaching Material Section
-        session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/" +
-        "td/div[contains(text(),'dagogique')]");
+	openTeachingMaterialSection();
         pause();
         
         //Add Text 
@@ -444,5 +443,18 @@ public class TeachingMaterial extends AbstractOSYLTest {
         logOut();
         log("TeachingMaterialTest: test complete");
         } // TeachingMaterialTest
+    
+    	private void openTeachingMaterialSection(){
+    	// Open Seances Section
+    	if (inFireFox()) {
+    	    session().mouseDown(
+    		    "//div[@class=\"gwt-TreeItem\"]/div/"
+    			    + "div[contains(text(),'dagogique')]");
+    	    pause();
+    	} else {
+    	    // This doesn't seem to work anymore
+    	    session().click("gwt-uid-17");
+    	}
+    	}
 
 }
