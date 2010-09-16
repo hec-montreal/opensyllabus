@@ -38,13 +38,16 @@ public class AttachAction extends OsylManagerAbstractAction {
 
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
-	boolean b=true;
-	for(COSite cosite : siteIds){
-	    String parentSite=cosite.getParentSite();
-	    if(parentSite!=null && !parentSite.equals(""))
-		b=false;
+	
+	if (siteIds.size() == 1) {
+	    COSite cosite = siteIds.get(0);
+	    String parentSite = cosite.getParentSite();
+	    
+	    if (parentSite == null || parentSite.equals("")) {
+		    return true;
+	    }
 	}
-	return b;
+	return false;
     }
 
     @Override

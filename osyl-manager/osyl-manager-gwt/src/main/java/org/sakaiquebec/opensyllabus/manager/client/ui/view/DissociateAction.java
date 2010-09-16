@@ -101,12 +101,16 @@ public class DissociateAction extends OsylManagerAbstractAction {
 
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
-	for (COSite cosite : siteIds) {
-	    if (cosite.getCourseNumber() == null
-		    || cosite.getCourseNumber().equals(""))
-		return false;
+	if (siteIds.size() > 0) {
+	    for (COSite cosite : siteIds) {
+		if (cosite.getCourseNumber() == null
+			|| cosite.getCourseNumber().equals(""))
+		    return false;
+	    }
+	    return true;
+	} else {
+	    return false;
 	}
-	return true;
     }
 
     @Override

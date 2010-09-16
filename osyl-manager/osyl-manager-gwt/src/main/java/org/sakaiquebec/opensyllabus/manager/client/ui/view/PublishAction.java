@@ -105,7 +105,11 @@ public class PublishAction extends OsylManagerAbstractAction {
 
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
-	return true;
+	if(siteIds.size() > 0){
+	    return true;
+	} else {
+	    return false;
+	}
     }
 
     @Override

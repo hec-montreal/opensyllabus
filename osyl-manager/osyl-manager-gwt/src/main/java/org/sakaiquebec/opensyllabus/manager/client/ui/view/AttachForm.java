@@ -151,7 +151,8 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	parentSiteList = new ListBox();
 	mainPanel.add(createPanel(l, parentSiteList));
 
-	attButton = new PushButton(messages.associate());
+	attButton = new PushButton(messages.attach());
+	attButton.setStylePrimaryName("Osyl-Button");
 	attButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		diag.show();

@@ -67,7 +67,7 @@ public interface Messages extends ConstantsWithLookup {
 
     String associateDissociateCM();
 
-    String associate();
+    String attach();
 
     String associateToCM();
 
@@ -105,7 +105,6 @@ public interface Messages extends ConstantsWithLookup {
 
     String language_fr_CA();
 
-    //
     String infoView_associatedCourse();
 
     String infoView_label();
