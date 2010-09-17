@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.client.ui.OsylRichTextArea;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylNewsView;
 import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
@@ -102,7 +103,7 @@ public class OsylNewsEditor extends OsylAbstractResProxEditor {
     }
 
     private void initEditor() {
-	RichTextArea rta = new RichTextArea();
+	RichTextArea rta = new OsylRichTextArea();
 	rta.setWidth("500px");
 	rta.setStylePrimaryName("Osyl-UnitView-TextArea");
 	rta.addClickHandler(new ResetLabelClickListener(getView().getCoMessage(

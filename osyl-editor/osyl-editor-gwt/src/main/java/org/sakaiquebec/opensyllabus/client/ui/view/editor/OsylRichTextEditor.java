@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.client.ui.OsylRichTextArea;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 
 import com.google.gwt.user.client.ui.FlexTable;
@@ -95,7 +96,7 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
 
     private void initEditor() {
 	editorPanel = new VerticalPanel();
-	RichTextArea rta = new RichTextArea();
+	RichTextArea rta = new OsylRichTextArea();
 	rta.setStylePrimaryName("Osyl-UnitView-TextArea");
 	rta.addClickHandler(new ResetLabelClickListener(getView().getCoMessage(
 		"InsertYourTextHere")));

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.sakaiquebec.opensyllabus.client.ui.OsylRichTextArea;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxContactInfoView;
@@ -298,7 +299,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 
     public RichTextArea getEditorAvailability() {
 	if (editorAvailability == null) {
-	    editorAvailability = new RichTextArea();
+	    editorAvailability = new OsylRichTextArea();
 	    editorAvailability.setHeight("7em");
 	    editorAvailability.setStylePrimaryName("Osyl-UnitView-TextArea");
 	    editorAvailability.setTitle(getView().getUiMessage(
@@ -337,7 +338,7 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 
     public RichTextArea getEditorComments() {
 	if (editorComments == null) {
-	    editorComments = new RichTextArea();
+	    editorComments = new OsylRichTextArea();
 	    editorComments.setHeight("7em");
 	    editorComments.setStylePrimaryName("Osyl-UnitView-TextArea");
 	    editorComments.setTitle(getView().getUiMessage(

@@ -7,6 +7,8 @@
       xmlns:fo="http://www.w3.org/1999/XSL/Format"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
+<xsl:strip-space elements="comment availability"/> 
+
 <xsl:output method="xml" indent="yes" />
 <xsl:param name="ppath"></xsl:param>
 <xsl:param name="spath"></xsl:param>
@@ -507,7 +509,7 @@
 	<fo:block font-size="8pt">
 		<xsl:value-of select="Person/tel"/>
 	</fo:block>
-	<xsl:if test="availability != null">
+	<xsl:if test="availability != ''">
 		<fo:block font-size="8pt">
 			<fo:inline>
 				<xsl:choose>
@@ -527,8 +529,8 @@
 			<fo:inline><xsl:value-of select="Person/availability"/></fo:inline>
 		</fo:block>
 	</xsl:if>
-	<xsl:if test="comment != null">
-		<fo:block font-size="8pt" space-before="15pt">
+	<xsl:if test="comment !=''">
+		<fo:block font-size="8pt" space-before="10pt">
 			<xsl:value-of select="Person/comment"/>
 		</fo:block>
 	</xsl:if>
@@ -574,7 +576,7 @@
 </xsl:template>
 
 <xsl:template match="asmResource[@xsi:type='Text']">
-	<fo:block>
+	<fo:block space-after="10px">
 		<xsl:apply-templates select="text/node()"/>
 	</fo:block>
 </xsl:template>
@@ -583,7 +585,7 @@
 	<fo:block>
 		<xsl:apply-templates select="text/node()"/>
 	</fo:block>
-	<fo:block>
+	<fo:block space-after="10px">
 		<fo:inline>
 			<xsl:call-template name="printDate">
 				<xsl:with-param name="date"><xsl:value-of select="substring-before(../modified,'T')"/></xsl:with-param>
@@ -596,34 +598,42 @@
 </xsl:template>
 
 <xsl:template match="asmResource[@xsi:type='URL']">
-	<fo:block font-size="10pt" color="blue" text-decoration="underline">
-		<fo:basic-link>
-				<xsl:attribute name="external-destination"><xsl:value-of select="identifier"/></xsl:attribute>
-			<xsl:value-of select="../label"/>
-		</fo:basic-link>
-	</fo:block>
-	<fo:block font-size="10pt" color="gray">
-		(<xsl:value-of select="identifier"/>)
-	</fo:block>
-	<fo:block font-size="10pt" space-before="15pt" space-after="15pt">
-		<xsl:value-of select="../comment"/>
-	</fo:block>
-</xsl:template>
-
-<xsl:template match="asmResource[@xsi:type='SakaiEntity']">
-	<fo:block font-size="10pt">
-		<fo:inline color="blue" text-decoration="underline">
+	<fo:block space-after="10px">
+		<fo:block font-size="10pt" color="blue" text-decoration="underline">
 			<fo:basic-link>
 					<xsl:attribute name="external-destination"><xsl:value-of select="identifier"/></xsl:attribute>
 				<xsl:value-of select="../label"/>
 			</fo:basic-link>
-		</fo:inline>
-		<fo:inline color="gray">
+		</fo:block>
+		<fo:block font-size="10pt" color="gray">
 			(<xsl:value-of select="identifier"/>)
-		</fo:inline>
+		</fo:block>
+		<xsl:if test="../comment!=''">
+			<fo:block font-size="10pt">
+				<xsl:value-of select="../comment"/>
+			</fo:block>
+		</xsl:if>
 	</fo:block>
-	<fo:block font-size="10pt" space-before="15pt" space-after="15pt">
-		<xsl:value-of select="../comment"/>
+</xsl:template>
+
+<xsl:template match="asmResource[@xsi:type='SakaiEntity']">
+	<fo:block space-after="10px">
+		<fo:block font-size="10pt">
+			<fo:inline color="blue" text-decoration="underline">
+				<fo:basic-link>
+						<xsl:attribute name="external-destination"><xsl:value-of select="identifier"/></xsl:attribute>
+					<xsl:value-of select="../label"/>
+				</fo:basic-link>
+			</fo:inline>
+			<fo:inline color="gray">
+				(<xsl:value-of select="identifier"/>)
+			</fo:inline>
+		</fo:block>
+		<xsl:if test="../comment!=''">
+			<fo:block font-size="10pt">
+				<xsl:value-of select="../comment"/>
+			</fo:block>
+		</xsl:if>
 	</fo:block>
 </xsl:template>
 
@@ -635,91 +645,99 @@
 		</xsl:call-template>
 	</xsl:variable>
 
-	<fo:block font-size="10pt">
-		<fo:inline color="blue" text-decoration="underline">
-			<fo:basic-link>
-					<xsl:attribute name="external-destination"><xsl:value-of select="$spath"/><xsl:value-of select="identifier"/></xsl:attribute>
-				<xsl:value-of select="../label"/>
-			</fo:basic-link>
-		</fo:inline>
-		<fo:inline color="gray">
-			(<xsl:value-of select="$file"/>)
-		</fo:inline>
-	</fo:block>
-	<fo:block font-size="10pt" space-before="15pt" space-after="15pt">
-		<xsl:value-of select="../comment"/>
+	<fo:block space-after="10px">
+		<fo:block font-size="10pt">
+			<fo:inline color="blue" text-decoration="underline">
+				<fo:basic-link>
+						<xsl:attribute name="external-destination"><xsl:value-of select="$spath"/><xsl:value-of select="identifier"/></xsl:attribute>
+					<xsl:value-of select="../label"/>
+				</fo:basic-link>
+			</fo:inline>
+			<fo:inline color="gray">
+				(<xsl:value-of select="$file"/>)
+			</fo:inline>
+		</fo:block>
+		<xsl:if test="../comment!=''">
+			<fo:block font-size="10pt">
+				<xsl:value-of select="../comment"/>
+			</fo:block>
+		</xsl:if>
 	</fo:block>
 </xsl:template>
 
 <xsl:template match="asmResource[@xsi:type='BiblioResource']">
-	<fo:block font-size="10pt">
-		<xsl:choose>
-			<xsl:when test="resourceType='article' or resourceType='proceed'">
-				<fo:inline><xsl:value-of select="author"/></fo:inline>
-				<fo:inline>(<xsl:value-of select="year"/>). </fo:inline>
-				<fo:inline>«<xsl:value-of select="title"/>»</fo:inline>
-				<fo:inline font-style="italic">, <xsl:value-of select="journal"/></fo:inline>
-				<fo:inline>, vol.<xsl:value-of select="volume"/></fo:inline>
-				<fo:inline>, no.<xsl:value-of select="issue"/></fo:inline>
-				<fo:inline>, p.<xsl:value-of select="pages"/></fo:inline>
-				<fo:inline>.</fo:inline>
-			</xsl:when>
-			<xsl:when  test="resourceType='book' or resourceType='report'">
-				<fo:inline><xsl:value-of select="author"/></fo:inline>
-				<fo:inline>(<xsl:value-of select="year"/>)</fo:inline>
-				<fo:inline font-style="italic">. <xsl:value-of select="title"/></fo:inline>
-				<fo:inline>, <xsl:value-of select="publisher"/></fo:inline>
-				<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>
-				<fo:inline>.</fo:inline>
-				<xsl:if test="identifier[@type='isn']">
-					<fo:block>
-						<fo:inline>ISBN:<xsl:value-of select="identifier[@type='isn']"/></fo:inline>
-					</fo:block>
-				</xsl:if>
-			</xsl:when>
-			<xsl:otherwise>
-				<fo:inline><xsl:value-of select="title"/></fo:inline>
-			</xsl:otherwise>
-			
-		</xsl:choose>
-	</fo:block>
-	<fo:block font-size="10pt" space-before="15pt" space-after="15pt">
-		<xsl:value-of select="../comment"/>
-	</fo:block>
-	<xsl:if test="identifier/@type='library'">
-		<xsl:call-template name="BiblioResource_link">
-			 <xsl:with-param name="img">library_link</xsl:with-param>
-			 <xsl:with-param name="link_text">library_link_text</xsl:with-param>
-			 <xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='library']"/></xsl:with-param>
-		</xsl:call-template>
-	</xsl:if>
-	<xsl:if test="identifier/@type='bookstore'">
-		<xsl:call-template name="BiblioResource_link">
-			 <xsl:with-param name="img">bookstore_link</xsl:with-param>
-			 <xsl:with-param name="link_text">bookstore_link_text</xsl:with-param>
-			 <xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='bookstore']"/></xsl:with-param>
-		</xsl:call-template>
-	</xsl:if>
-	<xsl:if test="identifier/@type='other_link'">
-		<xsl:variable name="other_link_label">
+	<fo:block space-after="10px">
+		<fo:block font-size="10pt">
 			<xsl:choose>
-				<xsl:when test="identifier/@label!='' "><xsl:value-of select="identifier/@label"/></xsl:when>
-				<xsl:otherwise>other_link_text</xsl:otherwise>
+				<xsl:when test="resourceType='article' or resourceType='proceed'">
+					<fo:inline><xsl:value-of select="author"/></fo:inline>
+					<fo:inline>(<xsl:value-of select="year"/>). </fo:inline>
+					<fo:inline>«<xsl:value-of select="title"/>»</fo:inline>
+					<fo:inline font-style="italic">, <xsl:value-of select="journal"/></fo:inline>
+					<fo:inline>, vol.<xsl:value-of select="volume"/></fo:inline>
+					<fo:inline>, no.<xsl:value-of select="issue"/></fo:inline>
+					<fo:inline>, p.<xsl:value-of select="pages"/></fo:inline>
+					<fo:inline>.</fo:inline>
+				</xsl:when>
+				<xsl:when  test="resourceType='book' or resourceType='report'">
+					<fo:inline><xsl:value-of select="author"/></fo:inline>
+					<fo:inline>(<xsl:value-of select="year"/>)</fo:inline>
+					<fo:inline font-style="italic">. <xsl:value-of select="title"/></fo:inline>
+					<fo:inline>, <xsl:value-of select="publisher"/></fo:inline>
+					<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>
+					<fo:inline>.</fo:inline>
+					<xsl:if test="identifier[@type='isn']">
+						<fo:block>
+							<fo:inline>ISBN:<xsl:value-of select="identifier[@type='isn']"/></fo:inline>
+						</fo:block>
+					</xsl:if>
+				</xsl:when>
+				<xsl:otherwise>
+					<fo:inline><xsl:value-of select="title"/></fo:inline>
+				</xsl:otherwise>
+
 			</xsl:choose>
-		</xsl:variable>
-		<xsl:call-template name="BiblioResource_link">
-			 <xsl:with-param name="img">other_link</xsl:with-param>
-			 <xsl:with-param name="link_text"><xsl:value-of select="$other_link_label"/></xsl:with-param>
-			 <xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='other_link']"/></xsl:with-param>
-		</xsl:call-template>
-	</xsl:if>
+		</fo:block>
+		<xsl:if test="../comment!=''">
+			<fo:block font-size="10pt">
+				<xsl:value-of select="../comment"/>
+			</fo:block>
+		</xsl:if>
+		<xsl:if test="identifier/@type='library'">
+			<xsl:call-template name="BiblioResource_link">
+				 <xsl:with-param name="img">library_link</xsl:with-param>
+				 <xsl:with-param name="link_text">library_link_text</xsl:with-param>
+				 <xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='library']"/></xsl:with-param>
+			</xsl:call-template>
+		</xsl:if>
+		<xsl:if test="identifier/@type='bookstore'">
+			<xsl:call-template name="BiblioResource_link">
+				 <xsl:with-param name="img">bookstore_link</xsl:with-param>
+				 <xsl:with-param name="link_text">bookstore_link_text</xsl:with-param>
+				 <xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='bookstore']"/></xsl:with-param>
+			</xsl:call-template>
+		</xsl:if>
+		<xsl:if test="identifier/@type='other_link'">
+			<xsl:variable name="other_link_label">
+				<xsl:choose>
+					<xsl:when test="identifier/@label!='' "><xsl:value-of select="identifier/@label"/></xsl:when>
+					<xsl:otherwise>other_link_text</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			<xsl:call-template name="BiblioResource_link">
+				 <xsl:with-param name="img">other_link</xsl:with-param>
+				 <xsl:with-param name="link_text"><xsl:value-of select="$other_link_label"/></xsl:with-param>
+				 <xsl:with-param name="identifier"><xsl:value-of select="identifier[@type='other_link']"/></xsl:with-param>
+			</xsl:call-template>
+		</xsl:if>
+	</fo:block>
 </xsl:template>
 
 <xsl:template name="BiblioResource_link">
   <xsl:param name="img"/>
   <xsl:param name="link_text"/>
   <xsl:param name="identifier"/>
-	<fo:table width="100%" table-layout="fixed" space-before="10pt">
+	<fo:table width="100%" table-layout="fixed">
 		<fo:table-column column-width="10%" column-number="1" />
 		<fo:table-column column-width="90%" column-number="2" />
 		<fo:table-body >
@@ -747,53 +765,55 @@
 </xsl:template>
 
 <xsl:template match="asmResource[@xsi:type='Assignment']">
-	<fo:block font-size="10pt" color="blue" text-decoration="underline">
-		<fo:basic-link>
-				<xsl:attribute name="external-destination"><xsl:value-of select="identifier"/></xsl:attribute>
-			<xsl:value-of select="../label"/>
-		</fo:basic-link>
-	</fo:block>
-	<fo:block font-size="10pt" font-style="italic">
-		<fo:inline>
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Date d'ouverture: </xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Opening date: </xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Fecha de apertura: </xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</fo:inline>
-		<fo:inline>
-			<xsl:call-template name="printDate">
-				<xsl:with-param name="date"><xsl:value-of select="substring-before(date-start,'T')"/></xsl:with-param>
-			</xsl:call-template>
-		</fo:inline>
-		<fo:inline padding-left="5px">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Date d'échéance: </xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Deadline: </xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Plazo: </xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</fo:inline>
-		<fo:inline>
-			<xsl:call-template name="printDate">
-				<xsl:with-param name="date"><xsl:value-of select="substring-before(date-end,'T')"/></xsl:with-param>
-			</xsl:call-template>
-		</fo:inline>
+	<fo:block space-after="10px">
+		<fo:block font-size="10pt" color="blue" text-decoration="underline">
+			<fo:basic-link>
+					<xsl:attribute name="external-destination"><xsl:value-of select="identifier"/></xsl:attribute>
+				<xsl:value-of select="../label"/>
+			</fo:basic-link>
+		</fo:block>
+		<fo:block font-size="10pt" font-style="italic">
+			<fo:inline>
+				<xsl:choose>
+					<xsl:when test="$lang = 'FR'">
+						<xsl:text>Date d'ouverture: </xsl:text>
+					</xsl:when>
+					<xsl:when test="$lang = 'EN'">
+						<xsl:text>Opening date: </xsl:text>
+					</xsl:when>
+					<xsl:when test="$lang = 'ES'">
+						<xsl:text>Fecha de apertura: </xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+					</xsl:otherwise>
+				</xsl:choose>
+			</fo:inline>
+			<fo:inline>
+				<xsl:call-template name="printDate">
+					<xsl:with-param name="date"><xsl:value-of select="substring-before(date-start,'T')"/></xsl:with-param>
+				</xsl:call-template>
+			</fo:inline>
+			<fo:inline padding-left="5px">
+				<xsl:choose>
+					<xsl:when test="$lang = 'FR'">
+						<xsl:text>Date d'échéance: </xsl:text>
+					</xsl:when>
+					<xsl:when test="$lang = 'EN'">
+						<xsl:text>Deadline: </xsl:text>
+					</xsl:when>
+					<xsl:when test="$lang = 'ES'">
+						<xsl:text>Plazo: </xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+					</xsl:otherwise>
+				</xsl:choose>
+			</fo:inline>
+			<fo:inline>
+				<xsl:call-template name="printDate">
+					<xsl:with-param name="date"><xsl:value-of select="substring-before(date-end,'T')"/></xsl:with-param>
+				</xsl:call-template>
+			</fo:inline>
+		</fo:block>
 	</fo:block>
 </xsl:template>
 

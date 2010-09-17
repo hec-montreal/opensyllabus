@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.client.ui.OsylRichTextArea;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxLinkView;
@@ -131,7 +132,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 
 	Label label = new Label(getView().getUiMessage("comment"));
 	editorPanel.add(label);
-	editorDesc = new RichTextArea();
+	editorDesc = new OsylRichTextArea();
 	editorDesc.setHeight("120px");
 	editorDesc.setStylePrimaryName("Osyl-UnitView-TextArea");
 	editorPanel.add(editorDesc);

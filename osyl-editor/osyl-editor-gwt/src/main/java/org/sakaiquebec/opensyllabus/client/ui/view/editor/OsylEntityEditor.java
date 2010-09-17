@@ -27,19 +27,15 @@ import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBAddFolderEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBItemSelectionEventHandler;
+import org.sakaiquebec.opensyllabus.client.ui.OsylRichTextArea;
 import org.sakaiquebec.opensyllabus.client.ui.base.Dimension;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
-import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylEntityBrowser;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxEntityView;
-import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
-import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
-import org.sakaiquebec.opensyllabus.shared.model.file.OsylDirectory;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
@@ -138,7 +134,7 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
 
 	Label l2 = new Label(getView().getUiMessage("comment"));
 	editorPanel.add(l2);
-	editorDesc = new RichTextArea();
+	editorDesc = new OsylRichTextArea();
 	editorDesc.setHeight("80px");
 	editorDesc.setStylePrimaryName("Osyl-UnitView-TextArea");
 	editorPanel.add(editorDesc);

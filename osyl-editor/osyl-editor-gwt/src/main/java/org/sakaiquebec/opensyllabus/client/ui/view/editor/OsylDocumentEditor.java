@@ -29,6 +29,7 @@ import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredE
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBAddFolderEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBItemSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
+import org.sakaiquebec.opensyllabus.client.ui.OsylRichTextArea;
 import org.sakaiquebec.opensyllabus.client.ui.base.Dimension;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
@@ -152,7 +153,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 	Label l2 = new Label(getView().getUiMessage("comment"));
 	editorPanel.add(l2);
-	editorDesc = new RichTextArea();
+	editorDesc = new OsylRichTextArea();
 	editorDesc.setHeight("80px");
 	editorDesc.setStylePrimaryName("Osyl-UnitView-TextArea");
 	editorPanel.add(editorDesc);
