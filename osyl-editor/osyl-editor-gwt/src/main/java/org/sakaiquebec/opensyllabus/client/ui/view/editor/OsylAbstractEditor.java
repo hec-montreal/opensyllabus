@@ -322,7 +322,7 @@ public abstract class OsylAbstractEditor extends Composite {
 		getEditionFocusWidgets().iterator(); fwIterator.hasNext();) {
 	    FocusWidget fw = (FocusWidget) fwIterator.next();
 	    fw.addFocusHandler(new FocusWidgetFocusHandler());
-	    if (fw.getClass().equals(RichTextArea.class)) {
+	    if (fw instanceof RichTextArea) {
 		osylFormattingToolbar =
 			new OsylFormattingToolbar((RichTextArea) fw);
 	    }
@@ -640,7 +640,7 @@ public abstract class OsylAbstractEditor extends Composite {
 
 	public void onFocus(FocusEvent event) {
 
-	    if (event.getSource().getClass().equals(RichTextArea.class)) {
+	    if (event.getSource() instanceof RichTextArea) {
 		osylFormattingToolbar.setRichText((RichTextArea) event
 			.getSource());
 	    } else {
