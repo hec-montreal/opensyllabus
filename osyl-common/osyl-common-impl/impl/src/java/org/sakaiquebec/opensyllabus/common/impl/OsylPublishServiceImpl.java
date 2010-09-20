@@ -453,19 +453,15 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	    try {
 		contentHostingService.getResource(resourceOutputDir
-			+ PRINT_VERSION_FILENAME);
+			+ siteId +".pdf");
 		contentHostingService.removeResource(resourceOutputDir
-			+ PRINT_VERSION_FILENAME);
+			+ siteId +".pdf");
 	    } catch (Exception e) {
 
 	    }
 	    ContentResourceEdit newResource =
 		    contentHostingService.addResource(resourceOutputDir,
-			    PRINT_VERSION_FILENAME.substring(0,
-				    PRINT_VERSION_FILENAME.lastIndexOf(".")),
-			    PRINT_VERSION_FILENAME
-				    .substring(PRINT_VERSION_FILENAME
-					    .lastIndexOf(".")), 1);
+			    siteId,".pdf",1);
 	    newResource.setContent(new BufferedInputStream(new FileInputStream(
 		    f)));
 	    newResource.setContentType(MimeConstants.MIME_PDF);

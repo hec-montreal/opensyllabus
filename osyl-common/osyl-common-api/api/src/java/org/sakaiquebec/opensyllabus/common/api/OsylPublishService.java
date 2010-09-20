@@ -48,7 +48,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 /**
  * This interface contains all the methods used to publish a course outline or
  * to retrieve a published course outline.
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -65,9 +65,7 @@ public interface OsylPublishService {
      * published.
      */
     public static final String PUBLISH_DIRECTORY = "publish";
-    
-    public static final String PRINT_VERSION_FILENAME="osylPrintVersion.pdf";
-    
+
     /**
      * Prefix of the site realm id.
      */
@@ -75,7 +73,7 @@ public interface OsylPublishService {
 
     /**
      * Returns the unique URL for the published course plan
-     * 
+     *
      * @return a String that is the published course plan URL
      */
     public COSerialized getSerializedPublishedCourseOutlineForAccessType(String siteId,
@@ -88,7 +86,7 @@ public interface OsylPublishService {
 
     /**
      * Make an xsl transformation of the specified xml for the specified group
-     * 
+     *
      * @param xml
      * @param group
      * @return the result of the transformation
