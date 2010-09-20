@@ -381,27 +381,29 @@
 		</fo:table-body>
 	</fo:table>
 	<fo:block font-size="10pt" space-before="0pt" space-after="0pt">
-		<fo:inline><xsl:value-of select="mode"/><xsl:text> / </xsl:text></fo:inline>
-		<fo:inline><xsl:value-of select="location"/></fo:inline>
+		<xsl:if test="mode!=''"><fo:inline><xsl:value-of select="mode"/></fo:inline></xsl:if>
+		<xsl:if test="location!=''"><fo:inline><xsl:text> / </xsl:text><xsl:value-of select="location"/></fo:inline></xsl:if>
 	</fo:block>
-	<fo:block font-size="10pt" space-before="0pt" space-after="0pt">
-		<fo:inline>
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Mode de remise : </xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Submission method: </xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Forma de entrega: </xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</fo:inline>
-		<fo:inline><xsl:value-of select="submition_type"/></fo:inline>
-	</fo:block>
+	<xsl:if test="submition_type!=''">
+		<fo:block font-size="10pt" space-before="0pt" space-after="0pt">
+			<fo:inline>
+				<xsl:choose>
+					<xsl:when test="$lang = 'FR'">
+						<xsl:text>Mode de remise : </xsl:text>
+					</xsl:when>
+					<xsl:when test="$lang = 'EN'">
+						<xsl:text>Submission method: </xsl:text>
+					</xsl:when>
+					<xsl:when test="$lang = 'ES'">
+						<xsl:text>Forma de entrega: </xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+					</xsl:otherwise>
+				</xsl:choose>
+			</fo:inline>
+			<fo:inline><xsl:value-of select="submition_type"/></fo:inline>
+		</fo:block>
+	</xsl:if>
 
  	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='description']"/>
  	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='objectives']"/>
