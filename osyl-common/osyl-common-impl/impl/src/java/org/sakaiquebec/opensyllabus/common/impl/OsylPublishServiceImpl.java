@@ -498,7 +498,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    (NodeList) expr.evaluate(d, XPathConstants.NODESET);
 	    for (int i = 0; i < nodes.getLength(); i++) {
 		Node node = nodes.item(i);
-		StringReader reader = new StringReader(node.getTextContent());
+		String textContent = node.getTextContent();
+		textContent = textContent.replaceAll("<o:p>","");
+		textContent = textContent.replaceAll("</o:p>","");
+		StringReader reader = new StringReader(textContent);
 		StringWriter writer = new StringWriter();
 		t.parseDOM(reader, writer);
 		String s = writer.toString();
