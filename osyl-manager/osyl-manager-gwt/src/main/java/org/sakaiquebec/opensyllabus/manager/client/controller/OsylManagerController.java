@@ -362,7 +362,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
      * Retrieves all the course management courses
      * @param callback container of the server response
      */
-    public void getCMCourses(AsyncCallback<List<CMCourse>> callback) {
-	OsylManagerRPCController.getInstance().getCMCourses(callback);
+    public void getCMCourses(String startsWith, AsyncCallback<List<CMCourse>> callback) {
+	OsylManagerRPCController.getInstance().getCMCourses(startsWith, callback);
     }
 }
