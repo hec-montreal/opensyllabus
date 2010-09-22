@@ -92,4 +92,6 @@ public interface OsylPublishService {
      * @return the result of the transformation
      */
     public String transformXmlForGroup(String xml, String group, String webappDir) throws Exception;
+    
+    public void createEditionPrintVersion(COSerialized cos, String webappdir) throws Exception;
 }

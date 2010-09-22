@@ -331,4 +331,9 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	callback.onSuccess(null);
     }
 
+    public void createPrintableEditionVersion(String xml,
+	    AsyncCallback<Void> printEditionVersionCallback) {
+	printEditionVersionCallback.onFailure(null);
+    }
+
 }

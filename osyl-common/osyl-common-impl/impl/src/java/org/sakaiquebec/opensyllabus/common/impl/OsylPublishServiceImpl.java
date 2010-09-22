@@ -69,7 +69,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The security service to be injected by Spring
-     *
+     * 
      * @uml.property name="osylSecurityService"
      * @uml.associationEnd
      */
@@ -79,7 +79,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link OsylSecurityService}.
-     *
+     * 
      * @param securityService
      */
     public void setSecurityService(OsylSecurityService securityService) {
@@ -99,7 +99,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The chs to be injected by Spring
-     *
+     * 
      * @uml.property name="contentHostingService"
      * @uml.associationEnd multiplicity="(0 -1)" ordering="true"
      *                     elementType="org.sakaiproject.content.api.ContentEntity"
@@ -110,7 +110,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the <code>ContentHostingService</code>.
-     *
+     * 
      * @param contentHostingService
      * @uml.property name="contentHostingService"
      */
@@ -134,7 +134,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     /**
      * The resouceDao to be injected by Spring
-     *
+     * 
      * @uml.property name="resourceDao"
      * @uml.associationEnd
      */
@@ -142,7 +142,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link ResourceDao} .
-     *
+     * 
      * @param resourceDao
      * @uml.property name="resourceDao"
      */
@@ -152,7 +152,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The config service to be injected by Spring
-     *
+     * 
      * @uml.property name="osylConfigService"
      * @uml.associationEnd
      */
@@ -160,7 +160,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link OsylConfigService}.
-     *
+     * 
      * @param configService
      */
     public void setConfigService(OsylConfigService configService) {
@@ -169,7 +169,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The transformation and transfer service to be injected by Spring
-     *
+     * 
      * @uml.property name="osylTransformToZCCO"
      * @uml.associationEnd
      */
@@ -177,7 +177,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link OsylTransformToZCCO}.
-     *
+     * 
      * @param osylTransformToZCCO
      */
     public void setOsylTransformToZCCO(OsylTransformToZCCO osylTransformToZCCO) {
@@ -186,7 +186,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The OsylSite service to be injected by Spring
-     *
+     * 
      * @uml.property name="osylSiteService"
      * @uml.associationEnd
      */
@@ -194,7 +194,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link OsylSiteService} .
-     *
+     * 
      * @param osylSiteService
      * @uml.property name="osylSiteService"
      */
@@ -206,7 +206,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link CORelationDao}.
-     *
+     * 
      * @param configDao
      */
     public void setCoRelationDao(CORelationDao relationDao) {
@@ -219,42 +219,42 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public COSerialized getSerializedPublishedCourseOutlineForAccessType(
 	    String siteId, String accessType, String webappDir) {
 	long start = System.currentTimeMillis();
-		COSerialized thisCo = null;
-		String configRef;
-		try {
-		    thisCo =
-			    resourceDao
-				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
-					    siteId, accessType);
-		} catch (Exception e) {
-		}
-		if (thisCo != null) {
-		    try {
-			osylSiteService.getSiteInfo(thisCo, siteId);
-			configRef = thisCo.getOsylConfig().getConfigRef();
-		    } catch (Exception e) {
-			configRef = osylConfigService.getDefaultConfig();
-			log.error("Unable to retrieve published course outline for"
-				+ " access type [" + accessType + "]", e);
-		    }
-		    try {
-			thisCo =
-				osylConfigService.fillCo(webappDir
-					+ OsylConfigService.CONFIG_DIR + File.separator
-					+ configRef, thisCo);
-		    } catch (Exception e) {
-			log.error("Unable to fill course outline", e);
-		    }
-		}
-		log.debug("getSerializedPublishedCourseOutlineForAccessType"
-			+ elapsed(start) + siteId);
+	COSerialized thisCo = null;
+	String configRef;
+	try {
+	    thisCo =
+		    resourceDao
+			    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+				    siteId, accessType);
+	} catch (Exception e) {
+	}
+	if (thisCo != null) {
+	    try {
+		osylSiteService.getSiteInfo(thisCo, siteId);
+		configRef = thisCo.getOsylConfig().getConfigRef();
+	    } catch (Exception e) {
+		configRef = osylConfigService.getDefaultConfig();
+		log.error("Unable to retrieve published course outline for"
+			+ " access type [" + accessType + "]", e);
+	    }
+	    try {
+		thisCo =
+			osylConfigService.fillCo(webappDir
+				+ OsylConfigService.CONFIG_DIR + File.separator
+				+ configRef, thisCo);
+	    } catch (Exception e) {
+		log.error("Unable to fill course outline", e);
+	    }
+	}
+	log.debug("getSerializedPublishedCourseOutlineForAccessType"
+		+ elapsed(start) + siteId);
 	return thisCo;
     }
 
     /**
      * Creates or updates the corresponding entries in the database and copies
      * the ressources
-     *
+     * 
      * @param String webapp dir (absolute pathname !?)
      */
     public Map<String, String> publish(String webappDir, String siteId)
@@ -272,7 +272,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	COSerialized co =
 		osylSiteService
 			.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
-	log.info("Publishing course outline for site [" + (co.getTitle()==null?siteId:co.getTitle()) + "]");
+	log.info("Publishing course outline for site ["
+		+ (co.getTitle() == null ? siteId : co.getTitle()) + "]");
 	COModeledServer coModeled = new COModeledServer(co);
 
 	// PRE-PUBLICATION
@@ -301,8 +302,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
 	}
 
-
-	//Retrieve documents associated to the course outline and its parents
+	// Retrieve documents associated to the course outline and its parents
 	setDocumentSecurityMap(coModeled.getDocumentSecurityMap());
 
 	setDocumentVisibilityMap(coModeled.getDocumentVisibilityMap());
@@ -338,12 +338,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	SecurityService.clearAdvisors();
 
 	log.info("Finished publishing course outline for site ["
-		+ (co.getTitle()==null?siteId:co.getTitle()) + "] in "
+		+ (co.getTitle() == null ? siteId : co.getTitle()) + "] in "
 		+ (System.currentTimeMillis() - start) + " ms");
 
 	return publicationProperties;
     }
-
 
     private COSerialized updateCourseInformations(COSerialized co,
 	    String webappDir) {
@@ -351,8 +350,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	String providerId = null;
 	String siteId = co.getSiteId();
 	String dept = "";
-	String program ="";
-	String title="";
+	String program = "";
+	String title = "";
 	try {
 	    AuthzGroup realm =
 		    AuthzGroupService.getAuthzGroup(REALM_ID_PREFIX + siteId);
@@ -363,7 +362,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		siteName = osylSiteService.getSiteName(providerId);
 		Section s = cmService.getSection(providerId);
 		String courseOffId = s.getCourseOfferingEid();
-		CourseOffering courseOff = cmService.getCourseOffering(courseOffId);
+		CourseOffering courseOff =
+			cmService.getCourseOffering(courseOffId);
 		program = courseOff.getAcademicCareer();
 		dept = cmService.getSectionCategoryDescription(s.getCategory());
 		title = s.getTitle();
@@ -397,9 +397,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		coContent.addProperty(COPropertiesType.CREATOR, "");// TODO
 		coContent.addProperty(COPropertiesType.DEPARTMENT,
 			propertyType, dept);
-		if(program!=null)
-			coContent.addProperty(COPropertiesType.PROGRAM,propertyType,program);
-		coContent.addProperty(COPropertiesType.TITLE, propertyType, title);
+		if (program != null)
+		    coContent.addProperty(COPropertiesType.PROGRAM,
+			    propertyType, program);
+		coContent.addProperty(COPropertiesType.TITLE, propertyType,
+			title);
 		coModeledServer.model2XML();
 		co.setContent(coModeledServer.getSerializedContent());
 
@@ -413,55 +415,41 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return co;
     }
 
-    private void createPrintVersion(String siteId, String webappdir) {
+    private void createPublishPrintVersion(String siteId, String webappdir) throws Exception{
 	COSerialized coSerializedAttendee =
 		getSerializedPublishedCourseOutlineForAccessType(siteId,
 			SecurityInterface.ACCESS_ATTENDEE, webappdir);
+	File f = createPrintVersion(coSerializedAttendee, webappdir);
+	if (f != null) {
+	    createPdfInResource(siteId, PUBLISH_DIRECTORY, f);
+	}
+    }
 
-	String xml = coSerializedAttendee.getContent();
-	Node d = XmlHelper.parseXml(xml);
+    public void createEditionPrintVersion(COSerialized cos, String webappdir)
+	    throws Exception {
+	File f = createPrintVersion(cos, webappdir);
+	String siteId = cos.getSiteId();
+	if (f != null) {
+	    createPdfInResource(siteId, WORK_DIRECTORY, f);
+	} 
+    }
 
+    private void createPdfInResource(String siteId, String directory, File f) {
+	String resourceOutputDir =
+		contentHostingService.getSiteCollection(siteId);
+	resourceOutputDir += directory + "/";
 	try {
-	    // change keys for i18n messages
-	    d =
-		    replaceSemanticTagsWithI18NMessage(d, coSerializedAttendee
-			    .getMessages());
+	    contentHostingService.getResource(resourceOutputDir + siteId
+		    + ".pdf");
+	    contentHostingService.removeResource(resourceOutputDir + siteId
+		    + ".pdf");
+	} catch (Exception e) {
 
-	    // convert html in xhtml
-	    d = convertHtmlToXhtml(d);
-
-	    // transform xml -> pdf
-	    String configRef =
-		    coSerializedAttendee.getOsylConfig().getConfigRef();
-	    String xsltXmltoPdf =
-		    FileHelper.getFileContent(webappdir + File.separator
-			    + OsylConfigService.CONFIG_DIR + File.separator
-			    + configRef + File.separator
-			    + OsylConfigService.PRINT_DIRECTORY
-			    + File.separator
-			    + OsylConfigService.PRINT_XSLFO_FILENAME);
-	    File f =
-		    FOPHelper.convertXml2Pdf(d, xsltXmltoPdf, webappdir
-			    + OsylConfigService.CONFIG_DIR + File.separator
-			    + configRef + File.separator
-			    + OsylConfigService.PRINT_DIRECTORY
-			    + File.separator);
-	    String resourceOutputDir =
-		    contentHostingService.getSiteCollection(siteId);
-
-	    resourceOutputDir += PUBLISH_DIRECTORY + "/";
-
-	    try {
-		contentHostingService.getResource(resourceOutputDir
-			+ siteId +".pdf");
-		contentHostingService.removeResource(resourceOutputDir
-			+ siteId +".pdf");
-	    } catch (Exception e) {
-
-	    }
+	}
+	try {
 	    ContentResourceEdit newResource =
 		    contentHostingService.addResource(resourceOutputDir,
-			    siteId,".pdf",1);
+			    siteId, ".pdf", 1);
 	    newResource.setContent(new BufferedInputStream(new FileInputStream(
 		    f)));
 	    newResource.setContentType(MimeConstants.MIME_PDF);
@@ -471,6 +459,34 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
+    }
+
+    private File createPrintVersion(COSerialized coSerialized, String webappdir)
+	    throws Exception {
+	String xml = coSerialized.getContent();
+	Node d = XmlHelper.parseXml(xml);
+	File f = null;
+	// change keys for i18n messages
+	d = replaceSemanticTagsWithI18NMessage(d, coSerialized.getMessages());
+
+	// convert html in xhtml
+	d = convertHtmlToXhtml(d);
+
+	// transform xml -> pdf
+	String configRef = coSerialized.getOsylConfig().getConfigRef();
+	String xsltXmltoPdf =
+		FileHelper.getFileContent(webappdir + File.separator
+			+ OsylConfigService.CONFIG_DIR + File.separator
+			+ configRef + File.separator
+			+ OsylConfigService.PRINT_DIRECTORY + File.separator
+			+ OsylConfigService.PRINT_XSLFO_FILENAME);
+	f =
+		FOPHelper.convertXml2Pdf(d, xsltXmltoPdf, webappdir
+			+ OsylConfigService.CONFIG_DIR + File.separator
+			+ configRef + File.separator
+			+ OsylConfigService.PRINT_DIRECTORY + File.separator);
+
+	return f;
     }
 
     public static Node convertHtmlToXhtml(Node d) {
@@ -499,8 +515,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    for (int i = 0; i < nodes.getLength(); i++) {
 		Node node = nodes.item(i);
 		String textContent = node.getTextContent();
-		textContent = textContent.replaceAll("<o:p>","");
-		textContent = textContent.replaceAll("</o:p>","");
+		textContent = textContent.replaceAll("<o:p>", "");
+		textContent = textContent.replaceAll("</o:p>", "");
 		StringReader reader = new StringReader(textContent);
 		StringWriter writer = new StringWriter();
 		t.parseDOM(reader, writer);
@@ -567,7 +583,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	    updateCourseInformations(hierarchyFussionedCO, webappDir);
 
-
 	    // Create a course outline with security public
 	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_PUBLIC,
 		    webappDir);
@@ -576,7 +591,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_ATTENDEE,
 		    webappDir);
 
-	    createPrintVersion(siteId, webappDir);
+	    // create print version
+	    try{
+		createPublishPrintVersion(siteId, webappDir);
+	    }catch (Exception e) {
+		e.printStackTrace();
+	    }
 
 	    publishChild(siteId, webappDir);
 	}
@@ -789,7 +809,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// We save the published date in the course outline in edition
 	co.setPublicationDate(new java.util.Date(System.currentTimeMillis()));
 	resourceDao.setPublicationDate(co.getCoId(), co.getPublicationDate());
-
 
 	String portalActivated =
 		ServerConfigurationService.getString("hec.portail.activated");

@@ -1,7 +1,6 @@
 package org.sakaiquebec.opensyllabus.server;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtService;
@@ -82,9 +81,9 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 
     public void removeAssignment(String assignmentId) {
     }
-  
+
     public SakaiEntities getExistingEntities(String siteId) {
-        return null;
+	return null;
     }
 
     public void removeCitation(String citationId) {
@@ -102,8 +101,12 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     public String transformXmlForGroup(String xml, String group) {
 	return null;
     }
-    
-    public void releaseLock(){
-	
+
+    public void releaseLock() {
+
+    }
+
+    public void createPrintableEditionVersion(String xml) throws Exception{
+
     }
 }

@@ -20,6 +20,7 @@
 
 package org.sakaiquebec.opensyllabus.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.tool.api.Tool;
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtService;
+import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
@@ -52,7 +54,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * OsylEditorGwtServiceImpl is the server side entry-point of OpenSyllabus GWT
  * editor. It implements the Resource and Security Interfaces common to the DAO,
  * Services and RPC.
- *
+ * 
  * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Lepretre</a>
  * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
  * @author <a href="mailto:tom.landry@crim.ca">Tom Landry</a>
@@ -167,7 +169,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * Publishes the CourseOutline whose ID is specified. It must have been
      * saved previously. Throws an exception if any error occurs, returns
      * otherwise.
-     *
+     * 
      * @param String id
      */
     public Map<String, String> publishCourseOutline() throws Exception {
@@ -177,8 +179,8 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
 	try {
 	    publicationProperties =
-		    osylServices.getOsylPublishService().publish(
-			    webappDir, siteId);
+		    osylServices.getOsylPublishService().publish(webappDir,
+			    siteId);
 	    // We invalidate the cached published CO for this siteId
 	    if (cacheEnabled) {
 		publishedCoCache.remove(siteId
@@ -195,7 +197,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     /**
      * Returns the URL where we can access the CourseOutline whose ID is
      * specified. It must have been published previously.
-     *
+     * 
      * @param String id
      * @return String URL
      */
@@ -210,14 +212,15 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	if (cacheEnabled && publishedCoCache.containsKey(cacheKey)) {
 	    cos = publishedCoCache.get(cacheKey);
 	} else {
-	    cos = osylServices.getOsylPublishService()
-		.getSerializedPublishedCourseOutlineForAccessType(siteId,
-			accessType, webappdir);
-			if(cos!=null){
-	    if (cacheEnabled) {
-		publishedCoCache.put(cacheKey, cos);
+	    cos =
+		    osylServices.getOsylPublishService()
+			    .getSerializedPublishedCourseOutlineForAccessType(
+				    siteId, accessType, webappdir);
+	    if (cos != null) {
+		if (cacheEnabled) {
+		    publishedCoCache.put(cacheKey, cos);
+		}
 	    }
-	}
 	}
 	log.debug("getSerializedPublishedCourseOutlineForAccessType "
 		+ accessType + " " + elapsed(start) + siteId);
@@ -227,7 +230,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     /**
      * Returns the CourseOutlineXML whose ID is specified Note that the id 1
      * will always be available as a test POJO
-     *
+     * 
      * @param String id
      * @return the CourseOutlineXML POJO corresponding to the specified ID
      * @throws Exception
@@ -255,7 +258,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * Returns the CourseOutlineXML whose ID is unspecified By default, asks for
      * the CourseOutline. Return published Course Outline if the current user
      * has not permission to edit it.
-     *
+     * 
      * @return the CourseOutlineXML POJO corresponding to the current site
      *         context
      */
@@ -271,23 +274,21 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 			    .getSerializedCourseOutline(webappDir);
 	} else {
 	    String currentUserRole = getCurrentUserRole();
-	    if (currentUserRole.equals(
-		    OsylSecurityService.SECURITY_ROLE_COURSE_GENERAL_ASSISTANT)
-		    || currentUserRole.equals(
-			    OsylSecurityService.SECURITY_ROLE_COURSE_TEACHING_ASSISTANT)
-		    || currentUserRole.equals(
-			    OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)
-		    || currentUserRole.equals(
-			    OsylSecurityService.SECURITY_ROLE_COURSE_HELPDESK)
-		    || currentUserRole.equals(
-			    OsylSecurityService.SECURITY_ROLE_PROJECT_ACCESS)) {
+	    if (currentUserRole
+		    .equals(OsylSecurityService.SECURITY_ROLE_COURSE_GENERAL_ASSISTANT)
+		    || currentUserRole
+			    .equals(OsylSecurityService.SECURITY_ROLE_COURSE_TEACHING_ASSISTANT)
+		    || currentUserRole
+			    .equals(OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)
+		    || currentUserRole
+			    .equals(OsylSecurityService.SECURITY_ROLE_COURSE_HELPDESK)
+		    || currentUserRole
+			    .equals(OsylSecurityService.SECURITY_ROLE_PROJECT_ACCESS)) {
 		thisCo =
-			getSerializedPublishedCourseOutlineForAccessType(
-				SecurityInterface.ACCESS_ATTENDEE);
+			getSerializedPublishedCourseOutlineForAccessType(SecurityInterface.ACCESS_ATTENDEE);
 	    } else {
 		thisCo =
-			getSerializedPublishedCourseOutlineForAccessType(
-				SecurityInterface.ACCESS_PUBLIC);
+			getSerializedPublishedCourseOutlineForAccessType(SecurityInterface.ACCESS_PUBLIC);
 	    }
 	}
 	log.debug("getSerializedCourseOutline" + elapsed(start) + siteId);
@@ -300,7 +301,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * this case, it is the responsibility of the client application to keep
      * track of this new ID, notably to save it again at a later time. If
      * something goes wrong, an exception is thrown.
-     *
+     * 
      * @param COSerialized POJO
      * @return the CourseOutlineXML ID
      */
@@ -320,7 +321,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 
     /**
      * Returns the user role for current user.
-     *
+     * 
      * @return String userRole
      */
     public String getCurrentUserRole() {
@@ -331,7 +332,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * Applies a permission for the specified Site. If something prevents the
      * call to complete successfully an exception is thrown. TODO: check if the
      * description is OK, I'm not sure I understand this one well.
-     *
+     * 
      * @param String resourceId
      */
     public void applyPermissions(String resourceId, String permission) {
@@ -347,7 +348,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     /**
      * Returns the default configuration to be used with the rules, the message
      * bundle and a reference to the css file
-     *
+     * 
      * @return COConfigSerialized
      */
     public COConfigSerialized getSerializedConfig() throws Exception {
@@ -360,18 +361,18 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 
 	    String webappDir = getServletContext().getRealPath("/");
 	    String cfgId =
-		osylServices.getOsylSiteService().getOsylConfigIdForSiteId(
-			siteId);
+		    osylServices.getOsylSiteService().getOsylConfigIdForSiteId(
+			    siteId);
 	    try {
 		if (cfgId == null)
 		    cfg =
-			osylServices.getOsylConfigService().getConfigByRef(
-				osylServices.getOsylConfigService()
-				.getDefaultConfig(), webappDir);
+			    osylServices.getOsylConfigService().getConfigByRef(
+				    osylServices.getOsylConfigService()
+					    .getDefaultConfig(), webappDir);
 		else
 		    cfg =
-			osylServices.getOsylConfigService().getConfig(cfgId,
-				webappDir);
+			    osylServices.getOsylConfigService().getConfig(
+				    cfgId, webappDir);
 
 	    } catch (Exception e) {
 		log.error("Unable to retrieve serialized config", e);
@@ -420,7 +421,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 
     /**
      * Get the xsl associated with the particular group
-     *
+     * 
      * @param group
      * @param callback
      */
@@ -458,5 +459,26 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     // only to improve readability while profiling
     private static String elapsed(long start) {
 	return ": elapsed : " + (System.currentTimeMillis() - start) + " ms ";
+    }
+
+    /**
+     * Method used to create a pdf for the edition version of the CO
+     * 
+     * @param xml
+     * @param printEditionVersionCallback
+     */
+    public void createPrintableEditionVersion(String xml) throws Exception {
+	String webappDir = getServletContext().getRealPath("/");
+	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
+	COSerialized cos = getSerializedCourseOutline(siteId);
+	osylServices.getOsylConfigService().fillCo(webappDir
+			    + OsylConfigService.CONFIG_DIR + File.separator
+			    + cos.getOsylConfig().getConfigRef(), cos);
+	String transformXml =
+		osylServices.getOsylPublishService().transformXmlForGroup(xml,
+			SecurityInterface.ACCESS_ATTENDEE, webappDir);
+	cos.setContent(transformXml);
+	osylServices.getOsylPublishService().createEditionPrintVersion(cos,
+		webappDir);
     }
 }

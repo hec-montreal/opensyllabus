@@ -21,7 +21,6 @@
 package org.sakaiquebec.opensyllabus.client.remoteservice.rpc;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
@@ -195,5 +194,13 @@ public interface OsylEditorGwtServiceAsync {
      * site course outline
      */
     public void releaseLock(AsyncCallback<Void> callback);
+
+    /**
+     * Method used to create a pdf for the edition version of the CO
+     * @param xml
+     * @param printEditionVersionCallback
+     */
+    public void createPrintableEditionVersion(String xml,
+	    AsyncCallback<Void> printEditionVersionCallback);
 
 }

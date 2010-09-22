@@ -188,6 +188,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		/* Print menu button */
 		getOsylToolbar().getPrintSeparator().setVisible(true);
 		getOsylToolbar().getPrintPushButton().setVisible(true);
+		    
 
 		/* Add menu button */
 		getOsylToolbar().getAddMenuItem().setVisible(false);
