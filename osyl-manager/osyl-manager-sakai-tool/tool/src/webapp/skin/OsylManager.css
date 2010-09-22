@@ -193,8 +193,13 @@ cursor:pointer;
 }
 
 .OsylManager-headerTable{
-background-color : #cccccc;
+background-color : #e7e7e7;
 }
+
+.headerTable tr td, .dataTable tr td {
+ border: 1px solid #cccccc;
+}
+
 /*----------------------------------------------------------------------------------------------------------------*/
 
 .OsylManager-SuggestBox
