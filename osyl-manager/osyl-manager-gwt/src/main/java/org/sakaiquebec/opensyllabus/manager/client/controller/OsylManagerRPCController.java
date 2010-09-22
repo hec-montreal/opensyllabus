@@ -138,8 +138,8 @@ public class OsylManagerRPCController {
 	serviceProxy.dissociateFromCM(siteId, callback);
     }
 
-    public void getCMCourses(AsyncCallback<List<CMCourse>> callback) {
-	serviceProxy.getCMCourses(callback);
+    public void getCMCourses(String startsWith, AsyncCallback<List<CMCourse>> callback) {
+	serviceProxy.getCMCourses(startsWith, callback);
     }
     
     public void getCoAndSiteInfo(String siteId, String searchTerm, AsyncCallback<COSite> callback){

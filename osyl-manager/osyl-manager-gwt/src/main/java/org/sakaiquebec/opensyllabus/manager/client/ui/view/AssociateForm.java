@@ -179,8 +179,9 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	mainPanel.add(hnom);
 	mainPanel.setCellHorizontalAlignment(hnom,
 		HasHorizontalAlignment.ALIGN_CENTER);
-
-	controller.getCMCourses(coursesListAsyncCallback);
+	
+	//TODO: SAKAI-2006
+	//controller.getCMCourses(l.getText(), coursesListAsyncCallback);
 
 	cmCourseInfoView = new CMCourseInfoView(controller);
 	DecoratorPanel ivDecoratorPanel = new DecoratorPanel();

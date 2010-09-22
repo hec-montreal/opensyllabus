@@ -371,6 +371,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		SecurityService.popAdvisor();
 	    }
 	}
+	
+	getCMCourses("1404");
     }
 
     private String mkdirCollection(String resourceDirToCreate,
@@ -1185,18 +1187,19 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     /**
-     * Returns the list of all courses defined in the CM so that the user can
-     * associate a site to a specific course.
+     * Returns the list of all courses that start with the given argument
+     * defined in the CM so that the user can associate a site to a specific course.
      */
-    public List<CMCourse> getCMCourses() {
+    public List<CMCourse> getCMCourses(String startsWith) {
 	long start = System.currentTimeMillis();
-	log.debug("getCMCourses ##### START #####");
+	log.debug("getCMCourses that starts with " + startsWith + " ##### START #####");
 	List<CMCourse> cmCourses = new ArrayList<CMCourse>();
 	Set<CourseSet> courseSets = courseManagementService.getCourseSets();
 	Set<CourseOffering> courseOffs = null;
 	Set<Section> sections = null;
 	CourseSet courseSet = null;
 	CourseOffering courseOff = null;
+	String courseOffEid = null;
 	Section courseS = null;
 	if (courseSets == null)
 	    return null;
@@ -1208,64 +1211,69 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    for (Iterator<CourseOffering> cOffs = courseOffs.iterator(); cOffs
 		    .hasNext();) {
 		courseOff = cOffs.next();
-		sections =
-			courseManagementService.getSections(courseOff.getEid());
-		for (Iterator<Section> cSs = sections.iterator(); cSs.hasNext();) {
-		    courseS = cSs.next();
-		    String courseTitle =
-			    courseManagementService.getCanonicalCourse(
-				    courseOff.getCanonicalCourseEid())
-				    .getTitle();
-		    String courseSId = courseS.getEid();
-		    String session = courseOff.getAcademicSession().getTitle();
-		    String sigle = courseOff.getCanonicalCourseEid();
-		    String section =
-			    courseSId.substring(courseSId.length() - 3,
-				    courseSId.length());
+		courseOffEid = courseOff.getEid();
+		sections = courseManagementService.getSections(courseOffEid);
+		if (courseOffEid.startsWith(startsWith)) {
+		    for (Iterator<Section> cSs = sections.iterator(); cSs
+			    .hasNext();) {
+			courseS = cSs.next();
+			String courseTitle =
+				courseManagementService.getCanonicalCourse(
+					courseOff.getCanonicalCourseEid())
+					.getTitle();
+			String courseSId = courseS.getEid();
+			String session =
+				courseOff.getAcademicSession().getTitle();
+			String sigle = courseOff.getCanonicalCourseEid();
+			String section =
+				courseSId.substring(courseSId.length() - 3,
+					courseSId.length());
 
-		    String instructorsString = "";
-		    int studentNumber = -1;
-		    EnrollmentSet enrollmentSet = courseS.getEnrollmentSet();
-		    if (enrollmentSet != null) {
-			// Retrieve official instructors
-			Set<String> instructors =
-				enrollmentSet.getOfficialInstructors();
-			User user = null;
-			String name = null;
-			for (String instructor : instructors) {
-			    try {
-				user =
-					UserDirectoryService
-						.getUserByEid(instructor);
-				name = user.getDisplayName();
-				instructorsString += name + " & ";
-			    } catch (UserNotDefinedException e) {
-				e.printStackTrace();
+			String instructorsString = "";
+			int studentNumber = -1;
+			EnrollmentSet enrollmentSet =
+				courseS.getEnrollmentSet();
+			if (enrollmentSet != null) {
+			    // Retrieve official instructors
+			    Set<String> instructors =
+				    enrollmentSet.getOfficialInstructors();
+			    User user = null;
+			    String name = null;
+			    for (String instructor : instructors) {
+				try {
+				    user =
+					    UserDirectoryService
+						    .getUserByEid(instructor);
+				    name = user.getDisplayName();
+				    instructorsString += name + " & ";
+				} catch (UserNotDefinedException e) {
+				    e.printStackTrace();
+				}
 			    }
+			    // retrieve student number
+			    Set<Enrollment> enrollments =
+				    courseManagementService
+					    .getEnrollments(enrollmentSet
+						    .getEid());
+			    if (enrollments != null)
+				studentNumber = enrollments.size();
 			}
-			// retrieve student number
-			Set<Enrollment> enrollments =
-				courseManagementService
-					.getEnrollments(enrollmentSet.getEid());
-			if (enrollments != null)
-			    studentNumber = enrollments.size();
+			if (!instructorsString.equals(""))
+			    instructorsString =
+				    instructorsString.substring(0,
+					    instructorsString.length() - 3);
+
+			CMCourse cmCourse = new CMCourse();
+			cmCourse.setId(courseS.getEid());
+			cmCourse.setSession(session);
+			cmCourse.setName(courseTitle);
+			cmCourse.setSigle(sigle);
+			cmCourse.setSection(section);
+			cmCourse.setInstructor(instructorsString);
+			cmCourse.setStudentNumber(studentNumber);
+			cmCourses.add(cmCourse);
 		    }
-		    if (!instructorsString.equals(""))
-			instructorsString =
-				instructorsString.substring(0,
-					instructorsString.length() - 3);
-
-		    CMCourse cmCourse = new CMCourse();
-		    cmCourse.setId(courseS.getEid());
-		    cmCourse.setSession(session);
-		    cmCourse.setName(courseTitle);
-		    cmCourse.setSigle(sigle);
-		    cmCourse.setSection(section);
-		    cmCourse.setInstructor(instructorsString);
-		    cmCourse.setStudentNumber(studentNumber);
-		    cmCourses.add(cmCourse);
 		}
-
 	    }
 	}
 	log.debug("getCMCourses ###### END ######" + elapsed(start) + " for "

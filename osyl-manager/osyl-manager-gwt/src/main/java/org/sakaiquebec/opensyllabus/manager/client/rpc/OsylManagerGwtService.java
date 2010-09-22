@@ -70,7 +70,7 @@ public interface OsylManagerGwtService extends RemoteService {
 
     public void dissociateFromCM(String siteId) throws Exception;
 
-    public List<CMCourse> getCMCourses();
+    public List<CMCourse> getCMCourses(String startsWith);
 
     /**
      * Retrieve all the informations of the specified site and the course

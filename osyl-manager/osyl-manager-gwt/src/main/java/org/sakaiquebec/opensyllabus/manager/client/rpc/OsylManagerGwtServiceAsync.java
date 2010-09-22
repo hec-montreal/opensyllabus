@@ -75,7 +75,7 @@ public interface OsylManagerGwtServiceAsync {
     
     public void dissociateFromCM(String siteId, AsyncCallback<Void> callback);
     
-    public void getCMCourses( AsyncCallback<List<CMCourse>> callback) ;
+    public void getCMCourses( String startsWith, AsyncCallback<List<CMCourse>> callback) ;
     
     public void getCoAndSiteInfo(String siteId, String searchTerm, AsyncCallback<COSite> callback);
     

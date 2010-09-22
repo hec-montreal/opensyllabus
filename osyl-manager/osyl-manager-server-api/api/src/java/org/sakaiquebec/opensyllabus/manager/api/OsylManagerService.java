@@ -133,11 +133,11 @@ public interface OsylManagerService {
 
     /**
      * This method retrieves all the course sections registered in the course
-     * management
-     * 
-     * @return list of the course sections
+     * management and that startsWith the given text or numbers.
+     * @param startsWith
+     * @return
      */
-    public List<CMCourse> getCMCourses();
+    public List<CMCourse> getCMCourses(String startsWith);
 
     /**
      * This method retrieves all sites that contains an OpenSyllabus tool and a

@@ -143,8 +143,8 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	osylManagerServices.getOsylManagerService().dissociateFromCM(siteId);
     }
 
-    public List<CMCourse> getCMCourses() {
-	return osylManagerServices.getOsylManagerService().getCMCourses();
+    public List<CMCourse> getCMCourses(String startsWith) {
+	return osylManagerServices.getOsylManagerService().getCMCourses( startsWith);
     }
     
     public COSite getCoAndSiteInfo(String siteId, String searchTerm){
