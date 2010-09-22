@@ -34,17 +34,34 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.PushButton;
 
 /**
+ * Base class for all action objects of Osyl Manager.
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
 public abstract class OsylManagerAbstractAction extends PushButton implements
 	ClickHandler, OsylManagerEventHandler {
 
+    /**
+     * The Osyl Maanger controller
+     */
     protected OsylManagerController controller;
+    
+    /**
+     * The dialog box used to display feedback during operation process.
+     */
     protected OsylCancelDialog diag;
+    
+    /**
+     * The messages bundle loaded and being used by the action objects.
+     */
     protected Messages messages;
 
 
+    /**
+     * Constructor.
+     * @param controller the Osyl Manager controller
+     * @param key the key used to display action label
+     */
     public OsylManagerAbstractAction(OsylManagerController controller,
 	    String key) {
 	super();
@@ -66,18 +83,24 @@ public abstract class OsylManagerAbstractAction extends PushButton implements
 	controller.addEventHandler(this);
     }
         
+    /** {@inheritDoc} */
     public void onOsylManagerEvent(OsylManagerEvent e) {
 	if (e.getType() == OsylManagerEvent.SITES_SELECTION_EVENT) {
 	    setEnabled(isActionEnableForSites(controller.getSelectSites()));
 	}
-
     }
 
+    /** {@inheritDoc} */
     public void onClick(ClickEvent e) {
 	if (isEnabled())
 	    onClick(controller.getSelectSites());
     }
 
+    /**
+     * Method to be implemented in child classes.  This method uses the list of
+     * site ids in order to perform actions on sites on a button click event.
+     * @param siteIds
+     */
     public abstract void onClick(List<COSite> siteIds);
 
     public abstract boolean isActionEnableForSites(List<COSite> siteIds);

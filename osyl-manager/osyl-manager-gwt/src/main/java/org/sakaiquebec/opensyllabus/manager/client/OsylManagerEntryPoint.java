@@ -36,10 +36,20 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class OsylManagerEntryPoint implements EntryPoint {
 
+    /**
+     * Controller needed to communicate with the server side.
+     */
     private OsylManagerController controller =
 	    OsylManagerController.getInstance();
 
+    /**
+     * The base panel of Osyl Manager GUI
+     */
     private RootPanel rootPanel = RootPanel.get();
+    
+    /**
+     * The base abstract view of Osyl Manager GUI
+     */
     private OsylManagerAbstractView view;
 
     /**
@@ -49,6 +59,9 @@ public class OsylManagerEntryPoint implements EntryPoint {
 	initView();
     }
 
+    /**
+     * Initialization of the base view.
+     */
     private void initView() {
 	view = new OsylManagerMainAdvancedView(controller);
 	rootPanel.add(view);

@@ -22,24 +22,27 @@
 package org.sakaiquebec.opensyllabus.manager.client.controller.event;
 
 /**
+ * Interface used by OSYL Manager classes to add/remove handlers for events of
+ * type <code>OsylManagerEvent</code> like SITES_SELECTION_EVENT,
+ * SITE_CREATION_EVENT, SITE_IMPORT_EVENT and SITE_INFO_CHANGE.   
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
 public interface FireOsylManagerEvents {
 
     /**
-     * Add an handler to the list of the handlers to notify when there is a
-     * SiteCreationEventHandler
+     * Adds an handler to the list of the handlers to notify when there is a
+     * <code>OsylManagerEvent</code>.
      * 
-     * @param handler
+     * @param handler the handler to add
      */
     public void addEventHandler(OsylManagerEventHandler handler);
 
     /**
-     * Remove an handler to the list of the handlers to notify when there is a
-     * SiteCreationEventHandler
+     * Removes an handler to the list of the handlers to notify when there is a
+     * <code>OsylManagerEvent</code>
      * 
-     * @param handler
+     * @param handler the handler to remove
      */
     public void removeEventHandler(OsylManagerEventHandler handler);
 

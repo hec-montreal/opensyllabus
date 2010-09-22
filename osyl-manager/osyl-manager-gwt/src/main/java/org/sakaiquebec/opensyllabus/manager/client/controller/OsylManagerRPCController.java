@@ -101,18 +101,7 @@ public class OsylManagerRPCController {
      * @param siteId
      */
     public void importData(OsylManagerController osylManagerController,
-	    String url, String siteId) {
-	final OsylManagerController caller = osylManagerController;
-	// We first create a call-back for this method call
-	AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-	    public void onSuccess(Void serverResponse) {
-		caller.readCB();
-	    }
-
-	    public void onFailure(Throwable error) {
-		Window.alert(error.getMessage());
-	    }
-	};
+	    String url, String siteId, AsyncCallback<Void> callback) {
 	serviceProxy.importData(url, siteId, callback);
     }
     

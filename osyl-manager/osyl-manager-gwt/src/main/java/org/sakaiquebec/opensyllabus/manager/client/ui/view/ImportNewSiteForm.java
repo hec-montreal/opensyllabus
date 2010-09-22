@@ -28,6 +28,7 @@ import java.util.Map;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.helper.ActionHelper;
 
@@ -74,6 +75,24 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
     private final FormPanel formPanel;
     
     private final OsylOkCancelDialog warning;
+    
+    private final OsylCancelDialog diag;
+    
+    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+	public void onSuccess(Void serverResponse) {
+	    diag.hide();
+	    controller.readCB();
+	}
+
+	public void onFailure(Throwable error) {
+	    OsylOkCancelDialog warning = new OsylOkCancelDialog(false,
+		    true, messages.OsylWarning_Title(),
+		    error.getMessage(), true, false);
+	    warning.show();
+	    warning.centerAndFocus();
+	}
+    };
+
 
     AsyncCallback<Map<String, String>> configListAsyncCallback =
 	    new AsyncCallback<Map<String, String>>() {
@@ -109,9 +128,10 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 
 	    };
 
-    public ImportNewSiteForm(final OsylManagerController controller) {
+    public ImportNewSiteForm(final OsylManagerController controller,
+	    OsylCancelDialog aDiag) {
 	super(controller);
-	
+	this.diag = aDiag;
 	warning = new OsylOkCancelDialog(false, true, messages.OsylWarning_Title(),
 		"", true, false);
 
@@ -187,8 +207,9 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 			String retourJSON = event.getResults();
 			if (getState(event.getResults())) {
 			    String url = getURL(retourJSON);
-			    controller.importData(url, siteId);
+			    controller.importData(url, siteId, callback);
 			} else {
+			    diag.hide();
 			    warning.setText(messages.siteNotCreated());
 			    warning.show();
 			    warning.centerAndFocus();
@@ -209,6 +230,9 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 					.matches("^[a-zA-Z0-9áàâÁÀÂçÇéèêëÉÈÊËíîïÍÎÏñÑóôÓÔúùüÚÙÜ][ a-zA-Z0-9a-zA-Z0-9áàâÁÀÂçÇéèêëÉÈÊËíîïÍÎÏñÑóôÓÔúùüÚÙÜ\\._-]*") && name
 				.matches(".*[\\S]$"));
 		if (nameValid) {
+		    diag.show();
+		    diag.centerAndFocus();
+		    
 		    if (configListBox.getSelectedIndex() != -1) {
 			String configRef =
 				configListBox.getValue(configListBox

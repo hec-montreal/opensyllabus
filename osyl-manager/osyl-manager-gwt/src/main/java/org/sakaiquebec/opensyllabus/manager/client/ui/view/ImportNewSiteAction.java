@@ -56,7 +56,7 @@ public class ImportNewSiteAction extends OsylManagerAbstractAction {
 	    Window.alert("L'opération est refusée. Veuillez contacter le centre d'assistance.");
 	    return;
 	}
-	ImportNewSiteForm importNewSiteForm = new ImportNewSiteForm(controller);
+	ImportNewSiteForm importNewSiteForm = new ImportNewSiteForm(controller, diag);
 	importNewSiteForm.showModal();
     }
 }

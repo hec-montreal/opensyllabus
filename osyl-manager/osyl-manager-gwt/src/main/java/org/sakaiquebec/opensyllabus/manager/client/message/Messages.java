@@ -24,6 +24,8 @@ package org.sakaiquebec.opensyllabus.manager.client.message;
 import com.google.gwt.i18n.client.ConstantsWithLookup;
 
 /**
+ * Implements the message interface used by Osyl manager classes to retrieve the
+ * messages to show in the GUI.
  * @author <a href="mailto:Laurent.Danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
