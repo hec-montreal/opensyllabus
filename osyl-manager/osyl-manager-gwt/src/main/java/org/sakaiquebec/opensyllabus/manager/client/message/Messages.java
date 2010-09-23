@@ -246,4 +246,6 @@ public interface Messages extends ConstantsWithLookup {
     String OsylCancelDialog_Content();
     
     String OsylWarning_Title();
+
+    String associateForm_search();
 }

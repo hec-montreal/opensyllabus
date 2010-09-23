@@ -36,19 +36,22 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.SuggestBox;
-import com.google.gwt.user.client.ui.SuggestOracle;
-import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
+import com.google.gwt.user.client.ui.TextBox;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -56,75 +59,48 @@ import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
  */
 public class AssociateForm extends OsylManagerAbstractWindowPanel {
 
-    private static int SUGGESTION_LIMIT = 15;
-
     private COSite selectedSite;
 
     private CMCourse selectedCourse;
 
-    private SuggestBox sigleSuggestBox;
-
-    private SuggestBox nomSuggestBox;
+    private TextBox sigleTextBox;
 
     private CMCourseInfoView cmCourseInfoView;
 
     private MultiWordSuggestOracle sigleOracle = new MultiWordSuggestOracle();
 
-    private MultiWordSuggestOracle nameOracle = new MultiWordSuggestOracle();
-
     private PushButton okButton;
 
     private Map<String, CMCourse> sigleCourseMap;
 
-    private Map<String, CMCourse> nameCourseMap;
-    
     private final OsylCancelDialog diag;
 
-    private SelectionHandler<Suggestion> suggestBoxSelectionHandler =
-	    new SelectionHandler<Suggestion>() {
-
-		public void onSelection(SelectionEvent<Suggestion> event) {
-		    Map<String, CMCourse> map = null;
-		    if (event.getSource().equals(sigleSuggestBox))
-			map = sigleCourseMap;
-		    if (event.getSource().equals(nomSuggestBox))
-			map = nameCourseMap;
-		    selectedCourse =
-			    map.get(event.getSelectedItem()
-				    .getReplacementString());
-		    cmCourseInfoView.refreshView(selectedCourse);
-		    okButton.setEnabled(true);
-		}
-
-	    };
+    private ListBox suggestionListBox;
 
     AsyncCallback<List<CMCourse>> coursesListAsyncCallback =
 	    new AsyncCallback<List<CMCourse>>() {
 
 		public void onFailure(Throwable caught) {
-		    OsylOkCancelDialog warning = new OsylOkCancelDialog(false,
-			    true, messages.OsylWarning_Title(),
-			    messages.rpcFailure(), false, true);
+		    OsylOkCancelDialog warning =
+			    new OsylOkCancelDialog(false, true, messages
+				    .OsylWarning_Title(),
+				    messages.rpcFailure(), false, true);
 		    warning.show();
 		    warning.centerAndFocus();
 		}
 
 		public void onSuccess(List<CMCourse> result) {
+		    sigleOracle = new MultiWordSuggestOracle();
 		    sigleCourseMap = new HashMap<String, CMCourse>();
-		    nameCourseMap = new HashMap<String, CMCourse>();
 		    for (CMCourse course : result) {
 			String sigleValue =
 				course.getSigle() + " " + course.getSession()
 					+ " " + course.getSection();
 			sigleOracle.add(sigleValue);
 			sigleCourseMap.put(sigleValue, course);
-			String nameValue =
-				course.getName() + " " + course.getSession()
-					+ " " + course.getSection();
-			nameOracle.add(nameValue);
-			nameCourseMap.put(nameValue, course);
-
+			suggestionListBox.addItem(sigleValue, sigleValue);
 		    }
+		    suggestionListBox.setSelectedIndex(0);
 		}
 	    };
 
@@ -132,9 +108,10 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 
 	public void onFailure(Throwable caught) {
 	    diag.hide();
-	    OsylOkCancelDialog alert = new OsylOkCancelDialog(false, true,
-		    messages.OsylWarning_Title(), messages.rpcFailure(),
-		    true, false);
+	    OsylOkCancelDialog alert =
+		    new OsylOkCancelDialog(false, true, messages
+			    .OsylWarning_Title(), messages.rpcFailure(), true,
+			    false);
 	    alert.show();
 	    alert.centerAndFocus();
 	}
@@ -148,40 +125,88 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 
     };
 
-    public AssociateForm(OsylManagerController controller, COSite site, OsylCancelDialog aDiag) {
+    public AssociateForm(final OsylManagerController controller, COSite site,
+	    OsylCancelDialog aDiag) {
 	super(controller);
 	this.selectedSite = site;
 	this.diag = aDiag;
 
-	Label title =
-		new Label(messages.mainView_action_associate());
+	Label title = new Label(messages.mainView_action_associate());
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);
 
 	Label instruction =
-		new Label(messages.associateForm_instruction()
-			.replace("{0}", selectedSite.getSiteId()));
+		new Label(messages.associateForm_instruction().replace("{0}",
+			selectedSite.getSiteId()));
 	mainPanel.add(instruction);
 
-	Label l =
-		new Label(messages
-			.associateForm_courseIdentifier());
-	sigleSuggestBox = createSuggestBoxWithOracle(sigleOracle);
-	HorizontalPanel hsigle = createPanel(l, sigleSuggestBox);
-	mainPanel.add(hsigle);
-	mainPanel.setCellHorizontalAlignment(hsigle,
+	Label l = new Label(messages.associateForm_courseIdentifier());
+
+	sigleTextBox = new TextBox();
+
+	final Button search = new Button(messages.associateForm_search());
+	search.addClickHandler(new ClickHandler() {
+
+	    public void onClick(ClickEvent event) {
+		String value = sigleTextBox.getText();
+		suggestionListBox.clear();
+		controller.getCMCourses(value, coursesListAsyncCallback);
+	    }
+	});
+	search.setEnabled(false);
+
+	HorizontalPanel hp = new HorizontalPanel();
+	hp.add(l);
+	l.setStylePrimaryName("OsylManager-form-label");
+	hp.add(sigleTextBox);
+	sigleTextBox.setStylePrimaryName("OsylManager-form-element");
+	hp.add(search);
+	hp.setCellWidth(l, "30%");
+	hp.setCellWidth(sigleTextBox, "40%");
+	hp.setCellWidth(search, "30%");
+	hp.setCellVerticalAlignment(l, HasVerticalAlignment.ALIGN_BOTTOM);
+	hp.setCellVerticalAlignment(sigleTextBox,
+		HasVerticalAlignment.ALIGN_BOTTOM);
+	hp.setCellVerticalAlignment(search, HasVerticalAlignment.ALIGN_BOTTOM);
+	hp.setStylePrimaryName("OsylManager-form-genericPanel");
+	mainPanel.add(hp);
+	mainPanel.setCellHorizontalAlignment(hp,
 		HasHorizontalAlignment.ALIGN_CENTER);
 
-	Label l2 =
-		new Label(messages.associateForm_courseName());
-	nomSuggestBox = createSuggestBoxWithOracle(nameOracle);
-	HorizontalPanel hnom = createPanel(l2, nomSuggestBox);
-	mainPanel.add(hnom);
-	mainPanel.setCellHorizontalAlignment(hnom,
-		HasHorizontalAlignment.ALIGN_CENTER);
+	sigleTextBox.addKeyPressHandler(new KeyPressHandler() {
+	    
+	    public void onKeyPress(KeyPressEvent event) {
+		cmCourseInfoView.refreshView(null);
+		okButton.setEnabled(false);
+		String value = sigleTextBox.getText();
+		search.setEnabled(value.length() >= 3);
+	    }
+	});
 	
-	//TODO: SAKAI-2006
-	//controller.getCMCourses(l.getText(), coursesListAsyncCallback);
+	HorizontalPanel suggestionPanel = new HorizontalPanel();
+	
+	suggestionListBox = new ListBox();
+	suggestionListBox.addChangeHandler(new ChangeHandler() {
+
+	    public void onChange(ChangeEvent event) {
+		selectedCourse =
+			sigleCourseMap
+				.get(suggestionListBox
+					.getValue(suggestionListBox
+						.getSelectedIndex()));
+		cmCourseInfoView.refreshView(selectedCourse);
+		okButton.setEnabled(true);
+	    }
+	});
+	Label voidLabel= new Label();
+	suggestionPanel.add(voidLabel);
+	suggestionPanel.add(suggestionListBox);
+	suggestionPanel.setStylePrimaryName("OsylManager-form-genericPanel");
+	suggestionPanel.setCellWidth(voidLabel, "30%");
+	suggestionPanel.setCellWidth(suggestionPanel, "70%");
+	mainPanel.add(suggestionPanel);
+	mainPanel.setCellHorizontalAlignment(suggestionPanel,
+		HasHorizontalAlignment.ALIGN_CENTER);
 
 	cmCourseInfoView = new CMCourseInfoView(controller);
 	DecoratorPanel ivDecoratorPanel = new DecoratorPanel();
@@ -225,35 +250,18 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 		HasHorizontalAlignment.ALIGN_CENTER);
     }
 
-    private SuggestBox createSuggestBoxWithOracle(SuggestOracle oracle) {
-	SuggestBox suggestBox = new SuggestBox(oracle);
-	suggestBox.setAnimationEnabled(true);
-	suggestBox.setStylePrimaryName("OsylManager-SuggestBox");
-	suggestBox.setPopupStyleName("OsylManager-SuggestBoxPopup");
-	suggestBox.setLimit(SUGGESTION_LIMIT);
-	suggestBox.addSelectionHandler(suggestBoxSelectionHandler);
-	suggestBox.getTextBox().addChangeHandler(new ChangeHandler() {
-	    public void onChange(ChangeEvent event) {
-		cmCourseInfoView.refreshView(null);
-		okButton.setEnabled(false);
-	    }
-	});
-	return suggestBox;
-    }
-
     protected void onAssociationEnd() {
 	mainPanel.clear();
 
-	Label title =
-		new Label(messages.mainView_action_associate());
+	Label title = new Label(messages.mainView_action_associate());
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);
 
-	Label conf =
-		new Label(messages.associateForm_confirmation());
+	Label conf = new Label(messages.associateForm_confirmation());
 	mainPanel.add(conf);
 
-	cmCourseInfoView.setImage(new Image(controller.getImageBundle().check()));
+	cmCourseInfoView
+		.setImage(new Image(controller.getImageBundle().check()));
 	DecoratorPanel ivDecoratorPanel = new DecoratorPanel();
 	ivDecoratorPanel.setWidget(cmCourseInfoView);
 	ivDecoratorPanel.setStylePrimaryName("OsylManager-infoView");
