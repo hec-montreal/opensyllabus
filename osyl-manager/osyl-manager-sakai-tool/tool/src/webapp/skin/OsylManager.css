@@ -196,8 +196,14 @@ cursor:pointer;
 background-color : #e7e7e7;
 }
 
-.headerTable tr td, .dataTable tr td {
- border: 1px solid #cccccc;
+.gwt-ScrollTable .dataTable td,
+.gwt-ScrollTable .headerTable td,
+.gwt-ScrollTable .footerTable td {
+  border-color: #ccc;
+  border-style: solid;
+  border-width: 0px 1px 1px 0px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 /*----------------------------------------------------------------------------------------------------------------*/

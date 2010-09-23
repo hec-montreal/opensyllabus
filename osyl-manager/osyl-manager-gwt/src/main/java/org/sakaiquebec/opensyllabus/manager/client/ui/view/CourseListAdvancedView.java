@@ -316,7 +316,7 @@ implements OsylManagerEventHandler {
     private void getHostedModeData(){
 	mainPanel.clear();
 	scSiteList.getDataTable().clearAll();
-	scSiteList.getDataTable().resize(0, 8);
+	scSiteList.getDataTable().resize(0, 7);
 
 	for(int i=0;i<15;i++){
 	    int rowNum = scSiteList.getDataTable().insertRow(i);
