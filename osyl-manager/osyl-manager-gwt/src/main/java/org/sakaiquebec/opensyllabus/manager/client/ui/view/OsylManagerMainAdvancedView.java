@@ -26,6 +26,9 @@ import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractVie
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -40,9 +43,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 
     private VerticalPanel mainPanel;
-    
+
     private CourseListAdvancedView courseListView;
-    
+
     private TextBox selectSiteInput;
 
     public OsylManagerMainAdvancedView(OsylManagerController controller) {
@@ -54,12 +57,13 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
     }
 
     private void initView() {
-	Label mainLabel = new Label(getController().getMessages().mainView_label());
+	Label mainLabel =
+		new Label(getController().getMessages().mainView_label());
 	mainLabel.setStylePrimaryName("OsylManager-mainView-label");
 	mainPanel.add(mainLabel);
 
 	VerticalPanel vPanel1 = new VerticalPanel();
-	
+
 	HorizontalPanel hzPanel1 = new HorizontalPanel();
 	hzPanel1.setStylePrimaryName("OsylManager-panel");
 
@@ -68,39 +72,57 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 
 	HorizontalPanel hzPanel3 = new HorizontalPanel();
 	hzPanel3.setStylePrimaryName("OsylManager-panel");
-	
+
 	HorizontalPanel hzPanel4 = new HorizontalPanel();
 	hzPanel4.setStylePrimaryName("OsylManager-panel");
 
-	Label selectSiteLabel = new Label(getController().getMessages().
-		mainView_searchForExistingSites());
+	Label selectSiteLabel =
+		new Label(getController().getMessages()
+			.mainView_searchForExistingSites());
 	selectSiteLabel.setStylePrimaryName("OsylManager-mainView-label");
 	selectSiteInput = new TextBox();
-	selectSiteInput.setText(getController().getMessages().
-		mainView_searchForExistingSites_input());
-	selectSiteInput.addClickHandler(new ClickHandler(){
+	selectSiteInput.setText(getController().getMessages()
+		.mainView_searchForExistingSites_input());
+	selectSiteInput.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
-		((TextBox)event.getSource()).setText("");
+		TextBox txtBox = (TextBox) event.getSource();
+
+		if (getController().getMessages()
+			.mainView_searchForExistingSites_input().equals(
+				txtBox.getText())) {
+		    ((TextBox) event.getSource()).setText("");
+		}
 	    }
-	    
+
 	});
-	PushButton selectSiteActionBtn = new PushButton(getController().
-		getMessages().mainView_action_search());
+	
+	selectSiteInput.addKeyPressHandler(new KeyPressHandler(){
+
+	    public void onKeyPress(KeyPressEvent event) {
+		if (event.getCharCode() == KeyCodes.KEY_ENTER) {
+		    courseListView.setSearchTerm(selectSiteInput.getText());
+		    courseListView.refresh();
+		}
+	    }
+	});
+	PushButton selectSiteActionBtn =
+		new PushButton(getController().getMessages()
+			.mainView_action_search());
 	selectSiteActionBtn.setStylePrimaryName("Osyl-Button");
-	selectSiteActionBtn.addClickHandler(new ClickHandler(){
+	selectSiteActionBtn.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
 		courseListView.setSearchTerm(selectSiteInput.getText());
 		courseListView.refresh();
 	    }
 	});
-//	vPanel1.add(selectSiteLabel);
+	// vPanel1.add(selectSiteLabel);
 	hzPanel1.add(selectSiteLabel);
 	hzPanel1.add(selectSiteInput);
 	hzPanel1.add(selectSiteActionBtn);
 	vPanel1.add(hzPanel1);
-	
+
 	hzPanel2.add(courseListView);
 
 	VerticalPanel commandsPanel = new VerticalPanel();
@@ -108,8 +130,8 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	HorizontalPanel hz1 = new HorizontalPanel();
 	hz1.add(new EditAction(getController()));
 	hz1.add(new PublishAction(getController()));
-	hz1.add(new UnpublishAction(getController()));
-	hz1.add(new CopyAction(getController()));
+//	hz1.add(new UnpublishAction(getController()));
+//	hz1.add(new CopyAction(getController()));
 	hz1.setStyleName("OsylManager-mainView-actionList");
 	commandsPanel.add(hz1);
 
@@ -128,7 +150,7 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	HorizontalPanel hz4 = new HorizontalPanel();
 	hz4.add(new ImportAction(getController()));
 	hz4.add(new ExportAction(getController()));
-	hz4.add(new CleanAction(getController()));
+//	hz4.add(new CleanAction(getController()));
 	hz4.add(new DeleteAction(getController()));
 	hz4.setStyleName("OsylManager-mainView-actionList");
 	commandsPanel.add(hz4);
@@ -138,9 +160,10 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	mainPanel.add(hzPanel2);
 	mainPanel.add(hzPanel3);
 	mainPanel.add(hzPanel4);
-	
-	Label newSiteCreationLbl = new Label(getController().getMessages().
-		mainView_creationOfNewSite());
+
+	Label newSiteCreationLbl =
+		new Label(getController().getMessages()
+			.mainView_creationOfNewSite());
 	newSiteCreationLbl.setStylePrimaryName("OsylManager-mainView-label");
 	mainPanel.add(newSiteCreationLbl);
 	HorizontalPanel hPanel = new HorizontalPanel();
