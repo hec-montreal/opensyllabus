@@ -36,6 +36,7 @@ import org.sakaiproject.coursemanagement.api.Membership;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.coursemanagement.api.exception.IdExistsException;
 import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
+import org.sakaiproject.email.cover.EmailService;
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.event.cover.UsageSessionService;
 import org.sakaiproject.tool.api.Session;
@@ -90,7 +91,7 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMapEn
 
 /**
  * The class is an implementation of the OsylCMJob as job launched by the quartz
- *
+ * 
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -136,10 +137,9 @@ public class OsylCMJobImpl implements OsylCMJob {
     private ServiceEnseignementMap servEnsMap = null;
 
     /**
-	 * Map used to store information about the programs
-	 */
-	private ProgrammeEtudesMap programmeEtudesMap = null;
-
+     * Map used to store information about the programs
+     */
+    private ProgrammeEtudesMap programmeEtudesMap = null;
 
     /**
      * Map used to store information about the exam dates
@@ -230,19 +230,19 @@ public class OsylCMJobImpl implements OsylCMJob {
 			+ ": " + instructors.toString());
 
 		// On a un coordonnateur
-		//SAKAI-1582
-//		if (detailsCours.getCoordonnateur() != null) {
-//		    matricule = detailsCours.getCoordonnateur().getEmplId();
-//		    courseOffId = getCourseOfferingId(detailsCours);
-//		    courseOff = cmService.getCourseOffering(courseOffId);
-//
-//		    cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
-//			    COORDONNATEUR_ROLE, courseOffId, ACTIVE_STATUS);
-//		    log.info("Coordinator for " + detailsCours.getUniqueKey()
-//			    + ": " + matricule);
-//		    cmAdmin.updateCourseOffering(courseOff);
-//
-//		}
+		// SAKAI-1582
+		// if (detailsCours.getCoordonnateur() != null) {
+		// matricule = detailsCours.getCoordonnateur().getEmplId();
+		// courseOffId = getCourseOfferingId(detailsCours);
+		// courseOff = cmService.getCourseOffering(courseOffId);
+		//
+		// cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
+		// COORDONNATEUR_ROLE, courseOffId, ACTIVE_STATUS);
+		// log.info("Coordinator for " + detailsCours.getUniqueKey()
+		// + ": " + matricule);
+		// cmAdmin.updateCourseOffering(courseOff);
+		//
+		// }
 	    }
 
 	}
@@ -257,7 +257,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 	String description = "";
 	String title = "";
 	String lang = "";
-	String career ="";
+	String career = "";
 	AcademicSession session = null;
 	String category;
 	Set<CanonicalCourse> cc = new HashSet<CanonicalCourse>();
@@ -299,17 +299,19 @@ public class OsylCMJobImpl implements OsylCMJob {
 	    if (cmService.isAcademicSessionDefined(coursEntry.getStrmId())) {
 		courseOfferingId = getCourseOfferingId(coursEntry);
 		lang = coursEntry.getLangue();
-		ProgrammeEtudesMapEntry programmeEtudesMapEntry = programmeEtudesMap.get(coursEntry.getAcadCareer());
-		if(Constants.ENGLISH.equals(lang))
-			career=programmeEtudesMapEntry.getDescEng();
-		else career=programmeEtudesMapEntry.getDescFr();
+		ProgrammeEtudesMapEntry programmeEtudesMapEntry =
+			programmeEtudesMap.get(coursEntry.getAcadCareer());
+		if (Constants.ENGLISH.equals(lang))
+		    career = programmeEtudesMapEntry.getDescEng();
+		else
+		    career = programmeEtudesMapEntry.getDescFr();
 		if (!cmService.isCourseOfferingDefined(courseOfferingId)) {
 		    courseOff =
 			    cmAdmin.createCourseOffering(courseOfferingId,
 				    title, description, COURSE_OFF_STATUS,
 				    session.getEid(), canonicalCourseId,
 				    session.getStartDate(), session
-					    .getEndDate(), lang,career);
+					    .getEndDate(), lang, career);
 		    courseOfferingSet.add(courseOff);
 		} else {
 		    // We update
@@ -524,7 +526,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 		    + "' is not defined in the sakai.properties file"));
 	    return;
 	}
-	try {
+	try {	    
 	    detailSessionMap =
 		    GenericDetailSessionsMapFactory.getInstance(directory);
 	    detailSessionMap =
@@ -554,8 +556,10 @@ public class OsylCMJobImpl implements OsylCMJob {
 		    GenericEtudiantCoursMapFactory.buildMap(directory,
 			    detailCoursMap, detailSessionMap);
 
-		programmeEtudesMap = GenericProgrammeEtudesMapFactory.getInstance(directory);
-	    programmeEtudesMap = GenericProgrammeEtudesMapFactory.buildMap(directory);
+	    programmeEtudesMap =
+		    GenericProgrammeEtudesMapFactory.getInstance(directory);
+	    programmeEtudesMap =
+		    GenericProgrammeEtudesMapFactory.buildMap(directory);
 
 	    // We first retrieve the current values in the system for the same
 	    log
@@ -588,7 +592,14 @@ public class OsylCMJobImpl implements OsylCMJob {
 	    syncEnrollments();
 	    log.info("Enrollments updated successfully");
 
-	} catch (IOException e) {
+	} catch (Exception e) {
+	    String message =
+		    "Synchronization with PeopleSoft failed cause :\n"
+			    + e.toString();
+	    EmailService.send("admin.zonecours2@hec.ca",
+		    "admin.zonecours2@hec.ca",
+		    "Synchronization with PeopleSoft failed", message, null,
+		    null, null);
 	    e.printStackTrace();
 	}
 
