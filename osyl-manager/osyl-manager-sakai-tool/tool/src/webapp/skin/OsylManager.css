@@ -113,7 +113,11 @@ cursor:pointer;
 	width:600px;
 }
 /*----------------------------------------------------------------------------------------------------------------*/
-.OsylManager-mainView-mainPanel{
+.OsylManager-rootPanel>table{
+	width:98%;
+}
+.OsylManager-courseListView,
+.OsylManager-courseListView table{
 	width:100%;
 }
 
@@ -153,10 +157,6 @@ color:#a2a2a2;
 cursor:default;
 }
 
-.OsylManager-mainView-tabPanel{
-	width: 100%;
-}
-
 .OsylManager-mainView-tabPanel .gwt-TabPanelBottom {
 border-color:#d6dbdf;
 border-style:solid;
@@ -167,7 +167,7 @@ padding:6px;
 
 .OsylManager-scrollTable{
 border:1px solid;
-width:750px;
+width:100%;
 height:400px;
 padding:3px;
 }
@@ -202,6 +202,7 @@ background-color : #e7e7e7;
   border-color: #ccc;
   border-style: solid;
   border-width: 0px 1px 1px 0px;
+  padding : 5px;
   white-space: nowrap;
   overflow: hidden;
 }

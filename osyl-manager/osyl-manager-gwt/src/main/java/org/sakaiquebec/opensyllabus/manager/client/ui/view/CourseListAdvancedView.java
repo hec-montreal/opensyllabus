@@ -44,9 +44,12 @@ import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Image;
@@ -58,7 +61,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @version $Id: $
  */
 public class CourseListAdvancedView extends OsylManagerAbstractView
-implements OsylManagerEventHandler {
+implements OsylManagerEventHandler, ClickHandler {
     
     private static final int SITE_ID_COL = 0;
 
@@ -69,6 +72,8 @@ implements OsylManagerEventHandler {
     private String searchTerm;
     
     private ScrollTable scSiteList;
+    
+    private CheckBox selectAll;
     
     private Messages messages = getController().getMessages();
 
@@ -113,7 +118,7 @@ implements OsylManagerEventHandler {
 			    scSiteList.getDataTable().getCellFormatter()
 			    .setStylePrimaryName(rowNum, 0, "OsylManager-scrollTable-Cell");
 			    
-			    scSiteList.getDataTable().setHTML(rowNum, 1, coSite.getCourseNumber());
+			    scSiteList.getDataTable().setHTML(rowNum, 1, coSite.getAcademicCareer());
 			    scSiteList.getDataTable().getCellFormatter()
 			    .setStylePrimaryName(rowNum, 1, "OsylManager-scrollTable-Cell");
 			    
@@ -265,9 +270,12 @@ implements OsylManagerEventHandler {
 	FlexCellFormatter formatter = headerTable.getFlexCellFormatter();
 	headerTable.addStyleName("OsylManager-headerTable");
 	
-	headerTable.setHTML(0, 0, "");
-	formatter.setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT);
-	formatter.setVerticalAlignment(0, 0, HasVerticalAlignment.ALIGN_TOP);
+	selectAll = new CheckBox();
+	selectAll.addClickHandler(this);
+	
+	headerTable.setWidget(0, 0, selectAll);
+	formatter.setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_CENTER);
+	formatter.setVerticalAlignment(0, 0, HasVerticalAlignment.ALIGN_MIDDLE);
 	formatter.addStyleName(0, 0, "OsylManager-scrollTable-Cell");
 	
 	headerTable.setHTML(0, 1, messages.CourseListView_scSiteList_col0());
@@ -325,5 +333,13 @@ implements OsylManagerEventHandler {
 //	    scSiteList.getDataTable().setWidget(rowNum, 7, new CheckBox());
 	}
 	mainPanel.add(scSiteList);
+    }
+
+    public void onClick(ClickEvent event) {
+	if(selectAll.getValue()){
+	    scSiteList.getDataTable().selectAllRows();
+	} else {
+	    scSiteList.getDataTable().deselectAllRows();
+	}
     }
 }

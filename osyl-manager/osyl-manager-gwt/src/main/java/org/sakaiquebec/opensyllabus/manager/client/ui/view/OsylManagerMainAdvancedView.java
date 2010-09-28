@@ -68,7 +68,7 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	hzPanel1.setStylePrimaryName("OsylManager-panel");
 
 	HorizontalPanel hzPanel2 = new HorizontalPanel();
-	hzPanel2.setStylePrimaryName("OsylManager-mainView-mainPanel");
+	hzPanel2.setStylePrimaryName("OsylManager-courseListView");
 
 	HorizontalPanel hzPanel3 = new HorizontalPanel();
 	hzPanel3.setStylePrimaryName("OsylManager-panel");

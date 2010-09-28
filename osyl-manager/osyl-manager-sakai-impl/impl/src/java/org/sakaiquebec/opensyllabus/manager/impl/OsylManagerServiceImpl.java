@@ -1435,6 +1435,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		info
 			.setCourseSession(courseOff.getAcademicSession()
 				.getTitle());
+		info.setAcademicCareer(courseOff.getAcademicCareer());
 
 		// TODO: the coordinator is not saved in the cm. Correct this
 		// when done.
