@@ -137,5 +137,11 @@ public interface ResourceDao {
     
     public Date getModifiedDate(String siteId) throws Exception;
     
+    /**
+     * Remove all CO for given siteId
+     * @param siteId
+     */
+    public void removeCoForSiteId(String siteId);
+    
 
 }

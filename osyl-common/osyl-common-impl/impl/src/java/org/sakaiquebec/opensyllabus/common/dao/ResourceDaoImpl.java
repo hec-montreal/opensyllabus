@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.regexp.REUtil;
 import org.hibernate.HibernateException;
 import org.sakaiproject.db.cover.SqlService;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -449,6 +450,27 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	} else
 	    throw new Exception("No course outline with site id= " + siteId
 		    + " and published=false");
+    }
+
+    @SuppressWarnings("unchecked")
+    public void removeCoForSiteId(String siteId) {
+	List<COSerialized> results = null;
+
+	if (siteId == null)
+	    throw new IllegalArgumentException();
+	try {
+	    results =
+		    getHibernateTemplate().find(
+			    "from COSerialized where siteId= ? ",
+			    new Object[] { siteId });
+	} catch (Exception e) {
+	    log.error("Unable to retrieve course outline by its siteId", e);
+	}
+	if(results!=null){
+	    for(COSerialized courseOutline:results){
+		getHibernateTemplate().delete(courseOutline);
+	    }
+	}
     }
 
 

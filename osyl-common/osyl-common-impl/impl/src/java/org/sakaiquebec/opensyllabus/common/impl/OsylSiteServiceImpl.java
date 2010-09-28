@@ -278,6 +278,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    public void update(Observable o, Object arg) {
 		Event e = (Event) arg;
 		if (e.getEvent().equals(UsageSessionService.EVENT_LOGOUT)) {
+		    //we unlocks all CO locks by current user (he logs out)
 		    resourceDao.clearLocksForSession(sessionManager
 			    .getCurrentSession().getId());
 		} else if (e.getEvent().equals(PresenceService.EVENT_ABSENCE)) {
@@ -298,7 +299,30 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    } catch (Exception ex) {
 		    }
 
+		} else if(e.getEvent().equals(SiteService.SECURE_REMOVE_SITE)){
+		    //A site is removed, we have to delete COs associated to this site too
+		    String siteid = e.getResource().substring("/site/".length());
+		    
+		    //breaks relation with other co
+		    try{
+		    String parent = coRelationDao.getParentOfCourseOutline(siteid);
+		    if(parent!=null)
+			dissociate(siteid, parent);
+		    List<CORelation> childrens = coRelationDao.getCourseOutlineChildren(siteid);
+		    if(childrens!=null)
+			for(CORelation corelation:childrens){
+			    String child = corelation.getChild();
+			    dissociate(child, siteid);
+			}
+		   
+		    //delete co for siteid
+		    resourceDao.removeCoForSiteId(siteid);
+		    
+		    }catch (Exception e1) {
+			log.error("Could not delete Co after site removing",e1);
+		    }
 		}
+		
 	    }
 	});
 
@@ -1198,7 +1222,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
 
 	    if (co != null) {
-		getSiteInfo(co, siteId);
+		try{
+		    getSiteInfo(co, siteId);
+		}catch(Exception e){
+		}
 		COModeledServer coModelChild = new COModeledServer(co);
 		if (parentId != null) {
 		    COModeledServer coModelParent =

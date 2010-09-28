@@ -88,9 +88,11 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 		}
 		if (parents != null && !parents.isEmpty())
 			return parents.get(0).getParent();
-		else
-			throw new Exception("No parent for course outline with id = "
+		else{
+			log.info("No parent for course outline with id = "
 					+ coId);
+			return null;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
