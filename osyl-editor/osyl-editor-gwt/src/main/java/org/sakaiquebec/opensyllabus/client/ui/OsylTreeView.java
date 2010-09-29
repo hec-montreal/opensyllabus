@@ -37,6 +37,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.DOM;
@@ -260,7 +261,8 @@ public class OsylTreeView extends OsylViewableComposite implements
     }
 
     public void onUpdateModel(UpdateCOStructureElementEvent event) {
-	refreshView();
+    	refreshView();
+    	OsylController.getInstance().getMainView().setTreeItemsWidth();
     }
 
     public Element[] getCurrentTreeItemsElement() {
@@ -312,6 +314,19 @@ public class OsylTreeView extends OsylViewableComposite implements
     				treeItemView.getModel());
     	}
     }
+    
+    public void onBrowserEvent(Event event) {
+		Element target = DOM.eventGetTarget(event);
+		super.onBrowserEvent(event);
+		switch (DOM.eventGetType(event)) {
+			case Event.ONMOUSEDOWN: {
+				if (DOM.isOrHasChild(getTree().getElement(), target) && target.getTagName() == "IMG") {
+					OsylController.getInstance().getMainView().setTreeItemsWidth();
+				}
+				break;
+			}
+		}
+	}
     
     public void setTreeItemsWidth(int treeWidth) {
 		Element[] elms = getCurrentTreeItemsElement();
