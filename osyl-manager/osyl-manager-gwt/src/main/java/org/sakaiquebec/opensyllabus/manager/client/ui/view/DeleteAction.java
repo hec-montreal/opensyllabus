@@ -129,8 +129,8 @@ public class DeleteAction extends OsylManagerAbstractAction {
 	    }
 	}
 	if(hasChild)
-	    message=messages.deleteAction_delete_siteHasChild();
-	message+="\n"+messages.deleteAction_delete_confirmation();
+	    message=messages.deleteAction_delete_siteHasChild()+"\n";
+	message+=messages.deleteAction_delete_confirmation();
 	
 	OsylOkCancelDialog conf = new OsylOkCancelDialog(messages.OsylWarning_Title(),message);
 	conf.addOkButtonCLickHandler(new ClickHandler() {

@@ -43,6 +43,9 @@ import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.assignment.api.Assignment;
 import org.sakaiproject.assignment.api.AssignmentEdit;
 import org.sakaiproject.assignment.api.AssignmentService;
+import org.sakaiproject.authz.api.SecurityAdvisor;
+import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
+import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
@@ -390,9 +393,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 						e1);
 			    }
 			}
-
 			String attachementCollectionId =
-				"/attachement/" + siteid + "/";
+				"/attachment/" + siteid + "/";
 			try {
 			    contentHostingService
 				    .removeCollection(attachementCollectionId);

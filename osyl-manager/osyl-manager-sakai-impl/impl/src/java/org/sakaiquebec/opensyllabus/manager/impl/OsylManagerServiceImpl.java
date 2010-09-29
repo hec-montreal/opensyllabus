@@ -1464,7 +1464,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		childs=osylSiteService.getChildren(siteId);
 	    }catch(Exception e){
 	    }
-	    if(childs!=null) 
+	    if(childs!=null && !childs.isEmpty()) 
 		info.setHasChild(true);
 	} else {
 	    info = null;
