@@ -74,6 +74,12 @@ public class COSite implements java.io.Serializable {
      * from the course management.
      */
     private String courseSection;
+    
+    /**
+     * The academic career in which the course associated to the site is part
+     * of (BAA, MBA, PHD, ...)
+     */
+    private String academicCareer;
 
     /**
      * The instructors of the course associated to the site. The information
@@ -333,5 +339,19 @@ public class COSite implements java.io.Serializable {
 
     public String getSiteId() {
 	return siteId;
+    }
+
+    /**
+     * @return the academicCareer value.
+     */
+    public String getAcademicCareer() {
+        return academicCareer;
+    }
+
+    /**
+     * @param academicCareer the new value of academicCareer
+     */
+    public void setAcademicCareer(String academicCareer) {
+        this.academicCareer = academicCareer;
     }
 }
