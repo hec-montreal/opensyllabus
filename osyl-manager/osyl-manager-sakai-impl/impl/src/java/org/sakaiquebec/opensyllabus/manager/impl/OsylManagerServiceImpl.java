@@ -1458,6 +1458,14 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 
 	    info.setParentSite(parentSite);
+	    
+	    List<String> childs = null;
+	    try{
+		childs=osylSiteService.getChildren(siteId);
+	    }catch(Exception e){
+	    }
+	    if(childs!=null) 
+		info.setHasChild(true);
 	} else {
 	    info = null;
 	}

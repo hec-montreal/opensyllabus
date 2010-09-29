@@ -120,7 +120,12 @@ public class COSite implements java.io.Serializable {
      * The last time the course outline was modified.
      */
     private Date lastModifiedDate;
-
+    
+    /**
+     * Is the site has childs
+     */
+    private boolean hasChild=false;
+    
     /**
      * Empty constructor.
      */
@@ -353,5 +358,13 @@ public class COSite implements java.io.Serializable {
      */
     public void setAcademicCareer(String academicCareer) {
         this.academicCareer = academicCareer;
+    }
+
+    public void setHasChild(boolean hasChild) {
+	this.hasChild = hasChild;
+    }
+
+    public boolean hasChild() {
+	return hasChild;
     }
 }

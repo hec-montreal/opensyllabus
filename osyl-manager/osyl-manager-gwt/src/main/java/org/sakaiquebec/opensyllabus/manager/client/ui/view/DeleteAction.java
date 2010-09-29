@@ -25,9 +25,12 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -44,8 +47,6 @@ public class DeleteAction extends OsylManagerAbstractAction {
     private static int asynCB_return = 0;
 
     private static int asynCB_OK = 0;
-
-    private OsylUnobtrusiveAlert alert;
 
     private class DeleteAsynCallBack implements AsyncCallback<Void> {
 
@@ -87,7 +88,7 @@ public class DeleteAction extends OsylManagerAbstractAction {
 		}
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
-		alert = new OsylUnobtrusiveAlert(msg);
+		new OsylUnobtrusiveAlert(msg);
 	    }
 	}
 
@@ -107,7 +108,7 @@ public class DeleteAction extends OsylManagerAbstractAction {
     }
 
     @Override
-    public void onClick(List<COSite> siteIds) {
+    public void onClick(final List<COSite> siteIds) {
 	// TODO: i18n
 	String pw = Window.prompt("Mot de passe / Password ?", "");
 	String okPw = "osyl" + "123";
@@ -119,20 +120,37 @@ public class DeleteAction extends OsylManagerAbstractAction {
 		    .alert("L'opération est refusée. Veuillez contacter le centre d'assistance.");
 	    return;
 	}
-
-	if (Window.confirm(messages.deleteAction_delete_confirmation())) {
-	    diag.show();
-	    diag.centerAndFocus();
-	    coSites = siteIds;
-	    asynCB_return = 0;
-	    asynCB_OK = 0;
-	    lMsg = new ArrayList<String>();
-
-	    for (COSite coSite : siteIds) {
-		controller.deleteSite(coSite.getSiteId(),
-			new DeleteAsynCallBack(coSite.getSiteId()));
+	String message="";
+	boolean hasChild=false;
+	for(COSite coSite:siteIds){
+	    if(coSite.hasChild()){
+		hasChild=true;
+		break;
 	    }
 	}
+	if(hasChild)
+	    message=messages.deleteAction_delete_siteHasChild();
+	message+="\n"+messages.deleteAction_delete_confirmation();
+	
+	OsylOkCancelDialog conf = new OsylOkCancelDialog(messages.OsylWarning_Title(),message);
+	conf.addOkButtonCLickHandler(new ClickHandler() {
+	    
+	    public void onClick(ClickEvent event) {
+		diag.show();
+		    diag.centerAndFocus();
+		    coSites = siteIds;
+		    asynCB_return = 0;
+		    asynCB_OK = 0;
+		    lMsg = new ArrayList<String>();
+
+		    for (COSite coSite : siteIds) {
+			controller.deleteSite(coSite.getSiteId(),
+				new DeleteAsynCallBack(coSite.getSiteId()));
+		    }
+	    }
+	});
+	conf.center();
+	conf.show();
     }
 
 }
