@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerRPCController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.FireOsylManagerEvents;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
@@ -40,9 +39,9 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
- * This is the base class of OsylManager.  The controller manages objects
- * needed by the interface classes and it has access to the server side to get
- * the data needed.
+ * This is the base class of OsylManager. The controller manages objects needed
+ * by the interface classes and it has access to the server side to get the data
+ * needed.
  * 
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
@@ -111,6 +110,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Gives access to the images bundle needed by the user interface objects.
+     * 
      * @return the imageBundle
      */
     public ManagerImageBundleInterface getImageBundle() {
@@ -119,6 +119,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Sets the images bundle to use.
+     * 
      * @param imageBundle the imageBundle to be used.
      */
     public void setImageBundle(ManagerImageBundleInterface imageBundle) {
@@ -127,6 +128,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Returns the list of selected sites in the sites table of OsylManager.
+     * 
      * @return a list of selected sites
      */
     public List<COSite> getSelectSites() {
@@ -135,6 +137,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Sets the new list of selected sites and throw a site selection event.
+     * 
      * @param selectSiteIDs a list of the selected sites.
      */
     public void setSelectSites(List<COSite> selectSiteIDs) {
@@ -144,9 +147,10 @@ public class OsylManagerController implements FireOsylManagerEvents {
 			OsylManagerEvent.SITES_SELECTION_EVENT);
 	notifyManagerEventHandler(event);
     }
-    
+
     /**
      * Returns a map of all the Course Management courses
+     * 
      * @return a courses map
      */
     public Map<String, String> getCMCourses() {
@@ -155,6 +159,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Sets the courses map needed by the user interfaces objects.
+     * 
      * @param coursesMap a courses map
      */
     public void setCoursesMap(Map<String, String> coursesMap) {
@@ -163,12 +168,12 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Adds a site to the selected sites list.
+     * 
      * @param cosite the site to add.
      */
     public void addSelectedSite(COSite cosite) {
 	selectSites.add(cosite);
     }
-
 
     // SERVER CALLS
     /**
@@ -183,6 +188,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Retrieves the map of all the osyl configs available
+     * 
      * @param callback the server callback when the operation is completed
      */
     public void getOsylConfigs(AsyncCallback<Map<String, String>> callback) {
@@ -198,12 +204,13 @@ public class OsylManagerController implements FireOsylManagerEvents {
      */
     public void importData(String url, String siteId,
 	    AsyncCallback<Void> callback) {
-	OsylManagerRPCController.getInstance().importData(
-		this, url, siteId, callback);
+	OsylManagerRPCController.getInstance().importData(this, url, siteId,
+		callback);
     }
 
     /**
      * Retrieves the zip file
+     * 
      * @param siteId
      * @param cb
      */
@@ -249,6 +256,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Notifies all the handlers listening to osyl Manager events.
+     * 
      * @param event the event being thrown
      */
     public void notifyManagerEventHandler(OsylManagerEvent event) {
@@ -262,6 +270,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Retrieves the parent site of the site with site id.
+     * 
      * @param siteId the id of the site to find its parent
      * @param callback the callback to contain the server response
      */
@@ -271,6 +280,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Retrieves all the sites corresponding of the site ids in the list
+     * 
      * @param siteIds the list of site ids
      * @param callback the callback to contain server response
      */
@@ -281,6 +291,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Associates a site to a parent site.
+     * 
      * @param siteId the site id to associate to a prent site
      * @param parentId the id of the parent site
      * @param callback container of the server response
@@ -293,6 +304,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Dissociates a site from its parent site.
+     * 
      * @param siteId the id of the site to dissociate from its parent
      * @param parentId the id of the parent site
      * @param callback container of the server response
@@ -305,6 +317,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Associates a site to a course management section.
+     * 
      * @param courseSectionId id of the course management section
      * @param siteId id of the site to associate
      * @param callback container of the server response
@@ -317,6 +330,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Dissociates a site form a course management section.
+     * 
      * @param siteId id of the site to dissociates
      * @param callback container of the server response
      */
@@ -327,6 +341,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Publishes the course outline of the course site.
+     * 
      * @param siteId id of the site to publish the course outline
      * @param callback container of the server response
      */
@@ -336,9 +351,10 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Retrieves the site and all the information about it.
+     * 
      * @param siteId id of the site to retrieve
      * @param searchTerm the search term to verify if the corresponding to the
-     * id matches it
+     *            id matches it
      * @param callback container of the server response
      */
     public void getCoAndSiteInfo(String siteId, String searchTerm,
@@ -349,6 +365,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Retrieves all the sites and their information.
+     * 
      * @param searchTerm the search term entered by the user
      * @param callback container of the server response
      */
@@ -360,9 +377,16 @@ public class OsylManagerController implements FireOsylManagerEvents {
 
     /**
      * Retrieves all the course management courses
+     * 
      * @param callback container of the server response
      */
-    public void getCMCourses(String startsWith, AsyncCallback<List<CMCourse>> callback) {
-	OsylManagerRPCController.getInstance().getCMCourses(startsWith, callback);
+    public void getCMCourses(String startsWith,
+	    AsyncCallback<List<CMCourse>> callback) {
+	OsylManagerRPCController.getInstance().getCMCourses(startsWith,
+		callback);
+    }
+
+    public void deleteSite(String siteId, AsyncCallback<Void> deleteAsynCallBack) {
+	OsylManagerRPCController.getInstance().deleteSite(siteId,deleteAsynCallBack);
     }
 }

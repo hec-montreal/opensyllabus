@@ -172,7 +172,7 @@ public class OsylServiceImpl implements OsylService {
      * Init method called at initialization of the bean.
      */
     public void init() {
-	log.warn("INIT from Osyl service");
+	log.info("INIT from Osyl service");
 
     }
 

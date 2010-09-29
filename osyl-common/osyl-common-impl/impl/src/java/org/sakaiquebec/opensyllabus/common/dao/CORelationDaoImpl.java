@@ -42,7 +42,7 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 	 * Init method called at initialization of the bean.
 	 */
 	public void init() {
-		log.warn("Init from DAO");
+		log.info("Init from DAO");
 	}
 
 	/** {@inheritDoc} */
@@ -91,7 +91,7 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 		else{
 			log.info("No parent for course outline with id = "
 					+ coId);
-			return null;
+			throw new Exception("No parent for course outline with id = "+coId);
 		}
 	}
 

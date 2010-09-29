@@ -248,4 +248,10 @@ public interface Messages extends ConstantsWithLookup {
     String OsylWarning_Title();
 
     String associateForm_search();
+
+    String deleteAction_delete_error();
+    String deleteAction_delete_ok();
+    String deleteAction_delete_error_detail();
+
+    String deleteAction_delete_confirmation();
 }

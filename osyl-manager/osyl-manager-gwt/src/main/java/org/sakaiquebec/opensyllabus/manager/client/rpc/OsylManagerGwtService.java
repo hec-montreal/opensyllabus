@@ -91,4 +91,6 @@ public interface OsylManagerGwtService extends RemoteService {
 
     public void publish(String siteId) throws Exception;
 
+    public void deleteSite(String siteId) throws Exception;
+
 }

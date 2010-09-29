@@ -82,5 +82,7 @@ public interface OsylManagerGwtServiceAsync {
     public void getAllCoAndSiteInfo(String searchTerm, AsyncCallback<List<COSite>> callback);
 
     public void publish(String siteId, AsyncCallback<Void> callback);
+
+    public void deleteSite(String siteId, AsyncCallback<Void> deleteAsynCallBack);
     
 }

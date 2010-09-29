@@ -29,6 +29,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -39,8 +40,12 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.assignment.api.Assignment;
+import org.sakaiproject.assignment.api.AssignmentEdit;
+import org.sakaiproject.assignment.api.AssignmentService;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
+import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResourceEdit;
@@ -93,7 +98,7 @@ import org.w3c.dom.Element;
 
 /**
  * Implementation of the <code>OsylSiteService</code>
- *
+ * 
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -138,9 +143,11 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     private UserDirectoryService userDirectoryService;
 
+    private AssignmentService assignmentService;
+
     /**
      * Sets the <code>CitationService</code>.
-     *
+     * 
      * @param citationService
      * @uml.property name="citationService"
      */
@@ -162,7 +169,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylConfigService}.
-     *
+     * 
      * @param osylConfigService
      */
     public void setConfigService(OsylConfigService osylConfigService) {
@@ -182,7 +189,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Dependency: EntityManager.
-     *
+     * 
      * @param service The EntityManager.
      */
     public void setEntityManager(EntityManager entityManager) {
@@ -191,7 +198,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylSecurityService}.
-     *
+     * 
      * @param securityService
      */
     public void setSecurityService(OsylSecurityService securityService) {
@@ -205,7 +212,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylSecurityService}.
-     *
+     * 
      * @param securityService
      */
     public void setOsylHierarchyService(OsylHierarchyService hierarchyService) {
@@ -214,7 +221,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>ContentHostingService</code>.
-     *
+     * 
      * @param contentHostingService
      */
     public void setContentHostingService(
@@ -224,7 +231,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link CORelationDao}.
-     *
+     * 
      * @param configDao
      */
     public void setCoRelationDao(CORelationDao relationDao) {
@@ -233,7 +240,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link ResourceDao}.
-     *
+     * 
      * @param resourceDao
      */
     public void setResourceDao(ResourceDao resourceDao) {
@@ -242,7 +249,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link COConfigDao}.
-     *
+     * 
      * @param configDao
      */
     public void setConfigDao(COConfigDao configDao) {
@@ -251,7 +258,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>SiteService</code>.
-     *
+     * 
      * @param siteService
      */
     public void setSiteService(SiteService siteService) {
@@ -267,6 +274,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	this.userDirectoryService = userDirectoryService;
     }
 
+    public void setAssignmentService(AssignmentService assignmentService) {
+	this.assignmentService = assignmentService;
+    }
+
     /**
      * Init method called at initialization of the bean.
      */
@@ -278,7 +289,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    public void update(Observable o, Object arg) {
 		Event e = (Event) arg;
 		if (e.getEvent().equals(UsageSessionService.EVENT_LOGOUT)) {
-		    //we unlocks all CO locks by current user (he logs out)
+		    // we unlocks all CO locks by current user (he logs out)
 		    resourceDao.clearLocksForSession(sessionManager
 			    .getCurrentSession().getId());
 		} else if (e.getEvent().equals(PresenceService.EVENT_ABSENCE)) {
@@ -299,30 +310,102 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    } catch (Exception ex) {
 		    }
 
-		} else if(e.getEvent().equals(SiteService.SECURE_REMOVE_SITE)){
-		    //A site is removed, we have to delete COs associated to this site too
-		    String siteid = e.getResource().substring("/site/".length());
-		    
-		    //breaks relation with other co
-		    try{
-		    String parent = coRelationDao.getParentOfCourseOutline(siteid);
-		    if(parent!=null)
-			dissociate(siteid, parent);
-		    List<CORelation> childrens = coRelationDao.getCourseOutlineChildren(siteid);
-		    if(childrens!=null)
-			for(CORelation corelation:childrens){
-			    String child = corelation.getChild();
-			    dissociate(child, siteid);
+		} else if (e.getEvent().equals(SiteService.SECURE_REMOVE_SITE)) {
+		    // A site is removed
+		    String siteid =
+			    e.getResource().substring("/site/".length());
+
+		    if (ServerConfigurationService.getBoolean(
+			    "osyl.site_deletion.co.delete", false)) {
+			// we have to delete COs associated to this site too
+			// breaks relation with other co
+			
+			
+			try {
+			    String parent=null;
+			    try{
+        			    parent =
+        				    coRelationDao
+        					    .getParentOfCourseOutline(siteid);
+			    }catch (Exception e2) {
+			    }
+			    if (parent != null)
+				dissociate(siteid, parent);
+			    List<CORelation> childrens =
+				    coRelationDao
+					    .getCourseOutlineChildren(siteid);
+			    if (childrens != null)
+				for (CORelation corelation : childrens) {
+				    String child = corelation.getChild();
+				    dissociate(child, siteid);
+				}
+
+			    // delete co for siteid
+			    resourceDao.removeCoForSiteId(siteid);
+
+			} catch (Exception e1) {
+			    log.error(
+				    "Could not delete Co after site removing",
+				    e1);
 			}
-		   
-		    //delete co for siteid
-		    resourceDao.removeCoForSiteId(siteid);
-		    
-		    }catch (Exception e1) {
-			log.error("Could not delete Co after site removing",e1);
+		    }
+
+		    if (ServerConfigurationService.getBoolean(
+			    "osyl.site_deletion.resource.delete", false)) {
+			// we have to delete resources
+			String collectionId = "/group/" + siteid + "/";
+			try {
+			    contentHostingService
+				    .removeCollection(collectionId);
+			} catch (Exception e1) {
+			    log
+				    .error(
+					    "Could not delete resources after site removing",
+					    e1);
+			}
+		    }
+
+		    if (ServerConfigurationService.getBoolean(
+			    "osyl.site_deletion.assignement.delete", false)) {
+			// we have to delete asssignement
+			Iterator assignementsIter;
+			for (assignementsIter =
+				assignmentService
+					.getAssignmentsForContext(siteid); assignementsIter
+				.hasNext();) {
+			    Assignment assignment =
+				    (Assignment) assignementsIter.next();
+			    AssignmentEdit toRemove;
+			    try {
+				toRemove =
+					assignmentService
+						.editAssignment(assignment
+							.getId());
+				assignmentService.removeAssignment(toRemove);
+				assignmentService.cancelEdit(toRemove);
+			    } catch (Exception e1) {
+				log
+					.error(
+						"Could not delete assignement after site removing",
+						e1);
+			    }
+			}
+
+			String attachementCollectionId =
+				"/attachement/" + siteid + "/";
+			try {
+			    contentHostingService
+				    .removeCollection(attachementCollectionId);
+			} catch (Exception e1) {
+			    log
+				    .error(
+					    "Could not delete assignement attachement after site removing",
+					    e1);
+			}
+
 		    }
 		}
-		
+
 	    }
 	});
 
@@ -472,17 +555,19 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return null;
     }
 
-    public COSerialized getCourseOutlineForExport(String siteId, String webappDir) throws Exception{
-		COSerialized co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
-		COConfigSerialized coConfig = co.getOsylConfig();
-		// at the first call we got only the config id and ref. We need to fill
-		// the rules so the next call is used to get it.
-		coConfig =
-			osylConfigService.getConfigByRef(coConfig.getConfigRef(),
-				webappDir);
-		co.setOsylConfig(coConfig);
-		updateCOContentTitle(siteId, co);
-		return co;
+    public COSerialized getCourseOutlineForExport(String siteId,
+	    String webappDir) throws Exception {
+	COSerialized co =
+		resourceDao.getSerializedCourseOutlineBySiteId(siteId);
+	COConfigSerialized coConfig = co.getOsylConfig();
+	// at the first call we got only the config id and ref. We need to fill
+	// the rules so the next call is used to get it.
+	coConfig =
+		osylConfigService.getConfigByRef(coConfig.getConfigRef(),
+			webappDir);
+	co.setOsylConfig(coConfig);
+	updateCOContentTitle(siteId, co);
+	return co;
     }
 
     /**
@@ -652,7 +737,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Add a collection (similar to a sub-directory) under the resource tool.
-     *
+     * 
      * @param dir name of collection
      * @param parent where to create it (null means top-level)
      * @return boolean whether the collection was added or not
@@ -681,7 +766,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Tells if a collection is already created in sakai.
-     *
+     * 
      * @param a String of the collection id.
      * @return boolean whether the collection exists
      */
@@ -697,7 +782,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Get a valid resource reference base site URL to be used in later calls.
-     *
+     * 
      * @return a String of the base URL
      */
     private String getSiteReference(Site site) {
@@ -849,7 +934,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			    getCourseManagementTitle(getCurrentSiteId());
 		    String cmIdentifier =
 			    getCourseManagementCourseNo(getCurrentSiteId());
-			String cmProgram =
+		    String cmProgram =
 			    getCourseManagementProgram(getCurrentSiteId());
 		    if (cmTitle != null) {
 			title = cmTitle;
@@ -857,7 +942,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    if (cmIdentifier != null) {
 			identifier = cmIdentifier;
 		    }
-		    if(cmProgram != null){
+		    if (cmProgram != null) {
 			program = cmProgram;
 		    }
 		}
@@ -930,7 +1015,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @throws Exception
      */
     public COSerialized getSerializedCourseOutline(String id, String webappDir)
@@ -948,7 +1033,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @throws Exception
      */
     public String updateSerializedCourseOutline(COSerialized co)
@@ -972,17 +1057,16 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     }
 
     /**
-     * Writes the XML into a temp file. This is a temporary measure.
-     * TODO SAKAI-1932: find a better way to backup course outlines, possibly
-     * computing differences and limiting how long and how many copies are
-     * kept.
-     *
+     * Writes the XML into a temp file. This is a temporary measure. TODO
+     * SAKAI-1932: find a better way to backup course outlines, possibly
+     * computing differences and limiting how long and how many copies are kept.
+     * 
      * @param co
      * @throws IOException
      */
     private void backupCo(COSerialized co) throws IOException {
-	File backup = File.createTempFile("osyl-co-" + co.getSiteId() + "_",
-		".xml");
+	File backup =
+		File.createTempFile("osyl-co-" + co.getSiteId() + "_", ".xml");
 	FileHelper.writeFileContent(backup, co.getContent());
     }
 
@@ -1051,7 +1135,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     /**
      * Reads the course outline xml template from a file located in the
      * osylcoconfigs directory.
-     *
+     * 
      * @param webappDir The path to the webapp directory
      * @return
      */
@@ -1078,7 +1162,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     /**
      * Checks if the file of the co template exists, if not it takes the default
      * template file, and return a buffered reader on the file.
-     *
+     * 
      * @param webappDir the location of the webapp
      * @return a BufferedReader on the appropriate template file.
      */
@@ -1222,9 +1306,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
 
 	    if (co != null) {
-		try{
+		try {
 		    getSiteInfo(co, siteId);
-		}catch(Exception e){
+		} catch (Exception e) {
 		}
 		COModeledServer coModelChild = new COModeledServer(co);
 		if (parentId != null) {
@@ -1454,15 +1538,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     }
 
     private String getCourseManagementProgram(String siteId) throws Exception {
-		String program = "";
+	String program = "";
 
-		String Eid = getSite(siteId).getProviderGroupId();
-		if (cmService.isSectionDefined(Eid)) {
-		    Section section = cmService.getSection(Eid);
-		    program = getProgram(section);
-		}
+	String Eid = getSite(siteId).getProviderGroupId();
+	if (cmService.isSectionDefined(Eid)) {
+	    Section section = cmService.getSection(Eid);
+	    program = getProgram(section);
+	}
 
-		return program;
+	return program;
     }
 
     private String getCourseManagementTitle(String siteId) throws Exception {
@@ -1477,9 +1561,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return courseManageMentTitle;
     }
 
-    public String getSiteName (String sectionId){
+    public String getSiteName(String sectionId) {
 	return getSiteName(cmService.getSection(sectionId));
     }
+
     private String getSiteName(Section section) {
 	StringBuilder siteName = new StringBuilder();
 	String sectionId = section.getEid();
@@ -1562,9 +1647,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     }
 
     private String getProgram(Section section) {
-		String courseOffId = section.getCourseOfferingEid();
-		CourseOffering courseOff = cmService.getCourseOffering(courseOffId);
-		return courseOff.getAcademicCareer();
+	String courseOffId = section.getCourseOfferingEid();
+	CourseOffering courseOff = cmService.getCourseOffering(courseOffId);
+	return courseOff.getAcademicCareer();
     }
 
     private String getSessionName(AcademicSession session) {
@@ -1648,6 +1733,11 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    e.printStackTrace();
 	    return null;
 	}
+    }
+
+    public void deleteSite(String siteId) throws Exception {
+	Site site = getSite(siteId);
+	siteService.removeSite(site);
     }
 
 }

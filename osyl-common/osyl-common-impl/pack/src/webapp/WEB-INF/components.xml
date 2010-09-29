@@ -122,6 +122,8 @@
 		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
 		<property name="userDirectoryService"
 			ref="org.sakaiproject.user.api.UserDirectoryService" />
+		<property name="assignmentService"
+			ref="org.sakaiproject.assignment.api.AssignmentService" />
 
 
 		<!-- Osyl dependencies -->

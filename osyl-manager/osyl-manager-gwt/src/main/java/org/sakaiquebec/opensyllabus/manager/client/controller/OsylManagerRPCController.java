@@ -154,4 +154,8 @@ public class OsylManagerRPCController {
 	serviceProxy.publish(siteId,callback);
     }
 
+    public void deleteSite(String siteId, AsyncCallback<Void> deleteAsynCallBack) {
+	serviceProxy.deleteSite(siteId,deleteAsynCallBack);
+    }
+
 }

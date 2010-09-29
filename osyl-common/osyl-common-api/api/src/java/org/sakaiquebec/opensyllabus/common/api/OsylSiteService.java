@@ -300,6 +300,8 @@ public interface OsylSiteService extends EntityProducer {
     public Date getCoLastModifiedDate(String siteId);
 
     public COSerialized getCourseOutlineForExport(String siteId, String webappDir) throws Exception;
+    
+    public void deleteSite(String siteId) throws Exception;
 
 
 }

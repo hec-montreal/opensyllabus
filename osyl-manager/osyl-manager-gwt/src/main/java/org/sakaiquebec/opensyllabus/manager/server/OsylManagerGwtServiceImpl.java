@@ -159,5 +159,9 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	String webappDir = getServletContext().getRealPath("/");
 	osylManagerServices.getOsylPublishService().publish(webappDir, siteId);
     }
+    
+    public void deleteSite(String siteId) throws Exception{
+	osylManagerServices.getOsylSiteService().deleteSite(siteId);
+    }
 
 }
