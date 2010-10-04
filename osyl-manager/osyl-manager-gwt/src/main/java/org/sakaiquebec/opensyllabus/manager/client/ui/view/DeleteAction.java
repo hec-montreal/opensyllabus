@@ -109,34 +109,51 @@ public class DeleteAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(final List<COSite> siteIds) {
-	// TODO: i18n
-	String pw = Window.prompt("Mot de passe / Password ?", "");
-	String okPw = "osyl" + "123";
-	if (null == pw) {
-	    return;
-	} else if (!okPw.equals(pw)) {
+
+	boolean hasChild = false;
+	boolean isCMLinked = false;
+	for (COSite coSite : siteIds) {
+	    if (coSite.hasChild())
+		hasChild = true;
+	    if (!"".equals(coSite.getCourseName()))
+		isCMLinked = true;
+
+	}
+
+	if (isCMLinked) {
+	    OsylOkCancelDialog canc =
+		    new OsylOkCancelDialog(false, true, messages
+			    .OsylWarning_Title(), messages
+			    .deleteAction_delete_error_linkedToCM(), true,
+			    false);
+	    canc.center();
+	    canc.show();
+	} else {
+
 	    // TODO: i18n
-	    Window
-		    .alert("L'opération est refusée. Veuillez contacter le centre d'assistance.");
-	    return;
-	}
-	String message="";
-	boolean hasChild=false;
-	for(COSite coSite:siteIds){
-	    if(coSite.hasChild()){
-		hasChild=true;
-		break;
+	    String pw = Window.prompt("Mot de passe / Password ?", "");
+	    String okPw = "osyl" + "123";
+	    if (null == pw) {
+		return;
+	    } else if (!okPw.equals(pw)) {
+		// TODO: i18n
+		Window
+			.alert("L'opération est refusée. Veuillez contacter le centre d'assistance.");
+		return;
 	    }
-	}
-	if(hasChild)
-	    message=messages.deleteAction_delete_siteHasChild()+"\n";
-	message+=messages.deleteAction_delete_confirmation();
-	
-	OsylOkCancelDialog conf = new OsylOkCancelDialog(messages.OsylWarning_Title(),message);
-	conf.addOkButtonCLickHandler(new ClickHandler() {
-	    
-	    public void onClick(ClickEvent event) {
-		diag.show();
+	    String message = "";
+
+	    if (hasChild)
+		message = messages.deleteAction_delete_siteHasChild() + "\n";
+	    message += messages.deleteAction_delete_confirmation();
+
+	    OsylOkCancelDialog conf =
+		    new OsylOkCancelDialog(messages.OsylWarning_Title(),
+			    message);
+	    conf.addOkButtonCLickHandler(new ClickHandler() {
+
+		public void onClick(ClickEvent event) {
+		    diag.show();
 		    diag.centerAndFocus();
 		    coSites = siteIds;
 		    asynCB_return = 0;
@@ -147,10 +164,11 @@ public class DeleteAction extends OsylManagerAbstractAction {
 			controller.deleteSite(coSite.getSiteId(),
 				new DeleteAsynCallBack(coSite.getSiteId()));
 		    }
-	    }
-	});
-	conf.center();
-	conf.show();
+		}
+	    });
+	    conf.center();
+	    conf.show();
+	}
     }
 
 }
