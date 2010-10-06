@@ -115,7 +115,7 @@ public class DeleteAction extends OsylManagerAbstractAction {
 	for (COSite coSite : siteIds) {
 	    if (coSite.hasChild())
 		hasChild = true;
-	    if (!"".equals(coSite.getCourseName()))
+	    if (coSite.getCourseName()!=null && !"".equals(coSite.getCourseName()))
 		isCMLinked = true;
 
 	}
