@@ -106,7 +106,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 
     }
 
-    public void createPrintableEditionVersion(String xml) throws Exception{
+    public void createPrintableEditionVersion() throws Exception{
 
     }
 }

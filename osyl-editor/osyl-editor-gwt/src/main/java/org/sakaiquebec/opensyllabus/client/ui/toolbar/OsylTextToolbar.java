@@ -272,10 +272,16 @@ public class OsylTextToolbar extends Composite {
 		new MenuItem(getOsylController().getUiMessages().getMessage(
 			"ButtonPrintToolBar.edition_version"), new Command() {
 		    public void execute() {
-			OsylEditorEntryPoint.getInstance().prepareModelForSave();
-			COSerialized coSerialized =
-				new COSerialized(OsylEditorEntryPoint.getInstance().getUpdatedSerializedCourseOutline());
-			osylController.createPrintableEditionVersion(coSerialized.getContent(), print_editionVersion_callback); 
+			AsyncCallback<String> callback = new AsyncCallback<String>() {
+				public void onSuccess(String serverResponse) {
+				    osylController.createPrintableEditionVersion(print_editionVersion_callback); 
+				}
+
+				public void onFailure(Throwable error) {
+				}
+			    };
+			
+			osylController.saveCourseOutline(callback);
 		    }
 		});
 

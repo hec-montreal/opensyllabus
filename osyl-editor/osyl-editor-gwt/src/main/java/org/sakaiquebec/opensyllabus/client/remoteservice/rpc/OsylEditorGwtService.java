@@ -188,6 +188,6 @@ public interface OsylEditorGwtService extends RemoteService {
      * @param xml
      * @param printEditionVersionCallback
      */
-    public void createPrintableEditionVersion(String xml) throws Exception;
+    public void createPrintableEditionVersion() throws Exception;
 
 }

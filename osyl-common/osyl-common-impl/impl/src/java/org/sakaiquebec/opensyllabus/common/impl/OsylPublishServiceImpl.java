@@ -427,6 +427,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     public void createEditionPrintVersion(COSerialized cos, String webappdir)
 	    throws Exception {
+	updateCourseInformations(cos, webappdir);
 	File f = createPrintVersion(cos, webappdir);
 	String siteId = cos.getSiteId();
 	if (f != null) {

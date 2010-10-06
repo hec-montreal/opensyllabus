@@ -200,7 +200,7 @@ public interface OsylEditorGwtServiceAsync {
      * @param xml
      * @param printEditionVersionCallback
      */
-    public void createPrintableEditionVersion(String xml,
+    public void createPrintableEditionVersion(
 	    AsyncCallback<Void> printEditionVersionCallback);
 
 }

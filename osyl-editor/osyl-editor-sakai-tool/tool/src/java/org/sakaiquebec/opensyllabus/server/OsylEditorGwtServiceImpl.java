@@ -467,16 +467,14 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * @param xml
      * @param printEditionVersionCallback
      */
-    public void createPrintableEditionVersion(String xml) throws Exception {
+    public void createPrintableEditionVersion() throws Exception {
 	String webappDir = getServletContext().getRealPath("/");
 	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
 	COSerialized cos = getSerializedCourseOutline(siteId);
 	osylServices.getOsylConfigService().fillCo(webappDir
 			    + OsylConfigService.CONFIG_DIR + File.separator
 			    + cos.getOsylConfig().getConfigRef(), cos);
-	String transformXml =
-		osylServices.getOsylPublishService().transformXmlForGroup(xml,
-			SecurityInterface.ACCESS_ATTENDEE, webappDir);
+	String transformXml = transformXmlForGroup(cos.getContent(), SecurityInterface.ACCESS_ATTENDEE);
 	cos.setContent(transformXml);
 	osylServices.getOsylPublishService().createEditionPrintVersion(cos,
 		webappDir);

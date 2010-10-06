@@ -1688,9 +1688,8 @@ public class OsylController implements SavePushButtonEventHandler,
 	OsylRemoteServiceLocator.getEditorRemoteService().releaseLock(cb);
     }
 
-    public void createPrintableEditionVersion(String xml,
-	    AsyncCallback<Void> printEditionVersionCallback) {
-	OsylRemoteServiceLocator.getEditorRemoteService().createPrintableEditionVersion(xml,printEditionVersionCallback);
+    public void createPrintableEditionVersion(AsyncCallback<Void> printEditionVersionCallback) {
+	OsylRemoteServiceLocator.getEditorRemoteService().createPrintableEditionVersion(printEditionVersionCallback);
     }
 
 }
