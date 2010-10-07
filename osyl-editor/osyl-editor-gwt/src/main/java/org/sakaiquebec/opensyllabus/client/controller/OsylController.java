@@ -1211,53 +1211,15 @@ public class OsylController implements SavePushButtonEventHandler,
 	if (isReadOnly()) {
 	    return;
 	}
-	// The caller must be declared final to use it into an inner class
-	final OsylController caller = this;
-	// We first create a call-back for this method call
-	AsyncCallback<String> callback = new AsyncCallback<String>() {
-	    // We define the behavior in case of success
-	    public void onSuccess(String id) {
-		try {
-		    System.out
-			    .println("RPC SUCCESS - updateSerializedCourseOutline(...)");
-		    caller.updateSerializedCourseOutlineCB(OsylEditorEntryPoint
-			    .getInstance().getSerializedCourseOutline(), id);
-		} catch (Exception error) {
-		    System.out
-			    .println("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
-				    + error.toString());
-		    Window
-			    .alert("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
-				    + error.toString());
-		    caller
-			    .handleRPCError("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
-				    + error.toString());
-		}
-	    }
-
-	    // And we define the behavior in case of failure
-	    public void onFailure(Throwable error) {
-		System.out
-			.println("RPC FAILURE - updateSerializedCourseOutline(...) : "
-				+ error.toString());
-		Window
-			.alert("RPC FAILURE - updateSerializedCourseOutline(...) : "
-				+ error.toString());
-		caller
-			.handleRPCError("RPC FAILURE - updateSerializedCourseOutline(...) :"
-				+ error.toString());
-	    }
-	};
-	saveCourseOutline(callback);
-
+	saveCourseOutline(null);
     }
 
     public void saveCourseOutline(AsyncCallback<String> callBack) {
 	saveCourseOutline(callBack, false);
     }
 
-    public void saveCourseOutline(AsyncCallback<String> callBack,
-	    boolean autoSave) {
+    public void saveCourseOutline(final AsyncCallback<String> callBack,
+	    final boolean autoSave) {
 	try {
 	    // 1. Unless we are performing an auto-save, we instruct the
 	    // ViewContext to close all editors in case an editor with modified
@@ -1272,8 +1234,47 @@ public class OsylController implements SavePushButtonEventHandler,
 	    entryPoint.prepareModelForSave();
 
 	    // 3. And we save it!
+	    // The caller must be declared final to use it into an inner class
+		final OsylController caller = this;
+	    AsyncCallback<String> callback = new AsyncCallback<String>() {
+		    // We define the behavior in case of success
+		    public void onSuccess(String id) {
+			try {
+			    System.out
+				    .println("RPC SUCCESS - updateSerializedCourseOutline(...)");
+			    caller.updateSerializedCourseOutlineCB(OsylEditorEntryPoint
+        				    .getInstance().getSerializedCourseOutline(), id);
+			    if(callBack!=null)
+			    	callBack.onSuccess(id);
+			} catch (Exception error) {
+			    System.out
+				    .println("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
+					    + error.toString());
+			    Window
+				    .alert("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
+					    + error.toString());
+			    caller
+				    .handleRPCError("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
+					    + error.toString());
+			}
+		    }
+
+		    // And we define the behavior in case of failure
+		    public void onFailure(Throwable error) {
+			System.out
+				.println("RPC FAILURE - updateSerializedCourseOutline(...) : "
+					+ error.toString());
+			Window
+				.alert("RPC FAILURE - updateSerializedCourseOutline(...) : "
+					+ error.toString());
+			caller
+				.handleRPCError("RPC FAILURE - updateSerializedCourseOutline(...) :"
+					+ error.toString());
+		    }
+		};
+	    
 	    updateSerializedCourseOutline(entryPoint
-		    .getSerializedCourseOutline(), callBack);
+		    .getSerializedCourseOutline(), callback);
 
 	    // 4. Set flag isDirty to false again
 	    osylModelController.setModelDirty(false);
@@ -1592,11 +1593,6 @@ public class OsylController implements SavePushButtonEventHandler,
 
 	    // We define the behavior in case of success
 	    public void onSuccess(String serverResponse) {
-		try {
-		    caller.autoSaveCB(serverResponse);
-		} catch (Exception e) {
-		    caller.unableToAutoSave(e);
-		}
 	    }
 
 	    // And we define the behavior in case of failure
