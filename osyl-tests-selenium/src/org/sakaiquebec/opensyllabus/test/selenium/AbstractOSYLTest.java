@@ -147,9 +147,21 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      */
     public void createTestSite() throws Exception {
 	log("Creating site " + getCurrentTestSiteName());
-	session().open("/portal/site/opensyllabusManager");
-
+	//open site administration workspace
+	session().open("/portal/site/!admin");
 	session().answerOnNextPrompt("osyl123");
+	
+	//open course outline manager tool
+	if (inFireFox()) {
+	    session().mouseOver("//a[@class='icon-sakai-opensyllabus-manager-tool']");
+	    session().mouseDown("//a[@class='icon-sakai-opensyllabus-manager-tool']");
+	    session().mouseUp("//a[@class='icon-sakai-opensyllabus-manager-tool']");
+	    session().click("//a[@class='icon-sakai-opensyllabus-manager-tool']/span");
+	    pause();
+	} else {
+	    session().keyPress("//a[@class='icon-sakai-opensyllabus-manager-tool']", "\r");
+	}
+	
 	if (inFireFox()) {
 	    session().mouseOver("//tr[7]/td/table/tbody/tr/td[1]/div");
 	    session().mouseDown("//tr[7]/td/table/tbody/tr/td[1]/div");
@@ -429,7 +441,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * for now).
      */
     public void clickAddButton() {
-	session().click("gwt-uid-8");
+	session().click("gwt-uid-7");
     }
 
     /**

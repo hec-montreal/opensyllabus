@@ -171,9 +171,12 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	pause();
 	
 	//Overview
-	session().click("gwt-uid-9");
+	session().click("gwt-uid-8");
 	pause();
-	session().click("gwt-uid-11");
+	// Attendee Overview
+	session().click(
+		    "//html/body/div/div/table/tbody/tr[2]/td[2]/div/"
+			    + "div/table/tbody/tr/td");
 	pause();
 	//session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
 	//Will be tested when the problem is resolved(public & attendee)
