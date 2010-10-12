@@ -1,95 +1,21 @@
 ACAD_ORG;DESCRFORMAL;DEPTID
-0101;Direction (Amenagement)       ;0101
-0104;Architecture                  ;0104
-0105;Architecture de paysage       ;0105
-0106;Design industriel             ;0106
-0107;Urbanisme                     ;0107
-0301;Direction (Arts et sciences)  ;0301
-0304;Anthropologie                 ;0304
-0307;Bibliotheconomie (Ecole de)   ;0307
-0308;Biochimie                     ;0308
-0310;Chimie                        ;0310
-0311;Communication                 ;0311
-0313;Criminologie (Ecole de)       ;0313
-0316;Demographie                   ;0316
-0319;Litteratures et lang. modernes;0319
-0322;Etudes anglaises              ;0322
-0325;Litterat. de langue francaise ;0325
-0328;Etud. classiques et medievales;0328
-0331;Geographie                    ;0331
-0334;Geologie                      ;0334
-0337;Histoire                      ;0337
-0338;Hist. de l'art et et. cinemat.;0338
-0340;Informatique et rech. oper.   ;0340
-0341;D.E.S.I.                      ;0341
-0343;Linguistique et traduction    ;0343
-0344;Litterature comparee          ;0344
-0346;Mathematiques et statistique  ;0346
-0349;Philosophie                   ;0349
-0352;Physique                      ;0352
-0355;Psychoeducation (Ecole de)    ;0355
-0358;Psychologie                   ;0358
-0361;Relations industrielles(Ecole);0361
-0364;Sciences biologiques          ;0364
-0367;Sciences economiques          ;0367
-0370;Science politique             ;0370
-0373;Service social (Ecole de)     ;0373
-0376;Sociologie                    ;0376
-0379;Hist.-soc. des sciences(Inst.);0379
-0390;Centre etudes Asie de l'est   ;0390
-0601;Direction (Medecine dentaire) ;0601
-0607;Sante buccale                 ;0607
-0610;Dentisterie de restauration   ;0610
-0619;Stomatologie                  ;0619
-1101;Direction (Droit)             ;1101
-1301;Direction (Kinesiologie)      ;1301
-1601;Direction (Educ. permanente)  ;1601
-1602;Promotion culturelle          ;1602
-1801;Direction (Etudes superieures);1801
-2101;Direction (H.E.C.)            ;2101
-2301;Direction (Medecine)          ;2301
-2302;Administration de la sante    ;2302
-2304;Pathologie et biologie cellul.;2304
-2307;Anesthesie et reanimation     ;2307
-2310;Biochimie                     ;2310
-2313;Chirurgie                     ;2313
-2316;Nutrition                     ;2316
-2318;Institut de genie biomedical  ;2318
-2319;Medecine                      ;2319
-2320;Sante env. et sante au travail;2320
-2323;Medecine familiale            ;2323
-2325;Medecine sociale et preventive;2325
-2328;Microbiologie et immunologie  ;2328
-2331;Obstetrique et gynecologie    ;2331
-2332;Ophtalmologie                 ;2332
-2333;Orthophonie et audiologie     ;2333
-2334;Pathologie                    ;2334
-2337;Pediatrie                     ;2337
-2340;Pharmacologie                 ;2340
-2343;Physiologie                   ;2343
-2346;Psychiatrie                   ;2346
-2349;Readaptation (Ecole de)       ;2349
-2352;Radiologie                    ;2352
-2601;Direction (Med. veterinaire)  ;2601
-2604;Biomedecine veterinaire       ;2604
-2607;Sciences cliniques            ;2607
-2610;Pathologie et microbiologie   ;2610
-2801;Direction (Musique)           ;2801
-3101;Direction (Sc. infirmieres)   ;3101
-3301;Direction (Optometrie)        ;3301
-3601;Direction (Pharmacie)         ;3601
-3801;Direction (Polytechnique)     ;3801
-4601;Direction (Sc. de l'education);4601
-4602;Formation initiale des maitres;4602
-4615;Didactique                    ;4615
-4620;Admin. et fondements de l'educ;4620
-4630;Psychopedagogie et andragogie ;4630
-4801;Direction (Theologie)         ;4801
-7046;F.A.S. - (F.S.E.)             ;7046
-7116;Amenagement - F.A.S.- (F.E.P.);7116
-7216;(F.E.P.) - Medecine           ;7216
-7316;F.A.S. - (F.E.P.)             ;7316
-7416;(F.E.P.)-Medecine-Educ.physiq.;7416
-7516;(F.E.P.) - F.S.I. - Medecine  ;7516
-7616;F.A.S. - (F.E.P.) - Medecine  ;7616
-7716;F.A.S. - (F.E.P.) - Theologie ;7716
+BAA;Programme de BAA;112
+BUR.REGIST;Bureau du registraire;120
+CERTIFICAT;Programmes de certificat;115
+DIPLOMES;Direction des diplômes;118
+DIR.PROG.; ;110
+DOCTORAT;Programme de doctorat;116
+FINANCE;Finance;103
+GOL;Gestion des opérations et de la logistique;104
+GRH;Gestion - ressources humaines;102
+IEA;Institut d'économie appliquée;107
+INTERNAT;Service de l'enseignement Affaires Internationales;186
+MARKETING;Marketing;109
+MBA;Programme de MBA;113
+MNGT;Management;105
+MQG;Méthodes quantitatives;101
+MSC;Programme de M.Sc.;117
+P.ETUD.SUP;Programmes d'études supérieures;152
+QUAL.COMM.;Dir. Qualité communication;119
+SC.COMPT.;Sciences comptables;106
+TI;Technologies de l'information;108
