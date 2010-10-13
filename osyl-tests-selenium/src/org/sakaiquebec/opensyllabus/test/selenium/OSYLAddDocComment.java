@@ -43,7 +43,7 @@ public class OSYLAddDocComment  extends AbstractOSYLTest {
 		deleteTestSite(false);
 		// We create a brand new one to ensure a constant "playground"!
 		createTestSite();
-		goToSite();
+		goToCurrentSite();
 		waitForOSYL();
 		enterFirstLecture();
 

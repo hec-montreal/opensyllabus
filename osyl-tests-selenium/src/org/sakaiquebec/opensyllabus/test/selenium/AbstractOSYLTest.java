@@ -21,20 +21,20 @@
 
 package org.sakaiquebec.opensyllabus.test.selenium;
 
+import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.closeSeleniumSession;
+import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.session;
+import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.startSeleniumSession;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.thoughtworks.selenium.SeleneseTestCase;
-
+import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
-import org.testng.Reporter;
 
-import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.closeSeleniumSession;
-import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.session;
-import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.startSeleniumSession;
+import com.thoughtworks.selenium.SeleneseTestCase;
 
 /**
  * AbstractOSYLTest contains several methods that can be used to implement
@@ -146,22 +146,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * TODO: change the locators so they are locale-independent.
      */
     public void createTestSite() throws Exception {
-	log("Creating site " + getCurrentTestSiteName());
-	//open site administration workspace
-	session().open("/portal/site/~admin");
-	session().answerOnNextPrompt("osyl123");
-	
-	//open course outline manager tool
-	if (inFireFox()) {
-	    session().mouseOver("//a[@class='icon-sakai-opensyllabus-manager-tool']");
-	    session().mouseDown("//a[@class='icon-sakai-opensyllabus-manager-tool']");
-	    session().mouseUp("//a[@class='icon-sakai-opensyllabus-manager-tool']");
-	    session().click("//a[@class='icon-sakai-opensyllabus-manager-tool']/span");
-	    pause();
-	} else {
-	    session().keyPress("//a[@class='icon-sakai-opensyllabus-manager-tool']", "\r");
-	}
-	
+	createSite(getCurrentTestSiteName());
+    } // createTestSite
+
+    public void createSite(String siteName) throws Exception {
+	log("Creating site " + siteName);
+	goToOsylManagerTool();
+
 	if (inFireFox()) {
 	    session().mouseOver("//tr[7]/td/table/tbody/tr/td[1]/div");
 	    session().mouseDown("//tr[7]/td/table/tbody/tr/td[1]/div");
@@ -171,8 +162,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    session().keyPress("//tr[7]/td/table/tbody/tr/td[1]/div", "\r");
 	}
 
-	session().type("//tr[2]/td/table/tbody/tr/td[2]/input",
-		getCurrentTestSiteName());
+	session().type("//tr[2]/td/table/tbody/tr/td[2]/input", siteName);
 	session().select("//tr[4]/td/table/tbody/tr/td[2]/select",
 		"value=default");
 	session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=2");
@@ -194,41 +184,72 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    session().keyPress("//tr[4]/td/div/div", "\r");
 	}
 
-    } // createTestSite
+    } // createSite
+
+    public void goToOsylManagerTool() {
+	// open site administration workspace
+	session().open("/portal/site/~admin");
+	session().answerOnNextPrompt("osyl123");
+
+	if (!session().isElementPresent(
+		"//span[@class='icon-sakai-opensyllabus-manager-tool']")) {
+	    // open course outline manager tool
+	    if (inFireFox()) {
+		session().mouseOver(
+			"//a[@class='icon-sakai-opensyllabus-manager-tool']");
+		session().mouseDown(
+			"//a[@class='icon-sakai-opensyllabus-manager-tool']");
+		session().mouseUp(
+			"//a[@class='icon-sakai-opensyllabus-manager-tool']");
+		session()
+			.click(
+				"//a[@class='icon-sakai-opensyllabus-manager-tool']/span");
+		pause();
+	    } else {
+		session().keyPress(
+			"//a[@class='icon-sakai-opensyllabus-manager-tool']",
+			"\r");
+	    }
+	}
+    }
 
     public String getCurrentTestSiteName() {
 	return siteName;
     }
 
-    /**
-     * Loads the test site. Assumes we are already logged-in. A failure occurs
-     * if the site does not exist.
-     */
-    public void goToSite() throws IllegalStateException {
+    public void goToSite(String siteName) throws IllegalStateException {
 	try {
-	    session().open("/portal/site/" + getCurrentTestSiteName());
+	    session().open("/portal/site/" + siteName);
 	    waitForPageToLoad();
 	    if (session().isTextPresent("Site Unavailable")) {
-	        throw new IllegalStateException("Got 'Site Unavailable' !");
+		throw new IllegalStateException("Got 'Site Unavailable' !");
 	    }
 
 	    session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
 	    pause();
 	    // gwt-uid-4 is button Save
 	    if (!session().isVisible("gwt-uid-4")) {
-	        log("Course outline locked: waiting 15 minutes");
-	        pause(900000);
-	        session().refresh();
-	        waitForPageToLoad();
+		log("Course outline locked: waiting 15 minutes");
+		pause(900000);
+		session().refresh();
+		waitForPageToLoad();
 	    }
 	    if (!session().isVisible("gwt-uid-4")) {
-	        logAndFail("Course outline still locked after 15 minutes");
+		logAndFail("Course outline still locked after 15 minutes");
 	    }
 	} catch (IllegalStateException e) {
 	    throw e;
 	} catch (Exception e) {
 	    logAndFail("goToSite: " + e);
 	}
+    }
+
+    /**
+     * Loads the test site. Assumes we are already logged-in. A failure occurs
+     * if the site does not exist.
+     */
+    public void goToCurrentSite() throws IllegalStateException {
+	goToSite(getCurrentTestSiteName());
     }
 
     /**
@@ -694,8 +715,8 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().select("//select[@name=\"listBoxFormElement\"]",
 		"label=" + rubricLabel);
     }
-    
-    protected void openOrganisationSection(){
+
+    protected void openOrganisationSection() {
 	// Open Seances Section
 	if (inFireFox()) {
 	    session().mouseDown(
@@ -704,13 +725,154 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    pause();
 	} else {
 	    // This doesn't seem to work anymore
-	    session().click("gwt-uid-22");
+	    session().click("//div[@id='gwt-uid-21']/div");
+	    session().keyPress("//div[@id='gwt-uid-21']/div","\r");
+	    session().mouseOver("//div[@id='gwt-uid-21']/div");
+	    session().mouseDown("//div[@id='gwt-uid-21']/div");
+            session().mouseUp("//div[@id='gwt-uid-21']/div");
 	}
     }
-    
+
     protected int getResourceCount() {
 	return session().getXpathCount(
 		"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
+    }
+
+    protected void openTeachingMaterialSection() {
+	// Open Seances Section
+	if (inFireFox()) {
+	    session().mouseDown(
+		    "//div[@class=\"gwt-TreeItem\"]/div/"
+			    + "div[contains(text(),'dagogique')]");
+	    pause();
+	} else {
+	    // This doesn't seem to work anymore
+	    session().click("gwt-uid-17");
+	}
+    }
+    
+    protected String addText(String text){
+	// Add Text in the last Lecture Unit
+	clickAddItem("addText");
+
+	// We edit the new text Lecture
+	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+
+	
+	// We select randomly the rubric name
+	String rubric = getRandomRubric();
+	log("Selecting rubric [" + rubric + "]");
+	changeRubric(rubric);
+
+	// We select attendee on dissemination level
+	session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",
+		"index=0");
+
+	// Type some text in the rich-text area
+	if (inFireFox()) {
+	    // type text
+	    session()
+		    .selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
+		   
+	    session().type("//html/body", text);
+	    // close editor
+	    session().selectFrame("relative=parent");
+	    session().click("//td/table/tbody/tr/td[1]/button");
+	    // check if text is visible
+	    if (!session().isTextPresent(text)) {
+		logAndFail("Expected to see text [" + text
+			+ "] after text edition");
+	    }
+	    log("OK: Text resource edited");
+	} else {
+	    log("RichText edition can only be tested in Firefox");
+	    // close editor
+	    session().click("//td/table/tbody/tr/td[1]/button");
+	}
+	return rubric;
+    }
+    
+    protected String addDocument(String docName, String clickableText){
+	
+	String docNameModified= docName.replaceAll("\\[", "_");
+	docNameModified= docNameModified.replaceAll("\\]", "_");
+	// Add new document
+	clickAddItem("addDocument");
+
+	// We open Document resource editor
+	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+
+	// We choose randomly a Rubric
+	String rubric = getRandomRubric();
+	log("Selecting rubric [" + rubric + "]");
+	changeRubric(rubric);
+
+	// We select attendee on dissemination level
+	session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",
+		"index=0");
+
+	// We type the clickable text
+	session().type("//input[@class=\"Osyl-LabelEditor-TextBox\"]",
+		clickableText);
+
+	// Open form to upload a first document
+	if (inFireFox()) {
+
+	    session().mouseOver(
+		    "//div[@class=\"Osyl-FileBrowserTopButto"
+			    + "n Osyl-FileBrowserTopButton-up\"]");
+	    session().mouseOver(
+		    "//div[@class=\"Osyl-FileBrowserTopButto"
+			    + "n Osyl-FileBrowserTopButton-up\"]");
+	    session().mouseOver(
+		    "//div[@class=\"Osyl-FileBrowserTopButto"
+			    + "n Osyl-FileBrowserTopButton-up\"]");
+	    session().mouseOut(
+		    "//div[@class=\"Osyl-FileBrowserTopButton"
+			    + " Osyl-FileBrowserTopButton-up-hovering\"]");
+	    session().mouseOut(
+		    "//div[@class=\"Osyl-FileBrowserTopButton"
+			    + " Osyl-FileBrowserTopButton-up-hovering\"]");
+	    session().mouseDown(
+		    "//div[@class=\"Osyl-FileBrowserTopButto"
+			    + "n Osyl-FileBrowserTopButton-up-hovering\"]");
+	    session().mouseUp(
+		    "//div[@class=\"Osyl-FileBrowserTopButton"
+			    + " Osyl-FileBrowserTopButton-down-hovering\"]");
+
+	    // Choose file and close window
+	    session().type(
+		    "uploadFormElement",
+		    "C:\\Documents and Setti"
+			    + "ngs\\clihec3\\Local Settings\\Temporary Int"
+			    + "ernet Files\\"
+			    + "Content.IE5\\K0F6YKYM\\"+docName);
+	    // We select randomly the rights field
+	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
+	    String newText8 = getRandomOption(xpathRole4);
+	    session().select(xpathRole4, newText8);
+	    pause();
+	    // Close window
+	    session().click("//tr[5]/td/table/tbody/tr/td/button");
+	    pause();
+
+	}
+	pause();
+
+	// Select file in browser window
+	session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
+		"value= (F" + ")   "+docNameModified);
+	session().mouseOver("//option[@value=' (F)   "+docNameModified+"']");
+	session().focus("//option[@value=' (F)   "+docNameModified+"']");
+	session().click("//option[@value=' (F)   "+docNameModified+"']");
+	pause();
+
+	// Close Editor
+	session().click(
+		"//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/"
+			+ "tbody/tr/td[1]/button");
+	
+	return rubric;
     }
 
 }

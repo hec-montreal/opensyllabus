@@ -56,10 +56,10 @@ public class AssessmentTestUdeM extends AbstractOSYLTest{
     	// We log in
     	logInAsAdmin(webSite);
     	try {
-    	    goToSite();
+    	    goToCurrentSite();
     	} catch (IllegalStateException e) {
     	    createTestSite();
-    	    goToSite();
+    	    goToCurrentSite();
     	}
     	waitForOSYL();
     	
@@ -322,40 +322,11 @@ public class AssessmentTestUdeM extends AbstractOSYLTest{
 	}else{
 	    session().click("link=" + Val + " -");
 	}
-	//Add Text in Assessment Unit
-	clickAddItem("addText");
-
-	//We edit the new text rubric
-	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
-
-	//We select randomly the rubric name  
-	String selectedRubric1 = getRandomRubric();
-	log("Selecting rubric [" + selectedRubric1 + "]");
-	changeRubric(selectedRubric1);
 	
-	
-	// Type some text in the rich-text area
-	if (inFireFox()) {
-	    // type text
-	    session().selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
-	    String newText9 = "this is a text resource typed by "
+	String newText9 = "this is a text resource typed by "
 		+ "selenium, hope it works and you see it. Added on "
 		+ timeStamp() + " in Firefox";
-	    session().type("//html/body", newText9);
-	    // close editor
-	    session().selectFrame("relative=parent");
-	    session().click("//td/table/tbody/tr/td[1]/button");
-	    // check if text is visible
-	    if (!session().isTextPresent(newText9)) {
-		logAndFail("Expected to see text [" + newText9 
-			+ "] after text edition");
-	    }
-	    log("OK: Text resource edited");
-	} else {
-	    log("RichText edition can only be tested in Firefox");
-	    // close editor
-	    session().click("//td/table/tbody/tr/td[1]/button");
-	}
+	String selectedRubric1 = addText(newText9);
 	
 	//Save modifications
 	saveCourseOutline();

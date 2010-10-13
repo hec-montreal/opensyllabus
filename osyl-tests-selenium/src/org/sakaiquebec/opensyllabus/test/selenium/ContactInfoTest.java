@@ -47,10 +47,10 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	// We log in
 	logInAsAdmin(webSite);
 	try {
-	    goToSite();
+	    goToCurrentSite();
 	} catch (IllegalStateException e) {
 	    createTestSite();
-	    goToSite();
+	    goToCurrentSite();
 	}
 	waitForOSYL();
 	

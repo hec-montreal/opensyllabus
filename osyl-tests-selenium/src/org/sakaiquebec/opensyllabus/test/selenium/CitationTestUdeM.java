@@ -57,10 +57,10 @@ public class CitationTestUdeM extends AbstractOSYLTest{
 		// We log in to create a site
 		logInAsAdmin(webSite);
 		try {
-			goToSite();
+			goToCurrentSite();
 		} catch (IllegalStateException e) {
 			createTestSite();
-			goToSite();
+			goToCurrentSite();
 		}
 		waitForOSYL();
 

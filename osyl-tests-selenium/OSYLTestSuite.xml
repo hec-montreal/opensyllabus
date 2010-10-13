@@ -18,6 +18,7 @@
          <class name="org.sakaiquebec.opensyllabus.test.selenium.NewsTest"/> 
          <class name="org.sakaiquebec.opensyllabus.test.selenium.PresentationOfCourse"/>   
          <class name="org.sakaiquebec.opensyllabus.test.selenium.TeachingMaterial"/>
+         <class name="org.sakaiquebec.opensyllabus.test.selenium.AssociateToParentSite"/>
       </classes>
    </test>
 </suite>
