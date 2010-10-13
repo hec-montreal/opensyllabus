@@ -148,7 +148,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     public void createTestSite() throws Exception {
 	log("Creating site " + getCurrentTestSiteName());
 	//open site administration workspace
-	session().open("/portal/site/!admin");
+	session().open("/portal/site/~admin");
 	session().answerOnNextPrompt("osyl123");
 	
 	//open course outline manager tool
