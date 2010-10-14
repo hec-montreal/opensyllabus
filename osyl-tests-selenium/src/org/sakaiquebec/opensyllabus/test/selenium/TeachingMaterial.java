@@ -69,7 +69,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	    "this is a text resource typed by "
 		    + "selenium, hope it works and you see it. Added on "
 		    + timeStamp() + " in Firefox";
-	addText(newText9);
+	addText(newText9,LEVEL_ATTENDEE);
 
 	// Save modifications
 	saveCourseOutline();

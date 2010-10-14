@@ -63,6 +63,10 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
     protected String fileServer;
 
+    protected static final String LEVEL_ATTENDEE = "attendee";
+
+    protected static final String LEVEL_PUBLIC = "public";
+
     @BeforeClass(alwaysRun = true)
     @Parameters( { "seleniumHost", "seleniumPort", "browser", "webSite" })
     public void setUp(String seleniumHost, int seleniumPort, String browser,
@@ -726,10 +730,10 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	} else {
 	    // This doesn't seem to work anymore
 	    session().click("//div[@id='gwt-uid-21']/div");
-	    session().keyPress("//div[@id='gwt-uid-21']/div","\r");
+	    session().keyPress("//div[@id='gwt-uid-21']/div", "\r");
 	    session().mouseOver("//div[@id='gwt-uid-21']/div");
 	    session().mouseDown("//div[@id='gwt-uid-21']/div");
-            session().mouseUp("//div[@id='gwt-uid-21']/div");
+	    session().mouseUp("//div[@id='gwt-uid-21']/div");
 	}
     }
 
@@ -750,30 +754,35 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    session().click("gwt-uid-17");
 	}
     }
-    
-    protected String addText(String text){
+
+    protected String addText(String text, String level) {
 	// Add Text in the last Lecture Unit
 	clickAddItem("addText");
 
 	// We edit the new text Lecture
 	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
 
-	
 	// We select randomly the rubric name
 	String rubric = getRandomRubric();
 	log("Selecting rubric [" + rubric + "]");
 	changeRubric(rubric);
 
 	// We select attendee on dissemination level
-	session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",
-		"index=0");
+	if (LEVEL_ATTENDEE.equals(level))
+	    session().select(
+		    "//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",
+		    "index=0");
+	else
+	    session().select(
+		    "//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",
+		    "index=1");
 
 	// Type some text in the rich-text area
 	if (inFireFox()) {
 	    // type text
 	    session()
 		    .selectFrame("//iframe[@class=\"Osyl-UnitView-TextArea\"]");
-		   
+
 	    session().type("//html/body", text);
 	    // close editor
 	    session().selectFrame("relative=parent");
@@ -791,11 +800,11 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	}
 	return rubric;
     }
-    
-    protected String addDocument(String docName, String clickableText){
-	
-	String docNameModified= docName.replaceAll("\\[", "_");
-	docNameModified= docNameModified.replaceAll("\\]", "_");
+
+    protected String addDocument(String docName, String clickableText) {
+
+	String docNameModified = docName.replaceAll("\\[", "_");
+	docNameModified = docNameModified.replaceAll("\\]", "_");
 	// Add new document
 	clickAddItem("addDocument");
 
@@ -845,8 +854,8 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		    "uploadFormElement",
 		    "C:\\Documents and Setti"
 			    + "ngs\\clihec3\\Local Settings\\Temporary Int"
-			    + "ernet Files\\"
-			    + "Content.IE5\\K0F6YKYM\\"+docName);
+			    + "ernet Files\\" + "Content.IE5\\K0F6YKYM\\"
+			    + docName);
 	    // We select randomly the rights field
 	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
 	    String newText8 = getRandomOption(xpathRole4);
@@ -861,17 +870,18 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 	// Select file in browser window
 	session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
-		"value= (F" + ")   "+docNameModified);
-	session().mouseOver("//option[@value=' (F)   "+docNameModified+"']");
-	session().focus("//option[@value=' (F)   "+docNameModified+"']");
-	session().click("//option[@value=' (F)   "+docNameModified+"']");
+		"value= (F" + ")   " + docNameModified);
+	session()
+		.mouseOver("//option[@value=' (F)   " + docNameModified + "']");
+	session().focus("//option[@value=' (F)   " + docNameModified + "']");
+	session().click("//option[@value=' (F)   " + docNameModified + "']");
 	pause();
 
 	// Close Editor
 	session().click(
 		"//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/"
 			+ "tbody/tr/td[1]/button");
-	
+
 	return rubric;
     }
 

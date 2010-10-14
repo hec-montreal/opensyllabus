@@ -66,7 +66,7 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 	    "this is a text resource typed by "
 		    + "selenium, hope it works and you see it. Added on "
 		    + timeStamp() + " in Firefox";
-	addText(newText9);
+	addText(newText9,LEVEL_ATTENDEE);
 
 	// Save modifications
 	saveCourseOutline();
@@ -80,7 +80,7 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 		    "this is a text resource typed by "
 			    + "selenium, hope it works and you see it. Added on "
 			    + timeStamp() + " in Firefox";
-	 addText(newText9Bis);
+	 addText(newText9Bis,LEVEL_ATTENDEE);
 	 
 	// We delete the new text Lecture
 	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[2]/button");

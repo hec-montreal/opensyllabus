@@ -65,6 +65,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	}
 	waitForOSYL();
 	
+	try{
 	//add content
 	openTeachingMaterialSection();
 	
@@ -72,7 +73,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    + "selenium, hope it works and you see it. Added on "
 	    + timeStamp() + " in Firefox";
 	
-	addText(parentText);
+	addText(parentText,LEVEL_ATTENDEE);
 	
 	//publish
 	session().click("gwt-uid-5");
@@ -112,7 +113,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	String currentSiteText = "this is a text resource typed by "
 	    + "selenium, hope it works and you see it. Added on "
 	    + timeStamp() + " in Firefox";
-	addText(currentSiteText);
+	addText(currentSiteText,LEVEL_ATTENDEE);
 	
 	//publish
 	session().click("gwt-uid-5");
@@ -242,6 +243,9 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	
 	logOut();
 	log("testAddLecture: test complete");
+	}catch(Exception e){
+	    logAndFail("Associate to parent FAILED:"+e);
+	}
     } // testAddLecture
     
     

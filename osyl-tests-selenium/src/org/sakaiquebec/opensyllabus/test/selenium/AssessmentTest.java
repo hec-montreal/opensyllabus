@@ -308,7 +308,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 	    "this is a text resource typed by "
 		    + "selenium, hope it works and you see it. Added on "
 		    + timeStamp() + " in Firefox";
-	String selectedRubric1 = addText(newText9);
+	String selectedRubric1 = addText(newText9,LEVEL_PUBLIC);
 	
 	// Save modifications
 	saveCourseOutline();
