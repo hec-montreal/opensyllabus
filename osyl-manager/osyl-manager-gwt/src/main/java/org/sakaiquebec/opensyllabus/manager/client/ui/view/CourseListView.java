@@ -136,7 +136,7 @@ public class CourseListView extends OsylManagerAbstractView implements
 		.courseListView_loading()));
 	Image im = new Image(GWT.getModuleBaseURL() + "images/ajaxLoader.gif");
 	mainPanel.add(im);
-	getController().getAllCoAndSiteInfo("", asyncCallback);
+	getController().getAllCoAndSiteInfo("", "", asyncCallback);
     }
 
     public void onOsylManagerEvent(OsylManagerEvent e) {

@@ -29,6 +29,7 @@ import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtService;
+import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.springframework.web.context.WebApplicationContext;
@@ -147,12 +148,16 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	return osylManagerServices.getOsylManagerService().getCMCourses( startsWith);
     }
     
-    public COSite getCoAndSiteInfo(String siteId, String searchTerm){
-	return osylManagerServices.getOsylManagerService().getCoAndSiteInfo(siteId, searchTerm);
+    public COSite getCoAndSiteInfo(String siteId, String searchTerm,
+	    String academicSession){
+	return osylManagerServices.getOsylManagerService().getCoAndSiteInfo(
+		siteId, searchTerm, academicSession);
     }
 
-    public List<COSite> getAllCoAndSiteInfo(String searchTerm){
-	return osylManagerServices.getOsylManagerService().getAllCoAndSiteInfo(searchTerm);
+    public List<COSite> getAllCoAndSiteInfo(String searchTerm,
+	    String academicSession){
+	return osylManagerServices.getOsylManagerService().getAllCoAndSiteInfo(
+		searchTerm, academicSession);
     }
 
     public void publish(String siteId) throws Exception {
@@ -164,4 +169,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	osylManagerServices.getOsylSiteService().deleteSite(siteId);
     }
 
+    public List<CMAcademicSession> getAcademicSessions() {
+	return osylManagerServices.getOsylManagerService().getAcademicSessions();
+    }
 }

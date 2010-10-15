@@ -31,6 +31,7 @@ import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerE
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.imageBundle.ManagerImageBundleInterface;
 import org.sakaiquebec.opensyllabus.manager.client.message.Messages;
+import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
@@ -358,9 +359,9 @@ public class OsylManagerController implements FireOsylManagerEvents {
      * @param callback container of the server response
      */
     public void getCoAndSiteInfo(String siteId, String searchTerm,
-	    AsyncCallback<COSite> callback) {
+	    String academicSession, AsyncCallback<COSite> callback) {
 	OsylManagerRPCController.getInstance().getCoAndSiteInfo(siteId,
-		searchTerm, callback);
+		searchTerm, academicSession, callback);
     }
 
     /**
@@ -369,10 +370,10 @@ public class OsylManagerController implements FireOsylManagerEvents {
      * @param searchTerm the search term entered by the user
      * @param callback container of the server response
      */
-    public void getAllCoAndSiteInfo(String searchTerm,
+    public void getAllCoAndSiteInfo(String searchTerm, String academicSession,
 	    AsyncCallback<List<COSite>> callback) {
 	OsylManagerRPCController.getInstance().getAllCoAndSiteInfo(searchTerm,
-		callback);
+		academicSession, callback);
     }
 
     /**
@@ -386,6 +387,10 @@ public class OsylManagerController implements FireOsylManagerEvents {
 		callback);
     }
 
+    public void getAcademicSessions(AsyncCallback<List<CMAcademicSession>> callback) {
+	OsylManagerRPCController.getInstance().getAcademicSessions(callback);
+    }
+    
     public void deleteSite(String siteId, AsyncCallback<Void> deleteAsynCallBack) {
 	OsylManagerRPCController.getInstance().deleteSite(siteId,deleteAsynCallBack);
     }

@@ -24,6 +24,7 @@ package org.sakaiquebec.opensyllabus.manager.client.rpc;
 import java.util.List;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
@@ -77,12 +78,16 @@ public interface OsylManagerGwtServiceAsync {
     
     public void getCMCourses( String startsWith, AsyncCallback<List<CMCourse>> callback) ;
     
-    public void getCoAndSiteInfo(String siteId, String searchTerm, AsyncCallback<COSite> callback);
+    public void getCoAndSiteInfo(String siteId, String searchTerm,
+	    String academicSession, AsyncCallback<COSite> callback);
     
-    public void getAllCoAndSiteInfo(String searchTerm, AsyncCallback<List<COSite>> callback);
+    public void getAllCoAndSiteInfo(String searchTerm, String academicSession,
+	    AsyncCallback<List<COSite>> callback);
 
     public void publish(String siteId, AsyncCallback<Void> callback);
 
     public void deleteSite(String siteId, AsyncCallback<Void> deleteAsynCallBack);
+    
+    public void getAcademicSessions(AsyncCallback<List<CMAcademicSession>> callback);
     
 }

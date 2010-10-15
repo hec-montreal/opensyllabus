@@ -33,12 +33,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
+import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -50,13 +51,8 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
-import org.sakaiproject.authz.api.AuthzGroup;
-import org.sakaiproject.authz.api.AuthzPermissionException;
-import org.sakaiproject.authz.api.GroupNotDefinedException;
-import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.cover.AuthzGroupService;
-import org.sakaiproject.authz.cover.FunctionManager;
 import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.citation.api.Citation;
 import org.sakaiproject.citation.api.CitationCollection;
@@ -81,7 +77,6 @@ import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.event.cover.NotificationService;
-import org.sakaiproject.exception.IdInvalidException;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.IdUsedException;
 import org.sakaiproject.exception.InUseException;
@@ -104,6 +99,7 @@ import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
+import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
@@ -123,6 +119,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     private final static String PROP_SITE_TERM = "term";
 
     private final static String PROP_SITE_TERM_EID = "term_eid";
+    
+    private static final String SAKAI_SITE_TYPE = SiteService.SITE_SUBTYPE;
 
     private static final Log log =
 	    LogFactory.getLog(OsylManagerServiceImpl.class);
@@ -457,7 +455,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Get a valid resource reference base site URL to be used in later calls.
-     *
+     * 
      * @return a String of the base URL
      */
     private String getSiteReference(Site site) {
@@ -469,7 +467,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Add a collection (similar to a sub-directory) under the resource tool.
-     *
+     * 
      * @param dir name of collection
      * @param parent where to create it (null means top-level)
      * @return boolean whether the collection was added or not
@@ -493,7 +491,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Tells if a collection is already created in sakai.
-     *
+     * 
      * @param a String of the collection id.
      * @return boolean whether the collection exists
      */
@@ -548,7 +546,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    throws Exception {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] imports zip [" + zipReference + "] into site " + siteId);
-	
+
 	try {
 	    File zipTempfile =
 		    File.createTempFile("osyl-package-import", ".zip");
@@ -595,7 +593,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * FIXME Task SAKAI-1609. This method is used to update the description and
      * the license of the Sakai resource during importation of a course outline
      * in a new site. It should be removed after the migration.
-     *
+     * 
      * @param element
      */
     private void updateResourceMetaInfo(COElementAbstract element) {
@@ -883,14 +881,14 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * List the files in a sites and zip them
-     *
+     * 
      * @param siteId
      * @return zipFile a temporary zip file...
      * @throws IOException
      */
     private File exportAndZip(String siteId, String webappDir) throws Exception {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
-		+ "] exports site: [" + siteId +"]");
+		+ "] exports site: [" + siteId + "]");
 
 	// opening a new temporary zipfile
 	File zipFile = File.createTempFile("osyl-package-export", ".zip");
@@ -899,7 +897,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	// retrieving the xml file
 	COSerialized coSerialized =
-		osylSiteService.getCourseOutlineForExport(siteId,webappDir);
+		osylSiteService.getCourseOutlineForExport(siteId, webappDir);
 
 	byte[] xmlBytes = coSerialized.getContent().getBytes("UTF-8");
 	writeToZip(zos, OsylManagerService.CO_XML_FILENAME, xmlBytes);
@@ -934,7 +932,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		String id = getSiteReference(site) + TEMP_DIRECTORY;
 		id = id.substring(8) + "/";
 		enableSecurityAdvisor();
-		
+
 		if (collectionExist(id)) {
 		    ContentCollection contentCollection =
 			    contentHostingService.getCollection(id);
@@ -981,7 +979,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     /**
      * Get the delay (in minutes) to wait before deleting export zip defined in
      * the sakai.properties
-     *
+     * 
      * @return
      */
     private int getDeleteExportDelay() {
@@ -1009,14 +1007,16 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     public void dissociate(String siteId, String parentId) throws Exception {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
-		+ "] dissociates [" + siteId + "] from parent [" + parentId + "]");
+		+ "] dissociates [" + siteId + "] from parent [" + parentId
+		+ "]");
 	osylSiteService.dissociate(siteId, parentId);
     }
 
     public void associateToCM(String courseSectionId, String siteId)
 	    throws Exception {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
-		+ "] associates [" + siteId + "] to course [" + courseSectionId + "]");
+		+ "] associates [" + siteId + "] to course [" + courseSectionId
+		+ "]");
 
 	// TODO: est-ce qu'on change le nom du site après que le lien soit créé
 
@@ -1046,7 +1046,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    String webappDir) throws Exception {
 
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
-		+ "] associates [" + siteId + "] to course [" + courseSectionId + "]");
+		+ "] associates [" + siteId + "] to course [" + courseSectionId
+		+ "]");
 
 	if (siteId != null) {
 	    Site site = siteService.getSite(siteId);
@@ -1100,11 +1101,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Returns the list of all courses that start with the given argument
-     * defined in the CM so that the user can associate a site to a specific course.
+     * defined in the CM so that the user can associate a site to a specific
+     * course.
      */
     public List<CMCourse> getCMCourses(String startsWith) {
 	long start = System.currentTimeMillis();
-	log.debug("getCMCourses that starts with " + startsWith + " ##### START #####");
+	log.debug("getCMCourses that starts with " + startsWith
+		+ " ##### START #####");
 	List<CMCourse> cmCourses = new ArrayList<CMCourse>();
 	Set<CourseSet> courseSets = courseManagementService.getCourseSets();
 	Set<CourseOffering> courseOffs = null;
@@ -1195,7 +1198,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Import files contained in the osylPackage to Sakai resources
-     *
+     * 
      * @param zipReference
      * @param siteId
      */
@@ -1274,17 +1277,19 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     /** {@inheritDoc} */
-    public COSite getCoAndSiteInfo(String siteId, String searchTerm) {
+    public COSite getCoAndSiteInfo(String siteId, String searchTerm,
+	    String academicSession) {
 	long start = System.currentTimeMillis();
 	Site site = null;
 	COSite info = new COSite();
 
 	try {
 	    site = osylSiteService.getSite(siteId);
-	    
-//	    if (osylSiteService.hasCourseOutline(siteId)) {
-//		COSerialized co = osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
-//	    }
+
+	    // if (osylSiteService.hasCourseOutline(siteId)) {
+	    // COSerialized co =
+	    // osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
+	    // }
 	} catch (IdUnusedException e) {
 	    log.error(e.getMessage());
 	    e.printStackTrace();
@@ -1292,7 +1297,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	if (site != null
 		&& searchTerm != null
-		&& site.getTitle().toLowerCase().startsWith(
+		&& site.getTitle().toLowerCase().contains(
 			searchTerm.toLowerCase())) {
 	    // Retrieve site info
 	    info.setSiteId(siteId);
@@ -1307,69 +1312,87 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    // Retrieve CM info
 	    String siteProviderId = site.getProviderGroupId();
+	    
 	    if (courseManagementService.isSectionDefined(siteProviderId)) {
 		Section section =
 			courseManagementService.getSection(siteProviderId);
-
-		// Retrieve official instructors
-		EnrollmentSet enrollmentSet = section.getEnrollmentSet();
-
-		if (enrollmentSet != null) {
-		    Set<String> instructors =
-			    enrollmentSet.getOfficialInstructors();
-		    User user = null;
-		    String name = null;
-		    for (String instructor : instructors) {
-			try {
-			    user =
-				    UserDirectoryService
-					    .getUserByEid(instructor);
-			    name = user.getDisplayName();
-			    info.addCourseInstructor(name);
-			} catch (UserNotDefinedException e) {
-			    e.printStackTrace();
-			}
-		    }
-		}
 
 		// Retrieve course number
 		CourseOffering courseOff =
 			courseManagementService.getCourseOffering(section
 				.getCourseOfferingEid());
-		CanonicalCourse canCourse =
-			courseManagementService.getCanonicalCourse(courseOff
-				.getCanonicalCourseEid());
 
-		info.setCourseNumber(canCourse.getEid());
-		info.setCourseName(section.getTitle());
-		info.setCourseSection(siteProviderId.substring(siteProviderId
-			.length() - 3));
-		info
-			.setCourseSession(courseOff.getAcademicSession()
-				.getTitle());
-		info.setAcademicCareer(courseOff.getAcademicCareer());
+		//If the session selected is the trimester without any period,
+		//we remove the tailing character.
+		if((academicSession.toLowerCase()).charAt(4) != 'p'){
+		    academicSession = academicSession.substring(0, 4);
+		}
+		System.err.println("Course Offering session : "+courseOff.getAcademicSession().getEid());
+		System.err.println("Chosen academic session : "+academicSession);
+		if (courseOff.getAcademicSession().getEid().contains(
+			academicSession)) {
+		    System.err.println("true");
+		    CanonicalCourse canCourse =
+			    courseManagementService
+				    .getCanonicalCourse(courseOff
+					    .getCanonicalCourseEid());
 
-		// TODO: the coordinator is not saved in the cm. Correct this
-		// when done.
-		info.setCourseCoordinator(null);
+		    // Retrieve official instructors
+		    EnrollmentSet enrollmentSet = section.getEnrollmentSet();
 
+		    if (enrollmentSet != null) {
+			Set<String> instructors =
+				enrollmentSet.getOfficialInstructors();
+			User user = null;
+			String name = null;
+			for (String instructor : instructors) {
+			    try {
+				user =
+					UserDirectoryService
+						.getUserByEid(instructor);
+				name = user.getDisplayName();
+				info.addCourseInstructor(name);
+			    } catch (UserNotDefinedException e) {
+				e.printStackTrace();
+			    }
+			}
+		    }
+
+		    info.setCourseNumber(canCourse.getEid());
+		    info.setCourseName(section.getTitle());
+		    info.setCourseSection(siteProviderId
+			    .substring(siteProviderId.length() - 3));
+		    info.setCourseSession(courseOff.getAcademicSession()
+			    .getTitle());
+		    info.setAcademicCareer(courseOff.getAcademicCareer());
+
+		    // TODO: the coordinator is not saved in the cm. Correct
+		    // this
+		    // when done.
+		    info.setCourseCoordinator(null);
+
+		    info.setLastModifiedDate(osylSiteService
+			    .getCoLastModifiedDate(siteId));
+		    info.setLastPublicationDate(osylSiteService
+			    .getCoLastPublicationDate(siteId));
+
+		    // Retrieve parent site
+		    String parentSite = null;
+
+		    try {
+			parentSite = osylSiteService.getParent(siteId);
+		    } catch (Exception e) {
+			log.error(e.getMessage());
+			e.printStackTrace();
+		    }
+
+		    info.setParentSite(parentSite);
+		} else {
+		    info = null;
+		}
+	    } else {
+		info = null;
 	    }
-	    info.setLastModifiedDate(osylSiteService
-		    .getCoLastModifiedDate(siteId));
-	    info.setLastPublicationDate(osylSiteService
-		    .getCoLastPublicationDate(siteId));
-
-	    // Retrieve parent site
-	    String parentSite = null;
-
-	    try {
-		parentSite = osylSiteService.getParent(siteId);
-	    } catch (Exception e) {
-		log.error(e.getMessage());
-		e.printStackTrace();
-	    }
-
-	    info.setParentSite(parentSite);
 	} else {
 	    info = null;
 	}
@@ -1378,26 +1401,30 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     } // getCoAndSiteInfo
 
     /** {@inheritDoc} */
-    public List<COSite> getAllCoAndSiteInfo(String searchTerm) {
+    public List<COSite> getAllCoAndSiteInfo(String searchTerm,
+	    String academicSession) {
 	long start = System.currentTimeMillis();
 	List<COSite> allSitesInfo = null;
 	COSite info = null;
 	String currentUser = sessionManager.getCurrentSessionUserId();
 	int siteCount = 0;
 
-	log.trace("getCoAndSiteInfo (Site List ##### START #####)"
+	log.trace("getAllCoAndSiteInfo (Site List ##### START #####)"
 		+ elapsed(start));
 	List<String> accessedSites =
 		getSitesForUser(currentUser, SiteService.SITE_VISIT);
 
-	log.trace("getCoAndSiteInfo (Site List ##### SITES #####)"
+	log.trace("getAllCoAndSiteInfo (Site List ##### SITES #####)"
 		+ elapsed(start));
 
 	if (accessedSites != null) {
 	    allSitesInfo = new ArrayList<COSite>();
 	    int accessedSitesSize = accessedSites.size();
 	    for (int i = 0; i < accessedSitesSize; i++) {
-		info = getCoAndSiteInfo(accessedSites.get(i), searchTerm);
+		System.err.println("Site "+i);
+		info =
+			getCoAndSiteInfo(accessedSites.get(i), searchTerm,
+				academicSession);
 		if (info != null) {
 		    allSitesInfo.add(info);
 		    siteCount++;
@@ -1408,11 +1435,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	// TODO: move this to the end of getOsylPackage() with a specific
 	// path instead of iterating through all the sites!!!
 	new DeleteExpiredTemporaryExportFiles(allSitesInfo).start();
-	//deleteExpiredTemporaryExportFiles(allSitesInfo);
+	// deleteExpiredTemporaryExportFiles(allSitesInfo);
 	return allSitesInfo;
     }
-
-    private static final String SAKAI_SITE_TYPE = SiteService.SITE_SUBTYPE;
 
     @SuppressWarnings("unchecked")
     protected List<String> getSitesForUser(String userId, String permission) {
@@ -1450,6 +1475,25 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return l;
     }
 
+    public List<CMAcademicSession> getAcademicSessions() {
+	List<AcademicSession> acadSessionsList =
+		courseManagementService.getAcademicSessions();
+	List<CMAcademicSession> cmAcadSessionsList =
+		new Vector<CMAcademicSession>();
+
+	for (AcademicSession acadSession : acadSessionsList) {
+	    CMAcademicSession cmAcadSession = new CMAcademicSession();
+	    cmAcadSession.setId(acadSession.getEid());
+	    cmAcadSession.setTitle(acadSession.getTitle());
+	    cmAcadSession.setDescription(acadSession.getDescription());
+	    cmAcadSession.setStartDate(acadSession.getStartDate());
+	    cmAcadSession.setEndDate(acadSession.getEndDate());
+	    cmAcadSessionsList.add(cmAcadSession);
+	}
+	Collections.sort(cmAcadSessionsList);
+	return cmAcadSessionsList;
+    }
+
     class DeleteExpiredTemporaryExportFiles extends Thread {
 
 	List<COSite> allSitesInfo;
@@ -1467,7 +1511,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	    Session s = sessionManager.getCurrentSession();
 	    s.setUserId(UserDirectoryService.ADMIN_ID);
-	    
+
 	    long start = System.currentTimeMillis();
 	    log.debug("deleteExpiredTemporaryExportFiles");
 	    deleteExpiredTemporaryExportFiles(allSitesInfo);

@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtService;
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtServiceAsync;
+import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
@@ -142,20 +143,25 @@ public class OsylManagerRPCController {
 	serviceProxy.getCMCourses(startsWith, callback);
     }
     
-    public void getCoAndSiteInfo(String siteId, String searchTerm, AsyncCallback<COSite> callback){
-	serviceProxy.getCoAndSiteInfo(siteId, searchTerm, callback);
+    public void getCoAndSiteInfo(String siteId, String searchTerm,
+	    String academicSession, AsyncCallback<COSite> callback){
+	serviceProxy.getCoAndSiteInfo(siteId, searchTerm, academicSession,
+		callback);
     }
 
-    public void getAllCoAndSiteInfo(String searchTerm, AsyncCallback< java.util.List<COSite>> callback){
-	serviceProxy.getAllCoAndSiteInfo(searchTerm, callback);
+    public void getAllCoAndSiteInfo(String searchTerm, String academicSession,
+	    AsyncCallback< java.util.List<COSite>> callback){
+	serviceProxy.getAllCoAndSiteInfo(searchTerm, academicSession, callback);
     }
 
     public void publish(String siteId, AsyncCallback<Void> callback) {
 	serviceProxy.publish(siteId,callback);
     }
 
+    public void getAcademicSessions(AsyncCallback<List<CMAcademicSession>> callback) {
+	serviceProxy.getAcademicSessions(callback);
+    }
     public void deleteSite(String siteId, AsyncCallback<Void> deleteAsynCallBack) {
 	serviceProxy.deleteSite(siteId,deleteAsynCallBack);
     }
-
 }

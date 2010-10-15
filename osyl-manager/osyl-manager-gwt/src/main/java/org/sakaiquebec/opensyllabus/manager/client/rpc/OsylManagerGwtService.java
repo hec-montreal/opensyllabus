@@ -24,6 +24,7 @@ package org.sakaiquebec.opensyllabus.manager.client.rpc;
 import java.util.List;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
@@ -79,7 +80,8 @@ public interface OsylManagerGwtService extends RemoteService {
      * @param siteId
      * @return
      */
-    public COSite getCoAndSiteInfo(String siteId, String searchTerm);
+    public COSite getCoAndSiteInfo(String siteId, String searchTerm,
+	    String academicSession);
 
     /**
      * Retrieve the informations of all the sites the current user has access
@@ -87,9 +89,12 @@ public interface OsylManagerGwtService extends RemoteService {
      * 
      * @return
      */
-    public List<COSite> getAllCoAndSiteInfo(String searchTerm);
+    public List<COSite> getAllCoAndSiteInfo(String searchTerm,
+	    String academicSession);
 
     public void publish(String siteId) throws Exception;
+    
+    public List<CMAcademicSession> getAcademicSessions();
 
     public void deleteSite(String siteId) throws Exception;
 

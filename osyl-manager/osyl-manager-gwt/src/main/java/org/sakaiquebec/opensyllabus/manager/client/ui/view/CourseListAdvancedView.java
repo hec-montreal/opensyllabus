@@ -71,6 +71,8 @@ implements OsylManagerEventHandler, ClickHandler {
     
     private String searchTerm;
     
+    private String selectedAcadSession;
+    
     private ScrollTable scSiteList;
     
     private CheckBox selectAll;
@@ -171,6 +173,7 @@ implements OsylManagerEventHandler, ClickHandler {
 	FixedWidthGrid dataTable = new FixedWidthGrid(0, 7);
 	dataTable.setSelectionEnabled(true);
 	dataTable.setSelectionPolicy(SelectionPolicy.CHECKBOX);
+	dataTable.setWidth("100%");
 	
 	FixedWidthFlexTable headerTable = createHeaderTable();
 	scSiteList = new ScrollTable(dataTable, headerTable);
@@ -240,7 +243,7 @@ implements OsylManagerEventHandler, ClickHandler {
 	if(getController().isInHostedMode()){
 	    getHostedModeData();
 	} else {
-	    getController().getAllCoAndSiteInfo(getSearchTerm(), asyncCallback);
+	    getController().getAllCoAndSiteInfo(getSearchTerm(), getSelectedAcadSession(), asyncCallback);
 	}
     }
 
@@ -265,10 +268,19 @@ implements OsylManagerEventHandler, ClickHandler {
         this.searchTerm = searchTerm;
     }
     
+    public String getSelectedAcadSession() {
+        return selectedAcadSession;
+    }
+
+    public void setSelectedAcadSession(String selectedAcadSession) {
+        this.selectedAcadSession = selectedAcadSession;
+    }
+
     public FixedWidthFlexTable createHeaderTable(){
 	FixedWidthFlexTable headerTable = new FixedWidthFlexTable();
 	FlexCellFormatter formatter = headerTable.getFlexCellFormatter();
 	headerTable.addStyleName("OsylManager-headerTable");
+	headerTable.setWidth("100%");
 	
 	selectAll = new CheckBox();
 	selectAll.addClickHandler(this);

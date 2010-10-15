@@ -257,4 +257,6 @@ public interface Messages extends ConstantsWithLookup {
     String deleteAction_delete_siteHasChild();
 
     String deleteAction_delete_error_linkedToCM();
+    
+    String academicSessionLabel();
 }

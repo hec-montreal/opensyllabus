@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
@@ -155,7 +156,8 @@ public interface OsylManagerService {
      * @param siteId
      * @return
      */
-    public COSite getCoAndSiteInfo(String siteId, String searchTerm);
+    public COSite getCoAndSiteInfo(String siteId, String searchTerm,
+	    String academicSession);
 
     /**
      * Retrieve the informations of all the sites the current user has access
@@ -163,6 +165,9 @@ public interface OsylManagerService {
      * 
      * @return
      */
-    public List<COSite> getAllCoAndSiteInfo(String searchTerm);
+    public List<COSite> getAllCoAndSiteInfo(String searchTerm,
+	    String academicSession);
+    
+    public List<CMAcademicSession> getAcademicSessions();
     
 }
