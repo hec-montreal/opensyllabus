@@ -54,6 +54,18 @@ public abstract class OsylAbstractResProxBrowserView extends
     }
 
     /**
+     * Returns the text value of current model.
+     */
+    public String getTextFromSdataModel() {
+	String text = getModel().getLabel();
+	if (getEditor().isInEditionMode()) {
+	    return text;
+	} else {
+	    return generateHTMLLink(getLinkSdataURI(), text);
+	}
+    }
+
+    /**
      * Returns the URI of current resource
      */
     public String getLinkURI() {
@@ -65,6 +77,21 @@ public abstract class OsylAbstractResProxBrowserView extends
 	    return uri;
 	} else {
 	    return "/access/content" + uri;
+	}
+    } // getLinkURI
+
+    /**
+     * Returns the URI of current resource
+     */
+    public String getLinkSdataURI() {
+	// We get the URI from the model
+	String uri = getRawURI();
+
+	if (uri.matches("^(https?|ftp|mailto)://.+")) {
+	    // If it's an external link we return it as is
+	    return uri;
+	} else {
+	    return "/sdata/c" + uri + "?child=" + getController().getSiteId();
 	}
     } // getLinkURI
 

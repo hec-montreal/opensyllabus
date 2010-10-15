@@ -89,5 +89,14 @@ public interface CORelationDao {
      */
     public List<CORelation> getCORelationDescendants (String coId);
     
+    /**
+     * Tells whether or not two course outlines are related.
+     * 
+     * @param parentSiteId
+     * @param childSiteId
+     * @return
+     */
+    public boolean areCourseOutlinesRelated (String parentSiteId, String childSiteId);
+    
   
 }

@@ -367,10 +367,10 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    // We get the text to display from the model
 	    getModel().getProperties().addProperty(COPropertiesType.LABEL,
 		    getView().validateLinkLabel(getModel().getLabel()));
-	    getViewerLink().setHTML(getView().getTextFromModel());
+	    getViewerLink().setHTML(getView().getTextFromSdataModel());
 	    getViewerLink().addClickHandler(
 		    new OsylLinkClickListener(getView(), getView()
-			    .getTextFromModel()));
+			    .getTextFromSdataModel()));
 	    getViewerName().setHTML("(" + getView().getDocName() + ")");
 	    getViewerDesc().setHTML(getView().getCommentFromModel());
 

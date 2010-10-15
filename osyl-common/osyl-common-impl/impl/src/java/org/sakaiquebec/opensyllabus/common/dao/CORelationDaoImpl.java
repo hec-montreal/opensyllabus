@@ -214,4 +214,19 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
 		return allAncestors;
 	}
 
+	public boolean areCourseOutlinesRelated(String parentSiteId,
+		String childSiteId) {
+	    
+	    List<CORelation> ancestors = getCourseOutlineAncestors(childSiteId);
+	    String parent = null;
+	    
+	    for (CORelation relation: ancestors){
+		parent = relation.getParent();
+		if (parent.equalsIgnoreCase(parentSiteId))
+		    return true;
+	    }
+	    
+	    return false;
+	}
+
 }
