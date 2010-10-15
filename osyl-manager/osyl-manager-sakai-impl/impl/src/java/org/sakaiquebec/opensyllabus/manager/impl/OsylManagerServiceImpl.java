@@ -1327,11 +1327,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		if((academicSession.toLowerCase()).charAt(4) != 'p'){
 		    academicSession = academicSession.substring(0, 4);
 		}
-		System.err.println("Course Offering session : "+courseOff.getAcademicSession().getEid());
-		System.err.println("Chosen academic session : "+academicSession);
+		
 		if (courseOff.getAcademicSession().getEid().contains(
 			academicSession)) {
-		    System.err.println("true");
 		    CanonicalCourse canCourse =
 			    courseManagementService
 				    .getCanonicalCourse(courseOff
@@ -1421,7 +1419,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    allSitesInfo = new ArrayList<COSite>();
 	    int accessedSitesSize = accessedSites.size();
 	    for (int i = 0; i < accessedSitesSize; i++) {
-		System.err.println("Site "+i);
 		info =
 			getCoAndSiteInfo(accessedSites.get(i), searchTerm,
 				academicSession);
