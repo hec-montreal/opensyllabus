@@ -310,6 +310,22 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    goToSite(childSiteName);
 	    openTeachingMaterialSection();
 	    assertFalse(session().isTextPresent(currentSiteText));
+	    
+	    //delete ressource in parent for future tests
+	    session().selectFrame("relative=parent");
+	    goToSite(parentSiteName);
+	    openTeachingMaterialSection();
+	    session().click("//tr/td/div/table[2]/tbody/tr/td[2]/button");
+	    pause();
+
+	    session()
+		    .click(
+			    "//tr/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
+	    pause();
+	    // publish
+	    session().click("gwt-uid-5");
+	    session().click("//button[contains(text(),'Publier')]");
+	    pause();
 
 	    logOut();
 	    log("testAddLecture: test complete");
