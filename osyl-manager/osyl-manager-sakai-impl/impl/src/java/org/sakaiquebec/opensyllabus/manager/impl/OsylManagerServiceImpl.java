@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -51,8 +52,13 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
+import org.sakaiproject.authz.api.AuthzGroup;
+import org.sakaiproject.authz.api.AuthzPermissionException;
+import org.sakaiproject.authz.api.GroupNotDefinedException;
+import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.cover.AuthzGroupService;
+import org.sakaiproject.authz.cover.FunctionManager;
 import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.citation.api.Citation;
 import org.sakaiproject.citation.api.CitationCollection;
@@ -77,6 +83,7 @@ import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.event.cover.NotificationService;
+import org.sakaiproject.exception.IdInvalidException;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.IdUsedException;
 import org.sakaiproject.exception.InUseException;
@@ -119,7 +126,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     private final static String PROP_SITE_TERM = "term";
 
     private final static String PROP_SITE_TERM_EID = "term_eid";
-    
+
     private static final String SAKAI_SITE_TYPE = SiteService.SITE_SUBTYPE;
 
     private static final Log log =
@@ -279,9 +286,98 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * Init method called at the initialization of the bean.
      */
     public void init() {
-	log
-		.info("OsylManagerServiceImpl service init() site managerSiteName == \""
-			+ this.osylManagerSiteName + "\"");
+	// log
+	// .info("OsylManagerServiceImpl service init() site managerSiteName == \""
+	// + this.osylManagerSiteName + "\"");
+
+	if (null == this.osylManagerSiteName) {
+	    // can't create
+	    // log.info("init() managerSiteName is null");
+	} else if (siteService.siteExists(this.osylManagerSiteName)) {
+	    // no need to create
+	    // log.info("init() site " + this.osylManagerSiteName
+	    // + " already exists");
+	} else {
+	    // need to create
+	    try {
+		enableSecurityAdvisor();
+		// Session s = sessionManager.getCurrentSession();
+		// s.setUserId(UserDirectoryService.ADMIN_ID);
+
+		Site osylManagerSite =
+			siteService
+				.addSite(this.osylManagerSiteName, SITE_TYPE);
+		osylManagerSite.setTitle("OpenSyllabus Manager");
+		osylManagerSite.setPublished(true);
+		osylManagerSite.setJoinable(false);
+
+		AuthzGroup currentGroup =
+			AuthzGroupService.getInstance().getAuthzGroup(
+				this.authzGroupName);
+
+		for (Iterator<String> iFunctionsToRegister =
+			this.functionsToRegister.iterator(); iFunctionsToRegister
+			.hasNext();) {
+		    FunctionManager.registerFunction(iFunctionsToRegister
+			    .next());
+		}
+
+		for (Iterator<Entry<String, List<String>>> iFunctionsToAllow =
+			this.functionsToAllow.entrySet().iterator(); iFunctionsToAllow
+			.hasNext();) {
+		    Entry<String, List<String>> entry =
+			    iFunctionsToAllow.next();
+
+		    Role role = currentGroup.getRole(entry.getKey());
+
+		    role.allowFunctions(entry.getValue());
+		}
+
+		for (Iterator<Entry<String, List<String>>> iFunctionsToDisallow =
+			this.functionsToDisallow.entrySet().iterator(); iFunctionsToDisallow
+			.hasNext();) {
+		    Entry<String, List<String>> entry =
+			    iFunctionsToDisallow.next();
+
+		    Role role = currentGroup.getRole(entry.getKey());
+
+		    role.disallowFunctions(entry.getValue());
+		}
+
+		currentGroup.removeRole(STUDENT_ROLE);
+
+		AuthzGroupService.save(currentGroup);
+
+		// add Resources tool
+		SitePage page = osylManagerSite.addPage();
+		page.setTitle(this.osylManagerSiteName);
+		page.addTool("sakai.opensyllabus.manager.tool");
+
+		siteService.save(osylManagerSite);
+		// log.debug("init() site " + this.osylManagerSiteName
+		// + " has been created");
+
+	    } catch (IdInvalidException e) {
+		// log.warn("IdInvalidException ", e);
+	    } catch (IdUsedException e) {
+		// we've already verified that the site doesn't exist but
+		// this can occur if site was created by another server
+		// in a cluster that is starting up at the same time.
+		// log.warn("IdUsedException ", e);
+	    } catch (PermissionException e) {
+		// log.warn("PermissionException ", e);
+	    } catch (IdUnusedException e) {
+		// log.warn("IdUnusedException ", e);
+	    } catch (GroupNotDefinedException e) {
+		e.printStackTrace();
+	    } catch (AuthzPermissionException e) {
+		e.printStackTrace();
+	    } finally {
+		SecurityService.popAdvisor();
+	    }
+	}
+
+	getCMCourses("1404");
 
     }
 
@@ -1312,7 +1408,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    // Retrieve CM info
 	    String siteProviderId = site.getProviderGroupId();
-	    
+
 	    if (courseManagementService.isSectionDefined(siteProviderId)) {
 		Section section =
 			courseManagementService.getSection(siteProviderId);
@@ -1322,12 +1418,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			courseManagementService.getCourseOffering(section
 				.getCourseOfferingEid());
 
-		//If the session selected is the trimester without any period,
-		//we remove the tailing character.
-		if((academicSession.toLowerCase()).charAt(4) != 'p'){
+		// If the session selected is the trimester without any period,
+		// we remove the tailing character.
+		if ((academicSession.toLowerCase()).charAt(4) != 'p') {
 		    academicSession = academicSession.substring(0, 4);
 		}
-		
+
 		if (courseOff.getAcademicSession().getEid().contains(
 			academicSession)) {
 		    CanonicalCourse canCourse =
@@ -1385,6 +1481,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    }
 
 		    info.setParentSite(parentSite);
+
+		    // retrieve childs
+		    List<String> childs = null;
+		    try {
+			childs = osylSiteService.getChildren(siteId);
+		    } catch (Exception e) {
+		    }
+		    if (childs != null && !childs.isEmpty())
+			info.setHasChild(true);
 		} else {
 		    info = null;
 		}
