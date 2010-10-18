@@ -527,6 +527,26 @@
 	<fo:block font-size="8pt">
 		<xsl:value-of select="Person/tel"/>
 	</fo:block>
+	<xsl:if test="Person/officeroom != ''">
+		<fo:block font-size="8pt">
+			<fo:inline>
+				<xsl:choose>
+					<xsl:when test="$lang = 'FR'">
+						<xsl:text>Bureau : </xsl:text>
+					</xsl:when>
+					<xsl:when test="$lang = 'EN'">
+						<xsl:text>Office :</xsl:text>
+					</xsl:when>
+					<xsl:when test="$lang = 'ES'">
+						<xsl:text>Oficina : </xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+					</xsl:otherwise>
+				</xsl:choose>
+			</fo:inline>
+			<fo:inline><xsl:value-of select="Person/officeroom"/></fo:inline>
+		</fo:block>
+	</xsl:if>
 	<xsl:if test="availability != ''">
 		<fo:block font-size="8pt">
 			<fo:inline>
