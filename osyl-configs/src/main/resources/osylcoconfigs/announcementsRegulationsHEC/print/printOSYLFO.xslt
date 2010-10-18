@@ -335,6 +335,22 @@
 			<xsl:with-param name="role">secretaries</xsl:with-param>
 		</xsl:call-template>
 	</xsl:if>
+	<xsl:if test=".//asmContext[semanticTag[@type='HEC']='teachingassistants']/node()">
+		<xsl:call-template name="StaffUnitSubtitle">
+			<xsl:with-param name="label">teachingassistants</xsl:with-param>
+		</xsl:call-template>
+		<xsl:call-template name="Staff">
+			<xsl:with-param name="role">teachingassistants</xsl:with-param>
+		</xsl:call-template>
+	</xsl:if>
+	<xsl:if test=".//asmContext[semanticTag[@type='HEC']='speakers']/node()">
+		<xsl:call-template name="StaffUnitSubtitle">
+			<xsl:with-param name="label">speakers</xsl:with-param>
+		</xsl:call-template>
+		<xsl:call-template name="Staff">
+			<xsl:with-param name="role">speakers</xsl:with-param>
+		</xsl:call-template>
+	</xsl:if>
 </xsl:template>
 
 <xsl:template match="asmUnit[@xsi:type='OverviewUnit']">
@@ -528,12 +544,12 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</fo:inline>
-			<fo:inline><xsl:value-of select="Person/availability"/></fo:inline>
+			<fo:inline><xsl:value-of select="availability"/></fo:inline>
 		</fo:block>
 	</xsl:if>
 	<xsl:if test="comment !=''">
 		<fo:block font-size="8pt" space-before="10pt">
-			<xsl:value-of select="Person/comment"/>
+			<xsl:value-of select="comment"/>
 		</fo:block>
 	</xsl:if>
 </xsl:template>
@@ -943,6 +959,36 @@
 				</xsl:when>
 				<xsl:when test="$lang = 'ES'">
 					<xsl:text>Secretaria(s)</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'teachingassistants'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Stagiaire(s) d'enseignement</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Teaching Assistant(s)</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Profesor(es) ayudant(es)</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'speakers'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Conférencier(s)</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Speaker(s)</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Altavoces</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
 				</xsl:otherwise>
