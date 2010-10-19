@@ -33,9 +33,9 @@ Comparable<CMAcademicSession> {
 
     private static final long serialVersionUID = -1498844713154586116L;
     
-//    private static final String  FALL = "A";
-//    private static final String SUMMER = "E";
-//    private static final String WINTER = "H";
+    private static final String  FALL = "A";
+    private static final String SUMMER = "E";
+    private static final String WINTER = "H";
     
     private String id;
     private String title;
@@ -89,18 +89,21 @@ Comparable<CMAcademicSession> {
 	return this.getId().compareTo(o.getId());
     }
     
-//    public String getSessionName() {
-//	String sessionName = null;
-//	String year = getStartDate().toString().substring(0, 4);
-//
-//	if ((getId().charAt(3)) == '1')
-//	    sessionName = WINTER + year;
-//	if ((getId().charAt(3)) == '2')
-//	    sessionName = SUMMER + year;
-//	if ((getId().charAt(3)) == '3')
-//	    sessionName = FALL + year;
-//
-//	return sessionName;
-//    }
+    public String getSessionName() {
+	String sessionName = null;
+	String year = getStartDate().toString().substring(0, 4);
+
+	if ((getId().charAt(3)) == '1')
+	    sessionName = WINTER + year;
+	else if ((getId().charAt(3)) == '2')
+	    sessionName = SUMMER + year;
+	else if ((getId().charAt(3)) == '3')
+	    sessionName = FALL + year;
+	
+	if((getId().toLowerCase()).charAt(4) == 'p')
+	    sessionName += getId().substring(4);
+
+	return sessionName;
+    }
 }
 

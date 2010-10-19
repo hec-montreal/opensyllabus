@@ -72,8 +72,11 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	    }
 
 	    public void onSuccess(List<CMAcademicSession> result) {
+		acadSessionListBox.addItem(getController().getMessages().
+			academicSessionNone(), "");
+		
 		for(CMAcademicSession session : result){
-		    acadSessionListBox.addItem(session.getId(),
+		    acadSessionListBox.addItem(session.getSessionName(),
 			    session.getId());
 		}
 	    }

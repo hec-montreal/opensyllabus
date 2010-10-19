@@ -1418,9 +1418,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			courseManagementService.getCourseOffering(section
 				.getCourseOfferingEid());
 
-		// If the session selected is the trimester without any period,
-		// we remove the tailing character.
-		if ((academicSession.toLowerCase()).charAt(4) != 'p') {
+		//If the session selected is the trimester without any period,
+		//we remove the tailing character.
+		if(academicSession!=null && !"".equals(academicSession) &&
+			(academicSession.toLowerCase()).charAt(4) != 'p'){
 		    academicSession = academicSession.substring(0, 4);
 		}
 
