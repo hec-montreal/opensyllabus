@@ -182,8 +182,6 @@ implements OsylManagerEventHandler, ClickHandler {
 	scSiteList.setSortPolicy(ScrollTable.SortPolicy.MULTI_CELL);
 	scSiteList.setResizePolicy(ScrollTable.ResizePolicy.FIXED_WIDTH);
 	scSiteList.setColumnResizePolicy(ColumnResizePolicy.MULTI_CELL);
-	scSiteList.setMinimumColumnWidth(0, 20);
-	scSiteList.setMaximumColumnWidth(0, 20);
 	
 //	for(int i=0; i<dataTable.getColumnCount(); i++){
 //	    scSiteList.setMinimumColumnWidth(i, 0);

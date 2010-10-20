@@ -1381,20 +1381,18 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	try {
 	    site = osylSiteService.getSite(siteId);
-
-	    // if (osylSiteService.hasCourseOutline(siteId)) {
-	    // COSerialized co =
-	    // osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
-	    // }
 	} catch (IdUnusedException e) {
 	    log.error(e.getMessage());
 	    e.printStackTrace();
 	}
 
 	if (site != null
+		&& "course".equals(site.getType())
 		&& searchTerm != null
 		&& site.getTitle().toLowerCase().contains(
-			searchTerm.toLowerCase())) {
+			searchTerm.toLowerCase())
+		&& site.getTitle().toLowerCase().contains(
+			parseAcademicSession(academicSession).toLowerCase())) {
 	    // Retrieve site info
 	    info.setSiteId(siteId);
 	    info.setSiteName(site.getTitle());
@@ -1402,9 +1400,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    info.setSiteShortDescription(site.getShortDescription());
 	    info.setSiteOwnerLastName(site.getCreatedBy().getLastName());
 	    info.setSiteOwnerName(site.getCreatedBy().getFirstName());
-	    // info.setCourseNumber(co!=null?co.getTitle():"");
-	    // info.setCourseSection(co!=null?co.getSection():"");
-	    // info.setCourseSession(co!=null?co.get():"");
 
 	    // Retrieve CM info
 	    String siteProviderId = site.getProviderGroupId();
@@ -1418,85 +1413,70 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			courseManagementService.getCourseOffering(section
 				.getCourseOfferingEid());
 
-		//If the session selected is the trimester without any period,
-		//we remove the tailing character.
-		if(academicSession!=null && !"".equals(academicSession) &&
-			(academicSession.toLowerCase()).charAt(4) != 'p'){
-		    academicSession = academicSession.substring(0, 4);
-		}
+		CanonicalCourse canCourse =
+			courseManagementService.getCanonicalCourse(courseOff
+				.getCanonicalCourseEid());
 
-		if (courseOff.getAcademicSession().getEid().contains(
-			academicSession)) {
-		    CanonicalCourse canCourse =
-			    courseManagementService
-				    .getCanonicalCourse(courseOff
-					    .getCanonicalCourseEid());
+		// Retrieve official instructors
+		EnrollmentSet enrollmentSet = section.getEnrollmentSet();
 
-		    // Retrieve official instructors
-		    EnrollmentSet enrollmentSet = section.getEnrollmentSet();
-
-		    if (enrollmentSet != null) {
-			Set<String> instructors =
-				enrollmentSet.getOfficialInstructors();
-			User user = null;
-			String name = null;
-			for (String instructor : instructors) {
-			    try {
-				user =
-					UserDirectoryService
-						.getUserByEid(instructor);
-				name = user.getDisplayName();
-				info.addCourseInstructor(name);
-			    } catch (UserNotDefinedException e) {
-				e.printStackTrace();
-			    }
+		if (enrollmentSet != null) {
+		    Set<String> instructors =
+			    enrollmentSet.getOfficialInstructors();
+		    User user = null;
+		    String name = null;
+		    for (String instructor : instructors) {
+			try {
+			    user =
+				    UserDirectoryService
+					    .getUserByEid(instructor);
+			    name = user.getDisplayName();
+			    info.addCourseInstructor(name);
+			} catch (UserNotDefinedException e) {
+			    e.printStackTrace();
 			}
 		    }
-
-		    info.setCourseNumber(canCourse.getEid());
-		    info.setCourseName(section.getTitle());
-		    info.setCourseSection(siteProviderId
-			    .substring(siteProviderId.length() - 3));
-		    info.setCourseSession(courseOff.getAcademicSession()
-			    .getTitle());
-		    info.setAcademicCareer(courseOff.getAcademicCareer());
-
-		    // TODO: the coordinator is not saved in the cm. Correct
-		    // this
-		    // when done.
-		    info.setCourseCoordinator(null);
-
-		    info.setLastModifiedDate(osylSiteService
-			    .getCoLastModifiedDate(siteId));
-		    info.setLastPublicationDate(osylSiteService
-			    .getCoLastPublicationDate(siteId));
-
-		    // Retrieve parent site
-		    String parentSite = null;
-
-		    try {
-			parentSite = osylSiteService.getParent(siteId);
-		    } catch (Exception e) {
-			log.error(e.getMessage());
-			e.printStackTrace();
-		    }
-
-		    info.setParentSite(parentSite);
-
-		    // retrieve childs
-		    List<String> childs = null;
-		    try {
-			childs = osylSiteService.getChildren(siteId);
-		    } catch (Exception e) {
-		    }
-		    if (childs != null && !childs.isEmpty())
-			info.setHasChild(true);
-		} else {
-		    info = null;
 		}
-	    } else {
-		info = null;
+
+		info.setCourseNumber(canCourse.getEid());
+		info.setCourseName(section.getTitle());
+		info.setCourseSection(siteProviderId.substring(siteProviderId
+			.length() - 3));
+		info
+			.setCourseSession(courseOff.getAcademicSession()
+				.getTitle());
+		info.setAcademicCareer(courseOff.getAcademicCareer());
 	    }
+	    // TODO: the coordinator is not saved in the cm. Correct
+	    // this
+	    // when done.
+	    info.setCourseCoordinator(null);
+
+	    info.setLastModifiedDate(osylSiteService
+		    .getCoLastModifiedDate(siteId));
+	    info.setLastPublicationDate(osylSiteService
+		    .getCoLastPublicationDate(siteId));
+
+	    // Retrieve parent site
+	    String parentSite = null;
+
+	    try {
+		parentSite = osylSiteService.getParent(siteId);
+	    } catch (Exception e) {
+		log.error(e.getMessage());
+		e.printStackTrace();
+	    }
+
+	    info.setParentSite(parentSite);
+
+	    // retrieve childs
+	    List<String> childs = null;
+	    try {
+		childs = osylSiteService.getChildren(siteId);
+	    } catch (Exception e) {
+	    }
+	    if (childs != null && !childs.isEmpty())
+		info.setHasChild(true);
 	} else {
 	    info = null;
 	}
@@ -1623,4 +1603,22 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
     }
 
+    private String parseAcademicSession(String academicSession) {
+	
+	//We create a CMAcademicSession with academicSession as the id.  Then,
+	//we use the session name created from the id to compare the site title
+	//with the academic session name.
+	if (academicSession != null && !"".equals(academicSession)){
+	    AcademicSession acadSession =
+		courseManagementService.getAcademicSession(academicSession);
+	    CMAcademicSession cmAcadSession = new CMAcademicSession();
+	    cmAcadSession.setId(acadSession.getEid());
+	    cmAcadSession.setTitle(acadSession.getTitle());
+	    cmAcadSession.setDescription(acadSession.getDescription());
+	    cmAcadSession.setStartDate(acadSession.getStartDate());
+	    cmAcadSession.setEndDate(acadSession.getEndDate());
+	    academicSession = cmAcadSession.getSessionName();
+	}
+	return academicSession;
+    }
 }
