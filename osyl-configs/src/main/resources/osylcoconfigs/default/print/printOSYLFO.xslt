@@ -568,7 +568,7 @@
 		</fo:block>
 	</xsl:if>
 	<xsl:if test="comment !=''">
-		<fo:block font-size="8pt" space-before="10pt">
+		<fo:block font-size="8pt">
 			<xsl:value-of select="comment"/>
 		</fo:block>
 	</xsl:if>
