@@ -31,6 +31,8 @@ import org.testng.annotations.Test;
  */
 public class AssociateToParentSite extends AbstractOSYLTest {
 
+    private static int ALLOWED_TRIES = 10;
+    
     @Test(groups = "OSYL-Suite", description = "OSYLEditor OsylManagertest. Associate to a parent site")
     @Parameters( { "webSite" })
     public void testAssociateToParentSite(String webSite) throws Exception {
@@ -106,6 +108,12 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		    .mouseUp(
 			    "//div[@class='OsylManager-action OsylManager-action-down-hovering' and ./div[contains(.,'Lier')]]");
 	    pause();
+	    int i =0;
+	    while(!session().isElementPresent("//select[@class='OsylManager-form-element']/option[@value='"+parentSiteName+"']") && i<ALLOWED_TRIES){
+		pause();
+		i++;
+	    }
+	    assertTrue(session().isElementPresent("//select[@class='OsylManager-form-element']/option[@value='"+parentSiteName+"']"));
 	    session().select("//select[@class='OsylManager-form-element']",
 		    "label=" + parentSiteName);
 	    pause();
@@ -170,6 +178,11 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		    .mouseUp(
 			    "//div[@class='OsylManager-action OsylManager-action-down-hovering' and ./div[contains(.,'Lier')]]");
 	    pause();
+	    while(!session().isElementPresent("//select[@class='OsylManager-form-element']/option[@value='"+getCurrentTestSiteName()+"']") && i<ALLOWED_TRIES){
+		pause();
+		i++;
+	    }
+	    assertTrue(session().isElementPresent("//select[@class='OsylManager-form-element']/option[@value='"+getCurrentTestSiteName()+"']"));
 	    session().select("//select[@class='OsylManager-form-element']",
 		    "label=" + getCurrentTestSiteName());
 	    pause();
