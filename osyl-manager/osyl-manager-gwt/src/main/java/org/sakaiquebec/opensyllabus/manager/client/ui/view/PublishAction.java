@@ -100,7 +100,8 @@ public class PublishAction extends OsylManagerAbstractAction {
     }
     
     public PublishAction(OsylManagerController controller) {
-	super(controller, "mainView_action_publish");
+	super(controller, "mainView_action_publish",
+		"mainView_action_publish_tooltip");
     }
 
     @Override

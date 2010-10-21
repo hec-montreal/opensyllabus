@@ -34,7 +34,8 @@ import org.sakaiquebec.opensyllabus.shared.model.COSite;
 public class EditAction extends OsylManagerAbstractAction {
 
     public EditAction(OsylManagerController controller) {
-	super(controller, "mainView_action_edit");
+	super(controller, "mainView_action_edit",
+		"mainView_action_edit_tooltip");
     }
 
     @Override

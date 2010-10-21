@@ -35,7 +35,8 @@ import com.google.gwt.user.client.Window;
 public class AssociateAction extends OsylManagerAbstractAction {
 
     public AssociateAction(OsylManagerController controller) {
-	super(controller, "mainView_action_associate");
+	super(controller, "mainView_action_associate",
+	"mainView_action_associate_tooltip");
     }
 
     @Override

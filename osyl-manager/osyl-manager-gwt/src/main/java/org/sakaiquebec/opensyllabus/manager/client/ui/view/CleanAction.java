@@ -36,7 +36,8 @@ import com.google.gwt.user.client.Window;
 public class CleanAction extends OsylManagerAbstractAction {
 
     public CleanAction(OsylManagerController controller) {
-	super(controller, "mainView_action_clean");
+	super(controller, "mainView_action_clean",
+		"mainView_action_clean_tooltip");
     }
 
     @Override

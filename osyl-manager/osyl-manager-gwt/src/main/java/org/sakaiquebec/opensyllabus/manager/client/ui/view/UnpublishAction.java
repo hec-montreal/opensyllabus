@@ -36,7 +36,8 @@ import com.google.gwt.user.client.Window;
 public class UnpublishAction extends OsylManagerAbstractAction {
 
     public UnpublishAction(OsylManagerController controller) {
-	super(controller, "mainView_action_unpublish");
+	super(controller, "mainView_action_unpublish",
+		"mainView_action_unpublish_tooltip");
     }
 
     @Override

@@ -33,7 +33,8 @@ import org.sakaiquebec.opensyllabus.shared.model.COSite;
 public class ImportAction extends OsylManagerAbstractAction {
 
     public ImportAction(OsylManagerController controller) {
-	super(controller, "mainView_action_import");
+	super(controller, "mainView_action_import",
+		"mainView_action_import_tooltip");
     }
 
     @Override

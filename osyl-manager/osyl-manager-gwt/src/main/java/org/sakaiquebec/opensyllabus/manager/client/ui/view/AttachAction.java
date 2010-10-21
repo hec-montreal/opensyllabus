@@ -33,7 +33,8 @@ import org.sakaiquebec.opensyllabus.shared.model.COSite;
 public class AttachAction extends OsylManagerAbstractAction {
 
     public AttachAction(OsylManagerController controller) {
-	super(controller, "mainView_action_attach");
+	super(controller, "mainView_action_attach",
+		"mainView_action_attach_tooltip");
     }
 
     @Override

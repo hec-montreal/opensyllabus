@@ -61,7 +61,8 @@ public class ExportAction extends OsylManagerAbstractAction {
     }
 
     public ExportAction(OsylManagerController controller) {
-	super(controller, "mainView_action_export");
+	super(controller, "mainView_action_export",
+		"mainView_action_export_tooltip");
     }
 
     @Override

@@ -35,7 +35,8 @@ import com.google.gwt.user.client.Window;
 public class CreateSiteAction extends OsylManagerAbstractAction {
 
     public CreateSiteAction(OsylManagerController controller) {
-	super(controller, "mainView_action_createSite");
+	super(controller, "mainView_action_createSite",
+		"mainView_action_createSite_tooltip");
 	setEnabled(true);
     }
 

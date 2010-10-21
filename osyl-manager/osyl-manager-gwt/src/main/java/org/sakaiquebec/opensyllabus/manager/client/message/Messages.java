@@ -129,35 +129,36 @@ public interface Messages extends ConstantsWithLookup {
 
     String mainView_or();
 
-    String mainView_action_createSite();
-
-    String mainView_action_importSite();
-
-    String mainView_action_edit();
-
     String mainView_action_associate();
-
+    String mainView_action_associate_tooltip();
     String mainView_action_attach();
-
+    String mainView_action_attach_tooltip();
     String mainView_action_clean();
-
+    String mainView_action_clean_tooltip();
     String mainView_action_copy();
-
+    String mainView_action_copy_tooltip();
+    String mainView_action_createSite();
+    String mainView_action_createSite_tooltip();
     String mainView_action_delete();
-
+    String mainView_action_delete_tooltip();
     String mainView_action_dissociate();
-
+    String mainView_action_dissociate_tooltip();
+    String mainView_action_edit();
+    String mainView_action_edit_tooltip();
     String mainView_action_export();
-
+    String mainView_action_export_tooltip();
+    String mainView_action_import();
+    String mainView_action_import_tooltip();
+    String mainView_action_importSite();
+    String mainView_action_importSite_tooltip();
     String mainView_action_publish();
+    String mainView_action_publish_tooltip();
+    String mainView_action_unattach();
+    String mainView_action_unattach_tooltip();
+    String mainView_action_unpublish();
+    String mainView_action_unpublish_tooltip();
     
     String mainView_action_search();
-
-    String mainView_action_unattach();
-
-    String mainView_action_unpublish();
-
-    String mainView_action_import();
 
     String mainView_tabs_all();
 

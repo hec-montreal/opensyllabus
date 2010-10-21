@@ -172,10 +172,6 @@ height:400px;
 padding:3px;
 }
 
-OsylManager-scrollTable-Cell{
-border : 1px solid black;
-}
-
 .OsylManager-scrollTable-row{
 background-color:#ffffff;
 cursor:pointer;

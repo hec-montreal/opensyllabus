@@ -96,7 +96,8 @@ public class DissociateAction extends OsylManagerAbstractAction {
     }
 
     public DissociateAction(OsylManagerController controller) {
-	super(controller, "mainView_action_dissociate");
+	super(controller, "mainView_action_dissociate",
+		"mainView_action_dissociate_tooltip");
     }
 
     @Override

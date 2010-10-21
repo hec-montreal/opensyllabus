@@ -117,41 +117,18 @@ implements OsylManagerEventHandler, ClickHandler {
 			    .setStylePrimaryName(rowNum, "OsylManager-scrollTable-row");
 			    
 			    scSiteList.getDataTable().setHTML(rowNum, 0, coSite.getSiteId());
-			    scSiteList.getDataTable().getCellFormatter()
-			    .setStylePrimaryName(rowNum, 0, "OsylManager-scrollTable-Cell");
-			    
 			    scSiteList.getDataTable().setHTML(rowNum, 1, coSite.getAcademicCareer());
-			    scSiteList.getDataTable().getCellFormatter()
-			    .setStylePrimaryName(rowNum, 1, "OsylManager-scrollTable-Cell");
-			    
 			    scSiteList.getDataTable().setHTML(rowNum, 2, coSite.getCourseSession());
-			    scSiteList.getDataTable().getCellFormatter()
-			    .setStylePrimaryName(rowNum, 2, "OsylManager-scrollTable-Cell");
-			    
 			    scSiteList.getDataTable().setHTML(rowNum, 3, siteTitle);
-			    scSiteList.getDataTable().getCellFormatter()
-			    .setStylePrimaryName(rowNum, 3, "OsylManager-scrollTable-Cell");
-			    
 			    scSiteList.getDataTable().setHTML(rowNum, 4, coSite.getParentSite());
-			    scSiteList.getDataTable().getCellFormatter()
-			    .setStylePrimaryName(rowNum, 4, "OsylManager-scrollTable-Cell");
 			    
 			    if(coSite.getLastPublicationDate()!=null){
 				scSiteList.getDataTable().setHTML(rowNum, 5, dtf.format(coSite.getLastPublicationDate()));
-				scSiteList.getDataTable().getCellFormatter()
-			    .setStylePrimaryName(rowNum, 5, "OsylManager-scrollTable-Cell");
 			    }
 			    
 			    if(coSite.getLastModifiedDate()!=null){
 				scSiteList.getDataTable().setHTML(rowNum, 6, dtf.format(coSite.getLastModifiedDate()));
-				scSiteList.getDataTable().getCellFormatter()
-			    .setStylePrimaryName(rowNum, 6, "OsylManager-scrollTable-Cell");
 			    }
-			    
-//			    scSiteList.getDataTable().setWidget(rowNum, 7, new CheckBox());
-//			    scSiteList.getDataTable().getCellFormatter()
-//			    .setStylePrimaryName(rowNum, 7, "OsylManager-scrollTable-Cell");
-			    
 			    i++;
 			}
 		    }
@@ -288,56 +265,43 @@ implements OsylManagerEventHandler, ClickHandler {
 	headerTable.setWidget(0, 0, selectAll);
 	formatter.setHorizontalAlignment(0, 0, HasHorizontalAlignment.ALIGN_CENTER);
 	formatter.setVerticalAlignment(0, 0, HasVerticalAlignment.ALIGN_MIDDLE);
-	formatter.addStyleName(0, 0, "OsylManager-scrollTable-Cell");
 //	formatter.setWordWrap(0, 0, true);
 	
 	headerTable.setHTML(0, 1, messages.CourseListView_scSiteList_col0());
 	formatter.setHorizontalAlignment(0, 1, HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 1, HasVerticalAlignment.ALIGN_TOP);
-	formatter.addStyleName(0, 1, "OsylManager-scrollTable-Cell");
 //	formatter.setWordWrap(0, 1, false);
 	
 	headerTable.setHTML(0, 2, messages.CourseListView_scSiteList_col1());
 	formatter.setHorizontalAlignment(0, 2, HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 2, HasVerticalAlignment.ALIGN_TOP);
-	formatter.addStyleName(0, 2, "OsylManager-scrollTable-Cell");
 //	formatter.setWordWrap(0, 2, false);
 	
 	headerTable.setHTML(0, 3, messages.CourseListView_scSiteList_col2());
 	formatter.setHorizontalAlignment(0, 3, HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 3, HasVerticalAlignment.ALIGN_TOP);
-	formatter.addStyleName(0, 3, "OsylManager-scrollTable-Cell");
 //	formatter.setWordWrap(0, 3, false);
 	
 	headerTable.setHTML(0, 4, messages.CourseListView_scSiteList_col3());
 	formatter.setHorizontalAlignment(0, 4, HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 4, HasVerticalAlignment.ALIGN_TOP);
-	formatter.addStyleName(0, 4, "OsylManager-scrollTable-Cell");
 //	formatter.setWordWrap(0, 4, false);
 	
 	headerTable.setHTML(0, 5, messages.CourseListView_scSiteList_col4());
 	formatter.setHorizontalAlignment(0, 5, HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 5, HasVerticalAlignment.ALIGN_TOP);
-	formatter.addStyleName(0, 5, "OsylManager-scrollTable-Cell");
 //	formatter.setWordWrap(0, 5, false);
 	
 	headerTable.setHTML(0, 6, messages.CourseListView_scSiteList_col5());
 	formatter.setHorizontalAlignment(0, 6, HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 6, HasVerticalAlignment.ALIGN_TOP);
-	formatter.addStyleName(0, 6, "OsylManager-scrollTable-Cell");
 //	formatter.setWordWrap(0, 6, false);
 	
 	headerTable.setHTML(0, 7, messages.CourseListView_scSiteList_col6());
 	formatter.setHorizontalAlignment(0, 7, HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 7, HasVerticalAlignment.ALIGN_TOP);
-	formatter.addStyleName(0, 7, "OsylManager-scrollTable-Cell");
 //	formatter.setWordWrap(0, 7, false);
-	
-//	headerTable.setHTML(0, 7, messages.CourseListView_scSiteList_col7());
-//	formatter.setHorizontalAlignment(0, 7, HasHorizontalAlignment.ALIGN_LEFT);
-//	formatter.setVerticalAlignment(0, 7, HasVerticalAlignment.ALIGN_TOP);
-//	formatter.addStyleName(0, 7, "OsylManager-scrollTable-Cell");
-	
+
 	return headerTable;
     }
     
@@ -350,7 +314,6 @@ implements OsylManagerEventHandler, ClickHandler {
 	    int rowNum = scSiteList.getDataTable().insertRow(i);
 	    scSiteList.getDataTable().setHTML(rowNum, 0, "siteId"+i);
 	    scSiteList.getDataTable().setHTML(rowNum, 3, "siteTitle"+i);
-//	    scSiteList.getDataTable().setWidget(rowNum, 7, new CheckBox());
 	}
 	mainPanel.add(scSiteList);
     }

@@ -63,7 +63,7 @@ public abstract class OsylManagerAbstractAction extends PushButton implements
      * @param key the key used to display action label
      */
     public OsylManagerAbstractAction(OsylManagerController controller,
-	    String key) {
+	    String key, String tooltipKey) {
 	super();
 	this.controller = controller;
 	messages = this.controller.getMessages();
@@ -76,7 +76,14 @@ public abstract class OsylManagerAbstractAction extends PushButton implements
 	} catch (MissingResourceException e) {
 	    t = "missing key:" + key;
 	}
+	String tooltip;
+	try {
+	    tooltip = messages.getString(tooltipKey);
+	} catch (MissingResourceException e) {
+	    tooltip = "missing key:" + tooltipKey;
+	}
 	this.setText(t);
+	this.setTitle(tooltip);
 	this.addClickHandler(this);
 	this.setStylePrimaryName("OsylManager-action");
 	this.setEnabled(false);

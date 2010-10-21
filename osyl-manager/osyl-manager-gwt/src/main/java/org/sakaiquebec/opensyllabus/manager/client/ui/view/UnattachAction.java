@@ -96,7 +96,8 @@ public class UnattachAction extends OsylManagerAbstractAction {
     }
 
     public UnattachAction(OsylManagerController controller) {
-	super(controller, "mainView_action_unattach");
+	super(controller, "mainView_action_unattach",
+		"mainView_action_unattach_tooltip");
     }
 
     @Override

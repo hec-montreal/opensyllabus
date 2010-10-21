@@ -36,7 +36,8 @@ import com.google.gwt.user.client.Window;
 public class CopyAction extends OsylManagerAbstractAction {
 
     public CopyAction(OsylManagerController controller) {
-	super(controller, "mainView_action_copy");
+	super(controller, "mainView_action_copy",
+		"mainView_action_copy_tooltip");
     }
 
     @Override

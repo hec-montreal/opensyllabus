@@ -35,7 +35,8 @@ import com.google.gwt.user.client.Window;
 public class ImportNewSiteAction extends OsylManagerAbstractAction {
 
     public ImportNewSiteAction(OsylManagerController controller) {
-	super(controller, "mainView_action_importSite");
+	super(controller, "mainView_action_importSite",
+		"mainView_action_importSite_tooltip");
 	setEnabled(true);
     }
 

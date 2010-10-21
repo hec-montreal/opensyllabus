@@ -95,7 +95,8 @@ public class DeleteAction extends OsylManagerAbstractAction {
     }
 
     public DeleteAction(OsylManagerController controller) {
-	super(controller, "mainView_action_delete");
+	super(controller, "mainView_action_delete",
+		"mainView_action_delete_tooltip");
     }
 
     @Override
