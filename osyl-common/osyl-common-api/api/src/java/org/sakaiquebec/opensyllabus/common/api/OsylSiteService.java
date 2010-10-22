@@ -257,7 +257,7 @@ public interface OsylSiteService extends EntityProducer {
 
     public COModeledServer getFusionnedPrePublishedHierarchy(String siteId);
 
-    public COSerialized updateCOContentTitle(String siteId, String webappDir)
+    public COSerialized updateCOCourseInformations(String siteId, String webappDir)
 	    throws Exception;
 
     /**

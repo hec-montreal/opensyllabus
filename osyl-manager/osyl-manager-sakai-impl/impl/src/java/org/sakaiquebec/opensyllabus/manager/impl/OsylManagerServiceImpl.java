@@ -1160,7 +1160,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    site.setProviderGroupId(courseSectionId);
 	    siteService.save(site);
-	    osylSiteService.updateCOContentTitle(siteId, webappDir);
+	    osylSiteService.updateCOCourseInformations(siteId, webappDir);
 
 	}
     }
@@ -1191,7 +1191,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    rp.addProperty(PROP_SITE_TERM_EID, null);
 	    site.setProviderGroupId(null);
 	    siteService.save(site);
-	    osylSiteService.updateCOContentTitle(siteId, webappDir);
+	    osylSiteService.updateCOCourseInformations(siteId, webappDir);
 	}
     }
 

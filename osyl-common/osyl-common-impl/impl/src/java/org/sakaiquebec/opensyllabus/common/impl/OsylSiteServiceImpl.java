@@ -43,9 +43,6 @@ import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.assignment.api.Assignment;
 import org.sakaiproject.assignment.api.AssignmentEdit;
 import org.sakaiproject.assignment.api.AssignmentService;
-import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
-import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
@@ -568,7 +565,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		osylConfigService.getConfigByRef(coConfig.getConfigRef(),
 			webappDir);
 	co.setOsylConfig(coConfig);
-	updateCOContentTitle(siteId, co);
+	updateCOCourseInformations(siteId, co);
 	return co;
     }
 
@@ -928,36 +925,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		thisCo.setOsylConfig(coConfig);
 		thisCo.setContent(getXmlStringFromFile(coConfig, thisCo
 			.getLang(), webappDir));
-		String title = getSite(siteId).getTitle();
-		String identifier = "";
-		String program = "";
-		if (this.isCOLinkedToCourseManagement(getCurrentSiteId())) {
-		    String cmTitle =
-			    getCourseManagementTitle(getCurrentSiteId());
-		    String cmIdentifier =
-			    getCourseManagementCourseNo(getCurrentSiteId());
-		    String cmProgram =
-			    getCourseManagementProgram(getCurrentSiteId());
-		    if (cmTitle != null) {
-			title = cmTitle;
-		    }
-		    if (cmIdentifier != null) {
-			identifier = cmIdentifier;
-		    }
-		    if (cmProgram != null) {
-			program = cmProgram;
-		    }
-		}
+		
+		
 		// reinitilaisation des uuids et ajout titre et identifier
 		SchemaHelper sh = new SchemaHelper(webappDir);
 		COModeledServer coModeled = new COModeledServer(thisCo);
 		coModeled.XML2Model();
 		coModeled.resetXML(null);
-		coModeled.setCOContentTitle(title);
-		coModeled.setCOContentCourseId(identifier);
-		coModeled.setCOContentIdentifier(identifier);
 		coModeled.setSchemaVersion(sh.getSchemaVersion());
-		coModeled.setCOProgram(program);
+		updateCOCourseInformations(siteId, coModeled);
 		coModeled.model2XML();
 		thisCo.setContent(coModeled.getSerializedContent());
 
@@ -1461,17 +1437,33 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     public void transferCopyEntities(String fromContext, String toContext,
 	    List ids) {
-	// TODO Auto-generated method stub
+	transferCopyEntities(fromContext, toContext, ids, false);
 
     }
 
     public void transferCopyEntities(String fromContext, String toContext,
 	    List ids, boolean cleanup) {
-	// TODO Auto-generated method stub
-
+	COSerialized sourceCo =
+		getUnfusionnedSerializedCourseOutlineBySiteId(fromContext);
+	COSerialized destinationCo =
+		getUnfusionnedSerializedCourseOutlineBySiteId(toContext);
+	if (destinationCo == null) {
+	    destinationCo = sourceCo;
+	    destinationCo.setCoId(null);
+	} else {
+	    destinationCo.setContent(sourceCo.getContent());
+	}
+	COModeledServer coModeledServer = new COModeledServer(destinationCo);
+	coModeledServer.resetXML(null);
+	destinationCo.setContent(coModeledServer.getSerializedContent());
+	try {
+	    resourceDao.createOrUpdateCourseOutline(destinationCo);
+	} catch (Exception e) {
+	    log.error("transferCopyEntities:createOrUpdateCourseOutline", e);
+	}
     }
 
-    public COSerialized updateCOContentTitle(String siteId, String webappDir)
+    public COSerialized updateCOCourseInformations(String siteId, String webappDir)
 	    throws Exception {
 	COSerialized co = getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
 	COConfigSerialized coConfig = co.getOsylConfig();
@@ -1481,31 +1473,17 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		osylConfigService.getConfigByRef(coConfig.getConfigRef(),
 			webappDir);
 	co.setOsylConfig(coConfig);
-	updateCOContentTitle(siteId, co);
+	updateCOCourseInformations(siteId, co);
 
 	return co;
     }
 
-    public void updateCOContentTitle(String siteId, COSerialized co)
+    public void updateCOCourseInformations(String siteId, COSerialized co)
 	    throws Exception {
-	Site site = getSite(siteId);
-	String title = site.getTitle();
-	String identifier = "";
 	try {
-	    if (this.isCOLinkedToCourseManagement(siteId)) {
-		String cmTitle = getCourseManagementTitle(siteId);
-		String cmIdentifier = getCourseManagementCourseNo(siteId);
-		if (cmTitle != null) {
-		    title = cmTitle;
-		}
-		if (cmIdentifier != null) {
-		    identifier = cmIdentifier;
-		}
-	    }
 	    COModeledServer coModeled = new COModeledServer(co);
 	    coModeled.XML2Model();
-	    coModeled.setCOContentTitle(title);
-	    coModeled.setCOContentIdentifier(identifier);
+	    updateCOCourseInformations(siteId, coModeled);
 	    coModeled.model2XML();
 	    co.setContent(coModeled.getSerializedContent());
 	    resourceDao.createOrUpdateCourseOutline(co);
@@ -1517,7 +1495,41 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    // "client" doesn't have to know about IdUnusedException.
 	    throw new Exception(e);
 	}
-
+    }
+    
+    private void updateCOCourseInformations(String siteId,COModeledServer coModeled) throws Exception{
+	Site site = getSite(siteId);
+	String title = site.getTitle();
+	String identifier = "";
+	String program = "";
+	try {
+	    if (this.isCOLinkedToCourseManagement(siteId)) {
+		String cmTitle = getCourseManagementTitle(siteId);
+		String cmIdentifier = getCourseManagementCourseNo(siteId);
+		String cmProgram =
+		    getCourseManagementProgram(getCurrentSiteId());
+		if (cmTitle != null) {
+		    title = cmTitle;
+		}
+		if (cmIdentifier != null) {
+		    identifier = cmIdentifier;
+		}
+		if (cmProgram != null) {
+			program = cmProgram;
+		    }
+	    }
+	    coModeled.setCOContentTitle(title);
+	    coModeled.setCOContentCourseId(identifier);
+	    coModeled.setCOContentIdentifier(identifier);
+	    coModeled.setCOProgram(program);
+	} catch (IdUnusedException e) {
+	    log.warn("updateCOContentTitle - Id unused exception", e);
+	    log
+		    .warn("updateCOContentTitle - Failed to retreive course management title");
+	    // We wrap the exception in a java.lang.Exception. This way our
+	    // "client" doesn't have to know about IdUnusedException.
+	    throw new Exception(e);
+	}
     }
 
     private boolean isCOLinkedToCourseManagement(String siteId)
