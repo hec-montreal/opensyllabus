@@ -383,11 +383,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	}
 
-	try{
-	copySite("3-210-10A.A2010.A01", "1-404-05E.A2010.T31");
-	}catch(Exception e){
-	    e.printStackTrace();
-	}
+	
     }
 
     private String mkdirCollection(String resourceDirToCreate,
