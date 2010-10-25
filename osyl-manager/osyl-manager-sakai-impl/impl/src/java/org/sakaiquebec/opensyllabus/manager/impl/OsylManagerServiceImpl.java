@@ -25,12 +25,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-
-import org.sakaiproject.util.ArrayUtil;
-import org.sakaiproject.util.SortedIterator;
-import org.sakaiproject.entity.cover.EntityManager;
-import org.sakaiproject.component.cover.ServerConfigurationService;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -41,10 +35,8 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -65,13 +57,13 @@ import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
 import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.authz.cover.FunctionManager;
 import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.citation.api.Citation;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
+import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentEntity;
@@ -91,7 +83,7 @@ import org.sakaiproject.entity.api.EntityTransferrer;
 import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
-import org.sakaiproject.event.api.SessionState;
+import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.exception.IdInvalidException;
 import org.sakaiproject.exception.IdUnusedException;
@@ -109,8 +101,6 @@ import org.sakaiproject.time.api.Time;
 import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiproject.tool.api.Tool;
-import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.cover.UserDirectoryService;
@@ -138,15 +128,14 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     private static final String CITATION_EXTENSION = "CITATION";
     private final static String PROP_SITE_TERM = "term";
-    
+
     private final static String PROP_SITE_TERM_EID = "term_eid";
-    
+
     /** the web content tool id **/
     private final static String WEB_CONTENT_TOOL_ID = "sakai.iframe";
 
     /** the news tool **/
     private final static String NEWS_TOOL_ID = "sakai.news";
-
 
     private static final String SAKAI_SITE_TYPE = SiteService.SITE_SUBTYPE;
 
@@ -248,7 +237,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public void setOsylService(OsylService osylService) {
 	this.osylService = osylService;
     }
-
 
     /**
      * The chs to be injected by Spring
@@ -383,7 +371,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	}
 
-	
     }
 
     private String mkdirCollection(String resourceDirToCreate,
@@ -1627,7 +1614,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return academicSession;
     }
 
-    public void copySite(String siteFrom, String siteTo) throws Exception {
+    public void copySite(String siteFrom, String siteTo, String webappDir)
+	    throws Exception {
 	Site newSite = null;
 	Site oldSite = null;
 
@@ -1652,34 +1640,31 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	}
 
-
 	// Remove all old contents before importing contents from new site
 	importToolIntoSiteMigrate(toolIdList, newSite, oldSite);
 
-	
 	// We remove all resources in the publish directory collection
 	String val2 = contentHostingService.getSiteCollection(newSite.getId());
 	String refString =
 		contentHostingService.getReference(val2).substring(8);
 	String id_publish = (refString + PUBLISH_DIRECTORY + "/");
-	
+
 	ContentCollection publishContent =
-		    contentHostingService.getCollection(id_publish);
+		contentHostingService.getCollection(id_publish);
 
-	    @SuppressWarnings("unchecked")
-	    List<ContentEntity> membersPublished =
-		    publishContent.getMemberResources();
-	    for (Iterator<ContentEntity> pMbrs = membersPublished.iterator(); pMbrs
-		    .hasNext();) {
-		ContentEntity next = (ContentEntity) pMbrs.next();
-		String thisEntityRef = next.getId();
-		if (next.isCollection())
-		    contentHostingService.removeCollection(thisEntityRef);
-		else
-		    contentHostingService.removeResource(thisEntityRef);
-	    }
+	@SuppressWarnings("unchecked")
+	List<ContentEntity> membersPublished =
+		publishContent.getMemberResources();
+	for (Iterator<ContentEntity> pMbrs = membersPublished.iterator(); pMbrs
+		.hasNext();) {
+	    ContentEntity next = (ContentEntity) pMbrs.next();
+	    String thisEntityRef = next.getId();
+	    if (next.isCollection())
+		contentHostingService.removeCollection(thisEntityRef);
+	    else
+		contentHostingService.removeResource(thisEntityRef);
+	}
 
-	    
 	siteService.save(newSite);
 
     }

@@ -190,7 +190,7 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	hz1.add(new EditAction(getController()));
 	hz1.add(new PublishAction(getController()));
 //	hz1.add(new UnpublishAction(getController()));
-//	hz1.add(new CopyAction(getController()));
+	hz1.add(new CopyAction(getController()));
 	hz1.setStyleName("OsylManager-mainView-actionList");
 	commandsPanel.add(hz1);
 

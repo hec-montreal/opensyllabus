@@ -25,11 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
-import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
-import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
-import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -40,14 +37,11 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.TextBox;
 
@@ -55,28 +49,22 @@ import com.google.gwt.user.client.ui.TextBox;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class AssociateForm extends OsylManagerAbstractWindowPanel {
+public class CopyForm extends OsylManagerAbstractWindowPanel {
 
-    private COSite selectedSite;
+    private COSite selectFromSite;
 
-    private CMCourse selectedCourse;
+    private COSite selectToSite;
 
     private TextBox sigleTextBox;
 
-    private CMCourseInfoView cmCourseInfoView;
-
-    private MultiWordSuggestOracle sigleOracle = new MultiWordSuggestOracle();
-
     private PushButton okButton;
 
-    private Map<String, CMCourse> sigleCourseMap;
-
-    private final OsylCancelDialog diag;
+    private Map<String, COSite> sigleCourseMap;
 
     private ListBox suggestionListBox;
 
-    AsyncCallback<List<CMCourse>> coursesListAsyncCallback =
-	    new AsyncCallback<List<CMCourse>>() {
+    AsyncCallback<List<COSite>> siteListAsynCB =
+	    new AsyncCallback<List<COSite>>() {
 
 		public void onFailure(Throwable caught) {
 		    OsylOkCancelDialog warning =
@@ -87,25 +75,20 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 		    warning.centerAndFocus();
 		}
 
-		public void onSuccess(List<CMCourse> result) {
-		    sigleOracle = new MultiWordSuggestOracle();
-		    sigleCourseMap = new HashMap<String, CMCourse>();
-		    for (CMCourse course : result) {
-			String sigleValue =
-				course.getSigle() + " " + course.getSession()
-					+ " " + course.getSection();
-			sigleOracle.add(sigleValue);
-			sigleCourseMap.put(sigleValue, course);
-			suggestionListBox.addItem(sigleValue, sigleValue);
+		public void onSuccess(List<COSite> result) {
+		    sigleCourseMap = new HashMap<String, COSite>();
+		    for (COSite course : result) {
+			sigleCourseMap.put(course.getSiteId(), course);
+			suggestionListBox.addItem(course.getSiteId());
 		    }
 		    suggestionListBox.setSelectedIndex(0);
+		    okButton.setEnabled(true);
 		}
 	    };
 
-    AsyncCallback<Void> associateToCMAsyncCallback = new AsyncCallback<Void>() {
+    AsyncCallback<Void> copyToAsynCB = new AsyncCallback<Void>() {
 
 	public void onFailure(Throwable caught) {
-	    diag.hide();
 	    OsylOkCancelDialog alert =
 		    new OsylOkCancelDialog(false, true, messages
 			    .OsylWarning_Title(), messages.rpcFailure(), true,
@@ -115,40 +98,35 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	}
 
 	public void onSuccess(Void result) {
-	    diag.hide();
-	    controller.notifyManagerEventHandler(new OsylManagerEvent(null,
-		    OsylManagerEvent.SITE_INFO_CHANGE));
-	    AssociateForm.this.onAssociationEnd();
+	    CopyForm.this.onCopyEnd();
 	}
 
     };
 
-    public AssociateForm(final OsylManagerController controller, COSite site,
-	    OsylCancelDialog aDiag) {
+    public CopyForm(final OsylManagerController controller, COSite site) {
 	super(controller);
-	this.selectedSite = site;
-	this.diag = aDiag;
+	this.selectFromSite = site;
 
-	Label title = new Label(messages.mainView_action_associate());
+	Label title = new Label(messages.mainView_action_copy());
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);
 
 	Label instruction =
-		new Label(messages.associateForm_instruction().replace("{0}",
-			selectedSite.getSiteId()));
+		new Label(messages.copyForm_instruction().replace("{0}",
+			selectFromSite.getSiteId()));
 	mainPanel.add(instruction);
 
-	Label l = new Label(messages.associateForm_courseIdentifier());
+	Label l = new Label(messages.copyForm_courseIdentifier());
 
 	sigleTextBox = new TextBox();
 
-	final Button search = new Button(messages.associateForm_search());
+	final Button search = new Button(messages.copyForm_search());
 	search.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
 		String value = sigleTextBox.getText();
 		suggestionListBox.clear();
-		controller.getCMCourses(value, coursesListAsyncCallback);
+		controller.getAllCoAndSiteInfo(value, "", siteListAsynCB);
 	    }
 	});
 	search.setEnabled(false);
@@ -174,7 +152,6 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	sigleTextBox.addKeyPressHandler(new KeyPressHandler() {
 
 	    public void onKeyPress(KeyPressEvent event) {
-		cmCourseInfoView.refreshView(null);
 		okButton.setEnabled(false);
 		String value = sigleTextBox.getText();
 		search.setEnabled(value.length() >= 3);
@@ -187,13 +164,7 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	suggestionListBox.addChangeHandler(new ChangeHandler() {
 
 	    public void onChange(ChangeEvent event) {
-		selectedCourse =
-			sigleCourseMap
-				.get(suggestionListBox
-					.getValue(suggestionListBox
-						.getSelectedIndex()));
-		cmCourseInfoView.refreshView(selectedCourse);
-		okButton.setEnabled(true);
+		
 	    }
 	});
 	Label voidLabel = new Label();
@@ -206,36 +177,29 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	mainPanel.setCellHorizontalAlignment(suggestionPanel,
 		HasHorizontalAlignment.ALIGN_CENTER);
 
-	cmCourseInfoView = new CMCourseInfoView(controller);
-	DecoratorPanel ivDecoratorPanel = new DecoratorPanel();
-	ivDecoratorPanel.setWidget(cmCourseInfoView);
-	ivDecoratorPanel.setStylePrimaryName("OsylManager-infoView");
-	mainPanel.add(ivDecoratorPanel);
-	mainPanel.setCellHorizontalAlignment(ivDecoratorPanel,
-		HasHorizontalAlignment.ALIGN_CENTER);
-
 	okButton = new PushButton(messages.associateForm_ok());
 	okButton.setStylePrimaryName("Osyl-Button");
 	okButton.setWidth("50px");
 	okButton.setEnabled(false);
 	okButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
-		diag.show();
-		diag.centerAndFocus();
-		AssociateForm.this.controller.associateToCM(selectedCourse
-			.getId(), selectedSite.getSiteId(),
-			associateToCMAsyncCallback);
+		selectToSite =
+			sigleCourseMap
+				.get(suggestionListBox
+					.getValue(suggestionListBox
+						.getSelectedIndex()));
+		controller.copySite(selectFromSite.getSiteId(), selectToSite.getSiteId(), copyToAsynCB);
 	    }
 	});
 
 	PushButton cancelButton =
-		new PushButton(messages.associateForm_cancel());
+		new PushButton(messages.copyForm_cancel());
 	cancelButton.setStylePrimaryName("Osyl-Button");
 	cancelButton.setWidth("50px");
 	cancelButton.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
-		AssociateForm.super.hide();
+		CopyForm.super.hide();
 	    }
 	});
 
@@ -248,28 +212,19 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 		HasHorizontalAlignment.ALIGN_CENTER);
     }
 
-    protected void onAssociationEnd() {
+    protected void onCopyEnd() {
 	mainPanel.clear();
 
-	Label title = new Label(messages.mainView_action_associate());
+	Label title = new Label(messages.mainView_action_copy());
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);
 
-	Label conf = new Label(messages.associateForm_confirmation());
+	Label conf = new Label(messages.copyForm_confirmation());
 	mainPanel.add(conf);
-
-	cmCourseInfoView
-		.setImage(new Image(controller.getImageBundle().check()));
-	DecoratorPanel ivDecoratorPanel = new DecoratorPanel();
-	ivDecoratorPanel.setWidget(cmCourseInfoView);
-	ivDecoratorPanel.setStylePrimaryName("OsylManager-infoView");
-	mainPanel.add(ivDecoratorPanel);
-	mainPanel.setCellHorizontalAlignment(ivDecoratorPanel,
-		HasHorizontalAlignment.ALIGN_CENTER);
 
 	okButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
-		AssociateForm.super.hide();
+		CopyForm.super.hide();
 	    }
 	});
 	mainPanel.add(okButton);

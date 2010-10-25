@@ -172,4 +172,9 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     public List<CMAcademicSession> getAcademicSessions() {
 	return osylManagerServices.getOsylManagerService().getAcademicSessions();
     }
+    
+    public void copySite(String siteFrom, String siteTo) throws Exception{
+	String webappDir = getServletContext().getRealPath("/");
+	osylManagerServices.getOsylManagerService().copySite(siteFrom, siteTo, webappDir);
+    }
 }

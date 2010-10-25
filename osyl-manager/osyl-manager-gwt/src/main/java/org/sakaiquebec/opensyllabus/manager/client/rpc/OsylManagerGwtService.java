@@ -97,5 +97,7 @@ public interface OsylManagerGwtService extends RemoteService {
     public List<CMAcademicSession> getAcademicSessions();
 
     public void deleteSite(String siteId) throws Exception;
+    
+    public void copySite(String siteFrom, String siteTo) throws Exception;
 
 }

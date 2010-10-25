@@ -26,10 +26,7 @@ import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerControl
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
-import com.google.gwt.user.client.Window;
-
 /**
- *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
@@ -42,16 +39,16 @@ public class CopyAction extends OsylManagerAbstractAction {
 
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
-	if(siteIds.size()==1)
+	if (siteIds.size() == 1)
 	    return true;
-	else return false;
+	else
+	    return false;
     }
 
     @Override
     public void onClick(List<COSite> siteIds) {
-	Window.alert("copy");
-	//TODO implement "copy" action methods.
+	CopyForm copyForm = new CopyForm(controller, siteIds.get(0));
+	copyForm.showModal();
     }
 
 }
-
