@@ -409,7 +409,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	});
 
 	// We register the entity manager
-	// entityManager.registerEntityProducer(this, REFERENCE_ROOT);
+	 entityManager.registerEntityProducer(this, REFERENCE_ROOT);
 
     }
 

@@ -25,6 +25,12 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+
+import org.sakaiproject.util.ArrayUtil;
+import org.sakaiproject.util.SortedIterator;
+import org.sakaiproject.entity.cover.EntityManager;
+import org.sakaiproject.component.cover.ServerConfigurationService;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -35,8 +41,10 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -57,13 +65,13 @@ import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.SecurityAdvisor;
+import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
 import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.authz.cover.FunctionManager;
 import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.citation.api.Citation;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
-import org.sakaiproject.component.api.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentEntity;
@@ -78,10 +86,12 @@ import org.sakaiproject.coursemanagement.api.CourseSet;
 import org.sakaiproject.coursemanagement.api.Enrollment;
 import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Section;
-import org.sakaiproject.entity.api.EntityManager;
+import org.sakaiproject.entity.api.EntityProducer;
+import org.sakaiproject.entity.api.EntityTransferrer;
 import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
+import org.sakaiproject.event.api.SessionState;
 import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.exception.IdInvalidException;
 import org.sakaiproject.exception.IdUnusedException;
@@ -94,13 +104,17 @@ import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
+import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.time.api.Time;
 import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
+import org.sakaiproject.tool.api.Tool;
+import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.cover.UserDirectoryService;
+import org.sakaiproject.util.ArrayUtil;
 import org.sakaiquebec.opensyllabus.api.OsylService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
@@ -124,8 +138,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     private static final String CITATION_EXTENSION = "CITATION";
     private final static String PROP_SITE_TERM = "term";
-
+    
     private final static String PROP_SITE_TERM_EID = "term_eid";
+    
+    /** the web content tool id **/
+    private final static String WEB_CONTENT_TOOL_ID = "sakai.iframe";
+
+    /** the news tool **/
+    private final static String NEWS_TOOL_ID = "sakai.news";
+
 
     private static final String SAKAI_SITE_TYPE = SiteService.SITE_SUBTYPE;
 
@@ -158,16 +179,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     public void setAuthzGroupName(String authzGroupName) {
 	this.authzGroupName = authzGroupName;
-    }
-
-    /**
-     * The server configuration service
-     */
-    private ServerConfigurationService serverConfigurationService;
-
-    public void setServerConfigurationService(
-	    ServerConfigurationService serverConfigurationService) {
-	this.serverConfigurationService = serverConfigurationService;
     }
 
     /**
@@ -238,11 +249,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	this.osylService = osylService;
     }
 
-    private EntityManager entityManager;
-
-    public void setEntityManager(EntityManager entityManager) {
-	this.entityManager = entityManager;
-    }
 
     /**
      * The chs to be injected by Spring
@@ -377,8 +383,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	}
 
-	getCMCourses("1404");
-
+	try{
+	copySite("3-210-10A.A2010.A01", "1-404-05E.A2010.T31");
+	}catch(Exception e){
+	    e.printStackTrace();
+	}
     }
 
     private String mkdirCollection(String resourceDirToCreate,
@@ -1084,7 +1093,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	// TODO Check first in sakai.properties, then in the components.xml as
 	// a bean property and then use the constant.
 	String timeOutString =
-		serverConfigurationService
+		ServerConfigurationService
 			.getString(EXPORT_DELETE_DELAY_MINUTES_KEY);
 	if (timeOutString != null && !"".equals(timeOutString)) {
 	    timeout = Integer.parseInt(timeOutString);
@@ -1537,7 +1546,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	Iterator<String> it = authzGroupIds.iterator();
 	while (it.hasNext()) {
 	    String authzGroupId = it.next();
-	    Reference r = entityManager.newReference(authzGroupId);
+	    Reference r = EntityManager.newReference(authzGroupId);
 	    if (r.isKnownType()) {
 		// check if this is a Sakai Site or Group
 		if (r.getType().equals(SiteService.APPLICATION_ID)) {
@@ -1604,13 +1613,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     private String parseAcademicSession(String academicSession) {
-	
-	//We create a CMAcademicSession with academicSession as the id.  Then,
-	//we use the session name created from the id to compare the site title
-	//with the academic session name.
-	if (academicSession != null && !"".equals(academicSession)){
+
+	// We create a CMAcademicSession with academicSession as the id. Then,
+	// we use the session name created from the id to compare the site title
+	// with the academic session name.
+	if (academicSession != null && !"".equals(academicSession)) {
 	    AcademicSession acadSession =
-		courseManagementService.getAcademicSession(academicSession);
+		    courseManagementService.getAcademicSession(academicSession);
 	    CMAcademicSession cmAcadSession = new CMAcademicSession();
 	    cmAcadSession.setId(acadSession.getEid());
 	    cmAcadSession.setTitle(acadSession.getTitle());
@@ -1621,4 +1630,148 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 	return academicSession;
     }
+
+    public void copySite(String siteFrom, String siteTo) throws Exception {
+	Site newSite = null;
+	Site oldSite = null;
+
+	newSite = siteService.getSite(siteTo);
+	oldSite = siteService.getSite(siteFrom);
+
+	// get the tool id list
+	List<String> toolIdList = new Vector<String>();
+
+	// list all site tools which are displayed on its own page
+	@SuppressWarnings("unchecked")
+	List<SitePage> sitePages = oldSite.getPages();
+	if (sitePages != null) {
+	    for (SitePage page : sitePages) {
+		@SuppressWarnings("unchecked")
+		List<ToolConfiguration> pageToolsList = page.getTools(0);
+		// we only handle one tool per page case
+		if (page.getLayout() == SitePage.LAYOUT_SINGLE_COL
+			&& pageToolsList.size() == 1) {
+		    toolIdList.add(pageToolsList.get(0).getToolId());
+		}
+	    }
+	}
+
+
+	// Remove all old contents before importing contents from new site
+	importToolIntoSiteMigrate(toolIdList, newSite, oldSite);
+
+	
+	// We remove all resources in the publish directory collection
+	String val2 = contentHostingService.getSiteCollection(newSite.getId());
+	String refString =
+		contentHostingService.getReference(val2).substring(8);
+	String id_publish = (refString + PUBLISH_DIRECTORY + "/");
+	
+	ContentCollection publishContent =
+		    contentHostingService.getCollection(id_publish);
+
+	    @SuppressWarnings("unchecked")
+	    List<ContentEntity> membersPublished =
+		    publishContent.getMemberResources();
+	    for (Iterator<ContentEntity> pMbrs = membersPublished.iterator(); pMbrs
+		    .hasNext();) {
+		ContentEntity next = (ContentEntity) pMbrs.next();
+		String thisEntityRef = next.getId();
+		if (next.isCollection())
+		    contentHostingService.removeCollection(thisEntityRef);
+		else
+		    contentHostingService.removeResource(thisEntityRef);
+	    }
+
+	    
+	siteService.save(newSite);
+
+    }
+
+    /**
+     * @param state
+     * @return Get a list of all tools that should be included as options for
+     *         import
+     */
+    protected List getToolsAvailableForImport(Site oldSite,
+	    List<String> toolIdList) {
+	// The Web Content and News tools do not follow the standard rules for
+	// import
+	// Even if the current site does not contain the tool, News and WC will
+	// be
+	// an option if the imported site contains it
+	boolean displayWebContent = false;
+	boolean displayNews = false;
+
+	if (oldSite.getToolForCommonId(WEB_CONTENT_TOOL_ID) != null)
+	    displayWebContent = true;
+	if (oldSite.getToolForCommonId(NEWS_TOOL_ID) != null)
+	    displayNews = true;
+
+	if (displayWebContent && !toolIdList.contains(WEB_CONTENT_TOOL_ID))
+	    toolIdList.add(WEB_CONTENT_TOOL_ID);
+	if (displayNews && !toolIdList.contains(NEWS_TOOL_ID))
+	    toolIdList.add(NEWS_TOOL_ID);
+
+	return toolIdList;
+    } // getToolsAvailableForImport
+
+    private void importToolIntoSiteMigrate(List toolIds, Site newSite,
+	    Site oldSite) {
+
+	// import resources first
+	boolean resourcesImported = false;
+	for (int i = 0; i < toolIds.size() && !resourcesImported; i++) {
+	    String toolId = (String) toolIds.get(i);
+
+	    if (toolId.equalsIgnoreCase("sakai.resources")) {
+		String fromSiteId = oldSite.getId();
+		String toSiteId = newSite.getId();
+
+		String fromSiteCollectionId =
+			contentHostingService.getSiteCollection(fromSiteId);
+		String toSiteCollectionId =
+			contentHostingService.getSiteCollection(toSiteId);
+		transferCopyEntitiesMigrate(toolId, fromSiteCollectionId,
+			toSiteCollectionId);
+		resourcesImported = true;
+	    }
+	}
+
+	// import other tools then
+	for (int i = 0; i < toolIds.size(); i++) {
+	    String toolId = (String) toolIds.get(i);
+	    if (!toolId.equalsIgnoreCase("sakai.resources")) {
+		String fromSiteId = oldSite.getId();
+		String toSiteId = newSite.getId();
+		transferCopyEntitiesMigrate(toolId, fromSiteId, toSiteId);
+	    }
+	}
+
+    } // importToolIntoSiteMigrate
+
+    protected void transferCopyEntitiesMigrate(String toolId,
+	    String fromContext, String toContext) {
+
+	for (Iterator i = EntityManager.getEntityProducers().iterator(); i
+		.hasNext();) {
+	    EntityProducer ep = (EntityProducer) i.next();
+	    if (ep instanceof EntityTransferrer) {
+		try {
+		    EntityTransferrer et = (EntityTransferrer) ep;
+
+		    // if this producer claims this tool id
+		    if (ArrayUtil.contains(et.myToolIds(), toolId)) {
+			et.transferCopyEntities(fromContext, toContext,
+				new Vector(), true);
+		    }
+		} catch (Throwable t) {
+		    log.warn(
+			    "Error encountered while asking EntityTransfer to transferCopyEntities from: "
+				    + fromContext + " to: " + toContext, t);
+		}
+	    }
+	}
+    }
+
 }

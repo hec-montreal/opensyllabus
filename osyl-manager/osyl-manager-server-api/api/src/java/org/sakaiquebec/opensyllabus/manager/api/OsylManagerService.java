@@ -57,7 +57,10 @@ public interface OsylManagerService {
      */
     public static final String TEMP_DIRECTORY = "temp";
 
-    /**
+    // Special tool id for Home page
+    public static final String SITE_INFORMATION_TOOL="sakai.iframe.site";
+
+	/**
      * Name of the course outline xml file
      */
     public static final String CO_XML_FILENAME = "syllabus.xml";
@@ -169,5 +172,7 @@ public interface OsylManagerService {
 	    String academicSession);
     
     public List<CMAcademicSession> getAcademicSessions();
+    
+    public void copySite (String siteFrom, String siteTo) throws Exception;
     
 }

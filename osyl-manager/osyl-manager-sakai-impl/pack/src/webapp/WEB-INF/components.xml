@@ -57,12 +57,8 @@
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />
-		<property name="serverConfigurationService"
-			ref="org.sakaiproject.component.api.ServerConfigurationService" />
 		<property name="courseManagementService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService"/>
-		<property name="entityManager" 
-			ref="org.sakaiproject.entity.api.EntityManager"/>	
 	</bean>
 
 </beans>

@@ -6,7 +6,7 @@
 		description="Sakai OpenSyllabus Manager Tool">
 		<!-- <category name="course" /> -->
 		<!-- <category name="project" /> -->
-		<!-- <category name="myworkspace" /> -->
+		 <category name="myworkspace" /> 
 		<!-- <category name="sakai.admin" /> -->
 	</tool>	
 </registration>
