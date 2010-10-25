@@ -1431,7 +1431,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     }
 
     public String[] myToolIds() {
-	String[] toolIds = { "sakai.openSyllabus" };
+	String[] toolIds = { "sakai.opensyllabus.tool" };
 	return toolIds;
     }
 
@@ -1454,7 +1454,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    destinationCo.setContent(sourceCo.getContent());
 	}
 	COModeledServer coModeledServer = new COModeledServer(destinationCo);
+	coModeledServer.XML2Model();
 	coModeledServer.resetXML(null);
+	coModeledServer.model2XML();
 	destinationCo.setContent(coModeledServer.getSerializedContent());
 	try {
 	    resourceDao.createOrUpdateCourseOutline(destinationCo);
