@@ -99,27 +99,29 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	return null;
     }
 
-    public void importData(String fileReference, String siteId) throws Exception {
+    public void importData(String fileReference, String siteId)
+	    throws Exception {
 	String webappDir = getServletContext().getRealPath("/");
 	if (fileReference.endsWith(".zip"))
 	    osylManagerServices.getOsylManagerService().readZip(fileReference,
-		    siteId,webappDir);
+		    siteId, webappDir);
 	else
 	    osylManagerServices.getOsylManagerService().readXML(fileReference,
-		    siteId,webappDir);
+		    siteId, webappDir);
     }
 
     /**
      * {@inheritDoc}
      */
     public String getOsylPackage(String siteId) {
-   	String webappDir = getServletContext().getRealPath("/");
+	String webappDir = getServletContext().getRealPath("/");
 	return osylManagerServices.getOsylManagerService().getOsylPackage(
 		siteId, webappDir);
     }
 
     public Map<String, String> getOsylSites(List<String> siteIds) {
-	return osylManagerServices.getOsylManagerService().getOsylSites(siteIds);
+	return osylManagerServices.getOsylManagerService()
+		.getOsylSites(siteIds);
     }
 
     public String getParent(String siteId) throws Exception {
@@ -135,27 +137,30 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		.dissociate(siteId, parentId);
     }
 
-    public void associateToCM(String courseSectionId, String siteId) throws Exception{
+    public void associateToCM(String courseSectionId, String siteId)
+	    throws Exception {
 	osylManagerServices.getOsylManagerService().associateToCM(
-		courseSectionId, siteId,servletContext.getRealPath("/"));
+		courseSectionId, siteId, servletContext.getRealPath("/"));
     }
-    
-    public void dissociateFromCM(String siteId) throws Exception{
-	osylManagerServices.getOsylManagerService().dissociateFromCM(siteId);
+
+    public void dissociateFromCM(String siteId) throws Exception {
+	osylManagerServices.getOsylManagerService().dissociateFromCM(siteId,
+		servletContext.getRealPath("/"));
     }
 
     public List<CMCourse> getCMCourses(String startsWith) {
-	return osylManagerServices.getOsylManagerService().getCMCourses( startsWith);
+	return osylManagerServices.getOsylManagerService().getCMCourses(
+		startsWith);
     }
-    
+
     public COSite getCoAndSiteInfo(String siteId, String searchTerm,
-	    String academicSession){
+	    String academicSession) {
 	return osylManagerServices.getOsylManagerService().getCoAndSiteInfo(
 		siteId, searchTerm, academicSession);
     }
 
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
-	    String academicSession){
+	    String academicSession) {
 	return osylManagerServices.getOsylManagerService().getAllCoAndSiteInfo(
 		searchTerm, academicSession);
     }
@@ -164,19 +169,21 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	String webappDir = getServletContext().getRealPath("/");
 	osylManagerServices.getOsylPublishService().publish(webappDir, siteId);
     }
-    
-    public void deleteSite(String siteId) throws Exception{
+
+    public void deleteSite(String siteId) throws Exception {
 	osylManagerServices.getOsylSiteService().deleteSite(siteId);
     }
 
     public List<CMAcademicSession> getAcademicSessions() {
-	return osylManagerServices.getOsylManagerService().getAcademicSessions();
+	return osylManagerServices.getOsylManagerService()
+		.getAcademicSessions();
     }
-    
-    public void copySite(String siteFrom, String siteTo) throws Exception{
+
+    public void copySite(String siteFrom, String siteTo) throws Exception {
 	String webappDir = getServletContext().getRealPath("/");
 	osylManagerServices.getOsylManagerService().copySite(siteFrom, siteTo);
-	//update course informations
-	//osylManagerServices.getOsylSiteService().updateCOCourseInformations(siteTo, webappDir);
+	// update course informations
+	osylManagerServices.getOsylSiteService().updateCOCourseInformations(
+		siteTo, webappDir);
     }
 }

@@ -1509,7 +1509,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		String cmTitle = getCourseManagementTitle(siteId);
 		String cmIdentifier = getCourseManagementCourseNo(siteId);
 		String cmProgram =
-		    getCourseManagementProgram(getCurrentSiteId());
+		    getCourseManagementProgram(siteId);
 		if (cmTitle != null) {
 		    title = cmTitle;
 		}
