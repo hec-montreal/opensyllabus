@@ -30,7 +30,6 @@ import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -86,7 +85,7 @@ public class OsylManagerRPCController {
 			.siteNotCreated());
 	    }
 	};
-	serviceProxy.createSite(title, configRef, lang,  callback);
+	serviceProxy.createSite(title, configRef, lang, callback);
     }
 
     public void getOsylConfigs(AsyncCallback<Map<String, String>> callback) {
@@ -105,7 +104,7 @@ public class OsylManagerRPCController {
 	    String url, String siteId, AsyncCallback<Void> callback) {
 	serviceProxy.importData(url, siteId, callback);
     }
-    
+
     public void getOsylPackage(OsylManagerController osylManagerController,
 	    String siteId, AsyncCallback<String> callback) {
 	serviceProxy.getOsylPackage(siteId, callback);
@@ -134,34 +133,42 @@ public class OsylManagerRPCController {
 	    AsyncCallback<Void> callback) {
 	serviceProxy.associateToCM(courseSectionId, siteId, callback);
     }
-    
-    public void dissociateFromCM(String siteId, AsyncCallback<Void> callback){
+
+    public void dissociateFromCM(String siteId, AsyncCallback<Void> callback) {
 	serviceProxy.dissociateFromCM(siteId, callback);
     }
 
-    public void getCMCourses(String startsWith, AsyncCallback<List<CMCourse>> callback) {
+    public void getCMCourses(String startsWith,
+	    AsyncCallback<List<CMCourse>> callback) {
 	serviceProxy.getCMCourses(startsWith, callback);
     }
-    
+
     public void getCoAndSiteInfo(String siteId, String searchTerm,
-	    String academicSession, AsyncCallback<COSite> callback){
+	    String academicSession, AsyncCallback<COSite> callback) {
 	serviceProxy.getCoAndSiteInfo(siteId, searchTerm, academicSession,
 		callback);
     }
 
     public void getAllCoAndSiteInfo(String searchTerm, String academicSession,
-	    AsyncCallback< java.util.List<COSite>> callback){
+	    AsyncCallback<java.util.List<COSite>> callback) {
 	serviceProxy.getAllCoAndSiteInfo(searchTerm, academicSession, callback);
     }
 
     public void publish(String siteId, AsyncCallback<Void> callback) {
-	serviceProxy.publish(siteId,callback);
+	serviceProxy.publish(siteId, callback);
     }
 
-    public void getAcademicSessions(AsyncCallback<List<CMAcademicSession>> callback) {
+    public void getAcademicSessions(
+	    AsyncCallback<List<CMAcademicSession>> callback) {
 	serviceProxy.getAcademicSessions(callback);
     }
+
     public void deleteSite(String siteId, AsyncCallback<Void> deleteAsynCallBack) {
-	serviceProxy.deleteSite(siteId,deleteAsynCallBack);
+	serviceProxy.deleteSite(siteId, deleteAsynCallBack);
+    }
+
+    public void copySite(String siteFrom, String siteTo,
+	    AsyncCallback<Void> copyAsyncCallback) {
+	serviceProxy.copySite(siteFrom, siteTo, copyAsyncCallback);
     }
 }

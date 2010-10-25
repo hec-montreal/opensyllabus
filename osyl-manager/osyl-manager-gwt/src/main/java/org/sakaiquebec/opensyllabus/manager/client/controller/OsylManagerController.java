@@ -394,4 +394,9 @@ public class OsylManagerController implements FireOsylManagerEvents {
     public void deleteSite(String siteId, AsyncCallback<Void> deleteAsynCallBack) {
 	OsylManagerRPCController.getInstance().deleteSite(siteId,deleteAsynCallBack);
     }
+    
+    public void copySite(String siteFrom, String siteTo, AsyncCallback<Void> copyAsyncCallback){
+	OsylManagerRPCController.getInstance().copySite(siteFrom,siteTo,copyAsyncCallback);
+    }
+    
 }
