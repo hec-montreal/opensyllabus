@@ -173,6 +173,6 @@ public interface OsylManagerService {
     
     public List<CMAcademicSession> getAcademicSessions();
     
-    public void copySite (String siteFrom, String siteTo, String webappDir) throws Exception;
+    public void copySite (String siteFrom, String siteTo) throws Exception;
     
 }

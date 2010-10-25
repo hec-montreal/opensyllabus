@@ -1614,7 +1614,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return academicSession;
     }
 
-    public void copySite(String siteFrom, String siteTo, String webappDir)
+    public void copySite(String siteFrom, String siteTo)
 	    throws Exception {
 	Site newSite = null;
 	Site oldSite = null;

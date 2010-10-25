@@ -175,6 +175,8 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     
     public void copySite(String siteFrom, String siteTo) throws Exception{
 	String webappDir = getServletContext().getRealPath("/");
-	osylManagerServices.getOsylManagerService().copySite(siteFrom, siteTo, webappDir);
+	osylManagerServices.getOsylManagerService().copySite(siteFrom, siteTo);
+	//update course informations
+	//osylManagerServices.getOsylSiteService().updateCOCourseInformations(siteTo, webappDir);
     }
 }
