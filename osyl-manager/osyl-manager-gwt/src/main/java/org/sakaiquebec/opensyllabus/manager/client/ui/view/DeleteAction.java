@@ -113,12 +113,13 @@ public class DeleteAction extends OsylManagerAbstractAction {
 
 	boolean hasChild = false;
 	boolean isCMLinked = false;
+	String sites = "";
 	for (COSite coSite : siteIds) {
 	    if (coSite.hasChild())
 		hasChild = true;
 	    if (coSite.getCourseName()!=null && !"".equals(coSite.getCourseName()))
 		isCMLinked = true;
-
+	    sites += coSite.getSiteId()+"<br>";
 	}
 
 	if (isCMLinked) {
@@ -146,7 +147,7 @@ public class DeleteAction extends OsylManagerAbstractAction {
 
 	    if (hasChild)
 		message = messages.deleteAction_delete_siteHasChild() + "\n";
-	    message += messages.deleteAction_delete_confirmation();
+	    message += messages.deleteAction_delete_confirmation().replace("{0}", sites);
 
 	    OsylOkCancelDialog conf =
 		    new OsylOkCancelDialog(messages.OsylWarning_Title(),
