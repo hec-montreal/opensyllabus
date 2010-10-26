@@ -1,6 +1,7 @@
 package org.sakaiquebec.opensyllabus.common.impl;
 
 import org.jmock.Expectations;
+import org.sakaiproject.entity.api.EntityManager;
 import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.SessionManager;
@@ -47,12 +48,17 @@ public abstract class AbstractOsylSiteServiceTest extends AbstractServiceTest {
 	final EventTrackingService eventTrackingService =
 		getMockery().mock(EventTrackingService.class);
 	serviceImpl.setEventTrackingService(eventTrackingService);
+	
+	final EntityManager entityManager = getMockery().mock(EntityManager.class);
+	serviceImpl.setEntityManager(entityManager);
+	
 	getMockery().checking(new Expectations() {
 	    {
 		ignoring(eventTrackingService);
+		ignoring(entityManager);
 	    }
 	});
-
+	
 	serviceImpl.setSessionManager(getMockery().mock(SessionManager.class));
 
 	serviceImpl.init();
