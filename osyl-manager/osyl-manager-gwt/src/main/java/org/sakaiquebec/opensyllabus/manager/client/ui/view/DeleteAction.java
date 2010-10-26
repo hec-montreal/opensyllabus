@@ -146,7 +146,7 @@ public class DeleteAction extends OsylManagerAbstractAction {
 	    String message = "";
 
 	    if (hasChild)
-		message = messages.deleteAction_delete_siteHasChild() + "\n";
+		message = messages.deleteAction_delete_siteHasChild() + "<br>";
 	    message += messages.deleteAction_delete_confirmation().replace("{0}", sites);
 
 	    OsylOkCancelDialog conf =
