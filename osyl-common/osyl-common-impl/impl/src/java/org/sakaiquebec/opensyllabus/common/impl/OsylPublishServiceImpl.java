@@ -599,7 +599,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		e.printStackTrace();
 	    }
 
-	    publishChild(siteId, webappDir);
+	    publishChildren(siteId, webappDir);
 	}
     }
 
@@ -620,7 +620,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	this.documentSecurityMap = documentSecurityMap;
     }
 
-    private void publishChild(String siteId, String webappDir) {
+    private void publishChildren(String siteId, String webappDir) {
 	List<CORelation> coRelationList;
 	try {
 	    coRelationList = coRelationDao.getCourseOutlineChildren(siteId);
