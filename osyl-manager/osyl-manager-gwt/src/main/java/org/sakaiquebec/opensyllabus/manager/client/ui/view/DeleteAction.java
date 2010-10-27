@@ -31,7 +31,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -117,9 +116,10 @@ public class DeleteAction extends OsylManagerAbstractAction {
 	for (COSite coSite : siteIds) {
 	    if (coSite.hasChild())
 		hasChild = true;
-	    if (coSite.getCourseName()!=null && !"".equals(coSite.getCourseName()))
+	    if (coSite.getCourseName() != null
+		    && !"".equals(coSite.getCourseName()))
 		isCMLinked = true;
-	    sites += coSite.getSiteId()+"<br>";
+	    sites += coSite.getSiteId() + "<br>";
 	}
 
 	if (isCMLinked) {
@@ -131,23 +131,13 @@ public class DeleteAction extends OsylManagerAbstractAction {
 	    canc.center();
 	    canc.show();
 	} else {
-
-	    // TODO: i18n
-	    String pw = Window.prompt("Mot de passe / Password ?", "");
-	    String okPw = "osyl" + "123";
-	    if (null == pw) {
-		return;
-	    } else if (!okPw.equals(pw)) {
-		// TODO: i18n
-		Window
-			.alert("L'opération est refusée. Veuillez contacter le centre d'assistance.");
-		return;
-	    }
 	    String message = "";
 
 	    if (hasChild)
 		message = messages.deleteAction_delete_siteHasChild() + "<br>";
-	    message += messages.deleteAction_delete_confirmation().replace("{0}", sites);
+	    message +=
+		    messages.deleteAction_delete_confirmation().replace("{0}",
+			    sites);
 
 	    OsylOkCancelDialog conf =
 		    new OsylOkCancelDialog(messages.OsylWarning_Title(),
