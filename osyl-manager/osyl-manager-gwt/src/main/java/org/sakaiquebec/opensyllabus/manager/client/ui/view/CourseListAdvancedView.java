@@ -116,10 +116,10 @@ implements OsylManagerEventHandler, ClickHandler {
 			    scSiteList.getDataTable().getRowFormatter()
 			    .setStylePrimaryName(rowNum, "OsylManager-scrollTable-row");
 			    
-			    scSiteList.getDataTable().setHTML(rowNum, 0, coSite.getSiteId());
+			    scSiteList.getDataTable().setHTML(rowNum, 0, coSite.getSiteName());
 			    scSiteList.getDataTable().setHTML(rowNum, 1, coSite.getAcademicCareer());
 			    scSiteList.getDataTable().setHTML(rowNum, 2, coSite.getCourseSession());
-			    scSiteList.getDataTable().setHTML(rowNum, 3, siteTitle);
+			    scSiteList.getDataTable().setHTML(rowNum, 3, coSite.getCourseName());
 			    scSiteList.getDataTable().setHTML(rowNum, 4, coSite.getParentSite());
 			    
 			    if(coSite.getLastPublicationDate()!=null){
@@ -153,9 +153,12 @@ implements OsylManagerEventHandler, ClickHandler {
 	dataTable.setWidth("");
 	
 	FixedWidthFlexTable headerTable = createHeaderTable();
+//	FixedWidthFlexTable footerTable = createFooterTable();
+//	footerTable.getRowFormatter().addStyleName(0, "footerRow");
+//	footerTable.setWidth("");
 	scSiteList = new ScrollTable(dataTable, headerTable);
+//	scSiteList.setFooterTable(footerTable);
 	scSiteList.addStyleName("OsylManager-scrollTable");
-	
 	scSiteList.setSortPolicy(ScrollTable.SortPolicy.MULTI_CELL);
 	scSiteList.setResizePolicy(ScrollTable.ResizePolicy.FIXED_WIDTH);
 	scSiteList.setColumnResizePolicy(ColumnResizePolicy.MULTI_CELL);
@@ -253,11 +256,12 @@ implements OsylManagerEventHandler, ClickHandler {
         this.selectedAcadSession = selectedAcadSession;
     }
 
-    public FixedWidthFlexTable createHeaderTable(){
+    private FixedWidthFlexTable createHeaderTable(){
 	FixedWidthFlexTable headerTable = new FixedWidthFlexTable();
 	FlexCellFormatter formatter = headerTable.getFlexCellFormatter();
 	headerTable.addStyleName("OsylManager-headerTable");
 	headerTable.setWidth("");
+	headerTable.setTitle(getController().getMessages().explanationMsg());
 	
 	selectAll = new CheckBox();
 	selectAll.addClickHandler(this);
@@ -303,6 +307,41 @@ implements OsylManagerEventHandler, ClickHandler {
 //	formatter.setWordWrap(0, 7, false);
 
 	return headerTable;
+    }
+    
+    private FixedWidthFlexTable createFooterTable(){
+	FixedWidthFlexTable footerTable = new FixedWidthFlexTable();
+//	footerTable.setWidth("");
+	
+	VerticalPanel vPanel1 = new VerticalPanel();
+	vPanel1.add(new EditAction(getController()));
+	vPanel1.add(new PublishAction(getController()));
+//	vPanel1.add(new UnpublishAction(getController()));
+//	vPanel1.add(new CopyAction(getController()));
+	vPanel1.setStyleName("OsylManager-mainView-actionList");
+	footerTable.setWidget(0, 0, vPanel1);
+
+	VerticalPanel vPanel2 = new VerticalPanel();
+	vPanel2.add(new AttachAction(getController()));
+	vPanel2.add(new UnattachAction(getController()));
+	vPanel2.setStyleName("OsylManager-mainView-actionList");
+	footerTable.setWidget(0, 1, vPanel2);
+
+	VerticalPanel vPanel3 = new VerticalPanel();
+	vPanel3.add(new AssociateAction(getController()));
+	vPanel3.add(new DissociateAction(getController()));
+	vPanel3.setStyleName("OsylManager-mainView-actionList");
+	footerTable.setWidget(0, 2, vPanel3);
+
+	VerticalPanel vPanel4 = new VerticalPanel();
+	vPanel4.add(new ImportAction(getController()));
+	vPanel4.add(new ExportAction(getController()));
+//	vPanel4.add(new CleanAction(getController()));
+	vPanel4.add(new DeleteAction(getController()));
+	vPanel4.setStyleName("OsylManager-mainView-actionList");
+	footerTable.setWidget(0, 3, vPanel4);
+	
+	return footerTable;
     }
     
     private void getHostedModeData(){

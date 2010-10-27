@@ -42,7 +42,7 @@ public abstract class OsylManagerAbstractAction extends PushButton implements
 	ClickHandler, OsylManagerEventHandler {
 
     /**
-     * The Osyl Maanger controller
+     * The Osyl Manager controller
      */
     protected OsylManagerController controller;
     
@@ -86,7 +86,11 @@ public abstract class OsylManagerAbstractAction extends PushButton implements
 	this.setTitle(tooltip);
 	this.addClickHandler(this);
 	this.setStylePrimaryName("OsylManager-action");
-	this.setEnabled(false);
+	if(controller.isInHostedMode()){
+	    this.setEnabled(true);
+	} else {
+	    this.setEnabled(false);
+	}
 	controller.addEventHandler(this);
     }
         

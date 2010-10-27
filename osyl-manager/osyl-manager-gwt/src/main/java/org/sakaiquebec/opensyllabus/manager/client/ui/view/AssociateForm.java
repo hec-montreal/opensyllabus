@@ -74,11 +74,14 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
     private final OsylCancelDialog diag;
 
     private ListBox suggestionListBox;
+    
+    private Image spinner;
 
     AsyncCallback<List<CMCourse>> coursesListAsyncCallback =
 	    new AsyncCallback<List<CMCourse>>() {
 
 		public void onFailure(Throwable caught) {
+		    spinner.setVisible(false);
 		    OsylOkCancelDialog warning =
 			    new OsylOkCancelDialog(false, true, messages
 				    .OsylWarning_Title(),
@@ -88,6 +91,7 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 		}
 
 		public void onSuccess(List<CMCourse> result) {
+		    spinner.setVisible(false);
 		    sigleOracle = new MultiWordSuggestOracle();
 		    sigleCourseMap = new HashMap<String, CMCourse>();
 		    for (CMCourse course : result) {
@@ -146,6 +150,7 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	search.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
+		spinner.setVisible(true);
 		String value = sigleTextBox.getText();
 		suggestionListBox.clear();
 		controller.getCMCourses(value, coursesListAsyncCallback);
@@ -201,7 +206,13 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	suggestionPanel.add(suggestionListBox);
 	suggestionPanel.setStylePrimaryName("OsylManager-form-genericPanel");
 	suggestionPanel.setCellWidth(voidLabel, "30%");
-	suggestionPanel.setCellWidth(suggestionPanel, "70%");
+	
+	HorizontalPanel hzPanel = new HorizontalPanel();
+	hzPanel.add(suggestionListBox);
+	spinner = new Image(controller.getImageBundle().ajaxloader());
+	hzPanel.add(spinner);
+	spinner.setVisible(false);
+	suggestionPanel.add(hzPanel);
 	mainPanel.add(suggestionPanel);
 	mainPanel.setCellHorizontalAlignment(suggestionPanel,
 		HasHorizontalAlignment.ALIGN_CENTER);

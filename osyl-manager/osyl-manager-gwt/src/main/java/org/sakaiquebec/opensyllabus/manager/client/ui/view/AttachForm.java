@@ -37,10 +37,14 @@ import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -53,6 +57,8 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
     private ListBox parentSiteList;
 
     private PushButton attButton;
+    
+    private Widget img;
 
     private static List<String> lMsg = new ArrayList<String>();
 
@@ -66,10 +72,13 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	    new AsyncCallback<Map<String, String>>() {
 
 		public void onFailure(Throwable caught) {
+		    img.removeFromParent();
 		    attButton.setEnabled(false);
 		}
 
 		public void onSuccess(Map<String, String> result) {
+		    img.removeFromParent();
+		    
 		    if (result == null || result.isEmpty()) {
 			OsylOkCancelDialog warning = new OsylOkCancelDialog(
 				false, true, messages.OsylWarning_Title(),
@@ -149,7 +158,11 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 
 	Label l = new Label(messages.select_parent_site());
 	parentSiteList = new ListBox();
-	mainPanel.add(createPanel(l, parentSiteList));
+	img = new Image(controller.getImageBundle().ajaxloader());	
+	HorizontalPanel lBoxPanel = new HorizontalPanel();
+	lBoxPanel.add(parentSiteList);
+	lBoxPanel.add(img);
+	mainPanel.add(createPanel(l, lBoxPanel));
 
 	attButton = new PushButton(messages.attach());
 	attButton.setStylePrimaryName("Osyl-Button");
@@ -180,7 +193,21 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	List<String> siteIds = new ArrayList<String>();
 	for (COSite cosi : cosites)
 	    siteIds.add(cosi.getSiteId());
-	controller.getOsylSites(siteIds, parentListAsyncCallback);
+	
+	if(controller.isInHostedMode()){
+	    getHostedModeData();
+	} else {
+	    controller.getOsylSites(siteIds, parentListAsyncCallback);
+	}
+    }
+    
+    private void getHostedModeData(){
+	for (int i=1; i<=10; i++) {
+	    String siteTitle = "site"+i;
+	    String siteId = "site"+i;
+	    parentSiteList.addItem(siteTitle, siteId);
+	}
+	attButton.setEnabled(true);
     }
 
     public void onSuccess() {
@@ -194,7 +221,7 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	PushButton closeButton =
 		new PushButton(messages.form_close());
 	closeButton.setStylePrimaryName("Osyl-Button");
-	//closeButton.setWidth("40px");
+	closeButton.setWidth("40px");
 	closeButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		AttachForm.super.hide();
@@ -223,6 +250,7 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 
 	PushButton closeButton =
 		new PushButton(messages.form_close());
+	closeButton.setStylePrimaryName("Osyl-Button");
 	closeButton.setWidth("40px");
 	closeButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {

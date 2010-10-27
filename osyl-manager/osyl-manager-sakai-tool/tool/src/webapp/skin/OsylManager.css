@@ -193,8 +193,7 @@ background-color : #e7e7e7;
 }
 
 .gwt-ScrollTable .dataTable td,
-.gwt-ScrollTable .headerTable td,
-.gwt-ScrollTable .footerTable td {
+.gwt-ScrollTable .headerTable td {
   border-color: #ccc;
   border-style: solid;
   border-width: 0px 1px 1px 0px;
@@ -202,7 +201,6 @@ background-color : #e7e7e7;
   white-space: nowrap;
   overflow: hidden;
 }
-
 /*----------------------------------------------------------------------------------------------------------------*/
 
 .OsylManager-SuggestBox
