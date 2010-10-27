@@ -20,12 +20,8 @@
  *****************************************************************************/
 package org.sakaiquebec.opensyllabus.common.impl;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -103,8 +99,6 @@ import org.w3c.dom.Element;
  * @version $Id: $
  */
 public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
-
-    private static final String CO_CONTENT_TEMPLATE = "coContentTemplate";
 
     private static final Log log = LogFactory.getLog(OsylSiteServiceImpl.class);
 
@@ -319,15 +313,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			    "osyl.site_deletion.co.delete", false)) {
 			// we have to delete COs associated to this site too
 			// breaks relation with other co
-			
-			
+
 			try {
-			    String parent=null;
-			    try{
-        			    parent =
-        				    coRelationDao
-        					    .getParentOfCourseOutline(siteid);
-			    }catch (Exception e2) {
+			    String parent = null;
+			    try {
+				parent =
+					coRelationDao
+						.getParentOfCourseOutline(siteid);
+			    } catch (Exception e2) {
 			    }
 			    if (parent != null)
 				dissociate(siteid, parent);
@@ -409,7 +402,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	});
 
 	// We register the entity manager
-	 entityManager.registerEntityProducer(this, REFERENCE_ROOT);
+	entityManager.registerEntityProducer(this, REFERENCE_ROOT);
 
     }
 
@@ -901,7 +894,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			new COSerialized(idManager.createUuid(),
 				osylConfigService.getCurrentLocale(), "shared",
 				"", siteId, "sectionId", coConfig,
-				getXmlStringFromFile(coConfig,
+				osylConfigService.getXml(coConfig,
 					osylConfigService.getCurrentLocale(),
 					webappDir), "shortDescription",
 				"description", "title", false, null, null);
@@ -923,10 +916,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			osylConfigService.getConfigByRef(coConfig
 				.getConfigRef(), webappDir);
 		thisCo.setOsylConfig(coConfig);
-		thisCo.setContent(getXmlStringFromFile(coConfig, thisCo
+		thisCo.setContent(osylConfigService.getXml(coConfig, thisCo
 			.getLang(), webappDir));
-		
-		
+
 		// reinitilaisation des uuids et ajout titre et identifier
 		SchemaHelper sh = new SchemaHelper(webappDir);
 		COModeledServer coModeled = new COModeledServer(thisCo);
@@ -1108,109 +1100,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     /** {@inheritDoc} */
     public Site getSite(String siteId) throws IdUnusedException {
 	return siteService.getSite(siteId);
-    }
-
-    /**
-     * Reads the course outline xml template from a file located in the
-     * osylcoconfigs directory.
-     * 
-     * @param webappDir The path to the webapp directory
-     * @return
-     */
-    private String getXmlStringFromFile(COConfigSerialized coConfig,
-	    String lang, String webappDir) {
-	StringBuilder fileData = new StringBuilder(1000);
-	try {
-
-	    BufferedReader reader =
-		    getXmlTemplateFileReader(coConfig, lang, webappDir);
-
-	    char[] buf = new char[1024];
-	    int numRead = 0;
-	    while ((numRead = reader.read(buf)) != -1) {
-		fileData.append(buf, 0, numRead);
-	    }
-	    reader.close();
-	} catch (IOException e) {
-	    log.error(e.getLocalizedMessage(), e);
-	}
-	return fileData.toString();
-    }
-
-    /**
-     * Checks if the file of the co template exists, if not it takes the default
-     * template file, and return a buffered reader on the file.
-     * 
-     * @param webappDir the location of the webapp
-     * @return a BufferedReader on the appropriate template file.
-     */
-    private BufferedReader getXmlTemplateFileReader(
-	    COConfigSerialized coConfig, String lang, String webappDir) {
-	File coXmlFile = null;
-	String coXmlFilePath = null;
-	BufferedReader reader = null;
-	String templateFileName = "";
-	try {
-	    templateFileName =
-		    CO_CONTENT_TEMPLATE + "_" + lang
-			    + OsylSiteService.XML_FILE_EXTENSION;
-	    coXmlFilePath =
-		    webappDir + OsylConfigService.CONFIG_DIR + File.separator
-			    + coConfig.getConfigRef() + File.separator
-			    + templateFileName;
-	    coXmlFile = new File(coXmlFilePath);
-	    reader =
-		    new BufferedReader(new InputStreamReader(
-			    new FileInputStream(coXmlFile), "UTF-8"));
-
-	    log.info("Course outline created with template '"
-		    + templateFileName + "' and config '"
-		    + coConfig.getConfigRef() + "'");
-	} catch (FileNotFoundException e) {
-	    try {
-		templateFileName =
-			CO_CONTENT_TEMPLATE
-				+ OsylSiteService.XML_FILE_EXTENSION;
-		;
-		coXmlFilePath =
-			webappDir + OsylConfigService.CONFIG_DIR
-				+ File.separator + coConfig.getConfigRef()
-				+ File.separator + templateFileName;
-		coXmlFile = new File(coXmlFilePath);
-		reader =
-			new BufferedReader(new InputStreamReader(
-				new FileInputStream(coXmlFile), "UTF-8"));
-		log.info("Course outline created with template '"
-			+ templateFileName + "' and config '"
-			+ coConfig.getConfigRef() + "'");
-	    } catch (Exception e1) {
-		try {
-		    templateFileName =
-			    CO_CONTENT_TEMPLATE
-				    + OsylSiteService.XML_FILE_EXTENSION;
-		    String defaultConfigRef =
-			    osylConfigService.getCurrentConfig(webappDir)
-				    .getConfigRef();
-		    coXmlFilePath =
-			    webappDir + OsylConfigService.CONFIG_DIR
-				    + File.separator + defaultConfigRef
-				    + File.separator + templateFileName;
-		    coXmlFile = new File(coXmlFilePath);
-		    reader =
-			    new BufferedReader(new InputStreamReader(
-				    new FileInputStream(coXmlFile), "UTF-8"));
-		    log.info("Course outline created with template '"
-			    + templateFileName + "' and config '"
-			    + defaultConfigRef + "'");
-		} catch (Exception e2) {
-		    log.error("Could not created course oultine. "
-			    + e2.getLocalizedMessage(), e2);
-		}
-	    }
-	} catch (Exception e) {
-	    log.error(e.getLocalizedMessage(), e);
-	}
-	return reader;
     }
 
     /**
@@ -1465,8 +1354,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
     }
 
-    public COSerialized updateCOCourseInformations(String siteId, String webappDir)
-	    throws Exception {
+    public COSerialized updateCOCourseInformations(String siteId,
+	    String webappDir) throws Exception {
 	COSerialized co = getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
 	COConfigSerialized coConfig = co.getOsylConfig();
 	// at the first call we got only the config id and ref. We need to fill
@@ -1498,8 +1387,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    throw new Exception(e);
 	}
     }
-    
-    private void updateCOCourseInformations(String siteId,COModeledServer coModeled) throws Exception{
+
+    private void updateCOCourseInformations(String siteId,
+	    COModeledServer coModeled) throws Exception {
 	Site site = getSite(siteId);
 	String title = site.getTitle();
 	String identifier = "";
@@ -1508,8 +1398,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    if (this.isCOLinkedToCourseManagement(siteId)) {
 		String cmTitle = getCourseManagementTitle(siteId);
 		String cmIdentifier = getCourseManagementCourseNo(siteId);
-		String cmProgram =
-		    getCourseManagementProgram(siteId);
+		String cmProgram = getCourseManagementProgram(siteId);
 		if (cmTitle != null) {
 		    title = cmTitle;
 		}
@@ -1517,8 +1406,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    identifier = cmIdentifier;
 		}
 		if (cmProgram != null) {
-			program = cmProgram;
-		    }
+		    program = cmProgram;
+		}
 	    }
 	    coModeled.setCOContentTitle(title);
 	    coModeled.setCOContentCourseId(identifier);

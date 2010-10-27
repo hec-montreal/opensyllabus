@@ -274,6 +274,17 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
 	log.info("Publishing course outline for site ["
 		+ (co.getTitle() == null ? siteId : co.getTitle()) + "]");
+
+	if (co.getContent() == null) {
+	    COConfigSerialized coConfig = co.getOsylConfig();
+	    coConfig =
+		    osylConfigService.getConfigByRef(coConfig.getConfigRef(),
+			    webappDir);
+	    co.setContent(osylConfigService.getXml(coConfig, co.getLang(),
+		    webappDir));
+	    resourceDao.createOrUpdateCourseOutline(co);
+	    
+	}
 	COModeledServer coModeled = new COModeledServer(co);
 
 	// PRE-PUBLICATION
@@ -415,7 +426,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return co;
     }
 
-    private void createPublishPrintVersion(String siteId, String webappdir) throws Exception{
+    private void createPublishPrintVersion(String siteId, String webappdir)
+	    throws Exception {
 	COSerialized coSerializedAttendee =
 		getSerializedPublishedCourseOutlineForAccessType(siteId,
 			SecurityInterface.ACCESS_ATTENDEE, webappdir);
@@ -432,7 +444,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	String siteId = cos.getSiteId();
 	if (f != null) {
 	    createPdfInResource(siteId, WORK_DIRECTORY, f);
-	} 
+	}
     }
 
     private void createPdfInResource(String siteId, String directory, File f) {
@@ -593,9 +605,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    webappDir);
 
 	    // create print version
-	    try{
+	    try {
 		createPublishPrintVersion(siteId, webappDir);
-	    }catch (Exception e) {
+	    } catch (Exception e) {
 		e.printStackTrace();
 	    }
 

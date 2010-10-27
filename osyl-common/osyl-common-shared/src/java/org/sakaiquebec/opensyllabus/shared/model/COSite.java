@@ -127,6 +127,11 @@ public class COSite implements java.io.Serializable {
     private boolean hasChild=false;
     
     /**
+     * true if co is null
+     */
+    private boolean coIsNull=false; 
+    
+    /**
      * Empty constructor.
      */
     public COSite() {
@@ -366,5 +371,13 @@ public class COSite implements java.io.Serializable {
 
     public boolean hasChild() {
 	return hasChild;
+    }
+
+    public void setCoIsNull(boolean coIsNull) {
+	this.coIsNull = coIsNull;
+    }
+
+    public boolean isCoIsNull() {
+	return coIsNull;
     }
 }

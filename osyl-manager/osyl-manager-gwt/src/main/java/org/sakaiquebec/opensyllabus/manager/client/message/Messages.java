@@ -272,4 +272,6 @@ public interface Messages extends ConstantsWithLookup {
     String copyForm_confirmation();
 
     String copyForm_cancel();
+
+    String publishAction_publish_voidCO();
 }

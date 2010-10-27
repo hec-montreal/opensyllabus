@@ -22,9 +22,11 @@ package org.sakaiquebec.opensyllabus.common.impl;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,6 +39,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
+import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -421,6 +424,102 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 
     public void setDefaultConfig(String defaultConfig) {
 	this.defaultConfig = defaultConfig;
+    }
+    
+    public String getXml(COConfigSerialized coConfig,
+	    String lang, String webappDir){
+	StringBuilder fileData = new StringBuilder(1000);
+	try {
+
+	    BufferedReader reader =
+		    getXmlTemplateFileReader(coConfig, lang, webappDir);
+
+	    char[] buf = new char[1024];
+	    int numRead = 0;
+	    while ((numRead = reader.read(buf)) != -1) {
+		fileData.append(buf, 0, numRead);
+	    }
+	    reader.close();
+	} catch (IOException e) {
+	    log.error(e.getLocalizedMessage(), e);
+	}
+	return fileData.toString();
+    }
+    
+    /**
+     * Checks if the file of the co template exists, if not it takes the default
+     * template file, and return a buffered reader on the file.
+     * 
+     * @param webappDir the location of the webapp
+     * @return a BufferedReader on the appropriate template file.
+     */
+    private BufferedReader getXmlTemplateFileReader(
+	    COConfigSerialized coConfig, String lang, String webappDir) {
+	File coXmlFile = null;
+	String coXmlFilePath = null;
+	BufferedReader reader = null;
+	String templateFileName = "";
+	try {
+	    templateFileName =
+		    CO_CONTENT_TEMPLATE + "_" + lang
+			    + OsylSiteService.XML_FILE_EXTENSION;
+	    coXmlFilePath =
+		    webappDir + OsylConfigService.CONFIG_DIR + File.separator
+			    + coConfig.getConfigRef() + File.separator
+			    + templateFileName;
+	    coXmlFile = new File(coXmlFilePath);
+	    reader =
+		    new BufferedReader(new InputStreamReader(
+			    new FileInputStream(coXmlFile), "UTF-8"));
+
+	    log.info("Course outline created with template '"
+		    + templateFileName + "' and config '"
+		    + coConfig.getConfigRef() + "'");
+	} catch (FileNotFoundException e) {
+	    try {
+		templateFileName =
+			CO_CONTENT_TEMPLATE
+				+ OsylSiteService.XML_FILE_EXTENSION;
+		;
+		coXmlFilePath =
+			webappDir + OsylConfigService.CONFIG_DIR
+				+ File.separator + coConfig.getConfigRef()
+				+ File.separator + templateFileName;
+		coXmlFile = new File(coXmlFilePath);
+		reader =
+			new BufferedReader(new InputStreamReader(
+				new FileInputStream(coXmlFile), "UTF-8"));
+		log.info("Course outline created with template '"
+			+ templateFileName + "' and config '"
+			+ coConfig.getConfigRef() + "'");
+	    } catch (Exception e1) {
+		try {
+		    templateFileName =
+			    CO_CONTENT_TEMPLATE
+				    + OsylSiteService.XML_FILE_EXTENSION;
+		    String defaultConfigRef =
+			    getCurrentConfig(webappDir)
+				    .getConfigRef();
+		    coXmlFilePath =
+			    webappDir + OsylConfigService.CONFIG_DIR
+				    + File.separator + defaultConfigRef
+				    + File.separator + templateFileName;
+		    coXmlFile = new File(coXmlFilePath);
+		    reader =
+			    new BufferedReader(new InputStreamReader(
+				    new FileInputStream(coXmlFile), "UTF-8"));
+		    log.info("Course outline created with template '"
+			    + templateFileName + "' and config '"
+			    + defaultConfigRef + "'");
+		} catch (Exception e2) {
+		    log.error("Could not created course oultine. "
+			    + e2.getLocalizedMessage(), e2);
+		}
+	    }
+	} catch (Exception e) {
+	    log.error(e.getLocalizedMessage(), e);
+	}
+	return reader;
     }
 
 

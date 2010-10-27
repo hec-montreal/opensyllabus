@@ -59,6 +59,11 @@ public interface OsylConfigService {
     public static final String CONFIG_DIR = "osylcoconfigs";
     
     /**
+     * template prefix
+     */
+    public static final String CO_CONTENT_TEMPLATE = "coContentTemplate";
+    
+    /**
      * Creates the following configurations: "default" -
      * "Config from HEC Montreal" "udem" - "Config udem"
      * "udemCompetencesComposantes" - "Config UdeM - Competences Composantes"
@@ -215,5 +220,15 @@ public interface OsylConfigService {
      */
     public Map<String, String> getSettings(String path, String baseFileName) throws Exception;
 
-	public String getDefaultConfig();
+    public String getDefaultConfig();
+    
+    /**
+     * Reads the course outline xml template from a file located in the
+     * osylcoconfigs directory.
+     * 
+     * @param webappDir The path to the webapp directory
+     * @return
+     */
+    public String getXml(COConfigSerialized coConfig,
+	    String lang, String webappDir);
 }

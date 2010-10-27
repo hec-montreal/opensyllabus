@@ -29,6 +29,8 @@ import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DialogBox;
 
@@ -45,7 +47,7 @@ public class PublishAction extends OsylManagerAbstractAction {
     private static int asynCB_return = 0;
 
     private static int asynCB_OK = 0;
-    
+
     private DialogBox alert;
 
     private class PublishAsynCallBack implements AsyncCallback<Void> {
@@ -68,15 +70,13 @@ public class PublishAction extends OsylManagerAbstractAction {
 	    PublishAction.asynCB_OK++;
 	    responseReceive();
 	}
-	
+
 	private void responseReceive() {
 	    PublishAction.asynCB_return++;
 	    if (PublishAction.asynCB_return == PublishAction.coSites.size()) {
 		String msg = "";
 		if (PublishAction.asynCB_OK != PublishAction.coSites.size()) {
-		    msg =
-			    messages.publishAction_publish_error()
-				    + "\n";
+		    msg = messages.publishAction_publish_error() + "\n";
 		    for (String id : lMsg) {
 			msg +=
 				id
@@ -85,10 +85,11 @@ public class PublishAction extends OsylManagerAbstractAction {
 						.publishAction_publish_error_detail()
 					+ "\n";
 		    }
-		    alert = new OsylOkCancelDialog(false, true,
-		     messages.OsylWarning_Title(), msg, true, false);
-		    ((OsylOkCancelDialog)alert).show();
-		    ((OsylOkCancelDialog)alert).centerAndFocus();
+		    alert =
+			    new OsylOkCancelDialog(false, true, messages
+				    .OsylWarning_Title(), msg, true, false);
+		    ((OsylOkCancelDialog) alert).show();
+		    ((OsylOkCancelDialog) alert).centerAndFocus();
 		} else {
 		    msg = messages.publishAction_publish_ok();
 		    alert = new OsylUnobtrusiveAlert(msg);
@@ -98,7 +99,7 @@ public class PublishAction extends OsylManagerAbstractAction {
 	    }
 	}
     }
-    
+
     public PublishAction(OsylManagerController controller) {
 	super(controller, "mainView_action_publish",
 		"mainView_action_publish_tooltip");
@@ -106,7 +107,7 @@ public class PublishAction extends OsylManagerAbstractAction {
 
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
-	if(siteIds.size() > 0){
+	if (siteIds.size() > 0) {
 	    return true;
 	} else {
 	    return false;
@@ -114,14 +115,41 @@ public class PublishAction extends OsylManagerAbstractAction {
     }
 
     @Override
-    public void onClick(List<COSite> siteIds) {
+    public void onClick(final List<COSite> siteIds) {
+
+	boolean isNull = false;
+	String sites = "";
+	for (COSite coSite : siteIds) {
+	    if (coSite.isCoIsNull()) {
+		isNull = true;
+		sites += coSite.getSiteId() + "<br>";
+	    }
+	}
+	if (isNull) {
+	    String message = messages.publishAction_publish_voidCO().replace("{0}", sites);
+	    OsylOkCancelDialog conf =
+		new OsylOkCancelDialog(messages.OsylWarning_Title(), message);
+	    conf.addOkButtonCLickHandler(new ClickHandler() {
+		    public void onClick(ClickEvent event) {
+			publish(siteIds);
+		    }
+		});
+
+	    conf.center();
+	    conf.show();
+	} else {
+	    publish(siteIds);
+	}
+    }
+
+    private void publish(List<COSite> siteIds) {
 	diag.show();
 	diag.centerAndFocus();
 	coSites = siteIds;
 	asynCB_return = 0;
 	asynCB_OK = 0;
 	lMsg = new ArrayList<String>();
-	
+
 	for (COSite coSite : siteIds) {
 	    controller.publish(coSite.getSiteId(), new PublishAsynCallBack(
 		    coSite.getSiteId()));

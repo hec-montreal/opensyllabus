@@ -1448,6 +1448,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    .getCoLastModifiedDate(siteId));
 	    info.setLastPublicationDate(osylSiteService
 		    .getCoLastPublicationDate(siteId));
+	    if(osylSiteService.getUnfusionnedSerializedCourseOutlineBySiteId(siteId).getContent()==null)
+		info.setCoIsNull(true);
 
 	    // Retrieve parent site
 	    String parentSite = null;
