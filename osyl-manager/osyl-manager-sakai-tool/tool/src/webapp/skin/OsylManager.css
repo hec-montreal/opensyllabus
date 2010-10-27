@@ -79,7 +79,24 @@
 }
 
 .OsylManager-panel{
-	margin:10px;
+	margin:10px 0px 5px 0px;
+}
+
+.OsylManager-panel .gwt-TextBox {
+  margin-top: 1px;
+}
+
+.OsylManager-panel .Osyl-Button {
+  margin-top: 0px;
+}
+
+.OsylManager-panel .gwt-ListBox {
+  margin-top: 2px;
+	font-size: 8pt;
+}
+
+.OsylManager-panel .OsylManager-mainView-label {
+	margin: 4px 10px 0px 30px;
 }
 
 /*----------------------------------------------------------------------------------------------------------------*/

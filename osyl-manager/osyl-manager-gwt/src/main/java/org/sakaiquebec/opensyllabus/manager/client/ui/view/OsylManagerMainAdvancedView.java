@@ -91,11 +91,8 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 
 	VerticalPanel vSiteSelectionPanel = new VerticalPanel();
 
-	HorizontalPanel hzSiteSelectionPanel1 = new HorizontalPanel();
-	hzSiteSelectionPanel1.setStylePrimaryName("OsylManager-panel");
-	
 	HorizontalPanel hzSiteSelectionPanel2 = new HorizontalPanel();
-	hzSiteSelectionPanel1.setStylePrimaryName("OsylManager-panel");
+	hzSiteSelectionPanel2.setStylePrimaryName("OsylManager-panel");
 
 	HorizontalPanel hzPanel2 = new HorizontalPanel();
 	hzPanel2.setStylePrimaryName("OsylManager-courseListView");
@@ -106,10 +103,6 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	HorizontalPanel hzPanel4 = new HorizontalPanel();
 	hzPanel4.setStylePrimaryName("OsylManager-panel");
 
-	Label selectSiteLabel =
-		new Label(getController().getMessages()
-			.mainView_searchForExistingSites());
-	selectSiteLabel.setStylePrimaryName("OsylManager-mainView-label");
 	selectSiteInput = new TextBox();
 	selectSiteInput.setText(getController().getMessages()
 		.mainView_searchForExistingSites_input());
@@ -149,8 +142,6 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 		courseListView.refresh();
 	    }
 	});
-	hzSiteSelectionPanel1.add(selectSiteLabel);
-	vSiteSelectionPanel.add(hzSiteSelectionPanel1);
 	
 	Label trimesterLbl = new Label(getController().getMessages()
 		.academicSessionLabel());
