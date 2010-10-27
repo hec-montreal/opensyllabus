@@ -543,7 +543,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Get a valid resource reference base site URL to be used in later calls.
-     * 
+     *
      * @return a String of the base URL
      */
     private String getSiteReference(Site site) {
@@ -555,7 +555,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Add a collection (similar to a sub-directory) under the resource tool.
-     * 
+     *
      * @param dir name of collection
      * @param parent where to create it (null means top-level)
      * @return boolean whether the collection was added or not
@@ -579,7 +579,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Tells if a collection is already created in sakai.
-     * 
+     *
      * @param a String of the collection id.
      * @return boolean whether the collection exists
      */
@@ -681,7 +681,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * FIXME Task SAKAI-1609. This method is used to update the description and
      * the license of the Sakai resource during importation of a course outline
      * in a new site. It should be removed after the migration.
-     * 
+     *
      * @param element
      */
     private void updateResourceMetaInfo(COElementAbstract element) {
@@ -969,7 +969,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * List the files in a sites and zip them
-     * 
+     *
      * @param siteId
      * @return zipFile a temporary zip file...
      * @throws IOException
@@ -1067,7 +1067,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     /**
      * Get the delay (in minutes) to wait before deleting export zip defined in
      * the sakai.properties
-     * 
+     *
      * @return
      */
     private int getDeleteExportDelay() {
@@ -1286,7 +1286,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Import files contained in the osylPackage to Sakai resources
-     * 
+     *
      * @param zipReference
      * @param siteId
      */
@@ -1448,7 +1448,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    .getCoLastModifiedDate(siteId));
 	    info.setLastPublicationDate(osylSiteService
 		    .getCoLastPublicationDate(siteId));
-	    if(osylSiteService.getUnfusionnedSerializedCourseOutlineBySiteId(siteId).getContent()==null)
+	    if(osylSiteService
+				    .getUnfusionnedSerializedCourseOutlineBySiteId(siteId) == null
+				    || osylSiteService
+					    .getUnfusionnedSerializedCourseOutlineBySiteId(
+				    siteId).getContent() == null)
 		info.setCoIsNull(true);
 
 	    // Retrieve parent site
