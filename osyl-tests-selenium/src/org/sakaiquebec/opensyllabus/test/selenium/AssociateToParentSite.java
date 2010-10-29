@@ -113,7 +113,11 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		pause();
 		i++;
 	    }
-	    assertTrue(session().isElementPresent("//select[@class='OsylManager-form-element']/option[@value='"+parentSiteName+"']"));
+	    if(!session().isElementPresent(
+		    "//select[@class='OsylManager-form-element']/option[@value='"
+		    +parentSiteName+"']")) {
+		logAndFail("Cannot attach to parent site " + parentSiteName);
+	    }
 	    session().select("//select[@class='OsylManager-form-element']",
 		    "label=" + parentSiteName);
 	    pause();
