@@ -276,4 +276,6 @@ public interface Messages extends ConstantsWithLookup {
     String publishAction_publish_voidCO();
     
     String explanationMsg();
+
+    String publishAction_publish_inProgress();
 }

@@ -29,4 +29,8 @@ public interface ManagerImageBundleInterface extends ClientBundle {
     public ImageResource check();
     
     public ImageResource ajaxloader();
+    
+    public ImageResource check16();
+    
+    public ImageResource cross16();
 }

@@ -20,85 +20,21 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
-import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.DialogBox;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
 public class PublishAction extends OsylManagerAbstractAction {
-
-    private static List<String> lMsg = new ArrayList<String>();
-
-    private static List<COSite> coSites;
-
-    private static int asynCB_return = 0;
-
-    private static int asynCB_OK = 0;
-
-    private DialogBox alert;
-
-    private class PublishAsynCallBack implements AsyncCallback<Void> {
-
-	private String siteId;
-
-	public PublishAsynCallBack(String siteId) {
-	    super();
-	    this.siteId = siteId;
-	}
-
-	public void onFailure(Throwable caught) {
-	    diag.hide();
-	    PublishAction.lMsg.add(siteId);
-	    responseReceive();
-	}
-
-	public void onSuccess(Void result) {
-	    diag.hide();
-	    PublishAction.asynCB_OK++;
-	    responseReceive();
-	}
-
-	private void responseReceive() {
-	    PublishAction.asynCB_return++;
-	    if (PublishAction.asynCB_return == PublishAction.coSites.size()) {
-		String msg = "";
-		if (PublishAction.asynCB_OK != PublishAction.coSites.size()) {
-		    msg = messages.publishAction_publish_error() + "\n";
-		    for (String id : lMsg) {
-			msg +=
-				id
-					+ " "
-					+ messages
-						.publishAction_publish_error_detail()
-					+ "\n";
-		    }
-		    alert =
-			    new OsylOkCancelDialog(false, true, messages
-				    .OsylWarning_Title(), msg, true, false);
-		    ((OsylOkCancelDialog) alert).show();
-		    ((OsylOkCancelDialog) alert).centerAndFocus();
-		} else {
-		    msg = messages.publishAction_publish_ok();
-		    alert = new OsylUnobtrusiveAlert(msg);
-		}
-		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
-			OsylManagerEvent.SITE_INFO_CHANGE));
-	    }
-	}
-    }
 
     public PublishAction(OsylManagerController controller) {
 	super(controller, "mainView_action_publish",
@@ -116,7 +52,6 @@ public class PublishAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(final List<COSite> siteIds) {
-
 	boolean isNull = false;
 	String sites = "";
 	for (COSite coSite : siteIds) {
@@ -126,15 +61,17 @@ public class PublishAction extends OsylManagerAbstractAction {
 	    }
 	}
 	if (isNull) {
-	    String message = messages.publishAction_publish_voidCO().replace("{0}", sites);
+	    String message =
+		    messages.publishAction_publish_voidCO().replace("{0}",
+			    sites);
 	    OsylOkCancelDialog conf =
-		new OsylOkCancelDialog(messages.OsylWarning_Title(), message);
+		    new OsylOkCancelDialog(messages.OsylWarning_Title(),
+			    message);
 	    conf.addOkButtonCLickHandler(new ClickHandler() {
-		    public void onClick(ClickEvent event) {
-			publish(siteIds);
-		    }
-		});
-
+		public void onClick(ClickEvent event) {
+		    publish(siteIds);
+		}
+	    });
 	    conf.center();
 	    conf.show();
 	} else {
@@ -143,16 +80,7 @@ public class PublishAction extends OsylManagerAbstractAction {
     }
 
     private void publish(List<COSite> siteIds) {
-	diag.show();
-	diag.centerAndFocus();
-	coSites = siteIds;
-	asynCB_return = 0;
-	asynCB_OK = 0;
-	lMsg = new ArrayList<String>();
-
-	for (COSite coSite : siteIds) {
-	    controller.publish(coSite.getSiteId(), new PublishAsynCallBack(
-		    coSite.getSiteId()));
-	}
+	PublishForm publishForm = new PublishForm(controller, siteIds);
+	publishForm.showModal();
     }
 }

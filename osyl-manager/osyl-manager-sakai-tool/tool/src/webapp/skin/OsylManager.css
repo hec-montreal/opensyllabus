@@ -129,6 +129,17 @@ cursor:pointer;
 	margin:3px;
 	width:600px;
 }
+
+.OsylManager-form-publicationPanel{
+	margin:3px;
+	width:250px;
+}
+
+.OsylManager-form-publicationText{
+	text-decoration: blink;
+	color: red;
+	font:bold 12px Arial,Verdana,sans-serif;
+}
 /*----------------------------------------------------------------------------------------------------------------*/
 .OsylManager-rootPanel>table{
 	width:98%;
