@@ -244,7 +244,7 @@ public class COModeledServer {
 
     /**
      * Map<name,permissions> of permissions applied to ressources
-     *
+     * 
      * @uml.property name="documentSecurityMap"
      * @uml.associationEnd qualifier="trim:java.lang.String java.lang.String"
      */
@@ -254,17 +254,17 @@ public class COModeledServer {
      * Map containing all the documents in the xml
      */
     private Map<String, String> allDocumentsSecurityMap;
-    
+
     /**
      * Map containing all the documents in the xml
      */
     private Map<String, String> allDocumentsVisibilityMap;
-    
+
     private Map<String, String> allDocuments;
-    
+
     /**
      * Map<name,visibility> of visibility applied to ressources
-     *
+     * 
      * @uml.property name="documentVisibilityMap"
      * @uml.associationEnd qualifier="trim:java.lang.String java.lang.String"
      */
@@ -348,57 +348,59 @@ public class COModeledServer {
     }
 
     public Map<String, String> getAllDocumentsSecurityMap() {
-        return allDocumentsSecurityMap;
+	return allDocumentsSecurityMap;
     }
 
     public void setAllDocumentsSecurityMap(
-    	Map<String, String> allDocumentsSecurityMap) {
-        this.allDocumentsSecurityMap = allDocumentsSecurityMap;
+	    Map<String, String> allDocumentsSecurityMap) {
+	this.allDocumentsSecurityMap = allDocumentsSecurityMap;
     }
 
     public Map<String, String> getAllDocumentsVisibilityMap() {
-        return allDocumentsVisibilityMap;
+	return allDocumentsVisibilityMap;
     }
 
     public void setAllDocumentsVisibilityMap(
-    	Map<String, String> allDocumentsVisibilityMap) {
-        this.allDocumentsVisibilityMap = allDocumentsVisibilityMap;
+	    Map<String, String> allDocumentsVisibilityMap) {
+	this.allDocumentsVisibilityMap = allDocumentsVisibilityMap;
     }
 
     public Map<String, String> getAllDocuments() {
-        return allDocuments;
+	return allDocuments;
     }
 
     public void setAllDocuments(Map<String, String> allDocuments) {
-        this.allDocuments = allDocuments;
+	this.allDocuments = allDocuments;
     }
 
-    private  String rmNonValidChars(String str) {
+    private String rmNonValidChars(String str) {
 
-	   if(str==null) return null;
+	if (str == null)
+	    return null;
 
-	   StringBuffer s = new StringBuffer();
+	StringBuffer s = new StringBuffer();
 
-	      for (char c : str.toCharArray()) {
+	for (char c : str.toCharArray()) {
 
-	      if ((c == 0x9) || (c == 0xA) || (c == 0xD)
+	    if ((c == 0x9) || (c == 0xA) || (c == 0xD)
 
-	         || ((c >= 0x20) && (c <= 0xD7FF))
+	    || ((c >= 0x20) && (c <= 0xD7FF))
 
-	         || ((c >= 0xE000) && (c <= 0xFFFD))
+	    || ((c >= 0xE000) && (c <= 0xFFFD))
 
-	         || ((c >= 0x10000) && (c <= 0x10FFFF))) {
+	    || ((c >= 0x10000) && (c <= 0x10FFFF))) {
 
-	            s.append(c);
+		s.append(c);
 
-	      }
+	    }
 
-	   }
+	}
 
-	   return s.toString();
+	return s.toString();
     }
+
     private Document parseXml(String xml) {
-	
+
 	xml = rmNonValidChars(xml);
 	// get the factory
 	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -452,7 +454,7 @@ public class COModeledServer {
 
     /**
      * Creates a COContent POJO from the root of the xml document.
-     *
+     * 
      * @param document the document being created
      * @param coContent the POJO to be created from the root element.
      */
@@ -537,7 +539,7 @@ public class COModeledServer {
 
     /**
      * Creates a CoUnit POJO from the DOM.
-     *
+     * 
      * @param node the node from the DOM representing that structure element
      * @param coUnit the POJO to be created from the DOM.
      * @param parent the parent of the Structure element
@@ -573,7 +575,7 @@ public class COModeledServer {
 
     /**
      * Creates a CoUnit POJO from the DOM.
-     *
+     * 
      * @param node the node from the DOM representing that structure element
      * @param coUnitStructure the POJO to be created from the DOM.
      * @param parent the parent of the Structure element
@@ -616,7 +618,7 @@ public class COModeledServer {
 
     /**
      * Creates a StructureElement POJO from the DOM.
-     *
+     * 
      * @param node the node from the DOM representing that structure element
      * @param coStructElt the POJO to be created from the DOM.
      * @param coContent the parent of the Structure element
@@ -660,7 +662,7 @@ public class COModeledServer {
 
     /**
      * Creates a Course Outline content unit POJO from the DOM.
-     *
+     * 
      * @param node the node from the DOM representing that Course Outline
      *            content
      * @param coContentUnit the POJO to be created from the DOM.
@@ -697,7 +699,7 @@ public class COModeledServer {
     /**
      * Creates a Course Outline Resource Proxy POJO from the DOM. (for proxies
      * which belong directly to the contentUnit)
-     *
+     * 
      * @param node the node from the DOM representing that Resource Proxy
      * @return the created Course Outline Resource Proxy POJO
      */
@@ -750,15 +752,17 @@ public class COModeledServer {
 		    coContentResProxy.getProperty(COPropertiesType.VISIBILITY);
 
 	    if (coContentResProxy.getResource().getType().equals(
-		    COContentResourceType.DOCUMENT)){
+		    COContentResourceType.DOCUMENT)) {
 		documentVisibilityMap.put(uri.trim(), visibility);
-		allDocumentsVisibilityMap.put(coContentResProxy.getResource().getId(), visibility);
+		allDocumentsVisibilityMap.put(coContentResProxy.getResource()
+			.getId(), visibility);
 	    } else if (coContentResProxy.getResource().getType().equals(
 		    COContentResourceType.BIBLIO_RESOURCE)
-		    && uri != null){
+		    && uri != null) {
 		documentVisibilityMap.put(uri
 			.substring(0, uri.lastIndexOf("/")), visibility);
-		allDocumentsVisibilityMap.put(coContentResProxy.getResource().getId(), visibility);
+		allDocumentsVisibilityMap.put(coContentResProxy.getResource()
+			.getId(), visibility);
 	    }
 	} catch (Exception e) {
 	    e.printStackTrace();
@@ -769,7 +773,7 @@ public class COModeledServer {
 
     /**
      * Creates a Course Outline Resource POJO from the DOM.
-     *
+     * 
      * @param node the node from the DOM representing that Course Outline
      *            Content Resource
      * @return the created Content resource
@@ -799,7 +803,7 @@ public class COModeledServer {
 		if (uri != null) {
 		    documentSecurityMap.put(uri.trim(), coContentRes
 			    .getAccess());
-		    allDocuments.put(coContentRes.getId(),uri.trim());
+		    allDocuments.put(coContentRes.getId(), uri.trim());
 		    allDocumentsSecurityMap.put(coContentRes.getId(),
 			    coContentRes.getAccess());
 		    if (isPublication) {
@@ -829,9 +833,10 @@ public class COModeledServer {
 		if (uri != null) {
 		    documentSecurityMap.put(uri.substring(0, uri
 			    .lastIndexOf("/")), coContentRes.getAccess());
-		    allDocuments.put(coContentRes.getId(),uri.substring(0, uri
+		    allDocuments.put(coContentRes.getId(), uri.substring(0, uri
 			    .lastIndexOf("/")));
-		    allDocumentsSecurityMap.put(coContentRes.getId(), coContentRes.getAccess());
+		    allDocumentsSecurityMap.put(coContentRes.getId(),
+			    coContentRes.getAccess());
 		}
 	    }
 
@@ -843,7 +848,7 @@ public class COModeledServer {
 
     /**
      * Creates a Course Outline Resource POJO of type person from the DOM.
-     *
+     * 
      * @param node the node from the DOM representing that Course Outline
      *            Content Resource
      * @return the created Content resource
@@ -870,7 +875,7 @@ public class COModeledServer {
 
     /**
      * Creates a Course OutlineContent rubric POJO from the DOM.
-     *
+     * 
      * @param node the node from the DOM representing that Resource Proxy
      * @return the created Course Outline Resource Proxy POJO
      */
@@ -911,7 +916,7 @@ public class COModeledServer {
 
     /**
      * Entry point of the model conversion to XML string.
-     *
+     * 
      * @return the XML string generated from the model.
      */
     public void model2XML() {
@@ -985,7 +990,7 @@ public class COModeledServer {
 
     /**
      * Creates the root element of the document.
-     *
+     * 
      * @param document the document being created
      * @param coContent the POJO needed to create the root element.
      */
@@ -1022,7 +1027,7 @@ public class COModeledServer {
      * in the model. The parent can only be <code>CourseOutlineContent</code>
      * objects or <code>COStructureElement</code> objects following model
      * restrictions.
-     *
+     * 
      * @param document the document being created.
      * @param parent the parent element to append child element being created.
      * @param child the POJO from which the element is created.
@@ -1125,7 +1130,7 @@ public class COModeledServer {
      * Creates all the children elements of a <code>COContentUnit</code> or a
      * <code>COContentResourceProxy</code>. The children elements are created
      * from a <code>COContentResourceProxy</code>
-     *
+     * 
      * @param document the document being created.
      * @param parent the parent element (created from a
      *            <code>COContentUnit</code> object or a
@@ -1171,7 +1176,7 @@ public class COModeledServer {
 
     /**
      * Creates a "resource" node child.
-     *
+     * 
      * @param document the document being created.
      * @param coContentResourceProxyElem the node containing the resource
      *            element.
@@ -1211,7 +1216,7 @@ public class COModeledServer {
 
     /**
      * Creates a "rubric" element.
-     *
+     * 
      * @param document the document being created.
      * @param coContentResourceProxyElem The lement containing this rubric
      *            element.
@@ -1526,23 +1531,27 @@ public class COModeledServer {
 
     private void changeDocumentsUrlsToFitNewSiteName(
 	    COContentResourceProxy cocrp, Map<String, String> filenameChangesMap) {
-	String uri =
-		cocrp.getResource().getProperty(COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_URI);
-	if (uri != null && !uri.equals("")) {
-	    String oldSiteName = uri.substring(uri.indexOf("group/") + 6);
-	    oldSiteName = oldSiteName.substring(0, oldSiteName.indexOf("/"));
-	    uri =
-		    changeDocumentsUrls(uri, oldSiteName, coSerialized
-			    .getSiteId());
-	    if (filenameChangesMap != null) {
-		String filename = uri.substring(uri.lastIndexOf("/") + 1);
-		String newFilename = filenameChangesMap.get(filename);
-		if (newFilename != null)
-		    uri = changeDocumentsUrls(uri, filename, newFilename);
+	if (!cocrp.getResource().getType().equals(COContentResourceType.URL)) {
+	    String uri =
+		    cocrp.getResource().getProperty(
+			    COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_URI);
+	    if (uri != null && !uri.equals("")) {
+		String oldSiteName = uri.substring(uri.indexOf("group/") + 6);
+		oldSiteName =
+			oldSiteName.substring(0, oldSiteName.indexOf("/"));
+		uri =
+			changeDocumentsUrls(uri, oldSiteName, coSerialized
+				.getSiteId());
+		if (filenameChangesMap != null) {
+		    String filename = uri.substring(uri.lastIndexOf("/") + 1);
+		    String newFilename = filenameChangesMap.get(filename);
+		    if (newFilename != null)
+			uri = changeDocumentsUrls(uri, filename, newFilename);
+		}
+		cocrp.getResource().addProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_URI, uri);
 	    }
-	    cocrp.getResource().addProperty(COPropertiesType.IDENTIFIER,
-		    COPropertiesType.IDENTIFIER_TYPE_URI, uri);
 	}
     }
 
@@ -1581,14 +1590,13 @@ public class COModeledServer {
 	}
     }
 
-    public void setCOProgram(String p){
-		if (p != null) {
-		    String propertyType = getPropertyType();
-		    COContent content = this.getModeledContent();
-		    COProperties coProperties = content.getProperties();
-		    coProperties.addProperty(COPropertiesType.PROGRAM, propertyType,
-			    p);
-		}
+    public void setCOProgram(String p) {
+	if (p != null) {
+	    String propertyType = getPropertyType();
+	    COContent content = this.getModeledContent();
+	    COProperties coProperties = content.getProperties();
+	    coProperties.addProperty(COPropertiesType.PROGRAM, propertyType, p);
+	}
     }
 
     public static String getRulesConfigPropertyType(Document d) {
