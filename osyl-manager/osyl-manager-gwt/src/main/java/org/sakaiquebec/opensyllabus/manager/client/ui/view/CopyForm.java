@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
@@ -40,6 +41,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
@@ -62,11 +64,16 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
     private Map<String, COSite> sigleCourseMap;
 
     private ListBox suggestionListBox;
+    
+    private Image spinner;
+    
+    private final OsylCancelDialog diag;
 
     AsyncCallback<List<COSite>> siteListAsynCB =
 	    new AsyncCallback<List<COSite>>() {
 
 		public void onFailure(Throwable caught) {
+		    spinner.setVisible(false);
 		    OsylOkCancelDialog warning =
 			    new OsylOkCancelDialog(false, true, messages
 				    .OsylWarning_Title(),
@@ -76,6 +83,7 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 		}
 
 		public void onSuccess(List<COSite> result) {
+		    spinner.setVisible(false);
 		    sigleCourseMap = new HashMap<String, COSite>();
 		    for (COSite course : result) {
 			sigleCourseMap.put(course.getSiteId(), course);
@@ -89,6 +97,7 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
     AsyncCallback<Void> copyToAsynCB = new AsyncCallback<Void>() {
 
 	public void onFailure(Throwable caught) {
+	    diag.hide();
 	    OsylOkCancelDialog alert =
 		    new OsylOkCancelDialog(false, true, messages
 			    .OsylWarning_Title(), messages.rpcFailure(), true,
@@ -98,13 +107,16 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	}
 
 	public void onSuccess(Void result) {
+	    diag.hide();
 	    CopyForm.this.onCopyEnd();
 	}
 
     };
 
-    public CopyForm(final OsylManagerController controller, COSite site) {
+    public CopyForm(final OsylManagerController controller, COSite site,
+	    OsylCancelDialog aDiag) {
 	super(controller);
+	this.diag = aDiag;
 	this.selectFromSite = site;
 
 	Label title = new Label(messages.mainView_action_copy());
@@ -124,6 +136,7 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	search.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
+		spinner.setVisible(true);
 		String value = sigleTextBox.getText();
 		suggestionListBox.clear();
 		controller.getAllCoAndSiteInfo(value, "", siteListAsynCB);
@@ -158,7 +171,7 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	    }
 	});
 
-	HorizontalPanel suggestionPanel = new HorizontalPanel();
+//	HorizontalPanel suggestionPanel = new HorizontalPanel();
 
 	suggestionListBox = new ListBox();
 	suggestionListBox.addChangeHandler(new ChangeHandler() {
@@ -167,15 +180,29 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 		
 	    }
 	});
+	
+	HorizontalPanel hzPanel = new HorizontalPanel();
 	Label voidLabel = new Label();
-	suggestionPanel.add(voidLabel);
-	suggestionPanel.add(suggestionListBox);
-	suggestionPanel.setStylePrimaryName("OsylManager-form-genericPanel");
-	suggestionPanel.setCellWidth(voidLabel, "30%");
-	suggestionPanel.setCellWidth(suggestionPanel, "70%");
-	mainPanel.add(suggestionPanel);
-	mainPanel.setCellHorizontalAlignment(suggestionPanel,
+	hzPanel.add(voidLabel);
+	hzPanel.setCellWidth(voidLabel, "30%");
+	hzPanel.setStylePrimaryName("OsylManager-form-genericPanel");
+	hzPanel.add(suggestionListBox);
+	spinner = new Image(controller.getImageBundle().ajaxloader());
+	hzPanel.add(spinner);
+	spinner.setVisible(false);
+	mainPanel.add(hzPanel);
+	mainPanel.setCellHorizontalAlignment(hzPanel,
 		HasHorizontalAlignment.ALIGN_CENTER);
+	
+//	Label voidLabel = new Label();
+//	suggestionPanel.add(voidLabel);
+//	suggestionPanel.add(suggestionListBox);
+//	suggestionPanel.setStylePrimaryName("OsylManager-form-genericPanel");
+//	suggestionPanel.setCellWidth(voidLabel, "30%");
+//	suggestionPanel.setCellWidth(suggestionPanel, "70%");
+//	mainPanel.add(suggestionPanel);
+//	mainPanel.setCellHorizontalAlignment(suggestionPanel,
+//		HasHorizontalAlignment.ALIGN_CENTER);
 
 	okButton = new PushButton(messages.associateForm_ok());
 	okButton.setStylePrimaryName("Osyl-Button");
@@ -183,6 +210,8 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	okButton.setEnabled(false);
 	okButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
+		diag.show();
+		diag.centerAndFocus();
 		selectToSite =
 			sigleCourseMap
 				.get(suggestionListBox

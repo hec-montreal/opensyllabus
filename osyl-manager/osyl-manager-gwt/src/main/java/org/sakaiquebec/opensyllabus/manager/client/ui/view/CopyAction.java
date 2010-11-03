@@ -47,7 +47,7 @@ public class CopyAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(List<COSite> siteIds) {
-	CopyForm copyForm = new CopyForm(controller, siteIds.get(0));
+	CopyForm copyForm = new CopyForm(controller, siteIds.get(0),diag);
 	copyForm.showModal();
     }
 

@@ -186,8 +186,6 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	    }
 	});
 
-	HorizontalPanel suggestionPanel = new HorizontalPanel();
-
 	suggestionListBox = new ListBox();
 	suggestionListBox.addChangeHandler(new ChangeHandler() {
 
@@ -201,20 +199,19 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 		okButton.setEnabled(true);
 	    }
 	});
-	Label voidLabel = new Label();
-	suggestionPanel.add(voidLabel);
-	suggestionPanel.add(suggestionListBox);
-	suggestionPanel.setStylePrimaryName("OsylManager-form-genericPanel");
-	suggestionPanel.setCellWidth(voidLabel, "30%");
+	
 	
 	HorizontalPanel hzPanel = new HorizontalPanel();
+	Label voidLabel = new Label();
+	hzPanel.add(voidLabel);
+	hzPanel.setCellWidth(voidLabel, "30%");
+	hzPanel.setStylePrimaryName("OsylManager-form-genericPanel");
 	hzPanel.add(suggestionListBox);
 	spinner = new Image(controller.getImageBundle().ajaxloader());
 	hzPanel.add(spinner);
 	spinner.setVisible(false);
-	suggestionPanel.add(hzPanel);
-	mainPanel.add(suggestionPanel);
-	mainPanel.setCellHorizontalAlignment(suggestionPanel,
+	mainPanel.add(hzPanel);
+	mainPanel.setCellHorizontalAlignment(hzPanel,
 		HasHorizontalAlignment.ALIGN_CENTER);
 
 	cmCourseInfoView = new CMCourseInfoView(controller);
