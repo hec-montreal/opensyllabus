@@ -549,8 +549,17 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     public COSerialized getCourseOutlineForExport(String siteId,
 	    String webappDir) throws Exception {
-	COSerialized co =
-		resourceDao.getSerializedCourseOutlineBySiteId(siteId);
+	COSerialized co =getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
+	//create coContent if null
+	if (co.getContent() == null) {
+	    COConfigSerialized coConfig = co.getOsylConfig();
+	    coConfig =
+		    osylConfigService.getConfigByRef(coConfig.getConfigRef(),
+			    webappDir);
+	    co.setContent(osylConfigService.getXml(coConfig, co.getLang(),
+		    webappDir));
+	    resourceDao.createOrUpdateCourseOutline(co);
+	}
 	COConfigSerialized coConfig = co.getOsylConfig();
 	// at the first call we got only the config id and ref. We need to fill
 	// the rules so the next call is used to get it.
