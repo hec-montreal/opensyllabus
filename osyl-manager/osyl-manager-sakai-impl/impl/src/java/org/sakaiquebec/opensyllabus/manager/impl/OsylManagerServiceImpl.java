@@ -1623,6 +1623,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     public void copySite(String siteFrom, String siteTo) throws Exception {
 	Site newSite = null;
 	Site oldSite = null;
+	
+	long start = System.currentTimeMillis();
 
 	newSite = siteService.getSite(siteTo);
 	oldSite = siteService.getSite(siteFrom);
@@ -1677,10 +1679,145 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	cce.setHidden();
 	contentHostingService.commitCollection(cce);
 
+	//we update citation ids in the course outline 
+	updateCitationIds(siteFrom, siteTo);
+	
 	siteService.save(newSite);
+
+	log.info("Finished copying site ["
+		+ siteFrom  + "] in "
+		+ (System.currentTimeMillis() - start) + " ms");
 
     }
 
+    private void updateCitationIds(String oldSiteId, String newSiteId) {
+
+	// We retieve information from the new citations
+	String siteColl = contentHostingService.getSiteCollection(newSiteId);
+
+	List<ContentResource> resources =
+		contentHostingService.getAllResources(siteColl);
+
+	String collId = null;
+	Map<String, CitationCollection> newCitations = new HashMap<String, CitationCollection>();
+	List<Citation> fromColl = null;
+
+	for (ContentResource resource : resources) {
+	    if (resource.getResourceType().equalsIgnoreCase(
+		    "org.sakaiproject.citation.impl.CitationList")) {
+		try {
+		    collId = new String(resource.getContent());
+		    CitationCollection citaColl =
+			    org.sakaiproject.citation.cover.CitationService
+				    .getCollection(collId);
+		    fromColl = citaColl.getCitations();
+
+		    for (Citation citation : fromColl) {
+			newCitations.put(resource.getId() + "/"
+				+ citation.getId(), citaColl);
+		    }
+		} catch (ServerOverloadException e) {
+		    log.debug(e);
+		} catch (IdUnusedException e) {
+		    log.debug(e);
+		}
+	    }
+	}
+
+	// we retrieve informations from old citations
+	COSerialized co =
+		osylSiteService.getSerializedCourseOutlineBySiteId(newSiteId);
+	COModeledServer model = new COModeledServer(co);
+	Map<String, String> citationsChangeMap = new HashMap<String, String>();
+
+	model.XML2Model();
+
+	Map<String, String> oldCitations = model.getAllCitations();
+	String uri = null;
+	Citation oldCitation = null;
+	CitationCollection oldCollection = null;
+	String oldCollectionId = null;
+	String oldCollectionRef = null;
+
+	CitationCollection newColl = null;
+	Citation newCitation = null;
+	
+	for (String id : oldCitations.keySet()) {
+	    uri = oldCitations.get(id);
+	    uri = uri.replaceFirst(newSiteId, oldSiteId);
+	    
+	    oldCollectionRef = uri.substring(0, uri.lastIndexOf("/"));
+	    try {
+		oldCollectionId =
+			new String((contentHostingService
+				.getResource(oldCollectionRef)).getContent());
+		oldCollection =
+			org.sakaiproject.citation.cover.CitationService
+				.getCollection(oldCollectionId);
+		oldCitation =
+			oldCollection.getCitation(uri.substring(uri
+				.lastIndexOf("/") +1, uri.length()).trim());
+
+		for (String newCitationRef : newCitations.keySet()) {
+		    
+		    oldCollectionRef = oldCollectionRef.replaceFirst(oldSiteId, newSiteId);
+		    
+		    if (newCitationRef.contains(oldCollectionRef)) {
+			newColl = newCitations.get(newCitationRef);
+			newCitation =
+				newColl.getCitation(newCitationRef.substring(
+					newCitationRef.lastIndexOf("/") +1,
+					newCitationRef.length()).trim());
+			
+			//We update the citation id
+			if (compareCitations(oldCitation, newCitation)){
+			    citationsChangeMap.put(oldCitation.getId(), newCitation.getId());
+			    continue;
+			}
+		    }
+		}
+	    } catch (ServerOverloadException e) {
+		e.printStackTrace();
+	    } catch (PermissionException e) {
+		e.printStackTrace();
+	    } catch (IdUnusedException e) {
+		e.printStackTrace();
+	    } catch (TypeException e) {
+		e.printStackTrace();
+	    }
+	    finally{
+		model.resetXML(citationsChangeMap);
+		model.model2XML();
+		co.setContent(model.getSerializedContent());
+		try {
+		    osylSiteService.updateSerializedCourseOutline(co);
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+	    }
+	}
+
+    }
+    
+    private boolean compareCitations(Citation thisCitation,
+	    Citation otherCitation) {
+
+	StringBuilder thisCit = new StringBuilder();
+	StringBuilder otherCit = new StringBuilder();
+	try {
+	    thisCitation.exportRis(thisCit);
+	    otherCitation.exportRis(otherCit);
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+
+	if ((thisCit.toString()).equalsIgnoreCase(otherCit.toString()))
+	    return true;
+
+	return false;
+
+    }
+    
     /**
      * @param state
      * @return Get a list of all tools that should be included as options for

@@ -261,6 +261,8 @@ public class COModeledServer {
     private Map<String, String> allDocumentsVisibilityMap;
 
     private Map<String, String> allDocuments;
+    
+    private Map<String, String> allCitations;
 
     /**
      * Map<name,visibility> of visibility applied to ressources
@@ -325,6 +327,7 @@ public class COModeledServer {
 	documentVisibilityMap = new HashMap<String, String>();
 	allDocumentsSecurityMap = new HashMap<String, String>();
 	allDocuments = new HashMap<String, String>();
+	allCitations = new HashMap<String, String>();
 	allDocumentsVisibilityMap = new HashMap<String, String>();
 	if (coSerialized.getContent() != null) {
 	    coContent = new COContent();
@@ -371,6 +374,14 @@ public class COModeledServer {
 
     public void setAllDocuments(Map<String, String> allDocuments) {
 	this.allDocuments = allDocuments;
+    }
+
+    public Map<String, String> getAllCitations() {
+	return allCitations;
+    }
+
+    public void setAllCitations(Map<String, String> allCitations) {
+	this.allCitations = allCitations;
     }
 
     private String rmNonValidChars(String str) {
@@ -835,6 +846,7 @@ public class COModeledServer {
 			    .lastIndexOf("/")), coContentRes.getAccess());
 		    allDocuments.put(coContentRes.getId(), uri.substring(0, uri
 			    .lastIndexOf("/")));
+		    allCitations.put(coContentRes.getId(), uri.trim());
 		    allDocumentsSecurityMap.put(coContentRes.getId(),
 			    coContentRes.getAccess());
 		}
