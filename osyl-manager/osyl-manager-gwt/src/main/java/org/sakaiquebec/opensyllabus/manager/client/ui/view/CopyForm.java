@@ -171,8 +171,6 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	    }
 	});
 
-//	HorizontalPanel suggestionPanel = new HorizontalPanel();
-
 	suggestionListBox = new ListBox();
 	suggestionListBox.addChangeHandler(new ChangeHandler() {
 
@@ -193,16 +191,6 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	mainPanel.add(hzPanel);
 	mainPanel.setCellHorizontalAlignment(hzPanel,
 		HasHorizontalAlignment.ALIGN_CENTER);
-	
-//	Label voidLabel = new Label();
-//	suggestionPanel.add(voidLabel);
-//	suggestionPanel.add(suggestionListBox);
-//	suggestionPanel.setStylePrimaryName("OsylManager-form-genericPanel");
-//	suggestionPanel.setCellWidth(voidLabel, "30%");
-//	suggestionPanel.setCellWidth(suggestionPanel, "70%");
-//	mainPanel.add(suggestionPanel);
-//	mainPanel.setCellHorizontalAlignment(suggestionPanel,
-//		HasHorizontalAlignment.ALIGN_CENTER);
 
 	okButton = new PushButton(messages.associateForm_ok());
 	okButton.setStylePrimaryName("Osyl-Button");
