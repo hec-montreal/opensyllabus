@@ -20,10 +20,8 @@
 
 package org.sakaiquebec.opensyllabus.shared.model;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
@@ -215,33 +213,32 @@ public class COModeled extends COSerialized {
 	this.schemaVersion = schemaVersion;
     }
 
-    
-    private  String rmNonValidChars(String str) {
+    private String rmNonValidChars(String str) {
 
-	   if(str==null) return null;
+	if (str == null)
+	    return null;
 
-	   StringBuffer s = new StringBuffer();
+	StringBuffer s = new StringBuffer();
 
-	      for (char c : str.toCharArray()) {
+	for (char c : str.toCharArray()) {
 
-	      if ((c == 0x9) || (c == 0xA) || (c == 0xD)
+	    if ((c == 0x9) || (c == 0xA) || (c == 0xD)
 
-	         || ((c >= 0x20) && (c <= 0xD7FF))
+	    || ((c >= 0x20) && (c <= 0xD7FF))
 
-	         || ((c >= 0xE000) && (c <= 0xFFFD))
+	    || ((c >= 0xE000) && (c <= 0xFFFD))
 
-	         || ((c >= 0x10000) && (c <= 0x10FFFF))) {
+	    || ((c >= 0x10000) && (c <= 0x10FFFF))) {
 
-	            s.append(c);
+		s.append(c);
 
-	      }
+	    }
 
-	   }
+	}
 
-	   return s.toString();
- }
+	return s.toString();
+    }
 
-    
     /**
      * Entry point of the XML string conversion to the model. After the
      * conversion, setModeledContent is called on the new CourseOutlineContent.
@@ -262,9 +259,7 @@ public class COModeled extends COSerialized {
 	    // DOMtoModel
 	    coContent = createCOContentPOJO(messageDom, coContent);
 	} catch (Exception e) {
-		Window
-		.alert("An error has been detected in xmlToModel "
-			+ e);
+	    Window.alert("An error has been detected in xmlToModel " + e);
 	}
 	setModeledContent(coContent);
     }
@@ -278,7 +273,8 @@ public class COModeled extends COSerialized {
 
 	    elem.setId(map.getNamedItem(ID_ATTRIBUTE_NAME) == null ? UUID
 		    .uuid() : map.getNamedItem(ID_ATTRIBUTE_NAME)
-		    .getNodeValue());
+		    .getNodeValue().equals("") ? UUID.uuid() : map
+		    .getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue());
 
 	    elem
 		    .setEditable(map.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? true
@@ -449,7 +445,7 @@ public class COModeled extends COSerialized {
 	if (!key.equals("#text")) {
 	    String value = "";
 	    try {
-	
+
 		for (int j = 0; j < node.getChildNodes().getLength(); j++) {
 		    value += node.getChildNodes().item(j).getNodeValue();
 		}
@@ -596,27 +592,28 @@ public class COModeled extends COSerialized {
 	    prNode = resProxyChildren.item(j);
 	    prNodeName = prNode.getNodeName();
 
-	    try{
-	    if (prNodeName.equalsIgnoreCase(COPropertiesType.SEMANTIC_TAG)) {
-		coContentResProxy.setRubric(createCOContentRubricPOJO(prNode));
-	    } else if (prNodeName.equalsIgnoreCase(CO_RES_NODE_NAME)) {
-		coContentResProxy
-			.setResource(createCOContentResourcePOJO(prNode));
-	    } else if (prNodeName.equalsIgnoreCase(PERSON_NODE_NAME)) {
-		coContentResProxy
-			.setResource(createCOContentResourcePersonPOJO(prNode));
-	    } else if (prNodeName.equalsIgnoreCase(CO_RES_PROXY_NODE_NAME)) {
-		coContentResProxy
-			.addNestedResourceProxy(createCOContentResourceProxyPOJO(
-				prNode, coContentUnitParent));
-	    } else if (prNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
-		COUnit coUnit = new COUnit();
-		coContentResProxy.setResource(createCOUnitPOJO(prNode, coUnit,
-			coContentResProxy));
-	    } else {
-		addProperty(coContentResProxy.getProperties(), prNode);
-	    }
-	    
+	    try {
+		if (prNodeName.equalsIgnoreCase(COPropertiesType.SEMANTIC_TAG)) {
+		    coContentResProxy
+			    .setRubric(createCOContentRubricPOJO(prNode));
+		} else if (prNodeName.equalsIgnoreCase(CO_RES_NODE_NAME)) {
+		    coContentResProxy
+			    .setResource(createCOContentResourcePOJO(prNode));
+		} else if (prNodeName.equalsIgnoreCase(PERSON_NODE_NAME)) {
+		    coContentResProxy
+			    .setResource(createCOContentResourcePersonPOJO(prNode));
+		} else if (prNodeName.equalsIgnoreCase(CO_RES_PROXY_NODE_NAME)) {
+		    coContentResProxy
+			    .addNestedResourceProxy(createCOContentResourceProxyPOJO(
+				    prNode, coContentUnitParent));
+		} else if (prNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
+		    COUnit coUnit = new COUnit();
+		    coContentResProxy.setResource(createCOUnitPOJO(prNode,
+			    coUnit, coContentResProxy));
+		} else {
+		    addProperty(coContentResProxy.getProperties(), prNode);
+		}
+
 	    } catch (Exception e) {
 		Window
 			.alert("An error has been detected in createCOContentResourceProxyPOJO "
@@ -726,7 +723,7 @@ public class COModeled extends COSerialized {
 		    .alert("An error has been detected in createCOContentRubricPOJO "
 			    + e);
 	}
-	
+
 	return coContentRubric;
     }
 
@@ -814,7 +811,7 @@ public class COModeled extends COSerialized {
      */
     private void createChildElement(Document document, Element parent,
 	    COElementAbstract child, boolean saveParentInfos) {
-	
+
 	try {
 	    if (child instanceof COContentResourceProxy) {
 		createChildElement(document, parent,
@@ -974,7 +971,7 @@ public class COModeled extends COSerialized {
     private void createCOContentResourceChild(Document document,
 	    Element coContentResourceProxyElem, COContentResource resource) {
 	Element coContentResourceElem = null;
-	
+
 	try {
 	    if (resource.getType().equals(COContentResourceType.PERSON)) {
 		coContentResourceElem =
@@ -1016,7 +1013,8 @@ public class COModeled extends COSerialized {
      */
     private void createCOCOntentRubricChild(Document document,
 	    Element coContentResourceProxyElem, COContentRubric rubric) {
-	Element coContentRubricElem = document.createElement(COPropertiesType.SEMANTIC_TAG);
+	Element coContentRubricElem =
+		document.createElement(COPropertiesType.SEMANTIC_TAG);
 	try {
 	    coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME, rubric
 		    .getKey());

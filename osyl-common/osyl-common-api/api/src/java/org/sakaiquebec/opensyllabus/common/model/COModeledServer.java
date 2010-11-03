@@ -443,8 +443,11 @@ public class COModeledServer {
 
 	elem.setAccess(map.getNamedItem(ACCESS_ATTRIBUTE_NAME).getNodeValue());
 
-	elem.setId(map.getNamedItem(ID_ATTRIBUTE_NAME) == null ? UUID.uuid()
-		: map.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue());
+	elem
+	.setId(map.getNamedItem(ID_ATTRIBUTE_NAME) == null ? UUID
+		.uuid() : map.getNamedItem(ID_ATTRIBUTE_NAME)
+		.getNodeValue().equals("") ? UUID.uuid() : map
+		.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue());
 
 	elem
 		.setEditable(map.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? true
@@ -1543,6 +1546,8 @@ public class COModeledServer {
 
     private void changeDocumentsUrlsToFitNewSiteName(
 	    COContentResourceProxy cocrp, Map<String, String> filenameChangesMap) {
+	// reset id of the resource
+	cocrp.getResource().setId(UUID.uuid());
 	if (!cocrp.getResource().getType().equals(COContentResourceType.URL)) {
 	    String uri =
 		    cocrp.getResource().getProperty(
