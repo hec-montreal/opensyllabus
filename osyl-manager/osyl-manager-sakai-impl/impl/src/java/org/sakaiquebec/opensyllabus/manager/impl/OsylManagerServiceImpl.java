@@ -1087,10 +1087,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     }
 
-    public void associate(String siteId, String parentId) throws Exception {
+    public void associate(String siteId, String parentId, String webapp) throws Exception {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] associates [" + siteId + "] to parent [" + parentId + "]");
-	osylSiteService.associate(siteId, parentId);
+	osylSiteService.associate(siteId, parentId, webapp);
     }
 
     public void dissociate(String siteId, String parentId) throws Exception {

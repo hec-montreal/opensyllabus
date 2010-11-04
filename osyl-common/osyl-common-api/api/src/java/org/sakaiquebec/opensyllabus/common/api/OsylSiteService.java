@@ -251,7 +251,7 @@ public interface OsylSiteService extends EntityProducer {
 
     public List<String> getChildren(String siteId) throws Exception;
 
-    public void associate(String siteId, String parentId) throws Exception;
+    public void associate(String siteId, String parentId, String webapp) throws Exception;
 
     public void dissociate(String siteId, String parentId) throws Exception;
 
@@ -302,6 +302,8 @@ public interface OsylSiteService extends EntityProducer {
     public COSerialized getCourseOutlineForExport(String siteId, String webappDir) throws Exception;
     
     public void deleteSite(String siteId) throws Exception;
+    
+    public void setCoContentWithTemplate(COSerialized co, String webappDir) throws Exception;
 
 
 }

@@ -549,15 +549,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     public COSerialized getCourseOutlineForExport(String siteId,
 	    String webappDir) throws Exception {
-	COSerialized co =getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
-	//create coContent if null
+	COSerialized co = getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
+	// create coContent if null
 	if (co.getContent() == null) {
-	    COConfigSerialized coConfig = co.getOsylConfig();
-	    coConfig =
-		    osylConfigService.getConfigByRef(coConfig.getConfigRef(),
-			    webappDir);
-	    co.setContent(osylConfigService.getXml(coConfig, co.getLang(),
-		    webappDir));
+	    setCoContentWithTemplate(co, webappDir);
 	    resourceDao.createOrUpdateCourseOutline(co);
 	}
 	COConfigSerialized coConfig = co.getOsylConfig();
@@ -902,42 +897,13 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		thisCo =
 			new COSerialized(idManager.createUuid(),
 				osylConfigService.getCurrentLocale(), "shared",
-				"", siteId, "sectionId", coConfig,
-				osylConfigService.getXml(coConfig,
-					osylConfigService.getCurrentLocale(),
-					webappDir), "shortDescription",
-				"description", "title", false, null, null);
-		// reinitilaisation des uuids
-		SchemaHelper sh = new SchemaHelper(webappDir);
-		COModeledServer coModeled = new COModeledServer(thisCo);
-		coModeled.XML2Model();
-		coModeled.resetXML(null);
-		coModeled.setSchemaVersion(sh.getSchemaVersion());
-		coModeled.model2XML();
-		thisCo.setContent(coModeled.getSerializedContent());
-
+				"", siteId, "sectionId", coConfig, null,
+				"shortDescription", "description", "title",
+				false, null, null);
+		setCoContentWithTemplate(thisCo, webappDir);
 		resourceDao.createOrUpdateCourseOutline(thisCo);
 	    } else if (thisCo.getContent() == null) {
-		coConfig = thisCo.getOsylConfig();
-		// at the first call we got only the config id and ref. We need
-		// to fill the rules so the next call is used to get it.
-		coConfig =
-			osylConfigService.getConfigByRef(coConfig
-				.getConfigRef(), webappDir);
-		thisCo.setOsylConfig(coConfig);
-		thisCo.setContent(osylConfigService.getXml(coConfig, thisCo
-			.getLang(), webappDir));
-
-		// reinitilaisation des uuids et ajout titre et identifier
-		SchemaHelper sh = new SchemaHelper(webappDir);
-		COModeledServer coModeled = new COModeledServer(thisCo);
-		coModeled.XML2Model();
-		coModeled.resetXML(null);
-		coModeled.setSchemaVersion(sh.getSchemaVersion());
-		updateCOCourseInformations(siteId, coModeled);
-		coModeled.model2XML();
-		thisCo.setContent(coModeled.getSerializedContent());
-
+		setCoContentWithTemplate(thisCo, webappDir);
 		resourceDao.createOrUpdateCourseOutline(thisCo);
 	    } else {
 		coConfig = thisCo.getOsylConfig();
@@ -1134,7 +1100,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return children;
     }
 
-    public void associate(String siteId, String parentId) throws Exception {
+    public void associate(String siteId, String parentId, String webappDir)
+	    throws Exception {
 	COSerialized co;
 	try {
 	    co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
@@ -1147,6 +1114,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			    getFusionnedPrePublishedHierarchy(parentId);
 
 		    if (coModelParent != null) {
+			if (co.getContent() == null) {
+			    setCoContentWithTemplate(co, webappDir);
+			    resourceDao.createOrUpdateCourseOutline(co);
+			}
 			COModeledServer coModelChild = new COModeledServer(co);
 			// if(co.getSerializedContent()==null){
 			// coModelChild.setModeledContent(coModelParent.getModeledContent());
@@ -1652,6 +1623,24 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public void deleteSite(String siteId) throws Exception {
 	Site site = getSite(siteId);
 	siteService.removeSite(site);
+    }
+
+    public void setCoContentWithTemplate(COSerialized co, String webappDir)
+	    throws Exception {
+	COConfigSerialized coConfig = co.getOsylConfig();
+	coConfig =
+		osylConfigService.getConfigByRef(coConfig.getConfigRef(),
+			webappDir);
+	co.setContent(osylConfigService.getXml(coConfig, co.getLang(),
+		webappDir));
+	// reinitialisation de id
+	SchemaHelper sh = new SchemaHelper(webappDir);
+	COModeledServer coModeled = new COModeledServer(co);
+	coModeled.XML2Model();
+	coModeled.resetXML(null);
+	coModeled.setSchemaVersion(sh.getSchemaVersion());
+	coModeled.model2XML();
+	co.setContent(coModeled.getSerializedContent());
     }
 
 }

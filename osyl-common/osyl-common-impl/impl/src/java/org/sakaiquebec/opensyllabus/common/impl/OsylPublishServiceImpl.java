@@ -276,14 +276,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		+ (co.getTitle() == null ? siteId : co.getTitle()) + "]");
 
 	if (co.getContent() == null) {
-	    COConfigSerialized coConfig = co.getOsylConfig();
-	    coConfig =
-		    osylConfigService.getConfigByRef(coConfig.getConfigRef(),
-			    webappDir);
-	    co.setContent(osylConfigService.getXml(coConfig, co.getLang(),
-		    webappDir));
+	    osylSiteService.setCoContentWithTemplate(co, webappDir);
 	    resourceDao.createOrUpdateCourseOutline(co);
-	    
 	}
 	COModeledServer coModeled = new COModeledServer(co);
 
