@@ -128,8 +128,8 @@ public class DeleteAction extends OsylManagerAbstractAction {
 			    .OsylWarning_Title(), messages
 			    .deleteAction_delete_error_linkedToCM(), true,
 			    false);
-	    canc.center();
 	    canc.show();
+	    canc.centerAndFocus();
 	} else {
 	    String message = "";
 
@@ -158,8 +158,8 @@ public class DeleteAction extends OsylManagerAbstractAction {
 		    }
 		}
 	    });
-	    conf.center();
 	    conf.show();
+	    conf.centerAndFocus();
 	}
     }
 

@@ -72,8 +72,8 @@ public class PublishAction extends OsylManagerAbstractAction {
 		    publish(siteIds);
 		}
 	    });
-	    conf.center();
 	    conf.show();
+	    conf.centerAndFocus();
 	} else {
 	    publish(siteIds);
 	}
