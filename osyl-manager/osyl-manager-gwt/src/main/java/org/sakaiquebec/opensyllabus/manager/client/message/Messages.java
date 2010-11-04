@@ -22,7 +22,6 @@
 package org.sakaiquebec.opensyllabus.manager.client.message;
 
 import com.google.gwt.i18n.client.ConstantsWithLookup;
-import com.google.gwt.user.client.ui.Image;
 
 /**
  * Implements the message interface used by Osyl manager classes to retrieve the

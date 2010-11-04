@@ -275,6 +275,10 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	mainPanel.setCellHorizontalAlignment(ivDecoratorPanel,
 		HasHorizontalAlignment.ALIGN_CENTER);
 
+	okButton = new PushButton(messages.associateForm_ok());
+	okButton.setStylePrimaryName("Osyl-Button");
+	okButton.setWidth("50px");
+	
 	okButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		AssociateForm.super.hide();

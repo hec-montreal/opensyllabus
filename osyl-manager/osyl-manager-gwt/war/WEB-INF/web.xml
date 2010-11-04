@@ -10,12 +10,22 @@
 		<servlet-name>OsylManagerGwtServiceImpl</servlet-name>
 		<servlet-class>org.sakaiquebec.opensyllabus.manager.server.OsylManagerGwtServiceImpl</servlet-class>
 	</servlet>
-
+	
+	<servlet>
+		<servlet-name>remoteLoggingService</servlet-name>
+		<servlet-class>com.google.gwt.gen2.logging.server.RemoteLoggingService</servlet-class>
+	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>OsylManagerGwtServiceImpl</servlet-name>
 		<url-pattern>/OsylManagerGwtService</url-pattern>
 	</servlet-mapping>
 
+	<servlet-mapping>
+		<servlet-name>remoteLoggingService</servlet-name>
+		<url-pattern>/OsylManagerEntryPoint/logging</url-pattern>
+	</servlet-mapping>
+	
 	<!-- Default page to serve -->
 	<welcome-file-list>
 		<welcome-file>OsylManagerEntryPoint.html</welcome-file>

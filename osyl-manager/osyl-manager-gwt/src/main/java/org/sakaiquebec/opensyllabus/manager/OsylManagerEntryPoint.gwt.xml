@@ -8,8 +8,9 @@
 	<inherits name='com.google.gwt.xml.XML' />
 
 	<!-- to avoid error from common-shared -->
-	<inherits name='org.gwt.mosaic.Mosaic' />
+    <inherits name='org.gwt.mosaic.Mosaic' />
 	<inherits name='org.gwt.mosaic.actions.Actions' />
+	<inherits name='com.google.gwt.gen2.table.Table' />
 
 
 	<!-- Inherit the default GWT style sheet.  You can change       -->

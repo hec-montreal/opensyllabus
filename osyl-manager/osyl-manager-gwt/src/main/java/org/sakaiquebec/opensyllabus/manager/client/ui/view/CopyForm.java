@@ -239,6 +239,10 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	Label conf = new Label(messages.copyForm_confirmation());
 	mainPanel.add(conf);
 
+	okButton = new PushButton(messages.associateForm_ok());
+	okButton.setStylePrimaryName("Osyl-Button");
+	okButton.setWidth("50px");
+	
 	okButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		CopyForm.super.hide();
