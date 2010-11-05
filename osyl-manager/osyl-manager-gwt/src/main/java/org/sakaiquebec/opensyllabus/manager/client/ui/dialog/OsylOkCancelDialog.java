@@ -16,14 +16,12 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.dialog;
 import org.sakaiquebec.opensyllabus.manager.client.OsylManagerEntryPoint;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.message.Messages;
-import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -57,8 +55,7 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
 
     private boolean selectedValue = false;
     private Button okButton, cancelButton;
-    private String okButtonLabel =
-	    messages.OsylOKCancelDialog_Ok_Button();
+    private String okButtonLabel = messages.OsylOKCancelDialog_Ok_Button();
     private String cancelButtonLabel =
 	    messages.OsylOKCancelDialog_Cancel_Button();
 
@@ -99,7 +96,7 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
 	super(autoHide, modal);
 	initDialog(dialogTitle, dialogContent, true, true);
     }
-    
+
     public OsylOkCancelDialog(boolean autoHide, boolean modal,
 	    String dialogTitle, String dialogContent, boolean hasOkButton,
 	    boolean hasCancelButton) {
@@ -118,15 +115,13 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
      */
     public OsylOkCancelDialog(boolean autoHide, boolean modal,
 	    String dialogContent) {
-	this(autoHide, modal,
-		messages.OsylOkCancelDialog_Title(),
+	this(autoHide, modal, messages.OsylOkCancelDialog_Title(),
 		dialogContent);
     }
-    
+
     public OsylOkCancelDialog(boolean autoHide, boolean modal,
 	    String dialogContent, boolean hasOkButton, boolean hasCancelButton) {
-	this(autoHide, modal,
-		messages.OsylOkCancelDialog_Title(),
+	this(autoHide, modal, messages.OsylOkCancelDialog_Title(),
 		dialogContent, hasOkButton, hasCancelButton);
     }
 
@@ -150,10 +145,11 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
 	setCancelButtonLabel(cancelButtonLabel);
 	initDialog(dialogTitle, dialogContent, true, true);
     }
-    
+
     public OsylOkCancelDialog(boolean autoHide, boolean modal,
 	    String dialogTitle, String dialogContent, String okButtonLabel,
-	    String cancelButtonLabel, boolean hasOkButton, boolean hasCancelButton) {
+	    String cancelButtonLabel, boolean hasOkButton,
+	    boolean hasCancelButton) {
 	super(autoHide, modal);
 	setOkButtonLabel(okButtonLabel);
 	setCancelButtonLabel(cancelButtonLabel);
@@ -179,7 +175,7 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
 	// Create & add an option panel
 	HorizontalPanel optionPanel = new HorizontalPanel();
 	optionPanel.setSpacing(5);
-	
+
 	if (hasOkButton) {
 	    // Add OK button
 	    okButton = new Button(okButtonLabel);
@@ -192,7 +188,7 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
 		}
 	    });
 	}
-	
+
 	if (hasCancelButton) {
 	    // Add Cancel button
 	    cancelButton = new Button(cancelButtonLabel);
@@ -205,7 +201,7 @@ public class OsylOkCancelDialog extends OsylAbstractLightBox {
 		}
 	    });
 	}
-	
+
 	dialogVPanel.add(optionPanel);
 	// Set the contents of the Widget
 	// DialogBox is a SimplePanel, so you have to set its widget property to

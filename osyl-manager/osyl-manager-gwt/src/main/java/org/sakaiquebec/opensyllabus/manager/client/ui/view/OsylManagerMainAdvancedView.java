@@ -125,7 +125,7 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	    public void onKeyPress(KeyPressEvent event) {
 		if (event.getCharCode() == KeyCodes.KEY_ENTER) {
 		    courseListView.setSearchTerm(selectSiteInput.getText());
-		    courseListView.refresh();
+		    courseListView.refresh(true);
 		}
 	    }
 	});
@@ -139,7 +139,7 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 		courseListView.setSearchTerm(selectSiteInput.getText());
 		courseListView.setSelectedAcadSession(acadSessionListBox
 			.getValue(acadSessionListBox.getSelectedIndex()));
-		courseListView.refresh();
+		courseListView.refresh(true);
 	    }
 	});
 	

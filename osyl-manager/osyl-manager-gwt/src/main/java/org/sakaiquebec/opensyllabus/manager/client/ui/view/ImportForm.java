@@ -30,7 +30,6 @@ import org.sakaiquebec.opensyllabus.manager.client.ui.helper.ActionHelper;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -55,9 +54,9 @@ public class ImportForm extends OsylManagerAbstractWindowPanel implements
     private PushButton importSiteButton;
 
     private String siteId;
-    
+
     private final OsylCancelDialog diag;
-    
+
     AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 	public void onSuccess(Void serverResponse) {
 	    diag.hide();
@@ -65,9 +64,10 @@ public class ImportForm extends OsylManagerAbstractWindowPanel implements
 	}
 
 	public void onFailure(Throwable error) {
-	    OsylOkCancelDialog warning = new OsylOkCancelDialog(false,
-		    true, messages.OsylWarning_Title(),
-		    error.getMessage(), true, false);
+	    OsylOkCancelDialog warning =
+		    new OsylOkCancelDialog(false, true, messages
+			    .OsylWarning_Title(), error.getMessage(), true,
+			    false);
 	    warning.show();
 	    warning.centerAndFocus();
 	}
@@ -139,12 +139,13 @@ public class ImportForm extends OsylManagerAbstractWindowPanel implements
 		    controller.importData(url, siteId, callback);
 		} else {
 		    diag.hide();
-		    OsylOkCancelDialog warning = new OsylOkCancelDialog(false,
-			    true, messages.OsylWarning_Title(),
-			    messages.siteNotCreated(), true, false);
+		    OsylOkCancelDialog warning =
+			    new OsylOkCancelDialog(false, true, messages
+				    .OsylWarning_Title(), messages
+				    .siteNotCreated(), true, false);
 		    warning.show();
 		    warning.centerAndFocus();
-//		    return;
+		    // return;
 		}
 	    }
 	}); // new FormHandler (inner class)
@@ -153,7 +154,7 @@ public class ImportForm extends OsylManagerAbstractWindowPanel implements
 	setWidget(formPanel);
 	controller.addEventHandler(this);
     }
-    
+
     private String getFormAction() {
 	String url = GWT.getModuleBaseURL();
 	String cleanUrl = url.substring(0, url.indexOf("/", 8));
@@ -178,8 +179,7 @@ public class ImportForm extends OsylManagerAbstractWindowPanel implements
 	    });
 	    mainPanel.add(edit);
 
-	    PushButton closeButton =
-		    new PushButton(messages.form_close());
+	    PushButton closeButton = new PushButton(messages.form_close());
 	    closeButton.setWidth("40px");
 	    closeButton.setStylePrimaryName("Osyl-Button");
 	    closeButton.addClickHandler(new ClickHandler() {
