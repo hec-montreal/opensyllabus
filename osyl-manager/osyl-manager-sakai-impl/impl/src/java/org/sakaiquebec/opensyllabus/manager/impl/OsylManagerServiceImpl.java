@@ -1087,7 +1087,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     }
 
-    public void associate(String siteId, String parentId, String webapp) throws Exception {
+    public void associate(String siteId, String parentId, String webapp)
+	    throws Exception {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] associates [" + siteId + "] to parent [" + parentId + "]");
 	osylSiteService.associate(siteId, parentId, webapp);
@@ -1621,13 +1622,38 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     public void copySite(String siteFrom, String siteTo) throws Exception {
+	long start = System.currentTimeMillis();
 	Site newSite = null;
 	Site oldSite = null;
-	
-	long start = System.currentTimeMillis();
 
 	newSite = siteService.getSite(siteTo);
 	oldSite = siteService.getSite(siteFrom);
+
+	String val2 = contentHostingService.getSiteCollection(newSite.getId());
+	String refString =
+		contentHostingService.getReference(val2).substring(8);
+
+	String id_publish = refString + PUBLISH_DIRECTORY + "/";
+	String id_work = refString + WORK_DIRECTORY + "/";
+	try {
+	    // We remove all resources in the work directory collection
+	    ContentCollection workContent =
+		    contentHostingService.getCollection(id_work);
+
+	    @SuppressWarnings("unchecked")
+	    List<ContentEntity> workMembers = workContent.getMemberResources();
+	    for (Iterator<ContentEntity> wMbrs = workMembers.iterator(); wMbrs
+		    .hasNext();) {
+		ContentEntity next = (ContentEntity) wMbrs.next();
+		String thisEntityRef = next.getId();
+		if (next.isCollection())
+		    contentHostingService.removeCollection(thisEntityRef);
+		else
+		    contentHostingService.removeResource(thisEntityRef);
+	    }
+	} catch (Exception e) {
+	    log.warn("Could not delete work content:" + e);
+	}
 
 	// get the tool id list
 	List<String> toolIdList = new Vector<String>();
@@ -1651,11 +1677,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	importToolIntoSiteMigrate(toolIdList, newSite, oldSite);
 
 	// We remove all resources in the publish directory collection
-	String val2 = contentHostingService.getSiteCollection(newSite.getId());
-	String refString =
-		contentHostingService.getReference(val2).substring(8);
-	String id_publish = (refString + PUBLISH_DIRECTORY + "/");
-
 	ContentCollection publishContent =
 		contentHostingService.getCollection(id_publish);
 
@@ -1673,21 +1694,18 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 
 	// we hide work directory
-	String id_work = refString + WORK_DIRECTORY + "/";
 	ContentCollectionEdit cce =
 		contentHostingService.editCollection(id_work);
 	cce.setHidden();
 	contentHostingService.commitCollection(cce);
 
-	//we update citation ids in the course outline 
+	// we update citation ids in the course outline
 	updateCitationIds(siteFrom, siteTo);
-	
+
 	siteService.save(newSite);
 
-	log.info("Finished copying site ["
-		+ siteFrom  + "] in "
+	log.info("Finished copying site [" + siteFrom + "] in "
 		+ (System.currentTimeMillis() - start) + " ms");
-
     }
 
     private void updateCitationIds(String oldSiteId, String newSiteId) {
@@ -1699,7 +1717,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		contentHostingService.getAllResources(siteColl);
 
 	String collId = null;
-	Map<String, CitationCollection> newCitations = new HashMap<String, CitationCollection>();
+	Map<String, CitationCollection> newCitations =
+		new HashMap<String, CitationCollection>();
 	List<Citation> fromColl = null;
 
 	for (ContentResource resource : resources) {
@@ -1741,11 +1760,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	CitationCollection newColl = null;
 	Citation newCitation = null;
-	
+
 	for (String id : oldCitations.keySet()) {
 	    uri = oldCitations.get(id);
 	    uri = uri.replaceFirst(newSiteId, oldSiteId);
-	    
+
 	    oldCollectionRef = uri.substring(0, uri.lastIndexOf("/"));
 	    try {
 		oldCollectionId =
@@ -1755,23 +1774,25 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			org.sakaiproject.citation.cover.CitationService
 				.getCollection(oldCollectionId);
 		oldCitation =
-			oldCollection.getCitation(uri.substring(uri
-				.lastIndexOf("/") +1, uri.length()).trim());
+			oldCollection.getCitation(uri.substring(
+				uri.lastIndexOf("/") + 1, uri.length()).trim());
 
 		for (String newCitationRef : newCitations.keySet()) {
-		    
-		    oldCollectionRef = oldCollectionRef.replaceFirst(oldSiteId, newSiteId);
-		    
+
+		    oldCollectionRef =
+			    oldCollectionRef.replaceFirst(oldSiteId, newSiteId);
+
 		    if (newCitationRef.contains(oldCollectionRef)) {
 			newColl = newCitations.get(newCitationRef);
 			newCitation =
 				newColl.getCitation(newCitationRef.substring(
-					newCitationRef.lastIndexOf("/") +1,
+					newCitationRef.lastIndexOf("/") + 1,
 					newCitationRef.length()).trim());
-			
-			//We update the citation id
-			if (compareCitations(oldCitation, newCitation)){
-			    citationsChangeMap.put(oldCitation.getId(), newCitation.getId());
+
+			// We update the citation id
+			if (compareCitations(oldCitation, newCitation)) {
+			    citationsChangeMap.put(oldCitation.getId(),
+				    newCitation.getId());
 			    continue;
 			}
 		    }
@@ -1784,8 +1805,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		e.printStackTrace();
 	    } catch (TypeException e) {
 		e.printStackTrace();
-	    }
-	    finally{
+	    } finally {
 		model.resetXML(citationsChangeMap);
 		model.model2XML();
 		co.setContent(model.getSerializedContent());
@@ -1798,7 +1818,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 
     }
-    
+
     private boolean compareCitations(Citation thisCitation,
 	    Citation otherCitation) {
 
@@ -1817,7 +1837,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return false;
 
     }
-    
+
     /**
      * @param state
      * @return Get a list of all tools that should be included as options for
