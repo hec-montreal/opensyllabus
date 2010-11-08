@@ -84,6 +84,7 @@ import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
 import org.sakaiquebec.opensyllabus.common.helper.FileHelper;
+import org.sakaiquebec.opensyllabus.common.helper.ModelHelper;
 import org.sakaiquebec.opensyllabus.common.helper.SchemaHelper;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
@@ -94,7 +95,7 @@ import org.w3c.dom.Element;
 
 /**
  * Implementation of the <code>OsylSiteService</code>
- *
+ * 
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -141,7 +142,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>CitationService</code>.
-     *
+     * 
      * @param citationService
      * @uml.property name="citationService"
      */
@@ -163,7 +164,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylConfigService}.
-     *
+     * 
      * @param osylConfigService
      */
     public void setConfigService(OsylConfigService osylConfigService) {
@@ -183,7 +184,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Dependency: EntityManager.
-     *
+     * 
      * @param service The EntityManager.
      */
     public void setEntityManager(EntityManager entityManager) {
@@ -192,7 +193,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylSecurityService}.
-     *
+     * 
      * @param securityService
      */
     public void setSecurityService(OsylSecurityService securityService) {
@@ -206,7 +207,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylSecurityService}.
-     *
+     * 
      * @param securityService
      */
     public void setOsylHierarchyService(OsylHierarchyService hierarchyService) {
@@ -215,7 +216,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>ContentHostingService</code>.
-     *
+     * 
      * @param contentHostingService
      */
     public void setContentHostingService(
@@ -225,7 +226,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link CORelationDao}.
-     *
+     * 
      * @param configDao
      */
     public void setCoRelationDao(CORelationDao relationDao) {
@@ -234,7 +235,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link ResourceDao}.
-     *
+     * 
      * @param resourceDao
      */
     public void setResourceDao(ResourceDao resourceDao) {
@@ -243,7 +244,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link COConfigDao}.
-     *
+     * 
      * @param configDao
      */
     public void setConfigDao(COConfigDao configDao) {
@@ -252,7 +253,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>SiteService</code>.
-     *
+     * 
      * @param siteService
      */
     public void setSiteService(SiteService siteService) {
@@ -424,23 +425,21 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
 	try {
 	    coModeled = (co == null) ? null : new COModeledServer(co);
-	    if (parentId == null) {
-		if (coModeled != null)
+	    if (coModeled != null) {
+		if (parentId == null) {
 		    coModeled.XML2Model();
-		return coModeled;
-	    } else {
-		COModeledServer parentModel =
-			getFusionnedPrePublishedHierarchy(parentId);
-		if (parentModel != null && coModeled != null) {
-		    coModeled.XML2Model();
-		    coModeled.fusion(parentModel);
+		} else {
+		    COModeledServer parentModel =
+			    getFusionnedPrePublishedHierarchy(parentId);
+		    if (parentModel != null) {
+			coModeled.XML2Model();
+			coModeled.fusion(parentModel);
+		    }
 		}
-
 	    }
 	} catch (Exception e) {
 	    log.error(e.getLocalizedMessage(), e);
 	}
-
 	return coModeled;
     }
 
@@ -733,7 +732,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Add a collection (similar to a sub-directory) under the resource tool.
-     *
+     * 
      * @param dir name of collection
      * @param parent where to create it (null means top-level)
      * @return boolean whether the collection was added or not
@@ -762,7 +761,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Tells if a collection is already created in sakai.
-     *
+     * 
      * @param a String of the collection id.
      * @return boolean whether the collection exists
      */
@@ -778,7 +777,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Get a valid resource reference base site URL to be used in later calls.
-     *
+     * 
      * @return a String of the base URL
      */
     private String getSiteReference(Site site) {
@@ -960,7 +959,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @throws Exception
      */
     public COSerialized getSerializedCourseOutline(String id, String webappDir)
@@ -978,7 +977,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @throws Exception
      */
     public String updateSerializedCourseOutline(COSerialized co)
@@ -1005,7 +1004,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      * Writes the XML into a temp file. This is a temporary measure. TODO
      * SAKAI-1932: find a better way to backup course outlines, possibly
      * computing differences and limiting how long and how many copies are kept.
-     *
+     * 
      * @param co
      * @throws IOException
      */
@@ -1112,32 +1111,17 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		if (parentId != null) {
 		    COModeledServer coModelParent =
 			    getFusionnedPrePublishedHierarchy(parentId);
-
 		    if (coModelParent != null) {
 			if (co.getContent() == null) {
 			    setCoContentWithTemplate(co, webappDir);
-			    resourceDao.createOrUpdateCourseOutline(co);
 			}
-			COModeledServer coModelChild = new COModeledServer(co);
-			// if(co.getSerializedContent()==null){
-			// coModelChild.setModeledContent(coModelParent.getModeledContent());
-			// coModelChild.resetUuid();
-			// }else{
-			coModelChild.XML2Model();
-			// }
-
-			coModelChild.associate(coModelParent);
-			coModelChild.model2XML();
-			co.setContent(coModelChild.getSerializedContent());
+			ModelHelper.createAssociationInXML(co, coModelParent);
 			resourceDao.createOrUpdateCourseOutline(co);
-			coRelationDao.createRelation(siteId, parentId);
-
-			// We update the users
-			osylHierarchyService.addOrUpdateUsers(siteId);
-		    } else {
-			throw new Exception("Parent course outline is null");
 		    }
 		}
+		coRelationDao.createRelation(siteId, parentId);
+		// We update the users
+		osylHierarchyService.addOrUpdateUsers(siteId);
 	    } else {
 		throw new Exception("Child course outline is null");
 	    }

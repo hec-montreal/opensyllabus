@@ -49,6 +49,7 @@ import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
 import org.sakaiquebec.opensyllabus.common.helper.FOPHelper;
 import org.sakaiquebec.opensyllabus.common.helper.FileHelper;
+import org.sakaiquebec.opensyllabus.common.helper.ModelHelper;
 import org.sakaiquebec.opensyllabus.common.helper.XmlHelper;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
@@ -302,6 +303,26 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    publishedCO.setAccess("");
 	    publishedCO.setPublished(true);
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
+
+	    List<CORelation> childrens =
+		    coRelationDao.getCourseOutlineChildren(siteId);
+	    if (childrens != null && !childrens.isEmpty()) {
+		// site have childrens associated (only in corelation table, not
+		// in xml cause there was no published xml before).
+		// We must associate to parent now
+		for (CORelation coRelation : childrens) {
+		    co =
+			    resourceDao
+				    .getSerializedCourseOutlineBySiteId(coRelation
+					    .getChild());
+		    COModeledServer coModelParent =
+			    osylSiteService
+				    .getFusionnedPrePublishedHierarchy(siteId);
+		    ModelHelper.createAssociationInXML(co, coModelParent);
+		    resourceDao.createOrUpdateCourseOutline(co);
+		}
+
+	    }
 	} else {
 	    publishedCO.setContent(co.getContent());
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
@@ -317,7 +338,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	publication(co.getSiteId(), webappDir);
 
-	//
 	// change publication date
 	TreeMap<String, String> publicationProperties =
 		new TreeMap<String, String>();
