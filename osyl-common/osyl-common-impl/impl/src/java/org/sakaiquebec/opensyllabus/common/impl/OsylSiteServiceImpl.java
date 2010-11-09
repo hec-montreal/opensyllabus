@@ -39,6 +39,7 @@ import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.assignment.api.Assignment;
 import org.sakaiproject.assignment.api.AssignmentEdit;
 import org.sakaiproject.assignment.api.AssignmentService;
+import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
@@ -92,6 +93,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
 
 /**
  * Implementation of the <code>OsylSiteService</code>
@@ -584,6 +586,19 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public String createSite(String siteTitle, String configRef, String lang)
 	    throws Exception {
 	Site site = null;
+	
+	if (osylSecurityService
+		.getCurrentUserRole()
+		.equals(
+			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)) {
+	    SecurityService.pushAdvisor(new org.sakaiproject.authz.api.SecurityAdvisor() {
+		public SecurityAdvice isAllowed(String userId,
+			String function, String reference) {
+		    return SecurityAdvice.ALLOWED;
+		}
+	    });
+
+	}
 	if (!siteService.siteExists(siteTitle)) {
 	    site = siteService.addSite(siteTitle, SITE_TYPE);
 	    site.setTitle(siteTitle);
@@ -609,7 +624,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    contentHostingService.editCollection(directoryId);
 	    cce.setHidden();
 	    contentHostingService.commitCollection(cce);
-
+	    
 	    // we add the default citationList
 	    // TODO I18N
 	    String citationListName = "Références bibliographiques du cours";
@@ -667,6 +682,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    "Could not create site because site with title='"
 			    + siteTitle + "' already exists");
 	}
+
+	if (osylSecurityService
+		.getCurrentUserRole()
+		.equals(
+			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)) {
+	    SecurityService.clearAdvisors();
+	}
+
 	return site.getId();
     }
 

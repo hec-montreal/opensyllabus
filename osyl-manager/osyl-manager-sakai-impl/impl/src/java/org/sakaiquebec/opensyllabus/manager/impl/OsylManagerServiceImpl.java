@@ -57,6 +57,7 @@ import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.SecurityAdvisor;
+import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
 import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.authz.cover.FunctionManager;
 import org.sakaiproject.authz.cover.SecurityService;
@@ -1626,6 +1627,19 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	Site newSite = null;
 	Site oldSite = null;
 
+	if (osylSecurityService
+		.getCurrentUserRole()
+		.equals(
+			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)) {
+	    SecurityService.pushAdvisor(new org.sakaiproject.authz.api.SecurityAdvisor() {
+		public SecurityAdvice isAllowed(String userId,
+			String function, String reference) {
+		    return SecurityAdvice.ALLOWED;
+		}
+	    });
+
+	}
+
 	newSite = siteService.getSite(siteTo);
 	oldSite = siteService.getSite(siteFrom);
 
@@ -1703,6 +1717,14 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	updateCitationIds(siteFrom, siteTo);
 
 	siteService.save(newSite);
+	
+	if (osylSecurityService
+		.getCurrentUserRole()
+		.equals(
+			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)) {
+	    SecurityService.clearAdvisors();
+	}
+
 
 	log.info("Finished copying site [" + siteFrom + "] in "
 		+ (System.currentTimeMillis() - start) + " ms");
