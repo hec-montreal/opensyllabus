@@ -65,18 +65,6 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 
     private DateTimeFormat dateTimeFormat;
 
-    /**
-     * Constructor specifying the {@link OsylAbstractView} this editor is
-     * working for and whether the edition mode is activated by clicking on the
-     * main panel or not.
-     * 
-     * @param parent
-     */
-    public OsylCOUnitAssessmentLabelEditor(OsylAbstractView parent) {
-	this(parent, false);
-
-    }
-
     public OsylCOUnitAssessmentLabelEditor(OsylAbstractView parent,
 	    boolean isDeletable) {
 	super(parent, isDeletable);
@@ -137,7 +125,6 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	    }
 	}
 
-	// }
 	if (typeListBox.getSelectedIndex() == 0) {
 	    messages +=
 		    getView().getUiMessage("Global.field.required",
@@ -146,23 +133,19 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	    ok = false;
 	}
 
-	if (!isDeletable()) {
-
-	    if (localisationListBox.getSelectedIndex() == 0) {
-		messages +=
-			getView().getUiMessage("Global.field.required",
-				getUiMessage("Assessment.location"))
-				+ "\n";
-		ok = false;
-	    }
-	    if (modeListBox.getSelectedIndex() == 0) {
-		messages +=
-			getView().getUiMessage("Global.field.required",
-				getUiMessage("Assessment.mode"))
-				+ "\n";
-		ok = false;
-	    }
-
+	if (localisationListBox.getSelectedIndex() == 0) {
+	    messages +=
+		    getView().getUiMessage("Global.field.required",
+			    getUiMessage("Assessment.location"))
+			    + "\n";
+	    ok = false;
+	}
+	if (modeListBox.getSelectedIndex() == 0) {
+	    messages +=
+		    getView().getUiMessage("Global.field.required",
+			    getUiMessage("Assessment.mode"))
+			    + "\n";
+	    ok = false;
 	}
 	// date validation
 	if (!errordate && !endDateString.trim().equals("")) {
@@ -241,17 +224,18 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 
 	super.enterView();
 
-	if(getView().getTextFromModel()!= null &&
-	   getView().getTextFromModel().length() > 0){
-		String rating =
-			(getView().getWeight() != null && !getView().getWeight()
-				.equals("")) ? " (" + getView().getWeight() + "%)" : "";
-	
-		String date =
-			(getView().getDateEnd() != null) ? ("  " + dateTimeFormat
-				.format(getView().getDateEnd())) : "";
-	
-		setText(getView().getTextFromModel() + rating + date);
+	if (getView().getTextFromModel() != null
+		&& getView().getTextFromModel().length() > 0) {
+	    String rating =
+		    (getView().getWeight() != null && !getView().getWeight()
+			    .equals("")) ? " (" + getView().getWeight() + "%)"
+			    : "";
+
+	    String date =
+		    (getView().getDateEnd() != null) ? ("  " + dateTimeFormat
+			    .format(getView().getDateEnd())) : "";
+
+	    setText(getView().getTextFromModel() + rating + date);
 	}
 	// If we are in read-only mode, we return now to not add buttons and
 	// listeners enabling edition or deletion:
@@ -388,45 +372,52 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 		typeListBox.addItem(getView().getCoMessage(evalTypeKey));
 	    }
 	}
-	
-	boolean editExamDate = false; 
-	if(getController().getOsylConfig().getSettings().containsKey("assessement.exam.date.editable") &&
-	   getController().getOsylConfig().getSettings().getSettingsProperty("assessement.exam.date.editable").equals("true")){
-		editExamDate = true;
+
+	boolean editExamDate = false;
+	if (getController().getOsylConfig().getSettings().containsKey(
+		"assessement.exam.date.editable")
+		&& getController().getOsylConfig().getSettings()
+			.getSettingsProperty("assessement.exam.date.editable")
+			.equals("true")) {
+	    editExamDate = true;
 	}
-	
-	if(!editExamDate){
-		typeListBox.addChangeHandler(new ChangeHandler() {
-	
-		    public void onChange(ChangeEvent event) {
-			int selectedIndex = typeListBox.getSelectedIndex();
-			setText(typeListBox.getItemText(selectedIndex));
-			typeListBox.setSelectedIndex(selectedIndex);
-			if (getText().equals(
-				getView().getCoMessage("Assessment.Type.intra_exam"))
-				|| getText().equals(
-					getView().getCoMessage(
-						"Assessment.Type.final_exam"))) {
-			    dateDateBox.setValue(null);
-			    dateDateBox.setEnabled(false);
-			} else {
-			    dateDateBox.setEnabled(true);
-			}
+
+	if (!editExamDate) {
+	    typeListBox.addChangeHandler(new ChangeHandler() {
+
+		public void onChange(ChangeEvent event) {
+		    int selectedIndex = typeListBox.getSelectedIndex();
+		    setText(typeListBox.getItemText(selectedIndex));
+		    typeListBox.setSelectedIndex(selectedIndex);
+		    if (getText()
+			    .equals(
+				    getView().getCoMessage(
+					    "Assessment.Type.intra_exam"))
+			    || getText().equals(
+				    getView().getCoMessage(
+					    "Assessment.Type.final_exam"))) {
+			dateDateBox.setValue(null);
+			dateDateBox.setEnabled(false);
+		    } else {
+			dateDateBox.setEnabled(true);
 		    }
-	
-		});
+		}
+
+	    });
 	}
 	selectItemListBox(typeListBox, getView().getAssessmentType());
-	if(!editExamDate){
-		if (getView().getAssessmentType() != null
-			&& (getView().getAssessmentType().equals(
-				getView().getCoMessage("Assessment.Type.intra_exam")) || getView()
-				.getAssessmentType().equals(
-					getView().getCoMessage(
-						"Assessment.Type.final_exam")))) {
-		    dateDateBox.setValue(null);
-		    dateDateBox.setEnabled(false);
-		}
+	if (!editExamDate) {
+	    if (getView().getAssessmentType() != null
+		    && (getView().getAssessmentType()
+			    .equals(
+				    getView().getCoMessage(
+					    "Assessment.Type.intra_exam")) || getView()
+			    .getAssessmentType().equals(
+				    getView().getCoMessage(
+					    "Assessment.Type.final_exam")))) {
+		dateDateBox.setValue(null);
+		dateDateBox.setEnabled(false);
+	    }
 	}
 	typePanel.add(l9);
 	typePanel.add(typeListBox);
@@ -441,25 +432,19 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	    }
 	    vp.add(ligneSuper);
 	}
-	if (isDeletable()) {
-	    ligne1.add(typePanel);
-	    ligne1.add(ponderationPanel);
-	    ligne1.add(endDatePanel);
-	    vp.add(ligne1);
-	} else {
-	    ligne1.add(typePanel);
-	    ligne1.add(ponderationPanel);
-	    ligne1.add(localisationPanel);
-	    // ligne1.add(livrablePanel);
 
-	    ligne2.add(modePanel);
-	    ligne2.add(endDatePanel);
-	    ligne2.add(subTypePanel);
-	    // ligne2.add(scopePanel);
+	ligne1.add(typePanel);
+	ligne1.add(ponderationPanel);
+	ligne1.add(localisationPanel);
+	// ligne1.add(livrablePanel);
 
-	    vp.add(ligne1);
-	    vp.add(ligne2);
-	}
+	ligne2.add(modePanel);
+	ligne2.add(endDatePanel);
+	ligne2.add(subTypePanel);
+	// ligne2.add(scopePanel);
+
+	vp.add(ligne1);
+	vp.add(ligne2);
 
 	return new Widget[] { vp };
     }
