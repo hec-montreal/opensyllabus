@@ -768,7 +768,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		SitePage sitePage = (SitePage) iter.next();
 		if (!sitePage.getTools(
 			new String[] { "sakai.opensyllabus.tool" }).isEmpty()) {
-		    if (osylSiteService.hasBeenPublished(site.getId())) {
+		    //if (osylSiteService.hasBeenPublished(site.getId())) {
 			boolean isInHierarchy = false;
 			for (String siteId : siteIds) {
 			    isInHierarchy =
@@ -778,7 +778,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			}
 			if (!isInHierarchy)
 			    siteMap.put(site.getId(), site.getTitle());
-		    }
+		    //}
 		    break;
 		}
 	    }
@@ -1088,11 +1088,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     }
 
-    public void associate(String siteId, String parentId, String webapp)
+    public void associate(String siteId, String parentId)
 	    throws Exception {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] associates [" + siteId + "] to parent [" + parentId + "]");
-	osylSiteService.associate(siteId, parentId, webapp);
+	osylSiteService.associate(siteId, parentId);
     }
 
     public void dissociate(String siteId, String parentId) throws Exception {

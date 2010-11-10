@@ -37,5 +37,4 @@ public class ModelHelper {
 	coModelChild.model2XML();
 	co.setContent(coModelChild.getSerializedContent());
     }
-
 }

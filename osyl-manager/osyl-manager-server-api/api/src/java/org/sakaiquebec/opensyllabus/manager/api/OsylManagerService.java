@@ -125,7 +125,7 @@ public interface OsylManagerService {
 
     public String getParent(String siteId) throws Exception;
 
-    public void associate(String siteId, String parentId, String webapp) throws Exception;
+    public void associate(String siteId, String parentId) throws Exception;
 
     public void dissociate(String siteId, String parentId) throws Exception;
 

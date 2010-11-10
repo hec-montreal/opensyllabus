@@ -311,15 +311,15 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		// in xml cause there was no published xml before).
 		// We must associate to parent now
 		for (CORelation coRelation : childrens) {
-		    co =
+		    COSerialized coChild =
 			    resourceDao
 				    .getSerializedCourseOutlineBySiteId(coRelation
 					    .getChild());
 		    COModeledServer coModelParent =
 			    osylSiteService
 				    .getFusionnedPrePublishedHierarchy(siteId);
-		    ModelHelper.createAssociationInXML(co, coModelParent);
-		    resourceDao.createOrUpdateCourseOutline(co);
+		    ModelHelper.createAssociationInXML(coChild, coModelParent);
+		    resourceDao.createOrUpdateCourseOutline(coChild);
 		}
 
 	    }

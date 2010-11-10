@@ -433,8 +433,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		} else {
 		    COModeledServer parentModel =
 			    getFusionnedPrePublishedHierarchy(parentId);
+		    coModeled.XML2Model();
 		    if (parentModel != null) {
-			coModeled.XML2Model();
 			coModeled.fusion(parentModel);
 		    }
 		}
@@ -1122,8 +1122,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return children;
     }
 
-    public void associate(String siteId, String parentId, String webappDir)
-	    throws Exception {
+    public void associate(String siteId, String parentId) throws Exception {
 	COSerialized co;
 	try {
 	    co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
@@ -1134,10 +1133,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		if (parentId != null) {
 		    COModeledServer coModelParent =
 			    getFusionnedPrePublishedHierarchy(parentId);
-		    if (coModelParent != null) {
-			if (co.getContent() == null) {
-			    setCoContentWithTemplate(co, webappDir);
-			}
+		    if (coModelParent != null && co.getContent() != null) {
 			ModelHelper.createAssociationInXML(co, coModelParent);
 			resourceDao.createOrUpdateCourseOutline(co);
 		    }
@@ -1640,12 +1636,25 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			webappDir);
 	co.setContent(osylConfigService.getXml(coConfig, co.getLang(),
 		webappDir));
-	// reinitialisation de id
+
 	SchemaHelper sh = new SchemaHelper(webappDir);
 	COModeledServer coModeled = new COModeledServer(co);
 	coModeled.XML2Model();
+	// reinitialisation de id
 	coModeled.resetXML(null);
 	coModeled.setSchemaVersion(sh.getSchemaVersion());
+	// associate with parent if exist
+	String parentId = null;
+	try{
+	    parentId=coRelationDao.getParentOfCourseOutline(co.getSiteId());
+	}catch (Exception e) {
+	}
+	if (parentId != null && !parentId.equals("")) {
+	    COModeledServer coModelParent =
+		    getFusionnedPrePublishedHierarchy(parentId);
+	    if (coModelParent != null)
+		coModeled.associate(coModelParent);
+	}
 	coModeled.model2XML();
 	co.setContent(coModeled.getSerializedContent());
     }

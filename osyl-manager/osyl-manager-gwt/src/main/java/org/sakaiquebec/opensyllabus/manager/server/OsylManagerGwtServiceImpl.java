@@ -129,8 +129,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     }
 
     public void associate(String siteId, String parentId) throws Exception {
-	String webappDir = getServletContext().getRealPath("/");
-	osylManagerServices.getOsylManagerService().associate(siteId, parentId, webappDir);
+	osylManagerServices.getOsylManagerService().associate(siteId, parentId);
     }
 
     public void dissociate(String siteId, String parentId) throws Exception {

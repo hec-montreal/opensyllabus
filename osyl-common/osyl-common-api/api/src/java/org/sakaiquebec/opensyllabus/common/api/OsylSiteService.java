@@ -251,7 +251,7 @@ public interface OsylSiteService extends EntityProducer {
 
     public List<String> getChildren(String siteId) throws Exception;
 
-    public void associate(String siteId, String parentId, String webapp) throws Exception;
+    public void associate(String siteId, String parentId) throws Exception;
 
     public void dissociate(String siteId, String parentId) throws Exception;
 
@@ -295,14 +295,42 @@ public interface OsylSiteService extends EntityProducer {
      */
     public String getSiteName(String sectionId);
 
+    /**
+     * Retrive date of last publication
+     * @param siteId
+     * @return
+     */
     public Date getCoLastPublicationDate(String siteId);
 
+    /**
+     * Get date of last modification
+     * @param siteId
+     * @return
+     */
     public Date getCoLastModifiedDate(String siteId);
 
+    /**
+     * Get co for export
+     * @param siteId
+     * @param webappDir
+     * @return
+     * @throws Exception
+     */
     public COSerialized getCourseOutlineForExport(String siteId, String webappDir) throws Exception;
     
+    /**
+     * delete site (all xml related to this site)
+     * @param siteId
+     * @throws Exception
+     */
     public void deleteSite(String siteId) throws Exception;
     
+    /**
+     * 
+     * @param co
+     * @param webappDir
+     * @throws Exception
+     */
     public void setCoContentWithTemplate(COSerialized co, String webappDir) throws Exception;
 
 

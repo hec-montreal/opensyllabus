@@ -32,24 +32,24 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.cover.AuthzGroupService;
-import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.coursemanagement.api.CanonicalCourse;
+import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.CourseSet;
-import org.sakaiproject.coursemanagement.api.CourseManagementService;
+import org.sakaiproject.coursemanagement.api.Enrollment;
 import org.sakaiproject.coursemanagement.api.Membership;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.email.cover.EmailService;
 import org.sakaiproject.event.cover.EventTrackingService;
 import org.sakaiproject.event.cover.UsageSessionService;
-import org.sakaiproject.util.StringUtil;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.cover.UserDirectoryService;
+import org.sakaiproject.util.StringUtil;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
@@ -123,7 +123,6 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	loginToSakai();
 	Date startDateInterval = adminConfigService.getStartDate();
 	Date endDateInterval = adminConfigService.getEndDate();
-	boolean all = false;
 	// If we have a list of courses, we will create only those one. If we
 	// don't we create
 	// any course defined in the given sessions
@@ -136,8 +135,6 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	List<AcademicSession> allSessions =
 		getSessions(startDateInterval, endDateInterval);
 
-	String siteName = null;
-
 	if (courses != null && courses.size() > 0) {
 	    for (String courseId : courses) {
 		if (cmService.isCanonicalCourseDefined(courseId))
@@ -147,21 +144,20 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	} else {
 	    // Retrieve all the course sets
 	    allCourseSets = cmService.getCourseSets();
-	   
+
 	    for (CourseSet courseSet : allCourseSets) {
 
 		// Retrieve the canonical courses
 		canonicalCourses =
 			cmService.getCanonicalCourses(courseSet.getEid());
-		for (CanonicalCourse canCourse: canonicalCourses){
+		for (CanonicalCourse canCourse : canonicalCourses) {
 		    courses.add(canCourse.getEid());
 		}
-		
+
 	    }
 	}
 
 	String canCourseId = null;
-	String lang = null;
 
 	for (CanonicalCourse canCourse : canonicalCourses) {
 	    canCourseId = canCourse.getEid();
@@ -170,8 +166,8 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	    // If the list is not empty and the course is not inside, we
 	    // don't create it
 	    if (courses != null)
-		    if (!courses.contains(canCourseId.trim()))
-			continue;
+		if (!courses.contains(canCourseId.trim()))
+		    continue;
 
 	    // Retrieve the course offerings
 	    courseOffs =
@@ -190,52 +186,96 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 				    cmService.getSections(courseOff.getEid());
 
 			    // Create sharable site if necessary
+			    String shareableName = null;
 			    if (hasSharable(sections))
-				createShareable(courseOff);
+				shareableName = createShareable(courseOff);
 
 			    // Create site for section
 			    if (sections != null) {
 				String sectionId = null;
+				List<String> dfSections =
+					new ArrayList<String>();
+				String firstSection = null;
+				// create 'normal section'
 				for (Section section : sections) {
 				    sectionId = section.getEid();
-				    if (!sectionId.matches(".*[Dd][Ff][1-9]")) {
-					siteName = getSiteName(section);
-					if (section.getLang() == null)
-					    lang = TEMPORARY_LANG;
-					else
-					    lang = section.getLang();
-					try {
-					    if (!osylSiteService
-						    .siteExists(siteName)) {
-						osylSiteService.createSite(
-							siteName,
-							OSYL_CO_CONFIG, lang);
-					    }
-					} catch (Exception e) {
-					    log
-						    .debug("The site creation had the following problem: "
-							    + e.getMessage());
+				    if (!isDfSection(sectionId)) {
+					createSite(section);
+					String siteName = getSiteName(section);
+					if (shareableName != null) {
+					    associate(siteName, shareableName);
 					}
-					try {
-					    osylManagerService.associateToCM(
-						    section.getEid(), siteName);
-					} catch (Exception e) {
-					    log
-						    .debug("The association of the site to a course of the course management has not been successful: "
-							    + e.getMessage());
+					if (firstSection == null) {
+					    firstSection = siteName;
+					} else {
+					    if (siteName
+						    .compareTo(firstSection) < 0)
+						firstSection = siteName;
+					}
+				    } else {
+					// we create site DF only if there is
+					// students
+					Set<Enrollment> enrollments =
+						cmService
+							.getEnrollments(section
+								.getEnrollmentSet()
+								.getEid());
+					if (enrollments.size() > 0) {
+					    createSite(section);
+					    dfSections
+						    .add(getSiteName(section));
 					}
 				    }
 				}
-			    }
 
+				// associate df with 1st 'normal' course
+				for (String dfSite : dfSections) {
+				    associate(dfSite, firstSection);
+				}
+			    }
 			}
 		    }
 		}
 	    }
 	}
-
 	logoutFromSakai();
     } // execute
+
+    private void associate(String child, String parent) {
+	try {
+	    osylSiteService.associate(child, parent);
+	} catch (Exception e) {
+	    log.error("Could not associate site " + child + " with site "
+		    + parent, e);
+	}
+    }
+
+    private boolean createSite(Section section) {
+	String siteName = getSiteName(section);
+	String lang;
+	if (section.getLang() == null)
+	    lang = TEMPORARY_LANG;
+	else
+	    lang = section.getLang();
+	try {
+	    if (!osylSiteService.siteExists(siteName)) {
+		osylSiteService.createSite(siteName, OSYL_CO_CONFIG, lang);
+		return true;
+	    } else {
+		return false;
+	    }
+
+	} catch (Exception e) {
+	    log.error("Could not create site " + siteName, e);
+	}
+	try {
+	    osylManagerService.associateToCM(section.getEid(), siteName);
+	} catch (Exception e) {
+	    log.error("Could not associate site " + siteName + " with CM", e);
+	}
+	log.debug("Creation finished for site " + siteName);
+	return false;
+    }
 
     private boolean hasSharable(Set<Section> sections) {
 	int nbSections = 0;
@@ -243,7 +283,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
 	for (Section section : sections) {
 	    sectionId = section.getEid();
-	    if (!sectionId.matches(".*[Dd][Ff][1-9]"))
+	    if (!isDfSection(sectionId))
 		nbSections++;
 	}
 
@@ -252,8 +292,12 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	else
 	    return false;
     }
+    
+    private boolean isDfSection(String sectionId){
+	return sectionId.matches(".*[Dd][Ff][1-9]");
+    }
 
-    private void createShareable(CourseOffering course) {
+    private String createShareable(CourseOffering course) {
 	String siteName = getSharableSiteName(course);
 	Set<Membership> sectionMembers = new HashSet<Membership>();
 
@@ -309,7 +353,9 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
 	} catch (Exception e) {
 	    log.error(e.getMessage());
+	    return null;
 	}
+	return siteName;
     }
 
     protected List<String> getHeaders(String receiverEmail, String subject,
@@ -469,15 +515,16 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 				    + courseIdBack;
 
 		}
-		if (canCourseId.length() == 7){
+		if (canCourseId.length() == 7) {
 		    courseIdFront = canCourseId.substring(0, 1);
 		    courseIdMiddle = canCourseId.substring(1, 4);
 		    courseIdBack = canCourseId.substring(4);
 		    courseId =
-			    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
-		    
+			    courseIdFront + "-" + courseIdMiddle + "-"
+				    + courseIdBack;
+
 		}
-	    }else
+	    } else
 		courseId = canCourseId;
 	}
 	sessionTitle = getSessionName(session);
