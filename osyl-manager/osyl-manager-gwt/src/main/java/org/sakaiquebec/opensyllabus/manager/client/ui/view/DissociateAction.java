@@ -45,8 +45,6 @@ public class DissociateAction extends OsylManagerAbstractAction {
 
     private static int asynCB_OK = 0;
 
-    private OsylUnobtrusiveAlert alert;
-
     private class DissociateAsynCallBack implements AsyncCallback<Void> {
 
 	private String siteId;
@@ -89,7 +87,7 @@ public class DissociateAction extends OsylManagerAbstractAction {
 		}
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
-		alert = new OsylUnobtrusiveAlert(msg);
+		new OsylUnobtrusiveAlert(msg);
 	    }
 	}
 

@@ -48,6 +48,7 @@ public class UnattachAction extends OsylManagerAbstractAction {
     private class UnattachAsyncCallback implements AsyncCallback<Void> {
 
 	private String siteId;
+	
 
 	public UnattachAsyncCallback(String siteId) {
 	    super();
@@ -84,7 +85,7 @@ public class UnattachAction extends OsylManagerAbstractAction {
 		    warning.centerAndFocus();
 		}else{
 		    msg = messages.unattachAction_unattach_ok();
-		    alert = new OsylUnobtrusiveAlert(msg);
+		    new OsylUnobtrusiveAlert(msg);
 		}
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
