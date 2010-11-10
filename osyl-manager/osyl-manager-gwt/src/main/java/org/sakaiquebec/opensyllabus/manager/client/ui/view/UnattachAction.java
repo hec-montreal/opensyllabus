@@ -44,8 +44,6 @@ public class UnattachAction extends OsylManagerAbstractAction {
     private static int asynCB_return = 0;
 
     private static int asynCB_OK = 0;
-    
-    private OsylUnobtrusiveAlert alert;
 
     private class UnattachAsyncCallback implements AsyncCallback<Void> {
 
