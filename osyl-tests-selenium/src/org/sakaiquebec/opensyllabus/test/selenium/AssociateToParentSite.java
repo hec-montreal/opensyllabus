@@ -109,16 +109,17 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 			    "//div[@class='OsylManager-action OsylManager-action-down-hovering' and ./div[contains(.,'Lier')]]");
 	    pause();
 	    int i =0;
-	    while(!session().isElementPresent("//select[@class='OsylManager-form-element']/option[@value='"+parentSiteName+"']") && i<ALLOWED_TRIES){
+	    while(!session().isElementPresent("//table[@class='OsylManager-form-element']/tbody/tr/td/select[@class='gwt-ListBox']/option[@value='"
+		    +parentSiteName+"']") && i<ALLOWED_TRIES){
 		pause();
 		i++;
 	    }
 	    if(!session().isElementPresent(
-		    "//select[@class='OsylManager-form-element']/option[@value='"
+		    "//table[@class='OsylManager-form-element']/tbody/tr/td/select[@class='gwt-ListBox']/option[@value='"
 		    +parentSiteName+"']")) {
 		logAndFail("Cannot attach to parent site " + parentSiteName);
 	    }
-	    session().select("//select[@class='OsylManager-form-element']",
+	    session().select("//table[@class='OsylManager-form-element']/tbody/tr/td/select[@class='gwt-ListBox']",
 		    "label=" + parentSiteName);
 	    pause();
 	    session()
@@ -182,12 +183,14 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		    .mouseUp(
 			    "//div[@class='OsylManager-action OsylManager-action-down-hovering' and ./div[contains(.,'Lier')]]");
 	    pause();
-	    while(!session().isElementPresent("//select[@class='OsylManager-form-element']/option[@value='"+getCurrentTestSiteName()+"']") && i<ALLOWED_TRIES){
+	    while(!session().isElementPresent("//table[@class='OsylManager-form-element']/tbody/tr/td/select[@class='gwt-ListBox']/option[@value='"
+		    +getCurrentTestSiteName()+"']") && i<ALLOWED_TRIES){
 		pause();
 		i++;
 	    }
-	    assertTrue(session().isElementPresent("//select[@class='OsylManager-form-element']/option[@value='"+getCurrentTestSiteName()+"']"));
-	    session().select("//select[@class='OsylManager-form-element']",
+	    assertTrue(session().isElementPresent("//table[@class='OsylManager-form-element']/tbody/tr/td/select[@class='gwt-ListBox']/option[@value='"
+		    +getCurrentTestSiteName()+"']"));
+	    session().select("//table[@class='OsylManager-form-element']/tbody/tr/td/select[@class='gwt-ListBox']",
 		    "label=" + getCurrentTestSiteName());
 	    pause();
 	    session()
