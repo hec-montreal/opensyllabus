@@ -48,22 +48,19 @@ public class DeleteAction extends OsylManagerAbstractAction {
     private static int asynCB_OK = 0;
 
     private class DeleteAsynCallBack implements AsyncCallback<Void> {
+	private int index;
 
-	private String siteId;
-
-	public DeleteAsynCallBack(String siteId) {
+	public DeleteAsynCallBack(int index) {
 	    super();
-	    this.siteId = siteId;
+	    this.index = index;
 	}
 
 	public void onFailure(Throwable caught) {
-	    diag.hide();
-	    DeleteAction.lMsg.add(siteId);
+	    DeleteAction.lMsg.add(coSites.get(index).getSiteId());
 	    responseReceive();
 	}
 
 	public void onSuccess(Void result) {
-	    diag.hide();
 	    DeleteAction.asynCB_OK++;
 	    responseReceive();
 	}
@@ -71,6 +68,7 @@ public class DeleteAction extends OsylManagerAbstractAction {
 	private void responseReceive() {
 	    DeleteAction.asynCB_return++;
 	    if (DeleteAction.asynCB_return == DeleteAction.coSites.size()) {
+		diag.hide();
 		String msg = "";
 		if (DeleteAction.asynCB_OK != DeleteAction.coSites.size()) {
 		    msg = messages.deleteAction_delete_error() + "\n";
@@ -88,6 +86,9 @@ public class DeleteAction extends OsylManagerAbstractAction {
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
 		new OsylUnobtrusiveAlert(msg);
+	    } else {
+		controller.deleteSite(coSites.get(index+1).getSiteId(),
+			new DeleteAsynCallBack(index+1));
 	    }
 	}
 
@@ -151,11 +152,8 @@ public class DeleteAction extends OsylManagerAbstractAction {
 		    asynCB_return = 0;
 		    asynCB_OK = 0;
 		    lMsg = new ArrayList<String>();
-
-		    for (COSite coSite : siteIds) {
-			controller.deleteSite(coSite.getSiteId(),
-				new DeleteAsynCallBack(coSite.getSiteId()));
-		    }
+		    controller.deleteSite(coSites.get(0).getSiteId(),
+			    new DeleteAsynCallBack(0));
 		}
 	    });
 	    conf.show();
