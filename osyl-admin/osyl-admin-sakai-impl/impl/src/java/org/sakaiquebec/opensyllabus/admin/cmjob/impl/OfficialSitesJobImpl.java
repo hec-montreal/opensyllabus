@@ -121,6 +121,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
 	loginToSakai();
+	courseOffs = new HashSet<CourseOffering>();
 	Date startDateInterval = adminConfigService.getStartDate();
 	Date endDateInterval = adminConfigService.getEndDate();
 	// If we have a list of courses, we will create only those one. If we
@@ -138,105 +139,79 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	if (courses != null && courses.size() > 0) {
 	    for (String courseId : courses) {
 		if (cmService.isCanonicalCourseDefined(courseId))
-		    canonicalCourses
-			    .add(cmService.getCanonicalCourse(courseId));
+		    courseOffs.addAll(cmService
+			    .getCourseOfferingsInCanonicalCourse(courseId));
+
 	    }
 	} else {
 	    // Retrieve all the course sets
 	    allCourseSets = cmService.getCourseSets();
-
+	    Set<CourseOffering> fcourseOff = null;
 	    for (CourseSet courseSet : allCourseSets) {
 
-		// Retrieve the canonical courses
-		canonicalCourses =
-			cmService.getCanonicalCourses(courseSet.getEid());
-		for (CanonicalCourse canCourse : canonicalCourses) {
-		    courses.add(canCourse.getEid());
+		for (AcademicSession session : allSessions) {
+		    fcourseOff =
+			    cmService.findCourseOfferings(courseSet.getEid(),
+				    session.getEid());
+		    courseOffs.addAll(fcourseOff);
 		}
 
 	    }
 	}
 
-	String canCourseId = null;
+	int compteur = 0;
 
-	for (CanonicalCourse canCourse : canonicalCourses) {
-	    canCourseId = canCourse.getEid();
+	if (courseOffs != null) {
+	    for (CourseOffering courseOff : courseOffs) {
 
-	    // Check if it is in the list of courses to be created
-	    // If the list is not empty and the course is not inside, we
-	    // don't create it
-	    if (courses != null)
-		if (!courses.contains(canCourseId.trim()))
-		    continue;
+		// Retrieve the sections to be created
+		sections = cmService.getSections(courseOff.getEid());
 
-	    // Retrieve the course offerings
-	    courseOffs =
-		    cmService.getCourseOfferingsInCanonicalCourse(canCourseId);
+		compteur += sections.size();
+		// Create sharable site if necessary
+		String shareableName = null;
+		if (hasSharable(sections))
+		    shareableName = createShareable(courseOff);
+		if (sections != null) {
+		    String sectionId = null;
+		    List<String> dfSections = new ArrayList<String>();
+		    String firstSection = null;
+		    // create 'normal section'
+		    for (Section section : sections) {
+			sectionId = section.getEid();
+			if (!isDfSection(sectionId)) {
+			    createSite(section);
 
-	    if (courseOffs != null) {
-		for (CourseOffering courseOff : courseOffs) {
-
-		    // Check if we have the good session
-		    for (AcademicSession academicSession : allSessions) {
-			if ((courseOff.getAcademicSession().getEid())
-				.equals(academicSession.getEid())) {
-
-			    // Retrieve the sections to be created
-			    sections =
-				    cmService.getSections(courseOff.getEid());
-
-			    // Create sharable site if necessary
-			    String shareableName = null;
-			    if (hasSharable(sections))
-				shareableName = createShareable(courseOff);
-
-			    // Create site for section
-			    if (sections != null) {
-				String sectionId = null;
-				List<String> dfSections =
-					new ArrayList<String>();
-				String firstSection = null;
-				// create 'normal section'
-				for (Section section : sections) {
-				    sectionId = section.getEid();
-				    if (!isDfSection(sectionId)) {
-					createSite(section);
-					String siteName = getSiteName(section);
-					if (shareableName != null) {
-					    associate(siteName, shareableName);
-					}
-					if (firstSection == null) {
-					    firstSection = siteName;
-					} else {
-					    if (siteName
-						    .compareTo(firstSection) < 0)
-						firstSection = siteName;
-					}
-				    } else {
-					// we create site DF only if there is
-					// students
-					Set<Enrollment> enrollments =
-						cmService
-							.getEnrollments(section
-								.getEnrollmentSet()
-								.getEid());
-					if (enrollments.size() > 0) {
-					    createSite(section);
-					    dfSections
-						    .add(getSiteName(section));
-					}
-				    }
-				}
-
-				// associate df with 1st 'normal' course
-				for (String dfSite : dfSections) {
-				    associate(dfSite, firstSection);
-				}
+			    String siteName = getSiteName(section);
+			    if (shareableName != null) {
+				associate(siteName, shareableName);
+			    }
+			    if (firstSection == null) {
+				firstSection = siteName;
+			    } else {
+				if (siteName.compareTo(firstSection) < 0)
+				    firstSection = siteName;
+			    }
+			} else {
+			    // we create site DF only if there is
+			    // students
+			    Set<Enrollment> enrollments =
+				    cmService.getEnrollments(section
+					    .getEnrollmentSet().getEid());
+			    if (enrollments.size() > 0) {
+				createSite(section);
+				dfSections.add(getSiteName(section));
 			    }
 			}
 		    }
+
+		    // associate df with 1st 'normal' course
+		    // for (String dfSite : dfSections) {
+		    // associate(dfSite, firstSection);
+		    // }
 		}
 	    }
+
 	}
 	logoutFromSakai();
     } // execute
