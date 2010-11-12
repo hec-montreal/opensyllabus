@@ -261,7 +261,10 @@ public interface Messages extends ConstantsWithLookup {
     
     String academicSessionLabel();
     String academicSessionNone();
-
+    String academicSessionWinter();
+    String academicSessionSummer();
+    String academicSessionFall();
+    
     String copyForm_instruction();
 
     String copyForm_courseIdentifier();

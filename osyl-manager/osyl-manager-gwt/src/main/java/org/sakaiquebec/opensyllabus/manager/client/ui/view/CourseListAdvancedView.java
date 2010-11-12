@@ -22,6 +22,7 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
@@ -64,6 +65,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class CourseListAdvancedView extends OsylManagerAbstractView implements
 	OsylManagerEventHandler, ClickHandler {
 
+    private static final String WINTER = "winter";
+    private static final String SUMMER = "summer";
+    private static final String FALL = "fall";
+    
     private static final int SITE_ID_COL = 0;
 
     private VerticalPanel mainPanel;
@@ -126,7 +131,7 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 			    scSiteList.getDataTable().setHTML(rowNum, 1,
 				    coSite.getAcademicCareer());
 			    scSiteList.getDataTable().setHTML(rowNum, 2,
-				    coSite.getCourseSession());
+				   getLocalizedSessionName(coSite.getCourseSession()));
 			    scSiteList.getDataTable().setHTML(rowNum, 3,
 				    coSite.getCourseName());
 			    scSiteList.getDataTable().setHTML(rowNum, 4,
@@ -434,5 +439,27 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 
     public boolean isShowMessage() {
 	return showMessage;
+    }
+    
+    private String getLocalizedSessionName(String sessionName){
+	
+	if(sessionName==null || "".equals(sessionName)){
+	    return "";
+	} else {
+	    StringTokenizer strTok = new StringTokenizer(sessionName);
+	    String season = strTok.nextToken().toLowerCase();
+
+	    if (WINTER.equals(season)) {
+		season = messages.academicSessionWinter();
+	    } else if (SUMMER.equals(season)) {
+		season = messages.academicSessionSummer();
+	    } else if (FALL.equals(season)) {
+		season = messages.academicSessionFall();
+	    } else {
+		season = "";
+	    }
+	    return season + " "
+		    + (strTok.hasMoreTokens() ? strTok.nextToken() : "");
+	}
     }
 }
