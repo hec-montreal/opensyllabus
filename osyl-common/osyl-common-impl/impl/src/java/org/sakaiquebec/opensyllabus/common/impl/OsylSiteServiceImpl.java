@@ -39,6 +39,8 @@ import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.assignment.api.Assignment;
 import org.sakaiproject.assignment.api.AssignmentEdit;
 import org.sakaiproject.assignment.api.AssignmentService;
+import org.sakaiproject.authz.api.SecurityAdvisor;
+import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
 import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
@@ -587,18 +589,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    throws Exception {
 	Site site = null;
 	
-	if (osylSecurityService
-		.getCurrentUserRole()
-		.equals(
-			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)) {
-	    SecurityService.pushAdvisor(new org.sakaiproject.authz.api.SecurityAdvisor() {
-		public SecurityAdvice isAllowed(String userId,
-			String function, String reference) {
-		    return SecurityAdvice.ALLOWED;
-		}
-	    });
-
-	}
+	
 	if (!siteService.siteExists(siteTitle)) {
 	    site = siteService.addSite(siteTitle, SITE_TYPE);
 	    site.setTitle(siteTitle);
@@ -658,6 +649,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			    + PUBLISH_DIRECTORY + "/";
 	    osylSecurityService.applyDirectoryPermissions(directoryId);
 
+	    enableSecurityAdvisor();
 	    siteService.save(site);
 	    COConfigSerialized coConfig = null;
 	    COSerialized co = null;
@@ -683,10 +675,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			    + siteTitle + "' already exists");
 	}
 
-	if (osylSecurityService
-		.getCurrentUserRole()
-		.equals(
-			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)) {
+	if (osylSecurityService.getCurrentUserRole().equals(
+		OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
+		|| osylSecurityService.getCurrentUserRole().equals(
+			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
 	    SecurityService.clearAdvisors();
 	}
 
@@ -699,6 +691,23 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public String createSharableSite(String siteTitle, String configRef,
 	    String lang) throws Exception {
 	Site site = null;
+	if (osylSecurityService
+		.getCurrentUserRole()
+		.equals(
+			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)||
+			    osylSecurityService
+				.getCurrentUserRole()
+				.equals(
+					OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN))  {
+	    SecurityService.pushAdvisor(new org.sakaiproject.authz.api.SecurityAdvisor() {
+		public SecurityAdvice isAllowed(String userId,
+			String function, String reference) {
+		    return SecurityAdvice.ALLOWED;
+		}
+	    });
+
+	}
+
 	if (!siteService.siteExists(siteTitle)) {
 	    site = siteService.addSite(siteTitle, SITE_TYPE);
 	    site.setTitle(siteTitle);
@@ -750,6 +759,18 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    "Could not create site because site with title='"
 			    + siteTitle + "' already exists");
 	}
+	
+	if (osylSecurityService
+		.getCurrentUserRole()
+		.equals(
+			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)||
+			    osylSecurityService
+				.getCurrentUserRole()
+				.equals(
+					OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN))  {
+	    SecurityService.clearAdvisors();
+	}
+
 	return site.getId();
     }
 
@@ -1049,6 +1070,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /** {@inheritDoc} */
     public void addTool(Site site, String toolId) {
+
 	SitePage page = site.addPage();
 	Tool tool = toolManager.getTool(toolId);
 	page.setTitle(tool.getTitle());
@@ -1059,7 +1081,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	toolConf.setLayoutHints("0,0");
 
 	try {
+	    enableSecurityAdvisor();
 	    siteService.save(site);
+	    if (osylSecurityService.getCurrentUserRole().equals(
+		    OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
+		    || osylSecurityService.getCurrentUserRole().equals(
+			    OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
+		SecurityService.clearAdvisors();
+	    }
+
 	} catch (IdUnusedException e) {
 	    log.error("Add tool - Unused id exception", e);
 	} catch (PermissionException e) {
@@ -1659,4 +1689,23 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	co.setContent(coModeled.getSerializedContent());
     }
 
+    protected void enableSecurityAdvisor() {
+	if (osylSecurityService
+		.getCurrentUserRole()
+		.equals(
+			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)||
+			    osylSecurityService
+				.getCurrentUserRole()
+				.equals(
+					OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN))  {
+	SecurityService.pushAdvisor(new SecurityAdvisor() {
+	    public SecurityAdvice isAllowed(String userId, String function,
+		    String reference) {
+		return SecurityAdvice.ALLOWED;
+	    }
+	});
+	}
+    }
+
+    
 }

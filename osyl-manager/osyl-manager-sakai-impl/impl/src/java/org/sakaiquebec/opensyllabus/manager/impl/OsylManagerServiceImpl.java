@@ -741,15 +741,21 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * with no need for additional security permissions.
      */
     protected void enableSecurityAdvisor() {
-	// put in a security advisor so we can create citationAdmin site without
-	// need
-	// of further permissions
+	if (osylSecurityService
+		.getCurrentUserRole()
+		.equals(
+			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)||
+			    osylSecurityService
+				.getCurrentUserRole()
+				.equals(
+					OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN))  {
 	SecurityService.pushAdvisor(new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
 		    String reference) {
 		return SecurityAdvice.ALLOWED;
 	    }
 	});
+	}
     }
 
     public Map<String, String> getOsylSites(List<String> siteIds) {
@@ -1627,19 +1633,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	Site newSite = null;
 	Site oldSite = null;
 
-	if (osylSecurityService
-		.getCurrentUserRole()
-		.equals(
-			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)) {
-	    SecurityService.pushAdvisor(new org.sakaiproject.authz.api.SecurityAdvisor() {
-		public SecurityAdvice isAllowed(String userId,
-			String function, String reference) {
-		    return SecurityAdvice.ALLOWED;
-		}
-	    });
-
-	}
-
 	newSite = siteService.getSite(siteTo);
 	oldSite = siteService.getSite(siteFrom);
 
@@ -1716,15 +1709,19 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	// we update citation ids in the course outline
 	updateCitationIds(siteFrom, siteTo);
 
+	enableSecurityAdvisor();
 	siteService.save(newSite);
-	
+
 	if (osylSecurityService
 		.getCurrentUserRole()
 		.equals(
-			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)) {
+			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)||
+			    osylSecurityService
+				.getCurrentUserRole()
+				.equals(
+					OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN))  {
 	    SecurityService.clearAdvisors();
 	}
-
 
 	log.info("Finished copying site [" + siteFrom + "] in "
 		+ (System.currentTimeMillis() - start) + " ms");
