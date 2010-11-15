@@ -691,22 +691,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public String createSharableSite(String siteTitle, String configRef,
 	    String lang) throws Exception {
 	Site site = null;
-	if (osylSecurityService
-		.getCurrentUserRole()
-		.equals(
-			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)||
-			    osylSecurityService
-				.getCurrentUserRole()
-				.equals(
-					OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN))  {
-	    SecurityService.pushAdvisor(new org.sakaiproject.authz.api.SecurityAdvisor() {
-		public SecurityAdvice isAllowed(String userId,
-			String function, String reference) {
-		    return SecurityAdvice.ALLOWED;
-		}
-	    });
-
-	}
 
 	if (!siteService.siteExists(siteTitle)) {
 	    site = siteService.addSite(siteTitle, SITE_TYPE);
@@ -719,6 +703,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    addTool(site, "sakai.resources");
 	    addTool(site, "sakai.siteinfo");
 
+	    enableSecurityAdvisor();
 	    siteService.save(site);
 
 	    // we add the directories
