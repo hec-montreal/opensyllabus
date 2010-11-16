@@ -587,6 +587,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      */
     public String createSite(String siteTitle, String configRef, String lang)
 	    throws Exception {
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] creates site [" + siteTitle + "]");
+	long start = System.currentTimeMillis();
 	Site site = null;
 	
 	
@@ -682,6 +685,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    SecurityService.clearAdvisors();
 	}
 
+	log.info("Site [" + siteTitle + "] created in "
+		+ (System.currentTimeMillis() - start) + " ms ");
 	return site.getId();
     }
 

@@ -77,10 +77,10 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	    throws Exception {
 
 	if (osylManagerServices != null) {
-	    log.info("OsylSiteService : "
-		    + osylManagerServices.getOsylSiteService());
 	    return osylManagerServices.getOsylSiteService().createSite(
 		    siteTitle, configRef, lang);
+	} else {
+	    log.warn("Unable to create site: bean osylManagerMainBean is null");
 	}
 
 	return null;

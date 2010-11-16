@@ -1629,6 +1629,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     public void copySite(String siteFrom, String siteTo) throws Exception {
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] copies site [" + siteFrom + "] into site [" + siteTo + "]");
+
 	long start = System.currentTimeMillis();
 	Site newSite = null;
 	Site oldSite = null;
@@ -1723,8 +1726,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    SecurityService.clearAdvisors();
 	}
 
-	log.info("Finished copying site [" + siteFrom + "] in "
-		+ (System.currentTimeMillis() - start) + " ms");
+	log.info("Finished copying site [" + siteFrom + "] to [" + siteTo
+		+ "] in " + (System.currentTimeMillis() - start) + " ms");
     }
 
     private void updateCitationIds(String oldSiteId, String newSiteId) {
