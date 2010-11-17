@@ -47,17 +47,6 @@ public interface OsylEditorGwtServiceAsync {
     public void initTool(AsyncCallback<Void> callback);
 
     /**
-     * Returns the CourseOutline whose ID is specified.
-     * 
-     * @param String ID
-     * @param callback the callback to return the CourseOutline POJO
-     *            corresponding to the specified ID
-     * @throws Exception
-     */
-    public void getSerializedCourseOutline(String id,
-	    AsyncCallback<COSerialized> callback);
-
-    /**
      * Returns the CourseOutline of the current context.
      * 
      * @param callback the callback to return the CourseOutline POJO
@@ -75,7 +64,7 @@ public interface OsylEditorGwtServiceAsync {
      * @param callback the callback to return the CourseOutline ID
      */
     public void updateSerializedCourseOutline(COSerialized co,
-	    AsyncCallback<String> callback);
+	    AsyncCallback<Boolean> callback);
 
     /**
      * Publishes the CourseOutline whose ID is specified. It must have been

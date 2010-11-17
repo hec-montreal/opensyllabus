@@ -29,6 +29,8 @@ import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtService;
+import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
+import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
@@ -128,7 +130,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	return osylManagerServices.getOsylManagerService().getParent(siteId);
     }
 
-    public void associate(String siteId, String parentId) throws Exception {
+    public void associate(String siteId, String parentId) throws Exception,CompatibilityException {
 	osylManagerServices.getOsylManagerService().associate(siteId, parentId);
     }
 
@@ -165,7 +167,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		searchTerm, academicSession);
     }
 
-    public void publish(String siteId) throws Exception {
+    public void publish(String siteId) throws Exception, FusionException {
 	String webappDir = getServletContext().getRealPath("/");
 	osylManagerServices.getOsylPublishService().publish(webappDir, siteId);
     }

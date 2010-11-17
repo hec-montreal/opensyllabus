@@ -152,7 +152,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
      * 
      * @throws Exception
      */
-    public String createOrUpdateCourseOutline(COSerialized courseOutline)
+    public void createOrUpdateCourseOutline(COSerialized courseOutline)
 	    throws Exception {
 	boolean alreadyExist = false;
 	COSerialized cos = null;
@@ -182,7 +182,6 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    log.error("Unable to create or update course outline", e);
 	    throw e;
 	}
-	return courseOutline.getCoId();
     }
 
     @SuppressWarnings("unchecked")
@@ -259,7 +258,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    results =
 		    getHibernateTemplate()
 			    .find(
-				    "from COSerialized where siteId= ? and published=1",
+				    "from COSerialized where siteId= ? and published=1 and access is not null and not access=''",
 				    new Object[] { siteId });
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline", e);

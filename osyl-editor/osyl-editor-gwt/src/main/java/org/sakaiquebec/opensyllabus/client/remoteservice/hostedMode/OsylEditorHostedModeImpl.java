@@ -309,8 +309,8 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
     }
 
     public void updateSerializedCourseOutline(COSerialized co,
-	    AsyncCallback<String> callback) {
-	callback.onSuccess("hostedId");
+	    AsyncCallback<Boolean> callback) {
+	callback.onSuccess(true);
     }
 
     public void checkSitesRelation(String resourceURI,

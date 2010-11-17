@@ -40,7 +40,6 @@ import org.sakaiproject.assignment.api.Assignment;
 import org.sakaiproject.assignment.api.AssignmentEdit;
 import org.sakaiproject.assignment.api.AssignmentService;
 import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
 import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
@@ -91,11 +90,12 @@ import org.sakaiquebec.opensyllabus.common.helper.ModelHelper;
 import org.sakaiquebec.opensyllabus.common.helper.SchemaHelper;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
+import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
+import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 
 /**
  * Implementation of the <code>OsylSiteService</code>
@@ -308,7 +308,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			}
 		    } catch (Exception ex) {
 		    }
-
 		} else if (e.getEvent().equals(SiteService.SECURE_REMOVE_SITE)) {
 		    // A site is removed
 		    String siteid =
@@ -399,10 +398,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 					    "Could not delete assignement attachement after site removing",
 					    e1);
 			}
-
 		    }
 		}
-
 	    }
 	});
 
@@ -416,7 +413,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	log.info("DESTROY from OsylSite service");
     }
 
-    public COModeledServer getFusionnedPrePublishedHierarchy(String siteId) {
+    public COModeledServer getFusionnedPrePublishedHierarchy(String siteId)
+	    throws Exception {
 	COModeledServer coModeled = null;
 	COSerialized co = null;
 	String parentId = null;
@@ -443,97 +441,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    }
 	} catch (Exception e) {
 	    log.error(e.getLocalizedMessage(), e);
+	    throw e;
 	}
 	return coModeled;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public COSerialized getSerializedCourseOutlineBySiteId(String siteId) {
-	long start = System.currentTimeMillis();
-
-	try {
-	    COSerialized co;
-	    if (osylSecurityService.isAllowedToEdit(siteId)) {
-		co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
-		if (co != null) {
-		    getSiteInfo(co, siteId);
-		    COModeledServer coModelChild = new COModeledServer(co);
-		    // Fetch the parent
-		    String parentId = null;
-		    try {
-			parentId =
-				coRelationDao.getParentOfCourseOutline(siteId);
-		    } catch (Exception e) {
-		    }
-		    if (parentId != null) {
-
-			// fusion
-			COModeledServer coModelParent =
-				getFusionnedPrePublishedHierarchy(parentId);
-
-			if (coModelParent != null) {
-			    coModelChild.XML2Model();
-			    coModelChild.fusion(coModelParent);
-			    coModelChild.model2XML();
-			    co.setContent(coModelChild.getSerializedContent());
-			}
-
-		    }
-		}
-	    } else {
-		if (osylSecurityService.getCurrentUserRole() == null) {
-		    co =
-			    resourceDao
-				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
-					    siteId,
-					    SecurityInterface.ACCESS_PUBLIC);
-		    return co;
-		}
-
-		if (osylSecurityService
-			.getCurrentUserRole()
-			.equals(
-				OsylSecurityService.SECURITY_ROLE_COURSE_GENERAL_ASSISTANT)
-			|| osylSecurityService
-				.getCurrentUserRole()
-				.equals(
-					OsylSecurityService.SECURITY_ROLE_COURSE_TEACHING_ASSISTANT)
-			|| osylSecurityService
-				.getCurrentUserRole()
-				.equals(
-					OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)
-			|| osylSecurityService
-				.getCurrentUserRole()
-				.equals(
-					OsylSecurityService.SECURITY_ROLE_COURSE_HELPDESK)
-			|| osylSecurityService
-				.getCurrentUserRole()
-				.equals(
-					OsylSecurityService.SECURITY_ROLE_PROJECT_ACCESS))
-		    co =
-			    resourceDao
-				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
-					    siteId,
-					    SecurityInterface.ACCESS_ATTENDEE);
-		else
-		    co =
-			    resourceDao
-				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
-					    siteId,
-					    SecurityInterface.ACCESS_PUBLIC);
-
-	    }
-	    return co;
-	} catch (Exception e) {
-	    log.error("Unable to retrieve course outline by siteId", e);
-	} finally {
-	    log.debug("getSerializedCourseOutlineBySiteId  " + siteId
-		    + elapsed(start));
-	}
-	return null;
-    } // getSerializedCourseOutlineBySiteId
 
     /**
      * {@inheritDoc}
@@ -591,8 +502,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		+ "] creates site [" + siteTitle + "]");
 	long start = System.currentTimeMillis();
 	Site site = null;
-	
-	
+
 	if (!siteService.siteExists(siteTitle)) {
 	    site = siteService.addSite(siteTitle, SITE_TYPE);
 	    site.setTitle(siteTitle);
@@ -618,7 +528,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    contentHostingService.editCollection(directoryId);
 	    cce.setHidden();
 	    contentHostingService.commitCollection(cce);
-	    
+
 	    // we add the default citationList
 	    // TODO I18N
 	    String citationListName = "Références bibliographiques du cours";
@@ -669,7 +579,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    } catch (Exception e) {
 		log.error("createSite", e);
 	    }
-
 	} else {
 	    log.error("Could not create site because site with title='"
 		    + siteTitle + "' already exists");
@@ -684,7 +593,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
 	    SecurityService.clearAdvisors();
 	}
-
 	log.info("Site [" + siteTitle + "] created in "
 		+ (System.currentTimeMillis() - start) + " ms ");
 	return site.getId();
@@ -749,15 +657,11 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    "Could not create site because site with title='"
 			    + siteTitle + "' already exists");
 	}
-	
-	if (osylSecurityService
-		.getCurrentUserRole()
-		.equals(
-			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)||
-			    osylSecurityService
-				.getCurrentUserRole()
-				.equals(
-					OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN))  {
+
+	if (osylSecurityService.getCurrentUserRole().equals(
+		OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
+		|| osylSecurityService.getCurrentUserRole().equals(
+			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
 	    SecurityService.clearAdvisors();
 	}
 
@@ -912,82 +816,87 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     /**
      * {@inheritDoc}
      */
-    public synchronized COSerialized getSerializedCourseOutline(String webappDir) {
+    public COSerialized getSerializedCourseOutlineForEditor(String siteId,
+	    String webappDir) throws Exception {
 	long start = System.currentTimeMillis();
 	COSerialized thisCo = null;
-	COConfigSerialized coConfig = null;
-	String siteId = "";
-
-	try {
-
-	    siteId = getCurrentSiteId();
-	    thisCo = getSerializedCourseOutlineBySiteId(siteId);
-
-	    if (thisCo == null) {
-		coConfig =
-			osylConfigService.getConfigByRef(osylConfigService
-				.getDefaultConfig(), webappDir);
+	if (!osylSecurityService.isAllowedToEdit(siteId)) {
+	    if (osylSecurityService.getCurrentUserRole() == null) {
 		thisCo =
-			new COSerialized(idManager.createUuid(),
-				osylConfigService.getCurrentLocale(), "shared",
-				"", siteId, "sectionId", coConfig, null,
-				"shortDescription", "description", "title",
-				false, null, null);
-		setCoContentWithTemplate(thisCo, webappDir);
-		resourceDao.createOrUpdateCourseOutline(thisCo);
-	    } else if (thisCo.getContent() == null) {
-		setCoContentWithTemplate(thisCo, webappDir);
-		resourceDao.createOrUpdateCourseOutline(thisCo);
+			resourceDao
+				.getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+					siteId, SecurityInterface.ACCESS_PUBLIC);
+		return thisCo;
+	    } else if (osylSecurityService.getCurrentUserRole().equals(
+		    OsylSecurityService.SECURITY_ROLE_COURSE_GENERAL_ASSISTANT)
+		    || osylSecurityService
+			    .getCurrentUserRole()
+			    .equals(
+				    OsylSecurityService.SECURITY_ROLE_COURSE_TEACHING_ASSISTANT)
+		    || osylSecurityService.getCurrentUserRole().equals(
+			    OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)
+		    || osylSecurityService.getCurrentUserRole().equals(
+			    OsylSecurityService.SECURITY_ROLE_COURSE_HELPDESK)
+		    || osylSecurityService.getCurrentUserRole().equals(
+			    OsylSecurityService.SECURITY_ROLE_PROJECT_ACCESS)) {
+		thisCo =
+			resourceDao
+				.getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+					siteId,
+					SecurityInterface.ACCESS_ATTENDEE);
 	    } else {
-		coConfig = thisCo.getOsylConfig();
+		thisCo =
+			resourceDao
+				.getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+					siteId, SecurityInterface.ACCESS_PUBLIC);
 	    }
-	    String lockedBy = thisCo.getLockedBy();
-	    boolean lockFree = false;
-	    if (lockedBy == null || lockedBy.equals("")) {
-		lockFree = true;
-	    } else {
-		long d =
-			System.currentTimeMillis()
-				- (sessionManager.getSession(lockedBy) != null ? sessionManager
-					.getSession(lockedBy)
-					.getLastAccessedTime()
-					: 0);
-		if (d > (15 * 60 * 1000))// we invalidate lock after 15 mins of
-		    // inactivity
-		    lockFree = true;
-	    }
-	    if (lockFree) {
-		thisCo.setLockedBy(sessionManager.getCurrentSession().getId());
-		resourceDao.setLockedBy(thisCo.getCoId(), sessionManager
-			.getCurrentSession().getId());
-	    } else if (!lockedBy.equals(sessionManager.getCurrentSession()
-		    .getId())) {
-		try {
-		    // CO is already in edition
-		    thisCo.setEditable(false);
-		    // we set the name of the proprietary of the co to diplay to
-		    // users
-		    User u =
-			    userDirectoryService.getUser(sessionManager
-				    .getSession(thisCo.getLockedBy())
-				    .getUserId());
-		    thisCo
-			    .setLockedBy(u.getFirstName() + " "
-				    + u.getLastName());
-		} catch (Exception ex) {
-		}
-	    }
-	    thisCo =
-		    osylConfigService.fillCo(webappDir
-			    + OsylConfigService.CONFIG_DIR + File.separator
-			    + thisCo.getOsylConfig().getConfigRef(), thisCo);
-	    getSiteInfo(thisCo, thisCo.getSiteId());
-
-	} catch (Exception e) {
-	    log.error("Unable to retrieve course outline", e);
+	} else {
+	    thisCo = getSerializedCourseOutlineAndLockIt(siteId, webappDir);
 	}
-
+	thisCo =
+		osylConfigService.fillCo(webappDir
+			+ OsylConfigService.CONFIG_DIR + File.separator
+			+ thisCo.getOsylConfig().getConfigRef(), thisCo);
+	getSiteInfo(thisCo, thisCo.getSiteId());
 	log.debug("getSerializedCourseOutline" + elapsed(start) + siteId);
+	return thisCo;
+    }
+
+    public synchronized COSerialized getSerializedCourseOutlineAndLockIt(
+	    String siteId, String webappDir) throws Exception {
+	
+	COSerialized thisCo = getSerializedCourseOutline(siteId, webappDir);
+	String lockedBy = thisCo.getLockedBy();
+	boolean lockFree = false;
+	if (lockedBy == null || lockedBy.equals("")) {
+	    lockFree = true;
+	} else {
+	    long d =
+		    System.currentTimeMillis()
+			    - (sessionManager.getSession(lockedBy) != null ? sessionManager
+				    .getSession(lockedBy).getLastAccessedTime()
+				    : 0);
+	    if (d > (15 * 60 * 1000))// we invalidate lock after 15 mins of
+		// inactivity
+		lockFree = true;
+	}
+	if (lockFree) {
+	    thisCo.setLockedBy(sessionManager.getCurrentSession().getId());
+	    resourceDao.setLockedBy(thisCo.getCoId(), sessionManager
+		    .getCurrentSession().getId());
+	} else if (!lockedBy.equals(sessionManager.getCurrentSession().getId())) {
+	    try {
+		// CO is already in edition
+		thisCo.setEditable(false);
+		// we set the name of the proprietary of the co to diplay to
+		// users
+		User u =
+			userDirectoryService.getUser(sessionManager.getSession(
+				thisCo.getLockedBy()).getUserId());
+		thisCo.setLockedBy(u.getFirstName() + " " + u.getLastName());
+	    } catch (Exception ex) {
+	    }
+	}
 	return thisCo;
     }
 
@@ -996,11 +905,55 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      * 
      * @throws Exception
      */
-    public COSerialized getSerializedCourseOutline(String id, String webappDir)
-	    throws Exception {
+    public COSerialized getSerializedCourseOutline(String siteId,
+	    String webappDir) throws Exception {
 	try {
-	    COSerialized co = getSerializedCourseOutlineBySiteId(id);
-	    getSiteInfo(co, co.getSiteId());
+	    COSerialized co =
+		    resourceDao.getSerializedCourseOutlineBySiteId(siteId);
+	    COConfigSerialized coConfig = null;
+	    if (co == null) {
+		coConfig =
+			osylConfigService.getConfigByRef(osylConfigService
+				.getDefaultConfig(), webappDir);
+		co =
+			new COSerialized(idManager.createUuid(),
+				osylConfigService.getCurrentLocale(), "shared",
+				"", siteId, "sectionId", coConfig, null,
+				"shortDescription", "description", "title",
+				false, null, null);
+		setCoContentWithTemplate(co, webappDir);
+		resourceDao.createOrUpdateCourseOutline(co);
+	    } else if (co.getContent() == null) {
+		setCoContentWithTemplate(co, webappDir);
+		resourceDao.createOrUpdateCourseOutline(co);
+	    }
+	    COModeledServer coModelChild = new COModeledServer(co);
+	    // Fetch the parent
+	    String parentId = null;
+	    try {
+		parentId = coRelationDao.getParentOfCourseOutline(siteId);
+	    } catch (Exception e) {
+	    }
+	    if (parentId != null) {
+
+		// fusion
+		COModeledServer coModelParent =
+			getFusionnedPrePublishedHierarchy(parentId);
+
+		if (coModelParent != null) {
+
+		    try {
+			coModelChild.XML2Model();
+			coModelChild.fusion(coModelParent);
+			coModelChild.model2XML();
+			co.setContent(coModelChild.getSerializedContent());
+		    } catch (FusionException e) {
+			co.setIncompatibleWithHisParent(true);
+		    } catch (CompatibilityException e) {
+			co.setIncompatibleWithHisParent(true);
+		    }
+		}
+	    }
 	    return co;
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline", e);
@@ -1014,11 +967,12 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      * 
      * @throws Exception
      */
-    public String updateSerializedCourseOutline(COSerialized co)
+    public boolean updateSerializedCourseOutline(COSerialized co)
 	    throws Exception {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] saves CO [" + co.getTitle() + "]");
 
+	boolean reload = (co.getCoId() == null);
 	try {
 	    backupCo(co);
 	} catch (IOException e) {
@@ -1027,11 +981,37 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
 
 	try {
-	    return resourceDao.createOrUpdateCourseOutline(co);
+	    String parentId = null;
+	    try {
+		parentId =
+			coRelationDao.getParentOfCourseOutline(co.getSiteId());
+	    } catch (Exception e) {
+	    }
+	    if (parentId != null) {
+		COModeledServer coModelChild = new COModeledServer(co);
+		coModelChild.XML2Model();
+		if (!coModelChild.isXmlAssociated()) {
+		    COModeledServer coModelParent =
+			    getFusionnedPrePublishedHierarchy(parentId);
+
+		    if (coModelParent != null) {
+
+			try {
+			    coModelChild.associate(coModelParent);
+			    coModelChild.model2XML();
+			    co.setContent(coModelChild.getSerializedContent());
+			    reload = true;
+			} catch (CompatibilityException e) {
+			}
+		    }
+		}
+	    }
+	    resourceDao.createOrUpdateCourseOutline(co);
 	} catch (Exception e) {
 	    log.error("Unable to update course outline", e);
 	    throw e;
 	}
+	return reload;
     }
 
     /**
@@ -1046,16 +1026,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	File backup =
 		File.createTempFile("osyl-co-" + co.getSiteId() + "_", ".xml");
 	FileHelper.writeFileContent(backup, co.getContent());
-    }
-
-    public String createOrUpdateCO(COSerialized co) {
-
-	try {
-	    return resourceDao.createOrUpdateCourseOutline(co);
-	} catch (Exception e) {
-	    log.error("Unable to create or update course outline", e);
-	}
-	return "";
     }
 
     /** {@inheritDoc} */
@@ -1097,7 +1067,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	SchemaHelper schemaHelper = new SchemaHelper(webapp);
 	xmlData = schemaHelper.verifyAndConvert(xmlData);
 	try {
-	    co = getSerializedCourseOutlineBySiteId(siteId);
+	    co = getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
 	    if (co != null) {
 		co.setContent(xmlData);
 		COModeledServer coModeledServer = new COModeledServer(co);
@@ -1142,7 +1112,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return children;
     }
 
-    public void associate(String siteId, String parentId) throws Exception {
+    public void associate(String siteId, String parentId) throws Exception,
+	    CompatibilityException {
 	COSerialized co;
 	try {
 	    co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
@@ -1665,9 +1636,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	coModeled.setSchemaVersion(sh.getSchemaVersion());
 	// associate with parent if exist
 	String parentId = null;
-	try{
-	    parentId=coRelationDao.getParentOfCourseOutline(co.getSiteId());
-	}catch (Exception e) {
+	try {
+	    parentId = coRelationDao.getParentOfCourseOutline(co.getSiteId());
+	} catch (Exception e) {
 	}
 	if (parentId != null && !parentId.equals("")) {
 	    COModeledServer coModelParent =
@@ -1680,22 +1651,17 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     }
 
     protected void enableSecurityAdvisor() {
-	if (osylSecurityService
-		.getCurrentUserRole()
-		.equals(
-			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)||
-			    osylSecurityService
-				.getCurrentUserRole()
-				.equals(
-					OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN))  {
-	SecurityService.pushAdvisor(new SecurityAdvisor() {
-	    public SecurityAdvice isAllowed(String userId, String function,
-		    String reference) {
-		return SecurityAdvice.ALLOWED;
-	    }
-	});
+	if (osylSecurityService.getCurrentUserRole().equals(
+		OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
+		|| osylSecurityService.getCurrentUserRole().equals(
+			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
+	    SecurityService.pushAdvisor(new SecurityAdvisor() {
+		public SecurityAdvice isAllowed(String userId, String function,
+			String reference) {
+		    return SecurityAdvice.ALLOWED;
+		}
+	    });
 	}
     }
 
-    
 }

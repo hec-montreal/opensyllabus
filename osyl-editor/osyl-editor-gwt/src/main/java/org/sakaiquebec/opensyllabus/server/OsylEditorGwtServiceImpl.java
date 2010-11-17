@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtService;
+import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
@@ -48,10 +49,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	return null;
     }
 
-    public COSerialized getSerializedCourseOutline(String id) throws Exception {
-	return null;
-    }
-
     public COSerialized getSerializedCourseOutline() throws Exception {
 	return null;
     }
@@ -75,7 +72,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     public void ping() {
     }
 
-    public Map<String, String> publishCourseOutline() throws Exception {
+    public Map<String, String> publishCourseOutline() throws Exception,FusionException {
 	return null;
     }
 
@@ -89,9 +86,9 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     public void removeCitation(String citationId) {
     }
 
-    public String updateSerializedCourseOutline(COSerialized co)
+    public boolean updateSerializedCourseOutline(COSerialized co)
 	    throws Exception {
-	return null;
+	return false;
     }
 
     public boolean checkSitesRelation(String resourceURI) {

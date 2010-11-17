@@ -20,12 +20,8 @@
 
 package org.sakaiquebec.opensyllabus.client.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler;
@@ -60,7 +56,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 /**
  * Controller centralizes functionalities and informations needed by the
  * different views of the OpenSyllabus editor.
- *
+ * 
  * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
  * @version $Id: $
  */
@@ -118,7 +114,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Returns a valid instance of Controller.
-     *
+     * 
      * @return Controller instance
      */
     public static OsylController getInstance() {
@@ -130,7 +126,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Private constructor to force the use of singleton.
-     *
+     * 
      * @see getInstance
      */
     private OsylController() {
@@ -148,7 +144,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Sets the Model Controller.
-     *
+     * 
      * @param omc
      */
     private void setModelController(OsylModelController omc) {
@@ -157,7 +153,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Returns the {@link OsylModelController}.
-     *
+     * 
      * @return
      */
     public OsylModelController getModelController() {
@@ -166,7 +162,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Shortcut for getModelController().isModelDirty().
-     *
+     * 
      * @return
      */
     public boolean isModelDirty() {
@@ -177,7 +173,7 @@ public class OsylController implements SavePushButtonEventHandler,
      * This method is JSNI method to retrieve the value of osyl:ro meta tag in
      * the html head. &lt;meta name="osyl:ro" content="true" &gt; or &lt;meta
      * name="osyl:ro" content="false" &gt;
-     *
+     * 
      * @return true if UI is in read-only mode, false if not.
      */
     public native boolean getReadOnlyParameter() /*-{
@@ -202,7 +198,7 @@ public class OsylController implements SavePushButtonEventHandler,
      * This method is JSNI method to retrieve the value of osyl:sg meta tag in
      * the html head. &lt;meta name="osyl:sg" content="securityAttendee" &gt; or
      * &lt;meta name="osyl:ro" content="securityPublic" &gt;
-     *
+     * 
      * @return null or security group if found
      */
     public native String getPublishedSecurityAccessType() /*-{
@@ -221,7 +217,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Returns the user agent stocked in the meta tag of index.jsp.
-     *
+     * 
      * @return the user agent string.
      */
     public native String getUserAgent() /*-{
@@ -241,7 +237,7 @@ public class OsylController implements SavePushButtonEventHandler,
     /**
      * Tells if the specified model object is the same as current context
      * object.
-     *
+     * 
      * @param COModelInterface modelObject
      * @return true if the specified object is the same as current context
      */
@@ -252,7 +248,7 @@ public class OsylController implements SavePushButtonEventHandler,
     /**
      * Sets the type of object currently displayed in the editor, and the object
      * itself.
-     *
+     * 
      * @param String contextType
      * @param String viewContextModel
      */
@@ -262,7 +258,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Returns the object currently displayed in the editor.
-     *
+     * 
      * @return Model object
      */
     public COModelInterface getViewContextModel() {
@@ -271,7 +267,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Returns the view context object currently displayed in the editor.
-     *
+     * 
      * @return ViewContext
      */
     public OsylViewContext getViewContext() {
@@ -281,7 +277,7 @@ public class OsylController implements SavePushButtonEventHandler,
     /**
      * Sets the current site ID. This is called by the EntryPoint at
      * initialization.
-     *
+     * 
      * @param site ID
      */
     public void setSiteId(String s) {
@@ -291,7 +287,7 @@ public class OsylController implements SavePushButtonEventHandler,
     /**
      * Returns the current site ID. This allows the Controller to provide Views
      * or other classes with this information, when needed.
-     *
+     * 
      * @param site ID
      */
     public String getSiteId() {
@@ -300,7 +296,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Returns the current execution mode: test or prod.
-     *
+     * 
      * @return String
      */
     public static String getExecMode() {
@@ -309,7 +305,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Returns current main view.
-     *
+     * 
      * @return {@link EditorMainView}
      */
     public OsylMainView getMainView() {
@@ -318,7 +314,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Sets current main view.
-     *
+     * 
      * @param {@link EditorMainView}
      */
     public void setMainView(OsylMainView mainView) {
@@ -339,7 +335,7 @@ public class OsylController implements SavePushButtonEventHandler,
      * Called when we cannot establish communication with the server. Typically
      * this only occurs during development. We initialize with test content and
      * configuration.
-     *
+     * 
      * @param String error msg
      */
     void unableToInitServer(String err) {
@@ -350,7 +346,7 @@ public class OsylController implements SavePushButtonEventHandler,
      * handleRPCError is called by RPCController whenever an error occurs during
      * a server call. More specific behavior can be implemented by using
      * specific call-back methods.
-     *
+     * 
      * @param msg
      */
     public void handleRPCError(String msg) {
@@ -358,54 +354,6 @@ public class OsylController implements SavePushButtonEventHandler,
 	final OsylAlertDialog alertBox =
 		new OsylAlertDialog(false, true, "Alert - RPC Error", msg);
 	alertBox.show();
-    }
-
-    /**
-     * Request the loading of a specific CourseOutlineXML to the server.
-     *
-     * @param String ID of the requested CourseOutlineXML
-     */
-    public void getSerializedCourseOutline(String id) {
-
-	// The caller must be declared final to use it into an inner class
-	final OsylController caller = this;
-	// We first create a call-back for this method call
-	AsyncCallback<COSerialized> callback =
-		new AsyncCallback<COSerialized>() {
-		    // We define the behavior in case of success
-		    public void onSuccess(COSerialized co) {
-			try {
-			    System.out
-				    .println("RPC SUCCESS getSerializedCourseOutline(...)");
-			    caller.getSerializedCourseOutlineCB(co);
-			} catch (Exception error) {
-			    System.out
-				    .println("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
-					    + error.toString());
-			    Window
-				    .alert("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
-					    + error.toString());
-			    caller
-				    .handleRPCError("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
-					    + error.toString());
-			}
-		    }
-
-		    // And we define the behavior in case of failure
-		    public void onFailure(Throwable error) {
-			System.out
-				.println("RPC FAILURE getSerializedCourseOutline(...) : "
-					+ error.toString());
-			Window
-				.alert("RPC FAILURE - getSerializedCourseOutline(...) : "
-					+ error.toString());
-			caller
-				.handleRPCError("RPC FAILURE - getSerializedCourseOutline(...): "
-					+ error.toString());
-		    }
-		};
-	OsylRemoteServiceLocator.getEditorRemoteService()
-		.getSerializedCourseOutline(id, callback);
     }
 
     /**
@@ -422,8 +370,18 @@ public class OsylController implements SavePushButtonEventHandler,
 			try {
 			    System.out
 				    .println("RPC SUCCESS - getSerializedCourseOutline(...)");
-
 			    if (co != null) {
+				if (co.isIncompatibleWithHisParent()) {
+				    final OsylAlertDialog alertBox =
+					    new OsylAlertDialog(
+						    false,
+						    true,
+						    uiMessages
+							    .getMessage("Global.warning"),
+						    uiMessages
+							    .getMessage("fusionException"));
+				    alertBox.show();
+				}
 				caller.getSerializedCourseOutlineCB(co);
 			    } else {
 				if (caller.isReadOnly()) {
@@ -445,6 +403,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
 		    // And we define the behavior in case of failure
 		    public void onFailure(Throwable error) {
+
 			System.out
 				.println("RPC FAILURE - getSerializedCourseOutline(...) : "
 					+ error.toString());
@@ -476,7 +435,7 @@ public class OsylController implements SavePushButtonEventHandler,
     /**
      * Call-back method for parsing the CourseOutlineXML downloaded from the
      * server.
-     *
+     * 
      * @param COSerialized returned by the server
      */
     public void getSerializedCourseOutlineCB(COSerialized co) {
@@ -495,6 +454,7 @@ public class OsylController implements SavePushButtonEventHandler,
 	setCoMessages(new OsylConfigMessages(co.getMessages()));
 
 	OsylEditorEntryPoint.getInstance().initModel(co);
+	
 
 	// We keep track of the current site ID.
 	setSiteId(co.getSiteId());
@@ -503,7 +463,7 @@ public class OsylController implements SavePushButtonEventHandler,
     /**
      * Call-back method when we cannot download the CourseOutlineXML from the
      * server.
-     *
+     * 
      * @param String errorMessage
      */
     public void unableToGetSerializedCourseOutline(String errorMessage) {
@@ -517,7 +477,7 @@ public class OsylController implements SavePushButtonEventHandler,
     /**
      * Call-back method when we cannot create or update an assigment on the
      * server.
-     *
+     * 
      * @param String errorMessage
      */
     public void unableToCreateOrUpdateAssignment(String errorMessage) {
@@ -533,7 +493,7 @@ public class OsylController implements SavePushButtonEventHandler,
      * received from the server. That mean we did receive something, but we
      * cannot parse it. We initialize the model with a default content to allow
      * development.
-     *
+     * 
      * @param String errorMessage
      */
     public void unableToInitSerializedCourseOutline(String errorMessage) {
@@ -560,7 +520,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Call-back method when we cannot delete an assignment.
-     *
+     * 
      * @param String errorMessage
      */
     public void unableToRemoveAssignment(String errorMessage) {
@@ -575,7 +535,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Call-back method when we cannot delete a citation.
-     *
+     * 
      * @param String errorMessage
      */
     public void unableToRemoveCitation(String errorMessage) {
@@ -590,7 +550,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Call-back method when we cannot create a citation.
-     *
+     * 
      * @param String errorMessage
      */
     public void unableToCreateOrUpdateCitation(String errorMessage) {
@@ -603,7 +563,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Call-back method when we cannot create a temporary citation.
-     *
+     * 
      * @param String errorMessage
      */
     public void unableToCreateTemporaryCitationList(String errorMessage) {
@@ -616,30 +576,58 @@ public class OsylController implements SavePushButtonEventHandler,
     /**
      * Requests to the server that it saves the CourseOutlineXML. IMPORTANT: the
      * XML must have been generated from the model before this call!
-     *
+     * 
      * @param COSerialized the pojo of the course outline
      */
     public void updateSerializedCourseOutline(final COSerialized pojo,
-	    AsyncCallback<String> callback) {
+	    AsyncCallback<Boolean> callback) {
 	OsylRemoteServiceLocator.getEditorRemoteService()
 		.updateSerializedCourseOutline(pojo, callback);
     }
 
     /**
      * Call-back method for saving the CourseOutlineXML.
-     *
+     * 
      * @param String the id of the saved XML content
      */
-    public void updateSerializedCourseOutlineCB(COSerialized pojo, String id) {
+    public void updateSerializedCourseOutlineCB(Boolean reload) {
 
-	pojo.setCoId(id);
+	if (reload){
+	    AsyncCallback<COSerialized> callback =
+		new AsyncCallback<COSerialized>() {
+		    // We define the behavior in case of success
+		    public void onSuccess(COSerialized co) {
+			try {
+				OsylEditorEntryPoint.getInstance().refreshModel(co);
+			    
+			} catch (Exception error) {
+			    System.out
+				    .println("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
+					    + error.toString());
+			    Window
+				    .alert("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
+					    + error.toString());
+			}
+		    }
+
+		    // And we define the behavior in case of failure
+		    public void onFailure(Throwable error) {
+			Window
+				.alert("RPC FAILURE - getSerializedCourseOutline(...) : "
+					+ error.toString());
+		    }
+		};
+	    OsylRemoteServiceLocator.getEditorRemoteService()
+		    .getSerializedCourseOutline(callback);
+	}
 
 	// A POJO has been sent
 	if (getExecMode().equals("test")) {
 	    Window
 		    .alert("This is the call back from saveCourseOutlineXML. You have automatically "
 			    + "updated the current course outline, unique ID "
-			    + id);
+			    + OsylEditorEntryPoint.getInstance()
+				    .getSerializedCourseOutline().getCoId());
 	    final OsylAlertDialog alertBox =
 		    new OsylAlertDialog(
 			    false,
@@ -647,7 +635,9 @@ public class OsylController implements SavePushButtonEventHandler,
 			    "Alert - Save Confirmation",
 			    "This is the call back from saveCourseOutlineXML. You have automatically "
 				    + "updated the current course outline, unique ID "
-				    + id);
+				    + OsylEditorEntryPoint.getInstance()
+					    .getSerializedCourseOutline()
+					    .getCoId());
 	    alertBox.show();
 	} else {
 	    OsylUnobtrusiveAlert alert =
@@ -660,7 +650,7 @@ public class OsylController implements SavePushButtonEventHandler,
     /**
      * Requests to the server that it publishes the CourseOutline whose ID is
      * specified.
-     *
+     * 
      * @param String ID of the requested CourseOutlineXML
      */
     public void publishCourseOutline(AsyncCallback<Map<String, String>> callback) {
@@ -671,7 +661,7 @@ public class OsylController implements SavePushButtonEventHandler,
     /**
      * Response of the server to tell that the course outline has been
      * published.
-     *
+     * 
      * @param callback
      */
     public void hasBeenPublished(AsyncCallback<Boolean> callback) {
@@ -798,7 +788,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Call-back method for publishing the CourseOutlineXML.
-     *
+     * 
      * @param boolean either the process was successful or not
      */
     public void publishCourseOutlineCB(boolean b) {
@@ -821,7 +811,7 @@ public class OsylController implements SavePushButtonEventHandler,
      * Checks if the current site has a relation (child - parent or ancestor)
      * with the site containing the resource. If it is the case, we allow the
      * site to access to the resource
-     *
+     * 
      * @param resourceURI
      * @return
      */
@@ -878,7 +868,7 @@ public class OsylController implements SavePushButtonEventHandler,
     /**
      * Requests the URL where we can access the CourseOutline whose ID is
      * specified. It must have been published previously.
-     *
+     * 
      * @param String id
      * @return String URL
      */
@@ -915,7 +905,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Call-back method for getting the published CourseOutline URL.
-     *
+     * 
      * @param String URL
      */
     public void getSerializedPublishedCourseOutlineForAccessTypeCB(
@@ -961,7 +951,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Call-back method for getting the current user role.
-     *
+     * 
      * @param String current user role
      */
     public void getCurrentUserRoleCB(String role) {
@@ -976,7 +966,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Applies the specified permission for the specified resource.
-     *
+     * 
      * @param String resourceId
      * @param String permission
      */
@@ -1009,7 +999,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Call-back method for applying permissions.
-     *
+     * 
      * @param boolean either successful or not
      */
     public void applyPermissionsCB(boolean ok) {
@@ -1142,7 +1132,6 @@ public class OsylController implements SavePushButtonEventHandler,
 	}
     }
 
-
     private Map<String, String> providers;
     private Map<String, String> entities;
     private SakaiEntities sakaiEntities;
@@ -1155,11 +1144,9 @@ public class OsylController implements SavePushButtonEventHandler,
 	this.providers = providers;
     }
 
-
     public SakaiEntities getExistingEntities(String siteId) {
 	return sakaiEntities;
     }
-
 
     public void setExistingEntities(SakaiEntities sakaiEntities) {
 	this.sakaiEntities = sakaiEntities;
@@ -1170,17 +1157,18 @@ public class OsylController implements SavePushButtonEventHandler,
 	}
     }
 
-    public void getExistingEntities(String siteId, AsyncCallback<SakaiEntities> callback) {
+    public void getExistingEntities(String siteId,
+	    AsyncCallback<SakaiEntities> callback) {
 
-	OsylRemoteServiceLocator.getEditorRemoteService().getExistingEntities(siteId, callback);
+	OsylRemoteServiceLocator.getEditorRemoteService().getExistingEntities(
+		siteId, callback);
     }
-
 
     /**
      * Call-back method for receiving the configuration downloaded from the
      * server. It is invoked only if the RPC call was successful. In this case
      * we load the course outline.
-     *
+     * 
      * @param COConfigSerialized returned by the server
      */
     public void getSerializedConfigCB(COConfigSerialized cfg) {
@@ -1214,11 +1202,11 @@ public class OsylController implements SavePushButtonEventHandler,
 	saveCourseOutline(null);
     }
 
-    public void saveCourseOutline(AsyncCallback<String> callBack) {
+    public void saveCourseOutline(AsyncCallback<Void> callBack) {
 	saveCourseOutline(callBack, false);
     }
 
-    public void saveCourseOutline(final AsyncCallback<String> callBack,
+    public void saveCourseOutline(final AsyncCallback<Void> callBack,
 	    final boolean autoSave) {
 	try {
 	    // 1. Unless we are performing an auto-save, we instruct the
@@ -1235,44 +1223,43 @@ public class OsylController implements SavePushButtonEventHandler,
 
 	    // 3. And we save it!
 	    // The caller must be declared final to use it into an inner class
-		final OsylController caller = this;
-	    AsyncCallback<String> callback = new AsyncCallback<String>() {
-		    // We define the behavior in case of success
-		    public void onSuccess(String id) {
-			try {
-			    System.out
-				    .println("RPC SUCCESS - updateSerializedCourseOutline(...)");
-			    caller.updateSerializedCourseOutlineCB(OsylEditorEntryPoint
-        				    .getInstance().getSerializedCourseOutline(), id);
-			    if(callBack!=null)
-			    	callBack.onSuccess(id);
-			} catch (Exception error) {
-			    System.out
-				    .println("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
-					    + error.toString());
-			    Window
-				    .alert("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
-					    + error.toString());
-			    caller
-				    .handleRPCError("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
-					    + error.toString());
-			}
-		    }
-
-		    // And we define the behavior in case of failure
-		    public void onFailure(Throwable error) {
+	    final OsylController caller = this;
+	    AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+		// We define the behavior in case of success
+		public void onSuccess(Boolean reload) {
+		    try {
 			System.out
-				.println("RPC FAILURE - updateSerializedCourseOutline(...) : "
+				.println("RPC SUCCESS - updateSerializedCourseOutline(...)");
+			caller.updateSerializedCourseOutlineCB(reload);
+			if (callBack != null)
+			    callBack.onSuccess(null);
+		    } catch (Exception error) {
+			System.out
+				.println("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
 					+ error.toString());
 			Window
-				.alert("RPC FAILURE - updateSerializedCourseOutline(...) : "
+				.alert("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
 					+ error.toString());
 			caller
-				.handleRPCError("RPC FAILURE - updateSerializedCourseOutline(...) :"
+				.handleRPCError("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
 					+ error.toString());
 		    }
-		};
-	    
+		}
+
+		// And we define the behavior in case of failure
+		public void onFailure(Throwable error) {
+		    System.out
+			    .println("RPC FAILURE - updateSerializedCourseOutline(...) : "
+				    + error.toString());
+		    Window
+			    .alert("RPC FAILURE - updateSerializedCourseOutline(...) : "
+				    + error.toString());
+		    caller
+			    .handleRPCError("RPC FAILURE - updateSerializedCourseOutline(...) :"
+				    + error.toString());
+		}
+	    };
+
 	    updateSerializedCourseOutline(entryPoint
 		    .getSerializedCourseOutline(), callback);
 
@@ -1328,7 +1315,7 @@ public class OsylController implements SavePushButtonEventHandler,
     /**
      * Returns the Course Outline related message corresponding to the specified
      * key
-     *
+     * 
      * @return String CO Message .
      */
     public String getCoMessage(String key) {
@@ -1358,7 +1345,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Returns the UI message corresponding to the specified key
-     *
+     * 
      * @return String UI Message .
      */
     public String getUiMessage(String key) {
@@ -1374,7 +1361,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Checks if the application is running in hosted mode or with the backend.
-     *
+     * 
      * @return true if in hosted mode, false if not.
      */
     public boolean isInHostedMode() {
@@ -1414,7 +1401,7 @@ public class OsylController implements SavePushButtonEventHandler,
     /**
      * Retrieves the GWT module URL and only retain the beginning until the last
      * occurrence of "/".
-     *
+     * 
      * @return the adjusted module URL
      */
     public String getPublishedModuleBaseURL() {
@@ -1533,7 +1520,7 @@ public class OsylController implements SavePushButtonEventHandler,
 
     /**
      * Call-back method when we cannot ping the server.
-     *
+     * 
      * @param String errorMessage
      */
     public void unableToPing(Throwable error) {
@@ -1589,10 +1576,10 @@ public class OsylController implements SavePushButtonEventHandler,
 	final OsylController caller = this;
 
 	// We first create a call-back for this method call
-	AsyncCallback<String> callback = new AsyncCallback<String>() {
+	AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 
 	    // We define the behavior in case of success
-	    public void onSuccess(String serverResponse) {
+	    public void onSuccess(Void serverResponse) {
 	    }
 
 	    // And we define the behavior in case of failure
@@ -1605,15 +1592,8 @@ public class OsylController implements SavePushButtonEventHandler,
     }
 
     /**
-     * Call-back method for autoSave.
-     */
-    public void autoSaveCB(String serverResponse) {
-	updateSerializedCourseOutlineCB(getCOSerialized(), serverResponse);
-    }
-
-    /**
      * Call-back method when we cannot autoSave.
-     *
+     * 
      * @param String errorMessage
      */
     public void unableToAutoSave(Throwable error) {
@@ -1684,8 +1664,10 @@ public class OsylController implements SavePushButtonEventHandler,
 	OsylRemoteServiceLocator.getEditorRemoteService().releaseLock(cb);
     }
 
-    public void createPrintableEditionVersion(AsyncCallback<Void> printEditionVersionCallback) {
-	OsylRemoteServiceLocator.getEditorRemoteService().createPrintableEditionVersion(printEditionVersionCallback);
+    public void createPrintableEditionVersion(
+	    AsyncCallback<Void> printEditionVersionCallback) {
+	OsylRemoteServiceLocator.getEditorRemoteService()
+		.createPrintableEditionVersion(printEditionVersionCallback);
     }
 
 }

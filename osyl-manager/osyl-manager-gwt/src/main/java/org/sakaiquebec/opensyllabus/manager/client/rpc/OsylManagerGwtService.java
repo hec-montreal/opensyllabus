@@ -24,6 +24,8 @@ package org.sakaiquebec.opensyllabus.manager.client.rpc;
 import java.util.List;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
+import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
@@ -62,7 +64,7 @@ public interface OsylManagerGwtService extends RemoteService {
 
     public String getParent(String siteId) throws Exception;
 
-    public void associate(String siteId, String parentId) throws Exception;
+    public void associate(String siteId, String parentId) throws Exception,CompatibilityException;
 
     public void dissociate(String siteId, String parentId) throws Exception;
 
@@ -92,7 +94,7 @@ public interface OsylManagerGwtService extends RemoteService {
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
 	    String academicSession);
 
-    public void publish(String siteId) throws Exception;
+    public void publish(String siteId) throws Exception, FusionException;
     
     public List<CMAcademicSession> getAcademicSessions();
 

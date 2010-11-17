@@ -56,7 +56,7 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
     private ListBox parentSiteList;
 
     private PushButton attButton;
-    
+
     private Widget img;
 
     private static List<String> lMsg = new ArrayList<String>();
@@ -64,7 +64,7 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
     private static int asynCB_return = 0;
 
     private static int asynCB_OK = 0;
-    
+
     private final OsylCancelDialog diag;
 
     AsyncCallback<Map<String, String>> parentListAsyncCallback =
@@ -77,11 +77,12 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 
 		public void onSuccess(Map<String, String> result) {
 		    img.removeFromParent();
-		    
+
 		    if (result == null || result.isEmpty()) {
-			OsylOkCancelDialog warning = new OsylOkCancelDialog(
-				false, true, messages.OsylWarning_Title(),
-				messages.noAssociableCOSite(), true, false);
+			OsylOkCancelDialog warning =
+				new OsylOkCancelDialog(false, true, messages
+					.OsylWarning_Title(), messages
+					.noAssociableCOSite(), true, false);
 			warning.show();
 			warning.centerAndFocus();
 			attButton.setEnabled(false);
@@ -120,7 +121,10 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 
 	public void onFailure(Throwable caught) {
 	    diag.hide();
-	    AttachForm.lMsg.add(siteId);
+	    String msg =
+		    siteId +" "+messages.attachForm_attach_error_detail() + " :"
+			    + caught.getMessage();
+	    AttachForm.lMsg.add(msg);
 	    responseReceive();
 	}
 
@@ -138,7 +142,8 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 		} else {
 		    AttachForm.this.onFailure();
 		}
-		controller.notifyManagerEventHandler(new OsylManagerEvent(null, OsylManagerEvent.SITE_INFO_CHANGE));
+		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
+			OsylManagerEvent.SITE_INFO_CHANGE));
 	    }
 	}
 
@@ -150,14 +155,13 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	AttachForm.coSites = cosites;
 	this.diag = aDiag;
 
-	Label title =
-		new Label(messages.mainView_action_attach());
+	Label title = new Label(messages.mainView_action_attach());
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);
 
 	Label l = new Label(messages.select_parent_site());
 	parentSiteList = new ListBox();
-	img = new Image(controller.getImageBundle().ajaxloader());	
+	img = new Image(controller.getImageBundle().ajaxloader());
 	HorizontalPanel lBoxPanel = new HorizontalPanel();
 	lBoxPanel.add(parentSiteList);
 	lBoxPanel.add(img);
@@ -175,8 +179,8 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 		    for (COSite cosite : cosites) {
 			AssociateAsyncCallback aac =
 				new AssociateAsyncCallback(cosite.getSiteId());
-			asynCB_OK=0;
-			asynCB_return=0;
+			asynCB_OK = 0;
+			asynCB_return = 0;
 			controller.associate(cosite.getSiteId(), pId, aac);
 		    }
 
@@ -192,18 +196,18 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	List<String> siteIds = new ArrayList<String>();
 	for (COSite cosi : cosites)
 	    siteIds.add(cosi.getSiteId());
-	
-	if(controller.isInHostedMode()){
+
+	if (controller.isInHostedMode()) {
 	    getHostedModeData();
 	} else {
 	    controller.getOsylSites(siteIds, parentListAsyncCallback);
 	}
     }
-    
-    private void getHostedModeData(){
-	for (int i=1; i<=10; i++) {
-	    String siteTitle = "site"+i;
-	    String siteId = "site"+i;
+
+    private void getHostedModeData() {
+	for (int i = 1; i <= 10; i++) {
+	    String siteTitle = "site" + i;
+	    String siteId = "site" + i;
 	    parentSiteList.addItem(siteTitle, siteId);
 	}
 	attButton.setEnabled(true);
@@ -214,11 +218,9 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	Label l = new Label(messages.mainView_action_attach());
 	l.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(l);
-	mainPanel
-		.add(new Label(messages.attachForm_attach_ok()));
+	mainPanel.add(new Label(messages.attachForm_attach_ok()));
 
-	PushButton closeButton =
-		new PushButton(messages.form_close());
+	PushButton closeButton = new PushButton(messages.form_close());
 	closeButton.setStylePrimaryName("Osyl-Button");
 	closeButton.setWidth("40px");
 	closeButton.addClickHandler(new ClickHandler() {
@@ -236,19 +238,13 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	Label l = new Label(messages.mainView_action_attach());
 	l.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(l);
-	mainPanel.add(new Label(messages
-		.attachForm_attach_error()));
+	mainPanel.add(new Label(messages.attachForm_attach_error()));
 
-	for (String id : lMsg) {
-	    Label l1 =
-		    new Label(id
-			    + messages
-				    .attachForm_attach_error_detail());
-	    mainPanel.add(l1);
+	for (String msg : lMsg) {
+	    mainPanel.add(new Label(msg));
 	}
 
-	PushButton closeButton =
-		new PushButton(messages.form_close());
+	PushButton closeButton = new PushButton(messages.form_close());
 	closeButton.setStylePrimaryName("Osyl-Button");
 	closeButton.setWidth("40px");
 	closeButton.addClickHandler(new ClickHandler() {

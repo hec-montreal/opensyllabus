@@ -57,7 +57,6 @@ import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
 import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.authz.cover.FunctionManager;
 import org.sakaiproject.authz.cover.SecurityService;
@@ -111,6 +110,7 @@ import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
+import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
@@ -526,19 +526,24 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			file.getName().length() - CITATION_EXTENSION.length());
 	osylService.linkCitationsToSite(collection, siteId, collectionName);
 
-	COSerialized co =
-		osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
-	String xml = co.getContent();
-	String id = null;
-	String newId = null;
+	COSerialized co;
+	try {
+	    co = osylSiteService.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
+	    String xml = co.getContent();
+	    String id = null;
+	    String newId = null;
 
-	for (int i = 0; i < oldReferences.size(); i++) {
-	    id = oldReferences.get(i);
-	    newId = newReferences.get(i);
-	    xml.replaceAll(id, newId);
+	    for (int i = 0; i < oldReferences.size(); i++) {
+		id = oldReferences.get(i);
+		newId = newReferences.get(i);
+		xml.replaceAll(id, newId);
+	    }
+
+	    co.setContent(xml);
+	    osylSiteService.updateSerializedCourseOutline(co);
+	} catch (Exception e) {
+	    e.printStackTrace();
 	}
-	co.setContent(xml);
-	osylSiteService.createOrUpdateCO(co);
 
     }
 
@@ -774,17 +779,17 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		SitePage sitePage = (SitePage) iter.next();
 		if (!sitePage.getTools(
 			new String[] { "sakai.opensyllabus.tool" }).isEmpty()) {
-		    //if (osylSiteService.hasBeenPublished(site.getId())) {
-			boolean isInHierarchy = false;
-			for (String siteId : siteIds) {
-			    isInHierarchy =
-				    isInHierarchy
-					    || isSiteinSiteHierarchy(site
-						    .getId(), siteId);
-			}
-			if (!isInHierarchy)
-			    siteMap.put(site.getId(), site.getTitle());
-		    //}
+		    // if (osylSiteService.hasBeenPublished(site.getId())) {
+		    boolean isInHierarchy = false;
+		    for (String siteId : siteIds) {
+			isInHierarchy =
+				isInHierarchy
+					|| isSiteinSiteHierarchy(site.getId(),
+						siteId);
+		    }
+		    if (!isInHierarchy)
+			siteMap.put(site.getId(), site.getTitle());
+		    // }
 		    break;
 		}
 	    }
@@ -822,9 +827,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		SitePage sitePage = (SitePage) iter.next();
 		if (!sitePage.getTools(
 			new String[] { "sakai.opensyllabus.tool" }).isEmpty()) {
-		    if (osylSiteService.hasBeenPublished(site.getId())) {
+		    //if (osylSiteService.hasBeenPublished(site.getId())) {
 			siteMap.put(site.getId(), site.getTitle());
-		    }
+		    //}
 		}
 	    }
 	}
@@ -1094,8 +1099,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     }
 
-    public void associate(String siteId, String parentId)
-	    throws Exception {
+    public void associate(String siteId, String parentId) throws Exception,
+	    CompatibilityException {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] associates [" + siteId + "] to parent [" + parentId + "]");
 	osylSiteService.associate(siteId, parentId);
@@ -1766,77 +1771,91 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 
 	// we retrieve informations from old citations
-	COSerialized co =
-		osylSiteService.getSerializedCourseOutlineBySiteId(newSiteId);
-	COModeledServer model = new COModeledServer(co);
-	Map<String, String> citationsChangeMap = new HashMap<String, String>();
+	COSerialized co;
+	try {
+	    co = osylSiteService.getUnfusionnedSerializedCourseOutlineBySiteId(newSiteId);//getSerializedCourseOultineBysiteID
 
-	model.XML2Model();
+	    COModeledServer model = new COModeledServer(co);
+	    Map<String, String> citationsChangeMap =
+		    new HashMap<String, String>();
 
-	Map<String, String> oldCitations = model.getAllCitations();
-	String uri = null;
-	Citation oldCitation = null;
-	CitationCollection oldCollection = null;
-	String oldCollectionId = null;
-	String oldCollectionRef = null;
+	    model.XML2Model();
 
-	CitationCollection newColl = null;
-	Citation newCitation = null;
+	    Map<String, String> oldCitations = model.getAllCitations();
+	    String uri = null;
+	    Citation oldCitation = null;
+	    CitationCollection oldCollection = null;
+	    String oldCollectionId = null;
+	    String oldCollectionRef = null;
 
-	for (String id : oldCitations.keySet()) {
-	    uri = oldCitations.get(id);
-	    uri = uri.replaceFirst(newSiteId, oldSiteId);
+	    CitationCollection newColl = null;
+	    Citation newCitation = null;
 
-	    oldCollectionRef = uri.substring(0, uri.lastIndexOf("/"));
-	    try {
-		oldCollectionId =
-			new String((contentHostingService
-				.getResource(oldCollectionRef)).getContent());
-		oldCollection =
-			org.sakaiproject.citation.cover.CitationService
-				.getCollection(oldCollectionId);
-		oldCitation =
-			oldCollection.getCitation(uri.substring(
-				uri.lastIndexOf("/") + 1, uri.length()).trim());
+	    for (String id : oldCitations.keySet()) {
+		uri = oldCitations.get(id);
+		uri = uri.replaceFirst(newSiteId, oldSiteId);
 
-		for (String newCitationRef : newCitations.keySet()) {
+		oldCollectionRef = uri.substring(0, uri.lastIndexOf("/"));
+		try {
+		    oldCollectionId =
+			    new String((contentHostingService
+				    .getResource(oldCollectionRef))
+				    .getContent());
+		    oldCollection =
+			    org.sakaiproject.citation.cover.CitationService
+				    .getCollection(oldCollectionId);
+		    oldCitation =
+			    oldCollection.getCitation(uri.substring(
+				    uri.lastIndexOf("/") + 1, uri.length())
+				    .trim());
 
-		    oldCollectionRef =
-			    oldCollectionRef.replaceFirst(oldSiteId, newSiteId);
+		    for (String newCitationRef : newCitations.keySet()) {
 
-		    if (newCitationRef.contains(oldCollectionRef)) {
-			newColl = newCitations.get(newCitationRef);
-			newCitation =
-				newColl.getCitation(newCitationRef.substring(
-					newCitationRef.lastIndexOf("/") + 1,
-					newCitationRef.length()).trim());
+			oldCollectionRef =
+				oldCollectionRef.replaceFirst(oldSiteId,
+					newSiteId);
 
-			// We update the citation id
-			if (compareCitations(oldCitation, newCitation)) {
-			    citationsChangeMap.put(oldCitation.getId(),
-				    newCitation.getId());
-			    continue;
+			if (newCitationRef.contains(oldCollectionRef)) {
+			    newColl = newCitations.get(newCitationRef);
+			    newCitation =
+				    newColl
+					    .getCitation(newCitationRef
+						    .substring(
+							    newCitationRef
+								    .lastIndexOf("/") + 1,
+							    newCitationRef
+								    .length())
+						    .trim());
+
+			    // We update the citation id
+			    if (compareCitations(oldCitation, newCitation)) {
+				citationsChangeMap.put(oldCitation.getId(),
+					newCitation.getId());
+				continue;
+			    }
 			}
 		    }
-		}
-	    } catch (ServerOverloadException e) {
-		e.printStackTrace();
-	    } catch (PermissionException e) {
-		e.printStackTrace();
-	    } catch (IdUnusedException e) {
-		e.printStackTrace();
-	    } catch (TypeException e) {
-		e.printStackTrace();
-	    } finally {
-		model.resetXML(citationsChangeMap);
-		model.model2XML();
-		co.setContent(model.getSerializedContent());
-		try {
-		    osylSiteService.updateSerializedCourseOutline(co);
-		} catch (Exception e) {
+		} catch (ServerOverloadException e) {
 		    e.printStackTrace();
+		} catch (PermissionException e) {
+		    e.printStackTrace();
+		} catch (IdUnusedException e) {
+		    e.printStackTrace();
+		} catch (TypeException e) {
+		    e.printStackTrace();
+		} finally {
+		    model.resetXML(citationsChangeMap);
+		    model.model2XML();
+		    co.setContent(model.getSerializedContent());
+		    try {
+			osylSiteService.updateSerializedCourseOutline(co);
+		    } catch (Exception e) {
+			e.printStackTrace();
+		    }
 		}
 	    }
+	} catch (Exception e1) {
+	    e1.printStackTrace();
 	}
 
     }

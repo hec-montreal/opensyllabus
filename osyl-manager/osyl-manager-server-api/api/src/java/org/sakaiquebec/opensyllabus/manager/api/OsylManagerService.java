@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
@@ -125,7 +126,7 @@ public interface OsylManagerService {
 
     public String getParent(String siteId) throws Exception;
 
-    public void associate(String siteId, String parentId) throws Exception;
+    public void associate(String siteId, String parentId) throws Exception, CompatibilityException;
 
     public void dissociate(String siteId, String parentId) throws Exception;
 

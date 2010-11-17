@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.client.remoteservice.rpc;
 import java.util.Date;
 import java.util.Map;
 
+import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
@@ -47,15 +48,6 @@ public interface OsylEditorGwtService extends RemoteService {
     public void initTool() throws Exception;
 
     /**
-     * Returns the CourseOutline whose ID is specified.
-     * 
-     * @param String ID
-     * @return the CourseOutline POJO corresponding to the specified ID
-     * @throws Exception
-     */
-    public COSerialized getSerializedCourseOutline(String id) throws Exception;
-
-    /**
      * Returns the CourseOutline of the current context.
      * 
      * @return the CourseOutline POJO corresponding to the current context.
@@ -72,7 +64,7 @@ public interface OsylEditorGwtService extends RemoteService {
      * @return the CourseOutline ID
      * @throws Exception
      */
-    public String updateSerializedCourseOutline(COSerialized co)
+    public boolean updateSerializedCourseOutline(COSerialized co)
 	    throws Exception;
 
     /**
@@ -82,7 +74,7 @@ public interface OsylEditorGwtService extends RemoteService {
      * 
      * @param String id
      */
-    public Map<String, String> publishCourseOutline() throws Exception;
+    public Map<String, String> publishCourseOutline() throws Exception, FusionException;
 
     /**
      * Returns the Published CourseOutline for the access type specified in

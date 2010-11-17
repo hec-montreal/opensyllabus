@@ -9,6 +9,7 @@ import org.sakaiproject.entity.api.EntityProducer;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
+import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
 /******************************************************************************
@@ -183,20 +184,13 @@ public interface OsylSiteService extends EntityProducer {
 	    throws Exception;
 
     /**
-     * Returns the CourseOutline whose site ID is specified.
-     *
-     * @param String the site ID
-     * @return the CourseOutline POJO corresponding to the specified siteID
-     * @throws Exception
-     */
-    public COSerialized getSerializedCourseOutlineBySiteId(String siteId);
-
-    /**
      * Returns the CourseOutline of the current context.
      *
      * @return the CourseOutline POJO corresponding to the current context.
+     * @throws FusionException 
+     * @throws Exception 
      */
-    public COSerialized getSerializedCourseOutline(String webappDir);
+    public COSerialized getSerializedCourseOutlineForEditor(String siteId,String webappDir) throws Exception;
 
     /**
      * Returns the CourseOutline of the current context (version unfusionned).
@@ -204,13 +198,6 @@ public interface OsylSiteService extends EntityProducer {
      * @return the CourseOutline POJO corresponding to the current context.
      */
     public COSerialized getUnfusionnedSerializedCourseOutlineBySiteId(String id);
-
-    /**
-     * Creates or update a new course outline
-     *
-     * @return
-     */
-    public String createOrUpdateCO(COSerialized co);
 
     /**
      * Saves the CourseOutline specified. The ID is returned. This is useful if
@@ -222,7 +209,7 @@ public interface OsylSiteService extends EntityProducer {
      * @return the CourseOutline ID
      * @throws Exception
      */
-    public String updateSerializedCourseOutline(COSerialized co)
+    public boolean updateSerializedCourseOutline(COSerialized co)
 	    throws Exception;
 
     /**
@@ -251,11 +238,11 @@ public interface OsylSiteService extends EntityProducer {
 
     public List<String> getChildren(String siteId) throws Exception;
 
-    public void associate(String siteId, String parentId) throws Exception;
+    public void associate(String siteId, String parentId) throws Exception, CompatibilityException;
 
     public void dissociate(String siteId, String parentId) throws Exception;
 
-    public COModeledServer getFusionnedPrePublishedHierarchy(String siteId);
+    public COModeledServer getFusionnedPrePublishedHierarchy(String siteId) throws Exception;
 
     public COSerialized updateCOCourseInformations(String siteId, String webappDir)
 	    throws Exception;

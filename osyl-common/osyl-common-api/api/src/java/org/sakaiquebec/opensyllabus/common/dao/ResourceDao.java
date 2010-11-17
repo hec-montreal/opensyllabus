@@ -80,7 +80,7 @@ public interface ResourceDao {
      * @return Creates a new courseOutline
      * @throws Exception
      */
-    public String createOrUpdateCourseOutline(COSerialized courseoutline)
+    public void createOrUpdateCourseOutline(COSerialized courseoutline)
 	    throws Exception;
 
     /**

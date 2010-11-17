@@ -18,24 +18,36 @@
  * limitations under the License.
  *
  ******************************************************************************/
-package org.sakaiquebec.opensyllabus.common.helper;
+package org.sakaiquebec.opensyllabus.shared.exception;
 
-import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
-import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
+import java.io.Serializable;
+
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
 /**
+ *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class ModelHelper {
+public class FusionException extends Exception implements Serializable {
 
-    public static void createAssociationInXML(COSerialized co,
-	    COModeledServer coModelParent) throws CompatibilityException {
-	COModeledServer coModelChild = new COModeledServer(co);
-	coModelChild.XML2Model();
-	coModelChild.associate(coModelParent);
-	coModelChild.model2XML();
-	co.setContent(coModelChild.getSerializedContent());
+    private static final long serialVersionUID = -8218897299880366249L;
+    
+    public FusionException() {
+	super();
     }
+
+    /**
+     * Constructs a new exception with the specified detail message.  The
+     * cause is not initialized, and may subsequently be initialized by
+     * a call to {@link #initCause}.
+     *
+     * @param   message   the detail message. The detail message is saved for 
+     *          later retrieval by the {@link #getMessage()} method.
+     */
+    public FusionException(String message) {
+	super(message);
+    }
+     
 }
+

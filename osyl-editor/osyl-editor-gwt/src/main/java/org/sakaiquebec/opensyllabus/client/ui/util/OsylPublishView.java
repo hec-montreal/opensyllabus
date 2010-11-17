@@ -28,6 +28,7 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewControllable;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
+import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.GWT;
@@ -133,8 +134,8 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	public void onClick(ClickEvent event) {
 	    osylPublishedListView.setPublishingNow();
 
-	    AsyncCallback<String> callback = new AsyncCallback<String>() {
-		public void onSuccess(String serverResponse) {
+	    AsyncCallback<Void> callback = new AsyncCallback<Void>() {
+		public void onSuccess(Void serverResponse) {
 		    publish();
 		}
 
@@ -166,12 +167,19 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 		    }
 
 		    public void onFailure(Throwable error) {
-			final OsylAlertDialog alertBox =
+			if(error instanceof FusionException){
+			    final OsylAlertDialog alertBox =
+				new OsylAlertDialog(false, true, uiMessages.getMessage("Global.warning"),
+					uiMessages.getMessage("publish.fusionException"));
+			    alertBox.show();
+			}else{
+			    final OsylAlertDialog alertBox =
 				new OsylAlertDialog(false, true,
 					getController().getUiMessage(
 						"publish.error")
 						+ " : " + error.toString());
 			alertBox.show();
+			}
 			osylPublishedListView.verifiyPublishState(false);
 		    }
 		};

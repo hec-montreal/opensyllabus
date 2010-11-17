@@ -50,6 +50,8 @@ import javax.xml.xpath.XPathFactory;
 
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
+import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
+import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
@@ -261,7 +263,7 @@ public class COModeledServer {
     private Map<String, String> allDocumentsVisibilityMap;
 
     private Map<String, String> allDocuments;
-    
+
     private Map<String, String> allCitations;
 
     /**
@@ -444,10 +446,10 @@ public class COModeledServer {
 	elem.setAccess(map.getNamedItem(ACCESS_ATTRIBUTE_NAME).getNodeValue());
 
 	elem
-	.setId(map.getNamedItem(ID_ATTRIBUTE_NAME) == null ? UUID
-		.uuid() : map.getNamedItem(ID_ATTRIBUTE_NAME)
-		.getNodeValue().equals("") ? UUID.uuid() : map
-		.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue());
+		.setId(map.getNamedItem(ID_ATTRIBUTE_NAME) == null ? UUID
+			.uuid() : map.getNamedItem(ID_ATTRIBUTE_NAME)
+			.getNodeValue().equals("") ? UUID.uuid() : map
+			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue());
 
 	elem
 		.setEditable(map.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? true
@@ -1280,7 +1282,7 @@ public class COModeledServer {
 	this.documentVisibilityMap = documentVisibilityMap;
     }
 
-    public void associate(COModeledServer parent) throws Exception {
+    public void associate(COModeledServer parent) throws CompatibilityException {
 	COContent contentParent = parent.getModeledContent();
 	COContent contentChild = this.getModeledContent();
 
@@ -1292,15 +1294,18 @@ public class COModeledServer {
 	    if (this.schemaVersion.equals(parent.schemaVersion))
 		associateChild(contentChild, contentParent);
 	    else
-		throw new Exception(
-			"COuld not associate: child schema version != parent schema version");
+		throw new CompatibilityException(
+			CompatibilityException.SCHEMA_VERSION_INCOMPATIBILIYY,
+			null, null);
+	    // throw new Exception(
+	    // "COuld not associate: child schema version != parent schema version");
 	}
 
     }
 
     @SuppressWarnings("unchecked")
     private void associateChild(COElementAbstract childElement,
-	    COElementAbstract parentElement) throws Exception {
+	    COElementAbstract parentElement) throws CompatibilityException {
 	if ((parentElement.isCourseOutlineContent() && childElement
 		.isCourseOutlineContent())
 		|| (childElement.getType().equals(parentElement.getType()))) {
@@ -1309,12 +1314,15 @@ public class COModeledServer {
 		    || childElement.getIdParent().equals(""))
 		childElement.setIdParent(parentElement.getId());
 	    else if (!childElement.getIdParent().equals(parentElement.getId())) {
-		throw new Exception("Element " + childElement.getType()
-			+ " with id " + childElement.getId()
-			+ " is already associated with a parent(id "
-			+ childElement.getIdParent()
-			+ ") and could not be associated with parent (id "
-			+ parentElement.getId() + ").");
+		throw new CompatibilityException(
+			CompatibilityException.ELEMENT_ALREADY_ASSOCIATED,
+			null, null);
+		// Exception("Element " + childElement.getType()
+		// + " with id " + childElement.getId()
+		// + " is already associated with a parent(id "
+		// + childElement.getIdParent()
+		// + ") and could not be associated with parent (id "
+		// + parentElement.getId() + ").");
 	    }
 	    if (!parentElement.isCOUnitContent()) {
 		childElement.setIdParent(parentElement.getId());
@@ -1337,11 +1345,14 @@ public class COModeledServer {
 		}
 	    }
 	} else {
-	    throw new Exception(
-		    "Error while associate course outlines : type '"
-			    + childElement.getType()
-			    + "' could not be associate with type '"
-			    + parentElement.getType() + "'.");
+	    throw new CompatibilityException(
+		    CompatibilityException.STRUCTURE_INCOMPATIBILITY,
+		    childElement.getType(), parentElement.getType());
+	    // throw new Exception(
+	    // "Error while associate course outlines : type '"
+	    // + childElement.getType()
+	    // + "' could not be associate with type '"
+	    // + parentElement.getType() + "'.");
 	}
     }
 
@@ -1396,26 +1407,28 @@ public class COModeledServer {
 	coSerialized.setContent(sc);
     }
 
-    public void fusion(COModeledServer parent) {
+    public void fusion(COModeledServer parent) throws FusionException, CompatibilityException {
 	COContent contentChild = this.getModeledContent();
 	COContent contentfusionned = parent.getModeledContent();
-
-	try {
-	    if (contentChild.getIdParent() != null
-		    && !contentChild.getIdParent().equals("")) {
-
-		prepareForFusion(contentfusionned);
-		if (contentfusionned != null) {
-		    contentfusionned.setIdParent(contentfusionned.getId());
-		    contentfusionned.setId(contentChild.getId());
-		}
-		fusion(contentChild, contentfusionned);
-		contentfusionned.setProperties(contentChild.getProperties());
-		setModeledContent(contentfusionned);
+	if (isXmlAssociated()) {
+	    prepareForFusion(contentfusionned);
+	    if (contentfusionned != null) {
+		contentfusionned.setIdParent(contentfusionned.getId());
+		contentfusionned.setId(contentChild.getId());
 	    }
-	} catch (Exception e) {
-	    e.printStackTrace();
+	    fusion(contentChild, contentfusionned);
+	    contentfusionned.setProperties(contentChild.getProperties());
+	    setModeledContent(contentfusionned);
+	} else {
+	    //xml are not associated we try to associate it
+	    associate(parent);
+	    fusion(parent);
 	}
+    }
+    
+    public boolean isXmlAssociated(){
+	String idParent=this.getModeledContent().getIdParent();
+	return (idParent!=null && !idParent.equals(""));
     }
 
     @SuppressWarnings("unchecked")
@@ -1432,7 +1445,7 @@ public class COModeledServer {
     }
 
     @SuppressWarnings("unchecked")
-    public void fusion(COElementAbstract child, COElementAbstract fusionned) {
+    public void fusion(COElementAbstract child, COElementAbstract fusionned) throws FusionException {
 
 	try {
 	    if (child.isCOUnitContent()) {
@@ -1484,6 +1497,7 @@ public class COModeledServer {
 
 	} catch (Exception e) {
 	    e.printStackTrace();
+	    throw new FusionException();
 	}
     }
 

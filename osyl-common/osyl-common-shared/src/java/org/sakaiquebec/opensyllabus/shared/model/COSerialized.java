@@ -112,6 +112,9 @@ public class COSerialized implements java.io.Serializable {
     private Date publicationDate;
 
     private Date modificationDate;
+    
+    private boolean incompatibleWithHisParent=false;
+    
     /**
      * Default constructor
      */
@@ -433,5 +436,13 @@ public class COSerialized implements java.io.Serializable {
 
     public String getLockedBy() {
 	return lockedBy;
+    }
+
+    public void setIncompatibleWithHisParent(boolean incompatibleWithHisParent) {
+	this.incompatibleWithHisParent = incompatibleWithHisParent;
+    }
+
+    public boolean isIncompatibleWithHisParent() {
+	return incompatibleWithHisParent;
     }
 }

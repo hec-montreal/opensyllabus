@@ -26,7 +26,6 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.OsylPreviewView;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
-import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.GWT;
@@ -222,8 +221,8 @@ public class OsylTextToolbar extends Composite {
 	rightMenuBar.addSeparator(publishSeparator);
 	rightMenuBar.addItem(publishPushButton);
 	rightMenuBar.addSeparator(printSeparator);
-	
-	if(osylController.isReadOnly()){
+
+	if (osylController.isReadOnly()) {
 	    printPushButton =
 		    createMenuItem("ButtonPrintToolBar", getOsylImageBundle()
 			    .printer(), "ButtonPrintToolBarTooltip");
@@ -233,22 +232,23 @@ public class OsylTextToolbar extends Composite {
 		}
 	    });
 	    rightMenuBar.addItem(printPushButton);
-	}else{
+	} else {
 	    printMenuBar = new OsylMenuBar(true);
 	    printMenuBar.setTitle(uiMessages
 		    .getMessage("ButtonPrintToolBarTootip"));
 	    printMenuBar.setAutoOpen(true);
 	    printMenuBar.addStyleName("Osyl-MenuBar-vertical");
 	    printMenuBar.addStyleName("Osyl-MenuBar-View");
-	    addprintMenuBarItems(); 
-	    printPushButton = rightMenuBar.addItem(AbstractImagePrototype.create(
-			getOsylImageBundle().printer()).getHTML()
-			+ uiMessages.getMessage("ButtonPrintToolBar"), true,
-			printMenuBar);
+	    addprintMenuBarItems();
+	    printPushButton =
+		    rightMenuBar.addItem(AbstractImagePrototype.create(
+			    getOsylImageBundle().printer()).getHTML()
+			    + uiMessages.getMessage("ButtonPrintToolBar"),
+			    true, printMenuBar);
 	    printPushButton.addStyleName("Osyl-MenuItem-vertical");
 	    printPushButton.addStyleName("Osyl-MenuItem-View");
 	}
-	
+
 	initWidget(menuBar);
 
     }
@@ -258,13 +258,14 @@ public class OsylTextToolbar extends Composite {
 	final AsyncCallback<Void> print_editionVersion_callback =
 		new AsyncCallback<Void>() {
 		    public void onSuccess(Void v) {
-			    OsylTextToolbar.this
-				    .openDownloadPrintEditionVersionLink();
+			OsylTextToolbar.this
+				.openDownloadPrintEditionVersionLink();
 		    }
 
 		    public void onFailure(Throwable error) {
-			Window.alert("RPC FAILURE - create printable edition version : "
-				+ error.toString());
+			Window
+				.alert("RPC FAILURE - create printable edition version : "
+					+ error.toString());
 		    }
 		};
 
@@ -272,15 +273,17 @@ public class OsylTextToolbar extends Composite {
 		new MenuItem(getOsylController().getUiMessages().getMessage(
 			"ButtonPrintToolBar.edition_version"), new Command() {
 		    public void execute() {
-			AsyncCallback<String> callback = new AsyncCallback<String>() {
-				public void onSuccess(String serverResponse) {
-				    osylController.createPrintableEditionVersion(print_editionVersion_callback); 
-				}
+			AsyncCallback<Void> callback =
+				new AsyncCallback<Void>() {
+				    public void onSuccess(Void serverResponse) {
+					osylController
+						.createPrintableEditionVersion(print_editionVersion_callback);
+				    }
 
-				public void onFailure(Throwable error) {
-				}
-			    };
-			
+				    public void onFailure(Throwable error) {
+				    }
+				};
+
 			osylController.saveCourseOutline(callback);
 		    }
 		});
@@ -290,7 +293,7 @@ public class OsylTextToolbar extends Composite {
 			"ButtonPrintToolBar.published_version"), new Command() {
 		    public void execute() {
 			osylController
-			.hasBeenPublished(print_publishedVersion_callback);
+				.hasBeenPublished(print_publishedVersion_callback);
 		    }
 		});
 	getPrintMenuBar().addItem(editionPrintMenuItem);
@@ -447,7 +450,7 @@ public class OsylTextToolbar extends Composite {
     public void setViewMenuBar(OsylMenuBar viewMenuButton) {
 	this.viewMenuBar = viewMenuButton;
     }
-    
+
     public OsylMenuBar getPrintMenuBar() {
 	return printMenuBar;
     }

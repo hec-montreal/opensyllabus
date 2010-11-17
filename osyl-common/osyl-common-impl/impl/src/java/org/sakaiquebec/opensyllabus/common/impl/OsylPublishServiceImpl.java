@@ -53,6 +53,8 @@ import org.sakaiquebec.opensyllabus.common.helper.ModelHelper;
 import org.sakaiquebec.opensyllabus.common.helper.XmlHelper;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
+import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
+import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
@@ -259,7 +261,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * @param String webapp dir (absolute pathname !?)
      */
     public Map<String, String> publish(String webappDir, String siteId)
-	    throws Exception {
+	    throws Exception, FusionException {
 
 	long start = System.currentTimeMillis();
 
@@ -318,8 +320,14 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    COModeledServer coModelParent =
 			    osylSiteService
 				    .getFusionnedPrePublishedHierarchy(siteId);
-		    ModelHelper.createAssociationInXML(coChild, coModelParent);
-		    resourceDao.createOrUpdateCourseOutline(coChild);
+		    try {
+			ModelHelper.createAssociationInXML(coChild,
+				coModelParent);
+			resourceDao.createOrUpdateCourseOutline(coChild);
+		    } catch (CompatibilityException e) {
+			//we do nothing, editor of children will be alert when editing
+		    }
+		    
 		}
 
 	    }
@@ -592,10 +600,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return d;
     }
 
-    private void publication(String siteId, String webappDir) throws Exception {
+    private void publication(String siteId, String webappDir) throws Exception, FusionException {
 
 	COSerialized hierarchyFussionedCO =
-		osylSiteService.getSerializedCourseOutlineBySiteId(siteId);
+		osylSiteService.getSerializedCourseOutline(siteId,webappDir);//getSerializedCourseOultineBySiteId(siteid)
+	if(hierarchyFussionedCO.isIncompatibleWithHisParent())
+	    throw new FusionException();
 
 	COModeledServer coModeled = null;
 	try {
