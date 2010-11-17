@@ -22,32 +22,28 @@ package org.sakaiquebec.opensyllabus.shared.exception;
 
 import java.io.Serializable;
 
-import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
-
 /**
- *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
 public class FusionException extends Exception implements Serializable {
 
     private static final long serialVersionUID = -8218897299880366249L;
-    
+
     public FusionException() {
 	super();
     }
 
     /**
-     * Constructs a new exception with the specified detail message.  The
-     * cause is not initialized, and may subsequently be initialized by
-     * a call to {@link #initCause}.
-     *
-     * @param   message   the detail message. The detail message is saved for 
-     *          later retrieval by the {@link #getMessage()} method.
+     * Constructs a new exception with the specified detail message. The cause
+     * is not initialized, and may subsequently be initialized by a call to
+     * {@link #initCause}.
+     * 
+     * @param message the detail message. The detail message is saved for later
+     *            retrieval by the {@link #getMessage()} method.
      */
     public FusionException(String message) {
 	super(message);
     }
-     
-}
 
+}
