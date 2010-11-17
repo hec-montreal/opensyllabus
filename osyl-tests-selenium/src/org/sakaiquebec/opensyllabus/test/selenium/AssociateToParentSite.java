@@ -310,7 +310,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		    "//div[@class='Osyl-Button Osyl-Button-up-hovering']");
 	    session().mouseUp(
 		    "//div[@class='Osyl-Button Osyl-Button-down-hovering']");
-	    pause();
+	    pause(30000);
 	    session().click(
 		    "//tr[@class='OsylManager-scrollTable-row']/td/input");
 	    pause();
