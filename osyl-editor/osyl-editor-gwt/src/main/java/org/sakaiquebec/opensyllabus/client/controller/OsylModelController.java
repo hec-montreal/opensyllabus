@@ -20,6 +20,9 @@
 
 package org.sakaiquebec.opensyllabus.client.controller;
 
+import java.util.Map;
+
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler;
@@ -28,7 +31,9 @@ import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitStructureEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
@@ -98,6 +103,23 @@ public class OsylModelController implements
 
     /** {@inheritDoc} */
     public void onUpdateModel(UpdateCOContentResourceProxyEvent event) {
+	//update documentcontextvisibility
+	if (UpdateCOContentResourceProxyEvent.DELETE_EVENT_TYPE == event
+		.getEventType()) {
+	    COContentResourceProxy cocrp =
+		    (COContentResourceProxy) event.getSource();
+	    if (COContentResourceType.DOCUMENT.equals(cocrp.getResource()
+		    .getType())) {
+		Map<String, Map<String, String>> dcv =
+			OsylEditorEntryPoint.getInstance()
+				.getDocumentContextVisibilityMap();
+		String uri = cocrp.getResource().getProperty(
+			    COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_URI).trim();
+		dcv.get(uri).remove(cocrp.getId());
+		OsylEditorEntryPoint.getInstance().setDocumentContextVisibilityMap(dcv);
+	    }
+	}
 	setModelDirty(true);
     }
 
@@ -110,7 +132,7 @@ public class OsylModelController implements
     public void onUpdateModel(UpdateCOStructureElementEvent event) {
 	setModelDirty(true);
     }
-    
+
     /** {@inheritDoc} */
     public void onUpdateModel(UpdateCOUnitEvent event) {
 	setModelDirty(true);
@@ -134,9 +156,9 @@ public class OsylModelController implements
     public void trackChanges(COModelInterface model) {
 	if (model instanceof COStructureElement) {
 	    ((COStructureElement) model).addEventHandler(this);
-	} else if (model instanceof COUnit){
+	} else if (model instanceof COUnit) {
 	    ((COUnit) model).addEventHandler(this);
-	} else if (model instanceof COUnitStructure){
+	} else if (model instanceof COUnitStructure) {
 	    ((COUnitStructure) model).addEventHandler(this);
 	} else if (model instanceof COUnitContent) {
 	    ((COUnitContent) model).addEventHandler(this);
@@ -148,7 +170,7 @@ public class OsylModelController implements
 	    COContentResourceProxy proxy = (COContentResourceProxy) model;
 	    proxy.addEventHandler(this);
 	    if (proxy.getResource() instanceof COContentResource)// could be a
-								 // CoUnit too
+		// CoUnit too
 		((COContentResource) proxy.getResource()).addEventHandler(this);
 	}
     }

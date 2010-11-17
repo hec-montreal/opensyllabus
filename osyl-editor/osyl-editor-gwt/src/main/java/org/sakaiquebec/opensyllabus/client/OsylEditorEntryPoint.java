@@ -20,12 +20,18 @@
 
 package org.sakaiquebec.opensyllabus.client;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.OsylMainView;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
+import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COModeled;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -158,6 +164,14 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	editorMainView.initView();
 	this.setView(editorMainView);
 	refreshView();
+    }
+    
+    public Map<String,Map<String,String>> getDocumentContextVisibilityMap(){
+	return this.modeledCo.getDocumentContextVisibilityMap();
+    }
+    
+    public void setDocumentContextVisibilityMap(Map<String,Map<String,String>> m){
+	this.modeledCo.setDocumentContextVisibilityMap(m);
     }
 
     /**
@@ -744,27 +758,39 @@ public class OsylEditorEntryPoint implements EntryPoint {
     public static String getExecMode() {
 	return execmode;
     }
-
+    
+    public COModelInterface getCoModelInterfaceWithId(String id){
+	return getCoModelInterfaceWithId(getModel(), id);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private COModelInterface getCoModelInterfaceWithId(COElementAbstract coe,String id){
+	COModelInterface comi = null;
+	List<COElementAbstract> childrenList = coe.getChildrens();
+	boolean find = false;
+	Iterator<COElementAbstract> iter = childrenList.iterator();
+	while (iter.hasNext()) {
+	    comi = (COModelInterface) iter.next();
+	    if(id.equals(comi.getId())){
+		find=true;
+		break;
+	    }else{
+		if(comi instanceof COElementAbstract){
+		    COElementAbstract coea = (COElementAbstract)comi;
+		    comi=getCoModelInterfaceWithId(coea, id);
+		    if(comi!=null){
+			find=true;
+			break;
+		    }
+		}
+	    }
+	}
+	if (!find) 
+	    return null;
+	return comi;
+    }
+    
     // TODO: Move function used by the browser in the file BrowserUtil.java
-
-    /**
-     * Returns the computed current css style for the element. Call only if you
-     * need the CSS stylesheet style, not the DOM style.
-     * 
-     * @param el - The Element which we will call the style.
-     * @param cssprop - The Element's CSS property.
-     * @return The property's value of the style.
-     */
-
-    public static native String getStyle(Element el, String cssprop) /*-{
-								     if (el.currentStyle) //IE
-								     return el.currentStyle[cssprop];
-								     else if ($doc.defaultView && $doc.defaultView.getComputedStyle) //Firefox
-								     return $doc.defaultView.getComputedStyle(el, "")[cssprop];
-								     else //try and get inline style
-								     return el.style[cssprop];
-								     }-*/;
-
     public static int parsePixels(String value) {
 	int pos = value.indexOf("px");
 	if (pos != -1)
@@ -822,3 +848,5 @@ public class OsylEditorEntryPoint implements EntryPoint {
 				      return newElements;
 				      }-*/;
 }
+
+

@@ -20,6 +20,8 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.shared.util;
 
+import com.google.gwt.user.client.Element;
+
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
@@ -53,5 +55,23 @@ public class BrowserUtil {
 			return "gecko"; 
 		} 
 		return "unknown"; 
+	}-*/;
+    
+    /**
+     * Returns the computed current css style for the element. Call only if you
+     * need the CSS stylesheet style, not the DOM style.
+     * 
+     * @param el - The Element which we will call the style.
+     * @param cssprop - The Element's CSS property.
+     * @return The property's value of the style.
+     */
+
+    public static native String getStyle(Element el, String cssprop) /*-{
+	if (el.currentStyle) //IE
+		return el.currentStyle[cssprop];
+	else if ($doc.defaultView && $doc.defaultView.getComputedStyle) //Firefox
+		return $doc.defaultView.getComputedStyle(el, "")[cssprop];
+	else //try and get inline style
+		return el.style[cssprop];
 	}-*/;
 }

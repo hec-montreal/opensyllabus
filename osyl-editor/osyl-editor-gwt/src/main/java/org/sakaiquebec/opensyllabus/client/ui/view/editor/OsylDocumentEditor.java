@@ -21,7 +21,10 @@
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
@@ -39,6 +42,8 @@ import org.sakaiquebec.opensyllabus.client.ui.listener.OsylLinkClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylFileBrowser;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxDocumentView;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
+import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
@@ -309,6 +314,46 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    } else if (getLicence().equals(licenseListBox.getItemText(0))) {
 		message +=
 			getUiMessage("DocumentEditor.document.WrongRightsStatus");
+	    }
+	    Map<String, String> cv =
+		    OsylEditorEntryPoint.getInstance()
+			    .getDocumentContextVisibilityMap().get(
+				    getResourceURI());
+	    boolean incompatibility = false;
+	    Set<String> parentTitles = new HashSet<String>();
+	    if (cv != null) {
+		for (String id : cv.keySet()) {
+		    if (!id.equals(getView().getModel().getId())) {
+			String visibility = cv.get(id);
+			if (!visibility.equals("" + !isContextHidden())) {
+			    incompatibility = true;
+			    COModelInterface comi =
+				    OsylEditorEntryPoint.getInstance()
+					    .getCoModelInterfaceWithId(id);
+			    if (comi instanceof COElementAbstract) {
+				COElementAbstract coe =
+					(COElementAbstract) comi;
+				while (!coe.isCOUnit()) {
+				    coe = coe.getParent();
+				}
+				parentTitles.add(coe.getLabel());
+			    }
+			}
+		    }
+		}
+	    }
+	    if (incompatibility) {
+		String msgParameter = "";
+		for (String s : parentTitles) {
+		    msgParameter += s + ", ";
+		}
+		msgParameter =
+			msgParameter.substring(0, msgParameter.length() - 2);
+		message +=
+			getView()
+				.getUiMessage(
+					"DocumentEditor.document.visibilityIncompatibility",
+					msgParameter);
 	    }
 	}
 	if (message.equals("")) {
@@ -756,5 +801,4 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		}
 	    };
 
-    
 }

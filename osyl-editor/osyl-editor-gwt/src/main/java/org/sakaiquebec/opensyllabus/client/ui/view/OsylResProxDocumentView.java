@@ -20,8 +20,11 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.view;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylDocumentEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
@@ -63,12 +66,23 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 	getModel().setLabel(getEditor().getText());
 	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());
-	//FIXME This is a workaround. Should be deleted after we have a way to
+	// FIXME This is a workaround. Should be deleted after we have a way to
 	// display the fileBrowser showing the previously selected file.
 	String uri = getEditor().getResourceURI();
 	if (uri != null) {
 	    getModel().getResource().addProperty(COPropertiesType.IDENTIFIER,
 		    COPropertiesType.IDENTIFIER_TYPE_URI, uri);
+	    // update documentContextVisibilitymap
+	    Map<String, String> cv =
+		    OsylEditorEntryPoint.getInstance()
+			    .getDocumentContextVisibilityMap().get(uri);
+	    if (cv == null) {
+		cv = new HashMap<String, String>();
+	    }
+	    cv.put(getModel().getId(), getModel().getProperty(
+		    COPropertiesType.VISIBILITY));
+	    OsylEditorEntryPoint.getInstance()
+		    .getDocumentContextVisibilityMap().put(uri, cv);
 	}
     }
 
@@ -86,22 +100,23 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 	getModel().getResource().addProperty(COPropertiesType.DESCRIPTION,
 		getEditor().getResourceDescription());
     }
-    
-  //TODO Hack to remove bad links to resources inserted in the XML.  Remove this
-  //as soon as the cause is found and corrected.
-    public String validateLinkLabel(String link){
-	
-	if(link.contains("><")){
-	    link = link.substring(link.indexOf("><"), link.length()-5);
+
+    // TODO Hack to remove bad links to resources inserted in the XML. Remove
+    // this
+    // as soon as the cause is found and corrected.
+    public String validateLinkLabel(String link) {
+
+	if (link.contains("><")) {
+	    link = link.substring(link.indexOf("><"), link.length() - 5);
 	}
 	String linkLabel = link;
 	StringTokenizer linkTokenizer = new StringTokenizer(link, "><");
-	
-	if(linkTokenizer.hasMoreTokens()){
+
+	if (linkTokenizer.hasMoreTokens()) {
 	    linkTokenizer.nextToken();
 	}
-	
-	if(linkTokenizer.hasMoreTokens()){
+
+	if (linkTokenizer.hasMoreTokens()) {
 	    linkLabel = linkTokenizer.nextToken();
 	}
 	return linkLabel;

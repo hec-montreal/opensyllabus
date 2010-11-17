@@ -22,6 +22,7 @@ package org.sakaiquebec.opensyllabus.shared.model;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
@@ -178,6 +179,8 @@ public class COModeled extends COSerialized {
 
     private String schemaVersion;
 
+    private Map<String, Map<String, String>> documentContextVisibilityMap;
+
     /**
      * Default Constructor
      */
@@ -231,11 +234,8 @@ public class COModeled extends COSerialized {
 	    || ((c >= 0x10000) && (c <= 0x10FFFF))) {
 
 		s.append(c);
-
 	    }
-
 	}
-
 	return s.toString();
     }
 
@@ -247,6 +247,8 @@ public class COModeled extends COSerialized {
 
 	COContent coContent = new COContent();
 	Document messageDom = null;
+	documentContextVisibilityMap =
+		new HashMap<String, Map<String, String>>();
 
 	try {
 	    // XMLtoDOM
@@ -298,7 +300,6 @@ public class COModeled extends COSerialized {
 	    Window.alert("An error has been detected in setCommonAttributes "
 		    + e);
 	}
-
     }
 
     /**
@@ -390,7 +391,6 @@ public class COModeled extends COSerialized {
 		Window.alert("An error has been detected in createCOUnitPOJO "
 			+ e);
 	    }
-
 	}
 	return coUnit;
     }
@@ -467,7 +467,6 @@ public class COModeled extends COSerialized {
 	    } catch (Exception e) {
 		Window.alert("An error has been detected in xmlToModel " + e);
 	    }
-
 	}
     }
 
@@ -564,7 +563,6 @@ public class COModeled extends COSerialized {
 		    .alert("An error has been detected in createCOContentUnitPOJO "
 			    + e);
 	}
-
 	return coContentUnit;
     }
 
@@ -620,6 +618,23 @@ public class COModeled extends COSerialized {
 				+ e.toString());
 	    }
 	}
+	// build documentcontextvisibilitymap
+	if (COContentResourceType.DOCUMENT.equals(coContentResProxy
+		.getResource().getType())) {
+	    String uri =
+		    coContentResProxy.getResource().getProperty(
+			    COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_URI).trim();
+	    String visibility =
+		    coContentResProxy.getProperty(COPropertiesType.VISIBILITY);
+	    Map<String, String> contextVisibilityMap =
+		    documentContextVisibilityMap.get(uri);
+	    if (contextVisibilityMap == null) {
+		contextVisibilityMap = new HashMap<String, String>();
+	    }
+	    contextVisibilityMap.put(coContentResProxy.getId(), visibility);
+	    documentContextVisibilityMap.put(uri, contextVisibilityMap);
+	}
 	return coContentResProxy;
     }
 
@@ -647,7 +662,6 @@ public class COModeled extends COSerialized {
 		    .alert("An error has been detected in createCOContentResourcePOJO "
 			    + e);
 	}
-
 	return coContentRes;
     }
 
@@ -677,7 +691,6 @@ public class COModeled extends COSerialized {
 		    .alert("An error has been detected in createCOContentResourcePersonPOJO "
 			    + e);
 	}
-
 	return coContentRes;
     }
 
@@ -723,7 +736,6 @@ public class COModeled extends COSerialized {
 		    .alert("An error has been detected in createCOContentRubricPOJO "
 			    + e);
 	}
-
 	return coContentRubric;
     }
 
@@ -765,7 +777,6 @@ public class COModeled extends COSerialized {
 		    .alert("An error has been detected in setCommonAttributesAndProperties "
 			    + e);
 	}
-
     }
 
     /**
@@ -796,7 +807,6 @@ public class COModeled extends COSerialized {
 		    saveParentInfos);
 
 	}
-
     }
 
     /**
@@ -893,7 +903,6 @@ public class COModeled extends COSerialized {
 	    Window.alert("An error has been detected in createPropertiesElem "
 		    + e);
 	}
-
     }
 
     private void createPropElemAttributes(COProperty coProperty,
@@ -956,7 +965,6 @@ public class COModeled extends COSerialized {
 				+ e);
 	    }
 	}
-
     }
 
     /**
@@ -999,7 +1007,6 @@ public class COModeled extends COSerialized {
 		    .alert("An error has been detected in createCOContentResourceChild "
 			    + e);
 	}
-
     }
 
     /**
@@ -1035,6 +1042,14 @@ public class COModeled extends COSerialized {
 		    .alert("An error has been detected in createCOContentRubricChild "
 			    + e);
 	}
+    }
 
+    public Map<String, Map<String, String>> getDocumentContextVisibilityMap() {
+	return documentContextVisibilityMap;
+    }
+
+    public void setDocumentContextVisibilityMap(
+	    Map<String, Map<String, String>> documentContextVisibilityMap) {
+	this.documentContextVisibilityMap = documentContextVisibilityMap;
     }
 }
