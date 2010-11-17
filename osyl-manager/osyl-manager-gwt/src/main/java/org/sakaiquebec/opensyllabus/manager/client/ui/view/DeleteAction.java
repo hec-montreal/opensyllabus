@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.manager.client.OsylManagerEntryPoint;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
@@ -85,7 +86,8 @@ public class DeleteAction extends OsylManagerAbstractAction {
 		}
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
-		new OsylUnobtrusiveAlert(msg);
+		OsylUnobtrusiveAlert alert =  new OsylUnobtrusiveAlert(msg);
+		OsylManagerEntryPoint.showWidgetOnTop(alert);
 	    } else {
 		controller.deleteSite(coSites.get(index+1).getSiteId(),
 			new DeleteAsynCallBack(index+1));

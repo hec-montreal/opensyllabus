@@ -27,6 +27,7 @@ import org.sakaiquebec.opensyllabus.manager.client.ui.view.OsylManagerMainAdvanc
 import org.sakaiquebec.opensyllabus.manager.client.ui.view.OsylManagerMainView;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -84,6 +85,61 @@ public class OsylManagerEntryPoint implements EntryPoint {
 	width = Math.max(0, (Window.getClientWidth() - width) / 2);
 	height = Math.max(0, (Window.getClientHeight() - height) / 2);
 	widget.setPopupPosition(width, height);
+    }
+    
+    /**
+     * Shows the specified PopupPanel widget as close as possible to the top of
+     * interface (but always below the toolBar). After the specified default
+     * delay (3 seconds) it will be hidden.
+     * 
+     * @param p widget
+     */
+    public static void showWidgetOnTop(PopupPanel panel) {
+	showWidgetOnTop(panel, 3000);
+    }
+
+    /**
+     * Shows the specified PopupPanel widget as close as possible to the top of
+     * interface (but always below the toolBar). After the specified amount of
+     * time (in ms) it is hidden.
+     * 
+     * @param p widget
+     * @param time
+     */
+    public static void showWidgetOnTop(PopupPanel panel, int time) {
+	final PopupPanel p = panel;
+	final int maxTime = time;
+	p.show();
+	setTopMostPosition(p);
+	final long start = System.currentTimeMillis();
+	Timer timer = new Timer() {
+	    public void run() {
+		setTopMostPosition(p);
+		if (System.currentTimeMillis() - start >= maxTime) {
+		    p.hide();
+		    cancel();
+		}
+	    }
+	};
+	timer.scheduleRepeating(30);
+    }
+
+    private static void setTopMostPosition(PopupPanel p) {
+	setTopMostPosition(p,
+		(Window.getClientWidth() - p.getOffsetWidth()) / 2);
+    }
+
+    private static void setTopMostPosition(PopupPanel p, int x) {
+	p.setPopupPosition(x, getTopMostPosition());
+    }
+
+    /**
+     * getTopMostPosition returns the top most position. Since Osyl have the
+     * title, there is no need to place this value below the tool menu. So we
+     * simply put it with the course title.
+     */
+    private static int getTopMostPosition() {
+	return Window.getScrollTop() + 2;
     }
 
 }

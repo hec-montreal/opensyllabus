@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.manager.client.OsylManagerEntryPoint;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
@@ -48,7 +49,6 @@ public class UnattachAction extends OsylManagerAbstractAction {
     private class UnattachAsyncCallback implements AsyncCallback<Void> {
 
 	private String siteId;
-	
 
 	public UnattachAsyncCallback(String siteId) {
 	    super();
@@ -68,24 +68,25 @@ public class UnattachAction extends OsylManagerAbstractAction {
 	private void responseReceive() {
 	    UnattachAction.asynCB_return++;
 	    if (UnattachAction.asynCB_return == UnattachAction.coSites.size()) {
-		String msg="";
+		String msg = "";
 		if (UnattachAction.asynCB_OK != UnattachAction.coSites.size()) {
-		    msg = messages.unattachAction_unattach_error()
-				    + "\n";
+		    msg = messages.unattachAction_unattach_error() + "\n";
 		    for (String id : lMsg) {
 			msg +=
 				id
-					+ messages.unattachAction_unattach_error_detail()
+					+ messages
+						.unattachAction_unattach_error_detail()
 					+ "\n";
 		    }
-		    OsylOkCancelDialog warning = new OsylOkCancelDialog(false,
-			    true, messages.OsylWarning_Title(), msg, true,
-			    false);
+		    OsylOkCancelDialog warning =
+			    new OsylOkCancelDialog(false, true, messages
+				    .OsylWarning_Title(), msg, true, false);
 		    warning.show();
 		    warning.centerAndFocus();
-		}else{
+		} else {
 		    msg = messages.unattachAction_unattach_ok();
-		    new OsylUnobtrusiveAlert(msg);
+		    OsylUnobtrusiveAlert alert = new OsylUnobtrusiveAlert(msg);
+		    OsylManagerEntryPoint.showWidgetOnTop(alert);
 		}
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
