@@ -93,7 +93,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		    "//div[@class='Osyl-Button Osyl-Button-up-hovering']");
 	    session().mouseUp(
 		    "//div[@class='Osyl-Button Osyl-Button-down-hovering']");
-	    pause();
+	    pause(30000);
 	    session().click(
 		    "//tr[@class='OsylManager-scrollTable-row']/td/input");
 	    pause();
@@ -168,7 +168,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		    "//div[@class='Osyl-Button Osyl-Button-up-hovering']");
 	    session().mouseUp(
 		    "//div[@class='Osyl-Button Osyl-Button-down-hovering']");
-	    pause();
+	    pause(30000);
 	    session().click(
 		    "//tr[@class='OsylManager-scrollTable-row']/td/input");
 	    pause();
@@ -246,7 +246,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    session().click("//button[contains(text(),'Publier')]");
 	    pause();
 
-	    // verify if text of parentis present in current site
+	    // verify if text of parent is present in current site
 	    session().selectFrame("relative=parent");
 	    goToCurrentSite();
 	    openTeachingMaterialSection();
@@ -272,7 +272,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		    "//div[@class='Osyl-Button Osyl-Button-up-hovering']");
 	    session().mouseUp(
 		    "//div[@class='Osyl-Button Osyl-Button-down-hovering']");
-	    pause();
+	    pause(30000);
 	    session().click(
 		    "//tr[@class='OsylManager-scrollTable-row']/td/input");
 	    pause();
