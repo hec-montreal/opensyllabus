@@ -596,7 +596,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      */
     private String getScreenShotFileName(String msg) {
 	return SCREENSHOT_DIR + timeStamp() + " "
-		+ msg.replaceAll("[/\\:\\?\\!\\|><\"\\*]", "_")
+		+ msg.replaceAll("[/\\:\\?\\!\\|><\"\\*\\[\\]\\(\\)]", "_")
 		+ ".png";
     }
 
