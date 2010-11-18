@@ -595,9 +595,9 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * removing forbidden chars and adding ".png".
      */
     private String getScreenShotFileName(String msg) {
-	return SCREENSHOT_DIR + timeStamp() + " "
-		+ msg.replaceAll("[/\\:\\?\\!\\|><\"\\*\\[\\]\\(\\)]", "_")
-		+ ".png";
+	String fileName = msg.replaceAll("[/\\:\\?\\!\\|><\"\\*\\[\\]\\(\\)]", "_");
+	fileName = fileName.substring(0, 230);
+	return SCREENSHOT_DIR + timeStamp() + " " + fileName + ".png";
     }
 
     /**
