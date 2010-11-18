@@ -528,7 +528,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	COSerialized co;
 	try {
-	    co = osylSiteService.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
+	    co =
+		    osylSiteService
+			    .getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
 	    String xml = co.getContent();
 	    String id = null;
 	    String newId = null;
@@ -536,7 +538,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    for (int i = 0; i < oldReferences.size(); i++) {
 		id = oldReferences.get(i);
 		newId = newReferences.get(i);
-		xml.replaceAll(id, newId);
+		xml = xml.replaceAll(id, newId);
 	    }
 
 	    co.setContent(xml);
@@ -746,24 +748,21 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * with no need for additional security permissions.
      */
     protected void enableSecurityAdvisor() {
-	if (osylSecurityService
-		.getCurrentUserRole()
-		.equals(
-			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)||
-			    osylSecurityService
-				.getCurrentUserRole()
-				.equals(
-					OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN))  {
-	SecurityService.pushAdvisor(new SecurityAdvisor() {
-	    public SecurityAdvice isAllowed(String userId, String function,
-		    String reference) {
-		return SecurityAdvice.ALLOWED;
-	    }
-	});
+	if (osylSecurityService.getCurrentUserRole().equals(
+		OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
+		|| osylSecurityService.getCurrentUserRole().equals(
+			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
+	    SecurityService.pushAdvisor(new SecurityAdvisor() {
+		public SecurityAdvice isAllowed(String userId, String function,
+			String reference) {
+		    return SecurityAdvice.ALLOWED;
+		}
+	    });
 	}
     }
 
-    public Map<String, String> getOsylSites(List<String> siteIds) {
+    public Map<String, String> getOsylSites(List<String> siteIds,
+	    String searchTerm) {
 
 	Map<String, String> siteMap = new HashMap<String, String>();
 	@SuppressWarnings("unchecked")
@@ -773,24 +772,29 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	for (Iterator<Site> siteIterator = sites.iterator(); siteIterator
 		.hasNext();) {
 	    Site site = (Site) siteIterator.next();
-	    @SuppressWarnings("unchecked")
-	    List<SitePage> pagelist = site.getPages();
-	    for (Iterator<SitePage> iter = pagelist.iterator(); iter.hasNext();) {
-		SitePage sitePage = (SitePage) iter.next();
-		if (!sitePage.getTools(
-			new String[] { "sakai.opensyllabus.tool" }).isEmpty()) {
-		    // if (osylSiteService.hasBeenPublished(site.getId())) {
-		    boolean isInHierarchy = false;
-		    for (String siteId : siteIds) {
-			isInHierarchy =
-				isInHierarchy
-					|| isSiteinSiteHierarchy(site.getId(),
-						siteId);
+	    if (site.getTitle().toLowerCase()
+		    .contains(searchTerm.toLowerCase())) {
+		@SuppressWarnings("unchecked")
+		List<SitePage> pagelist = site.getPages();
+		for (Iterator<SitePage> iter = pagelist.iterator(); iter
+			.hasNext();) {
+		    SitePage sitePage = (SitePage) iter.next();
+		    if (!sitePage.getTools(
+			    new String[] { "sakai.opensyllabus.tool" })
+			    .isEmpty()) {
+			// if (osylSiteService.hasBeenPublished(site.getId())) {
+			boolean isInHierarchy = false;
+			for (String siteId : siteIds) {
+			    isInHierarchy =
+				    isInHierarchy
+					    || isSiteinSiteHierarchy(site
+						    .getId(), siteId);
+			}
+			if (!isInHierarchy)
+			    siteMap.put(site.getId(), site.getTitle());
+			// }
+			break;
 		    }
-		    if (!isInHierarchy)
-			siteMap.put(site.getId(), site.getTitle());
-		    // }
-		    break;
 		}
 	    }
 	}
@@ -809,31 +813,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	}
 	return isInHierarchy;
-    }
-
-    public Map<String, String> getPublishedOsylSites() {
-
-	Map<String, String> siteMap = new HashMap<String, String>();
-	@SuppressWarnings("unchecked")
-	List<Site> sites =
-		siteService.getSites(SiteService.SelectionType.ACCESS, null,
-			null, null, SiteService.SortType.TITLE_ASC, null);
-	for (Iterator<Site> siteIterator = sites.iterator(); siteIterator
-		.hasNext();) {
-	    Site site = (Site) siteIterator.next();
-	    @SuppressWarnings("unchecked")
-	    List<SitePage> pagelist = site.getPages();
-	    for (Iterator<SitePage> iter = pagelist.iterator(); iter.hasNext();) {
-		SitePage sitePage = (SitePage) iter.next();
-		if (!sitePage.getTools(
-			new String[] { "sakai.opensyllabus.tool" }).isEmpty()) {
-		    //if (osylSiteService.hasBeenPublished(site.getId())) {
-			siteMap.put(site.getId(), site.getTitle());
-		    //}
-		}
-	    }
-	}
-	return siteMap;
     }
 
     public String getParent(String siteId) throws Exception {
@@ -1634,8 +1613,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     public void copySite(String siteFrom, String siteTo) throws Exception {
-	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
-		+ "] copies site [" + siteFrom + "] into site [" + siteTo + "]");
+	log
+		.info("user ["
+			+ sessionManager.getCurrentSession().getUserEid()
+			+ "] copies site [" + siteFrom + "] into site ["
+			+ siteTo + "]");
 
 	long start = System.currentTimeMillis();
 	Site newSite = null;
@@ -1720,14 +1702,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	enableSecurityAdvisor();
 	siteService.save(newSite);
 
-	if (osylSecurityService
-		.getCurrentUserRole()
-		.equals(
-			OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)||
-			    osylSecurityService
-				.getCurrentUserRole()
-				.equals(
-					OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN))  {
+	if (osylSecurityService.getCurrentUserRole().equals(
+		OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
+		|| osylSecurityService.getCurrentUserRole().equals(
+			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
 	    SecurityService.clearAdvisors();
 	}
 
@@ -1773,7 +1751,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	// we retrieve informations from old citations
 	COSerialized co;
 	try {
-	    co = osylSiteService.getUnfusionnedSerializedCourseOutlineBySiteId(newSiteId);//getSerializedCourseOultineBysiteID
+	    co =
+		    osylSiteService
+			    .getUnfusionnedSerializedCourseOutlineBySiteId(newSiteId);// getSerializedCourseOultineBysiteID
 
 	    COModeledServer model = new COModeledServer(co);
 	    Map<String, String> citationsChangeMap =

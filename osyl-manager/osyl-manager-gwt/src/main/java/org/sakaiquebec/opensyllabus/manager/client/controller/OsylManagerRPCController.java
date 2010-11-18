@@ -114,9 +114,9 @@ public class OsylManagerRPCController {
 	serviceProxy.getParent(siteId, callback);
     }
 
-    public void getOsylSites(List<String> siteIds,
+    public void getOsylSites(List<String> siteIds, String searchTerm,
 	    AsyncCallback<Map<String, String>> callback) {
-	serviceProxy.getOsylSites(siteIds, callback);
+	serviceProxy.getOsylSites(siteIds, searchTerm, callback);
     }
 
     public void associate(String siteId, String parentId,

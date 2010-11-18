@@ -172,12 +172,6 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	});
 
 	suggestionListBox = new ListBox();
-	suggestionListBox.addChangeHandler(new ChangeHandler() {
-
-	    public void onChange(ChangeEvent event) {
-		
-	    }
-	});
 	
 	HorizontalPanel hzPanel = new HorizontalPanel();
 	Label voidLabel = new Label();

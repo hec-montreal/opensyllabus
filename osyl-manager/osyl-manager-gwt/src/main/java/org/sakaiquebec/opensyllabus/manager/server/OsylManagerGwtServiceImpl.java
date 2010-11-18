@@ -121,9 +121,9 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		siteId, webappDir);
     }
 
-    public Map<String, String> getOsylSites(List<String> siteIds) {
+    public Map<String, String> getOsylSites(List<String> siteIds, String searchTerm) {
 	return osylManagerServices.getOsylManagerService()
-		.getOsylSites(siteIds);
+		.getOsylSites(siteIds, searchTerm);
     }
 
     public String getParent(String siteId) throws Exception {

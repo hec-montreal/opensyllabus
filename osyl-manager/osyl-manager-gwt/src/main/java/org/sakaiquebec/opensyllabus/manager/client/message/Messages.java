@@ -280,4 +280,6 @@ public interface Messages extends ConstantsWithLookup {
     String explanationMsg();
 
     String publishAction_publish_inProgress();
+    
+    String attachForm_siteTitle();
 }

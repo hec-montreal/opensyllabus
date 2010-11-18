@@ -285,9 +285,9 @@ public class OsylManagerController implements FireOsylManagerEvents {
      * @param siteIds the list of site ids
      * @param callback the callback to contain server response
      */
-    public void getOsylSites(List<String> siteIds,
+    public void getOsylSites(List<String> siteIds, String searchTerm,
 	    AsyncCallback<Map<String, String>> callback) {
-	OsylManagerRPCController.getInstance().getOsylSites(siteIds, callback);
+	OsylManagerRPCController.getInstance().getOsylSites(siteIds, searchTerm, callback);
     }
 
     /**

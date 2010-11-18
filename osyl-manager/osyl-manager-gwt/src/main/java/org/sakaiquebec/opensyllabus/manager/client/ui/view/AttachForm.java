@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
@@ -37,13 +38,15 @@ import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.TextBox;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -51,14 +54,13 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class AttachForm extends OsylManagerAbstractWindowPanel {
 
-    private static List<COSite> coSites;
+    private List<COSite> coSites;
+
+    private TextBox searchTextBox;
 
     private ListBox parentSiteList;
 
     private PushButton attButton;
-
-    private Widget img;
-
     private static List<String> lMsg = new ArrayList<String>();
 
     private static int asynCB_return = 0;
@@ -67,17 +69,18 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 
     private final OsylCancelDialog diag;
 
+    private Image spinner;
+
     AsyncCallback<Map<String, String>> parentListAsyncCallback =
 	    new AsyncCallback<Map<String, String>>() {
 
 		public void onFailure(Throwable caught) {
-		    img.removeFromParent();
 		    attButton.setEnabled(false);
+		    spinner.removeFromParent();
 		}
 
 		public void onSuccess(Map<String, String> result) {
-		    img.removeFromParent();
-
+		    spinner.removeFromParent();
 		    if (result == null || result.isEmpty()) {
 			OsylOkCancelDialog warning =
 				new OsylOkCancelDialog(false, true, messages
@@ -97,12 +100,13 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 			    String siteTitle = result.get(siteId);
 			    sortedMap.put(siteTitle, siteId);
 			}
-			for (Iterator<String> sortedSiteIterator =
-				sortedMap.keySet().iterator(); sortedSiteIterator
+			for (Iterator<Entry<String, String>> sortedSIterator =
+				sortedMap.entrySet().iterator(); sortedSIterator
 				.hasNext();) {
-			    String siteTitle = sortedSiteIterator.next();
-			    String siteId = sortedMap.get(siteTitle);
-			    parentSiteList.addItem(siteTitle, siteId);
+			    Entry<String, String> entry =
+				    sortedSIterator.next();
+			    parentSiteList.addItem(entry.getKey(), entry
+				    .getValue());
 			}
 			attButton.setEnabled(true);
 		    }
@@ -122,8 +126,8 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	public void onFailure(Throwable caught) {
 	    diag.hide();
 	    String msg =
-		    siteId +" "+messages.attachForm_attach_error_detail() + " :"
-			    + caught.getMessage();
+		    siteId + " " + messages.attachForm_attach_error_detail()
+			    + " :" + caught.getMessage();
 	    AttachForm.lMsg.add(msg);
 	    responseReceive();
 	}
@@ -136,8 +140,8 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 
 	private void responseReceive() {
 	    AttachForm.asynCB_return++;
-	    if (AttachForm.asynCB_return == AttachForm.coSites.size()) {
-		if (AttachForm.asynCB_OK == AttachForm.coSites.size()) {
+	    if (AttachForm.asynCB_return == coSites.size()) {
+		if (AttachForm.asynCB_OK == coSites.size()) {
 		    AttachForm.this.onSuccess();
 		} else {
 		    AttachForm.this.onFailure();
@@ -152,20 +156,66 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
     public AttachForm(final OsylManagerController controller,
 	    final List<COSite> cosites, OsylCancelDialog aDiag) {
 	super(controller);
-	AttachForm.coSites = cosites;
+	coSites = cosites;
 	this.diag = aDiag;
 
 	Label title = new Label(messages.mainView_action_attach());
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);
+	searchTextBox = new TextBox();
 
-	Label l = new Label(messages.select_parent_site());
+	final Button search = new Button(messages.copyForm_search());
+	search.addClickHandler(new ClickHandler() {
+
+	    public void onClick(ClickEvent event) {
+		spinner.setVisible(true);
+		String value = searchTextBox.getText();
+		parentSiteList.clear();
+		List<String> siteIds = new ArrayList<String>();
+		for (COSite cosi : cosites)
+		    siteIds.add(cosi.getSiteId());
+		if (controller.isInHostedMode()) {
+		    getHostedModeData();
+		} else {
+		    controller.getOsylSites(siteIds, value,
+			    parentListAsyncCallback);
+		}
+	    }
+	});
+	search.setEnabled(true);
+
+	HorizontalPanel hp = new HorizontalPanel();
+	Label l = new Label(messages.attachForm_siteTitle());
+	hp.add(l);
+	l.setStylePrimaryName("OsylManager-form-label");
+	hp.add(searchTextBox);
+	searchTextBox.setStylePrimaryName("OsylManager-form-element");
+	hp.add(search);
+	hp.setCellWidth(l, "30%");
+	hp.setCellWidth(searchTextBox, "40%");
+	hp.setCellWidth(search, "30%");
+	hp.setCellVerticalAlignment(l, HasVerticalAlignment.ALIGN_BOTTOM);
+	hp.setCellVerticalAlignment(searchTextBox,
+		HasVerticalAlignment.ALIGN_BOTTOM);
+	hp.setCellVerticalAlignment(search, HasVerticalAlignment.ALIGN_BOTTOM);
+	hp.setStylePrimaryName("OsylManager-form-genericPanel");
+	mainPanel.add(hp);
+	mainPanel.setCellHorizontalAlignment(hp,
+		HasHorizontalAlignment.ALIGN_CENTER);
+
+	HorizontalPanel hzPanel = new HorizontalPanel();
+	Label voidLabel = new Label();
+	hzPanel.add(voidLabel);
+	hzPanel.setCellWidth(voidLabel, "30%");
+	hzPanel.setStylePrimaryName("OsylManager-form-genericPanel");
 	parentSiteList = new ListBox();
-	img = new Image(controller.getImageBundle().ajaxloader());
-	HorizontalPanel lBoxPanel = new HorizontalPanel();
-	lBoxPanel.add(parentSiteList);
-	lBoxPanel.add(img);
-	mainPanel.add(createPanel(l, lBoxPanel));
+	hzPanel.add(parentSiteList);
+	spinner = new Image(controller.getImageBundle().ajaxloader());
+	hzPanel.add(spinner);
+	spinner.setVisible(false);
+	mainPanel.add(hzPanel);
+	mainPanel.setCellHorizontalAlignment(hzPanel,
+		HasHorizontalAlignment.ALIGN_CENTER);
 
 	attButton = new PushButton(messages.attach());
 	attButton.setStylePrimaryName("Osyl-Button");
@@ -192,16 +242,6 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	mainPanel.add(attButton);
 	mainPanel.setCellHorizontalAlignment(attButton,
 		HasHorizontalAlignment.ALIGN_CENTER);
-
-	List<String> siteIds = new ArrayList<String>();
-	for (COSite cosi : cosites)
-	    siteIds.add(cosi.getSiteId());
-
-	if (controller.isInHostedMode()) {
-	    getHostedModeData();
-	} else {
-	    controller.getOsylSites(siteIds, parentListAsyncCallback);
-	}
     }
 
     private void getHostedModeData() {

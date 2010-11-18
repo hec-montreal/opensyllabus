@@ -122,7 +122,7 @@ public interface OsylManagerService {
      */
     public String getOsylPackage(String siteId, String webappDir);
 
-    public Map<String, String> getOsylSites(List<String> siteIds);
+    public Map<String, String> getOsylSites(List<String> siteIds, String searchTerm);
 
     public String getParent(String siteId) throws Exception;
 
@@ -143,15 +143,6 @@ public interface OsylManagerService {
      * @return
      */
     public List<CMCourse> getCMCourses(String startsWith);
-
-    /**
-     * This method retrieves all sites that contains an OpenSyllabus tool and a
-     * published course outline
-     * 
-     * @return list of the site that contain a opensyllabus tool and that has a
-     *         published course outline
-     */
-    public Map<String, String> getPublishedOsylSites();
 
     /**
      * Retrieve all the informations of the specified site and the course

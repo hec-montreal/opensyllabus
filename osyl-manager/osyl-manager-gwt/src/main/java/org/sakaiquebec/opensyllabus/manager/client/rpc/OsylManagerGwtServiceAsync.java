@@ -61,7 +61,7 @@ public interface OsylManagerGwtServiceAsync {
 
     public void getOsylPackage(String siteId, AsyncCallback<String> callback);
 
-    public void getOsylSites(List<String> siteIds,
+    public void getOsylSites(List<String> siteIds, String searchTerm,
 	    AsyncCallback<Map<String, String>> callback);
 
     public void getParent(String siteId, AsyncCallback<String> callback);

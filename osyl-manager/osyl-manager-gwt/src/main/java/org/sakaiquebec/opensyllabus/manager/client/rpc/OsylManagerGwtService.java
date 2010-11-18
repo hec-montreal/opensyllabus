@@ -60,7 +60,7 @@ public interface OsylManagerGwtService extends RemoteService {
 
     public String getOsylPackage(String siteId);
 
-    public Map<String, String> getOsylSites(List<String> siteIds);
+    public Map<String, String> getOsylSites(List<String> siteIds, String searchTerm);
 
     public String getParent(String siteId) throws Exception;
 
