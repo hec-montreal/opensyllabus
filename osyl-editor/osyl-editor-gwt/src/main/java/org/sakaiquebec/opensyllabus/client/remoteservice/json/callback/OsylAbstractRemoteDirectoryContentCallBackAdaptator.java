@@ -76,14 +76,15 @@ public abstract class OsylAbstractRemoteDirectoryContentCallBackAdaptator
 		    name =
 			    (JSONString) ((JSONObject) jObject
 				    .get("properties")).get("DAV:displayname");
-		    if (name.stringValue().equals(
+		    String nameString = (name==null)?"":name.stringValue();
+		    if (nameString.equals(
 			    OsylController.PUBLISH_FOLDER_NAME)) {
 			escaped = true;
 		    } else {
 			List<OsylAbstractBrowserItem> list =
 				new ArrayList<OsylAbstractBrowserItem>();
 			osylRemoteDirItem =
-				new OsylDirectory(name.stringValue(), path
+				new OsylDirectory(nameString, path
 					.stringValue(), "", list);
 		    }
 		} else {

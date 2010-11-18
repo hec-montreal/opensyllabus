@@ -426,6 +426,8 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     public String formatListingLine(OsylAbstractBrowserItem abstractBrowserItem) {
 	String formattedLine = " ";
 	String fileName = abstractBrowserItem.getFileName();
+	if("".equals(fileName) && abstractBrowserItem.isFolder())
+	    fileName=getController().getUiMessage("Browser.voidNameFolder");
 	formattedLine +=
 		getController().getUiMessage(abstractBrowserItem.getItemTag());
 	formattedLine += "   " + fileName;
