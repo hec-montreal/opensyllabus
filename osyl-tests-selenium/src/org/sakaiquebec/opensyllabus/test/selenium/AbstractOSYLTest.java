@@ -231,11 +231,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 	    session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
 	    pause();
-	    if(!session().isElementPresent("gwt-uid-4"))
+	    if(!session().isElementPresent("gwt-uid-4")) {
 		waitForPageToLoad();
+	    }
 	    assertTrue(session().isElementPresent("gwt-uid-4"));
 	    // gwt-uid-4 is button Save
 	    if (!session().isVisible("gwt-uid-4")) {
+		captureScreenShot("Course outline locked: waiting 15 minutes");
 		log("Course outline locked: waiting 15 minutes");
 		pause(900000);
 		session().refresh();
@@ -592,8 +594,9 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * Returns the screenshot file name corresponding to the specified message,
      * removing forbidden chars and adding ".png".
      */
-    private static String getScreenShotFileName(String msg) {
-	return SCREENSHOT_DIR + msg.replaceAll("[/\\:\\?\\!\\|><\"\\*]", "_")
+    private String getScreenShotFileName(String msg) {
+	return SCREENSHOT_DIR + timeStamp() + " "
+		+ msg.replaceAll("[/\\:\\?\\!\\|><\"\\*]", "_")
 		+ ".png";
     }
 
