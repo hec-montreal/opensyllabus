@@ -125,6 +125,7 @@ public class XmlHelper {
 
     public static String applyXsl(String xml, String xsl, URIResolver uriResolver,String encoding) throws Exception{
 	TransformerFactory tFactory = TransformerFactory.newInstance();
+	xml = rmNonValidChars(xml);
 	if(uriResolver!=null)
 	    tFactory.setURIResolver(uriResolver);
 
