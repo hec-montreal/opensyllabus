@@ -782,17 +782,17 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    if (!sitePage.getTools(
 			    new String[] { "sakai.opensyllabus.tool" })
 			    .isEmpty()) {
-			// if (osylSiteService.hasBeenPublished(site.getId())) {
-			boolean isInHierarchy = false;
-			for (String siteId : siteIds) {
-			    isInHierarchy =
-				    isInHierarchy
-					    || isSiteinSiteHierarchy(site
-						    .getId(), siteId);
+			if (osylSiteService.hasBeenPublished(site.getId())) {
+			    boolean isInHierarchy = false;
+			    for (String siteId : siteIds) {
+				isInHierarchy =
+					isInHierarchy
+						|| isSiteinSiteHierarchy(site
+							.getId(), siteId);
+			    }
+			    if (!isInHierarchy)
+				siteMap.put(site.getId(), site.getTitle());
 			}
-			if (!isInHierarchy)
-			    siteMap.put(site.getId(), site.getTitle());
-			// }
 			break;
 		    }
 		}
