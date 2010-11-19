@@ -23,10 +23,8 @@ package org.sakaiquebec.opensyllabus.common.dao;
 import java.util.Date;
 import java.util.List;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.regexp.REUtil;
 import org.hibernate.HibernateException;
 import org.sakaiproject.db.cover.SqlService;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -51,10 +49,10 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 
     /** The init method called by Spring */
     public void init() {
-        log.debug("Init from DAO");
-        singleRowHT = new HibernateTemplate(getSessionFactory());
-        singleRowHT.setFetchSize(1);
-        singleRowHT.setMaxResults(1);
+	log.debug("Init from DAO");
+	singleRowHT = new HibernateTemplate(getSessionFactory());
+	singleRowHT.setFetchSize(1);
+	singleRowHT.setMaxResults(1);
     }
 
     /** Default constructor */
@@ -255,11 +253,19 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	}
 
 	try {
+	    if ("oracle".equalsIgnoreCase(SqlService.getVendor())) {
 	    results =
 		    getHibernateTemplate()
 			    .find(
-				    "from COSerialized where siteId= ? and published=1 and access is not null and not access=''",
+				    "from COSerialized where siteId= ? and published=1 and access is not null",
 				    new Object[] { siteId });
+	    }else{
+		results =
+		    getHibernateTemplate()
+			    .find(
+				    "from COSerialized where siteId= ? and published=1 and not access=''",
+				    new Object[] { siteId });
+	    }
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline", e);
 	    throw e;
@@ -382,27 +388,27 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 		new Object[] { sessionId });
 
     }
-    
-    public void clearLocksForCoId(String coid){
+
+    public void clearLocksForCoId(String coid) {
 	getHibernateTemplate().bulkUpdate(
 		"update COSerialized set lockedBy=null where coId= ?",
 		new Object[] { coid });
     }
-    
-    public void setLockedBy(String coId, String sessionId){
+
+    public void setLockedBy(String coId, String sessionId) {
 	getHibernateTemplate().bulkUpdate(
 		"update COSerialized set lockedBy=? where coId= ?",
 		new Object[] { sessionId, coId });
     }
-    
-    public void setPublicationDate(String coId, Date pubDate){
+
+    public void setPublicationDate(String coId, Date pubDate) {
 	getHibernateTemplate().bulkUpdate(
 		"update COSerialized set publicationDate=? where coId= ?",
 		new Object[] { pubDate, coId });
     }
 
     @SuppressWarnings("unchecked")
-    public Date getModifiedDate(String siteId)throws Exception {
+    public Date getModifiedDate(String siteId) throws Exception {
 	List<Date> results = null;
 	Date res = null;
 
@@ -427,7 +433,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
     }
 
     @SuppressWarnings("unchecked")
-    public Date getPublicationDate(String siteId) throws Exception{
+    public Date getPublicationDate(String siteId) throws Exception {
 	List<Date> results = null;
 	Date res = null;
 
@@ -465,12 +471,11 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by its siteId", e);
 	}
-	if(results!=null){
-	    for(COSerialized courseOutline:results){
+	if (results != null) {
+	    for (COSerialized courseOutline : results) {
 		getHibernateTemplate().delete(courseOutline);
 	    }
 	}
     }
-
 
 }
