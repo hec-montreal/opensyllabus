@@ -1005,8 +1005,6 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	private HashMap getDocsIds(Connection connexion, String lang, Document xml,
 			StringBuffer outTrace, boolean trace) throws Exception {
 		// ---------------------------------------------------
-
-		Publication p = new Publication();
 		ArrayList ressAl = new ArrayList();
 		HashMap docs = new HashMap();
 

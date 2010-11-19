@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -168,8 +169,6 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	Map<String, Map<String, Object>> roles =
 		adminConfigService.getUdatedRoles();
 
-	Set<String> keys = roles.keySet();
-
 	String role;
 	List<String> removedUsers;
 	List<String> addedUsers;
@@ -177,9 +176,9 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	ConfigRole configRole;
 	Map<String, Object> values;
 
-	for (String key : keys) {
-	    role = key;
-	    values = roles.get(key);
+	for(Entry<String, Map<String,Object>> entry : roles.entrySet()){
+	    role = entry.getKey();
+	    values=entry.getValue();
 	    removedUsers =
 		    (List<String>) values
 			    .get(ConfigurationService.REMOVEDUSERS);

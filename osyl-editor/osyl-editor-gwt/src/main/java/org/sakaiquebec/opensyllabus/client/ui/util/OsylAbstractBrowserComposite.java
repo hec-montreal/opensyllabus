@@ -99,8 +99,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     
     private String oldSelectedEntity;
 
-    private Map<String, String> mySites;
-
     // private ListBox mySitesListBox;
 
     private TextBox currentSiteTextBox;
@@ -497,12 +495,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		getFileListing().setItemSelected(indexSelectedFile, true);
 		getFileListing().addStyleName(
 			"Osyl-RemoteFileBrowser-WaitingState");
-		String newFilePath =
-			getCurrentDirectory().getDirectoryPath()
-				+ "/"
-				+ getCurrentDirectory().getFilesList().get(
-					indexSelectedFile).getFileName();
-		newFilePath = uriSlashCorrection(newFilePath);
 		OsylAbstractBrowserItem selectedFile =
 			getCurrentDirectory().getFilesList().get(
 				indexSelectedFile);
@@ -999,7 +991,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	Map<String, String> entities = sakaiEntities.getEntities();
 	Map<String, String> allowedProviders = sakaiEntities.getProviders();
 		
-	TreeItem providers = new TreeItem();
+	TreeItem providers;
 	Set<String> entitiesKeys = entities.keySet();
 	Set<String> providersKeys = allowedProviders.keySet();
 	TreeItem selected = null;

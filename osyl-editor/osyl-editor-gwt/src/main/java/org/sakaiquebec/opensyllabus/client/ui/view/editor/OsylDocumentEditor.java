@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
@@ -322,9 +323,10 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    boolean incompatibility = false;
 	    Set<String> parentTitles = new HashSet<String>();
 	    if (cv != null) {
-		for (String id : cv.keySet()) {
+		for (Entry<String, String> entry : cv.entrySet()) {
+		    String id = entry.getKey();
 		    if (!id.equals(getView().getModel().getId())) {
-			String visibility = cv.get(id);
+			String visibility = entry.getValue();
 			if (!visibility.equals("" + !isContextHidden())) {
 			    incompatibility = true;
 			    COModelInterface comi =

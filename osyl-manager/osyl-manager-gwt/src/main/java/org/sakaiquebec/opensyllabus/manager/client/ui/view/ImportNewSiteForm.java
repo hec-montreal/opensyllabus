@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
@@ -65,19 +66,19 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
     private ListBox configListBox;
 
     private ListBox langListBox;
-    
+
     private FileUpload fileUpload;
 
     private PushButton importSiteButton;
-    
+
     private String siteId;
-    
+
     private final FormPanel formPanel;
-    
+
     private final OsylOkCancelDialog warning;
-    
+
     private final OsylCancelDialog diag;
-    
+
     AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 	public void onSuccess(Void serverResponse) {
 	    diag.hide();
@@ -85,14 +86,14 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 	}
 
 	public void onFailure(Throwable error) {
-	    OsylOkCancelDialog warning = new OsylOkCancelDialog(false,
-		    true, messages.OsylWarning_Title(),
-		    error.getMessage(), true, false);
+	    OsylOkCancelDialog warning =
+		    new OsylOkCancelDialog(false, true, messages
+			    .OsylWarning_Title(), error.getMessage(), true,
+			    false);
 	    warning.show();
 	    warning.centerAndFocus();
 	}
     };
-
 
     AsyncCallback<Map<String, String>> configListAsyncCallback =
 	    new AsyncCallback<Map<String, String>>() {
@@ -103,24 +104,22 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 
 		public void onSuccess(Map<String, String> result) {
 		    if (result == null || result.isEmpty()) {
-			OsylOkCancelDialog warning = new OsylOkCancelDialog(
-				false, true, messages.OsylWarning_Title(),
-				messages.noAssociableCOSite(), true, false);
+			OsylOkCancelDialog warning =
+				new OsylOkCancelDialog(false, true, messages
+					.OsylWarning_Title(), messages
+					.noAssociableCOSite(), true, false);
 			warning.show();
 			warning.centerAndFocus();
 			importSiteButton.setEnabled(false);
 		    } else {
-			for (Iterator<String> configMapKeysIterator =
-				result.keySet().iterator(); configMapKeysIterator
-				.hasNext();) {
-			    String configId = configMapKeysIterator.next();
-			    String configRef = result.get(configId);
-			    try{
-			    String configTitle =
-				    messages.getString(
-					    "config_" + configRef);
-			    configListBox.addItem(configTitle, configRef);
-			    }catch (Exception e) {
+			for (Entry<String, String> entry : result.entrySet()) {
+			    String configRef = entry.getValue();
+			    try {
+				String configTitle =
+					messages.getString("config_"
+						+ configRef);
+				configListBox.addItem(configTitle, configRef);
+			    } catch (Exception e) {
 			    }
 			}
 		    }
@@ -132,8 +131,9 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 	    OsylCancelDialog aDiag) {
 	super(controller);
 	this.diag = aDiag;
-	warning = new OsylOkCancelDialog(false, true, messages.OsylWarning_Title(),
-		"", true, false);
+	warning =
+		new OsylOkCancelDialog(false, true, messages
+			.OsylWarning_Title(), "", true, false);
 
 	Label l = new Label(messages.createSiteTitle());
 	l.setStylePrimaryName("OsylManager-form-title");
@@ -145,12 +145,11 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 
 	Label langTitle = new Label(messages.chooseLang());
 	langListBox = new ListBox();
-	
+
 	for (Iterator<String> langIter = supportedLang.iterator(); langIter
 		.hasNext();) {
 	    String lang = langIter.next();
-	    langListBox.addItem(messages.getString(
-		    "language_" + lang), lang);
+	    langListBox.addItem(messages.getString("language_" + lang), lang);
 	}
 	mainPanel.add(createPanel(langTitle, langListBox));
 
@@ -158,7 +157,7 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 	configListBox = new ListBox();
 	controller.getOsylConfigs(configListAsyncCallback);
 	mainPanel.add(createPanel(configTitle, configListBox));
-	
+
 	Label fileUploadLabel = new Label(messages.file());
 
 	fileUpload = new FileUpload();
@@ -172,52 +171,44 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 	formPanel.setWidth("95%");
 	formPanel.setEncoding(FormPanel.ENCODING_MULTIPART);
 	formPanel.setMethod(FormPanel.METHOD_POST);
-	formPanel
-		.addSubmitCompleteHandler(new SubmitCompleteHandler() {
-		    /**
-		     * Parse the file upload return string JSON
-		     * String
-		     * 
-		     * @param jsonString
-		     * @return a boolean of the success state
-		     */
-		    public boolean getState(String jsonString) {
-			return (jsonString
-				.contains("status\":\"ok"));
-		    }
+	formPanel.addSubmitCompleteHandler(new SubmitCompleteHandler() {
+	    /**
+	     * Parse the file upload return string JSON String
+	     * 
+	     * @param jsonString
+	     * @return a boolean of the success state
+	     */
+	    public boolean getState(String jsonString) {
+		return (jsonString.contains("status\":\"ok"));
+	    }
 
-		    public String getURL(String jsonString) {
-			String url =
-				jsonString
-					.substring(jsonString
-						.indexOf("\"url\":\"") + 7);
-			url =
-				url.substring(0, url
-					.indexOf("\""));
-			return url;
-		    }
+	    public String getURL(String jsonString) {
+		String url =
+			jsonString
+				.substring(jsonString.indexOf("\"url\":\"") + 7);
+		url = url.substring(0, url.indexOf("\""));
+		return url;
+	    }
 
-		    /*
-		     * When the form submission is successfully
-		     * completed, this event is fired. SDATA
-		     * returns an event of type JSON.
-		     */
-		    public void onSubmitComplete(
-			    SubmitCompleteEvent event) {
-			String retourJSON = event.getResults();
-			if (getState(event.getResults())) {
-			    String url = getURL(retourJSON);
-			    controller.importData(url, siteId, callback);
-			} else {
-			    diag.hide();
-			    warning.setText(messages.siteNotCreated());
-			    warning.show();
-			    warning.centerAndFocus();
-			    return;
-			}
-		    }
-		}); // new FormHandler (inner class)
-	
+	    /*
+	     * When the form submission is successfully completed, this event is
+	     * fired. SDATA returns an event of type JSON.
+	     */
+	    public void onSubmitComplete(SubmitCompleteEvent event) {
+		String retourJSON = event.getResults();
+		if (getState(event.getResults())) {
+		    String url = getURL(retourJSON);
+		    controller.importData(url, siteId, callback);
+		} else {
+		    diag.hide();
+		    warning.setText(messages.siteNotCreated());
+		    warning.show();
+		    warning.centerAndFocus();
+		    return;
+		}
+	    }
+	}); // new FormHandler (inner class)
+
 	importSiteButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		boolean nameValid = false;
@@ -232,7 +223,7 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 		if (nameValid) {
 		    diag.show();
 		    diag.centerAndFocus();
-		    
+
 		    if (configListBox.getSelectedIndex() != -1) {
 			String configRef =
 				configListBox.getValue(configListBox
@@ -266,13 +257,12 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 	    formPanel.setAction(getFormAction(siteId));
 	    formPanel.submit();
 	} else if (e.getType() == OsylManagerEvent.SITE_IMPORT_EVENT) {
-	    
+
 	    mainPanel.clear();
 	    Label l = new Label(messages.createSiteTitle());
 	    l.setStylePrimaryName("OsylManager-form-title");
 	    mainPanel.add(l);
-	    mainPanel.add(new Label(messages
-		    .siteForm_create_ok()));
+	    mainPanel.add(new Label(messages.siteForm_create_ok()));
 	    Anchor edit = new Anchor();
 	    edit.setText(messages.createForm_edit());
 	    edit.setStylePrimaryName("OsylManager-action");
@@ -284,8 +274,7 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 	    });
 	    mainPanel.add(edit);
 
-	    PushButton closeButton =
-		    new PushButton(messages.form_close());
+	    PushButton closeButton = new PushButton(messages.form_close());
 	    closeButton.setWidth("40px");
 	    closeButton.setStylePrimaryName("Osyl-Button");
 	    closeButton.addClickHandler(new ClickHandler() {
@@ -298,7 +287,7 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 		    HasHorizontalAlignment.ALIGN_CENTER);
 	}
     }
-    
+
     private String getFormAction(String siteId) {
 	String url = GWT.getModuleBaseURL();
 	String cleanUrl = url.substring(0, url.indexOf("/", 8));

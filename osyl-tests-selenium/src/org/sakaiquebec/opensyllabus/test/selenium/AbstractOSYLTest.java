@@ -83,6 +83,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
 	closeSeleniumSession();
+	super.tearDown();
     }
 
     /**

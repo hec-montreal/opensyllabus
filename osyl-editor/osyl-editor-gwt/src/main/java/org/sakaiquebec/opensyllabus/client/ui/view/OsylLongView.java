@@ -44,8 +44,6 @@ public class OsylLongView extends OsylViewableComposite {
     // View variables
     private VerticalPanel mainPanel;
 
-    private Label titleLabel;
-
     public void setMainPanel(VerticalPanel mainPanel) {
 	this.mainPanel = mainPanel;
     }

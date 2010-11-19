@@ -159,18 +159,6 @@ public class OsylTreeView extends OsylViewableComposite implements
     public void refreshView() {
 	COContent co = (COContent) getModel();
 	getTree().removeItems();
-	String treeItemTitle = null;
-
-	try {
-	    treeItemTitle = getController().getCOSerialized().getTitle();
-	} catch (NullPointerException e) {
-	    treeItemTitle = null;
-	}
-	// If we don't have a controller or a COSerialized (in hosted mode for
-	// instance), or an empty title, we simply display "Course Outline".
-	if (null == treeItemTitle || "".equals(treeItemTitle)) {
-	    treeItemTitle = getCoMessage("courseoutline");
-	}
 	TreeItem treeItemRoot = new TreeItem();
 	setRoot(treeItemRoot);
 	itemModelMap.put(getModel(), getRoot());

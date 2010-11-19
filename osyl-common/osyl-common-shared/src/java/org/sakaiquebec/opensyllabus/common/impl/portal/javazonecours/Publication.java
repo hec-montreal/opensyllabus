@@ -2313,7 +2313,6 @@ public class Publication {
 		if (trace)
 			outTrace
 					.append("<br><br>================ generation documents externes =====");
-		String planId = getRootKoId(xml);
 		Document xmlDocExts = newDOM();
 		processXSLT(xml, "parseDocExt.xsl", xmlDocExts, outTrace, trace);
 
@@ -2453,7 +2452,6 @@ public class Publication {
 			boolean trace) throws Exception {
 		// ---------------------------------------------------
 		String requeteSQLs = null;
-		Statement stmtS = connexion.createStatement();
 		String requeteSQLd1 = null;
 		Statement stmtD1 = connexion.createStatement();
 		String requeteSQLd2 = null;
@@ -3026,8 +3024,6 @@ public class Publication {
 			String lang, StringBuffer outPrint, StringBuffer outTrace,
 			boolean trace) throws Exception {
 		// ---------------------------------------------------
-
-		StringBuffer[] result = new StringBuffer[2];
 
 		outPrint.append("<html>");
 		outPrint.append("<head>");

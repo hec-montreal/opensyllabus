@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
@@ -68,7 +69,7 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
     private static final String WINTER = "winter";
     private static final String SUMMER = "summer";
     private static final String FALL = "fall";
-    
+
     private static final int SITE_ID_COL = 0;
 
     private VerticalPanel mainPanel;
@@ -117,11 +118,8 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 			DateTimeFormat dtf =
 				DateTimeFormat.getFormat("yyyy/MM/dd HH:mm:ss");
 
-			for (Iterator<String> sortedSiteIterator =
-				sortedMap.keySet().iterator(); sortedSiteIterator
-				.hasNext();) {
-			    String siteTitle = sortedSiteIterator.next();
-			    COSite coSite = sortedMap.get(siteTitle);
+			for (Entry<String, COSite> entry : sortedMap.entrySet()) {
+			    COSite coSite = entry.getValue();
 			    rowNum = scSiteList.getDataTable().insertRow(i);
 			    scSiteList.getDataTable().getRowFormatter()
 				    .setStylePrimaryName(rowNum,
@@ -130,8 +128,11 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 				    coSite.getSiteName());
 			    scSiteList.getDataTable().setHTML(rowNum, 1,
 				    coSite.getAcademicCareer());
-			    scSiteList.getDataTable().setHTML(rowNum, 2,
-				   getLocalizedSessionName(coSite.getCourseSession()));
+			    scSiteList.getDataTable().setHTML(
+				    rowNum,
+				    2,
+				    getLocalizedSessionName(coSite
+					    .getCourseSession()));
 			    scSiteList.getDataTable().setHTML(rowNum, 3,
 				    coSite.getCourseName());
 			    scSiteList.getDataTable().setHTML(rowNum, 4,
@@ -269,12 +270,13 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 	mainPanel.add(new Label(messages.courseListView_loading()));
 	Image im = new Image(GWT.getModuleBaseURL() + "images/ajaxLoader.gif");
 	mainPanel.add(im);
-	
-	if(getController().isInHostedMode()){
+
+	if (getController().isInHostedMode()) {
 	    getHostedModeData();
 	} else {
 	    setShowMessage(showMessage);
-	    getController().getAllCoAndSiteInfo(getSearchTerm(), getSelectedAcadSession(), asyncCallback);
+	    getController().getAllCoAndSiteInfo(getSearchTerm(),
+		    getSelectedAcadSession(), asyncCallback);
 	}
     }
 
@@ -440,10 +442,10 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
     public boolean isShowMessage() {
 	return showMessage;
     }
-    
-    private String getLocalizedSessionName(String sessionName){
-	
-	if(sessionName==null || "".equals(sessionName)){
+
+    private String getLocalizedSessionName(String sessionName) {
+
+	if (sessionName == null || "".equals(sessionName)) {
 	    return "";
 	} else {
 	    StringTokenizer strTok = new StringTokenizer(sessionName);

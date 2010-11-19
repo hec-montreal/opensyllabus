@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
@@ -70,24 +71,22 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 
 		public void onSuccess(Map<String, String> result) {
 		    if (result == null || result.isEmpty()) {
-			OsylOkCancelDialog warning = new OsylOkCancelDialog(
-				false, true, messages.OsylWarning_Title(),
-				messages.noAssociableCOSite(), true, false);
+			OsylOkCancelDialog warning =
+				new OsylOkCancelDialog(false, true, messages
+					.OsylWarning_Title(), messages
+					.noAssociableCOSite(), true, false);
 			warning.show();
 			warning.centerAndFocus();
 			createSite.setEnabled(false);
 		    } else {
-			for (Iterator<String> configMapKeysIterator =
-				result.keySet().iterator(); configMapKeysIterator
-				.hasNext();) {
-			    String configId = configMapKeysIterator.next();
-			    String configRef = result.get(configId);
-			    try{
-			    String configTitle =
-				    controller.getMessages().getString(
-					    "config_" + configRef);
-			    configListBox.addItem(configTitle, configRef);
-			    }catch (Exception e) {
+			for (Entry<String, String> entry : result.entrySet()) {
+			    String configRef = entry.getValue();
+			    try {
+				String configTitle =
+					controller.getMessages().getString(
+						"config_" + configRef);
+				configListBox.addItem(configTitle, configRef);
+			    } catch (Exception e) {
 			    }
 			}
 		    }
@@ -111,8 +110,7 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 	for (Iterator<String> langIter = supportedLang.iterator(); langIter
 		.hasNext();) {
 	    String lang = langIter.next();
-	    langListBox.addItem(messages.getString(
-		    "language_" + lang), lang);
+	    langListBox.addItem(messages.getString("language_" + lang), lang);
 	}
 	mainPanel.add(createPanel(langTitle, langListBox));
 
@@ -152,7 +150,7 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 	mainPanel.add(createSite);
 	mainPanel.setCellHorizontalAlignment(createSite,
 		HasHorizontalAlignment.ALIGN_CENTER);
-//	mainPanel.setWidth(FORM_WIDTH + "px");
+	// mainPanel.setWidth(FORM_WIDTH + "px");
 
 	controller.addEventHandler(this);
 
@@ -188,7 +186,7 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 	    });
 	    mainPanel.add(closeButton);
 	    mainPanel.setCellHorizontalAlignment(closeButton,
-			HasHorizontalAlignment.ALIGN_CENTER);
+		    HasHorizontalAlignment.ALIGN_CENTER);
 	}
     }
 

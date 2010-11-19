@@ -53,7 +53,7 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
     private CourseListAdvancedView courseListView;
 
     private TextBox selectSiteInput;
-    
+
     private ListBox acadSessionListBox;
 
     public OsylManagerMainAdvancedView(OsylManagerController controller) {
@@ -63,25 +63,25 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	initView();
 	initWidget(mainPanel);
     }
-    
+
     private AsyncCallback<List<CMAcademicSession>> acadSessionsCB =
-	new AsyncCallback<List<CMAcademicSession>>(){
+	    new AsyncCallback<List<CMAcademicSession>>() {
 
-	    public void onFailure(Throwable caught) {
-		Window.alert(caught.getStackTrace().toString());
-	    }
-
-	    public void onSuccess(List<CMAcademicSession> result) {
-		acadSessionListBox.addItem(getController().getMessages().
-			academicSessionNone(), "");
-		
-		for(CMAcademicSession session : result){
-		    acadSessionListBox.addItem(session.getSessionName(),
-			    session.getId());
+		public void onFailure(Throwable caught) {
+		    Window.alert(caught.getMessage());
 		}
-	    }
-	
-    };
+
+		public void onSuccess(List<CMAcademicSession> result) {
+		    acadSessionListBox.addItem(getController().getMessages()
+			    .academicSessionNone(), "");
+
+		    for (CMAcademicSession session : result) {
+			acadSessionListBox.addItem(session.getSessionName(),
+				session.getId());
+		    }
+		}
+
+	    };
 
     private void initView() {
 	Label mainLabel =
@@ -119,8 +119,8 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	    }
 
 	});
-	
-	selectSiteInput.addKeyPressHandler(new KeyPressHandler(){
+
+	selectSiteInput.addKeyPressHandler(new KeyPressHandler() {
 
 	    public void onKeyPress(KeyPressEvent event) {
 		if (event.getCharCode() == KeyCodes.KEY_ENTER) {
@@ -142,14 +142,14 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 		courseListView.refresh(true);
 	    }
 	});
-	
-	Label trimesterLbl = new Label(getController().getMessages()
-		.academicSessionLabel());
+
+	Label trimesterLbl =
+		new Label(getController().getMessages().academicSessionLabel());
 	trimesterLbl.setStylePrimaryName("OsylManager-mainView-label");
-	
+
 	acadSessionListBox = new ListBox();
-	
-	if(getController().isInHostedMode()){
+
+	if (getController().isInHostedMode()) {
 	    acadSessionListBox.addItem("Not specified");
 	    acadSessionListBox.addItem("H2010");
 	    acadSessionListBox.addItem("H2010P4");
@@ -180,7 +180,7 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	HorizontalPanel hz1 = new HorizontalPanel();
 	hz1.add(new EditAction(getController()));
 	hz1.add(new PublishAction(getController()));
-//	hz1.add(new UnpublishAction(getController()));
+	// hz1.add(new UnpublishAction(getController()));
 	hz1.add(new CopyAction(getController()));
 	hz1.setStyleName("OsylManager-mainView-actionList");
 	commandsPanel.add(hz1);
@@ -200,7 +200,7 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	HorizontalPanel hz4 = new HorizontalPanel();
 	hz4.add(new ImportAction(getController()));
 	hz4.add(new ExportAction(getController()));
-//	hz4.add(new CleanAction(getController()));
+	// hz4.add(new CleanAction(getController()));
 	hz4.add(new DeleteAction(getController()));
 	hz4.setStyleName("OsylManager-mainView-actionList");
 	commandsPanel.add(hz4);

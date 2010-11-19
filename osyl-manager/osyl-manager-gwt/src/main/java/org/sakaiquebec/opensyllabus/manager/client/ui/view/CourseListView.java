@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
@@ -78,12 +79,8 @@ public class CourseListView extends OsylManagerAbstractView implements
 			    String siteTitle = cos.getSiteName();
 			    sortedMap.put(siteTitle, siteId);
 			}
-			for (Iterator<String> sortedSiteIterator =
-				sortedMap.keySet().iterator(); sortedSiteIterator
-				.hasNext();) {
-			    String siteTitle = sortedSiteIterator.next();
-			    String siteId = sortedMap.get(siteTitle);
-			    siteListBox.addItem(siteTitle, siteId);
+			for(Entry<String,String> entry : sortedMap.entrySet()){
+			    siteListBox.addItem(entry.getKey(), entry.getValue());
 			}
 		    }
 		    if (!getController().getSelectSites().isEmpty()) {

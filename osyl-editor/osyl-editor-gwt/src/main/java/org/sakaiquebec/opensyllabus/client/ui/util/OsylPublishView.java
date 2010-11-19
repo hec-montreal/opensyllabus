@@ -22,6 +22,7 @@
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
@@ -90,8 +91,8 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	// final Button publishButton =
 	// new Button(uiMessages.getMessage("publish"),
 	// new PublishLinkClickListener());
-	AbstractImagePrototype imgPublishButton = 
-	    AbstractImagePrototype.create(osylImageBundle.publish());
+	AbstractImagePrototype imgPublishButton =
+		AbstractImagePrototype.create(osylImageBundle.publish());
 	ImageAndTextButton publishButton = new ImageAndTextButton(
 	// TODO: Bug with ImageBundle, we have to use
 		// AbstractImagePrototype
@@ -107,8 +108,8 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	// hide();
 	// }
 	// });
-	AbstractImagePrototype imgCloseButton = 
-	    AbstractImagePrototype.create(osylImageBundle.action_cancel());
+	AbstractImagePrototype imgCloseButton =
+		AbstractImagePrototype.create(osylImageBundle.action_cancel());
 	ImageAndTextButton cancelButton = new ImageAndTextButton(
 	// TODO: Bug with ImageBundle, we have to use
 		// AbstractImagePrototype
@@ -158,27 +159,35 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 		new AsyncCallback<Map<String, String>>() {
 		    public void onSuccess(Map<String, String> serverResponse) {
 			if (serverResponse != null) {
-			    for (String key : serverResponse.keySet())
+			    for (Entry<String, String> entry : serverResponse
+				    .entrySet()) {
+				String key = entry.getKey();
+				String value = entry.getValue();
 				osylController.getMainView().getModel()
-					.addProperty(key,
-						serverResponse.get(key));
+					.addProperty(key, value);
+			    }
 			}
 			osylPublishedListView.verifiyPublishState(true);
 		    }
 
 		    public void onFailure(Throwable error) {
-			if(error instanceof FusionException){
+			if (error instanceof FusionException) {
 			    final OsylAlertDialog alertBox =
-				new OsylAlertDialog(false, true, uiMessages.getMessage("Global.warning"),
-					uiMessages.getMessage("publish.fusionException"));
+				    new OsylAlertDialog(
+					    false,
+					    true,
+					    uiMessages
+						    .getMessage("Global.warning"),
+					    uiMessages
+						    .getMessage("publish.fusionException"));
 			    alertBox.show();
-			}else{
+			} else {
 			    final OsylAlertDialog alertBox =
-				new OsylAlertDialog(false, true,
-					getController().getUiMessage(
-						"publish.error")
-						+ " : " + error.toString());
-			alertBox.show();
+				    new OsylAlertDialog(false, true,
+					    getController().getUiMessage(
+						    "publish.error")
+						    + " : " + error.toString());
+			    alertBox.show();
 			}
 			osylPublishedListView.verifiyPublishState(false);
 		    }

@@ -21,28 +21,20 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
-import java.io.ObjectInputStream.GetField;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
-import org.sakaiquebec.opensyllabus.client.controller.OsylController;
-import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -112,7 +104,7 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite {
 	setCurrentSiteTextBox(currentSite);
 	getCurrentSiteTextBox().setReadOnly(true);
 	getCurrentSiteTextBox().setWidth("315px");
-	
+
 	firstRowPanel.add(getCurrentSiteTextBox());
 
 	setProvidersPanel(new ScrollPanel());
@@ -125,12 +117,14 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite {
 
 	Tree providers = new Tree();
 	setProviders(providers);
-	getProvidersPanel().addStyleName("Osyl-RemoteEntityBrowser-EntityListing");
+	getProvidersPanel().addStyleName(
+		"Osyl-RemoteEntityBrowser-EntityListing");
 	getProvidersPanel().add(getProviders());
 	mainContentPanel.add(getProvidersPanel());
 
-	getController().getExistingEntities(getController().getSiteId(), getSitesEntitiesCallback());
-	
+	getController().getExistingEntities(getController().getSiteId(),
+		getSitesEntitiesCallback());
+
 	// 3rd row: File field (first a label then a TextBox)
 	// /////////////////////////////////////////////////
 	HorizontalPanel entitySelectionSubPanel = new HorizontalPanel();
@@ -145,14 +139,14 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite {
 		// We have an entity if we have no child
 		if (item.getChildCount() == 0) {
 		    String selectedSite = getController().getSiteId();
-		    
-		    SakaiEntities sakaiEntities = getController().getExistingEntities(selectedSite); 
+
+		    SakaiEntities sakaiEntities =
+			    getController().getExistingEntities(selectedSite);
 		    Map<String, String> entities = sakaiEntities.getEntities();
-			    
-		    Set<String> entitiesKeys = entities.keySet();
-		    String entity;
-		    for (String key : entitiesKeys) {
-			entity = entities.get(key);
+
+		    for (Entry<String, String> entry : entities.entrySet()) {
+			String key = entry.getKey();
+			String entity = entry.getValue();
 			if (entity.equals(item.getText())) {
 			    entityRawUri = getLinkURI(key, entity);
 			    setEntityUri(getRawURI(key));
@@ -161,8 +155,8 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite {
 			}
 		    }
 		}
-		//TODO: changer le contenu du texte cliquable quand on choisit
-		//une entite
+		// TODO: changer le contenu du texte cliquable quand on choisit
+		// une entite
 		updateCurrentSelectionHtml(entityRawUri);
 
 	    }
@@ -176,26 +170,25 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite {
 	currentSelectionLabel.addStyleName("Osyl-RemoteFileBrowser-TitleLabel");
 	currentSelectionLabel.setWidth("130px");
 	entitySelectionSubPanel.add(currentSelectionLabel);
-	
+
 	setCurrentSelectionHtml(new HTML());
-	getCurrentSelectionHtml().addStyleName("Osyl-RemoteEntityBrowser-EntityListing");
+	getCurrentSelectionHtml().addStyleName(
+		"Osyl-RemoteEntityBrowser-EntityListing");
 	getCurrentSelectionHtml().setWidth("315px");
 	entitySelectionSubPanel.add(getCurrentSelectionHtml());
 	// Give the overall composite a style name
 	this.setStylePrimaryName("Osyl-RemoteFileBrowser");
 
-  }
+    }
 
     @Override
     protected void onFileDoubleClicking() {
 	// Nothing to do
     }
 
-
-    
     private String getRawURI(String uri) {
 	// We get the URI from the model
-	String link ="";
+	String link = "";
 
 	// Otherwise we have to prepend Sakai stuff in the URI
 	String url = GWT.getModuleBaseURL();
@@ -203,10 +196,8 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite {
 	link = serverId + "/direct" + uri;
 
 	return link;
-	
+
     }
-
-
 
     public ScrollPanel getProvidersPanel() {
 	return providersPanel;

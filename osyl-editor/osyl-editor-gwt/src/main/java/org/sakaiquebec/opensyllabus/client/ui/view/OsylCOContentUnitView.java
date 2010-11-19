@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
@@ -36,7 +35,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
-import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -154,7 +152,6 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 	COUnitContent unit = (COUnitContent) getModel();
 	COElementAbstract eltAbs = unit.getParent();
 	if (eltAbs.isCOStructureElement()) {
-	    COStructureElement parent = (COStructureElement) unit.getParent();
 	    position = unit.getPosition();
 	}
 	return position;
@@ -340,7 +337,8 @@ public class OsylCOContentUnitView extends OsylViewableComposite implements
 		    COContentRubric.RUBRIC_TYPE_NEWS)) {
 		resProx.moveToTheTopOfTheRubric();
 	    }
-	    //OsylEditorEntryPoint.getInstance().setToolHeight(getOffsetHeight() + 100);
+	    // OsylEditorEntryPoint.getInstance().setToolHeight(getOffsetHeight()
+	    // + 100);
 	}
     }
 

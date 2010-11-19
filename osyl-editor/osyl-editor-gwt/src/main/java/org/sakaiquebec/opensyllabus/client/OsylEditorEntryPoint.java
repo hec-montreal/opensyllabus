@@ -225,7 +225,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	    setSakaiIFrameHeight(h);
 	}
 	((OsylViewableComposite) getView()).setHeight((h - 16) + "px");
-	if (!isInternetExplorer() && ToolWidthMinReached())
+	if (!isInternetExplorer() && toolWidthMinReached())
 	    sc = 18;
 	getRootPanel().setHeight((h - sc) + "px");
 
@@ -690,13 +690,13 @@ public class OsylEditorEntryPoint implements EntryPoint {
     }
 
     public void setToolWidth() {
-	String width = ToolWidthMinReached() ? MIN_TOOL_WIDTH + "px" : "auto";
+	String width = toolWidthMinReached() ? MIN_TOOL_WIDTH + "px" : "auto";
 	DOM.setStyleAttribute(getSakaiToolIframe(), "overflowX",
-		ToolWidthMinReached() ? "auto" : "hidden");
+		toolWidthMinReached() ? "auto" : "hidden");
 	getRootPanel().setWidth(width);
     }
 
-    public Boolean ToolWidthMinReached() {
+    public Boolean toolWidthMinReached() {
 	return Window.getClientWidth() < MIN_TOOL_WIDTH;
     }
 

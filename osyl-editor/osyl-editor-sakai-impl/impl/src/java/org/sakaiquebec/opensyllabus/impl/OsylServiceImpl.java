@@ -247,7 +247,6 @@ public class OsylServiceImpl implements OsylService {
 	if (dueDate != null) {
 	    cal.setTime(dueDate);
 	    cal.add(Calendar.DATE, 1);
-	    dueDate = cal.getTime();
 	}
 	int dueYear = cal.get(Calendar.YEAR);
 	int dueMonth = cal.get(Calendar.MONTH) + 1;
@@ -716,10 +715,8 @@ public class OsylServiceImpl implements OsylService {
 	// providers for each site
 
 	// ++++++++++++++ Retrieve providers
-
-	Site site;
 	try {
-	    site = siteService.getSite(siteId);
+	    siteService.getSite(siteId);
 
 	    for (String provider : allowedProviders) {
 		entities =

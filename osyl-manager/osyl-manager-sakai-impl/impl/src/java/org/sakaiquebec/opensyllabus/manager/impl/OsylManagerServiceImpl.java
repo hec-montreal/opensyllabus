@@ -1304,8 +1304,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    e1.printStackTrace();
 	}
 
-	Set<File> files = fileMap.keySet();
-	for (File file : files) {
+	for (Entry<File, String> entry : fileMap.entrySet()) {
+	    File file = entry.getKey();
 	    try {
 		String fileNameToUse = fileMap.get(file);
 		InputStream inputStream = new FileInputStream(file);
@@ -1771,8 +1771,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    CitationCollection newColl = null;
 	    Citation newCitation = null;
 
-	    for (String id : oldCitations.keySet()) {
-		uri = oldCitations.get(id);
+	    for (Entry<String, String> entry : oldCitations.entrySet()) {
+		uri = entry.getValue();
 		uri = uri.replaceFirst(newSiteId, oldSiteId);
 
 		oldCollectionRef = uri.substring(0, uri.lastIndexOf("/"));

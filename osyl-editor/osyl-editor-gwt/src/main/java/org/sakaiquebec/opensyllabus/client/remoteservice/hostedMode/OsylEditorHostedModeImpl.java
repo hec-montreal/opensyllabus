@@ -164,7 +164,7 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 				Response response) {
 			    String responseTxt = response.getText();
 			    // transform text to List
-			    List<String> list = new ArrayList<String>();
+			    List<String> list;
 			    try {
 				list =
 					OsylHostedModeTransformUtil
