@@ -436,16 +436,10 @@ public class OsylCMJobImpl implements OsylCMJob {
 	    if (!cmService.isAcademicSessionDefined(eid)) {
 		cmAdmin.createAcademicSession(eid, title, description,
 			startDate, endDate);
-		// ///////////////////////////////////////////////////////////////
-		// this method is not available for sakai 2.5 //
-		// you can activate a session manually by changing to 1 //
-		// the value of is_current in the cm_academic_session_t //
-		// TODO: activate this method when running again on sakai 2.6 //
 		if ((now.compareTo(startDate)) >= 0
 			&& endDate.compareTo(endDate) <= 0)
 		    cmAdmin.setCurrentAcademicSessions(Arrays
-			    .asList(new String[] { eid })); //
-		// ////////////////////////////////////////////////////////////////
+			    .asList(new String[] { eid })); 
 	    } else {
 		// We update
 		AcademicSession aSession = cmService.getAcademicSession(eid);
@@ -455,7 +449,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 		aSession.setTitle(title);
 		cmAdmin.updateAcademicSession(aSession);
 		if ((now.compareTo(startDate)) >= 0
-			&& endDate.compareTo(endDate) <= 0)
+			&& now.compareTo(endDate) <= 0)
 		    cmAdmin.setCurrentAcademicSessions(Arrays
 			    .asList(new String[] { eid })); //
 
