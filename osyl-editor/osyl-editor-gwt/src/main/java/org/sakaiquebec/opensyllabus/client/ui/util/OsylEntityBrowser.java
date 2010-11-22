@@ -22,6 +22,7 @@
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
@@ -31,6 +32,8 @@ import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -48,9 +51,43 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylEntityBrowser extends OsylAbstractBrowserComposite {
+public class OsylEntityBrowser extends OsylAbstractBrowserComposite implements SelectionHandler<TreeItem>{
 
     ScrollPanel providersPanel = new ScrollPanel();
+
+    private String entityUri;
+
+    private String entityText;
+    
+    private Tree providers;
+    
+    HTML currentSelectionHtml;
+    
+    private SakaiEntities sakaiEntities;
+
+    private AsyncCallback<SakaiEntities> sitesEntitiesCallback =
+	    new AsyncCallback<SakaiEntities>() {
+		public void onSuccess(SakaiEntities sitesEntites) {
+		    try {
+			setExistingEntities(sitesEntites);
+			refreshSitesEntitiesListing(getEntityUri());
+		    } catch (Exception error) {
+			Window
+				.alert("Error - Unable to getExistingEntities(...) on RPC Success: "
+					+ error.toString());
+		    }
+		}
+
+		// And we define the behavior in case of failure
+		public void onFailure(Throwable error) {
+		    System.out
+			    .println("RPC FAILURE - getExistingEntities(...): "
+				    + error.toString()
+				    + " Hint: Check GWT version");
+		    Window.alert("RPC FAILURE - getExistingEntities(...): "
+			    + error.toString() + " Hint: Check GWT version");
+		}
+	    };
 
     public OsylEntityBrowser() {
 	super();
@@ -62,8 +99,11 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite {
      * @param model
      * @param newController
      */
-    public OsylEntityBrowser(String entity, boolean isEntity) {
-	super(entity, isEntity);
+    public OsylEntityBrowser(String entity) {
+	super();
+	setEntityUri(entity);
+	getController().getExistingEntities(getController().getSiteId(),
+		getSitesEntitiesCallback());
 
     }
 
@@ -114,54 +154,17 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite {
 
 	getProvidersPanel().setWidth("600px");
 	getProvidersPanel().setHeight("70px");
-
-	Tree providers = new Tree();
-	setProviders(providers);
 	getProvidersPanel().addStyleName(
 		"Osyl-RemoteEntityBrowser-EntityListing");
 	getProvidersPanel().add(getProviders());
 	mainContentPanel.add(getProvidersPanel());
-
-	getController().getExistingEntities(getController().getSiteId(),
-		getSitesEntitiesCallback());
 
 	// 3rd row: File field (first a label then a TextBox)
 	// /////////////////////////////////////////////////
 	HorizontalPanel entitySelectionSubPanel = new HorizontalPanel();
 	mainContentPanel.add(entitySelectionSubPanel);
 
-	getProviders().addSelectionHandler(new SelectionHandler<TreeItem>() {
-
-	    public void onSelection(SelectionEvent<TreeItem> event) {
-
-		String entityRawUri = "";
-		TreeItem item = event.getSelectedItem();
-		// We have an entity if we have no child
-		if (item.getChildCount() == 0) {
-		    String selectedSite = getController().getSiteId();
-
-		    SakaiEntities sakaiEntities =
-			    getController().getExistingEntities(selectedSite);
-		    Map<String, String> entities = sakaiEntities.getEntities();
-
-		    for (Entry<String, String> entry : entities.entrySet()) {
-			String key = entry.getKey();
-			String entity = entry.getValue();
-			if (entity.equals(item.getText())) {
-			    entityRawUri = getLinkURI(key, entity);
-			    setEntityUri(getRawURI(key));
-			    setEntityText(entity);
-			    break;
-			}
-		    }
-		}
-		// TODO: changer le contenu du texte cliquable quand on choisit
-		// une entite
-		updateCurrentSelectionHtml(entityRawUri);
-
-	    }
-
-	});
+	getProviders().addSelectionHandler(this);
 
 	// The Label
 	HTML currentSelectionLabel =
@@ -171,7 +174,7 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite {
 	currentSelectionLabel.setWidth("130px");
 	entitySelectionSubPanel.add(currentSelectionLabel);
 
-	setCurrentSelectionHtml(new HTML());
+	setCurrentSelectionHtml(new HTML(""));
 	getCurrentSelectionHtml().addStyleName(
 		"Osyl-RemoteEntityBrowser-EntityListing");
 	getCurrentSelectionHtml().setWidth("315px");
@@ -217,18 +220,130 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite {
 	return null;
     }
 
-    public void onUploadFile(UploadFileEvent event) {
-	setItemToSelect(new OsylFileItem(event.getSource().toString()));
-	((OsylFileItem) getItemToSelect()).setFileName(event.getSource()
-		.toString().substring(
-			event.getSource().toString().lastIndexOf("/"),
-			event.getSource().toString().length()));
-
-    }
-
     @Override
     protected PushButton createAddPushButton() {
 	return null;
+    }
+
+    public AsyncCallback<SakaiEntities> getSitesEntitiesCallback() {
+	return sitesEntitiesCallback;
+    }
+
+    public void setSitesEntitiesCallback(
+	    AsyncCallback<SakaiEntities> sitesEntitiesCallback) {
+	this.sitesEntitiesCallback = sitesEntitiesCallback;
+    }
+
+    public void refreshSitesEntitiesListing(String selectedEntity) {
+	getProviders().clear();
+
+	int countProviders = 0;
+	SakaiEntities sakaiEntities = getExistingEntities(getController().getSiteId());
+
+	Map<String, String> entities = sakaiEntities.getEntities();
+	Map<String, String> allowedProviders = sakaiEntities.getProviders();
+
+	TreeItem providers;
+	Set<String> entitiesKeys = entities.keySet();
+	TreeItem selectedItem = null;
+	for(Entry<String, String> entry : allowedProviders.entrySet()){
+	    String providerKey = entry.getKey();
+	    providers = new TreeItem(entry.getValue().toUpperCase());
+	    for (String key : entitiesKeys) {
+		if (key.contains(providerKey)) {
+		    TreeItem tItem = providers.addItem(entities.get(key));
+		    tItem.addStyleName("Osyl-RemoteEntityBrowser-Entity");
+		    if (selectedEntity != null && selectedEntity.contains(key)) {
+			providers.setState(true, true);
+			selectedItem = tItem;
+			updateCurrentSelectionHtml(getLinkURI(selectedEntity,
+				entities.get(key)));
+		    }
+		    countProviders++;
+		}
+	    }
+	    if (providers.getChildCount() > 0) {
+		getProviders().addItem(providers);
+
+	    }
+	}
+	if (countProviders == 0) {
+	    providers =
+		    new TreeItem(getController().getUiMessage("SakaiEntityEditor.noEntity"));
+	    getProviders().addItem(providers);
+	}
+	if(selectedItem!=null)
+	    getProviders().setSelectedItem(selectedItem);
+    }
+    
+    public void onSelection(SelectionEvent<TreeItem> event) {
+	String entityRawUri = "";
+	TreeItem item = event.getSelectedItem();
+	// We have an entity if we have no child
+	if (item.getChildCount() == 0) {
+	    String selectedSite = getController().getSiteId();
+
+	    SakaiEntities sakaiEntities = getExistingEntities(selectedSite);
+	    Map<String, String> entities = sakaiEntities.getEntities();
+
+	    for (Entry<String, String> entry : entities.entrySet()) {
+		String key = entry.getKey();
+		String entity = entry.getValue();
+		if (entity.equals(item.getText())) {
+		    entityRawUri = getLinkURI(key, entity);
+		    setEntityUri(getRawURI(key));
+		    setEntityText(entity);
+		    break;
+		}
+	    }
+	}
+	// TODO: changer le contenu du texte cliquable quand on choisit
+	// une entite
+	updateCurrentSelectionHtml(entityRawUri);
+    }
+    
+    protected void updateCurrentSelectionHtml(String entity) {
+	getCurrentSelectionHtml().setHTML(entity);
+    }
+    
+    public HTML getCurrentSelectionHtml() {
+	return currentSelectionHtml;
+    }
+
+    public void setCurrentSelectionHtml(HTML currentSelectionHtml) {
+	this.currentSelectionHtml = currentSelectionHtml;
+    }
+
+    public String getEntityUri() {
+	return entityUri;
+    }
+
+    public void setEntityUri(String entityUri) {
+	this.entityUri = entityUri;
+    }
+
+    public String getEntityText() {
+	return entityText;
+    }
+
+    public void setEntityText(String entityText) {
+	this.entityText = entityText;
+    }
+
+    public Tree getProviders() {
+	return providers;
+    }
+
+    public void setProviders(Tree providers) {
+	this.providers = providers;
+    }
+    
+    public SakaiEntities getExistingEntities(String siteId) {
+	return sakaiEntities;
+    }
+
+    public void setExistingEntities(SakaiEntities sakaiEntities) {
+	this.sakaiEntities = sakaiEntities;
     }
 
 }

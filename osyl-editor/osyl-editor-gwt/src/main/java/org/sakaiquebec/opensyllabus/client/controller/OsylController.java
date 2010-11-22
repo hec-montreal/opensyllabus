@@ -454,7 +454,6 @@ public class OsylController implements SavePushButtonEventHandler,
 	setCoMessages(new OsylConfigMessages(co.getMessages()));
 
 	OsylEditorEntryPoint.getInstance().initModel(co);
-	
 
 	// We keep track of the current site ID.
 	setSiteId(co.getSiteId());
@@ -592,31 +591,32 @@ public class OsylController implements SavePushButtonEventHandler,
      */
     public void updateSerializedCourseOutlineCB(Boolean reload) {
 
-	if (reload){
+	if (reload) {
 	    AsyncCallback<COSerialized> callback =
-		new AsyncCallback<COSerialized>() {
-		    // We define the behavior in case of success
-		    public void onSuccess(COSerialized co) {
-			try {
-				OsylEditorEntryPoint.getInstance().refreshModel(co);
-			    
-			} catch (Exception error) {
-			    System.out
-				    .println("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
-					    + error.toString());
+		    new AsyncCallback<COSerialized>() {
+			// We define the behavior in case of success
+			public void onSuccess(COSerialized co) {
+			    try {
+				OsylEditorEntryPoint.getInstance()
+					.refreshModel(co);
+
+			    } catch (Exception error) {
+				System.out
+					.println("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
+						+ error.toString());
+				Window
+					.alert("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
+						+ error.toString());
+			    }
+			}
+
+			// And we define the behavior in case of failure
+			public void onFailure(Throwable error) {
 			    Window
-				    .alert("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
+				    .alert("RPC FAILURE - getSerializedCourseOutline(...) : "
 					    + error.toString());
 			}
-		    }
-
-		    // And we define the behavior in case of failure
-		    public void onFailure(Throwable error) {
-			Window
-				.alert("RPC FAILURE - getSerializedCourseOutline(...) : "
-					+ error.toString());
-		    }
-		};
+		    };
 	    OsylRemoteServiceLocator.getEditorRemoteService()
 		    .getSerializedCourseOutline(callback);
 	}
@@ -1129,31 +1129,6 @@ public class OsylController implements SavePushButtonEventHandler,
 	} catch (RuntimeException e) {
 	    e.printStackTrace();
 	    unableToInitServer(e.toString());
-	}
-    }
-
-    private Map<String, String> providers;
-    private Map<String, String> entities;
-    private SakaiEntities sakaiEntities;
-
-    public Map<String, String> getProviders() {
-	return providers;
-    }
-
-    public void setProviders(Map<String, String> providers) {
-	this.providers = providers;
-    }
-
-    public SakaiEntities getExistingEntities(String siteId) {
-	return sakaiEntities;
-    }
-
-    public void setExistingEntities(SakaiEntities sakaiEntities) {
-	this.sakaiEntities = sakaiEntities;
-	if (sakaiEntities != null) {
-	    providers = sakaiEntities.getProviders();
-	    entities = sakaiEntities.getEntities();
-
 	}
     }
 

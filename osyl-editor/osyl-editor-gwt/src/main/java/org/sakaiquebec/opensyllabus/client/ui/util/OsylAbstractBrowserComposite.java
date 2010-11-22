@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
@@ -37,7 +35,6 @@ import org.sakaiquebec.opensyllabus.client.controller.event.UploadFileEventHandl
 import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredEventHandler.ItemListingAcquiredEvent;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
-import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylDirectory;
 
@@ -64,8 +61,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -85,27 +80,15 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     // Number of elements shown in the file listing
     private static final int LISTING_ITEM_NUMBER = 6;
 
-    private String entityUri;
-
-    private String entityText;
-
     private OsylDirectory currentDirectory = null;
-
-    private String baseDirectoryPath;
 
     private String initialDirPath;
 
     private String browsedSiteId;
-    
-    private String oldSelectedEntity;
-
-    // private ListBox mySitesListBox;
 
     private TextBox currentSiteTextBox;
+    
     private TextBox currentDirectoryTextBox;
-
-    // And the html content
-    HTML currentSelectionHtml = new HTML();
 
     private DoubleClickListBox fileListing;
 
@@ -148,57 +131,11 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		}
 	    };
 
- 
-    private Tree providers;
-
-    public Tree getProviders() {
-	return providers;
-    }
-
-    public void setProviders(Tree providers) {
-	this.providers = providers;
-    }
-
-
-    private AsyncCallback<SakaiEntities> sitesEntitiesCallback =
-	    new AsyncCallback<SakaiEntities>() {
-		public void onSuccess(SakaiEntities sitesEntites) {
-		    try {
-			getController().setExistingEntities(sitesEntites);
-			refreshSitesEntitiesListing(getEntityUri());
-		    } catch (Exception error) {
-			Window
-				.alert("Error - Unable to getExistingEntities(...) on RPC Success: "
-					+ error.toString());
-		    }
-		}
-
-		// And we define the behavior in case of failure
-		public void onFailure(Throwable error) {
-		    System.out
-			    .println("RPC FAILURE - getExistingEntities(...): "
-				    + error.toString()
-				    + " Hint: Check GWT version");
-		    Window.alert("RPC FAILURE - getExistingEntities(...): "
-			    + error.toString() + " Hint: Check GWT version");
-		}
-	    };
-
-    public AsyncCallback<SakaiEntities> getSitesEntitiesCallback() {
-	return sitesEntitiesCallback;
-    }
-
-    public void setSitesEntitiesCallback(
-	    AsyncCallback<SakaiEntities> sitesEntitiesCallback) {
-	this.sitesEntitiesCallback = sitesEntitiesCallback;
-    }
-
     private ArrayList<RFBAddFolderEventHandler> RFBAddFolderEventHandlerList;
 
     private ArrayList<RFBItemSelectionEventHandler> RFBFileSelectionEventHandlerList;
 
     private ArrayList<ItemListingAcquiredEventHandler> fileListingAcquiredEventHandlerList;
-
 
     private PushButton folderAddButton;
 
@@ -222,13 +159,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     public OsylAbstractBrowserComposite(String newDirPath) {
 	super();
 	setInitialDirPath(newDirPath);
-    }
-
-    public OsylAbstractBrowserComposite(String entity, boolean isEntity) {
-	super();
-	if (isEntity)
-	    setEntityUri(entity);
-	initView();
     }
 
     /**
@@ -368,20 +298,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	this.itemToSelect = item;
     }
 
-    protected void updateCurrentSelectionHtml(String entity) {
-	getCurrentSelectionHtml().setHTML(entity);
-
-    }
-
-    public HTML getCurrentSelectionHtml() {
-	return currentSelectionHtml;
-    }
-
-    public void setCurrentSelectionHtml(HTML currentSelectionHtml) {
-	this.currentSelectionHtml = currentSelectionHtml;
-    }
-
-
     protected PushButton createTopButton(ImageResource img, String tooltip) {
 	PushButton button = new PushButton(new Image(img));
 	button.setTitle(tooltip);
@@ -424,8 +340,8 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     public String formatListingLine(OsylAbstractBrowserItem abstractBrowserItem) {
 	String formattedLine = " ";
 	String fileName = abstractBrowserItem.getFileName();
-	if("".equals(fileName) && abstractBrowserItem.isFolder())
-	    fileName=getController().getUiMessage("Browser.voidNameFolder");
+	if ("".equals(fileName) && abstractBrowserItem.isFolder())
+	    fileName = getController().getUiMessage("Browser.voidNameFolder");
 	formattedLine +=
 		getController().getUiMessage(abstractBrowserItem.getItemTag());
 	formattedLine += "   " + fileName;
@@ -508,8 +424,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		// call the onFileSelectionEvent on each one
 		RFBItemSelectionEventHandler.RFBItemSelectionEvent event =
 			new RFBItemSelectionEventHandler.RFBItemSelectionEvent(
-				getBaseDirectoryPath()
-					+ RESSOURCE_URI_PREFIX
+				RESSOURCE_URI_PREFIX
 					+ getCurrentDirectoryTextBox()
 						.getText() + "/"
 					+ selectedFile.getFileName());
@@ -558,8 +473,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 		}
 		RFBItemSelectionEventHandler.RFBItemSelectionEvent event =
 			new RFBItemSelectionEventHandler.RFBItemSelectionEvent(
-				getBaseDirectoryPath()
-					+ RESSOURCE_URI_PREFIX
+				RESSOURCE_URI_PREFIX
 					+ getCurrentDirectoryTextBox()
 						.getText() + "/"
 					+ selectedFile.getFileName());
@@ -754,13 +668,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
     }
 
     /**
-     * @return the baseDirectoryPath value.
-     */
-    public String getBaseDirectoryPath() {
-	return this.baseDirectoryPath;
-    }
-
-    /**
      * @param newDirPath the new value of Previous Directory Path.
      */
     public void setInitialDirPath(String newDirPath) {
@@ -802,14 +709,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	return this.RFBAddFolderEventHandlerList;
     }
 
-    public String getEntityUri() {
-	return entityUri;
-    }
-
-    public void setEntityUri(String entityUri) {
-	this.entityUri = entityUri;
-    }
-
     /**
      * @param arrayList the new value of rFBFileSelectionEventHandlerList.
      */
@@ -823,14 +722,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
      */
     public ArrayList<RFBItemSelectionEventHandler> getRFBFileSelectionEventHandlerList() {
 	return this.RFBFileSelectionEventHandlerList;
-    }
-
-    public String getEntityText() {
-	return entityText;
-    }
-
-    public void setEntityText(String entityText) {
-	this.entityText = entityText;
     }
 
     /**
@@ -955,14 +846,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	}
     }
 
-    public String getOldSelectedEntity() {
-        return oldSelectedEntity;
-    }
-
-    public void setOldSelectedEntity(String oldSelectedEntity) {
-        this.oldSelectedEntity = oldSelectedEntity;
-    }
-
     protected String extractRessourceUri(String uri) {
 	String uu =
 		uri.substring(uri.indexOf(RESSOURCE_URI_PREFIX)
@@ -981,75 +864,7 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	return uu.substring(0, uu.indexOf("/"));
     }
 
-    public void refreshSitesEntitiesListing(String selectedEntity) {
-	getProviders().clear();
-
-	int countProviders = 0;
-	SakaiEntities sakaiEntities = 		getController()
-	.getExistingEntities(getController().getSiteId());
-
-	Map<String, String> entities = sakaiEntities.getEntities();
-	Map<String, String> allowedProviders = sakaiEntities.getProviders();
-		
-	TreeItem providers;
-	Set<String> entitiesKeys = entities.keySet();
-	Set<String> providersKeys = allowedProviders.keySet();
-	TreeItem selected = null;
-	for (String pkey : providersKeys) {
-	    providers = new TreeItem(pkey.toUpperCase());
-	    for (String key : entitiesKeys) {
-		if (key.contains(pkey)) {
-		    selected = providers.addItem(entities.get(key));
-		    if (selectedEntity != null && selectedEntity.contains(key)) {
-			providers.setState(true, true);
-			selected.setSelected(true);
-			selected.addStyleName("Osyl-RemoteEntityBrowser-SelectedEntity");
-			updateSelectedEntity(selectedEntity);
-			updateCurrentSelectionHtml(getLinkURI(selectedEntity,
-				entities.get(key)));
-		    }
-		    countProviders++;
-		}
-	    }
-	    if (providers.getChildCount() > 0) {
-		getProviders().addItem(providers);
-
-	    }
-
-	}
-
-	if (countProviders == 0) {
-	    // TODO: internationaliser le message
-	    providers =
-		    new TreeItem("This site contains no entities".toUpperCase());
-	    getProviders().addItem(providers);
-
-	}
-    }
-
-    protected void updateSelectedEntity(String entity ){
-	TreeItem item, subItem;
-	String oldEntity = getOldSelectedEntity();
-	int count = getProviders().getItemCount();
-	for(int i=0; i<count; i++){
-	    item = getProviders().getItem(i);
-	    for (int j=0; j< item.getChildCount(); j++){
-		subItem = item.getChild(j);
-	    if (oldEntity != null)
-		if (oldEntity.contains(subItem.getText()))
-		    item.removeStyleName("Osyl-RemoteEntityBrowser-SelectedEntity");
-	    if (entity != null)
-		if(entity.contains(subItem.getText())){
-		    item.addStyleName("Osyl-RemoteEntityBrowser-SelectedEntity");
-		    setOldSelectedEntity(entity);
-		}
-	    
-	    }
-	}
-    }
-    
-    
-    protected  String getLinkURI(String uri, String text) {
+    protected String getLinkURI(String uri, String text) {
 	// We get the URI from the model
 	String link;
 

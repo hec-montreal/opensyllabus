@@ -33,7 +33,6 @@ import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylEntityBrowser;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxEntityView;
-import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -74,7 +73,6 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
     // Contains the viewer and info icons for the requirement level
     private FlexTable viewerPanel;
 
- 
     private int originalEditorDescHeight;
 
     /**
@@ -108,7 +106,7 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
     private void setMainPanel(VerticalPanel mainPanel) {
 	this.mainPanel = mainPanel;
     }
-    
+
     public String getResourceDescription() {
 	return null;
     }
@@ -116,6 +114,7 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
     public String getLicence() {
 	return null;
     }
+
     /**
      * Creates and set the low-level editor (TextBox).
      */
@@ -255,18 +254,18 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
     }
 
     public String getResourceURI() {
-	return browser.getEntityUri();
+	return ((OsylEntityBrowser)browser).getEntityUri();
     }
 
     public String getLastModifiedDateString() {
 	return null;
     }
-    
+
     public String getText() {
 	if (isInEditionMode()) {
 	    return editorLabel.getText();
 	} else {
-	    return browser.getEntityText();
+	    return ((OsylEntityBrowser)browser).getEntityText();
 	}
     }
 
@@ -281,11 +280,10 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
     }
 
     public boolean prepareForSave() {
-	
+
 	String message = "";
 	if (getResourceURI() == null) {
-	    message +=
-		    getUiMessage("EntityEditor.save.error.entityUndefined");
+	    message += getUiMessage("EntityEditor.save.error.entityUndefined");
 	} else {
 	    if (editorLabel.getText().trim().equals("")) {
 		message +=
@@ -320,8 +318,7 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
 	editorDesc.setHTML(getView().getCommentFromModel());
 
 	createEditBox();
-  } // enterEdit
-
+    } // enterEdit
 
     public void enterView() {
 
@@ -330,11 +327,13 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
 	getMainPanel().clear();
 	if (!(isReadOnly() && getView().isContextHidden())) {
 	    initViewer();
-	    //TODO Hack to remove bad links to resources inserted in the XML.  Remove this
-	    //as soon as the cause is found and corrected.
-	    
+	    // TODO Hack to remove bad links to resources inserted in the XML.
+	    // Remove this
+	    // as soon as the cause is found and corrected.
+
 	    // We get the text to display from the model
-	    getModel().setLabel(getView().validateLinkLabel(getModel().getLabel()));
+	    getModel().setLabel(
+		    getView().validateLinkLabel(getModel().getLabel()));
 	    getViewerLink().setHTML(getView().getTextFromModel());
 	    getViewerName().setHTML("(" + getView().getDocName() + ")");
 	    getViewerDesc().setHTML(getView().getCommentFromModel());
@@ -383,8 +382,7 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
 
 	// SAKAI MODE
 
-	browser =
-		new OsylEntityBrowser(getView().getLinkURI(), true);
+	browser = new OsylEntityBrowser(getView().getLinkURI());
 
 	browser.addEventHandler((RFBItemSelectionEventHandler) this);
 	browser.addEventHandler((RFBAddFolderEventHandler) this);
@@ -396,16 +394,6 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
 	HorizontalPanel metaInfoPanel = new HorizontalPanel();
 	metaInfoPanel.setWidth("100%");
 
-
-	OsylFileItem selectedFile = null;
-
-	if (browser.getSelectedAbstractBrowserItem() != null
-		&& !browser.getSelectedAbstractBrowserItem().isFolder()) {
-	    selectedFile =
-		    (OsylFileItem) browser.getSelectedAbstractBrowserItem();
-	}
-
-
 	// Note: we prepend the message with a blank space instead of using
 	// padding in the CSS because we use 100% width and adding some padding
 	// causes the label to be larger than the popup in Firefox (very ugly).
@@ -415,8 +403,7 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
 	label2.setStylePrimaryName("sectionLabel");
 	browserPanel.add(label2);
 
-
-   }
+    }
 
     @Override
     protected List<FocusWidget> getEditionFocusWidgets() {
@@ -460,7 +447,6 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
 	}
     }
 
- 
     /**
      * Refreshes the components of the document editor and the file browser on
      * some events.
@@ -468,7 +454,7 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
     public void refreshBrowsingComponents() {
 
 	Window.alert("refreshBrowsingComponents");
-	//Change the content of the tree content
+	// Change the content of the tree content
     }
 
 }

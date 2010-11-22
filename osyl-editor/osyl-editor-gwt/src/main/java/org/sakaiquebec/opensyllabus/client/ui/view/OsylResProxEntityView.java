@@ -75,7 +75,7 @@ public class OsylResProxEntityView extends OsylAbstractResProxBrowserView {
     public String getDocName() {
 	String docName = super.getDocName();
 	if (docName == null)
-	    docName = getCoMessage("UndefinedENtity");
+	    docName = getCoMessage("UndefinedEntity");
 	return docName;
     }
 

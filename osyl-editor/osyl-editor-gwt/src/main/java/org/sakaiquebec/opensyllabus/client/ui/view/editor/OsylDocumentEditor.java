@@ -345,12 +345,11 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		}
 	    }
 	    if (incompatibility) {
-		String msgParameter = "";
+		StringBuilder sb = new StringBuilder();
 		for (String s : parentTitles) {
-		    msgParameter += s + ", ";
+		    sb.append(s + ", 0");
 		}
-		msgParameter =
-			msgParameter.substring(0, msgParameter.length() - 2);
+		String msgParameter = sb.substring(0, sb.length() - 2);
 		message +=
 			getView()
 				.getUiMessage(
