@@ -79,6 +79,10 @@ public class OsylController implements SavePushButtonEventHandler,
      */
     public static final String WORK_FOLDER_NAME = "work";
 
+    //TODO: SAKAI-2160 remove later
+    public final static String USE_ATTACHMENTS =
+	    "true";
+    
     // Singleton instance
     private static OsylController _instance;
 

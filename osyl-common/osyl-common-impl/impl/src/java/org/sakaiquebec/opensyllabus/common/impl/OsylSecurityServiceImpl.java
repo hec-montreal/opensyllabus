@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.SecurityService;
+import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResourceEdit;
@@ -203,16 +204,31 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 		ContentCollectionEdit edit =
 			contentHostingService.editCollection(resourceId);
 		// check if directory is work directory
-		if (!edit.getId().equals(
-			contentHostingService.getSiteCollection(siteId)
-				+ OsylSiteService.WORK_DIRECTORY + "/")) {
-		    if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
-			edit.setPublicAccess();
+		if (ServerConfigurationService.getString(
+			"opensyllabus.publish.in.attachment").equals("true")) {
+		    if (!edit.getId().equals(
+			    contentHostingService.getSiteCollection(siteId))) {
+			if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
+			    edit.setPublicAccess();
+			}
+		    } else {
+			// directory is work directory, no public is allowed
+			log.warn("no public access of work directory allowed: "
+				+ edit.getId());
 		    }
+
 		} else {
-		    // directory is work directory, no public is allowed
-		    log.warn("no public access of work directory allowed: "
-			    + edit.getId());
+		    if (!edit.getId().equals(
+			    contentHostingService.getSiteCollection(siteId)
+				    + OsylSiteService.WORK_DIRECTORY + "/")) {
+			if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
+			    edit.setPublicAccess();
+			}
+		    } else {
+			// directory is work directory, no public is allowed
+			log.warn("no public access of work directory allowed: "
+				+ edit.getId());
+		    }
 		}
 		contentHostingService.commitCollection(edit);
 	    }
@@ -221,16 +237,30 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 		ContentResourceEdit edit =
 			contentHostingService.editResource(resourceId);
 		// check if resource is in work directory
-		if (!resourceId.contains(contentHostingService
-			.getSiteCollection(siteId)
-			+ OsylSiteService.WORK_DIRECTORY + "/")) {
-		    if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
-			edit.setPublicAccess();
+		if (ServerConfigurationService.getString(
+			"opensyllabus.publish.in.attachment").equals("true")) {
+		    if (!resourceId.contains(contentHostingService
+			    .getSiteCollection(siteId))) {
+			if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
+			    edit.setPublicAccess();
+			}
+		    } else {
+		// resource is in work directory, no public is allowed
+			log.warn("no public access in work directory allowed: "
+				+ resourceId);
 		    }
 		} else {
-		    // resource is in work directory, no public is allowed
-		    log.warn("no public access in work directory allowed: "
-			    + resourceId);
+		    if (!resourceId.contains(contentHostingService
+			    .getSiteCollection(siteId) + OsylSiteService.WORK_DIRECTORY
+			    + "/")) {
+			if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
+			    edit.setPublicAccess();
+			}
+		    } else {
+			// resource is in work directory, no public is allowed
+			log.warn("no public access in work directory allowed: "
+				+ resourceId);
+		    }
 		}
 		contentHostingService.commitResource(edit,
 			NotificationService.NOTI_NONE);

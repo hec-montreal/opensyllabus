@@ -39,7 +39,10 @@ import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.id.cover.IdManager;
+import org.sakaiproject.site.api.Site;
+import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
+import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
@@ -88,6 +91,19 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public void setSecurityService(OsylSecurityService securityService) {
 	this.osylSecurityService = securityService;
     }
+
+    /** The osyl content service to be injected by Spring */
+    private OsylContentService osylContentService;
+
+    /**
+     * Sets the {@link OsylContentService}.
+     * 
+     * @param osylContentService
+     */
+    public void setOsylContentService(OsylContentService osylContentService) {
+	this.osylContentService = osylContentService;
+    }
+
 
     /**
      * Maps the visibility of the documents published, hidden or not
@@ -465,14 +481,16 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	File f = createPrintVersion(cos, webappdir);
 	String siteId = cos.getSiteId();
 	if (f != null) {
-	    createPdfInResource(siteId, WORK_DIRECTORY, f);
+	   createPdfInResource(siteId, WORK_DIRECTORY, f);
 	}
     }
 
     private void createPdfInResource(String siteId, String directory, File f) {
 	String resourceOutputDir =
 		contentHostingService.getSiteCollection(siteId);
-	resourceOutputDir += directory + "/";
+	if (!ServerConfigurationService.getString(
+		"opensyllabus.publish.in.attachment").equals("true"))
+	    resourceOutputDir += directory + "/";
 	try {
 	    contentHostingService.getResource(resourceOutputDir + siteId
 		    + ".pdf");
@@ -691,12 +709,29 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	String refString =
 		contentHostingService.getReference(val2).substring(8);
 	String id_work = (refString + WORK_DIRECTORY + "/");
-	String id_publish = (refString + PUBLISH_DIRECTORY + "/");
+	String id_publish = null;
 	try {
+	    
+	    if (osylContentService.USE_ATTACHMENTS.equals("true")) {
+		id_work = (refString );
+	    }
 	    ContentCollection workContent =
 		    contentHostingService.getCollection(id_work);
 
 	    // We remove all resources in the publish directory collection
+	    if (osylContentService.USE_ATTACHMENTS.equals("true")) {
+		Site site = osylSiteService.getSite(siteId);
+		String osylToolName =
+			ToolManager.getTool("sakai.opensyllabus.tool")
+				.getTitle();
+
+		id_publish =
+			contentHostingService.ATTACHMENTS_COLLECTION
+				+ site.getTitle() + "/" + osylToolName + "/";
+	    } else {
+		id_publish = (refString + PUBLISH_DIRECTORY + "/");
+	    }
+
 	    ContentCollection publishContent =
 		    contentHostingService.getCollection(id_publish);
 
@@ -714,7 +749,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    }
 
 	    copyWorkToPublish(refString, workContent, documentSecurityMap,
-		    documentVisibilityMap);
+		    documentVisibilityMap, siteId);
 
 	} catch (Exception e) {
 	    log.error(
@@ -727,7 +762,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     @SuppressWarnings("unchecked")
     private void copyWorkToPublish(String siteRef, ContentCollection directory,
 	    Map<String, String> documentSecurityMap,
-	    Map<String, String> documentVisibilityMap) throws Exception {
+	    Map<String, String> documentVisibilityMap, String siteId)
+	    throws Exception {
 
 	List<ContentEntity> members = directory.getMemberResources();
 	for (Iterator<ContentEntity> iMbrs = members.iterator(); iMbrs
@@ -738,22 +774,40 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    if (next.isCollection()) {
 		ContentCollection collection = (ContentCollection) next;
 		copyWorkToPublish(siteRef, collection, documentSecurityMap,
-			documentVisibilityMap);
+			documentVisibilityMap, siteId);
 	    } else {
 		String permission = documentSecurityMap.get(thisEntityRef);
 		String visibility = null;
+		String newId = null;
+		String this_publish_directory = null;
+
 		if (permission != null) {
 		    // doc exists in CO
 		    String this_work_id = directory.getId();
 
-		    String this_publish_directory =
-			    siteRef
-				    + PUBLISH_DIRECTORY
-				    + this_work_id.substring(this_work_id
-					    .lastIndexOf(siteRef)
-					    + siteRef.length()
-					    + WORK_DIRECTORY.length(),
-					    this_work_id.length());
+		    if (osylContentService.USE_ATTACHMENTS.equals("true")) {
+			Site site = osylSiteService.getSite(siteId);
+			String osylToolName =
+				ToolManager.getTool("sakai.opensyllabus.tool")
+					.getTitle();
+
+			this_publish_directory =
+				contentHostingService.ATTACHMENTS_COLLECTION
+					+ site.getTitle()
+					+ "/"
+					+ osylToolName + "/";
+			
+		    } else {
+			this_publish_directory =
+				siteRef
+					+ PUBLISH_DIRECTORY
+					+ this_work_id.substring(this_work_id
+						.lastIndexOf(siteRef)
+						+ siteRef.length()
+						+ WORK_DIRECTORY.length(),
+						this_work_id.length());
+
+		    }
 
 		    if (!contentHostingService
 			    .isCollection(this_publish_directory)) {
@@ -765,16 +819,15 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			contentHostingService
 				.commitCollection(publishContentEdit);
 		    }
-		    String newId =
+		    newId =
 			    contentHostingService.copyIntoFolder(thisEntityRef,
 				    this_publish_directory);
-
 		    visibility = documentVisibilityMap.get(newId);
 		    if (visibility != null && visibility.equals("false")) {
 			applyVisibility(newId);
 		    }
 		    // Permission application
-		    osylSecurityService.applyPermissions(newId, permission);
+		     osylSecurityService.applyPermissions(newId, permission);
 		}
 	    }
 	}

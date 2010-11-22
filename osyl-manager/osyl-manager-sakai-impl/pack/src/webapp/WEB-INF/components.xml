@@ -59,6 +59,8 @@
 			ref="org.sakaiproject.content.api.ContentHostingService" />
 		<property name="courseManagementService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService"/>
+		<property name="osylContentService" 
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />	
 	</bean>
 
 </beans>

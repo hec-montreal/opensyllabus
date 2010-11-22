@@ -73,6 +73,18 @@
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
 	</bean>
 
+	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylContentService"
+		class="org.sakaiquebec.opensyllabus.common.impl.OsylContentServiceImpl"
+		init-method="init" destroy-method="destroy" singleton="true">
+
+		<!-- Sakai dependencies -->
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+
+	</bean>
+
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylPublishService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylPublishServiceImpl"
 		init-method="init" singleton="true">
@@ -80,6 +92,8 @@
 		<!-- Osyl dependencies -->
 		<property name="osylSiteService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
+		<property name="osylContentService" 
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />	
 		<property name="resourceDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
 		<property name="securityService"
@@ -110,6 +124,7 @@
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />
 		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
+		<property name="osylContentService" ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />
 		<property name="idManager" ref="org.sakaiproject.id.api.IdManager" />
 		<property name="toolManager" ref="org.sakaiproject.tool.api.ToolManager" />
 		<property name="entityManager" ref="org.sakaiproject.entity.api.EntityManager" />

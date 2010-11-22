@@ -48,6 +48,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
@@ -825,19 +826,42 @@ public class COModeledServer {
 		    if (isPublication) {
 			COProperties copProperties =
 				coContentRes.getProperties();
-			copProperties
-				.addProperty(
-					COPropertiesType.IDENTIFIER,
-					COPropertiesType.IDENTIFIER_TYPE_URI,
-					this
-						.changeDocumentsUrls(
-							coContentRes
-								.getProperty(
-									COPropertiesType.IDENTIFIER,
-									COPropertiesType.IDENTIFIER_TYPE_URI)
-								.trim(),
-							OsylSiteService.WORK_DIRECTORY,
-							OsylSiteService.PUBLISH_DIRECTORY));
+
+			if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
+			    copProperties
+				    .addProperty(
+					    COPropertiesType.IDENTIFIER,
+					    COPropertiesType.IDENTIFIER_TYPE_URI,
+					    this
+						    .changeDocumentsUrls(
+							    coContentRes
+								    .getProperty(
+									    COPropertiesType.IDENTIFIER,
+									    COPropertiesType.IDENTIFIER_TYPE_URI)
+								    .trim(),
+							    OsylContentService.WORK_DIRECTORY_PREFIX
+								    + coSerialized
+									    .getSiteId(),
+							    OsylContentService.PUBLISH_DIRECTORY_PREFIX
+								    + coSerialized
+									    .getSiteId()
+								    + OsylContentService.PUBLISH_DIRECTORY_SUFFIX));
+
+			} else {
+			    copProperties
+				    .addProperty(
+					    COPropertiesType.IDENTIFIER,
+					    COPropertiesType.IDENTIFIER_TYPE_URI,
+					    this
+						    .changeDocumentsUrls(
+							    coContentRes
+								    .getProperty(
+									    COPropertiesType.IDENTIFIER,
+									    COPropertiesType.IDENTIFIER_TYPE_URI)
+								    .trim(),
+							    OsylSiteService.WORK_DIRECTORY,
+							    OsylSiteService.PUBLISH_DIRECTORY));
+			}
 			coContentRes.setProperties(copProperties);
 		    }
 		}

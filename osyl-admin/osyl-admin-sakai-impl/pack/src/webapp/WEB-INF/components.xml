@@ -303,7 +303,37 @@
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
 	</bean>
 	
+	<bean id="osyltransferjob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.TransferPublishedContentJobImpl" >
+		<property name="siteService"
+			ref="org.sakaiproject.site.api.SiteService" />			
+	    <property name="contentHostingService"	
+	    	ref ="org.sakaiproject.content.api.ContentHostingService"/>
+		<property name="osylContentService" 
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />	
+		<property name="osylSiteService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />	    
+	</bean>
 	
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osyltransferjob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		
+	
+		<property name="beanId">
+			<value>osyltransferjob</value>
+		</property>
+		
+		<property name="jobName">
+			<value>Transfer publish content in Attachments and related operations</value>
+		</property>
+		
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+		
+	</bean>	
+
+
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylcmjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">

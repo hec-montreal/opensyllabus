@@ -30,6 +30,8 @@
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
 		<property name="COConfigDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
+		<property name="osylContentService" 
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />	
 		
 	</bean>
 	

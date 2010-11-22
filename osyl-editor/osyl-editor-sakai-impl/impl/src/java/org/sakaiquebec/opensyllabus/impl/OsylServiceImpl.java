@@ -41,6 +41,7 @@ import org.sakaiproject.time.api.Time;
 import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiquebec.opensyllabus.api.OsylService;
+import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
@@ -104,6 +105,18 @@ public class OsylServiceImpl implements OsylService {
 
     public void setEntityBroker(EntityBroker entityBroker) {
 	this.entityBroker = entityBroker;
+    }
+
+    /** The osyl content service to be injected by Spring */
+    private OsylContentService osylContentService;
+
+    /**
+     * Sets the {@link OsylContentService}.
+     * 
+     * @param osylContentService
+     */
+    public void setOsylContentService(OsylContentService osylContentService) {
+	this.osylContentService = osylContentService;
     }
 
     /**
@@ -391,6 +404,10 @@ public class OsylServiceImpl implements OsylService {
 	String resourceDir =
 		getResourceReference(siteId) + OsylSiteService.WORK_DIRECTORY
 			+ "/";
+	if (ServerConfigurationService
+		    .getString("opensyllabus.publish.in.attachment").equals("true"))
+	    resourceDir =
+		getResourceReference(siteId) ;
 	try {
 	    String resourceId = resourceDir + citationTitle;
 	    // temporarily allow the user to read and write resources
@@ -496,56 +513,75 @@ public class OsylServiceImpl implements OsylService {
     public void initService() throws Exception {
 	String directoryId = "";
 
-	if (addCollection(WORK_DIRECTORY, null)) {
-	    directoryId =
-		    (osylSiteService.getCurrentSiteReference() + WORK_DIRECTORY + "/")
-			    .substring(8);
+	if (ServerConfigurationService.getString(
+		"opensyllabus.publish.in.attachment").equals("true")) {
+//	    directoryId =
+//		    OsylContentService.PUBLISH_DIRECTORY_PREFIX
+//			    + osylSiteService.getCurrentSiteId()
+//			    + OsylContentService.USE_ATTACHMENTS;
+//	    if (!collectionExist(directoryId)) {
+//		osylContentService.initSiteAttachments(osylSiteService
+//			.getCurrentSiteId());
+//	    }
+//
+//	    directoryId = osylSiteService.getCurrentSiteId();
 
-	    // HIDE COLLECTION
-	    ContentCollectionEdit cce =
-		    contentHostingService.editCollection(directoryId);
-	    cce.setHidden();
-	    contentHostingService.commitCollection(cce);
+	    // TODO : SAKAI-2160 - add citations list ?
+	    
+	} else {
+	    if (addCollection(WORK_DIRECTORY, null)) {
+		directoryId =
+			(osylSiteService.getCurrentSiteReference()
+				+ WORK_DIRECTORY + "/").substring(8);
 
-	    osylSecurityService.applyDirectoryPermissions(directoryId);
+		// HIDE COLLECTION
+		ContentCollectionEdit cce =
+			contentHostingService.editCollection(directoryId);
+		cce.setHidden();
+		contentHostingService.commitCollection(cce);
 
-	    // we add the default citationList
-	    // TODO I18N
-	    String citationListName = "Références bibliographiques du cours";
+		osylSecurityService.applyDirectoryPermissions(directoryId);
 
-	    CitationCollection citationList = citationService.addCollection();
+		// we add the default citationList
+		// TODO I18N
+		String citationListName =
+			"Références bibliographiques du cours";
 
-	    ContentResourceEdit cre =
-		    contentHostingService.addResource(directoryId,
-			    citationListName, null, 1);
+		CitationCollection citationList =
+			citationService.addCollection();
 
-	    cre.setResourceType(CitationService.CITATION_LIST_ID);
-	    cre.setContentType(ResourceType.MIME_TYPE_HTML);
+		ContentResourceEdit cre =
+			contentHostingService.addResource(directoryId,
+				citationListName, null, 1);
 
-	    ResourcePropertiesEdit props = cre.getPropertiesEdit();
-	    props
-		    .addProperty(
-			    ContentHostingService.PROP_ALTERNATE_REFERENCE,
-			    org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
-	    props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
-		    ResourceType.MIME_TYPE_HTML);
-	    props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
-		    citationListName);
+		cre.setResourceType(CitationService.CITATION_LIST_ID);
+		cre.setContentType(ResourceType.MIME_TYPE_HTML);
 
-	    cre.setContent(citationList.getId().getBytes());
-	    contentHostingService.commitResource(cre,
-		    NotificationService.NOTI_NONE);
-	    // Permission application
-	    // osylSecurityService.applyPermissions(newId,SecurityInterface.ACCESS_PUBLIC);
+		ResourcePropertiesEdit props = cre.getPropertiesEdit();
+		props
+			.addProperty(
+				ContentHostingService.PROP_ALTERNATE_REFERENCE,
+				org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
+		props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
+			ResourceType.MIME_TYPE_HTML);
+		props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
+			citationListName);
+
+		cre.setContent(citationList.getId().getBytes());
+		contentHostingService.commitResource(cre,
+			NotificationService.NOTI_NONE);
+		// Permission application
+		// osylSecurityService.applyPermissions(newId,SecurityInterface.ACCESS_PUBLIC);
+	    }
+
+	    if (addCollection(PUBLISH_DIRECTORY, null)) {
+		directoryId =
+			(osylSiteService.getCurrentSiteReference()
+				+ PUBLISH_DIRECTORY + "/").substring(8);
+		osylSecurityService.applyDirectoryPermissions(directoryId);
+	    }
 	}
-
-	if (addCollection(PUBLISH_DIRECTORY, null)) {
-	    directoryId =
-		    (osylSiteService.getCurrentSiteReference()
-			    + PUBLISH_DIRECTORY + "/").substring(8);
-	    osylSecurityService.applyDirectoryPermissions(directoryId);
-	}
-    }
+  }
 
     /**
      * Get a valid resource reference base URL to be used in later calls. Will

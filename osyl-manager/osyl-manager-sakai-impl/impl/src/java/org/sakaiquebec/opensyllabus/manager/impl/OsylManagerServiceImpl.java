@@ -106,6 +106,7 @@ import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.util.ArrayUtil;
 import org.sakaiquebec.opensyllabus.api.OsylService;
+import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
@@ -203,6 +204,21 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	this.functionsToDisallow = functionsToDisallow;
     }
 
+    
+    /** The osyl content service to be injected by Spring */
+    private OsylContentService osylContentService;
+
+    /**
+     * Sets the {@link OsylContentService}.
+     * 
+     * @param osylContentService
+     */
+    public void setOsylContentService(OsylContentService osylContentService) {
+	this.osylContentService = osylContentService;
+    }
+
+ 
+    
     /**
      * Sakai usr session manager injected by Spring.
      */
@@ -281,96 +297,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * Init method called at the initialization of the bean.
      */
     public void init() {
-	// log
-	// .info("OsylManagerServiceImpl service init() site managerSiteName == \""
-	// + this.osylManagerSiteName + "\"");
+	 log
+	 .info("OsylManagerServiceImpl service init() ");
 
-	if (null == this.osylManagerSiteName) {
-	    // can't create
-	    // log.info("init() managerSiteName is null");
-	} else if (siteService.siteExists(this.osylManagerSiteName)) {
-	    // no need to create
-	    // log.info("init() site " + this.osylManagerSiteName
-	    // + " already exists");
-	} else {
-	    // need to create
-	    try {
-		enableSecurityAdvisor();
-		// Session s = sessionManager.getCurrentSession();
-		// s.setUserId(UserDirectoryService.ADMIN_ID);
-
-		Site osylManagerSite =
-			siteService
-				.addSite(this.osylManagerSiteName, SITE_TYPE);
-		osylManagerSite.setTitle("OpenSyllabus Manager");
-		osylManagerSite.setPublished(true);
-		osylManagerSite.setJoinable(false);
-
-		AuthzGroup currentGroup =
-			AuthzGroupService.getInstance().getAuthzGroup(
-				this.authzGroupName);
-
-		for (Iterator<String> iFunctionsToRegister =
-			this.functionsToRegister.iterator(); iFunctionsToRegister
-			.hasNext();) {
-		    FunctionManager.registerFunction(iFunctionsToRegister
-			    .next());
-		}
-
-		for (Iterator<Entry<String, List<String>>> iFunctionsToAllow =
-			this.functionsToAllow.entrySet().iterator(); iFunctionsToAllow
-			.hasNext();) {
-		    Entry<String, List<String>> entry =
-			    iFunctionsToAllow.next();
-
-		    Role role = currentGroup.getRole(entry.getKey());
-
-		    role.allowFunctions(entry.getValue());
-		}
-
-		for (Iterator<Entry<String, List<String>>> iFunctionsToDisallow =
-			this.functionsToDisallow.entrySet().iterator(); iFunctionsToDisallow
-			.hasNext();) {
-		    Entry<String, List<String>> entry =
-			    iFunctionsToDisallow.next();
-
-		    Role role = currentGroup.getRole(entry.getKey());
-
-		    role.disallowFunctions(entry.getValue());
-		}
-
-		currentGroup.removeRole(STUDENT_ROLE);
-
-		AuthzGroupService.save(currentGroup);
-
-		// add Resources tool
-		SitePage page = osylManagerSite.addPage();
-		page.setTitle(this.osylManagerSiteName);
-		page.addTool("sakai.opensyllabus.manager.tool");
-
-		siteService.save(osylManagerSite);
-		// log.debug("init() site " + this.osylManagerSiteName
-		// + " has been created");
-
-	    } catch (IdInvalidException e) {
-		// log.warn("IdInvalidException ", e);
-	    } catch (IdUsedException e) {
-		// we've already verified that the site doesn't exist but
-		// this can occur if site was created by another server
-		// in a cluster that is starting up at the same time.
-		// log.warn("IdUsedException ", e);
-	    } catch (PermissionException e) {
-		// log.warn("PermissionException ", e);
-	    } catch (IdUnusedException e) {
-		// log.warn("IdUnusedException ", e);
-	    } catch (GroupNotDefinedException e) {
-		e.printStackTrace();
-	    } catch (AuthzPermissionException e) {
-		e.printStackTrace();
-	    } finally {
-		SecurityService.popAdvisor();
-	    }
-	}
 
     }
 
@@ -985,6 +914,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	String resourceDir =
 		contentHostingService.getSiteCollection(siteId)
 			+ WORK_DIRECTORY + "/";
+	if (ServerConfigurationService.getString(
+		"opensyllabus.publish.in.attachment").equals("true")) {
+	    resourceDir = contentHostingService.getSiteCollection(siteId);
+	}
+	
 	try {
 	    ContentCollection workContent =
 		    contentHostingService.getCollection(resourceDir);
@@ -1292,13 +1226,19 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	Parser parser = null;
 	String resourceOutputDir = null;
 	try {
-	    // Generation of a valid resourceOutput directory
-	    resourceOutputDir =
-		    contentHostingService.getSiteCollection(siteId)
-			    + WORK_DIRECTORY + "/";
+	    if (ServerConfigurationService.getString(
+		    "opensyllabus.publish.in.attachment").equals("true")) {
+		resourceOutputDir =
+			contentHostingService.getSiteCollection(siteId);
+	    } else {
+		// Generation of a valid resourceOutput directory
+		resourceOutputDir =
+			contentHostingService.getSiteCollection(siteId)
+				+ WORK_DIRECTORY + "/";
 
-	    resourceOutputDir =
-		    mkdirCollection(resourceOutputDir, WORK_DIRECTORY);
+		resourceOutputDir =
+			mkdirCollection(resourceOutputDir, WORK_DIRECTORY);
+	    }
 	} catch (Exception e1) {
 	    log.error(e1.getMessage());
 	    e1.printStackTrace();
@@ -1630,8 +1570,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	String refString =
 		contentHostingService.getReference(val2).substring(8);
 
-	String id_publish = refString + PUBLISH_DIRECTORY + "/";
 	String id_work = refString + WORK_DIRECTORY + "/";
+	if (ServerConfigurationService.getString(
+		"opensyllabus.publish.in.attachment").equals("true")) {
+	    id_work = refString;
+	}
 	try {
 	    // We remove all resources in the work directory collection
 	    ContentCollection workContent =
@@ -1674,28 +1617,36 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	importToolIntoSiteMigrate(toolIdList, newSite, oldSite);
 
 	// We remove all resources in the publish directory collection
-	ContentCollection publishContent =
-		contentHostingService.getCollection(id_publish);
+	if (osylContentService.USE_ATTACHMENTS.equals("true")) {
+	    osylContentService.initSiteAttachments(newSite.getTitle());
+	} else {
+	    String id_publish = refString + PUBLISH_DIRECTORY + "/";
 
-	@SuppressWarnings("unchecked")
-	List<ContentEntity> membersPublished =
-		publishContent.getMemberResources();
-	for (Iterator<ContentEntity> pMbrs = membersPublished.iterator(); pMbrs
-		.hasNext();) {
-	    ContentEntity next = (ContentEntity) pMbrs.next();
-	    String thisEntityRef = next.getId();
-	    if (next.isCollection())
-		contentHostingService.removeCollection(thisEntityRef);
-	    else
-		contentHostingService.removeResource(thisEntityRef);
+	    ContentCollection publishContent =
+		    contentHostingService.getCollection(id_publish);
+
+	    @SuppressWarnings("unchecked")
+	    List<ContentEntity> membersPublished =
+		    publishContent.getMemberResources();
+	    for (Iterator<ContentEntity> pMbrs = membersPublished.iterator(); pMbrs
+		    .hasNext();) {
+		ContentEntity next = (ContentEntity) pMbrs.next();
+		String thisEntityRef = next.getId();
+		if (next.isCollection())
+		    contentHostingService.removeCollection(thisEntityRef);
+		else
+		    contentHostingService.removeResource(thisEntityRef);
+	    }
 	}
-
 	// we hide work directory
-	ContentCollectionEdit cce =
-		contentHostingService.editCollection(id_work);
-	cce.setHidden();
-	contentHostingService.commitCollection(cce);
+	if (ServerConfigurationService.getString(
+		"opensyllabus.publish.in.attachment").equals("true")) {
 
+	    ContentCollectionEdit cce =
+		    contentHostingService.editCollection(id_work);
+	    cce.setHidden();
+	    contentHostingService.commitCollection(cce);
+	}
 	// we update citation ids in the course outline
 	updateCitationIds(siteFrom, siteTo);
 

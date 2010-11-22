@@ -78,6 +78,7 @@ import org.sakaiproject.tool.api.ToolManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
+import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 import org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
@@ -116,6 +117,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /** The security service to be injected by Spring */
     private OsylSecurityService osylSecurityService;
+
+    /** The osyl content service to be injected by Spring */
+    private OsylContentService osylContentService;
 
     /** The chs to be injected by Spring */
     private ContentHostingService contentHostingService;
@@ -204,6 +208,16 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	this.osylSecurityService = securityService;
     }
 
+    /**
+     * Sets the {@link OsylContentService}.
+     * 
+     * @param osylContentService
+     */
+    public void setOsylContentService(OsylContentService osylContentService) {
+	this.osylContentService = osylContentService;
+    }
+
+    
     public void setEventTrackingService(
 	    EventTrackingService eventTrackingService) {
 	this.eventTrackingService = eventTrackingService;
@@ -504,6 +518,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	Site site = null;
 
 	if (!siteService.siteExists(siteTitle)) {
+	    enableSecurityAdvisor();
 	    site = siteService.addSite(siteTitle, SITE_TYPE);
 	    site.setTitle(siteTitle);
 	    site.setPublished(true);
@@ -517,18 +532,31 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	    // we add the directories
 	    String directoryId;
-	    addCollection(WORK_DIRECTORY, site);
-	    directoryId =
-		    contentHostingService.getSiteCollection(site.getId())
-			    + WORK_DIRECTORY + "/";
-	    osylSecurityService.applyDirectoryPermissions(directoryId);
+	    if (osylContentService.USE_ATTACHMENTS.equals("true")) {
+		osylContentService.initSiteAttachments(site.getTitle());
+		directoryId =
+			contentHostingService.getSiteCollection(site.getId());
+	    } else {
 
-	    // HIDE COLLECTION
-	    ContentCollectionEdit cce =
-		    contentHostingService.editCollection(directoryId);
-	    cce.setHidden();
-	    contentHostingService.commitCollection(cce);
+		addCollection(WORK_DIRECTORY, site);
+		directoryId =
+			contentHostingService.getSiteCollection(site.getId())
+				+ WORK_DIRECTORY + "/";
+		osylSecurityService.applyDirectoryPermissions(directoryId);
 
+		// HIDE COLLECTION
+		ContentCollectionEdit cce =
+			contentHostingService.editCollection(directoryId);
+		cce.setHidden();
+		contentHostingService.commitCollection(cce);
+
+		addCollection(PUBLISH_DIRECTORY, site);
+		directoryId =
+			contentHostingService.getSiteCollection(site.getId())
+				+ PUBLISH_DIRECTORY + "/";
+		osylSecurityService.applyDirectoryPermissions(directoryId);
+
+	    }
 	    // we add the default citationList
 	    // TODO I18N
 	    String citationListName = "Références bibliographiques du cours";
@@ -556,14 +584,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    contentHostingService.commitResource(cre,
 		    NotificationService.NOTI_NONE);
 
-	    addCollection(PUBLISH_DIRECTORY, site);
-	    directoryId =
-		    contentHostingService.getSiteCollection(site.getId())
-			    + PUBLISH_DIRECTORY + "/";
-	    osylSecurityService.applyDirectoryPermissions(directoryId);
-
 	    enableSecurityAdvisor();
 	    siteService.save(site);
+
 	    COConfigSerialized coConfig = null;
 	    COSerialized co = null;
 
@@ -620,20 +643,24 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    siteService.save(site);
 
 	    // we add the directories
-	    String directoryId;
-	    addCollection(WORK_DIRECTORY, site);
-	    directoryId =
-		    contentHostingService.getSiteCollection(site.getId())
-			    + WORK_DIRECTORY + "/";
-	    osylSecurityService.applyDirectoryPermissions(directoryId);
+	    //SAKAI-2160
+	    if (osylContentService.USE_ATTACHMENTS.equals("true")) {
+		osylContentService.initSiteAttachments(site.getTitle());
+	    } else {
+		String directoryId;
+		addCollection(WORK_DIRECTORY, site);
+		directoryId =
+			contentHostingService.getSiteCollection(site.getId())
+				+ WORK_DIRECTORY + "/";
+		osylSecurityService.applyDirectoryPermissions(directoryId);
 
-	    addCollection(PUBLISH_DIRECTORY, site);
+		addCollection(PUBLISH_DIRECTORY, site);
 
-	    directoryId =
-		    contentHostingService.getSiteCollection(site.getId())
-			    + PUBLISH_DIRECTORY + "/";
-	    osylSecurityService.applyDirectoryPermissions(directoryId);
-
+		directoryId =
+			contentHostingService.getSiteCollection(site.getId())
+				+ PUBLISH_DIRECTORY + "/";
+		osylSecurityService.applyDirectoryPermissions(directoryId);
+	    }
 	    COConfigSerialized coConfig = null;
 	    COSerialized co = null;
 
