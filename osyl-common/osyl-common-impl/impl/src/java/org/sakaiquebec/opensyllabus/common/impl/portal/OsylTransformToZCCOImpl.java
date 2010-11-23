@@ -377,7 +377,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    docVisKey =
 		    docSecKey
 			    .replaceFirst(Pattern.quote(WORK_DIR), PUBLISH_DIR);
-	    
+
 	    doc = documents.get(docSecKey);
 	    if (docId != null && !"".equalsIgnoreCase(docId)) {
 		visibilite = documentVisibityMap.get(docVisKey);
@@ -396,7 +396,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			if (content != null) {
 			    ressType = content.getContentType();
 			    ressContent = content.getContent();
-			    ressSize = content.getContentLength();
+			    ressSize = (int)content.getContentLength();
 
 			    log.debug("Writing documents of site "
 				    + siteId + "in public portal database...");
@@ -783,7 +783,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		Map<String, String> documentSecurityMap;
 		Map<String, String> documentVisibilityMap;
 		Map<String, String> documents;
-		
+
 		COModeledServer coModeled = new COModeledServer(published);
 
 		coModeled.XML2Model();
@@ -835,7 +835,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			sent = sent
 					&& writeDocumentsInZC(siteId, lang,
 						documentSecurityMap,
-						documentVisibilityMap, 
+						documentVisibilityMap,
 						documents, zcco,
 						dbConn);
 			if (sent) {

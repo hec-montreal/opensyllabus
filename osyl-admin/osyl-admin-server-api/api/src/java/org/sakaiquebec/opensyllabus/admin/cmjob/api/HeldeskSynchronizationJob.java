@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.quartz.Job;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
+import java.util.Arrays;
 
 /******************************************************************************
  * $Id: $
@@ -31,7 +31,7 @@ import edu.emory.mathcs.backport.java.util.Arrays;
  * This job adds the role helpdesk with the correct permissions to all the sites
  * of type course. All the sites will be checked to make sure the role has at
  * least the specified permissions.
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */

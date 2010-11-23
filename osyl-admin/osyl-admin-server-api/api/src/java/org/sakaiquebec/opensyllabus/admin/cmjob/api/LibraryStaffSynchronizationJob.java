@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.quartz.Job;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
+import java.util.Arrays;
 
 /******************************************************************************
  * $Id: $

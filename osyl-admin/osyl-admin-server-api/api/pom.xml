@@ -29,6 +29,10 @@
 
     <!--  sakai -->
     <dependency>
+      <groupId>org.sakaiproject.kernel</groupId>
+      <artifactId>sakai-kernel-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.sakaiproject</groupId>
       <artifactId>generic-dao</artifactId>
       <scope>provided</scope>
