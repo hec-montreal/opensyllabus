@@ -5,13 +5,13 @@
   <parent>
     <artifactId>base</artifactId>
     <groupId>org.sakaiproject</groupId>
-    <version>2.6.1</version>
+    <version>2.7.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.sakaiquebec.opensyllabus</groupId>
   <artifactId>osyl</artifactId>
-  <version>2.6.1</version>
+  <version>2.7.1</version>
   <packaging>pom</packaging>
 
   <name>Sakai Quebec OpenSyllabus</name>
@@ -31,15 +31,17 @@
     <maven.tomcat.home>${CATALINA_HOME}</maven.tomcat.home>
     <!-- TODO -->
     <maven.test.skip>true</maven.test.skip>
+    <sakai.spring.mock.artifactId>spring-mock</sakai.spring.mock.artifactId>
+    <sakai.spring.mock.version>2.0.6</sakai.spring.mock.version>
   </properties>
 
   <modules>
     <module>gwt-shared</module>
     <module>osyl-configs</module>
     <module>osyl-common</module>
-    <module>osyl-admin</module>
+    <module>osyl-editor</module>
     <module>osyl-manager</module>
-	<module>osyl-editor</module>
+    <module>osyl-admin</module>
   </modules>
 
   <pluginRepositories>
@@ -165,10 +167,10 @@
         <version>0.9.1</version>
       </dependency>
       <dependency>
-        <groupId>org.sakaiproject</groupId>
-        <artifactId>sakai-coursemanagement-api</artifactId>
-        <scope>provided</scope>
-        <version>${sakai.version}</version>
+      	<groupId>org.sakaiproject.edu-services.course-management</groupId>
+      	<artifactId>coursemanagement-api</artifactId>
+      	<version>1.0.6</version>
+      	<scope>provided</scope>
       </dependency>
 
       <!-- spring and hibernate -->
