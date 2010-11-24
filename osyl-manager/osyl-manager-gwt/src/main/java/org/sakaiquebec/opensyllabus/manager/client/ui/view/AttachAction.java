@@ -51,7 +51,7 @@ public class AttachAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(List<COSite> siteIds) {
-	AttachForm attachForm = new AttachForm(controller, siteIds, diag);
+	AttachForm attachForm = new AttachForm(controller, siteIds);
 	attachForm.showModal();
     }
 

@@ -922,6 +922,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 				thisCo.getLockedBy()).getUserId());
 		thisCo.setLockedBy(u.getFirstName() + " " + u.getLastName());
 	    } catch (Exception ex) {
+		log.error("Unable to retrieve name of CO locker", ex);
 	    }
 	}
 	return thisCo;
@@ -1178,17 +1179,20 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    getSiteInfo(co, siteId);
 		} catch (Exception e) {
 		}
-		COModeledServer coModelChild = new COModeledServer(co);
 		if (parentId != null) {
-		    COModeledServer coModelParent =
-			    getFusionnedPrePublishedHierarchy(parentId);
+		    if (co.getContent() != null) {
+			COModeledServer coModelChild = new COModeledServer(co);
 
-		    if (coModelParent != null) {
-			coModelChild.XML2Model();
-			coModelChild.dissociate(coModelParent);
-			coModelChild.model2XML();
-			co.setContent(coModelChild.getSerializedContent());
-			resourceDao.createOrUpdateCourseOutline(co);
+			COModeledServer coModelParent =
+				getFusionnedPrePublishedHierarchy(parentId);
+
+			if (coModelParent != null) {
+			    coModelChild.XML2Model();
+			    coModelChild.dissociate(coModelParent);
+			    coModelChild.model2XML();
+			    co.setContent(coModelChild.getSerializedContent());
+			    resourceDao.createOrUpdateCourseOutline(co);
+			}
 		    }
 		    // We remove the users
 		    osylHierarchyService.removeUsers(parentId, siteId);

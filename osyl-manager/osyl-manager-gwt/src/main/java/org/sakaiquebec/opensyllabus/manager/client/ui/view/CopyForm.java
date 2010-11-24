@@ -30,8 +30,6 @@ import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -64,9 +62,9 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
     private Map<String, COSite> sigleCourseMap;
 
     private ListBox suggestionListBox;
-    
+
     private Image spinner;
-    
+
     private final OsylCancelDialog diag;
 
     AsyncCallback<List<COSite>> siteListAsynCB =
@@ -172,7 +170,7 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	});
 
 	suggestionListBox = new ListBox();
-	
+
 	HorizontalPanel hzPanel = new HorizontalPanel();
 	Label voidLabel = new Label();
 	hzPanel.add(voidLabel);
@@ -199,12 +197,12 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 				.get(suggestionListBox
 					.getValue(suggestionListBox
 						.getSelectedIndex()));
-		controller.copySite(selectFromSite.getSiteId(), selectToSite.getSiteId(), copyToAsynCB);
+		controller.copySite(selectFromSite.getSiteId(), selectToSite
+			.getSiteId(), copyToAsynCB);
 	    }
 	});
 
-	PushButton cancelButton =
-		new PushButton(messages.copyForm_cancel());
+	PushButton cancelButton = new PushButton(messages.copyForm_cancel());
 	cancelButton.setStylePrimaryName("Osyl-Button");
 	cancelButton.setWidth("50px");
 	cancelButton.addClickHandler(new ClickHandler() {
@@ -236,7 +234,7 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	okButton = new PushButton(messages.associateForm_ok());
 	okButton.setStylePrimaryName("Osyl-Button");
 	okButton.setWidth("50px");
-	
+
 	okButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		CopyForm.super.hide();

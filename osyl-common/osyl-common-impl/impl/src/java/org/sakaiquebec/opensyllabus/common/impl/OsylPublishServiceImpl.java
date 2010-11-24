@@ -497,7 +497,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    contentHostingService.removeResource(resourceOutputDir + siteId
 		    + ".pdf");
 	} catch (Exception e) {
-
+	    log.warn("Unable to delete "+siteId+".pdf",e);
 	}
 	try {
 	    ContentResourceEdit newResource =

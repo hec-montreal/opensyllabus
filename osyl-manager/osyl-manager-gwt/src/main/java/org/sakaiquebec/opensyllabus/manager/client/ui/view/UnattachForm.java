@@ -41,7 +41,7 @@ import com.google.gwt.user.client.ui.PushButton;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class PublishForm extends OsylManagerAbstractWindowPanel {
+public class UnattachForm extends OsylManagerAbstractWindowPanel {
 
     PushButton okButton;
 
@@ -49,24 +49,24 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 
     private int asynCB_return = 0;
 
-    private Label publishInProgess;
+    private Label unattachInProgess;
 
     private List<COSite> coSites;
 
-    private class PublishAsynCallBack implements AsyncCallback<Void> {
+    private class UnattachCallBack implements AsyncCallback<Void> {
 
 	private int siteIndex;
 
-	public PublishAsynCallBack(int siteIndex) {
+	public UnattachCallBack(int siteIndex) {
 	    super();
 	    this.siteIndex = siteIndex;
 	}
 
 	public void onFailure(Throwable caught) {
-	    Image image = new Image(controller.getImageBundle()
-		    .cross16());
-	    image.setTitle(messages.publishAction_publish_error()+":"+caught.getMessage());
-	    grid.setWidget(siteIndex, 1,image);
+	    Image image = new Image(controller.getImageBundle().cross16());
+	    image.setTitle(messages.unattachAction_unattach_error() + ":"
+		    + caught.getMessage());
+	    grid.setWidget(siteIndex, 1, image);
 	    responseReceive();
 	}
 
@@ -79,26 +79,29 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 	private void responseReceive() {
 	    asynCB_return++;
 	    if (asynCB_return == coSites.size()) {
-		publishInProgess.setVisible(false);
+		unattachInProgess.setVisible(false);
 		okButton.setEnabled(true);
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
-	    }else{
-		controller.publish(coSites.get(siteIndex+1).getSiteId(), new PublishAsynCallBack(siteIndex+1));
+	    } else {
+		controller.dissociate(coSites.get(siteIndex + 1).getSiteId(),
+			coSites.get(siteIndex + 1).getParentSite(),
+			new UnattachCallBack(siteIndex + 1));
 	    }
 	}
     }
 
-    public PublishForm(OsylManagerController controller, List<COSite> coSites) {
+    public UnattachForm(OsylManagerController controller, List<COSite> coSites) {
 	super(controller);
-	Label title = new Label(messages.mainView_action_publish());
+	Label title = new Label(messages.mainView_action_unattach());
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);
 
-	publishInProgess = new Label(messages.publishAction_publish_inProgress());
-	publishInProgess
+	unattachInProgess =
+		new Label(messages.unattachForm_unattach_inProgress());
+	unattachInProgess
 		.setStylePrimaryName("OsylManager-form-publicationText");
-	mainPanel.add(publishInProgess);
+	mainPanel.add(unattachInProgess);
 
 	grid = new Grid(coSites.size(), 2);
 	this.coSites = coSites;
@@ -130,7 +133,7 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 	okButton.setEnabled(false);
 	okButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
-		PublishForm.this.hide();
+		UnattachForm.this.hide();
 	    }
 	});
 
@@ -140,8 +143,9 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 	mainPanel.add(hz);
 	mainPanel.setCellHorizontalAlignment(hz,
 		HasHorizontalAlignment.ALIGN_CENTER);
-	
-	controller.publish(coSites.get(0).getSiteId(), new PublishAsynCallBack(0));
+
+	controller.dissociate(coSites.get(0).getSiteId(), coSites.get(0).getParentSite(), new UnattachCallBack(
+		0));
     }
 
 }

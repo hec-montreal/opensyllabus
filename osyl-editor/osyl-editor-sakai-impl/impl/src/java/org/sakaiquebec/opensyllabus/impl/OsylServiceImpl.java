@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -91,11 +90,10 @@ public class OsylServiceImpl implements OsylService {
     protected static final String ASSIGNMENT_TOOL_ID =
 	    "sakai.assignment.grades";
 
-    
     // Whether the experimental cache is enabled or not
     private static boolean CACHE_ENABLED = false;
 
-    // Whether we have read if the cache configuration  
+    // Whether we have read if the cache configuration
     private static boolean CACHE_CFG_INITIALIZED = false;
 
     /** the session manager to be injected by Spring */
@@ -218,7 +216,6 @@ public class OsylServiceImpl implements OsylService {
      * @uml.associationEnd
      */
     private OsylSecurityService osylSecurityService;
-
 
     /**
      * Sets the {@link OsylSecurityService}.
@@ -404,10 +401,9 @@ public class OsylServiceImpl implements OsylService {
 	String resourceDir =
 		getResourceReference(siteId) + OsylSiteService.WORK_DIRECTORY
 			+ "/";
-	if (ServerConfigurationService
-		    .getString("opensyllabus.publish.in.attachment").equals("true"))
-	    resourceDir =
-		getResourceReference(siteId) ;
+	if (ServerConfigurationService.getString(
+		"opensyllabus.publish.in.attachment").equals("true"))
+	    resourceDir = getResourceReference(siteId);
 	try {
 	    String resourceId = resourceDir + citationTitle;
 	    // temporarily allow the user to read and write resources
@@ -515,19 +511,19 @@ public class OsylServiceImpl implements OsylService {
 
 	if (ServerConfigurationService.getString(
 		"opensyllabus.publish.in.attachment").equals("true")) {
-//	    directoryId =
-//		    OsylContentService.PUBLISH_DIRECTORY_PREFIX
-//			    + osylSiteService.getCurrentSiteId()
-//			    + OsylContentService.USE_ATTACHMENTS;
-//	    if (!collectionExist(directoryId)) {
-//		osylContentService.initSiteAttachments(osylSiteService
-//			.getCurrentSiteId());
-//	    }
-//
-//	    directoryId = osylSiteService.getCurrentSiteId();
+	    // directoryId =
+	    // OsylContentService.PUBLISH_DIRECTORY_PREFIX
+	    // + osylSiteService.getCurrentSiteId()
+	    // + OsylContentService.USE_ATTACHMENTS;
+	    // if (!collectionExist(directoryId)) {
+	    // osylContentService.initSiteAttachments(osylSiteService
+	    // .getCurrentSiteId());
+	    // }
+	    //
+	    // directoryId = osylSiteService.getCurrentSiteId();
 
 	    // TODO : SAKAI-2160 - add citations list ?
-	    
+
 	} else {
 	    if (addCollection(WORK_DIRECTORY, null)) {
 		directoryId =
@@ -581,7 +577,7 @@ public class OsylServiceImpl implements OsylService {
 		osylSecurityService.applyDirectoryPermissions(directoryId);
 	    }
 	}
-  }
+    }
 
     /**
      * Get a valid resource reference base URL to be used in later calls. Will
@@ -778,8 +774,8 @@ public class OsylServiceImpl implements OsylService {
     }
 
     private void initCache() {
-	String cfg = ServerConfigurationService.getString(
-		CACHE_ENABLED_CONFIG_KEY);
+	String cfg =
+		ServerConfigurationService.getString(CACHE_ENABLED_CONFIG_KEY);
 	if (cfg != null && cfg.equalsIgnoreCase("true")) {
 	    CACHE_ENABLED = true;
 	} else {
@@ -789,10 +785,10 @@ public class OsylServiceImpl implements OsylService {
 	coConfigDao.setCacheEnabled(CACHE_ENABLED);
 	CACHE_CFG_INITIALIZED = true;
     }
-    
+
     /** {@inheritDoc} */
     public boolean isCacheEnabled() {
-	if (! CACHE_CFG_INITIALIZED) {
+	if (!CACHE_CFG_INITIALIZED) {
 	    initCache();
 	}
 	return CACHE_ENABLED;
