@@ -217,7 +217,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	this.osylContentService = osylContentService;
     }
 
-    
     public void setEventTrackingService(
 	    EventTrackingService eventTrackingService) {
 	this.eventTrackingService = eventTrackingService;
@@ -643,8 +642,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    siteService.save(site);
 
 	    // we add the directories
-	    //SAKAI-2160
-	    if (osylContentService.USE_ATTACHMENTS.equals("true")) {
+	    // SAKAI-2160
+	    if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
 		osylContentService.initSiteAttachments(site.getTitle());
 	    } else {
 		String directoryId;
@@ -891,7 +890,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     public synchronized COSerialized getSerializedCourseOutlineAndLockIt(
 	    String siteId, String webappDir) throws Exception {
-	
+
 	COSerialized thisCo = getSerializedCourseOutline(siteId, webappDir);
 	String lockedBy = thisCo.getLockedBy();
 	boolean lockFree = false;
