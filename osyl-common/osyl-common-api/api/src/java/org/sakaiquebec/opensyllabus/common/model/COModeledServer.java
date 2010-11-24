@@ -1321,8 +1321,6 @@ public class COModeledServer {
 		throw new CompatibilityException(
 			CompatibilityException.SCHEMA_VERSION_INCOMPATIBILIYY,
 			null, null);
-	    // throw new Exception(
-	    // "COuld not associate: child schema version != parent schema version");
 	}
 
     }
@@ -1341,12 +1339,6 @@ public class COModeledServer {
 		throw new CompatibilityException(
 			CompatibilityException.ELEMENT_ALREADY_ASSOCIATED,
 			null, null);
-		// Exception("Element " + childElement.getType()
-		// + " with id " + childElement.getId()
-		// + " is already associated with a parent(id "
-		// + childElement.getIdParent()
-		// + ") and could not be associated with parent (id "
-		// + parentElement.getId() + ").");
 	    }
 	    if (!parentElement.isCOUnitContent()) {
 		childElement.setIdParent(parentElement.getId());
@@ -1361,8 +1353,7 @@ public class COModeledServer {
 					.get(i);
 			associateChild(coElementChild, coElementParent);
 		    } else {
-			// Un structure existe chez le parent mais pas chez
-			// l'enfant
+			// a structure existe in parent but not in children
 			copyStructureOnly(coElementParent);
 			childElement.addChild(coElementParent);
 		    }
@@ -1372,11 +1363,6 @@ public class COModeledServer {
 	    throw new CompatibilityException(
 		    CompatibilityException.STRUCTURE_INCOMPATIBILITY,
 		    childElement.getType(), parentElement.getType());
-	    // throw new Exception(
-	    // "Error while associate course outlines : type '"
-	    // + childElement.getType()
-	    // + "' could not be associate with type '"
-	    // + parentElement.getType() + "'.");
 	}
     }
 
@@ -1494,25 +1480,20 @@ public class COModeledServer {
 			    parentElement.setId(childElement.getId());
 			    fusion(childElement, parentElement);
 			} else {
-			    // L'enfant référence qqchose qui n'existe PLUS dans
-			    // le
-			    // parent
+			    //child references something which not exist ANYMORE in parent
 			    if (!hasResProx(childElement)) {
-				// il n'a pas d'infos propres, on l'efface
+				//there is no proper infos, we deleted it
 				child.removeChild(childElement);
 				i--;
 				j--;
 			    } else {
-				// on supprime les uuidParent et on ajoute le
-				// contenu à la
-				// bonne place
+				//remove ipParent and add content in the rigth place
 				deleteParentUuids(childElement);
 				fusionned.getChildrens().add(j, childElement);
 			    }
 			}
 		    } else {
-			// L'enfant référence qqchose qui n'existe PAS dans le
-			// parent
+			//child references something which not exist in parent
 			fusionned.getChildrens().add(j, childElement);
 		    }
 		    j++;
