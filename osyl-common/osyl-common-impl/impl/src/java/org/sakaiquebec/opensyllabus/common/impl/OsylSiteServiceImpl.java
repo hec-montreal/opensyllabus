@@ -884,9 +884,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			+ OsylConfigService.CONFIG_DIR + File.separator
 			+ thisCo.getOsylConfig().getConfigRef(), thisCo);
 	getSiteInfo(thisCo, thisCo.getSiteId());
-	log.debug("getSerializedCourseOutline" + elapsed(start) + siteId);
+	log.debug("getSerializedCourseOutlineForEditor" + elapsed(start) + siteId);
 	return thisCo;
-    }
+    } // getSerializedCourseOutlineForEditor
 
     public synchronized COSerialized getSerializedCourseOutlineAndLockIt(
 	    String siteId, String webappDir) throws Exception {
@@ -1645,8 +1645,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     }
 
     public void deleteSite(String siteId) throws Exception {
+	long start = System.currentTimeMillis();
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] deletes site [" + siteId + "]");
+
 	Site site = getSite(siteId);
 	siteService.removeSite(site);
+
+	log.info("Site [" + siteId + "] deleted in "
+		+ (System.currentTimeMillis() - start) + " ms ");
     }
 
     public void setCoContentWithTemplate(COSerialized co, String webappDir)
