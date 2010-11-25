@@ -64,15 +64,17 @@ public class UnattachForm extends OsylManagerAbstractWindowPanel {
 
 	public void onFailure(Throwable caught) {
 	    Image image = new Image(controller.getImageBundle().cross16());
-	    image.setTitle(messages.unattachAction_unattach_error() + ":"
+	    image.setTitle(messages.unattachAction_unattach_error() + " : "
 		    + caught.getMessage());
 	    grid.setWidget(siteIndex, 1, image);
 	    responseReceive();
 	}
 
 	public void onSuccess(Void result) {
-	    grid.setWidget(siteIndex, 1, new Image(controller.getImageBundle()
-		    .check16()));
+	    Image image = new Image(controller.getImageBundle()
+		    .check16());
+	    image.setTitle(messages.unattachAction_unattach_ok());
+	    grid.setWidget(siteIndex, 1, image);
 	    responseReceive();
 	}
 
@@ -106,11 +108,12 @@ public class UnattachForm extends OsylManagerAbstractWindowPanel {
 	grid = new Grid(coSites.size(), 2);
 	this.coSites = coSites;
 	asynCB_return = 0;
+	Image image = new Image(controller.getImageBundle().ajaxloader());
+	image.setTitle(messages.unattachForm_unattach_inProgress());
 	for (int r = 0; r < coSites.size(); r++) {
 	    String siteId = coSites.get(r).getSiteId();
 	    grid.setText(r, 0, siteId);
-	    grid.setWidget(r, 1, new Image(controller.getImageBundle()
-		    .ajaxloader()));
+	    grid.setWidget(r, 1, image);
 	}
 	HorizontalPanel publicationPanel = new HorizontalPanel();
 	Label voidLabel = new Label();

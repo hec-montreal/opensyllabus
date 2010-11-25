@@ -282,7 +282,7 @@ public interface Messages extends ConstantsWithLookup {
     String publishAction_publish_inProgress();
     
     String attachForm_siteTitle();
-    
+
     String attachForm_attach_inProgress();
     
     String unattachForm_unattach_inProgress();
