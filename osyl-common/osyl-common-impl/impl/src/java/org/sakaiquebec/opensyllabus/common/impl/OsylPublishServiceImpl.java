@@ -903,6 +903,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	String portalActivated =
 		ServerConfigurationService.getString("hec.portail.activated");
 
+	// FIXME: this is for HEC Montreal only. Should be injected or something
+	// cleaner than this. See SAKAI-2163.
 	if (portalActivated != null && portalActivated.equalsIgnoreCase("true"))
 	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)) {
 		osylTransformToZCCO.sendXmlAndDoc(publishedCO);
