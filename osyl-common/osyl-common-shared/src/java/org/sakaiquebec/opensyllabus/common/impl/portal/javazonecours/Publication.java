@@ -1054,7 +1054,7 @@ public class Publication {
 				dateMajBdD = ((OracleResultSet) rset).getDate(2);
 				long dateMajBdL = dateMajBdD.getTime();
 
-				File docFile = new File(appDirName + "\\" + docFileName);
+				File docFile = new File(appDirName + File.separator + docFileName);
 				long dateMajFichierL = docFile.lastModified();
 				long difference = dateMajFichierL - dateMajBdL;
 				result = (difference >= 0);
@@ -1120,7 +1120,7 @@ public class Publication {
 				dateMajBdD = ((OracleResultSet) rset).getDate(1);
 				long dateMajBdL = dateMajBdD.getTime();
 
-				File docFile = new File(appDirName + "\\" + docFileName);
+				File docFile = new File(appDirName + File.separator + docFileName);
 				long dateMajFichierL = docFile.lastModified();
 				long difference = dateMajFichierL - dateMajBdL;
 				result = (difference >= 0);
@@ -1435,7 +1435,7 @@ public class Publication {
 				OutputStream blobOutput = ((oracle.sql.BLOB) blob)
 						.getBinaryOutputStream();
 
-				File docFile = new File(appDirName + "\\" + docFileName);
+				File docFile = new File(appDirName + File.separator + docFileName);
 				InputStream fileInput = new FileInputStream(docFile);
 
 				byte[] buffer = new byte[10 * 1024];
@@ -1522,7 +1522,7 @@ public class Publication {
 				OutputStream blobOutput = ((oracle.sql.BLOB) blob)
 						.getBinaryOutputStream();
 
-				File docFile = new File(appDirName + "\\" + docFileName);
+				File docFile = new File(appDirName + File.separator + docFileName);
 				InputStream fileInput = new FileInputStream(docFile);
 
 				byte[] buffer = new byte[10 * 1024];
