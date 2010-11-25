@@ -33,7 +33,7 @@
 							<importance>false</importance>
 							<level>undefined</level>
 							<visible>true</visible>
-							<semanticTag type="rubric">calculators</semanticTag>
+							<semanticTag type="HEC">calculators</semanticTag>
 							<asmResource xsi:type="Text" access="public">
 								<text><![CDATA[Les étudiants sont priés de prendre connaissance de la
 													politique d'utilisation de calculatrices lors d'examens lorsque
@@ -47,7 +47,7 @@
 							<importance>false</importance>
 							<level>undefined</level>
 							<visible>true</visible>
-							<semanticTag type="rubric">plagiarism</semanticTag>
+							<semanticTag type="HEC">plagiarism</semanticTag>
 							<asmResource xsi:type="Text" access="public">
 								<text><![CDATA[Les étudiants sont priés de prendre connaissance des actes et des
 												gestes qui sont considérés comme étant du plagiat ou une autre

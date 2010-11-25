@@ -8,7 +8,7 @@
 	<title type="HEC">Title of course at HEC</title>
 	<language>ENG</language>
 	<created>2001-12-17T09:30:47-05:00</created>
-	<creator>HEC Montréal</creator>
+	<creator>HEC Montrï¿½al</creator>
 	<modifiedBy></modifiedBy>
 	<parent type="HEC"></parent>
 	<children type="HEC"></children>
@@ -33,9 +33,9 @@
 							<importance>false</importance>
 							<level>undefined</level>
 							<visible>true</visible>
-							<semanticTag type="rubric">plagiarism</semanticTag>
+							<semanticTag type="HEC">plagiarism</semanticTag>
 							<asmResource xsi:type="Text" access="public">
-								<text><![CDATA[Please consult the acts and gestures that are considered plagiarism or another academic violation, along with the applicable procedure and sanctions, which range up to suspension and even expulsion from HEC Montréal. Violations are analyzed&nbsp; based on the facts and circumstances, and sanctions are applied accordingly.&nbsp; <a href="http://www.hec.ca/en/programs_training/plagiarism.html" target="_blank">Learn more about plagiarism .</a><br>]]></text>
+								<text><![CDATA[Please consult the acts and gestures that are considered plagiarism or another academic violation, along with the applicable procedure and sanctions, which range up to suspension and even expulsion from HEC Montrï¿½al. Violations are analyzed&nbsp; based on the facts and circumstances, and sanctions are applied accordingly.&nbsp; <a href="http://www.hec.ca/en/programs_training/plagiarism.html" target="_blank">Learn more about plagiarism .</a><br>]]></text>
 								<modified>2009-11-11T16:12:13-05:00</modified>
 							</asmResource>
 						</asmContext>
@@ -45,7 +45,7 @@
 							<importance>false</importance>
 							<level>undefined</level>
 							<visible>true</visible>
-							<semanticTag type="rubric">calculators</semanticTag>
+							<semanticTag type="HEC">calculators</semanticTag>
 							<asmResource xsi:type="Text" access="public">
 								<text><![CDATA[Please consult the <a href="http://www.hec.ca/en/current_student/technologies/calculators.html" target="_blank">calculator usage policy (in French)</a> during exams when&nbsp; applicable.]]></text>
 								<modified>2009-11-11T16:14:23-05:00</modified>
