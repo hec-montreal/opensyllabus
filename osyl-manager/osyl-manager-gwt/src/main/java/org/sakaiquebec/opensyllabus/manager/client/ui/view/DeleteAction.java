@@ -136,8 +136,9 @@ public class DeleteAction extends OsylManagerAbstractAction {
 	} else {
 	    String message = "";
 
-	    if (hasChild)
+	    if (hasChild) {
 		message = messages.deleteAction_delete_siteHasChild() + "<br>";
+	    }
 	    message +=
 		    messages.deleteAction_delete_confirmation().replace("{0}",
 			    sites);
@@ -158,6 +159,7 @@ public class DeleteAction extends OsylManagerAbstractAction {
 			    new DeleteAsynCallBack(0));
 		}
 	    });
+	    conf.setWidth("450px");
 	    conf.show();
 	    conf.centerAndFocus();
 	}
