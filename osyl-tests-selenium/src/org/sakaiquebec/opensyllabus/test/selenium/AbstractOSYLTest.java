@@ -236,6 +236,8 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    log("goToSite avant selectFrame");
 	    session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
 	    log("goToSite apres selectFrame");
+	    waitForPageToLoad();
+	    log("goToSite apres waitForPageToLoad");
 	    ensureElementPresent("gwt-uid-4");
 
 	    // gwt-uid-4 is button Save. If it is not visible, it means we are
