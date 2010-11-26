@@ -1351,6 +1351,9 @@ public class OsylController implements SavePushButtonEventHandler,
      * @return the documents folder name
      */
     public String getDocFolderName() {
+	if ("true".equals(USE_ATTACHMENTS)) {
+	    return "";
+	}
 	String folder = WORK_FOLDER_NAME;
 	if ((null != getCOSerialized()) && getCOSerialized().isPublished()) {
 	    folder = PUBLISH_FOLDER_NAME;
