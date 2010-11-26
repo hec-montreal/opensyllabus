@@ -66,6 +66,9 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     protected static final String LEVEL_ATTENDEE = "attendee";
 
     protected static final String LEVEL_PUBLIC = "public";
+    
+    // Maximum time we wait (in ms) for an element to appear as expected
+    private static final int MAX_TIME = 30000;
 
     @BeforeClass(alwaysRun = true)
     @Parameters( { "seleniumHost", "seleniumPort", "browser", "webSite" })
@@ -158,38 +161,38 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	log("Creating site " + siteName);
 	goToOsylManagerTool();
 
-	if (inFireFox()) {
-	    session().mouseOver("//tr[7]/td/table/tbody/tr/td[1]/div");
-	    session().mouseDown("//tr[7]/td/table/tbody/tr/td[1]/div");
-	    session().mouseUp("//tr[7]/td/table/tbody/tr/td[1]/div");
-	    pause();
-	} else {
-	    session().keyPress("//tr[7]/td/table/tbody/tr/td[1]/div", "\r");
-	}
+	ensureElementPresent("//tr[7]/td/table/tbody/tr/td[1]/div");
+	smartClick("//tr[7]/td/table/tbody/tr/td[1]/div");
 
+	ensureElementPresent("//tr[2]/td/table/tbody/tr/td[2]/input");
 	session().type("//tr[2]/td/table/tbody/tr/td[2]/input", siteName);
 	session().select("//tr[4]/td/table/tbody/tr/td[2]/select",
 		"value=default");
 	session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=2");
 
-	if (inFireFox()) {
-	    session().mouseOver("//tr[5]/td/div/div");
-	    session().mouseDown("//tr[5]/td/div/div");
-	    session().mouseUp("//tr[5]/td/div/div");
-	    pause();
-	} else {
-	    session().keyPress("//tr[5]/td/div/div", "\r");
-	}
+	// Click the button "Create"
+	smartClick("//tr[5]/td/div/div");
 
-	if (inFireFox()) {
-	    session().mouseOver("//tr[4]/td/div/div");
-	    session().mouseDown("//tr[4]/td/div/div");
-	    session().mouseUp("//tr[4]/td/div/div");
-	} else {
-	    session().keyPress("//tr[4]/td/div/div", "\r");
-	}
+	// Click button OK (confirmation)
+	ensureElementPresent("//tr[4]/td/div/div");
+	smartClick("//tr[4]/td/div/div");
 
     } // createSite
+
+    /**
+     * Clicks the element (if in FF) or selects it and press Enter (in IE).
+     * 
+     * @param element
+     */
+    private void smartClick(String element) {
+	if (inFireFox()) {
+	    session().mouseOver(element);
+	    session().mouseDown(element);
+	    session().mouseUp(element);
+	} else {
+	    session().keyPress(element, "\r");
+	}
+    }
 
     public void goToOsylManagerTool() {
 	// open site administration workspace
@@ -230,13 +233,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		throw new IllegalStateException("Got 'Site Unavailable' !");
 	    }
 
+	    log("goToSite avant selectFrame");
 	    session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
-	    pause();
-	    if(!session().isElementPresent("gwt-uid-4")) {
-		waitForPageToLoad();
-	    }
-	    assertTrue(session().isElementPresent("gwt-uid-4"));
-	    // gwt-uid-4 is button Save
+	    log("goToSite apres selectFrame");
+	    ensureElementPresent("gwt-uid-4");
+
+	    // gwt-uid-4 is button Save. If it is not visible, it means we are
+	    // in read-only mode.
 	    if (!session().isVisible("gwt-uid-4")) {
 		captureScreenShot("Course outline locked: waiting 15 minutes");
 		log("Course outline locked: waiting 15 minutes");
@@ -347,10 +350,10 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     public void waitForOSYL() throws Exception {
 
 	// session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
-	for (int second = 0;; second++) {
-	    if (second >= 60) {
+	for (int decisecond = 0;; decisecond++) {
+	    if (decisecond >= 600) {
 
-		fail("Timeout waiting for Osyl-TreeItem-HorizontalPanel sub-structure:"
+		logAndFail("Timeout waiting for Osyl-TreeItem-HorizontalPanel sub-structure:"
 			+ " __Was OpenSyllabus added to the site?__");
 	    }
 	    if (session().isTextPresent("Exception")
@@ -366,7 +369,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		}
 	    } catch (Exception e) {
 	    }
-	    Thread.sleep(1000);
+	    Thread.sleep(100);
 	}
 
 	log("Found OpenSyllabus: tests will begin now");
@@ -689,6 +692,24 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	}
     } // assertOrVerify
 
+    
+    protected void ensureElementPresent(String element) {
+	log("ensureElementPresent: entering " + element);
+	int time = 0;
+	int increment = 100; //ms
+	while(time < MAX_TIME){
+	    if (session().isElementPresent(element)) {
+		log("ensureElementPresent: found element after " + time + " ms");
+		return;
+	    }
+	    pause(increment);
+	    time += increment;
+	    log("ensureElementPresent: time spent " + time);
+	}
+	logAndFail("Unable to find element [" + element + "] after "
+		+ time + " ms");
+    }
+
     /**
      * Given a select menu whose XPath is specified, returns a String
      * corresponding to a random option. The select menu must be visible before
@@ -752,12 +773,12 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     }
 
     protected void openTeachingMaterialSection() {
-	// Open Seances Section
+	// Open Teaching Material Section
 	if (inFireFox()) {
 	    session().mouseDown(
 		    "//div[@class=\"gwt-TreeItem\"]/div/"
 			    + "div[contains(text(),'dagogique')]");
-	    pause();
+	    pause(2000);
 	} else {
 	    // This doesn't seem to work anymore
 	    session().click("gwt-uid-17");
@@ -833,7 +854,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().type("//input[@class=\"Osyl-LabelEditor-TextBox\"]",
 		clickableText);
 
-	// Open form to upload a first document
+	// Open form to upload the document
 	if (inFireFox()) {
 
 	    session().mouseOver(

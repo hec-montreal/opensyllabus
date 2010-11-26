@@ -22,6 +22,10 @@ package org.sakaiquebec.opensyllabus.test.selenium;
 
 import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.session;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
@@ -33,9 +37,9 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 
     private static int ALLOWED_TRIES = 10;
     
-    @Test(groups = "OSYL-Suite", description = "OSYLEditor OsylManagertest. Associate to a parent site")
+    @Test(groups = "OSYL-Suite", description = "OSYLEditor and OSYLManager test. Associates sites and check that content is added or deleted as expected.")
     @Parameters( { "webSite" })
-    public void testAssociateToParentSite(String webSite) throws Exception {
+    public void testHierarchy(String webSite) throws Exception {
 	// We log in
 	// test if site exist, else create it
 	logInAsAdmin(webSite);
@@ -81,68 +85,35 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    // publish
 	    session().click("gwt-uid-5");
 	    session().click("//button[contains(text(),'Publier')]");
-	    pause();
+	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
+	    ensurePublishDateOK();
 
-	    // attach to parent
+	    // The next block purpose is to attach currentSite to parentSiteName 
 	    session().selectFrame("relative=parent");
+	    // go to OSYLManager
 	    goToOsylManagerTool();
+	    // Search for the site
 	    session().type("//input[@class='gwt-TextBox']",
 		    getCurrentTestSiteName());
-	    session().mouseOver("//div[@class='Osyl-Button Osyl-Button-up']");
-	    session().mouseDown(
-		    "//div[@class='Osyl-Button Osyl-Button-up-hovering']");
-	    session().mouseUp(
-		    "//div[@class='Osyl-Button Osyl-Button-down-hovering']");
-	    pause(30000);
+	    clickSearch();
+	    waitForListToShow(getCurrentTestSiteName());
 	    session().click(
 		    "//tr[@class='OsylManager-scrollTable-row']/td/input");
-	    pause();
-	    assertTrue(session().isElementPresent("//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'Lier')]]"));
-	    session()
-		    .mouseOver(
-			    "//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'Lier')]]");
-	    session()
-		    .mouseDown(
-			    "//div[@class='OsylManager-action OsylManager-action-up-hovering' and ./div[contains(.,'Lier')]]");
-	    session()
-		    .mouseUp(
-			    "//div[@class='OsylManager-action OsylManager-action-down-hovering' and ./div[contains(.,'Lier')]]");
-	    pause();
-	    int i =0;
-	    while(!session().isElementPresent("//table[@class='OsylManager-form-element']/tbody/tr/td/select[@class='gwt-ListBox']/option[@value='"
-		    +parentSiteName+"']") && i<ALLOWED_TRIES){
-		pause();
-		i++;
-	    }
-	    if(!session().isElementPresent(
-		    "//table[@class='OsylManager-form-element']/tbody/tr/td/select[@class='gwt-ListBox']/option[@value='"
-		    +parentSiteName+"']")) {
-		logAndFail("Cannot attach to parent site " + parentSiteName);
-	    }
-	    session().select("//table[@class='OsylManager-form-element']/tbody/tr/td/select[@class='gwt-ListBox']",
+	    ensureElementPresent("//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'Lier')]]");
+	    log("Link action is available");
+	    clickActionWithLabel("Lier");
+	    ensureElementPresent("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/input[@class='OsylManager-form-element']");
+	    session().type("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/input[@class='OsylManager-form-element']",
+		    parentSiteName);
+	    log("Typed parent site name");
+	    session().click("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/button[@class='gwt-Button']");
+	    waitForLinkDropDownToShow(parentSiteName);
+	    session().select("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/select[@class='gwt-ListBox']",
 		    "label=" + parentSiteName);
-	    pause();
-	    session()
-		    .mouseOver(
-			    "//div[@class='Osyl-Button Osyl-Button-up' and ./div[contains(.,'Lier')]]");
-	    session()
-		    .mouseDown(
-			    "//div[@class='Osyl-Button Osyl-Button-up-hovering' and ./div[contains(.,'Lier')]]");
-	    session()
-		    .mouseUp(
-			    "//div[@class='Osyl-Button Osyl-Button-down-hovering' and ./div[contains(.,'Lier')]]");
-	    pause();
-	    assertTrue(session().isElementPresent("//div[contains(.,'bien')]"));
-	    session()
-		    .mouseOver(
-			    "//div[@class='Osyl-Button Osyl-Button-up' and ./div[contains(.,'Fermer')]]");
-	    session()
-		    .mouseDown(
-			    "//div[@class='Osyl-Button Osyl-Button-up-hovering' and ./div[contains(.,'Fermer')]]");
-	    session()
-		    .mouseUp(
-			    "//div[@class='Osyl-Button Osyl-Button-down-hovering' and ./div[contains(.,'Fermer')]]");
-
+	    clickButtonWithLabel("Lier");
+	    // We ensure the confirmation is displayed
+	    ensureElementPresent("//img[contains(@title,'Le site a bien ')]");
+	    clickButtonWithLabel("Ok");
 	    // verify if text is present
 	    goToCurrentSite();
 	    openTeachingMaterialSection();
@@ -157,62 +128,31 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    // publish
 	    session().click("gwt-uid-5");
 	    session().click("//button[contains(text(),'Publier')]");
-	    pause();
+	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
+	    ensurePublishDateOK();
 
 	    // attach child to current site
 	    session().selectFrame("relative=parent");
 	    goToOsylManagerTool();
 	    session().type("//input[@class='gwt-TextBox']", childSiteName);
-	    session().mouseOver("//div[@class='Osyl-Button Osyl-Button-up']");
-	    session().mouseDown(
-		    "//div[@class='Osyl-Button Osyl-Button-up-hovering']");
-	    session().mouseUp(
-		    "//div[@class='Osyl-Button Osyl-Button-down-hovering']");
-	    pause(30000);
+	    clickSearch();
+	    waitForListToShow(childSiteName);
 	    session().click(
 		    "//tr[@class='OsylManager-scrollTable-row']/td/input");
-	    pause();
-	    assertTrue(session().isElementPresent("//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'Lier')]]"));
-	    session()
-		    .mouseOver(
-			    "//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'Lier')]]");
-	    session()
-		    .mouseDown(
-			    "//div[@class='OsylManager-action OsylManager-action-up-hovering' and ./div[contains(.,'Lier')]]");
-	    session()
-		    .mouseUp(
-			    "//div[@class='OsylManager-action OsylManager-action-down-hovering' and ./div[contains(.,'Lier')]]");
-	    pause();
-	    while(!session().isElementPresent("//table[@class='OsylManager-form-element']/tbody/tr/td/select[@class='gwt-ListBox']/option[@value='"
-		    +getCurrentTestSiteName()+"']") && i<ALLOWED_TRIES){
-		pause();
-		i++;
-	    }
-	    assertTrue(session().isElementPresent("//table[@class='OsylManager-form-element']/tbody/tr/td/select[@class='gwt-ListBox']/option[@value='"
-		    +getCurrentTestSiteName()+"']"));
-	    session().select("//table[@class='OsylManager-form-element']/tbody/tr/td/select[@class='gwt-ListBox']",
+	    ensureElementPresent("//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'Lier')]]");
+	    clickActionWithLabel("Lier");
+	    ensureElementPresent("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/input[@class='OsylManager-form-element']");
+	    session().type("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/input[@class='OsylManager-form-element']",
+		    getCurrentTestSiteName());
+	    log("Typed site name " + getCurrentTestSiteName());
+	    session().click("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/button[@class='gwt-Button']");
+	    waitForLinkDropDownToShow(getCurrentTestSiteName());
+	    session().select("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/select[@class='gwt-ListBox']",
 		    "label=" + getCurrentTestSiteName());
-	    pause();
-	    session()
-		    .mouseOver(
-			    "//div[@class='Osyl-Button Osyl-Button-up' and ./div[contains(.,'Lier')]]");
-	    session()
-		    .mouseDown(
-			    "//div[@class='Osyl-Button Osyl-Button-up-hovering' and ./div[contains(.,'Lier')]]");
-	    session()
-		    .mouseUp(
-			    "//div[@class='Osyl-Button Osyl-Button-down-hovering' and ./div[contains(.,'Lier')]]");
-	    pause();
-	    assertTrue(session().isElementPresent("//div[contains(.,'bien')]"));
-	    session()
-		    .mouseOver(
-			    "//div[@class='Osyl-Button Osyl-Button-up' and ./div[contains(.,'Fermer')]]");
-	    session()
-		    .mouseDown(
-			    "//div[@class='Osyl-Button Osyl-Button-up-hovering' and ./div[contains(.,'Fermer')]]");
-	    session()
-		    .mouseUp(
-			    "//div[@class='Osyl-Button Osyl-Button-down-hovering' and ./div[contains(.,'Fermer')]]");
+	    clickButtonWithLabel("Lier");
+	    // We ensure the confirmation is displayed
+	    ensureElementPresent("//img[contains(@title,'Le site a bien ')]");
+	    clickButtonWithLabel("Ok");
 
 	    // verify if text is present
 	    goToSite(childSiteName);
@@ -226,13 +166,11 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    openTeachingMaterialSection();
 
 	    // delete text
-	    // We delete new added docuement
+	    // We delete newly added document
 	    session().click("//tr/td/div/table[2]/tbody/tr/td[2]/button");
-	    pause();
-
-	    session()
-		    .click(
-			    "//tr/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
+	    ensureElementPresent("//tr/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
+	    session().click(
+		    "//tr/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
 	    pause();
 
 	    // ---------------------------------------------------------------------------//
@@ -244,7 +182,8 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    // publish
 	    session().click("gwt-uid-5");
 	    session().click("//button[contains(text(),'Publier')]");
-	    pause();
+	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
+	    ensurePublishDateOK();
 
 	    // verify if text of parent is present in current site
 	    session().selectFrame("relative=parent");
@@ -262,31 +201,19 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    // verify if text of parent is not present in child site
 	    assertFalse(session().isTextPresent(parentText));
 
-	    // dissociate current site form parent
+	    // dissociate current site from parent
 	    session().selectFrame("relative=parent");
 	    goToOsylManagerTool();
 	    session().type("//input[@class='gwt-TextBox']",
 		    getCurrentTestSiteName());
-	    session().mouseOver("//div[@class='Osyl-Button Osyl-Button-up']");
-	    session().mouseDown(
-		    "//div[@class='Osyl-Button Osyl-Button-up-hovering']");
-	    session().mouseUp(
-		    "//div[@class='Osyl-Button Osyl-Button-down-hovering']");
-	    pause(30000);
+	    clickSearch();
+	    waitForListToShow(getCurrentTestSiteName());
 	    session().click(
 		    "//tr[@class='OsylManager-scrollTable-row']/td/input");
-	    pause();
-	    assertTrue(session().isElementPresent("//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'tacher')]]"));
-	    session()
-		    .mouseOver(
-			    "//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'tacher')]]");
-	    session()
-		    .mouseDown(
-			    "//div[@class='OsylManager-action OsylManager-action-up-hovering' and ./div[contains(.,'tacher')]]");
-	    session()
-		    .mouseUp(
-			    "//div[@class='OsylManager-action OsylManager-action-down-hovering' and ./div[contains(.,'tacher')]]");
-	    pause();
+	    ensureElementPresent("//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'tacher')]]");
+	    clickActionWithLabel("tacher");
+	    // We ensure the confirmation is displayed
+	    ensureElementPresent("//img[contains(@title,'Le site a bien ')]");
 
 	    // verify if text is not present in current site
 	    goToCurrentSite();
@@ -305,25 +232,12 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    session().selectFrame("relative=parent");
 	    goToOsylManagerTool();
 	    session().type("//input[@class='gwt-TextBox']", childSiteName);
-	    session().mouseOver("//div[@class='Osyl-Button Osyl-Button-up']");
-	    session().mouseDown(
-		    "//div[@class='Osyl-Button Osyl-Button-up-hovering']");
-	    session().mouseUp(
-		    "//div[@class='Osyl-Button Osyl-Button-down-hovering']");
-	    pause(30000);
+	    clickSearch();
+	    waitForListToShow(childSiteName);
 	    session().click(
 		    "//tr[@class='OsylManager-scrollTable-row']/td/input");
-	    pause();
-	    assertTrue(session().isElementPresent("//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'tacher')]]"));
-	    session()
-		    .mouseOver(
-			    "//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'tacher')]]");
-	    session()
-		    .mouseDown(
-			    "//div[@class='OsylManager-action OsylManager-action-up-hovering' and ./div[contains(.,'tacher')]]");
-	    session()
-		    .mouseUp(
-			    "//div[@class='OsylManager-action OsylManager-action-down-hovering' and ./div[contains(.,'tacher')]]");
+	    ensureElementPresent("//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'tacher')]]");
+	    clickActionWithLabel("tacher");
 	    pause();
 
 	    // verify if text from current site is not present
@@ -331,27 +245,116 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    openTeachingMaterialSection();
 	    assertFalse(session().isTextPresent(currentSiteText));
 	    
-	    //delete ressource in parent for future tests
+	    //delete resource in parent for future tests
 	    session().selectFrame("relative=parent");
 	    goToSite(parentSiteName);
 	    openTeachingMaterialSection();
 	    session().click("//tr/td/div/table[2]/tbody/tr/td[2]/button");
+	    ensureElementPresent(
+		    "//tr/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
+	    session().click(
+	    	    "//tr/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
 	    pause();
 
-	    session()
-		    .click(
-			    "//tr/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
-	    pause();
 	    // publish
 	    session().click("gwt-uid-5");
 	    session().click("//button[contains(text(),'Publier')]");
-	    pause();
+	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
+	    ensurePublishDateOK();
 
 	    logOut();
-	    log("testAddLecture: test complete");
+	    log("testHierarchy: test complete");
 	} catch (Exception e) {
-	    logAndFail("Associate to parent FAILED:" + e);
+	    logAndFail("Hierarchy test FAILED:" + e);
 	}
-    } // testAddLecture
+    } // testHierarchy
 
+    private void waitForLinkDropDownToShow(String siteName) {
+	int i = 0;
+	while(i<ALLOWED_TRIES){
+	    if (session().isElementPresent(
+		    "//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/select[@class='gwt-ListBox']/option[@value='"
+		    +siteName+"']")) {
+		log("Found site in drop-down list after " + i + " tries");
+		return;
+	    }
+	    pause();
+	    i++;
+	}
+	logAndFail("Unable to find site [" + siteName
+		+ "] in drop-down to link sites.");
+    }
+    
+    
+    /**
+     * Clicks on the Search button in OSYLManager
+     */
+    private void clickSearch() {
+	session().mouseOver("//div[@class='Osyl-Button Osyl-Button-up']");
+	session().mouseDown("//div[@class='Osyl-Button Osyl-Button-up-hovering']");
+	session().mouseUp("//div[@class='Osyl-Button Osyl-Button-down-hovering']");
+    }
+    
+    /**
+     * Waits until the specified siteName appears in the main OSYLManager list.
+     * Fails otherwise, after ALLOWED_TRIES.
+     * 
+     * @param siteName
+     */
+    private void waitForListToShow(String siteName) {
+	int i = 0;
+	while(i<ALLOWED_TRIES){
+	    if (session().isElementPresent(
+		"//tr[@class='OsylManager-scrollTable-row']/td[2][contains(.,'"
+		    +siteName+"')]")) {
+		log("Found site in list after " + i + " tries");
+		return;
+	    }
+	    pause();
+	    i++;
+	}
+	logAndFail("Unable to find site [" + siteName + "] in list");
+    }
+
+
+    private void clickActionWithLabel(String label) {
+	session().mouseOver(
+		"//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'"
+		+ label + "')]]");
+	session().mouseDown(
+		"//div[@class='OsylManager-action OsylManager-action-up-hovering' and ./div[contains(.,'"
+		+ label + "')]]");
+	session().mouseUp(
+		"//div[@class='OsylManager-action OsylManager-action-down-hovering' and ./div[contains(.,'"
+		+ label + "')]]");
+    }
+    
+    private void clickButtonWithLabel(String label) {
+	session().mouseOver(
+		"//div[@class='Osyl-Button Osyl-Button-up' and ./div[contains(.,'"
+		+ label + "')]]");
+	session().mouseDown(
+		"//div[@class='Osyl-Button Osyl-Button-up-hovering' and ./div[contains(.,'"
+		+ label + "')]]");
+	session().mouseUp(
+		"//div[@class='Osyl-Button Osyl-Button-down-hovering' and ./div[contains(.,'"
+		+ label + "')]]");
+    }
+
+    private void ensurePublishDateOK() {
+	try {
+	    String dateDiv = session().getText("//div[@class='Osyl-PublishView-publishedDate']");
+	    log("published: " + dateDiv);
+	    String pubDateStr = dateDiv.substring(dateDiv.indexOf(" : ") + 3);
+	    SimpleDateFormat publicationDateFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	    long pubTime = publicationDateFormatter.parse(pubDateStr).getTime();
+	    long diff = System.currentTimeMillis() - pubTime;
+	    log("published: " + diff + " ms ago");
+	    if (Math.abs(diff) > 30000) {
+		logAndFail("Incorrect publish date: " + pubDateStr);
+	    }
+	} catch (ParseException e) {
+	    logAndFail("Unable to parse publish date " + e);
+	}
+    }
 }
