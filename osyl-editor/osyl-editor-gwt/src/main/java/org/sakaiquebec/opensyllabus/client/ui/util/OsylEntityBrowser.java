@@ -27,7 +27,6 @@ import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
-import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -51,18 +50,19 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class OsylEntityBrowser extends OsylAbstractBrowserComposite implements SelectionHandler<TreeItem>{
+public class OsylEntityBrowser extends OsylAbstractBrowserComposite implements
+	SelectionHandler<TreeItem> {
 
     ScrollPanel providersPanel = new ScrollPanel();
 
     private String entityUri;
 
     private String entityText;
-    
+
     private Tree providers;
-    
+
     HTML currentSelectionHtml;
-    
+
     private SakaiEntities sakaiEntities;
 
     private AsyncCallback<SakaiEntities> sitesEntitiesCallback =
@@ -238,7 +238,8 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite implements S
 	getProviders().clear();
 
 	int countProviders = 0;
-	SakaiEntities sakaiEntities = getExistingEntities(getController().getSiteId());
+	SakaiEntities sakaiEntities =
+		getExistingEntities(getController().getSiteId());
 
 	Map<String, String> entities = sakaiEntities.getEntities();
 	Map<String, String> allowedProviders = sakaiEntities.getProviders();
@@ -246,9 +247,12 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite implements S
 	TreeItem providers;
 	Set<String> entitiesKeys = entities.keySet();
 	TreeItem selectedItem = null;
-	for(Entry<String, String> entry : allowedProviders.entrySet()){
+	for (Entry<String, String> entry : allowedProviders.entrySet()) {
 	    String providerKey = entry.getKey();
-	    providers = new TreeItem(getController().getUiMessage("SakaiEntityEditor.Entity."+entry.getValue()).toUpperCase());
+	    providers =
+		    new TreeItem(getController().getUiMessage(
+			    "SakaiEntityEditor.Entity." + entry.getValue())
+			    .toUpperCase());
 	    for (String key : entitiesKeys) {
 		if (key.contains(providerKey)) {
 		    TreeItem tItem = providers.addItem(entities.get(key));
@@ -269,13 +273,14 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite implements S
 	}
 	if (countProviders == 0) {
 	    providers =
-		    new TreeItem(getController().getUiMessage("SakaiEntityEditor.noEntity"));
+		    new TreeItem(getController().getUiMessage(
+			    "SakaiEntityEditor.noEntity"));
 	    getProviders().addItem(providers);
 	}
-	if(selectedItem!=null)
+	if (selectedItem != null)
 	    getProviders().setSelectedItem(selectedItem);
     }
-    
+
     public void onSelection(SelectionEvent<TreeItem> event) {
 	String entityRawUri = "";
 	TreeItem item = event.getSelectedItem();
@@ -301,11 +306,11 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite implements S
 	// une entite
 	updateCurrentSelectionHtml(entityRawUri);
     }
-    
+
     protected void updateCurrentSelectionHtml(String entity) {
 	getCurrentSelectionHtml().setHTML(entity);
     }
-    
+
     public HTML getCurrentSelectionHtml() {
 	return currentSelectionHtml;
     }
@@ -337,7 +342,7 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite implements S
     public void setProviders(Tree providers) {
 	this.providers = providers;
     }
-    
+
     public SakaiEntities getExistingEntities(String siteId) {
 	return sakaiEntities;
     }
