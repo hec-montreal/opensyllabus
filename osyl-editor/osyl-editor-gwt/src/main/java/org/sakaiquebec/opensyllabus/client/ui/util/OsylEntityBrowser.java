@@ -248,7 +248,7 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite implements S
 	TreeItem selectedItem = null;
 	for(Entry<String, String> entry : allowedProviders.entrySet()){
 	    String providerKey = entry.getKey();
-	    providers = new TreeItem(entry.getValue().toUpperCase());
+	    providers = new TreeItem(getController().getUiMessage("SakaiEntityEditor.Entity."+entry.getValue()).toUpperCase());
 	    for (String key : entitiesKeys) {
 		if (key.contains(providerKey)) {
 		    TreeItem tItem = providers.addItem(entities.get(key));
