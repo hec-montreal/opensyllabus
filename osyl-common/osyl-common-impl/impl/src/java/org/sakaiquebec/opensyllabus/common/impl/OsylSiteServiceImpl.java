@@ -1644,17 +1644,29 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
     }
 
-    public void deleteSite(String siteId) throws Exception {
-	long start = System.currentTimeMillis();
-	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
-		+ "] deletes site [" + siteId + "]");
+	public void deleteSite(String siteId) {
+		long start = System.currentTimeMillis();
+		log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+				+ "] deletes site [" + siteId + "]");
 
-	Site site = getSite(siteId);
-	siteService.removeSite(site);
+		Site site;
+		try {
+			enableSecurityAdvisor();
+			site = getSite(siteId);
+			siteService.removeSite(site);
+			SecurityService.clearAdvisors();
+		} catch (IdUnusedException e) {
+			log.info("User " + sessionManager.getCurrentSession().getUserEid()
+					+ " can not delete the site " + siteId
+					+ " because this site does not exist.");
+		} catch (PermissionException e) {
+			log.info("User " + sessionManager.getCurrentSession().getUserEid()
+					+ " has no right to delete site " + siteId);
+		}
 
-	log.info("Site [" + siteId + "] deleted in "
-		+ (System.currentTimeMillis() - start) + " ms ");
-    }
+		log.info("Site [" + siteId + "] deleted in "
+				+ (System.currentTimeMillis() - start) + " ms ");
+	}
 
     public void setCoContentWithTemplate(COSerialized co, String webappDir)
 	    throws Exception {
