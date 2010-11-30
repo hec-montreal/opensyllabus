@@ -124,6 +124,8 @@ public class TransferPublishedContentJobImpl implements
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 	loginToSakai();
 
+	log.info("TransferPublishedContentJobImpl: starting");
+
 	allSites =
 		siteService.getSites(SiteService.SelectionType.ANY, "course",
 			null, null, SiteService.SortType.NONE, null);
@@ -135,7 +137,9 @@ public class TransferPublishedContentJobImpl implements
 	String contentWid = null;
 	String contentSid = null;
 
-	for (int i = 0; i < 5; i++) { // allSites.size()
+	log.info("TransferPublishedContentJobImpl: sites to correct:" + allSites.size());
+
+	for (int i = 0; i < allSites.size(); i++) {
 
 	    site = allSites.get(i);
 	    siteTitle = site.getTitle();
@@ -198,7 +202,9 @@ public class TransferPublishedContentJobImpl implements
 	String uri, newUri;
 	String siteId;
 
-	for (int j = 0; j < 5; j++) {
+	log.info("TransferPublishedContentJobImpl: Course Outlines to correct:" + cos.size());
+
+	for (int j = 0; j < cos.size(); j++) {
 	    COSerialized co = cos.get(j);
 	    if (co.getContent() != null) {
 		model = new COModeledServer(co);
@@ -309,7 +315,7 @@ public class TransferPublishedContentJobImpl implements
 			} catch (InconsistentException e) {
 			    e.printStackTrace();
 			}
-			System.out.println("le dossier " + newResourceId);
+			log.debug("le dossier " + newResourceId);
 		    } else {
 			newResourceId = newResourceId + collectionId;
 			try {
@@ -371,7 +377,7 @@ public class TransferPublishedContentJobImpl implements
 		} catch (IdUniquenessException e) {
 		    e.printStackTrace();
 		}
-		System.out.println("la ressource " + newResourceId);
+		log.debug("la ressource " + newResourceId);
 	    }
 	}
     }
