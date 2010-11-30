@@ -172,14 +172,19 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 
 		    public void onFailure(Throwable error) {
 			if (error instanceof FusionException) {
+			    String msg = null;
+			    if (((FusionException) error)
+				    .isHierarchyFusionException()) {
+				msg = uiMessages
+					.getMessage("publish.fusionException.hierarchyFusionException");
+			    } else {
+				msg =
+					uiMessages
+						.getMessage("publish.fusionException");
+			    }
 			    final OsylAlertDialog alertBox =
-				    new OsylAlertDialog(
-					    false,
-					    true,
-					    uiMessages
-						    .getMessage("Global.warning"),
-					    uiMessages
-						    .getMessage("publish.fusionException"));
+				    new OsylAlertDialog(false, true, uiMessages
+					    .getMessage("Global.warning"), msg);
 			    alertBox.show();
 			} else {
 			    final OsylAlertDialog alertBox =

@@ -1381,31 +1381,19 @@ public class COModeledServer {
 	}
     }
 
-    public void dissociate(COModeledServer parent) {
-	COContent contentParent = parent.getModeledContent();
+    public void dissociate() {
 	COContent contentChild = this.getModeledContent();
 
-	dissociateChild(contentChild, contentParent);
+	dissociateChild(contentChild);
 
     }
 
-    private void dissociateChild(COElementAbstract childElement,
-	    COElementAbstract parentElement) {
-
+    private void dissociateChild(COElementAbstract childElement) {
 	childElement.setIdParent(null);
-	if (parentElement.isCOUnitContent()) {
-	    // nothing to do
-	} else {
-	    for (int i = 0; i < parentElement.getChildrens().size(); i++) {
-		COElementAbstract coElementParent =
-			(COElementAbstract) parentElement.getChildrens().get(i);
-		if (childElement.getChildrens().size() > i) {
-		    COElementAbstract coElementChild =
-			    (COElementAbstract) childElement.getChildrens()
-				    .get(i);
-		    dissociateChild(coElementChild, coElementParent);
-		}
-	    }
+	for (int i = 0; i < childElement.getChildrens().size(); i++) {
+	    COElementAbstract coElementChild =
+		    (COElementAbstract) childElement.getChildrens().get(i);
+	    dissociateChild(coElementChild);
 	}
     }
 
@@ -1417,7 +1405,8 @@ public class COModeledServer {
 	coSerialized.setContent(sc);
     }
 
-    public void fusion(COModeledServer parent) throws FusionException, CompatibilityException {
+    public void fusion(COModeledServer parent) throws FusionException,
+	    CompatibilityException {
 	COContent contentChild = this.getModeledContent();
 	COContent contentfusionned = parent.getModeledContent();
 	if (isXmlAssociated()) {
@@ -1430,15 +1419,15 @@ public class COModeledServer {
 	    contentfusionned.setProperties(contentChild.getProperties());
 	    setModeledContent(contentfusionned);
 	} else {
-	    //xml are not associated we try to associate it
+	    // xml are not associated we try to associate it
 	    associate(parent);
 	    fusion(parent);
 	}
     }
-    
-    public boolean isXmlAssociated(){
-	String idParent=this.getModeledContent().getIdParent();
-	return (idParent!=null && !idParent.equals(""));
+
+    public boolean isXmlAssociated() {
+	String idParent = this.getModeledContent().getIdParent();
+	return (idParent != null && !idParent.equals(""));
     }
 
     @SuppressWarnings("unchecked")
@@ -1455,7 +1444,8 @@ public class COModeledServer {
     }
 
     @SuppressWarnings("unchecked")
-    public void fusion(COElementAbstract child, COElementAbstract fusionned) throws FusionException {
+    public void fusion(COElementAbstract child, COElementAbstract fusionned)
+	    throws FusionException {
 
 	try {
 	    if (child.isCOUnitContent()) {
@@ -1480,20 +1470,22 @@ public class COModeledServer {
 			    parentElement.setId(childElement.getId());
 			    fusion(childElement, parentElement);
 			} else {
-			    //child references something which not exist ANYMORE in parent
+			    // child references something which not exist
+			    // ANYMORE in parent
 			    if (!hasResProx(childElement)) {
-				//there is no proper infos, we deleted it
+				// there is no proper infos, we deleted it
 				child.removeChild(childElement);
 				i--;
 				j--;
 			    } else {
-				//remove ipParent and add content in the rigth place
+				// remove ipParent and add content in the rigth
+				// place
 				deleteParentUuids(childElement);
 				fusionned.getChildrens().add(j, childElement);
 			    }
 			}
 		    } else {
-			//child references something which not exist in parent
+			// child references something which not exist in parent
 			fusionned.getChildrens().add(j, childElement);
 		    }
 		    j++;

@@ -115,6 +115,8 @@ public class COSerialized implements java.io.Serializable {
     
     private boolean incompatibleWithHisParent=false;
     
+    private boolean incompatibleHierarchy=false;
+    
     /**
      * Default constructor
      */
@@ -444,5 +446,13 @@ public class COSerialized implements java.io.Serializable {
 
     public boolean isIncompatibleWithHisParent() {
 	return incompatibleWithHisParent;
+    }
+
+    public void setIncompatibleHierarchy(boolean incompatibleHierarchy) {
+	this.incompatibleHierarchy = incompatibleHierarchy;
+    }
+
+    public boolean isIncompatibleHierarchy() {
+	return incompatibleHierarchy;
     }
 }

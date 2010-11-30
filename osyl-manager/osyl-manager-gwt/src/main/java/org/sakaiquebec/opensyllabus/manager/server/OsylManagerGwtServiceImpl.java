@@ -130,7 +130,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	return osylManagerServices.getOsylManagerService().getParent(siteId);
     }
 
-    public void associate(String siteId, String parentId) throws Exception,CompatibilityException {
+    public void associate(String siteId, String parentId) throws Exception,CompatibilityException, FusionException {
 	osylManagerServices.getOsylManagerService().associate(siteId, parentId);
     }
 

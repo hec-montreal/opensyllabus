@@ -30,8 +30,14 @@ public class FusionException extends Exception implements Serializable {
 
     private static final long serialVersionUID = -8218897299880366249L;
 
+    private boolean hierarchyFusionException = false;
+
+    private String conflictedCoId1;
+
+    private String conflictedCoId2;
+
     public FusionException() {
-	super();
+	super("FusionException");
     }
 
     /**
@@ -44,6 +50,35 @@ public class FusionException extends Exception implements Serializable {
      */
     public FusionException(String message) {
 	super(message);
+    }
+
+    public void setCoIds(String co1, String co2) {
+	this.conflictedCoId1 = co1;
+	this.conflictedCoId2 = co2;
+    }
+
+    public String getConflictedCoId1() {
+	return conflictedCoId1;
+    }
+
+    public void setConflictedCoId1(String conflictedCoId1) {
+	this.conflictedCoId1 = conflictedCoId1;
+    }
+
+    public String getConflictedCoId2() {
+	return conflictedCoId2;
+    }
+
+    public void setConflictedCoId2(String conflictedCoId2) {
+	this.conflictedCoId2 = conflictedCoId2;
+    }
+
+    public void setHierarchyFusionException(boolean hierarchyFusionException) {
+	this.hierarchyFusionException = hierarchyFusionException;
+    }
+
+    public boolean isHierarchyFusionException() {
+	return hierarchyFusionException;
     }
 
 }

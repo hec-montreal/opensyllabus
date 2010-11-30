@@ -427,7 +427,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     }
 
     public COModeledServer getFusionnedPrePublishedHierarchy(String siteId)
-	    throws Exception {
+	    throws Exception, FusionException {
 	COModeledServer coModeled = null;
 	COSerialized co = null;
 	String parentId = null;
@@ -884,7 +884,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			+ OsylConfigService.CONFIG_DIR + File.separator
 			+ thisCo.getOsylConfig().getConfigRef(), thisCo);
 	getSiteInfo(thisCo, thisCo.getSiteId());
-	log.debug("getSerializedCourseOutlineForEditor" + elapsed(start) + siteId);
+	log.debug("getSerializedCourseOutlineForEditor" + elapsed(start)
+		+ siteId);
 	return thisCo;
     } // getSerializedCourseOutlineForEditor
 
@@ -964,8 +965,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    if (parentId != null) {
 
 		// fusion
-		COModeledServer coModelParent =
-			getFusionnedPrePublishedHierarchy(parentId);
+		COModeledServer coModelParent = null;
+
+		try {
+		    coModelParent = getFusionnedPrePublishedHierarchy(parentId);
+		} catch (FusionException e) {
+		    co.setIncompatibleHierarchy(true);
+		} catch (CompatibilityException e) {
+		    co.setIncompatibleHierarchy(true);
+		}
 
 		if (coModelParent != null) {
 
@@ -1018,18 +1026,17 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		COModeledServer coModelChild = new COModeledServer(co);
 		coModelChild.XML2Model();
 		if (!coModelChild.isXmlAssociated()) {
-		    COModeledServer coModelParent =
-			    getFusionnedPrePublishedHierarchy(parentId);
+		    try {
+			COModeledServer coModelParent =
+				getFusionnedPrePublishedHierarchy(parentId);
 
-		    if (coModelParent != null) {
-
-			try {
+			if (coModelParent != null) {
 			    coModelChild.associate(coModelParent);
 			    coModelChild.model2XML();
 			    co.setContent(coModelChild.getSerializedContent());
 			    reload = true;
-			} catch (CompatibilityException e) {
 			}
+		    } catch (Exception e) {
 		    }
 		}
 	    }
@@ -1140,7 +1147,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     }
 
     public void associate(String siteId, String parentId) throws Exception,
-	    CompatibilityException {
+	    CompatibilityException, FusionException {
 	COSerialized co;
 	try {
 	    co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
@@ -1181,17 +1188,12 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		if (parentId != null) {
 		    if (co.getContent() != null) {
 			COModeledServer coModelChild = new COModeledServer(co);
+			coModelChild.XML2Model();
+			coModelChild.dissociate();
+			coModelChild.model2XML();
+			co.setContent(coModelChild.getSerializedContent());
+			resourceDao.createOrUpdateCourseOutline(co);
 
-			COModeledServer coModelParent =
-				getFusionnedPrePublishedHierarchy(parentId);
-
-			if (coModelParent != null) {
-			    coModelChild.XML2Model();
-			    coModelChild.dissociate(coModelParent);
-			    coModelChild.model2XML();
-			    co.setContent(coModelChild.getSerializedContent());
-			    resourceDao.createOrUpdateCourseOutline(co);
-			}
 		    }
 		    // We remove the users
 		    osylHierarchyService.removeUsers(parentId, siteId);
@@ -1644,29 +1646,29 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
     }
 
-	public void deleteSite(String siteId) {
-		long start = System.currentTimeMillis();
-		log.info("user [" + sessionManager.getCurrentSession().getUserEid()
-				+ "] deletes site [" + siteId + "]");
+    public void deleteSite(String siteId) {
+	long start = System.currentTimeMillis();
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] deletes site [" + siteId + "]");
 
-		Site site;
-		try {
-			enableSecurityAdvisor();
-			site = getSite(siteId);
-			siteService.removeSite(site);
-			SecurityService.clearAdvisors();
-		} catch (IdUnusedException e) {
-			log.info("User " + sessionManager.getCurrentSession().getUserEid()
-					+ " can not delete the site " + siteId
-					+ " because this site does not exist.");
-		} catch (PermissionException e) {
-			log.info("User " + sessionManager.getCurrentSession().getUserEid()
-					+ " has no right to delete site " + siteId);
-		}
-
-		log.info("Site [" + siteId + "] deleted in "
-				+ (System.currentTimeMillis() - start) + " ms ");
+	Site site;
+	try {
+	    enableSecurityAdvisor();
+	    site = getSite(siteId);
+	    siteService.removeSite(site);
+	    SecurityService.clearAdvisors();
+	} catch (IdUnusedException e) {
+	    log.info("User " + sessionManager.getCurrentSession().getUserEid()
+		    + " can not delete the site " + siteId
+		    + " because this site does not exist.");
+	} catch (PermissionException e) {
+	    log.info("User " + sessionManager.getCurrentSession().getUserEid()
+		    + " has no right to delete site " + siteId);
 	}
+
+	log.info("Site [" + siteId + "] deleted in "
+		+ (System.currentTimeMillis() - start) + " ms ");
+    }
 
     public void setCoContentWithTemplate(COSerialized co, String webappDir)
 	    throws Exception {
@@ -1687,14 +1689,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	String parentId = null;
 	try {
 	    parentId = coRelationDao.getParentOfCourseOutline(co.getSiteId());
+	    if (parentId != null && !parentId.equals("")) {
+		COModeledServer coModelParent =
+			getFusionnedPrePublishedHierarchy(parentId);
+		if (coModelParent != null)
+		    coModeled.associate(coModelParent);
+	    }
 	} catch (Exception e) {
 	}
-	if (parentId != null && !parentId.equals("")) {
-	    COModeledServer coModelParent =
-		    getFusionnedPrePublishedHierarchy(parentId);
-	    if (coModelParent != null)
-		coModeled.associate(coModelParent);
-	}
+
 	coModeled.model2XML();
 	co.setContent(coModeled.getSerializedContent());
     }

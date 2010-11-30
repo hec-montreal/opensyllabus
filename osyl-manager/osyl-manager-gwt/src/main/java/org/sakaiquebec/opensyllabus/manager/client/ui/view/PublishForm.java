@@ -25,6 +25,8 @@ import java.util.List;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
+import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
+import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -64,8 +66,21 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 
 	public void onFailure(Throwable caught) {
 	    Image image = new Image(controller.getImageBundle().cross16());
+	    String msg = null;
+	    if(caught instanceof FusionException){
+		if(((FusionException)caught).isHierarchyFusionException()){
+		    msg=messages.publishAction_publish_error_HierarchyFusionException();
+		}else{
+		    msg=messages.publishAction_publish_error_FusionException();
+		}
+	    }
+	    else if(caught instanceof CompatibilityException){
+		msg=messages.publishAction_publish_error_CompatibilityException();
+	    }else{
+		msg = caught.getMessage();
+	    }
 	    image.setTitle(messages.publishAction_publish_error() + " : "
-		    + caught.getMessage());
+		    + msg);
 	    grid.setWidget(siteIndex, 1,image);
 	    responseReceive();
 	}

@@ -383,7 +383,18 @@ public class OsylController implements SavePushButtonEventHandler,
 						    uiMessages
 							    .getMessage("Global.warning"),
 						    uiMessages
-							    .getMessage("fusionException"));
+							    .getMessage("Exception.incompatibleWithHisParent"));
+				    alertBox.show();
+				}
+				if(co.isIncompatibleHierarchy()){
+				    final OsylAlertDialog alertBox =
+					    new OsylAlertDialog(
+						    false,
+						    true,
+						    uiMessages
+							    .getMessage("Global.warning"),
+						    uiMessages
+							    .getMessage("Exception.incompatibleHierarchy"));
 				    alertBox.show();
 				}
 				caller.getSerializedCourseOutlineCB(co);

@@ -10,6 +10,7 @@ import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
+import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
 /******************************************************************************
@@ -238,11 +239,11 @@ public interface OsylSiteService extends EntityProducer {
 
     public List<String> getChildren(String siteId) throws Exception;
 
-    public void associate(String siteId, String parentId) throws Exception, CompatibilityException;
+    public void associate(String siteId, String parentId) throws Exception, CompatibilityException, FusionException;
 
     public void dissociate(String siteId, String parentId) throws Exception;
 
-    public COModeledServer getFusionnedPrePublishedHierarchy(String siteId) throws Exception;
+    public COModeledServer getFusionnedPrePublishedHierarchy(String siteId) throws Exception, FusionException;
 
     public COSerialized updateCOCourseInformations(String siteId, String webappDir)
 	    throws Exception;

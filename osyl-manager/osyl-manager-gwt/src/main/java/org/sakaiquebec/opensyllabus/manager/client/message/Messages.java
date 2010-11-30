@@ -286,4 +286,10 @@ public interface Messages extends ConstantsWithLookup {
     String attachForm_attach_inProgress();
     
     String unattachForm_unattach_inProgress();
+
+    String publishAction_publish_error_HierarchyFusionException();
+
+    String publishAction_publish_error_FusionException();
+
+    String publishAction_publish_error_CompatibilityException();
 }

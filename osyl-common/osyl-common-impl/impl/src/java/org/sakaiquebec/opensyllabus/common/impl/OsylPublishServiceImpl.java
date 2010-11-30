@@ -38,6 +38,7 @@ import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.event.cover.NotificationService;
+import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.id.cover.IdManager;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.tool.cover.ToolManager;
@@ -103,7 +104,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public void setOsylContentService(OsylContentService osylContentService) {
 	this.osylContentService = osylContentService;
     }
-
 
     /**
      * Maps the visibility of the documents published, hidden or not
@@ -329,21 +329,25 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		// in xml cause there was no published xml before).
 		// We must associate to parent now
 		for (CORelation coRelation : childrens) {
-		    COSerialized coChild =
-			    resourceDao
-				    .getSerializedCourseOutlineBySiteId(coRelation
-					    .getChild());
-		    COModeledServer coModelParent =
-			    osylSiteService
-				    .getFusionnedPrePublishedHierarchy(siteId);
 		    try {
+			COSerialized coChild =
+				resourceDao
+					.getSerializedCourseOutlineBySiteId(coRelation
+						.getChild());
+			COModeledServer coModelParent =
+				osylSiteService
+					.getFusionnedPrePublishedHierarchy(siteId);
+
 			ModelHelper.createAssociationInXML(coChild,
 				coModelParent);
 			resourceDao.createOrUpdateCourseOutline(coChild);
 		    } catch (CompatibilityException e) {
-			//we do nothing, editor of children will be alert when editing
+			// we do nothing, editor of children will be alert when
+			// editing
+		    } catch (FusionException fe) {
+
 		    }
-		    
+
 		}
 
 	    }
@@ -481,7 +485,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	File f = createPrintVersion(cos, webappdir);
 	String siteId = cos.getSiteId();
 	if (f != null) {
-	   createPdfInResource(siteId, WORK_DIRECTORY, f);
+	    createPdfInResource(siteId, WORK_DIRECTORY, f);
 	}
     }
 
@@ -496,8 +500,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    + ".pdf");
 	    contentHostingService.removeResource(resourceOutputDir + siteId
 		    + ".pdf");
+	} catch (IdUnusedException idue) {
+	    // pdf does not exist, nothing to do
 	} catch (Exception e) {
-	    log.warn("Unable to delete "+siteId+".pdf",e);
+	    log.warn("Unable to delete " + siteId + ".pdf", e);
 	}
 	try {
 	    ContentResourceEdit newResource =
@@ -618,18 +624,31 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return d;
     }
 
-    private void publication(String siteId, String webappDir) throws Exception, FusionException {
+    private void publication(String siteId, String webappDir) throws Exception,
+	    FusionException {
 
 	COSerialized hierarchyFussionedCO =
-		osylSiteService.getSerializedCourseOutline(siteId,webappDir);//getSerializedCourseOultineBySiteId(siteid)
-	if(hierarchyFussionedCO.isIncompatibleWithHisParent())
+		osylSiteService.getSerializedCourseOutline(siteId, webappDir);// getSerializedCourseOultineBySiteId(siteid)
+	if (hierarchyFussionedCO.isIncompatibleWithHisParent()){
 	    throw new FusionException();
+	}if(hierarchyFussionedCO.isIncompatibleHierarchy()){
+	    FusionException e = new FusionException();
+	    e.setHierarchyFusionException(true);
+	    throw e;
+	}
+	    
 
 	COModeledServer coModeled = null;
 	try {
 	    coModeled =
 		    osylSiteService.getFusionnedPrePublishedHierarchy(siteId);
-	} catch (Exception e) {
+	} catch (FusionException fe) {
+	    throw new FusionException();
+	} catch(CompatibilityException ce){
+	    FusionException fe = new FusionException();
+	    fe.setHierarchyFusionException(true);
+	    throw fe;
+	}catch (Exception e) {
 	    // there is no published version of co for siteid
 	}
 	if (hierarchyFussionedCO != null && coModeled != null) {
@@ -711,9 +730,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	String id_work = (refString + WORK_DIRECTORY + "/");
 	String id_publish = null;
 	try {
-	    
+
 	    if (osylContentService.USE_ATTACHMENTS.equals("true")) {
-		id_work = (refString );
+		id_work = (refString);
 	    }
 	    ContentCollection workContent =
 		    contentHostingService.getCollection(id_work);
@@ -793,10 +812,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 			this_publish_directory =
 				contentHostingService.ATTACHMENTS_COLLECTION
-					+ site.getTitle()
-					+ "/"
-					+ osylToolName + "/";
-			
+					+ site.getTitle() + "/" + osylToolName
+					+ "/";
+
 		    } else {
 			this_publish_directory =
 				siteRef
@@ -827,7 +845,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			applyVisibility(newId);
 		    }
 		    // Permission application
-		     osylSecurityService.applyPermissions(newId, permission);
+		    osylSecurityService.applyPermissions(newId, permission);
 		}
 	    }
 	}

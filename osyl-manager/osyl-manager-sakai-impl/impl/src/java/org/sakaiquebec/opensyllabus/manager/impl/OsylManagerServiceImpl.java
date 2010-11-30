@@ -112,6 +112,7 @@ import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
+import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
@@ -1013,7 +1014,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     public void associate(String siteId, String parentId) throws Exception,
-	    CompatibilityException {
+	    CompatibilityException, FusionException {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] associates [" + siteId + "] to parent [" + parentId + "]");
 	osylSiteService.associate(siteId, parentId);
