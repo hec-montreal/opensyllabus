@@ -84,8 +84,10 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 		    spinner.setVisible(false);
 		    sigleCourseMap = new HashMap<String, COSite>();
 		    for (COSite course : result) {
-			sigleCourseMap.put(course.getSiteId(), course);
-			suggestionListBox.addItem(course.getSiteId());
+		    	if (!course.getSiteId().equalsIgnoreCase(selectFromSite.getSiteId())){
+		    		sigleCourseMap.put(course.getSiteId(), course);
+		    		suggestionListBox.addItem(course.getSiteId());
+		    	}
 		    }
 		    suggestionListBox.setSelectedIndex(0);
 		    okButton.setEnabled(true);
