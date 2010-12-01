@@ -846,46 +846,61 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    String webappDir) throws Exception {
 	long start = System.currentTimeMillis();
 	COSerialized thisCo = null;
-	if (!osylSecurityService.isAllowedToEdit(siteId)) {
-	    if (osylSecurityService.getCurrentUserRole() == null) {
-		thisCo =
-			resourceDao
-				.getPublishedSerializedCourseOutlineBySiteIdAndAccess(
-					siteId, SecurityInterface.ACCESS_PUBLIC);
-		return thisCo;
-	    } else if (osylSecurityService.getCurrentUserRole().equals(
-		    OsylSecurityService.SECURITY_ROLE_COURSE_GENERAL_ASSISTANT)
-		    || osylSecurityService
-			    .getCurrentUserRole()
-			    .equals(
-				    OsylSecurityService.SECURITY_ROLE_COURSE_TEACHING_ASSISTANT)
-		    || osylSecurityService.getCurrentUserRole().equals(
-			    OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)
-		    || osylSecurityService.getCurrentUserRole().equals(
-			    OsylSecurityService.SECURITY_ROLE_COURSE_HELPDESK)
-		    || osylSecurityService.getCurrentUserRole().equals(
-			    OsylSecurityService.SECURITY_ROLE_PROJECT_ACCESS)) {
-		thisCo =
-			resourceDao
-				.getPublishedSerializedCourseOutlineBySiteIdAndAccess(
-					siteId,
-					SecurityInterface.ACCESS_ATTENDEE);
+	try {
+	    if (!osylSecurityService.isAllowedToEdit(siteId)) {
+		if (osylSecurityService.getCurrentUserRole() == null) {
+		    thisCo =
+			    resourceDao
+				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+					    siteId,
+					    SecurityInterface.ACCESS_PUBLIC);
+		    return thisCo;
+		} else if (osylSecurityService
+			.getCurrentUserRole()
+			.equals(
+				OsylSecurityService.SECURITY_ROLE_COURSE_GENERAL_ASSISTANT)
+			|| osylSecurityService
+				.getCurrentUserRole()
+				.equals(
+					OsylSecurityService.SECURITY_ROLE_COURSE_TEACHING_ASSISTANT)
+			|| osylSecurityService
+				.getCurrentUserRole()
+				.equals(
+					OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)
+			|| osylSecurityService
+				.getCurrentUserRole()
+				.equals(
+					OsylSecurityService.SECURITY_ROLE_COURSE_HELPDESK)
+			|| osylSecurityService
+				.getCurrentUserRole()
+				.equals(
+					OsylSecurityService.SECURITY_ROLE_PROJECT_ACCESS)) {
+		    thisCo =
+			    resourceDao
+				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+					    siteId,
+					    SecurityInterface.ACCESS_ATTENDEE);
+		} else {
+		    thisCo =
+			    resourceDao
+				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+					    siteId,
+					    SecurityInterface.ACCESS_PUBLIC);
+		}
 	    } else {
-		thisCo =
-			resourceDao
-				.getPublishedSerializedCourseOutlineBySiteIdAndAccess(
-					siteId, SecurityInterface.ACCESS_PUBLIC);
+		thisCo = getSerializedCourseOutlineAndLockIt(siteId, webappDir);
 	    }
-	} else {
-	    thisCo = getSerializedCourseOutlineAndLockIt(siteId, webappDir);
+	    thisCo =
+		    osylConfigService.fillCo(webappDir
+			    + OsylConfigService.CONFIG_DIR + File.separator
+			    + thisCo.getOsylConfig().getConfigRef(), thisCo);
+	    getSiteInfo(thisCo, thisCo.getSiteId());
+	} catch (Exception e) {
+	    log.error("Unable to retrieve course outline by siteId", e);
+	} finally {
+	    log.debug("getSerializedCourseOutlineForEditor  " + siteId
+		    + elapsed(start));
 	}
-	thisCo =
-		osylConfigService.fillCo(webappDir
-			+ OsylConfigService.CONFIG_DIR + File.separator
-			+ thisCo.getOsylConfig().getConfigRef(), thisCo);
-	getSiteInfo(thisCo, thisCo.getSiteId());
-	log.debug("getSerializedCourseOutlineForEditor" + elapsed(start)
-		+ siteId);
 	return thisCo;
     } // getSerializedCourseOutlineForEditor
 
