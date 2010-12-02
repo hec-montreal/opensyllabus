@@ -292,4 +292,10 @@ public interface Messages extends ConstantsWithLookup {
     String publishAction_publish_error_FusionException();
 
     String publishAction_publish_error_CompatibilityException();
+
+    String attachAction_attach_error_HierarchyFusionException();
+
+    String attachAction_attach_error_FusionException();
+
+    String attachAction_attach_error_CompatibilityException();
 }
