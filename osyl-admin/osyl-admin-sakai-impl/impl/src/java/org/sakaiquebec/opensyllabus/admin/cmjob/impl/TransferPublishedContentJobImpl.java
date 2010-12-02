@@ -124,6 +124,7 @@ public class TransferPublishedContentJobImpl implements
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 	loginToSakai();
 
+	long start = System.currentTimeMillis();
 	log.info("TransferPublishedContentJobImpl: starting");
 
 	allSites =
@@ -249,6 +250,7 @@ public class TransferPublishedContentJobImpl implements
 	    }
 	}
 
+	log.info("TransferPublishedContentJobImpl: completed in " + (System.currentTimeMillis() - start) + " ms");
 	logoutFromSakai();
 
     }
