@@ -840,12 +840,12 @@ public class COModeledServer {
 									    COPropertiesType.IDENTIFIER_TYPE_URI)
 								    .trim(),
 							    OsylContentService.WORK_DIRECTORY_PREFIX
-								    + coSerialized
+								    + "/" + coSerialized
 									    .getSiteId(),
 							    OsylContentService.PUBLISH_DIRECTORY_PREFIX
-								    + coSerialized
+								    + "/" + coSerialized
 									    .getSiteId()
-								    + OsylContentService.PUBLISH_DIRECTORY_SUFFIX));
+								    + "/" + OsylContentService.PUBLISH_DIRECTORY_SUFFIX));
 
 			} else {
 			    copProperties
@@ -1555,6 +1555,57 @@ public class COModeledServer {
 	}
     }
 
+    /**
+     * Used for the osylTransferJob
+     * @param element
+     * @param filenameChangesMap
+     */
+    public void changeResourceRef(COElementAbstract element,
+	    Map<String, String> filenameChangesMap) {
+	try {
+	    element.setId(UUID.uuid());
+	    element.setIdParent(null);
+	    if (element.isCOContentResourceProxy()) {
+		((COContentResourceProxy) element).getResource().setId(
+			UUID.uuid());
+		if (!((COContentResourceProxy) element).getResource().getType()
+			.equals(COContentResourceType.URL)) {
+		    String uri =
+			    ((COContentResourceProxy) element)
+				    .getResource()
+				    .getProperty(
+					    COPropertiesType.IDENTIFIER,
+					    COPropertiesType.IDENTIFIER_TYPE_URI);
+		    if (uri != null && !uri.equals("")) {
+			if (filenameChangesMap != null) {
+			    String newDirectoryname =
+				    filenameChangesMap.get(uri);
+			    if (newDirectoryname != null)
+				uri =
+					changeDocumentsUrls(uri, uri,
+						newDirectoryname);
+			}
+			((COContentResourceProxy) element).getResource()
+				.addProperty(COPropertiesType.IDENTIFIER,
+					COPropertiesType.IDENTIFIER_TYPE_URI,
+					uri);
+		    }
+		}
+
+	    } else {
+		for (int i = 0; i < element.getChildrens().size(); i++) {
+		    COElementAbstract childElement =
+			    (COElementAbstract) element.getChildrens().get(i);
+		    changeResourceRef(childElement, filenameChangesMap);
+		}
+	    }
+
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+
+    }    
+    
     private void changeDocumentsUrlsToFitNewSiteName(
 	    COContentResourceProxy cocrp, Map<String, String> filenameChangesMap) {
 	// reset id of the resource

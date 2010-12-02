@@ -107,7 +107,7 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
 	    String docFolder = controller.getDocFolderName();
 
 	    return serverId + "/access/content/group/" + siteId + "/"
-		    + docFolder + "/" + uri;
+		    + (docFolder.equals("")? "": docFolder + "/") + uri;
 	}
     } // getLinkURI
 

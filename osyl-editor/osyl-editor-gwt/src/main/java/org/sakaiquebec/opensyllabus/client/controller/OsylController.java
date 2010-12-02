@@ -1362,10 +1362,9 @@ public class OsylController implements SavePushButtonEventHandler,
      * @return the documents folder name
      */
     public String getDocFolderName() {
-	if ("true".equals(USE_ATTACHMENTS)) {
-	    return "";
-	}
 	String folder = WORK_FOLDER_NAME;
+	if (USE_ATTACHMENTS.equals("true"))
+	    folder ="";
 	if ((null != getCOSerialized()) && getCOSerialized().isPublished()) {
 	    folder = PUBLISH_FOLDER_NAME;
 	}
@@ -1375,6 +1374,8 @@ public class OsylController implements SavePushButtonEventHandler,
     public String getDocRelativePath(String path) {
 	String relativePath = path;
 	String pattern = getSiteId() + "/" + getDocFolderName() + "/";
+	if (USE_ATTACHMENTS.equals("true"))
+	    pattern = getSiteId() + "/" ;
 	int startIndex = relativePath.indexOf(pattern);
 	relativePath = relativePath.substring(startIndex + pattern.length());
 	return relativePath;
