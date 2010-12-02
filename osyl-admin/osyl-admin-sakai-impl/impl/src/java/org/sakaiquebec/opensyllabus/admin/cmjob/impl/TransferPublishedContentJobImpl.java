@@ -222,20 +222,20 @@ public class TransferPublishedContentJobImpl implements
 					contentSid + PUBLISH_DIRECTORY,
 					ATTACHMENT_DIRECTORY_PREFIX + siteId
 						+ ATTACHMENT_DIRECTORY_SUFFIX);
-			newResourcesUri.put(uri.substring(uri.lastIndexOf("/") + 1), newUri);
+			newResourcesUri.put(uri, newUri);
 		    }
 
 		    if (uri.startsWith(contentSid + WORK_DIRECTORY)) {
 			newUri =
 				uri.replaceFirst(contentSid + WORK_DIRECTORY,
 					contentSid);
-			newResourcesUri.put(uri.substring(uri.lastIndexOf("/") + 1), newUri);
+			newResourcesUri.put(uri, newUri);
 
 		    }
 
 		}
 
-		model.resetXML(newResourcesUri);
+		model.changeResourceRef(model.getModeledContent(), newResourcesUri);
 		model.model2XML();
 		co.setContent(model.getSerializedContent());
 		try {
