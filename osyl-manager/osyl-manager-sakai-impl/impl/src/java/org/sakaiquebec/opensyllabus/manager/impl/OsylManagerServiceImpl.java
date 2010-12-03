@@ -133,6 +133,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     private final static String PROP_SITE_TERM = "term";
 
     private final static String PROP_SITE_TERM_EID = "term_eid";
+    
+    private final static String PROP_SITE_TITLE = "title";
 
     /** the web content tool id **/
     private final static String WEB_CONTENT_TOOL_ID = "sakai.iframe";
@@ -1051,6 +1053,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    rp.addProperty(PROP_SITE_TERM, term.getTitle());
 	    rp.addProperty(PROP_SITE_TERM_EID, term.getEid());
+	    rp.addProperty(PROP_SITE_TITLE, courseOff.getTitle());
 
 	    site.setProviderGroupId(courseSectionId);
 	    siteService.save(site);
@@ -1076,6 +1079,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    rp.addProperty(PROP_SITE_TERM, term.getTitle());
 	    rp.addProperty(PROP_SITE_TERM_EID, term.getEid());
+	    rp.addProperty(PROP_SITE_TITLE, courseOff.getTitle());
 
 	    site.setProviderGroupId(courseSectionId);
 	    siteService.save(site);
@@ -1093,6 +1097,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    ResourcePropertiesEdit rp = site.getPropertiesEdit();
 	    rp.addProperty(PROP_SITE_TERM, null);
 	    rp.addProperty(PROP_SITE_TERM_EID, null);
+	    rp.addProperty(PROP_SITE_TITLE, null);
+
 	    site.setProviderGroupId(null);
 	    siteService.save(site);
 	}
@@ -1108,6 +1114,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    ResourcePropertiesEdit rp = site.getPropertiesEdit();
 	    rp.addProperty(PROP_SITE_TERM, null);
 	    rp.addProperty(PROP_SITE_TERM_EID, null);
+	    rp.addProperty(PROP_SITE_TITLE, null);
+
 	    site.setProviderGroupId(null);
 	    siteService.save(site);
 	    osylSiteService.updateCOCourseInformations(siteId, webappDir);

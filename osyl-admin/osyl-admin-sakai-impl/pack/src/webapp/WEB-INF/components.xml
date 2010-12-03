@@ -314,6 +314,13 @@
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />	    
 	</bean>
 	
+	<bean id="addcmTitlePropertyjob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.AddCMTitlePropertyJobImpl" >
+		<property name="siteService"
+			ref="org.sakaiproject.site.api.SiteService" />			
+		<property name="cmService"
+			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+	</bean>
+
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osyltransferjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
@@ -333,6 +340,24 @@
 		
 	</bean>	
 
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.addcmTitlePropertyjob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		
+	
+		<property name="beanId">
+			<value>addcmTitlePropertyjob</value>
+		</property>
+		
+		<property name="jobName">
+			<value>Update existing sites to add Section title if related to the CM</value>
+		</property>
+		
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+		
+	</bean>	
 
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylcmjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
