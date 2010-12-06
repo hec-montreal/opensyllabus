@@ -6,11 +6,13 @@ import java.io.FileInputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.Vector;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -59,6 +61,7 @@ import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
+import org.sakaiquebec.opensyllabus.shared.exception.PdfGenerationException;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
@@ -73,6 +76,8 @@ import org.w3c.tidy.Tidy;
 public class OsylPublishServiceImpl implements OsylPublishService {
 
     private static Log log = LogFactory.getLog(OsylPublishServiceImpl.class);
+    
+    private Vector<String> publishedSiteIds;
 
     /**
      * The security service to be injected by Spring
@@ -276,10 +281,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * 
      * @param String webapp dir (absolute pathname !?)
      */
-    public Map<String, String> publish(String webappDir, String siteId)
+    public Vector<Map<String, String>> publish(String webappDir, String siteId)
 	    throws Exception, FusionException {
 
 	long start = System.currentTimeMillis();
+	publishedSiteIds = new Vector<String>();
+	Vector<Map<String, String>> publicationResults = new Vector<Map<String, String>>();
 
 	SecurityService.pushAdvisor(new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
@@ -394,7 +401,24 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		+ (co.getTitle() == null ? siteId : co.getTitle()) + "] in "
 		+ (System.currentTimeMillis() - start) + " ms");
 
-	return publicationProperties;
+	publicationResults.add(publicationProperties);
+	
+	publicationResults.add(generatePublishedSitesPdf(webappDir));
+	return publicationResults;
+    }
+    
+    private Map<String, String> generatePublishedSitesPdf(String webappdir){
+	Map<String, String> pdfGenerationResults = new HashMap<String, String>();
+	
+	for(int i=0; i<publishedSiteIds.size();i++){
+	    try{
+		createPublishPrintVersion(publishedSiteIds.get(i), webappdir);
+		pdfGenerationResults.put(publishedSiteIds.get(i), "publish.pdfGeneration.ok");
+	    } catch (PdfGenerationException e){
+		pdfGenerationResults.put(publishedSiteIds.get(i), "publish.pdfGeneration.nok");
+	    }
+	}
+	return pdfGenerationResults;
     }
 
     private COSerialized updateCourseInformations(COSerialized co,
@@ -469,13 +493,17 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     }
 
     private void createPublishPrintVersion(String siteId, String webappdir)
-	    throws Exception {
+	    throws PdfGenerationException {
+	try{
 	COSerialized coSerializedAttendee =
 		getSerializedPublishedCourseOutlineForAccessType(siteId,
 			SecurityInterface.ACCESS_ATTENDEE, webappdir);
 	File f = createPrintVersion(coSerializedAttendee, webappdir);
 	if (f != null) {
 	    createPdfInResource(siteId, PUBLISH_DIRECTORY, f);
+	}
+	} catch (Exception e){
+	    throw new PdfGenerationException(e);
 	}
     }
 
@@ -522,6 +550,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     private File createPrintVersion(COSerialized coSerialized, String webappdir)
 	    throws Exception {
+	try{
 	String xml = coSerialized.getContent();
 	Node d = XmlHelper.parseXml(xml);
 	File f = null;
@@ -546,9 +575,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			+ OsylConfigService.PRINT_DIRECTORY + File.separator);
 
 	return f;
+	} catch (Exception e){
+	    throw e;
+	}
     }
 
-    public static Node convertHtmlToXhtml(Node d) {
+    public static Node convertHtmlToXhtml(Node d) throws Exception{
 	try {
 	    XPathFactory factory = XPathFactory.newInstance();
 	    XPath xpath = factory.newXPath();
@@ -582,10 +614,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		String s = writer.toString();
 		node.setTextContent(s);
 	    }
+	    return d;
 	} catch (XPathExpressionException e) {
 	    e.printStackTrace();
+	    throw e;
 	}
-	return d;
     }
 
     public static Node replaceSemanticTagsWithI18NMessage(Node d,
@@ -665,13 +698,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_ATTENDEE,
 		    webappDir);
 
-	    // create print version
-	    try {
-		createPublishPrintVersion(siteId, webappDir);
-	    } catch (Exception e) {
-		e.printStackTrace();
-	    }
-
+	    //If the publication worked, the site id is logged to generate the
+	    //pdf later.
+	    
+	    publishedSiteIds.add(siteId);
 	    publishChildren(siteId, webappDir);
 	}
     }

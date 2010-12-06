@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.client.ui.util;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Vector;
 
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
@@ -30,11 +31,13 @@ import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewControllable;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
+import org.sakaiquebec.opensyllabus.shared.exception.PdfGenerationException;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -146,7 +149,7 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 				    .getUiMessage("publish.error")
 				    + " : " + error.toString());
 		    alertBox.show();
-		    osylPublishedListView.verifiyPublishState(false);
+		    osylPublishedListView.verifiyPublishState(false, null);
 		}
 	    };
 	    osylController.saveCourseOutline(callback);
@@ -155,11 +158,11 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
     }
 
     private void publish() {
-	AsyncCallback<Map<String, String>> callback =
-		new AsyncCallback<Map<String, String>>() {
-		    public void onSuccess(Map<String, String> serverResponse) {
+	AsyncCallback<Vector<Map<String, String>>> callback =
+		new AsyncCallback<Vector<Map<String, String>>>() {
+		    public void onSuccess(Vector<Map<String, String>> serverResponse) {
 			if (serverResponse != null) {
-			    for (Entry<String, String> entry : serverResponse
+			    for (Entry<String, String> entry : serverResponse.get(0)
 				    .entrySet()) {
 				String key = entry.getKey();
 				String value = entry.getValue();
@@ -167,7 +170,7 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 					.addProperty(key, value);
 			    }
 			}
-			osylPublishedListView.verifiyPublishState(true);
+			osylPublishedListView.verifiyPublishState(true, serverResponse.get(1));
 		    }
 
 		    public void onFailure(Throwable error) {
@@ -186,6 +189,16 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 				    new OsylAlertDialog(false, true, uiMessages
 					    .getMessage("Global.warning"), msg);
 			    alertBox.show();
+			}else if (error instanceof PdfGenerationException){
+			    final OsylAlertDialog alertBox =
+				    new OsylAlertDialog(
+					    false,
+					    true,
+					    uiMessages
+						    .getMessage("Global.warning"),
+					    uiMessages
+						    .getMessage("publish.pdfGenerationException"));
+			    alertBox.show();
 			} else {
 			    final OsylAlertDialog alertBox =
 				    new OsylAlertDialog(false, true,
@@ -194,7 +207,7 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 						    + " : " + error.toString());
 			    alertBox.show();
 			}
-			osylPublishedListView.verifiyPublishState(false);
+			osylPublishedListView.verifiyPublishState(false, null);
 		    }
 		};
 	osylController.publishCourseOutline(callback);

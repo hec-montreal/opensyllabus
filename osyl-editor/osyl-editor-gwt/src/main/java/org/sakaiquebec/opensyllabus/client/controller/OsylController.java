@@ -22,6 +22,7 @@ package org.sakaiquebec.opensyllabus.client.controller;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Vector;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler;
@@ -668,7 +669,7 @@ public class OsylController implements SavePushButtonEventHandler,
      * 
      * @param String ID of the requested CourseOutlineXML
      */
-    public void publishCourseOutline(AsyncCallback<Map<String, String>> callback) {
+    public void publishCourseOutline(AsyncCallback<Vector<Map<String, String>>> callback) {
 	OsylRemoteServiceLocator.getEditorRemoteService().publishCourseOutline(
 		callback);
     }

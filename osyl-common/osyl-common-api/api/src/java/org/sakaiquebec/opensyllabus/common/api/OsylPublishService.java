@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.common.api;
 
 import java.util.Map;
+import java.util.Vector;
 
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -83,7 +84,7 @@ public interface OsylPublishService {
     /**
      * Publish the actual course plan in the web application directory
      */
-    public Map<String,String> publish(String webappDir, String siteId) throws Exception, FusionException;
+    public Vector<Map<String,String>> publish(String webappDir, String siteId) throws Exception, FusionException;
 
     /**
      * Make an xsl transformation of the specified xml for the specified group

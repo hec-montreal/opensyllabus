@@ -53,7 +53,7 @@ import org.w3c.dom.Node;
 public class FOPHelper {
 
     public static File convertXml2Pdf(String xml, String xslt, String webappdir)
-	    throws IOException, TransformerException {
+	    throws IOException, TransformerException, Exception {
 	File pdffile = File.createTempFile("osyl-fop-print", ".pdf");
 	try {
 	    // configure fopFactory as desired
@@ -112,12 +112,13 @@ public class FOPHelper {
 	    }
 	} catch (Exception e) {
 	    e.printStackTrace(System.err);
+	    throw e;
 	}
 	return pdffile;
     }
 
     public static File convertXml2Pdf(Node d, String xslt, String webappdir)
-	    throws IOException, TransformerException {
+	    throws IOException, TransformerException, Exception {
 
 	// Setup input for XSLT transformation
 	String s = xmlToString(d);

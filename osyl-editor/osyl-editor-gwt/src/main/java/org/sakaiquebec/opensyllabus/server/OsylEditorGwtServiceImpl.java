@@ -2,6 +2,7 @@ package org.sakaiquebec.opensyllabus.server;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Vector;
 
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtService;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
@@ -72,7 +73,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     public void ping() {
     }
 
-    public Map<String, String> publishCourseOutline() throws Exception,FusionException {
+    public Vector<Map<String, String>> publishCourseOutline() throws Exception,FusionException {
 	return null;
     }
 

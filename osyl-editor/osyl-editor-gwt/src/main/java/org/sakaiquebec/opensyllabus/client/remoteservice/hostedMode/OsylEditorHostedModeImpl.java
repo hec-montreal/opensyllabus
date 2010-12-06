@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylHostedModeInit;
 import org.sakaiquebec.opensyllabus.client.remoteservice.hostedMode.util.OsylHostedModeTransformUtil;
@@ -295,7 +296,7 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	callback.onSuccess(null);
     }
 
-    public void publishCourseOutline(AsyncCallback<Map<String,String>> callback) {
+    public void publishCourseOutline(AsyncCallback<Vector<Map<String,String>>> callback) {
 	callback.onSuccess(null);
     }
 

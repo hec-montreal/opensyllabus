@@ -14,6 +14,8 @@
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewControllable;
@@ -26,6 +28,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -63,16 +66,40 @@ public class OsylPublishedListView extends Composite implements
     private void initView() {
 	label= new Label();
 	label.setStylePrimaryName("Osyl-PublishView-Label");
-	verifiyPublishState(false);
+	verifiyPublishState(false, null);
 	initWidget(mainPanel);
     }
 
-    private void refreshView(boolean afterPublication) {
+    private void refreshView(boolean afterPublication, Map<String, String>
+    pdfGenerationResults) {
 	mainPanel.clear();
+
 	if (hasBeenPublished) {
 	    displayPublishedLinks(afterPublication);
 	} else {
 	    displayNoPublishedVersionMsg();
+	}
+	
+	if(pdfGenerationResults!=null){
+	    displayPdfGenerationResults(pdfGenerationResults);
+	}
+    }
+    
+    private void displayPdfGenerationResults(
+	    Map<String, String> pdfGenerationResults) {
+
+	HorizontalPanel dummyPanel = new HorizontalPanel();
+	mainPanel.add(dummyPanel);
+	Label pdfLabel =
+		new Label(uiMessages.getMessage("publish.pdfGenerationResults"));
+	pdfLabel.setStylePrimaryName("Osyl-PublishView-Label-important");
+	mainPanel.add(pdfLabel);
+	
+	for (Entry<String, String> entry : pdfGenerationResults.entrySet()) {
+	    HorizontalPanel hPanel = new HorizontalPanel();
+	    hPanel.add(new HTML(entry.getKey() + " : " +
+		    uiMessages.getMessage(entry.getValue())));
+	    mainPanel.add(hPanel);
 	}
     }
 
@@ -136,11 +163,12 @@ public class OsylPublishedListView extends Composite implements
     /**
      * 
      */
-    public void verifiyPublishState(final boolean newPublication) {
+    public void verifiyPublishState(final boolean newPublication,
+	    final Map<String, String> pdfGenerationResults) {
 	AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
 	    public void onSuccess(Boolean serverResponse) {
 		hasBeenPublished = serverResponse.booleanValue();
-		refreshView(newPublication);
+		refreshView(newPublication, pdfGenerationResults);
 	    }
 
 	    public void onFailure(Throwable error) {

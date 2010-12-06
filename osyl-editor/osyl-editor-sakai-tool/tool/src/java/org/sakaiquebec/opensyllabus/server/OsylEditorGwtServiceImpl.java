@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.Vector;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -41,6 +41,7 @@ import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtServic
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
+import org.sakaiquebec.opensyllabus.shared.exception.PdfGenerationException;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
@@ -172,14 +173,14 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * 
      * @param String id
      */
-    public Map<String, String> publishCourseOutline() throws Exception,
-	    FusionException {
+    public Vector<Map<String, String>> publishCourseOutline() throws Exception,
+	    FusionException, PdfGenerationException {
 	String webappDir = getServletContext().getRealPath("/");
-	Map<String, String> publicationProperties =
-		new TreeMap<String, String>();
+	Vector<Map<String, String>> publicationResults =
+		new Vector<Map<String, String>>();
 	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
 	try {
-	    publicationProperties =
+	    publicationResults =
 		    osylServices.getOsylPublishService().publish(webappDir,
 			    siteId);
 	    // We invalidate the cached published CO for this siteId
@@ -192,7 +193,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	} catch (Exception e) {
 	    throw e;
 	}
-	return publicationProperties;
+	return publicationResults;
     }
 
     /**

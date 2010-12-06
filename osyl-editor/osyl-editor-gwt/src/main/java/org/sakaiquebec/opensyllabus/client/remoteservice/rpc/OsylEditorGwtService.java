@@ -22,6 +22,7 @@ package org.sakaiquebec.opensyllabus.client.remoteservice.rpc;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Vector;
 
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
@@ -74,7 +75,7 @@ public interface OsylEditorGwtService extends RemoteService {
      * 
      * @param String id
      */
-    public Map<String, String> publishCourseOutline() throws Exception, FusionException;
+    public Vector<Map<String, String>> publishCourseOutline() throws Exception, FusionException;
 
     /**
      * Returns the Published CourseOutline for the access type specified in
