@@ -21,18 +21,11 @@
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOUnitAssessmentLabelView;
-import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
-import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
-import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
-import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
-import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
-import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -79,7 +72,6 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
     public boolean prepareForSave() {
 	boolean ok = true;
 	String messages = "";
-	boolean errordate = false;
 
 	// required fields validations
 	if (getText().trim().equals("")) {
@@ -121,7 +113,6 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 				dateTimeFormat.getPattern())
 				+ "\n";
 		ok = false;
-		errordate = true;
 	    }
 	}
 
@@ -147,14 +138,6 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 			    + "\n";
 	    ok = false;
 	}
-	// date validation
-	if (!errordate && !endDateString.trim().equals("")) {
-	    String verifyAssignement = verifyAssignementTool();
-	    if (!verifyAssignement.equals("")) {
-		ok = false;
-		messages += verifyAssignement;
-	    }
-	}
 	if (!ok) {
 	    OsylAlertDialog osylAlertDialog =
 		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
@@ -163,61 +146,6 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	    osylAlertDialog.show();
 	}
 	return ok;
-    }
-
-    private String verifyAssignementTool() {
-	return verifyAssignementTool((COElementAbstract) getModel());
-    }
-
-    @SuppressWarnings("unchecked")
-    private String verifyAssignementTool(COElementAbstract model) {
-	String message = "";
-	if (model.isCOContentResourceProxy()) {
-	    COContentResourceProxy contentResourceProxy =
-		    (COContentResourceProxy) model;
-	    if (contentResourceProxy.getResource().getType().equals(
-		    COContentResourceType.ASSIGNMENT)) {
-		COContentResource resource =
-			(COContentResource) contentResourceProxy.getResource();
-		String date_start =
-			resource.getProperty(COPropertiesType.DATE_START);
-		String date_end =
-			resource.getProperty(COPropertiesType.DATE_END);
-		if (date_start != null && date_end != null) {
-		    Date assignementStartDate =
-			    OsylDateUtils.getDateFromXMLDate(date_start);
-		    Date assignementEndDate =
-			    OsylDateUtils.getDateFromXMLDate(date_end);
-		    if (dateDateBox.getValue().before(assignementStartDate)) {
-			message +=
-				getView()
-					.getUiMessages()
-					.getMessage(
-						"Assignement.field.date.order.dateAfterDate",
-						getUiMessage("Assessment.date"),
-						getUiMessage("Assignement.date_start.details"))
-					+ "\n";
-		    }
-		    if (assignementEndDate.before(dateDateBox.getValue())) {
-			message +=
-				getView()
-					.getUiMessages()
-					.getMessage(
-						"Assignement.field.date.order.dateAfterDate",
-						getUiMessage("Assignement.date_end.details"),
-						getUiMessage("Assessment.date"))
-					+ "\n";
-		    }
-
-		}
-	    }
-	} else {
-	    for (Iterator<COElementAbstract> childsIterator =
-		    model.getChildrens().iterator(); childsIterator.hasNext();) {
-		message += verifyAssignementTool(childsIterator.next());
-	    }
-	}
-	return message;
     }
 
     public void enterView() {

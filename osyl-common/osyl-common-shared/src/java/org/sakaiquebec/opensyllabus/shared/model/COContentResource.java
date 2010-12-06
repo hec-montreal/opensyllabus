@@ -100,14 +100,10 @@ public class COContentResource implements COModelInterface,
 		    "http://www.google.ca/search?q=opensyllabus");
 	} else if (type.equalsIgnoreCase(COContentResourceType.ENTITY)) {
 	    resModel.addProperty(COPropertiesType.IDENTIFIER,
-		    COPropertiesType.IDENTIFIER_TYPE_URI,
-		    "http://www.hec.ca");
+		    COPropertiesType.IDENTIFIER_TYPE_URI, "http://www.hec.ca");
 	} else if (type.equalsIgnoreCase(COContentResourceType.DOCUMENT)) {
 	    resModel.addProperty(COPropertiesType.IDENTIFIER,
 		    COPropertiesType.IDENTIFIER_TYPE_URI, "");
-	} else if (type.equalsIgnoreCase(COContentResourceType.ASSIGNMENT)) {
-	    resModel.addProperty(COPropertiesType.TEXT, osylConfigMessages
-		    .getMessage("assigndescr"));
 	} else if (type.equalsIgnoreCase(COContentResourceType.BIBLIO_RESOURCE)) {
 	    resModel.addProperty(COPropertiesType.RESOURCE_TYPE, "unknown");
 	} else if (type.equalsIgnoreCase(COContentResourceType.NEWS)) {
@@ -164,9 +160,9 @@ public class COContentResource implements COModelInterface,
 	getProperties().removeProperty(key);
 	notifyEventHandlers();
     }
-    
-    public void removeProperty(String key,String type) {
-	getProperties().removeProperty(key,type);
+
+    public void removeProperty(String key, String type) {
+	getProperties().removeProperty(key, type);
 	notifyEventHandlers();
     }
 
@@ -177,7 +173,7 @@ public class COContentResource implements COModelInterface,
     public String getProperty(String key, String type) {
 	return getProperties().getProperty(key, type);
     }
-    
+
     public COProperty getCOProperty(String key, String type) {
 	return getProperties().getCOProperty(key, type);
     }
@@ -187,8 +183,8 @@ public class COContentResource implements COModelInterface,
 	    updateCOContentResourceEventHandlers =
 		    new HashSet<UpdateCOContentResourceEventHandler>();
 	}
-	if(!updateCOContentResourceEventHandlers.contains(handler))
-		updateCOContentResourceEventHandlers.add(handler);
+	if (!updateCOContentResourceEventHandlers.contains(handler))
+	    updateCOContentResourceEventHandlers.add(handler);
     }
 
     public void removeEventHandler(UpdateCOContentResourceEventHandler handler) {

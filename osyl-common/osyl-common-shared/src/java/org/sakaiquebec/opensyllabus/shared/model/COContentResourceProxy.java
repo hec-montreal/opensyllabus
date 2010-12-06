@@ -97,11 +97,7 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	    if (type.equalsIgnoreCase(COContentResourceProxyType.REFERENCE)) {
 		resProxModel.addProperty(COPropertiesType.DISPLAY_AS, "link");
 	    }
-	    if (resourceType.equalsIgnoreCase(COContentResourceType.ASSIGNMENT)) {
-		// We change the default text
-		resProxModel
-			.setLabel(osylConfigMessages.getMessage("SendWork"));
-	    } else if (resourceType
+	    if (resourceType
 		    .equalsIgnoreCase(COContentResourceType.TEXT)) {
 		resProxModel.setLabel(osylConfigMessages
 			.getMessage("InsertYourTextHere"));

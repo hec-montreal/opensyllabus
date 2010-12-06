@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2010 rel. 2 (http://www.altova.com) by Carl Duranceau (HEC Montréal) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.1">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.2">
 	<xs:element name="OSYL">
 		<xs:annotation>
 			<xs:documentation>Contains one or more Course Outlines</xs:documentation>
@@ -310,16 +310,6 @@
 	<xs:complexType name="AssessmentUnitStruct">
 		<xs:complexContent>
 			<xs:extension base="ASMUnitStructure"/>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="Assignment">
-		<xs:complexContent>
-			<xs:extension base="ASMResource">
-				<xs:sequence>
-					<xs:element name="date-start" type="xs:dateTime"/>
-					<xs:element name="date-end" type="xs:dateTime"/>
-				</xs:sequence>
-			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="BiblioContext">
@@ -649,14 +639,14 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="SakaiEntity">
+	<xs:complexType name="Entity">
 		<xs:annotation>
 			<xs:documentation>Link to a Sakai Entity</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="ASMResource">
 				<xs:sequence>
-					<xs:element name="sakaiEntity" type="xs:string"/>
+					<xs:element name="provider" type="xs:string"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

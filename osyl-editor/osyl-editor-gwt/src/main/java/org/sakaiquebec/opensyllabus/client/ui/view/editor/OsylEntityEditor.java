@@ -28,13 +28,11 @@ import org.sakaiquebec.opensyllabus.client.controller.event.ItemListingAcquiredE
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBAddFolderEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.RFBItemSelectionEventHandler;
 import org.sakaiquebec.opensyllabus.client.ui.OsylRichTextArea;
-import org.sakaiquebec.opensyllabus.client.ui.base.Dimension;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylEntityBrowser;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxEntityView;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
@@ -232,6 +230,10 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
 	this.viewer = viewer;
     }
 
+    public String getEntityProvider() {
+	return ((OsylEntityBrowser) browser).getEntityType();
+    }
+
     /**
      * ===================== OVERRIDEN METHODS ===================== See
      * superclass for javadoc!
@@ -239,10 +241,6 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
 
     protected OsylResProxEntityView getView() {
 	return (OsylResProxEntityView) super.getView();
-    }
-
-    public Dimension getPreferredSize() {
-	return new Dimension(400, 100);
     }
 
     public void setText(String text) {
@@ -254,7 +252,7 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
     }
 
     public String getResourceURI() {
-	return ((OsylEntityBrowser)browser).getEntityUri();
+	return ((OsylEntityBrowser) browser).getEntityUri();
     }
 
     public String getLastModifiedDateString() {
@@ -265,7 +263,7 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
 	if (isInEditionMode()) {
 	    return editorLabel.getText();
 	} else {
-	    return ((OsylEntityBrowser)browser).getEntityText();
+	    return ((OsylEntityBrowser) browser).getEntityText();
 	}
     }
 
@@ -335,7 +333,7 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
 	    getModel().setLabel(
 		    getView().validateLinkLabel(getModel().getLabel()));
 	    getViewerLink().setHTML(getView().getTextFromModel());
-	    getViewerName().setHTML("(" + getView().getDocName() + ")");
+	    getViewerName().setHTML("(" + getView().getRawURI() + ")");
 	    getViewerDesc().setHTML(getView().getCommentFromModel());
 
 	    // If we are not in read-only mode, we display some meta-info and
@@ -452,9 +450,6 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
      * some events.
      */
     public void refreshBrowsingComponents() {
-
-	Window.alert("refreshBrowsingComponents");
-	// Change the content of the tree content
     }
 
 }

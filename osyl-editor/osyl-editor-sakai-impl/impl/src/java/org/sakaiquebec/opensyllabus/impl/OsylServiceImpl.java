@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +11,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.sakaiproject.assignment.api.Assignment;
-import org.sakaiproject.assignment.api.AssignmentContentEdit;
-import org.sakaiproject.assignment.api.AssignmentEdit;
 import org.sakaiproject.assignment.api.AssignmentService;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.cover.SecurityService;
@@ -31,13 +26,7 @@ import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.entitybroker.EntityBroker;
 import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.exception.InUseException;
-import org.sakaiproject.exception.PermissionException;
-import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.site.api.ToolConfiguration;
-import org.sakaiproject.time.api.Time;
-import org.sakaiproject.time.cover.TimeService;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiquebec.opensyllabus.api.OsylService;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
@@ -224,173 +213,6 @@ public class OsylServiceImpl implements OsylService {
      */
     public void setSecurityService(OsylSecurityService securityService) {
 	this.osylSecurityService = securityService;
-    }
-
-    /** {@inheritDoc} */
-    public String createOrUpdateAssignment(String assignmentId, String title,
-	    String instructions, Date openDate, Date closeDate, Date dueDate) {
-	String siteId = "";
-	String toolId = "";
-	AssignmentEdit edit = null;
-	AssignmentContentEdit contentEdit = null;
-
-	Calendar cal = Calendar.getInstance();
-	cal.setTime(openDate);
-	int openYear = cal.get(Calendar.YEAR);
-	int openMonth = cal.get(Calendar.MONTH) + 1;
-	int openDay = cal.get(Calendar.DAY_OF_MONTH);
-	// int openHour=cal.get(Calendar.HOUR_OF_DAY);
-	// int openMinute=cal.get(Calendar.MINUTE);
-	int openHour = 0;
-	int openMinute = 0;
-
-	cal.setTime(closeDate);
-	cal.add(Calendar.DATE, 1);
-	int closeYear = cal.get(Calendar.YEAR);
-	int closeMonth = cal.get(Calendar.MONTH) + 1;
-	int closeDay = cal.get(Calendar.DAY_OF_MONTH);
-	// int closeHour=cal.get(Calendar.HOUR_OF_DAY);
-	// int closeMinute=cal.get(Calendar.MINUTE);
-	int closeHour = 0;
-	int closeMinute = -5;
-
-	if (dueDate != null) {
-	    cal.setTime(dueDate);
-	    cal.add(Calendar.DATE, 1);
-	}
-	int dueYear = cal.get(Calendar.YEAR);
-	int dueMonth = cal.get(Calendar.MONTH) + 1;
-	int dueDay = cal.get(Calendar.DAY_OF_MONTH);
-	// int dueHour=cal.get(Calendar.HOUR_OF_DAY);
-	// int dueMinute=cal.get(Calendar.MINUTE);
-	int dueHour = 0;
-	int dueMinute = -5;
-
-	try {
-	    siteId = osylSiteService.getCurrentSiteId();
-
-	} catch (Exception e) {
-	    log.error("Unable to retrieve current siteid", e);
-	}
-
-	try {
-	    // The client doesn't know the id. It must be a new item
-	    if (assignmentId == null || assignmentId.equals("")) {
-		edit = assignmentService.addAssignment(siteId);
-		contentEdit = assignmentService.addAssignmentContent(siteId);
-		contentEdit.setTypeOfGrade(Assignment.SCORE_GRADE_TYPE);
-		contentEdit.setMaxGradePoint(1000);
-		// Ajouter le user dans le user dans le groupe de l'assignment
-	    } else {
-		// temporarily allow the user to read and write from assignments
-		// (asn.revise permission)
-		if (osylSecurityService.isAllowedToEdit(siteId)) {
-		    SecurityService.pushAdvisor(new SecurityAdvisor() {
-			public SecurityAdvice isAllowed(String userId,
-				String function, String reference) {
-			    return SecurityAdvice.ALLOWED;
-			}
-		    });
-
-		}
-		edit = assignmentService.editAssignment(assignmentId);
-		contentEdit =
-			assignmentService.editAssignmentContent(edit
-				.getContent().getId());
-
-		// clear the permission
-		if (osylSecurityService.isAllowedToEdit(siteId)) {
-		    SecurityService.clearAdvisors();
-		}
-	    }
-	} catch (Exception e) {
-	    log.error("Unable to create an assignment", e);
-	}
-
-	try {
-	    edit.setTitle(title);
-	    edit.setContext(siteId);
-	    if (openYear != -1) {
-		Time openTime =
-			TimeService.newTimeLocal(openYear, openMonth, openDay,
-				openHour, openMinute, 0, 0);
-		edit.setOpenTime(openTime);
-	    }
-	    if (closeYear != -1) {
-		Time closeTime =
-			TimeService.newTimeLocal(closeYear, closeMonth,
-				closeDay, closeHour, closeMinute, 0, 0);
-		edit.setCloseTime(closeTime);
-		edit.setDropDeadTime(closeTime);
-	    }
-	    if (dueYear != -1) {
-		Time dueTime =
-			TimeService.newTimeLocal(dueYear, dueMonth, dueDay,
-				dueHour, dueMinute, 0, 0);
-		edit.setDueTime(dueTime);
-	    }
-	    edit.setDraft(false);
-	    contentEdit.setTitle(title);
-	    if (null != instructions) {
-		contentEdit.setInstructions(instructions);
-	    }
-	    contentEdit
-		    .setTypeOfSubmission(Assignment.TEXT_AND_ATTACHMENT_ASSIGNMENT_SUBMISSION);
-
-	    edit.setContent(contentEdit);
-
-	    assignmentService.commitEdit(edit);
-	    assignmentService.commitEdit(contentEdit);
-	} catch (RuntimeException e) {
-	    log.error("Unable to save the assignment", e);
-	}
-
-	Site site;
-	ToolConfiguration tool;
-
-	try {
-	    site = osylSiteService.getSite(siteId);
-	    tool = site.getToolForCommonId(ASSIGNMENT_TOOL_ID);
-
-	    // We verify if the site contains the assignment tool
-	    if (tool == null) {
-		osylSiteService.addTool(site, ASSIGNMENT_TOOL_ID);
-		tool = site.getToolForCommonId(ASSIGNMENT_TOOL_ID);
-	    }
-
-	    toolId = tool.getId();
-	} catch (IdUnusedException e1) {
-	    log.error("Unused id exception", e1);
-	}
-
-	// if assignment creation is a success, look for the tool context before
-	// returning an url
-
-	String assignmentUrl =
-		"/portal/tool/" + toolId + "?assignmentReference="
-			+ edit.getReference()
-			+ "&panel=Main&sakai_action=doView_submission";
-	log.info("Create or update assignment URL " + assignmentUrl);
-	return assignmentUrl;
-    }
-
-    /** {@inheritDoc} */
-    public void removeAssignment(String assignmentId) {
-	log.info("Removing Assignment id=" + assignmentId);
-	try {
-	    AssignmentEdit toRemove =
-		    assignmentService.editAssignment(assignmentId);
-	    assignmentService.removeAssignment(toRemove);
-	    assignmentService.cancelEdit(toRemove);
-	} catch (IdUnusedException e) {
-	    log.error("Remove assignment - Unused id exception", e);
-	} catch (PermissionException e) {
-	    log.error("Remove assignment - Permission exception", e);
-	} catch (InUseException e) {
-	    log.error("Remove assignment - In use exception", e);
-	} catch (Exception e) {
-	    log.error("Unable to remove assignment", e);
-	}
     }
 
     /** {@inheritDoc} */

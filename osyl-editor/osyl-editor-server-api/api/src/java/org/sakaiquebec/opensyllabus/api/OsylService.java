@@ -21,11 +21,6 @@
 package org.sakaiquebec.opensyllabus.api;
 
 import org.sakaiproject.citation.api.CitationCollection;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 
@@ -76,8 +71,8 @@ public interface OsylService {
 	    "citation_collection_id";
 
     public static final String CACHE_ENABLED_CONFIG_KEY =
-	"opensyllabus.cache.enabled";
-    
+	    "opensyllabus.cache.enabled";
+
     /**
      * retourne le xsl au client pour permettre une prévisualisation du plan de
      * cours avec le xml
@@ -86,21 +81,6 @@ public interface OsylService {
      * @return
      */
     public String getXslForGroup(String group, String webappdir);
-
-
-    /**
-     * Adds or update an assignment to the site. This method checks whether the
-     * Assignment tool is already integrated into the site, if it isn't, it is
-     * automatically added.
-     */
-    public String createOrUpdateAssignment(String assignmentId, String title,
-	    String instructions, Date openDate, Date closeDate, Date dueDate);
-
-    /**
-     * Delete an assignment
-     */
-    public void removeAssignment(String assignmentId);
-
 
     /**
      * Links a collection of citations to a site
@@ -111,7 +91,6 @@ public interface OsylService {
      */
     public CitationCollection linkCitationsToSite(
 	    CitationCollection collection, String siteId, String citationTitle);
-
 
     /**
      * @return a ResourcesLicencingInfo object which contains informations about
@@ -134,8 +113,8 @@ public interface OsylService {
     public SakaiEntities getExistingEntities(String siteId);
 
     /**
-     * Returns true if cache is enabled in the sakai.properties file. This is
-     * an experimental optimization.
+     * Returns true if cache is enabled in the sakai.properties file. This is an
+     * experimental optimization.
      * 
      * @return whether cache is enabled
      */

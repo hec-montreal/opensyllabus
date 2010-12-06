@@ -26,6 +26,7 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylEntityEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 /**
  * Class providing display and edition capabilities for Document resources.
@@ -63,12 +64,12 @@ public class OsylResProxEntityView extends OsylAbstractResProxBrowserView {
 	getModel().setLabel(getEditor().getText());
 	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());
-	//FIXME This is a workaround. Should be deleted after we have a way to
-	// display the fileBrowser showing the previously selected file.
 	String uri = getEditor().getResourceURI();
 	if (uri != null) {
 	    getModel().getResource().addProperty(COPropertiesType.IDENTIFIER,
 		    COPropertiesType.IDENTIFIER_TYPE_URI, uri);
+	    getModel().getResource().addProperty(COPropertiesType.PROVIDER,
+		    getEditor().getEntityProvider());
 	}
     }
 
@@ -79,14 +80,13 @@ public class OsylResProxEntityView extends OsylAbstractResProxBrowserView {
 	return docName;
     }
 
+    @Override
     public void updateResourceMetaInfo() {
 	super.updateResourceMetaInfo();
-	getModel().getResource().addProperty(COPropertiesType.LICENSE,
-		getEditor().getLicence());
-	getModel().getResource().addProperty(COPropertiesType.DESCRIPTION,
-		getEditor().getResourceDescription());
+	getModel().getResource().addProperty(COPropertiesType.MODIFIED,
+		OsylDateUtils.getCurrentDateAsXmlString());
     }
-    
+
     /**
      * Returns the text value of current model.
      */
@@ -99,22 +99,28 @@ public class OsylResProxEntityView extends OsylAbstractResProxBrowserView {
 	}
     }
 
-    
-  //TODO Hack to remove bad links to resources inserted in the XML.  Remove this
-  //as soon as the cause is found and corrected.
-    public String validateLinkLabel(String link){
-	
-	if(link.contains("><")){
-	    link = link.substring(link.indexOf("><"), link.length()-5);
+    public String getLinkURI() {
+	// We get the URI from the model
+	String uri = getRawURI();
+	return "/direct" + uri;
+    }
+
+    // TODO Hack to remove bad links to resources inserted in the XML. Remove
+    // this
+    // as soon as the cause is found and corrected.
+    public String validateLinkLabel(String link) {
+
+	if (link.contains("><")) {
+	    link = link.substring(link.indexOf("><"), link.length() - 5);
 	}
 	String linkLabel = link;
 	StringTokenizer linkTokenizer = new StringTokenizer(link, "><");
-	
-	if(linkTokenizer.hasMoreTokens()){
+
+	if (linkTokenizer.hasMoreTokens()) {
 	    linkTokenizer.nextToken();
 	}
-	
-	if(linkTokenizer.hasMoreTokens()){
+
+	if (linkTokenizer.hasMoreTokens()) {
 	    linkLabel = linkTokenizer.nextToken();
 	}
 	return linkLabel;

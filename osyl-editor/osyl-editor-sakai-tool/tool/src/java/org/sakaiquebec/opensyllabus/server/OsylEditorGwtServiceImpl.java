@@ -346,25 +346,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     }
 
     /**
-     * Adds or update an assignment to the site. This method checks whether the
-     * Assignment tool is already integrated into the site, if it isn't, it is
-     * automatically added.
-     */
-    public String createOrUpdateAssignment(String assignmentId, String title,
-	    String instructions, Date openDate, Date closeDate, Date dueDate) {
-	return osylServices.getOsylService()
-		.createOrUpdateAssignment(assignmentId, title, instructions,
-			openDate, closeDate, dueDate);
-    }
-
-    /**
-     * Delete an existing assignment.
-     */
-    public void removeAssignment(String assignmentId) {
-	osylServices.getOsylService().removeAssignment(assignmentId);
-    }
-
-    /**
      * {@inheritDoc}
      */
     public boolean hasBeenPublished() throws Exception {

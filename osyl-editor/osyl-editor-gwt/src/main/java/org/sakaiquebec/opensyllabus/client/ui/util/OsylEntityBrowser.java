@@ -148,8 +148,6 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite implements
 	firstRowPanel.add(getCurrentSiteTextBox());
 
 	setProvidersPanel(new ScrollPanel());
-	// TODO: change tree for something else one site can have entities with
-	// same name;
 	setProviders(new Tree());
 
 	getProvidersPanel().setWidth("600px");
@@ -187,19 +185,6 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite implements
     @Override
     protected void onFileDoubleClicking() {
 	// Nothing to do
-    }
-
-    private String getRawURI(String uri) {
-	// We get the URI from the model
-	String link = "";
-
-	// Otherwise we have to prepend Sakai stuff in the URI
-	String url = GWT.getModuleBaseURL();
-	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
-	link = serverId + "/direct" + uri;
-
-	return link;
-
     }
 
     public ScrollPanel getProvidersPanel() {
@@ -282,7 +267,6 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite implements
     }
 
     public void onSelection(SelectionEvent<TreeItem> event) {
-	String entityRawUri = "";
 	TreeItem item = event.getSelectedItem();
 	// We have an entity if we have no child
 	if (item.getChildCount() == 0) {
@@ -295,17 +279,18 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite implements
 		String key = entry.getKey();
 		String entity = entry.getValue();
 		if (entity.equals(item.getText())) {
-		    entityRawUri = getLinkURI(key, entity);
-		    setEntityUri(getRawURI(key));
+		    setEntityUri(key);
 		    setEntityText(entity);
 		    break;
 		}
 	    }
 	}
-	// TODO: changer le contenu du texte cliquable quand on choisit
-	// une entite
-	updateCurrentSelectionHtml(entityRawUri);
+	updateCurrentSelectionHtml(getLinkURI(getEntityUri(), getEntityText()));
     }
+    
+    protected String getLinkURI(String uri, String text) {
+	return "<a href=\"" + "/direct" + uri + "\" target=\"_blank\">" + text + "</a>";
+    } // getLinkURI
 
     protected void updateCurrentSelectionHtml(String entity) {
 	getCurrentSelectionHtml().setHTML(entity);
@@ -317,6 +302,16 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite implements
 
     public void setCurrentSelectionHtml(HTML currentSelectionHtml) {
 	this.currentSelectionHtml = currentSelectionHtml;
+    }
+
+    public String getEntityType() {
+	Map<String, String> allowedProviders = sakaiEntities.getProviders();
+	for (Entry<String, String> entry : allowedProviders.entrySet()) {
+	    String providerKey = entry.getKey();
+	    if (entityUri.contains(providerKey))
+		return providerKey;
+	}
+	return null;
     }
 
     public String getEntityUri() {

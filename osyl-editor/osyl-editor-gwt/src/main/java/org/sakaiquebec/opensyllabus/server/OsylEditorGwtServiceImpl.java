@@ -1,6 +1,5 @@
 package org.sakaiquebec.opensyllabus.server;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.Vector;
 
@@ -21,21 +20,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	OsylEditorGwtService {
 
     public void applyPermissions(String resourceId, String permission) {
-    }
-
-    public String createOrUpdateAssignment(String assignmentId, String title,
-	    String instructions, Date openDate, Date closeDate, Date dueDate) {
-	return null;
-    }
-
-    public String createOrUpdateCitation(String citationListId,
-	    String citation, String author, String type, String isbnIssn,
-	    String link) {
-	return null;
-    }
-
-    public String createTemporaryCitationList() {
-	return null;
     }
 
     public String getCurrentUserRole() {
@@ -77,14 +61,8 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	return null;
     }
 
-    public void removeAssignment(String assignmentId) {
-    }
-
     public SakaiEntities getExistingEntities(String siteId) {
 	return null;
-    }
-
-    public void removeCitation(String citationId) {
     }
 
     public boolean updateSerializedCourseOutline(COSerialized co)
@@ -104,7 +82,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 
     }
 
-    public void createPrintableEditionVersion() throws Exception{
+    public void createPrintableEditionVersion() throws Exception {
 
     }
 }

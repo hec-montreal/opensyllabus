@@ -115,19 +115,6 @@ public interface OsylEditorGwtService extends RemoteService {
      */
     public COConfigSerialized getSerializedConfig() throws Exception;
 
-    /**
-     * Creates or updates an assignment for this context.
-     * 
-     * @return String the assignment ID
-     */
-    public String createOrUpdateAssignment(String assignmentId, String title,
-	    String instructions, Date openDate, Date closeDate, Date dueDate);
-
-    /**
-     * Delete an existing assignment.
-     */
-    public void removeAssignment(String assignmentId);
-
     public SakaiEntities getExistingEntities(String siteId);
 
     /**

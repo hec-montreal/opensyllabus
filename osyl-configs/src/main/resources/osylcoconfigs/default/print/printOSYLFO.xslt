@@ -802,59 +802,6 @@
 	</fo:table>
 </xsl:template>
 
-<xsl:template match="asmResource[@xsi:type='Assignment']">
-	<fo:block space-after="10px">
-		<fo:block font-size="10pt" color="blue" text-decoration="underline">
-			<fo:basic-link>
-					<xsl:attribute name="external-destination"><xsl:value-of select="identifier"/></xsl:attribute>
-				<xsl:value-of select="../label"/>
-			</fo:basic-link>
-		</fo:block>
-		<fo:block font-size="10pt" font-style="italic">
-			<fo:inline>
-				<xsl:choose>
-					<xsl:when test="$lang = 'FR'">
-						<xsl:text>Date d'ouverture: </xsl:text>
-					</xsl:when>
-					<xsl:when test="$lang = 'EN'">
-						<xsl:text>Opening date: </xsl:text>
-					</xsl:when>
-					<xsl:when test="$lang = 'ES'">
-						<xsl:text>Fecha de apertura: </xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-					</xsl:otherwise>
-				</xsl:choose>
-			</fo:inline>
-			<fo:inline>
-				<xsl:call-template name="printDate">
-					<xsl:with-param name="date"><xsl:value-of select="substring-before(date-start,'T')"/></xsl:with-param>
-				</xsl:call-template>
-			</fo:inline>
-			<fo:inline padding-left="5px">
-				<xsl:choose>
-					<xsl:when test="$lang = 'FR'">
-						<xsl:text>Date d'échéance: </xsl:text>
-					</xsl:when>
-					<xsl:when test="$lang = 'EN'">
-						<xsl:text>Deadline: </xsl:text>
-					</xsl:when>
-					<xsl:when test="$lang = 'ES'">
-						<xsl:text>Plazo: </xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-					</xsl:otherwise>
-				</xsl:choose>
-			</fo:inline>
-			<fo:inline>
-				<xsl:call-template name="printDate">
-					<xsl:with-param name="date"><xsl:value-of select="substring-before(date-end,'T')"/></xsl:with-param>
-				</xsl:call-template>
-			</fo:inline>
-		</fo:block>
-	</fo:block>
-</xsl:template>
-
 <!-- ===================================== -->
 <xsl:template name="AssessmentHeader">
   <xsl:param name="label"/>

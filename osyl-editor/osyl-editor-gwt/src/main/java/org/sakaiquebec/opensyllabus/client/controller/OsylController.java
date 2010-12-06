@@ -20,7 +20,6 @@
 
 package org.sakaiquebec.opensyllabus.client.controller;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.Vector;
 
@@ -35,17 +34,11 @@ import org.sakaiquebec.opensyllabus.client.ui.util.OsylPublishView;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COConfig;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
-import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
-import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
-import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
-import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
-import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 import org.sakaiquebec.opensyllabus.shared.model.OsylSettings;
 import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
-import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
@@ -80,10 +73,9 @@ public class OsylController implements SavePushButtonEventHandler,
      */
     public static final String WORK_FOLDER_NAME = "work";
 
-    //TODO: SAKAI-2160 remove later
-    public final static String USE_ATTACHMENTS =
-	    "true";
-    
+    // TODO: SAKAI-2160 remove later
+    public final static String USE_ATTACHMENTS = "true";
+
     // Singleton instance
     private static OsylController _instance;
 
@@ -387,7 +379,7 @@ public class OsylController implements SavePushButtonEventHandler,
 							    .getMessage("Exception.incompatibleWithHisParent"));
 				    alertBox.show();
 				}
-				if(co.isIncompatibleHierarchy()){
+				if (co.isIncompatibleHierarchy()) {
 				    final OsylAlertDialog alertBox =
 					    new OsylAlertDialog(
 						    false,
@@ -686,123 +678,6 @@ public class OsylController implements SavePushButtonEventHandler,
     }
 
     /**
-     * Requests the server for the creation or update of an assignment.
-     */
-    public void createOrUpdateAssignment(COContentResourceProxy resProx,
-	    String assignmentId) {
-
-	COContentResource ressource = (COContentResource) resProx.getResource();
-	if (ressource != null) {
-
-	    Date startDate = null;
-	    String dateStartString =
-		    ressource.getProperty(COPropertiesType.DATE_START);
-	    if (dateStartString != null) {
-		startDate = OsylDateUtils.getDateFromXMLDate(dateStartString);
-	    }
-
-	    Date endDate = null;
-	    String endDateString =
-		    ressource.getProperty(COPropertiesType.DATE_END);
-	    if (endDateString != null) {
-		endDate = OsylDateUtils.getDateFromXMLDate(endDateString);
-	    }
-	    COElementAbstract model = resProx;
-	    boolean found = false;
-	    String title = "";
-	    while (!found && model.getParent() != null) {
-		if (model.isCOUnit()) {
-		    title = model.getLabel();
-		    found = true;
-		} else {
-		    model = model.getParent();
-		}
-	    }
-	    String instructions = "";
-
-	    if (startDate != null && endDate != null)
-		createOrUpdateAssignment(resProx, assignmentId, title,
-			instructions, startDate, endDate, null);
-	} else {
-	    final OsylAlertDialog alertBox =
-		    new OsylAlertDialog(false, true, "Assignment tool error",
-			    "The assignment not exists.");
-	    alertBox.show();
-	}
-    }
-
-    private void createOrUpdateAssignment(final COContentResourceProxy resProx,
-	    String assignmentId, String title, String instructions,
-	    Date dateStart, Date dateEnd, Date dateDue) {
-
-	if (dateStart != null && dateEnd != null) {
-
-	    AsyncCallback<String> callback = new AsyncCallback<String>() {
-		// We define the behavior in case of success
-		public void onSuccess(String assignmentId) {
-		    try {
-			createOrUpdateAssignmentCB(resProx, assignmentId);
-		    } catch (Exception error) {
-			unableToCreateOrUpdateAssignment("Error - Unable to createOrUpdateAssignment(...) on RPC Success: "
-				+ error.toString());
-		    }
-		}
-
-		// And we define the behavior in case of failure
-		public void onFailure(Throwable error) {
-		    unableToCreateOrUpdateAssignment("RPC FAILURE - createOrUpdateAssignment(...): "
-			    + error.toString());
-		}
-	    };
-
-	    OsylRemoteServiceLocator
-		    .getEditorRemoteService()
-		    .createOrUpdateAssignment(assignmentId, title,
-			    instructions, dateStart, dateEnd, dateEnd, callback);
-
-	}
-    }
-
-    /**
-     * CallBack for server request for the creation or update of an assignment.
-     */
-    public void createOrUpdateAssignmentCB(COContentResourceProxy resProx,
-	    String assignmentId) {
-	if (assignmentId.equals("failed")) {
-	    unableToCreateOrUpdateAssignment("failed");
-	}
-
-	try {
-	    if (!COContentResourceType.ASSIGNMENT.equals(resProx.getResource()
-		    .getType())) {
-		throw new IllegalArgumentException(
-			"createOrUpdateAssignmentCB:"
-				+ " Wrong type of resource!");
-	    }
-	    String url = GWT.getModuleBaseURL();
-	    String serverId = url.split("\\s*/portal/tool/\\s*")[0];
-	    assignmentId = serverId + assignmentId;
-	    if (TRACE) {
-		Window.alert("ModuleBaseURL = " + url);
-		Window.alert("serverId = " + serverId);
-		Window.alert("AssignmentID = " + assignmentId);
-		Window.alert("NewAssignmentID = " + assignmentId);
-	    }
-	    resProx.getResource().addProperty(COPropertiesType.IDENTIFIER,
-		    COPropertiesType.IDENTIFIER_TYPE_URI, assignmentId);
-	} catch (Exception e) {
-	    final OsylAlertDialog alertBox =
-		    new OsylAlertDialog(false, true,
-			    "Alert - Assignment Tool Error",
-			    "ERROR - Controller createOrUpdateAssignmentCB "
-				    + "ResourceProxyType ="
-				    + (resProx == null ? "null" : resProx
-					    .getType()) + ", err=" + e);
-	    alertBox.show();
-	}
-    }
-
-    /**
      * Call-back method for publishing the CourseOutlineXML.
      * 
      * @param boolean either the process was successful or not
@@ -1026,51 +901,6 @@ public class OsylController implements SavePushButtonEventHandler,
 			    "Have I just applied permission ? " + ok);
 	    alertBox.show();
 	}
-    }
-
-    /**
-     * Call for assignment suppression.
-     */
-    public void removeAssignment(String assignmentId) {
-
-	// The caller must be declared final to use it into an inner class
-	final OsylController caller = this;
-
-	// We first create a call-back for this method call
-	AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-
-	    // We define the behavior in case of success
-	    public void onSuccess(Void serverResponse) {
-		try {
-		    System.out.println("RPC SUCCESS - removeAssignment(...)");
-		    caller.removeAssignmentCB();
-		} catch (Exception error) {
-		    System.out
-			    .println("Error - Unable to removeAssignment(...) on RPC Success: "
-				    + error.toString());
-		    Window
-			    .alert("Error - Unable to removeAssignment(...) on RPC Success: "
-				    + error.toString());
-		    caller
-			    .unableToRemoveAssignment("Error - Unable to removeAssignment(...) on RPC Success: "
-				    + error.toString());
-		}
-	    }
-
-	    // And we define the behavior in case of failure
-	    public void onFailure(Throwable error) {
-		System.out.println("RPC FAILURE - removeAssignment(...): "
-			+ error.toString());
-		Window.alert("RPC FAILURE - removeAssignment(...): "
-			+ error.toString());
-		caller
-			.unableToRemoveAssignment("RPC FAILURE - removeAssignment(...): "
-				+ error.toString());
-	    }
-	};
-	// Then we can call the method
-	OsylRemoteServiceLocator.getEditorRemoteService().removeAssignment(
-		assignmentId, callback);
     }
 
     /**
@@ -1365,7 +1195,7 @@ public class OsylController implements SavePushButtonEventHandler,
     public String getDocFolderName() {
 	String folder = WORK_FOLDER_NAME;
 	if (USE_ATTACHMENTS.equals("true"))
-	    folder ="";
+	    folder = "";
 	if ((null != getCOSerialized()) && getCOSerialized().isPublished()) {
 	    folder = PUBLISH_FOLDER_NAME;
 	}
@@ -1376,7 +1206,7 @@ public class OsylController implements SavePushButtonEventHandler,
 	String relativePath = path;
 	String pattern = getSiteId() + "/" + getDocFolderName() + "/";
 	if (USE_ATTACHMENTS.equals("true"))
-	    pattern = getSiteId() + "/" ;
+	    pattern = getSiteId() + "/";
 	int startIndex = relativePath.indexOf(pattern);
 	relativePath = relativePath.substring(startIndex + pattern.length());
 	return relativePath;

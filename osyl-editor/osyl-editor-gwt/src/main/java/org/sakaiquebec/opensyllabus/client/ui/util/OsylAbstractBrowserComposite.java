@@ -864,18 +864,6 @@ public abstract class OsylAbstractBrowserComposite extends Composite implements
 	return uu.substring(0, uu.indexOf("/"));
     }
 
-    protected String getLinkURI(String uri, String text) {
-	// We get the URI from the model
-	String link;
-
-	// Otherwise we have to prepend Sakai stuff in the URI
-	String url = GWT.getModuleBaseURL();
-	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
-	link = serverId + "/direct" + uri;
-
-	return "<a href=\"" + link + "\" target=\"_blank\">" + text + "</a>";
-    } // getLinkURI
-
     protected void refreshFileListing(List<OsylAbstractBrowserItem> dirListing) {
 	getFileListing().clear();
 	getCurrentDirectory().setFilesList(dirListing);

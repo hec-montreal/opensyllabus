@@ -49,7 +49,6 @@ public class COPropertiesType {
     public static final String WEIGHT = "weight";
     public static final String DATE_START = "date-start";
     public static final String DATE_END = "date-end";
-    public static final String DATE = "date";
     public static final String LOCATION = "location";
     public static final String MODE = "mode";
     // public static final String RESULT = "result";
@@ -57,6 +56,9 @@ public class COPropertiesType {
     public static final String SUBMITION_TYPE = "submition_type";
     public static final String ASSESSMENT_TYPE = "assessmentType";
 
+    //SPECIFIC to sakai entity
+    public static final String PROVIDER = "provider";
+    
     // Specific to contact-info
     public static final String PERSON_TITLE = "title";
     public static final String SURNAME = "surname";
@@ -116,5 +118,6 @@ public class COPropertiesType {
 	    Arrays.asList(new String[] { COPropertiesType.DESCRIPTION,
 		    COPropertiesType.TEXT, COPropertiesType.COMMENT,
 		    COPropertiesType.AVAILABILITY });
+    
 
 }

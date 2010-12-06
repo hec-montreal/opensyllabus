@@ -20,7 +20,6 @@
 
 package org.sakaiquebec.opensyllabus.client.remoteservice.rpc;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.Vector;
 
@@ -118,26 +117,10 @@ public interface OsylEditorGwtServiceAsync {
      */
     public void getSerializedConfig(AsyncCallback<COConfigSerialized> callback);
 
-    /**
-     * Creates or updates an assignment for this context.
-     * 
-     * @param callback the callback to return the assignment ID
-     */
-    public void createOrUpdateAssignment(String assignmentId, String title,
-	    String instructions, Date openDate, Date closeDate, Date dueDate,
-	    AsyncCallback<String> callback);
+    public void getExistingEntities(String siteId,
+	    AsyncCallback<SakaiEntities> callback);
 
     /**
-     * Delete an existing assignment.
-     */
-    public void removeAssignment(String assignmentId,
-	    AsyncCallback<Void> callback);
-
-    public void getExistingEntities(String siteId, AsyncCallback<SakaiEntities> callback);
-
-    
-    /**
-     * 
      * Pings the server to keep user session alive as long as its client
      * interface is running.
      */
@@ -187,6 +170,7 @@ public interface OsylEditorGwtServiceAsync {
 
     /**
      * Method used to create a pdf for the edition version of the CO
+     * 
      * @param xml
      * @param printEditionVersionCallback
      */

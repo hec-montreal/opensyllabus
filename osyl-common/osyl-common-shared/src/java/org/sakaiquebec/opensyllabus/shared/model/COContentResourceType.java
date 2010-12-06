@@ -30,9 +30,8 @@ public class COContentResourceType {
     public static final String TEXT = "Text";
     public static final String BIBLIO_RESOURCE = "BiblioResource";
     public static final String DOCUMENT = "Document";
-    public static final String ASSIGNMENT = "Assignment";
     public static final String URL="URL";
     public static final String PERSON="Person";
     public static final String NEWS="News";
-    public static final String ENTITY="SakaiEntity";
+    public static final String ENTITY="Entity";
 }

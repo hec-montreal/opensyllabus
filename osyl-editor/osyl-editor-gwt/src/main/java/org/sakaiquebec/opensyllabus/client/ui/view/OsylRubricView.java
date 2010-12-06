@@ -32,11 +32,11 @@ import org.sakaiquebec.opensyllabus.shared.model.COContentRubric;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.FlexTable;
 
 /**
  * A wrapper for displaying a rubric and the resource proxies in this rubric.
@@ -53,16 +53,16 @@ public class OsylRubricView extends OsylViewableComposite {
     private Label rubricLabel;
     private Label rubricUserDefLabel;
 
-
     /**
      * Public constructor to display a rubric with the specified model.
      * 
      * @param model COContentRubric model
      * @param osylController
      */
-    public OsylRubricView(COContentRubric model, OsylController controller, String style) {
+    public OsylRubricView(COContentRubric model, OsylController controller,
+	    String style) {
 	super(model, controller);
-	this.style=style;
+	this.style = style;
 	initView();
     }
 
@@ -74,18 +74,19 @@ public class OsylRubricView extends OsylViewableComposite {
 	// Rubric section display
 	HorizontalPanel hPanel = new HorizontalPanel();
 	FlexTable ft = new FlexTable();
-	rubricLabel = new Label(getCoMessages().getMessage(getModel().getType()));
+	rubricLabel =
+		new Label(getCoMessages().getMessage(getModel().getType()));
 	rubricLabel.setStylePrimaryName("Osyl-UnitView-Title");
 	rubricLabel.addStyleName(style);
 	rubricLabel.addStyleName("Osyl-RubricTitle");
-	//hPanel.add(rubricLabel);
+	// hPanel.add(rubricLabel);
 	ft.setWidget(0, 0, rubricLabel);
 	rubricUserDefLabel = new Label();
 	rubricUserDefLabel.setStylePrimaryName("Osyl-ResProxView-MetaInfo");
 	rubricUserDefLabel.addStyleName("Osyl-RubricUserDefLabel");
 	rubricUserDefLabel.setVisible(false);
 	ft.setWidget(1, 0, rubricUserDefLabel);
-	//hPanel.add(rubricUserDefLabel);
+	// hPanel.add(rubricUserDefLabel);
 	hPanel.add(ft);
 	getMainPanel().add(hPanel);
 
@@ -94,27 +95,31 @@ public class OsylRubricView extends OsylViewableComposite {
     }
 
     public void refreshView() {
-    if(rubricLabel != null && rubricUserDefLabel != null){
-    	
-	    if((getModel() instanceof COContentRubric) &&
-	       getSettings().isRubricDescEditable() &&
-	       ((COContentRubric)getModel()).getUserDefLabel() != null &&
-	       ((COContentRubric)getModel()).getUserDefLabel().length() > 0	){
-	    	String rubricTypeDesc = getCoMessages().getMessage(getModel().getType());
-	    	String newRubricLabel = ((COContentRubric)getModel()).getUserDefLabel();
-	    	rubricLabel.setText(newRubricLabel);
-	    	rubricUserDefLabel.setText(rubricTypeDesc);
-	    	if (getController().isReadOnly()){
-	    		rubricUserDefLabel.setVisible(false);
-	    	}else{
-	    		rubricUserDefLabel.setVisible(true);	    		
-	    	}
-	    }else{
-	    	rubricLabel.setText(getCoMessages().getMessage(getModel().getType()));
-	    	rubricUserDefLabel.setText("");
-	    	rubricUserDefLabel.setVisible(false);	    	
+	if (rubricLabel != null && rubricUserDefLabel != null) {
+
+	    if ((getModel() instanceof COContentRubric)
+		    && getSettings().isRubricDescEditable()
+		    && ((COContentRubric) getModel()).getUserDefLabel() != null
+		    && ((COContentRubric) getModel()).getUserDefLabel()
+			    .length() > 0) {
+		String rubricTypeDesc =
+			getCoMessages().getMessage(getModel().getType());
+		String newRubricLabel =
+			((COContentRubric) getModel()).getUserDefLabel();
+		rubricLabel.setText(newRubricLabel);
+		rubricUserDefLabel.setText(rubricTypeDesc);
+		if (getController().isReadOnly()) {
+		    rubricUserDefLabel.setVisible(false);
+		} else {
+		    rubricUserDefLabel.setVisible(true);
+		}
+	    } else {
+		rubricLabel.setText(getCoMessages().getMessage(
+			getModel().getType()));
+		rubricUserDefLabel.setText("");
+		rubricUserDefLabel.setVisible(false);
 	    }
-    }
+	}
 	checkVisibility();
     }
 
@@ -138,17 +143,14 @@ public class OsylRubricView extends OsylViewableComposite {
 		oe = new OsylResProxLinkView(resProx, getController());
 	    } else if (resource.getType().equals(COContentResourceType.PERSON)) {
 		oe = new OsylResProxContactInfoView(resProx, getController());
-	    } else if (resource.getType().equals(
-		    COContentResourceType.ASSIGNMENT)) {
-		oe = new OsylResProxAssignmentView(resProx, getController());
-	    } else if (resource.getType().equals(COContentResourceType.ENTITY)){
+	    } else if (resource.getType().equals(COContentResourceType.ENTITY)) {
 		oe = new OsylResProxEntityView(resProx, getController());
-	    }else if (resource.getType().equals(
+	    } else if (resource.getType().equals(
 		    COContentResourceType.BIBLIO_RESOURCE)) {
 		oe = new OsylResProxCitationView(resProx, getController());
-	    } else if(resource.getType().equals(COContentResourceType.NEWS)){
+	    } else if (resource.getType().equals(COContentResourceType.NEWS)) {
 		oe = new OsylNewsView(resProx, getController());
-	    }else {
+	    } else {
 		Window
 			.alert("Internal error : addResProxView doesn't know how to "
 				+ "handle resource of type "
