@@ -654,7 +654,7 @@
 	</fo:block>
 </xsl:template>
 
-<xsl:template match="asmResource[@xsi:type='SakaiEntity']">
+<xsl:template match="asmResource[@xsi:type='Entity']">
 	<fo:block space-after="10px">
 		<fo:block font-size="10pt">
 			<fo:inline color="blue" text-decoration="underline">
