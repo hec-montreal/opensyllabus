@@ -278,6 +278,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	 * Parse the XML - if that fails, give up now
 	 */
 	if ((document = parseXmlFromStream(stream)) == null) {
+	    log.warn("retrieveConfigs: XML document is null");
 	    return;
 	}
 
