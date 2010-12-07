@@ -8,6 +8,8 @@ import org.sakaiproject.entity.api.Entity;
 import org.sakaiproject.entity.api.EntityProducer;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.site.api.Site;
+import org.sakaiproject.site.api.SitePage;
+import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
@@ -214,14 +216,27 @@ public interface OsylSiteService extends EntityProducer {
 	    throws Exception;
 
     /**
-     * Adds the tool to the site. This method is used in the process of
-     * integrating a sakai tool to OpenSyllabus. If the tool is not present in
-     * the site, we add it before creating a reference
+     * Adds the tool to a new dedicated page into the site. This method is used
+     * in the process of integrating OpenSyllabus to a Sakai site.
      *
      * @param site
      * @param toolId
+     * @return the ToolConfiguration for further modifications
      */
-    public void addTool(Site site, String toolId);
+    public ToolConfiguration addTool(Site site, String toolId);
+
+    /**
+     * Adds the tool to the specified page into the site, using a specific
+     * title. This method is used in the process of integrating OpenSyllabus
+     * to a Sakai site.
+     *
+     * @param site
+     * @param toolId
+     * @param title
+     * @return the ToolConfiguration for further modifications
+     */
+    public ToolConfiguration addTool(Site site, SitePage page, String toolId,
+	    String title);
 
     /**
      * We create a new course outline from a xmlContent

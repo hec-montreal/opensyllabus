@@ -513,6 +513,30 @@
 		
 	</bean>	
 	
+	<bean id="addHomePageJob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.AddHomePageToolImpl" >
+		<property name="siteService"
+			ref="org.sakaiproject.site.api.SiteService" />			
+	</bean>
+	
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.addHomePageJob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		
+	
+		<property name="beanId">
+			<value>addHomePageJob</value>
+		</property>
+		
+		<property name="jobName">
+			<value>Add Home Page and tools to course Sites</value>
+		</property>
+		
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+		
+	</bean>	
+
 
 
 

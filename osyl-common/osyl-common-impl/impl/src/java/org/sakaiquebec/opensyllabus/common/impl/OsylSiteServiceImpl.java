@@ -27,9 +27,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
@@ -107,6 +109,12 @@ import org.w3c.dom.Element;
 public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     private static final Log log = LogFactory.getLog(OsylSiteServiceImpl.class);
+
+    private static final String HEC_MONTREAL_RULES_TITLE_FR_CA =
+	"Règlements de HEC Montréal";
+
+    private static final String HEC_MONTREAL_RULES_TITLE_EN =
+	"HEC Montréal Regulations";
 
     private ToolManager toolManager;
 
@@ -524,6 +532,12 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    site.setJoinable(false);
 
 	    // we add the tools
+	    addHomePage(site, lang);
+	    ToolConfiguration anncCfg = addTool(site, "sakai.announcements");
+	    Properties anncProps = anncCfg.getPlacementConfig();
+	    // The following prevents students to see the Announcements page
+	    anncProps.put("functions.require","annc.new");
+	    anncCfg.save();
 	    addTool(site, "sakai.opensyllabus.tool");
 	    addTool(site, "sakai.assignment.grades");
 	    addTool(site, "sakai.resources");
@@ -1077,16 +1091,32 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	FileHelper.writeFileContent(backup, co.getContent());
     }
 
-    /** {@inheritDoc} */
-    public void addTool(Site site, String toolId) {
-
+    /** {@inheritDoc} 
+     */
+    public ToolConfiguration addTool(Site site, String toolId) {
 	SitePage page = site.addPage();
-	Tool tool = toolManager.getTool(toolId);
-	page.setTitle(tool.getTitle());
+	page.setTitle(toolManager.getTool(toolId).getTitle());
 	page.setLayout(SitePage.LAYOUT_SINGLE_COL);
-	ToolConfiguration toolConf = page.addTool();
-	toolConf.setTool(toolId, tool);
-	toolConf.setTitle(tool.getTitle());
+
+	return addTool(site, page, toolId);
+    }
+
+    private ToolConfiguration addTool(Site site, SitePage page, String toolId) {
+	return addTool(site, page, toolId, null);
+    }
+
+    /** {@inheritDoc} 
+     */
+    public ToolConfiguration addTool(Site site, SitePage page, String toolId,
+	    String specifiedTitle) {
+
+	Tool tool = toolManager.getTool(toolId);
+	ToolConfiguration toolConf = page.addTool(tool);
+	if (specifiedTitle != null) {
+	    toolConf.setTitle(specifiedTitle);	    
+	} else {
+	    toolConf.setTitle(tool.getTitle());
+	}
 	toolConf.setLayoutHints("0,0");
 
 	try {
@@ -1104,6 +1134,44 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	} catch (PermissionException e) {
 	    log.error("Add tool - Permission exception", e);
 	}
+
+	return toolConf;
+    }
+    
+    private void addHomePage(Site site, String lang) {
+	// Add Home page and its 2 tools
+	SitePage homePage = site.addPage();
+	homePage.setupPageCategory(SitePage.HOME_TOOL_ID);
+	homePage.setTitle("Accueil");
+	homePage.setPosition(0);
+//	saveSite(site);
+	
+	// 1st tool
+	ToolConfiguration synAnncCfg = addTool(site, homePage,
+		"sakai.synoptic.announcement");
+	synAnncCfg.setLayoutHints("0,0");
+	Properties props = synAnncCfg.getPlacementConfig();
+	props.put("days","31");
+	synAnncCfg.save();
+
+	// 2nd tool
+	String toolTitle;
+	if (Locale.CANADA_FRENCH.equals(lang)) {
+	    toolTitle = HEC_MONTREAL_RULES_TITLE_FR_CA;
+	} else { 
+	    toolTitle = HEC_MONTREAL_RULES_TITLE_EN;
+	}
+	ToolConfiguration iframeCfg = addTool(site, homePage, "sakai.iframe",
+		toolTitle);
+	iframeCfg.setLayoutHints("1,0");
+	Properties iframeProps = iframeCfg.getPlacementConfig();
+	iframeProps.put("height","400px");
+	iframeProps.put("source","/library/content/HEC_Montreal_rules_" + lang +
+			".html");
+	iframeProps.put("reset.button","true");
+	// TODO: find a way to prevent the instructors to change these
+	//       (how to hide "Options" link?)
+	iframeCfg.save();
 
     }
 
