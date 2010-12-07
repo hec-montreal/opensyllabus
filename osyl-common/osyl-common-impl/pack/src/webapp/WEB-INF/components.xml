@@ -104,12 +104,15 @@
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
 		<property name="osylTransformToZCCO"
 			ref="org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO" />
-		<property name="cmService"
-			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
 
 		<!-- Sakai dependencies -->
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />
+		<property name="cmService"
+			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+ 		<property name="announcementService"
+ 			ref="org.sakaiproject.announcement.api.AnnouncementService"/>			
+		
 		<!--
 			<property name="toolManager"
 			ref="org.sakaiproject.tool.api.ToolManager" />

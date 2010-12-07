@@ -170,5 +170,14 @@ public interface OsylEditorGwtService extends RemoteService {
      * @param printEditionVersionCallback
      */
     public void createPrintableEditionVersion() throws Exception;
+    
+
+	/**
+	 * Method used to add  an announcement upon publishing a course outline.
+	 * @param siteId
+	 * @param subject
+	 * @param body
+	 */
+	public void notifyOnPublish(String siteId, String subject, String body);
 
 }

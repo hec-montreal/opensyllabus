@@ -85,4 +85,8 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     public void createPrintableEditionVersion() throws Exception {
 
     }
+    
+    public void notifyOnPublish(String siteId, String subject, String body) {
+    
+    }
 }

@@ -336,4 +336,15 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	printEditionVersionCallback.onFailure(null);
     }
 
+	/**
+	 * Method used to add  an announcement upon publishing a course outline.
+	 * @param siteId
+	 * @param subject
+	 * @param body
+	 * @param callback
+	 */
+	public void notifyOnPublish(String siteId, String subject, String body,
+			AsyncCallback<Void> callback){
+		callback.onSuccess(null);
+	}
 }

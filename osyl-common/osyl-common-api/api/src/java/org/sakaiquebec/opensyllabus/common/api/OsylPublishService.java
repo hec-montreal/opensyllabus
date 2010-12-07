@@ -96,4 +96,16 @@ public interface OsylPublishService {
     public String transformXmlForGroup(String xml, String group, String webappDir) throws Exception;
     
     public void createEditionPrintVersion(COSerialized cos, String webappdir) throws Exception;
+    
+	/**
+	 * Send a notification message to the students of the course outline (or the
+	 * sections of the course outline) and the instructors of the sections
+	 * associated to the course outline.
+	 * 
+	 * @param subject
+	 * @param text
+	 * @param students
+	 * @param sectionInstructors
+	 */
+	public void notifyOnPublish(String siteId, String subject, String body);
 }
