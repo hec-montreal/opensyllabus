@@ -41,7 +41,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -97,20 +96,19 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	mainPanel.add(osylPublishedListView);
 	mainPanel.setWidth("100%");
 	setSize("400px", "200px");
-
-	Label announceLabel =
-		new Label(uiMessages.getMessage("publish.announce"));
-	mainPanel.add(announceLabel);
+	
 	announceChexBox =
 		new CheckBox(uiMessages
 			.getMessage("publish.announce.checkboxLabel"));
 	mainPanel.add(announceChexBox);
 
 	announcePanel = new VerticalPanel();
-	announceLabel =
+	Label announceLabel =
 		new Label(uiMessages.getMessage("publish.announce.label"));
+	announceLabel.setStylePrimaryName("Osyl-PublishView-Label");
 	announcePanel.add(announceLabel);
 	contentTextArea = new TextArea();
+	contentTextArea.setSize("375px", "75px");
 	announcePanel.add(contentTextArea);
 	announcePanel.setVisible(false);
 	mainPanel.add(announcePanel);

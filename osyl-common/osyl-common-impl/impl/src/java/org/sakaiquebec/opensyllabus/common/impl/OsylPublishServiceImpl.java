@@ -1033,9 +1033,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return cmService;
     }
 
-    public void notifyOnPublish(String siteId, String subject, String body) {
+    public void notifyOnPublish(String siteId, String subject, String body)
+	    throws Exception {
 	List<CORelation> cos = null;
-	Site site = null;
 	String originalSiteId = siteId;
 	// Check if site is related to other sites
 
@@ -1044,70 +1044,69 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	} catch (Exception e) {
 	    log.info("The course outline " + siteId + " has no children.");
 	}
+	// We add the message to the current site
+	if (osylSiteService.siteExists(siteId)) {
 
-	try {
-
-	    // We add the message to the current site
-	    site = osylSiteService.getSite(siteId);
+	    addAnnouncement(siteId, subject, body);
+	    log.info("An announcement has been made in the site " + siteId
+		    + " concerning the publication of the course outline "
+		    + originalSiteId);
+	}
+	// We add the message to the children site
+	for (CORelation relation : cos) {
+	    siteId = relation.getChild();
 	    if (osylSiteService.siteExists(siteId)) {
-
 		addAnnouncement(siteId, subject, body);
 		log.info("An announcement has been made in the site " + siteId
 			+ " concerning the publication of the course outline "
 			+ originalSiteId);
 	    }
-	    // We add the message to the children site
-	    for (CORelation relation : cos) {
-		siteId = relation.getChild();
-		if (osylSiteService.siteExists(siteId)) {
-		    addAnnouncement(siteId, subject, body);
-		    log
-			    .info("An announcement has been made in the site "
-				    + siteId
-				    + " concerning the publication of the course outline "
-				    + originalSiteId);
-		}
-	    }
-	} catch (Exception e) {
-	    log.info("The site " + siteId + " does not exist");
 	}
 
     }
 
-    private void addAnnouncement(String siteId, String subject, String body) {
+    private void addAnnouncement(String siteId, String subject, String body)
+	    throws Exception {
 
-	String chanelId = ServerConfigurationService.getString("channel", null);
+	AnnouncementChannel channel = getAnnouncementChannel(siteId);
+
+	if (channel != null) {
+	    AnnouncementMessageEdit message = null;
+	    message = channel.addAnnouncementMessage();
+
+	    if (message != null) {
+		AnnouncementMessageHeaderEdit header =
+			message.getAnnouncementHeaderEdit();
+		// TODO: add published course outline reference to course
+		// outline lookup in announcement tool
+		// message.getPropertiesEdit().addProperty("coReference", );
+		header.setSubject(subject);
+		message.setBody(body);
+
+		header.clearGroupAccess();
+
+		channel.commitMessage(message, NotificationService.NOTI_NONE);
+
+	    }
+	} else {
+	    throw new Exception("No annoucement channel available");
+	}
+    }
+
+    private AnnouncementChannel getAnnouncementChannel(String siteId) {
 	AnnouncementService aService =
 		org.sakaiproject.announcement.cover.AnnouncementService
 			.getInstance();
 	AnnouncementChannel channel = null;
-	AnnouncementMessageEdit message = null;
-	if (chanelId != null) {
-	    chanelId =
+	String channelId =
+		ServerConfigurationService.getString("channel", null);
+	if (channelId == null) {
+	    channelId =
 		    org.sakaiproject.announcement.cover.AnnouncementService
 			    .channelReference(siteId,
 				    SiteService.MAIN_CONTAINER);
-
 	    try {
-		channel = aService.getAnnouncementChannel(chanelId);
-
-		message = channel.addAnnouncementMessage();
-
-		if (message != null) {
-		    AnnouncementMessageHeaderEdit header =
-			    message.getAnnouncementHeaderEdit();
-		    // TODO: add published course outline reference to course
-		    // outline lookup in announcement tool
-		    // message.getPropertiesEdit().addProperty("coReference", );
-		    header.setSubject(subject);
-		    message.setBody(body);
-
-		    header.clearGroupAccess();
-
-		    channel.commitMessage(message,
-			    NotificationService.NOTI_NONE);
-
-		}
+		channel = aService.getAnnouncementChannel(channelId);
 	    } catch (IdUnusedException e) {
 		log
 			.warn(this
@@ -1121,6 +1120,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		channel = null;
 	    }
 	}
+	return channel;
     }
 
 }

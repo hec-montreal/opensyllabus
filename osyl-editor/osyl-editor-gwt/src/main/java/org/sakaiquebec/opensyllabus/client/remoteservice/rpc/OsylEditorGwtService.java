@@ -178,6 +178,6 @@ public interface OsylEditorGwtService extends RemoteService {
      * @param subject
      * @param body
      */
-    public void notifyOnPublish(String siteId, String subject, String body);
+    public void notifyOnPublish(String siteId, String subject, String body) throws Exception;
 
 }
