@@ -1144,7 +1144,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	homePage.setupPageCategory(SitePage.HOME_TOOL_ID);
 	homePage.setTitle("Accueil");
 	homePage.setPosition(0);
-//	saveSite(site);
 	
 	// 1st tool
 	ToolConfiguration synAnncCfg = addTool(site, homePage,
@@ -1166,11 +1165,11 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	iframeCfg.setLayoutHints("1,0");
 	Properties iframeProps = iframeCfg.getPlacementConfig();
 	iframeProps.put("height","400px");
+	// instructors won't be able to change this iFrame unless they get
+	// site.upd permission
 	iframeProps.put("source","/library/content/HEC_Montreal_rules_" + lang +
 			".html");
 	iframeProps.put("reset.button","true");
-	// TODO: find a way to prevent the instructors to change these
-	//       (how to hide "Options" link?)
 	iframeCfg.save();
 
     }

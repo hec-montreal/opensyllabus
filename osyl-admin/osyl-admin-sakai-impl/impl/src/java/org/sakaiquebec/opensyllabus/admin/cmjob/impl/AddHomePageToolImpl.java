@@ -58,40 +58,10 @@ public class AddHomePageToolImpl implements Job {
 	this.siteService = siteService;
     }
 
-    private final static String[] PAGES_BEFORE = {
-	"OpenSyllabus",
-	"Outil de remise", "Ressources", "Information du Site" };
-
-    private final static String[] PAGES_NEW = {
-	"Accueil", "Annonces" };
-
-    private final static String[] PAGES_AFTER = {
-	"Accueil", "Annonces",
-	"OpenSyllabus",
-	"Outil de remise", "Ressources", "Information du Site" };
-
     private final static String[] TOOLS_BEFORE = {
 	"sakai.opensyllabus.tool",
 	"sakai.assignment.grades", "sakai.resources", "sakai.siteinfo" };
 
-    private final static String[] TOOLS_NEW = {
-	"sakai.synoptic.announcement", "sakai.announcements" };
-
-    private final static String[] TOOLS_AFTER = {
-	"sakai.synoptic.announcement", "sakai.iframe", "sakai.announcements",
-	"sakai.opensyllabus.tool",
-	"sakai.assignment.grades", "sakai.resources", "sakai.siteinfo" };
-
-    /*
-     * Logique:
-     * si le nombre d'outil est égal à TOOLS_BEFORE
-     *    Ajouter PAGES_NEW
-     *    Ajouter TOOLS_NEW
-     * Sinon
-     *    Logger le nom du site (et les outils?)
-     */
-    
-    
     @SuppressWarnings("unchecked")
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
@@ -107,37 +77,26 @@ public class AddHomePageToolImpl implements Job {
 	    int updated = 0;
 	    for (int i = 0; i < allSites.size(); i++) {
 
-		// ############ TODO: veut-on filtrer pour juste les sites H2011 ???? #######################
+		// TODO: should we filter sites for winter 2011
 
 		site = allSites.get(i);
 		log.debug("AddHomePageToolImpl: processing site [" + site.getTitle() + "]");
 		if (site != null) {
 		    try {
-			// TODO: is there a way to get the language of the site and
-			//       customize the pages to add accordingly?
+			// TODO: we should get the language of the site and
+			//       customize the content accordingly
 			if (addTools(site)) {
 			    updated++;
 			}
 
 			// Move page OpenSyllabus in 3rd position
 			SitePage osylPage = getOsylPage(site);
-			log.debug("osyl page:" + osylPage);
 			if (osylPage != null) {
 			    osylPage.setPosition(2);
 			} else {
 			    log.debug("osylPage null");
 			}
 
-			
-			// TODO TODO TODO TODO: BEGIN remove me TODO TODO TODO TODO TODO TODO TODO TODO 
-			if (updated >= 5) {
-			    return;
-			}
-			// TODO TODO TODO TODO: END remove me TODO TODO TODO TODO TODO TODO TODO TODO 
-//		    } catch (IdUnusedException e) {
-//			log.error(e.getMessage());
-//		    } catch (PermissionException e) {
-//			log.error(e.getMessage());
 		    } catch (Exception e) {
 			log.equals("AddHomePageToolImpl.execute: "  + e);
 			e.printStackTrace();
@@ -210,12 +169,11 @@ public class AddHomePageToolImpl implements Job {
 		+ currentToolCount);
 
 	if (currentToolCount != TOOLS_BEFORE.length) {
-	    // Oops unexpected situation:
+	    // Oops unexpected situation (might also be a sharable site):
 	    log.warn("addTools: site [" + site.getTitle() +
-	    "]: Unable to add tools (unexpected number of tools)");
+	    	"]: Unable to add tools (unexpected number of tools)");
 	    return false;
 	}
-//	log.debug("addTools: adding 2 tools");
 	
 	// Add Home page and its 2 tools
 	SitePage homePage = site.addPage();
@@ -240,18 +198,10 @@ public class AddHomePageToolImpl implements Job {
 	iframeProps.put("height","400px");
 	iframeProps.put("source","/library/content/reglements_H2011.html");
 	iframeProps.put("reset.button","true");
-	// TODO: find a way to prevent the instructors to change these
-	//       (how to hide "Options" link?)
+	// instructors won't be able to change this iFrame unless they get
+	// site.upd permission
 	iframeCfg.save();
-		
-
-//	List<ToolConfiguration> newSiteTools = getSiteTools(site);
-//	int newToolCount = newSiteTools.size();
-//	if (newToolCount == TOOLS_BEFORE.length + 2) {
-	    // Tools already there: we configure them
-	    // Configure 1st tool
-	    // Configure 2nd tool
-
+	
 	// Add Announcements page
 	SitePage anncPage = site.addPage();
 	anncPage.setTitle("Annonces");
@@ -260,23 +210,11 @@ public class AddHomePageToolImpl implements Job {
 	ToolConfiguration anncCfg = addTool(anncPage, "sakai.announcements");
 	// Configure Announcements tool
 	Properties anncProps = anncCfg.getPlacementConfig();
-	// TODO:  check it's working Configuration for Announcements: functions.require = site.upd
 	anncProps.put("functions.require","annc.new");
 	anncCfg.save();
-	saveSite(site); // TODO: needed?
+	saveSite(site);
 
-	    /*
-	    return true;
-	} else {
-	    // Oops unexpected situation:
-	    log.warn("addTools: site [" + site.getTitle() +
-	    	"]: Unable to add tools (unexpected number of tools after" +
-	    	" addition): " + currentToolCount);
-	    return false;
-	}
-	*/
-
-	    return true;
+	return true;
     }
 
 
@@ -285,8 +223,6 @@ public class AddHomePageToolImpl implements Job {
 	page.setLayout(SitePage.LAYOUT_SINGLE_COL);
 	Tool tool1 = ToolManager.getTool(toolId1);
 	ToolConfiguration tool1Conf = page.addTool(tool1);
-//	tool1Conf.setTool(toolId1, tool1);
-//	tool1Conf.setTitle(tool1.getTitle());
 	
 	return tool1Conf;
     }
