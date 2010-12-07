@@ -110,12 +110,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     private static final Log log = LogFactory.getLog(OsylSiteServiceImpl.class);
 
-    private static final String HEC_MONTREAL_RULES_TITLE_FR_CA =
-	    "Règlements de HEC Montréal";
-
-    private static final String HEC_MONTREAL_RULES_TITLE_EN =
-	    "HEC Montréal Regulations";
-
     private ToolManager toolManager;
 
     private IdManager idManager;
@@ -1140,7 +1134,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return toolConf;
     }
 
-    private void addHomePage(Site site, String lang) {
+    private void addHomePage(Site site, String locale) {
 	// Add Home page and its 2 tools
 	SitePage homePage = site.addPage();
 	homePage.setupPageCategory(SitePage.HOME_TOOL_ID);
@@ -1157,7 +1151,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	// 2nd tool
 	String toolTitle;
-	if (Locale.CANADA_FRENCH.equals(lang)) {
+	if (Locale.CANADA_FRENCH.toString().equals(locale)) {
 	    toolTitle = HEC_MONTREAL_RULES_TITLE_FR_CA;
 	} else {
 	    toolTitle = HEC_MONTREAL_RULES_TITLE_EN;
@@ -1165,13 +1159,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	ToolConfiguration iframeCfg =
 		addTool(site, homePage, "sakai.iframe", toolTitle);
 	iframeCfg.setLayoutHints("1,0");
+
 	Properties iframeProps = iframeCfg.getPlacementConfig();
 	iframeProps.put("height", "400px");
 	// instructors won't be able to change this iFrame unless they get
 	// site.upd permission
-	iframeProps.put("source", "/library/content/HEC_Montreal_rules_" + lang
-		+ ".html");
-	iframeProps.put("reset.button", "true");
+	iframeProps.put("source", HEC_MONTREAL_RULES_FILE_BASE_NAME + locale
+			+ HEC_MONTREAL_RULES_FILE_EXTENSION);
+	iframeProps.put("reset.button","true");
 	iframeCfg.save();
 
     }

@@ -3,6 +3,7 @@ package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -24,6 +25,9 @@ import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.Tool;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.tool.cover.ToolManager;
+import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
+import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
+import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
 /**
  * This job takes charge of adding a new "Home" page to sites that don't have
@@ -58,9 +62,23 @@ public class AddHomePageToolImpl implements Job {
 	this.siteService = siteService;
     }
 
+    /** The resouceDao to be injected by Spring */
+    private ResourceDao resourceDao;
+
+    /**
+     * Sets the {@link ResourceDao}.
+     * 
+     * @param resourceDao
+     */
+    public void setResourceDao(ResourceDao resourceDao) {
+	this.resourceDao = resourceDao;
+    }
+
     private final static String[] TOOLS_BEFORE = {
 	"sakai.opensyllabus.tool",
 	"sakai.assignment.grades", "sakai.resources", "sakai.siteinfo" };
+
+    private static final String DEFAULT_LOCALE = "fr_CA";
 
     @SuppressWarnings("unchecked")
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
@@ -71,21 +89,23 @@ public class AddHomePageToolImpl implements Job {
 		siteService.getSites(SiteService.SelectionType.ANY, SITE_TYPE,
 			null, null, SiteService.SortType.NONE, null);
 
-	Site site = null;
-
+	Site site;
+	
 	try {
 	    int updated = 0;
 	    for (int i = 0; i < allSites.size(); i++) {
 
-		// TODO: should we filter sites for winter 2011
-
 		site = allSites.get(i);
-		log.debug("AddHomePageToolImpl: processing site [" + site.getTitle() + "]");
+		// we only process sites for winter 2011
+		if (site.getTitle().indexOf(".H2011.") == -1) {
+		    continue;
+		}
+		log.debug("processing site [" + site.getTitle() + "]");
+		String locale = getSiteLocale(site);
+		
 		if (site != null) {
 		    try {
-			// TODO: we should get the language of the site and
-			//       customize the content accordingly
-			if (addTools(site)) {
+			if (addTools(site, locale)) {
 			    updated++;
 			}
 
@@ -96,9 +116,10 @@ public class AddHomePageToolImpl implements Job {
 			} else {
 			    log.debug("osylPage null");
 			}
+			log.info("upgraded site [" + site.getTitle() + "]");
 
 		    } catch (Exception e) {
-			log.equals("AddHomePageToolImpl.execute: "  + e);
+			log.error("execute: site.getId()"  + e);
 			e.printStackTrace();
 		    }
 		}
@@ -109,6 +130,21 @@ public class AddHomePageToolImpl implements Job {
 	} finally {
 	    logoutFromSakai();
 	}
+    }
+
+    private String getSiteLocale(Site site) {
+	COSerialized co;
+	String locale;
+	try {
+	    co = resourceDao.getSerializedCourseOutlineBySiteId(site.getId());
+	    locale = co.getLang();
+	} catch (Exception e) {
+	    locale = DEFAULT_LOCALE;
+	    log.warn("getSiteLocale: " + e + " site [" + site.getId()
+		    + "]: defaulting to " + locale);
+	    e.printStackTrace();
+	}
+	return locale;
     }
 
     /**
@@ -162,16 +198,16 @@ public class AddHomePageToolImpl implements Job {
      * Adds the tools as needed, if possible.
      * 
      * @param site
+     * @param locale 
      */
-    private boolean addTools(Site site) {
+    private boolean addTools(Site site, String locale) {
 	int currentToolCount = getSiteTools(site).size();
-	log.debug("addTools: site [" + site.getTitle() + "] tools:"
-		+ currentToolCount);
 
 	if (currentToolCount != TOOLS_BEFORE.length) {
 	    // Oops unexpected situation (might also be a sharable site):
 	    log.warn("addTools: site [" + site.getTitle() +
-	    	"]: Unable to add tools (unexpected number of tools)");
+	    	"]: Unable to add tools (unexpected number of tools: " +
+	    	currentToolCount + ")");
 	    return false;
 	}
 	
@@ -191,15 +227,24 @@ public class AddHomePageToolImpl implements Job {
 	synAnncCfg.save();
 
 	// 2nd tool
-	ToolConfiguration iframeCfg = addTool(homePage, "sakai.iframe");
+	String toolTitle;
+	if (Locale.CANADA_FRENCH.toString().equals(locale)) {
+	    toolTitle = OsylSiteService.HEC_MONTREAL_RULES_TITLE_FR_CA;
+	} else { 
+	    toolTitle = OsylSiteService.HEC_MONTREAL_RULES_TITLE_EN;
+	}
+	ToolConfiguration iframeCfg = addTool(homePage, "sakai.iframe",
+		toolTitle);
 	iframeCfg.setLayoutHints("1,0");
-	iframeCfg.setTitle("Règlements de HEC Montréal");
+
 	Properties iframeProps = iframeCfg.getPlacementConfig();
 	iframeProps.put("height","400px");
-	iframeProps.put("source","/library/content/reglements_H2011.html");
-	iframeProps.put("reset.button","true");
 	// instructors won't be able to change this iFrame unless they get
 	// site.upd permission
+	iframeProps.put("source",
+		OsylSiteService.HEC_MONTREAL_RULES_FILE_BASE_NAME + locale +
+		OsylSiteService.HEC_MONTREAL_RULES_FILE_EXTENSION);
+	iframeProps.put("reset.button","true");
 	iframeCfg.save();
 	
 	// Add Announcements page
@@ -217,18 +262,26 @@ public class AddHomePageToolImpl implements Job {
 	return true;
     }
 
+    private ToolConfiguration addTool(SitePage page, String toolId) {
+	return addTool(page, toolId, null);
+    }
 
     private ToolConfiguration addTool(SitePage page, 
-	    String toolId1) {
+	    String toolId, String specifiedTitle) {
 	page.setLayout(SitePage.LAYOUT_SINGLE_COL);
-	Tool tool1 = ToolManager.getTool(toolId1);
-	ToolConfiguration tool1Conf = page.addTool(tool1);
+	Tool tool = ToolManager.getTool(toolId);
+	ToolConfiguration toolConf = page.addTool(tool);
+	if (specifiedTitle != null) {
+	    toolConf.setTitle(specifiedTitle);	    
+	} else {
+	    toolConf.setTitle(tool.getTitle());
+	}
 	
-	return tool1Conf;
+	return toolConf;
     }
     
     private void saveSite(Site site) {
-	log.debug("saveSite: " + site.getTitle());
+	log.trace("saveSite: " + site.getTitle());
 	try {
 	    siteService.save(site);
 	} catch (IdUnusedException e) {

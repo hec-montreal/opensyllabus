@@ -516,6 +516,8 @@
 	<bean id="addHomePageJob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.AddHomePageToolImpl" >
 		<property name="siteService"
 			ref="org.sakaiproject.site.api.SiteService" />			
+		<property name="resourceDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
 	</bean>
 	
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.addHomePageJob"

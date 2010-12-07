@@ -90,6 +90,28 @@ public interface OsylSiteService extends EntityProducer {
     public final static String WINTER = "H";
 
     public final static String FALL = "A";
+    
+    /**
+     * Title of iFrame presenting rules and regulations (French Canadian).
+     */
+    public static final String HEC_MONTREAL_RULES_TITLE_FR_CA =
+	"Règlements de HEC Montréal";
+
+    /**
+     * Title of iFrame presenting rules and regulations (English).
+     */
+    public static final String HEC_MONTREAL_RULES_TITLE_EN =
+	"HEC Montréal Regulations";
+
+    /**
+     * Base name of files containing a summary and links of rules and
+     * regulations.
+     */
+    public static final String HEC_MONTREAL_RULES_FILE_BASE_NAME =
+	"/library/content/HEC_Montreal_rules_";
+
+    public static final String HEC_MONTREAL_RULES_FILE_EXTENSION =
+	HTML_FILE_EXTENSION;
 
     /**
      * Get a valid resource reference base site URL to be used in later calls.
