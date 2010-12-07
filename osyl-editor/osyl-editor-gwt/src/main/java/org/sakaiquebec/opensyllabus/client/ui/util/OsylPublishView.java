@@ -210,7 +210,7 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 					.addProperty(key, value);
 			    }
 			}
-			if(announceChexBox.getValue())
+			if (announceChexBox.getValue())
 			    notifyOnPublish();
 			osylPublishedListView.verifiyPublishState(true,
 				serverResponse.get(1));
@@ -262,16 +262,14 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 
 	    public void onFailure(Throwable caught) {
 		final OsylAlertDialog alertBox =
-		    new OsylAlertDialog(false, true,
-			    getController().getUiMessage(
-				    "publish.announce.error"));
-	    alertBox.show();
+			new OsylAlertDialog(false, true, getController()
+				.getUiMessage("publish.announce.error"));
+		alertBox.show();
 	    }
 
 	    public void onSuccess(Void result) {
 	    }
 	};
-	Window.alert("NOTIF");
 	Date date = new Date();
 	DateTimeFormat df = getController().getSettings().getDateFormat();
 	DateTimeFormat tf = getController().getSettings().getTimeFormat();
