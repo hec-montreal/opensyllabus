@@ -20,7 +20,6 @@
 
 package org.sakaiquebec.opensyllabus.client.remoteservice.rpc;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.Vector;
 
@@ -75,7 +74,8 @@ public interface OsylEditorGwtService extends RemoteService {
      * 
      * @param String id
      */
-    public Vector<Map<String, String>> publishCourseOutline() throws Exception, FusionException;
+    public Vector<Map<String, String>> publishCourseOutline() throws Exception,
+	    FusionException;
 
     /**
      * Returns the Published CourseOutline for the access type specified in
@@ -162,9 +162,10 @@ public interface OsylEditorGwtService extends RemoteService {
      * site course outline
      */
     public void releaseLock();
-    
+
     /**
      * Method used to create a pdf for the edition version of the CO
+     * 
      * @param xml
      * @param printEditionVersionCallback
      */

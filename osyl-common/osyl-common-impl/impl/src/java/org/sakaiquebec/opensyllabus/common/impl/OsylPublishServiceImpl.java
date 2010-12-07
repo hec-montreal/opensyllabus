@@ -76,7 +76,7 @@ import org.w3c.tidy.Tidy;
 public class OsylPublishServiceImpl implements OsylPublishService {
 
     private static Log log = LogFactory.getLog(OsylPublishServiceImpl.class);
-    
+
     private Vector<String> publishedSiteIds;
 
     /**
@@ -286,7 +286,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	long start = System.currentTimeMillis();
 	publishedSiteIds = new Vector<String>();
-	Vector<Map<String, String>> publicationResults = new Vector<Map<String, String>>();
+	Vector<Map<String, String>> publicationResults =
+		new Vector<Map<String, String>>();
 
 	SecurityService.pushAdvisor(new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
@@ -402,20 +403,23 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		+ (System.currentTimeMillis() - start) + " ms");
 
 	publicationResults.add(publicationProperties);
-	
+
 	publicationResults.add(generatePublishedSitesPdf(webappDir));
 	return publicationResults;
     }
-    
-    private Map<String, String> generatePublishedSitesPdf(String webappdir){
-	Map<String, String> pdfGenerationResults = new HashMap<String, String>();
-	
-	for(int i=0; i<publishedSiteIds.size();i++){
-	    try{
+
+    private Map<String, String> generatePublishedSitesPdf(String webappdir) {
+	Map<String, String> pdfGenerationResults =
+		new HashMap<String, String>();
+
+	for (int i = 0; i < publishedSiteIds.size(); i++) {
+	    try {
 		createPublishPrintVersion(publishedSiteIds.get(i), webappdir);
-		pdfGenerationResults.put(publishedSiteIds.get(i), "publish.pdfGeneration.ok");
-	    } catch (PdfGenerationException e){
-		pdfGenerationResults.put(publishedSiteIds.get(i), "publish.pdfGeneration.nok");
+		pdfGenerationResults.put(publishedSiteIds.get(i),
+			"publish.pdfGeneration.ok");
+	    } catch (PdfGenerationException e) {
+		pdfGenerationResults.put(publishedSiteIds.get(i),
+			"publish.pdfGeneration.nok");
 	    }
 	}
 	return pdfGenerationResults;
@@ -494,15 +498,31 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     private void createPublishPrintVersion(String siteId, String webappdir)
 	    throws PdfGenerationException {
-	try{
-	COSerialized coSerializedAttendee =
-		getSerializedPublishedCourseOutlineForAccessType(siteId,
-			SecurityInterface.ACCESS_ATTENDEE, webappdir);
-	File f = createPrintVersion(coSerializedAttendee, webappdir);
-	if (f != null) {
-	    createPdfInResource(siteId, PUBLISH_DIRECTORY, f);
-	}
-	} catch (Exception e){
+	try {
+	    COSerialized coSerializedAttendee =
+		    getSerializedPublishedCourseOutlineForAccessType(siteId,
+			    SecurityInterface.ACCESS_ATTENDEE, webappdir);
+	    File f = createPrintVersion(coSerializedAttendee, webappdir);
+	    if (f != null) {
+		String publishDirectory = "";
+		if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
+		    Site site = osylSiteService.getSite(siteId);
+		    String osylToolName =
+			    ToolManager.getTool("sakai.opensyllabus.tool")
+				    .getTitle();
+		    publishDirectory =
+			    ContentHostingService.ATTACHMENTS_COLLECTION
+				    + site.getTitle() + "/" + osylToolName
+				    + "/";
+		} else {
+		    publishDirectory =
+			    contentHostingService.getSiteCollection(siteId)
+				    + PUBLISH_DIRECTORY + "/";
+		}
+		createPdfInResource(siteId, publishDirectory, f);
+
+	    }
+	} catch (Exception e) {
 	    throw new PdfGenerationException(e);
 	}
     }
@@ -513,21 +533,20 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	File f = createPrintVersion(cos, webappdir);
 	String siteId = cos.getSiteId();
 	if (f != null) {
-	    createPdfInResource(siteId, WORK_DIRECTORY, f);
+	    String workDirectory =
+		    contentHostingService.getSiteCollection(siteId);
+	    if (!OsylContentService.USE_ATTACHMENTS.equals("true")) {
+		workDirectory += WORK_DIRECTORY + "/";
+	    }
+	    createPdfInResource(siteId, workDirectory, f);
+
 	}
     }
 
     private void createPdfInResource(String siteId, String directory, File f) {
-	String resourceOutputDir =
-		contentHostingService.getSiteCollection(siteId);
-	if (!ServerConfigurationService.getString(
-		"opensyllabus.publish.in.attachment").equals("true"))
-	    resourceOutputDir += directory + "/";
 	try {
-	    contentHostingService.getResource(resourceOutputDir + siteId
-		    + ".pdf");
-	    contentHostingService.removeResource(resourceOutputDir + siteId
-		    + ".pdf");
+	    contentHostingService.getResource(directory + siteId + ".pdf");
+	    contentHostingService.removeResource(directory + siteId + ".pdf");
 	} catch (IdUnusedException idue) {
 	    // pdf does not exist, nothing to do
 	} catch (Exception e) {
@@ -535,8 +554,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	}
 	try {
 	    ContentResourceEdit newResource =
-		    contentHostingService.addResource(resourceOutputDir,
-			    siteId, ".pdf", 1);
+		    contentHostingService.addResource(directory, siteId,
+			    ".pdf", 1);
 	    newResource.setContent(new BufferedInputStream(new FileInputStream(
 		    f)));
 	    newResource.setContentType(MimeConstants.MIME_PDF);
@@ -550,37 +569,41 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     private File createPrintVersion(COSerialized coSerialized, String webappdir)
 	    throws Exception {
-	try{
-	String xml = coSerialized.getContent();
-	Node d = XmlHelper.parseXml(xml);
-	File f = null;
-	// change keys for i18n messages
-	d = replaceSemanticTagsWithI18NMessage(d, coSerialized.getMessages());
+	try {
+	    String xml = coSerialized.getContent();
+	    Node d = XmlHelper.parseXml(xml);
+	    File f = null;
+	    // change keys for i18n messages
+	    d =
+		    replaceSemanticTagsWithI18NMessage(d, coSerialized
+			    .getMessages());
 
-	// convert html in xhtml
-	d = convertHtmlToXhtml(d);
+	    // convert html in xhtml
+	    d = convertHtmlToXhtml(d);
 
-	// transform xml -> pdf
-	String configRef = coSerialized.getOsylConfig().getConfigRef();
-	String xsltXmltoPdf =
-		FileHelper.getFileContent(webappdir + File.separator
-			+ OsylConfigService.CONFIG_DIR + File.separator
-			+ configRef + File.separator
-			+ OsylConfigService.PRINT_DIRECTORY + File.separator
-			+ OsylConfigService.PRINT_XSLFO_FILENAME);
-	f =
-		FOPHelper.convertXml2Pdf(d, xsltXmltoPdf, webappdir
-			+ OsylConfigService.CONFIG_DIR + File.separator
-			+ configRef + File.separator
-			+ OsylConfigService.PRINT_DIRECTORY + File.separator);
+	    // transform xml -> pdf
+	    String configRef = coSerialized.getOsylConfig().getConfigRef();
+	    String xsltXmltoPdf =
+		    FileHelper.getFileContent(webappdir + File.separator
+			    + OsylConfigService.CONFIG_DIR + File.separator
+			    + configRef + File.separator
+			    + OsylConfigService.PRINT_DIRECTORY
+			    + File.separator
+			    + OsylConfigService.PRINT_XSLFO_FILENAME);
+	    f =
+		    FOPHelper.convertXml2Pdf(d, xsltXmltoPdf, webappdir
+			    + OsylConfigService.CONFIG_DIR + File.separator
+			    + configRef + File.separator
+			    + OsylConfigService.PRINT_DIRECTORY
+			    + File.separator);
 
-	return f;
-	} catch (Exception e){
+	    return f;
+	} catch (Exception e) {
 	    throw e;
 	}
     }
 
-    public static Node convertHtmlToXhtml(Node d) throws Exception{
+    public static Node convertHtmlToXhtml(Node d) throws Exception {
 	try {
 	    XPathFactory factory = XPathFactory.newInstance();
 	    XPath xpath = factory.newXPath();
@@ -662,14 +685,14 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	COSerialized hierarchyFussionedCO =
 		osylSiteService.getSerializedCourseOutline(siteId, webappDir);// getSerializedCourseOultineBySiteId(siteid)
-	if (hierarchyFussionedCO.isIncompatibleWithHisParent()){
+	if (hierarchyFussionedCO.isIncompatibleWithHisParent()) {
 	    throw new FusionException();
-	}if(hierarchyFussionedCO.isIncompatibleHierarchy()){
+	}
+	if (hierarchyFussionedCO.isIncompatibleHierarchy()) {
 	    FusionException e = new FusionException();
 	    e.setHierarchyFusionException(true);
 	    throw e;
 	}
-	    
 
 	COModeledServer coModeled = null;
 	try {
@@ -677,11 +700,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    osylSiteService.getFusionnedPrePublishedHierarchy(siteId);
 	} catch (FusionException fe) {
 	    throw new FusionException();
-	} catch(CompatibilityException ce){
+	} catch (CompatibilityException ce) {
 	    FusionException fe = new FusionException();
 	    fe.setHierarchyFusionException(true);
 	    throw fe;
-	}catch (Exception e) {
+	} catch (Exception e) {
 	    // there is no published version of co for siteid
 	}
 	if (hierarchyFussionedCO != null && coModeled != null) {
@@ -698,9 +721,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_ATTENDEE,
 		    webappDir);
 
-	    //If the publication worked, the site id is logged to generate the
-	    //pdf later.
-	    
+	    // If the publication worked, the site id is logged to generate the
+	    // pdf later.
+
 	    publishedSiteIds.add(siteId);
 	    publishChildren(siteId, webappDir);
 	}
@@ -761,21 +784,21 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	String id_publish = null;
 	try {
 
-	    if (osylContentService.USE_ATTACHMENTS.equals("true")) {
+	    if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
 		id_work = (refString);
 	    }
 	    ContentCollection workContent =
 		    contentHostingService.getCollection(id_work);
 
 	    // We remove all resources in the publish directory collection
-	    if (osylContentService.USE_ATTACHMENTS.equals("true")) {
+	    if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
 		Site site = osylSiteService.getSite(siteId);
 		String osylToolName =
 			ToolManager.getTool("sakai.opensyllabus.tool")
 				.getTitle();
 
 		id_publish =
-			contentHostingService.ATTACHMENTS_COLLECTION
+			ContentHostingService.ATTACHMENTS_COLLECTION
 				+ site.getTitle() + "/" + osylToolName + "/";
 	    } else {
 		id_publish = (refString + PUBLISH_DIRECTORY + "/");

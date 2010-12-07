@@ -514,8 +514,8 @@ public class OsylTextToolbar extends Composite {
 	String downloadUrl ;
 	if (OsylController.USE_ATTACHMENTS.equals("true"))
 	    downloadUrl = 	    
-		serverId + "/access/content/group/" + siteId + "/"
-			+ siteId + ".pdf";
+		serverId + "/sdata/c/attachment/" + siteId + "/OpenSyllabus/"
+			+ siteId + ".pdf?child=" + siteId;
 	else
 	    downloadUrl = 	    
 		serverId + "/access/content/group/" + siteId + "/"
