@@ -21,9 +21,10 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
+import java.util.Date;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
@@ -37,12 +38,17 @@ import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -60,6 +66,12 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
     private OsylImageBundleInterface osylImageBundle =
 	    (OsylImageBundleInterface) GWT
 		    .create(OsylImageBundleInterface.class);
+
+    private CheckBox announceChexBox;
+
+    private TextArea contentTextArea;
+
+    private VerticalPanel announcePanel;
 
     /**
      * User interface message bundle
@@ -85,6 +97,33 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	mainPanel.add(osylPublishedListView);
 	mainPanel.setWidth("100%");
 	setSize("400px", "200px");
+
+	Label announceLabel =
+		new Label(uiMessages.getMessage("publish.announce"));
+	mainPanel.add(announceLabel);
+	announceChexBox =
+		new CheckBox(uiMessages
+			.getMessage("publish.announce.checkboxLabel"));
+	mainPanel.add(announceChexBox);
+
+	announcePanel = new VerticalPanel();
+	announceLabel =
+		new Label(uiMessages.getMessage("publish.announce.label"));
+	announcePanel.add(announceLabel);
+	contentTextArea = new TextArea();
+	announcePanel.add(contentTextArea);
+	announcePanel.setVisible(false);
+	mainPanel.add(announcePanel);
+
+	announceChexBox
+		.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+
+		    public void onValueChange(ValueChangeEvent<Boolean> event) {
+			boolean visible = event.getValue();
+			announcePanel.setVisible(visible);
+		    }
+
+		});
 
 	// Add a button panel
 	HorizontalPanel buttonPanel = new HorizontalPanel();
@@ -160,17 +199,21 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
     private void publish() {
 	AsyncCallback<Vector<Map<String, String>>> callback =
 		new AsyncCallback<Vector<Map<String, String>>>() {
-		    public void onSuccess(Vector<Map<String, String>> serverResponse) {
+		    public void onSuccess(
+			    Vector<Map<String, String>> serverResponse) {
 			if (serverResponse != null) {
-			    for (Entry<String, String> entry : serverResponse.get(0)
-				    .entrySet()) {
+			    for (Entry<String, String> entry : serverResponse
+				    .get(0).entrySet()) {
 				String key = entry.getKey();
 				String value = entry.getValue();
 				osylController.getMainView().getModel()
 					.addProperty(key, value);
 			    }
 			}
-			osylPublishedListView.verifiyPublishState(true, serverResponse.get(1));
+			if(announceChexBox.getValue())
+			    notifyOnPublish();
+			osylPublishedListView.verifiyPublishState(true,
+				serverResponse.get(1));
 		    }
 
 		    public void onFailure(Throwable error) {
@@ -178,8 +221,9 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 			    String msg = null;
 			    if (((FusionException) error)
 				    .isHierarchyFusionException()) {
-				msg = uiMessages
-					.getMessage("publish.fusionException.hierarchyFusionException");
+				msg =
+					uiMessages
+						.getMessage("publish.fusionException.hierarchyFusionException");
 			    } else {
 				msg =
 					uiMessages
@@ -189,7 +233,7 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 				    new OsylAlertDialog(false, true, uiMessages
 					    .getMessage("Global.warning"), msg);
 			    alertBox.show();
-			}else if (error instanceof PdfGenerationException){
+			} else if (error instanceof PdfGenerationException) {
 			    final OsylAlertDialog alertBox =
 				    new OsylAlertDialog(
 					    false,
@@ -211,6 +255,35 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 		    }
 		};
 	osylController.publishCourseOutline(callback);
+    }
+
+    private void notifyOnPublish() {
+	AsyncCallback<Void> notifyCallback = new AsyncCallback<Void>() {
+
+	    public void onFailure(Throwable caught) {
+		final OsylAlertDialog alertBox =
+		    new OsylAlertDialog(false, true,
+			    getController().getUiMessage(
+				    "publish.announce.error"));
+	    alertBox.show();
+	    }
+
+	    public void onSuccess(Void result) {
+	    }
+	};
+	Window.alert("NOTIF");
+	Date date = new Date();
+	DateTimeFormat df = getController().getSettings().getDateFormat();
+	DateTimeFormat tf = getController().getSettings().getTimeFormat();
+	String dateString = df.format(date);
+	String timeString = tf.format(date);
+	String content =
+		uiMessages.getMessage("publish.announce.content", dateString,
+			timeString)
+			+ contentTextArea.getText();
+	getController().notifyOnPublish(getController().getSiteId(),
+		uiMessages.getMessage("publish.announce.object"), content,
+		notifyCallback);
     }
 
     public OsylController getController() {

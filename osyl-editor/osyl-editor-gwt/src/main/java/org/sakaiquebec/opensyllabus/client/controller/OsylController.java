@@ -661,7 +661,8 @@ public class OsylController implements SavePushButtonEventHandler,
      * 
      * @param String ID of the requested CourseOutlineXML
      */
-    public void publishCourseOutline(AsyncCallback<Vector<Map<String, String>>> callback) {
+    public void publishCourseOutline(
+	    AsyncCallback<Vector<Map<String, String>>> callback) {
 	OsylRemoteServiceLocator.getEditorRemoteService().publishCourseOutline(
 		callback);
     }
@@ -1493,6 +1494,12 @@ public class OsylController implements SavePushButtonEventHandler,
 	    AsyncCallback<Void> printEditionVersionCallback) {
 	OsylRemoteServiceLocator.getEditorRemoteService()
 		.createPrintableEditionVersion(printEditionVersionCallback);
+    }
+
+    public void notifyOnPublish(String siteId, String subject, String body,
+	    AsyncCallback<Void> callback) {
+	OsylRemoteServiceLocator.getEditorRemoteService().notifyOnPublish(
+		siteId, subject, body, callback);
     }
 
 }

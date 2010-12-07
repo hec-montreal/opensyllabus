@@ -43,7 +43,6 @@ import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.ResourceProperties;
-import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
@@ -51,9 +50,6 @@ import org.sakaiproject.id.cover.IdManager;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.cover.SiteService;
 import org.sakaiproject.tool.cover.ToolManager;
-import org.sakaiproject.user.api.User;
-import org.sakaiproject.user.api.UserNotDefinedException;
-import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
@@ -120,19 +116,18 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	this.osylContentService = osylContentService;
     }
 
-	/** Dependency: AnnouncementService. */
-	protected AnnouncementService announcementService = null;
+    /** Dependency: AnnouncementService. */
+    protected AnnouncementService announcementService = null;
 
-	/**
-	 * Dependency: AnnouncementService
-	 * 
-	 * @param announcementService
-	 *            The AnnouncementService
-	 */
-	public void setAnnouncementService(AnnouncementService announcementService) {
-		this.announcementService = announcementService;
-	}
-	
+    /**
+     * Dependency: AnnouncementService
+     * 
+     * @param announcementService The AnnouncementService
+     */
+    public void setAnnouncementService(AnnouncementService announcementService) {
+	this.announcementService = announcementService;
+    }
+
     /**
      * Maps the visibility of the documents published, hidden or not
      */
@@ -1037,88 +1032,95 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public CourseManagementService getCmService() {
 	return cmService;
     }
-    
-	public void notifyOnPublish(String siteId, String subject, String body) {
-		List<CORelation> cos = null;
-		Site site = null;
-		String originalSiteId = siteId;
-		// Check if site is related to other sites
 
-		try {
-			cos = coRelationDao.getCourseOutlineChildren(siteId);
-		} catch (Exception e) {
-			log.info("The course outline " + siteId + " has no children.");
-		}
+    public void notifyOnPublish(String siteId, String subject, String body) {
+	List<CORelation> cos = null;
+	Site site = null;
+	String originalSiteId = siteId;
+	// Check if site is related to other sites
 
-		try {
-
-			// We add the message to the current site
-			site = osylSiteService.getSite(siteId);
-			if (osylSiteService.siteExists(siteId)) {
-
-				addAnnouncemant(siteId, subject, body);
-				log.info("An announcement has been made in the site " + siteId
-						+ " concerning the publication of the course outline "
-						+ originalSiteId);
-			}
-			// We add the message to the children site
-			for (CORelation relation : cos) {
-				siteId = relation.getChild();
-				if (osylSiteService.siteExists(siteId)) {
-					addAnnouncemant(siteId, subject, body);
-					log.info("An announcement has been made in the site "
-							+ siteId
-							+ " concerning the publication of the course outline "
-							+ originalSiteId);
-				}
-			}
-		} catch (Exception e) {
-			log.info("The site " + siteId + " does not exist");
-		}
-
+	try {
+	    cos = coRelationDao.getCourseOutlineChildren(siteId);
+	} catch (Exception e) {
+	    log.info("The course outline " + siteId + " has no children.");
 	}
 
-	private void addAnnouncemant(String siteId, String subject, String body) {
+	try {
 
-		String chanelId = ServerConfigurationService.getString("channel", null);
-		AnnouncementService aService = org.sakaiproject.announcement.cover.AnnouncementService
-				.getInstance();
-		AnnouncementChannel channel = null;
-		AnnouncementMessageEdit message = null;
-		if (chanelId != null) {
-			chanelId = org.sakaiproject.announcement.cover.AnnouncementService
-					.channelReference(siteId, SiteService.MAIN_CONTAINER);
+	    // We add the message to the current site
+	    site = osylSiteService.getSite(siteId);
+	    if (osylSiteService.siteExists(siteId)) {
 
-			try {
-				channel = aService.getAnnouncementChannel(chanelId);
-
-				message = channel.addAnnouncementMessage();
-
-				if (message != null) {
-					AnnouncementMessageHeaderEdit header = message
-							.getAnnouncementHeaderEdit();
-					// TODO: add published course outline reference to course
-					// outline lookup in announcement tool
-					// message.getPropertiesEdit().addProperty("coReference", );
-					header.setSubject(subject);
-					message.setBody(body);
-
-					header.clearGroupAccess();
-
-					channel.commitMessage(message,
-							NotificationService.NOTI_NONE);
-
-				}
-			} catch (IdUnusedException e) {
-				log.warn(this + "getAnnouncement:No announcement channel found");
-				channel = null;
-			} catch (PermissionException e) {
-				log.warn(this
-						+ "getAnnouncement:Current user not authorized to deleted annc associated "
-						+ "with assignment. " + e.getMessage());
-				channel = null;
-			}
+		addAnnouncement(siteId, subject, body);
+		log.info("An announcement has been made in the site " + siteId
+			+ " concerning the publication of the course outline "
+			+ originalSiteId);
+	    }
+	    // We add the message to the children site
+	    for (CORelation relation : cos) {
+		siteId = relation.getChild();
+		if (osylSiteService.siteExists(siteId)) {
+		    addAnnouncement(siteId, subject, body);
+		    log
+			    .info("An announcement has been made in the site "
+				    + siteId
+				    + " concerning the publication of the course outline "
+				    + originalSiteId);
 		}
+	    }
+	} catch (Exception e) {
+	    log.info("The site " + siteId + " does not exist");
 	}
+
+    }
+
+    private void addAnnouncement(String siteId, String subject, String body) {
+
+	String chanelId = ServerConfigurationService.getString("channel", null);
+	AnnouncementService aService =
+		org.sakaiproject.announcement.cover.AnnouncementService
+			.getInstance();
+	AnnouncementChannel channel = null;
+	AnnouncementMessageEdit message = null;
+	if (chanelId != null) {
+	    chanelId =
+		    org.sakaiproject.announcement.cover.AnnouncementService
+			    .channelReference(siteId,
+				    SiteService.MAIN_CONTAINER);
+
+	    try {
+		channel = aService.getAnnouncementChannel(chanelId);
+
+		message = channel.addAnnouncementMessage();
+
+		if (message != null) {
+		    AnnouncementMessageHeaderEdit header =
+			    message.getAnnouncementHeaderEdit();
+		    // TODO: add published course outline reference to course
+		    // outline lookup in announcement tool
+		    // message.getPropertiesEdit().addProperty("coReference", );
+		    header.setSubject(subject);
+		    message.setBody(body);
+
+		    header.clearGroupAccess();
+
+		    channel.commitMessage(message,
+			    NotificationService.NOTI_NONE);
+
+		}
+	    } catch (IdUnusedException e) {
+		log
+			.warn(this
+				+ "getAnnouncement:No announcement channel found");
+		channel = null;
+	    } catch (PermissionException e) {
+		log
+			.warn(this
+				+ "getAnnouncement:Current user not authorized to deleted annc associated "
+				+ "with assignment. " + e.getMessage());
+		channel = null;
+	    }
+	}
+    }
 
 }

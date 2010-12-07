@@ -50,7 +50,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 /**
  * This interface contains all the methods used to publish a course outline or
  * to retrieve a published course outline.
- *
+ * 
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -75,37 +75,40 @@ public interface OsylPublishService {
 
     /**
      * Returns the unique URL for the published course plan
-     *
+     * 
      * @return a String that is the published course plan URL
      */
-    public COSerialized getSerializedPublishedCourseOutlineForAccessType(String siteId,
-	    String accessType, String webappdir);
+    public COSerialized getSerializedPublishedCourseOutlineForAccessType(
+	    String siteId, String accessType, String webappdir);
 
     /**
      * Publish the actual course plan in the web application directory
      */
-    public Vector<Map<String,String>> publish(String webappDir, String siteId) throws Exception, FusionException;
+    public Vector<Map<String, String>> publish(String webappDir, String siteId)
+	    throws Exception, FusionException;
 
     /**
      * Make an xsl transformation of the specified xml for the specified group
-     *
+     * 
      * @param xml
      * @param group
      * @return the result of the transformation
      */
-    public String transformXmlForGroup(String xml, String group, String webappDir) throws Exception;
-    
-    public void createEditionPrintVersion(COSerialized cos, String webappdir) throws Exception;
-    
-	/**
-	 * Send a notification message to the students of the course outline (or the
-	 * sections of the course outline) and the instructors of the sections
-	 * associated to the course outline.
-	 * 
-	 * @param subject
-	 * @param text
-	 * @param students
-	 * @param sectionInstructors
-	 */
-	public void notifyOnPublish(String siteId, String subject, String body);
+    public String transformXmlForGroup(String xml, String group,
+	    String webappDir) throws Exception;
+
+    public void createEditionPrintVersion(COSerialized cos, String webappdir)
+	    throws Exception;
+
+    /**
+     * Send a notification message to the students of the course outline (or the
+     * sections of the course outline) and the instructors of the sections
+     * associated to the course outline.
+     * 
+     * @param subject
+     * @param text
+     * @param students
+     * @param sectionInstructors
+     */
+    public void notifyOnPublish(String siteId, String subject, String body);
 }

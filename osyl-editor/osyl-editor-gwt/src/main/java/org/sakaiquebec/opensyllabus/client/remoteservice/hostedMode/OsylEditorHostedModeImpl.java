@@ -296,7 +296,8 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	callback.onSuccess(null);
     }
 
-    public void publishCourseOutline(AsyncCallback<Vector<Map<String,String>>> callback) {
+    public void publishCourseOutline(
+	    AsyncCallback<Vector<Map<String, String>>> callback) {
 	callback.onSuccess(null);
     }
 
@@ -328,23 +329,18 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 	callback.onSuccess(null);
     }
 
-    public void getExistingEntities(String siteId, AsyncCallback<SakaiEntities> callback){
+    public void getExistingEntities(String siteId,
+	    AsyncCallback<SakaiEntities> callback) {
 	callback.onSuccess(null);
     }
 
-    public void createPrintableEditionVersion(AsyncCallback<Void> printEditionVersionCallback) {
+    public void createPrintableEditionVersion(
+	    AsyncCallback<Void> printEditionVersionCallback) {
 	printEditionVersionCallback.onFailure(null);
     }
 
-	/**
-	 * Method used to add  an announcement upon publishing a course outline.
-	 * @param siteId
-	 * @param subject
-	 * @param body
-	 * @param callback
-	 */
-	public void notifyOnPublish(String siteId, String subject, String body,
-			AsyncCallback<Void> callback){
-		callback.onSuccess(null);
-	}
+    public void notifyOnPublish(String siteId, String subject, String body,
+	    AsyncCallback<Void> callback) {
+	callback.onSuccess(null);
+    }
 }

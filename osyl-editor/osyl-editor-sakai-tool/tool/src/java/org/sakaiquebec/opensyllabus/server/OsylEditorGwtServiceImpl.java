@@ -22,7 +22,6 @@ package org.sakaiquebec.opensyllabus.server;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -270,8 +269,8 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     public boolean updateSerializedCourseOutline(COSerialized co)
 	    throws Exception {
 	try {
-	    return  osylServices.getOsylSiteService()
-			    .updateSerializedCourseOutline(co);
+	    return osylServices.getOsylSiteService()
+		    .updateSerializedCourseOutline(co);
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    throw e;
@@ -419,5 +418,10 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	cos.setContent(transformXml);
 	osylServices.getOsylPublishService().createEditionPrintVersion(cos,
 		webappDir);
+    }
+
+    public void notifyOnPublish(String siteId, String subject, String body) {
+	osylServices.getOsylPublishService().notifyOnPublish(siteId, subject,
+		body);
     }
 }

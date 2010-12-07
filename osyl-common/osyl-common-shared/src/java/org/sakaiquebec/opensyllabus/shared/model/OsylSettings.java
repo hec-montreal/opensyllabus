@@ -45,6 +45,7 @@ public class OsylSettings {
 
     // date format
     private static final String FORMAT_DATE = "format.date";
+    private static final String FORMAT_TIME = "format.time";
     private static final String FORMAT_DATE_TIME = "format.date_time";
 
     // rubric editable
@@ -164,6 +165,15 @@ public class OsylSettings {
 	String f = "dd/MM/yyyy HH:mm:ss";// default format
 	if (settings.containsKey(FORMAT_DATE_TIME))
 	    f = getSettingsProperty(FORMAT_DATE_TIME);
+
+	return DateTimeFormat.getFormat(f);
+    }
+    
+    
+    public DateTimeFormat getTimeFormat(){
+	String f = "HH:mm:ss";//default format
+	if (settings.containsKey(FORMAT_TIME))
+	    f = getSettingsProperty(FORMAT_TIME);
 
 	return DateTimeFormat.getFormat(f);
     }
