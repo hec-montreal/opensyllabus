@@ -77,6 +77,16 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
      */
     private OsylConfigMessages uiMessages;
 
+    private OsylConfigMessages coMessages;
+
+    private String dateString;
+
+    private String timeString;
+
+    private DateTimeFormat dateFormat;
+
+    private DateTimeFormat timeFormat;
+
     /**
      * Constructor.
      * 
@@ -84,7 +94,10 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
      */
     public OsylPublishView(OsylController osylController) {
 	setController(osylController);
+	dateFormat = getController().getSettings().getDateFormat();
+	timeFormat = getController().getSettings().getTimeFormat();
 	uiMessages = osylController.getUiMessages();
+	coMessages = osylController.getCoMessages();
 	mainPanel = new VerticalPanel();
 	Label label =
 		new Label(uiMessages.getMessage("courseOutlinePublication"));
@@ -96,7 +109,7 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	mainPanel.add(osylPublishedListView);
 	mainPanel.setWidth("100%");
 	setSize("400px", "200px");
-	
+
 	announceChexBox =
 		new CheckBox(uiMessages
 			.getMessage("publish.announce.checkboxLabel"));
@@ -108,6 +121,11 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	announceLabel.setStylePrimaryName("Osyl-PublishView-Label");
 	announcePanel.add(announceLabel);
 	contentTextArea = new TextArea();
+	Date date = new Date();
+	dateString = dateFormat.format(date);
+	timeString = timeFormat.format(date);
+	contentTextArea.setText(coMessages.getMessage(
+		"announce.publish.content", dateString, timeString));
 	contentTextArea.setSize("375px", "75px");
 	announcePanel.add(contentTextArea);
 	announcePanel.setVisible(false);
@@ -268,17 +286,12 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	    public void onSuccess(Void result) {
 	    }
 	};
-	Date date = new Date();
-	DateTimeFormat df = getController().getSettings().getDateFormat();
-	DateTimeFormat tf = getController().getSettings().getTimeFormat();
-	String dateString = df.format(date);
-	String timeString = tf.format(date);
-	String content =
-		uiMessages.getMessage("publish.announce.content", dateString,
-			timeString)
-			+ contentTextArea.getText();
+	String content = contentTextArea.getText();
+	Date d = new Date();
+	content = content.replace(dateString, dateFormat.format(d));
+	content = content.replace(timeString, timeFormat.format(d));
 	getController().notifyOnPublish(getController().getSiteId(),
-		uiMessages.getMessage("publish.announce.object"), content,
+		coMessages.getMessage("announce.publish.object"), content,
 		notifyCallback);
     }
 
