@@ -23,8 +23,6 @@ package org.sakaiquebec.opensyllabus.common.impl;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -306,11 +304,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	    public void update(Observable o, Object arg) {
 		Event e = (Event) arg;
-		if(e.getEvent().equals(UsageSessionService.EVENT_LOGIN)){
-		    DateFormat df = new SimpleDateFormat("dd/MM/yyyy 'at' HH:mm");
-		    log.info("user [" + sessionManager.getCurrentSession().getUserEid()
-		+ "] login "+df.format(new Date()));
-		}else if (e.getEvent().equals(UsageSessionService.EVENT_LOGOUT)) {
+		if (e.getEvent().equals(UsageSessionService.EVENT_LOGIN)) {
+		    DateFormat df =
+			    new SimpleDateFormat("dd/MM/yyyy 'at' HH:mm");
+		    log.info("user ["
+			    + sessionManager.getCurrentSession().getUserEid()
+			    + "] login " + df.format(new Date()));
+		} else if (e.getEvent()
+			.equals(UsageSessionService.EVENT_LOGOUT)) {
 		    // we unlocks all CO locks by current user (he logs out)
 		    resourceDao.clearLocksForSession(sessionManager
 			    .getCurrentSession().getId());
@@ -1173,8 +1174,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	// instructors won't be able to change this iFrame unless they get
 	// site.upd permission
 	iframeProps.put("source", HEC_MONTREAL_RULES_FILE_BASE_NAME + locale
-			+ HEC_MONTREAL_RULES_FILE_EXTENSION);
-	iframeProps.put("reset.button","true");
+		+ HEC_MONTREAL_RULES_FILE_EXTENSION);
+	iframeProps.put("reset.button", "true");
 	iframeCfg.save();
 
     }

@@ -49,6 +49,7 @@ import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.id.cover.IdManager;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.cover.SiteService;
+import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
@@ -126,6 +127,16 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     public void setAnnouncementService(AnnouncementService announcementService) {
 	this.announcementService = announcementService;
+    }
+    
+    private SessionManager sessionManager;
+
+    public SessionManager getSessionManager() {
+        return sessionManager;
+    }
+
+    public void setSessionManager(SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
     }
 
     /**
@@ -303,6 +314,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    throws Exception, FusionException {
 
 	long start = System.currentTimeMillis();
+	log.info("user ["
+			    + sessionManager.getCurrentSession().getUserEid()
+			    + "] publish site ["+siteId+"]");
 	publishedSiteIds = new Vector<String>();
 	Vector<Map<String, String>> publicationResults =
 		new Vector<Map<String, String>>();
@@ -317,8 +331,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	COSerialized co =
 		osylSiteService
 			.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
-	log.info("Publishing course outline for site ["
-		+ (co.getTitle() == null ? siteId : co.getTitle()) + "]");
+	
 
 	if (co.getContent() == null) {
 	    osylSiteService.setCoContentWithTemplate(co, webappDir);

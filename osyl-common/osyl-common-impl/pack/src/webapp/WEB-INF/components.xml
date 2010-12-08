@@ -38,23 +38,24 @@
 	</bean>
 
 
-	<bean id="org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO"
+	<bean
+		id="org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO"
 		class="org.sakaiquebec.opensyllabus.common.impl.portal.OsylTransformToZCCOImpl"
 		init-method="init" destroy-method="destroy" singleton="true">
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />
-		
+
 		<property name="cmService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
 
-		<property name="siteService" 
-			ref="org.sakaiproject.site.api.SiteService" />
-		
-		<property name="zcPublierService" 
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
+
+		<property name="zcPublierService"
 			ref="org.sakaiquebec.opensyllabus.common.api.portal.publish3.ZCPublisherService" />
 	</bean>
 
-	<bean id="org.sakaiquebec.opensyllabus.common.api.portal.publish3.ZCPublisherService"
+	<bean
+		id="org.sakaiquebec.opensyllabus.common.api.portal.publish3.ZCPublisherService"
 		class="org.sakaiquebec.opensyllabus.common.impl.portal.publish3.ZCPublisherServiceImpl"
 		init-method="init" destroy-method="destroy" singleton="true">
 	</bean>
@@ -92,8 +93,8 @@
 		<!-- Osyl dependencies -->
 		<property name="osylSiteService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
-		<property name="osylContentService" 
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />	
+		<property name="osylContentService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />
 		<property name="resourceDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
 		<property name="securityService"
@@ -110,9 +111,10 @@
 			ref="org.sakaiproject.content.api.ContentHostingService" />
 		<property name="cmService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
- 		<property name="announcementService"
- 			ref="org.sakaiproject.announcement.api.AnnouncementService"/>			
-		
+		<property name="announcementService"
+			ref="org.sakaiproject.announcement.api.AnnouncementService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+
 		<!--
 			<property name="toolManager"
 			ref="org.sakaiproject.tool.api.ToolManager" />
@@ -127,7 +129,8 @@
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />
 		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
-		<property name="osylContentService" ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />
+		<property name="osylContentService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />
 		<property name="idManager" ref="org.sakaiproject.id.api.IdManager" />
 		<property name="toolManager" ref="org.sakaiproject.tool.api.ToolManager" />
 		<property name="entityManager" ref="org.sakaiproject.entity.api.EntityManager" />
