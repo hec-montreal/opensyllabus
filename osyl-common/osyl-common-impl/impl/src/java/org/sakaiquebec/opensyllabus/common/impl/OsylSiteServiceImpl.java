@@ -643,7 +643,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public String createSharableSite(String siteTitle, String configRef,
 	    String lang) throws Exception {
 	Site site = null;
-
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] creates site [" + siteTitle + "]");
 	if (!siteService.siteExists(siteTitle)) {
 	    site = siteService.addSite(siteTitle, SITE_TYPE);
 	    site.setTitle(siteTitle);
@@ -1236,6 +1237,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     public void associate(String siteId, String parentId) throws Exception,
 	    CompatibilityException, FusionException {
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] associates [" + siteId + "] to parent [" + parentId + "]");
 	COSerialized co;
 	try {
 	    co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
@@ -1264,6 +1267,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     }
 
     public void dissociate(String siteId, String parentId) throws Exception {
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] dissociates [" + siteId + "] from parent [" + parentId
+		+ "]");
 	COSerialized co;
 	try {
 	    co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);

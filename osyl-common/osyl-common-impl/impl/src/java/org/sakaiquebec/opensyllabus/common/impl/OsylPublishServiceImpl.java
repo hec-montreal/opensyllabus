@@ -789,6 +789,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		.hasNext();) {
 	    String childId = coRelationIter.next().getChild();
 	    try {
+		log.info("user ["
+			    + sessionManager.getCurrentSession().getUserEid()
+			    + "] publish child site ["+childId+"]");
 		publication(childId, webappDir);
 	    } catch (Exception e) {
 		e.printStackTrace();

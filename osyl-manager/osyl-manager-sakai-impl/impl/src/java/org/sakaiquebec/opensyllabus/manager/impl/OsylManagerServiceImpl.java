@@ -52,13 +52,8 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
-import org.sakaiproject.authz.api.AuthzGroup;
-import org.sakaiproject.authz.api.AuthzPermissionException;
-import org.sakaiproject.authz.api.GroupNotDefinedException;
-import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.cover.AuthzGroupService;
-import org.sakaiproject.authz.cover.FunctionManager;
 import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.citation.api.Citation;
 import org.sakaiproject.citation.api.CitationCollection;
@@ -85,7 +80,6 @@ import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.event.cover.NotificationService;
-import org.sakaiproject.exception.IdInvalidException;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.IdUsedException;
 import org.sakaiproject.exception.InUseException;
@@ -133,7 +127,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     private final static String PROP_SITE_TERM = "term";
 
     private final static String PROP_SITE_TERM_EID = "term_eid";
-    
+
     private final static String PROP_SITE_TITLE = "title";
 
     /** the web content tool id **/
@@ -207,7 +201,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	this.functionsToDisallow = functionsToDisallow;
     }
 
-    
     /** The osyl content service to be injected by Spring */
     private OsylContentService osylContentService;
 
@@ -220,8 +213,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	this.osylContentService = osylContentService;
     }
 
- 
-    
     /**
      * Sakai usr session manager injected by Spring.
      */
@@ -300,9 +291,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * Init method called at the initialization of the bean.
      */
     public void init() {
-	 log
-	 .info("OsylManagerServiceImpl service init() ");
-
+	log.info("OsylManagerServiceImpl service init() ");
 
     }
 
@@ -756,7 +745,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      */
     public String getOsylPackage(String siteId, String webappDir) {
 	String url = null;
-
 	try {
 	    File zipFile = exportAndZip(siteId, webappDir);
 	    Site site = siteService.getSite(siteId);
@@ -921,7 +909,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		"opensyllabus.publish.in.attachment").equals("true")) {
 	    resourceDir = contentHostingService.getSiteCollection(siteId);
 	}
-	
+
 	try {
 	    ContentCollection workContent =
 		    contentHostingService.getCollection(resourceDir);
@@ -1017,15 +1005,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     public void associate(String siteId, String parentId) throws Exception,
 	    CompatibilityException, FusionException {
-	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
-		+ "] associates [" + siteId + "] to parent [" + parentId + "]");
 	osylSiteService.associate(siteId, parentId);
     }
 
     public void dissociate(String siteId, String parentId) throws Exception {
-	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
-		+ "] dissociates [" + siteId + "] from parent [" + parentId
-		+ "]");
 	osylSiteService.dissociate(siteId, parentId);
     }
 

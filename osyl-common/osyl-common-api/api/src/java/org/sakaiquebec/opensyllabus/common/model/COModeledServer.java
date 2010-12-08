@@ -1391,9 +1391,13 @@ public class COModeledServer {
     private void dissociateChild(COElementAbstract childElement) {
 	childElement.setIdParent(null);
 	for (int i = 0; i < childElement.getChildrens().size(); i++) {
-	    COElementAbstract coElementChild =
-		    (COElementAbstract) childElement.getChildrens().get(i);
-	    dissociateChild(coElementChild);
+	    COModelInterface child = (COModelInterface) childElement.getChildrens().get(i);
+	    if(child instanceof COElementAbstract){
+		COElementAbstract coElementChild =
+		    (COElementAbstract) child;
+		dissociateChild(coElementChild);
+	    }
+	    
 	}
     }
 
