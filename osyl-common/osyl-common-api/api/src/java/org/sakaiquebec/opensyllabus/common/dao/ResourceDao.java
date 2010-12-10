@@ -45,26 +45,26 @@ public interface ResourceDao {
      * @return The site id of the courseOutline
      * @throws Exception if null parameter or non existing course outline
      */
-    public COSerialized getSerializedCourseOutlineBySiteId(String siteId) throws Exception;
+    public COSerialized getSerializedCourseOutlineBySiteId(String siteId)
+	    throws Exception;
 
-    
     /**
      * @param siteId
      * @return The site id of the courseOutline
      * @throws Exception if null parameter or non existing course outline
      */
-    public COSerialized getPrePublishSerializedCourseOutlineBySiteId(String siteId) throws Exception;
-    
-    
+    public COSerialized getPrePublishSerializedCourseOutlineBySiteId(
+	    String siteId) throws Exception;
+
     /**
      * @param siteId
      * @param groupName the name of the group you want access CO.
      * @return The site id of the courseOutline
      * @throws Exception if null parameter or non existing course outline
      */
-    public COSerialized getPublishedSerializedCourseOutlineBySiteIdAndAccess(String siteId,
-	    String access) throws Exception;
-    
+    public COSerialized getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+	    String siteId, String access) throws Exception;
+
     /**
      * Returns the course outline with the given id
      * 
@@ -93,18 +93,6 @@ public interface ResourceDao {
     public boolean removeCourseOutline(String idCo) throws Exception;
 
     /**
-     * This method tells whether or not a course outline with the given level of
-     * security is published or not
-     * 
-     * @param siteId
-     * @param security
-     * @return
-     * @throws Exception
-     
-    public COSerialized isPublished(String siteId, String security)
-	    throws Exception;*/
-
-    /**
      * Check if the Co for the siteId has been published
      * 
      * @param siteId
@@ -112,36 +100,42 @@ public interface ResourceDao {
      */
     public boolean hasBeenPublished(String siteId) throws Exception;
 
-
     /**
-     * Check if a Co for edition exists for the siteId 
+     * Check if a Co for edition exists for the siteId
      * 
      * @param siteId
      * @return true if a CO in edition exists
      */
-    public boolean hasCourseOutiline(String siteId) ;
-    
+    public boolean hasCourseOutiline(String siteId);
+
     /**
      * release lock made with session identified by sessionId
+     * 
      * @param sessionId
      */
     public void clearLocksForSession(String sessionId);
-    
+
     public void clearLocksForCoId(String coId);
-    
+
     public void setLockedBy(String coId, String sessionId);
-    
+
     public void setPublicationDate(String coId, Date pubDate);
-    
+
     public Date getPublicationDate(String siteId) throws Exception;
-    
+
     public Date getModifiedDate(String siteId) throws Exception;
-    
+
     /**
      * Remove all CO for given siteId
+     * 
      * @param siteId
      */
     public void removeCoForSiteId(String siteId);
-    
+
+    /**
+     * @param siteId
+     * @return
+     */
+    public List<COSerialized> getCourseOutlinesFoSite(String siteId);
 
 }

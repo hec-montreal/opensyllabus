@@ -26,6 +26,10 @@
       <groupId>org.sakaiquebec.opensyllabus</groupId>
       <artifactId>osyl-admin-server-api</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.sakaiquebec.opensyllabus</groupId>
+      <artifactId> osyl-common-impl</artifactId>
+    </dependency>
 
     <!--  sakai -->
 	<dependency>

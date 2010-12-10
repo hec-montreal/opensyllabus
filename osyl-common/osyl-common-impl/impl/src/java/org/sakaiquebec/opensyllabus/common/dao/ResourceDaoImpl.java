@@ -254,17 +254,17 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 
 	try {
 	    if ("oracle".equalsIgnoreCase(SqlService.getVendor())) {
-	    results =
-		    getHibernateTemplate()
-			    .find(
-				    "from COSerialized where siteId= ? and published=1 and access is not null",
-				    new Object[] { siteId });
-	    }else{
 		results =
-		    getHibernateTemplate()
-			    .find(
-				    "from COSerialized where siteId= ? and published=1 and not access=''",
-				    new Object[] { siteId });
+			getHibernateTemplate()
+				.find(
+					"from COSerialized where siteId= ? and published=1 and access is not null",
+					new Object[] { siteId });
+	    } else {
+		results =
+			getHibernateTemplate()
+				.find(
+					"from COSerialized where siteId= ? and published=1 and not access=''",
+					new Object[] { siteId });
 	    }
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline", e);
@@ -476,6 +476,23 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 		getHibernateTemplate().delete(courseOutline);
 	    }
 	}
+    }
+
+    public List<COSerialized> getCourseOutlinesFoSite(String siteId) {
+	List<COSerialized> results = null;
+	COSerialized courseOutline = null;
+
+	if (siteId == null)
+	    throw new IllegalArgumentException();
+	try {
+	    results =
+		    getHibernateTemplate().find(
+			    "from COSerialized where siteId= ?",
+			    new Object[] { siteId });
+	} catch (Exception e) {
+	    log.error("Unable to retrieve course outline by its siteId", e);
+	}
+	return results;
     }
 
 }
