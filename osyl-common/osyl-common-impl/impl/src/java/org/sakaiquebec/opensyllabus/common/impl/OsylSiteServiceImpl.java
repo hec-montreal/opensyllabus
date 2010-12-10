@@ -552,6 +552,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		osylContentService.initSiteAttachments(site.getTitle());
 		directoryId =
 			contentHostingService.getSiteCollection(site.getId());
+		ContentCollectionEdit cce = contentHostingService.editCollection(directoryId);
+		cce.setHidden();
+		contentHostingService.commitCollection(cce);
 	    } else {
 
 		addCollection(WORK_DIRECTORY, site);
@@ -661,10 +664,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	    // we add the directories
 	    // SAKAI-2160
+	    String directoryId;
 	    if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
 		osylContentService.initSiteAttachments(site.getTitle());
+		directoryId =
+			contentHostingService.getSiteCollection(site.getId());
+		ContentCollectionEdit cce = contentHostingService.editCollection(directoryId);
+		cce.setHidden();
+		contentHostingService.commitCollection(cce);
 	    } else {
-		String directoryId;
 		addCollection(WORK_DIRECTORY, site);
 		directoryId =
 			contentHostingService.getSiteCollection(site.getId())

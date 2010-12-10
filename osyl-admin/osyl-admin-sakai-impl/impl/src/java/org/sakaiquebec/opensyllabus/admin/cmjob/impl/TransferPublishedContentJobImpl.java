@@ -188,8 +188,24 @@ public class TransferPublishedContentJobImpl implements
 	    } catch (ServerOverloadException e) {
 		e.printStackTrace();
 	    }
-	    // remove Resources tool to students
-
+	    
+	    // Hide resource
+	    ContentCollectionEdit cce;
+	    try {
+		cce = contentHostingService.editCollection(contentSid);
+		cce.setHidden();
+		    contentHostingService.commitCollection(cce);
+	    } catch (IdUnusedException e) {
+		e.printStackTrace();
+	    } catch (TypeException e) {
+		e.printStackTrace();
+	    } catch (PermissionException e) {
+		e.printStackTrace();
+	    } catch (InUseException e) {
+		e.printStackTrace();
+	    }
+	    
+	
 	    log.info("The site " + siteTitle + " has been upgraded");
 	}
 
