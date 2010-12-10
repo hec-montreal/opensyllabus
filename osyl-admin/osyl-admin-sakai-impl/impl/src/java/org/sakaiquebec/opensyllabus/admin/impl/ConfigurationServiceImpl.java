@@ -82,6 +82,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private Map<String, Map<String, Object>> updatedRoles = null;
 
     private String role;
+    String description;
     private List<String> functions;
     private List<String> addedUsers;
     private List<String> removedUsers;
@@ -299,11 +300,13 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		Map<String, Object> values = new HashMap<String, Object>();
 
 		String role = retrieveParameter(document, ROLE);
+		String description = retrieveParameter(document,DESCRIPTION);
 		String addedUsers = retrieveParameter(document, ADDEDUSERS);
 		String removedUsers = retrieveParameter(document, REMOVEDUSERS);
 		String functions = retrieveParameter(document, FUNCTIONS);
 
 		setRole(role);
+		setDescription(description);
 		setAddedUsers(addedUsers);
 		setRemovedUsers(removedUsers);
 		setFunctions(functions);
@@ -311,6 +314,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		values.put(ADDEDUSERS, this.addedUsers);
 		values.put(REMOVEDUSERS, this.removedUsers);
 		values.put(FUNCTIONS, this.functions);
+		values.put(DESCRIPTION, this.description);
 
 		if (role != null) {
 		    if (updatedRoles == null)
@@ -372,6 +376,10 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	this.role = role;
     }
 
+    private void setDescription(String description) {
+    	this.description = description;
+    }
+    
     private void setFunctions(String functions) {
 	this.functions = new ArrayList<String>();
 	if (functions != null && functions.length() > 0) {

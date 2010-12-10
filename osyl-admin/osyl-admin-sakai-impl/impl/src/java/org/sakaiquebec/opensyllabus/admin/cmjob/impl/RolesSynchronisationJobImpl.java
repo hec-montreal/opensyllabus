@@ -89,6 +89,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	// Retrieve information from the xml file
 	init();
 	String role;
+	String description;
 	List<String> addedUsers;
 	List<String> removedUsers;
 	List<String> functions;
@@ -96,6 +97,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	if (rolesToConfig != null)
 	    for (ConfigRole configRole : rolesToConfig) {
 		role = configRole.getConfigRole();
+		description = configRole.getDescription();
 		addedUsers = configRole.getAddedUsers();
 		removedUsers = configRole.getRemovedUsers();
 		functions = configRole.getFunctions();
@@ -105,7 +107,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 		    AuthzGroup realm =
 			    AuthzGroupService.getAuthzGroup(TEMPLATE_ID);
 		    if (!isRoleInRealm(realm, role))
-			addRole(realm, role, functions);
+			addRole(realm, role, functions, description);
 		    else
 			checkRole(realm, role, functions);
 		    addUsers(realm, role, addedUsers);
@@ -143,7 +145,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 			// exists in the site
 			roleExists = isRoleInRealm(siteRealm, role);
 			if (!roleExists)
-			    addRole(siteRealm, role, functions);
+			    addRole(siteRealm, role, functions, description);
 			else
 			    checkRole(siteRealm, role, functions);
 
@@ -170,6 +172,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 		adminConfigService.getUdatedRoles();
 
 	String role;
+	String description;
 	List<String> removedUsers;
 	List<String> addedUsers;
 	List<String> functions;
@@ -186,9 +189,11 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 		    (List<String>) values.get(ConfigurationService.ADDEDUSERS);
 	    functions =
 		    (List<String>) values.get(ConfigurationService.FUNCTIONS);
+	    description = (String)values.get(ConfigurationService.DESCRIPTION);
 
 	    configRole = new ConfigRole();
 	    configRole.setConfigRole(role);
+	    configRole.setDescription(description);
 	    configRole.setAddedUsers(addedUsers);
 	    configRole.setRemovedUsers(removedUsers);
 	    configRole.setFunctions(functions);
@@ -227,10 +232,11 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
      * @param realm
      */
     private void addRole(AuthzGroup realm, String configRole,
-	    List<String> functions) {
+	    List<String> functions, String description) {
 	try {
 	    Role role = realm.addRole(configRole);
 	    role.allowFunctions(functions);
+	    role.setDescription(description);
 
 	    AuthzGroupService.save(realm);
 
@@ -349,6 +355,8 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
     class ConfigRole {
 	private String configRole;
 
+	private String description;
+	
 	private String removedRole;
 
 	private List<String> addedUsers;
@@ -367,6 +375,14 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 
 	public String getRemovedRole() {
 	    return removedRole;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public void setRemovedRole(String removedRole) {

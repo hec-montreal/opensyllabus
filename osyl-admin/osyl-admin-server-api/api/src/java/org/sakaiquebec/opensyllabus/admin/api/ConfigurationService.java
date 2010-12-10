@@ -45,6 +45,8 @@ public interface ConfigurationService {
     // For adding or removing users with a specific role or removing a role in
     // all the course sites
     public final static String ROLE = "role";
+    
+    public final static String DESCRIPTION = "description";
 
     public final static String ADDEDUSERS = "addedUsers";
 
