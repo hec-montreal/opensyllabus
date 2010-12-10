@@ -95,7 +95,7 @@ public class AddCMTitlePropertyJobImpl implements AddCMTitlePropertyJob {
 		loginToSakai();
 
 		long start = System.currentTimeMillis();
-		log.info("TransferPublishedContentJobImpl: starting");
+		log.info("AddCMTitlePropertyJobImpl: starting");
 
 		allSites = siteService.getSites(SiteService.SelectionType.ANY,
 				"course", null, null, SiteService.SortType.NONE, null);
@@ -130,8 +130,8 @@ public class AddCMTitlePropertyJobImpl implements AddCMTitlePropertyJob {
 
 		}
 
-		log.info("AddCMTitlePropertyJobImpl: completed in "
-				+ (System.currentTimeMillis() - start) + " ms");
+		log.info("AddCMTitlePropertyJobImpl: completed in " 
+			+ (System.currentTimeMillis() - start) + " ms");
 		logoutFromSakai();
 
 	}

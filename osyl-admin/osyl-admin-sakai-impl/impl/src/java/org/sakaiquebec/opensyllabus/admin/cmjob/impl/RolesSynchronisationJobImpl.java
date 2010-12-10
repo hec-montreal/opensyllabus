@@ -86,6 +86,10 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
 	loginToSakai();
+
+	long start = System.currentTimeMillis();
+	log.info("RolesSynchronisationJobImpl: starting");
+
 	// Retrieve information from the xml file
 	init();
 	String role;
@@ -158,6 +162,8 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 
 		    }
 		}
+		log.info("RolesSynchronisationJobImpl: completed in "
+			+ (System.currentTimeMillis() - start) + " ms");
 		logoutFromSakai();
 	    }
     }

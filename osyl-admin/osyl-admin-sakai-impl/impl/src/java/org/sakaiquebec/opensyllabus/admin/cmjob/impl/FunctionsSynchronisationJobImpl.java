@@ -66,6 +66,9 @@ public class FunctionsSynchronisationJobImpl implements
 
 	loginToSakai();
 
+	long start = System.currentTimeMillis();
+	log.info("FunctionsSynchronisationJobImpl: starting");
+
 	String roleToRemove = adminConfigService.getRoleToRemove();
 
 	String functionsRole = adminConfigService.getFunctionsRole();
@@ -232,6 +235,8 @@ public class FunctionsSynchronisationJobImpl implements
 	    	}	
 	    }
 	}
+	log.info("FunctionsSynchronisationJobImpl: completed in "
+		+ (System.currentTimeMillis() - start) + " ms");
 	logoutFromSakai();
     }
 
