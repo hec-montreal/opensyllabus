@@ -20,10 +20,10 @@
 	<asmStructure access="public" xsi:type="NewsStruct">
 		<modified>2001-12-17T09:30:47-05:00</modified>
 		<asmUnit access="public" xsi:type="NewsUnit">
-			<label><![CDATA[News and Regulations]]></label>
+			<label><![CDATA[News]]></label>
 			<modified>2001-12-17T09:30:47-05:00</modified>
 			<asmUnitStructure access="public" xsi:type="NewsUnitStruct">
-				<label><![CDATA[News and Regulations]]></label>
+				<label><![CDATA[News]]></label>
 				<modified>2001-12-17T09:30:47-05:00</modified>
 				<asmUnitContent access="public" xsi:type="NewsUnitContent">
 					<modified>2001-12-17T09:30:47-05:00</modified>
