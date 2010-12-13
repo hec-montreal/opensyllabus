@@ -89,6 +89,8 @@ public class AddHomePageToolImpl implements Job {
     @SuppressWarnings("unchecked")
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
+	log.info("Start adding home pages to sites");
+	long start = System.currentTimeMillis();
 	loginToSakai();
 
 	String configPath =
@@ -147,6 +149,8 @@ public class AddHomePageToolImpl implements Job {
 		// change news and regulations to news
 		changeNewsAndRegulationsToNewsForSite(site.getId());
 
+		log.info("Finished adding home pages in "
+			+ (System.currentTimeMillis() - start) + " ms");
 	    }
 	} catch (Exception e) {
 	    log.error("Job AddHomePageToolImpl failed: " + e);
