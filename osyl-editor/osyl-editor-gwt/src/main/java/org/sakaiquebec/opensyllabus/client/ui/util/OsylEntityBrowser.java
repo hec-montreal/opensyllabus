@@ -28,7 +28,6 @@ import java.util.Map.Entry;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.Window;
@@ -287,9 +286,10 @@ public class OsylEntityBrowser extends OsylAbstractBrowserComposite implements
 	}
 	updateCurrentSelectionHtml(getLinkURI(getEntityUri(), getEntityText()));
     }
-    
+
     protected String getLinkURI(String uri, String text) {
-	return "<a href=\"" + "/direct" + uri + "\" target=\"_blank\">" + text + "</a>";
+	return "<a href=\"" + "/direct" + uri + "\" target=\"_blank\">" + text
+		+ "</a>";
     } // getLinkURI
 
     protected void updateCurrentSelectionHtml(String entity) {

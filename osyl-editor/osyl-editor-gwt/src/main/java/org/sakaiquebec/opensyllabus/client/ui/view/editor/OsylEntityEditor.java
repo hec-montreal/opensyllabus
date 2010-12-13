@@ -32,6 +32,7 @@ import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylEntityBrowser;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxEntityView;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
@@ -330,7 +331,7 @@ public class OsylEntityEditor extends OsylAbstractBrowserEditor {
 	    // as soon as the cause is found and corrected.
 
 	    // We get the text to display from the model
-	    getModel().setLabel(
+	    getModel().getProperties().addProperty(COPropertiesType.LABEL,
 		    getView().validateLinkLabel(getModel().getLabel()));
 	    getViewerLink().setHTML(getView().getTextFromModel());
 	    getViewerName().setHTML("(" + getView().getRawURI() + ")");
