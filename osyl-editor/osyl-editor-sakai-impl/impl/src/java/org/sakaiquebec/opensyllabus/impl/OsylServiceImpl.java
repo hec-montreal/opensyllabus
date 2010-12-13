@@ -577,11 +577,15 @@ public class OsylServiceImpl implements OsylService {
 			entityBroker.findEntityRefs(new String[] { provider },
 				new String[] { "context", "userId" },
 				new String[] { siteId, currentUserId }, true);
-		if (entities != null) {
+		if (entities != null && !entities.isEmpty()) {
 
 		    for (String ent : entities) {
-			title = entityBroker.getPropertyValue(ent, "title");
-			siteEntities.put(ent, title);
+			if (!"assignment".equals(provider)
+				|| !Boolean.parseBoolean(entityBroker
+					.getPropertyValue(ent, "draft"))) {
+			    title = entityBroker.getPropertyValue(ent, "title");
+			    siteEntities.put(ent, title);
+			}
 		    }
 		}
 	    }
