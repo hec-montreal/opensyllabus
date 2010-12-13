@@ -52,6 +52,7 @@ public class OsylConversionJobImpl  implements OsylConversionJob{
     
     public void execute(JobExecutionContext jec) throws JobExecutionException {
 	log.info("Start converting Course Outlines");
+	long start = System.currentTimeMillis();
 	loginToSakai();
 	List<COSerialized> cos = osylSiteService.getAllCO();
 	String configPath = 
@@ -67,10 +68,11 @@ public class OsylConversionJobImpl  implements OsylConversionJob{
 		log.error("Could not convert co with co_id:"+co.getCoId());
 		e.printStackTrace();
 	    }
-	    log.debug("Finish conversion of co with co_id:"+co.getCoId());
+	    log.debug("Finished conversion of co with co_id:"+co.getCoId());
 	}
 	logoutFromSakai();
-	log.info("Finish converting Course Outlines");
+	log.info("Finished converting Course Outlines in "
+		+ (System.currentTimeMillis() - start) + " ms");
     }
 
     protected void loginToSakai() {
