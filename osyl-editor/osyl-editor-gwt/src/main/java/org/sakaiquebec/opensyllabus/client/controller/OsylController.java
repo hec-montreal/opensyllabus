@@ -42,7 +42,6 @@ import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -397,12 +396,6 @@ public class OsylController implements SavePushButtonEventHandler,
 				}
 			    }
 			} catch (Exception error) {
-			    System.out
-				    .println("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
-					    + error.toString());
-			    Window
-				    .alert("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
-					    + error.toString());
 			    caller
 				    .unableToInitSerializedCourseOutline("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
 					    + error.toString());
@@ -411,13 +404,6 @@ public class OsylController implements SavePushButtonEventHandler,
 
 		    // And we define the behavior in case of failure
 		    public void onFailure(Throwable error) {
-
-			System.out
-				.println("RPC FAILURE - getSerializedCourseOutline(...) : "
-					+ error.toString());
-			Window
-				.alert("RPC FAILURE - getSerializedCourseOutline(...) : "
-					+ error.toString());
 			caller
 				.unableToGetSerializedCourseOutline("RPC FAILURE - getSerializedCourseOutline(...) : "
 					+ error.toString());
@@ -474,7 +460,6 @@ public class OsylController implements SavePushButtonEventHandler,
      * @param String errorMessage
      */
     public void unableToGetSerializedCourseOutline(String errorMessage) {
-	Window.alert(uiMessages.getMessage("unableToLoadCO", errorMessage));
 	final OsylAlertDialog alertBox =
 		new OsylAlertDialog(false, true, "Alert - RPC Error",
 			uiMessages.getMessage("unableToLoadCO", errorMessage));
@@ -504,8 +489,6 @@ public class OsylController implements SavePushButtonEventHandler,
      * @param String errorMessage
      */
     public void unableToInitSerializedCourseOutline(String errorMessage) {
-	Window.alert(uiMessages.getMessage("unableToInitCO", errorMessage));
-
 	final OsylAlertDialog alertBox =
 		new OsylAlertDialog(false, true, "Alert - RPC Error",
 			uiMessages.getMessage("unableToInitCO", errorMessage));
@@ -609,20 +592,15 @@ public class OsylController implements SavePushButtonEventHandler,
 					.refreshModel(co);
 
 			    } catch (Exception error) {
-				System.out
-					.println("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
-						+ error.toString());
-				Window
-					.alert("Error - Unable to getSerializedCourseOutline(...) on RPC Success: "
-						+ error.toString());
+				handleRPCError("RPC FAILURE - updateSerializedCourseOutlineCB(...) : "
+					+ error.toString());
 			    }
 			}
 
 			// And we define the behavior in case of failure
 			public void onFailure(Throwable error) {
-			    Window
-				    .alert("RPC FAILURE - getSerializedCourseOutline(...) : "
-					    + error.toString());
+			    handleRPCError("RPC FAILURE - updateSerializedCourseOutlineCB(...) : "
+				    + error.toString());
 			}
 		    };
 	    OsylRemoteServiceLocator.getEditorRemoteService()
@@ -631,11 +609,6 @@ public class OsylController implements SavePushButtonEventHandler,
 
 	// A POJO has been sent
 	if (getExecMode().equals("test")) {
-	    Window
-		    .alert("This is the call back from saveCourseOutlineXML. You have automatically "
-			    + "updated the current course outline, unique ID "
-			    + OsylEditorEntryPoint.getInstance()
-				    .getSerializedCourseOutline().getCoId());
 	    final OsylAlertDialog alertBox =
 		    new OsylAlertDialog(
 			    false,
@@ -717,12 +690,6 @@ public class OsylController implements SavePushButtonEventHandler,
 				.println("RPC SUCCESS - checkSitesRelation(...)");
 			caller.checkSitesRelationCB(true);
 		    } catch (Exception error) {
-			System.out
-				.println("Error - Unable to checkSitesRelation(...) on RPC Success: "
-					+ error.toString());
-			Window
-				.alert("Error - Unable to checkSitesRelation(...) on RPC Success: "
-					+ error.toString());
 			caller
 				.unableToInitServer("Error - Unable to checkSitesRelation(...) on RPC Success: "
 					+ error.toString());
@@ -731,12 +698,6 @@ public class OsylController implements SavePushButtonEventHandler,
 
 		// And we define the behavior in case of failure
 		public void onFailure(Throwable error) {
-		    System.out
-			    .println("RPC FAILURE - checkSitesRelation(...): "
-				    + error.toString()
-				    + " Hint: Check GWT version");
-		    Window.alert("RPC FAILURE - checkSitesRelation(...): "
-			    + error.toString() + " Hint: Check GWT version");
 		    caller
 			    .unableToInitServer("RPC FAILURE - checkSitesRelation(...): "
 				    + error.toString()
@@ -772,19 +733,11 @@ public class OsylController implements SavePushButtonEventHandler,
 	AsyncCallback<COSerialized> callback =
 		new AsyncCallback<COSerialized>() {
 		    public void onSuccess(COSerialized co) {
-			System.out
-				.println("RPC SUCCESS - getSerializedPublishedCourseOutlineForAccessType(...)");
 			caller
 				.getSerializedPublishedCourseOutlineForAccessTypeCB(co);
 		    }
 
 		    public void onFailure(Throwable error) {
-			System.out
-				.println("RPC FAILURE - getSerializedPublishedCourseOutlineForAccessType(...) : "
-					+ error.toString());
-			Window
-				.alert("RPC FAILURE - getSerializedPublishedCourseOutlineForAccessType(...) : "
-					+ error.toString());
 			caller
 				.handleRPCError("RPC FAILURE - getSerializedPublishedCourseOutlineForAccessType(...)");
 		    }
@@ -822,15 +775,10 @@ public class OsylController implements SavePushButtonEventHandler,
 	// We first create a call-back for this method call
 	AsyncCallback<String> callback = new AsyncCallback<String>() {
 	    public void onSuccess(String role) {
-		System.out.println("RPC SUCCESS - getCurrentUserRole(...)");
 		caller.getCurrentUserRoleCB(role);
 	    }
 
 	    public void onFailure(Throwable error) {
-		System.out.println("RPC FAILURE - getCurrentUserRole(...) : "
-			+ error.toString());
-		Window.alert("RPC FAILURE - getCurrentUserRole(...) : "
-			+ error.toString());
 		caller
 			.handleRPCError("RPC FAILURE - getCurrentUserRole(...) : "
 				+ error.toString());
@@ -868,15 +816,10 @@ public class OsylController implements SavePushButtonEventHandler,
 	// We first create a call-back for this method call
 	AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 	    public void onSuccess(Void serverResponse) {
-		System.out.println("RPC SUCCESS applyPermissions(...)");
 		caller.applyPermissionsCB(true);
 	    }
 
 	    public void onFailure(Throwable error) {
-		System.out.println("RPC FAILURE - applyPermissions(...) : "
-			+ error.toString());
-		Window.alert("RPC FAILURE - applyPermissions(...) : "
-			+ error.toString());
 		caller.applyPermissionsCB(false);
 	    }
 	};
@@ -938,16 +881,8 @@ public class OsylController implements SavePushButtonEventHandler,
 			// We define the behavior in case of success
 			public void onSuccess(COConfigSerialized cfg) {
 			    try {
-				System.out
-					.println("RPC SUCCESS - getSerializedConfig(...)");
 				caller.getSerializedConfigCB(cfg);
 			    } catch (Exception error) {
-				System.out
-					.println("Error - Unable to getSerializedConfig(...) on RPC Success: "
-						+ error.toString());
-				Window
-					.alert("Error - Unable to getSerializedConfig(...) on RPC Success: "
-						+ error.toString());
 				caller
 					.unableToInitServer("Error - Unable to getSerializedConfig(...) on RPC Success: "
 						+ error.toString());
@@ -956,14 +891,6 @@ public class OsylController implements SavePushButtonEventHandler,
 
 			// And we define the behavior in case of failure
 			public void onFailure(Throwable error) {
-			    System.out
-				    .println("RPC FAILURE - getSerializedConfig(...): "
-					    + error.toString()
-					    + " Hint: Check GWT version");
-			    Window
-				    .alert("RPC FAILURE - getSerializedConfig(...): "
-					    + error.toString()
-					    + " Hint: Check GWT version");
 			    caller
 				    .unableToInitServer("RPC FAILURE - getSerializedConfig(...): "
 					    + error.toString()
@@ -1050,18 +977,10 @@ public class OsylController implements SavePushButtonEventHandler,
 		// We define the behavior in case of success
 		public void onSuccess(Boolean reload) {
 		    try {
-			System.out
-				.println("RPC SUCCESS - updateSerializedCourseOutline(...)");
 			caller.updateSerializedCourseOutlineCB(reload);
 			if (callBack != null)
 			    callBack.onSuccess(null);
 		    } catch (Exception error) {
-			System.out
-				.println("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
-					+ error.toString());
-			Window
-				.alert("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
-					+ error.toString());
 			caller
 				.handleRPCError("Error - Unable to updateSerializedCourseOutline(...) on RPC Success: "
 					+ error.toString());
@@ -1070,12 +989,6 @@ public class OsylController implements SavePushButtonEventHandler,
 
 		// And we define the behavior in case of failure
 		public void onFailure(Throwable error) {
-		    System.out
-			    .println("RPC FAILURE - updateSerializedCourseOutline(...) : "
-				    + error.toString());
-		    Window
-			    .alert("RPC FAILURE - updateSerializedCourseOutline(...) : "
-				    + error.toString());
 		    caller
 			    .handleRPCError("RPC FAILURE - updateSerializedCourseOutline(...) :"
 				    + error.toString());
