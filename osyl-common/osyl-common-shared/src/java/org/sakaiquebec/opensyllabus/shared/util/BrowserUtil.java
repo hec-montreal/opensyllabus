@@ -37,15 +37,17 @@ public class BrowserUtil {
 	var ua = navigator.userAgent.toLowerCase(); 
 	if (ua.indexOf("opera") != -1) { 
 		return "opera"; 
-	} 
-	else if (ua.indexOf("webkit") != -1) { 
+	}else if (ua.indexOf("webkit") != -1) { 
 		return "webkit"; 
-	} 
-	else if ((ua.indexOf("msie 6.0") != -1) || 
-		(ua.indexOf("msie 7.0") != -1)) { 
-		return "ie6"; 
-	} 
-	else if (ua.indexOf("gecko") != -1) { 
+	}else if (ua.indexOf("msie")!=-1){
+		var result = /msie ([0-9])/.exec(ua);
+		if(result){
+			var version = parseInt(result[1]);
+			if(version >= 6){
+				return "ie6";
+			}
+		}
+	}else if (ua.indexOf("gecko") != -1) { 
 		var result = /rv:([0-9]+)\.([0-9]+)/.exec(ua); 
 		if (result && result.length == 3) { 
 			var version = (parseInt(result[1]) * 10) + parseInt(result[2]); 
@@ -54,7 +56,7 @@ public class BrowserUtil {
 			} 
 			return "gecko"; 
 		} 
-		return "unknown"; 
+	return "unknown"; 
 	}-*/;
     
     /**
