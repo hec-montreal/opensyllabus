@@ -28,6 +28,7 @@ import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.SessionManager;
+import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiquebec.opensyllabus.api.OsylService;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
@@ -345,6 +346,15 @@ public class OsylServiceImpl implements OsylService {
 	    // directoryId = osylSiteService.getCurrentSiteId();
 
 	    // TODO : SAKAI-2160 - add citations list ?
+		
+		
+		//Create attachment folder if necessary
+			directoryId = contentHostingService.ATTACHMENTS_COLLECTION
+					+ osylSiteService.getCurrentSiteId() + "/"
+					+ ToolManager.getTool("sakai.opensyllabus.tool").getTitle() +"/";
+			if (!collectionExist(directoryId))
+				osylContentService.initSiteAttachments(osylSiteService
+						.getCurrentSiteId());
 
 	} else {
 	    if (addCollection(WORK_DIRECTORY, null)) {
