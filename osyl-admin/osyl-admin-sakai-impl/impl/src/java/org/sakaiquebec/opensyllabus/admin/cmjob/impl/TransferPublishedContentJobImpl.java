@@ -32,6 +32,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.cover.AuthzGroupService;
 import org.sakaiproject.content.api.ContentCollectionEdit;
+import org.sakaiproject.content.api.ContentEntity;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.ResourceProperties;
@@ -291,113 +292,143 @@ public class TransferPublishedContentJobImpl implements
     }
 
     private void copyContent(String contentOid, String contentDid) {
-	List<ContentResource> resources =
-		contentHostingService.getAllResources(contentOid);
-
-	String oldResourceId = null;
-	String newResourceId = null;
-	String collectionId = null;
-	int nbSubFolders = 0;
-
-	for (ContentResource resource : resources) {
-	    oldResourceId = resource.getId();
-
-	    if (oldResourceId.indexOf("/", contentOid.length() + 1) >= 0) {
-		// Copy folder
-		newResourceId = contentDid + "/";
-		StringTokenizer tokens =
-			new StringTokenizer(oldResourceId.substring(contentOid
-				.length()), "/");
-		ContentCollectionEdit collection = null;
-		while (tokens.hasMoreTokens()) {
-		    collectionId = tokens.nextToken();
-		    if (tokens.hasMoreTokens()) {
-			newResourceId = newResourceId + collectionId + "/";
-			try {
-
-			    collection =
-				    contentHostingService
-					    .addCollection(newResourceId);
-			    ResourcePropertiesEdit fileProperties =
-				    collection.getPropertiesEdit();
-			    fileProperties.addProperty(
-				    ResourceProperties.PROP_DISPLAY_NAME,
-				    collectionId);
-			    contentHostingService.commitCollection(collection);
-			} catch (IdUsedException e) {
-			    // The collection already exists, we do nothing
-			} catch (IdInvalidException e) {
-			    e.printStackTrace();
-			} catch (PermissionException e) {
-			    e.printStackTrace();
-			} catch (InconsistentException e) {
-			    e.printStackTrace();
-			}
-			log.debug("le dossier " + newResourceId);
-		    } else {
-			newResourceId = newResourceId + collectionId;
-			try {
-
-			    // Can not check if the resource already exists
-			    contentHostingService.copyIntoFolder(oldResourceId,
-				    contentDid);
-			} catch (PermissionException e) {
-			    e.printStackTrace();
-			} catch (IdUnusedException e) {
-			    e.printStackTrace();
-			} catch (TypeException e) {
-			    e.printStackTrace();
-			} catch (InUseException e) {
-			    // la ressource existe deja
-			} catch (OverQuotaException e) {
-			    e.printStackTrace();
-			} catch (IdUsedException e) {
-			    e.printStackTrace();
-			} catch (ServerOverloadException e) {
-			    e.printStackTrace();
-			} catch (InconsistentException e) {
-			    e.printStackTrace();
-			} catch (IdLengthException e) {
-			    e.printStackTrace();
-			} catch (IdUniquenessException e) {
-			    e.printStackTrace();
-			}
-
-			System.out.println("la ressource " + newResourceId);
-		    }
-		}
-
-	    } else {
-		newResourceId = oldResourceId.replace(contentOid, contentDid);
+    	String newResourceId = null;
+    	
+		List<ContentEntity> entities = contentHostingService
+				.getAllEntities(contentDid);    	
+    	
 		try {
-
-		    // Can not check if the resource already exists
-		    contentHostingService.copyIntoFolder(oldResourceId,
-			    contentDid);
-		} catch (PermissionException e) {
-		    e.printStackTrace();
-		} catch (IdUnusedException e) {
-		    e.printStackTrace();
-		} catch (TypeException e) {
-		    e.printStackTrace();
-		} catch (InUseException e) {
-		    // la ressource existe deja
-		} catch (OverQuotaException e) {
-		    e.printStackTrace();
-		} catch (IdUsedException e) {
-		    e.printStackTrace();
-		} catch (ServerOverloadException e) {
-		    e.printStackTrace();
-		} catch (InconsistentException e) {
-		    e.printStackTrace();
-		} catch (IdLengthException e) {
-		    e.printStackTrace();
-		} catch (IdUniquenessException e) {
-		    e.printStackTrace();
+			contentHostingService.addCollection(contentDid);
+		} catch (IdUsedException e1) {
+			// Collection already exists
+		} catch (IdInvalidException e1) {
+			e1.printStackTrace();
+		} catch (PermissionException e1) {
+			e1.printStackTrace();
+		} catch (InconsistentException e1) {
+			e1.printStackTrace();
 		}
-		log.debug("la ressource " + newResourceId);
-	    }
-	}
+		
+		for (ContentEntity entity: entities){
+			newResourceId = (entity.getId()).replace(contentOid, contentDid);
+			try {
+				log.info("Adding " + newResourceId);
+				if ( !newResourceId.equals(contentOid) )
+					if (entity.isCollection())
+						contentHostingService.copyIntoFolder(entity.getId(), newResourceId);
+					else
+						contentHostingService.copy(entity.getId(), newResourceId);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
+		}
+		
+//	List<ContentResource> resources =
+//		contentHostingService.getAllResources(contentOid);
+//
+//	String oldResourceId = null;
+//	String collectionId = null;
+//	int nbSubFolders = 0;
+//
+//	for (ContentResource resource : resources) {
+//	    oldResourceId = resource.getId();
+//
+//	    if (oldResourceId.indexOf("/", contentOid.length() + 1) >= 0) {
+//		// Copy folder
+//		newResourceId = contentDid + "/";
+//		StringTokenizer tokens =
+//			new StringTokenizer(oldResourceId.substring(contentOid
+//				.length()), "/");
+//		ContentCollectionEdit collection = null;
+//		while (tokens.hasMoreTokens()) {
+//		    collectionId = tokens.nextToken();
+//		    if (tokens.hasMoreTokens()) {
+//			newResourceId = newResourceId + collectionId + "/";
+//			try {
+//
+//			    collection =
+//				    contentHostingService
+//					    .addCollection(newResourceId);
+//			    ResourcePropertiesEdit fileProperties =
+//				    collection.getPropertiesEdit();
+//			    fileProperties.addProperty(
+//				    ResourceProperties.PROP_DISPLAY_NAME,
+//				    collectionId);
+//			    contentHostingService.commitCollection(collection);
+//			} catch (IdUsedException e) {
+//			    // The collection already exists, we do nothing
+//			} catch (IdInvalidException e) {
+//			    e.printStackTrace();
+//			} catch (PermissionException e) {
+//			    e.printStackTrace();
+//			} catch (InconsistentException e) {
+//			    e.printStackTrace();
+//			}
+//			log.debug("le dossier " + newResourceId);
+//		    } else {
+//			newResourceId = newResourceId + collectionId;
+//			try {
+//
+//			    // Can not check if the resource already exists
+//			    contentHostingService.copyIntoFolder(oldResourceId,
+//				    contentDid);
+//			} catch (PermissionException e) {
+//			    e.printStackTrace();
+//			} catch (IdUnusedException e) {
+//			    e.printStackTrace();
+//			} catch (TypeException e) {
+//			    e.printStackTrace();
+//			} catch (InUseException e) {
+//			    // la ressource existe deja
+//			} catch (OverQuotaException e) {
+//			    e.printStackTrace();
+//			} catch (IdUsedException e) {
+//			    e.printStackTrace();
+//			} catch (ServerOverloadException e) {
+//			    e.printStackTrace();
+//			} catch (InconsistentException e) {
+//			    e.printStackTrace();
+//			} catch (IdLengthException e) {
+//			    e.printStackTrace();
+//			} catch (IdUniquenessException e) {
+//			    e.printStackTrace();
+//			}
+//
+//			System.out.println("la ressource " + newResourceId);
+//		    }
+//		}
+//
+//	    } else {
+//		newResourceId = oldResourceId.replace(contentOid, contentDid);
+//		try {
+//
+//		    // Can not check if the resource already exists
+//		    contentHostingService.copyIntoFolder(oldResourceId,
+//			    contentDid);
+//		} catch (PermissionException e) {
+//		    e.printStackTrace();
+//		} catch (IdUnusedException e) {
+//		    e.printStackTrace();
+//		} catch (TypeException e) {
+//		    e.printStackTrace();
+//		} catch (InUseException e) {
+//		    // la ressource existe deja
+//		} catch (OverQuotaException e) {
+//		    e.printStackTrace();
+//		} catch (IdUsedException e) {
+//		    e.printStackTrace();
+//		} catch (ServerOverloadException e) {
+//		    e.printStackTrace();
+//		} catch (InconsistentException e) {
+//		    e.printStackTrace();
+//		} catch (IdLengthException e) {
+//		    e.printStackTrace();
+//		} catch (IdUniquenessException e) {
+//		    e.printStackTrace();
+//		}
+//		log.debug("la ressource " + newResourceId);
+//	    }
+//	}
     }
 
     /**
