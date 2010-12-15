@@ -139,9 +139,10 @@ public class TransferPublishedContentJobImpl implements
 	String contentWid = null;
 	String contentSid = null;
 
-	log.info("TransferPublishedContentJobImpl: sites to correct:" + allSites.size());
+	int siteCount = allSites.size();
+	log.info("TransferPublishedContentJobImpl: sites to correct:" + siteCount);
 
-	for (int i = 0; i < allSites.size(); i++) {
+	for (int i = 0; i < siteCount; i++) {
 
 	    site = allSites.get(i);
 	    siteTitle = site.getTitle();
@@ -207,7 +208,7 @@ public class TransferPublishedContentJobImpl implements
 	    }
 	    
 	
-	    log.info("The site " + siteTitle + " has been upgraded");
+	    log.info("The site " + siteTitle + " has been upgraded [" + i + "/" + siteCount +"]");
 	}
 
 	// change uri in course outline xml
@@ -220,9 +221,10 @@ public class TransferPublishedContentJobImpl implements
 	String uri, newUri;
 	String siteId;
 
-	log.info("TransferPublishedContentJobImpl: Course Outlines to correct:" + cos.size());
+	int coCount = cos.size();
+	log.info("TransferPublishedContentJobImpl: Course Outlines to correct:" + coCount);
 
-	for (int j = 0; j < cos.size(); j++) {
+	for (int j = 0; j < coCount; j++) {
 	    COSerialized co = cos.get(j);
 	    if (co.getContent() != null) {
 		model = new COModeledServer(co);
@@ -263,7 +265,7 @@ public class TransferPublishedContentJobImpl implements
 		}
 
 		log.info("The references of the course outline "
-			+ co.getSiteId() + " has been updated.");
+			+ co.getSiteId() + " has been updated [" + j + "/" + coCount +"]");
 	    }
 	}
 
