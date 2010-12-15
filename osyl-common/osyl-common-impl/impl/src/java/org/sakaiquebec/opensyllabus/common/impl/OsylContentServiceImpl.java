@@ -144,9 +144,9 @@ public class OsylContentServiceImpl implements OsylContentService {
 			    (ContentCollectionEdit) contentHostingService
 				    .getCollection(collectionId);
 		} catch (IdUnusedException e) {
-		    e.printStackTrace();
+		    log.info("The folder " + collectionId + " does not exist.");
 		} catch (TypeException e) {
-		    e.printStackTrace();
+		    log.info("The id " + collectionId + " does not refer to a folder.");
 		}
 	    else{
 		collection = contentHostingService.addCollection(collectionId);
@@ -165,13 +165,13 @@ public class OsylContentServiceImpl implements OsylContentService {
 	    }
 
 	} catch (IdUsedException e) {
-	    e.printStackTrace();
+		log.info("The site " + siteName + " does not exist.");
 	} catch (IdInvalidException e) {
-	    e.printStackTrace();
+		log.info("You are refering to an invalid id " );
 	} catch (PermissionException e) {
-	    e.printStackTrace();
+		log.info("You are not allowed access.");
 	} catch (InconsistentException e) {
-	    e.printStackTrace();
+		log.info("Inconsistent Error.");
 	}
     }
 
