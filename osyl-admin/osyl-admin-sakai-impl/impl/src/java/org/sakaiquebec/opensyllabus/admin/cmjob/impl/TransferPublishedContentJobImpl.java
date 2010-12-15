@@ -138,10 +138,9 @@ public class TransferPublishedContentJobImpl implements
 	String contentWid = null;
 	String contentSid = null;
 
-	int siteCount = allSites.size();
-	log.info("TransferPublishedContentJobImpl: sites to correct:" + siteCount);
+	log.info("TransferPublishedContentJobImpl: sites to correct:" + allSites.size());
 
-	for (int i = 0; i < siteCount; i++) {
+	for (int i = 0; i < allSites.size(); i++) {
 
 	    site = allSites.get(i);
 	    siteTitle = site.getTitle();
@@ -207,7 +206,7 @@ public class TransferPublishedContentJobImpl implements
 	    }
 	    
 	
-	    log.info("The site " + siteTitle + " has been upgraded [" + i + "/" + siteCount +"]");
+	    log.info("The site " + siteTitle + " has been upgraded");
 	}
 
 	// change uri in course outline xml
@@ -220,10 +219,9 @@ public class TransferPublishedContentJobImpl implements
 	String uri, newUri;
 	String siteId;
 
-	int coCount = cos.size();
-	log.info("TransferPublishedContentJobImpl: Course Outlines to correct:" + coCount);
+	log.info("TransferPublishedContentJobImpl: Course Outlines to correct:" + cos.size());
 
-	for (int j = 0; j < coCount; j++) {
+	for (int j = 0; j < cos.size(); j++) {
 	    COSerialized co = cos.get(j);
 	    if (co.getContent() != null) {
 		model = new COModeledServer(co);
@@ -239,8 +237,8 @@ public class TransferPublishedContentJobImpl implements
 			newUri =
 				uri.replaceFirst(
 					contentSid + PUBLISH_DIRECTORY,
-					ATTACHMENT_DIRECTORY_PREFIX + siteId
-						+ ATTACHMENT_DIRECTORY_SUFFIX);
+					ATTACHMENT_DIRECTORY_PREFIX + siteId+ "/"
+						+ ATTACHMENT_DIRECTORY_SUFFIX + "/");
 			newResourcesUri.put(uri, newUri);
 		    }
 
@@ -264,7 +262,7 @@ public class TransferPublishedContentJobImpl implements
 		}
 
 		log.info("The references of the course outline "
-			+ co.getSiteId() + " has been updated [" + j + "/" + coCount +"]");
+			+ co.getSiteId() + " has been updated.");
 	    }
 	}
 
