@@ -118,7 +118,13 @@ public class AddHomePageToolImpl implements Job {
 	    for (int i = 0; i < allSites.size(); i++) {
 
 		site = allSites.get(i);
-		// we only process sites for winter 2011
+		
+		// change news and regulations to news
+		if(site.getTitle().indexOf(".H2011")!=-1 ){
+		    changeNewsAndRegulationsToNewsForSite(site.getId());
+		}
+		
+		// we only process specific sites for winter 2011
 		if (site.getTitle().indexOf(".H2011.") == -1) {
 		    continue;
 		}
@@ -145,9 +151,6 @@ public class AddHomePageToolImpl implements Job {
 			e.printStackTrace();
 		    }
 		}
-
-		// change news and regulations to news
-		changeNewsAndRegulationsToNewsForSite(site.getId());
 
 		log.info("Finished adding home pages in "
 			+ (System.currentTimeMillis() - start) + " ms");
