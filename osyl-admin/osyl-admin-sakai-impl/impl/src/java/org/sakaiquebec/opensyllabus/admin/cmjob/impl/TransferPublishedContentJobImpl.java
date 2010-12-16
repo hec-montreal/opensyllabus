@@ -153,7 +153,7 @@ public class TransferPublishedContentJobImpl implements
 	    // move publish content
 	    contentDid =
 		    ATTACHMENT_DIRECTORY_PREFIX + siteTitle + "/"
-			    + ATTACHMENT_DIRECTORY_SUFFIX;
+			    + ATTACHMENT_DIRECTORY_SUFFIX + "/";
 
 	    contentPid = contentSid + PUBLISH_DIRECTORY;
 	    copyContent(contentPid, contentDid);
@@ -296,7 +296,9 @@ public class TransferPublishedContentJobImpl implements
     private void copyContent(String contentOid, String contentDid) {
     	String newResourceId = null;
     	
-		List<ContentEntity> entities = contentHostingService
+	log.info("Copy content from: " + contentOid + " to: " + contentDid);
+
+	List<ContentEntity> entities = contentHostingService
 				.getAllEntities(contentOid);    	
     	
 		try {
