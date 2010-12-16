@@ -57,6 +57,8 @@ import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.TransferPublishedContentJob;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
+import org.sakaiquebec.opensyllabus.common.dao.CORelation;
+import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
@@ -116,6 +118,20 @@ public class TransferPublishedContentJobImpl implements
 	this.osylContentService = osylContentService;
     }
 
+    /**
+     * Injection of the CORelationDao
+     */
+    private CORelationDao coRelationDao;
+
+    /**
+     * Sets the {@link CORelationDao}.
+     * 
+     * @param configDao
+     */
+    public void setCoRelationDao(CORelationDao relationDao) {
+	this.coRelationDao = relationDao;
+    }
+
     private OsylSiteService osylSiteService;
 
     public void setOsylSiteService(OsylSiteService osylSiteService) {
@@ -142,7 +158,7 @@ public class TransferPublishedContentJobImpl implements
 	int siteCount = allSites.size();
 	log.info("TransferPublishedContentJobImpl: sites to correct:" + siteCount);
 
-	for (int i = 0; i < siteCount; i++) {
+	for (int i = 0; i < 500 /*siteCount*/; i++) {
 
 	    site = allSites.get(i);
 	    siteTitle = site.getTitle();
@@ -221,53 +237,73 @@ public class TransferPublishedContentJobImpl implements
 	Set<String> keys;
 	String uri, newUri;
 	String siteId;
-
+	List<CORelation> ancestors = null;
+	CORelation relation = null;
+	int nb;
 	int coCount = cos.size();
 	log.info("TransferPublishedContentJobImpl: Course Outlines to correct:" + coCount);
 
-	for (int j = 0; j < coCount; j++) {
-	    COSerialized co = cos.get(j);
-	    if (co.getContent() != null) {
-		model = new COModeledServer(co);
-		model.XML2Model();
-		resources = model.getAllDocuments();
-		newResourcesUri = new HashMap<String, String>();
-		keys = resources.keySet();
-		siteId = co.getSiteId();
-		contentSid = contentHostingService.getSiteCollection(siteId);
-		for (String key : keys) {
-		    uri = resources.get(key);
-		    if (uri.startsWith(contentSid + PUBLISH_DIRECTORY)) {
-			newUri =
-				uri.replaceFirst(
-					contentSid + PUBLISH_DIRECTORY,
-					ATTACHMENT_DIRECTORY_PREFIX + siteId+ "/"
-						+ ATTACHMENT_DIRECTORY_SUFFIX + "/");
-			newResourcesUri.put(uri, newUri);
-		    }
+	for (int j = 0; j < 500/*coCount*/; j++) {
+		COSerialized co = cos.get(j);
+		if (co.getContent() != null) {
+			model = new COModeledServer(co);
+			model.XML2Model();
+			resources = model.getAllDocuments();
+			newResourcesUri = new HashMap<String, String>();
+			keys = resources.keySet();
+			siteId = co.getSiteId();
+			contentSid = contentHostingService.getSiteCollection(siteId);
 
-		    if (uri.startsWith(contentSid + WORK_DIRECTORY)) {
-			newUri =
-				uri.replaceFirst(contentSid + WORK_DIRECTORY,
-					contentSid);
-			newResourcesUri.put(uri, newUri);
+			// We get the course outline ancestors in case there are
+			// referenced in the current course outline
+			ancestors = coRelationDao.getCourseOutlineAncestors(siteId);
+			nb = 0;
+			do {
+				for (String key : keys) {
+					uri = resources.get(key);
+					if (uri.startsWith(contentSid + PUBLISH_DIRECTORY)) {
+						newUri = uri
+								.replaceFirst(
+										contentSid + PUBLISH_DIRECTORY,
+										ATTACHMENT_DIRECTORY_PREFIX
+												+ siteId
+												+ "/"
+												+ ATTACHMENT_DIRECTORY_SUFFIX
+												+ "/");
+						newResourcesUri.put(uri, newUri);
+					}
 
-		    }
+					if (uri.startsWith(contentSid + WORK_DIRECTORY)) {
+						newUri = uri.replaceFirst(contentSid
+								+ WORK_DIRECTORY, contentSid);
+						newResourcesUri.put(uri, newUri);
 
+					}
+
+				}
+				
+				if (ancestors != null && nb < ancestors.size()){
+					relation = ancestors.get(nb);
+					siteId = relation.getParent();
+					contentSid = contentHostingService.getSiteCollection(siteId);
+					nb++;
+				}
+			} while (nb < ancestors.size());
+
+			model.changeResourceRef(model.getModeledContent(),
+					newResourcesUri);
+			model.model2XML();
+			co.setContent(model.getSerializedContent());
+			try {
+				osylSiteService.updateSerializedCourseOutline(co);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			log.info("The references of the course outline "
+					+ co.getSiteId() + " has been updated [" + j + "/"
+					+ coCount + "]");
 		}
-
-		model.changeResourceRef(model.getModeledContent(), newResourcesUri);
-		model.model2XML();
-		co.setContent(model.getSerializedContent());
-		try {
-		    osylSiteService.updateSerializedCourseOutline(co);
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
-
-		log.info("The references of the course outline "
-			+ co.getSiteId() + " has been updated [" + j + "/" + coCount +"]");
-	    }
 	}
 
 	log.info("TransferPublishedContentJobImpl: completed in " + (System.currentTimeMillis() - start) + " ms");
