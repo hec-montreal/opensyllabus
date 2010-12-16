@@ -838,8 +838,13 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		id_publish = (refString + PUBLISH_DIRECTORY + "/");
 	    }
 
-	    ContentCollection publishContent =
+	    ContentCollection publishContent = null;
+	    try {
+	    	publishContent =
 		    contentHostingService.getCollection(id_publish);
+	    }catch (Exception e){
+	    	publishContent = contentHostingService.addCollection(id_publish);
+	    }
 
 	    @SuppressWarnings("unchecked")
 	    List<ContentEntity> membersPublished =
