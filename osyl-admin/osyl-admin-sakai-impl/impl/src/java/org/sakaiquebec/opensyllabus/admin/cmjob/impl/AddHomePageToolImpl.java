@@ -152,9 +152,9 @@ public class AddHomePageToolImpl implements Job {
 		    }
 		}
 
-		log.info("Finished adding home pages in "
-			+ (System.currentTimeMillis() - start) + " ms");
 	    }
+	    log.info("Finished adding home pages in "
+		    + (System.currentTimeMillis() - start) + " ms");
 	} catch (Exception e) {
 	    log.error("Job AddHomePageToolImpl failed: " + e);
 	    e.printStackTrace();
@@ -234,6 +234,10 @@ public class AddHomePageToolImpl implements Job {
     private boolean addTools(Site site, String locale) {
 	int currentToolCount = getSiteTools(site).size();
 
+//	####################################################################################
+//	TODO: peut-on vérifier si c'est un spécifique?
+//	####################################################################################
+	
 	if (currentToolCount != TOOLS_BEFORE.length) {
 	    // Oops unexpected situation (might also be a sharable site):
 	    log.warn("addTools: site [" + site.getTitle()
