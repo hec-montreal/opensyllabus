@@ -297,7 +297,7 @@ public class TransferPublishedContentJobImpl implements
     	String newResourceId = null;
     	
 		List<ContentEntity> entities = contentHostingService
-				.getAllEntities(contentDid);    	
+				.getAllEntities(contentOid);    	
     	
 		try {
 			contentHostingService.addCollection(contentDid);
