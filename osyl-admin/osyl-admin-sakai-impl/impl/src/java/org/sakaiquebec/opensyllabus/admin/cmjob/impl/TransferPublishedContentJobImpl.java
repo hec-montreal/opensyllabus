@@ -161,8 +161,9 @@ public class TransferPublishedContentJobImpl implements
 	    // delete publish
 	    try {
 		contentHostingService.removeCollection(contentPid);
+		contentHostingService.removeCollection(contentDid + PUBLISH_DIRECTORY);
 	    } catch (IdUnusedException e) {
-		e.printStackTrace();
+	    	log.info("Folder " + contentPid + " already deleted");
 	    } catch (TypeException e) {
 		e.printStackTrace();
 	    } catch (PermissionException e) {
@@ -180,7 +181,7 @@ public class TransferPublishedContentJobImpl implements
 	    try {
 		contentHostingService.removeCollection(contentWid);
 	    } catch (IdUnusedException e) {
-		e.printStackTrace();
+		log.info("Folder " + contentWid + " already deleted");
 	    } catch (TypeException e) {
 		e.printStackTrace();
 	    } catch (PermissionException e) {
@@ -301,30 +302,40 @@ public class TransferPublishedContentJobImpl implements
 	List<ContentEntity> entities = contentHostingService
 				.getAllEntities(contentOid);    	
     	
-		try {
-			contentHostingService.addCollection(contentDid);
-		} catch (IdUsedException e1) {
-			// Collection already exists
-		} catch (IdInvalidException e1) {
-			e1.printStackTrace();
-		} catch (PermissionException e1) {
-			e1.printStackTrace();
-		} catch (InconsistentException e1) {
-			e1.printStackTrace();
-		}
 		
 		for (ContentEntity entity: entities){
 			newResourceId = (entity.getId()).replace(contentOid, contentDid);
 			try {
 				log.info("Adding " + newResourceId);
 				if ( !newResourceId.equals(contentOid) )
+					if (!newResourceId.equals(entity.getId()))
+								
 					if (entity.isCollection())
 						contentHostingService.copyIntoFolder(entity.getId(), newResourceId);
 					else
 						contentHostingService.copy(entity.getId(), newResourceId);
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (PermissionException e) {
+				log.info("You are not allowed to move this resource");
+			} catch (IdUnusedException e) {
+				log.info("The id " + newResourceId + " is unused.");
+			} catch (TypeException e) {
+				log.info("The resource or collection type is not correct");
+			} catch (InUseException e) {
+				log.info("The id " + newResourceId + " is already in use");
+			} catch (OverQuotaException e) {
+				log.info("This is an OverQuota exception");
+			} catch (IdUsedException e) {
+				log.info("The id " + newResourceId + " is already exists");
+			} catch (ServerOverloadException e) {
+				log.info("This a server overload exception.");
+			} catch (InconsistentException e) {
+				log.info("This a server inconsistency exception.");
+			} catch (IdLengthException e) {
+				log.info("This a server length exception.");
+			} catch (IdUniquenessException e) {
+				log.info("This a server uniqueness exception.");
 			} 
+		
 		}
 		
 //	List<ContentResource> resources =
