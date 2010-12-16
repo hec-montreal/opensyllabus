@@ -338,7 +338,8 @@ public class AddHomePageToolImpl implements Job {
 	    } catch (Exception e) {
 		log
 			.error(
-				"could not update co to change news and regulation to news",
+				"could not update co to change news and"
+				+ " regulation to news [" + siteId + "]",
 				e);
 	    }
 	}
