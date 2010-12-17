@@ -146,21 +146,25 @@ public class TransferPublishedContentJobImpl implements
 
 	Thread t1 = new Thread() {
 	    public void run() {
+		loginToSakai();
 		processSites(allSites, 0, 700);
 	    }
 	};
 	Thread t2 = new Thread() {
 	    public void run() {
+		loginToSakai();
 		processSites(allSites, 700, 1400);
 	    }
 	};
 	Thread t3 = new Thread() {
 	    public void run() {
+		loginToSakai();
 		processSites(allSites, 1400, 2100);
 	    }
 	};
 	Thread t4 = new Thread() {
 	    public void run() {
+		loginToSakai();
 		processSites(allSites, 2100, 2800);
 	    }
 	};
