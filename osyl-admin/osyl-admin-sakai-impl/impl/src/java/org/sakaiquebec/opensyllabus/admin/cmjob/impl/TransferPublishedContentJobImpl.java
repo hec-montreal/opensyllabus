@@ -69,10 +69,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 public class TransferPublishedContentJobImpl implements
 	TransferPublishedContentJob {
 
-    private List<Site> allSites;
-
-    private List<COSerialized> cos;
-
     /**
      * Our logger
      */
@@ -144,10 +140,46 @@ public class TransferPublishedContentJobImpl implements
 	long start = System.currentTimeMillis();
 	log.info("TransferPublishedContentJobImpl: starting");
 
-	allSites =
+	final List<Site> allSites =
 		siteService.getSites(SiteService.SelectionType.ANY, "course",
 			null, null, SiteService.SortType.NONE, null);
 
+	Thread t1 = new Thread() {
+	    public void run() {
+		processSites(allSites, 0, 700);
+	    }
+	};
+	Thread t2 = new Thread() {
+	    public void run() {
+		processSites(allSites, 700, 1400);
+	    }
+	};
+	Thread t3 = new Thread() {
+	    public void run() {
+		processSites(allSites, 1400, 2100);
+	    }
+	};
+	Thread t4 = new Thread() {
+	    public void run() {
+		processSites(allSites, 2100, 2800);
+	    }
+	};
+	t1.start();
+	t2.start();
+	t3.start();
+	t4.start();
+	
+
+	// change uri in course outline xml
+	List<COSerialized> cos = osylSiteService.getAllCO(); 
+	correctAllXMLs(cos);
+
+	log.info("TransferPublishedContentJobImpl: completed in " + (System.currentTimeMillis() - start) + " ms");
+	logoutFromSakai();
+
+    } // execute
+ 
+    private void processSites(List<Site> allSites, int begin, int end) {
 	Site site = null;
 	String siteTitle = null;
 	String contentDid = null;
@@ -156,9 +188,13 @@ public class TransferPublishedContentJobImpl implements
 	String contentSid = null;
 
 	int siteCount = allSites.size();
-	log.info("TransferPublishedContentJobImpl: sites to correct:" + siteCount);
+	if (end > siteCount) {
+	    end = siteCount;
+	}
+	log.info("TransferPublishedContentJobImpl: sites to correct:" + begin
+		+ " to " + end + " / " + siteCount);
 
-	for (int i = 0; i < 500 /*siteCount*/; i++) {
+	for (int i = begin; i < end; i++) {
 
 	    site = allSites.get(i);
 	    siteTitle = site.getTitle();
@@ -227,10 +263,11 @@ public class TransferPublishedContentJobImpl implements
 	
 	    log.info("The site " + siteTitle + " has been upgraded [" + i + "/" + siteCount +"]");
 	}
+    }
 
-	// change uri in course outline xml
+    private void correctAllXMLs(List<COSerialized> cos) {
+	String contentSid = null;
 
-	cos = osylSiteService.getAllCO();
 	COModeledServer model;
 	Map<String, String> resources;
 	Map<String, String> newResourcesUri;
@@ -306,9 +343,6 @@ public class TransferPublishedContentJobImpl implements
 		}
 	}
 
-	log.info("TransferPublishedContentJobImpl: completed in " + (System.currentTimeMillis() - start) + " ms");
-	logoutFromSakai();
-
     }
 
     /**
@@ -329,6 +363,7 @@ public class TransferPublishedContentJobImpl implements
 	EventTrackingService.post(EventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGIN, null, true));
     }
+
 
     private void copyContent(String contentOid, String contentDid) {
     	String newResourceId = null;
