@@ -243,7 +243,7 @@ public class TransferPublishedContentJobImpl implements
 	int coCount = cos.size();
 	log.info("TransferPublishedContentJobImpl: Course Outlines to correct:" + coCount);
 
-	for (int j = 0; j < 500/*coCount*/; j++) {
+	for (int j = 0; j < coCount; j++) {
 		COSerialized co = cos.get(j);
 		if (co.getContent() != null) {
 			model = new COModeledServer(co);
