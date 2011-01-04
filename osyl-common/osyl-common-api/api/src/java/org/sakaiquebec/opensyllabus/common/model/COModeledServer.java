@@ -1567,11 +1567,7 @@ public class COModeledServer {
     public void changeResourceRef(COElementAbstract element,
 	    Map<String, String> filenameChangesMap) {
 	try {
-	    element.setId(UUID.uuid());
-	    element.setIdParent(null);
 	    if (element.isCOContentResourceProxy()) {
-		((COContentResourceProxy) element).getResource().setId(
-			UUID.uuid());
 		if (!((COContentResourceProxy) element).getResource().getType()
 			.equals(COContentResourceType.URL)) {
 		    String uri =
