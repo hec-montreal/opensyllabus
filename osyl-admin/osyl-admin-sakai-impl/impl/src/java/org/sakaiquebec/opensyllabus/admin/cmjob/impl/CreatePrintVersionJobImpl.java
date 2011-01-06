@@ -39,7 +39,6 @@ import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.cover.SessionManager;
 import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CreatePrintVersionJob;
-import org.sakaiquebec.opensyllabus.admin.conversionJob.impl.OsylConversionJobImpl;
 import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
 import org.sakaiquebec.opensyllabus.shared.exception.PdfGenerationException;
 
