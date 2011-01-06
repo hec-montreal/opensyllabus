@@ -133,12 +133,16 @@ public class DeleteAction extends OsylManagerAbstractAction {
 			    false);
 	    canc.show();
 	    canc.centerAndFocus();
+	} if (hasChild){
+	    OsylOkCancelDialog canc =
+		    new OsylOkCancelDialog(false, true, messages
+			    .OsylWarning_Title(), messages
+			    .deleteAction_delete_error_hasChild(), true,
+			    false);
+	    canc.show();
+	    canc.centerAndFocus();
 	} else {
 	    String message = "";
-
-	    if (hasChild) {
-		message = messages.deleteAction_delete_siteHasChild() + "<br>";
-	    }
 	    message +=
 		    messages.deleteAction_delete_confirmation().replace("{0}",
 			    sites);

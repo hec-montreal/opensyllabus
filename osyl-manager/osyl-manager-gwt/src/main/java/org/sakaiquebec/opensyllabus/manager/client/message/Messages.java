@@ -298,4 +298,6 @@ public interface Messages extends ConstantsWithLookup {
     String attachAction_attach_error_FusionException();
 
     String attachAction_attach_error_CompatibilityException();
+
+    String deleteAction_delete_error_hasChild();
 }
