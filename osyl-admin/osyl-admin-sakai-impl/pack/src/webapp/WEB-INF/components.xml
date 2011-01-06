@@ -317,6 +317,16 @@
 				    
 	</bean>
 	
+	
+	<bean id="createPrintVersionJob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CreatePrintVersionJobImpl" >
+		<property name="siteService"
+			ref="org.sakaiproject.site.api.SiteService" />			
+	    <property name="osylPublishService"	
+	    	ref ="org.sakaiquebec.opensyllabus.common.api.OsylPublishService"/>
+	    <property name="contentHostingService"	
+	    	ref ="org.sakaiproject.content.api.ContentHostingService"/>
+	</bean>
+	
 	<bean id="addcmTitlePropertyjob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.AddCMTitlePropertyJobImpl" >
 		<property name="siteService"
 			ref="org.sakaiproject.site.api.SiteService" />			
@@ -542,7 +552,24 @@
 		
 	</bean>	
 
-
+	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.createPrintVersionJob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+		
+	
+		<property name="beanId">
+			<value>createPrintVersionJob</value>
+		</property>
+		
+		<property name="jobName">
+			<value>Create print version for all sites</value>
+		</property>
+		
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+		
+	</bean>	
 
 
 </beans>

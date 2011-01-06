@@ -527,7 +527,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return co;
     }
 
-    private void createPublishPrintVersion(String siteId, String webappdir)
+    //TODO change visibility to private after 2.6.1->2.7.1 migration
+    public void createPublishPrintVersion(String siteId, String webappdir)
 	    throws PdfGenerationException {
 	try {
 	    COSerialized coSerializedAttendee =

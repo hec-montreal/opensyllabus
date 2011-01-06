@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
+import org.sakaiquebec.opensyllabus.shared.exception.PdfGenerationException;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
 /******************************************************************************
@@ -111,4 +112,7 @@ public interface OsylPublishService {
      * @param sectionInstructors
      */
     public void notifyOnPublish(String siteId, String subject, String body) throws Exception;
+    
+    //TODO temporary to be delete after 2.6.1->2.7.1 migration
+    public void createPublishPrintVersion(String siteId, String webappdir) throws PdfGenerationException;
 }
