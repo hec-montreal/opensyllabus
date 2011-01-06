@@ -100,7 +100,7 @@ public class CreatePrintVersionJobImpl implements CreatePrintVersionJob {
 		} catch (IdUnusedException idue) {
 		    // pdf does not exist, nothing to do
 		} catch (Exception e) {
-		    log.warn("Unable to delete " + directory + "osylPrintVersion.pdf", e);
+		    log.error("Unable to delete " + directory + "osylPrintVersion.pdf", e);
 		}
 	    
 	    try {
