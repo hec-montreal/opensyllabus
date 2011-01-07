@@ -534,16 +534,17 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	String sessionTitle = null;
 	String periode = null;
 
+	
 	if (canCourseId.length() == 7) {
 	    courseIdFront = canCourseId.substring(0, 2);
 	    courseIdMiddle = canCourseId.substring(2, 5);
-	    courseIdBack = canCourseId.substring(5, 7);
+	    courseIdBack = canCourseId.substring(5);
 	    courseId =
 		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
 	} else if (canCourseId.length() == 6) {
 	    courseIdFront = canCourseId.substring(0, 1);
 	    courseIdMiddle = canCourseId.substring(1, 4);
-	    courseIdBack = canCourseId.substring(4, 6);
+	    courseIdBack = canCourseId.substring(4);
 	    courseId =
 		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
 	} else {
@@ -551,8 +552,29 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	}
 
 	if (canCourseId.matches(".*[^0-9].*")) {
-	    courseId = canCourseId;
+	    if (canCourseId.endsWith("A") || canCourseId.endsWith("E")) {
+		if (canCourseId.length() == 8) {
+		    courseIdFront = canCourseId.substring(0, 2);
+		    courseIdMiddle = canCourseId.substring(2, 5);
+		    courseIdBack = canCourseId.substring(5);
+		    courseId =
+			    courseIdFront + "-" + courseIdMiddle + "-"
+				    + courseIdBack;
+
+		}
+		if (canCourseId.length() == 7) {
+		    courseIdFront = canCourseId.substring(0, 1);
+		    courseIdMiddle = canCourseId.substring(1, 4);
+		    courseIdBack = canCourseId.substring(4);
+		    courseId =
+			    courseIdFront + "-" + courseIdMiddle + "-"
+				    + courseIdBack;
+
+		}
+	    } else
+		courseId = canCourseId;
 	}
+
 	sessionTitle = getSessionName(session);
 
 	if (sessionId.matches(".*[pP].*")) {
