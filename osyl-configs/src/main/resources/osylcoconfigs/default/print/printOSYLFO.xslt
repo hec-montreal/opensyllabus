@@ -1206,10 +1206,10 @@
 		<xsl:when test="$label = 'written'">
 			<xsl:choose>
 				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Évaluations</xsl:text>
+					<xsl:text>Écrit</xsl:text>
 				</xsl:when>
 				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Écrit</xsl:text>
+					<xsl:text>Written</xsl:text>
 				</xsl:when>
 				<xsl:when test="$lang = 'ES'">
 					<xsl:text>Por escrito</xsl:text>
