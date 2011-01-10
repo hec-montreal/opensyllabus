@@ -26,6 +26,7 @@ import java.util.List;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylCOUnitAssessmentLabelView;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -49,12 +50,10 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
     private TextBox weightTextBox;
     private ListBox localisationListBox;
     private ListBox modeListBox;
-    // private TextBox livrableTextBox;
-    // private ListBox scopeListBox;
-    // private DateBox startDateBox;
     private DateBox dateDateBox;
     private ListBox subTypeListBox;
     private ListBox typeListBox;
+    private ListBox modalityListBox;
 
     private DateTimeFormat dateTimeFormat;
 
@@ -209,10 +208,10 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	localisationListBox
 		.setTitle(getUiMessage("Assessment.location.tooltip"));
 	localisationListBox.addItem("");
-	localisationListBox.addItem(getView().getCoMessage(
-		"Assessment.Location.inclass"));
-	localisationListBox.addItem(getView().getCoMessage(
-		"Assessment.Location.home"));
+	for (String s : COPropertiesType.LOCATION_VALUES) {
+	    localisationListBox.addItem(getView().getCoMessage(
+		    "Assessment.Location." + s), s);
+	}
 	selectItemListBox(localisationListBox, getView().getLocation());
 	localisationPanel.add(l2);
 	localisationPanel.add(localisationListBox);
@@ -226,33 +225,13 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	modeListBox.setName("Assessment.mode");
 	modeListBox.setTitle(getUiMessage("Assessment.mode.tooltip"));
 	modeListBox.addItem("");
-	modeListBox.addItem(getView().getCoMessage("Assessment.Mode.ind"));
-	modeListBox.addItem(getView().getCoMessage("Assessment.Mode.team"));
+	for (String s : COPropertiesType.MODE_VALUES) {
+	    modeListBox.addItem(getView().getCoMessage("Assessment.Mode." + s),
+		    s);
+	}
 	selectItemListBox(modeListBox, getView().getMode());
 	modePanel.add(l3);
 	modePanel.add(modeListBox);
-
-	// VerticalPanel livrablePanel = new VerticalPanel();
-	// livrablePanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
-	// Label l4 = new Label(getUiMessage("Assessment.deliverable"));
-	// livrableTextBox = new TextBox();
-	// livrableTextBox
-	// .setTitle(getUiMessage("Assessment.deliverable.tooltip"));
-	// livrableTextBox.setText(getView().getResult());
-	// livrablePanel.add(l4);
-	// livrablePanel.add(livrableTextBox);
-	//
-	// VerticalPanel scopePanel = new VerticalPanel();
-	// scopePanel.setStylePrimaryName("Osyl-EditorPopup-LastOptionGroup");
-	// Label l5 = new Label(getUiMessage("Assessment.scope"));
-	// scopeListBox = new ListBox();
-	// scopeListBox.setName("Assessment.scope");
-	// scopeListBox.setTitle(getUiMessage("Assessment.scope.tooltip"));
-	// scopeListBox.addItem(getView().getCoMessage("Assessment.Scope.Obl"));
-	// scopeListBox.addItem(getView().getCoMessage("Assessment.Scope.Fac"));
-	// selectItemListBox(scopeListBox, getView().getScope());
-	// scopePanel.add(l5);
-	// scopePanel.add(scopeListBox);
 
 	VerticalPanel endDatePanel = new VerticalPanel();
 	endDatePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
@@ -274,12 +253,10 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	subTypeListBox.setName("Assessment.subtype");
 	subTypeListBox.setTitle(getUiMessage("Assessment.subtype.tooltip"));
 	subTypeListBox.addItem("");
-	subTypeListBox.addItem(getView().getCoMessage(
-		"Assessment.Subtype.paper"));
-	subTypeListBox.addItem(getView().getCoMessage(
-		"Assessment.Subtype.elect"));
-	subTypeListBox.addItem(getView()
-		.getCoMessage("Assessment.Subtype.oral"));
+	for (String s : COPropertiesType.SUBMITION_TYPE_VALUES) {
+	    subTypeListBox.addItem(getView().getCoMessage(
+		    "Assessment.Subtype." + s), s);
+	}
 	selectItemListBox(subTypeListBox, getView().getSubmitionType());
 	subTypePanel.add(l8);
 	subTypePanel.add(subTypeListBox);
@@ -297,7 +274,8 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 		getController().getOsylConfig().getEvalTypeList();
 	if (evalTypeList != null) {
 	    for (String evalTypeKey : evalTypeList) {
-		typeListBox.addItem(getView().getCoMessage(evalTypeKey));
+		typeListBox.addItem(getView().getCoMessage(
+			"Assessment.Type." + evalTypeKey), evalTypeKey);
 	    }
 	}
 
@@ -350,6 +328,22 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	typePanel.add(l9);
 	typePanel.add(typeListBox);
 
+	VerticalPanel modalityPanel = new VerticalPanel();
+	modePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
+	HTML l10 =
+		new HTML(getUiMessage("Assessment.modality"));
+	modalityListBox = new ListBox();
+	modalityListBox.setName("Assessment.modality");
+	modalityListBox.setTitle(getUiMessage("Assessment.modality.tooltip"));
+	modalityListBox.addItem("");
+	for (String s : COPropertiesType.MODALITY_VALUES) {
+	    modalityListBox.addItem(getView().getCoMessage(
+		    "Assessment.Modality." + s), s);
+	}
+	selectItemListBox(modalityListBox, getView().getModality());
+	modalityPanel.add(l10);
+	modalityPanel.add(modalityListBox);
+
 	HorizontalPanel ligneSuper = new HorizontalPanel();
 	HorizontalPanel ligne1 = new HorizontalPanel();
 	HorizontalPanel ligne2 = new HorizontalPanel();
@@ -364,12 +358,11 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	ligne1.add(typePanel);
 	ligne1.add(ponderationPanel);
 	ligne1.add(localisationPanel);
-	// ligne1.add(livrablePanel);
+	ligne1.add(modalityPanel);
 
 	ligne2.add(modePanel);
 	ligne2.add(endDatePanel);
 	ligne2.add(subTypePanel);
-	// ligne2.add(scopePanel);
 
 	vp.add(ligne1);
 	vp.add(ligne2);
@@ -392,7 +385,10 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 
 	String assessementType = getView().getAssessmentType();
 
-	assessementType = assessementType != null ? assessementType : "";
+	assessementType =
+		(assessementType != null && !"".equals(assessementType)) ? getView()
+			.getCoMessage("Assessment.Type." + assessementType)
+			: "";
 
 	String assessementTypeLabel =
 		getUiMessage("Assessment.type") + ": " + assessementType;
@@ -428,38 +424,34 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
     }
 
     public String getLocation() {
-	return localisationListBox.getItemText(localisationListBox
+	return localisationListBox.getValue(localisationListBox
 		.getSelectedIndex());
     }
 
     public String getMode() {
-	return modeListBox.getItemText(modeListBox.getSelectedIndex());
+	return modeListBox.getValue(modeListBox.getSelectedIndex());
     }
-
-    // public String getResult() {
-    // return livrableTextBox.getText();
-    // }
-
-    // public String getScope() {
-    // return scopeListBox.getItemText(scopeListBox.getSelectedIndex());
-    // }
 
     public Date getDate() {
 	return dateDateBox.getValue();
     }
 
     public String getSubmitionType() {
-	return subTypeListBox.getItemText(subTypeListBox.getSelectedIndex());
+	return subTypeListBox.getValue(subTypeListBox.getSelectedIndex());
     }
 
     public String getType() {
-	return typeListBox.getItemText(typeListBox.getSelectedIndex());
+	return typeListBox.getValue(typeListBox.getSelectedIndex());
+    }
+
+    public String getModality() {
+	return modalityListBox.getValue(modalityListBox.getSelectedIndex());
     }
 
     private void selectItemListBox(ListBox lb, String text) {
 	int selectedIndex = 0;
 	for (int i = 0; i < lb.getItemCount(); i++) {
-	    if (lb.getItemText(i).equals(text)) {
+	    if (lb.getValue(i).equals(text)) {
 		selectedIndex = i;
 		break;
 	    }
@@ -472,21 +464,31 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 
 	String location = getView().getLocation();
 	String workMode = getView().getMode();
+	String modality = getView().getModality();
 	String submissionMode = getView().getSubmitionType();
 
 	workMode =
-		(workMode != null && !workMode.trim().equals("")) ? workMode
+		(workMode != null && !"".equals(workMode)) ? getView()
+			.getCoMessage("Assessment.Mode." + workMode)
 			+ " / " : "";
-	location = location != null ? location : "";
+	location =
+		(location != null && !"".equals(location)) ? getView()
+			.getCoMessage("Assessment.Location." + location)+" / " : "";
+			
+	modality = (modality != null && !"".equals(modality)) ? getView()
+		.getCoMessage("Assessment.Modality." + modality) : "";		
 
-	submissionMode = submissionMode != null ? submissionMode : "";
+	submissionMode =
+		(submissionMode != null && !"".equals(submissionMode)) ? getView()
+			.getCoMessage("Assessment.Subtype." + submissionMode)
+			: "";
 
 	String submissionModeLabel =
 		!submissionMode.equals("") ? getView().getCoMessage(
 			"Assessment.Subtype")
 			+ " : " + submissionMode : "";
 
-	Label label1 = new Label(workMode + location);
+	Label label1 = new Label(workMode + location + modality);
 	Label label2 = new Label(submissionModeLabel);
 
 	label1.setStylePrimaryName("Osyl-AssessmentView-AdditionalInfos");
@@ -495,5 +497,4 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	metaInfosPanel.add(label2);
 	return metaInfosPanel;
     }
-
 }

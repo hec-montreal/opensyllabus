@@ -65,16 +65,14 @@ public class OsylCOUnitAssessmentLabelView extends OsylCOUnitLabelView {
 	setLocation(((OsylCOUnitAssessmentLabelEditor) getEditor())
 		.getLocation());
 	setMode(((OsylCOUnitAssessmentLabelEditor) getEditor()).getMode());
-	// setResult(((OsylCOStructureEvaluationItemEditor) getEditor())
-	// .getResult());
-	// setScope(((OsylCOStructureEvaluationItemEditor)
-	// getEditor()).getScope());
 	setDateStart(((OsylCOUnitAssessmentLabelEditor) getEditor()).getDate());
 	setDateEnd(((OsylCOUnitAssessmentLabelEditor) getEditor()).getDate());
 	setSubmitionType(((OsylCOUnitAssessmentLabelEditor) getEditor())
 		.getSubmitionType());
 	setAssessmentType((((OsylCOUnitAssessmentLabelEditor) getEditor())
 		.getType()));
+	setModality((((OsylCOUnitAssessmentLabelEditor) getEditor())
+		.getModality()));
 	setModifiedDateToNow();
     }
 
@@ -149,33 +147,6 @@ public class OsylCOUnitAssessmentLabelView extends OsylCOUnitLabelView {
 	return reqLevel;
     }
 
-    // public void setResult(String l) {
-    // getModel().addProperty(COPropertiesType.RESULT, l);
-    // }
-    //
-    // public String getResult() {
-    // String reqLevel = null;
-    // if (!"undefined"
-    // .equals(getModel().getProperty(COPropertiesType.RESULT))
-    // || null != getModel().getProperty(COPropertiesType.RESULT)) {
-    // reqLevel = getModel().getProperty(COPropertiesType.RESULT);
-    // }
-    // return reqLevel;
-    // }
-    //
-    // public void setScope(String l) {
-    // getModel().addProperty(COPropertiesType.SCOPE, l);
-    // }
-    //
-    // public String getScope() {
-    // String reqLevel = null;
-    // if (!"undefined".equals(getModel().getProperty(COPropertiesType.SCOPE))
-    // || null != getModel().getProperty(COPropertiesType.SCOPE)) {
-    // reqLevel = getModel().getProperty(COPropertiesType.SCOPE);
-    // }
-    // return reqLevel;
-    // }
-
     public void setSubmitionType(String l) {
 	getModel().addProperty(COPropertiesType.SUBMITION_TYPE, l);
     }
@@ -204,6 +175,19 @@ public class OsylCOUnitAssessmentLabelView extends OsylCOUnitLabelView {
 	    reqLevel = getModel().getProperty(COPropertiesType.ASSESSMENT_TYPE);
 	}
 	return reqLevel;
+    }
+
+    public String getModality() {
+	String modality = null;
+	if (!"undefined".equals(getModel().getProperty(COPropertiesType.MODALITY))
+		|| null != getModel().getProperty(COPropertiesType.MODALITY)) {
+	    modality = getModel().getProperty(COPropertiesType.MODALITY);
+	}
+	return modality;
+    }
+    
+    private void setModality(String l) {
+	getModel().addProperty(COPropertiesType.MODALITY, l);
     }
 
 }

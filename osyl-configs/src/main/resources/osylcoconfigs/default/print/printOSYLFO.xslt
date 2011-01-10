@@ -398,8 +398,28 @@
 		</fo:table-body>
 	</fo:table>
 	<fo:block font-size="10pt" space-before="0pt" space-after="0pt">
-		<xsl:if test="mode!=''"><fo:inline><xsl:value-of select="mode"/></fo:inline></xsl:if>
-		<xsl:if test="location!=''"><fo:inline><xsl:text> / </xsl:text><xsl:value-of select="location"/></fo:inline></xsl:if>
+		<xsl:if test="mode!=''">
+			<fo:inline>
+				<xsl:call-template name="TextByLang">
+					<xsl:with-param name="label"><xsl:value-of select="mode"/></xsl:with-param>
+				</xsl:call-template>
+			</fo:inline>
+		</xsl:if>
+		<xsl:if test="location!=''">
+			<fo:inline>
+				<xsl:text> / </xsl:text>
+				<xsl:call-template name="TextByLang">
+					<xsl:with-param name="label"><xsl:value-of select="location"/></xsl:with-param>
+				</xsl:call-template>
+			</fo:inline>
+		</xsl:if>
+		<xsl:if test="modality!=''">
+			<fo:inline><xsl:text> / </xsl:text>
+				<xsl:call-template name="TextByLang">
+					<xsl:with-param name="label"><xsl:value-of select="modality"/></xsl:with-param>
+				</xsl:call-template>
+			</fo:inline>
+		</xsl:if>
 	</fo:block>
 	<xsl:if test="submition_type!=''">
 		<fo:block font-size="10pt" space-before="0pt" space-after="0pt">
@@ -418,7 +438,11 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</fo:inline>
-			<fo:inline><xsl:value-of select="submition_type"/></fo:inline>
+			<fo:inline>
+				<xsl:call-template name="TextByLang">
+					<xsl:with-param name="label"><xsl:value-of select="submition_type"/></xsl:with-param>
+				</xsl:call-template>
+			</fo:inline>
 		</fo:block>
 	</xsl:if>
 
@@ -1129,6 +1153,126 @@
 				</xsl:when>
 				<xsl:when test="$lang = 'ES'">
 					<xsl:text>Evaluaciones</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'home'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>À la maison</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>At Home - Out of class</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>En Casa - Fuera de clase</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'inClass'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>En classe</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>In Class</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>En la clase</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'oral'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Oral</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Oral</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Oral</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'written'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Évaluations</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Écrit</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Por escrito</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'individual'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Individuel</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Individual</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Individual</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'team'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>En équipe</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Equipo</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Evaluaciones</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'elect'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Électronique</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Electronic</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Electronica</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'paper'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text>Papier</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text>Paper</xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text>Papel</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
 				</xsl:otherwise>
