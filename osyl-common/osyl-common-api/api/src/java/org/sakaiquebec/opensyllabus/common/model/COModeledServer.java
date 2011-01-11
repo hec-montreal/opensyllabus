@@ -845,7 +845,7 @@ public class COModeledServer {
 							    OsylContentService.PUBLISH_DIRECTORY_PREFIX
 								    + "/" + coSerialized
 									    .getSiteId()
-								    + "/" + OsylContentService.PUBLISH_DIRECTORY_SUFFIX));
+								    + "/" + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX));
 
 			} else {
 			    copProperties

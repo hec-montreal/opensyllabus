@@ -539,12 +539,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		String publishDirectory = "";
 		if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
 		    Site site = osylSiteService.getSite(siteId);
-		    String osylToolName =
-			    ToolManager.getTool("sakai.opensyllabus.tool")
-				    .getTitle();
 		    publishDirectory =
 			    ContentHostingService.ATTACHMENTS_COLLECTION
-				    + site.getTitle() + "/" + osylToolName
+				    + site.getTitle() + "/" + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
 				    + "/";
 		} else {
 		    publishDirectory =
@@ -828,13 +825,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    // We remove all resources in the publish directory collection
 	    if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
 		Site site = osylSiteService.getSite(siteId);
-		String osylToolName =
-			ToolManager.getTool("sakai.opensyllabus.tool")
-				.getTitle();
-
 		id_publish =
 			ContentHostingService.ATTACHMENTS_COLLECTION
-				+ site.getTitle() + "/" + osylToolName + "/";
+				+ site.getTitle() + "/" + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX + "/";
 	    } else {
 		id_publish = (refString + PUBLISH_DIRECTORY + "/");
 	    }
@@ -899,13 +892,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 		    if (osylContentService.USE_ATTACHMENTS.equals("true")) {
 			Site site = osylSiteService.getSite(siteId);
-			String osylToolName =
-				ToolManager.getTool("sakai.opensyllabus.tool")
-					.getTitle();
-
 			this_publish_directory =
 				contentHostingService.ATTACHMENTS_COLLECTION
-					+ site.getTitle() + "/" + osylToolName
+					+ site.getTitle() + "/" + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
 					+ "/";
 
 		    } else {

@@ -20,8 +20,6 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.common.impl;
 
-import javax.swing.text.html.parser.Entity;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.authz.api.AuthzGroupService;
@@ -42,7 +40,6 @@ import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiproject.util.Validator;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 
@@ -130,12 +127,11 @@ public class OsylContentServiceImpl implements OsylContentService {
 	// Make sure the site name can be used as a collection id
 	Validator.checkResourceId(siteName);
 	try {
-	    String osylToolName =
-		    ToolManager.getTool("sakai.opensyllabus.tool").getTitle();
+	    String osylToolName = OPENSYLLABUS_ATTACHEMENT_PREFIX;
 
 	    // We create the site collection
 	    String collectionId =
-		    contentHostingService.ATTACHMENTS_COLLECTION + siteName;
+		    ContentHostingService.ATTACHMENTS_COLLECTION + siteName;
 
 	    ContentCollectionEdit collection = null;
 	    if (contentHostingService.isCollection(collectionId))
@@ -146,9 +142,10 @@ public class OsylContentServiceImpl implements OsylContentService {
 		} catch (IdUnusedException e) {
 		    log.info("The folder " + collectionId + " does not exist.");
 		} catch (TypeException e) {
-		    log.info("The id " + collectionId + " does not refer to a folder.");
+		    log.info("The id " + collectionId
+			    + " does not refer to a folder.");
 		}
-	    else{
+	    else {
 		collection = contentHostingService.addCollection(collectionId);
 		collection.getPropertiesEdit().addProperty(
 			ResourceProperties.PROP_DISPLAY_NAME, siteName);
@@ -165,13 +162,13 @@ public class OsylContentServiceImpl implements OsylContentService {
 	    }
 
 	} catch (IdUsedException e) {
-		log.info("The site " + siteName + " does not exist.");
+	    log.info("The site " + siteName + " does not exist.");
 	} catch (IdInvalidException e) {
-		log.info("You are refering to an invalid id " );
+	    log.info("You are refering to an invalid id ");
 	} catch (PermissionException e) {
-		log.info("You are not allowed access.");
+	    log.info("You are not allowed access.");
 	} catch (InconsistentException e) {
-		log.info("Inconsistent Error.");
+	    log.info("Inconsistent Error.");
 	}
     }
 

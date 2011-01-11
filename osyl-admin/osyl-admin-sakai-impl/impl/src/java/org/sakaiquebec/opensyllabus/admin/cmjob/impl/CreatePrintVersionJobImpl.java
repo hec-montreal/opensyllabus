@@ -37,8 +37,8 @@ import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.cover.SessionManager;
-import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CreatePrintVersionJob;
+import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
 import org.sakaiquebec.opensyllabus.shared.exception.PdfGenerationException;
 
@@ -49,26 +49,25 @@ import org.sakaiquebec.opensyllabus.shared.exception.PdfGenerationException;
 public class CreatePrintVersionJobImpl implements CreatePrintVersionJob {
 
     private static Log log = LogFactory.getLog(CreatePrintVersionJobImpl.class);
-    
+
     private OsylPublishService osylPublishService;
-    
+
     public void setOsylPublishService(OsylPublishService osylPublishService) {
-        this.osylPublishService = osylPublishService;
+	this.osylPublishService = osylPublishService;
     }
-    
+
     private SiteService siteService;
 
     public void setSiteService(SiteService siteService) {
 	this.siteService = siteService;
     }
-    
+
     private ContentHostingService contentHostingService;
-    
+
     public void setContentHostingService(
 	    ContentHostingService contentHostingService) {
 	this.contentHostingService = contentHostingService;
     }
-    
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 	log.info("Start converting Course Outlines");
@@ -78,34 +77,42 @@ public class CreatePrintVersionJobImpl implements CreatePrintVersionJob {
 	final List<Site> allSites =
 		siteService.getSites(SiteService.SelectionType.ANY, "course",
 			null, null, SiteService.SortType.NONE, null);
-	
-	String configPath = 
-		ServerConfigurationService.getString(OSYL_CONFIG_PATH_KEY,
-			null);
-	if(configPath==null)
-	    configPath = System.getProperty("catalina.home")+File.separator+"webapps"+File.separator+"osyl-admin-sakai-tool";//Ugly but don't know cleaner method.
-	
-	for(Site site : allSites){
-	    	String osylToolName =
-		    ToolManager.getTool("sakai.opensyllabus.tool")
-			    .getTitle();
-	    	String directory =
+
+	String configPath =
+		ServerConfigurationService
+			.getString(OSYL_CONFIG_PATH_KEY, null);
+	if (configPath == null)
+	    configPath =
+		    System.getProperty("catalina.home") + File.separator
+			    + "webapps" + File.separator
+			    + "osyl-admin-sakai-tool";// Ugly but don't know
+						      // cleaner method.
+
+	for (Site site : allSites) {
+	    String directory =
 		    ContentHostingService.ATTACHMENTS_COLLECTION
-			    + site.getTitle() + "/" + osylToolName
+			    + site.getTitle()
+			    + "/"
+			    + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
 			    + "/";
-	    	try {
-		    contentHostingService.getResource(directory + "osylPrintVersion.pdf");
-		    contentHostingService.removeResource(directory + "osylPrintVersion.pdf");
-		} catch (IdUnusedException idue) {
-		    // pdf does not exist, nothing to do
-		} catch (Exception e) {
-		    log.error("Unable to delete " + directory + "osylPrintVersion.pdf", e);
-		}
-	    
 	    try {
-		osylPublishService.createPublishPrintVersion(site.getId(), configPath+File.separator);
+		contentHostingService.getResource(directory
+			+ "osylPrintVersion.pdf");
+		contentHostingService.removeResource(directory
+			+ "osylPrintVersion.pdf");
+	    } catch (IdUnusedException idue) {
+		// pdf does not exist, nothing to do
+	    } catch (Exception e) {
+		log.error("Unable to delete " + directory
+			+ "osylPrintVersion.pdf", e);
+	    }
+
+	    try {
+		osylPublishService.createPublishPrintVersion(site.getId(),
+			configPath + File.separator);
 	    } catch (PdfGenerationException e) {
-		log.error("Could not create pdf for site '"+site.getId()+"'", e);
+		log.error("Could not create pdf for site '" + site.getId()
+			+ "'", e);
 	    }
 	}
 	logoutFromSakai();
@@ -128,7 +135,7 @@ public class CreatePrintVersionJobImpl implements CreatePrintVersionJob {
 	EventTrackingService.post(EventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGIN, null, true));
     }
-    
+
     protected void logoutFromSakai() {
 	// post the logout event
 	EventTrackingService.post(EventTrackingService.newEvent(

@@ -35,6 +35,5 @@ public interface TransferPublishedContentJob extends Job{
 
     public final static String ATTACHMENT_DIRECTORY_PREFIX = "/attachment/";
 
-    public final static String ATTACHMENT_DIRECTORY_SUFFIX =
-	    ToolManager.getTool("sakai.opensyllabus.tool").getTitle();
+    public final static String OPENSYLLABUS_ATTACHEMENT_PREFIX ="OpenSyllabus";
 }

@@ -28,7 +28,6 @@ import org.sakaiproject.event.cover.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiquebec.opensyllabus.api.OsylService;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
@@ -346,15 +345,17 @@ public class OsylServiceImpl implements OsylService {
 	    // directoryId = osylSiteService.getCurrentSiteId();
 
 	    // TODO : SAKAI-2160 - add citations list ?
-		
-		
-		//Create attachment folder if necessary
-			directoryId = contentHostingService.ATTACHMENTS_COLLECTION
-					+ osylSiteService.getCurrentSiteId() + "/"
-					+ ToolManager.getTool("sakai.opensyllabus.tool").getTitle() +"/";
-			if (!collectionExist(directoryId))
-				osylContentService.initSiteAttachments(osylSiteService
-						.getCurrentSiteId());
+
+	    // Create attachment folder if necessary
+	    directoryId =
+		    ContentHostingService.ATTACHMENTS_COLLECTION
+			    + osylSiteService.getCurrentSiteId()
+			    + "/"
+			    + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
+			    + "/";
+	    if (!collectionExist(directoryId))
+		osylContentService.initSiteAttachments(osylSiteService
+			.getCurrentSiteId());
 
 	} else {
 	    if (addCollection(WORK_DIRECTORY, null)) {
@@ -538,7 +539,7 @@ public class OsylServiceImpl implements OsylService {
     public SakaiEntities getExistingEntities(String siteId) {
 	SakaiEntities sakaiEntities = new SakaiEntities();
 	String currentUserId = sessionManager.getCurrentSessionUserId();
-	List<String> entities, theSiteEntities;
+	List<String> entities;
 	String title;
 	Map<String, String> siteEntities = new HashMap<String, String>();
 	Map<String, String> siteProviders = new HashMap<String, String>();

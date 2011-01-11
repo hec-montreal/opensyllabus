@@ -34,7 +34,6 @@ import org.sakaiproject.exception.OverQuotaException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.exception.TypeException;
-import org.sakaiproject.tool.cover.ToolManager;
 
 /**
  * Here we will manage (create, remove) all the published resources. The
@@ -47,11 +46,10 @@ import org.sakaiproject.tool.cover.ToolManager;
 public interface OsylContentService {
 
     public final static String PUBLISH_DIRECTORY_PREFIX = "attachment";
-    
+
     public static final String WORK_DIRECTORY_PREFIX = "group";
 
-    public final static String PUBLISH_DIRECTORY_SUFFIX =
-	    ToolManager.getTool("sakai.opensyllabus.tool").getTitle();
+    public final static String OPENSYLLABUS_ATTACHEMENT_PREFIX = "OpenSyllabus";
 
     public final static String USE_ATTACHMENTS =
 	    ServerConfigurationService
