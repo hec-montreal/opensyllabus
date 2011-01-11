@@ -144,7 +144,7 @@ public class OsylHorizontalSplitPanel extends Composite {
 						}
 		    		};
 		    		t.schedule(21);
-				}
+				}			
 			}
 			break;
 		}
@@ -160,7 +160,6 @@ public class OsylHorizontalSplitPanel extends Composite {
 				if (!isCollapseElementTarget) {
 					setCursor("col-resize");
 					isMouseDownOnSplitter = true;
-
 					diffSplitPosition = DOM.eventGetClientX(event)
 							- getAbsoluteLeft() - getSplitPosition();
 				} else {
@@ -212,7 +211,20 @@ public class OsylHorizontalSplitPanel extends Composite {
 		}
 
 		if (leftElementVisible && !collapseMouseDown && isResizable()) {
-			super.onBrowserEvent(event);
+			super.onBrowserEvent(event);			
+		} 
+	
+		if (isResizable()) {		
+			Boolean oldResizable = isResizable();		
+			OsylController.getInstance().getMainView().resize();
+			if (oldResizable != isResizable()) {
+				Timer t = new Timer() {
+					public void run() {
+						setSplitPosition(getComputedSplitPosition());
+					}
+	    		};
+	    		t.schedule(21);
+			}
 		}
 	}
 	
