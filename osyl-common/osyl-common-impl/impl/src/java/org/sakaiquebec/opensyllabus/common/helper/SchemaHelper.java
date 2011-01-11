@@ -82,17 +82,30 @@ public class SchemaHelper {
 	return schemaVersion;
     }
 
-    public String getMajorXMLSchemaVersion(String xml) {
+    public int getMajorXMLSchemaVersion(String xml) {
 	return getMajorVersion(getXMLSchemaVersion(xml));
     }
 
-    public String getMajorSchemaVersion() {
+    public int getMajorSchemaVersion() {
 	String schemaVersion = getSchemaVersion();
 	return getMajorVersion(schemaVersion);
     }
 
-    private String getMajorVersion(String version) {
-	return version.substring(0, version.indexOf('.'));
+    private int getMajorVersion(String version) {
+	return Integer.parseInt(version.substring(0, version.indexOf('.')));
+    }
+
+    public int getMinorXMLSchemaVersion(String xml) {
+	return getMinorVersion(getXMLSchemaVersion(xml));
+    }
+
+    public int getMinorSchemaVersion() {
+	String schemaVersion = getSchemaVersion();
+	return getMinorVersion(schemaVersion);
+    }
+
+    private int getMinorVersion(String version) {
+	return Integer.parseInt(version.substring(version.indexOf('.') + 1));
     }
 
     public boolean isValid(String xml) {
@@ -122,27 +135,27 @@ public class SchemaHelper {
      */
     public String verifyAndConvert(String xml) throws Exception {
 	if (xml != null && !xml.trim().equals("")) {
-	    if (getMajorXMLSchemaVersion(xml).equals(getMajorSchemaVersion())) {
-		String xmlVersionString = getXMLSchemaVersion(xml);
+	    int majorSchemaVersion = getMajorSchemaVersion();
+	    if (getMajorXMLSchemaVersion(xml) == majorSchemaVersion) {
 		String schemaVersionString = getSchemaVersion();
-		float actualVersion = Float.valueOf(xmlVersionString);
-		float schemaVersion = Float.valueOf(schemaVersionString);
+		int minorSchemaVersion = getMinorSchemaVersion();
+		int minorXmlVersion = getMinorXMLSchemaVersion(xml);
 		try {
-		    while (actualVersion != schemaVersion) {
-			float nextVersion = (float) (actualVersion + 0.1);
-
+		    while (minorXmlVersion != minorSchemaVersion) {
+			int nextMinorVersion = minorXmlVersion + 1;
 			xml =
-				convert(xml, Float.toString(actualVersion),
-					Float.toString(nextVersion));
+				convert(xml, majorSchemaVersion + "."
+					+ minorXmlVersion,
+					majorSchemaVersion + "."
+						+ nextMinorVersion);
 
-			actualVersion = nextVersion;
+			minorXmlVersion = nextMinorVersion;
 		    }
 		    xml = updateXmlSchemaVersion(xml, schemaVersionString);
 		} catch (Exception e) {
 		    e.printStackTrace();
 		    return xml;
 		}
-
 	    } else {
 		throw new Exception(
 			"XSD version and XML version are not compatible");
