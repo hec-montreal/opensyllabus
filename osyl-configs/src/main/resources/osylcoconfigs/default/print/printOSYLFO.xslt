@@ -1161,7 +1161,7 @@
 		<xsl:when test="$label = 'home'">
 			<xsl:choose>
 				<xsl:when test="$lang = 'FR'">
-					<xsl:text>À la maison</xsl:text>
+					<xsl:text>À la maison - Hors classe</xsl:text>
 				</xsl:when>
 				<xsl:when test="$lang = 'EN'">
 					<xsl:text>At Home - Out of class</xsl:text>
