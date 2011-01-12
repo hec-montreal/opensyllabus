@@ -1,7 +1,5 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
-import java.io.File;
-
 import org.quartz.Job;
 
 /******************************************************************************
@@ -38,14 +36,13 @@ import org.quartz.Job;
 public interface OsylCMJob extends Job {
 
     public final static String EXTRACTS_PATH_CONFIG_KEY =
-	"coursemanagement.extract.files.path";
+	    "coursemanagement.extract.files.path";
 
-    public final static String SECRETARY_ROLE = "I";
+    public final static String SECRETARY_ROLE = "SEC";
 
     public final static String ACTIVE_STATUS = "active";
 
-    public final static String COORDONNATEUR_ROLE = "I";
-
+    public final static String COORDONNATEUR_ROLE = "C";
 
     /**
      * Value used to represent the credits associated to this course. This is a
@@ -74,6 +71,5 @@ public interface OsylCMJob extends Job {
      * Le programme du certificat
      */
     public final static String CERTIFICAT = "CERT";
-  
- 
+
 }

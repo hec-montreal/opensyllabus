@@ -57,6 +57,16 @@ public interface OsylSecurityService {
     public static final String SECURITY_ROLE_COURSE_INSTRUCTOR = "Instructor";
 
     /**
+     * Course Coordonator role value
+     */
+    public static final String SECURITY_ROLE_COURSE_COORDONATOR = "Coordonator";
+
+    /**
+     * Course Secretary role value
+     */
+    public static final String SECURITY_ROLE_COURSE_SECRETARY = "Secretary";
+
+    /**
      * Course general assistant role value.
      */
     public static final String SECURITY_ROLE_COURSE_GENERAL_ASSISTANT =
@@ -127,7 +137,7 @@ public interface OsylSecurityService {
 	    String permission) throws Exception;
 
     public void applyDirectoryPermissions(String directoryId) throws Exception;
-    
+
     public String getCurrentUserId();
 
 }
