@@ -314,7 +314,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 			    log.error("transform(): " + e1);
 			}
 			zcco = XmlHelper.applyXsl(osylCoISO88591, xslt, new MyResolver(
-					xsltFileDirectory),"ISO-8859-1");
+					xsltFileDirectory),"ISO-8859-1",null);
 		} catch (Exception e) {
 			log.error("Unable to transform XML" + e);
 		}

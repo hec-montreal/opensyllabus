@@ -23,6 +23,8 @@ package org.sakaiquebec.opensyllabus.common.helper;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -118,12 +120,16 @@ public class XmlHelper {
     public static String applyXsl(String xml, String xsl) throws Exception {
 	return applyXsl(xml, xsl, null);
     }
-
-    public static String applyXsl(String xml, String xsl, URIResolver uriResolver) throws Exception {
-	return applyXsl(xml, xsl, uriResolver, "UTF-8");
+    
+    public static String applyXsl(String xml, String xsl, Map<String,String> transformerParameters) throws Exception {
+	return applyXsl(xml, xsl, null,transformerParameters);
     }
 
-    public static String applyXsl(String xml, String xsl, URIResolver uriResolver,String encoding) throws Exception{
+    public static String applyXsl(String xml, String xsl, URIResolver uriResolver,Map<String,String> transformerParameters) throws Exception {
+	return applyXsl(xml, xsl, uriResolver, "UTF-8",transformerParameters);
+    }
+
+    public static String applyXsl(String xml, String xsl, URIResolver uriResolver,String encoding,Map<String,String> transformerParameters) throws Exception{
 	TransformerFactory tFactory = TransformerFactory.newInstance();
 	xml = rmNonValidChars(xml);
 	if(uriResolver!=null)
@@ -143,6 +149,14 @@ public class XmlHelper {
 
 	Transformer transformerXml =
 		tFactory.newTransformer(coXslContentSource);
+	
+	// set transformer parameters
+	if(transformerParameters!=null){
+	    for(Entry<String, String> entry : transformerParameters.entrySet()){
+		transformerXml.setParameter(entry.getKey(), entry.getValue());
+	    }
+	}
+	
 	transformerXml.transform(coXmlContentSource, xmlResult);
 	return out.toString(encoding);
     }

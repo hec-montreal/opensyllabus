@@ -22,6 +22,7 @@ package org.sakaiquebec.opensyllabus.common.helper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.TreeMap;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.dom.DOMSource;
@@ -196,9 +197,11 @@ public class SchemaHelper {
 			+ UPDATE_VERSION_FILENAME;
 
 	String xsl = FileHelper.getFileContent(xslPath);
-	xsl = xsl.replace("{0}", newVersion);
-
-	return XmlHelper.applyXsl(xml, xsl);
+	
+	TreeMap<String, String> transformerParameters = new TreeMap<String, String>();
+	transformerParameters.put("newSchemaVersion", newVersion);
+	
+	return XmlHelper.applyXsl(xml, xsl,transformerParameters);
 
     }
 

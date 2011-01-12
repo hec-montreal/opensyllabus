@@ -3,12 +3,15 @@
 	<xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="no"/>
 	<xsl:output cdata-section-elements="text comment description availability label identifier"/>
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+	
+	<xsl:param name="newSchemaVersion"></xsl:param>
+	
 	<xsl:template match="@*|node()">
 		<xsl:copy>
 			<xsl:apply-templates select="@*|node()"/>
 		</xsl:copy>
 	</xsl:template>
 	<xsl:template match="@schemaVersion">
-		<xsl:attribute name="schemaVersion">{0}</xsl:attribute>
+		<xsl:attribute name="schemaVersion"><xsl:value-of select="$newSchemaVersion"/></xsl:attribute>
 	</xsl:template>
 </xsl:stylesheet>
