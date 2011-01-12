@@ -66,6 +66,11 @@ public interface OsylCMJob extends Job {
      * Mapping to the type of site asociated to this course in Sakai.
      */
     public final static String COURSE_OFF_STATUS = "course";
+    
+    /**
+     * Special section associated to sharable sites.
+     */
+    public final static String SHARABLE_SECTION = "00";
 
     /**
      * Le programme du certificat
