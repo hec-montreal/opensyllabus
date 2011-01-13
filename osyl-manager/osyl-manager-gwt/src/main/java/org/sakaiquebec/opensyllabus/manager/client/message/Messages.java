@@ -281,6 +281,12 @@ public interface Messages extends ConstantsWithLookup {
 
     String publishAction_publish_inProgress();
     
+    String publishAction_publish_title();
+    
+    String publishAction_publish_versionPDF();
+    
+    String publishAction_publish_publishedVersion();
+    
     String attachForm_siteTitle();
 
     String attachForm_attach_inProgress();
@@ -300,4 +306,15 @@ public interface Messages extends ConstantsWithLookup {
     String attachAction_attach_error_CompatibilityException();
 
     String deleteAction_delete_error_hasChild();
+    
+    String publish_pdfGeneration_nok();
+
+    String publish_pdfGeneration_ok();
+
+    String publish_pdfGenerationException();
+
+    String publish_pdfGenerationResults();
+
+    String publish_publishedDate();    
+    
 }
