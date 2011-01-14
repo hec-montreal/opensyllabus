@@ -286,12 +286,7 @@ public class AddHomePageToolImpl implements Job {
 	SitePage anncPage = site.addPage();
 	anncPage.setTitle("Annonces");
 	anncPage.setPosition(1);
-	saveSite(site);
-	ToolConfiguration anncCfg = addTool(anncPage, "sakai.announcements");
-	// Configure Announcements tool
-	Properties anncProps = anncCfg.getPlacementConfig();
-	anncProps.put("functions.require", "annc.new");
-	anncCfg.save();
+	addTool(anncPage, "sakai.announcements");
 	saveSite(site);
 
 	return true;

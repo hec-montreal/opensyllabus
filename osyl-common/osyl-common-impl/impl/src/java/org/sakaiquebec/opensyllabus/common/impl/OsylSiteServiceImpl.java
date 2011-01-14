@@ -536,11 +536,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	    // we add the tools
 	    addHomePage(site, lang);
-	    ToolConfiguration anncCfg = addTool(site, "sakai.announcements");
-	    Properties anncProps = anncCfg.getPlacementConfig();
-	    // The following prevents students to see the Announcements page
-	    anncProps.put("functions.require", "annc.new");
-	    anncCfg.save();
+	    addTool(site, "sakai.announcements");
 	    addTool(site, "sakai.opensyllabus.tool");
 	    addTool(site, "sakai.assignment.grades");
 	    addTool(site, "sakai.resources");
