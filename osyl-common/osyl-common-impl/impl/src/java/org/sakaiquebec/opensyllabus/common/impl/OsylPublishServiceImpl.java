@@ -895,7 +895,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			this_publish_directory =
 				contentHostingService.ATTACHMENTS_COLLECTION
 					+ site.getTitle() + "/" + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
-					+ "/";
+					+ "/" + this_work_id.substring(this_work_id.lastIndexOf(siteRef)+siteRef.length());
 
 		    } else {
 			this_publish_directory =
