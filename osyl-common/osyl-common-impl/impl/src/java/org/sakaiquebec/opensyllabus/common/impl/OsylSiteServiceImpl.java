@@ -1152,8 +1152,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	// Add Home page and its 2 tools
 	SitePage homePage = site.addPage();
 	homePage.setupPageCategory(SitePage.HOME_TOOL_ID);
-	homePage.setTitle("Accueil");
 	homePage.setPosition(0);
+	homePage.getPropertiesEdit().addProperty(SitePage.IS_HOME_PAGE, Boolean.TRUE.toString());
 
 	// 1st tool
 	ToolConfiguration synAnncCfg =
