@@ -1096,7 +1096,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 		header.clearGroupAccess();
 
-		channel.commitMessage(message, NotificationService.NOTI_NONE);
+		channel.commitMessage(message);
 
 	    }
 	} else {
