@@ -624,7 +624,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    + OsylConfigService.CONFIG_DIR + File.separator
 			    + configRef + File.separator
 			    + OsylConfigService.PRINT_DIRECTORY
-			    + File.separator);
+			    + File.separator,ServerConfigurationService.getServerUrl());
 
 	    return f;
 	} catch (Exception e) {
