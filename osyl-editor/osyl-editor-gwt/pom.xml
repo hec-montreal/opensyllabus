@@ -48,11 +48,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-dev</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.gwt.mosaic</groupId>
 			<artifactId>gwt-mosaic</artifactId>
 			<scope>provided</scope>
@@ -160,7 +155,7 @@
 						<configuration>
 							<module>${gwtModule}</module>
 							<webappDirectory>war</webappDirectory>
-							<soyc>false</soyc>
+							<compileReport>false</compileReport>
 						<!-- <localWorkers>1</localWorkers> -->
 						</configuration>
 					</plugin>
@@ -225,7 +220,7 @@
 							<module>${gwtModule}</module>
 							<runTarget>${gwtHostedEntryPointPage}</runTarget>
 							<webappDirectory>war</webappDirectory>
-							<soyc>false</soyc>
+							<compileReport>false</compileReport>
 						</configuration>
 					</plugin>
 					<plugin>
@@ -299,7 +294,7 @@
 							<runTarget>${gwtHostedEntryPointPage}</runTarget>
 							<webappDirectory>war</webappDirectory>
 							<debugPort>9000</debugPort>
-							<soyc>false</soyc>
+							<compileReport>false</compileReport>
 						</configuration>
 					</plugin>
 					<plugin>
@@ -371,7 +366,7 @@
 							<module>${gwtModule}</module>
 							<runTarget>${gwtHostedEntryPointPageUdem}</runTarget>
 							<webappDirectory>war</webappDirectory>
-							<soyc>false</soyc>
+							<compileReport>false</compileReport>
 						</configuration>
 					</plugin>
 					<plugin>

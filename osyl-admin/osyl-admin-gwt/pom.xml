@@ -30,11 +30,6 @@
 			<artifactId>gwt-user</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-dev</artifactId>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -117,7 +112,7 @@
 						<configuration>
 							<module>${gwtModule}</module>
 							<webappDirectory>war</webappDirectory>
-							<soyc>false</soyc>
+							<compileReport>false</compileReport>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -150,7 +145,7 @@
 							<module>${gwtModule}</module>
 							<runTarget>${gwtHostedEntryPointPage}</runTarget>
 							<webappDirectory>war</webappDirectory>
-							<soyc>false</soyc>
+							<compileReport>false</compileReport>
 						</configuration>
 					</plugin>
 					<plugin>

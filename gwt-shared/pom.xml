@@ -133,11 +133,11 @@
 									<goal>install-file</goal>
 								</goals>
 								<configuration>
-									<file>${project.basedir}/lib/gwt-incubator-20100204-r1747.jar
+									<file>${project.basedir}/lib/gwt-incubator-20101117-r1766.jar
 									</file>
 									<groupId>org.gwt.mosaic</groupId>
 									<artifactId>gwt-incubator</artifactId>
-									<version>20100204-r1747</version>
+									<version>20101117-r1766</version>
 									<packaging>jar</packaging>
 									<generatePom>true</generatePom>
 								</configuration>

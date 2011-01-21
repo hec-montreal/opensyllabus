@@ -27,7 +27,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <gwtVersion>2.0.4</gwtVersion>
+    <gwtVersion>2.1.1</gwtVersion>
     <maven.tomcat.home>${CATALINA_HOME}</maven.tomcat.home>
     <!-- TODO -->
     <maven.test.skip>true</maven.test.skip>
@@ -283,11 +283,6 @@
       </dependency>
       <dependency>
         <groupId>com.google.gwt</groupId>
-        <artifactId>gwt-dev</artifactId>
-        <version>${gwtVersion}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.gwt</groupId>
         <artifactId>gwt-servlet</artifactId>
         <version>${gwtVersion}</version>
       </dependency>
@@ -319,7 +314,7 @@
       <dependency>
         <groupId>org.gwt.mosaic</groupId>
         <artifactId>gwt-incubator</artifactId>
-        <version>20100204-r1747</version>
+        <version>20101117-r1766</version>
       </dependency>
         <!-- test -->
       <dependency>
@@ -488,7 +483,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>gwt-maven-plugin</artifactId>
-          <version>1.2</version>
+          <version>2.1.0-1</version>
           <configuration>
             <gwtVersion>${gwtVersion}</gwtVersion>
             <extraJvmArgs>-Xmx768m -Xss4096k</extraJvmArgs>
@@ -570,41 +565,4 @@
 	  </plugin>
 	</plugins>
   </reporting>
-  <profiles>
-   <!--  profiles (with activation per platform) -->
-    <profile>
-      <id>gwt-dev-windows</id>
-      <properties>
-        <platform>windows</platform>
-      </properties>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-        <os>
-          <family>windows</family>
-        </os>
-      </activation>
-    </profile>
-    <profile>
-      <id>gwt-dev-mac</id>
-      <properties>
-        <platform>mac</platform>
-      </properties>
-      <activation>
-        <os>
-          <family>mac</family>
-        </os>
-      </activation>
-    </profile>
-    <profile>
-      <id>gwt-dev-linux</id>
-      <properties>
-        <platform>linux</platform>
-      </properties>
-      <activation>
-        <os>
-          <name>linux</name>
-        </os>
-      </activation>
-    </profile>
-  </profiles>
 </project>

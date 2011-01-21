@@ -45,11 +45,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-dev</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring</artifactId>
 			<scope>provided</scope>
@@ -171,7 +166,7 @@
 						<configuration>
 							<module>${gwtModule}</module>
 							<webappDirectory>war</webappDirectory>
-							<soyc>false</soyc>
+							<compileReport>false</compileReport>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -228,7 +223,7 @@
 							<module>${gwtModule}</module>
 							<runTarget>${gwtHostedEntryPointPage}</runTarget>
 							<webappDirectory>war</webappDirectory>
-							<soyc>false</soyc>
+							<compileReport>false</compileReport>
 						</configuration>
 					</plugin>
 					<plugin>
@@ -295,7 +290,7 @@
 							<runTarget>${gwtHostedEntryPointPage}</runTarget>
 							<webappDirectory>war</webappDirectory>
 							<debugPort>9000</debugPort>
-							<soyc>false</soyc>
+							<compileReport>false</compileReport>
 						</configuration>
 					</plugin>
 					<plugin>
