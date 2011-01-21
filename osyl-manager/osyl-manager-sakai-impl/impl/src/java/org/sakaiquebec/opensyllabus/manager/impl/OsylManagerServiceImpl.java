@@ -138,6 +138,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     private static final String SAKAI_SITE_TYPE = SiteService.SITE_SUBTYPE;
 
+    public final static String SHARABLE_SECTION = "00";
+
     private static final Log log =
 	    LogFactory.getLog(OsylManagerServiceImpl.class);
 
@@ -1147,8 +1149,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 				courseOff.getAcademicSession().getTitle();
 			String sigle = courseOff.getCanonicalCourseEid();
 			String section =
-				courseSId.substring(courseSId.length() - 3,
-					courseSId.length());
+				(SHARABLE_SECTION.equals(courseSId.substring(
+					courseSId.length() - 2, courseSId
+						.length()))) ? SHARABLE_SECTION
+					: courseSId.substring(courseSId
+						.length() - 3, courseSId
+						.length());
 
 			String instructorsString = "";
 			int studentNumber = -1;
