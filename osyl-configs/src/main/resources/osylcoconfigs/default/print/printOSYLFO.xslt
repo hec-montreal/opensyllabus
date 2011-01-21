@@ -10,8 +10,8 @@
 	<xsl:strip-space elements="comment availability"/> 
 	
 	<xsl:output method="xml" indent="yes" />
-	<xsl:param name="ppath"></xsl:param>
-	<xsl:param name="spath"></xsl:param>
+	<xsl:param name="imagePath"></xsl:param>
+	<xsl:param name="serverUrl"></xsl:param>
 	<xsl:param name="currentDateTime"></xsl:param>
 
 	<xsl:variable name='lang'>
@@ -213,7 +213,7 @@
   <xsl:param name="period"/>
 		<fo:block>
 			<fo:external-graphic content-height="41px" vertical-align="middle" padding-top="-10pt">
-				<xsl:attribute name="src"><xsl:value-of select="$ppath"/>img/hecmontreal.gif</xsl:attribute>
+				<xsl:attribute name="src"><xsl:value-of select="$imagePath"/>img/hecmontreal.gif</xsl:attribute>
 			</fo:external-graphic>
 		</fo:block>
 		<fo:block text-align="right" margin-top="-20pt" font-size="14pt" padding-left="0pt" font-weight="bold"><xsl:value-of select="/OSYL/CO/program[@type='HEC']"/></fo:block>
@@ -599,7 +599,7 @@
 		<xsl:when test="(level/text()) and (level != 'undefined')">
 			<fo:block>
 				<fo:external-graphic content-height="20px" vertical-align="middle" padding-left="-30pt" padding-top="0pt">
-					<xsl:attribute name="src"><xsl:value-of select="$ppath"/>img/<xsl:value-of select="level"/>.png</xsl:attribute>
+					<xsl:attribute name="src"><xsl:value-of select="$imagePath"/>img/<xsl:value-of select="level"/>.png</xsl:attribute>
 				</fo:external-graphic>
 			</fo:block>
 			<fo:block padding-top="-15pt">
@@ -781,7 +781,7 @@
 		<fo:block font-size="10pt">
 			<fo:inline color="blue" text-decoration="underline">
 				<fo:basic-link>
-						<xsl:attribute name="external-destination"><xsl:value-of select="identifier"/></xsl:attribute>
+						<xsl:attribute name="external-destination"><xsl:value-of select="$serverUrl"/>/direct<xsl:value-of select="identifier"/></xsl:attribute>
 					<xsl:value-of select="../label"/>
 				</fo:basic-link>
 			</fo:inline>
@@ -809,7 +809,7 @@
 		<fo:block font-size="10pt">
 			<fo:inline color="blue" text-decoration="underline">
 				<fo:basic-link>
-						<xsl:attribute name="external-destination"><xsl:value-of select="$spath"/><xsl:value-of select="identifier"/></xsl:attribute>
+						<xsl:attribute name="external-destination"><xsl:value-of select="$serverUrl"/>/access/content<xsl:value-of select="identifier"/></xsl:attribute>
 					<xsl:value-of select="../label"/>
 				</fo:basic-link>
 			</fo:inline>
@@ -905,7 +905,7 @@
 				<fo:table-cell padding="0px" display-align="center">
 					<fo:block text-align="left">
 						<fo:external-graphic content-height="10px" vertical-align="middle" padding-left="0pt" padding-top="0pt">
-							<xsl:attribute name="src"><xsl:value-of select="$ppath"/>img/<xsl:value-of select="$img"/>.gif</xsl:attribute>
+							<xsl:attribute name="src"><xsl:value-of select="$imagePath"/>img/<xsl:value-of select="$img"/>.gif</xsl:attribute>
 						</fo:external-graphic>
 					</fo:block>
 				</fo:table-cell>
