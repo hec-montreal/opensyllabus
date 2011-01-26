@@ -73,6 +73,8 @@
 			ref="org.sakaiproject.authz.api.AuthzGroupService" />
 		<property name="securityService"
 			ref="org.sakaiproject.authz.api.SecurityService" />
+		<property name="functionManager" 
+			ref="org.sakaiproject.authz.api.FunctionManager" />
 		<property name="timeService"
 			ref="org.sakaiproject.time.api.TimeService" />
 		<property name="userDirectoryService"
