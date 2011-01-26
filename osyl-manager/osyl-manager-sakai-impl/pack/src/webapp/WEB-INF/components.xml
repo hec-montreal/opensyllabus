@@ -15,8 +15,14 @@
 		</property>
 		<property name="functionsToRegister">
 		    <list>
-		        <value>osyl.manager.import</value>
-		        <value>osyl.manager.export</value>
+				<value>osyl.manager.publish</value>
+				<value>osyl.manager.import</value>
+				<value>osyl.manager.create</value>
+				<value>osyl.manager.copy</value>
+				<value>osyl.manager.export</value>
+				<value>osyl.manager.delete</value>
+				<value>osyl.manager.attach</value>
+				<value>osyl.manager.associate</value>
 		    </list>
 		</property>
 		<property name="functionsToAllow">
@@ -26,7 +32,7 @@
 		                <value>osyl.manager.import</value>
 		                <value>osyl.manager.export</value>
 		            </list>
-		        </entry>
+		        </entry>        
 		        <entry key="Teaching Assistant">
 		            <list>
 		                <value>osyl.manager.import</value>
