@@ -60,7 +60,21 @@
 		<property name="courseManagementService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService"/>
 		<property name="osylContentService" 
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />	
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />
+		<property name="entityManager"
+			ref="org.sakaiproject.entity.api.EntityManager" />
+		<property name="authzGroupService"
+			ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="securityService"
+			ref="org.sakaiproject.authz.api.SecurityService" />
+		<property name="timeService"
+			ref="org.sakaiproject.time.api.TimeService" />
+		<property name="userDirectoryService"
+			ref="org.sakaiproject.user.api.UserDirectoryService" />
+			<!-- 
+		<property name="resourceDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
+			 -->
 	</bean>
 
 </beans>

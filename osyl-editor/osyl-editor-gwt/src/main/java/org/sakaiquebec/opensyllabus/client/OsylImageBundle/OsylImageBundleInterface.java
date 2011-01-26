@@ -137,5 +137,9 @@ public interface OsylImageBundleInterface extends ClientBundle {
     //DisclosurePanel images
     public ImageResource expand();
 
-    public ImageResource collapse();    
+    public ImageResource collapse();
+    
+    public ImageResource check16();
+    
+    public ImageResource cross16();
 }

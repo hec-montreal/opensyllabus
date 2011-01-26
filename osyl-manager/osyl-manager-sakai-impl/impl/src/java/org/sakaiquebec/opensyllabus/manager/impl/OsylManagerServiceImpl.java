@@ -38,9 +38,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
-import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -52,9 +52,9 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
+import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.authz.cover.AuthzGroupService;
-import org.sakaiproject.authz.cover.SecurityService;
+import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.citation.api.Citation;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
@@ -73,13 +73,13 @@ import org.sakaiproject.coursemanagement.api.CourseSet;
 import org.sakaiproject.coursemanagement.api.Enrollment;
 import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Section;
+import org.sakaiproject.entity.api.EntityManager;
 import org.sakaiproject.entity.api.EntityProducer;
 import org.sakaiproject.entity.api.EntityTransferrer;
 import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
-import org.sakaiproject.entity.cover.EntityManager;
-import org.sakaiproject.event.cover.NotificationService;
+import org.sakaiproject.event.api.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.IdUsedException;
 import org.sakaiproject.exception.InUseException;
@@ -92,12 +92,12 @@ import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.time.api.Time;
-import org.sakaiproject.time.cover.TimeService;
+import org.sakaiproject.time.api.TimeService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
+import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.user.api.UserNotDefinedException;
-import org.sakaiproject.user.cover.UserDirectoryService;
 import org.sakaiproject.util.ArrayUtil;
 import org.sakaiquebec.opensyllabus.api.OsylService;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
@@ -260,6 +260,51 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    ContentHostingService contentHostingService) {
 	this.contentHostingService = contentHostingService;
     }
+    
+    /**
+     * The entity manager to be injected by Spring
+     */
+    private EntityManager entityManager;
+
+    public void setEntityManager(EntityManager entityManager) {
+	this.entityManager = entityManager;
+    }
+
+    /**
+     * The authz group service to be injected by Spring
+     */
+    private AuthzGroupService authzGroupService;
+
+    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
+	this.authzGroupService = authzGroupService;
+    }
+
+    /**
+     * The security service to be injected by Spring
+     */
+    private SecurityService securityService;
+
+    public void setSecurityService(SecurityService securityService) {
+	this.securityService = securityService;
+    }
+
+    /**
+     * The time service to be injected by Spring
+     */
+    private TimeService timeService;
+
+    public void setTimeService(TimeService timeService) {
+	this.timeService = timeService;
+    }
+
+    /**
+     * The user directory service to be injected by Spring
+     */
+    private UserDirectoryService userDirectoryService;
+
+    public void setUserDirectoryService(UserDirectoryService userDirectoryService) {
+	this.userDirectoryService = userDirectoryService;
+    }
 
     /**
      * The cms to be injected by Spring
@@ -272,7 +317,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     /**
-     * The Osyl resource service to be injected by Spring
+     * The Osyl security service to be injected by Spring
      */
     private OsylSecurityService osylSecurityService;
 
@@ -675,7 +720,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
 		|| osylSecurityService.getCurrentUserRole().equals(
 			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
-	    SecurityService.pushAdvisor(new SecurityAdvisor() {
+	    securityService.pushAdvisor(new SecurityAdvisor() {
 		public SecurityAdvice isAllowed(String userId, String function,
 			String reference) {
 		    return SecurityAdvice.ALLOWED;
@@ -961,8 +1006,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 					.getProperties()
 					.getTimeProperty(
 						ResourceProperties.PROP_CREATION_DATE);
-			Time now = TimeService.newTime();
-			Time expirationTime = TimeService.newTime();
+			Time now = timeService.newTime();
+			Time expirationTime = timeService.newTime();
 			expirationTime.setTime(creationDate.getTime() + timeOut
 				* 60000);
 			if (now.after(expirationTime)) {
@@ -975,7 +1020,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			contentHostingService.removeCollection(id);
 		    }
 		}
-		SecurityService.popAdvisor();
+		securityService.popAdvisor();
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    }
@@ -1169,7 +1214,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			    for (String instructor : instructors) {
 				try {
 				    user =
-					    UserDirectoryService
+					    userDirectoryService
 						    .getUserByEid(instructor);
 				    name = user.getDisplayName();
 				    instructorsString += name + " & ";
@@ -1350,7 +1395,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    for (String instructor : instructors) {
 			try {
 			    user =
-				    UserDirectoryService
+				    userDirectoryService
 					    .getUserByEid(instructor);
 			    name = user.getDisplayName();
 			    info.addCourseInstructor(name);
@@ -1460,12 +1505,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	// get the groups from Sakai
 	Set<String> authzGroupIds =
-		AuthzGroupService.getAuthzGroupsIsAllowed(userId, permission,
+		authzGroupService.getAuthzGroupsIsAllowed(userId, permission,
 			null);
 	Iterator<String> it = authzGroupIds.iterator();
 	while (it.hasNext()) {
 	    String authzGroupId = it.next();
-	    Reference r = EntityManager.newReference(authzGroupId);
+	    Reference r = entityManager.newReference(authzGroupId);
 	    if (r.isKnownType()) {
 		// check if this is a Sakai Site or Group
 		if (r.getType().equals(SiteService.APPLICATION_ID)) {
@@ -1615,7 +1660,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	importToolIntoSiteMigrate(toolIdList, newSite, oldSite);
 
 	// We remove all resources in the publish directory collection
-	if (osylContentService.USE_ATTACHMENTS.equals("true")) {
+	if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
 	    osylContentService.initSiteAttachments(newSite.getTitle());
 	} else {
 	    String id_publish = refString + PUBLISH_DIRECTORY + "/";
@@ -1655,7 +1700,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
 		|| osylSecurityService.getCurrentUserRole().equals(
 			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
-	    SecurityService.clearAdvisors();
+	    securityService.popAdvisor();
 	}
 
 	log.info("Finished copying site [" + siteFrom + "] to [" + siteTo
@@ -1873,7 +1918,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     protected void transferCopyEntitiesMigrate(String toolId,
 	    String fromContext, String toContext) {
 
-	for (Iterator i = EntityManager.getEntityProducers().iterator(); i
+	for (Iterator i = entityManager.getEntityProducers().iterator(); i
 		.hasNext();) {
 	    EntityProducer ep = (EntityProducer) i.next();
 	    if (ep instanceof EntityTransferrer) {

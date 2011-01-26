@@ -9,7 +9,7 @@
 
 	<xsl:strip-space elements="comment availability"/> 
 	
-	<xsl:output method="xml" indent="yes" />
+	<xsl:output method="xml" encoding="UTF-8" indent="yes" />
 	<xsl:param name="imagePath"></xsl:param>
 	<xsl:param name="serverUrl"></xsl:param>
 	<xsl:param name="currentDateTime"></xsl:param>
@@ -82,7 +82,7 @@
 									<xsl:text>Plan de cours : </xsl:text>
 								</xsl:when>
 								<xsl:when test="$lang = 'EN'">
-									<xsl:text>Cours outline </xsl:text>
+									<xsl:text>Course outline </xsl:text>
 								</xsl:when>
 								<xsl:when test="$lang = 'ES'">
 									<xsl:text>Plano de curso </xsl:text>

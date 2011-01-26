@@ -66,7 +66,6 @@ public abstract class OsylManagerAbstractWindowPanel extends WindowPanel{
 	w.setStylePrimaryName("OsylManager-form-element");
 	hp.setCellVerticalAlignment(w, HasVerticalAlignment.ALIGN_BOTTOM);
 	hp.setCellWidth(l, "30%");
-//	hp.setCellWidth(w, "70%");
 	hp.setStylePrimaryName("OsylManager-form-genericPanel");
 	return hp;
     }

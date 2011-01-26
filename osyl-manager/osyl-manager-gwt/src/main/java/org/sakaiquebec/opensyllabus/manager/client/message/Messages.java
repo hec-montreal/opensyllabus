@@ -307,14 +307,13 @@ public interface Messages extends ConstantsWithLookup {
 
     String deleteAction_delete_error_hasChild();
     
-    String publish_pdfGeneration_nok();
-
-    String publish_pdfGeneration_ok();
-
     String publish_pdfGenerationException();
 
-    String publish_pdfGenerationResults();
-
-    String publish_publishedDate();    
+    String publish_publishedDate();
     
+    String publishAction_pdfGenNote();
+    
+    String publishAction_pdfGen_ok();
+    
+    String publishAction_pdfGen_nok();
 }

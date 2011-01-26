@@ -34,6 +34,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -50,6 +51,8 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 
     Grid grid;
 
+    HorizontalPanel publicationPanel;
+
     private int asynCB_return = 0;
 
     private Label publishInProgess;
@@ -59,8 +62,8 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
     private class PublishAsynCallBack implements AsyncCallback<Void> {
 
 	private int siteIndex;
-	
-	String pdfFile;
+
+	private String pdfGenMsg = messages.publishAction_pdfGenNote();
 
 	public PublishAsynCallBack(int siteIndex) {
 	    super();
@@ -68,84 +71,109 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 	}
 
 	public void onFailure(Throwable caught) {
-		Label voidLabel = new Label();			
-	    Image image = new Image(controller.getImageBundle().cross16());
+	    Image publishImage = null;
+	    Image pdfGenImage = null;
 	    String msg = null;
-	    if(caught instanceof FusionException){
-		if(((FusionException)caught).isHierarchyFusionException()){
-		    msg=messages.publishAction_publish_error_HierarchyFusionException();
-		}else{
-		    msg=messages.publishAction_publish_error_FusionException();
+
+	    if (caught instanceof FusionException) {
+		if (((FusionException) caught).isHierarchyFusionException()) {
+		    msg =
+			    messages.publishAction_publish_error_HierarchyFusionException();
+		} else {
+		    msg =
+			    messages.publishAction_publish_error_FusionException();
 		}
+		publishImage = new Image(controller.getImageBundle().cross16());
+		publishImage.setTitle(messages.publishAction_publish_error()
+			+ " : " + msg);
+		pdfGenImage = new Image(controller.getImageBundle().cross16());
+		pdfGenImage.setTitle(messages.publishAction_pdfGen_nok());
+	    } else if (caught instanceof CompatibilityException) {
+		msg =
+			messages.publishAction_publish_error_CompatibilityException();
+		publishImage = new Image(controller.getImageBundle().cross16());
+		publishImage.setTitle(messages.publishAction_publish_error()
+			+ " : " + msg);
+		pdfGenImage = new Image(controller.getImageBundle().cross16());
+		pdfGenImage.setTitle(messages.publishAction_pdfGen_nok());
+	    } else if (caught instanceof PdfGenerationException) {
+		msg = messages.publish_pdfGenerationException();
+		publishImage = new Image(controller.getImageBundle().check16());
+		publishImage.setTitle(messages.publishAction_publish_ok());
+		pdfGenImage = new Image(controller.getImageBundle().cross16());
+		pdfGenImage.setTitle(messages.publishAction_pdfGen_nok()
+			+ " : " + msg);
+	    } else {
+		msg = caught.getMessage();
+		publishImage = new Image(controller.getImageBundle().cross16());
+		publishImage.setTitle(messages.publishAction_publish_error()
+			+ " : " + msg);
+		pdfGenImage = new Image(controller.getImageBundle().cross16());
+		pdfGenImage.setTitle(messages.publishAction_pdfGen_nok()
+			+ " : " + msg);
 	    }
-	    else if(caught instanceof CompatibilityException){
-	    	msg=messages.publishAction_publish_error_CompatibilityException();	    
-		} else if (caught instanceof PdfGenerationException) {	    
-			msg=messages.publish_pdfGenerationException();
-	    }else{
-			msg = caught.getMessage();
-	    }
-	    image.setTitle(messages.publishAction_publish_error() + " : "
-		    + msg);
-	    grid.setWidget(siteIndex+1, 1, voidLabel);	
-	    grid.setWidget(siteIndex+1, 3, image);		    	    
+
+	    grid.setWidget(siteIndex + 1, 1, publishImage);
+	    grid.setWidget(siteIndex + 1, 2, pdfGenImage);
 	    responseReceive();
 	}
 
 	public void onSuccess(Void result) {
-		Label voidLabel = new Label();	
-		Label label = new Label(messages.publishAction_publish_versionPDF());	
-	    Image image = new Image(controller.getImageBundle()
-		    .check16());
-	    image.setTitle(messages.publishAction_publish_ok());
-	    grid.setWidget(siteIndex+1, 1, voidLabel);
-	    grid.setWidget(siteIndex+1, 3, image);	    
+	    Image publishImage =
+		    new Image(controller.getImageBundle().check16());
+	    publishImage.setTitle(messages.publishAction_publish_ok());
+	    Image pdfGenImage =
+		    new Image(controller.getImageBundle().check16());
+	    pdfGenImage.setTitle(messages.publishAction_pdfGen_ok());
+	    grid.setWidget(siteIndex + 1, 1, publishImage);
+	    grid.setWidget(siteIndex + 1, 2, pdfGenImage);
 	    responseReceive();
 	}
 
 	private void responseReceive() {
 	    asynCB_return++;
 	    if (asynCB_return == coSites.size()) {
-			publishInProgess.setVisible(false);
-			okButton.setEnabled(true);
-			controller.notifyManagerEventHandler(new OsylManagerEvent(null,
-				OsylManagerEvent.SITE_INFO_CHANGE));
-	    }else{
-	    	controller.publish(coSites.get(siteIndex+1).getSiteId(), new PublishAsynCallBack(siteIndex+1));
+//		publicationPanel.add(new HTML(pdfGenMsg));
+		publishInProgess.setVisible(false);
+		okButton.setEnabled(true);
+		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
+			OsylManagerEvent.SITE_INFO_CHANGE));
+	    } else {
+		controller.publish(coSites.get(siteIndex + 1).getSiteId(),
+			new PublishAsynCallBack(siteIndex + 1));
 	    }
 	}
     }
 
     public PublishForm(OsylManagerController controller, List<COSite> coSites) {
 	super(controller);
-	//Label title = new Label(messages.mainView_action_publish());
+	// Label title = new Label(messages.mainView_action_publish());
 	Label title = new Label(messages.publishAction_publish_title());
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);
 
-	publishInProgess = new Label(messages.publishAction_publish_inProgress());
+	publishInProgess =
+		new Label(messages.publishAction_publish_inProgress());
 	publishInProgess
 		.setStylePrimaryName("OsylManager-form-publicationText");
 	mainPanel.add(publishInProgess);
 
-	grid = new Grid(coSites.size()+1, 4);
+	grid = new Grid(coSites.size() + 1, 3);
 	this.coSites = coSites;
 	asynCB_return = 0;
 	Image image = new Image(controller.getImageBundle().ajaxloader());
 	image.setTitle(messages.publishAction_publish_inProgress());
-	String pdfFile = "";	
-	Label publishedVersion = new Label(messages.publishAction_publish_publishedVersion());	    
-    Label versionPDF = new Label(messages.publishAction_publish_versionPDF());
-    grid.setWidget(0, 0, publishedVersion);	    
-    grid.setWidget(0, 2, versionPDF);	        
+	Label publishedVersion =
+		new Label(messages.publishAction_publish_publishedVersion());
+	Label versionPDF =
+		new Label(messages.publishAction_publish_versionPDF());
+	grid.setWidget(0, 1, publishedVersion);
+	grid.setWidget(0, 2, versionPDF);
 	for (int r = 0; r < coSites.size(); r++) {
 	    String siteId = coSites.get(r).getSiteId();
-	    pdfFile = siteId + ".pdf";	    
-		Label versionSite = new Label(siteId);	    
-	    Label versionPdf = new Label(pdfFile);	    	    
-	    grid.setWidget(r+1, 0, versionSite);
-	    grid.setWidget(r+1, 1, image);
-	    grid.setWidget(r+1, 2, versionPdf);	 
+	    Label versionSite = new Label(siteId);
+	    grid.setWidget(r + 1, 0, versionSite);
+	    grid.setWidget(r + 1, 1, image);
 	}
 	HorizontalPanel publicationPanel = new HorizontalPanel();
 	Label voidLabel = new Label();
@@ -166,7 +194,7 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 	okButton.setStylePrimaryName("Osyl-Button");
 	okButton.setWidth("50px");
 	okButton.setEnabled(false);
-	
+
 	okButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		PublishForm.this.hide();
@@ -179,8 +207,9 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 	mainPanel.add(hz);
 	mainPanel.setCellHorizontalAlignment(hz,
 		HasHorizontalAlignment.ALIGN_CENTER);
-	
-	controller.publish(coSites.get(0).getSiteId(), new PublishAsynCallBack(0));
-	
+
+	controller.publish(coSites.get(0).getSiteId(), new PublishAsynCallBack(
+		0));
+
     }
 }

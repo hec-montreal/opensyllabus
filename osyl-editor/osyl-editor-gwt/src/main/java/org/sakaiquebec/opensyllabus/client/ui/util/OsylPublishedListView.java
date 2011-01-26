@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewControllable;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
@@ -24,11 +25,13 @@ import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -40,16 +43,25 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class OsylPublishedListView extends Composite implements
 	OsylViewControllable {
 
+    private static final String PDF_GENERATION_FAILED =
+	    "publish.pdfGeneration.nok";
+    private static final String PDF_GENERATION_SUCCEEDED =
+	    "publish.pdfGeneration.ok";
+
     Panel mainPanel = null;
     OsylController osylController;
     private boolean hasBeenPublished = false;
-   
+
     private Label label;
 
     /**
      * User interface message bundle
      */
     private OsylConfigMessages uiMessages;
+
+    private OsylImageBundleInterface osylImageBundle =
+	    (OsylImageBundleInterface) GWT
+		    .create(OsylImageBundleInterface.class);
 
     /**
      * Constructor.
@@ -64,14 +76,14 @@ public class OsylPublishedListView extends Composite implements
     }
 
     private void initView() {
-	label= new Label();
+	label = new Label();
 	label.setStylePrimaryName("Osyl-PublishView-Label");
 	verifiyPublishState(false, null);
 	initWidget(mainPanel);
     }
 
-    private void refreshView(boolean afterPublication, Map<String, String>
-    pdfGenerationResults) {
+    private void refreshView(boolean afterPublication,
+	    Map<String, String> pdfGenerationResults) {
 	mainPanel.clear();
 
 	if (hasBeenPublished) {
@@ -79,26 +91,32 @@ public class OsylPublishedListView extends Composite implements
 	} else {
 	    displayNoPublishedVersionMsg();
 	}
-	
-	if(pdfGenerationResults!=null){
+
+	if (pdfGenerationResults != null) {
 	    displayPdfGenerationResults(pdfGenerationResults);
 	}
     }
-    
+
     private void displayPdfGenerationResults(
 	    Map<String, String> pdfGenerationResults) {
 
-	HorizontalPanel dummyPanel = new HorizontalPanel();
-	mainPanel.add(dummyPanel);
 	Label pdfLabel =
 		new Label(uiMessages.getMessage("publish.pdfGenerationResults"));
 	pdfLabel.setStylePrimaryName("Osyl-PublishView-Label-important");
 	mainPanel.add(pdfLabel);
-	
+
 	for (Entry<String, String> entry : pdfGenerationResults.entrySet()) {
 	    HorizontalPanel hPanel = new HorizontalPanel();
-	    hPanel.add(new HTML(entry.getKey() + " : " +
-		    uiMessages.getMessage(entry.getValue())));
+	    Image pdfGenImage = null;
+
+	    if (entry.getValue().equals(PDF_GENERATION_FAILED)) {
+		pdfGenImage = new Image(osylImageBundle.cross16());
+		pdfGenImage.setTitle(uiMessages.getMessage(entry.getValue()));
+	    } else if (entry.getValue().equals(PDF_GENERATION_SUCCEEDED)) {
+		pdfGenImage = new Image(osylImageBundle.check16());
+		pdfGenImage.setTitle(uiMessages.getMessage(entry.getValue()));
+	    }
+	    hPanel.add(new HTML(entry.getKey() + " : " + pdfGenImage));
 	    mainPanel.add(hPanel);
 	}
     }
@@ -122,7 +140,7 @@ public class OsylPublishedListView extends Composite implements
 	DateTimeFormat dtf = osylController.getSettings().getDateTimeFormat();
 	String dateTimeString = dtf.format(publishedDate);
 
-	if(afterPublication){
+	if (afterPublication) {
 	    Label pubLabel = new Label(uiMessages.getMessage("publish.ok"));
 	    pubLabel.setStylePrimaryName("Osyl-PublishView-Label-important");
 	    mainPanel.add(pubLabel);
