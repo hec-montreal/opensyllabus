@@ -55,6 +55,7 @@ import org.apache.tika.sax.BodyContentHandler;
 import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.api.SecurityService;
+import org.sakaiproject.authz.api.FunctionManager;
 import org.sakaiproject.citation.api.Citation;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
@@ -143,6 +144,16 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     private static final Log log =
 	    LogFactory.getLog(OsylManagerServiceImpl.class);
 
+    /** the OsylManager fonctions **/
+    public final static String OSYL_MANAGER_FUNCTION_PUBLISH = "osyl.manager.publish";
+    public final static String OSYL_MANAGER_FUNCTION_IMPORT = "osyl.manager.import";
+    public final static String OSYL_MANAGER_FUNCTION_CREATE = "osyl.manager.create";
+    public final static String OSYL_MANAGER_FUNCTION_COPY = "osyl.manager.copy";
+    public final static String OSYL_MANAGER_FUNCTION_EXPORT = "osyl.manager.export";
+    public final static String OSYL_MANAGER_FUNCTION_DELETE = "osyl.manager.delete";
+    public final static String OSYL_MANAGER_FUNCTION_ATTACH = "osyl.manager.attach";
+    public final static String OSYL_MANAGER_FUNCTION_ASSOCIATE = "osyl.manager.associate";
+
     // Key to define the delay (in minutes) to wait before deleting export zip
     // files in sakai.properties
     public final static String EXPORT_DELETE_DELAY_MINUTES_KEY =
@@ -208,7 +219,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Sets the {@link OsylContentService}.
-     * 
+     *
      * @param osylContentService
      */
     public void setOsylContentService(OsylContentService osylContentService) {
@@ -260,7 +271,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    ContentHostingService contentHostingService) {
 	this.contentHostingService = contentHostingService;
     }
-    
+
     /**
      * The entity manager to be injected by Spring
      */
@@ -326,6 +337,16 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     /**
+     * The Osyl security service to be injected by Spring
+     */
+    private FunctionManager functionManager;
+
+	public void setFunctionManager(FunctionManager functionManager) {
+		this.functionManager = functionManager;
+	}
+
+
+    /**
      * The type of site we are creating
      */
     protected static final String SITE_TYPE = "course";
@@ -339,6 +360,16 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      */
     public void init() {
 	log.info("OsylManagerServiceImpl service init() ");
+
+		// register functions
+		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_PUBLISH);
+		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_IMPORT);
+		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_CREATE);
+		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_COPY);
+		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_EXPORT);
+		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_DELETE);
+		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_ATTACH);
+		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_ASSOCIATE);
 
     }
 
@@ -519,7 +550,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Get a valid resource reference base site URL to be used in later calls.
-     * 
+     *
      * @return a String of the base URL
      */
     private String getSiteReference(Site site) {
@@ -531,7 +562,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Add a collection (similar to a sub-directory) under the resource tool.
-     * 
+     *
      * @param dir name of collection
      * @param parent where to create it (null means top-level)
      * @return boolean whether the collection was added or not
@@ -555,7 +586,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Tells if a collection is already created in sakai.
-     * 
+     *
      * @param a String of the collection id.
      * @return boolean whether the collection exists
      */
@@ -657,7 +688,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * FIXME Task SAKAI-1609. This method is used to update the description and
      * the license of the Sakai resource during importation of a course outline
      * in a new site. It should be removed after the migration.
-     * 
+     *
      * @param element
      */
     private void updateResourceMetaInfo(COElementAbstract element) {
@@ -927,7 +958,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * List the files in a sites and zip them
-     * 
+     *
      * @param siteId
      * @return zipFile a temporary zip file...
      * @throws IOException
@@ -1030,7 +1061,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     /**
      * Get the delay (in minutes) to wait before deleting export zip defined in
      * the sakai.properties
-     * 
+     *
      * @return
      */
     private int getDeleteExportDelay() {
@@ -1255,7 +1286,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Import files contained in the osylPackage to Sakai resources
-     * 
+     *
      * @param zipReference
      * @param siteId
      */
