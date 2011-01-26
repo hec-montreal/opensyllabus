@@ -39,7 +39,7 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     private static final int SHRINK_BY_STEP_FACTOR = 8;
     private static final int INITIAL_SHRINK_DURATION = 30; // milliseconds
     private static final int ENDING_SHRINK_DURATION = 10; // milliseconds
-    
+
     /**
      * Internal class to manage the shrinking of the view when it is deleted. At
      * the end the resource proxy is removed from the model.
@@ -125,7 +125,7 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 	CollapseVertically collapseEffect = new CollapseVertically();
 	collapseEffect.init(effectPanel);
 	effectPanel.addEffect(collapseEffect);
-	
+
 	// Set the duration of the effects
 	effectPanel.setEffectsLength(1);
 
@@ -152,8 +152,9 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     protected void setProperty(String key, String type, String val) {
 	getModel().getResource().addProperty(key, type, val);
     }
-    
-    protected void addAttribute(String key, String type, String attrKey, String attrVal){
+
+    protected void addAttribute(String key, String type, String attrKey,
+	    String attrVal) {
 	getCOProperty(key, type).addAttribute(attrKey, attrVal);
     }
 
@@ -164,7 +165,7 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     protected String getProperty(String key, String type) {
 	return getModel().getResource().getProperty(key, type);
     }
-    
+
     protected COProperty getCOProperty(String key, String type) {
 	return getModel().getResource().getCOProperty(key, type);
     }
@@ -218,7 +219,7 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     }
 
     public void setRubricType(String r) {
-	getModel().setRubricType(r,propertyType);
+	getModel().setRubricType(r, propertyType);
     }
 
     public String getRubricUserDefLabel() {
@@ -226,7 +227,17 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     }
 
     public void setRubricUserDefLabel(String r) {
-	getModel().setRubricUserDefLabel(r,propertyType);
+	getModel().setRubricUserDefLabel(r, propertyType);
+    }
+
+    public boolean isNewAccordingSelectedDate() {
+	if (getController().getSelectedDate() != null) {
+	    if (OsylDateUtils.getDateFromXMLDate(
+		    getModel().getProperty(COPropertiesType.MODIFIED)).after(
+		    getController().getSelectedDate()))
+		return true;
+	}
+	return false;
     }
 
     protected void updateMetaInfo() {

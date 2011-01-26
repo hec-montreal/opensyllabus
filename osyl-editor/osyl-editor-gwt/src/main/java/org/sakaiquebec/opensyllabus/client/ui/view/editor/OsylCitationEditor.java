@@ -285,6 +285,11 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		"Osyl-UnitView-TextImportant");
 	    column = 1;
 	}
+	
+	if(getView().isNewAccordingSelectedDate()){
+	    getViewerPanel().addStyleName("Osyl-UnitView-New");
+	}
+	
 	getViewerPanel().setWidget(column, 1,getViewer());
 	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(column, 1,
 		"Osyl-UnitView-Content");

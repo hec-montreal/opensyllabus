@@ -20,6 +20,7 @@
 
 package org.sakaiquebec.opensyllabus.client.controller;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Vector;
 
@@ -107,6 +108,8 @@ public class OsylController implements SavePushButtonEventHandler,
     private OsylModelController osylModelController;
 
     private boolean readOnly;
+    
+    private Date selectedDate;
 
     /**
      * Returns a valid instance of Controller.
@@ -911,6 +914,14 @@ public class OsylController implements SavePushButtonEventHandler,
 
 	OsylRemoteServiceLocator.getEditorRemoteService().getExistingEntities(
 		siteId, callback);
+    }
+
+    public void setSelectedDate(Date selectedDate) {
+	this.selectedDate = selectedDate;
+    }
+
+    public Date getSelectedDate() {
+	return selectedDate;
     }
 
     /**

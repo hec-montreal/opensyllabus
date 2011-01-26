@@ -92,6 +92,8 @@ public class OsylTextToolbar extends Composite {
 
     private MenuItem editPushButton;
 
+    private MenuItem selectDateButton;
+
     private MenuItemSeparator viewSeparator;
 
     private MenuItemSeparator previewSeparator;
@@ -101,6 +103,8 @@ public class OsylTextToolbar extends Composite {
     private MenuItemSeparator printSeparator;
 
     private MenuItemSeparator editSeparator;
+    
+    private MenuItemSeparator selectDateSeparator;
 
     AsyncCallback<Boolean> print_publishedVersion_callback =
 	    new AsyncCallback<Boolean>() {
@@ -113,7 +117,7 @@ public class OsylTextToolbar extends Composite {
 				new OsylAlertDialog(
 					uiMessages.getMessage("Global.error"),
 					uiMessages
-						.getMessage("ButtonPrintToolBar.printVersionUnavailable"));
+						.getMessage("toolbar.button.print.printVersionUnavailable"));
 			oad.center();
 			oad.show();
 		    }
@@ -144,6 +148,7 @@ public class OsylTextToolbar extends Composite {
 	publishSeparator = new MenuItemSeparator();
 	printSeparator = new MenuItemSeparator();
 	editSeparator = new MenuItemSeparator();
+	selectDateSeparator = new MenuItemSeparator();
 	menuBar = new FlowPanel();
 	menuBar.add(leftMenuBar);
 	menuBar.add(rightMenuBar);
@@ -153,52 +158,62 @@ public class OsylTextToolbar extends Composite {
 	rightMenuBar.addStyleDependentName("Right");
 	sectionMenuBar.addStyleDependentName("Section");
 	closePushButton =
-		createMenuItem("ButtonCloseToolBar", getOsylImageBundle()
-			.cross(), "ButtonCloseToolBarTooltip");
+		createMenuItem("toolbar.button.close", getOsylImageBundle()
+			.cross(), "toolbar.button.close.tooltip");
 	rightMenuBar.addItem(closePushButton);
 	homePushButton =
-		createMenuItem("ButtonHomeToolBar",
-			getOsylImageBundle().home(), "ButtonHomeToolBarTooltip");
+		createMenuItem("toolbar.button.home", getOsylImageBundle()
+			.home(), "toolbar.button.home.tooltip");
 
 	viewAllPushButton =
-		createMenuItem("ButtonViewAllToolBar", getOsylImageBundle()
-			.view_all(), "ButtonViewAllToolBarTooltip");
+		createMenuItem("toolbar.button.viewAll", getOsylImageBundle()
+			.view_all(), "toolbar.button.viewAll.tooltip");
+
+	selectDateButton =
+		createMenuItem("toolbar.button.selectDate",
+			getOsylImageBundle().calendar_view_month(),
+			"toolbar.button.selectDate.tooltip");
 
 	savePushButton =
-		createMenuItem("ButtonSaveToolBar",
-			getOsylImageBundle().save(), "ButtonSaveToolBarTooltip");
+		createMenuItem("toolbar.button.save", getOsylImageBundle()
+			.save(), "toolbar.button.save.tooltip");
 
 	addMenuBar = new OsylMenuBar(true);
-	addMenuBar.setTitle(uiMessages.getMessage("ButtonAddToolBarTooltip"));
+	addMenuBar
+		.setTitle(uiMessages.getMessage("toolbar.button.add.tooltip"));
 	addMenuBar.setAutoOpen(true);
 	addMenuBar.addStyleName("Osyl-MenuBar-vertical");
 	addMenuBar.addStyleName("Osyl-MenuBar-Add");
 
 	viewMenuBar = new OsylMenuBar(true);
-	viewMenuBar.setTitle(uiMessages.getMessage("ButtonViewToolBarTooltip"));
+	viewMenuBar.setTitle(uiMessages
+		.getMessage("toolbar.button.view.tooltip"));
 	viewMenuBar.setAutoOpen(true);
 	viewMenuBar.addStyleName("Osyl-MenuBar-vertical");
 	viewMenuBar.addStyleName("Osyl-MenuBar-View");
 
 	publishPushButton =
-		createMenuItem("ButtonPublishToolBar", getOsylImageBundle()
-			.publish(), "ButtonPublishToolBarTooltip");
+		createMenuItem("toolbar.button.publish", getOsylImageBundle()
+			.publish(), "toolbar.button.publish.tooltip");
 
 	leftMenuBar.addItem(homePushButton);
 	leftMenuBar.addSeparator(viewSeparator);
 	leftMenuBar.addItem(viewAllPushButton);
+	leftMenuBar.addSeparator(selectDateSeparator);
+	leftMenuBar.addItem(selectDateButton);
+
 	rightMenuBar.addItem(savePushButton);
 	rightMenuBar.addSeparator(previewSeparator);
 	editPushButton =
-		createMenuItem("ButtonEditToolBar",
-			getOsylImageBundle().edit(), "ButtonEditToolBarTooltip");
+		createMenuItem("toolbar.button.edit", getOsylImageBundle()
+			.edit(), "toolbar.button.edit.tooltip");
 	sectionMenuBar.addItem(editPushButton);
 	sectionMenuBar.addSeparator(editSeparator);
 	// MenuBar Item with icon - nice trick...
 	addMenuItem =
 		sectionMenuBar.addItem(AbstractImagePrototype.create(
 			getOsylImageBundle().plus()).getHTML()
-			+ uiMessages.getMessage("ButtonAddToolBar"), true,
+			+ uiMessages.getMessage("toolbar.button.add"), true,
 			addMenuBar);
 
 	addMenuItem.addStyleName("Osyl-MenuItem-vertical");
@@ -207,7 +222,7 @@ public class OsylTextToolbar extends Composite {
 	viewMenuItem =
 		rightMenuBar.addItem(AbstractImagePrototype.create(
 			getOsylImageBundle().preview()).getHTML()
-			+ uiMessages.getMessage("ButtonViewToolBar"), true,
+			+ uiMessages.getMessage("toolbar.button.view"), true,
 			viewMenuBar);
 	viewMenuItem.addStyleName("Osyl-MenuItem-vertical");
 	viewMenuItem.addStyleName("Osyl-MenuItem-View");
@@ -224,8 +239,8 @@ public class OsylTextToolbar extends Composite {
 
 	if (osylController.isReadOnly()) {
 	    printPushButton =
-		    createMenuItem("ButtonPrintToolBar", getOsylImageBundle()
-			    .printer(), "ButtonPrintToolBarTooltip");
+		    createMenuItem("toolbar.button.print", getOsylImageBundle()
+			    .printer(), "toolbar.button.print.tooltip");
 	    printPushButton.setCommand(new Command() {
 		public void execute() {
 		    openDownloadPrintPublishedVersionLink();
@@ -235,7 +250,7 @@ public class OsylTextToolbar extends Composite {
 	} else {
 	    printMenuBar = new OsylMenuBar(true);
 	    printMenuBar.setTitle(uiMessages
-		    .getMessage("ButtonPrintToolBarTootip"));
+		    .getMessage("toolbar.button.print.tooltip"));
 	    printMenuBar.setAutoOpen(true);
 	    printMenuBar.addStyleName("Osyl-MenuBar-vertical");
 	    printMenuBar.addStyleName("Osyl-MenuBar-View");
@@ -243,7 +258,7 @@ public class OsylTextToolbar extends Composite {
 	    printPushButton =
 		    rightMenuBar.addItem(AbstractImagePrototype.create(
 			    getOsylImageBundle().printer()).getHTML()
-			    + uiMessages.getMessage("ButtonPrintToolBar"),
+			    + uiMessages.getMessage("toolbar.button.print"),
 			    true, printMenuBar);
 	    printPushButton.addStyleName("Osyl-MenuItem-vertical");
 	    printPushButton.addStyleName("Osyl-MenuItem-View");
@@ -271,7 +286,7 @@ public class OsylTextToolbar extends Composite {
 
 	MenuItem editionPrintMenuItem =
 		new MenuItem(getOsylController().getUiMessages().getMessage(
-			"ButtonPrintToolBar.edition_version"), new Command() {
+			"toolbar.button.print.edition_version"), new Command() {
 		    public void execute() {
 			AsyncCallback<Void> callback =
 				new AsyncCallback<Void>() {
@@ -290,12 +305,13 @@ public class OsylTextToolbar extends Composite {
 
 	MenuItem publishedPrintMenuItem =
 		new MenuItem(getOsylController().getUiMessages().getMessage(
-			"ButtonPrintToolBar.published_version"), new Command() {
-		    public void execute() {
-			osylController
-				.hasBeenPublished(print_publishedVersion_callback);
-		    }
-		});
+			"toolbar.button.print.published_version"),
+			new Command() {
+			    public void execute() {
+				osylController
+					.hasBeenPublished(print_publishedVersion_callback);
+			    }
+			});
 	getPrintMenuBar().addItem(editionPrintMenuItem);
 	getPrintMenuBar().addItem(publishedPrintMenuItem);
     }
@@ -373,6 +389,14 @@ public class OsylTextToolbar extends Composite {
 
     public MenuItemSeparator getViewSeparator() {
 	return viewSeparator;
+    }
+    
+    public MenuItemSeparator getSelectDateSeparator() {
+        return selectDateSeparator;
+    }
+
+    public void setSelectDateSeparator(MenuItemSeparator newsSeparator) {
+        this.selectDateSeparator = newsSeparator;
     }
 
     public void setViewSeparator(MenuItemSeparator viewSeparator) {
@@ -491,6 +515,14 @@ public class OsylTextToolbar extends Composite {
 	this.printPushButton = printPushButton;
     }
 
+    public void setSelectDateButton(MenuItem selectDateButton) {
+	this.selectDateButton = selectDateButton;
+    }
+
+    public MenuItem getSelectDateButton() {
+	return selectDateButton;
+    }
+
     public MenuItem getClosePushButton() {
 	return closePushButton;
     }
@@ -511,17 +543,17 @@ public class OsylTextToolbar extends Composite {
 	String url = GWT.getModuleBaseURL();
 	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
 	String siteId = OsylController.getInstance().getSiteId();
-	String downloadUrl ;
+	String downloadUrl;
 	if (OsylController.USE_ATTACHMENTS.equals("true"))
-	    downloadUrl = 	    
-		serverId + "/sdata/c/attachment/" + siteId + "/OpenSyllabus/"
-			+ siteId + ".pdf?child=" + siteId;
+	    downloadUrl =
+		    serverId + "/sdata/c/attachment/" + siteId
+			    + "/OpenSyllabus/" + siteId + ".pdf?child="
+			    + siteId;
 	else
-	    downloadUrl = 	    
-		serverId + "/access/content/group/" + siteId + "/"
-			+ OsylController.PUBLISH_FOLDER_NAME + "/" + siteId
-			+ ".pdf";
-	    
+	    downloadUrl =
+		    serverId + "/access/content/group/" + siteId + "/"
+			    + OsylController.PUBLISH_FOLDER_NAME + "/" + siteId
+			    + ".pdf";
 
 	Window.open(downloadUrl, "_blank", "");
     }
@@ -530,11 +562,11 @@ public class OsylTextToolbar extends Composite {
 	String url = GWT.getModuleBaseURL();
 	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
 	String siteId = OsylController.getInstance().getSiteId();
-	String downloadUrl ;
+	String downloadUrl;
 	if (OsylController.USE_ATTACHMENTS.equals("true"))
 	    downloadUrl =
-		    serverId + "/access/content/group/" + siteId + "/"
-			    +  siteId + ".pdf";
+		    serverId + "/access/content/group/" + siteId + "/" + siteId
+			    + ".pdf";
 	else
 	    downloadUrl =
 		    serverId + "/access/content/group/" + siteId + "/"

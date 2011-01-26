@@ -646,6 +646,10 @@ public class OsylContactInfoEditor extends OsylAbstractResProxEditor {
 	if (reqLevelIcon != null) {
 	    getViewerPanel().addStyleName("Osyl-UnitView-LvlReq");
 	}
+	
+	if(getView().isNewAccordingSelectedDate()){
+	    getViewerPanel().addStyleName("Osyl-UnitView-New");
+	}
 
 	getViewerPanel().setWidget(0, 0, reqLevelIcon);
 	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 0,

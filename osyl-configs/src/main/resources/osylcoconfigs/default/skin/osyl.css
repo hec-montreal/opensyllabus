@@ -212,6 +212,9 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 * html .Osyl-MenuBar-Add td.gwt-MenuItem-selected, * html .Osyl-MenuBar-Add td.gwt-MenuItem:hover {
 	width:100px;
 }
+
+.gwt-MenuItem.gwt-MenuItem-highlighted{background-color:#FFFF66;}
+
 /* Horizontal Split Panel , parent of the left, middle and right Zone -------------------------------------*/
 .Osyl-MainView-HorizontalSplitPanel {
 	margin:0;
@@ -707,6 +710,7 @@ div.Osyl-UnitView-ResPanel-ReadOnly {
 	border-left:2px solid #B6BEC4;
 	border-right:2px solid #B6BEC4;
 }
+
 .Osyl-UnitView-Important .Osyl-UnitView-TextImportant .gwt-HTML {
 	font:bold 12px Arial, Verdana, sans-serif;
 	color:#FFF;
@@ -722,9 +726,22 @@ div.Osyl-UnitView-ResPanel-ReadOnly {
 	background-color:#eff2f4;
 	padding:0 4px;
 }
+
 .Osyl-UnitView-Important .Osyl-UnitView-Content {
 	border:2px solid #B6BEC4;
 	padding:0 4px;
+}
+
+.Osyl-UnitView-LvlReq.Osyl-UnitView-New .Osyl-UnitView-IconLvlReq {
+	background-color:#FFFF66;
+}
+
+.Osyl-UnitView-LvlReq.Osyl-UnitView-New > tbody > tr + tr > td{
+	background-color:#FFFF66;
+}
+
+.Osyl-UnitView-New .Osyl-UnitView-Content, .Osyl-UnitView-LvlReq.Osyl-UnitView-New .Osyl-UnitView-Content, .Osyl-UnitView-Important.Osyl-UnitView-New .Osyl-UnitView-Content {
+	background-color:#FFFF66;
 }
 
 .Osyl-ResProxView-MetaInfo,

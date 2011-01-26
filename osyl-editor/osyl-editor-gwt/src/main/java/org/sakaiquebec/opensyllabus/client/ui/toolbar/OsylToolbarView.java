@@ -21,24 +21,25 @@
 package org.sakaiquebec.opensyllabus.client.ui.toolbar;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.gwt.mosaic.ui.client.WindowPanel;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.controller.event.ClosePushButtonEventHandler;
+import org.sakaiquebec.opensyllabus.client.controller.event.EditPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresClosePushButtonEvents;
+import org.sakaiquebec.opensyllabus.client.controller.event.FiresEditPushButtonEvents;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresPublishPushButtonEvents;
 import org.sakaiquebec.opensyllabus.client.controller.event.FiresSavePushButtonEvents;
-import org.sakaiquebec.opensyllabus.client.controller.event.FiresEditPushButtonEvents;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ViewContextSelectionEventHandler;
-import org.sakaiquebec.opensyllabus.client.controller.event.EditPushButtonEventHandler;
 import org.sakaiquebec.opensyllabus.client.controller.event.ClosePushButtonEventHandler.ClosePushButtonEvent;
+import org.sakaiquebec.opensyllabus.client.controller.event.EditPushButtonEventHandler.EditPushButtonEvent;
 import org.sakaiquebec.opensyllabus.client.controller.event.PublishPushButtonEventHandler.PublishPushButtonEvent;
 import org.sakaiquebec.opensyllabus.client.controller.event.SavePushButtonEventHandler.SavePushButtonEvent;
-import org.sakaiquebec.opensyllabus.client.controller.event.EditPushButtonEventHandler.EditPushButtonEvent;
-
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
@@ -51,15 +52,20 @@ import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.datepicker.client.DatePicker;
 
 /**
  * A view to the {@link OsylToolbar} displayed in the upper part of the editor.
  * the OsylToolbarView constructor takes care of instantiating the toolbar
  * itself and creating the appropriate listeners.<br/>
  * <br/>
- *
+ * 
  * @author <a href="mailto:sacha.lepretre@crim.ca">Sacha Leprêtre</a>
  * @version $Id: OsylToolbarView.java 521 2008-05-21 22:34:37Z
  *          sacha.lepretre@crim.ca $
@@ -102,10 +108,12 @@ public class OsylToolbarView extends OsylViewableComposite implements
      */
     public void refreshView() {
 	if (getController().isInPreview()) {
-		/* View type menu buttons */
+	    /* View type menu buttons */
 	    getOsylToolbar().getHomePushButton().setVisible(true);
 	    getOsylToolbar().getViewSeparator().setVisible(true);
 	    getOsylToolbar().getViewAllPushButton().setVisible(true);
+	    getOsylToolbar().getSelectDateSeparator().setVisible(false);
+	    getOsylToolbar().getSelectDateButton().setVisible(false);
 
 	    /* Preview mode specific menu buttons */
 	    getOsylToolbar().getClosePushButton().setVisible(true);
@@ -133,10 +141,12 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    setViewAllPushButtonCommand();
 
 	} else if (getController().isReadOnly()) {
-		/* View type menu buttons */
+	    /* View type menu buttons */
 	    getOsylToolbar().getHomePushButton().setVisible(true);
 	    getOsylToolbar().getViewSeparator().setVisible(true);
 	    getOsylToolbar().getViewAllPushButton().setVisible(true);
+	    getOsylToolbar().getSelectDateSeparator().setVisible(true);
+	    getOsylToolbar().getSelectDateButton().setVisible(true);
 
 	    /* Preview mode specific menu buttons */
 	    getOsylToolbar().getClosePushButton().setVisible(false);
@@ -159,26 +169,27 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    /* Add menu button */
 	    getOsylToolbar().getAddMenuItem().setVisible(false);
 
-
-
 	    setHomePushButtonCommand();
 	    setViewAllPushButtonCommand();
+	    setSelectDateButtonCommand();
 	} else {
 	    if (getModel() != null) {
-	    setSavePushButtonCommand();
-	    setHomePushButtonCommand();
-	    setViewAllPushButtonCommand();
-	    setPublishPushButtonCommand();
+		setSavePushButtonCommand();
+		setHomePushButtonCommand();
+		setViewAllPushButtonCommand();
+		setPublishPushButtonCommand();
 
-	    /* View type menu buttons */
+		/* View type menu buttons */
 		getOsylToolbar().getHomePushButton().setVisible(true);
 		getOsylToolbar().getViewSeparator().setVisible(true);
-	    getOsylToolbar().getViewAllPushButton().setVisible(true);
+		getOsylToolbar().getViewAllPushButton().setVisible(true);
+		getOsylToolbar().getSelectDateSeparator().setVisible(false);
+		    getOsylToolbar().getSelectDateButton().setVisible(false);
 
-	    /* Preview mode specific menu buttons */
-	    getOsylToolbar().getClosePushButton().setVisible(false);
+		/* Preview mode specific menu buttons */
+		getOsylToolbar().getClosePushButton().setVisible(false);
 
-	    /* Edition type menu buttons */
+		/* Edition type menu buttons */
 		getOsylToolbar().getSavePushButton().setVisible(true);
 		getOsylToolbar().getPreviewSeparator().setVisible(true);
 		getOsylToolbar().getViewMenuItem().setVisible(true);
@@ -188,27 +199,28 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		/* Print menu button */
 		getOsylToolbar().getPrintSeparator().setVisible(true);
 		getOsylToolbar().getPrintPushButton().setVisible(true);
-		    
 
 		/* Add menu button */
 		getOsylToolbar().getAddMenuItem().setVisible(false);
 		getOsylToolbar().getAddMenuBar().clearItems();
-		if(getController().getOsylConfig().getSettings().isModelTitleEditable(getModel()) && getModel().isEditable()){
-			setEditPushButtonCommand();
-			getOsylToolbar().getEditSeparator().setVisible(true);
-			getOsylToolbar().getEditPushButton().setVisible(true);
-		}else{
-			getOsylToolbar().getEditSeparator().setVisible(false);
-			getOsylToolbar().getEditPushButton().setVisible(false);
+		if (getController().getOsylConfig().getSettings()
+			.isModelTitleEditable(getModel())
+			&& getModel().isEditable()) {
+		    setEditPushButtonCommand();
+		    getOsylToolbar().getEditSeparator().setVisible(true);
+		    getOsylToolbar().getEditPushButton().setVisible(true);
+		} else {
+		    getOsylToolbar().getEditSeparator().setVisible(false);
+		    getOsylToolbar().getEditPushButton().setVisible(false);
 		}
-		//3 big ViewContext cases
+		// 3 big ViewContext cases
 
 		if (getModel().isCourseOutlineContent()) {
-			getOsylToolbar().getEditSeparator().setVisible(false);
-			getOsylToolbar().getAddMenuItem().setVisible(false);
+		    getOsylToolbar().getEditSeparator().setVisible(false);
+		    getOsylToolbar().getAddMenuItem().setVisible(false);
 		} else if (getModel().isCOUnit()) {
 		    // Enables or Disables buttons in this ViewContext
-		     getOsylToolbar().getAddMenuItem().setVisible(true);
+		    getOsylToolbar().getAddMenuItem().setVisible(true);
 		    // Clear menu list, and set it according to the viewcontext
 		    try {
 
@@ -220,7 +232,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		    }
 		} else if (getModel().isCOUnitStructure()) {
 		    // Enables or Disables buttons in this ViewContext
-		     getOsylToolbar().getAddMenuItem().setVisible(true);
+		    getOsylToolbar().getAddMenuItem().setVisible(true);
 		    // Clear menu list, and set it according to the viewcontext
 		    try {
 			createAllowedCOUnitStructureAddAction((COUnitStructure) getModel());
@@ -241,28 +253,31 @@ public class OsylToolbarView extends OsylViewableComposite implements
 					.getOsylConfigRuler()
 					.getAllowedSubModels(getModel());
 			Iterator<COModelInterface> iter = subModels.iterator();
-			boolean toolbarVisible=false;
+			boolean toolbarVisible = false;
 			while (iter.hasNext()) {
 			    COModelInterface subModel =
 				    (COModelInterface) iter.next();
-			    if (subModel instanceof COStructureElement){
-								List<COElementAbstract> childrens = castedModel.getChildrens();
-								boolean hasUneditableChild = false;
-								for(COElementAbstract c : childrens)
-								    if(!c.isEditable()) hasUneditableChild=true;
-								if(!hasUneditableChild){
-									toolbarVisible=true;
-				        				addAddCOStructureMenuItem(subModel.getType(),
-				        					new AddMenuCommand(castedModel,
-				        						subModel));
-									}
-							    }else{
-									toolbarVisible=true;
-								addAddCOMenuItem(subModel.getType(),
-									new AddMenuCommand(castedModel,
-										subModel));
-								}
-			    getOsylToolbar().getAddMenuItem().setVisible(toolbarVisible);
+			    if (subModel instanceof COStructureElement) {
+				List<COElementAbstract> childrens =
+					castedModel.getChildrens();
+				boolean hasUneditableChild = false;
+				for (COElementAbstract c : childrens)
+				    if (!c.isEditable())
+					hasUneditableChild = true;
+				if (!hasUneditableChild) {
+				    toolbarVisible = true;
+				    addAddCOStructureMenuItem(subModel
+					    .getType(), new AddMenuCommand(
+					    castedModel, subModel));
+				}
+			    } else {
+				toolbarVisible = true;
+				addAddCOMenuItem(subModel.getType(),
+					new AddMenuCommand(castedModel,
+						subModel));
+			    }
+			    getOsylToolbar().getAddMenuItem().setVisible(
+				    toolbarVisible);
 
 			}
 		    } catch (RuntimeException e) {
@@ -280,9 +295,10 @@ public class OsylToolbarView extends OsylViewableComposite implements
 			.getAllowedSubModels(model.getChildrens().get(0));
 	Iterator<COModelInterface> iter = subModels.iterator();
 	// Enables or Disables buttons in this ViewContext
-	/*if (iter.hasNext() == false) {
-		getOsylToolbar().getAddMenuItem().setVisible(false);
-	}*/
+	/*
+	 * if (iter.hasNext() == false) {
+	 * getOsylToolbar().getAddMenuItem().setVisible(false); }
+	 */
 	while (iter.hasNext()) {
 	    COModelInterface subModel = (COModelInterface) iter.next();
 	    if (subModel instanceof COContentResource) {
@@ -313,9 +329,10 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		getController().getOsylConfig().getOsylConfigRuler()
 			.getAllowedSubModels(model);
 	Iterator<COModelInterface> iter = subModels.iterator();
-	/*if (iter.hasNext() == false) {
-		getOsylToolbar().getAddMenuItem().setVisible(false);
-	}*/
+	/*
+	 * if (iter.hasNext() == false) {
+	 * getOsylToolbar().getAddMenuItem().setVisible(false); }
+	 */
 	while (iter.hasNext()) {
 	    COModelInterface subModel = (COModelInterface) iter.next();
 	    addAddCOMenuItem(subModel.getType(), new AddUnitStructureCommand(
@@ -342,13 +359,13 @@ public class OsylToolbarView extends OsylViewableComposite implements
 
     private void addAddCOStructureMenuItem(String itemType, Command cmd) {
 	String html =
-		"<div id=\"add" + itemType + "\">" + getCoMessage(itemType+".toolbar.title")
-			+ "</div>";
+		"<div id=\"add" + itemType + "\">"
+			+ getCoMessage(itemType + ".toolbar.title") + "</div>";
 	getOsylToolbar().getAddMenuBar().addItem(html, true, cmd);
     }
 
-    private void setSavePushButtonCommand(){
-    getOsylToolbar().getSavePushButton().setCommand(new Command() {
+    private void setSavePushButtonCommand() {
+	getOsylToolbar().getSavePushButton().setCommand(new Command() {
 	    public void execute() {
 		SavePushButtonEvent event = new SavePushButtonEvent("");
 		Iterator<SavePushButtonEventHandler> iter =
@@ -362,7 +379,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	});
     }
 
-    private void setHomePushButtonCommand(){
+    private void setHomePushButtonCommand() {
 	// Home Button
 	getOsylToolbar().getHomePushButton().setCommand(new Command() {
 	    public void execute() {
@@ -374,17 +391,54 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	});
     }
 
-    private void setViewAllPushButtonCommand(){
-	// View All Button
-	getOsylToolbar().getViewAllPushButton().setCommand(new Command() {
+    private void setSelectDateButtonCommand() {
+	getOsylToolbar().getSelectDateButton().setCommand(new Command() {
 	    public void execute() {
+
+		final WindowPanel datePickerWind =
+			new WindowPanel(
+				getUiMessage("toolbar.button.selectDate.datePicker.title"),
+				false);
 		// set to the starting viewContext
-		getController().getViewContext().setContextModel(getController().getMainView().getModel());
+		final DateTimeFormat dtf =
+			getController().getSettings().getDateFormat();
+		DatePicker dp = new DatePicker();
+		dp.setVisible(true);
+		dp.addValueChangeHandler(new ValueChangeHandler<Date>() {
+		    public void onValueChange(ValueChangeEvent<Date> event) {
+			datePickerWind.hide();
+			Date d = event.getValue();
+			getController().setSelectedDate(d);
+			getOsylToolbar()
+				.getSelectDateButton()
+				.setHTML(
+					AbstractImagePrototype.create(
+						getOsylImageBundle()
+							.calendar_view_month())
+						.getHTML()
+						+ getUiMessage("toolbar.button.selectDate")
+						+ dtf.format(d));
+			getOsylToolbar().getSelectDateButton().addStyleName("gwt-MenuItem-highlighted");
+		    }
+		});
+		datePickerWind.add(dp);
+		datePickerWind.showModal();
 	    }
 	});
     }
 
-    private void setPublishPushButtonCommand(){
+    private void setViewAllPushButtonCommand() {
+	// View All Button
+	getOsylToolbar().getViewAllPushButton().setCommand(new Command() {
+	    public void execute() {
+		// set to the starting viewContext
+		getController().getViewContext().setContextModel(
+			getController().getMainView().getModel());
+	    }
+	});
+    }
+
+    private void setPublishPushButtonCommand() {
 	// Publish Button
 	getOsylToolbar().getPublishPushButton().setCommand(new Command() {
 	    public void execute() {
@@ -400,36 +454,36 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	});
     }
 
-    private void setClosePushButtonCommand(){
-    getOsylToolbar().getClosePushButton().setCommand(new Command() {
-		public void execute() {
-		    ClosePushButtonEvent event = new ClosePushButtonEvent("");
-		    Iterator<ClosePushButtonEventHandler> iter =
-			    getCloseEventHandlerList().iterator();
-		    while (iter.hasNext()) {
-			ClosePushButtonEventHandler handler =
-				(ClosePushButtonEventHandler) iter.next();
-			handler.onClosePushButton(event);
-		    }
+    private void setClosePushButtonCommand() {
+	getOsylToolbar().getClosePushButton().setCommand(new Command() {
+	    public void execute() {
+		ClosePushButtonEvent event = new ClosePushButtonEvent("");
+		Iterator<ClosePushButtonEventHandler> iter =
+			getCloseEventHandlerList().iterator();
+		while (iter.hasNext()) {
+		    ClosePushButtonEventHandler handler =
+			    (ClosePushButtonEventHandler) iter.next();
+		    handler.onClosePushButton(event);
 		}
-	    });
+	    }
+	});
 
     }
 
-    private void setEditPushButtonCommand(){
-    	// Publish Button
-    	getOsylToolbar().getEditPushButton().setCommand(new Command() {
-    	    public void execute() {
-    		EditPushButtonEvent event = new EditPushButtonEvent("");
-    		Iterator<EditPushButtonEventHandler> iter =
-    			getEditEventHandlerList().iterator();
-    		while (iter.hasNext()) {
-    		    EditPushButtonEventHandler handler =
-    			    (EditPushButtonEventHandler) iter.next();
-    		    handler.onEditPushButton(event);
-    		}
-    	    }
-    	});
+    private void setEditPushButtonCommand() {
+	// Publish Button
+	getOsylToolbar().getEditPushButton().setCommand(new Command() {
+	    public void execute() {
+		EditPushButtonEvent event = new EditPushButtonEvent("");
+		Iterator<EditPushButtonEventHandler> iter =
+			getEditEventHandlerList().iterator();
+		while (iter.hasNext()) {
+		    EditPushButtonEventHandler handler =
+			    (EditPushButtonEventHandler) iter.next();
+		    handler.onEditPushButton(event);
+		}
+	    }
+	});
     }
 
     public void addEventHandler(PublishPushButtonEventHandler handler) {
@@ -474,7 +528,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
     }
 
     public void addEventHandler(EditPushButtonEventHandler handler) {
-    editEventHandlerList = new ArrayList<EditPushButtonEventHandler>();
+	editEventHandlerList = new ArrayList<EditPushButtonEventHandler>();
 	editEventHandlerList.add(handler);
     }
 
@@ -512,12 +566,12 @@ public class OsylToolbarView extends OsylViewableComposite implements
     }
 
     public List<EditPushButtonEventHandler> getEditEventHandlerList() {
-  	return editEventHandlerList;
+	return editEventHandlerList;
     }
 
     public void setEditEventHandlerList(
-   	    List<EditPushButtonEventHandler> editEventHandlerList) {
-   	this.editEventHandlerList = editEventHandlerList;
+	    List<EditPushButtonEventHandler> editEventHandlerList) {
+	this.editEventHandlerList = editEventHandlerList;
     }
 
     public void onUpdateModel(UpdateCOStructureElementEvent event) {
