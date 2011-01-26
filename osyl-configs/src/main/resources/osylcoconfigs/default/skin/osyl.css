@@ -740,7 +740,7 @@ div.Osyl-UnitView-ResPanel-ReadOnly {
 	background-color:#FFFF66;
 }
 
-.Osyl-UnitView-New .Osyl-UnitView-Content, .Osyl-UnitView-LvlReq.Osyl-UnitView-New .Osyl-UnitView-Content, .Osyl-UnitView-Important.Osyl-UnitView-New .Osyl-UnitView-Content {
+.Osyl-UnitView-New.Osyl-UnitView-Content, .Osyl-UnitView-LvlReq.Osyl-UnitView-New .Osyl-UnitView-Content, .Osyl-UnitView-Important.Osyl-UnitView-New .Osyl-UnitView-Content {
 	background-color:#FFFF66;
 }
 
