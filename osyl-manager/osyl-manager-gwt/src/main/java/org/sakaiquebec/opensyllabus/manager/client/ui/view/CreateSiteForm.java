@@ -38,6 +38,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
@@ -61,6 +62,8 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
     private ListBox langListBox;
 
     private PushButton createSite;
+    
+    private Image spinner;
 
     AsyncCallback<Map<String, String>> configListAsyncCallback =
 	    new AsyncCallback<Map<String, String>>() {
@@ -100,10 +103,12 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 	Label l = new Label(messages.createSiteTitle());
 	l.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(l);
-
+	
 	Label title = new Label(messages.courseName());
 	nameTextBox = new TextBox();
-	mainPanel.add(createPanel(title, nameTextBox));
+	spinner = new Image(controller.getImageBundle().ajaxloader());
+	spinner.setVisible(false);
+	mainPanel.add(createPanel(title, nameTextBox, spinner));
 
 	Label langTitle = new Label(messages.chooseLang());
 	langListBox = new ListBox();
@@ -135,6 +140,7 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 				.matches(".*[\\S]$"));
 		if (nameValid) {
 		    if (configListBox.getSelectedIndex() != -1) {
+			spinner.setVisible(true);
 			String configRef =
 				configListBox.getValue(configListBox
 					.getSelectedIndex());

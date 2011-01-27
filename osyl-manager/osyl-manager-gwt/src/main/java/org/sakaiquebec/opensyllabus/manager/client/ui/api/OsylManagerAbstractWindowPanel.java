@@ -31,43 +31,45 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public abstract class OsylManagerAbstractWindowPanel extends WindowPanel{
+public abstract class OsylManagerAbstractWindowPanel extends WindowPanel {
 
     protected OsylManagerController controller;
-    
-    protected  VerticalPanel mainPanel;
-    
+
+    protected VerticalPanel mainPanel;
+
     protected Messages messages;
-    
+
     public OsylManagerAbstractWindowPanel(OsylManagerController controller) {
 	super();
-	this.controller=controller;
+	this.controller = controller;
 	messages = this.controller.getMessages();
 	setResizable(true);
 	setAnimationEnabled(true);
 	setCaptionAction(null);
-	
+
 	mainPanel = new VerticalPanel();
-	
+
 	setWidget(mainPanel);
 	setStylePrimaryName("OsylManager-form");
-	
+
     }
-    
-    protected HorizontalPanel createPanel(Label l, Widget w){
+
+    protected HorizontalPanel createPanel(Label l, Widget ... w) {
 	HorizontalPanel hp = new HorizontalPanel();
 	hp.add(l);
 	l.setStylePrimaryName("OsylManager-form-label");
-	hp.add(w);
-	w.setStylePrimaryName("OsylManager-form-element");
-	hp.setCellVerticalAlignment(w, HasVerticalAlignment.ALIGN_BOTTOM);
+
+	for (Widget aWidget : w) {
+	    hp.add(aWidget);
+	    aWidget.setStylePrimaryName("OsylManager-form-element");
+	    hp.setCellVerticalAlignment(aWidget,
+		    HasVerticalAlignment.ALIGN_BOTTOM);
+	}
 	hp.setCellWidth(l, "30%");
 	hp.setStylePrimaryName("OsylManager-form-genericPanel");
 	return hp;
     }
 }
-
