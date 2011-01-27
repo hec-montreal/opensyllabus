@@ -493,6 +493,12 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 
 	label1.setStylePrimaryName("Osyl-AssessmentView-AdditionalInfos");
 	label2.setStylePrimaryName("Osyl-AssessmentView-AdditionalInfos");
+	
+	if(getView().isNewAccordingSelectedDate()){
+	    label1.addStyleName("Osyl-newElement");
+	    label2.addStyleName("Osyl-newElement");
+	}
+	
 	metaInfosPanel.add(label1);
 	metaInfosPanel.add(label2);
 	return metaInfosPanel;

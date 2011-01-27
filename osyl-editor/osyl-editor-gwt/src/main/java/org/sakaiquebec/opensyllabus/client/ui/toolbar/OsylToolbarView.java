@@ -114,6 +114,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    getOsylToolbar().getViewAllPushButton().setVisible(true);
 	    getOsylToolbar().getSelectDateSeparator().setVisible(false);
 	    getOsylToolbar().getSelectDateButton().setVisible(false);
+	    getOsylToolbar().getDeleteDateButton().setVisible(false);
 
 	    /* Preview mode specific menu buttons */
 	    getOsylToolbar().getClosePushButton().setVisible(true);
@@ -147,6 +148,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    getOsylToolbar().getViewAllPushButton().setVisible(true);
 	    getOsylToolbar().getSelectDateSeparator().setVisible(true);
 	    getOsylToolbar().getSelectDateButton().setVisible(true);
+	    getOsylToolbar().getDeleteDateButton().setVisible(getController().getSelectedDate()!=null);
 
 	    /* Preview mode specific menu buttons */
 	    getOsylToolbar().getClosePushButton().setVisible(false);
@@ -172,6 +174,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    setHomePushButtonCommand();
 	    setViewAllPushButtonCommand();
 	    setSelectDateButtonCommand();
+	    setDeleteDateButtonCommand();
 	} else {
 	    if (getModel() != null) {
 		setSavePushButtonCommand();
@@ -184,7 +187,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		getOsylToolbar().getViewSeparator().setVisible(true);
 		getOsylToolbar().getViewAllPushButton().setVisible(true);
 		getOsylToolbar().getSelectDateSeparator().setVisible(false);
-		    getOsylToolbar().getSelectDateButton().setVisible(false);
+		getOsylToolbar().getSelectDateButton().setVisible(false);
+		getOsylToolbar().getDeleteDateButton().setVisible(false);
 
 		/* Preview mode specific menu buttons */
 		getOsylToolbar().getClosePushButton().setVisible(false);
@@ -405,9 +409,13 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		DatePicker dp = new DatePicker();
 		dp.setVisible(true);
 		dp.addValueChangeHandler(new ValueChangeHandler<Date>() {
+		    @SuppressWarnings("deprecation")
 		    public void onValueChange(ValueChangeEvent<Date> event) {
 			datePickerWind.hide();
 			Date d = event.getValue();
+			d.setHours(0);
+			d.setMinutes(0);
+			d.setSeconds(0);
 			getController().setSelectedDate(d);
 			getOsylToolbar()
 				.getSelectDateButton()
@@ -418,13 +426,34 @@ public class OsylToolbarView extends OsylViewableComposite implements
 						.getHTML()
 						+ getUiMessage("toolbar.button.selectDate")
 						+ dtf.format(d));
-			getOsylToolbar().getSelectDateButton().addStyleName("gwt-MenuItem-highlighted");
+			getOsylToolbar().getSelectDateButton().addStyleName(
+				"Osyl-newElement");
+			getOsylToolbar().getDeleteDateButton().setVisible(true);
 		    }
 		});
 		datePickerWind.add(dp);
 		datePickerWind.showModal();
 	    }
 	});
+    }
+
+    private void setDeleteDateButtonCommand() {
+	getOsylToolbar().getDeleteDateButton().setCommand(new Command() {
+
+	    public void execute() {
+		getController().setSelectedDate(null);
+		getOsylToolbar().getSelectDateButton().setHTML(
+			AbstractImagePrototype.create(
+				getOsylImageBundle().calendar_view_month())
+				.getHTML()
+				+ getUiMessage("toolbar.button.selectDate"));
+		getOsylToolbar().getSelectDateButton().removeStyleName(
+			"Osyl-newElement");
+		getOsylToolbar().getDeleteDateButton().setVisible(false);
+	    }
+
+	});
+
     }
 
     private void setViewAllPushButtonCommand() {

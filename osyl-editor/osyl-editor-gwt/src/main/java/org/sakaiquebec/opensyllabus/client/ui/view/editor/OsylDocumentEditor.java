@@ -213,7 +213,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	}
 	
 	if(getView().isNewAccordingSelectedDate()){
-	    getViewerPanel().addStyleName("Osyl-UnitView-New");
+	    getViewerPanel().addStyleName("Osyl-newElement");
 	}
 	
 	getViewerPanel().setWidget(column, 1, getViewer());

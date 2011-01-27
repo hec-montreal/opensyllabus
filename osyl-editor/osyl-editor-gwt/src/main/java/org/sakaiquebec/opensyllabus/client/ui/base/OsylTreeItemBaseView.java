@@ -46,7 +46,7 @@ public abstract class OsylTreeItemBaseView extends OsylViewableComposite {
     }
 
     protected void initView() {
-    panel = new SimplePanel();
+	panel = new SimplePanel();
 	label = new Label("");
 	label.setWordWrap(false);
 	label.setStylePrimaryName("Osyl-TreeLabel");
@@ -57,8 +57,8 @@ public abstract class OsylTreeItemBaseView extends OsylViewableComposite {
     }
 
     /**
-     * Refreshes the view. remove and read label to the panel
-     * to refresh the title when using ellipsis.xml (Firefox Only)
+     * Refreshes the view. remove and read label to the panel to refresh the
+     * title when using ellipsis.xml (Firefox Only)
      */
     public void refreshView() {
 	String treeItemText = createTreeItemText();
@@ -73,7 +73,7 @@ public abstract class OsylTreeItemBaseView extends OsylViewableComposite {
     /**
      * @return the label value.
      */
-    protected Label getLabel() {
+    public Label getLabel() {
 	return label;
     }
 

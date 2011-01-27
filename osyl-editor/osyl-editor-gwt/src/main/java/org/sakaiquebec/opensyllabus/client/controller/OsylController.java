@@ -108,7 +108,7 @@ public class OsylController implements SavePushButtonEventHandler,
     private OsylModelController osylModelController;
 
     private boolean readOnly;
-    
+
     private Date selectedDate;
 
     /**
@@ -918,10 +918,21 @@ public class OsylController implements SavePushButtonEventHandler,
 
     public void setSelectedDate(Date selectedDate) {
 	this.selectedDate = selectedDate;
+	mainView.getWorkspaceTitleView().refreshView();
+	mainView.getWorkspaceView().refreshView();
+	mainView.getOsylTreeView().refreshView();
     }
 
     public Date getSelectedDate() {
 	return selectedDate;
+    }
+
+    public boolean isSelectedDateBeforeDate(Date date) {
+	if (getSelectedDate() != null) {
+	    if (getSelectedDate().before(date))
+		return true;
+	}
+	return false;
     }
 
     /**
@@ -938,7 +949,6 @@ public class OsylController implements SavePushButtonEventHandler,
 	} catch (RuntimeException e) {
 	    e.printStackTrace();
 	    unableToInitServer(e.toString());
-	    // Window.alert("getSerializedConfigCB: " + e);
 	    final OsylAlertDialog alertBox =
 		    new OsylAlertDialog(false, true, "Alert - Error",
 			    "getSerializedConfigCB: " + e);

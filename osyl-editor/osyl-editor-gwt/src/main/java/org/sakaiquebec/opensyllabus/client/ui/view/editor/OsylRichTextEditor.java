@@ -140,7 +140,7 @@ public class OsylRichTextEditor extends OsylAbstractResProxEditor {
 	}
 	
 	if(getView().isNewAccordingSelectedDate()){
-	    getViewerPanel().addStyleName("Osyl-UnitView-New");
+	    getViewerPanel().addStyleName("Osyl-newElement");
 	}
 	
 	getViewerPanel().setWidget(column, 1,getViewer());

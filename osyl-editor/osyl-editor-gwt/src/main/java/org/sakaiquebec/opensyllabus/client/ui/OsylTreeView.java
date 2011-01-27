@@ -32,15 +32,17 @@ import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitEventHandler;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 
@@ -64,16 +66,14 @@ public class OsylTreeView extends OsylViewableComposite implements
     private String rootTitle;
 
     private Tree osylTree;
-    
+
     private Element[] currentTreeItemElements;
 
     private Map<COModelInterface, TreeItem> itemModelMap;
-    
-    public static final int DEFAULT_WIDTH = 130;
-    
-    private static int maxTreeWidth = DEFAULT_WIDTH;
 
-    
+    public static final int DEFAULT_WIDTH = 130;
+
+    private static int maxTreeWidth = DEFAULT_WIDTH;
 
     public OsylTreeView(COModelInterface model, OsylController osylController) {
 	super(model, osylController);
@@ -82,12 +82,12 @@ public class OsylTreeView extends OsylViewableComposite implements
     }
 
     private void initView() {
-    	final Tree tree = new Tree();
-    	setTree(tree);
-    	getTree().setStylePrimaryName("Osyl-TreeView-Tree");
-    	getTree().addSelectionHandler(this);
-    	initWidget(getTree());
-    	refreshView();
+	final Tree tree = new Tree();
+	setTree(tree);
+	getTree().setStylePrimaryName("Osyl-TreeView-Tree");
+	getTree().addSelectionHandler(this);
+	initWidget(getTree());
+	refreshView();
     }
 
     @SuppressWarnings("unchecked")
@@ -112,7 +112,7 @@ public class OsylTreeView extends OsylViewableComposite implements
 	    // this can be a Lecture leaf
 	    COElementAbstract itemModel = (COElementAbstract) iter.next();
 	    // Compute the maximum tree width
-	    
+
 	    if (itemModel.isCOStructureElement()) {
 		List<COModelInterface> subModels =
 			getController().getOsylConfig().getOsylConfigRuler()
@@ -164,14 +164,16 @@ public class OsylTreeView extends OsylViewableComposite implements
 	itemModelMap.put(getModel(), getRoot());
 	getTree().addItem(getRoot());
 	refreshSubModelsViews(co);
-	//hide the root of the tree
-	DOM.getChild(DOM.getChild(getTree().getElement(),1),0).setClassName("Osyl-TreeView-TreeRoot");
-	DOM.getChild(DOM.getChild(getTree().getElement(),1),1).setClassName("Osyl-TreeView-TreeContent");
+	// hide the root of the tree
+	DOM.getChild(DOM.getChild(getTree().getElement(), 1), 0).setClassName(
+		"Osyl-TreeView-TreeRoot");
+	DOM.getChild(DOM.getChild(getTree().getElement(), 1), 1).setClassName(
+		"Osyl-TreeView-TreeContent");
 	// The tree is expanded by default
 	setCurrentTreeItemsElement();
 	computeMaxTreeWidth();
 	getRoot().setState(true);
-	}
+    }
 
     private void addUnitTreeItem(TreeItem parentTreeItem, COUnit itemModel) {
 	OsylUnitTreeItemView treeItemView =
@@ -195,11 +197,36 @@ public class OsylTreeView extends OsylViewableComposite implements
 
     private void addTreeItemView(TreeItem parentTreeItem,
 	    OsylTreeItemBaseView treeItemView) {
+	if (getController().isReadOnly()) {
+	    if (hasNewElement(treeItemView.getModel())) {
+		treeItemView.getLabel().addStyleName("Osyl-newElement");
+	    }
+	}
 	TreeItem treeItem = new TreeItem(treeItemView);
 	itemModelMap.put(treeItemView.getModel(), treeItem);
 	parentTreeItem.addItem(treeItem);
 	// The tree is expanded by default
 	parentTreeItem.setState(true);
+    }
+
+    private boolean hasNewElement(COModelInterface comi) {
+	if (getController().isSelectedDateBeforeDate(
+		OsylDateUtils.getDateFromXMLDate(comi
+			.getProperty(COPropertiesType.MODIFIED))))
+	    return true;
+	else {
+	    boolean hasNewElement = false;
+	    if (comi instanceof COElementAbstract) {
+		COElementAbstract coea = (COElementAbstract) comi;
+		if (!coea.isCOContentResourceProxy()) {
+		    List<COElementAbstract> list = coea.getChildrens();
+		    for (int i = 0; i < list.size() && !hasNewElement; i++) {
+			hasNewElement = hasNewElement(list.get(i));
+		    }
+		}
+	    }
+	    return hasNewElement;
+	}
     }
 
     /**
@@ -249,32 +276,35 @@ public class OsylTreeView extends OsylViewableComposite implements
     }
 
     public void onUpdateModel(UpdateCOStructureElementEvent event) {
-    	refreshView();
-    	OsylController.getInstance().getMainView().setTreeItemsWidth();
+	refreshView();
+	OsylController.getInstance().getMainView().setTreeItemsWidth();
     }
 
     public Element[] getCurrentTreeItemsElement() {
-    	return currentTreeItemElements;
+	return currentTreeItemElements;
     }
-    
+
     public void setCurrentTreeItemsElement() {
-    	currentTreeItemElements = 
-    		OsylEditorEntryPoint.getElementsByClass("Osyl-TreeLabel", this.getElement(), "DIV");
+	currentTreeItemElements =
+		OsylEditorEntryPoint.getElementsByClass("Osyl-TreeLabel", this
+			.getElement(), "DIV");
     }
-    
+
     private void computeMaxTreeWidth() {
-    	// Computation of the initial split position based on longest label 
-    	// in the tree items.
-    	Element[] elms = getCurrentTreeItemsElement();
-    	int currentTreeWidth;
-    	int left = 0;
-    	for (int i=0; i<elms.length;i++) {
-    		left = elms[i].getAbsoluteLeft();
-    		currentTreeWidth = elms[i].getInnerText().length() * 7 + (left == 0 ? 49:left);
-    		if (currentTreeWidth > getMaxTreeWidth()) {
-    			setMaxTreeWidth(currentTreeWidth);
-    		}
-    	}
+	// Computation of the initial split position based on longest label
+	// in the tree items.
+	Element[] elms = getCurrentTreeItemsElement();
+	int currentTreeWidth;
+	int left = 0;
+	for (int i = 0; i < elms.length; i++) {
+	    left = elms[i].getAbsoluteLeft();
+	    currentTreeWidth =
+		    elms[i].getInnerText().length() * 7
+			    + (left == 0 ? 49 : left);
+	    if (currentTreeWidth > getMaxTreeWidth()) {
+		setMaxTreeWidth(currentTreeWidth);
+	    }
+	}
     }
 
     public int getMaxTreeWidth() {
@@ -285,41 +315,43 @@ public class OsylTreeView extends OsylViewableComposite implements
 	OsylTreeView.maxTreeWidth = newMaxTreeWidth;
     }
 
-
     public void onUpdateModel(UpdateCOUnitEvent event) {
-    	refreshSubModelsViews((COElementAbstract) event.getSource());
-    	OsylController.getInstance().getMainView().setTreeItemsWidth();
+	refreshSubModelsViews((COElementAbstract) event.getSource());
+	OsylController.getInstance().getMainView().setTreeItemsWidth();
     }
 
     public void onSelection(SelectionEvent<TreeItem> event) {
-    	TreeItem item = event.getSelectedItem();
-    	if (item.getParentItem() == null) {
-    		getController().getViewContext().setContextModel(getModel());
-    	} else {
-    		OsylTreeItemBaseView treeItemView =
-    			(OsylTreeItemBaseView) item.getWidget();
-    		getController().getViewContext().setContextModel(
-    				treeItemView.getModel());
-    	}
+	TreeItem item = event.getSelectedItem();
+	if (item.getParentItem() == null) {
+	    getController().getViewContext().setContextModel(getModel());
+	} else {
+	    OsylTreeItemBaseView treeItemView =
+		    (OsylTreeItemBaseView) item.getWidget();
+	    getController().getViewContext().setContextModel(
+		    treeItemView.getModel());
+	}
     }
-    
+
     public void onBrowserEvent(Event event) {
-		Element target = DOM.eventGetTarget(event);
-		super.onBrowserEvent(event);
-		switch (DOM.eventGetType(event)) {
-			case Event.ONMOUSEDOWN: {
-				if (DOM.isOrHasChild(getTree().getElement(), target) && target.getTagName() == "IMG") {
-					OsylController.getInstance().getMainView().setTreeItemsWidth();
-				}
-				break;
-			}
-		}
+	Element target = DOM.eventGetTarget(event);
+	super.onBrowserEvent(event);
+	switch (DOM.eventGetType(event)) {
+	case Event.ONMOUSEDOWN: {
+	    if (DOM.isOrHasChild(getTree().getElement(), target)
+		    && target.getTagName() == "IMG") {
+		OsylController.getInstance().getMainView().setTreeItemsWidth();
+	    }
+	    break;
 	}
-    
+	}
+    }
+
     public void setTreeItemsWidth(int treeWidth) {
-		Element[] elms = getCurrentTreeItemsElement();
-		for (int i = 0; i < elms.length; i++) {
-			DOM.setStyleAttribute(elms[i],"width",(treeWidth - elms[i].getAbsoluteLeft())+ "px");
-		}
+	Element[] elms = getCurrentTreeItemsElement();
+	for (int i = 0; i < elms.length; i++) {
+	    DOM.setStyleAttribute(elms[i], "width", (treeWidth - elms[i]
+		    .getAbsoluteLeft())
+		    + "px");
 	}
+    }
 }

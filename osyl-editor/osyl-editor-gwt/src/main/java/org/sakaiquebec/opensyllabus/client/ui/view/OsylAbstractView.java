@@ -23,6 +23,7 @@ import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -40,7 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $Id: $
  */
 public abstract class OsylAbstractView extends OsylViewableComposite implements
- EditPushButtonEventHandler{
+	EditPushButtonEventHandler {
 
     /**
      * The panel where will be added widgets either for displaying or editing
@@ -63,7 +64,7 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
     private VerticalPanel upAndDownPanel;
 
     protected OsylEditableMouseOverListener popUpMouseOverListener;
-    
+
     protected String propertyType;
     protected boolean viewFirstElement;
 
@@ -80,11 +81,14 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
     }
 
     protected OsylAbstractView(COModelInterface model,
-	    OsylController osylController, boolean editable, boolean viewFirstElement) {
+	    OsylController osylController, boolean editable,
+	    boolean viewFirstElement) {
 	super(model, osylController);
 	this.viewFirstElement = viewFirstElement;
-	propertyType = getController().getOsylConfig().getOsylConfigRuler().getPropertyType();
-	
+	propertyType =
+		getController().getOsylConfig().getOsylConfigRuler()
+			.getPropertyType();
+
 	setMainPanel(new AbsolutePanel());
 	setButtonPanel(new HorizontalPanel());
 	setUpAndDownPanel(new VerticalPanel());
@@ -162,13 +166,13 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 	    getMainPanel().add(getEditor());
 	    getEditor().setWidth("100%");
 	    setStylePrimaryName("Osyl-UnitView-ResPanel");
-	    if(viewFirstElement) {
-	    	this.addStyleName("Osyl-firstElementOfView");
+	    if (viewFirstElement) {
+		this.addStyleName("Osyl-firstElementOfView");
 	    }
 	    if (!editable) {
-	    	this.addStyleName("Osyl-UnitView-ResPanel-ReadOnly");
+		this.addStyleName("Osyl-UnitView-ResPanel-ReadOnly");
 	    }
-	    
+
 	    if (!getController().isReadOnly()) {
 		getMainPanel().add(getButtonPanel());
 		getMainPanel().add(getUpAndDownPanel());
@@ -247,22 +251,23 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
 
     /**
      * Move an element to the element with specified id
+     * 
      * @param targetUuid
      */
     @SuppressWarnings("unchecked")
     protected void moveTo(String targetUuid) {
 	COElementAbstract model = (COElementAbstract) getModel();
-	//search target parent element
+	// search target parent element
 	COElementAbstract targetModel =
 		((COElementAbstract) getController().getMainView().getModel())
 			.findCOElementAbstractWithId(targetUuid);
-	
-	//move element
+
+	// move element
 	model.getParent().removeChild(getModel());
 	model.setParent(targetModel);
 	model.removeMeFromMyParent();
 	targetModel.addChild(getModel());
-	
+
 	// display message
 	OsylUnobtrusiveAlert alert =
 		new OsylUnobtrusiveAlert(getUiMessage("element.moved"));
@@ -381,9 +386,14 @@ public abstract class OsylAbstractView extends OsylViewableComposite implements
      * {@inheritDoc}
      */
     public void onEditPushButton(EditPushButtonEvent event) {
-    	enterEdit();
+	enterEdit();
     }
 
+    public boolean isNewAccordingSelectedDate() {
+	return getController().isSelectedDateBeforeDate(
+		OsylDateUtils.getDateFromXMLDate(getModel().getProperty(
+			COPropertiesType.MODIFIED)));
+    }
 
     /**
      * ==================== ABSTRACT METHODS =====================

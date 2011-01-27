@@ -93,6 +93,8 @@ public class OsylTextToolbar extends Composite {
     private MenuItem editPushButton;
 
     private MenuItem selectDateButton;
+    
+    private MenuItem deleteDateButton;
 
     private MenuItemSeparator viewSeparator;
 
@@ -173,7 +175,11 @@ public class OsylTextToolbar extends Composite {
 		createMenuItem("toolbar.button.selectDate",
 			getOsylImageBundle().calendar_view_month(),
 			"toolbar.button.selectDate.tooltip");
-
+	
+	deleteDateButton = createMenuItem("toolbar.button.deleteDate",
+		getOsylImageBundle().calendar_delete(),
+		"toolbar.button.deleteDate.tooltip");
+	
 	savePushButton =
 		createMenuItem("toolbar.button.save", getOsylImageBundle()
 			.save(), "toolbar.button.save.tooltip");
@@ -201,6 +207,7 @@ public class OsylTextToolbar extends Composite {
 	leftMenuBar.addItem(viewAllPushButton);
 	leftMenuBar.addSeparator(selectDateSeparator);
 	leftMenuBar.addItem(selectDateButton);
+	leftMenuBar.addItem(deleteDateButton);
 
 	rightMenuBar.addItem(savePushButton);
 	rightMenuBar.addSeparator(previewSeparator);
@@ -537,6 +544,14 @@ public class OsylTextToolbar extends Composite {
 
     public void setEditPushButton(MenuItem editPushButton) {
 	this.editPushButton = editPushButton;
+    }
+    
+    public void setDeleteDateButton(MenuItem deleteDateButton) {
+	this.deleteDateButton = deleteDateButton;
+    }
+
+    public MenuItem getDeleteDateButton() {
+	return deleteDateButton;
     }
 
     private void openDownloadPrintPublishedVersionLink() {

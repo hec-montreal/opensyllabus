@@ -225,6 +225,10 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 	setInEditionMode(false);
 	// We get the text to display from the model
 	setText(getView().getTextFromModel());
+	
+	if(getView().isNewAccordingSelectedDate()){
+	    getViewer().addStyleName("Osyl-newElement");
+	}
 
 	// If we are in read-only mode, we return now to not add buttons and
 	// listeners enabling edition or deletion:

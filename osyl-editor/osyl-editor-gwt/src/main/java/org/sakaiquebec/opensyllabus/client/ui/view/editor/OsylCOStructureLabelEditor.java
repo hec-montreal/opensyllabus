@@ -86,6 +86,10 @@ public class OsylCOStructureLabelEditor extends OsylLabelEditor {
 	Label label1 = new Label(getView().getDescriptionFromModel());
 	label1.setStylePrimaryName("Osyl-ASMStructure-description");
 
+	if(getView().isNewAccordingSelectedDate()){
+	    label1.addStyleName("Osyl-newElement");
+	}
+	
 	getMainPanel().add(label1);
     } // enterView
 

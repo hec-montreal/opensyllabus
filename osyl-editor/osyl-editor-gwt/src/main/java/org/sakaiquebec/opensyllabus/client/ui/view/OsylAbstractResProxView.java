@@ -230,16 +230,6 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 	getModel().setRubricUserDefLabel(r, propertyType);
     }
 
-    public boolean isNewAccordingSelectedDate() {
-	if (getController().getSelectedDate() != null) {
-	    if (OsylDateUtils.getDateFromXMLDate(
-		    getModel().getProperty(COPropertiesType.MODIFIED)).after(
-		    getController().getSelectedDate()))
-		return true;
-	}
-	return false;
-    }
-
     protected void updateMetaInfo() {
 	// contextMetaInfo
 	if (getEditor().isHasImportant())

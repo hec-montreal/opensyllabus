@@ -213,8 +213,6 @@ td.gwt-MenuItemSeparator div.menuSeparatorInner {
 	width:100px;
 }
 
-.gwt-MenuItem.gwt-MenuItem-highlighted{background-color:#FFFF66;}
-
 /* Horizontal Split Panel , parent of the left, middle and right Zone -------------------------------------*/
 .Osyl-MainView-HorizontalSplitPanel {
 	margin:0;
@@ -730,18 +728,6 @@ div.Osyl-UnitView-ResPanel-ReadOnly {
 .Osyl-UnitView-Important .Osyl-UnitView-Content {
 	border:2px solid #B6BEC4;
 	padding:0 4px;
-}
-
-.Osyl-UnitView-LvlReq.Osyl-UnitView-New .Osyl-UnitView-IconLvlReq {
-	background-color:#FFFF66;
-}
-
-.Osyl-UnitView-LvlReq.Osyl-UnitView-New > tbody > tr + tr > td{
-	background-color:#FFFF66;
-}
-
-.Osyl-UnitView-New .Osyl-UnitView-Content, .Osyl-UnitView-LvlReq.Osyl-UnitView-New .Osyl-UnitView-Content, .Osyl-UnitView-Important.Osyl-UnitView-New .Osyl-UnitView-Content {
-	background-color:#FFFF66;
 }
 
 .Osyl-ResProxView-MetaInfo,
@@ -1565,3 +1551,13 @@ a.Osyl-collapseButton.down {background-position: -16px 0}
 a.Osyl-collapseButton.collapse {background-position: -24px 0}
 a.Osyl-collapseButton.collapse:hover {background-position: -32px 0}
 a.Osyl-collapseButton.collapse.down {background-position: -40px 0}
+
+.Osyl-newElement {background-color:#FFFF66}
+
+.gwt-MenuItem.Osyl-newElement {background-color:#FFFF66}
+
+.Osyl-UnitView-LvlReq.Osyl-newElement .Osyl-UnitView-IconLvlReq {background-color:#FFFF66}
+
+.Osyl-UnitView-LvlReq.Osyl-newElement > tbody > tr + tr > td {background-color:#FFFF66}
+
+.Osyl-newElement .Osyl-UnitView-Content, .Osyl-UnitView-LvlReq.Osyl-newElement .Osyl-UnitView-Content, .Osyl-UnitView-Important.Osyl-newElement .Osyl-UnitView-Content {background-color:#FFFF66}

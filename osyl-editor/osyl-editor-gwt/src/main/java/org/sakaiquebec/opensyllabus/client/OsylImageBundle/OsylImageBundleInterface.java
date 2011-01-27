@@ -139,9 +139,11 @@ public interface OsylImageBundleInterface extends ClientBundle {
 
     public ImageResource collapse();
     
-    public ImageResource check16();
-    
     public ImageResource cross16();
     
+    public ImageResource check16();
+    
     public ImageResource calendar_view_month();
+    
+    public ImageResource calendar_delete();
 }
