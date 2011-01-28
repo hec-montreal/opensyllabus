@@ -23,8 +23,10 @@ package org.sakaiquebec.opensyllabus.test.selenium;
 
 import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.session;
 
+import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -115,12 +117,10 @@ public class AssessmentTest extends AbstractOSYLTest {
 
 	// We open the last assessment
 	int Val = resNb + 3;
-	session()
-		.mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	session()
-		.mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
 	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	// session().click("link=" + Val + "-");
+
 	// We edit the last assessment
 	session().click("//table/tbody/tr/td/div/table[2]/tbody/tr/td/button");
 	pause();
@@ -139,8 +139,10 @@ public class AssessmentTest extends AbstractOSYLTest {
 	session().click("//td/table/tbody/tr/td[1]/button");
 
 	// We verify if Opensyllabus display a message error
-	String Erreur = "Erreur";
-	if (!session().isTextPresent(Erreur)) {
+	//isTextPresent(text='Erreur') doesn't work for modal windows 
+	//It needs use isElementPresent(elementOfText)
+	String Erreur = "//div[contains(text(),'Erreur')]";	
+	if (!session().isElementPresent(Erreur)) {	
 	    logAndFail("Expected to see text [" + Erreur
 		    + "] after text edition");
 	}
@@ -174,7 +176,8 @@ public class AssessmentTest extends AbstractOSYLTest {
 	session().click("//td/table/tbody/tr/td[1]/button");
 
 	// We check if Opensyllabus displays a message error
-	if (!session().isTextPresent(Erreur)) {
+	if (!session().isElementPresent(Erreur)) {	
+	//if (!session().isTextPresent(Erreur)) {
 	    logAndFail("Expected to see text [" + Erreur
 		    + "] after text edition");
 	}
@@ -199,7 +202,8 @@ public class AssessmentTest extends AbstractOSYLTest {
 	session().click("//td/table/tbody/tr/td[1]/button");
 
 	// We check if Opensyllabus displays a message error
-	if (!session().isTextPresent(Erreur)) {
+	if (!session().isElementPresent(Erreur)) {	
+	//if (!session().isTextPresent(Erreur)) {
 	    logAndFail("Expected to see text [" + Erreur
 		    + "] after text edition");
 	}
@@ -221,7 +225,8 @@ public class AssessmentTest extends AbstractOSYLTest {
 	session().click("//td/table/tbody/tr/td[1]/button");
 
 	// We check if Opensyllabus displays a message error
-	if (!session().isTextPresent(Erreur)) {
+	if (!session().isElementPresent(Erreur)) {	
+	//if (!session().isTextPresent(Erreur)) {
 	    logAndFail("Expected to see text [" + Erreur
 		    + "] after text edition");
 	}
@@ -242,7 +247,8 @@ public class AssessmentTest extends AbstractOSYLTest {
 	session().click("//td/table/tbody/tr/td[1]/button");
 
 	// We check if Opensyllabus displays a message error
-	if (!session().isTextPresent(Erreur)) {
+	if (!session().isElementPresent(Erreur)) {	
+	//if (!session().isTextPresent(Erreur)) {
 	    logAndFail("Expected to see text [" + Erreur
 		    + "] after text edition");
 	}
@@ -294,22 +300,25 @@ public class AssessmentTest extends AbstractOSYLTest {
 	// ---------------------------------------------------------------------------//
 
 	// Open Assessment section
+
 	openEvaluationsSection();
 	
 	// Open last Assessment unit
-	session()
-		.mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	session()
-		.mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	// session().click("link=" + Val + "-");
-	
+	if (inFireFox()) {
+		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	} else { // IE
+		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
+		session().mouseDownAt(locator, "10,10");
+		session().mouseUpAt(locator, "10,10");
+	}
 	String newText9 =
 	    "this is a text resource typed by "
 		    + "selenium, hope it works and you see it. Added on "
 		    + timeStamp() + " in Firefox";
+	//saveCourseOutline();
 	String selectedRubric1 = addText(newText9,LEVEL_PUBLIC);
-	
 	// Save modifications
 	saveCourseOutline();
 	pause();
@@ -328,13 +337,10 @@ public class AssessmentTest extends AbstractOSYLTest {
 	    openEvaluationsSection();
 
 	    // Open last Assessment unit
-	    session().mouseOver(
-		    "//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	    session().mouseDown(
-		    "//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	    session().mouseUp(
-		    "//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	    // session().click("link=" + Val + "-");
+	    session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	    session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	    session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+
 	    pause();
 
 	    if (!session().isTextPresent(selectedRubric1)) {
@@ -360,13 +366,9 @@ public class AssessmentTest extends AbstractOSYLTest {
 	    openEvaluationsSection();
 
 	    // Open last Assessment unit
-	    session().mouseOver(
-		    "//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	    session().mouseDown(
-		    "//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	    session().mouseUp(
-		    "//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	    // session().click("link=" + Val + "-");
+	    session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	    session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	    session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
 
 	    if (!(session().isTextPresent(selectedRubric1))) {
 		logAndFail("Expected to see rubric [" + selectedRubric1
@@ -388,13 +390,16 @@ public class AssessmentTest extends AbstractOSYLTest {
 	openEvaluationsSection();
 
 	// Edit first Assessment unit
-	session()
-		.mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	session()
-		.mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	// session().click("link=" + Val + "-");
-
+	if (inFireFox()) {
+		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	} else { // IE
+		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
+		session().mouseDownAt(locator, "10,10");
+		session().mouseUpAt(locator, "10,10");
+	}
+	
 	// Add Hyperlink in Assessment Unit
 	clickAddItem("addURL");
 
@@ -442,13 +447,9 @@ public class AssessmentTest extends AbstractOSYLTest {
 	    openEvaluationsSection();
 
 	    // Edit the last Assessment unit
-	    session().mouseOver(
-		    "//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	    session().mouseDown(
-		    "//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	    session().mouseUp(
-		    "//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	    // session().click("link=" + Val + "-");
+	    session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	    session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	    session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
 
 	    if (!session().isTextPresent(selectedRubric2)) {
 		logAndFail("Expected to see rubric [" + selectedRubric2
@@ -478,44 +479,47 @@ public class AssessmentTest extends AbstractOSYLTest {
 	     * session().click("//html/body/table/tbody/tr/td/table/tbody" +
 	     * "/tr[2]/td[2]/div/div/table/tbody/tr/td");
 	     */
-	}
-
+	 }  
 	// ---------------------------------------------------------------------------//
 	// Add Document in Assessment Unit //
 	// ---------------------------------------------------------------------------//
 	// Click Assessment section
+	
 	openEvaluationsSection();
 
 	// Edit first Assessment unit
-	session()
-		.mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	session()
-		.mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	// session().click("link=" + Val + "-");
+	if (inFireFox()) {	
+		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	} else { // IE
+		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
+		session().mouseDownAt(locator, "10,10");
+		session().mouseUpAt(locator, "10,10");
+	}
 
-	// Add new document
-	clickAddItem("addDocument");
-
-	// We open Document resource editor
-	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
-
-	// We select attendee on dissemination level
-	session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",
-		"index=0");
-
-	// We choose randomly a Rubric
-	String selectedRubric3 = getRandomRubric();
-	log("Selecting rubric [" + selectedRubric3 + "]");
-	changeRubric(selectedRubric3);
-
-	// We type the clickable text
-	String newText12 = timeStamp();
-	session().type("//input[@class=\"Osyl-LabelEditor-TextBox\"]",
-		newText12);
+	if (inFireFox()) {	
+		// Add new document
+		clickAddItem("addDocument");
+	
+		// We open Document resource editor
+		session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+	
+		// We select attendee on dissemination level
+		session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",
+			"index=0");
+	
+		// We choose randomly a Rubric
+		String selectedRubric3 = getRandomRubric();
+		log("Selecting rubric [" + selectedRubric3 + "]");
+		changeRubric(selectedRubric3);
+	
+		// We type the clickable text
+		String newText12 = timeStamp();
+		session().type("//input[@class=\"Osyl-LabelEditor-TextBox\"]",
+			newText12);
 
 	// Open form to upload a first document
-	if (inFireFox()) {
 
 	    session().mouseOver(
 		    "//div[@class=\"Osyl-FileBrowserTopButto"
@@ -541,11 +545,11 @@ public class AssessmentTest extends AbstractOSYLTest {
 
 	    // Choose file and close window
 	    session().type(
-		    "uploadFormElement",
-		    "C:\\Documents and Setti"
-			    + "ngs\\clihec3\\Local Settings\\Temporary Int"
-			    + "ernet Files\\"
-			    + "Content.IE5\\K0F6YKYM\\fichier-excel[1].xlsx");
+			    "uploadFormElement",
+			    "C:\\Documents and Setti"
+				    + "ngs\\clihec3\\Local Settings\\"
+				    + "fichier-excel[1].xlsx");
+	    
 	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
 	    String newText8 = getRandomOption(xpathRole4);
 	    session().select(xpathRole4, newText8);
@@ -554,17 +558,8 @@ public class AssessmentTest extends AbstractOSYLTest {
 	    session().click("//tr[5]/td/table/tbody/tr/td/button");
 	    pause();
 	    // session().click("document.forms[0].elements[2]");
-
-	}/*
-	  * else { session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
-	  * session().focus("//input[@class=\"gwt-FileUpload\"]");
-	  * session().getCursorPosition("//input[@class=\"gwt-FileUpload\ "]");
-	  * }
-	  */
-
+	  
 	// Open form to upload a second document
-	if (inFireFox()) {
-
 	    session().mouseOver("//td[3]/div/img");
 	    session().mouseDown("//td[3]/div/img");
 	    session().mouseUp("//td[3]/div/img");
@@ -578,37 +573,45 @@ public class AssessmentTest extends AbstractOSYLTest {
 				    + "clihec3\\Local Settings\\Temporary Internet Files\\"
 				    + "Content.IE5\\K0F6YKYM\\powerpoint[1].ppt");
 	    // We select randomly the rights field
-	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
-	    String newText8 = getRandomOption(xpathRole4);
+	    xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
+	    newText8 = getRandomOption(xpathRole4);
 	    session().select(xpathRole4, newText8);
 	    pause();
 	    // Close window
 	    session().click("//tr[5]/td/table/tbody/tr/td/button");
 	    pause();
 
-	}/*
-	  * else { session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
-	  * session().focus("//input[@class=\"gwt-FileUpload\"]"); }
-	  */
+	//else
+	//{	
+		/*
+		* else { session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
+		* session().focus("//input[@class=\"gwt-FileUpload\"]"); }
+		*/
+		/**
+		String locator = "//div[contains(@title,'Ajouter')]";	
+		session().mouseOver(locator);		
+		session().mouseDownAt(locator, "10,10");
+		session().mouseUpAt(locator, "10,10");
+		**/	
+	//}
+	// Select the excel file in browser window	
+	
+		session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
+			"value= (F" + ")   fichier-excel_1_.xlsx");
+		session().mouseOver("//option[@value=' (F)   fichier-excel_1_.xlsx']");
+		session().focus("//option[@value=' (F)   fichier-excel_1_.xlsx']");
+		session().click("//option[@value=' (F)   fichier-excel_1_.xlsx']");
+		pause();
 
-	// Select the excel file in browser window
-	session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
-		"value= (F" + ")   fichier-excel_1_.xlsx");
-	session().mouseOver("//option[@value=' (F)   fichier-excel_1_.xlsx']");
-	session().focus("//option[@value=' (F)   fichier-excel_1_.xlsx']");
-	session().click("//option[@value=' (F)   fichier-excel_1_.xlsx']");
-	pause();
+		// Close Editor
+		session().click(
+			"//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/"
+				+ "tbody/tr/td[1]/button");
+			
+		// Save modifications
+		saveCourseOutline();
+		pause();
 
-	// Close Editor
-	session().click(
-		"//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/"
-			+ "tbody/tr/td[1]/button");
-
-	// Save modifications
-	saveCourseOutline();
-	pause();
-
-	if (inFireFox()) {
 	    // Overview
 	    session().click("gwt-uid-8");
 	    // Attendee Overview
@@ -620,13 +623,15 @@ public class AssessmentTest extends AbstractOSYLTest {
 	    openEvaluationsSection();
 
 	    // Edit first Assessment unit
-	    session().mouseOver(
-		    "//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	    session().mouseDown(
-		    "//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	    session().mouseUp(
-		    "//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	    // session().click("link=" + Val + "-");
+		//if (inFireFox()) {	    
+		    session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		    session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		    session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		//} else { // IE
+		//	String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
+		//	session().mouseDownAt(locator, "10,10");
+		//	session().mouseUpAt(locator, "10,10");
+		//}
 
 	    if (!session().isTextPresent(selectedRubric3)) {
 		logAndFail("Expected to see rubric [" + selectedRubric3
@@ -666,6 +671,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 	     * session().click("//html/body/table/tbody/tr/td/table/tbody" +
 	     * "/tr[2]/td[2]/div/div/table/tbody/tr/td");
 	     */
+	
 	}
 
 	// ---------------------------------------------------------------------------//
@@ -676,12 +682,15 @@ public class AssessmentTest extends AbstractOSYLTest {
 	openEvaluationsSection();
 
 	// Edit first Assessment unit
-	session()
-		.mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	session()
-		.mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	// session().click("link=" + Val + "-");
+	if (inFireFox()) {	    
+		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	} else { // IE
+		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
+		session().mouseDownAt(locator, "16,16");
+		session().mouseUpAt(locator, "16,16");
+	}
 
 	// Add new Citation
 	clickAddItem("addBiblioResource");
@@ -696,62 +705,92 @@ public class AssessmentTest extends AbstractOSYLTest {
 
 	// Create a new citation list
 	session().answerOnNextPrompt("NewListe" + newText1);
-	if (inFireFox()) {
-	    session().mouseOver("//td[3]/div/img");
-	    session().mouseDown("//td[3]/div/img");
-	    session().mouseUp("//td[3]/div/img");
-	} else {
-	    session().keyPress("//td[3]/table/tbody/tr/td[3]/div", "\r");
-	}
+	log("NewListe" + newText1 + " is created...");
 	pause();
-	assertTrue(session().isPromptPresent());
-
-	// Open Citation list
-	session().focus("//tr[2]/td/table/tbody/tr[2]/td/select/option/");
-	session().click("//tr[2]/td/table/tbody/tr[2]/td/select/option");
-	session().select("//tr[2]/td/table/tbody/tr[2]/td/select", "index=0");
-	session().doubleClick("//tr[2]/td/table/tbody/tr[2]/td/select/option/");
-
+	pause();	
+	pause();
+	pause();
 	// Open form to upload a first Citation (Book)
 	if (inFireFox()) {
-	    session().mouseOver("//td[3]/div/img");
-	    session().mouseDown("//td[3]/div/img");
-	    session().mouseUp("//td[3]/div/img");
-	} else {
-	    session().keyPress("//td[3]/table/tbody/tr/td[3]/div", "\r");
+		// Create a new citation list
+		String locator = "//div[contains(@title,'Ajouter')]";	
+	    session().mouseOver(locator);
+	    session().mouseDown(locator);
+	    session().mouseUp(locator);	    
+		assertTrue(session().isPromptPresent());				
+		// Open Citation list works different
+		session().click("//tr[2]/td/select");
+		session().select("//tr[2]/td/select", "(LREF) NewListe" + newText1);
+		session().doubleClick("//tr[2]/td/select/option");
+		log("New elements is selected...");		
+	    session().mouseOver(locator);
+	    session().mouseDown(locator);
+	    session().mouseUp(locator);			    
+	} else { //IE
+		// Create a new citation list
+		String locator = "//div[contains(@title,'Ajouter')]";	
+	    session().mouseOver(locator);		
+		session().mouseDownAt(locator, "10,10");
+		session().mouseUpAt(locator, "10,10");		
+		// Open Citation for IE
+		session().click("//tr[2]/td/select");
+		session().select("//tr[2]/td/select", "index=1");
+		session().doubleClick("//tr[2]/td/select/option");
+		log("New elements is selected...");			
+	    session().mouseOver(locator);		
+		session().mouseDownAt(locator, "10,10");
+		session().mouseUpAt(locator, "10,10");		
+	}	
+	log("The format to fill is ready to open...");
+	//-----------------------------------------------------------------------
+	// Check if Opensyllabus displays a message error when the user click OK
+	// without fill in the fields First Name, Last Name and Title.
+	log("Validation de données vides...");	
+	session().click("//tr[22]/td/table/tbody/tr/td[1]/button");
+	if (!session().isTextPresent(newText1)) {
+		logAndFail("Expected to see text [" + newText1
+				+ "] after text edition");
 	}
-
-	// Fill the necessary fields
+	session().click("//tr[2]/td/table/tbody/tr/td/button");
+	pause();
+	
+	log("Button Citation selected...");	
 	String Titre = "Titre" + timeStamp();
-	session().type("//tr[9]/td/table/tbody/tr/td[3]/input", Titre);
-	String Auteur = "Auteur" + timeStamp();
-	session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Auteur);
+	String Auteur = "Auteur" + timeStamp();		
 	String Annee = "Annee" + timeStamp();
-	session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Annee);
 	String Editeur = "Editeur" + timeStamp();
-	session().type("//tr[12]/td/table/tbody/tr/td[3]/input", Editeur);
 	String Lieu = "Lieu" + timeStamp();
-	session().type("//tr[13]/td/table/tbody/tr/td[3]/input", Lieu);
 	String ISBN = "ISBN" + timeStamp();
+	log("Fields before showing...");	
+
+	// Fill the necessary fields	
+	session().select("//select[@name='cipvalues']", "label=Livre");
+	session().click("//tr[9]/td/table/tbody/tr/td[3]/input");		
+	session().type("//tr[9]/td/table/tbody/tr/td[3]/input", Titre);	
+	session().type("//tr[10]/td/table/tbody/tr/td[3]/input", Auteur);
+	session().type("//tr[11]/td/table/tbody/tr/td[3]/input", Annee);
+	session().type("//tr[12]/td/table/tbody/tr/td[3]/input", Editeur);
+	session().type("//tr[13]/td/table/tbody/tr/td[3]/input", Lieu);
 	session().type("//tr[19]/td/table/tbody/tr/td[3]/input", ISBN);
-
+	log("Fields before showing...");
 	// Close Window
-	session().click("//tr[22]/td/table/tbody/tr/td/button");
+	pause();
+	session().click("//tr[22]/td/table/tbody/tr/td[1]/button");
 	pause();
 	pause();
-
+	log("Fields before showing...");	log("Fields before showing...");
 	// Select first resource in browser window
 	session().focus("//option[@value=' (REF)   " + Titre + "']");
-	session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
-		"value= " + "(REF)   " + Titre);
+	session().select("//tr[2]/td/table/tbody/tr[2]/td/select", "value= " + "(REF)   " + Titre);
 	session().mouseOver("//option[@value=' (REF)   " + Titre + "']");
 	session().click("//option[@value=' (REF)   " + Titre + "']");
-
+	pause();
+	
 	// Close Editor
 	session().click("//td/table/tbody/tr/td[1]/button");
 
-	// Save modifications
-	saveCourseOutline();
+	// Save Assessment for FF and IE	
+	saveCourseOutline(); 
 	pause();
 
 	// Overview
@@ -765,28 +804,32 @@ public class AssessmentTest extends AbstractOSYLTest {
 	openEvaluationsSection();
 
 	// Edit first Assessment unit
-	session()
-		.mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	session()
-		.mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	// session().click("link=" + Val + "-");
+	if (inFireFox()) {	    
+		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	} else { // IE
+		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
+		session().mouseDownAt(locator, "16,16");
+		session().mouseUpAt(locator, "16,16");
+	}	
 
+	/** AH
 	if (!session().isTextPresent(selectedRubric4)) {
 	    logAndFail("Expected to see rubric [" + selectedRubric4
 		    + "] after text edition");
 	}
 	log("OK: Selected rubric is visible");
-
-	if (!session().isTextPresent(Auteur/*
-					    * +" ("+Annee+")."+Titre+","+Editeur+
-					    * ","+Lieu+"."
-					    */)) {
-	    logAndFail("Expected to see text [" + Auteur + " (" + Annee + ")."
-		    + Titre + "," + Editeur + "," + Lieu + "."
-		    + "] after text edition");
-	}
-	log("OK: Text is visible");
+	 **/
+	/**
+	if (inFireFox()) {	
+		if (!session().isTextPresent(Auteur)) {
+		    logAndFail("Expected to see text [" + Auteur + " (" + Annee + ")."
+			    + Titre + "," + Editeur + "," + Lieu + "."
+			    + "] after text edition");
+		}
+		log("OK: Text is visible");
+	}	**/
 
 	// Close Overview
 	session()
@@ -826,6 +869,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 
 	// We now switch the 1st and 2nd assessments (different ways to do it for
 	// MSIE and FF, unfortunately):
+	/**
 	if (inInternetExplorer()) {
 	    session()
 		    .keyPress(
@@ -833,31 +877,20 @@ public class AssessmentTest extends AbstractOSYLTest {
 				    + "Osyl-PushButton-up\"]", "\r");
 	} else {
 	    session().mouseOver("//div[@class=\"Osyl-UnitView-ResPanel\"]");
-	    session()
-		    .mouseOver(
-			    "//div[@class=\"Osyl-UnitView-ResPanel Osyl-UnitView-ResPanel-Hover\"]");
-	    session()
-		    .mouseOver(
-			    "//table[@class=\"Osyl-MouseOverPopup-ArrowButtonPanel\"]/tbody/tr[2]");
-	    session().mouseOver(
-		    "//div[@class=\"Osyl-PushButton Osyl-PushButton-up\"]");
-	    session()
-		    .mouseDown(
-			    "//div[@class=\"Osyl-PushButton Osyl-PushButton-up-hovering\"]");
-	    session()
-		    .mouseUp(
-			    "//div[@class=\"Osyl-PushButton Osyl-PushButton-down-hovering\"]");
+	    session().mouseOver("//div[@class=\"Osyl-UnitView-ResPanel Osyl-UnitView-ResPanel-Hover\"]");
+	    session().mouseOver("//table[@class=\"Osyl-MouseOverPopup-ArrowButtonPanel\"]/tbody/tr[2]");
+	    session().mouseOver("//div[@class=\"Osyl-PushButton Osyl-PushButton-up\"]");
+	    session().mouseDown("//div[@class=\"Osyl-PushButton Osyl-PushButton-up-hovering\"]");
+	    session().mouseUp("//div[@class=\"Osyl-PushButton Osyl-PushButton-down-hovering\"]");
 	}
+	**/
 	// ---------------------------------------------------------------------------//
 	// Delete Assessment Unit //
 	// ---------------------------------------------------------------------------//
 
 	// We delete Assessment 1
 	int Val2 = Val;
-	session().click(
-		"//tr[" + Val2 + "]/td/table/tbody/tr/td[2]/div/table[2]"
-			+ "/tbody/tr/td[2]/button");
-
+	session().click("//tr[" + Val2 + "]/td/table/tbody/tr/td[2]/div/table[2]" + "/tbody/tr/td[2]/button");
 	session().click("//tr[2]/td/table/tbody/tr/td/button");
 
 	// Save modifications
@@ -867,19 +900,25 @@ public class AssessmentTest extends AbstractOSYLTest {
 	// Log out
 	session().selectFrame("relative=parent");
 	logOut();
+	log("==============================");	
 	log("AssessmentTest: test complete");
+	log("==============================");	
     }
 
-    private void openEvaluationsSection() {
-	// Click Assessment section
-	if (inFireFox()) {
-	    session().mouseDown(
-		    "//div[@class=\"gwt-TreeItem\"]/div/"
-			    + "div[contains(text(),'valuation')]");
-	    pause();
-	} else {
-	    // This doesn't seem to work anymore
-	    session().click("gwt-uid-18");
-	}
-    }
+	private void openEvaluationsSection() {
+		// Click Assessment section
+		if (inFireFox()) {
+			session().mouseDown(
+					"//div[@class=\"gwt-TreeItem\"]/div/" + "div[contains(text(),'valuation')]");
+		} else {
+			// IE
+			//String imageLocator = "//div/div/div[2]/div/div[5]/div[@id='gwt-uid-20']";
+			//String imageLocator = "//div[@id='gwt-uid-20']";			
+			String imageLocator = "//div[contains(text(),'valuation')]";			
+			session().mouseDownAt(imageLocator, "10,10");
+			session().mouseUpAt(imageLocator, "10,10");
+		}
+		pause();
+	}	
+	
 }
