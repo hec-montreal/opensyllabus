@@ -156,106 +156,157 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     public void createTestSite() throws Exception {
 	createSite(getCurrentTestSiteName());
     } // createTestSite
+    
+    public void createTestSite(String parentChild) throws Exception {
+    	createSite(parentChild);
+    	goToSite(parentChild);  	
+        } // createTestSite
 
-    public void createSite(String siteName) throws Exception {
-	log("Creating site " + siteName);
-	goToOsylManagerTool();
-
-	ensureElementPresent("//tr[7]/td/table/tbody/tr/td[1]/div");
-	smartClick("//tr[7]/td/table/tbody/tr/td[1]/div");
-
-	ensureElementPresent("//tr[2]/td/table/tbody/tr/td[2]/input");
-	session().type("//tr[2]/td/table/tbody/tr/td[2]/input", siteName);
-	session().select("//tr[4]/td/table/tbody/tr/td[2]/select",
-		"value=default");
-	session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=2");
-
-	// Click the button "Create"
-	smartClick("//tr[5]/td/div/div");
-
-	// Click button OK (confirmation)
-	ensureElementPresent("//tr[4]/td/div/div");
-	smartClick("//tr[4]/td/div/div");
-
-    } // createSite
-
+	public void createSite(String siteName) throws Exception {
+		// Créer un nouveau site avec l'outil OpenSyllabus
+		log("**** Creating site " + siteName);
+		goToOsylManagerTool(); //Now, it is not necessary
+		// Créer un nouveau site avec l'outil Gestionnaire de plans de cours
+		if (inFireFox()) {	
+			String element = "//*[@class='icon-sakai-opensyllabus-manager-tool']";			
+			ensureElementPresent(element);
+			pause();
+			smartClick(element);			
+		} else { 
+			//(inIE)
+			String element = "//*[@class='icon-sakai-opensyllabus-manager-tool']";		
+			ensureElementPresent(element);
+			pause();			
+			smartMouse(element); 
+		}		
+		pause();
+		pause();
+		pause();		
+		if (!session().isElementPresent("//tr[7]/td/table/tbody/tr/td/div/div")) {
+			clickOpenOsyl("//tr[7]/td/table/tbody/tr/td/div/div");
+		}
+		else {
+			clickOpenOsyl("//tr[7]/td/table/tbody/tr/td[1]/div/div");
+		}
+		pause();	
+		pause();		
+		ensureElementPresent("//tr[2]/td/table/tbody/tr/td[2]/input");
+		session().type("//tr[2]/td/table/tbody/tr/td[2]/input", siteName);
+		session().select("//tr[4]/td/table/tbody/tr/td[2]/select", "value=default");
+		session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=2");
+		// Click the button "Create"		
+		smartMouse("//div/div/div/div[2]/table/tbody/tr[5]/td/div/div");		
+		// Click button OK (confirmation)		
+		ensureElementPresent("//tr[4]/td/div");
+		smartMouse("//tr[4]/td/div");
+		log("**** Site created " + siteName + "*******");
+	} // createSite
+	
+    /**
+     * Opens windows to create a new site (if in FF) or selects it and press Enter (in IE).
+     * @param element
+     */
+    private void clickOpenOsyl(String element) {
+	if (inFireFox()) {
+	    session().mouseOver(element);
+	    session().mouseDown(element);
+	    session().mouseUp(element);	    
+	} else {
+	    session().mouseOver(element);		
+		session().mouseDownAt(element, "10,10");
+		session().mouseUpAt(element, "10,10");	
+	}
+    }
+    
     /**
      * Clicks the element (if in FF) or selects it and press Enter (in IE).
-     * 
      * @param element
      */
     private void smartClick(String element) {
+	if (inFireFox()) {
+		session().click(element);	    
+	} else {
+		session().click(element);		
+	}
+    }
+
+    /**
+     * Clicks the element (if in FF) or selects it and press Enter (in IE).
+     * @param element
+     */
+    private void smartMouse(String element) {
 	if (inFireFox()) {
 	    session().mouseOver(element);
 	    session().mouseDown(element);
 	    session().mouseUp(element);
 	} else {
-	    session().keyPress(element, "\r");
+	    session().mouseOver(element);		
+		session().mouseDownAt(element, "10,10");
+		session().mouseUpAt(element, "10,10");	
 	}
-    }
-
-    public void goToOsylManagerTool() {
-	// open site administration workspace
-	session().open("/portal/site/~admin");
-	session().answerOnNextPrompt("osyl123");
-
-	if (!session().isElementPresent(
-		"//span[@class='icon-sakai-opensyllabus-manager-tool']")) {
-	    // open course outline manager tool
-	    if (inFireFox()) {
-		session().mouseOver(
-			"//a[@class='icon-sakai-opensyllabus-manager-tool']");
-		session().mouseDown(
-			"//a[@class='icon-sakai-opensyllabus-manager-tool']");
-		session().mouseUp(
-			"//a[@class='icon-sakai-opensyllabus-manager-tool']");
-		session()
-			.click(
-				"//a[@class='icon-sakai-opensyllabus-manager-tool']/span");
-		pause();
-	    } else {
-		session().keyPress(
-			"//a[@class='icon-sakai-opensyllabus-manager-tool']",
-			"\r");
-	    }
+    }    
+    
+	public void goToOsylManagerTool() {
+		// open site administration workspace
+		session().open("/portal/site/~admin");
+		session().answerOnNextPrompt("osyl123");
+	
+		if (!session().isElementPresent(
+				"//span[@class='icon-sakai-opensyllabus-manager-tool']")) {
+			// open course outline manager tool
+			if (inFireFox()) {session().mouseOver("//a[@class='icon-sakai-opensyllabus-manager-tool']");
+				session().mouseDown("//a[@class='icon-sakai-opensyllabus-manager-tool']");
+				session().mouseUp("//a[@class='icon-sakai-opensyllabus-manager-tool']");
+				session().click("//a[@class='icon-sakai-opensyllabus-manager-tool']/span");
+				pause();
+			} else {
+				session().click("//a[@class='icon-sakai-opensyllabus-manager-tool']");
+			}
+		}
 	}
-    }
 
     public String getCurrentTestSiteName() {
 	return siteName;
     }
 
     public void goToSite(String siteName) throws IllegalStateException {
-	try {
 	    session().open("/portal/site/" + siteName);
 	    waitForPageToLoad();
+
+	    if (!session().isTextPresent(siteName)) {
+	    	try {
+				createTestSite(siteName);
+			//} catch (IllegalStateException e) {
+			//    throw e;
+			} catch (Exception e) {
+			    logAndFail("goToSite: " + e);
+			}
+	    }  	    	    
+	    
+	    /**
 	    if (session().isTextPresent("Site Unavailable")) {
-		throw new IllegalStateException("Got 'Site Unavailable' !");
-	    }
-
-	    pause();
-	    log("goToSite avant selectFrame");
-	    session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
-	    log("goToSite apres selectFrame");
-	    ensureElementPresent("gwt-uid-4");
-
-	    // gwt-uid-4 is button Save. If it is not visible, it means we are
-	    // in read-only mode.
+	    	throw new IllegalStateException("Got 'Site Unavailable' !");
+	    }  	    
+	    log("*** goToSite avant selectFrame");	    
+	    //session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
+	    session().selectFrame("//iframe[@class=\"portletMainIframe\"]");    
+	    log("*** goToSite apres selectFrame");
+	    //session().waitForPageToLoad("30000");    
+	    ensureElementPresent("gwt-uid-4");    
+	    //gwt-uid-4 is button Save. If it is not visible, it means we are
+	    //in read-only mode.
+	    if (!session().isVisible("gwt-uid-4")) {   
+			captureScreenShot("Course outline locked: waiting 15 minutes");
+			log("Course outline locked: waiting 15 minutes");
+			pause(90000);
+			session().refresh();
+			waitForPageToLoad();
+	    }    
 	    if (!session().isVisible("gwt-uid-4")) {
-		captureScreenShot("Course outline locked: waiting 15 minutes");
-		log("Course outline locked: waiting 15 minutes");
-		pause(900000);
-		session().refresh();
-		waitForPageToLoad();
+	    	logAndFail("Course outline still locked after 15 minutes");
 	    }
-	    if (!session().isVisible("gwt-uid-4")) {
-		logAndFail("Course outline still locked after 15 minutes");
-	    }
-	} catch (IllegalStateException e) {
-	    throw e;
-	} catch (Exception e) {
-	    logAndFail("goToSite: " + e);
-	}
+	    **/	 
+   
     }
 
     /**
@@ -263,6 +314,14 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * if the site does not exist.
      */
     public void goToCurrentSite() throws IllegalStateException {
+	/**
+    try {
+		createTestSite();
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}  
+	**/
 	goToSite(getCurrentTestSiteName());
     }
 
@@ -326,7 +385,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * Terminates the current session by clicking on element loginLink1. After
      * the click, we expect to see element eid (user ID input field).
      */
-    public void logOut() throws Exception {
+    public void logOut() throws Exception { 	
 	session().selectFrame("relative=parent");
 	session().click("loginLink1");
 	waitForPageToLoad();
@@ -378,7 +437,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	// Increase this to be able to see the test running. Do not set it below
 	// 100 as it tends to cause problems (menu items not found for
 	// instance).
-	session().setSpeed("200");
+	session().setSpeed("1000");
 
     } // waitForOSYL
 
@@ -414,7 +473,8 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	log("Entering clickHomeButton");
 
 	// Click the button
-	session().click("gwt-uid-1");
+	// session().click("gwt-uid-1");
+	session().click("gwt-uid-4"); //AH
 	openOrganisationSection();
 
 	// We check that we see at least one LectureNo label. Actually there
@@ -440,9 +500,14 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	try {
 	    // Click the add button
 	    clickAddButton();
-
-	    // Click the item or fail if it is not found
-	    session().click("//div[@id=\"" + itemText + "\"]");
+		if (inFireFox()) {
+		    // Click the item or fail if it is not found
+		    session().click("//div[@id=\"" + itemText + "\"]");
+		} else { // IE		
+		    session().click("//div[@id=\"" + itemText + "\"]");			
+			//session().mouseDownAt("//div[@id=\"" + itemText + "\"]", "10,10");
+			//session().mouseUpAt("//div[@id=\"" + itemText + "\"]", "10,10");
+		}	
 	} catch (Exception e) {
 	    logAndFail("clickAddButton(" + itemText + ") FAILED: " + e);
 	}
@@ -488,7 +553,9 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      */
     public void saveCourseOutline() throws Exception {
 	log("Entering saveCourseOutline");
-
+	pause();
+	pause();
+	pause();	
 	String origSpeed = session().getSpeed();
 	session().setSpeed("30");
 	long start = System.currentTimeMillis();
@@ -526,8 +593,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		    // slow enough!)
 		    log("saveCourseOutline: trying again...");
 		    clickSaveButton();
-		    // TODO: aprÃ¨s trois fois on pourrait assumer que le save a
-		    // fonctionnÃ©!
+		    // TODO: After three times one could assume that save works well
 		} else {
 		    Thread.sleep(100);
 		}
@@ -584,15 +650,15 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * screenShot capture is taken if possible.
      */
     protected void logAndFail(String msg) {
-	log("logAndFail: " + msg);
-	captureScreenShotFailure(msg);
-	try {
-	    logOut();
-	} catch (Exception e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-	fail(msg);
+		log("logAndFail: " + msg);
+		captureScreenShotFailure(msg);
+		try {
+		    logOut();
+		} catch (Exception e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
+		fail(msg);
     }
 
     /**
@@ -756,21 +822,23 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	if (inFireFox()) {
 	    session().mouseDown(
 		    "//div[@class=\"gwt-TreeItem\"]/div/"
-			    + "div[contains(text(),'Organisation')]");
-	    pause();
+			    + "div[contains(text(),'Organisation')]");	    
 	} else {
-	    // This doesn't seem to work anymore
-	    session().click("//div[@id='gwt-uid-21']/div");
-	    session().keyPress("//div[@id='gwt-uid-21']/div", "\r");
-	    session().mouseOver("//div[@id='gwt-uid-21']/div");
-	    session().mouseDown("//div[@id='gwt-uid-21']/div");
-	    session().mouseUp("//div[@id='gwt-uid-21']/div");
+		//IE
+		String imageLocator = "//div[contains(text(),'Organisation')]";			
+		session().mouseDownAt(imageLocator, "10,10");
+		session().mouseUpAt(imageLocator, "10,10");	    
 	}
+    pause();	
     }
 
     protected int getResourceCount() {
-	return session().getXpathCount(
-		"//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
+    	if (session().isTextPresent("//div[@class=\"Osyl-UnitView-ResPanel\"]")) {
+    		return session().getXpathCount("//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();    		    		
+    	}    	
+        else {
+    	    return 0;
+        }
     }
 
     protected void openTeachingMaterialSection() {
@@ -779,11 +847,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    session().mouseDown(
 		    "//div[@class=\"gwt-TreeItem\"]/div/"
 			    + "div[contains(text(),'dagogique')]");
-	    pause(2000);
 	} else {
-	    // This doesn't seem to work anymore
-	    session().click("gwt-uid-17");
+		// IE
+		String imageLocator = "//div[contains(text(),'dagogique')]";			
+		session().mouseDownAt(imageLocator, "10,10");
+		session().mouseUpAt(imageLocator, "10,10");	    
 	}
+    pause(2000);	
     }
 
     protected String addText(String text, String level) {
@@ -857,7 +927,6 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 	// Open form to upload the document
 	if (inFireFox()) {
-
 	    session().mouseOver(
 		    "//div[@class=\"Osyl-FileBrowserTopButto"
 			    + "n Osyl-FileBrowserTopButton-up\"]");
@@ -895,7 +964,29 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    // Close window
 	    session().click("//tr[5]/td/table/tbody/tr/td/button");
 	    pause();
-
+	} else {		
+		String locator = "//div[contains(@title,'Ajouter')]";	
+	    session().mouseOver(locator);		
+		session().mouseDownAt(locator, "10,10");
+		session().mouseUpAt(locator, "10,10");		
+	    // Choose file and close window
+		session().type("//input[@name='uploadFormElement']", "d:\\clihec3\\Bureau\\"+docName);		
+		/*
+	    session().type(
+		    "uploadFormElement",
+		    "C:\\Documents and Setti"
+			    + "ngs\\clihec3\\Local Settings\\Temporary Int"
+			    + "ernet Files\\" + "Content.IE5\\K0F6YKYM\\"
+			    + docName);
+		 **/
+	    // We select randomly the rights field
+	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
+	    String newText8 = getRandomOption(xpathRole4);
+	    session().select(xpathRole4, newText8);
+	    pause();
+	    // Close window
+	    session().click("//tr[5]/td/table/tbody/tr/td/button");
+	    
 	}
 	pause();
 
