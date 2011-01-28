@@ -10,9 +10,9 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.authz.cover.AuthzGroupService;
-import org.sakaiproject.event.cover.EventTrackingService;
-import org.sakaiproject.event.cover.UsageSessionService;
+import org.sakaiproject.authz.api.AuthzGroupService;
+import org.sakaiproject.event.api.EventTrackingService;
+import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.api.Site;
@@ -20,9 +20,9 @@ import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.tool.api.Session;
+import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.tool.api.Tool;
-import org.sakaiproject.tool.cover.SessionManager;
-import org.sakaiproject.tool.cover.ToolManager;
+import org.sakaiproject.tool.api.ToolManager;
 
 public class ChangeOsylEditorSiteTypeJobImpl implements Job {
 
@@ -34,6 +34,7 @@ public class ChangeOsylEditorSiteTypeJobImpl implements Job {
     private static Log log =
 	    LogFactory.getLog(ChangeOsylEditorSiteTypeJobImpl.class);
 
+    // ***************** SPRING INJECTION ************************//
     /**
      * The site service used to create new sites: Spring injection
      */
@@ -48,6 +49,39 @@ public class ChangeOsylEditorSiteTypeJobImpl implements Job {
 	this.siteService = siteService;
     }
 
+    private AuthzGroupService authzGroupService;
+
+    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
+	this.authzGroupService = authzGroupService;
+    }
+
+    private EventTrackingService eventTrackingService;
+
+    public void setEventTrackingService(
+	    EventTrackingService eventTrackingService) {
+	this.eventTrackingService = eventTrackingService;
+    }
+
+    private UsageSessionService usageSessionService;
+
+    public void setUsageSessionService(UsageSessionService usageSessionService) {
+	this.usageSessionService = usageSessionService;
+    }
+
+    private SessionManager sessionManager;
+
+    public void setSessionManager(SessionManager sessionManager) {
+	this.sessionManager = sessionManager;
+    }
+
+    private ToolManager toolManager;
+
+    public void setToolManager(ToolManager toolManager) {
+	this.toolManager = toolManager;
+    }
+
+    // ***************** END SPRING INJECTION ************************//
+
     private final static String NEW_SITE_TYPE = "course";
 
     private final static String SITE_TYPE = "osylEditor";
@@ -58,7 +92,6 @@ public class ChangeOsylEditorSiteTypeJobImpl implements Job {
 
     private List<ToolConfiguration> siteTools = null;
 
-    @SuppressWarnings("unchecked")
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
 	loginToSakai();
@@ -89,6 +122,7 @@ public class ChangeOsylEditorSiteTypeJobImpl implements Job {
 	logoutFromSakai();
     }
 
+    @SuppressWarnings("unchecked")
     private List<ToolConfiguration> getSiteTools(Site site) {
 	List pages = new Vector(site.getPages());
 	List tools = new ArrayList();
@@ -104,7 +138,8 @@ public class ChangeOsylEditorSiteTypeJobImpl implements Job {
     private void validateTools(Site site) {
 	List<ToolConfiguration> newSiteTools = getSiteTools(site);
 
-	if ((siteTools.size() != newSiteTools.size()) || (newSiteTools.size() == 0)) {
+	if ((siteTools.size() != newSiteTools.size())
+		|| (newSiteTools.size() == 0)) {
 	    String[] toolsToAdd;
 	    if (siteTools.size() == 0)
 		toolsToAdd = DEFAULT_TOOLS;
@@ -116,7 +151,7 @@ public class ChangeOsylEditorSiteTypeJobImpl implements Job {
 		}
 	    }
 
-	    for (int i=0; i<toolsToAdd.length; i++){
+	    for (int i = 0; i < toolsToAdd.length; i++) {
 		if (site.getTool(toolsToAdd[i]) == null)
 		    addTool(site, toolsToAdd[i]);
 	    }
@@ -132,7 +167,7 @@ public class ChangeOsylEditorSiteTypeJobImpl implements Job {
 
     public void addTool(Site site, String toolId) {
 	SitePage page = site.addPage();
-	Tool tool = ToolManager.getTool(toolId);
+	Tool tool = toolManager.getTool(toolId);
 	page.setTitle(tool.getTitle());
 	page.setLayout(SitePage.LAYOUT_SINGLE_COL);
 	ToolConfiguration toolConf = page.addTool();
@@ -154,18 +189,18 @@ public class ChangeOsylEditorSiteTypeJobImpl implements Job {
      * Logs in the sakai environment
      */
     protected void loginToSakai() {
-	Session sakaiSession = SessionManager.getCurrentSession();
+	Session sakaiSession = sessionManager.getCurrentSession();
 	sakaiSession.setUserId("admin");
 	sakaiSession.setUserEid("admin");
 
 	// establish the user's session
-	UsageSessionService.startSession("admin", "127.0.0.1", "CMSync");
+	usageSessionService.startSession("admin", "127.0.0.1", "CMSync");
 
 	// update the user's externally provided realm definitions
-	AuthzGroupService.refreshUser("admin");
+	authzGroupService.refreshUser("admin");
 
 	// post the login event
-	EventTrackingService.post(EventTrackingService.newEvent(
+	eventTrackingService.post(eventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGIN, null, true));
     }
 
@@ -174,7 +209,7 @@ public class ChangeOsylEditorSiteTypeJobImpl implements Job {
      */
     protected void logoutFromSakai() {
 	// post the logout event
-	EventTrackingService.post(EventTrackingService.newEvent(
+	eventTrackingService.post(eventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGOUT, null, true));
     }
 

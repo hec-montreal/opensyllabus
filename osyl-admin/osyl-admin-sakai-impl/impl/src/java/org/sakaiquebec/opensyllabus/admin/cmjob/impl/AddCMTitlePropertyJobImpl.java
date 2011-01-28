@@ -29,12 +29,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.authz.cover.AuthzGroupService;
+import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
-import org.sakaiproject.event.cover.EventTrackingService;
-import org.sakaiproject.event.cover.UsageSessionService;
+import org.sakaiproject.event.api.EventTrackingService;
+import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.api.Site;
@@ -42,9 +42,9 @@ import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.tool.api.Session;
+import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.tool.api.Tool;
-import org.sakaiproject.tool.cover.SessionManager;
-import org.sakaiproject.tool.cover.ToolManager;
+import org.sakaiproject.tool.api.ToolManager;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.AddCMTitlePropertyJob;
 
 /**
@@ -53,177 +53,214 @@ import org.sakaiquebec.opensyllabus.admin.cmjob.api.AddCMTitlePropertyJob;
  */
 public class AddCMTitlePropertyJobImpl implements AddCMTitlePropertyJob {
 
-	private List<Site> allSites;
+    private List<Site> allSites;
 
-	private final static String[] DEFAULT_TOOLS = { "sakai.opensyllabus.tool",
-			"sakai.assignment.grades", "sakai.resources", "sakai.siteinfo" };
+    private final static String[] DEFAULT_TOOLS =
+	    { "sakai.opensyllabus.tool", "sakai.assignment.grades",
+		    "sakai.resources", "sakai.siteinfo" };
 
-	private List<ToolConfiguration> siteTools = null;
+    private List<ToolConfiguration> siteTools = null;
 
-	/**
-	 * Our logger
-	 */
-	private static Log log = LogFactory.getLog(AddCMTitlePropertyJobImpl.class);
+    /**
+     * Our logger
+     */
+    private static Log log = LogFactory.getLog(AddCMTitlePropertyJobImpl.class);
 
-	/**
-	 * The cms to be injected by Spring
-	 */
-	private CourseManagementService cmService;
+    // ***************** SPRING INJECTION ************************//
+    /**
+     * The cms to be injected by Spring
+     */
+    private CourseManagementService cmService;
 
-	/**
-	 * @param cmService
-	 */
-	public void setCmService(CourseManagementService cmService) {
-		this.cmService = cmService;
-	}
+    /**
+     * @param cmService
+     */
+    public void setCmService(CourseManagementService cmService) {
+	this.cmService = cmService;
+    }
 
-	/**
-	 * The site service used to create new sites: Spring injection
-	 */
-	private SiteService siteService;
+    /**
+     * The site service used to create new sites: Spring injection
+     */
+    private SiteService siteService;
 
-	/**
-	 * Sets the <code>SiteService</code> needed to create a new site in Sakai.
-	 * 
-	 * @param siteService
-	 */
-	public void setSiteService(SiteService siteService) {
-		this.siteService = siteService;
-	}
+    /**
+     * Sets the <code>SiteService</code> needed to create a new site in Sakai.
+     * 
+     * @param siteService
+     */
+    public void setSiteService(SiteService siteService) {
+	this.siteService = siteService;
+    }
 
-	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		loginToSakai();
+    private AuthzGroupService authzGroupService;
 
-		long start = System.currentTimeMillis();
-		log.info("AddCMTitlePropertyJobImpl: starting");
+    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
+	this.authzGroupService = authzGroupService;
+    }
 
-		allSites = siteService.getSites(SiteService.SelectionType.ANY,
-				"course", null, null, SiteService.SortType.NONE, null);
+    private EventTrackingService eventTrackingService;
 
-		Site site = null;
+    public void setEventTrackingService(
+	    EventTrackingService eventTrackingService) {
+	this.eventTrackingService = eventTrackingService;
+    }
 
-		log.info("AddCMTitlePropertyJobImpl: sites to correct:"
-				+ allSites.size());
+    private UsageSessionService usageSessionService;
 
-		for (int i = 0; i < allSites.size(); i++) {
+    public void setUsageSessionService(UsageSessionService usageSessionService) {
+	this.usageSessionService = usageSessionService;
+    }
 
-			site = allSites.get(i);
+    private SessionManager sessionManager;
 
-			if (site.getProviderGroupId() != null) {
-				Section section = cmService.getSection(site
-						.getProviderGroupId());
-				ResourcePropertiesEdit rpr = site.getPropertiesEdit();
-				rpr.addProperty("title", section.getTitle());
-				try {
-					siteTools = getSiteTools(site);
-					validateTools(site);
-					siteService.save(site);
-				} catch (IdUnusedException e) {
-					log.info("The site " + site.getTitle() + " does not exist.");
-				} catch (PermissionException e) {
-					log.info("You are not allowed to update the site "
-							+ site.getTitle());
-				}
+    public void setSessionManager(SessionManager sessionManager) {
+	this.sessionManager = sessionManager;
+    }
+    
+    private ToolManager toolManager;
+    
+    public void setToolManager(ToolManager toolManager) {
+        this.toolManager = toolManager;
+    }
+    // ***************** END SPRING INJECTION ************************//
 
-				log.info("The site " + site.getTitle() + " has been upgraded");
-			}
+    public void execute(JobExecutionContext arg0) throws JobExecutionException {
+	loginToSakai();
 
-		}
+	long start = System.currentTimeMillis();
+	log.info("AddCMTitlePropertyJobImpl: starting");
 
-		log.info("AddCMTitlePropertyJobImpl: completed in " 
-			+ (System.currentTimeMillis() - start) + " ms");
-		logoutFromSakai();
+	allSites =
+		siteService.getSites(SiteService.SelectionType.ANY, "course",
+			null, null, SiteService.SortType.NONE, null);
 
-	}
+	Site site = null;
 
-	/**
-	 * Logs in the sakai environment
-	 */
-	protected void loginToSakai() {
-		Session sakaiSession = SessionManager.getCurrentSession();
-		sakaiSession.setUserId("admin");
-		sakaiSession.setUserEid("admin");
+	log.info("AddCMTitlePropertyJobImpl: sites to correct:"
+		+ allSites.size());
 
-		// establish the user's session
-		UsageSessionService.startSession("admin", "127.0.0.1", "CMSync");
+	for (int i = 0; i < allSites.size(); i++) {
 
-		// update the user's externally provided realm definitions
-		AuthzGroupService.refreshUser("admin");
+	    site = allSites.get(i);
 
-		// post the login event
-		EventTrackingService.post(EventTrackingService.newEvent(
-				UsageSessionService.EVENT_LOGIN, null, true));
-	}
-
-	/**
-	 * Logs out of the sakai environment
-	 */
-	protected void logoutFromSakai() {
-		// post the logout event
-		EventTrackingService.post(EventTrackingService.newEvent(
-				UsageSessionService.EVENT_LOGOUT, null, true));
-	}
-
-	private List<ToolConfiguration> getSiteTools(Site site) {
-		List pages = new Vector(site.getPages());
-		List tools = new ArrayList();
-
-		for (Iterator p = pages.iterator(); p.hasNext();) {
-			SitePage page = (SitePage) p.next();
-			tools.addAll(page.getTools());
-		}
-
-		return tools;
-	}
-
-	private void validateTools(Site site) {
-		List<ToolConfiguration> newSiteTools = getSiteTools(site);
-
-		if ((siteTools.size() != newSiteTools.size())
-				|| (newSiteTools.size() == 0)) {
-			String[] toolsToAdd;
-			if (siteTools.size() == 0)
-				toolsToAdd = DEFAULT_TOOLS;
-			else {
-				toolsToAdd = new String[siteTools.size()];
-				int i = 0;
-				for (ToolConfiguration tool : siteTools) {
-					toolsToAdd[i++] = tool.getToolId();
-				}
-			}
-
-			for (int i = 0; i < toolsToAdd.length; i++) {
-				if (site.getTool(toolsToAdd[i]) == null)
-					addTool(site, toolsToAdd[i]);
-			}
-			try {
-				siteService.save(site);
-			} catch (IdUnusedException e) {
-				log.info(e.getMessage());
-			} catch (PermissionException e) {
-				log.info(e.getMessage());
-			}
-		}
-	}
-
-	public void addTool(Site site, String toolId) {
-		SitePage page = site.addPage();
-		Tool tool = ToolManager.getTool(toolId);
-		page.setTitle(tool.getTitle());
-		page.setLayout(SitePage.LAYOUT_SINGLE_COL);
-		ToolConfiguration toolConf = page.addTool();
-		toolConf.setTool(toolId, tool);
-		toolConf.setTitle(tool.getTitle());
-		toolConf.setLayoutHints("0,0");
-
+	    if (site.getProviderGroupId() != null) {
+		Section section =
+			cmService.getSection(site.getProviderGroupId());
+		ResourcePropertiesEdit rpr = site.getPropertiesEdit();
+		rpr.addProperty("title", section.getTitle());
 		try {
-			siteService.save(site);
+		    siteTools = getSiteTools(site);
+		    validateTools(site);
+		    siteService.save(site);
 		} catch (IdUnusedException e) {
-			log.error("Add tool - Unused id exception", e);
+		    log
+			    .info("The site " + site.getTitle()
+				    + " does not exist.");
 		} catch (PermissionException e) {
-			log.error("Add tool - Permission exception", e);
+		    log.info("You are not allowed to update the site "
+			    + site.getTitle());
 		}
 
+		log.info("The site " + site.getTitle() + " has been upgraded");
+	    }
+
 	}
+
+	log.info("AddCMTitlePropertyJobImpl: completed in "
+		+ (System.currentTimeMillis() - start) + " ms");
+	logoutFromSakai();
+
+    }
+
+    /**
+     * Logs in the sakai environment
+     */
+    protected void loginToSakai() {
+	Session sakaiSession = sessionManager.getCurrentSession();
+	sakaiSession.setUserId("admin");
+	sakaiSession.setUserEid("admin");
+
+	// establish the user's session
+	usageSessionService.startSession("admin", "127.0.0.1", "CMSync");
+
+	// update the user's externally provided realm definitions
+	authzGroupService.refreshUser("admin");
+
+	// post the login event
+	eventTrackingService.post(eventTrackingService.newEvent(
+		UsageSessionService.EVENT_LOGIN, null, true));
+    }
+
+    /**
+     * Logs out of the sakai environment
+     */
+    protected void logoutFromSakai() {
+	// post the logout event
+	eventTrackingService.post(eventTrackingService.newEvent(
+		UsageSessionService.EVENT_LOGOUT, null, true));
+    }
+
+    private List<ToolConfiguration> getSiteTools(Site site) {
+	List pages = new Vector(site.getPages());
+	List tools = new ArrayList();
+
+	for (Iterator p = pages.iterator(); p.hasNext();) {
+	    SitePage page = (SitePage) p.next();
+	    tools.addAll(page.getTools());
+	}
+
+	return tools;
+    }
+
+    private void validateTools(Site site) {
+	List<ToolConfiguration> newSiteTools = getSiteTools(site);
+
+	if ((siteTools.size() != newSiteTools.size())
+		|| (newSiteTools.size() == 0)) {
+	    String[] toolsToAdd;
+	    if (siteTools.size() == 0)
+		toolsToAdd = DEFAULT_TOOLS;
+	    else {
+		toolsToAdd = new String[siteTools.size()];
+		int i = 0;
+		for (ToolConfiguration tool : siteTools) {
+		    toolsToAdd[i++] = tool.getToolId();
+		}
+	    }
+
+	    for (int i = 0; i < toolsToAdd.length; i++) {
+		if (site.getTool(toolsToAdd[i]) == null)
+		    addTool(site, toolsToAdd[i]);
+	    }
+	    try {
+		siteService.save(site);
+	    } catch (IdUnusedException e) {
+		log.info(e.getMessage());
+	    } catch (PermissionException e) {
+		log.info(e.getMessage());
+	    }
+	}
+    }
+
+    public void addTool(Site site, String toolId) {
+	SitePage page = site.addPage();
+	Tool tool = toolManager.getTool(toolId);
+	page.setTitle(tool.getTitle());
+	page.setLayout(SitePage.LAYOUT_SINGLE_COL);
+	ToolConfiguration toolConf = page.addTool();
+	toolConf.setTool(toolId, tool);
+	toolConf.setTitle(tool.getTitle());
+	toolConf.setLayoutHints("0,0");
+
+	try {
+	    siteService.save(site);
+	} catch (IdUnusedException e) {
+	    log.error("Add tool - Unused id exception", e);
+	} catch (PermissionException e) {
+	    log.error("Add tool - Permission exception", e);
+	}
+
+    }
 
 }

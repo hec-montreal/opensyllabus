@@ -31,24 +31,22 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.authz.cover.AuthzGroupService;
+import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
-import org.sakaiproject.coursemanagement.api.CanonicalCourse;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.CourseSet;
 import org.sakaiproject.coursemanagement.api.Enrollment;
-import org.sakaiproject.coursemanagement.api.Membership;
 import org.sakaiproject.coursemanagement.api.Section;
-import org.sakaiproject.email.cover.EmailService;
-import org.sakaiproject.event.cover.EventTrackingService;
-import org.sakaiproject.event.cover.UsageSessionService;
+import org.sakaiproject.email.api.EmailService;
+import org.sakaiproject.event.api.EventTrackingService;
+import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.site.api.Site;
-import org.sakaiproject.site.cover.SiteService;
+import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
-import org.sakaiproject.tool.cover.SessionManager;
+import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.User;
-import org.sakaiproject.user.cover.UserDirectoryService;
+import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.util.StringUtil;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob;
@@ -72,11 +70,9 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
     private List<String> newCO = null;
 
-    private Set<CanonicalCourse> canonicalCourses =
-	    new HashSet<CanonicalCourse>();;
-
     private Set<Section> sections = null;
 
+    // ***************** SPRING INJECTION ************************//
     private OsylManagerService osylManagerService;
 
     public void setOsylManagerService(OsylManagerService osylManagerService) {
@@ -119,116 +115,163 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	this.adminConfigService = adminConfigService;
     }
 
-	public void execute(JobExecutionContext arg0) throws JobExecutionException {
+    private AuthzGroupService authzGroupService;
 
-		loginToSakai();
-		courseOffs = new HashSet<CourseOffering>();
-		Date startDateInterval = adminConfigService.getStartDate();
-		Date endDateInterval = adminConfigService.getEndDate();
-		// If we have a list of courses, we will create only those one. If we
-		// don't we create
-		// any course defined in the given sessions
-		List<String> courses = adminConfigService.getCourses();
+    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
+	this.authzGroupService = authzGroupService;
+    }
 
-		// If we have an interval of time, we take the courses defined in that
-		// period of time
-		// If we don't have any interval, we take the courses defined in the
-		// active sessions.
-		List<AcademicSession> allSessions = getSessions(startDateInterval,
-				endDateInterval);
+    private EventTrackingService eventTrackingService;
 
-		if (courses != null && courses.size() > 0) {
-			for (String courseId : courses) {
-				if (cmService.isCanonicalCourseDefined(courseId))
-					courseOffs.addAll(cmService
-							.getCourseOfferingsInCanonicalCourse(courseId));
+    public void setEventTrackingService(
+	    EventTrackingService eventTrackingService) {
+	this.eventTrackingService = eventTrackingService;
+    }
 
-			}
-		} else {
-			// Retrieve all the course sets
-			allCourseSets = cmService.getCourseSets();
-			Set<CourseOffering> fcourseOff = null;
-			for (CourseSet courseSet : allCourseSets) {
+    private UsageSessionService usageSessionService;
 
-				for (AcademicSession session : allSessions) {
-					fcourseOff = cmService.findCourseOfferings(
-							courseSet.getEid(), session.getEid());
-					courseOffs.addAll(fcourseOff);
-				}
+    public void setUsageSessionService(UsageSessionService usageSessionService) {
+	this.usageSessionService = usageSessionService;
+    }
 
-			}
+    private SessionManager sessionManager;
+
+    public void setSessionManager(SessionManager sessionManager) {
+	this.sessionManager = sessionManager;
+    }
+
+    private EmailService emailService;
+
+    public void setEmailService(EmailService emailService) {
+	this.emailService = emailService;
+    }
+
+    private SiteService siteService;
+
+    public void setSiteService(SiteService siteService) {
+	this.siteService = siteService;
+    }
+
+    private UserDirectoryService userDirectoryService;
+
+    public void setUserDirectoryService(
+	    UserDirectoryService userDirectoryService) {
+	this.userDirectoryService = userDirectoryService;
+    }
+
+    // ***************** END SPRING INJECTION ************************//
+
+    public void execute(JobExecutionContext arg0) throws JobExecutionException {
+
+	loginToSakai();
+	courseOffs = new HashSet<CourseOffering>();
+	Date startDateInterval = adminConfigService.getStartDate();
+	Date endDateInterval = adminConfigService.getEndDate();
+	// If we have a list of courses, we will create only those one. If we
+	// don't we create
+	// any course defined in the given sessions
+	List<String> courses = adminConfigService.getCourses();
+
+	// If we have an interval of time, we take the courses defined in that
+	// period of time
+	// If we don't have any interval, we take the courses defined in the
+	// active sessions.
+	List<AcademicSession> allSessions =
+		getSessions(startDateInterval, endDateInterval);
+
+	if (courses != null && courses.size() > 0) {
+	    for (String courseId : courses) {
+		if (cmService.isCanonicalCourseDefined(courseId))
+		    courseOffs.addAll(cmService
+			    .getCourseOfferingsInCanonicalCourse(courseId));
+
+	    }
+	} else {
+	    // Retrieve all the course sets
+	    allCourseSets = cmService.getCourseSets();
+	    Set<CourseOffering> fcourseOff = null;
+	    for (CourseSet courseSet : allCourseSets) {
+
+		for (AcademicSession session : allSessions) {
+		    fcourseOff =
+			    cmService.findCourseOfferings(courseSet.getEid(),
+				    session.getEid());
+		    courseOffs.addAll(fcourseOff);
 		}
 
-		int compteur = 0;
-
-		if (courseOffs != null) {
-			for (CourseOffering courseOff : courseOffs) {
-
-				// Retrieve the sections to be created
-				sections = cmService.getSections(courseOff.getEid());
-
-				compteur += sections.size();
-				// Create sharable site if necessary
-				String shareableName = null;
-				if (hasSharable(sections))
-					shareableName = createShareable(courseOff);
-				if (sections != null) {
-					String sectionId = null;
-					String sharableSectionId = courseOff.getEid()
-							+ OsylCMJob.SHARABLE_SECTION;
-					List<String> dfSections = new ArrayList<String>();
-					String firstSection = null;
-					// create 'normal section'
-					for (Section section : sections) {
-						sectionId = section.getEid();
-						if (!isDfSection(sectionId)) {
-
-							if (!sectionId.equalsIgnoreCase(sharableSectionId)) {
-								createSite(section);
-
-								String siteName = getSiteName(section);
-								if (shareableName != null) {
-									associate(siteName, shareableName);
-								}
-								if (firstSection == null) {
-									firstSection = siteName;
-								} else {
-									if (siteName.compareTo(firstSection) < 0)
-										firstSection = siteName;
-								}
-							}
-						} else {
-							// we create site DF only if there is
-							// students
-							Set<Enrollment> enrollments = cmService
-									.getEnrollments(section.getEnrollmentSet()
-											.getEid());
-							if (enrollments.size() > 0) {
-								createSite(section);
-								dfSections.add(getSiteName(section));
-							}
-						}
-					}
-
-					// associate df with 1st 'normal' course
-					// for (String dfSite : dfSections) {
-					// associate(dfSite, firstSection);
-					// }
-				}
-			}
-
-		}
-		logoutFromSakai();
-	} // execute
-
-	private void associate(String child, String parent) {
-		try {
-			osylSiteService.associate(child, parent);
-		} catch (Exception e) {
-			log.error("Could not associate site " + child + " with site "
-					+ parent, e);
-		}
+	    }
 	}
+
+	int compteur = 0;
+
+	if (courseOffs != null) {
+	    for (CourseOffering courseOff : courseOffs) {
+
+		// Retrieve the sections to be created
+		sections = cmService.getSections(courseOff.getEid());
+
+		compteur += sections.size();
+		// Create sharable site if necessary
+		String shareableName = null;
+		if (hasSharable(sections))
+		    shareableName = createShareable(courseOff);
+		if (sections != null) {
+		    String sectionId = null;
+		    String sharableSectionId =
+			    courseOff.getEid() + OsylCMJob.SHARABLE_SECTION;
+		    List<String> dfSections = new ArrayList<String>();
+		    String firstSection = null;
+		    // create 'normal section'
+		    for (Section section : sections) {
+			sectionId = section.getEid();
+			if (!isDfSection(sectionId)) {
+
+			    if (!sectionId.equalsIgnoreCase(sharableSectionId)) {
+				createSite(section);
+
+				String siteName = getSiteName(section);
+				if (shareableName != null) {
+				    associate(siteName, shareableName);
+				}
+				if (firstSection == null) {
+				    firstSection = siteName;
+				} else {
+				    if (siteName.compareTo(firstSection) < 0)
+					firstSection = siteName;
+				}
+			    }
+			} else {
+			    // we create site DF only if there is
+			    // students
+			    Set<Enrollment> enrollments =
+				    cmService.getEnrollments(section
+					    .getEnrollmentSet().getEid());
+			    if (enrollments.size() > 0) {
+				createSite(section);
+				dfSections.add(getSiteName(section));
+			    }
+			}
+		    }
+
+		    // associate df with 1st 'normal' course
+		    // for (String dfSite : dfSections) {
+		    // associate(dfSite, firstSection);
+		    // }
+		}
+	    }
+
+	}
+	logoutFromSakai();
+    } // execute
+
+    private void associate(String child, String parent) {
+	try {
+	    osylSiteService.associate(child, parent);
+	} catch (Exception e) {
+	    log.error("Could not associate site " + child + " with site "
+		    + parent, e);
+	}
+    }
 
     private boolean createSite(Section section) {
 	String siteName = getSiteName(section);
@@ -240,9 +283,9 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	try {
 	    if (!osylSiteService.siteExists(siteName)) {
 		osylSiteService.createSite(siteName, OSYL_CO_CONFIG, lang);
-//		return true;
-//	    } else {
-//		return false;
+		// return true;
+		// } else {
+		// return false;
 	    }
 
 	} catch (Exception e) {
@@ -272,71 +315,69 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	else
 	    return false;
     }
-    
-    private boolean isDfSection(String sectionId){
+
+    private boolean isDfSection(String sectionId) {
 	return sectionId.matches(".*[Dd][Ff][1-9]");
     }
 
-	private String createShareable(CourseOffering course) {
-		String siteName = getSharableSiteName(course);
-		String sharableSectionId = course.getEid() + OsylCMJob.SHARABLE_SECTION;
-		Section sharableSection = null;
-		String lang = null;
+    private String createShareable(CourseOffering course) {
+	String siteName = getSharableSiteName(course);
+	String sharableSectionId = course.getEid() + OsylCMJob.SHARABLE_SECTION;
+	Section sharableSection = null;
+	String lang = null;
 
-		if (!cmService.isSectionDefined(sharableSectionId)) {
-			log.info("There is no special section (" + sharableSectionId
-					+ ") for this sharable site.");
-			lang = TEMPORARY_LANG;
-		} else {
-			sharableSection = cmService.getSection(sharableSectionId);
-			lang = sharableSection.getLang();
-		}
-
-		try {
-			if (!osylSiteService.siteExists(siteName)) {
-				osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG,
-						lang);
-			}
-
-			Site sharable = SiteService.getSite(siteName);
-
-			if (sharableSection != null)
-				try {
-					osylManagerService.associateToCM(sharableSection.getEid(),
-							siteName);
-				} catch (Exception e) {
-					log.error("Could not associate site " + siteName
-							+ " with CM", e);
-				}
-
-			SiteService.save(sharable);
-
-			// After we are sure the sharable course outline has been created,
-			// We check if we have to send a message telling there is already a
-			// course section that might need to be transferred
-
-			// FIXME: SAKAI-1550
-			existingCourseOutlineSections(course);
-			if (existingCO != null) {
-
-				Vector<User> receivers = new Vector<User>();
-				// Add the users that will receive the mail
-				receivers.add(UserDirectoryService.getUserByEid("admin"));
-
-				String message = getNotificationMessages(existingCO.toString());
-				if (receivers.size() > 0)
-					EmailService.sendToUsers(
-							receivers,
-							getHeaders(null, "test d'envoi",
-									receivers.toString()), message);
-			}
-
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			return null;
-		}
-		return siteName;
+	if (!cmService.isSectionDefined(sharableSectionId)) {
+	    log.info("There is no special section (" + sharableSectionId
+		    + ") for this sharable site.");
+	    lang = TEMPORARY_LANG;
+	} else {
+	    sharableSection = cmService.getSection(sharableSectionId);
+	    lang = sharableSection.getLang();
 	}
+
+	try {
+	    if (!osylSiteService.siteExists(siteName)) {
+		osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG,
+			lang);
+	    }
+
+	    Site sharable = siteService.getSite(siteName);
+
+	    if (sharableSection != null)
+		try {
+		    osylManagerService.associateToCM(sharableSection.getEid(),
+			    siteName);
+		} catch (Exception e) {
+		    log.error("Could not associate site " + siteName
+			    + " with CM", e);
+		}
+
+	    siteService.save(sharable);
+
+	    // After we are sure the sharable course outline has been created,
+	    // We check if we have to send a message telling there is already a
+	    // course section that might need to be transferred
+
+	    // FIXME: SAKAI-1550
+	    existingCourseOutlineSections(course);
+	    if (existingCO != null) {
+
+		Vector<User> receivers = new Vector<User>();
+		// Add the users that will receive the mail
+		receivers.add(userDirectoryService.getUserByEid("admin"));
+
+		String message = getNotificationMessages(existingCO.toString());
+		if (receivers.size() > 0)
+		    emailService.sendToUsers(receivers, getHeaders(null,
+			    "test d'envoi", receivers.toString()), message);
+	    }
+
+	} catch (Exception e) {
+	    log.error(e.getMessage());
+	    return null;
+	}
+	return siteName;
+    }
 
     protected List<String> getHeaders(String receiverEmail, String subject,
 	    String from) {
@@ -371,7 +412,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
 	for (Section section : sections) {
 	    siteSectionId = getSiteName(section);
-	    if (SiteService.siteExists(siteSectionId)) {
+	    if (siteService.siteExists(siteSectionId)) {
 		if (existingCO == null) {
 		    existingCO = new ArrayList<String>();
 		}
@@ -539,7 +580,6 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	String sessionTitle = null;
 	String periode = null;
 
-	
 	if (canCourseId.length() == 7) {
 	    courseIdFront = canCourseId.substring(0, 2);
 	    courseIdMiddle = canCourseId.substring(2, 5);
@@ -598,19 +638,19 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
      * Logs in the sakai environment
      */
     protected void loginToSakai() {
-	Session sakaiSession = SessionManager.getCurrentSession();
+	Session sakaiSession = sessionManager.getCurrentSession();
 	sakaiSession.setUserId("admin");
 	sakaiSession.setUserEid("admin");
 
 	// establish the user's session
-	UsageSessionService.startSession("admin", "127.0.0.1",
+	usageSessionService.startSession("admin", "127.0.0.1",
 		"OfficialSitesSync");
 
 	// update the user's externally provided realm definitions
-	AuthzGroupService.refreshUser("admin");
+	authzGroupService.refreshUser("admin");
 
 	// post the login event
-	EventTrackingService.post(EventTrackingService.newEvent(
+	eventTrackingService.post(eventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGIN, null, true));
     }
 
@@ -619,7 +659,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
      */
     protected void logoutFromSakai() {
 	// post the logout event
-	EventTrackingService.post(EventTrackingService.newEvent(
+	eventTrackingService.post(eventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGOUT, null, true));
     }
 

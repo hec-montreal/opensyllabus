@@ -11,9 +11,8 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.sakaiproject.assignment.api.AssignmentService;
 import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.authz.cover.SecurityService;
+import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
@@ -75,6 +74,12 @@ public class OsylServiceImpl implements OsylService {
 	    ContentHostingService contentHostingService) {
 	this.contentHostingService = contentHostingService;
     }
+    
+    private SecurityService securityService;
+    
+    public void setSecurityService(SecurityService securityService) {
+        this.securityService = securityService;
+    }
 
     protected static final String ASSIGNMENT_TOOL_ID =
 	    "sakai.assignment.grades";
@@ -113,24 +118,6 @@ public class OsylServiceImpl implements OsylService {
      */
     public void setSessionManager(SessionManager sessionManager) {
 	this.sessionManager = sessionManager;
-    }
-
-    /**
-     * The assignment service to be injected by Spring
-     * 
-     * @uml.property name="assignmentService"
-     * @uml.associationEnd
-     */
-    private AssignmentService assignmentService;
-
-    /**
-     * Sets the <code>AssignmentService</code>.
-     * 
-     * @param assignmentService
-     * @uml.property name="assignmentService"
-     */
-    public void setAssignmentService(AssignmentService assignmentService) {
-	this.assignmentService = assignmentService;
     }
 
     /**
@@ -211,7 +198,7 @@ public class OsylServiceImpl implements OsylService {
      * 
      * @param securityService
      */
-    public void setSecurityService(OsylSecurityService securityService) {
+    public void setOsylSecurityService(OsylSecurityService securityService) {
 	this.osylSecurityService = securityService;
     }
 
@@ -230,7 +217,7 @@ public class OsylServiceImpl implements OsylService {
 	    String resourceId = resourceDir + citationTitle;
 	    // temporarily allow the user to read and write resources
 	    if (osylSecurityService.isAllowedToEdit(siteId)) {
-		SecurityService.pushAdvisor(new SecurityAdvisor() {
+		securityService.pushAdvisor(new SecurityAdvisor() {
 		    public SecurityAdvice isAllowed(String userId,
 			    String function, String reference) {
 			return SecurityAdvice.ALLOWED;
@@ -264,7 +251,7 @@ public class OsylServiceImpl implements OsylService {
 	} finally {
 	    // clear the permission
 	    if (osylSecurityService.isAllowedToEdit(siteId)) {
-		SecurityService.clearAdvisors();
+		securityService.clearAdvisors();
 	    }
 	}
 
@@ -514,7 +501,7 @@ public class OsylServiceImpl implements OsylService {
 		// (asn.revise permission)
 
 		// if (osylSecurityService.isAllowedToEdit(parent)) {
-		SecurityService.pushAdvisor(new SecurityAdvisor() {
+		securityService.pushAdvisor(new SecurityAdvisor() {
 		    public SecurityAdvice isAllowed(String userId,
 			    String function, String reference) {
 			return SecurityAdvice.ALLOWED;

@@ -6,14 +6,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.authz.api.SecurityAdvisor.SecurityAdvice;
-import org.sakaiproject.authz.cover.AuthzGroupService;
-import org.sakaiproject.authz.cover.SecurityService;
-import org.sakaiproject.event.cover.EventTrackingService;
-import org.sakaiproject.event.cover.UsageSessionService;
+import org.sakaiproject.authz.api.AuthzGroupService;
+import org.sakaiproject.event.api.EventTrackingService;
+import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.tool.api.Session;
-import org.sakaiproject.tool.cover.SessionManager;
+import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylHierarchicalCourseOutlineJob;
 import org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
@@ -42,17 +39,17 @@ import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
  *****************************************************************************/
 
 /**
- *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public class OsylHierarchicalCourseOutlineJobImpl implements OsylHierarchicalCourseOutlineJob {
+public class OsylHierarchicalCourseOutlineJobImpl implements
+	OsylHierarchicalCourseOutlineJob {
 
-    
     private static final Log log =
 	    LogFactory.getLog(OsylHierarchicalCourseOutlineJobImpl.class);
 
-
+    
+  //***************** SPRING INJECTION ************************//
     /** The hierarchy service to be injected by Spring */
     private OsylHierarchyService osylHierarchyService;
 
@@ -78,7 +75,33 @@ public class OsylHierarchicalCourseOutlineJobImpl implements OsylHierarchicalCou
     public void setCoRelationDao(CORelationDao relationDao) {
 	this.coRelationDao = relationDao;
     }
-
+    
+    private AuthzGroupService authzGroupService;
+    
+    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
+        this.authzGroupService = authzGroupService;
+    }
+    
+    private EventTrackingService eventTrackingService;
+    
+    public void setEventTrackingService(EventTrackingService eventTrackingService) {
+        this.eventTrackingService = eventTrackingService;
+    }
+    
+    private UsageSessionService usageSessionService;
+    
+    public void setUsageSessionService(UsageSessionService usageSessionService) {
+        this.usageSessionService = usageSessionService;
+    }
+    
+    private SessionManager sessionManager;
+    
+    public void setSessionManager(SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
+    }
+    //*****************END  SPRING INJECTION ************************//
+    
+    
     /** {@inheritDoc} */
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 	List<CORelation> allRelations =
@@ -100,24 +123,23 @@ public class OsylHierarchicalCourseOutlineJobImpl implements OsylHierarchicalCou
 
 	logoutFromSakai();
     }
-    
-    
+
     /**
      * Logs in the sakai environment
      */
     protected void loginToSakai() {
-	Session sakaiSession = SessionManager.getCurrentSession();
+	Session sakaiSession = sessionManager.getCurrentSession();
 	sakaiSession.setUserId("admin");
 	sakaiSession.setUserEid("admin");
 
 	// establish the user's session
-	UsageSessionService.startSession("admin", "127.0.0.1", "CMSync");
+	usageSessionService.startSession("admin", "127.0.0.1", "CMSync");
 
 	// update the user's externally provided realm definitions
-	AuthzGroupService.refreshUser("admin");
+	authzGroupService.refreshUser("admin");
 
 	// post the login event
-	EventTrackingService.post(EventTrackingService.newEvent(
+	eventTrackingService.post(eventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGIN, null, true));
     }
 
@@ -126,7 +148,7 @@ public class OsylHierarchicalCourseOutlineJobImpl implements OsylHierarchicalCou
      */
     protected void logoutFromSakai() {
 	// post the logout event
-	EventTrackingService.post(EventTrackingService.newEvent(
+	eventTrackingService.post(eventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGOUT, null, true));
     }
 

@@ -44,7 +44,7 @@ import org.sakaiproject.assignment.api.Assignment;
 import org.sakaiproject.assignment.api.AssignmentEdit;
 import org.sakaiproject.assignment.api.AssignmentService;
 import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.authz.cover.SecurityService;
+import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
@@ -152,6 +152,12 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     private AssignmentService assignmentService;
 
+    private SecurityService securityService;
+
+    public void setSecurityService(SecurityService securityService) {
+	this.securityService = securityService;
+    }
+
     /**
      * Sets the <code>CitationService</code>.
      * 
@@ -208,7 +214,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      * 
      * @param securityService
      */
-    public void setSecurityService(OsylSecurityService securityService) {
+    public void setOsylSecurityService(OsylSecurityService securityService) {
 	this.osylSecurityService = securityService;
     }
 
@@ -544,11 +550,12 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	    // we add the directories
 	    String directoryId;
-	    if (osylContentService.USE_ATTACHMENTS.equals("true")) {
+	    if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
 		osylContentService.initSiteAttachments(site.getTitle());
 		directoryId =
 			contentHostingService.getSiteCollection(site.getId());
-		ContentCollectionEdit cce = contentHostingService.editCollection(directoryId);
+		ContentCollectionEdit cce =
+			contentHostingService.editCollection(directoryId);
 		cce.setHidden();
 		contentHostingService.commitCollection(cce);
 	    } else {
@@ -629,7 +636,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
 		|| osylSecurityService.getCurrentUserRole().equals(
 			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
-	    SecurityService.clearAdvisors();
+	    securityService.clearAdvisors();
 	}
 	log.info("Site [" + siteTitle + "] created in "
 		+ (System.currentTimeMillis() - start) + " ms ");
@@ -665,7 +672,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		osylContentService.initSiteAttachments(site.getTitle());
 		directoryId =
 			contentHostingService.getSiteCollection(site.getId());
-		ContentCollectionEdit cce = contentHostingService.editCollection(directoryId);
+		ContentCollectionEdit cce =
+			contentHostingService.editCollection(directoryId);
 		cce.setHidden();
 		contentHostingService.commitCollection(cce);
 	    } else {
@@ -710,7 +718,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
 		|| osylSecurityService.getCurrentUserRole().equals(
 			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
-	    SecurityService.clearAdvisors();
+	    securityService.clearAdvisors();
 	}
 
 	return site.getId();
@@ -1136,7 +1144,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
 		    || osylSecurityService.getCurrentUserRole().equals(
 			    OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
-		SecurityService.clearAdvisors();
+		securityService.clearAdvisors();
 	    }
 
 	} catch (IdUnusedException e) {
@@ -1153,7 +1161,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	SitePage homePage = site.addPage();
 	homePage.setupPageCategory(SitePage.HOME_TOOL_ID);
 	homePage.setPosition(0);
-	homePage.getPropertiesEdit().addProperty(SitePage.IS_HOME_PAGE, Boolean.TRUE.toString());
+	homePage.getPropertiesEdit().addProperty(SitePage.IS_HOME_PAGE,
+		Boolean.TRUE.toString());
 
 	// 1st tool
 	ToolConfiguration synAnncCfg =
@@ -1754,7 +1763,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    enableSecurityAdvisor();
 	    site = getSite(siteId);
 	    siteService.removeSite(site);
-	    SecurityService.clearAdvisors();
+	    securityService.clearAdvisors();
 	} catch (IdUnusedException e) {
 	    log.info("User " + sessionManager.getCurrentSession().getUserEid()
 		    + " can not delete the site " + siteId
@@ -1805,7 +1814,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
 		|| osylSecurityService.getCurrentUserRole().equals(
 			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
-	    SecurityService.pushAdvisor(new SecurityAdvisor() {
+	    securityService.pushAdvisor(new SecurityAdvisor() {
 		public SecurityAdvice isAllowed(String userId, String function,
 			String reference) {
 		    return SecurityAdvice.ALLOWED;

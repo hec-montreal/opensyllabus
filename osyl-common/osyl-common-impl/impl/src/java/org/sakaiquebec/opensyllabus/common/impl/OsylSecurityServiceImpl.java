@@ -29,8 +29,7 @@ import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.entity.api.ResourceProperties;
-import org.sakaiproject.event.api.Event;
-import org.sakaiproject.event.cover.NotificationService;
+import org.sakaiproject.event.api.NotificationService;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
@@ -245,14 +244,14 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 			    edit.setPublicAccess();
 			}
 		    } else {
-		// resource is in work directory, no public is allowed
+			// resource is in work directory, no public is allowed
 			log.warn("no public access in work directory allowed: "
 				+ resourceId);
 		    }
 		} else {
 		    if (!resourceId.contains(contentHostingService
-			    .getSiteCollection(siteId) + OsylSiteService.WORK_DIRECTORY
-			    + "/")) {
+			    .getSiteCollection(siteId)
+			    + OsylSiteService.WORK_DIRECTORY + "/")) {
 			if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
 			    edit.setPublicAccess();
 			}

@@ -8,248 +8,260 @@
 		init-method="init" singleton="true">
 		<!-- Sakai dependencies -->
 		<property name="osylAdminSiteName">
-		    <value>opensyllabusAdmin</value>
+			<value>opensyllabusAdmin</value>
 		</property>
 		<property name="authzGroupName">
-		    <value>/site/opensyllabusAdmin</value>
+			<value>/site/opensyllabusAdmin</value>
 		</property>
 		<property name="functionsToRegister">
-		    <list>
-		        <value>osyl.admin.create.any.config</value>
-		        <value>osyl.admin.upd.any.config</value>
-		        <value>osyl.admin.del.any.config</value>
-		        <value>osyl.admin.create.any.skin</value>
-		        <value>osyl.admin.upd.any.skin</value>
-		        <value>osyl.admin.del.any.skin</value>
-		    </list>
+			<list>
+				<value>osyl.admin.create.any.config</value>
+				<value>osyl.admin.upd.any.config</value>
+				<value>osyl.admin.del.any.config</value>
+				<value>osyl.admin.create.any.skin</value>
+				<value>osyl.admin.upd.any.skin</value>
+				<value>osyl.admin.del.any.skin</value>
+			</list>
 		</property>
 		<property name="rolesToAdd">
-		    <map>
-		        <entry key="maintain">
-		            <list>
-		                <!-- opensyllabusAdmin permissions -->
-		                <value>osyl.admin.create.any.config</value>
-		                <value>osyl.admin.upd.any.config</value>
-		                <value>osyl.admin.del.any.config</value>
-		                <value>osyl.admin.create.any.skin</value>
-		                <value>osyl.admin.upd.any.skin</value>
-		                <value>osyl.admin.del.any.skin</value>
-		            </list>
-		        </entry>
-		        <entry key="maintainConfig">
-		            <list>
-		                <value>annc.all.groups</value>
-		                <value>annc.delete.any</value>
-		                <value>annc.delete.own</value>
-		                <value>annc.new</value>
-		                <value>annc.read</value>
-		                <value>annc.read.drafts</value>
-		                <value>annc.revise.any</value>
-		                <value>annc.revise.own</value>
-		                <value>asn.all.groups</value>
-		                <value>asn.delete</value>
-		                <value>asn.grade</value>
-		                <value>asn.new</value>
-		                <value>asn.read</value>
-		                <value>asn.revise</value>
-		                <value>asn.submit</value>
-		                <value>content.all.groups</value>
-		                <value>content.delete.any</value>
-		                <value>content.delete.own</value>
-		                <value>content.hidden</value>
-		                <value>content.new</value>
-		                <value>content.read</value>
-		                <value>content.revise.any</value>
-		                <value>content.revise.own</value>
-		                <value>dropbox.maintain</value>
-		                <value>gradebook.editAssignments</value>
-		                <value>gradebook.gradeAll</value>
-		                <value>mail.delete.any</value>
-		                <value>mail.new</value>
-		                <value>mail.read</value>
-		                <value>metaobj.create</value>
-		                <value>metaobj.delete</value>
-		                <value>metaobj.edit</value>
-		                <value>metaobj.publish</value>
-		                <value>metaobj.suggest.global.publish</value>
-		                <value>osp.help.glossary.add</value>
-		                <value>osp.help.glossary.delete</value>
-		                <value>osp.help.glossary.edit</value>
-		                <value>osp.help.glossary.export</value>
-		                <value>osp.matrix.evaluate</value>
-		                <value>osp.matrix.evaluate</value>
-		                <value>osp.matrix.review</value>
-		                <value>osp.matrix.scaffolding.create</value>
-		                <value>osp.matrix.scaffolding.delete</value>
-		                <value>osp.matrix.scaffolding.edit</value>
-		                <value>osp.matrix.scaffolding.export</value>
-		                <value>osp.matrix.scaffolding.publish</value>
-		                <value>osp.matrix.viewOwner</value>
-		                <value>osp.presentation.comment</value>
-		                <value>osp.presentation.create</value>
-		                <value>osp.presentation.delete</value>
-		                <value>osp.presentation.layout.create</value>
-		                <value>osp.presentation.layout.delete</value>
-		                <value>osp.presentation.layout.edit</value>
-		                <value>osp.presentation.layout.publish</value>
-		                <value>osp.presentation.layout.suggestPublish</value>
-		                <value>osp.presentation.template.copy</value>
-		                <value>osp.presentation.template.create</value>
-		                <value>osp.presentation.template.delete</value>
-		                <value>osp.presentation.template.edit</value>
-		                <value>osp.presentation.template.export</value>
-		                <value>osp.presentation.template.publish</value>
-		                <value>osp.style.create</value>
-		                <value>osp.style.delete</value>
-		                <value>osp.style.edit</value>
-		                <value>osp.style.globalPublish</value>
-		                <value>osp.style.publish</value>
-		                <value>osp.style.suggestGlobalPublish</value>
-		                <value>osp.wizard.create</value>
-		                <value>osp.wizard.delete</value>
-		                <value>osp.wizard.edit</value>
-		                <value>osp.wizard.export</value>
-		                <value>osp.wizard.publish</value>
-		                <value>osp.wizard.review</value>
-		                <value>realm.del</value>
-		                <value>realm.upd</value>
-		                <value>section.role.instructor</value>
-		                <value>site.del</value>
-		                <value>site.upd</value>
-		                <value>site.upd.grp.mbrshp</value>
-		                <value>site.upd.site.mbrshp</value>
-		                <value>site.visit</value>
-		                <value>site.visit.unp</value>
-		                <!-- opensyllabusAdmin permissions -->
-		                <value>osyl.admin.create.any.config</value>
-		                <value>osyl.admin.upd.any.config</value>
-		                <value>osyl.admin.del.any.config</value>
-		            </list>
-		        </entry>
-		        <entry key="maintainUI">
-		            <list>
-		                <value>annc.all.groups</value>
-		                <value>annc.delete.any</value>
-		                <value>annc.delete.own</value>
-		                <value>annc.new</value>
-		                <value>annc.read</value>
-		                <value>annc.read.drafts</value>
-		                <value>annc.revise.any</value>
-		                <value>annc.revise.own</value>
-		                <value>asn.all.groups</value>
-		                <value>asn.delete</value>
-		                <value>asn.grade</value>
-		                <value>asn.new</value>
-		                <value>asn.read</value>
-		                <value>asn.revise</value>
-		                <value>asn.submit</value>
-		                <value>content.all.groups</value>
-		                <value>content.delete.any</value>
-		                <value>content.delete.own</value>
-		                <value>content.hidden</value>
-		                <value>content.new</value>
-		                <value>content.read</value>
-		                <value>content.revise.any</value>
-		                <value>content.revise.own</value>
-		                <value>dropbox.maintain</value>
-		                <value>gradebook.editAssignments</value>
-		                <value>gradebook.gradeAll</value>
-		                <value>mail.delete.any</value>
-		                <value>mail.new</value>
-		                <value>mail.read</value>
-		                <value>metaobj.create</value>
-		                <value>metaobj.delete</value>
-		                <value>metaobj.edit</value>
-		                <value>metaobj.publish</value>
-		                <value>metaobj.suggest.global.publish</value>
-		                <value>osp.help.glossary.add</value>
-		                <value>osp.help.glossary.delete</value>
-		                <value>osp.help.glossary.edit</value>
-		                <value>osp.help.glossary.export</value>
-		                <value>osp.matrix.evaluate</value>
-		                <value>osp.matrix.evaluate</value>
-		                <value>osp.matrix.review</value>
-		                <value>osp.matrix.scaffolding.create</value>
-		                <value>osp.matrix.scaffolding.delete</value>
-		                <value>osp.matrix.scaffolding.edit</value>
-		                <value>osp.matrix.scaffolding.export</value>
-		                <value>osp.matrix.scaffolding.publish</value>
-		                <value>osp.matrix.viewOwner</value>
-		                <value>osp.presentation.comment</value>
-		                <value>osp.presentation.create</value>
-		                <value>osp.presentation.delete</value>
-		                <value>osp.presentation.layout.create</value>
-		                <value>osp.presentation.layout.delete</value>
-		                <value>osp.presentation.layout.edit</value>
-		                <value>osp.presentation.layout.publish</value>
-		                <value>osp.presentation.layout.suggestPublish</value>
-		                <value>osp.presentation.template.copy</value>
-		                <value>osp.presentation.template.create</value>
-		                <value>osp.presentation.template.delete</value>
-		                <value>osp.presentation.template.edit</value>
-		                <value>osp.presentation.template.export</value>
-		                <value>osp.presentation.template.publish</value>
-		                <value>osp.style.create</value>
-		                <value>osp.style.delete</value>
-		                <value>osp.style.edit</value>
-		                <value>osp.style.globalPublish</value>
-		                <value>osp.style.publish</value>
-		                <value>osp.style.suggestGlobalPublish</value>
-		                <value>osp.wizard.create</value>
-		                <value>osp.wizard.delete</value>
-		                <value>osp.wizard.edit</value>
-		                <value>osp.wizard.export</value>
-		                <value>osp.wizard.publish</value>
-		                <value>osp.wizard.review</value>
-		                <value>realm.del</value>
-		                <value>realm.upd</value>
-		                <value>section.role.instructor</value>
-		                <value>site.del</value>
-		                <value>site.upd</value>
-		                <value>site.upd.grp.mbrshp</value>
-		                <value>site.upd.site.mbrshp</value>
-		                <value>site.visit</value>
-		                <value>site.visit.unp</value>
-		                <!-- opensyllabusAdmin permissions -->
-		                <value>osyl.admin.create.any.skin</value>
-		                <value>osyl.admin.upd.any.skin</value>
-		                <value>osyl.admin.del.any.skin</value>
-		            </list>
-		        </entry>
-		    </map>
+			<map>
+				<entry key="maintain">
+					<list>
+						<!-- opensyllabusAdmin permissions -->
+						<value>osyl.admin.create.any.config</value>
+						<value>osyl.admin.upd.any.config</value>
+						<value>osyl.admin.del.any.config</value>
+						<value>osyl.admin.create.any.skin</value>
+						<value>osyl.admin.upd.any.skin</value>
+						<value>osyl.admin.del.any.skin</value>
+					</list>
+				</entry>
+				<entry key="maintainConfig">
+					<list>
+						<value>annc.all.groups</value>
+						<value>annc.delete.any</value>
+						<value>annc.delete.own</value>
+						<value>annc.new</value>
+						<value>annc.read</value>
+						<value>annc.read.drafts</value>
+						<value>annc.revise.any</value>
+						<value>annc.revise.own</value>
+						<value>asn.all.groups</value>
+						<value>asn.delete</value>
+						<value>asn.grade</value>
+						<value>asn.new</value>
+						<value>asn.read</value>
+						<value>asn.revise</value>
+						<value>asn.submit</value>
+						<value>content.all.groups</value>
+						<value>content.delete.any</value>
+						<value>content.delete.own</value>
+						<value>content.hidden</value>
+						<value>content.new</value>
+						<value>content.read</value>
+						<value>content.revise.any</value>
+						<value>content.revise.own</value>
+						<value>dropbox.maintain</value>
+						<value>gradebook.editAssignments</value>
+						<value>gradebook.gradeAll</value>
+						<value>mail.delete.any</value>
+						<value>mail.new</value>
+						<value>mail.read</value>
+						<value>metaobj.create</value>
+						<value>metaobj.delete</value>
+						<value>metaobj.edit</value>
+						<value>metaobj.publish</value>
+						<value>metaobj.suggest.global.publish</value>
+						<value>osp.help.glossary.add</value>
+						<value>osp.help.glossary.delete</value>
+						<value>osp.help.glossary.edit</value>
+						<value>osp.help.glossary.export</value>
+						<value>osp.matrix.evaluate</value>
+						<value>osp.matrix.evaluate</value>
+						<value>osp.matrix.review</value>
+						<value>osp.matrix.scaffolding.create</value>
+						<value>osp.matrix.scaffolding.delete</value>
+						<value>osp.matrix.scaffolding.edit</value>
+						<value>osp.matrix.scaffolding.export</value>
+						<value>osp.matrix.scaffolding.publish</value>
+						<value>osp.matrix.viewOwner</value>
+						<value>osp.presentation.comment</value>
+						<value>osp.presentation.create</value>
+						<value>osp.presentation.delete</value>
+						<value>osp.presentation.layout.create</value>
+						<value>osp.presentation.layout.delete</value>
+						<value>osp.presentation.layout.edit</value>
+						<value>osp.presentation.layout.publish</value>
+						<value>osp.presentation.layout.suggestPublish</value>
+						<value>osp.presentation.template.copy</value>
+						<value>osp.presentation.template.create</value>
+						<value>osp.presentation.template.delete</value>
+						<value>osp.presentation.template.edit</value>
+						<value>osp.presentation.template.export</value>
+						<value>osp.presentation.template.publish</value>
+						<value>osp.style.create</value>
+						<value>osp.style.delete</value>
+						<value>osp.style.edit</value>
+						<value>osp.style.globalPublish</value>
+						<value>osp.style.publish</value>
+						<value>osp.style.suggestGlobalPublish</value>
+						<value>osp.wizard.create</value>
+						<value>osp.wizard.delete</value>
+						<value>osp.wizard.edit</value>
+						<value>osp.wizard.export</value>
+						<value>osp.wizard.publish</value>
+						<value>osp.wizard.review</value>
+						<value>realm.del</value>
+						<value>realm.upd</value>
+						<value>section.role.instructor</value>
+						<value>site.del</value>
+						<value>site.upd</value>
+						<value>site.upd.grp.mbrshp</value>
+						<value>site.upd.site.mbrshp</value>
+						<value>site.visit</value>
+						<value>site.visit.unp</value>
+						<!-- opensyllabusAdmin permissions -->
+						<value>osyl.admin.create.any.config</value>
+						<value>osyl.admin.upd.any.config</value>
+						<value>osyl.admin.del.any.config</value>
+					</list>
+				</entry>
+				<entry key="maintainUI">
+					<list>
+						<value>annc.all.groups</value>
+						<value>annc.delete.any</value>
+						<value>annc.delete.own</value>
+						<value>annc.new</value>
+						<value>annc.read</value>
+						<value>annc.read.drafts</value>
+						<value>annc.revise.any</value>
+						<value>annc.revise.own</value>
+						<value>asn.all.groups</value>
+						<value>asn.delete</value>
+						<value>asn.grade</value>
+						<value>asn.new</value>
+						<value>asn.read</value>
+						<value>asn.revise</value>
+						<value>asn.submit</value>
+						<value>content.all.groups</value>
+						<value>content.delete.any</value>
+						<value>content.delete.own</value>
+						<value>content.hidden</value>
+						<value>content.new</value>
+						<value>content.read</value>
+						<value>content.revise.any</value>
+						<value>content.revise.own</value>
+						<value>dropbox.maintain</value>
+						<value>gradebook.editAssignments</value>
+						<value>gradebook.gradeAll</value>
+						<value>mail.delete.any</value>
+						<value>mail.new</value>
+						<value>mail.read</value>
+						<value>metaobj.create</value>
+						<value>metaobj.delete</value>
+						<value>metaobj.edit</value>
+						<value>metaobj.publish</value>
+						<value>metaobj.suggest.global.publish</value>
+						<value>osp.help.glossary.add</value>
+						<value>osp.help.glossary.delete</value>
+						<value>osp.help.glossary.edit</value>
+						<value>osp.help.glossary.export</value>
+						<value>osp.matrix.evaluate</value>
+						<value>osp.matrix.evaluate</value>
+						<value>osp.matrix.review</value>
+						<value>osp.matrix.scaffolding.create</value>
+						<value>osp.matrix.scaffolding.delete</value>
+						<value>osp.matrix.scaffolding.edit</value>
+						<value>osp.matrix.scaffolding.export</value>
+						<value>osp.matrix.scaffolding.publish</value>
+						<value>osp.matrix.viewOwner</value>
+						<value>osp.presentation.comment</value>
+						<value>osp.presentation.create</value>
+						<value>osp.presentation.delete</value>
+						<value>osp.presentation.layout.create</value>
+						<value>osp.presentation.layout.delete</value>
+						<value>osp.presentation.layout.edit</value>
+						<value>osp.presentation.layout.publish</value>
+						<value>osp.presentation.layout.suggestPublish</value>
+						<value>osp.presentation.template.copy</value>
+						<value>osp.presentation.template.create</value>
+						<value>osp.presentation.template.delete</value>
+						<value>osp.presentation.template.edit</value>
+						<value>osp.presentation.template.export</value>
+						<value>osp.presentation.template.publish</value>
+						<value>osp.style.create</value>
+						<value>osp.style.delete</value>
+						<value>osp.style.edit</value>
+						<value>osp.style.globalPublish</value>
+						<value>osp.style.publish</value>
+						<value>osp.style.suggestGlobalPublish</value>
+						<value>osp.wizard.create</value>
+						<value>osp.wizard.delete</value>
+						<value>osp.wizard.edit</value>
+						<value>osp.wizard.export</value>
+						<value>osp.wizard.publish</value>
+						<value>osp.wizard.review</value>
+						<value>realm.del</value>
+						<value>realm.upd</value>
+						<value>section.role.instructor</value>
+						<value>site.del</value>
+						<value>site.upd</value>
+						<value>site.upd.grp.mbrshp</value>
+						<value>site.upd.site.mbrshp</value>
+						<value>site.visit</value>
+						<value>site.visit.unp</value>
+						<!-- opensyllabusAdmin permissions -->
+						<value>osyl.admin.create.any.skin</value>
+						<value>osyl.admin.upd.any.skin</value>
+						<value>osyl.admin.del.any.skin</value>
+					</list>
+				</entry>
+			</map>
 		</property>
-		<property name="sessionManager"
-		    ref="org.sakaiproject.tool.api.SessionManager" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
 		<property name="userDirService"
 			ref="org.sakaiproject.user.api.UserDirectoryService" />
-		<property name="siteService"
-			ref="org.sakaiproject.site.api.SiteService" />
-			
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="functionManager" ref="org.sakaiproject.authz.api.FunctionManager" />
+		<property name="securityService" ref="org.sakaiproject.authz.api.SecurityService" />
 	</bean>
-	
-	  <!-- ConfigurationService bean handles institution-specific configuration
-       for the Citations Helper -->
-  <bean id="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService"
-    class="org.sakaiquebec.opensyllabus.admin.impl.ConfigurationServiceImpl"
-    init-method="init"
-    destroy-method="destroy"
-    singleton="true">
 
-    <property name="contentHostingService">
-    	<ref bean="org.sakaiproject.content.api.ContentHostingService"/>
-    </property>
- 
-  </bean>
-	
-	
-	<bean id="osylcmjob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImpl" >
+	<!--
+		ConfigurationService bean handles institution-specific configuration
+		for the Citations Helper
+	-->
+	<bean id="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService"
+		class="org.sakaiquebec.opensyllabus.admin.impl.ConfigurationServiceImpl"
+		init-method="init" destroy-method="destroy" singleton="true">
+
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="entityManager" ref="org.sakaiproject.entity.api.EntityManager" />
+		<property name="securityService" ref="org.sakaiproject.authz.api.SecurityService" />
+	</bean>
+
+	<bean id="osylcmjob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImpl">
 		<property name="cmAdmin"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
 		<property name="cmService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		<property name="emailService" ref="org.sakaiproject.email.api.EmailService" />
+		<property name="userDirectoryService"
+			ref="org.sakaiproject.user.api.UserDirectoryService" />
 	</bean>
-	
-	<bean id="offSitesjob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OfficialSitesJobImpl" >
+
+	<bean id="offSitesjob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OfficialSitesJobImpl">
 		<property name="cmService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
 		<property name="adminConfigService"
@@ -258,318 +270,376 @@
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
 		<property name="osylManagerService"
 			ref="org.sakaiquebec.opensyllabus.manager.api.OsylManagerService" />
-			
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		<property name="emailService" ref="org.sakaiproject.email.api.EmailService" />
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
+		<property name="userDirectoryService"
+			ref="org.sakaiproject.user.api.UserDirectoryService" />
 	</bean>
 
-	<bean id="roleSynchrojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.RolesSynchronisationJobImpl" >
+	<bean id="roleSynchrojob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.RolesSynchronisationJobImpl">
 		<property name="userDirService"
 			ref="org.sakaiproject.user.api.UserDirectoryService" />
-		<property name="siteService"
-			ref="org.sakaiproject.site.api.SiteService" />			
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
 		<property name="adminConfigService"
 			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
 	</bean>
 
-	<bean id="changePermSynchrojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.FunctionsSynchronisationJobImpl" >
-		<property name="siteService"
-			ref="org.sakaiproject.site.api.SiteService" />			
+	<bean id="changePermSynchrojob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.FunctionsSynchronisationJobImpl">
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
 		<property name="adminConfigService"
 			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
 	</bean>
 
-	<bean id="changeOsylEditorSiteTypejob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.ChangeOsylEditorSiteTypeJobImpl" >
-		<property name="siteService"
-			ref="org.sakaiproject.site.api.SiteService" />			
+	<bean id="changeOsylEditorSiteTypejob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.ChangeOsylEditorSiteTypeJobImpl">
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		<property name="toolManager" ref="org.sakaiproject.tool.api.ToolManager" />
 	</bean>
 
-	<bean id="osylhcojob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylHierarchicalCourseOutlineJobImpl" >
+	<bean id="osylhcojob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylHierarchicalCourseOutlineJobImpl">
 		<property name="coRelationDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
 		<property name="osylHierarchyService"
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService" />	
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
 	</bean>
 
-	<bean id="osylcmjobudem" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImplUdeM" >
+	<bean id="osylcmjobudem"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImplUdeM">
 		<property name="userDirService"
 			ref="org.sakaiproject.user.api.UserDirectoryService" />
 		<property name="cmAdmin"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
 		<property name="cmService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
 	</bean>
-	
-	<bean id="osylconvjob" class="org.sakaiquebec.opensyllabus.admin.conversionJob.impl.OsylConversionJobImpl" >
+
+	<bean id="osylconvjob"
+		class="org.sakaiquebec.opensyllabus.admin.conversionJob.impl.OsylConversionJobImpl">
 		<property name="osylSiteService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
 	</bean>
-	
-	<bean id="osyltransferjob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.TransferPublishedContentJobImpl" >
-		<property name="siteService"
-			ref="org.sakaiproject.site.api.SiteService" />			
-	    <property name="contentHostingService"	
-	    	ref ="org.sakaiproject.content.api.ContentHostingService"/>
-		<property name="osylContentService" 
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />	
+
+	<bean id="osyltransferjob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.TransferPublishedContentJobImpl">
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+		<property name="osylContentService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />
 		<property name="osylSiteService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
 		<property name="coRelationDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
-				    
-	</bean>
-	
-	
-	<bean id="createPrintVersionJob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CreatePrintVersionJobImpl" >
-		<property name="siteService"
-			ref="org.sakaiproject.site.api.SiteService" />			
-	    <property name="osylPublishService"	
-	    	ref ="org.sakaiquebec.opensyllabus.common.api.OsylPublishService"/>
-	    <property name="contentHostingService"	
-	    	ref ="org.sakaiproject.content.api.ContentHostingService"/>
-	</bean>
-	
-	<bean id="addcmTitlePropertyjob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.AddCMTitlePropertyJobImpl" >
-		<property name="siteService"
-			ref="org.sakaiproject.site.api.SiteService" />			
-		<property name="cmService"
-			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
 	</bean>
 
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osyltransferjob"
+	<bean id="createPrintVersionJob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CreatePrintVersionJobImpl">
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
+		<property name="osylPublishService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylPublishService" />
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+	</bean>
+
+	<bean id="addcmTitlePropertyjob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.AddCMTitlePropertyJobImpl">
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
+		<property name="cmService"
+			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		<property name="toolManager" ref="org.sakaiproject.tool.api.ToolManager" />
+	</bean>
+	
+	<bean id="addHomePageJob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.AddHomePageToolImpl">
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
+		<property name="resourceDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
+			<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		<property name="toolManager" ref="org.sakaiproject.tool.api.ToolManager" />
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osyltransferjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
-		
-	
+
 		<property name="beanId">
 			<value>osyltransferjob</value>
 		</property>
-		
+
 		<property name="jobName">
 			<value>Transfer publish content in Attachments and related operations</value>
 		</property>
-		
+
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
-		
-	</bean>	
+	</bean>
 
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.addcmTitlePropertyjob"
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.addcmTitlePropertyjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
-		
-	
+
 		<property name="beanId">
 			<value>addcmTitlePropertyjob</value>
 		</property>
-		
+
 		<property name="jobName">
-			<value>Update existing sites to add Section title if related to the CM</value>
+			<value>Update existing sites to add Section title if related to the
+				CM</value>
 		</property>
-		
+
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
-		
-	</bean>	
+	</bean>
 
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylcmjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
-		
-	
+
 		<property name="beanId">
 			<value>osylcmjob</value>
 		</property>
-		
+
 		<property name="jobName">
 			<value>OpenSyllabus Course Management Job Synchronizer</value>
 		</property>
-		
+
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
-		
-	</bean>	
+	</bean>
 
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.offSitesjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
-		
-	
+
 		<property name="beanId">
 			<value>offSitesjob</value>
 		</property>
-		
+
 		<property name="jobName">
 			<value>Official Sites Creation Job</value>
 		</property>
-		
+
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
-		
-	</bean>	
+	</bean>
 
 
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.roleSynchrojob"
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.roleSynchrojob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
-		
-	
+
 		<property name="beanId">
 			<value>roleSynchrojob</value>
 		</property>
-		
+
 		<property name="jobName">
 			<value>Role Synchronisation Job</value>
 		</property>
-		
+
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
-		
-	</bean>	
+	</bean>
 
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.changePermSynchrojob"
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.changePermSynchrojob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
-		
-	
+
 		<property name="beanId">
 			<value>changePermSynchrojob</value>
 		</property>
-		
+
 		<property name="jobName">
 			<value>Change Permissions Synchronisation Job</value>
 		</property>
-		
+
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
-		
-	</bean>	
+	</bean>
 
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.changeOsylEditorSiteTypejob"
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.changeOsylEditorSiteTypejob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
-		
-	
+
 		<property name="beanId">
 			<value>changeOsylEditorSiteTypejob</value>
 		</property>
-		
+
 		<property name="jobName">
 			<value>Change 'osylEditor' Site to 'course' Site Job</value>
 		</property>
-		
+
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
-		
-	</bean>	
-	
-	
+
+	</bean>
+
+
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylcmjobudem"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
-		
-	
+
 		<property name="beanId">
 			<value>osylcmjobudem</value>
 		</property>
-		
+
 		<property name="jobName">
 			<value>UdeM OpenSyllabus Course Management Job Synchronizer</value>
 		</property>
-		
+
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
-		
-	</bean>	
-	
+	</bean>
+
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylhcojob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
-		
-	
+
 		<property name="beanId">
 			<value>osylhcojob</value>
 		</property>
-		
+
 		<property name="jobName">
 			<value>OpenSyllabus Hierarchical Course Outline Job Synchronizer</value>
 		</property>
-		
+
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
-		
-	</bean>	
-	
+	</bean>
+
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylconvjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
-		
-	
+
 		<property name="beanId">
 			<value>osylconvjob</value>
 		</property>
-		
+
 		<property name="jobName">
 			<value>OpenSyllabus Course Outline Conversion Job</value>
 		</property>
-		
+
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
-		
-	</bean>	
-	
-	<bean id="addHomePageJob" class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.AddHomePageToolImpl" >
-		<property name="siteService"
-			ref="org.sakaiproject.site.api.SiteService" />			
-		<property name="resourceDao"
-			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
 	</bean>
-	
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.addHomePageJob"
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.addHomePageJob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
-		
-	
+
 		<property name="beanId">
 			<value>addHomePageJob</value>
 		</property>
-		
+
 		<property name="jobName">
 			<value>Add Home Page and tools to course Sites</value>
 		</property>
-		
+
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
-		
-	</bean>	
+	</bean>
 
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.createPrintVersionJob"
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.createPrintVersionJob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
 		singleton="true" init-method="init">
-		
-	
+
 		<property name="beanId">
 			<value>createPrintVersionJob</value>
 		</property>
-		
+
 		<property name="jobName">
 			<value>Create print version for all sites</value>
 		</property>
-		
+
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
-		
-	</bean>	
+	</bean>
 
 
 </beans>

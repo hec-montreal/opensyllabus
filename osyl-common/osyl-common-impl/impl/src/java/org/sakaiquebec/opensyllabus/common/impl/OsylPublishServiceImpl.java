@@ -28,10 +28,10 @@ import org.sakaiproject.announcement.api.AnnouncementMessageEdit;
 import org.sakaiproject.announcement.api.AnnouncementMessageHeaderEdit;
 import org.sakaiproject.announcement.api.AnnouncementService;
 import org.sakaiproject.authz.api.AuthzGroup;
+import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.authz.cover.AuthzGroupService;
-import org.sakaiproject.authz.cover.SecurityService;
+import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentCollectionEdit;
@@ -43,14 +43,13 @@ import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.ResourceProperties;
-import org.sakaiproject.event.cover.NotificationService;
+import org.sakaiproject.event.api.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
-import org.sakaiproject.id.cover.IdManager;
+import org.sakaiproject.id.api.IdManager;
 import org.sakaiproject.site.api.Site;
-import org.sakaiproject.site.cover.SiteService;
+import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiproject.tool.cover.ToolManager;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
@@ -101,20 +100,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * 
      * @param securityService
      */
-    public void setSecurityService(OsylSecurityService securityService) {
+    public void setOsylSecurityService(OsylSecurityService securityService) {
 	this.osylSecurityService = securityService;
-    }
-
-    /** The osyl content service to be injected by Spring */
-    private OsylContentService osylContentService;
-
-    /**
-     * Sets the {@link OsylContentService}.
-     * 
-     * @param osylContentService
-     */
-    public void setOsylContentService(OsylContentService osylContentService) {
-	this.osylContentService = osylContentService;
     }
 
     /** Dependency: AnnouncementService. */
@@ -137,6 +124,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     public void setSessionManager(SessionManager sessionManager) {
         this.sessionManager = sessionManager;
+    }
+    
+    private SecurityService securityService;
+
+    public void setSecurityService(SecurityService securityService) {
+	this.securityService = securityService;
     }
 
     /**
@@ -265,6 +258,19 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public void setCoRelationDao(CORelationDao relationDao) {
 	this.coRelationDao = relationDao;
     }
+    
+    private AuthzGroupService authzGroupService;
+    
+
+    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
+        this.authzGroupService = authzGroupService;
+    }
+    
+    private IdManager idManager;
+
+    public void setIdManager(IdManager idManager) {
+        this.idManager = idManager;
+    }
 
     /**
      * {@inheritDoc}
@@ -321,7 +327,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	Vector<Map<String, String>> publicationResults =
 		new Vector<Map<String, String>>();
 
-	SecurityService.pushAdvisor(new SecurityAdvisor() {
+	securityService.pushAdvisor(new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
 		    String reference) {
 		return SecurityAdvice.ALLOWED;
@@ -356,7 +362,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// Create a course outline with security public
 	if (publishedCO == null) {
 	    publishedCO = new COSerialized(co);
-	    publishedCO.setCoId(IdManager.createUuid());
+	    publishedCO.setCoId(idManager.createUuid());
 	    publishedCO.setAccess("");
 	    publishedCO.setPublished(true);
 	    resourceDao.createOrUpdateCourseOutline(publishedCO);
@@ -427,7 +433,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		coContent.getProperty(COPropertiesType.PREVIOUS_PUBLISHED));
 	publicationProperties.put(COPropertiesType.PUBLISHED, coContent
 		.getProperty(COPropertiesType.PUBLISHED));
-	SecurityService.clearAdvisors();
+	securityService.clearAdvisors();
 
 	log.info("Finished publishing course outline for site ["
 		+ (co.getTitle() == null ? siteId : co.getTitle()) + "] in "
@@ -466,7 +472,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	String title = "";
 	try {
 	    AuthzGroup realm =
-		    AuthzGroupService.getAuthzGroup(REALM_ID_PREFIX + siteId);
+		    authzGroupService.getAuthzGroup(REALM_ID_PREFIX + siteId);
 	    if (realm != null) {
 		providerId = realm.getProviderGroupId();
 	    }
@@ -890,10 +896,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    // doc exists in CO
 		    String this_work_id = directory.getId();
 
-		    if (osylContentService.USE_ATTACHMENTS.equals("true")) {
+		    if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
 			Site site = osylSiteService.getSite(siteId);
 			this_publish_directory =
-				contentHostingService.ATTACHMENTS_COLLECTION
+				ContentHostingService.ATTACHMENTS_COLLECTION
 					+ site.getTitle() + "/" + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
 					+ "/" + this_work_id.substring(this_work_id.lastIndexOf(siteRef)+siteRef.length());
 
@@ -983,7 +989,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// Create a course outline with specified access
 	if (publishedCO == null) {
 	    publishedCO = new COSerialized(co);
-	    publishedCO.setCoId(IdManager.createUuid());
+	    publishedCO.setCoId(idManager.createUuid());
 	    publishedCO.setContent(transformXmlForGroup(co.getContent(),
 		    access, webappDir));
 	    publishedCO.setAccess(access);

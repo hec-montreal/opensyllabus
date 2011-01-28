@@ -3,7 +3,6 @@ package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
@@ -11,19 +10,17 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.api.AuthzGroup;
+import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.RoleAlreadyDefinedException;
-import org.sakaiproject.authz.cover.AuthzGroupService;
-import org.sakaiproject.event.cover.EventTrackingService;
-import org.sakaiproject.event.cover.UsageSessionService;
-import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.exception.PermissionException;
+import org.sakaiproject.event.api.EventTrackingService;
+import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
-import org.sakaiproject.tool.cover.SessionManager;
+import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
@@ -31,6 +28,14 @@ import org.sakaiquebec.opensyllabus.admin.cmjob.api.RolesSynchronizationJob;
 
 public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 
+    private static Log log =
+	    LogFactory.getLog(RolesSynchronisationJobImpl.class);
+
+    private List<Site> allSites;
+
+    private List<ConfigRole> rolesToConfig = null;
+
+    // ***************** SPRING INJECTION ************************//
     /**
      * The user service injected by the Spring
      */
@@ -58,13 +63,9 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	this.adminConfigService = adminConfigService;
     }
 
-    private List<Site> allSites;
-
     /**
      * Our logger
      */
-    private static Log log =
-	    LogFactory.getLog(RolesSynchronisationJobImpl.class);
 
     /**
      * The site service used to create new sites: Spring injection
@@ -80,9 +81,33 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	this.siteService = siteService;
     }
 
-    private List<ConfigRole> rolesToConfig = null;
+    private AuthzGroupService authzGroupService;
 
-    @SuppressWarnings("unchecked")
+    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
+	this.authzGroupService = authzGroupService;
+    }
+
+    private EventTrackingService eventTrackingService;
+
+    public void setEventTrackingService(
+	    EventTrackingService eventTrackingService) {
+	this.eventTrackingService = eventTrackingService;
+    }
+
+    private UsageSessionService usageSessionService;
+
+    public void setUsageSessionService(UsageSessionService usageSessionService) {
+	this.usageSessionService = usageSessionService;
+    }
+
+    private SessionManager sessionManager;
+
+    public void setSessionManager(SessionManager sessionManager) {
+	this.sessionManager = sessionManager;
+    }
+
+    // ***************** END SPRING INJECTION ************************//
+
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
 	loginToSakai();
@@ -109,14 +134,14 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 		// Check role in template realm
 		try {
 		    AuthzGroup realm =
-			    AuthzGroupService.getAuthzGroup(TEMPLATE_ID);
+			    authzGroupService.getAuthzGroup(TEMPLATE_ID);
 		    if (!isRoleInRealm(realm, role))
 			addRole(realm, role, functions, description);
 		    else
 			checkRole(realm, role, functions);
 		    addUsers(realm, role, addedUsers);
 		    removeUsers(realm, role, removedUsers);
-		    
+
 		} catch (GroupNotDefinedException e) {
 		    e.printStackTrace();
 		}
@@ -136,7 +161,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 
 		    try {
 			siteRealm =
-				AuthzGroupService.getAuthzGroup(REALM_PREFIX
+				authzGroupService.getAuthzGroup(REALM_PREFIX
 					+ site.getId());
 		    } catch (GroupNotDefinedException e) {
 			log.error(e.getMessage());
@@ -158,7 +183,6 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 
 			// We remove the specified users
 			removeUsers(siteRealm, role, removedUsers);
-			    
 
 		    }
 		}
@@ -185,9 +209,9 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	ConfigRole configRole;
 	Map<String, Object> values;
 
-	for(Entry<String, Map<String,Object>> entry : roles.entrySet()){
+	for (Entry<String, Map<String, Object>> entry : roles.entrySet()) {
 	    role = entry.getKey();
-	    values=entry.getValue();
+	    values = entry.getValue();
 	    removedUsers =
 		    (List<String>) values
 			    .get(ConfigurationService.REMOVEDUSERS);
@@ -195,7 +219,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 		    (List<String>) values.get(ConfigurationService.ADDEDUSERS);
 	    functions =
 		    (List<String>) values.get(ConfigurationService.FUNCTIONS);
-	    description = (String)values.get(ConfigurationService.DESCRIPTION);
+	    description = (String) values.get(ConfigurationService.DESCRIPTION);
 
 	    configRole = new ConfigRole();
 	    configRole.setConfigRole(role);
@@ -207,7 +231,6 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	    rolesToConfig.add(configRole);
 	}
     }
-
 
     /**
      * Checks if the permissions are associated to the role.
@@ -223,7 +246,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 		if (!role.isAllowed((String) function))
 		    role.allowFunction((String) function);
 	    }
-	    AuthzGroupService.save(realm);
+	    authzGroupService.save(realm);
 
 	} catch (GroupNotDefinedException e) {
 	    log.error(e.getMessage());
@@ -244,7 +267,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	    role.allowFunctions(functions);
 	    role.setDescription(description);
 
-	    AuthzGroupService.save(realm);
+	    authzGroupService.save(realm);
 
 	} catch (RoleAlreadyDefinedException e) {
 	    log.error(e.getMessage());
@@ -284,7 +307,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 		    if (realm.hasRole(userId, configRole)) {
 			realm.removeMember(userId);
 		    }
-		    AuthzGroupService.save(realm);
+		    authzGroupService.save(realm);
 
 		} catch (UserNotDefinedException e) {
 		    log.error("The user " + user
@@ -316,7 +339,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 			realm.addMember(userId, configRole, true, false);
 		    }
 
-		    AuthzGroupService.save(realm);
+		    authzGroupService.save(realm);
 
 		} catch (UserNotDefinedException e) {
 		    log.error("The user " + user
@@ -334,18 +357,18 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
      * Logs in the sakai environment
      */
     protected void loginToSakai() {
-	Session sakaiSession = SessionManager.getCurrentSession();
+	Session sakaiSession = sessionManager.getCurrentSession();
 	sakaiSession.setUserId("admin");
 	sakaiSession.setUserEid("admin");
 
 	// establish the user's session
-	UsageSessionService.startSession("admin", "127.0.0.1", "CMSync");
+	usageSessionService.startSession("admin", "127.0.0.1", "CMSync");
 
 	// update the user's externally provided realm definitions
-	AuthzGroupService.refreshUser("admin");
+	authzGroupService.refreshUser("admin");
 
 	// post the login event
-	EventTrackingService.post(EventTrackingService.newEvent(
+	eventTrackingService.post(eventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGIN, null, true));
     }
 
@@ -354,7 +377,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
      */
     protected void logoutFromSakai() {
 	// post the logout event
-	EventTrackingService.post(EventTrackingService.newEvent(
+	eventTrackingService.post(eventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGOUT, null, true));
     }
 
@@ -362,7 +385,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	private String configRole;
 
 	private String description;
-	
+
 	private String removedRole;
 
 	private List<String> addedUsers;
@@ -384,11 +407,11 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	}
 
 	public String getDescription() {
-		return description;
+	    return description;
 	}
 
 	public void setDescription(String description) {
-		this.description = description;
+	    this.description = description;
 	}
 
 	public void setRemovedRole(String removedRole) {

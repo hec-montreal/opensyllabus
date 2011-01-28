@@ -16,13 +16,13 @@
 			ref="org.sakaiproject.entitybroker.EntityBroker" />		
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />
-		<property name="assignmentService"
-			ref="org.sakaiproject.assignment.api.AssignmentService" />
 		<property name="citationService"
 			ref="org.sakaiproject.citation.api.CitationService" />
+		<property name="securityService"
+			ref="org.sakaiproject.authz.api.SecurityService" />
 		
 		<!-- Osyl dependencies -->
-		<property name="securityService"
+		<property name="osylSecurityService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
 		<property name="osylSiteService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />

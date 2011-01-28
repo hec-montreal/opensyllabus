@@ -37,14 +37,14 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.authz.cover.SecurityService;
+import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
+import org.sakaiproject.entity.api.EntityManager;
 import org.sakaiproject.entity.api.Reference;
-import org.sakaiproject.entity.cover.EntityManager;
 import org.sakaiproject.event.api.Event;
-import org.sakaiproject.event.cover.EventTrackingService;
+import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
@@ -81,7 +81,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private Map<String, Map<String, Object>> updatedRoles = null;
 
-    private String role;
     String description;
     private List<String> functions;
     private List<String> addedUsers;
@@ -92,12 +91,30 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     public void setContentHostingService(ContentHostingService service) {
 	contentHostingService = service;
     }
+    
+    private EventTrackingService eventTrackingService;
+    
+    public void setEventTrackingService(EventTrackingService eventTrackingService) {
+        this.eventTrackingService = eventTrackingService;
+    }
+    
+    private EntityManager entityManager;
+    
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+    
+    private SecurityService securityService;
+
+    public void setSecurityService(SecurityService securityService) {
+        this.securityService = securityService;
+    }
 
     public void init() {
 
 	log.info("initialize OsylAdmin configuration service");
 
-	EventTrackingService.addObserver(this);
+	eventTrackingService.addObserver(this);
 
 	updateConfig(CONFIGFORLDER + OFFSITESCONFIGFILE);
 	updateConfig(ROLEFOLDER);
@@ -213,7 +230,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private void updateConfig(String fileName) {
 
-	Reference reference = EntityManager.newReference(fileName);
+	Reference reference = entityManager.newReference(fileName);
 
 	if (reference != null) {
 
@@ -221,7 +238,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
 	    try {
 		// We allow access to the file
-		SecurityService.pushAdvisor(new SecurityAdvisor() {
+		securityService.pushAdvisor(new SecurityAdvisor() {
 		    public SecurityAdvice isAllowed(String userId,
 			    String function, String reference) {
 			return SecurityAdvice.ALLOWED;
@@ -257,7 +274,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			retrieveConfigs(fileName, resource.streamContent());
 		}
 		// We remove access to the resource
-		SecurityService.clearAdvisors();
+		securityService.clearAdvisors();
 	    } catch (PermissionException e) {
 		log.info("You are not allowed to access this resource");
 	    } catch (IdUnusedException e) {
@@ -305,7 +322,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		String removedUsers = retrieveParameter(document, REMOVEDUSERS);
 		String functions = retrieveParameter(document, FUNCTIONS);
 
-		setRole(role);
 		setDescription(description);
 		setAddedUsers(addedUsers);
 		setRemovedUsers(removedUsers);
@@ -370,10 +386,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     public List<String> getCourses() {
 	return courses;
-    }
-
-    private void setRole(String role) {
-	this.role = role;
     }
 
     private void setDescription(String description) {

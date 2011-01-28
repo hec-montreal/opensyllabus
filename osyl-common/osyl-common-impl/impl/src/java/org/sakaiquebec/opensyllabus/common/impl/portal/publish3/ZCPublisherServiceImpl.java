@@ -21,28 +21,17 @@
 package org.sakaiquebec.opensyllabus.common.impl.portal.publish3;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Hashtable;
-
-import javax.naming.InitialContext;
-import javax.servlet.ServletException;
-import javax.sql.DataSource;
-import javax.xml.transform.Transformer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiquebec.opensyllabus.common.api.portal.publish3.ZCPublisherService;
-import org.sakaiquebec.opensyllabus.common.impl.portal.javazonecours.Publication;
-import org.w3c.dom.Document;
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
@@ -56,7 +45,6 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 
     String urlConn = null;
 
-    
     public void init() {
 	log.info("INIT from ZCPublisherImpl");
     }
@@ -68,7 +56,9 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 	    parameter = "?file=" + koId + "&lang=" + langue + "&c=2";
 
 	if (parameter != null)
-	    urlConn = ServerConfigurationService.getServerUrl() + URL_CONN + parameter;
+	    urlConn =
+		    ServerConfigurationService.getServerUrl() + URL_CONN
+			    + parameter;
 
 	if (urlConn != null) {
 
@@ -85,13 +75,13 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 		BufferedReader br =
 			new BufferedReader(new InputStreamReader(conn
 				.getInputStream()));
-		
+
 		String line;
-		
-		while ((line = br.readLine()) != null){
+
+		while ((line = br.readLine()) != null) {
 		    log.trace(line);
 		}
-		
+
 		request.close();
 		br.close();
 

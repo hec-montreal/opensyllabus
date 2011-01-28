@@ -22,7 +22,6 @@ package org.sakaiquebec.opensyllabus.common.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
@@ -39,7 +38,6 @@ import org.sakaiproject.exception.OverQuotaException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.exception.TypeException;
-import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.util.Validator;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 
@@ -62,32 +60,8 @@ public class OsylContentServiceImpl implements OsylContentService {
 	this.contentHostingService = contentHostingService;
     }
 
-    /** The site service to be injected by Spring */
-    private SiteService siteService;
-
-    /**
-     * Sets the <code>SiteService</code>.
-     * 
-     * @param siteService
-     */
-    public void setSiteService(SiteService siteService) {
-	this.siteService = siteService;
-    }
-
     private static final Log log =
 	    LogFactory.getLog(OsylContentServiceImpl.class);
-
-    /** the authorisation service to be injected by Spring */
-    private AuthzGroupService authzService;
-
-    /**
-     * Sets the <code>AuthzGroupService</code>.
-     * 
-     * @param authzService
-     */
-    public void setAuthzGroupService(AuthzGroupService authzService) {
-	this.authzService = authzService;
-    }
 
     /**
      * Init method called at initialization of the bean.

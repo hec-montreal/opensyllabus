@@ -13,10 +13,10 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.authz.cover.AuthzGroupService;
+import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
-import org.sakaiproject.event.cover.EventTrackingService;
-import org.sakaiproject.event.cover.UsageSessionService;
+import org.sakaiproject.event.api.EventTrackingService;
+import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.api.Site;
@@ -24,9 +24,9 @@ import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.tool.api.Session;
+import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.tool.api.Tool;
-import org.sakaiproject.tool.cover.SessionManager;
-import org.sakaiproject.tool.cover.ToolManager;
+import org.sakaiproject.tool.api.ToolManager;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
 import org.sakaiquebec.opensyllabus.common.helper.FileHelper;
@@ -54,6 +54,7 @@ public class AddHomePageToolImpl implements Job {
      */
     private static Log log = LogFactory.getLog(AddHomePageToolImpl.class);
 
+    // ***************** SPRING INJECTION ************************//
     /**
      * The site service used to create new sites: Spring injection
      */
@@ -80,13 +81,44 @@ public class AddHomePageToolImpl implements Job {
 	this.resourceDao = resourceDao;
     }
 
+    private AuthzGroupService authzGroupService;
+
+    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
+	this.authzGroupService = authzGroupService;
+    }
+
+    private EventTrackingService eventTrackingService;
+
+    public void setEventTrackingService(
+	    EventTrackingService eventTrackingService) {
+	this.eventTrackingService = eventTrackingService;
+    }
+
+    private UsageSessionService usageSessionService;
+
+    public void setUsageSessionService(UsageSessionService usageSessionService) {
+	this.usageSessionService = usageSessionService;
+    }
+
+    private SessionManager sessionManager;
+
+    public void setSessionManager(SessionManager sessionManager) {
+	this.sessionManager = sessionManager;
+    }
+
+    private ToolManager toolManager;
+
+    public void setToolManager(ToolManager toolManager) {
+	this.toolManager = toolManager;
+    }
+
+    // ***************** END SPRING INJECTION ************************//
     private final static String[] TOOLS_BEFORE =
 	    { "sakai.opensyllabus.tool", "sakai.assignment.grades",
 		    "sakai.resources", "sakai.siteinfo" };
 
     private static final String DEFAULT_LOCALE = "fr_CA";
 
-    @SuppressWarnings("unchecked")
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
 	log.info("Start adding home pages to sites");
@@ -101,7 +133,7 @@ public class AddHomePageToolImpl implements Job {
 		    System.getProperty("catalina.home") + File.separator
 			    + "webapps" + File.separator
 			    + "osyl-admin-sakai-tool";// Ugly but don't know
-						      // cleaner method.
+	// cleaner method.
 	String xslPath =
 		configPath + File.separator + OsylSiteService.XSLT_DIRECTORY
 			+ File.separator + "news.xslt";
@@ -118,12 +150,12 @@ public class AddHomePageToolImpl implements Job {
 	    for (int i = 0; i < allSites.size(); i++) {
 
 		site = allSites.get(i);
-		
+
 		// change news and regulations to news
-		if(site.getTitle().indexOf(".H2011")!=-1 ){
+		if (site.getTitle().indexOf(".H2011") != -1) {
 		    changeNewsAndRegulationsToNewsForSite(site.getId());
 		}
-		
+
 		// we only process specific sites for winter 2011
 		if (site.getTitle().indexOf(".H2011.") == -1) {
 		    continue;
@@ -234,10 +266,10 @@ public class AddHomePageToolImpl implements Job {
     private boolean addTools(Site site, String locale) {
 	int currentToolCount = getSiteTools(site).size();
 
-//	####################################################################################
-//	TODO: peut-on vérifier si c'est un spécifique?
-//	####################################################################################
-	
+	// ####################################################################################
+	// TODO: peut-on vérifier si c'est un spécifique?
+	// ####################################################################################
+
 	if (currentToolCount != TOOLS_BEFORE.length) {
 	    // Oops unexpected situation (might also be a sharable site):
 	    log.warn("addTools: site [" + site.getTitle()
@@ -299,7 +331,7 @@ public class AddHomePageToolImpl implements Job {
     private ToolConfiguration addTool(SitePage page, String toolId,
 	    String specifiedTitle) {
 	page.setLayout(SitePage.LAYOUT_SINGLE_COL);
-	Tool tool = ToolManager.getTool(toolId);
+	Tool tool = toolManager.getTool(toolId);
 	ToolConfiguration toolConf = page.addTool(tool);
 	if (specifiedTitle != null) {
 	    toolConf.setTitle(specifiedTitle);
@@ -331,11 +363,8 @@ public class AddHomePageToolImpl implements Job {
 		cos.setContent(xml);
 		resourceDao.createOrUpdateCourseOutline(cos);
 	    } catch (Exception e) {
-		log
-			.error(
-				"could not update co to change news and"
-				+ " regulation to news [" + siteId + "]",
-				e);
+		log.error("could not update co to change news and"
+			+ " regulation to news [" + siteId + "]", e);
 	    }
 	}
     }
@@ -344,18 +373,18 @@ public class AddHomePageToolImpl implements Job {
      * Logs in the sakai environment
      */
     protected void loginToSakai() {
-	Session sakaiSession = SessionManager.getCurrentSession();
+	Session sakaiSession = sessionManager.getCurrentSession();
 	sakaiSession.setUserId("admin");
 	sakaiSession.setUserEid("admin");
 
 	// establish the user's session
-	UsageSessionService.startSession("admin", "127.0.0.1", "CMSync");
+	usageSessionService.startSession("admin", "127.0.0.1", "CMSync");
 
 	// update the user's externally provided realm definitions
-	AuthzGroupService.refreshUser("admin");
+	authzGroupService.refreshUser("admin");
 
 	// post the login event
-	EventTrackingService.post(EventTrackingService.newEvent(
+	eventTrackingService.post(eventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGIN, null, true));
     }
 
@@ -364,7 +393,7 @@ public class AddHomePageToolImpl implements Job {
      */
     protected void logoutFromSakai() {
 	// post the logout event
-	EventTrackingService.post(EventTrackingService.newEvent(
+	eventTrackingService.post(eventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGOUT, null, true));
     }
 

@@ -34,8 +34,6 @@ import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.Member;
 import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.RoleAlreadyDefinedException;
-import org.sakaiproject.content.api.ContentHostingService;
-import org.sakaiproject.site.api.SiteService;
 import org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService;
 import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
@@ -46,30 +44,6 @@ import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
  */
 public class OsylHierarchyServiceImpl implements OsylHierarchyService {
 
-	/** The chs to be injected by Spring */
-	private ContentHostingService contentHostingService;
-
-	/**
-	 * Sets the <code>ContentHostingService</code>.
-	 * 
-	 * @param contentHostingService
-	 */
-	public void setContentHostingService(
-			ContentHostingService contentHostingService) {
-		this.contentHostingService = contentHostingService;
-	}
-
-	/** The site service to be injected by Spring */
-	private SiteService siteService;
-
-	/**
-	 * Sets the <code>SiteService</code>.
-	 * 
-	 * @param siteService
-	 */
-	public void setSiteService(SiteService siteService) {
-		this.siteService = siteService;
-	}
 
 	private static final Log log = LogFactory
 			.getLog(OsylHierarchyServiceImpl.class);
@@ -160,7 +134,6 @@ public class OsylHierarchyServiceImpl implements OsylHierarchyService {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	public void addUsersWithChildRole(String parentSiteId, String childSiteId) {
 		// We retrieve all the users in the child site
 		Set<String> childSiteUsers = null;

@@ -33,14 +33,14 @@ import java.util.Map.Entry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.authz.api.AuthzGroup;
+import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzPermissionException;
+import org.sakaiproject.authz.api.FunctionManager;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.RoleAlreadyDefinedException;
 import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.authz.cover.AuthzGroupService;
-import org.sakaiproject.authz.cover.FunctionManager;
-import org.sakaiproject.authz.cover.SecurityService;
+import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.exception.IdInvalidException;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.IdUsedException;
@@ -49,15 +49,12 @@ import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
-import org.sakaiproject.tool.api.Tool;
+import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.UserAlreadyDefinedException;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.user.api.UserEdit;
 import org.sakaiproject.user.api.UserIdInvalidException;
 import org.sakaiproject.user.api.UserPermissionException;
-import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiproject.tool.cover.ToolManager;
-
 import org.sakaiquebec.opensyllabus.admin.api.OsylAdminService;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericMatriculeNomMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.MatriculeNomMap;
@@ -85,15 +82,14 @@ public class OsylAdminServiceImpl implements OsylAdminService {
      * teacher id, course id, course session, course periode
      */
     // private ProfCoursMap profCoursMap = null;
-    
+
     /*
      * Map used to store information about the courses taken by a student:
      * student id, course id, course session, course period
      */
     // private EtudiantCoursMap etudCoursMap = null;
-    
 
-     /**
+    /**
      * The value of the student status represented in our extracts
      */
     protected static final String USER_STATUS = "E";
@@ -163,6 +159,7 @@ public class OsylAdminServiceImpl implements OsylAdminService {
 
     /**
      * Sets the <code>Set</code> of functions to register.
+     * 
      * @param functionsToRegister
      */
     public void setFunctionsToRegister(Set<String> functionsToRegister) {
@@ -199,9 +196,6 @@ public class OsylAdminServiceImpl implements OsylAdminService {
 	this.userDirService = userDirService;
     }
 
- 
- 
-
     /**
      * The site service used to create new sites: Spring injection
      */
@@ -209,10 +203,29 @@ public class OsylAdminServiceImpl implements OsylAdminService {
 
     /**
      * Sets the <code>SiteService</code> needed to create a new site in Sakai.
+     * 
      * @param siteService
      */
     public void setSiteService(SiteService siteService) {
 	this.siteService = siteService;
+    }
+    
+    private AuthzGroupService authzGroupService;
+    
+    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
+        this.authzGroupService = authzGroupService;
+    }
+    
+    private FunctionManager functionManager;
+    
+    public void setFunctionManager(FunctionManager functionManager) {
+        this.functionManager = functionManager;
+    }
+    
+    private SecurityService securityService;
+    
+    public void setSecurityService(SecurityService securityService) {
+        this.securityService = securityService;
     }
 
     /** {@inheritDoc} */
@@ -270,12 +283,12 @@ public class OsylAdminServiceImpl implements OsylAdminService {
 
     }
 
-
-   /**
+    /**
      * Init method called right after Spring injection.
      */
     public void init() {
-	log.info("OsylAdminServiceImpl service init() site managerSiteName == \""
+	log
+		.info("OsylAdminServiceImpl service init() site managerSiteName == \""
 			+ this.osylAdminSiteName + "\"");
 
 	if (null == this.osylAdminSiteName) {
@@ -299,13 +312,13 @@ public class OsylAdminServiceImpl implements OsylAdminService {
 		osylAdminSite.setJoinable(false);
 
 		AuthzGroup currentGroup =
-			AuthzGroupService.getInstance().getAuthzGroup(
+		    authzGroupService.getAuthzGroup(
 				this.authzGroupName);
 
 		for (Iterator<String> iFunctionsToRegister =
 			this.functionsToRegister.iterator(); iFunctionsToRegister
 			.hasNext();) {
-		    FunctionManager.registerFunction(iFunctionsToRegister
+		    functionManager.registerFunction(iFunctionsToRegister
 			    .next());
 		}
 
@@ -321,20 +334,19 @@ public class OsylAdminServiceImpl implements OsylAdminService {
 		    }
 		    roleToAdd.allowFunctions(entry.getValue());
 		}
-		AuthzGroupService.save(currentGroup);
+		authzGroupService.save(currentGroup);
 
-		//add Resources tool
+		// add Resources tool
 		SitePage page2 = osylAdminSite.addPage();
 		page2.setTitle("Resources");
 		page2.addTool("sakai.resources");
-		
+
 		// add OsylAdmin tool
 		SitePage page = osylAdminSite.addPage();
 		page.setTitle(this.osylAdminSiteName);
 		page.addTool("sakai.opensyllabus.admin.tool");
 
 		siteService.save(osylAdminSite);
-		
 
 		log.debug("init() site " + this.osylAdminSiteName
 			+ " has been created");
@@ -371,7 +383,7 @@ public class OsylAdminServiceImpl implements OsylAdminService {
 	// put in a security advisor so we can create citationAdmin site without
 	// need
 	// of further permissions
-	SecurityService.pushAdvisor(new SecurityAdvisor() {
+	securityService.pushAdvisor(new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
 		    String reference) {
 		return SecurityAdvice.ALLOWED;

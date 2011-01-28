@@ -48,7 +48,7 @@
 		<property name="cmService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
 
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
 
 		<property name="zcPublierService"
 			ref="org.sakaiquebec.opensyllabus.common.api.portal.publish3.ZCPublisherService" />
@@ -65,9 +65,6 @@
 		init-method="init" destroy-method="destroy" singleton="true">
 
 		<!-- Sakai dependencies -->
-		<property name="contentHostingService"
-			ref="org.sakaiproject.content.api.ContentHostingService" />
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
 		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
 
 		<property name="coRelationDao"
@@ -81,9 +78,6 @@
 		<!-- Sakai dependencies -->
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-
 	</bean>
 
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylPublishService"
@@ -93,11 +87,9 @@
 		<!-- Osyl dependencies -->
 		<property name="osylSiteService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
-		<property name="osylContentService"
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />
 		<property name="resourceDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
-		<property name="securityService"
+		<property name="osylSecurityService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
 		<property name="configService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylConfigService" />
@@ -114,6 +106,10 @@
 		<property name="announcementService"
 			ref="org.sakaiproject.announcement.api.AnnouncementService" />
 		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="securityService"
+			ref="org.sakaiproject.authz.api.SecurityService" />
+		<property name="idManager" ref="org.sakaiproject.id.api.IdManager" />
 
 		<!--
 			<property name="toolManager"
@@ -145,10 +141,12 @@
 			ref="org.sakaiproject.user.api.UserDirectoryService" />
 		<property name="assignmentService"
 			ref="org.sakaiproject.assignment.api.AssignmentService" />
+		<property name="securityService"
+			ref="org.sakaiproject.authz.api.SecurityService" />
 
 
 		<!-- Osyl dependencies -->
-		<property name="securityService"
+		<property name="osylSecurityService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
 		<property name="configService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylConfigService" />
