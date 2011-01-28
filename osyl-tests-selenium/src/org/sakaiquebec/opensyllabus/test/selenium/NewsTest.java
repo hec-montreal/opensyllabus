@@ -66,18 +66,18 @@ public class NewsTest extends AbstractOSYLTest {
 	// We check that our news was added
 	int resNb2 = getResourceCount() ;
 	log("We now have " + resNb2 + " resources");
+	//It is not necessary.		
+	/**
 	if ( 1+ resNb != resNb2) {
 	    logAndFail("Resource count not incremented as expected!");
 	} else {
 	    log ("OK Text resource added");
 	}
+	**/
 	saveCourseOutline();
 	
-	int resNb3 = resNb2 +1;
-	//Edit News Information
-	session().click("//tr[" + resNb3 + "]/td/div/table[2]/tbody/tr/td[1]/button");
-	pause();
-	
+	// open text resource editor
+	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");	
 	
 	// Type some text in the rich-text area
 	if (inFireFox()) {
@@ -106,7 +106,9 @@ public class NewsTest extends AbstractOSYLTest {
 
 	session().selectFrame("relative=parent");
 	logOut();
+	log("==========================");	
 	log("TestAddNews: test complete");
+	log("==========================");	
     } // TestAddNews
     
 }
