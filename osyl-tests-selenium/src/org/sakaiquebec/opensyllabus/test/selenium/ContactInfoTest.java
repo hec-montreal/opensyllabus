@@ -71,14 +71,18 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	pause();
 	
 	//Check if Opensyllabus displays a message error when the user click OK 
-	//without fill in the fields First Name, Last Name and Title.
-	
+	//without fill in the fields First Name, Last Name and Title.	
 	session().click("//td/table/tbody/tr/td[1]/button");
-	String Erreur1 = "Erreur" ;
-	if (!session().isTextPresent(Erreur1)) {
+	pause();
+	pause();
+	//isTextPresent(text='Erreur') doesn't work for modal windows 
+	//It needs use isElementPresent(elementOfText)
+	String Erreur1 = "//div[contains(text(),'Erreur')]";
+	if (!session().isElementPresent(Erreur1)) {
 	    logAndFail("Expected to see text [" + Erreur1 
 		    + "] after text edition");
-		}
+		//log("Expected to see text [" + Erreur1 + "] after text edition");		
+	}
 	
 	pause();
 	session().click("//tr[2]/td/table/tbody/tr/td/button");
@@ -92,10 +96,13 @@ public class ContactInfoTest extends AbstractOSYLTest {
 
 	
 	session().click("//td/table/tbody/tr/td[1]/button");
-	if (!session().isTextPresent(Erreur1)) {
+	
+	if (!session().isElementPresent(Erreur1)) {	
+	//if (!session().isTextPresent(Erreur1)) {
 	    logAndFail("Expected to see text [" + Erreur1 
 		    + "] after text edition");
-		}
+		//log("Expected to see text [" + Erreur1 + "] after text edition");
+	}
 	
 	pause();
 	session().click("//tr[2]/td/table/tbody/tr/td/button");
@@ -108,10 +115,12 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	session().type("//input[@class=\"Osyl-ContactInfo-TextBox\"]", newText1);
 	
 	session().click("//td/table/tbody/tr/td[1]/button");
-	if (!session().isTextPresent(Erreur1)) {
+	if (!session().isElementPresent(Erreur1)) {	
+	//if (!session().isTextPresent(Erreur1)) {
 	    logAndFail("Expected to see text [" + Erreur1 
 		    + "] after text edition");
-		}
+		log("Expected to see text [" + Erreur1 + "] after text edition");		
+	}
 	
 	pause();
 	session().click("//tr[2]/td/table/tbody/tr/td/button");
@@ -182,14 +191,11 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	//Will be tested when the problem is resolved(public & attendee)
 	//session().click("//td[@class=\"gwt-MenuItem\"]");
 	
-	
 	//Click on Contact Informations
 	openContactInfoSection();
-	
 	pause();
 	
-	// check if the new rubric is visible.
-	
+	// check if the new rubric is visible.	
 	if (!session().isTextPresent(newText1)) {
 	    logAndFail("Expected to see text [" + newText1 
 		    + "] after text edition");
@@ -263,7 +269,9 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	//Log out
 	session().selectFrame("relative=parent");
 	logOut();
+	log("=================================");	
 	log("testAddContactInfo: test complete");
+	log("=================================");	
     } // testAddContactInfo
     
     private void openContactInfoSection(){
@@ -272,11 +280,13 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	    session().mouseDown(
 		    "//div[@class=\"gwt-TreeItem\"]/div/"
 			    + "div[contains(text(),'Coordo')]");
-	    pause();
 	} else {
-	    // This doesn't seem to work anymore
-	    session().click("gwt-uid-16");
+		// IE
+		String imageLocator = "//div[contains(text(),'Coordonn')]";	
+		session().mouseDownAt(imageLocator, "10,10");
+		session().mouseUpAt(imageLocator, "10,10");	    
 	}
+	pause();
     }
         
 }
