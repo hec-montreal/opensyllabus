@@ -238,27 +238,32 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 	pause();
 
 	// Select file in browser window
-	session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
-		"value= (F" + ")   osyl-src_1_.zip");
-	session().mouseOver("//option[@value=' (F)   osyl-src_1_.zip']");
-	session().focus("//option[@value=' (F)   osyl-src_1_.zip']");
-	session().click("//option[@value=' (F)   osyl-src_1_.zip']");
-	pause();
-
-	// Close Editor
-	session().click(
-		"//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/"
-			+ "tbody/tr/td[1]/button");
-
+	if (inFireFox()) {		
+		session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
+			"value= (F" + ")   osyl-src_1_.zip");
+		session().mouseOver("//option[@value=' (F)   osyl-src_1_.zip']");
+		session().focus("//option[@value=' (F)   osyl-src_1_.zip']");
+		session().click("//option[@value=' (F)   osyl-src_1_.zip']");
+		pause();
+	
+		// Close Editor
+		session().click(
+			"//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/"
+				+ "tbody/tr/td[1]/button");
+	} else {
+		// Cancel editor
+		session().click("//td/table/tbody/tr/td[2]/button");
+	}
+	
 	// Save modifications
 	saveCourseOutline();
 	pause();
 
-	saveCourseOutline();
-
 	session().selectFrame("relative=parent");
 	logOut();
+	log("=======================================");	
 	log("PresentationOfCourseTest: test complete");
+	log("=======================================");	
     } // PresentationOfCourseTest
 
     private void openPresentationSection() {
@@ -267,10 +272,11 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 	    session().mouseDown(
 		    "//div[@class=\"gwt-TreeItem\"]/div/"
 			    + "div[contains(text(),'sentation')]");
-	    pause();
 	} else {
-	    // This doesn't seem to work anymore
-	    session().click("gwt-uid-15");
+		String imageLocator = "//div[contains(text(),'sentation')]";			
+		session().mouseDownAt(imageLocator, "10,10");
+		session().mouseUpAt(imageLocator, "10,10");	    
 	}
+    pause();	
     }
 }
