@@ -18,6 +18,7 @@
 					<ref
 						bean="org.sakaiproject.springframework.orm.hibernate.GlobalSessionFactory" />
 				</property>
+				<property name="sqlService" ref="org.sakaiproject.db.api.SqlService"/>
 			</bean>
 		</property>
 		<property name="transactionAttributes">

@@ -26,7 +26,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
-import org.sakaiproject.db.cover.SqlService;
+import org.sakaiproject.db.api.SqlService;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -46,6 +46,12 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
     // This HibernateTemplate is dedicated to requests expecting only one
     // row as results. This showed an average 5-15% speed increase.
     private HibernateTemplate singleRowHT;
+
+    private SqlService sqlService;
+
+    public void setSqlService(SqlService sqlService) {
+	this.sqlService = sqlService;
+    }
 
     /** The init method called by Spring */
     public void init() {
@@ -191,7 +197,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	if (siteId == null || access == null)
 	    throw new IllegalArgumentException();
 	try {
-	    if ("oracle".equalsIgnoreCase(SqlService.getVendor())
+	    if ("oracle".equalsIgnoreCase(sqlService.getVendor())
 		    && access.equals("")) {
 		results =
 			singleRowHT
@@ -253,7 +259,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	}
 
 	try {
-	    if ("oracle".equalsIgnoreCase(SqlService.getVendor())) {
+	    if ("oracle".equalsIgnoreCase(sqlService.getVendor())) {
 		results =
 			getHibernateTemplate()
 				.find(
@@ -332,7 +338,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	if (siteId == null)
 	    throw new IllegalArgumentException();
 	try {
-	    if ("oracle".equalsIgnoreCase(SqlService.getVendor())) {
+	    if ("oracle".equalsIgnoreCase(sqlService.getVendor())) {
 		results =
 			getHibernateTemplate()
 				.find(
