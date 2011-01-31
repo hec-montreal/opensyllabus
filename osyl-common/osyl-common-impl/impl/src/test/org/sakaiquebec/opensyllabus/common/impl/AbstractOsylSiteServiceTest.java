@@ -40,7 +40,7 @@ public abstract class AbstractOsylSiteServiceTest extends AbstractServiceTest {
 
 	serviceImpl
 		.setConfigService(getMockery().mock(OsylConfigService.class));
-	serviceImpl.setSecurityService(getMockery().mock(
+	serviceImpl.setOsylSecurityService(getMockery().mock(
 		OsylSecurityService.class));
 	serviceImpl.setUserDirectoryService(getMockery().mock(
 		UserDirectoryService.class));
