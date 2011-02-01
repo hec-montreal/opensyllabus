@@ -37,6 +37,7 @@ public abstract class AbstractOsylSiteServiceTest extends AbstractServiceTest {
 	serviceImpl.setSiteService(this.siteService);
 	serviceImpl.setToolManager(getMockery().newToolManager());
 	serviceImpl.setIdManager(getMockery().newIdManager());
+	serviceImpl.setSecurityService(getMockery().newSecurityService());
 
 	serviceImpl
 		.setConfigService(getMockery().mock(OsylConfigService.class));
