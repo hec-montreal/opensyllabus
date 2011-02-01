@@ -197,10 +197,8 @@ public class OsylTreeView extends OsylViewableComposite implements
 
     private void addTreeItemView(TreeItem parentTreeItem,
 	    OsylTreeItemBaseView treeItemView) {
-	if (getController().isReadOnly()) {
-	    if (hasNewElement(treeItemView.getModel())) {
-		treeItemView.getLabel().addStyleName("Osyl-newElement");
-	    }
+	if (hasNewElement(treeItemView.getModel())) {
+	    treeItemView.getLabel().addStyleName("Osyl-newElement");
 	}
 	TreeItem treeItem = new TreeItem(treeItemView);
 	itemModelMap.put(treeItemView.getModel(), treeItem);

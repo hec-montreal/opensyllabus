@@ -112,9 +112,9 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    getOsylToolbar().getHomePushButton().setVisible(true);
 	    getOsylToolbar().getViewSeparator().setVisible(true);
 	    getOsylToolbar().getViewAllPushButton().setVisible(true);
-	    getOsylToolbar().getSelectDateSeparator().setVisible(false);
-	    getOsylToolbar().getSelectDateButton().setVisible(false);
-	    getOsylToolbar().getDeleteDateButton().setVisible(false);
+	    getOsylToolbar().getSelectDateSeparator().setVisible(true);
+	    getOsylToolbar().getSelectDateButton().setVisible(true);
+	    getOsylToolbar().getDeleteDateButton().setVisible(getController().getSelectedDate()!=null);
 
 	    /* Preview mode specific menu buttons */
 	    getOsylToolbar().getClosePushButton().setVisible(true);
@@ -140,6 +140,8 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    setClosePushButtonCommand();
 	    setHomePushButtonCommand();
 	    setViewAllPushButtonCommand();
+	    setSelectDateButtonCommand();
+	    setDeleteDateButtonCommand();
 
 	} else if (getController().isReadOnly()) {
 	    /* View type menu buttons */
@@ -181,14 +183,16 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		setHomePushButtonCommand();
 		setViewAllPushButtonCommand();
 		setPublishPushButtonCommand();
+		setSelectDateButtonCommand();
+		setDeleteDateButtonCommand();
 
 		/* View type menu buttons */
 		getOsylToolbar().getHomePushButton().setVisible(true);
 		getOsylToolbar().getViewSeparator().setVisible(true);
 		getOsylToolbar().getViewAllPushButton().setVisible(true);
-		getOsylToolbar().getSelectDateSeparator().setVisible(false);
-		getOsylToolbar().getSelectDateButton().setVisible(false);
-		getOsylToolbar().getDeleteDateButton().setVisible(false);
+		getOsylToolbar().getSelectDateSeparator().setVisible(true);
+		getOsylToolbar().getSelectDateButton().setVisible(true);
+		getOsylToolbar().getDeleteDateButton().setVisible(getController().getSelectedDate()!=null);
 
 		/* Preview mode specific menu buttons */
 		getOsylToolbar().getClosePushButton().setVisible(false);
