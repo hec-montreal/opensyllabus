@@ -89,7 +89,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    addText(parentText, LEVEL_ATTENDEE);
 
 	    // publish
-	    session().click("gwt-uid-5");
+	    session().click(BUTTON_PUBLISH); //It was "gwt-uid-5"
 	    session().click("//button[contains(text(),'Publier')]");
 	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
 	    ensurePublishDateOK();
@@ -152,7 +152,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    addText(currentSiteText, LEVEL_ATTENDEE);
 
 	    // publish
-	    session().click("gwt-uid-5");
+	    session().click(BUTTON_PUBLISH); //It was "gwt-uid-5"
 	    session().click("//button[contains(text(),'Publier')]");
 	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
 	    ensurePublishDateOK();
@@ -228,7 +228,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    	addDocument("osyl-src[1].zip", parentDocumentClickabletext);
 	    }
 	    // publish
-	    session().click("gwt-uid-5");
+	    session().click(BUTTON_PUBLISH); //It was "gwt-uid-5"
 	    session().click("//button[contains(text(),'Publier')]");
 	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
 	    ensurePublishDateOK();
@@ -347,7 +347,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    pause();
 
 	    // publish
-	    session().click("gwt-uid-5");
+	    session().click(BUTTON_PUBLISH); //It was "gwt-uid-5"
 	    session().click("//button[contains(text(),'Publier')]");
 	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
 	    ensurePublishDateOK();
