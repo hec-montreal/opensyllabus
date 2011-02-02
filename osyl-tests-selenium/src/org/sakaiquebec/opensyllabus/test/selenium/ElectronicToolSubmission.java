@@ -110,7 +110,7 @@ public class ElectronicToolSubmission extends AbstractOSYLTest{
     	pause();
 	
 	//Publish
-	session().click("gwt-uid-4");
+	session().click(BUTTON_PUBLISH);  //It was "gwt-uid-6"
 	pause();
 	session().click("//td/table/tbody/tr/td[1]/button");
 	pause();
