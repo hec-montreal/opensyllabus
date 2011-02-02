@@ -180,7 +180,7 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	pause();
 	
 	//Overview
-	session().click("gwt-uid-8");
+    session().click(BUTTON_PREVIEW); //It was "gwt-uid-8"
 	pause();
 	// Attendee Overview
 	session().click(
