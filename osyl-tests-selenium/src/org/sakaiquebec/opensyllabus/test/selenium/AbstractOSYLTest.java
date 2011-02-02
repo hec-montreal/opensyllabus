@@ -50,6 +50,16 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     private String siteName;
     // Base name for test sites
     public static final String TEST_SITE_BASE_NAME = "Se-";
+    
+    //Button's click event names
+    public static final String BUTTON_HOME = "gwt-uid-2";    
+    public static final String BUTTON_ALL_VIEW = "gwt-uid-3";        
+    public static final String BUTTON_ADD = "gwt-uid-9";    
+    public static final String BUTTON_SAVE = "gwt-uid-6";
+    public static final String BUTTON_PUBLISH = "gwt-uid-7";        
+    public static final String BUTTON_PRINT = "gwt-uid-15";    
+    public static final String BUTTON_UPDATE = "gwt-uid-8";    
+    public static final String BUTTON_PREVIEW = "gwt-uid-10";    
 
     // The screenshot capture is always done on the windows machine (running
     // the test) and not on the grid. This explains the following!
@@ -292,17 +302,17 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    session().selectFrame("//iframe[@class=\"portletMainIframe\"]");    
 	    log("*** goToSite apres selectFrame");
 	    //session().waitForPageToLoad("30000");    
-	    ensureElementPresent("gwt-uid-4");    
-	    //gwt-uid-4 is button Save. If it is not visible, it means we are
+	    ensureElementPresent("gwt-uid-6");    
+	    //gwt-uid-6 is button Save. If it is not visible, it means we are
 	    //in read-only mode.
-	    if (!session().isVisible("gwt-uid-4")) {   
+	    if (!session().isVisible("gwt-uid-6")) {   
 			captureScreenShot("Course outline locked: waiting 15 minutes");
 			log("Course outline locked: waiting 15 minutes");
 			pause(90000);
 			session().refresh();
 			waitForPageToLoad();
 	    }    
-	    if (!session().isVisible("gwt-uid-4")) {
+	    if (!session().isVisible("gwt-uid-6")) {
 	    	logAndFail("Course outline still locked after 15 minutes");
 	    }
 	    **/	 
@@ -409,27 +419,27 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      */
     public void waitForOSYL() throws Exception {
 
-	// session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
+	session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
 	for (int decisecond = 0;; decisecond++) {
+	    try {	    	
+	    	String element = "//div[@class=\"Osyl-TreeItem-HorizontalPanel\"]";
+	    	if (session().isElementPresent(element)) {	    	
+	    		break;
+	    	}
+	    } catch (Exception e) {
+	    }
+	    Thread.sleep(100);		
+		
 	    if (decisecond >= 600) {
-
-		logAndFail("Timeout waiting for Osyl-TreeItem-HorizontalPanel sub-structure:"
-			+ " __Was OpenSyllabus added to the site?__");
+			logAndFail("Timeout waiting for Osyl-TreeItem-HorizontalPanel sub-structure:"
+				+ " __Was OpenSyllabus added to the site?__");
 	    }
 	    if (session().isTextPresent("Exception")
 		    && session().isTextPresent("Stacktrace")
 		    && session().isTextPresent("at org.sakaiproject.portal")) {
-		logAndFail("Found exception waiting for OpenSyllabus: "
-			+ "deployment may have failed. See screenshot.");
+	    		logAndFail("Found exception waiting for OpenSyllabus: "
+	    				+ "deployment may have failed. See screenshot.");
 	    }
-	    try {
-		if (session().isElementPresent(
-			"//div[@class=\"Osyl-TreeItem-HorizontalPanel\"]")) {
-		    break;
-		}
-	    } catch (Exception e) {
-	    }
-	    Thread.sleep(100);
 	}
 
 	log("Found OpenSyllabus: tests will begin now");
@@ -473,8 +483,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	log("Entering clickHomeButton");
 
 	// Click the button
-	// session().click("gwt-uid-1");
-	session().click("gwt-uid-4"); //AH
+	session().click(BUTTON_HOME); // to save
 	openOrganisationSection();
 
 	// We check that we see at least one LectureNo label. Actually there
@@ -541,7 +550,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * for now).
      */
     public void clickAddButton() {
-	session().click("gwt-uid-7");
+	session().click(BUTTON_ADD); //It was "gwt-uid-7"
     }
 
     /**
@@ -614,7 +623,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     }
 
     private void clickSaveButton() {
-	session().click("gwt-uid-4");
+	session().click(BUTTON_SAVE);  //It was "gwt-uid-4"
     }
 
     /**
@@ -1006,5 +1015,5 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 	return rubric;
     }
-
+    
 }
