@@ -21,6 +21,9 @@
 package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Vector;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
@@ -34,7 +37,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -46,6 +48,12 @@ import com.google.gwt.user.client.ui.PushButton;
  * @version $Id: $
  */
 public class PublishForm extends OsylManagerAbstractWindowPanel {
+    
+    private static final String PDF_GENERATION_FAILED =
+	    "publish.pdfGeneration.nok";
+
+    private static final String PDF_GENERATION_SUCCEEDED =
+	    "publish.pdfGeneration.ok";
 
     PushButton okButton;
 
@@ -59,7 +67,7 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 
     private List<COSite> coSites;
 
-    private class PublishAsynCallBack implements AsyncCallback<Void> {
+    private class PublishAsynCallBack implements AsyncCallback<Vector<Map<String, String>>> {
 
 	private int siteIndex;
 
@@ -118,15 +126,32 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 	    responseReceive();
 	}
 
-	public void onSuccess(Void result) {
-	    Image publishImage =
-		    new Image(controller.getImageBundle().check16());
-	    publishImage.setTitle(messages.publishAction_publish_ok());
-	    Image pdfGenImage =
-		    new Image(controller.getImageBundle().check16());
-	    pdfGenImage.setTitle(messages.publishAction_pdfGen_ok());
-	    grid.setWidget(siteIndex + 1, 1, publishImage);
-	    grid.setWidget(siteIndex + 1, 2, pdfGenImage);
+	public void onSuccess(Vector<Map<String, String>> serverResponse) {
+	    Map<String, String> pdfGenerationResults = serverResponse.get(1);
+	    
+	    if(pdfGenerationResults != null) {
+
+		for (Entry<String, String> entry : pdfGenerationResults
+			.entrySet()) {
+		    Image publishImage =
+			    new Image(controller.getImageBundle().check16());
+		    publishImage.setTitle(messages.publishAction_publish_ok());
+		    Image pdfGenImage = null;
+
+		    if (entry.getValue().equals(PDF_GENERATION_FAILED)) {
+			pdfGenImage = new Image(controller.getImageBundle()
+				.cross16());
+			pdfGenImage.setTitle(messages.publishAction_pdfGen_nok());
+		    } else if (entry.getValue()
+			    .equals(PDF_GENERATION_SUCCEEDED)) {
+			pdfGenImage = new Image(controller.getImageBundle().check16());
+			pdfGenImage.setTitle(messages.publishAction_pdfGen_ok());
+		    }
+		    grid.setWidget(siteIndex + 1, 1, publishImage);
+		    grid.setWidget(siteIndex + 1, 2, pdfGenImage);
+		}
+
+	    }
 	    responseReceive();
 	}
 
@@ -147,7 +172,6 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 
     public PublishForm(OsylManagerController controller, List<COSite> coSites) {
 	super(controller);
-	// Label title = new Label(messages.mainView_action_publish());
 	Label title = new Label(messages.publishAction_publish_title());
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);

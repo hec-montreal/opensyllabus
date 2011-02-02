@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.manager.client.rpc;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
@@ -94,7 +95,7 @@ public interface OsylManagerGwtService extends RemoteService {
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
 	    String academicSession);
 
-    public void publish(String siteId) throws Exception, FusionException;
+    public Vector<Map<String, String>> publish(String siteId) throws Exception, FusionException;
     
     public List<CMAcademicSession> getAcademicSessions();
 

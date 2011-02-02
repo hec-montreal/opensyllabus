@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.manager.client.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtService;
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtServiceAsync;
@@ -154,7 +155,7 @@ public class OsylManagerRPCController {
 	serviceProxy.getAllCoAndSiteInfo(searchTerm, academicSession, callback);
     }
 
-    public void publish(String siteId, AsyncCallback<Void> callback) {
+    public void publish(String siteId, AsyncCallback<Vector<Map<String, String>>> callback) {
 	serviceProxy.publish(siteId, callback);
     }
 

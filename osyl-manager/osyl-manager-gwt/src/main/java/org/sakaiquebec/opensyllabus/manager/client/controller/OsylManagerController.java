@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.FireOsylManagerEvents;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
@@ -346,7 +347,7 @@ public class OsylManagerController implements FireOsylManagerEvents {
      * @param siteId id of the site to publish the course outline
      * @param callback container of the server response
      */
-    public void publish(String siteId, AsyncCallback<Void> callback) {
+    public void publish(String siteId, AsyncCallback<Vector<Map<String, String>>> callback) {
 	OsylManagerRPCController.getInstance().publish(siteId, callback);
     }
 

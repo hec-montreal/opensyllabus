@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.manager.server;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.servlet.ServletContext;
 
@@ -167,9 +168,9 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		searchTerm, academicSession);
     }
 
-    public void publish(String siteId) throws Exception, FusionException {
+    public Vector<Map<String, String>> publish(String siteId) throws Exception, FusionException {
 	String webappDir = getServletContext().getRealPath("/");
-	osylManagerServices.getOsylPublishService().publish(webappDir, siteId);
+	return osylManagerServices.getOsylPublishService().publish(webappDir, siteId);
     }
 
     public void deleteSite(String siteId) throws Exception {
