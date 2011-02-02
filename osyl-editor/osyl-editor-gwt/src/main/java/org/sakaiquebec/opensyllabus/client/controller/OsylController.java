@@ -928,7 +928,7 @@ public class OsylController implements SavePushButtonEventHandler,
     }
 
     public boolean isSelectedDateBeforeDate(Date date) {
-	if (getSelectedDate() != null) {
+	if (getSelectedDate() != null && date != null) {
 	    if (getSelectedDate().before(date))
 		return true;
 	}

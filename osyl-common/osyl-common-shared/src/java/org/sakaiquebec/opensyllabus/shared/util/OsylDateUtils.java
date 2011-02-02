@@ -50,7 +50,7 @@ public class OsylDateUtils {
     public static Date getDateFromXMLDate(String dateString) {
 	SimpleDateFormat dateFormat =
 		new SimpleDateFormat(OsylDateUtils.DATE_TIME_FORMAT);
-	Date date = new Date();
+	Date date = null;
 
 	try {
 	    date = dateFormat.parse(OsylDateUtils.getRFC822String(dateString));
