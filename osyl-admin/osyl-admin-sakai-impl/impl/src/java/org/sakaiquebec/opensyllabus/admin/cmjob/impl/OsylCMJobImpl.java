@@ -226,57 +226,56 @@ public class OsylCMJobImpl implements OsylCMJob {
 
     // ***************** END SPRING INJECTION ************************//
 
-    /* load the instructors and assigns them to their courses */
-    private void assignTeachers() {
-	ProfCoursMapEntry profCoursEntry = null;
-	String matricule = "";
-	Iterator<DetailCoursMapEntry> cours;
-	DetailCoursMapEntry detailsCours;
-	CourseOffering courseOff = null;
-	String courseOffId = null;
-	Iterator<ProfCoursMapEntry> profCours =
-		profCoursMap.values().iterator();
+	/* load the instructors and assigns them to their courses */
+	private void assignTeachers() {
+		ProfCoursMapEntry profCoursEntry = null;
+		String matricule = "";
+		Iterator<DetailCoursMapEntry> cours;
+		DetailCoursMapEntry detailsCours;
+		Iterator<ProfCoursMapEntry> profCours = profCoursMap.values()
+				.iterator();
 
-	while (profCours.hasNext()) {
-	    profCoursEntry = (ProfCoursMapEntry) profCours.next();
-	    matricule = profCoursEntry.getEmplId();
-	    cours = profCoursEntry.getCours();
-	    while (cours.hasNext()) {
-		detailsCours = (DetailCoursMapEntry) cours.next();
+		while (profCours.hasNext()) {
+			profCoursEntry = (ProfCoursMapEntry) profCours.next();
+			matricule = profCoursEntry.getEmplId();
+			cours = profCoursEntry.getCours();
+			while (cours.hasNext()) {
+				detailsCours = (DetailCoursMapEntry) cours.next();
 
-		EnrollmentSet enrollmentSet = null;
-		Set<String> instructors = new HashSet<String>();
-		Set<String> coordinateurs = new HashSet<String>();
+				EnrollmentSet enrollmentSet = null;
+				Set<String> instructors = new HashSet<String>();
+				String coordinateur = null;
 
-		// On a un enseignant
-		String enrollmentSetId =
-			getCourseSectionEnrollmentSetId(detailsCours);
+				// On a un enseignant
+				String enrollmentSetId = getCourseSectionEnrollmentSetId(detailsCours);
 
-		enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
-		enrollmentSet.setDefaultEnrollmentCredits(profCoursEntry
-			.getUnitMinimum());
-		instructors = enrollmentSet.getOfficialInstructors();
-		if (instructors == null)
-		    instructors = new HashSet<String>();
-		instructors.add(matricule);
-		enrollmentSet.setOfficialInstructors(instructors);
-		cmAdmin.updateEnrollmentSet(enrollmentSet);
-		log.info("Instructors for " + detailsCours.getUniqueKey()
-			+ ": " + instructors.toString());
+				enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
+				enrollmentSet.setDefaultEnrollmentCredits(profCoursEntry
+						.getUnitMinimum());
+				instructors = enrollmentSet.getOfficialInstructors();
+				if (instructors == null)
+					instructors = new HashSet<String>();
+				instructors.add(matricule);
+				enrollmentSet.setOfficialInstructors(instructors);
+				cmAdmin.updateEnrollmentSet(enrollmentSet);
+				log.info("Instructors for " + detailsCours.getUniqueKey()
+						+ ": " + instructors.toString());
 
-		// On a un coordonnateur
-		enrollmentSetId =
-			getCourseOfferingId(detailsCours) + SHARABLE_SECTION;
-		enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
-		coordinateurs = enrollmentSet.getOfficialInstructors();
-		coordinateurs.add(detailsCours.getCoordonnateur().getEmplId());
-		enrollmentSet.setOfficialInstructors(coordinateurs);
-		cmAdmin.updateEnrollmentSet(enrollmentSet);
+				// On a un coordonnateur
+				enrollmentSetId = getCourseOfferingId(detailsCours)
+						+ SHARABLE_SECTION;
+				enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
+				coordinateur = detailsCours.getCoordonnateur().getEmplId();
+				cmAdmin.addOrUpdateSectionMembership(coordinateur,
+						COORDONNATEUR_ROLE, enrollmentSetId, ACTIVE_STATUS);
+				enrollmentSet.setOfficialInstructors(null);
+				actualCourseMembers.remove(coordinateur + enrollmentSetId);
+				log.info("Coordinators for " + detailsCours.getUniqueKey()
+						+ ": " + coordinateur);
+			}
 
-	    }
-
+		}
 	}
-    }
 
     /** {@inheritDoc} */
     public void loadCourses() {
