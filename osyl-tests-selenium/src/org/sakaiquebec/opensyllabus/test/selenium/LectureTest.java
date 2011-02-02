@@ -102,7 +102,7 @@ public class LectureTest extends AbstractOSYLTest {
 
 	// Now we return to the lecture list
 	//clickHomeButton(); // AH
-	session().click("gwt-uid-2");	
+	session().click(BUTTON_HOME);	//It was "gwt-uid-2"
 	openOrganisationSection();
 	
 	// Ensure the new name is still visible
