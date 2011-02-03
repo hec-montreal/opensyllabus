@@ -115,17 +115,17 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public void setAnnouncementService(AnnouncementService announcementService) {
 	this.announcementService = announcementService;
     }
-    
+
     private SessionManager sessionManager;
 
     public SessionManager getSessionManager() {
-        return sessionManager;
+	return sessionManager;
     }
 
     public void setSessionManager(SessionManager sessionManager) {
-        this.sessionManager = sessionManager;
+	this.sessionManager = sessionManager;
     }
-    
+
     private SecurityService securityService;
 
     public void setSecurityService(SecurityService securityService) {
@@ -258,18 +258,17 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public void setCoRelationDao(CORelationDao relationDao) {
 	this.coRelationDao = relationDao;
     }
-    
+
     private AuthzGroupService authzGroupService;
-    
 
     public void setAuthzGroupService(AuthzGroupService authzGroupService) {
-        this.authzGroupService = authzGroupService;
+	this.authzGroupService = authzGroupService;
     }
-    
+
     private IdManager idManager;
 
     public void setIdManager(IdManager idManager) {
-        this.idManager = idManager;
+	this.idManager = idManager;
     }
 
     /**
@@ -320,9 +319,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    throws Exception, FusionException {
 
 	long start = System.currentTimeMillis();
-	log.info("user ["
-			    + sessionManager.getCurrentSession().getUserEid()
-			    + "] publish site ["+siteId+"]");
+	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		+ "] publish site [" + siteId + "]");
 	publishedSiteIds = new Vector<String>();
 	Vector<Map<String, String>> publicationResults =
 		new Vector<Map<String, String>>();
@@ -337,7 +335,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	COSerialized co =
 		osylSiteService
 			.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
-	
 
 	if (co.getContent() == null) {
 	    osylSiteService.setCoContentWithTemplate(co, webappDir);
@@ -533,7 +530,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return co;
     }
 
-    //TODO change visibility to private after 2.6.1->2.7.1 migration
+    // TODO change visibility to private after 2.6.1->2.7.1 migration
     public void createPublishPrintVersion(String siteId, String webappdir)
 	    throws PdfGenerationException {
 	try {
@@ -547,7 +544,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    Site site = osylSiteService.getSite(siteId);
 		    publishDirectory =
 			    ContentHostingService.ATTACHMENTS_COLLECTION
-				    + site.getTitle() + "/" + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
+				    + site.getTitle()
+				    + "/"
+				    + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
 				    + "/";
 		} else {
 		    publishDirectory =
@@ -630,7 +629,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    + OsylConfigService.CONFIG_DIR + File.separator
 			    + configRef + File.separator
 			    + OsylConfigService.PRINT_DIRECTORY
-			    + File.separator,ServerConfigurationService.getServerUrl());
+			    + File.separator, ServerConfigurationService
+			    .getServerUrl(),coSerialized.getSiteId());
 
 	    return f;
 	} catch (Exception e) {
@@ -794,8 +794,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    String childId = coRelationIter.next().getChild();
 	    try {
 		log.info("user ["
-			    + sessionManager.getCurrentSession().getUserEid()
-			    + "] publish child site ["+childId+"]");
+			+ sessionManager.getCurrentSession().getUserEid()
+			+ "] publish child site [" + childId + "]");
 		publication(childId, webappDir);
 	    } catch (Exception e) {
 		e.printStackTrace();
@@ -833,17 +833,21 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		Site site = osylSiteService.getSite(siteId);
 		id_publish =
 			ContentHostingService.ATTACHMENTS_COLLECTION
-				+ site.getTitle() + "/" + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX + "/";
+				+ site.getTitle()
+				+ "/"
+				+ OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
+				+ "/";
 	    } else {
 		id_publish = (refString + PUBLISH_DIRECTORY + "/");
 	    }
 
 	    ContentCollection publishContent = null;
 	    try {
-	    	publishContent =
-		    contentHostingService.getCollection(id_publish);
-	    }catch (Exception e){
-	    	publishContent = contentHostingService.addCollection(id_publish);
+		publishContent =
+			contentHostingService.getCollection(id_publish);
+	    } catch (Exception e) {
+		publishContent =
+			contentHostingService.addCollection(id_publish);
 	    }
 
 	    @SuppressWarnings("unchecked")
@@ -900,8 +904,13 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			Site site = osylSiteService.getSite(siteId);
 			this_publish_directory =
 				ContentHostingService.ATTACHMENTS_COLLECTION
-					+ site.getTitle() + "/" + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
-					+ "/" + this_work_id.substring(this_work_id.lastIndexOf(siteRef)+siteRef.length());
+					+ site.getTitle()
+					+ "/"
+					+ OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
+					+ "/"
+					+ this_work_id.substring(this_work_id
+						.lastIndexOf(siteRef)
+						+ siteRef.length());
 
 		    } else {
 			this_publish_directory =
@@ -987,20 +996,26 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	}
 
 	// Create a course outline with specified access
+	String content =
+		transformXmlForGroup(co.getContent(), access, webappDir);
 	if (publishedCO == null) {
 	    publishedCO = new COSerialized(co);
 	    publishedCO.setCoId(idManager.createUuid());
-	    publishedCO.setContent(transformXmlForGroup(co.getContent(),
-		    access, webappDir));
 	    publishedCO.setAccess(access);
 	    publishedCO.setPublished(true);
-	    resourceDao.createOrUpdateCourseOutline(publishedCO);
-
-	} else {
-	    publishedCO.setContent(transformXmlForGroup(co.getContent(),
-		    access, webappDir));
-	    resourceDao.createOrUpdateCourseOutline(publishedCO);
 	}
+	publishedCO.setContent(content);
+//	COModeledServer coModeledServer = new COModeledServer(publishedCO);
+//	coModeledServer.XML2Model();
+//	coModeledServer.getModeledContent().addProperty(
+//		COPropertiesType.PREVIOUS_PUBLISHED,
+//		coModeledServer.getModeledContent().getProperty(
+//			COPropertiesType.PUBLISHED));
+//	coModeledServer.getModeledContent().addProperty(
+//		COPropertiesType.PUBLISHED,
+//		OsylDateUtils.getCurrentDateAsXmlString());
+//	coModeledServer.model2XML();
+	resourceDao.createOrUpdateCourseOutline(publishedCO);
 
 	// We save the published date in the course outline in edition
 	co.setPublicationDate(new java.util.Date(System.currentTimeMillis()));

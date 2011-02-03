@@ -13,6 +13,7 @@
 	<xsl:param name="imagePath"></xsl:param>
 	<xsl:param name="serverUrl"></xsl:param>
 	<xsl:param name="currentDateTime"></xsl:param>
+	<xsl:param name="siteId"></xsl:param>
 
 	<xsl:variable name='lang'>
 		<xsl:value-of select="substring(/OSYL/CO/language,1,2)"/>
@@ -809,7 +810,7 @@
 		<fo:block font-size="10pt">
 			<fo:inline color="blue" text-decoration="underline">
 				<fo:basic-link>
-						<xsl:attribute name="external-destination"><xsl:value-of select="$serverUrl"/>/access/content<xsl:value-of select="identifier"/></xsl:attribute>
+						<xsl:attribute name="external-destination"><xsl:value-of select="$serverUrl"/>/sdata/c<xsl:value-of select="identifier"/>?child=<xsl:value-of select="$siteId"/></xsl:attribute>
 					<xsl:value-of select="../label"/>
 				</fo:basic-link>
 			</fo:inline>

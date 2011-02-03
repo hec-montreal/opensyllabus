@@ -52,7 +52,7 @@ import org.w3c.dom.Node;
 
 public class FOPHelper {
 
-    public static File convertXml2Pdf(String xml, String xslt, String webappdir, String serverName)
+    public static File convertXml2Pdf(String xml, String xslt, String webappdir, String serverName, String siteId)
 	    throws IOException, TransformerException, Exception {
 	File pdffile = File.createTempFile("osyl-fop-print", ".pdf");
 	try {
@@ -85,6 +85,7 @@ public class FOPHelper {
 		transformer.setParameter("imagePath", webappdir);
 		transformer.setParameter("serverUrl", serverName);
 		transformer.setParameter("currentDateTime", OsylDateUtils.getCurrentDateAsXmlString());
+		transformer.setParameter("siteId", siteId);
 
 		// Setup input for XSLT transformation
 		String escapeString = xml.replaceAll("&amp;", "&#38;");
@@ -118,12 +119,12 @@ public class FOPHelper {
 	return pdffile;
     }
     
-    public static File convertXml2Pdf(Node d, String xslt, String webappdir, String serverName)
+    public static File convertXml2Pdf(Node d, String xslt, String webappdir, String serverName, String siteId)
 	    throws IOException, TransformerException, Exception {
 
 	// Setup input for XSLT transformation
 	String s = xmlToString(d);
-	return convertXml2Pdf(s, xslt, webappdir, serverName);
+	return convertXml2Pdf(s, xslt, webappdir, serverName, siteId);
     }
 
     public static String xmlToString(Node node) {
