@@ -357,14 +357,14 @@ public class OsylCMJobImpl implements OsylCMJob {
 		    cmAdmin.updateCourseOffering(courseOff);
 		}
 
-		if (coursEntry.getCoordonnateur() != null) {
-		    String offInstructor =
-			    coursEntry.getCoordonnateur().getEmplId();
-		    cmAdmin.addOrUpdateCourseOfferingMembership(offInstructor,
-			    COORDONNATEUR_ROLE, courseOff.getEid(),
-			    ACTIVE_STATUS);
-
-		}
+//		if (coursEntry.getCoordonnateur() != null) {
+//		    String offInstructor =
+//			    coursEntry.getCoordonnateur().getEmplId();
+//		    cmAdmin.addOrUpdateCourseOfferingMembership(offInstructor,
+//			    COORDONNATEUR_ROLE, courseOff.getEid(),
+//			    ACTIVE_STATUS);
+//
+//		}
 
 		if (cmService.isCourseSetDefined(courseSetId)) {
 		    cmAdmin.removeCourseOfferingFromCourseSet(courseSetId,
@@ -477,20 +477,21 @@ public class OsylCMJobImpl implements OsylCMJob {
 	    EnrollmentSet enrollmentSet = null;
 
 	    if (!cmService.isEnrollmentSetDefined(enrollmentSetId)) {
-		try {
-
-		    enrollmentSet =
-			    cmAdmin.createEnrollmentSet(enrollmentSetId, title,
-				    description, courseSetId, CREDITS,
-				    courseOfferingId, new HashSet<String>());
-		} catch (IdExistsException e) {
-		    e.printStackTrace();
-		}
+//		try {
+//
+//		    enrollmentSet =
+//			    cmAdmin.createEnrollmentSet(enrollmentSetId, title,
+//				    description, courseSetId, CREDITS,
+//				    courseOfferingId, new HashSet<String>());
+//		} catch (IdExistsException e) {
+//		    e.printStackTrace();
+//		}
 	    } else {
-		enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
+	    	cmAdmin.removeEnrollmentSet(enrollmentSetId);
+		//enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
 	    }
-	    newSection.setEnrollmentSet(enrollmentSet);
-	    cmAdmin.updateSection(newSection);
+//	    newSection.setEnrollmentSet(enrollmentSet);
+//	    cmAdmin.updateSection(newSection);
 	}
 
 	return newSection;
