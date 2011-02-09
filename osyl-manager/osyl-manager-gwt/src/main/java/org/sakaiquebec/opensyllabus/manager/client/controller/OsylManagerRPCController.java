@@ -27,6 +27,7 @@ import java.util.Vector;
 
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtService;
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtServiceAsync;
+import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
@@ -82,6 +83,11 @@ public class OsylManagerRPCController {
 	    }
 
 	    public void onFailure(Throwable error) {
+		if(error instanceof OsylPermissionException){
+		    Window.alert(osylManagerController.getMessages()
+				.siteNotCreated()+osylManagerController.getMessages()
+				.permission_exception());
+		}
 		Window.alert(osylManagerController.getMessages()
 			.siteNotCreated());
 	    }

@@ -28,6 +28,7 @@ import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
+import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
@@ -60,9 +61,9 @@ public interface OsylManagerService {
     public static final String TEMP_DIRECTORY = "temp";
 
     // Special tool id for Home page
-    public static final String SITE_INFORMATION_TOOL="sakai.iframe.site";
+    public static final String SITE_INFORMATION_TOOL = "sakai.iframe.site";
 
-	/**
+    /**
      * Name of the course outline xml file
      */
     public static final String CO_XML_FILENAME = "syllabus.xml";
@@ -78,7 +79,8 @@ public interface OsylManagerService {
      * @param xmlReference
      * @param siteId
      */
-    public void readXML(String xmlReference, String siteId, String webapp) throws Exception;
+    public void readXML(String xmlReference, String siteId, String webapp)
+	    throws Exception, OsylPermissionException;
 
     /**
      * Create a Course outline using the zip reference
@@ -86,7 +88,8 @@ public interface OsylManagerService {
      * @param zipReference
      * @param siteId
      */
-    public void readZip(String zipReference, String siteId, String webapp) throws Exception;
+    public void readZip(String zipReference, String siteId, String webapp)
+	    throws Exception, OsylPermissionException;
 
     /**
      * This method return a list of the files contained in the same zip file as
@@ -121,25 +124,33 @@ public interface OsylManagerService {
      * 
      * @return url of the package file
      */
-    public String getOsylPackage(String siteId, String webappDir);
+    public String getOsylPackage(String siteId, String webappDir) throws OsylPermissionException;
 
-    public Map<String, String> getOsylSites(List<String> siteIds, String searchTerm);
+    public Map<String, String> getOsylSites(List<String> siteIds,
+	    String searchTerm);
 
     public String getParent(String siteId) throws Exception;
 
-    public void associate(String siteId, String parentId) throws Exception, CompatibilityException, FusionException;
+    public void associate(String siteId, String parentId) throws Exception,
+	    CompatibilityException, FusionException, OsylPermissionException;
 
-    public void dissociate(String siteId, String parentId) throws Exception;
+    public void dissociate(String siteId, String parentId) throws Exception, OsylPermissionException;
 
-    public void associateToCM(String courseSectionId, String siteId) throws Exception;
-    public void associateToCM(String courseSectionId, String siteId, String webappDir) throws Exception;
-    
-    public void dissociateFromCM(String siteId) throws Exception;
-    public void dissociateFromCM(String siteId, String webappDir) throws Exception;
+    public void associateToCM(String courseSectionId, String siteId)
+	    throws Exception, OsylPermissionException;
+
+    public void associateToCM(String courseSectionId, String siteId,
+	    String webappDir) throws Exception, OsylPermissionException;
+
+    public void dissociateFromCM(String siteId) throws Exception, OsylPermissionException;
+
+    public void dissociateFromCM(String siteId, String webappDir)
+	    throws Exception, OsylPermissionException;
 
     /**
      * This method retrieves all the course sections registered in the course
      * management and that startsWith the given text or numbers.
+     * 
      * @param startsWith
      * @return
      */
@@ -163,9 +174,13 @@ public interface OsylManagerService {
      */
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
 	    String academicSession);
-    
+
     public List<CMAcademicSession> getAcademicSessions();
-    
-    public void copySite (String siteFrom, String siteTo) throws Exception;
-    
+
+    public void copySite(String siteFrom, String siteTo) throws Exception, OsylPermissionException;
+
+    public void deleteSite(String siteId) throws OsylPermissionException, Exception;
+
+    public String createSite(String siteTitle, String configRef, String lang) throws Exception, OsylPermissionException;
+
 }

@@ -32,6 +32,7 @@ import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWin
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.helper.ActionHelper;
+import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -86,9 +87,12 @@ public class ImportNewSiteForm extends OsylManagerAbstractWindowPanel implements
 	}
 
 	public void onFailure(Throwable error) {
+	    String msg = error.getMessage();
+	    if(error instanceof OsylPermissionException)
+		msg = messages.permission_exception();
 	    OsylOkCancelDialog warning =
 		    new OsylOkCancelDialog(false, true, messages
-			    .OsylWarning_Title(), error.getMessage(), true,
+			    .OsylWarning_Title(), msg, true,
 			    false);
 	    warning.show();
 	    warning.centerAndFocus();

@@ -29,6 +29,7 @@ import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerE
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
+import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
@@ -74,7 +75,7 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
     private final OsylCancelDialog diag;
 
     private ListBox suggestionListBox;
-    
+
     private Image spinner;
 
     AsyncCallback<List<CMCourse>> coursesListAsyncCallback =
@@ -109,11 +110,14 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
     AsyncCallback<Void> associateToCMAsyncCallback = new AsyncCallback<Void>() {
 
 	public void onFailure(Throwable caught) {
+	    String msg = messages.rpcFailure();
+	    if (caught instanceof OsylPermissionException) {
+		msg = messages.permission_exception();
+	    }
 	    diag.hide();
 	    OsylOkCancelDialog alert =
 		    new OsylOkCancelDialog(false, true, messages
-			    .OsylWarning_Title(), messages.rpcFailure(), true,
-			    false);
+			    .OsylWarning_Title(), msg, true, false);
 	    alert.show();
 	    alert.centerAndFocus();
 	}
@@ -199,8 +203,7 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 		okButton.setEnabled(true);
 	    }
 	});
-	
-	
+
 	HorizontalPanel hzPanel = new HorizontalPanel();
 	Label voidLabel = new Label();
 	hzPanel.add(voidLabel);
@@ -278,7 +281,7 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	okButton = new PushButton(messages.associateForm_ok());
 	okButton.setStylePrimaryName("Osyl-Button");
 	okButton.setWidth("50px");
-	
+
 	okButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
 		AssociateForm.super.hide();

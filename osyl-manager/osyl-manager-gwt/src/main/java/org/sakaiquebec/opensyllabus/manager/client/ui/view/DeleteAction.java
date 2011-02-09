@@ -28,6 +28,7 @@ import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerControl
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylUnobtrusiveAlert;
+import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -48,6 +49,8 @@ public class DeleteAction extends OsylManagerAbstractAction {
 
     private static int asynCB_OK = 0;
 
+    private boolean permissionException = false;
+
     private class DeleteAsynCallBack implements AsyncCallback<Void> {
 	private int index;
 
@@ -57,6 +60,8 @@ public class DeleteAction extends OsylManagerAbstractAction {
 	}
 
 	public void onFailure(Throwable caught) {
+	    if (caught instanceof OsylPermissionException)
+		permissionException = true;
 	    DeleteAction.lMsg.add(coSites.get(index).getSiteId());
 	    responseReceive();
 	}
@@ -73,24 +78,27 @@ public class DeleteAction extends OsylManagerAbstractAction {
 		String msg = "";
 		if (DeleteAction.asynCB_OK != DeleteAction.coSites.size()) {
 		    msg = messages.deleteAction_delete_error() + "\n";
-		    for (String id : lMsg) {
-			msg +=
-				id
-					+ messages
-						.deleteAction_delete_error_detail()
-					+ "\n";
+		    if (permissionException) {
+			msg += messages.permission_exception();
+		    } else {
+			for (String id : lMsg) {
+			    msg +=
+				    id
+					    + messages
+						    .deleteAction_delete_error_detail()
+					    + "\n";
+			}
 		    }
-
 		} else {
 		    msg = messages.deleteAction_delete_ok();
 		}
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
-		OsylUnobtrusiveAlert alert =  new OsylUnobtrusiveAlert(msg);
+		OsylUnobtrusiveAlert alert = new OsylUnobtrusiveAlert(msg);
 		OsylManagerEntryPoint.showWidgetOnTop(alert);
 	    } else {
-		controller.deleteSite(coSites.get(index+1).getSiteId(),
-			new DeleteAsynCallBack(index+1));
+		controller.deleteSite(coSites.get(index + 1).getSiteId(),
+			new DeleteAsynCallBack(index + 1));
 	    }
 	}
 
@@ -133,12 +141,12 @@ public class DeleteAction extends OsylManagerAbstractAction {
 			    false);
 	    canc.show();
 	    canc.centerAndFocus();
-	} if (hasChild){
+	}
+	if (hasChild) {
 	    OsylOkCancelDialog canc =
 		    new OsylOkCancelDialog(false, true, messages
 			    .OsylWarning_Title(), messages
-			    .deleteAction_delete_error_hasChild(), true,
-			    false);
+			    .deleteAction_delete_error_hasChild(), true, false);
 	    canc.show();
 	    canc.centerAndFocus();
 	} else {

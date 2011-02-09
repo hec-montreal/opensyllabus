@@ -38,9 +38,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
+import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -53,9 +53,9 @@ import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
 import org.sakaiproject.authz.api.AuthzGroupService;
+import org.sakaiproject.authz.api.FunctionManager;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.api.SecurityService;
-import org.sakaiproject.authz.api.FunctionManager;
 import org.sakaiproject.citation.api.Citation;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
@@ -108,6 +108,7 @@ import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
+import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
@@ -145,14 +146,19 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    LogFactory.getLog(OsylManagerServiceImpl.class);
 
     /** the OsylManager fonctions **/
-    public final static String OSYL_MANAGER_FUNCTION_PUBLISH = "osyl.manager.publish";
-    public final static String OSYL_MANAGER_FUNCTION_IMPORT = "osyl.manager.import";
-    public final static String OSYL_MANAGER_FUNCTION_CREATE = "osyl.manager.create";
+    public final static String OSYL_MANAGER_FUNCTION_IMPORT =
+	    "osyl.manager.import";
+    public final static String OSYL_MANAGER_FUNCTION_CREATE =
+	    "osyl.manager.create";
     public final static String OSYL_MANAGER_FUNCTION_COPY = "osyl.manager.copy";
-    public final static String OSYL_MANAGER_FUNCTION_EXPORT = "osyl.manager.export";
-    public final static String OSYL_MANAGER_FUNCTION_DELETE = "osyl.manager.delete";
-    public final static String OSYL_MANAGER_FUNCTION_ATTACH = "osyl.manager.attach";
-    public final static String OSYL_MANAGER_FUNCTION_ASSOCIATE = "osyl.manager.associate";
+    public final static String OSYL_MANAGER_FUNCTION_EXPORT =
+	    "osyl.manager.export";
+    public final static String OSYL_MANAGER_FUNCTION_DELETE =
+	    "osyl.manager.delete";
+    public final static String OSYL_MANAGER_FUNCTION_ATTACH =
+	    "osyl.manager.attach";
+    public final static String OSYL_MANAGER_FUNCTION_ASSOCIATE =
+	    "osyl.manager.associate";
 
     // Key to define the delay (in minutes) to wait before deleting export zip
     // files in sakai.properties
@@ -219,7 +225,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Sets the {@link OsylContentService}.
-     *
+     * 
      * @param osylContentService
      */
     public void setOsylContentService(OsylContentService osylContentService) {
@@ -313,7 +319,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      */
     private UserDirectoryService userDirectoryService;
 
-    public void setUserDirectoryService(UserDirectoryService userDirectoryService) {
+    public void setUserDirectoryService(
+	    UserDirectoryService userDirectoryService) {
 	this.userDirectoryService = userDirectoryService;
     }
 
@@ -341,10 +348,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      */
     private FunctionManager functionManager;
 
-	public void setFunctionManager(FunctionManager functionManager) {
-		this.functionManager = functionManager;
-	}
-
+    public void setFunctionManager(FunctionManager functionManager) {
+	this.functionManager = functionManager;
+    }
 
     /**
      * The type of site we are creating
@@ -360,17 +366,14 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      */
     public void init() {
 	log.info("OsylManagerServiceImpl service init() ");
-
-		// register functions
-		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_PUBLISH);
-		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_IMPORT);
-		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_CREATE);
-		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_COPY);
-		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_EXPORT);
-		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_DELETE);
-		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_ATTACH);
-		functionManager.registerFunction(OSYL_MANAGER_FUNCTION_ASSOCIATE);
-
+	// register functions
+	functionManager.registerFunction(OSYL_MANAGER_FUNCTION_IMPORT);
+	functionManager.registerFunction(OSYL_MANAGER_FUNCTION_CREATE);
+	functionManager.registerFunction(OSYL_MANAGER_FUNCTION_COPY);
+	functionManager.registerFunction(OSYL_MANAGER_FUNCTION_EXPORT);
+	functionManager.registerFunction(OSYL_MANAGER_FUNCTION_DELETE);
+	functionManager.registerFunction(OSYL_MANAGER_FUNCTION_ATTACH);
+	functionManager.registerFunction(OSYL_MANAGER_FUNCTION_ASSOCIATE);
     }
 
     private String mkdirCollection(String resourceDirToCreate,
@@ -550,7 +553,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Get a valid resource reference base site URL to be used in later calls.
-     *
+     * 
      * @return a String of the base URL
      */
     private String getSiteReference(Site site) {
@@ -562,7 +565,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Add a collection (similar to a sub-directory) under the resource tool.
-     *
+     * 
      * @param dir name of collection
      * @param parent where to create it (null means top-level)
      * @return boolean whether the collection was added or not
@@ -586,7 +589,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Tells if a collection is already created in sakai.
-     *
+     * 
      * @param a String of the collection id.
      * @return boolean whether the collection exists
      */
@@ -604,6 +607,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      */
     public void readXML(String xmlReference, String siteId, String webapp)
 	    throws Exception {
+	if (!isActionAllowedForCurrentUser(OSYL_MANAGER_FUNCTION_IMPORT)) {
+	    throw new OsylPermissionException(sessionManager
+		    .getCurrentSession().getUserEid(),
+		    OSYL_MANAGER_FUNCTION_IMPORT);
+	}
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] imports XML [" + xmlReference + "] into site " + siteId);
 	String xml;
@@ -639,6 +647,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      */
     public void readZip(String zipReference, String siteId, String webapp)
 	    throws Exception {
+	if (!isActionAllowedForCurrentUser(OSYL_MANAGER_FUNCTION_IMPORT)) {
+	    throw new OsylPermissionException(sessionManager
+		    .getCurrentSession().getUserEid(),
+		    OSYL_MANAGER_FUNCTION_IMPORT);
+	}
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] imports zip [" + zipReference + "] into site " + siteId);
 
@@ -688,7 +701,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
      * FIXME Task SAKAI-1609. This method is used to update the description and
      * the license of the Sakai resource during importation of a course outline
      * in a new site. It should be removed after the migration.
-     *
+     * 
      * @param element
      */
     private void updateResourceMetaInfo(COElementAbstract element) {
@@ -821,8 +834,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     /**
      * {@inheritDoc}
      */
-    public String getOsylPackage(String siteId, String webappDir) {
+    public String getOsylPackage(String siteId, String webappDir) throws OsylPermissionException {
 	String url = null;
+	if (!isActionAllowedForCurrentUser(OSYL_MANAGER_FUNCTION_EXPORT)) {
+	    throw new OsylPermissionException(sessionManager
+		    .getCurrentSession().getUserEid(),
+		    OSYL_MANAGER_FUNCTION_EXPORT);
+	}
 	try {
 	    File zipFile = exportAndZip(siteId, webappDir);
 	    Site site = siteService.getSite(siteId);
@@ -958,7 +976,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * List the files in a sites and zip them
-     *
+     * 
      * @param siteId
      * @return zipFile a temporary zip file...
      * @throws IOException
@@ -1061,7 +1079,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     /**
      * Get the delay (in minutes) to wait before deleting export zip defined in
      * the sakai.properties
-     *
+     * 
      * @return
      */
     private int getDeleteExportDelay() {
@@ -1082,12 +1100,24 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     public void associate(String siteId, String parentId) throws Exception,
-	    CompatibilityException, FusionException {
-	osylSiteService.associate(siteId, parentId);
+	    CompatibilityException, FusionException, OsylPermissionException {
+	if (!isActionAllowedForCurrentUser(OSYL_MANAGER_FUNCTION_ASSOCIATE)) {
+	    throw new OsylPermissionException(sessionManager
+		    .getCurrentSession().getUserEid(),
+		    OSYL_MANAGER_FUNCTION_ASSOCIATE);
+	} else {
+	    osylSiteService.associate(siteId, parentId);
+	}
     }
 
     public void dissociate(String siteId, String parentId) throws Exception {
-	osylSiteService.dissociate(siteId, parentId);
+	if (!isActionAllowedForCurrentUser(OSYL_MANAGER_FUNCTION_ASSOCIATE)) {
+	    throw new OsylPermissionException(sessionManager
+		    .getCurrentSession().getUserEid(),
+		    OSYL_MANAGER_FUNCTION_ASSOCIATE);
+	} else {
+	    osylSiteService.dissociate(siteId, parentId);
+	}
     }
 
     public void associateToCM(String courseSectionId, String siteId)
@@ -1123,7 +1153,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     public void associateToCM(String courseSectionId, String siteId,
 	    String webappDir) throws Exception {
-
+	if (!isActionAllowedForCurrentUser(OSYL_MANAGER_FUNCTION_ATTACH)) {
+	    throw new OsylPermissionException(sessionManager
+		    .getCurrentSession().getUserEid(),
+		    OSYL_MANAGER_FUNCTION_ATTACH);
+	}
+	
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] associates [" + siteId + "] to course [" + courseSectionId
 		+ "]");
@@ -1167,6 +1202,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     public void dissociateFromCM(String siteId, String webappDir)
 	    throws Exception {
+	if (!isActionAllowedForCurrentUser(OSYL_MANAGER_FUNCTION_ATTACH)) {
+	    throw new OsylPermissionException(sessionManager
+		    .getCurrentSession().getUserEid(),
+		    OSYL_MANAGER_FUNCTION_ATTACH);
+	}
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] dissociates [" + siteId + "] from course management");
 
@@ -1286,7 +1326,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /**
      * Import files contained in the osylPackage to Sakai resources
-     *
+     * 
      * @param zipReference
      * @param siteId
      */
@@ -1627,6 +1667,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     public void copySite(String siteFrom, String siteTo) throws Exception {
+	if (!isActionAllowedForCurrentUser(OSYL_MANAGER_FUNCTION_COPY)) {
+	    throw new OsylPermissionException(sessionManager
+		    .getCurrentSession().getUserEid(),
+		    OSYL_MANAGER_FUNCTION_COPY);
+	}
 	log
 		.info("user ["
 			+ sessionManager.getCurrentSession().getUserEid()
@@ -1968,6 +2013,40 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		}
 	    }
 	}
+    }
+
+    protected boolean isActionAllowedForCurrentUser(String permission) {
+	String userSiteId =
+		siteService.getUserSiteId(sessionManager
+			.getCurrentSessionUserId());
+	try {
+	    Site s = siteService.getSite(userSiteId);
+	    if (securityService.unlock(permission, s.getReference()))
+		return true;
+	    return false;
+	} catch (IdUnusedException e) {
+	    e.printStackTrace();
+	    return false;
+	}
+    }
+
+    public void deleteSite(String siteId) throws Exception, OsylPermissionException {
+	if (!isActionAllowedForCurrentUser(OSYL_MANAGER_FUNCTION_DELETE)) {
+	    throw new OsylPermissionException(sessionManager
+		    .getCurrentSession().getUserEid(),
+		    OSYL_MANAGER_FUNCTION_DELETE);
+	}
+	osylSiteService.deleteSite(siteId);
+    }
+
+    public String createSite(String siteTitle, String configRef, String lang)
+	    throws Exception, OsylPermissionException {
+	if (!isActionAllowedForCurrentUser(OSYL_MANAGER_FUNCTION_CREATE)) {
+	    throw new OsylPermissionException(sessionManager
+		    .getCurrentSession().getUserEid(),
+		    OSYL_MANAGER_FUNCTION_CREATE);
+	}
+	return osylSiteService.createSite(siteTitle, configRef, lang);
     }
 
 }

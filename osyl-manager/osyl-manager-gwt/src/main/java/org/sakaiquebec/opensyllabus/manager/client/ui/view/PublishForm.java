@@ -22,14 +22,15 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
+import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.exception.PdfGenerationException;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
@@ -48,7 +49,7 @@ import com.google.gwt.user.client.ui.PushButton;
  * @version $Id: $
  */
 public class PublishForm extends OsylManagerAbstractWindowPanel {
-    
+
     private static final String PDF_GENERATION_FAILED =
 	    "publish.pdfGeneration.nok";
 
@@ -67,7 +68,8 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 
     private List<COSite> coSites;
 
-    private class PublishAsynCallBack implements AsyncCallback<Vector<Map<String, String>>> {
+    private class PublishAsynCallBack implements
+	    AsyncCallback<Vector<Map<String, String>>> {
 
 	private int siteIndex;
 
@@ -86,10 +88,12 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 	    if (caught instanceof FusionException) {
 		if (((FusionException) caught).isHierarchyFusionException()) {
 		    msg =
-			    messages.publishAction_publish_error_HierarchyFusionException();
+			    messages
+				    .publishAction_publish_error_HierarchyFusionException();
 		} else {
 		    msg =
-			    messages.publishAction_publish_error_FusionException();
+			    messages
+				    .publishAction_publish_error_FusionException();
 		}
 		publishImage = new Image(controller.getImageBundle().cross16());
 		publishImage.setTitle(messages.publishAction_publish_error()
@@ -98,7 +102,8 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 		pdfGenImage.setTitle(messages.publishAction_pdfGen_nok());
 	    } else if (caught instanceof CompatibilityException) {
 		msg =
-			messages.publishAction_publish_error_CompatibilityException();
+			messages
+				.publishAction_publish_error_CompatibilityException();
 		publishImage = new Image(controller.getImageBundle().cross16());
 		publishImage.setTitle(messages.publishAction_publish_error()
 			+ " : " + msg);
@@ -111,6 +116,13 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 		pdfGenImage = new Image(controller.getImageBundle().cross16());
 		pdfGenImage.setTitle(messages.publishAction_pdfGen_nok()
 			+ " : " + msg);
+	    } else if (caught instanceof OsylPermissionException) {
+		msg = messages.permission_exception();
+		publishImage = new Image(controller.getImageBundle().check16());
+		publishImage.setTitle(messages.publishAction_publish_error()
+			+ " : " + msg);
+		pdfGenImage = new Image(controller.getImageBundle().cross16());
+		pdfGenImage.setTitle(messages.publishAction_pdfGen_nok());
 	    } else {
 		msg = caught.getMessage();
 		publishImage = new Image(controller.getImageBundle().cross16());
@@ -128,8 +140,8 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 
 	public void onSuccess(Vector<Map<String, String>> serverResponse) {
 	    Map<String, String> pdfGenerationResults = serverResponse.get(1);
-	    
-	    if(pdfGenerationResults != null) {
+
+	    if (pdfGenerationResults != null) {
 
 		for (Entry<String, String> entry : pdfGenerationResults
 			.entrySet()) {
@@ -139,13 +151,16 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 		    Image pdfGenImage = null;
 
 		    if (entry.getValue().equals(PDF_GENERATION_FAILED)) {
-			pdfGenImage = new Image(controller.getImageBundle()
-				.cross16());
-			pdfGenImage.setTitle(messages.publishAction_pdfGen_nok());
+			pdfGenImage =
+				new Image(controller.getImageBundle().cross16());
+			pdfGenImage.setTitle(messages
+				.publishAction_pdfGen_nok());
 		    } else if (entry.getValue()
 			    .equals(PDF_GENERATION_SUCCEEDED)) {
-			pdfGenImage = new Image(controller.getImageBundle().check16());
-			pdfGenImage.setTitle(messages.publishAction_pdfGen_ok());
+			pdfGenImage =
+				new Image(controller.getImageBundle().check16());
+			pdfGenImage
+				.setTitle(messages.publishAction_pdfGen_ok());
 		    }
 		    grid.setWidget(siteIndex + 1, 1, publishImage);
 		    grid.setWidget(siteIndex + 1, 2, pdfGenImage);
@@ -158,7 +173,7 @@ public class PublishForm extends OsylManagerAbstractWindowPanel {
 	private void responseReceive() {
 	    asynCB_return++;
 	    if (asynCB_return == coSites.size()) {
-//		publicationPanel.add(new HTML(pdfGenMsg));
+		// publicationPanel.add(new HTML(pdfGenMsg));
 		publishInProgess.setVisible(false);
 		okButton.setEnabled(true);
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,

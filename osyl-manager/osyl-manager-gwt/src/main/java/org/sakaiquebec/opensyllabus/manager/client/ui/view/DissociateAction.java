@@ -27,9 +27,9 @@ import org.sakaiquebec.opensyllabus.manager.client.OsylManagerEntryPoint;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylUnobtrusiveAlert;
+import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -46,6 +46,8 @@ public class DissociateAction extends OsylManagerAbstractAction {
 
     private static int asynCB_OK = 0;
 
+    private boolean permissionException = false;
+
     private class DissociateAsynCallBack implements AsyncCallback<Void> {
 
 	private String siteId;
@@ -57,6 +59,8 @@ public class DissociateAction extends OsylManagerAbstractAction {
 
 	public void onFailure(Throwable caught) {
 	    diag.hide();
+	    if (caught instanceof OsylPermissionException)
+		permissionException = true;
 	    DissociateAction.lMsg.add(siteId);
 	    responseReceive();
 	}
@@ -75,20 +79,23 @@ public class DissociateAction extends OsylManagerAbstractAction {
 		if (DissociateAction.asynCB_OK != DissociateAction.coSites
 			.size()) {
 		    msg = messages.dissociateAction_dissociate_error() + "\n";
-		    for (String id : lMsg) {
-			msg +=
-				id
-					+ messages
-						.dissociateAction_dissociate_error_detail()
-					+ "\n";
+		    if (permissionException) {
+			msg += messages.permission_exception();
+		    } else {
+			for (String id : lMsg) {
+			    msg +=
+				    id
+					    + messages
+						    .dissociateAction_dissociate_error_detail()
+					    + "\n";
+			}
 		    }
-
 		} else {
 		    msg = messages.dissociateAction_dissociate_ok();
 		}
 		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
 			OsylManagerEvent.SITE_INFO_CHANGE));
-		OsylUnobtrusiveAlert alert =  new OsylUnobtrusiveAlert(msg);
+		OsylUnobtrusiveAlert alert = new OsylUnobtrusiveAlert(msg);
 		OsylManagerEntryPoint.showWidgetOnTop(alert);
 	    }
 	}
@@ -116,18 +123,6 @@ public class DissociateAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(List<COSite> siteIds) {
-	// TODO: i18n
-	String pw = Window.prompt("Mot de passe / Password ?", "");
-	String okPw = "osyl" + "123";
-	if (null == pw) {
-	    return;
-	} else if (!okPw.equals(pw)) {
-	    // TODO: i18n
-	    Window
-		    .alert("L'opération est refusée. Veuillez contacter le centre d'assistance.");
-	    return;
-	}
-
 	diag.show();
 	diag.centerAndFocus();
 	coSites = siteIds;

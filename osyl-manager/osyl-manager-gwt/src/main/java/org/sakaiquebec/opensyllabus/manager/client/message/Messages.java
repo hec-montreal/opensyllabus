@@ -316,4 +316,6 @@ public interface Messages extends ConstantsWithLookup {
     String publishAction_pdfGen_ok();
     
     String publishAction_pdfGen_nok();
+    
+    String permission_exception();
 }

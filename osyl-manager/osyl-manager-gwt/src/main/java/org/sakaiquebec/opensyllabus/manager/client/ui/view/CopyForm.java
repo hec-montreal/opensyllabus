@@ -28,6 +28,7 @@ import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerControl
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
+import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -71,11 +72,11 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	    new AsyncCallback<List<COSite>>() {
 
 		public void onFailure(Throwable caught) {
+		    String msg = messages.rpcFailure();
 		    spinner.setVisible(false);
 		    OsylOkCancelDialog warning =
 			    new OsylOkCancelDialog(false, true, messages
-				    .OsylWarning_Title(),
-				    messages.rpcFailure(), false, true);
+				    .OsylWarning_Title(), msg, false, true);
 		    warning.show();
 		    warning.centerAndFocus();
 		}
@@ -84,10 +85,11 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 		    spinner.setVisible(false);
 		    sigleCourseMap = new HashMap<String, COSite>();
 		    for (COSite course : result) {
-		    	if (!course.getSiteId().equalsIgnoreCase(selectFromSite.getSiteId())){
-		    		sigleCourseMap.put(course.getSiteId(), course);
-		    		suggestionListBox.addItem(course.getSiteId());
-		    	}
+			if (!course.getSiteId().equalsIgnoreCase(
+				selectFromSite.getSiteId())) {
+			    sigleCourseMap.put(course.getSiteId(), course);
+			    suggestionListBox.addItem(course.getSiteId());
+			}
 		    }
 		    suggestionListBox.setSelectedIndex(0);
 		    okButton.setEnabled(true);
@@ -97,11 +99,14 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
     AsyncCallback<Void> copyToAsynCB = new AsyncCallback<Void>() {
 
 	public void onFailure(Throwable caught) {
+	    String msg = messages.rpcFailure();
+	    if (caught instanceof OsylPermissionException) {
+		msg = messages.permission_exception();
+	    }
 	    diag.hide();
 	    OsylOkCancelDialog alert =
 		    new OsylOkCancelDialog(false, true, messages
-			    .OsylWarning_Title(), messages.rpcFailure(), true,
-			    false);
+			    .OsylWarning_Title(), msg, true, false);
 	    alert.show();
 	    alert.centerAndFocus();
 	}

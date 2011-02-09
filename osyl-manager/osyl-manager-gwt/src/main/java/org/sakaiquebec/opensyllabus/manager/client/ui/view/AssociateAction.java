@@ -26,8 +26,6 @@ import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerControl
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
-import com.google.gwt.user.client.Window;
-
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
@@ -36,7 +34,7 @@ public class AssociateAction extends OsylManagerAbstractAction {
 
     public AssociateAction(OsylManagerController controller) {
 	super(controller, "mainView_action_associate",
-	"mainView_action_associate_tooltip");
+		"mainView_action_associate_tooltip");
     }
 
     @Override
@@ -55,16 +53,6 @@ public class AssociateAction extends OsylManagerAbstractAction {
 
     @Override
     public void onClick(List<COSite> siteIds) {
-	// TODO: i18n
-	String pw = Window.prompt("Mot de passe / Password ?", "");
-	String okPw = "osyl" + "123";
-	if (null == pw) {
-	    return;
-	} else if (!okPw.equals(pw)) {
-	    // TODO: i18n
-	    Window.alert("L'opération est refusée. Veuillez contacter le centre d'assistance.");
-	    return;
-	}
 	AssociateForm as = new AssociateForm(controller, siteIds.get(0), diag);
 	as.showModal();
     }

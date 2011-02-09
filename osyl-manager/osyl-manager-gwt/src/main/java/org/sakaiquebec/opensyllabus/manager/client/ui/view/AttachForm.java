@@ -33,6 +33,7 @@ import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWin
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
+import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
@@ -140,6 +141,8 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	    }
 	    else if(caught instanceof CompatibilityException){
 		msg=messages.attachAction_attach_error_CompatibilityException();
+	    }else if(caught instanceof OsylPermissionException){
+		msg= messages.permission_exception();
 	    }else{
 		msg = caught.getMessage();
 	    }
