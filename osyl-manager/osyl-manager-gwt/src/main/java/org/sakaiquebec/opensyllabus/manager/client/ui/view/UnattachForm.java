@@ -25,6 +25,7 @@ import java.util.List;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
+import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -64,15 +65,19 @@ public class UnattachForm extends OsylManagerAbstractWindowPanel {
 
 	public void onFailure(Throwable caught) {
 	    Image image = new Image(controller.getImageBundle().cross16());
-	    image.setTitle(messages.unattachAction_unattach_error() + " : "
-		    + caught.getMessage());
+	    String msg = messages.unattachAction_unattach_error() + " : ";
+	    if (caught instanceof OsylPermissionException) {
+		msg += messages.permission_exception();
+	    } else {
+		msg += caught.getMessage();
+	    }
+	    image.setTitle(msg);
 	    grid.setWidget(siteIndex, 1, image);
 	    responseReceive();
 	}
 
 	public void onSuccess(Void result) {
-	    Image image = new Image(controller.getImageBundle()
-		    .check16());
+	    Image image = new Image(controller.getImageBundle().check16());
 	    image.setTitle(messages.unattachAction_unattach_ok());
 	    grid.setWidget(siteIndex, 1, image);
 	    responseReceive();
@@ -147,8 +152,8 @@ public class UnattachForm extends OsylManagerAbstractWindowPanel {
 	mainPanel.setCellHorizontalAlignment(hz,
 		HasHorizontalAlignment.ALIGN_CENTER);
 
-	controller.dissociate(coSites.get(0).getSiteId(), coSites.get(0).getParentSite(), new UnattachCallBack(
-		0));
+	controller.dissociate(coSites.get(0).getSiteId(), coSites.get(0)
+		.getParentSite(), new UnattachCallBack(0));
     }
 
 }

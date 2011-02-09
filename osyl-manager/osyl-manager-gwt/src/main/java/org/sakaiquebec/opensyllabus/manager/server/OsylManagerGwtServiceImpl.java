@@ -29,9 +29,11 @@ import javax.servlet.ServletContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.exception.PermissionException;
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtService;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
+import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
@@ -77,10 +79,10 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
      * {@inheritDoc}
      */
     public String createSite(String siteTitle, String configRef, String lang)
-	    throws Exception {
+	    throws Exception, PermissionException {
 
 	if (osylManagerServices != null) {
-	    return osylManagerServices.getOsylSiteService().createSite(
+	    return osylManagerServices.getOsylManagerService().createSite(
 		    siteTitle, configRef, lang);
 	} else {
 	    log.warn("Unable to create site: bean osylManagerMainBean is null");
@@ -103,7 +105,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     }
 
     public void importData(String fileReference, String siteId)
-	    throws Exception {
+	    throws Exception, PermissionException {
 	String webappDir = getServletContext().getRealPath("/");
 	if (fileReference.endsWith(".zip"))
 	    osylManagerServices.getOsylManagerService().readZip(fileReference,
@@ -112,41 +114,40 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	    osylManagerServices.getOsylManagerService().readXML(fileReference,
 		    siteId, webappDir);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getOsylPackage(String siteId) {
+    
+    public String getOsylPackage(String siteId) throws OsylPermissionException {
 	String webappDir = getServletContext().getRealPath("/");
 	return osylManagerServices.getOsylManagerService().getOsylPackage(
 		siteId, webappDir);
     }
 
-    public Map<String, String> getOsylSites(List<String> siteIds, String searchTerm) {
-	return osylManagerServices.getOsylManagerService()
-		.getOsylSites(siteIds, searchTerm);
+    public Map<String, String> getOsylSites(List<String> siteIds,
+	    String searchTerm) {
+	return osylManagerServices.getOsylManagerService().getOsylSites(
+		siteIds, searchTerm);
     }
 
     public String getParent(String siteId) throws Exception {
 	return osylManagerServices.getOsylManagerService().getParent(siteId);
     }
 
-    public void associate(String siteId, String parentId) throws Exception,CompatibilityException, FusionException {
+    public void associate(String siteId, String parentId) throws Exception,
+	    CompatibilityException, FusionException, PermissionException {
 	osylManagerServices.getOsylManagerService().associate(siteId, parentId);
     }
 
-    public void dissociate(String siteId, String parentId) throws Exception {
+    public void dissociate(String siteId, String parentId) throws Exception, PermissionException {
 	osylManagerServices.getOsylManagerService()
 		.dissociate(siteId, parentId);
     }
 
     public void associateToCM(String courseSectionId, String siteId)
-	    throws Exception {
+	    throws Exception, PermissionException {
 	osylManagerServices.getOsylManagerService().associateToCM(
 		courseSectionId, siteId, servletContext.getRealPath("/"));
     }
 
-    public void dissociateFromCM(String siteId) throws Exception {
+    public void dissociateFromCM(String siteId) throws Exception, PermissionException {
 	osylManagerServices.getOsylManagerService().dissociateFromCM(siteId,
 		servletContext.getRealPath("/"));
     }
@@ -168,13 +169,15 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		searchTerm, academicSession);
     }
 
-    public Vector<Map<String, String>> publish(String siteId) throws Exception, FusionException {
+    public Vector<Map<String, String>> publish(String siteId) throws Exception,
+	    FusionException, PermissionException {
 	String webappDir = getServletContext().getRealPath("/");
-	return osylManagerServices.getOsylPublishService().publish(webappDir, siteId);
+	return osylManagerServices.getOsylPublishService().publish(webappDir,
+		siteId);
     }
 
-    public void deleteSite(String siteId) throws Exception {
-	osylManagerServices.getOsylSiteService().deleteSite(siteId);
+    public void deleteSite(String siteId) throws Exception, PermissionException {
+	osylManagerServices.getOsylManagerService().deleteSite(siteId);
     }
 
     public List<CMAcademicSession> getAcademicSessions() {
@@ -182,7 +185,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		.getAcademicSessions();
     }
 
-    public void copySite(String siteFrom, String siteTo) throws Exception {
+    public void copySite(String siteFrom, String siteTo) throws Exception, PermissionException {
 	String webappDir = getServletContext().getRealPath("/");
 	osylManagerServices.getOsylManagerService().copySite(siteFrom, siteTo);
 	// update course informations
