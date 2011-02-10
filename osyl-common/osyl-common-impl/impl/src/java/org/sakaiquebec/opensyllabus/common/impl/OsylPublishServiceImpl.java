@@ -1072,7 +1072,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// Check if site is related to other sites
 
 	try {
-	    cos = coRelationDao.getCourseOutlineChildren(siteId);
+	    cos = coRelationDao.getCORelationDescendants(siteId);
 	} catch (Exception e) {
 	    log.info("The course outline " + siteId + " has no children.");
 	}
