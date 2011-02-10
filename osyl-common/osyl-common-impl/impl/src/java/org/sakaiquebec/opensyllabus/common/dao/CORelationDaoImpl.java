@@ -20,6 +20,7 @@
 
 package org.sakaiquebec.opensyllabus.common.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -146,16 +147,17 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
     @SuppressWarnings("unchecked")
     public List<CORelation> getCORelationDescendants(String coId) {
 
-	List<CORelation> descendants = null;
+	List<CORelation> descendants = new ArrayList<CORelation>();
 	if (coId == null)
 	    throw new IllegalArgumentException();
 	try {
-	    descendants =
+	    List<CORelation> childs =
 		    getHibernateTemplate().find(
 			    "from CORelation where parent= ? ",
 			    new Object[] { coId });
-	    if (descendants != null) {
-		for (CORelation cor : descendants) {
+	    if (childs != null) {
+		descendants.addAll(childs);
+		for (CORelation cor : childs) {
 		    descendants
 			    .addAll(getCORelationDescendants(cor.getChild()));
 		}
@@ -169,16 +171,17 @@ public class CORelationDaoImpl extends HibernateDaoSupport implements
     @SuppressWarnings("unchecked")
     public List<CORelation> getCourseOutlineAncestors(String coId) {
 
-	List<CORelation> ancestors = null;
+	List<CORelation> ancestors =  new ArrayList<CORelation>();
 	if (coId == null)
 	    throw new IllegalArgumentException();
 	try {
-	    ancestors =
+	    List<CORelation> parents =
 		    getHibernateTemplate().find(
 			    "from CORelation where child= ? ",
 			    new Object[] { coId });
-	    if (ancestors != null) {
-		for (CORelation cor : ancestors) {
+	    if (parents != null) {
+		ancestors.addAll(parents);
+		for (CORelation cor : parents) {
 		    ancestors
 			    .addAll(getCourseOutlineAncestors(cor.getParent()));
 		}

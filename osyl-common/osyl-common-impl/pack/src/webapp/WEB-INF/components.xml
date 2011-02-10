@@ -107,8 +107,7 @@
 			ref="org.sakaiproject.announcement.api.AnnouncementService" />
 		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
 		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="securityService"
-			ref="org.sakaiproject.authz.api.SecurityService" />
+		<property name="securityService" ref="org.sakaiproject.authz.api.SecurityService" />
 		<property name="idManager" ref="org.sakaiproject.id.api.IdManager" />
 
 		<!--
@@ -141,8 +140,9 @@
 			ref="org.sakaiproject.user.api.UserDirectoryService" />
 		<property name="assignmentService"
 			ref="org.sakaiproject.assignment.api.AssignmentService" />
-		<property name="securityService"
-			ref="org.sakaiproject.authz.api.SecurityService" />
+		<property name="securityService" ref="org.sakaiproject.authz.api.SecurityService" />
+		<property name="announcementService"
+			ref="org.sakaiproject.announcement.api.AnnouncementService" />
 
 
 		<!-- Osyl dependencies -->

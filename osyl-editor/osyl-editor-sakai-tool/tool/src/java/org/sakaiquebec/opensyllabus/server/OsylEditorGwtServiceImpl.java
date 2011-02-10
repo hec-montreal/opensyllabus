@@ -420,8 +420,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 		webappDir);
     }
 
-    public void notifyOnPublish(String siteId, String subject, String body) throws Exception{
-	osylServices.getOsylPublishService().notifyOnPublish(siteId, subject,
-		body);
+    public void notifyOnPublish(String siteId, String subject, String body) {
+	osylServices.getOsylSiteService().addAnnounce(siteId, subject, body);
     }
 }

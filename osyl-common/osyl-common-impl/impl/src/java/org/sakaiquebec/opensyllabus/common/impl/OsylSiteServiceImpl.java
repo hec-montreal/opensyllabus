@@ -36,10 +36,17 @@ import java.util.Observer;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.announcement.api.AnnouncementChannel;
+import org.sakaiproject.announcement.api.AnnouncementMessage;
+import org.sakaiproject.announcement.api.AnnouncementMessageEdit;
+import org.sakaiproject.announcement.api.AnnouncementMessageHeader;
+import org.sakaiproject.announcement.api.AnnouncementMessageHeaderEdit;
+import org.sakaiproject.announcement.api.AnnouncementService;
 import org.sakaiproject.assignment.api.Assignment;
 import org.sakaiproject.assignment.api.AssignmentEdit;
 import org.sakaiproject.assignment.api.AssignmentService;
@@ -153,6 +160,12 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     private AssignmentService assignmentService;
 
     private SecurityService securityService;
+
+    private AnnouncementService announcementService;
+    
+    //need this because annoucement are copied in draft mode and we want want to know what to 'commit' after
+    private TreeMap<String, AnnouncementMessageHeader> expectedAnnoucementDraft =
+	    new TreeMap<String, AnnouncementMessageHeader>();
 
     public void setSecurityService(SecurityService securityService) {
 	this.securityService = securityService;
@@ -300,6 +313,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	this.assignmentService = assignmentService;
     }
 
+    public void setAnnouncementService(AnnouncementService announcementService) {
+	this.announcementService = announcementService;
+    }
+
     /**
      * Init method called at initialization of the bean.
      */
@@ -311,6 +328,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    public void update(Observable o, Object arg) {
 		Event e = (Event) arg;
 		if (e.getEvent().equals(UsageSessionService.EVENT_LOGIN)) {
+		    // ##### LOGIN ####//
 		    DateFormat df =
 			    new SimpleDateFormat("dd/MM/yyyy 'at' HH:mm");
 		    log.info("user ["
@@ -318,11 +336,13 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			    + "] login " + df.format(new Date()));
 		} else if (e.getEvent()
 			.equals(UsageSessionService.EVENT_LOGOUT)) {
-		    // we unlocks all CO locks by current user (he logs out)
+		    // ##### LOGOUT ####//
+		    // we unlocks all CO locks by current user
 		    resourceDao.clearLocksForSession(sessionManager
 			    .getCurrentSession().getId());
 		} else if (e.getEvent().equals(PresenceService.EVENT_ABSENCE)) {
-		    // we leave the sakai site, so we can unlock the CO
+		    // ##### LEFT SITE ####//
+		    // we can unlock the CO
 		    String res = e.getResource();
 		    String siteId =
 			    res.substring(res.lastIndexOf("/") + 1, res
@@ -339,7 +359,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    } catch (Exception ex) {
 		    }
 		} else if (e.getEvent().equals(SiteService.SECURE_REMOVE_SITE)) {
-		    // A site is removed
+		    // ##### DELETE SITE ####//
 		    String siteid =
 			    e.getResource().substring("/site/".length());
 
@@ -429,12 +449,101 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 					    e1);
 			}
 		    }
+		} else if (e.getEvent().equals(
+			AnnouncementService.SECURE_ANNC_ADD)) {
+		    // ##### NEW ANNOUNCE ####//
+		    if (ServerConfigurationService.getBoolean(
+			    "osyl.annc_new.descendant.add", false)) {
+			String messageId;
+			String siteId =
+				e.getResource().substring(
+					"/announcement/msg/".length());
+			messageId = siteId.substring(siteId.indexOf("/") + 1);
+			messageId =
+				messageId.substring(messageId.indexOf("/") + 1);
+			siteId = siteId.substring(0, siteId.indexOf("/"));
+
+			AnnouncementMessage msg =
+				getAnnouncementMessage(siteId, messageId);
+			String subjectString =
+				msg.getAnnouncementHeader().getSubject();
+			if (expectedAnnoucementDraft.keySet().contains(siteId)
+				&& expectedAnnoucementDraft.get(siteId)
+					.getSubject().equals(subjectString)) {
+			    if (!expectedAnnoucementDraft.get(siteId)
+				    .getDraft())
+				setAnnoucementMessageDraftToFalse(siteId,
+					messageId);
+			    expectedAnnoucementDraft.remove(siteId);
+			} else {
+			    for (CORelation cor : coRelationDao
+				    .getCORelationDescendants(siteId)) {
+				expectedAnnoucementDraft.put(cor.getChild(),
+					msg.getAnnouncementHeader());
+			    }
+			    copyAnnoucmentToDescendants(siteId, messageId);
+			}
+		    }
+		} else if (e.getEvent().equals(
+			AnnouncementService.SECURE_ANNC_UPDATE_ANY)
+			|| e.getEvent().equals(
+				AnnouncementService.SECURE_ANNC_UPDATE_OWN)) {
+		    // ##### UPDATE ANNOUNCE ####//
+		    // TODO
+		} else if (e.getEvent().equals(
+			AnnouncementService.SECURE_ANNC_REMOVE_ANY)
+			|| e.getEvent().equals(
+				AnnouncementService.SECURE_ANNC_REMOVE_OWN)) {
+		    // ##### REMOVE ANNOUNCE ####//
+		    // TODO
 		}
+
 	    }
 	});
 
 	// We register the entity manager
 	entityManager.registerEntityProducer(this, REFERENCE_ROOT);
+
+    }
+
+    private AnnouncementMessage getAnnouncementMessage(String siteId,
+	    String messageId) {
+	AnnouncementMessage msg = null;
+	String channelId =
+		ServerConfigurationService.getString("channel", null);
+	if (channelId == null) {
+	    channelId =
+		    announcementService.channelReference(siteId,
+			    SiteService.MAIN_CONTAINER);
+	    try {
+		AnnouncementChannel channel =
+			announcementService.getAnnouncementChannel(channelId);
+		msg = channel.getAnnouncementMessage(messageId);
+
+	    } catch (Exception ee) {
+	    }
+	}
+	return msg;
+    }
+
+    private void setAnnoucementMessageDraftToFalse(String siteId,
+	    String messageId) {
+	AnnouncementMessageEdit msg = null;
+	String channelId =
+		ServerConfigurationService.getString("channel", null);
+	if (channelId == null) {
+	    channelId =
+		    announcementService.channelReference(siteId,
+			    SiteService.MAIN_CONTAINER);
+	    try {
+		AnnouncementChannel channel =
+			announcementService.getAnnouncementChannel(channelId);
+		msg = channel.editAnnouncementMessage(messageId);
+		msg.getHeaderEdit().setDraft(false);
+		channel.commitMessage(msg);
+	    } catch (Exception ee) {
+	    }
+	}
 
     }
 
@@ -658,6 +767,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    site.setJoinable(false);
 
 	    // we add the tools
+	    addTool(site, "sakai.announcements");
 	    addTool(site, "sakai.opensyllabus.tool");
 	    addTool(site, "sakai.resources");
 	    addTool(site, "sakai.siteinfo");
@@ -1821,6 +1931,137 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		}
 	    });
 	}
+    }
+
+    public void addAnnounce(String siteId, String subject, String body) {
+	// We add the message to the current site
+	if (siteExists(siteId)) {
+	    try {
+		addAnnouncement(siteId, subject, body);
+		log.info("An announcement has been made in the site " + siteId);
+	    } catch (Exception e) {
+		log.error("Could not add an annoucement in site " + siteId, e);
+	    }
+	}
+	// if (ServerConfigurationService.getBoolean(
+	// "osyl.annc_new.descendant.add", false))
+	// addAnnounceInDescendant(siteId, subject, body);
+    }
+
+    // private void addAnnounceInDescendant(String siteId, String subject,
+    // String body) {
+    // List<CORelation> cos = null;
+    // String originalSiteId = siteId;
+    // try {
+    // cos = coRelationDao.getCORelationDescendants(siteId);
+    // } catch (Exception e) {
+    // }
+    //
+    // // We add the message to the children site
+    // for (CORelation relation : cos) {
+    // siteId = relation.getChild();
+    // if (siteExists(siteId)) {
+    // try {
+    // addAnnouncement(siteId, subject, body);
+    // log
+    // .info("An announcement has been made in the site "
+    // + siteId + " concerning the site "
+    // + originalSiteId);
+    // } catch (Exception e) {
+    // log.error("Could not add an annoucement in site " + siteId
+    // + ". The annoucement come from site "
+    // + originalSiteId, e);
+    // }
+    // }
+    // }
+    // }
+
+    private void addAnnouncement(String siteId, String subject, String body)
+	    throws Exception {
+
+	AnnouncementChannel channel = getAnnouncementChannel(siteId);
+
+	if (channel != null) {
+	    AnnouncementMessageEdit message = null;
+	    message = channel.addAnnouncementMessage();
+
+	    if (message != null) {
+		AnnouncementMessageHeaderEdit header =
+			message.getAnnouncementHeaderEdit();
+		// TODO: add published course outline reference to course
+		// outline lookup in announcement tool
+		// message.getPropertiesEdit().addProperty("coReference", );
+		header.setSubject(subject);
+		message.setBody(body);
+
+		header.clearGroupAccess();
+
+		channel.commitMessage(message);
+
+	    }
+	} else {
+	    throw new Exception("No annoucement channel available");
+	}
+    }
+
+    private void copyAnnoucmentToDescendants(String siteId, String ref) {
+	List<CORelation> cos = null;
+	String originalSiteId = siteId;
+	try {
+	    cos = coRelationDao.getCORelationDescendants(siteId);
+	} catch (Exception e) {
+	}
+
+	// We add the message to the children site
+	for (CORelation relation : cos) {
+	    siteId = relation.getChild();
+	    if (siteExists(siteId)) {
+		try {
+		    copyAnnoucement(originalSiteId, siteId, ref);
+		    log
+			    .info("An announcement has been made in the site "
+				    + siteId + " concerning the site "
+				    + originalSiteId);
+		} catch (Exception e) {
+		    log.error("Could not add an annoucement in site " + siteId
+			    + ". The annoucement come from site "
+			    + originalSiteId, e);
+		}
+	    }
+	}
+    }
+
+    private void copyAnnoucement(String fromSite, String toSite, String ref) {
+	List<String> list = new ArrayList<String>();
+	list.add(ref);
+	((EntityTransferrer) announcementService).transferCopyEntities(
+		fromSite, toSite, list);
+    }
+
+    private AnnouncementChannel getAnnouncementChannel(String siteId) {
+	AnnouncementChannel channel = null;
+	String channelId =
+		ServerConfigurationService.getString("channel", null);
+	if (channelId == null) {
+	    channelId =
+		    announcementService.channelReference(siteId,
+			    SiteService.MAIN_CONTAINER);
+	    try {
+		channel = announcementService.getAnnouncementChannel(channelId);
+	    } catch (IdUnusedException e) {
+		log
+			.warn(this
+				+ "getAnnouncement:No announcement channel found");
+		channel = null;
+	    } catch (PermissionException e) {
+		log
+			.warn(this
+				+ "getAnnouncement:Current user not authorized to deleted annc associated "
+				+ "with assignment. " + e.getMessage());
+		channel = null;
+	    }
+	}
+	return channel;
     }
 
 }

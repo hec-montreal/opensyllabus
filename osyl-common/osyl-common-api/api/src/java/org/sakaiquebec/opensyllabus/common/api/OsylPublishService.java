@@ -100,18 +100,6 @@ public interface OsylPublishService {
 
     public void createEditionPrintVersion(COSerialized cos, String webappdir)
 	    throws Exception;
-
-    /**
-     * Send a notification message to the students of the course outline (or the
-     * sections of the course outline) and the instructors of the sections
-     * associated to the course outline.
-     * 
-     * @param subject
-     * @param text
-     * @param students
-     * @param sectionInstructors
-     */
-    public void notifyOnPublish(String siteId, String subject, String body) throws Exception;
     
     //TODO temporary to be delete after 2.6.1->2.7.1 migration
     public void createPublishPrintVersion(String siteId, String webappdir) throws PdfGenerationException;

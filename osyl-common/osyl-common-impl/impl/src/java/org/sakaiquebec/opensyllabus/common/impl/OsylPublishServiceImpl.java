@@ -23,9 +23,6 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.fop.apps.MimeConstants;
-import org.sakaiproject.announcement.api.AnnouncementChannel;
-import org.sakaiproject.announcement.api.AnnouncementMessageEdit;
-import org.sakaiproject.announcement.api.AnnouncementMessageHeaderEdit;
 import org.sakaiproject.announcement.api.AnnouncementService;
 import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzGroupService;
@@ -45,10 +42,8 @@ import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.event.api.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
-import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.id.api.IdManager;
 import org.sakaiproject.site.api.Site;
-import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
@@ -630,7 +625,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    + configRef + File.separator
 			    + OsylConfigService.PRINT_DIRECTORY
 			    + File.separator, ServerConfigurationService
-			    .getServerUrl(),coSerialized.getSiteId());
+			    .getServerUrl(), coSerialized.getSiteId());
 
 	    return f;
 	} catch (Exception e) {
@@ -1005,16 +1000,16 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    publishedCO.setPublished(true);
 	}
 	publishedCO.setContent(content);
-//	COModeledServer coModeledServer = new COModeledServer(publishedCO);
-//	coModeledServer.XML2Model();
-//	coModeledServer.getModeledContent().addProperty(
-//		COPropertiesType.PREVIOUS_PUBLISHED,
-//		coModeledServer.getModeledContent().getProperty(
-//			COPropertiesType.PUBLISHED));
-//	coModeledServer.getModeledContent().addProperty(
-//		COPropertiesType.PUBLISHED,
-//		OsylDateUtils.getCurrentDateAsXmlString());
-//	coModeledServer.model2XML();
+	// COModeledServer coModeledServer = new COModeledServer(publishedCO);
+	// coModeledServer.XML2Model();
+	// coModeledServer.getModeledContent().addProperty(
+	// COPropertiesType.PREVIOUS_PUBLISHED,
+	// coModeledServer.getModeledContent().getProperty(
+	// COPropertiesType.PUBLISHED));
+	// coModeledServer.getModeledContent().addProperty(
+	// COPropertiesType.PUBLISHED,
+	// OsylDateUtils.getCurrentDateAsXmlString());
+	// coModeledServer.model2XML();
 	resourceDao.createOrUpdateCourseOutline(publishedCO);
 
 	// We save the published date in the course outline in edition
@@ -1063,96 +1058,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     public CourseManagementService getCmService() {
 	return cmService;
-    }
-
-    public void notifyOnPublish(String siteId, String subject, String body)
-	    throws Exception {
-	List<CORelation> cos = null;
-	String originalSiteId = siteId;
-	// Check if site is related to other sites
-
-	try {
-	    cos = coRelationDao.getCORelationDescendants(siteId);
-	} catch (Exception e) {
-	    log.info("The course outline " + siteId + " has no children.");
-	}
-	// We add the message to the current site
-	if (osylSiteService.siteExists(siteId)) {
-
-	    addAnnouncement(siteId, subject, body);
-	    log.info("An announcement has been made in the site " + siteId
-		    + " concerning the publication of the course outline "
-		    + originalSiteId);
-	}
-	// We add the message to the children site
-	for (CORelation relation : cos) {
-	    siteId = relation.getChild();
-	    if (osylSiteService.siteExists(siteId)) {
-		addAnnouncement(siteId, subject, body);
-		log.info("An announcement has been made in the site " + siteId
-			+ " concerning the publication of the course outline "
-			+ originalSiteId);
-	    }
-	}
-
-    }
-
-    private void addAnnouncement(String siteId, String subject, String body)
-	    throws Exception {
-
-	AnnouncementChannel channel = getAnnouncementChannel(siteId);
-
-	if (channel != null) {
-	    AnnouncementMessageEdit message = null;
-	    message = channel.addAnnouncementMessage();
-
-	    if (message != null) {
-		AnnouncementMessageHeaderEdit header =
-			message.getAnnouncementHeaderEdit();
-		// TODO: add published course outline reference to course
-		// outline lookup in announcement tool
-		// message.getPropertiesEdit().addProperty("coReference", );
-		header.setSubject(subject);
-		message.setBody(body);
-
-		header.clearGroupAccess();
-
-		channel.commitMessage(message);
-
-	    }
-	} else {
-	    throw new Exception("No annoucement channel available");
-	}
-    }
-
-    private AnnouncementChannel getAnnouncementChannel(String siteId) {
-	AnnouncementService aService =
-		org.sakaiproject.announcement.cover.AnnouncementService
-			.getInstance();
-	AnnouncementChannel channel = null;
-	String channelId =
-		ServerConfigurationService.getString("channel", null);
-	if (channelId == null) {
-	    channelId =
-		    org.sakaiproject.announcement.cover.AnnouncementService
-			    .channelReference(siteId,
-				    SiteService.MAIN_CONTAINER);
-	    try {
-		channel = aService.getAnnouncementChannel(channelId);
-	    } catch (IdUnusedException e) {
-		log
-			.warn(this
-				+ "getAnnouncement:No announcement channel found");
-		channel = null;
-	    } catch (PermissionException e) {
-		log
-			.warn(this
-				+ "getAnnouncement:Current user not authorized to deleted annc associated "
-				+ "with assignment. " + e.getMessage());
-		channel = null;
-	    }
-	}
-	return channel;
     }
 
 }

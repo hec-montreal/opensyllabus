@@ -358,5 +358,13 @@ public interface OsylSiteService extends EntityProducer {
      */
     public void setCoContentWithTemplate(COSerialized co, String webappDir) throws Exception;
 
+    /**
+     * Add an annoucment in site
+     * @param siteId
+     * @param subject
+     * @param body
+     */
+    public void addAnnounce(String siteId, String subject, String body);
+
 
 }
