@@ -20,7 +20,6 @@
 
 package org.sakaiquebec.opensyllabus.common.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -34,199 +33,175 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @version $Id: $
  */
 public class CORelationDaoImpl extends HibernateDaoSupport implements
-		CORelationDao {
+	CORelationDao {
 
-	private static Log log = LogFactory.getLog(CORelationDaoImpl.class);
+    private static Log log = LogFactory.getLog(CORelationDaoImpl.class);
 
-	/**
-	 * Init method called at initialization of the bean.
-	 */
-	public void init() {
-		log.info("Init from DAO");
+    /**
+     * Init method called at initialization of the bean.
+     */
+    public void init() {
+	log.info("Init from DAO");
+    }
+
+    /** {@inheritDoc} */
+    public void createRelation(String child, String parent) throws Exception {
+	if (parent == null || child == null) {
+	    throw new IllegalArgumentException();
+	}
+	CORelation relation = new CORelation(child, parent);
+	getHibernateTemplate().saveOrUpdate(relation);
+
+    }
+
+    /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
+    public List<CORelation> getCourseOutlineChildren(String coId)
+	    throws Exception {
+	if (coId == null)
+	    throw new IllegalArgumentException();
+	List<CORelation> children = null;
+	try {
+	    children =
+		    getHibernateTemplate().find(
+			    "from CORelation where parent= ? ",
+			    new Object[] { coId });
+	} catch (Exception e) {
+	    log.error("Unable to retrieve course outline children", e);
+	    throw e;
 	}
 
-	/** {@inheritDoc} */
-	public void createRelation(String child, String parent) throws Exception {
-		if (parent == null || child == null) {
-			throw new IllegalArgumentException();
-		}
-		CORelation relation = new CORelation(child, parent);
-		getHibernateTemplate().saveOrUpdate(relation);
+	return children;
+    }
 
+    /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
+    public String getParentOfCourseOutline(String coId) throws Exception {
+	if (coId == null)
+	    throw new IllegalArgumentException();
+	List<CORelation> parents = null;
+	try {
+	    parents =
+		    getHibernateTemplate().find(
+			    "from CORelation where child= ? ",
+			    new Object[] { coId });
+	} catch (Exception e) {
+	    log.error("Unable to retrieve course outline parents", e);
+	    throw e;
 	}
-
-	/** {@inheritDoc} */
-	@SuppressWarnings("unchecked")
-	public List<CORelation> getCourseOutlineChildren(String coId)
-			throws Exception {
-		if (coId == null)
-			throw new IllegalArgumentException();
-		List<CORelation> children = null;
-		try {
-			children = getHibernateTemplate().find(
-					"from CORelation where parent= ? ", new Object[] { coId });
-		} catch (Exception e) {
-			log.error("Unable to retrieve course outline children", e);
-			throw e;
-		}
-
-		return children;
+	if (parents != null && !parents.isEmpty())
+	    return parents.get(0).getParent();
+	else {
+	    log.debug("No parent for course outline with id = " + coId);
+	    throw new Exception("No parent for course outline with id = "
+		    + coId);
 	}
+    }
 
-	/** {@inheritDoc} */
-	@SuppressWarnings("unchecked")
-	public String getParentOfCourseOutline(String coId) throws Exception {
-		if (coId == null)
-			throw new IllegalArgumentException();
-		List<CORelation> parents = null;
-		try {
-			parents = getHibernateTemplate().find(
-					"from CORelation where child= ? ", new Object[] { coId });
-		} catch (Exception e) {
-			log.error("Unable to retrieve course outline parents", e);
-			throw e;
-		}
-		if (parents != null && !parents.isEmpty())
-			return parents.get(0).getParent();
-		else{
-			log.debug("No parent for course outline with id = "
-					+ coId);
-			throw new Exception("No parent for course outline with id = "+coId);
-		}
+    @SuppressWarnings("unchecked")
+    public CORelation getRelation(String childId, String parentId)
+	    throws Exception {
+	List<CORelation> results = null;
+
+	try {
+	    results =
+		    getHibernateTemplate().find(
+			    "from CORelation where child= ? and parent= ?",
+			    new Object[] { childId, parentId });
+	} catch (Exception e) {
+	    log.error("Unable to retrieve config", e);
+	    throw new Exception(e);
 	}
+	if (results.size() >= 1)
+	    return (CORelation) results.get(0);
+	else
+	    throw new Exception("No relation between " + childId + " and "
+		    + parentId);
+    }
 
-	@SuppressWarnings("unchecked")
-	public CORelation getRelation(String childId, String parentId)
-			throws Exception {
-		List<CORelation> results = null;
-
-		try {
-			results = getHibernateTemplate().find(
-					"from CORelation where child= ? and parent= ?",
-					new Object[] { childId, parentId });
-		} catch (Exception e) {
-			log.error("Unable to retrieve config", e);
-			throw new Exception(e);
-		}
-		if (results.size() >= 1)
-			return (CORelation) results.get(0);
-		else
-			throw new Exception("No relation between " + childId + " and "
-					+ parentId);
+    /** {@inheritDoc} */
+    public boolean removeRelation(String coId, String idParent)
+	    throws Exception {
+	if (coId == null || idParent == null) {
+	    throw new IllegalArgumentException();
 	}
+	try {
+	    CORelation courseOutlineRelation = getRelation(coId, idParent);
+	    getHibernateTemplate().delete(courseOutlineRelation);
+	} catch (Exception e) {
+	    log.warn("Unable to retrieve course outline parent", e);
+	    throw e;
+	}
+	return true;
+    }
 
-	/** {@inheritDoc} */
-	public boolean removeRelation(String coId, String idParent)
-			throws Exception {
-		if (coId == null || idParent == null) {
-			throw new IllegalArgumentException();
+    /** {@inheritDoc} */
+    @SuppressWarnings("unchecked")
+    public List<CORelation> getAllLinkedCourseOutlines() {
+	List<CORelation> loadAll =
+		getHibernateTemplate().loadAll(CORelation.class);
+	return loadAll;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<CORelation> getCORelationDescendants(String coId) {
+
+	List<CORelation> descendants = null;
+	if (coId == null)
+	    throw new IllegalArgumentException();
+	try {
+	    descendants =
+		    getHibernateTemplate().find(
+			    "from CORelation where parent= ? ",
+			    new Object[] { coId });
+	    if (descendants != null) {
+		for (CORelation cor : descendants) {
+		    descendants
+			    .addAll(getCORelationDescendants(cor.getChild()));
 		}
-		try {
-			CORelation courseOutlineRelation = getRelation(coId, idParent);
-			getHibernateTemplate().delete(courseOutlineRelation);
-		} catch (Exception e) {
-			log.warn("Unable to retrieve course outline parent", e);
-			throw e;
+	    }
+	} catch (Exception e) {
+	    log.error("Unable to fetch descendant", e);
+	}
+	return descendants;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<CORelation> getCourseOutlineAncestors(String coId) {
+
+	List<CORelation> ancestors = null;
+	if (coId == null)
+	    throw new IllegalArgumentException();
+	try {
+	    ancestors =
+		    getHibernateTemplate().find(
+			    "from CORelation where child= ? ",
+			    new Object[] { coId });
+	    if (ancestors != null) {
+		for (CORelation cor : ancestors) {
+		    ancestors
+			    .addAll(getCourseOutlineAncestors(cor.getParent()));
 		}
+	    }
+	} catch (Exception e) {
+	    log.error("Unable to fetch ancestors", e);
+	}
+	return ancestors;
+    }
+
+    public boolean areCourseOutlinesRelated(String parentSiteId,
+	    String childSiteId) {
+
+	List<CORelation> ancestors = getCourseOutlineAncestors(childSiteId);
+	String parent = null;
+
+	for (CORelation relation : ancestors) {
+	    parent = relation.getParent();
+	    if (parent.equalsIgnoreCase(parentSiteId))
 		return true;
 	}
 
-	/** {@inheritDoc} */
-	@SuppressWarnings("unchecked")
-	public List<CORelation> getAllLinkedCourseOutlines() {
-		List<CORelation> loadAll = getHibernateTemplate().loadAll(
-				CORelation.class);
-		return loadAll;
-	}
-
-	/** {@inheritDoc} */
-	public List<CORelation> getCORelationDescendants(String coId) {
-		List<CORelation> descendants = null;
-		try {
-			descendants = getCORelationDescendants(coId,
-					new ArrayList<CORelation>());
-		} catch (Exception e) {
-			log.error(e.getMessage());
-		}
-		return descendants;
-	}
-
-	@SuppressWarnings("unchecked")
-	private List<CORelation> getCORelationDescendants(String coId,
-			List<CORelation> allDescendants) throws Exception {
-		List<CORelation> descendants = null;
-		if (coId == null)
-			throw new IllegalArgumentException();
-		try {
-			descendants = getHibernateTemplate().find(
-					"from CORelation where parent= ? ", new Object[] { coId });
-
-			if (descendants != null) {
-				allDescendants.addAll(descendants);
-				getCORelationDescendants(coId, allDescendants);
-			} else
-				return allDescendants;
-		} catch (Exception e) {
-			log.error("Unable to retrieve course outline children", e);
-			throw e;
-		}
-
-		return allDescendants;
-	}
-
-	/** {@inheritDoc} */
-	public List<CORelation> getCourseOutlineAncestors(String coId) {
-		List<CORelation> ancestors = null;
-		try {
-			ancestors = getCourseOutlineAncestors(coId,
-					new ArrayList<CORelation>());
-		} catch (Exception e) {
-			log.error(e.getMessage());
-		}
-		return ancestors;
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<CORelation> getCourseOutlineAncestors(String coId,
-			List<CORelation> allAncestors) throws Exception {
-		List<CORelation> ancestors = null;
-		CORelation relation = null;
-		if (coId == null)
-			throw new IllegalArgumentException();
-		try {
-			ancestors = getHibernateTemplate().find(
-					"from CORelation where child= ? ", new Object[] { coId });
-
-			if (ancestors != null && ancestors.size() > 0) {
-				allAncestors.addAll(ancestors);
-				for (int i = 0; i < ancestors.size(); i++) {
-					relation = ancestors.get(i);
-					getCourseOutlineAncestors(relation.getParent(),
-							allAncestors);
-				}
-			} else
-				return allAncestors;
-		} catch (Exception e) {
-			log.error("Unable to retrieve course outline children", e);
-			throw e;
-		}
-
-		return allAncestors;
-	}
-
-	public boolean areCourseOutlinesRelated(String parentSiteId,
-		String childSiteId) {
-	    
-	    List<CORelation> ancestors = getCourseOutlineAncestors(childSiteId);
-	    String parent = null;
-	    
-	    for (CORelation relation: ancestors){
-		parent = relation.getParent();
-		if (parent.equalsIgnoreCase(parentSiteId))
-		    return true;
-	    }
-	    
-	    return false;
-	}
+	return false;
+    }
 
 }
