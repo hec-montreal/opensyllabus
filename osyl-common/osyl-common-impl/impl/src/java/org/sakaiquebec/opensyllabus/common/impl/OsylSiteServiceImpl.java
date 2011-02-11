@@ -489,13 +489,13 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			|| e.getEvent().equals(
 				AnnouncementService.SECURE_ANNC_UPDATE_OWN)) {
 		    // ##### UPDATE ANNOUNCE ####//
-		    // TODO
+		    // TODO SAKAI-2414
 		} else if (e.getEvent().equals(
 			AnnouncementService.SECURE_ANNC_REMOVE_ANY)
 			|| e.getEvent().equals(
 				AnnouncementService.SECURE_ANNC_REMOVE_OWN)) {
 		    // ##### REMOVE ANNOUNCE ####//
-		    // TODO
+		    // TODO SAKAI-2414
 		}
 
 	    }
