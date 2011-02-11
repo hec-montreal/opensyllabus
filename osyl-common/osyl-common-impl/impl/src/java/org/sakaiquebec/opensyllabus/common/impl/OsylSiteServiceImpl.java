@@ -44,7 +44,6 @@ import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.announcement.api.AnnouncementChannel;
 import org.sakaiproject.announcement.api.AnnouncementMessage;
 import org.sakaiproject.announcement.api.AnnouncementMessageEdit;
-import org.sakaiproject.announcement.api.AnnouncementMessageHeader;
 import org.sakaiproject.announcement.api.AnnouncementMessageHeaderEdit;
 import org.sakaiproject.announcement.api.AnnouncementService;
 import org.sakaiproject.assignment.api.Assignment;
@@ -119,6 +118,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     private static final Log log = LogFactory.getLog(OsylSiteServiceImpl.class);
 
+    private static final String ORIGINAL_ANNOUNCEMENT_MESSAGE_REF =
+	    "originalAnnouncementMessageRef";
+
     private ToolManager toolManager;
 
     private IdManager idManager;
@@ -162,10 +164,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     private SecurityService securityService;
 
     private AnnouncementService announcementService;
-    
-    //need this because annoucement are copied in draft mode and we want want to know what to 'commit' after
-    private TreeMap<String, AnnouncementMessageHeader> expectedAnnoucementDraft =
-	    new TreeMap<String, AnnouncementMessageHeader>();
+
+    // need this because annoucement are copied in draft mode and we want want
+    // to know what to 'commit' after
+    private TreeMap<String, String> expectedAnnouncementAdd =
+	    new TreeMap<String, String>();
+
+    private TreeMap<String, String> expectedAnnouncementModification =
+	    new TreeMap<String, String>();
 
     public void setSecurityService(SecurityService securityService) {
 	this.securityService = securityService;
@@ -454,7 +460,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    // ##### NEW ANNOUNCE ####//
 		    if (ServerConfigurationService.getBoolean(
 			    "osyl.annc_new.descendant.add", false)) {
-			String messageId;
+			String messageId = null;
 			String siteId =
 				e.getResource().substring(
 					"/announcement/msg/".length());
@@ -464,24 +470,31 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			siteId = siteId.substring(0, siteId.indexOf("/"));
 
 			AnnouncementMessage msg =
-				getAnnouncementMessage(siteId, messageId);
+				getAnnouncementMessage(e.getResource());
 			String subjectString =
 				msg.getAnnouncementHeader().getSubject();
-			if (expectedAnnoucementDraft.keySet().contains(siteId)
-				&& expectedAnnoucementDraft.get(siteId)
-					.getSubject().equals(subjectString)) {
-			    if (!expectedAnnoucementDraft.get(siteId)
-				    .getDraft())
-				setAnnoucementMessageDraftToFalse(siteId,
-					messageId);
-			    expectedAnnoucementDraft.remove(siteId);
+			if (expectedAnnouncementAdd.keySet().contains(siteId)) {
+			    AnnouncementMessage originalMessage =
+				    getAnnouncementMessage(expectedAnnouncementAdd
+					    .get(siteId));
+			    if (originalMessage.getAnnouncementHeader()
+				    .getSubject().equals(subjectString)) {
+				expectedAnnouncementModification.put(siteId, e
+					.getResource());
+				setAnnoucementMessageDraftValue(siteId,
+					messageId, expectedAnnouncementAdd
+						.get(siteId), originalMessage
+						.getAnnouncementHeader()
+						.getDraft());
+				expectedAnnouncementAdd.remove(siteId);
+			    }
 			} else {
 			    for (CORelation cor : coRelationDao
 				    .getCORelationDescendants(siteId)) {
-				expectedAnnoucementDraft.put(cor.getChild(),
-					msg.getAnnouncementHeader());
+				expectedAnnouncementAdd.put(cor.getChild(), e
+					.getResource());
 			    }
-			    copyAnnoucmentToDescendants(siteId, messageId);
+			    copyAnnouncmentToDescendants(siteId, messageId);
 			}
 		    }
 		} else if (e.getEvent().equals(
@@ -489,13 +502,48 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			|| e.getEvent().equals(
 				AnnouncementService.SECURE_ANNC_UPDATE_OWN)) {
 		    // ##### UPDATE ANNOUNCE ####//
-		    // TODO SAKAI-2414
+		    if (ServerConfigurationService.getBoolean(
+			    "osyl.annc_new.descendant.add", false)) {
+			String messageId = null;
+			String siteId =
+				e.getResource().substring(
+					"/announcement/msg/".length());
+			messageId = siteId.substring(siteId.indexOf("/") + 1);
+			messageId =
+				messageId.substring(messageId.indexOf("/") + 1);
+			siteId = siteId.substring(0, siteId.indexOf("/"));
+			if (!expectedAnnouncementModification.keySet()
+				.contains(siteId)) {
+			    for (CORelation cor : coRelationDao
+				    .getCORelationDescendants(siteId)) {
+				deleteSiteAnnouncementForOriginalAnnouncementMessageRef(
+					cor.getChild(), e.getResource());
+				expectedAnnouncementAdd.put(cor.getChild(), e
+					.getResource());
+			    }
+			    copyAnnouncmentToDescendants(siteId, messageId);
+			} else {
+			    expectedAnnouncementModification.remove(siteId);
+			}
+		    }
+
 		} else if (e.getEvent().equals(
 			AnnouncementService.SECURE_ANNC_REMOVE_ANY)
 			|| e.getEvent().equals(
 				AnnouncementService.SECURE_ANNC_REMOVE_OWN)) {
 		    // ##### REMOVE ANNOUNCE ####//
-		    // TODO SAKAI-2414
+		    if (ServerConfigurationService.getBoolean(
+			    "osyl.annc_new.descendant.add", false)) {
+			String siteId =
+				e.getResource().substring(
+					"/announcement/msg/".length());
+			siteId = siteId.substring(0, siteId.indexOf("/"));
+			for (CORelation cor : coRelationDao
+				.getCORelationDescendants(siteId)) {
+			    deleteSiteAnnouncementForOriginalAnnouncementMessageRef(
+				    cor.getChild(), e.getResource());
+			}
+		    }
 		}
 
 	    }
@@ -503,47 +551,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	// We register the entity manager
 	entityManager.registerEntityProducer(this, REFERENCE_ROOT);
-
-    }
-
-    private AnnouncementMessage getAnnouncementMessage(String siteId,
-	    String messageId) {
-	AnnouncementMessage msg = null;
-	String channelId =
-		ServerConfigurationService.getString("channel", null);
-	if (channelId == null) {
-	    channelId =
-		    announcementService.channelReference(siteId,
-			    SiteService.MAIN_CONTAINER);
-	    try {
-		AnnouncementChannel channel =
-			announcementService.getAnnouncementChannel(channelId);
-		msg = channel.getAnnouncementMessage(messageId);
-
-	    } catch (Exception ee) {
-	    }
-	}
-	return msg;
-    }
-
-    private void setAnnoucementMessageDraftToFalse(String siteId,
-	    String messageId) {
-	AnnouncementMessageEdit msg = null;
-	String channelId =
-		ServerConfigurationService.getString("channel", null);
-	if (channelId == null) {
-	    channelId =
-		    announcementService.channelReference(siteId,
-			    SiteService.MAIN_CONTAINER);
-	    try {
-		AnnouncementChannel channel =
-			announcementService.getAnnouncementChannel(channelId);
-		msg = channel.editAnnouncementMessage(messageId);
-		msg.getHeaderEdit().setDraft(false);
-		channel.commitMessage(msg);
-	    } catch (Exception ee) {
-	    }
-	}
 
     }
 
@@ -1943,38 +1950,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		log.error("Could not add an annoucement in site " + siteId, e);
 	    }
 	}
-	// if (ServerConfigurationService.getBoolean(
-	// "osyl.annc_new.descendant.add", false))
-	// addAnnounceInDescendant(siteId, subject, body);
     }
 
-    // private void addAnnounceInDescendant(String siteId, String subject,
-    // String body) {
-    // List<CORelation> cos = null;
-    // String originalSiteId = siteId;
-    // try {
-    // cos = coRelationDao.getCORelationDescendants(siteId);
-    // } catch (Exception e) {
-    // }
-    //
-    // // We add the message to the children site
-    // for (CORelation relation : cos) {
-    // siteId = relation.getChild();
-    // if (siteExists(siteId)) {
-    // try {
-    // addAnnouncement(siteId, subject, body);
-    // log
-    // .info("An announcement has been made in the site "
-    // + siteId + " concerning the site "
-    // + originalSiteId);
-    // } catch (Exception e) {
-    // log.error("Could not add an annoucement in site " + siteId
-    // + ". The annoucement come from site "
-    // + originalSiteId, e);
-    // }
-    // }
-    // }
-    // }
 
     private void addAnnouncement(String siteId, String subject, String body)
 	    throws Exception {
@@ -1988,9 +1965,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    if (message != null) {
 		AnnouncementMessageHeaderEdit header =
 			message.getAnnouncementHeaderEdit();
-		// TODO: add published course outline reference to course
-		// outline lookup in announcement tool
-		// message.getPropertiesEdit().addProperty("coReference", );
 		header.setSubject(subject);
 		message.setBody(body);
 
@@ -2004,7 +1978,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
     }
 
-    private void copyAnnoucmentToDescendants(String siteId, String ref) {
+    private void copyAnnouncmentToDescendants(String siteId, String ref) {
 	List<CORelation> cos = null;
 	String originalSiteId = siteId;
 	try {
@@ -2062,6 +2036,57 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    }
 	}
 	return channel;
+    }
+
+    private AnnouncementMessage getAnnouncementMessage(String ref) {
+	String messageId = null;
+	String siteId = ref.substring("/announcement/msg/".length());
+	messageId = siteId.substring(siteId.indexOf("/") + 1);
+	messageId = messageId.substring(messageId.indexOf("/") + 1);
+	siteId = siteId.substring(0, siteId.indexOf("/"));
+
+	AnnouncementChannel channel = getAnnouncementChannel(siteId);
+	AnnouncementMessage msg = null;
+	try {
+	    msg = channel.getAnnouncementMessage(messageId);
+	} catch (Exception e) {
+	}
+
+	return msg;
+    }
+
+    private void setAnnoucementMessageDraftValue(String siteId,
+	    String messageId, String originalRef, boolean draft) {
+	AnnouncementMessageEdit msg = null;
+	try {
+	    AnnouncementChannel channel = getAnnouncementChannel(siteId);
+	    msg = channel.editAnnouncementMessage(messageId);
+	    msg.getHeaderEdit().setDraft(draft);
+	    msg.getPropertiesEdit().addProperty(
+		    ORIGINAL_ANNOUNCEMENT_MESSAGE_REF, originalRef);
+	    channel.commitMessage(msg);
+	} catch (Exception ee) {
+	}
+
+    }
+
+    private void deleteSiteAnnouncementForOriginalAnnouncementMessageRef(
+	    String siteId, String ref) {
+
+	try {
+	    AnnouncementChannel channel = getAnnouncementChannel(siteId);
+	    List messageList = channel.getMessages(null, true);
+
+	    for (Iterator iter = messageList.iterator(); iter.hasNext();) {
+		AnnouncementMessage msg = (AnnouncementMessage) iter.next();
+		if (ref.equals(msg.getProperties().get(
+			ORIGINAL_ANNOUNCEMENT_MESSAGE_REF)))
+
+		    channel.removeMessage(msg.getId());
+	    }
+	} catch (Exception ee) {
+	}
+
     }
 
 }
