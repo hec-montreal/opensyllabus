@@ -485,10 +485,9 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 
 	workMode =
 		(workMode != null && !"".equals(workMode)) ? getView()
-			.getCoMessage("Assessment.Mode." + workMode)
-			+ " / " : "";
+			.getCoMessage("Assessment.Mode." + workMode) : "";
 
-	if (location != null) {
+	if (location != null && !location.equals("")) {
 	    String val = "";
 	    List<String> values = Arrays.asList(location.split("/"));
 	    for (String v : values) {
@@ -496,12 +495,12 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 		    val += " " + getUiMessage("Global.and") + " ";
 		val += getView().getCoMessage("Assessment.Location." + v);
 	    }
-	    location = val + " / ";
+	    location = " / " + val;
 	} else {
 	    location = "";
 	}
 
-	if (modality != null) {
+	if (modality != null && !modality.equals("")) {
 	    String val = "";
 	    List<String> values = Arrays.asList(modality.split("/"));
 	    for (String v : values) {
@@ -509,12 +508,12 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 		    val += " " + getUiMessage("Global.and") + " ";
 		val += getView().getCoMessage("Assessment.Modality." + v);
 	    }
-	    modality = val;
+	    modality = " / " + val;
 	} else {
 	    modality = "";
 	}
 
-	if (submissionMode != null) {
+	if (submissionMode != null && !submissionMode.equals("")) {
 	    String val = "";
 	    List<String> values = Arrays.asList(submissionMode.split("/"));
 	    for (String v : values) {
