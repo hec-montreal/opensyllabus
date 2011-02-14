@@ -545,7 +545,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			}
 		    }
 		}
-
 	    }
 	});
 

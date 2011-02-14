@@ -409,16 +409,47 @@
 		<xsl:if test="location!=''">
 			<fo:inline>
 				<xsl:text> / </xsl:text>
-				<xsl:call-template name="TextByLang">
-					<xsl:with-param name="label"><xsl:value-of select="location"/></xsl:with-param>
-				</xsl:call-template>
+				<xsl:choose>
+					<xsl:when test="contains(location,'/')">
+						<xsl:call-template name="TextByLang">
+							<xsl:with-param name="label"><xsl:value-of select="substring-before(location,'/')"/></xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="TextByLang">
+							<xsl:with-param name="label">and</xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="TextByLang">
+							<xsl:with-param name="label"><xsl:value-of select="substring-after(location,'/')"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:call-template name="TextByLang">
+							<xsl:with-param name="label"><xsl:value-of select="location"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:otherwise>
+				</xsl:choose>
 			</fo:inline>
 		</xsl:if>
 		<xsl:if test="modality!=''">
-			<fo:inline><xsl:text> / </xsl:text>
-				<xsl:call-template name="TextByLang">
-					<xsl:with-param name="label"><xsl:value-of select="modality"/></xsl:with-param>
-				</xsl:call-template>
+			<fo:inline>
+				<xsl:text> / </xsl:text>
+				<xsl:choose>
+					<xsl:when test="contains(modality,'/')">
+						<xsl:call-template name="TextByLang">
+							<xsl:with-param name="label"><xsl:value-of select="substring-before(modality,'/')"/></xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="TextByLang">
+							<xsl:with-param name="label">and</xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="TextByLang">
+							<xsl:with-param name="label"><xsl:value-of select="substring-after(modality,'/')"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:call-template name="TextByLang">
+							<xsl:with-param name="label"><xsl:value-of select="modality"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:otherwise>
+				</xsl:choose>
 			</fo:inline>
 		</xsl:if>
 	</fo:block>
@@ -440,9 +471,24 @@
 				</xsl:choose>
 			</fo:inline>
 			<fo:inline>
-				<xsl:call-template name="TextByLang">
-					<xsl:with-param name="label"><xsl:value-of select="submition_type"/></xsl:with-param>
-				</xsl:call-template>
+				<xsl:choose>
+					<xsl:when test="contains(submition_type,'/')">
+						<xsl:call-template name="TextByLang">
+							<xsl:with-param name="label"><xsl:value-of select="substring-before(submition_type,'/')"/></xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="TextByLang">
+							<xsl:with-param name="label">and</xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="TextByLang">
+							<xsl:with-param name="label"><xsl:value-of select="substring-after(submition_type,'/')"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:call-template name="TextByLang">
+							<xsl:with-param name="label"><xsl:value-of select="submition_type"/></xsl:with-param>
+						</xsl:call-template>
+					</xsl:otherwise>
+				</xsl:choose>
 			</fo:inline>
 		</fo:block>
 	</xsl:if>
@@ -1274,6 +1320,21 @@
 				</xsl:when>
 				<xsl:when test="$lang = 'ES'">
 					<xsl:text>Papel</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:when>
+		<xsl:when test="$label = 'and'">
+			<xsl:choose>
+				<xsl:when test="$lang = 'FR'">
+					<xsl:text> et </xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'EN'">
+					<xsl:text> and </xsl:text>
+				</xsl:when>
+				<xsl:when test="$lang = 'ES'">
+					<xsl:text> y </xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
 				</xsl:otherwise>

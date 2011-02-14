@@ -24,14 +24,20 @@
 	</xsl:template>
 	
 	<xsl:template match="asmUnit[@xsi:type='AssessmentUnit']/submition_type">
-		<submition_type>
-			<xsl:choose>
-				<xsl:when test=".='Électronique' or .='Electronic' or .='Electronica'">elect</xsl:when>
-				<xsl:when test=".='Oral'">oral</xsl:when>
-				<xsl:when test=".='Papier' or .='Paper' or .='Papel'">paper</xsl:when>
-				<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
-			</xsl:choose>
-		</submition_type>
+		<xsl:choose>
+			<xsl:when test=".='Électronique' or .='Electronic' or .='Electronica'">
+				<modality>oral</modality>
+				<submition_type>oral</submition_type>
+			</xsl:when>
+			<xsl:when test=".='Oral'">
+				<modality>written</modality>
+				<submition_type>oral</submition_type>
+			</xsl:when>
+			<xsl:when test=".='Papier' or .='Paper' or .='Papel'">
+				<modality>written</modality>
+				<submition_type>paper</submition_type>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:template>
 	
 	<xsl:template match="asmUnit[@xsi:type='AssessmentUnit']/mode">

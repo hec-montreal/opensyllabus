@@ -56,7 +56,7 @@ public class COPropertiesType {
     public static final String MODALITY = "modality";
     public static final List<String> LOCATION_VALUES = Arrays.asList(new String[]{"inClass","home"}); 
     public static final List<String> MODE_VALUES = Arrays.asList(new String[]{"individual","team"}); 
-    public static final List<String> SUBMITION_TYPE_VALUES = Arrays.asList(new String[]{"paper","elect","oral"}); 
+    public static final List<String> SUBMITION_TYPE_VALUES = Arrays.asList(new String[]{"paper","elect"}); 
     public static final List<String> MODALITY_VALUES = Arrays.asList(new String[]{"oral","written"});
 
     //SPECIFIC to sakai entity

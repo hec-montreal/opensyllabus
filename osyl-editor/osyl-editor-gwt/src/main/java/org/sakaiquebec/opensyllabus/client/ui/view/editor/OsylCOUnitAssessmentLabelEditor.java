@@ -20,8 +20,12 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
@@ -32,6 +36,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -48,12 +53,12 @@ import com.google.gwt.user.datepicker.client.DateBox;
 public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 
     private TextBox weightTextBox;
-    private ListBox localisationListBox;
+    private Map<String, CheckBox> localisationMapCheckBox;
     private ListBox modeListBox;
     private DateBox dateDateBox;
-    private ListBox subTypeListBox;
+    private Map<String, CheckBox> subTypeMapCheckBox;
     private ListBox typeListBox;
-    private ListBox modalityListBox;
+    private Map<String, CheckBox> modalityMapCheckBox;
 
     private DateTimeFormat dateTimeFormat;
 
@@ -119,14 +124,6 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	    messages +=
 		    getView().getUiMessage("Global.field.required",
 			    getUiMessage("Assessment.type"))
-			    + "\n";
-	    ok = false;
-	}
-
-	if (localisationListBox.getSelectedIndex() == 0) {
-	    messages +=
-		    getView().getUiMessage("Global.field.required",
-			    getUiMessage("Assessment.location"))
 			    + "\n";
 	    ok = false;
 	}
@@ -200,21 +197,17 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 
 	VerticalPanel localisationPanel = new VerticalPanel();
 	localisationPanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	HTML l2 =
-		new HTML(getUiMessage("Assessment.location")
-			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR);
-	localisationListBox = new ListBox();
-	localisationListBox.setName("Assessment.location");
-	localisationListBox
-		.setTitle(getUiMessage("Assessment.location.tooltip"));
-	localisationListBox.addItem("");
-	for (String s : COPropertiesType.LOCATION_VALUES) {
-	    localisationListBox.addItem(getView().getCoMessage(
-		    "Assessment.Location." + s), s);
-	}
-	selectItemListBox(localisationListBox, getView().getLocation());
+	HTML l2 = new HTML(getUiMessage("Assessment.location"));
 	localisationPanel.add(l2);
-	localisationPanel.add(localisationListBox);
+	localisationMapCheckBox = new TreeMap<String, CheckBox>();
+	for (String s : COPropertiesType.LOCATION_VALUES) {
+	    CheckBox checkBox =
+		    new CheckBox(getView().getCoMessage(
+			    "Assessment.Location." + s));
+	    localisationMapCheckBox.put(s, checkBox);
+	    localisationPanel.add(checkBox);
+	}
+	selectItemListCheckBox(localisationMapCheckBox, getView().getLocation());
 
 	VerticalPanel modePanel = new VerticalPanel();
 	modePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
@@ -249,17 +242,17 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	VerticalPanel subTypePanel = new VerticalPanel();
 	subTypePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
 	Label l8 = new Label(getView().getCoMessage("Assessment.Subtype"));
-	subTypeListBox = new ListBox();
-	subTypeListBox.setName("Assessment.subtype");
-	subTypeListBox.setTitle(getUiMessage("Assessment.subtype.tooltip"));
-	subTypeListBox.addItem("");
-	for (String s : COPropertiesType.SUBMITION_TYPE_VALUES) {
-	    subTypeListBox.addItem(getView().getCoMessage(
-		    "Assessment.Subtype." + s), s);
-	}
-	selectItemListBox(subTypeListBox, getView().getSubmitionType());
 	subTypePanel.add(l8);
-	subTypePanel.add(subTypeListBox);
+	subTypeMapCheckBox = new TreeMap<String, CheckBox>();
+	for (String s : COPropertiesType.SUBMITION_TYPE_VALUES) {
+	    CheckBox checkBox =
+		    new CheckBox(getView().getCoMessage(
+			    "Assessment.Subtype." + s));
+	    subTypeMapCheckBox.put(s, checkBox);
+	    subTypePanel.add(checkBox);
+
+	}
+	selectItemListCheckBox(subTypeMapCheckBox, getView().getSubmitionType());
 
 	VerticalPanel typePanel = new VerticalPanel();
 	typePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
@@ -287,21 +280,16 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 			.equals("true")) {
 	    editExamDate = true;
 	}
-
 	if (!editExamDate) {
 	    typeListBox.addChangeHandler(new ChangeHandler() {
 
 		public void onChange(ChangeEvent event) {
 		    int selectedIndex = typeListBox.getSelectedIndex();
+		    String value = typeListBox.getValue(selectedIndex);
 		    setText(typeListBox.getItemText(selectedIndex));
 		    typeListBox.setSelectedIndex(selectedIndex);
-		    if (getText()
-			    .equals(
-				    getView().getCoMessage(
-					    "Assessment.Type.intra_exam"))
-			    || getText().equals(
-				    getView().getCoMessage(
-					    "Assessment.Type.final_exam"))) {
+		    if (value.equals("intra_exam")
+			    || value.equals("final_exam")) {
 			dateDateBox.setValue(null);
 			dateDateBox.setEnabled(false);
 		    } else {
@@ -314,13 +302,8 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	selectItemListBox(typeListBox, getView().getAssessmentType());
 	if (!editExamDate) {
 	    if (getView().getAssessmentType() != null
-		    && (getView().getAssessmentType()
-			    .equals(
-				    getView().getCoMessage(
-					    "Assessment.Type.intra_exam")) || getView()
-			    .getAssessmentType().equals(
-				    getView().getCoMessage(
-					    "Assessment.Type.final_exam")))) {
+		    && (getView().getAssessmentType().equals("intra_exam") || getView()
+			    .getAssessmentType().equals("final_exam"))) {
 		dateDateBox.setValue(null);
 		dateDateBox.setEnabled(false);
 	    }
@@ -330,19 +313,17 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 
 	VerticalPanel modalityPanel = new VerticalPanel();
 	modePanel.setStylePrimaryName("Osyl-EditorPopup-OptionGroup");
-	HTML l10 =
-		new HTML(getUiMessage("Assessment.modality"));
-	modalityListBox = new ListBox();
-	modalityListBox.setName("Assessment.modality");
-	modalityListBox.setTitle(getUiMessage("Assessment.modality.tooltip"));
-	modalityListBox.addItem("");
-	for (String s : COPropertiesType.MODALITY_VALUES) {
-	    modalityListBox.addItem(getView().getCoMessage(
-		    "Assessment.Modality." + s), s);
-	}
-	selectItemListBox(modalityListBox, getView().getModality());
+	HTML l10 = new HTML(getUiMessage("Assessment.modality"));
 	modalityPanel.add(l10);
-	modalityPanel.add(modalityListBox);
+	modalityMapCheckBox = new TreeMap<String, CheckBox>();
+	for (String s : COPropertiesType.MODALITY_VALUES) {
+	    CheckBox checkBox =
+		    new CheckBox(getView().getCoMessage(
+			    "Assessment.Modality." + s));
+	    modalityMapCheckBox.put(s, checkBox);
+	    modalityPanel.add(checkBox);
+	}
+	selectItemListCheckBox(modalityMapCheckBox, getView().getModality());
 
 	HorizontalPanel ligneSuper = new HorizontalPanel();
 	HorizontalPanel ligne1 = new HorizontalPanel();
@@ -357,11 +338,12 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 
 	ligne1.add(typePanel);
 	ligne1.add(ponderationPanel);
-	ligne1.add(localisationPanel);
-	ligne1.add(modalityPanel);
 
-	ligne2.add(modePanel);
-	ligne2.add(endDatePanel);
+	ligne1.add(modePanel);
+	ligne1.add(endDatePanel);
+
+	ligne2.add(localisationPanel);
+	ligne2.add(modalityPanel);
 	ligne2.add(subTypePanel);
 
 	vp.add(ligne1);
@@ -424,8 +406,15 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
     }
 
     public String getLocation() {
-	return localisationListBox.getValue(localisationListBox
-		.getSelectedIndex());
+	String value = "";
+	for (Entry<String, CheckBox> entry : localisationMapCheckBox.entrySet()) {
+	    if (entry.getValue().getValue()) {
+		if (!"".equals(value))
+		    value += "/";
+		value += entry.getKey();
+	    }
+	}
+	return value;
     }
 
     public String getMode() {
@@ -437,7 +426,15 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
     }
 
     public String getSubmitionType() {
-	return subTypeListBox.getValue(subTypeListBox.getSelectedIndex());
+	String value = "";
+	for (Entry<String, CheckBox> entry : subTypeMapCheckBox.entrySet()) {
+	    if (entry.getValue().getValue()) {
+		if (!"".equals(value))
+		    value += "/";
+		value += entry.getKey();
+	    }
+	}
+	return value;
     }
 
     public String getType() {
@@ -445,7 +442,15 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
     }
 
     public String getModality() {
-	return modalityListBox.getValue(modalityListBox.getSelectedIndex());
+	String value = "";
+	for (Entry<String, CheckBox> entry : modalityMapCheckBox.entrySet()) {
+	    if (entry.getValue().getValue()) {
+		if (!"".equals(value))
+		    value += "/";
+		value += entry.getKey();
+	    }
+	}
+	return value;
     }
 
     private void selectItemListBox(ListBox lb, String text) {
@@ -457,6 +462,17 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 	    }
 	}
 	lb.setSelectedIndex(selectedIndex);
+    }
+
+    private void selectItemListCheckBox(Map<String, CheckBox> checkBoxMap,
+	    String value) {
+	if (value != null) {
+	    List<String> values = Arrays.asList(value.split("/"));
+	    for (Entry<String, CheckBox> entry : checkBoxMap.entrySet()) {
+		if (values.contains(entry.getKey()))
+		    entry.getValue().setValue(true);
+	    }
+	}
     }
 
     private Widget getAdditionalInfos() {
@@ -471,18 +487,45 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 		(workMode != null && !"".equals(workMode)) ? getView()
 			.getCoMessage("Assessment.Mode." + workMode)
 			+ " / " : "";
-	location =
-		(location != null && !"".equals(location)) ? getView()
-			.getCoMessage("Assessment.Location." + location)+" / " : "";
-			
-	modality = (modality != null && !"".equals(modality)) ? getView()
-		.getCoMessage("Assessment.Modality." + modality) : "";		
 
-	submissionMode =
-		(submissionMode != null && !"".equals(submissionMode)) ? getView()
-			.getCoMessage("Assessment.Subtype." + submissionMode)
-			: "";
+	if (location != null) {
+	    String val = "";
+	    List<String> values = Arrays.asList(location.split("/"));
+	    for (String v : values) {
+		if (!"".equals(val))
+		    val += " " + getUiMessage("Global.and") + " ";
+		val += getView().getCoMessage("Assessment.Location." + v);
+	    }
+	    location = val + " / ";
+	} else {
+	    location = "";
+	}
 
+	if (modality != null) {
+	    String val = "";
+	    List<String> values = Arrays.asList(modality.split("/"));
+	    for (String v : values) {
+		if (!"".equals(val))
+		    val += " " + getUiMessage("Global.and") + " ";
+		val += getView().getCoMessage("Assessment.Modality." + v);
+	    }
+	    modality = val;
+	} else {
+	    modality = "";
+	}
+
+	if (submissionMode != null) {
+	    String val = "";
+	    List<String> values = Arrays.asList(submissionMode.split("/"));
+	    for (String v : values) {
+		if (!"".equals(val))
+		    val += " " + getUiMessage("Global.and") + " ";
+		val += getView().getCoMessage("Assessment.Subtype." + v);
+	    }
+	    submissionMode = val;
+	} else {
+	    submissionMode = "";
+	}
 	String submissionModeLabel =
 		!submissionMode.equals("") ? getView().getCoMessage(
 			"Assessment.Subtype")
@@ -493,12 +536,12 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 
 	label1.setStylePrimaryName("Osyl-AssessmentView-AdditionalInfos");
 	label2.setStylePrimaryName("Osyl-AssessmentView-AdditionalInfos");
-	
-	if(getView().isNewAccordingSelectedDate()){
+
+	if (getView().isNewAccordingSelectedDate()) {
 	    label1.addStyleName("Osyl-newElement");
 	    label2.addStyleName("Osyl-newElement");
 	}
-	
+
 	metaInfosPanel.add(label1);
 	metaInfosPanel.add(label2);
 	return metaInfosPanel;
