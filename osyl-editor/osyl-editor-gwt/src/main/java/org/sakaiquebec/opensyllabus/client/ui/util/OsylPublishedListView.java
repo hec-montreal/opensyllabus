@@ -149,8 +149,9 @@ public class OsylPublishedListView extends Composite implements
 	label.setText(uiMessages.getMessage("publishedVersions"));
 
 	displayPublishedLink(SecurityInterface.ACCESS_PUBLIC);
-	// displayPublishedLink(SecurityInterface.SECURITY_ACCESS_ONSITE);
+	displayPublishedLink(SecurityInterface.ACCESS_COMMUNITY);
 	displayPublishedLink(SecurityInterface.ACCESS_ATTENDEE);
+
 	Label infoLabel =
 		new Label(uiMessages.getMessage("publish.publishedDate")
 			+ " : " + dateTimeString);
