@@ -1012,10 +1012,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			|| osylSecurityService
 				.getCurrentUserRole()
 				.equals(
-					OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)
-			|| osylSecurityService
-				.getCurrentUserRole()
-				.equals(
 					OsylSecurityService.SECURITY_ROLE_COURSE_HELPDESK)
 			|| osylSecurityService
 				.getCurrentUserRole()
@@ -1025,7 +1021,17 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			    resourceDao
 				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
 					    siteId,
-					    SecurityInterface.ACCESS_ATTENDEE);
+					    SecurityInterface.ACCESS_COMMUNITY);
+		} else if (osylSecurityService
+				.getCurrentUserRole()
+				.equals(
+						OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)) {
+			    thisCo =
+				    resourceDao
+					    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+						    siteId,
+						    SecurityInterface.ACCESS_ATTENDEE);
+
 		} else {
 		    thisCo =
 			    resourceDao
