@@ -332,6 +332,14 @@ public class OsylTextToolbar extends Composite {
 				getOsylController());
 		    }
 		});
+	MenuItem communityViewMenuItem =
+		new MenuItem(getOsylController().getUiMessages().getMessage(
+			"Preview.community_version"), new Command() {
+		    public void execute() {
+			new OsylPreviewView(SecurityInterface.ACCESS_COMMUNITY,
+				getOsylController());
+		    }
+		});	
 	MenuItem publicViewMenuItem =
 		new MenuItem(getOsylController().getUiMessages().getMessage(
 			"Preview.public_version"), new Command() {
@@ -340,7 +348,9 @@ public class OsylTextToolbar extends Composite {
 				getOsylController());
 		    }
 		});
+	
 	getViewMenuBar().addItem(attendeeViewMenuItem);
+	getViewMenuBar().addItem(communityViewMenuItem);	
 	getViewMenuBar().addItem(publicViewMenuItem);
     }
 
