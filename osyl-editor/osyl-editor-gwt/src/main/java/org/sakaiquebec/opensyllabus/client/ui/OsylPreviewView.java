@@ -61,11 +61,11 @@ public class OsylPreviewView extends OsylMainView implements
 	if (getController().isInHostedMode()) {
 	    String xsl = "";
 	    if (access.equals(SecurityInterface.ACCESS_PUBLIC)) {
-		xsl = OsylTestXsl.XSL_PUBLIC;
-	    } else if (access.equals(SecurityInterface.ACCESS_ONSITE)) {
-		xsl = OsylTestXsl.XSL_ONSITE;
+	    	xsl = OsylTestXsl.XSL_PUBLIC;
+	    } else if (access.equals(SecurityInterface.ACCESS_COMMUNITY)) {
+	    	xsl = OsylTestXsl.XSL_COMMUNITY;
 	    } else {
-		xsl = OsylTestXsl.XSL_ATTENDEE;
+	    	xsl = OsylTestXsl.XSL_ATTENDEE;
 	    }
 	    initModelWithXsl(xsl);
 	} else {
