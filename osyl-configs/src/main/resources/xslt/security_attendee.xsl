@@ -5,13 +5,13 @@
 <!--  =========================================================================== -->
 
 	<xsl:template match="/">
-		<xsl:apply-templates select="/*[(@access='public' or @access='onsite' or @access='attendee') and not(./visible='false')]|*[not(@access) and not(./visible='false')]" />
+		<xsl:apply-templates select="/*[(@access='public' or @access='community' or @access='attendee') and not(./visible='false')]|*[not(@access) and not(./visible='false')]" />
 	</xsl:template>
 	
-	<xsl:template match="@*|node()[(@access='public' or @access='onsite' or @access='attendee') and not(./visible='false')]">
+	<xsl:template match="@*|node()[(@access='public' or @access='community' or @access='attendee') and not(./visible='false')]">
 	  <xsl:copy>
 	  	<xsl:copy-of select="@*"/> 
-	    <xsl:apply-templates select="@*|*[(@access='public' or @access='onsite' or @access='attendee') and not(./visible='false')]|text()|*[not(@access) and not(./visible='false')]"/>
+	    <xsl:apply-templates select="@*|*[(@access='public' or @access='community' or @access='attendee') and not(./visible='false')]|text()|*[not(@access) and not(./visible='false')]"/>
 	  </xsl:copy>
 	</xsl:template>
 
