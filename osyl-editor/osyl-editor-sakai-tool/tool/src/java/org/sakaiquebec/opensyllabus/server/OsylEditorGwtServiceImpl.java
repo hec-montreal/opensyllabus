@@ -187,6 +187,8 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 		publishedCoCache.remove(siteId
 			+ SecurityInterface.ACCESS_ATTENDEE);
 		publishedCoCache.remove(siteId
+				+ SecurityInterface.ACCESS_COMMUNITY);		
+		publishedCoCache.remove(siteId
 			+ SecurityInterface.ACCESS_PUBLIC);
 	    }
 	} catch (Exception e) {
