@@ -743,14 +743,18 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	    updateCourseInformations(hierarchyFussionedCO, webappDir);
 
-	    // Create a course outline with security public
-	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_PUBLIC,
-		    webappDir);
-
 	    // Create a course outline with security attendee
 	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_ATTENDEE,
 		    webappDir);
 
+	    // Create a course outline with security community
+	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_COMMUNITY,
+		    webappDir);
+
+	    // Create a course outline with security public
+	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_PUBLIC,
+		    webappDir);
+	    
 	    // If the publication worked, the site id is logged to generate the
 	    // pdf later.
 
