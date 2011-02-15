@@ -788,6 +788,8 @@ public class COModeled extends COSerialized {
     private void createRootElement(Document document, COContent coContent,
 	    boolean saveParentInfos) {
 	Element osylElement = document.createElement("OSYL");
+	//If (ACCESS_ATTRIBUTE_NAME is different of ACCESS_PUBLIC)
+	//there is an error An error has been detected in xmlToModel com.google.gwt.xml.client.impl.DOMParseException: 
 	osylElement.setAttribute(ACCESS_ATTRIBUTE_NAME,
 		SecurityInterface.ACCESS_PUBLIC);
 	osylElement.setAttribute("schemaVersion", schemaVersion);
