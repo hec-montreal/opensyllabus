@@ -224,20 +224,27 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 	// configGroups.add(diffusionPanel);
 	diffusionPanel.add(new Label(getUiMessage("MetaInfo.audience")));
 	diffusionListBox = new ListBox();
-	diffusionListBox.setWidth("100px");
+	diffusionListBox.setWidth("110px");
 	diffusionListBox.setTitle(getUiMessage("MetaInfo.audience.title"));
 	diffusionListBox.addItem(getUiMessage("MetaInfo.audience.attendee"),
 		SecurityInterface.ACCESS_ATTENDEE);
+	diffusionListBox.addItem(getUiMessage("MetaInfo.audience.community"),
+			SecurityInterface.ACCESS_COMMUNITY);		
 	diffusionListBox.addItem(getUiMessage("MetaInfo.audience.public"),
 		SecurityInterface.ACCESS_PUBLIC);
 	diffusionPanel.add(diffusionListBox);
 	String level = getView().getDiffusionLevel();
-	int levelIndex = 1;
+	int levelIndex = 0;
 	if (SecurityInterface.ACCESS_ATTENDEE.equals(level)) {
-	    levelIndex = 0;
-	} else if (SecurityInterface.ACCESS_PUBLIC.equals(level)) {
+	    levelIndex = 0;	
+	}else if (SecurityInterface.ACCESS_COMMUNITY.equals(level)) {
+		levelIndex = 1;
+	}else if (SecurityInterface.ACCESS_PUBLIC.equals(level)) {
+		levelIndex = 2;
+	}else {
 	    levelIndex = 1;
 	}
+	
 	diffusionListBox.setSelectedIndex(levelIndex);
 	widgetList.add(diffusionPanel);
 
@@ -400,7 +407,7 @@ public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
      * Returns the selected diffusion level. This is either
      * {@link SecurityInterface#SECURITY_GROUP_PUBLIC},
      * {@link SecurityInterface#SECURITY_GROUP_ATTENDEE} or
-     * {@link SecurityInterface#SECURITY_GROUP_ONSITE}.
+     * {@link SecurityInterface#SECURITY_GROUP_COMMUNITY}.
      *
      * @return String
      */
