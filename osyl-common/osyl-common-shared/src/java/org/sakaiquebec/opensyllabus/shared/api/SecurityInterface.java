@@ -30,9 +30,9 @@ package org.sakaiquebec.opensyllabus.shared.api;
 public interface SecurityInterface {
 
     /**
-     * On site access security value.
+     * Community access security value.
      */
-    public static final String ACCESS_ONSITE = "onsite";
+    public static final String ACCESS_COMMUNITY = "community";
 
     /**
      * Public access security value.
