@@ -418,6 +418,8 @@ public class OsylController implements SavePushButtonEventHandler,
 	if (SecurityInterface.ACCESS_PUBLIC
 		.equalsIgnoreCase(publishedSecurityAccess)
 		|| SecurityInterface.ACCESS_ATTENDEE
+			.equalsIgnoreCase(publishedSecurityAccess)
+		|| SecurityInterface.ACCESS_COMMUNITY
 			.equalsIgnoreCase(publishedSecurityAccess)) {
 	    OsylRemoteServiceLocator.getEditorRemoteService()
 		    .getSerializedPublishedCourseOutlineForAccessType(
