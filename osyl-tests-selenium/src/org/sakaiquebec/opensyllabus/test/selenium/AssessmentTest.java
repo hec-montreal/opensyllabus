@@ -158,20 +158,22 @@ public class AssessmentTest extends AbstractOSYLTest {
 	// We fill the weighting field
 	session().type("//tr[2]/td/table/tbody/tr/td/input", newText3);
 
-	// We select randomly the location field
+	// We select randomly the work mode field (mode de travail)
 	String xpathRole2 =
 		"//tr[2]/td/table/tbody/tr/td[3]/table/tbody/tr[2]/td/select";
 	String newText6 = getRandomOption(xpathRole2);
 	session().select(xpathRole2, newText6);
 	pause();
 
-	// We select randomly the work mode field
-	String xpathRole3 =
-		"//tr[3]/td/table/tbody/tr/td/table/tbody/tr[2]/td/select";
-	String newText7 = getRandomOption(xpathRole3);
-	session().select(xpathRole3, newText7);
-	pause();
-
+	// We define elements to click on checkboxs 
+	String localisat1 = "//input[@id=(//label[text()=\"En classe\"]/@for)]";
+	String localisat2 = "//input[@id=(//label[contains(text(),'la maison')]/@for)]";
+	String modalidad1 = "//input[@id=(//label[text()=\"Oral\"]/@for)]";
+	String modalidad2 = "//input[@id=(//label[contains(text(),'crit')]/@for)]";
+	String modeRemis1 = "//input[@id=(//label[text()=\"Papier\"]/@for)]";
+	String modeRemis2 = "//input[@id=(//label[contains(text(),'tronique')]/@for)]";	
+	int optionId = 1 + (int) Math.round(Math.random() * 2);
+	
 	// We click OK to close assessment editor
 	session().click("//td/table/tbody/tr/td[1]/button");
 
@@ -186,17 +188,25 @@ public class AssessmentTest extends AbstractOSYLTest {
 	// We click OK to return to assessment editor
 	session().click("//tr[2]/td/table/tbody/tr/td/button");
 
-	// We check if the field "Location" is mandatory
-	// --------------------------------------------------------------------//
-
+	//Clicks for location, work mode and submission mode fields
+	if (optionId==1){
+		session().click(localisat1);
+		session().click(modalidad1);
+		session().click(modeRemis1);
+	}else {
+		session().click(localisat2);
+		session().click(modalidad2);
+		session().click(modeRemis2);		
+	}	
+	
 	// We select randomly the assessment type field
 	session().select(xpathRole1, newText5);
 
-	// We empty the fields "Location"
+	// We empty the fields work mode
 	session().select(xpathRole2, "label=");
 
-	// We select randomly the work mode field
-	session().select(xpathRole3, newText7);
+	// We select randomly the "Location" field
+	//session().select(xpathRole3, newText7);
 
 	// We click OK to close assessment editor
 	session().click("//td/table/tbody/tr/td[1]/button");
@@ -218,44 +228,9 @@ public class AssessmentTest extends AbstractOSYLTest {
 	// We select randomly the location field
 	session().select(xpathRole2, newText6);
 
-	// We empty the fields "Work mode"
-	session().select(xpathRole3, "label=");
-
-	// We click OK to close assessment editor
-	session().click("//td/table/tbody/tr/td[1]/button");
-
-	// We check if Opensyllabus displays a message error
-	if (!session().isElementPresent(Erreur)) {	
-	//if (!session().isTextPresent(Erreur)) {
-	    logAndFail("Expected to see text [" + Erreur
-		    + "] after text edition");
-	}
-
-	// We click OK to return to assessment editor
-	session().click("//tr[2]/td/table/tbody/tr/td/button");
-
-	// We check if the field "Weighting" is mandatory
-	// -------------------------------------------------------------------//
-
-	// We select randomly the work mode field
-	session().select(xpathRole3, newText7);
-
 	// We empty the fields "Weighting"
-	session().type("//tr[2]/td/table/tbody/tr/td/input", "");
-
-	// We click OK to close assessment editor
-	session().click("//td/table/tbody/tr/td[1]/button");
-
-	// We check if Opensyllabus displays a message error
-	if (!session().isElementPresent(Erreur)) {	
-	//if (!session().isTextPresent(Erreur)) {
-	    logAndFail("Expected to see text [" + Erreur
-		    + "] after text edition");
-	}
-	log("OK: Error displayed");
-
-	// We click OK to return to assessment editor
-	session().click("//tr[2]/td/table/tbody/tr/td/button");
+	session().type("//tr[2]/td/table/tbody/tr/td/input", "10");
+	
 
 	// We check if Opensyllabus displays a message error when the user enter
 	// a wrong date format.
@@ -266,34 +241,10 @@ public class AssessmentTest extends AbstractOSYLTest {
 
 	// We fill the assessment name field
 	String newText1 = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-	/*
-	 * session().type("//tr[2]/td/table/tbody/tr/td[2]/table/tbody/tr[2]/td"
-	 * + "/input", newText1); //We fill the assessment date field by a wrong
-	 * format //String newText2 = timeStamp();
-	 * //session().type("//tr[2]/td/input", newText2); //We click OK to
-	 * close assessment editor
-	 * session().click("//td/table/tbody/tr/td[1]/button"); //We check if
-	 * Opensyllabus displays a message error if
-	 * (!session().isTextPresent(Erreur)) {
-	 * logAndFail("Expected to see text [" + Erreur +
-	 * "] after text edition"); } log("OK: Error displayed"); //We click OK
-	 * to return to assessment editor
-	 * session().click("//tr[2]/td/table/tbody/tr/td/button"); //We Fill the
-	 * assessment date field session().type("//tr[2]/td/input", newText1);
-	 * //We fill the assessment name field String Name = "Evaluation" +
-	 * timeStamp();
-	 * session().type("//input[@class=\"Osyl-LabelEditor-TextBox\"]", Name);
-	 */
 
 	// We close Editor
 	session().click("//td/table/tbody/tr/td[1]/button");
 	pause();
-
-	// TODO: Check if the new rubric is visible.
-	// if (!session().isTextPresent(newText2)){
-	// logAndFail("Expected to see text [" + newText2 +" ("+ newText3 + ")"
-	// + "] after text edition");
-	// }
 
 	// ---------------------------------------------------------------------------//
 	// Add Text in Assessment Unit //
@@ -463,22 +414,6 @@ public class AssessmentTest extends AbstractOSYLTest {
 			    "//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
 	    pause();
 
-	    /*
-	     * /Overview session().click("gwt-uid-6"); //Public Overview
-	     * session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
-	     * "/div/div/table/tbody/tr[2]/td"); pause(); //Click Assessment
-	     * sectionsession().mouseDown(
-	     * "//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td" +
-	     * "/div[contains(text(),'valuations')]"); //Edit the last
-	     * Assessment unit if(Val < 10){ session().click("link=0" + Val +
-	     * " -"); }else{ session().click("link=" + Val + " -"); } if
-	     * (session().isTextPresent(selectedRubric2)) {
-	     * logAndFail("Expected to not see rubric [" + selectedRubric2 +
-	     * "] after text edition on public overview"); }
-	     * log("OK: Selected rubric is not visible"); //Close Overview
-	     * session().click("//html/body/table/tbody/tr/td/table/tbody" +
-	     * "/tr[2]/td[2]/div/div/table/tbody/tr/td");
-	     */
 	 }  
 	// ---------------------------------------------------------------------------//
 	// Add Document in Assessment Unit //
@@ -650,27 +585,6 @@ public class AssessmentTest extends AbstractOSYLTest {
 		    .click(
 			    "//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
 	    pause();
-
-	    /*
-	     * /Overview session().click("gwt-uid-6"); //Public Overview
-	     * session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
-	     * "/div/div/table/tbody/tr[2]/td"); pause(); //Click Assessment
-	     * sectionsession().mouseDown(
-	     * "//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td" +
-	     * "/div[contains(text(),'valuations')]"); //Edit first Assessment
-	     * unit if(Val < 10){ session().click("link=0" + Val + " -"); }else{
-	     * session().click("link=" + Val + " -"); } if
-	     * (session().isTextPresent(selectedRubric3)) {
-	     * logAndFail("Expected to not see rubric [" + selectedRubric3 +
-	     * "] after text edition on public overview"); }
-	     * log("OK: Selected rubric is not visible"); if
-	     * (session().isTextPresent(newText12)) {
-	     * logAndFail("Expected to not see rubric [" + newText12 +
-	     * "] after text edition on public overview"); }
-	     * log("OK: Text is not visible"); //Close Overview
-	     * session().click("//html/body/table/tbody/tr/td/table/tbody" +
-	     * "/tr[2]/td[2]/div/div/table/tbody/tr/td");
-	     */
 	
 	}
 
@@ -837,26 +751,6 @@ public class AssessmentTest extends AbstractOSYLTest {
 			"//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
 	pause();
 
-	/*
-	 * /Overview session().click("gwt-uid-6"); pause(); //Public Overview
-	 * session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
-	 * "/div/div/table/tbody/tr[2]/td"); pause(); //Click Assessment section
-	 * session
-	 * ().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/td" +
-	 * "/div[contains(text(),'valuations')]"); pause(); //Open Assessment 1
-	 * session().click("link=Evaluation 1 -"); if
-	 * (session().isTextPresent(selectedRubric4)) {
-	 * logAndFail("Expected to not see rubric [" + selectedRubric4 +
-	 * "] after text edition on public overview"); }
-	 * log("OK: Selected rubric is not visible"); if
-	 * (session().isTextPresent(Auteur+"."+Titre+"."+Annee+"."+ISBN)) {
-	 * logAndFail("Expected to not see rubric [" +
-	 * Auteur+"."+Titre+"."+Annee+"." +ISBN +
-	 * "] after text edition on public overview"); }
-	 * log("OK: Text is not visible"); //Close Overview
-	 * session().click("//html/body/table/tbody/tr/td/table/tbody" +
-	 * "/tr[2]/td[2]/div/div/table/tbody/tr/td");
-	 */
 
 	// ---------------------------------------------------------------------------//
 	// Switch two Assessments //
