@@ -204,9 +204,12 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		session().type("//tr[2]/td/table/tbody/tr/td[2]/input", siteName);
 		session().select("//tr[4]/td/table/tbody/tr/td[2]/select", "value=default");
 		session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=2");
-		// Click the button "Create"		
-		smartMouse("//div/div/div/div[2]/table/tbody/tr[5]/td/div/div");		
-		// Click button OK (confirmation)		
+		// Click the button "Create" Cours		
+		smartMouse("//div/div/div/div[2]/table/tbody/tr[5]/td/div/div");
+		pause();
+		pause();
+		pause();				
+		// Click button "Close" (confirmation)		
 		ensureElementPresent("//tr[4]/td/div");
 		smartMouse("//tr[4]/td/div");
 		log("**** Site created " + siteName + "*******");
@@ -281,9 +284,10 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
     public void goToSite(String siteName) throws IllegalStateException {
 	    session().open("/portal/site/" + siteName);
+
 	    waitForPageToLoad();
 
-	    if (!session().isTextPresent(siteName)) {
+	    if (!session().isTextPresent(siteName) || session().isTextPresent("Site Unavailable")) {
 	    	try {
 				createTestSite(siteName);
 			//} catch (IllegalStateException e) {
@@ -291,32 +295,11 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 			} catch (Exception e) {
 			    logAndFail("goToSite: " + e);
 			}
-	    }  	    	    
-	    
-	    /**
-	    if (session().isTextPresent("Site Unavailable")) {
-	    	throw new IllegalStateException("Got 'Site Unavailable' !");
-	    }  	    
-	    log("*** goToSite avant selectFrame");	    
-	    //session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
-	    session().selectFrame("//iframe[@class=\"portletMainIframe\"]");    
-	    log("*** goToSite apres selectFrame");
-	    //session().waitForPageToLoad("30000");    
-	    ensureElementPresent("gwt-uid-6");    
-	    //gwt-uid-6 is button Save. If it is not visible, it means we are
-	    //in read-only mode.
-	    if (!session().isVisible("gwt-uid-6")) {   
-			captureScreenShot("Course outline locked: waiting 15 minutes");
-			log("Course outline locked: waiting 15 minutes");
-			pause(90000);
-			session().refresh();
-			waitForPageToLoad();
-	    }    
-	    if (!session().isVisible("gwt-uid-6")) {
-	    	logAndFail("Course outline still locked after 15 minutes");
-	    }
-	    **/	 
-   
+	    }else
+		{
+			goToMenuOsyl();
+		}
+
     }
 
     /**
@@ -341,6 +324,23 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     public void deleteTestSite() throws Exception {
 	deleteTestSite(true);
     }
+
+
+    public void goToMenuOsyl() throws IllegalStateException {
+	String elementOsylMenu = "//div[@id='toolMenu']/ul/li[3]/a/span";
+	if (session().isElementPresent(elementOsylMenu)) {
+		// open Osyl tool
+		if (inFireFox()) {session().mouseOver(elementOsylMenu);
+			session().mouseDown(elementOsylMenu);
+			session().mouseUp(elementOsylMenu);
+			session().click(elementOsylMenu);
+			pause();
+		} else {
+			session().click(elementOsylMenu);
+		}
+	}
+	}
+
 
     /**
      * Deletes the test site. Will fail if the operation is unsuccessful and if
