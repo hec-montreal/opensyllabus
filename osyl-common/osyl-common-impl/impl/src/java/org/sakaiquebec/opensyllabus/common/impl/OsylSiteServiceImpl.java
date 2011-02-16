@@ -29,11 +29,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Properties;
 import java.util.Set;
 import java.util.Stack;
 import java.util.TreeMap;
@@ -79,11 +77,8 @@ import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.id.api.IdManager;
 import org.sakaiproject.presence.api.PresenceService;
 import org.sakaiproject.site.api.Site;
-import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.site.api.ToolConfiguration;
 import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiproject.tool.api.Tool;
 import org.sakaiproject.tool.api.ToolManager;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
@@ -650,18 +645,23 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	if (!siteService.siteExists(siteTitle)) {
 	    enableSecurityAdvisor();
-	    site = siteService.addSite(siteTitle, SITE_TYPE);
+	    String template =
+		    ServerConfigurationService.getString(
+			    "opensyllabus.course.template.prefix", null);
+	    if(template!=null){
+		site = siteService.addSite(siteTitle, siteService.getSite(template+lang));
+		site.getPropertiesEdit().addProperty("template", "false");
+	    }else{
+		site = siteService.addSite(siteTitle, SITE_TYPE);
+	    }
 	    site.setTitle(siteTitle);
 	    site.setPublished(true);
 	    site.setJoinable(false);
-
-	    // we add the tools
-	    addHomePage(site, lang);
-	    addTool(site, "sakai.announcements");
-	    addTool(site, "sakai.opensyllabus.tool");
-	    addTool(site, "sakai.assignment.grades");
-	    addTool(site, "sakai.resources");
-	    addTool(site, "sakai.siteinfo");
+	    
+	    
+	    enableSecurityAdvisor();
+	    siteService.save(site);
+	   
 
 	    // we add the directories
 	    String directoryId;
@@ -721,9 +721,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    contentHostingService.commitResource(cre,
 		    NotificationService.NOTI_NONE);
 
-	    enableSecurityAdvisor();
-	    siteService.save(site);
-
 	    COConfigSerialized coConfig = null;
 	    COSerialized co = null;
 
@@ -767,16 +764,16 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] creates site [" + siteTitle + "]");
 	if (!siteService.siteExists(siteTitle)) {
-	    site = siteService.addSite(siteTitle, SITE_TYPE);
+	    String template =
+		    ServerConfigurationService.getString(
+			    "opensyllabus.course.template.prefix", null);
+	    if(template!=null)
+		site = siteService.addSite(siteTitle, siteService.getSite(template+lang));
+	    else
+		site = siteService.addSite(siteTitle, SITE_TYPE);
 	    site.setTitle(siteTitle);
 	    site.setPublished(true);
 	    site.setJoinable(false);
-
-	    // we add the tools
-	    addTool(site, "sakai.announcements");
-	    addTool(site, "sakai.opensyllabus.tool");
-	    addTool(site, "sakai.resources");
-	    addTool(site, "sakai.siteinfo");
 
 	    enableSecurityAdvisor();
 	    siteService.save(site);
@@ -1022,15 +1019,13 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
 					    siteId,
 					    SecurityInterface.ACCESS_COMMUNITY);
-		} else if (osylSecurityService
-				.getCurrentUserRole()
-				.equals(
-						OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)) {
-			    thisCo =
-				    resourceDao
-					    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
-						    siteId,
-						    SecurityInterface.ACCESS_ATTENDEE);
+		} else if (osylSecurityService.getCurrentUserRole().equals(
+			OsylSecurityService.SECURITY_ROLE_COURSE_STUDENT)) {
+		    thisCo =
+			    resourceDao
+				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
+					    siteId,
+					    SecurityInterface.ACCESS_ATTENDEE);
 
 		} else {
 		    thisCo =
@@ -1227,93 +1222,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	File backup =
 		File.createTempFile("osyl-co-" + co.getSiteId() + "_", ".xml");
 	FileHelper.writeFileContent(backup, co.getContent());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public ToolConfiguration addTool(Site site, String toolId) {
-	SitePage page = site.addPage();
-	page.setTitle(toolManager.getTool(toolId).getTitle());
-	page.setLayout(SitePage.LAYOUT_SINGLE_COL);
-
-	return addTool(site, page, toolId);
-    }
-
-    private ToolConfiguration addTool(Site site, SitePage page, String toolId) {
-	return addTool(site, page, toolId, null);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public ToolConfiguration addTool(Site site, SitePage page, String toolId,
-	    String specifiedTitle) {
-
-	Tool tool = toolManager.getTool(toolId);
-	ToolConfiguration toolConf = page.addTool(tool);
-	if (specifiedTitle != null) {
-	    toolConf.setTitle(specifiedTitle);
-	} else {
-	    toolConf.setTitle(tool.getTitle());
-	}
-	toolConf.setLayoutHints("0,0");
-
-	try {
-	    enableSecurityAdvisor();
-	    siteService.save(site);
-	    if (osylSecurityService.getCurrentUserRole().equals(
-		    OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
-		    || osylSecurityService.getCurrentUserRole().equals(
-			    OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
-		securityService.clearAdvisors();
-	    }
-
-	} catch (IdUnusedException e) {
-	    log.error("Add tool - Unused id exception", e);
-	} catch (PermissionException e) {
-	    log.error("Add tool - Permission exception", e);
-	}
-
-	return toolConf;
-    }
-
-    private void addHomePage(Site site, String locale) {
-	// Add Home page and its 2 tools
-	SitePage homePage = site.addPage();
-	homePage.setupPageCategory(SitePage.HOME_TOOL_ID);
-	homePage.setPosition(0);
-	homePage.getPropertiesEdit().addProperty(SitePage.IS_HOME_PAGE,
-		Boolean.TRUE.toString());
-
-	// 1st tool
-	ToolConfiguration synAnncCfg =
-		addTool(site, homePage, "sakai.synoptic.announcement");
-	synAnncCfg.setLayoutHints("0,0");
-	Properties props = synAnncCfg.getPlacementConfig();
-	props.put("days", "31");
-	synAnncCfg.save();
-
-	// 2nd tool
-	String toolTitle;
-	if (Locale.CANADA_FRENCH.toString().equals(locale)) {
-	    toolTitle = HEC_MONTREAL_RULES_TITLE_FR_CA;
-	} else {
-	    toolTitle = HEC_MONTREAL_RULES_TITLE_EN;
-	}
-	ToolConfiguration iframeCfg =
-		addTool(site, homePage, "sakai.iframe", toolTitle);
-	iframeCfg.setLayoutHints("1,0");
-
-	Properties iframeProps = iframeCfg.getPlacementConfig();
-	iframeProps.put("height", "400px");
-	// instructors won't be able to change this iFrame unless they get
-	// site.upd permission
-	iframeProps.put("source", HEC_MONTREAL_RULES_FILE_BASE_NAME + locale
-		+ HEC_MONTREAL_RULES_FILE_EXTENSION);
-	iframeProps.put("reset.button", "true");
-	iframeCfg.save();
-
     }
 
     /** {@inheritDoc} */
@@ -1956,7 +1864,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    }
 	}
     }
-
 
     private void addAnnouncement(String siteId, String subject, String body)
 	    throws Exception {
