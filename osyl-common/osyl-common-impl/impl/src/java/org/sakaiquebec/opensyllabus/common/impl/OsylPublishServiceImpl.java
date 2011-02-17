@@ -1026,9 +1026,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// FIXME: this is for HEC Montreal only. Should be injected or something
 	// cleaner than this. See SAKAI-2163.
 	if (portalActivated != null && portalActivated.equalsIgnoreCase("true"))
-	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)) {
-		osylTransformToZCCO.sendXmlAndDoc(publishedCO);
-
+		if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)
+				|| access
+						.equalsIgnoreCase(SecurityInterface.ACCESS_COMMUNITY)) {
+			osylTransformToZCCO.sendXmlAndDoc(publishedCO);
 	    }
     }
 
