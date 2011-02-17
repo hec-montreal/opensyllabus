@@ -100,6 +100,17 @@ public interface OsylSiteService extends EntityProducer {
      */
     public static final String HEC_MONTREAL_RULES_TITLE_EN =
 	    "HEC Montréal Regulations";
+    
+    /**
+     * Title of iFrame presenting rules and regulations (French Canadian).
+     */
+    public static final String HEC_WELCOME_FR_CA =
+	    "Bienvenue dans ce cours!";
+    /**
+     * Title of iFrame presenting rules and regulations (English).
+     */
+    public static final String HEC_WELCOME_EN =
+	    "Welcome in this course";
 
     /**
      * Base name of files containing a summary and links of rules and

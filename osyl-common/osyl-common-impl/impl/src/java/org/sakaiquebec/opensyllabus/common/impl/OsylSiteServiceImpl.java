@@ -662,7 +662,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    addHomePage(site, lang);
 		    addTool(site, "sakai.announcements");
 		    addTool(site, "sakai.opensyllabus.tool");
-		    addTool(site, "sakai.assignment.grades");
 		    addTool(site, "sakai.resources");
 		    addTool(site, "sakai.siteinfo");
 	    }
@@ -1292,29 +1291,44 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	SitePage homePage = site.addPage();
 	homePage.setupPageCategory(SitePage.HOME_TOOL_ID);
 	homePage.setPosition(0);
+	homePage.setLayout(SitePage.LAYOUT_DOUBLE_COL);
 	homePage.getPropertiesEdit().addProperty(SitePage.IS_HOME_PAGE,
 		Boolean.TRUE.toString());
 
 	// 1st tool
+	String toolTitle;
+	if (Locale.CANADA_FRENCH.toString().equals(locale)) {
+	    toolTitle = HEC_WELCOME_FR_CA;
+	} else {
+	    toolTitle = HEC_WELCOME_EN;
+	}
+	ToolConfiguration iframeCfg =
+		addTool(site, homePage, "sakai.iframe", toolTitle);
+	iframeCfg.setLayoutHints("0,0");
+	Properties iframeProps = iframeCfg.getPlacementConfig();
+	iframeProps.put("height", "600px");
+	iframeProps.put("source", "http://www.google.com");
+	iframeCfg.save();
+	
+	// 2nd tool
 	ToolConfiguration synAnncCfg =
 		addTool(site, homePage, "sakai.synoptic.announcement");
-	synAnncCfg.setLayoutHints("0,0");
+	synAnncCfg.setLayoutHints("0,1");
 	Properties props = synAnncCfg.getPlacementConfig();
 	props.put("days", "31");
 	synAnncCfg.save();
-
-	// 2nd tool
-	String toolTitle;
+	
+	// 3nd tool
 	if (Locale.CANADA_FRENCH.toString().equals(locale)) {
 	    toolTitle = HEC_MONTREAL_RULES_TITLE_FR_CA;
 	} else {
 	    toolTitle = HEC_MONTREAL_RULES_TITLE_EN;
 	}
-	ToolConfiguration iframeCfg =
+	iframeCfg =
 		addTool(site, homePage, "sakai.iframe", toolTitle);
-	iframeCfg.setLayoutHints("1,0");
+	iframeCfg.setLayoutHints("1,1");
 
-	Properties iframeProps = iframeCfg.getPlacementConfig();
+	iframeProps = iframeCfg.getPlacementConfig();
 	iframeProps.put("height", "400px");
 	// instructors won't be able to change this iFrame unless they get
 	// site.upd permission
