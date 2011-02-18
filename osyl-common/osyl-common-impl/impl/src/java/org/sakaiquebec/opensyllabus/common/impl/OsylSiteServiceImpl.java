@@ -165,14 +165,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     private AnnouncementService announcementService;
 
-    // need this because annoucement are copied in draft mode and we want want
-    // to know what to 'commit' after
-    private TreeMap<String, String> expectedAnnouncementAdd =
-	    new TreeMap<String, String>();
-
-    private TreeMap<String, String> expectedAnnouncementModification =
-	    new TreeMap<String, String>();
-
     public void setSecurityService(SecurityService securityService) {
 	this.securityService = securityService;
     }
@@ -331,6 +323,38 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	eventTrackingService.addObserver(new Observer() {
 
+	    // private class for register AnnoucementEvent (resource, priority)
+	    // to applied to sub-site if needed
+	    class AnnouncementEvent {
+
+		private String resource;
+
+		private int priority;
+
+		public AnnouncementEvent(String resource, int priority) {
+		    super();
+		    this.resource = resource;
+		    this.priority = priority;
+		}
+
+		public String getResource() {
+		    return resource;
+		}
+
+		public int getPriority() {
+		    return priority;
+		}
+	    }
+
+	    // need this because annoucement are copied in draft mode and we
+	    // want want
+	    // to know what to 'commit' after
+	    private TreeMap<String, AnnouncementEvent> expectedAnnouncementAdd =
+		    new TreeMap<String, AnnouncementEvent>();
+
+	    private TreeMap<String, String> expectedAnnouncementModification =
+		    new TreeMap<String, String>();
+
 	    public void update(Observable o, Object arg) {
 		Event e = (Event) arg;
 		if (e.getEvent().equals(UsageSessionService.EVENT_LOGIN)) {
@@ -476,23 +500,25 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			if (expectedAnnouncementAdd.keySet().contains(siteId)) {
 			    AnnouncementMessage originalMessage =
 				    getAnnouncementMessage(expectedAnnouncementAdd
-					    .get(siteId));
+					    .get(siteId).getResource());
 			    if (originalMessage.getAnnouncementHeader()
 				    .getSubject().equals(subjectString)) {
 				expectedAnnouncementModification.put(siteId, e
 					.getResource());
+				AnnouncementEvent t =
+					expectedAnnouncementAdd.get(siteId);
 				setAnnoucementMessageDraftValue(siteId,
-					messageId, expectedAnnouncementAdd
-						.get(siteId), originalMessage
-						.getAnnouncementHeader()
-						.getDraft());
+					messageId, t.getResource(),
+					originalMessage.getAnnouncementHeader()
+						.getDraft(), t.getPriority());
 				expectedAnnouncementAdd.remove(siteId);
 			    }
 			} else {
 			    for (CORelation cor : coRelationDao
 				    .getCORelationDescendants(siteId)) {
-				expectedAnnouncementAdd.put(cor.getChild(), e
-					.getResource());
+				expectedAnnouncementAdd.put(cor.getChild(),
+					new AnnouncementEvent(e.getResource(),
+						e.getPriority()));
 			    }
 			    copyAnnouncmentToDescendants(siteId, messageId);
 			}
@@ -518,8 +544,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 				    .getCORelationDescendants(siteId)) {
 				deleteSiteAnnouncementForOriginalAnnouncementMessageRef(
 					cor.getChild(), e.getResource());
-				expectedAnnouncementAdd.put(cor.getChild(), e
-					.getResource());
+				expectedAnnouncementAdd.put(cor.getChild(),
+					new AnnouncementEvent(e.getResource(),
+						e.getPriority()));
 			    }
 			    copyAnnouncmentToDescendants(siteId, messageId);
 			} else {
@@ -1585,7 +1612,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public void transferCopyEntities(String fromContext, String toContext,
 	    List ids) {
 	transferCopyEntities(fromContext, toContext, ids, false);
-
     }
 
     public void transferCopyEntities(String fromContext, String toContext,
@@ -1695,7 +1721,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    Section section = cmService.getSection(Eid);
 	    courseNo = getSiteName(section);
 	}
-
 	return courseNo;
 
     }
@@ -1708,7 +1733,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    Section section = cmService.getSection(Eid);
 	    program = getProgram(section);
 	}
-
 	return program;
     }
 
@@ -1720,7 +1744,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    Section section = cmService.getSection(Eid);
 	    courseManageMentTitle = section.getTitle();
 	}
-
 	return courseManageMentTitle;
     }
 
@@ -1843,7 +1866,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    }
 	} catch (Exception e) {
 	}
-
     }
 
     public String getOsylConfigIdForSiteId(String siteId) {
@@ -1868,7 +1890,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    co.setContent(xmlData);
 	    resourceDao.createOrUpdateCourseOutline(co);
 	}
-
     }
 
     public List<COSerialized> getAllCO() {
@@ -1949,7 +1970,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    }
 	} catch (Exception e) {
 	}
-
 	coModeled.model2XML();
 	co.setContent(coModeled.getSerializedContent());
     }
@@ -2079,12 +2099,11 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	} catch (Exception e) {
 	    log.error("Could not retrieve announcement " + ref, e);
 	}
-
 	return msg;
     }
 
     private void setAnnoucementMessageDraftValue(String siteId,
-	    String messageId, String originalRef, boolean draft) {
+	    String messageId, String originalRef, boolean draft, int priority) {
 	AnnouncementMessageEdit msg = null;
 	try {
 	    AnnouncementChannel channel = getAnnouncementChannel(siteId);
@@ -2092,21 +2111,12 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    msg.getHeaderEdit().setDraft(draft);
 	    msg.getPropertiesEdit().addProperty(
 		    ORIGINAL_ANNOUNCEMENT_MESSAGE_REF, originalRef);
-	    String notification =
-		    msg.getProperties().getProperty("notificationLevel");
-	    int noti = NotificationService.NOTI_OPTIONAL;
-	    if ("r".equals(notification)) {
-		noti = NotificationService.NOTI_REQUIRED;
-	    } else if ("n".equals(notification)) {
-		noti = NotificationService.NOTI_NONE;
-	    }
 	    channel
-		    .commitMessage(msg, noti,
+		    .commitMessage(msg, priority,
 			    "org.sakaiproject.announcement.impl.SiteEmailNotificationAnnc");
 	} catch (Exception ee) {
 	    log.error("Could not modify announcement " + messageId, ee);
 	}
-
     }
 
     private void deleteSiteAnnouncementForOriginalAnnouncementMessageRef(
@@ -2125,7 +2135,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    }
 	} catch (Exception ee) {
 	}
-
     }
 
 }
