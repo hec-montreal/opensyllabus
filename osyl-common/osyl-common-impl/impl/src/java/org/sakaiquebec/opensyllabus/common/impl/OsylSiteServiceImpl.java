@@ -653,26 +653,26 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    String template =
 		    ServerConfigurationService.getString(
 			    "opensyllabus.course.template.prefix", null);
-	    if(template!=null){
-		site = siteService.addSite(siteTitle, siteService.getSite(template+lang));
+	    if (template != null) {
+		site =
+			siteService.addSite(siteTitle, siteService
+				.getSite(template + lang));
 		site.getPropertiesEdit().addProperty("template", "false");
-	    }else{
+	    } else {
 		site = siteService.addSite(siteTitle, SITE_TYPE);
 		// we add the tools
-		    addHomePage(site, lang);
-		    addTool(site, "sakai.announcements");
-		    addTool(site, "sakai.opensyllabus.tool");
-		    addTool(site, "sakai.resources");
-		    addTool(site, "sakai.siteinfo");
+		addHomePage(site, lang);
+		addTool(site, "sakai.announcements");
+		addTool(site, "sakai.opensyllabus.tool");
+		addTool(site, "sakai.resources");
+		addTool(site, "sakai.siteinfo");
 	    }
 	    site.setTitle(siteTitle);
 	    site.setPublished(true);
 	    site.setJoinable(false);
-	    
-	    
+
 	    enableSecurityAdvisor();
 	    siteService.save(site);
-	   
 
 	    // we add the directories
 	    String directoryId;
@@ -778,16 +778,18 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    String template =
 		    ServerConfigurationService.getString(
 			    "opensyllabus.course.template.prefix", null);
-	    if(template!=null){
-		site = siteService.addSite(siteTitle, siteService.getSite(template+lang));
+	    if (template != null) {
+		site =
+			siteService.addSite(siteTitle, siteService
+				.getSite(template + lang));
 		site.getPropertiesEdit().addProperty("template", "false");
-	    }else{
+	    } else {
 		site = siteService.addSite(siteTitle, SITE_TYPE);
 		// we add the tools
-		    addTool(site, "sakai.announcements");
-		    addTool(site, "sakai.opensyllabus.tool");
-		    addTool(site, "sakai.resources");
-		    addTool(site, "sakai.siteinfo");
+		addTool(site, "sakai.announcements");
+		addTool(site, "sakai.opensyllabus.tool");
+		addTool(site, "sakai.resources");
+		addTool(site, "sakai.siteinfo");
 	    }
 	    site.setTitle(siteTitle);
 	    site.setPublished(true);
@@ -1242,7 +1244,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	FileHelper.writeFileContent(backup, co.getContent());
     }
 
-    
     private ToolConfiguration addTool(Site site, String toolId) {
 	SitePage page = site.addPage();
 	page.setTitle(toolManager.getTool(toolId).getTitle());
@@ -1309,7 +1310,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	iframeProps.put("height", "600px");
 	iframeProps.put("source", "");
 	iframeCfg.save();
-	
+
 	// 2nd tool
 	ToolConfiguration synAnncCfg =
 		addTool(site, homePage, "sakai.synoptic.announcement");
@@ -1317,15 +1318,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	Properties props = synAnncCfg.getPlacementConfig();
 	props.put("days", "31");
 	synAnncCfg.save();
-	
+
 	// 3nd tool
 	if (Locale.CANADA_FRENCH.toString().equals(locale)) {
 	    toolTitle = HEC_MONTREAL_RULES_TITLE_FR_CA;
 	} else {
 	    toolTitle = HEC_MONTREAL_RULES_TITLE_EN;
 	}
-	iframeCfg =
-		addTool(site, homePage, "sakai.iframe", toolTitle);
+	iframeCfg = addTool(site, homePage, "sakai.iframe", toolTitle);
 	iframeCfg.setLayoutHints("1,1");
 
 	iframeProps = iframeCfg.getPlacementConfig();
@@ -1338,7 +1338,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	iframeCfg.save();
 
     }
-    
+
     /** {@inheritDoc} */
     public COSerialized importDataInCO(String xmlData, String siteId,
 	    Map<String, String> filenameChangesMap, String webapp)
@@ -2077,6 +2077,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	try {
 	    msg = channel.getAnnouncementMessage(messageId);
 	} catch (Exception e) {
+	    log.error("Could not retrieve announcement " + ref, e);
 	}
 
 	return msg;
@@ -2091,8 +2092,19 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    msg.getHeaderEdit().setDraft(draft);
 	    msg.getPropertiesEdit().addProperty(
 		    ORIGINAL_ANNOUNCEMENT_MESSAGE_REF, originalRef);
-	    channel.commitMessage(msg);
+	    String notification =
+		    msg.getProperties().getProperty("notificationLevel");
+	    int noti = NotificationService.NOTI_OPTIONAL;
+	    if ("r".equals(notification)) {
+		noti = NotificationService.NOTI_REQUIRED;
+	    } else if ("n".equals(notification)) {
+		noti = NotificationService.NOTI_NONE;
+	    }
+	    channel
+		    .commitMessage(msg, noti,
+			    "org.sakaiproject.announcement.impl.SiteEmailNotificationAnnc");
 	} catch (Exception ee) {
+	    log.error("Could not modify announcement " + messageId, ee);
 	}
 
     }
