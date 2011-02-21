@@ -447,7 +447,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    deleteRessourceSecuriteDB(dbConn, koId, siteId);
 	    // By default, security is zero for all documents belonging to
 	    // portal
-	    insertRessourceSecuriteDB(dbConn, koId, siteId, "0");
+	    insertRessourceSecuriteDB(dbConn, koId, siteId, "1");  // it was "0"
 
 	} else {
 
@@ -458,7 +458,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    deleteRessourceSecuriteDB(dbConn, koId, siteId);
 	    // By default, security is zero for all documents belonging to
 	    // portal
-	    insertRessourceSecuriteDB(dbConn, koId, siteId, "0");
+	    insertRessourceSecuriteDB(dbConn, koId, siteId, "1");  // it was "0"
 
 	}
 	log.debug("Document " + koId + " has been written in the database");
@@ -532,7 +532,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	ResultSet rset = null;
 	BLOB blob;
 	
-	String nivSecu="0";
+	String nivSecu="1";
 	if (acces.equalsIgnoreCase(ACCESS_PUBLIC)) {
 		nivSecu="0";
 	} else if(acces.equalsIgnoreCase(ACCESS_COMMUNITY)) {
