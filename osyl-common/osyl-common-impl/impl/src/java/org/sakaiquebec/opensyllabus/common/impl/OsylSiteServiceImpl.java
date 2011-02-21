@@ -733,25 +733,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	    }
 
-	    //add welcome page
-	    String welcomePageName = "";
-	    String content = "";
-	    if (Locale.CANADA_FRENCH.toString().equals(lang)) {
-		welcomePageName = WELCOME_FILENAME_FR_CA;
-		content = HEC_WELCOME_FR_CA;
-	    } else {
-		welcomePageName = WELCOME_FILENAME_EN;
-		content = HEC_WELCOME_EN;
-	    }
-	    ContentResourceEdit cEdit =
-		    contentHostingService.addResource(directoryId,
-			    welcomePageName, null, 1);
-	    cEdit.setResourceType(ResourceType.TYPE_HTML);
-	    cEdit.setContentType(ResourceType.MIME_TYPE_HTML);
-	    cEdit.setContent(content.getBytes());
-	    contentHostingService.commitResource(cEdit,
-		    NotificationService.NOTI_NONE);
-
 	    // we add the default citationList
 	    // TODO I18N
 	    String citationListName = "Références bibliographiques du cours";
@@ -1348,18 +1329,11 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    toolTitle = HEC_WELCOME_EN;
 	}
 	ToolConfiguration iframeCfg =
-		addTool(site, homePage, "sakai.iframe", toolTitle);
+		addTool(site, homePage, "sakai.iframe.site", toolTitle);
 	iframeCfg.setLayoutHints("0,0");
 	Properties iframeProps = iframeCfg.getPlacementConfig();
 	iframeProps.put("height", "600px");
 	String welcomePageName = "";
-	if (Locale.CANADA_FRENCH.toString().equals(locale)) {
-	    welcomePageName = WELCOME_FILENAME_FR_CA;
-	} else {
-	    welcomePageName = WELCOME_FILENAME_EN;
-	}
-	iframeProps.put("source", ServerConfigurationService.getServerUrl()
-		+ "/access/content/group/" + site.getId() +"/"+ welcomePageName);
 	iframeCfg.save();
 
 	// 2nd tool

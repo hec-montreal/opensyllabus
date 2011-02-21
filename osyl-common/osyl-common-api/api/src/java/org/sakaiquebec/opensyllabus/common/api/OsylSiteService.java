@@ -113,17 +113,6 @@ public interface OsylSiteService extends EntityProducer {
 	    "Welcome in this course";
     
     /**
-     * Title of iFrame presenting rules and regulations (French Canadian).
-     */
-    public static final String WELCOME_FILENAME_FR_CA =
-	    "bienvenue.html";
-    /**
-     * Title of iFrame presenting rules and regulations (English).
-     */
-    public static final String WELCOME_FILENAME_EN =
-	    "welcome.html";
-
-    /**
      * Base name of files containing a summary and links of rules and
      * regulations.
      */
