@@ -89,6 +89,10 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
     private ZCPublisherService zcPublisherService;
 
+    public static final String ACCESS_COMMUNITY = "community";
+    public static final String ACCESS_PUBLIC = "public";
+    public static final String ACCESS_ATTENDEE = "attendee";
+    
     public void setZcPublierService(ZCPublisherService zcPublierService) {
 	this.zcPublisherService = zcPublierService;
     }
@@ -367,7 +371,10 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		fileName =
 			docVisKey.substring(docVisKey.indexOf("/publish") + 9);
 		fileName = fileName.replaceAll("/", "_");
-		if ("public".equals(acces) && "true".equals(visibilite)) {
+				if ((ACCESS_PUBLIC.equals(acces) && "true"
+						.equals(visibilite))
+						|| (ACCESS_COMMUNITY.equals(acces) && "true"
+								.equals(visibilite))) {
 		    try {
 			ContentResource content =
 				contentHostingService.getResource(doc);
@@ -524,6 +531,13 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	PreparedStatement ps = null;
 	ResultSet rset = null;
 	BLOB blob;
+	
+	String nivSecu="0";
+	if (acces.equalsIgnoreCase(ACCESS_PUBLIC)) {
+		nivSecu="0";
+	} else if(acces.equalsIgnoreCase(ACCESS_COMMUNITY)) {
+		nivSecu="1";
+	}
 
 	try {
 
@@ -532,7 +546,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    ps_ins = dbConn.prepareStatement(requete_ins);
 	    ps_ins.setString(1, koId);
 	    ps_ins.setString(2, lang);
-	    ps_ins.setString(3, "0");
+	    ps_ins.setString(3, nivSecu);
 	    ps_ins.setString(4, ressType);
 	    ps_ins.execute();
 	    ps_ins.close();
