@@ -2307,7 +2307,7 @@ public class Publication {
 					deleteFromPlanZone(connexion, ressourceId, outPrint,
 							outTrace, trace);
 					processAndInsertInDB(connexion, ressourceId, lang,
-							"docInt", "20", "0", xml, outPrint, outTrace, trace);
+							"docInt", "20", "1", xml, outPrint, outTrace, trace); //It was "0"
 				}
 			}
 		}
