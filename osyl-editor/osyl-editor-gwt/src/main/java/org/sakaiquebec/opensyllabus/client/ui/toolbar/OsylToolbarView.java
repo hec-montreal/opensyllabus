@@ -111,9 +111,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    /* View type menu buttons */
 	    getOsylToolbar().getHomePushButton().setVisible(true);
 	    getOsylToolbar().getViewSeparator().setVisible(true);
-	    getOsylToolbar().getViewAllPushButton().setVisible(true);
-	    getOsylToolbar().getSelectDateSeparator().setVisible(true);
-	    getOsylToolbar().getSelectDateButton().setVisible(true);
+	    getOsylToolbar().getDisplayButton().setVisible(true);
 	    getOsylToolbar().getDeleteDateButton().setVisible(getController().getSelectedDate()!=null);
 
 	    /* Preview mode specific menu buttons */
@@ -142,14 +140,11 @@ public class OsylToolbarView extends OsylViewableComposite implements
 	    setViewAllPushButtonCommand();
 	    setSelectDateButtonCommand();
 	    setDeleteDateButtonCommand();
-
 	} else if (getController().isReadOnly()) {
 	    /* View type menu buttons */
 	    getOsylToolbar().getHomePushButton().setVisible(true);
 	    getOsylToolbar().getViewSeparator().setVisible(true);
-	    getOsylToolbar().getViewAllPushButton().setVisible(true);
-	    getOsylToolbar().getSelectDateSeparator().setVisible(true);
-	    getOsylToolbar().getSelectDateButton().setVisible(true);
+	    getOsylToolbar().getDisplayButton().setVisible(true);
 	    getOsylToolbar().getDeleteDateButton().setVisible(getController().getSelectedDate()!=null);
 
 	    /* Preview mode specific menu buttons */
@@ -189,9 +184,7 @@ public class OsylToolbarView extends OsylViewableComposite implements
 		/* View type menu buttons */
 		getOsylToolbar().getHomePushButton().setVisible(true);
 		getOsylToolbar().getViewSeparator().setVisible(true);
-		getOsylToolbar().getViewAllPushButton().setVisible(true);
-		getOsylToolbar().getSelectDateSeparator().setVisible(true);
-		getOsylToolbar().getSelectDateButton().setVisible(true);
+		getOsylToolbar().getDisplayButton().setVisible(true);
 		getOsylToolbar().getDeleteDateButton().setVisible(getController().getSelectedDate()!=null);
 
 		/* Preview mode specific menu buttons */

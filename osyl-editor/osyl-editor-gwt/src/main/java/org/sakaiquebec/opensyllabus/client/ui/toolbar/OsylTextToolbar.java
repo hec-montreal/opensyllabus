@@ -70,6 +70,10 @@ public class OsylTextToolbar extends Composite {
 
     private MenuItem homePushButton;
 
+    private OsylMenuBar displayMenuBar;
+
+    private MenuItem displayButton;
+
     private MenuItem viewAllPushButton;
 
     private MenuItem savePushButton;
@@ -93,7 +97,7 @@ public class OsylTextToolbar extends Composite {
     private MenuItem editPushButton;
 
     private MenuItem selectDateButton;
-    
+
     private MenuItem deleteDateButton;
 
     private MenuItemSeparator viewSeparator;
@@ -105,8 +109,6 @@ public class OsylTextToolbar extends Composite {
     private MenuItemSeparator printSeparator;
 
     private MenuItemSeparator editSeparator;
-    
-    private MenuItemSeparator selectDateSeparator;
 
     AsyncCallback<Boolean> print_publishedVersion_callback =
 	    new AsyncCallback<Boolean>() {
@@ -150,7 +152,6 @@ public class OsylTextToolbar extends Composite {
 	publishSeparator = new MenuItemSeparator();
 	printSeparator = new MenuItemSeparator();
 	editSeparator = new MenuItemSeparator();
-	selectDateSeparator = new MenuItemSeparator();
 	menuBar = new FlowPanel();
 	menuBar.add(leftMenuBar);
 	menuBar.add(rightMenuBar);
@@ -163,23 +164,11 @@ public class OsylTextToolbar extends Composite {
 		createMenuItem("toolbar.button.close", getOsylImageBundle()
 			.cross(), "toolbar.button.close.tooltip");
 	rightMenuBar.addItem(closePushButton);
+	
 	homePushButton =
 		createMenuItem("toolbar.button.home", getOsylImageBundle()
 			.home(), "toolbar.button.home.tooltip");
 
-	viewAllPushButton =
-		createMenuItem("toolbar.button.viewAll", getOsylImageBundle()
-			.view_all(), "toolbar.button.viewAll.tooltip");
-
-	selectDateButton =
-		createMenuItem("toolbar.button.selectDate",
-			getOsylImageBundle().calendar_view_month(),
-			"toolbar.button.selectDate.tooltip");
-	
-	deleteDateButton = createMenuItem("toolbar.button.deleteDate",
-		getOsylImageBundle().calendar_delete(),
-		"toolbar.button.deleteDate.tooltip");
-	
 	savePushButton =
 		createMenuItem("toolbar.button.save", getOsylImageBundle()
 			.save(), "toolbar.button.save.tooltip");
@@ -204,10 +193,21 @@ public class OsylTextToolbar extends Composite {
 
 	leftMenuBar.addItem(homePushButton);
 	leftMenuBar.addSeparator(viewSeparator);
-	leftMenuBar.addItem(viewAllPushButton);
-	leftMenuBar.addSeparator(selectDateSeparator);
-	leftMenuBar.addItem(selectDateButton);
-	leftMenuBar.addItem(deleteDateButton);
+	displayMenuBar = new OsylMenuBar(true);
+	displayMenuBar.setTitle(uiMessages
+		.getMessage("toolbar.button.display.tooltip"));
+	displayMenuBar.setAutoOpen(true);
+	displayMenuBar.addStyleName("Osyl-MenuBar-vertical");
+	displayMenuBar.addStyleName("Osyl-MenuBar-View");
+	addDisplayMenuBarItems();
+	displayButton =
+		leftMenuBar.addItem(AbstractImagePrototype.create(
+			getOsylImageBundle().printer()).getHTML()
+			+ uiMessages.getMessage("toolbar.button.display"), true,
+			displayMenuBar);
+	displayButton.addStyleName("Osyl-MenuItem-vertical");
+	displayButton.addStyleName("Osyl-MenuItem-View");
+	leftMenuBar.addItem(displayButton);
 
 	rightMenuBar.addItem(savePushButton);
 	rightMenuBar.addSeparator(previewSeparator);
@@ -239,7 +239,7 @@ public class OsylTextToolbar extends Composite {
 		    "backgroundPosition", "-49px 0");
 	}
 
-	addViewMenuBarItems();
+	addPreviewMenuBarItems();
 	rightMenuBar.addSeparator(publishSeparator);
 	rightMenuBar.addItem(publishPushButton);
 	rightMenuBar.addSeparator(printSeparator);
@@ -273,6 +273,27 @@ public class OsylTextToolbar extends Composite {
 
 	initWidget(menuBar);
 
+    }
+
+    private void addDisplayMenuBarItems() {
+	viewAllPushButton =
+		createMenuItem("toolbar.button.viewAll", getOsylImageBundle()
+			.view_all(), "toolbar.button.viewAll.tooltip");
+
+	selectDateButton =
+		createMenuItem("toolbar.button.selectDate",
+			getOsylImageBundle().calendar_view_month(),
+			"toolbar.button.selectDate.tooltip");
+
+	deleteDateButton =
+		createMenuItem("toolbar.button.deleteDate",
+			getOsylImageBundle().calendar_delete(),
+			"toolbar.button.deleteDate.tooltip");
+	
+	getDisplayMenuBar().addItem(viewAllPushButton);
+	getDisplayMenuBar().addItem(selectDateButton);
+	getDisplayMenuBar().addItem(deleteDateButton);
+	
     }
 
     private void addprintMenuBarItems() {
@@ -323,7 +344,7 @@ public class OsylTextToolbar extends Composite {
 	getPrintMenuBar().addItem(publishedPrintMenuItem);
     }
 
-    private void addViewMenuBarItems() {
+    private void addPreviewMenuBarItems() {
 	MenuItem attendeeViewMenuItem =
 		new MenuItem(getOsylController().getUiMessages().getMessage(
 			"Preview.attendee_version"), new Command() {
@@ -339,7 +360,7 @@ public class OsylTextToolbar extends Composite {
 			new OsylPreviewView(SecurityInterface.ACCESS_COMMUNITY,
 				getOsylController());
 		    }
-		});	
+		});
 	MenuItem publicViewMenuItem =
 		new MenuItem(getOsylController().getUiMessages().getMessage(
 			"Preview.public_version"), new Command() {
@@ -348,9 +369,9 @@ public class OsylTextToolbar extends Composite {
 				getOsylController());
 		    }
 		});
-	
+
 	getViewMenuBar().addItem(attendeeViewMenuItem);
-	getViewMenuBar().addItem(communityViewMenuItem);	
+	getViewMenuBar().addItem(communityViewMenuItem);
 	getViewMenuBar().addItem(publicViewMenuItem);
     }
 
@@ -406,14 +427,6 @@ public class OsylTextToolbar extends Composite {
 
     public MenuItemSeparator getViewSeparator() {
 	return viewSeparator;
-    }
-    
-    public MenuItemSeparator getSelectDateSeparator() {
-        return selectDateSeparator;
-    }
-
-    public void setSelectDateSeparator(MenuItemSeparator newsSeparator) {
-        this.selectDateSeparator = newsSeparator;
     }
 
     public void setViewSeparator(MenuItemSeparator viewSeparator) {
@@ -555,13 +568,29 @@ public class OsylTextToolbar extends Composite {
     public void setEditPushButton(MenuItem editPushButton) {
 	this.editPushButton = editPushButton;
     }
-    
+
     public void setDeleteDateButton(MenuItem deleteDateButton) {
 	this.deleteDateButton = deleteDateButton;
     }
 
     public MenuItem getDeleteDateButton() {
 	return deleteDateButton;
+    }
+
+    public OsylMenuBar getDisplayMenuBar() {
+	return displayMenuBar;
+    }
+
+    public void setDisplayMenuBar(OsylMenuBar displayMenuBar) {
+	this.displayMenuBar = displayMenuBar;
+    }
+
+    public MenuItem getDisplayButton() {
+	return displayButton;
+    }
+
+    public void setDisplayButton(MenuItem displayButton) {
+	this.displayButton = displayButton;
     }
 
     private void openDownloadPrintPublishedVersionLink() {

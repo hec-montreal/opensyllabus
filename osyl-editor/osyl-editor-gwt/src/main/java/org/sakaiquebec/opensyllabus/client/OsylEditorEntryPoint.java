@@ -77,7 +77,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
     public static String execmode = "prod";
 
     private static final int MIN_TOOL_HEIGHT = 200;
-    public static final int MIN_TOOL_WIDTH = 855;
+    public static final int MIN_TOOL_WIDTH = 640;
 
     // Default Constructor. We ensure that our singleton instance is the same as
     // the one initialized by the GWT framework!
