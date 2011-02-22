@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
@@ -95,5 +96,7 @@ public interface OsylManagerGwtServiceAsync {
 
     public void unpublish(String siteId,
 	    AsyncCallback<Void> unpublishAsyncCallback);
+    
+    public void unpublish(String siteId,AsyncCallback<Void> callback);
     
 }
