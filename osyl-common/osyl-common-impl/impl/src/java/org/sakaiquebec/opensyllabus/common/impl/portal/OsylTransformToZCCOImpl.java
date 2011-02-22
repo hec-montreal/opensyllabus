@@ -436,6 +436,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		selectDocInDocZone(koId, lang, acces, ressType, ressSize,
 			content, siteId, dbConn);
 
+	String nivSecu=getSecurityLabel(acces);
+	
 	// Check if the record is already on the table
 	if (!exist) {
 
@@ -444,10 +446,10 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    ressContent.close();
 	    // Add the information to the relational table
 	    // Clean the place to avoid unique constraint violation
-	    deleteRessourceSecuriteDB(dbConn, koId, siteId);
+	    deleteRessourceSecuriteDB(dbConn, koId, siteId, nivSecu);
 	    // By default, security is zero for all documents belonging to
 	    // portal
-	    insertRessourceSecuriteDB(dbConn, koId, siteId, "1");  // it was "0"
+	    insertRessourceSecuriteDB(dbConn, koId, siteId, nivSecu);  // it was "0"
 
 	} else {
 
@@ -455,10 +457,10 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		    ressContent, content, siteId);
 	    ressContent.close();
 	    // Clean the place to avoid unique constraint violation
-	    deleteRessourceSecuriteDB(dbConn, koId, siteId);
+	    deleteRessourceSecuriteDB(dbConn, koId, siteId, nivSecu);
 	    // By default, security is zero for all documents belonging to
 	    // portal
-	    insertRessourceSecuriteDB(dbConn, koId, siteId, "1");  // it was "0"
+	    insertRessourceSecuriteDB(dbConn, koId, siteId, nivSecu);  // it was "0"
 
 	}
 	log.debug("Document " + koId + " has been written in the database");
@@ -484,11 +486,13 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	String requete_select = null;
 	PreparedStatement ps_select = null;
 	ResultSet rSet_select = null;
-
-	requete_select = "select * from doczone where koId like ?";
+	String nivSecu=getSecurityLabel(acces);
+	
+	requete_select = "select * from doczone where koId like ?  AND nivSecu=?";
 	try {
 	    ps_select = dbConn.prepareStatement(requete_select);
 	    ps_select.setString(1, koId);
+	    ps_select.setString(2, nivSecu);	    
 	    rSet_select = ps_select.executeQuery();
 
 	    if (rSet_select.next())
@@ -532,12 +536,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	ResultSet rset = null;
 	BLOB blob;
 	
-	String nivSecu="1";
-	if (acces.equalsIgnoreCase(ACCESS_PUBLIC)) {
-		nivSecu="0";
-	} else if(acces.equalsIgnoreCase(ACCESS_COMMUNITY)) {
-		nivSecu="1";
-	}
+	String nivSecu=getSecurityLabel(acces);
 
 	try {
 
@@ -552,9 +551,10 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    ps_ins.close();
 
 	    requeteSQL =
-		    "SELECT docContent FROM DocZone WHERE koId=? FOR UPDATE";
+		    "SELECT docContent FROM DocZone WHERE koId=? AND nivSecu=? FOR UPDATE";
 	    ps = dbConn.prepareStatement(requeteSQL);
 	    ps.setString(1, koId);
+	    ps.setString(2, nivSecu);	    
 
 	    rset = ps.executeQuery();
 
@@ -602,16 +602,17 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      * @throws Exception
      */
     public void deleteRessourceSecuriteDB(Connection connexion, String koId,
-	    String planId) throws Exception {
+	    String planId, String acces) throws Exception {
 	// ---------------------------------------------------
 	String requeteSQL_del = null;
 	Statement stmt_del = connexion.createStatement();
 
 	String xmlKoId = getKoId(planId);
-
+	String nivSecu=getSecurityLabel(acces);
+	
 	requeteSQL_del =
 		" DELETE FROM DocSecu WHERE koId = '" + koId + "' AND planId='"
-			+ xmlKoId + "'";
+			+ xmlKoId + "' AND nivSecu='" + nivSecu + "'";
 	log.debug(requeteSQL_del + " ...");
 	stmt_del.execute(requeteSQL_del);
 	log.debug("request ok: " + requeteSQL_del);
@@ -627,13 +628,13 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      * @param koId The identifier of the document
      * @throws Exception
      */
-    public void deleteRessourceFromDB(Connection connexion, String koId)
+    public void deleteRessourceFromDB(Connection connexion, String koId, String acces)
 	    throws Exception {
 	// ---------------------------------------------------
 	String requeteSQL_delRess = null;
 	Statement stmt_delRess = connexion.createStatement();
-
-	requeteSQL_delRess = " DELETE FROM DocZone WHERE koId = '" + koId + "'";
+	String nivSecu=getSecurityLabel(acces);	
+	requeteSQL_delRess = " DELETE FROM DocZone WHERE koId = '" + koId + "' AND nivSecu = '" + nivSecu + "'";
 	log.debug(requeteSQL_delRess + " ...");
 	stmt_delRess.execute(requeteSQL_delRess);
 	log.debug("request ok: " + requeteSQL_delRess);
@@ -700,16 +701,17 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	String requete_upd = null;
 	PreparedStatement ps_upd = null;
 	ResultSet rSet_upd = null;
-
+	String nivSecu=getSecurityLabel(acces);
 	// Check if the record is already on the table
 
 	// Add the document content in the record
 	requete_upd =
-		"update doczone set doccontent = ?, datemaj= sysdate  WHERE koId=? ";
+		"update doczone set doccontent = ?, datemaj= sysdate  WHERE koId=? AND nivSecu=?";
 	try {
 	    ps_upd = dbConn.prepareStatement(requete_upd);
 	    ps_upd.setBinaryStream(1, ressContent, ressSize);
 	    ps_upd.setString(2, koId);
+	    ps_upd.setString(3, nivSecu);	    
 	    ps_upd.execute();
 
 	    ps_upd.close();
@@ -911,6 +913,16 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	return sessionName;
     }
 
+    private String getSecurityLabel(String acces) {
+    	String nivSecu="1";
+    	if (acces.equalsIgnoreCase(ACCESS_PUBLIC)) {
+    		nivSecu="0";
+    	} else if(acces.equalsIgnoreCase(ACCESS_COMMUNITY)) {
+    		nivSecu="1";
+    	}	
+    	return nivSecu;
+    }
+	
     /**
      * To resolve URIs
      */
