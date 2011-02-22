@@ -318,4 +318,10 @@ public interface Messages extends ConstantsWithLookup {
     String publishAction_pdfGen_nok();
     
     String permission_exception();
+
+    String unpublishAction_unpublish_error();
+
+    String unpublishAction_unpublish_error_detail();
+
+    String unpublishAction_unpublish_ok();
 }

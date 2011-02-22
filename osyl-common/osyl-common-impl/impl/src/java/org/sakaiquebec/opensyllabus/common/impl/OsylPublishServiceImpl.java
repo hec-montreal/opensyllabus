@@ -42,6 +42,7 @@ import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.event.api.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.id.api.IdManager;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.tool.api.SessionManager;
@@ -1063,6 +1064,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     public CourseManagementService getCmService() {
 	return cmService;
+    }
+
+    public void unpublish(String siteId) throws Exception, PermissionException {
+	resourceDao.removePublishVersionsForSiteId(siteId);
     }
 
 }

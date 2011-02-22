@@ -400,4 +400,8 @@ public class OsylManagerController implements FireOsylManagerEvents {
 	OsylManagerRPCController.getInstance().copySite(siteFrom,siteTo,copyAsyncCallback);
     }
     
+    public void unpublish(String siteId,AsyncCallback<Void> unpublishAsyncCallback){
+	OsylManagerRPCController.getInstance().unpublish(siteId,unpublishAsyncCallback);
+    }
+    
 }

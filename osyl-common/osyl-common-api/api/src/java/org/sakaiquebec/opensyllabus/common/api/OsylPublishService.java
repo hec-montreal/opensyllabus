@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.common.api;
 import java.util.Map;
 import java.util.Vector;
 
+import org.sakaiproject.exception.PermissionException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.exception.PdfGenerationException;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -103,4 +104,6 @@ public interface OsylPublishService {
     
     //TODO temporary to be delete after 2.6.1->2.7.1 migration
     public void createPublishPrintVersion(String siteId, String webappdir) throws PdfGenerationException;
+
+    public void unpublish(String siteId) throws Exception, PermissionException;
 }

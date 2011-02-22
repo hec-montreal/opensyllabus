@@ -32,6 +32,7 @@ import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 /**
@@ -106,5 +107,7 @@ public interface OsylManagerGwtService extends RemoteService {
     public void deleteSite(String siteId) throws Exception, OsylPermissionException;
 
     public void copySite(String siteFrom, String siteTo) throws Exception, OsylPermissionException;
+    
+    public void unpublish(String siteId) throws Exception, OsylPermissionException;
 
 }

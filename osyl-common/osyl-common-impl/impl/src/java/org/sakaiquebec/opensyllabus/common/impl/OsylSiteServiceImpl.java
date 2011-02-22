@@ -103,6 +103,7 @@ import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
+import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.w3c.dom.Document;
@@ -2134,5 +2135,4 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	} catch (Exception ee) {
 	}
     }
-
 }

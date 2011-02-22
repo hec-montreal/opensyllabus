@@ -484,9 +484,9 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	}
     }
 
+    @SuppressWarnings("unchecked")
     public List<COSerialized> getCourseOutlinesFoSite(String siteId) {
 	List<COSerialized> results = null;
-	COSerialized courseOutline = null;
 
 	if (siteId == null)
 	    throw new IllegalArgumentException();
@@ -499,6 +499,27 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    log.error("Unable to retrieve course outline by its siteId", e);
 	}
 	return results;
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void removePublishVersionsForSiteId(String siteId){
+	List<COSerialized> results = null;
+
+	if (siteId == null)
+	    throw new IllegalArgumentException();
+	try {
+	    results =
+		    getHibernateTemplate().find(
+			    "from COSerialized where siteId= ? and published=1",
+			    new Object[] { siteId });
+	} catch (Exception e) {
+	    log.error("Unable to retrieve course outline by its siteId", e);
+	}
+	if (results != null) {
+	    for (COSerialized courseOutline : results) {
+		getHibernateTemplate().delete(courseOutline);
+	    }
+	}
     }
 
 }

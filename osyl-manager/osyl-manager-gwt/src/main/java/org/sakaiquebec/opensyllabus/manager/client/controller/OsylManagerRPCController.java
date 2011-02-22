@@ -83,10 +83,11 @@ public class OsylManagerRPCController {
 	    }
 
 	    public void onFailure(Throwable error) {
-		if(error instanceof OsylPermissionException){
+		if (error instanceof OsylPermissionException) {
 		    Window.alert(osylManagerController.getMessages()
-				.siteNotCreated()+osylManagerController.getMessages()
-				.permission_exception());
+			    .siteNotCreated()
+			    + osylManagerController.getMessages()
+				    .permission_exception());
 		}
 		Window.alert(osylManagerController.getMessages()
 			.siteNotCreated());
@@ -161,7 +162,8 @@ public class OsylManagerRPCController {
 	serviceProxy.getAllCoAndSiteInfo(searchTerm, academicSession, callback);
     }
 
-    public void publish(String siteId, AsyncCallback<Vector<Map<String, String>>> callback) {
+    public void publish(String siteId,
+	    AsyncCallback<Vector<Map<String, String>>> callback) {
 	serviceProxy.publish(siteId, callback);
     }
 
@@ -177,5 +179,10 @@ public class OsylManagerRPCController {
     public void copySite(String siteFrom, String siteTo,
 	    AsyncCallback<Void> copyAsyncCallback) {
 	serviceProxy.copySite(siteFrom, siteTo, copyAsyncCallback);
+    }
+
+    public void unpublish(String siteId,
+	    AsyncCallback<Void> unpublishAsyncCallback) {
+	serviceProxy.unpublish(siteId, unpublishAsyncCallback);
     }
 }

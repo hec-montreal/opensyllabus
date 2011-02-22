@@ -164,7 +164,7 @@ public class OsylTextToolbar extends Composite {
 		createMenuItem("toolbar.button.close", getOsylImageBundle()
 			.cross(), "toolbar.button.close.tooltip");
 	rightMenuBar.addItem(closePushButton);
-	
+
 	homePushButton =
 		createMenuItem("toolbar.button.home", getOsylImageBundle()
 			.home(), "toolbar.button.home.tooltip");
@@ -202,9 +202,9 @@ public class OsylTextToolbar extends Composite {
 	addDisplayMenuBarItems();
 	displayButton =
 		leftMenuBar.addItem(AbstractImagePrototype.create(
-			getOsylImageBundle().printer()).getHTML()
-			+ uiMessages.getMessage("toolbar.button.display"), true,
-			displayMenuBar);
+			getOsylImageBundle().view_all()).getHTML()
+			+ uiMessages.getMessage("toolbar.button.display"),
+			true, displayMenuBar);
 	displayButton.addStyleName("Osyl-MenuItem-vertical");
 	displayButton.addStyleName("Osyl-MenuItem-View");
 	leftMenuBar.addItem(displayButton);
@@ -276,24 +276,24 @@ public class OsylTextToolbar extends Composite {
     }
 
     private void addDisplayMenuBarItems() {
-	viewAllPushButton =
-		createMenuItem("toolbar.button.viewAll", getOsylImageBundle()
-			.view_all(), "toolbar.button.viewAll.tooltip");
-
-	selectDateButton =
-		createMenuItem("toolbar.button.selectDate",
-			getOsylImageBundle().calendar_view_month(),
-			"toolbar.button.selectDate.tooltip");
-
-	deleteDateButton =
-		createMenuItem("toolbar.button.deleteDate",
-			getOsylImageBundle().calendar_delete(),
-			"toolbar.button.deleteDate.tooltip");
+	Command nullCommand = null;
 	
+	viewAllPushButton =
+		new MenuItem(uiMessages.getMessage("toolbar.button.viewAll"), true, nullCommand);
+	viewAllPushButton.setTitle(uiMessages.getMessage("toolbar.button.viewAll.tooltip"));
+	
+	selectDateButton =
+		new MenuItem(uiMessages.getMessage("toolbar.button.selectDate"), true, nullCommand);
+	selectDateButton.setTitle(uiMessages.getMessage("toolbar.button.selectDate.tooltip"));
+	
+	deleteDateButton =
+		new MenuItem(uiMessages.getMessage("toolbar.button.deleteDate"), true, nullCommand);
+	deleteDateButton.setTitle(uiMessages.getMessage("toolbar.button.deleteDate.tooltip"));
+
 	getDisplayMenuBar().addItem(viewAllPushButton);
 	getDisplayMenuBar().addItem(selectDateButton);
 	getDisplayMenuBar().addItem(deleteDateButton);
-	
+
     }
 
     private void addprintMenuBarItems() {

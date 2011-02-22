@@ -137,5 +137,7 @@ public interface ResourceDao {
      * @return
      */
     public List<COSerialized> getCourseOutlinesFoSite(String siteId);
+    
+    public void removePublishVersionsForSiteId(String siteId);
 
 }

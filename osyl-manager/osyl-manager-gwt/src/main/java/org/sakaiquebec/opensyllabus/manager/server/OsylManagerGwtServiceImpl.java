@@ -114,7 +114,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	    osylManagerServices.getOsylManagerService().readXML(fileReference,
 		    siteId, webappDir);
     }
-    
+
     public String getOsylPackage(String siteId) throws OsylPermissionException {
 	String webappDir = getServletContext().getRealPath("/");
 	return osylManagerServices.getOsylManagerService().getOsylPackage(
@@ -136,7 +136,8 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	osylManagerServices.getOsylManagerService().associate(siteId, parentId);
     }
 
-    public void dissociate(String siteId, String parentId) throws Exception, PermissionException {
+    public void dissociate(String siteId, String parentId) throws Exception,
+	    PermissionException {
 	osylManagerServices.getOsylManagerService()
 		.dissociate(siteId, parentId);
     }
@@ -147,7 +148,8 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		courseSectionId, siteId, servletContext.getRealPath("/"));
     }
 
-    public void dissociateFromCM(String siteId) throws Exception, PermissionException {
+    public void dissociateFromCM(String siteId) throws Exception,
+	    PermissionException {
 	osylManagerServices.getOsylManagerService().dissociateFromCM(siteId,
 		servletContext.getRealPath("/"));
     }
@@ -185,11 +187,17 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		.getAcademicSessions();
     }
 
-    public void copySite(String siteFrom, String siteTo) throws Exception, PermissionException {
+    public void copySite(String siteFrom, String siteTo) throws Exception,
+	    PermissionException {
 	String webappDir = getServletContext().getRealPath("/");
 	osylManagerServices.getOsylManagerService().copySite(siteFrom, siteTo);
 	// update course informations
 	osylManagerServices.getOsylSiteService().updateCOCourseInformations(
 		siteTo, webappDir);
+    }
+
+    public void unpublish(String siteId) throws Exception,
+	    OsylPermissionException {
+	osylManagerServices.getOsylPublishService().unpublish(siteId);
     }
 }
