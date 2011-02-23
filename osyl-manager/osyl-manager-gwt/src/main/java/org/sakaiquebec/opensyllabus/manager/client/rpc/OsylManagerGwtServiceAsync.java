@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
@@ -45,11 +44,10 @@ public interface OsylManagerGwtServiceAsync {
      * @param siteTitle
      * @param callback
      */
-    public void createSite(String siteTitle, String configRef, String lang, AsyncCallback<String> callback);
+    public void createSite(String siteTitle, String configRef, String lang,
+	    AsyncCallback<String> callback);
 
-    
     public void getOsylConfigs(AsyncCallback<Map<String, String>> callback);
-    
 
     /**
      * Reads a archive file.
@@ -70,33 +68,36 @@ public interface OsylManagerGwtServiceAsync {
 
     public void associate(String siteId, String parentId,
 	    AsyncCallback<Void> callback);
-    
+
     public void dissociate(String siteId, String parentId,
 	    AsyncCallback<Void> callback);
-    
-    public void associateToCM (String courseSectionId, String siteId, AsyncCallback<Void> callback);
-    
+
+    public void associateToCM(String courseSectionId, String siteId,
+	    AsyncCallback<Void> callback);
+
     public void dissociateFromCM(String siteId, AsyncCallback<Void> callback);
-    
-    public void getCMCourses( String startsWith, AsyncCallback<List<CMCourse>> callback) ;
-    
+
+    public void getCMCourses(String startsWith,
+	    AsyncCallback<List<CMCourse>> callback);
+
     public void getCoAndSiteInfo(String siteId, String searchTerm,
 	    String academicSession, AsyncCallback<COSite> callback);
-    
+
     public void getAllCoAndSiteInfo(String searchTerm, String academicSession,
 	    AsyncCallback<List<COSite>> callback);
 
-    public void publish(String siteId, AsyncCallback<Vector<Map<String, String>>> callback);
+    public void publish(String siteId,
+	    AsyncCallback<Vector<Map<String, String>>> callback);
 
     public void deleteSite(String siteId, AsyncCallback<Void> deleteAsynCallBack);
-    
-    public void getAcademicSessions(AsyncCallback<List<CMAcademicSession>> callback);
-    
-    public void copySite(String siteFrom, String siteTo, AsyncCallback<Void> callback);
+
+    public void getAcademicSessions(
+	    AsyncCallback<List<CMAcademicSession>> callback);
+
+    public void copySite(String siteFrom, String siteTo,
+	    AsyncCallback<Void> callback);
 
     public void unpublish(String siteId,
 	    AsyncCallback<Void> unpublishAsyncCallback);
-    
-    public void unpublish(String siteId,AsyncCallback<Void> callback);
-    
+
 }
