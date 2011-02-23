@@ -755,7 +755,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    // Create a course outline with security community
 	    publish(hierarchyFussionedCO, SecurityInterface.ACCESS_COMMUNITY,
 		    webappDir);
-	    
+
 	    // If the publication worked, the site id is logged to generate the
 	    // pdf later.
 
@@ -819,7 +819,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	String refString =
 		contentHostingService.getReference(val2).substring(8);
 	String id_work = (refString + WORK_DIRECTORY + "/");
-	String id_publish = null;
 	try {
 
 	    if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
@@ -828,40 +827,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    ContentCollection workContent =
 		    contentHostingService.getCollection(id_work);
 
-	    // We remove all resources in the publish directory collection
-	    if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
-		Site site = osylSiteService.getSite(siteId);
-		id_publish =
-			ContentHostingService.ATTACHMENTS_COLLECTION
-				+ site.getTitle()
-				+ "/"
-				+ OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
-				+ "/";
-	    } else {
-		id_publish = (refString + PUBLISH_DIRECTORY + "/");
-	    }
-
-	    ContentCollection publishContent = null;
-	    try {
-		publishContent =
-			contentHostingService.getCollection(id_publish);
-	    } catch (Exception e) {
-		publishContent =
-			contentHostingService.addCollection(id_publish);
-	    }
-
-	    @SuppressWarnings("unchecked")
-	    List<ContentEntity> membersPublished =
-		    publishContent.getMemberResources();
-	    for (Iterator<ContentEntity> pMbrs = membersPublished.iterator(); pMbrs
-		    .hasNext();) {
-		ContentEntity next = (ContentEntity) pMbrs.next();
-		String thisEntityRef = next.getId();
-		if (next.isCollection())
-		    contentHostingService.removeCollection(thisEntityRef);
-		else
-		    contentHostingService.removeResource(thisEntityRef);
-	    }
+	    deletePublishedContent(siteId);
 
 	    copyWorkToPublish(refString, workContent, documentSecurityMap,
 		    documentVisibilityMap, siteId);
@@ -872,6 +838,46 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    e);
 	    throw e;
 	}
+    }
+
+    private void deletePublishedContent(String siteId) throws Exception {
+	String id_publish = null;
+	String val2 = contentHostingService.getSiteCollection(siteId);
+	String refString =
+		contentHostingService.getReference(val2).substring(8);
+	// We remove all resources in the publish directory collection
+	if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
+	    Site site = osylSiteService.getSite(siteId);
+	    id_publish =
+		    ContentHostingService.ATTACHMENTS_COLLECTION
+			    + site.getTitle()
+			    + "/"
+			    + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
+			    + "/";
+	} else {
+	    id_publish = (refString + PUBLISH_DIRECTORY + "/");
+	}
+
+	ContentCollection publishContent = null;
+	try {
+	    publishContent = contentHostingService.getCollection(id_publish);
+	} catch (Exception e) {
+	    publishContent = contentHostingService.addCollection(id_publish);
+	}
+
+	@SuppressWarnings("unchecked")
+	List<ContentEntity> membersPublished =
+		publishContent.getMemberResources();
+	for (Iterator<ContentEntity> pMbrs = membersPublished.iterator(); pMbrs
+		.hasNext();) {
+	    ContentEntity next = (ContentEntity) pMbrs.next();
+	    String thisEntityRef = next.getId();
+	    if (next.isCollection())
+		contentHostingService.removeCollection(thisEntityRef);
+	    else
+		contentHostingService.removeResource(thisEntityRef);
+	}
+
     }
 
     @SuppressWarnings("unchecked")
@@ -1027,10 +1033,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// FIXME: this is for HEC Montreal only. Should be injected or something
 	// cleaner than this. See SAKAI-2163.
 	if (portalActivated != null && portalActivated.equalsIgnoreCase("true"))
-		if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)
-				|| access
-						.equalsIgnoreCase(SecurityInterface.ACCESS_COMMUNITY)) {
-			osylTransformToZCCO.sendXmlAndDoc(publishedCO);
+	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)
+		    || access
+			    .equalsIgnoreCase(SecurityInterface.ACCESS_COMMUNITY)) {
+		osylTransformToZCCO.sendXmlAndDoc(publishedCO);
 	    }
     }
 
@@ -1068,6 +1074,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     public void unpublish(String siteId) throws Exception, PermissionException {
 	resourceDao.removePublishVersionsForSiteId(siteId);
+	deletePublishedContent(siteId);
     }
 
 }
