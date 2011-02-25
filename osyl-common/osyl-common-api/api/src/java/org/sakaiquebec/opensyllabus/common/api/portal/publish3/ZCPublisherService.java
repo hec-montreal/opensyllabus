@@ -28,8 +28,12 @@ public interface ZCPublisherService {
 
     public final static String XSLT_DIR_NAME = "xslt";
     
-    public final static String URL_CONN = "/osyl-editor-sakai-tool/publish3/zcPublier3.jsp";
+    public final static String URL_CONN_PUBLIER = "/osyl-editor-sakai-tool/publish3/zcPublier3.jsp";
+    
+    public final static String URL_CONN_DEPUBLIER = "/osyl-editor-sakai-tool/publish3/zcDepublier3.jsp";
     
     public void publier(String koId, String langue);
+    
+    public void depublier(String koId, String langue);
 }
 

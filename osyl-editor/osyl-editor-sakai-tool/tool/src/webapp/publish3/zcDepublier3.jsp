@@ -15,10 +15,11 @@
         javax.xml.transform.stream.*,
         javax.xml.parsers.*,
         org.xml.sax.*,
-        javax.naming.*
+        org.sakaiquebec.opensyllabus.common.impl.portal.javazonecours.*,
+        javax.naming.*,
+        org.sakaiproject.component.cover.ServerConfigurationService
         "%>
 
-<%@page import="publishing.Publication" %>
 
 
 <%
@@ -44,13 +45,22 @@ Publication p = new Publication();
 Connection connexionPublication = null;		// hors du try pour fermer dans finally
 
 try{
+    String driverName =
+	ServerConfigurationService
+		.getString("hec.zonecours.conn.portail.driver.name");
+	String url =
+	ServerConfigurationService
+		.getString("hec.zonecours.conn.portail.url");
+	String user =
+	ServerConfigurationService
+		.getString("hec.zonecours.conn.portail.user");
+	String password =
+	ServerConfigurationService
+		.getString("hec.zonecours.conn.portail.password");
+    
+	Class.forName(driverName);
 
-	Class.forName("oracle.jdbc.driver.OracleDriver");
-
-	DataSource dsPublication = (DataSource) new InitialContext().lookup("java:comp/env/jdbc/Publication");
-	if (dsPublication == null) throw new ServletException("data source :Publication non trouvé");
-
-	connexionPublication = dsPublication.getConnection();
+	connexionPublication = DriverManager.getConnection(url, user, password);
 
 	p.depublier(connexionPublication, file, lang, outPrint, outTrace, trace);
 }

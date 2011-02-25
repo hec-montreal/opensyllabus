@@ -1318,7 +1318,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	iframeCfg.setLayoutHints("0,0");
 	Properties iframeProps = iframeCfg.getPlacementConfig();
 	iframeProps.put("height", "600px");
-	String welcomePageName = "";
 	iframeCfg.save();
 
 	// 2nd tool

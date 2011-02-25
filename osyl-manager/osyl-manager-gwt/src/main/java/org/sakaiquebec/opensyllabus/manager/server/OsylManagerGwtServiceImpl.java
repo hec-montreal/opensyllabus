@@ -198,6 +198,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 
     public void unpublish(String siteId) throws Exception,
 	    OsylPermissionException {
-	osylManagerServices.getOsylPublishService().unpublish(siteId);
+	String webappDir = getServletContext().getRealPath("/");
+	osylManagerServices.getOsylPublishService().unpublish(siteId,webappDir);
     }
 }

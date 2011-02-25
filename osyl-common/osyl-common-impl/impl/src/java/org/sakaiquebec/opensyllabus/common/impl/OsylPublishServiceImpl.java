@@ -727,7 +727,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    FusionException {
 
 	COSerialized hierarchyFussionedCO =
-		osylSiteService.getSerializedCourseOutline(siteId, webappDir);// getSerializedCourseOultineBySiteId(siteid)
+		osylSiteService.getSerializedCourseOutline(siteId, webappDir);
 	if (hierarchyFussionedCO.isIncompatibleWithHisParent()) {
 	    throw new FusionException();
 	}
@@ -1086,9 +1086,18 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return cmService;
     }
 
-    public void unpublish(String siteId) throws Exception, PermissionException {
+    public void unpublish(String siteId, String webappDir) throws Exception, PermissionException {
 	resourceDao.removePublishVersionsForSiteId(siteId);
 	deletePublishedContent(siteId);
+	COSerialized co =
+		osylSiteService.getSerializedCourseOutline(siteId, webappDir);
+	String portalActivated =
+		ServerConfigurationService.getString("hec.portail.activated");
+	if (portalActivated != null && portalActivated.equalsIgnoreCase("true")){
+	    osylTransformToZCCO.unpublish(siteId, co.getLang());
+	}
+	//remove publication date in DB
+	resourceDao.setPublicationDate(co.getCoId(), null);
     }
 
 }

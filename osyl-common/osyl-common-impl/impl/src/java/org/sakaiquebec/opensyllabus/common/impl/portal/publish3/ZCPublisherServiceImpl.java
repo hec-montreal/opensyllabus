@@ -57,7 +57,7 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 
 	if (parameter != null)
 	    urlConn =
-		    ServerConfigurationService.getServerUrl() + URL_CONN
+		    ServerConfigurationService.getServerUrl() + URL_CONN_PUBLIER
 			    + parameter;
 
 	if (urlConn != null) {
@@ -92,7 +92,51 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 	    }
 
 	}
+    }
+    
+    
+    public void depublier(String koId, String langue){
+	if (koId != null && koId.length() > 0 && langue != null
+		&& langue.length() > 0)
+	    parameter = "?file=" + koId + "&lang=" + langue;
 
+	if (parameter != null)
+	    urlConn =
+		    ServerConfigurationService.getServerUrl() + URL_CONN_DEPUBLIER
+			    + parameter;
+
+	if (urlConn != null) {
+
+	    try {
+		URL url = new URL(urlConn);
+		URLConnection conn = url.openConnection();
+		conn.setDoOutput(true);
+		OutputStreamWriter request =
+			new OutputStreamWriter(conn.getOutputStream());
+
+		request.write(parameter);
+		request.flush();
+
+		BufferedReader br =
+			new BufferedReader(new InputStreamReader(conn
+				.getInputStream()));
+
+		String line;
+
+		while ((line = br.readLine()) != null) {
+		    log.trace(line);
+		}
+
+		request.close();
+		br.close();
+
+	    } catch (MalformedURLException e) {
+		log.error(e.getMessage());
+	    } catch (IOException e) {
+		log.error(e.getMessage());
+	    }
+
+	}
     }
 
 }

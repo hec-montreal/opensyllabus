@@ -998,4 +998,10 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	}
 	return docs;
     }
+    
+    
+    public void unpublish(String siteId, String lang){
+	String koId = getKoId(siteId);
+	zcPublisherService.depublier(koId,lang.substring(0, 2));
+    }
 }
