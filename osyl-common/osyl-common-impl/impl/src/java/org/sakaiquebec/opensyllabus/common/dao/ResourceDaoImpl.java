@@ -408,9 +408,15 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
     }
 
     public void setPublicationDate(String coId, Date pubDate) {
+	if(pubDate==null){
+	    getHibernateTemplate().bulkUpdate(
+			"update COSerialized set publicationDate=null where coId= ?",
+			new Object[] { coId });
+	}else{
 	getHibernateTemplate().bulkUpdate(
 		"update COSerialized set publicationDate=? where coId= ?",
 		new Object[] { pubDate, coId });
+	}
     }
 
     @SuppressWarnings("unchecked")
