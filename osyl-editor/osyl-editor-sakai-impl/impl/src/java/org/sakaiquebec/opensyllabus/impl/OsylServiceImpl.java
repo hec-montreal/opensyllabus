@@ -5,12 +5,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.authz.api.FunctionManager;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.citation.api.CitationCollection;
@@ -74,11 +76,11 @@ public class OsylServiceImpl implements OsylService {
 	    ContentHostingService contentHostingService) {
 	this.contentHostingService = contentHostingService;
     }
-    
+
     private SecurityService securityService;
-    
+
     public void setSecurityService(SecurityService securityService) {
-        this.securityService = securityService;
+	this.securityService = securityService;
     }
 
     protected static final String ASSIGNMENT_TOOL_ID =
@@ -160,8 +162,35 @@ public class OsylServiceImpl implements OsylService {
      */
     public void init() {
 	log.info("INIT from Osyl service");
+	/******************************************************************************/
 
+	for (Iterator<String> i = functionsToRegister.iterator(); i.hasNext();) {
+	    String function = i.next();
+		getFunctionManager().registerFunction(function);
+	}
     }
+
+    private FunctionManager functionManager;
+
+    public FunctionManager getFunctionManager() {
+	return functionManager;
+    }
+
+    public void setFunctionManager(FunctionManager functionManager) {
+	this.functionManager = functionManager;
+    }
+    
+    private List<String> functionsToRegister;
+
+//    public List getFunctionsToRegister() {
+//	return functionsToRegister;
+//    }
+
+    public void setFunctionsToRegister(List<String> functionsToRegister) {
+	this.functionsToRegister = functionsToRegister;
+    }
+
+    /**************************************************************************/
 
     private CORelationDao coRelationDao;
 
@@ -374,10 +403,9 @@ public class OsylServiceImpl implements OsylService {
 		cre.setContentType(ResourceType.MIME_TYPE_HTML);
 
 		ResourcePropertiesEdit props = cre.getPropertiesEdit();
-		props
-			.addProperty(
-				ContentHostingService.PROP_ALTERNATE_REFERENCE,
-				org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
+		props.addProperty(
+			ContentHostingService.PROP_ALTERNATE_REFERENCE,
+			org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
 		props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
 			ResourceType.MIME_TYPE_HTML);
 		props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,

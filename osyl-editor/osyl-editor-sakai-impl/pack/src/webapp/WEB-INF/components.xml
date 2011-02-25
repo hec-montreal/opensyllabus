@@ -20,6 +20,8 @@
 			ref="org.sakaiproject.citation.api.CitationService" />
 		<property name="securityService"
 			ref="org.sakaiproject.authz.api.SecurityService" />
+		<property name="functionManager" 
+			ref="org.sakaiproject.authz.api.FunctionManager" />
 		
 		<!-- Osyl dependencies -->
 		<property name="osylSecurityService"
@@ -31,8 +33,47 @@
 		<property name="COConfigDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
 		<property name="osylContentService" 
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />	
-		
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />
+ 		
+		<property name="functionsToRegister">
+		    <list>
+				<value>osyl.view.student</value>
+				<value>osyl.view.community</value>
+				<value>osyl.view.public</value>
+				<value>osyl.read</value>
+				<value>osyl.edit</value>
+				<value>osyl.publish</value>
+		    </list>
+		</property>
+
+		<!-- 
+		<property name="functionsToAllow">
+		    <map>
+		        <entry key="Instructor">
+		            <list>
+		                <value>osyl.manager.import</value>
+		                <value>osyl.manager.export</value>
+		            </list>
+		        </entry>        
+		        <entry key="Teaching Assistant">
+		            <list>
+		                <value>osyl.manager.import</value>
+		                <value>osyl.manager.export</value>
+		            </list>
+		        </entry>
+		    </map>
+		</property>
+		<property name="functionsToDisallow">
+		    <map>
+		        <entry key="Instructor">
+		            <list>
+		                <value>site.del</value>
+		                <value>site.upd</value>
+		            </list>
+		        </entry>
+		    </map>
+		</property>
+		-->
 	</bean>
 	
 </beans>

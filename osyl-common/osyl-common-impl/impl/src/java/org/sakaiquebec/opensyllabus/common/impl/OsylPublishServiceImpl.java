@@ -63,6 +63,7 @@ import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
+import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.exception.PdfGenerationException;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
@@ -312,130 +313,143 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * @param String webapp dir (absolute pathname !?)
      */
     public Vector<Map<String, String>> publish(String webappDir, String siteId)
-	    throws Exception, FusionException {
+	    throws Exception, FusionException, OsylPermissionException {
+	if (!osylSecurityService
+		.isActionAllowedInCurrentSite(osylSiteService.getCurrentSiteReference(), OsylSecurityService.OSYL_FUNCTION_PUBLISH)) {
+	    throw new OsylPermissionException(sessionManager
+		    .getCurrentSession().getUserEid(),
+		    OsylSecurityService.OSYL_FUNCTION_PUBLISH);
+	} else {
+	    long start = System.currentTimeMillis();
+	    log.info("user [" + sessionManager.getCurrentSession().getUserEid()
+		    + "] publish site [" + siteId + "]");
+	    publishedSiteIds = new Vector<String>();
+	    Vector<Map<String, String>> publicationResults =
+		    new Vector<Map<String, String>>();
 
-	long start = System.currentTimeMillis();
-	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
-		+ "] publish site [" + siteId + "]");
-	publishedSiteIds = new Vector<String>();
-	Vector<Map<String, String>> publicationResults =
-		new Vector<Map<String, String>>();
+	    securityService.pushAdvisor(new SecurityAdvisor() {
+		public SecurityAdvice isAllowed(String userId, String function,
+			String reference) {
+		    return SecurityAdvice.ALLOWED;
+		}
+	    });
 
-	securityService.pushAdvisor(new SecurityAdvisor() {
-	    public SecurityAdvice isAllowed(String userId, String function,
-		    String reference) {
-		return SecurityAdvice.ALLOWED;
+	    COSerialized co =
+		    osylSiteService
+			    .getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
+
+	    if (co.getContent() == null) {
+		osylSiteService.setCoContentWithTemplate(co, webappDir);
+		resourceDao.createOrUpdateCourseOutline(co);
 	    }
-	});
+	    COModeledServer coModeled = new COModeledServer(co);
 
-	COSerialized co =
-		osylSiteService
-			.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
+	    // PRE-PUBLICATION
+	    // change work directory to publish directory
+	    coModeled.XML2Model(true);
+	    coModeled.model2XML();
+	    co.setContent(coModeled.getSerializedContent());
 
-	if (co.getContent() == null) {
-	    osylSiteService.setCoContentWithTemplate(co, webappDir);
-	    resourceDao.createOrUpdateCourseOutline(co);
-	}
-	COModeledServer coModeled = new COModeledServer(co);
+	    COSerialized publishedCO = null;
+	    try {
+		publishedCO =
+			resourceDao
+				.getPrePublishSerializedCourseOutlineBySiteId(co
+					.getSiteId());
+	    } catch (Exception e) {
+	    }
 
-	// PRE-PUBLICATION
-	// change work directory to publish directory
-	coModeled.XML2Model(true);
-	coModeled.model2XML();
-	co.setContent(coModeled.getSerializedContent());
+	    // Create a course outline with security public
+	    if (publishedCO == null) {
+		publishedCO = new COSerialized(co);
+		publishedCO.setCoId(idManager.createUuid());
+		publishedCO.setAccess("");
+		publishedCO.setPublished(true);
+		resourceDao.createOrUpdateCourseOutline(publishedCO);
 
-	COSerialized publishedCO = null;
-	try {
-	    publishedCO =
-		    resourceDao.getPrePublishSerializedCourseOutlineBySiteId(co
-			    .getSiteId());
-	} catch (Exception e) {
-	}
+		List<CORelation> childrens =
+			coRelationDao.getCourseOutlineChildren(siteId);
+		if (childrens != null && !childrens.isEmpty()) {
+		    // site have childrens associated (only in corelation table,
+		    // not
+		    // in xml cause there was no published xml before).
+		    // We must associate to parent now
+		    for (CORelation coRelation : childrens) {
+			try {
+			    COSerialized coChild =
+				    resourceDao
+					    .getSerializedCourseOutlineBySiteId(coRelation
+						    .getChild());
+			    COModeledServer coModelParent =
+				    osylSiteService
+					    .getFusionnedPrePublishedHierarchy(siteId);
 
-	// Create a course outline with security public
-	if (publishedCO == null) {
-	    publishedCO = new COSerialized(co);
-	    publishedCO.setCoId(idManager.createUuid());
-	    publishedCO.setAccess("");
-	    publishedCO.setPublished(true);
-	    resourceDao.createOrUpdateCourseOutline(publishedCO);
+			    ModelHelper.createAssociationInXML(coChild,
+				    coModelParent);
+			    resourceDao.createOrUpdateCourseOutline(coChild);
+			} catch (CompatibilityException e) {
+			    // we do nothing, editor of children will be alert
+			    // when
+			    // editing
+			} catch (FusionException fe) {
 
-	    List<CORelation> childrens =
-		    coRelationDao.getCourseOutlineChildren(siteId);
-	    if (childrens != null && !childrens.isEmpty()) {
-		// site have childrens associated (only in corelation table, not
-		// in xml cause there was no published xml before).
-		// We must associate to parent now
-		for (CORelation coRelation : childrens) {
-		    try {
-			COSerialized coChild =
-				resourceDao
-					.getSerializedCourseOutlineBySiteId(coRelation
-						.getChild());
-			COModeledServer coModelParent =
-				osylSiteService
-					.getFusionnedPrePublishedHierarchy(siteId);
-
-			ModelHelper.createAssociationInXML(coChild,
-				coModelParent);
-			resourceDao.createOrUpdateCourseOutline(coChild);
-		    } catch (CompatibilityException e) {
-			// we do nothing, editor of children will be alert when
-			// editing
-		    } catch (FusionException fe) {
+			}
 
 		    }
 
 		}
-
+	    } else {
+		publishedCO.setContent(co.getContent());
+		resourceDao.createOrUpdateCourseOutline(publishedCO);
 	    }
-	} else {
-	    publishedCO.setContent(co.getContent());
-	    resourceDao.createOrUpdateCourseOutline(publishedCO);
+
+	    // Retrieve documents associated to the course outline and its
+	    // parents
+	    setDocumentSecurityMap(coModeled.getDocumentSecurityMap());
+
+	    setDocumentVisibilityMap(coModeled.getDocumentVisibilityMap());
+
+	    copyWorkToPublish(siteId, getDocumentSecurityMap(),
+		    getDocumentVisibilityMap());
+
+	    publication(co.getSiteId(), webappDir);
+
+	    // change publication date
+	    TreeMap<String, String> publicationProperties =
+		    new TreeMap<String, String>();
+	    COSerialized coSerialized =
+		    osylSiteService
+			    .getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
+	    COModeledServer coModeledServer = new COModeledServer(coSerialized);
+	    coModeledServer.XML2Model(false);
+	    COContent coContent = coModeledServer.getModeledContent();
+	    coContent
+		    .addProperty(
+			    COPropertiesType.PREVIOUS_PUBLISHED,
+			    coContent.getProperty(COPropertiesType.PUBLISHED) != null ? coContent
+				    .getProperty(COPropertiesType.PUBLISHED)
+				    : "");
+	    coContent.addProperty(COPropertiesType.PUBLISHED,
+		    OsylDateUtils.getCurrentDateAsXmlString());
+	    coModeledServer.model2XML();
+	    coSerialized.setContent(coModeledServer.getSerializedContent());
+	    resourceDao.createOrUpdateCourseOutline(coSerialized);
+
+	    publicationProperties.put(COPropertiesType.PREVIOUS_PUBLISHED,
+		    coContent.getProperty(COPropertiesType.PREVIOUS_PUBLISHED));
+	    publicationProperties.put(COPropertiesType.PUBLISHED,
+		    coContent.getProperty(COPropertiesType.PUBLISHED));
+	    securityService.clearAdvisors();
+
+	    log.info("Finished publishing course outline for site ["
+		    + (co.getTitle() == null ? siteId : co.getTitle())
+		    + "] in " + (System.currentTimeMillis() - start) + " ms");
+
+	    publicationResults.add(publicationProperties);
+
+	    publicationResults.add(generatePublishedSitesPdf(webappDir));
+	    return publicationResults;
 	}
-
-	// Retrieve documents associated to the course outline and its parents
-	setDocumentSecurityMap(coModeled.getDocumentSecurityMap());
-
-	setDocumentVisibilityMap(coModeled.getDocumentVisibilityMap());
-
-	copyWorkToPublish(siteId, getDocumentSecurityMap(),
-		getDocumentVisibilityMap());
-
-	publication(co.getSiteId(), webappDir);
-
-	// change publication date
-	TreeMap<String, String> publicationProperties =
-		new TreeMap<String, String>();
-	COSerialized coSerialized =
-		osylSiteService
-			.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
-	COModeledServer coModeledServer = new COModeledServer(coSerialized);
-	coModeledServer.XML2Model(false);
-	COContent coContent = coModeledServer.getModeledContent();
-	coContent.addProperty(COPropertiesType.PREVIOUS_PUBLISHED, coContent
-		.getProperty(COPropertiesType.PUBLISHED) != null ? coContent
-		.getProperty(COPropertiesType.PUBLISHED) : "");
-	coContent.addProperty(COPropertiesType.PUBLISHED, OsylDateUtils
-		.getCurrentDateAsXmlString());
-	coModeledServer.model2XML();
-	coSerialized.setContent(coModeledServer.getSerializedContent());
-	resourceDao.createOrUpdateCourseOutline(coSerialized);
-
-	publicationProperties.put(COPropertiesType.PREVIOUS_PUBLISHED,
-		coContent.getProperty(COPropertiesType.PREVIOUS_PUBLISHED));
-	publicationProperties.put(COPropertiesType.PUBLISHED, coContent
-		.getProperty(COPropertiesType.PUBLISHED));
-	securityService.clearAdvisors();
-
-	log.info("Finished publishing course outline for site ["
-		+ (co.getTitle() == null ? siteId : co.getTitle()) + "] in "
-		+ (System.currentTimeMillis() - start) + " ms");
-
-	publicationResults.add(publicationProperties);
-
-	publicationResults.add(generatePublishedSitesPdf(webappDir));
-	return publicationResults;
     }
 
     private Map<String, String> generatePublishedSitesPdf(String webappdir) {
@@ -605,8 +619,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    File f = null;
 	    // change keys for i18n messages
 	    d =
-		    replaceSemanticTagsWithI18NMessage(d, coSerialized
-			    .getMessages());
+		    replaceSemanticTagsWithI18NMessage(d,
+			    coSerialized.getMessages());
 
 	    // convert html in xhtml
 	    d = convertHtmlToXhtml(d);
@@ -625,8 +639,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    + OsylConfigService.CONFIG_DIR + File.separator
 			    + configRef + File.separator
 			    + OsylConfigService.PRINT_DIRECTORY
-			    + File.separator, ServerConfigurationService
-			    .getServerUrl(), coSerialized.getSiteId());
+			    + File.separator,
+			    ServerConfigurationService.getServerUrl(),
+			    coSerialized.getSiteId());
 
 	    return f;
 	} catch (Exception e) {
@@ -652,8 +667,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    t.setMakeClean(true);
 
 	    expr =
-		    xpath
-			    .compile("//text | //comment | //description | //availability | //label | //identifier");
+		    xpath.compile("//text | //comment | //description | //availability | //label | //identifier");
 
 	    NodeList nodes =
 		    (NodeList) expr.evaluate(d, XPathConstants.NODESET);
@@ -690,12 +704,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		Node node = nodes.item(i);
 		String userDefLabel =
 			(node.getAttributes() == null) ? null
-				: (node
-					.getAttributes()
+				: (node.getAttributes()
 					.getNamedItem(
 						COPropertiesType.SEMANTIC_TAG_USERDEFLABEL) == null) ? null
-					: node
-						.getAttributes()
+					: node.getAttributes()
 						.getNamedItem(
 							COPropertiesType.SEMANTIC_TAG_USERDEFLABEL)
 						.getNodeValue();
@@ -922,10 +934,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			this_publish_directory =
 				siteRef
 					+ PUBLISH_DIRECTORY
-					+ this_work_id.substring(this_work_id
-						.lastIndexOf(siteRef)
-						+ siteRef.length()
-						+ WORK_DIRECTORY.length(),
+					+ this_work_id.substring(
+						this_work_id
+							.lastIndexOf(siteRef)
+							+ siteRef.length()
+							+ WORK_DIRECTORY
+								.length(),
 						this_work_id.length());
 
 		    }

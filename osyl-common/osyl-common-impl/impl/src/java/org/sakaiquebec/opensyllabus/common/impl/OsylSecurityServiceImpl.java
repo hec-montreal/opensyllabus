@@ -30,6 +30,7 @@ import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResourceEdit;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.event.api.NotificationService;
+import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
@@ -299,4 +300,27 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 	return sessionManager.getCurrentSessionUserId();
     }
 
+    public boolean isActionAllowedForCurrentUser(String permission) {
+	String userSiteId =
+		siteService.getUserSiteId(sessionManager
+			.getCurrentSessionUserId());
+	try {
+	    Site s = siteService.getSite(userSiteId);
+	    if (securityService.unlock(permission, s.getReference()))
+		return true;
+	    return false;
+	} catch (IdUnusedException e) {
+	    e.printStackTrace();
+	    return false;
+	}
+    }
+
+    public boolean isActionAllowedInCurrentSite(String currentSiteRef,
+	    String permission) {
+	if (securityService.unlock(permission, currentSiteRef)) {
+	    return true;
+	} else {
+	    return false;
+	}
+    }
 }
