@@ -53,13 +53,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     
     //Button's click event names
     public static final String BUTTON_HOME = "gwt-uid-2";    
-    public static final String BUTTON_ALL_VIEW = "gwt-uid-3";        
-    public static final String BUTTON_ADD = "gwt-uid-9";    
-    public static final String BUTTON_SAVE = "gwt-uid-6";
-    public static final String BUTTON_PUBLISH = "gwt-uid-7";        
-    public static final String BUTTON_PRINT = "gwt-uid-15";    
+    public static final String BUTTON_ALL_VIEW = "gwt-uid-8";        
+    public static final String BUTTON_ADD = "gwt-uid-10";    
+    public static final String BUTTON_SAVE = "gwt-uid-3";
+    public static final String BUTTON_PUBLISH = "gwt-uid-4";        
+    public static final String BUTTON_PRINT = "gwt-uid-17";    
     public static final String BUTTON_UPDATE = "gwt-uid-8";    
-    public static final String BUTTON_PREVIEW = "gwt-uid-10";    
+    public static final String BUTTON_PREVIEW = "gwt-uid-11";    
 
     // The screenshot capture is always done on the windows machine (running
     // the test) and not on the grid. This explains the following!
@@ -172,48 +172,52 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     	goToSite(parentChild);  	
         } // createTestSite
 
-	public void createSite(String siteName) throws Exception {
-		// Créer un nouveau site avec l'outil OpenSyllabus
-		log("**** Creating site " + siteName);
-		goToOsylManagerTool(); //Now, it is not necessary
-		// Créer un nouveau site avec l'outil Gestionnaire de plans de cours
-		if (inFireFox()) {	
-			String element = "//*[@class='icon-sakai-opensyllabus-manager-tool']";			
-			ensureElementPresent(element);
-			pause();
-			smartClick(element);			
-		} else { 
-			//(inIE)
-			String element = "//*[@class='icon-sakai-opensyllabus-manager-tool']";		
-			ensureElementPresent(element);
-			pause();			
-			smartMouse(element); 
-		}		
-		pause();
-		pause();
-		pause();		
-		if (!session().isElementPresent("//tr[7]/td/table/tbody/tr/td/div/div")) {
-			clickOpenOsyl("//tr[7]/td/table/tbody/tr/td/div/div");
-		}
-		else {
-			clickOpenOsyl("//tr[7]/td/table/tbody/tr/td[1]/div/div");
-		}
-		pause();	
-		pause();		
-		ensureElementPresent("//tr[2]/td/table/tbody/tr/td[2]/input");
-		session().type("//tr[2]/td/table/tbody/tr/td[2]/input", siteName);
-		session().select("//tr[4]/td/table/tbody/tr/td[2]/select", "value=default");
-		session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=2");
-		// Click the button "Create" Cours		
-		smartMouse("//div/div/div/div[2]/table/tbody/tr[5]/td/div/div");
-		pause();
-		pause();
-		pause();				
-		// Click button "Close" (confirmation)		
-		ensureElementPresent("//tr[4]/td/div");
-		smartMouse("//tr[4]/td/div");
-		log("**** Site created " + siteName + "*******");
-	} // createSite
+    public void createSite(String siteName) throws Exception {
+	// CrÃ©er un nouveau site avec l'outil OpenSyllabus
+	log("**** Creating site " + siteName);
+	goToOsylManagerTool(); // Now, it is not necessary
+	// Crï¿½er un nouveau site avec l'outil Gestionnaire de plans de cours
+	if (inFireFox()) {
+	    String element =
+		    "//*[@class='icon-sakai-opensyllabus-manager-tool']";
+	    ensureElementPresent(element);
+	    pause();
+	    smartClick(element);
+	} else {
+	    // (inIE)
+	    String element =
+		    "//*[@class='icon-sakai-opensyllabus-manager-tool']";
+	    ensureElementPresent(element);
+	    pause();
+	    smartMouse(element);
+	}
+	pause();
+	pause();
+	pause();
+	if (!session().isElementPresent("//tr[7]/td/table/tbody/tr/td/div/div")) {
+	    clickOpenOsyl("//tr[7]/td/table/tbody/tr/td/div/div");
+	} else {
+	    clickOpenOsyl("//tr[7]/td/table/tbody/tr/td[1]/div/div");
+	}
+	pause();
+	pause();
+	ensureElementPresent("//tr[2]/td/table/tbody/tr/td[2]/input");
+	session().type("//tr[2]/td/table/tbody/tr/td[2]/input", siteName);
+	session().select("//tr[4]/td/table/tbody/tr/td[2]/select",
+		"value=default");
+	session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=2");
+	// Click the button "Create" Cours
+	smartMouse("//div/div/div/div[2]/table/tbody/tr[5]/td/div/div");
+	pause();
+	pause();
+	pause();
+	pause();
+	pause();
+	// Click button "Close" (confirmation)
+	ensureElementPresent("//tr[4]/td/div");
+	smartMouse("//tr[4]/td/div");
+	log("**** Site created " + siteName + "*******");
+    } // createSite
 	
     /**
      * Opens windows to create a new site (if in FF) or selects it and press Enter (in IE).
