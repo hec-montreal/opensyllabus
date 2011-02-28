@@ -167,10 +167,26 @@ public interface OsylSecurityService {
 
     public void applyDirectoryPermissions(String directoryId) throws Exception;
 
+    /**
+     * @return the id of the current user.
+     */
     public String getCurrentUserId();
     
+    /**
+     * Checks if the current user as the specified permission (in his MyWorspace
+     * realm).
+     * @param permission the permission to check for.
+     * @return true if the user has the specified permission, false otherwise.
+     */
     public boolean isActionAllowedForCurrentUser(String permission);
     
+    /**
+     * Checks if the current user as the specified permission in the specified
+     * site.
+     * @param currentSiteRef The reference to the site.
+     * @param permission the permission to check for.
+     * @return true if the user has the specified permission, false otherwise.
+     */
     public boolean isActionAllowedInCurrentSite(String currentSiteRef,
 	    String permission);
 }
