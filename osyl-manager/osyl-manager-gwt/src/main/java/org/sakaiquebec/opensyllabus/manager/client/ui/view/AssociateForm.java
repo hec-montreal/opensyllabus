@@ -96,12 +96,18 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 		    sigleOracle = new MultiWordSuggestOracle();
 		    sigleCourseMap = new HashMap<String, CMCourse>();
 		    for (CMCourse course : result) {
-			String sigleValue =
-				course.getSigle() + " " + course.getSession()
-					+ " " + course.getSection();
-			sigleOracle.add(sigleValue);
-			sigleCourseMap.put(sigleValue, course);
-			suggestionListBox.addItem(sigleValue, sigleValue);
+				//if (!sigleValue.substring(sigleValue.length()-2,2).equals("00")) {
+				if (course.getSection().substring(course.getSection().length()-2,2).equals("00")) {
+					//They are "partageables
+				} else {
+					String sigleValue =
+						course.getSigle() + " " + course.getSession()
+							+ " " + course.getSection();
+					sigleOracle.add(sigleValue);
+					sigleCourseMap.put(sigleValue, course);
+					suggestionListBox.addItem(sigleValue, sigleValue);
+				}
+					
 		    }
 		    suggestionListBox.setSelectedIndex(0);
 		}
