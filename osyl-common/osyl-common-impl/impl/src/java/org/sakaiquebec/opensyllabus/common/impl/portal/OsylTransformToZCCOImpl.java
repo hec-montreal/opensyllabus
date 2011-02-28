@@ -92,6 +92,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
     public static final String ACCESS_COMMUNITY = "community";
     public static final String ACCESS_PUBLIC = "public";
     public static final String ACCESS_ATTENDEE = "attendee";
+    private static final String SITE_SHAREABLE = "00";
     
     public void setZcPublierService(ZCPublisherService zcPublierService) {
 	this.zcPublisherService = zcPublierService;
@@ -738,72 +739,82 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      */
     public boolean sendXmlAndDoc(COSerialized published) throws Exception {
 
-	Map<String, String> documentSecurityMap;
-	Map<String, String> documentVisibilityMap;
-	Map<String, String> documents;
-
-	COModeledServer coModeled = new COModeledServer(published);
-
-	coModeled.XML2Model();
-	coModeled.model2XML();
-
-	documentSecurityMap = coModeled.getAllDocumentsSecurityMap();
-	documentVisibilityMap = coModeled.getAllDocumentsVisibilityMap();
-	documents = coModeled.getAllDocuments();
-
-	try {
-	    AuthzGroup realm =
-		    authzGroupService.getAuthzGroup(SITE_PREFIX
-			    + published.getSiteId());
-	    String provider = realm.getProviderGroupId();
-	    if (provider == null || !cmService.isSectionDefined(provider)) {
-		log
-			.info("The course outline "
-				+ published.getSiteId()
-				+ " is not associated to a section in the course management,"
-				+ " it will not be transferred to ZoneCours public.");
-		return false;
-	    }
-	} catch (GroupNotDefinedException e) {
-	    log.error("sendXmlAndDoc(): " + e);
-	}
-
-	String siteId = published.getSiteId();
-	String osylCoXml = published.getContent();
+    String siteShareable =  getKoId(published.getSiteId());
+    siteShareable = siteShareable.substring((siteShareable.length()-2), siteShareable.length());
 	boolean sent = false;
-	String zcco = null;
-	// TODO: fill out these values from the course management
-	String koId = null;
-	String lang = null;
-
-	// Transform the course outline
-	zcco = transform(osylCoXml);
-
-	if (zcco != null) {
-
-	    // Connect to the database using config defined in
-	    // sakai.properties
-	    Connection dbConn = connect();
-
-	    // Save the course outline in the zonecours database
-	    // The siteId is used as koID
-	    koId = getKoId(siteId);
-	    lang = published.getLang().substring(0, 2);
-	    sent = writeXmlInZC(zcco, koId, lang, dbConn);
-	    // Save the documents in the zonecours database
-	    sent =
-		    sent
-			    && writeDocumentsInZC(siteId, lang,
-				    documentSecurityMap, documentVisibilityMap,
-				    documents, zcco, dbConn);
-	    if (sent) {
+	
+    if (!siteShareable.equals(SITE_SHAREABLE)) {						   	
+		Map<String, String> documentSecurityMap;
+		Map<String, String> documentVisibilityMap;
+		Map<String, String> documents;
+	
+		COModeledServer coModeled = new COModeledServer(published);
+	
+		coModeled.XML2Model();
+		coModeled.model2XML();
+	
+		documentSecurityMap = coModeled.getAllDocumentsSecurityMap();
+		documentVisibilityMap = coModeled.getAllDocumentsVisibilityMap();
+		documents = coModeled.getAllDocuments();
+	
+		try {
+		    AuthzGroup realm =
+			    authzGroupService.getAuthzGroup(SITE_PREFIX
+				    + published.getSiteId());
+		    String provider = realm.getProviderGroupId();
+		    if (provider == null || !cmService.isSectionDefined(provider)) {
+			log
+				.info("The course outline "
+					+ published.getSiteId()
+					+ " is not associated to a section in the course management,"
+					+ " it will not be transferred to ZoneCours public.");
+			return false;
+		    }
+		} catch (GroupNotDefinedException e) {
+		    log.error("sendXmlAndDoc(): " + e);
+		}
+	
+		String siteId = published.getSiteId();
+		String osylCoXml = published.getContent();
+		String zcco = null;
+		// TODO: fill out these values from the course management
+		String koId = null;
+		String lang = null;
+	
+		// Transform the course outline
+		zcco = transform(osylCoXml);
+	
+		if (zcco != null) {
+	
+		    // Connect to the database using config defined in
+		    // sakai.properties
+		    Connection dbConn = connect();
+	
+		    // Save the course outline in the zonecours database
+		    // The siteId is used as koID
+		    koId = getKoId(siteId);
+		    lang = published.getLang().substring(0, 2);
+		    sent = writeXmlInZC(zcco, koId, lang, dbConn);
+		    // Save the documents in the zonecours database
+		    sent =
+			    sent
+				    && writeDocumentsInZC(siteId, lang,
+					    documentSecurityMap, documentVisibilityMap,
+					    documents, zcco, dbConn);
+		    if (sent) {
+			log.debug("The transfer to the ZoneCours "
+				+ "database is complete and successful");
+		    }
+		    zcPublisherService.publier(koId, lang);
+		    dbConn.close();
+		}
+		return sent;
+    }
+    else {
 		log.debug("The transfer to the ZoneCours "
-			+ "database is complete and successful");
-	    }
-	    zcPublisherService.publier(koId, lang);
-	    dbConn.close();
-	}
-	return sent;
+				+ "database was not done because the site is shareable");
+		return sent;
+    }
     }
 
     /**
