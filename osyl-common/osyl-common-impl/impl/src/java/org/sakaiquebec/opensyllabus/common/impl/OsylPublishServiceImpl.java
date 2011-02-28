@@ -80,6 +80,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     private static Log log = LogFactory.getLog(OsylPublishServiceImpl.class);
 
+    private static final String SITE_SHAREABLE = "00";
+
     private Vector<String> publishedSiteIds;
 
     /**
@@ -1046,11 +1048,14 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	// FIXME: this is for HEC Montreal only. Should be injected or something
 	// cleaner than this. See SAKAI-2163.
+    String siteShareable =  publishedCO.getSiteId().substring((publishedCO.getSiteId().length() - 2), publishedCO.getSiteId().length());
 	if (portalActivated != null && portalActivated.equalsIgnoreCase("true"))
 	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)
 		    || access
 			    .equalsIgnoreCase(SecurityInterface.ACCESS_COMMUNITY)) {
-		osylTransformToZCCO.sendXmlAndDoc(publishedCO);
+				if (!siteShareable.equals(SITE_SHAREABLE)) {
+					osylTransformToZCCO.sendXmlAndDoc(publishedCO);
+			}
 	    }
     }
 
