@@ -1,5 +1,6 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -589,15 +590,37 @@ public class OsylCMJobImpl implements OsylCMJob {
 		UsageSessionService.EVENT_LOGIN, null, true));
     }
 
-    /**
-     * Logs out of the sakai environment
-     */
-    protected void logoutFromSakai() {
-	// post the logout event
-	eventTrackingService.post(eventTrackingService.newEvent(
-		UsageSessionService.EVENT_LOGOUT, null, true));
-    }
+	/**
+	 * Logs out of the sakai environment
+	 */
+	protected void logoutFromSakai() {
+		// post the logout event
+		eventTrackingService.post(eventTrackingService.newEvent(
+				UsageSessionService.EVENT_LOGOUT, null, true));
+	}
 
+	private boolean filesExists(String directory) {
+
+		File sessionFile = new File(directory + File.separator + SESSION_FILE);
+		File coursFile = new File(directory + File.separator + COURS_FILE);
+		File etudiantFile = new File(directory + File.separator + ETUDIANT_FILE);
+		File horairesFile = new File(directory + File.separator + HORAIRES_FILE);
+		File profFile = new File(directory + File.separator + PROF_FILE);
+		File secretairesFile = new File(directory + File.separator
+				+ SECRETAIRES_FILE);
+		File servensFile = new File(directory + File.separator + SERV_ENS_FILE);
+		File progEtudFile = new File(directory + File.separator
+				+ PROG_ETUD_FILE);
+
+		if (sessionFile.exists() && coursFile.exists() && etudiantFile.exists()
+				&& horairesFile.exists() && profFile.exists()
+				&& secretairesFile.exists() && servensFile.exists()
+				&& progEtudFile.exists())
+			return true;
+		return false;
+
+	}    
+    
     /** {@inheritDoc} */
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 	long start = System.currentTimeMillis();
@@ -612,12 +635,24 @@ public class OsylCMJobImpl implements OsylCMJob {
 			null);
 
 	if (directory == null || "".equalsIgnoreCase(directory)) {
-	    log.warn(this, new IllegalStateException("The property '"
-		    + EXTRACTS_PATH_CONFIG_KEY
-		    + "' is not defined in the sakai.properties file"));
-	    return;
+		log.warn(this, new IllegalStateException("The property '"
+				+ EXTRACTS_PATH_CONFIG_KEY
+				+ "' is not defined in the sakai.properties file"));
+		return;
 	}
-	try {
+
+	if (!filesExists(directory)) {
+		String message = "The synchronization did not take place because" +
+				" one of the extract files is missing";
+		emailService.send("admin.zonecours2@hec.ca",
+				"admin.zonecours2@hec.ca",
+				"Synchronization with PeopleSoft failed", message, null,
+				null, null);
+		return;
+	}
+
+		try {
+		
 	    detailSessionMap =
 		    GenericDetailSessionsMapFactory.getInstance(directory);
 	    detailSessionMap =
