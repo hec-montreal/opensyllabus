@@ -36,7 +36,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.URIResolver;
@@ -93,7 +92,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
     public static final String ACCESS_PUBLIC = "public";
     public static final String ACCESS_ATTENDEE = "attendee";
     private static final String SITE_SHAREABLE = "00";
-    
+
     public void setZcPublierService(ZCPublisherService zcPublierService) {
 	this.zcPublisherService = zcPublierService;
     }
@@ -340,8 +339,6 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	String ressType = null;
 	byte[] ressContent = null;
 	int ressSize = 0;
-	String docId = null;
-	String fileName = null;
 	StringBuffer outTrace = null;
 	Publication p = new Publication();
 	String courseNumber = getCourseNumber();
@@ -353,29 +350,19 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	}
 
 	Set<String> docSecKeyValues = documentSecurityMap.keySet();
-	String docVisKey = null;
 	String doc = null;
 	HashMap hache = getDocsIds(dbConn, lang, xmlSourceDoc, outTrace, false);
 
 	for (String docSecKey : docSecKeyValues) {
 	    acces = documentSecurityMap.get(docSecKey);
-	    docId = docSecKey;
-	    docVisKey =
-		    docSecKey
-			    .replaceFirst(Pattern.quote(WORK_DIR), PUBLISH_DIR);
-
 	    doc = documents.get(docSecKey);
-	    if (docId != null && !"".equalsIgnoreCase(docId)) {
-		visibilite = documentVisibityMap.get(docVisKey);
+	    if (docSecKey != null && !"".equalsIgnoreCase(docSecKey)) {
+		visibilite = documentVisibityMap.get(docSecKey);
 		// Exclude the string "/publish" itsself to get the real
 		// filename
-		fileName =
-			docVisKey.substring(docVisKey.indexOf("/publish") + 9);
-		fileName = fileName.replaceAll("/", "_");
-				if ((ACCESS_PUBLIC.equals(acces) && "true"
-						.equals(visibilite))
-						|| (ACCESS_COMMUNITY.equals(acces) && "true"
-								.equals(visibilite))) {
+		if ((ACCESS_PUBLIC.equals(acces) && "true".equals(visibilite))
+			|| (ACCESS_COMMUNITY.equals(acces) && "true"
+				.equals(visibilite))) {
 		    try {
 			ContentResource content =
 				contentHostingService.getResource(doc);
@@ -389,9 +376,10 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 			    log.debug("Writing documents of site " + siteId
 				    + "in public portal database...");
-			    if (docId != null
-				    && hache.get(courseNumber + "_" + docId) != null)
-				writeDocInZcDb(courseNumber + "_" + docId,
+			    if (docSecKey != null
+				    && hache
+					    .get(courseNumber + "_" + docSecKey) != null)
+				writeDocInZcDb(courseNumber + "_" + docSecKey,
 					lang, acces, ressType, ressSize,
 					content.streamContent(), ressContent,
 					siteId, dbConn);
@@ -437,8 +425,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		selectDocInDocZone(koId, lang, acces, ressType, ressSize,
 			content, siteId, dbConn);
 
-	String nivSecu=getSecurityLabel(acces);
-	
+	String nivSecu = getSecurityLabel(acces);
+
 	// Check if the record is already on the table
 	if (!exist) {
 
@@ -450,7 +438,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    deleteRessourceSecuriteDB(dbConn, koId, siteId, nivSecu);
 	    // By default, security is zero for all documents belonging to
 	    // portal
-	    insertRessourceSecuriteDB(dbConn, koId, siteId, nivSecu);  // it was "0"
+	    insertRessourceSecuriteDB(dbConn, koId, siteId, nivSecu); // it was
+								      // "0"
 
 	} else {
 
@@ -461,7 +450,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    deleteRessourceSecuriteDB(dbConn, koId, siteId, nivSecu);
 	    // By default, security is zero for all documents belonging to
 	    // portal
-	    insertRessourceSecuriteDB(dbConn, koId, siteId, nivSecu);  // it was "0"
+	    insertRessourceSecuriteDB(dbConn, koId, siteId, nivSecu); // it was
+								      // "0"
 
 	}
 	log.debug("Document " + koId + " has been written in the database");
@@ -487,13 +477,14 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	String requete_select = null;
 	PreparedStatement ps_select = null;
 	ResultSet rSet_select = null;
-	String nivSecu=getSecurityLabel(acces);
-	
-	requete_select = "select * from doczone where koId like ?  AND nivSecu=?";
+	String nivSecu = getSecurityLabel(acces);
+
+	requete_select =
+		"select * from doczone where koId like ?  AND nivSecu=?";
 	try {
 	    ps_select = dbConn.prepareStatement(requete_select);
 	    ps_select.setString(1, koId);
-	    ps_select.setString(2, nivSecu);	    
+	    ps_select.setString(2, nivSecu);
 	    rSet_select = ps_select.executeQuery();
 
 	    if (rSet_select.next())
@@ -536,8 +527,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	PreparedStatement ps = null;
 	ResultSet rset = null;
 	BLOB blob;
-	
-	String nivSecu=getSecurityLabel(acces);
+
+	String nivSecu = getSecurityLabel(acces);
 
 	try {
 
@@ -555,7 +546,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		    "SELECT docContent FROM DocZone WHERE koId=? AND nivSecu=? FOR UPDATE";
 	    ps = dbConn.prepareStatement(requeteSQL);
 	    ps.setString(1, koId);
-	    ps.setString(2, nivSecu);	    
+	    ps.setString(2, nivSecu);
 
 	    rset = ps.executeQuery();
 
@@ -609,8 +600,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	Statement stmt_del = connexion.createStatement();
 
 	String xmlKoId = getKoId(planId);
-	String nivSecu=getSecurityLabel(acces);
-	
+	String nivSecu = getSecurityLabel(acces);
+
 	requeteSQL_del =
 		" DELETE FROM DocSecu WHERE koId = '" + koId + "' AND planId='"
 			+ xmlKoId + "' AND nivSecu='" + nivSecu + "'";
@@ -629,13 +620,15 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      * @param koId The identifier of the document
      * @throws Exception
      */
-    public void deleteRessourceFromDB(Connection connexion, String koId, String acces)
-	    throws Exception {
+    public void deleteRessourceFromDB(Connection connexion, String koId,
+	    String acces) throws Exception {
 	// ---------------------------------------------------
 	String requeteSQL_delRess = null;
 	Statement stmt_delRess = connexion.createStatement();
-	String nivSecu=getSecurityLabel(acces);	
-	requeteSQL_delRess = " DELETE FROM DocZone WHERE koId = '" + koId + "' AND nivSecu = '" + nivSecu + "'";
+	String nivSecu = getSecurityLabel(acces);
+	requeteSQL_delRess =
+		" DELETE FROM DocZone WHERE koId = '" + koId
+			+ "' AND nivSecu = '" + nivSecu + "'";
 	log.debug(requeteSQL_delRess + " ...");
 	stmt_delRess.execute(requeteSQL_delRess);
 	log.debug("request ok: " + requeteSQL_delRess);
@@ -702,7 +695,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	String requete_upd = null;
 	PreparedStatement ps_upd = null;
 	ResultSet rSet_upd = null;
-	String nivSecu=getSecurityLabel(acces);
+	String nivSecu = getSecurityLabel(acces);
 	// Check if the record is already on the table
 
 	// Add the document content in the record
@@ -712,7 +705,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    ps_upd = dbConn.prepareStatement(requete_upd);
 	    ps_upd.setBinaryStream(1, ressContent, ressSize);
 	    ps_upd.setString(2, koId);
-	    ps_upd.setString(3, nivSecu);	    
+	    ps_upd.setString(3, nivSecu);
 	    ps_upd.execute();
 
 	    ps_upd.close();
@@ -739,82 +732,84 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      */
     public boolean sendXmlAndDoc(COSerialized published) throws Exception {
 
-    String siteShareable =  getKoId(published.getSiteId());
-    siteShareable = siteShareable.substring((siteShareable.length()-2), siteShareable.length());
+	String siteShareable = getKoId(published.getSiteId());
+	siteShareable =
+		siteShareable.substring((siteShareable.length() - 2),
+			siteShareable.length());
 	boolean sent = false;
-	
-    if (!siteShareable.equals(SITE_SHAREABLE)) {						   	
-		Map<String, String> documentSecurityMap;
-		Map<String, String> documentVisibilityMap;
-		Map<String, String> documents;
-	
-		COModeledServer coModeled = new COModeledServer(published);
-	
-		coModeled.XML2Model();
-		coModeled.model2XML();
-	
-		documentSecurityMap = coModeled.getAllDocumentsSecurityMap();
-		documentVisibilityMap = coModeled.getAllDocumentsVisibilityMap();
-		documents = coModeled.getAllDocuments();
-	
-		try {
-		    AuthzGroup realm =
-			    authzGroupService.getAuthzGroup(SITE_PREFIX
-				    + published.getSiteId());
-		    String provider = realm.getProviderGroupId();
-		    if (provider == null || !cmService.isSectionDefined(provider)) {
-			log
-				.info("The course outline "
-					+ published.getSiteId()
-					+ " is not associated to a section in the course management,"
-					+ " it will not be transferred to ZoneCours public.");
-			return false;
-		    }
-		} catch (GroupNotDefinedException e) {
-		    log.error("sendXmlAndDoc(): " + e);
+
+	if (!siteShareable.equals(SITE_SHAREABLE)) {
+	    Map<String, String> documentSecurityMap;
+	    Map<String, String> documentVisibilityMap;
+	    Map<String, String> documents;
+
+	    COModeledServer coModeled = new COModeledServer(published);
+
+	    coModeled.XML2Model();
+	    coModeled.model2XML();
+
+	    documentSecurityMap = coModeled.getAllDocumentsSecurityMap();
+	    documentVisibilityMap = coModeled.getAllDocumentsVisibilityMap();
+	    documents = coModeled.getAllDocuments();
+
+	    try {
+		AuthzGroup realm =
+			authzGroupService.getAuthzGroup(SITE_PREFIX
+				+ published.getSiteId());
+		String provider = realm.getProviderGroupId();
+		if (provider == null || !cmService.isSectionDefined(provider)) {
+		    log
+			    .info("The course outline "
+				    + published.getSiteId()
+				    + " is not associated to a section in the course management,"
+				    + " it will not be transferred to ZoneCours public.");
+		    return false;
 		}
-	
-		String siteId = published.getSiteId();
-		String osylCoXml = published.getContent();
-		String zcco = null;
-		// TODO: fill out these values from the course management
-		String koId = null;
-		String lang = null;
-	
-		// Transform the course outline
-		zcco = transform(osylCoXml);
-	
-		if (zcco != null) {
-	
-		    // Connect to the database using config defined in
-		    // sakai.properties
-		    Connection dbConn = connect();
-	
-		    // Save the course outline in the zonecours database
-		    // The siteId is used as koID
-		    koId = getKoId(siteId);
-		    lang = published.getLang().substring(0, 2);
-		    sent = writeXmlInZC(zcco, koId, lang, dbConn);
-		    // Save the documents in the zonecours database
-		    sent =
-			    sent
-				    && writeDocumentsInZC(siteId, lang,
-					    documentSecurityMap, documentVisibilityMap,
-					    documents, zcco, dbConn);
-		    if (sent) {
-			log.debug("The transfer to the ZoneCours "
-				+ "database is complete and successful");
-		    }
-		    zcPublisherService.publier(koId, lang);
-		    dbConn.close();
+	    } catch (GroupNotDefinedException e) {
+		log.error("sendXmlAndDoc(): " + e);
+	    }
+
+	    String siteId = published.getSiteId();
+	    String osylCoXml = published.getContent();
+	    String zcco = null;
+	    // TODO: fill out these values from the course management
+	    String koId = null;
+	    String lang = null;
+
+	    // Transform the course outline
+	    zcco = transform(osylCoXml);
+
+	    if (zcco != null) {
+
+		// Connect to the database using config defined in
+		// sakai.properties
+		Connection dbConn = connect();
+
+		// Save the course outline in the zonecours database
+		// The siteId is used as koID
+		koId = getKoId(siteId);
+		lang = published.getLang().substring(0, 2);
+		sent = writeXmlInZC(zcco, koId, lang, dbConn);
+		// Save the documents in the zonecours database
+		sent =
+			sent
+				&& writeDocumentsInZC(siteId, lang,
+					documentSecurityMap,
+					documentVisibilityMap, documents, zcco,
+					dbConn);
+		if (sent) {
+		    log.debug("The transfer to the ZoneCours "
+			    + "database is complete and successful");
 		}
-		return sent;
-    }
-    else {
-		log.debug("The transfer to the ZoneCours "
-				+ "database was not done because the site is shareable");
-		return sent;
-    }
+		zcPublisherService.publier(koId, lang);
+		dbConn.close();
+	    }
+	    return sent;
+	} else {
+	    log.debug("The transfer to the ZoneCours "
+		    + "database was not done because the site is shareable");
+	    return sent;
+	}
     }
 
     /**
@@ -925,15 +920,15 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
     }
 
     private String getSecurityLabel(String acces) {
-    	String nivSecu="1";
-    	if (acces.equalsIgnoreCase(ACCESS_PUBLIC)) {
-    		nivSecu="0";
-    	} else if(acces.equalsIgnoreCase(ACCESS_COMMUNITY)) {
-    		nivSecu="1";
-    	}	
-    	return nivSecu;
+	String nivSecu = "1";
+	if (acces.equalsIgnoreCase(ACCESS_PUBLIC)) {
+	    nivSecu = "0";
+	} else if (acces.equalsIgnoreCase(ACCESS_COMMUNITY)) {
+	    nivSecu = "1";
+	}
+	return nivSecu;
     }
-	
+
     /**
      * To resolve URIs
      */
@@ -1009,10 +1004,9 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	}
 	return docs;
     }
-    
-    
-    public void unpublish(String siteId, String lang){
+
+    public void unpublish(String siteId, String lang) {
 	String koId = getKoId(siteId);
-	zcPublisherService.depublier(koId,lang.substring(0, 2));
+	zcPublisherService.depublier(koId, lang.substring(0, 2));
     }
 }
