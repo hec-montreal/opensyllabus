@@ -156,7 +156,8 @@ if (v == 1) {
 if (v == 2) {
 	String koId = request.getParameter("file");
 	String langue = request.getParameter("lang");
-
+	String nivSec = request.getParameter("nivSecu");	
+	
 	//------------ FORCE -----------
 	boolean force = false;
 	String frc = request.getParameter("force");
@@ -332,7 +333,7 @@ if (v == 2) {
 			// ==================================================================
 		if (trace) outTrace.append("<br>connexions établies :" + new java.util.Date(System.currentTimeMillis()));
 
-		ok = p.chargerTraiter(connexionPublication,connexionPeopleSoft,koId,langue, force, outPrint, outTrace, trace);
+		ok = p.chargerTraiter(connexionPublication,connexionPeopleSoft,koId,langue, force, outPrint, outTrace, trace, nivSec);
 
 		dateFin = new java.util.Date(System.currentTimeMillis());
 		outPrint.append("<div class='duree'>Durée: " + (((double)dateFin.getTime()-(double)dateDeb.getTime())/1000)+" secondes</div>");
