@@ -571,13 +571,13 @@ public class Publication {
 
 	// ---------------------------------------------------
 	public void deleteFromPlanZone(Connection connexion, String koId,
-			StringBuffer outPrint, StringBuffer outTrace, boolean trace)
+			StringBuffer outPrint, StringBuffer outTrace, boolean trace, String nivSecu)
 			throws Exception {
 		// ---------------------------------------------------
 		String requeteSQL = null;
 		Statement stmt = connexion.createStatement();
 
-		requeteSQL = "DELETE FROM PlanZone WHERE koId = '" + koId + "'";
+		requeteSQL = "DELETE FROM PlanZone WHERE koId = '" + koId + "' and NivSecu='" + nivSecu + "'";
 		if (trace)
 			outTrace.append("<br>" + requeteSQL + "...");
 		stmt.execute(requeteSQL);
@@ -1310,13 +1310,13 @@ public class Publication {
 
 	// ---------------------------------------------------
 	public void deleteRessourceFromDB(Connection connexion, String koId,
-			StringBuffer outPrint, StringBuffer outTrace, boolean trace)
+			StringBuffer outPrint, StringBuffer outTrace, boolean trace, String nivSecu)
 			throws Exception {
 		// ---------------------------------------------------
 		String requeteSQL = null;
 		Statement stmt = connexion.createStatement();
 
-		requeteSQL = " DELETE FROM DocZone WHERE koId = '" + koId + "'";
+		requeteSQL = " DELETE FROM DocZone WHERE koId = '" + koId + "' AND nivSecu='" + nivSecu+ "'";
 		if (trace)
 			outTrace.append("<br>" + requeteSQL + " ...");
 		stmt.execute(requeteSQL);
@@ -2062,7 +2062,7 @@ public class Publication {
 		if (xml != null) {
 			//nivSecu = ACCESS_PUBLIC or ACCESS_COMMUNITY
 			if (nivSecu.equals(PUBLIC_SECURITY_LABEL) || nivSecu.equals(COMMUNITY_SECURITY_LABEL))
-				deleteFromPlanZone(connexion, koId, outPrint, outTrace, trace);
+				deleteFromPlanZone(connexion, koId, outPrint, outTrace, trace, nivSecu);
 
 			// --- generation presentation ---
 			processAndInsertInDB(connexion, koId, lang, ressId, "11", nivSecu,
@@ -2204,7 +2204,7 @@ public class Publication {
 							+ " :  " + seanceId + "</div>");
 					if (nivSecu.equals(PUBLIC_SECURITY_LABEL) || nivSecu.equals(COMMUNITY_SECURITY_LABEL))
 						deleteFromPlanZone(connexion, seanceId, outPrint,
-								outTrace, trace);
+								outTrace, trace, nivSecu);
 
 					deleteFromSeance(connexion, seanceId, outPrint, outTrace,
 							trace);
@@ -2253,7 +2253,7 @@ public class Publication {
 		if (trace)
 			outTrace.append("<hr>==== TraiterPlanCoursAnnuaire - entree ====");
 		if (nivSecu.equals(PUBLIC_SECURITY_LABEL) || nivSecu.equals(COMMUNITY_SECURITY_LABEL))		
-			deleteFromPlanZone(connexion, koId, outPrint, outTrace, trace);
+			deleteFromPlanZone(connexion, koId, outPrint, outTrace, trace, nivSecu);
 
 		// --- generation presentation ---
 
@@ -2280,7 +2280,7 @@ public class Publication {
 	 */
 	private boolean traiterDocumentsIntsExts(Connection connexion, String lang,
 			Document xml, boolean force, StringBuffer outPrint,
-			StringBuffer outTrace, boolean trace) throws Exception {
+			StringBuffer outTrace, boolean trace, String nivSecu) throws Exception {
 		// ---------------------------------------------------
 		boolean ok = true;
 		// --- generation documents internes ---
@@ -2305,9 +2305,9 @@ public class Publication {
 					outPrint.append("<div class='docInt'>Document interne :  "
 							+ ressourceId + "</div>");
 					deleteFromPlanZone(connexion, ressourceId, outPrint,
-							outTrace, trace);
+							outTrace, trace, nivSecu);
 					processAndInsertInDB(connexion, ressourceId, lang,
-							"docInt", "20", "1", xml, outPrint, outTrace, trace); //It was "0"
+							"docInt", "20", nivSecu, xml, outPrint, outTrace, trace); //It was "0"
 				}
 			}
 		}
@@ -2334,7 +2334,7 @@ public class Publication {
 				Element ressource = (Element) docExts.item(i - 1);
 				String ressourceId = ressource.getAttribute("koId");
 				String type = ressource.getAttribute("type");
-				String nivSecu = ressource.getAttribute("securite");
+				//String nivSecu = ressource.getAttribute("securite");  AH it's a parameter from jsp
 				String fileName = "<font color='red'>ERREUR - pas de fichier ou d'url associe au document</font>";
 				String extension = "inconnu";
 				ressAl.add(ressourceId);
@@ -2541,7 +2541,7 @@ public class Publication {
 	public boolean publierPlanDeCours(Connection connexionPublication,
 			Connection connexionPeopleSoft, String koId, Document xmlSourceDoc,
 			String ressType, String planType, boolean force,
-			StringBuffer outPrint, StringBuffer outTrace, boolean trace)
+			StringBuffer outPrint, StringBuffer outTrace, boolean trace, String nivSec)
 			throws Exception {
 		// ---------------------------------------------------
 
@@ -2775,7 +2775,7 @@ public class Publication {
 				outTrace
 						.append("<hr> ======================================= DOCUMENTS ===========================<hr>");
 			if (!traiterDocumentsIntsExts(connexionPublication, lang,
-					xmlSourceDoc, force, outPrint, outTrace, trace))
+					xmlSourceDoc, force, outPrint, outTrace, trace, nivSec))
 				ok = false;
 			;
 			// -------------------------------------------------------
@@ -2830,7 +2830,7 @@ public class Publication {
 	public boolean chargerTraiter(Connection connexionPublication,
 			Connection connexionPeopleSoft, String koId, String langue,
 			boolean force, StringBuffer outPrint, StringBuffer outTrace,
-			boolean trace) throws Exception {
+			boolean trace, String nivSec) throws Exception {
 		// ---------------------------------------------------
 		System.err.println("dans chargertraiter");
 		boolean ok = true;
@@ -2918,7 +2918,7 @@ public class Publication {
 							if (!chargerTraiter(connexionPublication,
 									connexionPeopleSoft, ((Element) liste
 											.item(i)).getAttribute("koId"),
-									langue, force, outPrint, outTrace, trace))
+									langue, force, outPrint, outTrace, trace, nivSec))
 								ok = false;
 							;
 						}
@@ -2950,7 +2950,7 @@ public class Publication {
 
 					if (!publierPlanDeCours(connexionPublication,
 							connexionPeopleSoft, koId, xmlSourceDoc, ressType,
-							planType, force, outPrint, outTrace, trace))
+							planType, force, outPrint, outTrace, trace, nivSec))
 						ok = false;
 					;
 				}
@@ -2959,7 +2959,7 @@ public class Publication {
 					System.err.println(" on publie");
 					if (!publierPlanDeCours(connexionPublication,
 							connexionPeopleSoft, koId, xmlSourceDoc, ressType,
-							planType, force, outPrint, outTrace, trace))
+							planType, force, outPrint, outTrace, trace, nivSec))
 						ok = false;
 				}
 			}
@@ -2983,7 +2983,7 @@ public class Publication {
 			throws Exception {
 		// ---------------------------------------------------
 
-		deleteFromPlanZone(connexion, koId, outPrint, outTrace, trace);
+		deleteFromPlanZone(connexion, koId, outPrint, outTrace, trace, nivSecu);
 
 		// --- suppression seances ---
 		NodeList seances = xmlSourceDoc.getElementsByTagName("seance");
@@ -2999,7 +2999,7 @@ public class Publication {
 				outPrint.append("<div class='seance'>Seance " + i + " :  "
 						+ seanceId + "</div>");
 				deleteFromPlanZone(connexion, seanceId, outPrint, outTrace,
-						trace);
+						trace, nivSecu);
 			}
 		}
 
@@ -3016,7 +3016,7 @@ public class Publication {
 					outPrint.append("<div class='docInt'>Document interne :  "
 							+ ressourceId + "</div>");
 					deleteFromPlanZone(connexion, ressourceId, outPrint,
-							outTrace, trace);
+							outTrace, trace, nivSecu);
 				}
 			}
 		}
