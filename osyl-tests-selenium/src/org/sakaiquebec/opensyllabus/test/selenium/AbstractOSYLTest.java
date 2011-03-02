@@ -173,10 +173,9 @@ public class AbstractOSYLTest extends SeleneseTestCase {
         } // createTestSite
 
     public void createSite(String siteName) throws Exception {
-	// CrÃ©er un nouveau site avec l'outil OpenSyllabus
+	// Create an outline course from OsylManager
 	log("**** Creating site " + siteName);
 	goToOsylManagerTool(); // Now, it is not necessary
-	// Crï¿½er un nouveau site avec l'outil Gestionnaire de plans de cours
 	if (inFireFox()) {
 	    String element =
 		    "//*[@class='icon-sakai-opensyllabus-manager-tool']";
@@ -283,7 +282,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	}
 
     public String getCurrentTestSiteName() {
-	return siteName;
+    	return siteName;
     }
 
     public void goToSite(String siteName) throws IllegalStateException {
@@ -311,15 +310,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * if the site does not exist.
      */
     public void goToCurrentSite() throws IllegalStateException {
-	/**
-    try {
-		createTestSite();
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}  
-	**/
-	goToSite(getCurrentTestSiteName());
+    	goToSite(getCurrentTestSiteName());
     }
 
     /**
@@ -331,7 +322,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 
     public void goToMenuOsyl() throws IllegalStateException {
-	String elementOsylMenu = "//div[@id='toolMenu']/ul/li[3]/a/span";
+	String elementOsylMenu = "//*[@class='icon-sakai-opensyllabus-tool']";
 	if (session().isElementPresent(elementOsylMenu)) {
 		// open Osyl tool
 		if (inFireFox()) {session().mouseOver(elementOsylMenu);
@@ -343,9 +334,41 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 			session().click(elementOsylMenu);
 		}
 	}
+	pause();
+	pause();	
 	}
 
+    public void goToMenuAssessment() throws IllegalStateException {
+	String elementAssessmentMenu = "//*[@class='icon-sakai-assignment-grades']";
+	if (session().isElementPresent(elementAssessmentMenu)) {
+		// open Assessment tool
+		if (inFireFox()) {session().mouseOver(elementAssessmentMenu);
+			session().mouseDown(elementAssessmentMenu);
+			session().mouseUp(elementAssessmentMenu);
+			session().click(elementAssessmentMenu);
+			pause();
+		} else {
+			session().click(elementAssessmentMenu);
+		}
+	}
+	pause();
+	pause();	    	
+    }
 
+    public void goToMenuSiteSetup() throws IllegalStateException {
+	String elementSiteSetupMenu = "//*[@class='icon-sakai-sitesetup']";
+	// open site setup
+	pause(); pause(); pause();		
+	if (inFireFox()) {
+		session().click(elementSiteSetupMenu);
+		pause();
+	} else {
+		session().click(elementSiteSetupMenu);
+	}
+	pause();
+	pause();	    	
+    }    
+    
     /**
      * Deletes the test site. Will fail if the operation is unsuccessful and if
      * the boolean parameter is true.
@@ -1018,6 +1041,30 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 			+ "tbody/tr/td[1]/button");
 
 	return rubric;
+    }
+    
+    public void addAssessmentInOutLinecours() {
+	//Add assessment inside outline course
+    session().click("//ul[@id='siteLinkList']/li[1]/a/span");    	
+	goToMenuSiteSetup();
+	session().waitForPageToLoad("30000");
+	session().type("search", siteName);
+	session().click("//input[@value='Recherche']");
+	session().waitForPageToLoad("30000");
+	session().click("site1");
+	session().click("link=Réviser");
+	session().waitForPageToLoad("30000");
+	session().click("link=Éditer les outils");
+	session().waitForPageToLoad("30000");
+	session().click("sakai.assignment.grades");
+	session().click("Continue");
+	session().waitForPageToLoad("30000");
+	session().click("eventSubmit_doSave_revised_features");
+	session().waitForPageToLoad("30000");
+	session().select("//div[@id='selectNav']/select", "label=Se-2011-03-01");
+	session().waitForPageToLoad("30000");
+	session().click("//div[@id='toolMenu']/ul/li[4]/a/span");
+	session().waitForPageToLoad("30000");	
     }
     
 }

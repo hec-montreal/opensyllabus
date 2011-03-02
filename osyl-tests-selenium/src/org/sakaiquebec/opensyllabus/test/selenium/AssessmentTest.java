@@ -60,15 +60,19 @@ public class AssessmentTest extends AbstractOSYLTest {
 	try {
 	    goToCurrentSite();
 	} catch (IllegalStateException e) {
-	    createTestSite();
+	    createTestSite();    
 	    goToCurrentSite();
 	}
-	waitForOSYL();
+	//waitForOSYL();
 
 	// ---------------------------------------------------------------------------//
 	// Add Assessment Unit //
 	// ---------------------------------------------------------------------------//
 
+	addAssessmentInOutLinecours();
+	goToMenuAssessment();		
+	createAssignmentGrades();
+	goToMenuOsyl();	
 	openEvaluationsSection();
 
 	// We keep track of how many resources are showing to check that it
@@ -333,6 +337,41 @@ public class AssessmentTest extends AbstractOSYLTest {
 			    "//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
 	}
 
+	
+	// ---------------------------------------------------------------------------//
+	// Add Assignment in Assessment Unit //
+	// ---------------------------------------------------------------------------//
+
+	// Click Assessment section
+	openEvaluationsSection();
+	// Edit first Assessment unit
+	if (inFireFox()) {
+		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	} else { // IE
+		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
+		session().mouseDownAt(locator, "10,10");
+		session().mouseUpAt(locator, "10,10");
+	}	
+	
+	// Add Hyperlink in Assessment Unit
+	clickAddItem("addEntity");	
+	
+	// We edit the new Hyperlink rubric
+	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+	// We add an assignment 
+	session().clickAt("//div/div/div/div[2]/table/tbody/tr/td[1]/img", "");
+	session().mouseOver("//tr[2]/td/div/div/div/div[2]/div/div/div[@class='gwt-TreeItem']");
+	session().mouseDown("//tr[2]/td/div/div/div/div[2]/div/div/div[@class='gwt-TreeItem']");
+	session().select("listBoxFormElement", "label=Description");
+	session().type("//tr[2]/td/input", "It's an example for assessment (remis de travaux)");
+	session().select("//td[4]/table/tbody/tr[2]/td/select", "label=Complémentaire");
+	
+	// We close Editor
+	session().click("//td/table/tbody/tr/td[1]/button");
+	pause();	
+	
 	// ---------------------------------------------------------------------------//
 	// Add Hyperlink in Assessment Unit //
 	// ---------------------------------------------------------------------------//
@@ -813,6 +852,28 @@ public class AssessmentTest extends AbstractOSYLTest {
 			session().mouseUpAt(imageLocator, "10,10");
 		}
 		pause();
+	}	
+	
+	private void createAssignmentGrades() {
+		// Click Assessment section
+		//Create an assignment grades
+		pause();		
+		session().click("//*[contains(@alt,'initialiser')]");
+		pause();		
+		session().click("link=Ajouter");
+		session().waitForPageToLoad("30000");
+		session().type("new_assignment_title", "Travail TP" + timeStamp());
+		session().select("new_assignment_openampm", "label=AM");
+		session().select("new_assignment_grade_type", "label=Points");
+		session().type("new_assignment_grade_points", "10");
+		session().click("//td[@id='xToolbar']/table[1]/tbody/tr/td[2]/div/table/tbody/tr/td[1]");
+		session().type("//td[@id='xEditingArea']/textarea", "Instructions pour le travail de devoir" + timeStamp());
+		pause();		
+		session().click("post");
+		pause();
+		pause();			
+		session().waitForPageToLoad("30000");
+		session().selectFrame("relative=up");
 	}	
 	
 }
