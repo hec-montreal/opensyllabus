@@ -32,7 +32,7 @@ public interface ZCPublisherService {
     
     public final static String URL_CONN_DEPUBLIER = "/osyl-editor-sakai-tool/publish3/zcDepublier3.jsp";
     
-    public void publier(String koId, String langue);
+    public void publier(String koId, String langue, String nivSec);
     
     public void depublier(String koId, String langue);
 }
