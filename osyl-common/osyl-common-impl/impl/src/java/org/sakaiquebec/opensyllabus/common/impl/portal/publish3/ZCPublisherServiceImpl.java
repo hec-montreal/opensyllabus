@@ -49,11 +49,11 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 	log.info("INIT from ZCPublisherImpl");
     }
 
-    public void publier(String koId, String langue) {
+    public void publier(String koId, String langue, String nivSec) {
 
 	if (koId != null && koId.length() > 0 && langue != null
 		&& langue.length() > 0)
-	    parameter = "?file=" + koId + "&lang=" + langue + "&c=2";
+	    parameter = "?file=" + koId + "&lang=" + langue + "&c=2&nivSecu=" + nivSec;
 
 	if (parameter != null)
 	    urlConn =
