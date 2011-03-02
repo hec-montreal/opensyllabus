@@ -580,7 +580,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    stmt.close();
 
 	}
-	log.debug("The document " + koId + " has been transferred");
+	log.debug("The document " + koId + " NivSec: " + nivSecu + " has been transferred");
 
     }
 
@@ -730,7 +730,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      * @see org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO#sendXmlAndDoc(org.sakaiquebec.opensyllabus.shared.model.COSerialized,
      *      java.util.Map, java.util.Map)
      */
-    public boolean sendXmlAndDoc(COSerialized published) throws Exception {
+    public boolean sendXmlAndDoc(COSerialized published, String acces) throws Exception {
 
 	String siteShareable = getKoId(published.getSiteId());
 	siteShareable =
@@ -801,7 +801,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		    log.debug("The transfer to the ZoneCours "
 			    + "database is complete and successful");
 		}
-		zcPublisherService.publier(koId, lang);
+		    String nivSec = getSecurityLabel(acces);
+		    zcPublisherService.publier(koId, lang, nivSec);
 		dbConn.close();
 	    }
 	    return sent;
