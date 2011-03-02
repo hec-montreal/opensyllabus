@@ -1019,18 +1019,19 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	// FIXME: this is for HEC Montreal only. Should be injected or something
 	// cleaner than this. See SAKAI-2163.
-	String siteShareable =
-		publishedCO.getSiteId().substring(
-			(publishedCO.getSiteId().length() - 2),
-			publishedCO.getSiteId().length());
-	if (portalActivated != null && portalActivated.equalsIgnoreCase("true"))
-	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)
-		    || access
-			    .equalsIgnoreCase(SecurityInterface.ACCESS_COMMUNITY)) {
-		if (!siteShareable.equals(SITE_SHAREABLE)) {
-		    osylTransformToZCCO.sendXmlAndDoc(publishedCO);
+    String siteShareable =  publishedCO.getSiteId().substring((publishedCO.getSiteId().length() - 2), publishedCO.getSiteId().length());
+	if (portalActivated != null && portalActivated.equalsIgnoreCase("true")) {
+		if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)
+				&& (!siteShareable.equals(SITE_SHAREABLE))) {
+			osylTransformToZCCO.sendXmlAndDoc(publishedCO,
+					SecurityInterface.ACCESS_PUBLIC);
 		}
-	    }
+		if (access.equalsIgnoreCase(SecurityInterface.ACCESS_COMMUNITY)
+				&& (!siteShareable.equals(SITE_SHAREABLE))) {
+			osylTransformToZCCO.sendXmlAndDoc(publishedCO,
+					SecurityInterface.ACCESS_COMMUNITY);
+		}
+	}
     }
 
     public String transformXmlForGroup(String content, String group,
