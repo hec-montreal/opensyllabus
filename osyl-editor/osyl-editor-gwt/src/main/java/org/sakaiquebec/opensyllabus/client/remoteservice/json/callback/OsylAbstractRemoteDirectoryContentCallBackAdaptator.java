@@ -3,7 +3,6 @@ package org.sakaiquebec.opensyllabus.client.remoteservice.json.callback;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylAbstractBrowserItem;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylDirectory;
 
@@ -76,17 +75,13 @@ public abstract class OsylAbstractRemoteDirectoryContentCallBackAdaptator
 		    name =
 			    (JSONString) ((JSONObject) jObject
 				    .get("properties")).get("DAV:displayname");
-		    String nameString = (name==null)?"":name.stringValue();
-		    if (nameString.equals(
-			    OsylController.PUBLISH_FOLDER_NAME)) {
-			escaped = true;
-		    } else {
-			List<OsylAbstractBrowserItem> list =
-				new ArrayList<OsylAbstractBrowserItem>();
-			osylRemoteDirItem =
-				new OsylDirectory(nameString, path
-					.stringValue(), "", list);
-		    }
+		    String nameString =
+			    (name == null) ? "" : name.stringValue();
+		    List<OsylAbstractBrowserItem> list =
+			    new ArrayList<OsylAbstractBrowserItem>();
+		    osylRemoteDirItem =
+			    new OsylDirectory(nameString, path.stringValue(),
+				    "", list);
 		} else {
 		    OsylAbstractBrowserItem oBrowserItem =
 			    getOsylAbstractBrowserItem(jObject);

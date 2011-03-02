@@ -376,8 +376,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    // we can unlock the CO
 		    String res = e.getResource();
 		    String siteId =
-			    res.substring(res.lastIndexOf("/") + 1,
-				    res.lastIndexOf("-"));
+			    res.substring(res.lastIndexOf("/") + 1, res
+				    .lastIndexOf("-"));
 		    try {
 			COSerialized cos =
 				resourceDao
@@ -436,9 +436,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			    contentHostingService
 				    .removeCollection(collectionId);
 			} catch (Exception e1) {
-			    log.error(
-				    "Could not delete resources after site removing",
-				    e1);
+			    log
+				    .error(
+					    "Could not delete resources after site removing",
+					    e1);
 			}
 		    }
 
@@ -461,9 +462,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 				assignmentService.removeAssignment(toRemove);
 				assignmentService.cancelEdit(toRemove);
 			    } catch (Exception e1) {
-				log.error(
-					"Could not delete assignement after site removing",
-					e1);
+				log
+					.error(
+						"Could not delete assignement after site removing",
+						e1);
 			    }
 			}
 			String attachementCollectionId =
@@ -472,9 +474,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			    contentHostingService
 				    .removeCollection(attachementCollectionId);
 			} catch (Exception e1) {
-			    log.error(
-				    "Could not delete assignement attachement after site removing",
-				    e1);
+			    log
+				    .error(
+					    "Could not delete assignement attachement after site removing",
+					    e1);
 			}
 		    }
 		} else if (e.getEvent().equals(
@@ -501,8 +504,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 					    .get(siteId).getResource());
 			    if (originalMessage.getAnnouncementHeader()
 				    .getSubject().equals(subjectString)) {
-				expectedAnnouncementModification.put(siteId,
-					e.getResource());
+				expectedAnnouncementModification.put(siteId, e
+					.getResource());
 				AnnouncementEvent t =
 					expectedAnnouncementAdd.get(siteId);
 				setAnnoucementMessageDraftValue(siteId,
@@ -680,8 +683,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			    "opensyllabus.course.template.prefix", null);
 	    if (template != null) {
 		site =
-			siteService.addSite(siteTitle,
-				siteService.getSite(template + lang));
+			siteService.addSite(siteTitle, siteService
+				.getSite(template + lang));
 		site.getPropertiesEdit().addProperty("template", "false");
 	    } else {
 		site = siteService.addSite(siteTitle, SITE_TYPE);
@@ -701,35 +704,13 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	    // we add the directories
 	    String directoryId;
-	    if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
-		osylContentService.initSiteAttachments(site.getTitle());
-		directoryId =
-			contentHostingService.getSiteCollection(site.getId());
-		ContentCollectionEdit cce =
-			contentHostingService.editCollection(directoryId);
-		cce.setHidden();
-		contentHostingService.commitCollection(cce);
-	    } else {
 
-		addCollection(WORK_DIRECTORY, site);
-		directoryId =
-			contentHostingService.getSiteCollection(site.getId())
-				+ WORK_DIRECTORY + "/";
-		osylSecurityService.applyDirectoryPermissions(directoryId);
-
-		// HIDE COLLECTION
-		ContentCollectionEdit cce =
-			contentHostingService.editCollection(directoryId);
-		cce.setHidden();
-		contentHostingService.commitCollection(cce);
-
-		addCollection(PUBLISH_DIRECTORY, site);
-		directoryId =
-			contentHostingService.getSiteCollection(site.getId())
-				+ PUBLISH_DIRECTORY + "/";
-		osylSecurityService.applyDirectoryPermissions(directoryId);
-
-	    }
+	    osylContentService.initSiteAttachments(site.getTitle());
+	    directoryId = contentHostingService.getSiteCollection(site.getId());
+	    ContentCollectionEdit cce =
+		    contentHostingService.editCollection(directoryId);
+	    cce.setHidden();
+	    contentHostingService.commitCollection(cce);
 
 	    // we add the default citationList
 	    // TODO I18N
@@ -742,9 +723,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    cre.setContentType(ResourceType.MIME_TYPE_HTML);
 
 	    ResourcePropertiesEdit props = cre.getPropertiesEdit();
-	    props.addProperty(
-		    ContentHostingService.PROP_ALTERNATE_REFERENCE,
-		    org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
+	    props
+		    .addProperty(
+			    ContentHostingService.PROP_ALTERNATE_REFERENCE,
+			    org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
 	    props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
 		    ResourceType.MIME_TYPE_HTML);
 	    props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
@@ -802,8 +784,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			    "opensyllabus.course.template.prefix", null);
 	    if (template != null) {
 		site =
-			siteService.addSite(siteTitle,
-				siteService.getSite(template + lang));
+			siteService.addSite(siteTitle, siteService
+				.getSite(template + lang));
 		site.getPropertiesEdit().addProperty("template", "false");
 	    } else {
 		site = siteService.addSite(siteTitle, SITE_TYPE);
@@ -823,28 +805,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    // we add the directories
 	    // SAKAI-2160
 	    String directoryId;
-	    if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
-		osylContentService.initSiteAttachments(site.getTitle());
-		directoryId =
-			contentHostingService.getSiteCollection(site.getId());
-		ContentCollectionEdit cce =
-			contentHostingService.editCollection(directoryId);
-		cce.setHidden();
-		contentHostingService.commitCollection(cce);
-	    } else {
-		addCollection(WORK_DIRECTORY, site);
-		directoryId =
-			contentHostingService.getSiteCollection(site.getId())
-				+ WORK_DIRECTORY + "/";
-		osylSecurityService.applyDirectoryPermissions(directoryId);
 
-		addCollection(PUBLISH_DIRECTORY, site);
+	    osylContentService.initSiteAttachments(site.getTitle());
+	    directoryId = contentHostingService.getSiteCollection(site.getId());
+	    ContentCollectionEdit cce =
+		    contentHostingService.editCollection(directoryId);
+	    cce.setHidden();
+	    contentHostingService.commitCollection(cce);
 
-		directoryId =
-			contentHostingService.getSiteCollection(site.getId())
-				+ PUBLISH_DIRECTORY + "/";
-		osylSecurityService.applyDirectoryPermissions(directoryId);
-	    }
 	    COConfigSerialized coConfig = null;
 	    COSerialized co = null;
 
@@ -990,7 +958,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    throw new Exception(e);
 	} catch (IdNotFoundException e) {
 	    log.warn("Get site info - Id Not Found exception", e);
-	    log.warn("Get site info - Fail to retreive course management title");
+	    log
+		    .warn("Get site info - Fail to retreive course management title");
 	}
     }
 
@@ -1131,10 +1100,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    COConfigSerialized coConfig = null;
 	    if (co == null) {
 		coConfig =
-			osylConfigService
-				.getConfigByRef(
-					osylConfigService.getDefaultConfig(),
-					webappDir);
+			osylConfigService.getConfigByRef(osylConfigService
+				.getDefaultConfig(), webappDir);
 		co =
 			new COSerialized(idManager.createUuid(),
 				osylConfigService.getCurrentLocale(), "shared",
@@ -1655,7 +1622,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    resourceDao.createOrUpdateCourseOutline(co);
 	} catch (IdUnusedException e) {
 	    log.warn("updateCOContentTitle - Id unused exception", e);
-	    log.warn("updateCOContentTitle - Failed to retreive course management title");
+	    log
+		    .warn("updateCOContentTitle - Failed to retreive course management title");
 	    // We wrap the exception in a java.lang.Exception. This way our
 	    // "client" doesn't have to know about IdUnusedException.
 	    throw new Exception(e);
@@ -1689,7 +1657,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    coModeled.setCOProgram(program);
 	} catch (IdUnusedException e) {
 	    log.warn("updateCOContentTitle - Id unused exception", e);
-	    log.warn("updateCOContentTitle - Failed to retreive course management title");
+	    log
+		    .warn("updateCOContentTitle - Failed to retreive course management title");
 	    // We wrap the exception in a java.lang.Exception. This way our
 	    // "client" doesn't have to know about IdUnusedException.
 	    throw new Exception(e);
@@ -2028,8 +1997,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    if (siteExists(siteId)) {
 		try {
 		    copyAnnoucement(originalSiteId, siteId, ref);
-		    log.info("An announcement has been made in the site "
-			    + siteId + " concerning the site " + originalSiteId);
+		    log
+			    .info("An announcement has been made in the site "
+				    + siteId + " concerning the site "
+				    + originalSiteId);
 		} catch (Exception e) {
 		    log.error("Could not add an annoucement in site " + siteId
 			    + ". The annoucement come from site "
@@ -2057,12 +2028,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    try {
 		channel = announcementService.getAnnouncementChannel(channelId);
 	    } catch (IdUnusedException e) {
-		log.warn(this + "getAnnouncement:No announcement channel found");
+		log
+			.warn(this
+				+ "getAnnouncement:No announcement channel found");
 		channel = null;
 	    } catch (PermissionException e) {
-		log.warn(this
-			+ "getAnnouncement:Current user not authorized to deleted annc associated "
-			+ "with assignment. " + e.getMessage());
+		log
+			.warn(this
+				+ "getAnnouncement:Current user not authorized to deleted annc associated "
+				+ "with assignment. " + e.getMessage());
 		channel = null;
 	    }
 	}
@@ -2095,8 +2069,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    msg.getHeaderEdit().setDraft(draft);
 	    msg.getPropertiesEdit().addProperty(
 		    ORIGINAL_ANNOUNCEMENT_MESSAGE_REF, originalRef);
-	    channel.commitMessage(msg, priority,
-		    "org.sakaiproject.announcement.impl.SiteEmailNotificationAnnc");
+	    channel
+		    .commitMessage(msg, priority,
+			    "org.sakaiproject.announcement.impl.SiteEmailNotificationAnnc");
 	} catch (Exception ee) {
 	    log.error("Could not modify announcement " + messageId, ee);
 	}

@@ -49,7 +49,6 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
-import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
@@ -827,41 +826,28 @@ public class COModeledServer {
 			COProperties copProperties =
 				coContentRes.getProperties();
 
-			if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
-			    copProperties
-				    .addProperty(
-					    COPropertiesType.IDENTIFIER,
-					    COPropertiesType.IDENTIFIER_TYPE_URI,
-					    this
-						    .changeDocumentsUrls(
-							    coContentRes
-								    .getProperty(
-									    COPropertiesType.IDENTIFIER,
-									    COPropertiesType.IDENTIFIER_TYPE_URI)
-								    .trim(),
-							    OsylContentService.WORK_DIRECTORY_PREFIX
-								    + "/" + coSerialized
-									    .getSiteId(),
-							    OsylContentService.PUBLISH_DIRECTORY_PREFIX
-								    + "/" + coSerialized
-									    .getSiteId()
-								    + "/" + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX));
+			copProperties
+				.addProperty(
+					COPropertiesType.IDENTIFIER,
+					COPropertiesType.IDENTIFIER_TYPE_URI,
+					this
+						.changeDocumentsUrls(
+							coContentRes
+								.getProperty(
+									COPropertiesType.IDENTIFIER,
+									COPropertiesType.IDENTIFIER_TYPE_URI)
+								.trim(),
+							OsylContentService.WORK_DIRECTORY_PREFIX
+								+ "/"
+								+ coSerialized
+									.getSiteId(),
+							OsylContentService.PUBLISH_DIRECTORY_PREFIX
+								+ "/"
+								+ coSerialized
+									.getSiteId()
+								+ "/"
+								+ OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX));
 
-			} else {
-			    copProperties
-				    .addProperty(
-					    COPropertiesType.IDENTIFIER,
-					    COPropertiesType.IDENTIFIER_TYPE_URI,
-					    this
-						    .changeDocumentsUrls(
-							    coContentRes
-								    .getProperty(
-									    COPropertiesType.IDENTIFIER,
-									    COPropertiesType.IDENTIFIER_TYPE_URI)
-								    .trim(),
-							    OsylSiteService.WORK_DIRECTORY,
-							    OsylSiteService.PUBLISH_DIRECTORY));
-			}
 			coContentRes.setProperties(copProperties);
 		    }
 		}
@@ -1391,13 +1377,13 @@ public class COModeledServer {
     private void dissociateChild(COElementAbstract childElement) {
 	childElement.setIdParent(null);
 	for (int i = 0; i < childElement.getChildrens().size(); i++) {
-	    COModelInterface child = (COModelInterface) childElement.getChildrens().get(i);
-	    if(child instanceof COElementAbstract){
-		COElementAbstract coElementChild =
-		    (COElementAbstract) child;
+	    COModelInterface child =
+		    (COModelInterface) childElement.getChildrens().get(i);
+	    if (child instanceof COElementAbstract) {
+		COElementAbstract coElementChild = (COElementAbstract) child;
 		dissociateChild(coElementChild);
 	    }
-	    
+
 	}
     }
 
@@ -1544,16 +1530,15 @@ public class COModeledServer {
 	    element.setId(UUID.uuid());
 	    element.setIdParent(null);
 	    if (element.isCOContentResourceProxy()) {
-			changeDocumentsUrlsToFitNewSiteName(
-				(COContentResourceProxy) element, filenameChangesMap);
-			changeEntityCommentsToFitNewSiteName(
-					(COContentResourceProxy) element);				
+		changeDocumentsUrlsToFitNewSiteName(
+			(COContentResourceProxy) element, filenameChangesMap);
+		changeEntityCommentsToFitNewSiteName((COContentResourceProxy) element);
 	    } else {
-			for (int i = 0; i < element.getChildrens().size(); i++) {
-			    COElementAbstract childElement =
-				    (COElementAbstract) element.getChildrens().get(i);
-			    resetXML(childElement, filenameChangesMap);
-			}
+		for (int i = 0; i < element.getChildrens().size(); i++) {
+		    COElementAbstract childElement =
+			    (COElementAbstract) element.getChildrens().get(i);
+		    resetXML(childElement, filenameChangesMap);
+		}
 	    }
 
 	} catch (Exception e) {
@@ -1563,6 +1548,7 @@ public class COModeledServer {
 
     /**
      * Used for the osylTransferJob
+     * 
      * @param element
      * @param filenameChangesMap
      */
@@ -1606,8 +1592,8 @@ public class COModeledServer {
 	    e.printStackTrace();
 	}
 
-    }       
-    
+    }
+
     private void changeDocumentsUrlsToFitNewSiteName(
 	    COContentResourceProxy cocrp, Map<String, String> filenameChangesMap) {
 	// reset id of the resource
@@ -1636,28 +1622,30 @@ public class COModeledServer {
 	}
     }
 
-    private void changeEntityCommentsToFitNewSiteName(COContentResourceProxy cocrp) {
-    	// reset comments of the resource
-		String msg = "<br><b>Le lien d&eacute;fini vers l'outil Sakai a " + 
-		"&eacute;t&eacute; r&eacute;initialis&eacute; " + 
-		"suite &agrave; la copie du site, il doit &ecirc;tre " +
-		"d&eacute;fini &agrave; nouveau.</b>";     	
-		if (cocrp.getResource().getType().equals(COContentResourceType.ENTITY)) {
-			String comment = cocrp.getProperty(COPropertiesType.COMMENT);
-		    if (comment != null && !comment.equals("")) {
-		    	comment += msg;
-		    } else {
-		    	comment = msg;
-		    }
-			cocrp.addProperty(COPropertiesType.COMMENT, comment);
-		}
+    private void changeEntityCommentsToFitNewSiteName(
+	    COContentResourceProxy cocrp) {
+	// reset comments of the resource
+	String msg =
+		"<br><b>Le lien d&eacute;fini vers l'outil Sakai a "
+			+ "&eacute;t&eacute; r&eacute;initialis&eacute; "
+			+ "suite &agrave; la copie du site, il doit &ecirc;tre "
+			+ "d&eacute;fini &agrave; nouveau.</b>";
+	if (cocrp.getResource().getType().equals(COContentResourceType.ENTITY)) {
+	    String comment = cocrp.getProperty(COPropertiesType.COMMENT);
+	    if (comment != null && !comment.equals("")) {
+		comment += msg;
+	    } else {
+		comment = msg;
+	    }
+	    cocrp.addProperty(COPropertiesType.COMMENT, comment);
+	}
     }
-    
+
     public String changeDocumentsUrls(String url, String originalDirectory,
 	    String newDirectory) {
 	return url.replaceFirst(Pattern.quote(originalDirectory), newDirectory);
     }
-    
+
     public void setCOContentTitle(String coTitle) {
 	if (coTitle != null) {
 	    String propertyType = getPropertyType();

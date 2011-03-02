@@ -1716,27 +1716,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	importToolIntoSiteMigrate(toolIdList, newSite, oldSite);
 
 	// We remove all resources in the publish directory collection
-	if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
-	    osylContentService.initSiteAttachments(newSite.getTitle());
-	} else {
-	    String id_publish = refString + PUBLISH_DIRECTORY + "/";
-
-	    ContentCollection publishContent =
-		    contentHostingService.getCollection(id_publish);
-
-	    @SuppressWarnings("unchecked")
-	    List<ContentEntity> membersPublished =
-		    publishContent.getMemberResources();
-	    for (Iterator<ContentEntity> pMbrs = membersPublished.iterator(); pMbrs
-		    .hasNext();) {
-		ContentEntity next = (ContentEntity) pMbrs.next();
-		String thisEntityRef = next.getId();
-		if (next.isCollection())
-		    contentHostingService.removeCollection(thisEntityRef);
-		else
-		    contentHostingService.removeResource(thisEntityRef);
-	    }
-	}
+	osylContentService.initSiteAttachments(newSite.getTitle());
+	
 	// we hide work directory
 	if (ServerConfigurationService.getString(
 		"opensyllabus.publish.in.attachment").equals("true")) {

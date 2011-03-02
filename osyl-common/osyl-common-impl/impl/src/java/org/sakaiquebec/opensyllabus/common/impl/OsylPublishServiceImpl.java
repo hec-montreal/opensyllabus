@@ -316,8 +316,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     public Vector<Map<String, String>> publish(String webappDir, String siteId)
 	    throws Exception, FusionException, OsylPermissionException {
-	if (!osylSecurityService
-		.isActionAllowedInCurrentSite(osylSiteService.getCurrentSiteReference(), OsylSecurityService.OSYL_FUNCTION_PUBLISH)) {
+	if (!osylSecurityService.isActionAllowedInCurrentSite(osylSiteService
+		.getCurrentSiteReference(),
+		OsylSecurityService.OSYL_FUNCTION_PUBLISH)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
 		    OsylSecurityService.OSYL_FUNCTION_PUBLISH);
@@ -431,16 +432,16 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    coContent.getProperty(COPropertiesType.PUBLISHED) != null ? coContent
 				    .getProperty(COPropertiesType.PUBLISHED)
 				    : "");
-	    coContent.addProperty(COPropertiesType.PUBLISHED,
-		    OsylDateUtils.getCurrentDateAsXmlString());
+	    coContent.addProperty(COPropertiesType.PUBLISHED, OsylDateUtils
+		    .getCurrentDateAsXmlString());
 	    coModeledServer.model2XML();
 	    coSerialized.setContent(coModeledServer.getSerializedContent());
 	    resourceDao.createOrUpdateCourseOutline(coSerialized);
 
 	    publicationProperties.put(COPropertiesType.PREVIOUS_PUBLISHED,
 		    coContent.getProperty(COPropertiesType.PREVIOUS_PUBLISHED));
-	    publicationProperties.put(COPropertiesType.PUBLISHED,
-		    coContent.getProperty(COPropertiesType.PUBLISHED));
+	    publicationProperties.put(COPropertiesType.PUBLISHED, coContent
+		    .getProperty(COPropertiesType.PUBLISHED));
 	    securityService.clearAdvisors();
 
 	    log.info("Finished publishing course outline for site ["
@@ -552,19 +553,14 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    File f = createPrintVersion(coSerializedAttendee, webappdir);
 	    if (f != null) {
 		String publishDirectory = "";
-		if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
-		    Site site = osylSiteService.getSite(siteId);
-		    publishDirectory =
-			    ContentHostingService.ATTACHMENTS_COLLECTION
-				    + site.getTitle()
-				    + "/"
-				    + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
-				    + "/";
-		} else {
-		    publishDirectory =
-			    contentHostingService.getSiteCollection(siteId)
-				    + PUBLISH_DIRECTORY + "/";
-		}
+		Site site = osylSiteService.getSite(siteId);
+		publishDirectory =
+			ContentHostingService.ATTACHMENTS_COLLECTION
+				+ site.getTitle()
+				+ "/"
+				+ OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
+				+ "/";
+
 		createPdfInResource(siteId, publishDirectory, f);
 
 	    }
@@ -581,9 +577,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	if (f != null) {
 	    String workDirectory =
 		    contentHostingService.getSiteCollection(siteId);
-	    if (!OsylContentService.USE_ATTACHMENTS.equals("true")) {
-		workDirectory += WORK_DIRECTORY + "/";
-	    }
 	    createPdfInResource(siteId, workDirectory, f);
 
 	}
@@ -621,8 +614,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    File f = null;
 	    // change keys for i18n messages
 	    d =
-		    replaceSemanticTagsWithI18NMessage(d,
-			    coSerialized.getMessages());
+		    replaceSemanticTagsWithI18NMessage(d, coSerialized
+			    .getMessages());
 
 	    // convert html in xhtml
 	    d = convertHtmlToXhtml(d);
@@ -641,9 +634,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    + OsylConfigService.CONFIG_DIR + File.separator
 			    + configRef + File.separator
 			    + OsylConfigService.PRINT_DIRECTORY
-			    + File.separator,
-			    ServerConfigurationService.getServerUrl(),
-			    coSerialized.getSiteId());
+			    + File.separator, ServerConfigurationService
+			    .getServerUrl(), coSerialized.getSiteId());
 
 	    return f;
 	} catch (Exception e) {
@@ -669,7 +661,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    t.setMakeClean(true);
 
 	    expr =
-		    xpath.compile("//text | //comment | //description | //availability | //label | //identifier");
+		    xpath
+			    .compile("//text | //comment | //description | //availability | //label | //identifier");
 
 	    NodeList nodes =
 		    (NodeList) expr.evaluate(d, XPathConstants.NODESET);
@@ -706,10 +699,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		Node node = nodes.item(i);
 		String userDefLabel =
 			(node.getAttributes() == null) ? null
-				: (node.getAttributes()
+				: (node
+					.getAttributes()
 					.getNamedItem(
 						COPropertiesType.SEMANTIC_TAG_USERDEFLABEL) == null) ? null
-					: node.getAttributes()
+					: node
+						.getAttributes()
 						.getNamedItem(
 							COPropertiesType.SEMANTIC_TAG_USERDEFLABEL)
 						.getNodeValue();
@@ -832,12 +827,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	String val2 = contentHostingService.getSiteCollection(siteId);
 	String refString =
 		contentHostingService.getReference(val2).substring(8);
-	String id_work = (refString + WORK_DIRECTORY + "/");
+	String id_work;
 	try {
+	    id_work = (refString);
 
-	    if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
-		id_work = (refString);
-	    }
 	    ContentCollection workContent =
 		    contentHostingService.getCollection(id_work);
 
@@ -856,21 +849,14 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     private void deletePublishedContent(String siteId) throws Exception {
 	String id_publish = null;
-	String val2 = contentHostingService.getSiteCollection(siteId);
-	String refString =
-		contentHostingService.getReference(val2).substring(8);
 	// We remove all resources in the publish directory collection
-	if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
-	    Site site = osylSiteService.getSite(siteId);
-	    id_publish =
-		    ContentHostingService.ATTACHMENTS_COLLECTION
-			    + site.getTitle()
-			    + "/"
-			    + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
-			    + "/";
-	} else {
-	    id_publish = (refString + PUBLISH_DIRECTORY + "/");
-	}
+
+	Site site = osylSiteService.getSite(siteId);
+	id_publish =
+		ContentHostingService.ATTACHMENTS_COLLECTION + site.getTitle()
+			+ "/"
+			+ OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
+			+ "/";
 
 	ContentCollection publishContent = null;
 	try {
@@ -920,31 +906,16 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    // doc exists in CO
 		    String this_work_id = directory.getId();
 
-		    if (OsylContentService.USE_ATTACHMENTS.equals("true")) {
-			Site site = osylSiteService.getSite(siteId);
-			this_publish_directory =
-				ContentHostingService.ATTACHMENTS_COLLECTION
-					+ site.getTitle()
-					+ "/"
-					+ OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
-					+ "/"
-					+ this_work_id.substring(this_work_id
-						.lastIndexOf(siteRef)
-						+ siteRef.length());
-
-		    } else {
-			this_publish_directory =
-				siteRef
-					+ PUBLISH_DIRECTORY
-					+ this_work_id.substring(
-						this_work_id
-							.lastIndexOf(siteRef)
-							+ siteRef.length()
-							+ WORK_DIRECTORY
-								.length(),
-						this_work_id.length());
-
-		    }
+		    Site site = osylSiteService.getSite(siteId);
+		    this_publish_directory =
+			    ContentHostingService.ATTACHMENTS_COLLECTION
+				    + site.getTitle()
+				    + "/"
+				    + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
+				    + "/"
+				    + this_work_id.substring(this_work_id
+					    .lastIndexOf(siteRef)
+					    + siteRef.length());
 
 		    if (!contentHostingService
 			    .isCollection(this_publish_directory)) {
@@ -1048,14 +1019,17 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	// FIXME: this is for HEC Montreal only. Should be injected or something
 	// cleaner than this. See SAKAI-2163.
-    String siteShareable =  publishedCO.getSiteId().substring((publishedCO.getSiteId().length() - 2), publishedCO.getSiteId().length());
+	String siteShareable =
+		publishedCO.getSiteId().substring(
+			(publishedCO.getSiteId().length() - 2),
+			publishedCO.getSiteId().length());
 	if (portalActivated != null && portalActivated.equalsIgnoreCase("true"))
 	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)
 		    || access
 			    .equalsIgnoreCase(SecurityInterface.ACCESS_COMMUNITY)) {
-				if (!siteShareable.equals(SITE_SHAREABLE)) {
-					osylTransformToZCCO.sendXmlAndDoc(publishedCO);
-			}
+		if (!siteShareable.equals(SITE_SHAREABLE)) {
+		    osylTransformToZCCO.sendXmlAndDoc(publishedCO);
+		}
 	    }
     }
 
@@ -1091,17 +1065,18 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return cmService;
     }
 
-    public void unpublish(String siteId, String webappDir) throws Exception, PermissionException {
+    public void unpublish(String siteId, String webappDir) throws Exception,
+	    PermissionException {
 	resourceDao.removePublishVersionsForSiteId(siteId);
 	deletePublishedContent(siteId);
 	COSerialized co =
 		osylSiteService.getSerializedCourseOutline(siteId, webappDir);
 	String portalActivated =
 		ServerConfigurationService.getString("hec.portail.activated");
-	if (portalActivated != null && portalActivated.equalsIgnoreCase("true")){
+	if (portalActivated != null && portalActivated.equalsIgnoreCase("true")) {
 	    osylTransformToZCCO.unpublish(siteId, co.getLang());
 	}
-	//remove publication date in DB
+	// remove publication date in DB
 	resourceDao.setPublicationDate(co.getCoId(), null);
     }
 

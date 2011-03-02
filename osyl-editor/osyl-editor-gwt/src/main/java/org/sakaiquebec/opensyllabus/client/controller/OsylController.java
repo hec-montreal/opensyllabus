@@ -63,19 +63,7 @@ public class OsylController implements SavePushButtonEventHandler,
     public final static boolean STAND_ALONE_MODE = false;
 
     public static final boolean TRACE = false;
-    /**
-     * Publish folder name for documents in sakai
-     */
-    public static final String PUBLISH_FOLDER_NAME = "publish";
-
-    /**
-     * Work folder name for documents in sakai
-     */
-    public static final String WORK_FOLDER_NAME = "work";
-
-    // TODO: SAKAI-2160 remove later
-    public final static String USE_ATTACHMENTS = "true";
-
+    
     // Singleton instance
     private static OsylController _instance;
 
@@ -1130,20 +1118,12 @@ public class OsylController implements SavePushButtonEventHandler,
      * @return the documents folder name
      */
     public String getDocFolderName() {
-	String folder = WORK_FOLDER_NAME;
-	if (USE_ATTACHMENTS.equals("true"))
-	    folder = "";
-	if ((null != getCOSerialized()) && getCOSerialized().isPublished()) {
-	    folder = PUBLISH_FOLDER_NAME;
-	}
-	return folder;
+	return "";
     }
 
     public String getDocRelativePath(String path) {
 	String relativePath = path;
-	String pattern = getSiteId() + "/" + getDocFolderName() + "/";
-	if (USE_ATTACHMENTS.equals("true"))
-	    pattern = getSiteId() + "/";
+	String pattern = getSiteId() + "/";
 	int startIndex = relativePath.indexOf(pattern);
 	relativePath = relativePath.substring(startIndex + pattern.length());
 	return relativePath;

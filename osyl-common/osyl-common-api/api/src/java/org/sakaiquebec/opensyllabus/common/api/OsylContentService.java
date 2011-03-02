@@ -20,7 +20,6 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.common.api;
 
-import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.exception.IdInvalidException;
@@ -50,10 +49,6 @@ public interface OsylContentService {
     public static final String WORK_DIRECTORY_PREFIX = "group";
 
     public final static String OPENSYLLABUS_ATTACHEMENT_PREFIX = "OpenSyllabus";
-
-    public final static String USE_ATTACHMENTS =
-	    ServerConfigurationService
-		    .getString("opensyllabus.publish.in.attachment");
 
     /**
      * Creates the folder where all the published resources associated to

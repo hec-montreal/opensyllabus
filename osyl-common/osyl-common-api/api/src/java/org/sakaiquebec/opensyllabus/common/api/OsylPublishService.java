@@ -59,18 +59,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 public interface OsylPublishService {
 
     /**
-     * Name of the chs folder in which the course outline content will be
-     * stored.
-     */
-    public static final String WORK_DIRECTORY = "work";
-
-    /**
-     * Name of the chs folder in which the course outline content will be
-     * published.
-     */
-    public static final String PUBLISH_DIRECTORY = "publish";
-
-    /**
      * Prefix of the site realm id.
      */
     public static final String REALM_ID_PREFIX = "/site/";

@@ -277,18 +277,26 @@ public class OsylTextToolbar extends Composite {
 
     private void addDisplayMenuBarItems() {
 	Command nullCommand = null;
-	
+
 	viewAllPushButton =
-		new MenuItem(uiMessages.getMessage("toolbar.button.viewAll"), true, nullCommand);
-	viewAllPushButton.setTitle(uiMessages.getMessage("toolbar.button.viewAll.tooltip"));
-	
+		new MenuItem(uiMessages.getMessage("toolbar.button.viewAll"),
+			true, nullCommand);
+	viewAllPushButton.setTitle(uiMessages
+		.getMessage("toolbar.button.viewAll.tooltip"));
+
 	selectDateButton =
-		new MenuItem(uiMessages.getMessage("toolbar.button.selectDate"), true, nullCommand);
-	selectDateButton.setTitle(uiMessages.getMessage("toolbar.button.selectDate.tooltip"));
-	
+		new MenuItem(
+			uiMessages.getMessage("toolbar.button.selectDate"),
+			true, nullCommand);
+	selectDateButton.setTitle(uiMessages
+		.getMessage("toolbar.button.selectDate.tooltip"));
+
 	deleteDateButton =
-		new MenuItem(uiMessages.getMessage("toolbar.button.deleteDate"), true, nullCommand);
-	deleteDateButton.setTitle(uiMessages.getMessage("toolbar.button.deleteDate.tooltip"));
+		new MenuItem(
+			uiMessages.getMessage("toolbar.button.deleteDate"),
+			true, nullCommand);
+	deleteDateButton.setTitle(uiMessages
+		.getMessage("toolbar.button.deleteDate.tooltip"));
 
 	getDisplayMenuBar().addItem(viewAllPushButton);
 	getDisplayMenuBar().addItem(selectDateButton);
@@ -598,16 +606,10 @@ public class OsylTextToolbar extends Composite {
 	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
 	String siteId = OsylController.getInstance().getSiteId();
 	String downloadUrl;
-	if (OsylController.USE_ATTACHMENTS.equals("true"))
-	    downloadUrl =
-		    serverId + "/sdata/c/attachment/" + siteId
-			    + "/OpenSyllabus/" + siteId + ".pdf?child="
-			    + siteId;
-	else
-	    downloadUrl =
-		    serverId + "/access/content/group/" + siteId + "/"
-			    + OsylController.PUBLISH_FOLDER_NAME + "/" + siteId
-			    + ".pdf";
+
+	downloadUrl =
+		serverId + "/sdata/c/attachment/" + siteId + "/OpenSyllabus/"
+			+ siteId + ".pdf?child=" + siteId;
 
 	Window.open(downloadUrl, "_blank", "");
     }
@@ -617,15 +619,9 @@ public class OsylTextToolbar extends Composite {
 	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
 	String siteId = OsylController.getInstance().getSiteId();
 	String downloadUrl;
-	if (OsylController.USE_ATTACHMENTS.equals("true"))
-	    downloadUrl =
-		    serverId + "/access/content/group/" + siteId + "/" + siteId
-			    + ".pdf";
-	else
-	    downloadUrl =
-		    serverId + "/access/content/group/" + siteId + "/"
-			    + OsylController.WORK_FOLDER_NAME + "/" + siteId
-			    + ".pdf";
+	downloadUrl =
+		serverId + "/access/content/group/" + siteId + "/" + siteId
+			+ ".pdf";
 
 	Window.open(downloadUrl, "_blank", "");
     }
