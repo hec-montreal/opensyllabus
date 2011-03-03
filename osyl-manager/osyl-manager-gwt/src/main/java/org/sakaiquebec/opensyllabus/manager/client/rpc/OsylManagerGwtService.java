@@ -70,8 +70,7 @@ public interface OsylManagerGwtService extends RemoteService {
     public String getParent(String siteId) throws Exception;
 
     public void associate(String siteId, String parentId) throws Exception,
-	    CompatibilityException, FusionException, OsylPermissionException,
-	    SessionCompatibilityException;
+	    CompatibilityException, FusionException, OsylPermissionException,SessionCompatibilityException;
 
     public void dissociate(String siteId, String parentId) throws Exception,
 	    OsylPermissionException;
