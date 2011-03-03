@@ -1041,6 +1041,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		OsylSiteService.XSL_PREFIX + group
 			+ OsylSiteService.XSL_FILE_EXTENSION;
 	// Retrieve xml and xsl from the webapps/xslt
+	String asmCommunityAccess = "<asmUnit access=\"community\"";
+	String asmPublicAccess = "<asmUnit access=\"public\"";	
+	content = content.replaceAll(asmCommunityAccess, asmPublicAccess);
+
 	String coXslFilePath =
 		webappDir + File.separator + OsylSiteService.XSLT_DIRECTORY
 			+ File.separator + xslFileName;
