@@ -142,7 +142,9 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 	return "yes";
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @deprecated
+     */
     public boolean isAllowedToEdit(String siteId) {
 	// TODO: this is just a workaround ... must be implemented
 	boolean result =

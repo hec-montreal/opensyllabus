@@ -121,6 +121,7 @@ public interface OsylSecurityService {
      * editor
      * 
      * @param siteId TODO
+     * @deprecated
      */
     public boolean isAllowedToEdit(String siteId);
 

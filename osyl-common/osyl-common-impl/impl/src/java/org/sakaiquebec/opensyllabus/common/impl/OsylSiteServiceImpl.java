@@ -1007,7 +1007,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	long start = System.currentTimeMillis();
 	COSerialized thisCo = null;
 	try {
-	    if (!osylSecurityService.isAllowedToEdit(siteId)) {
+	    if (!osylSecurityService.isActionAllowedInSite(
+			getSiteReference(siteId),
+			OsylSecurityService.OSYL_FUNCTION_EDIT)) {
 		if (osylSecurityService.getCurrentUserRole() == null) {
 		    thisCo =
 			    resourceDao

@@ -245,7 +245,9 @@ public class OsylServiceImpl implements OsylService {
 	try {
 	    String resourceId = resourceDir + citationTitle;
 	    // temporarily allow the user to read and write resources
-	    if (osylSecurityService.isAllowedToEdit(siteId)) {
+	    if (osylSecurityService.isActionAllowedInSite(
+			osylSiteService.getSiteReference(siteId),
+			OsylSecurityService.OSYL_FUNCTION_EDIT)) {
 		securityService.pushAdvisor(new SecurityAdvisor() {
 		    public SecurityAdvice isAllowed(String userId,
 			    String function, String reference) {
@@ -279,7 +281,9 @@ public class OsylServiceImpl implements OsylService {
 			    + " resource: ", e1);
 	} finally {
 	    // clear the permission
-	    if (osylSecurityService.isAllowedToEdit(siteId)) {
+	    if (osylSecurityService.isActionAllowedInSite(
+			osylSiteService.getSiteReference(siteId),
+			OsylSecurityService.OSYL_FUNCTION_EDIT)) {
 		securityService.clearAdvisors();
 	    }
 	}
