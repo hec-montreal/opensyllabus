@@ -315,9 +315,8 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 	}
     }
 
-    public boolean isActionAllowedInCurrentSite(String currentSiteRef,
-	    String permission) {
-	if (securityService.unlock(permission, currentSiteRef)) {
+    public boolean isActionAllowedInSite(String siteRef, String permission) {
+	if (securityService.unlock(permission, siteRef)) {
 	    return true;
 	} else {
 	    return false;

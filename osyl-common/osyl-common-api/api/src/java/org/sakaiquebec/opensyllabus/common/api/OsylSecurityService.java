@@ -183,10 +183,9 @@ public interface OsylSecurityService {
     /**
      * Checks if the current user as the specified permission in the specified
      * site.
-     * @param currentSiteRef The reference to the site.
+     * @param siteRef The reference to the site.
      * @param permission the permission to check for.
      * @return true if the user has the specified permission, false otherwise.
      */
-    public boolean isActionAllowedInCurrentSite(String currentSiteRef,
-	    String permission);
+    public boolean isActionAllowedInSite(String siteRef, String permission);
 }

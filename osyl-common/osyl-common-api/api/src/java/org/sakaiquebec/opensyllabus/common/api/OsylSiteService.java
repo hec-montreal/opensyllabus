@@ -130,6 +130,13 @@ public interface OsylSiteService extends EntityProducer {
      * @return a String of the base URL
      */
     public String getCurrentSiteReference();
+    
+    /**
+     * Get a valid resource reference base site URL to be used in later calls.
+     * @param siteId the id of the site to get its reference. 
+     * @return a String of the base URL
+     */
+    public String getSiteReference(String siteId);
 
     /**
      * Returns whether a site with the specified title exists.

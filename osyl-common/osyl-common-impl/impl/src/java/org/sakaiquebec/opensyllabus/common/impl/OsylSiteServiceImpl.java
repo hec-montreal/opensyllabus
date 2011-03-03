@@ -903,6 +903,13 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	String refString = contentHostingService.getReference(val2);
 	return refString;
     }
+    
+    /** {@inheritDoc} */
+    public String getSiteReference(String siteId) {
+	String val2 = contentHostingService.getSiteCollection(siteId);
+	String refString = contentHostingService.getReference(val2);
+	return refString;
+    }
 
     /** {@inheritDoc} */
     public String getCurrentSiteReference() {
@@ -1008,16 +1015,16 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 					    siteId,
 					    SecurityInterface.ACCESS_PUBLIC);
 		    return thisCo;
-		} else if (osylSecurityService.isActionAllowedInCurrentSite(
-			getCurrentSiteReference(),
+		} else if (osylSecurityService.isActionAllowedInSite(
+			getSiteReference(siteId),
 			OsylSecurityService.OSYL_FUNCTION_VIEW_STUDENT)) {
 		    thisCo =
 			    resourceDao
 				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
 					    siteId,
 					    SecurityInterface.ACCESS_ATTENDEE);
-		} else if (osylSecurityService.isActionAllowedInCurrentSite(
-			getCurrentSiteReference(),
+		} else if (osylSecurityService.isActionAllowedInSite(
+			getSiteReference(siteId),
 			OsylSecurityService.OSYL_FUNCTION_VIEW_COMMUNITY)) {
 		    thisCo =
 			    resourceDao

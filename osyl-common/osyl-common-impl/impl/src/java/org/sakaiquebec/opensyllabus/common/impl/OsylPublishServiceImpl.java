@@ -316,8 +316,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     public Vector<Map<String, String>> publish(String webappDir, String siteId)
 	    throws Exception, FusionException, OsylPermissionException {
-	if (!osylSecurityService.isActionAllowedInCurrentSite(osylSiteService
-		.getCurrentSiteReference(),
+	if (!osylSecurityService.isActionAllowedInSite(
+		osylSiteService.getSiteReference(siteId),
 		OsylSecurityService.OSYL_FUNCTION_PUBLISH)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
@@ -432,16 +432,16 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    coContent.getProperty(COPropertiesType.PUBLISHED) != null ? coContent
 				    .getProperty(COPropertiesType.PUBLISHED)
 				    : "");
-	    coContent.addProperty(COPropertiesType.PUBLISHED, OsylDateUtils
-		    .getCurrentDateAsXmlString());
+	    coContent.addProperty(COPropertiesType.PUBLISHED,
+		    OsylDateUtils.getCurrentDateAsXmlString());
 	    coModeledServer.model2XML();
 	    coSerialized.setContent(coModeledServer.getSerializedContent());
 	    resourceDao.createOrUpdateCourseOutline(coSerialized);
 
 	    publicationProperties.put(COPropertiesType.PREVIOUS_PUBLISHED,
 		    coContent.getProperty(COPropertiesType.PREVIOUS_PUBLISHED));
-	    publicationProperties.put(COPropertiesType.PUBLISHED, coContent
-		    .getProperty(COPropertiesType.PUBLISHED));
+	    publicationProperties.put(COPropertiesType.PUBLISHED,
+		    coContent.getProperty(COPropertiesType.PUBLISHED));
 	    securityService.clearAdvisors();
 
 	    log.info("Finished publishing course outline for site ["
@@ -614,8 +614,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    File f = null;
 	    // change keys for i18n messages
 	    d =
-		    replaceSemanticTagsWithI18NMessage(d, coSerialized
-			    .getMessages());
+		    replaceSemanticTagsWithI18NMessage(d,
+			    coSerialized.getMessages());
 
 	    // convert html in xhtml
 	    d = convertHtmlToXhtml(d);
@@ -634,8 +634,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    + OsylConfigService.CONFIG_DIR + File.separator
 			    + configRef + File.separator
 			    + OsylConfigService.PRINT_DIRECTORY
-			    + File.separator, ServerConfigurationService
-			    .getServerUrl(), coSerialized.getSiteId());
+			    + File.separator,
+			    ServerConfigurationService.getServerUrl(),
+			    coSerialized.getSiteId());
 
 	    return f;
 	} catch (Exception e) {
@@ -661,8 +662,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    t.setMakeClean(true);
 
 	    expr =
-		    xpath
-			    .compile("//text | //comment | //description | //availability | //label | //identifier");
+		    xpath.compile("//text | //comment | //description | //availability | //label | //identifier");
 
 	    NodeList nodes =
 		    (NodeList) expr.evaluate(d, XPathConstants.NODESET);
@@ -699,12 +699,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		Node node = nodes.item(i);
 		String userDefLabel =
 			(node.getAttributes() == null) ? null
-				: (node
-					.getAttributes()
+				: (node.getAttributes()
 					.getNamedItem(
 						COPropertiesType.SEMANTIC_TAG_USERDEFLABEL) == null) ? null
-					: node
-						.getAttributes()
+					: node.getAttributes()
 						.getNamedItem(
 							COPropertiesType.SEMANTIC_TAG_USERDEFLABEL)
 						.getNodeValue();
@@ -1019,18 +1017,21 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	// FIXME: this is for HEC Montreal only. Should be injected or something
 	// cleaner than this. See SAKAI-2163.
-    String siteShareable =  publishedCO.getSiteId().substring((publishedCO.getSiteId().length() - 2), publishedCO.getSiteId().length());
+	String siteShareable =
+		publishedCO.getSiteId().substring(
+			(publishedCO.getSiteId().length() - 2),
+			publishedCO.getSiteId().length());
 	if (portalActivated != null && portalActivated.equalsIgnoreCase("true")) {
-		if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)
-				&& (!siteShareable.equals(SITE_SHAREABLE))) {
-			osylTransformToZCCO.sendXmlAndDoc(publishedCO,
-					SecurityInterface.ACCESS_PUBLIC);
-		}
-		if (access.equalsIgnoreCase(SecurityInterface.ACCESS_COMMUNITY)
-				&& (!siteShareable.equals(SITE_SHAREABLE))) {
-			osylTransformToZCCO.sendXmlAndDoc(publishedCO,
-					SecurityInterface.ACCESS_COMMUNITY);
-		}
+	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)
+		    && (!siteShareable.equals(SITE_SHAREABLE))) {
+		osylTransformToZCCO.sendXmlAndDoc(publishedCO,
+			SecurityInterface.ACCESS_PUBLIC);
+	    }
+	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_COMMUNITY)
+		    && (!siteShareable.equals(SITE_SHAREABLE))) {
+		osylTransformToZCCO.sendXmlAndDoc(publishedCO,
+			SecurityInterface.ACCESS_COMMUNITY);
+	    }
 	}
     }
 
