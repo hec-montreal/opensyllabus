@@ -1061,7 +1061,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().waitForPageToLoad("30000");
 	session().click("eventSubmit_doSave_revised_features");
 	session().waitForPageToLoad("30000");
-	session().select("//div[@id='selectNav']/select", "label=Se-2011-03-01");
+	session().select("//div[@id='selectNav']/select", "label=" + siteName);
 	session().waitForPageToLoad("30000");
 	session().click("//div[@id='toolMenu']/ul/li[4]/a/span");
 	session().waitForPageToLoad("30000");	
