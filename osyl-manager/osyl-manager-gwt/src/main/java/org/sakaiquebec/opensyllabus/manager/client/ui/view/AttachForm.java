@@ -34,6 +34,7 @@ import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
+import org.sakaiquebec.opensyllabus.shared.exception.SessionCompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
@@ -132,29 +133,32 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	public void onFailure(Throwable caught) {
 	    Image image = new Image(controller.getImageBundle().cross16());
 	    String msg = null;
-	    if(caught instanceof FusionException){
-		if(((FusionException)caught).isHierarchyFusionException()){
-		    msg=messages.attachAction_attach_error_HierarchyFusionException();
-		}else{
-		    msg=messages.attachAction_attach_error_FusionException();
+	    if (caught instanceof FusionException) {
+		if (((FusionException) caught).isHierarchyFusionException()) {
+		    msg =
+			    messages
+				    .attachAction_attach_error_HierarchyFusionException();
+		} else {
+		    msg = messages.attachAction_attach_error_FusionException();
 		}
-	    }
-	    else if(caught instanceof CompatibilityException){
-		msg=messages.attachAction_attach_error_CompatibilityException();
-	    }else if(caught instanceof OsylPermissionException){
-		msg= messages.permission_exception();
-	    }else{
+	    } else if (caught instanceof CompatibilityException) {
+		msg =
+			messages
+				.attachAction_attach_error_CompatibilityException();
+	    } else if (caught instanceof OsylPermissionException) {
+		msg = messages.permission_exception();
+	    } else if (caught instanceof SessionCompatibilityException) {
+		msg = messages.session_compatibility_exception();
+	    } else {
 		msg = caught.getMessage();
 	    }
-	    image.setTitle(messages.attachForm_attach_error() + " : "
-		    + msg);
+	    image.setTitle(messages.attachForm_attach_error() + " : " + msg);
 	    grid.setWidget(siteIndex, 1, image);
 	    responseReceive();
 	}
 
 	public void onSuccess(Void result) {
-	    Image image = new Image(controller.getImageBundle()
-		    .check16());
+	    Image image = new Image(controller.getImageBundle().check16());
 	    image.setTitle(messages.attachForm_attach_ok());
 	    grid.setWidget(siteIndex, 1, image);
 	    responseReceive();

@@ -30,6 +30,7 @@ import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWin
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
+import org.sakaiquebec.opensyllabus.shared.exception.SessionCompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
@@ -111,9 +112,10 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 
 	public void onFailure(Throwable caught) {
 	    String msg = messages.rpcFailure();
-	    if (caught instanceof OsylPermissionException) {
+	    if (caught instanceof OsylPermissionException) 
 		msg = messages.permission_exception();
-	    }
+	    else if(caught instanceof SessionCompatibilityException)
+		msg = messages.session_compatibility_exception();
 	    diag.hide();
 	    OsylOkCancelDialog alert =
 		    new OsylOkCancelDialog(false, true, messages

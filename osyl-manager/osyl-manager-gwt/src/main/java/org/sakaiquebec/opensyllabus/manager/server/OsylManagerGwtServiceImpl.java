@@ -34,6 +34,7 @@ import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtService;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
+import org.sakaiquebec.opensyllabus.shared.exception.SessionCompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
@@ -132,7 +133,8 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     }
 
     public void associate(String siteId, String parentId) throws Exception,
-	    CompatibilityException, FusionException, PermissionException {
+	    CompatibilityException, FusionException, PermissionException,
+	    SessionCompatibilityException {
 	osylManagerServices.getOsylManagerService().associate(siteId, parentId);
     }
 
@@ -143,7 +145,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     }
 
     public void associateToCM(String courseSectionId, String siteId)
-	    throws Exception, PermissionException {
+	    throws Exception, PermissionException, SessionCompatibilityException {
 	osylManagerServices.getOsylManagerService().associateToCM(
 		courseSectionId, siteId, servletContext.getRealPath("/"));
     }
@@ -199,6 +201,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     public void unpublish(String siteId) throws Exception,
 	    OsylPermissionException {
 	String webappDir = getServletContext().getRealPath("/");
-	osylManagerServices.getOsylPublishService().unpublish(siteId,webappDir);
+	osylManagerServices.getOsylPublishService()
+		.unpublish(siteId, webappDir);
     }
 }

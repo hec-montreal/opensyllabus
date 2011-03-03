@@ -1384,6 +1384,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    try {
 		co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
 
+		
+		
 		if (co != null) {
 		    getSiteInfo(co, siteId);
 

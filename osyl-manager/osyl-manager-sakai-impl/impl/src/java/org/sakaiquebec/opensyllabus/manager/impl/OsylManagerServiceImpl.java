@@ -38,9 +38,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
+import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -104,11 +104,14 @@ import org.sakaiquebec.opensyllabus.api.OsylService;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
+import org.sakaiquebec.opensyllabus.common.dao.CORelation;
+import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
+import org.sakaiquebec.opensyllabus.shared.exception.SessionCompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
@@ -142,8 +145,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     public final static String SHARABLE_SECTION = "00";
 
-    private static final Log log = LogFactory
-	    .getLog(OsylManagerServiceImpl.class);
+    private static final Log log =
+	    LogFactory.getLog(OsylManagerServiceImpl.class);
 
     // Key to define the delay (in minutes) to wait before deleting export zip
     // files in sakai.properties
@@ -337,6 +340,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	this.functionManager = functionManager;
     }
 
+    private CORelationDao coRelationDao;
+
+    public void setCoRelationDao(CORelationDao relationDao) {
+	this.coRelationDao = relationDao;
+    }
+
     /**
      * The type of site we are creating
      */
@@ -474,8 +483,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			    tempList.add(line);
 			else {
 			    oldId =
-				    line.substring(CITATION_TAG.length(),
-					    line.length());
+				    line.substring(CITATION_TAG.length(), line
+					    .length());
 			    oldReferences.add(oldId);
 			}
 
@@ -783,8 +792,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			    for (String siteId : siteIds) {
 				isInHierarchy =
 					isInHierarchy
-						|| isSiteinSiteHierarchy(
-							site.getId(), siteId);
+						|| isSiteinSiteHierarchy(site
+							.getId(), siteId);
 			    }
 			    if (!isInHierarchy)
 				siteMap.put(site.getId(), site.getTitle());
@@ -1086,8 +1095,56 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     public void associate(String siteId, String parentId) throws Exception,
-	    CompatibilityException, FusionException {
+	    CompatibilityException, FusionException,
+	    SessionCompatibilityException {
+	// verify session compatibility
+	verifySessionCompatibility(siteId, parentId, getSessionCode(siteId));
 	osylSiteService.associate(siteId, parentId);
+    }
+
+    private void verifySessionCompatibility(String siteId, String parentId,
+	    String siteSessionCode) throws SessionCompatibilityException {
+	if (siteSessionCode != null) {
+	    // verify parent compatibility
+	    String parentSessionCode = getSessionCode(parentId);
+	    if (parentSessionCode != null
+		    && !siteSessionCode.equals(parentSessionCode))
+		throw new SessionCompatibilityException(siteId, parentId);
+	    // verify hierarchy compatibility
+	    List<CORelation> ancestors =
+		    coRelationDao.getCourseOutlineAncestors(parentId);
+	    for (CORelation coRelation : ancestors) {
+		String sId = coRelation.getParent();
+		String sessionCode = getSessionCode(sId);
+		if (sessionCode != null && !siteSessionCode.equals(sessionCode))
+		    throw new SessionCompatibilityException(siteId, sId);
+	    }
+	}
+    }
+
+    private String getSessionCode(String siteId) {
+	Site site;
+	try {
+	    site = siteService.getSite(siteId);
+
+	    String siteProviderId = site.getProviderGroupId();
+
+	    if (courseManagementService.isSectionDefined(siteProviderId)) {
+		Section section =
+			courseManagementService.getSection(siteProviderId);
+
+		// Retrieve course number
+		CourseOffering courseOff =
+			courseManagementService.getCourseOffering(section
+				.getCourseOfferingEid());
+
+		return courseOff.getAcademicSession().getEid();
+	    }
+	} catch (IdUnusedException e) {
+	    e.printStackTrace();
+	}
+	return null;
+
     }
 
     public void dissociate(String siteId, String parentId) throws Exception {
@@ -1107,6 +1164,13 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		+ "] associates [" + siteId + "] to course [" + courseSectionId
 		+ "]");
 
+	Section courseSection =
+		courseManagementService.getSection(courseSectionId);
+	CourseOffering courseOff =
+		courseManagementService.getCourseOffering(courseSection
+			.getCourseOfferingEid());
+	AcademicSession term = courseOff.getAcademicSession();
+
 	// TODO: est-ce qu'on change le nom du site après que le lien soit créé
 
 	if (siteId != null) {
@@ -1116,12 +1180,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    // if (added) {
 	    Site site = siteService.getSite(siteId);
 	    ResourcePropertiesEdit rp = site.getPropertiesEdit();
-	    Section courseSection =
-		    courseManagementService.getSection(courseSectionId);
-	    CourseOffering courseOff =
-		    courseManagementService.getCourseOffering(courseSection
-			    .getCourseOfferingEid());
-	    AcademicSession term = courseOff.getAcademicSession();
 
 	    rp.addProperty(PROP_SITE_TERM, term.getTitle());
 	    rp.addProperty(PROP_SITE_TERM_EID, term.getEid());
@@ -1133,13 +1191,29 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     public void associateToCM(String courseSectionId, String siteId,
-	    String webappDir) throws Exception {
+	    String webappDir) throws Exception, SessionCompatibilityException {
 	if (!osylSecurityService
 		.isActionAllowedForCurrentUser(OsylSecurityService.OSYL_MANAGER_FUNCTION_ATTACH)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
 		    OsylSecurityService.OSYL_MANAGER_FUNCTION_ATTACH);
 	}
+
+	Section courseSection =
+		courseManagementService.getSection(courseSectionId);
+	CourseOffering courseOff =
+		courseManagementService.getCourseOffering(courseSection
+			.getCourseOfferingEid());
+	AcademicSession term = courseOff.getAcademicSession();
+
+	// verify sessionCompatibility
+	String parentId = null;
+	try{
+	    parentId = coRelationDao.getParentOfCourseOutline(siteId);
+	}catch(Exception e){
+	}
+	if (parentId != null)
+	    verifySessionCompatibility(siteId, parentId, term.getEid());
 
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] associates [" + siteId + "] to course [" + courseSectionId
@@ -1148,12 +1222,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	if (siteId != null) {
 	    Site site = siteService.getSite(siteId);
 	    ResourcePropertiesEdit rp = site.getPropertiesEdit();
-	    Section courseSection =
-		    courseManagementService.getSection(courseSectionId);
-	    CourseOffering courseOff =
-		    courseManagementService.getCourseOffering(courseSection
-			    .getCourseOfferingEid());
-	    AcademicSession term = courseOff.getAcademicSession();
 
 	    rp.addProperty(PROP_SITE_TERM, term.getTitle());
 	    rp.addProperty(PROP_SITE_TERM_EID, term.getEid());
@@ -1249,11 +1317,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			String sigle = courseOff.getCanonicalCourseEid();
 			String section =
 				(SHARABLE_SECTION.equals(courseSId.substring(
-					courseSId.length() - 2,
-					courseSId.length()))) ? SHARABLE_SECTION
-					: courseSId.substring(
-						courseSId.length() - 3,
-						courseSId.length());
+					courseSId.length() - 2, courseSId
+						.length()))) ? SHARABLE_SECTION
+					: courseSId.substring(courseSId
+						.length() - 3, courseSId
+						.length());
 
 			String instructorsString = "";
 			int studentNumber = -1;
@@ -1358,7 +1426,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		metadata = new Metadata();
 		metadata.set(Metadata.RESOURCE_NAME_KEY, file.getName());
 		parser = new AutoDetectParser();
-		parser.parse(inputStream, handler, metadata, new ParseContext());
+		parser
+			.parse(inputStream, handler, metadata,
+				new ParseContext());
 
 		// We need to close the inputstream and rebuild it after the
 		// parsing here,
@@ -1371,9 +1441,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    addCitations(file, siteId, resourceOutputDir);
 		} else {
 		    String s =
-			    addRessource(fileNameToUse, inputStream,
-				    metadata.get(Metadata.CONTENT_TYPE),
-				    siteId, resourceOutputDir);
+			    addRessource(fileNameToUse, inputStream, metadata
+				    .get(Metadata.CONTENT_TYPE), siteId,
+				    resourceOutputDir);
 		    if (!fileNameToUse.equals(s))
 			fileNameChangesMap.put(fileNameToUse, s);
 		}
@@ -1408,13 +1478,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	if (site != null
 		&& "course".equals(site.getType())
 		&& searchTerm != null
-		&& site.getTitle().toLowerCase()
-			.contains(searchTerm.toLowerCase())
-		&& site.getTitle()
-			.toLowerCase()
-			.contains(
-				parseAcademicSession(academicSession)
-					.toLowerCase())) {
+		&& site.getTitle().toLowerCase().contains(
+			searchTerm.toLowerCase())
+		&& site.getTitle().toLowerCase().contains(
+			parseAcademicSession(academicSession).toLowerCase())) {
 	    // Retrieve site info
 	    info.setSiteId(siteId);
 	    info.setSiteName(site.getTitle());
@@ -1464,7 +1531,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		info.setCourseName(section.getTitle());
 		info.setCourseSection(siteProviderId.substring(siteProviderId
 			.length() - 3));
-		info.setCourseSession(courseOff.getAcademicSession().getTitle());
+		info
+			.setCourseSession(courseOff.getAcademicSession()
+				.getTitle());
 		info.setAcademicCareer(courseOff.getAcademicCareer());
 	    }
 	    // TODO: the coordinator is not saved in the cm. Correct
@@ -1655,8 +1724,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    .getCurrentSession().getUserEid(),
 		    OsylSecurityService.OSYL_MANAGER_FUNCTION_COPY);
 	}
-	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
-		+ "] copies site [" + siteFrom + "] into site [" + siteTo + "]");
+	log
+		.info("user ["
+			+ sessionManager.getCurrentSession().getUserEid()
+			+ "] copies site [" + siteFrom + "] into site ["
+			+ siteTo + "]");
 
 	long start = System.currentTimeMillis();
 	Site newSite = null;
@@ -1717,7 +1789,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	// We remove all resources in the publish directory collection
 	osylContentService.initSiteAttachments(newSite.getTitle());
-	
+
 	// we hide work directory
 	if (ServerConfigurationService.getString(
 		"opensyllabus.publish.in.attachment").equals("true")) {
@@ -1768,9 +1840,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		    fromColl = citaColl.getCitations();
 
 		    for (Citation citation : fromColl) {
-			newCitations.put(
-				resource.getId() + "/" + citation.getId(),
-				citaColl);
+			newCitations.put(resource.getId() + "/"
+				+ citation.getId(), citaColl);
 		    }
 		} catch (ServerOverloadException e) {
 		    log.debug(e);
@@ -1785,7 +1856,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	try {
 	    co =
 		    osylSiteService
-			    .getUnfusionnedSerializedCourseOutlineBySiteId(newSiteId);// getSerializedCourseOultineBysiteID
+			    .getUnfusionnedSerializedCourseOutlineBySiteId(newSiteId);
 
 	    COModeledServer model = new COModeledServer(co);
 	    Map<String, String> citationsChangeMap =
@@ -1810,10 +1881,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		oldCollectionRef = uri.substring(0, uri.lastIndexOf("/"));
 		try {
 		    oldCollectionId =
-			    new String(
-				    (contentHostingService
-					    .getResource(oldCollectionRef))
-					    .getContent());
+			    new String((contentHostingService
+				    .getResource(oldCollectionRef))
+				    .getContent());
 		    oldCollection =
 			    org.sakaiproject.citation.cover.CitationService
 				    .getCollection(oldCollectionId);
@@ -1831,12 +1901,14 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			if (newCitationRef.contains(oldCollectionRef)) {
 			    newColl = newCitations.get(newCitationRef);
 			    newCitation =
-				    newColl.getCitation(newCitationRef
-					    .substring(
-						    newCitationRef
-							    .lastIndexOf("/") + 1,
-						    newCitationRef.length())
-					    .trim());
+				    newColl
+					    .getCitation(newCitationRef
+						    .substring(
+							    newCitationRef
+								    .lastIndexOf("/") + 1,
+							    newCitationRef
+								    .length())
+						    .trim());
 
 			    // We update the citation id
 			    if (compareCitations(oldCitation, newCitation)) {

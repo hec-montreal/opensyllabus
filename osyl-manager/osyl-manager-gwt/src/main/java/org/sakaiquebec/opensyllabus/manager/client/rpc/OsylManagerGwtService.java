@@ -28,11 +28,11 @@ import java.util.Vector;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
+import org.sakaiquebec.opensyllabus.shared.exception.SessionCompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 /**
@@ -59,7 +59,8 @@ public interface OsylManagerGwtService extends RemoteService {
      * @param xmlReference
      * @param siteId
      */
-    public void importData(String xmlReference, String siteId) throws Exception, OsylPermissionException;
+    public void importData(String xmlReference, String siteId)
+	    throws Exception, OsylPermissionException;
 
     public String getOsylPackage(String siteId) throws OsylPermissionException;
 
@@ -69,14 +70,17 @@ public interface OsylManagerGwtService extends RemoteService {
     public String getParent(String siteId) throws Exception;
 
     public void associate(String siteId, String parentId) throws Exception,
-	    CompatibilityException, FusionException, OsylPermissionException;
+	    CompatibilityException, FusionException, OsylPermissionException,
+	    SessionCompatibilityException;
 
-    public void dissociate(String siteId, String parentId) throws Exception, OsylPermissionException;
+    public void dissociate(String siteId, String parentId) throws Exception,
+	    OsylPermissionException;
 
     public void associateToCM(String courseSectionId, String siteId)
-	    throws Exception, OsylPermissionException;
+	    throws Exception, OsylPermissionException, SessionCompatibilityException;
 
-    public void dissociateFromCM(String siteId) throws Exception, OsylPermissionException;
+    public void dissociateFromCM(String siteId) throws Exception,
+	    OsylPermissionException;
 
     public List<CMCourse> getCMCourses(String startsWith);
 
@@ -104,10 +108,13 @@ public interface OsylManagerGwtService extends RemoteService {
 
     public List<CMAcademicSession> getAcademicSessions();
 
-    public void deleteSite(String siteId) throws Exception, OsylPermissionException;
+    public void deleteSite(String siteId) throws Exception,
+	    OsylPermissionException;
 
-    public void copySite(String siteFrom, String siteTo) throws Exception, OsylPermissionException;
-    
-    public void unpublish(String siteId) throws Exception, OsylPermissionException;
+    public void copySite(String siteFrom, String siteTo) throws Exception,
+	    OsylPermissionException;
+
+    public void unpublish(String siteId) throws Exception,
+	    OsylPermissionException;
 
 }
