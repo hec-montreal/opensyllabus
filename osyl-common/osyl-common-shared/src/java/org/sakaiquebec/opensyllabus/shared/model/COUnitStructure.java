@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitStructureEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitStructureEventHandler.UpdateCOUnitStructureEvent;
 
@@ -46,6 +47,7 @@ public class COUnitStructure extends COElementAbstract<COElementAbstract>
 
     public COUnitStructure() {
 	super();
+	setAccess(SecurityInterface.ACCESS_PUBLIC);
 	setClassType(ASM_UNIT_STRUCTURE_CLASS_TYPE);
 	childrens = new ArrayList<COElementAbstract>();
     }

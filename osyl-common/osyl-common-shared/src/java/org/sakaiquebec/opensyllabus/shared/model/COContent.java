@@ -16,6 +16,8 @@ package org.sakaiquebec.opensyllabus.shared.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
+
 /**
  * Content element of the XML course outline.
  *
@@ -39,6 +41,7 @@ public class COContent extends COElementAbstract<COElementAbstract> implements C
      */
     public COContent() {
 	super();
+	setAccess(SecurityInterface.ACCESS_PUBLIC);
 	setClassType(CO_CONTENT_CLASS_TYPE);
 	children = new ArrayList<COElementAbstract>();
     }

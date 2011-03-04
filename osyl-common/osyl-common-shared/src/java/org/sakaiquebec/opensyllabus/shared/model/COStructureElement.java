@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOStructureElementEventHandler.UpdateCOStructureElementEvent;
 
@@ -54,6 +55,7 @@ public class COStructureElement extends COElementAbstract<COElementAbstract>
      */
     public COStructureElement() {
 	super();
+	setAccess(SecurityInterface.ACCESS_PUBLIC);
 	setClassType(ASM_STRUCTURE_CLASS_TYPE);
 	childrens = new ArrayList<COElementAbstract>();
     }

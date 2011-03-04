@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.events.FiresUpdateCOUnitContentEvents;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOUnitContentEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEventHandler.UpdateCOContentResourceProxyEvent;
@@ -64,6 +65,7 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
      */
     public COUnitContent() {
 	super();
+	setAccess(SecurityInterface.ACCESS_PUBLIC);
 	setClassType(ASM_UNIT_CONTENT_CLASS_TYPE);
 	resourceProxies = new ArrayList<COContentResourceProxy>();
     }

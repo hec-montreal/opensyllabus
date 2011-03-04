@@ -125,7 +125,6 @@ public abstract class COElementAbstract<T extends COModelInterface> implements
 	properties = new COProperties();
 	addProperty(COPropertiesType.MODIFIED, OsylDateUtils
 		.getCurrentDateAsXmlString());
-	//setAccess(SecurityInterface.ACCESS_PUBLIC);
 	setAccess(SecurityInterface.ACCESS_COMMUNITY);	
     }
 
