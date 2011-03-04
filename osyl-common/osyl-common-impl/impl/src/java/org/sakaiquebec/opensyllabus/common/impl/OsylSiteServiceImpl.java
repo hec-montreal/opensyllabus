@@ -903,7 +903,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	String refString = contentHostingService.getReference(val2);
 	return refString;
     }
-    
+
     /** {@inheritDoc} */
     public String getSiteReference(String siteId) {
 	String val2 = contentHostingService.getSiteCollection(siteId);
@@ -1393,8 +1393,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    try {
 		co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
 
-		
-		
 		if (co != null) {
 		    getSiteInfo(co, siteId);
 
@@ -1625,12 +1623,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public void updateCOCourseInformations(String siteId, COSerialized co)
 	    throws Exception {
 	try {
-	    COModeledServer coModeled = new COModeledServer(co);
-	    coModeled.XML2Model();
-	    updateCOCourseInformations(siteId, coModeled);
-	    coModeled.model2XML();
-	    co.setContent(coModeled.getSerializedContent());
-	    resourceDao.createOrUpdateCourseOutline(co);
+	    if (co.getContent() != null) {
+		COModeledServer coModeled = new COModeledServer(co);
+		coModeled.XML2Model();
+		updateCOCourseInformations(siteId, coModeled);
+		coModeled.model2XML();
+		co.setContent(coModeled.getSerializedContent());
+		resourceDao.createOrUpdateCourseOutline(co);
+	    }
 	} catch (IdUnusedException e) {
 	    log.warn("updateCOContentTitle - Id unused exception", e);
 	    log
