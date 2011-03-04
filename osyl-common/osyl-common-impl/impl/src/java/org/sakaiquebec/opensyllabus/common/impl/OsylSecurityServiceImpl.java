@@ -142,19 +142,6 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 	return "yes";
     }
 
-    /** {@inheritDoc}
-     * @deprecated
-     */
-    public boolean isAllowedToEdit(String siteId) {
-	// TODO: this is just a workaround ... must be implemented
-	boolean result =
-		contentHostingService
-			.allowUpdateCollection(contentHostingService
-				.getSiteCollection(siteId));
-	log.debug("is allowed to edit: " + result + " siteId: " + siteId);
-	return result;
-    }
-
     /** {@inheritDoc} */
     public String getCurrentUserRole() {
 	String role = null;

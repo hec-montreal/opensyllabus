@@ -117,15 +117,6 @@ public interface OsylSecurityService {
     public String filterContent(String inputXml, String role);
 
     /**
-     * Returns true if the current user has the permission to use Opensyllabus
-     * editor
-     * 
-     * @param siteId TODO
-     * @deprecated
-     */
-    public boolean isAllowedToEdit(String siteId);
-
-    /**
      * Returns the user role for current user.
      * 
      * @return String userRole
