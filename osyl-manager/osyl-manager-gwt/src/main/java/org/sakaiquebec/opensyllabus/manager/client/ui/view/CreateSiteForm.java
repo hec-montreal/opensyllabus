@@ -52,7 +52,7 @@ public class CreateSiteForm extends OsylManagerAbstractWindowPanel implements
 	OsylManagerEventHandler {
 
     private static List<String> supportedLang =
-	    Arrays.asList(new String[] { "en", "es", "fr_CA" });// TODO to be
+	    Arrays.asList(new String[] {  "fr_CA", "en", "es", });// TODO to be
     // parameterized
 
     private TextBox nameTextBox;
