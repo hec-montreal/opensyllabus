@@ -16,5 +16,7 @@
 	<!-- remove news element -->
 	<xsl:template match="asmStructure[@xsi:type='NewsStruct']">
 	</xsl:template>
+	<xsl:template match="asmContext[.//asmResource[@xsi:type='News']]">
+	</xsl:template>
 	
 </xsl:stylesheet>
