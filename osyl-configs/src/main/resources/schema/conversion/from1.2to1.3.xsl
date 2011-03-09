@@ -13,55 +13,8 @@
 		</xsl:copy>
 	</xsl:template>
 	
-	<xsl:template match="asmUnit[@xsi:type='AssessmentUnit']/location">
-		<location>
-			<xsl:choose>
-				<xsl:when test=".='À la maison' or .='At Home' or .='A la casa'">home</xsl:when>
-				<xsl:when test=".='En classe' or .='In Class' or .='En la classe'">inClass</xsl:when>
-				<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
-			</xsl:choose>
-		</location>
-	</xsl:template>
-	
-	<xsl:template match="asmUnit[@xsi:type='AssessmentUnit']/submition_type">
-		<xsl:choose>
-			<xsl:when test=".='Électronique' or .='Electronic' or .='Electronica'">
-				<modality>oral</modality>
-				<submition_type>oral</submition_type>
-			</xsl:when>
-			<xsl:when test=".='Oral'">
-				<modality>written</modality>
-				<submition_type>oral</submition_type>
-			</xsl:when>
-			<xsl:when test=".='Papier' or .='Paper' or .='Papel'">
-				<modality>written</modality>
-				<submition_type>paper</submition_type>
-			</xsl:when>
-		</xsl:choose>
-	</xsl:template>
-	
-	<xsl:template match="asmUnit[@xsi:type='AssessmentUnit']/mode">
-		<mode>
-			<xsl:choose>
-				<xsl:when test=".='Individuel' or .='Individual'">individual</xsl:when>
-				<xsl:when test=".='En équipe' or .='Team'">team</xsl:when>
-				<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
-			</xsl:choose>		
-		</mode>
-	</xsl:template>
-	
-	<xsl:template match="asmUnit[@xsi:type='AssessmentUnit']/assessmentType">
-		<assessmentType>
-			<xsl:choose>
-				<xsl:when test=".='Examen intra' or .='Midterm Exam' or .='Examen parcial'">intra_exam</xsl:when>
-				<xsl:when test=".='Examen final' or .='Final Exam'">final_exam</xsl:when>
-				<xsl:when test=".='Travail' or .='Work' or .='Trabajo'">session_work</xsl:when>
-				<xsl:when test=".='Participation' or .='Participación'">participation</xsl:when>
-				<xsl:when test=".='Test/Quiz'">quiz</xsl:when>
-				<xsl:when test=".='Autre' or .='Other'">other</xsl:when>
-				<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
-			</xsl:choose>
-		</assessmentType>
+	<!-- remove news element -->
+	<xsl:template match="asmStructure[@xsi:type='NewsStruct']">
 	</xsl:template>
 	
 </xsl:stylesheet>

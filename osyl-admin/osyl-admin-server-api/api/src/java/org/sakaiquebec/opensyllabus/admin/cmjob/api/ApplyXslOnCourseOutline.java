@@ -18,15 +18,15 @@
  * limitations under the License.
  *
  ******************************************************************************/
-package org.sakaiquebec.opensyllabus.admin.conversionJob.api;
+package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
 import org.quartz.Job;
+
 /**
- *
- * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
+ * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public interface OsylConversionJob extends Job {
+public interface ApplyXslOnCourseOutline extends Job{
     public static String OSYL_CONFIG_PATH_KEY = "opensyllabus.configs.path";
-}
 
+}

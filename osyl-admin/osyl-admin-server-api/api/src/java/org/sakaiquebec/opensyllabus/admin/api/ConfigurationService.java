@@ -45,7 +45,7 @@ public interface ConfigurationService {
     // For adding or removing users with a specific role or removing a role in
     // all the course sites
     public final static String ROLE = "role";
-    
+
     public final static String DESCRIPTION = "description";
 
     public final static String ADDEDUSERS = "addedUsers";
@@ -53,12 +53,11 @@ public interface ConfigurationService {
     public final static String REMOVEDUSERS = "removedUsers";
 
     public final static String FUNCTIONS = "functions";
-    
-    
-    //For adding a role with
-    
+
+    // For adding a role with
+
     public final static String FUNCTIONS_ROLE = "role";
-    
+
     public final static String ALLOWED_FUNCTIONS = "allowed_functions";
 
     public final static String DISALLOWED_FUNCTIONS = "disallowed_functions";
@@ -67,22 +66,25 @@ public interface ConfigurationService {
 
     public final static String ADMINSITENAME = "opensyllabusAdmin";
 
+    public final static String ADMIN_CONTENT_FOLDER =
+	    "/content/group/opensyllabusAdmin/";
+
     /**
      * Folder that contains all the configuration files
      */
-    public final static String CONFIGFORLDER =
-	    "/content/group/opensyllabusAdmin/config/";
+    public final static String CONFIGFORLDER = ADMIN_CONTENT_FOLDER + "config/";
 
     /**
      * This folder contains all the configuration files that modify
      * (add-remove-update) a role.
      */
-    public final static String ROLEFOLDER =
-	    "/content/group/opensyllabusAdmin/config/role/";
+    public final static String ROLEFOLDER = CONFIGFORLDER + "role/";
 
     public final static String OFFSITESCONFIGFILE = "offSitesConfig.xml";
 
     public final static String FUNCTIONSSCONFIGFILE = "functionsConfig.xml";
+
+    public final static String XSL_FILENAME = "courseOutline.xsl";
 
     // Parameters used in the official sites synchronisation job
     public Date getEndDate();
@@ -92,13 +94,15 @@ public interface ConfigurationService {
     public List<String> getCourses();
 
     public Map<String, Map<String, Object>> getUdatedRoles();
-    
+
     public String getFunctionsRole();
-    
+
     public String getRoleToRemove();
-    
+
     public List<String> getAllowedFunctions();
-    
+
     public List<String> getDisallowedFunctions();
+    
+    public String getCourseOutlineXsl();
 
 }

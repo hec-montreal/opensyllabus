@@ -187,7 +187,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 		publishedCoCache.remove(siteId
 			+ SecurityInterface.ACCESS_ATTENDEE);
 		publishedCoCache.remove(siteId
-				+ SecurityInterface.ACCESS_COMMUNITY);		
+			+ SecurityInterface.ACCESS_COMMUNITY);
 		publishedCoCache.remove(siteId
 			+ SecurityInterface.ACCESS_PUBLIC);
 	    }
@@ -320,24 +320,9 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	} else {
 
 	    String webappDir = getServletContext().getRealPath("/");
-	    String cfgId =
-		    osylServices.getOsylSiteService().getOsylConfigIdForSiteId(
-			    siteId);
-	    try {
-		if (cfgId == null)
-		    cfg =
-			    osylServices.getOsylConfigService().getConfigByRef(
-				    osylServices.getOsylConfigService()
-					    .getDefaultConfig(), webappDir);
-		else
-		    cfg =
-			    osylServices.getOsylConfigService().getConfig(
-				    cfgId, webappDir);
-
-	    } catch (Exception e) {
-		log.error("Unable to retrieve serialized config", e);
-		throw e;
-	    }
+	    cfg =
+		    osylServices.getOsylSiteService().getOsylConfigForSiteId(
+			    siteId, webappDir);
 	    if (cacheEnabled) {
 		configCache.put(siteId, cfg);
 	    }
@@ -412,8 +397,7 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	String webappDir = getServletContext().getRealPath("/");
 	COSerialized cos = getSerializedCourseOutline();
 	osylServices.getOsylConfigService().fillCo(
-		webappDir + OsylConfigService.CONFIG_DIR + File.separator
-			+ cos.getOsylConfig().getConfigRef(), cos);
+		webappDir, cos);
 	String transformXml =
 		transformXmlForGroup(cos.getContent(),
 			SecurityInterface.ACCESS_ATTENDEE);

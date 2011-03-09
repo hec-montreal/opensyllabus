@@ -30,8 +30,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -41,7 +40,6 @@ import org.xml.sax.SAXException;
  */
 public class SchemaHelper {
 
-    private static Log log = LogFactory.getLog(SchemaHelper.class);
     public static final String SCHEMA_DIRECTORY = "schema";
     public static final String SCHEMA_FILENAME = "osyl.xsd";
     private static final String VERSION_ATTRIBUTE = "version";
@@ -134,7 +132,8 @@ public class SchemaHelper {
      * @param xml
      * @throws Exception
      */
-    public String verifyAndConvert(String xml) throws Exception {
+    public COSerialized verifyAndConvert(COSerialized co) throws Exception {
+	String xml = co.getContent();
 	if (xml != null && !xml.trim().equals("")) {
 	    int majorSchemaVersion = getMajorSchemaVersion();
 	    if (getMajorXMLSchemaVersion(xml) == majorSchemaVersion) {
@@ -146,23 +145,23 @@ public class SchemaHelper {
 			int nextMinorVersion = minorXmlVersion + 1;
 			xml =
 				convert(xml, majorSchemaVersion + "."
-					+ minorXmlVersion,
-					majorSchemaVersion + "."
-						+ nextMinorVersion);
-
+					+ minorXmlVersion, majorSchemaVersion
+					+ "." + nextMinorVersion);
 			minorXmlVersion = nextMinorVersion;
 		    }
 		    xml = updateXmlSchemaVersion(xml, schemaVersionString);
+		    co.setContent(xml);
+		    co.setConfigVersion(schemaVersionString);
 		} catch (Exception e) {
 		    e.printStackTrace();
-		    return xml;
+		    return co;
 		}
 	    } else {
 		throw new Exception(
 			"XSD version and XML version are not compatible");
 	    }
 	}
-	return xml;
+	return co;
     }
 
     private String convert(String xml, String actualVersion, String nextVersion)
@@ -197,11 +196,12 @@ public class SchemaHelper {
 			+ UPDATE_VERSION_FILENAME;
 
 	String xsl = FileHelper.getFileContent(xslPath);
-	
-	TreeMap<String, String> transformerParameters = new TreeMap<String, String>();
+
+	TreeMap<String, String> transformerParameters =
+		new TreeMap<String, String>();
 	transformerParameters.put("newSchemaVersion", newVersion);
-	
-	return XmlHelper.applyXsl(xml, xsl,transformerParameters);
+
+	return XmlHelper.applyXsl(xml, xsl, transformerParameters);
 
     }
 

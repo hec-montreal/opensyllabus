@@ -277,7 +277,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    String siteId, String accessType, String webappDir) {
 	long start = System.currentTimeMillis();
 	COSerialized thisCo = null;
-	String configRef;
 	try {
 	    thisCo =
 		    resourceDao
@@ -287,18 +286,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	}
 	if (thisCo != null) {
 	    try {
-		osylSiteService.getSiteInfo(thisCo, siteId);
-		configRef = thisCo.getOsylConfig().getConfigRef();
-	    } catch (Exception e) {
-		configRef = osylConfigService.getDefaultConfig();
-		log.error("Unable to retrieve published course outline for"
-			+ " access type [" + accessType + "]", e);
-	    }
-	    try {
-		thisCo =
-			osylConfigService.fillCo(webappDir
-				+ OsylConfigService.CONFIG_DIR + File.separator
-				+ configRef, thisCo);
+		thisCo = osylConfigService.fillCo(webappDir, thisCo);
 	    } catch (Exception e) {
 		log.error("Unable to fill course outline", e);
 	    }
@@ -316,8 +304,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     public Vector<Map<String, String>> publish(String webappDir, String siteId)
 	    throws Exception, FusionException, OsylPermissionException {
-	if (!osylSecurityService.isActionAllowedInSite(
-		osylSiteService.getSiteReference(siteId),
+	if (!osylSecurityService.isActionAllowedInSite(osylSiteService
+		.getSiteReference(siteId),
 		OsylSecurityService.OSYL_FUNCTION_PUBLISH)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
@@ -432,16 +420,16 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    coContent.getProperty(COPropertiesType.PUBLISHED) != null ? coContent
 				    .getProperty(COPropertiesType.PUBLISHED)
 				    : "");
-	    coContent.addProperty(COPropertiesType.PUBLISHED,
-		    OsylDateUtils.getCurrentDateAsXmlString());
+	    coContent.addProperty(COPropertiesType.PUBLISHED, OsylDateUtils
+		    .getCurrentDateAsXmlString());
 	    coModeledServer.model2XML();
 	    coSerialized.setContent(coModeledServer.getSerializedContent());
 	    resourceDao.createOrUpdateCourseOutline(coSerialized);
 
 	    publicationProperties.put(COPropertiesType.PREVIOUS_PUBLISHED,
 		    coContent.getProperty(COPropertiesType.PREVIOUS_PUBLISHED));
-	    publicationProperties.put(COPropertiesType.PUBLISHED,
-		    coContent.getProperty(COPropertiesType.PUBLISHED));
+	    publicationProperties.put(COPropertiesType.PUBLISHED, coContent
+		    .getProperty(COPropertiesType.PUBLISHED));
 	    securityService.clearAdvisors();
 
 	    log.info("Finished publishing course outline for site ["
@@ -511,8 +499,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	if (siteName != null) {
 	    try {
 		COConfigSerialized cocs =
-			osylConfigService.getConfigByRef(co.getOsylConfig()
-				.getConfigRef(), webappDir);
+			osylConfigService.getConfigByRefAndVersion(co
+				.getOsylConfig().getConfigRef(), co
+				.getConfigVersion(), webappDir);
 		Document d = XmlHelper.parseXml(cocs.getRulesConfig());
 		String propertyType =
 			COModeledServer.getRulesConfigPropertyType(d);
@@ -614,29 +603,31 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    File f = null;
 	    // change keys for i18n messages
 	    d =
-		    replaceSemanticTagsWithI18NMessage(d,
-			    coSerialized.getMessages());
+		    replaceSemanticTagsWithI18NMessage(d, coSerialized
+			    .getMessages());
 
 	    // convert html in xhtml
 	    d = convertHtmlToXhtml(d);
 
 	    // transform xml -> pdf
 	    String configRef = coSerialized.getOsylConfig().getConfigRef();
+	    String configVersion = coSerialized.getConfigVersion();
 	    String xsltXmltoPdf =
 		    FileHelper.getFileContent(webappdir + File.separator
 			    + OsylConfigService.CONFIG_DIR + File.separator
-			    + configRef + File.separator
+			    + configRef + File.separator + configVersion
+			    + File.separator
 			    + OsylConfigService.PRINT_DIRECTORY
 			    + File.separator
 			    + OsylConfigService.PRINT_XSLFO_FILENAME);
 	    f =
 		    FOPHelper.convertXml2Pdf(d, xsltXmltoPdf, webappdir
 			    + OsylConfigService.CONFIG_DIR + File.separator
-			    + configRef + File.separator
+			    + configRef + File.separator + configVersion
+			    + File.separator
 			    + OsylConfigService.PRINT_DIRECTORY
-			    + File.separator,
-			    ServerConfigurationService.getServerUrl(),
-			    coSerialized.getSiteId());
+			    + File.separator, ServerConfigurationService
+			    .getServerUrl(), coSerialized.getSiteId());
 
 	    return f;
 	} catch (Exception e) {
@@ -662,7 +653,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    t.setMakeClean(true);
 
 	    expr =
-		    xpath.compile("//text | //comment | //description | //availability | //label | //identifier");
+		    xpath
+			    .compile("//text | //comment | //description | //availability | //label | //identifier");
 
 	    NodeList nodes =
 		    (NodeList) expr.evaluate(d, XPathConstants.NODESET);
@@ -699,10 +691,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		Node node = nodes.item(i);
 		String userDefLabel =
 			(node.getAttributes() == null) ? null
-				: (node.getAttributes()
+				: (node
+					.getAttributes()
 					.getNamedItem(
 						COPropertiesType.SEMANTIC_TAG_USERDEFLABEL) == null) ? null
-					: node.getAttributes()
+					: node
+						.getAttributes()
 						.getNamedItem(
 							COPropertiesType.SEMANTIC_TAG_USERDEFLABEL)
 						.getNodeValue();

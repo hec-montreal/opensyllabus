@@ -3,9 +3,12 @@
 <%@ page import="java.util.Locale"%>
 <%@ page import="org.sakaiquebec.opensyllabus.server.OsylBackingBean"%>
 <%@ page import="org.sakaiquebec.opensyllabus.shared.model.COSerialized"%>
+<%@ page import="org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized"%>
 <%@ page import="org.springframework.web.context.WebApplicationContext"%>
 <%@ page import="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService"%>
 <%@ page import="org.sakaiquebec.opensyllabus.common.api.OsylSiteService"%>
+<%@page import="org.sakaiquebec.opensyllabus.common.api.OsylConfigService"%>
+<%@page import="org.sakaiquebec.opensyllabus.shared.model.COConfig"%>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="org.sakaiproject.util.ResourceLoader"%>
 <%@ page import="java.io.File"%>
@@ -40,10 +43,7 @@
 	Locale sessionLocale = rb.getLocale();
 	String locale = sessionLocale.toString();
 %>
-        
-
-<%@page import="org.sakaiquebec.opensyllabus.common.api.OsylConfigService"%>
-<%@page import="org.sakaiquebec.opensyllabus.shared.model.COConfig"%><html>
+<html>
 	<head>
 
 	<!-- AJAXSLT -->
@@ -124,14 +124,9 @@
 	    			configId, webappDir).getCascadingStyleSheetPath();
 	    	*/
 	    	String cssPath = null;
-	    	String configRef = null;
-	    	String configId = osylMainBean.getOsylSiteService().getOsylConfigIdForSiteId(siteId);
-	    	if(configId == null || configId.length() == 0){
-	    		configRef = osylMainBean.getOsylConfigService().getDefaultConfig();
-	    		cssPath = osylMainBean.getOsylConfigService().getCssPathFromConfigRef(webappDir, configRef);
-	    	}else{
-	    		cssPath = osylMainBean.getOsylConfigService().getCssPathFromConfigId(webappDir, configId);
-	    	}
+	    	COConfigSerialized coConfig = osylMainBean.getOsylSiteService().getOsylConfigForSiteId(siteId,webappDir);
+	    	cssPath = coConfig.getCascadingStyleSheetPath();
+	    	
 	    %>
 		<link rel="stylesheet" type="text/css" href="<%=cssPath+COConfig.MAIN_CSS%>" />
 		<link rel="stylesheet" type="text/css" href="<%=cssPath+COConfig.PRINT_CSS%>" media="print"/>

@@ -112,11 +112,13 @@ public class COSerialized implements java.io.Serializable {
     private Date publicationDate;
 
     private Date modificationDate;
-    
-    private boolean incompatibleWithHisParent=false;
-    
-    private boolean incompatibleHierarchy=false;
-    
+
+    private boolean incompatibleWithHisParent = false;
+
+    private boolean incompatibleHierarchy = false;
+
+    private String configVersion;
+
     /**
      * Default constructor
      */
@@ -144,7 +146,8 @@ public class COSerialized implements java.io.Serializable {
 			.getDescription(), courseOutlineXML.getTitle(),
 		courseOutlineXML.isPublished(), courseOutlineXML
 			.getPublicationDate(), courseOutlineXML
-			.getModificationDate());
+			.getModificationDate(), courseOutlineXML
+			.getConfigVersion());
     }
 
     /**
@@ -156,7 +159,7 @@ public class COSerialized implements java.io.Serializable {
 	    String siteId, String sectionId, COConfigSerialized osylConfigId,
 	    String content, String shortDescription, String description,
 	    String title, boolean published, Date creationDate,
-	    Date modificationDate) {
+	    Date modificationDate, String configVersion) {
 	this.setCoId(coId);
 	this.setLang(lang);
 	this.setType(type);
@@ -171,6 +174,7 @@ public class COSerialized implements java.io.Serializable {
 	this.setPublished(published);
 	this.setPublicationDate(creationDate);
 	this.setModificationDate(modificationDate);
+	this.setConfigVersion(configVersion);
 
     }
 
@@ -454,5 +458,13 @@ public class COSerialized implements java.io.Serializable {
 
     public boolean isIncompatibleHierarchy() {
 	return incompatibleHierarchy;
+    }
+
+    public void setConfigVersion(String configVersion) {
+	this.configVersion = configVersion;
+    }
+
+    public String getConfigVersion() {
+	return configVersion;
     }
 }

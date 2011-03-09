@@ -86,6 +86,9 @@ public class COConfigSerialized implements java.io.Serializable {
 	 */
 	private ArrayList<String> evalTypeList;
 
+	
+	private String version;
+	
 	/**
 	 * Constructor
 	 */
@@ -230,6 +233,14 @@ public class COConfigSerialized implements java.io.Serializable {
 			this.settings.putAll(settings);
 		}
 
+	}
+
+	public void setVersion(String version) {
+	    this.version = version;
+	}
+
+	public String getVersion() {
+	    return version;
 	}
 
 

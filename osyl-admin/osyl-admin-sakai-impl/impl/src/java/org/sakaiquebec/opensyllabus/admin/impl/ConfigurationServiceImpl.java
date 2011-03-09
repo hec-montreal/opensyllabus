@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.admin.impl;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,6 +79,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private String functionsRole = null;
 
     private List<String> courses = null;
+    
+    private String courseOutlineXsl = null;
 
     private Map<String, Map<String, Object>> updatedRoles = null;
 
@@ -118,6 +121,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
 	updateConfig(CONFIGFORLDER + OFFSITESCONFIGFILE);
 	updateConfig(ROLEFOLDER);
+	updateConfig(ADMIN_CONTENT_FOLDER + XSL_FILENAME);
 	updateConfig(CONFIGFORLDER + FUNCTIONSSCONFIGFILE);
 
     }
@@ -224,6 +228,12 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			    + referenceString);
 		    updateConfig(referenceString);
 		}
+		
+		if(referenceString.contains(XSL_FILENAME)){
+		    log.info("Updating XSL in resource"
+			    + referenceString);
+		    updateConfig(referenceString);
+		}
 	    }
 	}
     }
@@ -266,7 +276,16 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			    retrieveConfigs(ress.getReference(), ress
 				    .streamContent());
 		    }
-		} else {
+		} else if(fileName.contains(XSL_FILENAME)){
+		    resource =
+			    contentHostingService
+				    .getResource(reference.getId());
+		    try {
+			setCourseOutlineXsl(new String(resource.getContent(),"UTF-8"));
+		    } catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		    }
+		} else{
 		    resource =
 			    contentHostingService
 				    .getResource(reference.getId());
@@ -521,6 +540,14 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     public String getRoleToRemove() {
 	return removedRole;
+    }
+
+    public void setCourseOutlineXsl(String courseOutlineXsl) {
+	this.courseOutlineXsl = courseOutlineXsl;
+    }
+
+    public String getCourseOutlineXsl() {
+	return courseOutlineXsl;
     }
 
 }

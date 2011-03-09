@@ -2,55 +2,59 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="org.sakaiquebec.opensyllabus.shared.model.COSerialized" table="osyl_co">
-        <id name="coId" type="string">
-            <column name="CO_ID" length="99" />
-            <generator class="assigned" />
-        </id>
-       
-        <property name="lang" type="string">
-            <column name="LANG" length="45" />
-        </property>
+	<class name="org.sakaiquebec.opensyllabus.shared.model.COSerialized"
+		table="osyl_co">
+		<id name="coId" type="string">
+			<column name="CO_ID" length="99" />
+			<generator class="assigned" />
+		</id>
 
-        <property name="content" type="text" >
-            <column name="`CONTENT`" length="16777215"/>
-        </property>
+		<property name="lang" type="string">
+			<column name="LANG" length="45" />
+		</property>
 
-        <property name="type" type="string">
-            <column name="`TYPE`" length="45" />
-        </property>
+		<property name="content" type="text">
+			<column name="`CONTENT`" length="16777215" />
+		</property>
 
-        <property name="access" type="string">
-            <column name="`ACCESS`" length="45" />
-        </property>
- 
-        <property name="siteId" type="string">
-            <column name="SITE_ID" length="99" not-null="true" />
-        </property>
+		<property name="type" type="string">
+			<column name="`TYPE`" length="45" />
+		</property>
 
-        <property name="section" type="string">
-            <column name="SECTION" length="99" />
-        </property>
-        
- 		<many-to-one name="osylConfig" class="org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized"
-			column="CONFIG"
-			not-null="true" lazy="false"/>
- 
-    	<property name="published" type="boolean">
-            <column name="PUBLISHED" />
-        </property>
-        
-        <property name="lockedBy" type="string">
-        	<column name="LOCKED_BY" />
-        </property>
+		<property name="access" type="string">
+			<column name="`ACCESS`" length="45" />
+		</property>
 
-		<property name="publicationDate" column="CREATION_DATE"
-			type="java.util.Date" />
+		<property name="siteId" type="string">
+			<column name="SITE_ID" length="99" not-null="true" />
+		</property>
+
+		<property name="section" type="string">
+			<column name="SECTION" length="99" />
+		</property>
+
+		<many-to-one name="osylConfig"
+			class="org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized"
+			column="CONFIG" not-null="true" lazy="false" />
+
+		<property name="published" type="boolean">
+			<column name="PUBLISHED" />
+		</property>
+
+		<property name="lockedBy" type="string">
+			<column name="LOCKED_BY" />
+		</property>
+
+		<property name="publicationDate" column="CREATION_DATE" type="java.util.Date" />
 
 		<property name="modificationDate" column="MODIFICATION_DATE"
 			type="java.util.Date" />
 
-  	</class>
+		<property name="configVersion" type="string">
+			<column name="CONFIG_VERSION" length="10" default="1.2"/>
+		</property>
+
+	</class>
 
 
 </hibernate-mapping>

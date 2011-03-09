@@ -12,6 +12,7 @@ import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
+import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
 /******************************************************************************
@@ -294,7 +295,7 @@ public interface OsylSiteService extends EntityProducer {
      * @param siteId
      * @return
      */
-    public String getOsylConfigIdForSiteId(String siteId);
+    public COConfigSerialized getOsylConfigForSiteId(String siteId, String webappDir);
 
     /**
      * @return list of all Course outlines of the system

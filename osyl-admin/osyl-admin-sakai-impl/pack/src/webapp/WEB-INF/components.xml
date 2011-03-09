@@ -353,7 +353,7 @@
 	</bean>
 
 	<bean id="osylconvjob"
-		class="org.sakaiquebec.opensyllabus.admin.conversionJob.impl.OsylConversionJobImpl">
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylConversionJobImpl">
 		<property name="osylSiteService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
 		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
@@ -424,6 +424,22 @@
 			ref="org.sakaiproject.event.api.UsageSessionService" />
 		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
 		<property name="toolManager" ref="org.sakaiproject.tool.api.ToolManager" />
+	</bean>
+	
+	<bean id="applyXslOnCourseOutline"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.ApplyXslOnCourseOutlineImpl">
+		<property name="osylSiteService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		<property name="resourceDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
+		<property name="adminConfigService"
+			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
 	</bean>
 
 	<bean
@@ -634,6 +650,24 @@
 
 		<property name="jobName">
 			<value>Create print version for all sites</value>
+		</property>
+
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+	
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.applyXslOnCourseOutline"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+
+		<property name="beanId">
+			<value>applyXslOnCourseOutline</value>
+		</property>
+
+		<property name="jobName">
+			<value>Apply xsl on course outline (xsl must be in opensyllabus admin site and named courseOutline.xsl</value>
 		</property>
 
 		<property name="schedulerManager">

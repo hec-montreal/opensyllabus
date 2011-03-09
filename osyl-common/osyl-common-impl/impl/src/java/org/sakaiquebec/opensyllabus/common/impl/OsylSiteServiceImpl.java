@@ -646,8 +646,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	// at the first call we got only the config id and ref. We need to fill
 	// the rules so the next call is used to get it.
 	coConfig =
-		osylConfigService.getConfigByRef(coConfig.getConfigRef(),
-			webappDir);
+		osylConfigService.getConfigByRefAndVersion(coConfig
+			.getConfigRef(), co.getConfigVersion(), webappDir);
 	co.setOsylConfig(coConfig);
 	updateCOCourseInformations(siteId, co);
 	return co;
@@ -739,13 +739,25 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    COConfigSerialized coConfig = null;
 	    COSerialized co = null;
 
+	    String configPath =
+		    ServerConfigurationService.getString(
+			    "opensyllabus.configs.path", null);
+	    if (configPath == null)
+		configPath =
+			System.getProperty("catalina.home") + File.separator
+				+ "webapps" + File.separator
+				+ "osyl-editor-sakai-tool";// TODO SAKAI-860
+	    SchemaHelper schemaHelper = new SchemaHelper(configPath);
+	    String version = schemaHelper.getSchemaVersion();
+
 	    try {
 		coConfig = configDao.getConfigByRef(configRef);
 		co =
 			new COSerialized(idManager.createUuid(), lang,
 				"shared", "", site.getId(), "sectionId",
 				coConfig, null, "shortDescription",
-				"description", "title", false, null, null);
+				"description", "title", false, null, null,
+				version);
 		resourceDao.createOrUpdateCourseOutline(co);
 
 	    } catch (Exception e) {
@@ -816,13 +828,25 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    COConfigSerialized coConfig = null;
 	    COSerialized co = null;
 
+	    String configPath =
+		    ServerConfigurationService.getString(
+			    "opensyllabus.configs.path", null);
+	    if (configPath == null)
+		configPath =
+			System.getProperty("catalina.home") + File.separator
+				+ "webapps" + File.separator
+				+ "osyl-editor-sakai-tool";// TODO SAKAI-860
+	    SchemaHelper schemaHelper = new SchemaHelper(configPath);
+	    String version = schemaHelper.getSchemaVersion();
+
 	    try {
 		coConfig = configDao.getConfigByRef(configRef);
 		co =
 			new COSerialized(idManager.createUuid(), lang,
 				"shared", "", site.getId(), "sectionId",
 				coConfig, null, "shortDescription",
-				"description", "title", false, null, null);
+				"description", "title", false, null, null,
+				version);
 		resourceDao.createOrUpdateCourseOutline(co);
 
 	    } catch (Exception e) {
@@ -1008,8 +1032,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	COSerialized thisCo = null;
 	try {
 	    if (!osylSecurityService.isActionAllowedInSite(
-			getSiteReference(siteId),
-			OsylSecurityService.OSYL_FUNCTION_EDIT)) {
+		    getSiteReference(siteId),
+		    OsylSecurityService.OSYL_FUNCTION_EDIT)) {
 		if (osylSecurityService.getCurrentUserRole() == null) {
 		    thisCo =
 			    resourceDao
@@ -1043,10 +1067,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    } else {
 		thisCo = getSerializedCourseOutlineAndLockIt(siteId, webappDir);
 	    }
-	    thisCo =
-		    osylConfigService.fillCo(webappDir
-			    + OsylConfigService.CONFIG_DIR + File.separator
-			    + thisCo.getOsylConfig().getConfigRef(), thisCo);
+	    thisCo = osylConfigService.fillCo(webappDir, thisCo);
 	    getSiteInfo(thisCo, thisCo.getSiteId());
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by siteId", e);
@@ -1109,14 +1130,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    COConfigSerialized coConfig = null;
 	    if (co == null) {
 		coConfig =
-			osylConfigService.getConfigByRef(osylConfigService
-				.getDefaultConfig(), webappDir);
+			osylConfigService.getConfigByRefAndVersion(
+				osylConfigService.getDefaultConfig(), null,
+				webappDir);
 		co =
 			new COSerialized(idManager.createUuid(),
 				osylConfigService.getCurrentLocale(), "shared",
 				"", siteId, "sectionId", coConfig, null,
 				"shortDescription", "description", "title",
-				false, null, null);
+				false, null, null, coConfig.getVersion());
 		setCoContentWithTemplate(co, webappDir);
 		resourceDao.createOrUpdateCourseOutline(co);
 	    } else if (co.getContent() == null) {
@@ -1331,7 +1353,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	COSerialized co = null;
 
 	SchemaHelper schemaHelper = new SchemaHelper(webapp);
-	xmlData = schemaHelper.verifyAndConvert(xmlData);
 	try {
 	    co = getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
 	    if (co != null) {
@@ -1341,6 +1362,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		coModeledServer.resetXML(filenameChangesMap);
 		coModeledServer.model2XML();
 		co.setContent(coModeledServer.getSerializedContent());
+		co = schemaHelper.verifyAndConvert(co);
 		resourceDao.createOrUpdateCourseOutline(co);
 	    }
 	} catch (Exception e) {
@@ -1598,8 +1620,18 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	coModeledServer.resetXML(null);
 	coModeledServer.model2XML();
 	destinationCo.setContent(coModeledServer.getSerializedContent());
+
+	// convert
+	String configPath =
+		ServerConfigurationService.getString(
+			"opensyllabus.configs.path", null);
+	if (configPath == null)
+	    configPath =
+		    System.getProperty("catalina.home") + File.separator
+			    + "webapps" + File.separator
+			    + "osyl-editor-sakai-tool";// TODO SAKAI-860
 	try {
-	    resourceDao.createOrUpdateCourseOutline(destinationCo);
+	    convertAndSave(configPath, destinationCo);
 	} catch (Exception e) {
 	    log.error("transferCopyEntities:createOrUpdateCourseOutline", e);
 	}
@@ -1612,8 +1644,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	// at the first call we got only the config id and ref. We need to fill
 	// the rules so the next call is used to get it.
 	coConfig =
-		osylConfigService.getConfigByRef(coConfig.getConfigRef(),
-			webappDir);
+		osylConfigService.getConfigByRefAndVersion(coConfig
+			.getConfigRef(), co.getConfigVersion(), webappDir);
 	co.setOsylConfig(coConfig);
 	updateCOCourseInformations(siteId, co);
 
@@ -1837,26 +1869,47 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
     }
 
-    public String getOsylConfigIdForSiteId(String siteId) {
-	String configId = null;
+    public COConfigSerialized getOsylConfigForSiteId(String siteId,
+	    String webappDir) {
+	COConfigSerialized config = null;
 	try {
 	    COSerialized thisCo =
 		    resourceDao.getSerializedCourseOutlineBySiteId(siteId);
-	    configId = thisCo.getOsylConfig().getConfigId();
+	    String cfgId = thisCo.getOsylConfig().getConfigId();
+	    if (cfgId == null) {
+		String configPath =
+			ServerConfigurationService.getString(
+				"opensyllabus.configs.path", null);
+		if (configPath == null)
+		    configPath =
+			    System.getProperty("catalina.home")
+				    + File.separator + "webapps"
+				    + File.separator + "osyl-editor-sakai-tool";// TODO
+		// SAKAI-860
+		SchemaHelper schemaHelper = new SchemaHelper(configPath);
+		String version = schemaHelper.getSchemaVersion();
+		config =
+			osylConfigService.getConfigByRefAndVersion(
+				osylConfigService.getDefaultConfig(), version,
+				webappDir);
+	    } else {
+		config =
+			osylConfigService.getConfig(cfgId, thisCo
+				.getConfigVersion(), webappDir);
+	    }
 	} catch (Exception e) {
 	    log.debug("getOsylConfigIdForSiteId: " + e);
 	}
-	return configId;
+	return config;
     }
 
     public void convertAndSave(String webapp, COSerialized co) throws Exception {
 	SchemaHelper schemaHelper = new SchemaHelper(webapp);
-	String xmlData = schemaHelper.verifyAndConvert(co.getContent());
-	if (xmlData == null || xmlData.trim().equals("")) {
+	co = schemaHelper.verifyAndConvert(co);
+	if (co.getContent() == null || co.getContent().trim().equals("")) {
 	    log.warn("CO with co_id:" + co.getCoId()
 		    + " is null or void. Nothing to convert");
 	} else {
-	    co.setContent(xmlData);
 	    resourceDao.createOrUpdateCourseOutline(co);
 	}
     }
@@ -1916,8 +1969,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    throws Exception {
 	COConfigSerialized coConfig = co.getOsylConfig();
 	coConfig =
-		osylConfigService.getConfigByRef(coConfig.getConfigRef(),
-			webappDir);
+		osylConfigService.getConfigByRefAndVersion(coConfig
+			.getConfigRef(), coConfig.getVersion(), webappDir);
 	co.setContent(osylConfigService.getXml(coConfig, co.getLang(),
 		webappDir));
 

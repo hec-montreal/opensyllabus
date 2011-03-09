@@ -57,12 +57,12 @@ public interface OsylConfigService {
      * Package (ie: folder) containing the message files (.properties)
      */
     public static final String CONFIG_DIR = "osylcoconfigs";
-    
+
     /**
      * template prefix
      */
     public static final String CO_CONTENT_TEMPLATE = "coContentTemplate";
-    
+
     /**
      * Creates the following configurations: "default" -
      * "Config from HEC Montreal" "udem" - "Config udem"
@@ -80,21 +80,20 @@ public interface OsylConfigService {
      */
     public static final String DEFAULT_CONFIG_REF = "default";
 
-    public static final String PRINT_DIRECTORY="print";
+    public static final String PRINT_DIRECTORY = "print";
     public static final String PRINT_XSLFO_FILENAME = "printOSYLFO.xslt";
-    
+
     /**
      * Returns the configuration corresponding to the specified id (should not
      * be mistaken with the config ref which is the only one human-readable).
-     * 
      * The configId is usually composed of 32 chars (hexadecimal).
      * 
      * @param configId
      * @return COConfigSerialized
      * @throws Exception
      */
-    public COConfigSerialized getConfig(String configId, String webappDir)
-	    throws Exception;
+    public COConfigSerialized getConfig(String configId, String version,
+	    String webappDir) throws Exception;
 
     /**
      * Returns the relative path for CSS files given the configuration ID.
@@ -103,8 +102,8 @@ public interface OsylConfigService {
      * @throws Exception
      */
     public String getCssPathFromConfigId(String webappDir, String configId)
-    	    throws Exception;
-    
+	    throws Exception;
+
     /**
      * Returns the relative path for CSS files given the configuration Ref.
      * 
@@ -112,8 +111,8 @@ public interface OsylConfigService {
      * @throws Exception
      */
     public String getCssPathFromConfigRef(String webappDir, String configRef)
-    	    throws Exception;
-    
+	    throws Exception;
+
     /**
      * Returns all configs avaiable
      * 
@@ -123,15 +122,15 @@ public interface OsylConfigService {
     public Map<String, String> getConfigs() throws Exception;
 
     /**
-     * Returns the config corresponding to the specified configuration
-     * reference (ie: directory name for that config, for instance 'default').
+     * Returns the config corresponding to the specified configuration reference
+     * (ie: directory name for that config, for instance 'default').
      * 
      * @param configRef
      * @return COConfigSerialized
      * @throws Exception
      */
-    public COConfigSerialized getConfigByRef(String configRef, String webappDir)
-	    throws Exception;
+    public COConfigSerialized getConfigByRefAndVersion(String configRef,
+	    String version, String webappDir) throws Exception;
 
     /**
      * Returns the configurations with configId as id.
@@ -207,21 +206,22 @@ public interface OsylConfigService {
      * @return Filled COConfigSerialized
      * @throws Exception
      */
-    public COSerialized fillCo(String dir, COSerialized coSerialized)
+    public COSerialized fillCo(String webappdir, COSerialized coSerialized)
 	    throws Exception;
 
     /**
-     * For a given directory, this method reads the general settings file and put it
-     * into a map.
+     * For a given directory, this method reads the general settings file and
+     * put it into a map.
      * 
      * @param dir Configuration directory
      * @return Map
      * @throws Exception
      */
-    public Map<String, String> getSettings(String path, String baseFileName) throws Exception;
+    public Map<String, String> getSettings(String path, String baseFileName)
+	    throws Exception;
 
     public String getDefaultConfig();
-    
+
     /**
      * Reads the course outline xml template from a file located in the
      * osylcoconfigs directory.
@@ -229,6 +229,6 @@ public interface OsylConfigService {
      * @param webappDir The path to the webapp directory
      * @return
      */
-    public String getXml(COConfigSerialized coConfig,
-	    String lang, String webappDir);
+    public String getXml(COConfigSerialized coConfig, String lang,
+	    String webappDir);
 }

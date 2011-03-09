@@ -18,7 +18,7 @@
  * limitations under the License.
  *
  ******************************************************************************/
-package org.sakaiquebec.opensyllabus.admin.conversionJob.impl;
+package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
 import java.io.File;
 import java.util.List;
@@ -33,7 +33,7 @@ import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiquebec.opensyllabus.admin.conversionJob.api.OsylConversionJob;
+import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylConversionJob;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
@@ -76,6 +76,7 @@ public class OsylConversionJobImpl implements OsylConversionJob {
     public void setSessionManager(SessionManager sessionManager) {
 	this.sessionManager = sessionManager;
     }
+
     // ***************** END SPRING INJECTION ************************//
 
     public void execute(JobExecutionContext jec) throws JobExecutionException {
@@ -90,7 +91,7 @@ public class OsylConversionJobImpl implements OsylConversionJob {
 	    configPath =
 		    System.getProperty("catalina.home") + File.separator
 			    + "webapps" + File.separator
-			    + "osyl-admin-sakai-tool";// Ugly but don't know
+			    + "osyl-admin-sakai-tool";// TODO SAKAI-860
 	// cleaner method.
 	for (COSerialized co : cos) {
 	    log.debug("Start conversion of co with co_id:" + co.getCoId());

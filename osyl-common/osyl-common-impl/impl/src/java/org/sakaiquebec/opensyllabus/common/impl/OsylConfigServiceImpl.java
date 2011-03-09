@@ -92,7 +92,7 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
      * Injection of the ConfigDao
      */
     private COConfigDao coConfigDao;
-    
+
     private String defaultConfig;
 
     /**
@@ -166,17 +166,38 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	COConfigSerialized coConfig = (COConfigSerialized) configs.get(0);
 	coConfig =
 		fillConfig(coConfig, webappDir, coConfig.getConfigRef(),
-			coConfig.getConfigId());
+			getDefautVersionConfig(webappDir + CONFIG_DIR
+				+ File.separator + coConfig.getConfigRef()
+				+ File.separator));
 	return coConfig;
     }
 
+    private static String getDefautVersionConfig(String dir) {
+	String folderVersion = "1.0";
+	float folderVersionFloat = Float.parseFloat(folderVersion);
+	File folder = new File(dir);
+	File[] listOfFiles = folder.listFiles();
+
+	for (int i = 0; i < listOfFiles.length; i++) {
+	    if (listOfFiles[i].isDirectory()) {
+		float directoryVersionFloat =
+			Float.parseFloat(listOfFiles[i].getName());
+		if (Float.parseFloat(listOfFiles[i].getName()) > folderVersionFloat) {
+		    folderVersionFloat = directoryVersionFloat;
+		    folderVersion = listOfFiles[i].getName();
+		}
+	    }
+	}
+	return folderVersion;
+    }
+
     /** {@inheritDoc} */
-    public COConfigSerialized getConfig(String configId, String webappDir)
-	    throws Exception {
+    public COConfigSerialized getConfig(String configId, String version,
+	    String webappDir) throws Exception {
 	COConfigSerialized coConfig = coConfigDao.getConfig(configId);
 	coConfig =
 		fillConfig(coConfig, webappDir, coConfig.getConfigRef(),
-			configId);
+			version);
 	return coConfig;
     }
 
@@ -216,10 +237,8 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
      * @throws Exception
      */
     public void initConfigs() throws Exception {
-	// Config names are internationalized, we only see keys here: 
+	// Config names are internationalized, we only see keys here:
 	initConfig("default");
-	initConfig("announcementsRegulationsHEC");
-	initConfig("udem");
     }
 
     private void initConfig(String configref) throws Exception {
@@ -237,12 +256,10 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
     }
 
     /** {@inheritDoc} */
-    public COConfigSerialized getConfigByRef(String configRef, String webappDir)
-	    throws Exception {
+    public COConfigSerialized getConfigByRefAndVersion(String configRef,
+	    String version, String webappDir) throws Exception {
 	COConfigSerialized coConfig = coConfigDao.getConfigByRef(configRef);
-	coConfig =
-		fillConfig(coConfig, webappDir, configRef, coConfig
-			.getConfigId());
+	coConfig = fillConfig(coConfig, webappDir, configRef, version);
 	return coConfig;
     }
 
@@ -252,19 +269,20 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
     }
 
     /** {@inheritDoc} */
-    public COSerialized fillCo(String dir, COSerialized coSerialized)
+    public COSerialized fillCo(String webappdir, COSerialized coSerialized)
 	    throws Exception {
 	if (coSerialized != null) {
 	    coSerialized
-		    .setMessages(getMessages(dir,
+		    .setMessages(getMessages(getConfigAbsolutePath(webappdir,
+			    coSerialized.getOsylConfig().getConfigRef(),
+			    coSerialized.getConfigVersion()),
 			    OsylConfigService.CONFIG_COMESSAGES, coSerialized
 				    .getLang()));
 	}
 	return coSerialized;
     }
 
-    private void createConfig(String configRef)
-	    throws Exception {
+    private void createConfig(String configRef) throws Exception {
 	COConfigSerialized coConfig = new COConfigSerialized();
 	coConfig.setConfigRef(configRef);
 	createConfig(coConfig);
@@ -282,23 +300,29 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
      * @throws Exception
      */
     private static COConfigSerialized fillConfig(COConfigSerialized coConfig,
-	    String webappdir, String configRef, String configId)
+	    String webappdir, String configRef, String version)
 	    throws Exception {
-	String path = getConfigAbsolutePath(webappdir, configRef);
-	coConfig.setCascadingStyleSheetPath(getCssPath(webappdir, coConfig));
+	String path = getConfigAbsolutePath(webappdir, configRef, version);
+	coConfig.setCascadingStyleSheetPath(getCssPath(path, coConfig));
 	coConfig.setCoreBundle(OsylConfigServiceMessages.getMessages(path,
 		CONFIG_UIMESSAGES));
 	coConfig.setRulesConfig(getRules(path));
 	coConfig.setRolesList(getRolesList(path));
 	coConfig.setEvalTypeList(getEvalTypeList(path));
-	coConfig.setSettings(OsylConfigSettingsService.getSettings(path, 
-			CONFIG_SETTINGS));
+	coConfig.setSettings(OsylConfigSettingsService.getSettings(path,
+		CONFIG_SETTINGS));
+	coConfig.setVersion(version);
 	return coConfig;
     }
 
-    private static String getConfigAbsolutePath(
-	    String webappdir, String configRef) {
-	return webappdir + CONFIG_DIR + File.separator + configRef;
+    private static String getConfigAbsolutePath(String webappdir,
+	    String configRef, String version) {
+	String dir =
+		webappdir + CONFIG_DIR + File.separator + configRef
+			+ File.separator;
+	if (version == null)
+	    version = getDefautVersionConfig(dir);
+	return dir + version;
     }
 
     /**
@@ -382,28 +406,27 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	}
 
 	return result;
-    }    
+    }
 
     private static String getCssPath(String webAppDir,
 	    COConfigSerialized coConfig) throws Exception {
-	String webAppRelativeDir = webAppDir.substring(
-		webAppDir.indexOf("webapps") + 7);
-	String relativePath = webAppRelativeDir
-	    	+ CONFIG_DIR + File.separator
-		+ coConfig.getConfigRef() + File.separator
-		+ CONFIGS_SKIN_DIRECTORY + File.separator;
+	String webAppRelativeDir =
+		webAppDir.substring(webAppDir.indexOf("webapps") + 7);
+	String relativePath =
+		webAppRelativeDir + File.separator + CONFIGS_SKIN_DIRECTORY
+			+ File.separator;
 	relativePath = relativePath.replaceAll("\\\\", "/");
 	return relativePath;
     }
-    
+
     public String getCssPathFromConfigId(String webAppDir, String configId)
-    		throws Exception {
+	    throws Exception {
 	return getCssPath(webAppDir, coConfigDao.getConfig(configId));
     }
-    
+
     public String getCssPathFromConfigRef(String webAppDir, String configRef)
-	throws Exception {
-    	return getCssPath(webAppDir, coConfigDao.getConfigByRef(configRef));
+	    throws Exception {
+	return getCssPath(webAppDir, coConfigDao.getConfigByRef(configRef));
     }
 
     /**
@@ -411,12 +434,13 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
      * 
      * @throws Exception
      */
-    public Map<String, String> getSettings(String path, String baseFileName) throws Exception {
+    public Map<String, String> getSettings(String path, String baseFileName)
+	    throws Exception {
 	return OsylConfigSettingsService.getSettings(path, baseFileName);
     }
 
     public String getDefaultConfig() {
-	if(defaultConfig == null || defaultConfig.length() == 0){
+	if (defaultConfig == null || defaultConfig.length() == 0) {
 	    defaultConfig = DEFAULT_CONFIG_REF;
 	}
 	return defaultConfig;
@@ -425,9 +449,9 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
     public void setDefaultConfig(String defaultConfig) {
 	this.defaultConfig = defaultConfig;
     }
-    
-    public String getXml(COConfigSerialized coConfig,
-	    String lang, String webappDir){
+
+    public String getXml(COConfigSerialized coConfig, String lang,
+	    String webappDir) {
 	StringBuilder fileData = new StringBuilder(1000);
 	try {
 
@@ -445,7 +469,7 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	}
 	return fileData.toString();
     }
-    
+
     /**
      * Checks if the file of the co template exists, if not it takes the default
      * template file, and return a buffered reader on the file.
@@ -464,9 +488,14 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 		    CO_CONTENT_TEMPLATE + "_" + lang
 			    + OsylSiteService.XML_FILE_EXTENSION;
 	    coXmlFilePath =
-		    webappDir + OsylConfigService.CONFIG_DIR + File.separator
-			    + coConfig.getConfigRef() + File.separator
-			    + templateFileName;
+		    webappDir
+			    + OsylConfigService.CONFIG_DIR
+			    + File.separator
+			    + coConfig.getConfigRef()
+			    + File.separator
+			    + getDefautVersionConfig(webappDir + CONFIG_DIR
+				    + File.separator + coConfig.getConfigRef()
+				    + File.separator) + templateFileName;
 	    coXmlFile = new File(coXmlFilePath);
 	    reader =
 		    new BufferedReader(new InputStreamReader(
@@ -482,9 +511,15 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 				+ OsylSiteService.XML_FILE_EXTENSION;
 		;
 		coXmlFilePath =
-			webappDir + OsylConfigService.CONFIG_DIR
-				+ File.separator + coConfig.getConfigRef()
-				+ File.separator + templateFileName;
+			webappDir
+				+ OsylConfigService.CONFIG_DIR
+				+ File.separator
+				+ coConfig.getConfigRef()
+				+ File.separator
+				+ getDefautVersionConfig(webappDir + CONFIG_DIR
+					+ File.separator
+					+ coConfig.getConfigRef()
+					+ File.separator) + templateFileName;
 		coXmlFile = new File(coXmlFilePath);
 		reader =
 			new BufferedReader(new InputStreamReader(
@@ -498,12 +533,18 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 			    CO_CONTENT_TEMPLATE
 				    + OsylSiteService.XML_FILE_EXTENSION;
 		    String defaultConfigRef =
-			    getCurrentConfig(webappDir)
-				    .getConfigRef();
+			    getCurrentConfig(webappDir).getConfigRef();
 		    coXmlFilePath =
-			    webappDir + OsylConfigService.CONFIG_DIR
-				    + File.separator + defaultConfigRef
-				    + File.separator + templateFileName;
+			    webappDir
+				    + OsylConfigService.CONFIG_DIR
+				    + File.separator
+				    + defaultConfigRef
+				    + File.separator
+				    + getDefautVersionConfig(webappDir
+					    + CONFIG_DIR + File.separator
+					    + coConfig.getConfigRef()
+					    + File.separator)
+				    + templateFileName;
 		    coXmlFile = new File(coXmlFilePath);
 		    reader =
 			    new BufferedReader(new InputStreamReader(
@@ -521,6 +562,5 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	}
 	return reader;
     }
-
 
 }
