@@ -51,7 +51,7 @@
 			type="java.util.Date" />
 
 		<property name="configVersion" type="string">
-			<column name="CONFIG_VERSION" length="10" default="1.2"/>
+			<column name="CONFIG_VERSION" length="10"/>
 		</property>
 
 	</class>
