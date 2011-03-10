@@ -40,7 +40,7 @@ import org.testng.annotations.Test;
  *@author<a href="mailto:bouchra.laabissi.1@ens.etsmtl.ca">Bouchra Laabissi</a>
  */
 public class PresentationOfCourse extends AbstractOSYLTest {
-
+	
     @Test(groups = "OSYL-Suite", description = "OSYLEditor test. Add a contact resource, edit it and save the changes")
     @Parameters( { "webSite" })
     public void PresentationOfCourseTest(String webSite) throws Exception {
@@ -55,7 +55,7 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 	waitForOSYL();
 
 	// ---------------------------------------------------------------------------//
-	// Add Text //
+	// Add Text in Overview Unit //
 	// ---------------------------------------------------------------------------//
 
 	// Open Lectures Section
@@ -68,10 +68,13 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 		    + timeStamp() + " in Firefox";
 	addText(newText9,LEVEL_ATTENDEE);
 
+	//Add message to log file
+	logFile(OVERVIEW_TEST, CT_006, PASSED);
+	
 	// Save modifications
 	saveCourseOutline();
 	pause();
-
+	
 	// ---------------------------------------------------------------------------//
 	// Add, Modify and delete Text //
 	// ---------------------------------------------------------------------------//
@@ -81,6 +84,8 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 			    + "selenium, hope it works and you see it. Added on "
 			    + timeStamp() + " in Firefox";
 	 addText(newText9Bis,LEVEL_ATTENDEE);
+	//Add message to log file
+	logFile(OVERVIEW_TEST, CT_006, PASSED);
 	 
 	// We delete the new text Lecture
 	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[2]/button");
@@ -93,10 +98,13 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 	log("Text deleted");
 	pause();
 
+	//Add message to log file
+	logFile(OVERVIEW_TEST, CT_010, PASSED);
+	
 	// Save modifications
 	saveCourseOutline();
 	pause();
-
+	
 	// ---------------------------------------------------------------------------//
 	// Add Hyperlink //
 	// ---------------------------------------------------------------------------//
@@ -133,6 +141,8 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 	// Save modifications
 	saveCourseOutline();
 	pause();
+	//Add message to log file
+	logFile(OVERVIEW_TEST, CT_028, PASSED);
 
 	// ---------------------------------------------------------------------------//
 	// Add Document //
@@ -255,6 +265,9 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 		session().click("//td/table/tbody/tr/td[2]/button");
 	}
 	
+	//Add message to log file
+	logFile(OVERVIEW_TEST, CT_027, PASSED);
+	
 	// Save modifications
 	saveCourseOutline();
 	pause();
@@ -267,7 +280,7 @@ public class PresentationOfCourse extends AbstractOSYLTest {
     } // PresentationOfCourseTest
 
     private void openPresentationSection() {
-	// Click Assessment section
+	// Click on Overview section
 	if (inFireFox()) {
 	    session().mouseDown(
 		    "//div[@class=\"gwt-TreeItem\"]/div/"

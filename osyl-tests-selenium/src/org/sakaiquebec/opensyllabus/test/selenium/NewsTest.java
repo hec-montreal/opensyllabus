@@ -39,7 +39,7 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
  *@author<a href="mailto:bouchra.laabissi.1@ens.etsmtl.ca">Bouchra Laabissi</a>
  */
 public class NewsTest extends AbstractOSYLTest {
-
+	
     @Test(groups = "OSYL-Suite", description =
 	"OSYLEditor test. Add a contact resource, edit it and save the changes")
     @Parameters( { "webSite" })
@@ -54,8 +54,10 @@ public class NewsTest extends AbstractOSYLTest {
 	}
 	waitForOSYL();
 	
-	
-        // We keep track of how many resources are showing to check that it
+	// ---------------------------------------------------------------------------//
+	// Add News in News Unit //
+	// ---------------------------------------------------------------------------//	
+    // We keep track of how many resources are showing to check that it
 	// is incremented as expected when we add one
 	int resNb = getResourceCount();
 	log("We start with " + resNb + " resources");
@@ -92,10 +94,12 @@ public class NewsTest extends AbstractOSYLTest {
 	    session().selectFrame("relative=parent");
 	    session().click("//td/table/tbody/tr/td[1]/button");
 	    // check if text is visible
-	    if (!session().isTextPresent(newText)) {
-		logAndFail("Expected to see text [" + newText 
-			+ "] after text edition");
-	    }
+		if (!session().isTextPresent(newText)) {
+			logAndFail("Expected to see text [" + newText
+					+ "] after text edition");
+			// Add message to log file
+			logFile(NEWS_TEST, CT_067, FAILED);
+		}
 	    log("OK: Text resource edited");
 	} else {
 	    log("RichText edition can only be tested in Firefox");
@@ -103,7 +107,9 @@ public class NewsTest extends AbstractOSYLTest {
 	    session().click("//td/table/tbody/tr/td[1]/button");
 	}
 	saveCourseOutline();
-
+	//Add message to log file
+	logFile(NEWS_TEST, CT_067, PASSED);
+	
 	session().selectFrame("relative=parent");
 	logOut();
 	log("==========================");	

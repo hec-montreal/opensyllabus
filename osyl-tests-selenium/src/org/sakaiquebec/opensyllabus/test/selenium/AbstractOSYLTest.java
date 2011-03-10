@@ -26,9 +26,11 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
 import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.startSeleniumSession;
 
 import java.io.File;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.sakaiquebec.opensyllabus.test.selenium.MsgLog;
 import org.testng.Reporter;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -41,7 +43,7 @@ import com.thoughtworks.selenium.SeleneseTestCase;
  * various Selenium tests. Some methods have to be called in a specific order.
  * For instance createTestSite() won't work unless logInAsAdmin(webSite) has
  * been invoked before.
- * 
+ *
  * @author <a href="mailto:remi.saias@hec.ca">Remi Saias</a>
  */
 public class AbstractOSYLTest extends SeleneseTestCase {
@@ -50,16 +52,16 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     private String siteName;
     // Base name for test sites
     public static final String TEST_SITE_BASE_NAME = "Se-";
-    
+
     //Button's click event names
-    public static final String BUTTON_HOME = "gwt-uid-2";    
-    public static final String BUTTON_ALL_VIEW = "gwt-uid-8";        
-    public static final String BUTTON_ADD = "gwt-uid-10";    
+    public static final String BUTTON_HOME = "gwt-uid-2";
+    public static final String BUTTON_ALL_VIEW = "gwt-uid-8";
+    public static final String BUTTON_ADD = "gwt-uid-10";
     public static final String BUTTON_SAVE = "gwt-uid-3";
-    public static final String BUTTON_PUBLISH = "gwt-uid-4";        
-    public static final String BUTTON_PRINT = "gwt-uid-17";    
-    public static final String BUTTON_UPDATE = "gwt-uid-8";    
-    public static final String BUTTON_PREVIEW = "gwt-uid-11";    
+    public static final String BUTTON_PUBLISH = "gwt-uid-4";
+    public static final String BUTTON_PRINT = "gwt-uid-17";
+    public static final String BUTTON_UPDATE = "gwt-uid-8";
+    public static final String BUTTON_PREVIEW = "gwt-uid-11";
 
     // The screenshot capture is always done on the windows machine (running
     // the test) and not on the grid. This explains the following!
@@ -73,10 +75,74 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
     protected String fileServer;
 
+    // Dissemination level for OSYL
     protected static final String LEVEL_ATTENDEE = "attendee";
-
+    protected static final String LEVEL_COMMUNITY = "community";
     protected static final String LEVEL_PUBLIC = "public";
-    
+
+    //Result of scenario
+    protected static final String PASSED = "PASSÉ";
+    protected static final String FAILED = "ÉCHEC";
+
+    //Scripts java selenium
+    protected static final String OSYL_TEST = "AbstractOSYLTest";
+    protected static final String ASSESSMENT_TEST = "AssessmentTest";
+    protected static final String ASSOCIATION_SITES_TEST = "AssociateToParentSite";
+    protected static final String STAFF_INFO_TEST = "ContactInfoTest";
+    protected static final String LECTURE_TEST = "LectureTest";
+    protected static final String NEWS_TEST = "NewsTest";
+    protected static final String OVERVIEW_TEST = "PresentationOfCourse";
+    protected static final String PEDAGOGICAL_TEST = "SeancesTest";
+    protected static final String TEACHING_MATERIAL_TEST = "TeachingMaterial";
+    protected static final String TEXT_TEST = "TextTest";
+
+	//Uses Cases for testing
+    protected static final String CT_001 = "001-Associer plan de cours enfant à un parent";
+    protected static final String CT_002 = "002-Créer un plan de cours non-associer à un cours";
+	protected static final String CT_003 = "003-Créer un plan de cours - Plan de cours existant";
+	protected static final String CT_004 = "004-Dissocier plan de cours parent d'un plan enfant";
+	protected static final String CT_005 = "005-Ajouter Outil de remise électronique";
+	protected static final String CT_006 = "006-Ajouter texte à la section présentation";
+    protected static final String CT_007 = "007-Ajouter une coordonnée";
+    protected static final String CT_008 = "008-Ajouter une séance de cours";
+    protected static final String CT_009 = "009-Ajouter une évaluation";
+    protected static final String CT_010 = "010-Supprimer texte de la section présentation";
+    protected static final String CT_013 = "013-Modifier un document dans une séance de cours";
+    protected static final String CT_015 = "015-Modifier Hyperlien";
+    protected static final String CT_016 = "016-Supprimer une séance de cours";
+    protected static final String CT_018 = "018-Modifier une coordonnées";
+    protected static final String CT_020 = "020-Supprimer Document(dans une séance)";
+    protected static final String CT_024 = "024-Supprimer une coordonnée";
+    protected static final String CT_028 = "028-Ajouter Hyperlien";
+    protected static final String CT_027 = "027-Ajouter Document (dans une Séance)";
+	protected static final String CT_030 = "030-Modifier une Évaluation";
+	protected static final String CT_045 = "045-Ajouter une citation de type livre d'une liste à un content unit";
+	protected static final String CT_050 = "050-Ajouter une évaluation avec des valeurs invalides à la création";
+	protected static final String CT_054 = "054-Supprimer une liste de citations";
+    protected static final String CT_061 = "061-Générer aperçu étudiants inscrits";
+    protected static final String CT_067 = "067-Ajouter une nouvelle (Section nouvelle)";
+	protected static final String CT_068 = "068-Ajouter une nouvelle (Séance)";
+    protected static final String CT_069 = "069-Consulter un plan de cours vue étudiant";
+	protected static final String CT_070 = "070-Supprimer un devoir évalué";
+	protected static final String CT_076 = "076-Ajouter un regroupement au premier niveau (cas limite)";
+	protected static final String CT_084 = "084-Modifier un regroupement de premier niveau";
+	protected static final String CT_096 = "096-Ajouter texte, document, réf. biblio., hyperlien et nouvelle en diffusion \"étudiants inscrits\" dans un plan de cours coordonné";
+    protected static final String CT_087 = "087-Supprimer un regroupement de premier niveau";
+    protected static final String CT_104 = "104-Ajouter une citation de type article d'une liste à un content unit";
+    protected static final String CT_105 = "105-Ajouter l'outil de remise électronique";
+    protected static final String CT_106 = "106-Modifier le lien vers l'outil de remise électronique";
+    protected static final String CT_119 = "119-Publier un plan de cours - scénario principal";
+    protected static final String CT_0091 = "CT-???-Ajouter un texte dans évaluation";
+    protected static final String CT_0092 = "CT-???-Ajouter un document dans évaluation";
+    protected static final String CT_0093 = "CT-???-Ajouter une réf. biblio. dans évaluation";
+    protected static final String CT_0101 = "CT-???-Ajouter un texte dans matériel pédagogique";
+    protected static final String CT_0102 = "CT-???-Ajouter un document dans matériel pédagogique";
+    protected static final String CT_0103 = "CT-???-Ajouter une réf. biblio. dans matériel pédagogique";
+    protected static final String CT_0111 = "CT-???-Ajouter un texte dans séances";
+    protected static final String CT_0112 = "CT-???-Ajouter un document dans séances";
+    protected static final String CT_0113 = "CT-???-Ajouter une réf. biblio. dans séances";
+    protected static final String PT_19_2 = "PT 19.2 Création du devoir évalué à partir de l'Outil de remise";
+
     // Maximum time we wait (in ms) for an element to appear as expected
     private static final int MAX_TIME = 30000;
 
@@ -124,7 +190,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
     /**
      * Log in Sakai using the admin account.
-     * 
+     *
      * @param String url of the Sakai instance to log in
      */
     public void logInAsAdmin(String url) throws Exception {
@@ -166,84 +232,87 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     public void createTestSite() throws Exception {
 	createSite(getCurrentTestSiteName());
     } // createTestSite
-    
+
     public void createTestSite(String parentChild) throws Exception {
     	createSite(parentChild);
-    	goToSite(parentChild);  	
+    	goToSite(parentChild);
         } // createTestSite
 
-    public void createSite(String siteName) throws Exception {
-	// Create an outline course from OsylManager
-	log("**** Creating site " + siteName);
-	goToOsylManagerTool(); // Now, it is not necessary
-	if (inFireFox()) {
-	    String element =
-		    "//*[@class='icon-sakai-opensyllabus-manager-tool']";
-	    ensureElementPresent(element);
-	    pause();
-	    smartClick(element);
-	} else {
-	    // (inIE)
-	    String element =
-		    "//*[@class='icon-sakai-opensyllabus-manager-tool']";
-	    ensureElementPresent(element);
-	    pause();
-	    smartMouse(element);
-	}
-	pause();
-	pause();
-	pause();
-	if (!session().isElementPresent("//tr[7]/td/table/tbody/tr/td/div/div")) {
-	    clickOpenOsyl("//tr[7]/td/table/tbody/tr/td/div/div");
-	} else {
-	    clickOpenOsyl("//tr[7]/td/table/tbody/tr/td[1]/div/div");
-	}
-	pause();
-	pause();
-	ensureElementPresent("//tr[2]/td/table/tbody/tr/td[2]/input");
-	session().type("//tr[2]/td/table/tbody/tr/td[2]/input", siteName);
-	session().select("//tr[4]/td/table/tbody/tr/td[2]/select",
-		"value=default");
-	session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=2");
-	// Click the button "Create" Cours
-	smartMouse("//div/div/div/div[2]/table/tbody/tr[5]/td/div/div");
-	pause();
-	pause();
-	pause();
-	pause();
-	pause();
-	// Click button "Close" (confirmation)
-	ensureElementPresent("//tr[4]/td/div");
-	smartMouse("//tr[4]/td/div");
-	log("**** Site created " + siteName + "*******");
-    } // createSite
-	
+	public void createSite(String siteName) throws Exception {
+		// Create an outline course from OsylManager
+		log("**** Creating site " + siteName);
+		goToOsylManagerTool(); // Now, it is not necessary
+		if (inFireFox()) {
+			String element = "//*[@class='icon-sakai-opensyllabus-manager-tool']";
+			ensureElementPresent(element);
+			pause();
+			smartClick(element);
+		} else {
+			// (inIE)
+			String element = "//*[@class='icon-sakai-opensyllabus-manager-tool']";
+			ensureElementPresent(element);
+			pause();
+			smartMouse(element);
+		}
+		pause();
+		pause();
+		pause();
+		if (!session().isElementPresent("//tr[7]/td/table/tbody/tr/td/div/div")) {
+			clickOpenOsyl("//tr[7]/td/table/tbody/tr/td/div/div");
+		} else {
+			clickOpenOsyl("//tr[7]/td/table/tbody/tr/td[1]/div/div");
+		}
+		pause();
+		pause();
+		pause();
+		// Course Name
+		ensureElementPresent("//tr[2]/td/table/tbody/tr/td[2]/input");
+		session().type("//tr[2]/td/table/tbody/tr/td[2]/input", siteName);
+		// Course Language
+		session().select("//tr[3]/td/table/tbody/tr/td[2]/select", "index=0");
+		// Default configuration course
+		session().select("//tr[4]/td/table/tbody/tr/td[2]/select",
+				"value=default");
+		// Click on button "Create Course"
+		smartMouse("//div/div/div/div[2]/table/tbody/tr[5]/td/div/div");
+		pause();
+		pause();
+		pause();
+		pause();
+		pause();
+		// Click button "Close" (confirmation)
+		ensureElementPresent("//tr[4]/td/div");
+		smartMouse("//tr[4]/td/div");
+		log("**** Site created " + siteName + "*******");
+		logFile(OSYL_TEST, CT_002, PASSED);
+	} // createSite
+
     /**
      * Opens windows to create a new site (if in FF) or selects it and press Enter (in IE).
      * @param element
      */
     private void clickOpenOsyl(String element) {
-	if (inFireFox()) {
-	    session().mouseOver(element);
-	    session().mouseDown(element);
-	    session().mouseUp(element);	    
-	} else {
-	    session().mouseOver(element);		
-		session().mouseDownAt(element, "10,10");
-		session().mouseUpAt(element, "10,10");	
-	}
+		if (inFireFox()) {
+		    session().mouseOver(element);
+		    session().mouseDown(element);
+		    session().mouseUp(element);
+		} else {
+		    session().mouseOver(element);
+			session().mouseDownAt(element, "10,10");
+			session().mouseUpAt(element, "10,10");
+		}
     }
-    
+
     /**
      * Clicks the element (if in FF) or selects it and press Enter (in IE).
      * @param element
      */
     private void smartClick(String element) {
-	if (inFireFox()) {
-		session().click(element);	    
-	} else {
-		session().click(element);		
-	}
+		if (inFireFox()) {
+			session().click(element);
+		} else {
+			session().click(element);
+		}
     }
 
     /**
@@ -251,22 +320,22 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * @param element
      */
     private void smartMouse(String element) {
-	if (inFireFox()) {
-	    session().mouseOver(element);
-	    session().mouseDown(element);
-	    session().mouseUp(element);
-	} else {
-	    session().mouseOver(element);		
-		session().mouseDownAt(element, "10,10");
-		session().mouseUpAt(element, "10,10");	
-	}
-    }    
-    
+		if (inFireFox()) {
+		    session().mouseOver(element);
+		    session().mouseDown(element);
+		    session().mouseUp(element);
+		} else {
+		    session().mouseOver(element);
+			session().mouseDownAt(element, "10,10");
+			session().mouseUpAt(element, "10,10");
+		}
+    }
+
 	public void goToOsylManagerTool() {
 		// open site administration workspace
 		session().open("/portal/site/~admin");
 		session().answerOnNextPrompt("osyl123");
-	
+
 		if (!session().isElementPresent(
 				"//span[@class='icon-sakai-opensyllabus-manager-tool']")) {
 			// open course outline manager tool
@@ -287,19 +356,22 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
     public void goToSite(String siteName) throws IllegalStateException {
 	    session().open("/portal/site/" + siteName);
-
 	    waitForPageToLoad();
 
 	    if (!session().isTextPresent(siteName) || session().isTextPresent("Site Unavailable")) {
+		    log("****************Not found: " + siteName);
 	    	try {
 				createTestSite(siteName);
-			//} catch (IllegalStateException e) {
-			//    throw e;
 			} catch (Exception e) {
 			    logAndFail("goToSite: " + e);
+				//Add message to log file
+				logFile(OSYL_TEST, CT_069, FAILED);
 			}
 	    }else
 		{
+		    log("****************Found: " + siteName);
+			//Add message to log file
+			logFile(OSYL_TEST, CT_069, PASSED);
 			goToMenuOsyl();
 		}
 
@@ -335,7 +407,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		}
 	}
 	pause();
-	pause();	
+	pause();
 	}
 
     public void goToMenuAssessment() throws IllegalStateException {
@@ -352,13 +424,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		}
 	}
 	pause();
-	pause();	    	
+	pause();
     }
 
     public void goToMenuSiteSetup() throws IllegalStateException {
 	String elementSiteSetupMenu = "//*[@class='icon-sakai-sitesetup']";
 	// open site setup
-	pause(); pause(); pause();		
+	pause(); pause(); pause();
 	if (inFireFox()) {
 		session().click(elementSiteSetupMenu);
 		pause();
@@ -366,13 +438,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		session().click(elementSiteSetupMenu);
 	}
 	pause();
-	pause();	    	
-    }    
-    
+	pause();
+    }
+
     /**
      * Deletes the test site. Will fail if the operation is unsuccessful and if
      * the boolean parameter is true.
-     * 
+     *
      * @param boolean fail
      */
     public void deleteTestSite(boolean fail) throws Exception {
@@ -422,7 +494,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * Terminates the current session by clicking on element loginLink1. After
      * the click, we expect to see element eid (user ID input field).
      */
-    public void logOut() throws Exception { 	
+    public void logOut() throws Exception {
 	session().selectFrame("relative=parent");
 	session().click("loginLink1");
 	waitForPageToLoad();
@@ -440,6 +512,38 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	}
     } // logOut
 
+
+    /**
+     * It creates messages, after creating a log file
+     */
+    public void logFile(String testName, String ctName, String result) {
+    	String role = "admin";
+    	String browser = browserString;
+    	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	String currentDate = dateFormat.format(new java.util.Date());
+		StringBuffer msg = new StringBuffer(1000);
+		msg.append("(");
+		msg.append(testName);
+		msg.append(")");
+		msg.append("CT-");
+		msg.append(ctName);
+		msg.append(',');
+		msg.append("résultat:");
+		msg.append(result);
+		msg.append(',');
+		msg.append("rôle:");
+		msg.append(role);
+		msg.append(',');
+		msg.append("fureteur:");
+		msg.append(browser);
+		msg.append(',');
+		msg.append("date:");
+		msg.append(currentDate);
+		//msg.append('\n');
+		MsgLog.write(msg.toString());
+    }
+
+
     /**
      * After clicking on the OpenSyllabus tool link, a call to this method
      * ensures that it has loaded and it is displayed.
@@ -448,15 +552,15 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 	session().selectFrame("//iframe[@class=\"portletMainIframe\"]");
 	for (int decisecond = 0;; decisecond++) {
-	    try {	    	
+	    try {
 	    	String element = "//div[@class=\"Osyl-TreeItem-HorizontalPanel\"]";
-	    	if (session().isElementPresent(element)) {	    	
+	    	if (session().isElementPresent(element)) {
 	    		break;
 	    	}
 	    } catch (Exception e) {
 	    }
-	    Thread.sleep(100);		
-		
+	    Thread.sleep(100);
+
 	    if (decisecond >= 600) {
 			logAndFail("Timeout waiting for Osyl-TreeItem-HorizontalPanel sub-structure:"
 				+ " __Was OpenSyllabus added to the site?__");
@@ -511,6 +615,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 	// Click the button
 	session().click(BUTTON_HOME); // to save
+	// Open Organisation section
 	openOrganisationSection();
 
 	// We check that we see at least one LectureNo label. Actually there
@@ -527,7 +632,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * Calls clickAddButton and clicks on the item whose id is specified (case
      * sensitive). This ID uses the pattern addType. For instance addText or
      * addPedagogicalUnit. Calls logAndFail if the item is not found.
-     * 
+     *
      * @param itemText to click
      */
     public void clickAddItem(String itemText) {
@@ -539,11 +644,11 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		if (inFireFox()) {
 		    // Click the item or fail if it is not found
 		    session().click("//div[@id=\"" + itemText + "\"]");
-		} else { // IE		
-		    session().click("//div[@id=\"" + itemText + "\"]");			
+		} else { // IE
+		    session().click("//div[@id=\"" + itemText + "\"]");
 			//session().mouseDownAt("//div[@id=\"" + itemText + "\"]", "10,10");
 			//session().mouseUpAt("//div[@id=\"" + itemText + "\"]", "10,10");
-		}	
+		}
 	} catch (Exception e) {
 	    logAndFail("clickAddButton(" + itemText + ") FAILED: " + e);
 	}
@@ -553,7 +658,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * Calls clickAddButton and clicks on the item at the specified index. Calls
      * logAndFail if the index is out of bounds. Using this method is
      * discouraged as it doesn't allow to click on a specific known item.
-     * 
+     *
      * @param index of item to click
      */
     public void clickAddItem(int index) {
@@ -591,7 +696,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	log("Entering saveCourseOutline");
 	pause();
 	pause();
-	pause();	
+	pause();
 	String origSpeed = session().getSpeed();
 	session().setSpeed("30");
 	long start = System.currentTimeMillis();
@@ -777,7 +882,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     /**
      * Verifies the specified boolean is true (if we are in MSIE), asserts it
      * otherwise. This method is handy for tests which can't be fixed in MSIE.
-     * 
+     *
      * @param result
      */
     protected void assertOrVerify(String msg, boolean result) {
@@ -795,7 +900,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	}
     } // assertOrVerify
 
-    
+
     protected void ensureElementPresent(String element) {
 	log("ensureElementPresent: entering " + element);
 	int time = 0;
@@ -817,7 +922,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * Given a select menu whose XPath is specified, returns a String
      * corresponding to a random option. The select menu must be visible before
      * calling this method.
-     * 
+     *
      * @return random option
      */
     protected String getRandomOption(String xpath) {
@@ -834,7 +939,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * Returns a String corresponding to one of the rubrics available. The
      * corresponding select menu (name=listBoxFormElement) must be visible
      * before calling this method.
-     * 
+     *
      * @return random rubric
      */
     protected String getRandomRubric() {
@@ -845,7 +950,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * Changes the rubric in the resource being edited. The corresponding select
      * menu (name=listBoxFormElement) must be visible before calling this
      * method.
-     * 
+     *
      * @param rubricLabel
      */
     protected void changeRubric(String rubricLabel) {
@@ -858,38 +963,38 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	if (inFireFox()) {
 	    session().mouseDown(
 		    "//div[@class=\"gwt-TreeItem\"]/div/"
-			    + "div[contains(text(),'Organisation')]");	    
+			    + "div[contains(text(),'Organisation')]");
 	} else {
 		//IE
-		String imageLocator = "//div[contains(text(),'Organisation')]";			
+		String imageLocator = "//div[contains(text(),'Organisation')]";
 		session().mouseDownAt(imageLocator, "10,10");
-		session().mouseUpAt(imageLocator, "10,10");	    
+		session().mouseUpAt(imageLocator, "10,10");
 	}
-    pause();	
+    pause();
     }
 
     protected int getResourceCount() {
     	if (session().isTextPresent("//div[@class=\"Osyl-UnitView-ResPanel\"]")) {
-    		return session().getXpathCount("//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();    		    		
-    	}    	
+    		return session().getXpathCount("//div[@class=\"Osyl-UnitView-ResPanel\"]").intValue();
+    	}
         else {
     	    return 0;
         }
     }
 
     protected void openTeachingMaterialSection() {
-	// Open Teaching Material Section
+	// click on Teaching Material Section
 	if (inFireFox()) {
 	    session().mouseDown(
 		    "//div[@class=\"gwt-TreeItem\"]/div/"
 			    + "div[contains(text(),'dagogique')]");
 	} else {
 		// IE
-		String imageLocator = "//div[contains(text(),'dagogique')]";			
+		String imageLocator = "//div[contains(text(),'dagogique')]";
 		session().mouseDownAt(imageLocator, "10,10");
-		session().mouseUpAt(imageLocator, "10,10");	    
+		session().mouseUpAt(imageLocator, "10,10");
 	}
-    pause(2000);	
+    pause(2000);
     }
 
     protected String addText(String text, String level) {
@@ -926,8 +1031,10 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    session().click("//td/table/tbody/tr/td[1]/button");
 	    // check if text is visible
 	    if (!session().isTextPresent(text)) {
-		logAndFail("Expected to see text [" + text
-			+ "] after text edition");
+			logAndFail("Expected to see text [" + text
+				+ "] after text edition");
+			//Add message to log file
+			logFile(OVERVIEW_TEST, CT_006, FAILED);
 	    }
 	    log("OK: Text resource edited");
 	} else {
@@ -1000,13 +1107,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    // Close window
 	    session().click("//tr[5]/td/table/tbody/tr/td/button");
 	    pause();
-	} else {		
-		String locator = "//div[contains(@title,'Ajouter')]";	
-	    session().mouseOver(locator);		
+	} else {
+		String locator = "//div[contains(@title,'Ajouter')]";
+	    session().mouseOver(locator);
 		session().mouseDownAt(locator, "10,10");
-		session().mouseUpAt(locator, "10,10");		
+		session().mouseUpAt(locator, "10,10");
 	    // Choose file and close window
-		session().type("//input[@name='uploadFormElement']", "d:\\clihec3\\Bureau\\"+docName);		
+		session().type("//input[@name='uploadFormElement']", "d:\\clihec3\\Bureau\\"+docName);
 		/*
 	    session().type(
 		    "uploadFormElement",
@@ -1022,10 +1129,11 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    pause();
 	    // Close window
 	    session().click("//tr[5]/td/table/tbody/tr/td/button");
-	    
+
 	}
 	pause();
-
+	pause();
+	pause();
 	// Select file in browser window
 	session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
 		"value= (F" + ")   " + docNameModified);
@@ -1042,21 +1150,23 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 	return rubric;
     }
-    
+
     public void addAssessmentInOutLinecours() {
 	//Add assessment inside outline course
-    session().click("//ul[@id='siteLinkList']/li[1]/a/span");    	
+    session().click("//ul[@id='siteLinkList']/li[1]/a/span");
 	goToMenuSiteSetup();
 	session().waitForPageToLoad("30000");
 	session().type("search", siteName);
 	session().click("//input[@value='Recherche']");
 	session().waitForPageToLoad("30000");
 	session().click("site1");
-	session().click("link=Réviser");
+	session().click("//div[1]/ul[@id='actionToolBar']/li[4]/span/a");
 	session().waitForPageToLoad("30000");
-	session().click("link=Éditer les outils");
+	session().click("//html/body/div/ul/li[2]/span/a");
 	session().waitForPageToLoad("30000");
-	session().click("sakai.assignment.grades");
+	if (!session().getValue("sakai.assignment.grades").equals("on"))  {
+		session().click("//input[@id='sakai.assignment.grades']");
+	}
 	session().click("Continue");
 	session().waitForPageToLoad("30000");
 	session().click("eventSubmit_doSave_revised_features");
@@ -1064,7 +1174,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().select("//div[@id='selectNav']/select", "label=" + siteName);
 	session().waitForPageToLoad("30000");
 	session().click("//div[@id='toolMenu']/ul/li[4]/a/span");
-	session().waitForPageToLoad("30000");	
+	session().waitForPageToLoad("30000");
     }
-    
+
 }

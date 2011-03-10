@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
  */
 public class AssociateToParentSite extends AbstractOSYLTest {
 
-    private static int ALLOWED_TRIES = 10;
+	private static int ALLOWED_TRIES = 10;
     
     @Test(groups = "OSYL-Suite", description = "OSYLEditor and OSYLManager test. Associates sites and check that content is added or deleted as expected.")
     @Parameters( { "webSite" })
@@ -60,7 +60,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    goToSite(childSiteName);
 	}
 	waitForOSYL();
-
+	
 	session().selectFrame("relative=parent");
 	String parentSiteName = getCurrentTestSiteName() + "_Parent";
 	try {
@@ -93,7 +93,9 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    session().click("//button[contains(text(),'Publier')]");
 	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
 	    ensurePublishDateOK();
-
+	    //-------------------------------------------------------------
+	    //Attach currentSite to parentSiteName
+	    //--------------------------------------------------------------
 	    // The next block purpose is to attach currentSite to parentSiteName 
 	    session().selectFrame("relative=parent");
 	    // go to OSYLManager
@@ -128,7 +130,11 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    } else
 	    {
 		    smartMouse("//tr[4]/td/table/tbody/tr/td/div");	    	
-	    }	    	    
+	    }	    
+	    
+		//Add message to log file
+		logFile(ASSOCIATION_SITES_TEST, CT_001, PASSED);	
+		
 	    // verify if text is present
 	    goToCurrentSite();
 	    openTeachingMaterialSection();
@@ -150,14 +156,18 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 			    + dateText + " in Firefox";
 */		
 	    addText(currentSiteText, LEVEL_ATTENDEE);
-
+		//Add message to log file
+		logFile(ASSOCIATION_SITES_TEST, CT_096, PASSED);	
+		
 	    // publish
 	    session().click(BUTTON_PUBLISH); //It was "gwt-uid-5"
 	    session().click("//button[contains(text(),'Publier')]");
 	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
 	    ensurePublishDateOK();
 
-	    // attach child to current site
+	    //-------------------------------------------------------------
+	    //Attach child to current site
+	    //--------------------------------------------------------------	    
 	    session().selectFrame("relative=parent");
 	    goToOsylManagerTool();
 	    session().type("//input[@class='gwt-TextBox']", childSiteName);
@@ -189,8 +199,13 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    {
 		    smartMouse("//tr[4]/td/table/tbody/tr/td/div");	    	
 	    }
+	    
+		//Add message to log file
+		logFile(ASSOCIATION_SITES_TEST, CT_001, PASSED);	
+		
 	    // verify if text is present
 	    goToSite(childSiteName);
+	    //click on teaching material
 	    openTeachingMaterialSection();
 	    //assertTrue(session().isTextPresent(parentText));
 	    //assertTrue(session().isTextPresent(currentSiteText));
@@ -204,7 +219,6 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		} else {
 			log("** " + currentSiteText + " ** is NOT present **");
 		}
-
 	    
 	    // go to parent site
 	    session().selectFrame("relative=parent");
@@ -227,6 +241,9 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    if (inFireFox()) {
 	    	addDocument("osyl-src[1].zip", parentDocumentClickabletext);
 	    }
+		//Add message to log file
+		logFile(ASSOCIATION_SITES_TEST, CT_096, PASSED);	
+		
 	    // publish
 	    session().click(BUTTON_PUBLISH); //It was "gwt-uid-5"
 	    session().click("//button[contains(text(),'Publier')]");
@@ -268,7 +285,9 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		} else {
 			log("** " + parentText + " ** is NOT present but it's OK**");
 		}	
-	    // dissociate current site from parent
+		//--------------------------------------------------------------------
+	    // Dissociate current site from parent
+		//-------------------------------------------------------------------
 	    session().selectFrame("relative=parent");
 	    goToOsylManagerTool();
 	    session().type("//input[@class='gwt-TextBox']",
@@ -284,6 +303,8 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    smartMouse(locator);
 	    // We ensure the confirmation is displayed
 	    ensureElementPresent("//img[contains(@title,'Le site a bien ')]");
+	    //Add message to log file
+		logFile(ASSOCIATION_SITES_TEST, CT_004, PASSED);		
 	    // verify if text is not present in current site
 	    goToCurrentSite();
 	    openTeachingMaterialSection();
@@ -310,7 +331,9 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		} else {
 			log("** " + currentSiteText + " ** is NOT present **");
 		}	
-	    // dissociate child from current site name
+		//--------------------------------------------------------------------
+	    // Dissociate child from current site name
+		//-------------------------------------------------------------------
 	    session().selectFrame("relative=parent");
 	    goToOsylManagerTool();
 	    session().type("//input[@class='gwt-TextBox']", childSiteName);
@@ -324,7 +347,8 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    //clickActionWithLabel("tacher");
 	    smartMouse(locator);
 	    pause();
-
+	    //Add message to log file
+		logFile(ASSOCIATION_SITES_TEST, CT_004, PASSED);
 	    // verify if text from current site is not present
 	    goToSite(childSiteName);
 	    openTeachingMaterialSection();
@@ -337,27 +361,31 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    //delete resource in parent for future tests
 	    session().selectFrame("relative=parent");
 	    goToSite(parentSiteName);
-	    openTeachingMaterialSection();
-	    
+	    openTeachingMaterialSection();	    
 		if (session().isElementPresent("//tr/td/div/table[2]/tbody/tr/td[2]/button")) {
 			session().click("//tr/td/div/table[2]/tbody/tr/td[2]/button");
 		    ensureElementPresent("//tr/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
 		    session().click("//tr/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");			
 		}
 	    pause();
-
+		
+		//Add message to log file
+		logFile(ASSOCIATION_SITES_TEST, CT_020, PASSED);	
+		
 	    // publish
 	    session().click(BUTTON_PUBLISH); //It was "gwt-uid-5"
 	    session().click("//button[contains(text(),'Publier')]");
 	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
 	    ensurePublishDateOK();
 
-	    logOut();
+	    logOut();	    		
 		log("==============================");	    
 	    log("testHierarchy: test complete");
 		log("==============================");	    
 	} catch (Exception e) {
 	    logAndFail("Hierarchy test FAILED:" + e);
+		//Add message to log file
+		logFile(ASSOCIATION_SITES_TEST, CT_001, FAILED);		
 	}
     } // testHierarchy
 
@@ -390,7 +418,6 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	else {
     //IE
 		String imageLocator = "//div[contains(text(),'Chercher')]";			
-		//String imageLocator = "//tr/td[2]/div";
 		session().mouseOver(imageLocator);		
 		session().mouseDownAt(imageLocator, "1,1");
 		session().mouseUpAt(imageLocator, "1,1");
@@ -475,8 +502,12 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    if (Math.abs(diff) > 30000) {
 		logAndFail("Incorrect publish date: " + pubDateStr);
 	    }
+		//Add message to log file
+		logFile(ASSOCIATION_SITES_TEST, CT_119, PASSED);		    
 	} catch (ParseException e) {
 	    logAndFail("Unable to parse publish date " + e);
+		//Add message to log file
+		logFile(ASSOCIATION_SITES_TEST, CT_119, FAILED);	
 	}
     }
 }

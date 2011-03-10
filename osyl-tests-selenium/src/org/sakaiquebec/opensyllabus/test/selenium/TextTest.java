@@ -50,9 +50,12 @@ public class TextTest extends AbstractOSYLTest {
 	}
 	waitForOSYL();
 
+	// ---------------------------------------------------------------------------//
+	// Add Lecture in Lecture|WorkSession Unit //
+	// ---------------------------------------------------------------------------//
 	openOrganisationSection();
-
-	// If we don't have a Lecture we add one
+	
+	//If we don't have a Lecture we add one
 	int lectNb = getResourceCount();
 	log("getResourceCount returned " + lectNb);
 	if (lectNb == 0) {
@@ -67,7 +70,12 @@ public class TextTest extends AbstractOSYLTest {
 	int resNb = getResourceCount();
 	log("We start with " + resNb + " resources");
 	
-	// AH
+	//Add message to log file
+	logFile(TEXT_TEST, CT_008, PASSED);
+	
+	// ---------------------------------------------------------------------------//
+	// Add Text in Lecture   //
+	// ---------------------------------------------------------------------------//	
 	openSeanceSection();
 	// Click menu Add/Text
 	clickAddItem("addText");
@@ -75,8 +83,9 @@ public class TextTest extends AbstractOSYLTest {
 	// We check that our new text was added
 	int resNb2 = getResourceCount();
 	log("We now have " + resNb2 + " resources");
-	//It is not necessary.	
-	/**	
+	
+	/**
+	//It is not necessary. 	
 	if (1 + resNb != resNb2) {
 	    logAndFail("Resource count not incremented as expected!");
 	} else {
@@ -108,8 +117,10 @@ public class TextTest extends AbstractOSYLTest {
 	    session().click("//td/table/tbody/tr/td[1]/button");
 	    // check if text is visible
 	    if (!session().isTextPresent(newText)) {
-		logAndFail("Expected to see text [" + newText
+	    	logAndFail("Expected to see text [" + newText
 			+ "] after text edition");
+	    	//Add message to log file
+	    	logFile(TEXT_TEST, CT_006, FAILED);	    	
 	    }
 	    log("OK: Text resource edited");
 	} else {
@@ -127,7 +138,8 @@ public class TextTest extends AbstractOSYLTest {
 	} else {
 		log("OK: Selected rubric is visible");
 	}
-	
+	//Add message to log file
+	logFile(TEXT_TEST, CT_006, PASSED);
 	session().selectFrame("relative=parent");
 	logOut();
 	log("==============================");	

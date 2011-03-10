@@ -43,7 +43,7 @@ import org.testng.annotations.Test;
  *@author<a href="mailto:bouchra.laabissi.1@ens.etsmtl.ca">Bouchra Laabissi</a>
  */
 public class TeachingMaterial extends AbstractOSYLTest {
-
+	
     @Test(groups = "OSYL-Suite", description = "OSYLEditor test. Add a contact resource, edit it and save the changes")
     @Parameters( { "webSite" })
     public void TeachingMaterialTest(String webSite) throws Exception {
@@ -61,7 +61,7 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	// Add Text //
 	// ---------------------------------------------------------------------------//
 
-	// Open Teaching Material Section
+	// click on Teaching Material Section
 	openTeachingMaterialSection();
 	pause();
 
@@ -75,6 +75,9 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	saveCourseOutline();
 	pause();
 
+	//Add message to log file
+	logFile(TEACHING_MATERIAL_TEST, CT_0101, PASSED);
+	
 	// ---------------------------------------------------------------------------//
 	// Add Hyperlink //
 	// ---------------------------------------------------------------------------//
@@ -107,6 +110,9 @@ public class TeachingMaterial extends AbstractOSYLTest {
 
 	// We click URL to test
 	session().click("link=" + newText11);
+	
+	//Add message to log file
+	logFile(TEACHING_MATERIAL_TEST, CT_028, PASSED);	
 
 	// Save modifications
 	saveCourseOutline();
@@ -134,6 +140,9 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	session().click("//td/table/tbody/tr/td[1]/button");
 	pause();
 
+	//Add message to log file
+	logFile(TEACHING_MATERIAL_TEST, CT_028, PASSED);
+	
 	// We delete new hyperlink
 	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[2]/button");
 	pause();
@@ -145,6 +154,9 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	log("Hyperlink deleted");
 	pause();
 
+	//Add message to log file
+	logFile(TEACHING_MATERIAL_TEST, CT_015, PASSED);
+	
 	// Save modifications
 	saveCourseOutline();
 	pause();
@@ -263,6 +275,9 @@ public class TeachingMaterial extends AbstractOSYLTest {
 		session().click(
 			"//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/"
 				+ "tbody/tr/td[1]/button");
+		
+		//Add message to log file
+		logFile(TEACHING_MATERIAL_TEST, CT_027, PASSED);		
 	}
 	// ---------------------------------------------------------------------------//
 	// Add Citation //
@@ -285,9 +300,6 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	log("NewListe" + newText1 + " is created...");
 	
 	if (inFireFox()) {
-/*	    session().mouseOver("//td[3]/div/img");
-	    session().mouseDown("//td[3]/div/img");
-	    session().mouseUp("//td[3]/div/img");*/
 		// Create a new citation list
 		String locator = "//div[contains(@title,'Ajouter')]";	
 	    session().mouseOver(locator);
@@ -303,7 +315,6 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	    session().mouseDown(locator);
 	    session().mouseUp(locator);			
 	} else {
-	    //session().keyPress("//td[3]/table/tbody/tr/td[3]/div", "\r");
 		// Create a new citation list
 		String locator = "//div[contains(@title,'Ajouter')]";	
 	    session().mouseOver(locator);		
@@ -373,6 +384,9 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	// Close Editor
 	session().click("//td/table/tbody/tr/td[1]/button");
 
+	//Add message to log file
+	logFile(TEACHING_MATERIAL_TEST, CT_0103, PASSED);
+	
 	// Save modifications
 	saveCourseOutline();
 	pause();
@@ -455,6 +469,9 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	pause();
 	pause();
 
+	//Add message to log file
+	logFile(TEACHING_MATERIAL_TEST, CT_045, PASSED);
+	
 	// Select first resource in browser window
 	session().focus("//option[@value=' (REF)   " + Titre + "']");
 	session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
@@ -477,13 +494,17 @@ public class TeachingMaterial extends AbstractOSYLTest {
 	pause();
 	log("Citation deleted");
 	pause();
-
+	
+	//Add message to log file
+	logFile(TEACHING_MATERIAL_TEST, CT_054, PASSED);
+	
 	// Save modifications
 	saveCourseOutline();
 	pause();
 
 	session().selectFrame("relative=parent");
 	logOut();
+
 	log("===================================");	
 	log("TeachingMaterialTest: test complete");
 	log("===================================");	

@@ -39,7 +39,7 @@ import org.testng.annotations.Test;
  */
 
 public class SeancesTest extends AbstractOSYLTest {
-
+	
     @Test(groups = "OSYL-Suite", description = "OSYLEditor test. Add a lecture, edit it and save the changes")
     @Parameters( { "webSite" })
     public void TestAddSeance(String webSite) throws Exception {
@@ -57,7 +57,7 @@ public class SeancesTest extends AbstractOSYLTest {
 	// Add Lecture //
 	// ---------------------------------------------------------------------------//
 
-	// Open Lectures Section
+	// Click on Organisation Section
 	openOrganisationSection();
 	pause();
 
@@ -72,6 +72,9 @@ public class SeancesTest extends AbstractOSYLTest {
 	// We add a first Assessment Unit
 	clickAddItem("addLecture");
 	pause();
+
+	//Add message to log file
+	logFile(PEDAGOGICAL_TEST, CT_076, PASSED);
 
 	// ---------------------------------------------------------------------------//
 	// Modify Lecture name //
@@ -126,6 +129,9 @@ public class SeancesTest extends AbstractOSYLTest {
 	} else {
 		log("OK: Lecture renamed from inside");	
 	}		
+
+	//Add message to log file
+	logFile(PEDAGOGICAL_TEST, CT_084, PASSED);
 	
 	// ---------------------------------------------------------------------------//
 	// Add Text in the Lecture Unit //
@@ -184,22 +190,9 @@ public class SeancesTest extends AbstractOSYLTest {
 			    "//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
 	    pause();
 
-	    /*
-	     * /Overview session().click("gwt-uid-9"); //Public Overview
-	     * session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
-	     * "/div/div/table/tbody/tr[2]/td"); pause(); //Open Lectures
-	     * Section
-	     * session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/"
-	     * + "td/div[contains(text(),'Organisation')]"); pause(); //Open the
-	     * last Lecture unit session().click("//tr["+Position
-	     * +"]/td/table/tbody/tr/td/div"); pause(); if
-	     * (session().isTextPresent(selectedRubric1)) {
-	     * logAndFail("Expected to see rubric [" + selectedRubric1 +
-	     * "] after text edition on public overview"); }
-	     * log("OK: Selected rubric is visible"); //Close Overview
-	     * session().click("//html/body/table/tbody/tr/td/table/tbody" +
-	     * "/tr[2]/td[2]/div/div/table/tbody/tr/td"); pause();
-	     */
+		//Add message to log file
+		logFile(PEDAGOGICAL_TEST, CT_0111, PASSED);
+
 	}
 
 	// ---------------------------------------------------------------------------//
@@ -281,22 +274,8 @@ public class SeancesTest extends AbstractOSYLTest {
 			    "//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
 	    pause();
 
-	    /*
-	     * /Overview session().click("gwt-uid-9"); //Public Overview
-	     * session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
-	     * "/div/div/table/tbody/tr[2]/td"); pause(); //Open Lectures
-	     * Section
-	     * session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/"
-	     * + "td/div[contains(text(),'ances')]"); pause(); //Open the last
-	     * Lecture unit session().click("//tr["+Position
-	     * +"]/td/table/tbody/tr/td/div"); pause(); if
-	     * (session().isTextPresent(selectedRubric2)) {
-	     * logAndFail("Expected to not see rubric [" + selectedRubric2 +
-	     * "] after text edition on public overview"); }
-	     * log("OK: Selected rubric is not visible"); //Close Overview
-	     * session().click("//html/body/table/tbody/tr/td/table/tbody" +
-	     * "/tr[2]/td[2]/div/div/table/tbody/tr/td"); pause();
-	     */
+		//Add message to log file
+		logFile(PEDAGOGICAL_TEST, CT_028, PASSED);
 	}
 
 	//Now, addDocument doesn't work on IE
@@ -468,27 +447,9 @@ public class SeancesTest extends AbstractOSYLTest {
 			    .click(
 				    "//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
 		    pause();
-	
-		    /*
-		     * /Overview session().click("gwt-uid-9"); //Public Overview
-		     * session().click("//html/body/div/div/table/tbody/tr[2]/td[2]" +
-		     * "/div/div/table/tbody/tr[2]/td"); pause(); //Open Lectures
-		     * Section
-		     * session().mouseDown("//div[@class=\"gwt-TreeItem\"]/table/tbody/tr/"
-		     * + "td/div[contains(text(),'Organisation')]"); pause(); //Open the
-		     * last Lecture unit session().click("//tr["+Position
-		     * +"]/td/table/tbody/tr/td/div"); pause(); if
-		     * (session().isTextPresent(selectedRubric3)) {
-		     * logAndFail("Expected to not see rubric [" + selectedRubric3 +
-		     * "] after text edition on public overview"); }
-		     * log("OK: Selected rubric is not visible"); if
-		     * (session().isTextPresent(newText12)) {
-		     * logAndFail("Expected to not see rubric [" + newText12 +
-		     * "] after text edition on public overview"); }
-		     * log("OK: Text is not visible"); //Close Overview
-		     * session().click("//html/body/table/tbody/tr/td/table/tbody" +
-		     * "/tr[2]/td[2]/div/div/table/tbody/tr/td"); pause();
-		     */
+		    
+			//Add message to log file		    
+			logFile(PEDAGOGICAL_TEST, CT_0112, PASSED);			
 		}
 		else {
 		log("addDocument is denied on IE because it doesn't support gwt-FileUpload"); //Close Overview
@@ -578,7 +539,10 @@ public class SeancesTest extends AbstractOSYLTest {
 		session().click(
 			"//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/"
 				+ "tbody/tr/td[1]/button");
-	
+
+		//Add message to log file
+		logFile(PEDAGOGICAL_TEST, CT_013, PASSED);	
+
 		// We delete new added docuement
 		session().click("//tr[2]/td/div/table[2]/tbody/tr/td[2]/button");
 		pause();
@@ -586,10 +550,11 @@ public class SeancesTest extends AbstractOSYLTest {
 		session()
 			.click(
 				"//tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
-		pause();
+		pause();		
 		log("Document deleted");
-		pause();
-	
+		//Add message to log file
+		logFile(PEDAGOGICAL_TEST, CT_020, PASSED);			
+		pause();		
 		// Save modifications
 		saveCourseOutline();
 		pause();
@@ -692,6 +657,9 @@ public class SeancesTest extends AbstractOSYLTest {
 	// Close Editor
 	session().click("//td/table/tbody/tr/td[1]/button");
 
+	//Add message to log file
+	logFile(PEDAGOGICAL_TEST, CT_104, PASSED);	
+
 	// Save modifications
 	saveCourseOutline();
 	pause();
@@ -706,31 +674,22 @@ public class SeancesTest extends AbstractOSYLTest {
 	//pause();
 
 	// We switch the 1st and 2nd assessment
-	/**
-	int Val1 = resNb + 2;
-	if (inInternetExplorer()) {
-		session().keyPress("//div[@class=\"Osyl-PushButton "
-								+ "Osyl-PushButton-up\"]", "\r");
-	} else {
-		session().mouseOver("//div[@class=\"Osyl-UnitView-ResPanel\"]");
-		session().mouseOver("//div[@class=\"Osyl-UnitView-ResPanel Osyl-UnitView-ResPanel-Hover\"]");
-		session().mouseOver("//table[@class=\"Osyl-MouseOverPopup-ArrowButtonPanel\"]/tbody/tr[2]");
-		session().mouseOver("//div[@class=\"Osyl-PushButton Osyl-PushButton-up\"]");
-		session().mouseDown("//div[@class=\"Osyl-PushButton Osyl-PushButton-up-hovering\"]");
-		session().mouseUp("//div[@class=\"Osyl-PushButton Osyl-PushButton-down-hovering\"]");
-	}
-	**/
+	//it needs an update
+
 	// ---------------------------------------------------------------------------//
 	// Delete Lecture Unit //
 	// ---------------------------------------------------------------------------//
 	int Val2 = Val;
 	session().click("//tr[" + Val2 + "]/td/table/tbody/tr/td[2]/div/table[2]/tbody/tr/td[2]/button");
 	session().click("//tr[2]/td/table/tbody/tr/td/button");	
-	log("Lecture deleted...");	
+	log("Lecture deleted...");
+
+	//Add message to log file
+	logFile(PEDAGOGICAL_TEST, CT_106, PASSED);	
+	
 	// Save modifications
 	saveCourseOutline();
 	pause();
-
 	// Log out
 	logOut();
 	log("==============================");	
@@ -739,7 +698,7 @@ public class SeancesTest extends AbstractOSYLTest {
     }
     
     private void openSeanceSection(String nameSeance) {
-    	// Open Seances Section
+    	// click on Seances Section
     	if (inFireFox()) {
     	    session().mouseDown(
     		    "//div[@class=\"gwt-TreeItem\"]/div/"

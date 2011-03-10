@@ -85,6 +85,9 @@ public class LectureTest extends AbstractOSYLTest {
 	    log("New lecture title is present");					
 	}
 	
+	//Add message to log file
+	logFile(LECTURE_TEST, CT_105, PASSED);
+	
 	// Now we rename the lecture from inside
 	session().click("//tr[2]/td/table/tbody/tr/td[2]/div/table[2]/tbody/tr/td[1]/button");
 	
@@ -100,16 +103,13 @@ public class LectureTest extends AbstractOSYLTest {
 		log("OK: Lecture renamed from inside");		
 	}
 
+	//Add message to log file
+	logFile(LECTURE_TEST, CT_106, PASSED);
+	
 	// Now we return to the lecture list
-	//clickHomeButton(); // AH
 	session().click(BUTTON_HOME);	//It was "gwt-uid-2"
 	openOrganisationSection();
 	
-	// Ensure the new name is still visible
-	//if (!session().isTextPresent(newName)) {
-	//    logAndFail("New lecture title not present (renamed from inside)");
-	//}
-
 	if (lectureNb < 2) {
 	    // We add a first Lecture
 	    clickAddItem("addLecture");
@@ -184,7 +184,7 @@ public class LectureTest extends AbstractOSYLTest {
 	clickAddItem("addLecture");
 
 	// Save changes. We do it before checking the addition was done, this
-	// way we can log into the site and look into the situation.
+	// way we can log into the site and look into the situation.	
 	saveCourseOutline();
 
 	// We check the lecture was really added by comparing the lecture count
@@ -192,8 +192,13 @@ public class LectureTest extends AbstractOSYLTest {
 	if (newLectureNb != lectureNb) {
 	    fail("Found " + newLectureNb + " lectures instead of " + lectureNb
 		    + " as expected.");
+		//Add message to log file
+		logFile(LECTURE_TEST, CT_105, FAILED);	    
+	} else {
+		log("OK: Lecture added");
+		//Add message to log file
+		logFile(LECTURE_TEST, CT_105, PASSED);		
 	}
-	log("OK: Lecture added");
 
 	// Click Edit for the last lecture (add 1 because 1st row is a label)
 	//session().click("//tr[" + (1 + lectureNb) + "]/td/table/tbody/tr/td[2]/"
@@ -208,16 +213,22 @@ public class LectureTest extends AbstractOSYLTest {
 	if (!session().isTextPresent(newName)) {
 	    //logAndFail("Last lecture new title not present");
 		log("Last lecture new title not present");
+		//Add message to log file
+		logFile(LECTURE_TEST, CT_106, FAILED);	    
+		
 	}
 	else {
-		log("OK: Last lecture renamed");	
+		log("OK: Last lecture renamed");
+		//Add message to log file
+		logFile(LECTURE_TEST, CT_106, PASSED);		
 	}	
-
+	
 	// And we save the changes
 	saveCourseOutline();
 
 	session().selectFrame("relative=parent");
 	logOut();
+	
 	log("==============================");	
 	log("testAddLecture: test complete");
 	log("==============================");	

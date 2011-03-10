@@ -39,7 +39,7 @@ import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStor
  *@author<a href="mailto:bouchra.laabissi.1@ens.etsmtl.ca">Bouchra Laabissi</a>
  */
 public class ContactInfoTest extends AbstractOSYLTest {
-
+	
     @Test(groups = "OSYL-Suite", description =
 	"OSYLEditor test. Add a contact resource, edit it and save the changes")
     @Parameters( { "webSite" })
@@ -62,6 +62,8 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	
 	//Add Contact Information
 	clickAddItem("addPerson");
+	//Add message to log file
+	logFile(TEXT_TEST, CT_007, PASSED);
 	
 //---------------------------------------------------------------------------//
 //				Modify Contact		                     //
@@ -80,8 +82,9 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	String Erreur1 = "//div[contains(text(),'Erreur')]";
 	if (!session().isElementPresent(Erreur1)) {
 	    logAndFail("Expected to see text [" + Erreur1 
-		    + "] after text edition");
-		//log("Expected to see text [" + Erreur1 + "] after text edition");		
+		    + "] after text edition");	
+		//Add message to log file
+		logFile(TEXT_TEST, CT_018, FAILED);
 	}
 	
 	pause();
@@ -101,7 +104,8 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	//if (!session().isTextPresent(Erreur1)) {
 	    logAndFail("Expected to see text [" + Erreur1 
 		    + "] after text edition");
-		//log("Expected to see text [" + Erreur1 + "] after text edition");
+		//Add message to log file
+		logFile(TEXT_TEST, CT_018, FAILED);	    
 	}
 	
 	pause();
@@ -119,7 +123,8 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	//if (!session().isTextPresent(Erreur1)) {
 	    logAndFail("Expected to see text [" + Erreur1 
 		    + "] after text edition");
-		log("Expected to see text [" + Erreur1 + "] after text edition");		
+		//Add message to log file
+		logFile(TEXT_TEST, CT_018, FAILED);		
 	}
 	
 	pause();
@@ -135,8 +140,7 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	changeRubric(selectedRubric);
 
 	
-	//Fill in the required informations (FirstName, Last Name and Title) 
-	
+	//Fill in the required informations (FirstName, Last Name and Title) 	
 	session().type("//input[@class=\"Osyl-ContactInfo-TextBox\"]", newText1);
 	
 	String newText2 = "YYYYYYYY";
@@ -157,24 +161,36 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	if (!session().isTextPresent(newText1)) {
 	    logAndFail("Expected to see text [" + newText1 
 		    + "] after text edition");
+		//Add message to log file
+		logFile(TEXT_TEST, CT_018, FAILED);	    
 	}
 	if (!session().isTextPresent(newText2)) {
 	    logAndFail("Expected to see text [" + newText2 
 		    + "] after text edition");
+		//Add message to log file
+		logFile(TEXT_TEST, CT_018, FAILED);	    
 	}
 	if (inFireFox()) {
         	if (!session().isTextPresent(newText3)) {
         	    logAndFail("Expected to see text [" + newText3 + timeStamp()
         		    + "] after text edition");
+        		//Add message to log file
+        		logFile(TEXT_TEST, CT_018, FAILED);        	    
         	}
 	}
 
 	if (!session().isTextPresent(selectedRubric)) {
 	    logAndFail("Expected to see rubric [" + selectedRubric
 		    + "] after text edition");
+		//Add message to log file
+		logFile(TEXT_TEST, CT_018, FAILED);	    
 	}
 	log("OK: Selected rubric is visible");
 
+	//Add message to log file
+	logFile(TEXT_TEST, CT_018, PASSED);
+
+	
 	//Save the new rubric
 	saveCourseOutline();
 	pause();
@@ -199,27 +215,37 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	if (!session().isTextPresent(newText1)) {
 	    logAndFail("Expected to see text [" + newText1 
 		    + "] after text edition");
+		//Add message to log file
+		logFile(TEXT_TEST, CT_018, FAILED);	  	    
 	}
 	if (!session().isTextPresent(newText2)) {
 	    logAndFail("Expected to see text [" + newText2 
 		    + "] after text edition");
+		//Add message to log file
+		logFile(TEXT_TEST, CT_018, FAILED);	  	    
 	}
 	
 	if (inFireFox()) {
         	if (!session().isTextPresent(newText3)) {
         	    logAndFail("Expected to see text [" + newText3 + timeStamp()
         		    + "] after text edition");
+        		//Add message to log file
+        		logFile(TEXT_TEST, CT_018, FAILED);	          	    
         	}
 	}
 
 	if (!session().isTextPresent(selectedRubric)) {
 	    logAndFail("Expected to see rubric [" + selectedRubric
 		    + "] after text edition");
+		//Add message to log file
+		logFile(TEXT_TEST, CT_018, FAILED);	  	    
 	}
 	log("OK: Selected rubric is visible");
 	pause();
 	//Close Overview
 	session().click("//html/body/table/tbody/tr[2]/td/div/div[2]/table/tbody/tr/td");
+	//Add message to log file
+	logFile(TEXT_TEST, CT_018, PASSED);	  
 	
 //---------------------------------------------------------------------------//
 //				Delete Contact		                     //
@@ -254,15 +280,18 @@ public class ContactInfoTest extends AbstractOSYLTest {
 	pause();
 	
 	//We delete new contact 
-        session().click("//tr[2]/td/div/table[2]/tbody/tr/td[2]/button");
-        pause();
-        
-        session().click("//tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
-        pause();
-        log("Contact deleted");
-        pause();
-        
-        //Save modifications
+    session().click("//tr[2]/td/div/table[2]/tbody/tr/td[2]/button");
+    pause();
+    
+    session().click("//tr[2]/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
+    pause();
+    log("Contact deleted");
+    pause();
+
+	//Add message to log file
+	logFile(TEXT_TEST, CT_024, PASSED);	 
+
+	//Save modifications
 	saveCourseOutline();
 	pause();
 	
@@ -275,7 +304,7 @@ public class ContactInfoTest extends AbstractOSYLTest {
     } // testAddContactInfo
     
     private void openContactInfoSection(){
-	// Open Coordo Section
+	// Click on Coordo Section
 	if (inFireFox()) {
 	    session().mouseDown(
 		    "//div[@class=\"gwt-TreeItem\"]/div/"
