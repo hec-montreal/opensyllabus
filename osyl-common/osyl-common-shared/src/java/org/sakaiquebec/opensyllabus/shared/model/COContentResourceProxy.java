@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.events.FiresUpdateCOContentResourceProxyEvents;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEventHandler.UpdateCOContentResourceProxyEvent;
@@ -98,23 +99,28 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 		resProxModel.addProperty(COPropertiesType.DISPLAY_AS, "link");
 	    }
 	    if (resourceType
-		    .equalsIgnoreCase(COContentResourceType.TEXT)) {
-		resProxModel.setLabel(osylConfigMessages
+		    .equalsIgnoreCase(COContentResourceType.TEXT)) {    	
+			resProxModel.setLabel(osylConfigMessages
 			.getMessage("InsertYourTextHere"));
-	    } else if (resourceType.equalsIgnoreCase(COContentResourceType.URL)) {
-		resProxModel.setLabel(osylConfigMessages
+			resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);
+	    } else if (resourceType.equalsIgnoreCase(COContentResourceType.URL)) {	    	
+	    	resProxModel.setLabel(osylConfigMessages	    			
 			.getMessage("InsertYourHyperlinkLabelHere"));
-	    }else if (resourceType.equalsIgnoreCase(COContentResourceType.ENTITY)) {
-		resProxModel.setLabel(osylConfigMessages
+			resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);	    	
+	    }else if (resourceType.equalsIgnoreCase(COContentResourceType.ENTITY)) {	    	
+			resProxModel.setLabel(osylConfigMessages
 			.getMessage("InsertYourSakaiEntityLabelHere"));
+			resProxModel.setAccess(SecurityInterface.ACCESS_ATTENDEE);			
 	    }  else if (resourceType
-		    .equalsIgnoreCase(COContentResourceType.DOCUMENT)) {
-		resProxModel.setLabel(osylConfigMessages
+		    .equalsIgnoreCase(COContentResourceType.DOCUMENT)) {	    	
+	    	resProxModel.setLabel(osylConfigMessages
 			.getMessage("InsertYourDocumentLabelHere"));
+			resProxModel.setAccess(SecurityInterface.ACCESS_COMMUNITY);	    	
 	    } else if (resourceType
-		    .equalsIgnoreCase(COContentResourceType.NEWS)) {
-		resProxModel.setLabel(osylConfigMessages
+		    .equalsIgnoreCase(COContentResourceType.NEWS)) {	    	
+			resProxModel.setLabel(osylConfigMessages
 			.getMessage("InsertYourTextHere"));
+			resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);			
 	    }
 	}
 
