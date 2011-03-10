@@ -516,14 +516,12 @@
 		<xsl:with-param name="pos"><xsl:value-of select="$pos"/></xsl:with-param>
 		<xsl:with-param name="label"><xsl:value-of select="label"/></xsl:with-param>
 	</xsl:call-template>
- 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='description']"/>
  	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='objectives']"/>
-	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='learningstrat']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='description']"/>
+	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='actResBefore']"/>
+	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='actResDuring']"/>
+ 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='actResAfter']"/>
 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='misresources']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='ressinclass']"/>
-	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='case']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='readinglist']"/>
- 	<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']='exercises']"/>
 </xsl:template>
 
 <xsl:template match="asmUnit[@xsi:type='NewsUnit']">

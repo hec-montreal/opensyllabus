@@ -19,4 +19,19 @@
 	<xsl:template match="asmContext[.//asmResource[@xsi:type='News']]">
 	</xsl:template>
 	
+	<!-- change rubrics-->
+	<xsl:template match="asmStructure[@xsi:type='PedagogicalStruct']//semanticTag[@type='HEC']">
+		<semanticTag type='HEC'>
+			<xsl:choose>
+				<xsl:when test=".='learningstrat'">objectives</xsl:when>
+				<xsl:when test=".='case'">actResBefore</xsl:when>
+				<xsl:when test=".='readinglist'">actResBefore</xsl:when>
+				<xsl:when test=".='ressinclass'">actResDuring</xsl:when>
+				<xsl:when test=".='exercises'">actResAfter</xsl:when>
+				<xsl:otherwise><xsl:value-of select="."/></xsl:otherwise>
+			</xsl:choose>
+		</semanticTag>
+	</xsl:template>
+	
+	
 </xsl:stylesheet>

@@ -167,6 +167,14 @@
 
 <xsl:variable name='diversSeanceLbl'>Avisos para el periodo de clase</xsl:variable>
 
+<xsl:variable name='actResBeforeTag'>rubriqueActivitesRessourcesAvantSeance</xsl:variable>
+<xsl:variable name='actResBeforeLbl'>Actividades y/o Recursos antes de la sesión</xsl:variable>
+
+<xsl:variable name='actResDuringTag'>rubriqueActivitesRessourcesPendantSeance</xsl:variable>
+<xsl:variable name='actResDuringLbl'>Actividades y/o Recursos durante de la sesión</xsl:variable>
+
+<xsl:variable name='actResAfterTag'>rubriqueActivitesRessourcesApresSeance</xsl:variable>
+<xsl:variable name='actResAfterLbl'>Actividades y/o Recursos después de la sesión</xsl:variable>
 
 <!-- ========================= -->
 <!-- ======= Attributs ======= -->

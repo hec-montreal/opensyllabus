@@ -37,6 +37,28 @@
 		</xsl:if>
 	</xsl:for-each>
 	
+	<!-- ============NEW RUBRICS ================== -->
+	<xsl:for-each select="$chemin/rubriqueActivitesRessourcesAvantSeance[*]">
+		<xsl:if test="position()=1">
+			<xsl:text> | </xsl:text>
+			&lt;a href="#jumpActResBefore"><xsl:value-of select="$actResBeforeLbl"/>&lt;/a>
+		</xsl:if>
+	</xsl:for-each>
+	
+	<xsl:for-each select="$chemin/rubriqueActivitesRessourcesPendantSeance[*]">
+		<xsl:if test="position()=1">
+			<xsl:text> | </xsl:text>
+			&lt;a href="#jumpActResDuring"><xsl:value-of select="$actResDuringLbl"/>&lt;/a>
+		</xsl:if>
+	</xsl:for-each>
+	
+	<xsl:for-each select="$chemin/rubriqueActivitesRessourcesApresSeance[*]">
+		<xsl:if test="position()=1">
+			<xsl:text> | </xsl:text>
+			&lt;a href="#jumpActResAfter"><xsl:value-of select="$actResAfterLbl"/>&lt;/a>
+		</xsl:if>
+	</xsl:for-each>
+	
 	<!-- =========4======== -->
 	<xsl:for-each select="$chemin/rubriqueRessourcesGenerales[*]">
 		<xsl:if test="position()=1">
@@ -240,6 +262,56 @@
 			&lt;/div>&lt;!-- div rubrique -->
 		</xsl:if>
 	</xsl:for-each>
+	
+	<xsl:for-each select="$chemin/rubriqueActivitesRessourcesAvantSeance[*]">
+		<xsl:if test="position()=1">
+			&lt;div class='rubrique'>
+				&lt;div class="logoRubrique">&lt;/div><!-- logoRubrique -->
+				&lt;div class='titreRubrique'>
+						&lt;a name="#jumpActResBefore"><xsl:value-of select="$actResBeforeLbl"/>&lt;/a>
+				&lt;/div>&lt;!-- titreRubrique -->
+				&lt;div class='contenuRubrique'>
+		</xsl:if>
+					<xsl:apply-templates select='ressource'/>
+		<xsl:if test="position()=last()">
+				&lt;/div>&lt;!-- contenuRubrique -->
+			&lt;/div>&lt;!-- div rubrique -->
+		</xsl:if>
+	</xsl:for-each>
+	
+	<xsl:for-each select="$chemin/rubriqueActivitesRessourcesPendantSeance[*]">
+		<xsl:if test="position()=1">
+			&lt;div class='rubrique'>
+				&lt;div class="logoRubrique">&lt;/div><!-- logoRubrique -->
+				&lt;div class='titreRubrique'>
+						&lt;a name="#jumpActResDuring"><xsl:value-of select="$actResDuringLbl"/>&lt;/a>
+				&lt;/div>&lt;!-- titreRubrique -->
+				&lt;div class='contenuRubrique'>
+		</xsl:if>
+					<xsl:apply-templates select='ressource'/>
+		<xsl:if test="position()=last()">
+				&lt;/div>&lt;!-- contenuRubrique -->
+			&lt;/div>&lt;!-- div rubrique -->
+		</xsl:if>
+	</xsl:for-each>
+	
+	<xsl:for-each select="$chemin/rubriqueActivitesRessourcesApresSeance[*]">
+		<xsl:if test="position()=1">
+			&lt;div class='rubrique'>
+				&lt;div class="logoRubrique">&lt;/div><!-- logoRubrique -->
+				&lt;div class='titreRubrique'>
+						&lt;a name="#jumpActResAfter"><xsl:value-of select="$actResAfterLbl"/>&lt;/a>
+				&lt;/div>&lt;!-- titreRubrique -->
+				&lt;div class='contenuRubrique'>
+		</xsl:if>
+					<xsl:apply-templates select='ressource'/>
+		<xsl:if test="position()=last()">
+				&lt;/div>&lt;!-- contenuRubrique -->
+			&lt;/div>&lt;!-- div rubrique -->
+		</xsl:if>
+	</xsl:for-each>
+	
+	
 	
 	<xsl:for-each select="$chemin/rubriqueRessourcesGenerales[*]">
 		<xsl:if test="position()=1">

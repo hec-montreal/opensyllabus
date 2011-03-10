@@ -111,6 +111,15 @@
 <xsl:variable name='diversCoursLbl'>Nouvelles du cours</xsl:variable>
 <xsl:variable name='diversSeanceLbl'>Nouvelles de la séance</xsl:variable>
 
+<xsl:variable name='actResBeforeTag'>rubriqueActivitesRessourcesAvantSeance</xsl:variable>
+<xsl:variable name='actResBeforeLbl'>Activités/Ressources avant la séance</xsl:variable>
+
+<xsl:variable name='actResDuringTag'>rubriqueActivitesRessourcesPendantSeance</xsl:variable>
+<xsl:variable name='actResDuringLbl'>Activités/Ressources pendant la séance</xsl:variable>
+
+<xsl:variable name='actResAfterTag'>rubriqueActivitesRessourcesApresSeance</xsl:variable>
+<xsl:variable name='actResAfterLbl'>Activités/Ressources après la séance</xsl:variable>
+
 <!-- ========================= -->
 <!-- ======= Attributs ======= -->
 <!-- ========================= -->
