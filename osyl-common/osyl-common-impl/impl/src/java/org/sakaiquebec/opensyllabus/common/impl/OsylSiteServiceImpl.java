@@ -1332,16 +1332,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	} else {
 	    toolTitle = HEC_MONTREAL_RULES_TITLE_EN;
 	}
-	iframeCfg = addTool(site, homePage, "sakai.iframe", toolTitle);
+	iframeCfg = addTool(site, homePage, "sakai.rutgers.linktool", toolTitle);
 	iframeCfg.setLayoutHints("1,1");
 
 	iframeProps = iframeCfg.getPlacementConfig();
 	iframeProps.put("height", "400px");
 	// instructors won't be able to change this iFrame unless they get
 	// site.upd permission
-	iframeProps.put("source", HEC_MONTREAL_RULES_FILE_BASE_NAME + locale
+	iframeProps.put("url", HEC_MONTREAL_RULES_FILE_BASE_NAME + locale
 		+ HEC_MONTREAL_RULES_FILE_EXTENSION);
-	iframeProps.put("reset.button", "true");
 	iframeCfg.save();
 
     }
