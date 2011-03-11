@@ -45,18 +45,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COSite;
 public interface OsylManagerService {
 
     /**
-     * Name of the chs folder in which the course outline content will be
-     * stored.
-     */
-    public static final String WORK_DIRECTORY = "work";
-
-    /**
-     * Name of the chs folder in which the course outline content will be
-     * published.
-     */
-    public static final String PUBLISH_DIRECTORY = "publish";
-
-    /**
      * Name of the chs folder in which temporary files will be stored
      */
     public static final String TEMP_DIRECTORY = "temp";

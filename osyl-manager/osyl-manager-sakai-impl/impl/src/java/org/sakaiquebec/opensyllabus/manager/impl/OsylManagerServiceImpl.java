@@ -993,14 +993,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	writeToZip(zos, OsylManagerService.CO_XML_FILENAME, xmlBytes);
 
 	// retrieving other resources
-	String resourceDir =
-		contentHostingService.getSiteCollection(siteId)
-			+ WORK_DIRECTORY + "/";
-	if (ServerConfigurationService.getString(
-		"opensyllabus.publish.in.attachment").equals("true")) {
-	    resourceDir = contentHostingService.getSiteCollection(siteId);
-	}
-
+	String resourceDir = contentHostingService.getSiteCollection(siteId);
+	
 	try {
 	    ContentCollection workContent =
 		    contentHostingService.getCollection(resourceDir);
@@ -1391,19 +1385,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	Parser parser = null;
 	String resourceOutputDir = null;
 	try {
-	    if (ServerConfigurationService.getString(
-		    "opensyllabus.publish.in.attachment").equals("true")) {
 		resourceOutputDir =
 			contentHostingService.getSiteCollection(siteId);
-	    } else {
-		// Generation of a valid resourceOutput directory
-		resourceOutputDir =
-			contentHostingService.getSiteCollection(siteId)
-				+ WORK_DIRECTORY + "/";
-
-		resourceOutputDir =
-			mkdirCollection(resourceOutputDir, WORK_DIRECTORY);
-	    }
 	} catch (Exception e1) {
 	    log.error(e1.getMessage());
 	    e1.printStackTrace();
@@ -1741,15 +1724,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	String refString =
 		contentHostingService.getReference(val2).substring(8);
 
-	String id_work = refString + WORK_DIRECTORY + "/";
-	if (ServerConfigurationService.getString(
-		"opensyllabus.publish.in.attachment").equals("true")) {
-	    id_work = refString;
-	}
+	String ressource_id = refString;
 	try {
 	    // We remove all resources in the work directory collection
 	    ContentCollection workContent =
-		    contentHostingService.getCollection(id_work);
+		    contentHostingService.getCollection(ressource_id);
 
 	    @SuppressWarnings("unchecked")
 	    List<ContentEntity> workMembers = workContent.getMemberResources();
@@ -1784,21 +1763,18 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    }
 	}
 
-	// Remove all old contents before importing contents from new site
-	importToolIntoSiteMigrate(toolIdList, newSite, oldSite);
-
 	// We remove all resources in the publish directory collection
 	osylContentService.initSiteAttachments(newSite.getTitle());
 
 	// we hide work directory
-	if (ServerConfigurationService.getString(
-		"opensyllabus.publish.in.attachment").equals("true")) {
-
 	    ContentCollectionEdit cce =
-		    contentHostingService.editCollection(id_work);
+		    contentHostingService.editCollection(ressource_id);
 	    cce.setHidden();
 	    contentHostingService.commitCollection(cce);
-	}
+	
+	// Remove all old contents before importing contents from new site
+	importToolIntoSiteMigrate(toolIdList, newSite, oldSite);
+
 	// we update citation ids in the course outline
 	updateCitationIds(siteFrom, siteTo);
 
