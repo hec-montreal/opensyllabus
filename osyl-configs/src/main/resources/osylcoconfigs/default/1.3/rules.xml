@@ -97,7 +97,7 @@
 							<attribute name="type" restrictionpattern="Text|Document|URL|BiblioResource|Entity" />
 						</element>
 						<element name="semanticTag">
-				    		<attribute name="type" restrictionpattern="undefined|objectives|description|actResBefore|actResDuring|actResAfter|misresources" />
+				    		<attribute name="type" restrictionpattern="undefined|description|objectives|actResBefore|actResDuring|actResAfter|misresources" />
 						</element>
 					</element>
 				</element>
