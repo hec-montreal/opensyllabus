@@ -134,6 +134,10 @@ public interface OsylImageBundleInterface extends ClientBundle {
     
     public ImageResource save_disabled();
     
+    public ImageResource waiting();
+    
+    public ImageResource working();    
+    
     //DisclosurePanel images
     public ImageResource expand();
 
