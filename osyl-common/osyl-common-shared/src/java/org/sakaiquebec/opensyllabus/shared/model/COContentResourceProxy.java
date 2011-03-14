@@ -123,7 +123,13 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 			resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);			
 	    }
 	}
-
+	if (!type.equalsIgnoreCase(COContentResourceProxyType.BIBLIO)) {
+		resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);					
+	}
+	if (!type.equalsIgnoreCase(COContentResourceProxyType.PEOPLE)) {
+		resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);					
+	}
+	
 	resProxModel.setRubricType(defaultRubric, propertyType);
 
 	// Default resource
