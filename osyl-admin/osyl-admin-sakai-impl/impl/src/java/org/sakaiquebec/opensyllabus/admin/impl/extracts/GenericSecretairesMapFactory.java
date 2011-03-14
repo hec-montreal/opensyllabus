@@ -35,28 +35,15 @@ import org.apache.commons.logging.LogFactory;
  */
 public class GenericSecretairesMapFactory {
 
-    private static final String DEFAULT_BASE_NAME = "secretaires_serv_ens";
-    private static Log log =
-	    LogFactory.getLog(GenericSecretairesMapFactory.class);
+    private static Log log = LogFactory
+	    .getLog(GenericSecretairesMapFactory.class);
 
-    public static SecretairesMap buildMap(String dataDir)
-	    throws java.io.IOException {
-
-	return buildMap(dataDir, DEFAULT_BASE_NAME);
-    }
-
-    /**
-     * @param dataDir
-     * @param baseName
-     * @return
-     * @throws java.io.IOException
-     */
-    public static SecretairesMap buildMap(String dataDir, String baseName)
+    public static SecretairesMap buildMap(String completeFileName)
 	    throws java.io.IOException {
 
 	SecretairesMap map;
 	try {
-	    map = getInstance(dataDir);
+	    map = getInstance(completeFileName);
 	    print("Mise a jour de la map...");
 	} catch (FileNotFoundException e) {
 	    print("La map n'a pas ete trouvee, on la recree au complet.");
@@ -67,8 +54,8 @@ public class GenericSecretairesMapFactory {
 	}
 
 	InputStreamReader stream =
-		new InputStreamReader(new FileInputStream(dataDir + "/"
-			+ baseName + ".dat"), "ISO-8859-1");
+		new InputStreamReader(new FileInputStream(completeFileName),
+			"ISO-8859-1");
 	BufferedReader breader = new BufferedReader(stream);
 	String buffer, emplid, role, deptId;
 	String emplStatus, jobCode;
@@ -94,7 +81,7 @@ public class GenericSecretairesMapFactory {
 	    entry.setEmpl_status(emplStatus);
 	    entry.setJobCode(jobCode);
 	    if (role.equalsIgnoreCase(map.SECRETAIRES_ACTIVITES_PROF)
-	    	|| role.equalsIgnoreCase(map.SECRETAIRES_ACTIVITES_ENS)
+		    || role.equalsIgnoreCase(map.SECRETAIRES_ACTIVITES_ENS)
 		    || map.secretaireCertificat(role, deptId)
 		    || role.contains(map.SECRETAIRES_PRINCIPALE))
 		map.put(entry);
@@ -111,18 +98,7 @@ public class GenericSecretairesMapFactory {
      * @return
      * @throws IOException
      */
-    public static SecretairesMap getInstance(String dataDir) throws IOException {
-
-	return getInstance(dataDir, DEFAULT_BASE_NAME);
-    }
-
-    /**
-     * @param dataDir
-     * @param mapName
-     * @return
-     * @throws IOException
-     */
-    private static SecretairesMap getInstance(String dataDir, String mapName)
+    public static SecretairesMap getInstance(String completeFileName)
 	    throws IOException {
 
 	return new SecretairesMap();

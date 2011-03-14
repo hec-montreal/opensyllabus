@@ -35,22 +35,15 @@ import org.apache.commons.logging.LogFactory;
  */
 public class GenericServiceEnseignementMapFactory {
 
-    private static final String DEFAULT_BASE_NAME = "service_enseignement";
-    private static Log log =
-	    LogFactory.getLog(GenericServiceEnseignementMapFactory.class);
+    private static Log log = LogFactory
+	    .getLog(GenericServiceEnseignementMapFactory.class);
 
-    public static ServiceEnseignementMap buildMap(String dataDir)
+    public static ServiceEnseignementMap buildMap(String completeFileName)
 	    throws java.io.IOException {
-
-	return buildMap(dataDir, DEFAULT_BASE_NAME);
-    }
-
-    public static ServiceEnseignementMap buildMap(String dataDir,
-	    String baseName) throws java.io.IOException {
 
 	ServiceEnseignementMap map;
 	try {
-	    map = getInstance(dataDir);
+	    map = getInstance(completeFileName);
 	    print("Mise a jour de la map...");
 	} catch (FileNotFoundException e) {
 	    print("La map n'a pas ete trouvee, on la recree au complet.");
@@ -61,8 +54,8 @@ public class GenericServiceEnseignementMapFactory {
 	}
 
 	InputStreamReader stream =
-		new InputStreamReader(new FileInputStream(dataDir + "/"
-			+ baseName + ".dat"), "ISO-8859-1");
+		new InputStreamReader(new FileInputStream(completeFileName),
+			"ISO-8859-1");
 	BufferedReader breader = new BufferedReader(stream);
 	String buffer, acadOrg, descFormal, deptId;
 
@@ -92,14 +85,8 @@ public class GenericServiceEnseignementMapFactory {
 	return map;
     } // buildMap
 
-    public static ServiceEnseignementMap getInstance(String dataDir)
+    public static ServiceEnseignementMap getInstance(String completeFileName)
 	    throws IOException {
-
-	return getInstance(dataDir, DEFAULT_BASE_NAME);
-    }
-
-    private static ServiceEnseignementMap getInstance(String dataDir,
-	    String mapName) throws IOException {
 
 	return new ServiceEnseignementMap();
     }

@@ -7,33 +7,15 @@ import org.apache.commons.logging.LogFactory;
 
 public class GenericDetailCoursMapFactory {
 
-    private static final String DEFAULT_BASE_NAME = "cours";
-    
-    private static Log log = LogFactory.getLog(GenericDetailCoursMapFactory.class);
+    private static Log log = LogFactory
+	    .getLog(GenericDetailCoursMapFactory.class);
 
-    public static DetailCoursMap buildMap(String dataDir)
-	    throws java.io.IOException {
-
-	return buildMap(dataDir, DEFAULT_BASE_NAME);
-    }
-
-    /**
-     * Cette methode lit les extracts pour creer les DetailCoursMapEntry en
-     * consequence. Si un DetailCoursMapEntry avec la meme cle existe deja il
-     * est utilise, et donc potentiellement mis a jour (par exemple changement
-     * du coordonnateur...).<br>
-     * <br>
-     * Ceci est important car lorsqu'on definit un stagiaire dans l'interface
-     * prof, cela ajoute des donnees dans le DetailCoursMapEntry du cours (et le
-     * MatriculeNomMapEntry du stagiaire). On perdrait ces donnees si on ne
-     * procedait pas ainsi.
-     */
-    public static DetailCoursMap buildMap(String dataDir, String baseName)
+    public static DetailCoursMap buildMap(String completeFileName)
 	    throws java.io.IOException {
 
 	DetailCoursMap map;
 	try {
-	    map = getInstance(dataDir);
+	    map = getInstance(completeFileName);
 	    print("Mise a jour de la map...");
 	} catch (FileNotFoundException e) {
 	    print("La map n'a pas ete trouvee, on la recree au complet.");
@@ -43,11 +25,11 @@ public class GenericDetailCoursMapFactory {
 	    throw e;
 	}
 
-	InputStreamReader stream = new InputStreamReader(new FileInputStream(
-			dataDir + "/" + baseName + ".dat"), "ISO-8859-1");
-	BufferedReader breader =
-		new BufferedReader(stream);
-	String buffer, key, courseId, strm, sessionCode, catalogNbr, section, acadCareer;	
+	InputStreamReader stream =
+		new InputStreamReader(new FileInputStream(completeFileName),
+			"ISO-8859-1");
+	BufferedReader breader = new BufferedReader(stream);
+	String buffer, key, courseId, strm, sessionCode, catalogNbr, section, acadCareer;
 	DetailCoursMapEntry entry;
 
 	// We remove the first line containing the title
@@ -55,20 +37,22 @@ public class GenericDetailCoursMapFactory {
 
 	// fait le tour des lignes du fichier
 	while ((buffer = breader.readLine()) != null) {
-		String[] tokens = buffer.split(";");
+	    String[] tokens = buffer.split(";");
 	    int i = 0;
-		
+
 	    courseId = tokens[i++];
 	    strm = tokens[i++];
 	    sessionCode = tokens[i++];
 	    catalogNbr = tokens[i++];
 	    section = tokens[i++];
-	    
-	    //Remove empty spaces
+
+	    // Remove empty spaces
 	    if (courseId != null)
-	    	courseId = courseId.trim();
-	    
-	    key = DetailCoursMapEntry.getUniqueKey(catalogNbr, (strm + sessionCode), section);
+		courseId = courseId.trim();
+
+	    key =
+		    DetailCoursMapEntry.getUniqueKey(catalogNbr,
+			    (strm + sessionCode), section);
 	    // on reprend l'entree existante
 	    if (map.containsKey(key)) {
 		entry = map.get(key);
@@ -90,9 +74,9 @@ public class GenericDetailCoursMapFactory {
 	    }
 	    entry.setAcadOrg(tokens[i++]);
 	    entry.setStrmId(tokens[i++]);
-	    
+
 	    entry.setAcaCareer(tokens[i++]);
-	    
+
 	    map.put(entry);
 	}
 
@@ -102,13 +86,7 @@ public class GenericDetailCoursMapFactory {
 	return map;
     } // buildMap
 
- 
-    public static DetailCoursMap getInstance(String dataDir) throws IOException {
-
-	return getInstance(dataDir, DEFAULT_BASE_NAME);
-    }
-
-    private static DetailCoursMap getInstance(String dataDir, String mapName)
+    public static DetailCoursMap getInstance(String completeFileName)
 	    throws IOException {
 
 	return new DetailCoursMap();

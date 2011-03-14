@@ -50,6 +50,8 @@ public interface OsylCMJob extends Job {
 	public final static String SERV_ENS_FILE = "service_enseignement.dat";
 	
 	public final static String PROG_ETUD_FILE = "programme_etudes.dat";
+	
+	public final static String CHARGE_FORMATION = "charge_formation.dat";
 
     public final static String EXTRACTS_PATH_CONFIG_KEY =
 	    "coursemanagement.extract.files.path";
@@ -59,6 +61,8 @@ public interface OsylCMJob extends Job {
     public final static String ACTIVE_STATUS = "active";
 
     public final static String COORDONNATEUR_ROLE = "C";
+    
+    public final static String CHARGE_FORMATION_ROLE = "CH";
 
     /**
      * Value used to represent the credits associated to this course. This is a

@@ -35,22 +35,15 @@ import org.apache.commons.logging.LogFactory;
  */
 public class GenericProgrammeEtudesMapFactory {
 
-    private static final String DEFAULT_BASE_NAME = "programme_etudes";
-    private static Log log =
-	    LogFactory.getLog(GenericProgrammeEtudesMapFactory.class);
+    private static Log log = LogFactory
+	    .getLog(GenericProgrammeEtudesMapFactory.class);
 
-    public static ProgrammeEtudesMap buildMap(String dataDir)
+    public static ProgrammeEtudesMap buildMap(String completeFileName)
 	    throws java.io.IOException {
-
-	return buildMap(dataDir, DEFAULT_BASE_NAME);
-    }
-
-    public static ProgrammeEtudesMap buildMap(String dataDir,
-	    String baseName) throws java.io.IOException {
 
 	ProgrammeEtudesMap map;
 	try {
-	    map = getInstance(dataDir);
+	    map = getInstance(completeFileName);
 	    print("Mise a jour de la map...");
 	} catch (FileNotFoundException e) {
 	    print("La map n'a pas ete trouvee, on la recree au complet.");
@@ -61,8 +54,8 @@ public class GenericProgrammeEtudesMapFactory {
 	}
 
 	InputStreamReader stream =
-		new InputStreamReader(new FileInputStream(dataDir + "/"
-			+ baseName + ".dat"), "ISO-8859-1");
+		new InputStreamReader(new FileInputStream(completeFileName),
+			"ISO-8859-1");
 	BufferedReader breader = new BufferedReader(stream);
 	String buffer, acadCareer, descFr, descEng;
 
@@ -71,8 +64,7 @@ public class GenericProgrammeEtudesMapFactory {
 
 	// fait le tour des lignes du fichier
 	while ((buffer = breader.readLine()) != null) {
-	    ProgrammeEtudesMapEntry entry =
-		    new ProgrammeEtudesMapEntry();
+	    ProgrammeEtudesMapEntry entry = new ProgrammeEtudesMapEntry();
 	    String[] tokens = buffer.split(";");
 	    int i = 0;
 
@@ -92,14 +84,8 @@ public class GenericProgrammeEtudesMapFactory {
 	return map;
     } // buildMap
 
-    public static ProgrammeEtudesMap getInstance(String dataDir)
+    public static ProgrammeEtudesMap getInstance(String completeFileName)
 	    throws IOException {
-
-	return getInstance(dataDir, DEFAULT_BASE_NAME);
-    }
-
-    private static ProgrammeEtudesMap getInstance(String dataDir,
-	    String mapName) throws IOException {
 
 	return new ProgrammeEtudesMap();
     }

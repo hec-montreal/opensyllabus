@@ -74,6 +74,15 @@ public class DetailCoursMapEntry implements java.io.Serializable {
 	return "MBA".equals(getAcadOrg());
     }
 
+    
+    public boolean isInCertificat(){
+	return "CERT".equals(getAcadCareer());
+    }
+    
+    public boolean isQualiteComm(){
+	return "QUAL.COMM.".equals(getAcadOrg());
+    }
+    
     public String getCourseId() {
 	return courseId;
     }
