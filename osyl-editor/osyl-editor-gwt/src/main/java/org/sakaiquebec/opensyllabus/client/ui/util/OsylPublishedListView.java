@@ -119,6 +119,7 @@ public class OsylPublishedListView extends Composite implements
 	    hPanel.add(new HTML(entry.getKey() + " : " + pdfGenImage));
 	    mainPanel.add(hPanel);
 	}
+	mainPanel.add(new HTML("&nbsp;"));
     }
 
     private void displayNoPublishedVersionMsg() {
@@ -126,10 +127,12 @@ public class OsylPublishedListView extends Composite implements
 	mainPanel.add(label);
     }
 
-    public void setPublishingNow() {
+    public void setPublishingNow() { 		
+	Image spinner = new Image(osylImageBundle.waiting());
+    HorizontalPanel hPanel = new HorizontalPanel();
 	mainPanel.clear();
-	label.setText(uiMessages.getMessage("publishing"));
-	mainPanel.add(label);
+	hPanel.add(new HTML(uiMessages.getMessage("publishing") +" " + spinner));	
+	mainPanel.add(hPanel);
     }
 
     private void displayPublishedLinks(boolean afterPublication) {
@@ -151,12 +154,15 @@ public class OsylPublishedListView extends Composite implements
 	displayPublishedLink(SecurityInterface.ACCESS_PUBLIC);
 	displayPublishedLink(SecurityInterface.ACCESS_COMMUNITY);
 	displayPublishedLink(SecurityInterface.ACCESS_ATTENDEE);
-
+	HTML voidLabel = new HTML("&nbsp;");
+	voidLabel.setStylePrimaryName("Osyl-PublishView-Label");	
 	Label infoLabel =
 		new Label(uiMessages.getMessage("publish.publishedDate")
 			+ " : " + dateTimeString);
 	infoLabel.setStylePrimaryName("Osyl-PublishView-publishedDate");
+	mainPanel.add(voidLabel);	
 	mainPanel.add(infoLabel);
+	mainPanel.add(voidLabel);	
     }
 
     private void displayPublishedLink(String securityGroup) {
@@ -173,7 +179,7 @@ public class OsylPublishedListView extends Composite implements
 			    + "/index.jsp?ro=true&sg=" + securityGroup;
 	}
 	HTML htmlLink =
-		new HTML("<a href='" + link + "' target='PublishedView'>"
+		new HTML("&nbsp;&nbsp;&nbsp;<a href='" + link + "' target='PublishedView'>"
 			+ linkName + "</a>");
 	htmlLink.setStylePrimaryName("Osyl-PublishView-Label");
 	mainPanel.add(htmlLink);
