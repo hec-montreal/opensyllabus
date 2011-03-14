@@ -28,8 +28,6 @@ import org.sakaiquebec.opensyllabus.admin.cmjob.api.FunctionsSynchronizationJob;
 public class FunctionsSynchronisationJobImpl implements
 	FunctionsSynchronizationJob {
 
-    private List<Site> allSites;
-
     /**
      * Our logger
      */
@@ -92,31 +90,36 @@ public class FunctionsSynchronisationJobImpl implements
 
     @SuppressWarnings("unchecked")
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
-
-	loginToSakai();
+	
+        loginToSakai();
 
 	long start = System.currentTimeMillis();
 	log.info("FunctionsSynchronisationJobImpl: starting");
 
 	String roleToRemove = adminConfigService.getRoleToRemove();
-
 	String functionsRole = adminConfigService.getFunctionsRole();
+	List<String> allowedFunctions = adminConfigService.getAllowedFunctions();
+	List<String> disallowedFunctions = adminConfigService.getDisallowedFunctions();
+	
+	log.info("FunctionsSynchronisationJobImpl: data provided by adminConfigService:");
+	log.info("FunctionsSynchronisationJobImpl: roleToRemove:        " + roleToRemove);
+	log.info("FunctionsSynchronisationJobImpl: functionsRole:       " + functionsRole);
+	log.info("FunctionsSynchronisationJobImpl: allowedFunctions:    " + allowedFunctions);
+	log.info("FunctionsSynchronisationJobImpl: disallowedFunctions: " + disallowedFunctions);
 
 	// Check role in site template realm
 	try {
 	    AuthzGroup realm = authzGroupService.getAuthzGroup(TEMPLATE_ID);
 	    if (functionsRole != null) {
-		if (!isRoleInRealm(realm)) {
-		    addRole(realm);
+		if (!isRoleInRealm(realm, functionsRole)) {
+		    addRole(realm, functionsRole, allowedFunctions,
+			    disallowedFunctions);
 		    authzGroupService.save(realm);
 		} else {
 
-		    Role role =
-			    realm
-				    .getRole(adminConfigService
-					    .getFunctionsRole());
-		    addPermissions(role);
-		    removePermissions(role);
+		    Role role = realm.getRole(functionsRole);
+		    addPermissions(role, allowedFunctions);
+		    removePermissions(role, disallowedFunctions);
 		}
 	    }
 	    // We remove the role
@@ -129,23 +132,24 @@ public class FunctionsSynchronisationJobImpl implements
 	} catch (AuthzPermissionException e) {
 	    log.error(e.getMessage());
 	}
+
+	log.info("FunctionsSynchronisationJobImpl: checkpoint after "
+		+ (System.currentTimeMillis() - start) + " ms");
 
 	// Check role in group template realm
 	try {
 	    AuthzGroup realm =
 		authzGroupService.getAuthzGroup(GROUP_TEMPLATE_ID);
 	    if (functionsRole != null) {
-		if (!isRoleInRealm(realm)) {
-		    addRole(realm);
+		if (!isRoleInRealm(realm, functionsRole)) {
+		    addRole(realm, functionsRole, allowedFunctions,
+			    disallowedFunctions);
 		    authzGroupService.save(realm);
 		} else {
 
-		    Role role =
-			    realm
-				    .getRole(adminConfigService
-					    .getFunctionsRole());
-		    addPermissions(role);
-		    removePermissions(role);
+		    Role role = realm.getRole(functionsRole);
+		    addPermissions(role, allowedFunctions);
+		    removePermissions(role, disallowedFunctions);
 		}
 	    }
 	    // We remove the role
@@ -159,10 +163,16 @@ public class FunctionsSynchronisationJobImpl implements
 	    log.error(e.getMessage());
 	}
 
+	log.info("FunctionsSynchronisationJobImpl: checkpoint after "
+		+ (System.currentTimeMillis() - start) + " ms");
+
 	// check all course site realms
-	allSites =
+	List<Site> allSites =
 		siteService.getSites(SiteService.SelectionType.ANY, SITE_TYPE,
 			null, null, SiteService.SortType.NONE, null);
+
+	log.info("FunctionsSynchronisationJobImpl: processing "
+		+ allSites.size() + " sites");
 
 	boolean roleExists = false;
 	Site site = null;
@@ -186,20 +196,19 @@ public class FunctionsSynchronisationJobImpl implements
 		    if (functionsRole != null) {
 			// We check if the role with the required
 			// permissions exists in the site
-			roleExists = isRoleInRealm(siteRealm);
+			roleExists = isRoleInRealm(siteRealm, functionsRole);
 			if (!roleExists) {
-			    addRole(siteRealm);
+			    addRole(siteRealm, functionsRole, allowedFunctions,
+				    disallowedFunctions);
 			    authzGroupService.save(siteRealm);
 			} else {
 
-			    Role role =
-				    siteRealm.getRole(adminConfigService
-					    .getFunctionsRole());
+			    Role role = siteRealm.getRole(functionsRole);
 			    // We add the new permissions
-			    addPermissions(role);
+			    addPermissions(role, allowedFunctions);
 
 			    // We remove the specified users
-			    removePermissions(role);
+			    removePermissions(role, disallowedFunctions);
 			}
 		    }
 
@@ -235,21 +244,23 @@ public class FunctionsSynchronisationJobImpl implements
 			    if (functionsRole != null) {
 				// We check if the role with the required
 				// permissions exists in the group
-				roleExists = isRoleInRealm(groupRealm);
+				roleExists = isRoleInRealm(groupRealm,
+					functionsRole);
 				if (!roleExists) {
-				    addRole(groupRealm);
+				    addRole(groupRealm, functionsRole,
+					    allowedFunctions,
+					    disallowedFunctions);
 				    authzGroupService.save(groupRealm);
 				} else {
 
 				    Role role =
 					    groupRealm
-						    .getRole(adminConfigService
-							    .getFunctionsRole());
+						    .getRole(functionsRole);
 				    // We add the new permissions
-				    addPermissions(role);
+				    addPermissions(role, allowedFunctions);
 
 				    // We remove the specified users
-				    removePermissions(role);
+				    removePermissions(role, disallowedFunctions);
 				}
 			    }
 
@@ -267,29 +278,31 @@ public class FunctionsSynchronisationJobImpl implements
 		}
 	    }
 	}
+
 	log.info("FunctionsSynchronisationJobImpl: completed in "
-		+ (System.currentTimeMillis() - start) + " ms");
+		+ (System.currentTimeMillis() - start)
+		+ " ms with this data from ConfigService:");
+	log.info("FunctionsSynchronisationJobImpl: roleToRemove:        " + roleToRemove);
+	log.info("FunctionsSynchronisationJobImpl: functionsRole:       " + functionsRole);
+	log.info("FunctionsSynchronisationJobImpl: allowedFunctions:    " + allowedFunctions);
+	log.info("FunctionsSynchronisationJobImpl: disallowedFunctions: " + disallowedFunctions);
+	
 	logoutFromSakai();
-    }
+    } // execute
 
     /**
      * Checks if the permissions are associated to the role.
      * 
      * @param siteRealm
      */
-    private void addRole(AuthzGroup realm) {
+    private void addRole(AuthzGroup realm, String functionsRole,
+	    List<String> functionsAdded, List<String> functionsRemoved) {
 	try {
-	    String functionsRole = adminConfigService.getFunctionsRole();
 	    if (functionsRole != null) {
 		Role role = realm.getRole(functionsRole);
 
 		if (role == null)
 		    role = realm.addRole(functionsRole);
-
-		List<String> functionsAdded =
-			adminConfigService.getAllowedFunctions();
-		List<String> functionsRemoved =
-			adminConfigService.getDisallowedFunctions();
 
 		for (Object function : functionsAdded) {
 		    if (!role.isAllowed((String) function))
@@ -313,17 +326,15 @@ public class FunctionsSynchronisationJobImpl implements
 
     }
 
-    private boolean isRoleInRealm(AuthzGroup realm) {
-	Role role = realm.getRole(adminConfigService.getFunctionsRole());
+    private boolean isRoleInRealm(AuthzGroup realm, String functionsRole) {
+	Role role = realm.getRole(functionsRole);
 	if (role == null)
 	    return false;
 	else
 	    return true;
     }
 
-    private void removePermissions(Role role) {
-	List<String> functionsRemoved =
-		adminConfigService.getDisallowedFunctions();
+    private void removePermissions(Role role, List<String> functionsRemoved) {
 	if (functionsRemoved.size() > 0) {
 	    for (String permission : functionsRemoved) {
 		if (role.isAllowed(permission)) {
@@ -333,15 +344,12 @@ public class FunctionsSynchronisationJobImpl implements
 	}
     }
 
-    private void addPermissions(Role role) {
-	List<String> functionsAdded = adminConfigService.getAllowedFunctions();
+    private void addPermissions(Role role, List<String> functionsAdded) {
 	if (functionsAdded.size() > 0) {
 	    for (String perm : functionsAdded) {
-
 		if (!role.isAllowed(perm)) {
 		    role.allowFunction(perm);
 		}
-
 	    }
 	}
     }
