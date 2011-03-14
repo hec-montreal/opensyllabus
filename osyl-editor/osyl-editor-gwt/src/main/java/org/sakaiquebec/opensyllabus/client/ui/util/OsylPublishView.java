@@ -42,12 +42,14 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -69,6 +71,8 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
     private CheckBox announceChexBox;
 
     private TextArea contentTextArea;
+    
+    private TextBox titleTextBox;
 
     private VerticalPanel announcePanel;
 
@@ -103,34 +107,54 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 		new Label(uiMessages.getMessage("courseOutlinePublication"));
 	label.setStylePrimaryName("Osyl-PublishView-Title");
 	mainPanel.add(label);
-
+	HTML voidLabel = new HTML("<p>&nbsp;</p>");
+	voidLabel.setStylePrimaryName("Osyl-PublishView-Label");	
+	mainPanel.add(voidLabel);
 	osylPublishedListView = new OsylPublishedListView(getController());
 	osylPublishedListView.setWidth("100%");
 	mainPanel.add(osylPublishedListView);
 	mainPanel.setWidth("100%");
-	setSize("400px", "200px");
-
+	setSize("420px", "250px");
+	mainPanel.add(voidLabel);
 	announceChexBox =
 		new CheckBox(uiMessages
 			.getMessage("publish.announce.checkboxLabel"));
+	mainPanel.add(voidLabel);	
 	mainPanel.add(announceChexBox);
-
+	mainPanel.add(voidLabel);
+	
 	announcePanel = new VerticalPanel();
-	Label announceLabel =
-		new Label(uiMessages.getMessage("publish.announce.label"));
+	Label announceLabel = new Label(uiMessages
+			.getMessage("publish.announce.label"));
 	announceLabel.setStylePrimaryName("Osyl-PublishView-Label");
+	HTML spaceLabel = new HTML("&nbsp;");
+	spaceLabel.setStylePrimaryName("Osyl-PublishView-Label");
+	announcePanel.add(spaceLabel);	
 	announcePanel.add(announceLabel);
+	announcePanel.add(spaceLabel);	
+	titleTextBox = new TextBox();	
 	contentTextArea = new TextArea();
 	Date date = new Date();
 	dateString = dateFormat.format(date);
 	timeString = timeFormat.format(date);
+	Label titleLabel = new Label(uiMessages.getMessage("publish.announce.title"));
+	Label texteLabel = new Label(uiMessages.getMessage("publish.announce.text"));
+	titleLabel.setStylePrimaryName("Osyl-PublishView-Label-important");
+	texteLabel.setStylePrimaryName("Osyl-PublishView-Label-important");
+	titleTextBox.setText(coMessages.getMessage("announce.publish.subject"));
 	contentTextArea.setText(coMessages.getMessage(
-		"announce.publish.content", dateString, timeString));
-	contentTextArea.setSize("375px", "75px");
+		"announce.publish.content", dateString, timeString));	
+	titleTextBox.setWidth("400px");
+	contentTextArea.setSize("400px", "75px");
+	announcePanel.add(spaceLabel);
+	announcePanel.add(spaceLabel);
+	announcePanel.add(titleLabel);	
+	announcePanel.add(titleTextBox);		
+	announcePanel.add(texteLabel);	
 	announcePanel.add(contentTextArea);
+	announcePanel.add(spaceLabel);
 	announcePanel.setVisible(false);
 	mainPanel.add(announcePanel);
-
 	announceChexBox
 		.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 
@@ -287,14 +311,15 @@ public class OsylPublishView extends PopupPanel implements OsylViewControllable 
 	    }
 	};
 	String content = contentTextArea.getText();
+	String subject = titleTextBox.getText(); 
 	Date d = new Date();
 	content = content.replace(dateString, dateFormat.format(d));
 	content = content.replace(timeString, timeFormat.format(d));
 	getController().notifyOnPublish(getController().getSiteId(),
-		coMessages.getMessage("announce.publish.object"), content,
+			subject, content,
 		notifyCallback);
     }
-
+	
     public OsylController getController() {
 	return osylController;
     }
