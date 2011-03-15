@@ -39,14 +39,19 @@ public class UnattachAction extends OsylManagerAbstractAction {
 
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
-	boolean enable = true;
-	for (COSite coSite : siteIds) {
-	    String parentSite = coSite.getParentSite();
-	    if (parentSite == null || parentSite.equals("")) {
-		return false;
+	if(siteIds.isEmpty()){
+	    return false;
+	} else {
+	    boolean enable = true;
+	    for (COSite coSite : siteIds) {
+		String parentSite = coSite.getParentSite();
+		
+		if (parentSite == null || parentSite.equals("")) {
+		    return false;
+		}
 	    }
+	    return enable;
 	}
-	return enable;
     }
 
     @Override

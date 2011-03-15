@@ -179,28 +179,36 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 
 	HorizontalPanel hz1 = new HorizontalPanel();
 	hz1.add(new EditAction(getController()));
+	hz1.add(new HTML(" | "));
 	hz1.add(new PublishAction(getController()));
+	hz1.add(new HTML(" | "));
 	hz1.add(new UnpublishAction(getController()));
+	hz1.add(new HTML(" | "));
 	hz1.add(new CopyAction(getController()));
 	hz1.setStyleName("OsylManager-mainView-actionList");
 	commandsPanel.add(hz1);
 
 	HorizontalPanel hz2 = new HorizontalPanel();
 	hz2.add(new AttachAction(getController()));
+	hz2.add(new HTML(" | "));
 	hz2.add(new UnattachAction(getController()));
 	hz2.setStyleName("OsylManager-mainView-actionList");
 	commandsPanel.add(hz2);
 
 	HorizontalPanel hz3 = new HorizontalPanel();
 	hz3.add(new AssociateAction(getController()));
+	hz3.add(new HTML(" | "));
 	hz3.add(new DissociateAction(getController()));
 	hz3.setStyleName("OsylManager-mainView-actionList");
 	commandsPanel.add(hz3);
 
 	HorizontalPanel hz4 = new HorizontalPanel();
 	hz4.add(new ImportAction(getController()));
+	hz4.add(new HTML(" | "));
 	hz4.add(new ExportAction(getController()));
+	hz4.add(new HTML(" | "));
 	// hz4.add(new CleanAction(getController()));
+	//hz4.add(new HTML(" | "));
 	hz4.add(new DeleteAction(getController()));
 	hz4.setStyleName("OsylManager-mainView-actionList");
 	commandsPanel.add(hz4);
