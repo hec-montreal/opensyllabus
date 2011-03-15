@@ -85,50 +85,48 @@ public class COContentResourceProxy extends COElementAbstract<COModelInterface>
 	rubrics = new HashMap<String, COContentRubric>();
     }
 
-    public static COContentResourceProxy createDefaultResProxy(
-	    final String type, final OsylConfigMessages osylConfigMessages,
-	    final COElementAbstract parentModel, final String resourceType,
-	    String defaultRubric, String propertyType) {
+	public static COContentResourceProxy createDefaultResProxy(
+			final String type, final OsylConfigMessages osylConfigMessages,
+			final COElementAbstract parentModel, final String resourceType,
+			String defaultRubric, String propertyType) {
 
-	final COContentResourceProxy resProxModel =
-		new COContentResourceProxy();
-	resProxModel.setType(type);
-
-	if (!type.equalsIgnoreCase(COContentResourceProxyType.PEOPLE)) {
-	    if (type.equalsIgnoreCase(COContentResourceProxyType.REFERENCE)) {
-		resProxModel.addProperty(COPropertiesType.DISPLAY_AS, "link");
-	    }
-	    if (resourceType
-		    .equalsIgnoreCase(COContentResourceType.TEXT)) {    	
-			resProxModel.setLabel(osylConfigMessages
-			.getMessage("InsertYourTextHere"));
-			resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);
-	    } else if (resourceType.equalsIgnoreCase(COContentResourceType.URL)) {	    	
-	    	resProxModel.setLabel(osylConfigMessages	    			
-			.getMessage("InsertYourHyperlinkLabelHere"));
-			resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);	    	
-	    }else if (resourceType.equalsIgnoreCase(COContentResourceType.ENTITY)) {	    	
-			resProxModel.setLabel(osylConfigMessages
-			.getMessage("InsertYourSakaiEntityLabelHere"));
-			resProxModel.setAccess(SecurityInterface.ACCESS_ATTENDEE);			
-	    }  else if (resourceType
-		    .equalsIgnoreCase(COContentResourceType.DOCUMENT)) {	    	
-	    	resProxModel.setLabel(osylConfigMessages
-			.getMessage("InsertYourDocumentLabelHere"));
-			resProxModel.setAccess(SecurityInterface.ACCESS_COMMUNITY);	    	
-	    } else if (resourceType
-		    .equalsIgnoreCase(COContentResourceType.NEWS)) {	    	
-			resProxModel.setLabel(osylConfigMessages
-			.getMessage("InsertYourTextHere"));
-			resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);			
-	    }
-	}
-	if (!type.equalsIgnoreCase(COContentResourceProxyType.BIBLIO)) {
-		resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);					
-	}
-	if (!type.equalsIgnoreCase(COContentResourceProxyType.PEOPLE)) {
-		resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);					
-	}
+		final COContentResourceProxy resProxModel = new COContentResourceProxy();
+		resProxModel.setType(type);
+		if (!type.equalsIgnoreCase(COContentResourceProxyType.PEOPLE)) {
+			if (type.equalsIgnoreCase(COContentResourceProxyType.REFERENCE)) {
+				resProxModel.addProperty(COPropertiesType.DISPLAY_AS, "link");
+			}
+			if (resourceType.equalsIgnoreCase(COContentResourceType.TEXT)) {
+				resProxModel.setLabel(osylConfigMessages
+						.getMessage("InsertYourTextHere"));
+				resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);
+			} else if (resourceType.equalsIgnoreCase(COContentResourceType.URL)) {
+				resProxModel.setLabel(osylConfigMessages
+						.getMessage("InsertYourHyperlinkLabelHere"));
+				resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);
+			} else if (resourceType
+					.equalsIgnoreCase(COContentResourceType.ENTITY)) {
+				resProxModel.setLabel(osylConfigMessages
+						.getMessage("InsertYourSakaiEntityLabelHere"));
+				resProxModel.setAccess(SecurityInterface.ACCESS_ATTENDEE);
+			} else if (resourceType
+					.equalsIgnoreCase(COContentResourceType.DOCUMENT)) {
+				resProxModel.setLabel(osylConfigMessages
+						.getMessage("InsertYourDocumentLabelHere"));
+				resProxModel.setAccess(SecurityInterface.ACCESS_COMMUNITY);
+			} else if (resourceType
+					.equalsIgnoreCase(COContentResourceType.NEWS)) {
+				resProxModel.setLabel(osylConfigMessages
+						.getMessage("InsertYourTextHere"));
+				resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);
+			} else if (resourceType.equalsIgnoreCase(COContentResourceType.BIBLIO_RESOURCE)) {
+				resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);
+			}
+		} else {	
+			if (resourceType.equalsIgnoreCase(COContentResourceType.PERSON)) {
+				resProxModel.setAccess(SecurityInterface.ACCESS_PUBLIC);
+			}
+		}
 	
 	resProxModel.setRubricType(defaultRubric, propertyType);
 
