@@ -236,12 +236,7 @@ public class OsylServiceImpl implements OsylService {
 	    CitationCollection collection, String siteId, String citationTitle) {
 
 	ContentResourceEdit resource = null;
-	String resourceDir =
-		getResourceReference(siteId) + OsylSiteService.WORK_DIRECTORY
-			+ "/";
-	if (ServerConfigurationService.getString(
-		"opensyllabus.publish.in.attachment").equals("true"))
-	    resourceDir = getResourceReference(siteId);
+	String resourceDir = getResourceReference(siteId);
 	try {
 	    String resourceId = resourceDir + citationTitle;
 	    // temporarily allow the user to read and write resources

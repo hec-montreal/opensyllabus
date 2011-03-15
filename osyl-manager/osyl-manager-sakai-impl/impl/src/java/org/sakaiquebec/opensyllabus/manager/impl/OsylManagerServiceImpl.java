@@ -516,7 +516,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	collection.addAll(importCollection);
 	String collectionName =
 		file.getName().substring(0,
-			file.getName().length() - CITATION_EXTENSION.length());
+			file.getName().length() - CITATION_EXTENSION.length() - 1);
 	osylService.linkCitationsToSite(collection, siteId, collectionName);
 
 	COSerialized co;
