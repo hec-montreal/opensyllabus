@@ -61,7 +61,8 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 	// ---------------------------------------------------------------------------//
 
 	// Open Lectures Section
-	openPresentationSection();
+	//It's not necessary because now overview is first element on course outline.
+	//openPresentationSection();
 	pause();
 
 	String newText9 =

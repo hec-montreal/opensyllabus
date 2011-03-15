@@ -70,11 +70,15 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     // Current browser
     private String browserString;
 
+    // Current user
+    private String userString;
+    private String passwordString;
+    
     // Formatter for timeStamps
     private SimpleDateFormat timeStampFormatter;
 
     protected String fileServer;
-
+    
     // Dissemination level for OSYL
     protected static final String LEVEL_ATTENDEE = "attendee";
     protected static final String LEVEL_COMMUNITY = "community";
@@ -212,10 +216,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    log("logInAsAdmin: We are already logged in!");
 	    return;
 	}
-	session().type("eid", "admin");
-	session().type("pw", "osyl123");
+	userString = "prof_selenium";
+	passwordString = "123456";
+	session().type("eid", userString);  // admin
+	session().type("pw", passwordString); // osyl123
 	session().click("submit");
-	// waitForPageToLoad();
+
+
 	session().waitForPageToLoad("300000");
 	assertFalse("Login failed", session().isElementPresent(
 		"//div[@class=\"alertMessage\"]"));
@@ -241,19 +248,8 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	public void createSite(String siteName) throws Exception {
 		// Create an outline course from OsylManager
 		log("**** Creating site " + siteName);
-		goToOsylManagerTool(); // Now, it is not necessary
-		if (inFireFox()) {
-			String element = "//*[@class='icon-sakai-opensyllabus-manager-tool']";
-			ensureElementPresent(element);
-			pause();
-			smartClick(element);
-		} else {
-			// (inIE)
-			String element = "//*[@class='icon-sakai-opensyllabus-manager-tool']";
-			ensureElementPresent(element);
-			pause();
-			smartMouse(element);
-		}
+		//Search Osyl Manager location
+		goToOsylManagerTool();
 		pause();
 		pause();
 		pause();
@@ -281,8 +277,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		pause();
 		pause();
 		// Click button "Close" (confirmation)
-		ensureElementPresent("//tr[4]/td/div");
-		smartMouse("//tr[4]/td/div");
+		if (userString.equalsIgnoreCase("prof_selenium")) {
+			ensureElementPresent("//tr[4]/td/div");			
+			smartMouse("//tr[4]/td/div");					
+		} else if (userString.equalsIgnoreCase("admin")) {
+			ensureElementPresent("//tr[4]/td/div");			
+			smartMouse("//tr[4]/td/div");		
+		}		
 		log("**** Site created " + siteName + "*******");
 	} // createSite
 
@@ -332,20 +333,27 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 	public void goToOsylManagerTool() {
 		// open site administration workspace
+		String osylManagerChoice = "//a[@class='icon-sakai-opensyllabus-manager-tool']";
 		session().open("/portal/site/~admin");
 		session().answerOnNextPrompt("osyl123");
-
 		if (!session().isElementPresent(
 				"//span[@class='icon-sakai-opensyllabus-manager-tool']")) {
 			// open course outline manager tool
-			if (inFireFox()) {session().mouseOver("//a[@class='icon-sakai-opensyllabus-manager-tool']");
-				session().mouseDown("//a[@class='icon-sakai-opensyllabus-manager-tool']");
-				session().mouseUp("//a[@class='icon-sakai-opensyllabus-manager-tool']");
-				session().click("//a[@class='icon-sakai-opensyllabus-manager-tool']/span");
+			if (userString.equalsIgnoreCase("prof_selenium")) {
+				//Osyl Manager Folder
+				osylManagerChoice = "//ul[@id='siteLinkList']/li[2]/a/span";
+			} else if (userString.equalsIgnoreCase("admin")) {
+				//Osyl Manager Menu
+				osylManagerChoice = "//a[@class='icon-sakai-opensyllabus-manager-tool']"; 
+			}
+			if (inFireFox()) {session().mouseOver(osylManagerChoice);
+				session().mouseDown(osylManagerChoice);
+				session().mouseUp(osylManagerChoice);
+				session().click(osylManagerChoice);
 				pause();
 			} else {
-				session().click("//a[@class='icon-sakai-opensyllabus-manager-tool']");
-			}
+				session().click(osylManagerChoice);
+			}				
 		}
 	}
 
@@ -514,7 +522,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      * It creates messages, after creating a log file
      */
     public void logFile(String testName, String ctName, String result) {
-    	String role = "admin";
+    	String role = userString;
     	String browser = browserString;
     	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	String currentDate = dateFormat.format(new java.util.Date());
@@ -1157,22 +1165,36 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	session().waitForPageToLoad("30000");    
 	goToMenuSiteSetup();
 	session().waitForPageToLoad("30000");
+	//Click on search siteName
 	session().type("search", siteName);
 	session().click("//input[@value='Recherche']");
 	session().waitForPageToLoad("30000");
 	session().click("site1");
-	session().click("//div[1]/ul[@id='actionToolBar']/li[4]/span/a");
+	//Reviser
+	if (userString.equalsIgnoreCase("prof_selenium")) {
+		session().click("//div[1]/ul[@id='actionToolBar']/li[3]/span/a");
+	} else if (userString.equalsIgnoreCase("admin")) {
+		session().click("//div[1]/ul[@id='actionToolBar']/li[4]/span/a");		
+	}
 	session().waitForPageToLoad("30000");
-	session().click("//html/body/div/ul/li[2]/span/a");
+	//Click on Course Site Tools 
+	session().click("//html/body/div/ul/li[2]/span/a");		
+	session().click("//html/body/div/ul/li[2]/span/a");		
 	session().waitForPageToLoad("30000");
+	//It checks if assignment is a tool already selected
 	if (!session().getValue("sakai.assignment.grades").equals("on"))  {
 		session().click("//input[@id='sakai.assignment.grades']");
 	}
 	session().click("Continue");
 	session().waitForPageToLoad("30000");
+	//Save added tool
 	session().click("eventSubmit_doSave_revised_features");
 	session().waitForPageToLoad("30000");
-	session().select("//div[@id='selectNav']/select", "label=" + siteName);
+	if (userString.equalsIgnoreCase("prof_selenium")) {
+		session().open("/portal/site/" + siteName);
+	} else if (userString.equalsIgnoreCase("admin")) {
+		session().select("//div[@id='selectNav']/select", "label=" + siteName);		
+	}		
 	session().waitForPageToLoad("30000");
 	session().click("//div[@id='toolMenu']/ul/li[4]/a/span");
 	session().waitForPageToLoad("30000");
