@@ -62,7 +62,7 @@ public interface OsylCMJob extends Job {
 
     public final static String COORDONNATEUR_ROLE = "C";
     
-    public final static String CHARGE_FORMATION_ROLE = "CH";
+    public final static String CHARGE_FORMATION_ROLE = "FTL";
 
     /**
      * Value used to represent the credits associated to this course. This is a
