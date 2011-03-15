@@ -44,22 +44,26 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	// test if site exist, else create it
 	logInAsAdmin(webSite);
 	try {
-	    goToCurrentSite();
+	    goToCurrentSite();    	    
 	} catch (IllegalStateException e) {
 	    createTestSite();
+		logFile(OSYL_TEST, CT_002, PASSED);
 	    goToCurrentSite();
 	}
 	waitForOSYL();
-
+	logFile(OSYL_TEST, CT_069, PASSED);	
+	
 	session().selectFrame("relative=parent");
 	String childSiteName = getCurrentTestSiteName() + "_Child";
 	try {
 	    goToSite(childSiteName);
 	} catch (IllegalStateException e) {
 	    createSite(childSiteName);
+		logFile(OSYL_TEST, CT_002, PASSED);	    
 	    goToSite(childSiteName);
 	}
 	waitForOSYL();
+	logFile(OSYL_TEST, CT_069, PASSED);	
 	
 	session().selectFrame("relative=parent");
 	String parentSiteName = getCurrentTestSiteName() + "_Parent";
@@ -67,10 +71,11 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    goToSite(parentSiteName);
 	} catch (IllegalStateException e) {
 	    createSite(parentSiteName);
+		logFile(OSYL_TEST, CT_002, PASSED);	    
 	    goToSite(parentSiteName);
 	}
 	waitForOSYL();
-
+	logFile(OSYL_TEST, CT_069, PASSED);	
 	try {
 	    // add content
 	    openTeachingMaterialSection();

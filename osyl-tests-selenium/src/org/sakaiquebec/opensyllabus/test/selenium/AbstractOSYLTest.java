@@ -284,7 +284,6 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		ensureElementPresent("//tr[4]/td/div");
 		smartMouse("//tr[4]/td/div");
 		log("**** Site created " + siteName + "*******");
-		logFile(OSYL_TEST, CT_002, PASSED);
 	} // createSite
 
     /**
@@ -359,7 +358,6 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    waitForPageToLoad();
 
 	    if (!session().isTextPresent(siteName) || session().isTextPresent("Site Unavailable")) {
-		    log("****************Not found: " + siteName);
 	    	try {
 				createTestSite(siteName);
 			} catch (Exception e) {
@@ -369,9 +367,6 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 			}
 	    }else
 		{
-		    log("****************Found: " + siteName);
-			//Add message to log file
-			logFile(OSYL_TEST, CT_069, PASSED);
 			goToMenuOsyl();
 		}
 
@@ -432,7 +427,9 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	// open site setup
 	pause(); pause(); pause();
 	if (inFireFox()) {
-		session().click(elementSiteSetupMenu);
+		session().mouseDown(elementSiteSetupMenu);
+		session().mouseUp(elementSiteSetupMenu);
+		session().click(elementSiteSetupMenu);		
 		pause();
 	} else {
 		session().click(elementSiteSetupMenu);
@@ -960,6 +957,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
     protected void openOrganisationSection() {
 	// Open Seances Section
+    pause();
 	if (inFireFox()) {
 	    session().mouseDown(
 		    "//div[@class=\"gwt-TreeItem\"]/div/"
@@ -984,6 +982,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
     protected void openTeachingMaterialSection() {
 	// click on Teaching Material Section
+    pause();
 	if (inFireFox()) {
 	    session().mouseDown(
 		    "//div[@class=\"gwt-TreeItem\"]/div/"
@@ -994,7 +993,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		session().mouseDownAt(imageLocator, "10,10");
 		session().mouseUpAt(imageLocator, "10,10");
 	}
-    pause(2000);
+       pause();
     }
 
     protected String addText(String text, String level) {
@@ -1153,7 +1152,9 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
     public void addAssessmentInOutLinecours() {
 	//Add assessment inside outline course
-    session().click("//ul[@id='siteLinkList']/li[1]/a/span");
+    String element = "//html/body/div[@id='portalOuterContainer']/div[@id='portalContainer']/div[@id='headerMax']/div[2]/div[@id='siteNav']/div[@id='linkNav']/ul[@id='siteLinkList']/li[1]/a/span";
+    session().click(element);
+	session().waitForPageToLoad("30000");    
 	goToMenuSiteSetup();
 	session().waitForPageToLoad("30000");
 	session().type("search", siteName);

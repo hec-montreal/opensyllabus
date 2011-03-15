@@ -43,13 +43,15 @@ public class TextTest extends AbstractOSYLTest {
 	// We log in
 	logInAsAdmin(webSite);
 	try {
-	    goToCurrentSite();
+	    goToCurrentSite();	    
 	} catch (IllegalStateException e) {
 	    createTestSite();
+		logFile(OSYL_TEST, CT_002, PASSED);
 	    goToCurrentSite();
 	}
 	waitForOSYL();
-
+	logFile(OSYL_TEST, CT_069, PASSED);
+	
 	// ---------------------------------------------------------------------------//
 	// Add Lecture in Lecture|WorkSession Unit //
 	// ---------------------------------------------------------------------------//
@@ -149,6 +151,7 @@ public class TextTest extends AbstractOSYLTest {
     
     private void openSeanceSection() {
 	// Open Seances Section
+    pause();
 	if (inFireFox()) {
 	    session().mouseDown(
 		    "//div[@class=\"gwt-TreeItem\"]/div/"

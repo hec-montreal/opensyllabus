@@ -47,12 +47,14 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 	// We log in
 	logInAsAdmin(webSite);
 	try {
-	    goToCurrentSite();
+	    goToCurrentSite();	    
 	} catch (IllegalStateException e) {
 	    createTestSite();
-	    goToCurrentSite();
+		logFile(OSYL_TEST, CT_002, PASSED);
+	    goToCurrentSite();	
 	}
 	waitForOSYL();
+	logFile(OSYL_TEST, CT_069, PASSED);		
 
 	// ---------------------------------------------------------------------------//
 	// Add Text in Overview Unit //
@@ -281,6 +283,7 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 
     private void openPresentationSection() {
 	// Click on Overview section
+    pause();
 	if (inFireFox()) {
 	    session().mouseDown(
 		    "//div[@class=\"gwt-TreeItem\"]/div/"
@@ -290,6 +293,6 @@ public class PresentationOfCourse extends AbstractOSYLTest {
 		session().mouseDownAt(imageLocator, "10,10");
 		session().mouseUpAt(imageLocator, "10,10");	    
 	}
-    pause();	
+    pause();
     }
 }

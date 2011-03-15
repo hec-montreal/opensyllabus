@@ -46,12 +46,14 @@ public class SeancesTest extends AbstractOSYLTest {
 	// We log in
 	logInAsAdmin(webSite);
 	try {
-	    goToCurrentSite();
+	    goToCurrentSite();	    
 	} catch (IllegalStateException e) {
 	    createTestSite();
-	    goToCurrentSite();
+		logFile(OSYL_TEST, CT_002, PASSED);
+	    goToCurrentSite();	
 	}
 	waitForOSYL();
+	logFile(OSYL_TEST, CT_069, PASSED);	
 
 	// ---------------------------------------------------------------------------//
 	// Add Lecture //
@@ -699,6 +701,7 @@ public class SeancesTest extends AbstractOSYLTest {
     
     private void openSeanceSection(String nameSeance) {
     	// click on Seances Section
+        pause();
     	if (inFireFox()) {
     	    session().mouseDown(
     		    "//div[@class=\"gwt-TreeItem\"]/div/"
@@ -708,6 +711,6 @@ public class SeancesTest extends AbstractOSYLTest {
     		session().mouseDownAt(imageLocator, "10,10");
     		session().mouseUpAt(imageLocator, "10,10");	    
     	}
-        pause();	
+        pause();
         }    
 }

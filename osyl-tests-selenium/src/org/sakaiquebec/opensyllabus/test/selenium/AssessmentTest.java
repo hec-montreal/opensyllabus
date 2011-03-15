@@ -60,11 +60,13 @@ public class AssessmentTest extends AbstractOSYLTest {
 	try {
 	    goToCurrentSite();
 	} catch (IllegalStateException e) {
-	    createTestSite();    
-	    goToCurrentSite();
+	    createTestSite();
+		logFile(OSYL_TEST, CT_002, PASSED);
+	    goToCurrentSite();    
 	}
-	waitForOSYL();
-
+	//waitForOSYL();
+	logFile(OSYL_TEST, CT_069, PASSED);
+	
 	//Add Assessment tool in OutLine Course
 	addAssessmentInOutLinecours();
 	//Add a work in Assessment tool
@@ -888,6 +890,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 
 	private void openEvaluationsSection() {
 		// Click on Assessment section
+	    pause();
 		if (inFireFox()) {
 			session().mouseDown(
 					"//div[@class=\"gwt-TreeItem\"]/div/" + "div[contains(text(),'valuation')]");

@@ -47,12 +47,14 @@ public class NewsTest extends AbstractOSYLTest {
 	// We log in
 	logInAsAdmin(webSite);
 	try {
-	    goToCurrentSite();
+	    goToCurrentSite();	    
 	} catch (IllegalStateException e) {
 	    createTestSite();
+		logFile(OSYL_TEST, CT_002, PASSED);
 	    goToCurrentSite();
 	}
 	waitForOSYL();
+	logFile(OSYL_TEST, CT_069, PASSED);		
 	
 	// ---------------------------------------------------------------------------//
 	// Add News in News Unit //

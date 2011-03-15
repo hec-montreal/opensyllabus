@@ -49,13 +49,15 @@ public class LectureTest extends AbstractOSYLTest {
 	// We log in
 	logInAsAdmin(webSite);
 	try {
-	    goToCurrentSite();
+	    goToCurrentSite();	    
 	} catch (IllegalStateException e) {
 	    createTestSite();
+		logFile(OSYL_TEST, CT_002, PASSED);
 	    goToCurrentSite();
 	}
 	waitForOSYL();
-
+	logFile(OSYL_TEST, CT_069, PASSED);	
+	
 	openOrganisationSection();
 
 	// We keep the current lecture count for future comparison
