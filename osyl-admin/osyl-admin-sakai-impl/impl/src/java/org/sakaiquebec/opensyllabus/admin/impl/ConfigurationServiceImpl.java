@@ -83,6 +83,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private String courseOutlineXsl = null;
 
     private Map<String, Map<String, Object>> updatedRoles = null;
+    
+    private Map <String, String> configFiles = null;
 
     String description;
     private List<String> functions;
@@ -119,6 +121,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
 	eventTrackingService.addObserver(this);
 
+	configFiles = new HashMap <String, String>();
 	updateConfig(CONFIGFORLDER + OFFSITESCONFIGFILE);
 	updateConfig(ROLEFOLDER);
 	updateConfig(ADMIN_CONTENT_FOLDER + XSL_FILENAME);
@@ -251,7 +254,9 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		securityService.pushAdvisor(new SecurityAdvisor() {
 		    public SecurityAdvice isAllowed(String userId,
 			    String function, String reference) {
-			return SecurityAdvice.ALLOWED;
+			if (function.equals("content.read"))
+			    return SecurityAdvice.ALLOWED;
+			return SecurityAdvice.NOT_ALLOWED;
 		    }
 		});
 		if (fileName.contains(ROLEFOLDER)) {
@@ -297,7 +302,26 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    } catch (PermissionException e) {
 		log.info("You are not allowed to access this resource");
 	    } catch (IdUnusedException e) {
-		log.warn("There is no " + fileName + " file ");
+		//The file has been removed - remove config in list
+		if (fileName.contains(ROLEFOLDER)) {
+		    String role = configFiles.get(fileName);
+		    configFiles.remove(fileName);
+		    updatedRoles.remove(role);
+		}
+		if (fileName.contains(OFFSITESCONFIGFILE)) {
+		    setCourses(null);
+		    setStartDate(null);
+		    setEndDate(null);
+
+		}
+		if (fileName.contains(FUNCTIONSSCONFIGFILE)) {
+		    setFunctionsRole(null);
+		    setRemovedRole(null);
+		    setAllowedFunctions(null);
+		    setDisallowedFunctions(null);
+
+		}
+		log.info("There is no " + fileName + " has been removed ");
 	    } catch (TypeException e) {
 		log.info("The resource requested has the wrong type");
 	    } catch (ServerOverloadException e) {
@@ -329,6 +353,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		setCourses(courses);
 		setStartDate(startDate);
 		setEndDate(endDate);
+		
+		
 	    }
 
 	    if (configurationXml.contains(ROLEFOLDER)) {
@@ -359,6 +385,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		    if (updatedRoles.containsKey(role))
 			updatedRoles.remove(role);
 		    updatedRoles.put(role, values);
+		    configFiles.put(configurationXml, role);
 		}
 	    }
 
