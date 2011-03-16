@@ -39,6 +39,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.Vector;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
@@ -115,6 +116,7 @@ import org.sakaiquebec.opensyllabus.shared.exception.SessionCompatibilityExcepti
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceType;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -454,8 +456,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
     }
 
-    private void addCitations(File file, String siteId, String resourceOutputDir)
-	    throws IOException {
+    private Map<String, String> addCitations(File file, String siteId,
+	    String resourceOutputDir) throws IOException {
 	List<String> oldReferences = new ArrayList<String>();
 	List<String> newReferences = new ArrayList<String>();
 
@@ -473,6 +475,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	String line = null;
 	String oldId = null;
+	Map<String, String> refUpdated = new TreeMap<String, String>();
 
 	try {
 	    BufferedReader input = new BufferedReader(new FileReader(file));
@@ -495,8 +498,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			if (importCitation.importFromRisList(tempList)) {
 			    org.sakaiproject.citation.cover.CitationService
 				    .save(importCitation);
-			    newReferences.add(importCitation.getId());
 			    importCollection.add(importCitation);
+			    refUpdated.put(oldId, importCitation.getId());
 			}
 			tempList = new ArrayList<String>();
 			importCitation =
@@ -515,31 +518,12 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	collection.addAll(importCollection);
 	String collectionName =
-		file.getName().substring(0,
-			file.getName().length() - CITATION_EXTENSION.length() - 1);
+		file.getName().substring(
+			0,
+			file.getName().length() - CITATION_EXTENSION.length()
+				- 1);
 	osylService.linkCitationsToSite(collection, siteId, collectionName);
-
-	COSerialized co;
-	try {
-	    co =
-		    osylSiteService
-			    .getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
-	    String xml = co.getContent();
-	    String id = null;
-	    String newId = null;
-
-	    for (int i = 0; i < oldReferences.size(); i++) {
-		id = oldReferences.get(i);
-		newId = newReferences.get(i);
-		xml = xml.replaceAll(id, newId);
-	    }
-
-	    co.setContent(xml);
-	    osylSiteService.updateSerializedCourseOutline(co);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
-
+	return refUpdated;
     }
 
     /**
@@ -659,7 +643,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	    osylPackage = new OsylPackage();
 	    osylPackage.unzip(zipTempfile);
-	    String xml = osylPackage.getXml();
 
 	    Map<String, String> filenameChangesMap =
 		    importFilesInSite(zipReference, siteId);
@@ -673,6 +656,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	     * the end of fixme. And the commented code above should be
 	     * uncommented.
 	     */
+	    String xml = osylPackage.getXml();
 	    COModeledServer coModeledServer =
 		    new COModeledServer(osylSiteService.importDataInCO(xml,
 			    siteId, filenameChangesMap, webapp));
@@ -703,37 +687,40 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	if (element.isCOContentResourceProxy()) {
 	    COContentResourceProxy coResProxy =
 		    (COContentResourceProxy) element;
-	    ContentResourceEdit newResource;
-	    try {
-		String uri =
-			coResProxy.getResource().getProperty(
-				COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_URI);
-		newResource = contentHostingService.editResource(uri);
+	    if (COContentResourceType.DOCUMENT.equals(coResProxy.getResource()
+		    .getType())) {
+		ContentResourceEdit newResource;
+		try {
+		    String uri =
+			    coResProxy.getResource().getProperty(
+				    COPropertiesType.IDENTIFIER,
+				    COPropertiesType.IDENTIFIER_TYPE_URI);
+		    newResource = contentHostingService.editResource(uri);
 
-		newResource.getPropertiesEdit().addProperty(
-			ResourceProperties.PROP_DESCRIPTION,
-			coResProxy.getResource().getProperty(
-				COPropertiesType.DESCRIPTION));
-		newResource.getPropertiesEdit().addProperty(
-			ResourceProperties.PROP_COPYRIGHT_CHOICE,
-			coResProxy.getResource().getProperty(
-				COPropertiesType.LICENSE));
+		    newResource.getPropertiesEdit().addProperty(
+			    ResourceProperties.PROP_DESCRIPTION,
+			    coResProxy.getResource().getProperty(
+				    COPropertiesType.DESCRIPTION));
+		    newResource.getPropertiesEdit().addProperty(
+			    ResourceProperties.PROP_COPYRIGHT_CHOICE,
+			    coResProxy.getResource().getProperty(
+				    COPropertiesType.LICENSE));
 
-		contentHostingService.commitResource(newResource,
-			NotificationService.NOTI_NONE);
-	    } catch (PermissionException e) {
-		e.printStackTrace();
-	    } catch (IdUnusedException e) {
-		e.printStackTrace();
-	    } catch (TypeException e) {
-		e.printStackTrace();
-	    } catch (InUseException e) {
-		e.printStackTrace();
-	    } catch (OverQuotaException e) {
-		e.printStackTrace();
-	    } catch (ServerOverloadException e) {
-		e.printStackTrace();
+		    contentHostingService.commitResource(newResource,
+			    NotificationService.NOTI_NONE);
+		} catch (PermissionException e) {
+		    e.printStackTrace();
+		} catch (IdUnusedException e) {
+		    e.printStackTrace();
+		} catch (TypeException e) {
+		    e.printStackTrace();
+		} catch (InUseException e) {
+		    e.printStackTrace();
+		} catch (OverQuotaException e) {
+		    e.printStackTrace();
+		} catch (ServerOverloadException e) {
+		    e.printStackTrace();
+		}
 	    }
 	} else {
 	    for (int i = 0; i < element.getChildrens().size(); i++) {
@@ -994,7 +981,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	// retrieving other resources
 	String resourceDir = contentHostingService.getSiteCollection(siteId);
-	
+
 	try {
 	    ContentCollection workContent =
 		    contentHostingService.getCollection(resourceDir);
@@ -1202,9 +1189,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	// verify sessionCompatibility
 	String parentId = null;
-	try{
+	try {
 	    parentId = coRelationDao.getParentOfCourseOutline(siteId);
-	}catch(Exception e){
+	} catch (Exception e) {
 	}
 	if (parentId != null)
 	    verifySessionCompatibility(siteId, parentId, term.getEid());
@@ -1385,8 +1372,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	Parser parser = null;
 	String resourceOutputDir = null;
 	try {
-		resourceOutputDir =
-			contentHostingService.getSiteCollection(siteId);
+	    resourceOutputDir = contentHostingService.getSiteCollection(siteId);
 	} catch (Exception e1) {
 	    log.error(e1.getMessage());
 	    e1.printStackTrace();
@@ -1421,7 +1407,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 		if (CITATION_EXTENSION.equals(fileExtension)) {
 		    // read input stream of file to get properties of citation
-		    addCitations(file, siteId, resourceOutputDir);
+		    fileNameChangesMap.putAll(addCitations(file, siteId,
+			    resourceOutputDir));
 		} else {
 		    String s =
 			    addRessource(fileNameToUse, inputStream, metadata
@@ -1767,11 +1754,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	osylContentService.initSiteAttachments(newSite.getTitle());
 
 	// we hide work directory
-	    ContentCollectionEdit cce =
-		    contentHostingService.editCollection(ressource_id);
-	    cce.setHidden();
-	    contentHostingService.commitCollection(cce);
-	
+	ContentCollectionEdit cce =
+		contentHostingService.editCollection(ressource_id);
+	cce.setHidden();
+	contentHostingService.commitCollection(cce);
+
 	// Remove all old contents before importing contents from new site
 	importToolIntoSiteMigrate(toolIdList, newSite, oldSite);
 
