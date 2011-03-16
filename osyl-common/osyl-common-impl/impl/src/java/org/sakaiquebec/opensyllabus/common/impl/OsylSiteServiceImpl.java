@@ -393,91 +393,94 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    // ##### DELETE SITE ####//
 		    String siteid =
 			    e.getResource().substring("/site/".length());
+		    if (!siteid.startsWith("~")) {
+			if (ServerConfigurationService.getBoolean(
+				"osyl.site_deletion.co.delete", false)) {
+			    // we have to delete COs associated to this site too
+			    // breaks relation with other co
 
-		    if (ServerConfigurationService.getBoolean(
-			    "osyl.site_deletion.co.delete", false)) {
-			// we have to delete COs associated to this site too
-			// breaks relation with other co
-
-			try {
-			    String parent = null;
 			    try {
-				parent =
-					coRelationDao
-						.getParentOfCourseOutline(siteid);
-			    } catch (Exception e2) {
-			    }
-			    if (parent != null)
-				dissociate(siteid, parent);
-			    List<CORelation> childrens =
-				    coRelationDao
-					    .getCourseOutlineChildren(siteid);
-			    if (childrens != null)
-				for (CORelation corelation : childrens) {
-				    String child = corelation.getChild();
-				    dissociate(child, siteid);
+				String parent = null;
+				try {
+				    parent =
+					    coRelationDao
+						    .getParentOfCourseOutline(siteid);
+				} catch (Exception e2) {
 				}
+				if (parent != null)
+				    dissociate(siteid, parent);
+				List<CORelation> childrens =
+					coRelationDao
+						.getCourseOutlineChildren(siteid);
+				if (childrens != null)
+				    for (CORelation corelation : childrens) {
+					String child = corelation.getChild();
+					dissociate(child, siteid);
+				    }
 
-			    // delete co for siteid
-			    resourceDao.removeCoForSiteId(siteid);
+				// delete co for siteid
+				resourceDao.removeCoForSiteId(siteid);
 
-			} catch (Exception e1) {
-			    log.error(
-				    "Could not delete Co after site removing",
-				    e1);
-			}
-		    }
-
-		    if (ServerConfigurationService.getBoolean(
-			    "osyl.site_deletion.resource.delete", false)) {
-			// we have to delete resources
-			String collectionId = "/group/" + siteid + "/";
-			try {
-			    contentHostingService
-				    .removeCollection(collectionId);
-			} catch (Exception e1) {
-			    log
-				    .error(
-					    "Could not delete resources after site removing",
-					    e1);
-			}
-		    }
-
-		    if (ServerConfigurationService.getBoolean(
-			    "osyl.site_deletion.assignement.delete", false)) {
-			// we have to delete asssignement
-			Iterator assignementsIter;
-			for (assignementsIter =
-				assignmentService
-					.getAssignmentsForContext(siteid); assignementsIter
-				.hasNext();) {
-			    Assignment assignment =
-				    (Assignment) assignementsIter.next();
-			    AssignmentEdit toRemove;
-			    try {
-				toRemove =
-					assignmentService
-						.editAssignment(assignment
-							.getId());
-				assignmentService.removeAssignment(toRemove);
-				assignmentService.cancelEdit(toRemove);
 			    } catch (Exception e1) {
 				log
 					.error(
-						"Could not delete assignement after site removing",
+						"Could not delete Co after site removing",
 						e1);
 			    }
 			}
-			String attachementCollectionId =
-				"/attachment/" + siteid + "/";
-			try {
-			    contentHostingService
-				    .removeCollection(attachementCollectionId);
-			} catch (Exception e1) {
-			    log
-				    .error(
-					    "Could not delete assignement attachement after site removing",
-					    e1);
+
+			if (ServerConfigurationService.getBoolean(
+				"osyl.site_deletion.resource.delete", false)) {
+			    // we have to delete resources
+			    String collectionId = "/group/" + siteid + "/";
+			    try {
+				contentHostingService
+					.removeCollection(collectionId);
+			    } catch (Exception e1) {
+				log
+					.error(
+						"Could not delete resources after site removing",
+						e1);
+			    }
+			}
+
+			if (ServerConfigurationService.getBoolean(
+				"osyl.site_deletion.assignement.delete", false)) {
+			    // we have to delete asssignement
+			    Iterator assignementsIter;
+			    for (assignementsIter =
+				    assignmentService
+					    .getAssignmentsForContext(siteid); assignementsIter
+				    .hasNext();) {
+				Assignment assignment =
+					(Assignment) assignementsIter.next();
+				AssignmentEdit toRemove;
+				try {
+				    toRemove =
+					    assignmentService
+						    .editAssignment(assignment
+							    .getId());
+				    assignmentService
+					    .removeAssignment(toRemove);
+				    assignmentService.cancelEdit(toRemove);
+				} catch (Exception e1) {
+				    log
+					    .error(
+						    "Could not delete assignement after site removing",
+						    e1);
+				}
+			    }
+			    String attachementCollectionId =
+				    "/attachment/" + siteid + "/";
+			    try {
+				contentHostingService
+					.removeCollection(attachementCollectionId);
+			    } catch (Exception e1) {
+				log
+					.error(
+						"Could not delete assignement attachement after site removing",
+						e1);
+			    }
 			}
 		    }
 		} else if (e.getEvent().equals(
@@ -1333,7 +1336,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	} else {
 	    toolTitle = HEC_MONTREAL_RULES_TITLE_EN;
 	}
-	iframeCfg = addTool(site, homePage, "sakai.rutgers.linktool", toolTitle);
+	iframeCfg =
+		addTool(site, homePage, "sakai.rutgers.linktool", toolTitle);
 	iframeCfg.setLayoutHints("1,1");
 
 	iframeProps = iframeCfg.getPlacementConfig();
