@@ -326,4 +326,8 @@ public interface Messages extends ConstantsWithLookup {
     String unpublishAction_unpublish_ok();
 
     String session_compatibility_exception();
+
+    String unpublishAction_unpublish_confirmation();
+
+    String error();
 }
