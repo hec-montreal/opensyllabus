@@ -123,6 +123,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 		"//table/tbody/tr/td/table/tbody/tr/td/table/tbody/"
 			+ "tr/td/button");
 	pause();
+	pause();
 
 	//Add message to log file
 	logFile(ASSESSMENT_TEST, CT_030, PASSED);
@@ -140,7 +141,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 	// We edit the last assessment
 	session().click("//table/tbody/tr/td/div/table[2]/tbody/tr/td/button");
 	pause();
-
+	pause();
 	// We check if Opensyllabus displays a message error when the user click
 	// OK without fill the mandatory fields
 	// --------------------------------------------------------------------//
@@ -153,7 +154,8 @@ public class AssessmentTest extends AbstractOSYLTest {
 
 	// We click OK without filling the mandatory fields
 	session().click("//td/table/tbody/tr/td[1]/button");
-
+	pause();
+	pause();	
 	// We verify if Opensyllabus display a message error
 	//isTextPresent(text='Erreur') doesn't work for modal windows 
 	//It needs use isElementPresent(elementOfText)
@@ -168,7 +170,8 @@ public class AssessmentTest extends AbstractOSYLTest {
 	// We click OK to return to Assessment editor after message error
 	// displaying
 	session().click("//tr[2]/td/table/tbody/tr/td/button");
-
+	pause();
+	pause();	
 	// We check if the field "assessment type" is mandatory
 	// --------------------------------------------------------------------//
 
@@ -193,7 +196,8 @@ public class AssessmentTest extends AbstractOSYLTest {
 	
 	// We click OK to close assessment editor
 	session().click("//td/table/tbody/tr/td[1]/button");
-
+	pause();
+	pause();	
 	// We check if Opensyllabus displays a message error
 	if (!session().isElementPresent(Erreur)) {	
 	//if (!session().isTextPresent(Erreur)) {
@@ -207,7 +211,9 @@ public class AssessmentTest extends AbstractOSYLTest {
 
 	// We click OK to return to assessment editor
 	session().click("//tr[2]/td/table/tbody/tr/td/button");
-
+	pause();
+	pause();
+	
 	//Clicks for location, work mode and submission mode fields
 	if (optionId==1){
 		session().click(localisat1);
@@ -231,6 +237,8 @@ public class AssessmentTest extends AbstractOSYLTest {
 	// We click OK to close assessment editor
 	session().click("//td/table/tbody/tr/td[1]/button");
 
+	pause();
+	pause();	
 	// We check if Opensyllabus displays a message error
 	if (!session().isElementPresent(Erreur)) {	
 	//if (!session().isTextPresent(Erreur)) {
@@ -243,7 +251,8 @@ public class AssessmentTest extends AbstractOSYLTest {
 
 	// We click OK to return to assessment editor
 	session().click("//tr[2]/td/table/tbody/tr/td/button");
-
+	pause();
+	pause();	
 	// We check if the field "Work mode" is mandatory - it needs an update
 	// --------------------------------------------------------------------//
 	// We select randomly the location field
@@ -264,7 +273,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 	// We close Editor
 	session().click("//td/table/tbody/tr/td[1]/button");
 	pause();
-
+	pause();
 	//Add message to log file
 	logFile(ASSESSMENT_TEST, CT_050, PASSED);
 		
@@ -305,7 +314,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 		    "//html/body/div/div/table/tbody/tr[2]/td[2]/div/"
 			    + "div/table/tbody/tr/td");
 	    pause();
-
+		pause();
 	    // Click on Assessment section
 	    openEvaluationsSection();
 
@@ -334,7 +343,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 		    "//html/body/div/div/table/tbody/tr[2]/td[2]"
 			    + "/div/div/table/tbody/tr[2]/td");
 	    pause();
-
+		pause();
 	    // Click on Assessment section
 	    openEvaluationsSection();
 
@@ -383,7 +392,9 @@ public class AssessmentTest extends AbstractOSYLTest {
 
 	// open Citation resource editor
 	session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
-
+	pause();
+	pause();
+	
 	// We choose randomly a Rubric
 	String selectedRubric4 = getRandomRubric();
 	log("Selecting rubric [" + selectedRubric4 + "]");
@@ -447,7 +458,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 	}
 	session().click("//tr[2]/td/table/tbody/tr/td/button");
 	pause();
-	
+	pause();
 	log("Button Citation selected...");	
 	String Titre = "Titre" + timeStamp();
 	String Auteur = "Auteur" + timeStamp();		
@@ -486,7 +497,8 @@ public class AssessmentTest extends AbstractOSYLTest {
 	
 	// Close Editor
 	session().click("//td/table/tbody/tr/td[1]/button");
-
+	pause();
+	pause();	
 	// Save Assessment for FF and IE	
 	saveCourseOutline(); 
 	pause();
@@ -503,6 +515,7 @@ public class AssessmentTest extends AbstractOSYLTest {
 		"//html/body/div/div/table/tbody/tr[2]/td[2]/div/"
 			+ "div/table/tbody/tr/td");
 	pause();
+	pause();	
 	// Click on Assessment section
 	openEvaluationsSection();
 

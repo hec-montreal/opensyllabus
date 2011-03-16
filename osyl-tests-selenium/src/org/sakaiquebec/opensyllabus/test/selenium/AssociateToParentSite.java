@@ -95,7 +95,9 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 
 	    // publish
 	    session().click(BUTTON_PUBLISH); //It was "gwt-uid-5"
+	    pause();
 	    session().click("//button[contains(text(),'Publier')]");
+	    pause();	    
 	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
 	    ensurePublishDateOK();
 	    //-------------------------------------------------------------
@@ -122,12 +124,15 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		    parentSiteName);
 	    log("Typed parent site name");
 	    session().click("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/button[@class='gwt-Button']");
+	    pause();	    
 	    waitForLinkDropDownToShow(parentSiteName);
 	    session().select("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/select[@class='gwt-ListBox']",
 		    "label=" + parentSiteName);
 	    locator = "//tr[2]/td[2]/div/div/div/div[2]/table/tbody/tr[4]/td/div";
 	    //clickButtonWithLabel("Lier");
 	    smartMouse(locator);
+	    pause();
+	    pause();
 	    // We ensure the confirmation is displayed
 	    ensureElementPresent("//img[contains(@title,'Le site a bien')]");
 	    if (inFireFox()) {
@@ -136,7 +141,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    {
 		    smartMouse("//tr[4]/td/table/tbody/tr/td/div");	    	
 	    }	    
-	    
+	    pause();
 		//Add message to log file
 		logFile(ASSOCIATION_SITES_TEST, CT_001, PASSED);	
 		
@@ -165,8 +170,11 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		logFile(ASSOCIATION_SITES_TEST, CT_096, PASSED);	
 		
 	    // publish
+	    pause();
 	    session().click(BUTTON_PUBLISH); //It was "gwt-uid-5"
+	    pause();	    
 	    session().click("//button[contains(text(),'Publier')]");
+	    pause();	    
 	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
 	    ensurePublishDateOK();
 
@@ -190,12 +198,15 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		    getCurrentTestSiteName());
 	    log("Typed site name " + getCurrentTestSiteName());
 	    session().click("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/button[@class='gwt-Button']");
+	    pause();	    
 	    waitForLinkDropDownToShow(getCurrentTestSiteName());
 	    session().select("//table[@class='OsylManager-form-genericPanel']/tbody/tr/td/select[@class='gwt-ListBox']",
 		    "label=" + getCurrentTestSiteName());
 	    locator = "//tr[2]/td[2]/div/div/div/div[2]/table/tbody/tr[4]/td/div";
 	    //clickButtonWithLabel("Lier");
-	    smartMouse(locator);	    
+	    smartMouse(locator);	
+	    pause();
+	    pause();
 	    // We ensure the confirmation is displayed
 	    ensureElementPresent("//img[contains(@title,'Le site a bien ')]");
 	    if (inFireFox()) {
@@ -233,7 +244,9 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    // delete text
 	    // We delete newly added document
 	    session().click("//tr/td/div/table[2]/tbody/tr/td[2]/button");
+	    pause();
 	    ensureElementPresent("//tr/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
+	    pause();
 	    session().click(
 		    "//tr/td[2]/div/table/tbody/tr[2]/td/table/tbody/tr/td/button");
 	    pause();
@@ -250,7 +263,9 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		logFile(ASSOCIATION_SITES_TEST, CT_096, PASSED);	
 		
 	    // publish
+	    pause();
 	    session().click(BUTTON_PUBLISH); //It was "gwt-uid-5"
+	    pause();
 	    session().click("//button[contains(text(),'Publier')]");
 	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
 	    ensurePublishDateOK();
@@ -378,7 +393,9 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 		logFile(ASSOCIATION_SITES_TEST, CT_020, PASSED);	
 		
 	    // publish
+	    pause();
 	    session().click(BUTTON_PUBLISH); //It was "gwt-uid-5"
+	    pause();
 	    session().click("//button[contains(text(),'Publier')]");
 	    ensureElementPresent("//div[@class='Osyl-PublishView-publishedDate']");
 	    ensurePublishDateOK();
