@@ -667,7 +667,36 @@
 		</property>
 
 		<property name="jobName">
-			<value>Apply xsl on course outline (xsl must be in opensyllabus admin site and named courseOutline.xsl</value>
+			<value>Apply xsl on course outline (xsl must be in opensyllabus admin site and named courseOutline.xsl)</value>
+		</property>
+
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+
+	<bean id="deleteAllMyWorkspaces"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.DeleteAllMyWorkspaces">
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.deleteAllMyWorkspaces"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+
+		<property name="beanId">
+			<value>deleteAllMyWorkspaces</value>
+		</property>
+
+		<property name="jobName">
+			<value>Deletes all "My Workspace" sites.</value>
 		</property>
 
 		<property name="schedulerManager">
