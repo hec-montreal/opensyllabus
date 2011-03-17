@@ -127,12 +127,13 @@ public class UnpublishAction extends OsylManagerAbstractAction {
     public void onClick(final List<COSite> siteIds) {
 	String sites = "";
 	for (COSite coSite : siteIds) {
-	    sites += coSite.getSiteId() + "<br>";
+	    sites += coSite.getSiteId() + ",<br>";
 	}
+	sites=sites.substring(0,sites.length()-6);
 	String message = "";
 	message +=
 		messages.unpublishAction_unpublish_confirmation().replace(
-			"{0}", sites.subSequence(sites.length()-4, sites.length()));
+			"{0}", sites);
 
 	OsylOkCancelDialog conf =
 		new OsylOkCancelDialog(messages.OsylWarning_Title(), message);
