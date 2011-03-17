@@ -2081,8 +2081,20 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     private void copyAnnoucement(String fromSite, String toSite, String ref) {
 	List<String> list = new ArrayList<String>();
 	list.add(ref);
-	((EntityTransferrer) announcementService).transferCopyEntities(
-		fromSite, toSite, list);
+	SecurityAdvisor advisor = new SecurityAdvisor() {
+	    public SecurityAdvice isAllowed(String arg0, String arg1,
+		    String arg2) {
+		return SecurityAdvice.ALLOWED;
+	    }
+	};
+	try {
+	    securityService.pushAdvisor(advisor);
+	    ((EntityTransferrer) announcementService).transferCopyEntities(
+		    fromSite, toSite, list);
+	} finally {
+	    securityService.popAdvisor();
+	}
+
     }
 
     private AnnouncementChannel getAnnouncementChannel(String siteId) {
