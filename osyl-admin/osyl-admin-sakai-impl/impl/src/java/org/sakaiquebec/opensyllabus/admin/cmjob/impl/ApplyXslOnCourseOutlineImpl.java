@@ -44,7 +44,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
  */
 public class ApplyXslOnCourseOutlineImpl implements ApplyXslOnCourseOutline {
 
-    private static Log log = LogFactory.getLog(OsylConversionJobImpl.class);
+    private static Log log = LogFactory.getLog(ApplyXslOnCourseOutlineImpl.class);
 
     // ***************** SPRING INJECTION ************************//
     private OsylSiteService osylSiteService;
@@ -117,7 +117,7 @@ public class ApplyXslOnCourseOutlineImpl implements ApplyXslOnCourseOutline {
 	    log.debug("Finished applying xsl on co with co_id:" + co.getCoId());
 	}
 	logoutFromSakai();
-	log.info("Finished applying xsl on co Course Outlines in "
+	log.info("Finished applying xsl on Course Outlines in "
 		+ (System.currentTimeMillis() - start) + " ms");
     }
 
@@ -127,7 +127,7 @@ public class ApplyXslOnCourseOutlineImpl implements ApplyXslOnCourseOutline {
 	sakaiSession.setUserEid("admin");
 
 	// establish the user's session
-	usageSessionService.startSession("admin", "127.0.0.1", "COConv");
+	usageSessionService.startSession("admin", "127.0.0.1", "XSLOsyl");
 
 	// update the user's externally provided realm definitions
 	authzGroupService.refreshUser("admin");
