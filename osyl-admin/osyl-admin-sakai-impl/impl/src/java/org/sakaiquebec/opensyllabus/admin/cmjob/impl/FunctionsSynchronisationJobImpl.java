@@ -226,7 +226,7 @@ public class FunctionsSynchronisationJobImpl implements
 
 	    for (int i = 0; i < THREAD_COUNT; i++) {
 		start = i * share;
-		end = Math.max(i * share + share, allSites.size());
+		end = Math.min(i * share + share, allSites.size());
 		threads[i] = new MyThread(i, allSites.subList(start, end));
 		threads[i].start();
 	    }
