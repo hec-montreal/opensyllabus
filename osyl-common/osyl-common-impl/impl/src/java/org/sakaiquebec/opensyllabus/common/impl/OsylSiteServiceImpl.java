@@ -2159,8 +2159,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     private void deleteSiteAnnouncementForOriginalAnnouncementMessageRef(
 	    String siteId, String ref) {
-
+	SecurityAdvisor advisor = new SecurityAdvisor() {
+	    public SecurityAdvice isAllowed(String arg0, String arg1,
+		    String arg2) {
+		return SecurityAdvice.ALLOWED;
+	    }
+	};
 	try {
+	    securityService.pushAdvisor(advisor);
 	    AnnouncementChannel channel = getAnnouncementChannel(siteId);
 	    List messageList = channel.getMessages(null, true);
 
@@ -2171,7 +2177,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 		    channel.removeMessage(msg.getId());
 	    }
-	} catch (Exception ee) {
+	} catch (Exception e) {
+	} finally {
+	    securityService.popAdvisor();
 	}
     }
 }
