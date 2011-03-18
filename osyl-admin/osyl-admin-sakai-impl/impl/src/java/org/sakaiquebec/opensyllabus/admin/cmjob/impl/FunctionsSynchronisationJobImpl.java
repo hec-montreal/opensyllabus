@@ -139,18 +139,18 @@ public class FunctionsSynchronisationJobImpl implements
         loginToSakai();
 
 	setStart(System.currentTimeMillis());
-	log.info("FunctionsSynchronisationJobImpl: starting");
+	log.info("starting");
 
 	setRoleToRemove(adminConfigService.getRoleToRemove());
 	setFunctionsRole(adminConfigService.getFunctionsRole());
 	setAllowedFunctions(adminConfigService.getAllowedFunctions());
 	setDisallowedFunctions(adminConfigService.getDisallowedFunctions());
 	
-	log.info("FunctionsSynchronisationJobImpl: data provided by adminConfigService:");
-	log.info("FunctionsSynchronisationJobImpl: roleToRemove:        " + getRoleToRemove());
-	log.info("FunctionsSynchronisationJobImpl: functionsRole:       " + getFunctionsRole());
-	log.info("FunctionsSynchronisationJobImpl: allowedFunctions:    " + getAllowedFunctions());
-	log.info("FunctionsSynchronisationJobImpl: disallowedFunctions: " + getDisallowedFunctions());
+	log.info("data provided by adminConfigService:");
+	log.info("roleToRemove:        " + getRoleToRemove());
+	log.info("functionsRole:       " + getFunctionsRole());
+	log.info("allowedFunctions:    " + getAllowedFunctions());
+	log.info("disallowedFunctions: " + getDisallowedFunctions());
 
 	// Check role in site template realm
 	try {
@@ -176,9 +176,6 @@ public class FunctionsSynchronisationJobImpl implements
 	} catch (AuthzPermissionException e) {
 	    log.error(e.getMessage());
 	}
-
-	log.info("FunctionsSynchronisationJobImpl: checkpoint after "
-		+ (System.currentTimeMillis() - getStart()) + " ms");
 
 	// Check role in group template realm
 	try {
@@ -206,65 +203,87 @@ public class FunctionsSynchronisationJobImpl implements
 	    log.error(e.getMessage());
 	}
 
-	log.info("FunctionsSynchronisationJobImpl: checkpoint after "
-		+ (System.currentTimeMillis() - getStart()) + " ms");
-
 	// check all course site realms
 	final List<Site> allSites =
 		siteService.getSites(SiteService.SelectionType.ANY, SITE_TYPE,
 			null, null, SiteService.SortType.NONE, null);
 
-	log.info("FunctionsSynchronisationJobImpl: processing "
-		+ allSites.size() + " sites");
-	logoutFromSakai();
+	log.info("processing " + allSites.size() + " sites");
 	
-	final int sublistLength = new Double(Math.floor(allSites.size()/4)).intValue();
+	int THREAD_COUNT = 8;
 	
-	if(allSites.size()<4){
+	final int share = new Double(
+		Math.floor(allSites.size()/THREAD_COUNT)).intValue();
+	
+	if(allSites.size()<THREAD_COUNT){
 	    processSites(allSites);
 	} else {
-	    Thread t1 = new Thread() {
-		public void run() {
-		    loginToSakai();
-		    processSites(allSites.subList(0, sublistLength));
-		    logoutFromSakai();
-		}
-	    };
+	    logoutFromSakai();
 
-	    Thread t2 = new Thread() {
-		public void run() {
-		    loginToSakai();
-		    processSites(allSites.subList(sublistLength,
-			    2 * sublistLength));
-		    logoutFromSakai();
-		}
-	    };
+	    MyThread[] threads = new MyThread[THREAD_COUNT];
+	    int start = 0;
+	    int end = 0;
 
-	    Thread t3 = new Thread() {
-		public void run() {
-		    loginToSakai();
-		    processSites(allSites.subList(2 * sublistLength,
-			    3 * sublistLength));
-		    logoutFromSakai();
+	    for (int i = 0; i < THREAD_COUNT; i++) {
+		start = i * share;
+		end = Math.max(i * share + share, allSites.size());
+		threads[i] = new MyThread(i, allSites.subList(start, end));
+		threads[i].start();
+	    }
+	    
+	    // Check that every thread has completed.
+	    boolean allCompleted = true; 
+	    while (true) {
+		allCompleted = true;
+		for (int i = 0; i < THREAD_COUNT; i++) {
+		    if(!threads[i].completed()) {
+			allCompleted = false;
+			break;
+		    }
 		}
-	    };
 
-	    Thread t4 = new Thread() {
-		public void run() {
-		    loginToSakai();
-		    processSites(allSites.subList(3 * sublistLength,
-			    allSites.size()));
-		    logoutFromSakai();
+		if (allCompleted) {
+		    break;
+		} else {
+		    try {
+			// Wait 5 sec
+			Thread.sleep(5000);
+		    } catch (InterruptedException e) {
+			e.printStackTrace();
+		    }
 		}
-	    };
-
-	    t1.start();
-	    t2.start();
-	    t3.start();
-	    t4.start();
+	    }
 	}
+	log.info("Completed after "
+		+ ((getStart() - System.currentTimeMillis())/1000)
+		+ " seconds");
     } // execute
     
+    class MyThread extends Thread {
+	List<Site> sites;
+	boolean completed;
+	int threadNo;
+
+	MyThread(int threadNo, List<Site> sites) {
+	    this.threadNo = threadNo;
+	    this.sites = sites;
+	    completed = false;
+	}
+
+	public void run() {
+	    log.debug("Thread #" + threadNo + " Starting");
+	    loginToSakai();
+	    processSites(sites);
+	    logoutFromSakai();
+	    completed = true;
+	    log.debug("Thread #" + threadNo + " Finished");
+	}
+
+	public boolean completed() {
+	    return completed;
+	}
+    } // class MyThread
+	
     private void processSites(List<Site> sites){
 	boolean roleExists = false;
 	Site site = null;
@@ -363,7 +382,7 @@ public class FunctionsSynchronisationJobImpl implements
 		}
 	    }
 	}
-    }
+    } // processSites
 
     /**
      * Checks if the permissions are associated to the role.
