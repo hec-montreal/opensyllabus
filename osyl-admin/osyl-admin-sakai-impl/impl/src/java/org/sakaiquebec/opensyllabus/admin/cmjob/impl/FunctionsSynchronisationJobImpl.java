@@ -255,7 +255,7 @@ public class FunctionsSynchronisationJobImpl implements
 	    }
 	}
 	log.info("Completed after "
-		+ ((getStart() - System.currentTimeMillis())/1000)
+		+ ((System.currentTimeMillis() - getStart())/1000)
 		+ " seconds");
     } // execute
     
