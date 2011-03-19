@@ -262,6 +262,9 @@ public class FunctionsSynchronisationJobImpl implements
 			allCompleted = false;
 			break;
 		    }
+		    if (allCompleted) {
+			break;
+		    }
 		}
 
 		if (allCompleted) {
@@ -297,7 +300,7 @@ public class FunctionsSynchronisationJobImpl implements
 
 	public void run() {
 	    completed = false;
-	    log.debug("Thread #" + threadNo + " Starting");
+	    log.debug("Thread #" + threadNo + " (" + getName() + ") Starting");
 	    loginToSakai();
 	    processSites(sites);
 	    logoutFromSakai();
