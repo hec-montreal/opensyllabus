@@ -259,10 +259,12 @@ public class FunctionsSynchronisationJobImpl implements
 			    log.debug("all sites allocated, waiting for threads to complete");
 			}
 		    } else {
+			log.debug("allCompleted false");
 			allCompleted = false;
 			break;
 		    }
 		    if (allCompleted) {
+			log.debug("allCompleted true");
 			break;
 		    }
 		}
