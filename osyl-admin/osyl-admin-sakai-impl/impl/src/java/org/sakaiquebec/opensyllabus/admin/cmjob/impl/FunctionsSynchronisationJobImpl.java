@@ -243,6 +243,7 @@ public class FunctionsSynchronisationJobImpl implements
 			// found one free thread 
 			if (shareEnd != allSites.size()) {
 			    // not all sites processed
+			    allCompleted = false;
 			    shareEnd = Math.min(shareStart + share,
 				    allSites.size());
 			    threads[i] = new MyThread(
@@ -259,9 +260,8 @@ public class FunctionsSynchronisationJobImpl implements
 			    log.debug("all sites allocated, waiting for threads to complete");
 			}
 		    } else {
-			log.debug("allCompleted false");
+			log.debug("allCompleted false: thread running: " + i);
 			allCompleted = false;
-			break;
 		    }
 		    if (allCompleted) {
 			log.debug("allCompleted true");
