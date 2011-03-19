@@ -257,15 +257,12 @@ public class FunctionsSynchronisationJobImpl implements
 			    shareStart = shareEnd;
 			} else {
 			    // all sites allocated
-			    log.debug("all sites allocated, waiting for threads to complete");
+			    log.debug("all sites allocated, waiting for threads ("
+				    + i + ") to complete");
 			}
 		    } else {
 			log.debug("allCompleted false: thread running: " + i);
 			allCompleted = false;
-		    }
-		    if (allCompleted) {
-			log.debug("allCompleted true");
-			break;
 		    }
 		}
 
@@ -288,7 +285,7 @@ public class FunctionsSynchronisationJobImpl implements
     
     class MyThread extends Thread {
 	List<Site> sites;
-	boolean completed;
+	boolean completed = false;
 	int threadNo;
 
 	MyThread(int threadNo, List<Site> sites) {
