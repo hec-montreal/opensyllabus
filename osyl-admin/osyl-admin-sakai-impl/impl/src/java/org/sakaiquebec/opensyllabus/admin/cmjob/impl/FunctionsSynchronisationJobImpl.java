@@ -245,7 +245,8 @@ public class FunctionsSynchronisationJobImpl implements
 			    // not all sites processed
 			    shareEnd = Math.min(shareStart + share,
 				    allSites.size());
-			    threads[i].setSiteList(
+			    threads[i] = new MyThread(
+				    i, 
 				    allSites.subList(
 					    shareStart,
 					    shareEnd));
