@@ -211,32 +211,53 @@ public class FunctionsSynchronisationJobImpl implements
 	log.info("processing " + allSites.size() + " sites");
 	
 	int THREAD_COUNT = 8;
+	int SHARE_COUNT = THREAD_COUNT * 4;
 	
-	final int share = new Double(
-		Math.floor(allSites.size()/THREAD_COUNT)).intValue();
-	
-	if(allSites.size()<THREAD_COUNT){
+	if(allSites.size()<SHARE_COUNT){
 	    processSites(allSites);
 	} else {
+	    final int share = new Double(
+		    Math.floor(allSites.size()/(SHARE_COUNT))).intValue();
+		
 	    logoutFromSakai();
 
 	    MyThread[] threads = new MyThread[THREAD_COUNT];
-	    int start = 0;
-	    int end = 0;
+	    int shareStart = 0;
+	    int shareEnd = 0;
 
 	    for (int i = 0; i < THREAD_COUNT; i++) {
-		start = i * share;
-		end = Math.min(i * share + share, allSites.size());
-		threads[i] = new MyThread(i, allSites.subList(start, end));
+		shareStart = i * share;
+		shareEnd = Math.min(i * share + share, allSites.size());
+		threads[i] = new MyThread(i,
+			allSites.subList(shareStart, shareEnd));
 		threads[i].start();
 	    }
+	    shareStart = THREAD_COUNT * share;
 	    
 	    // Check that every thread has completed.
 	    boolean allCompleted = true; 
 	    while (true) {
 		allCompleted = true;
 		for (int i = 0; i < THREAD_COUNT; i++) {
-		    if(!threads[i].completed()) {
+		    if(threads[i].completed()) {
+			// found one free thread 
+			if (shareEnd != allSites.size()) {
+			    // not all sites processed
+			    shareEnd = Math.min(shareStart + share,
+				    allSites.size());
+			    threads[i].setSiteList(
+				    allSites.subList(
+					    shareStart,
+					    shareEnd));
+			    log.debug("allocated sites " + shareStart + " to "
+				    + shareEnd + " to thread #" + i);
+			    threads[i].start();
+			    shareStart = shareEnd;
+			} else {
+			    // all sites allocated
+			    log.debug("all sites allocated, waiting for threads to complete");
+			}
+		    } else {
 			allCompleted = false;
 			break;
 		    }
@@ -246,8 +267,8 @@ public class FunctionsSynchronisationJobImpl implements
 		    break;
 		} else {
 		    try {
-			// Wait 5 sec
-			Thread.sleep(5000);
+			// Wait a bit
+			Thread.sleep(100);
 		    } catch (InterruptedException e) {
 			e.printStackTrace();
 		    }
@@ -266,17 +287,21 @@ public class FunctionsSynchronisationJobImpl implements
 
 	MyThread(int threadNo, List<Site> sites) {
 	    this.threadNo = threadNo;
+	    setSiteList(sites);
+	}
+	
+	private void setSiteList(List<Site> sites) {
 	    this.sites = sites;
-	    completed = false;
 	}
 
 	public void run() {
+	    completed = false;
 	    log.debug("Thread #" + threadNo + " Starting");
 	    loginToSakai();
 	    processSites(sites);
 	    logoutFromSakai();
-	    completed = true;
 	    log.debug("Thread #" + threadNo + " Finished");
+	    completed = true;
 	}
 
 	public boolean completed() {

@@ -303,10 +303,14 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		log.info("You are not allowed to access this resource");
 	    } catch (IdUnusedException e) {
 		//The file has been removed - remove config in list
-		if (configFiles != null && fileName.contains(ROLEFOLDER)) {
-		    String role = configFiles.get(fileName);
-		    configFiles.remove(fileName);
-		    updatedRoles.remove(role);
+		if (configFiles != null) {
+		    if (fileName.contains(ROLEFOLDER)) {
+			String role = configFiles.get(fileName);
+			configFiles.remove(fileName);
+			if (updatedRoles != null) {
+			    updatedRoles.remove(role);
+			}
+		    }
 		}
 		if ( fileName.contains(OFFSITESCONFIGFILE)) {
 		    setCourses(null);
