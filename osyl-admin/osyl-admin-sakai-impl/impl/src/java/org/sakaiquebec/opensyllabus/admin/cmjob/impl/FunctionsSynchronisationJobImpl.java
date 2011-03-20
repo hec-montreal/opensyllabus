@@ -211,7 +211,7 @@ public class FunctionsSynchronisationJobImpl implements
 	log.info("processing " + allSites.size() + " sites");
 	
 	int THREAD_COUNT = 8;
-	int SHARE_COUNT = THREAD_COUNT * 4;
+	int SHARE_COUNT = THREAD_COUNT * 8;
 	
 	if(allSites.size()<SHARE_COUNT){
 	    processSites(allSites);
@@ -230,6 +230,8 @@ public class FunctionsSynchronisationJobImpl implements
 		shareEnd = Math.min(i * share + share, allSites.size());
 		threads[i] = new MyThread(i,
 			allSites.subList(shareStart, shareEnd));
+		log.debug("allocated sites " + shareStart + " to "
+			+ shareEnd + " to thread #" + i);
 		threads[i].start();
 	    }
 	    shareStart = THREAD_COUNT * share;
@@ -257,11 +259,11 @@ public class FunctionsSynchronisationJobImpl implements
 			    shareStart = shareEnd;
 			} else {
 			    // all sites allocated
-			    log.debug("all sites allocated, waiting for threads ("
+			    log.trace("all sites allocated, waiting for threads ("
 				    + i + ") to complete");
 			}
 		    } else {
-			log.debug("allCompleted false: thread running: " + i);
+			log.trace("allCompleted false: thread running: " + i);
 			allCompleted = false;
 		    }
 		}
