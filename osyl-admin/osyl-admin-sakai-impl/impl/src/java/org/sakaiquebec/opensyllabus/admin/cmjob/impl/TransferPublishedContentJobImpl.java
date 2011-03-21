@@ -416,8 +416,10 @@ public class TransferPublishedContentJobImpl implements
 		    if (!newResourceId.equals(entity.getId()))
 
 			if (entity.isCollection())
+			    // FIXME: This creates duplicated structures (JIRA SAKAI-2368)
 			    contentHostingService.copyIntoFolder(
 				    entity.getId(), newResourceId);
+			    // FIXME: This creates duplicated structures (JIRA SAKAI-2368)
 			else
 			    contentHostingService.copy(entity.getId(),
 				    newResourceId);
