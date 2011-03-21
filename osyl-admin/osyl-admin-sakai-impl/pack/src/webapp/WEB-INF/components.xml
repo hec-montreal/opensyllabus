@@ -322,35 +322,6 @@
 		<property name="toolManager" ref="org.sakaiproject.tool.api.ToolManager" />
 	</bean>
 
-	<bean id="osylhcojob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylHierarchicalCourseOutlineJobImpl">
-		<property name="coRelationDao"
-			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
-		<property name="osylHierarchyService"
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService" />
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="eventTrackingService"
-			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
-	</bean>
-
-	<bean id="osylcmjobudem"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImplUdeM">
-		<property name="userDirService"
-			ref="org.sakaiproject.user.api.UserDirectoryService" />
-		<property name="cmAdmin"
-			ref="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
-		<property name="cmService"
-			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="eventTrackingService"
-			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
-	</bean>
 
 	<bean id="osylconvjob"
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylConversionJobImpl">
@@ -569,40 +540,6 @@
 
 	</bean>
 
-
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylcmjobudem"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
-
-		<property name="beanId">
-			<value>osylcmjobudem</value>
-		</property>
-
-		<property name="jobName">
-			<value>UdeM OpenSyllabus Course Management Job Synchronizer</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
-
-	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylhcojob"
-		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
-		singleton="true" init-method="init">
-
-		<property name="beanId">
-			<value>osylhcojob</value>
-		</property>
-
-		<property name="jobName">
-			<value>OpenSyllabus Hierarchical Course Outline Job Synchronizer</value>
-		</property>
-
-		<property name="schedulerManager">
-			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
-		</property>
-	</bean>
 
 	<bean id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.osylconvjob"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
