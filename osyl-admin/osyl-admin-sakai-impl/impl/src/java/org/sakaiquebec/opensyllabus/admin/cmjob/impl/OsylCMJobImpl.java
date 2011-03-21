@@ -620,29 +620,31 @@ public class OsylCMJobImpl implements OsylCMJob {
 				UsageSessionService.EVENT_LOGOUT, null, true));
 	}
 
-	private boolean filesExists(String directory) {
+	private boolean filesExist(String directory) {
 
-		File sessionFile = new File(directory + File.separator + SESSION_FILE);
-		File coursFile = new File(directory + File.separator + COURS_FILE);
-		File etudiantFile = new File(directory + File.separator + ETUDIANT_FILE);
-		File horairesFile = new File(directory + File.separator + HORAIRES_FILE);
-		File profFile = new File(directory + File.separator + PROF_FILE);
-		File secretairesFile = new File(directory + File.separator
-				+ SECRETAIRES_FILE);
-		File servensFile = new File(directory + File.separator + SERV_ENS_FILE);
-		File progEtudFile = new File(directory + File.separator
-				+ PROG_ETUD_FILE);
+	    File sessionFile = new File(directory, SESSION_FILE);
+	    File coursFile = new File(directory, COURS_FILE);
+	    File etudiantFile = new File(directory, ETUDIANT_FILE);
+	    File horairesFile = new File(directory, HORAIRES_FILE);
+	    File profFile = new File(directory, PROF_FILE);
+	    File secretairesFile = new File(directory, SECRETAIRES_FILE);
+	    File servensFile = new File(directory, SERV_ENS_FILE);
+	    File progEtudFile = new File(directory, PROG_ETUD_FILE);
+	    File chargeFormFile = new File(directory, CHARGE_FORMATION);
 
-		File chargeFormFile = new File(directory + File.separator + CHARGE_FORMATION);
-		
-		if (sessionFile.exists() && coursFile.exists() && etudiantFile.exists()
-				&& horairesFile.exists() && profFile.exists()
-				&& secretairesFile.exists() && servensFile.exists()
-				&& progEtudFile.exists() && chargeFormFile.exists())
-			return true;
-		return false;
-
-	}    
+	    if (sessionFile.exists() && coursFile.exists()
+		    && etudiantFile.exists() && horairesFile.exists()
+		    && profFile.exists() && secretairesFile.exists()
+		    && servensFile.exists() && progEtudFile.exists()
+		    && chargeFormFile.exists()) {
+		return true;
+	    }
+	    
+	    log.warn("At least one file of the PeopleSoft extract file "
+		    + "set is missing in directory " + directory);
+	    return false;
+	    
+	} // filesExist    
     
     /** {@inheritDoc} */
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
@@ -664,7 +666,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 	    return;
 	}
 
-	if (!filesExists(directory)) {
+	if (!filesExist(directory)) {
 	    String message =
 		    "The synchronization did not take place because"
 			    + " one of the extract files is missing";
