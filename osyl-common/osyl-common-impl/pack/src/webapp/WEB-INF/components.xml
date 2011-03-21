@@ -60,17 +60,6 @@
 		init-method="init" destroy-method="destroy" singleton="true">
 	</bean>
 
-	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService"
-		class="org.sakaiquebec.opensyllabus.common.impl.OsylHierarchyServiceImpl"
-		init-method="init" destroy-method="destroy" singleton="true">
-
-		<!-- Sakai dependencies -->
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-
-		<property name="coRelationDao"
-			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
-	</bean>
-
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylContentService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylContentServiceImpl"
 		init-method="init" destroy-method="destroy" singleton="true">
@@ -150,8 +139,6 @@
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService" />
 		<property name="configService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylConfigService" />
-		<property name="osylHierarchyService"
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService" />
 		<property name="resourceDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
 		<property name="configDao"

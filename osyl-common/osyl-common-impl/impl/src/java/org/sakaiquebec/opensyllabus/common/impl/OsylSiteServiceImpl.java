@@ -89,7 +89,6 @@ import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
-import org.sakaiquebec.opensyllabus.common.api.OsylHierarchyService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
@@ -137,9 +136,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /** The chs to be injected by Spring */
     private ContentHostingService contentHostingService;
-
-    /** The hierarchy service to be injected by Spring */
-    private OsylHierarchyService osylHierarchyService;
 
     private EventTrackingService eventTrackingService;
 
@@ -244,14 +240,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	this.eventTrackingService = eventTrackingService;
     }
 
-    /**
-     * Sets the {@link OsylSecurityService}.
-     * 
-     * @param securityService
-     */
-    public void setOsylHierarchyService(OsylHierarchyService hierarchyService) {
-	this.osylHierarchyService = hierarchyService;
-    }
 
     /**
      * Sets the <code>ContentHostingService</code>.
@@ -1432,8 +1420,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			}
 		    }
 		    coRelationDao.createRelation(siteId, parentId);
-		    // We update the users
-		    osylHierarchyService.addOrUpdateUsers(siteId);
 		} else {
 		    throw new Exception("Child course outline is null");
 		}
@@ -1467,8 +1453,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			resourceDao.createOrUpdateCourseOutline(co);
 
 		    }
-		    // We remove the users
-		    osylHierarchyService.removeUsers(parentId, siteId);
 
 		    coRelationDao.removeRelation(siteId, parentId);
 
