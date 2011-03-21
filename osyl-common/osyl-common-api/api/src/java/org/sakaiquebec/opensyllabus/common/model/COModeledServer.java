@@ -766,7 +766,6 @@ public class COModeledServer {
 
 	    String visibility =
 		    coContentResProxy.getProperty(COPropertiesType.VISIBILITY);
-
 	    if (coContentResProxy.getResource().getType().equals(
 		    COContentResourceType.DOCUMENT)) {
 		documentVisibilityMap.put(uri.trim(), visibility);
@@ -780,6 +779,8 @@ public class COModeledServer {
 		allDocumentsVisibilityMap.put(coContentResProxy.getResource()
 			.getId(), visibility);
 	    }
+	    if (!Boolean.parseBoolean(visibility) && isPublication)
+		return null;
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
@@ -1061,37 +1062,40 @@ public class COModeledServer {
      */
     private void createChildElement(Document document, Element parent,
 	    COElementAbstract child) {
+	    try {
+		if (child instanceof COContentResourceProxy) {
+		    createChildElement(document, parent,
+			    (COContentResourceProxy) child);
+		} else {
+		    Element element = null;
+		    if (child.isCOStructureElement()) {
+			element =
+				document.createElement(CO_STRUCTURE_NODE_NAME);
+		    } else if (child.isCOUnit()) {
+			element = document.createElement(CO_UNIT_NODE_NAME);
 
-	try {
-	    if (child instanceof COContentResourceProxy) {
-		createChildElement(document, parent,
-			(COContentResourceProxy) child);
-	    } else {
-		Element element = null;
-		if (child.isCOStructureElement()) {
-		    element = document.createElement(CO_STRUCTURE_NODE_NAME);
-		} else if (child.isCOUnit()) {
-		    element = document.createElement(CO_UNIT_NODE_NAME);
+		    } else if (child.isCOUnitStructure()) {
+			element =
+				document
+					.createElement(CO_UNIT_STRUCTURE_NODE_NAME);
 
-		} else if (child.isCOUnitStructure()) {
-		    element =
-			    document.createElement(CO_UNIT_STRUCTURE_NODE_NAME);
+		    } else if (child.isCOUnitContent()) {
+			element =
+				document
+					.createElement(CO_UNIT_CONTENT_NODE_NAME);
+		    }
+		    setCommonAttributesAndProperties(element, child, document);
 
-		} else if (child.isCOUnitContent()) {
-		    element = document.createElement(CO_UNIT_CONTENT_NODE_NAME);
+		    for (int i = 0; i < child.getChildrens().size(); i++) {
+			createChildElement(document, element,
+				(COElementAbstract) child.getChildrens().get(i));
+		    }
+		    parent.appendChild(element);
 		}
-		setCommonAttributesAndProperties(element, child, document);
 
-		for (int i = 0; i < child.getChildrens().size(); i++) {
-		    createChildElement(document, element,
-			    (COElementAbstract) child.getChildrens().get(i));
-		}
-		parent.appendChild(element);
+	    } catch (Exception e) {
+		e.printStackTrace();
 	    }
-
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
     }
 
     /**

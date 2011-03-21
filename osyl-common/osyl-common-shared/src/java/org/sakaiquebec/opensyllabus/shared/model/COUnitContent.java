@@ -118,9 +118,12 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
      * @return true if the resourcePRoxy is added successfully, false if not.
      */
     public boolean addChild(COContentResourceProxy resourceProxy) {
-	boolean res = getChildrens().add(resourceProxy);
-	notifyEventHandlers(UpdateCOUnitContentEvent.ADD_RESSOURCE_PROXY_EVENT_TYPE);
-	return res;
+	if (resourceProxy != null) {
+	    boolean res = getChildrens().add(resourceProxy);
+	    notifyEventHandlers(UpdateCOUnitContentEvent.ADD_RESSOURCE_PROXY_EVENT_TYPE);
+	    return res;
+	}
+	return true;
     }
 
     /**
@@ -142,7 +145,7 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
 	    updateCOUnitContentEventHandler =
 		    new HashSet<UpdateCOUnitContentEventHandler>();
 	}
-	if(!updateCOUnitContentEventHandler.contains(handler))
+	if (!updateCOUnitContentEventHandler.contains(handler))
 	    updateCOUnitContentEventHandler.add(handler);
     }
 
@@ -176,17 +179,16 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
     @Override
     public void changeElementPosition(COContentResourceProxy resourceProxy,
 	    int action) {
-	
+
     }
 
     @Override
     public int getElementPosition(COContentResourceProxy resourceProxy) {
 	return 0;
     }
-    
-    
+
     public void changeElementPosition(COContentResourceProxy resourceProxy,
-	    int action,String propertyKey) {
+	    int action, String propertyKey) {
 	Iterator<COContentResourceProxy> resourceProxiesIter =
 		getChildrens().iterator();
 	boolean isFound = false;
@@ -229,8 +231,8 @@ public class COUnitContent extends COElementAbstract<COContentResourceProxy>
 	}
     }
 
-    
-    public int getElementPosition(COContentResourceProxy resourceProxy,String propertyKey) {
+    public int getElementPosition(COContentResourceProxy resourceProxy,
+	    String propertyKey) {
 	boolean isFound = false;
 	boolean hasPredecessor = false;
 	boolean hasSuccessor = false;
