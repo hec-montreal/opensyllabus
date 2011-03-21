@@ -3,6 +3,7 @@ package org.sakaiquebec.opensyllabus.common.impl;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -41,8 +42,15 @@ import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.ResourceProperties;
 import org.sakaiproject.event.api.NotificationService;
+import org.sakaiproject.exception.IdInvalidException;
+import org.sakaiproject.exception.IdLengthException;
+import org.sakaiproject.exception.IdUniquenessException;
 import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.exception.InUseException;
+import org.sakaiproject.exception.OverQuotaException;
 import org.sakaiproject.exception.PermissionException;
+import org.sakaiproject.exception.ServerOverloadException;
+import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.id.api.IdManager;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.tool.api.SessionManager;
@@ -86,7 +94,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The security service to be injected by Spring
-     *
+     * 
      * @uml.property name="osylSecurityService"
      * @uml.associationEnd
      */
@@ -96,7 +104,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link OsylSecurityService}.
-     *
+     * 
      * @param securityService
      */
     public void setOsylSecurityService(OsylSecurityService securityService) {
@@ -108,7 +116,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Dependency: AnnouncementService
-     *
+     * 
      * @param announcementService The AnnouncementService
      */
     public void setAnnouncementService(AnnouncementService announcementService) {
@@ -144,7 +152,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The chs to be injected by Spring
-     *
+     * 
      * @uml.property name="contentHostingService"
      * @uml.associationEnd multiplicity="(0 -1)" ordering="true"
      *                     elementType="org.sakaiproject.content.api.ContentEntity"
@@ -155,7 +163,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the <code>ContentHostingService</code>.
-     *
+     * 
      * @param contentHostingService
      * @uml.property name="contentHostingService"
      */
@@ -179,7 +187,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     /**
      * The resouceDao to be injected by Spring
-     *
+     * 
      * @uml.property name="resourceDao"
      * @uml.associationEnd
      */
@@ -187,7 +195,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link ResourceDao} .
-     *
+     * 
      * @param resourceDao
      * @uml.property name="resourceDao"
      */
@@ -197,7 +205,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The config service to be injected by Spring
-     *
+     * 
      * @uml.property name="osylConfigService"
      * @uml.associationEnd
      */
@@ -205,7 +213,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link OsylConfigService}.
-     *
+     * 
      * @param configService
      */
     public void setConfigService(OsylConfigService configService) {
@@ -214,7 +222,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The transformation and transfer service to be injected by Spring
-     *
+     * 
      * @uml.property name="osylTransformToZCCO"
      * @uml.associationEnd
      */
@@ -222,7 +230,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link OsylTransformToZCCO}.
-     *
+     * 
      * @param osylTransformToZCCO
      */
     public void setOsylTransformToZCCO(OsylTransformToZCCO osylTransformToZCCO) {
@@ -231,7 +239,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The OsylSite service to be injected by Spring
-     *
+     * 
      * @uml.property name="osylSiteService"
      * @uml.associationEnd
      */
@@ -239,7 +247,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link OsylSiteService} .
-     *
+     * 
      * @param osylSiteService
      * @uml.property name="osylSiteService"
      */
@@ -251,7 +259,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link CORelationDao}.
-     *
+     * 
      * @param configDao
      */
     public void setCoRelationDao(CORelationDao relationDao) {
@@ -299,7 +307,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     /**
      * Creates or updates the corresponding entries in the database and copies
      * the ressources
-     *
+     * 
      * @param String webapp dir (absolute pathname !?)
      */
     public Vector<Map<String, String>> publish(String webappDir, String siteId)
@@ -572,26 +580,59 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     }
 
     private void createPdfInResource(String siteId, String directory, File f) {
+
+	SecurityAdvisor advisor = new SecurityAdvisor() {
+	    public SecurityAdvice isAllowed(String arg0, String arg1,
+		    String arg2) {
+		return SecurityAdvice.ALLOWED;
+	    }
+	};
 	try {
-	    contentHostingService.getResource(directory + siteId + ".pdf");
-	    contentHostingService.removeResource(directory + siteId + ".pdf");
-	} catch (IdUnusedException idue) {
-	    // pdf does not exist, nothing to do
-	} catch (Exception e) {
-	    log.warn("Unable to delete " + siteId + ".pdf", e);
-	}
-	try {
-	    ContentResourceEdit newResource =
-		    contentHostingService.addResource(directory, siteId,
-			    ".pdf", 1);
-	    newResource.setContent(new BufferedInputStream(new FileInputStream(
-		    f)));
-	    newResource.setContentType(MimeConstants.MIME_PDF);
-	    contentHostingService.commitResource(newResource,
-		    NotificationService.NOTI_NONE);
-	    f.delete();
-	} catch (Exception e) {
-	    e.printStackTrace();
+	    securityService.pushAdvisor(advisor);
+	    try {
+		contentHostingService.getResource(directory + siteId + ".pdf");
+		contentHostingService.removeResource(directory + siteId
+			+ ".pdf");
+	    } catch (PermissionException e1) {
+		e1.printStackTrace();
+	    } catch (IdUnusedException e1) {
+		e1.printStackTrace();
+	    } catch (TypeException e1) {
+		e1.printStackTrace();
+	    } catch (InUseException e1) {
+		e1.printStackTrace();
+	    }
+
+	    ContentResourceEdit newResource;
+	    try {
+		newResource =
+			contentHostingService.addResource(directory, siteId,
+				".pdf", 1);
+		newResource.setContent(new BufferedInputStream(
+			new FileInputStream(f)));
+		newResource.setContentType(MimeConstants.MIME_PDF);
+		contentHostingService.commitResource(newResource,
+			NotificationService.NOTI_NONE);
+		f.delete();
+	    } catch (PermissionException e) {
+		e.printStackTrace();
+	    } catch (IdUniquenessException e) {
+		e.printStackTrace();
+	    } catch (IdLengthException e) {
+		e.printStackTrace();
+	    } catch (IdInvalidException e) {
+		e.printStackTrace();
+	    } catch (IdUnusedException e) {
+		e.printStackTrace();
+	    } catch (OverQuotaException e) {
+		e.printStackTrace();
+	    } catch (ServerOverloadException e) {
+		e.printStackTrace();
+	    } catch (FileNotFoundException e) {
+		e.printStackTrace();
+	    }
+	} finally {
+	    securityService.popAdvisor();
 	}
     }
 
@@ -1013,8 +1054,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// cleaner than this. See SAKAI-2163.
 	String siteShareable =
 		publishedCO.getSiteId().substring(
-			(publishedCO.getSiteId().length() - 2),
-			publishedCO.getSiteId().length());
+			publishedCO.getSiteId().lastIndexOf(".") + 1);
 	if (portalActivated != null && portalActivated.equalsIgnoreCase("true")) {
 	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)
 		    && (!siteShareable.equals(SITE_SHAREABLE))) {
@@ -1075,7 +1115,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	// remove publication date in DB
 	resourceDao.setPublicationDate(co.getCoId(), null);
 
-	//republish children
+	// republish children
 	publishChildren(siteId, webappDir);
     }
 

@@ -437,7 +437,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    // By default, security is zero for all documents belonging to
 	    // portal
 	    insertRessourceSecuriteDB(dbConn, koId, siteId, nivSecu); // it was
-								      // "0"
+	    // "0"
 
 	} else {
 
@@ -449,7 +449,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    // By default, security is zero for all documents belonging to
 	    // portal
 	    insertRessourceSecuriteDB(dbConn, koId, siteId, nivSecu); // it was
-								      // "0"
+	    // "0"
 
 	}
 	log.debug("Document " + koId + " has been written in the database");
@@ -578,7 +578,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    stmt.close();
 
 	}
-	log.debug("The document " + koId + " NivSec: " + nivSecu + " has been transferred");
+	log.debug("The document " + koId + " NivSec: " + nivSecu
+		+ " has been transferred");
 
     }
 
@@ -728,87 +729,77 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      * @see org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO#sendXmlAndDoc(org.sakaiquebec.opensyllabus.shared.model.COSerialized,
      *      java.util.Map, java.util.Map)
      */
-    public boolean sendXmlAndDoc(COSerialized published, String acces) throws Exception {
+    public boolean sendXmlAndDoc(COSerialized published, String acces)
+	    throws Exception {
 
-	String siteShareable = getKoId(published.getSiteId());
-	siteShareable =
-		siteShareable.substring((siteShareable.length() - 2),
-			siteShareable.length());
 	boolean sent = false;
 
-	if (!siteShareable.equals(SITE_SHAREABLE)) {
-	    Map<String, String> documentSecurityMap;
-	    Map<String, String> documentVisibilityMap;
-	    Map<String, String> documents;
+	Map<String, String> documentSecurityMap;
+	Map<String, String> documentVisibilityMap;
+	Map<String, String> documents;
 
-	    COModeledServer coModeled = new COModeledServer(published);
+	COModeledServer coModeled = new COModeledServer(published);
 
-	    coModeled.XML2Model();
-	    coModeled.model2XML();
+	coModeled.XML2Model();
+	coModeled.model2XML();
 
-	    documentSecurityMap = coModeled.getAllDocumentsSecurityMap();
-	    documentVisibilityMap = coModeled.getAllDocumentsVisibilityMap();
-	    documents = coModeled.getAllDocuments();
+	documentSecurityMap = coModeled.getAllDocumentsSecurityMap();
+	documentVisibilityMap = coModeled.getAllDocumentsVisibilityMap();
+	documents = coModeled.getAllDocuments();
 
-	    try {
-		AuthzGroup realm =
-			authzGroupService.getAuthzGroup(SITE_PREFIX
-				+ published.getSiteId());
-		String provider = realm.getProviderGroupId();
-		if (provider == null || !cmService.isSectionDefined(provider)) {
-		    log
-			    .info("The course outline "
-				    + published.getSiteId()
-				    + " is not associated to a section in the course management,"
-				    + " it will not be transferred to ZoneCours public.");
-		    return false;
-		}
-	    } catch (GroupNotDefinedException e) {
-		log.error("sendXmlAndDoc(): " + e);
+	try {
+	    AuthzGroup realm =
+		    authzGroupService.getAuthzGroup(SITE_PREFIX
+			    + published.getSiteId());
+	    String provider = realm.getProviderGroupId();
+	    if (provider == null || !cmService.isSectionDefined(provider)) {
+		log
+			.info("The course outline "
+				+ published.getSiteId()
+				+ " is not associated to a section in the course management,"
+				+ " it will not be transferred to ZoneCours public.");
+		return false;
 	    }
-
-	    String siteId = published.getSiteId();
-	    String osylCoXml = published.getContent();
-	    String zcco = null;
-	    // TODO: fill out these values from the course management
-	    String koId = null;
-	    String lang = null;
-
-	    // Transform the course outline
-	    zcco = transform(osylCoXml);
-
-	    if (zcco != null) {
-
-		// Connect to the database using config defined in
-		// sakai.properties
-		Connection dbConn = connect();
-
-		// Save the course outline in the zonecours database
-		// The siteId is used as koID
-		koId = getKoId(siteId);
-		lang = published.getLang().substring(0, 2);
-		sent = writeXmlInZC(zcco, koId, lang, dbConn);
-		// Save the documents in the zonecours database
-		sent =
-			sent
-				&& writeDocumentsInZC(siteId, lang,
-					documentSecurityMap,
-					documentVisibilityMap, documents, zcco,
-					dbConn);
-		if (sent) {
-		    log.debug("The transfer to the ZoneCours "
-			    + "database is complete and successful");
-		}
-		    String nivSec = getSecurityLabel(acces);
-		    zcPublisherService.publier(koId, lang, nivSec);
-		dbConn.close();
-	    }
-	    return sent;
-	} else {
-	    log.debug("The transfer to the ZoneCours "
-		    + "database was not done because the site is shareable");
-	    return sent;
+	} catch (GroupNotDefinedException e) {
+	    log.error("sendXmlAndDoc(): " + e);
 	}
+
+	String siteId = published.getSiteId();
+	String osylCoXml = published.getContent();
+	String zcco = null;
+	// TODO: fill out these values from the course management
+	String koId = null;
+	String lang = null;
+
+	// Transform the course outline
+	zcco = transform(osylCoXml);
+
+	if (zcco != null) {
+
+	    // Connect to the database using config defined in
+	    // sakai.properties
+	    Connection dbConn = connect();
+
+	    // Save the course outline in the zonecours database
+	    // The siteId is used as koID
+	    koId = getKoId(siteId);
+	    lang = published.getLang().substring(0, 2);
+	    sent = writeXmlInZC(zcco, koId, lang, dbConn);
+	    // Save the documents in the zonecours database
+	    sent =
+		    sent
+			    && writeDocumentsInZC(siteId, lang,
+				    documentSecurityMap, documentVisibilityMap,
+				    documents, zcco, dbConn);
+	    if (sent) {
+		log.debug("The transfer to the ZoneCours "
+			+ "database is complete and successful");
+	    }
+	    String nivSec = getSecurityLabel(acces);
+	    zcPublisherService.publier(koId, lang, nivSec);
+	    dbConn.close();
+	}
+	return sent;
     }
 
     /**
