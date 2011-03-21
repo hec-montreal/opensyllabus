@@ -661,6 +661,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	// post the logout event
 	eventTrackingService.post(eventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGOUT, null, true));
+	usageSessionService.logout();
     }
 
 }

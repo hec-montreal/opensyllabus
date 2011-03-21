@@ -614,37 +614,38 @@ public class OsylCMJobImpl implements OsylCMJob {
 	/**
 	 * Logs out of the sakai environment
 	 */
-	protected void logoutFromSakai() {
-		// post the logout event
-		eventTrackingService.post(eventTrackingService.newEvent(
-				UsageSessionService.EVENT_LOGOUT, null, true));
+    protected void logoutFromSakai() {
+	// post the logout event
+	eventTrackingService.post(eventTrackingService.newEvent(
+		UsageSessionService.EVENT_LOGOUT, null, true));
+	usageSessionService.logout();
+    }
+
+    private boolean filesExist(String directory) {
+
+	File sessionFile = new File(directory, SESSION_FILE);
+	File coursFile = new File(directory, COURS_FILE);
+	File etudiantFile = new File(directory, ETUDIANT_FILE);
+	File horairesFile = new File(directory, HORAIRES_FILE);
+	File profFile = new File(directory, PROF_FILE);
+	File secretairesFile = new File(directory, SECRETAIRES_FILE);
+	File servensFile = new File(directory, SERV_ENS_FILE);
+	File progEtudFile = new File(directory, PROG_ETUD_FILE);
+	File chargeFormFile = new File(directory, CHARGE_FORMATION);
+
+	if (sessionFile.exists() && coursFile.exists()
+		&& etudiantFile.exists() && horairesFile.exists()
+		&& profFile.exists() && secretairesFile.exists()
+		&& servensFile.exists() && progEtudFile.exists()
+		&& chargeFormFile.exists()) {
+	    return true;
 	}
 
-	private boolean filesExist(String directory) {
+	log.warn("At least one file of the PeopleSoft extract file "
+		+ "set is missing in directory " + directory);
+	return false;
 
-	    File sessionFile = new File(directory, SESSION_FILE);
-	    File coursFile = new File(directory, COURS_FILE);
-	    File etudiantFile = new File(directory, ETUDIANT_FILE);
-	    File horairesFile = new File(directory, HORAIRES_FILE);
-	    File profFile = new File(directory, PROF_FILE);
-	    File secretairesFile = new File(directory, SECRETAIRES_FILE);
-	    File servensFile = new File(directory, SERV_ENS_FILE);
-	    File progEtudFile = new File(directory, PROG_ETUD_FILE);
-	    File chargeFormFile = new File(directory, CHARGE_FORMATION);
-
-	    if (sessionFile.exists() && coursFile.exists()
-		    && etudiantFile.exists() && horairesFile.exists()
-		    && profFile.exists() && secretairesFile.exists()
-		    && servensFile.exists() && progEtudFile.exists()
-		    && chargeFormFile.exists()) {
-		return true;
-	    }
-	    
-	    log.warn("At least one file of the PeopleSoft extract file "
-		    + "set is missing in directory " + directory);
-	    return false;
-	    
-	} // filesExist    
+    } // filesExist    
     
     /** {@inheritDoc} */
     public void execute(JobExecutionContext arg0) throws JobExecutionException {

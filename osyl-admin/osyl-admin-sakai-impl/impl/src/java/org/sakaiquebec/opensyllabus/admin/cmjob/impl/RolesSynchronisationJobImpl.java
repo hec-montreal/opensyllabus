@@ -113,7 +113,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	loginToSakai();
 
 	long start = System.currentTimeMillis();
-	log.info("RolesSynchronisationJobImpl: starting");
+	log.info("Starting");
 
 	// Retrieve information from the xml file
 	init();
@@ -126,10 +126,15 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	if (rolesToConfig != null)
 	    for (ConfigRole configRole : rolesToConfig) {
 		role = configRole.getConfigRole();
+		log.info("role: " + role);
 		description = configRole.getDescription();
+		log.info("description: " + description);
 		addedUsers = configRole.getAddedUsers();
+		log.info("addedUsers: " + addedUsers);
 		removedUsers = configRole.getRemovedUsers();
+		log.info("removedUsers: " + removedUsers);
 		functions = configRole.getFunctions();
+		log.info("functions: " + functions);
 
 		// Check role in template realm
 		try {
@@ -186,7 +191,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 
 		    }
 		}
-		log.info("RolesSynchronisationJobImpl: completed in "
+		log.info("completed in "
 			+ (System.currentTimeMillis() - start) + " ms");
 		logoutFromSakai();
 	    }
@@ -362,7 +367,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	sakaiSession.setUserEid("admin");
 
 	// establish the user's session
-	usageSessionService.startSession("admin", "127.0.0.1", "CMSync");
+	usageSessionService.startSession("admin", "127.0.0.1", "RoleSync");
 
 	// update the user's externally provided realm definitions
 	authzGroupService.refreshUser("admin");
@@ -379,6 +384,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	// post the logout event
 	eventTrackingService.post(eventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGOUT, null, true));
+	usageSessionService.logout();
     }
 
     class ConfigRole {

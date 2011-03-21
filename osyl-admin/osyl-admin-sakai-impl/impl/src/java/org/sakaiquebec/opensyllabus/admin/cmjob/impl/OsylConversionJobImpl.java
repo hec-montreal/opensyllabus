@@ -131,6 +131,7 @@ public class OsylConversionJobImpl implements OsylConversionJob {
 	// post the logout event
 	eventTrackingService.post(eventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGOUT, null, true));
+	usageSessionService.logout();
     }
 
 }

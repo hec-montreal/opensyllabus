@@ -153,7 +153,7 @@ public class CreatePrintVersionJobImpl implements CreatePrintVersionJob {
 	sakaiSession.setUserEid("admin");
 
 	// establish the user's session
-	usageSessionService.startSession("admin", "127.0.0.1", "CMSync");
+	usageSessionService.startSession("admin", "127.0.0.1", "PDFJob");
 
 	// update the user's externally provided realm definitions
 	authzGroupService.refreshUser("admin");
@@ -167,6 +167,7 @@ public class CreatePrintVersionJobImpl implements CreatePrintVersionJob {
 	// post the logout event
 	eventTrackingService.post(eventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGOUT, null, true));
+	usageSessionService.logout();
     }
 
 }
