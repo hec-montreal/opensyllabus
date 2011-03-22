@@ -69,6 +69,10 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private String startDate = null;
 
     private String endDate = null;
+    
+    private List<String> programs = null;
+    
+    private List<String> servEns = null;
 
     private List<String> allowedFunctions = null;
 
@@ -186,6 +190,26 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private void setStartDate(String startDate) {
 	this.startDate = startDate;
+    }
+    
+    private void setPrograms (String programs){
+	this.programs = new ArrayList<String>();
+	if (programs != null && programs.length() > 0) {
+	    String[] programsTable = programs.split(LIST_DELIMITER);
+	    for (int i = 0; i < programsTable.length; i++) {
+		this.programs.add(programsTable[i].trim());
+	    }
+	}
+    }
+    
+    private void setServEns (String servEns){
+	this.servEns = new ArrayList<String>();
+	if (servEns != null && servEns.length() > 0) {
+	    String[] servEnsTable = servEns.split(LIST_DELIMITER);
+	    for (int i = 0; i < servEnsTable.length; i++) {
+		this.servEns.add(servEnsTable[i].trim());
+	    }
+	}
     }
 
     private void setEndDate(String endDate) {
@@ -316,6 +340,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		    setCourses(null);
 		    setStartDate(null);
 		    setEndDate(null);
+		    setPrograms(null);
+		    setServEns(null);
 
 		}
 		if ( fileName.contains(FUNCTIONSSCONFIGFILE)) {
@@ -353,10 +379,14 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		String courses = retrieveParameter(document, COURSES);
 		String endDate = retrieveParameter(document, ENDDATE);
 		String startDate = retrieveParameter(document, STARTDATE);
+		String programs = retrieveParameter(document, PROGRAMS);
+		String servEns = retrieveParameter(document, SERVENS);
 
 		setCourses(courses);
 		setStartDate(startDate);
 		setEndDate(endDate);
+		setPrograms(programs);
+		setServEns(servEns);
 		
 		
 	    }
@@ -579,6 +609,14 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     public String getCourseOutlineXsl() {
 	return courseOutlineXsl;
+    }
+
+    public List<String> getServEns() {
+	return null;
+    }
+
+    public List<String> getPrograms() {
+	return null;
     }
 
 }

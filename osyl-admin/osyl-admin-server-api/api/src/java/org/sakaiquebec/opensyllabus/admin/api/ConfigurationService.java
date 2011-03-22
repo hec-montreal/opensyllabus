@@ -41,6 +41,10 @@ public interface ConfigurationService {
     public final static String STARTDATE = "startDate";
 
     public final static String ENDDATE = "endDate";
+    
+    public final static String PROGRAMS = "programs";
+    
+    public final static String SERVENS = "servEns";
 
     // For adding or removing users with a specific role or removing a role in
     // all the course sites
@@ -92,6 +96,10 @@ public interface ConfigurationService {
     public Date getStartDate();
 
     public List<String> getCourses();
+    
+    public List<String> getServEns ();
+    
+    public List<String> getPrograms();
 
     public Map<String, Map<String, Object>> getUdatedRoles();
 

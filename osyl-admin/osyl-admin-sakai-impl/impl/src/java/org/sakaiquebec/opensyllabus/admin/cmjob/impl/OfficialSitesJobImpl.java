@@ -33,6 +33,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
+import org.sakaiproject.coursemanagement.api.CanonicalCourse;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.CourseSet;
@@ -80,7 +81,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
     }
 
     /**
-     *Course management service integration.
+     * Course management service integration.
      */
     private CourseManagementService cmService;
 
@@ -171,6 +172,8 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	// don't we create
 	// any course defined in the given sessions
 	List<String> courses = adminConfigService.getCourses();
+	List<String> programs = adminConfigService.getPrograms();
+	List<String> servEns = adminConfigService.getServEns();
 
 	// If we have an interval of time, we take the courses defined in that
 	// period of time
@@ -179,12 +182,52 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	List<AcademicSession> allSessions =
 		getSessions(startDateInterval, endDateInterval);
 
+	// Associated to canonical courses
 	if (courses != null && courses.size() > 0) {
+	    String coId = null;
 	    for (String courseId : courses) {
-		if (cmService.isCanonicalCourseDefined(courseId))
-		    courseOffs.addAll(cmService
-			    .getCourseOfferingsInCanonicalCourse(courseId));
+		for (AcademicSession session : allSessions) {
+		    coId = courseId + session.getEid();
+		    if (cmService.isCourseOfferingDefined(coId))
+			courseOffs.add(cmService.getCourseOffering(coId));
+		}
 
+	    }
+	}
+	// Associated to Acad_Career
+	else if (programs != null && programs.size() > 0) {
+	    Set<CourseOffering> courseOfferings = null;
+	    for (String program : programs) {
+		for (AcademicSession session : allSessions) {
+		    courseOfferings =
+			    cmService.findCourseOfferingsByAcadCareer(program,
+				    session.getEid());
+		    if (courseOfferings != null)
+			courseOffs.addAll(courseOfferings);
+		}
+
+	    }
+
+	}
+	// Associated to the category
+	else if (servEns != null && servEns.size() > 0) {
+	    Set<Section> allSections = new HashSet<Section>();
+	    String coffId = null;
+	    for (String serviceEnseignement : servEns) {
+		for (AcademicSession session : allSessions) {
+		    allSections =
+			    cmService.findSectionsByCategory(
+				    serviceEnseignement, session.getEid());
+		    if (allSections != null) {
+			for (Section section : allSections) {
+			    coffId = section.getCourseOfferingEid();
+			    if (coffId != null)
+				courseOffs.add(cmService
+					.getCourseOffering(coffId));
+			}
+
+		    }
+		}
 	    }
 	} else {
 	    // Retrieve all the course sets
@@ -213,8 +256,10 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 		compteur += sections.size();
 		// Create sharable site if necessary
 		String shareableName = null;
-		if (hasSharable(sections))
+		if (hasSharable(sections)) {
 		    shareableName = createShareable(courseOff);
+		    compteur++;
+		}
 		if (sections != null) {
 		    String sectionId = null;
 		    String sharableSectionId =
@@ -224,14 +269,19 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 		    // create 'normal section'
 		    for (Section section : sections) {
 			sectionId = section.getEid();
+
+			// We do not create sites associated to DF
 			if (!isDfSection(sectionId)) {
 
+			    // We do not create site associated to section 00
 			    if (!sectionId.equalsIgnoreCase(sharableSectionId)) {
 				createSite(section);
 
 				String siteName = getSiteName(section);
 				if (shareableName != null) {
 				    associate(siteName, shareableName);
+				    log.info("Associating " + shareableName
+					    + " to " + siteName);
 				}
 				if (firstSection == null) {
 				    firstSection = siteName;
@@ -253,6 +303,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 			}
 		    }
 
+		    // Removed because secretary will do it
 		    // associate df with 1st 'normal' course
 		    // for (String dfSite : dfSections) {
 		    // associate(dfSite, firstSection);
@@ -260,11 +311,14 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 		}
 	    }
 
+	    log.info(compteur
+		    + " sites has been processed (not necessarily created)");
+
 	}
 	logoutFromSakai();
     } // execute
 
-    private void associate(String child, String parent) {
+    private void osyl(String child, String parent) {
 	try {
 	    osylSiteService.associate(child, parent);
 	} catch (Exception e) {
@@ -280,23 +334,30 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	    lang = TEMPORARY_LANG;
 	else
 	    lang = section.getLang();
+	// 2 try/catch distinct to make the difference between
+	// a creation problem and an association problem
 	try {
 	    if (!osylSiteService.siteExists(siteName)) {
 		osylSiteService.createSite(siteName, OSYL_CO_CONFIG, lang);
-		// return true;
-		// } else {
-		// return false;
 	    }
 
 	} catch (Exception e) {
 	    log.error("Could not create site " + siteName, e);
 	}
 	try {
-	    osylManagerService.associateToCM(section.getEid(), siteName);
+	    if (!osylSiteService.siteExists(siteName)) {
+		osylManagerService.associateToCM(section.getEid(), siteName);
+		Site site = siteService.getSite(siteName);
+		siteService.save(site);
+		log.info("The site " + siteName
+			+ " has been created and associated to the section "
+			+ section.getEid() + " in the Course Management");
+	    }
+	    return true;
 	} catch (Exception e) {
 	    log.error("Could not associate site " + siteName + " with CM", e);
 	}
-	log.debug("Creation finished for site " + siteName);
+	log.debug("The site " + siteName + " has not been created");
 	return false;
     }
 
@@ -316,8 +377,19 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	    return false;
     }
 
+    
+    
     private boolean isDfSection(String sectionId) {
 	return sectionId.matches(".*[Dd][Ff][1-9]");
+    }
+
+    private void associate(String child, String parent) {
+	try {
+	    osylSiteService.associate(child, parent);
+	} catch (Exception e) {
+	    log.error("Could not associate site " + child + " with site "
+		    + parent, e);
+	}
     }
 
     private String createShareable(CourseOffering course) {
@@ -325,6 +397,8 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	String sharableSectionId = course.getEid() + OsylCMJob.SHARABLE_SECTION;
 	Section sharableSection = null;
 	String lang = null;
+
+	log.info("Creating sharable site for " + siteName);
 
 	if (!cmService.isSectionDefined(sharableSectionId)) {
 	    log.info("There is no special section (" + sharableSectionId
@@ -339,12 +413,15 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	    if (!osylSiteService.siteExists(siteName)) {
 		osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG,
 			lang);
+	    } else {
+		log.info("The site " + siteName + " already exist.");
 	    }
 
 	    Site sharable = siteService.getSite(siteName);
 
 	    if (sharableSection != null)
 		try {
+
 		    osylManagerService.associateToCM(sharableSection.getEid(),
 			    siteName);
 		} catch (Exception e) {
@@ -368,8 +445,10 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
 		String message = getNotificationMessages(existingCO.toString());
 		if (receivers.size() > 0)
-		    emailService.sendToUsers(receivers, getHeaders(null,
-			    "test d'envoi", receivers.toString()), message);
+		    emailService.sendToUsers(
+			    receivers,
+			    getHeaders(null, "test d'envoi",
+				    receivers.toString()), message);
 	    }
 
 	} catch (Exception e) {
@@ -384,8 +463,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	List<String> rv = new Vector<String>();
 
 	rv.add("MIME-Version: 1.0");
-	rv
-		.add("Content-Type: multipart/alternative; boundary=\"======sakai-multi-part-boundary======\"");
+	rv.add("Content-Type: multipart/alternative; boundary=\"======sakai-multi-part-boundary======\"");
 	// set the subject
 	rv.add(subject);
 
@@ -439,8 +517,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	message.append(plainTextContent);
 	message.append("\n\n--======sakai-multi-part-boundary======\n");
 	message.append("Content-Type: text/html\n\n");
-	message
-		.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n");
+	message.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n");
 	message.append("    \"http://www.w3.org/TR/html4/loose.dtd\">\n");
 	message.append("<html>\n");
 	message.append("  <head><title>");
