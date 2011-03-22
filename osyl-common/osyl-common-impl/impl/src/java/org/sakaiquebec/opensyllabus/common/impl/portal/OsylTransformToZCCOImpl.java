@@ -760,6 +760,13 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 				+ " it will not be transferred to ZoneCours public.");
 		return false;
 	    }
+	    if (provider.matches(".*[Dd][Ff][1-9]")) {
+		log.info("The course outline "
+			+ published.getSiteId()
+			+ " will not be transferred to ZoneCours public because it is a deferred section.");
+		return false;
+	    }
+
 	} catch (GroupNotDefinedException e) {
 	    log.error("sendXmlAndDoc(): " + e);
 	}
