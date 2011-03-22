@@ -134,7 +134,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    pause();
 	    pause();
 	    // We ensure the confirmation is displayed
-	    ensureElementPresent("//img[contains(@title,'Le site a bien')]");
+	    ensureElementPresent("//img[contains(@title,'bien')]");
 	    if (inFireFox()) {
 	    	clickButtonWithLabel("Ok");
 	    } else
@@ -208,7 +208,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    pause();
 	    pause();
 	    // We ensure the confirmation is displayed
-	    ensureElementPresent("//img[contains(@title,'Le site a bien ')]");
+	    ensureElementPresent("//img[contains(@title,'bien')]");
 	    if (inFireFox()) {
 	    	clickButtonWithLabel("Ok");
 	    } else
@@ -317,12 +317,14 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    session().click(
 		    "//tr[@class='OsylManager-scrollTable-row']/td/input");
 	    //ensureElementPresent("//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'tacher')]]");
-	    locator = "//tr[2]/td/table/tbody/tr/td[2]/div";	    		   	    
+	    locator="//tr[2]/td/table/tbody/tr/td[3]/div/div";
 	    ensureElementPresent(locator);	    
 	    //clickActionWithLabel("tacher");
 	    smartMouse(locator);
+	    pause();
+	    pause();	    
 	    // We ensure the confirmation is displayed
-	    ensureElementPresent("//img[contains(@title,'Le site a bien ')]");
+	    ensureElementPresent("//img[contains(@title,'bien')]");
 	    //Add message to log file
 		logFile(ASSOCIATION_SITES_TEST, CT_004, PASSED);		
 	    // verify if text is not present in current site
@@ -362,7 +364,7 @@ public class AssociateToParentSite extends AbstractOSYLTest {
 	    session().click(
 		    "//tr[@class='OsylManager-scrollTable-row']/td/input");
 	    //ensureElementPresent("//div[@class='OsylManager-action OsylManager-action-up' and ./div[contains(.,'tacher')]]");
-	    locator = "//tr[2]/td/table/tbody/tr/td[2]/div";
+	    locator="//tr[2]/td/table/tbody/tr/td[3]/div/div";
 	    ensureElementPresent(locator);	    
 	    //clickActionWithLabel("tacher");
 	    smartMouse(locator);

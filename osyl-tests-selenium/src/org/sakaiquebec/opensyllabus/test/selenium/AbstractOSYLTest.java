@@ -51,7 +51,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     // Current test site
     private String siteName;
     // Base name for test sites
-    public static final String TEST_SITE_BASE_NAME = "Se-";
+    public static final String TEST_SITE_BASE_NAME = "Sei-";
 
     //Button's click event names
     public static final String BUTTON_HOME = "gwt-uid-2";
@@ -250,17 +250,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		log("**** Creating site " + siteName);
 		//Search Osyl Manager location
 		goToOsylManagerTool();
-		pause();
-		pause();
-		pause();
+		pause3();
 		if (!session().isElementPresent("//tr[7]/td/table/tbody/tr/td/div/div")) {
 			clickOpenOsyl("//tr[7]/td/table/tbody/tr/td/div/div");
 		} else {
 			clickOpenOsyl("//tr[7]/td/table/tbody/tr/td[1]/div/div");
 		}
-		pause();
-		pause();
-		pause();
+		pause3();
 		// Course Name
 		ensureElementPresent("//tr[2]/td/table/tbody/tr/td[2]/input");
 		session().type("//tr[2]/td/table/tbody/tr/td[2]/input", siteName);
@@ -270,12 +266,9 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 		session().select("//tr[4]/td/table/tbody/tr/td[2]/select",
 				"value=default");
 		// Click on button "Create Course"
-		smartMouse("//div/div/div/div[2]/table/tbody/tr[5]/td/div/div");
-		pause();
-		pause();
-		pause();
-		pause();
-		pause();
+		//smartMouse("//div/div/div/div[2]/table/tbody/tr[5]/td/div/div");
+		smartMouse("//tr[2]/td[2]/div/div/div/div[2]/table/tbody/tr[5]/td/div/div");
+		pause(30000);
 		// Click button "Close" (confirmation)
 		if (userString.equalsIgnoreCase("prof_selenium")) {
 			ensureElementPresent("//tr[4]/td/div");			
@@ -409,8 +402,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 			session().click(elementOsylMenu);
 		}
 	}
-	pause();
-	pause();
+	pause3();
 	}
 
     public void goToMenuAssessment() throws IllegalStateException {
@@ -426,14 +418,13 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 			session().click(elementAssessmentMenu);
 		}
 	}
-	pause();
-	pause();
+	pause3();
     }
 
     public void goToMenuSiteSetup() throws IllegalStateException {
 	String elementSiteSetupMenu = "//*[@class='icon-sakai-sitesetup']";
 	// open site setup
-	pause(); pause(); pause();
+	pause3();
 	if (inFireFox()) {
 		session().mouseDown(elementSiteSetupMenu);
 		session().mouseUp(elementSiteSetupMenu);
@@ -442,8 +433,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	} else {
 		session().click(elementSiteSetupMenu);
 	}
-	pause();
-	pause();
+	pause3();
     }
 
     /**
@@ -699,9 +689,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
      */
     public void saveCourseOutline() throws Exception {
 	log("Entering saveCourseOutline");
-	pause();
-	pause();
-	pause();
+	pause3();
 	String origSpeed = session().getSpeed();
 	session().setSpeed("30");
 	long start = System.currentTimeMillis();
@@ -784,6 +772,14 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	pause(5000);
     }
 
+    /**
+     * Pauses for a default delay (15 seconds). This allow for any unobtrusive
+     * alert to disappear.
+     */
+    public void pause3() {
+	pause(15000);
+    }
+    
     /**
      * Shortcut for <code>org.testng.Reporter.log(msg, true)</code>.
      */
@@ -1138,9 +1134,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 	    session().click("//tr[5]/td/table/tbody/tr/td/button");
 
 	}
-	pause();
-	pause();
-	pause();
+	pause3();
 	// Select file in browser window
 	session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
 		"value= (F" + ")   " + docNameModified);
