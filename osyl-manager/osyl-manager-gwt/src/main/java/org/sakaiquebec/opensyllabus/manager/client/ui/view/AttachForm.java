@@ -32,6 +32,7 @@ import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerE
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
+import org.sakaiquebec.opensyllabus.shared.exception.VersionCompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.exception.SessionCompatibilityException;
@@ -135,20 +136,18 @@ public class AttachForm extends OsylManagerAbstractWindowPanel {
 	    String msg = null;
 	    if (caught instanceof FusionException) {
 		if (((FusionException) caught).isHierarchyFusionException()) {
-		    msg =
-			    messages
-				    .attachAction_attach_error_HierarchyFusionException();
+		    msg = messages.attachAction_attach_error_HierarchyFusionException();
 		} else {
 		    msg = messages.attachAction_attach_error_FusionException();
 		}
 	    } else if (caught instanceof CompatibilityException) {
-		msg =
-			messages
-				.attachAction_attach_error_CompatibilityException();
+	    	msg = messages.attachAction_attach_error_CompatibilityException();
 	    } else if (caught instanceof OsylPermissionException) {
-		msg = messages.permission_exception();
+	    	msg = messages.permission_exception();
 	    } else if (caught instanceof SessionCompatibilityException) {
-		msg = messages.session_compatibility_exception();
+	    	msg = messages.session_compatibility_exception();
+	    } else if (caught instanceof VersionCompatibilityException) {
+			msg = messages.attachAction_attach_error_VersionCompatibilityException();	    	
 	    } else {
 		msg = caught.getMessage();
 	    }
