@@ -103,6 +103,7 @@ import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
+import org.sakaiquebec.opensyllabus.shared.exception.VersionCompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.w3c.dom.Document;
@@ -1393,7 +1394,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     }
 
     public void associate(String siteId, String parentId) throws Exception,
-	    CompatibilityException, FusionException, OsylPermissionException {
+	    CompatibilityException, FusionException, OsylPermissionException, VersionCompatibilityException {
 	if (!osylSecurityService
 		.isActionAllowedForCurrentUser(OsylSecurityService.OSYL_MANAGER_FUNCTION_ASSOCIATE)) {
 	    throw new OsylPermissionException(sessionManager
@@ -1404,22 +1405,28 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    + "] associates [" + siteId + "] to parent [" + parentId
 		    + "]");
 	    COSerialized co;
+	    COSerialized cop;	    
 	    try {
 		co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
-
+		cop = resourceDao.getSerializedCourseOutlineBySiteId(parentId);		
+		String versionSite = co.getConfigVersion();
+		String versionParent = cop.getConfigVersion();			
 		if (co != null) {
-		    getSiteInfo(co, siteId);
-
-		    if (parentId != null) {
-			COModeledServer coModelParent =
-				getFusionnedPrePublishedHierarchy(parentId);
-			if (coModelParent != null && co.getContent() != null) {
-			    ModelHelper.createAssociationInXML(co,
-				    coModelParent);
-			    resourceDao.createOrUpdateCourseOutline(co);
-			}
+			if (versionSite.equalsIgnoreCase(versionParent)) {			
+			    getSiteInfo(co, siteId);
+			    if (parentId != null) {
+				COModeledServer coModelParent =
+					getFusionnedPrePublishedHierarchy(parentId);
+				if (coModelParent != null && co.getContent() != null) {
+				    ModelHelper.createAssociationInXML(co,
+					    coModelParent);
+				    resourceDao.createOrUpdateCourseOutline(co);
+				}
 		    }
 		    coRelationDao.createRelation(siteId, parentId);
+			} else {
+				throw new VersionCompatibilityException("Versions cours outline are incompatible");
+			}		    
 		} else {
 		    throw new Exception("Child course outline is null");
 		}
@@ -1430,6 +1437,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
     }
 
+    
     public void dissociate(String siteId, String parentId) throws Exception {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] dissociates [" + siteId + "] from parent [" + parentId
