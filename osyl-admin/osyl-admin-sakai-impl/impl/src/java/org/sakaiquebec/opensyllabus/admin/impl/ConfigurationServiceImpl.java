@@ -346,6 +346,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		}
 		if ( fileName.contains(FUNCTIONSSCONFIGFILE)) {
 		    setFunctionsRole(null);
+		    setDescription(null);
 		    setRemovedRole(null);
 		    setAllowedFunctions(null);
 		    setDisallowedFunctions(null);
@@ -426,6 +427,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    if (configurationXml.contains(FUNCTIONSSCONFIGFILE)) {
 
 		String fuctionsRole = retrieveParameter(document, ROLE);
+		String description = retrieveParameter(document, DESCRIPTION);
 		String removedRole = retrieveParameter(document, REMOVED_ROLE);
 		String allowedFunctions =
 			retrieveParameter(document, ALLOWED_FUNCTIONS);
@@ -433,6 +435,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			retrieveParameter(document, DISALLOWED_FUNCTIONS);
 
 		setFunctionsRole(fuctionsRole);
+		setDescription(description);
 		setRemovedRole(removedRole);
 		setAllowedFunctions(allowedFunctions);
 		setDisallowedFunctions(disallowedFunctions);
@@ -472,6 +475,10 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     	this.description = description;
     }
     
+    public String getDescription() {
+        return description;
+    }
+
     private void setFunctions(String functions) {
 	this.functions = new ArrayList<String>();
 	if (functions != null && functions.length() > 0) {

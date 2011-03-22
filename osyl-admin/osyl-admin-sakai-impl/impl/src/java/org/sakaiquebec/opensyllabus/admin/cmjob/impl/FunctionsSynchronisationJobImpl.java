@@ -89,6 +89,7 @@ public class FunctionsSynchronisationJobImpl implements
     // ***************** END SPRING INJECTION ************************//
 
     String functionsRole;
+    String roleDescription;
     String roleToRemove;
     List<String> allowedFunctions;
     List<String> disallowedFunctions;
@@ -100,6 +101,14 @@ public class FunctionsSynchronisationJobImpl implements
 
     private void setFunctionsRole(String functionsRole) {
         this.functionsRole = functionsRole;
+    }
+
+    public String getRoleDescription() {
+        return roleDescription;
+    }
+
+    public void setRoleDescription(String roleDescription) {
+        this.roleDescription = roleDescription;
     }
 
     private String getRoleToRemove() {
@@ -143,12 +152,14 @@ public class FunctionsSynchronisationJobImpl implements
 
 	setRoleToRemove(adminConfigService.getRoleToRemove());
 	setFunctionsRole(adminConfigService.getFunctionsRole());
+	setRoleDescription(adminConfigService.getDescription());
 	setAllowedFunctions(adminConfigService.getAllowedFunctions());
 	setDisallowedFunctions(adminConfigService.getDisallowedFunctions());
 	
 	log.info("data provided by adminConfigService:");
 	log.info("roleToRemove:        " + getRoleToRemove());
 	log.info("functionsRole:       " + getFunctionsRole());
+	log.info("roleDEscription:       " + getRoleDescription());
 	log.info("allowedFunctions:    " + getAllowedFunctions());
 	log.info("disallowedFunctions: " + getDisallowedFunctions());
 
@@ -162,6 +173,7 @@ public class FunctionsSynchronisationJobImpl implements
 		} else {
 
 		    Role role = realm.getRole(getFunctionsRole());
+		    role.setDescription(getRoleDescription());
 		    addPermissions(role, getAllowedFunctions());
 		    removePermissions(role, getDisallowedFunctions());
 		}
@@ -341,6 +353,7 @@ public class FunctionsSynchronisationJobImpl implements
 			} else {
 
 			    Role role = siteRealm.getRole(getFunctionsRole());
+			    role.setDescription(getRoleDescription());
 			    // We add the new permissions
 			    addPermissions(role, getAllowedFunctions());
 
@@ -390,6 +403,7 @@ public class FunctionsSynchronisationJobImpl implements
 				    Role role =
 					    groupRealm
 						    .getRole(getFunctionsRole());
+				    role.setDescription(getRoleDescription());
 				    // We add the new permissions
 				    addPermissions(role, getAllowedFunctions());
 
@@ -426,6 +440,8 @@ public class FunctionsSynchronisationJobImpl implements
 
 		if (role == null)
 		    role = realm.addRole(getFunctionsRole());
+		
+		role.setDescription(getRoleDescription());
 
 		for (Object function : getAllowedFunctions()) {
 		    if (!role.isAllowed((String) function))

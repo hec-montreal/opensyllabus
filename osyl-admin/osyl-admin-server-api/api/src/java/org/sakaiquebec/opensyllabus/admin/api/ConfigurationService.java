@@ -104,6 +104,8 @@ public interface ConfigurationService {
     public Map<String, Map<String, Object>> getUdatedRoles();
 
     public String getFunctionsRole();
+    
+    public String getDescription();
 
     public String getRoleToRemove();
 
