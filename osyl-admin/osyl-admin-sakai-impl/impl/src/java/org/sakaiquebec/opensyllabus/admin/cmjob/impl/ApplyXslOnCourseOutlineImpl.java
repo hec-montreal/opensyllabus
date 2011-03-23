@@ -144,6 +144,7 @@ public class ApplyXslOnCourseOutlineImpl implements ApplyXslOnCourseOutline {
 	// post the logout event
 	eventTrackingService.post(eventTrackingService.newEvent(
 		UsageSessionService.EVENT_LOGOUT, null, true));
+	usageSessionService.logout();
     }
 
 }
