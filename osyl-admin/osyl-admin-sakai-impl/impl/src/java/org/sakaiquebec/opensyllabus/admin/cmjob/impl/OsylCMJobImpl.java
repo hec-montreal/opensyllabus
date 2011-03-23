@@ -246,6 +246,10 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 	while (profCours.hasNext()) {
 	    profCoursEntry = (ProfCoursMapEntry) profCours.next();
+	    if (profCoursEntry == null) {
+		log.warn("Null instructor entry");
+		continue;
+	    }
 	    matricule = profCoursEntry.getEmplId();
 	    cours = profCoursEntry.getCours();
 	    while (cours.hasNext()) {
@@ -253,7 +257,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 		EnrollmentSet enrollmentSet = null;
 		Set<String> instructors = new HashSet<String>();
-		String coordinateur = null;
+		String coordinator = null;
 
 		// On a un enseignant
 		// Add instructor to section
@@ -278,40 +282,38 @@ public class OsylCMJobImpl implements OsylCMJob {
 			+ ": " + instructors.toString());
 
 		if (detailsCours.getCoordonnateur() == null) {
-		// On a un coordonnateur
-		coordinateur = detailsCours.getCoordonnateur().getEmplId();
-		
+		    // We don't have a coordinator: not expected!
 		    log.warn("The course " + enrollmentSetId
 			    + " does not have a coordinator");
 		    //TODO: send mail also 
 		} else {
+		    coordinator = detailsCours.getCoordonnateur().getEmplId();
 		    // Add coordinator to course offering for CERTIFICAT
 		    if (detailsCours.isInCertificat()
 			    || detailsCours.isQualiteComm()) {
 
 			courseOfferingId = getCourseOfferingId(detailsCours);
 			cmAdmin.addOrUpdateCourseOfferingMembership(
-				coordinateur, COORDONNATEUR_ROLE,
+				coordinator, COORDONNATEUR_ROLE,
 				courseOfferingId, ACTIVE_STATUS);
-			actualCourseMembers.remove(coordinateur
+			actualCourseMembers.remove(coordinator
 				+ courseOfferingId);
 			log.info("Coordinators for "
 				+ detailsCours.getUniqueKey() + ": "
-				+ coordinateur);
-		    }
-		    // Add coordinator to sharable site for other courses
-		    else {
+				+ coordinator);
+		    } else {
+			// Add coordinator to sharable site for other courses
 			enrollmentSetId =
 				getCourseOfferingId(detailsCours)
 					+ SHARABLE_SECTION;
-			cmAdmin.addOrUpdateSectionMembership(coordinateur,
+			cmAdmin.addOrUpdateSectionMembership(coordinator,
 				COORDONNATEUR_ROLE, enrollmentSetId,
 				ACTIVE_STATUS);
-			actualCourseMembers.remove(coordinateur
+			actualCourseMembers.remove(coordinator
 				+ enrollmentSetId);
 			log.info("Coordinators for "
 				+ detailsCours.getUniqueKey() + ": "
-				+ coordinateur);
+				+ coordinator);
 
 		    }
 		}
