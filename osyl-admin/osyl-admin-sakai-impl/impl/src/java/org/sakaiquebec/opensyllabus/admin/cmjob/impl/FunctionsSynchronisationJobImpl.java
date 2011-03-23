@@ -200,6 +200,7 @@ public class FunctionsSynchronisationJobImpl implements
 		} else {
 
 		    Role role = realm.getRole(getFunctionsRole());
+		    role.setDescription(getRoleDescription());
 		    addPermissions(role, getAllowedFunctions());
 		    removePermissions(role, getDisallowedFunctions());
 		}
