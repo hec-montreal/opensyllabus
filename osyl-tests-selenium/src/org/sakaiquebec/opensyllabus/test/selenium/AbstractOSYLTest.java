@@ -1154,44 +1154,51 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
     public void addAssessmentInOutLinecours() {
 	//Add assessment inside outline course
-    String element = "//html/body/div[@id='portalOuterContainer']/div[@id='portalContainer']/div[@id='headerMax']/div[2]/div[@id='siteNav']/div[@id='linkNav']/ul[@id='siteLinkList']/li[1]/a/span";
-    session().click(element);
-	session().waitForPageToLoad("30000");    
-	goToMenuSiteSetup();
-	session().waitForPageToLoad("30000");
-	//Click on search siteName
-	session().type("search", siteName);
-	session().click("//input[@value='Recherche']");
-	session().waitForPageToLoad("30000");
-	session().click("site1");
-	//Reviser
-	if (userString.equalsIgnoreCase("prof_selenium")) {
-		session().click("//div[1]/ul[@id='actionToolBar']/li[3]/span/a");
-	} else if (userString.equalsIgnoreCase("admin")) {
-		session().click("//div[1]/ul[@id='actionToolBar']/li[4]/span/a");		
-	}
-	session().waitForPageToLoad("30000");
-	//Click on Course Site Tools 
-	session().click("//html/body/div/ul/li[2]/span/a");		
-	session().click("//html/body/div/ul/li[2]/span/a");		
-	session().waitForPageToLoad("30000");
+   	String element = null;   	   	
+	if (userString.equalsIgnoreCase("admin")) {
+		element = "//html/body/div[@id='portalOuterContainer']/div[@id='portalContainer']/div[@id='headerMax']/div[2]/div[@id='siteNav']/div[@id='linkNav']/ul[@id='siteLinkList']/li[1]/a/span";
+	    session().click(element);
+		pause();
+		goToMenuSiteSetup();
+		pause();
+		//Click on search siteName
+		session().type("search", siteName);
+		session().click("//input[@value='Recherche']");
+		pause();
+		session().click("site1");
+		//Reviser
+		session().click("//div[1]/ul[@id='actionToolBar']/li[4]/span/a");
+		pause();
+		//Click on Course Site Tools 
+		session().click("//html/body/div/ul/li[2]/span/a");		
+		session().click("//html/body/div/ul/li[2]/span/a");		
+		session().waitForPageToLoad("30000");		
+	} else {
+		//Menu Site Information
+		element = "//div[@id='container']/div[@id='toolMenuWrap']/div[@id='toolMenu']/ul/li[5]/a/span";
+	    session().click(element);
+		pause();	
+		//Edit tools
+		session().click("//html/body/div[1]/ul/li[2]/span/a");
+		pause3();
+	}	
 	//It checks if assignment is a tool already selected
-	if (!session().getValue("sakai.assignment.grades").equals("on"))  {
+	//if (!session().getValue("sakai.assignment.grades").equals("on"))  {
 		session().click("//input[@id='sakai.assignment.grades']");
-	}
+	//}
 	session().click("Continue");
-	session().waitForPageToLoad("30000");
+	pause();
 	//Save added tool
 	session().click("eventSubmit_doSave_revised_features");
-	session().waitForPageToLoad("30000");
+	pause();
 	if (userString.equalsIgnoreCase("prof_selenium")) {
 		session().open("/portal/site/" + siteName);
 	} else if (userString.equalsIgnoreCase("admin")) {
 		session().select("//div[@id='selectNav']/select", "label=" + siteName);		
 	}		
-	session().waitForPageToLoad("30000");
+	pause();
 	session().click("//div[@id='toolMenu']/ul/li[4]/a/span");
-	session().waitForPageToLoad("30000");
+	pause();
     }
 
 }
