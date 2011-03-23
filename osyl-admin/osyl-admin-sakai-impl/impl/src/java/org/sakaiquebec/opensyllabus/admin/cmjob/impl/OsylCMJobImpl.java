@@ -277,9 +277,10 @@ public class OsylCMJobImpl implements OsylCMJob {
 		log.info("Instructors for " + detailsCours.getUniqueKey()
 			+ ": " + instructors.toString());
 
+		if (detailsCours.getCoordonnateur() == null) {
 		// On a un coordonnateur
 		coordinateur = detailsCours.getCoordonnateur().getEmplId();
-		if (coordinateur == null) {
+		
 		    log.warn("The course " + enrollmentSetId
 			    + " does not have a coordinator");
 		    //TODO: send mail also 
