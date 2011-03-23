@@ -619,11 +619,11 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     }
 
     public List<String> getServEns() {
-	return null;
+	return servEns;
     }
 
     public List<String> getPrograms() {
-	return null;
+	return programs;
     }
 
 }

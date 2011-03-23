@@ -202,8 +202,9 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 		    courseOfferings =
 			    cmService.findCourseOfferingsByAcadCareer(program,
 				    session.getEid());
-		    if (courseOfferings != null)
+		    if (courseOfferings != null && courseOfferings.size() > 0)
 			courseOffs.addAll(courseOfferings);
+		    courseOfferings = new HashSet<CourseOffering>();
 		}
 
 	    }
@@ -213,15 +214,19 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	else if (servEns != null && servEns.size() > 0) {
 	    Set<Section> allSections = new HashSet<Section>();
 	    String coffId = null;
+	    CourseOffering coff = null;
 	    for (String serviceEnseignement : servEns) {
-		for (AcademicSession session : allSessions) {
-		    allSections =
-			    cmService.findSectionsByCategory(
-				    serviceEnseignement, session.getEid());
-		    if (allSections != null) {
+		allSections =
+			cmService.findSectionsByCategory(serviceEnseignement);
+		if (allSections != null) {
+		    for (AcademicSession session : allSessions) {
+
 			for (Section section : allSections) {
 			    coffId = section.getCourseOfferingEid();
-			    if (coffId != null)
+			    coff = cmService.getCourseOffering(coffId);
+			    if (coffId != null
+				    && coff.getAcademicSession().getEid()
+					    .equals(session.getEid()))
 				courseOffs.add(cmService
 					.getCourseOffering(coffId));
 			}
@@ -245,9 +250,10 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	    }
 	}
 
+	log.info(courseOffs.size() + " courses will be treated.");
 	int compteur = 0;
 
-	if (courseOffs != null) {
+	if (courseOffs == null) {
 	    for (CourseOffering courseOff : courseOffs) {
 
 		// Retrieve the sections to be created
