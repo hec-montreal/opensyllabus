@@ -266,7 +266,12 @@ public class OsylCMJobImpl implements OsylCMJob {
 		instructors = enrollmentSet.getOfficialInstructors();
 		if (instructors == null)
 		    instructors = new HashSet<String>();
-		instructors.add(matricule);
+		if (matricule != null)
+		    instructors.add(matricule);
+		else{
+		    log.warn("The course " + enrollmentSetId + " does not have instructors");
+		    //TODO: send mail also
+		}
 		enrollmentSet.setOfficialInstructors(instructors);
 		cmAdmin.updateEnrollmentSet(enrollmentSet);
 		log.info("Instructors for " + detailsCours.getUniqueKey()
@@ -274,25 +279,40 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 		// On a un coordonnateur
 		coordinateur = detailsCours.getCoordonnateur().getEmplId();
-		// Add coordinator to course offering for CERTIFICAT
-		if (detailsCours.isInCertificat() || detailsCours.isQualiteComm()) {
+		if (coordinateur == null) {
+		    log.warn("The course " + enrollmentSetId
+			    + " does not have a coordinator");
+		    //TODO: send mail also 
+		} else {
+		    // Add coordinator to course offering for CERTIFICAT
+		    if (detailsCours.isInCertificat()
+			    || detailsCours.isQualiteComm()) {
 
-		    courseOfferingId = getCourseOfferingId(detailsCours);
-		    cmAdmin.addOrUpdateCourseOfferingMembership(coordinateur,
-			    COORDONNATEUR_ROLE, courseOfferingId, ACTIVE_STATUS);
-		    actualCourseMembers.remove(coordinateur + courseOfferingId);
-		    log.info("Coordinators for " + detailsCours.getUniqueKey()
-			    + ": " + coordinateur);
-		}
-		//Add coordinator to sharable site for other courses
-		else {
-		    enrollmentSetId = getCourseOfferingId(detailsCours) + SHARABLE_SECTION;
-		    cmAdmin.addOrUpdateSectionMembership(coordinateur,
-			    COORDONNATEUR_ROLE, enrollmentSetId, ACTIVE_STATUS);
-		    actualCourseMembers.remove(coordinateur + enrollmentSetId);
-		    log.info("Coordinators for " + detailsCours.getUniqueKey()
-			    + ": " + coordinateur);
+			courseOfferingId = getCourseOfferingId(detailsCours);
+			cmAdmin.addOrUpdateCourseOfferingMembership(
+				coordinateur, COORDONNATEUR_ROLE,
+				courseOfferingId, ACTIVE_STATUS);
+			actualCourseMembers.remove(coordinateur
+				+ courseOfferingId);
+			log.info("Coordinators for "
+				+ detailsCours.getUniqueKey() + ": "
+				+ coordinateur);
+		    }
+		    // Add coordinator to sharable site for other courses
+		    else {
+			enrollmentSetId =
+				getCourseOfferingId(detailsCours)
+					+ SHARABLE_SECTION;
+			cmAdmin.addOrUpdateSectionMembership(coordinateur,
+				COORDONNATEUR_ROLE, enrollmentSetId,
+				ACTIVE_STATUS);
+			actualCourseMembers.remove(coordinateur
+				+ enrollmentSetId);
+			log.info("Coordinators for "
+				+ detailsCours.getUniqueKey() + ": "
+				+ coordinateur);
 
+		    }
 		}
 	    }
 

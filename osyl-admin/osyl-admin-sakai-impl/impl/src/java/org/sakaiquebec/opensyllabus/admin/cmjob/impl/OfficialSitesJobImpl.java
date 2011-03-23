@@ -253,7 +253,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	log.info(courseOffs.size() + " courses will be treated.");
 	int compteur = 0;
 
-	if (courseOffs == null) {
+	if (courseOffs != null) {
 	    for (CourseOffering courseOff : courseOffs) {
 
 		// Retrieve the sections to be created

@@ -388,7 +388,7 @@ public class DetailCoursMapEntry implements java.io.Serializable {
 
     public static String getUniqueKey(String catalogNbr, String strmId,
 	    String section) {
-	return strmId + catalogNbr + section;
+	return catalogNbr +strmId + section;
     }
 
     /**
