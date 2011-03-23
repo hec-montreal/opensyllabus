@@ -236,6 +236,8 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
 	    setContextImportant(getEditor().isContextImportant());
 	if (getEditor().isHasHide())
 	    setContextHidden(getEditor().isContextHidden());
+	else 
+	    setContextHidden(false);
 	setDiffusionLevel(getEditor().getDiffusionLevel());
 	setRubricType(getEditor().getRubricType());
 	setRubricUserDefLabel(getEditor().getRubricUserDefLabel());

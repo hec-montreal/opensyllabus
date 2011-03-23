@@ -779,7 +779,7 @@ public class COModeledServer {
 		allDocumentsVisibilityMap.put(coContentResProxy.getResource()
 			.getId(), visibility);
 	    }
-	    if (!Boolean.parseBoolean(visibility) && isPublication)
+	    if (isPublication && visibility!=null && !Boolean.parseBoolean(visibility))
 		return null;
 	} catch (Exception e) {
 	    e.printStackTrace();
