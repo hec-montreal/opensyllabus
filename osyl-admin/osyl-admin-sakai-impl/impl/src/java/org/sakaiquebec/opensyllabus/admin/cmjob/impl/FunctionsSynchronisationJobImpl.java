@@ -270,13 +270,8 @@ public class FunctionsSynchronisationJobImpl implements
 				    + shareEnd + " to thread #" + i);
 			    threads[i].start();
 			    shareStart = shareEnd;
-			} else {
-			    // all sites allocated
-			    log.trace("all sites allocated, waiting for threads ("
-				    + i + ") to complete");
 			}
 		    } else {
-			log.trace("allCompleted false: thread running: " + i);
 			allCompleted = false;
 		    }
 		}
@@ -296,6 +291,12 @@ public class FunctionsSynchronisationJobImpl implements
 	log.info("Completed after "
 		+ ((System.currentTimeMillis() - getStart())/1000)
 		+ " seconds");
+	if (getFunctionsRole() != null) {
+	    log.info("roleModified:       " + getFunctionsRole());
+	}
+	if (getRoleToRemove() != null) {
+	    log.info("roleRemoved:        " + getRoleToRemove());
+	}
     } // execute
     
     class MyThread extends Thread {
