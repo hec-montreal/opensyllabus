@@ -241,7 +241,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	this.eventTrackingService = eventTrackingService;
     }
 
-
     /**
      * Sets the <code>ContentHostingService</code>.
      * 
@@ -1394,41 +1393,46 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     }
 
     public void associate(String siteId, String parentId) throws Exception,
-	    CompatibilityException, FusionException, OsylPermissionException, VersionCompatibilityException {
+	    CompatibilityException, FusionException, OsylPermissionException,
+	    VersionCompatibilityException {
 	if (!osylSecurityService
 		.isActionAllowedForCurrentUser(OsylSecurityService.OSYL_MANAGER_FUNCTION_ASSOCIATE)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
 		    OsylSecurityService.OSYL_MANAGER_FUNCTION_ASSOCIATE);
 	} else {
-	    if(coRelationDao.getParentOfCourseOutline(siteId)!=null && coRelationDao.getParentOfCourseOutline(siteId).equals(parentId))
+	    if (coRelationDao.getParentOfCourseOutline(siteId) != null
+		    && coRelationDao.getParentOfCourseOutline(siteId).equals(
+			    parentId))
 		return;
 	    log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		    + "] associates [" + siteId + "] to parent [" + parentId
 		    + "]");
 	    COSerialized co;
-	    COSerialized cop;	    
+	    COSerialized cop;
 	    try {
 		co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
-		cop = resourceDao.getSerializedCourseOutlineBySiteId(parentId);		
+		cop = resourceDao.getSerializedCourseOutlineBySiteId(parentId);
 		String versionSite = co.getConfigVersion();
-		String versionParent = cop.getConfigVersion();			
+		String versionParent = cop.getConfigVersion();
 		if (co != null) {
-			if (versionSite.equalsIgnoreCase(versionParent)) {			
-			    getSiteInfo(co, siteId);
-			    if (parentId != null) {
-				COModeledServer coModelParent =
-					getFusionnedPrePublishedHierarchy(parentId);
-				if (coModelParent != null && co.getContent() != null) {
-				    ModelHelper.createAssociationInXML(co,
-					    coModelParent);
-				    resourceDao.createOrUpdateCourseOutline(co);
-				}
+		    if (versionSite.equalsIgnoreCase(versionParent)) {
+			getSiteInfo(co, siteId);
+			if (parentId != null) {
+			    COModeledServer coModelParent =
+				    getFusionnedPrePublishedHierarchy(parentId);
+			    if (coModelParent != null
+				    && co.getContent() != null) {
+				ModelHelper.createAssociationInXML(co,
+					coModelParent);
+				resourceDao.createOrUpdateCourseOutline(co);
+			    }
+			}
+			coRelationDao.createRelation(siteId, parentId);
+		    } else {
+			throw new VersionCompatibilityException(
+				"Versions cours outline are incompatible");
 		    }
-		    coRelationDao.createRelation(siteId, parentId);
-			} else {
-				throw new VersionCompatibilityException("Versions cours outline are incompatible");
-			}		    
 		} else {
 		    throw new Exception("Child course outline is null");
 		}
@@ -1439,7 +1443,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
     }
 
-    
     public void dissociate(String siteId, String parentId) throws Exception {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] dissociates [" + siteId + "] from parent [" + parentId
