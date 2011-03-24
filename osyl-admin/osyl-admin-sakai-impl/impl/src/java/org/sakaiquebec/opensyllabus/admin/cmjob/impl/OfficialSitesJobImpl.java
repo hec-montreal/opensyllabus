@@ -332,6 +332,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
     private boolean createSite(Section section) {
 	String siteName = getSiteName(section);
 	String lang;
+	boolean justCreated = false;
 	if (section.getLang() == null)
 	    lang = TEMPORARY_LANG;
 	else
@@ -341,13 +342,14 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	try {
 	    if (!osylSiteService.siteExists(siteName)) {
 		osylSiteService.createSite(siteName, OSYL_CO_CONFIG, lang);
+		justCreated = true;
 	    }
 
 	} catch (Exception e) {
 	    log.error("Could not create site " + siteName, e);
 	}
 	try {
-	    if (!osylSiteService.siteExists(siteName)) {
+	    if (justCreated) {
 		osylManagerService.associateToCM(section.getEid(), siteName);
 		Site site = siteService.getSite(siteName);
 		siteService.save(site);
@@ -399,6 +401,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	String sharableSectionId = course.getEid() + OsylCMJob.SHARABLE_SECTION;
 	Section sharableSection = null;
 	String lang = null;
+	boolean justCreated = false;
 
 	log.info("Creating sharable site for " + siteName);
 
@@ -409,19 +412,21 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	} else {
 	    sharableSection = cmService.getSection(sharableSectionId);
 	    lang = sharableSection.getLang();
+	    
 	}
 
 	try {
 	    if (!osylSiteService.siteExists(siteName)) {
 		osylSiteService.createSharableSite(siteName, OSYL_CO_CONFIG,
 			lang);
+		justCreated = true;
 	    } else {
 		log.info("The site " + siteName + " already exist.");
 	    }
 
 	    Site sharable = siteService.getSite(siteName);
 
-	    if (sharableSection != null)
+	    if (justCreated)
 		try {
 
 		    osylManagerService.associateToCM(sharableSection.getEid(),
