@@ -67,10 +67,6 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
     private Set<CourseOffering> courseOffs = null;
 
-    private List<String> existingCO = null;
-
-    private List<String> newCO = null;
-
     private Set<Section> sections = null;
 
     // ***************** SPRING INJECTION ************************//
@@ -436,105 +432,11 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 		}
 
 	    siteService.save(sharable);
-
-	    // After we are sure the sharable course outline has been created,
-	    // We check if we have to send a message telling there is already a
-	    // course section that might need to be transferred
-
-	    // FIXME: SAKAI-1550
-	    existingCourseOutlineSections(course);
-	    if (existingCO != null) {
-
-		Vector<User> receivers = new Vector<User>();
-		// Add the users that will receive the mail
-		receivers.add(userDirectoryService.getUserByEid("admin"));
-
-		String message = getNotificationMessages(existingCO.toString());
-		if (receivers.size() > 0)
-		    emailService.sendToUsers(
-			    receivers,
-			    getHeaders(null, "test d'envoi",
-				    receivers.toString()), message);
-	    }
-
 	} catch (Exception e) {
 	    log.error(e.getMessage());
 	    return null;
 	}
 	return siteName;
-    }
-
-    protected List<String> getHeaders(String receiverEmail, String subject,
-	    String from) {
-	List<String> rv = new Vector<String>();
-
-	rv.add("MIME-Version: 1.0");
-	rv.add("Content-Type: multipart/alternative; boundary=\"======sakai-multi-part-boundary======\"");
-	// set the subject
-	rv.add(subject);
-
-	// from
-	rv.add(from);
-
-	// to
-	if (StringUtil.trimToNull(receiverEmail) != null) {
-	    rv.add("To: " + receiverEmail);
-	}
-
-	return rv;
-    }
-
-    // FIXME: SAKAI:1550
-    private void existingCourseOutlineSections(CourseOffering courseOff) {
-
-	Set<Section> sections = cmService.getSections(courseOff.getEid());
-
-	existingCO = null;
-	newCO = null;
-
-	String siteSectionId;
-
-	for (Section section : sections) {
-	    siteSectionId = getSiteName(section);
-	    if (siteService.siteExists(siteSectionId)) {
-		if (existingCO == null) {
-		    existingCO = new ArrayList<String>();
-		}
-		existingCO.add(siteSectionId);
-	    } else {
-		if (newCO == null) {
-		    newCO = new ArrayList<String>();
-		}
-		newCO.add(siteSectionId);
-	    }
-	}
-    }
-
-    // FIXME: SAKAI:1550
-    private String getNotificationMessages(String existingSections) {
-	StringBuilder message = new StringBuilder();
-	String plainTextContent = " le contenu en texte";
-	String htmlContent = " le contenu en html";
-	String subject = "sujet du message " + existingSections;
-
-	message.append("This message is for MIME-compliant mail readers.");
-	message.append("\n\n--======sakai-multi-part-boundary======\n");
-	message.append("Content-Type: text/plain\n\n");
-	message.append(plainTextContent);
-	message.append("\n\n--======sakai-multi-part-boundary======\n");
-	message.append("Content-Type: text/html\n\n");
-	message.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\"\n");
-	message.append("    \"http://www.w3.org/TR/html4/loose.dtd\">\n");
-	message.append("<html>\n");
-	message.append("  <head><title>");
-	message.append(subject);
-	message.append("</title></head>\n");
-	message.append("  <body>\n");
-	message.append(htmlContent);
-	message.append("\n  </body>\n</html>\n");
-	message.append("\n\n--======sakai-multi-part-boundary======--\n\n");
-
-	return message.toString();
     }
 
     private List<AcademicSession> getSessions(Date startDate, Date endDate) {
