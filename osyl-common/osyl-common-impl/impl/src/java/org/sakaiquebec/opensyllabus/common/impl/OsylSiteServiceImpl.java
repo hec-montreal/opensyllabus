@@ -1401,6 +1401,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    .getCurrentSession().getUserEid(),
 		    OsylSecurityService.OSYL_MANAGER_FUNCTION_ASSOCIATE);
 	} else {
+	    if(coRelationDao.getParentOfCourseOutline(siteId)!=null && coRelationDao.getParentOfCourseOutline(siteId).equals(parentId))
+		return;
 	    log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		    + "] associates [" + siteId + "] to parent [" + parentId
 		    + "]");
