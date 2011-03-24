@@ -321,7 +321,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
      * documents
      * @return true if all documents have been written successfully
      */
-    private boolean writeDocumentsInZC(String siteId, String lang,
+    private boolean writeDocumentsInZC(String siteId, String lang, String acces,
 	    Map<String, String> documentSecurityMap,
 	    Map<String, String> documentVisibityMap,
 	    Map<String, String> documents, String zcco, Connection dbConn)
@@ -332,7 +332,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 		+ "in public portal database...");
 
 	boolean written = false;
-	String acces = null;
+	String accesDoc = null;
 	String visibilite = null;
 	String ressType = null;
 	byte[] ressContent = null;
@@ -350,51 +350,52 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	Set<String> docSecKeyValues = documentSecurityMap.keySet();
 	String doc = null;
 	HashMap hache = getDocsIds(dbConn, lang, xmlSourceDoc, outTrace, false);
-
+	//It uses access from each document
 	for (String docSecKey : docSecKeyValues) {
-	    acces = documentSecurityMap.get(docSecKey);
+	    accesDoc = documentSecurityMap.get(docSecKey);
 	    doc = documents.get(docSecKey);
 	    if (docSecKey != null && !"".equalsIgnoreCase(docSecKey)) {
 		visibilite = documentVisibityMap.get(docSecKey);
 		// Exclude the string "/publish" itsself to get the real
 		// filename
-		if ((ACCESS_PUBLIC.equals(acces) && "true".equals(visibilite))
-			|| (ACCESS_COMMUNITY.equals(acces) && "true"
-				.equals(visibilite))) {
-		    try {
-			ContentResource content =
-				contentHostingService.getResource(doc);
-			// TODO: verifier les types des documents sont
-			// compatibles
-			// dans ZoneCours
-			if (content != null) {
-			    ressType = content.getContentType();
-			    ressContent = content.getContent();
-			    ressSize = (int) content.getContentLength();
-
-			    log.debug("Writing documents of site " + siteId
-				    + "in public portal database...");
-			    if (docSecKey != null
-				    && hache
-					    .get(courseNumber + "_" + docSecKey) != null)
-				writeDocInZcDb(courseNumber + "_" + docSecKey,
-					lang, acces, ressType, ressSize,
-					content.streamContent(), ressContent,
-					siteId, dbConn);
+		//It searches documents inside courses through a course as "community" 
+		//because that includes all documents
+		if (ACCESS_COMMUNITY.equals(acces)) {				
+			if ((accesDoc.equals(ACCESS_PUBLIC) && "true".equals(visibilite))
+				|| (accesDoc.equals(ACCESS_COMMUNITY) && "true".equals(visibilite))) {		
+			    try {
+				ContentResource content =
+					contentHostingService.getResource(doc);
+				// TODO: verifier les types des documents sont
+				// compatibles dans ZoneCours
+				if (content != null) {
+				    ressType = content.getContentType();
+				    ressContent = content.getContent();
+				    ressSize = (int) content.getContentLength();
+	
+				    log.debug("Writing documents of site " + siteId
+					    + "in public portal database...");
+				    if (docSecKey != null
+					    && hache
+						    .get(courseNumber + "_" + docSecKey) != null)
+					writeDocInZcDb(courseNumber + "_" + docSecKey,
+						lang, accesDoc, ressType, ressSize,
+						content.streamContent(), ressContent,
+						siteId, dbConn);
+				}
+			    } catch (PermissionException e) {
+				log.error("writeDocumentsInZC(): " + e);
+			    } catch (IdUnusedException e) {
+				log.error("writeDocumentsInZC(): " + e);
+			    } catch (TypeException e) {
+				log.error("writeDocumentsInZC(): " + e);
+			    } catch (ServerOverloadException e) {
+				log.error("writeDocumentsInZC(): " + e);
+			    }
+			    written = true;
 			}
-		    } catch (PermissionException e) {
-			log.error("writeDocumentsInZC(): " + e);
-		    } catch (IdUnusedException e) {
-			log.error("writeDocumentsInZC(): " + e);
-		    } catch (TypeException e) {
-			log.error("writeDocumentsInZC(): " + e);
-		    } catch (ServerOverloadException e) {
-			log.error("writeDocumentsInZC(): " + e);
-		    }
-		    written = true;
-		}
 	    }
-
+	    }
 	}
 	log.debug("All public documents of site " + siteId
 		+ "have been written in public portal database...");
@@ -478,11 +479,11 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	String nivSecu = getSecurityLabel(acces);
 
 	requete_select =
-		"select * from doczone where koId like ?  AND nivSecu=?";
+		"select * from doczone where koId like ? "; // AND nivSecu=?
 	try {
 	    ps_select = dbConn.prepareStatement(requete_select);
 	    ps_select.setString(1, koId);
-	    ps_select.setString(2, nivSecu);
+	    //ps_select.setString(2, nivSecu);
 	    rSet_select = ps_select.executeQuery();
 
 	    if (rSet_select.next())
@@ -541,10 +542,10 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    ps_ins.close();
 
 	    requeteSQL =
-		    "SELECT docContent FROM DocZone WHERE koId=? AND nivSecu=? FOR UPDATE";
+		    "SELECT docContent FROM DocZone WHERE koId=? FOR UPDATE";
 	    ps = dbConn.prepareStatement(requeteSQL);
 	    ps.setString(1, koId);
-	    ps.setString(2, nivSecu);
+	    //ps.setString(2, nivSecu);
 
 	    rset = ps.executeQuery();
 
@@ -603,7 +604,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 	requeteSQL_del =
 		" DELETE FROM DocSecu WHERE koId = '" + koId + "' AND planId='"
-			+ xmlKoId + "' AND nivSecu='" + nivSecu + "'";
+			+ xmlKoId + "'";
 	log.debug(requeteSQL_del + " ...");
 	stmt_del.execute(requeteSQL_del);
 	log.debug("request ok: " + requeteSQL_del);
@@ -625,9 +626,8 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	String requeteSQL_delRess = null;
 	Statement stmt_delRess = connexion.createStatement();
 	String nivSecu = getSecurityLabel(acces);
-	requeteSQL_delRess =
-		" DELETE FROM DocZone WHERE koId = '" + koId
-			+ "' AND nivSecu = '" + nivSecu + "'";
+	requeteSQL_delRess = " DELETE FROM DocZone WHERE koId = '" + koId + "'";		
+	//" DELETE FROM DocZone WHERE koId = '" + koId + "' AND nivSecu = '" + nivSecu + "'";
 	log.debug(requeteSQL_delRess + " ...");
 	stmt_delRess.execute(requeteSQL_delRess);
 	log.debug("request ok: " + requeteSQL_delRess);
@@ -699,12 +699,12 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 
 	// Add the document content in the record
 	requete_upd =
-		"update doczone set doccontent = ?, datemaj= sysdate  WHERE koId=? AND nivSecu=?";
+		"update doczone set doccontent = ?, datemaj= sysdate, nivSecu=?  WHERE koId=? ";
 	try {
 	    ps_upd = dbConn.prepareStatement(requete_upd);
 	    ps_upd.setBinaryStream(1, ressContent, ressSize);
-	    ps_upd.setString(2, koId);
-	    ps_upd.setString(3, nivSecu);
+	    ps_upd.setString(2, nivSecu);	    
+	    ps_upd.setString(3, koId);
 	    ps_upd.execute();
 
 	    ps_upd.close();
@@ -795,7 +795,7 @@ public class OsylTransformToZCCOImpl implements OsylTransformToZCCO {
 	    // Save the documents in the zonecours database
 	    sent =
 		    sent
-			    && writeDocumentsInZC(siteId, lang,
+			    && writeDocumentsInZC(siteId, lang, acces,
 				    documentSecurityMap, documentVisibilityMap,
 				    documents, zcco, dbConn);
 	    if (sent) {
