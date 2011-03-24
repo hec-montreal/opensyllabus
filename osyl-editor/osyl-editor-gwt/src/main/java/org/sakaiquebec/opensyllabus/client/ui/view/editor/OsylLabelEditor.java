@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylLabelEditClickListener;
@@ -154,8 +155,8 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 	// We only create an edit button (as delete is not allowed) and add it:
 	String title = getView().getUiMessage("edit");
 	ClickHandler handler = new OsylLabelEditClickListener(getView());
-	AbstractImagePrototype imgEditButton = 
-	    AbstractImagePrototype.create(getOsylImageBundle().edit());
+	AbstractImagePrototype imgEditButton =
+		AbstractImagePrototype.create(getOsylImageBundle().edit());
 	ImageAndTextButton pbEdit = createButton(imgEditButton, title, handler);
 	getView().getButtonPanel().clear();
 	getView().getButtonPanel().add(pbEdit);
@@ -197,13 +198,21 @@ public class OsylLabelEditor extends OsylAbstractEditor {
     }
 
     public boolean prepareForSave() {
-	return !getText().equals("");
+	if (getText() == null || getText().equals("")) {
+	    OsylAlertDialog alert =
+		    new OsylAlertDialog(getUiMessage("Global.error"),
+			    getUiMessage("OsylLabelEditor.error.emptyTitle"));
+	    alert.show();
+	    return false;
+	} else {
+	    return true;
+	}
     }
 
     public void enterEdit() {
 	// We keep track that we are now in edition-mode
 	setInEditionMode(true);
-	
+
 	createEditBox();
 
 	// We get the text to edit from the model
@@ -225,8 +234,8 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 	setInEditionMode(false);
 	// We get the text to display from the model
 	setText(getView().getTextFromModel());
-	
-	if(getView().isNewAccordingSelectedDate()){
+
+	if (getView().isNewAccordingSelectedDate()) {
 	    getViewer().addStyleName("Osyl-newElement");
 	}
 
@@ -296,8 +305,8 @@ public class OsylLabelEditor extends OsylAbstractEditor {
      * ==================== ADDED CLASSES or METHODS ====================
      */
     protected ImageAndTextButton createButtonDelete() {
-	AbstractImagePrototype imgDeleteButton = 
-	    AbstractImagePrototype.create(getOsylImageBundle().delete());
+	AbstractImagePrototype imgDeleteButton =
+		AbstractImagePrototype.create(getOsylImageBundle().delete());
 	String title = getView().getUiMessage("delete");
 	ClickHandler handler =
 		new MyDeletePushButtonListener((COElementAbstract) getView()
@@ -366,7 +375,7 @@ public class OsylLabelEditor extends OsylAbstractEditor {
 	    }
 	}
     }
-    
+
     public void setIsDeletable(boolean isDeletable) {
 	this.isDeletable = isDeletable;
     }
