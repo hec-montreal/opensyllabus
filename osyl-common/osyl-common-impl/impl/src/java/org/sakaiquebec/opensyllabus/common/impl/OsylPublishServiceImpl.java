@@ -596,7 +596,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    } catch (PermissionException e1) {
 		e1.printStackTrace();
 	    } catch (IdUnusedException e1) {
-		e1.printStackTrace();
 	    } catch (TypeException e1) {
 		e1.printStackTrace();
 	    } catch (InUseException e1) {
