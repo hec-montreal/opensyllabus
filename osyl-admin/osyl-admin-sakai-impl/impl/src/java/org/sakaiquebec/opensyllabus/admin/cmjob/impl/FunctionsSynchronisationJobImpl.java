@@ -265,6 +265,11 @@ public class FunctionsSynchronisationJobImpl implements
 		List<String> disallowedFunctions, String roleToRemove) {
 	    this.threadNo = threadNo;
 	    setSiteList(sites);
+	    setFunctionsRole(functionsRole);
+	    setRoleDescription(roleDescription);
+	    setRoleToRemove(roleToRemove);
+	    setAllowedFunctions(allowedFunctions);
+	    setDisallowedFunctions(disallowedFunctions);
 	}
 	
 	private void setSiteList(List<Site> sites) {
