@@ -317,7 +317,14 @@ public class FunctionsSynchronisationJobImpl implements
 	    completed = false;
 	    log.debug("Thread #" + threadNo + " (" + getName() + ") Starting");
 	    loginToSakai();
-	    processSites(sites);
+	    try {
+		processSites(sites);
+	    } catch (Exception e) {
+		log.error("Thread #" + threadNo + " (" + getName()
+			+ ") : Unable to process all sites without error: "
+			+ e);
+		e.printStackTrace();
+	    }
 	    logoutFromSakai();
 	    log.debug("Thread #" + threadNo + " Finished");
 	    completed = true;
@@ -367,7 +374,14 @@ public class FunctionsSynchronisationJobImpl implements
 		    // We remove the role
 		    if (getRoleToRemove() != null)
 			removeRole(siteRealm, getRoleToRemove());
-		    authzGroupService.save(siteRealm);
+		    try {
+			authzGroupService.save(siteRealm);
+		    } catch (Exception e) {
+			log.error("Unable to save changes for site "
+				+ site.getId() + " : " + e);
+			e.printStackTrace();
+
+		    }
 
 		} catch (GroupNotDefinedException e) {
 		    log.error(e.getMessage());
@@ -417,7 +431,13 @@ public class FunctionsSynchronisationJobImpl implements
 			    // We remove the role
 			    if (getRoleToRemove() != null)
 				removeRole(groupRealm, getRoleToRemove());
-			    authzGroupService.save(groupRealm);
+			    try {
+				authzGroupService.save(groupRealm);
+			    } catch (Exception e) {
+				log.error("Unable to save changes for group "
+					+ groupId + " : " + e);
+				e.printStackTrace();
+			    }
 
 			} catch (GroupNotDefinedException e) {
 			    log.error(e.getMessage());
