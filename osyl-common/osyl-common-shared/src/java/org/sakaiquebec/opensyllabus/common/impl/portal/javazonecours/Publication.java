@@ -1316,7 +1316,7 @@ public class Publication {
 		String requeteSQL = null;
 		Statement stmt = connexion.createStatement();
 
-		requeteSQL = " DELETE FROM DocZone WHERE koId = '" + koId + "' AND nivSecu='" + nivSecu+ "'";
+		requeteSQL = " DELETE FROM DocZone WHERE koId = '" + koId + "'";
 		if (trace)
 			outTrace.append("<br>" + requeteSQL + " ...");
 		stmt.execute(requeteSQL);
