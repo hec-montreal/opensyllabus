@@ -170,6 +170,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
      */
     private void initViewer() {
 	HTML htmlViewer = new HTML();
+	htmlViewer.setStylePrimaryName("Osyl-UnitView-UnitLabel");
 	setViewer(htmlViewer);
 
 	HTML htmlViewerDesc = new HTML();
