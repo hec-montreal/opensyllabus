@@ -440,10 +440,10 @@ public class OsylController implements SavePushButtonEventHandler,
 	// keep track of co messages
 	setCoMessages(new OsylConfigMessages(co.getMessages()));
 
-	OsylEditorEntryPoint.getInstance().initModel(co);
-
 	// We keep track of the current site ID.
 	setSiteId(co.getSiteId());
+	
+	OsylEditorEntryPoint.getInstance().initModel(co);
     }
 
     /**
