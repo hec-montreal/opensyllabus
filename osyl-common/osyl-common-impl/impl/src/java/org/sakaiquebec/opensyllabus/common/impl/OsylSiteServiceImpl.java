@@ -816,6 +816,30 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    cce.setHidden();
 	    contentHostingService.commitCollection(cce);
 
+	    // we add the default citationList
+	    // TODO I18N
+	    String citationListName = "Références bibliographiques du cours";
+	    CitationCollection citationList = citationService.addCollection();
+	    ContentResourceEdit cre =
+		    contentHostingService.addResource(directoryId,
+			    citationListName, null, 1);
+	    cre.setResourceType(CitationService.CITATION_LIST_ID);
+	    cre.setContentType(ResourceType.MIME_TYPE_HTML);
+
+	    ResourcePropertiesEdit props = cre.getPropertiesEdit();
+	    props
+		    .addProperty(
+			    ContentHostingService.PROP_ALTERNATE_REFERENCE,
+			    org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
+	    props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
+		    ResourceType.MIME_TYPE_HTML);
+	    props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
+		    citationListName);
+
+	    cre.setContent(citationList.getId().getBytes());
+	    contentHostingService.commitResource(cre,
+		    NotificationService.NOTI_NONE);
+
 	    COConfigSerialized coConfig = null;
 	    COSerialized co = null;
 
