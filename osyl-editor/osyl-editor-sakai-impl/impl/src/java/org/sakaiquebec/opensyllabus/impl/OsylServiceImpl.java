@@ -166,7 +166,7 @@ public class OsylServiceImpl implements OsylService {
 
 	for (Iterator<String> i = functionsToRegister.iterator(); i.hasNext();) {
 	    String function = i.next();
-		getFunctionManager().registerFunction(function);
+	    getFunctionManager().registerFunction(function);
 	}
     }
 
@@ -179,12 +179,12 @@ public class OsylServiceImpl implements OsylService {
     public void setFunctionManager(FunctionManager functionManager) {
 	this.functionManager = functionManager;
     }
-    
+
     private List<String> functionsToRegister;
 
-//    public List getFunctionsToRegister() {
-//	return functionsToRegister;
-//    }
+    // public List getFunctionsToRegister() {
+    // return functionsToRegister;
+    // }
 
     public void setFunctionsToRegister(List<String> functionsToRegister) {
 	this.functionsToRegister = functionsToRegister;
@@ -237,18 +237,21 @@ public class OsylServiceImpl implements OsylService {
 
 	ContentResourceEdit resource = null;
 	String resourceDir = getResourceReference(siteId);
+
+	SecurityAdvisor advisor = new SecurityAdvisor() {
+	    public SecurityAdvice isAllowed(String userId, String function,
+		    String reference) {
+		return SecurityAdvice.ALLOWED;
+	    }
+	};
+
 	try {
 	    String resourceId = resourceDir + citationTitle;
 	    // temporarily allow the user to read and write resources
-	    if (osylSecurityService.isActionAllowedInSite(
-			osylSiteService.getSiteReference(siteId),
-			OsylSecurityService.OSYL_FUNCTION_EDIT)) {
-		securityService.pushAdvisor(new SecurityAdvisor() {
-		    public SecurityAdvice isAllowed(String userId,
-			    String function, String reference) {
-			return SecurityAdvice.ALLOWED;
-		    }
-		});
+	    if (osylSecurityService.isActionAllowedInSite(osylSiteService
+		    .getSiteReference(siteId),
+		    OsylSecurityService.OSYL_FUNCTION_EDIT)) {
+		securityService.pushAdvisor(advisor);
 	    }
 	    // check if resource is existing - throws IdUnusedException
 	    contentHostingService.checkResource(resourceId);
@@ -276,10 +279,10 @@ public class OsylServiceImpl implements OsylService {
 			    + " resource: ", e1);
 	} finally {
 	    // clear the permission
-	    if (osylSecurityService.isActionAllowedInSite(
-			osylSiteService.getSiteReference(siteId),
-			OsylSecurityService.OSYL_FUNCTION_EDIT)) {
-		securityService.clearAdvisors();
+	    if (osylSecurityService.isActionAllowedInSite(osylSiteService
+		    .getSiteReference(siteId),
+		    OsylSecurityService.OSYL_FUNCTION_EDIT)) {
+		securityService.popAdvisor();
 	    }
 	}
 
@@ -402,9 +405,10 @@ public class OsylServiceImpl implements OsylService {
 		cre.setContentType(ResourceType.MIME_TYPE_HTML);
 
 		ResourcePropertiesEdit props = cre.getPropertiesEdit();
-		props.addProperty(
-			ContentHostingService.PROP_ALTERNATE_REFERENCE,
-			org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
+		props
+			.addProperty(
+				ContentHostingService.PROP_ALTERNATE_REFERENCE,
+				org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
 		props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
 			ResourceType.MIME_TYPE_HTML);
 		props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
@@ -524,23 +528,7 @@ public class OsylServiceImpl implements OsylService {
 	    String parent =
 		    coRelationDao.getParentOfCourseOutline(currentSiteId);
 	    if (resourceURI.indexOf(parent, 0) != -1) {
-		// temporarily allow the user to read and write from assignments
-		// (asn.revise permission)
-
-		// if (osylSecurityService.isAllowedToEdit(parent)) {
-		securityService.pushAdvisor(new SecurityAdvisor() {
-		    public SecurityAdvice isAllowed(String userId,
-			    String function, String reference) {
-			return SecurityAdvice.ALLOWED;
-		    }
-		});
-
-		// }
-
-		// clear the permission
-
-		// if (osylSecurityService.isAllowedToEdit(siteId)) {
-		// SecurityService.clearAdvisors(); }
+		
 
 	    }
 

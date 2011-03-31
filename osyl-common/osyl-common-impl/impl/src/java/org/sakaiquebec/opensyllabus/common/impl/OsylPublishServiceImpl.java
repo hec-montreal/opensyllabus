@@ -326,127 +326,139 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    Vector<Map<String, String>> publicationResults =
 		    new Vector<Map<String, String>>();
 
-	    securityService.pushAdvisor(new SecurityAdvisor() {
+	    SecurityAdvisor advisor = new SecurityAdvisor() {
 		public SecurityAdvice isAllowed(String userId, String function,
 			String reference) {
 		    return SecurityAdvice.ALLOWED;
 		}
-	    });
+	    };
 
 	    COSerialized co =
 		    osylSiteService
 			    .getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
-
-	    if (co.getContent() == null) {
-		osylSiteService.setCoContentWithTemplate(co, webappDir);
-		resourceDao.createOrUpdateCourseOutline(co);
-	    }
-	    COModeledServer coModeled = new COModeledServer(co);
-
-	    // PRE-PUBLICATION
-	    // change work directory to publish directory
-	    coModeled.XML2Model(true);
-	    coModeled.model2XML();
-	    co.setContent(coModeled.getSerializedContent());
-
-	    COSerialized publishedCO = null;
 	    try {
-		publishedCO =
-			resourceDao
-				.getPrePublishSerializedCourseOutlineBySiteId(co
-					.getSiteId());
-	    } catch (Exception e) {
-	    }
+		securityService.pushAdvisor(advisor);
 
-	    // Create a course outline with security public
-	    if (publishedCO == null) {
-		publishedCO = new COSerialized(co);
-		publishedCO.setCoId(idManager.createUuid());
-		publishedCO.setAccess("");
-		publishedCO.setPublished(true);
-		resourceDao.createOrUpdateCourseOutline(publishedCO);
+		if (co.getContent() == null) {
+		    osylSiteService.setCoContentWithTemplate(co, webappDir);
+		    resourceDao.createOrUpdateCourseOutline(co);
+		}
+		COModeledServer coModeled = new COModeledServer(co);
 
-		List<CORelation> childrens =
-			coRelationDao.getCourseOutlineChildren(siteId);
-		if (childrens != null && !childrens.isEmpty()) {
-		    // site have childrens associated (only in corelation table,
-		    // not
-		    // in xml cause there was no published xml before).
-		    // We must associate to parent now
-		    for (CORelation coRelation : childrens) {
-			try {
-			    COSerialized coChild =
-				    resourceDao
-					    .getSerializedCourseOutlineBySiteId(coRelation
-						    .getChild());
-			    COModeledServer coModelParent =
-				    osylSiteService
-					    .getFusionnedPrePublishedHierarchy(siteId);
+		// PRE-PUBLICATION
+		// change work directory to publish directory
+		coModeled.XML2Model(true);
+		coModeled.model2XML();
+		co.setContent(coModeled.getSerializedContent());
 
-			    ModelHelper.createAssociationInXML(coChild,
-				    coModelParent);
-			    resourceDao.createOrUpdateCourseOutline(coChild);
-			} catch (CompatibilityException e) {
-			    // we do nothing, editor of children will be alert
-			    // when
-			    // editing
-			} catch (FusionException fe) {
+		COSerialized publishedCO = null;
+		try {
+		    publishedCO =
+			    resourceDao
+				    .getPrePublishSerializedCourseOutlineBySiteId(co
+					    .getSiteId());
+		} catch (Exception e) {
+		}
+
+		// Create a course outline with security public
+		if (publishedCO == null) {
+		    publishedCO = new COSerialized(co);
+		    publishedCO.setCoId(idManager.createUuid());
+		    publishedCO.setAccess("");
+		    publishedCO.setPublished(true);
+		    resourceDao.createOrUpdateCourseOutline(publishedCO);
+
+		    List<CORelation> childrens =
+			    coRelationDao.getCourseOutlineChildren(siteId);
+		    if (childrens != null && !childrens.isEmpty()) {
+			// site have childrens associated (only in corelation
+			// table,
+			// not
+			// in xml cause there was no published xml before).
+			// We must associate to parent now
+			for (CORelation coRelation : childrens) {
+			    try {
+				COSerialized coChild =
+					resourceDao
+						.getSerializedCourseOutlineBySiteId(coRelation
+							.getChild());
+				COModeledServer coModelParent =
+					osylSiteService
+						.getFusionnedPrePublishedHierarchy(siteId);
+
+				ModelHelper.createAssociationInXML(coChild,
+					coModelParent);
+				resourceDao
+					.createOrUpdateCourseOutline(coChild);
+			    } catch (CompatibilityException e) {
+				// we do nothing, editor of children will be
+				// alert
+				// when
+				// editing
+			    } catch (FusionException fe) {
+
+			    }
 
 			}
 
 		    }
-
+		} else {
+		    publishedCO.setContent(co.getContent());
+		    resourceDao.createOrUpdateCourseOutline(publishedCO);
 		}
-	    } else {
-		publishedCO.setContent(co.getContent());
-		resourceDao.createOrUpdateCourseOutline(publishedCO);
+
+		// Retrieve documents associated to the course outline and its
+		// parents
+		setDocumentSecurityMap(coModeled.getDocumentSecurityMap());
+
+		setDocumentVisibilityMap(coModeled.getDocumentVisibilityMap());
+
+		copyWorkToPublish(siteId, getDocumentSecurityMap(),
+			getDocumentVisibilityMap());
+
+		publication(co.getSiteId(), webappDir);
+
+		// change publication date
+		TreeMap<String, String> publicationProperties =
+			new TreeMap<String, String>();
+		COSerialized coSerialized =
+			osylSiteService
+				.getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
+		COModeledServer coModeledServer =
+			new COModeledServer(coSerialized);
+		coModeledServer.XML2Model(false);
+		COContent coContent = coModeledServer.getModeledContent();
+		coContent
+			.addProperty(
+				COPropertiesType.PREVIOUS_PUBLISHED,
+				coContent
+					.getProperty(COPropertiesType.PUBLISHED) != null ? coContent
+					.getProperty(COPropertiesType.PUBLISHED)
+					: "");
+		coContent.addProperty(COPropertiesType.PUBLISHED, OsylDateUtils
+			.getCurrentDateAsXmlString());
+		coModeledServer.model2XML();
+		coSerialized.setContent(coModeledServer.getSerializedContent());
+		resourceDao.createOrUpdateCourseOutline(coSerialized);
+
+		publicationProperties
+			.put(
+				COPropertiesType.PREVIOUS_PUBLISHED,
+				coContent
+					.getProperty(COPropertiesType.PREVIOUS_PUBLISHED));
+		publicationProperties.put(COPropertiesType.PUBLISHED, coContent
+			.getProperty(COPropertiesType.PUBLISHED));
+		publicationResults.add(publicationProperties);
+
+		publicationResults.add(generatePublishedSitesPdf(webappDir));
+
+	    } finally {
+		securityService.popAdvisor();
 	    }
-
-	    // Retrieve documents associated to the course outline and its
-	    // parents
-	    setDocumentSecurityMap(coModeled.getDocumentSecurityMap());
-
-	    setDocumentVisibilityMap(coModeled.getDocumentVisibilityMap());
-
-	    copyWorkToPublish(siteId, getDocumentSecurityMap(),
-		    getDocumentVisibilityMap());
-
-	    publication(co.getSiteId(), webappDir);
-
-	    // change publication date
-	    TreeMap<String, String> publicationProperties =
-		    new TreeMap<String, String>();
-	    COSerialized coSerialized =
-		    osylSiteService
-			    .getUnfusionnedSerializedCourseOutlineBySiteId(siteId);
-	    COModeledServer coModeledServer = new COModeledServer(coSerialized);
-	    coModeledServer.XML2Model(false);
-	    COContent coContent = coModeledServer.getModeledContent();
-	    coContent
-		    .addProperty(
-			    COPropertiesType.PREVIOUS_PUBLISHED,
-			    coContent.getProperty(COPropertiesType.PUBLISHED) != null ? coContent
-				    .getProperty(COPropertiesType.PUBLISHED)
-				    : "");
-	    coContent.addProperty(COPropertiesType.PUBLISHED, OsylDateUtils
-		    .getCurrentDateAsXmlString());
-	    coModeledServer.model2XML();
-	    coSerialized.setContent(coModeledServer.getSerializedContent());
-	    resourceDao.createOrUpdateCourseOutline(coSerialized);
-
-	    publicationProperties.put(COPropertiesType.PREVIOUS_PUBLISHED,
-		    coContent.getProperty(COPropertiesType.PREVIOUS_PUBLISHED));
-	    publicationProperties.put(COPropertiesType.PUBLISHED, coContent
-		    .getProperty(COPropertiesType.PUBLISHED));
-	    securityService.clearAdvisors();
-
 	    log.info("Finished publishing course outline for site ["
 		    + (co.getTitle() == null ? siteId : co.getTitle())
 		    + "] in " + (System.currentTimeMillis() - start) + " ms");
 
-	    publicationResults.add(publicationProperties);
-
-	    publicationResults.add(generatePublishedSitesPdf(webappDir));
 	    return publicationResults;
 	}
     }
