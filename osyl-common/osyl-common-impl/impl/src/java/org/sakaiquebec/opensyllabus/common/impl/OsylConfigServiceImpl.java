@@ -491,7 +491,8 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 			    + File.separator
 			    + getDefautVersionConfig(webappDir + CONFIG_DIR
 				    + File.separator + coConfig.getConfigRef()
-				    + File.separator) + File.separator+ templateFileName;
+				    + File.separator) + File.separator
+			    + templateFileName;
 	    coXmlFile = new File(coXmlFilePath);
 	    reader =
 		    new BufferedReader(new InputStreamReader(
@@ -515,7 +516,8 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 				+ getDefautVersionConfig(webappDir + CONFIG_DIR
 					+ File.separator
 					+ coConfig.getConfigRef()
-					+ File.separator) + templateFileName;
+					+ File.separator) + File.separator
+				+ templateFileName;
 		coXmlFile = new File(coXmlFilePath);
 		reader =
 			new BufferedReader(new InputStreamReader(
@@ -539,7 +541,7 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 				    + getDefautVersionConfig(webappDir
 					    + CONFIG_DIR + File.separator
 					    + coConfig.getConfigRef()
-					    + File.separator)
+					    + File.separator) + File.separator
 				    + templateFileName;
 		    coXmlFile = new File(coXmlFilePath);
 		    reader =
