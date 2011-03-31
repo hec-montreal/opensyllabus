@@ -666,93 +666,106 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		+ "] creates site [" + siteTitle + "]");
 	long start = System.currentTimeMillis();
 	Site site = null;
-
 	if (!siteService.siteExists(siteTitle)) {
-	    enableSecurityAdvisor();
-	    String template =
-		    ServerConfigurationService.getString(
-			    "opensyllabus.course.template.prefix", null);
-	    if (template != null) {
-		site =
-			siteService.addSite(siteTitle, siteService
-				.getSite(template + lang));
-		site.getPropertiesEdit().addProperty("template", "false");
-	    } else {
-		site = siteService.addSite(siteTitle, SITE_TYPE);
-		// we add the tools
-		addHomePage(site, lang);
-		addTool(site, "sakai.announcements");
-		addTool(site, "sakai.opensyllabus.tool");
-		addTool(site, "sakai.resources");
-		addTool(site, "sakai.siteinfo");
-	    }
-	    site.setTitle(siteTitle);
-	    site.setPublished(true);
-	    site.setJoinable(false);
-
-	    enableSecurityAdvisor();
-	    siteService.save(site);
-
-	    // we add the directories
-	    String directoryId;
-
-	    osylContentService.initSiteAttachments(site.getTitle());
-	    directoryId = contentHostingService.getSiteCollection(site.getId());
-	    ContentCollectionEdit cce =
-		    contentHostingService.editCollection(directoryId);
-	    cce.setHidden();
-	    contentHostingService.commitCollection(cce);
-
-	    // we add the default citationList
-	    // TODO I18N
-	    String citationListName = "Références bibliographiques du cours";
-	    CitationCollection citationList = citationService.addCollection();
-	    ContentResourceEdit cre =
-		    contentHostingService.addResource(directoryId,
-			    citationListName, null, 1);
-	    cre.setResourceType(CitationService.CITATION_LIST_ID);
-	    cre.setContentType(ResourceType.MIME_TYPE_HTML);
-
-	    ResourcePropertiesEdit props = cre.getPropertiesEdit();
-	    props
-		    .addProperty(
-			    ContentHostingService.PROP_ALTERNATE_REFERENCE,
-			    org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
-	    props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
-		    ResourceType.MIME_TYPE_HTML);
-	    props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
-		    citationListName);
-
-	    cre.setContent(citationList.getId().getBytes());
-	    contentHostingService.commitResource(cre,
-		    NotificationService.NOTI_NONE);
-
-	    COConfigSerialized coConfig = null;
-	    COSerialized co = null;
-
-	    String configPath =
-		    ServerConfigurationService.getString(
-			    "opensyllabus.configs.path", null);
-	    if (configPath == null)
-		configPath =
-			System.getProperty("catalina.home") + File.separator
-				+ "webapps" + File.separator
-				+ "osyl-editor-sakai-tool";// TODO SAKAI-860
-	    SchemaHelper schemaHelper = new SchemaHelper(configPath);
-	    String version = schemaHelper.getSchemaVersion();
-
+	    SecurityAdvisor advisor = new SecurityAdvisor() {
+		public SecurityAdvice isAllowed(String userId, String function,
+			String reference) {
+		    return SecurityAdvice.ALLOWED;
+		}
+	    };
 	    try {
-		coConfig = configDao.getConfigByRef(configRef);
-		co =
-			new COSerialized(idManager.createUuid(), lang,
-				"shared", "", site.getId(), "sectionId",
-				coConfig, null, "shortDescription",
-				"description", "title", false, null, null,
-				version);
-		resourceDao.createOrUpdateCourseOutline(co);
+		securityService.pushAdvisor(advisor);
+		String template =
+			ServerConfigurationService.getString(
+				"opensyllabus.course.template.prefix", null);
+		if (template != null) {
+		    site =
+			    siteService.addSite(siteTitle, siteService
+				    .getSite(template + lang));
+		    site.getPropertiesEdit().addProperty("template", "false");
+		} else {
+		    site = siteService.addSite(siteTitle, SITE_TYPE);
+		    // we add the tools
+		    addHomePage(site, lang);
+		    addTool(site, "sakai.announcements");
+		    addTool(site, "sakai.opensyllabus.tool");
+		    addTool(site, "sakai.resources");
+		    addTool(site, "sakai.siteinfo");
+		}
+		site.setTitle(siteTitle);
+		site.setPublished(true);
+		site.setJoinable(false);
 
-	    } catch (Exception e) {
-		log.error("createSite", e);
+		siteService.save(site);
+
+		// we add the directories
+		String directoryId;
+
+		osylContentService.initSiteAttachments(site.getTitle());
+		directoryId =
+			contentHostingService.getSiteCollection(site.getId());
+		ContentCollectionEdit cce =
+			contentHostingService.editCollection(directoryId);
+		cce.setHidden();
+		contentHostingService.commitCollection(cce);
+
+		// we add the default citationList
+		// TODO I18N
+		String citationListName =
+			"Références bibliographiques du cours";
+		CitationCollection citationList =
+			citationService.addCollection();
+		ContentResourceEdit cre =
+			contentHostingService.addResource(directoryId,
+				citationListName, null, 1);
+		cre.setResourceType(CitationService.CITATION_LIST_ID);
+		cre.setContentType(ResourceType.MIME_TYPE_HTML);
+
+		ResourcePropertiesEdit props = cre.getPropertiesEdit();
+		props
+			.addProperty(
+				ContentHostingService.PROP_ALTERNATE_REFERENCE,
+				org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
+		props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
+			ResourceType.MIME_TYPE_HTML);
+		props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
+			citationListName);
+
+		cre.setContent(citationList.getId().getBytes());
+		contentHostingService.commitResource(cre,
+			NotificationService.NOTI_NONE);
+
+		COConfigSerialized coConfig = null;
+		COSerialized co = null;
+
+		String configPath =
+			ServerConfigurationService.getString(
+				"opensyllabus.configs.path", null);
+		if (configPath == null)
+		    configPath =
+			    System.getProperty("catalina.home")
+				    + File.separator + "webapps"
+				    + File.separator + "osyl-editor-sakai-tool";// TODO
+		// SAKAI-860
+		SchemaHelper schemaHelper = new SchemaHelper(configPath);
+		String version = schemaHelper.getSchemaVersion();
+
+		try {
+		    coConfig = configDao.getConfigByRef(configRef);
+		    co =
+			    new COSerialized(idManager.createUuid(), lang,
+				    "shared", "", site.getId(), "sectionId",
+				    coConfig, null, "shortDescription",
+				    "description", "title", false, null, null,
+				    version);
+		    resourceDao.createOrUpdateCourseOutline(co);
+
+		} catch (Exception e) {
+		    log.error("createSite", e);
+		}
+
+	    } finally {
+		securityService.popAdvisor();
 	    }
 	} else {
 	    log.error("Could not create site because site with title='"
@@ -760,13 +773,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    throw new Exception(
 		    "Could not create site because site with title='"
 			    + siteTitle + "' already exists");
-	}
-
-	if (osylSecurityService.getCurrentUserRole().equals(
-		OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
-		|| osylSecurityService.getCurrentUserRole().equals(
-			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
-	    securityService.clearAdvisors();
 	}
 	log.info("Site [" + siteTitle + "] created in "
 		+ (System.currentTimeMillis() - start) + " ms ");
@@ -782,90 +788,103 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] creates site [" + siteTitle + "]");
 	if (!siteService.siteExists(siteTitle)) {
-	    String template =
-		    ServerConfigurationService.getString(
-			    "opensyllabus.course.template.prefix", null);
-	    if (template != null) {
-		site =
-			siteService.addSite(siteTitle, siteService
-				.getSite(template + lang));
-		site.getPropertiesEdit().addProperty("template", "false");
-	    } else {
-		site = siteService.addSite(siteTitle, SITE_TYPE);
-		// we add the tools
-		addTool(site, "sakai.announcements");
-		addTool(site, "sakai.opensyllabus.tool");
-		addTool(site, "sakai.resources");
-		addTool(site, "sakai.siteinfo");
-	    }
-	    site.setTitle(siteTitle);
-	    site.setPublished(true);
-	    site.setJoinable(false);
-
-	    enableSecurityAdvisor();
-	    siteService.save(site);
-
-	    // we add the directories
-	    // SAKAI-2160
-	    String directoryId;
-
-	    osylContentService.initSiteAttachments(site.getTitle());
-	    directoryId = contentHostingService.getSiteCollection(site.getId());
-	    ContentCollectionEdit cce =
-		    contentHostingService.editCollection(directoryId);
-	    cce.setHidden();
-	    contentHostingService.commitCollection(cce);
-
-	    // we add the default citationList
-	    // TODO I18N
-	    String citationListName = "Références bibliographiques du cours";
-	    CitationCollection citationList = citationService.addCollection();
-	    ContentResourceEdit cre =
-		    contentHostingService.addResource(directoryId,
-			    citationListName, null, 1);
-	    cre.setResourceType(CitationService.CITATION_LIST_ID);
-	    cre.setContentType(ResourceType.MIME_TYPE_HTML);
-
-	    ResourcePropertiesEdit props = cre.getPropertiesEdit();
-	    props
-		    .addProperty(
-			    ContentHostingService.PROP_ALTERNATE_REFERENCE,
-			    org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
-	    props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
-		    ResourceType.MIME_TYPE_HTML);
-	    props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
-		    citationListName);
-
-	    cre.setContent(citationList.getId().getBytes());
-	    contentHostingService.commitResource(cre,
-		    NotificationService.NOTI_NONE);
-
-	    COConfigSerialized coConfig = null;
-	    COSerialized co = null;
-
-	    String configPath =
-		    ServerConfigurationService.getString(
-			    "opensyllabus.configs.path", null);
-	    if (configPath == null)
-		configPath =
-			System.getProperty("catalina.home") + File.separator
-				+ "webapps" + File.separator
-				+ "osyl-editor-sakai-tool";// TODO SAKAI-860
-	    SchemaHelper schemaHelper = new SchemaHelper(configPath);
-	    String version = schemaHelper.getSchemaVersion();
-
+	    SecurityAdvisor advisor = new SecurityAdvisor() {
+		public SecurityAdvice isAllowed(String userId, String function,
+			String reference) {
+		    return SecurityAdvice.ALLOWED;
+		}
+	    };
 	    try {
-		coConfig = configDao.getConfigByRef(configRef);
-		co =
-			new COSerialized(idManager.createUuid(), lang,
-				"shared", "", site.getId(), "sectionId",
-				coConfig, null, "shortDescription",
-				"description", "title", false, null, null,
-				version);
-		resourceDao.createOrUpdateCourseOutline(co);
+		securityService.pushAdvisor(advisor);
+		String template =
+			ServerConfigurationService.getString(
+				"opensyllabus.course.template.prefix", null);
+		if (template != null) {
+		    site =
+			    siteService.addSite(siteTitle, siteService
+				    .getSite(template + lang));
+		    site.getPropertiesEdit().addProperty("template", "false");
+		} else {
+		    site = siteService.addSite(siteTitle, SITE_TYPE);
+		    // we add the tools
+		    addTool(site, "sakai.announcements");
+		    addTool(site, "sakai.opensyllabus.tool");
+		    addTool(site, "sakai.resources");
+		    addTool(site, "sakai.siteinfo");
+		}
+		site.setTitle(siteTitle);
+		site.setPublished(true);
+		site.setJoinable(false);
+		siteService.save(site);
 
-	    } catch (Exception e) {
-		log.error("createSite", e);
+		// we add the directories
+		// SAKAI-2160
+		String directoryId;
+
+		osylContentService.initSiteAttachments(site.getTitle());
+		directoryId =
+			contentHostingService.getSiteCollection(site.getId());
+		ContentCollectionEdit cce =
+			contentHostingService.editCollection(directoryId);
+		cce.setHidden();
+		contentHostingService.commitCollection(cce);
+
+		// we add the default citationList
+		// TODO I18N
+		String citationListName =
+			"Références bibliographiques du cours";
+		CitationCollection citationList =
+			citationService.addCollection();
+		ContentResourceEdit cre =
+			contentHostingService.addResource(directoryId,
+				citationListName, null, 1);
+		cre.setResourceType(CitationService.CITATION_LIST_ID);
+		cre.setContentType(ResourceType.MIME_TYPE_HTML);
+
+		ResourcePropertiesEdit props = cre.getPropertiesEdit();
+		props
+			.addProperty(
+				ContentHostingService.PROP_ALTERNATE_REFERENCE,
+				org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
+		props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
+			ResourceType.MIME_TYPE_HTML);
+		props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
+			citationListName);
+
+		cre.setContent(citationList.getId().getBytes());
+		contentHostingService.commitResource(cre,
+			NotificationService.NOTI_NONE);
+		
+		COConfigSerialized coConfig = null;
+		COSerialized co = null;
+
+		String configPath =
+			ServerConfigurationService.getString(
+				"opensyllabus.configs.path", null);
+		if (configPath == null)
+		    configPath =
+			    System.getProperty("catalina.home")
+				    + File.separator + "webapps"
+				    + File.separator + "osyl-editor-sakai-tool";// TODO
+										// SAKAI-860
+		SchemaHelper schemaHelper = new SchemaHelper(configPath);
+		String version = schemaHelper.getSchemaVersion();
+
+		try {
+		    coConfig = configDao.getConfigByRef(configRef);
+		    co =
+			    new COSerialized(idManager.createUuid(), lang,
+				    "shared", "", site.getId(), "sectionId",
+				    coConfig, null, "shortDescription",
+				    "description", "title", false, null, null,
+				    version);
+		    resourceDao.createOrUpdateCourseOutline(co);
+
+		} catch (Exception e) {
+		    log.error("createSite", e);
+		}
+	    } finally {
+		securityService.popAdvisor();
 	    }
 
 	} else {
@@ -875,14 +894,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    "Could not create site because site with title='"
 			    + siteTitle + "' already exists");
 	}
-
-	if (osylSecurityService.getCurrentUserRole().equals(
-		OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
-		|| osylSecurityService.getCurrentUserRole().equals(
-			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
-	    securityService.clearAdvisors();
-	}
-
 	return site.getId();
     }
 
@@ -1290,21 +1301,21 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    toolConf.setTitle(tool.getTitle());
 	}
 	toolConf.setLayoutHints("0,0");
-
-	try {
-	    enableSecurityAdvisor();
-	    siteService.save(site);
-	    if (osylSecurityService.getCurrentUserRole().equals(
-		    OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
-		    || osylSecurityService.getCurrentUserRole().equals(
-			    OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
-		securityService.clearAdvisors();
+	SecurityAdvisor advisor = new SecurityAdvisor() {
+	    public SecurityAdvice isAllowed(String userId, String function,
+		    String reference) {
+		return SecurityAdvice.ALLOWED;
 	    }
-
+	};
+	try {
+	    securityService.pushAdvisor(advisor);
+	    siteService.save(site);
 	} catch (IdUnusedException e) {
 	    log.error("Add tool - Unused id exception", e);
 	} catch (PermissionException e) {
 	    log.error("Add tool - Permission exception", e);
+	} finally {
+	    securityService.popAdvisor();
 	}
 
 	return toolConf;
@@ -1975,11 +1986,16 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		+ "] deletes site [" + siteId + "]");
 
 	Site site;
+	SecurityAdvisor advisor = new SecurityAdvisor() {
+	    public SecurityAdvice isAllowed(String userId, String function,
+		    String reference) {
+		return SecurityAdvice.ALLOWED;
+	    }
+	};
 	try {
-	    enableSecurityAdvisor();
+	    securityService.pushAdvisor(advisor);
 	    site = getSite(siteId);
 	    siteService.removeSite(site);
-	    securityService.clearAdvisors();
 	} catch (IdUnusedException e) {
 	    log.info("User " + sessionManager.getCurrentSession().getUserEid()
 		    + " can not delete the site " + siteId
@@ -1987,6 +2003,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	} catch (PermissionException e) {
 	    log.info("User " + sessionManager.getCurrentSession().getUserEid()
 		    + " has no right to delete site " + siteId);
+	} finally {
+	    securityService.popAdvisor();
 	}
 
 	log.info("Site [" + siteId + "] deleted in "
@@ -2022,20 +2040,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
 	coModeled.model2XML();
 	co.setContent(coModeled.getSerializedContent());
-    }
-
-    protected void enableSecurityAdvisor() {
-	if (osylSecurityService.getCurrentUserRole().equals(
-		OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
-		|| osylSecurityService.getCurrentUserRole().equals(
-			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
-	    securityService.pushAdvisor(new SecurityAdvisor() {
-		public SecurityAdvice isAllowed(String userId, String function,
-			String reference) {
-		    return SecurityAdvice.ALLOWED;
-		}
-	    });
-	}
     }
 
     public void addAnnounce(String siteId, String subject, String body) {
