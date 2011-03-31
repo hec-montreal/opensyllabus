@@ -25,7 +25,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,22 +32,23 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
-import org.sakaiproject.coursemanagement.api.CanonicalCourse;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.CourseSet;
 import org.sakaiproject.coursemanagement.api.Enrollment;
 import org.sakaiproject.coursemanagement.api.Section;
+import org.sakaiproject.email.api.ContentType;
+import org.sakaiproject.email.api.EmailAddress;
+import org.sakaiproject.email.api.EmailMessage;
 import org.sakaiproject.email.api.EmailService;
+import org.sakaiproject.email.api.EmailAddress.RecipientType;
 import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
-import org.sakaiproject.util.StringUtil;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
@@ -257,10 +257,19 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
 		compteur += sections.size();
 		// Create sharable site if necessary
-		String shareableName = null;
+		String sharableName = null;
+		boolean createSharable = false;
 		if (hasSharable(sections)) {
-		    shareableName = createShareable(courseOff);
-		    compteur++;
+		    boolean sharableExist = false;
+		    try{
+			sharableExist = osylSiteService
+			    .siteExists(getSharableSiteName(courseOff));
+		    }catch(Exception e){}
+		    if (!sharableExist) {
+			sharableName = createShareable(courseOff);
+			compteur++;
+			createSharable = true;
+		    }
 		}
 		if (sections != null) {
 		    String sectionId = null;
@@ -277,19 +286,73 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
 			    // We do not create site associated to section 00
 			    if (!sectionId.equalsIgnoreCase(sharableSectionId)) {
-				createSite(section);
-
-				String siteName = getSiteName(section);
-				if (shareableName != null) {
-				    associate(siteName, shareableName);
-				    log.info("Associating " + shareableName
-					    + " to " + siteName);
-				}
-				if (firstSection == null) {
-				    firstSection = siteName;
-				} else {
-				    if (siteName.compareTo(firstSection) < 0)
+				boolean siteExist = false;
+				try{
+				    siteExist = osylSiteService
+					.siteExists(getSiteName(section));
+				}catch(Exception e){}
+				if (!siteExist) {
+				    createSite(section);
+				    String siteName = getSiteName(section);
+				    if (sharableName != null) {
+					associate(siteName, sharableName);
+					log.info("Associating " + sharableName
+						+ " to " + siteName);
+				    }
+				    if (firstSection == null) {
 					firstSection = siteName;
+				    } else {
+					if (siteName.compareTo(firstSection) < 0)
+					    firstSection = siteName;
+				    }
+				} else {
+				    if (createSharable) {
+					// send mail
+					try {
+					    List<EmailAddress> toRecipients =
+						    new ArrayList<EmailAddress>();
+					    for (String eid : section
+						    .getEnrollmentSet()
+						    .getOfficialInstructors()) {
+						toRecipients
+							.add(new EmailAddress(
+								userDirectoryService
+									.getUserByEid(
+										eid)
+									.getEmail()));
+					    }
+					    EmailMessage message =
+						    new EmailMessage();
+					    message
+						    .setSubject("Création du partageable "+sharableName);
+					    message.setContentType(ContentType.TEXT_HTML);
+					    message
+						    .setBody("Bonjour,<br>suite à l'ajout d'une section au cours "
+							    + sharableName
+							    + " un partageable a été crée et le cours "
+							    + getSiteName(section)
+							    + " automatiquement rattaché à celui-ci.<br>Si vous ne souhaitez pas utiliser le contenu du partageable, vous pouvez vous détacher de celui-ci à l'aide du gestionnaire de plan de cours");
+					    message
+						    .setFrom("admin.zonecours2@hec.ca");
+					    List<EmailAddress> ccRecipients =
+						    new ArrayList<EmailAddress>();
+					    ccRecipients.add(new EmailAddress(
+						    "zonecours2.hec.ca"));
+					    message.setRecipients(
+						    RecipientType.CC,
+						    ccRecipients);
+					    message.setRecipients(
+						    RecipientType.TO,
+						    toRecipients);
+					    emailService.send(message);
+					} catch (Exception e) {
+					    log
+						    .error("Could not send email to shareable owners:"
+							    + e);
+					}
+
+				    }
+
 				}
 			    }
 			} else {
@@ -319,15 +382,6 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	}
 	logoutFromSakai();
     } // execute
-
-    private void osyl(String child, String parent) {
-	try {
-	    osylSiteService.associate(child, parent);
-	} catch (Exception e) {
-	    log.error("Could not associate site " + child + " with site "
-		    + parent, e);
-	}
-    }
 
     private boolean createSite(Section section) {
 	String siteName = getSiteName(section);
@@ -381,8 +435,6 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	    return false;
     }
 
-    
-    
     private boolean isDfSection(String sectionId) {
 	return sectionId.matches(".*[Dd][Ff][1-9]");
     }
