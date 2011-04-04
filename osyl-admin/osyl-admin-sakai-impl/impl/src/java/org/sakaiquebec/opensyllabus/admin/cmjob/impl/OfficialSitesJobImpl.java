@@ -425,7 +425,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
 	for (Section section : sections) {
 	    sectionId = section.getEid();
-	    if (!isDfSection(sectionId))
+	    if (!isDfSection(sectionId) && !sectionId.endsWith(OsylCMJob.SHARABLE_SECTION))
 		nbSections++;
 	}
 
