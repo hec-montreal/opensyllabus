@@ -1067,13 +1067,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		publishedCO.getSiteId().substring(
 			publishedCO.getSiteId().lastIndexOf(".") + 1);
 	if (portalActivated != null && portalActivated.equalsIgnoreCase("true")) {
-	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)
-		    && (!siteShareable.equals(SITE_SHAREABLE))) {
+	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)) {
 		osylTransformToZCCO.sendXmlAndDoc(publishedCO,
 			SecurityInterface.ACCESS_PUBLIC);
 	    }
-	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_COMMUNITY)
-		    && (!siteShareable.equals(SITE_SHAREABLE))) {
+	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_COMMUNITY)) {
 		osylTransformToZCCO.sendXmlAndDoc(publishedCO,
 			SecurityInterface.ACCESS_COMMUNITY);
 	    }
