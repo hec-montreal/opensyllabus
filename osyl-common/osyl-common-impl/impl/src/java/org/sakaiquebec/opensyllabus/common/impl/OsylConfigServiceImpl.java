@@ -239,6 +239,7 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
     public void initConfigs() throws Exception {
 	// Config names are internationalized, we only see keys here:
 	initConfig("default");
+	initConfig("directory");	
     }
 
     private void initConfig(String configref) throws Exception {
