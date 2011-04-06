@@ -97,6 +97,8 @@ public interface Messages extends ConstantsWithLookup {
 
     String config_default();
 
+    String config_directory();
+
     String config_udem();
 
     String config_announcementsRegulationsHEC();
