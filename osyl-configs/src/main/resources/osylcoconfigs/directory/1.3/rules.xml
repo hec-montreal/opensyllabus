@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ Rules for content display
+  @author <a href="mailto:sacha.Lepretre@crim.ca">Sacha Lepretre</a>
+  @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
+-->
+<schema>
+	<element name="CO">
+		<!-- restriction pattern is a regexp pattern based on the value of attribute type -->
+		<attribute name="propertyType" restrictionpattern="HEC" />
+		<!-- list of element asmUnit allowed at this level -->
+		<element name="asmStructure">
+			<attribute name="type" restrictionpattern="PageStruct" />
+			<element name="asmUnit">
+				<attribute name="type" restrictionpattern="PageUnit" allowMultiple="false" />
+				<element name="asmUnitStructure">
+					<attribute name="type" restrictionpattern="PageUnitStruct" allowMultiple="false"/>
+					<element name="asmUnitContent">
+						<attribute name="type" restrictionpattern="PageUnitContent" />
+			    		<element name="asmResource">
+				    		<attribute name="type" restrictionpattern="Text" />
+			    		</element>
+			    		<element name="semanticTag">
+			        		<attribute name="type" restrictionpattern="description" />
+			    		</element>
+					</element>
+				</element>
+			</element>
+		</element>		
+	</element>
+</schema>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Liquid XML Studio - FREE Community Edition 7.1.6.1440 (http://www.liquid-technologies.com) -->
+<OSYL access="public" schemaVersion="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<CO access="public">
+	<modified></modified>
+	<identifier type="HEC">Identifier of course</identifier>
+	<template type="HEC">TemplateHec</template>
+	<title type="HEC">Title of course at HEC</title>
+	<language>ENG</language>
+	<created>2001-12-17T09:30:47-05:00</created>
+	<creator>HEC Montréal</creator>
+	<modifiedBy></modifiedBy>
+	<parent type="HEC"></parent>
+	<children type="HEC"></children>
+	<previousPublished></previousPublished>
+	<lastPublished></lastPublished>
+	<courseId type="HEC">Course Id</courseId>
+	<department type="HEC"></department>
+	<program type="HEC"></program>
+	<asmStructure access="public" xsi:type="PageStruct">
+		<modified>2001-12-17T09:30:47-05:00</modified>
+		<asmUnit access="public" xsi:type="PageUnit">
+			<label><![CDATA[Pages]]></label>
+			<modified>2001-12-17T09:30:47-05:00</modified>
+			<asmUnitStructure access="public" xsi:type="PageUnitStruct">
+				<label><![CDATA[Pages]]></label>
+				<modified>2001-12-17T09:30:47-05:00</modified>
+				<asmUnitContent access="public" xsi:type="PageUnitContent">
+					<modified>2001-12-17T09:30:47-05:00</modified>
+				</asmUnitContent>
+			</asmUnitStructure>
+		</asmUnit>
+	</asmStructure>
+</CO>
+</OSYL>
