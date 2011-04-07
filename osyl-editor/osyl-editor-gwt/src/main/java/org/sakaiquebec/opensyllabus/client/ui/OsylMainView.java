@@ -97,13 +97,16 @@ public class OsylMainView extends OsylViewableComposite implements
 	if (null == coTitle || "".equals(coTitle)) {
 	    coTitle = getCoMessage("courseoutline");
 	}
+		
 	String suffix = "";
 	if (!getController().isReadOnly()) {
 	    suffix = getUiMessage("edition_suffix");
 	} else if (getController().isInPreview()) {
 	    suffix = getUiMessage("preview_suffix");
 	}
-	courseTitle = new Label(coTitle + " " + suffix);
+	String course = coTitle + " " + suffix;
+	course = course.replaceAll("\\.00","");		
+	courseTitle = new Label(course);
 	courseTitle.setStylePrimaryName("Osyl-MainPanel-Title");
 	getMainPanel().setWidget(row, 0, courseTitle);
 	getMainPanel().getCellFormatter().setStylePrimaryName(row, 0,
