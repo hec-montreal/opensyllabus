@@ -30,11 +30,11 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 	return null;
     }
 
-    public COConfigSerialized getSerializedConfig() throws Exception {
+    public COConfigSerialized getSerializedConfig(String siteId) throws Exception {
 	return null;
     }
 
-    public COSerialized getSerializedCourseOutline() throws Exception {
+    public COSerialized getSerializedCourseOutline(String siteId) throws Exception {
 	return null;
     }
 

@@ -101,7 +101,7 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 
     }
 
-    public void getSerializedConfig(
+    public void getSerializedConfig(String siteId, 
 	    final AsyncCallback<COConfigSerialized> callback) {
 	if (configSer == null) {
 	    configSer = new COConfigSerialized();

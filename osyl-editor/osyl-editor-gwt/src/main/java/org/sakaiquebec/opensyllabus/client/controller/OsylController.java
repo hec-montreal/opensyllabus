@@ -43,6 +43,7 @@ import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -119,6 +120,7 @@ public class OsylController implements SavePushButtonEventHandler,
     private OsylController() {
 	osylViewContext = new OsylViewContext();
 	setModelController(new OsylModelController());
+	setSiteId(getSiteIdParameter());
 	setReadOnly(getReadOnlyParameter());
 	osylModelController.setReadOnly(isReadOnly());
 	if (!isReadOnly()) {
@@ -179,6 +181,27 @@ public class OsylController implements SavePushButtonEventHandler,
 						 } else {
 						 return true;
 						 }
+						 }-*/;
+    
+    /**
+     * This method is JSNI method to retrieve the value of osyl:ro meta tag in
+     * the html head. &lt;meta name="osyl:ro" content="true" &gt; or &lt;meta
+     * name="osyl:ro" content="false" &gt;
+     * 
+     * @return true if UI is in read-only mode, false if not.
+     */
+    public native String getSiteIdParameter() /*-{
+						 metas = $doc.getElementsByTagName('meta');
+						 ret = null;
+
+						 for (i = 0; i < metas.length; i++) {
+
+						 	if(metas[i].name == 'osyl:siteId') {
+						 		ret = metas[i].content;
+						 		break;
+						 	}
+						 }
+						 return ret;
 						 }-*/;
 
     /**
@@ -414,7 +437,7 @@ public class OsylController implements SavePushButtonEventHandler,
 			    publishedSecurityAccess, callback);
 	} else {
 	    OsylRemoteServiceLocator.getEditorRemoteService()
-		    .getSerializedCourseOutline(callback);
+		    .getSerializedCourseOutline(getSiteId(),callback);
 	}
 	// OsylRemoteServiceLocator.getEditorRemoteService().getSerializedCourseOutline(callback);
     }
@@ -425,7 +448,7 @@ public class OsylController implements SavePushButtonEventHandler,
      * 
      * @param COSerialized returned by the server
      */
-    public void getSerializedCourseOutlineCB(COSerialized co) {
+    public void getSerializedCourseOutlineCB(COSerialized co){ 
 	if (!co.isEditable()) {
 	    readOnly = true;
 	    pinger.stop();
@@ -439,9 +462,6 @@ public class OsylController implements SavePushButtonEventHandler,
 	}
 	// keep track of co messages
 	setCoMessages(new OsylConfigMessages(co.getMessages()));
-
-	// We keep track of the current site ID.
-	setSiteId(co.getSiteId());
 	
 	OsylEditorEntryPoint.getInstance().initModel(co);
     }
@@ -597,7 +617,7 @@ public class OsylController implements SavePushButtonEventHandler,
 			}
 		    };
 	    OsylRemoteServiceLocator.getEditorRemoteService()
-		    .getSerializedCourseOutline(callback);
+		    .getSerializedCourseOutline(getSiteId(),callback);
 	}
 
 	// A POJO has been sent
@@ -892,7 +912,7 @@ public class OsylController implements SavePushButtonEventHandler,
 		    };
 	    // Then we can call the method
 	    OsylRemoteServiceLocator.getEditorRemoteService()
-		    .getSerializedConfig(callback);
+		    .getSerializedConfig(getSiteId(),callback);
 	} catch (RuntimeException e) {
 	    e.printStackTrace();
 	    unableToInitServer(e.toString());

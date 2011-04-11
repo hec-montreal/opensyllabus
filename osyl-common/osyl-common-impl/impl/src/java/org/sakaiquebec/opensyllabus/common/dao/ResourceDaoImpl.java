@@ -20,11 +20,13 @@
 
 package org.sakaiquebec.opensyllabus.common.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.sakaiproject.db.api.SqlService;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -526,6 +528,26 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 		getHibernateTemplate().delete(courseOutline);
 	    }
 	}
+    }
+    
+    //for proof of concept
+    @SuppressWarnings("unchecked")
+    public List<String> getPublishCoSiteIds(){
+	List<COSerialized> temp = null;
+	List<String> results = new ArrayList<String>();
+	try {
+	    temp =
+		getHibernateTemplate()
+		.find(
+			"from COSerialized where published=1 and access='public'");
+	} catch (Exception e) {
+	    log.error("Unable to retrieve site Id list", e);
+	}
+	if(temp!=null && !temp.isEmpty()){
+	    for(COSerialized cos:temp)
+		results.add(cos.getSiteId());
+	}
+	return results;
     }
 
 }

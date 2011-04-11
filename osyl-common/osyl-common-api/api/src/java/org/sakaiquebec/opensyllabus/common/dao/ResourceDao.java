@@ -140,4 +140,8 @@ public interface ResourceDao {
     
     public void removePublishVersionsForSiteId(String siteId);
 
+    //for proof of concept
+    public List<String> getPublishCoSiteIds();
+    
+    
 }

@@ -370,5 +370,8 @@ public interface OsylSiteService extends EntityProducer {
      * @param body
      */
     public void addAnnounce(String siteId, String subject, String body);
+    
+    //for proof of concept
+    public List<String> getPublishCOSiteIds();
 
 }

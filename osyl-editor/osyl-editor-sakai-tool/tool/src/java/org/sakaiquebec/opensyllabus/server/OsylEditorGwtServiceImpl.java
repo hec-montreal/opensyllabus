@@ -20,7 +20,6 @@
 
 package org.sakaiquebec.opensyllabus.server;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +36,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.tool.api.Tool;
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtService;
-import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.exception.PdfGenerationException;
@@ -246,10 +244,12 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * @return the CourseOutlineXML POJO corresponding to the current site
      *         context
      */
-    public COSerialized getSerializedCourseOutline() throws Exception {
+    public COSerialized getSerializedCourseOutline(String siteId)
+	    throws Exception {
 	long start = System.currentTimeMillis();
 	COSerialized thisCo;
-	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
+	if (siteId == null)
+	    siteId = osylServices.getOsylSiteService().getCurrentSiteId();
 	String webappDir = getServletContext().getRealPath("/");
 	thisCo =
 		osylServices.getOsylSiteService()
@@ -311,10 +311,12 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      * 
      * @return COConfigSerialized
      */
-    public COConfigSerialized getSerializedConfig() throws Exception {
+    public COConfigSerialized getSerializedConfig(String siteId)
+	    throws Exception {
 	long start = System.currentTimeMillis();
 	COConfigSerialized cfg = null;
-	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
+	if (siteId == null)
+	    siteId = osylServices.getOsylSiteService().getCurrentSiteId();
 	if (cacheEnabled && configCache.containsKey(siteId)) {
 	    cfg = configCache.get(siteId);
 	} else {
@@ -395,9 +397,10 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
      */
     public void createPrintableEditionVersion() throws Exception {
 	String webappDir = getServletContext().getRealPath("/");
-	COSerialized cos = getSerializedCourseOutline();
-	osylServices.getOsylConfigService().fillCo(
-		webappDir, cos);
+	COSerialized cos =
+		getSerializedCourseOutline(osylServices.getOsylSiteService()
+			.getCurrentSiteId());
+	osylServices.getOsylConfigService().fillCo(webappDir, cos);
 	String transformXml =
 		transformXmlForGroup(cos.getContent(),
 			SecurityInterface.ACCESS_ATTENDEE);

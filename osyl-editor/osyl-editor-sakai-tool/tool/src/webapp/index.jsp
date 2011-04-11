@@ -12,19 +12,20 @@
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="org.sakaiproject.util.ResourceLoader"%>
 <%@ page import="java.io.File"%>
+<%@ page import="java.util.List" %>
 
 <%
 	WebApplicationContext context = WebApplicationContextUtils
 			.getWebApplicationContext(application);
 	OsylBackingBean osylMainBean = (OsylBackingBean) context
 			.getBean("osylMainBean");
-
-	// String userGroup = osylMainBean.getOsylSecurityService()
-	// 		.getCurrentUserGroup();
-	String userRole = osylMainBean.getOsylSecurityService()
-			.getCurrentUserRole();
+	
 	String webappDir = getServletContext().getRealPath("/");
-	String siteId = osylMainBean.getOsylSiteService().getCurrentSiteId();
+	
+	String siteId = request.getParameter("siteId");
+	if(siteId==null){
+		siteId = osylMainBean.getOsylSiteService().getCurrentSiteId();
+	}
 	
 	ResourceLoader rb = new ResourceLoader();
 
@@ -37,14 +38,14 @@
 		osylMainBean.getOsylService().initService();
 	}
 
-	// userGroup = osylMainBean.getOsylSecurityService()
-	// 		.getCurrentUserGroup();
-
 	Locale sessionLocale = rb.getLocale();
 	String locale = sessionLocale.toString();
 %>
 <html>
 	<head>
+
+	<!--  IE9 support -->
+	<meta http-equiv="X-UA-Compatible" content="IE=8" />
 
 	<!-- AJAXSLT -->
 	<script src='<%=request.getContextPath() %>/OsylEditorEntryPoint/js/ajaxslt-0.8.1/util.js' type="text/javascript"></script>
@@ -56,6 +57,7 @@
 	<!--                                           -->
 	<!-- Sets the parameters of the EntryPoint     -->
 	<!--                                           -->
+	<meta name="osyl:siteId" content="<%= siteId %>"/> 
 	<%
 		boolean readonly=false;
 		if (request.getParameter("sg") != null) {
@@ -105,8 +107,9 @@
 		<title>OpenSyllabus</title>
 		
 		<!-- Headers from Sakai                        -->
+		<%if(request.getAttribute("sakai.html.head")!=null){%>
 		<%=request.getAttribute("sakai.html.head")%>
-
+		<%}%>
 		<style>
 			body,td,a,div,.p{font-family:arial,sans-serif}
 			div,td{color:#000000}
@@ -148,6 +151,5 @@
 		</script>
 	</head>
 
-	<body onload="myLoad()">
-	</body>
+	<body onload="myLoad()"></body>
 </html>

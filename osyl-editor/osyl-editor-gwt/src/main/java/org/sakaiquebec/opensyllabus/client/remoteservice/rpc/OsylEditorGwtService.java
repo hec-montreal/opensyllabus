@@ -52,7 +52,7 @@ public interface OsylEditorGwtService extends RemoteService {
      * 
      * @return the CourseOutline POJO corresponding to the current context.
      */
-    public COSerialized getSerializedCourseOutline() throws Exception;
+    public COSerialized getSerializedCourseOutline(String siteId) throws Exception;
 
     /**
      * Saves the CourseOutline specified. The ID is returned. This is useful if
@@ -113,7 +113,7 @@ public interface OsylEditorGwtService extends RemoteService {
      * 
      * @return {@link COConfigSerialized}
      */
-    public COConfigSerialized getSerializedConfig() throws Exception;
+    public COConfigSerialized getSerializedConfig(String siteId) throws Exception;
 
     public SakaiEntities getExistingEntities(String siteId);
 

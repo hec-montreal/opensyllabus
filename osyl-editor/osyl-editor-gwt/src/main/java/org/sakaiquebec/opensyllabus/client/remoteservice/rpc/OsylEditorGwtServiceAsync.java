@@ -53,7 +53,7 @@ public interface OsylEditorGwtServiceAsync {
 	 *            the callback to return the CourseOutline POJO corresponding to
 	 *            the current context.
 	 */
-	public void getSerializedCourseOutline(AsyncCallback<COSerialized> callback);
+	public void getSerializedCourseOutline(String siteId,AsyncCallback<COSerialized> callback);
 
 	/**
 	 * Saves the CourseOutline specified. The ID is returned. This is useful if
@@ -126,7 +126,7 @@ public interface OsylEditorGwtServiceAsync {
 	 * @param callback
 	 *            the callback to return {@link COConfigSerialized}
 	 */
-	public void getSerializedConfig(AsyncCallback<COConfigSerialized> callback);
+	public void getSerializedConfig(String siteId, AsyncCallback<COConfigSerialized> callback);
 
 	public void getExistingEntities(String siteId,
 			AsyncCallback<SakaiEntities> callback);

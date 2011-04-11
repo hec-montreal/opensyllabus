@@ -42,6 +42,7 @@
     <module>osyl-editor</module>
     <module>osyl-manager</module>
     <module>osyl-admin</module>
+    <module>osyl-public-portal</module>
   </modules>
 
   <pluginRepositories>
