@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<registration>
+
+	<tool
+		id="sakai.opensyllabus.portal.tool"
+		title="Opensyllabus Portal"
+		description="Pour acc&#233;deraux plans de cours">
+		
+		<configuration name="help.id" value="sakai.opensyllabus.portal.tool" type="final" />
+		<category name="course" />
+		<category name="project" />
+	</tool>
+	
+</registration>
