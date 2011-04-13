@@ -37,7 +37,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.sakaiproject.authz.api.SecurityAdvisor;
+//import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentHostingService;
@@ -274,8 +274,11 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    ContentResource resource = null;
 
 	    try {
+	    log.info("*** securityService.pushAdvisor(new SecurityAdvisor() ConfigurationServiceImpl *** ");	    	
+
 		// We allow access to the file
-		securityService.pushAdvisor(new SecurityAdvisor() {
+	    /** 
+		securityService.pushAdvisor(new SecurityAdvisor() { 
 		    public SecurityAdvice isAllowed(String userId,
 			    String function, String reference) {
 			if (function.equals("content.read"))
@@ -283,6 +286,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			return SecurityAdvice.NOT_ALLOWED;
 		    }
 		});
+		**/
 		if (fileName.contains(ROLEFOLDER)) {
 		    ContentCollection collection;
 		    if (!contentHostingService.isCollection(reference.getId())) {
@@ -322,7 +326,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			retrieveConfigs(fileName, resource.streamContent());
 		}
 		// We remove access to the resource
-		securityService.clearAdvisors();
+	    //securityService.popAdvisor();
+	    
 	    } catch (PermissionException e) {
 		log.info("You are not allowed to access this resource");
 	    } catch (IdUnusedException e) {
@@ -359,6 +364,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		log.info(e.getMessage());
 	    }
 	} else {
+	    //securityService.popAdvisor();		
 	    log.warn("There is no " + fileName + " file ");
 	}
     }

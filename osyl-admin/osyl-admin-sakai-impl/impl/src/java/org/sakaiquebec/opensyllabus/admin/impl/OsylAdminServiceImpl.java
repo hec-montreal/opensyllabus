@@ -302,6 +302,7 @@ public class OsylAdminServiceImpl implements OsylAdminService {
 	    // need to create
 	    try {
 		enableSecurityAdvisor();
+	    log.info("*** enableSecurityAdvisor() OsylAdminServiceImpl *** ");	    	
 		Session s = sessionManager.getCurrentSession();
 		s.setUserId(UserDirectoryService.ADMIN_ID);
 
@@ -386,8 +387,11 @@ public class OsylAdminServiceImpl implements OsylAdminService {
 	securityService.pushAdvisor(new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
 		    String reference) {
-		return SecurityAdvice.ALLOWED;
-	    }
+            if ((userId != null) && (userId.equals(UserDirectoryService.ADMIN_ID))) {	    	
+            	return SecurityAdvice.ALLOWED;
+            }
+            return SecurityAdvice.PASS;
+	  }
 	});
-    }
+    }   
 }
