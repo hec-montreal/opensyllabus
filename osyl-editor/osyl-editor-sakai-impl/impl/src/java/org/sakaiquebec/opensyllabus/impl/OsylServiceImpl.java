@@ -13,7 +13,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.authz.api.FunctionManager;
-import org.sakaiproject.authz.api.SecurityAdvisor;
+//import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.citation.api.CitationCollection;
 import org.sakaiproject.citation.api.CitationService;
@@ -237,21 +237,23 @@ public class OsylServiceImpl implements OsylService {
 
 	ContentResourceEdit resource = null;
 	String resourceDir = getResourceReference(siteId);
+    log.info("*** linkCitationsToSite SecurityAdvisor advisor = new SecurityAdvisor() { OsylServiceImpl *** ");	    
 
+	/*
 	SecurityAdvisor advisor = new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
 		    String reference) {
 		return SecurityAdvice.ALLOWED;
 	    }
 	};
-
+	*/
 	try {
 	    String resourceId = resourceDir + citationTitle;
 	    // temporarily allow the user to read and write resources
 	    if (osylSecurityService.isActionAllowedInSite(osylSiteService
 		    .getSiteReference(siteId),
 		    OsylSecurityService.OSYL_FUNCTION_EDIT)) {
-		securityService.pushAdvisor(advisor);
+		//securityService.pushAdvisor(advisor);
 	    }
 	    // check if resource is existing - throws IdUnusedException
 	    contentHostingService.checkResource(resourceId);
@@ -282,7 +284,7 @@ public class OsylServiceImpl implements OsylService {
 	    if (osylSecurityService.isActionAllowedInSite(osylSiteService
 		    .getSiteReference(siteId),
 		    OsylSecurityService.OSYL_FUNCTION_EDIT)) {
-		securityService.popAdvisor();
+		//securityService.popAdvisor();
 	    }
 	}
 
