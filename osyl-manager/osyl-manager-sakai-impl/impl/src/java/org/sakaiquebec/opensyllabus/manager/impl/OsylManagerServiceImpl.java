@@ -1007,7 +1007,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			siteService.getSite(((COSite) iter.next()).getSiteId());
 		String id = getSiteReference(site) + TEMP_DIRECTORY;
 		id = id.substring(8) + "/";
-		enableSecurityAdvisor();
+		//enableSecurityAdvisor();
+	    log.info("*** deleteExpiredTemporaryExportFiles enableSecurityAdvisor() { OsylManagerServiceImpl *** ");	    
 
 		if (collectionExist(id)) {
 		    ContentCollection contentCollection =
@@ -1045,7 +1046,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			contentHostingService.removeCollection(id);
 		    }
 		}
-		securityService.popAdvisor();
+		//securityService.popAdvisor();
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    }
@@ -1765,14 +1766,15 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	// we update citation ids in the course outline
 	updateCitationIds(siteFrom, siteTo);
 
-	enableSecurityAdvisor();
+	//enableSecurityAdvisor();
+    log.info("*** copySite enableSecurityAdvisor() { OsylManagerServiceImpl *** ");	    
 	siteService.save(newSite);
 
 	if (osylSecurityService.getCurrentUserRole().equals(
 		OsylSecurityService.SECURITY_ROLE_COURSE_INSTRUCTOR)
 		|| osylSecurityService.getCurrentUserRole().equals(
 			OsylSecurityService.SECURITY_ROLE_PROJECT_MAINTAIN)) {
-	    securityService.popAdvisor();
+	    //securityService.popAdvisor();
 	}
 
 	log.info("Finished copying site [" + siteFrom + "] to [" + siteTo
