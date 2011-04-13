@@ -664,12 +664,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	long start = System.currentTimeMillis();
 	Site site = null;
 	if (!siteService.siteExists(siteTitle)) {
+
 	    SecurityAdvisor advisor = new SecurityAdvisor() {
 		public SecurityAdvice isAllowed(String userId, String function,
 			String reference) {
 		    return SecurityAdvice.ALLOWED;
 		}
 	    };
+
 	    try {
 		securityService.pushAdvisor(advisor);
 		String template =
@@ -761,7 +763,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		}
 
 	    } finally {
-		securityService.popAdvisor();
+	    	securityService.popAdvisor();
 	    }
 	} else {
 	    log.error("Could not create site because site with title='"
@@ -784,12 +786,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] creates site [" + siteTitle + "]");
 	if (!siteService.siteExists(siteTitle)) {
+	    log.info("*** createSharableSite SecurityAdvisor advisor = new SecurityAdvisor() { OsylSiteServiceImpl *** ");	    
+
 	    SecurityAdvisor advisor = new SecurityAdvisor() {
 		public SecurityAdvice isAllowed(String userId, String function,
 			String reference) {
 		    return SecurityAdvice.ALLOWED;
 		}
 	    };
+
 	    try {
 		securityService.pushAdvisor(advisor);
 		String template =
@@ -879,7 +884,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    log.error("createSite", e);
 		}
 	    } finally {
-		securityService.popAdvisor();
+	    	securityService.popAdvisor();
 	    }
 
 	} else {
@@ -1292,21 +1297,25 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    toolConf.setTitle(tool.getTitle());
 	}
 	toolConf.setLayoutHints("0,0");
+    log.info("*** addTool SecurityAdvisor advisor = new SecurityAdvisor() { OsylSiteServiceImpl *** ");	    
+
+	/* 
 	SecurityAdvisor advisor = new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
 		    String reference) {
 		return SecurityAdvice.ALLOWED;
 	    }
 	};
+	*/
 	try {
-	    securityService.pushAdvisor(advisor);
+	    //securityService.pushAdvisor(advisor);
 	    siteService.save(site);
 	} catch (IdUnusedException e) {
 	    log.error("Add tool - Unused id exception", e);
 	} catch (PermissionException e) {
 	    log.error("Add tool - Permission exception", e);
 	} finally {
-	    securityService.popAdvisor();
+	    //securityService.popAdvisor();
 	}
 
 	return toolConf;
@@ -1976,12 +1985,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		+ "] deletes site [" + siteId + "]");
 
 	Site site;
+
 	SecurityAdvisor advisor = new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String userId, String function,
 		    String reference) {
 		return SecurityAdvice.ALLOWED;
 	    }
 	};
+	
 	try {
 	    securityService.pushAdvisor(advisor);
 	    site = getSite(siteId);
@@ -2098,18 +2109,22 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     private void copyAnnoucement(String fromSite, String toSite, String ref) {
 	List<String> list = new ArrayList<String>();
 	list.add(ref);
+    log.info("*** copyAnnoucement SecurityAdvisor advisor = new SecurityAdvisor() { OsylSiteServiceImpl *** ");	    
+
+	/*
 	SecurityAdvisor advisor = new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String arg0, String arg1,
 		    String arg2) {
 		return SecurityAdvice.ALLOWED;
 	    }
 	};
+	*/
 	try {
-	    securityService.pushAdvisor(advisor);
+	    //securityService.pushAdvisor(advisor);
 	    ((EntityTransferrer) announcementService).transferCopyEntities(
 		    fromSite, toSite, list);
 	} finally {
-	    securityService.popAdvisor();
+	    //securityService.popAdvisor();
 	}
 
     }
@@ -2172,14 +2187,17 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     private void deleteSiteAnnouncementForOriginalAnnouncementMessageRef(
 	    String siteId, String ref) {
+    log.info("*** deleteSiteAnnouncementForOriginalAnnouncementMessageRef SecurityAdvisor advisor = new SecurityAdvisor() { OsylSiteServiceImpl *** ");	    
+    /*
 	SecurityAdvisor advisor = new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String arg0, String arg1,
 		    String arg2) {
 		return SecurityAdvice.ALLOWED;
 	    }
 	};
+	*/
 	try {
-	    securityService.pushAdvisor(advisor);
+	    //securityService.pushAdvisor(advisor);
 	    AnnouncementChannel channel = getAnnouncementChannel(siteId);
 	    List messageList = channel.getMessages(null, true);
 
@@ -2192,7 +2210,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    }
 	} catch (Exception e) {
 	} finally {
-	    securityService.popAdvisor();
+	    //securityService.popAdvisor();
 	}
     }
     
