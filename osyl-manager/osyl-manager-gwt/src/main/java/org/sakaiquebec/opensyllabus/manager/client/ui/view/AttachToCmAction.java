@@ -30,34 +30,31 @@ import org.sakaiquebec.opensyllabus.shared.model.COSite;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class AttachAction extends OsylManagerAbstractAction {
+public class AttachToCmAction extends OsylManagerAbstractAction {
 
-    public AttachAction(OsylManagerController controller) {
-	super(controller, "mainView_action_attach",
-		"mainView_action_attach_tooltip");
+    public AttachToCmAction(OsylManagerController controller) {
+	super(controller, "mainView_action_associate",
+		"mainView_action_associate_tooltip");
     }
 
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
-	if(siteIds.isEmpty()){
-	    return false;
-	} else {
-	    boolean enable = true;
-	    for (COSite coSite : siteIds) {
-		String parentSite = coSite.getParentSite();
-		
-		if (parentSite != null && !parentSite.equals("")) {
-		    return false;
-		}
-	    }
-	    return enable;
+	if (siteIds.size() == 1) {
+	    String siteName = siteIds.get(0).getCourseName();
+	    if (siteName != null && !siteName.equals(""))
+		return false;
+	    else
+		return true;
 	}
+
+	else
+	    return false;
     }
 
     @Override
     public void onClick(List<COSite> siteIds) {
-	AttachForm attachForm = new AttachForm(controller, siteIds);
-	attachForm.showModal();
+	AttachToCmForm as = new AttachToCmForm(controller, siteIds.get(0), diag);
+	as.showModal();
     }
 
 }

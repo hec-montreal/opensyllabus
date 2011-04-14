@@ -35,6 +35,7 @@ import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 
@@ -252,7 +253,7 @@ public class OsylServiceImpl implements OsylService {
 	    // temporarily allow the user to read and write resources
 	    if (osylSecurityService.isActionAllowedInSite(osylSiteService
 		    .getSiteReference(siteId),
-		    OsylSecurityService.OSYL_FUNCTION_EDIT)) {
+		    SecurityInterface.OSYL_FUNCTION_EDIT)) {
 		//securityService.pushAdvisor(advisor);
 	    }
 	    // check if resource is existing - throws IdUnusedException
@@ -283,7 +284,7 @@ public class OsylServiceImpl implements OsylService {
 	    // clear the permission
 	    if (osylSecurityService.isActionAllowedInSite(osylSiteService
 		    .getSiteReference(siteId),
-		    OsylSecurityService.OSYL_FUNCTION_EDIT)) {
+		    SecurityInterface.OSYL_FUNCTION_EDIT)) {
 		//securityService.popAdvisor();
 	    }
 	}

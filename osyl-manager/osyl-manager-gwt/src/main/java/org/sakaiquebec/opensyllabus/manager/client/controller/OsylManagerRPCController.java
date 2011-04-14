@@ -185,4 +185,8 @@ public class OsylManagerRPCController {
 	    AsyncCallback<Void> unpublishAsyncCallback) {
 	serviceProxy.unpublish(siteId, unpublishAsyncCallback);
     }
+
+    public void getPermissions(AsyncCallback<Map<String,Boolean>> permissionCallback) {
+	serviceProxy.getPermissions(permissionCallback);
+    }
 }

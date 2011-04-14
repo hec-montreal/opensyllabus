@@ -100,4 +100,7 @@ public interface OsylManagerGwtServiceAsync {
     public void unpublish(String siteId,
 	    AsyncCallback<Void> unpublishAsyncCallback);
 
+    public void getPermissions(
+	    AsyncCallback<Map<String, Boolean>> permissionCallback);
+
 }

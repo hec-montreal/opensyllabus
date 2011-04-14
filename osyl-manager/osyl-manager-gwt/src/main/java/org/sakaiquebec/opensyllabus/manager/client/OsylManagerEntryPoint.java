@@ -21,14 +21,17 @@
 
 package org.sakaiquebec.opensyllabus.manager.client;
 
+import java.util.Map;
+
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
+import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.view.OsylManagerMainAdvancedView;
-import org.sakaiquebec.opensyllabus.manager.client.ui.view.OsylManagerMainView;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -40,14 +43,14 @@ public class OsylManagerEntryPoint implements EntryPoint {
     /**
      * Controller needed to communicate with the server side.
      */
-    private OsylManagerController controller =
-	    OsylManagerController.getInstance();
+    private OsylManagerController controller = OsylManagerController
+	    .getInstance();
 
     /**
      * The base panel of Osyl Manager GUI
      */
     private RootPanel rootPanel = RootPanel.get();
-    
+
     /**
      * The base abstract view of Osyl Manager GUI
      */
@@ -57,7 +60,23 @@ public class OsylManagerEntryPoint implements EntryPoint {
      * {@inheritDoc}
      */
     public void onModuleLoad() {
-	initView();
+	AsyncCallback<Map<String,Boolean>> permissionsCallBack = new AsyncCallback<Map<String,Boolean>>() {
+	    public void onFailure(Throwable caught) {
+		OsylOkCancelDialog warning =
+				new OsylOkCancelDialog(false, true, controller
+					.getMessages().error(), controller
+					.getMessages().init_failed(), false, true);
+		warning.show();
+		warning.centerAndFocus();
+	    }
+
+	    public void onSuccess(Map<String, Boolean> result) {
+		controller.setPermissions(result);
+		initView();
+	    }
+	};
+	controller.getPermissions(permissionsCallBack);
+	
     }
 
     /**
@@ -69,7 +88,7 @@ public class OsylManagerEntryPoint implements EntryPoint {
 	rootPanel.setHeight("600px");
 	rootPanel.addStyleName("OsylManager-rootPanel");
     }
-    
+
     /**
      * Centers the specified {@link PopupPanel} on the current view. This method
      * takes into account the current position in OSYLEditor, as well as the
@@ -86,7 +105,7 @@ public class OsylManagerEntryPoint implements EntryPoint {
 	height = Math.max(0, (Window.getClientHeight() - height) / 2);
 	widget.setPopupPosition(width, height);
     }
-    
+
     /**
      * Shows the specified PopupPanel widget as close as possible to the top of
      * interface (but always below the toolBar). After the specified default

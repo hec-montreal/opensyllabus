@@ -204,4 +204,8 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	osylManagerServices.getOsylPublishService()
 		.unpublish(siteId, webappDir);
     }
+
+    public Map<String,Boolean> getPermissions() {
+	return osylManagerServices.getOsylManagerService().getPermissions();
+    }
 }

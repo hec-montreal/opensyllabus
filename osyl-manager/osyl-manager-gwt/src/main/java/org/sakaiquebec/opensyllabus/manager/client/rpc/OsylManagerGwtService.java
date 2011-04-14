@@ -70,13 +70,15 @@ public interface OsylManagerGwtService extends RemoteService {
     public String getParent(String siteId) throws Exception;
 
     public void associate(String siteId, String parentId) throws Exception,
-	    CompatibilityException, FusionException, OsylPermissionException,SessionCompatibilityException;
+	    CompatibilityException, FusionException, OsylPermissionException,
+	    SessionCompatibilityException;
 
     public void dissociate(String siteId, String parentId) throws Exception,
 	    OsylPermissionException;
 
     public void associateToCM(String courseSectionId, String siteId)
-	    throws Exception, OsylPermissionException, SessionCompatibilityException;
+	    throws Exception, OsylPermissionException,
+	    SessionCompatibilityException;
 
     public void dissociateFromCM(String siteId) throws Exception,
 	    OsylPermissionException;
@@ -115,5 +117,7 @@ public interface OsylManagerGwtService extends RemoteService {
 
     public void unpublish(String siteId) throws Exception,
 	    OsylPermissionException;
+
+    public Map<String, Boolean> getPermissions();
 
 }

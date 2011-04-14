@@ -23,8 +23,10 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -112,8 +114,8 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 		TextBox txtBox = (TextBox) event.getSource();
 
 		if (getController().getMessages()
-			.mainView_searchForExistingSites_input().equals(
-				txtBox.getText())) {
+			.mainView_searchForExistingSites_input()
+			.equals(txtBox.getText())) {
 		    ((TextBox) event.getSource()).setText("");
 		}
 	    }
@@ -183,35 +185,56 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	hz1.add(new PublishAction(getController()));
 	hz1.add(new HTML(" | "));
 	hz1.add(new UnpublishAction(getController()));
-	hz1.add(new HTML(" | "));
-	hz1.add(new CopyAction(getController()));
+	if (getController().getPermissions().get(
+		SecurityInterface.OSYL_MANAGER_FUNCTION_COPY)) {
+	    hz1.add(new HTML(" | "));
+	    hz1.add(new CopyAction(getController()));
+	}
 	hz1.setStyleName("OsylManager-mainView-actionList");
 	commandsPanel.add(hz1);
 
-	HorizontalPanel hz2 = new HorizontalPanel();
-	hz2.add(new AttachAction(getController()));
-	hz2.add(new HTML(" | "));
-	hz2.add(new UnattachAction(getController()));
-	hz2.setStyleName("OsylManager-mainView-actionList");
-	commandsPanel.add(hz2);
+	if (getController().getPermissions().get(
+		SecurityInterface.OSYL_MANAGER_FUNCTION_ASSOCIATE)) {
+	    HorizontalPanel hz2 = new HorizontalPanel();
+	    hz2.add(new AssociateAction(getController()));
+	    hz2.add(new HTML(" | "));
+	    hz2.add(new DissociateAction(getController()));
+	    hz2.setStyleName("OsylManager-mainView-actionList");
+	    commandsPanel.add(hz2);
+	}
 
-	HorizontalPanel hz3 = new HorizontalPanel();
-	hz3.add(new AssociateAction(getController()));
-	hz3.add(new HTML(" | "));
-	hz3.add(new DissociateAction(getController()));
-	hz3.setStyleName("OsylManager-mainView-actionList");
-	commandsPanel.add(hz3);
+	if (getController().getPermissions().get(
+		SecurityInterface.OSYL_MANAGER_FUNCTION_ATTACH)) {
+	    HorizontalPanel hz3 = new HorizontalPanel();
+	    hz3.add(new AttachToCmAction(getController()));
+	    hz3.add(new HTML(" | "));
+	    hz3.add(new UnattachFromCmAction(getController()));
+	    hz3.setStyleName("OsylManager-mainView-actionList");
+	    commandsPanel.add(hz3);
+	}
 
 	HorizontalPanel hz4 = new HorizontalPanel();
-	hz4.add(new ImportAction(getController()));
-	hz4.add(new HTML(" | "));
-	hz4.add(new ExportAction(getController()));
-	hz4.add(new HTML(" | "));
-	// hz4.add(new CleanAction(getController()));
-	//hz4.add(new HTML(" | "));
-	hz4.add(new DeleteAction(getController()));
-	hz4.setStyleName("OsylManager-mainView-actionList");
-	commandsPanel.add(hz4);
+	if (getController().getPermissions().get(
+		SecurityInterface.OSYL_MANAGER_FUNCTION_IMPORT)) {
+	    hz4.add(new ImportAction(getController()));
+	}
+	if (getController().getPermissions().get(
+		SecurityInterface.OSYL_MANAGER_FUNCTION_EXPORT)) {
+	    if (hz4.getWidgetCount() > 0)
+		hz4.add(new HTML(" | "));
+	    hz4.add(new ExportAction(getController()));
+	}
+	if (getController().getPermissions().get(
+		SecurityInterface.OSYL_MANAGER_FUNCTION_DELETE)) {
+	    if (hz4.getWidgetCount() > 0)
+		hz4.add(new HTML(" | "));
+	    hz4.add(new DeleteAction(getController()));
+	}
+	if (hz4.getWidgetCount() > 0) {
+	    hz4.setStyleName("OsylManager-mainView-actionList");
+	    commandsPanel.add(hz4);
+	}
+
 	hzPanel3.add(commandsPanel);
 
 	mainPanel.add(vSiteSelectionPanel);
@@ -224,13 +247,15 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 			.mainView_creationOfNewSite());
 	newSiteCreationLbl.setStylePrimaryName("OsylManager-mainView-label");
 	mainPanel.add(newSiteCreationLbl);
-	HorizontalPanel hPanel = new HorizontalPanel();
 
-	hPanel.add(new CreateSiteAction(getController()));
-	hPanel.add(new HTML("&nbsp;"
-		+ getController().getMessages().mainView_or() + "&nbsp;"));
-	hPanel.add(new ImportNewSiteAction(getController()));
-
-	mainPanel.add(hPanel);
+	if (getController().getPermissions().get(
+		SecurityInterface.OSYL_MANAGER_FUNCTION_CREATE)) {
+	    HorizontalPanel hPanel = new HorizontalPanel();
+	    hPanel.add(new CreateSiteAction(getController()));
+	    hPanel.add(new HTML("&nbsp;"
+		    + getController().getMessages().mainView_or() + "&nbsp;"));
+	    hPanel.add(new ImportNewSiteAction(getController()));
+	    mainPanel.add(hPanel);
+	}
     }
 }

@@ -314,10 +314,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    throws Exception, FusionException, OsylPermissionException {
 	if (!osylSecurityService.isActionAllowedInSite(osylSiteService
 		.getSiteReference(siteId),
-		OsylSecurityService.OSYL_FUNCTION_PUBLISH)) {
+		SecurityInterface.OSYL_FUNCTION_PUBLISH)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
-		    OsylSecurityService.OSYL_FUNCTION_PUBLISH);
+		    SecurityInterface.OSYL_FUNCTION_PUBLISH);
 	} else {
 	    long start = System.currentTimeMillis();
 	    log.info("user [" + sessionManager.getCurrentSession().getUserEid()

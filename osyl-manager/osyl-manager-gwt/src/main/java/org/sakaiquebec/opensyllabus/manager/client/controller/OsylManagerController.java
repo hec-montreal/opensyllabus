@@ -69,6 +69,8 @@ public class OsylManagerController implements FireOsylManagerEvents {
 		    .create(ManagerImageBundleInterface.class);
 
     private List<COSite> selectSites = new ArrayList<COSite>();
+    
+    private Map<String,Boolean> permissions;
 
     /**
      * Private constructor use to implements singleton
@@ -402,6 +404,18 @@ public class OsylManagerController implements FireOsylManagerEvents {
     
     public void unpublish(String siteId,AsyncCallback<Void> unpublishAsyncCallback){
 	OsylManagerRPCController.getInstance().unpublish(siteId,unpublishAsyncCallback);
+    }
+    
+    public void getPermissions(AsyncCallback<Map<String,Boolean>> permissionCallBack){
+	OsylManagerRPCController.getInstance().getPermissions(permissionCallBack);
+    }
+
+    public void setPermissions(Map<String,Boolean> permissions) {
+	this.permissions = permissions;
+    }
+
+    public Map<String,Boolean> getPermissions() {
+	return permissions;
     }
     
 }

@@ -1058,10 +1058,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	try {
 	    if (!osylSecurityService.isActionAllowedInSite(
 		    getSiteReference(siteId),
-		    OsylSecurityService.OSYL_FUNCTION_EDIT)) {
+		    SecurityInterface.OSYL_FUNCTION_EDIT)) {
 		if (osylSecurityService.isActionAllowedInSite(
 			getSiteReference(siteId),
-			OsylSecurityService.OSYL_FUNCTION_VIEW_STUDENT)) {
+			SecurityInterface.OSYL_FUNCTION_VIEW_STUDENT)) {
 		    thisCo =
 			    resourceDao
 				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
@@ -1069,7 +1069,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 					    SecurityInterface.ACCESS_ATTENDEE);
 		} else if (osylSecurityService.isActionAllowedInSite(
 			getSiteReference(siteId),
-			OsylSecurityService.OSYL_FUNCTION_VIEW_COMMUNITY)) {
+			SecurityInterface.OSYL_FUNCTION_VIEW_COMMUNITY)) {
 		    thisCo =
 			    resourceDao
 				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
@@ -1077,7 +1077,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 					    SecurityInterface.ACCESS_COMMUNITY);
 		} else if (osylSecurityService.isActionAllowedInSite(
 			getSiteReference(siteId),
-			OsylSecurityService.OSYL_FUNCTION_VIEW_PUBLIC)) {
+			SecurityInterface.OSYL_FUNCTION_VIEW_PUBLIC)) {
 		    thisCo =
 			    resourceDao
 				    .getPublishedSerializedCourseOutlineBySiteIdAndAccess(
@@ -1431,10 +1431,10 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    CompatibilityException, FusionException, OsylPermissionException,
 	    VersionCompatibilityException {
 	if (!osylSecurityService
-		.isActionAllowedForCurrentUser(OsylSecurityService.OSYL_MANAGER_FUNCTION_ASSOCIATE)) {
+		.isActionAllowedForCurrentUser(SecurityInterface.OSYL_MANAGER_FUNCTION_ASSOCIATE)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
-		    OsylSecurityService.OSYL_MANAGER_FUNCTION_ASSOCIATE);
+		    SecurityInterface.OSYL_MANAGER_FUNCTION_ASSOCIATE);
 	} else {
 	    String parent = null;
 	    try {

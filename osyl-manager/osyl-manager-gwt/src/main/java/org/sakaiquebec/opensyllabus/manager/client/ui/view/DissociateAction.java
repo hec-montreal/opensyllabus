@@ -20,17 +20,11 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.sakaiquebec.opensyllabus.manager.client.OsylManagerEntryPoint;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractAction;
-import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylUnobtrusiveAlert;
-import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
-
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -38,101 +32,32 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public class DissociateAction extends OsylManagerAbstractAction {
 
-    private static List<String> lMsg = new ArrayList<String>();
-
-    private static List<COSite> coSites;
-
-    private static int asynCB_return = 0;
-
-    private static int asynCB_OK = 0;
-
-    private boolean permissionException = false;
-
-    private class DissociateAsynCallBack implements AsyncCallback<Void> {
-
-	private String siteId;
-
-	public DissociateAsynCallBack(String siteId) {
-	    super();
-	    this.siteId = siteId;
-	}
-
-	public void onFailure(Throwable caught) {
-	    diag.hide();
-	    if (caught instanceof OsylPermissionException)
-		permissionException = true;
-	    DissociateAction.lMsg.add(siteId);
-	    responseReceive();
-	}
-
-	public void onSuccess(Void result) {
-	    diag.hide();
-	    DissociateAction.asynCB_OK++;
-	    responseReceive();
-	}
-
-	private void responseReceive() {
-	    DissociateAction.asynCB_return++;
-	    if (DissociateAction.asynCB_return == DissociateAction.coSites
-		    .size()) {
-		String msg = "";
-		if (DissociateAction.asynCB_OK != DissociateAction.coSites
-			.size()) {
-		    msg = messages.dissociateAction_dissociate_error() + "\n";
-		    if (permissionException) {
-			msg += messages.permission_exception();
-		    } else {
-			for (String id : lMsg) {
-			    msg +=
-				    id
-					    + messages
-						    .dissociateAction_dissociate_error_detail()
-					    + "\n";
-			}
-		    }
-		} else {
-		    msg = messages.dissociateAction_dissociate_ok();
-		}
-		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
-			OsylManagerEvent.SITE_INFO_CHANGE));
-		OsylUnobtrusiveAlert alert = new OsylUnobtrusiveAlert(msg);
-		OsylManagerEntryPoint.showWidgetOnTop(alert);
-	    }
-	}
-
-    }
-
     public DissociateAction(OsylManagerController controller) {
-	super(controller, "mainView_action_dissociate",
-		"mainView_action_dissociate_tooltip");
+	super(controller, "mainView_action_unattach",
+		"mainView_action_unattach_tooltip");
     }
 
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
-	if (siteIds.size() > 0) {
-	    for (COSite cosite : siteIds) {
-		if (cosite.getCourseNumber() == null
-			|| cosite.getCourseNumber().equals(""))
-		    return false;
-	    }
-	    return true;
-	} else {
+	if(siteIds.isEmpty()){
 	    return false;
+	} else {
+	    boolean enable = true;
+	    for (COSite coSite : siteIds) {
+		String parentSite = coSite.getParentSite();
+		
+		if (parentSite == null || parentSite.equals("")) {
+		    return false;
+		}
+	    }
+	    return enable;
 	}
     }
 
     @Override
     public void onClick(List<COSite> siteIds) {
-	diag.show();
-	diag.centerAndFocus();
-	coSites = siteIds;
-	asynCB_return = 0;
-	asynCB_OK = 0;
-	lMsg = new ArrayList<String>();
-
-	for (COSite coSite : siteIds) {
-	    controller.dissociateFromCM(coSite.getSiteId(),
-		    new DissociateAsynCallBack(coSite.getSiteId()));
-	}
+	DissociateForm unattachForm = new DissociateForm(controller, siteIds);
+	unattachForm.showModal();
     }
+
 }

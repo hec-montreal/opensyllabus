@@ -179,4 +179,6 @@ public interface OsylManagerService {
     public String createSite(String siteTitle, String configRef, String lang)
 	    throws Exception, OsylPermissionException;
 
+    public Map<String, Boolean> getPermissions();
+
 }

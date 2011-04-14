@@ -42,7 +42,7 @@ import com.google.gwt.user.client.ui.PushButton;
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class UnattachForm extends OsylManagerAbstractWindowPanel {
+public class DissociateForm extends OsylManagerAbstractWindowPanel {
 
     PushButton okButton;
 
@@ -98,7 +98,7 @@ public class UnattachForm extends OsylManagerAbstractWindowPanel {
 	}
     }
 
-    public UnattachForm(OsylManagerController controller, List<COSite> coSites) {
+    public DissociateForm(OsylManagerController controller, List<COSite> coSites) {
 	super(controller);
 	Label title = new Label(messages.mainView_action_unattach());
 	title.setStylePrimaryName("OsylManager-form-title");
@@ -141,7 +141,7 @@ public class UnattachForm extends OsylManagerAbstractWindowPanel {
 	okButton.setEnabled(false);
 	okButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
-		UnattachForm.this.hide();
+		DissociateForm.this.hide();
 	    }
 	});
 

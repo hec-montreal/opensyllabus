@@ -33,28 +33,31 @@ import org.sakaiquebec.opensyllabus.shared.model.COSite;
 public class AssociateAction extends OsylManagerAbstractAction {
 
     public AssociateAction(OsylManagerController controller) {
-	super(controller, "mainView_action_associate",
-		"mainView_action_associate_tooltip");
+	super(controller, "mainView_action_attach",
+		"mainView_action_attach_tooltip");
     }
 
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
-	if (siteIds.size() == 1) {
-	    String siteName = siteIds.get(0).getCourseName();
-	    if (siteName != null && !siteName.equals(""))
-		return false;
-	    else
-		return true;
-	}
-
-	else
+	if(siteIds.isEmpty()){
 	    return false;
+	} else {
+	    boolean enable = true;
+	    for (COSite coSite : siteIds) {
+		String parentSite = coSite.getParentSite();
+		
+		if (parentSite != null && !parentSite.equals("")) {
+		    return false;
+		}
+	    }
+	    return enable;
+	}
     }
 
     @Override
     public void onClick(List<COSite> siteIds) {
-	AssociateForm as = new AssociateForm(controller, siteIds.get(0), diag);
-	as.showModal();
+	AssociateForm attachForm = new AssociateForm(controller, siteIds);
+	attachForm.showModal();
     }
 
 }

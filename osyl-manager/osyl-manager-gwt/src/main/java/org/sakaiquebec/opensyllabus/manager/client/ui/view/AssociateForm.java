@@ -20,36 +20,36 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler.OsylManagerEvent;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractWindowPanel;
-import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylCancelDialog;
 import org.sakaiquebec.opensyllabus.manager.client.ui.dialog.OsylOkCancelDialog;
+import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
+import org.sakaiquebec.opensyllabus.shared.exception.VersionCompatibilityException;
+import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
 import org.sakaiquebec.opensyllabus.shared.exception.SessionCompatibilityException;
-import org.sakaiquebec.opensyllabus.shared.model.CMCourse;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
+import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.TextBox;
 
@@ -59,122 +59,168 @@ import com.google.gwt.user.client.ui.TextBox;
  */
 public class AssociateForm extends OsylManagerAbstractWindowPanel {
 
-    private COSite selectedSite;
+    private List<COSite> coSites;
 
-    private CMCourse selectedCourse;
+    private TextBox searchTextBox;
 
-    private TextBox sigleTextBox;
+    private ListBox parentSiteList;
 
-    private CMCourseInfoView cmCourseInfoView;
+    private PushButton attButton;
 
-    private MultiWordSuggestOracle sigleOracle = new MultiWordSuggestOracle();
+    PushButton okButton;
 
-    private PushButton okButton;
+    Grid grid;
 
-    private Map<String, CMCourse> sigleCourseMap;
+    private int asynCB_return = 0;
 
-    private final OsylCancelDialog diag;
-
-    private ListBox suggestionListBox;
+    private Label attachInProgess;
 
     private Image spinner;
 
-    AsyncCallback<List<CMCourse>> coursesListAsyncCallback =
-	    new AsyncCallback<List<CMCourse>>() {
+    private String selectedParentId = null;
+
+    AsyncCallback<Map<String, String>> parentListAsyncCallback =
+	    new AsyncCallback<Map<String, String>>() {
 
 		public void onFailure(Throwable caught) {
-		    spinner.setVisible(false);
-		    OsylOkCancelDialog warning =
-			    new OsylOkCancelDialog(false, true, messages
-				    .OsylWarning_Title(),
-				    messages.rpcFailure(), false, true);
-		    warning.show();
-		    warning.centerAndFocus();
+		    attButton.setEnabled(false);
+		    spinner.removeFromParent();
 		}
 
-		public void onSuccess(List<CMCourse> result) {
-		    spinner.setVisible(false);
-		    sigleOracle = new MultiWordSuggestOracle();
-		    sigleCourseMap = new HashMap<String, CMCourse>();
-		    for (CMCourse course : result) {
-				String sigleValue =
-					course.getSigle() + " " + course.getSession()
-						+ " " + course.getSection();
-				sigleOracle.add(sigleValue);
-				sigleCourseMap.put(sigleValue, course);
-				suggestionListBox.addItem(sigleValue, sigleValue);	
+		public void onSuccess(Map<String, String> result) {
+		    spinner.removeFromParent();
+		    if (result == null || result.isEmpty()) {
+			OsylOkCancelDialog warning =
+				new OsylOkCancelDialog(false, true, messages
+					.OsylWarning_Title(), messages
+					.noAssociableCOSite(), true, false);
+			warning.show();
+			warning.centerAndFocus();
+			attButton.setEnabled(false);
+		    } else {
+			TreeMap<String, String> sortedMap =
+				new TreeMap<String, String>(
+					LocalizedStringComparator.getInstance());
+			for (Iterator<String> sitesMapKeysIterator =
+				result.keySet().iterator(); sitesMapKeysIterator
+				.hasNext();) {
+			    String siteId = sitesMapKeysIterator.next();
+			    String siteTitle = result.get(siteId);
+			    sortedMap.put(siteTitle, siteId);
+			}
+			for (Iterator<Entry<String, String>> sortedSIterator =
+				sortedMap.entrySet().iterator(); sortedSIterator
+				.hasNext();) {
+			    Entry<String, String> entry =
+				    sortedSIterator.next();
+			    parentSiteList.addItem(entry.getKey(), entry
+				    .getValue());
+			}
+			attButton.setEnabled(true);
 		    }
-		    suggestionListBox.setSelectedIndex(0);
 		}
+
 	    };
 
-    AsyncCallback<Void> associateToCMAsyncCallback = new AsyncCallback<Void>() {
+    private class AttachAsynCallBack implements AsyncCallback<Void> {
+
+	private int siteIndex;
+
+	public AttachAsynCallBack(int siteIndex) {
+	    super();
+	    this.siteIndex = siteIndex;
+	}
 
 	public void onFailure(Throwable caught) {
-	    String msg = messages.rpcFailure();
-	    if (caught instanceof OsylPermissionException) 
-		msg = messages.permission_exception();
-	    else if(caught instanceof SessionCompatibilityException)
-		msg = messages.session_compatibility_exception();
-	    diag.hide();
-	    OsylOkCancelDialog alert =
-		    new OsylOkCancelDialog(false, true, messages
-			    .OsylWarning_Title(), msg, true, false);
-	    alert.show();
-	    alert.centerAndFocus();
+	    Image image = new Image(controller.getImageBundle().cross16());
+	    String msg = null;
+	    if (caught instanceof FusionException) {
+		if (((FusionException) caught).isHierarchyFusionException()) {
+		    msg = messages.attachAction_attach_error_HierarchyFusionException();
+		} else {
+		    msg = messages.attachAction_attach_error_FusionException();
+		}
+	    } else if (caught instanceof CompatibilityException) {
+	    	msg = messages.attachAction_attach_error_CompatibilityException();
+	    } else if (caught instanceof OsylPermissionException) {
+	    	msg = messages.permission_exception();
+	    } else if (caught instanceof SessionCompatibilityException) {
+	    	msg = messages.session_compatibility_exception();
+	    } else if (caught instanceof VersionCompatibilityException) {
+			msg = messages.attachAction_attach_error_VersionCompatibilityException();	    	
+	    } else {
+		msg = caught.getMessage();
+	    }
+	    image.setTitle(messages.attachForm_attach_error() + " : " + msg);
+	    grid.setWidget(siteIndex, 1, image);
+	    responseReceive();
 	}
 
 	public void onSuccess(Void result) {
-	    diag.hide();
-	    controller.notifyManagerEventHandler(new OsylManagerEvent(null,
-		    OsylManagerEvent.SITE_INFO_CHANGE));
-	    AssociateForm.this.onAssociationEnd();
+	    Image image = new Image(controller.getImageBundle().check16());
+	    image.setTitle(messages.attachForm_attach_ok());
+	    grid.setWidget(siteIndex, 1, image);
+	    responseReceive();
 	}
 
-    };
+	private void responseReceive() {
+	    asynCB_return++;
+	    if (asynCB_return == coSites.size()) {
+		attachInProgess.setVisible(false);
+		okButton.setEnabled(true);
+		controller.notifyManagerEventHandler(new OsylManagerEvent(null,
+			OsylManagerEvent.SITE_INFO_CHANGE));
+	    } else {
+		controller
+			.associate(coSites.get(siteIndex + 1).getSiteId(),
+				selectedParentId, new AttachAsynCallBack(
+					siteIndex + 1));
+	    }
+	}
+    }
 
-    public AssociateForm(final OsylManagerController controller, COSite site,
-	    OsylCancelDialog aDiag) {
+    public AssociateForm(final OsylManagerController controller,
+	    final List<COSite> cosites) {
 	super(controller);
-	this.selectedSite = site;
-	this.diag = aDiag;
+	coSites = cosites;
 
-	Label title = new Label(messages.mainView_action_associate());
+	Label title = new Label(messages.mainView_action_attach());
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);
+	searchTextBox = new TextBox();
 
-	Label instruction =
-		new Label(messages.associateForm_instruction().replace("{0}",
-			selectedSite.getSiteId()));
-	mainPanel.add(instruction);
-
-	Label l = new Label(messages.associateForm_courseIdentifier());
-
-	sigleTextBox = new TextBox();
-
-	final Button search = new Button(messages.associateForm_search());
+	final Button search = new Button(messages.copyForm_search());
 	search.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
 		spinner.setVisible(true);
-		String value = sigleTextBox.getText();
-		suggestionListBox.clear();
-		controller.getCMCourses(value, coursesListAsyncCallback);
+		String value = searchTextBox.getText();
+		parentSiteList.clear();
+		List<String> siteIds = new ArrayList<String>();
+		for (COSite cosi : cosites)
+		    siteIds.add(cosi.getSiteId());
+		if (controller.isInHostedMode()) {
+		    getHostedModeData();
+		} else {
+		    controller.getOsylSites(siteIds, value,
+			    parentListAsyncCallback);
+		}
 	    }
 	});
-	search.setEnabled(false);
+	search.setEnabled(true);
 
 	HorizontalPanel hp = new HorizontalPanel();
+	Label l = new Label(messages.attachForm_siteTitle());
 	hp.add(l);
 	l.setStylePrimaryName("OsylManager-form-label");
-	hp.add(sigleTextBox);
-	sigleTextBox.setStylePrimaryName("OsylManager-form-element");
+	hp.add(searchTextBox);
+	searchTextBox.setStylePrimaryName("OsylManager-form-element");
 	hp.add(search);
 	hp.setCellWidth(l, "30%");
-	hp.setCellWidth(sigleTextBox, "40%");
+	hp.setCellWidth(searchTextBox, "40%");
 	hp.setCellWidth(search, "30%");
 	hp.setCellVerticalAlignment(l, HasVerticalAlignment.ALIGN_BOTTOM);
-	hp.setCellVerticalAlignment(sigleTextBox,
+	hp.setCellVerticalAlignment(searchTextBox,
 		HasVerticalAlignment.ALIGN_BOTTOM);
 	hp.setCellVerticalAlignment(search, HasVerticalAlignment.ALIGN_BOTTOM);
 	hp.setStylePrimaryName("OsylManager-form-genericPanel");
@@ -182,36 +228,13 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	mainPanel.setCellHorizontalAlignment(hp,
 		HasHorizontalAlignment.ALIGN_CENTER);
 
-	sigleTextBox.addKeyPressHandler(new KeyPressHandler() {
-
-	    public void onKeyPress(KeyPressEvent event) {
-		cmCourseInfoView.refreshView(null);
-		okButton.setEnabled(false);
-		String value = sigleTextBox.getText();
-		search.setEnabled(value.length() >= 3);
-	    }
-	});
-
-	suggestionListBox = new ListBox();
-	suggestionListBox.addChangeHandler(new ChangeHandler() {
-
-	    public void onChange(ChangeEvent event) {
-		selectedCourse =
-			sigleCourseMap
-				.get(suggestionListBox
-					.getValue(suggestionListBox
-						.getSelectedIndex()));
-		cmCourseInfoView.refreshView(selectedCourse);
-		okButton.setEnabled(true);
-	    }
-	});
-
 	HorizontalPanel hzPanel = new HorizontalPanel();
 	Label voidLabel = new Label();
 	hzPanel.add(voidLabel);
 	hzPanel.setCellWidth(voidLabel, "30%");
 	hzPanel.setStylePrimaryName("OsylManager-form-genericPanel");
-	hzPanel.add(suggestionListBox);
+	parentSiteList = new ListBox();
+	hzPanel.add(parentSiteList);
 	spinner = new Image(controller.getImageBundle().ajaxloader());
 	hzPanel.add(spinner);
 	spinner.setVisible(false);
@@ -219,12 +242,56 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	mainPanel.setCellHorizontalAlignment(hzPanel,
 		HasHorizontalAlignment.ALIGN_CENTER);
 
-	cmCourseInfoView = new CMCourseInfoView(controller);
-	DecoratorPanel ivDecoratorPanel = new DecoratorPanel();
-	ivDecoratorPanel.setWidget(cmCourseInfoView);
-	ivDecoratorPanel.setStylePrimaryName("OsylManager-infoView");
-	mainPanel.add(ivDecoratorPanel);
-	mainPanel.setCellHorizontalAlignment(ivDecoratorPanel,
+	attButton = new PushButton(messages.attach());
+	attButton.setStylePrimaryName("Osyl-Button");
+	attButton.addClickHandler(new ClickHandler() {
+	    public void onClick(ClickEvent event) {
+		int selectedIndex = parentSiteList.getSelectedIndex();
+		if (selectedIndex != -1) {
+		    selectedParentId = parentSiteList.getValue(selectedIndex);
+		    displayAttachGrid();
+		}
+	    }
+	});
+	attButton.setWidth("70px");
+	attButton.setEnabled(false);
+	mainPanel.add(attButton);
+	mainPanel.setCellHorizontalAlignment(attButton,
+		HasHorizontalAlignment.ALIGN_CENTER);
+    }
+
+    private void displayAttachGrid() {
+	mainPanel.clear();
+	Label title = new Label(messages.mainView_action_attach());
+	title.setStylePrimaryName("OsylManager-form-title");
+	mainPanel.add(title);
+
+	attachInProgess = new Label(messages.attachForm_attach_inProgress());
+	attachInProgess.setStylePrimaryName("OsylManager-form-publicationText");
+	mainPanel.add(attachInProgess);
+
+	grid = new Grid(coSites.size(), 2);
+	asynCB_return = 0;
+	Image image = new Image(controller.getImageBundle().ajaxloader());
+	image.setTitle(messages.attachForm_attach_inProgress());
+	for (int r = 0; r < coSites.size(); r++) {
+	    String siteId = coSites.get(r).getSiteId();
+	    grid.setText(r, 0, siteId);
+	    grid.setWidget(r, 1, image);
+	}
+	HorizontalPanel publicationPanel = new HorizontalPanel();
+	Label voidLabel = new Label();
+	publicationPanel.add(voidLabel);
+	publicationPanel.add(grid);
+	Label voidLabel2 = new Label();
+	publicationPanel.add(voidLabel2);
+	publicationPanel.setCellWidth(voidLabel, "10%");
+	publicationPanel.setCellWidth(grid, "80%");
+	publicationPanel.setCellWidth(voidLabel2, "10%");
+	publicationPanel
+		.setStylePrimaryName("OsylManager-form-publicationPanel");
+	mainPanel.add(publicationPanel);
+	mainPanel.setCellHorizontalAlignment(publicationPanel,
 		HasHorizontalAlignment.ALIGN_CENTER);
 
 	okButton = new PushButton(messages.associateForm_ok());
@@ -233,66 +300,27 @@ public class AssociateForm extends OsylManagerAbstractWindowPanel {
 	okButton.setEnabled(false);
 	okButton.addClickHandler(new ClickHandler() {
 	    public void onClick(ClickEvent event) {
-		diag.show();
-		diag.centerAndFocus();
-		AssociateForm.this.controller.associateToCM(selectedCourse
-			.getId(), selectedSite.getSiteId(),
-			associateToCMAsyncCallback);
-	    }
-	});
-
-	PushButton cancelButton =
-		new PushButton(messages.associateForm_cancel());
-	cancelButton.setStylePrimaryName("Osyl-Button");
-	cancelButton.setWidth("50px");
-	cancelButton.addClickHandler(new ClickHandler() {
-
-	    public void onClick(ClickEvent event) {
-		AssociateForm.super.hide();
+		AssociateForm.this.hide();
 	    }
 	});
 
 	HorizontalPanel hz = new HorizontalPanel();
 	hz.add(okButton);
-	hz.add(cancelButton);
 
 	mainPanel.add(hz);
 	mainPanel.setCellHorizontalAlignment(hz,
 		HasHorizontalAlignment.ALIGN_CENTER);
+
+	controller.associate(coSites.get(0).getSiteId(), selectedParentId,
+		new AttachAsynCallBack(0));
     }
 
-    protected void onAssociationEnd() {
-	mainPanel.clear();
-
-	Label title = new Label(messages.mainView_action_associate());
-	title.setStylePrimaryName("OsylManager-form-title");
-	mainPanel.add(title);
-
-	Label conf = new Label(messages.associateForm_confirmation());
-	mainPanel.add(conf);
-
-	cmCourseInfoView
-		.setImage(new Image(controller.getImageBundle().check()));
-	DecoratorPanel ivDecoratorPanel = new DecoratorPanel();
-	ivDecoratorPanel.setWidget(cmCourseInfoView);
-	ivDecoratorPanel.setStylePrimaryName("OsylManager-infoView");
-	mainPanel.add(ivDecoratorPanel);
-	mainPanel.setCellHorizontalAlignment(ivDecoratorPanel,
-		HasHorizontalAlignment.ALIGN_CENTER);
-
-	okButton = new PushButton(messages.associateForm_ok());
-	okButton.setStylePrimaryName("Osyl-Button");
-	okButton.setWidth("50px");
-
-	okButton.addClickHandler(new ClickHandler() {
-	    public void onClick(ClickEvent event) {
-		AssociateForm.super.hide();
-	    }
-	});
-	mainPanel.add(okButton);
-	mainPanel.setCellHorizontalAlignment(okButton,
-		HasHorizontalAlignment.ALIGN_CENTER);
-
+    private void getHostedModeData() {
+	for (int i = 1; i <= 10; i++) {
+	    String siteTitle = "site" + i;
+	    String siteId = "site" + i;
+	    parentSiteList.addItem(siteTitle, siteId);
+	}
+	attButton.setEnabled(true);
     }
-
 }

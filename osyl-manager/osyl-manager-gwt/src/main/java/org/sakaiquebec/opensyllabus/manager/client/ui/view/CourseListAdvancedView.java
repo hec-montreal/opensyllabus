@@ -22,9 +22,9 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.controller.event.OsylManagerEventHandler;
@@ -36,10 +36,10 @@ import org.sakaiquebec.opensyllabus.shared.util.LocalizedStringComparator;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.gen2.table.client.AbstractScrollTable.ColumnResizePolicy;
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
 import com.google.gwt.gen2.table.client.FixedWidthGrid;
 import com.google.gwt.gen2.table.client.ScrollTable;
-import com.google.gwt.gen2.table.client.AbstractScrollTable.ColumnResizePolicy;
 import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
 import com.google.gwt.gen2.table.event.client.RowHighlightEvent;
 import com.google.gwt.gen2.table.event.client.RowHighlightHandler;
@@ -54,7 +54,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -121,7 +120,9 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 			for (Entry<String, COSite> entry : sortedMap.entrySet()) {
 			    COSite coSite = entry.getValue();
 			    rowNum = scSiteList.getDataTable().insertRow(i);
-			    scSiteList.getDataTable().getRowFormatter()
+			    scSiteList
+				    .getDataTable()
+				    .getRowFormatter()
 				    .setStylePrimaryName(rowNum,
 					    "OsylManager-scrollTable-row");
 			    scSiteList.getDataTable().setHTML(rowNum, 0,
@@ -246,7 +247,9 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 		new RowHighlightHandler() {
 
 		    public void onRowHighlight(RowHighlightEvent event) {
-			scSiteList.getDataTable().getRowFormatter()
+			scSiteList
+				.getDataTable()
+				.getRowFormatter()
 				.addStyleName(event.getValue().getRowIndex(),
 					"OsylManager-scrollTable-row-hover");
 		    }
@@ -256,7 +259,9 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 		new RowUnhighlightHandler() {
 
 		    public void onRowUnhighlight(RowUnhighlightEvent event) {
-			scSiteList.getDataTable().getRowFormatter()
+			scSiteList
+				.getDataTable()
+				.getRowFormatter()
 				.removeStyleName(
 					event.getValue().getRowIndex(),
 					"OsylManager-scrollTable-row-hover");
@@ -360,43 +365,6 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 	formatter.setVerticalAlignment(0, 7, HasVerticalAlignment.ALIGN_TOP);
 
 	return headerTable;
-    }
-
-    private FixedWidthFlexTable createFooterTable() {
-	FixedWidthFlexTable footerTable = new FixedWidthFlexTable();
-	HorizontalPanel commandsPanel = new HorizontalPanel();
-
-	VerticalPanel vPanel1 = new VerticalPanel();
-	vPanel1.add(new EditAction(getController()));
-	vPanel1.add(new PublishAction(getController()));
-	// vPanel1.add(new UnpublishAction(getController()));
-	vPanel1.add(new CopyAction(getController()));
-	vPanel1.setStyleName("OsylManager-mainView-actionList");
-	commandsPanel.add(vPanel1);
-
-	VerticalPanel vPanel2 = new VerticalPanel();
-	vPanel2.add(new AttachAction(getController()));
-	vPanel2.add(new UnattachAction(getController()));
-	vPanel2.setStyleName("OsylManager-mainView-actionList");
-	commandsPanel.add(vPanel2);
-
-	VerticalPanel vPanel3 = new VerticalPanel();
-	vPanel3.add(new AssociateAction(getController()));
-	vPanel3.add(new DissociateAction(getController()));
-	vPanel3.setStyleName("OsylManager-mainView-actionList");
-	commandsPanel.add(vPanel3);
-
-	VerticalPanel vPanel4 = new VerticalPanel();
-	vPanel4.add(new ImportAction(getController()));
-	vPanel4.add(new ExportAction(getController()));
-	// vPanel4.add(new CleanAction(getController()));
-	vPanel4.add(new DeleteAction(getController()));
-	vPanel4.setStyleName("OsylManager-mainView-actionList");
-	commandsPanel.add(vPanel4);
-
-	footerTable.setWidget(0, 0, commandsPanel);
-
-	return footerTable;
     }
 
     private void getHostedModeData() {

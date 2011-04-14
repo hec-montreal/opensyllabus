@@ -20,6 +20,8 @@
 
 package org.sakaiquebec.opensyllabus.common.api;
 
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * OsylSecurityService defines all calls related to security and context. It
@@ -78,35 +80,7 @@ public interface OsylSecurityService {
      */
     public static final String SECURITY_ROLE_COURSE_TEACHING_ASSISTANT =
 	    "Teaching Assistant";
-    
-    /** the OsylManager fonctions **/
-    public final static String OSYL_MANAGER_FUNCTION_IMPORT =
-	    "osyl.manager.import";
-    public final static String OSYL_MANAGER_FUNCTION_CREATE =
-	    "osyl.manager.create";
-    public final static String OSYL_MANAGER_FUNCTION_COPY = "osyl.manager.copy";
-    public final static String OSYL_MANAGER_FUNCTION_EXPORT =
-	    "osyl.manager.export";
-    public final static String OSYL_MANAGER_FUNCTION_DELETE =
-	    "osyl.manager.delete";
-    public final static String OSYL_MANAGER_FUNCTION_ATTACH =
-	    "osyl.manager.attach";
-    public final static String OSYL_MANAGER_FUNCTION_ASSOCIATE =
-	    "osyl.manager.associate";
-    
-    /** the OsylEditor fonctions **/
-    public final static String OSYL_FUNCTION_VIEW_STUDENT =
-	    "osyl.view.student";
-    public final static String OSYL_FUNCTION_VIEW_COMMUNITY =
-	    "osyl.view.community";
-    public final static String OSYL_FUNCTION_VIEW_PUBLIC = "osyl.view.public";
-    public final static String OSYL_FUNCTION_READ =
-	    "osyl.read";
-    public final static String OSYL_FUNCTION_EDIT =
-	    "osyl.edit";
-    public final static String OSYL_FUNCTION_PUBLISH =
-	    "osyl.publish";
-    
+
     /**
      * Takes an XML file and strips tags based on a user role
      * 
@@ -163,18 +137,20 @@ public interface OsylSecurityService {
      * @return the id of the current user.
      */
     public String getCurrentUserId();
-    
+
     /**
      * Checks if the current user as the specified permission (in his MyWorspace
      * realm).
+     * 
      * @param permission the permission to check for.
      * @return true if the user has the specified permission, false otherwise.
      */
     public boolean isActionAllowedForCurrentUser(String permission);
-    
+
     /**
      * Checks if the current user as the specified permission in the specified
      * site.
+     * 
      * @param siteRef The reference to the site.
      * @param permission the permission to check for.
      * @return true if the user has the specified permission, false otherwise.
