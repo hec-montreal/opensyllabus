@@ -334,4 +334,6 @@ public interface Messages extends ConstantsWithLookup {
     String unpublishAction_unpublish_confirmation();
 
     String error();
+
+    String deleteAction_delete_error_hasChild_detail();
 }

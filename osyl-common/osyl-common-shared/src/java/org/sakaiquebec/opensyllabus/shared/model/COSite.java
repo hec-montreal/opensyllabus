@@ -22,6 +22,7 @@ package org.sakaiquebec.opensyllabus.shared.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * This POJO rounds up all the informations associated to the course outline and
@@ -124,7 +125,7 @@ public class COSite implements java.io.Serializable {
     /**
      * Is the site has childs
      */
-    private boolean hasChild=false;
+    private List<String> childs;
     
     /**
      * true if co is null
@@ -365,12 +366,12 @@ public class COSite implements java.io.Serializable {
         this.academicCareer = academicCareer;
     }
 
-    public void setHasChild(boolean hasChild) {
-	this.hasChild = hasChild;
+    public void setChilds(List<String> childs) {
+	this.childs= childs;
     }
 
-    public boolean hasChild() {
-	return hasChild;
+    public List<String> getChilds() {
+	return childs;
     }
 
     public void setCoIsNull(boolean coIsNull) {

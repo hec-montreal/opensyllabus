@@ -124,9 +124,22 @@ public class DeleteAction extends OsylManagerAbstractAction {
 	boolean hasChild = false;
 	boolean isCMLinked = false;
 	String sites = "";
+	String msg = "";
 	for (COSite coSite : siteIds) {
-	    if (coSite.hasChild())
+	    if (coSite.getChilds() != null && !coSite.getChilds().isEmpty()) {
 		hasChild = true;
+		String childString = "";
+		for (String s : coSite.getChilds()) {
+		    childString += s + ", ";
+		}
+		childString =
+			childString.substring(0, childString.length() - 2);
+		msg +=
+			messages.deleteAction_delete_error_hasChild_detail()
+				.replace("{0}", coSite.getSiteId())
+				.replace("{1}", childString)+"<br>";
+		msg = "<i>"+msg+"</i>";
+	    }
 	    if (coSite.getCourseName() != null
 		    && !"".equals(coSite.getCourseName()))
 		isCMLinked = true;
@@ -135,18 +148,19 @@ public class DeleteAction extends OsylManagerAbstractAction {
 
 	if (isCMLinked) {
 	    OsylOkCancelDialog canc =
-		    new OsylOkCancelDialog(false, true, messages
-			    .OsylWarning_Title(), messages
-			    .deleteAction_delete_error_linkedToCM(), true,
-			    false);
+		    new OsylOkCancelDialog(false, true,
+			    messages.OsylWarning_Title(),
+			    messages.deleteAction_delete_error_linkedToCM(),
+			    true, false);
 	    canc.show();
 	    canc.centerAndFocus();
 	}
 	if (hasChild) {
 	    OsylOkCancelDialog canc =
-		    new OsylOkCancelDialog(false, true, messages
-			    .OsylWarning_Title(), messages
-			    .deleteAction_delete_error_hasChild(), true, false);
+		    new OsylOkCancelDialog(false, true,
+			    messages.OsylWarning_Title(),
+			    messages.deleteAction_delete_error_hasChild()
+				    + "<br>" + msg, true, false);
 	    canc.show();
 	    canc.centerAndFocus();
 	} else {
@@ -176,5 +190,4 @@ public class DeleteAction extends OsylManagerAbstractAction {
 	    conf.centerAndFocus();
 	}
     }
-
 }
