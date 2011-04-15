@@ -23,7 +23,6 @@ package org.sakaiquebec.opensyllabus.manager.client.ui.view;
 
 import java.util.List;
 
-import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.manager.client.controller.OsylManagerController;
 import org.sakaiquebec.opensyllabus.manager.client.ui.api.OsylManagerAbstractView;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
