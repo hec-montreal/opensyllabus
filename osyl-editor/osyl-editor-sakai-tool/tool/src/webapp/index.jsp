@@ -8,6 +8,7 @@
 <%@ page import="org.sakaiquebec.opensyllabus.common.api.OsylSecurityService"%>
 <%@ page import="org.sakaiquebec.opensyllabus.common.api.OsylSiteService"%>
 <%@page import="org.sakaiquebec.opensyllabus.common.api.OsylConfigService"%>
+<%@ page import="org.sakaiquebec.opensyllabus.shared.api.SecurityInterface" %>
 <%@page import="org.sakaiquebec.opensyllabus.shared.model.COConfig"%>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ page import="org.sakaiproject.util.ResourceLoader"%>
@@ -34,7 +35,7 @@
 	// let's make sure that only a user with maintain rights will init the tool
 	if (osylMainBean.getOsylSecurityService().isActionAllowedInSite(
      		osylMainBean.getOsylSiteService().getSiteReference(siteId),
-		OsylSecurityService.OSYL_FUNCTION_EDIT)) {
+		SecurityInterface.OSYL_FUNCTION_EDIT)) {
 		osylMainBean.getOsylService().initService();
 	}
 
@@ -73,7 +74,7 @@
     <%
      	} else if (osylMainBean.getOsylSecurityService().isActionAllowedInSite(
      		osylMainBean.getOsylSiteService().getSiteReference(siteId),
-		OsylSecurityService.OSYL_FUNCTION_EDIT)) {
+		SecurityInterface.OSYL_FUNCTION_EDIT)) {
      	    readonly=false;
      %>
  	        <meta name="osyl:ro" content="false"> 
