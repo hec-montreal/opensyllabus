@@ -733,12 +733,12 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</fo:inline>
-			<fo:inline><xsl:value-of select="availability"/></fo:inline>
+			<fo:inline><xsl:apply-templates select="availability"/></fo:inline>
 		</fo:block>
 	</xsl:if>
 	<xsl:if test="comment !=''">
 		<fo:block font-size="8pt">
-			<xsl:value-of select="comment"/>
+			<xsl:apply-templates select="comment"/>
 		</fo:block>
 	</xsl:if>
 </xsl:template>
@@ -817,7 +817,7 @@
 		</fo:block>
 		<xsl:if test="../comment!=''">
 			<fo:block font-size="10pt">
-				<xsl:value-of select="../comment"/>
+				<xsl:apply-templates select="../comment"/>
 			</fo:block>
 		</xsl:if>
 	</fo:block>
@@ -838,7 +838,7 @@
 		</fo:block>
 		<xsl:if test="../comment!=''">
 			<fo:block font-size="10pt">
-				<xsl:value-of select="../comment"/>
+				<xsl:apply-templates select="../comment"/>
 			</fo:block>
 		</xsl:if>
 	</fo:block>
@@ -866,7 +866,7 @@
 		</fo:block>
 		<xsl:if test="../comment!=''">
 			<fo:block font-size="10pt">
-				<xsl:value-of select="../comment"/>
+				<xsl:apply-templates select="../comment"/>
 			</fo:block>
 		</xsl:if>
 	</fo:block>
@@ -907,7 +907,7 @@
 		</fo:block>
 		<xsl:if test="../comment!=''">
 			<fo:block font-size="10pt">
-				<xsl:value-of select="../comment"/>
+				<xsl:apply-templates select="../comment"/>
 			</fo:block>
 		</xsl:if>
 		<xsl:if test="identifier/@type='library'">
