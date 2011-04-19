@@ -298,6 +298,7 @@
 					<fo:table-cell padding="0px" display-align="center">
 						<fo:block text-align="left">
 							<xsl:call-template name="printAssessmentDate">
+								<xsl:with-param name="type"><xsl:value-of select="assessmentType"/></xsl:with-param>
 								<xsl:with-param name="date"><xsl:value-of select="substring-before(date-start,'T')"/></xsl:with-param>
 							</xsl:call-template>
 						</fo:block>
@@ -391,6 +392,7 @@
 				<fo:table-cell padding="0px" border-bottom="1px solid black" display-align="center">
 					<fo:block text-align="left" font-size="13pt" font-weight="bold">
 						<xsl:call-template name="printAssessmentDate">
+							<xsl:with-param name="type"><xsl:value-of select="assessmentType"/></xsl:with-param>
 							<xsl:with-param name="date"><xsl:value-of select="substring-before(date-end,'T')"/></xsl:with-param>
 						</xsl:call-template>
 					</fo:block>
@@ -1348,10 +1350,16 @@
 </xsl:template>
 
 <xsl:template name="printAssessmentDate">
+  <xsl:param name="type"/>
   <xsl:param name="date"/>
 
 	<xsl:choose>
-		<xsl:when test="$date=''">
+		<xsl:when test="$date!=''">
+			<xsl:call-template name="printDate">
+				<xsl:with-param name="date"><xsl:value-of select="$date"/></xsl:with-param>
+			</xsl:call-template>
+		</xsl:when>
+		<xsl:when test="$date='' and ($type='intra_exam' or $type='final_exam')">
 			<xsl:choose>
 				<xsl:when test="$lang = 'FR'">
 					<fo:inline>Voir </fo:inline>
@@ -1368,14 +1376,9 @@
 					<fo:inline font-style="italic">HEC en ligne</fo:inline>
 					<fo:inline> para fecha</fo:inline>
 				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:when>
 		<xsl:otherwise>
-			<xsl:call-template name="printDate">
-				<xsl:with-param name="date"><xsl:value-of select="$date"/></xsl:with-param>
-			</xsl:call-template>
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
