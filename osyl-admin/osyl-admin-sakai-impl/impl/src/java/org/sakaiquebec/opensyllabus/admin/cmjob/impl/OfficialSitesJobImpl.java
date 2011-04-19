@@ -333,11 +333,11 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 							    + getSiteName(section)
 							    + " automatiquement rattaché à celui-ci.<br>Si vous ne souhaitez pas utiliser le contenu du partageable, vous pouvez vous détacher de celui-ci à l'aide du gestionnaire de plan de cours");
 					    message
-						    .setFrom("admin.zonecours2@hec.ca");
+						    .setFrom("zonecours2@hec.ca");
 					    List<EmailAddress> ccRecipients =
 						    new ArrayList<EmailAddress>();
 					    ccRecipients.add(new EmailAddress(
-						    "zonecours2.hec.ca"));
+						    "zonecours2@hec.ca"));
 					    message.setRecipients(
 						    RecipientType.CC,
 						    ccRecipients);
