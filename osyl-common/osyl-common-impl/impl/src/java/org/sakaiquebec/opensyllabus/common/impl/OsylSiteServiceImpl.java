@@ -89,6 +89,7 @@ import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
+import org.sakaiquebec.opensyllabus.common.api.OsylEventService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.COConfigDao;
@@ -763,7 +764,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		}
 
 	    } finally {
-	    	securityService.popAdvisor();
+		securityService.popAdvisor();
 	    }
 	} else {
 	    log.error("Could not create site because site with title='"
@@ -786,7 +787,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
 		+ "] creates site [" + siteTitle + "]");
 	if (!siteService.siteExists(siteTitle)) {
-	    log.info("*** createSharableSite SecurityAdvisor advisor = new SecurityAdvisor() { OsylSiteServiceImpl *** ");	    
+	    log.info("*** createSharableSite SecurityAdvisor advisor = new SecurityAdvisor() { OsylSiteServiceImpl *** ");
 
 	    SecurityAdvisor advisor = new SecurityAdvisor() {
 		public SecurityAdvice isAllowed(String userId, String function,
@@ -884,7 +885,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    log.error("createSite", e);
 		}
 	    } finally {
-	    	securityService.popAdvisor();
+		securityService.popAdvisor();
 	    }
 
 	} else {
@@ -1091,6 +1092,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    }
 	    thisCo = osylConfigService.fillCo(webappDir, thisCo);
 	    getSiteInfo(thisCo, thisCo.getSiteId());
+	    eventTrackingService.post(eventTrackingService.newEvent(
+		    OsylEventService.EVENT_OPENSYLLABUS_ACCESS,
+		    getSiteReference(siteId), false));
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by siteId", e);
 	} finally {
@@ -1257,6 +1261,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    log.error("Unable to update course outline", e);
 	    throw e;
 	}
+	eventTrackingService.post(eventTrackingService.newEvent(
+		    OsylEventService.EVENT_OPENSYLLABUS_SAVE,
+		    getSiteReference(co.getSiteId()), false));
 	return reload;
     }
 
@@ -1297,25 +1304,22 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    toolConf.setTitle(tool.getTitle());
 	}
 	toolConf.setLayoutHints("0,0");
-    log.info("*** addTool SecurityAdvisor advisor = new SecurityAdvisor() { OsylSiteServiceImpl *** ");	    
+	log.info("*** addTool SecurityAdvisor advisor = new SecurityAdvisor() { OsylSiteServiceImpl *** ");
 
-	/* 
-	SecurityAdvisor advisor = new SecurityAdvisor() {
-	    public SecurityAdvice isAllowed(String userId, String function,
-		    String reference) {
-		return SecurityAdvice.ALLOWED;
-	    }
-	};
-	*/
+	/*
+	 * SecurityAdvisor advisor = new SecurityAdvisor() { public
+	 * SecurityAdvice isAllowed(String userId, String function, String
+	 * reference) { return SecurityAdvice.ALLOWED; } };
+	 */
 	try {
-	    //securityService.pushAdvisor(advisor);
+	    // securityService.pushAdvisor(advisor);
 	    siteService.save(site);
 	} catch (IdUnusedException e) {
 	    log.error("Add tool - Unused id exception", e);
 	} catch (PermissionException e) {
 	    log.error("Add tool - Permission exception", e);
 	} finally {
-	    //securityService.popAdvisor();
+	    // securityService.popAdvisor();
 	}
 
 	return toolConf;
@@ -1992,7 +1996,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		return SecurityAdvice.ALLOWED;
 	    }
 	};
-	
+
 	try {
 	    securityService.pushAdvisor(advisor);
 	    site = getSite(siteId);
@@ -2109,22 +2113,19 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     private void copyAnnoucement(String fromSite, String toSite, String ref) {
 	List<String> list = new ArrayList<String>();
 	list.add(ref);
-    log.info("*** copyAnnoucement SecurityAdvisor advisor = new SecurityAdvisor() { OsylSiteServiceImpl *** ");	    
+	log.info("*** copyAnnoucement SecurityAdvisor advisor = new SecurityAdvisor() { OsylSiteServiceImpl *** ");
 
 	/*
-	SecurityAdvisor advisor = new SecurityAdvisor() {
-	    public SecurityAdvice isAllowed(String arg0, String arg1,
-		    String arg2) {
-		return SecurityAdvice.ALLOWED;
-	    }
-	};
-	*/
+	 * SecurityAdvisor advisor = new SecurityAdvisor() { public
+	 * SecurityAdvice isAllowed(String arg0, String arg1, String arg2) {
+	 * return SecurityAdvice.ALLOWED; } };
+	 */
 	try {
-	    //securityService.pushAdvisor(advisor);
+	    // securityService.pushAdvisor(advisor);
 	    ((EntityTransferrer) announcementService).transferCopyEntities(
 		    fromSite, toSite, list);
 	} finally {
-	    //securityService.popAdvisor();
+	    // securityService.popAdvisor();
 	}
 
     }
@@ -2187,17 +2188,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     private void deleteSiteAnnouncementForOriginalAnnouncementMessageRef(
 	    String siteId, String ref) {
-    log.info("*** deleteSiteAnnouncementForOriginalAnnouncementMessageRef SecurityAdvisor advisor = new SecurityAdvisor() { OsylSiteServiceImpl *** ");	    
-    /*
-	SecurityAdvisor advisor = new SecurityAdvisor() {
-	    public SecurityAdvice isAllowed(String arg0, String arg1,
-		    String arg2) {
-		return SecurityAdvice.ALLOWED;
-	    }
-	};
-	*/
+	log.info("*** deleteSiteAnnouncementForOriginalAnnouncementMessageRef SecurityAdvisor advisor = new SecurityAdvisor() { OsylSiteServiceImpl *** ");
+	/*
+	 * SecurityAdvisor advisor = new SecurityAdvisor() { public
+	 * SecurityAdvice isAllowed(String arg0, String arg1, String arg2) {
+	 * return SecurityAdvice.ALLOWED; } };
+	 */
 	try {
-	    //securityService.pushAdvisor(advisor);
+	    // securityService.pushAdvisor(advisor);
 	    AnnouncementChannel channel = getAnnouncementChannel(siteId);
 	    List messageList = channel.getMessages(null, true);
 
@@ -2210,13 +2208,13 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    }
 	} catch (Exception e) {
 	} finally {
-	    //securityService.popAdvisor();
+	    // securityService.popAdvisor();
 	}
     }
-    
-  //for proof of concept
-    public List<String> getPublishCOSiteIds(){
+
+    // for proof of concept
+    public List<String> getPublishCOSiteIds() {
 	return resourceDao.getPublishCoSiteIds();
     }
-    
+
 }

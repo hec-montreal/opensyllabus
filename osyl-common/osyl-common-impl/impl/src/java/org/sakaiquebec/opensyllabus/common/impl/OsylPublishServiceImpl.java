@@ -41,6 +41,7 @@ import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.EnrollmentSet;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.ResourceProperties;
+import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.event.api.NotificationService;
 import org.sakaiproject.exception.IdInvalidException;
 import org.sakaiproject.exception.IdLengthException;
@@ -54,8 +55,10 @@ import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.id.api.IdManager;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.tool.api.SessionManager;
+import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
+import org.sakaiquebec.opensyllabus.common.api.OsylEventService;
 import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
@@ -277,6 +280,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public void setIdManager(IdManager idManager) {
 	this.idManager = idManager;
     }
+    
+    private EventTrackingService eventTrackingService;
+    
+    public void setEventTrackingService(EventTrackingService eventTrackingService){
+	this.eventTrackingService=eventTrackingService;
+    }
 
     /**
      * {@inheritDoc}
@@ -455,10 +464,14 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    } finally {
 		securityService.popAdvisor();
 	    }
+	    
+	    eventTrackingService.post(eventTrackingService.newEvent(
+		    OsylEventService.EVENT_OPENSYLLABUS_PUBLICATION,
+		    osylSiteService.getSiteReference(siteId), false));
+	    
 	    log.info("Finished publishing course outline for site ["
 		    + (co.getTitle() == null ? siteId : co.getTitle())
 		    + "] in " + (System.currentTimeMillis() - start) + " ms");
-
 	    return publicationResults;
 	}
     }

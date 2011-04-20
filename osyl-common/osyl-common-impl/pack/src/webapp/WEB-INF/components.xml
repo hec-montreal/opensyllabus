@@ -94,6 +94,8 @@
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
 		<property name="announcementService"
 			ref="org.sakaiproject.announcement.api.AnnouncementService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
 		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
 		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
 		<property name="securityService" ref="org.sakaiproject.authz.api.SecurityService" />
