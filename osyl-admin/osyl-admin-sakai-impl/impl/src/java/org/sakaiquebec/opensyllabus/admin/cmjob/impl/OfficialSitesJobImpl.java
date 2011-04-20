@@ -349,6 +349,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 					    log
 						    .error("Could not send email to shareable owners:"
 							    + e);
+					    e.printStackTrace();
 					}
 
 				    }
