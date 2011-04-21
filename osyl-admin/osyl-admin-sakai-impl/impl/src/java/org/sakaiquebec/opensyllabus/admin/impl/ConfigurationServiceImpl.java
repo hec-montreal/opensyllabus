@@ -90,6 +90,10 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     
     private Map <String, String> configFiles = null;
 
+    private String session = null;
+    
+    private String period = null;
+
     String description;
     private List<String> functions;
     private List<String> addedUsers;
@@ -220,6 +224,23 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	return getDate(endDate);
     }
 
+    public String getSession() {
+	return session;
+    }
+
+    private void setSession(String session) {
+	this.session = session;
+    }
+        
+        
+	public String getPeriod() {
+	return period;
+    }
+
+    private void setPeriod(String period) {
+	this.period = period;
+    }        
+    
     /**
      * Called when an observed object changes.
      * 
@@ -368,6 +389,32 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    log.warn("There is no " + fileName + " file ");
 	}
     }
+
+	public void getSessionPeriodConfig() {
+	String fileName = CONFIGFORLDER + FROZENSITESCONFIG;
+	Reference reference = entityManager.newReference(fileName);
+	if (reference != null) {
+		ContentResource resource = null;
+		try {
+			resource = contentHostingService.getResource(reference.getId());
+			if (resource != null)
+				retrieveConfigs(fileName, resource.streamContent());
+
+		} catch (PermissionException e) {
+			log.info("You are not allowed to access this resource");
+		} catch (IdUnusedException e) {
+			if (fileName.contains(FROZENSITESCONFIG)) {
+				setPeriod(null);
+				setSession(null);
+			}
+			log.info("There is no " + fileName + " has been removed ");
+		} catch (TypeException e) {
+			log.info("The resource requested has the wrong type");
+		} catch (ServerOverloadException e) {
+			log.info(e.getMessage());
+		}
+	}
+	}
 
     private void retrieveConfigs(String configurationXml, InputStream stream) {
 	org.w3c.dom.Document document;
