@@ -45,6 +45,10 @@ public interface ConfigurationService {
     public final static String PROGRAMS = "programs";
     
     public final static String SERVENS = "servEns";
+    
+    public final static String SESSION = "session";
+
+    public final static String PERIOD = "period";
 
     // For adding or removing users with a specific role or removing a role in
     // all the course sites
@@ -87,6 +91,9 @@ public interface ConfigurationService {
     public final static String OFFSITESCONFIGFILE = "offSitesConfig.xml";
 
     public final static String FUNCTIONSSCONFIGFILE = "functionsConfig.xml";
+    
+	// File containing the xml configuration of sites to freeze
+	public final static String FROZENSITESCONFIG = "frozenSitesConfig.xml";
 
     public final static String XSL_FILENAME = "courseOutline.xsl";
 
@@ -114,5 +121,11 @@ public interface ConfigurationService {
     public List<String> getDisallowedFunctions();
     
     public String getCourseOutlineXsl();
+
+    public String getSession();
+
+    public String getPeriod();
+    
+    public void getSessionPeriodConfig();
 
 }
