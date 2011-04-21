@@ -297,6 +297,27 @@
 		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
 	</bean>
 
+	<bean id="freezeSitesjob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.FreezeSitesAfterSessionJobImpl">
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+		<property name="cmAdmin"
+			ref="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
+		<property name="cmService"
+			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		<property name="osylSiteService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
+		<property name="adminConfigService"
+			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="eventTrackingService"
+			ref="org.sakaiproject.event.api.EventTrackingService" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />			
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+	</bean>
+
 	<bean id="changePermSynchrojob"
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.FunctionsSynchronisationJobImpl">
 		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
@@ -496,6 +517,24 @@
 
 		<property name="jobName">
 			<value>Role Synchronisation Job</value>
+		</property>
+
+		<property name="schedulerManager">
+			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
+		</property>
+	</bean>
+
+	<bean
+		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.freezeSitesjob"
+		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
+		singleton="true" init-method="init">
+
+		<property name="beanId">
+			<value>freezeSitesjob</value>
+		</property>
+
+		<property name="jobName">
+			<value>Change Permissions to Freeze Sites Synchronisation Job</value>
 		</property>
 
 		<property name="schedulerManager">
