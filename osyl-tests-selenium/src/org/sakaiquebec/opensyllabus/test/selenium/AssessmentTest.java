@@ -276,6 +276,141 @@ public class AssessmentTest extends AbstractOSYLTest {
 	pause();
 	//Add message to log file
 	logFile(ASSESSMENT_TEST, CT_050, PASSED);
+
+	// ---------------------------------------------------------------------------//
+	// Add Document in Assessment Unit //
+	// ---------------------------------------------------------------------------//
+
+	// Click on Assessment section	
+	openEvaluationsSection();
+
+	// Edit first Assessment unit
+	if (inFireFox()) {	
+		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
+	} else { // IE
+		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
+		session().mouseDownAt(locator, "10,10");
+		session().mouseUpAt(locator, "10,10");
+	}
+
+	if (inFireFox()) {	
+		// Add new document
+		clickAddItem("addDocument");
+	
+		// We open Document resource editor
+		session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
+	
+		// We select attendee on dissemination level
+		//session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",   ---It isn't necessary
+		//	"index=0");
+	
+		// We choose randomly a Rubric
+		String selectedRubric3 = getRandomRubric();
+		log("Selecting rubric [" + selectedRubric3 + "]");
+		changeRubric(selectedRubric3);
+	
+		// We type the clickable text
+		String newText12 = timeStamp();
+		session().type("//input[@class=\"Osyl-LabelEditor-TextBox\"]",
+			newText12);
+
+	// Open form to upload a first document
+
+	    session().mouseOver(
+		    "//div[@class=\"Osyl-FileBrowserTopButto"
+			    + "n Osyl-FileBrowserTopButton-up\"]");
+	    session().mouseOver(
+		    "//div[@class=\"Osyl-FileBrowserTopButto"
+			    + "n Osyl-FileBrowserTopButton-up\"]");
+	    session().mouseOver(
+		    "//div[@class=\"Osyl-FileBrowserTopButto"
+			    + "n Osyl-FileBrowserTopButton-up\"]");
+	    session().mouseOut(
+		    "//div[@class=\"Osyl-FileBrowserTopButton"
+			    + " Osyl-FileBrowserTopButton-up-hovering\"]");
+	    session().mouseOut(
+		    "//div[@class=\"Osyl-FileBrowserTopButton"
+			    + " Osyl-FileBrowserTopButton-up-hovering\"]");
+	    session().mouseDown(
+		    "//div[@class=\"Osyl-FileBrowserTopButto"
+			    + "n Osyl-FileBrowserTopButton-up-hovering\"]");
+	    session().mouseUp(
+		    "//div[@class=\"Osyl-FileBrowserTopButton"
+			    + " Osyl-FileBrowserTopButton-down-hovering\"]");
+
+	    // Choose file and close window
+	    session().type(
+			    "uploadFormElement",
+			    "C:\\Documents and Setti"
+				    + "ngs\\clihec3\\Local Settings\\"
+				    + "fichier-excel[1].xlsx");
+	    
+	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
+	    String newText8 = getRandomOption(xpathRole4);
+	    session().select(xpathRole4, newText8);
+	    pause();
+	    // Close window
+	    session().click("//tr[5]/td/table/tbody/tr/td/button");
+	    pause();
+	    // session().click("document.forms[0].elements[2]");
+	  
+	// Open form to upload a second document
+	    session().mouseOver("//td[3]/div/img");
+	    session().mouseDown("//td[3]/div/img");
+	    session().mouseUp("//td[3]/div/img");
+
+	    // Choose file
+	    session()
+		    .type(
+			    "//input[@class=\"gwt-FileUpload\"]",
+			    "C:\\"
+				    + "Documents and Settings\\"
+				    + "clihec3\\Local Settings\\Temporary Internet Files\\"
+				    + "Content.IE5\\K0F6YKYM\\powerpoint[1].ppt");
+	    // We select randomly the rights field
+	    xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
+	    newText8 = getRandomOption(xpathRole4);
+	    session().select(xpathRole4, newText8);
+	    pause();
+	    // Close window
+	    session().click("//tr[5]/td/table/tbody/tr/td/button");
+	    pause();
+
+	//else
+	//{	
+		/*
+		* else { session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
+		* session().focus("//input[@class=\"gwt-FileUpload\"]"); }
+		*/
+		/**
+		String locator = "//div[contains(@title,'Ajouter')]";	
+		session().mouseOver(locator);		
+		session().mouseDownAt(locator, "10,10");
+		session().mouseUpAt(locator, "10,10");
+		**/	
+	//}
+	// Select the excel file in browser window	
+	
+		session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
+			"value= (F" + ")   fichier-excel_1_.xlsx");
+		session().mouseOver("//option[@value=' (F)   fichier-excel_1_.xlsx']");
+		session().focus("//option[@value=' (F)   fichier-excel_1_.xlsx']");
+		session().click("//option[@value=' (F)   fichier-excel_1_.xlsx']");
+		pause();
+
+		// Close Editor
+		session().click(
+			"//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/"
+				+ "tbody/tr/td[1]/button");
+			
+		// Save modifications
+		saveCourseOutline();
+		pause();
+
+		//Add message to log file
+		logFile(ASSESSMENT_TEST, CT_0092, PASSED);
 		
 	// ---------------------------------------------------------------------------//
 	// Add Text in Assessment Unit //
@@ -686,140 +821,6 @@ public class AssessmentTest extends AbstractOSYLTest {
 	    pause();
 
 	 }  
-	// ---------------------------------------------------------------------------//
-	// Add Document in Assessment Unit //
-	// ---------------------------------------------------------------------------//
-
-	// Click on Assessment section	
-	openEvaluationsSection();
-
-	// Edit first Assessment unit
-	if (inFireFox()) {	
-		session().mouseOver("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-		session().mouseDown("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-		session().mouseUp("//tr[" + Val + "]/td/table/tbody/tr/td[1]/div/div");
-	} else { // IE
-		String locator = "//div/div/div[2]/div/div[5]/div/div[" + Val + "]/div/div/div";
-		session().mouseDownAt(locator, "10,10");
-		session().mouseUpAt(locator, "10,10");
-	}
-
-	if (inFireFox()) {	
-		// Add new document
-		clickAddItem("addDocument");
-	
-		// We open Document resource editor
-		session().click("//tr[2]/td/div/table[2]/tbody/tr/td[1]/button");
-	
-		// We select attendee on dissemination level
-		session().select("//table/tbody/tr/td[2]/table/tbody/tr[2]/td/select",
-			"index=0");
-	
-		// We choose randomly a Rubric
-		String selectedRubric3 = getRandomRubric();
-		log("Selecting rubric [" + selectedRubric3 + "]");
-		changeRubric(selectedRubric3);
-	
-		// We type the clickable text
-		String newText12 = timeStamp();
-		session().type("//input[@class=\"Osyl-LabelEditor-TextBox\"]",
-			newText12);
-
-	// Open form to upload a first document
-
-	    session().mouseOver(
-		    "//div[@class=\"Osyl-FileBrowserTopButto"
-			    + "n Osyl-FileBrowserTopButton-up\"]");
-	    session().mouseOver(
-		    "//div[@class=\"Osyl-FileBrowserTopButto"
-			    + "n Osyl-FileBrowserTopButton-up\"]");
-	    session().mouseOver(
-		    "//div[@class=\"Osyl-FileBrowserTopButto"
-			    + "n Osyl-FileBrowserTopButton-up\"]");
-	    session().mouseOut(
-		    "//div[@class=\"Osyl-FileBrowserTopButton"
-			    + " Osyl-FileBrowserTopButton-up-hovering\"]");
-	    session().mouseOut(
-		    "//div[@class=\"Osyl-FileBrowserTopButton"
-			    + " Osyl-FileBrowserTopButton-up-hovering\"]");
-	    session().mouseDown(
-		    "//div[@class=\"Osyl-FileBrowserTopButto"
-			    + "n Osyl-FileBrowserTopButton-up-hovering\"]");
-	    session().mouseUp(
-		    "//div[@class=\"Osyl-FileBrowserTopButton"
-			    + " Osyl-FileBrowserTopButton-down-hovering\"]");
-
-	    // Choose file and close window
-	    session().type(
-			    "uploadFormElement",
-			    "C:\\Documents and Setti"
-				    + "ngs\\clihec3\\Local Settings\\"
-				    + "fichier-excel[1].xlsx");
-	    
-	    String xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
-	    String newText8 = getRandomOption(xpathRole4);
-	    session().select(xpathRole4, newText8);
-	    pause();
-	    // Close window
-	    session().click("//tr[5]/td/table/tbody/tr/td/button");
-	    pause();
-	    // session().click("document.forms[0].elements[2]");
-	  
-	// Open form to upload a second document
-	    session().mouseOver("//td[3]/div/img");
-	    session().mouseDown("//td[3]/div/img");
-	    session().mouseUp("//td[3]/div/img");
-
-	    // Choose file
-	    session()
-		    .type(
-			    "//input[@class=\"gwt-FileUpload\"]",
-			    "C:\\"
-				    + "Documents and Settings\\"
-				    + "clihec3\\Local Settings\\Temporary Internet Files\\"
-				    + "Content.IE5\\K0F6YKYM\\powerpoint[1].ppt");
-	    // We select randomly the rights field
-	    xpathRole4 = "//div[2]/form/table/tbody/tr[4]/td/select";
-	    newText8 = getRandomOption(xpathRole4);
-	    session().select(xpathRole4, newText8);
-	    pause();
-	    // Close window
-	    session().click("//tr[5]/td/table/tbody/tr/td/button");
-	    pause();
-
-	//else
-	//{	
-		/*
-		* else { session().keyPress("//td[3]/table/tbody/tr/td[3]/div","\r");
-		* session().focus("//input[@class=\"gwt-FileUpload\"]"); }
-		*/
-		/**
-		String locator = "//div[contains(@title,'Ajouter')]";	
-		session().mouseOver(locator);		
-		session().mouseDownAt(locator, "10,10");
-		session().mouseUpAt(locator, "10,10");
-		**/	
-	//}
-	// Select the excel file in browser window	
-	
-		session().select("//tr[2]/td/table/tbody/tr[2]/td/select",
-			"value= (F" + ")   fichier-excel_1_.xlsx");
-		session().mouseOver("//option[@value=' (F)   fichier-excel_1_.xlsx']");
-		session().focus("//option[@value=' (F)   fichier-excel_1_.xlsx']");
-		session().click("//option[@value=' (F)   fichier-excel_1_.xlsx']");
-		pause();
-
-		// Close Editor
-		session().click(
-			"//td/table/tbody/tr/td[2]/table/tbody/tr/td/table/"
-				+ "tbody/tr/td[1]/button");
-			
-		// Save modifications
-		saveCourseOutline();
-		pause();
-
-		//Add message to log file
-		logFile(ASSESSMENT_TEST, CT_0092, PASSED);
 		
 		// ---------------------------------------------------------------------------//
 		// Overview //

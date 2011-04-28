@@ -73,6 +73,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     // Current user
     private String userString;
     private String passwordString;
+    private String environment;
     
     // Formatter for timeStamps
     private SimpleDateFormat timeStampFormatter;
@@ -88,6 +89,11 @@ public class AbstractOSYLTest extends SeleneseTestCase {
     protected static final String PASSED = "PASSÉ";
     protected static final String FAILED = "ÉCHEC";
 
+    //Environments
+    protected static final String IC_ORACLE = "icoracle";
+    protected static final String IC_MYSQL = "icmysql";
+    protected static final String ZC2A = "zc2a";
+    
     //Scripts java selenium
     protected static final String OSYL_TEST = "AbstractOSYLTest";
     protected static final String ASSESSMENT_TEST = "AssessmentTest";
@@ -326,6 +332,7 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 
 	public void goToOsylManagerTool() {
 		// open site administration workspace
+		environment = ZC2A;
 		String osylManagerChoice = "//a[@class='icon-sakai-opensyllabus-manager-tool']";
 		session().open("/portal/site/~admin");
 		session().answerOnNextPrompt("osyl123");
@@ -334,19 +341,34 @@ public class AbstractOSYLTest extends SeleneseTestCase {
 			// open course outline manager tool
 			if (userString.equalsIgnoreCase("prof_selenium")) {
 				//Osyl Manager Folder
-				osylManagerChoice = "//ul[@id='siteLinkList']/li[2]/a/span";
+				if (environment.equals(ZC2A)) {
+					//Osyl Manager Menu
+					osylManagerChoice = "//a[@class='icon-sakai-opensyllabus-manager-tool']";					
+				} else {
+					//Because there is a folder
+					osylManagerChoice = "//ul[@id='siteLinkList']/li[2]/a/span";
+				}
 			} else if (userString.equalsIgnoreCase("admin")) {
 				//Osyl Manager Menu
 				osylManagerChoice = "//a[@class='icon-sakai-opensyllabus-manager-tool']"; 
 			}
-			if (inFireFox()) {session().mouseOver(osylManagerChoice);
+			if (inFireFox()) {
+				if (environment.equals(ZC2A)) {
+					String folderElmnt = "//ul[@id='siteLinkList']/li[1]/a/span";
+					session().mouseOver(folderElmnt);
+					session().mouseDown(folderElmnt);
+					session().mouseUp(folderElmnt);
+					session().click(folderElmnt);
+					pause3();
+				}
+				session().mouseOver(osylManagerChoice);
 				session().mouseDown(osylManagerChoice);
 				session().mouseUp(osylManagerChoice);
 				session().click(osylManagerChoice);
-				pause();
 			} else {
 				session().click(osylManagerChoice);
-			}				
+			}
+			pause3();
 		}
 	}
 
