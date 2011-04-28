@@ -137,6 +137,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     private final static String PROP_SITE_TERM_EID = "term_eid";
 
     private final static String PROP_SITE_TITLE = "title";
+    
+    private final static String PROP_SITE_ISFROZEN = "isfrozen";    
 
     /** the web content tool id **/
     private final static String WEB_CONTENT_TOOL_ID = "sakai.iframe";
@@ -1167,6 +1169,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    rp.addProperty(PROP_SITE_TERM, term.getTitle());
 	    rp.addProperty(PROP_SITE_TERM_EID, term.getEid());
 	    rp.addProperty(PROP_SITE_TITLE, courseOff.getTitle());
+	    rp.addProperty(PROP_SITE_ISFROZEN, "false");	    
 
 	    site.setProviderGroupId(courseSectionId);
 	    siteService.save(site);
@@ -1209,6 +1212,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    rp.addProperty(PROP_SITE_TERM, term.getTitle());
 	    rp.addProperty(PROP_SITE_TERM_EID, term.getEid());
 	    rp.addProperty(PROP_SITE_TITLE, courseOff.getTitle());
+	    rp.addProperty(PROP_SITE_ISFROZEN, "false");	    
 
 	    site.setProviderGroupId(courseSectionId);
 	    siteService.save(site);
@@ -1227,7 +1231,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    rp.addProperty(PROP_SITE_TERM, null);
 	    rp.addProperty(PROP_SITE_TERM_EID, null);
 	    rp.addProperty(PROP_SITE_TITLE, null);
-
+	    rp.addProperty(PROP_SITE_ISFROZEN, null);
+	    
 	    site.setProviderGroupId(null);
 	    siteService.save(site);
 	}
@@ -1250,6 +1255,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    rp.addProperty(PROP_SITE_TERM, null);
 	    rp.addProperty(PROP_SITE_TERM_EID, null);
 	    rp.addProperty(PROP_SITE_TITLE, null);
+	    rp.addProperty(PROP_SITE_ISFROZEN, null);	    
 
 	    site.setProviderGroupId(null);
 	    siteService.save(site);
@@ -1439,7 +1445,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	long start = System.currentTimeMillis();
 	Site site = null;
 	COSite info = new COSite();
-
 	try {
 	    site = osylSiteService.getSite(siteId);
 	} catch (IdUnusedException e) {
@@ -1454,13 +1459,14 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 			searchTerm.toLowerCase())
 		&& site.getTitle().toLowerCase().contains(
 			parseAcademicSession(academicSession).toLowerCase())) {
-	    // Retrieve site info
+	    // Retrieve site info		
 	    info.setSiteId(siteId);
 	    info.setSiteName(site.getTitle());
 	    info.setSiteDescription(site.getDescription());
 	    info.setSiteShortDescription(site.getShortDescription());
 	    info.setSiteOwnerLastName(site.getCreatedBy().getLastName());
 	    info.setSiteOwnerName(site.getCreatedBy().getFirstName());
+	    info.setCoIsFrozen(getFrozenValue(site));
 
 	    // Retrieve CM info
 	    String siteProviderId = site.getProviderGroupId();
@@ -1549,7 +1555,19 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	log.trace("getCoAndSiteInfo  " + elapsed(start) + "DONE " + siteId);
 	return info;
     } // getCoAndSiteInfo
-
+    
+	private boolean getFrozenValue(Site site) {
+		ResourcePropertiesEdit rp = site.getPropertiesEdit();
+		boolean coIsFrozen = false;
+		
+		if (rp.getProperty(PROP_SITE_ISFROZEN)!= null) {
+			if (rp.getProperty(PROP_SITE_ISFROZEN).equals("true")) {
+				coIsFrozen = true;
+			}
+		}	
+		return coIsFrozen;
+	}	        
+    
     /** {@inheritDoc} */
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
 	    String academicSession) {
