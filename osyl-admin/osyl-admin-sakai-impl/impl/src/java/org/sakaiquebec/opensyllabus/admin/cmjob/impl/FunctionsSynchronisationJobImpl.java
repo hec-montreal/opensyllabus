@@ -15,6 +15,7 @@ import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.RoleAlreadyDefinedException;
+import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.site.api.Group;
@@ -34,6 +35,8 @@ public class FunctionsSynchronisationJobImpl implements
     private static Log log =
 	    LogFactory.getLog(FunctionsSynchronisationJobImpl.class);
 
+    private final static String PROP_SITE_ISFROZEN = "isfrozen";  
+    
     // ***************** SPRING INJECTION ************************//
     /**
      * The site service used to create new sites: Spring injection
@@ -328,114 +331,118 @@ public class FunctionsSynchronisationJobImpl implements
 	
 	for (int i = 0; i < sites.size(); i++) {
 	    site = sites.get(i);
-	    try {
-		siteRealm =
-		    authzGroupService.getAuthzGroup(REALM_PREFIX
-				+ site.getId());
-	    } catch (GroupNotDefinedException e) {
-		log.error(e.getMessage());
-	    }
 
-	    if (siteRealm != null) {
-		try {
-		    if (functionsRole != null) {
-			// We check if the role with the required
-			// permissions exists in the site
-			roleExists = isRoleInRealm(siteRealm, functionsRole);
-			if (!roleExists) {
-			    addRole(siteRealm, functionsRole, roleDescription,
-				    allowedFunctions, disallowedFunctions);
-			    authzGroupService.save(siteRealm);
-			} else {
+	    if (!getFrozenValue(site)) {
 
-			    Role role = siteRealm.getRole(functionsRole);
-			    role.setDescription(roleDescription);
-			    // We add the new permissions
-			    addPermissions(role, allowedFunctions);
-
-			    // We remove the specified users
-			    removePermissions(role, disallowedFunctions);
-			}
-		    }
-
-		    // We remove the role
-		    if (roleToRemove != null)
-			removeRole(siteRealm, roleToRemove);
 		    try {
-			authzGroupService.save(siteRealm);
-		    } catch (Exception e) {
-			log.error("Unable to save changes for site "
-				+ site.getId() + " : " + e);
-			e.printStackTrace();
-
+			siteRealm =
+			    authzGroupService.getAuthzGroup(REALM_PREFIX
+					+ site.getId());
+		    } catch (GroupNotDefinedException e) {
+			log.error(e.getMessage());
 		    }
-
-		} catch (GroupNotDefinedException e) {
-		    log.error(e.getMessage());
-		} catch (AuthzPermissionException e) {
-		    log.error(e.getMessage());
-		}
-	    }
-
-	    // look if we have a group for the current site
-	    Collection<Group> groups = site.getGroups();
-	    if (groups != null && groups.size() > 0) {
-		Iterator<Group> groupIter = groups.iterator();
-		while (groupIter.hasNext()) {
-		    Group group = groupIter.next();
-		    if (group != null) {
-			String groupId = group.getId();
-			AuthzGroup groupRealm = null;
+	
+		    if (siteRealm != null) {
 			try {
-			    groupRealm =
-				authzGroupService
-					    .getAuthzGroup(REALM_PREFIX
-						    + site.getId()
-						    + GROUP_REALM_PREFIX
-						    + groupId);
-
 			    if (functionsRole != null) {
 				// We check if the role with the required
-				// permissions exists in the group
-				roleExists = isRoleInRealm(groupRealm,
-					functionsRole);
+				// permissions exists in the site
+				roleExists = isRoleInRealm(siteRealm, functionsRole);
 				if (!roleExists) {
-				    addRole(groupRealm, functionsRole,
-					    roleDescription, allowedFunctions,
-					    disallowedFunctions);
-				    authzGroupService.save(groupRealm);
+				    addRole(siteRealm, functionsRole, roleDescription,
+					    allowedFunctions, disallowedFunctions);
+				    authzGroupService.save(siteRealm);
 				} else {
-
-				    Role role =
-					    groupRealm
-						    .getRole(functionsRole);
+	
+				    Role role = siteRealm.getRole(functionsRole);
 				    role.setDescription(roleDescription);
 				    // We add the new permissions
 				    addPermissions(role, allowedFunctions);
-
+	
 				    // We remove the specified users
 				    removePermissions(role, disallowedFunctions);
 				}
 			    }
-
+	
 			    // We remove the role
 			    if (roleToRemove != null)
-				removeRole(groupRealm, roleToRemove);
+				removeRole(siteRealm, roleToRemove);
 			    try {
-				authzGroupService.save(groupRealm);
+				authzGroupService.save(siteRealm);
 			    } catch (Exception e) {
-				log.error("Unable to save changes for group "
-					+ groupId + " : " + e);
+				log.error("Unable to save changes for site "
+					+ site.getId() + " : " + e);
 				e.printStackTrace();
+	
 			    }
-
+	
 			} catch (GroupNotDefinedException e) {
 			    log.error(e.getMessage());
 			} catch (AuthzPermissionException e) {
 			    log.error(e.getMessage());
 			}
 		    }
-		}
+	
+		    // look if we have a group for the current site
+		    Collection<Group> groups = site.getGroups();
+		    if (groups != null && groups.size() > 0) {
+			Iterator<Group> groupIter = groups.iterator();
+			while (groupIter.hasNext()) {
+			    Group group = groupIter.next();
+			    if (group != null) {
+				String groupId = group.getId();
+				AuthzGroup groupRealm = null;
+				try {
+				    groupRealm =
+					authzGroupService
+						    .getAuthzGroup(REALM_PREFIX
+							    + site.getId()
+							    + GROUP_REALM_PREFIX
+							    + groupId);
+	
+				    if (functionsRole != null) {
+					// We check if the role with the required
+					// permissions exists in the group
+					roleExists = isRoleInRealm(groupRealm,
+						functionsRole);
+					if (!roleExists) {
+					    addRole(groupRealm, functionsRole,
+						    roleDescription, allowedFunctions,
+						    disallowedFunctions);
+					    authzGroupService.save(groupRealm);
+					} else {
+	
+					    Role role =
+						    groupRealm
+							    .getRole(functionsRole);
+					    role.setDescription(roleDescription);
+					    // We add the new permissions
+					    addPermissions(role, allowedFunctions);
+	
+					    // We remove the specified users
+					    removePermissions(role, disallowedFunctions);
+					}
+				    }
+	
+				    // We remove the role
+				    if (roleToRemove != null)
+					removeRole(groupRealm, roleToRemove);
+				    try {
+					authzGroupService.save(groupRealm);
+				    } catch (Exception e) {
+					log.error("Unable to save changes for group "
+						+ groupId + " : " + e);
+					e.printStackTrace();
+				    }
+	
+				} catch (GroupNotDefinedException e) {
+				    log.error(e.getMessage());
+				} catch (AuthzPermissionException e) {
+				    log.error(e.getMessage());
+				}
+			    }
+			}
+		    }
 	    }
 	}
     } // processSites
@@ -554,5 +561,16 @@ public class FunctionsSynchronisationJobImpl implements
 		UsageSessionService.EVENT_LOGOUT, null, true));
 	usageSessionService.logout();
     }
-
+    
+	private boolean getFrozenValue(Site site) {
+		ResourcePropertiesEdit rp = site.getPropertiesEdit();
+		boolean coIsFrozen = false;
+		if (rp.getProperty(PROP_SITE_ISFROZEN)!= null) {
+			if (rp.getProperty(PROP_SITE_ISFROZEN).equals("true")) {
+				coIsFrozen = true;
+				log.info("Site frozen: " + site.getTitle());				
+			}
+		}	
+		return coIsFrozen;
+	}
 }
