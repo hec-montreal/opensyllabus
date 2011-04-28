@@ -131,6 +131,12 @@ public class COSite implements java.io.Serializable {
      * true if co is null
      */
     private boolean coIsNull=false; 
+
+    
+    /**
+     * true if co is frozen
+     */
+    private boolean coIsFrozen=false; 
     
     /**
      * Empty constructor.
@@ -380,5 +386,13 @@ public class COSite implements java.io.Serializable {
 
     public boolean isCoIsNull() {
 	return coIsNull;
+    }
+    
+    public void setCoIsFrozen(boolean coIsFrozen) {
+	this.coIsFrozen = coIsFrozen;
+    }
+
+    public boolean isCoIsFrozen() {
+	return coIsFrozen;
     }
 }
