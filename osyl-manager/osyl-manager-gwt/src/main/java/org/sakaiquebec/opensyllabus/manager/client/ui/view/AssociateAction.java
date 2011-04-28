@@ -44,11 +44,12 @@ public class AssociateAction extends OsylManagerAbstractAction {
 	} else {
 	    boolean enable = true;
 	    for (COSite coSite : siteIds) {
-		String parentSite = coSite.getParentSite();
-		
-		if (parentSite != null && !parentSite.equals("")) {
-		    return false;
-		}
+		    if (coSite.isCoIsFrozen())
+				return false;
+			String parentSite = coSite.getParentSite();
+			if (parentSite != null && !parentSite.equals("")) {
+			    return false;
+			}
 	    }
 	    return enable;
 	}

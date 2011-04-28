@@ -100,64 +100,55 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 		    scSiteList.getDataTable().clearAll();
 		    scSiteList.getDataTable().resize(0, 7);
 
-		    if ((result == null || result.isEmpty()) && isShowMessage()) {
-			Window.alert(messages.noCOSite());
-		    } else {
-			TreeMap<String, COSite> sortedMap =
-				new TreeMap<String, COSite>(
-					LocalizedStringComparator.getInstance());
-			for (Iterator<COSite> coSiteIter = result.iterator(); coSiteIter
-				.hasNext();) {
-			    COSite cos = coSiteIter.next();
-			    String siteTitle = cos.getSiteName();
-			    sortedMap.put(siteTitle, cos);
-			}
-			int i = 0;
-			int rowNum = i;
-			DateTimeFormat dtf =
-				DateTimeFormat.getFormat("yyyy/MM/dd HH:mm:ss");
-
-			for (Entry<String, COSite> entry : sortedMap.entrySet()) {
-			    COSite coSite = entry.getValue();
-			    rowNum = scSiteList.getDataTable().insertRow(i);
-			    scSiteList
-				    .getDataTable()
-				    .getRowFormatter()
-				    .setStylePrimaryName(rowNum,
-					    "OsylManager-scrollTable-row");
-			    scSiteList.getDataTable().setHTML(rowNum, 0,
-				    coSite.getSiteName());
-			    scSiteList.getDataTable().setHTML(rowNum, 1,
-				    coSite.getAcademicCareer());
-			    scSiteList.getDataTable().setHTML(
-				    rowNum,
-				    2,
-				    getLocalizedSessionName(coSite
-					    .getCourseSession()));
-			    scSiteList.getDataTable().setHTML(rowNum, 3,
-				    coSite.getCourseName());
-			    scSiteList.getDataTable().setHTML(rowNum, 4,
-				    coSite.getParentSite());
-
-			    if (coSite.getLastPublicationDate() != null) {
-				scSiteList.getDataTable().setHTML(
-					rowNum,
-					5,
-					dtf.format(coSite
-						.getLastPublicationDate()));
-			    }
-
-			    if (coSite.getLastModifiedDate() != null) {
-				scSiteList
-					.getDataTable()
-					.setHTML(
-						rowNum,
-						6,
-						dtf.format(coSite
-							.getLastModifiedDate()));
-			    }
-			    i++;
-			}
+			if ((result == null || result.isEmpty()) && isShowMessage()) {
+				Window.alert(messages.noCOSite());
+			} else {
+				TreeMap<String, COSite> sortedMap =
+					new TreeMap<String, COSite>(
+						LocalizedStringComparator.getInstance());
+				for (Iterator<COSite> coSiteIter = result.iterator(); coSiteIter
+					.hasNext();) {
+				    COSite cos = coSiteIter.next();
+				    String siteTitle = cos.getSiteName();
+				    sortedMap.put(siteTitle, cos);
+				}
+				int i = 0;
+				int rowNum = i;
+				DateTimeFormat dtf =
+					DateTimeFormat.getFormat("yyyy/MM/dd HH:mm:ss");
+	
+				for (Entry<String, COSite> entry : sortedMap.entrySet()) {
+				    COSite coSite = entry.getValue();
+				    rowNum = scSiteList.getDataTable().insertRow(i);
+				    scSiteList
+					    .getDataTable()
+					    .getRowFormatter()
+					    .setStylePrimaryName(rowNum,
+						    "OsylManager-scrollTable-row");
+				    scSiteList.getDataTable().setHTML(rowNum, 0,
+					    coSite.getSiteName());
+				    scSiteList.getDataTable().setHTML(rowNum, 1,
+					    coSite.getAcademicCareer());
+				    scSiteList.getDataTable().setHTML(rowNum, 2,
+					    getLocalizedSessionName(coSite
+						    .getCourseSession()));
+				    scSiteList.getDataTable().setHTML(rowNum, 3,
+					    coSite.getCourseName());
+				    scSiteList.getDataTable().setHTML(rowNum, 4,
+					    coSite.getParentSite());
+	
+					if (coSite.getLastPublicationDate() != null) {
+						scSiteList.getDataTable().setHTML(rowNum, 5,
+								dtf.format(coSite.getLastPublicationDate()));
+					}
+	
+					if (coSite.getLastModifiedDate() != null) {
+						scSiteList.getDataTable().setHTML(rowNum, 6,
+								dtf.format(coSite.getLastModifiedDate()));
+					}
+				
+				    i++;
+				}
 		    }
 		    mainPanel.add(scSiteList);
 		}
@@ -381,11 +372,11 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 		public void onClick(ClickEvent event) {
 		    CheckBox checkBox = (CheckBox) event.getSource();
 
-		    if (checkBox.getValue()) {
-			scSiteList.getDataTable().selectRow(
-				Integer.parseInt(checkBox.getName()), false);
-		    } else {
-		    }
+			if (checkBox.getValue()) {
+				scSiteList.getDataTable().selectRow(
+						Integer.parseInt(checkBox.getName()), false);
+			} else {
+			}
 		}
 
 	    });

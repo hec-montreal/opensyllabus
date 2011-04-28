@@ -41,12 +41,14 @@ public class AttachToCmAction extends OsylManagerAbstractAction {
     public boolean isActionEnableForSites(List<COSite> siteIds) {
 	if (siteIds.size() == 1) {
 	    String siteName = siteIds.get(0).getCourseName();
+	    boolean isFrozen = siteIds.get(0).isCoIsFrozen();
+	    if (isFrozen)
+			return false;
 	    if (siteName != null && !siteName.equals(""))
-		return false;
+	    	return false;
 	    else
-		return true;
+	    	return true;
 	}
-
 	else
 	    return false;
     }
