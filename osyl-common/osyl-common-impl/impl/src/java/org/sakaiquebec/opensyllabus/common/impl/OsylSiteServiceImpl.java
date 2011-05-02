@@ -123,6 +123,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     private static final String ORIGINAL_ANNOUNCEMENT_MESSAGE_REF =
 	    "originalAnnouncementMessageRef";
 
+    private final static String PROP_SITE_ISFROZEN = "isfrozen";  
+    
     private ToolManager toolManager;
 
     private IdManager idManager;
@@ -1009,6 +1011,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    }
 	    co.setShortDescription(site.getShortDescription());
 	    co.setDescription(site.getDescription());
+	    co.setCoIsFrozen(getFrozenValue(site));
 	} catch (IdUnusedException e) {
 	    log.error("Get site info - Id unused exception", e);
 	    // We wrap the exception in a java.lang.Exception. This way our
@@ -2217,4 +2220,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return resourceDao.getPublishCoSiteIds();
     }
 
+	private boolean getFrozenValue(Site site) {
+		ResourcePropertiesEdit rp = site.getPropertiesEdit();
+		boolean coIsFrozen = false;
+		if (rp.getProperty(PROP_SITE_ISFROZEN)!= null) {
+			if (rp.getProperty(PROP_SITE_ISFROZEN).equals("true")) {
+				coIsFrozen = true;
+				log.info("Site frozen: " + site.getTitle());				
+			}
+		}	
+		return coIsFrozen;
+	}
 }
