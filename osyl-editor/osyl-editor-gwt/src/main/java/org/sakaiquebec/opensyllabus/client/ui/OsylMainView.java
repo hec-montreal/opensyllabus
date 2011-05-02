@@ -87,8 +87,12 @@ public class OsylMainView extends OsylViewableComposite implements
 	    getMainPanel().addStyleDependentName("ReadOnly");
 
 	String coTitle = null;
+	boolean coIsFrozen = false;
+	String msgAsFrozenSite = "";
 	try {
 	    coTitle = getController().getCOSerialized().getTitle();
+	    coIsFrozen = getController().getCOSerialized().isCoIsFrozen();
+	    
 	} catch (NullPointerException e) {
 	    coTitle = null;
 	}
@@ -96,6 +100,10 @@ public class OsylMainView extends OsylViewableComposite implements
 	// instance), or an empty title, we simply display "Course Outline".
 	if (null == coTitle || "".equals(coTitle)) {
 	    coTitle = getCoMessage("courseoutline");
+	}
+	// If the site is frozen, we add a message
+	if (coIsFrozen) {
+		msgAsFrozenSite = " - \"" + getCoMessage("thissiteisfrozen") + "\"";
 	}
 		
 	String suffix = "";
@@ -105,7 +113,8 @@ public class OsylMainView extends OsylViewableComposite implements
 	    suffix = getUiMessage("preview_suffix");
 	}
 	String course = coTitle + " " + suffix;
-	course = course.replaceAll("\\.00","");		
+	course = course.replaceAll("\\.00","");
+	course = course + msgAsFrozenSite;
 	courseTitle = new Label(course);
 	courseTitle.setStylePrimaryName("Osyl-MainPanel-Title");
 	getMainPanel().setWidget(row, 0, courseTitle);
