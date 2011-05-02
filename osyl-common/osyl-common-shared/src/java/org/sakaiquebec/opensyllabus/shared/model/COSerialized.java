@@ -119,6 +119,8 @@ public class COSerialized implements java.io.Serializable {
 
     private String configVersion;
 
+    private boolean coIsFrozen = false; 
+
     /**
      * Default constructor
      */
@@ -467,4 +469,12 @@ public class COSerialized implements java.io.Serializable {
     public String getConfigVersion() {
 	return configVersion;
     }
+
+    public void setCoIsFrozen(boolean coIsFrozen) {
+	this.coIsFrozen = coIsFrozen;
+    }
+
+    public boolean isCoIsFrozen() {
+	return coIsFrozen;
+    }    
 }
