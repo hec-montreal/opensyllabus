@@ -93,8 +93,12 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private String session = null;
     
     private String period = null;
+    
+    private String permissions = null;
 
-    String description;
+	private List<String> permissionsFrozen;
+
+	String description;
     private List<String> functions;
     private List<String> addedUsers;
     private List<String> removedUsers;
@@ -239,8 +243,30 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private void setPeriod(String period) {
 	this.period = period;
-    }        
+    }
     
+    public String getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(String permissions) {
+		this.permissionsFrozen = new ArrayList<String>();
+		if (permissions != null && permissions.length() > 0) {
+		    String[] permissionsTable = permissions.split(LIST_DELIMITER);
+		    for (int i = 0; i < permissionsTable.length; i++) {
+			this.permissionsFrozen.add(permissionsTable[i].trim());
+		    }
+		}
+	}
+
+	public List<String> getPermissionsFrozen() {
+		return permissionsFrozen;
+	}
+
+	public void setPermissionsFrozen(List<String> permissionsFrozen) {
+		this.permissionsFrozen = permissionsFrozen;
+	}
+	
     /**
      * Called when an observed object changes.
      * 
@@ -399,13 +425,14 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			resource = contentHostingService.getResource(reference.getId());
 			if (resource != null)
 				retrieveConfigs(fileName, resource.streamContent());
-
 		} catch (PermissionException e) {
 			log.info("You are not allowed to access this resource");
 		} catch (IdUnusedException e) {
 			if (fileName.contains(FROZENSITESCONFIG)) {
 				setPeriod(null);
 				setSession(null);
+				setPermissions(null);
+				setPermissionsFrozen(null);
 			}
 			log.info("There is no " + fileName + " has been removed ");
 		} catch (TypeException e) {
@@ -415,7 +442,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		}
 	}
 	}
-
+	
     private void retrieveConfigs(String configurationXml, InputStream stream) {
 	org.w3c.dom.Document document;
 
@@ -454,7 +481,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		String addedUsers = retrieveParameter(document, ADDEDUSERS);
 		String removedUsers = retrieveParameter(document, REMOVEDUSERS);
 		String functions = retrieveParameter(document, FUNCTIONS);
-
+		
 		setDescription(description);
 		setAddedUsers(addedUsers);
 		setRemovedUsers(removedUsers);
@@ -493,6 +520,16 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		setAllowedFunctions(allowedFunctions);
 		setDisallowedFunctions(disallowedFunctions);
 	    }
+	    
+	    if (configurationXml.contains(FROZENSITESCONFIG)) {
+			String session = retrieveParameter(document, SESSION);
+			String period = retrieveParameter(document, PERIOD);
+			String permissions = retrieveParameter(document, PERMISSIONSFROZEN);
+			setSession(session);
+			setPeriod(period);
+			setPermissions(permissions);
+	    }	
+
 	}
 
     }
