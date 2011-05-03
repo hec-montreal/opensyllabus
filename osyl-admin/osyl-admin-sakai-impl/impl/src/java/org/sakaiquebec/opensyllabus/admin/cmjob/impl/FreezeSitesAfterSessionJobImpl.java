@@ -13,10 +13,8 @@ import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.Role;
-import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
-import org.sakaiproject.coursemanagement.api.CourseManagementAdministration;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
@@ -30,7 +28,6 @@ import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.FreezeSitesAfterSessionJob;
-import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 
 public class FreezeSitesAfterSessionJobImpl implements
 		FreezeSitesAfterSessionJob {
@@ -42,30 +39,14 @@ public class FreezeSitesAfterSessionJobImpl implements
 	
 	private String periodConfig = null;
 	
+	private String permissionsConfig = null;
+
 	private List<String> functionsToPut;
 		
     private List<Site> allSites;    
 	
 
 	// ***************** SPRING INJECTION ************************//
-
-	/**
-	 * Osyl Manager Service.
-	 */   
-    private ContentHostingService contentHostingService;
-
-    public void setContentHostingService(ContentHostingService service) {
-    	contentHostingService = service;
-    }	
-	
-	/**
-	 * Course management administration.
-	 */
-	private CourseManagementAdministration cmAdmin;
-
-	public void setCmAdmin(CourseManagementAdministration cmAdmin) {
-		this.cmAdmin = cmAdmin;
-	}
 
 	/**
 	 * Course management service integration.
@@ -76,15 +57,6 @@ public class FreezeSitesAfterSessionJobImpl implements
 		this.cmService = cmService;
 	}
 
-	/**
-	 * Integration of the OsylSiteService
-	 */
-	private OsylSiteService osylSiteService;
-
-	public void setOsylSiteService(OsylSiteService osylSiteService) {
-		this.osylSiteService = osylSiteService;
-	}
-	
     /**
      * Administration ConfigurationService injection
      */
@@ -158,28 +130,32 @@ public class FreezeSitesAfterSessionJobImpl implements
 	loginToSakai();
 	
 	//-------------------------------------------------------------------
-	//Retrieve session and period from config
+	//Retrieve session, period and a new list of permissions to replace 
+	//original permissions from configuration file
 	//-------------------------------------------------------------------
-	
 	adminConfigService.getSessionPeriodConfig();
     setSessionConfig(adminConfigService.getSession());
 	setPeriodConfig(adminConfigService.getPeriod());
-
+	functionsToPut = adminConfigService.getPermissionsFrozen();
+	
 	log.info("FreezeSitesAfterSessionJobImpl: session from xml:" + getSessionConfig());
-	log.info("FreezeSitesAfterSessionJobImpl: period from xml:" + getPeriodConfig());	
+	log.info("FreezeSitesAfterSessionJobImpl: period from xml:" + getPeriodConfig());
+	for (String f : functionsToPut)  
+	{  
+		log.info("FreezeSitesAfterSessionJobImpl: permission from xml:" + f);
+	}
 
 	if (getSessionConfig() != null && getPeriodConfig()!= null) {	
 		//-------------------------------------------------------------------		
-		//Retrive list of all sites	to evaluate	
+		//Retrieve list of all sites	to evaluate	
 		//-------------------------------------------------------------------
-
 		allSites =
 			siteService.getSites(SiteService.SelectionType.ANY, "course",
 				null, null, SiteService.SortType.NONE, null);
-	
+
 		log.info("FreezeSitesAfterSessionJobImpl: sites to correct:"
 				+ allSites.size());
-	
+		long cont = 0;		
 		Site site = null;
 		AuthzGroup siteRealm = null;
 	    CourseOffering courseOffering = null;
@@ -188,18 +164,13 @@ public class FreezeSitesAfterSessionJobImpl implements
 			site = allSites.get(i);
 			if (site.getProviderGroupId() != null
 					&& site.getProviderGroupId().length() > 0) {
-        		log.info("* Site to verify :" + site.getTitle() + "***");
 				Section section = cmService.getSection(site.getProviderGroupId());
 				String courseOfferingEid = section.getCourseOfferingEid();
 				courseOffering = cmService.getCourseOffering(courseOfferingEid);				
-			    if (courseOffering != null) {
-	        		log.info("** courseOffering to be process :" + courseOffering.getAcademicSession().getEid() + "***");			    	
+			    if (courseOffering != null) {			    	
 			    	courseOffering.getAcademicSession().getEid();
 				    AcademicSession session = courseOffering.getAcademicSession();
-				    //String sessionNameConfig = session + period;
 		    		if (getSessionConfig().equals(getSession(session)) && getPeriodConfig().equals(getPeriod(session))) {
-		    			log.info("-----------------------------------------------------");
-		        		log.info("***The site :" + site.getTitle() + " is valid to process it ***");
 		        	    try {
 		        			siteRealm =
 		        			    authzGroupService.getAuthzGroup(REALM_PREFIX
@@ -208,22 +179,18 @@ public class FreezeSitesAfterSessionJobImpl implements
 	        		    	log.error(e.getMessage());
 	        		    }
 	        		    if (siteRealm != null) {
-						    //-----------------------------------------------------
-					    	replacePermission(siteRealm, listFunctions);								
-							//-----------------------------------------------------
-					    	setFrozenStatus(site, "true");
-							//-----------------------------------------------------						    	
+			        		log.info("*** The site :" + site.getTitle() + " will be frozen ***");	        		    	
+					    	replacePermission(siteRealm, functionsToPut);
+					    	setFrozenStatus(site, YES);
+	        		    	cont++;
 	        		    } else {
 			        		log.info("*** siteRealm is null***");	        		    	
 	        		    }
-		    		}else {
-		        		log.info("The session is :" +getSession(session) + " and the period: " + getPeriod(session) );	        		    	
-        		    } 
-			    } else {
-	        		log.info("*** courseOffering is null ***");	        		    	
-    		    }
+		    		} 
+			    } 
 			}
 		}
+		log.info("Sites frozen : " + cont + "");
 	}//session and period 	
 	else {
 		log.info("The file frozenSitesConfig.xml does not exist in OpenSyllabus Admin Ressources/config.");
@@ -236,16 +203,8 @@ public class FreezeSitesAfterSessionJobImpl implements
 			
     }
 
-	@SuppressWarnings("unchecked")
-	
 	private void init() {
-		//-------------------------------------------------------------------
-		//Retrieve new permissions to replace original permissions
-		for (String f : listFunctions)  
-		{  
-			System.out.println(f);
-			functionsToPut.add(f);
-		}
+
 	}
 
 /**
@@ -269,7 +228,7 @@ public class FreezeSitesAfterSessionJobImpl implements
 			    roleToUpdate.disallowAll();  //getAllowedFunctions / disallowFunctions
 			    roleToUpdate.allowFunctions(functions);
 			    authzGroupService.save(realm);
-				log.info("*** The replacePermission works.");				    
+				log.info("*** The permission was applied ***");				    
 			} 
 		} else {
 			log.info("Roles is null.");
@@ -283,11 +242,10 @@ public class FreezeSitesAfterSessionJobImpl implements
 
 	private void setFrozenStatus(Site site, String value) {
 	// Replace property isfrozen to true
-	// sakai_realm.provider_id not null
+	// if sakai_realm.provider_id not null
 	if (site.getProviderGroupId() != null) {
 		ResourcePropertiesEdit rpr = site.getPropertiesEdit();
 		rpr.addProperty("isfrozen", value);
-		log.info("*** The setFrozenStatus works.");
 		try {
 			siteService.save(site);
 		} catch (IdUnusedException e) {
@@ -367,7 +325,15 @@ public class FreezeSitesAfterSessionJobImpl implements
 	private void setPeriodConfig(String periodConfig) {
 		this.periodConfig = periodConfig;
 	}  
-	
+
+	public String getPermissionsConfig() {
+		return permissionsConfig;
+	}
+
+	public void setPermissionsConfig(String permissionsConfig) {
+		this.permissionsConfig = permissionsConfig;
+	}	
+
 	public List<String> getFunctionsToPut() {
 	    return functionsToPut;
 	}
@@ -375,5 +341,4 @@ public class FreezeSitesAfterSessionJobImpl implements
 	public void setFunctionsToPut(List<String> functionsToPut) {
 	    this.functionsToPut = functionsToPut;
 	}
-
 }
