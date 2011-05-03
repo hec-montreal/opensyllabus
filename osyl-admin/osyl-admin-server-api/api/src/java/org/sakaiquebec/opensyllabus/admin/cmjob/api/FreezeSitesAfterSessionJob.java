@@ -1,10 +1,6 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
-import java.util.List;
-
 import org.quartz.Job;
-
-import java.util.Arrays;
 
 /******************************************************************************
  * $Id: $
@@ -40,13 +36,8 @@ public interface FreezeSitesAfterSessionJob extends Job {
 
 	// These are the functions that will allowed to these sites. If we encounter
 	// any other function the job will try to remove it.
-	
-	public final static String[] FUNCTIONS_TO_ALLOW = {"annc.read", "asn.read", "assessment.questionpool.copy.own",
-			"content.read", "osyl.read", "site.visit", "sitestats.view"};  
-	
-	public final static List<String> listFunctions = Arrays.asList(FUNCTIONS_TO_ALLOW);  
 		
-	// File containing the xml configuration of sites to freeze
+	// File containing the xml configuration of sites to freeze and its permission
 	public final static String FROZENSITESCONFIG = "frozenSitesConfig.xml";
 
     public final static String ADMINSITENAME = "opensyllabusAdmin";
@@ -59,6 +50,10 @@ public interface FreezeSitesAfterSessionJob extends Job {
     // For the official sites xml configuration file
     public final static String SESSION = "session";
     public final static String PERIOD = "period";
+
+    //Do you want to freeze this site?
+    public final static String YES = "true";
+    public final static String NOT = "false";
     
 	// Sessions
 	public final static String SUMMER = "E";
