@@ -92,6 +92,8 @@ public interface ConfigurationService {
 
     public final static String FUNCTIONSSCONFIGFILE = "functionsConfig.xml";
     
+    public final static String PERMISSIONSFROZEN = "permissions";
+    
 	// File containing the xml configuration of sites to freeze
 	public final static String FROZENSITESCONFIG = "frozenSitesConfig.xml";
 
@@ -124,7 +126,9 @@ public interface ConfigurationService {
 
     public String getSession();
 
-    public String getPeriod();
+    public String getPeriod();   
+
+    public List<String> getPermissionsFrozen();
     
     public void getSessionPeriodConfig();
 
