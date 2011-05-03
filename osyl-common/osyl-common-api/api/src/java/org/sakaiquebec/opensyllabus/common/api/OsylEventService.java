@@ -21,7 +21,7 @@
 package org.sakaiquebec.opensyllabus.common.api;
 /**
  *
- * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danetn</a>
+ * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
 public interface OsylEventService {

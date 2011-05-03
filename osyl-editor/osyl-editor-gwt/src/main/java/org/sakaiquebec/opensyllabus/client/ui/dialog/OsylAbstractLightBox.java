@@ -3,8 +3,7 @@
  */
 package org.sakaiquebec.opensyllabus.client.ui.dialog;
 
-import org.gwt.mosaic.core.client.DOM;
-
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Label;

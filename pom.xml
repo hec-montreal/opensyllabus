@@ -27,7 +27,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <gwtVersion>2.1.1</gwtVersion>
+    <gwtVersion>2.3.0</gwtVersion>
     <maven.tomcat.home>${CATALINA_HOME}</maven.tomcat.home>
     <!-- TODO -->
     <maven.test.skip>true</maven.test.skip>
@@ -288,6 +288,11 @@
         <version>${gwtVersion}</version>
       </dependency>
       <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-dev</artifactId>
+        <version>${gwtVersion}</version>
+      </dependency>
+      <dependency>
         <groupId>com.google.gwt-fx</groupId>
         <artifactId>gwt-fx</artifactId>
         <version>0.5.0-MS1</version>
@@ -385,23 +390,23 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>2.1.0</version>
+          <version>2.2.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.4</version>
+          <version>2.5</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins
           </groupId>
           <artifactId>maven-eclipse-plugin</artifactId>
-          <version>2.5.1</version>
+          <version>2.8</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>1.0-beta-1</version>
+          <version>1.0</version>
           <configuration>
             <rules>
               <requireJavaVersion>
@@ -413,7 +418,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-install-plugin</artifactId>
-          <version>2.3</version>
+          <version>2.3.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -432,7 +437,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jxr-plugin</artifactId>
-          <version>2.1</version>
+          <version>2.2</version>
           <configuration>
             <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
           </configuration>
@@ -440,7 +445,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>2.3</version>
+          <version>2.5</version>
           <configuration>
             <encoding>${project.build.sourceEncoding}</encoding>
           </configuration>
@@ -448,7 +453,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>2.0</version>
+          <version>2.2</version>
           <configuration>
             <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
             <outputEncoding>${project.build.sourceEncoding}</outputEncoding>
@@ -457,17 +462,17 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
-          <version>1.2</version>
+          <version>1.4</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.4.3</version>
+          <version>2.8.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
-          <version>2.1-beta-1</version>
+          <version>2.1.1</version>
         </plugin>
 
         <!-- Misc -->
@@ -484,7 +489,19 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>gwt-maven-plugin</artifactId>
-          <version>2.1.0-1</version>
+          <version>2.2.0</version>
+          <dependencies>
+	          <dependency>
+	            <groupId>com.google.gwt</groupId>
+	            <artifactId>gwt-user</artifactId>
+	            <version>${gwtVersion}</version>
+	          </dependency>
+	          <dependency>
+	            <groupId>com.google.gwt</groupId>
+	            <artifactId>gwt-dev</artifactId>
+	            <version>${gwtVersion}</version>
+	          </dependency>
+          </dependencies>
           <configuration>
             <gwtVersion>${gwtVersion}</gwtVersion>
             <extraJvmArgs>-Xmx768m -Xss4096k</extraJvmArgs>
@@ -537,7 +554,7 @@
 	  <plugin>
 		<groupId>org.codehaus.mojo</groupId>
 		<artifactId>cobertura-maven-plugin</artifactId>
-		<version>2.2</version>
+		<version>2.5</version>
 		<configuration>
 			<formats>
 				<format>xml</format>
@@ -548,7 +565,7 @@
 	  <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>2.4.2</version>
+        <version>2.8.1</version>
         <configuration>
         	<!-- see http://www.nabble.com/surefire-forkMode-setting-td22863160.html -->
            	<forkMode>once</forkMode>
@@ -557,12 +574,12 @@
 	  <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
-        <version>2.1</version>
+        <version>2.2</version>
       </plugin>
 	  <plugin>
 	    <groupId>org.apache.maven.plugins</groupId>
 	    <artifactId>maven-project-info-reports-plugin</artifactId>
-	    <version>2.1.1</version>
+	    <version>2.3.1</version>
 	  </plugin>
 	</plugins>
   </reporting>

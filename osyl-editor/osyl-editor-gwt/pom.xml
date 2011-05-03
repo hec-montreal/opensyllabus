@@ -180,7 +180,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
-						<version>2.1</version>
+						<version>2.2.0</version>
 						<executions>
 							<execution>
 								<id>unpack-osyl-configs</id>
@@ -226,7 +226,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-war-plugin</artifactId>
-						<version>2.0.2</version>
+						<version>2.1.1</version>
 						<configuration>
 							<warSourceDirectory>war</warSourceDirectory>
 							<webXml>war/WEB-INF/web.xml</webXml>
@@ -253,7 +253,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
-						<version>2.1</version>
+						<version>2.2.0</version>
 						<executions>
 							<execution>
 								<id>unpack-osyl-configs</id>
@@ -300,7 +300,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-war-plugin</artifactId>
-						<version>2.0.2</version>
+						<version>2.1.1</version>
 						<configuration>
 							<warSourceDirectory>war</warSourceDirectory>
 							<webXml>war/WEB-INF/web.xml</webXml>
@@ -327,7 +327,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
-						<version>2.1</version>
+						<version>2.2.0</version>
 						<executions>
 							<execution>
 								<id>unpack-osyl-configs</id>
@@ -372,7 +372,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-war-plugin</artifactId>
-						<version>2.0.2</version>
+						<version>2.1.1</version>
 						<configuration>
 							<warSourceDirectory>war</warSourceDirectory>
 							<webXml>war/WEB-INF/web.xml</webXml>
