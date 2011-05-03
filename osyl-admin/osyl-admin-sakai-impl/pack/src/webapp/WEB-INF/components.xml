@@ -299,14 +299,8 @@
 
 	<bean id="freezeSitesjob"
 		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.FreezeSitesAfterSessionJobImpl">
-		<property name="contentHostingService"
-			ref="org.sakaiproject.content.api.ContentHostingService" />
-		<property name="cmAdmin"
-			ref="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
 		<property name="cmService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
-		<property name="osylSiteService"
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
 		<property name="adminConfigService"
 			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
 		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
