@@ -129,7 +129,7 @@ public class UnpublishAction extends OsylManagerAbstractAction {
 	for (COSite coSite : siteIds) {
 	    sites += coSite.getSiteId() + ",<br>";
 	}
-	sites=sites.substring(0,sites.length()-6);
+	sites=sites.substring(0,sites.length()-5);
 	String message = "";
 	message +=
 		messages.unpublishAction_unpublish_confirmation().replace(
