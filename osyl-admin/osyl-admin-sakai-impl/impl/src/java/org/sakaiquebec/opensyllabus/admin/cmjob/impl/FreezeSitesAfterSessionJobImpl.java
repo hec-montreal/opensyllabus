@@ -218,17 +218,12 @@ public class FreezeSitesAfterSessionJobImpl implements
 		Set<Role> roles = realm.getRoles();
 		if (roles != null) {
 			log.info(" Roles num: " + roles.size());
-			for (Role role : roles) {	
-				log.info(role.getId());
-			}
 			for (Role role : roles) {				
-				log.info("Role:...getId(): '" + role.getId()+ "'  ***");
-			    Role roleToUpdate = realm.getRole(role.getId());
-				log.info("roleToUpdate:...getId(): '" + roleToUpdate.getId()+ "'  ***");			    
+			    Role roleToUpdate = realm.getRole(role.getId());			    
 			    roleToUpdate.disallowAll();  //getAllowedFunctions / disallowFunctions
 			    roleToUpdate.allowFunctions(functions);
 			    authzGroupService.save(realm);
-				log.info("*** The permission was applied ***");				    
+				log.info("roleToUpdate:...getId(): '" + roleToUpdate.getId()+ "' the permission was applied ***");
 			} 
 		} else {
 			log.info("Roles is null.");
