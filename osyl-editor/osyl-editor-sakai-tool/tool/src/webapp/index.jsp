@@ -45,9 +45,6 @@
 <html>
 	<head>
 
-	<!--  IE9 support -->
-	<meta http-equiv="X-UA-Compatible" content="IE=8" />
-
 	<!-- AJAXSLT -->
 	<script src='<%=request.getContextPath() %>/OsylEditorEntryPoint/js/ajaxslt-0.8.1/util.js' type="text/javascript"></script>
     <script src='<%=request.getContextPath() %>/OsylEditorEntryPoint/js/ajaxslt-0.8.1/xmltoken.js' type="text/javascript"></script>
