@@ -67,6 +67,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COStructureElement;
 import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
+import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.sakaiquebec.opensyllabus.shared.util.UUID;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -175,37 +176,37 @@ public class COModeledServer {
     protected final static String DATEEND_ATTRIBUTE_NAME = "date-end";
 
     /**
-     *Name of result attribute
+     * Name of result attribute
      */
     protected final static String RESULT_ATTRIBUTE_NAME = "result";
 
     /**
-     *Name of scope attribute
+     * Name of scope attribute
      */
     protected final static String SCOPE_ATTRIBUTE_NAME = "scope";
 
     /**
-     *Name of uuid attribute
+     * Name of uuid attribute
      */
     protected final static String ID_ATTRIBUTE_NAME = "id";
 
     /**
-     *Name of uuid parent attribute
+     * Name of uuid parent attribute
      */
     protected final static String ID_PARENT_ATTRIBUTE_NAME = "id_parent";
 
     /**
-     *Name of uuid attribute
+     * Name of uuid attribute
      */
     protected final static String EDITABLE_ATTRIBUTE_NAME = "editable";
 
     /**
-     *Name of person node
+     * Name of person node
      */
     protected final static String PERSON_NODE_NAME = "Person";
 
     /**
-     *Name of modified node
+     * Name of modified node
      */
     protected final static String MODIFIED_NODE_NAME = "modified";
 
@@ -217,28 +218,28 @@ public class COModeledServer {
     private COContent modeledContent;
 
     /**
-     *Name of element node in rules.xml
+     * Name of element node in rules.xml
      */
     protected static final String ELEMENT_NODE_NAME = "element";
 
     /**
-     *Name of restriction pattern attribute in rules.xml
+     * Name of restriction pattern attribute in rules.xml
      */
     protected static final String RESTRICTION_PATTERN_ATTRIBUTE_NAME =
 	    "restrictionpattern";
 
     /**
-     *Name of attribute name in rules.xml
+     * Name of attribute name in rules.xml
      */
     protected static final String NAME_ATTRIBUTE_NAME = "name";
 
     /**
-     *Name of attribute node in rules.xml
+     * Name of attribute node in rules.xml
      */
     protected static final String ATTRIBUTE_NODE_NAME = "attribute";
 
     /**
-     *Name of property type attribute in rules.xml
+     * Name of property type attribute in rules.xml
      */
     protected static final String PROPERTY_TYPE_ATTRIBUTE_NAME = "propertyType";
 
@@ -445,16 +446,14 @@ public class COModeledServer {
 
 	elem.setAccess(map.getNamedItem(ACCESS_ATTRIBUTE_NAME).getNodeValue());
 
-	elem
-		.setId(map.getNamedItem(ID_ATTRIBUTE_NAME) == null ? UUID
+	elem.setId(map.getNamedItem(ID_ATTRIBUTE_NAME) == null ? UUID.uuid()
+		: map.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue().equals("") ? UUID
 			.uuid() : map.getNamedItem(ID_ATTRIBUTE_NAME)
-			.getNodeValue().equals("") ? UUID.uuid() : map
-			.getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue());
+			.getNodeValue());
 
-	elem
-		.setEditable(map.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? true
-			: Boolean.valueOf(map.getNamedItem(
-				EDITABLE_ATTRIBUTE_NAME).getNodeValue()));
+	elem.setEditable(map.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? true
+		: Boolean.valueOf(map.getNamedItem(EDITABLE_ATTRIBUTE_NAME)
+			.getNodeValue()));
 
 	elem.setType(map.getNamedItem(XSI_TYPE_ATTRIBUTE_NAME) == null ? null
 		: map.getNamedItem(XSI_TYPE_ATTRIBUTE_NAME).getNodeValue());
@@ -766,20 +765,21 @@ public class COModeledServer {
 
 	    String visibility =
 		    coContentResProxy.getProperty(COPropertiesType.VISIBILITY);
-	    if (coContentResProxy.getResource().getType().equals(
-		    COContentResourceType.DOCUMENT)) {
+	    if (coContentResProxy.getResource().getType()
+		    .equals(COContentResourceType.DOCUMENT)) {
 		documentVisibilityMap.put(uri.trim(), visibility);
 		allDocumentsVisibilityMap.put(coContentResProxy.getResource()
 			.getId(), visibility);
-	    } else if (coContentResProxy.getResource().getType().equals(
-		    COContentResourceType.BIBLIO_RESOURCE)
+	    } else if (coContentResProxy.getResource().getType()
+		    .equals(COContentResourceType.BIBLIO_RESOURCE)
 		    && uri != null) {
-		documentVisibilityMap.put(uri
-			.substring(0, uri.lastIndexOf("/")), visibility);
+		documentVisibilityMap.put(
+			uri.substring(0, uri.lastIndexOf("/")), visibility);
 		allDocumentsVisibilityMap.put(coContentResProxy.getResource()
 			.getId(), visibility);
 	    }
-	    if (isPublication && visibility!=null && !Boolean.parseBoolean(visibility))
+	    if (isPublication && visibility != null
+		    && !Boolean.parseBoolean(visibility))
 		return null;
 	} catch (Exception e) {
 	    e.printStackTrace();
@@ -818,8 +818,8 @@ public class COModeledServer {
 			coContentRes.getProperty(COPropertiesType.IDENTIFIER,
 				COPropertiesType.IDENTIFIER_TYPE_URI);
 		if (uri != null) {
-		    documentSecurityMap.put(uri.trim(), coContentRes
-			    .getAccess());
+		    documentSecurityMap.put(uri.trim(),
+			    coContentRes.getAccess());
 		    allDocuments.put(coContentRes.getId(), uri.trim());
 		    allDocumentsSecurityMap.put(coContentRes.getId(),
 			    coContentRes.getAccess());
@@ -831,23 +831,22 @@ public class COModeledServer {
 				.addProperty(
 					COPropertiesType.IDENTIFIER,
 					COPropertiesType.IDENTIFIER_TYPE_URI,
-					this
-						.changeDocumentsUrls(
-							coContentRes
-								.getProperty(
-									COPropertiesType.IDENTIFIER,
-									COPropertiesType.IDENTIFIER_TYPE_URI)
-								.trim(),
-							OsylContentService.WORK_DIRECTORY_PREFIX
-								+ "/"
-								+ coSerialized
-									.getSiteId(),
-							OsylContentService.PUBLISH_DIRECTORY_PREFIX
-								+ "/"
-								+ coSerialized
-									.getSiteId()
-								+ "/"
-								+ OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX));
+					this.changeDocumentsUrls(
+						coContentRes
+							.getProperty(
+								COPropertiesType.IDENTIFIER,
+								COPropertiesType.IDENTIFIER_TYPE_URI)
+							.trim(),
+						OsylContentService.WORK_DIRECTORY_PREFIX
+							+ "/"
+							+ coSerialized
+								.getSiteId(),
+						OsylContentService.PUBLISH_DIRECTORY_PREFIX
+							+ "/"
+							+ coSerialized
+								.getSiteId()
+							+ "/"
+							+ OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX));
 
 			coContentRes.setProperties(copProperties);
 		    }
@@ -858,10 +857,11 @@ public class COModeledServer {
 			coContentRes.getProperty(COPropertiesType.IDENTIFIER,
 				COPropertiesType.IDENTIFIER_TYPE_URI);
 		if (uri != null) {
-		    documentSecurityMap.put(uri.substring(0, uri
-			    .lastIndexOf("/")), coContentRes.getAccess());
-		    allDocuments.put(coContentRes.getId(), uri.substring(0, uri
-			    .lastIndexOf("/")));
+		    documentSecurityMap.put(
+			    uri.substring(0, uri.lastIndexOf("/")),
+			    coContentRes.getAccess());
+		    allDocuments.put(coContentRes.getId(),
+			    uri.substring(0, uri.lastIndexOf("/")));
 		    allCitations.put(coContentRes.getId(), uri.trim());
 		    allDocumentsSecurityMap.put(coContentRes.getId(),
 			    coContentRes.getAccess());
@@ -986,15 +986,15 @@ public class COModeledServer {
 	    COModelInterface modelInterface, Document document) {
 
 	try {
-	    element.setAttribute(ACCESS_ATTRIBUTE_NAME, modelInterface
-		    .getAccess());
+	    element.setAttribute(ACCESS_ATTRIBUTE_NAME,
+		    modelInterface.getAccess());
 	    element.setAttribute(ID_ATTRIBUTE_NAME, modelInterface.getId());
-	    element.setAttribute(EDITABLE_ATTRIBUTE_NAME, ""
-		    + modelInterface.isEditable());
+	    element.setAttribute(EDITABLE_ATTRIBUTE_NAME,
+		    "" + modelInterface.isEditable());
 
 	    if (modelInterface.getType() != null) {
-		element.setAttribute(XSI_TYPE_ATTRIBUTE_NAME, modelInterface
-			.getType());
+		element.setAttribute(XSI_TYPE_ATTRIBUTE_NAME,
+			modelInterface.getType());
 	    }
 
 	    if (modelInterface instanceof COElementAbstract) {
@@ -1007,8 +1007,8 @@ public class COModeledServer {
 	    // Properties
 	    if (modelInterface.getProperties() != null
 		    && !modelInterface.getProperties().isEmpty()) {
-		createPropertiesElem(document, element, modelInterface
-			.getProperties());
+		createPropertiesElem(document, element,
+			modelInterface.getProperties());
 	    }
 
 	} catch (Exception e) {
@@ -1062,40 +1062,36 @@ public class COModeledServer {
      */
     private void createChildElement(Document document, Element parent,
 	    COElementAbstract child) {
-	    try {
-		if (child instanceof COContentResourceProxy) {
-		    createChildElement(document, parent,
-			    (COContentResourceProxy) child);
-		} else {
-		    Element element = null;
-		    if (child.isCOStructureElement()) {
-			element =
-				document.createElement(CO_STRUCTURE_NODE_NAME);
-		    } else if (child.isCOUnit()) {
-			element = document.createElement(CO_UNIT_NODE_NAME);
+	try {
+	    if (child instanceof COContentResourceProxy) {
+		createChildElement(document, parent,
+			(COContentResourceProxy) child);
+	    } else {
+		Element element = null;
+		if (child.isCOStructureElement()) {
+		    element = document.createElement(CO_STRUCTURE_NODE_NAME);
+		} else if (child.isCOUnit()) {
+		    element = document.createElement(CO_UNIT_NODE_NAME);
 
-		    } else if (child.isCOUnitStructure()) {
-			element =
-				document
-					.createElement(CO_UNIT_STRUCTURE_NODE_NAME);
+		} else if (child.isCOUnitStructure()) {
+		    element =
+			    document.createElement(CO_UNIT_STRUCTURE_NODE_NAME);
 
-		    } else if (child.isCOUnitContent()) {
-			element =
-				document
-					.createElement(CO_UNIT_CONTENT_NODE_NAME);
-		    }
-		    setCommonAttributesAndProperties(element, child, document);
-
-		    for (int i = 0; i < child.getChildrens().size(); i++) {
-			createChildElement(document, element,
-				(COElementAbstract) child.getChildrens().get(i));
-		    }
-		    parent.appendChild(element);
+		} else if (child.isCOUnitContent()) {
+		    element = document.createElement(CO_UNIT_CONTENT_NODE_NAME);
 		}
+		setCommonAttributesAndProperties(element, child, document);
 
-	    } catch (Exception e) {
-		e.printStackTrace();
+		for (int i = 0; i < child.getChildrens().size(); i++) {
+		    createChildElement(document, element,
+			    (COElementAbstract) child.getChildrens().get(i));
+		}
+		parent.appendChild(element);
 	    }
+
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
     }
 
     /**
@@ -1229,14 +1225,14 @@ public class COModeledServer {
 			resource.getType());
 
 	    }
-	    coContentResourceElem.setAttribute(ACCESS_ATTRIBUTE_NAME, resource
-		    .getAccess());
-	    coContentResourceElem.setAttribute(ID_ATTRIBUTE_NAME, resource
-		    .getId());
+	    coContentResourceElem.setAttribute(ACCESS_ATTRIBUTE_NAME,
+		    resource.getAccess());
+	    coContentResourceElem.setAttribute(ID_ATTRIBUTE_NAME,
+		    resource.getId());
 	    if (resource.getProperties() != null
 		    && !resource.getProperties().isEmpty()) {
-		createPropertiesElem(document, coContentResourceElem, resource
-			.getProperties());
+		createPropertiesElem(document, coContentResourceElem,
+			resource.getProperties());
 	    }
 	    coContentResourceProxyElem.appendChild(coContentResourceElem);
 
@@ -1260,13 +1256,13 @@ public class COModeledServer {
 		document.createElement(COPropertiesType.SEMANTIC_TAG);
 
 	try {
-	    coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME, rubric
-		    .getKey());
+	    coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME,
+		    rubric.getKey());
 	    if (rubric.getUserDefLabel() != null
 		    && rubric.getUserDefLabel().length() > 0) {
 		coContentRubricElem.setAttribute(
-			COPropertiesType.SEMANTIC_TAG_USERDEFLABEL, rubric
-				.getUserDefLabel());
+			COPropertiesType.SEMANTIC_TAG_USERDEFLABEL,
+			rubric.getUserDefLabel());
 	    }
 
 	    Text elemValue = document.createTextNode(rubric.getType());
@@ -1533,10 +1529,21 @@ public class COModeledServer {
 	try {
 	    element.setId(UUID.uuid());
 	    element.setIdParent(null);
+	    element.addProperty(COPropertiesType.MODIFIED,
+		    OsylDateUtils.getCurrentDateAsXmlString());
+	    if (element.isCourseOutlineContent()) {
+		element.addProperty(COPropertiesType.PUBLISHED, "");
+		element.addProperty(COPropertiesType.PREVIOUS_PUBLISHED, "");
+		element.addProperty(COPropertiesType.CREATED,
+			OsylDateUtils.getCurrentDateAsXmlString());
+	    }
 	    if (element.isCOContentResourceProxy()) {
-		changeDocumentsUrlsToFitNewSiteName(
-			(COContentResourceProxy) element, filenameChangesMap);
-		changeEntityCommentsToFitNewSiteName((COContentResourceProxy) element);
+		COContentResourceProxy cocrp = (COContentResourceProxy) element;
+		changeDocumentsUrlsToFitNewSiteName(cocrp, filenameChangesMap);
+		changeEntityCommentsToFitNewSiteName(cocrp);
+		cocrp.getResource().addProperty(COPropertiesType.MODIFIED,
+			OsylDateUtils.getCurrentDateAsXmlString());
+
 	    } else {
 		for (int i = 0; i < element.getChildrens().size(); i++) {
 		    COElementAbstract childElement =
@@ -1612,8 +1619,8 @@ public class COModeledServer {
 		oldSiteName =
 			oldSiteName.substring(0, oldSiteName.indexOf("/"));
 		uri =
-			changeDocumentsUrls(uri, oldSiteName, coSerialized
-				.getSiteId());
+			changeDocumentsUrls(uri, oldSiteName,
+				coSerialized.getSiteId());
 		if (filenameChangesMap != null) {
 		    String filename = uri.substring(uri.lastIndexOf("/") + 1);
 		    String newFilename = filenameChangesMap.get(filename);
@@ -1697,8 +1704,7 @@ public class COModeledServer {
 	    XPathExpression expr;
 
 	    expr =
-		    xpath
-			    .compile("//schema/element[@name='CO']/attribute[@name='propertyType']/@restrictionpattern");
+		    xpath.compile("//schema/element[@name='CO']/attribute[@name='propertyType']/@restrictionpattern");
 
 	    propertyType = (String) expr.evaluate(d, XPathConstants.STRING);
 	} catch (XPathExpressionException e) {

@@ -900,63 +900,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return site.getId();
     }
 
-    /**
-     * Add a collection (similar to a sub-directory) under the resource tool.
-     * 
-     * @param dir name of collection
-     * @param parent where to create it (null means top-level)
-     * @return boolean whether the collection was added or not
-     * @throws Exception
-     */
-    private void addCollection(String dir, Site site) {
-	ContentCollectionEdit collection = null;
-	String id = null;
-
-	id = getSiteReference(site) + dir;
-	id = id.substring(8);
-	try {
-	    if (!collectionExists(id)) {
-		collection = contentHostingService.addCollection(id);
-		ResourcePropertiesEdit fileProperties =
-			collection.getPropertiesEdit();
-		fileProperties.addProperty(
-			ResourceProperties.PROP_DISPLAY_NAME, dir);
-		contentHostingService.commitCollection(collection);
-	    }
-	} catch (Exception e) {
-	    log.warn("Unable to add a collection", e);
-
-	}
-    }
-
-    /**
-     * Tells if a collection is already created in sakai.
-     * 
-     * @param a String of the collection id.
-     * @return boolean whether the collection exists
-     */
-    private boolean collectionExists(String id) {
-	try {
-	    contentHostingService.getCollection(id);
-	} catch (Exception e) {
-	    log.debug("collectionExists [" + id + "]:" + e);
-	    return false;
-	}
-	return true;
-    }
-
-    /**
-     * Get a valid resource reference base site URL to be used in later calls.
-     * 
-     * @return a String of the base URL
-     */
-    private String getSiteReference(Site site) {
-	String siteId = site.getId();
-	String val2 = contentHostingService.getSiteCollection(siteId);
-	String refString = contentHostingService.getReference(val2);
-	return refString;
-    }
-
     /** {@inheritDoc} */
     public String getSiteReference(String siteId) {
 	String val2 = contentHostingService.getSiteCollection(siteId);
