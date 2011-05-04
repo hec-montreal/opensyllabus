@@ -93,6 +93,10 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private String session = null;
     
     private String period = null;
+
+    private String frozenSession = null;
+    
+    private String frozenPeriod = null;
     
     private String permissions = null;
 
@@ -243,6 +247,23 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private void setPeriod(String period) {
 	this.period = period;
+    }
+
+    public String getFrozenSession() {
+	return frozenSession;
+    }
+
+    private void setFrozenSession(String frozenSession) {
+	this.frozenSession = frozenSession;
+    }
+        
+        
+	public String getFrozenPeriod() {
+	return frozenPeriod;
+    }
+
+    private void setFrozenPeriod(String frozenPeriod) {
+	this.frozenPeriod = frozenPeriod;
     }
     
     public String getPermissions() {
@@ -443,6 +464,31 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	}
 	}
 	
+	public void getFrozenSessionPeriodConfig() {
+	String fileName = CONFIGFORLDER + UNFROZENSITESCONFIG;
+	Reference reference = entityManager.newReference(fileName);
+	if (reference != null) {
+		ContentResource resource = null;
+		try {
+			resource = contentHostingService.getResource(reference.getId());
+			if (resource != null)
+				retrieveConfigs(fileName, resource.streamContent());
+		} catch (PermissionException e) {
+			log.info("You are not allowed to access this resource");
+		} catch (IdUnusedException e) {
+			if (fileName.contains(UNFROZENSITESCONFIG)) {
+				setFrozenPeriod(null);
+				setFrozenSession(null);
+			}
+			log.info("There is no " + fileName + " has been removed ");
+		} catch (TypeException e) {
+			log.info("The resource requested has the wrong type");
+		} catch (ServerOverloadException e) {
+			log.info(e.getMessage());
+		}
+	}
+	}	
+	
     private void retrieveConfigs(String configurationXml, InputStream stream) {
 	org.w3c.dom.Document document;
 
@@ -456,69 +502,63 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
 	synchronized (this) {
 	    if (configurationXml.contains(OFFSITESCONFIGFILE)) {
-
-		String courses = retrieveParameter(document, COURSES);
-		String endDate = retrieveParameter(document, ENDDATE);
-		String startDate = retrieveParameter(document, STARTDATE);
-		String programs = retrieveParameter(document, PROGRAMS);
-		String servEns = retrieveParameter(document, SERVENS);
-
-		setCourses(courses);
-		setStartDate(startDate);
-		setEndDate(endDate);
-		setPrograms(programs);
-		setServEns(servEns);
-		
-		
+			String courses = retrieveParameter(document, COURSES);
+			String endDate = retrieveParameter(document, ENDDATE);
+			String startDate = retrieveParameter(document, STARTDATE);
+			String programs = retrieveParameter(document, PROGRAMS);
+			String servEns = retrieveParameter(document, SERVENS);
+	
+			setCourses(courses);
+			setStartDate(startDate);
+			setEndDate(endDate);
+			setPrograms(programs);
+			setServEns(servEns);
 	    }
 
 	    if (configurationXml.contains(ROLEFOLDER)) {
-
-		Map<String, Object> values = new HashMap<String, Object>();
-
-		String role = retrieveParameter(document, ROLE);
-		String description = retrieveParameter(document,DESCRIPTION);
-		String addedUsers = retrieveParameter(document, ADDEDUSERS);
-		String removedUsers = retrieveParameter(document, REMOVEDUSERS);
-		String functions = retrieveParameter(document, FUNCTIONS);
-		
-		setDescription(description);
-		setAddedUsers(addedUsers);
-		setRemovedUsers(removedUsers);
-		setFunctions(functions);
-
-		values.put(ADDEDUSERS, this.addedUsers);
-		values.put(REMOVEDUSERS, this.removedUsers);
-		values.put(FUNCTIONS, this.functions);
-		values.put(DESCRIPTION, this.description);
-
-		if (role != null) {
-		    if (updatedRoles == null)
-			updatedRoles =
-				new HashMap<String, Map<String, Object>>();
-
-		    if (updatedRoles.containsKey(role))
-			updatedRoles.remove(role);
-		    updatedRoles.put(role, values);
-		    configFiles.put(configurationXml, role);
-		}
+			Map<String, Object> values = new HashMap<String, Object>();
+			String role = retrieveParameter(document, ROLE);
+			String description = retrieveParameter(document,DESCRIPTION);
+			String addedUsers = retrieveParameter(document, ADDEDUSERS);
+			String removedUsers = retrieveParameter(document, REMOVEDUSERS);
+			String functions = retrieveParameter(document, FUNCTIONS);
+			
+			setDescription(description);
+			setAddedUsers(addedUsers);
+			setRemovedUsers(removedUsers);
+			setFunctions(functions);
+	
+			values.put(ADDEDUSERS, this.addedUsers);
+			values.put(REMOVEDUSERS, this.removedUsers);
+			values.put(FUNCTIONS, this.functions);
+			values.put(DESCRIPTION, this.description);
+	
+			if (role != null) {
+			    if (updatedRoles == null)
+				updatedRoles =
+					new HashMap<String, Map<String, Object>>();
+	
+			    if (updatedRoles.containsKey(role))
+				updatedRoles.remove(role);
+			    updatedRoles.put(role, values);
+			    configFiles.put(configurationXml, role);
+			}
 	    }
 
 	    if (configurationXml.contains(FUNCTIONSSCONFIGFILE)) {
-
-		String fuctionsRole = retrieveParameter(document, ROLE);
-		String description = retrieveParameter(document, DESCRIPTION);
-		String removedRole = retrieveParameter(document, REMOVED_ROLE);
-		String allowedFunctions =
-			retrieveParameter(document, ALLOWED_FUNCTIONS);
-		String disallowedFunctions =
-			retrieveParameter(document, DISALLOWED_FUNCTIONS);
-
-		setFunctionsRole(fuctionsRole);
-		setDescription(description);
-		setRemovedRole(removedRole);
-		setAllowedFunctions(allowedFunctions);
-		setDisallowedFunctions(disallowedFunctions);
+			String fuctionsRole = retrieveParameter(document, ROLE);
+			String description = retrieveParameter(document, DESCRIPTION);
+			String removedRole = retrieveParameter(document, REMOVED_ROLE);
+			String allowedFunctions =
+				retrieveParameter(document, ALLOWED_FUNCTIONS);
+			String disallowedFunctions =
+				retrieveParameter(document, DISALLOWED_FUNCTIONS);
+	
+			setFunctionsRole(fuctionsRole);
+			setDescription(description);
+			setRemovedRole(removedRole);
+			setAllowedFunctions(allowedFunctions);
+			setDisallowedFunctions(disallowedFunctions);
 	    }
 	    
 	    if (configurationXml.contains(FROZENSITESCONFIG)) {
@@ -530,8 +570,13 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			setPermissions(permissions);
 	    }	
 
+	    if (configurationXml.contains(UNFROZENSITESCONFIG)) {
+			String frozenSession = retrieveParameter(document, SESSION);
+			String frozenPeriod = retrieveParameter(document, PERIOD);
+			setFrozenSession(frozenSession);
+			setFrozenPeriod(frozenPeriod);
+	    }		    
 	}
-
     }
 
     private Date getDate(String date) {
