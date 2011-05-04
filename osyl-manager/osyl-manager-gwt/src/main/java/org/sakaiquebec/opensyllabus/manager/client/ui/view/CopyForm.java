@@ -88,7 +88,9 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 			if (!course.getSiteId().equalsIgnoreCase(
 				selectFromSite.getSiteId())) {
 			    sigleCourseMap.put(course.getSiteId(), course);
-			    suggestionListBox.addItem(course.getSiteId());
+				if (!course.isCoIsFrozen()) {
+				    suggestionListBox.addItem(course.getSiteId());					
+				}
 			}
 		    }
 		    suggestionListBox.setSelectedIndex(0);
