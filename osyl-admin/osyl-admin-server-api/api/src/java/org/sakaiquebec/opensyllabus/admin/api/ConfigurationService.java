@@ -96,7 +96,8 @@ public interface ConfigurationService {
     
 	// File containing the xml configuration of sites to freeze
 	public final static String FROZENSITESCONFIG = "frozenSitesConfig.xml";
-
+	public final static String UNFROZENSITESCONFIG = "unFrozenConfig.xml";
+	
     public final static String XSL_FILENAME = "courseOutline.xsl";
 
     // Parameters used in the official sites synchronisation job
@@ -128,8 +129,14 @@ public interface ConfigurationService {
 
     public String getPeriod();   
 
+    public String getFrozenSession();
+
+    public String getFrozenPeriod();   
+    
     public List<String> getPermissionsFrozen();
     
     public void getSessionPeriodConfig();
+    
+    public void getFrozenSessionPeriodConfig();    
 
 }
