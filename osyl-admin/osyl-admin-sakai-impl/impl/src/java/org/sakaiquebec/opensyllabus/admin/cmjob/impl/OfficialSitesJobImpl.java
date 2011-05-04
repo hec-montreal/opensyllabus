@@ -39,9 +39,9 @@ import org.sakaiproject.coursemanagement.api.Enrollment;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.email.api.ContentType;
 import org.sakaiproject.email.api.EmailAddress;
+import org.sakaiproject.email.api.EmailAddress.RecipientType;
 import org.sakaiproject.email.api.EmailMessage;
 import org.sakaiproject.email.api.EmailService;
-import org.sakaiproject.email.api.EmailAddress.RecipientType;
 import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.site.api.Site;
@@ -261,10 +261,12 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 		boolean createSharable = false;
 		if (hasSharable(sections)) {
 		    boolean sharableExist = false;
-		    try{
-			sharableExist = osylSiteService
-			    .siteExists(getSharableSiteName(courseOff));
-		    }catch(Exception e){}
+		    try {
+			sharableExist =
+				osylSiteService
+					.siteExists(getSharableSiteName(courseOff));
+		    } catch (Exception e) {
+		    }
 		    if (!sharableExist) {
 			sharableName = createShareable(courseOff);
 			compteur++;
@@ -287,10 +289,12 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 			    // We do not create site associated to section 00
 			    if (!sectionId.equalsIgnoreCase(sharableSectionId)) {
 				boolean siteExist = false;
-				try{
-				    siteExist = osylSiteService
-					.siteExists(getSiteName(section));
-				}catch(Exception e){}
+				try {
+				    siteExist =
+					    osylSiteService
+						    .siteExists(getSiteName(section));
+				} catch (Exception e) {
+				}
 				if (!siteExist) {
 				    createSite(section);
 				    String siteName = getSiteName(section);
@@ -323,17 +327,15 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 					    }
 					    EmailMessage message =
 						    new EmailMessage();
-					    message
-						    .setSubject("Création du partageable "+sharableName);
+					    message.setSubject("Création du partageable "
+						    + sharableName);
 					    message.setContentType(ContentType.TEXT_HTML);
-					    message
-						    .setBody("Bonjour,<br>suite à l'ajout d'une section au cours "
-							    + sharableName
-							    + " un partageable a été crée et le cours "
-							    + getSiteName(section)
-							    + " automatiquement rattaché à celui-ci.<br>Si vous ne souhaitez pas utiliser le contenu du partageable, vous pouvez vous détacher de celui-ci à l'aide du gestionnaire de plan de cours");
-					    message
-						    .setFrom("zonecours2@hec.ca");
+					    message.setBody("Bonjour,<br>suite à l'ajout d'une section au cours "
+						    + sharableName
+						    + " un partageable a été crée et le cours "
+						    + getSiteName(section)
+						    + " automatiquement rattaché à celui-ci.<br>Si vous ne souhaitez pas utiliser le contenu du partageable, vous pouvez vous détacher de celui-ci à l'aide du gestionnaire de plan de cours");
+					    message.setFrom("zonecours2@hec.ca");
 					    List<EmailAddress> ccRecipients =
 						    new ArrayList<EmailAddress>();
 					    ccRecipients.add(new EmailAddress(
@@ -346,9 +348,8 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 						    toRecipients);
 					    emailService.send(message);
 					} catch (Exception e) {
-					    log
-						    .error("Could not send email to shareable owners:"
-							    + e);
+					    log.error("Could not send email to shareable owners:"
+						    + e);
 					    e.printStackTrace();
 					}
 
@@ -426,7 +427,8 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
 	for (Section section : sections) {
 	    sectionId = section.getEid();
-	    if (!isDfSection(sectionId) && !sectionId.endsWith(OsylCMJob.SHARABLE_SECTION))
+	    if (!isDfSection(sectionId)
+		    && !sectionId.endsWith(OsylCMJob.SHARABLE_SECTION))
 		nbSections++;
 	}
 
@@ -465,7 +467,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	} else {
 	    sharableSection = cmService.getSection(sharableSectionId);
 	    lang = sharableSection.getLang();
-	    
+
 	}
 
 	try {
@@ -569,7 +571,8 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 	}
 
 	if (canCourseId.matches(".*[^0-9].*")) {
-	    if (canCourseId.endsWith("A") || canCourseId.endsWith("E")) {
+	    if (canCourseId.endsWith("A") || canCourseId.endsWith("E")
+		    || canCourseId.endsWith("R")) {
 		if (canCourseId.length() == 8) {
 		    courseIdFront = canCourseId.substring(0, 2);
 		    courseIdMiddle = canCourseId.substring(2, 5);
