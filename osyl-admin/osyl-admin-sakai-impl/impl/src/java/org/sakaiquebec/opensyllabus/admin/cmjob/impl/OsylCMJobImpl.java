@@ -579,7 +579,9 @@ public class OsylCMJobImpl implements OsylCMJob {
 	DetailSessionsMapEntry sessionEntry = null;
 	String eid = "", title = "", description = "";
 	Date startDate = null, endDate = null;
-
+	List<String> currentSessions = null;
+	AcademicSession aSession = null;
+	
 	Date now = new Date(System.currentTimeMillis());
 	Iterator<DetailSessionsMapEntry> sessions =
 		detailSessionMap.values().iterator();
@@ -601,26 +603,28 @@ public class OsylCMJobImpl implements OsylCMJob {
 	    }
 
 	    if (!cmService.isAcademicSessionDefined(eid)) {
-		cmAdmin.createAcademicSession(eid, title, description,
+		aSession = cmAdmin.createAcademicSession(eid, title, description,
 			startDate, endDate);
-		if ((now.compareTo(startDate)) >= 0
-			&& endDate.compareTo(endDate) <= 0)
-		    cmAdmin.setCurrentAcademicSessions(Arrays
-			    .asList(new String[] { eid }));
 	    } else {
 		// We update
-		AcademicSession aSession = cmService.getAcademicSession(eid);
+		aSession = cmService.getAcademicSession(eid);
 		aSession.setDescription(description);
 		aSession.setEndDate(endDate);
 		aSession.setStartDate(startDate);
 		aSession.setTitle(title);
 		cmAdmin.updateAcademicSession(aSession);
-		if ((now.compareTo(startDate)) >= 0
-			&& now.compareTo(endDate) <= 0)
-		    cmAdmin.setCurrentAcademicSessions(Arrays
-			    .asList(new String[] { eid })); //
-
 	    }
+	    
+	    if (currentSessions == null){
+		currentSessions = new ArrayList <String>();
+	    }
+	    if ((now.compareTo(startDate)) >= 0
+			&& now.compareTo(endDate) <= 0){
+		currentSessions.add(aSession.getEid());		
+	    }else
+		currentSessions.remove(aSession.getEid());
+	    cmAdmin.setCurrentAcademicSessions(currentSessions); 
+	    
 	}
     }
 
