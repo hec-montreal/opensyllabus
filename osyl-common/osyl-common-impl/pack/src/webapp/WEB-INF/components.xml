@@ -149,4 +149,29 @@
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
 	</bean>
 
+	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylDirectoryService"
+		class="org.sakaiquebec.opensyllabus.common.impl.OsylDirectoryServiceImpl"
+		init-method="init" destroy-method="destroy" singleton="true">
+
+		<!-- Sakai dependencies -->
+		<property name="siteService" 
+			ref="org.sakaiproject.site.api.SiteService" />
+		<property name="cmService"
+			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
+		<property name="sessionManager" 
+			ref="org.sakaiproject.tool.api.SessionManager" />
+		<property name="toolManager" 
+			ref="org.sakaiproject.tool.api.ToolManager" />
+		<property name="securityService" 
+			ref="org.sakaiproject.authz.api.SecurityService" />
+		<property name="idManager" 
+			ref="org.sakaiproject.id.api.IdManager" />
+
+		<!-- Osyl dependencies -->
+		<property name="resourceDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
+		<property name="configDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
+	</bean>
+
 </beans>

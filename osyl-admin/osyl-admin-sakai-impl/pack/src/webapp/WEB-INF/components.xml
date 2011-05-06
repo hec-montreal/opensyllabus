@@ -256,8 +256,11 @@
 			ref="org.sakaiproject.event.api.UsageSessionService" />
 		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
 		<property name="emailService" ref="org.sakaiproject.email.api.EmailService" />
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
 		<property name="userDirectoryService"
 			ref="org.sakaiproject.user.api.UserDirectoryService" />
+		<property name="osylDirectoryService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylDirectoryService" />
 	</bean>
 
 	<bean id="offSitesjob"

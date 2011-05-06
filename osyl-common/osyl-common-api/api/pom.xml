@@ -38,5 +38,12 @@
 	  <groupId>org.sakaiproject.kernel</groupId>
 	  <artifactId>sakai-component-manager</artifactId>
 	</dependency>
+	<dependency>
+		<groupId>org.sakaiproject.edu-services.course-management</groupId>
+		<artifactId>coursemanagement-api</artifactId>
+		<version>1.0.6</version>
+		<type>jar</type>
+		<scope>compile</scope>
+	</dependency>
   </dependencies>
 </project>

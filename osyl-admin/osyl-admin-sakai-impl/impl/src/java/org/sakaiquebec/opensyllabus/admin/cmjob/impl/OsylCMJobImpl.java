@@ -41,6 +41,7 @@ import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
 import org.sakaiproject.email.api.EmailService;
 import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.event.api.UsageSessionService;
+import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.Session;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.user.api.UserDirectoryService;
@@ -72,6 +73,7 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.SecretairesMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.SecretairesMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMapEntry;
+import org.sakaiquebec.opensyllabus.common.api.OsylDirectoryService;
 
 /******************************************************************************
  * $Id: $
@@ -195,6 +197,18 @@ public class OsylCMJobImpl implements OsylCMJob {
 	this.cmService = cmService;
     }
 
+    /** The site service to be injected by Spring */
+    private SiteService siteService;
+
+    /**
+     * Sets the <code>SiteService</code>.
+     * 
+     * @param siteService
+     */
+    public void setSiteService(SiteService siteService) {
+	this.siteService = siteService;
+    }
+
     private AuthzGroupService authzGroupService;
 
     public void setAuthzGroupService(AuthzGroupService authzGroupService) {
@@ -212,6 +226,12 @@ public class OsylCMJobImpl implements OsylCMJob {
 
     public void setUsageSessionService(UsageSessionService usageSessionService) {
 	this.usageSessionService = usageSessionService;
+    }
+    
+    private OsylDirectoryService osylDirectoryService;
+    
+    public void setOsylDirectoryService (OsylDirectoryService osylDirectoryService){
+	this.osylDirectoryService = osylDirectoryService;
     }
 
     private SessionManager sessionManager;
@@ -365,7 +385,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 	String category;
 	Set<CanonicalCourse> cc = new HashSet<CanonicalCourse>();
 	Set<CourseOffering> courseOfferingSet = new HashSet<CourseOffering>();
-
+	CanonicalCourse canCourse = null;
+	
 	Iterator<DetailCoursMapEntry> cours =
 		detailCoursMap.values().iterator();
 
@@ -378,18 +399,22 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 	    // create the canonical course
 	    if (!cmService.isCanonicalCourseDefined(canonicalCourseId)) {
-		cc.add(cmAdmin.createCanonicalCourse(canonicalCourseId, title,
-			description));
+		canCourse = cmAdmin.createCanonicalCourse(canonicalCourseId, title,
+			description);
+		cc.add(canCourse);
 		cmAdmin.setEquivalentCanonicalCourses(cc);
 
 	    } else {
 		// we update
-		CanonicalCourse canCourse =
+		canCourse =
 			cmService.getCanonicalCourse(canonicalCourseId);
 		canCourse.setDescription(description);
 		canCourse.setTitle(title);
 	    }
 
+	    //Check wether there is a directory site
+	    hasDirectorySite(canCourse);
+	    
 	    if (cmService.isCourseSetDefined(courseSetId)) {
 		cmAdmin.removeCanonicalCourseFromCourseSet(courseSetId,
 			canonicalCourseId);
@@ -1212,6 +1237,104 @@ public class OsylCMJobImpl implements OsylCMJob {
 	    cmAdmin.removeSectionMembership(userId, sectionId);
 	    log.info("L'utilisateur " + userId + " n'est plus membre du cours "
 		    + sectionId);
+	}
+    }
+
+    /**
+     * Check if we have a directory site associated.
+     * @param canCourse
+     * @return
+     */
+    private boolean hasDirectorySite(CanonicalCourse canCourse) {
+	boolean exists = false;
+	String canCourseId = canCourse.getEid().trim();
+	String siteTitle = getDirectorySiteName(canCourseId);
+	
+	if (!siteExists(siteTitle)) {
+	    try {
+		exists = osylDirectoryService.createSite(siteTitle, canCourse);
+		
+	    } catch (Exception e) {
+		 log.error("The directory site for "
+			    + siteTitle + " has not been created.");
+		 e.printStackTrace();
+	    }
+	    
+	    //TODO: put a more visible message like sending mail
+	    log.info("The directory site for "
+		    + siteTitle + " has been created.");
+	}
+	return exists;
+    }
+
+    /**
+     * Get the name of the directory site associated
+     * @param canCourseId
+     * @return
+     */
+    private String getDirectorySiteName(String canCourseId) {
+	String courseId = null;
+	String courseIdFront = null;
+	String courseIdMiddle = null;
+	String courseIdBack = null;
+
+	if (canCourseId.length() == 7) {
+	    courseIdFront = canCourseId.substring(0, 2);
+	    courseIdMiddle = canCourseId.substring(2, 5);
+	    courseIdBack = canCourseId.substring(5);
+	    courseId =
+		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
+	} else if (canCourseId.length() == 6) {
+	    courseIdFront = canCourseId.substring(0, 1);
+	    courseIdMiddle = canCourseId.substring(1, 4);
+	    courseIdBack = canCourseId.substring(4);
+	    courseId =
+		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
+	} else {
+	    courseId = canCourseId;
+	}
+
+	if (canCourseId.matches(".*[^0-9].*")) {
+	    if (canCourseId.endsWith("A")
+		    || canCourseId.endsWith("E")
+		    || canCourseId.endsWith("R")) {
+		if (canCourseId.length() == 8) {
+		    courseIdFront = canCourseId.substring(0, 2);
+		    courseIdMiddle = canCourseId.substring(2, 5);
+		    courseIdBack = canCourseId.substring(5);
+		    courseId =
+			    courseIdFront + "-" + courseIdMiddle + "-"
+				    + courseIdBack;
+
+		}
+		if (canCourseId.length() == 7) {
+		    courseIdFront = canCourseId.substring(0, 1);
+		    courseIdMiddle = canCourseId.substring(1, 4);
+		    courseIdBack = canCourseId.substring(4);
+		    courseId =
+			    courseIdFront + "-" + courseIdMiddle + "-"
+				    + courseIdBack;
+
+		}
+	    } else
+		courseId = canCourseId;
+	}
+	return courseId;
+    }
+    
+    /**
+     * Check whether a site with the given title exists.
+     *  
+     * @param siteTitle
+     * @return
+     */
+    public boolean siteExists(String siteTitle) {
+	try {
+	    return siteService.siteExists(siteTitle);
+	} catch (Exception e) {
+	    log.error(e.getMessage());
+	    e.printStackTrace();
+	    return false;
 	}
     }
 
