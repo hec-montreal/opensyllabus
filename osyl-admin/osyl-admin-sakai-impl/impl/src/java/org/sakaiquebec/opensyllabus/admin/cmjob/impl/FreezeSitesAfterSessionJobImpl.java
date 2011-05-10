@@ -1,6 +1,7 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +14,6 @@ import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.Role;
-import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.Section;
@@ -29,21 +29,20 @@ import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.FreezeSitesAfterSessionJob;
 
-public class FreezeSitesAfterSessionJobImpl implements
-		FreezeSitesAfterSessionJob {
+public class FreezeSitesAfterSessionJobImpl implements FreezeSitesAfterSessionJob {
 
 	private static Log log = LogFactory
 			.getLog(FreezeSitesAfterSessionJobImpl.class);
 
-	private String sessionConfig = null;
-	
-	private String periodConfig = null;
-	
+	private String sessionIdConfig = null;
+		
 	private String permissionsConfig = null;
 
-	private List<String> functionsToPut;
+	private HashMap<String, List<String>> functionsToPut;
+	
+	private HashMap<String, List<String>> functionsToAllow;
 		
-    private List<Site> allSites;    
+	private List<Site> allSites;    
 	
 
 	// ***************** SPRING INJECTION ************************//
@@ -122,6 +121,7 @@ public class FreezeSitesAfterSessionJobImpl implements
    
 	// ***************** END SPRING INJECTION ************************//
 
+	@SuppressWarnings("unchecked")
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
 	long start = System.currentTimeMillis();
@@ -130,24 +130,19 @@ public class FreezeSitesAfterSessionJobImpl implements
 	loginToSakai();
 	
 	//-------------------------------------------------------------------
-	//Retrieve session, period and a new list of permissions to replace 
-	//original permissions from configuration file
+	//Retrieve a HashMap with sessionId and a list of permissions by role
+	//to replace original permissions from configuration file
 	//-------------------------------------------------------------------
-	adminConfigService.getSessionPeriodConfig();
-    setSessionConfig(adminConfigService.getSession());
-	setPeriodConfig(adminConfigService.getPeriod());
-	functionsToPut = adminConfigService.getPermissionsFrozen();
+	adminConfigService.getConfigToFreeze();
+    setSessionIdConfig(adminConfigService.getSessionId());
+    functionsToPut = adminConfigService.getFrozenFunctionsToAllow();
+	setFunctionsToAllow(functionsToPut);    
 	
-	log.info("FreezeSitesAfterSessionJobImpl: session from xml:" + getSessionConfig());
-	log.info("FreezeSitesAfterSessionJobImpl: period from xml:" + getPeriodConfig());
-	for (String f : functionsToPut)  
-	{  
-		log.info("FreezeSitesAfterSessionJobImpl: permission from xml:" + f);
-	}
-
-	if (getSessionConfig() != null && getPeriodConfig()!= null) {	
+	log.info("FreezeSitesAfterSessionJobImpl: sessionId from xml:" + getSessionIdConfig());
+	
+	if (getSessionIdConfig() != null) {	
 		//-------------------------------------------------------------------		
-		//Retrieve list of all sites	to evaluate	
+		//Retrieve list of all sites to evaluate	
 		//-------------------------------------------------------------------
 		allSites =
 			siteService.getSites(SiteService.SelectionType.ANY, "course",
@@ -168,9 +163,8 @@ public class FreezeSitesAfterSessionJobImpl implements
 				String courseOfferingEid = section.getCourseOfferingEid();
 				courseOffering = cmService.getCourseOffering(courseOfferingEid);				
 			    if (courseOffering != null) {			    	
-			    	courseOffering.getAcademicSession().getEid();
-				    AcademicSession session = courseOffering.getAcademicSession();
-		    		if (getSessionConfig().equals(getSession(session)) && getPeriodConfig().equals(getPeriod(session))) {
+			    	String sessionId = courseOffering.getAcademicSession().getEid();			    	
+		    		if (getSessionIdConfig().equals(sessionId)) {
 		        	    try {
 		        			siteRealm =
 		        			    authzGroupService.getAuthzGroup(REALM_PREFIX
@@ -195,7 +189,7 @@ public class FreezeSitesAfterSessionJobImpl implements
 	else {
 		log.info("The file frozenSitesConfig.xml does not exist in OpenSyllabus Admin Ressources/config.");
 	}	
-
+	
 	//-------------------------------------------------------------------
 	log.info("FreezeSitesAfterSessionJobImpl: completed in "
 			+ (System.currentTimeMillis() - start) + " ms");
@@ -203,27 +197,27 @@ public class FreezeSitesAfterSessionJobImpl implements
 			
     }
 
-	private void init() {
-
-	}
-
-/**
- * It replaces original permissions to permissions to read and view
- * 
- * @param siteRealm
- */
-	
-  private void replacePermission(AuthzGroup realm, List<String> functions) {
+  private void replacePermission(AuthzGroup realm, 	HashMap<String, List<String>> functions) {
 	try {	    
 		Set<Role> roles = realm.getRoles();
 		if (roles != null) {
 			log.info(" Roles num: " + roles.size());
-			for (Role role : roles) {				
-			    Role roleToUpdate = realm.getRole(role.getId());			    
-			    roleToUpdate.disallowAll();  //getAllowedFunctions / disallowFunctions
-			    roleToUpdate.allowFunctions(functions);
-			    authzGroupService.save(realm);
-				log.info("roleToUpdate:...getId(): '" + roleToUpdate.getId()+ "' the permission was applied ***");
+			for (Role role : roles) {
+			    Role roleToUpdate = realm.getRole(role.getId());				
+				Set  st = functions.keySet();
+				Iterator iterator = st.iterator();				  
+				while (iterator.hasNext()) {
+					String keyRole = (String) iterator.next();
+					log.info("FreezeSitesAfterSessionJobImpl: Role " + keyRole + " has " + functions.get(keyRole).size() + "functions **");
+					if (roleToUpdate.getId().equalsIgnoreCase(keyRole)){
+						List<String> newPermissions = functions.get(keyRole);
+						Set<String> oldPermissions = roleToUpdate.getAllowedFunctions();						
+					    roleToUpdate.disallowFunctions(oldPermissions);
+					    roleToUpdate.allowFunctions(newPermissions);
+					    authzGroupService.save(realm);
+						log.info("roleToUpdate:...getId(): '" + roleToUpdate.getId()+ "' the permission was applied ***");						
+					}					  
+				}
 			} 
 		} else {
 			log.info("Roles is null.");
@@ -234,7 +228,7 @@ public class FreezeSitesAfterSessionJobImpl implements
 	    log.error(e.getMessage());
 	}
   	}	   
-
+	  
 	private void setFrozenStatus(Site site, String value) {
 	// Replace property isfrozen to true
 	// if sakai_realm.provider_id not null
@@ -252,29 +246,6 @@ public class FreezeSitesAfterSessionJobImpl implements
 		log.info("The site " + site.getTitle() + " has been upgraded with isfrozen");
 	}
 	}  
- 
-     
-    private String getPeriod(AcademicSession session) {
-    	String sessionId = session.getEid();
-    	String period = sessionId.substring(4, sessionId.length());
-    	return period;
-    }    
-    
-    private String getSession(AcademicSession session) {
-    	String sessionName = null;
-    	String sessionId = session.getEid();
-    	Date startDate = session.getStartDate();
-    	String year = startDate.toString().substring(0, 4);
-
-    	if ((sessionId.charAt(3)) == '1')
-    	    sessionName = WINTER + year;
-    	if ((sessionId.charAt(3)) == '2')
-    	    sessionName = SUMMER + year;
-    	if ((sessionId.charAt(3)) == '3')
-    	    sessionName = FALL + year;
-
-    	return sessionName;
-   }
     
 	/**
 	 * Logs in the sakai environment
@@ -305,21 +276,13 @@ public class FreezeSitesAfterSessionJobImpl implements
 		usageSessionService.logout();
 	}
 	
-	public String getSessionConfig() {
-		return sessionConfig;
+	public String getSessionIdConfig() {
+		return sessionIdConfig;
 	}
 
-	private void setSessionConfig(String sessionConfig) {
-		this.sessionConfig = sessionConfig;
+	private void setSessionIdConfig(String sessionIdConfig) {
+		this.sessionIdConfig = sessionIdConfig;
 	}
-
-	public String getPeriodConfig() {
-		return periodConfig;
-	}
-
-	private void setPeriodConfig(String periodConfig) {
-		this.periodConfig = periodConfig;
-	}  
 
 	public String getPermissionsConfig() {
 		return permissionsConfig;
@@ -328,12 +291,20 @@ public class FreezeSitesAfterSessionJobImpl implements
 	public void setPermissionsConfig(String permissionsConfig) {
 		this.permissionsConfig = permissionsConfig;
 	}	
-
-	public List<String> getFunctionsToPut() {
+		
+	public HashMap<String, List<String>> getFunctionsToPut() {
 	    return functionsToPut;
 	}
 
-	public void setFunctionsToPut(List<String> functionsToPut) {
+	public void setFunctionsToPut(HashMap<String, List<String>> functionsToPut) {
 	    this.functionsToPut = functionsToPut;
 	}
+	
+    public HashMap<String, List<String>> getFunctionsToAllow() {
+		return functionsToAllow;
+	}
+
+	public void setFunctionsToAllow(HashMap<String, List<String>> functionsToAllow) {
+		this.functionsToAllow = functionsToAllow;
+	}	
 }

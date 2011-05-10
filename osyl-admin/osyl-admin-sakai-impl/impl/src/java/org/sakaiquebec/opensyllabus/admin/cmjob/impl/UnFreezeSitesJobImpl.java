@@ -35,9 +35,7 @@ public class UnFreezeSitesJobImpl implements
 	private static Log log = LogFactory
 			.getLog(UnFreezeSitesJobImpl.class);
 
-	private String sessionConfig = null;
-	
-	private String periodConfig = null;
+	private String sessionIdConfig = null;
 	
 	private String permissionsConfig = null;
 
@@ -133,15 +131,12 @@ public class UnFreezeSitesJobImpl implements
 	//Retrieve session and period for frozen sites to replace permissions 
 	//to original permissions for each role
 	//-------------------------------------------------------------------
-	adminConfigService.getFrozenSessionPeriodConfig();
-    setSessionConfig(adminConfigService.getFrozenSession());
-	setPeriodConfig(adminConfigService.getFrozenPeriod());
+	adminConfigService.getFrozenSessionIdConfig();
+    setSessionIdConfig(adminConfigService.getSessionId());
 	
-	log.info("UnFreezeSitesAfterSessionJobImpl: session from xml:" + getSessionConfig());
-	log.info("UnFreezeSitesAfterSessionJobImpl: period from xml:" + getPeriodConfig());	
+	log.info("UnFreezeSitesAfterSessionJobImpl: session from xml:" + getSessionIdConfig());
 
-
-	if (getSessionConfig() != null && getPeriodConfig()!= null) {	
+	if (getSessionIdConfig() != null) {
 		//-------------------------------------------------------------------		
 		//Retrieve list of all site to evaluate	
 		//-------------------------------------------------------------------
@@ -166,10 +161,9 @@ public class UnFreezeSitesJobImpl implements
 				String courseOfferingEid = section.getCourseOfferingEid();
 				courseOffering = cmService.getCourseOffering(courseOfferingEid);				
 			    if (courseOffering != null) {		    	
-			    	courseOffering.getAcademicSession().getEid();
-				    AcademicSession session = courseOffering.getAcademicSession();
-				    //If the site has a session and period from configuration file
-		    		if (getSessionConfig().equals(getSession(session)) && getPeriodConfig().equals(getPeriod(session))) {
+			    	String sessionId = courseOffering.getAcademicSession().getEid();
+				    //If the site has a session and period from configuration file			    	
+		    		if (getSessionIdConfig().equals(sessionId)) {			    	
 		        	    try {
 								tmplRealm = authzGroupService
 										.getAuthzGroup(TEMPLATE_ID);
@@ -240,9 +234,10 @@ private boolean getFrozenValue(Site site) {
 				for (Role roleTmpl : rolesTmpl) {
 					Role roleFromTmpl = realm.getRole(roleTmpl.getId());
 					if (roleToUpdate.getId().equalsIgnoreCase(roleFromTmpl.getId())) {
-						roleToUpdate.disallowAll();
-						Set<String> permissions = roleTmpl.getAllowedFunctions();
-						roleToUpdate.allowFunctions(permissions);
+						Set<String> lastPermissions = roleToUpdate.getAllowedFunctions();
+						roleToUpdate.disallowFunctions(lastPermissions);
+						Set<String> oldPermissions = roleTmpl.getAllowedFunctions();
+						roleToUpdate.allowFunctions(oldPermissions);
 					    authzGroupService.save(realm);
 						log.info("roleToUpdate:...getId(): '" + roleToUpdate.getId()+ "' the permission was applied ***");						
 					}
@@ -278,28 +273,6 @@ private boolean getFrozenValue(Site site) {
 	}  
  
      
-    private String getPeriod(AcademicSession session) {
-    	String sessionId = session.getEid();
-    	String period = sessionId.substring(4, sessionId.length());
-    	return period;
-    }    
-    
-    private String getSession(AcademicSession session) {
-    	String sessionName = null;
-    	String sessionId = session.getEid();
-    	Date startDate = session.getStartDate();
-    	String year = startDate.toString().substring(0, 4);
-
-    	if ((sessionId.charAt(3)) == '1')
-    	    sessionName = WINTER + year;
-    	if ((sessionId.charAt(3)) == '2')
-    	    sessionName = SUMMER + year;
-    	if ((sessionId.charAt(3)) == '3')
-    	    sessionName = FALL + year;
-
-    	return sessionName;
-   }
-    
 	/**
 	 * Logs in the sakai environment
 	 */
@@ -329,22 +302,14 @@ private boolean getFrozenValue(Site site) {
 		usageSessionService.logout();
 	}
 	
-	public String getSessionConfig() {
-		return sessionConfig;
+	public String getSessionIdConfig() {
+		return sessionIdConfig;
 	}
 
-	private void setSessionConfig(String sessionConfig) {
-		this.sessionConfig = sessionConfig;
+	private void setSessionIdConfig(String sessionIdConfig) {
+		this.sessionIdConfig = sessionIdConfig;
 	}
-
-	public String getPeriodConfig() {
-		return periodConfig;
-	}
-
-	private void setPeriodConfig(String periodConfig) {
-		this.periodConfig = periodConfig;
-	}  
-
+	
 	public String getPermissionsConfig() {
 		return permissionsConfig;
 	}
