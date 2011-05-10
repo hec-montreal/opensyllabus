@@ -21,8 +21,10 @@
 package org.sakaiquebec.opensyllabus.admin.api;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This class is used to retrieved informations saved in the config.xml file.
@@ -46,10 +48,17 @@ public interface ConfigurationService {
     
     public final static String SERVENS = "servEns";
     
-    public final static String SESSION = "session";
+    // For updating all courses sites to frozen sites
+    public final static String FROZENPERMISSIONS = "permissions";
+      
+    public final static String SESSIONID = "sessionId";
 
-    public final static String PERIOD = "period";
-
+    public final static String ROLESET = "role";
+    
+    public final static String ROLEID = "id";
+    
+    public final static String PERMISSIONS = "permissions";    
+    
     // For adding or removing users with a specific role or removing a role in
     // all the course sites
     public final static String ROLE = "role";
@@ -91,9 +100,7 @@ public interface ConfigurationService {
     public final static String OFFSITESCONFIGFILE = "offSitesConfig.xml";
 
     public final static String FUNCTIONSSCONFIGFILE = "functionsConfig.xml";
-    
-    public final static String PERMISSIONSFROZEN = "permissions";
-    
+        
 	// File containing the xml configuration of sites to freeze
 	public final static String FROZENSITESCONFIG = "frozenSitesConfig.xml";
 	public final static String UNFROZENSITESCONFIG = "unFrozenConfig.xml";
@@ -124,19 +131,14 @@ public interface ConfigurationService {
     public List<String> getDisallowedFunctions();
     
     public String getCourseOutlineXsl();
-
-    public String getSession();
-
-    public String getPeriod();   
-
-    public String getFrozenSession();
-
-    public String getFrozenPeriod();   
     
-    public List<String> getPermissionsFrozen();
-    
-    public void getSessionPeriodConfig();
-    
-    public void getFrozenSessionPeriodConfig();    
+    public String getSessionId();    
+   
+    public List<String> getFrozenPermissions();
 
+	public HashMap<String, List<String>> getFrozenFunctionsToAllow();
+	
+    public void getFrozenSessionIdConfig();
+    
+    public void getConfigToFreeze();
 }
