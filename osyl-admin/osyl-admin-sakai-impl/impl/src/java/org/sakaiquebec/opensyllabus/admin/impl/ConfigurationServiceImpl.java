@@ -27,10 +27,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -90,18 +92,16 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     
     private Map <String, String> configFiles = null;
 
-    private String session = null;
+    private String sessionId = null;
     
-    private String period = null;
-
-    private String frozenSession = null;
-    
-    private String frozenPeriod = null;
-    
+    private String roleId = null;
+           
     private String permissions = null;
 
-	private List<String> permissionsFrozen;
+	private List<String> frozenPermissions;
 
+    private HashMap<String, List<String>> frozenFunctionsToAllow;
+    
 	String description;
     private List<String> functions;
     private List<String> addedUsers;
@@ -232,61 +232,52 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	return getDate(endDate);
     }
 
-    public String getSession() {
-	return session;
-    }
+    public String getSessionId() {
+		return sessionId;
+	}
 
-    private void setSession(String session) {
-	this.session = session;
-    }
-        
-        
-	public String getPeriod() {
-	return period;
-    }
-
-    private void setPeriod(String period) {
-	this.period = period;
-    }
-
-    public String getFrozenSession() {
-	return frozenSession;
-    }
-
-    private void setFrozenSession(String frozenSession) {
-	this.frozenSession = frozenSession;
-    }
-        
-        
-	public String getFrozenPeriod() {
-	return frozenPeriod;
-    }
-
-    private void setFrozenPeriod(String frozenPeriod) {
-	this.frozenPeriod = frozenPeriod;
-    }
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}    
     
+	public String getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
+	    
     public String getPermissions() {
 		return permissions;
 	}
 
 	public void setPermissions(String permissions) {
-		this.permissionsFrozen = new ArrayList<String>();
+		this.frozenPermissions = new ArrayList<String>();
 		if (permissions != null && permissions.length() > 0) {
 		    String[] permissionsTable = permissions.split(LIST_DELIMITER);
 		    for (int i = 0; i < permissionsTable.length; i++) {
-			this.permissionsFrozen.add(permissionsTable[i].trim());
+			this.frozenPermissions.add(permissionsTable[i].trim());
 		    }
 		}
 	}
 
-	public List<String> getPermissionsFrozen() {
-		return permissionsFrozen;
+	public List<String> getFrozenPermissions() {
+		return frozenPermissions;
 	}
 
-	public void setPermissionsFrozen(List<String> permissionsFrozen) {
-		this.permissionsFrozen = permissionsFrozen;
+	public void setFrozenPermissions(List<String> frozenPermissions) {
+		this.frozenPermissions = frozenPermissions;
 	}
+	
+	public HashMap<String, List<String>> getFrozenFunctionsToAllow() {
+		return frozenFunctionsToAllow;
+	}
+
+	public void setFrozenFunctionsToAllow(
+			HashMap<String, List<String>> frozenFunctionsToAllow) {
+		this.frozenFunctionsToAllow = frozenFunctionsToAllow;
+	}	
 	
     /**
      * Called when an observed object changes.
@@ -436,35 +427,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    log.warn("There is no " + fileName + " file ");
 	}
     }
-
-	public void getSessionPeriodConfig() {
-	String fileName = CONFIGFORLDER + FROZENSITESCONFIG;
-	Reference reference = entityManager.newReference(fileName);
-	if (reference != null) {
-		ContentResource resource = null;
-		try {
-			resource = contentHostingService.getResource(reference.getId());
-			if (resource != null)
-				retrieveConfigs(fileName, resource.streamContent());
-		} catch (PermissionException e) {
-			log.info("You are not allowed to access this resource");
-		} catch (IdUnusedException e) {
-			if (fileName.contains(FROZENSITESCONFIG)) {
-				setPeriod(null);
-				setSession(null);
-				setPermissions(null);
-				setPermissionsFrozen(null);
-			}
-			log.info("There is no " + fileName + " has been removed ");
-		} catch (TypeException e) {
-			log.info("The resource requested has the wrong type");
-		} catch (ServerOverloadException e) {
-			log.info(e.getMessage());
-		}
-	}
-	}
 	
-	public void getFrozenSessionPeriodConfig() {
+	public void getFrozenSessionIdConfig() {
 	String fileName = CONFIGFORLDER + UNFROZENSITESCONFIG;
 	Reference reference = entityManager.newReference(fileName);
 	if (reference != null) {
@@ -477,8 +441,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			log.info("You are not allowed to access this resource");
 		} catch (IdUnusedException e) {
 			if (fileName.contains(UNFROZENSITESCONFIG)) {
-				setFrozenPeriod(null);
-				setFrozenSession(null);
+				setSessionId(null);
 			}
 			log.info("There is no " + fileName + " has been removed ");
 		} catch (TypeException e) {
@@ -488,6 +451,32 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		}
 	}
 	}	
+
+	public void getConfigToFreeze() {
+		String fileName = CONFIGFORLDER + FROZENSITESCONFIG;
+		Reference reference = entityManager.newReference(fileName);
+		if (reference != null) {
+			ContentResource resource = null;
+			try {
+				resource = contentHostingService.getResource(reference.getId());
+				if (resource != null)
+					retrieveConfigs(fileName, resource.streamContent());
+			} catch (PermissionException e) {
+				log.info("You are not allowed to access this resource");
+			} catch (IdUnusedException e) {
+				if (fileName.contains(FROZENSITESCONFIG)) {
+					setSessionId(null);
+					setFrozenFunctionsToAllow(null);
+				}
+				log.info("There is no " + fileName + " has been removed ");
+			} catch (TypeException e) {
+				log.info("The resource requested has the wrong type");
+			} catch (ServerOverloadException e) {
+				log.info(e.getMessage());
+			}
+		}
+	}
+	
 	
     private void retrieveConfigs(String configurationXml, InputStream stream) {
 	org.w3c.dom.Document document;
@@ -560,25 +549,44 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			setAllowedFunctions(allowedFunctions);
 			setDisallowedFunctions(disallowedFunctions);
 	    }
-	    
-	    if (configurationXml.contains(FROZENSITESCONFIG)) {
-			String session = retrieveParameter(document, SESSION);
-			String period = retrieveParameter(document, PERIOD);
-			String permissions = retrieveParameter(document, PERMISSIONSFROZEN);
-			setSession(session);
-			setPeriod(period);
-			setPermissions(permissions);
-	    }	
 
+	    if (configurationXml.contains(FROZENSITESCONFIG)) {			
+			String sessionId = retrieveParameter(document, SESSIONID);
+			setSessionId(sessionId);
+			setFrozenFunctionsToAllow(getFrozenPermissionsByRole(document));
+	    }	
+	    
 	    if (configurationXml.contains(UNFROZENSITESCONFIG)) {
-			String frozenSession = retrieveParameter(document, SESSION);
-			String frozenPeriod = retrieveParameter(document, PERIOD);
-			setFrozenSession(frozenSession);
-			setFrozenPeriod(frozenPeriod);
+			String frozenSessionId = retrieveParameter(document, SESSIONID);
+			setSessionId(frozenSessionId);
 	    }		    
 	}
     }
 
+    
+    private HashMap<String, List<String>> getFrozenPermissionsByRole(Document document) {
+    	HashMap<String, List<String>> rolesToFrozen = new HashMap<String, List<String>>();
+    	//get the root element
+		Element docEle = document.getDocumentElement();
+		//get a nodelist of elements
+		NodeList nl = docEle.getElementsByTagName(ROLESET);
+		if(nl != null && nl.getLength() > 0) {
+			for(int i = 0 ; i < nl.getLength();i++) {
+				//get the role element
+				Element element = (Element)nl.item(i);
+				//get the role object
+				String roleId = element.getAttribute(ROLEID);
+				String permissions = retrieveParameter(document, FROZENPERMISSIONS);
+				setPermissions(permissions);
+				//add it to list
+				List<String> permissionsAllowed = this.getFrozenPermissions();
+				rolesToFrozen.put(roleId, permissionsAllowed);
+			}
+			return rolesToFrozen;
+		}
+		return rolesToFrozen;
+    }
+	
     private Date getDate(String date) {
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 	Date convertedDate = null;
