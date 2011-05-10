@@ -37,29 +37,14 @@ public interface FreezeSitesAfterSessionJob extends Job {
 	// These are the functions that will allowed to these sites. If we encounter
 	// any other function the job will try to remove it.
 		
-	// File containing the xml configuration of sites to freeze and its permission
-	public final static String FROZENSITESCONFIG = "frozenSitesConfig.xml";
-
-    public final static String ADMINSITENAME = "opensyllabusAdmin";
-
 	//Folder that contains all the configuration files
 	public final static String ADMIN_CONTENT_FOLDER = "/content/group/opensyllabusAdmin/";
     public final static String CONFIGFORLDER = ADMIN_CONTENT_FOLDER + "config/";
-
-    // Tags used in the xml files
-    // For the official sites xml configuration file
-    public final static String SESSION = "session";
-    public final static String PERIOD = "period";
 
     //Do you want to freeze this site?
     public final static String YES = "true";
     public final static String NOT = "false";
     
-	// Sessions
-	public final static String SUMMER = "E";
-	public final static String WINTER = "H";
-	public final static String FALL = "A";
-	
     public final static String REALM_PREFIX = "/site/";
 
 }
