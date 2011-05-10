@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.sakaiquebec.opensyllabus</groupId>
+    <artifactId>osyl-manager</artifactId>
+    <version>2.7.1</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+
+  <groupId>org.sakaiquebec.opensyllabus</groupId>
+  <artifactId>osyl-manager-sakai-help</artifactId>
+  <packaging>jar</packaging>
+
+  <name>osyl-manager-sakai-help</name>
+
+  <properties>
+    <deploy.target>shared</deploy.target>
+  </properties>
+  <build>
+    <resources>
+      <resource>
+        <directory>src</directory>
+      </resource>
+    </resources>
+    <sourceDirectory>src</sourceDirectory>
+  </build>
+</project>
