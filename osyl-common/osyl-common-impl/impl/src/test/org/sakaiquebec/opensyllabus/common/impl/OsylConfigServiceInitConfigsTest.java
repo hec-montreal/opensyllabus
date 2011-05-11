@@ -17,6 +17,6 @@ public final class OsylConfigServiceInitConfigsTest extends
 	assertEquals(
 		"OsylServiceConfig.initConfigs() didn't created the number of "
 			+ "COConfigSerialized that the documentation says it does.",
-		3, getService().getConfigs().size());
+		2, getService().getConfigs().size());
     }
 }
