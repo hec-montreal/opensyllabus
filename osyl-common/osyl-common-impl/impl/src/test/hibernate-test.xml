@@ -23,6 +23,17 @@
 		<property name="password"><value>${hibernate.connection.password}</value></property>
 	</bean>
 
+    <bean id="org.sakaiproject.db.api.SqlService"
+			class="org.sakaiquebec.opensyllabus.common.dao.MockSqlService"
+			init-method="init" destroy-method="destroy" singleton="true">
+			
+		<!-- HSQLDB configuration -->
+		<property name="vendor">
+			<value>hsqldb</value>
+		</property>
+        
+	</bean>
+
 	<!-- create a SessionFactory bean from the data source and point it at our HBMs,
 		name it the same as the Sakai global one so we can reuse our other spring files -->
 	<bean id="org.sakaiproject.springframework.orm.hibernate.GlobalSessionFactory"
