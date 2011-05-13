@@ -85,13 +85,13 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 		    spinner.setVisible(false);
 		    sigleCourseMap = new HashMap<String, COSite>();
 		    for (COSite course : result) {
-			if (!course.getSiteId().equalsIgnoreCase(
-				selectFromSite.getSiteId())) {
-			    sigleCourseMap.put(course.getSiteId(), course);
-				if (!course.isCoIsFrozen()) {
-				    suggestionListBox.addItem(course.getSiteId());					
+				if (!course.getSiteId().equalsIgnoreCase(
+						selectFromSite.getSiteId())) {
+					if (!course.isCoIsFrozen()) {
+						sigleCourseMap.put(course.getSiteId(), course);
+						suggestionListBox.addItem(course.getSiteId());
+					}
 				}
-			}
 		    }
 		    suggestionListBox.setSelectedIndex(0);
 		    okButton.setEnabled(true);
@@ -130,13 +130,15 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	title.setStylePrimaryName("OsylManager-form-title");
 	mainPanel.add(title);
 
-	Label instruction =
-		new Label(messages.copyForm_instruction().replace("{0}",
-			selectFromSite.getSiteId()));
-	mainPanel.add(instruction);
+	//Label instruction =
+	//	new Label(messages.copyForm_instruction().replace("{0}",
+	//		selectFromSite.getSiteId()));
+	//mainPanel.add(instruction);
 
 	Label l = new Label(messages.copyForm_courseIdentifier());
-
+	Label s = new Label(messages.copyForm_courseSource());
+	Label courseSource = new Label(selectFromSite.getSiteId());
+	
 	sigleTextBox = new TextBox();
 
 	final Button search = new Button(messages.copyForm_search());
@@ -150,24 +152,32 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	    }
 	});
 	search.setEnabled(false);
-
-	HorizontalPanel hp = new HorizontalPanel();
-	hp.add(l);
+	HorizontalPanel hzPanel1 = new HorizontalPanel();
+	HorizontalPanel hzPanel2 = new HorizontalPanel();
+	hzPanel1.add(s);
+	s.setStylePrimaryName("OsylManager-form-label");
+	hzPanel1.add(courseSource);
+	courseSource.setStylePrimaryName("OsylManager-form-element");
+	hzPanel2.add(l);
 	l.setStylePrimaryName("OsylManager-form-label");
-	hp.add(sigleTextBox);
+	hzPanel2.add(sigleTextBox);
 	sigleTextBox.setStylePrimaryName("OsylManager-form-element");
-	hp.add(search);
-	hp.setCellWidth(l, "30%");
-	hp.setCellWidth(sigleTextBox, "40%");
-	hp.setCellWidth(search, "30%");
-	hp.setCellVerticalAlignment(l, HasVerticalAlignment.ALIGN_BOTTOM);
-	hp.setCellVerticalAlignment(sigleTextBox,
-		HasVerticalAlignment.ALIGN_BOTTOM);
-	hp.setCellVerticalAlignment(search, HasVerticalAlignment.ALIGN_BOTTOM);
-	hp.setStylePrimaryName("OsylManager-form-genericPanel");
-	mainPanel.add(hp);
-	mainPanel.setCellHorizontalAlignment(hp,
-		HasHorizontalAlignment.ALIGN_CENTER);
+	hzPanel2.add(search);
+	hzPanel1.setCellWidth(s, "30%");
+	hzPanel2.setCellWidth(l, "30%");
+	hzPanel2.setCellWidth(sigleTextBox, "40%");
+	hzPanel2.setCellWidth(search, "30%");
+	hzPanel1.setCellVerticalAlignment(s, HasVerticalAlignment.ALIGN_BOTTOM);	
+	hzPanel2.setCellVerticalAlignment(l, HasVerticalAlignment.ALIGN_BOTTOM);
+	hzPanel1.setCellVerticalAlignment(courseSource, HasVerticalAlignment.ALIGN_BOTTOM);	
+	hzPanel2.setCellVerticalAlignment(sigleTextBox, HasVerticalAlignment.ALIGN_BOTTOM);
+	hzPanel1.setCellVerticalAlignment(search, HasVerticalAlignment.ALIGN_BOTTOM);
+	hzPanel1.setStylePrimaryName("OsylManager-form-genericPanel");
+	hzPanel2.setStylePrimaryName("OsylManager-form-genericPanel");	
+	mainPanel.add(hzPanel1);
+	mainPanel.add(hzPanel2);	
+	mainPanel.setCellHorizontalAlignment(hzPanel1, HasHorizontalAlignment.ALIGN_CENTER);
+	mainPanel.setCellHorizontalAlignment(hzPanel2, HasHorizontalAlignment.ALIGN_CENTER);
 
 	sigleTextBox.addKeyPressHandler(new KeyPressHandler() {
 
@@ -179,20 +189,19 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	});
 
 	suggestionListBox = new ListBox();
-
-	HorizontalPanel hzPanel = new HorizontalPanel();
-	Label voidLabel = new Label();
-	hzPanel.add(voidLabel);
-	hzPanel.setCellWidth(voidLabel, "30%");
-	hzPanel.setStylePrimaryName("OsylManager-form-genericPanel");
-	hzPanel.add(suggestionListBox);
+	HorizontalPanel hzPanel3 = new HorizontalPanel();
+	Label courseTarget = new Label(messages.copyForm_courseTarget());
+	courseTarget.setStylePrimaryName("OsylManager-form-element");
+	hzPanel3.add(courseTarget);
+	courseTarget.setStylePrimaryName("OsylManager-form-element");
+	hzPanel3.setCellWidth(courseTarget, "30%");
+	hzPanel3.setStylePrimaryName("OsylManager-form-genericPanel");
+	hzPanel3.add(suggestionListBox);
 	spinner = new Image(controller.getImageBundle().ajaxloader());
-	hzPanel.add(spinner);
+	hzPanel3.add(spinner);
 	spinner.setVisible(false);
-	mainPanel.add(hzPanel);
-	mainPanel.setCellHorizontalAlignment(hzPanel,
-		HasHorizontalAlignment.ALIGN_CENTER);
-
+	mainPanel.add(hzPanel3);
+	mainPanel.setCellHorizontalAlignment(hzPanel3, HasHorizontalAlignment.ALIGN_CENTER);
 	okButton = new PushButton(messages.associateForm_ok());
 	okButton.setStylePrimaryName("Osyl-Button");
 	okButton.setWidth("50px");

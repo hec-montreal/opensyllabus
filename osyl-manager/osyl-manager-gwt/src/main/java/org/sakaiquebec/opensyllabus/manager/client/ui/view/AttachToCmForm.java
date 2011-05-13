@@ -100,9 +100,10 @@ public class AttachToCmForm extends OsylManagerAbstractWindowPanel {
 				String sigleValue =
 					course.getSigle() + " " + course.getSession()
 						+ " " + course.getSection();
-				sigleOracle.add(sigleValue);
-				sigleCourseMap.put(sigleValue, course);
-				suggestionListBox.addItem(sigleValue, sigleValue);	
+					sigleOracle.add(sigleValue);
+					sigleCourseMap.put(sigleValue, course);
+					suggestionListBox.addItem(sigleValue, sigleValue);
+
 		    }
 		    suggestionListBox.setSelectedIndex(0);
 		}
