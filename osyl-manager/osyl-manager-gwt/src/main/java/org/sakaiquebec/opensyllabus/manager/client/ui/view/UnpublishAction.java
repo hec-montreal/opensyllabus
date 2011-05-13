@@ -117,12 +117,17 @@ public class UnpublishAction extends OsylManagerAbstractAction {
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
 	if (siteIds.size() > 0) {
+	    for (COSite cosite : siteIds) {
+	    	if (cosite.isCoIsFrozen())
+	    	    return false;
+	    }
 	    return true;
 	} else {
 	    return false;
 	}
     }
-
+    
+    
     @Override
     public void onClick(final List<COSite> siteIds) {
 	String sites = "";
