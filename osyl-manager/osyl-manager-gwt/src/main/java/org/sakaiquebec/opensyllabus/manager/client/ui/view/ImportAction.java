@@ -39,9 +39,13 @@ public class ImportAction extends OsylManagerAbstractAction {
 
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
-	if (siteIds.size() == 1)
-	    return true;
-	return false;
+	if (siteIds.size() == 1) {
+	    if (siteIds.get(0).isCoIsFrozen())
+			return false;
+	    else 
+	    	return true;		
+	} else		
+		return false;
     }
 
     @Override

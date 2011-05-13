@@ -75,7 +75,7 @@ public class ExportAction extends OsylManagerAbstractAction {
 	if(siteIds.size() > 0){
 	    return true;
 	} else {
-	    return false;
+	    	return false;
 	}
     }
 
