@@ -137,7 +137,11 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 
 	Label l = new Label(messages.copyForm_courseIdentifier());
 	Label s = new Label(messages.copyForm_courseSource());
-	Label courseSource = new Label(selectFromSite.getSiteId());
+	String courseSite = selectFromSite.getSiteId();
+	if (selectFromSite.getCourseName()!= null)
+		courseSite = courseSite + " - " + selectFromSite.getCourseName();
+
+	Label courseSource = new Label(courseSite);
 	
 	sigleTextBox = new TextBox();
 
@@ -168,10 +172,11 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	hzPanel2.setCellWidth(sigleTextBox, "40%");
 	hzPanel2.setCellWidth(search, "30%");
 	hzPanel1.setCellVerticalAlignment(s, HasVerticalAlignment.ALIGN_BOTTOM);	
-	hzPanel2.setCellVerticalAlignment(l, HasVerticalAlignment.ALIGN_BOTTOM);
+	hzPanel2.setCellVerticalAlignment(l, HasVerticalAlignment.ALIGN_MIDDLE);
 	hzPanel1.setCellVerticalAlignment(courseSource, HasVerticalAlignment.ALIGN_BOTTOM);	
-	hzPanel2.setCellVerticalAlignment(sigleTextBox, HasVerticalAlignment.ALIGN_BOTTOM);
-	hzPanel1.setCellVerticalAlignment(search, HasVerticalAlignment.ALIGN_BOTTOM);
+	hzPanel2.setCellVerticalAlignment(sigleTextBox, HasVerticalAlignment.ALIGN_MIDDLE);
+	hzPanel1.setCellVerticalAlignment(search, HasVerticalAlignment.ALIGN_MIDDLE);
+	hzPanel1.setCellHeight(search, "60%"); //For sizing 
 	hzPanel1.setStylePrimaryName("OsylManager-form-genericPanel");
 	hzPanel2.setStylePrimaryName("OsylManager-form-genericPanel");	
 	mainPanel.add(hzPanel1);
@@ -193,8 +198,10 @@ public class CopyForm extends OsylManagerAbstractWindowPanel {
 	Label courseTarget = new Label(messages.copyForm_courseTarget());
 	courseTarget.setStylePrimaryName("OsylManager-form-element");
 	hzPanel3.add(courseTarget);
-	courseTarget.setStylePrimaryName("OsylManager-form-element");
+	courseTarget.setStylePrimaryName("OsylManager-form-label");	
 	hzPanel3.setCellWidth(courseTarget, "30%");
+	hzPanel1.setCellVerticalAlignment(courseTarget, HasVerticalAlignment.ALIGN_BOTTOM);
+	hzPanel1.setCellVerticalAlignment(suggestionListBox, HasVerticalAlignment.ALIGN_BOTTOM);	
 	hzPanel3.setStylePrimaryName("OsylManager-form-genericPanel");
 	hzPanel3.add(suggestionListBox);
 	spinner = new Image(controller.getImageBundle().ajaxloader());
