@@ -6,7 +6,7 @@
 
 	<!-- list the backing beans here -->
 	<bean id="osylPortalMainBean"
-			class="org.sakaiquebec.opensyllabus.portal.server.OsylPortalBackingBean"
+			class="org.sakaiquebec.opensyllabus.publicportal.server.OsylPublicPortalBackingBean"
 			init-method="init">
 		<property name="osylService"
 			ref="org.sakaiquebec.opensyllabus.api.OsylService" />

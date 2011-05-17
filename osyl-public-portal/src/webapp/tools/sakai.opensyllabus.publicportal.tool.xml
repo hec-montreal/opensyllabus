@@ -3,11 +3,11 @@
 <registration>
 
 	<tool
-		id="sakai.opensyllabus.portal.tool"
-		title="Opensyllabus Portal"
+		id="sakai.opensyllabus.publicportal.tool"
+		title="Opensyllabus Public Portal"
 		description="Pour acc&#233;deraux plans de cours">
 		
-		<configuration name="help.id" value="sakai.opensyllabus.portal.tool" type="final" />
+		<configuration name="help.id" value="sakai.opensyllabus.publicportal.tool" type="final" />
 		<category name="course" />
 		<category name="project" />
 	</tool>

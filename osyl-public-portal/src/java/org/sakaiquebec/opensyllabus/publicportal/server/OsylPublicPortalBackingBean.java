@@ -1,4 +1,4 @@
-package org.sakaiquebec.opensyllabus.portal.server;
+package org.sakaiquebec.opensyllabus.publicportal.server;
 /*******************************************************************************
  * $Id: $
  *******************************************************************************
@@ -35,10 +35,10 @@ import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
  * @author <a href="mailto:tom.landry@crim.ca">Tom Landry</a>
  * @version $Id: $
  */
-public class OsylPortalBackingBean {
+public class OsylPublicPortalBackingBean {
 
     /** Our logger */
-    private static Log log = LogFactory.getLog(OsylPortalBackingBean.class);
+    private static Log log = LogFactory.getLog(OsylPublicPortalBackingBean.class);
 
     /** Init method to be called by Spring */
     public void init() {
@@ -46,7 +46,7 @@ public class OsylPortalBackingBean {
     }
 
     /** The default constructor */
-    public OsylPortalBackingBean() {
+    public OsylPublicPortalBackingBean() {
 	log.debug("Constructor Osyl Backing Bean");
     }
 

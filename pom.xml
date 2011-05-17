@@ -42,7 +42,7 @@
     <module>osyl-editor</module>
     <module>osyl-manager</module>
     <module>osyl-admin</module>
-    <module>osyl-public-portal</module>
+    <module>osyl-portal</module>
   </modules>
 
   <pluginRepositories>
@@ -129,6 +129,16 @@
         <version>${sakai.version}</version>
       </dependency>
       <dependency>
+      	<groupId>org.sakaiquebec.opensyllabus</groupId>
+        <artifactId>osyl-portal-sakai-impl</artifactId>
+        <version>${sakai.version}</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.sakaiquebec.opensyllabus</groupId>
+        <artifactId>osyl-portal-server-api</artifactId>
+        <version>${sakai.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.sakaiquebec.opensyllabus.managergwt</groupId>
         <artifactId>osyl-manager-gwt</artifactId>
         <version>${sakai.version}</version>
@@ -141,6 +151,11 @@
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus.admingwt</groupId>
         <artifactId>osyl-admin-gwt</artifactId>
+        <version>${sakai.version}</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.sakaiquebec.opensyllabus.portalgwt</groupId>
+        <artifactId>osyl-portal-gwt</artifactId>
         <version>${sakai.version}</version>
       </dependency>
 
