@@ -1,3 +1,5 @@
+//FILE HEC ONLY SAKAI-2723
+
 /******************************************************************************
  * $Id: $
  ******************************************************************************
@@ -29,7 +31,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
  * OpenSyllabus course outline related to a section of the course management and
  * transforms it into a ZoneCours course outline XML compatible. The new course
  * outline it deposited in the ZoneCours database.
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -56,7 +58,7 @@ public interface OsylTransformToZCCO {
     /**
      * Creates a XML course outline ZoneCours compatible and sends it to the
      * ZoneCours database.
-     * 
+     *
      * @param documentSecurityMap TODO
      * @param documentVisibilityMap TODO
      * @return

@@ -97,7 +97,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The security service to be injected by Spring
-     * 
+     *
      * @uml.property name="osylSecurityService"
      * @uml.associationEnd
      */
@@ -107,7 +107,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link OsylSecurityService}.
-     * 
+     *
      * @param securityService
      */
     public void setOsylSecurityService(OsylSecurityService securityService) {
@@ -119,7 +119,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Dependency: AnnouncementService
-     * 
+     *
      * @param announcementService The AnnouncementService
      */
     public void setAnnouncementService(AnnouncementService announcementService) {
@@ -155,7 +155,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The chs to be injected by Spring
-     * 
+     *
      * @uml.property name="contentHostingService"
      * @uml.associationEnd multiplicity="(0 -1)" ordering="true"
      *                     elementType="org.sakaiproject.content.api.ContentEntity"
@@ -166,7 +166,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the <code>ContentHostingService</code>.
-     * 
+     *
      * @param contentHostingService
      * @uml.property name="contentHostingService"
      */
@@ -190,7 +190,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     /**
      * The resouceDao to be injected by Spring
-     * 
+     *
      * @uml.property name="resourceDao"
      * @uml.associationEnd
      */
@@ -198,7 +198,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link ResourceDao} .
-     * 
+     *
      * @param resourceDao
      * @uml.property name="resourceDao"
      */
@@ -208,7 +208,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The config service to be injected by Spring
-     * 
+     *
      * @uml.property name="osylConfigService"
      * @uml.associationEnd
      */
@@ -216,24 +216,26 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link OsylConfigService}.
-     * 
+     *
      * @param configService
      */
     public void setConfigService(OsylConfigService configService) {
 	this.osylConfigService = configService;
     }
 
+	// BEGIN HEC ONLY SAKAI-2723
     /**
      * The transformation and transfer service to be injected by Spring
-     * 
+     *
      * @uml.property name="osylTransformToZCCO"
      * @uml.associationEnd
      */
     private OsylTransformToZCCO osylTransformToZCCO;
+	// END HEC ONLY SAKAI-2723
 
     /**
      * Sets the {@link OsylTransformToZCCO}.
-     * 
+     *
      * @param osylTransformToZCCO
      */
     public void setOsylTransformToZCCO(OsylTransformToZCCO osylTransformToZCCO) {
@@ -242,7 +244,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * The OsylSite service to be injected by Spring
-     * 
+     *
      * @uml.property name="osylSiteService"
      * @uml.associationEnd
      */
@@ -250,7 +252,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link OsylSiteService} .
-     * 
+     *
      * @param osylSiteService
      * @uml.property name="osylSiteService"
      */
@@ -262,7 +264,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     /**
      * Sets the {@link CORelationDao}.
-     * 
+     *
      * @param configDao
      */
     public void setCoRelationDao(CORelationDao relationDao) {
@@ -280,9 +282,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public void setIdManager(IdManager idManager) {
 	this.idManager = idManager;
     }
-    
+
     private EventTrackingService eventTrackingService;
-    
+
     public void setEventTrackingService(EventTrackingService eventTrackingService){
 	this.eventTrackingService=eventTrackingService;
     }
@@ -316,7 +318,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     /**
      * Creates or updates the corresponding entries in the database and copies
      * the ressources
-     * 
+     *
      * @param String webapp dir (absolute pathname !?)
      */
     public Vector<Map<String, String>> publish(String webappDir, String siteId)
@@ -464,11 +466,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    } finally {
 		securityService.popAdvisor();
 	    }
-	    
+
 	    eventTrackingService.post(eventTrackingService.newEvent(
 		    OsylEventService.EVENT_OPENSYLLABUS_PUBLICATION,
 		    osylSiteService.getSiteReference(siteId), false));
-	    
+
 	    log.info("Finished publishing course outline for site ["
 		    + (co.getTitle() == null ? siteId : co.getTitle())
 		    + "] in " + (System.currentTimeMillis() - start) + " ms");
@@ -513,7 +515,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		String courseOffId = s.getCourseOfferingEid();
 		CourseOffering courseOff =
 			cmService.getCourseOffering(courseOffId);
-		program = courseOff.getAcademicCareer();
+		program = courseOff.getAcademicCareer(); //HEC ONLY SAKAI-2723
 		dept = cmService.getSectionCategoryDescription(s.getCategory());
 		title = s.getTitle();
 		EnrollmentSet es = s.getEnrollmentSet();
@@ -1074,6 +1076,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	String portalActivated =
 		ServerConfigurationService.getString("hec.portail.activated");
 
+	//BEGIN HEC ONLY SAKAI-2723
 	// FIXME: this is for HEC Montreal only. Should be injected or something
 	// cleaner than this. See SAKAI-2163.
 	String siteShareable =
@@ -1089,6 +1092,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			SecurityInterface.ACCESS_COMMUNITY);
 	    }
 	}
+	//END HEC ONLY SAKAI-2723
+
     }
 
     public String transformXmlForGroup(String content, String group,
@@ -1129,11 +1134,15 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	deletePublishedContent(siteId);
 	COSerialized co =
 		osylSiteService.getSerializedCourseOutline(siteId, webappDir);
+
+	//BEGIN HEC ONLY SAKAI-2723
 	String portalActivated =
 		ServerConfigurationService.getString("hec.portail.activated");
 	if (portalActivated != null && portalActivated.equalsIgnoreCase("true")) {
 	    osylTransformToZCCO.unpublish(siteId, co.getLang());
 	}
+	//END HEC ONLY SAKAI-2723
+
 	// remove publication date in DB
 	resourceDao.setPublicationDate(co.getCoId(), null);
 

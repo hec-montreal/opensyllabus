@@ -1,3 +1,5 @@
+//FILE HEC ONLY SAKAI-2723
+
 /******************************************************************************
  * $Id: $
  ******************************************************************************
@@ -93,8 +95,8 @@ public class ZCPublisherServiceImpl implements ZCPublisherService {
 
 	}
     }
-    
-    
+
+
     public void depublier(String koId, String langue){
 	if (koId != null && koId.length() > 0 && langue != null
 		&& langue.length() > 0)

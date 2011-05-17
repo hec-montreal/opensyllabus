@@ -64,7 +64,7 @@ public class OsylDirectoryServiceImpl implements OsylDirectoryService{
 
     /**
      * Sets the {@link COConfigDao}.
-     * 
+     *
      * @param configDao
      */
     public void setConfigDao(COConfigDao configDao) {
@@ -76,7 +76,7 @@ public class OsylDirectoryServiceImpl implements OsylDirectoryService{
 
     /**
      * Sets the {@link ResourceDao}.
-     * 
+     *
      * @param resourceDao
      */
     public void setResourceDao(ResourceDao resourceDao) {
@@ -112,7 +112,7 @@ public class OsylDirectoryServiceImpl implements OsylDirectoryService{
 
     /**
      * Sets the <code>SiteService</code>.
-     * 
+     *
      * @param siteService
      */
     public void setSiteService(SiteService siteService) {
@@ -133,8 +133,8 @@ public class OsylDirectoryServiceImpl implements OsylDirectoryService{
     }
 
     private static final Log log = LogFactory.getLog( OsylDirectoryServiceImpl.class);
-    
-    
+
+
     public boolean createSite(String siteTitle, CanonicalCourse canCourse) throws Exception{
 
 	log.info("user [" + sessionManager.getCurrentSession().getUserEid()
@@ -157,13 +157,13 @@ public class OsylDirectoryServiceImpl implements OsylDirectoryService{
 		site = siteService.addSite(siteTitle, SITE_TYPE);
 		    addTool(site, "sakai.opensyllabus.tool");
 		    addTool(site, "sakai.siteinfo");
-		
+
 		site.setTitle(siteTitle);
 		site.setPublished(true);
 		site.setJoinable(false);
 
 		siteService.save(site);
-		
+
 		//add least one course outline for the current session
 		List <AcademicSession> sessions = cmService.getCurrentAcademicSessions();
 		String courseOffId = null;
@@ -202,7 +202,7 @@ public class OsylDirectoryServiceImpl implements OsylDirectoryService{
     public void init() {
 	log.info("INIT from OsylDirectory service");
     }
-    
+
     private ToolConfiguration addTool(Site site,  String toolId) {
 
 	Tool tool = toolManager.getTool(toolId);
@@ -210,9 +210,9 @@ public class OsylDirectoryServiceImpl implements OsylDirectoryService{
 	page.setTitle(toolManager.getTool(toolId).getTitle());
 	page.setLayout(SitePage.LAYOUT_SINGLE_COL);
 	ToolConfiguration toolConf = page.addTool(tool);
-	
+
 	    toolConf.setTitle(tool.getTitle());
-	
+
 	toolConf.setLayoutHints("0,0");
 	try {
 	    siteService.save(site);
@@ -220,17 +220,17 @@ public class OsylDirectoryServiceImpl implements OsylDirectoryService{
 	    log.error("Add tool - Unused id exception", e);
 	} catch (PermissionException e) {
 	    log.error("Add tool - Permission exception", e);
-	} 
+	}
 
 	return toolConf;
     }
 
     public boolean createCourseOutline(CourseOffering courseOff, String siteId) {
-	
+
 	COConfigSerialized coConfig = null;
 	COSerialized co = null;
-	String lang = courseOff.getLang();
-	
+	String lang = courseOff.getLang(); // HEC ONLY SAKAI-2723
+
 	String configPath =
 		ServerConfigurationService.getString(
 			"opensyllabus.configs.path", null);
@@ -255,10 +255,10 @@ public class OsylDirectoryServiceImpl implements OsylDirectoryService{
 	} catch (Exception e) {
 	    log.error("createCourse outline", e);
 	}
-	    
+
 	return false;
     }
-    
- 
+
+
 }
 

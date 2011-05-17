@@ -112,7 +112,7 @@ import org.w3c.dom.Element;
 
 /**
  * Implementation of the <code>OsylSiteService</code>
- * 
+ *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -123,8 +123,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     private static final String ORIGINAL_ANNOUNCEMENT_MESSAGE_REF =
 	    "originalAnnouncementMessageRef";
 
-    private final static String PROP_SITE_ISFROZEN = "isfrozen";  
-    
+    private final static String PROP_SITE_ISFROZEN = "isfrozen";
+
     private ToolManager toolManager;
 
     private IdManager idManager;
@@ -172,7 +172,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>CitationService</code>.
-     * 
+     *
      * @param citationService
      * @uml.property name="citationService"
      */
@@ -194,7 +194,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylConfigService}.
-     * 
+     *
      * @param osylConfigService
      */
     public void setConfigService(OsylConfigService osylConfigService) {
@@ -214,7 +214,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Dependency: EntityManager.
-     * 
+     *
      * @param service The EntityManager.
      */
     public void setEntityManager(EntityManager entityManager) {
@@ -223,7 +223,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylSecurityService}.
-     * 
+     *
      * @param securityService
      */
     public void setOsylSecurityService(OsylSecurityService securityService) {
@@ -232,7 +232,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylContentService}.
-     * 
+     *
      * @param osylContentService
      */
     public void setOsylContentService(OsylContentService osylContentService) {
@@ -246,7 +246,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>ContentHostingService</code>.
-     * 
+     *
      * @param contentHostingService
      */
     public void setContentHostingService(
@@ -256,7 +256,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link CORelationDao}.
-     * 
+     *
      * @param configDao
      */
     public void setCoRelationDao(CORelationDao relationDao) {
@@ -265,7 +265,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link ResourceDao}.
-     * 
+     *
      * @param resourceDao
      */
     public void setResourceDao(ResourceDao resourceDao) {
@@ -274,7 +274,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link COConfigDao}.
-     * 
+     *
      * @param configDao
      */
     public void setConfigDao(COConfigDao configDao) {
@@ -283,7 +283,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>SiteService</code>.
-     * 
+     *
      * @param siteService
      */
     public void setSiteService(SiteService siteService) {
@@ -1091,7 +1091,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @throws Exception
      */
     public COSerialized getSerializedCourseOutline(String siteId,
@@ -1161,7 +1161,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @throws Exception
      */
     public boolean updateSerializedCourseOutline(COSerialized co)
@@ -1217,7 +1217,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      * Writes the XML into a temp file. This is a temporary measure. TODO
      * SAKAI-1932: find a better way to backup course outlines, possibly
      * computing differences and limiting how long and how many copies are kept.
-     * 
+     *
      * @param co
      * @throws IOException
      */
@@ -1824,7 +1824,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     private String getProgram(Section section) {
 	String courseOffId = section.getCourseOfferingEid();
 	CourseOffering courseOff = cmService.getCourseOffering(courseOffId);
-	return courseOff.getAcademicCareer();
+	String program = null;
+	program = courseOff.getAcademicCareer(); // HEC ONLY SAKAI-2723
+	return program;
     }
 
     private String getSessionName(AcademicSession session) {
@@ -2169,9 +2171,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		if (rp.getProperty(PROP_SITE_ISFROZEN)!= null) {
 			if (rp.getProperty(PROP_SITE_ISFROZEN).equals("true")) {
 				coIsFrozen = true;
-				log.info("Site frozen: " + site.getTitle());				
+				log.info("Site frozen: " + site.getTitle());
 			}
-		}	
+		}
 		return coIsFrozen;
 	}
 }
