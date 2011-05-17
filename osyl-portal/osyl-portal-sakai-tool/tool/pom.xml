@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.sakaiquebec.opensyllabus</groupId>
+		<artifactId>osyl-portal</artifactId>
+		<version>2.7.1</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+
+	<groupId>org.sakaiquebec.opensyllabus</groupId>
+	<artifactId>osyl-portal-sakai-tool</artifactId>
+	<packaging>war</packaging>
+
+	<name>Sakai Opensyllabus Portal tool</name>
+	<description>OpenSyllabus Portal webapp (tool)</description>
+
+	<dependencies>
+		<!--  opensyllabus -->
+		<dependency>
+			<groupId>org.sakaiquebec.opensyllabus</groupId>
+			<artifactId> osyl-common-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiquebec.opensyllabus</groupId>
+			<artifactId>osyl-portal-server-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiquebec.opensyllabus.portalgwt</groupId>
+			<artifactId>osyl-portal-gwt</artifactId>
+			<scope>compile</scope>
+		</dependency>
+
+		<!--  sakai -->
+		<dependency>
+			<groupId>org.sakaiproject.kernel</groupId>
+			<artifactId>sakai-kernel-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject.kernel</groupId>
+			<artifactId>sakai-component-manager</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject.kernel</groupId>
+			<artifactId>sakai-kernel-util</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
+			<artifactId>sakai-jsp-adapter</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- spring and hibernate -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- gwt -->
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- misc -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jsp-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+		</dependency>
+	</dependencies>
+
+	<properties>
+		<gwtModuleRename>OsylPortalEntryPoint</gwtModuleRename>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<artifactSet>
+								<includes>
+									<include>org.sakaiquebec.opensyllabus.portalgwt:osyl-portal-gwt</include>
+									<include>org.sakaiquebec.opensyllabus:osyl-configs</include>
+								</includes>
+							</artifactSet>
+							<filters>
+								<filter>
+									<artifact>org.sakaiquebec.opensyllabus.portalgwt:osyl-portal-gwt</artifact>
+									<includes>
+										<include>${gwtModuleRename}/**</include>
+									</includes>
+								</filter>
+							</filters>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ComponentsXmlResourceTransformer" />
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.sakaiquebec.opensyllabus</groupId>
+		<artifactId>osyl</artifactId>
+		<version>2.7.1</version>
+		<relativePath>../osyl-pom/pom.xml</relativePath>
+	</parent>
+
+	<groupId>org.sakaiquebec.opensyllabus.portalgwt</groupId>
+	<artifactId>osyl-portal-gwt</artifactId>
+	<!--  Note: we create a jar to shade it in the associated tool -->
+	<packaging>jar</packaging>
+
+	<name>Sakai Quebec OpenSyllabus PortalGWT Project</name>
+
+	<properties>
+		<gwtModule>org.sakaiquebec.opensyllabus.portal.OsylPortalEntryPoint</gwtModule>
+		<gwtModuleRename>OsylPortalEntryPoint</gwtModuleRename>
+		<gwtHostedEntryPointPage>OsylPortalEntryPoint.html</gwtHostedEntryPointPage>
+	</properties>
+
+	<dependencies>
+		<!-- gwt -->
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<outputDirectory>war/WEB-INF/classes</outputDirectory>
+		<plugins>
+			<!--
+				The following is done just before packaging to jar phase : Adding in
+				the target jar artefact the compiled javascript folder, the java
+				source code
+			-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<configuration>
+							<tasks>
+								<jar destfile="${project.build.directory}/${project.build.finalName}.jar"
+									update="true" defaultexcludes="true">
+									<fileset dir="${basedir}/src/main/java" includes="**/*.*" />
+									<fileset dir="${basedir}/war/" includes="${gwtModuleRename}/**/*" />
+								</jar>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!--
+				Cleaning specific GWT files
+			-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${basedir}</directory>
+							<includes>
+								<include>war/${gwtModuleRename}</include>
+								<include>war/WEB-INF/classes</include>
+								<include>war/WEB-INF/lib</include>
+							</includes>
+							<followSymlinks>false</followSymlinks>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<!--
+				This profile is active by default, the gwt-maven-plugin will check
+				its self if a compilation is required ex: mvn clean install
+			-->
+			<id>full</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>generate-gwt</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>compile</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<module>${gwtModule}</module>
+							<webappDirectory>war</webappDirectory>
+							<compileReport>false</compileReport>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<!--
+				Launching hosted mode by profile call, ex:
+				 mvn clean install -Phosted
+			-->
+			<id>hosted</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>hosted-gwt</id>
+								<phase>compile</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<module>${gwtModule}</module>
+							<runTarget>${gwtHostedEntryPointPage}</runTarget>
+							<webappDirectory>war</webappDirectory>
+							<compileReport>false</compileReport>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.1.1</version>
+						<configuration>
+							<warSourceDirectory>war</warSourceDirectory>
+							<webXml>war/WEB-INF/web.xml</webXml>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

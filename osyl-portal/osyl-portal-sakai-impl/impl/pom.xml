@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.sakaiquebec.opensyllabus</groupId>
+    <artifactId>osyl-portal</artifactId>
+    <version>2.7.1</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
+
+   <groupId>org.sakaiquebec.opensyllabus</groupId>
+   <artifactId>osyl-portal-sakai-impl</artifactId>
+   <packaging>jar</packaging>
+
+   <name>osyl-portal-sakai-impl</name>
+   <description>OpenSyllabus Portal implementation</description>
+
+  <properties>
+    <deploy.target />
+  </properties>
+
+  <dependencies>
+    <!--  opensyllabus -->
+    <dependency>
+		<groupId>org.sakaiquebec.opensyllabus</groupId>
+		<artifactId>osyl-portal-server-api</artifactId>
+		<scope>compile</scope>
+	</dependency>
+    <dependency>
+      <groupId>org.sakaiquebec.opensyllabus</groupId>
+      <artifactId> osyl-common-impl</artifactId>
+    </dependency>
+
+    <!--  sakai -->
+	<dependency>
+	  <groupId>org.sakaiproject.kernel</groupId>
+	  <artifactId>sakai-kernel-api</artifactId>
+	</dependency>
+    <dependency>
+	  <groupId>org.sakaiproject.kernel</groupId>
+	  <artifactId>sakai-component-manager</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sakaiproject.edu-services.course-management</groupId>
+      <artifactId>coursemanagement-api</artifactId>
+     </dependency>
+     <!-- spring and hibernate -->
+    <dependency>
+      <groupId>${sakai.spring.groupId}</groupId>
+      <artifactId>${sakai.spring.artifactId}</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>${sakai.hibernate.groupId}</groupId>
+      <artifactId>${sakai.hibernate.artifactId}</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- misc -->
+    <dependency>
+      <groupId>quartz</groupId>
+      <artifactId>quartz</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jta</groupId>
+      <artifactId>jta</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+    </dependency>
+        <dependency>
+      <groupId>org.sakaiproject.kernel</groupId>
+      <artifactId>sakai-kernel-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>easymock</groupId>
+      <artifactId>easymock</artifactId>
+    </dependency>
+
+      <!-- test -->
+    <dependency>
+      <groupId>${sakai.spring.groupId}</groupId>
+      <artifactId>${sakai.spring.mock.artifactId}</artifactId>
+    </dependency>
+   </dependencies> 
+</project>
