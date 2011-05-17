@@ -379,6 +379,12 @@ public class OsylManagerController implements FireOsylManagerEvents {
 		academicSession, callback);
     }
 
+	public void getAllCoAndSiteInfo(String searchTerm, String academicSession,
+			boolean withFrozenSites, AsyncCallback<List<COSite>> callback) {
+		OsylManagerRPCController.getInstance().getAllCoAndSiteInfo(searchTerm,
+				academicSession, withFrozenSites, callback);
+	}
+    
     /**
      * Retrieves all the course management courses
      * 
