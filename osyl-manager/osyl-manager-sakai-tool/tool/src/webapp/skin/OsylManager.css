@@ -76,6 +76,7 @@
 
 .OsylManager-mainView-actionList{
 	margin: 0 0 0 10px;
+	vertical-align: bottom;
 }
 
 .OsylManager-panel{
@@ -93,6 +94,10 @@
 .OsylManager-panel .gwt-ListBox {
   margin-top: 2px;
 	font-size: 8pt;
+}
+
+.OsylManager-panel .Osyl-CheckBox {
+  vertical-align: bottom;
 }
 
 .OsylManager-panel .OsylManager-mainView-label {
@@ -203,6 +208,11 @@ padding:3px;
 .OsylManager-scrollTable-row{
 background-color:#ffffff;
 cursor:pointer;
+}
+
+.OsylManager-scrollTable-row-frozen{
+background-color:transparent;
+color: silver;
 }
 
 .OsylManager-scrollTable-row-hover{
