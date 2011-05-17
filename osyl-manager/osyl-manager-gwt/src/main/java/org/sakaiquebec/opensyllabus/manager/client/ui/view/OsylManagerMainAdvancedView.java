@@ -35,8 +35,10 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
@@ -56,6 +58,8 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
     private TextBox selectSiteInput;
 
     private ListBox acadSessionListBox;
+    
+    private CheckBox showFrozenCheckBox;
 
     public OsylManagerMainAdvancedView(OsylManagerController controller) {
 	super(controller);
@@ -140,6 +144,7 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 		courseListView.setSearchTerm(selectSiteInput.getText());
 		courseListView.setSelectedAcadSession(acadSessionListBox
 			.getValue(acadSessionListBox.getSelectedIndex()));
+		courseListView.setWithFrozenSites(showFrozenCheckBox.getValue());
 		courseListView.refresh(true);
 	    }
 	});
@@ -149,7 +154,9 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	trimesterLbl.setStylePrimaryName("OsylManager-mainView-label");
 
 	acadSessionListBox = new ListBox();
-
+	showFrozenCheckBox = new CheckBox();
+	showFrozenCheckBox.setStylePrimaryName("Osyl-CheckBox");
+	
 	if (getController().isInHostedMode()) {
 	    acadSessionListBox.addItem("Not specified");
 	    acadSessionListBox.addItem("H2010");
@@ -167,11 +174,20 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	} else {
 	    getController().getAcademicSessions(acadSessionsCB);
 	}
+
+	Label showFrozenLbl = new Label(getController().getMessages()
+				.showFrozenSites());
+	showFrozenLbl.setStylePrimaryName("OsylManager-mainView-label");
+	
 	acadSessionListBox.setVisibleItemCount(1);
 	hzSiteSelectionPanel2.add(selectSiteInput);
 	hzSiteSelectionPanel2.add(selectSiteActionBtn);
 	hzSiteSelectionPanel2.add(trimesterLbl);
 	hzSiteSelectionPanel2.add(acadSessionListBox);
+	hzSiteSelectionPanel2.add(showFrozenLbl);
+	hzSiteSelectionPanel2.add(showFrozenCheckBox);
+	hzSiteSelectionPanel2.setCellVerticalAlignment(showFrozenCheckBox,
+			HasVerticalAlignment.ALIGN_BOTTOM);
 	vSiteSelectionPanel.add(hzSiteSelectionPanel2);
 
 	hzPanel2.add(courseListView);

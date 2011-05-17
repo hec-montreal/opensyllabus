@@ -78,16 +78,20 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
     private String searchTerm;
 
     private String selectedAcadSession;
+    
+    private boolean withFrozenSites;
 
-    private ScrollTable scSiteList;
+	private ScrollTable scSiteList;
 
     private CheckBox selectAll;
 
     private Messages messages = getController().getMessages();
 
     private boolean showMessage = true;
+    
+    private String styleRow;
 
-    private AsyncCallback<List<COSite>> asyncCallback =
+	private AsyncCallback<List<COSite>> asyncCallback =
 	    new AsyncCallback<List<COSite>>() {
 
 		public void onFailure(Throwable caught) {
@@ -98,7 +102,7 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 		    cosites = result;
 		    mainPanel.clear();
 		    scSiteList.getDataTable().clearAll();
-		    scSiteList.getDataTable().resize(0, 7);
+		    scSiteList.getDataTable().resize(0, 8);
 
 			if ((result == null || result.isEmpty()) && isShowMessage()) {
 				Window.alert(messages.noCOSite());
@@ -120,11 +124,17 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 				for (Entry<String, COSite> entry : sortedMap.entrySet()) {
 				    COSite coSite = entry.getValue();
 				    rowNum = scSiteList.getDataTable().insertRow(i);
+				    String scrollTableCss = "OsylManager-scrollTable-row"; 				    
+				    if (coSite.isCoIsFrozen())
+				    	scrollTableCss = "OsylManager-scrollTable-row-frozen";				    
+				    
 				    scSiteList
-					    .getDataTable()
-					    .getRowFormatter()
-					    .setStylePrimaryName(rowNum,
-						    "OsylManager-scrollTable-row");
+				    .getDataTable().addStyleDependentName(scrollTableCss);
+				    
+				    scSiteList
+				    .getDataTable()
+				    .getRowFormatter()
+				    .setStylePrimaryName(rowNum, scrollTableCss);				    
 				    scSiteList.getDataTable().setHTML(rowNum, 0,
 					    coSite.getSiteName());
 				    scSiteList.getDataTable().setHTML(rowNum, 1,
@@ -146,7 +156,13 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 						scSiteList.getDataTable().setHTML(rowNum, 6,
 								dtf.format(coSite.getLastModifiedDate()));
 					}
-				
+					
+					if (coSite.isCoIsFrozen()) {
+						scSiteList.getDataTable().setHTML(rowNum, 7, "X");	
+					}else {
+						scSiteList.getDataTable().setHTML(rowNum, 7, "");
+					}
+					scSiteList.getDataTable().getCellFormatter().setVisible(rowNum, 7, false);
 				    i++;
 				}
 		    }
@@ -179,19 +195,32 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 	scSiteList.addStyleName("OsylManager-scrollTable");
 	scSiteList.setSortPolicy(ScrollTable.SortPolicy.SINGLE_CELL);
 	scSiteList.setResizePolicy(ScrollTable.ResizePolicy.FILL_WIDTH);
-	scSiteList.setColumnResizePolicy(ColumnResizePolicy.MULTI_CELL);
+	//scSiteList.setColumnResizePolicy(ColumnResizePolicy.MULTI_CELL); AH
+	scSiteList.setColumnWidth(0, 30);
+	scSiteList.setColumnWidth(1, 80);
+	scSiteList.setColumnWidth(2, 80);
+	scSiteList.setColumnWidth(3, 80);
+	scSiteList.setColumnWidth(4, 80);
+	scSiteList.setColumnWidth(5, 100);
+	scSiteList.setColumnWidth(6, 80);
+	scSiteList.setColumnWidth(7, 80);
+	scSiteList.setColumnWidth(8, 80);
+	scSiteList.setColumnWidth(9, 10);
+
 	// scSiteList.setMinimumColumnWidth(0, 20);
 	// scSiteList.setMaximumColumnWidth(0, 20);
 
 	scSiteList.getDataTable().addRowSelectionHandler(
 		new RowSelectionHandler() {
 
-		    public void onRowSelection(RowSelectionEvent event) {
-			getController().getSelectSites().clear();
+	    public void onRowSelection(RowSelectionEvent event) {
+		getController().getSelectSites().clear();
 
-			for (int i = 0; i < scSiteList.getDataTable()
-				.getRowCount(); i++) {
-			    if (!scSiteList.getDataTable().isRowSelected(i)) {
+		for (int i = 0; i < scSiteList.getDataTable()
+			.getRowCount(); i++) {
+			//There is NOT row selected
+		    if (!scSiteList.getDataTable().isRowSelected(i)) {
+		    	
 				scSiteList
 					.getDataTable()
 					.getRowFormatter()
@@ -202,42 +231,73 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 					.getRowFormatter()
 					.removeStyleName(i,
 						"OsylManager-scrollTable-row-hover");
-			    }
-			}
+			
+				//Add setStyleRow 2th last 
+				setStyleRow(scSiteList
+						.getDataTable()
+						.getRowFormatter().getStyleName(i));
+		    }	    
+			//There is NOT row selected
 
-			for (int rowNum : scSiteList.getDataTable()
-				.getSelectedRows()) {
-			    if (!getController().isInHostedMode()) {
+		    if (scSiteList.getDataTable().isRowSelected(i)) {
+			    String scrollTableCss = "OsylManager-scrollTable-row";	
+				if (scSiteList.getDataTable().getText(i, 7).equalsIgnoreCase("X")) {
+			    	scrollTableCss = "OsylManager-scrollTable-row-frozen";
+				}
+				setStyleRow(scrollTableCss);
+  	
+				scSiteList
+					.getDataTable()
+					.getRowFormatter()
+					.addStyleName(i,
+						getStyleRow());
+		    }
+		}
+		//There are selected rows
+		for (int rowNum : scSiteList.getDataTable()
+			.getSelectedRows()) {
+		    if (!getController().isInHostedMode()) {
 				getController()
-					.addSelectedSite(
-						getCOSiteFromList(scSiteList
-							.getDataTable()
-							.getText(
-								rowNum,
-								CourseListAdvancedView.SITE_ID_COL)));
-			    } else {
+						.addSelectedSite(
+								getCOSiteFromList(scSiteList
+										.getDataTable()
+										.getText(
+												rowNum,
+												CourseListAdvancedView.SITE_ID_COL)));
+		    } else {
 				COSite cosite = new COSite();
 				cosite.setSiteId("siteId" + rowNum);
 				getController().addSelectedSite(cosite);
 				Window.alert("Selected site : " + rowNum);
-			    }
-			    scSiteList
-				    .getDataTable()
-				    .getRowFormatter()
-				    .setStylePrimaryName(rowNum,
-					    "OsylManager-scrollTable-row-selected");
-			}
-			OsylManagerEvent osylEvent =
-				new OsylManagerEvent(this,
-					OsylManagerEvent.SITES_SELECTION_EVENT);
-			getController().notifyManagerEventHandler(osylEvent);
 		    }
-		});
+
+	    	//Add setStyleRow
+/*		    setStyleRow(scSiteList
+					.getDataTable()
+					.getRowFormatter().getStyleName(rowNum));
+*/		    
+		    scSiteList
+			    .getDataTable()
+			    .getRowFormatter()
+			    .setStylePrimaryName(rowNum,
+				    "OsylManager-scrollTable-row-selected");
+		}
+		OsylManagerEvent osylEvent =
+			new OsylManagerEvent(this,
+				OsylManagerEvent.SITES_SELECTION_EVENT);
+		getController().notifyManagerEventHandler(osylEvent);
+	    }
+	});
 
 	scSiteList.getDataTable().addRowHighlightHandler(
 		new RowHighlightHandler() {
 
 		    public void onRowHighlight(RowHighlightEvent event) {
+				//Add last setStyleRow 
+				setStyleRow(scSiteList
+						.getDataTable()
+						.getRowFormatter().getStyleName(event.getValue().getRowIndex()));
+				
 			scSiteList
 				.getDataTable()
 				.getRowFormatter()
@@ -257,6 +317,7 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 					event.getValue().getRowIndex(),
 					"OsylManager-scrollTable-row-hover");
 		    }
+
 		});
 	mainPanel.add(scSiteList);
     }
@@ -272,7 +333,7 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 	} else {
 	    setShowMessage(showMessage);
 	    getController().getAllCoAndSiteInfo(getSearchTerm(),
-		    getSelectedAcadSession(), asyncCallback);
+		    getSelectedAcadSession(), isWithFrozenSites(), asyncCallback);
 	}
     }
 
@@ -307,6 +368,14 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 	this.selectedAcadSession = selectedAcadSession;
     }
 
+    public boolean isWithFrozenSites() {
+		return withFrozenSites;
+	}
+
+	public void setWithFrozenSites(boolean withFrozenSites) {
+		this.withFrozenSites = withFrozenSites;
+	}    
+    
     private FixedWidthFlexTable createHeaderTable() {
 	FixedWidthFlexTable headerTable = new FixedWidthFlexTable();
 	FlexCellFormatter formatter = headerTable.getFlexCellFormatter();
@@ -329,32 +398,35 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 	formatter.setHorizontalAlignment(0, 2,
 		HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 2, HasVerticalAlignment.ALIGN_TOP);
-
+	
 	headerTable.setHTML(0, 3, messages.CourseListView_scSiteList_col2());
 	formatter.setHorizontalAlignment(0, 3,
 		HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 3, HasVerticalAlignment.ALIGN_TOP);
-
+	
 	headerTable.setHTML(0, 4, messages.CourseListView_scSiteList_col3());
 	formatter.setHorizontalAlignment(0, 4,
 		HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 4, HasVerticalAlignment.ALIGN_TOP);
-
+	
 	headerTable.setHTML(0, 5, messages.CourseListView_scSiteList_col4());
 	formatter.setHorizontalAlignment(0, 5,
 		HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 5, HasVerticalAlignment.ALIGN_TOP);
-
+	
 	headerTable.setHTML(0, 6, messages.CourseListView_scSiteList_col5());
 	formatter.setHorizontalAlignment(0, 6,
 		HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 6, HasVerticalAlignment.ALIGN_TOP);
-
+	
 	headerTable.setHTML(0, 7, messages.CourseListView_scSiteList_col6());
 	formatter.setHorizontalAlignment(0, 7,
 		HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 7, HasVerticalAlignment.ALIGN_TOP);
-
+	
+	//headerTable.setHTML(0, 8, "");
+	//formatter.setVisible(0, 8, false);
+	
 	return headerTable;
     }
 
@@ -364,20 +436,43 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 	scSiteList.getDataTable().resize(0, 7);
 
 	for (int i = 0; i < 15; i++) {
-	    int rowNum = scSiteList.getDataTable().insertRow(i);
+	    final int rowNum = scSiteList.getDataTable().insertRow(i);
 	    CheckBox selectSite = new CheckBox();
 	    selectSite.setName(Integer.toString(i));
 	    selectSite.addClickHandler(new ClickHandler() {
 
-		public void onClick(ClickEvent event) {
-		    CheckBox checkBox = (CheckBox) event.getSource();
-
-			if (checkBox.getValue()) {
-				scSiteList.getDataTable().selectRow(
-						Integer.parseInt(checkBox.getName()), false);
-			} else {
+			public void onClick(ClickEvent event) {
+			    CheckBox checkBox = (CheckBox) event.getSource();
+				//Add setStyleRow 3th last
+			    String scrollTableCss = "OsylManager-scrollTable-row";	
+				if (scSiteList.getDataTable().getText(rowNum, 7).equalsIgnoreCase("X")) {
+			    	scrollTableCss = "OsylManager-scrollTable-row-frozen";
+				}
+				scSiteList.getDataTable().setText(rowNum, 7, ""+Integer.parseInt(checkBox.getName()));
+				setStyleRow(scrollTableCss);
+			    
+				if (checkBox.getValue()) {
+					setStyleRow(scSiteList.getDataTable().getRowFormatter()
+							.getStyleName(
+									Integer.parseInt(checkBox.getName())));
+					
+					scSiteList.getDataTable().selectRow(
+							Integer.parseInt(checkBox.getName()), false);
+				} else {
+					//Just to recover the original color
+					scSiteList.getDataTable().getRowFormatter()
+							.setStyleName(
+									Integer.parseInt(checkBox.getName()),
+									"OsylManager-scrollTable-row-frozen");
+				}
+				//Add setStyleRow
+			    scrollTableCss = "OsylManager-scrollTable-row";	
+				if (scSiteList.getDataTable().getText(rowNum, 7).equalsIgnoreCase("X")) {
+			    	scrollTableCss = "OsylManager-scrollTable-row-frozen";
+				}
+				scSiteList.getDataTable().setText(rowNum, 7, ""+Integer.parseInt(checkBox.getName()));
+				setStyleRow(scrollTableCss);
 			}
-		}
 
 	    });
 	    scSiteList.getDataTable().setHTML(rowNum, 1, "siteId" + i);
@@ -387,10 +482,11 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
     }
 
     public void onClick(ClickEvent event) {
+    setStyleRow("");    	
 	if (selectAll.getValue()) {
 	    scSiteList.getDataTable().selectAllRows();
 	} else {
-	    scSiteList.getDataTable().deselectAllRows();
+	    scSiteList.getDataTable().deselectAllRows();	    
 	}
     }
 
@@ -402,6 +498,14 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 	return showMessage;
     }
 
+    public String getStyleRow() {
+		return styleRow;
+	}
+
+	public void setStyleRow(String styleRow) {
+		this.styleRow = styleRow;
+	}
+	
     private String getLocalizedSessionName(String sessionName) {
 
 	if (sessionName == null || "".equals(sessionName)) {
