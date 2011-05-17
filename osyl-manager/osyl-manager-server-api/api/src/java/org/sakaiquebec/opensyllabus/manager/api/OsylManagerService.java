@@ -168,6 +168,9 @@ public interface OsylManagerService {
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
 	    String academicSession);
 
+    public List<COSite> getAllCoAndSiteInfo(String searchTerm,
+    	    String academicSession, boolean withFrozenSites);
+
     public List<CMAcademicSession> getAcademicSessions();
 
     public void copySite(String siteFrom, String siteTo) throws Exception,
