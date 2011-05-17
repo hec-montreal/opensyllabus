@@ -103,6 +103,9 @@ public interface OsylManagerGwtService extends RemoteService {
      */
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
 	    String academicSession);
+    
+    public List<COSite> getAllCoAndSiteInfo(String searchTerm,
+    	    String academicSession, boolean withFrozenSites);    
 
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
     	    String academicSession, boolean withFrozenSites);
