@@ -785,8 +785,8 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 						|| isSiteinSiteHierarchy(site
 							.getId(), siteId);
 			    }
-			    if (!isInHierarchy)
-				siteMap.put(site.getId(), site.getTitle());
+			    if (!isInHierarchy && !getFrozenValue(site))
+			    	siteMap.put(site.getId(), site.getTitle());
 			}
 			break;
 		    }
@@ -1598,7 +1598,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		}
 	    }
 	}
-
 	// TODO: move this to the end of getOsylPackage() with a specific
 	// path instead of iterating through all the sites!!!
 	new DeleteExpiredTemporaryExportFiles(allSitesInfo).start();
@@ -1606,6 +1605,49 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	return allSitesInfo;
     }
 
+    /** {@inheritDoc} */
+    public List<COSite> getAllCoAndSiteInfo(String searchTerm,
+	    String academicSession, boolean withFrozenSites) {
+	long start = System.currentTimeMillis();
+	List<COSite> allSitesInfo = null;
+	COSite info = null;
+	String currentUser = sessionManager.getCurrentSessionUserId();
+	int siteCount = 0;
+
+	log.trace("getAllCoAndSiteInfo (Site List ##### START #####)"
+		+ elapsed(start));
+	List<String> accessedSites =
+		getSitesForUser(currentUser, SiteService.SITE_VISIT);
+
+	log.trace("getAllCoAndSiteInfo (Site List ##### SITES #####)"
+		+ elapsed(start));
+
+	if (accessedSites != null) {
+	    allSitesInfo = new ArrayList<COSite>();
+	    int accessedSitesSize = accessedSites.size();
+	    for (int i = 0; i < accessedSitesSize; i++) {
+			info = getCoAndSiteInfo(accessedSites.get(i), searchTerm,
+					academicSession);
+			if (info != null) {
+				if (withFrozenSites) {
+				    allSitesInfo.add(info);
+				    siteCount++;
+				} else {
+					if (!info.isCoIsFrozen()) {
+					    allSitesInfo.add(info);
+					    siteCount++;
+					}
+				}
+			}
+	    }
+	}
+	// TODO: move this to the end of getOsylPackage() with a specific
+	// path instead of iterating through all the sites!!!
+	new DeleteExpiredTemporaryExportFiles(allSitesInfo).start();
+	// deleteExpiredTemporaryExportFiles(allSitesInfo);
+	return allSitesInfo;
+    }    
+    
     @SuppressWarnings("unchecked")
     protected List<String> getSitesForUser(String userId, String permission) {
 	log.debug("getSitesForUser ["
