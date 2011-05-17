@@ -199,7 +199,7 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 	scSiteList.setColumnWidth(0, 150);
 	scSiteList.setColumnWidth(1, 100);
 	scSiteList.setColumnWidth(2, 100);
-	scSiteList.setColumnWidth(3, 180);
+	scSiteList.setColumnWidth(3, 170);
 	scSiteList.setColumnWidth(4, 100);
 	scSiteList.setColumnWidth(5, 120);
 	scSiteList.setColumnWidth(6, 120);
