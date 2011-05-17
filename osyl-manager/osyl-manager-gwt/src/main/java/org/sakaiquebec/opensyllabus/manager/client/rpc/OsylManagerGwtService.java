@@ -107,9 +107,6 @@ public interface OsylManagerGwtService extends RemoteService {
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
     	    String academicSession, boolean withFrozenSites);    
 
-    public List<COSite> getAllCoAndSiteInfo(String searchTerm,
-    	    String academicSession, boolean withFrozenSites);
-
     public Vector<Map<String, String>> publish(String siteId) throws Exception,
 	    FusionException, OsylPermissionException;
 
