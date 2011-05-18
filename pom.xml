@@ -42,7 +42,7 @@
     <module>osyl-editor</module>
     <module>osyl-manager</module>
     <module>osyl-admin</module>
-    <module>osyl-portal</module>
+    <module>osyl-portal</module><!-- HEC ONLY SAKAI-2723 -->
   </modules>
 
   <pluginRepositories>
