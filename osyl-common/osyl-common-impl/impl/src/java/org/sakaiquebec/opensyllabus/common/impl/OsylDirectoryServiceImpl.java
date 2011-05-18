@@ -229,7 +229,8 @@ public class OsylDirectoryServiceImpl implements OsylDirectoryService{
 
 	COConfigSerialized coConfig = null;
 	COSerialized co = null;
-	String lang = courseOff.getLang(); // HEC ONLY SAKAI-2723
+	String lang = "en"; // Sakai community only (TODO: use static var)
+	lang = courseOff.getLang(); // HEC ONLY SAKAI-2723
 
 	String configPath =
 		ServerConfigurationService.getString(
