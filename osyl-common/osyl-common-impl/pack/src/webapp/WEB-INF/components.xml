@@ -60,7 +60,7 @@
 		class="org.sakaiquebec.opensyllabus.common.impl.portal.publish3.ZCPublisherServiceImpl"
 		init-method="init" destroy-method="destroy" singleton="true">
 	</bean>
-	<!-- END HEC ONLY SAKAI -->
+	<!-- END HEC ONLY SAKAI-2723 -->
 	
 	<bean id="org.sakaiquebec.opensyllabus.common.api.OsylContentService"
 		class="org.sakaiquebec.opensyllabus.common.impl.OsylContentServiceImpl"
@@ -91,7 +91,7 @@
 		<!-- BEGIN HEC ONLY SAKAI-2723 -->	
 		<property name="osylTransformToZCCO"
 			ref="org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO" />
-		<!-- END HEC ONLY SAKAI -->
+		<!-- END HEC ONLY SAKAI-2723 -->
 
 		<!-- Sakai dependencies -->
 		<property name="contentHostingService"
@@ -127,10 +127,10 @@
 		<property name="toolManager" ref="org.sakaiproject.tool.api.ToolManager" />
 		<property name="entityManager" ref="org.sakaiproject.entity.api.EntityManager" />
 		
-		<!-- BEGIN HEC ONLY SAKAI -->		
+		<!-- BEGIN HEC ONLY SAKAI-2723 -->		
 		<property name="citationService"
 			ref="org.sakaiproject.citation.api.CitationService" />
-		<!-- END HEC ONLY SAKAI -->
+		<!-- END HEC ONLY SAKAI-2723 -->
 	
 		<property name="cmService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
