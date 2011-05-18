@@ -1,6 +1,5 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
-import org.quartz.Job;
 
 /******************************************************************************
  * $Id: $
@@ -33,7 +32,7 @@ import org.quartz.Job;
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public interface OsylCMJob extends Job {
+public interface OsylCMJob extends OsylAbstractQuartzJob {
 	
 	public final static String SESSION_FILE = "session.dat";
 	

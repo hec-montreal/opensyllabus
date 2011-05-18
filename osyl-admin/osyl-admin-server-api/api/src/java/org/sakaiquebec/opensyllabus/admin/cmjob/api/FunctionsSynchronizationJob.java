@@ -1,10 +1,5 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
-import java.util.List;
-
-import org.quartz.Job;
-
-import java.util.Arrays;
 
 /******************************************************************************
  * $Id: $
@@ -35,7 +30,7 @@ import java.util.Arrays;
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public interface FunctionsSynchronizationJob extends Job {
+public interface FunctionsSynchronizationJob extends OsylAbstractQuartzJob {
 
 
     public final static String SITE_TYPE = "course";
@@ -47,5 +42,6 @@ public interface FunctionsSynchronizationJob extends Job {
     public final static String TEMPLATE_ID = "!site.template.course";
 
     public final static String GROUP_TEMPLATE_ID = "!group.template.course";
-
+    
+    public final static int NB_THREADS = 4;
 }

@@ -29,12 +29,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentEntity;
-import org.sakaiproject.content.api.ContentHostingService;
-import org.sakaiproject.event.api.EventTrackingService;
-import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.exception.IdLengthException;
 import org.sakaiproject.exception.IdUniquenessException;
 import org.sakaiproject.exception.IdUnusedException;
@@ -47,13 +43,8 @@ import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.tool.api.Session;
-import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.TransferPublishedContentJob;
-import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
-import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.common.dao.CORelation;
-import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
@@ -61,100 +52,14 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public class TransferPublishedContentJobImpl implements
-	TransferPublishedContentJob {
+public class TransferPublishedContentJobImpl extends OsylAbstractQuartzJobImpl
+	implements TransferPublishedContentJob {
 
     /**
      * Our logger
      */
-    private static Log log =
-	    LogFactory.getLog(TransferPublishedContentJobImpl.class);
-
-    // ***************** SPRING INJECTION ************************//
-    /** The chs to be injected by Spring */
-    private ContentHostingService contentHostingService;
-
-    /**
-     * Sets the <code>ContentHostingService</code>.
-     * 
-     * @param contentHostingService
-     */
-    public void setContentHostingService(
-	    ContentHostingService contentHostingService) {
-	this.contentHostingService = contentHostingService;
-    }
-
-    /**
-     * The site service used to create new sites: Spring injection
-     */
-    private SiteService siteService;
-
-    /**
-     * Sets the <code>SiteService</code> needed to create a new site in Sakai.
-     * 
-     * @param siteService
-     */
-    public void setSiteService(SiteService siteService) {
-	this.siteService = siteService;
-    }
-
-    /** The osyl content service to be injected by Spring */
-    private OsylContentService osylContentService;
-
-    /**
-     * Sets the {@link OsylContentService}.
-     * 
-     * @param osylContentService
-     */
-    public void setOsylContentService(OsylContentService osylContentService) {
-	this.osylContentService = osylContentService;
-    }
-
-    /**
-     * Injection of the CORelationDao
-     */
-    private CORelationDao coRelationDao;
-
-    /**
-     * Sets the {@link CORelationDao}.
-     * 
-     * @param configDao
-     */
-    public void setCoRelationDao(CORelationDao relationDao) {
-	this.coRelationDao = relationDao;
-    }
-
-    private OsylSiteService osylSiteService;
-
-    public void setOsylSiteService(OsylSiteService osylSiteService) {
-	this.osylSiteService = osylSiteService;
-    }
-
-    private AuthzGroupService authzGroupService;
-
-    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
-	this.authzGroupService = authzGroupService;
-    }
-
-    private EventTrackingService eventTrackingService;
-
-    public void setEventTrackingService(
-	    EventTrackingService eventTrackingService) {
-	this.eventTrackingService = eventTrackingService;
-    }
-
-    private UsageSessionService usageSessionService;
-
-    public void setUsageSessionService(UsageSessionService usageSessionService) {
-	this.usageSessionService = usageSessionService;
-    }
-
-    private SessionManager sessionManager;
-
-    public void setSessionManager(SessionManager sessionManager) {
-	this.sessionManager = sessionManager;
-    }
-    // ***************** END SPRING INJECTION ************************//
+    protected static Log log = LogFactory
+	    .getLog(TransferPublishedContentJobImpl.class);
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 	loginToSakai();
@@ -332,15 +237,13 @@ public class TransferPublishedContentJobImpl implements
 			uri = resources.get(key);
 			if (uri.startsWith(contentSid + PUBLISH_DIRECTORY)) {
 			    newUri =
-				    uri
-					    .replaceFirst(
-						    contentSid
-							    + PUBLISH_DIRECTORY,
-						    ATTACHMENT_DIRECTORY_PREFIX
-							    + siteId
-							    + "/"
-							    + OPENSYLLABUS_ATTACHEMENT_PREFIX
-							    + "/");
+				    uri.replaceFirst(
+					    contentSid + PUBLISH_DIRECTORY,
+					    ATTACHMENT_DIRECTORY_PREFIX
+						    + siteId
+						    + "/"
+						    + OPENSYLLABUS_ATTACHEMENT_PREFIX
+						    + "/");
 			    newResourcesUri.put(uri, newUri);
 			}
 
@@ -385,19 +288,7 @@ public class TransferPublishedContentJobImpl implements
      * Logs in the sakai environment
      */
     protected void loginToSakai() {
-	Session sakaiSession = sessionManager.getCurrentSession();
-	sakaiSession.setUserId("admin");
-	sakaiSession.setUserEid("admin");
-
-	// establish the user's session
-	usageSessionService.startSession("admin", "127.0.0.1", "CMSync");
-
-	// update the user's externally provided realm definitions
-	authzGroupService.refreshUser("admin");
-
-	// post the login event
-	eventTrackingService.post(eventTrackingService.newEvent(
-		UsageSessionService.EVENT_LOGIN, null, true));
+	super.loginToSakai("TransferPublishedContentJob");
     }
 
     private void copyContent(String contentOid, String contentDid) {
@@ -416,10 +307,12 @@ public class TransferPublishedContentJobImpl implements
 		    if (!newResourceId.equals(entity.getId()))
 
 			if (entity.isCollection())
-			    // FIXME: This creates duplicated structures (JIRA SAKAI-2368)
+			    // FIXME: This creates duplicated structures (JIRA
+			    // SAKAI-2368)
 			    contentHostingService.copyIntoFolder(
 				    entity.getId(), newResourceId);
-			    // FIXME: This creates duplicated structures (JIRA SAKAI-2368)
+			// FIXME: This creates duplicated structures (JIRA
+			// SAKAI-2368)
 			else
 			    contentHostingService.copy(entity.getId(),
 				    newResourceId);
@@ -446,122 +339,5 @@ public class TransferPublishedContentJobImpl implements
 	    }
 
 	}
-
-	// List<ContentResource> resources =
-	// contentHostingService.getAllResources(contentOid);
-	//
-	// String oldResourceId = null;
-	// String collectionId = null;
-	// int nbSubFolders = 0;
-	//
-	// for (ContentResource resource : resources) {
-	// oldResourceId = resource.getId();
-	//
-	// if (oldResourceId.indexOf("/", contentOid.length() + 1) >= 0) {
-	// // Copy folder
-	// newResourceId = contentDid + "/";
-	// StringTokenizer tokens =
-	// new StringTokenizer(oldResourceId.substring(contentOid
-	// .length()), "/");
-	// ContentCollectionEdit collection = null;
-	// while (tokens.hasMoreTokens()) {
-	// collectionId = tokens.nextToken();
-	// if (tokens.hasMoreTokens()) {
-	// newResourceId = newResourceId + collectionId + "/";
-	// try {
-	//
-	// collection =
-	// contentHostingService
-	// .addCollection(newResourceId);
-	// ResourcePropertiesEdit fileProperties =
-	// collection.getPropertiesEdit();
-	// fileProperties.addProperty(
-	// ResourceProperties.PROP_DISPLAY_NAME,
-	// collectionId);
-	// contentHostingService.commitCollection(collection);
-	// } catch (IdUsedException e) {
-	// // The collection already exists, we do nothing
-	// } catch (IdInvalidException e) {
-	// e.printStackTrace();
-	// } catch (PermissionException e) {
-	// e.printStackTrace();
-	// } catch (InconsistentException e) {
-	// e.printStackTrace();
-	// }
-	// log.debug("le dossier " + newResourceId);
-	// } else {
-	// newResourceId = newResourceId + collectionId;
-	// try {
-	//
-	// // Can not check if the resource already exists
-	// contentHostingService.copyIntoFolder(oldResourceId,
-	// contentDid);
-	// } catch (PermissionException e) {
-	// e.printStackTrace();
-	// } catch (IdUnusedException e) {
-	// e.printStackTrace();
-	// } catch (TypeException e) {
-	// e.printStackTrace();
-	// } catch (InUseException e) {
-	// // la ressource existe deja
-	// } catch (OverQuotaException e) {
-	// e.printStackTrace();
-	// } catch (IdUsedException e) {
-	// e.printStackTrace();
-	// } catch (ServerOverloadException e) {
-	// e.printStackTrace();
-	// } catch (InconsistentException e) {
-	// e.printStackTrace();
-	// } catch (IdLengthException e) {
-	// e.printStackTrace();
-	// } catch (IdUniquenessException e) {
-	// e.printStackTrace();
-	// }
-	//
-	// System.out.println("la ressource " + newResourceId);
-	// }
-	// }
-	//
-	// } else {
-	// newResourceId = oldResourceId.replace(contentOid, contentDid);
-	// try {
-	//
-	// // Can not check if the resource already exists
-	// contentHostingService.copyIntoFolder(oldResourceId,
-	// contentDid);
-	// } catch (PermissionException e) {
-	// e.printStackTrace();
-	// } catch (IdUnusedException e) {
-	// e.printStackTrace();
-	// } catch (TypeException e) {
-	// e.printStackTrace();
-	// } catch (InUseException e) {
-	// // la ressource existe deja
-	// } catch (OverQuotaException e) {
-	// e.printStackTrace();
-	// } catch (IdUsedException e) {
-	// e.printStackTrace();
-	// } catch (ServerOverloadException e) {
-	// e.printStackTrace();
-	// } catch (InconsistentException e) {
-	// e.printStackTrace();
-	// } catch (IdLengthException e) {
-	// e.printStackTrace();
-	// } catch (IdUniquenessException e) {
-	// e.printStackTrace();
-	// }
-	// log.debug("la ressource " + newResourceId);
-	// }
-	// }
     }
-
-    /**
-     * Logs out of the sakai environment
-     */
-    protected void logoutFromSakai() {
-	// post the logout event
-	eventTrackingService.post(eventTrackingService.newEvent(
-		UsageSessionService.EVENT_LOGOUT, null, true));
-    }
-
 }

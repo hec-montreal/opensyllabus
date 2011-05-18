@@ -7,7 +7,6 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,14 +21,11 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.api.AuthzGroup;
-import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.coursemanagement.api.CanonicalCourse;
-import org.sakaiproject.coursemanagement.api.CourseManagementAdministration;
-import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.CourseSet;
 import org.sakaiproject.coursemanagement.api.Enrollment;
@@ -38,13 +34,6 @@ import org.sakaiproject.coursemanagement.api.Membership;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.coursemanagement.api.exception.IdExistsException;
 import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
-import org.sakaiproject.email.api.EmailService;
-import org.sakaiproject.event.api.EventTrackingService;
-import org.sakaiproject.event.api.UsageSessionService;
-import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.tool.api.Session;
-import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.Constants;
@@ -73,7 +62,6 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.SecretairesMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.SecretairesMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMapEntry;
-import org.sakaiquebec.opensyllabus.common.api.OsylDirectoryService;
 
 /******************************************************************************
  * $Id: $
@@ -103,7 +91,8 @@ import org.sakaiquebec.opensyllabus.common.api.OsylDirectoryService;
  * @version $Id: $
  */
 
-public class OsylCMJobImpl implements OsylCMJob {
+public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
+	OsylCMJob {
 
     /**
      * Map used to store information about the courses that a teacher gives:
@@ -153,7 +142,7 @@ public class OsylCMJobImpl implements OsylCMJob {
      * Map used to store information about the exam dates
      */
     private GenericExamensMapFactory examenMap = null;
-    
+
     /**
      * Map used to store information about the charge de formation
      */
@@ -182,79 +171,9 @@ public class OsylCMJobImpl implements OsylCMJob {
     /**
      * Our logger
      */
-    private static Log log = LogFactory.getLog(OsylCMJobImpl.class);
+    protected static Log log = LogFactory.getLog(OsylCMJobImpl.class);
 
-    // ***************** SPRING INJECTION ************************//
-    private CourseManagementAdministration cmAdmin;
-
-    public void setCmAdmin(CourseManagementAdministration cmAdmin) {
-	this.cmAdmin = cmAdmin;
-    }
-
-    private CourseManagementService cmService;
-
-    public void setCmService(CourseManagementService cmService) {
-	this.cmService = cmService;
-    }
-
-    /** The site service to be injected by Spring */
-    private SiteService siteService;
-
-    /**
-     * Sets the <code>SiteService</code>.
-     * 
-     * @param siteService
-     */
-    public void setSiteService(SiteService siteService) {
-	this.siteService = siteService;
-    }
-
-    private AuthzGroupService authzGroupService;
-
-    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
-	this.authzGroupService = authzGroupService;
-    }
-
-    private EventTrackingService eventTrackingService;
-
-    public void setEventTrackingService(
-	    EventTrackingService eventTrackingService) {
-	this.eventTrackingService = eventTrackingService;
-    }
-
-    private UsageSessionService usageSessionService;
-
-    public void setUsageSessionService(UsageSessionService usageSessionService) {
-	this.usageSessionService = usageSessionService;
-    }
-    
-    private OsylDirectoryService osylDirectoryService;
-    
-    public void setOsylDirectoryService (OsylDirectoryService osylDirectoryService){
-	this.osylDirectoryService = osylDirectoryService;
-    }
-
-    private SessionManager sessionManager;
-
-    public void setSessionManager(SessionManager sessionManager) {
-	this.sessionManager = sessionManager;
-    }
-    
-    private EmailService emailService;
-    
-    public void setEmailService(EmailService emailService) {
-        this.emailService = emailService;
-    }
-    
-    private UserDirectoryService userDirectoryService;
-    
-    public void setUserDirectoryService(UserDirectoryService userDirectoryService) {
-        this.userDirectoryService = userDirectoryService;
-    }
-
-    // ***************** END SPRING INJECTION ************************//
-
-	/* load the instructors and assigns them to their courses */
+    /* load the instructors and assigns them to their courses */
     private void assignTeachers() {
 	ProfCoursMapEntry profCoursEntry = null;
 	String matricule = "";
@@ -292,9 +211,10 @@ public class OsylCMJobImpl implements OsylCMJob {
 		    instructors = new HashSet<String>();
 		if (matricule != null)
 		    instructors.add(matricule);
-		else{
-		    log.warn("The course " + enrollmentSetId + " does not have instructors");
-		    //TODO: send mail also
+		else {
+		    log.warn("The course " + enrollmentSetId
+			    + " does not have instructors");
+		    // TODO: send mail also
 		}
 		enrollmentSet.setOfficialInstructors(instructors);
 		cmAdmin.updateEnrollmentSet(enrollmentSet);
@@ -305,7 +225,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 		    // We don't have a coordinator: not expected!
 		    log.warn("The course " + enrollmentSetId
 			    + " does not have a coordinator");
-		    //TODO: send mail also 
+		    // TODO: send mail also
 		} else {
 		    coordinator = detailsCours.getCoordonnateur().getEmplId();
 		    // Add coordinator to course offering for CERTIFICAT
@@ -341,7 +261,6 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 	}
     }
-    
 
     /* load the 'charge de formation' and assigns them to their courses */
     private void assignChargeFormation() {
@@ -386,7 +305,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 	Set<CanonicalCourse> cc = new HashSet<CanonicalCourse>();
 	Set<CourseOffering> courseOfferingSet = new HashSet<CourseOffering>();
 	CanonicalCourse canCourse = null;
-	
+
 	Iterator<DetailCoursMapEntry> cours =
 		detailCoursMap.values().iterator();
 
@@ -399,22 +318,22 @@ public class OsylCMJobImpl implements OsylCMJob {
 
 	    // create the canonical course
 	    if (!cmService.isCanonicalCourseDefined(canonicalCourseId)) {
-		canCourse = cmAdmin.createCanonicalCourse(canonicalCourseId, title,
-			description);
+		canCourse =
+			cmAdmin.createCanonicalCourse(canonicalCourseId, title,
+				description);
 		cc.add(canCourse);
 		cmAdmin.setEquivalentCanonicalCourses(cc);
 
 	    } else {
 		// we update
-		canCourse =
-			cmService.getCanonicalCourse(canonicalCourseId);
+		canCourse = cmService.getCanonicalCourse(canonicalCourseId);
 		canCourse.setDescription(description);
 		canCourse.setTitle(title);
 	    }
 
-	    //Check wether there is a directory site
+	    // Check wether there is a directory site
 	    hasDirectorySite(canCourse);
-	    
+
 	    if (cmService.isCourseSetDefined(courseSetId)) {
 		cmAdmin.removeCanonicalCourseFromCourseSet(courseSetId,
 			canonicalCourseId);
@@ -438,8 +357,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 			    cmAdmin.createCourseOffering(courseOfferingId,
 				    title, description, COURSE_OFF_STATUS,
 				    session.getEid(), canonicalCourseId,
-				    session.getStartDate(), session
-					    .getEndDate(), lang, career);
+				    session.getStartDate(),
+				    session.getEndDate(), lang, career);
 		    courseOfferingSet.add(courseOff);
 		} else {
 		    // We update
@@ -455,7 +374,6 @@ public class OsylCMJobImpl implements OsylCMJob {
 		    courseOff.setAcademicCareer(career);
 		    cmAdmin.updateCourseOffering(courseOff);
 		}
-		
 
 		if (cmService.isCourseSetDefined(courseSetId)) {
 		    cmAdmin.removeCourseOfferingFromCourseSet(courseSetId,
@@ -527,7 +445,6 @@ public class OsylCMJobImpl implements OsylCMJob {
      * Creates or updates the special section used for the sharable sites
      * Sharable sites should not have enrollment set so students and everything
      * section and group aware should not be associated to it.
-     *  
      * @param courseSetId
      * @param title
      * @param description
@@ -563,7 +480,6 @@ public class OsylCMJobImpl implements OsylCMJob {
 	    cmAdmin.updateSection(newSection);
 	}
 
-
 	return newSection;
     }
 
@@ -581,7 +497,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 	Date startDate = null, endDate = null;
 	List<String> currentSessions = null;
 	AcademicSession aSession = null;
-	
+
 	Date now = new Date(System.currentTimeMillis());
 	Iterator<DetailSessionsMapEntry> sessions =
 		detailSessionMap.values().iterator();
@@ -603,8 +519,9 @@ public class OsylCMJobImpl implements OsylCMJob {
 	    }
 
 	    if (!cmService.isAcademicSessionDefined(eid)) {
-		aSession = cmAdmin.createAcademicSession(eid, title, description,
-			startDate, endDate);
+		aSession =
+			cmAdmin.createAcademicSession(eid, title, description,
+				startDate, endDate);
 	    } else {
 		// We update
 		aSession = cmService.getAcademicSession(eid);
@@ -614,17 +531,16 @@ public class OsylCMJobImpl implements OsylCMJob {
 		aSession.setTitle(title);
 		cmAdmin.updateAcademicSession(aSession);
 	    }
-	    
-	    if (currentSessions == null){
-		currentSessions = new ArrayList <String>();
+
+	    if (currentSessions == null) {
+		currentSessions = new ArrayList<String>();
 	    }
-	    if ((now.compareTo(startDate)) >= 0
-			&& now.compareTo(endDate) <= 0){
-		currentSessions.add(aSession.getEid());		
-	    }else
+	    if ((now.compareTo(startDate)) >= 0 && now.compareTo(endDate) <= 0) {
+		currentSessions.add(aSession.getEid());
+	    } else
 		currentSessions.remove(aSession.getEid());
-	    cmAdmin.setCurrentAcademicSessions(currentSessions); 
-	    
+	    cmAdmin.setCurrentAcademicSessions(currentSessions);
+
 	}
     }
 
@@ -648,29 +564,7 @@ public class OsylCMJobImpl implements OsylCMJob {
      * Logs in the sakai environment
      */
     protected void loginToSakai() {
-	Session sakaiSession = sessionManager.getCurrentSession();
-	sakaiSession.setUserId("admin");
-	sakaiSession.setUserEid("admin");
-
-	// establish the user's session
-	usageSessionService.startSession("admin", "127.0.0.1", "CMSync");
-
-	// update the user's externally provided realm definitions
-	authzGroupService.refreshUser("admin");
-
-	// post the login event
-	eventTrackingService.post(eventTrackingService.newEvent(
-		UsageSessionService.EVENT_LOGIN, null, true));
-    }
-
-	/**
-	 * Logs out of the sakai environment
-	 */
-    protected void logoutFromSakai() {
-	// post the logout event
-	eventTrackingService.post(eventTrackingService.newEvent(
-		UsageSessionService.EVENT_LOGOUT, null, true));
-	usageSessionService.logout();
+	super.loginToSakai("OsylCMJob");
     }
 
     private boolean filesExist(String directory) {
@@ -685,11 +579,10 @@ public class OsylCMJobImpl implements OsylCMJob {
 	File progEtudFile = new File(directory, PROG_ETUD_FILE);
 	File chargeFormFile = new File(directory, CHARGE_FORMATION);
 
-	if (sessionFile.exists() && coursFile.exists()
-		&& etudiantFile.exists() && horairesFile.exists()
-		&& profFile.exists() && secretairesFile.exists()
-		&& servensFile.exists() && progEtudFile.exists()
-		&& chargeFormFile.exists()) {
+	if (sessionFile.exists() && coursFile.exists() && etudiantFile.exists()
+		&& horairesFile.exists() && profFile.exists()
+		&& secretairesFile.exists() && servensFile.exists()
+		&& progEtudFile.exists() && chargeFormFile.exists()) {
 	    return true;
 	}
 
@@ -697,8 +590,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 		+ "set is missing in directory " + directory);
 	return false;
 
-    } // filesExist    
-    
+    } // filesExist
+
     /** {@inheritDoc} */
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 	long start = System.currentTimeMillis();
@@ -1172,7 +1065,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 
     int i = 0;
 
-    //Add secretary directly to the course offering
+    // Add secretary directly to the course offering
     private void addSecretariesToMembership(List<String> secretaries,
 	    List<DetailCoursMapEntry> courses) {
 	String courseOfferingId = null;
@@ -1184,8 +1077,8 @@ public class OsylCMJobImpl implements OsylCMJob {
 		    + secretaries.toString());
 
 	    for (String secretary : secretaries) {
-		cmAdmin.addOrUpdateCourseOfferingMembership(secretary, SECRETARY_ROLE,
-			courseOfferingId, ACTIVE_STATUS);
+		cmAdmin.addOrUpdateCourseOfferingMembership(secretary,
+			SECRETARY_ROLE, courseOfferingId, ACTIVE_STATUS);
 		actualCourseMembers.remove(secretary + courseOfferingId);
 
 	    }
@@ -1246,6 +1139,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 
     /**
      * Check if we have a directory site associated.
+     * 
      * @param canCourse
      * @return
      */
@@ -1253,26 +1147,27 @@ public class OsylCMJobImpl implements OsylCMJob {
 	boolean exists = false;
 	String canCourseId = canCourse.getEid().trim();
 	String siteTitle = getDirectorySiteName(canCourseId);
-	
+
 	if (!siteExists(siteTitle)) {
 	    try {
 		exists = osylDirectoryService.createSite(siteTitle, canCourse);
-		
+
 	    } catch (Exception e) {
-		 log.error("The directory site for "
-			    + siteTitle + " has not been created.");
-		 e.printStackTrace();
+		log.error("The directory site for " + siteTitle
+			+ " has not been created.");
+		e.printStackTrace();
 	    }
-	    
-	    //TODO: put a more visible message like sending mail
-	    log.info("The directory site for "
-		    + siteTitle + " has been created.");
+
+	    // TODO: put a more visible message like sending mail
+	    log.info("The directory site for " + siteTitle
+		    + " has been created.");
 	}
 	return exists;
     }
 
     /**
      * Get the name of the directory site associated
+     * 
      * @param canCourseId
      * @return
      */
@@ -1299,8 +1194,7 @@ public class OsylCMJobImpl implements OsylCMJob {
 	}
 
 	if (canCourseId.matches(".*[^0-9].*")) {
-	    if (canCourseId.endsWith("A")
-		    || canCourseId.endsWith("E")
+	    if (canCourseId.endsWith("A") || canCourseId.endsWith("E")
 		    || canCourseId.endsWith("R")) {
 		if (canCourseId.length() == 8) {
 		    courseIdFront = canCourseId.substring(0, 2);
@@ -1325,10 +1219,10 @@ public class OsylCMJobImpl implements OsylCMJob {
 	}
 	return courseId;
     }
-    
+
     /**
      * Check whether a site with the given title exists.
-     *  
+     * 
      * @param siteTitle
      * @return
      */

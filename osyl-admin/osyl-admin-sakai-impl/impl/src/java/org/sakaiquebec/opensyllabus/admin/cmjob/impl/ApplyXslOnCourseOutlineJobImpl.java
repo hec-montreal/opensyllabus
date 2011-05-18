@@ -20,56 +20,56 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
-import java.io.File;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.component.cover.ServerConfigurationService;
-import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylConversionJob;
+import org.sakaiquebec.opensyllabus.admin.cmjob.api.ApplyXslOnCourseOutlineJob;
+import org.sakaiquebec.opensyllabus.common.helper.XmlHelper;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
 /**
- * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
+ * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public class OsylConversionJobImpl extends OsylAbstractQuartzJobImpl implements
-	OsylConversionJob {
+public class ApplyXslOnCourseOutlineJobImpl extends OsylAbstractQuartzJobImpl
+	implements ApplyXslOnCourseOutlineJob {
 
-    protected static Log log = LogFactory.getLog(OsylConversionJobImpl.class);
+    protected static Log log = LogFactory
+	    .getLog(ApplyXslOnCourseOutlineJobImpl.class);
 
     public void execute(JobExecutionContext jec) throws JobExecutionException {
-	log.info("Start converting Course Outlines");
+	log.info("Start apply xsl on Course Outlines");
 	long start = System.currentTimeMillis();
 	loginToSakai();
 	List<COSerialized> cos = osylSiteService.getAllCO();
-	String configPath =
-		ServerConfigurationService
-			.getString(OSYL_CONFIG_PATH_KEY, null);
-	if (configPath == null)
-	    configPath =
-		    System.getProperty("catalina.home") + File.separator
-			    + "webapps" + File.separator
-			    + "osyl-admin-sakai-tool";// TODO SAKAI-860
-	// cleaner method.
+	String xsl = adminConfigService.getCourseOutlineXsl();
 	for (COSerialized co : cos) {
-	    log.debug("Start conversion of co with co_id:" + co.getCoId());
+	    log.debug("Start applying xsl on co with co_id:" + co.getCoId());
 	    try {
-		osylSiteService.convertAndSave(configPath, co);
+		String xml = co.getContent();
+
+		if (xml != null) {
+		    xml = XmlHelper.applyXsl(xml, xsl);
+		    co.setContent(xml);
+		    resourceDao.createOrUpdateCourseOutline(co);
+		}
+
 	    } catch (Exception e) {
-		log.error("Could not convert co with co_id:" + co.getCoId());
+		log.error("Could not apply xsl on co with co_id:"
+			+ co.getCoId());
 		e.printStackTrace();
 	    }
-	    log.debug("Finished conversion of co with co_id:" + co.getCoId());
+	    log.debug("Finished applying xsl on co with co_id:" + co.getCoId());
 	}
 	logoutFromSakai();
-	log.info("Finished converting Course Outlines in "
+	log.info("Finished applying xsl on Course Outlines in "
 		+ (System.currentTimeMillis() - start) + " ms");
     }
 
     protected void loginToSakai() {
-	super.loginToSakai("OsylConversionJob");
+	super.loginToSakai("ApplyXslOnCourseOutlineJob");
     }
 }

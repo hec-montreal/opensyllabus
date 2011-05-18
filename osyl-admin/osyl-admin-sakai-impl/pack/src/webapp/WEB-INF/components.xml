@@ -227,10 +227,8 @@
 		<property name="securityService" ref="org.sakaiproject.authz.api.SecurityService" />
 	</bean>
 
-	<!--
-		ConfigurationService bean handles institution-specific configuration
-		for the Citations Helper
-	-->
+	<!-- ConfigurationService bean handles institution-specific configuration 
+		for the Citations Helper -->
 	<bean id="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService"
 		class="org.sakaiquebec.opensyllabus.admin.impl.ConfigurationServiceImpl"
 		init-method="init" destroy-method="destroy" singleton="true">
@@ -240,211 +238,116 @@
 		<property name="eventTrackingService"
 			ref="org.sakaiproject.event.api.EventTrackingService" />
 		<property name="entityManager" ref="org.sakaiproject.entity.api.EntityManager" />
-		<property name="securityService" ref="org.sakaiproject.authz.api.SecurityService" />
 	</bean>
 
-	<bean id="osylcmjob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImpl">
+	<bean id="osylAbstractQuartzJob" abstract="true"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylAbstractQuartzJobImpl">
+		<property name="adminConfigService"
+			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
+		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
 		<property name="cmAdmin"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementAdministration" />
 		<property name="cmService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
+		<property name="contentHostingService"
+			ref="org.sakaiproject.content.api.ContentHostingService" />
+		<property name="coRelationDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
+		<property name="emailService" ref="org.sakaiproject.email.api.EmailService" />
 		<property name="eventTrackingService"
 			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
-		<property name="emailService" ref="org.sakaiproject.email.api.EmailService" />
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
-		<property name="userDirectoryService"
-			ref="org.sakaiproject.user.api.UserDirectoryService" />
+		<property name="osylContentService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />
 		<property name="osylDirectoryService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylDirectoryService" />
+		<property name="osylManagerService"
+			ref="org.sakaiquebec.opensyllabus.manager.api.OsylManagerService" />
+		<property name="osylPublishService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylPublishService" />
+		<property name="osylSiteService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
+		<property name="resourceDao"
+			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
+		<property name="serverConfigService"
+			ref="org.sakaiproject.component.api.ServerConfigurationService" />
+		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
+		<property name="toolManager" ref="org.sakaiproject.tool.api.ToolManager" />
+		<property name="usageSessionService"
+			ref="org.sakaiproject.event.api.UsageSessionService" />
+		<property name="userDirectoryService"
+			ref="org.sakaiproject.user.api.UserDirectoryService" />
+	</bean>
+
+
+	<bean id="osylcmjob"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylCMJobImpl"
+		parent="osylAbstractQuartzJob">
 	</bean>
 
 	<bean id="offSitesjob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OfficialSitesJobImpl">
-		<property name="cmService"
-			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
-		<property name="adminConfigService"
-			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
-		<property name="osylSiteService"
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
-		<property name="osylManagerService"
-			ref="org.sakaiquebec.opensyllabus.manager.api.OsylManagerService" />
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="eventTrackingService"
-			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
-		<property name="emailService" ref="org.sakaiproject.email.api.EmailService" />
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
-		<property name="userDirectoryService"
-			ref="org.sakaiproject.user.api.UserDirectoryService" />
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OfficialSitesJobImpl"
+		parent="osylAbstractQuartzJob">
 	</bean>
 
 	<bean id="roleSynchrojob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.RolesSynchronisationJobImpl">
-		<property name="userDirService"
-			ref="org.sakaiproject.user.api.UserDirectoryService" />
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
-		<property name="adminConfigService"
-			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="eventTrackingService"
-			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.RolesSynchronizationJobImpl"
+		parent="osylAbstractQuartzJob">
 	</bean>
 
 	<bean id="freezeSitesjob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.FreezeSitesAfterSessionJobImpl">
-		<property name="cmService"
-			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
-		<property name="adminConfigService"
-			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="eventTrackingService"
-			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />			
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.FreezeSitesAfterSessionJobImpl"
+		parent="osylAbstractQuartzJob">
 	</bean>
 
 	<bean id="unFreezeSitesjob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.UnFreezeSitesJobImpl">
-		<property name="cmService"
-			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
-		<property name="adminConfigService"
-			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="eventTrackingService"
-			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />			
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.UnFreezeSitesJobImpl"
+		parent="osylAbstractQuartzJob">
 	</bean>
 
-
 	<bean id="changePermSynchrojob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.FunctionsSynchronisationJobImpl">
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
-		<property name="adminConfigService"
-			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="eventTrackingService"
-			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.FunctionsSynchronizationJobImpl"
+		parent="osylAbstractQuartzJob">
 	</bean>
 
 	<bean id="changeOsylEditorSiteTypejob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.ChangeOsylEditorSiteTypeJobImpl">
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="eventTrackingService"
-			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
-		<property name="toolManager" ref="org.sakaiproject.tool.api.ToolManager" />
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.ChangeOsylEditorSiteTypeJobImpl"
+		parent="osylAbstractQuartzJob">
 	</bean>
 
-
 	<bean id="osylconvjob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylConversionJobImpl">
-		<property name="osylSiteService"
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="eventTrackingService"
-			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.OsylConversionJobImpl"
+		parent="osylAbstractQuartzJob">
 	</bean>
 
 	<bean id="osyltransferjob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.TransferPublishedContentJobImpl">
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
-		<property name="contentHostingService"
-			ref="org.sakaiproject.content.api.ContentHostingService" />
-		<property name="osylContentService"
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />
-		<property name="osylSiteService"
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
-		<property name="coRelationDao"
-			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="eventTrackingService"
-			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.TransferPublishedContentJobImpl"
+		parent="osylAbstractQuartzJob">
 	</bean>
 
 	<bean id="createPrintVersionJob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CreatePrintVersionJobImpl">
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
-		<property name="osylPublishService"
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylPublishService" />
-		<property name="contentHostingService"
-			ref="org.sakaiproject.content.api.ContentHostingService" />
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="eventTrackingService"
-			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.CreatePrintVersionJobImpl"
+		parent="osylAbstractQuartzJob">
 	</bean>
 
 	<bean id="addcmTitlePropertyjob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.AddCMTitlePropertyJobImpl">
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
-		<property name="cmService"
-			ref="org.sakaiproject.coursemanagement.api.CourseManagementService" />
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="eventTrackingService"
-			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
-		<property name="toolManager" ref="org.sakaiproject.tool.api.ToolManager" />
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.AddCMTitlePropertyJobImpl"
+		parent="osylAbstractQuartzJob">
 	</bean>
-	
+
 	<bean id="addHomePageJob"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.AddHomePageToolImpl">
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
-		<property name="resourceDao"
-			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
-			<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="eventTrackingService"
-			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
-		<property name="toolManager" ref="org.sakaiproject.tool.api.ToolManager" />
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.AddHomePageToolJobImpl"
+		parent="osylAbstractQuartzJob">
 	</bean>
-	
+
 	<bean id="applyXslOnCourseOutline"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.ApplyXslOnCourseOutlineImpl">
-		<property name="osylSiteService"
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="eventTrackingService"
-			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
-		<property name="resourceDao"
-			ref="org.sakaiquebec.opensyllabus.common.dao.ResourceDao" />
-		<property name="adminConfigService"
-			ref="org.sakaiquebec.opensyllabus.admin.api.ConfigurationService" />
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.ApplyXslOnCourseOutlineJobImpl"
+		parent="osylAbstractQuartzJob">
+	</bean>
+
+	<bean id="deleteAllMyWorkspaces"
+		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.DeleteAllMyWorkspaceJobImpl"
+		parent="osylAbstractQuartzJob">
 	</bean>
 
 	<bean
@@ -664,7 +567,7 @@
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
 	</bean>
-	
+
 	<bean
 		id="org.sakaiproject.api.app.scheduler.JobBeanWrapper.applyXslOnCourseOutline"
 		class="org.sakaiproject.component.app.scheduler.jobs.SpringJobBeanWrapper"
@@ -675,23 +578,13 @@
 		</property>
 
 		<property name="jobName">
-			<value>Apply xsl on course outline (xsl must be in opensyllabus admin site and named courseOutline.xsl)</value>
+			<value>Apply xsl on course outline (xsl must be in opensyllabus admin
+				site and named courseOutline.xsl)</value>
 		</property>
 
 		<property name="schedulerManager">
 			<ref bean="org.sakaiproject.api.app.scheduler.SchedulerManager" />
 		</property>
-	</bean>
-
-	<bean id="deleteAllMyWorkspaces"
-		class="org.sakaiquebec.opensyllabus.admin.cmjob.impl.DeleteAllMyWorkspaces">
-		<property name="authzGroupService" ref="org.sakaiproject.authz.api.AuthzGroupService" />
-		<property name="eventTrackingService"
-			ref="org.sakaiproject.event.api.EventTrackingService" />
-		<property name="usageSessionService"
-			ref="org.sakaiproject.event.api.UsageSessionService" />
-		<property name="sessionManager" ref="org.sakaiproject.tool.api.SessionManager" />
-		<property name="siteService" ref="org.sakaiproject.site.api.SiteService" />
 	</bean>
 
 	<bean

@@ -25,10 +25,7 @@ package org.sakaiquebec.opensyllabus.admin.cmjob.api;
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public interface AddCMTitlePropertyJob extends OsylAbstractQuartzJob{
-
-    final static String[] DEFAULT_TOOLS =
-    { "sakai.opensyllabus.tool", "sakai.assignment.grades",
-	    "sakai.resources", "sakai.siteinfo" };
+public interface ApplyXslOnCourseOutlineJob extends OsylAbstractQuartzJob{
+    public static String OSYL_CONFIG_PATH_KEY = "opensyllabus.configs.path";
 
 }

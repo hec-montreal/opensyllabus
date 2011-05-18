@@ -10,25 +10,18 @@ import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.component.cover.ServerConfigurationService;
-import org.sakaiproject.event.api.EventTrackingService;
-import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.ToolConfiguration;
-import org.sakaiproject.tool.api.Session;
-import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.tool.api.Tool;
-import org.sakaiproject.tool.api.ToolManager;
+import org.sakaiquebec.opensyllabus.admin.cmjob.api.AddHomePageToolJob;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
-import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
 import org.sakaiquebec.opensyllabus.common.helper.FileHelper;
 import org.sakaiquebec.opensyllabus.common.helper.XmlHelper;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -39,11 +32,8 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
  * 
  * @author Rémi Saïas
  */
-public class AddHomePageToolImpl implements Job {
-
-    private final static String SITE_TYPE = "course";
-
-    public static String OSYL_CONFIG_PATH_KEY = "opensyllabus.configs.path";
+public class AddHomePageToolJobImpl extends OsylAbstractQuartzJobImpl implements
+	AddHomePageToolJob {
 
     private List<Site> allSites;
 
@@ -52,72 +42,7 @@ public class AddHomePageToolImpl implements Job {
     /**
      * Our logger
      */
-    private static Log log = LogFactory.getLog(AddHomePageToolImpl.class);
-
-    // ***************** SPRING INJECTION ************************//
-    /**
-     * The site service used to create new sites: Spring injection
-     */
-    private SiteService siteService;
-
-    /**
-     * Sets the <code>SiteService</code> needed to create a new site in Sakai.
-     * 
-     * @param siteService
-     */
-    public void setSiteService(SiteService siteService) {
-	this.siteService = siteService;
-    }
-
-    /** The resouceDao to be injected by Spring */
-    private ResourceDao resourceDao;
-
-    /**
-     * Sets the {@link ResourceDao}.
-     * 
-     * @param resourceDao
-     */
-    public void setResourceDao(ResourceDao resourceDao) {
-	this.resourceDao = resourceDao;
-    }
-
-    private AuthzGroupService authzGroupService;
-
-    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
-	this.authzGroupService = authzGroupService;
-    }
-
-    private EventTrackingService eventTrackingService;
-
-    public void setEventTrackingService(
-	    EventTrackingService eventTrackingService) {
-	this.eventTrackingService = eventTrackingService;
-    }
-
-    private UsageSessionService usageSessionService;
-
-    public void setUsageSessionService(UsageSessionService usageSessionService) {
-	this.usageSessionService = usageSessionService;
-    }
-
-    private SessionManager sessionManager;
-
-    public void setSessionManager(SessionManager sessionManager) {
-	this.sessionManager = sessionManager;
-    }
-
-    private ToolManager toolManager;
-
-    public void setToolManager(ToolManager toolManager) {
-	this.toolManager = toolManager;
-    }
-
-    // ***************** END SPRING INJECTION ************************//
-    private final static String[] TOOLS_BEFORE =
-	    { "sakai.opensyllabus.tool", "sakai.assignment.grades",
-		    "sakai.resources", "sakai.siteinfo" };
-
-    private static final String DEFAULT_LOCALE = "fr_CA";
+    protected static Log log = LogFactory.getLog(AddHomePageToolJobImpl.class);
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
@@ -373,28 +298,6 @@ public class AddHomePageToolImpl implements Job {
      * Logs in the sakai environment
      */
     protected void loginToSakai() {
-	Session sakaiSession = sessionManager.getCurrentSession();
-	sakaiSession.setUserId("admin");
-	sakaiSession.setUserEid("admin");
-
-	// establish the user's session
-	usageSessionService.startSession("admin", "127.0.0.1", "CMSync");
-
-	// update the user's externally provided realm definitions
-	authzGroupService.refreshUser("admin");
-
-	// post the login event
-	eventTrackingService.post(eventTrackingService.newEvent(
-		UsageSessionService.EVENT_LOGIN, null, true));
+	super.loginToSakai("AddHomePageToolJob");
     }
-
-    /**
-     * Logs out of the sakai environment
-     */
-    protected void logoutFromSakai() {
-	// post the logout event
-	eventTrackingService.post(eventTrackingService.newEvent(
-		UsageSessionService.EVENT_LOGOUT, null, true));
-    }
-
 }

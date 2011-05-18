@@ -10,87 +10,24 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.api.AuthzGroup;
-import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.RoleAlreadyDefinedException;
-import org.sakaiproject.entity.api.ResourcePropertiesEdit;
-import org.sakaiproject.event.api.EventTrackingService;
-import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.site.api.Group;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.tool.api.Session;
-import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.FunctionsSynchronizationJob;
 
-public class FunctionsSynchronisationJobImpl implements
-	FunctionsSynchronizationJob {
+public class FunctionsSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
+	implements FunctionsSynchronizationJob {
 
     /**
      * Our logger
      */
-    private static Log log =
-	    LogFactory.getLog(FunctionsSynchronisationJobImpl.class);
+    protected static Log log = LogFactory
+	    .getLog(FunctionsSynchronizationJobImpl.class);
 
-    private final static String PROP_SITE_ISFROZEN = "isfrozen";  
-    
-    // ***************** SPRING INJECTION ************************//
-    /**
-     * The site service used to create new sites: Spring injection
-     */
-    private SiteService siteService;
-
-    /**
-     * Sets the <code>SiteService</code> needed to create a new site in Sakai.
-     * 
-     * @param siteService
-     */
-    public void setSiteService(SiteService siteService) {
-	this.siteService = siteService;
-    }
-
-    /**
-     * Administration ConfigurationService injection
-     */
-    private ConfigurationService adminConfigService;
-
-    /**
-     * @param adminConfigService
-     */
-    public void setAdminConfigService(ConfigurationService adminConfigService) {
-	this.adminConfigService = adminConfigService;
-    }
-
-    private AuthzGroupService authzGroupService;
-
-    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
-	this.authzGroupService = authzGroupService;
-    }
-
-    private EventTrackingService eventTrackingService;
-
-    public void setEventTrackingService(
-	    EventTrackingService eventTrackingService) {
-	this.eventTrackingService = eventTrackingService;
-    }
-
-    private UsageSessionService usageSessionService;
-
-    public void setUsageSessionService(UsageSessionService usageSessionService) {
-	this.usageSessionService = usageSessionService;
-    }
-
-    private SessionManager sessionManager;
-
-    public void setSessionManager(SessionManager sessionManager) {
-	this.sessionManager = sessionManager;
-    }
-
-    // ***************** END SPRING INJECTION ************************//
-    
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 	loginToSakai();
 
@@ -100,9 +37,11 @@ public class FunctionsSynchronisationJobImpl implements
 	String roleToRemove = adminConfigService.getRoleToRemove();
 	String functionsRole = adminConfigService.getFunctionsRole();
 	String roleDescription = adminConfigService.getDescription();
-	List<String> allowedFunctions = adminConfigService.getAllowedFunctions();
-	List<String> disallowedFunctions = adminConfigService.getDisallowedFunctions();
-	
+	List<String> allowedFunctions =
+		adminConfigService.getAllowedFunctions();
+	List<String> disallowedFunctions =
+		adminConfigService.getDisallowedFunctions();
+
 	log.info("data provided by adminConfigService:");
 	log.info("roleToRemove:        " + roleToRemove);
 	log.info("functionsRole:       " + functionsRole);
@@ -140,7 +79,7 @@ public class FunctionsSynchronisationJobImpl implements
 	// Check role in group template realm
 	try {
 	    AuthzGroup realm =
-		authzGroupService.getAuthzGroup(GROUP_TEMPLATE_ID);
+		    authzGroupService.getAuthzGroup(GROUP_TEMPLATE_ID);
 	    if (functionsRole != null) {
 		if (!isRoleInRealm(realm, functionsRole)) {
 		    addRole(realm, functionsRole, roleDescription,
@@ -167,21 +106,28 @@ public class FunctionsSynchronisationJobImpl implements
 
 	// check all course site realms
 	final List<Site> allSites =
-		siteService.getSites(SiteService.SelectionType.ANY, SITE_TYPE,
-			null, null, SiteService.SortType.NONE, null);
+		siteService.getSites(SiteService.SelectionType.ANY,
+			COURSE_SITE, null, null, SiteService.SortType.NONE,
+			null);
 
+//	if (adminConfigService.isIncludingDirSites()) {
+//	    allSites.addAll(siteService
+//		    .getSites(SiteService.SelectionType.ANY, DIRECTORY_SITE,
+//			    null, null, SiteService.SortType.NONE, null));
+//	}
 	log.info("processing " + allSites.size() + " sites");
-	
+
 	int THREAD_COUNT = 8;
 	int SHARE_COUNT = THREAD_COUNT * 8;
-	
-	if(allSites.size()<SHARE_COUNT){
+
+	if (allSites.size() < SHARE_COUNT) {
 	    processSites(allSites, functionsRole, roleDescription,
 		    allowedFunctions, disallowedFunctions, roleToRemove);
 	} else {
-	    final int share = new Double(
-		    Math.floor(allSites.size()/(SHARE_COUNT))).intValue();
-		
+	    final int share =
+		    new Double(Math.floor(allSites.size() / (SHARE_COUNT)))
+			    .intValue();
+
 	    logoutFromSakai();
 
 	    MyThread[] threads = new MyThread[THREAD_COUNT];
@@ -191,34 +137,35 @@ public class FunctionsSynchronisationJobImpl implements
 	    for (int i = 0; i < THREAD_COUNT; i++) {
 		shareStart = i * share;
 		shareEnd = Math.min(i * share + share, allSites.size());
-		threads[i] = new MyThread(i,
-			allSites.subList(shareStart, shareEnd), functionsRole,
-			    roleDescription, allowedFunctions,
-			    disallowedFunctions, roleToRemove);
-		log.debug("allocated sites " + shareStart + " to "
-			+ shareEnd + " to thread #" + i);
+		threads[i] =
+			new MyThread(i, allSites.subList(shareStart, shareEnd),
+				functionsRole, roleDescription,
+				allowedFunctions, disallowedFunctions,
+				roleToRemove);
+		log.debug("allocated sites " + shareStart + " to " + shareEnd
+			+ " to thread #" + i);
 		threads[i].start();
 	    }
 	    shareStart = THREAD_COUNT * share;
-	    
+
 	    // Check that every thread has completed.
-	    boolean allCompleted = true; 
+	    boolean allCompleted = true;
 	    while (true) {
 		allCompleted = true;
 		for (int i = 0; i < THREAD_COUNT; i++) {
-		    if(threads[i].completed()) {
-			// found one free thread 
+		    if (threads[i].completed()) {
+			// found one free thread
 			if (shareEnd != allSites.size()) {
 			    // not all sites processed
 			    allCompleted = false;
-			    shareEnd = Math.min(shareStart + share,
-				    allSites.size());
-			    threads[i] = new MyThread(
-				    i, 
-				    allSites.subList(
-					    shareStart,
-					    shareEnd), functionsRole,
-					    roleDescription, allowedFunctions,
+			    shareEnd =
+				    Math.min(shareStart + share,
+					    allSites.size());
+			    threads[i] =
+				    new MyThread(i, allSites.subList(
+					    shareStart, shareEnd),
+					    functionsRole, roleDescription,
+					    allowedFunctions,
 					    disallowedFunctions, roleToRemove);
 			    log.debug("allocated sites " + shareStart + " to "
 				    + shareEnd + " to thread #" + i);
@@ -243,8 +190,7 @@ public class FunctionsSynchronisationJobImpl implements
 	    }
 	}
 	log.info("Completed after "
-		+ ((System.currentTimeMillis() - start)/1000)
-		+ " seconds");
+		+ ((System.currentTimeMillis() - start) / 1000) + " seconds");
 	if (functionsRole != null) {
 	    log.info("roleModified:       " + functionsRole);
 	}
@@ -252,7 +198,7 @@ public class FunctionsSynchronisationJobImpl implements
 	    log.info("roleRemoved:        " + roleToRemove);
 	}
     } // execute
-    
+
     class MyThread extends Thread {
 	List<Site> sites;
 	String functionsRole;
@@ -274,7 +220,7 @@ public class FunctionsSynchronisationJobImpl implements
 	    setAllowedFunctions(allowedFunctions);
 	    setDisallowedFunctions(disallowedFunctions);
 	}
-	
+
 	private void setSiteList(List<Site> sites) {
 	    this.sites = sites;
 	}
@@ -305,11 +251,10 @@ public class FunctionsSynchronisationJobImpl implements
 	    loginToSakai();
 	    try {
 		processSites(sites, functionsRole, roleDescription,
-		    allowedFunctions, disallowedFunctions, roleToRemove);
+			allowedFunctions, disallowedFunctions, roleToRemove);
 	    } catch (Exception e) {
 		log.error("Thread #" + threadNo + " (" + getName()
-			+ ") : Unable to process all sites without error: "
-			+ e);
+			+ ") : Unable to process all sites without error: " + e);
 		e.printStackTrace();
 	    }
 	    logoutFromSakai();
@@ -321,49 +266,54 @@ public class FunctionsSynchronisationJobImpl implements
 	    return completed;
 	}
     } // class MyThread
-	
+
     private void processSites(List<Site> sites, String functionsRole,
 	    String roleDescription, List<String> allowedFunctions,
-	    List<String> disallowedFunctions, String roleToRemove){
+	    List<String> disallowedFunctions, String roleToRemove) {
 	boolean roleExists = false;
 	Site site = null;
 	AuthzGroup siteRealm = null;
-	
+
 	for (int i = 0; i < sites.size(); i++) {
 	    site = sites.get(i);
 
-	    if (!getFrozenValue(site)) {
+//	    if (adminConfigService.isIncludingFrozenSites()
+//		    || (!adminConfigService.isIncludingFrozenSites() && !getFrozenValue(site))) {
+		if (!getFrozenValue(site)) {
 
 		    try {
 			siteRealm =
-			    authzGroupService.getAuthzGroup(REALM_PREFIX
+				authzGroupService.getAuthzGroup(REALM_PREFIX
 					+ site.getId());
 		    } catch (GroupNotDefinedException e) {
 			log.error(e.getMessage());
 		    }
-	
+
 		    if (siteRealm != null) {
 			try {
 			    if (functionsRole != null) {
 				// We check if the role with the required
 				// permissions exists in the site
-				roleExists = isRoleInRealm(siteRealm, functionsRole);
+				roleExists =
+					isRoleInRealm(siteRealm, functionsRole);
 				if (!roleExists) {
-				    addRole(siteRealm, functionsRole, roleDescription,
-					    allowedFunctions, disallowedFunctions);
+				    addRole(siteRealm, functionsRole,
+					    roleDescription, allowedFunctions,
+					    disallowedFunctions);
 				    authzGroupService.save(siteRealm);
 				} else {
-	
-				    Role role = siteRealm.getRole(functionsRole);
+
+				    Role role =
+					    siteRealm.getRole(functionsRole);
 				    role.setDescription(roleDescription);
 				    // We add the new permissions
 				    addPermissions(role, allowedFunctions);
-	
+
 				    // We remove the specified users
 				    removePermissions(role, disallowedFunctions);
 				}
 			    }
-	
+
 			    // We remove the role
 			    if (roleToRemove != null)
 				removeRole(siteRealm, roleToRemove);
@@ -373,16 +323,16 @@ public class FunctionsSynchronisationJobImpl implements
 				log.error("Unable to save changes for site "
 					+ site.getId() + " : " + e);
 				e.printStackTrace();
-	
+
 			    }
-	
+
 			} catch (GroupNotDefinedException e) {
 			    log.error(e.getMessage());
 			} catch (AuthzPermissionException e) {
 			    log.error(e.getMessage());
 			}
 		    }
-	
+
 		    // look if we have a group for the current site
 		    Collection<Group> groups = site.getGroups();
 		    if (groups != null && groups.size() > 0) {
@@ -394,36 +344,41 @@ public class FunctionsSynchronisationJobImpl implements
 				AuthzGroup groupRealm = null;
 				try {
 				    groupRealm =
-					authzGroupService
+					    authzGroupService
 						    .getAuthzGroup(REALM_PREFIX
 							    + site.getId()
 							    + GROUP_REALM_PREFIX
 							    + groupId);
-	
+
 				    if (functionsRole != null) {
-					// We check if the role with the required
+					// We check if the role with the
+					// required
 					// permissions exists in the group
-					roleExists = isRoleInRealm(groupRealm,
-						functionsRole);
+					roleExists =
+						isRoleInRealm(groupRealm,
+							functionsRole);
 					if (!roleExists) {
 					    addRole(groupRealm, functionsRole,
-						    roleDescription, allowedFunctions,
+						    roleDescription,
+						    allowedFunctions,
 						    disallowedFunctions);
 					    authzGroupService.save(groupRealm);
 					} else {
-	
+
 					    Role role =
 						    groupRealm
 							    .getRole(functionsRole);
 					    role.setDescription(roleDescription);
 					    // We add the new permissions
-					    addPermissions(role, allowedFunctions);
-	
+					    addPermissions(role,
+						    allowedFunctions);
+
 					    // We remove the specified users
-					    removePermissions(role, disallowedFunctions);
+					    removePermissions(role,
+						    disallowedFunctions);
 					}
 				    }
-	
+
 				    // We remove the role
 				    if (roleToRemove != null)
 					removeRole(groupRealm, roleToRemove);
@@ -434,7 +389,7 @@ public class FunctionsSynchronisationJobImpl implements
 						+ groupId + " : " + e);
 					e.printStackTrace();
 				    }
-	
+
 				} catch (GroupNotDefinedException e) {
 				    log.error(e.getMessage());
 				} catch (AuthzPermissionException e) {
@@ -443,7 +398,8 @@ public class FunctionsSynchronisationJobImpl implements
 			    }
 			}
 		    }
-	    }
+		}
+//	    }
 	}
     } // processSites
 
@@ -461,7 +417,7 @@ public class FunctionsSynchronisationJobImpl implements
 
 		if (role == null)
 		    role = realm.addRole(functionsRole);
-		
+
 		role.setDescription(roleDescription);
 
 		for (Object function : allowedFunctions) {
@@ -518,19 +474,7 @@ public class FunctionsSynchronisationJobImpl implements
      * Logs in the sakai environment
      */
     protected void loginToSakai() {
-	Session sakaiSession = sessionManager.getCurrentSession();
-	sakaiSession.setUserId("admin");
-	sakaiSession.setUserEid("admin");
-
-	// establish the user's session
-	usageSessionService.startSession("admin", "127.0.0.1", "FunctionsSync");
-
-	// update the user's externally provided realm definitions
-	authzGroupService.refreshUser("admin");
-
-	// post the login event
-	eventTrackingService.post(eventTrackingService.newEvent(
-		UsageSessionService.EVENT_LOGIN, null, true));
+	super.loginToSakai("FunctionsSynchronizationJob");
     }
 
     private void removeRole(AuthzGroup realm, String role) {
@@ -551,26 +495,4 @@ public class FunctionsSynchronisationJobImpl implements
 	}
 
     }
-
-    /**
-     * Logs out of the sakai environment
-     */
-    protected void logoutFromSakai() {
-	// post the logout event
-	eventTrackingService.post(eventTrackingService.newEvent(
-		UsageSessionService.EVENT_LOGOUT, null, true));
-	usageSessionService.logout();
-    }
-    
-	private boolean getFrozenValue(Site site) {
-		ResourcePropertiesEdit rp = site.getPropertiesEdit();
-		boolean coIsFrozen = false;
-		if (rp.getProperty(PROP_SITE_ISFROZEN)!= null) {
-			if (rp.getProperty(PROP_SITE_ISFROZEN).equals("true")) {
-				coIsFrozen = true;
-				log.info("Site frozen: " + site.getTitle());				
-			}
-		}	
-		return coIsFrozen;
-	}
 }

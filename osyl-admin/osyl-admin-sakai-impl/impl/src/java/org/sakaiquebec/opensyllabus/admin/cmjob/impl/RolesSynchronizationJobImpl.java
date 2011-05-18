@@ -10,103 +10,24 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.api.AuthzGroup;
-import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.RoleAlreadyDefinedException;
-import org.sakaiproject.event.api.EventTrackingService;
-import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.tool.api.Session;
-import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.RolesSynchronizationJob;
 
-public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
+public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
+	implements RolesSynchronizationJob {
 
-    private static Log log =
-	    LogFactory.getLog(RolesSynchronisationJobImpl.class);
-
+    protected static Log log = LogFactory.getLog(RolesSynchronizationJobImpl.class);
+    
     private List<Site> allSites;
 
     private List<ConfigRole> rolesToConfig = null;
-
-    // ***************** SPRING INJECTION ************************//
-    /**
-     * The user service injected by the Spring
-     */
-    private UserDirectoryService userDirService;
-
-    /**
-     * Sets the <code>UserDirectoryService</code> needed to create the site in
-     * the init() method.
-     * 
-     * @param userDirService
-     */
-    public void setUserDirService(UserDirectoryService userDirService) {
-	this.userDirService = userDirService;
-    }
-
-    /**
-     * Administration ConfigurationService injection
-     */
-    private ConfigurationService adminConfigService;
-
-    /**
-     * @param adminConfigService
-     */
-    public void setAdminConfigService(ConfigurationService adminConfigService) {
-	this.adminConfigService = adminConfigService;
-    }
-
-    /**
-     * Our logger
-     */
-
-    /**
-     * The site service used to create new sites: Spring injection
-     */
-    private SiteService siteService;
-
-    /**
-     * Sets the <code>SiteService</code> needed to create a new site in Sakai.
-     * 
-     * @param siteService
-     */
-    public void setSiteService(SiteService siteService) {
-	this.siteService = siteService;
-    }
-
-    private AuthzGroupService authzGroupService;
-
-    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
-	this.authzGroupService = authzGroupService;
-    }
-
-    private EventTrackingService eventTrackingService;
-
-    public void setEventTrackingService(
-	    EventTrackingService eventTrackingService) {
-	this.eventTrackingService = eventTrackingService;
-    }
-
-    private UsageSessionService usageSessionService;
-
-    public void setUsageSessionService(UsageSessionService usageSessionService) {
-	this.usageSessionService = usageSessionService;
-    }
-
-    private SessionManager sessionManager;
-
-    public void setSessionManager(SessionManager sessionManager) {
-	this.sessionManager = sessionManager;
-    }
-
-    // ***************** END SPRING INJECTION ************************//
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
@@ -117,87 +38,98 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 
 	// Retrieve information from the xml file
 	init();
-	String role;
-	String description;
-	List<String> addedUsers;
-	List<String> removedUsers;
-	List<String> functions;
 
-	if (rolesToConfig != null)
+	if (rolesToConfig != null) {
+
 	    for (ConfigRole configRole : rolesToConfig) {
-		role = configRole.getConfigRole();
+		String role = configRole.getConfigRole();
 		log.info("role: " + role);
-		description = configRole.getDescription();
+		String description = configRole.getDescription();
 		log.info("description: " + description);
-		addedUsers = configRole.getAddedUsers();
+		List<String> addedUsers = configRole.getAddedUsers();
 		log.info("addedUsers: " + addedUsers);
-		removedUsers = configRole.getRemovedUsers();
+		List<String> removedUsers = configRole.getRemovedUsers();
 		log.info("removedUsers: " + removedUsers);
-		functions = configRole.getFunctions();
+		List<String> functions = configRole.getFunctions();
 		log.info("functions: " + functions);
+		boolean includingFrozenSites =
+			configRole.isIncludingFrozenSites();
+		log.info("isIncludingFrozenSites: " + includingFrozenSites);
+		boolean includingDirSites = configRole.isIncludingDirSites();
+		log.info("isIncludingDirSites: " + includingDirSites);
 
 		// Check role in template realm
 		try {
 		    AuthzGroup realm =
 			    authzGroupService.getAuthzGroup(TEMPLATE_ID);
-		    if (!isRoleInRealm(realm, role))
-			addRole(realm, role, functions, description);
-		    else
-			checkRole(realm, role, functions);
-		    addUsers(realm, role, addedUsers);
-		    removeUsers(realm, role, removedUsers);
-
+		    processRealm(realm, configRole);
 		} catch (GroupNotDefinedException e) {
 		    e.printStackTrace();
 		}
 
 		allSites =
 			siteService.getSites(SiteService.SelectionType.ANY,
-				SITE_TYPE, null, null,
+				COURSE_SITE, null, null,
 				SiteService.SortType.NONE, null);
 
-		boolean roleExists = false;
+		if (configRole.isIncludingDirSites()) {
+		    allSites.addAll(siteService.getSites(
+			    SiteService.SelectionType.ANY, DIRECTORY_SITE,
+			    null, null, SiteService.SortType.NONE, null));
+		}
 		Site site = null;
 		AuthzGroup siteRealm = null;
 
 		for (int i = 0; i < allSites.size(); i++) {
-
 		    site = allSites.get(i);
 
-		    try {
-			siteRealm =
-				authzGroupService.getAuthzGroup(REALM_PREFIX
-					+ site.getId());
-		    } catch (GroupNotDefinedException e) {
-			log.error(e.getMessage());
-		    }
-
-		    if (siteRealm != null) {
-
-			// We check if the role helpdesk with the required
-			// permissions
-			// exists in the site
-			roleExists = isRoleInRealm(siteRealm, role);
-			if (!roleExists)
-			    addRole(siteRealm, role, functions, description);
-			else
-			    checkRole(siteRealm, role, functions);
-
-			// We add the new users
-			addUsers(siteRealm, role, addedUsers);
-
-			// We remove the specified users
-			removeUsers(siteRealm, role, removedUsers);
-
+		    if (configRole.isIncludingFrozenSites()
+			    || (!configRole.isIncludingFrozenSites() && !getFrozenValue(site))) {
+			try {
+			    siteRealm =
+				    authzGroupService
+					    .getAuthzGroup(REALM_PREFIX
+						    + site.getId());
+			} catch (GroupNotDefinedException e) {
+			    log.error(e.getMessage());
+			}
+			processRealm(siteRealm, configRole);
 		    }
 		}
-		log.info("completed in "
-			+ (System.currentTimeMillis() - start) + " ms");
+		log.info("completed in " + (System.currentTimeMillis() - start)
+			+ " ms");
 		logoutFromSakai();
 	    }
+	}
     }
 
-    @SuppressWarnings("unchecked")
+    private void processRealm(AuthzGroup siteRealm, ConfigRole configRole) {
+	boolean roleExists = false;
+
+	if (siteRealm != null) {
+
+	    // We check if the role with the required
+	    // permissions
+	    // exists in the site
+	    roleExists = isRoleInRealm(siteRealm, configRole.getConfigRole());
+	    if (!roleExists) {
+		addRole(siteRealm, configRole.getConfigRole(),
+			configRole.getFunctions(), configRole.getDescription());
+	    } else {
+		checkRole(siteRealm, configRole.getConfigRole(),
+			configRole.getFunctions());
+	    }
+	    // We add the new users
+	    addUsers(siteRealm, configRole.getConfigRole(),
+		    configRole.getAddedUsers());
+
+	    // We remove the specified users
+	    removeUsers(siteRealm, configRole.getConfigRole(),
+		    configRole.getRemovedUsers());
+
+	}
+    }
+
     private void init() {
 	if (rolesToConfig == null) {
 	    rolesToConfig = new ArrayList<ConfigRole>();
@@ -211,6 +143,8 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	List<String> removedUsers;
 	List<String> addedUsers;
 	List<String> functions;
+	boolean includingFrozenSites;
+	boolean includingDirSites;
 	ConfigRole configRole;
 	Map<String, Object> values;
 
@@ -225,6 +159,14 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	    functions =
 		    (List<String>) values.get(ConfigurationService.FUNCTIONS);
 	    description = (String) values.get(ConfigurationService.DESCRIPTION);
+	    includingFrozenSites =
+		    ((Boolean) values
+			    .get(ConfigurationService.INCLUDING_FROZEN_SITES))
+			    .booleanValue();
+	    includingDirSites =
+		    ((Boolean) values
+			    .get(ConfigurationService.INCLUDING_DIR_SITES))
+			    .booleanValue();
 
 	    configRole = new ConfigRole();
 	    configRole.setConfigRole(role);
@@ -232,6 +174,8 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	    configRole.setAddedUsers(addedUsers);
 	    configRole.setRemovedUsers(removedUsers);
 	    configRole.setFunctions(functions);
+	    configRole.setIncludingFrozenSites(includingFrozenSites);
+	    configRole.setIncludingDirSites(includingDirSites);
 
 	    rolesToConfig.add(configRole);
 	}
@@ -308,7 +252,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	    String userId = null;
 	    for (String user : removedUsers) {
 		try {
-		    userId = userDirService.getUserId(user);
+		    userId = userDirectoryService.getUserId(user);
 		    if (realm.hasRole(userId, configRole)) {
 			realm.removeMember(userId);
 		    }
@@ -338,7 +282,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	    for (String user : addedUsers) {
 
 		try {
-		    userId = userDirService.getUserId(user);
+		    userId = userDirectoryService.getUserId(user);
 
 		    if (realm.getMember(userId) == null) {
 			realm.addMember(userId, configRole, true, false);
@@ -362,29 +306,7 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
      * Logs in the sakai environment
      */
     protected void loginToSakai() {
-	Session sakaiSession = sessionManager.getCurrentSession();
-	sakaiSession.setUserId("admin");
-	sakaiSession.setUserEid("admin");
-
-	// establish the user's session
-	usageSessionService.startSession("admin", "127.0.0.1", "RoleSync");
-
-	// update the user's externally provided realm definitions
-	authzGroupService.refreshUser("admin");
-
-	// post the login event
-	eventTrackingService.post(eventTrackingService.newEvent(
-		UsageSessionService.EVENT_LOGIN, null, true));
-    }
-
-    /**
-     * Logs out of the sakai environment
-     */
-    protected void logoutFromSakai() {
-	// post the logout event
-	eventTrackingService.post(eventTrackingService.newEvent(
-		UsageSessionService.EVENT_LOGOUT, null, true));
-	usageSessionService.logout();
+	super.loginToSakai("RolesSynchronizationJob");
     }
 
     class ConfigRole {
@@ -399,6 +321,10 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	private List<String> removedUsers;
 
 	private List<String> functions;
+
+	private boolean includingFrozenSites;
+
+	private boolean includingDirSites;
 
 	public String getConfigRole() {
 	    return configRole;
@@ -448,5 +374,32 @@ public class RolesSynchronisationJobImpl implements RolesSynchronizationJob {
 	    this.functions = functions;
 	}
 
+	/**
+	 * @return the includingFrozenSites value.
+	 */
+	public boolean isIncludingFrozenSites() {
+	    return includingFrozenSites;
+	}
+
+	/**
+	 * @param includingFrozenSites the new value of includingFrozenSites.
+	 */
+	public void setIncludingFrozenSites(boolean includingFrozenSites) {
+	    this.includingFrozenSites = includingFrozenSites;
+	}
+
+	/**
+	 * @return the includingDirSites value.
+	 */
+	public boolean isIncludingDirSites() {
+	    return includingDirSites;
+	}
+
+	/**
+	 * @param includingDirSites the new value of includingDirSites.
+	 */
+	public void setIncludingDirSites(boolean includingDirSites) {
+	    this.includingDirSites = includingDirSites;
+	}
     }
 }

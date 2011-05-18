@@ -1,10 +1,5 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
-import java.util.List;
-
-import org.quartz.Job;
-
-import java.util.Arrays;
 
 /******************************************************************************
  * $Id: $
@@ -35,12 +30,7 @@ import java.util.Arrays;
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public interface RolesSynchronizationJob extends Job {
-
-   /**
-     * Id of the users that will be add
-     */
-    public final static String SITE_TYPE = "course";
+public interface RolesSynchronizationJob extends OsylAbstractQuartzJob {
 
     public final static String REALM_PREFIX = "/site/";
 

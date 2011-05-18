@@ -27,20 +27,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-//import org.sakaiproject.authz.api.SecurityAdvisor;
-import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
@@ -71,9 +67,9 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private String startDate = null;
 
     private String endDate = null;
-    
+
     private List<String> programs = null;
-    
+
     private List<String> servEns = null;
 
     private List<String> allowedFunctions = null;
@@ -85,24 +81,29 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private String functionsRole = null;
 
     private List<String> courses = null;
-    
+
     private String courseOutlineXsl = null;
 
     private Map<String, Map<String, Object>> updatedRoles = null;
-    
-    private Map <String, String> configFiles = null;
+
+    private Map<String, String> configFiles = null;
 
     private String sessionId = null;
-    
+
     private String roleId = null;
-           
+
     private String permissions = null;
 
-	private List<String> frozenPermissions;
+    private List<String> frozenPermissions;
 
     private HashMap<String, List<String>> frozenFunctionsToAllow;
+
+    private String description;
     
-	String description;
+    private boolean includingFrozenSites;
+    
+    private boolean includingDirSites;
+    
     private List<String> functions;
     private List<String> addedUsers;
     private List<String> removedUsers;
@@ -112,23 +113,18 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     public void setContentHostingService(ContentHostingService service) {
 	contentHostingService = service;
     }
-    
-    private EventTrackingService eventTrackingService;
-    
-    public void setEventTrackingService(EventTrackingService eventTrackingService) {
-        this.eventTrackingService = eventTrackingService;
-    }
-    
-    private EntityManager entityManager;
-    
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-    
-    private SecurityService securityService;
 
-    public void setSecurityService(SecurityService securityService) {
-        this.securityService = securityService;
+    private EventTrackingService eventTrackingService;
+
+    public void setEventTrackingService(
+	    EventTrackingService eventTrackingService) {
+	this.eventTrackingService = eventTrackingService;
+    }
+
+    private EntityManager entityManager;
+
+    public void setEntityManager(EntityManager entityManager) {
+	this.entityManager = entityManager;
     }
 
     public void init() {
@@ -137,7 +133,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
 	eventTrackingService.addObserver(this);
 
-	configFiles = new HashMap <String, String>();
+	configFiles = new HashMap<String, String>();
 	updateConfig(CONFIGFORLDER + OFFSITESCONFIGFILE);
 	updateConfig(ROLEFOLDER);
 	updateConfig(ADMIN_CONTENT_FOLDER + XSL_FILENAME);
@@ -203,8 +199,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private void setStartDate(String startDate) {
 	this.startDate = startDate;
     }
-    
-    private void setPrograms (String programs){
+
+    private void setPrograms(String programs) {
 	this.programs = new ArrayList<String>();
 	if (programs != null && programs.length() > 0) {
 	    String[] programsTable = programs.split(LIST_DELIMITER);
@@ -213,8 +209,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    }
 	}
     }
-    
-    private void setServEns (String servEns){
+
+    private void setServEns(String servEns) {
 	this.servEns = new ArrayList<String>();
 	if (servEns != null && servEns.length() > 0) {
 	    String[] servEnsTable = servEns.split(LIST_DELIMITER);
@@ -233,52 +229,52 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     }
 
     public String getSessionId() {
-		return sessionId;
-	}
+	return sessionId;
+    }
 
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
-	}    
-    
-	public String getRoleId() {
-		return roleId;
-	}
+    public void setSessionId(String sessionId) {
+	this.sessionId = sessionId;
+    }
 
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
-	}
-	    
+    public String getRoleId() {
+	return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+	this.roleId = roleId;
+    }
+
     public String getPermissions() {
-		return permissions;
-	}
+	return permissions;
+    }
 
-	public void setPermissions(String permissions) {
-		this.frozenPermissions = new ArrayList<String>();
-		if (permissions != null && permissions.length() > 0) {
-		    String[] permissionsTable = permissions.split(LIST_DELIMITER);
-		    for (int i = 0; i < permissionsTable.length; i++) {
-			this.frozenPermissions.add(permissionsTable[i].trim());
-		    }
-		}
+    public void setPermissions(String permissions) {
+	this.frozenPermissions = new ArrayList<String>();
+	if (permissions != null && permissions.length() > 0) {
+	    String[] permissionsTable = permissions.split(LIST_DELIMITER);
+	    for (int i = 0; i < permissionsTable.length; i++) {
+		this.frozenPermissions.add(permissionsTable[i].trim());
+	    }
 	}
+    }
 
-	public List<String> getFrozenPermissions() {
-		return frozenPermissions;
-	}
+    public List<String> getFrozenPermissions() {
+	return frozenPermissions;
+    }
 
-	public void setFrozenPermissions(List<String> frozenPermissions) {
-		this.frozenPermissions = frozenPermissions;
-	}
-	
-	public HashMap<String, List<String>> getFrozenFunctionsToAllow() {
-		return frozenFunctionsToAllow;
-	}
+    public void setFrozenPermissions(List<String> frozenPermissions) {
+	this.frozenPermissions = frozenPermissions;
+    }
 
-	public void setFrozenFunctionsToAllow(
-			HashMap<String, List<String>> frozenFunctionsToAllow) {
-		this.frozenFunctionsToAllow = frozenFunctionsToAllow;
-	}	
-	
+    public HashMap<String, List<String>> getFrozenFunctionsToAllow() {
+	return frozenFunctionsToAllow;
+    }
+
+    public void setFrozenFunctionsToAllow(
+	    HashMap<String, List<String>> frozenFunctionsToAllow) {
+	this.frozenFunctionsToAllow = frozenFunctionsToAllow;
+    }
+
     /**
      * Called when an observed object changes.
      * 
@@ -314,10 +310,9 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			    + referenceString);
 		    updateConfig(referenceString);
 		}
-		
-		if(referenceString.contains(XSL_FILENAME)){
-		    log.info("Updating XSL in resource"
-			    + referenceString);
+
+		if (referenceString.contains(XSL_FILENAME)) {
+		    log.info("Updating XSL in resource" + referenceString);
 		    updateConfig(referenceString);
 		}
 	    }
@@ -333,19 +328,16 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    ContentResource resource = null;
 
 	    try {
-	    log.info("*** securityService.pushAdvisor(new SecurityAdvisor() ConfigurationServiceImpl *** ");	    	
+		log.info("*** securityService.pushAdvisor(new SecurityAdvisor() ConfigurationServiceImpl *** ");
 
 		// We allow access to the file
-	    /** 
-		securityService.pushAdvisor(new SecurityAdvisor() { 
-		    public SecurityAdvice isAllowed(String userId,
-			    String function, String reference) {
-			if (function.equals("content.read"))
-			    return SecurityAdvice.ALLOWED;
-			return SecurityAdvice.NOT_ALLOWED;
-		    }
-		});
-		**/
+		/**
+		 * securityService.pushAdvisor(new SecurityAdvisor() { public
+		 * SecurityAdvice isAllowed(String userId, String function,
+		 * String reference) { if (function.equals("content.read"))
+		 * return SecurityAdvice.ALLOWED; return
+		 * SecurityAdvice.NOT_ALLOWED; } });
+		 **/
 		if (fileName.contains(ROLEFOLDER)) {
 		    ContentCollection collection;
 		    if (!contentHostingService.isCollection(reference.getId())) {
@@ -365,19 +357,20 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
 		    for (ContentResource ress : resources) {
 			if (ress != null)
-			    retrieveConfigs(ress.getReference(), ress
-				    .streamContent());
+			    retrieveConfigs(ress.getReference(),
+				    ress.streamContent());
 		    }
-		} else if(fileName.contains(XSL_FILENAME)){
+		} else if (fileName.contains(XSL_FILENAME)) {
 		    resource =
 			    contentHostingService
 				    .getResource(reference.getId());
 		    try {
-			setCourseOutlineXsl(new String(resource.getContent(),"UTF-8"));
+			setCourseOutlineXsl(new String(resource.getContent(),
+				"UTF-8"));
 		    } catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		    }
-		} else{
+		} else {
 		    resource =
 			    contentHostingService
 				    .getResource(reference.getId());
@@ -385,12 +378,12 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			retrieveConfigs(fileName, resource.streamContent());
 		}
 		// We remove access to the resource
-	    //securityService.popAdvisor();
-	    
+		// securityService.popAdvisor();
+
 	    } catch (PermissionException e) {
 		log.info("You are not allowed to access this resource");
 	    } catch (IdUnusedException e) {
-		//The file has been removed - remove config in list
+		// The file has been removed - remove config in list
 		if (configFiles != null) {
 		    if (fileName.contains(ROLEFOLDER)) {
 			String role = configFiles.get(fileName);
@@ -400,7 +393,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			}
 		    }
 		}
-		if ( fileName.contains(OFFSITESCONFIGFILE)) {
+		if (fileName.contains(OFFSITESCONFIGFILE)) {
 		    setCourses(null);
 		    setStartDate(null);
 		    setEndDate(null);
@@ -408,7 +401,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		    setServEns(null);
 
 		}
-		if ( fileName.contains(FUNCTIONSSCONFIGFILE)) {
+		if (fileName.contains(FUNCTIONSSCONFIGFILE)) {
 		    setFunctionsRole(null);
 		    setDescription(null);
 		    setRemovedRole(null);
@@ -423,61 +416,60 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		log.info(e.getMessage());
 	    }
 	} else {
-	    //securityService.popAdvisor();		
+	    // securityService.popAdvisor();
 	    log.warn("There is no " + fileName + " file ");
 	}
     }
-	
-	public void getFrozenSessionIdConfig() {
+
+    public void getFrozenSessionIdConfig() {
 	String fileName = CONFIGFORLDER + UNFROZENSITESCONFIG;
 	Reference reference = entityManager.newReference(fileName);
 	if (reference != null) {
-		ContentResource resource = null;
-		try {
-			resource = contentHostingService.getResource(reference.getId());
-			if (resource != null)
-				retrieveConfigs(fileName, resource.streamContent());
-		} catch (PermissionException e) {
-			log.info("You are not allowed to access this resource");
-		} catch (IdUnusedException e) {
-			if (fileName.contains(UNFROZENSITESCONFIG)) {
-				setSessionId(null);
-			}
-			log.info("There is no " + fileName + " has been removed ");
-		} catch (TypeException e) {
-			log.info("The resource requested has the wrong type");
-		} catch (ServerOverloadException e) {
-			log.info(e.getMessage());
+	    ContentResource resource = null;
+	    try {
+		resource = contentHostingService.getResource(reference.getId());
+		if (resource != null)
+		    retrieveConfigs(fileName, resource.streamContent());
+	    } catch (PermissionException e) {
+		log.info("You are not allowed to access this resource");
+	    } catch (IdUnusedException e) {
+		if (fileName.contains(UNFROZENSITESCONFIG)) {
+		    setSessionId(null);
 		}
+		log.info("There is no " + fileName + " has been removed ");
+	    } catch (TypeException e) {
+		log.info("The resource requested has the wrong type");
+	    } catch (ServerOverloadException e) {
+		log.info(e.getMessage());
+	    }
 	}
-	}	
+    }
 
-	public void getConfigToFreeze() {
-		String fileName = CONFIGFORLDER + FROZENSITESCONFIG;
-		Reference reference = entityManager.newReference(fileName);
-		if (reference != null) {
-			ContentResource resource = null;
-			try {
-				resource = contentHostingService.getResource(reference.getId());
-				if (resource != null)
-					retrieveConfigs(fileName, resource.streamContent());
-			} catch (PermissionException e) {
-				log.info("You are not allowed to access this resource");
-			} catch (IdUnusedException e) {
-				if (fileName.contains(FROZENSITESCONFIG)) {
-					setSessionId(null);
-					setFrozenFunctionsToAllow(null);
-				}
-				log.info("There is no " + fileName + " has been removed ");
-			} catch (TypeException e) {
-				log.info("The resource requested has the wrong type");
-			} catch (ServerOverloadException e) {
-				log.info(e.getMessage());
-			}
+    public void getConfigToFreeze() {
+	String fileName = CONFIGFORLDER + FROZENSITESCONFIG;
+	Reference reference = entityManager.newReference(fileName);
+	if (reference != null) {
+	    ContentResource resource = null;
+	    try {
+		resource = contentHostingService.getResource(reference.getId());
+		if (resource != null)
+		    retrieveConfigs(fileName, resource.streamContent());
+	    } catch (PermissionException e) {
+		log.info("You are not allowed to access this resource");
+	    } catch (IdUnusedException e) {
+		if (fileName.contains(FROZENSITESCONFIG)) {
+		    setSessionId(null);
+		    setFrozenFunctionsToAllow(null);
 		}
+		log.info("There is no " + fileName + " has been removed ");
+	    } catch (TypeException e) {
+		log.info("The resource requested has the wrong type");
+	    } catch (ServerOverloadException e) {
+		log.info(e.getMessage());
+	    }
 	}
-	
-	
+    }
+
     private void retrieveConfigs(String configurationXml, InputStream stream) {
 	org.w3c.dom.Document document;
 
@@ -491,102 +483,116 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
 	synchronized (this) {
 	    if (configurationXml.contains(OFFSITESCONFIGFILE)) {
-			String courses = retrieveParameter(document, COURSES);
-			String endDate = retrieveParameter(document, ENDDATE);
-			String startDate = retrieveParameter(document, STARTDATE);
-			String programs = retrieveParameter(document, PROGRAMS);
-			String servEns = retrieveParameter(document, SERVENS);
-	
-			setCourses(courses);
-			setStartDate(startDate);
-			setEndDate(endDate);
-			setPrograms(programs);
-			setServEns(servEns);
+		String courses = retrieveParameter(document, COURSES);
+		String endDate = retrieveParameter(document, ENDDATE);
+		String startDate = retrieveParameter(document, STARTDATE);
+		String programs = retrieveParameter(document, PROGRAMS);
+		String servEns = retrieveParameter(document, SERVENS);
+
+		setCourses(courses);
+		setStartDate(startDate);
+		setEndDate(endDate);
+		setPrograms(programs);
+		setServEns(servEns);
 	    }
 
 	    if (configurationXml.contains(ROLEFOLDER)) {
-			Map<String, Object> values = new HashMap<String, Object>();
-			String role = retrieveParameter(document, ROLE);
-			String description = retrieveParameter(document,DESCRIPTION);
-			String addedUsers = retrieveParameter(document, ADDEDUSERS);
-			String removedUsers = retrieveParameter(document, REMOVEDUSERS);
-			String functions = retrieveParameter(document, FUNCTIONS);
-			
-			setDescription(description);
-			setAddedUsers(addedUsers);
-			setRemovedUsers(removedUsers);
-			setFunctions(functions);
-	
-			values.put(ADDEDUSERS, this.addedUsers);
-			values.put(REMOVEDUSERS, this.removedUsers);
-			values.put(FUNCTIONS, this.functions);
-			values.put(DESCRIPTION, this.description);
-	
-			if (role != null) {
-			    if (updatedRoles == null)
-				updatedRoles =
-					new HashMap<String, Map<String, Object>>();
-	
-			    if (updatedRoles.containsKey(role))
-				updatedRoles.remove(role);
-			    updatedRoles.put(role, values);
-			    configFiles.put(configurationXml, role);
-			}
+		Map<String, Object> values = new HashMap<String, Object>();
+		String role = retrieveParameter(document, ROLE);
+		String description = retrieveParameter(document, DESCRIPTION);
+		boolean includingFrozenSites = Boolean.parseBoolean(
+			retrieveParameter(document, INCLUDING_FROZEN_SITES));
+		boolean includingDirSites = Boolean.parseBoolean(
+			retrieveParameter(document, INCLUDING_DIR_SITES));
+		String addedUsers = retrieveParameter(document, ADDEDUSERS);
+		String removedUsers = retrieveParameter(document, REMOVEDUSERS);
+		String functions = retrieveParameter(document, FUNCTIONS);
+
+		setDescription(description);
+		setIncludingFrozenSites(includingFrozenSites);
+		setIncludingDirSites(includingDirSites);
+		setAddedUsers(addedUsers);
+		setRemovedUsers(removedUsers);
+		setFunctions(functions);
+
+		values.put(ADDEDUSERS, this.addedUsers);
+		values.put(REMOVEDUSERS, this.removedUsers);
+		values.put(FUNCTIONS, this.functions);
+		values.put(DESCRIPTION, this.description);
+
+		if (role != null) {
+		    if (updatedRoles == null)
+			updatedRoles =
+				new HashMap<String, Map<String, Object>>();
+
+		    if (updatedRoles.containsKey(role))
+			updatedRoles.remove(role);
+		    updatedRoles.put(role, values);
+		    configFiles.put(configurationXml, role);
+		}
 	    }
 
 	    if (configurationXml.contains(FUNCTIONSSCONFIGFILE)) {
-			String fuctionsRole = retrieveParameter(document, ROLE);
-			String description = retrieveParameter(document, DESCRIPTION);
-			String removedRole = retrieveParameter(document, REMOVED_ROLE);
-			String allowedFunctions =
-				retrieveParameter(document, ALLOWED_FUNCTIONS);
-			String disallowedFunctions =
-				retrieveParameter(document, DISALLOWED_FUNCTIONS);
-	
-			setFunctionsRole(fuctionsRole);
-			setDescription(description);
-			setRemovedRole(removedRole);
-			setAllowedFunctions(allowedFunctions);
-			setDisallowedFunctions(disallowedFunctions);
+		String fuctionsRole = retrieveParameter(document, ROLE);
+		String description = retrieveParameter(document, DESCRIPTION);
+		String removedRole = retrieveParameter(document, REMOVED_ROLE);
+		boolean includingFrozenSites = Boolean.parseBoolean(
+			retrieveParameter(document, INCLUDING_FROZEN_SITES));
+		boolean includingDirSites = Boolean.parseBoolean(
+			retrieveParameter(document, INCLUDING_DIR_SITES));
+		String allowedFunctions =
+			retrieveParameter(document, ALLOWED_FUNCTIONS);
+		String disallowedFunctions =
+			retrieveParameter(document, DISALLOWED_FUNCTIONS);
+
+		setFunctionsRole(fuctionsRole);
+		setDescription(description);
+		setRemovedRole(removedRole);
+		setIncludingFrozenSites(includingFrozenSites);
+		setIncludingDirSites(includingDirSites);
+		setAllowedFunctions(allowedFunctions);
+		setDisallowedFunctions(disallowedFunctions);
 	    }
 
-	    if (configurationXml.contains(FROZENSITESCONFIG)) {			
-			String sessionId = retrieveParameter(document, SESSIONID);
-			setSessionId(sessionId);
-			setFrozenFunctionsToAllow(getFrozenPermissionsByRole(document));
-	    }	
-	    
+	    if (configurationXml.contains(FROZENSITESCONFIG)) {
+		String sessionId = retrieveParameter(document, SESSIONID);
+		setSessionId(sessionId);
+		setFrozenFunctionsToAllow(getFrozenPermissionsByRole(document));
+	    }
+
 	    if (configurationXml.contains(UNFROZENSITESCONFIG)) {
-			String frozenSessionId = retrieveParameter(document, SESSIONID);
-			setSessionId(frozenSessionId);
-	    }		    
+		String frozenSessionId = retrieveParameter(document, SESSIONID);
+		setSessionId(frozenSessionId);
+	    }
 	}
     }
 
-    
-    private HashMap<String, List<String>> getFrozenPermissionsByRole(Document document) {
-    	HashMap<String, List<String>> rolesToFrozen = new HashMap<String, List<String>>();
-    	//get the root element
-		Element docEle = document.getDocumentElement();
-		//get a nodelist of elements
-		NodeList nl = docEle.getElementsByTagName(ROLESET);
-		if(nl != null && nl.getLength() > 0) {
-			for(int i = 0 ; i < nl.getLength();i++) {
-				//get the role element
-				Element element = (Element)nl.item(i);
-				//get the role object
-				String roleId = element.getAttribute(ROLEID);
-				String permissions = retrieveParameter(document, FROZENPERMISSIONS);
-				setPermissions(permissions);
-				//add it to list
-				List<String> permissionsAllowed = this.getFrozenPermissions();
-				rolesToFrozen.put(roleId, permissionsAllowed);
-			}
-			return rolesToFrozen;
-		}
-		return rolesToFrozen;
+    private HashMap<String, List<String>> getFrozenPermissionsByRole(
+	    Document document) {
+	HashMap<String, List<String>> rolesToFrozen =
+		new HashMap<String, List<String>>();
+	// get the root element
+	Element docEle = document.getDocumentElement();
+	// get a nodelist of elements
+	NodeList nl = docEle.getElementsByTagName(ROLESET);
+	if (nl != null && nl.getLength() > 0) {
+	    for (int i = 0; i < nl.getLength(); i++) {
+		// get the role element
+		Element element = (Element) nl.item(i);
+		// get the role object
+		String roleId = element.getAttribute(ROLEID);
+		String permissions =
+			retrieveParameter(document, FROZENPERMISSIONS);
+		setPermissions(permissions);
+		// add it to list
+		List<String> permissionsAllowed = this.getFrozenPermissions();
+		rolesToFrozen.put(roleId, permissionsAllowed);
+	    }
+	    return rolesToFrozen;
+	}
+	return rolesToFrozen;
     }
-	
+
     private Date getDate(String date) {
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 	Date convertedDate = null;
@@ -615,11 +621,39 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     }
 
     private void setDescription(String description) {
-    	this.description = description;
+	this.description = description;
     }
-    
+
     public String getDescription() {
-        return description;
+	return description;
+    }
+
+    /**
+     * @return the includingFrozenSites value.
+     */
+    public boolean isIncludingFrozenSites() {
+        return includingFrozenSites;
+    }
+
+    /**
+     * @param includingFrozenSites the new value of includingFrozenSites.
+     */
+    private void setIncludingFrozenSites(boolean includingFrozenSites) {
+        this.includingFrozenSites = includingFrozenSites;
+    }
+
+    /**
+     * @return the includingDirSites value.
+     */
+    public boolean isIncludingDirSites() {
+        return includingDirSites;
+    }
+
+    /**
+     * @param includingDirSites the new value of includingDirSites.
+     */
+    private void setIncludingDirSites(boolean includingDirSites) {
+        this.includingDirSites = includingDirSites;
     }
 
     private void setFunctions(String functions) {

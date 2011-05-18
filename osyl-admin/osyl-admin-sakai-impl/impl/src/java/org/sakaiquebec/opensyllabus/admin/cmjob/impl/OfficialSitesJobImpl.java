@@ -30,9 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
-import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.CourseSet;
 import org.sakaiproject.coursemanagement.api.Enrollment;
@@ -41,27 +39,16 @@ import org.sakaiproject.email.api.ContentType;
 import org.sakaiproject.email.api.EmailAddress;
 import org.sakaiproject.email.api.EmailAddress.RecipientType;
 import org.sakaiproject.email.api.EmailMessage;
-import org.sakaiproject.email.api.EmailService;
-import org.sakaiproject.event.api.EventTrackingService;
-import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.site.api.Site;
-import org.sakaiproject.site.api.SiteService;
-import org.sakaiproject.tool.api.Session;
-import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiproject.user.api.UserDirectoryService;
-import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OfficialSitesJob;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
-import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
-import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public class OfficialSitesJobImpl implements OfficialSitesJob {
-
-    private static Log log = LogFactory.getLog(OfficialSitesJobImpl.class);
+public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
+	OfficialSitesJob {
 
     private Set<CourseSet> allCourseSets = null;
 
@@ -69,94 +56,7 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
 
     private Set<Section> sections = null;
 
-    // ***************** SPRING INJECTION ************************//
-    private OsylManagerService osylManagerService;
-
-    public void setOsylManagerService(OsylManagerService osylManagerService) {
-	this.osylManagerService = osylManagerService;
-    }
-
-    /**
-     * Course management service integration.
-     */
-    private CourseManagementService cmService;
-
-    /**
-     * @param cmService
-     */
-    public void setCmService(CourseManagementService cmService) {
-	this.cmService = cmService;
-    }
-
-    /**
-     * Integration of the OsylSiteService
-     */
-    private OsylSiteService osylSiteService;
-
-    /**
-     * @param osylSiteService
-     */
-    public void setOsylSiteService(OsylSiteService osylSiteService) {
-	this.osylSiteService = osylSiteService;
-    }
-
-    /**
-     * Administration ConfigurationService injection
-     */
-    private ConfigurationService adminConfigService;
-
-    /**
-     * @param adminConfigService
-     */
-    public void setAdminConfigService(ConfigurationService adminConfigService) {
-	this.adminConfigService = adminConfigService;
-    }
-
-    private AuthzGroupService authzGroupService;
-
-    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
-	this.authzGroupService = authzGroupService;
-    }
-
-    private EventTrackingService eventTrackingService;
-
-    public void setEventTrackingService(
-	    EventTrackingService eventTrackingService) {
-	this.eventTrackingService = eventTrackingService;
-    }
-
-    private UsageSessionService usageSessionService;
-
-    public void setUsageSessionService(UsageSessionService usageSessionService) {
-	this.usageSessionService = usageSessionService;
-    }
-
-    private SessionManager sessionManager;
-
-    public void setSessionManager(SessionManager sessionManager) {
-	this.sessionManager = sessionManager;
-    }
-
-    private EmailService emailService;
-
-    public void setEmailService(EmailService emailService) {
-	this.emailService = emailService;
-    }
-
-    private SiteService siteService;
-
-    public void setSiteService(SiteService siteService) {
-	this.siteService = siteService;
-    }
-
-    private UserDirectoryService userDirectoryService;
-
-    public void setUserDirectoryService(
-	    UserDirectoryService userDirectoryService) {
-	this.userDirectoryService = userDirectoryService;
-    }
-
-    // ***************** END SPRING INJECTION ************************//
+    protected static Log log = LogFactory.getLog(OfficialSitesJobImpl.class);
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
@@ -684,30 +584,6 @@ public class OfficialSitesJobImpl implements OfficialSitesJob {
      * Logs in the sakai environment
      */
     protected void loginToSakai() {
-	Session sakaiSession = sessionManager.getCurrentSession();
-	sakaiSession.setUserId("admin");
-	sakaiSession.setUserEid("admin");
-
-	// establish the user's session
-	usageSessionService.startSession("admin", "127.0.0.1",
-		"OfficialSitesSync");
-
-	// update the user's externally provided realm definitions
-	authzGroupService.refreshUser("admin");
-
-	// post the login event
-	eventTrackingService.post(eventTrackingService.newEvent(
-		UsageSessionService.EVENT_LOGIN, null, true));
+	super.loginToSakai("OfficialSitesJob");
     }
-
-    /**
-     * Logs out of the sakai environment
-     */
-    protected void logoutFromSakai() {
-	// post the logout event
-	eventTrackingService.post(eventTrackingService.newEvent(
-		UsageSessionService.EVENT_LOGOUT, null, true));
-	usageSessionService.logout();
-    }
-
 }

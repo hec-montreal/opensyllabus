@@ -20,14 +20,13 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
-import org.quartz.Job;
 
 /**
  *
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public interface OfficialSitesJob extends Job {
+public interface OfficialSitesJob extends OsylAbstractQuartzJob {
 
     public final static String TEMPORARY_LANG = "fr_CA";
 

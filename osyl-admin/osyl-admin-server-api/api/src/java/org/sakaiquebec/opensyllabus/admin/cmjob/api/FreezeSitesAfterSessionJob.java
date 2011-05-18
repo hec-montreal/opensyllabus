@@ -1,6 +1,5 @@
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
-import org.quartz.Job;
 
 /******************************************************************************
  * $Id: $
@@ -32,7 +31,7 @@ import org.quartz.Job;
  * @author <a href="mailto:alejandro.hernandez-pena@hec.ca">Alejandro Hernandez</a>
  * @version $Id: $
  */
-public interface FreezeSitesAfterSessionJob extends Job {
+public interface FreezeSitesAfterSessionJob extends OsylAbstractQuartzJob {
 
 	// These are the functions that will allowed to these sites. If we encounter
 	// any other function the job will try to remove it.

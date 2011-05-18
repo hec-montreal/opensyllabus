@@ -29,101 +29,33 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.sakaiproject.authz.api.AuthzGroupService;
-import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.entity.api.ResourcePropertiesEdit;
-import org.sakaiproject.event.api.EventTrackingService;
-import org.sakaiproject.event.api.UsageSessionService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SitePage;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.site.api.ToolConfiguration;
-import org.sakaiproject.tool.api.Session;
-import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiproject.tool.api.Tool;
-import org.sakaiproject.tool.api.ToolManager;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.AddCMTitlePropertyJob;
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public class AddCMTitlePropertyJobImpl implements AddCMTitlePropertyJob {
+public class AddCMTitlePropertyJobImpl extends OsylAbstractQuartzJobImpl
+	implements AddCMTitlePropertyJob {
 
     private List<Site> allSites;
-
-    private final static String[] DEFAULT_TOOLS =
-	    { "sakai.opensyllabus.tool", "sakai.assignment.grades",
-		    "sakai.resources", "sakai.siteinfo" };
 
     private List<ToolConfiguration> siteTools = null;
 
     /**
      * Our logger
      */
-    private static Log log = LogFactory.getLog(AddCMTitlePropertyJobImpl.class);
-
-    // ***************** SPRING INJECTION ************************//
-    /**
-     * The cms to be injected by Spring
-     */
-    private CourseManagementService cmService;
-
-    /**
-     * @param cmService
-     */
-    public void setCmService(CourseManagementService cmService) {
-	this.cmService = cmService;
-    }
-
-    /**
-     * The site service used to create new sites: Spring injection
-     */
-    private SiteService siteService;
-
-    /**
-     * Sets the <code>SiteService</code> needed to create a new site in Sakai.
-     * 
-     * @param siteService
-     */
-    public void setSiteService(SiteService siteService) {
-	this.siteService = siteService;
-    }
-
-    private AuthzGroupService authzGroupService;
-
-    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
-	this.authzGroupService = authzGroupService;
-    }
-
-    private EventTrackingService eventTrackingService;
-
-    public void setEventTrackingService(
-	    EventTrackingService eventTrackingService) {
-	this.eventTrackingService = eventTrackingService;
-    }
-
-    private UsageSessionService usageSessionService;
-
-    public void setUsageSessionService(UsageSessionService usageSessionService) {
-	this.usageSessionService = usageSessionService;
-    }
-
-    private SessionManager sessionManager;
-
-    public void setSessionManager(SessionManager sessionManager) {
-	this.sessionManager = sessionManager;
-    }
-    
-    private ToolManager toolManager;
-    
-    public void setToolManager(ToolManager toolManager) {
-        this.toolManager = toolManager;
-    }
-    // ***************** END SPRING INJECTION ************************//
+    protected static Log log = LogFactory
+	    .getLog(AddCMTitlePropertyJobImpl.class);
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 	loginToSakai();
@@ -154,9 +86,7 @@ public class AddCMTitlePropertyJobImpl implements AddCMTitlePropertyJob {
 		    validateTools(site);
 		    siteService.save(site);
 		} catch (IdUnusedException e) {
-		    log
-			    .info("The site " + site.getTitle()
-				    + " does not exist.");
+		    log.info("The site " + site.getTitle() + " does not exist.");
 		} catch (PermissionException e) {
 		    log.info("You are not allowed to update the site "
 			    + site.getTitle());
@@ -177,39 +107,17 @@ public class AddCMTitlePropertyJobImpl implements AddCMTitlePropertyJob {
      * Logs in the sakai environment
      */
     protected void loginToSakai() {
-	Session sakaiSession = sessionManager.getCurrentSession();
-	sakaiSession.setUserId("admin");
-	sakaiSession.setUserEid("admin");
-
-	// establish the user's session
-	usageSessionService.startSession("admin", "127.0.0.1", "CMSync");
-
-	// update the user's externally provided realm definitions
-	authzGroupService.refreshUser("admin");
-
-	// post the login event
-	eventTrackingService.post(eventTrackingService.newEvent(
-		UsageSessionService.EVENT_LOGIN, null, true));
-    }
-
-    /**
-     * Logs out of the sakai environment
-     */
-    protected void logoutFromSakai() {
-	// post the logout event
-	eventTrackingService.post(eventTrackingService.newEvent(
-		UsageSessionService.EVENT_LOGOUT, null, true));
+	super.loginToSakai("AddCMTitlePropertyJob");
     }
 
     private List<ToolConfiguration> getSiteTools(Site site) {
-	List pages = new Vector(site.getPages());
-	List tools = new ArrayList();
+	List<SitePage> pages = new Vector<SitePage>(site.getPages());
+	List<ToolConfiguration> tools = new ArrayList<ToolConfiguration>();
 
-	for (Iterator p = pages.iterator(); p.hasNext();) {
-	    SitePage page = (SitePage) p.next();
+	for (Iterator<SitePage> p = pages.iterator(); p.hasNext();) {
+	    SitePage page = p.next();
 	    tools.addAll(page.getTools());
 	}
-
 	return tools;
     }
 

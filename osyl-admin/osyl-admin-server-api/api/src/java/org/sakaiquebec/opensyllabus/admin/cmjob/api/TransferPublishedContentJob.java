@@ -20,14 +20,12 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
-import org.quartz.Job;
-import org.sakaiproject.tool.cover.ToolManager;
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
-public interface TransferPublishedContentJob extends Job{
+public interface TransferPublishedContentJob extends OsylAbstractQuartzJob{
 
     public final static String PUBLISH_DIRECTORY = "publish/";
     

@@ -1,16 +1,8 @@
-package org.sakaiquebec.opensyllabus.admin.cmjob.api;
-
-import java.util.List;
-
-import org.quartz.Job;
-
-import java.util.Arrays;
-
 /******************************************************************************
  * $Id: $
  ******************************************************************************
  *
- * Copyright (c) 2010 The Sakai Foundation, The Sakai Quebec Team.
+ * Copyright (c) 2011 The Sakai Foundation, The Sakai Quebec Team.
  *
  * Licensed under the Educational Community License, Version 1.0
  * (the "License"); you may not use this file except in compliance with the
@@ -25,23 +17,22 @@ import java.util.Arrays;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- *****************************************************************************/
+ ******************************************************************************/
+package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
 /**
- * This job adds the role library staff with the correct permissions to all the
- * sites of type course. All the sites will be checked to make sure the role has
- * at least the specified permissions.
- *
- * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
+ * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @version $Id: $
  */
-public interface ChangePermissionsSynchronizationJob extends Job {
+public interface AddHomePageToolJob extends OsylAbstractQuartzJob {
 
+    final static String SITE_TYPE = "course";
 
-    public final static String SITE_TYPE = "course";
+    final static String OSYL_CONFIG_PATH_KEY = "opensyllabus.configs.path";
 
-    public final static String REALM_PREFIX = "/site/";
+    final static String[] TOOLS_BEFORE = { "sakai.opensyllabus.tool",
+	    "sakai.assignment.grades", "sakai.resources", "sakai.siteinfo" };
 
-    public final static String TEMPLATE_ID = "!site.template.course";
+    final static String DEFAULT_LOCALE = "fr_CA";
 
 }

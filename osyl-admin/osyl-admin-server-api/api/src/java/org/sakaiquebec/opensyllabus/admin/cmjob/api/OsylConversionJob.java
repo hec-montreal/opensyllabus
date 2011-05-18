@@ -20,13 +20,12 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
-import org.quartz.Job;
 /**
  *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public interface OsylConversionJob extends Job {
+public interface OsylConversionJob extends OsylAbstractQuartzJob {
     public static String OSYL_CONFIG_PATH_KEY = "opensyllabus.configs.path";
 }
 

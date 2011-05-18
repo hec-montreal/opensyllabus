@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * This class is used to retrieved informations saved in the config.xml file.
@@ -43,22 +42,22 @@ public interface ConfigurationService {
     public final static String STARTDATE = "startDate";
 
     public final static String ENDDATE = "endDate";
-    
+
     public final static String PROGRAMS = "programs";
-    
+
     public final static String SERVENS = "servEns";
-    
+
     // For updating all courses sites to frozen sites
     public final static String FROZENPERMISSIONS = "permissions";
-      
+
     public final static String SESSIONID = "sessionId";
 
     public final static String ROLESET = "role";
-    
+
     public final static String ROLEID = "id";
-    
-    public final static String PERMISSIONS = "permissions";    
-    
+
+    public final static String PERMISSIONS = "permissions";
+
     // For adding or removing users with a specific role or removing a role in
     // all the course sites
     public final static String ROLE = "role";
@@ -100,12 +99,18 @@ public interface ConfigurationService {
     public final static String OFFSITESCONFIGFILE = "offSitesConfig.xml";
 
     public final static String FUNCTIONSSCONFIGFILE = "functionsConfig.xml";
-        
-	// File containing the xml configuration of sites to freeze
-	public final static String FROZENSITESCONFIG = "frozenSitesConfig.xml";
-	public final static String UNFROZENSITESCONFIG = "unFrozenConfig.xml";
-	
+
+    // File containing the xml configuration of sites to freeze
+    public final static String FROZENSITESCONFIG = "frozenSitesConfig.xml";
+    public final static String UNFROZENSITESCONFIG = "unFrozenConfig.xml";
+
     public final static String XSL_FILENAME = "courseOutline.xsl";
+
+    public final static String INCLUDING_FROZEN_SITES =
+	    "includingFrozenSites";
+
+    public final static String INCLUDING_DIR_SITES =
+	    "includingDirSites";
 
     // Parameters used in the official sites synchronisation job
     public Date getEndDate();
@@ -113,15 +118,15 @@ public interface ConfigurationService {
     public Date getStartDate();
 
     public List<String> getCourses();
-    
-    public List<String> getServEns ();
-    
+
+    public List<String> getServEns();
+
     public List<String> getPrograms();
 
     public Map<String, Map<String, Object>> getUdatedRoles();
 
     public String getFunctionsRole();
-    
+
     public String getDescription();
 
     public String getRoleToRemove();
@@ -129,16 +134,20 @@ public interface ConfigurationService {
     public List<String> getAllowedFunctions();
 
     public List<String> getDisallowedFunctions();
-    
+
     public String getCourseOutlineXsl();
-    
-    public String getSessionId();    
-   
+
+    public String getSessionId();
+
     public List<String> getFrozenPermissions();
 
-	public HashMap<String, List<String>> getFrozenFunctionsToAllow();
-	
+    public HashMap<String, List<String>> getFrozenFunctionsToAllow();
+
     public void getFrozenSessionIdConfig();
-    
+
     public void getConfigToFreeze();
+    
+    public boolean isIncludingFrozenSites();
+    
+    public boolean isIncludingDirSites();
 }

@@ -2,7 +2,7 @@
  * $Id: $
  ******************************************************************************
  *
- * Copyright (c) 2010 The Sakai Foundation, The Sakai Quebec Team.
+ * Copyright (c) 2011 The Sakai Foundation, The Sakai Quebec Team.
  *
  * Licensed under the Educational Community License, Version 1.0
  * (the "License"); you may not use this file except in compliance with the
@@ -20,15 +20,16 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.cmjob.api;
 
-
 /**
- * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
+ * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @version $Id: $
  */
-public interface AddCMTitlePropertyJob extends OsylAbstractQuartzJob{
+public interface ChangeOsylEditorSiteTypeJob extends OsylAbstractQuartzJob {
 
-    final static String[] DEFAULT_TOOLS =
-    { "sakai.opensyllabus.tool", "sakai.assignment.grades",
-	    "sakai.resources", "sakai.siteinfo" };
+    final static String NEW_SITE_TYPE = "course";
 
+    final static String SITE_TYPE = "osylEditor";
+
+    final static String[] DEFAULT_TOOLS = { "sakai.opensyllabus.tool",
+	    "sakai.assignment.grades", "sakai.resources", "sakai.siteinfo" };
 }
