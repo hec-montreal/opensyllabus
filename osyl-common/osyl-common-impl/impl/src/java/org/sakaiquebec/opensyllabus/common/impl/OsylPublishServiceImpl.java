@@ -62,7 +62,7 @@ import org.sakaiquebec.opensyllabus.common.api.OsylEventService;
 import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
-import org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO;
+import org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO; 	// HEC ONLY SAKAI-2723
 import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
@@ -231,7 +231,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      * @uml.associationEnd
      */
     private OsylTransformToZCCO osylTransformToZCCO;
-	// END HEC ONLY SAKAI-2723
 
     /**
      * Sets the {@link OsylTransformToZCCO}.
@@ -241,6 +240,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public void setOsylTransformToZCCO(OsylTransformToZCCO osylTransformToZCCO) {
 	this.osylTransformToZCCO = osylTransformToZCCO;
     }
+	// END HEC ONLY SAKAI-2723
 
     /**
      * The OsylSite service to be injected by Spring
