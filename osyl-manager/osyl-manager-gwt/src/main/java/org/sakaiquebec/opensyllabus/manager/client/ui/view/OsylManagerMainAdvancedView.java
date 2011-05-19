@@ -187,7 +187,7 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	hzSiteSelectionPanel2.add(showFrozenLbl);
 	hzSiteSelectionPanel2.add(showFrozenCheckBox);
 	hzSiteSelectionPanel2.setCellVerticalAlignment(showFrozenCheckBox,
-			HasVerticalAlignment.ALIGN_BOTTOM);
+			HasVerticalAlignment.ALIGN_MIDDLE);
 	vSiteSelectionPanel.add(hzSiteSelectionPanel2);
 
 	hzPanel2.add(courseListView);
