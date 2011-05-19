@@ -7,7 +7,7 @@
       	<value>osyl_manager_fr_CA</value>
       </property>
       <property name="name">
-      	<value>Gestionnaire de plans de cours</value>
+      	<value>Aide Gestionnaire de plans de cours</value>
       </property>
       <property name="location">
       	<value>/sakai_opensyllabus_manager_tool/osyl_manager_fr_CA.html</value>
