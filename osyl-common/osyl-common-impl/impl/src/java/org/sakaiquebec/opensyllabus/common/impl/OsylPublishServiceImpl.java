@@ -62,7 +62,6 @@ import org.sakaiquebec.opensyllabus.common.api.OsylEventService;
 import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
-import org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO; 	// HEC ONLY SAKAI-2723
 import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
@@ -223,24 +222,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	this.osylConfigService = configService;
     }
 
-	// BEGIN HEC ONLY SAKAI-2723
-    /**
-     * The transformation and transfer service to be injected by Spring
-     *
-     * @uml.property name="osylTransformToZCCO"
-     * @uml.associationEnd
-     */
-    private OsylTransformToZCCO osylTransformToZCCO;
-
-    /**
-     * Sets the {@link OsylTransformToZCCO}.
-     *
-     * @param osylTransformToZCCO
-     */
-    public void setOsylTransformToZCCO(OsylTransformToZCCO osylTransformToZCCO) {
-	this.osylTransformToZCCO = osylTransformToZCCO;
-    }
-	// END HEC ONLY SAKAI-2723
 
     /**
      * The OsylSite service to be injected by Spring
@@ -515,7 +496,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		String courseOffId = s.getCourseOfferingEid();
 		CourseOffering courseOff =
 			cmService.getCourseOffering(courseOffId);
-		program = courseOff.getAcademicCareer(); //HEC ONLY SAKAI-2723
 		dept = cmService.getSectionCategoryDescription(s.getCategory());
 		title = s.getTitle();
 		EnrollmentSet es = s.getEnrollmentSet();
@@ -1076,23 +1056,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	String portalActivated =
 		ServerConfigurationService.getString("hec.portail.activated");
 
-	//BEGIN HEC ONLY SAKAI-2723
-	// FIXME: this is for HEC Montreal only. Should be injected or something
-	// cleaner than this. See SAKAI-2163.
-	String siteShareable =
-		publishedCO.getSiteId().substring(
-			publishedCO.getSiteId().lastIndexOf(".") + 1);
-	if (portalActivated != null && portalActivated.equalsIgnoreCase("true")) {
-	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_PUBLIC)) {
-		osylTransformToZCCO.sendXmlAndDoc(publishedCO,
-			SecurityInterface.ACCESS_PUBLIC);
-	    }
-	    if (access.equalsIgnoreCase(SecurityInterface.ACCESS_COMMUNITY)) {
-		osylTransformToZCCO.sendXmlAndDoc(publishedCO,
-			SecurityInterface.ACCESS_COMMUNITY);
-	    }
-	}
-	//END HEC ONLY SAKAI-2723
 
     }
 
@@ -1135,13 +1098,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	COSerialized co =
 		osylSiteService.getSerializedCourseOutline(siteId, webappDir);
 
-	//BEGIN HEC ONLY SAKAI-2723
-	String portalActivated =
-		ServerConfigurationService.getString("hec.portail.activated");
-	if (portalActivated != null && portalActivated.equalsIgnoreCase("true")) {
-	    osylTransformToZCCO.unpublish(siteId, co.getLang());
-	}
-	//END HEC ONLY SAKAI-2723
 
 	// remove publication date in DB
 	resourceDao.setPublicationDate(co.getCoId(), null);
