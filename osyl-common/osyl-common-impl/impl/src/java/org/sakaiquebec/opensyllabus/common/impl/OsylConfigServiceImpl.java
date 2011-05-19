@@ -308,6 +308,9 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	coConfig.setEvalTypeList(getEvalTypeList(path));
 	coConfig.setSettings(OsylConfigSettingsService.getSettings(path,
 		CONFIG_SETTINGS));
+	if (version == null)
+		version = getDefautVersionConfig(webappdir + CONFIG_DIR
+				+ File.separator + configRef + File.separator);
 	coConfig.setVersion(version);
 	return coConfig;
     }

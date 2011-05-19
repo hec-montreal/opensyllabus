@@ -48,6 +48,7 @@
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-jsp-adapter</artifactId>
+<!-- <version>0.10-K1</version> // HEC ONLY SAKAI-2723 -->
 			<scope>runtime</scope>
 		</dependency>
 	</dependencies>

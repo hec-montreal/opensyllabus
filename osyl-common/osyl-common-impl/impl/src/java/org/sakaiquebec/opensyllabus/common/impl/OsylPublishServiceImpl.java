@@ -223,7 +223,19 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	this.osylConfigService = configService;
     }
 
-	// BEGIN HEC ONLY SAKAI-2723
+    /** The osyl content service to be injected by Spring */
+    private OsylContentService osylContentService;
+
+    /**
+     * Sets the {@link OsylContentService}.
+     *
+     * @param osylContentService
+     */
+    public void setOsylContentService(OsylContentService osylContentService) {
+	this.osylContentService = osylContentService;
+    }
+
+    // BEGIN HEC ONLY SAKAI-2723
     /**
      * The transformation and transfer service to be injected by Spring
      *
@@ -631,6 +643,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	    ContentResourceEdit newResource;
 	    try {
+		if (!collectionExists(directory))
+		    osylContentService.initSiteAttachments(siteId);
 		newResource =
 			contentHostingService.addResource(directory, siteId,
 				".pdf", 1);
@@ -661,6 +675,22 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    securityService.popAdvisor();
 	}
     }
+    
+    private boolean collectionExists (String collectionId){
+	try {
+	    contentHostingService.getCollection(collectionId);
+	} catch (IdUnusedException e) {
+	    return false;
+	} catch (TypeException e) {
+	    log.warn("This is not a valid collection id: " + collectionId);
+	    return false;
+	} catch (PermissionException e) {
+	    log.warn("You are not allowed to access this collection id: " + collectionId);
+	}
+	
+	return true;
+    }
+    
 
     private File createPrintVersion(COSerialized coSerialized, String webappdir)
 	    throws Exception {

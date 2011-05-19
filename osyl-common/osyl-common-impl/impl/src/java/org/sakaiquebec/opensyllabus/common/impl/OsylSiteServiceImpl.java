@@ -1096,21 +1096,22 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      */
     public COSerialized getSerializedCourseOutline(String siteId,
 	    String webappDir) throws Exception {
+		COSerialized co = null;
 	try {
-	    COSerialized co =
-		    resourceDao.getSerializedCourseOutlineBySiteId(siteId);
+			co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
+		} catch (Exception e) {
+			log.warn("There is no course outline associated to the site " + siteId);
+		}
+		
 	    COConfigSerialized coConfig = null;
 	    if (co == null) {
-		coConfig =
-			osylConfigService.getConfigByRefAndVersion(
-				osylConfigService.getDefaultConfig(), null,
-				webappDir);
-		co =
-			new COSerialized(idManager.createUuid(),
-				osylConfigService.getCurrentLocale(), "shared",
-				"", siteId, "sectionId", coConfig, null,
-				"shortDescription", "description", "title",
-				false, null, null, coConfig.getVersion());
+			coConfig = osylConfigService.getConfigByRefAndVersion(
+					osylConfigService.getDefaultConfig(), null, webappDir);
+			co = new COSerialized(idManager.createUuid(),
+					osylConfigService.getCurrentLocale(), "shared", "", siteId,
+					"sectionId", coConfig, null, "shortDescription",
+					"description", "title", false, null, null,
+					coConfig.getVersion());
 		setCoContentWithTemplate(co, webappDir);
 		resourceDao.createOrUpdateCourseOutline(co);
 	    } else if (co.getContent() == null) {
@@ -1152,10 +1153,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		}
 	    }
 	    return co;
-	} catch (Exception e) {
-	    log.error("Unable to retrieve course outline", e);
-	    throw e;
-	}
 
     }
 
@@ -1862,10 +1859,22 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public COConfigSerialized getOsylConfigForSiteId(String siteId,
 	    String webappDir) {
 	COConfigSerialized config = null;
+	COSerialized thisCo = null;
+	String cfgId = null;
 	try {
-	    COSerialized thisCo =
-		    resourceDao.getSerializedCourseOutlineBySiteId(siteId);
-	    String cfgId = thisCo.getOsylConfig().getConfigId();
+	    thisCo = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
+	    cfgId = thisCo.getOsylConfig().getConfigId();
+	} catch (Exception e) {
+	    // Changed for easy community use SAKAI-2723
+	    // log.debug("getOsylConfigIdForSiteId: " + e);
+	    log.warn("A course outline is not associated to the site "
+		    + siteId
+		    + ". A new course outline will be created from default config.");
+	    thisCo = null;
+	    cfgId = null;
+	}
+
+	try {
 	    if (cfgId == null) {
 		String configPath =
 			ServerConfigurationService.getString(
@@ -1888,7 +1897,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 				thisCo.getConfigVersion(), webappDir);
 	    }
 	} catch (Exception e) {
-	    log.debug("getOsylConfigIdForSiteId: " + e);
+	    log.error(e);
 	}
 	return config;
     }
