@@ -54,9 +54,8 @@ foreach $file (@files) {
   my $content = "";
   # Process each line
   while (<fileDescriptor>) {
-	next if /HEC ONLY SAKAI-2723/; # Discard this single line
 	$in_block = 1 if /BEGIN HEC ONLY SAKAI\-2723/;
-	$content .= $_ if not ($in_block);
+	$content .= $_ if (not $in_block and not /HEC ONLY SAKAI-2723/);
 	$in_block = 0 if /END HEC ONLY SAKAI\-2723/;
   }
   close fileDescriptor or die;
