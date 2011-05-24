@@ -236,6 +236,7 @@
 		<property name="contentHostingService"
 			ref="org.sakaiproject.content.api.ContentHostingService" />
 		<property name="entityManager" ref="org.sakaiproject.entity.api.EntityManager" />
+		<property name=eventTrackingService" ref="org.sakaiproject.event.api.EventTrackingService" />
 	</bean>
 
 	<bean id="osylAbstractQuartzJob" abstract="true"

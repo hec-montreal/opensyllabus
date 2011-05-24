@@ -43,6 +43,7 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.EntityManager;
 import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.event.api.Event;
+import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
@@ -114,6 +115,13 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     public void setContentHostingService(ContentHostingService service) {
 	contentHostingService = service;
     }
+    
+    private EventTrackingService eventTrackingService;
+
+    public void setEventTrackingService(
+	    EventTrackingService eventTrackingService) {
+	this.eventTrackingService = eventTrackingService;
+    }
 
     private EntityManager entityManager;
 
@@ -122,6 +130,10 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     }
 
     public void init() {
+	log.info("initialize OsylAdmin configuration service");
+
+	eventTrackingService.addObserver(this);
+
 	configFiles = new HashMap<String, String>();
 	updateConfig(CONFIGFORLDER + OFFSITESCONFIGFILE);
 	updateConfig(ROLEFOLDER);
