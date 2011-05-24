@@ -131,23 +131,31 @@ public class FreezeSitesAfterSessionJobImpl extends OsylAbstractQuartzJobImpl
 		    Set<String> st = functions.keySet();
 		    Iterator<String> iterator = st.iterator();
 		    while (iterator.hasNext()) {
-			String keyRole = iterator.next();
-			log.info("FreezeSitesAfterSessionJobImpl: Role "
-				+ keyRole + " has "
-				+ functions.get(keyRole).size()
-				+ "functions **");
-			if (roleToUpdate.getId().equalsIgnoreCase(keyRole)) {
-			    List<String> newPermissions =
-				    functions.get(keyRole);
-			    Set<String> oldPermissions =
-				    roleToUpdate.getAllowedFunctions();
-			    roleToUpdate.disallowFunctions(oldPermissions);
-			    roleToUpdate.allowFunctions(newPermissions);
-			    authzGroupService.save(realm);
-			    log.info("roleToUpdate:...getId(): '"
-				    + roleToUpdate.getId()
-				    + "' the permission was applied ***");
-			}
+				String keyRole = iterator.next();
+				log.info("FreezeSitesAfterSessionJobImpl: Role "
+					+ keyRole + " has "
+					+ functions.get(keyRole).size()
+					+ "functions **");
+				if (roleToUpdate.getId().equalsIgnoreCase(keyRole)) {
+				    List<String> newPermissions =
+					    functions.get(keyRole);
+				    Set<String> oldPermissions =
+					    roleToUpdate.getAllowedFunctions();
+				    //roleToUpdate.disallowFunctions(oldPermissions);
+				    for (Object oldFunction : oldPermissions) {
+						if (role.isAllowed((String) oldFunction))
+						    role.disallowFunction((String) oldFunction);
+					}
+				    //roleToUpdate.allowFunctions(newPermissions);
+				    for (Object newFunction : newPermissions) {
+						if (!role.isAllowed((String) newFunction))
+						    role.allowFunction((String) newFunction);
+					}				    
+				    authzGroupService.save(realm);
+				    log.info("roleToUpdate:...getId(): '"
+					    + roleToUpdate.getId()
+					    + "' the permission was applied ***");
+				}
 		    }
 		}
 	    } else {
