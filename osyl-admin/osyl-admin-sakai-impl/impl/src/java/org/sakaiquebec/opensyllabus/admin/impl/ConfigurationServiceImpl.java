@@ -43,7 +43,6 @@ import org.sakaiproject.content.api.ContentResource;
 import org.sakaiproject.entity.api.EntityManager;
 import org.sakaiproject.entity.api.Reference;
 import org.sakaiproject.event.api.Event;
-import org.sakaiproject.event.api.EventTrackingService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
@@ -107,18 +106,13 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private List<String> functions;
     private List<String> addedUsers;
     private List<String> removedUsers;
+    
+    private Map<String, String> printVersionJobParams = null;
 
     protected ContentHostingService contentHostingService = null;
 
     public void setContentHostingService(ContentHostingService service) {
 	contentHostingService = service;
-    }
-
-    private EventTrackingService eventTrackingService;
-
-    public void setEventTrackingService(
-	    EventTrackingService eventTrackingService) {
-	this.eventTrackingService = eventTrackingService;
     }
 
     private EntityManager entityManager;
@@ -128,17 +122,12 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     }
 
     public void init() {
-
-	log.info("initialize OsylAdmin configuration service");
-
-	eventTrackingService.addObserver(this);
-
 	configFiles = new HashMap<String, String>();
 	updateConfig(CONFIGFORLDER + OFFSITESCONFIGFILE);
 	updateConfig(ROLEFOLDER);
 	updateConfig(ADMIN_CONTENT_FOLDER + XSL_FILENAME);
 	updateConfig(CONFIGFORLDER + FUNCTIONSSCONFIGFILE);
-
+	updateConfig(CONFIGFORLDER + PRINT_VERSION_CONFIG);
     }
 
     public String getFunctionsRole() {
@@ -298,21 +287,26 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
 		// If the content of the role folder update, we update the
 		// values
-		if (referenceString.contains(ROLEFOLDER)) {
+		else if (referenceString.contains(ROLEFOLDER)) {
 		    log.info("Updating roles config files from "
 			    + referenceString);
 		    updateConfig(referenceString);
 		}
 
 		// If the functions files updated we change the values
-		if (referenceString.contains(FUNCTIONSSCONFIGFILE)) {
+		else if (referenceString.contains(FUNCTIONSSCONFIGFILE)) {
 		    log.info("Updating permissions config files from "
 			    + referenceString);
 		    updateConfig(referenceString);
 		}
 
-		if (referenceString.contains(XSL_FILENAME)) {
+		else if (referenceString.contains(XSL_FILENAME)) {
 		    log.info("Updating XSL in resource" + referenceString);
+		    updateConfig(referenceString);
+		}
+		
+		else if (referenceString.contains(PRINT_VERSION_CONFIG)) {
+		    log.info("Updating 'createPrintVersion' job config" + referenceString);
 		    updateConfig(referenceString);
 		}
 	    }
@@ -328,16 +322,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    ContentResource resource = null;
 
 	    try {
-		log.info("*** securityService.pushAdvisor(new SecurityAdvisor() ConfigurationServiceImpl *** ");
-
-		// We allow access to the file
-		/**
-		 * securityService.pushAdvisor(new SecurityAdvisor() { public
-		 * SecurityAdvice isAllowed(String userId, String function,
-		 * String reference) { if (function.equals("content.read"))
-		 * return SecurityAdvice.ALLOWED; return
-		 * SecurityAdvice.NOT_ALLOWED; } });
-		 **/
 		if (fileName.contains(ROLEFOLDER)) {
 		    ContentCollection collection;
 		    if (!contentHostingService.isCollection(reference.getId())) {
@@ -377,8 +361,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		    if (resource != null)
 			retrieveConfigs(fileName, resource.streamContent());
 		}
-		// We remove access to the resource
-		// securityService.popAdvisor();
 
 	    } catch (PermissionException e) {
 		log.info("You are not allowed to access this resource");
@@ -494,9 +476,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		setEndDate(endDate);
 		setPrograms(programs);
 		setServEns(servEns);
-	    }
-
-	    if (configurationXml.contains(ROLEFOLDER)) {
+	    } else if (configurationXml.contains(ROLEFOLDER)) {
 		Map<String, Object> values = new HashMap<String, Object>();
 		String role = retrieveParameter(document, ROLE);
 		String description = retrieveParameter(document, DESCRIPTION);
@@ -530,9 +510,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		    updatedRoles.put(role, values);
 		    configFiles.put(configurationXml, role);
 		}
-	    }
-
-	    if (configurationXml.contains(FUNCTIONSSCONFIGFILE)) {
+	    } else if (configurationXml.contains(FUNCTIONSSCONFIGFILE)) {
 		String fuctionsRole = retrieveParameter(document, ROLE);
 		String description = retrieveParameter(document, DESCRIPTION);
 		String removedRole = retrieveParameter(document, REMOVED_ROLE);
@@ -552,17 +530,19 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		setIncludingDirSites(includingDirSites);
 		setAllowedFunctions(allowedFunctions);
 		setDisallowedFunctions(disallowedFunctions);
-	    }
-
-	    if (configurationXml.contains(FROZENSITESCONFIG)) {
+	    } else if (configurationXml.contains(FROZENSITESCONFIG)) {
 		String sessionId = retrieveParameter(document, SESSIONID);
 		setSessionId(sessionId);
 		setFrozenFunctionsToAllow(getFrozenPermissionsByRole(document));
-	    }
-
-	    if (configurationXml.contains(UNFROZENSITESCONFIG)) {
+	    } else if (configurationXml.contains(UNFROZENSITESCONFIG)) {
 		String frozenSessionId = retrieveParameter(document, SESSIONID);
 		setSessionId(frozenSessionId);
+	    } else if(configurationXml.contains(PRINT_VERSION_CONFIG)) {
+		printVersionJobParams = new HashMap<String, String>();
+		printVersionJobParams.put(INCLUDING_DIR_SITES,
+			retrieveParameter(document, INCLUDING_DIR_SITES));
+		printVersionJobParams.put(INCLUDING_FROZEN_SITES,
+			retrieveParameter(document, INCLUDING_FROZEN_SITES));
 	    }
 	}
     }
@@ -803,4 +783,10 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	return programs;
     }
 
+    /**
+     * @return the printVersionJobParams value.
+     */
+    public Map<String, String> getPrintVersionJobParams() {
+        return printVersionJobParams;
+    }
 }

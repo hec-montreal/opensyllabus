@@ -31,6 +31,7 @@ import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
+import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.CreatePrintVersionJob;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 import org.sakaiquebec.opensyllabus.shared.exception.PdfGenerationException;
@@ -51,8 +52,16 @@ public class CreatePrintVersionJobImpl extends OsylAbstractQuartzJobImpl
 	loginToSakai();
 
 	final List<Site> allSites =
-		siteService.getSites(SiteService.SelectionType.ANY, "course",
-			null, null, SiteService.SortType.NONE, null);
+		siteService.getSites(SiteService.SelectionType.ANY,
+			COURSE_SITE, null, null, SiteService.SortType.NONE,
+			null);
+
+	if (TRUE.equals(adminConfigService.getPrintVersionJobParams().get(
+		ConfigurationService.INCLUDING_DIR_SITES))) {
+	    allSites.addAll(siteService
+		    .getSites(SiteService.SelectionType.ANY, DIRECTORY_SITE,
+			    null, null, SiteService.SortType.NONE, null));
+	}
 
 	String configPath =
 		serverConfigService.getString(OSYL_CONFIG_PATH_KEY, null);
@@ -64,30 +73,39 @@ public class CreatePrintVersionJobImpl extends OsylAbstractQuartzJobImpl
 						      // cleaner method.
 
 	for (Site site : allSites) {
-	    String directory =
-		    ContentHostingService.ATTACHMENTS_COLLECTION
-			    + site.getTitle()
-			    + "/"
-			    + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
-			    + "/";
-	    try {
-		contentHostingService.getResource(directory
-			+ "osylPrintVersion.pdf");
-		contentHostingService.removeResource(directory
-			+ "osylPrintVersion.pdf");
-	    } catch (IdUnusedException idue) {
-		// pdf does not exist, nothing to do
-	    } catch (Exception e) {
-		log.error("Unable to delete " + directory
-			+ "osylPrintVersion.pdf", e);
-	    }
 
-	    try {
-		osylPublishService.createPublishPrintVersion(site.getId(),
-			configPath + File.separator);
-	    } catch (PdfGenerationException e) {
-		log.error("Could not create pdf for site '" + site.getId()
-			+ "'", e);
+	    if (TRUE.equals(adminConfigService.getPrintVersionJobParams().get(
+		    ConfigurationService.INCLUDING_FROZEN_SITES))
+		    || (FALSE.equals(adminConfigService
+			    .getPrintVersionJobParams()
+			    .get(ConfigurationService.INCLUDING_FROZEN_SITES))
+			    && !getFrozenValue(site))) {
+
+		String directory =
+			ContentHostingService.ATTACHMENTS_COLLECTION
+				+ site.getTitle()
+				+ "/"
+				+ OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
+				+ "/";
+		try {
+		    contentHostingService.getResource(directory
+			    + "osylPrintVersion.pdf");
+		    contentHostingService.removeResource(directory
+			    + "osylPrintVersion.pdf");
+		} catch (IdUnusedException idue) {
+		    // pdf does not exist, nothing to do
+		} catch (Exception e) {
+		    log.error("Unable to delete " + directory
+			    + "osylPrintVersion.pdf", e);
+		}
+
+		try {
+		    osylPublishService.createPublishPrintVersion(site.getId(),
+			    configPath + File.separator);
+		} catch (PdfGenerationException e) {
+		    log.error("Could not create pdf for site '" + site.getId()
+			    + "'", e);
+		}
 	    }
 	}
 	logoutFromSakai();

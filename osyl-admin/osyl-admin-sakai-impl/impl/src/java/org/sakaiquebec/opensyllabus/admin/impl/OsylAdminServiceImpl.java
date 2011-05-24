@@ -393,5 +393,5 @@ public class OsylAdminServiceImpl implements OsylAdminService {
             return SecurityAdvice.PASS;
 	  }
 	});
-    }   
+    }
 }

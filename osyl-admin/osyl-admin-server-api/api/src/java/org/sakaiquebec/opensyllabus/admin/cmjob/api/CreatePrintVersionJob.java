@@ -28,5 +28,7 @@ package org.sakaiquebec.opensyllabus.admin.cmjob.api;
  */
 public interface CreatePrintVersionJob extends OsylAbstractQuartzJob{
     public static String OSYL_CONFIG_PATH_KEY = "opensyllabus.configs.path";
+    public static String TRUE = "true";
+    public static String FALSE = "false";
 }
 

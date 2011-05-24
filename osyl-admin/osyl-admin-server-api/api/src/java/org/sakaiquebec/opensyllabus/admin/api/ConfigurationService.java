@@ -105,6 +105,8 @@ public interface ConfigurationService {
     public final static String UNFROZENSITESCONFIG = "unFrozenConfig.xml";
 
     public final static String XSL_FILENAME = "courseOutline.xsl";
+    
+    public final static String PRINT_VERSION_CONFIG = "printVersionConfig.xml";
 
     public final static String INCLUDING_FROZEN_SITES =
 	    "includingFrozenSites";
@@ -150,4 +152,6 @@ public interface ConfigurationService {
     public boolean isIncludingFrozenSites();
     
     public boolean isIncludingDirSites();
+    
+    public Map<String, String> getPrintVersionJobParams();
 }

@@ -110,11 +110,11 @@ public class FunctionsSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 			COURSE_SITE, null, null, SiteService.SortType.NONE,
 			null);
 
-//	if (adminConfigService.isIncludingDirSites()) {
-//	    allSites.addAll(siteService
-//		    .getSites(SiteService.SelectionType.ANY, DIRECTORY_SITE,
-//			    null, null, SiteService.SortType.NONE, null));
-//	}
+	if (adminConfigService.isIncludingDirSites()) {
+	    allSites.addAll(siteService
+		    .getSites(SiteService.SelectionType.ANY, DIRECTORY_SITE,
+			    null, null, SiteService.SortType.NONE, null));
+	}
 	log.info("processing " + allSites.size() + " sites");
 
 	int THREAD_COUNT = 8;
@@ -277,8 +277,9 @@ public class FunctionsSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 	for (int i = 0; i < sites.size(); i++) {
 	    site = sites.get(i);
 
-//	    if (adminConfigService.isIncludingFrozenSites()
-//		    || (!adminConfigService.isIncludingFrozenSites() && !getFrozenValue(site))) {
+	    if (adminConfigService.isIncludingFrozenSites()
+		    || (!adminConfigService.isIncludingFrozenSites() && !getFrozenValue(site))) {
+
 		if (!getFrozenValue(site)) {
 
 		    try {
@@ -399,7 +400,7 @@ public class FunctionsSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 			}
 		    }
 		}
-//	    }
+	    }
 	}
     } // processSites
 
