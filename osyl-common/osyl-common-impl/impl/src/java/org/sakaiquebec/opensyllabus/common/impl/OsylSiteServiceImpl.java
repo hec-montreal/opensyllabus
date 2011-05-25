@@ -2074,19 +2074,20 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     private void copyAnnoucement(String fromSite, String toSite, String ref) {
 	List<String> list = new ArrayList<String>();
 	list.add(ref);
-	log.info("*** copyAnnoucement SecurityAdvisor advisor = new SecurityAdvisor() { OsylSiteServiceImpl *** ");
 
-	/*
-	 * SecurityAdvisor advisor = new SecurityAdvisor() { public
-	 * SecurityAdvice isAllowed(String arg0, String arg1, String arg2) {
-	 * return SecurityAdvice.ALLOWED; } };
-	 */
+	SecurityAdvisor advisor = new SecurityAdvisor() {
+	    public SecurityAdvice isAllowed(String arg0, String arg1,
+		    String arg2) {
+		return SecurityAdvice.ALLOWED;
+	    }
+	};
+
 	try {
-	    // securityService.pushAdvisor(advisor);
+	    securityService.pushAdvisor(advisor);
 	    ((EntityTransferrer) announcementService).transferCopyEntities(
 		    fromSite, toSite, list);
 	} finally {
-	    // securityService.popAdvisor();
+	    securityService.popAdvisor();
 	}
 
     }
@@ -2149,14 +2150,16 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     private void deleteSiteAnnouncementForOriginalAnnouncementMessageRef(
 	    String siteId, String ref) {
-	log.info("*** deleteSiteAnnouncementForOriginalAnnouncementMessageRef SecurityAdvisor advisor = new SecurityAdvisor() { OsylSiteServiceImpl *** ");
-	/*
-	 * SecurityAdvisor advisor = new SecurityAdvisor() { public
-	 * SecurityAdvice isAllowed(String arg0, String arg1, String arg2) {
-	 * return SecurityAdvice.ALLOWED; } };
-	 */
+
+	SecurityAdvisor advisor = new SecurityAdvisor() {
+	    public SecurityAdvice isAllowed(String arg0, String arg1,
+		    String arg2) {
+		return SecurityAdvice.ALLOWED;
+	    }
+	};
+
 	try {
-	    // securityService.pushAdvisor(advisor);
+	    securityService.pushAdvisor(advisor);
 	    AnnouncementChannel channel = getAnnouncementChannel(siteId);
 	    List messageList = channel.getMessages(null, true);
 
@@ -2169,7 +2172,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    }
 	} catch (Exception e) {
 	} finally {
-	    // securityService.popAdvisor();
+	    securityService.popAdvisor();
 	}
     }
 
