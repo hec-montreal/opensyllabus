@@ -175,7 +175,7 @@
       <dependency>
         <groupId>org.sakaiproject</groupId>
         <artifactId>sakai-jsp-adapter</artifactId>
-        <version>${sakai.version}</version>
+        <version>0.10-K1</version>
       </dependency>
       <dependency>
         <groupId>org.sakaiproject</groupId>

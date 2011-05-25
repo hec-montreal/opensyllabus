@@ -55,6 +55,7 @@
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-jsp-adapter</artifactId>
+                        <version>0.10-K1</version>
 			<scope>runtime</scope>
 		</dependency>
 
