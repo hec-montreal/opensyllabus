@@ -112,7 +112,7 @@ import org.w3c.dom.Element;
 
 /**
  * Implementation of the <code>OsylSiteService</code>
- *
+ * 
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
  * @version $Id: $
  */
@@ -172,7 +172,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>CitationService</code>.
-     *
+     * 
      * @param citationService
      * @uml.property name="citationService"
      */
@@ -194,7 +194,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylConfigService}.
-     *
+     * 
      * @param osylConfigService
      */
     public void setConfigService(OsylConfigService osylConfigService) {
@@ -214,7 +214,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Dependency: EntityManager.
-     *
+     * 
      * @param service The EntityManager.
      */
     public void setEntityManager(EntityManager entityManager) {
@@ -223,7 +223,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylSecurityService}.
-     *
+     * 
      * @param securityService
      */
     public void setOsylSecurityService(OsylSecurityService securityService) {
@@ -232,7 +232,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link OsylContentService}.
-     *
+     * 
      * @param osylContentService
      */
     public void setOsylContentService(OsylContentService osylContentService) {
@@ -246,7 +246,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>ContentHostingService</code>.
-     *
+     * 
      * @param contentHostingService
      */
     public void setContentHostingService(
@@ -256,7 +256,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link CORelationDao}.
-     *
+     * 
      * @param configDao
      */
     public void setCoRelationDao(CORelationDao relationDao) {
@@ -265,7 +265,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link ResourceDao}.
-     *
+     * 
      * @param resourceDao
      */
     public void setResourceDao(ResourceDao resourceDao) {
@@ -274,7 +274,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the {@link COConfigDao}.
-     *
+     * 
      * @param configDao
      */
     public void setConfigDao(COConfigDao configDao) {
@@ -283,7 +283,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * Sets the <code>SiteService</code>.
-     *
+     * 
      * @param siteService
      */
     public void setSiteService(SiteService siteService) {
@@ -1091,74 +1091,78 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @throws Exception
      */
     public COSerialized getSerializedCourseOutline(String siteId,
 	    String webappDir) throws Exception {
-		COSerialized co = null;
+	COSerialized co = null;
 	try {
-			co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
-		} catch (Exception e) {
-			log.warn("There is no course outline associated to the site " + siteId);
-		}
-		
-	    COConfigSerialized coConfig = null;
-	    if (co == null) {
-			coConfig = osylConfigService.getConfigByRefAndVersion(
-					osylConfigService.getDefaultConfig(), null, webappDir);
-			co = new COSerialized(idManager.createUuid(),
-					osylConfigService.getCurrentLocale(), "shared", "", siteId,
-					"sectionId", coConfig, null, "shortDescription",
-					"description", "title", false, null, null,
-					coConfig.getVersion());
-		setCoContentWithTemplate(co, webappDir);
-		resourceDao.createOrUpdateCourseOutline(co);
-	    } else if (co.getContent() == null) {
-		setCoContentWithTemplate(co, webappDir);
-		resourceDao.createOrUpdateCourseOutline(co);
-	    }
-	    COModeledServer coModelChild = new COModeledServer(co);
-	    // Fetch the parent
-	    String parentId = null;
-	    try {
-		parentId = coRelationDao.getParentOfCourseOutline(siteId);
-	    } catch (Exception e) {
-	    }
-	    if (parentId != null) {
+	    co = resourceDao.getSerializedCourseOutlineBySiteId(siteId);
+	} catch (Exception e) {
+	    log.warn("There is no course outline associated to the site "
+		    + siteId);
+	}
 
-		// fusion
-		COModeledServer coModelParent = null;
+	COConfigSerialized coConfig = null;
+	if (co == null) {
+	    coConfig =
+		    osylConfigService.getConfigByRefAndVersion(
+			    osylConfigService.getDefaultConfig(), null,
+			    webappDir);
+	    co =
+		    new COSerialized(idManager.createUuid(),
+			    osylConfigService.getCurrentLocale(), "shared", "",
+			    siteId, "sectionId", coConfig, null,
+			    "shortDescription", "description", "title", false,
+			    null, null, coConfig.getVersion());
+	    setCoContentWithTemplate(co, webappDir);
+	    resourceDao.createOrUpdateCourseOutline(co);
+	} else if (co.getContent() == null) {
+	    setCoContentWithTemplate(co, webappDir);
+	    resourceDao.createOrUpdateCourseOutline(co);
+	}
+	COModeledServer coModelChild = new COModeledServer(co);
+	// Fetch the parent
+	String parentId = null;
+	try {
+	    parentId = coRelationDao.getParentOfCourseOutline(siteId);
+	} catch (Exception e) {
+	}
+	if (parentId != null) {
+
+	    // fusion
+	    COModeledServer coModelParent = null;
+
+	    try {
+		coModelParent = getFusionnedPrePublishedHierarchy(parentId);
+	    } catch (FusionException e) {
+		co.setIncompatibleHierarchy(true);
+	    } catch (CompatibilityException e) {
+		co.setIncompatibleHierarchy(true);
+	    }
+
+	    if (coModelParent != null) {
 
 		try {
-		    coModelParent = getFusionnedPrePublishedHierarchy(parentId);
+		    coModelChild.XML2Model();
+		    coModelChild.fusion(coModelParent);
+		    coModelChild.model2XML();
+		    co.setContent(coModelChild.getSerializedContent());
 		} catch (FusionException e) {
-		    co.setIncompatibleHierarchy(true);
+		    co.setIncompatibleWithHisParent(true);
 		} catch (CompatibilityException e) {
-		    co.setIncompatibleHierarchy(true);
-		}
-
-		if (coModelParent != null) {
-
-		    try {
-			coModelChild.XML2Model();
-			coModelChild.fusion(coModelParent);
-			coModelChild.model2XML();
-			co.setContent(coModelChild.getSerializedContent());
-		    } catch (FusionException e) {
-			co.setIncompatibleWithHisParent(true);
-		    } catch (CompatibilityException e) {
-			co.setIncompatibleWithHisParent(true);
-		    }
+		    co.setIncompatibleWithHisParent(true);
 		}
 	    }
-	    return co;
+	}
+	return co;
 
     }
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @throws Exception
      */
     public boolean updateSerializedCourseOutline(COSerialized co)
@@ -1214,7 +1218,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      * Writes the XML into a temp file. This is a temporary measure. TODO
      * SAKAI-1932: find a better way to backup course outlines, possibly
      * computing differences and limiting how long and how many copies are kept.
-     *
+     * 
      * @param co
      * @throws IOException
      */
@@ -2174,16 +2178,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return resourceDao.getPublishCoSiteIds();
     }
 
-	private boolean getFrozenValue(Site site) {
-		ResourcePropertiesEdit rp = site.getPropertiesEdit();
-		boolean coIsFrozen = false;
-		if (rp.getProperty(PROP_SITE_ISFROZEN)!= null) {
-			if (rp.getProperty(PROP_SITE_ISFROZEN).equals("true")) {
-				coIsFrozen = true;
-				log.info("Site frozen: " + site.getTitle());
-			}
-		}
-		return coIsFrozen;
+    private boolean getFrozenValue(Site site) {
+	ResourcePropertiesEdit rp = site.getPropertiesEdit();
+	boolean coIsFrozen = false;
+	if (rp.getProperty(PROP_SITE_ISFROZEN) != null) {
+	    if (rp.getProperty(PROP_SITE_ISFROZEN).equals("true")) {
+		coIsFrozen = true;
+		log.info("Site frozen: " + site.getTitle());
+	    }
 	}
 	return coIsFrozen;
     }
