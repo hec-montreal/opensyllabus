@@ -130,28 +130,29 @@ public class UnFreezeSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 	    Set<Role> rolesTmpl = tmplt.getRoles();
 
 	    if (rolesSite != null && rolesTmpl != null) {
-		// It just to test
-		log.info(" Roles site num: " + rolesSite.size());
-		log.info(" Roles template num: " + rolesTmpl.size());
-		for (Role roleSite : rolesSite) {
-		    Role roleToUpdate = realm.getRole(roleSite.getId());
-		    for (Role roleTmpl : rolesTmpl) {
-			Role roleFromTmpl = realm.getRole(roleTmpl.getId());
-			if (roleToUpdate.getId().equalsIgnoreCase(
-				roleFromTmpl.getId())) {
-			    Set<String> lastPermissions =
-				    roleToUpdate.getAllowedFunctions();
-			    roleToUpdate.disallowFunctions(lastPermissions);
-			    Set<String> oldPermissions =
-				    roleTmpl.getAllowedFunctions();
-			    roleToUpdate.allowFunctions(oldPermissions);
-			    authzGroupService.save(realm);
-			    log.info("roleToUpdate:...getId(): '"
-				    + roleToUpdate.getId()
-				    + "' the permission was applied ***");
+			for (Role roleSite : rolesSite) {
+			    Role roleToUpdate = realm.getRole(roleSite.getId());
+			    for (Role roleTmpl : rolesTmpl) {
+					Role roleFromTmpl = realm.getRole(roleTmpl.getId());
+					if (roleToUpdate.getId().equalsIgnoreCase(
+						roleFromTmpl.getId())) {
+					    Set<String> lastPermissions = roleToUpdate.getAllowedFunctions();					    
+					    //roleToUpdate.disallowFunctions(lastPermissions);
+					    for (String lastFunction : lastPermissions) {
+							if (roleToUpdate.isAllowed((String) lastFunction)) {				    	
+									roleToUpdate.disallowFunction((String) lastFunction);
+					    	}
+						}
+					    Set<String> oldPermissions = roleTmpl.getAllowedFunctions();
+					    //roleToUpdate.allowFunctions(oldPermissions);
+					    for (String oldFunction : oldPermissions) {
+							if (!roleToUpdate.isAllowed((String) oldFunction))
+								roleToUpdate.allowFunction((String) oldFunction);
+						}	
+					    authzGroupService.save(realm);
+					}
+				}
 			}
-		    }
-		}
 	    } else {
 		log.info("Roles are null.");
 	    }

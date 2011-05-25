@@ -120,93 +120,39 @@ public class FreezeSitesAfterSessionJobImpl extends OsylAbstractQuartzJobImpl
 
     }
 
-    private void xreplacePermission(AuthzGroup realm,
-	    HashMap<String, List<String>> functions) {
-	try {
-	    Set<Role> roles = realm.getRoles();
-	    if (roles != null) {
-		log.info(" Roles num: " + roles.size());
-		for (Role role : roles) {
-		    Role roleToUpdate = realm.getRole(role.getId());
-		    Set<String> st = functions.keySet();
-		    Iterator<String> iterator = st.iterator();
-		    while (iterator.hasNext()) {
-				String keyRole = iterator.next();
-				log.info("FreezeSitesAfterSessionJobImpl: Role "
-					+ keyRole + " has "
-					+ functions.get(keyRole).size()
-					+ "functions **");
-				if (roleToUpdate.getId().equalsIgnoreCase(keyRole)) {
-				    List<String> newPermissions =
-					    functions.get(keyRole);
-				    Set<String> oldPermissions =
-					    roleToUpdate.getAllowedFunctions();
-				    //roleToUpdate.disallowFunctions(oldPermissions);
-				    for (Object oldFunction : oldPermissions) {
-						if (roleToUpdate.isAllowed((String) oldFunction))
-							roleToUpdate.disallowFunction((String) oldFunction);
-					}				    
-				    //roleToUpdate.allowFunctions(newPermissions);
-				    for (Object newFunction : newPermissions) {
-						if (!roleToUpdate.isAllowed((String) newFunction))
-							roleToUpdate.allowFunction((String) newFunction);
-					}				    
-				    //realm.getRole(roleToUpdate.getId());
-				    authzGroupService.save(realm);
-				    log.info("roleToUpdate:...getId(): '"
-					    + roleToUpdate.getId()
-					    + "' the permission was applied ***");
-				}
-		    }
-		}
-	    } else {
-		log.info("Roles is null.");
-	    }
-	} catch (GroupNotDefinedException e) {
-	    log.error(e.getMessage());
-	} catch (AuthzPermissionException e) {
-	    log.error(e.getMessage());
-	}
-    }
-
     private void replacePermission(AuthzGroup realm,
     	    HashMap<String, List<String>> functions) {
 	try {
 		
-		AuthzGroup realmEdit = authzGroupService.getAuthzGroup(realm.getId());
-		authzGroupService.save(realmEdit);
-
-	    Set<Role> roles = realmEdit.getRoles();
+	    Set<Role> roles = realm.getRoles();
 	    if (roles != null) {
-		log.info(" Roles num: " + roles.size());
-	    Set<String> st = functions.keySet();
-	    Iterator<String> iterator = st.iterator();
-	    while (iterator.hasNext()) {
-			String keyRole = iterator.next();
-			for (Role role : roles) {
-			    Role roleToUpdate = realmEdit.getRole(role.getId());
-				if (roleToUpdate.getId().equalsIgnoreCase(keyRole)) {
-				    List<String> newPermissions =
-					    functions.get(keyRole);
-				    Set<String> oldPermissions =
-					    roleToUpdate.getAllowedFunctions();
-				    for (Object oldFunction : oldPermissions) {
-				    	String content = oldFunction.toString().substring(0,7);
-				    	if (!content.equalsIgnoreCase("content")) {
-							if (roleToUpdate.isAllowed((String) oldFunction))
-								roleToUpdate.disallowFunction((String) oldFunction);
-				    	}
-					}				    
-				    for (Object newFunction : newPermissions) {
-						if (!roleToUpdate.isAllowed((String) newFunction))
-							roleToUpdate.allowFunction((String) newFunction);
-					}				    
-				    authzGroupService.save(realmEdit);
-				}
-		    }
-		}
+			log.info(" Roles num: " + roles.size());
+		    Set<String> st = functions.keySet();
+		    Iterator<String> iterator = st.iterator();
+		    while (iterator.hasNext()) {
+				String keyRole = iterator.next();
+				for (Role roleToUpdate : roles) {
+				    //Role roleToUpdate = realm.getRole(role.getId());
+					if (keyRole.equalsIgnoreCase(roleToUpdate.getId())) {
+					    Set<String> oldPermissions = roleToUpdate.getAllowedFunctions();						
+					    for (String oldFunction : oldPermissions) {
+					    	String content = oldFunction.toString().substring(0,7);
+							if (roleToUpdate.isAllowed((String) oldFunction)) {				    	
+								if (!content.equalsIgnoreCase("content"))
+									roleToUpdate.disallowFunction((String) oldFunction);
+					    	}
+						}
+					    List<String> newPermissions = functions.get(keyRole);
+					    for (String newFunction : newPermissions) {
+							if (!roleToUpdate.isAllowed((String) newFunction))
+								roleToUpdate.allowFunction((String) newFunction);
+						}
+					    authzGroupService.save(realm);
+					}
+			    }
+			}
 	    } else {
-		log.info("Roles is null.");
+	    	log.info("Roles is null.");
 	    }
 	} catch (GroupNotDefinedException e) {
 	    log.error(e.getMessage());
