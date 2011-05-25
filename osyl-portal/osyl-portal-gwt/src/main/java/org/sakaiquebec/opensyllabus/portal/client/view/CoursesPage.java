@@ -26,17 +26,19 @@ import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.gen2.table.client.AbstractScrollTable.ColumnResizePolicy;
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
 import com.google.gwt.gen2.table.client.FixedWidthGrid;
 import com.google.gwt.gen2.table.client.ScrollTable;
 import com.google.gwt.gen2.table.override.client.FlexTable.FlexCellFormatter;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
@@ -50,6 +52,8 @@ public class CoursesPage extends AbstractPortalView {
     private VerticalPanel mainPanel;
 
     private ScrollTable coursesTable;
+
+    private DescriptionView descriptionView;
 
     public CoursesPage(List<COSite> courses) {
 	super();
@@ -92,41 +96,51 @@ public class CoursesPage extends AbstractPortalView {
 					    .toArray()[0]);
 	    coursesTable.getDataTable().setHTML(rowNum, 3,
 		    coSite.getAcademicCareer());
-	    
-	    Image descImage = new Image(getImages().description());
-	    descImage.setTitle(getMessage("coursesPage_Description"));
-	    descImage.addClickHandler(new ClickHandler() {
 
-		public void onClick(ClickEvent event) {
-		    Window.open("http://www.google.com", "_self", "");
+	    final Image descImage = new Image(getImages().description());
+	    descImage.setTitle(getMessage("coursesPage_Description"));
+	    descImage.addMouseOverHandler(new MouseOverHandler() {
+
+		public void onMouseOver(MouseOverEvent event) {
+		    if(descriptionView!=null && descriptionView.isShowing())
+			descriptionView.hide();
+		    descriptionView =
+			    new DescriptionView(coSite.getCourseNumber());
+		    descriptionView.setPopupPosition(
+			    descImage.getAbsoluteLeft(),
+			    descImage.getAbsoluteTop());
+		    descriptionView.show();
+		    descriptionView.pack();
+		    descriptionView.toFront();
 		}
 	    });
-	    coursesTable.getDataTable().setWidget(rowNum, 4,
-		    descImage);
-	    
+	    coursesTable.getDataTable().setWidget(rowNum, 4, descImage);
+
 	    Image htmlImage = new Image(getImages().zc2html());
 	    htmlImage.setTitle(getMessage("coursesPage_Html"));
-	    
+
 	    htmlImage.addClickHandler(new ClickHandler() {
 
 		public void onClick(ClickEvent event) {
-		    Window.open("/osyl-editor-sakai-tool/index.jsp?siteId="+coSite.getCourseNumber(), "_self", "");
+		    Window.open("/osyl-editor-sakai-tool/index.jsp?siteId="
+			    + coSite.getCourseNumber(), "_self", "");
 		}
 	    });
-	    coursesTable.getDataTable().setWidget(rowNum, 5,
-		    htmlImage);
+	    coursesTable.getDataTable().setWidget(rowNum, 5, htmlImage);
 
 	    Image pdfImage = new Image(getImages().pdf());
 	    pdfImage.setTitle(getMessage("coursesPage_Pdf"));
 	    pdfImage.addClickHandler(new ClickHandler() {
 
 		public void onClick(ClickEvent event) {
-		    Window.open("http://www.google.com", "_blank", "");
+		    String siteId = coSite.getCourseNumber();
+		    Window.open("/sdata/c/attachment/" + siteId
+			    + "/OpenSyllabus/" + siteId + "_public.pdf?child="
+			    + siteId, "_blank", "");
 		}
 	    });
-	    coursesTable.getDataTable().setWidget(rowNum, 6,
-		    pdfImage);
-	    
+	    coursesTable.getDataTable().setWidget(rowNum, 6, pdfImage);
+
 	    i++;
 	}
 	mainPanel.add(coursesTable);
@@ -137,7 +151,7 @@ public class CoursesPage extends AbstractPortalView {
 	FlexCellFormatter formatter = headerTable.getFlexCellFormatter();
 	headerTable.setTitle("titeHeaderTable");
 
-	headerTable.setHTML(0, 0, getMessage("coursesPage_courseTitle"));
+	headerTable.setHTML(0, 0, getMessage("coursesPage_courseNumber"));
 	formatter.setHorizontalAlignment(0, 0,
 		HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 0, HasVerticalAlignment.ALIGN_TOP);

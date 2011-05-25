@@ -32,6 +32,7 @@ import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.Section;
+import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.portal.api.OsylPortalService;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
@@ -53,6 +54,12 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	this.courseManagementService = courseManagementService;
     }
 
+    private OsylSiteService osylSiteService;
+
+    public void setOsylSiteService(OsylSiteService osylSiteService) {
+	this.osylSiteService = osylSiteService;
+    }
+
     /**
      * Init method called right after Spring injection.
      */
@@ -72,8 +79,15 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 			    .getSections(courseOffering.getEid());
 	    for (Section section : sections) {
 		COSite coSite = fillCOSiteWithSection(section);
-		    if(coSite!=null)
-			coursesList.add(coSite);
+		boolean publish = false;
+		try {
+		    publish =
+			    osylSiteService.hasBeenPublished(coSite
+				    .getCourseNumber());
+		} catch (Exception e) {
+		}
+		if (coSite != null && publish)
+		    coursesList.add(coSite);
 	    }
 
 	}
@@ -87,7 +101,14 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		courseManagementService.findSectionsByCategory(responsible);
 	for (Section section : sections) {
 	    COSite coSite = fillCOSiteWithSection(section);
-	    if(coSite!=null)
+	    boolean publish = false;
+	    try {
+		publish =
+			osylSiteService.hasBeenPublished(coSite
+				.getCourseNumber());
+	    } catch (Exception e) {
+	    }
+	    if (coSite != null && publish)
 		coursesList.add(coSite);
 
 	}
@@ -97,7 +118,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
     private COSite fillCOSiteWithSection(Section section) {
 	COSite coSite = null;
 	if (!section.getEid()
-		.substring(section.getCourseOfferingEid().length()).equals("00")) {
+		.substring(section.getCourseOfferingEid().length())
+		.equals("00")) {
 	    coSite = new COSite();
 	    coSite.setCourseNumber(getSiteName(section));
 	    coSite.setCourseName(section.getTitle());
@@ -202,57 +224,6 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    sessionName = FALL + year;
 
 	return sessionName;
-    }
-
-    private String formatCourseOfferingEid(CourseOffering courseOff) {
-	String canCourseId = (courseOff.getCanonicalCourseEid()).trim();
-
-	String courseId = null;
-	String courseIdFront = null;
-	String courseIdMiddle = null;
-	String courseIdBack = null;
-
-	if (canCourseId.length() == 7) {
-	    courseIdFront = canCourseId.substring(0, 2);
-	    courseIdMiddle = canCourseId.substring(2, 5);
-	    courseIdBack = canCourseId.substring(5);
-	    courseId =
-		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
-	} else if (canCourseId.length() == 6) {
-	    courseIdFront = canCourseId.substring(0, 1);
-	    courseIdMiddle = canCourseId.substring(1, 4);
-	    courseIdBack = canCourseId.substring(4);
-	    courseId =
-		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
-	} else {
-	    courseId = canCourseId;
-	}
-
-	if (canCourseId.matches(".*[^0-9].*")) {
-	    if (canCourseId.endsWith("A") || canCourseId.endsWith("E")
-		    || canCourseId.endsWith("R")) {
-		if (canCourseId.length() == 8) {
-		    courseIdFront = canCourseId.substring(0, 2);
-		    courseIdMiddle = canCourseId.substring(2, 5);
-		    courseIdBack = canCourseId.substring(5);
-		    courseId =
-			    courseIdFront + "-" + courseIdMiddle + "-"
-				    + courseIdBack;
-
-		}
-		if (canCourseId.length() == 7) {
-		    courseIdFront = canCourseId.substring(0, 1);
-		    courseIdMiddle = canCourseId.substring(1, 4);
-		    courseIdBack = canCourseId.substring(4);
-		    courseId =
-			    courseIdFront + "-" + courseIdMiddle + "-"
-				    + courseIdBack;
-
-		}
-	    } else
-		courseId = canCourseId;
-	}
-	return courseId;
     }
 
     @Override

@@ -71,21 +71,14 @@ background-color : #e7e7e7;
   overflow: hidden;
 }
 
-.CP-description{
-	 background: transparent url(img/description.png) no-repeat 0 0; 
-	 width:44px;
-	 height:20px;
+.CP-Description{
+	padding:0px;
+	font:normal 100% Arial, Verdana, sans-serif;
+	color:#FFF;
+	background-color:#26649D;
 }
 
-.CP-html{
-	 background: transparent url(img/zc2html.png) no-repeat 0 0; 
-	 width:44px;
-	 height:20px;
-}
-
-.CP-pdf{
-	 background: transparent url(img/pdf.png) no-repeat 0 0; 
-	 width:44px;
-	 height:20px;
+.CP-Description .dragdrop-handle {
+	cursor:pointer;
 }
 

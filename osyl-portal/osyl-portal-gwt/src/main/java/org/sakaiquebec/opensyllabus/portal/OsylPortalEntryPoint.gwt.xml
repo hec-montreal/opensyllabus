@@ -3,31 +3,33 @@
 
 <module rename-to='OsylPortalEntryPoint'>
 
-      <!-- Inherit the core Web Toolkit stuff.                        -->
-      <inherits name='com.google.gwt.user.User'/>
-      <inherits name='com.google.gwt.xml.XML' />
-		
-      <!-- Inherit the default GWT style sheet.  You can change       -->
-      <!-- the theme of your GWT application by uncommenting          -->
-      <!-- any one of the following lines.                            -->
-      <inherits name='com.google.gwt.user.theme.standard.Standard'/>
-      <inherits name='com.google.gwt.gen2.table.Table' />
-      <inherits name='org.sakaiquebec.opensyllabus.shared' />
-
-      <!-- Other module inherits                                      -->
+	<!-- Inherit the core Web Toolkit stuff. -->
+	<inherits name='com.google.gwt.user.User' />
+	<inherits name='com.google.gwt.xml.XML' />
 
 
-      <!-- Specify the app entry point class.                         -->
-      <entry-point class='org.sakaiquebec.opensyllabus.portal.client.OsylPortalEntryPoint'/>
-      <inherits name="org.sakaiquebec.opensyllabus.portal.OsylPortalEntryPoint"/>
-      
-	  <!-- Specify the app servlet path. -->
-	  <!-- now moved to web.xml -->
+	<!-- Inherit the default GWT style sheet. You can change -->
+	<!-- the theme of your GWT application by uncommenting -->
+	<!-- any one of the following lines. -->
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+	<inherits name='com.google.gwt.gen2.table.Table' />
+	<inherits name='org.sakaiquebec.opensyllabus.shared' />
+	<inherits name='org.gwt.mosaic.Mosaic' />
 
-      <!-- Specify the application specific style sheet.              -->
-      <stylesheet src='OsylPortalEntryPoint.css' />
-      
-      <extend-property name="locale" values="fr_CA" />
-	  <extend-property name="locale" values="es" />
-	
+	<!-- Other module inherits -->
+
+
+	<!-- Specify the app entry point class. -->
+	<entry-point
+		class='org.sakaiquebec.opensyllabus.portal.client.OsylPortalEntryPoint' />
+	<inherits name="org.sakaiquebec.opensyllabus.portal.OsylPortalEntryPoint" />
+
+	<!-- Specify the app servlet path. -->
+	<!-- now moved to web.xml -->
+	<!-- Specify the application specific style sheet. -->
+	<stylesheet src='OsylPortalEntryPoint.css' />
+
+	<extend-property name="locale" values="fr_CA" />
+	<extend-property name="locale" values="es" />
+
 </module>
