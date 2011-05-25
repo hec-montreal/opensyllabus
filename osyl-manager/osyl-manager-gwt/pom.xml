@@ -25,16 +25,17 @@
 
 	<dependencies>
 	    <!-- sakai -->
-	<dependency>
-	  <groupId>org.sakaiproject.kernel</groupId>
-	  <artifactId>sakai-kernel-api</artifactId>
-	</dependency>
- 
-		<!-- gwt -->
+		<dependency>
+	 		<groupId>org.sakaiproject.kernel</groupId>
+			<artifactId>sakai-kernel-api</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.sakaiquebec.opensyllabus</groupId>
 			<artifactId>osyl-common-shared</artifactId>
 		</dependency>
+ 
+		<!-- gwt -->
+		
 		<dependency>
 			<groupId>org.sakaiquebec.opensyllabus</groupId>
 			<artifactId>osyl-configs</artifactId>

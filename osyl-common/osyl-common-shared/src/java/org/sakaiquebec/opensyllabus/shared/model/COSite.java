@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.shared.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -246,14 +247,14 @@ public class COSite implements java.io.Serializable {
     /**
      * @return the courseInstructor value.
      */
-    public ArrayList<String> getCourseInstructors() {
+    public Collection<String> getCourseInstructors() {
 	return courseInstructors;
     }
 
     /**
      * @param courseInstructors the new value of courseInstructors.
      */
-    public void setCourseInstructors(ArrayList<String> courseInstructors) {
+    public void setCourseInstructors(Collection<String> courseInstructors) {
 	this.courseInstructors.addAll(courseInstructors);
     }
 

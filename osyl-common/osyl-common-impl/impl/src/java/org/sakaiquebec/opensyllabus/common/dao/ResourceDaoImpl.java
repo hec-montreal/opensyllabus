@@ -26,7 +26,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.sakaiproject.db.api.SqlService;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
@@ -89,8 +88,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	try {
 	    results =
 		    getHibernateTemplate()
-			    .find(
-				    "from COSerialized where siteId= ? and published=0",
+			    .find("from COSerialized where siteId= ? and published=0",
 				    new Object[] { siteId });
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by its siteId", e);
@@ -165,8 +163,9 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	try {
 	    cos =
 		    getSerializedVourseOutlineBySiteIdAccessAndPublished(
-			    courseOutline.getSiteId(), courseOutline
-				    .getAccess(), courseOutline.isPublished());
+			    courseOutline.getSiteId(),
+			    courseOutline.getAccess(),
+			    courseOutline.isPublished());
 	    if (!cos.getCoId().equals(courseOutline.getCoId()))
 		alreadyExist = true;
 
@@ -203,14 +202,12 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 		    && access.equals("")) {
 		results =
 			singleRowHT
-				.find(
-					"from COSerialized where siteId= ? and published= ? and access is null",
+				.find("from COSerialized where siteId= ? and published= ? and access is null",
 					new Object[] { siteId, published });
 	    } else {
 		results =
 			getHibernateTemplate()
-				.find(
-					"from COSerialized where siteId= ? and access= ? and published= ?",
+				.find("from COSerialized where siteId= ? and access= ? and published= ?",
 					new Object[] { siteId, access,
 						published });
 	    }
@@ -264,14 +261,12 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    if ("oracle".equalsIgnoreCase(sqlService.getVendor())) {
 		results =
 			getHibernateTemplate()
-				.find(
-					"from COSerialized where siteId= ? and published=1 and access is not null",
+				.find("from COSerialized where siteId= ? and published=1 and access is not null",
 					new Object[] { siteId });
 	    } else {
 		results =
 			getHibernateTemplate()
-				.find(
-					"from COSerialized where siteId= ? and published=1 and not access=''",
+				.find("from COSerialized where siteId= ? and published=1 and not access=''",
 					new Object[] { siteId });
 	    }
 	} catch (Exception e) {
@@ -295,8 +290,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    try {
 		results =
 			getHibernateTemplate()
-				.find(
-					"from COSerialized where siteId= ? and published=0",
+				.find("from COSerialized where siteId= ? and published=0",
 					new Object[] { siteId });
 	    } catch (Exception e) {
 		return false;
@@ -317,8 +311,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	try {
 	    results =
 		    getHibernateTemplate()
-			    .find(
-				    "from COSerialized where siteId= ? and access = ? ",
+			    .find("from COSerialized where siteId= ? and access = ? ",
 				    new Object[] { siteId, access });
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline", e);
@@ -343,14 +336,12 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    if ("oracle".equalsIgnoreCase(sqlService.getVendor())) {
 		results =
 			getHibernateTemplate()
-				.find(
-					"from COSerialized where siteId= ? and published=1 and access is null",
+				.find("from COSerialized where siteId= ? and published=1 and access is null",
 					new Object[] { siteId });
 	    } else {
 		results =
 			getHibernateTemplate()
-				.find(
-					"from COSerialized where siteId= ? and published=1 and access= ?",
+				.find("from COSerialized where siteId= ? and published=1 and access= ?",
 					new Object[] { siteId, "" });
 	    }
 	} catch (Exception e) {
@@ -410,14 +401,15 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
     }
 
     public void setPublicationDate(String coId, Date pubDate) {
-	if(pubDate==null){
+	if (pubDate == null) {
+	    getHibernateTemplate()
+		    .bulkUpdate(
+			    "update COSerialized set publicationDate=null where coId= ?",
+			    new Object[] { coId });
+	} else {
 	    getHibernateTemplate().bulkUpdate(
-			"update COSerialized set publicationDate=null where coId= ?",
-			new Object[] { coId });
-	}else{
-	getHibernateTemplate().bulkUpdate(
-		"update COSerialized set publicationDate=? where coId= ?",
-		new Object[] { pubDate, coId });
+		    "update COSerialized set publicationDate=? where coId= ?",
+		    new Object[] { pubDate, coId });
 	}
     }
 
@@ -431,8 +423,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	try {
 	    results =
 		    getHibernateTemplate()
-			    .find(
-				    "select modificationDate from COSerialized where siteId= ? and published=0",
+			    .find("select modificationDate from COSerialized where siteId= ? and published=0",
 				    new Object[] { siteId });
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by its siteId", e);
@@ -456,8 +447,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	try {
 	    results =
 		    getHibernateTemplate()
-			    .find(
-				    "select publicationDate from COSerialized where siteId= ? and published=0",
+			    .find("select publicationDate from COSerialized where siteId= ? and published=0",
 				    new Object[] { siteId });
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by its siteId", e);
@@ -508,18 +498,18 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	}
 	return results;
     }
-    
+
     @SuppressWarnings("unchecked")
-    public void removePublishVersionsForSiteId(String siteId){
+    public void removePublishVersionsForSiteId(String siteId) {
 	List<COSerialized> results = null;
 
 	if (siteId == null)
 	    throw new IllegalArgumentException();
 	try {
 	    results =
-		    getHibernateTemplate().find(
-			    "from COSerialized where siteId= ? and published=1",
-			    new Object[] { siteId });
+		    getHibernateTemplate()
+			    .find("from COSerialized where siteId= ? and published=1",
+				    new Object[] { siteId });
 	} catch (Exception e) {
 	    log.error("Unable to retrieve course outline by its siteId", e);
 	}
@@ -529,22 +519,21 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 	    }
 	}
     }
-    
-    //for proof of concept
+
+    // for proof of concept
     @SuppressWarnings("unchecked")
-    public List<String> getPublishCoSiteIds(){
+    public List<String> getPublishCoSiteIds() {
 	List<COSerialized> temp = null;
 	List<String> results = new ArrayList<String>();
 	try {
 	    temp =
-		getHibernateTemplate()
-		.find(
-			"from COSerialized where published=1 and access='public'");
+		    getHibernateTemplate()
+			    .find("from COSerialized where published=1 and access='public'");
 	} catch (Exception e) {
 	    log.error("Unable to retrieve site Id list", e);
 	}
-	if(temp!=null && !temp.isEmpty()){
-	    for(COSerialized cos:temp)
+	if (temp != null && !temp.isEmpty()) {
+	    for (COSerialized cos : temp)
 		results.add(cos.getSiteId());
 	}
 	return results;

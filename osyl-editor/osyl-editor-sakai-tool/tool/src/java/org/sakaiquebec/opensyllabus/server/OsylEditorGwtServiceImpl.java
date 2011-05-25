@@ -412,4 +412,13 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     public void notifyOnPublish(String siteId, String subject, String body) {
 	osylServices.getOsylSiteService().addAnnounce(siteId, subject, body);
     }
+
+    @Override
+    public void sendEvent(String eventType, String resource) {
+	try {
+	    osylServices.getOsylSiteService().sendEvent(eventType,resource,osylServices.getOsylSiteService().getCurrentSiteId());
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+    }
 }

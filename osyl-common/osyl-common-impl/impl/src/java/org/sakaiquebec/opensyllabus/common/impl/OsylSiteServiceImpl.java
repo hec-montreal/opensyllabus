@@ -1205,8 +1205,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    throw e;
 	}
 	eventTrackingService.post(eventTrackingService.newEvent(
-		    OsylEventService.EVENT_OPENSYLLABUS_SAVE,
-		    getSiteReference(co.getSiteId()), false));
+		OsylEventService.EVENT_OPENSYLLABUS_SAVE,
+		getSiteReference(co.getSiteId()), false));
 	return reload;
     }
 
@@ -2185,4 +2185,16 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		}
 		return coIsFrozen;
 	}
+	return coIsFrozen;
+    }
+
+    @Override
+    public void sendEvent(String eventType, String resource, String context) {
+	eventTrackingService.post(eventTrackingService.newEvent(
+		eventType,
+		"/content/group/" + context + "/"
+			+ resource.replace("/", "%2F"), context, false,
+		NotificationService.NOTI_NONE));
+
+    }
 }

@@ -374,4 +374,11 @@ public interface OsylSiteService extends EntityProducer {
     //for proof of concept
     public List<String> getPublishCOSiteIds();
 
+    /**
+     * Send an event
+     * @param eventType
+     * @param resource
+     */
+    public void sendEvent(String eventType, String resource, String context);
+
 }

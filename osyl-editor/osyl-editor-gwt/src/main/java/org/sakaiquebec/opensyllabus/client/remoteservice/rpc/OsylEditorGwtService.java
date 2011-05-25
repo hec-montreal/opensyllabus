@@ -29,6 +29,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 import org.sakaiquebec.opensyllabus.shared.model.SakaiEntities;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 /**
@@ -52,7 +53,8 @@ public interface OsylEditorGwtService extends RemoteService {
      * 
      * @return the CourseOutline POJO corresponding to the current context.
      */
-    public COSerialized getSerializedCourseOutline(String siteId) throws Exception;
+    public COSerialized getSerializedCourseOutline(String siteId)
+	    throws Exception;
 
     /**
      * Saves the CourseOutline specified. The ID is returned. This is useful if
@@ -113,7 +115,8 @@ public interface OsylEditorGwtService extends RemoteService {
      * 
      * @return {@link COConfigSerialized}
      */
-    public COConfigSerialized getSerializedConfig(String siteId) throws Exception;
+    public COConfigSerialized getSerializedConfig(String siteId)
+	    throws Exception;
 
     public SakaiEntities getExistingEntities(String siteId);
 
@@ -178,6 +181,16 @@ public interface OsylEditorGwtService extends RemoteService {
      * @param subject
      * @param body
      */
-    public void notifyOnPublish(String siteId, String subject, String body) throws Exception;
+    public void notifyOnPublish(String siteId, String subject, String body)
+	    throws Exception;
+
+    /**
+     * Send an event to the server
+     * 
+     * @param eventType
+     * @param resource
+     * @param callback
+     */
+    public void sendEvent(String eventType, String resource);
 
 }

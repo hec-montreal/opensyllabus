@@ -1438,4 +1438,17 @@ public class OsylController implements SavePushButtonEventHandler,
 		siteId, subject, body, callback);
     }
 
+    public void sendEvent(String citationLinkClickEvent, String resource) {
+	AsyncCallback<Void> voidCallback = new AsyncCallback<Void>() {
+	    @Override
+	    public void onFailure(Throwable caught) {
+	    }
+
+	    @Override
+	    public void onSuccess(Void result) {
+	    }
+	};
+	OsylRemoteServiceLocator.getEditorRemoteService().sendEvent(citationLinkClickEvent,resource, voidCallback);
+    }
+
 }

@@ -96,7 +96,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 	    for (String program : programs) {
 		for (AcademicSession session : allSessions) {
 		    courseOfferings =
-			    cmService.findCourseOfferingsByAcadCareer(program,
+			    cmService.findCourseOfferingsByAcadCareerAndAcademicSession(program,
 				    session.getEid());
 		    if (courseOfferings != null && courseOfferings.size() > 0)
 			courseOffs.addAll(courseOfferings);
