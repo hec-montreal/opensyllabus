@@ -34,7 +34,6 @@ import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
 import org.sakaiquebec.opensyllabus.client.ui.base.OsylWindowPanel;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
-import org.sakaiquebec.opensyllabus.client.ui.listener.OsylCitationLinkClickHandler;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylDisclosureListener;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylAbstractBrowserComposite;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylCitationBrowser;
@@ -221,14 +220,12 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	    HTML h = new HTML();
 	    h.setStylePrimaryName("Osyl-ResProxCitationView-libraryImage");
 	    libLinkPanel.add(h);
-	    HTML link = new HTML(
-		    getView()
-		    .generateHTMLLink(
-			    getView().getCitationLibraryLink(),
-			    getUiMessage("ResProxCitationView.libraryLink.available")));
-	    link.addClickHandler(new OsylCitationLinkClickHandler(getView().getCitationLibraryLink()));
 	    libLinkPanel
-		    .add(link);
+		    .add(new HTML(
+			    getView()
+				    .generateHTMLLink(
+					    getView().getCitationLibraryLink(),
+					    getUiMessage("ResProxCitationView.libraryLink.available"))));
 	    getViewer().add(libLinkPanel);
 	}
 
@@ -239,16 +236,13 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	    HTML h = new HTML();
 	    h.setStylePrimaryName("Osyl-ResProxCitationView-bookstoreImage");
 	    libLinkPanel.add(h);
-	    HTML link =new HTML(
-		    getView()
-		    .generateHTMLLink(
-			    getView()
-				    .getCitationBookstoreLink(),
-			    getUiMessage("ResProxCitationView.bookstoreLink.available")));
-	    link.addClickHandler(new OsylCitationLinkClickHandler( getView()
-		    .getCitationBookstoreLink()));
 	    libLinkPanel
-		    .add(link);
+		    .add(new HTML(
+			    getView()
+				    .generateHTMLLink(
+					    getView()
+						    .getCitationBookstoreLink(),
+					    getUiMessage("ResProxCitationView.bookstoreLink.available"))));
 	    getViewer().add(libLinkPanel);
 	}
 
@@ -260,14 +254,13 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	    h.setStylePrimaryName("Osyl-ResProxCitationView-otherImage");
 	    libLinkPanel.add(h);
 	    String urlLabel = getView().getCitationOtherLinkLabel();
-	    HTML link =new HTML(getView().generateHTMLLink(
+	    
+	    libLinkPanel.add(new HTML(getView().generateHTMLLink(
 		    getView().getCitationOtherLink(),
 		    urlLabel != null &&
 		    !urlLabel.equals("") ?
 			    getView().getCitationOtherLinkLabel() :
-			    getUiMessage("ResProxCitationView.otherLink.available")));
-	    link.addClickHandler(new OsylCitationLinkClickHandler(getView().getCitationOtherLink()));
-	    libLinkPanel.add(link);
+			    getUiMessage("ResProxCitationView.otherLink.available"))));
 	    getViewer().add(libLinkPanel);
 	}
 
@@ -303,7 +296,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	
 	getMainPanel().add(getViewerPanel());
 
-    }    
+    }
 
     private void setViewerLink(HTML html) {
 	this.viewerLink = html;
