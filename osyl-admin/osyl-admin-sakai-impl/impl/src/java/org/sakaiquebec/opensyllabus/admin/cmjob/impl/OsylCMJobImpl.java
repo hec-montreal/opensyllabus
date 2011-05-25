@@ -171,7 +171,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
     /**
      * Our logger
      */
-    protected static Log log = LogFactory.getLog(OsylCMJobImpl.class);
+    private static Log log = LogFactory.getLog(OsylCMJobImpl.class);
 
     /* load the instructors and assigns them to their courses */
     private void assignTeachers() {

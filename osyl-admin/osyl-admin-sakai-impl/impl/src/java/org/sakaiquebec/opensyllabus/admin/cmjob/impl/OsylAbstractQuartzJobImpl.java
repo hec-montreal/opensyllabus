@@ -20,6 +20,8 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.authz.api.AuthzGroupService;
@@ -53,6 +55,9 @@ import org.sakaiquebec.opensyllabus.manager.api.OsylManagerService;
  */
 public abstract class OsylAbstractQuartzJobImpl implements
 	OsylAbstractQuartzJob {
+    
+    private static Log log = LogFactory
+    .getLog(OsylAbstractQuartzJobImpl.class);
     
     // Fields and methods for spring injection
     protected ConfigurationService adminConfigService;
@@ -208,7 +213,7 @@ public abstract class OsylAbstractQuartzJobImpl implements
 	if (rp.getProperty(PROP_SITE_ISFROZEN) != null) {
 	    if (rp.getProperty(PROP_SITE_ISFROZEN).equals("true")) {
 		coIsFrozen = true;
-//		log.info("Site frozen: " + site.getTitle());
+		log.info("Site frozen: " + site.getTitle());
 	    }
 	}
 	return coIsFrozen;

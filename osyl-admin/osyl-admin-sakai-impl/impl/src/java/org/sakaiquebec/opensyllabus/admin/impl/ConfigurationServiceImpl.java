@@ -37,6 +37,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.authz.api.SecurityAdvisor;
+import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.content.api.ContentCollection;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResource;
@@ -127,6 +129,12 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     public void setEntityManager(EntityManager entityManager) {
 	this.entityManager = entityManager;
+    }
+    
+    private SecurityService securityService;
+
+    public void setSecurityService(SecurityService securityService) {
+        this.securityService = securityService;
     }
 
     public void init() {
@@ -299,25 +307,25 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
 		// If the content of the role folder update, we update the
 		// values
-		else if (referenceString.contains(ROLEFOLDER)) {
+		if (referenceString.contains(ROLEFOLDER)) {
 		    log.info("Updating roles config files from "
 			    + referenceString);
 		    updateConfig(referenceString);
 		}
 
 		// If the functions files updated we change the values
-		else if (referenceString.contains(FUNCTIONSSCONFIGFILE)) {
+		if (referenceString.contains(FUNCTIONSSCONFIGFILE)) {
 		    log.info("Updating permissions config files from "
 			    + referenceString);
 		    updateConfig(referenceString);
 		}
 
-		else if (referenceString.contains(XSL_FILENAME)) {
+		if (referenceString.contains(XSL_FILENAME)) {
 		    log.info("Updating XSL in resource" + referenceString);
 		    updateConfig(referenceString);
 		}
 		
-		else if (referenceString.contains(PRINT_VERSION_CONFIG)) {
+		if (referenceString.contains(PRINT_VERSION_CONFIG)) {
 		    log.info("Updating 'createPrintVersion' job config" + referenceString);
 		    updateConfig(referenceString);
 		}
@@ -334,6 +342,19 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    ContentResource resource = null;
 
 	    try {
+		log.info("*** securityService.pushAdvisor(new SecurityAdvisor() ConfigurationServiceImpl *** ");	    	
+
+		// We allow access to the file
+
+		securityService.pushAdvisor(new SecurityAdvisor() { 
+		    public SecurityAdvice isAllowed(String userId,
+			    String function, String reference) {
+			if (function.equals("content.read"))
+			    return SecurityAdvice.ALLOWED;
+			return SecurityAdvice.NOT_ALLOWED;
+		    }
+		});
+
 		if (fileName.contains(ROLEFOLDER)) {
 		    ContentCollection collection;
 		    if (!contentHostingService.isCollection(reference.getId())) {
@@ -410,7 +431,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		log.info(e.getMessage());
 	    }
 	} else {
-	    // securityService.popAdvisor();
+	    securityService.popAdvisor();
 	    log.warn("There is no " + fileName + " file ");
 	}
     }
@@ -488,7 +509,9 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		setEndDate(endDate);
 		setPrograms(programs);
 		setServEns(servEns);
-	    } else if (configurationXml.contains(ROLEFOLDER)) {
+	    }
+	    
+	    if (configurationXml.contains(ROLEFOLDER)) {
 		Map<String, Object> values = new HashMap<String, Object>();
 		String role = retrieveParameter(document, ROLE);
 		String description = retrieveParameter(document, DESCRIPTION);
@@ -522,7 +545,9 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		    updatedRoles.put(role, values);
 		    configFiles.put(configurationXml, role);
 		}
-	    } else if (configurationXml.contains(FUNCTIONSSCONFIGFILE)) {
+	    }
+	    
+	    if (configurationXml.contains(FUNCTIONSSCONFIGFILE)) {
 		String fuctionsRole = retrieveParameter(document, ROLE);
 		String description = retrieveParameter(document, DESCRIPTION);
 		String removedRole = retrieveParameter(document, REMOVED_ROLE);
@@ -542,14 +567,20 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		setIncludingDirSites(includingDirSites);
 		setAllowedFunctions(allowedFunctions);
 		setDisallowedFunctions(disallowedFunctions);
-	    } else if (configurationXml.contains(FROZENSITESCONFIG)) {
+	    }
+
+	    if (configurationXml.contains(FROZENSITESCONFIG)) {
 		String sessionId = retrieveParameter(document, SESSIONID);
 		setSessionId(sessionId);
 		setFrozenFunctionsToAllow(getFrozenPermissionsByRole(document));
-	    } else if (configurationXml.contains(UNFROZENSITESCONFIG)) {
+	    }
+
+	    if (configurationXml.contains(UNFROZENSITESCONFIG)) {
 		String frozenSessionId = retrieveParameter(document, SESSIONID);
 		setSessionId(frozenSessionId);
-	    } else if(configurationXml.contains(PRINT_VERSION_CONFIG)) {
+	    }
+
+	    if(configurationXml.contains(PRINT_VERSION_CONFIG)) {
 		printVersionJobParams = new HashMap<String, String>();
 		printVersionJobParams.put(INCLUDING_DIR_SITES,
 			retrieveParameter(document, INCLUDING_DIR_SITES));

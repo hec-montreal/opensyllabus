@@ -21,7 +21,7 @@ public class DeleteAllMyWorkspaceJobImpl extends OsylAbstractQuartzJobImpl
     /**
      * Our logger
      */
-    protected static Log log = LogFactory
+    private static Log log = LogFactory
 	    .getLog(DeleteAllMyWorkspaceJobImpl.class);
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {

@@ -56,7 +56,7 @@ public class OfficialSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 
     private Set<Section> sections = null;
 
-    protected static Log log = LogFactory.getLog(OfficialSitesJobImpl.class);
+    private static Log log = LogFactory.getLog(OfficialSitesJobImpl.class);
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 

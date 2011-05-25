@@ -54,7 +54,7 @@ public class AddCMTitlePropertyJobImpl extends OsylAbstractQuartzJobImpl
     /**
      * Our logger
      */
-    protected static Log log = LogFactory
+    private static Log log = LogFactory
 	    .getLog(AddCMTitlePropertyJobImpl.class);
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {

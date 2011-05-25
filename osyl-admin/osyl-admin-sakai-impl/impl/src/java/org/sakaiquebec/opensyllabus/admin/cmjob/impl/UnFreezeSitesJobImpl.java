@@ -31,7 +31,7 @@ public class UnFreezeSitesJobImpl extends OsylAbstractQuartzJobImpl implements
 
     private List<Site> allSites;
 
-    protected static Log log = LogFactory.getLog(UnFreezeSitesJobImpl.class);
+    private static Log log = LogFactory.getLog(UnFreezeSitesJobImpl.class);
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 

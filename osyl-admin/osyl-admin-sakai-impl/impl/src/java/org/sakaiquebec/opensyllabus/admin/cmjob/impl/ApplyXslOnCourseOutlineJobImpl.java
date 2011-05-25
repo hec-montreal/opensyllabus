@@ -37,7 +37,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 public class ApplyXslOnCourseOutlineJobImpl extends OsylAbstractQuartzJobImpl
 	implements ApplyXslOnCourseOutlineJob {
 
-    protected static Log log = LogFactory
+    private static Log log = LogFactory
 	    .getLog(ApplyXslOnCourseOutlineJobImpl.class);
 
     public void execute(JobExecutionContext jec) throws JobExecutionException {

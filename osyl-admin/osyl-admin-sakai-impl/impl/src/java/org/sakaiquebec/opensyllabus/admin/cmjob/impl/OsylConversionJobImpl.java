@@ -38,7 +38,7 @@ import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 public class OsylConversionJobImpl extends OsylAbstractQuartzJobImpl implements
 	OsylConversionJob {
 
-    protected static Log log = LogFactory.getLog(OsylConversionJobImpl.class);
+    private static Log log = LogFactory.getLog(OsylConversionJobImpl.class);
 
     public void execute(JobExecutionContext jec) throws JobExecutionException {
 	log.info("Start converting Course Outlines");

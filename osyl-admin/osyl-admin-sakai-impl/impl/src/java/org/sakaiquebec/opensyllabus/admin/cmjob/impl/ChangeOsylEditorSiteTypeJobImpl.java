@@ -26,7 +26,7 @@ public class ChangeOsylEditorSiteTypeJobImpl extends OsylAbstractQuartzJobImpl
     /**
      * Our logger
      */
-    protected static Log log = LogFactory
+    private static Log log = LogFactory
 	    .getLog(ChangeOsylEditorSiteTypeJobImpl.class);
 
     private List<ToolConfiguration> siteTools = null;

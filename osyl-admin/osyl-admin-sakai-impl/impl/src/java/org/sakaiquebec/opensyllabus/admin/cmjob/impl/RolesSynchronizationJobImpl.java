@@ -23,7 +23,7 @@ import org.sakaiquebec.opensyllabus.admin.cmjob.api.RolesSynchronizationJob;
 public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 	implements RolesSynchronizationJob {
 
-    protected static Log log = LogFactory.getLog(RolesSynchronizationJobImpl.class);
+    private static Log log = LogFactory.getLog(RolesSynchronizationJobImpl.class);
     
     private List<Site> allSites;
 

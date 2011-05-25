@@ -42,7 +42,7 @@ public class AddHomePageToolJobImpl extends OsylAbstractQuartzJobImpl implements
     /**
      * Our logger
      */
-    protected static Log log = LogFactory.getLog(AddHomePageToolJobImpl.class);
+    private static Log log = LogFactory.getLog(AddHomePageToolJobImpl.class);
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 

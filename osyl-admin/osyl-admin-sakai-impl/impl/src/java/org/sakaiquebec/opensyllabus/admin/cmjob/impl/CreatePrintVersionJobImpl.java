@@ -43,8 +43,7 @@ import org.sakaiquebec.opensyllabus.shared.exception.PdfGenerationException;
 public class CreatePrintVersionJobImpl extends OsylAbstractQuartzJobImpl
 	implements CreatePrintVersionJob {
 
-    protected static Log log = LogFactory
-	    .getLog(CreatePrintVersionJobImpl.class);
+    private static Log log = LogFactory.getLog(CreatePrintVersionJobImpl.class);
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
 	log.info("Start converting Course Outlines");

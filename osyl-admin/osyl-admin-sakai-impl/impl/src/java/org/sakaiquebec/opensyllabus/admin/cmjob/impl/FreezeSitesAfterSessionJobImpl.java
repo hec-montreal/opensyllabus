@@ -35,7 +35,7 @@ public class FreezeSitesAfterSessionJobImpl extends OsylAbstractQuartzJobImpl
 
     private List<Site> allSites;
 
-    protected static Log log = LogFactory
+    private static Log log = LogFactory
 	    .getLog(FreezeSitesAfterSessionJobImpl.class);
 
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
