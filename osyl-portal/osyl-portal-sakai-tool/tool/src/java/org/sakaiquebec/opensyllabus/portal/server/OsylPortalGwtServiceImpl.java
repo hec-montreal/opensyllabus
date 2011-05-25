@@ -22,13 +22,13 @@
 package org.sakaiquebec.opensyllabus.portal.server;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiquebec.opensyllabus.portal.client.rpc.OsylPortalGwtService;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -67,14 +67,14 @@ public class OsylPortalGwtServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public Map<String, String> getCoursesForAcadCareer(String acadCareer) {
+    public List<COSite> getCoursesForAcadCareer(String acadCareer) {
 	return osylPortalServices.getOsylPortalService()
 		.getCoursesForAcadCareer(acadCareer);
 
     }
 
     @Override
-    public Map<String, String> getCoursesForResponsible(String responsible) {
+    public List<COSite> getCoursesForResponsible(String responsible) {
 	return osylPortalServices.getOsylPortalService()
 		.getCoursesForResponsible(responsible);
     }
@@ -82,6 +82,10 @@ public class OsylPortalGwtServiceImpl extends RemoteServiceServlet implements
     @Override
     public List<String> getAllResponsibles() {
 	return osylPortalServices.getOsylPortalService().getAllResponsibles();
+    }
+    
+    public String getServerName(){
+	return null;
     }
 
 }

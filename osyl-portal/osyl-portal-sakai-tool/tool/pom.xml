@@ -26,6 +26,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.sakaiquebec.opensyllabus</groupId>
+			<artifactId>osyl-common-shared</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiquebec.opensyllabus</groupId>
 			<artifactId>osyl-portal-server-api</artifactId>
 			<scope>provided</scope>
 		</dependency>

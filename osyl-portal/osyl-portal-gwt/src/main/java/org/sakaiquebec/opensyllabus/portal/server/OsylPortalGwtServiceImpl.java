@@ -1,9 +1,9 @@
 package org.sakaiquebec.opensyllabus.portal.server;
 
 import java.util.List;
-import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.portal.client.rpc.OsylPortalGwtService;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -14,11 +14,11 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class OsylPortalGwtServiceImpl extends RemoteServiceServlet implements
 	OsylPortalGwtService {
 
-    public Map<String, String> getCoursesForAcadCareer(String acadCareer) {
+    public List<COSite> getCoursesForAcadCareer(String acadCareer) {
 	return null;
     }
 
-    public Map<String, String> getCoursesForResponsible(String responsible) {
+    public List<COSite> getCoursesForResponsible(String responsible) {
 	return null;
     }
 

@@ -21,12 +21,14 @@
 
 package org.sakaiquebec.opensyllabus.portal.client;
 
+import org.sakaiquebec.opensyllabus.portal.client.controller.PortalController;
 import org.sakaiquebec.opensyllabus.portal.client.view.NavigationHomePage;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -38,12 +40,13 @@ public class OsylPortalEntryPoint implements EntryPoint {
     /** {@inheritDoc} */
     public void onModuleLoad() {
 	rootPanel = RootPanel.get();
+	PortalController.getInstance().setEntryPoint(this);
 	initView();
 
     }
 
     private void initView() {
-	rootPanel.add(new NavigationHomePage());
+	setView(new NavigationHomePage());
 	setSakaiIFrameHeight(650);
     }
     
@@ -55,4 +58,10 @@ public class OsylPortalEntryPoint implements EntryPoint {
     private static void setSakaiIFrameHeight(int h) {
 	DOM.setStyleAttribute(getSakaiToolIframe(), "height", h + "px");
     }
+    
+    public void setView(Widget view){
+	rootPanel.clear();
+	rootPanel.add(view);
+    }
+    
 }

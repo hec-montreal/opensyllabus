@@ -18,43 +18,23 @@
  * limitations under the License.
  *
  ******************************************************************************/
-package org.sakaiquebec.opensyllabus.portal.client.view;
+package org.sakaiquebec.opensyllabus.portal.client.image;
 
-import java.util.MissingResourceException;
-
-import org.sakaiquebec.opensyllabus.portal.client.controller.PortalController;
-import org.sakaiquebec.opensyllabus.portal.client.image.PortalImages;
-import org.sakaiquebec.opensyllabus.portal.client.message.OsylPortalMessages;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
+ *
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class AbstractPortalView extends Composite {
-
-    private OsylPortalMessages messages = (OsylPortalMessages) GWT
-	    .create(OsylPortalMessages.class);
+public interface PortalImages extends ClientBundle{
     
-    private PortalImages images = (PortalImages) GWT
-    .create(PortalImages.class);
-
-    public String getMessage(String key) {
-	try {
-	    return messages.getString(key.replace(".", "_"));
-	} catch (MissingResourceException e) {
-	    return "Missing key: " + key;
-	}
-    }
-
-    public PortalController getController() {
-	return PortalController.getInstance();
-    }
+    public ImageResource zc2html();
     
-    public PortalImages getImages(){
-	return images;
-    }
+    public ImageResource description();
+    
+    public ImageResource pdf();
 
 }
+

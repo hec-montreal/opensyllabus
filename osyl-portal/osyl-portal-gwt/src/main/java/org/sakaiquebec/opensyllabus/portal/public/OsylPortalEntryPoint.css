@@ -25,3 +25,67 @@ body{
 	cursor: pointer;
 }
 
+.CP-scrollTable{
+border:1px solid;
+width:900px;
+height:600px;
+padding:3px;
+}
+
+.CP-scrollTable-row{
+background-color:#ffffff;
+cursor:pointer;
+}
+
+.CP-scrollTable-row-hover{
+background-color:#ccccff;
+cursor:pointer;
+}
+
+.CP-scrollTable-row-selected{
+color:#ffffff;
+background-color:#000066;
+cursor:pointer;
+}
+
+.gwt-ScrollTable .headerWrapper{
+background-color : #e7e7e7;
+}
+
+.gwt-ScrollTable .dataTable td,
+.gwt-ScrollTable .headerTable td {
+  border-color: #ccc;
+  border-style: solid;
+  border-width: 0px 1px 1px 0px;
+  padding : 5px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.gwt-ScrollTable .footerTable .footerRow {
+  border-color: #ccc;
+  border-style: solid;
+  border-width: 1px 0px 0px 0px;
+  padding : 5px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.CP-description{
+	 background: transparent url(img/description.png) no-repeat 0 0; 
+	 width:44px;
+	 height:20px;
+}
+
+.CP-html{
+	 background: transparent url(img/zc2html.png) no-repeat 0 0; 
+	 width:44px;
+	 height:20px;
+}
+
+.CP-pdf{
+	 background: transparent url(img/pdf.png) no-repeat 0 0; 
+	 width:44px;
+	 height:20px;
+}
+

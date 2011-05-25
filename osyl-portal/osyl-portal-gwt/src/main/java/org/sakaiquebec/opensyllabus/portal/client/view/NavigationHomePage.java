@@ -22,8 +22,8 @@ package org.sakaiquebec.opensyllabus.portal.client.view;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -81,20 +81,18 @@ public class NavigationHomePage extends AbstractPortalView {
 
 		public void onClick(ClickEvent event) {
 		    Label l = (Label) event.getSource();
-		    AsyncCallback<Map<String, String>> callback =
-			    new AsyncCallback<Map<String, String>>() {
+		    AsyncCallback<List<COSite>> callback =
+			    new AsyncCallback<List<COSite>>() {
 
 				public void onFailure(Throwable caught) {
 				}
 
-				public void onSuccess(Map<String, String> result) {
-				    for (Entry<String, String> entry : result
-					    .entrySet()) {
+				public void onSuccess(List<COSite> result) {
+				    getController().setView(
+					    new CoursesPage(result));
 
-				    }
 				}
 			    };
-		    Window.alert(s);
 		    getController().getCoursesForAcadCareer(l.getText(),
 			    callback);
 
@@ -112,20 +110,18 @@ public class NavigationHomePage extends AbstractPortalView {
 	    l.addClickHandler(new ClickHandler() {
 
 		public void onClick(ClickEvent event) {
-		    AsyncCallback<Map<String, String>> callback =
-			    new AsyncCallback<Map<String, String>>() {
+		    AsyncCallback<List<COSite>> callback =
+			    new AsyncCallback<List<COSite>>() {
 
 				public void onFailure(Throwable caught) {
 				}
 
-				public void onSuccess(Map<String, String> result) {
-				    for (Entry<String, String> entry : result
-					    .entrySet()) {
-					Window.alert(entry.getKey());
-				    }
+				public void onSuccess(List<COSite> result) {
+				    getController().setView(
+					    new CoursesPage(result));
+
 				}
 			    };
-		    Window.alert(responsible);
 		    getController().getCoursesForResponsible(responsible,
 			    callback);
 

@@ -21,9 +21,12 @@
 package org.sakaiquebec.opensyllabus.portal.client.controller;
 
 import java.util.List;
-import java.util.Map;
+
+import org.sakaiquebec.opensyllabus.portal.client.OsylPortalEntryPoint;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -32,6 +35,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class PortalController {
 
     private static PortalController _instance;
+
+    private OsylPortalEntryPoint osylPortalEntryPoint;
 
     public static PortalController getInstance() {
 	if (_instance == null) {
@@ -44,14 +49,23 @@ public class PortalController {
 	super();
     }
 
+    public void setEntryPoint(OsylPortalEntryPoint osylPortalEntryPoint2) {
+	this.osylPortalEntryPoint = osylPortalEntryPoint2;
+    }
+
+    public void setView(Widget view) {
+	osylPortalEntryPoint.setView(view);
+    }
+
+    /***************************** RPC CALLS *********************************/
     public void getCoursesForAcadCareer(String acadCareer,
-	    AsyncCallback<Map<String, String>> callback) {
+	    AsyncCallback<List<COSite>> callback) {
 	PortalRpcController.getInstance().getCoursesForAcadCareer(acadCareer,
 		callback);
     }
 
     public void getCoursesForResponsible(String responsible,
-	    AsyncCallback<Map<String, String>> callback) {
+	    AsyncCallback<List<COSite>> callback) {
 	PortalRpcController.getInstance().getCoursesForResponsible(responsible,
 		callback);
     }
@@ -59,5 +73,6 @@ public class PortalController {
     public void getAllResponsibles(AsyncCallback<List<String>> callback) {
 	PortalRpcController.getInstance().getAllResponsibles(callback);
     }
+    /************************** END RPC CALLS *******************************/
 
 }

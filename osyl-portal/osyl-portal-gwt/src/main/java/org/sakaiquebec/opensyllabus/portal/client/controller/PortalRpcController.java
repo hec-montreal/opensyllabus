@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.portal.client.rpc.OsylPortalGwtService;
 import org.sakaiquebec.opensyllabus.portal.client.rpc.OsylPortalGwtServiceAsync;
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -59,12 +60,12 @@ public class PortalRpcController {
 	pointService.setServiceEntryPoint(cleanUrl + "OsylPortalGwtService");
     }
 
-    public void getCoursesForAcadCareer(String acadCareer, AsyncCallback<Map<String, String>> callback) {
+    public void getCoursesForAcadCareer(String acadCareer, AsyncCallback<List<COSite>> callback) {
 	serviceProxy.getCoursesForAcadCareer(acadCareer,callback);
     }
 
     public void getCoursesForResponsible(String responsible,
-	    AsyncCallback<Map<String, String>> callback) {
+	    AsyncCallback<List<COSite>> callback) {
 	serviceProxy.getCoursesForResponsible(responsible,callback);
     }
 

@@ -89,5 +89,20 @@ public interface OsylPortalMessages extends ConstantsWithLookup {
     String responsible_SC_COMPT_();
 
     String responsible_TI();
+    
+    String coursesPage_courseNumber();
+    
+    String coursesPage_courseTitle();
+    
+    String coursesPage_Instructor();
+    
+    String coursesPage_Program();
+    
+    String coursesPage_Description();
+           
+    String coursesPage_Html();
+    
+    String coursesPage_Pdf();
+    
 
 }

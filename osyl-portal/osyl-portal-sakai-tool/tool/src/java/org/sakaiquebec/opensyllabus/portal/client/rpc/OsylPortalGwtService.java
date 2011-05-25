@@ -22,7 +22,8 @@
 package org.sakaiquebec.opensyllabus.portal.client.rpc;
 
 import java.util.List;
-import java.util.Map;
+
+import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
@@ -35,10 +36,10 @@ import com.google.gwt.user.client.rpc.RemoteService;
  */
 public interface OsylPortalGwtService extends RemoteService {
 
-    public Map<String, String> getCoursesForAcadCareer(String acadCareer);
+    public List<COSite> getCoursesForAcadCareer(String acadCareer);
 
-    public Map<String, String> getCoursesForResponsible(String responsible);
-    
+    public List<COSite> getCoursesForResponsible(String responsible);
+
     public List<String> getAllResponsibles();
 
 }
