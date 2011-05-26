@@ -26,8 +26,6 @@ import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.gen2.table.client.AbstractScrollTable.ColumnResizePolicy;
@@ -87,13 +85,8 @@ public class CoursesPage extends AbstractPortalView {
 		    coSite.getCourseNumber());
 	    coursesTable.getDataTable().setHTML(rowNum, 1,
 		    coSite.getCourseName());
-	    coursesTable.getDataTable()
-		    .setHTML(
-			    rowNum,
-			    2,
-			    coSite.getCourseInstructors() == null ? ""
-				    : (String) coSite.getCourseInstructors()
-					    .toArray()[0]);
+	    coursesTable.getDataTable().setHTML(rowNum, 2,
+		    coSite.getCourseCoordinator());
 	    coursesTable.getDataTable().setHTML(rowNum, 3,
 		    coSite.getAcademicCareer());
 
@@ -102,7 +95,7 @@ public class CoursesPage extends AbstractPortalView {
 	    descImage.addMouseOverHandler(new MouseOverHandler() {
 
 		public void onMouseOver(MouseOverEvent event) {
-		    if(descriptionView!=null && descriptionView.isShowing())
+		    if (descriptionView != null && descriptionView.isShowing())
 			descriptionView.hide();
 		    descriptionView =
 			    new DescriptionView(coSite.getCourseNumber());

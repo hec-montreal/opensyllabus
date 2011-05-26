@@ -93,7 +93,7 @@ public class NavigationHomePage extends AbstractPortalView {
 
 				}
 			    };
-		    getController().getCoursesForAcadCareer(l.getText(),
+		    getController().getCoursesForAcadCareer(s,
 			    callback);
 
 		}

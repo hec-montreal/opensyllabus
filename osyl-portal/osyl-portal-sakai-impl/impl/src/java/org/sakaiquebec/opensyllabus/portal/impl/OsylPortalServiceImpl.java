@@ -70,87 +70,63 @@ public class OsylPortalServiceImpl implements OsylPortalService {
     @Override
     public List<COSite> getCoursesForAcadCareer(String acadCareer) {
 	List<COSite> coursesList = new ArrayList<COSite>();
+	List<String> coursesName = new ArrayList<String>();
 	Set<CourseOffering> courseOfferings =
 		courseManagementService
 			.findCourseOfferingsByAcadCareer(acadCareer);
-	for (CourseOffering courseOffering : courseOfferings) {
-	    Set<Section> sections =
-		    courseManagementService
-			    .getSections(courseOffering.getEid());
-	    for (Section section : sections) {
-		COSite coSite = fillCOSiteWithSection(section);
-		boolean publish = false;
-		try {
-		    publish =
-			    osylSiteService.hasBeenPublished(coSite
-				    .getCourseNumber());
-		} catch (Exception e) {
-		}
-		if (coSite != null && publish)
-		    coursesList.add(coSite);
-	    }
 
+	for (CourseOffering courseOffering : courseOfferings) {
+	    if (!coursesName.contains(courseOffering.getCanonicalCourseEid())) {
+		COSite coSite = fillCOSiteWithCourseOffering(courseOffering);
+		coursesList.add(coSite);
+		coursesName.add(courseOffering.getCanonicalCourseEid());
+	    }
 	}
 	return coursesList;
     }
 
     @Override
     public List<COSite> getCoursesForResponsible(String responsible) {
+	List<String> coursesName = new ArrayList<String>();
 	List<COSite> coursesList = new ArrayList<COSite>();
 	Set<Section> sections =
 		courseManagementService.findSectionsByCategory(responsible);
 	for (Section section : sections) {
-	    COSite coSite = fillCOSiteWithSection(section);
-	    boolean publish = false;
-	    try {
-		publish =
-			osylSiteService.hasBeenPublished(coSite
-				.getCourseNumber());
-	    } catch (Exception e) {
-	    }
-	    if (coSite != null && publish)
+	    CourseOffering courseOffering =
+		    courseManagementService.getCourseOffering(section
+			    .getCourseOfferingEid());
+	    if (!coursesName.contains(courseOffering.getCanonicalCourseEid())) {
+		COSite coSite =
+			fillCOSiteWithCourseOffering(courseOffering);
 		coursesList.add(coSite);
-
+		coursesName.add(courseOffering.getCanonicalCourseEid());
+	    }
 	}
 	return coursesList;
     }
 
-    private COSite fillCOSiteWithSection(Section section) {
-	COSite coSite = null;
-	if (!section.getEid()
-		.substring(section.getCourseOfferingEid().length())
-		.equals("00")) {
-	    coSite = new COSite();
-	    coSite.setCourseNumber(getSiteName(section));
-	    coSite.setCourseName(section.getTitle());
-	    if (section.getEnrollmentSet() != null)
-		coSite.setCourseInstructors(section.getEnrollmentSet()
-			.getOfficialInstructors());
-	    coSite.setAcademicCareer(courseManagementService.getCourseOffering(
-		    section.getCourseOfferingEid()).getAcademicCareer());
-	    coSite.setSiteDescription(section.getDescription());
+    private COSite fillCOSiteWithCourseOffering(CourseOffering courseOffering) {
+	COSite coSite = new COSite();
+	coSite.setCourseNumber(getDirectorySiteName(courseOffering
+		.getCanonicalCourseEid()));
+	coSite.setCourseName(courseOffering.getTitle());
+	Section shareable =
+		courseManagementService.getSection(courseOffering.getEid()
+			+ "00");
+	if (shareable.getEnrollmentSet() != null) {
+	    coSite.setCourseCoordinator((String) shareable.getEnrollmentSet()
+		    .getOfficialInstructors().toArray()[0]);
 	}
+	coSite.setAcademicCareer(courseOffering.getAcademicCareer());
+	coSite.setSiteDescription(courseOffering.getDescription());
 	return coSite;
     }
 
-    private String getSiteName(Section section) {
-	String siteName = null;
-	String sectionId = section.getEid();
-	String courseOffId = section.getCourseOfferingEid();
-	CourseOffering courseOff =
-		courseManagementService.getCourseOffering(courseOffId);
-	String canCourseId = (courseOff.getCanonicalCourseEid()).trim();
-	AcademicSession session = courseOff.getAcademicSession();
-	String sessionId = session.getEid();
-
+    private String getDirectorySiteName(String canCourseId) {
 	String courseId = null;
 	String courseIdFront = null;
 	String courseIdMiddle = null;
 	String courseIdBack = null;
-
-	String sessionTitle = null;
-	String periode = null;
-	String groupe = null;
 
 	if (canCourseId.length() == 7) {
 	    courseIdFront = canCourseId.substring(0, 2);
@@ -192,38 +168,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    } else
 		courseId = canCourseId;
 	}
-	sessionTitle = getSessionName(session);
-
-	if (sessionId.matches(".*[pP].*")) {
-	    periode = sessionId.substring(sessionId.length() - 2);
-	}
-
-	groupe = sectionId.substring(courseOffId.length());
-
-	if (periode == null)
-	    siteName = courseId + "." + sessionTitle + "." + groupe;
-	else
-	    siteName =
-		    courseId + "." + sessionTitle + "." + periode + "."
-			    + groupe;
-
-	return siteName;
-    }
-
-    private String getSessionName(AcademicSession session) {
-	String sessionName = null;
-	String sessionId = session.getEid();
-	Date startDate = session.getStartDate();
-	String year = startDate.toString().substring(0, 4);
-
-	if ((sessionId.charAt(3)) == '1')
-	    sessionName = WINTER + year;
-	if ((sessionId.charAt(3)) == '2')
-	    sessionName = SUMMER + year;
-	if ((sessionId.charAt(3)) == '3')
-	    sessionName = FALL + year;
-
-	return sessionName;
+	return courseId;
     }
 
     @Override
