@@ -591,30 +591,29 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     }
 
     private HashMap<String, List<String>> getFrozenPermissionsByRole(
-	    Document document) {
-	HashMap<String, List<String>> rolesToFrozen =
-		new HashMap<String, List<String>>();
-	// get the root element
-	Element docEle = document.getDocumentElement();
-	// get a nodelist of elements
-	NodeList nl = docEle.getElementsByTagName(ROLESET);
-	if (nl != null && nl.getLength() > 0) {
-	    for (int i = 0; i < nl.getLength(); i++) {
-		// get the role element
-		Element element = (Element) nl.item(i);
-		// get the role object
-		String roleId = element.getAttribute(ROLEID);
-		String permissions =
-			retrieveParameter(document, FROZENPERMISSIONS);
-		setPermissions(permissions);
-		// add it to list
-		List<String> permissionsAllowed = this.getFrozenPermissions();
-		rolesToFrozen.put(roleId, permissionsAllowed);
-	    }
-	    return rolesToFrozen;
-	}
-	return rolesToFrozen;
-    }
+    	    Document document) {
+    	HashMap<String, List<String>> rolesToFrozen =
+    		new HashMap<String, List<String>>();
+    	// get the root element
+    	Element docEle = document.getDocumentElement();
+    	// get a nodelist of elements
+    	NodeList nl = docEle.getElementsByTagName(ROLESET);
+    	if (nl != null && nl.getLength() > 0) {
+    	    for (int i = 0; i < nl.getLength(); i++) {
+    		// get the role element
+    		Element element = (Element) nl.item(i);
+    		// get the role object
+    		String roleId = element.getAttribute(ROLEID);
+    		String permissions = element.getTextContent();
+    		setPermissions(permissions);
+    		// add it to list
+    		List<String> permissionsAllowed = this.getFrozenPermissions();
+    		rolesToFrozen.put(roleId, permissionsAllowed);
+    	    }
+    	    return rolesToFrozen;
+    	}
+    	return rolesToFrozen;
+        }
 
     private Date getDate(String date) {
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
