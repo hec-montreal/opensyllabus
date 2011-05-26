@@ -42,9 +42,9 @@ public interface OsylPortalService {
 
     public final static String FALL = "A";
 
-    public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer);
+    public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer, String webappDir);
 
-    public List<CODirectorySite> getCoursesForResponsible(String responsible);
+    public List<CODirectorySite> getCoursesForResponsible(String responsible, String webappDir);
 
     public List<String> getAllResponsibles();
 

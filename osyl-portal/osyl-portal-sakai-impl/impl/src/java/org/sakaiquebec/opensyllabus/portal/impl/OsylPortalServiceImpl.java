@@ -28,15 +28,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.Section;
-import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
+import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
+import org.sakaiquebec.opensyllabus.common.helper.XmlHelper;
 import org.sakaiquebec.opensyllabus.portal.api.OsylPortalService;
+import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
+import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
@@ -56,10 +66,10 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	this.courseManagementService = courseManagementService;
     }
 
-    private OsylSiteService osylSiteService;
+    private OsylPublishService osylPublishService;
 
-    public void setOsylSiteService(OsylSiteService osylSiteService) {
-	this.osylSiteService = osylSiteService;
+    public void setOsylPublishService(OsylPublishService osylPublishService) {
+	this.osylPublishService = osylPublishService;
     }
 
     /**
@@ -70,7 +80,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
     }
 
     @Override
-    public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer) {
+    public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer, String webappDir) {
 	List<CODirectorySite> coursesList = new ArrayList<CODirectorySite>();
 	List<String> coursesName = new ArrayList<String>();
 	Set<CourseOffering> courseOfferings =
@@ -79,7 +89,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 
 	for (CourseOffering courseOffering : courseOfferings) {
 	    if (!coursesName.contains(courseOffering.getCanonicalCourseEid())) {
-		CODirectorySite coSite = fillCODirectorySiteWithCourseOffering(courseOffering);
+		CODirectorySite coSite =
+			fillCODirectorySiteWithCourseOffering(courseOffering,webappDir);
 		coursesList.add(coSite);
 		coursesName.add(courseOffering.getCanonicalCourseEid());
 	    }
@@ -88,7 +99,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
     }
 
     @Override
-    public List<CODirectorySite> getCoursesForResponsible(String responsible) {
+    public List<CODirectorySite> getCoursesForResponsible(String responsible, String webappDir) {
 	List<String> coursesName = new ArrayList<String>();
 	List<CODirectorySite> coursesList = new ArrayList<CODirectorySite>();
 	Set<Section> sections =
@@ -99,7 +110,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 			    .getCourseOfferingEid());
 	    if (!coursesName.contains(courseOffering.getCanonicalCourseEid())) {
 		CODirectorySite coSite =
-			fillCODirectorySiteWithCourseOffering(courseOffering);
+			fillCODirectorySiteWithCourseOffering(courseOffering,webappDir);
 		coursesList.add(coSite);
 		coursesName.add(courseOffering.getCanonicalCourseEid());
 	    }
@@ -107,7 +118,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	return coursesList;
     }
 
-    private CODirectorySite fillCODirectorySiteWithCourseOffering(CourseOffering courseOffering) {
+    private CODirectorySite fillCODirectorySiteWithCourseOffering(
+	    CourseOffering courseOffering, String webappDir) {
 	CODirectorySite coSite = new CODirectorySite();
 	coSite.setCourseNumber(getDirectorySiteName(courseOffering
 		.getCanonicalCourseEid()));
@@ -115,21 +127,46 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	coSite.setProgram(courseOffering.getAcademicCareer());
 	coSite.setCredits("3");
 	coSite.setRequirements("Vous devez avoir suivi <br> bal <b>bla</b>");
-	
-	Set<Section> sections = courseManagementService.getSections(courseOffering.getEid());
-	Map<String,String> map = new HashMap<String,String>();
-	for(Section section : sections){
-	    if(!section.getEid().endsWith("00")){
+
+	Set<Section> sections =
+		courseManagementService.getSections(courseOffering.getEid());
+	Map<String, String> map = new HashMap<String, String>();
+	for (Section section : sections) {
+	    if (!section.getEid().endsWith("00")) {
 		map.put(getSiteName(section), "todo todo");
 	    }
-	    if(section.getCategory()!=null && !section.getCategory().equals("")){
+	    if (section.getCategory() != null
+		    && !section.getCategory().equals("")) {
 		coSite.setResponsible(section.getCategory());
 	    }
 	}
 	coSite.setSections(map);
 	coSite.setProgram(courseOffering.getAcademicCareer());
-	
-	
+
+	String description = "";
+	try {
+	    COSerialized coSerialized =
+		    osylPublishService
+			    .getSerializedPublishedCourseOutlineForAccessType(
+				    coSite.getCourseNumber(),
+				    SecurityInterface.ACCESS_PUBLIC, webappDir);
+	    Node d = XmlHelper.parseXml(coSerialized.getContent());
+	    XPathFactory factory = XPathFactory.newInstance();
+	    XPath xpath = factory.newXPath();
+	    XPathExpression expr;
+	    expr =
+		    xpath.compile("//asmContext[semanticTag[@type='HEC']='description']/asmResource/text");
+
+	    NodeList nodes =
+		    (NodeList) expr.evaluate(d, XPathConstants.NODESET);
+	    for (int i = 0; i < nodes.getLength(); i++) {
+		Node node = nodes.item(i);
+		description += node.getTextContent();
+	    }
+	} catch (Exception e) {
+	}
+	coSite.setDescription(description);
+
 	return coSite;
     }
 
@@ -181,12 +218,13 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	}
 	return courseId;
     }
-    
+
     private String getSiteName(Section section) {
 	String siteName = null;
 	String sectionId = section.getEid();
 	String courseOffId = section.getCourseOfferingEid();
-	CourseOffering courseOff = courseManagementService.getCourseOffering(courseOffId);
+	CourseOffering courseOff =
+		courseManagementService.getCourseOffering(courseOffId);
 	String canCourseId = (courseOff.getCanonicalCourseEid()).trim();
 	AcademicSession session = courseOff.getAcademicSession();
 	String sessionId = session.getEid();
@@ -257,7 +295,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 
 	return siteName;
     }
-    
+
     private String getSessionName(AcademicSession session) {
 	String sessionName = null;
 	String sessionId = session.getEid();

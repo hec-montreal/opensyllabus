@@ -58,34 +58,38 @@ public class DirectoryCoursePage extends AbstractPortalView {
 	Label t2 = new Label(getMessage("directoryCoursePage_description"));
 	t2.setStylePrimaryName("NHP_titre2");
 	mainPanel.add(t2);
-
-	Label t21 = new Label(getMessage("directoryCoursePage_features"));
-	t21.setStylePrimaryName("NHP_titre2");
+	
+	Label t21 = new HTML(site.getDescription());
+	t21.setStylePrimaryName("NHP_titre3");
 	mainPanel.add(t21);
 
-	Label t22 =
+	Label t3 = new Label(getMessage("directoryCoursePage_features"));
+	t3.setStylePrimaryName("NHP_titre2");
+	mainPanel.add(t3);
+
+	Label t31 =
 		new Label(getMessage("directoryCoursePage_responsible") + " : "
-			+ site.getResponsible());
-	t22.setStylePrimaryName("NHP_titre3");
-	mainPanel.add(t22);
+			+ getMessage("responsible." +site.getResponsible()));
+	t31.setStylePrimaryName("NHP_titre3");
+	mainPanel.add(t31);
 
-	Label t23 =
+	Label t32 =
 		new Label(getMessage("directoryCoursePage_program") + " : "
-			+ site.getProgram());
-	t23.setStylePrimaryName("NHP_titre3");
-	mainPanel.add(t23);
+			+ getMessage("acad_career." +site.getProgram()));
+	t32.setStylePrimaryName("NHP_titre3");
+	mainPanel.add(t32);
 
-	Label t24 =
+	Label t33 =
 		new Label(getMessage("directoryCoursePage_credits") + " : "
 			+ site.getCredits());
-	t24.setStylePrimaryName("NHP_titre3");
-	mainPanel.add(t24);
+	t33.setStylePrimaryName("NHP_titre3");
+	mainPanel.add(t33);
 
-	Label t3 =
+	Label t34 =
 		new HTML(getMessage("directoryCoursePage_requirements")
 			+ " : " + site.getRequirements());
-	t3.setStylePrimaryName("NHP_titre3");
-	mainPanel.add(t3);
+	t34.setStylePrimaryName("NHP_titre3");
+	mainPanel.add(t34);
 
 	Label t4 = new Label(getMessage("directoryCoursePage_coursesList"));
 	t4.setStylePrimaryName("NHP_titre2");

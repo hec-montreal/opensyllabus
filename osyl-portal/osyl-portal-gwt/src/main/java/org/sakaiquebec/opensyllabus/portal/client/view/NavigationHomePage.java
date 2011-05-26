@@ -41,7 +41,7 @@ public class NavigationHomePage extends AbstractPortalView {
     private VerticalPanel mainPanel;
 
     private static final List<String> progs = Arrays.asList(new String[] {
-	    "BAA", "APRE", "CERT", "MBA", "MSC", "DES", "PHD" });
+	    "BAA", "APRE", "CERT", "MBA", "MSC", "DESS", "PHD" });
 
     private List<String> responsiblesList;
 

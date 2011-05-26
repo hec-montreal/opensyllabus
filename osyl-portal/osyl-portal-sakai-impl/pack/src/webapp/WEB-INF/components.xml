@@ -8,8 +8,8 @@
 		init-method="init" singleton="true">
 		<property name="courseManagementService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService"/>
-		<property name="osylSiteService"
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
+		<property name="osylPublishService"
+			ref="org.sakaiquebec.opensyllabus.common.api.OsylPublishService" />
 	</bean>
 
 </beans>

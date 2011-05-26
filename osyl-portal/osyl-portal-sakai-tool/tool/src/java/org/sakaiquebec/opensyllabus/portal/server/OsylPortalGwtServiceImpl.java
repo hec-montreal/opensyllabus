@@ -69,15 +69,17 @@ public class OsylPortalGwtServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer) {
+	String webappDir = getServletContext().getRealPath("/");
 	return osylPortalServices.getOsylPortalService()
-		.getCoursesForAcadCareer(acadCareer);
+		.getCoursesForAcadCareer(acadCareer,webappDir);
 
     }
 
     @Override
     public List<CODirectorySite> getCoursesForResponsible(String responsible) {
+	String webappDir = getServletContext().getRealPath("/");
 	return osylPortalServices.getOsylPortalService()
-		.getCoursesForResponsible(responsible);
+		.getCoursesForResponsible(responsible,webappDir);
     }
 
     @Override
