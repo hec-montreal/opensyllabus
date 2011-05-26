@@ -22,9 +22,8 @@
 package org.sakaiquebec.opensyllabus.portal.api;
 
 import java.util.List;
-import java.util.Map;
 
-import org.sakaiquebec.opensyllabus.shared.model.COSite;
+import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 /**
  * OsylAdminService is a administrative service used to define properties and
@@ -43,9 +42,9 @@ public interface OsylPortalService {
 
     public final static String FALL = "A";
 
-    public List<COSite> getCoursesForAcadCareer(String acadCareer);
+    public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer);
 
-    public List<COSite> getCoursesForResponsible(String responsible);
+    public List<CODirectorySite> getCoursesForResponsible(String responsible);
 
     public List<String> getAllResponsibles();
 

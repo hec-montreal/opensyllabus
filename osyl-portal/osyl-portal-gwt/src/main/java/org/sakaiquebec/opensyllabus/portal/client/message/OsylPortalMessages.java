@@ -104,5 +104,21 @@ public interface OsylPortalMessages extends ConstantsWithLookup {
     
     String coursesPage_Pdf();
     
+    String directoryCoursePage_description();
+    
+    String directoryCoursePage_features();
+    
+    String directoryCoursePage_coursesList();
+    
+    String directoryCoursePage_responsible();
+    
+    String directoryCoursePage_program();
+    
+    String directoryCoursePage_credits();
+    
+    String directoryCoursePage_requirements();
+    
+    
+    
 
 }

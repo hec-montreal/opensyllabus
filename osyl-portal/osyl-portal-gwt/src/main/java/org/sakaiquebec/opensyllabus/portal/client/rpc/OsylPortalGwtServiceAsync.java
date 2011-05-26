@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.portal.client.rpc;
 
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -34,10 +35,10 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface OsylPortalGwtServiceAsync {
 
     public void getCoursesForAcadCareer(String acadCareer,
-	    AsyncCallback<List<COSite>> callback);
+	    AsyncCallback<List<CODirectorySite>> callback);
 
     public void getCoursesForResponsible(String responsible,
-	    AsyncCallback<List<COSite>> callback);
+	    AsyncCallback<List<CODirectorySite>> callback);
 
     public void getAllResponsibles(AsyncCallback<List<String>> callback);
 

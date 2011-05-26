@@ -23,7 +23,7 @@ package org.sakaiquebec.opensyllabus.portal.client.controller;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.portal.client.OsylPortalEntryPoint;
-import org.sakaiquebec.opensyllabus.shared.model.COSite;
+import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Widget;
@@ -59,13 +59,13 @@ public class PortalController {
 
     /***************************** RPC CALLS *********************************/
     public void getCoursesForAcadCareer(String acadCareer,
-	    AsyncCallback<List<COSite>> callback) {
+	    AsyncCallback<List<CODirectorySite>> callback) {
 	PortalRpcController.getInstance().getCoursesForAcadCareer(acadCareer,
 		callback);
     }
 
     public void getCoursesForResponsible(String responsible,
-	    AsyncCallback<List<COSite>> callback) {
+	    AsyncCallback<List<CODirectorySite>> callback) {
 	PortalRpcController.getInstance().getCoursesForResponsible(responsible,
 		callback);
     }

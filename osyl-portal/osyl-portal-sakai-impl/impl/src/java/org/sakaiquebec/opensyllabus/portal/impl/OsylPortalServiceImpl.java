@@ -23,7 +23,9 @@ package org.sakaiquebec.opensyllabus.portal.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -34,7 +36,7 @@ import org.sakaiproject.coursemanagement.api.CourseOffering;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.portal.api.OsylPortalService;
-import org.sakaiquebec.opensyllabus.shared.model.COSite;
+import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
@@ -68,8 +70,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
     }
 
     @Override
-    public List<COSite> getCoursesForAcadCareer(String acadCareer) {
-	List<COSite> coursesList = new ArrayList<COSite>();
+    public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer) {
+	List<CODirectorySite> coursesList = new ArrayList<CODirectorySite>();
 	List<String> coursesName = new ArrayList<String>();
 	Set<CourseOffering> courseOfferings =
 		courseManagementService
@@ -77,7 +79,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 
 	for (CourseOffering courseOffering : courseOfferings) {
 	    if (!coursesName.contains(courseOffering.getCanonicalCourseEid())) {
-		COSite coSite = fillCOSiteWithCourseOffering(courseOffering);
+		CODirectorySite coSite = fillCODirectorySiteWithCourseOffering(courseOffering);
 		coursesList.add(coSite);
 		coursesName.add(courseOffering.getCanonicalCourseEid());
 	    }
@@ -86,9 +88,9 @@ public class OsylPortalServiceImpl implements OsylPortalService {
     }
 
     @Override
-    public List<COSite> getCoursesForResponsible(String responsible) {
+    public List<CODirectorySite> getCoursesForResponsible(String responsible) {
 	List<String> coursesName = new ArrayList<String>();
-	List<COSite> coursesList = new ArrayList<COSite>();
+	List<CODirectorySite> coursesList = new ArrayList<CODirectorySite>();
 	Set<Section> sections =
 		courseManagementService.findSectionsByCategory(responsible);
 	for (Section section : sections) {
@@ -96,8 +98,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		    courseManagementService.getCourseOffering(section
 			    .getCourseOfferingEid());
 	    if (!coursesName.contains(courseOffering.getCanonicalCourseEid())) {
-		COSite coSite =
-			fillCOSiteWithCourseOffering(courseOffering);
+		CODirectorySite coSite =
+			fillCODirectorySiteWithCourseOffering(courseOffering);
 		coursesList.add(coSite);
 		coursesName.add(courseOffering.getCanonicalCourseEid());
 	    }
@@ -105,20 +107,29 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	return coursesList;
     }
 
-    private COSite fillCOSiteWithCourseOffering(CourseOffering courseOffering) {
-	COSite coSite = new COSite();
+    private CODirectorySite fillCODirectorySiteWithCourseOffering(CourseOffering courseOffering) {
+	CODirectorySite coSite = new CODirectorySite();
 	coSite.setCourseNumber(getDirectorySiteName(courseOffering
 		.getCanonicalCourseEid()));
 	coSite.setCourseName(courseOffering.getTitle());
-	Section shareable =
-		courseManagementService.getSection(courseOffering.getEid()
-			+ "00");
-	if (shareable.getEnrollmentSet() != null) {
-	    coSite.setCourseCoordinator((String) shareable.getEnrollmentSet()
-		    .getOfficialInstructors().toArray()[0]);
+	coSite.setProgram(courseOffering.getAcademicCareer());
+	coSite.setCredits("3");
+	coSite.setRequirements("Vous devez avoir suivi <br> bal <b>bla</b>");
+	
+	Set<Section> sections = courseManagementService.getSections(courseOffering.getEid());
+	Map<String,String> map = new HashMap<String,String>();
+	for(Section section : sections){
+	    if(!section.getEid().endsWith("00")){
+		map.put(getSiteName(section), "todo todo");
+	    }
+	    if(section.getCategory()!=null && !section.getCategory().equals("")){
+		coSite.setResponsible(section.getCategory());
+	    }
 	}
-	coSite.setAcademicCareer(courseOffering.getAcademicCareer());
-	coSite.setSiteDescription(courseOffering.getDescription());
+	coSite.setSections(map);
+	coSite.setProgram(courseOffering.getAcademicCareer());
+	
+	
 	return coSite;
     }
 
@@ -169,6 +180,98 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		courseId = canCourseId;
 	}
 	return courseId;
+    }
+    
+    private String getSiteName(Section section) {
+	String siteName = null;
+	String sectionId = section.getEid();
+	String courseOffId = section.getCourseOfferingEid();
+	CourseOffering courseOff = courseManagementService.getCourseOffering(courseOffId);
+	String canCourseId = (courseOff.getCanonicalCourseEid()).trim();
+	AcademicSession session = courseOff.getAcademicSession();
+	String sessionId = session.getEid();
+
+	String courseId = null;
+	String courseIdFront = null;
+	String courseIdMiddle = null;
+	String courseIdBack = null;
+
+	String sessionTitle = null;
+	String periode = null;
+	String groupe = null;
+
+	if (canCourseId.length() == 7) {
+	    courseIdFront = canCourseId.substring(0, 2);
+	    courseIdMiddle = canCourseId.substring(2, 5);
+	    courseIdBack = canCourseId.substring(5);
+	    courseId =
+		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
+	} else if (canCourseId.length() == 6) {
+	    courseIdFront = canCourseId.substring(0, 1);
+	    courseIdMiddle = canCourseId.substring(1, 4);
+	    courseIdBack = canCourseId.substring(4);
+	    courseId =
+		    courseIdFront + "-" + courseIdMiddle + "-" + courseIdBack;
+	} else {
+	    courseId = canCourseId;
+	}
+
+	if (canCourseId.matches(".*[^0-9].*")) {
+	    if (canCourseId.endsWith("A") || canCourseId.endsWith("E")
+		    || canCourseId.endsWith("R")) {
+		if (canCourseId.length() == 8) {
+		    courseIdFront = canCourseId.substring(0, 2);
+		    courseIdMiddle = canCourseId.substring(2, 5);
+		    courseIdBack = canCourseId.substring(5);
+		    courseId =
+			    courseIdFront + "-" + courseIdMiddle + "-"
+				    + courseIdBack;
+
+		}
+		if (canCourseId.length() == 7) {
+		    courseIdFront = canCourseId.substring(0, 1);
+		    courseIdMiddle = canCourseId.substring(1, 4);
+		    courseIdBack = canCourseId.substring(4);
+		    courseId =
+			    courseIdFront + "-" + courseIdMiddle + "-"
+				    + courseIdBack;
+
+		}
+	    } else
+		courseId = canCourseId;
+	}
+	sessionTitle = getSessionName(session);
+
+	if (sessionId.matches(".*[pP].*")) {
+	    periode = sessionId.substring(sessionId.length() - 2);
+	}
+
+	groupe = sectionId.substring(courseOffId.length());
+
+	if (periode == null)
+	    siteName = courseId + "." + sessionTitle + "." + groupe;
+	else
+	    siteName =
+		    courseId + "." + sessionTitle + "." + periode + "."
+			    + groupe;
+
+	return siteName;
+    }
+    
+    private String getSessionName(AcademicSession session) {
+	String sessionName = null;
+	String sessionId = session.getEid();
+	Date startDate = session.getStartDate();
+	String year = startDate.toString().substring(0, 4);
+
+	if ((sessionId.charAt(3)) == '1')
+	    sessionName = WINTER + year;
+	if ((sessionId.charAt(3)) == '2')
+	    sessionName = SUMMER + year;
+	if ((sessionId.charAt(3)) == '3')
+	    sessionName = FALL + year;
+
+	return sessionName;
     }
 
     @Override

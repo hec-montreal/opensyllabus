@@ -23,7 +23,7 @@ package org.sakaiquebec.opensyllabus.portal.client.view;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sakaiquebec.opensyllabus.shared.model.COSite;
+import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -80,21 +80,22 @@ public class NavigationHomePage extends AbstractPortalView {
 	    l.addClickHandler(new ClickHandler() {
 
 		public void onClick(ClickEvent event) {
-		    Label l = (Label) event.getSource();
-		    AsyncCallback<List<COSite>> callback =
-			    new AsyncCallback<List<COSite>>() {
+		    AsyncCallback<List<CODirectorySite>> callback =
+			    new AsyncCallback<List<CODirectorySite>>() {
 
 				public void onFailure(Throwable caught) {
 				}
 
-				public void onSuccess(List<COSite> result) {
+				public void onSuccess(
+					List<CODirectorySite> result) {
 				    getController().setView(
-					    new CoursesPage(result));
+					    new CoursesPage(
+						    getMessage("acad_career."
+							    + s), result));
 
 				}
 			    };
-		    getController().getCoursesForAcadCareer(s,
-			    callback);
+		    getController().getCoursesForAcadCareer(s, callback);
 
 		}
 	    });
@@ -110,15 +111,19 @@ public class NavigationHomePage extends AbstractPortalView {
 	    l.addClickHandler(new ClickHandler() {
 
 		public void onClick(ClickEvent event) {
-		    AsyncCallback<List<COSite>> callback =
-			    new AsyncCallback<List<COSite>>() {
+		    AsyncCallback<List<CODirectorySite>> callback =
+			    new AsyncCallback<List<CODirectorySite>>() {
 
 				public void onFailure(Throwable caught) {
 				}
 
-				public void onSuccess(List<COSite> result) {
+				public void onSuccess(
+					List<CODirectorySite> result) {
 				    getController().setView(
-					    new CoursesPage(result));
+					    new CoursesPage(
+						    getMessage("responsible."
+							    + responsible),
+						    result));
 
 				}
 			    };
