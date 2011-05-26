@@ -74,8 +74,7 @@ public class ResourceDaoImpl extends HibernateDaoSupport implements ResourceDao 
 
     /**
      * {@inheritDoc}
-     * 
-     * @throws Exception
+     *  
      */
     @SuppressWarnings("unchecked")
     public COSerialized getSerializedCourseOutlineBySiteId(String siteId)

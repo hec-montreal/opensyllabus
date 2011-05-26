@@ -100,32 +100,44 @@ public class OsylContentServiceImpl implements OsylContentService {
 
 	// Make sure the site name can be used as a collection id
 	Validator.checkResourceId(siteName);
-	try {
-	    String osylToolName = OPENSYLLABUS_ATTACHEMENT_PREFIX;
+	String osylToolName = OPENSYLLABUS_ATTACHEMENT_PREFIX;
 
-	    // We create the site collection
-	    String collectionId =
-		    ContentHostingService.ATTACHMENTS_COLLECTION + siteName;
+	// We create the site collection
+	String collectionId =
+		ContentHostingService.ATTACHMENTS_COLLECTION + siteName;
+	ContentCollectionEdit collection = null;
+	if (contentHostingService.isCollection(collectionId))
+	    try {
+		collection =
+			(ContentCollectionEdit) contentHostingService
+				.getCollection(collectionId);
+	    } catch (IdUnusedException e) {
+		log.info("The folder " + collectionId + " does not exist.");
+	    } catch (PermissionException e) {
+		log.info("You are not allowed access.");
+	    } catch (TypeException e) {
+		log.info("The id " + collectionId
+			+ " does not refer to a folder.");
+	    }
+	else {
 
-	    ContentCollectionEdit collection = null;
-	    if (contentHostingService.isCollection(collectionId))
-		try {
-		    collection =
-			    (ContentCollectionEdit) contentHostingService
-				    .getCollection(collectionId);
-		} catch (IdUnusedException e) {
-		    log.info("The folder " + collectionId + " does not exist.");
-		} catch (TypeException e) {
-		    log.info("The id " + collectionId
-			    + " does not refer to a folder.");
-		}
-	    else {
+	    try {
 		collection = contentHostingService.addCollection(collectionId);
 		collection.getPropertiesEdit().addProperty(
 			ResourceProperties.PROP_DISPLAY_NAME, siteName);
 		contentHostingService.commitCollection(collection);
+	    } catch (IdUsedException e) {
+		log.info("The collection " + collectionId + " already exists.");
+	    } catch (IdInvalidException e) {
+		log.info("You are refering to an invalid id ");
+	    } catch (PermissionException e) {
+		log.info("You are not allowed access.");
+	    } catch (InconsistentException e) {
+		log.info("Inconsistent Error.");
 	    }
+	}
 
+	try {
 	    // We create the OpenSyllabus collection
 	    collectionId = collectionId + "/" + osylToolName;
 	    if (!contentHostingService.isCollection(collectionId)) {
@@ -136,7 +148,7 @@ public class OsylContentServiceImpl implements OsylContentService {
 	    }
 
 	} catch (IdUsedException e) {
-	    log.info("The site " + siteName + " does not exist.");
+	    log.info("The collection " + collectionId + " already exists.");
 	} catch (IdInvalidException e) {
 	    log.info("You are refering to an invalid id ");
 	} catch (PermissionException e) {

@@ -27,6 +27,7 @@ import org.sakaiproject.entity.api.ResourcePropertiesEdit;
 import org.sakaiproject.entitybroker.EntityBroker;
 import org.sakaiproject.event.api.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
+import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.tool.api.SessionManager;
 import org.sakaiquebec.opensyllabus.api.OsylService;
@@ -345,91 +346,24 @@ public class OsylServiceImpl implements OsylService {
     }
 
     /**
-     * Create work and publish directories automatically if they don't exists.
+     * Create OpenSyllabus directory in attachment automatically if it does not exists.
      * Also applies default permission level
      */
     public void initService() throws Exception {
 	String directoryId = "";
 
-	if (ServerConfigurationService.getString(
-		"opensyllabus.publish.in.attachment").equals("true")) {
-	    // directoryId =
-	    // OsylContentService.PUBLISH_DIRECTORY_PREFIX
-	    // + osylSiteService.getCurrentSiteId()
-	    // + OsylContentService.USE_ATTACHMENTS;
-	    // if (!collectionExist(directoryId)) {
-	    // osylContentService.initSiteAttachments(osylSiteService
-	    // .getCurrentSiteId());
-	    // }
-	    //
-	    // directoryId = osylSiteService.getCurrentSiteId();
+	Site site = siteService.getSite(osylSiteService.getCurrentSiteId());
+	// Create attachment folder if necessary
+	directoryId =
+		ContentHostingService.ATTACHMENTS_COLLECTION + site.getTitle()
+			+ "/"
+			+ OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
+			+ "/";
+	if (!collectionExist(directoryId))
+	    osylContentService.initSiteAttachments(site.getTitle());
 
-	    // TODO : SAKAI-2160 - add citations list ?
+	directoryId = (osylSiteService.getCurrentSiteReference()).substring(8);
 
-	    // Create attachment folder if necessary
-	    directoryId =
-		    ContentHostingService.ATTACHMENTS_COLLECTION
-			    + osylSiteService.getCurrentSiteId()
-			    + "/"
-			    + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
-			    + "/";
-	    if (!collectionExist(directoryId))
-		osylContentService.initSiteAttachments(osylSiteService
-			.getCurrentSiteId());
-
-	} else {
-	    if (addCollection(WORK_DIRECTORY, null)) {
-		directoryId =
-			(osylSiteService.getCurrentSiteReference()
-				+ WORK_DIRECTORY + "/").substring(8);
-
-		// HIDE COLLECTION
-		ContentCollectionEdit cce =
-			contentHostingService.editCollection(directoryId);
-		cce.setHidden();
-		contentHostingService.commitCollection(cce);
-
-		osylSecurityService.applyDirectoryPermissions(directoryId);
-
-		// we add the default citationList
-		// TODO I18N
-		String citationListName =
-			"Références bibliographiques du cours";
-
-		CitationCollection citationList =
-			citationService.addCollection();
-
-		ContentResourceEdit cre =
-			contentHostingService.addResource(directoryId,
-				citationListName, null, 1);
-
-		cre.setResourceType(CitationService.CITATION_LIST_ID);
-		cre.setContentType(ResourceType.MIME_TYPE_HTML);
-
-		ResourcePropertiesEdit props = cre.getPropertiesEdit();
-		props
-			.addProperty(
-				ContentHostingService.PROP_ALTERNATE_REFERENCE,
-				org.sakaiproject.citation.api.CitationService.REFERENCE_ROOT);
-		props.addProperty(ResourceProperties.PROP_CONTENT_TYPE,
-			ResourceType.MIME_TYPE_HTML);
-		props.addProperty(ResourceProperties.PROP_DISPLAY_NAME,
-			citationListName);
-
-		cre.setContent(citationList.getId().getBytes());
-		contentHostingService.commitResource(cre,
-			NotificationService.NOTI_NONE);
-		// Permission application
-		// osylSecurityService.applyPermissions(newId,SecurityInterface.ACCESS_PUBLIC);
-	    }
-
-	    if (addCollection(PUBLISH_DIRECTORY, null)) {
-		directoryId =
-			(osylSiteService.getCurrentSiteReference()
-				+ PUBLISH_DIRECTORY + "/").substring(8);
-		osylSecurityService.applyDirectoryPermissions(directoryId);
-	    }
-	}
     }
 
     /**

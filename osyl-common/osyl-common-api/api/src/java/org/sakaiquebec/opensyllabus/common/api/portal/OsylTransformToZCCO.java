@@ -41,11 +41,6 @@ public interface OsylTransformToZCCO {
 
     public final static String PUBLISH_COLL_PREFIX = "/group/";
 
-    public final static String PUBLISH_COLL_SUFFIX = "/publish/";
-
-    public static final String WORK_DIR = "work";
-
-    public static final String PUBLISH_DIR = "publish";
 
     public final static String SUMMER = "E";
 

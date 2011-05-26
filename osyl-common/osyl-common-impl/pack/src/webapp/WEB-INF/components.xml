@@ -86,9 +86,6 @@
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylConfigService" />
 		<property name="coRelationDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.CORelationDao" />
-		<property name="osylContentService"
-			ref="org.sakaiquebec.opensyllabus.common.api.OsylContentService" />
-	
 
 		<!-- BEGIN HEC ONLY SAKAI-2723 -->	
 		<property name="osylTransformToZCCO"

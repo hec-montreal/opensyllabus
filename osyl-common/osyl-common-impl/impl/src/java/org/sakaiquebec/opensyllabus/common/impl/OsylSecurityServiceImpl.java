@@ -192,65 +192,33 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 	    if (isCollection) {
 		ContentCollectionEdit edit =
 			contentHostingService.editCollection(resourceId);
-		// check if directory is work directory
-		if (ServerConfigurationService.getString(
-			"opensyllabus.publish.in.attachment").equals("true")) {
-		    if (!edit.getId().equals(
-			    contentHostingService.getSiteCollection(siteId))) {
-			if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
-			    edit.setPublicAccess();
-			}
-		    } else {
-			// directory is work directory, no public is allowed
-			log.warn("no public access of work directory allowed: "
-				+ edit.getId());
+		if (!edit.getId().equals(
+			contentHostingService.getSiteCollection(siteId))) {
+		    if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
+			edit.setPublicAccess();
 		    }
-
 		} else {
-		    if (!edit.getId().equals(
-			    contentHostingService.getSiteCollection(siteId)
-				    + OsylSiteService.WORK_DIRECTORY + "/")) {
-			if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
-			    edit.setPublicAccess();
-			}
-		    } else {
-			// directory is work directory, no public is allowed
-			log.warn("no public access of work directory allowed: "
-				+ edit.getId());
-		    }
+		    log.warn("no public access of work directory allowed: "
+			    + edit.getId());
 		}
+
 		contentHostingService.commitCollection(edit);
 	    }
 
 	    else {
 		ContentResourceEdit edit =
 			contentHostingService.editResource(resourceId);
-		// check if resource is in work directory
-		if (ServerConfigurationService.getString(
-			"opensyllabus.publish.in.attachment").equals("true")) {
-		    if (!resourceId.contains(contentHostingService
-			    .getSiteCollection(siteId))) {
-			if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
-			    edit.setPublicAccess();
-			}
-		    } else {
-			// resource is in work directory, no public is allowed
-			log.warn("no public access in work directory allowed: "
-				+ resourceId);
+		if (!resourceId.contains(contentHostingService
+			.getSiteCollection(siteId))) {
+		    if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
+			edit.setPublicAccess();
 		    }
 		} else {
-		    if (!resourceId.contains(contentHostingService
-			    .getSiteCollection(siteId)
-			    + OsylSiteService.WORK_DIRECTORY + "/")) {
-			if (SecurityInterface.ACCESS_PUBLIC.equals(permission)) {
-			    edit.setPublicAccess();
-			}
-		    } else {
-			// resource is in work directory, no public is allowed
-			log.warn("no public access in work directory allowed: "
-				+ resourceId);
-		    }
+		    // resource is in work directory, no public is allowed
+		    log.warn("no public access in work directory allowed: "
+			    + resourceId);
 		}
+
 		contentHostingService.commitResource(edit,
 			NotificationService.NOTI_NONE);
 	    }

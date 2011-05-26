@@ -48,18 +48,6 @@ public interface OsylService {
      */
     public static final String XSLT_DIRECTORY = "xslt";
 
-    /**
-     * Name of the chs folder in which the course outline content will be
-     * stored.
-     */
-    public static final String WORK_DIRECTORY = "work";
-
-    /**
-     * Name of the chs folder in which the course outline content will be
-     * published.
-     */
-    public static final String PUBLISH_DIRECTORY = "publish";
-
     /** Path to use to generate a valid URL of the citation list folder. */
     public static final String REFERENCES_PATH = "/citation/content/group/";
 

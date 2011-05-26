@@ -223,18 +223,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	this.osylConfigService = configService;
     }
 
-    /** The osyl content service to be injected by Spring */
-    private OsylContentService osylContentService;
-
-    /**
-     * Sets the {@link OsylContentService}.
-     *
-     * @param osylContentService
-     */
-    public void setOsylContentService(OsylContentService osylContentService) {
-	this.osylContentService = osylContentService;
-    }
-
     // BEGIN HEC ONLY SAKAI-2723
     /**
      * The transformation and transfer service to be injected by Spring
@@ -628,9 +616,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	};
 	try {
 	    securityService.pushAdvisor(advisor);
+	    Site site = osylSiteService.getSite(siteId);
+	    String siteName = site.getTitle();
 	    try {
-		contentHostingService.getResource(directory + siteId + ".pdf");
-		contentHostingService.removeResource(directory + siteId
+		contentHostingService.getResource(directory + siteName + ".pdf");
+		contentHostingService.removeResource(directory + siteName
 			+ ".pdf");
 	    } catch (PermissionException e1) {
 		e1.printStackTrace();
@@ -643,10 +633,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
 	    ContentResourceEdit newResource;
 	    try {
-		if (!collectionExists(directory))
-		    osylContentService.initSiteAttachments(siteId);
 		newResource =
-			contentHostingService.addResource(directory, siteId,
+			contentHostingService.addResource(directory, siteName,
 				".pdf", 1);
 		newResource.setContent(new BufferedInputStream(
 			new FileInputStream(f)));
@@ -671,6 +659,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    } catch (FileNotFoundException e) {
 		e.printStackTrace();
 	    }
+	} catch (IdUnusedException e) {
+	    log.warn("This is not a valid siteId: " + siteId, e);
 	} finally {
 	    securityService.popAdvisor();
 	}
