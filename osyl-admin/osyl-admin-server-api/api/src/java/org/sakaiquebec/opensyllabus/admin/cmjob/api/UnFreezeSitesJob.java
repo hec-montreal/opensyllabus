@@ -42,6 +42,9 @@ public interface UnFreezeSitesJob extends OsylAbstractQuartzJob {
 	public final static String ADMIN_CONTENT_FOLDER = "/content/group/opensyllabusAdmin/";
     public final static String CONFIGFORLDER = ADMIN_CONTENT_FOLDER + "config/";  
     
+	public final static String[] DEFAULT_TOOLS = { "sakai.opensyllabus.tool",
+		"sakai.assignment.grades", "sakai.resources", "sakai.siteinfo" };
+	
     //The site has a field "isfrozen"
     public final static String PROP_SITE_ISFROZEN = "isfrozen";
     

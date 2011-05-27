@@ -39,7 +39,10 @@ public interface FreezeSitesAfterSessionJob extends OsylAbstractQuartzJob {
 	//Folder that contains all the configuration files
 	public final static String ADMIN_CONTENT_FOLDER = "/content/group/opensyllabusAdmin/";
     public final static String CONFIGFORLDER = ADMIN_CONTENT_FOLDER + "config/";
-
+    
+	public final static String[] DEFAULT_TOOLS = { "sakai.opensyllabus.tool",
+			"sakai.assignment.grades", "sakai.resources", "sakai.siteinfo" };
+    
     //Do you want to freeze this site?
     public final static String YES = "true";
     public final static String NOT = "false";
