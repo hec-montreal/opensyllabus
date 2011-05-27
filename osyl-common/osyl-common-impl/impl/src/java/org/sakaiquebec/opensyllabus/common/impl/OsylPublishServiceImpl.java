@@ -577,10 +577,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    File f = createPrintVersion(coSerializedAttendee, webappdir);
 	    if (f != null) {
 		String publishDirectory = "";
-		Site site = osylSiteService.getSite(siteId);
 		publishDirectory =
 			ContentHostingService.ATTACHMENTS_COLLECTION
-				+ site.getTitle()
+				+ siteId
 				+ "/"
 				+ OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
 				+ "/";
@@ -988,7 +987,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		    Site site = osylSiteService.getSite(siteId);
 		    this_publish_directory =
 			    ContentHostingService.ATTACHMENTS_COLLECTION
-				    + site.getTitle()
+				    + site.getId()
 				    + "/"
 				    + OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
 				    + "/"

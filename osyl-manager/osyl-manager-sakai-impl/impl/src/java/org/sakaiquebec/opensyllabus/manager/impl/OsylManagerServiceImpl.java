@@ -1812,7 +1812,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 
 	// We remove all resources in the publish directory collection
-	osylContentService.initSiteAttachments(newSite.getTitle());
+	osylContentService.initSiteAttachments(newSite);
 
 	// we hide work directory
 	ContentCollectionEdit cce =

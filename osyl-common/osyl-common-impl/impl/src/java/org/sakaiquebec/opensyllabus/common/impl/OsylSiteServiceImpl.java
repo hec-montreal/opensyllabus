@@ -703,7 +703,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		// we add the directories
 		String directoryId;
 
-		osylContentService.initSiteAttachments(site.getTitle());
+		osylContentService.initSiteAttachments(site);
 		directoryId =
 			contentHostingService.getSiteCollection(site.getId());
 		ContentCollectionEdit cce =
@@ -825,7 +825,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		// SAKAI-2160
 		String directoryId;
 
-		osylContentService.initSiteAttachments(site.getTitle());
+		osylContentService.initSiteAttachments(site);
 		directoryId =
 			contentHostingService.getSiteCollection(site.getId());
 		ContentCollectionEdit cce =

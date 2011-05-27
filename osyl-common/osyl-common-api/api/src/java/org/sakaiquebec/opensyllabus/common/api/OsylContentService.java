@@ -33,6 +33,7 @@ import org.sakaiproject.exception.OverQuotaException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.exception.TypeException;
+import org.sakaiproject.site.api.Site;
 
 /**
  * Here we will manage (create, remove) all the published resources. The
@@ -54,9 +55,10 @@ public interface OsylContentService {
      * Creates the folder where all the published resources associated to
      * OpenSyllabus will be saved.
      * 
-     * @param siteName the name that will be used as collection name
+     * @param site is that will have a new collection associated to in the
+     *            attachment folder
      */
-    public void initSiteAttachments(String siteName);
+    public void initSiteAttachments(Site site);
 
     /**
      * Creates a collection with the given collection id locked for update.

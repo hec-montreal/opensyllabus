@@ -360,7 +360,7 @@ public class OsylServiceImpl implements OsylService {
 			+ OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
 			+ "/";
 	if (!collectionExist(directoryId))
-	    osylContentService.initSiteAttachments(site.getTitle());
+	    osylContentService.initSiteAttachments(site);
 
 	directoryId = (osylSiteService.getCurrentSiteReference()).substring(8);
 

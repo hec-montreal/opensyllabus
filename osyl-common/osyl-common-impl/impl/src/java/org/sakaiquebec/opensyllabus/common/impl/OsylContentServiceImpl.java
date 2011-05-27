@@ -38,6 +38,8 @@ import org.sakaiproject.exception.OverQuotaException;
 import org.sakaiproject.exception.PermissionException;
 import org.sakaiproject.exception.ServerOverloadException;
 import org.sakaiproject.exception.TypeException;
+import org.sakaiproject.site.api.Site;
+import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.util.Validator;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 
@@ -59,6 +61,7 @@ public class OsylContentServiceImpl implements OsylContentService {
 	    ContentHostingService contentHostingService) {
 	this.contentHostingService = contentHostingService;
     }
+
 
     private static final Log log =
 	    LogFactory.getLog(OsylContentServiceImpl.class);
@@ -96,21 +99,25 @@ public class OsylContentServiceImpl implements OsylContentService {
     }
 
     /** {@inheritDoc} */
-    public void initSiteAttachments(String siteName) {
+    public void initSiteAttachments(Site site) {
 
+	String siteId = site.getId();
+	String siteTitle = site.getTitle();
 	// Make sure the site name can be used as a collection id
-	Validator.checkResourceId(siteName);
+	Validator.checkResourceId(siteId);
+	
 	String osylToolName = OPENSYLLABUS_ATTACHEMENT_PREFIX;
 
 	// We create the site collection
 	String collectionId =
-		ContentHostingService.ATTACHMENTS_COLLECTION + siteName;
+		ContentHostingService.ATTACHMENTS_COLLECTION + siteId;
 	ContentCollectionEdit collection = null;
 	if (contentHostingService.isCollection(collectionId))
 	    try {
 		collection =
 			(ContentCollectionEdit) contentHostingService
 				.getCollection(collectionId);
+		
 	    } catch (IdUnusedException e) {
 		log.info("The folder " + collectionId + " does not exist.");
 	    } catch (PermissionException e) {
@@ -124,7 +131,7 @@ public class OsylContentServiceImpl implements OsylContentService {
 	    try {
 		collection = contentHostingService.addCollection(collectionId);
 		collection.getPropertiesEdit().addProperty(
-			ResourceProperties.PROP_DISPLAY_NAME, siteName);
+			ResourceProperties.PROP_DISPLAY_NAME, siteTitle);
 		contentHostingService.commitCollection(collection);
 	    } catch (IdUsedException e) {
 		log.info("The collection " + collectionId + " already exists.");

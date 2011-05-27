@@ -605,11 +605,12 @@ public class OsylTextToolbar extends Composite {
 	String url = GWT.getModuleBaseURL();
 	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
 	String siteId = OsylController.getInstance().getSiteId();
+	String siteTitle = OsylController.getInstance().getCOSerialized().getTitle();
 	String downloadUrl;
 
 	downloadUrl =
 		serverId + "/sdata/c/attachment/" + siteId + "/OpenSyllabus/"
-			+ siteId + ".pdf?child=" + siteId;
+			+ siteTitle + ".pdf?child=" + siteId;
 
 	Window.open(downloadUrl, "_blank", "");
     }

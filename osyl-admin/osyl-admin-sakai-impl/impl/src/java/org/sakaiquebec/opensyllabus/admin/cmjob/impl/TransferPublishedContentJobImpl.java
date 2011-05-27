@@ -135,7 +135,7 @@ public class TransferPublishedContentJobImpl extends OsylAbstractQuartzJobImpl
 	    siteTitle = site.getTitle();
 	    contentSid = contentHostingService.getSiteCollection(site.getId());
 	    // create site folder and OpenSyllabus folder in attachments
-	    osylContentService.initSiteAttachments(siteTitle);
+	    osylContentService.initSiteAttachments(site);
 
 	    // move publish content
 	    contentDid =
