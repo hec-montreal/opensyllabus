@@ -21,6 +21,7 @@
 
 package org.sakaiquebec.opensyllabus.portal.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,6 +59,10 @@ public class OsylPortalServiceImpl implements OsylPortalService {
      * Our logger
      */
     private static Log log = LogFactory.getLog(OsylPortalServiceImpl.class);
+    
+    private Map<String,List<CODirectorySite>> courseListByAcadCareerMap;
+    
+    private Map<String,List<CODirectorySite>> courseListByResponsibleMap;
 
     private CourseManagementService courseManagementService;
 
@@ -76,11 +81,32 @@ public class OsylPortalServiceImpl implements OsylPortalService {
      * Init method called right after Spring injection.
      */
     public void init() {
-
+	buildCoursesMaps();
+    }
+    
+    private void buildCoursesMaps(){
+	String webappDir=
+	 System.getProperty("catalina.home") + File.separator
+	    + "webapps" + File.separator
+	    + "osyl-portal-sakai-tool";// Ugly but don't know how
+	
+	//ACAD_CARRER
+	Map<String,List<CODirectorySite>> temp_courseListByAcadCareerMap = new HashMap<String, List<CODirectorySite>>();
+	for(String acad_career:ACAD_CARREERS){
+	    temp_courseListByAcadCareerMap.put(acad_career, buildCoursesListForAcadCareer(acad_career, webappDir));
+	}
+	courseListByAcadCareerMap=temp_courseListByAcadCareerMap;
+	
+	//RESPONSIBLE
+	Map<String,List<CODirectorySite>> temp_courseListByResponsibleMap = new HashMap<String, List<CODirectorySite>>();
+	for(String responsible:getAllResponsibles()){
+	    temp_courseListByResponsibleMap.put(responsible, buildCoursesListForResponsible(responsible, webappDir));
+	}
+	courseListByResponsibleMap=temp_courseListByResponsibleMap;
+	
     }
 
-    @Override
-    public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer, String webappDir) {
+    private List<CODirectorySite> buildCoursesListForAcadCareer(String acadCareer, String webappDir) {
 	List<CODirectorySite> coursesList = new ArrayList<CODirectorySite>();
 	List<String> coursesName = new ArrayList<String>();
 	Set<CourseOffering> courseOfferings =
@@ -98,8 +124,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	return coursesList;
     }
 
-    @Override
-    public List<CODirectorySite> getCoursesForResponsible(String responsible, String webappDir) {
+    private List<CODirectorySite> buildCoursesListForResponsible(String responsible, String webappDir) {
 	List<String> coursesName = new ArrayList<String>();
 	List<CODirectorySite> coursesList = new ArrayList<CODirectorySite>();
 	Set<Section> sections =
@@ -125,8 +150,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		.getCanonicalCourseEid()));
 	coSite.setCourseName(courseOffering.getTitle());
 	coSite.setProgram(courseOffering.getAcademicCareer());
-	coSite.setCredits("3");
-	coSite.setRequirements("Vous devez avoir suivi <br> bal <b>bla</b>");
+	coSite.setCredits("3");//TODO
+	coSite.setRequirements("Vous devez avoir suivi <br> bal <b>bla</b>");//TODO
 
 	Set<Section> sections =
 		courseManagementService.getSections(courseOffering.getEid());
@@ -316,5 +341,14 @@ public class OsylPortalServiceImpl implements OsylPortalService {
     public List<String> getAllResponsibles() {
 	return courseManagementService.getSectionCategories();
     }
+    
+    @Override
+    public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer) {
+	return courseListByAcadCareerMap.get(acadCareer);
+    }
 
+    @Override
+    public List<CODirectorySite> getCoursesForResponsible(String responsible) {
+	return courseListByResponsibleMap.get(responsible);
+    }
 }

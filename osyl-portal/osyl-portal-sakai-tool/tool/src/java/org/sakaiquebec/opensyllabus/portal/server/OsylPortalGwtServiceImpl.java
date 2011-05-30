@@ -29,7 +29,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiquebec.opensyllabus.portal.client.rpc.OsylPortalGwtService;
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
-import org.sakaiquebec.opensyllabus.shared.model.COSite;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -69,26 +68,20 @@ public class OsylPortalGwtServiceImpl extends RemoteServiceServlet implements
 
     @Override
     public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer) {
-	String webappDir = getServletContext().getRealPath("/");
 	return osylPortalServices.getOsylPortalService()
-		.getCoursesForAcadCareer(acadCareer,webappDir);
+		.getCoursesForAcadCareer(acadCareer);
 
     }
 
     @Override
     public List<CODirectorySite> getCoursesForResponsible(String responsible) {
-	String webappDir = getServletContext().getRealPath("/");
 	return osylPortalServices.getOsylPortalService()
-		.getCoursesForResponsible(responsible,webappDir);
+		.getCoursesForResponsible(responsible);
     }
 
     @Override
     public List<String> getAllResponsibles() {
 	return osylPortalServices.getOsylPortalService().getAllResponsibles();
-    }
-    
-    public String getServerName(){
-	return null;
     }
 
 }

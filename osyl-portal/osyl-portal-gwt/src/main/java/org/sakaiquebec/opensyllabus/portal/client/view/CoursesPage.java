@@ -28,6 +28,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
 import com.google.gwt.gen2.table.override.client.FlexTable.FlexCellFormatter;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
@@ -56,6 +57,7 @@ public class CoursesPage extends AbstractPortalView {
 	mainPanel = new VerticalPanel();
 	initView();
 	initWidget(mainPanel);
+	History.newItem(Integer.toString(this.hashCode()));
 
     }
 

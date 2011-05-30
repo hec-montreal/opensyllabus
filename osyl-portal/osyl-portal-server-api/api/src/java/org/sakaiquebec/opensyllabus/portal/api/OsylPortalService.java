@@ -46,9 +46,9 @@ public interface OsylPortalService {
     public static final List<String> ACAD_CARREERS = Arrays.asList(new String[] {
 	    "BAA", "APRE", "CERT", "MBA", "MSC", "DES", "PHD" });
 
-    public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer, String webappDir);
+    public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer);
 
-    public List<CODirectorySite> getCoursesForResponsible(String responsible, String webappDir);
+    public List<CODirectorySite> getCoursesForResponsible(String responsible);
 
     public List<String> getAllResponsibles();
 
