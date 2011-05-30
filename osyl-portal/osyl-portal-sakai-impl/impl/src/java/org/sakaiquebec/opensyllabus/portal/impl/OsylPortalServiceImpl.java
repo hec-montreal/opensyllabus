@@ -81,7 +81,11 @@ public class OsylPortalServiceImpl implements OsylPortalService {
      * Init method called right after Spring injection.
      */
     public void init() {
+	log.info("Start building course maps");
+	long start = System.currentTimeMillis();
 	buildCoursesMaps();
+	log.info("Finished building course maps in "
+		+ (System.currentTimeMillis() - start) + " ms");
     }
     
     private void buildCoursesMaps(){
