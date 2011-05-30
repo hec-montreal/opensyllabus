@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -81,18 +83,25 @@ public class OsylPortalServiceImpl implements OsylPortalService {
      * Init method called right after Spring injection.
      */
     public void init() {
-	log.info("Start building course maps");
-	long start = System.currentTimeMillis();
-	buildCoursesMaps();
-	log.info("Finished building course maps in "
-		+ (System.currentTimeMillis() - start) + " ms");
+	Timer t = new Timer();
+	TimerTask timerTask = new TimerTask() {
+	    
+	    @Override
+	    public void run() {
+		buildCoursesMaps();
+	    }
+	};
+	t.schedule(timerTask, 5000, 86400000);
     }
     
     private void buildCoursesMaps(){
+	log.info("Start building course maps");
+	long start = System.currentTimeMillis();
+	
 	String webappDir=
 	 System.getProperty("catalina.home") + File.separator
 	    + "webapps" + File.separator
-	    + "osyl-portal-sakai-tool";// Ugly but don't know how
+	    + "osyl-portal-sakai-tool"+File.separator;// Ugly but don't know how
 	
 	//ACAD_CARRER
 	Map<String,List<CODirectorySite>> temp_courseListByAcadCareerMap = new HashMap<String, List<CODirectorySite>>();
@@ -108,6 +117,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	}
 	courseListByResponsibleMap=temp_courseListByResponsibleMap;
 	
+	log.info("Finished building course maps in "
+		+ (System.currentTimeMillis() - start) + " ms");
     }
 
     private List<CODirectorySite> buildCoursesListForAcadCareer(String acadCareer, String webappDir) {
