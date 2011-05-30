@@ -27,8 +27,10 @@ import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -41,7 +43,15 @@ public class NavigationHomePage extends AbstractPortalView {
     private VerticalPanel mainPanel;
 
     private static final List<String> progs = Arrays.asList(new String[] {
-	    "BAA", "APRE", "CERT", "MBA", "MSC", "DES", "PHD" });
+	    "BAA", "APRE", "CERT", "MBA", "MSC", "DESS", "PHD" });
+
+    private static final List<String> responsible_part1 = Arrays
+	    .asList(new String[] { "IEA", "FINANCE", "GOL", "GRH", "INTERNAT",
+		    "MQG", "SC.COMPT.", "TI", "MARKETING", "MNGT" });
+
+    private static final List<String> responsible_part2 = Arrays
+	    .asList(new String[] { "BUR.REGIST", "QUAL.COMM.", "BAA", "CERTIFICAT",
+		    "DIPLOMES", "MBA", "MSC", "DOCTORAT" });
 
     private List<String> responsiblesList;
 
@@ -61,7 +71,9 @@ public class NavigationHomePage extends AbstractPortalView {
 	super();
 	mainPanel = new VerticalPanel();
 	initWidget(mainPanel);
-	getController().getAllResponsibles(callback);
+	// getController().getAllResponsibles(callback);
+	initView();
+	History.newItem(Integer.toString(this.hashCode()));
     }
 
     private void initView() {
@@ -74,66 +86,88 @@ public class NavigationHomePage extends AbstractPortalView {
 	t2.setStylePrimaryName("NHP_titre2");
 	mainPanel.add(t2);
 
-	for (final String s : progs) {
-	    Label l = new Label(getMessage("acad_career." + s));
-	    l.setStylePrimaryName("NHP_link");
-	    l.addClickHandler(new ClickHandler() {
+	mainPanel.add(getProgramLabel("BAA"));
+	Label apre_label = getProgramLabel("APRE");
+	apre_label.setText("- "+apre_label.getText());
+	mainPanel.add(apre_label);
+	mainPanel.add(new HTML("&nbsp;"));
+	mainPanel.add(getProgramLabel("CERT"));
+	mainPanel.add(new HTML("&nbsp;"));
+	mainPanel.add(getProgramLabel("MBA"));
+	mainPanel.add(getProgramLabel("MSC"));
+	mainPanel.add(getProgramLabel("DES"));
+	mainPanel.add(new HTML("&nbsp;"));
+	mainPanel.add(getProgramLabel("PHD"));
 
-		public void onClick(ClickEvent event) {
-		    AsyncCallback<List<CODirectorySite>> callback =
-			    new AsyncCallback<List<CODirectorySite>>() {
-
-				public void onFailure(Throwable caught) {
-				}
-
-				public void onSuccess(
-					List<CODirectorySite> result) {
-				    getController().setView(
-					    new CoursesPage(
-						    getMessage("acad_career."
-							    + s), result));
-
-				}
-			    };
-		    getController().getCoursesForAcadCareer(s, callback);
-
-		}
-	    });
-	    mainPanel.add(l);
-	}
 	Label t3 = new Label(getMessage("courseListByResponsible"));
 	t3.setStylePrimaryName("NHP_titre2");
 	mainPanel.add(t3);
 
-	for (final String responsible : responsiblesList) {
-	    Label l = new Label(getMessage("responsible." + responsible));
-	    l.setStylePrimaryName("NHP_link");
-	    l.addClickHandler(new ClickHandler() {
-
-		public void onClick(ClickEvent event) {
-		    AsyncCallback<List<CODirectorySite>> callback =
-			    new AsyncCallback<List<CODirectorySite>>() {
-
-				public void onFailure(Throwable caught) {
-				}
-
-				public void onSuccess(
-					List<CODirectorySite> result) {
-				    getController().setView(
-					    new CoursesPage(
-						    getMessage("responsible."
-							    + responsible),
-						    result));
-
-				}
-			    };
-		    getController().getCoursesForResponsible(responsible,
-			    callback);
-
-		}
-	    });
-	    mainPanel.add(l);
+	for (final String responsible : responsible_part1) {
+	    mainPanel.add(getResponsibleLabel(responsible));
 	}
+
+	mainPanel.add(new HTML("&nbsp;"));
+
+	for (final String responsible : responsible_part2) {
+	    mainPanel.add(getResponsibleLabel(responsible));
+	}
+    }
+
+    private Label getProgramLabel(final String program) {
+	Label l = new Label(getMessage("acad_career." + program));
+	l.setStylePrimaryName("NHP_link");
+	l.addClickHandler(new ClickHandler() {
+
+	    public void onClick(ClickEvent event) {
+		AsyncCallback<List<CODirectorySite>> callback =
+			new AsyncCallback<List<CODirectorySite>>() {
+
+			    public void onFailure(Throwable caught) {
+			    }
+
+			    public void onSuccess(List<CODirectorySite> result) {
+				getController().setView(
+					new CoursesPage(
+						getMessage("acad_career."
+							+ program), result));
+
+			    }
+			};
+		getController().getCoursesForAcadCareer(program, callback);
+
+	    }
+	});
+	return l;
+    }
+
+    private Label getResponsibleLabel(final String responsible) {
+	Label l = new Label(getMessage("responsible." + responsible));
+	l.setStylePrimaryName("NHP_link");
+	l.addClickHandler(new ClickHandler() {
+
+	    public void onClick(ClickEvent event) {
+		AsyncCallback<List<CODirectorySite>> callback =
+			new AsyncCallback<List<CODirectorySite>>() {
+
+			    public void onFailure(Throwable caught) {
+			    }
+
+			    public void onSuccess(List<CODirectorySite> result) {
+				getController()
+					.setView(
+						new CoursesPage(
+							getMessage("responsible."
+								+ responsible),
+							result));
+
+			    }
+			};
+		getController().getCoursesForResponsible(responsible, callback);
+
+	    }
+	});
+	return l;
     }
 
 }

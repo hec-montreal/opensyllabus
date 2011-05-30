@@ -21,6 +21,7 @@
 
 package org.sakaiquebec.opensyllabus.portal.api;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
@@ -41,6 +42,9 @@ public interface OsylPortalService {
     public final static String WINTER = "H";
 
     public final static String FALL = "A";
+    
+    public static final List<String> ACAD_CARREERS = Arrays.asList(new String[] {
+	    "BAA", "APRE", "CERT", "MBA", "MSC", "DES", "PHD" });
 
     public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer, String webappDir);
 

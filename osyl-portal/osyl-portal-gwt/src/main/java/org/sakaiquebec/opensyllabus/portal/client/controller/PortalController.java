@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.portal.client.controller;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.portal.client.OsylPortalEntryPoint;
+import org.sakaiquebec.opensyllabus.portal.client.view.AbstractPortalView;
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -53,7 +54,7 @@ public class PortalController {
 	this.osylPortalEntryPoint = osylPortalEntryPoint2;
     }
 
-    public void setView(Widget view) {
+    public void setView(AbstractPortalView view) {
 	osylPortalEntryPoint.setView(view);
     }
 

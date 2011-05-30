@@ -21,25 +21,37 @@
 
 package org.sakaiquebec.opensyllabus.portal.client;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.sakaiquebec.opensyllabus.portal.client.controller.PortalController;
+import org.sakaiquebec.opensyllabus.portal.client.view.AbstractPortalView;
 import org.sakaiquebec.opensyllabus.portal.client.view.NavigationHomePage;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class OsylPortalEntryPoint implements EntryPoint {
+public class OsylPortalEntryPoint implements EntryPoint, ValueChangeHandler<String> {
 
+    private Map<String,AbstractPortalView> views;
+    
     private RootPanel rootPanel;
 
     /** {@inheritDoc} */
     public void onModuleLoad() {
 	rootPanel = RootPanel.get();
+	views=new HashMap<String, AbstractPortalView>();
+	History.addValueChangeHandler(this);
 	PortalController.getInstance().setEntryPoint(this);
 	initView();
 
@@ -47,7 +59,7 @@ public class OsylPortalEntryPoint implements EntryPoint {
 
     private void initView() {
 	setView(new NavigationHomePage());
-	setSakaiIFrameHeight(650);
+	setSakaiIFrameHeight(660);
     }
     
     public static native Element getSakaiToolIframe() /*-{
@@ -59,9 +71,16 @@ public class OsylPortalEntryPoint implements EntryPoint {
 	DOM.setStyleAttribute(getSakaiToolIframe(), "height", h + "px");
     }
     
-    public void setView(Widget view){
+    public void setView(AbstractPortalView view){
 	rootPanel.clear();
 	rootPanel.add(view);
+	if(!views.keySet().contains(Integer.toString(view.hashCode())))
+	    views.put(Integer.toString(view.hashCode()),view);
+    }
+
+    public void onValueChange(ValueChangeEvent<String> event) {
+	//Window.alert(event.getValue());
+	//setView(views.get(event.getValue()));
     }
     
 }
