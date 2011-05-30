@@ -570,7 +570,7 @@
 					</xsl:text>
 					<fo:inline font-size="10pt" color="blue" text-decoration="underline">
 						<fo:basic-link>
-							<xsl:attribute name="external-destination"></xsl:attribute>
+							<xsl:attribute name="external-destination">http://youruniversity.edu/info/about/plagiarism/fr/</xsl:attribute>
 							<xsl:text>En savoir plus sur le plagiat...</xsl:text>
 						</fo:basic-link>
 					</fo:inline>
@@ -586,7 +586,7 @@
 					</xsl:text>
 					<fo:inline font-size="10pt" color="blue" text-decoration="underline"> 
 						<fo:basic-link>
-							<xsl:attribute name="external-destination"></xsl:attribute><xsl:text>Learn more about plagiarism...</xsl:text>
+							<xsl:attribute name="external-destination">http://youruniversity.edu/info/about/plagiarism/en/</xsl:attribute><xsl:text>Learn more about plagiarism...</xsl:text>
 						</fo:basic-link>
 					</fo:inline>
 				</fo:block>
@@ -612,7 +612,7 @@
 					<xsl:text>Les étudiants sont priés de prendre connaissance de la politique d'utilisation de calculatrices lors d'examens lorsque celles-ci sont autorisées.</xsl:text> 
 					<fo:inline font-size="10pt" color="blue" text-decoration="underline">
 						<fo:basic-link>
-							<xsl:attribute name="external-destination">http://calculatrices.html</xsl:attribute>
+							<xsl:attribute name="external-destination">http://youruniversity.edu/info/about/calculators/fr/</xsl:attribute>
 							<xsl:text> En savoir plus sur la politique d'usage de calculatrices...</xsl:text>
 						</fo:basic-link>
 					</fo:inline>
@@ -623,7 +623,7 @@
 					<xsl:text>Please consult the </xsl:text>
 					<fo:inline font-size="10pt" color="blue" text-decoration="underline"> 
 						<fo:basic-link>
-							<xsl:attribute name="external-destination">http://calculators.html</xsl:attribute><xsl:text>calculator usage policy</xsl:text>
+							<xsl:attribute name="external-destination">http://youruniversity.edu/info/about/calculators/en/</xsl:attribute><xsl:text>calculator usage policy</xsl:text>
 						</fo:basic-link>
 					</fo:inline>
 					<xsl:text> during exams when applicable.</xsl:text>
