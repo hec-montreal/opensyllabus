@@ -36,21 +36,23 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class OsylPortalEntryPoint implements EntryPoint, ValueChangeHandler<String> {
+public class OsylPortalEntryPoint implements EntryPoint,
+	ValueChangeHandler<String> {
 
-    private Map<String,AbstractPortalView> views;
-    
+    private Map<String, AbstractPortalView> views;
+
+    private String currentView = "";
+
     private RootPanel rootPanel;
 
     /** {@inheritDoc} */
     public void onModuleLoad() {
 	rootPanel = RootPanel.get();
-	views=new HashMap<String, AbstractPortalView>();
+	views = new HashMap<String, AbstractPortalView>();
 	History.addValueChangeHandler(this);
 	PortalController.getInstance().setEntryPoint(this);
 	initView();
@@ -61,26 +63,30 @@ public class OsylPortalEntryPoint implements EntryPoint, ValueChangeHandler<Stri
 	setView(new NavigationHomePage());
 	setSakaiIFrameHeight(660);
     }
-    
+
     public static native Element getSakaiToolIframe() /*-{
     var elm = $wnd.parent.document.getElementById($wnd.name);
     return (elm != null ? elm : $wnd.document.body);
     }-*/;
-    
+
     private static void setSakaiIFrameHeight(int h) {
 	DOM.setStyleAttribute(getSakaiToolIframe(), "height", h + "px");
     }
-    
-    public void setView(AbstractPortalView view){
+
+    public void setView(AbstractPortalView view) {
 	rootPanel.clear();
 	rootPanel.add(view);
-	if(!views.keySet().contains(Integer.toString(view.hashCode())))
-	    views.put(Integer.toString(view.hashCode()),view);
+	if (!views.keySet().contains(view.getViewKey()))
+	    views.put(view.getViewKey(), view);
     }
 
     public void onValueChange(ValueChangeEvent<String> event) {
-	//Window.alert(event.getValue());
-	//setView(views.get(event.getValue()));
+	String newView = event.getValue();
+	if (!currentView.equals(newView)) {
+	    AbstractPortalView view = views.get(newView);
+	    if (view != null)
+		setView(view);
+	}
     }
-    
+
 }

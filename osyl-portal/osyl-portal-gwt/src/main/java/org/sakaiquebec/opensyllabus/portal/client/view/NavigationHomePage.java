@@ -27,7 +27,6 @@ import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
@@ -50,8 +49,8 @@ public class NavigationHomePage extends AbstractPortalView {
 		    "MQG", "SC.COMPT.", "TI", "MARKETING", "MNGT" });
 
     private static final List<String> responsible_part2 = Arrays
-	    .asList(new String[] { "BUR.REGIST", "QUAL.COMM.", "BAA", "CERTIFICAT",
-		    "DIPLOMES", "MBA", "MSC", "DOCTORAT" });
+	    .asList(new String[] { "BUR.REGIST", "QUAL.COMM.", "BAA",
+		    "CERTIFICAT", "DIPLOMES", "MBA", "MSC", "DOCTORAT" });
 
     private List<String> responsiblesList;
 
@@ -68,12 +67,10 @@ public class NavigationHomePage extends AbstractPortalView {
     };
 
     public NavigationHomePage() {
-	super();
+	super("NavigationHomePage");
 	mainPanel = new VerticalPanel();
 	initWidget(mainPanel);
-	// getController().getAllResponsibles(callback);
 	initView();
-	History.newItem(Integer.toString(this.hashCode()));
     }
 
     private void initView() {
@@ -88,7 +85,7 @@ public class NavigationHomePage extends AbstractPortalView {
 
 	mainPanel.add(getProgramLabel("BAA"));
 	Label apre_label = getProgramLabel("APRE");
-	apre_label.setText("- "+apre_label.getText());
+	apre_label.setText("- " + apre_label.getText());
 	mainPanel.add(apre_label);
 	mainPanel.add(new HTML("&nbsp;"));
 	mainPanel.add(getProgramLabel("CERT"));
@@ -128,9 +125,8 @@ public class NavigationHomePage extends AbstractPortalView {
 
 			    public void onSuccess(List<CODirectorySite> result) {
 				getController().setView(
-					new CoursesPage(
-						getMessage("acad_career."
-							+ program), result));
+					new CoursesPage("acad_career."
+						+ program, result));
 
 			    }
 			};
@@ -154,12 +150,9 @@ public class NavigationHomePage extends AbstractPortalView {
 			    }
 
 			    public void onSuccess(List<CODirectorySite> result) {
-				getController()
-					.setView(
-						new CoursesPage(
-							getMessage("responsible."
-								+ responsible),
-							result));
+				getController().setView(
+					new CoursesPage("responsible."
+						+ responsible, result));
 
 			    }
 			};

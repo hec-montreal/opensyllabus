@@ -50,14 +50,13 @@ public class CoursesPage extends AbstractPortalView {
     //
     // private DescriptionView descriptionView;
 
-    public CoursesPage(String labelText, List<CODirectorySite> courses) {
-	super();
-	label = new Label(labelText);
+    public CoursesPage(String key, List<CODirectorySite> courses) {
+	super("CoursesPage_"+key);
+	label = new Label(getMessage(key));
 	this.courses = courses;
 	mainPanel = new VerticalPanel();
 	initView();
 	initWidget(mainPanel);
-	History.newItem(Integer.toString(this.hashCode()));
 
     }
 

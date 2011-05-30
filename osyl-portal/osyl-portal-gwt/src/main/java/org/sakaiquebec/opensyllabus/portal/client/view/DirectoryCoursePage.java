@@ -43,12 +43,11 @@ public class DirectoryCoursePage extends AbstractPortalView {
     private VerticalPanel mainPanel;
 
     public DirectoryCoursePage(CODirectorySite site) {
-	super();
+	super("DirectoryCoursePage_"+site.getCourseName());
 	this.site = site;
 	mainPanel = new VerticalPanel();
 	initView();
 	initWidget(mainPanel);
-	History.newItem(Integer.toString(this.hashCode()));
     }
 
     private void initView() {

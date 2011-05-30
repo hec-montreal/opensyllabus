@@ -27,6 +27,7 @@ import org.sakaiquebec.opensyllabus.portal.client.image.PortalImages;
 import org.sakaiquebec.opensyllabus.portal.client.message.OsylPortalMessages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Composite;
 
 /**
@@ -35,12 +36,20 @@ import com.google.gwt.user.client.ui.Composite;
  */
 public class AbstractPortalView extends Composite {
 
+    private String viewKey;
+    
     private OsylPortalMessages messages = (OsylPortalMessages) GWT
 	    .create(OsylPortalMessages.class);
     
     private PortalImages images = (PortalImages) GWT
     .create(PortalImages.class);
 
+    
+    public AbstractPortalView(String key){
+	this.setViewKey(key);
+	History.newItem(viewKey);
+    }
+    
     public String getMessage(String key) {
 	try {
 	    return messages.getString(key.replace(".", "_"));
@@ -55,6 +64,14 @@ public class AbstractPortalView extends Composite {
     
     public PortalImages getImages(){
 	return images;
+    }
+
+    public void setViewKey(String viewKey) {
+	this.viewKey = viewKey;
+    }
+
+    public String getViewKey() {
+	return viewKey;
     }
 
 }
