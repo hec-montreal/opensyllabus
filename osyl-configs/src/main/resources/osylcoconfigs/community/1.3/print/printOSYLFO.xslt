@@ -214,7 +214,7 @@
   <xsl:param name="period"/>
 		<fo:block>
 			<fo:external-graphic content-height="41px" vertical-align="middle" padding-top="-10pt">
-				<xsl:attribute name="src"><xsl:value-of select="$imagePath"/>img/u.gif</xsl:attribute>
+				<xsl:attribute name="src"><xsl:value-of select="$imagePath"/>img/Sakai.png</xsl:attribute>
 			</fo:external-graphic>
 		</fo:block>
 		<fo:block text-align="right" margin-top="-20pt" font-size="14pt" padding-left="0pt" font-weight="bold"><xsl:value-of select="/OSYL/CO/program[@type='universityName']"/></fo:block>
