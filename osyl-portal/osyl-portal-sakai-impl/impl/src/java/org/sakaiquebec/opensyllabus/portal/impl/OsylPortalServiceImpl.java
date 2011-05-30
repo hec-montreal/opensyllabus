@@ -91,7 +91,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		buildCoursesMaps();
 	    }
 	};
-	t.schedule(timerTask, 5000, 86400000);
+	t.schedule(timerTask, 50000, 86400000);
     }
     
     private void buildCoursesMaps(){
