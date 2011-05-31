@@ -90,7 +90,6 @@ public interface OsylPublishService {
     public void createEditionPrintVersion(COSerialized cos, String webappdir)
 	    throws Exception;
     
-    //TODO temporary to be delete after 2.6.1->2.7.1 migration
     public void createPublishPrintVersion(String siteId, String webappdir) throws PdfGenerationException;
 
     public void unpublish(String siteId, String webappDir) throws Exception, PermissionException;

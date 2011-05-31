@@ -68,8 +68,9 @@ public class OsylMainView extends OsylViewableComposite implements
     protected OsylDecoratorPanel treeDecoratorPanel;
     protected OsylDecoratorPanel workspaceDecoratorPanel;
     protected Label courseTitle;
+    private String access;
     private Label treeHeaderLabel;
-	private int workspaceInnerWidth;
+    private int workspaceInnerWidth;
 
     public OsylMainView(COModelInterface model, OsylController osylController) {
 	super(model, osylController);
@@ -92,7 +93,7 @@ public class OsylMainView extends OsylViewableComposite implements
 	try {
 	    coTitle = getController().getCOSerialized().getTitle();
 	    coIsFrozen = getController().getCOSerialized().isCoIsFrozen();
-	    
+
 	} catch (NullPointerException e) {
 	    coTitle = null;
 	}
@@ -103,9 +104,9 @@ public class OsylMainView extends OsylViewableComposite implements
 	}
 	// If the site is frozen, we add a message
 	if (coIsFrozen) {
-		msgAsFrozenSite = " - \"" + getCoMessage("thissiteisfrozen") + "\"";
+	    msgAsFrozenSite = " - \"" + getCoMessage("thissiteisfrozen") + "\"";
 	}
-		
+
 	String suffix = "";
 	if (!getController().isReadOnly()) {
 	    suffix = getUiMessage("edition_suffix");
@@ -113,7 +114,7 @@ public class OsylMainView extends OsylViewableComposite implements
 	    suffix = getUiMessage("preview_suffix");
 	}
 	String course = coTitle + " " + suffix;
-	course = course.replaceAll("\\.00","");
+	course = course.replaceAll("\\.00", "");
 	course = course + msgAsFrozenSite;
 	courseTitle = new Label(course);
 	courseTitle.setStylePrimaryName("Osyl-MainPanel-Title");
@@ -149,9 +150,10 @@ public class OsylMainView extends OsylViewableComposite implements
 
 	// Create and set the OpenSyllabus TreeView
 	setOsylTreeView(new OsylTreeView(getModel(), getController()));
-	osylHorizontalSplitPanel.setTempSplitPosition(osylHorizontalSplitPanel.getInitialSplitPosition());
-	osylHorizontalSplitPanel.setSplitPosition(
-			osylHorizontalSplitPanel.getInitialSplitPosition());
+	osylHorizontalSplitPanel.setTempSplitPosition(osylHorizontalSplitPanel
+		.getInitialSplitPosition());
+	osylHorizontalSplitPanel.setSplitPosition(osylHorizontalSplitPanel
+		.getInitialSplitPosition());
 	treeDecoratorPanel = new OsylDecoratorPanel();
 	treeDecoratorPanel.setWidget(getOsylTreeView());
 	treeDecoratorPanel.setStylePrimaryName("Osyl-TreeView");
@@ -171,10 +173,12 @@ public class OsylMainView extends OsylViewableComposite implements
 	workspaceDecoratorPanel.setStylePrimaryName("Osyl-WorkspaceView");
 	workspaceDecoratorPanel.setTitle(getWorkspaceTitleView());
 	horizontalSplitPanel.setRightWidget(workspaceDecoratorPanel);
-	setScrollBar(DOM.getChild(DOM.getChild(horizontalSplitPanel
-		.getElement(), 0), 0), "hidden");
-	setScrollBar(DOM.getChild(DOM.getChild(horizontalSplitPanel
-		.getElement(), 0), 2), "hidden");
+	setScrollBar(DOM.getChild(
+		DOM.getChild(horizontalSplitPanel.getElement(), 0), 0),
+		"hidden");
+	setScrollBar(DOM.getChild(
+		DOM.getChild(horizontalSplitPanel.getElement(), 0), 2),
+		"hidden");
 	subscribeChildrenViewsToLocalHandlers();
 	initWidget(getMainPanel());
 	initViewContext();
@@ -186,11 +190,11 @@ public class OsylMainView extends OsylViewableComposite implements
 	getOsylToolbarView().refreshView();
 	getWorkspaceView().refreshView();
 	getWorkspaceTitleView().refreshView();
-	
+
     }
-    
-    private void setScrollBar(Element e, String value){
-    	DOM.setStyleAttribute(e, "overflow", value);
+
+    private void setScrollBar(Element e, String value) {
+	DOM.setStyleAttribute(e, "overflow", value);
     }
 
     /**
@@ -314,48 +318,60 @@ public class OsylMainView extends OsylViewableComposite implements
 
     public void onMouseMove(MouseMoveEvent event) {
     }
+
     public void resize() {
-    	resize(false);
+	resize(false);
     }
+
     public void resize(Boolean isWindowResized) {
 
-    int treeWidth = osylHorizontalSplitPanel.getComputedSplitPosition();
-    // Set the splitter position
-    if (isWindowResized) {
-    	if (osylHorizontalSplitPanel.isLeftElementVisible()) {
-    		treeWidth = osylHorizontalSplitPanel.getComputedSplitPosition(
-    			osylHorizontalSplitPanel.getSplitPosition());
-    		osylHorizontalSplitPanel.setSplitPosition(treeWidth);
-    	}else {
-    		treeWidth = 0;
-    	}
-    }
-    
-    int toolWidth = Math.max(OsylEditorEntryPoint.MIN_TOOL_WIDTH,
-    		OsylEditorEntryPoint.getInstance().getToolWidth() - 1);
-    
-    if (OsylEditorEntryPoint.isInternetExplorer()) {
-    	DOM.setStyleAttribute(getElement(), "width", toolWidth + "px");
-    }
-    // Set The tree width
+	int treeWidth = osylHorizontalSplitPanel.getComputedSplitPosition();
+	// Set the splitter position
+	if (isWindowResized) {
+	    if (osylHorizontalSplitPanel.isLeftElementVisible()) {
+		treeWidth =
+			osylHorizontalSplitPanel
+				.getComputedSplitPosition(osylHorizontalSplitPanel
+					.getSplitPosition());
+		osylHorizontalSplitPanel.setSplitPosition(treeWidth);
+	    } else {
+		treeWidth = 0;
+	    }
+	}
 
-	int treeInnerWidth = Math.max(0, treeWidth
-			- (treeDecoratorPanel.getCell(1, 0).getOffsetWidth() + treeDecoratorPanel
+	int toolWidth =
+		Math.max(OsylEditorEntryPoint.MIN_TOOL_WIDTH,
+			OsylEditorEntryPoint.getInstance().getToolWidth() - 1);
+
+	if (OsylEditorEntryPoint.isInternetExplorer()) {
+	    DOM.setStyleAttribute(getElement(), "width", toolWidth + "px");
+	}
+	// Set The tree width
+
+	int treeInnerWidth =
+		Math.max(0,
+			treeWidth
+				- (treeDecoratorPanel.getCell(1, 0)
+					.getOffsetWidth() + treeDecoratorPanel
 					.getCell(1, 2).getOffsetWidth()));
-		
+
 	DOM.setStyleAttribute(treeDecoratorPanel.getCell(0, 1), "width",
 		treeInnerWidth + "px");
 	DOM.setStyleAttribute(treeDecoratorPanel.getCell(1, 1), "width",
 		treeInnerWidth + "px");
 	int treeHeaderLabelLeftPadding = 35;
-	treeHeaderLabel.setWidth(Math.max(0,treeInnerWidth - treeHeaderLabelLeftPadding)
+	treeHeaderLabel.setWidth(Math.max(0, treeInnerWidth
+		- treeHeaderLabelLeftPadding)
 		+ "px");
 	int splitterWidth =
 		osylHorizontalSplitPanel.getSplitElement().getOffsetWidth();
-	
-	int workspaceWidth = toolWidth - (osylHorizontalSplitPanel.getSplitPosition() == 0 ? 0:treeWidth) - splitterWidth;
+
+	int workspaceWidth =
+		toolWidth
+			- (osylHorizontalSplitPanel.getSplitPosition() == 0 ? 0
+				: treeWidth) - splitterWidth;
 	setWorkspaceInnerWidth(workspaceWidth);
-	
+
 	osylWorkspaceTitleView.setWorkspaceTitleWidth();
 	// Set The tree height and the workspace height
 	int toolHeight =
@@ -372,37 +388,54 @@ public class OsylMainView extends OsylViewableComposite implements
 		innerHeight + "px");
 	setTreeItemsWidth();
     }
-    
+
     public void setWorkspaceInnerWidth(int width) {
-    	workspaceInnerWidth = Math.max(0,
-    			width
-    			- (workspaceDecoratorPanel.getCell(1, 0)
-    				.getOffsetWidth() + workspaceDecoratorPanel
-    				.getCell(1, 2).getOffsetWidth()));
-    	DOM.setStyleAttribute(workspaceDecoratorPanel.getCell(1, 1), "width",
-    		workspaceInnerWidth + "px");
+	workspaceInnerWidth =
+		Math.max(0, width
+			- (workspaceDecoratorPanel.getCell(1, 0)
+				.getOffsetWidth() + workspaceDecoratorPanel
+				.getCell(1, 2).getOffsetWidth()));
+	DOM.setStyleAttribute(workspaceDecoratorPanel.getCell(1, 1), "width",
+		workspaceInnerWidth + "px");
     }
-    
+
     public int getWorkspaceInnerWidth() {
-		return workspaceInnerWidth;
+	return workspaceInnerWidth;
     }
-    
+
     public void setTreeItemsWidth() {
-    	// Set the treeItems width
-    	Boolean haveScroll = false;
-    	int width = 250;
-    	width = treeDecoratorPanel
-		.getCell(1, 0).getOffsetWidth() + treeDecoratorPanel
-		.getCell(1, 1).getOffsetWidth();
-    	haveScroll = osylTree.getTree().getOffsetHeight() >
-    		treeDecoratorPanel.getCell(1, 1).getOffsetHeight();
-    	osylTree.setTreeItemsWidth(width - (haveScroll? 19 : 0));
+	// Set the treeItems width
+	Boolean haveScroll = false;
+	int width = 250;
+	width =
+		treeDecoratorPanel.getCell(1, 0).getOffsetWidth()
+			+ treeDecoratorPanel.getCell(1, 1).getOffsetWidth();
+	haveScroll =
+		osylTree.getTree().getOffsetHeight() > treeDecoratorPanel
+			.getCell(1, 1).getOffsetHeight();
+	osylTree.setTreeItemsWidth(width - (haveScroll ? 19 : 0));
     }
-    
+
     public OsylWorkspaceTitleView getWorkspaceTitleView() {
-    	return osylWorkspaceTitleView;
+	return osylWorkspaceTitleView;
     }
-	public void setWorkspaceTitleView(OsylWorkspaceTitleView osylWorkspaceTitleView) {
-		this.osylWorkspaceTitleView = osylWorkspaceTitleView;
-	}
+
+    public void setWorkspaceTitleView(
+	    OsylWorkspaceTitleView osylWorkspaceTitleView) {
+	this.osylWorkspaceTitleView = osylWorkspaceTitleView;
+    }
+
+    /**
+     * @return the access value.
+     */
+    public String getAccess() {
+        return access;
+    }
+
+    /**
+     * @param access the new value of access.
+     */
+    protected void setAccess(String access) {
+        this.access = access;
+    }
 }

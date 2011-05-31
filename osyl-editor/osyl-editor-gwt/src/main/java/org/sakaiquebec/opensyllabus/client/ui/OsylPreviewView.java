@@ -40,8 +40,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class OsylPreviewView extends OsylMainView implements
 	ClosePushButtonEventHandler {
 
-    private String access;
-
     private OsylViewable previousMainView;
 
     private COSerialized coSerializedForGroup;
@@ -52,7 +50,7 @@ public class OsylPreviewView extends OsylMainView implements
     public OsylPreviewView(String access, OsylController controller) {
 
 	super(null, controller);
-	this.access = access;
+	setAccess(access);
 
 	entryPoint.prepareModelForSave();
 	coSerializedForGroup =
@@ -143,14 +141,6 @@ public class OsylPreviewView extends OsylMainView implements
 	resize();
 	getController().getViewContext().setContextModel(
 		findStartingViewContext());
-    }
-
-    public String getAccess() {
-	return access;
-    }
-
-    public void setAccess(String access) {
-	this.access = access;
     }
 
     public void onClosePushButton(ClosePushButtonEvent event) {

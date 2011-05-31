@@ -567,15 +567,25 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return co;
     }
 
-    // TODO change visibility to private after 2.6.1->2.7.1 migration
     public void createPublishPrintVersion(String siteId, String webappdir)
 	    throws PdfGenerationException {
 	try {
 	    COSerialized coSerializedAttendee =
 		    getSerializedPublishedCourseOutlineForAccessType(siteId,
 			    SecurityInterface.ACCESS_ATTENDEE, webappdir);
-	    File f = createPrintVersion(coSerializedAttendee, webappdir);
-	    if (f != null) {
+	    File fAttendee = createPrintVersion(coSerializedAttendee, webappdir);
+	    
+	    COSerialized coSerializedCommunity =
+		    getSerializedPublishedCourseOutlineForAccessType(siteId,
+			    SecurityInterface.ACCESS_COMMUNITY, webappdir);
+	    File fCommunity = createPrintVersion(coSerializedCommunity, webappdir);
+	    
+	    COSerialized coSerializedPublic =
+		    getSerializedPublishedCourseOutlineForAccessType(siteId,
+			    SecurityInterface.ACCESS_PUBLIC, webappdir);
+	    File fPublic = createPrintVersion(coSerializedPublic, webappdir);
+	    
+	    if (fAttendee != null && fCommunity != null && fPublic != null) {
 		String publishDirectory = "";
 		publishDirectory =
 			ContentHostingService.ATTACHMENTS_COLLECTION
@@ -584,10 +594,15 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 				+ OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
 				+ "/";
 
-		createPdfInResource(siteId, publishDirectory, f);
-
+		createPdfInResource(siteId, publishDirectory, fAttendee, 
+			SecurityInterface.ACCESS_ATTENDEE);
+		createPdfInResource(siteId, publishDirectory, fCommunity,
+			SecurityInterface.ACCESS_COMMUNITY);
+		createPdfInResource(siteId, publishDirectory, fPublic,
+			SecurityInterface.ACCESS_PUBLIC);
 	    }
 	} catch (Exception e) {
+	    e.printStackTrace();
 	    throw new PdfGenerationException(e);
 	}
     }
@@ -600,12 +615,13 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	if (f != null) {
 	    String workDirectory =
 		    contentHostingService.getSiteCollection(siteId);
-	    createPdfInResource(siteId, workDirectory, f);
+	    createPdfInResource(siteId, workDirectory, f, "");
 
 	}
     }
 
-    private void createPdfInResource(String siteId, String directory, File f) {
+    private void createPdfInResource(String siteId, String directory, File f,
+	    String access) {
 
 	SecurityAdvisor advisor = new SecurityAdvisor() {
 	    public SecurityAdvice isAllowed(String arg0, String arg1,
@@ -616,11 +632,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	try {
 	    securityService.pushAdvisor(advisor);
 	    Site site = osylSiteService.getSite(siteId);
-	    String siteName = site.getTitle();
+	    String siteTitle = site.getTitle();
 	    try {
-		contentHostingService.getResource(directory + siteName + ".pdf");
-		contentHostingService.removeResource(directory + siteName
-			+ ".pdf");
+		contentHostingService.getResource(directory + siteTitle
+			+ ("".equals(access)? "":"_" + access) + ".pdf");
+		contentHostingService.removeResource(directory + siteTitle
+			+ ("".equals(access)? "":"_" + access) + ".pdf");
 	    } catch (PermissionException e1) {
 		e1.printStackTrace();
 	    } catch (IdUnusedException e1) {
@@ -633,7 +650,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    ContentResourceEdit newResource;
 	    try {
 		newResource =
-			contentHostingService.addResource(directory, siteName,
+			contentHostingService.addResource(directory, siteTitle
+				+ ("".equals(access)? "":"_" + access),
 				".pdf", 1);
 		newResource.setContent(new BufferedInputStream(
 			new FileInputStream(f)));

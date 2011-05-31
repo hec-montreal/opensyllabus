@@ -110,12 +110,60 @@ public class OsylTextToolbar extends Composite {
 
     private MenuItemSeparator editSeparator;
 
-    AsyncCallback<Boolean> print_publishedVersion_callback =
+    AsyncCallback<Boolean> print_publishedVersion_callback_attendee =
 	    new AsyncCallback<Boolean>() {
 		public void onSuccess(Boolean serverResponse) {
 		    if (serverResponse) {
 			OsylTextToolbar.this
-				.openDownloadPrintPublishedVersionLink();
+				.openDownloadPrintPublishedVersionLink(SecurityInterface.ACCESS_ATTENDEE);
+		    } else {
+			OsylAlertDialog oad =
+				new OsylAlertDialog(
+					uiMessages.getMessage("Global.error"),
+					uiMessages
+						.getMessage("toolbar.button.print.printVersionUnavailable"));
+			oad.center();
+			oad.show();
+		    }
+
+		}
+
+		public void onFailure(Throwable error) {
+		    Window.alert("RPC FAILURE - hasBeenPublished : "
+			    + error.toString());
+		}
+	    };
+
+    AsyncCallback<Boolean> print_publishedVersion_callback_community =
+	    new AsyncCallback<Boolean>() {
+		public void onSuccess(Boolean serverResponse) {
+		    if (serverResponse) {
+			OsylTextToolbar.this
+				.openDownloadPrintPublishedVersionLink(SecurityInterface.ACCESS_COMMUNITY);
+		    } else {
+			OsylAlertDialog oad =
+				new OsylAlertDialog(
+					uiMessages.getMessage("Global.error"),
+					uiMessages
+						.getMessage("toolbar.button.print.printVersionUnavailable"));
+			oad.center();
+			oad.show();
+		    }
+
+		}
+
+		public void onFailure(Throwable error) {
+		    Window.alert("RPC FAILURE - hasBeenPublished : "
+			    + error.toString());
+		}
+	    };
+
+    AsyncCallback<Boolean> print_publishedVersion_callback_public =
+	    new AsyncCallback<Boolean>() {
+		public void onSuccess(Boolean serverResponse) {
+		    if (serverResponse) {
+			OsylTextToolbar.this
+				.openDownloadPrintPublishedVersionLink(SecurityInterface.ACCESS_PUBLIC);
 		    } else {
 			OsylAlertDialog oad =
 				new OsylAlertDialog(
@@ -201,9 +249,11 @@ public class OsylTextToolbar extends Composite {
 	displayMenuBar.addStyleName("Osyl-MenuBar-View");
 	addDisplayMenuBarItems();
 	displayButton =
-		leftMenuBar.addItem(AbstractImagePrototype.create(
-			getOsylImageBundle().view_all()).getHTML()
-			+ uiMessages.getMessage("toolbar.button.display"),
+		leftMenuBar.addItem(
+			AbstractImagePrototype.create(
+				getOsylImageBundle().view_all()).getHTML()
+				+ uiMessages
+					.getMessage("toolbar.button.display"),
 			true, displayMenuBar);
 	displayButton.addStyleName("Osyl-MenuItem-vertical");
 	displayButton.addStyleName("Osyl-MenuItem-View");
@@ -218,19 +268,21 @@ public class OsylTextToolbar extends Composite {
 	sectionMenuBar.addSeparator(editSeparator);
 	// MenuBar Item with icon - nice trick...
 	addMenuItem =
-		sectionMenuBar.addItem(AbstractImagePrototype.create(
-			getOsylImageBundle().plus()).getHTML()
-			+ uiMessages.getMessage("toolbar.button.add"), true,
-			addMenuBar);
+		sectionMenuBar.addItem(
+			AbstractImagePrototype.create(
+				getOsylImageBundle().plus()).getHTML()
+				+ uiMessages.getMessage("toolbar.button.add"),
+			true, addMenuBar);
 
 	addMenuItem.addStyleName("Osyl-MenuItem-vertical");
 	addMenuItem.addStyleName("Osyl-MenuItem-Add");
 
 	viewMenuItem =
-		rightMenuBar.addItem(AbstractImagePrototype.create(
-			getOsylImageBundle().preview()).getHTML()
-			+ uiMessages.getMessage("toolbar.button.view"), true,
-			viewMenuBar);
+		rightMenuBar.addItem(
+			AbstractImagePrototype.create(
+				getOsylImageBundle().preview()).getHTML()
+				+ uiMessages.getMessage("toolbar.button.view"),
+			true, viewMenuBar);
 	viewMenuItem.addStyleName("Osyl-MenuItem-vertical");
 	viewMenuItem.addStyleName("Osyl-MenuItem-View");
 
@@ -263,10 +315,14 @@ public class OsylTextToolbar extends Composite {
 	    printMenuBar.addStyleName("Osyl-MenuBar-View");
 	    addprintMenuBarItems();
 	    printPushButton =
-		    rightMenuBar.addItem(AbstractImagePrototype.create(
-			    getOsylImageBundle().printer()).getHTML()
-			    + uiMessages.getMessage("toolbar.button.print"),
-			    true, printMenuBar);
+		    rightMenuBar
+			    .addItem(
+				    AbstractImagePrototype.create(
+					    getOsylImageBundle().printer())
+					    .getHTML()
+					    + uiMessages
+						    .getMessage("toolbar.button.print"),
+				    true, printMenuBar);
 	    printPushButton.addStyleName("Osyl-MenuItem-vertical");
 	    printPushButton.addStyleName("Osyl-MenuItem-View");
 	}
@@ -314,9 +370,8 @@ public class OsylTextToolbar extends Composite {
 		    }
 
 		    public void onFailure(Throwable error) {
-			Window
-				.alert("RPC FAILURE - create printable edition version : "
-					+ error.toString());
+			Window.alert("RPC FAILURE - create printable edition version : "
+				+ error.toString());
 		    }
 		};
 
@@ -339,17 +394,34 @@ public class OsylTextToolbar extends Composite {
 		    }
 		});
 
-	MenuItem publishedPrintMenuItem =
+	MenuItem publishedPrintMenuItemAttendee =
 		new MenuItem(getOsylController().getUiMessages().getMessage(
-			"toolbar.button.print.published_version"),
-			new Command() {
-			    public void execute() {
-				osylController
-					.hasBeenPublished(print_publishedVersion_callback);
-			    }
-			});
+			"MetaInfo.audience.attendee"), new Command() {
+		    public void execute() {
+			osylController
+				.hasBeenPublished(print_publishedVersion_callback_attendee);
+		    }
+		});
+	MenuItem publishedPrintMenuItemCommunity =
+		new MenuItem(getOsylController().getUiMessages().getMessage(
+			"MetaInfo.audience.community"), new Command() {
+		    public void execute() {
+			osylController
+				.hasBeenPublished(print_publishedVersion_callback_community);
+		    }
+		});
+	MenuItem publishedPrintMenuItemPublic =
+		new MenuItem(getOsylController().getUiMessages().getMessage(
+			"MetaInfo.audience.public"), new Command() {
+		    public void execute() {
+			osylController
+				.hasBeenPublished(print_publishedVersion_callback_public);
+		    }
+		});
 	getPrintMenuBar().addItem(editionPrintMenuItem);
-	getPrintMenuBar().addItem(publishedPrintMenuItem);
+	getPrintMenuBar().addItem(publishedPrintMenuItemAttendee);
+	getPrintMenuBar().addItem(publishedPrintMenuItemCommunity);
+	getPrintMenuBar().addItem(publishedPrintMenuItemPublic);
     }
 
     private void addPreviewMenuBarItems() {
@@ -602,15 +674,28 @@ public class OsylTextToolbar extends Composite {
     }
 
     private void openDownloadPrintPublishedVersionLink() {
+	openDownloadPrintPublishedVersionLink(null);
+    }
+
+    private void openDownloadPrintPublishedVersionLink(String access) {
 	String url = GWT.getModuleBaseURL();
 	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
 	String siteId = OsylController.getInstance().getSiteId();
 	String siteTitle = OsylController.getInstance().getCOSerialized().getTitle();
 	String downloadUrl;
 
+	if (access == null) {
+	    access = osylController.getPublishedSecurityAccessType();
+	}
+
+	if (access == null) {
+	    access = osylController.getMainView().getAccess();
+	}
+
 	downloadUrl =
 		serverId + "/sdata/c/attachment/" + siteId + "/OpenSyllabus/"
-			+ siteTitle + ".pdf?child=" + siteId;
+			+ siteTitle + ((access == null) ? "" : "_" + access)
+			+ ".pdf?child=" + siteId;
 
 	Window.open(downloadUrl, "_blank", "");
     }
