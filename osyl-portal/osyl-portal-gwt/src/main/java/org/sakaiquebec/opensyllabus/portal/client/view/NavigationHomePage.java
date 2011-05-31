@@ -27,7 +27,6 @@ import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -41,30 +40,48 @@ public class NavigationHomePage extends AbstractPortalView {
 
     private VerticalPanel mainPanel;
 
-    private static final List<String> progs = Arrays.asList(new String[] {
-	    "BAA", "APRE", "CERT", "MBA", "MSC", "DESS", "PHD" });
+    private static final String ACAD_CAREER_BAA = "BAA";
+    private static final String ACAD_CAREER_APRE = "APRE";
+    private static final String ACAD_CAREER_CERT = "CERT";
+    private static final String ACAD_CAREER_MBA = "MBA";
+    private static final String ACAD_CAREER_MSC = "MSC";
+    private static final String ACAD_CAREER_DESS = "DES";
+    private static final String ACAD_CAREER_PHD = "PHD";
+    private static final String RESPONSIBLE_IEA = "IEA";
+    private static final String RESPONSIBLE_FINANCE = "FINANCE";
+    private static final String RESPONSIBLE_GOL = "GOL";
+    private static final String RESPONSIBLE_GRH = "GRH";
+    private static final String RESPONSIBLE_INTERNAT = "INTERNAT";
+    private static final String RESPONSIBLE_MQG = "MQG";
+    private static final String RESPONSIBLE_SC_COMPT = "SC.COMPT.";
+    private static final String RESPONSIBLE_TI = "TI";
+    private static final String RESPONSIBLE_MARKETING = "MARKETING";
+    private static final String RESPONSIBLE_MNGT = "MNGT";
+    private static final String RESPONSIBLE_BUR_REGIST = "BUR.REGIST";
+    private static final String RESPONSIBLE_QUAL_COMM = "QUAL.COMM.";
+    private static final String RESPONSIBLE_BAA = "BAA";
+    private static final String RESPONSIBLE_CERTIFICAT = "CERTIFICAT";
+    private static final String RESPONSIBLE_DIPLOMES = "DIPLOMES";
+    private static final String RESPONSIBLE_MBA = "MBA";
+    private static final String RESPONSIBLE_MSC = "MSC";
+    private static final String RESPONSIBLE_DOCTORAT = "DOCTORAT";
+
+    private static final List<String> progs = Arrays
+	    .asList(new String[] { ACAD_CAREER_BAA, ACAD_CAREER_APRE,
+		    ACAD_CAREER_CERT, ACAD_CAREER_MBA, ACAD_CAREER_MSC,
+		    ACAD_CAREER_DESS, ACAD_CAREER_PHD });
 
     private static final List<String> responsible_part1 = Arrays
-	    .asList(new String[] { "IEA", "FINANCE", "GOL", "GRH", "INTERNAT",
-		    "MQG", "SC.COMPT.", "TI", "MARKETING", "MNGT" });
+	    .asList(new String[] { RESPONSIBLE_IEA, RESPONSIBLE_FINANCE,
+		    RESPONSIBLE_GOL, RESPONSIBLE_GRH, RESPONSIBLE_INTERNAT,
+		    RESPONSIBLE_MQG, RESPONSIBLE_SC_COMPT, RESPONSIBLE_TI,
+		    RESPONSIBLE_MARKETING, RESPONSIBLE_MNGT });
 
     private static final List<String> responsible_part2 = Arrays
-	    .asList(new String[] { "BUR.REGIST", "QUAL.COMM.", "BAA",
-		    "CERTIFICAT", "DIPLOMES", "MBA", "MSC", "DOCTORAT" });
-
-    private List<String> responsiblesList;
-
-    AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
-
-	public void onFailure(Throwable caught) {
-	    Window.alert(caught.toString());
-	}
-
-	public void onSuccess(List<String> result) {
-	    responsiblesList = result;
-	    initView();
-	}
-    };
+	    .asList(new String[] { RESPONSIBLE_BUR_REGIST,
+		    RESPONSIBLE_QUAL_COMM, RESPONSIBLE_BAA,
+		    RESPONSIBLE_CERTIFICAT, RESPONSIBLE_DIPLOMES,
+		    RESPONSIBLE_MBA, RESPONSIBLE_MSC, RESPONSIBLE_DOCTORAT });
 
     public NavigationHomePage() {
 	super("NavigationHomePage");
@@ -83,18 +100,18 @@ public class NavigationHomePage extends AbstractPortalView {
 	t2.setStylePrimaryName("NHP_titre2");
 	mainPanel.add(t2);
 
-	mainPanel.add(getProgramLabel("BAA"));
-	Label apre_label = getProgramLabel("APRE");
+	mainPanel.add(getProgramLabel(ACAD_CAREER_BAA));
+	Label apre_label = getProgramLabel(ACAD_CAREER_APRE);
 	apre_label.setText("- " + apre_label.getText());
 	mainPanel.add(apre_label);
 	mainPanel.add(new HTML("&nbsp;"));
-	mainPanel.add(getProgramLabel("CERT"));
+	mainPanel.add(getProgramLabel(ACAD_CAREER_CERT));
 	mainPanel.add(new HTML("&nbsp;"));
-	mainPanel.add(getProgramLabel("MBA"));
-	mainPanel.add(getProgramLabel("MSC"));
-	mainPanel.add(getProgramLabel("DES"));
+	mainPanel.add(getProgramLabel(ACAD_CAREER_MBA));
+	mainPanel.add(getProgramLabel(ACAD_CAREER_MSC));
+	mainPanel.add(getProgramLabel(ACAD_CAREER_DESS));
 	mainPanel.add(new HTML("&nbsp;"));
-	mainPanel.add(getProgramLabel("PHD"));
+	mainPanel.add(getProgramLabel(ACAD_CAREER_PHD));
 
 	Label t3 = new Label(getMessage("courseListByResponsible"));
 	t3.setStylePrimaryName("NHP_titre2");

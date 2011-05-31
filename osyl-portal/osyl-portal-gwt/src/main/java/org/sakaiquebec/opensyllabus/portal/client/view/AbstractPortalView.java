@@ -20,14 +20,17 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.portal.client.view;
 
+import java.util.Comparator;
 import java.util.MissingResourceException;
 
 import org.sakaiquebec.opensyllabus.portal.client.controller.PortalController;
 import org.sakaiquebec.opensyllabus.portal.client.image.PortalImages;
 import org.sakaiquebec.opensyllabus.portal.client.message.OsylPortalMessages;
+import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 
 /**
@@ -36,20 +39,64 @@ import com.google.gwt.user.client.ui.Composite;
  */
 public class AbstractPortalView extends Composite {
 
+    public final static String SUMMER = "E";
+
+    public final static String WINTER = "H";
+
+    public final static String FALL = "A";
+
     private String viewKey;
-    
+
     private OsylPortalMessages messages = (OsylPortalMessages) GWT
 	    .create(OsylPortalMessages.class);
-    
-    private PortalImages images = (PortalImages) GWT
-    .create(PortalImages.class);
 
-    
-    public AbstractPortalView(String key){
+    private PortalImages images = (PortalImages) GWT.create(PortalImages.class);
+
+    protected Comparator<CODirectorySite> courseNameComparator =
+	    new Comparator<CODirectorySite>() {
+
+		public int compare(CODirectorySite cods1, CODirectorySite cods2) {
+		    String siteName1 = cods1.getCourseNumber();
+		    String siteName2 = cods2.getCourseNumber();
+		    return siteName1.compareTo(siteName2);
+		}
+	    };
+
+    protected Comparator<String> courseSectionComparator =
+	    new Comparator<String>() {
+
+		public int compare(String siteName1, String siteName2) {
+		    int res = 0;
+		    if (siteName1 != null && siteName2 != null
+			    && !siteName1.trim().equals("")
+			    && !siteName2.trim().equals("")) {
+			res =
+				getSessionYear(siteName1).compareTo(
+					getSessionYear(siteName2));
+			if (res == 0) {
+			    res =
+				    getSessionLetterIndex(siteName1).compareTo(
+					    getSessionLetterIndex(siteName2));
+			    if (res == 0) {
+				res =
+					getNumber(siteName1).compareTo(
+						getNumber(siteName2));
+				if (res == 0)
+				    return getSection(siteName1).compareTo(
+					    getSection(siteName2));
+			    }
+			}
+		    }
+		    return res;
+
+		}
+	    };
+
+    public AbstractPortalView(String key) {
 	this.setViewKey(key);
 	History.newItem(viewKey);
     }
-    
+
     public String getMessage(String key) {
 	try {
 	    return messages.getString(key.replace(".", "_"));
@@ -61,8 +108,8 @@ public class AbstractPortalView extends Composite {
     public PortalController getController() {
 	return PortalController.getInstance();
     }
-    
-    public PortalImages getImages(){
+
+    public PortalImages getImages() {
 	return images;
     }
 
@@ -72,6 +119,45 @@ public class AbstractPortalView extends Composite {
 
     public String getViewKey() {
 	return viewKey;
+    }
+
+    protected String getSessionName(String siteName) {
+	return messages.getString("session_"+ getSessionLetter(siteName))
+		+ " " + getSessionYear(siteName).toString();
+
+    }
+
+    protected Integer getSessionYear(String title) {
+	return new Integer(getSession(title).substring(1));
+    }
+
+    protected Integer getSessionLetterIndex(String title) {
+	String letter = getSessionLetter(title);
+	Integer i;
+	if (WINTER.equals(letter))
+	    i = new Integer(0);
+	else if (SUMMER.equals(letter))
+	    i = new Integer(1);
+	else
+	    i = new Integer(2);
+	return i;
+    }
+
+    protected String getSessionLetter(String title) {
+	return getSession(title).substring(0,1);
+    }
+
+    protected String getSection(String title) {
+	return title.substring(title.lastIndexOf(".") + 1);
+    }
+
+    protected String getSession(String title) {
+	String temp = title.substring(title.indexOf(".") + 1);
+	return temp.substring(0, temp.indexOf("."));
+    }
+
+    protected String getNumber(String title) {
+	return title.substring(0, title.indexOf("."));
     }
 
 }

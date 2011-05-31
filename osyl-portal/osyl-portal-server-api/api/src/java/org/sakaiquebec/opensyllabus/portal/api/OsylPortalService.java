@@ -36,7 +36,7 @@ import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
  * @version $Id: $
  */
 public interface OsylPortalService {
-
+    
     public final static String SUMMER = "E";
 
     public final static String WINTER = "H";
@@ -49,7 +49,5 @@ public interface OsylPortalService {
     public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer);
 
     public List<CODirectorySite> getCoursesForResponsible(String responsible);
-
-    public List<String> getAllResponsibles();
 
 }

@@ -20,13 +20,15 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.portal.client.view;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -43,7 +45,7 @@ public class DirectoryCoursePage extends AbstractPortalView {
     private VerticalPanel mainPanel;
 
     public DirectoryCoursePage(CODirectorySite site) {
-	super("DirectoryCoursePage_"+site.getCourseName());
+	super("DirectoryCoursePage_" + site.getCourseName());
 	this.site = site;
 	mainPanel = new VerticalPanel();
 	initView();
@@ -59,7 +61,7 @@ public class DirectoryCoursePage extends AbstractPortalView {
 	Label t2 = new Label(getMessage("directoryCoursePage_description"));
 	t2.setStylePrimaryName("NHP_titre2");
 	mainPanel.add(t2);
-	
+
 	Label t21 = new HTML(site.getDescription());
 	t21.setStylePrimaryName("NHP_titre3");
 	mainPanel.add(t21);
@@ -70,13 +72,13 @@ public class DirectoryCoursePage extends AbstractPortalView {
 
 	Label t31 =
 		new Label(getMessage("directoryCoursePage_responsible") + " : "
-			+ getMessage("responsible." +site.getResponsible()));
+			+ getMessage("responsible." + site.getResponsible()));
 	t31.setStylePrimaryName("NHP_titre3");
 	mainPanel.add(t31);
 
 	Label t32 =
 		new Label(getMessage("directoryCoursePage_program") + " : "
-			+ getMessage("acad_career." +site.getProgram()));
+			+ getMessage("acad_career." + site.getProgram()));
 	t32.setStylePrimaryName("NHP_titre3");
 	mainPanel.add(t32);
 
@@ -87,23 +89,38 @@ public class DirectoryCoursePage extends AbstractPortalView {
 	mainPanel.add(t33);
 
 	Label t34 =
-		new HTML(getMessage("directoryCoursePage_requirements")
-			+ " : " + site.getRequirements());
+		new HTML(getMessage("directoryCoursePage_requirements") + " : "
+			+ site.getRequirements());
 	t34.setStylePrimaryName("NHP_titre3");
 	mainPanel.add(t34);
 
 	Label t4 = new Label(getMessage("directoryCoursePage_coursesList"));
 	t4.setStylePrimaryName("NHP_titre2");
 	mainPanel.add(t4);
+	
 
-	for (final Entry<String, String> entry : site.getSections().entrySet()) {
-	    Label link = new Label(entry.getKey());
+	List<String> sectionsKeys = new ArrayList<String>(site.getSections().keySet());
+	Collections.sort(sectionsKeys, courseSectionComparator);
+	String old_sessionName = "";
+	for (final String key : sectionsKeys) {
+	    if(!old_sessionName.equals(getSessionName(key))){
+		old_sessionName = getSessionName(key); 
+		Label l = new Label(old_sessionName);
+		l.setStylePrimaryName("NHP_titre3");
+		mainPanel.add(l);		
+	    }
+	    
+	    Label link =
+		    new HTML(
+			    key
+				    + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+				    + site.getSections().get(key));
 	    link.setStylePrimaryName("NHP_link");
 	    link.addClickHandler(new ClickHandler() {
 
 		public void onClick(ClickEvent event) {
 		    Window.open("/osyl-editor-sakai-tool/index.jsp?siteId="
-			    + entry.getKey(), "_self", "");
+			    + key, "_self", "");
 		}
 	    });
 	    mainPanel.add(link);

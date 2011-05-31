@@ -22,9 +22,4 @@ public class OsylPortalGwtServiceImpl extends RemoteServiceServlet implements
     public List<CODirectorySite> getCoursesForResponsible(String responsible) {
 	return null;
     }
-
-    public List<String> getAllResponsibles() {
-	return null;
-    }
-
 }

@@ -10,6 +10,8 @@
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService"/>
 		<property name="osylPublishService"
 			ref="org.sakaiquebec.opensyllabus.common.api.OsylPublishService" />
+		<property name="userDirectoryService"
+			ref="org.sakaiproject.user.api.UserDirectoryService" />
 	</bean>
 
 </beans>

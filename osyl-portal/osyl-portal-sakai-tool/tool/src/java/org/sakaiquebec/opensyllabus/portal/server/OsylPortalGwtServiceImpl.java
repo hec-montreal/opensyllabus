@@ -78,10 +78,4 @@ public class OsylPortalGwtServiceImpl extends RemoteServiceServlet implements
 	return osylPortalServices.getOsylPortalService()
 		.getCoursesForResponsible(responsible);
     }
-
-    @Override
-    public List<String> getAllResponsibles() {
-	return osylPortalServices.getOsylPortalService().getAllResponsibles();
-    }
-
 }

@@ -41,6 +41,4 @@ public interface OsylPortalGwtService extends RemoteService {
 
     public List<CODirectorySite> getCoursesForResponsible(String responsible);
 
-    public List<String> getAllResponsibles();
-
 }
