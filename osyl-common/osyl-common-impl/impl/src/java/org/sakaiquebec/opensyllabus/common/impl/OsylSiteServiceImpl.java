@@ -1081,7 +1081,12 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		User u =
 			userDirectoryService.getUser(sessionManager.getSession(
 				thisCo.getLockedBy()).getUserId());
-		thisCo.setLockedBy(u.getFirstName() + " " + u.getLastName());
+		thisCo.setLockedBy(u.getFirstName().substring(0, 1)
+			.toUpperCase()
+			+ u.getFirstName().substring(1)
+			+ " "
+			+ u.getLastName().substring(0, 1).toUpperCase()
+			+ u.getLastName().substring(1));
 	    } catch (Exception ex) {
 		log.error("Unable to retrieve name of CO locker", ex);
 	    }

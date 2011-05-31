@@ -20,6 +20,7 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.shared.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -31,7 +32,7 @@ public class CODirectorySite implements java.io.Serializable {
     private static final long serialVersionUID = -5914778051117341406L;
 
     private String description;
-    
+
     private String courseNumber;
 
     private String courseName;
@@ -48,6 +49,7 @@ public class CODirectorySite implements java.io.Serializable {
 
     public CODirectorySite() {
 	super();
+	sections = new HashMap<String, String>();
     }
 
     public String getCourseNumber() {
@@ -96,6 +98,10 @@ public class CODirectorySite implements java.io.Serializable {
 
     public void setSections(Map<String, String> sections) {
 	this.sections = sections;
+    }
+
+    public void putSection(String key, String value) {
+	sections.put(key, value);
     }
 
     public void setProgram(String program) {
