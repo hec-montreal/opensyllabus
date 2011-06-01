@@ -5,7 +5,7 @@
 <beans>
 	<bean id="org.sakaiquebec.opensyllabus.portal.api.OsylPortalService"
 		class="org.sakaiquebec.opensyllabus.portal.impl.OsylPortalServiceImpl"
-		init-method="init" singleton="true">
+		init-method="init" destroy-method="destroy" singleton="true">
 		<property name="courseManagementService"
 			ref="org.sakaiproject.coursemanagement.api.CourseManagementService"/>
 		<property name="osylPublishService"

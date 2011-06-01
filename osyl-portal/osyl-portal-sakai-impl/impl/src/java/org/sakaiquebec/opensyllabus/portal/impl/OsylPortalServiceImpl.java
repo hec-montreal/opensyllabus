@@ -71,6 +71,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
     private List<AcademicSession> currentSessions;
 
     private CourseManagementService courseManagementService;
+    
+    private Timer timer;
 
     public void setCourseManagementService(
 	    CourseManagementService courseManagementService) {
@@ -94,7 +96,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
      * Init method called right after Spring injection.
      */
     public void init() {
-	Timer t = new Timer();
+	timer = new Timer();
 	TimerTask timerTask = new TimerTask() {
 
 	    @Override
@@ -102,7 +104,13 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		buildCoursesMaps();
 	    }
 	};
-	t.schedule(timerTask, 50000, 86400000);
+	timer.schedule(timerTask, 50000, 86400000);
+    }
+    
+    public void destroy(){
+	log.info("DESTROY from OsylPortalService");
+	timer.cancel();
+	timer=null;
     }
 
     private void buildCoursesMaps() {
