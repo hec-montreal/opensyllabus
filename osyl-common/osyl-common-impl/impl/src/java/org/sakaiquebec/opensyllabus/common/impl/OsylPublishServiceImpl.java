@@ -55,14 +55,13 @@ import org.sakaiproject.exception.TypeException;
 import org.sakaiproject.id.api.IdManager;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.tool.api.SessionManager;
-import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
 import org.sakaiquebec.opensyllabus.common.api.OsylEventService;
 import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
-import org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO; 	// HEC ONLY SAKAI-2723
+import org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO;
 import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
@@ -93,58 +92,97 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 
     private static final String SITE_SHAREABLE = "00";
 
-    private Vector<String> publishedSiteIds;
+    // SPRING INJECTIONS
+    protected OsylSecurityService osylSecurityService;
 
-    /**
-     * The security service to be injected by Spring
-     *
-     * @uml.property name="osylSecurityService"
-     * @uml.associationEnd
-     */
-    private OsylSecurityService osylSecurityService;
-
-    private CourseManagementService cmService;
-
-    /**
-     * Sets the {@link OsylSecurityService}.
-     *
-     * @param securityService
-     */
     public void setOsylSecurityService(OsylSecurityService securityService) {
 	this.osylSecurityService = securityService;
     }
 
-    /** Dependency: AnnouncementService. */
-    protected AnnouncementService announcementService = null;
+    protected AnnouncementService announcementService;
 
-    /**
-     * Dependency: AnnouncementService
-     *
-     * @param announcementService The AnnouncementService
-     */
     public void setAnnouncementService(AnnouncementService announcementService) {
 	this.announcementService = announcementService;
     }
 
-    private SessionManager sessionManager;
-
-    public SessionManager getSessionManager() {
-	return sessionManager;
-    }
+    protected SessionManager sessionManager;
 
     public void setSessionManager(SessionManager sessionManager) {
 	this.sessionManager = sessionManager;
     }
 
-    private SecurityService securityService;
+    protected SecurityService securityService;
 
     public void setSecurityService(SecurityService securityService) {
 	this.securityService = securityService;
     }
 
-    /**
-     * Maps the visibility of the documents published, hidden or not
-     */
+    protected ContentHostingService contentHostingService;
+
+    public void setContentHostingService(
+	    ContentHostingService contentHostingService) {
+	this.contentHostingService = contentHostingService;
+    }
+
+    protected ResourceDao resourceDao;
+
+    public void setResourceDao(ResourceDao resourceDao) {
+	this.resourceDao = resourceDao;
+    }
+
+    protected OsylConfigService osylConfigService;
+
+    public void setConfigService(OsylConfigService configService) {
+	this.osylConfigService = configService;
+    }
+
+    protected OsylSiteService osylSiteService;
+
+    public void setOsylSiteService(OsylSiteService osylSiteService) {
+	this.osylSiteService = osylSiteService;
+    }
+
+    protected CORelationDao coRelationDao;
+
+    public void setCoRelationDao(CORelationDao relationDao) {
+	this.coRelationDao = relationDao;
+    }
+
+    protected AuthzGroupService authzGroupService;
+
+    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
+	this.authzGroupService = authzGroupService;
+    }
+
+    protected IdManager idManager;
+
+    public void setIdManager(IdManager idManager) {
+	this.idManager = idManager;
+    }
+
+    protected EventTrackingService eventTrackingService;
+
+    public void setEventTrackingService(
+	    EventTrackingService eventTrackingService) {
+	this.eventTrackingService = eventTrackingService;
+    }
+
+    protected CourseManagementService cmService;
+
+    public void setCmService(CourseManagementService cmService) {
+	this.cmService = cmService;
+    }
+
+    // BEGIN HEC ONLY SAKAI-2723
+    private OsylTransformToZCCO osylTransformToZCCO;
+
+    public void setOsylTransformToZCCO(OsylTransformToZCCO osylTransformToZCCO) {
+	this.osylTransformToZCCO = osylTransformToZCCO;
+    }
+
+    // END HEC ONLY SAKAI-2723
+
+    // END SPRING INJECTION
     Map<String, String> documentVisibilityMap;
 
     /**
@@ -153,140 +191,13 @@ public class OsylPublishServiceImpl implements OsylPublishService {
      */
     Map<String, String> documentSecurityMap;
 
-    /**
-     * The chs to be injected by Spring
-     *
-     * @uml.property name="contentHostingService"
-     * @uml.associationEnd multiplicity="(0 -1)" ordering="true"
-     *                     elementType="org.sakaiproject.content.api.ContentEntity"
-     *                     qualifier
-     *                     ="substring:java.lang.String java.lang.String"
-     */
-    private ContentHostingService contentHostingService;
-
-    /**
-     * Sets the <code>ContentHostingService</code>.
-     *
-     * @param contentHostingService
-     * @uml.property name="contentHostingService"
-     */
-    public void setContentHostingService(
-	    ContentHostingService contentHostingService) {
-	this.contentHostingService = contentHostingService;
-    }
-
+    protected Vector<String> publishedSiteIds;
+    
     /**
      * Init method called at initialization of the bean.
      */
     public void init() {
 	log.info("INIT from OsylPublish service");
-    }
-
-    /*
-     * the tool manager to be injected by Spring private ToolManager
-     * toolManager; / Sets the <code>ToolManager</code>.
-     * @param toolManager public void setToolManager(ToolManager toolManager) {
-     * this.toolManager = toolManager; }
-     */
-    /**
-     * The resouceDao to be injected by Spring
-     *
-     * @uml.property name="resourceDao"
-     * @uml.associationEnd
-     */
-    private ResourceDao resourceDao;
-
-    /**
-     * Sets the {@link ResourceDao} .
-     *
-     * @param resourceDao
-     * @uml.property name="resourceDao"
-     */
-    public void setResourceDao(ResourceDao resourceDao) {
-	this.resourceDao = resourceDao;
-    }
-
-    /**
-     * The config service to be injected by Spring
-     *
-     * @uml.property name="osylConfigService"
-     * @uml.associationEnd
-     */
-    private OsylConfigService osylConfigService;
-
-    /**
-     * Sets the {@link OsylConfigService}.
-     *
-     * @param configService
-     */
-    public void setConfigService(OsylConfigService configService) {
-	this.osylConfigService = configService;
-    }
-
-    // BEGIN HEC ONLY SAKAI-2723
-    /**
-     * The transformation and transfer service to be injected by Spring
-     *
-     * @uml.property name="osylTransformToZCCO"
-     * @uml.associationEnd
-     */
-    private OsylTransformToZCCO osylTransformToZCCO;
-
-    /**
-     * Sets the {@link OsylTransformToZCCO}.
-     *
-     * @param osylTransformToZCCO
-     */
-    public void setOsylTransformToZCCO(OsylTransformToZCCO osylTransformToZCCO) {
-	this.osylTransformToZCCO = osylTransformToZCCO;
-    }
-	// END HEC ONLY SAKAI-2723
-
-    /**
-     * The OsylSite service to be injected by Spring
-     *
-     * @uml.property name="osylSiteService"
-     * @uml.associationEnd
-     */
-    private OsylSiteService osylSiteService;
-
-    /**
-     * Sets the {@link OsylSiteService} .
-     *
-     * @param osylSiteService
-     * @uml.property name="osylSiteService"
-     */
-    public void setOsylSiteService(OsylSiteService osylSiteService) {
-	this.osylSiteService = osylSiteService;
-    }
-
-    private CORelationDao coRelationDao;
-
-    /**
-     * Sets the {@link CORelationDao}.
-     *
-     * @param configDao
-     */
-    public void setCoRelationDao(CORelationDao relationDao) {
-	this.coRelationDao = relationDao;
-    }
-
-    private AuthzGroupService authzGroupService;
-
-    public void setAuthzGroupService(AuthzGroupService authzGroupService) {
-	this.authzGroupService = authzGroupService;
-    }
-
-    private IdManager idManager;
-
-    public void setIdManager(IdManager idManager) {
-	this.idManager = idManager;
-    }
-
-    private EventTrackingService eventTrackingService;
-
-    public void setEventTrackingService(EventTrackingService eventTrackingService){
-	this.eventTrackingService=eventTrackingService;
     }
 
     /**
@@ -318,13 +229,13 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     /**
      * Creates or updates the corresponding entries in the database and copies
      * the ressources
-     *
+     * 
      * @param String webapp dir (absolute pathname !?)
      */
     public Vector<Map<String, String>> publish(String webappDir, String siteId)
 	    throws Exception, FusionException, OsylPermissionException {
-	if (!osylSecurityService.isActionAllowedInSite(osylSiteService
-		.getSiteReference(siteId),
+	if (!osylSecurityService.isActionAllowedInSite(
+		osylSiteService.getSiteReference(siteId),
 		SecurityInterface.OSYL_FUNCTION_PUBLISH)) {
 	    throw new OsylPermissionException(sessionManager
 		    .getCurrentSession().getUserEid(),
@@ -446,19 +357,18 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 					.getProperty(COPropertiesType.PUBLISHED) != null ? coContent
 					.getProperty(COPropertiesType.PUBLISHED)
 					: "");
-		coContent.addProperty(COPropertiesType.PUBLISHED, OsylDateUtils
-			.getCurrentDateAsXmlString());
+		coContent.addProperty(COPropertiesType.PUBLISHED,
+			OsylDateUtils.getCurrentDateAsXmlString());
 		coModeledServer.model2XML();
 		coSerialized.setContent(coModeledServer.getSerializedContent());
 		resourceDao.createOrUpdateCourseOutline(coSerialized);
 
 		publicationProperties
-			.put(
-				COPropertiesType.PREVIOUS_PUBLISHED,
+			.put(COPropertiesType.PREVIOUS_PUBLISHED,
 				coContent
 					.getProperty(COPropertiesType.PREVIOUS_PUBLISHED));
-		publicationProperties.put(COPropertiesType.PUBLISHED, coContent
-			.getProperty(COPropertiesType.PUBLISHED));
+		publicationProperties.put(COPropertiesType.PUBLISHED,
+			coContent.getProperty(COPropertiesType.PUBLISHED));
 		publicationResults.add(publicationProperties);
 
 		publicationResults.add(generatePublishedSitesPdf(webappDir));
@@ -478,7 +388,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	}
     }
 
-    private Map<String, String> generatePublishedSitesPdf(String webappdir) {
+    protected Map<String, String> generatePublishedSitesPdf(String webappdir) {
 	Map<String, String> pdfGenerationResults =
 		new HashMap<String, String>();
 
@@ -495,7 +405,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return pdfGenerationResults;
     }
 
-    private COSerialized updateCourseInformations(COSerialized co,
+    protected COSerialized updateCourseInformations(COSerialized co,
 	    String webappDir) {
 	String siteName = null;
 	String providerId = null;
@@ -515,7 +425,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		String courseOffId = s.getCourseOfferingEid();
 		CourseOffering courseOff =
 			cmService.getCourseOffering(courseOffId);
-		program = courseOff.getAcademicCareer(); //HEC ONLY SAKAI-2723
+		program = courseOff.getAcademicCareer(); // HEC ONLY SAKAI-2723
 		dept = cmService.getSectionCategoryDescription(s.getCategory());
 		title = s.getTitle();
 		EnrollmentSet es = s.getEnrollmentSet();
@@ -573,18 +483,20 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    COSerialized coSerializedAttendee =
 		    getSerializedPublishedCourseOutlineForAccessType(siteId,
 			    SecurityInterface.ACCESS_ATTENDEE, webappdir);
-	    File fAttendee = createPrintVersion(coSerializedAttendee, webappdir);
-	    
+	    File fAttendee =
+		    createPrintVersion(coSerializedAttendee, webappdir);
+
 	    COSerialized coSerializedCommunity =
 		    getSerializedPublishedCourseOutlineForAccessType(siteId,
 			    SecurityInterface.ACCESS_COMMUNITY, webappdir);
-	    File fCommunity = createPrintVersion(coSerializedCommunity, webappdir);
-	    
+	    File fCommunity =
+		    createPrintVersion(coSerializedCommunity, webappdir);
+
 	    COSerialized coSerializedPublic =
 		    getSerializedPublishedCourseOutlineForAccessType(siteId,
 			    SecurityInterface.ACCESS_PUBLIC, webappdir);
 	    File fPublic = createPrintVersion(coSerializedPublic, webappdir);
-	    
+
 	    if (fAttendee != null && fCommunity != null && fPublic != null) {
 		String publishDirectory = "";
 		publishDirectory =
@@ -594,7 +506,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 				+ OsylContentService.OPENSYLLABUS_ATTACHEMENT_PREFIX
 				+ "/";
 
-		createPdfInResource(siteId, publishDirectory, fAttendee, 
+		createPdfInResource(siteId, publishDirectory, fAttendee,
 			SecurityInterface.ACCESS_ATTENDEE);
 		createPdfInResource(siteId, publishDirectory, fCommunity,
 			SecurityInterface.ACCESS_COMMUNITY);
@@ -610,17 +522,20 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     public void createEditionPrintVersion(COSerialized cos, String webappdir)
 	    throws Exception {
 	updateCourseInformations(cos, webappdir);
+	String transformXml =
+		transformXmlForGroup(cos.getContent(),
+			SecurityInterface.ACCESS_ATTENDEE,webappdir);
+	cos.setContent(transformXml);
 	File f = createPrintVersion(cos, webappdir);
 	String siteId = cos.getSiteId();
 	if (f != null) {
 	    String workDirectory =
 		    contentHostingService.getSiteCollection(siteId);
 	    createPdfInResource(siteId, workDirectory, f, "");
-
 	}
     }
 
-    private void createPdfInResource(String siteId, String directory, File f,
+    protected void createPdfInResource(String siteId, String directory, File f,
 	    String access) {
 
 	SecurityAdvisor advisor = new SecurityAdvisor() {
@@ -635,9 +550,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    String siteTitle = site.getTitle();
 	    try {
 		contentHostingService.getResource(directory + siteTitle
-			+ ("".equals(access)? "":"_" + access) + ".pdf");
+			+ ("".equals(access) ? "" : "_" + access) + ".pdf");
 		contentHostingService.removeResource(directory + siteTitle
-			+ ("".equals(access)? "":"_" + access) + ".pdf");
+			+ ("".equals(access) ? "" : "_" + access) + ".pdf");
 	    } catch (PermissionException e1) {
 		e1.printStackTrace();
 	    } catch (IdUnusedException e1) {
@@ -651,7 +566,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    try {
 		newResource =
 			contentHostingService.addResource(directory, siteTitle
-				+ ("".equals(access)? "":"_" + access),
+				+ ("".equals(access) ? "" : "_" + access),
 				".pdf", 1);
 		newResource.setContent(new BufferedInputStream(
 			new FileInputStream(f)));
@@ -682,8 +597,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    securityService.popAdvisor();
 	}
     }
-    
-    private boolean collectionExists (String collectionId){
+
+    private boolean collectionExists(String collectionId) {
 	try {
 	    contentHostingService.getCollection(collectionId);
 	} catch (IdUnusedException e) {
@@ -692,23 +607,23 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    log.warn("This is not a valid collection id: " + collectionId);
 	    return false;
 	} catch (PermissionException e) {
-	    log.warn("You are not allowed to access this collection id: " + collectionId);
+	    log.warn("You are not allowed to access this collection id: "
+		    + collectionId);
 	}
-	
+
 	return true;
     }
-    
 
-    private File createPrintVersion(COSerialized coSerialized, String webappdir)
-	    throws Exception {
+    protected File createPrintVersion(COSerialized coSerialized,
+	    String webappdir) throws Exception {
 	try {
 	    String xml = coSerialized.getContent();
 	    Node d = XmlHelper.parseXml(xml);
 	    File f = null;
 	    // change keys for i18n messages
 	    d =
-		    replaceSemanticTagsWithI18NMessage(d, coSerialized
-			    .getMessages());
+		    replaceSemanticTagsWithI18NMessage(d,
+			    coSerialized.getMessages());
 
 	    // convert html in xhtml
 	    d = convertHtmlToXhtml(d);
@@ -730,8 +645,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    + configRef + File.separator + configVersion
 			    + File.separator
 			    + OsylConfigService.PRINT_DIRECTORY
-			    + File.separator, ServerConfigurationService
-			    .getServerUrl(), coSerialized.getSiteId());
+			    + File.separator,
+			    ServerConfigurationService.getServerUrl(),
+			    coSerialized.getSiteId());
 
 	    return f;
 	} catch (Exception e) {
@@ -757,8 +673,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    t.setMakeClean(true);
 
 	    expr =
-		    xpath
-			    .compile("//text | //comment | //description | //availability | //label | //identifier");
+		    xpath.compile("//text | //comment | //description | //availability | //label | //identifier");
 
 	    NodeList nodes =
 		    (NodeList) expr.evaluate(d, XPathConstants.NODESET);
@@ -795,12 +710,10 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		Node node = nodes.item(i);
 		String userDefLabel =
 			(node.getAttributes() == null) ? null
-				: (node
-					.getAttributes()
+				: (node.getAttributes()
 					.getNamedItem(
 						COPropertiesType.SEMANTIC_TAG_USERDEFLABEL) == null) ? null
-					: node
-						.getAttributes()
+					: node.getAttributes()
 						.getNamedItem(
 							COPropertiesType.SEMANTIC_TAG_USERDEFLABEL)
 						.getNodeValue();
@@ -1113,7 +1026,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	String portalActivated =
 		ServerConfigurationService.getString("hec.portail.activated");
 
-	//BEGIN HEC ONLY SAKAI-2723
+	// BEGIN HEC ONLY SAKAI-2723
 	// FIXME: this is for HEC Montreal only. Should be injected or something
 	// cleaner than this. See SAKAI-2163.
 	String siteShareable =
@@ -1129,7 +1042,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			SecurityInterface.ACCESS_COMMUNITY);
 	    }
 	}
-	//END HEC ONLY SAKAI-2723
+	// END HEC ONLY SAKAI-2723
 
     }
 
@@ -1157,14 +1070,6 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	return ": elapsed : " + (System.currentTimeMillis() - start) + " ms ";
     }
 
-    public void setCmService(CourseManagementService cmService) {
-	this.cmService = cmService;
-    }
-
-    public CourseManagementService getCmService() {
-	return cmService;
-    }
-
     public void unpublish(String siteId, String webappDir) throws Exception,
 	    PermissionException {
 	resourceDao.removePublishVersionsForSiteId(siteId);
@@ -1172,13 +1077,13 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	COSerialized co =
 		osylSiteService.getSerializedCourseOutline(siteId, webappDir);
 
-	//BEGIN HEC ONLY SAKAI-2723
+	// BEGIN HEC ONLY SAKAI-2723
 	String portalActivated =
 		ServerConfigurationService.getString("hec.portail.activated");
 	if (portalActivated != null && portalActivated.equalsIgnoreCase("true")) {
 	    osylTransformToZCCO.unpublish(siteId, co.getLang());
 	}
-	//END HEC ONLY SAKAI-2723
+	// END HEC ONLY SAKAI-2723
 
 	// remove publication date in DB
 	resourceDao.setPublicationDate(co.getCoId(), null);

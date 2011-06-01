@@ -182,5 +182,10 @@
 		<property name="configDao"
 			ref="org.sakaiquebec.opensyllabus.common.dao.COConfigDao" />
 	</bean>
+	
+	<bean id="org.sakaiquebec.opensyllabus.common.impl.OsylDirectoryPublishServiceImpl"
+		class="org.sakaiquebec.opensyllabus.common.impl.OsylDirectoryPublishServiceImpl" 
+		parent="org.sakaiquebec.opensyllabus.common.api.OsylPublishService">
+	</bean>
 
 </beans>

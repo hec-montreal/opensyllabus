@@ -380,5 +380,7 @@ public interface OsylSiteService extends EntityProducer {
      * @param resource
      */
     public void sendEvent(String eventType, String resource, String context);
+    
+    public String getSiteType(String siteId);
 
 }

@@ -2207,4 +2207,14 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		NotificationService.NOTI_NONE));
 
     }
+
+    @Override
+    public String getSiteType(String siteId) {
+	String type = null;
+	try {
+	    type = siteService.getSite(siteId).getType();
+	} catch (Exception e) {
+	}
+	return type;
+    }
 }
