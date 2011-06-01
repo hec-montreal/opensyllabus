@@ -207,8 +207,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    if (!section.getEid().endsWith("00")) {
 		Set<String> instructors =
 			section.getEnrollmentSet().getOfficialInstructors();
+		 String userName = "";
 		if (!instructors.isEmpty()) {
-		    String userName = "";
 		    try {
 			User user =
 				userDirectoryService
@@ -224,8 +224,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 					+ user.getLastName().substring(1);
 		    } catch (Exception e) {
 		    }
-		    coDirectorySite.putSection(getSiteName(section), userName);
 		}
+		coDirectorySite.putSection(getSectionName(section), userName);
 	    }
 	    if (section.getCategory() != null
 		    && !section.getCategory().equals("")) {
@@ -233,8 +233,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    }
 	}
 
-	// if (!currentSessions.contains(courseOffering.getAcademicSession()))
-	// coDirectorySite.setSections(new HashMap<String, String>());
+	if (!currentSessions.contains(courseOffering.getAcademicSession()))
+	    coDirectorySite.setSections(new HashMap<String, String>());
 
 	coDirectorySite.setProgram(courseOffering.getAcademicCareer());
 
@@ -314,7 +314,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	return courseId;
     }
 
-    private String getSiteName(Section section) {
+    private String getSectionName(Section section) {
 	String siteName = null;
 	String sectionId = section.getEid();
 	String courseOffId = section.getCourseOfferingEid();
