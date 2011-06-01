@@ -36,6 +36,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.tool.api.Tool;
 import org.sakaiquebec.opensyllabus.client.remoteservice.rpc.OsylEditorGwtService;
+import org.sakaiquebec.opensyllabus.common.api.OsylDirectoryService;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
 import org.sakaiquebec.opensyllabus.shared.exception.PdfGenerationException;
@@ -177,9 +178,15 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 		new Vector<Map<String, String>>();
 	String siteId = osylServices.getOsylSiteService().getCurrentSiteId();
 	try {
-	    publicationResults =
-		    osylServices.getOsylPublishService().publish(webappDir,
-			    siteId);
+	    if (OsylDirectoryService.SITE_TYPE.equals(osylServices
+		    .getOsylSiteService().getSiteType(siteId)))
+		publicationResults =
+			osylServices.getOsylDirectoryPublishService().publish(
+				webappDir, siteId);
+	    else
+		publicationResults =
+			osylServices.getOsylPublishService().publish(webappDir,
+				siteId);
 	    // We invalidate the cached published CO for this siteId
 	    if (cacheEnabled) {
 		publishedCoCache.remove(siteId
@@ -401,10 +408,6 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
 		getSerializedCourseOutline(osylServices.getOsylSiteService()
 			.getCurrentSiteId());
 	osylServices.getOsylConfigService().fillCo(webappDir, cos);
-	String transformXml =
-		transformXmlForGroup(cos.getContent(),
-			SecurityInterface.ACCESS_ATTENDEE);
-	cos.setContent(transformXml);
 	osylServices.getOsylPublishService().createEditionPrintVersion(cos,
 		webappDir);
     }
@@ -416,7 +419,8 @@ public class OsylEditorGwtServiceImpl extends RemoteServiceServlet implements
     @Override
     public void sendEvent(String eventType, String resource) {
 	try {
-	    osylServices.getOsylSiteService().sendEvent(eventType,resource,osylServices.getOsylSiteService().getCurrentSiteId());
+	    osylServices.getOsylSiteService().sendEvent(eventType, resource,
+		    osylServices.getOsylSiteService().getCurrentSiteId());
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}

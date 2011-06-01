@@ -52,23 +52,25 @@ public class OsylBackingBean {
 
     /**
      * The security service to be injected by spring
-     * @uml.property  name="osylSecurityService"
-     * @uml.associationEnd  
+     * 
+     * @uml.property name="osylSecurityService"
+     * @uml.associationEnd
      */
     private OsylSecurityService osylSecurityService;
 
     /**
-     * Sets the  {@link OsylSiteService} .
-     * @param  osylSiteService
-     * @uml.property  name="osylSiteService"
+     * Sets the {@link OsylSiteService} .
+     * 
+     * @param osylSiteService
+     * @uml.property name="osylSiteService"
      */
     public void setOsylSiteService(OsylSiteService osylSiteService) {
 	this.osylSiteService = osylSiteService;
     }
 
     /**
-     * @return  the osylSecurityService.
-     * @uml.property  name="osylSecurityService"
+     * @return the osylSecurityService.
+     * @uml.property name="osylSecurityService"
      */
     public OsylSecurityService getOsylSecurityService() {
 	return osylSecurityService;
@@ -76,23 +78,25 @@ public class OsylBackingBean {
 
     /**
      * The Site service to be injected by spring
-     * @uml.property  name="osylSiteService"
-     * @uml.associationEnd  
+     * 
+     * @uml.property name="osylSiteService"
+     * @uml.associationEnd
      */
     private OsylSiteService osylSiteService;
 
     /**
-     * @return  the osylSiteService.
-     * @uml.property  name="osylSiteService"
+     * @return the osylSiteService.
+     * @uml.property name="osylSiteService"
      */
     public OsylSiteService getOsylSiteService() {
 	return osylSiteService;
     }
 
     /**
-     * Sets the  {@link OsylSecurityService} .
-     * @param  osylSecurityService
-     * @uml.property  name="osylSecurityService"
+     * Sets the {@link OsylSecurityService} .
+     * 
+     * @param osylSecurityService
+     * @uml.property name="osylSecurityService"
      */
     public void setOsylSecurityService(OsylSecurityService osylSecurityService) {
 	this.osylSecurityService = osylSecurityService;
@@ -100,70 +104,90 @@ public class OsylBackingBean {
 
     /**
      * The config service to be injected by spring
-     * @uml.property  name="osylConfigService"
-     * @uml.associationEnd  
+     * 
+     * @uml.property name="osylConfigService"
+     * @uml.associationEnd
      */
     private OsylConfigService osylConfigService;
 
     /**
-     * Sets the  {@link OsylConfigService} .
-     * @param  osylConfigService
-     * @uml.property  name="osylConfigService"
+     * Sets the {@link OsylConfigService} .
+     * 
+     * @param osylConfigService
+     * @uml.property name="osylConfigService"
      */
     public void setOsylConfigService(OsylConfigService osylConfigService) {
 	this.osylConfigService = osylConfigService;
     }
 
     /**
-     * @return  the osylConfigService.
-     * @uml.property  name="osylConfigService"
+     * @return the osylConfigService.
+     * @uml.property name="osylConfigService"
      */
     public OsylConfigService getOsylConfigService() {
 	return osylConfigService;
     }
 
     /**
-     * @uml.property  name="osylService"
-     * @uml.associationEnd  
+     * @uml.property name="osylService"
+     * @uml.associationEnd
      */
     private OsylService osylService;
 
-	/**
-	 * @return
-	 * @uml.property  name="osylService"
-	 */
-	public OsylService getOsylService() {
-		return osylService;
-	}
+    /**
+     * @return
+     * @uml.property name="osylService"
+     */
+    public OsylService getOsylService() {
+	return osylService;
+    }
 
-	/**
-	 * @param osylService
-	 * @uml.property  name="osylService"
-	 */
-	public void setOsylService(OsylService osylService) {
-		this.osylService = osylService;
-	}
-	
-	/**
-	 * @uml.property  name="osylPublishService"
-	 * @uml.associationEnd  
-	 */
-	private OsylPublishService osylPublishService;
+    /**
+     * @param osylService
+     * @uml.property name="osylService"
+     */
+    public void setOsylService(OsylService osylService) {
+	this.osylService = osylService;
+    }
 
-	/**
-	 * @return
-	 * @uml.property  name="osylPublishService"
-	 */
-	public OsylPublishService getOsylPublishService() {
-		return osylPublishService;
-	}
+    /**
+     * @uml.property name="osylPublishService"
+     * @uml.associationEnd
+     */
+    private OsylPublishService osylPublishService;
 
-	/**
-	 * @param osylPublishService
-	 * @uml.property  name="osylPublishService"
-	 */
-	public void setOsylPublishService(OsylPublishService osylPublishService) {
-		this.osylPublishService = osylPublishService;
-	}
-	
+    /**
+     * @return
+     * @uml.property name="osylPublishService"
+     */
+    public OsylPublishService getOsylPublishService() {
+	return osylPublishService;
+    }
+
+    /**
+     * @param osylPublishService
+     * @uml.property name="osylPublishService"
+     */
+    public void setOsylPublishService(OsylPublishService osylPublishService) {
+	this.osylPublishService = osylPublishService;
+    }
+    
+    private OsylPublishService osylDirectoryPublishService;
+
+    /**
+     * @return
+     * @uml.property name="osylDirectoryPublishService"
+     */
+    public OsylPublishService getOsylDirectoryPublishService() {
+	return osylDirectoryPublishService;
+    }
+
+    /**
+     * @param osylPublishService
+     * @uml.property name="osylPublishService"
+     */
+    public void setOsylDirectoryPublishService(OsylPublishService osylPublishService) {
+	this.osylDirectoryPublishService = osylPublishService;
+    }
+
 }
