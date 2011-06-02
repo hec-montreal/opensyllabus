@@ -118,7 +118,7 @@ public class UnpublishAction extends OsylManagerAbstractAction {
     public boolean isActionEnableForSites(List<COSite> siteIds) {
 	if (siteIds.size() > 0) {
 	    for (COSite cosite : siteIds) {
-	    	if (cosite.isCoIsFrozen())
+	    	if (cosite.isCoIsFrozen() || cosite.getLastPublicationDate()==null)
 	    	    return false;
 	    }
 	    return true;
