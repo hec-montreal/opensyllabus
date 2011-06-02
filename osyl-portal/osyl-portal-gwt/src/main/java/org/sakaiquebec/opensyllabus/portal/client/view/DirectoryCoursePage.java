@@ -78,7 +78,7 @@ public class DirectoryCoursePage extends AbstractPortalView {
 
 	Label t32 =
 		new Label(getMessage("directoryCoursePage_program") + " : "
-			+ getMessage("acad_career." + site.getProgram()));
+			+ site.getProgram());
 	t32.setStylePrimaryName("NHP_titre3");
 	mainPanel.add(t32);
 

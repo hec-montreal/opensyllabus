@@ -233,8 +233,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    }
 	}
 
-	if (!currentSessions.contains(courseOffering.getAcademicSession()))
-	    coDirectorySite.setSections(new HashMap<String, String>());
+//	if (!currentSessions.contains(courseOffering.getAcademicSession()))
+//	    coDirectorySite.setSections(new HashMap<String, String>());
 
 	coDirectorySite.setProgram(courseOffering.getAcademicCareer());
 
