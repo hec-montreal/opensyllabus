@@ -27,7 +27,6 @@ import org.sakaiquebec.opensyllabus.portal.client.view.AbstractPortalView;
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
@@ -70,8 +69,8 @@ public class PortalController {
 	PortalRpcController.getInstance().getCoursesForResponsible(responsible,
 		callback);
     }
-    
-    public void getDescription(String siteId,AsyncCallback<String> callback){
+
+    public void getDescription(String siteId, AsyncCallback<String> callback) {
 	PortalRpcController.getInstance().getDescription(siteId, callback);
     }
     /************************** END RPC CALLS *******************************/

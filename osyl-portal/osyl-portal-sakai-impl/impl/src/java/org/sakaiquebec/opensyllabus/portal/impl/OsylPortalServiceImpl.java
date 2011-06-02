@@ -386,64 +386,10 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 
     @Override
     public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer) {
-	// for (CODirectorySite coDirectorySite : courseListByAcadCareerMap
-	// .get(acadCareer)) {
-	// String description = "";
-	// try {
-	// COSerialized coSerialized =
-	// osylPublishService
-	// .getSerializedPublishedCourseOutlineForAccessType(
-	// coDirectorySite.getCourseNumber(),
-	// SecurityInterface.ACCESS_PUBLIC,
-	// webappDir);
-	// Node d = XmlHelper.parseXml(coSerialized.getContent());
-	// XPathFactory factory = XPathFactory.newInstance();
-	// XPath xpath = factory.newXPath();
-	// XPathExpression expr;
-	// expr =
-	// xpath.compile("//asmContext[semanticTag[@type='HEC']='description']/asmResource/text");
-	//
-	// NodeList nodes =
-	// (NodeList) expr.evaluate(d, XPathConstants.NODESET);
-	// for (int i = 0; i < nodes.getLength(); i++) {
-	// Node node = nodes.item(i);
-	// description += node.getTextContent();
-	// }
-	// } catch (Exception e) {
-	// }
-	// coDirectorySite.setDescription(description);
-	// }
 	return courseListByAcadCareerMap.get(acadCareer);
     }
 
     public List<CODirectorySite> getCoursesForResponsible(String responsible) {
-	// for (CODirectorySite coDirectorySite : courseListByResponsibleMap
-	// .get(responsible)) {
-	// String description = "";
-	// try {
-	// COSerialized coSerialized =
-	// osylPublishService
-	// .getSerializedPublishedCourseOutlineForAccessType(
-	// coDirectorySite.getCourseNumber(),
-	// SecurityInterface.ACCESS_PUBLIC,
-	// webappDir);
-	// Node d = XmlHelper.parseXml(coSerialized.getContent());
-	// XPathFactory factory = XPathFactory.newInstance();
-	// XPath xpath = factory.newXPath();
-	// XPathExpression expr;
-	// expr =
-	// xpath.compile("//asmContext[semanticTag[@type='HEC']='description']/asmResource/text");
-	//
-	// NodeList nodes =
-	// (NodeList) expr.evaluate(d, XPathConstants.NODESET);
-	// for (int i = 0; i < nodes.getLength(); i++) {
-	// Node node = nodes.item(i);
-	// description += node.getTextContent();
-	// }
-	// } catch (Exception e) {
-	// }
-	// coDirectorySite.setDescription(description);
-	// }
 	return courseListByResponsibleMap.get(responsible);
     }
 
