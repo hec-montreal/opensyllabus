@@ -24,6 +24,7 @@ import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.component.cover.ServerConfigurationService;
+import org.sakaiproject.coursemanagement.api.AcademicCareer;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
 import org.sakaiproject.coursemanagement.api.CanonicalCourse;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
@@ -348,10 +349,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		lang = coursEntry.getLangue();
 		ProgrammeEtudesMapEntry programmeEtudesMapEntry =
 			programmeEtudesMap.get(coursEntry.getAcadCareer());
-		if (Constants.ENGLISH.equals(lang))
-		    career = programmeEtudesMapEntry.getDescEng();
-		else
-		    career = programmeEtudesMapEntry.getDescFr();
+		career = programmeEtudesMapEntry.getAcadCareer();
+		
 		if (!cmService.isCourseOfferingDefined(courseOfferingId)) {
 		    courseOff =
 			    cmAdmin.createCourseOffering(courseOfferingId,
@@ -483,6 +482,39 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	return newSection;
     }
 
+    /**
+     * Method used to create academic careers.
+     */
+    public void loadAcademicCareers() {
+	ProgrammeEtudesMapEntry acadCareerEntry = null;
+	String eid = null;
+	String description = null;
+	String description_fr_ca = null;
+	AcademicCareer acadCareer = null;
+
+	Iterator<ProgrammeEtudesMapEntry> academicCareers =
+		programmeEtudesMap.values().iterator();
+
+	while (academicCareers.hasNext()) {
+	    acadCareerEntry = academicCareers.next();
+	    eid = acadCareerEntry.getAcadCareer();
+	    description = acadCareerEntry.getDescEng();
+	    description_fr_ca = acadCareerEntry.getDescFr();
+	    if (!cmService.isAcademicCareerDefined(eid)) {
+		acadCareer =
+			cmAdmin.createAcademicCareer(eid, description,
+				description_fr_ca);
+	    } else {
+		acadCareer = cmService.getAcademicCareer(eid);
+		acadCareer.setDescription(description);
+		acadCareer.setDescription_fr_ca(description_fr_ca);
+		cmAdmin.updateAcademicCareer(acadCareer);
+	    }
+
+	}
+
+    }
+    
     /**
      * Method used to create the sessions
      */
@@ -693,6 +725,11 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	    retrieveCurrentCMContent();
 
+	    
+	    //We load academic careers
+	    loadAcademicCareers();
+	    log.info("Academic Careers updated successfully");
+	    
 	    // We load sessions
 	    loadSessions();
 	    log.info("Sessions updated successfully");
