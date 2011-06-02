@@ -76,8 +76,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 							// how;
 
     private Timer timer;
-    
-    //SPRING INJECTONS
+
+    // SPRING INJECTONS
     private CourseManagementService courseManagementService;
 
     public void setCourseManagementService(
@@ -97,7 +97,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    UserDirectoryService userDirectoryService) {
 	this.userDirectoryService = userDirectoryService;
     }
-    //END SPRING INJECTIONS
+
+    // END SPRING INJECTIONS
 
     /**
      * Init method called right after Spring injection.
@@ -207,7 +208,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    if (!section.getEid().endsWith("00")) {
 		Set<String> instructors =
 			section.getEnrollmentSet().getOfficialInstructors();
-		 String userName = "";
+		String userName = "";
 		if (!instructors.isEmpty()) {
 		    try {
 			User user =
@@ -233,34 +234,10 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    }
 	}
 
-//	if (!currentSessions.contains(courseOffering.getAcademicSession()))
-//	    coDirectorySite.setSections(new HashMap<String, String>());
+	// if (!currentSessions.contains(courseOffering.getAcademicSession()))
+	// coDirectorySite.setSections(new HashMap<String, String>());
 
 	coDirectorySite.setProgram(courseOffering.getAcademicCareer());
-
-	String description = "";
-	try {
-	    COSerialized coSerialized =
-		    osylPublishService
-			    .getSerializedPublishedCourseOutlineForAccessType(
-				    coDirectorySite.getCourseNumber(),
-				    SecurityInterface.ACCESS_PUBLIC, webappDir);
-	    Node d = XmlHelper.parseXml(coSerialized.getContent());
-	    XPathFactory factory = XPathFactory.newInstance();
-	    XPath xpath = factory.newXPath();
-	    XPathExpression expr;
-	    expr =
-		    xpath.compile("//asmContext[semanticTag[@type='HEC']='description']/asmResource/text");
-
-	    NodeList nodes =
-		    (NodeList) expr.evaluate(d, XPathConstants.NODESET);
-	    for (int i = 0; i < nodes.getLength(); i++) {
-		Node node = nodes.item(i);
-		description += node.getTextContent();
-	    }
-	} catch (Exception e) {
-	}
-	coDirectorySite.setDescription(description);
 
 	return coDirectorySite;
     }
@@ -409,65 +386,91 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 
     @Override
     public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer) {
-	for (CODirectorySite coDirectorySite : courseListByAcadCareerMap
-		.get(acadCareer)) {
-	    String description = "";
-	    try {
-		COSerialized coSerialized =
-			osylPublishService
-				.getSerializedPublishedCourseOutlineForAccessType(
-					coDirectorySite.getCourseNumber(),
-					SecurityInterface.ACCESS_PUBLIC,
-					webappDir);
-		Node d = XmlHelper.parseXml(coSerialized.getContent());
-		XPathFactory factory = XPathFactory.newInstance();
-		XPath xpath = factory.newXPath();
-		XPathExpression expr;
-		expr =
-			xpath.compile("//asmContext[semanticTag[@type='HEC']='description']/asmResource/text");
-
-		NodeList nodes =
-			(NodeList) expr.evaluate(d, XPathConstants.NODESET);
-		for (int i = 0; i < nodes.getLength(); i++) {
-		    Node node = nodes.item(i);
-		    description += node.getTextContent();
-		}
-	    } catch (Exception e) {
-	    }
-	    coDirectorySite.setDescription(description);
-	}
+	// for (CODirectorySite coDirectorySite : courseListByAcadCareerMap
+	// .get(acadCareer)) {
+	// String description = "";
+	// try {
+	// COSerialized coSerialized =
+	// osylPublishService
+	// .getSerializedPublishedCourseOutlineForAccessType(
+	// coDirectorySite.getCourseNumber(),
+	// SecurityInterface.ACCESS_PUBLIC,
+	// webappDir);
+	// Node d = XmlHelper.parseXml(coSerialized.getContent());
+	// XPathFactory factory = XPathFactory.newInstance();
+	// XPath xpath = factory.newXPath();
+	// XPathExpression expr;
+	// expr =
+	// xpath.compile("//asmContext[semanticTag[@type='HEC']='description']/asmResource/text");
+	//
+	// NodeList nodes =
+	// (NodeList) expr.evaluate(d, XPathConstants.NODESET);
+	// for (int i = 0; i < nodes.getLength(); i++) {
+	// Node node = nodes.item(i);
+	// description += node.getTextContent();
+	// }
+	// } catch (Exception e) {
+	// }
+	// coDirectorySite.setDescription(description);
+	// }
 	return courseListByAcadCareerMap.get(acadCareer);
     }
 
     public List<CODirectorySite> getCoursesForResponsible(String responsible) {
-	for (CODirectorySite coDirectorySite : courseListByResponsibleMap
-		.get(responsible)) {
-	    String description = "";
-	    try {
-		COSerialized coSerialized =
-			osylPublishService
-				.getSerializedPublishedCourseOutlineForAccessType(
-					coDirectorySite.getCourseNumber(),
-					SecurityInterface.ACCESS_PUBLIC,
-					webappDir);
-		Node d = XmlHelper.parseXml(coSerialized.getContent());
-		XPathFactory factory = XPathFactory.newInstance();
-		XPath xpath = factory.newXPath();
-		XPathExpression expr;
-		expr =
-			xpath.compile("//asmContext[semanticTag[@type='HEC']='description']/asmResource/text");
-
-		NodeList nodes =
-			(NodeList) expr.evaluate(d, XPathConstants.NODESET);
-		for (int i = 0; i < nodes.getLength(); i++) {
-		    Node node = nodes.item(i);
-		    description += node.getTextContent();
-		}
-	    } catch (Exception e) {
-	    }
-	    coDirectorySite.setDescription(description);
-	}
+	// for (CODirectorySite coDirectorySite : courseListByResponsibleMap
+	// .get(responsible)) {
+	// String description = "";
+	// try {
+	// COSerialized coSerialized =
+	// osylPublishService
+	// .getSerializedPublishedCourseOutlineForAccessType(
+	// coDirectorySite.getCourseNumber(),
+	// SecurityInterface.ACCESS_PUBLIC,
+	// webappDir);
+	// Node d = XmlHelper.parseXml(coSerialized.getContent());
+	// XPathFactory factory = XPathFactory.newInstance();
+	// XPath xpath = factory.newXPath();
+	// XPathExpression expr;
+	// expr =
+	// xpath.compile("//asmContext[semanticTag[@type='HEC']='description']/asmResource/text");
+	//
+	// NodeList nodes =
+	// (NodeList) expr.evaluate(d, XPathConstants.NODESET);
+	// for (int i = 0; i < nodes.getLength(); i++) {
+	// Node node = nodes.item(i);
+	// description += node.getTextContent();
+	// }
+	// } catch (Exception e) {
+	// }
+	// coDirectorySite.setDescription(description);
+	// }
 	return courseListByResponsibleMap.get(responsible);
+    }
+
+    public String getDescription(String siteId) {
+	String description = "";
+	try {
+	    COSerialized coSerialized =
+		    osylPublishService
+			    .getSerializedPublishedCourseOutlineForAccessType(
+				    siteId, SecurityInterface.ACCESS_PUBLIC,
+				    webappDir);
+	    Node d = XmlHelper.parseXml(coSerialized.getContent());
+	    XPathFactory factory = XPathFactory.newInstance();
+	    XPath xpath = factory.newXPath();
+	    XPathExpression expr;
+	    expr =
+		    xpath.compile("//asmContext[semanticTag[@type='HEC']='description']/asmResource/text");
+
+	    NodeList nodes =
+		    (NodeList) expr.evaluate(d, XPathConstants.NODESET);
+	    for (int i = 0; i < nodes.getLength(); i++) {
+		Node node = nodes.item(i);
+		description += node.getTextContent();
+	    }
+	} catch (Exception e) {
+	}
+	return description;
     }
 
 }

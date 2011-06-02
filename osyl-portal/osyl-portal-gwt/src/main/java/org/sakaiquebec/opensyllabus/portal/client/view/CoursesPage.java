@@ -27,6 +27,7 @@ import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -73,9 +74,27 @@ public class CoursesPage extends AbstractPortalView {
 	    l.addClickHandler(new ClickHandler() {
 
 		public void onClick(ClickEvent event) {
-		    getController().setView(
-			    new DirectoryCoursePage(coDirectorySite));
-		}
+			AsyncCallback<String> callback =
+				new AsyncCallback<String>() {
+
+				    public void onFailure(Throwable caught) {
+				    }
+
+				    public void onSuccess(String result) {
+					coDirectorySite.setDescription(result);
+					getController().setView(
+						    new DirectoryCoursePage(coDirectorySite));
+
+				    }
+				};
+			getController().getDescription(coDirectorySite.getCourseNumber(), callback);
+
+		    }
+		
+//		public void onClick(ClickEvent event) {
+//		    getController().setView(
+//			    new DirectoryCoursePage(coDirectorySite));
+//		}
 	    });
 	    mainPanel.add(l);
 	}

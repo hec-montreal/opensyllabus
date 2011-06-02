@@ -49,5 +49,7 @@ public interface OsylPortalService {
     public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer);
 
     public List<CODirectorySite> getCoursesForResponsible(String responsible);
+    
+    public String getDescription(String siteId);
 
 }

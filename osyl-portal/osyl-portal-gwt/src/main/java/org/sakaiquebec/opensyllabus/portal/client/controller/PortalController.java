@@ -70,6 +70,10 @@ public class PortalController {
 	PortalRpcController.getInstance().getCoursesForResponsible(responsible,
 		callback);
     }
+    
+    public void getDescription(String siteId,AsyncCallback<String> callback){
+	PortalRpcController.getInstance().getDescription(siteId, callback);
+    }
     /************************** END RPC CALLS *******************************/
 
 }
