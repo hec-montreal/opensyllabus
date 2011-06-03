@@ -69,7 +69,7 @@ public class CoursesPage extends AbstractPortalView {
 			    + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
 			    + coDirectorySite.getCourseName()
 			    + " ("
-			    + coDirectorySite.getProgram() + ")");
+			    + getMessage("acad_career_"+coDirectorySite.getProgram()) + ")");
 	    l.setStylePrimaryName("NHP_link");
 	    l.addClickHandler(new ClickHandler() {
 
@@ -78,6 +78,8 @@ public class CoursesPage extends AbstractPortalView {
 				new AsyncCallback<String>() {
 
 				    public void onFailure(Throwable caught) {
+					getController().setView(
+						    new DirectoryCoursePage(coDirectorySite));
 				    }
 
 				    public void onSuccess(String result) {
@@ -90,11 +92,6 @@ public class CoursesPage extends AbstractPortalView {
 			getController().getDescription(coDirectorySite.getCourseNumber(), callback);
 
 		    }
-		
-//		public void onClick(ClickEvent event) {
-//		    getController().setView(
-//			    new DirectoryCoursePage(coDirectorySite));
-//		}
 	    });
 	    mainPanel.add(l);
 	}

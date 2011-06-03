@@ -23,7 +23,6 @@ package org.sakaiquebec.opensyllabus.portal.client.view;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
@@ -78,7 +77,7 @@ public class DirectoryCoursePage extends AbstractPortalView {
 
 	Label t32 =
 		new Label(getMessage("directoryCoursePage_program") + " : "
-			+ site.getProgram());
+			+ getMessage("acad_career_" + site.getProgram()));
 	t32.setStylePrimaryName("NHP_titre3");
 	mainPanel.add(t32);
 
@@ -97,19 +96,19 @@ public class DirectoryCoursePage extends AbstractPortalView {
 	Label t4 = new Label(getMessage("directoryCoursePage_coursesList"));
 	t4.setStylePrimaryName("NHP_titre2");
 	mainPanel.add(t4);
-	
 
-	List<String> sectionsKeys = new ArrayList<String>(site.getSections().keySet());
+	List<String> sectionsKeys =
+		new ArrayList<String>(site.getSections().keySet());
 	Collections.sort(sectionsKeys, courseSectionComparator);
 	String old_sessionName = "";
 	for (final String key : sectionsKeys) {
-	    if(!old_sessionName.equals(getSessionName(key))){
-		old_sessionName = getSessionName(key); 
+	    if (!old_sessionName.equals(getSessionName(key))) {
+		old_sessionName = getSessionName(key);
 		Label l = new Label(old_sessionName);
 		l.setStylePrimaryName("NHP_titre3");
-		mainPanel.add(l);		
+		mainPanel.add(l);
 	    }
-	    
+
 	    Label link =
 		    new HTML(
 			    key

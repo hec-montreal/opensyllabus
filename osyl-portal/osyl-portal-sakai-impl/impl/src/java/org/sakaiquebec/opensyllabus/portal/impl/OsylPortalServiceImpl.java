@@ -68,7 +68,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 
     private Map<String, List<CODirectorySite>> courseListByResponsibleMap;
 
-    private List<AcademicSession> currentSessions;
+    private List<String> currentSessions;
 
     private String webappDir = System.getProperty("catalina.home")
 	    + File.separator + "webapps" + File.separator
@@ -112,7 +112,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		buildCoursesMaps();
 	    }
 	};
-	timer.schedule(timerTask, 50000, 86400000);
+	timer.schedule(timerTask, 0, 86400000);
     }
 
     public void destroy() {
@@ -125,7 +125,11 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	log.info("Start building course maps");
 	long start = System.currentTimeMillis();
 
-	currentSessions = courseManagementService.getCurrentAcademicSessions();
+	currentSessions = new ArrayList<String>();
+	for (AcademicSession academicSession : courseManagementService
+		.getCurrentAcademicSessions()){
+	    currentSessions.add(academicSession.getEid());
+	}
 
 	// ACAD_CARRER
 	Map<String, List<CODirectorySite>> temp_courseListByAcadCareerMap =
@@ -152,43 +156,58 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 
     private List<CODirectorySite> buildCoursesListForAcadCareer(
 	    String acadCareer, String webappDir) {
-	List<CODirectorySite> coursesList = new ArrayList<CODirectorySite>();
-	List<String> coursesName = new ArrayList<String>();
+	Map<String, CODirectorySite> courseMap =
+		new HashMap<String, CODirectorySite>();
 	Set<CourseOffering> courseOfferings =
 		courseManagementService
 			.findCourseOfferingsByAcadCareer(acadCareer);
 
 	for (CourseOffering courseOffering : courseOfferings) {
-	    if (!coursesName.contains(courseOffering.getCanonicalCourseEid())) {
-		CODirectorySite coSite =
-			fillCODirectorySiteWithCourseOffering(courseOffering,
-				webappDir);
-		coursesList.add(coSite);
-		coursesName.add(courseOffering.getCanonicalCourseEid());
+	    if (currentSessions.contains(courseOffering.getAcademicSession()
+		    .getEid())) {
+		if (!courseMap.containsKey(courseOffering
+			.getCanonicalCourseEid())) {
+		    CODirectorySite coSite =
+			    fillCODirectorySiteWithCourseOffering(
+				    courseOffering, webappDir);
+		    courseMap.put(courseOffering.getCanonicalCourseEid(),
+			    coSite);
+		} else {
+		    fillSectionsForCODirectorySite(courseMap.get(courseOffering
+			    .getCanonicalCourseEid()), courseOffering);
+		}
 	    }
 	}
-	return coursesList;
+	return new ArrayList<CODirectorySite>(courseMap.values());
     }
 
     private List<CODirectorySite> buildCoursesListForResponsible(
 	    String responsible, String webappDir) {
-	List<String> coursesName = new ArrayList<String>();
-	List<CODirectorySite> coursesList = new ArrayList<CODirectorySite>();
+	Map<String, CODirectorySite> courseMap =
+		new HashMap<String, CODirectorySite>();
 	Set<Section> sections =
 		courseManagementService.findSectionsByCategory(responsible);
+
 	for (Section section : sections) {
 	    CourseOffering courseOffering =
 		    courseManagementService.getCourseOffering(section
 			    .getCourseOfferingEid());
-	    if (!coursesName.contains(courseOffering.getCanonicalCourseEid())) {
-		CODirectorySite coSite =
-			fillCODirectorySiteWithCourseOffering(courseOffering,
-				webappDir);
-		coursesList.add(coSite);
-		coursesName.add(courseOffering.getCanonicalCourseEid());
+	    if (currentSessions.contains(courseOffering.getAcademicSession()
+		    .getEid())) {
+		if (!courseMap.containsKey(courseOffering
+			.getCanonicalCourseEid())) {
+		    CODirectorySite coSite =
+			    fillCODirectorySiteWithCourseOffering(
+				    courseOffering, webappDir);
+		    courseMap.put(courseOffering.getCanonicalCourseEid(),
+			    coSite);
+		} else {
+		    fillSectionsForCODirectorySite(courseMap.get(courseOffering
+			    .getCanonicalCourseEid()), courseOffering);
+		}
 	    }
 	}
-	return coursesList;
+	return new ArrayList<CODirectorySite>(courseMap.values());
     }
 
     private CODirectorySite fillCODirectorySiteWithCourseOffering(
@@ -202,6 +221,15 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	coDirectorySite
 		.setRequirements("Vous devez avoir suivi les cours suivants pour vous inscrire<br><b>COURS-101</b><br><b>COURS-102</b>");// TODO
 
+	fillSectionsForCODirectorySite(coDirectorySite, courseOffering);
+
+	coDirectorySite.setProgram(courseOffering.getAcademicCareer());
+
+	return coDirectorySite;
+    }
+
+    private void fillSectionsForCODirectorySite(
+	    CODirectorySite coDirectorySite, CourseOffering courseOffering) {
 	Set<Section> sections =
 		courseManagementService.getSections(courseOffering.getEid());
 	for (Section section : sections) {
@@ -233,13 +261,6 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		coDirectorySite.setResponsible(section.getCategory());
 	    }
 	}
-
-	// if (!currentSessions.contains(courseOffering.getAcademicSession()))
-	// coDirectorySite.setSections(new HashMap<String, String>());
-
-	coDirectorySite.setProgram(courseOffering.getAcademicCareer());
-
-	return coDirectorySite;
     }
 
     private String getDirectorySiteName(String canCourseId) {
