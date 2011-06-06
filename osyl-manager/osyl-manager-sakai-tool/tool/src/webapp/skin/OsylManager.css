@@ -215,6 +215,11 @@ background-color:transparent;
 color: silver;
 }
 
+.OsylManager-scrollTable-row-directory{
+background-color:transparent;
+color: blue;
+}
+
 .OsylManager-scrollTable-row-hover{
 background-color:#ccccff;
 cursor:pointer;
