@@ -169,7 +169,7 @@ public interface OsylManagerService {
 	    String academicSession);
 
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
-    	    String academicSession, boolean withFrozenSites);
+    	    String academicSession, boolean withFrozenSites, boolean withDirectorySites);
 
     public List<CMAcademicSession> getAcademicSessions();
 
