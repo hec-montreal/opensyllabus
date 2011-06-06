@@ -122,11 +122,11 @@ public interface Messages extends ConstantsWithLookup {
     String mainView_label();
 
     String mainView_creationOfNewSite();
-    
+
     String mainView_operationsOnExistingSites();
-    
+
     String mainView_searchForExistingSites();
-    
+
     String mainView_searchForExistingSites_input();
 
     String mainView_or();
@@ -159,7 +159,7 @@ public interface Messages extends ConstantsWithLookup {
     String mainView_action_unattach_tooltip();
     String mainView_action_unpublish();
     String mainView_action_unpublish_tooltip();
-    
+
     String mainView_action_search();
 
     String mainView_tabs_all();
@@ -189,7 +189,7 @@ public interface Messages extends ConstantsWithLookup {
     String unattachAction_unattach_error();
 
     String unattachAction_unattach_error_detail();
-    
+
     String unattachAction_unattach_ok();
 
     String cminfoView_label();
@@ -203,7 +203,7 @@ public interface Messages extends ConstantsWithLookup {
     String cminfoView_studentNumber();
 
     String associateForm_instruction();
-    
+
     String associateForm_courseIdentifier();
 
     String associateForm_courseName();
@@ -211,11 +211,11 @@ public interface Messages extends ConstantsWithLookup {
     String associateForm_ok();
 
     String associateForm_cancel();
-    
+
     String dissociateAction_dissociate_error();
-    
+
     String dissociateAction_dissociate_error_detail();
-    
+
     String dissociateAction_dissociate_ok();
 
     String associateForm_confirmation();
@@ -227,7 +227,7 @@ public interface Messages extends ConstantsWithLookup {
     String publishAction_publish_error_detail();
 
     String publishAction_publish_ok();
-    
+
     String CourseListView_scSiteList_col0();
     String CourseListView_scSiteList_col1();
     String CourseListView_scSiteList_col2();
@@ -236,19 +236,19 @@ public interface Messages extends ConstantsWithLookup {
     String CourseListView_scSiteList_col5();
     String CourseListView_scSiteList_col6();
     String CourseListView_scSiteList_col7();
-    String CourseListView_scSiteList_col8();    
-    
+    String CourseListView_scSiteList_col8();
+
     String OsylAlertDialog_Title();
     String OsylAlertDialog_Ok_Button();
-    
+
     String OsylOKCancelDialog_Ok_Button();
     String OsylOKCancelDialog_Cancel_Button();
     String OsylOkCancelDialog_Title();
-    
+
     String OsylCancelDialog_Cancel_Button();
     String OsylCancelDialog_Title();
     String OsylCancelDialog_Content();
-    
+
     String OsylWarning_Title();
 
     String associateForm_search();
@@ -261,15 +261,17 @@ public interface Messages extends ConstantsWithLookup {
     String deleteAction_delete_siteHasChild();
 
     String deleteAction_delete_error_linkedToCM();
-    
+
     String academicSessionLabel();
     String academicSessionNone();
     String academicSessionWinter();
     String academicSessionSummer();
     String academicSessionFall();
-    
+
     String showFrozenSites();
-    
+
+	String showDirectorySites();
+
     String copyForm_instruction();
 
     String copyForm_courseIdentifier();
@@ -285,21 +287,21 @@ public interface Messages extends ConstantsWithLookup {
     String copyForm_cancel();
 
     String publishAction_publish_voidCO();
-    
+
     String explanationMsg();
 
     String publishAction_publish_inProgress();
-    
+
     String publishAction_publish_title();
-    
+
     String publishAction_publish_versionPDF();
-    
+
     String publishAction_publish_publishedVersion();
-    
+
     String attachForm_siteTitle();
 
     String attachForm_attach_inProgress();
-    
+
     String unattachForm_unattach_inProgress();
 
     String publishAction_publish_error_HierarchyFusionException();
@@ -313,21 +315,21 @@ public interface Messages extends ConstantsWithLookup {
     String attachAction_attach_error_FusionException();
 
     String attachAction_attach_error_VersionCompatibilityException();
-    
+
     String attachAction_attach_error_CompatibilityException();
 
     String deleteAction_delete_error_hasChild();
-    
+
     String publish_pdfGenerationException();
 
     String publish_publishedDate();
-    
+
     String publishAction_pdfGenNote();
-    
+
     String publishAction_pdfGen_ok();
-    
+
     String publishAction_pdfGen_nok();
-    
+
     String permission_exception();
 
     String unpublishAction_unpublish_error();
