@@ -149,7 +149,11 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     private static final String SAKAI_SITE_TYPE = SiteService.SITE_SUBTYPE;
 
     public final static String SHARABLE_SECTION = "00";
+    
+    public final static String DIRECTORY_TYPE_SITE = "directory";
 
+    public final static String COURSE_TYPE_SITE = "course";
+    
     private static final Log log =
 	    LogFactory.getLog(OsylManagerServiceImpl.class);
 
@@ -1463,6 +1467,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    info.setSiteId(siteId);
 	    info.setSiteName(site.getTitle());
 	    info.setSiteDescription(site.getDescription());
+	    info.setType(site.getType());
 	    info.setSiteShortDescription(site.getShortDescription());
 	    info.setSiteOwnerLastName(site.getCreatedBy().getLastName());
 	    info.setSiteOwnerName(site.getCreatedBy().getFirstName());
@@ -1555,18 +1560,133 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	log.trace("getCoAndSiteInfo  " + elapsed(start) + "DONE " + siteId);
 	return info;
     } // getCoAndSiteInfo
-    
-	private boolean getFrozenValue(Site site) {
-		ResourcePropertiesEdit rp = site.getPropertiesEdit();
-		boolean coIsFrozen = false;
-		
-		if (rp.getProperty(PROP_SITE_ISFROZEN)!= null) {
-			if (rp.getProperty(PROP_SITE_ISFROZEN).equals("true")) {
-				coIsFrozen = true;
+
+    /** {@inheritDoc} */
+    public COSite getCoAndSiteInfo(String siteId, String searchTerm,
+	    String academicSession, boolean withDirectorySites) {
+	long start = System.currentTimeMillis();
+	Site site = null;
+	COSite info = new COSite();
+	try {
+	    site = osylSiteService.getSite(siteId);
+	} catch (IdUnusedException e) {
+	    log.error(e.getMessage());
+	    e.printStackTrace();
+	}
+
+	if (site != null
+		&& (COURSE_TYPE_SITE.equals(site.getType()) || DIRECTORY_TYPE_SITE
+			.equals(site.getType()))
+		&& searchTerm != null
+		&& site.getTitle().toLowerCase().contains(
+			searchTerm.toLowerCase())
+		&& site.getTitle().toLowerCase().contains(
+			parseAcademicSession(academicSession).toLowerCase())) {
+	    // Retrieve site info		
+	    info.setSiteId(siteId);
+	    info.setSiteName(site.getTitle());
+	    info.setSiteDescription(site.getDescription());
+	    info.setType(site.getType());
+	    info.setSiteShortDescription(site.getShortDescription());
+	    info.setSiteOwnerLastName(site.getCreatedBy().getLastName());
+	    info.setSiteOwnerName(site.getCreatedBy().getFirstName());
+	    info.setCoIsFrozen(getFrozenValue(site));
+
+	    // Retrieve CM info
+	    String siteProviderId = site.getProviderGroupId();
+	    if (siteProviderId != null) {
+		if (courseManagementService.isSectionDefined(siteProviderId)) {
+		    Section section =
+			    courseManagementService.getSection(siteProviderId);
+		    // Retrieve course number
+		    CourseOffering courseOff =
+			    courseManagementService.getCourseOffering(section
+				    .getCourseOfferingEid());
+		    CanonicalCourse canCourse =
+			    courseManagementService
+				    .getCanonicalCourse(courseOff
+					    .getCanonicalCourseEid());
+		    // Retrieve official instructors
+		    EnrollmentSet enrollmentSet = section.getEnrollmentSet();
+		    if (enrollmentSet != null) {
+			Set<String> instructors =
+				enrollmentSet.getOfficialInstructors();
+			User user = null;
+			String name = null;
+			for (String instructor : instructors) {
+			    try {
+				user =
+					userDirectoryService
+						.getUserByEid(instructor);
+				name = user.getDisplayName();
+				info.addCourseInstructor(name);
+			    } catch (UserNotDefinedException e) {
+				e.printStackTrace();
+			    }
 			}
-		}	
-		return coIsFrozen;
-	}	        
+		    }
+		    info.setCourseNumber(canCourse.getEid());
+		    info.setCourseName(section.getTitle());
+		    info.setCourseSection(siteProviderId
+			    .substring(siteProviderId.length() - 3));
+		    info.setCourseSession(courseOff.getAcademicSession()
+			    .getTitle());
+		    info.setAcademicCareer(courseOff.getAcademicCareer());
+		}
+	    }
+	    // TODO: the coordinator is not saved in the cm. Correct
+	    // this
+	    // when done.
+	    info.setCourseCoordinator(null);
+
+	    info.setLastModifiedDate(osylSiteService
+		    .getCoLastModifiedDate(siteId));
+	    info.setLastPublicationDate(osylSiteService
+		    .getCoLastPublicationDate(siteId));
+	    if (osylSiteService
+		    .getUnfusionnedSerializedCourseOutlineBySiteId(siteId) == null
+		    || osylSiteService
+			    .getUnfusionnedSerializedCourseOutlineBySiteId(
+				    siteId).getContent() == null)
+		info.setCoIsNull(true);
+
+	    // Retrieve parent site
+	    String parentSite = null;
+
+	    try {
+		parentSite = osylSiteService.getParent(siteId);
+	    } catch (Exception e) {
+		log.error(e.getMessage());
+		e.printStackTrace();
+	    }
+
+	    info.setParentSite(parentSite);
+
+	    // retrieve childs
+	    List<String> childs = null;
+	    try {
+		childs = osylSiteService.getChildren(siteId);
+		info.setChilds(childs);
+	    } catch (Exception e) {
+	    }
+	} else {
+	    info = null;
+	}
+	log.trace("getCoAndSiteInfo  " + elapsed(start) + "DONE " + siteId);
+	return info;
+    } // getCoAndSiteInfo    
+    
+    private boolean getFrozenValue(Site site) {
+	ResourcePropertiesEdit rp = site.getPropertiesEdit();
+	boolean coIsFrozen = false;
+		
+	if (rp.getProperty(PROP_SITE_ISFROZEN)!= null) {
+	    if (rp.getProperty(PROP_SITE_ISFROZEN).equals("true")) {
+			coIsFrozen = true;
+	    }
+	}	
+	return coIsFrozen;
+    }	        
     
     /** {@inheritDoc} */
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
@@ -1607,7 +1727,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /** {@inheritDoc} */
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
-	    String academicSession, boolean withFrozenSites) {
+	    String academicSession, boolean withFrozenSites,boolean withDirectorySites) {
 	long start = System.currentTimeMillis();
 	List<COSite> allSitesInfo = null;
 	COSite info = null;
@@ -1626,19 +1746,21 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    allSitesInfo = new ArrayList<COSite>();
 	    int accessedSitesSize = accessedSites.size();
 	    for (int i = 0; i < accessedSitesSize; i++) {
-			info = getCoAndSiteInfo(accessedSites.get(i), searchTerm,
-					academicSession);
-			if (info != null) {
-				if (withFrozenSites) {
-				    allSitesInfo.add(info);
-				    siteCount++;
-				} else {
-					if (!info.isCoIsFrozen()) {
-					    allSitesInfo.add(info);
-					    siteCount++;
-					}
-				}
-			}
+		info =
+			getCoAndSiteInfo(accessedSites.get(i), searchTerm,
+				academicSession, withDirectorySites);
+		if (info != null) {		    
+		    if (info.isCoIsFrozen() && withFrozenSites) {
+			allSitesInfo.add(info);
+			siteCount++;
+		    } else if (info.getType().equalsIgnoreCase(DIRECTORY_TYPE_SITE) && withDirectorySites) {
+			allSitesInfo.add(info);
+			siteCount++;
+		    } else if (!info.isCoIsFrozen() && info.getType().equalsIgnoreCase(COURSE_TYPE_SITE)) {
+			    allSitesInfo.add(info);
+			    siteCount++;
+		    }
+		}
 	    }
 	}
 	// TODO: move this to the end of getOsylPackage() with a specific
@@ -1646,7 +1768,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	new DeleteExpiredTemporaryExportFiles(allSitesInfo).start();
 	// deleteExpiredTemporaryExportFiles(allSitesInfo);
 	return allSitesInfo;
-    }    
+    }  
     
     @SuppressWarnings("unchecked")
     protected List<String> getSitesForUser(String userId, String permission) {
@@ -1812,7 +1934,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 
 	// We remove all resources in the publish directory collection
-	osylContentService.initSiteAttachments(newSite);
+	osylContentService.initSiteAttachments(newSite.getTitle());
 
 	// we hide work directory
 	ContentCollectionEdit cce =
