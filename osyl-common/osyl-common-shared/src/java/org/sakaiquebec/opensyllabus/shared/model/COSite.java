@@ -140,6 +140,11 @@ public class COSite implements java.io.Serializable {
     private boolean coIsFrozen=false; 
     
     /**
+     * Type of site
+     */
+    private String type; 
+    
+    /**
      * Empty constructor.
      */
     public COSite() {
@@ -395,5 +400,13 @@ public class COSite implements java.io.Serializable {
 
     public boolean isCoIsFrozen() {
 	return coIsFrozen;
+    }
+    
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
