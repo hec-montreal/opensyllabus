@@ -162,9 +162,9 @@ public class OsylManagerRPCController {
 	serviceProxy.getAllCoAndSiteInfo(searchTerm, academicSession, callback);
     }
 
-    public void getAllCoAndSiteInfo(String searchTerm, String academicSession, boolean withFrozenSites,
-	    AsyncCallback<java.util.List<COSite>> callback) {
-	serviceProxy.getAllCoAndSiteInfo(searchTerm, academicSession, withFrozenSites, callback);
+    public void getAllCoAndSiteInfo(String searchTerm, String academicSession, boolean withFrozenSites, 
+		boolean withDirectorySites, AsyncCallback<java.util.List<COSite>> callback) {
+	serviceProxy.getAllCoAndSiteInfo(searchTerm, academicSession, withFrozenSites, withDirectorySites, callback);
     }
     
     public void publish(String siteId,
