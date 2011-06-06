@@ -111,11 +111,13 @@ public class UnattachFromCmAction extends OsylManagerAbstractAction {
     public boolean isActionEnableForSites(List<COSite> siteIds) {
 	if (siteIds.size() > 0) {
 	    for (COSite cosite : siteIds) {
-	    	if (cosite.isCoIsFrozen())
-	    	    return false;
-			if (cosite.getCourseNumber() == null
-				|| cosite.getCourseNumber().equals(""))
-			    return false;
+		if (cosite.isCoIsFrozen())
+		    return false;
+		if (cosite.getType().equalsIgnoreCase("directory"))
+		    return false;		
+		if (cosite.getCourseNumber() == null
+			|| cosite.getCourseNumber().equals(""))
+		    return false;
 	    }
 	    return true;
 	} else {

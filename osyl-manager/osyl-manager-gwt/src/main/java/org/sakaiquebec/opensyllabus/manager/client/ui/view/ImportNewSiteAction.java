@@ -40,6 +40,10 @@ public class ImportNewSiteAction extends OsylManagerAbstractAction {
 
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
+	for (COSite cosite : siteIds) {
+	    if (cosite.getType().equalsIgnoreCase("directory"))
+		return false;
+	}
 	return true;
     }
 

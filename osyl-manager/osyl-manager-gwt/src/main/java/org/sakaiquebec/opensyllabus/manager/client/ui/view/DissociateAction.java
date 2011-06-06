@@ -39,17 +39,19 @@ public class DissociateAction extends OsylManagerAbstractAction {
 
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
-	if(siteIds.isEmpty()){
+	if (siteIds.isEmpty()) {
 	    return false;
 	} else {
 	    boolean enable = true;
 	    for (COSite coSite : siteIds) {
-			String parentSite = coSite.getParentSite();
-		    if (coSite.isCoIsFrozen())
-				return false;
-			if (parentSite == null || parentSite.equals("")) {
-			    return false;
-			}
+		String parentSite = coSite.getParentSite();
+		if (coSite.isCoIsFrozen())
+		    return false;
+		if (coSite.getType().equalsIgnoreCase("directory"))
+		    return false;
+		if (parentSite == null || parentSite.equals("")) {
+		    return false;
+		}
 	    }
 	    return enable;
 	}

@@ -72,10 +72,14 @@ public class ExportAction extends OsylManagerAbstractAction {
 
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
-	if(siteIds.size() > 0){
+	if (siteIds.size() > 0) {
+	    for (COSite cosite : siteIds) {
+		if (cosite.getType().equalsIgnoreCase("directory"))
+		    return false;
+	    }
 	    return true;
 	} else {
-	    	return false;
+	    return false;
 	}
     }
 

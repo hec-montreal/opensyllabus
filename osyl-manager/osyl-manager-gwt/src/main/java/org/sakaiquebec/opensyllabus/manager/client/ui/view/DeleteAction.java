@@ -113,8 +113,10 @@ public class DeleteAction extends OsylManagerAbstractAction {
     public boolean isActionEnableForSites(List<COSite> siteIds) {
 	if (siteIds.size() > 0) {
 	    for (COSite cosite : siteIds) {
-	    	if (cosite.isCoIsFrozen())
-	    	    return false;
+		if (cosite.isCoIsFrozen())
+		    return false;
+		if (cosite.getType().equalsIgnoreCase("directory"))
+		    return false;
 	    }
 	    return true;
 	} else {

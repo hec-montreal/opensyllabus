@@ -120,6 +120,8 @@ public class UnpublishAction extends OsylManagerAbstractAction {
 	    for (COSite cosite : siteIds) {
 	    	if (cosite.isCoIsFrozen() || cosite.getLastPublicationDate()==null)
 	    	    return false;
+		if (cosite.getType().equalsIgnoreCase("directory"))
+		    return false;	    	
 	    }
 	    return true;
 	} else {

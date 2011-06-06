@@ -39,17 +39,19 @@ public class AssociateAction extends OsylManagerAbstractAction {
 
     @Override
     public boolean isActionEnableForSites(List<COSite> siteIds) {
-	if(siteIds.isEmpty()){
+	if (siteIds.isEmpty()) {
 	    return false;
 	} else {
 	    boolean enable = true;
 	    for (COSite coSite : siteIds) {
-		    if (coSite.isCoIsFrozen())
-				return false;
-			String parentSite = coSite.getParentSite();
-			if (parentSite != null && !parentSite.equals("")) {
-			    return false;
-			}
+		if (coSite.isCoIsFrozen())
+		    return false;
+		if (coSite.getType().equalsIgnoreCase("directory")) 
+		    return false;
+		String parentSite = coSite.getParentSite();
+		if (parentSite != null && !parentSite.equals("")) {
+		    return false;
+		}
 	    }
 	    return enable;
 	}
