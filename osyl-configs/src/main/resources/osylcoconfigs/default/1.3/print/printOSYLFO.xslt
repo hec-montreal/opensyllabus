@@ -14,6 +14,7 @@
 	<xsl:param name="serverUrl"></xsl:param>
 	<xsl:param name="currentDateTime"></xsl:param>
 	<xsl:param name="siteId"></xsl:param>
+	<xsl:param name="access"></xsl:param>
 
 	<xsl:variable name='lang'>
 		<xsl:value-of select="substring(/OSYL/CO/language,1,2)"/>
@@ -80,19 +81,19 @@
 						<fo:inline>
 							<xsl:choose>
 								<xsl:when test="$lang = 'FR'">
-									<xsl:text>Plan de cours : </xsl:text>
+									<xsl:text>Plan de cours</xsl:text>
 								</xsl:when>
 								<xsl:when test="$lang = 'EN'">
-									<xsl:text>Course outline </xsl:text>
+									<xsl:text>Course outline</xsl:text>
 								</xsl:when>
 								<xsl:when test="$lang = 'ES'">
-									<xsl:text>Plano de curso </xsl:text>
+									<xsl:text>Plano de curso</xsl:text>
 								</xsl:when>
 								<xsl:otherwise>
 								</xsl:otherwise>
 							</xsl:choose>
 						</fo:inline>
-						<fo:inline><xsl:value-of select="$courseCode"/> (<xsl:value-of select="$group"/>)</fo:inline>
+						<fo:inline><xsl:value-of select="$courseCode"/> (<xsl:value-of select="$group"/>) <xsl:text>(attendee)</xsl:text></fo:inline>
 					</fo:block>
 					<fo:block text-align="right" margin-top="-15pt"><xsl:value-of select="$session"/></fo:block>
           			<fo:block border-top-color="lightgrey" border-top-style="solid" border-top-width="1.5px" space-before="5pt"/>
@@ -223,6 +224,7 @@
 		<fo:block font-size="14pt" font-weight="bold" space-before="16pt" text-align='center'>
 			<fo:inline><xsl:value-of select="/OSYL/CO/title[@type='HEC']"/> - </fo:inline>
 			<fo:inline><xsl:value-of select="$courseCode"/></fo:inline>
+			<fo:inline> (<xsl:value-of select="$access"/>)</fo:inline>
 		</fo:block>
 
 		<fo:table width="100%" table-layout="fixed" space-before="10pt">

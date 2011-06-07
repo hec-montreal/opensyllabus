@@ -564,5 +564,4 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	}
 	return reader;
     }
-
 }

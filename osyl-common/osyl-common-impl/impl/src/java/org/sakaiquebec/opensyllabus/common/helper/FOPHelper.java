@@ -52,7 +52,8 @@ import org.w3c.dom.Node;
 
 public class FOPHelper {
 
-    public static File convertXml2Pdf(String xml, String xslt, String webappdir, String serverName, String siteId)
+    public static File convertXml2Pdf(String xml, String xslt,
+	    String webappdir, String serverName, String siteId, String access)
 	    throws IOException, TransformerException, Exception {
 	File pdffile = File.createTempFile("osyl-fop-print", ".pdf");
 	try {
@@ -75,21 +76,24 @@ public class FOPHelper {
 		// Setup XSLT
 		TransformerFactory factory = TransformerFactory.newInstance();
 		Transformer transformer =
-			factory
-				.newTransformer(new StreamSource(
-					new ByteArrayInputStream(xslt
-						.getBytes("UTF-8"))));
+			factory.newTransformer(new StreamSource(
+				new ByteArrayInputStream(xslt.getBytes("UTF-8"))));
 
 		// Set the value of a <param> in the stylesheet
 		transformer.setParameter("versionParam", "2.0");
 		transformer.setParameter("imagePath", webappdir);
 		transformer.setParameter("serverUrl", serverName);
-		transformer.setParameter("currentDateTime", OsylDateUtils.getCurrentDateAsXmlString());
+		transformer.setParameter("currentDateTime",
+			OsylDateUtils.getCurrentDateAsXmlString());
 		transformer.setParameter("siteId", siteId);
-
+		if (access == null) {
+		    access = "";
+		}
+		transformer.setParameter("access", access);
+		
 		// Setup input for XSLT transformation
 		String escapeString = xml.replaceAll("&amp;", "&#38;");
-		escapeString = escapeString.replaceAll("\\s{2,}", " ");	
+		escapeString = escapeString.replaceAll("\\s{2,}", " ");
 		escapeString = escapeString.replaceAll("&#38;amp;", "&#38;");
 		escapeString = escapeString.replaceAll("\n", " ");
 		escapeString = escapeString.replaceAll("\r", " ");
@@ -100,8 +104,8 @@ public class FOPHelper {
 		escapeString = escapeString.replaceAll("&#13;", "");
 		escapeString = escapeString.replaceAll("&#0;", "");
 		Source src =
-			new StreamSource(new ByteArrayInputStream(escapeString
-				.getBytes("UTF-8")));
+			new StreamSource(new ByteArrayInputStream(
+				escapeString.getBytes("UTF-8")));
 
 		// Resulting SAX events (the generated FO) must be piped through
 		// to FOP
@@ -118,13 +122,14 @@ public class FOPHelper {
 	}
 	return pdffile;
     }
-    
-    public static File convertXml2Pdf(Node d, String xslt, String webappdir, String serverName, String siteId)
+
+    public static File convertXml2Pdf(Node d, String xslt, String webappdir,
+	    String serverName, String siteId, String access)
 	    throws IOException, TransformerException, Exception {
 
 	// Setup input for XSLT transformation
 	String s = xmlToString(d);
-	return convertXml2Pdf(s, xslt, webappdir, serverName, siteId);
+	return convertXml2Pdf(s, xslt, webappdir, serverName, siteId, access);
     }
 
     public static String xmlToString(Node node) {

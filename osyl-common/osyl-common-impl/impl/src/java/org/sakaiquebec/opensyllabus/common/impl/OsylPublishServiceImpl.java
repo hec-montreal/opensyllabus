@@ -61,7 +61,7 @@ import org.sakaiquebec.opensyllabus.common.api.OsylEventService;
 import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
-import org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO;// HEC ONLY SAKAI-2723
+import org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO;
 import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
@@ -220,6 +220,11 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    } catch (Exception e) {
 		log.error("Unable to fill course outline", e);
 	    }
+	}
+	try{
+	    osylSiteService.getSiteInfo(thisCo, siteId);
+	} catch(Exception e){
+	    log.error("Unable to get site info", e);
 	}
 	log.debug("getSerializedPublishedCourseOutlineForAccessType"
 		+ elapsed(start) + siteId);
@@ -647,7 +652,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    + OsylConfigService.PRINT_DIRECTORY
 			    + File.separator,
 			    ServerConfigurationService.getServerUrl(),
-			    coSerialized.getSiteId());
+			    coSerialized.getSiteId(), coSerialized.getAccess());
 
 	    return f;
 	} catch (Exception e) {

@@ -1091,6 +1091,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		log.error("Unable to retrieve name of CO locker", ex);
 	    }
 	}
+	getSiteInfo(thisCo, thisCo.getSiteId());
 	return thisCo;
     }
 
@@ -1161,6 +1162,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		}
 	    }
 	}
+	getSiteInfo(co, co.getSiteId());
 	return co;
 
     }
