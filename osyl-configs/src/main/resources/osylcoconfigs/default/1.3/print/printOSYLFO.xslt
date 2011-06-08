@@ -81,19 +81,19 @@
 						<fo:inline>
 							<xsl:choose>
 								<xsl:when test="$lang = 'FR'">
-									<xsl:text>Plan de cours</xsl:text>
+									<xsl:text>Plan de cours </xsl:text>
 								</xsl:when>
 								<xsl:when test="$lang = 'EN'">
-									<xsl:text>Course outline</xsl:text>
+									<xsl:text>Course outline </xsl:text>
 								</xsl:when>
 								<xsl:when test="$lang = 'ES'">
-									<xsl:text>Plano de curso</xsl:text>
+									<xsl:text>Plano de curso </xsl:text>
 								</xsl:when>
 								<xsl:otherwise>
 								</xsl:otherwise>
 							</xsl:choose>
 						</fo:inline>
-						<fo:inline><xsl:value-of select="$courseCode"/> (<xsl:value-of select="$group"/>) <xsl:text>(attendee)</xsl:text></fo:inline>
+						<fo:inline><xsl:value-of select="$courseCode"/> (<xsl:value-of select="$group"/>)</fo:inline>
 					</fo:block>
 					<fo:block text-align="right" margin-top="-15pt"><xsl:value-of select="$session"/></fo:block>
           			<fo:block border-top-color="lightgrey" border-top-style="solid" border-top-width="1.5px" space-before="5pt"/>
