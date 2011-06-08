@@ -89,6 +89,7 @@ import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.common.api.OsylConfigService;
 import org.sakaiquebec.opensyllabus.common.api.OsylContentService;
+import org.sakaiquebec.opensyllabus.common.api.OsylDirectoryService;
 import org.sakaiquebec.opensyllabus.common.api.OsylEventService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
@@ -1112,6 +1113,15 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
 	COConfigSerialized coConfig = null;
 	if (co == null) {
+	    Site site = siteService.getSite(siteId);
+	    String type = site.getType();
+	    
+	    if (type != null && type.equals(OsylDirectoryService.CONFIG_REF)){
+		coConfig =
+		    osylConfigService.getConfigByRefAndVersion(
+			    osylConfigService.DIRECTORY_CONFIG_REF, null,
+			    webappDir);
+	    }else
 	    coConfig =
 		    osylConfigService.getConfigByRefAndVersion(
 			    osylConfigService.getDefaultConfig(), null,
