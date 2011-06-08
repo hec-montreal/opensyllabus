@@ -44,6 +44,8 @@ public class CODirectorySite implements java.io.Serializable {
     private String credits;
 
     private String requirements;
+    
+    private String instructor;
 
     private Map<String, String> sections;
 
@@ -118,6 +120,14 @@ public class CODirectorySite implements java.io.Serializable {
 
     public String getDescription() {
 	return description;
+    }
+
+    public void setInstructor(String instructor) {
+	this.instructor = instructor;
+    }
+
+    public String getInstructor() {
+	return instructor;
     }
 
 }
