@@ -59,6 +59,12 @@ public interface OsylHostedModeInit {
 	 * @return the EvalTypeList path
 	 */
 	public String getEvalTypeListPath();
+	
+	/**
+	 * @return the EvalTypeList path
+	 */
+	public String getResourceTypeListPath();
+
 	/**
 	 * @return the general settings path
 	 */
