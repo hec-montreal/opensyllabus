@@ -63,6 +63,22 @@
 			<xs:enumeration value="Teaching assistant"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="resourceType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Study case"/>
+			<xs:enumeration value="Scientific article"/>
+			<xs:enumeration value="Professional article"/>
+			<xs:enumeration value="Newspaper article"/>
+			<xs:enumeration value="Website"/>
+			<xs:enumeration value="Report"/>
+			<xs:enumeration value="Document teacher"/>
+			<xs:enumeration value="Book"/>
+			<xs:enumeration value="Simulation"/>
+			<xs:enumeration value="Exercises"/>
+			<xs:enumeration value="Document set"/>
+			<xs:enumeration value="Other"/>		
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="semanticType">
 		<xs:restriction base="xs:string"/>
 	</xs:simpleType>
@@ -117,6 +133,17 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="ASMResource" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="ASMObject">
+				<xs:sequence>
+					<xs:element name="identifier" type="identifierType" maxOccurs="unbounded"/>
+					<xs:element name="language" type="xs:language" minOccurs="0"/>
+					<xs:element name="asmResourceType" type="ASMResourceType"/>					
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ASMResourceType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="ASMObject">
 				<xs:sequence>
