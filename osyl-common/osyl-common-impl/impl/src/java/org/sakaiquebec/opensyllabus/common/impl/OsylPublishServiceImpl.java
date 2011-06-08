@@ -61,12 +61,7 @@ import org.sakaiquebec.opensyllabus.common.api.OsylEventService;
 import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
-
-// BEGIN HEC ONLY SAKAI-2723
-import org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO;
-
-// END HEC ONLY SAKAI-2723
-
+import org.sakaiquebec.opensyllabus.common.api.portal.OsylTransformToZCCO;// HEC ONLY SAKAI-2723
 import org.sakaiquebec.opensyllabus.common.dao.CORelation;
 import org.sakaiquebec.opensyllabus.common.dao.CORelationDao;
 import org.sakaiquebec.opensyllabus.common.dao.ResourceDao;
