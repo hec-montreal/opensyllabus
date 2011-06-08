@@ -86,6 +86,10 @@ public class COConfigSerialized implements java.io.Serializable {
 	 */
 	private ArrayList<String> evalTypeList;
 
+	/**
+	 * ResourceTypeList definition
+	 */
+	private ArrayList<String> resourceTypeList;
 	
 	private String version;
 	
@@ -96,6 +100,7 @@ public class COConfigSerialized implements java.io.Serializable {
 		super();
 		
 		this.evalTypeList = new ArrayList<String>();
+		this.resourceTypeList = new ArrayList<String>();
 		this.rolesList = new ArrayList<String>();
 		this.i18nMessages = new HashMap<String, String>();
 		this.settings = new HashMap<String, String>();
@@ -194,6 +199,13 @@ public class COConfigSerialized implements java.io.Serializable {
 	}
 
 	/**
+	 * @return the resourceTypeList
+	 */
+	public List<String> getResourceTypeList() {
+		return resourceTypeList;
+	}
+	
+	/**
 	 * @param rolesList
 	 *            the rolesList to set
 	 */
@@ -216,11 +228,21 @@ public class COConfigSerialized implements java.io.Serializable {
 	}
 
 	/**
+	 * @param resourceTypeList
+	 *            the resourceTypeList to set
+	 */
+	public void setResourceTypeList(List<String> resourceTypeList) {
+		this.resourceTypeList.clear();
+		if (resourceTypeList != null) {
+			this.resourceTypeList.addAll(resourceTypeList);
+		}
+	}
+
+	/**
 	 * @return the generalSettings value.
 	 */
 	public Map<String, String> getSettings() {
 		return settings;
-		
 	}
 
 	/**
@@ -232,7 +254,6 @@ public class COConfigSerialized implements java.io.Serializable {
 		if (null != settings) {
 			this.settings.putAll(settings);
 		}
-
 	}
 
 	public void setVersion(String version) {
@@ -242,6 +263,4 @@ public class COConfigSerialized implements java.io.Serializable {
 	public String getVersion() {
 	    return version;
 	}
-
-
 }

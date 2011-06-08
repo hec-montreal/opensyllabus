@@ -42,6 +42,8 @@ public class COConfig {
     private List<String> rolesList;
     
     private List<String> evalTypeList;
+    
+    private List<String> resourceTypeList;    
 
     private OsylSettings settings;
     
@@ -81,6 +83,7 @@ public class COConfig {
 	this.osylConfigRuler =OsylConfigRuler.createInstance(this.cOConfigSerialized.getRulesConfig());
 	this.rolesList = cOConfigSerialized.getRolesList();
 	this.evalTypeList = cOConfigSerialized.getEvalTypeList();
+	this.resourceTypeList = cOConfigSerialized.getResourceTypeList();
 	this.settings = 
 		new OsylSettings(cOConfigSerialized.getSettings());
 	this.stylesheetPath = cOConfigSerialized.getCascadingStyleSheetPath();
@@ -112,7 +115,14 @@ public class COConfig {
 	 */
 	public List<String> getEvalTypeList() {
 		return evalTypeList;
-	} 
+	}
+	
+	/**
+	 * @return the resourceTypeList
+	 */
+	public List<String> getResourceTypeList() {
+		return resourceTypeList;
+	} 	
 
     /**
      * @return the general settings.
