@@ -102,6 +102,15 @@ public class CoursesPage extends AbstractPortalView {
 
     private void initView2() {
 	mainPanel.clear();
+	
+	Label t1 = new Label(getMessage("courseList"));
+	t1.setStylePrimaryName("NHP_titre1");
+	mainPanel.add(t1);
+
+	label.setStylePrimaryName("NHP_titre2");
+	mainPanel.add(label);
+	
+	
 	FixedWidthGrid dataTable = new FixedWidthGrid(0, 5);
 	dataTable.setSelectionEnabled(false);
 	FixedWidthFlexTable headerTable = createHeaderTable();
@@ -198,7 +207,7 @@ public class CoursesPage extends AbstractPortalView {
 	FlexCellFormatter formatter = headerTable.getFlexCellFormatter();
 	headerTable.setTitle("titeHeaderTable");
 
-	headerTable.setHTML(0, 0, getMessage("coursesPage_courseTitle"));
+	headerTable.setHTML(0, 0, getMessage("coursesPage_courseNumber"));
 	formatter.setHorizontalAlignment(0, 0,
 		HasHorizontalAlignment.ALIGN_LEFT);
 	formatter.setVerticalAlignment(0, 0, HasVerticalAlignment.ALIGN_TOP);
