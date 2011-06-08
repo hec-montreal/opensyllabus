@@ -178,6 +178,32 @@ public class OsylEditorHostedModeImpl implements OsylEditorGwtServiceAsync {
 			}
 		    });
 
+	    // Getting resourceTypeList for config
+	    getFileByRequest(osylHostedModeInit.getResourceTypeListPath(),
+		    new RequestCallback() {
+			public void onError(Request request, Throwable exception) {
+			    Window.alert("Error while reading "
+				    + osylHostedModeInit.getResourceTypeListPath()
+				    + " :" + exception.toString());
+			}
+
+			public void onResponseReceived(Request request,
+				Response response) {
+			    String responseTxt = response.getText();
+			    // transform text to List
+			    List<String> list;
+			    try {
+				list =
+					OsylHostedModeTransformUtil
+						.xmlTxt2List(responseTxt);
+				configSer.setResourceTypeList(list);
+			    } catch (Exception e) {
+				e.printStackTrace();
+				Window.alert(e.getMessage() + " " + e);
+			    }
+			}
+		    });
+
 	    // Getting Rules for config
 	    getFileByRequest(osylHostedModeInit.getConfigPath(),
 		    new RequestCallback() {
