@@ -578,6 +578,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		newResource.setContentType(MimeConstants.MIME_PDF);
 		contentHostingService.commitResource(newResource,
 			NotificationService.NOTI_NONE);
+		osylSecurityService.applyPermissions(newResource.getId(), access);
 		f.delete();
 	    } catch (PermissionException e) {
 		e.printStackTrace();
@@ -594,6 +595,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    } catch (ServerOverloadException e) {
 		e.printStackTrace();
 	    } catch (FileNotFoundException e) {
+		e.printStackTrace();
+	    } catch (Exception e) {
 		e.printStackTrace();
 	    }
 	} catch (IdUnusedException e) {
