@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!--
+		List of Evaluation.Type to be displayed in OpenSyllabus Warning: each
+		value specified in the list targets a corresponding key in the bundle
+		COMessages_??_??.properties files
+	-->
+<list>
+	<item value="study_case" />
+	<item value="scientific_article" />
+	<item value="professional_article" />
+	<item value="newspaper_article" />
+	<item value="website"/>
+	<item value="report"/>
+	<item value="document_teacher"/>
+	<item value="book"/>
+	<item value="simulation"/>
+	<item value="exercises"/>
+	<item value="slides_software" />
+	<item value="document_set" />
+	<item value="other" />
+</list>
