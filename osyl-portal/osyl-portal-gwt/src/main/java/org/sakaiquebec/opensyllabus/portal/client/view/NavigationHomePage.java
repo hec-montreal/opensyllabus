@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.portal.client.view;
 import java.util.Arrays;
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.portal.client.controller.PortalController;
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -40,36 +41,41 @@ public class NavigationHomePage extends AbstractPortalView {
 
     private VerticalPanel mainPanel;
 
-    private static final String ACAD_CAREER_BAA = "BAA";
-    private static final String ACAD_CAREER_APRE = "APRE";
-    private static final String ACAD_CAREER_CERT = "CERT";
-    private static final String ACAD_CAREER_MBA = "MBA";
-    private static final String ACAD_CAREER_MSC = "MSC";
-    private static final String ACAD_CAREER_DESS = "DES";
-    private static final String ACAD_CAREER_PHD = "PHD";
-    private static final String RESPONSIBLE_IEA = "IEA";
-    private static final String RESPONSIBLE_FINANCE = "FINANCE";
-    private static final String RESPONSIBLE_GOL = "GOL";
-    private static final String RESPONSIBLE_GRH = "GRH";
-    private static final String RESPONSIBLE_INTERNAT = "INTERNAT";
-    private static final String RESPONSIBLE_MQG = "MQG";
-    private static final String RESPONSIBLE_SC_COMPT = "SC.COMPT.";
-    private static final String RESPONSIBLE_TI = "TI";
-    private static final String RESPONSIBLE_MARKETING = "MARKETING";
-    private static final String RESPONSIBLE_MNGT = "MNGT";
-    private static final String RESPONSIBLE_BUR_REGIST = "BUR.REGIST";
-    private static final String RESPONSIBLE_QUAL_COMM = "QUAL.COMM.";
-    private static final String RESPONSIBLE_BAA = "BAA";
-    private static final String RESPONSIBLE_CERTIFICAT = "CERTIFICAT";
-    private static final String RESPONSIBLE_DIPLOMES = "DIPLOMES";
-    private static final String RESPONSIBLE_MBA = "MBA";
-    private static final String RESPONSIBLE_MSC = "MSC";
-    private static final String RESPONSIBLE_DOCTORAT = "DOCTORAT";
+    private static String viewPrefix = "NavigationHomePage";
 
-    private static final List<String> progs = Arrays
+    public static final String ACAD_CAREER_BAA = "BAA";
+    public static final String ACAD_CAREER_APRE = "APRE";
+    public static final String ACAD_CAREER_CERT = "CERT";
+    public static final String ACAD_CAREER_MBA = "MBA";
+    public static final String ACAD_CAREER_MSC = "MSC";
+    public static final String ACAD_CAREER_MSCP = "MSCP";
+    public static final String ACAD_CAREER_DESS = "DES";
+    public static final String ACAD_CAREER_PHD = "PHD";
+    public static final String ACAD_CAREER_PHDP = "PHDP";
+    public static final String RESPONSIBLE_IEA = "IEA";
+    public static final String RESPONSIBLE_FINANCE = "FINANCE";
+    public static final String RESPONSIBLE_GOL = "GOL";
+    public static final String RESPONSIBLE_GRH = "GRH";
+    public static final String RESPONSIBLE_INTERNAT = "INTERNAT";
+    public static final String RESPONSIBLE_MQG = "MQG";
+    public static final String RESPONSIBLE_SC_COMPT = "SC.COMPT.";
+    public static final String RESPONSIBLE_TI = "TI";
+    public static final String RESPONSIBLE_MARKETING = "MARKETING";
+    public static final String RESPONSIBLE_MNGT = "MNGT";
+    public static final String RESPONSIBLE_BUR_REGIST = "BUR.REGIST";
+    public static final String RESPONSIBLE_QUAL_COMM = "QUAL.COMM.";
+    public static final String RESPONSIBLE_BAA = "BAA";
+    public static final String RESPONSIBLE_CERTIFICAT = "CERTIFICAT";
+    public static final String RESPONSIBLE_DIPLOMES = "DIPLOMES";
+    public static final String RESPONSIBLE_MBA = "MBA";
+    public static final String RESPONSIBLE_MSC = "MSC";
+    public static final String RESPONSIBLE_DOCTORAT = "DOCTORAT";
+
+    public static final List<String> ACAD_CARREERS = Arrays
 	    .asList(new String[] { ACAD_CAREER_BAA, ACAD_CAREER_APRE,
 		    ACAD_CAREER_CERT, ACAD_CAREER_MBA, ACAD_CAREER_MSC,
-		    ACAD_CAREER_DESS, ACAD_CAREER_PHD });
+		    ACAD_CAREER_MSCP, ACAD_CAREER_DESS, ACAD_CAREER_PHD,
+		    ACAD_CAREER_PHDP });
 
     private static final List<String> responsible_part1 = Arrays
 	    .asList(new String[] { RESPONSIBLE_IEA, RESPONSIBLE_FINANCE,
@@ -84,7 +90,7 @@ public class NavigationHomePage extends AbstractPortalView {
 		    RESPONSIBLE_MBA, RESPONSIBLE_MSC, RESPONSIBLE_DOCTORAT });
 
     public NavigationHomePage() {
-	super("NavigationHomePage");
+	super(viewPrefix);
 	mainPanel = new VerticalPanel();
 	initWidget(mainPanel);
 	initView();
@@ -129,55 +135,31 @@ public class NavigationHomePage extends AbstractPortalView {
     }
 
     private Label getProgramLabel(final String program) {
-	Label l = new Label(getMessage("acad_career." + program));
+	Label l = new Label(getMessage(PortalController.ACAD_CAREER_PREFIX + program));
 	l.setStylePrimaryName("NHP_link");
 	l.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
-		AsyncCallback<List<CODirectorySite>> callback =
-			new AsyncCallback<List<CODirectorySite>>() {
-
-			    public void onFailure(Throwable caught) {
-			    }
-
-			    public void onSuccess(List<CODirectorySite> result) {
-				getController().setView(
-					new CoursesPage("acad_career."
-						+ program, result));
-
-			    }
-			};
-		getController().getCoursesForAcadCareer(program, callback);
-
+		getController().createCourseViewForAcadCareer(program);
 	    }
 	});
 	return l;
     }
 
     private Label getResponsibleLabel(final String responsible) {
-	Label l = new Label(getMessage("responsible." + responsible));
+	Label l = new Label(getMessage(PortalController.RESPONSIBLE_PREFIX + responsible));
 	l.setStylePrimaryName("NHP_link");
 	l.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
-		AsyncCallback<List<CODirectorySite>> callback =
-			new AsyncCallback<List<CODirectorySite>>() {
-
-			    public void onFailure(Throwable caught) {
-			    }
-
-			    public void onSuccess(List<CODirectorySite> result) {
-				getController().setView(
-					new CoursesPage("responsible."
-						+ responsible, result));
-
-			    }
-			};
-		getController().getCoursesForResponsible(responsible, callback);
-
+		getController().createCourseViewForResponsible(responsible);
 	    }
 	});
 	return l;
+    }
+
+    public static String getViewKeyPrefix() {
+	return viewPrefix;
     }
 
 }

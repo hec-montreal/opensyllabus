@@ -47,13 +47,31 @@ public interface OsylPortalMessages extends ConstantsWithLookup {
     String acad_career_PHD();
     
     String acad_career_PHDP();
+    
+    String acad_career_APRE_abb();
+
+    String acad_career_BAA_abb();
+
+    String acad_career_CERT_abb();
+
+    String acad_career_DES_abb();
+
+    String acad_career_MBA_abb();
+
+    String acad_career_MSC_abb();
+    
+    String acad_career_MSCP_abb();
+
+    String acad_career_PHD_abb();
+    
+    String acad_career_PHDP_abb();
 
     String courseList();
 
     String courseListByAcadCareer();
 
     String courseListByResponsible();
-
+    
     String responsible_BAA();
 
     String responsible_BUR_REGIST();
@@ -94,11 +112,53 @@ public interface OsylPortalMessages extends ConstantsWithLookup {
 
     String responsible_TI();
     
+    String responsible_BAA_abb();
+
+    String responsible_BUR_REGIST_abb();
+
+    String responsible_CERTIFICAT_abb();
+
+    String responsible_DIR_PROG__abb();
+
+    String responsible_DIPLOMES_abb();
+
+    String responsible_DOCTORAT_abb();
+
+    String responsible_FINANCE_abb();
+
+    String responsible_GOL_abb();
+
+    String responsible_GRH_abb();
+
+    String responsible_IEA_abb();
+
+    String responsible_INTERNAT_abb();
+
+    String responsible_MARKETING_abb();
+
+    String responsible_MBA_abb();
+
+    String responsible_MNGT_abb();
+
+    String responsible_MQG_abb();
+
+    String responsible_MSC_abb();
+
+    String responsible_P_ETUD_SUP_abb();
+
+    String responsible_QUAL_COMM__abb();
+
+    String responsible_SC_COMPT__abb();
+
+    String responsible_TI_abb();
+    
     String coursesPage_courseNumber();
     
     String coursesPage_courseTitle();
     
     String coursesPage_Instructor();
+    
+    String coursesPage_Coordinator();
     
     String coursesPage_Program();
     
@@ -128,7 +188,9 @@ public interface OsylPortalMessages extends ConstantsWithLookup {
     
     String session_H();
     
+    String locale_fr_CA();
     
+    String locale_en();
     
-
+    String locale_es();
 }

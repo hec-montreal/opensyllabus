@@ -38,7 +38,10 @@ public interface OsylPortalGwtServiceAsync {
 
     public void getCoursesForResponsible(String responsible,
 	    AsyncCallback<List<CODirectorySite>> callback);
-    
+
     public void getDescription(String siteId, AsyncCallback<String> callback);
+
+    public void getCODirectorySite(String courseNumber,
+	    AsyncCallback<CODirectorySite> callback);
 
 }

@@ -21,11 +21,15 @@
 package org.sakaiquebec.opensyllabus.portal.client.controller;
 
 import java.util.List;
+import java.util.MissingResourceException;
 
 import org.sakaiquebec.opensyllabus.portal.client.OsylPortalEntryPoint;
+import org.sakaiquebec.opensyllabus.portal.client.message.OsylPortalMessages;
 import org.sakaiquebec.opensyllabus.portal.client.view.AbstractPortalView;
+import org.sakaiquebec.opensyllabus.portal.client.view.CoursesPage;
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -37,6 +41,15 @@ public class PortalController {
     private static PortalController _instance;
 
     private OsylPortalEntryPoint osylPortalEntryPoint;
+
+    private OsylPortalMessages messages = (OsylPortalMessages) GWT
+	    .create(OsylPortalMessages.class);
+
+    public static String RESPONSIBLE_PREFIX = "responsible.";
+
+    public static String ACAD_CAREER_PREFIX = "acad_career.";
+    
+    public static String ABBREVIATION_SUFFIX = "_abb";
 
     public static PortalController getInstance() {
 	if (_instance == null) {
@@ -57,6 +70,46 @@ public class PortalController {
 	osylPortalEntryPoint.setView(view);
     }
 
+    public String getMessage(String key) {
+	try {
+	    return messages.getString(key.replace(".", "_"));
+	} catch (MissingResourceException e) {
+	    return "Missing key: " + key;
+	}
+    }
+
+    public void createCourseViewForAcadCareer(final String acadCareer) {
+	AsyncCallback<List<CODirectorySite>> callback =
+		new AsyncCallback<List<CODirectorySite>>() {
+
+		    public void onFailure(Throwable caught) {
+		    }
+
+		    public void onSuccess(List<CODirectorySite> result) {
+			setView(new CoursesPage(ACAD_CAREER_PREFIX
+				+ acadCareer, result));
+
+		    }
+		};
+	getCoursesForAcadCareer(acadCareer, callback);
+    }
+    
+    public void createCourseViewForResponsible(final String responsible) {
+	AsyncCallback<List<CODirectorySite>> callback =
+		new AsyncCallback<List<CODirectorySite>>() {
+
+		    public void onFailure(Throwable caught) {
+		    }
+
+		    public void onSuccess(List<CODirectorySite> result) {
+			setView(new CoursesPage(RESPONSIBLE_PREFIX
+				+ responsible, result));
+
+		    }
+		};
+	getCoursesForResponsible(responsible, callback);
+    }
+
     /***************************** RPC CALLS *********************************/
     public void getCoursesForAcadCareer(String acadCareer,
 	    AsyncCallback<List<CODirectorySite>> callback) {
@@ -72,6 +125,10 @@ public class PortalController {
 
     public void getDescription(String siteId, AsyncCallback<String> callback) {
 	PortalRpcController.getInstance().getDescription(siteId, callback);
+    }
+    
+    public void getCODirectorySite(String siteId, AsyncCallback<CODirectorySite> callback) {
+	PortalRpcController.getInstance().getCODirectorySite(siteId, callback);
     }
     /************************** END RPC CALLS *******************************/
 

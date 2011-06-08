@@ -3,6 +3,16 @@ body{
     font-weight: normal;
 }
 
+.NHP_localePanel{
+	
+}
+
+.NHP_locale{
+	color: #063871;
+	padding-right: 5px;
+	padding-bottom: 5px;
+}
+
 .NHP_titre1{
 	color: #063871;
     font-size: 130%;
@@ -31,7 +41,7 @@ body{
 }
 
 .CP-scrollTable{
-border:1px solid;
+border:none;
 width:900px;
 height:600px;
 padding:3px;
@@ -59,8 +69,7 @@ background-color : #e7e7e7;
 
 .gwt-ScrollTable .dataTable td,
 .gwt-ScrollTable .headerTable td {
-  border-color: #ccc;
-  border-style: solid;
+  border-style: none;
   border-width: 0px 1px 1px 0px;
   padding : 5px;
   white-space: nowrap;
@@ -68,8 +77,7 @@ background-color : #e7e7e7;
 }
 
 .gwt-ScrollTable .footerTable .footerRow {
-  border-color: #ccc;
-  border-style: solid;
+  border: none;
   border-width: 1px 0px 0px 0px;
   padding : 5px;
   white-space: nowrap;
@@ -79,8 +87,8 @@ background-color : #e7e7e7;
 .CP-Description{
 	padding:0px;
 	font:normal 100% Arial, Verdana, sans-serif;
-	color:#FFF;
-	background-color:#26649D;
+	background-color:#EEE;
+	width: 375px;
 }
 
 .CP-Description .dragdrop-handle {

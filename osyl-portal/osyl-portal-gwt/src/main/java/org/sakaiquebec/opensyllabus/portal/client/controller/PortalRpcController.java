@@ -71,4 +71,9 @@ public class PortalRpcController {
     public void getDescription(String siteId, AsyncCallback<String> callback){
 	serviceProxy.getDescription(siteId, callback);
     }
+    
+    public void getCODirectorySite(String siteId, AsyncCallback<CODirectorySite> callback){
+	serviceProxy.getCODirectorySite(siteId, callback);
+    }
+    
 }

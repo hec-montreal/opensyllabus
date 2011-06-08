@@ -21,23 +21,20 @@
 package org.sakaiquebec.opensyllabus.portal.client.view;
 
 import java.util.Comparator;
-import java.util.MissingResourceException;
 
 import org.sakaiquebec.opensyllabus.portal.client.controller.PortalController;
 import org.sakaiquebec.opensyllabus.portal.client.image.PortalImages;
-import org.sakaiquebec.opensyllabus.portal.client.message.OsylPortalMessages;
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 
 /**
  * @author <a href="mailto:laurent.danet@hec.ca">Laurent Danet</a>
  * @version $Id: $
  */
-public class AbstractPortalView extends Composite {
+public abstract class AbstractPortalView extends Composite {
 
     public final static String SUMMER = "E";
 
@@ -46,9 +43,6 @@ public class AbstractPortalView extends Composite {
     public final static String FALL = "A";
 
     private String viewKey;
-
-    private OsylPortalMessages messages = (OsylPortalMessages) GWT
-	    .create(OsylPortalMessages.class);
 
     private PortalImages images = (PortalImages) GWT.create(PortalImages.class);
 
@@ -98,11 +92,7 @@ public class AbstractPortalView extends Composite {
     }
 
     public String getMessage(String key) {
-	try {
-	    return messages.getString(key.replace(".", "_"));
-	} catch (MissingResourceException e) {
-	    return "Missing key: " + key;
-	}
+	return getController().getMessage(key);
     }
 
     public PortalController getController() {
@@ -122,8 +112,8 @@ public class AbstractPortalView extends Composite {
     }
 
     protected String getSessionName(String siteName) {
-	return messages.getString("session_"+ getSessionLetter(siteName))
-		+ " " + getSessionYear(siteName).toString();
+	return getMessage("session_" + getSessionLetter(siteName)) + " "
+		+ getSessionYear(siteName).toString();
 
     }
 
@@ -144,7 +134,7 @@ public class AbstractPortalView extends Composite {
     }
 
     protected String getSessionLetter(String title) {
-	return getSession(title).substring(0,1);
+	return getSession(title).substring(0, 1);
     }
 
     protected String getSection(String title) {
@@ -158,6 +148,10 @@ public class AbstractPortalView extends Composite {
 
     protected String getNumber(String title) {
 	return title.substring(0, title.indexOf("."));
+    }
+    
+    public static String getViewKeyPrefix(){
+	return null;
     }
 
 }

@@ -39,8 +39,10 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.coursemanagement.api.AcademicSession;
+import org.sakaiproject.coursemanagement.api.CanonicalCourse;
 import org.sakaiproject.coursemanagement.api.CourseManagementService;
 import org.sakaiproject.coursemanagement.api.CourseOffering;
+import org.sakaiproject.coursemanagement.api.CourseSet;
 import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
@@ -77,7 +79,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 
     private Timer timer;
 
-    // SPRING INJECTONS
+    // SPRING INJECTIONS
     private CourseManagementService courseManagementService;
 
     public void setCourseManagementService(
@@ -127,104 +129,84 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 
 	currentSessions = new ArrayList<String>();
 	for (AcademicSession academicSession : courseManagementService
-		.getCurrentAcademicSessions()){
+		.getCurrentAcademicSessions()) {
 	    currentSessions.add(academicSession.getEid());
 	}
 
-	// ACAD_CARRER
-	Map<String, List<CODirectorySite>> temp_courseListByAcadCareerMap =
-		new HashMap<String, List<CODirectorySite>>();
-	for (String acad_career : ACAD_CARREERS) {
-	    temp_courseListByAcadCareerMap.put(acad_career,
-		    buildCoursesListForAcadCareer(acad_career, webappDir));
-	}
-	courseListByAcadCareerMap = temp_courseListByAcadCareerMap;
-
-	// RESPONSIBLE
-	Map<String, List<CODirectorySite>> temp_courseListByResponsibleMap =
-		new HashMap<String, List<CODirectorySite>>();
-	for (String responsible : courseManagementService
-		.getSectionCategories()) {
-	    temp_courseListByResponsibleMap.put(responsible,
-		    buildCoursesListForResponsible(responsible, webappDir));
-	}
-	courseListByResponsibleMap = temp_courseListByResponsibleMap;
+	buildCoursesMapsFromCM();
 
 	log.info("Finished building course maps in "
 		+ (System.currentTimeMillis() - start) + " ms");
     }
 
-    private List<CODirectorySite> buildCoursesListForAcadCareer(
-	    String acadCareer, String webappDir) {
-	Map<String, CODirectorySite> courseMap =
-		new HashMap<String, CODirectorySite>();
-	Set<CourseOffering> courseOfferings =
-		courseManagementService
-			.findCourseOfferingsByAcadCareer(acadCareer);
+    private void buildCoursesMapsFromCM() {
+	Map<String, List<CODirectorySite>> temp_courseListByAcadCareerMap =
+		new HashMap<String, List<CODirectorySite>>();
 
-	for (CourseOffering courseOffering : courseOfferings) {
-	    if (currentSessions.contains(courseOffering.getAcademicSession()
-		    .getEid())) {
-		if (!courseMap.containsKey(courseOffering
-			.getCanonicalCourseEid())) {
-		    CODirectorySite coSite =
-			    fillCODirectorySiteWithCourseOffering(
-				    courseOffering, webappDir);
-		    courseMap.put(courseOffering.getCanonicalCourseEid(),
-			    coSite);
-		} else {
-		    fillSectionsForCODirectorySite(courseMap.get(courseOffering
-			    .getCanonicalCourseEid()), courseOffering);
+	Map<String, List<CODirectorySite>> temp_courseListByResponsibleMap =
+		new HashMap<String, List<CODirectorySite>>();
+
+	for (CourseSet courseSet : courseManagementService.getCourseSets()) {
+	    for (CanonicalCourse canonicalCourse : courseManagementService
+		    .getCanonicalCourses(courseSet.getEid())) {
+		CODirectorySite coDirectorySite = createCODirectorySite(canonicalCourse);
+		String acadCareer = coDirectorySite.getProgram();
+		String responsible = coDirectorySite.getResponsible();
+		if (acadCareer != null) {
+		    List<CODirectorySite> list =
+			    temp_courseListByAcadCareerMap.get(acadCareer);
+		    if (list == null) {
+			list = new ArrayList<CODirectorySite>();
+		    }
+		    list.add(coDirectorySite);
+		    temp_courseListByAcadCareerMap.put(acadCareer, list);
+		}
+		if (responsible != null) {
+		    List<CODirectorySite> list =
+			    temp_courseListByResponsibleMap.get(responsible);
+		    if (list == null) {
+			list = new ArrayList<CODirectorySite>();
+		    }
+		    list.add(coDirectorySite);
+		    temp_courseListByResponsibleMap.put(responsible, list);
 		}
 	    }
 	}
-	return new ArrayList<CODirectorySite>(courseMap.values());
+	courseListByAcadCareerMap = temp_courseListByAcadCareerMap;
+	courseListByResponsibleMap = temp_courseListByResponsibleMap;
     }
-
-    private List<CODirectorySite> buildCoursesListForResponsible(
-	    String responsible, String webappDir) {
-	Map<String, CODirectorySite> courseMap =
-		new HashMap<String, CODirectorySite>();
-	Set<Section> sections =
-		courseManagementService.findSectionsByCategory(responsible);
-
-	for (Section section : sections) {
-	    CourseOffering courseOffering =
-		    courseManagementService.getCourseOffering(section
-			    .getCourseOfferingEid());
-	    if (currentSessions.contains(courseOffering.getAcademicSession()
-		    .getEid())) {
-		if (!courseMap.containsKey(courseOffering
-			.getCanonicalCourseEid())) {
-		    CODirectorySite coSite =
-			    fillCODirectorySiteWithCourseOffering(
-				    courseOffering, webappDir);
-		    courseMap.put(courseOffering.getCanonicalCourseEid(),
-			    coSite);
-		} else {
-		    fillSectionsForCODirectorySite(courseMap.get(courseOffering
-			    .getCanonicalCourseEid()), courseOffering);
-		}
-	    }
-	}
-	return new ArrayList<CODirectorySite>(courseMap.values());
+    
+    public CODirectorySite getCODirectorySite(String siteId){
+	CODirectorySite coDirectorySite = createCODirectorySite(courseManagementService.getCanonicalCourse(siteId.replace("-","")));
+	coDirectorySite.setDescription(getDescription(siteId));
+	return coDirectorySite;
     }
-
-    private CODirectorySite fillCODirectorySiteWithCourseOffering(
-	    CourseOffering courseOffering, String webappDir) {
+    
+    private CODirectorySite createCODirectorySite(CanonicalCourse canonicalCourse){
 	CODirectorySite coDirectorySite = new CODirectorySite();
-	coDirectorySite.setCourseNumber(getDirectorySiteName(courseOffering
-		.getCanonicalCourseEid()));
-	coDirectorySite.setCourseName(courseOffering.getTitle());
-	coDirectorySite.setProgram(courseOffering.getAcademicCareer());
-	coDirectorySite.setCredits("3");// TODO
 	coDirectorySite
-		.setRequirements("Vous devez avoir suivi les cours suivants pour vous inscrire<br><b>COURS-101</b><br><b>COURS-102</b>");// TODO
+		.setCourseNumber(getDirectorySiteName(canonicalCourse
+			.getEid()));
+	coDirectorySite.setCourseName(canonicalCourse.getTitle());
+	for (CourseOffering courseOffering : courseManagementService
+		.getCourseOfferingsInCanonicalCourse(canonicalCourse
+			.getEid())) {
+	    if (coDirectorySite.getProgram() == null) {
+		coDirectorySite.setProgram(courseOffering
+			.getAcademicCareer());
+		coDirectorySite.setCredits("3");// TODO
+		coDirectorySite
+			.setRequirements("Vous devez avoir suivi les cours suivants pour vous inscrire<br><b>COURS-101</b><br><b>COURS-102</b>");// TODO
 
-	fillSectionsForCODirectorySite(coDirectorySite, courseOffering);
-
-	coDirectorySite.setProgram(courseOffering.getAcademicCareer());
-
+		coDirectorySite.setProgram(courseOffering
+			.getAcademicCareer());
+	    }
+	    if (currentSessions.contains(courseOffering
+		    .getAcademicSession().getEid())) {
+		fillSectionsForCODirectorySite(coDirectorySite,
+			courseOffering);
+	    }
+	}
 	return coDirectorySite;
     }
 

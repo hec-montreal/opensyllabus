@@ -23,12 +23,23 @@ package org.sakaiquebec.opensyllabus.portal.client.view;
 import java.util.Collections;
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.portal.client.controller.PortalController;
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.gen2.table.client.AbstractScrollTable.ColumnResizePolicy;
+import com.google.gwt.gen2.table.client.FixedWidthFlexTable;
+import com.google.gwt.gen2.table.client.FixedWidthGrid;
+import com.google.gwt.gen2.table.client.ScrollTable;
+import com.google.gwt.gen2.table.override.client.FlexTable.FlexCellFormatter;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -42,17 +53,177 @@ public class CoursesPage extends AbstractPortalView {
 
     private VerticalPanel mainPanel;
 
+    private ScrollTable coursesTable;
+
+    private DescriptionView descriptionView;
+
     private Label label;
 
+    private static String VIEW_PREFIX = "CoursesPage_";
+
+    private class CourseClickHandler implements ClickHandler {
+
+	private CODirectorySite coDirectorySite;
+
+	public CourseClickHandler(CODirectorySite cods) {
+	    this.coDirectorySite = cods;
+	}
+
+	public void onClick(ClickEvent event) {
+	    AsyncCallback<String> callback = new AsyncCallback<String>() {
+
+		public void onFailure(Throwable caught) {
+		    getController().setView(
+			    new DirectoryCoursePage(coDirectorySite));
+		}
+
+		public void onSuccess(String result) {
+		    coDirectorySite.setDescription(result);
+		    getController().setView(
+			    new DirectoryCoursePage(coDirectorySite));
+
+		}
+	    };
+	    getController().getDescription(coDirectorySite.getCourseNumber(),
+		    callback);
+	}
+
+    }
+
     public CoursesPage(String key, List<CODirectorySite> courses) {
-	super("CoursesPage_" + key);
+	super(VIEW_PREFIX + key);
 	label = new Label(getMessage(key));
 	this.courses = courses;
-	Collections.sort(this.courses,courseNameComparator);
+	Collections.sort(this.courses, courseNameComparator);
 	mainPanel = new VerticalPanel();
-	initView();
+	initView2();
 	initWidget(mainPanel);
+    }
 
+    private void initView2() {
+	mainPanel.clear();
+	FixedWidthGrid dataTable = new FixedWidthGrid(0, 5);
+	dataTable.setSelectionEnabled(false);
+	FixedWidthFlexTable headerTable = createHeaderTable();
+	coursesTable = new ScrollTable(dataTable, headerTable);
+	coursesTable.addStyleName("CP-scrollTable");
+	coursesTable.setSortPolicy(ScrollTable.SortPolicy.SINGLE_CELL);
+	coursesTable.setResizePolicy(ScrollTable.ResizePolicy.FILL_WIDTH);
+	coursesTable.setColumnResizePolicy(ColumnResizePolicy.MULTI_CELL);
+
+	coursesTable.getDataTable().clearAll();
+	coursesTable.getDataTable().resize(0, 5);
+	int i = 0;
+	int rowNum;
+	for (final CODirectorySite coSite : courses) {
+	    rowNum = coursesTable.getDataTable().insertRow(i);
+
+	    ClickHandler clickHandler = new CourseClickHandler(coSite);
+
+	    coursesTable.getDataTable().getRowFormatter()
+		    .setStylePrimaryName(rowNum, "CP-scrollTable-row");
+
+	    Label number = new Label(coSite.getCourseNumber());
+	    number.addClickHandler(clickHandler);
+	    coursesTable.getDataTable().setWidget(rowNum, 0, number);
+
+	    Label name = new Label(coSite.getCourseName());
+	    name.addClickHandler(clickHandler);
+	    coursesTable.getDataTable().setWidget(rowNum, 1, name);
+
+	    Label instructor =
+		    new Label(coSite.getInstructor() == null ? ""
+			    : coSite.getInstructor());
+	    instructor.addClickHandler(clickHandler);
+	    coursesTable.getDataTable().setWidget(rowNum, 2, instructor);
+
+	    Label prog =
+		    new Label(getMessage(PortalController.ACAD_CAREER_PREFIX
+			    + coSite.getProgram()+PortalController.ABBREVIATION_SUFFIX));
+	    prog.addClickHandler(clickHandler);
+	    coursesTable.getDataTable().setWidget(rowNum, 3, prog);
+
+	    final Image descImage = new Image(getImages().description());
+	    descImage.setTitle(getMessage("coursesPage_Description"));
+	    descImage.addMouseOverHandler(new MouseOverHandler() {
+
+		public void onMouseOver(MouseOverEvent event) {
+
+		    AsyncCallback<String> callback =
+			    new AsyncCallback<String>() {
+
+				public void onFailure(Throwable caught) {
+				    showDescriptonView();
+				}
+
+				public void onSuccess(String result) {
+				    coSite.setDescription(result);
+				    showDescriptonView();
+				}
+			    };
+		    if (descriptionView != null
+			    && descriptionView.isShowing()
+			    && descriptionView.getCoDirectorySite()
+				    .getCourseNumber()
+				    .equals(coSite.getCourseNumber()))
+			return;
+		    else
+			getController().getDescription(
+				coSite.getCourseNumber(), callback);
+
+		}
+
+		private void showDescriptonView() {
+		    if (descriptionView != null && descriptionView.isShowing())
+			descriptionView.hide();
+		    descriptionView = new DescriptionView(coSite);
+		    descriptionView.setPopupPosition(
+			    descImage.getAbsoluteLeft() + descImage.getWidth(),
+			    descImage.getAbsoluteTop() + descImage.getHeight());
+		    descriptionView.show();
+		    descriptionView.pack();
+		    descriptionView.toFront();
+		}
+
+	    });
+	    coursesTable.getDataTable().setWidget(rowNum, 4, descImage);
+
+	    i++;
+	}
+	mainPanel.add(coursesTable);
+    }
+
+    private FixedWidthFlexTable createHeaderTable() {
+	FixedWidthFlexTable headerTable = new FixedWidthFlexTable();
+	FlexCellFormatter formatter = headerTable.getFlexCellFormatter();
+	headerTable.setTitle("titeHeaderTable");
+
+	headerTable.setHTML(0, 0, getMessage("coursesPage_courseTitle"));
+	formatter.setHorizontalAlignment(0, 0,
+		HasHorizontalAlignment.ALIGN_LEFT);
+	formatter.setVerticalAlignment(0, 0, HasVerticalAlignment.ALIGN_TOP);
+
+	headerTable.setHTML(0, 1, getMessage("coursesPage_courseTitle"));
+	formatter.setHorizontalAlignment(0, 1,
+		HasHorizontalAlignment.ALIGN_LEFT);
+	formatter.setVerticalAlignment(0, 1, HasVerticalAlignment.ALIGN_TOP);
+
+	headerTable.setHTML(0, 2, getMessage("coursesPage_Coordinator"));
+	formatter.setHorizontalAlignment(0, 2,
+		HasHorizontalAlignment.ALIGN_LEFT);
+	formatter.setVerticalAlignment(0, 2, HasVerticalAlignment.ALIGN_TOP);
+
+	headerTable.setHTML(0, 3, getMessage("coursesPage_Program"));
+	formatter.setHorizontalAlignment(0, 3,
+		HasHorizontalAlignment.ALIGN_LEFT);
+	formatter.setVerticalAlignment(0, 3, HasVerticalAlignment.ALIGN_TOP);
+
+	headerTable.setHTML(0, 4, getMessage("coursesPage_Description"));
+	formatter.setHorizontalAlignment(0, 4,
+		HasHorizontalAlignment.ALIGN_LEFT);
+	formatter.setVerticalAlignment(0, 4, HasVerticalAlignment.ALIGN_TOP);
+
+	return headerTable;
     }
 
     private void initView() {
@@ -69,31 +240,39 @@ public class CoursesPage extends AbstractPortalView {
 			    + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
 			    + coDirectorySite.getCourseName()
 			    + " ("
-			    + getMessage("acad_career_"+coDirectorySite.getProgram()) + ")");
+			    + getMessage(PortalController.ACAD_CAREER_PREFIX
+				    + coDirectorySite.getProgram()) + ")");
 	    l.setStylePrimaryName("NHP_link");
 	    l.addClickHandler(new ClickHandler() {
 
 		public void onClick(ClickEvent event) {
-			AsyncCallback<String> callback =
-				new AsyncCallback<String>() {
+		    AsyncCallback<String> callback =
+			    new AsyncCallback<String>() {
 
-				    public void onFailure(Throwable caught) {
-					getController().setView(
-						    new DirectoryCoursePage(coDirectorySite));
-				    }
+				public void onFailure(Throwable caught) {
+				    getController().setView(
+					    new DirectoryCoursePage(
+						    coDirectorySite));
+				}
 
-				    public void onSuccess(String result) {
-					coDirectorySite.setDescription(result);
-					getController().setView(
-						    new DirectoryCoursePage(coDirectorySite));
+				public void onSuccess(String result) {
+				    coDirectorySite.setDescription(result);
+				    getController().setView(
+					    new DirectoryCoursePage(
+						    coDirectorySite));
 
-				    }
-				};
-			getController().getDescription(coDirectorySite.getCourseNumber(), callback);
+				}
+			    };
+		    getController().getDescription(
+			    coDirectorySite.getCourseNumber(), callback);
 
-		    }
+		}
 	    });
 	    mainPanel.add(l);
 	}
+    }
+
+    public static String getViewKeyPrefix() {
+	return VIEW_PREFIX;
     }
 }
