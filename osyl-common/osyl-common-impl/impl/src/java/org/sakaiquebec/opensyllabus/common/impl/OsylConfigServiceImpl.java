@@ -79,6 +79,11 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
     private static final String CONFIG_EVAL_TYPE_LIST = "coEvalTypeList.xml";
 
     /**
+     * File containing the ResourceTypeList config (in xml)
+     */
+    private static final String CONFIG_RESOURCE_TYPE_LIST = "coResourceTypeList.xml";
+    
+    /**
      * Item node name for xml parsing
      */
     private static final String ITEM_NODE_NAME = "item";
@@ -306,6 +311,7 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	coConfig.setRulesConfig(getRules(path));
 	coConfig.setRolesList(getRolesList(path));
 	coConfig.setEvalTypeList(getEvalTypeList(path));
+	coConfig.setResourceTypeList(getResourceTypeList(path));	
 	coConfig.setSettings(OsylConfigSettingsService.getSettings(path,
 		CONFIG_SETTINGS));
 	if (version == null)
@@ -375,6 +381,19 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
      */
     private static List<String> getEvalTypeList(String dir) throws Exception {
 	File xmlFile = new File(dir, CONFIG_EVAL_TYPE_LIST);
+	List<String> list = parseXmlForList(xmlFile);
+	return list;
+    }
+
+    /**
+     * For a given config directory in the webapp, this method reads the
+     * evalType xml file and parse it as a List
+     * 
+     * @param dir
+     * @return List
+     */
+    private static List<String> getResourceTypeList(String dir) throws Exception {
+	File xmlFile = new File(dir, CONFIG_RESOURCE_TYPE_LIST);
 	List<String> list = parseXmlForList(xmlFile);
 	return list;
     }
@@ -564,4 +583,5 @@ public class OsylConfigServiceImpl extends Object implements OsylConfigService {
 	}
 	return reader;
     }
+
 }
