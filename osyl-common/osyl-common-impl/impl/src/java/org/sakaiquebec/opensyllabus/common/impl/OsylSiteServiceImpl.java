@@ -1116,12 +1116,12 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    Site site = siteService.getSite(siteId);
 	    String type = site.getType();
 	    
-	    if (type != null && type.equals(OsylDirectoryService.CONFIG_REF)){
-		coConfig =
-		    osylConfigService.getConfigByRefAndVersion(
-			    osylConfigService.DIRECTORY_CONFIG_REF, null,
-			    webappDir);
-	    }else
+//	    if (type != null && type.equals(OsylDirectoryService.CONFIG_REF)){
+//		coConfig =
+//		    osylConfigService.getConfigByRefAndVersion(
+//			    osylConfigService.DIRECTORY_CONFIG_REF, null,
+//			    webappDir);
+//	    }else
 	    coConfig =
 		    osylConfigService.getConfigByRefAndVersion(
 			    osylConfigService.getDefaultConfig(), null,
