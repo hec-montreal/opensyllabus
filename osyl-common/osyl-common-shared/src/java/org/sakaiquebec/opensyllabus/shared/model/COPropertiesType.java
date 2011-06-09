@@ -38,6 +38,7 @@ public class COPropertiesType {
     public static final String DESCRIPTION = "description";
     public static final String COMMENT = "comment";
     public static final String NON_APPLICABLE = "n/a";
+    public static final String DOCUMENT_TYPE = "documentType";
 
     //Requirement Level
     public final static String REQ_LEVEL_MANDATORY = "mandatory";

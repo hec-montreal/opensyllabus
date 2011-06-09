@@ -53,6 +53,11 @@ public class COContentResource implements COModelInterface,
     private String type;
 
     /**
+     * The type of the document or resource
+     */
+    private String typeDocument;
+    
+    /**
      * The access level.
      */
     private String access;
@@ -137,6 +142,14 @@ public class COContentResource implements COModelInterface,
 	notifyEventHandlers();
     }
 
+    public String getTypeDocument() {
+	return typeDocument;
+    }
+
+    public void setTypeDocument(String typeDocument) {
+	this.typeDocument = typeDocument;
+    }
+    
     public COProperties getProperties() {
 	return properties;
     }
