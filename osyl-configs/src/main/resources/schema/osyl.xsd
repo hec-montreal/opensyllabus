@@ -138,17 +138,7 @@
 				<xs:sequence>
 					<xs:element name="identifier" type="identifierType" maxOccurs="unbounded"/>
 					<xs:element name="language" type="xs:language" minOccurs="0"/>
-					<xs:element name="asmResourceType" type="ASMResourceType"/>					
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="ASMResourceType" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="ASMObject">
-				<xs:sequence>
-					<xs:element name="identifier" type="identifierType" maxOccurs="unbounded"/>
-					<xs:element name="language" type="xs:language" minOccurs="0"/>
+					<xs:element name="asmResourceType" type="resourceType"/>					
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
