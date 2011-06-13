@@ -92,7 +92,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</fo:inline>
-						<fo:inline><xsl:value-of select="$courseCode"/> (<xsl:value-of select="$group"/>)</fo:inline>
+						<fo:inline><xsl:value-of select="$courseCode"/> (<xsl:value-of select="$group"/>) <xsl:text>(public)</xsl:text></fo:inline>
 					</fo:block>
 					<fo:block text-align="right" margin-top="-15pt"><xsl:value-of select="$session"/></fo:block>
           			<fo:block border-top-color="lightgrey" border-top-style="solid" border-top-width="1.5px" space-before="5pt"/>
