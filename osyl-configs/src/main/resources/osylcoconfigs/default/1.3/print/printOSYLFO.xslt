@@ -228,18 +228,16 @@
 				<xsl:choose>
 					<xsl:when test="$access =''">
 						<xsl:if test="$lang ='FR'">
-							<xsl:text>(édition)</xsl:text>
+							<xsl:text> (édition)</xsl:text>
 						</xsl:if>
 						<xsl:if test="$lang ='EN'">
-							<xsl:text>(edition)</xsl:text>
+							<xsl:text> (edition)</xsl:text>
 						</xsl:if>
 						<xsl:if test="$lang ='ES'">
-							<xsl:text>(edición)</xsl:text>
+							<xsl:text> (edición)</xsl:text>
 						</xsl:if>
 					</xsl:when>
-					<xsl:otherwise>
-						(<xsl:value-of select="$access"/>)
-					</xsl:otherwise>
+					<xsl:otherwise> (<xsl:value-of select="$access"/>)</xsl:otherwise>
 				</xsl:choose>
 			</fo:inline>
 		</fo:block>

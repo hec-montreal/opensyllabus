@@ -945,14 +945,8 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
     public void getSiteInfo(COSerialized co, String siteId) throws Exception {
 	try {
 	    Site site = getSite(siteId);
-	    co.setTitle(site.getTitle());
-	    if (this.isCOLinkedToCourseManagement(siteId)) {
-		String cmTitle = getCourseManagementTitle(siteId);
-		String cmCourseNo = getCourseManagementCourseNo(siteId);
-		if (cmTitle != null && cmCourseNo != null) {
-		    co.setTitle(cmCourseNo + " - " + cmTitle);
-		}
-	    }
+	    co.setTitle(getCoSiteTitle(site));
+
 	    co.setShortDescription(site.getShortDescription());
 	    co.setDescription(site.getDescription());
 	    co.setCoIsFrozen(getFrozenValue(site));
@@ -965,6 +959,22 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	    log.warn("Get site info - Id Not Found exception", e);
 	    log.warn("Get site info - Fail to retreive course management title");
 	}
+    }
+
+    public String getCoSiteTitle(Site site) throws Exception{
+	String coSiteTitle ="";
+	
+	if (isCOLinkedToCourseManagement(site.getId())) {
+	    String cmTitle = getCourseManagementTitle(site.getId());
+	    String cmCourseNo = getCourseManagementCourseNo(site.getId());
+
+	    if (cmTitle != null && cmCourseNo != null) {
+		coSiteTitle = cmCourseNo + " - " + cmTitle;
+	    }
+	} else {
+	    coSiteTitle = site.getTitle();
+	}
+	return coSiteTitle;
     }
 
     /**
@@ -1115,17 +1125,17 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	if (co == null) {
 	    Site site = siteService.getSite(siteId);
 	    String type = site.getType();
-	    
-	    if (type != null && type.equals(OsylDirectoryService.CONFIG_REF)){
+
+	    if (type != null && type.equals(OsylDirectoryService.CONFIG_REF)) {
 		coConfig =
-		    osylConfigService.getConfigByRefAndVersion(
-			    osylConfigService.DIRECTORY_CONFIG_REF, null,
-			    webappDir);
-	    }else
-	    coConfig =
-		    osylConfigService.getConfigByRefAndVersion(
-			    osylConfigService.getDefaultConfig(), null,
-			    webappDir);
+			osylConfigService.getConfigByRefAndVersion(
+				osylConfigService.DIRECTORY_CONFIG_REF, null,
+				webappDir);
+	    } else
+		coConfig =
+			osylConfigService.getConfigByRefAndVersion(
+				osylConfigService.getDefaultConfig(), null,
+				webappDir);
 	    co =
 		    new COSerialized(idManager.createUuid(),
 			    osylConfigService.getCurrentLocale(), "shared", "",
@@ -2210,7 +2220,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	return coIsFrozen;
     }
 
-    @Override
     public void sendEvent(String eventType, String resource, String context) {
 	eventTrackingService.post(eventTrackingService.newEvent(
 		eventType,
@@ -2220,7 +2229,6 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 
     }
 
-    @Override
     public String getSiteType(String siteId) {
 	String type = null;
 	try {

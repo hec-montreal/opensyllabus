@@ -552,7 +552,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	try {
 	    securityService.pushAdvisor(advisor);
 	    Site site = osylSiteService.getSite(siteId);
-	    String siteTitle = site.getTitle();
+	    String siteTitle = osylSiteService.getCoSiteTitle(site);
+	    
 	    try {
 		contentHostingService.getResource(directory + siteTitle
 			+ ("".equals(access) ? "" : "_" + access) + ".pdf");
@@ -601,6 +602,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    }
 	} catch (IdUnusedException e) {
 	    log.warn("This is not a valid siteId: " + siteId, e);
+	} catch (Exception e1) {
+		e1.printStackTrace();
 	} finally {
 	    securityService.popAdvisor();
 	}
