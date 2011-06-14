@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -88,6 +89,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
     private Map<String, Map<String, Object>> updatedRoles = null;
 
+    private Map<String, Map<String, String>> cmExceptions = null;
+
     private Map<String, String> configFiles = null;
 
     private String sessionId = null;
@@ -101,15 +104,15 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private HashMap<String, List<String>> frozenFunctionsToAllow;
 
     private String description;
-    
+
     private boolean includingFrozenSites;
-    
+
     private boolean includingDirSites;
-    
+
     private List<String> functions;
     private List<String> addedUsers;
     private List<String> removedUsers;
-    
+
     private Map<String, String> printVersionJobParams = null;
 
     protected ContentHostingService contentHostingService = null;
@@ -117,7 +120,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     public void setContentHostingService(ContentHostingService service) {
 	contentHostingService = service;
     }
-    
+
     private EventTrackingService eventTrackingService;
 
     public void setEventTrackingService(
@@ -130,11 +133,11 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     public void setEntityManager(EntityManager entityManager) {
 	this.entityManager = entityManager;
     }
-    
+
     private SecurityService securityService;
 
     public void setSecurityService(SecurityService securityService) {
-        this.securityService = securityService;
+	this.securityService = securityService;
     }
 
     public void init() {
@@ -143,11 +146,12 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	eventTrackingService.addObserver(this);
 
 	configFiles = new HashMap<String, String>();
-	updateConfig(CONFIGFORLDER + OFFSITESCONFIGFILE);
-	updateConfig(ROLEFOLDER);
+	updateConfig(CONFIG_FOLDER + OFFSITESCONFIGFILE);
+	updateConfig(ROLE_FOLDER);
 	updateConfig(ADMIN_CONTENT_FOLDER + XSL_FILENAME);
-	updateConfig(CONFIGFORLDER + FUNCTIONSSCONFIGFILE);
-	updateConfig(CONFIGFORLDER + PRINT_VERSION_CONFIG);
+	updateConfig(CONFIG_FOLDER + FUNCTIONSSCONFIGFILE);
+	updateConfig(CONFIG_FOLDER + PRINT_VERSION_CONFIG);
+	updateConfig(CM_EXCEPTIONS_FOLDER);
     }
 
     public String getFunctionsRole() {
@@ -307,7 +311,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 
 		// If the content of the role folder update, we update the
 		// values
-		if (referenceString.contains(ROLEFOLDER)) {
+		if (referenceString.contains(ROLE_FOLDER)) {
 		    log.info("Updating roles config files from "
 			    + referenceString);
 		    updateConfig(referenceString);
@@ -324,9 +328,10 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		    log.info("Updating XSL in resource" + referenceString);
 		    updateConfig(referenceString);
 		}
-		
+
 		if (referenceString.contains(PRINT_VERSION_CONFIG)) {
-		    log.info("Updating 'createPrintVersion' job config" + referenceString);
+		    log.info("Updating 'createPrintVersion' job config"
+			    + referenceString);
 		    updateConfig(referenceString);
 		}
 	    }
@@ -342,11 +347,11 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    ContentResource resource = null;
 
 	    try {
-		log.info("*** securityService.pushAdvisor(new SecurityAdvisor() ConfigurationServiceImpl *** ");	    	
+		log.info("*** securityService.pushAdvisor(new SecurityAdvisor() ConfigurationServiceImpl *** ");
 
 		// We allow access to the file
 
-		securityService.pushAdvisor(new SecurityAdvisor() { 
+		securityService.pushAdvisor(new SecurityAdvisor() {
 		    public SecurityAdvice isAllowed(String userId,
 			    String function, String reference) {
 			if (function.equals("content.read"))
@@ -355,7 +360,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		    }
 		});
 
-		if (fileName.contains(ROLEFOLDER)) {
+		if (fileName.contains(ROLE_FOLDER)) {
 		    ContentCollection collection;
 		    if (!contentHostingService.isCollection(reference.getId())) {
 			resource =
@@ -375,6 +380,28 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		    for (ContentResource ress : resources) {
 			if (ress != null)
 			    retrieveConfigs(ress.getReference(),
+				    ress.streamContent());
+		    }
+		} else if (fileName.contains(CM_EXCEPTIONS_FOLDER)) {
+		    ContentCollection collection;
+		    if (!contentHostingService.isCollection(reference.getId())) {
+			resource =
+				contentHostingService.getResource(reference
+					.getId());
+
+			collection = resource.getContainingCollection();
+		    } else {
+			collection =
+				contentHostingService.getCollection(reference
+					.getId());
+		    }
+		    List<ContentResource> resources =
+			    contentHostingService.getAllResources(collection
+				    .getId());
+
+		    for (ContentResource ress : resources) {
+			if (ress != null)
+			    retrieveCmExceptions(ress.getReference(),
 				    ress.streamContent());
 		    }
 		} else if (fileName.contains(XSL_FILENAME)) {
@@ -400,7 +427,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    } catch (IdUnusedException e) {
 		// The file has been removed - remove config in list
 		if (configFiles != null) {
-		    if (fileName.contains(ROLEFOLDER)) {
+		    if (fileName.contains(ROLE_FOLDER)) {
 			String role = configFiles.get(fileName);
 			configFiles.remove(fileName);
 			if (updatedRoles != null) {
@@ -436,8 +463,41 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	}
     }
 
+    private void retrieveCmExceptions(String configurationXml,
+	    InputStream stream) {
+	org.w3c.dom.Document document;
+
+	/*
+	 * Parse the XML - if that fails, give up now
+	 */
+	if ((document = parseXmlFromStream(stream)) == null) {
+	    log.warn("retrieveConfigs: XML document is null");
+	    return;
+	}
+
+	synchronized (this) {
+
+	    String users = retrieveParameter(document, CM_EXCEPTIONS_USERS);
+	    String courses = retrieveParameter(document, CM_EXCEPTIONS_COURSES);
+	    String category =
+		    retrieveParameter(document, CM_EXCEPTIONS_CATEGORY);
+	    String role = retrieveParameter(document, CM_EXCEPTIONS_ROLE);
+
+	    for (String user : Arrays.asList(users.split(","))) {
+		if (cmExceptions == null)
+		    cmExceptions = new HashMap<String, Map<String, String>>();
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put(CM_EXCEPTIONS_COURSES, courses);
+		map.put(CM_EXCEPTIONS_CATEGORY, category);
+		map.put(CM_EXCEPTIONS_ROLE, role);
+		cmExceptions.put(user, map);
+	    }
+
+	}
+    }
+
     public void getFrozenSessionIdConfig() {
-	String fileName = CONFIGFORLDER + UNFROZENSITESCONFIG;
+	String fileName = CONFIG_FOLDER + UNFROZENSITESCONFIG;
 	Reference reference = entityManager.newReference(fileName);
 	if (reference != null) {
 	    ContentResource resource = null;
@@ -461,7 +521,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     }
 
     public void getConfigToFreeze() {
-	String fileName = CONFIGFORLDER + FROZENSITESCONFIG;
+	String fileName = CONFIG_FOLDER + FROZENSITESCONFIG;
 	Reference reference = entityManager.newReference(fileName);
 	if (reference != null) {
 	    ContentResource resource = null;
@@ -510,15 +570,17 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		setPrograms(programs);
 		setServEns(servEns);
 	    }
-	    
-	    if (configurationXml.contains(ROLEFOLDER)) {
+
+	    if (configurationXml.contains(ROLE_FOLDER)) {
 		Map<String, Object> values = new HashMap<String, Object>();
 		String role = retrieveParameter(document, ROLE);
 		String description = retrieveParameter(document, DESCRIPTION);
-		boolean includingFrozenSites = Boolean.parseBoolean(
-			retrieveParameter(document, INCLUDING_FROZEN_SITES));
-		boolean includingDirSites = Boolean.parseBoolean(
-			retrieveParameter(document, INCLUDING_DIR_SITES));
+		boolean includingFrozenSites =
+			Boolean.parseBoolean(retrieveParameter(document,
+				INCLUDING_FROZEN_SITES));
+		boolean includingDirSites =
+			Boolean.parseBoolean(retrieveParameter(document,
+				INCLUDING_DIR_SITES));
 		String addedUsers = retrieveParameter(document, ADDEDUSERS);
 		String removedUsers = retrieveParameter(document, REMOVEDUSERS);
 		String functions = retrieveParameter(document, FUNCTIONS);
@@ -546,15 +608,17 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		    configFiles.put(configurationXml, role);
 		}
 	    }
-	    
+
 	    if (configurationXml.contains(FUNCTIONSSCONFIGFILE)) {
 		String fuctionsRole = retrieveParameter(document, ROLE);
 		String description = retrieveParameter(document, DESCRIPTION);
 		String removedRole = retrieveParameter(document, REMOVED_ROLE);
-		boolean includingFrozenSites = Boolean.parseBoolean(
-			retrieveParameter(document, INCLUDING_FROZEN_SITES));
-		boolean includingDirSites = Boolean.parseBoolean(
-			retrieveParameter(document, INCLUDING_DIR_SITES));
+		boolean includingFrozenSites =
+			Boolean.parseBoolean(retrieveParameter(document,
+				INCLUDING_FROZEN_SITES));
+		boolean includingDirSites =
+			Boolean.parseBoolean(retrieveParameter(document,
+				INCLUDING_DIR_SITES));
 		String allowedFunctions =
 			retrieveParameter(document, ALLOWED_FUNCTIONS);
 		String disallowedFunctions =
@@ -580,7 +644,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		setSessionId(frozenSessionId);
 	    }
 
-	    if(configurationXml.contains(PRINT_VERSION_CONFIG)) {
+	    if (configurationXml.contains(PRINT_VERSION_CONFIG)) {
 		printVersionJobParams = new HashMap<String, String>();
 		printVersionJobParams.put(INCLUDING_DIR_SITES,
 			retrieveParameter(document, INCLUDING_DIR_SITES));
@@ -591,29 +655,29 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     }
 
     private HashMap<String, List<String>> getFrozenPermissionsByRole(
-    	    Document document) {
-    	HashMap<String, List<String>> rolesToFrozen =
-    		new HashMap<String, List<String>>();
-    	// get the root element
-    	Element docEle = document.getDocumentElement();
-    	// get a nodelist of elements
-    	NodeList nl = docEle.getElementsByTagName(ROLESET);
-    	if (nl != null && nl.getLength() > 0) {
-    	    for (int i = 0; i < nl.getLength(); i++) {
-    		// get the role element
-    		Element element = (Element) nl.item(i);
-    		// get the role object
-    		String roleId = element.getAttribute(ROLEID);
-    		String permissions = element.getTextContent();
-    		setPermissions(permissions);
-    		// add it to list
-    		List<String> permissionsAllowed = this.getFrozenPermissions();
-    		rolesToFrozen.put(roleId, permissionsAllowed);
-    	    }
-    	    return rolesToFrozen;
-    	}
-    	return rolesToFrozen;
-        }
+	    Document document) {
+	HashMap<String, List<String>> rolesToFrozen =
+		new HashMap<String, List<String>>();
+	// get the root element
+	Element docEle = document.getDocumentElement();
+	// get a nodelist of elements
+	NodeList nl = docEle.getElementsByTagName(ROLESET);
+	if (nl != null && nl.getLength() > 0) {
+	    for (int i = 0; i < nl.getLength(); i++) {
+		// get the role element
+		Element element = (Element) nl.item(i);
+		// get the role object
+		String roleId = element.getAttribute(ROLEID);
+		String permissions = element.getTextContent();
+		setPermissions(permissions);
+		// add it to list
+		List<String> permissionsAllowed = this.getFrozenPermissions();
+		rolesToFrozen.put(roleId, permissionsAllowed);
+	    }
+	    return rolesToFrozen;
+	}
+	return rolesToFrozen;
+    }
 
     private Date getDate(String date) {
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
@@ -654,28 +718,28 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
      * @return the includingFrozenSites value.
      */
     public boolean isIncludingFrozenSites() {
-        return includingFrozenSites;
+	return includingFrozenSites;
     }
 
     /**
      * @param includingFrozenSites the new value of includingFrozenSites.
      */
     private void setIncludingFrozenSites(boolean includingFrozenSites) {
-        this.includingFrozenSites = includingFrozenSites;
+	this.includingFrozenSites = includingFrozenSites;
     }
 
     /**
      * @return the includingDirSites value.
      */
     public boolean isIncludingDirSites() {
-        return includingDirSites;
+	return includingDirSites;
     }
 
     /**
      * @param includingDirSites the new value of includingDirSites.
      */
     private void setIncludingDirSites(boolean includingDirSites) {
-        this.includingDirSites = includingDirSites;
+	this.includingDirSites = includingDirSites;
     }
 
     private void setFunctions(String functions) {
@@ -804,6 +868,10 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     public Map<String, Map<String, Object>> getUdatedRoles() {
 	return updatedRoles;
     }
+    
+    public Map<String,Map<String,String>> getCmExceptions(){
+	return cmExceptions;
+    }
 
     public String getRoleToRemove() {
 	return removedRole;
@@ -829,6 +897,6 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
      * @return the printVersionJobParams value.
      */
     public Map<String, String> getPrintVersionJobParams() {
-        return printVersionJobParams;
+	return printVersionJobParams;
     }
 }

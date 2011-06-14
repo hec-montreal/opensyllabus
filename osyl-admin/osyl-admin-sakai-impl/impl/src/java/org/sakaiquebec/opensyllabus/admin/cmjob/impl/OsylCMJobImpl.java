@@ -7,12 +7,14 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 
@@ -36,8 +38,8 @@ import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.coursemanagement.api.exception.IdExistsException;
 import org.sakaiproject.coursemanagement.api.exception.IdNotFoundException;
 import org.sakaiproject.user.api.UserNotDefinedException;
+import org.sakaiquebec.opensyllabus.admin.api.ConfigurationService;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.OsylCMJob;
-import org.sakaiquebec.opensyllabus.admin.impl.extracts.Constants;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailChargeFormationMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailChargeFormationMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.DetailCoursMap;
@@ -350,7 +352,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		ProgrammeEtudesMapEntry programmeEtudesMapEntry =
 			programmeEtudesMap.get(coursEntry.getAcadCareer());
 		career = programmeEtudesMapEntry.getAcadCareer();
-		
+
 		if (!cmService.isCourseOfferingDefined(courseOfferingId)) {
 		    courseOff =
 			    cmAdmin.createCourseOffering(courseOfferingId,
@@ -514,7 +516,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	}
 
     }
-    
+
     /**
      * Method used to create the sessions
      */
@@ -725,11 +727,10 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	    retrieveCurrentCMContent();
 
-	    
-	    //We load academic careers
+	    // We load academic careers
 	    loadAcademicCareers();
 	    log.info("Academic Careers updated successfully");
-	    
+
 	    // We load sessions
 	    loadSessions();
 	    log.info("Sessions updated successfully");
@@ -1028,6 +1029,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	assignChargeFormation();
 	assignTeachers();
 	syncSecretaries();
+	syncCmExceptions();
     }
 
     /**
@@ -1172,6 +1174,41 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	    log.info("L'utilisateur " + userId + " n'est plus membre du cours "
 		    + sectionId);
 	}
+    }
+
+    private void syncCmExceptions() {
+
+	Map<String, Map<String, String>> exceptions =
+		adminConfigService.getCmExceptions();
+	for (Entry<String, Map<String, String>> entry : exceptions.entrySet()) {
+	    String matricule = entry.getKey();
+	    Map<String, String> props = entry.getValue();
+	    String courses =
+		    props.get(ConfigurationService.CM_EXCEPTIONS_COURSES);
+	    String category =
+		    props.get(ConfigurationService.CM_EXCEPTIONS_CATEGORY);
+	    String role = props.get(ConfigurationService.CM_EXCEPTIONS_ROLE);
+	    if (courses != null && !"".equals(courses)) {
+		for (String course : Arrays.asList(courses.split(","))) {
+		    course = course.replaceAll("-", "");
+		    for (DetailCoursMapEntry dcme :
+			    detailCoursMap.getAllGroupeCours(course)) {
+			String courseOfferingId = getCourseOfferingId(dcme);
+			cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
+				role, courseOfferingId, ACTIVE_STATUS);
+		    }
+		}
+	    } else if (category != null && !"".equals(category)) {
+		for (DetailCoursMapEntry dcme : detailCoursMap
+			.getCoursByAcadOrg(category)) {
+		    String courseOfferingId = getCourseOfferingId(dcme);
+		    cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
+			    role, courseOfferingId, ACTIVE_STATUS);
+		}
+	    }
+
+	}
+
     }
 
     /**

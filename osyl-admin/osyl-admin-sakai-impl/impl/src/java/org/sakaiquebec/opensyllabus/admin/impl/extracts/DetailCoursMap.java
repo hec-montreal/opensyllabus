@@ -70,6 +70,21 @@ public class DetailCoursMap extends HashMap<String, DetailCoursMapEntry> {
 
 	return v.iterator();
     } // getAllGroupeCours
+    
+    
+    public List<DetailCoursMapEntry> getAllGroupeCours(String catalogNbr) {
+	List<DetailCoursMapEntry> v = new ArrayList<DetailCoursMapEntry>();
+
+	Iterator<DetailCoursMapEntry> values = values().iterator();
+	while (values.hasNext()) {
+	    DetailCoursMapEntry cours = (DetailCoursMapEntry) values.next();
+	    if (catalogNbr.equals(cours.getCatalogNbr())) {
+		v.add(cours);
+	    }
+	}
+
+	return v;
+    } // getAllGroupeCours
 
     /**
      * Retourne les differents groupe-cours du cours dont le numero de
@@ -193,5 +208,6 @@ public class DetailCoursMap extends HashMap<String, DetailCoursMapEntry> {
 
 	return cours;
     }
+   
 
 }

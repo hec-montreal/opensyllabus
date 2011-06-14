@@ -88,13 +88,13 @@ public interface ConfigurationService {
     /**
      * Folder that contains all the configuration files
      */
-    public final static String CONFIGFORLDER = ADMIN_CONTENT_FOLDER + "config/";
+    public final static String CONFIG_FOLDER = ADMIN_CONTENT_FOLDER + "config/";
 
     /**
      * This folder contains all the configuration files that modify
      * (add-remove-update) a role.
      */
-    public final static String ROLEFOLDER = CONFIGFORLDER + "role/";
+    public final static String ROLE_FOLDER = CONFIG_FOLDER + "role/";
 
     public final static String OFFSITESCONFIGFILE = "offSitesConfig.xml";
 
@@ -114,6 +114,17 @@ public interface ConfigurationService {
     public final static String INCLUDING_DIR_SITES =
 	    "includingDirSites";
 
+    public final static String CM_EXCEPTIONS_FOLDER = CONFIG_FOLDER + "cm_exceptions/";
+    
+    public final static String CM_EXCEPTIONS_USERS = "users";
+    
+    public final static String CM_EXCEPTIONS_COURSES = "courses";
+    
+    public final static String CM_EXCEPTIONS_CATEGORY = "category";
+    
+    public final static String CM_EXCEPTIONS_ROLE = "role";
+    
+    
     // Parameters used in the official sites synchronisation job
     public Date getEndDate();
 
@@ -154,4 +165,6 @@ public interface ConfigurationService {
     public boolean isIncludingDirSites();
     
     public Map<String, String> getPrintVersionJobParams();
+    
+    public Map<String,Map<String,String>> getCmExceptions();
 }
