@@ -512,9 +512,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		acadCareer.setDescription_fr_ca(description_fr_ca);
 		cmAdmin.updateAcademicCareer(acadCareer);
 	    }
-
 	}
-
     }
 
     /**
