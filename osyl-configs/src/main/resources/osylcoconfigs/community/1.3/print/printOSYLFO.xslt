@@ -140,13 +140,13 @@
 						<fo:inline>
 							<xsl:choose>
 								<xsl:when test="$lang = 'FR'">
-									<xsl:text> à partir de ZoneCours2 et n’est peut-être pas à jour avec la version en ligne.</xsl:text>
+									<xsl:text> à partir de OpenSyllabus et n’est peut-être pas à jour avec la version en ligne.</xsl:text>
 								</xsl:when>
 								<xsl:when test="$lang = 'EN'">
-									<xsl:text> from ZoneCours2 and may not be up to date with the online version.</xsl:text>
+									<xsl:text> from OpenSyllabus and may not be up to date with the online version.</xsl:text>
 								</xsl:when>
 								<xsl:when test="$lang = 'ES'">
-									<xsl:text> a partir de ZoneCours2 y posiblemente no está al día con la versión en línea.</xsl:text>
+									<xsl:text> a partir de OpenSyllabus y posiblemente no está al día con la versión en línea.</xsl:text>
 								</xsl:when>
 								<xsl:otherwise>
 								</xsl:otherwise>
