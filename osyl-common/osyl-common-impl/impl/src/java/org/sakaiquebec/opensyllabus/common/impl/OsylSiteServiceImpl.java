@@ -47,8 +47,10 @@ import org.sakaiproject.announcement.api.AnnouncementMessageEdit;
 import org.sakaiproject.announcement.api.AnnouncementMessageHeaderEdit;
 import org.sakaiproject.announcement.api.AnnouncementService;
 import org.sakaiproject.assignment.api.Assignment;
+import org.sakaiproject.assignment.api.AssignmentConstants;
 import org.sakaiproject.assignment.api.AssignmentEdit;
 import org.sakaiproject.assignment.api.AssignmentService;
+import org.sakaiproject.assignment.api.AssignmentSubmission;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.citation.api.CitationCollection;
@@ -313,7 +315,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      */
     public void init() {
 	log.info("INIT from OsylSite service");
-
+	// BEGIN HEC ONLY SAKAI-2723 
 	eventTrackingService.addObserver(new Observer() {
 
 	    // private class for register AnnoucementEvent (resource, priority)
@@ -564,9 +566,49 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 			}
 		    }
 		}
+		else if(e.getEvent().equals(AssignmentConstants.EVENT_SUBMIT_ASSIGNMENT_SUBMISSION)){
+		    //ASSIGNEMENT SUBMISSION
+		    try{
+			AssignmentSubmission as = assignmentService.getSubmission(e.getResource());
+			log.info("user ["
+				    + sessionManager.getCurrentSession().getUserEid()
+				    + "] submit an assignement submission : " + as.getId());
+		    }catch(Exception e1){
+			log.info("user ["
+				    + sessionManager.getCurrentSession().getUserEid()
+				    + "] submit an assignement submission : no assignemtn submission id");
+		    }  
+		}
+		else if(e.getEvent().equals(AssignmentConstants.EVENT_SAVE_ASSIGNMENT_SUBMISSION)){
+		    //SASSIGNMENT SAVING
+		    try{
+			AssignmentSubmission as = assignmentService.getSubmission(e.getResource());
+			log.info("user ["
+				    + sessionManager.getCurrentSession().getUserEid()
+				    + "] save an assignement submission : " + as.getId());
+		    }catch(Exception e1){
+			log.info("user ["
+				    + sessionManager.getCurrentSession().getUserEid()
+				    + "] save an assignement submission : no assignemtn submission id");
+		    }  
+		}
+		else if(e.getEvent().equals(AssignmentConstants.EVENT_UPDATE_ASSIGNMENT_SUBMISSION)){
+		    //ASSIGNEMENT SUBMISSION UPDATE
+		    try{
+			AssignmentSubmission as = assignmentService.getSubmission(e.getResource());
+			log.info("user ["
+				    + sessionManager.getCurrentSession().getUserEid()
+				    + "] update an assignement submission : " + as.getId());
+		    }catch(Exception e1){
+			log.info("user ["
+				    + sessionManager.getCurrentSession().getUserEid()
+				    + "] update an assignement submission : no assignemtn submission id !");
+		    }  
+		}
 	    }
 	});
 
+	// END HEC ONLY SAKAI-2723 
 	// We register the entity manager
 	entityManager.registerEntityProducer(this, REFERENCE_ROOT);
 
