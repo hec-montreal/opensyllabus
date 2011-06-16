@@ -567,7 +567,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    }
 		}
 		else if(e.getEvent().equals(AssignmentConstants.EVENT_SUBMIT_ASSIGNMENT_SUBMISSION)){
-		    //ASSIGNEMENT SUBMISSION
+		    //ASSIGNMENT SUBMISSION
 		    try{
 			AssignmentSubmission as = assignmentService.getSubmission(e.getResource());
 			log.info("user ["
@@ -580,7 +580,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    }  
 		}
 		else if(e.getEvent().equals(AssignmentConstants.EVENT_SAVE_ASSIGNMENT_SUBMISSION)){
-		    //SASSIGNMENT SAVING
+		    //ASSIGNMENT SUBMISSION SAVING
 		    try{
 			AssignmentSubmission as = assignmentService.getSubmission(e.getResource());
 			log.info("user ["
@@ -593,7 +593,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 		    }  
 		}
 		else if(e.getEvent().equals(AssignmentConstants.EVENT_UPDATE_ASSIGNMENT_SUBMISSION)){
-		    //ASSIGNEMENT SUBMISSION UPDATE
+		    //ASSIGNMENT SUBMISSION UPDATE
 		    try{
 			AssignmentSubmission as = assignmentService.getSubmission(e.getResource());
 			log.info("user ["
