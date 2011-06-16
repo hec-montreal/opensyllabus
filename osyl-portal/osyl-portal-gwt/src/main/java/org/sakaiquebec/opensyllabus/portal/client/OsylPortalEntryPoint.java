@@ -34,13 +34,18 @@ import org.sakaiquebec.opensyllabus.portal.client.view.NavigationHomePage;
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -138,27 +143,27 @@ public class OsylPortalEntryPoint implements EntryPoint,
     public void setView(final AbstractPortalView view) {
 	rootPanel.clear();
 
-	// HorizontalPanel localePanel = new HorizontalPanel();
-	// for (final String locale : LOCALES) {
-	// Label l =
-	// new Label(PortalController.getInstance().getMessage(
-	// "locale_" + locale));
-	// l.addClickHandler(new ClickHandler() {
-	//
-	// public void onClick(ClickEvent event) {
-	// changeLocale(locale, view.getViewKey());
-	// }
-	//
-	// });
-	// l.setStylePrimaryName("NHP_locale");
-	// localePanel.add(l);
-	// }
-	// localePanel.setStylePrimaryName("NHP_localePanel");
-	//
-	// VerticalPanel vp = new VerticalPanel();
-	// vp.add(localePanel);
-	// vp.add(view);
-	// rootPanel.add(vp);
+	 HorizontalPanel localePanel = new HorizontalPanel();
+	 for (final String locale : LOCALES) {
+	 Label l =
+	 new Label(PortalController.getInstance().getMessage(
+	 "locale_" + locale));
+	 l.addClickHandler(new ClickHandler() {
+	
+	 public void onClick(ClickEvent event) {
+	 changeLocale(locale, view.getViewKey());
+	 }
+	
+	 });
+	 l.setStylePrimaryName("NHP_locale");
+	 localePanel.add(l);
+	 }
+	 localePanel.setStylePrimaryName("NHP_localePanel");
+	
+	 VerticalPanel vp = new VerticalPanel();
+	 vp.add(localePanel);
+	 vp.add(view);
+	 rootPanel.add(vp);
 	rootPanel.add(view);
 	if (!views.keySet().contains(view.getViewKey()))
 	    views.put(view.getViewKey(), view);
