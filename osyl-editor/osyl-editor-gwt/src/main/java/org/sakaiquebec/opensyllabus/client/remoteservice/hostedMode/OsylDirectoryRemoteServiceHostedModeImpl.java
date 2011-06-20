@@ -63,7 +63,7 @@ public class OsylDirectoryRemoteServiceHostedModeImpl implements OsylDirectoryRe
 				"work/HostedModeSubDirectory2", "2009/04/03",
 				new ArrayList<OsylAbstractBrowserItem>()));
 		listUserDir.add(new OsylFileItem("File1", "work/File1", false, "2009/04/03", "text/html",
-				"File1 description", "File1 coyright"));
+				"File1 description", "File1 coyright", "File1 typeResource"));
 	}
 
 	/**
@@ -84,13 +84,15 @@ public class OsylDirectoryRemoteServiceHostedModeImpl implements OsylDirectoryRe
 	/**
 	 * {@inheritDoc}
 	 */
-	public void updateRemoteFileInfo(String fileName, 
-			String description, String copyright, final AsyncCallback<Void> callback) {
+    public void updateRemoteFileInfo(String fileName, String description,
+	    String copyright, String typeResource,
+	    final AsyncCallback<Void> callback) {
 
 		try {
 			OsylFileItem file = (OsylFileItem) findItembyByName(false, fileName);
 			file.setDescription(description);
 			file.setCopyrightChoice(copyright);
+			file.setTypeResource(typeResource);
 			callback.onSuccess(null);
 		} catch (Exception e) {
 			callback.onFailure(e);
