@@ -45,6 +45,8 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 
     private List<String> rightsList;
 
+    private List<String> typesResourceList;
+    
     private OsylFileUpload osylFileUpload;
 
     public OsylFileBrowser() {
@@ -76,7 +78,7 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 	public void onClick(ClickEvent event) {
 	    osylFileUpload =
 		    new OsylFileUpload(getController().getUiMessages().getMessage("fileUpload.addResource"), getController(), getCurrentDirectory()
-			    .getDirectoryPath(), rightsList);
+			    .getDirectoryPath(), rightsList, typesResourceList);
 	    osylFileUpload.addEventHandler(OsylFileBrowser.this);
 	    osylFileUpload.showModal();
 	}
@@ -122,8 +124,8 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 		.updateRemoteFileInfo(
 			((OsylFileItem) getItemToSelect()).getFilePath(),
 			"",
-			osylFileUpload
-			.getRight(),
+			osylFileUpload.getRight(),
+			osylFileUpload.getTypeResource(),
 			this.fileUpdateRequestHandler);
     }
 
@@ -131,6 +133,10 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 	this.rightsList = rightsList;
     }
 
+    public void setTypesResourceList(List<String> typesResourceList) {
+	this.typesResourceList = typesResourceList;
+    }
+    
     /**
      * Inner anonymous class that represent the response callback when updating
      * file properties via sdata.
