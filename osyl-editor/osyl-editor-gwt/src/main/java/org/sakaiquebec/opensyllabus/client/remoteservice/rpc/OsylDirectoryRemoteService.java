@@ -15,6 +15,6 @@ public interface OsylDirectoryRemoteService extends RemoteService {
 	    String relativePathFolder);
 
     public void updateRemoteFileInfo(String fileName, String description,
-	    String copyright);
+	    String copyright, String typeResource);
 
 }

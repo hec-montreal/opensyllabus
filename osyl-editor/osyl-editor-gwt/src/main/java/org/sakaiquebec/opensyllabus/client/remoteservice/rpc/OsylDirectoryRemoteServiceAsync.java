@@ -33,7 +33,7 @@ public interface OsylDirectoryRemoteServiceAsync {
 	 * @param callback
 	 */
 	public void updateRemoteFileInfo(String fileName,
-			String description, String copyright, final AsyncCallback<Void> callback);
+			String description, String copyright, String typeResource, final AsyncCallback<Void> callback);
 
 	/**
 	 * Create a new remote directory using SData
