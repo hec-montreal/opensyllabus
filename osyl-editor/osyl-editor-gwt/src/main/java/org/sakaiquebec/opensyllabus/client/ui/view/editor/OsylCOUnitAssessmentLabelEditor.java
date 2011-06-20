@@ -59,6 +59,7 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
     private Map<String, CheckBox> subTypeMapCheckBox;
     private ListBox typeListBox;
     private Map<String, CheckBox> modalityMapCheckBox;
+    private ListBox typeResourceListBox;
 
     private DateTimeFormat dateTimeFormat;
 
@@ -134,6 +135,14 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 			    + "\n";
 	    ok = false;
 	}
+	if (typeResourceListBox.getSelectedIndex() == 0) {
+	    messages +=
+		    getView().getUiMessage("Global.field.required",
+			    getUiMessage("Assessment.mode"))
+			    + "\n";
+	    ok = false;
+	}
+	
 	if (!ok) {
 	    OsylAlertDialog osylAlertDialog =
 		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
