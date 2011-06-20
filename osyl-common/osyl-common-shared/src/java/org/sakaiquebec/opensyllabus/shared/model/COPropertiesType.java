@@ -116,6 +116,7 @@ public class COPropertiesType {
     public static final String RESOURCE_TYPE_CITATION = "typeResource";
     public static final String RESOURCE_TYPE_DOCUMENT = "typeResource";    
     public static final String RESOURCE_TYPE_LINK = "typeResource";    
+    public static final String TYPE_RESOURCE = "typeResource";    
 
     //Specific to ASMUnit
     public static final String PREFIX = "prefix";
