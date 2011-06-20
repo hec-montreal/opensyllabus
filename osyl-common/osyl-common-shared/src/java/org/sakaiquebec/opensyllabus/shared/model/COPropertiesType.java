@@ -111,6 +111,11 @@ public class COPropertiesType {
     //Specific to Document resource
     public static final String LICENSE = "license";
     public static final String RIGHTS = "rights";
+    
+    //Specific to Type of resource    
+    public static final String RESOURCE_TYPE_CITATION = "typeResource";
+    public static final String RESOURCE_TYPE_DOCUMENT = "typeResource";    
+    public static final String RESOURCE_TYPE_LINK = "typeResource";    
 
     //Specific to ASMUnit
     public static final String PREFIX = "prefix";

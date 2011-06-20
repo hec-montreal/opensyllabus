@@ -37,6 +37,9 @@ public class ResourcesLicencingInfo implements java.io.Serializable {
     private List<String> copyrightTypeList;
     private String defaultCopyright;
 
+    private List<String> typeResourceTypeList;
+    private String defaultTypeResource;
+    
     /**
      * @return the copyrightTypeList
      */
@@ -52,6 +55,20 @@ public class ResourcesLicencingInfo implements java.io.Serializable {
     }
 
     /**
+     * @return the typeResourceTypeList
+     */    
+    public List<String> getTypeResourceTypeList() {
+        return typeResourceTypeList;
+    }
+
+    /**
+     * @param typeResourceTypeList the typeResourceTypeList to set
+     */
+    public void setTypeResourceTypeList(List<String> typeResourceTypeList) {
+        this.typeResourceTypeList = typeResourceTypeList;
+    }
+    
+    /**
      * @return the defaultCopyright
      */
     public String getDefaultCopyright() {
@@ -64,10 +81,25 @@ public class ResourcesLicencingInfo implements java.io.Serializable {
     public void setDefaultCopyright(String defaultCopyright) {
 	this.defaultCopyright = defaultCopyright;
     }
+   
+    /**
+     * @return the defaultTypeResource
+     */    
+    public String getDefaultTypeResource() {
+        return defaultTypeResource;
+    }
+
+    /**
+     * @param defaultTypeResource the defaultTypeResource to set
+     */
+    public void setDefaultTypeResource(String defaultTypeResource) {
+        this.defaultTypeResource = defaultTypeResource;
+    }
 
     public ResourcesLicencingInfo() {
 	copyrightTypeList = new ArrayList<String>();
 	defaultCopyright = null;
-    }
-
+	typeResourceTypeList = new ArrayList<String>();
+	defaultTypeResource = null;
+    }    
 }
