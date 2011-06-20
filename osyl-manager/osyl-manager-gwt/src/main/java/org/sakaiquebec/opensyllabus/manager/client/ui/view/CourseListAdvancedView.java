@@ -160,7 +160,7 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 			    scSiteList.getDataTable().setHTML(rowNum, 3,
 				    coSite.getCourseName());
 			    //Site parent
-			    if (coSite.getType().equalsIgnoreCase(
+			    if (!coSite.getType().equalsIgnoreCase(
 				    DIRECTORY_TYPE_SITE)) {
 			        scSiteList.getDataTable().setHTML(rowNum, 4,
         				    coSite.getParentSite());
