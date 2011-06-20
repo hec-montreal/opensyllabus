@@ -709,7 +709,13 @@ public class OsylTextToolbar extends Composite {
 	downloadUrl =
 		serverId + "/access/content/group/" + siteId + "/" + siteTitle
 			+ ".pdf";
-
+	downloadUrl = validateUrl(downloadUrl);
 	Window.open(downloadUrl, "_blank", "");
+    }
+    
+    private String validateUrl(String downloadUrl){
+	downloadUrl = downloadUrl.replaceAll("'", "_");
+	downloadUrl = downloadUrl.replaceAll("&", "_");
+	return downloadUrl;
     }
 }
