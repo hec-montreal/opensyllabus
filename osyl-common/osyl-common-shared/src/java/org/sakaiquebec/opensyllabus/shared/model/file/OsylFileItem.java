@@ -13,16 +13,19 @@ public class OsylFileItem extends OsylAbstractBrowserItem implements
 
     private String copyrightChoice;
 
+    private String typeResource;
+
     public OsylFileItem() {
     }
 
     public OsylFileItem(String newFileName, String newFilePath,
 	    boolean newIsFolder, String newLastModifTime, String newMimeType,
-	    String newDescription, String newCopyrightChoice) {
+	    String newDescription, String newCopyrightChoice, String newTypeResource) {
 	super(newFileName, newFilePath, newIsFolder, newLastModifTime);
 	setMimeType(newMimeType);
 	setDescription(newDescription);
 	setCopyrightChoice(newCopyrightChoice);
+	setTypeResource(newTypeResource);
     }
 
     public OsylFileItem(String filePath) {
@@ -53,6 +56,14 @@ public class OsylFileItem extends OsylAbstractBrowserItem implements
 	this.copyrightChoice = newCopyrightChoice;
     }
 
+    public String getTypeResource() {
+	return typeResource;
+    }
+
+    public void setTypeResource(String newTypeResource) {
+	this.typeResource = newTypeResource;
+    }
+    
     /** {@inheritDoc} */
     @Override
     public boolean isFolder() {
