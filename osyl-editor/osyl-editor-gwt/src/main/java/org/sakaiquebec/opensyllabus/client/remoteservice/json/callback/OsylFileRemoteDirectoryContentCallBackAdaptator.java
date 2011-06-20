@@ -43,6 +43,7 @@ public class OsylFileRemoteDirectoryContentCallBackAdaptator extends
 			String lastmodifiedString = "";
 			String descriptionString = "";
 			String copyrightchoiceString = "";
+			String typeresourceString = "";
 
 			if (jObject.get("mimeType") != null) {
 				JSONString mimeType = (JSONString) jObject.get("mimeType");
@@ -66,9 +67,15 @@ public class OsylFileRemoteDirectoryContentCallBackAdaptator extends
 						.get("properties")).get("CHEF:copyrightchoice");
 				copyrightchoiceString = copyrightchoice.stringValue();
 			}
+			if (((JSONObject) jObject.get("properties"))
+				.get("CHEF:typeresource") != null) {
+			JSONString typeresource = (JSONString) ((JSONObject) jObject
+					.get("properties")).get("CHEF:typeresource");
+			typeresourceString = typeresource.stringValue();
+			}
 			return new OsylFileItem(name.stringValue(), path.stringValue(),
 					false, lastmodifiedString, mimeTypeString,
-					descriptionString, copyrightchoiceString);
+					descriptionString, copyrightchoiceString, typeresourceString);
 		}
 	    }catch (Exception e) {
 		return null;
