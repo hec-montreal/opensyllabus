@@ -89,14 +89,19 @@ public class DirectoryCoursePage extends AbstractPortalView {
 	mainPanel.add(t32);
 
 	Label t33 =
-		new Label(getMessage("directoryCoursePage_credits") + " : "
-			+ site.getCredits());
+		new Label(
+			getMessage("directoryCoursePage_credits")
+				+ " : "
+				+ ((site.getCredits() == null) ? "" : site
+					.getCredits()));
 	t33.setStylePrimaryName("NHP_titre3");
 	mainPanel.add(t33);
 
 	Label t34 =
-		new HTML(getMessage("directoryCoursePage_requirements") + " : "
-			+ site.getRequirements());
+		new HTML(getMessage("directoryCoursePage_requirements")
+			+ " : "
+			+ ((site.getRequirements() == null) ? ""
+				: site.getRequirements()));
 	t34.setStylePrimaryName("NHP_titre3");
 	mainPanel.add(t34);
 

@@ -55,12 +55,15 @@ import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericEtudiantCoursMapF
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericExamensMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericProfCoursMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericProgrammeEtudesMapFactory;
+import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericRequirementsCoursMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericSecretairesMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.GenericServiceEnseignementMapFactory;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProfCoursMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProfCoursMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProgrammeEtudesMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ProgrammeEtudesMapEntry;
+import org.sakaiquebec.opensyllabus.admin.impl.extracts.RequirementsCoursMap;
+import org.sakaiquebec.opensyllabus.admin.impl.extracts.RequirementsCoursMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.SecretairesMap;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.SecretairesMapEntry;
 import org.sakaiquebec.opensyllabus.admin.impl.extracts.ServiceEnseignementMap;
@@ -151,6 +154,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
      */
     private DetailChargeFormationMap chargeFormationMap = null;
 
+    private RequirementsCoursMap requirementsCoursMap;
+
     /**
      * Students currently registered as enrolled in the system
      */
@@ -207,8 +212,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 			getCourseSectionEnrollmentSetId(detailsCours);
 
 		enrollmentSet = cmService.getEnrollmentSet(enrollmentSetId);
-		enrollmentSet.setDefaultEnrollmentCredits(profCoursEntry
-			.getUnitMinimum());
+		enrollmentSet.setDefaultEnrollmentCredits(detailsCours
+			.getUnitsMinimum());
 		instructors = enrollmentSet.getOfficialInstructors();
 		if (instructors == null)
 		    instructors = new HashSet<String>();
@@ -303,6 +308,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	String title = "";
 	String lang = "";
 	String career = "";
+	String credits = "";
+	String requirements= "";
 	AcademicSession session = null;
 	String category;
 	Set<CanonicalCourse> cc = new HashSet<CanonicalCourse>();
@@ -349,8 +356,10 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	    if (cmService.isAcademicSessionDefined(coursEntry.getStrmId())) {
 		courseOfferingId = getCourseOfferingId(coursEntry);
 		lang = coursEntry.getLangue();
+		credits = coursEntry.getUnitsMinimum();
 		ProgrammeEtudesMapEntry programmeEtudesMapEntry =
 			programmeEtudesMap.get(coursEntry.getAcadCareer());
+		RequirementsCoursMapEntry requirementsCoursMapEntry = requirementsCoursMap.get(coursEntry.getCourseId());
 		career = programmeEtudesMapEntry.getAcadCareer();
 
 		if (!cmService.isCourseOfferingDefined(courseOfferingId)) {
@@ -359,7 +368,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 				    title, description, COURSE_OFF_STATUS,
 				    session.getEid(), canonicalCourseId,
 				    session.getStartDate(),
-				    session.getEndDate(), lang, career);
+				    session.getEndDate(), lang, career, credits, requirementsCoursMapEntry.getDescription(lang));
 		    courseOfferingSet.add(courseOff);
 		} else {
 		    // We update
@@ -373,6 +382,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		    courseOfferingSet.add(courseOff);
 		    courseOff.setLang(lang);
 		    courseOff.setAcademicCareer(career);
+		    courseOff.setCredits(credits);
+		    courseOff.setRequirements(requirementsCoursMapEntry.getDescription(lang));
 		    cmAdmin.updateCourseOffering(courseOff);
 		}
 
@@ -610,11 +621,13 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	File servensFile = new File(directory, SERV_ENS_FILE);
 	File progEtudFile = new File(directory, PROG_ETUD_FILE);
 	File chargeFormFile = new File(directory, CHARGE_FORMATION);
+	File requirementsFile = new File(directory, REQUIREMENTS);
 
 	if (sessionFile.exists() && coursFile.exists() && etudiantFile.exists()
 		&& horairesFile.exists() && profFile.exists()
 		&& secretairesFile.exists() && servensFile.exists()
-		&& progEtudFile.exists() && chargeFormFile.exists()) {
+		&& progEtudFile.exists() && chargeFormFile.exists()
+		&& requirementsFile.exists()) {
 	    return true;
 	}
 
@@ -719,6 +732,14 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		    GenericDetailChargeFormationMapFactory
 			    .buildMap(directory + File.separator
 				    + CHARGE_FORMATION, detailCoursMap);
+
+	    requirementsCoursMap =
+		    GenericRequirementsCoursMapFactory.getInstance(directory
+			    + File.separator + REQUIREMENTS);
+	    requirementsCoursMap =
+		    GenericRequirementsCoursMapFactory.buildMap(directory
+			    + File.separator + REQUIREMENTS);
+
 	    // We first retrieve the current values in the system for the same
 	    log.info("Finished reading extracts. Now updating the Course Management");
 	    // time period as the extracts
@@ -1189,8 +1210,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	    if (courses != null && !"".equals(courses)) {
 		for (String course : Arrays.asList(courses.split(","))) {
 		    course = course.replaceAll("-", "");
-		    for (DetailCoursMapEntry dcme :
-			    detailCoursMap.getAllGroupeCours(course)) {
+		    for (DetailCoursMapEntry dcme : detailCoursMap
+			    .getAllGroupeCours(course)) {
 			String courseOfferingId = getCourseOfferingId(dcme);
 			cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
 				role, courseOfferingId, ACTIVE_STATUS);

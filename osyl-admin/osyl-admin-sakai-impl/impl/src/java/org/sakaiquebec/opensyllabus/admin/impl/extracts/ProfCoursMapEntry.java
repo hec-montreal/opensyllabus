@@ -27,21 +27,11 @@ public class ProfCoursMapEntry implements java.io.Serializable {
     private Vector<DetailCoursMapEntry> cours;
     private Map<String, DetailCoursMapEntry> coursCoordonnes;
     private String emplId;
-    private String unitMinimum ;
     private String descLong ;
     private String nDescLong;
     private String acadOrg;
     private String role;
     private String strmId;
-    
-
-    public String getUnitMinimum() {
-        return unitMinimum;
-    }
-
-    public void setUnitMinimum(String unitMinimum) {
-        this.unitMinimum = unitMinimum;
-    }
 
     public String getDescLong() {
         return descLong;

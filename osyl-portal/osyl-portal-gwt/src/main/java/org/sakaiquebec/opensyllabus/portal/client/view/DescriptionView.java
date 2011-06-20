@@ -40,7 +40,7 @@ public class DescriptionView extends WindowPanel {
     private String description = "";
 
     private CODirectorySite coDirectorySite;
-    
+
     private String viewKey;
 
     private PortalController controller = PortalController.getInstance();
@@ -58,13 +58,13 @@ public class DescriptionView extends WindowPanel {
     };
 
     public DescriptionView(CODirectorySite coDirectorySite) {
-	this(coDirectorySite,coDirectorySite.getCourseNumber());
+	this(coDirectorySite, coDirectorySite.getCourseNumber());
     }
-    
+
     public DescriptionView(CODirectorySite coDirectorySite, String key) {
 	super();
 	this.coDirectorySite = coDirectorySite;
-	this.viewKey=key;
+	this.viewKey = key;
 	setResizable(false);
 	setAnimationEnabled(true);
 	setCaptionAction(null);
@@ -120,7 +120,9 @@ public class DescriptionView extends WindowPanel {
 
 	Label t33 =
 		new Label(controller.getMessage("directoryCoursePage_credits")
-			+ " : " + coDirectorySite.getCredits());
+			+ " : "
+			+ ((coDirectorySite.getRequirements() == null) ? ""
+				: coDirectorySite.getRequirements()));
 	t33.setStylePrimaryName("NHP_titre3");
 	mainPanel.add(t33);
 
@@ -128,7 +130,9 @@ public class DescriptionView extends WindowPanel {
 		new HTML(
 			controller
 				.getMessage("directoryCoursePage_requirements")
-				+ " : " + coDirectorySite.getRequirements());
+				+ " : "
+				+ ((coDirectorySite.getRequirements() == null) ? ""
+					: coDirectorySite.getRequirements()));
 	t34.setStylePrimaryName("NHP_titre3");
 	mainPanel.add(t34);
     }

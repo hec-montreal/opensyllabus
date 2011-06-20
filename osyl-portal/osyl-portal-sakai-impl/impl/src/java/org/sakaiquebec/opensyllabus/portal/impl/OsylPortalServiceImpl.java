@@ -76,7 +76,6 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    + File.separator + "webapps" + File.separator
 	    + "osyl-portal-sakai-tool" + File.separator;// Ugly but don't know
 							// how;
-
     private Timer timer;
 
     // SPRING INJECTIONS
@@ -149,7 +148,8 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	for (CourseSet courseSet : courseManagementService.getCourseSets()) {
 	    for (CanonicalCourse canonicalCourse : courseManagementService
 		    .getCanonicalCourses(courseSet.getEid())) {
-		CODirectorySite coDirectorySite = createCODirectorySite(canonicalCourse);
+		CODirectorySite coDirectorySite =
+			createCODirectorySite(canonicalCourse);
 		String acadCareer = coDirectorySite.getProgram();
 		String responsible = coDirectorySite.getResponsible();
 		if (acadCareer != null) {
@@ -175,36 +175,33 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	courseListByAcadCareerMap = temp_courseListByAcadCareerMap;
 	courseListByResponsibleMap = temp_courseListByResponsibleMap;
     }
-    
-    public CODirectorySite getCODirectorySite(String siteId){
-	CODirectorySite coDirectorySite = createCODirectorySite(courseManagementService.getCanonicalCourse(siteId.replace("-","")));
+
+    public CODirectorySite getCODirectorySite(String siteId) {
+	CODirectorySite coDirectorySite =
+		createCODirectorySite(courseManagementService
+			.getCanonicalCourse(siteId.replace("-", "")));
 	coDirectorySite.setDescription(getDescription(siteId));
 	return coDirectorySite;
     }
-    
-    private CODirectorySite createCODirectorySite(CanonicalCourse canonicalCourse){
+
+    private CODirectorySite createCODirectorySite(
+	    CanonicalCourse canonicalCourse) {
 	CODirectorySite coDirectorySite = new CODirectorySite();
-	coDirectorySite
-		.setCourseNumber(getDirectorySiteName(canonicalCourse
-			.getEid()));
+	coDirectorySite.setCourseNumber(getDirectorySiteName(canonicalCourse
+		.getEid()));
 	coDirectorySite.setCourseName(canonicalCourse.getTitle());
 	for (CourseOffering courseOffering : courseManagementService
-		.getCourseOfferingsInCanonicalCourse(canonicalCourse
-			.getEid())) {
+		.getCourseOfferingsInCanonicalCourse(canonicalCourse.getEid())) {
 	    if (coDirectorySite.getProgram() == null) {
-		coDirectorySite.setProgram(courseOffering
-			.getAcademicCareer());
-		coDirectorySite.setCredits("3");// TODO
-		coDirectorySite
-			.setRequirements("Vous devez avoir suivi les cours suivants pour vous inscrire<br><b>COURS-101</b><br><b>COURS-102</b>");// TODO
-
-		coDirectorySite.setProgram(courseOffering
-			.getAcademicCareer());
+		coDirectorySite.setProgram(courseOffering.getAcademicCareer());
+		coDirectorySite.setCredits(courseOffering.getCredits());
+		coDirectorySite.setRequirements(courseOffering
+			.getRequirements());
+		coDirectorySite.setProgram(courseOffering.getAcademicCareer());
 	    }
-	    if (currentSessions.contains(courseOffering
-		    .getAcademicSession().getEid())) {
-		fillSectionsForCODirectorySite(coDirectorySite,
-			courseOffering);
+	    if (currentSessions.contains(courseOffering.getAcademicSession()
+		    .getEid())) {
+		fillSectionsForCODirectorySite(coDirectorySite, courseOffering);
 	    }
 	}
 	return coDirectorySite;

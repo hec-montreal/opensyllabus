@@ -58,7 +58,6 @@ public class GenericProfCoursMapFactory {
 	    String strm = token[i++];
 	    String sessionCode = token[i++];
 	    String section = token[i++];
-	    String unitMinimum = token[i++];
 	    String acadOrg = token[i++];
 	    String role = token[i++];
 	    String strmId = strm + sessionCode;
@@ -81,7 +80,6 @@ public class GenericProfCoursMapFactory {
 	    DetailCoursMapEntry cours =
 		    detailCoursMap.get(catalogNbr, strmId, section);
 
-	    entry.setUnitMinimum(unitMinimum);
 	    entry.setAcadOrg(acadOrg);
 	    entry.setRole(role);
 	    entry.setStrmId(strmId);

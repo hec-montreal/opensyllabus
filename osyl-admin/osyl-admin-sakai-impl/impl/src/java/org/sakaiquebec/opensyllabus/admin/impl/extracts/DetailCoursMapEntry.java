@@ -26,6 +26,8 @@ public class DetailCoursMapEntry implements java.io.Serializable {
     private String strmId;
     private String lang;
     private String acadCareer;
+    private String classStat;
+    private String unitsMinimum ;
     private ProfCoursMapEntry coordonnateur;
     private Vector<ProfCoursMapEntry> professeurs;
     private Vector<String> etudiants;
@@ -151,25 +153,22 @@ public class DetailCoursMapEntry implements java.io.Serializable {
     public void setSection(String classSection) {
 	this.classSection = classSection;
     }
+    
+    public void setClassStat(String classStat) {
+	this.classStat = classStat;
+    }
 
-    /*
-     * public void setTitreFr(String titreFr){ this.titreFr = titreFr; } public
-     * String getTitreFr(){ return titreFr; } public void setTitreEn(String
-     * titreEn){ this.titreEn = titreEn; } public String getTitreEn(){ return
-     * titreEn; } public void setTitreSp(String titreSp){ this.titreSp =
-     * titreSp; } public String getTitreSp(){ return titreSp; } Retourne le
-     * courseTitleLong dans la langue du cours, s'il est d�fini, null sinon.
-     * public String getTitre() { return getTitre(getLangue()); } Retourne le
-     * courseTitleLong dans la langue sp�cifi�e, s'il est d�fini, null
-     * sinon. public String getTitre(int l) { if (l == Constants.SPANISH) {
-     * return getTitreSp(); } else if(l == Constants.ENGLISH) { return
-     * getTitreEn(); } else if(l == Constants.FRENCH) { return getTitreFr(); }
-     * else { return null; } } Retourne le courseTitleLong, si possible dans la
-     * langue du cours, sinon dans la langue sp�cifi�e. public String
-     * getTitreFallback(int defaultLang) { String courseTitleLong = getTitre();
-     * if (courseTitleLong == null) { return getTitre(defaultLang); } else {
-     * return courseTitleLong; } }
-     */
+    public String getClassStat() {
+	return classStat;
+    }
+
+    public void setUnitsMinimum(String unitsMinimum) {
+	this.unitsMinimum = unitsMinimum;
+    }
+
+    public String getUnitsMinimum() {
+	return unitsMinimum;
+    }
 
     public void setCourseTitleLong(String courseTitle) {
 	this.courseTitleLong = courseTitle;

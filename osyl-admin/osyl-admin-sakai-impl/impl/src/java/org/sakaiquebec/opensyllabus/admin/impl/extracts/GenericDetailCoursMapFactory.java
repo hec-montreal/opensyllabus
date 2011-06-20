@@ -76,6 +76,8 @@ public class GenericDetailCoursMapFactory {
 	    entry.setStrmId(tokens[i++]);
 
 	    entry.setAcaCareer(tokens[i++]);
+	    entry.setClassStat(tokens[i++]);
+	    entry.setUnitsMinimum(tokens[i++]); 
 
 	    map.put(entry);
 	}
