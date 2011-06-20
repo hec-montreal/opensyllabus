@@ -118,7 +118,8 @@ public class OsylDirectoryRemoteServiceJsonImpl implements
     /**
      * {@inheritDoc}
      */
-    public void updateRemoteFileInfo(String filePath, String description, String copyright,
+    public void updateRemoteFileInfo(String filePath, String description,
+	    String copyright, String typeResource,
 	    final AsyncCallback<Void> callback) {
 
 	String requestParams =
@@ -126,7 +127,9 @@ public class OsylDirectoryRemoteServiceJsonImpl implements
 			+ URL.encode("CHEF:description") + "&fv="
 			+ URL.encode(description) + "&fp="
 			+ URL.encode("CHEF:copyrightchoice") + "&fv="
-			+ URL.encode(copyright);
+			+ URL.encode(copyright) + "&fp="
+			+ URL.encode("CHEF:typeresource") + "&fv="			
+			+ URL.encode(typeResource);
 	String resourceDirectoryPath = remoteUri + filePath;
 
 	RequestBuilder requestBuilder =
