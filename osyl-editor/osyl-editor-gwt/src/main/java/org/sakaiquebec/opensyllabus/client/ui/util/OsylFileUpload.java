@@ -42,6 +42,7 @@ import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -90,13 +91,19 @@ public class OsylFileUpload extends WindowPanel implements
 
     private String right;
 
+    private List<String> typesResourceList;
+
+    private ListBox typesResourceListBox;
+
+    private String typeResource;
+    
     /**
      * Constructor.
      * 
      * @param osylController
      */
     public OsylFileUpload(String title, OsylController osylController,
-	    String currentDirectory, List<String> rightsList) {
+	    String currentDirectory, List<String> rightsList, List<String> typesResourceList) {
 	super(title);
 	// set some properties for WindowPanel
 	setResizable(false);
@@ -105,6 +112,7 @@ public class OsylFileUpload extends WindowPanel implements
 	setController(osylController);
 	this.currentFolder = currentDirectory;
 	this.rightsList = rightsList;
+	this.typesResourceList = typesResourceList;	
 	uiMessages = osylController.getUiMessages();
 
 	table = new FlexTable();
@@ -130,6 +138,8 @@ public class OsylFileUpload extends WindowPanel implements
 	table.setWidget(row, 0, sizeLabel);
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
 	sizeLabel.setStylePrimaryName("Osyl-FileUpload-information");
+	((FlexCellFormatter) table.getCellFormatter()).setVerticalAlignment(
+		row, 0, HasVerticalAlignment.ALIGN_BOTTOM);
 
 	// Create a FileUpload widget.
 	row++;
@@ -137,20 +147,23 @@ public class OsylFileUpload extends WindowPanel implements
 	upload.setName("uploadFormElement");
 	table.setWidget(row, 0, upload);
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
-
+	
+	//-----------------------------------------------------------------------
 	row++;
 	final Label rightsLabel =
 		new Label(uiMessages.getMessage("fileUpload.rights"));
 	table.setWidget(row, 0, rightsLabel);
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
 	rightsLabel.setStylePrimaryName("Osyl-FileUpload-information");
+	((FlexCellFormatter) table.getCellFormatter()).setVerticalAlignment(
+		row, 0, HasVerticalAlignment.ALIGN_BOTTOM);	
 
 	// Add a "choose rights status" listbox
 	rightsListBox = new ListBox();
 	// TODO erreur sur la ligne 157 rightsList probablement null.
 	for (String license : this.rightsList) {
 	    rightsListBox.addItem(license);
-	}
+	}	
 	rightsListBox.setItemSelected(0, true);
 	rightsListBox.addChangeHandler(new ChangeHandler() {
 
@@ -159,12 +172,39 @@ public class OsylFileUpload extends WindowPanel implements
 			.getSelectedIndex()));
 	    }
 	});
+
 	row++;
 	table.setWidget(row, 0, rightsListBox);
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
-	((FlexCellFormatter) table.getCellFormatter()).setHorizontalAlignment(
-		row, 0, HasHorizontalAlignment.ALIGN_CENTER);
 
+	//-----------------------------------------------------------------------
+	row++;	
+	final Label typeResourceLabel =
+		new Label(uiMessages.getMessage("fileUpload.typesResource"));
+	table.setWidget(row, 0, typeResourceLabel);
+	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
+	typeResourceLabel.setStylePrimaryName("Osyl-FileUpload-information");
+	((FlexCellFormatter) table.getCellFormatter()).setVerticalAlignment(
+		row, 0, HasVerticalAlignment.ALIGN_BOTTOM);
+	
+	// Add a "type Resources" listbox
+	typesResourceListBox = new ListBox();
+	for (String typeDocument : this.typesResourceList) {
+	    typesResourceListBox.addItem(typeDocument);
+	}
+	typesResourceListBox.setItemSelected(0, true);
+	typesResourceListBox.addChangeHandler(new ChangeHandler() {
+
+	    public void onChange(ChangeEvent event) {
+		setTypeResource(typesResourceListBox.getItemText(typesResourceListBox
+			.getSelectedIndex()));
+	    }
+	});
+
+	row++;
+	table.setWidget(row, 0, typesResourceListBox);
+	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
+	//-----------------------------------------------------------------------
 	// Add a 'save' button.
 	AbstractImagePrototype imgSaveButton = 
 	    AbstractImagePrototype.create(osylImageBundle.save());
@@ -203,7 +243,8 @@ public class OsylFileUpload extends WindowPanel implements
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
 	((FlexCellFormatter) table.getCellFormatter()).setHorizontalAlignment(
 		row, 0, HasHorizontalAlignment.ALIGN_CENTER);
-
+	((FlexCellFormatter) table.getCellFormatter()).setVerticalAlignment(
+		row, 0, HasVerticalAlignment.ALIGN_BOTTOM);	
 	row++;
 
 	// Add an event handler to the form.
@@ -222,6 +263,10 @@ public class OsylFileUpload extends WindowPanel implements
 		    message =
 			    uiMessages
 				    .getMessage("fileUpload.chooseRightsStatus");
+		} else if (typesResourceListBox.getSelectedIndex() < 0) {
+		    message =
+			    uiMessages
+				    .getMessage("fileUpload.chooseTypesResourceStatus");
 		}
 
 		if (message.equals("")) {
@@ -292,6 +337,14 @@ public class OsylFileUpload extends WindowPanel implements
 	return right;
     }
 
+    private void setTypeResource(String typeResource) {
+	this.typeResource = typeResource;
+    }
+
+    public String getTypeResource() {
+	return typeResource;
+    }
+    
     /**
      * Parse the JSON String returned after file upload
      * 
