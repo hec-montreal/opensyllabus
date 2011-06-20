@@ -30,6 +30,8 @@ public interface OsylDirectoryRemoteServiceAsync {
 	 *            description to update
 	 * @param copyright
 	 *            copyright to update
+	 * @param typeResource
+	 *            typeResource to update            
 	 * @param callback
 	 */
 	public void updateRemoteFileInfo(String fileName,
@@ -47,6 +49,5 @@ public interface OsylDirectoryRemoteServiceAsync {
 	 */
 	public void createNewRemoteDirectory(String newFolderName, String relativePathFolder,
 			final AsyncCallback<Void> callback);
-
 
 }
