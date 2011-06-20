@@ -66,6 +66,10 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 	getModel().setLabel(getEditor().getText());
 	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());
+	//Document resource type	
+	getModel().addProperty(COPropertiesType.RESOURCE_TYPE_DOCUMENT,
+		getEditor().getTypeDocument());
+	
 	// FIXME This is a workaround. Should be deleted after we have a way to
 	// display the fileBrowser showing the previously selected file.
 	String uri = getEditor().getResourceURI();
@@ -99,6 +103,8 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 		getEditor().getLicence());
 	getModel().getResource().addProperty(COPropertiesType.DESCRIPTION,
 		getEditor().getResourceDescription());
+	getModel().getResource().addProperty(COPropertiesType.RESOURCE_TYPE_DOCUMENT,
+		getEditor().getTypeDocument());
     }
 
     // TODO Hack to remove bad links to resources inserted in the XML. Remove
