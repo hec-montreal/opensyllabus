@@ -1964,7 +1964,6 @@ public class OsylManagerServiceImpl implements OsylManagerService {
     }
 
     private void updateCitationIds(String oldSiteId, String newSiteId) {
-
 	// We retieve information from the new citations
 	String siteColl = contentHostingService.getSiteCollection(newSiteId);
 
@@ -2074,7 +2073,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 		} catch (TypeException e) {
 		    e.printStackTrace();
 		} finally {
-		    model.resetXML(citationsChangeMap);
+		    model.changeCitationUrl(citationsChangeMap);
 		    model.model2XML();
 		    co.setContent(model.getSerializedContent());
 		    try {

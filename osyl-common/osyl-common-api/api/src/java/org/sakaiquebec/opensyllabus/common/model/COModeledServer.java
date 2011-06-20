@@ -1520,6 +1520,27 @@ public class COModeledServer {
 	return hasChild;
     }
 
+    public void changeCitationUrl(Map<String, String> citationChangesMap){
+	changeCitationUrl(this.getModeledContent(), citationChangesMap);
+    }
+    
+    private void changeCitationUrl(COElementAbstract element, Map<String, String> citationChangesMap){
+	try {
+	    if (element.isCOContentResourceProxy()) {
+		COContentResourceProxy cocrp = (COContentResourceProxy) element;
+		changeDocumentsUrlsToFitNewSiteName(cocrp, citationChangesMap);
+	    } else {
+		for (int i = 0; i < element.getChildrens().size(); i++) {
+		    COElementAbstract childElement =
+			    (COElementAbstract) element.getChildrens().get(i);
+		    changeCitationUrl(childElement, citationChangesMap);
+		}
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+    }
+    
     public void resetXML(Map<String, String> filenameChangesMap) {
 	resetXML(this.getModeledContent(), filenameChangesMap);
     }
