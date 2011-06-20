@@ -104,6 +104,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
     private ImageAndTextButton saveButton;
     private TextArea descriptionTextArea;
     private ListBox licenseListBox;
+    private ListBox typeResourceListBox;
 
     private ResourcesLicencingInfo resourceLicensingInfo;
 
@@ -321,6 +322,9 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    } else if (getLicence().equals(licenseListBox.getItemText(0))) {
 		message +=
 			getUiMessage("DocumentEditor.document.WrongRightsStatus");
+	    } else if (getTypeDocument().equals(typeResourceListBox.getItemText(0))) {
+		message +=
+			getUiMessage("DocumentEditor.document.WrongTypeResStatus");
 	    }
 	    Map<String, String> cv =
 		    OsylEditorEntryPoint.getInstance()
@@ -533,8 +537,17 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	licenseListBox = new ListBox();
 
 	rightsAndSavePanel.add(licenseListBox);
-	licenseListBox.setWidth("100%");
+	licenseListBox.setWidth("70%");
 
+	//------------------------------------------
+	rightsAndSavePanel.add(new Label(getView().getUiMessage(
+	"DocumentEditor.document.type")));	
+	typeResourceListBox = new ListBox();
+	
+	rightsAndSavePanel.add(typeResourceListBox);
+	typeResourceListBox.setWidth("50%");	
+
+	//------------------------------------------
 	HorizontalPanel savePanel = new HorizontalPanel();
 	savePanel.setWidth("100%");
 	rightsAndSavePanel.add(savePanel);
@@ -567,17 +580,16 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 				    .getSelectedAbstractBrowserItem();
 
 		    selectedFile.setDescription(descriptionTextArea.getText());
-		    selectedFile.setCopyrightChoice(licenseListBox
-			    .getItemText(licenseListBox.getSelectedIndex()));
-
+		    selectedFile.setCopyrightChoice(licenseListBox.getItemText(licenseListBox.getSelectedIndex()));
+		    selectedFile.setTypeResource(typeResourceListBox.getItemText(typeResourceListBox.getSelectedIndex()));
 		    OsylRemoteServiceLocator
 			    .getDirectoryRemoteService()
 			    .updateRemoteFileInfo(
 				    selectedFile.getFilePath(),
 				    selectedFile.getDescription(),
 				    selectedFile.getCopyrightChoice(),
+				    selectedFile.getTypeResource(),
 				    OsylDocumentEditor.this.fileUpdateRequestHandler);
-
 		}
 
 	    }
@@ -609,7 +621,20 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		}
 	    }
 	});
+
+	typeResourceListBox.addChangeHandler(new ChangeHandler() {
+
+	    public void onChange(ChangeEvent event) {
+		if (typeResourceListBox.getSelectedIndex() > 0) {
+		    saveButton.setEnabled(true);
+		} else {
+		    saveButton.setEnabled(false);
+		}
+	    }
+	});
+
 	updateResourceLicenseInfo();
+	
     }
 
     @Override
@@ -662,6 +687,14 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    return "";
     }
 
+    public String getTypeDocument() {
+	if (typeResourceListBox.getSelectedIndex() != -1)
+	    return typeResourceListBox
+		    .getItemText(typeResourceListBox.getSelectedIndex());
+	else
+	    return "";
+    }
+    
     public String getResourceDescription() {
 	return descriptionTextArea.getText();
     }
@@ -705,13 +738,22 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 						    .getUiMessage(rightKey));
 					}
 				    }
-				    ((OsylFileBrowser) browser)
-					    .setRightsList(rightsList);
-				    // TODO Auto-generated method stub
-				    // getController().handleRPCError("Sucess
-				    // while retrieving license information
-				    // object");
+				    ((OsylFileBrowser) browser).setRightsList(rightsList);
+
 				    buildLicenseListBox(rightsList);
+				    
+				    List<String> typesResourceList = new ArrayList<String>();
+				    List<String> typesResList = new ArrayList<String>();
+				    typesResourceList = OsylController.getInstance().getOsylConfig().getResourceTypeList();
+				    
+				    for (String typeResKey : typesResourceList) {
+					typesResList.add(getView().getCoMessage("Resource.Type." + typeResKey));
+				    }
+					
+				    ((OsylFileBrowser) browser).setTypesResourceList(typesResList);
+
+				    buildTypeResourceListBox(typesResList);
+
 				}
 			    });
 	} else {
@@ -727,6 +769,21 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    }
 	    ((OsylFileBrowser) browser).setRightsList(rightsList);
 	    buildLicenseListBox(rightsList);
+	    
+	    //---------------------------------------------------------
+	    //Types of documents
+	    //---------------------------------------------------------	    
+	    List<String> typesResourceList = new ArrayList<String>();
+	    List<String> typesResList = new ArrayList<String>();
+	    typesResourceList = OsylController.getInstance().getOsylConfig().getResourceTypeList();
+
+	    for (String typeResKey : typesResourceList) {
+		typesResList.add(getView().getCoMessage("Resource.Type." + typeResKey));
+	    }
+		
+	    ((OsylFileBrowser) browser).setTypesResourceList(typesResList);
+	    buildTypeResourceListBox(typesResList);
+
 	}
     }
 
@@ -739,6 +796,16 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	refreshBrowsingComponents();
     }
 
+    private void buildTypeResourceListBox(List<String> typesResourceList) {
+	resourceLicensingInfo.getTypeResourceTypeList();
+	typeResourceListBox.clear();
+	for (String typeResource : typesResourceList) {
+	    //typeResourceListBox.addItem(getView().getCoMessage("Resource.Type." + typeResource));
+	    typeResourceListBox.addItem(typeResource);
+	}
+	refreshBrowsingComponents();
+    }
+    
     public ImageAndTextButton getSaveButton() {
 	return saveButton;
     }
@@ -757,6 +824,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    if (browser.getSelectedAbstractBrowserItem().isFolder()) {
 		descriptionTextArea.setText("");
 		licenseListBox.setSelectedIndex(-1);
+		typeResourceListBox.setSelectedIndex(-1);		
 	    } else {
 		OsylFileItem selectedFile =
 			(OsylFileItem) browser.getSelectedAbstractBrowserItem();
@@ -764,18 +832,25 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 		for (int i = 0; i < licenseListBox.getItemCount(); i++) {
 		    String item = licenseListBox.getValue(i);
-
 		    if (item.equals(selectedFile.getCopyrightChoice())) {
 			licenseListBox.setItemSelected(i, true);
 			isFound = true;
 		    }
 		}
+		for (int i = 0; i < typeResourceListBox.getItemCount(); i++) {
+		    String item = typeResourceListBox.getValue(i);
+		    if (item.equals(selectedFile.getTypeResource())) {
+			typeResourceListBox.setItemSelected(i, true);
+			isFound = true;
+		    }
+		}		
 	    }
 
 	}
 	if (!isFound) {
 	    licenseListBox.setSelectedIndex(0);
-	    descriptionTextArea.setText("");
+	    typeResourceListBox.setSelectedIndex(0);
+	    descriptionTextArea.setText("");	    
 	}
 	saveButton.setEnabled(false);
     }
