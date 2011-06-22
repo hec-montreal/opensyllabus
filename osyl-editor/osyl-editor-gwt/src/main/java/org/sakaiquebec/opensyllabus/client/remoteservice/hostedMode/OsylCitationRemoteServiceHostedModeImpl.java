@@ -66,6 +66,7 @@ public class OsylCitationRemoteServiceHostedModeImpl extends
 	    citation.setProperty(CitationSchema.DATE, "01/01/2009");
 	    citation.setProperty(CitationSchema.DOI, "doi"+i);
 	    citation.setProperty(CitationSchema.SOURCE_TITLE, "sourceTitle"+i);
+	    citation.setProperty(CitationSchema.CITATION_RESOURCE_TYPE, "asmResourceType"+i);	    
 	    citations.add(citation);
 	}
 	citationsList.setCitations(citations);
@@ -80,6 +81,7 @@ public class OsylCitationRemoteServiceHostedModeImpl extends
 	List<OsylAbstractBrowserItem> list =
 		findDirectoryByRelativePath(p_relativePathFolder);
 	String id = p_citation.getId();
+	String resourceType = p_citation.getResourceType();	
 	if (list != null) {
 	    if (id != null) {
 		// update an existing one
@@ -90,6 +92,8 @@ public class OsylCitationRemoteServiceHostedModeImpl extends
 		p_citation.setId(id);
 		p_citation.setProperty(CitationSchema.CITATIONID, id);
 		p_citation.setFilePath(p_relativePathFolder);
+		p_citation.setProperty(CitationSchema.CITATION_RESOURCE_TYPE, "");
+		p_citation.setResourceType(resourceType);		
 	    }
 	    // add the new reference
 	    list.add(p_citation);
