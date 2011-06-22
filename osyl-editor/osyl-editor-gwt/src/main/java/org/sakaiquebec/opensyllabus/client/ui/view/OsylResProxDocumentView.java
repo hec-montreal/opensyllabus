@@ -66,6 +66,9 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 	getModel().setLabel(getEditor().getText());
 	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());
+	//Document resource type	
+	getModel().getResource().addProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+		getEditor().getTypeDocument());
 
 	// FIXME This is a workaround. Should be deleted after we have a way to
 	// display the fileBrowser showing the previously selected file.
@@ -105,8 +108,8 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 		getEditor().getLicence());
 	getModel().getResource().addProperty(COPropertiesType.DESCRIPTION,
 		getEditor().getResourceDescription());
-	getModel().getResource().addProperty(
-		COPropertiesType.RESOURCE_TYPE_DOCUMENT,
+	//Document resource type	
+	getModel().getResource().addProperty(COPropertiesType.ASM_RESOURCE_TYPE,
 		getEditor().getTypeDocument());
     }
 
