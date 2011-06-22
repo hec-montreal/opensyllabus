@@ -23,17 +23,21 @@ package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.OsylRichTextArea;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxLinkView;
 import org.sakaiquebec.opensyllabus.shared.util.LinkValidator;
 
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -56,19 +60,24 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     private TextBox editorName;
     private TextBox editorLink;
     private RichTextArea editorDesc;
+    private ListBox typeResourceListBox;
 
     // Our viewers
     private VerticalPanel viewer;
     private HTML viewerLink;
     private HTML viewerURI;
     private HTML viewerDesc;
+    private HTML viewerTypeResource;
 
     // Contains the viewer and info icons for the requirement level
     private FlexTable viewerPanel;
 
     // remember editor description height for maximizing popup
     private int originalEditorDescHeight;
-
+    
+    //Type of resource for hyperlink
+    private String typeResource;
+    
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
      * working for.
@@ -127,6 +136,17 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 		+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + " : "));
 	flexTable.setWidget(1, 1, editorLink);
 
+	// --------------------------------------------------------
+	// Type of link
+	// --------------------------------------------------------
+	typeResourceListBox = new ListBox();
+	typeResourceListBox.setStylePrimaryName("Osyl-LabelEditor-TextBox");
+	typeResourceListBox.setWidth("30%");
+	flexTable.setWidget(2, 0, new HTML(getUiMessage("Link.urlType")
+		+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + " : "));
+	flexTable.setWidget(2, 1, typeResourceListBox);
+	// --------------------------------------------------------
+
 	flexTable.setWidth("100%");
 	editorPanel.add(flexTable);
 
@@ -138,6 +158,16 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	editorPanel.add(editorDesc);
 
 	setEditor(editorPanel);
+
+	typeResourceListBox.addChangeHandler(new ChangeHandler() {
+
+	    public void onChange(ChangeEvent event) {
+		setTypeResource(typeResourceListBox.getValue(typeResourceListBox
+			.getSelectedIndex()));
+	    }
+	});
+
+	updateResourceTypeInfo();
     }
 
     private void setEditor(VerticalPanel vp) {
@@ -169,6 +199,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	getViewer().add(getViewerLink());
 	getViewer().add(getViewerURI());
 	getViewer().add(getViewerDesc());
+	//getViewer().add(getViewerTypeResource());
 
 	setViewerPanel(new FlexTable());
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
@@ -191,12 +222,12 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 		"Osyl-UnitView-TextImportant");
 	    column = 1;
 	}
-	
-	if(getView().isNewAccordingSelectedDate()){
+
+	if (getView().isNewAccordingSelectedDate()) {
 	    getViewerPanel().addStyleName("Osyl-newElement");
 	}
-	
-	getViewerPanel().setWidget(column, 1,getViewer());
+
+	getViewerPanel().setWidget(column, 1, getViewer());
 	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(column, 1,
 		"Osyl-UnitView-Content");
 	getMainPanel().add(getViewerPanel());
@@ -232,6 +263,14 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 
     private HTML getViewerDesc() {
 	return this.viewerDesc;
+    }
+
+    private void setViewerTypeResource(HTML html) {
+	this.viewerTypeResource = html;
+    }
+
+    private HTML getViewerTypeResource() {
+	return this.viewerTypeResource;
     }
 
     private void setViewerPanel(FlexTable viewerPanel) {
@@ -297,6 +336,14 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	}
     }
 
+    public String getHyperLink() {
+	if (isInEditionMode()) {
+	    return editorDesc.getHTML();
+	} else {
+	    return viewerDesc.getHTML();
+	}
+    }
+
     public void setFocus(boolean b) {
 	if (isInEditionMode()) {
 	    editorName.setFocus(b);
@@ -320,6 +367,12 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	    ok = false;
 	    messages = getView().getUiMessage("LinkEditor.unvalidLink");
 	}
+	if (getTypeLinkSelected().equals(typeResourceListBox.getItemText(0))) {
+	    ok = false;
+	    messages =
+		    getUiMessage("DocumentEditor.document.WrongTypeResStatus");
+	}
+
 	if (!ok) {
 	    OsylAlertDialog osylAlertDialog =
 		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
@@ -349,7 +402,8 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	setLink(getView().getLinkURI());
 	// We get the description text to edit from the model
 	editorDesc.setHTML(getView().getCommentFromModel());
-
+	// We get the type of resource value to edit from the model
+	setTypeResource(getView().getResourceTypeFromModel());	
     } // enterEdit
 
     public void enterView() {
@@ -421,4 +475,40 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	editorDesc.setHeight(originalEditorDescHeight + "px");
     }
 
+    private void updateResourceTypeInfo() {
+	List<String> typesResourceList =
+		OsylController.getInstance().getOsylConfig()
+			.getResourceTypeList();
+	buildTypeResourceListBox(typesResourceList);
+    }
+
+    private void buildTypeResourceListBox(List<String> typesResourceList) {
+	typeResourceListBox.clear();
+	for (String typeResource : typesResourceList) {
+	    typeResourceListBox.addItem(getView().getCoMessage(
+		    "Resource.Type." + typeResource), typeResource);
+	}
+	for (int i = 0; i < typeResourceListBox.getItemCount(); i++) {
+	    String item = typeResourceListBox.getValue(i);
+	    if (item.equals(getView().getResourceTypeFromModel())) {
+		typeResourceListBox.setItemSelected(i, true);
+	    }
+	}
+    }
+
+    public String getTypeLinkSelected() {
+	if (typeResourceListBox.getSelectedIndex() != -1)
+	    return typeResourceListBox.getValue(typeResourceListBox
+		    .getSelectedIndex());
+	else
+	    return "";
+    }
+    
+    private void setTypeResource(String typeResource) {
+	this.typeResource = typeResource;
+    }
+
+    public String getTypeResource() {
+	return typeResource;
+    }
 }
