@@ -40,8 +40,8 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -79,6 +79,8 @@ public class OsylCitationForm extends WindowPanel implements
      * User interface message bundle
      */
     private OsylConfigMessages uiMessages;
+    private OsylConfigMessages coMessages;
+    
 
     // UI components
     private VerticalPanel mainPanel;
@@ -133,6 +135,14 @@ public class OsylCitationForm extends WindowPanel implements
 
     private HorizontalPanel publicationLocationPanel;
 
+    private HorizontalPanel resourceTypePanel;
+    
+    private List<String> typesResourceList;
+
+    private ListBox typesResourceListBox;
+
+    private String typeResource;
+
     private VerticalPanel urlPanel;
     private TextBox urlTextBox;
 
@@ -161,6 +171,7 @@ public class OsylCitationForm extends WindowPanel implements
 	    final String currentDirectory, final OsylCitationItem citationItem) {
 	if (citationItem != null)
 	    System.out.println("resource id : " + citationItem.getResourceId());
+	
 	// set some properties for WindowPanel
 	setResizable(true); // but is not maximizable
 	setAnimationEnabled(true);
@@ -169,8 +180,9 @@ public class OsylCitationForm extends WindowPanel implements
 	citation = citationItem;
 	setController(osylController);
 	uiMessages = osylController.getUiMessages();
+	coMessages = osylController.getCoMessages();
 	initCitationTypes();
-
+	this.typesResourceList = osylController.getOsylConfig().getResourceTypeList();
 	mainPanel = new VerticalPanel();
 	mainPanel.setWidth(FORM_WIDTH + "px");
 
@@ -450,7 +462,47 @@ public class OsylCitationForm extends WindowPanel implements
 				"Osyl-CitationForm-longTextBox");
 	urlPanel.add(urlTextBox);
 	mainPanel.add(urlPanel);
+	//-------------------------------------------------------------------
+	//Type of resource
+	//-------------------------------------------------------------------
+	typesResourceListBox = new ListBox();
+	for (String typeResource : this.typesResourceList) {
+	    typesResourceListBox.addItem(coMessages.getMessage(
+		    "Resource.Type." + typeResource), typeResource);
+	}
+	typesResourceListBox.addChangeHandler(new ChangeHandler() {
+	    public void onChange(ChangeEvent event) {
+		setTypeResource(typesResourceListBox.getValue(typesResourceListBox
+			.getSelectedIndex()));
+	    }
+	});
+	HTML typeResourcelabel =
+		createNewLabel(osylController
+			.getUiMessage("ResProxCitationView.resourceType.label")
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + ":");
 
+	typesResourceListBox.setStylePrimaryName("Osyl-CitationForm-genericPanel");
+	typesResourceListBox.setWidth("80%");
+	resourceTypePanel = new HorizontalPanel();
+	resourceTypePanel.add(typeResourcelabel);
+	resourceTypePanel.add(typesResourceListBox);
+	resourceTypePanel.setCellWidth(typeResourcelabel, "30%");
+	resourceTypePanel.setCellWidth(typesResourceListBox, "70%");
+	resourceTypePanel.setCellHorizontalAlignment(typesResourceListBox,
+		HasHorizontalAlignment.ALIGN_CENTER);
+	// set the type key for saving citation in sakai resources
+	mainPanel.add(resourceTypePanel);
+
+	typesResourceListBox.addChangeHandler(new ChangeHandler() {
+
+	    public void onChange(ChangeEvent event) {
+		setTypeResource(typesResourceListBox.getValue(typesResourceListBox
+			.getSelectedIndex()));
+	    }
+	});
+
+	buildTypeResourceListBox();	
+	//-------------------------------------------------------------------	
 	// Add a 'save' button.
 	AbstractImagePrototype imgSaveButton = AbstractImagePrototype.create(osylImageBundle.save());
 	saveButton = new ImageAndTextButton(
@@ -527,6 +579,16 @@ public class OsylCitationForm extends WindowPanel implements
 			.getText());
 		citation.setProperty(CitationSchema.PUBLICATION_LOCATION,
 			publicationLocationTextBox.getText());
+		
+		//Type of resource
+		citation.setResourceType(typesResourceListBox
+			.getValue(typesResourceListBox.getSelectedIndex()));
+		citation.setProperty(CitationSchema.CITATION_RESOURCE_TYPE,
+			typesResourceListBox.getValue(typesResourceListBox
+				.getSelectedIndex()));
+		setTypeResource(typesResourceListBox
+			.getValue(typesResourceListBox.getSelectedIndex()));		
+		
 		// citation.setResourceName(listname == null ? "" : listname);
 
 		// We add the corresponding identifier
@@ -791,7 +853,7 @@ public class OsylCitationForm extends WindowPanel implements
 	citationTypeKeys.add(CitationSchema.TYPE_UNKNOWN);
 	citationTypeKeys.add(CitationSchema.TYPE_PROCEED);
     }
-
+    
     /**
      * Initializes listbox for citation types
      */
@@ -814,6 +876,32 @@ public class OsylCitationForm extends WindowPanel implements
 	}
     }
 
+    /**
+     * Initializes listbox for citation types
+     */
+    private void buildTypeResourceListBox() {
+	if (citation.getResourceType()!=null) {
+		setTypeResource(citation.getResourceType());	    
+	} else {
+	    setTypeResource("");
+	}
+	
+	for (int i = 0; i < typesResourceListBox.getItemCount(); i++) {
+	    String item = typesResourceListBox.getValue(i);
+	    if (item.equals(getTypeResource())) {
+		typesResourceListBox.setItemSelected(i, true);
+	    }
+	}	
+    }
+    
+    private void setTypeResource(String typeResource) {
+	this.typeResource = typeResource;
+    }
+
+    public String getTypeResource() {
+	return typeResource;
+    }
+    
     /**
      * Updates form according to the new type of citation, shows or hides fields
      * for each type.
@@ -901,6 +989,7 @@ public class OsylCitationForm extends WindowPanel implements
 	    publicationLocationPanel.setVisible(false);
 	    urlPanel.setVisible(true);
 	}
+	resourceTypePanel.setVisible(true);
 	layout();
     }
 
