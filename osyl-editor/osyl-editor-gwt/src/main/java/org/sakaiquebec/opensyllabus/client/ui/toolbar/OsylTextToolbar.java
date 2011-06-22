@@ -20,6 +20,8 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.toolbar;
 
+import java.util.StringTokenizer;
+
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.OsylImageBundle.OsylImageBundleInterface;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
@@ -681,7 +683,11 @@ public class OsylTextToolbar extends Composite {
 	String url = GWT.getModuleBaseURL();
 	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
 	String siteId = OsylController.getInstance().getSiteId();
-	String siteTitle = OsylController.getInstance().getCOSerialized().getTitle();
+	String siteTitle =
+		OsylController.getInstance().getCOSerialized().getTitle();
+	
+	siteTitle = truncateSiteTitle(siteTitle); // HEC ONLY SAKAI-2758
+	
 	String downloadUrl;
 
 	if (access == null) {
@@ -696,7 +702,6 @@ public class OsylTextToolbar extends Composite {
 		serverId + "/sdata/c/attachment/" + siteId + "/OpenSyllabus/"
 			+ siteTitle + ((access == null) ? "" : "_" + access)
 			+ ".pdf?child=" + siteId;
-
 	Window.open(downloadUrl, "_blank", "");
     }
 
@@ -704,18 +709,23 @@ public class OsylTextToolbar extends Composite {
 	String url = GWT.getModuleBaseURL();
 	String serverId = url.split("\\s*/portal/tool/\\s*")[0];
 	String siteId = OsylController.getInstance().getSiteId();
-	String siteTitle = OsylController.getInstance().getCOSerialized().getTitle();
+	String siteTitle =
+		OsylController.getInstance().getCOSerialized().getTitle();
+
+	siteTitle = truncateSiteTitle(siteTitle); // HEC ONLY SAKAI-2758
+
 	String downloadUrl;
 	downloadUrl =
 		serverId + "/access/content/group/" + siteId + "/" + siteTitle
 			+ ".pdf";
-	downloadUrl = validateUrl(downloadUrl);
 	Window.open(downloadUrl, "_blank", "");
     }
-    
-    private String validateUrl(String downloadUrl){
-	downloadUrl = downloadUrl.replaceAll("'", "_");
-	downloadUrl = downloadUrl.replaceAll("&", "_");
-	return downloadUrl;
+
+    // BEGIN HEC ONLY SAKAI-2758
+    // Dirty hack to remove the course title from the string
+    private String truncateSiteTitle(String siteTitle) {
+	StringTokenizer strTok = new StringTokenizer(siteTitle, " ");
+	return strTok.nextToken();
     }
+    // END HEC ONLY SAKAI-2758
 }

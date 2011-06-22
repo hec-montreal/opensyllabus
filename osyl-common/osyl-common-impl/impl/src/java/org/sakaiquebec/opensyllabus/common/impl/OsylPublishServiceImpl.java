@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -553,6 +554,12 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    securityService.pushAdvisor(advisor);
 	    Site site = osylSiteService.getSite(siteId);
 	    String siteTitle = osylSiteService.getCoSiteTitle(site);
+	    
+	    // BEGIN HEC ONLY SAKAI-2758
+	    StringTokenizer strTok = new StringTokenizer(siteTitle, " ");
+	    
+	    siteTitle = strTok.nextToken();
+	    // END HEC ONLY SAKAI-2758
 	    
 	    try {
 		contentHostingService.getResource(directory + siteTitle
