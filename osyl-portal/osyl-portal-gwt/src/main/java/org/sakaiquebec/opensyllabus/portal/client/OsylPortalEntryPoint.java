@@ -143,27 +143,27 @@ public class OsylPortalEntryPoint implements EntryPoint,
     public void setView(final AbstractPortalView view) {
 	rootPanel.clear();
 
-	 HorizontalPanel localePanel = new HorizontalPanel();
-	 for (final String locale : LOCALES) {
-	 Label l =
-	 new Label(PortalController.getInstance().getMessage(
-	 "locale_" + locale));
-	 l.addClickHandler(new ClickHandler() {
-	
-	 public void onClick(ClickEvent event) {
-	 changeLocale(locale, view.getViewKey());
-	 }
-	
-	 });
-	 l.setStylePrimaryName("NHP_locale");
-	 localePanel.add(l);
-	 }
-	 localePanel.setStylePrimaryName("NHP_localePanel");
-	
-	 VerticalPanel vp = new VerticalPanel();
-	 vp.add(localePanel);
-	 vp.add(view);
-	 rootPanel.add(vp);
+	HorizontalPanel localePanel = new HorizontalPanel();
+	for (final String locale : LOCALES) {
+	    Label l =
+		    new Label(PortalController.getInstance().getMessage(
+			    "locale_" + locale));
+	    l.addClickHandler(new ClickHandler() {
+
+		public void onClick(ClickEvent event) {
+		    changeLocale(locale, view.getViewKey());
+		}
+
+	    });
+	    l.setStylePrimaryName("NHP_locale");
+	    localePanel.add(l);
+	}
+	localePanel.setStylePrimaryName("NHP_localePanel");
+
+	VerticalPanel vp = new VerticalPanel();
+	vp.add(localePanel);
+	vp.add(view);
+	rootPanel.add(vp);
 	rootPanel.add(view);
 	if (!views.keySet().contains(view.getViewKey()))
 	    views.put(view.getViewKey(), view);

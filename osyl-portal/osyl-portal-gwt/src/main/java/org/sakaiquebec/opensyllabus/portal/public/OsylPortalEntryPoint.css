@@ -1,97 +1,96 @@
-body{
-	font-family: helvetica,arial,sans-serif;
-    font-weight: normal;
+body {
+	font-family: helvetica, arial, sans-serif;
+	font-weight: normal;
 }
 
-.NHP_localePanel{
+.NHP_localePanel {
 	
 }
 
-.NHP_locale{
+.NHP_locale {
 	color: #063871;
 	padding-right: 5px;
 	padding-bottom: 5px;
+	cursor: pointer;
 }
 
-.NHP_titre1{
+.NHP_titre1 {
 	color: #063871;
-    font-size: 130%;
-    font-weight: bold;
-    margin-left: 10px;
+	font-size: 130%;
+	font-weight: bold;
+	margin-left: 10px;
 }
 
-.NHP_titre2{
+.NHP_titre2 {
 	color: #414141;
-    font-size: 115%;
-    font-weight: bold;
-    margin-bottom: 10px;
-    margin-top: 25px;
-    margin-left: 20px;
+	font-size: 115%;
+	font-weight: bold;
+	margin-bottom: 10px;
+	margin-top: 25px;
+	margin-left: 20px;
 }
 
-.NHP_titre3{
+.NHP_titre3 {
 	color: #063871;
 	margin-left: 30px;
 }
 
-.NHP_link{
+.NHP_link {
 	color: #063871;
 	margin-left: 30px;
 	cursor: pointer;
 }
 
-.CP-scrollTable{
-border:none;
-width:900px;
-height:600px;
-padding:3px;
+.CP-scrollTable {
+	border: none;
+	width: 900px;
+	height: 600px;
+	padding: 3px;
 }
 
-.CP-scrollTable-row{
-background-color:#ffffff;
-cursor:pointer;
+.CP-scrollTable-row {
+	background-color: #ffffff;
+	cursor: pointer;
 }
 
-.CP-scrollTable-row-hover{
-background-color:#ccccff;
-cursor:pointer;
+.CP-scrollTable-row-hover {
+	background-color: #ccccff;
+	cursor: pointer;
 }
 
-.CP-scrollTable-row-selected{
-color:#ffffff;
-background-color:#000066;
-cursor:pointer;
+.CP-scrollTable-row-selected {
+	color: #ffffff;
+	background-color: #000066;
+	cursor: pointer;
 }
 
-.gwt-ScrollTable .headerWrapper{
-background-color : #e7e7e7;
+.gwt-ScrollTable .headerWrapper {
+	background-color: #e7e7e7;
 }
 
-.gwt-ScrollTable .dataTable td,
-.gwt-ScrollTable .headerTable td {
-  border-style: none;
-  border-width: 0px 1px 1px 0px;
-  padding : 5px;
-  white-space: nowrap;
-  overflow: hidden;
+.gwt-ScrollTable .dataTable td,.gwt-ScrollTable .headerTable td {
+	border-style: none;
+	border-width: 0px 1px 1px 0px;
+	padding: 5px;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 .gwt-ScrollTable .footerTable .footerRow {
-  border: none;
-  border-width: 1px 0px 0px 0px;
-  padding : 5px;
-  white-space: nowrap;
-  overflow: hidden;
+	border: none;
+	border-width: 1px 0px 0px 0px;
+	padding: 5px;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
-.CP-Description{
-	padding:0px;
-	font:normal 100% Arial, Verdana, sans-serif;
-	background-color:#EEE;
+.CP-Description {
+	padding: 0px;
+	font: normal 100% Arial, Verdana, sans-serif;
+	background-color: #EEE;
 	width: 375px;
 }
 
 .CP-Description .dragdrop-handle {
-	cursor:pointer;
+	cursor: pointer;
 }
-
