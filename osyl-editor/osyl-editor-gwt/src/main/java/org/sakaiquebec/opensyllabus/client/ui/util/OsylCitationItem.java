@@ -52,6 +52,11 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
      * Name of the resource (citationList name)
      */
     private String resourceName;
+    
+    /**
+     * Type of the resource (resourceList name)
+     */
+    private String resourceType;    
 
     /**
      * Map of citation properties
@@ -111,6 +116,20 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 	this.resourceName = resourceName;
     }
 
+    /**
+     * @return the resourceType (typeResourceList name)
+     */
+    public String getResourceType() {
+        return resourceType;
+    }
+
+    /**
+     * @param resourceType the resourceType to set (typeResourceList name)
+     */
+    public void setResourceType(String resourceType) {
+        this.resourceType = resourceType;
+    }
+    
     /**
      * @return the properties of the citation
      */
