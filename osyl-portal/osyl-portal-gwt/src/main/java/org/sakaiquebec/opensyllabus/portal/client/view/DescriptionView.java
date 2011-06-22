@@ -37,8 +37,6 @@ public class DescriptionView extends WindowPanel {
 
     protected VerticalPanel mainPanel;
 
-    private String description = "";
-
     private CODirectorySite coDirectorySite;
 
     private String viewKey;
@@ -122,7 +120,7 @@ public class DescriptionView extends WindowPanel {
 		new Label(controller.getMessage("directoryCoursePage_credits")
 			+ " : "
 			+ ((coDirectorySite.getRequirements() == null) ? ""
-				: coDirectorySite.getRequirements()));
+				: coDirectorySite.getCredits()));
 	t33.setStylePrimaryName("NHP_titre3");
 	mainPanel.add(t33);
 
@@ -132,7 +130,7 @@ public class DescriptionView extends WindowPanel {
 				.getMessage("directoryCoursePage_requirements")
 				+ " : "
 				+ ((coDirectorySite.getRequirements() == null) ? ""
-					: coDirectorySite.getRequirements()));
+					: coDirectorySite.getRequirements().replace("\n", "<br>")));
 	t34.setStylePrimaryName("NHP_titre3");
 	mainPanel.add(t34);
     }

@@ -101,7 +101,7 @@ public class DirectoryCoursePage extends AbstractPortalView {
 		new HTML(getMessage("directoryCoursePage_requirements")
 			+ " : "
 			+ ((site.getRequirements() == null) ? ""
-				: site.getRequirements()));
+				: site.getRequirements().replace("\n", "<br>")));
 	t34.setStylePrimaryName("NHP_titre3");
 	mainPanel.add(t34);
 

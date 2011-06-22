@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -86,8 +87,9 @@ public class GenericRequirementsCoursMapFactory {
 		entry.setCourseId(courseId);
 		entry.setCatalogNbr(catalogNbr);
 		entry.setEffDate(effDate);
-		entry.setDescriptionAng(descrAng);
-		entry.setDescriptionFra(descrFr);
+		
+		entry.setDescriptionAng(StringEscapeUtils.unescapeJava(descrAng));
+		entry.setDescriptionFra(StringEscapeUtils.unescapeJava(descrFr));
 	    }
 	    map.put(courseId, entry);
 	}
