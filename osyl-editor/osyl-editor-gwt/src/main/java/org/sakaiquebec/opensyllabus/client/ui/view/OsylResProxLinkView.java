@@ -60,6 +60,10 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
 	getModel().setLabel(getEditor().getText());
 	getModel().addProperty(COPropertiesType.COMMENT,
 		((OsylLinkEditor) getEditor()).getDescription());
+	//Type of link resource
+	getModel().getResource().addProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+		((OsylLinkEditor) getEditor()).getTypeLinkSelected());
+
 	getModel().getResource().addProperty(
 		COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_URI,
 		((OsylLinkEditor) getEditor()).getLink());
@@ -88,6 +92,13 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
 	return getModel().getProperty(COPropertiesType.COMMENT);
     }
 
+    /**
+     * Returns the type of resource text of current resource.
+     */
+    public String getResourceTypeFromModel() {
+	return getModel().getResource().getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
+    }
+    
     /**
      * Returns the URI of current resource
      */
