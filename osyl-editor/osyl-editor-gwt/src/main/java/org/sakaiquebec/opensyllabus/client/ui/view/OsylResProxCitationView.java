@@ -81,6 +81,10 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());
 
+	//Document resource type
+	getModel().getResource().addProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+		getEditor().getTypeResource());
+
 	if (uri != null) {
 	    setProperty(COPropertiesType.IDENTIFIER,
 		    COPropertiesType.IDENTIFIER_TYPE_URI, uri
@@ -291,6 +295,13 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 		    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL);
 	}
 	return urlLabel;
+    }
+  
+    /**
+     * Returns the type of resource text of current resource.
+     */
+    public String getResourceTypeFromModel() {
+	return getModel().getResource().getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
     }
     
     /**
