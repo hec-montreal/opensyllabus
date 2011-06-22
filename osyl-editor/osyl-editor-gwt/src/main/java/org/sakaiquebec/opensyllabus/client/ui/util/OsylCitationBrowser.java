@@ -20,6 +20,8 @@
  ******************************************************************************/
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
+import java.util.List;
+
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocator;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
@@ -40,6 +42,8 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
     private boolean firstTimeRefreshing = true;
 
     private OsylCitationListItem currentCitationListItem = null;
+    
+    private List<String> typesResourceList;
 
     // CONSTRUUCTORS
     public OsylCitationBrowser() {
@@ -241,6 +245,7 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 	    } else {
 		OsylCitationItem oci = new OsylCitationItem();
 		oci.setFilePath(currentCitationListItem.getFilePath());
+		oci.setResourceType(null);
 		oci.setId(null);
 		openEditor(oci);
 	    }
@@ -327,4 +332,11 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 	    return true;
     }
 
+    public void setTypesResourceList(List<String> typesResourceList) {
+	this.typesResourceList = typesResourceList;
+    }
+    
+    public List<String> getTypesResourceList() {
+        return typesResourceList;
+    }    
 }
