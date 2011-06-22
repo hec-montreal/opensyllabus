@@ -185,6 +185,26 @@ public class DetailCoursMap extends HashMap<String, DetailCoursMapEntry> {
 
 	return cours;
     }
+    
+    /**
+     * Liste des cours selon le service d'enseignment
+     * 
+     * @param acadOrg
+     * @return
+     */
+    public List<DetailCoursMapEntry> getCoursByAcadOrgAndProg(String acadOrg,String prog) {
+	List<DetailCoursMapEntry> cours = new ArrayList<DetailCoursMapEntry>();
+	Set<String> keys = this.keySet();
+	DetailCoursMapEntry detailCours = null;
+
+	for (String key : keys) {
+	    detailCours = this.get(key);
+	    if (detailCours.getAcadOrg().equalsIgnoreCase(acadOrg) && detailCours.getAcadCareer().equals(prog))
+		cours.add(detailCours);
+	}
+
+	return cours;
+    }
 
     /**
      * Liste des cours selon le service d'enseignment. On exclue les cours du

@@ -334,6 +334,12 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			    + referenceString);
 		    updateConfig(referenceString);
 		}
+		if(referenceString.contains(CM_EXCEPTIONS_FOLDER)){
+		    log.info("Updating CM exceptions"
+			    + referenceString);
+		    updateConfig(referenceString);
+		}
+	
 	    }
 	}
     }
@@ -481,6 +487,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    String courses = retrieveParameter(document, CM_EXCEPTIONS_COURSES);
 	    String category =
 		    retrieveParameter(document, CM_EXCEPTIONS_CATEGORY);
+	    String program = retrieveParameter(document, CM_EXCEPTIONS_PROGRAM);
 	    String role = retrieveParameter(document, CM_EXCEPTIONS_ROLE);
 
 	    for (String user : Arrays.asList(users.split(","))) {
@@ -489,7 +496,9 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put(CM_EXCEPTIONS_COURSES, courses);
 		map.put(CM_EXCEPTIONS_CATEGORY, category);
+		map.put(CM_EXCEPTIONS_PROGRAM, program);
 		map.put(CM_EXCEPTIONS_ROLE, role);
+		
 		cmExceptions.put(user, map);
 	    }
 

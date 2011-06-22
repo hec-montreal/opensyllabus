@@ -1206,6 +1206,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		    props.get(ConfigurationService.CM_EXCEPTIONS_COURSES);
 	    String category =
 		    props.get(ConfigurationService.CM_EXCEPTIONS_CATEGORY);
+	    String program = props.get(ConfigurationService.CM_EXCEPTIONS_PROGRAM);
 	    String role = props.get(ConfigurationService.CM_EXCEPTIONS_ROLE);
 	    if (courses != null && !"".equals(courses)) {
 		for (String course : Arrays.asList(courses.split(","))) {
@@ -1217,9 +1218,9 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 				role, courseOfferingId, ACTIVE_STATUS);
 		    }
 		}
-	    } else if (category != null && !"".equals(category)) {
+	    } else if (category != null && !"".equals(category) && program !=null && !"".equals(program)) {
 		for (DetailCoursMapEntry dcme : detailCoursMap
-			.getCoursByAcadOrg(category)) {
+			.getCoursByAcadOrgAndProg(category, program)) {
 		    String courseOfferingId = getCourseOfferingId(dcme);
 		    cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
 			    role, courseOfferingId, ACTIVE_STATUS);

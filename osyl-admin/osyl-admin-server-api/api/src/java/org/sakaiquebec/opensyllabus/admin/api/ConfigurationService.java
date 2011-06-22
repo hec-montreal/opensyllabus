@@ -124,6 +124,8 @@ public interface ConfigurationService {
     
     public final static String CM_EXCEPTIONS_ROLE = "role";
     
+    public final static String CM_EXCEPTIONS_PROGRAM= "program";
+    
     
     // Parameters used in the official sites synchronisation job
     public Date getEndDate();
