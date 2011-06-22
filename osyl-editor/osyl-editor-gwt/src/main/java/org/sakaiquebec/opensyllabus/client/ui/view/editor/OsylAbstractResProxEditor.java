@@ -64,6 +64,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public abstract class OsylAbstractResProxEditor extends OsylAbstractEditor {
 
+    public static String RESS_TYPE_MESSAGE_PREFIX="Resource.Type.";
     // TODO: document
     private CheckBox importantCheckBox;
     private CheckBox hideCheckBox;

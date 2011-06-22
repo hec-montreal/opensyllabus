@@ -807,8 +807,14 @@ div.Osyl-UnitView-ResPanel-ReadOnly {
 	font-size:1em;
 }
 
+.Osyl-ResProxDocument .name, .Osyl-ResProxLink .uri, .Osyl-ResProxDocument .type{padding-top: 3px}
 .Osyl-ResProxDocument .name, .Osyl-ResProxLink .uri {color:#A0A0A0}
 .Osyl-ResProxDocument .name {margin-left:5px}
+.Osyl-ResProxDocument .type {
+	color: #8C8A87;
+    padding-right: 5px;
+    font-weight: bold;
+}
 .Osyl-ResProxLink .uri, .Osyl-ResProxDocument .description, .Osyl-ResProxLink .description {margin-top:5px}
 
 /*End Res ProxDocument --------------------------------------------------------------------------------------*/

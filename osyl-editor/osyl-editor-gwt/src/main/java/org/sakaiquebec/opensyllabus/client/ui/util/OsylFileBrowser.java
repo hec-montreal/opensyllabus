@@ -46,7 +46,7 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
     private List<String> rightsList;
 
     private List<String> typesResourceList;
-    
+
     private OsylFileUpload osylFileUpload;
 
     public OsylFileBrowser() {
@@ -66,7 +66,8 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
     @Override
     protected PushButton createAddPushButton() {
 	PushButton pb =
-		createTopButton(getOsylImageBundle().document_add(),
+		createTopButton(
+			getOsylImageBundle().document_add(),
 			getController().getUiMessage(
 				"Browser.addFileButton.tooltip"));
 	pb.addClickHandler(new FileAddButtonClickHandler());
@@ -77,8 +78,11 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 
 	public void onClick(ClickEvent event) {
 	    osylFileUpload =
-		    new OsylFileUpload(getController().getUiMessages().getMessage("fileUpload.addResource"), getController(), getCurrentDirectory()
-			    .getDirectoryPath(), rightsList, typesResourceList);
+		    new OsylFileUpload(getController().getUiMessages()
+			    .getMessage("fileUpload.addResource"),
+			    getController(), getCurrentDirectory()
+				    .getDirectoryPath(), rightsList,
+			    typesResourceList);
 	    osylFileUpload.addEventHandler(OsylFileBrowser.this);
 	    osylFileUpload.showModal();
 	}
@@ -114,16 +118,15 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
 
     public void onUploadFile(UploadFileEvent event) {
 	setItemToSelect(new OsylFileItem(event.getSource().toString()));
-	((OsylFileItem) getItemToSelect()).setFileName(event.getSource()
-		.toString().substring(
-			event.getSource().toString().lastIndexOf("/"),
+	((OsylFileItem) getItemToSelect()).setFileName(event
+		.getSource()
+		.toString()
+		.substring(event.getSource().toString().lastIndexOf("/"),
 			event.getSource().toString().length()));
 
-	OsylRemoteServiceLocator
-		.getDirectoryRemoteService()
+	OsylRemoteServiceLocator.getDirectoryRemoteService()
 		.updateRemoteFileInfo(
-			((OsylFileItem) getItemToSelect()).getFilePath(),
-			"",
+			((OsylFileItem) getItemToSelect()).getFilePath(), "",
 			osylFileUpload.getRight(),
 			osylFileUpload.getTypeResource(),
 			this.fileUpdateRequestHandler);
@@ -136,7 +139,7 @@ public class OsylFileBrowser extends OsylAbstractBrowserComposite {
     public void setTypesResourceList(List<String> typesResourceList) {
 	this.typesResourceList = typesResourceList;
     }
-    
+
     /**
      * Inner anonymous class that represent the response callback when updating
      * file properties via sdata.

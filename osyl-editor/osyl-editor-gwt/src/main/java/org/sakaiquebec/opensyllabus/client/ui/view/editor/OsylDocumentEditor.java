@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
@@ -91,6 +91,9 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
     // Our viewer (link to the document)
     private VerticalPanel viewer;
     private HTML viewerLink;
+
+    // Our viewer (type)
+    private HTML viewerType;
     // Our viewer (document name)
     private HTML viewerName;
     // Our viewer (description)
@@ -184,9 +187,14 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	htmlViewerName.setStylePrimaryName("name");
 	setViewerName(htmlViewerName);
 
+	HTML htmlViewerType = new HTML();
+	htmlViewerType.setStylePrimaryName("type");
+	setViewerType(htmlViewerType);
+
 	setViewer(new VerticalPanel());
 	getViewer().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	HorizontalPanel linkAndNameHP = new HorizontalPanel();
+	linkAndNameHP.add(getViewerType());
 	linkAndNameHP.add(getViewerLink());
 	linkAndNameHP.add(getViewerName());
 	getViewer().add(linkAndNameHP);
@@ -213,11 +221,11 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		    "Osyl-UnitView-TextImportant");
 	    column = 1;
 	}
-	
-	if(getView().isNewAccordingSelectedDate()){
+
+	if (getView().isNewAccordingSelectedDate()) {
 	    getViewerPanel().addStyleName("Osyl-newElement");
 	}
-	
+
 	getViewerPanel().setWidget(column, 1, getViewer());
 	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(column, 1,
 		"Osyl-UnitView-Content");
@@ -322,14 +330,15 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    } else if (getLicence().equals(licenseListBox.getItemText(0))) {
 		message +=
 			getUiMessage("DocumentEditor.document.WrongRightsStatus");
-	    } else if (getTypeDocument().equals(typeResourceListBox.getItemText(0))) {
+	    } else if (getTypeDocument().equals(
+		    typeResourceListBox.getItemText(0))) {
 		message +=
 			getUiMessage("DocumentEditor.document.WrongTypeResStatus");
 	    }
 	    Map<String, String> cv =
 		    OsylEditorEntryPoint.getInstance()
-			    .getDocumentContextVisibilityMap().get(
-				    getResourceURI());
+			    .getDocumentContextVisibilityMap()
+			    .get(getResourceURI());
 	    boolean incompatibility = false;
 	    Set<String> parentTitles = new HashSet<String>();
 	    if (cv != null) {
@@ -423,6 +432,11 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    // We get the text to display from the model
 	    getModel().getProperties().addProperty(COPropertiesType.LABEL,
 		    getView().validateLinkLabel(getModel().getLabel()));
+	    if (getView().getDocType() != null)
+		getViewerType().setHTML(
+			getView().getCoMessage(
+				RESS_TYPE_MESSAGE_PREFIX
+					+ getView().getDocType()));
 	    getViewerLink().setHTML(getView().getTextFromSdataModel());
 	    getViewerLink().addClickHandler(
 		    new OsylLinkClickListener(getView(), getView()
@@ -539,15 +553,15 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	rightsAndSavePanel.add(licenseListBox);
 	licenseListBox.setWidth("70%");
 
-	//------------------------------------------
+	// ------------------------------------------
 	rightsAndSavePanel.add(new Label(getView().getUiMessage(
-	"DocumentEditor.document.type")));	
+		"DocumentEditor.document.type")));
 	typeResourceListBox = new ListBox();
-	
-	rightsAndSavePanel.add(typeResourceListBox);
-	typeResourceListBox.setWidth("50%");	
 
-	//------------------------------------------
+	rightsAndSavePanel.add(typeResourceListBox);
+	typeResourceListBox.setWidth("50%");
+
+	// ------------------------------------------
 	HorizontalPanel savePanel = new HorizontalPanel();
 	savePanel.setWidth("100%");
 	rightsAndSavePanel.add(savePanel);
@@ -558,7 +572,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	saveButton =
 		new ImageAndTextButton(
 		// TODO: Bug with ImageBundle, we have to use
-			// AbstractImagePrototype
+		// AbstractImagePrototype
 			imgSaveButton, getView().getUiMessage(
 				"DocumentEditor.save.name"));
 	saveButton.setStylePrimaryName("Osyl-EditorPopup-Button");
@@ -580,8 +594,10 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 				    .getSelectedAbstractBrowserItem();
 
 		    selectedFile.setDescription(descriptionTextArea.getText());
-		    selectedFile.setCopyrightChoice(licenseListBox.getItemText(licenseListBox.getSelectedIndex()));
-		    selectedFile.setTypeResource(typeResourceListBox.getItemText(typeResourceListBox.getSelectedIndex()));
+		    selectedFile.setCopyrightChoice(licenseListBox
+			    .getItemText(licenseListBox.getSelectedIndex()));
+		    selectedFile.setTypeResource(typeResourceListBox
+			    .getItemText(typeResourceListBox.getSelectedIndex()));
 		    OsylRemoteServiceLocator
 			    .getDirectoryRemoteService()
 			    .updateRemoteFileInfo(
@@ -634,7 +650,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	});
 
 	updateResourceLicenseInfo();
-	
+
     }
 
     @Override
@@ -689,12 +705,12 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
     public String getTypeDocument() {
 	if (typeResourceListBox.getSelectedIndex() != -1)
-	    return typeResourceListBox
-		    .getItemText(typeResourceListBox.getSelectedIndex());
+	    return typeResourceListBox.getValue(typeResourceListBox
+		    .getSelectedIndex());
 	else
 	    return "";
     }
-    
+
     public String getResourceDescription() {
 	return descriptionTextArea.getText();
     }
@@ -738,21 +754,21 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 						    .getUiMessage(rightKey));
 					}
 				    }
-				    ((OsylFileBrowser) browser).setRightsList(rightsList);
+				    ((OsylFileBrowser) browser)
+					    .setRightsList(rightsList);
 
 				    buildLicenseListBox(rightsList);
-				    
-				    List<String> typesResourceList = new ArrayList<String>();
-				    List<String> typesResList = new ArrayList<String>();
-				    typesResourceList = OsylController.getInstance().getOsylConfig().getResourceTypeList();
-				    
-				    for (String typeResKey : typesResourceList) {
-					typesResList.add(getView().getCoMessage("Resource.Type." + typeResKey));
-				    }
-					
-				    ((OsylFileBrowser) browser).setTypesResourceList(typesResList);
 
-				    buildTypeResourceListBox(typesResList);
+				    List<String> typesResourceList =
+					    new ArrayList<String>();
+				    typesResourceList =
+					    OsylController.getInstance()
+						    .getOsylConfig()
+						    .getResourceTypeList();
+				    ((OsylFileBrowser) browser)
+					    .setTypesResourceList(typesResourceList);
+
+				    buildTypeResourceListBox(typesResourceList);
 
 				}
 			    });
@@ -769,20 +785,17 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    }
 	    ((OsylFileBrowser) browser).setRightsList(rightsList);
 	    buildLicenseListBox(rightsList);
-	    
-	    //---------------------------------------------------------
-	    //Types of documents
-	    //---------------------------------------------------------	    
-	    List<String> typesResourceList = new ArrayList<String>();
-	    List<String> typesResList = new ArrayList<String>();
-	    typesResourceList = OsylController.getInstance().getOsylConfig().getResourceTypeList();
 
-	    for (String typeResKey : typesResourceList) {
-		typesResList.add(getView().getCoMessage("Resource.Type." + typeResKey));
-	    }
-		
-	    ((OsylFileBrowser) browser).setTypesResourceList(typesResList);
-	    buildTypeResourceListBox(typesResList);
+	    // ---------------------------------------------------------
+	    // Types of documents
+	    // ---------------------------------------------------------
+	    List<String> typesResourceList = new ArrayList<String>();
+	    typesResourceList =
+		    OsylController.getInstance().getOsylConfig()
+			    .getResourceTypeList();
+
+	    ((OsylFileBrowser) browser).setTypesResourceList(typesResourceList);
+	    buildTypeResourceListBox(typesResourceList);
 
 	}
     }
@@ -799,13 +812,19 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
     private void buildTypeResourceListBox(List<String> typesResourceList) {
 	resourceLicensingInfo.getTypeResourceTypeList();
 	typeResourceListBox.clear();
+	typeResourceListBox.addItem(getView().getUiMessage(
+		"DocumentEditor.documentType.choose"));
 	for (String typeResource : typesResourceList) {
-	    //typeResourceListBox.addItem(getView().getCoMessage("Resource.Type." + typeResource));
-	    typeResourceListBox.addItem(typeResource);
+	    // typeResourceListBox.addItem(getView().getCoMessage("Resource.Type."
+	    // + typeResource));
+	    typeResourceListBox.addItem(
+		    getView().getCoMessage(
+			    RESS_TYPE_MESSAGE_PREFIX + typeResource),
+		    typeResource);
 	}
 	refreshBrowsingComponents();
     }
-    
+
     public ImageAndTextButton getSaveButton() {
 	return saveButton;
     }
@@ -824,7 +843,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    if (browser.getSelectedAbstractBrowserItem().isFolder()) {
 		descriptionTextArea.setText("");
 		licenseListBox.setSelectedIndex(-1);
-		typeResourceListBox.setSelectedIndex(-1);		
+		typeResourceListBox.setSelectedIndex(-1);
 	    } else {
 		OsylFileItem selectedFile =
 			(OsylFileItem) browser.getSelectedAbstractBrowserItem();
@@ -843,16 +862,24 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 			typeResourceListBox.setItemSelected(i, true);
 			isFound = true;
 		    }
-		}		
+		}
 	    }
 
 	}
 	if (!isFound) {
 	    licenseListBox.setSelectedIndex(0);
 	    typeResourceListBox.setSelectedIndex(0);
-	    descriptionTextArea.setText("");	    
+	    descriptionTextArea.setText("");
 	}
 	saveButton.setEnabled(false);
+    }
+
+    public void setViewerType(HTML viewerType) {
+	this.viewerType = viewerType;
+    }
+
+    public HTML getViewerType() {
+	return viewerType;
     }
 
     /**
