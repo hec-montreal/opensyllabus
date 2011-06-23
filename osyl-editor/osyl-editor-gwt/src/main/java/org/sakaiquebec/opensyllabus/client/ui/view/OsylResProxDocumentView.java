@@ -92,7 +92,7 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 
     public String getDocType() {
 	return getModel().getResource().getProperty(
-		COPropertiesType.RESOURCE_TYPE_DOCUMENT);
+		COPropertiesType.ASM_RESOURCE_TYPE);
     }
 
     public String getDocName() {
