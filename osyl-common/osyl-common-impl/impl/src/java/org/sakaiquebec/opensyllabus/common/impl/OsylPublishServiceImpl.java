@@ -741,6 +741,16 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    messages.get(node.getTextContent()));
 		}
 	    }
+	    
+	    expr = xpath.compile("//"+COPropertiesType.ASM_RESOURCE_TYPE);
+	    nodes =
+		    (NodeList) expr.evaluate(d, XPathConstants.NODESET);
+	    for (int i = 0; i < nodes.getLength(); i++) {
+		Node node = nodes.item(i);
+		Element e = (Element) node;
+		e.setTextContent(messages.get("Resource.Type."+node.getTextContent()));
+	    }
+	    
 	} catch (XPathExpressionException e) {
 	    e.printStackTrace();
 	}

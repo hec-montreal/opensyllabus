@@ -35,6 +35,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -64,6 +65,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 
     // Our viewers
     private VerticalPanel viewer;
+    private HTML viewerType;
     private HTML viewerLink;
     private HTML viewerURI;
     private HTML viewerDesc;
@@ -192,13 +194,20 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	if (isReadOnly()) {
 	    getViewerURI().setVisible(false);
 	}
+	
+	HTML htmlViewerType = new HTML();
+	htmlViewerType.setStylePrimaryName("type");
+	setViewerType(htmlViewerType);
 
+	HorizontalPanel hzPanel = new HorizontalPanel();
+	hzPanel.add(getViewerType());
+	hzPanel.add(getViewerLink());
+	
 	setViewer(new VerticalPanel());
 	getViewer().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
-	getViewer().add(getViewerLink());
+	getViewer().add(hzPanel);
 	getViewer().add(getViewerURI());
 	getViewer().add(getViewerDesc());
-	//getViewer().add(getViewerTypeResource());
 
 	setViewerPanel(new FlexTable());
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
@@ -405,6 +414,11 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	    initViewer();
 
 	    // We get the text to display from the model
+	    if (getView().getDocType() != null)
+		getViewerType().setHTML(
+			getView().getCoMessage(
+				RESS_TYPE_MESSAGE_PREFIX
+					+ getView().getDocType()));
 	    getViewerLink().setHTML(getView().getTextFromModel());
 	    getViewerURI().setHTML("(" + getView().getRawURI() + ")");
 	    getViewerDesc().setHTML(getView().getCommentFromModel());
@@ -477,7 +491,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	typeResourceListBox.clear();
 	for (String typeResource : typesResourceList) {
 	    typeResourceListBox.addItem(getView().getCoMessage(
-		    "Resource.Type." + typeResource), typeResource);
+		    RESS_TYPE_MESSAGE_PREFIX + typeResource), typeResource);
 	}
 	for (int i = 0; i < typeResourceListBox.getItemCount(); i++) {
 	    String item = typeResourceListBox.getValue(i);
@@ -502,4 +516,13 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     public String getTypeResource() {
 	return typeResource;
     }
+    
+    private HTML getViewerType(){
+	return viewerType;
+    }
+    
+    private void setViewerType(HTML viewer){
+	this.viewerType = viewer;
+    }
+    
 }

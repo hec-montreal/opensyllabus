@@ -693,7 +693,6 @@ div.Osyl-UnitView-ResPanel-ReadOnly {
 /* Label in a Content Unit Panel  */
 .Osyl-UnitView-UnitLabel {
 	font:normal 1em Arial, Verdana, sans-serif;
-	padding:3px 0;
 	width:auto;
 }
 .Osyl-UnitView-UnitLabel ul, .Osyl-UnitView-HtmlViewer ul {margin-left:30px}
@@ -807,7 +806,6 @@ div.Osyl-UnitView-ResPanel-ReadOnly {
 	font-size:1em;
 }
 
-.Osyl-ResProxDocument .name, .Osyl-ResProxLink .uri, .Osyl-ResProxDocument .type{padding-top: 3px}
 .Osyl-ResProxDocument .name, .Osyl-ResProxLink .uri {color:#A0A0A0}
 .Osyl-ResProxDocument .name {margin-left:5px}
 .Osyl-ResProxDocument .type {

@@ -66,8 +66,8 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.RichTextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -89,6 +89,9 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     private VerticalPanel editorPanel;
     // Our viewer
     private VerticalPanel viewer;
+    // Our viewer (type)
+    private HTML viewerType;
+    // Our view link
     private HTML viewerLink;
     // Our viewer (description)
     private HTML viewerDesc;
@@ -111,7 +114,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     private CheckBox disableOtherLinkCheckBox;
     private TextBox editorOtherLink;
     private TextBox editorOtherLinkLabel;
-        
+
     // Remove any link associated to this citation
     private CheckBox disableLibraryLinkCheckBox;
     private HTML libraryLink;
@@ -191,33 +194,42 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		"CitationEditor.document.description"));
 	setViewerDesc(htmlViewerDesc);
 
-	HTML htmlViewerName = new HTML();
-	htmlViewerName.setStylePrimaryName("name");
+	HTML htmlViewerType =
+		new HTML((getView().getDocType() == null) ? "" : getView()
+			.getCoMessage(
+				RESS_TYPE_MESSAGE_PREFIX
+					+ getView().getDocType()));
+	htmlViewerType.setStylePrimaryName("type");
+	setViewerType(htmlViewerType);
+
+	HorizontalPanel hzPanel = new HorizontalPanel();
+	hzPanel.add(getViewerType());
+	hzPanel.add(getViewerLink());
 
 	setViewer(new VerticalPanel());
 	getViewer().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
-	getViewer().add(getViewerLink());
+	getViewer().add(hzPanel);
 
 	String isn =
-		getView().getModel().getResource().getProperty(
-			COPropertiesType.IDENTIFIER,
-			COPropertiesType.IDENTIFIER_TYPE_ISN);
+		getView()
+			.getModel()
+			.getResource()
+			.getProperty(COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_ISN);
 	if (isn != null && !isn.trim().equals("")) {
 	    HTML isbn_issnLabel;
 	    String type =
-		    getView().getModel().getResource().getProperty(
-			    COPropertiesType.RESOURCE_TYPE);
+		    getView().getModel().getResource()
+			    .getProperty(COPropertiesType.RESOURCE_TYPE);
 	    if (type.equals(CitationSchema.TYPE_BOOK)
 		    || type.equals(CitationSchema.TYPE_REPORT))
 		isbn_issnLabel =
-			new HTML(
-				getUiMessage("ResProxCitationView.isbn.label")
-					+ ":" + isn);
+			new HTML(getUiMessage("ResProxCitationView.isbn.label")
+				+ ":" + isn);
 	    else
 		isbn_issnLabel =
-			new HTML(
-				getUiMessage("ResProxCitationView.issn.label")
-					+ ":" + isn);
+			new HTML(getUiMessage("ResProxCitationView.issn.label")
+				+ ":" + isn);
 	    getViewer().add(isbn_issnLabel);
 	}
 
@@ -230,12 +242,13 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	    HTML h = new HTML();
 	    h.setStylePrimaryName("Osyl-ResProxCitationView-libraryImage");
 	    libLinkPanel.add(h);
-	    libLinkPanel
-		    .add(new HTML(
+	    HTML link =
+		    new HTML(
 			    getView()
 				    .generateHTMLLink(
 					    getView().getCitationLibraryLink(),
-					    getUiMessage("ResProxCitationView.libraryLink.available"))));
+					    getUiMessage("ResProxCitationView.libraryLink.available")));
+	    libLinkPanel.add(link);
 	    getViewer().add(libLinkPanel);
 	}
 
@@ -246,13 +259,14 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	    HTML h = new HTML();
 	    h.setStylePrimaryName("Osyl-ResProxCitationView-bookstoreImage");
 	    libLinkPanel.add(h);
-	    libLinkPanel
-		    .add(new HTML(
+	    HTML link =
+		    new HTML(
 			    getView()
 				    .generateHTMLLink(
 					    getView()
 						    .getCitationBookstoreLink(),
-					    getUiMessage("ResProxCitationView.bookstoreLink.available"))));
+					    getUiMessage("ResProxCitationView.bookstoreLink.available")));
+	    libLinkPanel.add(link);
 	    getViewer().add(libLinkPanel);
 	}
 
@@ -264,18 +278,21 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	    h.setStylePrimaryName("Osyl-ResProxCitationView-otherImage");
 	    libLinkPanel.add(h);
 	    String urlLabel = getView().getCitationOtherLinkLabel();
-	    
-	    libLinkPanel.add(new HTML(getView().generateHTMLLink(
-		    getView().getCitationOtherLink(),
-		    urlLabel != null &&
-		    !urlLabel.equals("") ?
-			    getView().getCitationOtherLinkLabel() :
-			    getUiMessage("ResProxCitationView.otherLink.available"))));
+	    HTML link =
+		    new HTML(
+			    getView()
+				    .generateHTMLLink(
+					    getView().getCitationOtherLink(),
+					    urlLabel != null
+						    && !urlLabel.equals("") ? getView()
+						    .getCitationOtherLinkLabel()
+						    : getUiMessage("ResProxCitationView.otherLink.available")));
+	    libLinkPanel.add(link);
 	    getViewer().add(libLinkPanel);
 	}
 
 	setViewerPanel(new FlexTable());
-	
+
 	getViewerPanel().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 
 	Image reqLevelIcon = getCurrentRequirementLevelIcon();
@@ -290,20 +307,20 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	if (getView().isContextImportant()) {
 	    getViewerPanel().addStyleName("Osyl-UnitView-Important");
 	    getViewerPanel().setWidget(0, 1,
-		new HTML(getView().getCoMessage("MetaInfo.important")));
+		    new HTML(getView().getCoMessage("MetaInfo.important")));
 	    getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 1,
-		"Osyl-UnitView-TextImportant");
+		    "Osyl-UnitView-TextImportant");
 	    column = 1;
 	}
-	
-	if(getView().isNewAccordingSelectedDate()){
+
+	if (getView().isNewAccordingSelectedDate()) {
 	    getViewerPanel().addStyleName("Osyl-newElement");
 	}
-	
-	getViewerPanel().setWidget(column, 1,getViewer());
+
+	getViewerPanel().setWidget(column, 1, getViewer());
 	getViewerPanel().getFlexCellFormatter().setStylePrimaryName(column, 1,
 		"Osyl-UnitView-Content");
-	
+
 	getMainPanel().add(getViewerPanel());
 
     }
@@ -427,7 +444,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	else
 	    return "";
     }
-    
+
     @Override
     public Widget getConfigurationWidget() {
 	return null;
@@ -472,8 +489,9 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 	metaInfoDiscPanel =
 		new DisclosurePanel(getOsylImageBundle().expand(),
-			getOsylImageBundle().collapse(), getView().getUiMessage(
-			"CitationEditor.document.details"));
+			getOsylImageBundle().collapse(),
+			getView().getUiMessage(
+				"CitationEditor.document.details"));
 	metaInfoDiscPanel.setAnimationEnabled(true);
 	metaInfoDiscPanel.setStylePrimaryName("DetailsPanel");
 	VerticalPanel metaInfoPanel = new VerticalPanel();
@@ -528,8 +546,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		// change the url type
 		if (selectedFile.getProperty(CitationSchema.TYPE)
 			.equalsIgnoreCase(CitationSchema.TYPE_UNKNOWN)) {
-		    Window
-			    .alert(getUiMessage("CitationEditor.ChangeUrl.InvalidChange"));
+		    Window.alert(getUiMessage("CitationEditor.ChangeUrl.InvalidChange"));
 		    disableLibraryLinkCheckBox.setValue(true);
 
 		} else {
@@ -583,36 +600,42 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	disableOtherLinkCheckBox.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
-		editorOtherLink
-			.setEnabled(!disableOtherLinkCheckBox.getValue());
-		editorOtherLinkLabel
-		.setEnabled(!disableOtherLinkCheckBox.getValue());
+		editorOtherLink.setEnabled(!disableOtherLinkCheckBox.getValue());
+		editorOtherLinkLabel.setEnabled(!disableOtherLinkCheckBox
+			.getValue());
 		saveButton.setEnabled(true);
 
 	    }
 	});
 	linksPanel.setWidget(2, 1, disableOtherLinkCheckBox);
 
-	linksPanel.setWidget(2, 2, new Label(getView().getUiMessage(
-	"CitationEditor.otherLink.nameLabel")));
+	linksPanel.setWidget(
+		2,
+		2,
+		new Label(getView().getUiMessage(
+			"CitationEditor.otherLink.nameLabel")));
 	editorOtherLinkLabel = new TextBox();
 	editorOtherLinkLabel
-	.setStylePrimaryName("Osyl-ResProxCitationView-linkTextbox");
+		.setStylePrimaryName("Osyl-ResProxCitationView-linkTextbox");
 	linksPanel.setWidget(2, 3, editorOtherLinkLabel);
 	editorOtherLinkLabel.setWidth("90%");
-	
-	linksPanel.setWidget(3, 2, new Label(getView().getUiMessage(
-	"CitationEditor.otherLink.urlLabel")));
+
+	linksPanel.setWidget(
+		3,
+		2,
+		new Label(getView().getUiMessage(
+			"CitationEditor.otherLink.urlLabel")));
 	editorOtherLink = new TextBox();
 	editorOtherLink
 		.setStylePrimaryName("Osyl-ResProxCitationView-linkTextbox");
 	linksPanel.setWidget(3, 3, editorOtherLink);
 	editorOtherLink.setWidth("90%");
 
-	//-----------------------------------------------------------------------
+	// -----------------------------------------------------------------------
 	typeResourceListBox = new ListBox();
-	linksPanel.setWidget(4, 2, new Label(getView().getUiMessage(
-		"DocumentEditor.document.type")));        
+	linksPanel.setWidget(4, 2,
+		new Label(getView()
+			.getUiMessage("DocumentEditor.document.type")));
 	linksPanel.setWidget(4, 3, typeResourceListBox);
 	typeResourceListBox.setWidth("80%");
 	
@@ -666,9 +689,12 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		    selectedFile.setProperty(COPropertiesType.IDENTIFIER,
 			    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
 			    editorOtherLink.getText());
-		    COProperty coProperty = selectedFile.getCOProperty(COPropertiesType.IDENTIFIER,
-			    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK);
-		    coProperty.addAttribute(COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL,
+		    COProperty coProperty =
+			    selectedFile.getCOProperty(
+				    COPropertiesType.IDENTIFIER,
+				    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK);
+		    coProperty.addAttribute(
+			    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL,
 			    editorOtherLinkLabel.getText());
 		}
 		//Type of resource for citation
@@ -676,6 +702,9 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			COPropertiesType.ASM_RESOURCE_TYPE, getTypeResourceSelected());
 		
 		selectedFile.setResourceType(getTypeResourceSelected());
+
+		selectedFile.setResourceType(typeResourceListBox.getItemText(
+			typeResourceListBox.getSelectedIndex()).toString());
 
 		OsylRemoteServiceLocator.getCitationRemoteService()
 			.createOrUpdateCitation(
@@ -741,7 +770,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			+ getView().getUiMessage("CitationEditor.context"));
 	label2.setStylePrimaryName("sectionLabel");
 	browserPanel.add(label2);
-	
+
 	updateResourceTypeInfo();
     }
 
@@ -762,7 +791,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	typeResourceListBox.clear();
 	for (String typeResource : typesResourceList) {
 	    typeResourceListBox.addItem(getView().getCoMessage(
-		    "Resource.Type." + typeResource), typeResource);
+		    RESS_TYPE_MESSAGE_PREFIX + typeResource));
 	}
 	String typeResCitation = getView().getResourceTypeFromModel();
 	if (typeResCitation != null) {
@@ -868,7 +897,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		citationPreviewLabel.getOffsetHeight();
 
 	if (browser.getSelectedAbstractBrowserItem() != null) {
-	    if (browser.getSelectedAbstractBrowserItem().isFolder() || browser.getSelectedAbstractBrowserItem() instanceof OsylCitationListItem) {
+	    if (browser.getSelectedAbstractBrowserItem().isFolder()
+		    || browser.getSelectedAbstractBrowserItem() instanceof OsylCitationListItem) {
 		citationPreviewLabel.setHTML("");
 		bookStoreLink.setText("");
 		bookStoreLink.setEnabled(false);
@@ -880,12 +910,12 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		disableBookstoreLinkCheckBox.setEnabled(false);
 		disableOtherLinkCheckBox.setEnabled(false);
 		disableOtherLinkCheckBox.setValue(false);
-		typeResourceListBox.setSelectedIndex(-1);		
-		saveButton.setEnabled(false);		
+		typeResourceListBox.setSelectedIndex(-1);
+		saveButton.setEnabled(false);
 	    } else {
 		disableLibraryLinkCheckBox.setEnabled(true);
 		disableBookstoreLinkCheckBox.setEnabled(true);
-		disableOtherLinkCheckBox.setEnabled(true);				
+		disableOtherLinkCheckBox.setEnabled(true);
 		OsylCitationItem selectedFile =
 			(OsylCitationItem) browser
 				.getSelectedAbstractBrowserItem();
@@ -912,18 +942,20 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK)) {
 		    disableOtherLinkCheckBox.setValue(false);
 		    editorOtherLinkLabel.setEnabled(true);
-		    
+
 		    String urlLabel = null;
-		    COProperty coProperty = selectedFile.getCOProperty(
-			    COPropertiesType.IDENTIFIER,
-			    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK);
-		    
-		    if(coProperty != null){
-			urlLabel = coProperty.getAttribute(
-			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL);
+		    COProperty coProperty =
+			    selectedFile.getCOProperty(
+				    COPropertiesType.IDENTIFIER,
+				    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK);
+
+		    if (coProperty != null) {
+			urlLabel =
+				coProperty
+					.getAttribute(COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL);
 		    }
-		    
-		    if(urlLabel == null || urlLabel.equals("")){
+
+		    if (urlLabel == null || urlLabel.equals("")) {
 			editorOtherLinkLabel.setText("");
 		    } else {
 			editorOtherLinkLabel.setText(urlLabel);
@@ -944,14 +976,14 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	}
 	if (!isFound) {
 	    citationPreviewLabel.setHTML("");
-	    typeResourceListBox.setSelectedIndex(0);	    
+	    typeResourceListBox.setSelectedIndex(0);
 	}
 	if (metaInfoDiscPanel.isOpen()) {
 	    OsylWindowPanel popup = getEditorPopup();
-	    popup.updateLayout(popup.getContentWidth(), popup
-		    .getContentHeight()
-		    - previousCitationPreviewLabelHeight
-		    + citationPreviewLabel.getOffsetHeight());
+	    popup.updateLayout(popup.getContentWidth(),
+		    popup.getContentHeight()
+			    - previousCitationPreviewLabelHeight
+			    + citationPreviewLabel.getOffsetHeight());
 	}
     }
 
@@ -986,9 +1018,9 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		(OsylCitationItem) browser.getSelectedAbstractBrowserItem();
 	return selectedFile.getProperty(key, type);
     }
-    
+
     public String getSelectedCitationPropertyAttr(String key, String type,
-	    String attrKey){
+	    String attrKey) {
 	OsylCitationItem selectedFile =
 		(OsylCitationItem) browser.getSelectedAbstractBrowserItem();
 	try {
@@ -1027,6 +1059,14 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		&& !"undefined".equalsIgnoreCase(identifier))
 	    return false;
 	return true;
+    }
+
+    public void setViewerType(HTML viewerType) {
+	this.viewerType = viewerType;
+    }
+
+    public HTML getViewerType() {
+	return viewerType;
     }
 
 }

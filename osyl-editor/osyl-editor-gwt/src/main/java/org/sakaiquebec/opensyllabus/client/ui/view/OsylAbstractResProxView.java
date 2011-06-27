@@ -275,5 +275,10 @@ public abstract class OsylAbstractResProxView extends OsylAbstractView {
     public void updateResourceMetaInfo() {
 	getModel().getResource().setAccess(getModel().getAccess());
     }
+    
+    public String getDocType() {
+	return getModel().getResource().getProperty(
+		COPropertiesType.ASM_RESOURCE_TYPE);
+    }
 
 }

@@ -43,6 +43,8 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
@@ -51,6 +53,8 @@ import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 import org.w3c.dom.Node;
 
 public class FOPHelper {
+
+    private static Log log = LogFactory.getLog(FOPHelper.class);
 
     public static File convertXml2Pdf(String xml, String xslt,
 	    String webappdir, String serverName, String siteId, String access)
@@ -90,7 +94,7 @@ public class FOPHelper {
 		    access = "";
 		}
 		transformer.setParameter("access", access);
-		
+
 		// Setup input for XSLT transformation
 		String escapeString = xml.replaceAll("&amp;", "&#38;");
 		escapeString = escapeString.replaceAll("\\s{2,}", " ");
@@ -117,7 +121,7 @@ public class FOPHelper {
 		out.close();
 	    }
 	} catch (Exception e) {
-	    e.printStackTrace(System.err);
+	    log.error("Could not create pdf version of CO", e);
 	    throw e;
 	}
 	return pdffile;
