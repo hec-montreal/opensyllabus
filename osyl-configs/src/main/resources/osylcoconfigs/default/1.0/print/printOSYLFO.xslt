@@ -314,46 +314,21 @@
 <!-- ========== asmUnit ================ -->
 <!-- =================================== -->
 <xsl:template match="asmUnit[@xsi:type='StaffUnit']">
-	<xsl:if test=".//asmContext[semanticTag[@type='HEC']='lecturers']/node()">
-		<xsl:call-template name="StaffUnitTitle">
-			<xsl:with-param name="label">lecturers</xsl:with-param>
-		</xsl:call-template>
-		<xsl:call-template name="Staff">
-			<xsl:with-param name="role">lecturers</xsl:with-param>
-		</xsl:call-template>
-	</xsl:if>
-	<xsl:if test=".//asmContext[semanticTag[@type='HEC']='coordinators']/node()">
-		<xsl:call-template name="StaffUnitSubtitle">
-			<xsl:with-param name="label">coordinators</xsl:with-param>
-		</xsl:call-template>
-		<xsl:call-template name="Staff">
-			<xsl:with-param name="role">coordinators</xsl:with-param>
-		</xsl:call-template>
-	</xsl:if>
-	<xsl:if test=".//asmContext[semanticTag[@type='HEC']='secretaries']/node()">
-		<xsl:call-template name="StaffUnitSubtitle">
-			<xsl:with-param name="label">secretaries</xsl:with-param>
-		</xsl:call-template>
-		<xsl:call-template name="Staff">
-			<xsl:with-param name="role">secretaries</xsl:with-param>
-		</xsl:call-template>
-	</xsl:if>
-	<xsl:if test=".//asmContext[semanticTag[@type='HEC']='teachingassistants']/node()">
-		<xsl:call-template name="StaffUnitSubtitle">
-			<xsl:with-param name="label">teachingassistants</xsl:with-param>
-		</xsl:call-template>
-		<xsl:call-template name="Staff">
-			<xsl:with-param name="role">teachingassistants</xsl:with-param>
-		</xsl:call-template>
-	</xsl:if>
-	<xsl:if test=".//asmContext[semanticTag[@type='HEC']='speakers']/node()">
-		<xsl:call-template name="StaffUnitSubtitle">
-			<xsl:with-param name="label">speakers</xsl:with-param>
-		</xsl:call-template>
-		<xsl:call-template name="Staff">
-			<xsl:with-param name="role">speakers</xsl:with-param>
-		</xsl:call-template>
-	</xsl:if>
+	<xsl:call-template name="Staff">
+		<xsl:with-param name="role">lecturers</xsl:with-param>
+	</xsl:call-template>
+	<xsl:call-template name="Staff">
+		<xsl:with-param name="role">coordinators</xsl:with-param>
+	</xsl:call-template>
+	<xsl:call-template name="Staff">
+		<xsl:with-param name="role">secretaries</xsl:with-param>
+	</xsl:call-template>
+	<xsl:call-template name="Staff">
+		<xsl:with-param name="role">teachingassistants</xsl:with-param>
+	</xsl:call-template>
+	<xsl:call-template name="Staff">
+		<xsl:with-param name="role">speakers</xsl:with-param>
+	</xsl:call-template>
 </xsl:template>
 
 <xsl:template match="asmUnit[@xsi:type='OverviewUnit']">
@@ -663,25 +638,30 @@
 
 <xsl:template name="Staff">
   <xsl:param name="role"/>
-	<xsl:variable name="threshold" select="(count(.//asmContext[semanticTag[@type='HEC']=$role]) + 1) div 2"/>
-	<fo:table width="100%" table-layout="fixed" space-before="5pt">
-		<fo:table-column column-width="50%" column-number="1" />
-		<fo:table-column column-width="50%" column-number="2" />
-		<fo:table-body >
-			<fo:table-row>
-				<fo:table-cell padding="5px">
-					<fo:block>
-					<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']=$role][(position() &lt;= $threshold)]"/>
-					</fo:block>
-				</fo:table-cell>
-				<fo:table-cell padding="5px">
-					<fo:block>
-					<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']=$role][(position() &gt; $threshold)]"/>
-					</fo:block>
-				</fo:table-cell>
-			</fo:table-row>
-		</fo:table-body>
-	</fo:table>
+  	<xsl:if test=".//asmContext[semanticTag[@type='HEC']=$role]/node()">
+  		<xsl:call-template name="StaffUnitTitle">
+			<xsl:with-param name="label"><xsl:value-of select=".//asmContext[semanticTag[@type='HEC']=$role][1]/semanticTag/@userDefLabel"/></xsl:with-param>
+		</xsl:call-template>
+		<xsl:variable name="threshold" select="(count(.//asmContext[semanticTag[@type='HEC']=$role]) + 1) div 2"/>
+		<fo:table width="100%" table-layout="fixed" space-before="5pt">
+			<fo:table-column column-width="50%" column-number="1" />
+			<fo:table-column column-width="50%" column-number="2" />
+			<fo:table-body >
+				<fo:table-row>
+					<fo:table-cell padding="5px">
+						<fo:block>
+						<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']=$role][(position() &lt;= $threshold)]"/>
+						</fo:block>
+					</fo:table-cell>
+					<fo:table-cell padding="5px">
+						<fo:block>
+						<xsl:apply-templates select=".//asmContext[semanticTag[@type='HEC']=$role][(position() &gt; $threshold)]"/>
+						</fo:block>
+					</fo:table-cell>
+				</fo:table-row>
+			</fo:table-body>
+		</fo:table>
+	</xsl:if>
 </xsl:template>
 
 <xsl:template match="asmContext[@xsi:type='PeopleContext']">
@@ -808,11 +788,14 @@
 
 <xsl:template match="asmResource[@xsi:type='URL']">
 	<fo:block space-after="10px">
-		<fo:block font-size="10pt" color="blue" text-decoration="underline">
-			<fo:basic-link>
-					<xsl:attribute name="external-destination"><xsl:value-of select="identifier"/></xsl:attribute>
-				<xsl:value-of select="../label"/>
-			</fo:basic-link>
+		<fo:block font-size="10pt">
+			<fo:inline color="gray" font-weight="bold"><xsl:value-of select="asmResourceType"/><xsl:text> </xsl:text></fo:inline>
+			<fo:inline color="blue" text-decoration="underline">
+				<fo:basic-link>
+						<xsl:attribute name="external-destination"><xsl:value-of select="identifier"/></xsl:attribute>
+					<xsl:value-of select="../label"/>
+				</fo:basic-link>
+			</fo:inline>
 		</fo:block>
 		<fo:block font-size="10pt" color="gray">
 			(<xsl:value-of select="identifier"/>)
@@ -856,6 +839,7 @@
 
 	<fo:block space-after="10px">
 		<fo:block font-size="10pt">
+			<fo:inline color="gray" font-weight="bold"><xsl:value-of select="asmResourceType"/><xsl:text> </xsl:text></fo:inline>
 			<fo:inline color="blue" text-decoration="underline">
 				<fo:basic-link>
 						<xsl:attribute name="external-destination"><xsl:value-of select="$serverUrl"/>/sdata/c<xsl:value-of select="identifier"/>?child=<xsl:value-of select="$siteId"/></xsl:attribute>
@@ -877,6 +861,7 @@
 <xsl:template match="asmResource[@xsi:type='BiblioResource']">
 	<fo:block space-after="10px">
 		<fo:block font-size="10pt">
+			<fo:inline color="gray" font-weight="bold"><xsl:value-of select="asmResourceType"/><xsl:text> </xsl:text></fo:inline>
 			<xsl:choose>
 				<xsl:when test="resourceType='article' or resourceType='proceed'">
 					<fo:inline><xsl:value-of select="author"/></fo:inline>
@@ -1034,9 +1019,7 @@
 <xsl:template name="StaffUnitTitle">
   <xsl:param name="label"/>
 	<fo:block font-size="12pt" font-weight="bold" margin-left="0px" padding-left="5px" padding-top="3px" padding-bottom="2px" space-before="15pt" space-after="5pt" background-color="lightgrey">
-		<xsl:call-template name="TextByLang">
-			<xsl:with-param name="label"><xsl:value-of select="$label"/></xsl:with-param>
-		</xsl:call-template>
+		<xsl:value-of select="$label"/>
 	</fo:block>
 </xsl:template>
 
@@ -1057,81 +1040,6 @@
   <xsl:param name="label"/>
 
 	<xsl:choose>
-		<xsl:when test="$label = 'lecturers'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Enseignant(s)</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Lecturer(s)</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Profesor</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'coordinators'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Coordonnateur</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Coordinator</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Coordinador</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'secretaries'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Secrétaire(s)</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Secretary(ies)</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Secretaria(s)</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'teachingassistants'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Stagiaire(s) d'enseignement</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Teaching Assistant(s)</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Profesor(es) ayudant(es)</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
-		<xsl:when test="$label = 'speakers'">
-			<xsl:choose>
-				<xsl:when test="$lang = 'FR'">
-					<xsl:text>Conférencier(s)</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Speaker(s)</xsl:text>
-				</xsl:when>
-				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Altavoces</xsl:text>
-				</xsl:when>
-				<xsl:otherwise>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:when>
 		<xsl:when test="$label = 'library_link_text'">
 			<xsl:choose>
 				<xsl:when test="$lang = 'FR'">
