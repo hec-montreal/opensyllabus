@@ -119,8 +119,12 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     private int originalEditorDescHeight;
 
     private DisclosurePanel metaInfoDiscPanel;
-    
+
+    //List of type of resources    
     private ListBox typeResourceListBox;
+    
+    //Type of resource for hyperlink
+    private String typeResource;
 
     private KeyPressHandler kph = new KeyPressHandler() {
 
@@ -416,10 +420,10 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	}
     } // enterView
 
-    public String getTypeResource() {
+    public String getTypeResourceSelected() {
 	if (typeResourceListBox.getSelectedIndex() != -1)
 	    return typeResourceListBox
-		    .getItemText(typeResourceListBox.getSelectedIndex());
+		    .getValue(typeResourceListBox.getSelectedIndex());
 	else
 	    return "";
     }
@@ -611,7 +615,16 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		"DocumentEditor.document.type")));        
 	linksPanel.setWidget(4, 3, typeResourceListBox);
 	typeResourceListBox.setWidth("80%");
+	
+	typeResourceListBox.addChangeHandler(new ChangeHandler() {
+
+	    public void onChange(ChangeEvent event) {
+		setTypeResource(typeResourceListBox.getValue(typeResourceListBox
+			.getSelectedIndex()));
+	    }
+	});
 	//-----------------------------------------------------------------------
+
 	AbstractImagePrototype imgSaveButton = 
 	    AbstractImagePrototype.create(getOsylImageBundle().save());
 	saveButton =
@@ -658,9 +671,11 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		    coProperty.addAttribute(COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL,
 			    editorOtherLinkLabel.getText());
 		}
+		//Type of resource for citation
+		selectedFile.setProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+			COPropertiesType.ASM_RESOURCE_TYPE, getTypeResourceSelected());
 		
-		selectedFile.setResourceType(typeResourceListBox.getItemText(typeResourceListBox
-				.getSelectedIndex()).toString());
+		selectedFile.setResourceType(getTypeResourceSelected());
 
 		OsylRemoteServiceLocator.getCitationRemoteService()
 			.createOrUpdateCitation(
@@ -675,7 +690,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 								+ ": "
 								+ getView()
 									.getUiMessage(
-										"CitationEditor.document.PropUpdateError"));
+					
+									"CitationEditor.document.PropUpdateError"));
 					OsylEditorEntryPoint
 						.showWidgetOnTop(failure);
 				    }
@@ -726,17 +742,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	label2.setStylePrimaryName("sectionLabel");
 	browserPanel.add(label2);
 	
-	typeResourceListBox.addChangeHandler(new ChangeHandler() {
-
-	    public void onChange(ChangeEvent event) {
-		if (typeResourceListBox.getSelectedIndex() > 0) {
-		    saveButton.setEnabled(true);
-		} else {
-		    saveButton.setEnabled(false);
-		}
-	    }
-	});
-
 	updateResourceTypeInfo();
     }
 
@@ -747,28 +752,30 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
      * set to licenceListReady=true
      */
     private void updateResourceTypeInfo() {
-	List<String> typesResourceList = new ArrayList<String>();
-	List<String> typesResList = new ArrayList<String>();
-	typesResourceList = OsylController.getInstance().getOsylConfig().getResourceTypeList();
-
-	for (String typeResKey : typesResourceList) {
-	    typesResList.add(getView().getCoMessage("Resource.Type." + typeResKey));
-	}
-
-	((OsylCitationBrowser) browser).setTypesResourceList(typesResList);
-
-	buildTypeResourceListBox(typesResList);	
+	List<String> typesResourceList =
+		OsylController.getInstance().getOsylConfig()
+			.getResourceTypeList();
+	buildTypeResourceListBox(typesResourceList);
     }
 
     private void buildTypeResourceListBox(List<String> typesResourceList) {
 	typeResourceListBox.clear();
 	for (String typeResource : typesResourceList) {
-	    //typeResourceListBox.addItem(getView().getCoMessage("Resource.Type." + typeResource));
-	    typeResourceListBox.addItem(typeResource);
+	    typeResourceListBox.addItem(getView().getCoMessage(
+		    "Resource.Type." + typeResource), typeResource);
 	}
-	refreshBrowsingComponents();
+	String typeResCitation = getView().getResourceTypeFromModel();
+	if (typeResCitation != null) {
+	    for (int i = 0; i < typeResourceListBox.getItemCount(); i++) {
+        	String item = typeResourceListBox.getValue(i);
+        	if (item.equals(typeResCitation)) {
+        	    typeResourceListBox.setItemSelected(i, true);
+        	}
+	    }
+	}
+	//refreshBrowsingComponents();
     }
-    
+
     protected String getResourcesPath() {
 	if (getController().isInHostedMode()) {
 	    return "";
@@ -890,14 +897,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 				COPropertiesType.IDENTIFIER_TYPE_LIBRARY),
 			getUiMessage("ResProxCitationView.link.label")));
 
-		for (int i = 0; i < typeResourceListBox.getItemCount(); i++) {
-		    String item = typeResourceListBox.getValue(i);
-		    if (item.equals(getView().getResourceTypeFromModel())) {
-			typeResourceListBox.setItemSelected(i, true);
-			isFound = true;
-		    }
-		}
-
 		if (hasIdentifierType(selectedFile,
 			COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE)) {
 		    disableBookstoreLinkCheckBox.setValue(false);
@@ -960,6 +959,14 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	return citationPreviewLabel.getHTML();
     }
 
+    public void setTypeResource(String typeResource) {
+        this.typeResource = typeResource;
+    }
+    
+    public String getTypeResource() {
+	return typeResource;
+    }
+    
     private String getEditBoxTitle() {
 	if (getView().isDocumentDefined()) {
 	    return getView().getUiMessage("CitationEditor.title.edit");
