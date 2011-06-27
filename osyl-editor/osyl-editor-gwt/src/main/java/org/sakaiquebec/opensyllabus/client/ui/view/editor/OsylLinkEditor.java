@@ -67,7 +67,6 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     private HTML viewerLink;
     private HTML viewerURI;
     private HTML viewerDesc;
-    private HTML viewerTypeResource;
 
     // Contains the viewer and info icons for the requirement level
     private FlexTable viewerPanel;
@@ -263,14 +262,6 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 
     private HTML getViewerDesc() {
 	return this.viewerDesc;
-    }
-
-    private void setViewerTypeResource(HTML html) {
-	this.viewerTypeResource = html;
-    }
-
-    private HTML getViewerTypeResource() {
-	return this.viewerTypeResource;
     }
 
     private void setViewerPanel(FlexTable viewerPanel) {
