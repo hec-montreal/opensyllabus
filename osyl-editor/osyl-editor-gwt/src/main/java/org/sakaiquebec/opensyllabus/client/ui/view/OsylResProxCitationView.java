@@ -81,10 +81,19 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());
 
-	//Document resource type
-	getModel().getResource().addProperty(COPropertiesType.ASM_RESOURCE_TYPE,
-		getEditor().getTypeResource());
+	//Citation resource type
+	//getModel().getResource().addProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+	//	getEditor().getTypeResourceSelected());
 
+
+	setModelPropertyWithEditorProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+		getEditor().getSelectedCitationProperty(CitationSchema.CITATION_RESOURCE_TYPE));
+
+	
+	//setProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+	//	    COPropertiesType.ASM_RESOURCE_TYPE, getEditor().getSelectedCitationProperty(
+	//			    CitationSchema.CITATION_RESOURCE_TYPE));
+	
 	if (uri != null) {
 	    setProperty(COPropertiesType.IDENTIFIER,
 		    COPropertiesType.IDENTIFIER_TYPE_URI, uri
