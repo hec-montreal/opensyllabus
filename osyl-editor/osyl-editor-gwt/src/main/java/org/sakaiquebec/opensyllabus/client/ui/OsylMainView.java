@@ -435,7 +435,7 @@ public class OsylMainView extends OsylViewableComposite implements
     /**
      * @param access the new value of access.
      */
-    protected void setAccess(String access) {
+    public void setAccess(String access) {
         this.access = access;
     }
 }

@@ -184,8 +184,10 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	// itself (that is we do not specify an element ID):
 	rootPanel = RootPanel.get();
 	osylController.setCOSerialized(getSerializedCourseOutline());
+	
 	// We create our main view
 	editorMainView = new OsylMainView(getModel(), osylController);
+	editorMainView.setAccess(osylController.getCOSerialized().getAccess());
 	editorMainView.initView();
 
 	this.setView(editorMainView);
