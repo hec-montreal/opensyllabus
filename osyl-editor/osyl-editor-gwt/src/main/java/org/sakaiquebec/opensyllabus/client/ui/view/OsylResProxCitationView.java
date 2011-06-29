@@ -81,19 +81,9 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());
 
-	//Citation resource type
-	//getModel().getResource().addProperty(COPropertiesType.ASM_RESOURCE_TYPE,
-	//	getEditor().getTypeResourceSelected());
-
-
 	setModelPropertyWithEditorProperty(COPropertiesType.ASM_RESOURCE_TYPE,
 		getEditor().getSelectedCitationProperty(CitationSchema.CITATION_RESOURCE_TYPE));
 
-	
-	//setProperty(COPropertiesType.ASM_RESOURCE_TYPE,
-	//	    COPropertiesType.ASM_RESOURCE_TYPE, getEditor().getSelectedCitationProperty(
-	//			    CitationSchema.CITATION_RESOURCE_TYPE));
-	
 	if (uri != null) {
 	    setProperty(COPropertiesType.IDENTIFIER,
 		    COPropertiesType.IDENTIFIER_TYPE_URI, uri
@@ -178,6 +168,9 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 			.getSelectedCitationProperty(
 				COPropertiesType.IDENTIFIER,
 				COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE));
+
+	setModelPropertyWithEditorProperty(CitationSchema.CITATION_RESOURCE_TYPE, getEditor()
+		.getSelectedCitationProperty(CitationSchema.CITATION_RESOURCE_TYPE));
 
 	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
 		COPropertiesType.IDENTIFIER_TYPE_OTHERLINK, getEditor()
@@ -282,6 +275,17 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 
     }
 
+    public String getCitationResourceType() {
+	String resourceType =
+		getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
+
+	if (resourceType == null || resourceType.equals(""))
+	    return null;
+	else
+	    return resourceType;
+
+    }
+    
     public String getCitationOtherLink() {
 	String url =
 		getProperty(COPropertiesType.IDENTIFIER,
