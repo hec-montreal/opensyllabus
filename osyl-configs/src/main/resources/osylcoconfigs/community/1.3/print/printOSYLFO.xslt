@@ -875,8 +875,8 @@
 					<fo:inline><xsl:value-of select="author"/></fo:inline>
 					<fo:inline>(<xsl:value-of select="year"/>)</fo:inline>
 					<fo:inline font-style="italic">. <xsl:value-of select="title"/></fo:inline>
-					<fo:inline>, <xsl:value-of select="publisher"/></fo:inline>
 					<fo:inline>, <xsl:value-of select="publicationLocation"/></fo:inline>
+					<fo:inline>, <xsl:value-of select="publisher"/></fo:inline>
 					<fo:inline>.</fo:inline>
 					<xsl:if test="identifier[@type='isn']">
 						<fo:block>
