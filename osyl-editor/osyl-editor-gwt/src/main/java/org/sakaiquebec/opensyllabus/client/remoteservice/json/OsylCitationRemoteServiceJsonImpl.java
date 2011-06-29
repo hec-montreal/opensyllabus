@@ -58,6 +58,7 @@ public class OsylCitationRemoteServiceJsonImpl extends
     private static final String PREFERRED_URL = "preferredUrl";
     private static final String PREFERRED_URL_LABEL = "sakai:url_label";
     private static final String BOOKSTORE_URL = "bookstoreUrl";
+    private static final String RESOURCE_TYPE = "asmResourceType";    
     private static final String NO_URL = "noUrl";
     private static final String URL="url";
 
@@ -129,17 +130,15 @@ public class OsylCitationRemoteServiceJsonImpl extends
 	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
 		.getProperty(CitationSchema.TYPE)));
 
-	panel
-		.add(FormHelper.createHiddenField("cipkeys",
+	panel.add(FormHelper.createHiddenField("cipkeys",
 			CitationSchema.TITLE));
 	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
 		.getTitle()));
-
-	panel
-		.add(FormHelper.createHiddenField("cipkeys",
-			CitationSchema.TITLE));
-	panel.add(FormHelper.createHiddenField("cipvalues", p_citation
-		.getTitle()));
+	
+	//Type of resource
+	panel.add(FormHelper.createHiddenField("cipkeys",
+			CitationSchema.CITATION_RESOURCE_TYPE));
+	panel.add(FormHelper.createHiddenField("cipvalues", p_citation.getResourceType()));
 
 	panel.add(FormHelper.createHiddenField("cipkeys",
 		CitationSchema.CREATOR));
@@ -226,7 +225,16 @@ public class OsylCitationRemoteServiceJsonImpl extends
 		    .getProperty(COPropertiesType.IDENTIFIER,
 			    COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE)));
 	}
-	
+/*
+	if (p_citation.getProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+		COPropertiesType.ASM_RESOURCE_TYPE) != null) {
+	    panel.add(FormHelper.createHiddenField("cipkeys",
+		    RESOURCE_TYPE));
+	    panel.add(FormHelper.createHiddenField("cipvalues", p_citation
+		    .getProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+			    COPropertiesType.ASM_RESOURCE_TYPE)));
+	}
+*/	
 	if (p_citation.getProperty(COPropertiesType.IDENTIFIER,
 		COPropertiesType.IDENTIFIER_TYPE_NOLINK) != null) {
 	    panel.add(FormHelper.createHiddenField("cipkeys", NO_URL));
