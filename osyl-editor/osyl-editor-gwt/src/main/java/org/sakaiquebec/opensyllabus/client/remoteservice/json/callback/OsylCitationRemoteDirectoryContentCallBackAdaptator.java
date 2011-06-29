@@ -39,6 +39,7 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
     private static final String PREFERRED_URL_LABEL = "sakai:url_label";
     private static final String PREFERRED_URL = "preferredUrl";
     private static final String BOOKSTORE_URL = "bookstoreUrl";
+    private static final String RESOURCE_TYPE = "asmResourceType";
     private static final String NO_URL = "noUrl";
     private static final String URL="url";
 
@@ -101,6 +102,11 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 			(JSONString) properties
 				.get(CitationSchema.SOURCE_TITLE);
 
+		//Type of resource
+		JSONString resourceType =
+			(JSONString) properties
+				.get(CitationSchema.CITATION_RESOURCE_TYPE);
+		
 		JSONString identifierTypeUrlLabel =
 		    (JSONString) properties.get(PREFERRED_URL_LABEL);
 		
@@ -109,6 +115,9 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 		JSONString identifierTypeLibrary =
 			(JSONString) properties
 				.get(URL);
+		JSONString identifierTypeResource =
+			(JSONString) properties.get(RESOURCE_TYPE);
+		
 		JSONString identifierTypeBookstore =
 			(JSONString) properties.get(BOOKSTORE_URL);
 
@@ -182,6 +191,11 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 			.stringValue());
 		csi.setProperty(CitationSchema.DOI, doi == null ? "" : doi
 			.stringValue());
+		
+		//Type of resource
+		csi.setProperty(CitationSchema.CITATION_RESOURCE_TYPE,
+			resourceType == null ? "" : resourceType.stringValue());
+		
 		csi.setProperty(CitationSchema.PUBLICATION_LOCATION,
 			publicationLocation == null ? "" : publicationLocation
 				.stringValue());
@@ -208,6 +222,16 @@ public class OsylCitationRemoteDirectoryContentCallBackAdaptator extends
 			identifierTypeLibrary == null ? ""
 				: identifierTypeLibrary.stringValue());
 
+		csi.setProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.RESOURCE_TYPE,
+			identifierTypeResource == null ? ""
+				: identifierTypeResource.stringValue());
+/*
+		csi.setProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+			COPropertiesType.ASM_RESOURCE_TYPE,
+			identifierTypeResource == null ? ""
+				: identifierTypeResource.stringValue());
+*/
 		csi.setProperty(COPropertiesType.IDENTIFIER,
 			COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE,
 			identifierTypeBookstore == null ? ""
