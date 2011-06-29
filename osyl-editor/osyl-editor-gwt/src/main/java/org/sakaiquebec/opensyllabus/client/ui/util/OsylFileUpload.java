@@ -106,8 +106,7 @@ public class OsylFileUpload extends WindowPanel implements
      * @param osylController
      */
     public OsylFileUpload(String title, OsylController osylController,
-	    String currentDirectory, List<String> rightsList,
-	    List<String> typesResourceList) {
+	    String currentDirectory, List<String> rightsList, List<String> typesResourceList) {
 	super(title);
 	// set some properties for WindowPanel
 	setResizable(false);
@@ -153,7 +152,7 @@ public class OsylFileUpload extends WindowPanel implements
 	table.setWidget(row, 0, upload);
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
 
-	// -----------------------------------------------------------------------
+	//-----------------------------------------------------------------------
 	row++;
 	final Label rightsLabel =
 		new Label(uiMessages.getMessage("fileUpload.rights"));
@@ -182,8 +181,8 @@ public class OsylFileUpload extends WindowPanel implements
 	table.setWidget(row, 0, rightsListBox);
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
 
-	// -----------------------------------------------------------------------
-	row++;
+	//-----------------------------------------------------------------------
+	row++;	
 	final Label typeResourceLabel =
 		new Label(uiMessages.getMessage("fileUpload.typesResource"));
 	table.setWidget(row, 0, typeResourceLabel);
@@ -191,29 +190,27 @@ public class OsylFileUpload extends WindowPanel implements
 	typeResourceLabel.setStylePrimaryName("Osyl-FileUpload-information");
 	((FlexCellFormatter) table.getCellFormatter()).setVerticalAlignment(
 		row, 0, HasVerticalAlignment.ALIGN_BOTTOM);
-
+	
 	// Add a "type Resources" listbox
 	typesResourceListBox = new ListBox();
+	typesResourceListBox.addItem(uiMessages.getMessage(
+	"DocumentEditor.documentType.choose"));	
 	for (String typeDocument : this.typesResourceList) {
-	    typesResourceListBox
-		    .addItem(
-			    coMessages
-				    .getMessage(OsylAbstractResProxEditor.RESS_TYPE_MESSAGE_PREFIX
-					    + typeDocument), typeDocument);
+	    typesResourceListBox.addItem(coMessages.getMessage(
+		    "Resource.Type." + typeDocument), typeDocument);
 	}
 	typesResourceListBox.setItemSelected(0, true);
 	typesResourceListBox.addChangeHandler(new ChangeHandler() {
-
 	    public void onChange(ChangeEvent event) {
-		setTypeResource(typesResourceListBox
-			.getValue(typesResourceListBox.getSelectedIndex()));
+		setTypeResource(typesResourceListBox.getItemText(typesResourceListBox
+			.getSelectedIndex()));
 	    }
 	});
 
 	row++;
 	table.setWidget(row, 0, typesResourceListBox);
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
-	// -----------------------------------------------------------------------
+	//-----------------------------------------------------------------------
 	// Add a 'save' button.
 	AbstractImagePrototype imgSaveButton =
 		AbstractImagePrototype.create(osylImageBundle.save());
@@ -272,7 +269,7 @@ public class OsylFileUpload extends WindowPanel implements
 		    message =
 			    uiMessages
 				    .getMessage("fileUpload.chooseRightsStatus");
-		} else if (typesResourceListBox.getSelectedIndex() < 0) {
+		} else if (typesResourceListBox.getSelectedIndex() == 0) {
 		    message =
 			    uiMessages
 				    .getMessage("fileUpload.chooseTypesResourceStatus");
