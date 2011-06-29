@@ -202,7 +202,7 @@ public class OsylFileUpload extends WindowPanel implements
 	typesResourceListBox.setItemSelected(0, true);
 	typesResourceListBox.addChangeHandler(new ChangeHandler() {
 	    public void onChange(ChangeEvent event) {
-		setTypeResource(typesResourceListBox.getItemText(typesResourceListBox
+		setTypeResource(typesResourceListBox.getValue(typesResourceListBox
 			.getSelectedIndex()));
 	    }
 	});
