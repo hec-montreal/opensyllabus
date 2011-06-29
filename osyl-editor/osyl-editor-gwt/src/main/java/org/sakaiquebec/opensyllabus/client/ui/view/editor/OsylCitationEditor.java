@@ -637,7 +637,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		new Label(getView()
 			.getUiMessage("DocumentEditor.document.type")));
 	linksPanel.setWidget(4, 3, typeResourceListBox);
-	typeResourceListBox.setWidth("80%");
+	typeResourceListBox.setWidth("90%");
 	
 	typeResourceListBox.addChangeHandler(new ChangeHandler() {
 
@@ -697,14 +697,19 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL,
 			    editorOtherLinkLabel.getText());
 		}
-		//Type of resource for citation
+		//Type of resource for citation	
+		/*
 		selectedFile.setProperty(COPropertiesType.ASM_RESOURCE_TYPE,
-			COPropertiesType.ASM_RESOURCE_TYPE, getTypeResourceSelected());
-		
-		selectedFile.setResourceType(getTypeResourceSelected());
+			    COPropertiesType.ASM_RESOURCE_TYPE,
+			    typeResourceListBox.getValue(typeResourceListBox
+					.getSelectedIndex()));
+		*/
+		selectedFile.setProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+		typeResourceListBox.getValue(typeResourceListBox
+			.getSelectedIndex()));
 
-		selectedFile.setResourceType(typeResourceListBox.getItemText(
-			typeResourceListBox.getSelectedIndex()).toString());
+		selectedFile.setResourceType(typeResourceListBox.getValue(typeResourceListBox
+			.getSelectedIndex()));
 
 		OsylRemoteServiceLocator.getCitationRemoteService()
 			.createOrUpdateCitation(
@@ -789,11 +794,17 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
     private void buildTypeResourceListBox(List<String> typesResourceList) {
 	typeResourceListBox.clear();
+	typeResourceListBox.addItem(getView().getUiMessage(
+		"DocumentEditor.documentType.choose"));
 	for (String typeResource : typesResourceList) {
 	    typeResourceListBox.addItem(getView().getCoMessage(
-		    RESS_TYPE_MESSAGE_PREFIX + typeResource));
+		    "Resource.Type." + typeResource), typeResource);
 	}
-	String typeResCitation = getView().getResourceTypeFromModel();
+	String typeResCitation = getTypeResource();
+	if (getTypeResource() == null || getTypeResource().equals("")) {
+	    typeResCitation = getView().getResourceTypeFromModel();
+	}
+
 	if (typeResCitation != null) {
 	    for (int i = 0; i < typeResourceListBox.getItemCount(); i++) {
         	String item = typeResourceListBox.getValue(i);
@@ -938,6 +949,18 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		    bookStoreLink.setText("");
 		    bookStoreLink.setEnabled(false);
 		}
+		//Type of resource
+		String resourceTypeCitation = selectedFile.getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
+		setTypeResource(resourceTypeCitation);
+
+		for (int i = 0; i < typeResourceListBox.getItemCount(); i++) {
+		    String item = typeResourceListBox.getValue(i);
+		    if (item.equals(resourceTypeCitation)) {
+	        	typeResourceListBox.setItemSelected(i, true);
+		    }
+		}
+		//--------------------------------------------------------------------
+
 		if (hasIdentifierType(selectedFile,
 			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK)) {
 		    disableOtherLinkCheckBox.setValue(false);
