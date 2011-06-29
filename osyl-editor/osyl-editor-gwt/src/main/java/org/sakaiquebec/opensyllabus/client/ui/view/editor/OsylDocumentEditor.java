@@ -557,7 +557,6 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	rightsAndSavePanel.add(new Label(getView().getUiMessage(
 		"DocumentEditor.document.type")));
 	typeResourceListBox = new ListBox();
-
 	rightsAndSavePanel.add(typeResourceListBox);
 	typeResourceListBox.setWidth("50%");
 
@@ -597,7 +596,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		    selectedFile.setCopyrightChoice(licenseListBox
 			    .getItemText(licenseListBox.getSelectedIndex()));
 		    selectedFile.setTypeResource(typeResourceListBox
-			    .getValue(typeResourceListBox.getSelectedIndex()));
+			    .getItemText(typeResourceListBox.getSelectedIndex()));
 		    OsylRemoteServiceLocator
 			    .getDirectoryRemoteService()
 			    .updateRemoteFileInfo(
