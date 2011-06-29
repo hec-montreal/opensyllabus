@@ -597,7 +597,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		    selectedFile.setCopyrightChoice(licenseListBox
 			    .getItemText(licenseListBox.getSelectedIndex()));
 		    selectedFile.setTypeResource(typeResourceListBox
-			    .getItemText(typeResourceListBox.getSelectedIndex()));
+			    .getValue(typeResourceListBox.getSelectedIndex()));
 		    OsylRemoteServiceLocator
 			    .getDirectoryRemoteService()
 			    .updateRemoteFileInfo(
@@ -815,8 +815,6 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	typeResourceListBox.addItem(getView().getUiMessage(
 		"DocumentEditor.documentType.choose"));
 	for (String typeResource : typesResourceList) {
-	    // typeResourceListBox.addItem(getView().getCoMessage("Resource.Type."
-	    // + typeResource));
 	    typeResourceListBox.addItem(
 		    getView().getCoMessage(
 			    RESS_TYPE_MESSAGE_PREFIX + typeResource),
