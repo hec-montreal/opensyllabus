@@ -489,6 +489,8 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 
     private void buildTypeResourceListBox(List<String> typesResourceList) {
 	typeResourceListBox.clear();
+	typeResourceListBox.addItem(getView().getUiMessage(
+		"DocumentEditor.documentType.choose"));
 	for (String typeResource : typesResourceList) {
 	    typeResourceListBox.addItem(getView().getCoMessage(
 		    RESS_TYPE_MESSAGE_PREFIX + typeResource), typeResource);
