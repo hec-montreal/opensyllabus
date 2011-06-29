@@ -540,7 +540,7 @@ public class OsylCitationForm extends WindowPanel implements
 				    .getMessage("fileUpload.chooseTypesResourceStatus");
 		}
 		
-		if (message.equals("")) {
+		if (!message.equals("")) {
 		    final OsylAlertDialog alertBox =
 			    new OsylAlertDialog(uiMessages
 				    .getMessage("Global.error"), message);
