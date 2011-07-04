@@ -642,11 +642,16 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	typeResourceListBox.addChangeHandler(new ChangeHandler() {
 
 	    public void onChange(ChangeEvent event) {
+		if (typeResourceListBox.getSelectedIndex() > 0) {
+		    saveButton.setEnabled(true);
+		} else {
+		    saveButton.setEnabled(false);
+		}		
 		setTypeResource(typeResourceListBox.getValue(typeResourceListBox
 			.getSelectedIndex()));
 	    }
 	});
-	//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
 	AbstractImagePrototype imgSaveButton = 
 	    AbstractImagePrototype.create(getOsylImageBundle().save());
@@ -698,17 +703,11 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			    editorOtherLinkLabel.getText());
 		}
 		//Type of resource for citation	
-		/*
-		selectedFile.setProperty(COPropertiesType.ASM_RESOURCE_TYPE,
-			    COPropertiesType.ASM_RESOURCE_TYPE,
-			    typeResourceListBox.getValue(typeResourceListBox
-					.getSelectedIndex()));
-		*/
-		selectedFile.setProperty(COPropertiesType.ASM_RESOURCE_TYPE,
-		typeResourceListBox.getValue(typeResourceListBox
+		selectedFile.setResourceType(typeResourceListBox.getValue(typeResourceListBox
 			.getSelectedIndex()));
 
-		selectedFile.setResourceType(typeResourceListBox.getValue(typeResourceListBox
+		selectedFile.setProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+		typeResourceListBox.getValue(typeResourceListBox
 			.getSelectedIndex()));
 
 		OsylRemoteServiceLocator.getCitationRemoteService()
