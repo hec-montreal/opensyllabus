@@ -1218,15 +1218,21 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 				role, courseOfferingId, ACTIVE_STATUS);
 		    }
 		}
-	    } else if (category != null && !"".equals(category) && program !=null && !"".equals(program)) {
-		for (DetailCoursMapEntry dcme : detailCoursMap
-			.getCoursByAcadOrgAndProg(category, program)) {
+	    } else if (category != null && !"".equals(category)) {
+		List<DetailCoursMapEntry> coursesList=null;
+		if(program !=null && !"".equals(program)){
+		   coursesList = detailCoursMap
+			.getCoursByAcadOrgAndProg(category, program);
+		}else{
+		    coursesList = detailCoursMap
+			.getCoursByAcadOrg(category);
+			}
+		for (DetailCoursMapEntry dcme : coursesList) {
 		    String courseOfferingId = getCourseOfferingId(dcme);
 		    cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
 			    role, courseOfferingId, ACTIVE_STATUS);
 		}
-	    }
-
+	    } 
 	}
 
     }
