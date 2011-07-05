@@ -15,6 +15,8 @@ public class DetailCoursMapEntry implements java.io.Serializable {
     // Pour assurer la compatibilite des instances serialisees meme
     // quand on change la classe...
     public static final long serialVersionUID = -5942666321016168578l;
+    
+    public static final String CLASS_STATUS_CANCELLED = "X";
 
     private String strm;
     private String sessionCode;
