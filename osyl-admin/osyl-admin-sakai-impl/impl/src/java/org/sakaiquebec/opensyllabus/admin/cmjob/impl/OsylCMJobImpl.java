@@ -102,7 +102,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	OsylCMJob {
 
     String webappDir = null;
-    
+
     /**
      * Map used to store information about the courses that a teacher gives:
      * teacher id, course id, course session, course periode
@@ -469,7 +469,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		    boolean siteExist = osylSiteService.siteExists(siteId);
 		    if (siteExist) {
 			Site site = siteService.getSite(siteId);
-			if(osylSiteService.hasBeenPublished(siteId)){
+			if (osylSiteService.hasBeenPublished(siteId)) {
 			    osylPublishService.unpublish(siteId, webappDir);
 			}
 			if (site.getProviderGroupId() != null
@@ -769,12 +769,15 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		+ " course management");
 
 	loginToSakai();
-	
+
 	webappDir =
-		    System.getProperty("catalina.home") + File.separator
-			    + "webapps" + File.separator
-			    + "osyl-admin-sakai-tool";// Ugly but don't know
-						      // cleaner method.
+		System.getProperty("catalina.home") + File.separator
+			+ "webapps" + File.separator + "osyl-admin-sakai-tool";// Ugly
+									       // but
+									       // don't
+									       // know
+									       // cleaner
+									       // method.
 
 	String directory =
 		ServerConfigurationService.getString(EXTRACTS_PATH_CONFIG_KEY,
@@ -1330,8 +1333,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	Map<String, Map<String, String>> exceptions =
 		adminConfigService.getCmExceptions();
 	for (Entry<String, Map<String, String>> entry : exceptions.entrySet()) {
-	    String matricule = entry.getKey();
 	    Map<String, String> props = entry.getValue();
+	    String users = props.get(ConfigurationService.CM_EXCEPTIONS_USERS);
 	    String courses =
 		    props.get(ConfigurationService.CM_EXCEPTIONS_COURSES);
 	    String category =
@@ -1345,8 +1348,11 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		    for (DetailCoursMapEntry dcme : detailCoursMap
 			    .getAllGroupeCours(course)) {
 			String courseOfferingId = getCourseOfferingId(dcme);
-			cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
-				role, courseOfferingId, ACTIVE_STATUS);
+			for (String matricule : Arrays.asList(users.split(","))) {
+			    cmAdmin.addOrUpdateCourseOfferingMembership(
+				    matricule, role, courseOfferingId,
+				    ACTIVE_STATUS);
+			}
 		    }
 		}
 	    } else if (category != null && !"".equals(category)) {
@@ -1360,8 +1366,10 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		}
 		for (DetailCoursMapEntry dcme : coursesList) {
 		    String courseOfferingId = getCourseOfferingId(dcme);
-		    cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
-			    role, courseOfferingId, ACTIVE_STATUS);
+		    for (String matricule : Arrays.asList(users.split(","))) {
+			cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
+				role, courseOfferingId, ACTIVE_STATUS);
+		    }
 		}
 	    }
 	}

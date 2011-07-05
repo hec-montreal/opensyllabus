@@ -25,7 +25,6 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -334,12 +333,11 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 			    + referenceString);
 		    updateConfig(referenceString);
 		}
-		if(referenceString.contains(CM_EXCEPTIONS_FOLDER)){
-		    log.info("Updating CM exceptions"
-			    + referenceString);
+		if (referenceString.contains(CM_EXCEPTIONS_FOLDER)) {
+		    log.info("Updating CM exceptions" + referenceString);
 		    updateConfig(referenceString);
 		}
-	
+
 	    }
 	}
     }
@@ -490,17 +488,16 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    String program = retrieveParameter(document, CM_EXCEPTIONS_PROGRAM);
 	    String role = retrieveParameter(document, CM_EXCEPTIONS_ROLE);
 
-	    for (String user : Arrays.asList(users.split(","))) {
-		if (cmExceptions == null)
-		    cmExceptions = new HashMap<String, Map<String, String>>();
-		HashMap<String, String> map = new HashMap<String, String>();
-		map.put(CM_EXCEPTIONS_COURSES, courses);
-		map.put(CM_EXCEPTIONS_CATEGORY, category);
-		map.put(CM_EXCEPTIONS_PROGRAM, program);
-		map.put(CM_EXCEPTIONS_ROLE, role);
-		
-		cmExceptions.put(user, map);
-	    }
+	    if (cmExceptions == null)
+		cmExceptions = new HashMap<String, Map<String, String>>();
+	    HashMap<String, String> map = new HashMap<String, String>();
+	    map.put(CM_EXCEPTIONS_USERS, users);
+	    map.put(CM_EXCEPTIONS_COURSES, courses);
+	    map.put(CM_EXCEPTIONS_CATEGORY, category);
+	    map.put(CM_EXCEPTIONS_PROGRAM, program);
+	    map.put(CM_EXCEPTIONS_ROLE, role);
+
+	    cmExceptions.put(configurationXml, map);
 
 	}
     }
@@ -877,8 +874,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     public Map<String, Map<String, Object>> getUdatedRoles() {
 	return updatedRoles;
     }
-    
-    public Map<String,Map<String,String>> getCmExceptions(){
+
+    public Map<String, Map<String, String>> getCmExceptions() {
 	return cmExceptions;
     }
 
