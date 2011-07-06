@@ -1333,6 +1333,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	Map<String, Map<String, String>> exceptions =
 		adminConfigService.getCmExceptions();
 	for (Entry<String, Map<String, String>> entry : exceptions.entrySet()) {
+	    log.info("Start processing exceptions from "+entry.getKey());
 	    Map<String, String> props = entry.getValue();
 	    String users = props.get(ConfigurationService.CM_EXCEPTIONS_USERS);
 	    String courses =
@@ -1349,6 +1350,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 			    .getAllGroupeCours(course)) {
 			String courseOfferingId = getCourseOfferingId(dcme);
 			for (String matricule : Arrays.asList(users.split(","))) {
+			    log.info("Adding "+matricule+ " to courseOffering "+courseOfferingId+ " with "+role +" role");
 			    cmAdmin.addOrUpdateCourseOfferingMembership(
 				    matricule, role, courseOfferingId,
 				    ACTIVE_STATUS);
@@ -1367,11 +1369,13 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		for (DetailCoursMapEntry dcme : coursesList) {
 		    String courseOfferingId = getCourseOfferingId(dcme);
 		    for (String matricule : Arrays.asList(users.split(","))) {
+			log.info("Adding "+matricule+ " to courseOffering "+courseOfferingId+ " with "+role +" role");
 			cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
 				role, courseOfferingId, ACTIVE_STATUS);
 		    }
 		}
 	    }
+	    log.info("End processing exceptions from "+entry.getKey());
 	}
 
     }
