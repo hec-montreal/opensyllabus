@@ -36,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class GenericRequirementsCoursMapFactory {
     private static Log log = LogFactory
-	    .getLog(GenericDetailCoursMapFactory.class);
+	    .getLog(GenericRequirementsCoursMapFactory.class);
 
     public static RequirementsCoursMap buildMap(String completeFileName)
 	    throws java.io.IOException {
