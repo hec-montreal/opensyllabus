@@ -1343,13 +1343,14 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	    String program =
 		    props.get(ConfigurationService.CM_EXCEPTIONS_PROGRAM);
 	    String role = props.get(ConfigurationService.CM_EXCEPTIONS_ROLE);
+	    List<String> matricules = Arrays.asList(users.split(","));
 	    if (courses != null && !"".equals(courses)) {
 		for (String course : Arrays.asList(courses.split(","))) {
 		    course = course.replaceAll("-", "");
 		    for (DetailCoursMapEntry dcme : detailCoursMap
 			    .getAllGroupeCours(course)) {
 			String courseOfferingId = getCourseOfferingId(dcme);
-			for (String matricule : Arrays.asList(users.split(","))) {
+			for (String matricule : matricules) {
 			    log.info("Adding "+matricule+ " to courseOffering "+courseOfferingId+ " with "+role +" role");
 			    cmAdmin.addOrUpdateCourseOfferingMembership(
 				    matricule, role, courseOfferingId,
@@ -1368,7 +1369,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		}
 		for (DetailCoursMapEntry dcme : coursesList) {
 		    String courseOfferingId = getCourseOfferingId(dcme);
-		    for (String matricule : Arrays.asList(users.split(","))) {
+		    for (String matricule : matricules) {
 			log.info("Adding "+matricule+ " to courseOffering "+courseOfferingId+ " with "+role +" role");
 			cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
 				role, courseOfferingId, ACTIVE_STATUS);
