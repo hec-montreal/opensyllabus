@@ -36,6 +36,7 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -77,7 +78,6 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
     public boolean prepareForSave() {
 	boolean ok = true;
 	String messages = "";
-
 	// required fields validations
 	if (getText().trim().equals("")) {
 	    messages +=
@@ -86,6 +86,7 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 			    + "\n";
 	    ok = false;
 	}
+	
 	String weight = weightTextBox.getText();
 	if (weight.trim().equals("")) {
 	    messages +=
@@ -105,7 +106,7 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 		ok = false;
 	    }
 	}
-
+	
 	String endDateString = dateDateBox.getTextBox().getText();
 	if (!endDateString.trim().equals("")) {
 	    try {
@@ -128,14 +129,8 @@ public class OsylCOUnitAssessmentLabelEditor extends OsylCOUnitLabelEditor {
 			    + "\n";
 	    ok = false;
 	}
+	
 	if (modeListBox.getSelectedIndex() == 0) {
-	    messages +=
-		    getView().getUiMessage("Global.field.required",
-			    getUiMessage("Assessment.mode"))
-			    + "\n";
-	    ok = false;
-	}
-	if (typeResourceListBox.getSelectedIndex() == 0) {
 	    messages +=
 		    getView().getUiMessage("Global.field.required",
 			    getUiMessage("Assessment.mode"))
