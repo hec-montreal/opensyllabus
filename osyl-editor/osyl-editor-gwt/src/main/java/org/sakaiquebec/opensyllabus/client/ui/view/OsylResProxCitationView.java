@@ -20,6 +20,10 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.view;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.util.CitationFormatter;
@@ -199,6 +203,23 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	// .getSelectedCitationProperty(
 	// COPropertiesType.IDENTIFIER,
 	// COPropertiesType.IDENTIFIER_TYPE_NOLINK));
+	// update resTypeContextVisibilitymap
+	    Map<String, String> cr =
+		    OsylEditorEntryPoint.getInstance()
+			    .getResTypeContextVisibilityMap().get(uri
+				    + "/"
+				    + getEditor().getSelectedCitationProperty(
+					    CitationSchema.CITATIONID));
+	    if (cr == null) {
+		cr = new HashMap<String, String>();
+	    }
+	    cr.put(getModel().getResource().getId(),
+		    getModel().getResource().getProperty(COPropertiesType.ASM_RESOURCE_TYPE));
+	    OsylEditorEntryPoint.getInstance().getResTypeContextVisibilityMap()
+		    .put(uri
+			    + "/"
+			    + getEditor().getSelectedCitationProperty(
+				    CitationSchema.CITATIONID), cr);
     }
 
     /**

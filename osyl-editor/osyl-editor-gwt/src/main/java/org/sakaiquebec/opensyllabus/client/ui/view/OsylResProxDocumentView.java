@@ -87,6 +87,18 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 		    getModel().getProperty(COPropertiesType.VISIBILITY));
 	    OsylEditorEntryPoint.getInstance()
 		    .getDocumentContextVisibilityMap().put(uri, cv);
+
+	    // update resTypeContextVisibilitymap
+	    Map<String, String> cr =
+		    OsylEditorEntryPoint.getInstance()
+			    .getResTypeContextVisibilityMap().get(uri);
+	    if (cr == null) {
+		cr = new HashMap<String, String>();
+	    }
+	    cr.put(getModel().getResource().getId(),
+		    getModel().getResource().getProperty(COPropertiesType.ASM_RESOURCE_TYPE));
+	    OsylEditorEntryPoint.getInstance().getResTypeContextVisibilityMap()
+		    .put(uri, cr);
 	}
     }
 

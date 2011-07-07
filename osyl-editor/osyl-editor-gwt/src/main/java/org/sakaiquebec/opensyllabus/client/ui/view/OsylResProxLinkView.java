@@ -20,10 +20,15 @@
 
 package org.sakaiquebec.opensyllabus.client.ui.view;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylLinkEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
+import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.util.OsylDateUtils;
 
 import com.google.gwt.core.client.GWT;
@@ -67,6 +72,17 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
 	getModel().getResource().addProperty(
 		COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_URI,
 		((OsylLinkEditor) getEditor()).getLink());
+	// update resTypeContextVisibilitymap
+	    Map<String, String> cr =
+		    OsylEditorEntryPoint.getInstance()
+			    .getResTypeContextVisibilityMap().get(((OsylLinkEditor) getEditor()).getLink());
+	    if (cr == null) {
+		cr = new HashMap<String, String>();
+	    }
+	    cr.put(getModel().getResource().getId(),
+		    getModel().getResource().getProperty(COPropertiesType.ASM_RESOURCE_TYPE));
+	    OsylEditorEntryPoint.getInstance().getResTypeContextVisibilityMap()
+		    .put(((OsylLinkEditor) getEditor()).getLink(), cr);
     }
 
     /**
