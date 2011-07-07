@@ -180,6 +180,8 @@ public class COModeled extends COSerialized {
     private String schemaVersion;
 
     private Map<String, Map<String, String>> documentContextVisibilityMap;
+    
+    private Map<String, Map<String, String>> resTypeContextVisibilityMap;
 
     /**
      * Default Constructor
@@ -249,6 +251,8 @@ public class COModeled extends COSerialized {
 	Document messageDom = null;
 	documentContextVisibilityMap =
 		new HashMap<String, Map<String, String>>();
+	resTypeContextVisibilityMap =
+		new HashMap<String, Map<String, String>>();	
 
 	try {
 	    // XMLtoDOM
@@ -634,6 +638,25 @@ public class COModeled extends COSerialized {
 	    }
 	    contextVisibilityMap.put(coContentResProxy.getId(), visibility);
 	    documentContextVisibilityMap.put(uri, contextVisibilityMap);
+	}
+	// build resTypeContextVisibilityMap
+	if (COContentResourceType.DOCUMENT.equals(coContentResProxy
+		.getResource().getType()) || COContentResourceType.BIBLIO_RESOURCE.equals(coContentResProxy
+			.getResource().getType()) || COContentResourceType.URL.equals(coContentResProxy
+				.getResource().getType())) {
+	    String uri =
+		    coContentResProxy.getResource().getProperty(
+			    COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_URI).trim();
+	    String resourceTypeDoc =
+		    coContentResProxy.getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
+	    Map<String, String> contextVisibilityMap =
+		resTypeContextVisibilityMap.get(uri);	    
+	    if (contextVisibilityMap == null) {
+		contextVisibilityMap = new HashMap<String, String>();
+	    }
+	    contextVisibilityMap.put(coContentResProxy.getId(), resourceTypeDoc);
+	    resTypeContextVisibilityMap.put(uri, contextVisibilityMap);	    
 	}
 	return coContentResProxy;
     }
@@ -1053,5 +1076,14 @@ public class COModeled extends COSerialized {
     public void setDocumentContextVisibilityMap(
 	    Map<String, Map<String, String>> documentContextVisibilityMap) {
 	this.documentContextVisibilityMap = documentContextVisibilityMap;
+    }
+    
+    public Map<String, Map<String, String>> getResTypeContextVisibilityMap() {
+        return resTypeContextVisibilityMap;
+    }
+
+    public void setResTypeContextVisibilityMap(
+    	Map<String, Map<String, String>> resTypeContextVisibilityMap) {
+        this.resTypeContextVisibilityMap = resTypeContextVisibilityMap;
     }
 }
