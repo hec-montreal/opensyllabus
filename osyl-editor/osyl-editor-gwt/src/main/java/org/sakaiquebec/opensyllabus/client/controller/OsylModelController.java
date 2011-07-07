@@ -110,14 +110,28 @@ public class OsylModelController implements
 		    (COContentResourceProxy) event.getSource();
 	    if (COContentResourceType.DOCUMENT.equals(cocrp.getResource()
 		    .getType())) {
+		// Incompatibility in DocumentContextVisibilityMap
 		Map<String, Map<String, String>> dcv =
 			OsylEditorEntryPoint.getInstance()
 				.getDocumentContextVisibilityMap();
-		String uri = cocrp.getResource().getProperty(
-			    COPropertiesType.IDENTIFIER,
-			    COPropertiesType.IDENTIFIER_TYPE_URI).trim();
+		String uri =
+			cocrp.getResource().getProperty(
+				COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_URI).trim();
 		dcv.get(uri).remove(cocrp.getId());
-		OsylEditorEntryPoint.getInstance().setDocumentContextVisibilityMap(dcv);
+		OsylEditorEntryPoint.getInstance()
+			.setDocumentContextVisibilityMap(dcv);
+		// Incompatibility in DocumentContextVisibilityMap
+		Map<String, Map<String, String>> dcr =
+			OsylEditorEntryPoint.getInstance()
+				.getResTypeContextVisibilityMap();
+		uri =
+			cocrp.getResource().getProperty(
+				COPropertiesType.IDENTIFIER,
+				COPropertiesType.IDENTIFIER_TYPE_URI).trim();
+		dcr.get(uri).remove(cocrp.getId());
+		OsylEditorEntryPoint.getInstance()
+			.setResTypeContextVisibilityMap(dcr);
 	    }
 	}
 	setModelDirty(true);
