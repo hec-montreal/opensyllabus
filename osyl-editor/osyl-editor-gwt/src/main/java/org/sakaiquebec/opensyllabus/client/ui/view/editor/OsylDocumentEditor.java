@@ -335,6 +335,10 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		message +=
 			getUiMessage("DocumentEditor.document.WrongTypeResStatus");
 	    }
+	    //-----------------------------------------------------------------------
+	    // Check visibility incompatibility 
+	    //-----------------------------------------------------------------------
+
 	    Map<String, String> cv =
 		    OsylEditorEntryPoint.getInstance()
 			    .getDocumentContextVisibilityMap()
@@ -374,6 +378,52 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 				.getUiMessage(
 					"DocumentEditor.document.visibilityIncompatibility",
 					msgParameter);
+	    }
+
+	    //-----------------------------------------------------------------------
+	    // Check resource type incompatibility 
+	    //-----------------------------------------------------------------------
+		String typage = "";
+	    Map<String, String> cr = OsylEditorEntryPoint.getInstance()
+			    .getResTypeContextVisibilityMap()
+			    .get(getResourceURI());
+	    boolean resIncompatibility = false;
+	    String resType =   typeResourceListBox.getValue(typeResourceListBox.getSelectedIndex());
+	    parentTitles = new HashSet<String>();
+	    if (cr != null) {
+		for (Entry<String, String> entry : cr.entrySet()) {
+		    String id = entry.getKey();
+		    if (!id.equals(getView().getModel().getResource().getId())) {
+			typage = entry.getValue();
+			if (!typage.equals(resType)) {
+			    resIncompatibility = true;
+			    COModelInterface comi =
+				    OsylEditorEntryPoint.getInstance()
+					    .getCoModelInterfaceWithId(id);
+			    if (comi instanceof COElementAbstract) {
+				COElementAbstract coe =
+					(COElementAbstract) comi;
+				while (!coe.isCOUnit()) {
+				    coe = coe.getParent();
+				}
+				parentTitles.add(coe.getLabel());
+			    }
+			}
+		    }
+		}
+	    }
+	    if (resIncompatibility) {
+		StringBuilder sb = new StringBuilder();
+		for (String s : parentTitles) {
+		    sb.append(s + ", 0");
+		}
+		String msgParameter = sb.substring(0, sb.length() - 2);
+		message += " " +
+			getView()
+				.getUiMessage(
+					"DocumentEditor.document.resTypeIncompatibility", 
+					msgParameter);
+		message += " : " + typage;		
 	    }
 	}
 	if (message.equals("")) {
@@ -551,14 +601,14 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	licenseListBox = new ListBox();
 
 	rightsAndSavePanel.add(licenseListBox);
-	licenseListBox.setWidth("70%");
+	licenseListBox.setWidth("60%");
 
 	// ------------------------------------------
 	rightsAndSavePanel.add(new Label(getView().getUiMessage(
 		"DocumentEditor.document.type")));
 	typeResourceListBox = new ListBox();
 	rightsAndSavePanel.add(typeResourceListBox);
-	typeResourceListBox.setWidth("50%");
+	typeResourceListBox.setWidth("70%");
 
 	// ------------------------------------------
 	HorizontalPanel savePanel = new HorizontalPanel();
@@ -585,26 +635,78 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 	    public void onClick(ClickEvent event) {
 		saveButton.setEnabled(false);
-
-		if (browser.getSelectedAbstractBrowserItem() != null
-			&& !browser.getSelectedAbstractBrowserItem().isFolder()) {
-		    OsylFileItem selectedFile =
-			    (OsylFileItem) browser
-				    .getSelectedAbstractBrowserItem();
-
-		    selectedFile.setDescription(descriptionTextArea.getText());
-		    selectedFile.setCopyrightChoice(licenseListBox
-			    .getItemText(licenseListBox.getSelectedIndex()));
-		    selectedFile.setTypeResource(typeResourceListBox
-			    .getItemText(typeResourceListBox.getSelectedIndex()));
-		    OsylRemoteServiceLocator
-			    .getDirectoryRemoteService()
-			    .updateRemoteFileInfo(
-				    selectedFile.getFilePath(),
-				    selectedFile.getDescription(),
-				    selectedFile.getCopyrightChoice(),
-				    selectedFile.getTypeResource(),
-				    OsylDocumentEditor.this.fileUpdateRequestHandler);
+		
+		String message = "";
+		String typage = "";
+		//-----------------------------------------------------------------------
+		// Check resource type incompatibility 
+		//-----------------------------------------------------------------------
+		Map<String, String> cr = OsylEditorEntryPoint.getInstance()
+				    .getResTypeContextVisibilityMap()
+				    .get(getResourceURI());
+		boolean resIncompatibility = false;
+		String resType =   typeResourceListBox.getValue(typeResourceListBox.getSelectedIndex());
+		Set<String> parentTitles = new HashSet<String>();
+		if (cr != null) {
+        		for (Entry<String, String> entry : cr.entrySet()) {
+        		    String id = entry.getKey();
+        		    if (!id.equals(getView().getModel().getResource().getId())) {
+        			typage = entry.getValue();
+        			if (!typage.equals(resType)) {
+        			    resIncompatibility = true;
+        			    COModelInterface comi =
+        				    OsylEditorEntryPoint.getInstance()
+        					    .getCoModelInterfaceWithId(id);
+        			    if (comi instanceof COElementAbstract) {
+        				COElementAbstract coe =
+        					(COElementAbstract) comi;
+        				while (!coe.isCOUnit()) {
+        				    coe = coe.getParent();
+        				}
+        				parentTitles.add(coe.getLabel());
+        			    }
+        			}
+        		    }
+        		}
+		}
+		if (resIncompatibility) {
+		    StringBuilder sb = new StringBuilder();
+		    for (String s : parentTitles) {
+			sb.append(s + ", 0");
+		    }
+		    String msgParameter = sb.substring(0, sb.length() - 2);
+		    message +=	" " + getView()
+					.getUiMessage(
+						"DocumentEditor.document.resTypeIncompatibility", 
+						msgParameter);
+		    message += " : " + typage;		    
+		}
+		if (!message.equals("")) {
+		    OsylAlertDialog oad =
+			    new OsylAlertDialog(getUiMessage("Global.error"), message);
+		    oad.center();
+		    oad.show();
+		} else {
+		    if (browser.getSelectedAbstractBrowserItem() != null
+        		&& !browser.getSelectedAbstractBrowserItem().isFolder()) {
+        		OsylFileItem selectedFile =
+        		    (OsylFileItem) browser
+        			    .getSelectedAbstractBrowserItem();
+        
+        		selectedFile.setDescription(descriptionTextArea.getText());
+        		selectedFile.setCopyrightChoice(licenseListBox
+        		    .getItemText(licenseListBox.getSelectedIndex()));
+        		selectedFile.setTypeResource(typeResourceListBox
+        		    .getValue(typeResourceListBox.getSelectedIndex()));
+        		OsylRemoteServiceLocator
+        		    .getDirectoryRemoteService()
+        		    .updateRemoteFileInfo(
+        			    selectedFile.getFilePath(),
+        			    selectedFile.getDescription(),
+        			    selectedFile.getCopyrightChoice(),
+        			    selectedFile.getTypeResource(),
+        			    OsylDocumentEditor.this.fileUpdateRequestHandler);
+		    }
 		}
 
 	    }

@@ -22,16 +22,24 @@ package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
+import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.OsylRichTextArea;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxLinkView;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
+import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.util.LinkValidator;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
@@ -289,7 +297,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     protected OsylResProxLinkView getView() {
 	return (OsylResProxLinkView) super.getView();
     }
-
+   
     public void setText(String text) {
 	if (isInEditionMode()) {
 	    editorName.setText(text);
@@ -372,6 +380,52 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	    messages =
 		    getUiMessage("DocumentEditor.document.WrongTypeResStatus");
 	}
+	//-----------------------------------------------------------------------
+	// Check resource type incompatibility 
+	//-----------------------------------------------------------------------
+	String typage = "";
+	Map<String, String> cr = OsylEditorEntryPoint.getInstance()
+			    .getResTypeContextVisibilityMap()
+			    .get(getLink());
+	boolean resIncompatibility = false;
+	String resType = typeResourceListBox.getValue(typeResourceListBox.getSelectedIndex());
+	Set<String> parentTitles = new HashSet<String>();
+	if (cr != null) {
+	    for (Entry<String, String> entry : cr.entrySet()) {
+		String id = entry.getKey();
+		if (!id.equals(getLink())) {
+		    typage = entry.getValue();
+		    if (!typage.equals(resType)) {
+			resIncompatibility = true;
+			ok = false;
+			COModelInterface comi =
+			    OsylEditorEntryPoint.getInstance()
+			    .getCoModelInterfaceWithId(id);
+			if (comi instanceof COElementAbstract) {
+			    COElementAbstract coe =
+				(COElementAbstract) comi;
+			    while (!coe.isCOUnit()) {
+				coe = coe.getParent();
+			    }
+			    parentTitles.add(coe.getLabel());
+			}
+		    }
+		}
+	    }
+	}
+	if (resIncompatibility) {
+		StringBuilder sb = new StringBuilder();
+		for (String s : parentTitles) {
+		sb.append(s + ", 0");
+		}
+		String msgParameter = sb.substring(0, sb.length() - 2);
+		messages += " " +
+			getView()
+				.getUiMessage(
+					"DocumentEditor.document.resTypeIncompatibility", 
+					msgParameter);
+		messages += " : " + typage;
+	}
 
 	if (!ok) {
 	    OsylAlertDialog osylAlertDialog =
@@ -434,7 +488,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	    getMainPanel().setVisible(false);
 	}
     } // enterView
-
+    
     @Override
     public Widget getConfigurationWidget() {
 	return null;
