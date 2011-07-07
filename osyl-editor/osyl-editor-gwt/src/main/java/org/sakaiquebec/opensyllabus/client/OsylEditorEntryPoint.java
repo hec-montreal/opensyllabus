@@ -173,6 +173,14 @@ public class OsylEditorEntryPoint implements EntryPoint {
     public void setDocumentContextVisibilityMap(Map<String,Map<String,String>> m){
 	this.modeledCo.setDocumentContextVisibilityMap(m);
     }
+    
+    public Map<String,Map<String, String>> getResTypeContextVisibilityMap(){
+        return this.modeledCo.getResTypeContextVisibilityMap();
+    }
+
+    public void setResTypeContextVisibilityMap(Map<String,Map<String,String>> m) {
+        this.modeledCo.setResTypeContextVisibilityMap(m);
+    }
 
     /**
      * Initializes the view, its model and controller.
