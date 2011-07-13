@@ -1196,10 +1196,10 @@
 					<xsl:text>En équipe</xsl:text>
 				</xsl:when>
 				<xsl:when test="$lang = 'EN'">
-					<xsl:text>Equipo</xsl:text>
+					<xsl:text>Team</xsl:text>
 				</xsl:when>
 				<xsl:when test="$lang = 'ES'">
-					<xsl:text>Evaluaciones</xsl:text>
+					<xsl:text>Equipo</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
 				</xsl:otherwise>
