@@ -42,7 +42,7 @@
     <module>osyl-editor</module>
     <module>osyl-manager</module><!-- HEC ONLY SAKAI-2723 -->
     <module>osyl-admin</module><!-- HEC ONLY SAKAI-2723 -->
-    <module>osyl-portal</module><!-- HEC ONLY SAKAI-2723 -->
+    <!-- <module>osyl-portal</module>--><!-- HEC ONLY SAKAI-2723 -->
   </modules>
 
   <pluginRepositories>
@@ -128,16 +128,16 @@
         <artifactId>osyl-manager-sakai-impl</artifactId>
         <version>${sakai.version}</version>
       </dependency>
-      <dependency>
-      	<groupId>org.sakaiquebec.opensyllabus</groupId>
-        <artifactId>osyl-portal-sakai-impl</artifactId>
-        <version>${sakai.version}</version>
-      </dependency>
-      <dependency>
-      	<groupId>org.sakaiquebec.opensyllabus</groupId>
-        <artifactId>osyl-portal-server-api</artifactId>
-        <version>${sakai.version}</version>
-      </dependency>
+      <!-- <dependency>--><!-- HEC ONLY SAKAI-2723 -->
+      	<!-- <groupId>org.sakaiquebec.opensyllabus</groupId>--><!-- HEC ONLY SAKAI-2723 -->
+        <!-- <artifactId>osyl-portal-sakai-impl</artifactId>--><!-- HEC ONLY SAKAI-2723 -->
+       <!--  <version>${sakai.version}</version>--><!-- HEC ONLY SAKAI-2723 -->
+      <!-- </dependency>--><!-- HEC ONLY SAKAI-2723 -->
+      <!-- <dependency>--><!-- HEC ONLY SAKAI-2723 -->
+      	<!-- <groupId>org.sakaiquebec.opensyllabus</groupId>--><!-- HEC ONLY SAKAI-2723 -->
+        <!-- <artifactId>osyl-portal-server-api</artifactId>--><!-- HEC ONLY SAKAI-2723 -->
+        <!-- <version>${sakai.version}</version>--><!-- HEC ONLY SAKAI-2723 -->
+     <!--  </dependency>--><!-- HEC ONLY SAKAI-2723 -->
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus.managergwt</groupId>
         <artifactId>osyl-manager-gwt</artifactId>
@@ -153,11 +153,11 @@
         <artifactId>osyl-admin-gwt</artifactId>
         <version>${sakai.version}</version>
       </dependency>
-      <dependency>
-      	<groupId>org.sakaiquebec.opensyllabus.portalgwt</groupId>
-        <artifactId>osyl-portal-gwt</artifactId>
-        <version>${sakai.version}</version>
-      </dependency>
+      <!--<dependency>--><!-- HEC ONLY SAKAI-2723 -->
+      <!--	<groupId>org.sakaiquebec.opensyllabus.portalgwt</groupId>--><!-- HEC ONLY SAKAI-2723 -->
+        <!--<artifactId>osyl-portal-gwt</artifactId>--><!-- HEC ONLY SAKAI-2723 -->
+       <!-- <version>${sakai.version}</version>--><!-- HEC ONLY SAKAI-2723 -->
+     <!-- </dependency>--><!-- HEC ONLY SAKAI-2723 -->
 
       <!--  sakai -->
       <dependency>
