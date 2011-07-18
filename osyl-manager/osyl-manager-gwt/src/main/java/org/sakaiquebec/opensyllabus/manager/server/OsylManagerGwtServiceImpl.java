@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.manager.server;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import javax.servlet.ServletContext;
@@ -30,6 +31,7 @@ import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.exception.PermissionException;
+import org.sakaiquebec.opensyllabus.common.api.OsylDirectoryService;// HEC ONLY SAKAI-2723 
 import org.sakaiquebec.opensyllabus.manager.client.rpc.OsylManagerGwtService;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
@@ -97,7 +99,20 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 	    if (osylManagerServices != null) {
 		log.info("OsylSiteService : "
 			+ osylManagerServices.getOsylConfigService());
-		return osylManagerServices.getOsylConfigService().getConfigs();
+		Map<String, String> map =
+			osylManagerServices.getOsylConfigService().getConfigs();
+		// BEGIN HEC ONLY SAKAI-2723
+		if (!osylManagerServices.getOsylSecurityService()
+			.isCurrentUserASuperUser()) {
+		    for (Entry<String, String> entry : map.entrySet()) {
+			if (OsylDirectoryService.CONFIG_REF.equals(entry
+				.getValue())) {
+			    map.remove(entry.getKey());
+			}
+		    }
+		}
+		// END HEC ONLY SAKAI-2723
+		return map;
 	    }
 	} catch (Exception e) {
 	    e.printStackTrace();
@@ -145,7 +160,8 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     }
 
     public void associateToCM(String courseSectionId, String siteId)
-	    throws Exception, PermissionException, SessionCompatibilityException {
+	    throws Exception, PermissionException,
+	    SessionCompatibilityException {
 	osylManagerServices.getOsylManagerService().associateToCM(
 		courseSectionId, siteId, servletContext.getRealPath("/"));
     }
@@ -174,11 +190,13 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     }
 
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
-    	    String academicSession, boolean withFrozenSites, boolean withDirectorySites) {
-    	return osylManagerServices.getOsylManagerService().getAllCoAndSiteInfo(
-    		searchTerm, academicSession, withFrozenSites, withDirectorySites);
-        }    
-    
+	    String academicSession, boolean withFrozenSites,
+	    boolean withDirectorySites) {
+	return osylManagerServices.getOsylManagerService().getAllCoAndSiteInfo(
+		searchTerm, academicSession, withFrozenSites,
+		withDirectorySites);
+    }
+
     public Vector<Map<String, String>> publish(String siteId) throws Exception,
 	    FusionException, PermissionException {
 	String webappDir = getServletContext().getRealPath("/");
@@ -211,7 +229,7 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		.unpublish(siteId, webappDir);
     }
 
-    public Map<String,Boolean> getPermissions() {
+    public Map<String, Boolean> getPermissions() {
 	return osylManagerServices.getOsylManagerService().getPermissions();
     }
 }

@@ -156,4 +156,7 @@ public interface OsylSecurityService {
      * @return true if the user has the specified permission, false otherwise.
      */
     public boolean isActionAllowedInSite(String siteRef, String permission);
+    
+    public boolean isCurrentUserASuperUser();
+    
 }

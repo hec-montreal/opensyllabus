@@ -24,7 +24,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.SecurityService;
-import org.sakaiproject.component.cover.ServerConfigurationService;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
 import org.sakaiproject.content.api.ContentResourceEdit;
@@ -278,5 +277,10 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 	} else {
 	    return false;
 	}
+    }
+
+    @Override
+    public boolean isCurrentUserASuperUser() {
+	return securityService.isSuperUser();
     }
 }
