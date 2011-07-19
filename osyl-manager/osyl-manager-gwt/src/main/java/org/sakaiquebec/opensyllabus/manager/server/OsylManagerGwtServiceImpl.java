@@ -104,12 +104,16 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
 		// BEGIN HEC ONLY SAKAI-2723
 		if (!osylManagerServices.getOsylSecurityService()
 			.isCurrentUserASuperUser()) {
+		    String keyToRemove=null;
 		    for (Entry<String, String> entry : map.entrySet()) {
 			if (OsylDirectoryService.CONFIG_REF.equals(entry
 				.getValue())) {
-			    map.remove(entry.getKey());
+			   keyToRemove=entry.getKey();
+			   break;
 			}
 		    }
+		    if(keyToRemove!=null)
+			map.remove(keyToRemove);
 		}
 		// END HEC ONLY SAKAI-2723
 		return map;
