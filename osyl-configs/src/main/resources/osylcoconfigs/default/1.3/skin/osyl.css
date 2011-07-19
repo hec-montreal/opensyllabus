@@ -807,10 +807,9 @@ div.Osyl-UnitView-ResPanel-ReadOnly {
 }
 
 .Osyl-ResProxDocument .name, .Osyl-ResProxLink .uri {color:#A0A0A0}
-.Osyl-ResProxDocument .name {margin-left:5px}
 .Osyl-ResProxDocument .type, .Osyl-ResProxLink .type{
 	color: #8C8A87;
-    padding-right: 5px;
+    margin-left:5px;
     font-weight: bold;
 }
 .Osyl-ResProxLink .uri, .Osyl-ResProxDocument .description, .Osyl-ResProxLink .description {margin-top:5px}

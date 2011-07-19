@@ -194,10 +194,10 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	setViewer(new VerticalPanel());
 	getViewer().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	HorizontalPanel linkAndNameHP = new HorizontalPanel();
-	linkAndNameHP.add(getViewerType());
 	linkAndNameHP.add(getViewerLink());
-	linkAndNameHP.add(getViewerName());
+	linkAndNameHP.add(getViewerType());
 	getViewer().add(linkAndNameHP);
+	getViewer().add(getViewerName());
 	getViewer().add(getViewerDesc());
 
 	setViewerPanel(new FlexTable());
@@ -483,10 +483,10 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    getModel().getProperties().addProperty(COPropertiesType.LABEL,
 		    getView().validateLinkLabel(getModel().getLabel()));
 	    if (getView().getDocType() != null)
-		getViewerType().setHTML(
+		getViewerType().setHTML("["+
 			getView().getCoMessage(
 				RESS_TYPE_MESSAGE_PREFIX
-					+ getView().getDocType()));
+					+ getView().getDocType())+"]");
 	    getViewerLink().setHTML(getView().getTextFromSdataModel());
 	    getViewerLink().addClickHandler(
 		    new OsylLinkClickListener(getView(), getView()

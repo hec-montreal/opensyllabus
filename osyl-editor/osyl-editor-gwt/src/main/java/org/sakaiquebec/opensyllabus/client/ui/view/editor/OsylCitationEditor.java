@@ -201,20 +201,17 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	setViewerDesc(htmlViewerDesc);
 
 	HTML htmlViewerType =
-		new HTML((getView().getDocType() == null) ? "" : getView()
+		new HTML((getView().getDocType() == null) ? "" : "["+getView()
 			.getCoMessage(
 				RESS_TYPE_MESSAGE_PREFIX
-					+ getView().getDocType()));
+					+ getView().getDocType())+"]");
 	htmlViewerType.setStylePrimaryName("type");
 	setViewerType(htmlViewerType);
 
-	HorizontalPanel hzPanel = new HorizontalPanel();
-	hzPanel.add(getViewerType());
-	hzPanel.add(getViewerLink());
-
 	setViewer(new VerticalPanel());
 	getViewer().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
-	getViewer().add(hzPanel);
+	getViewer().add(getViewerLink());
+	
 
 	String isn =
 		getView()
@@ -238,7 +235,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 				+ ":" + isn);
 	    getViewer().add(isbn_issnLabel);
 	}
-
+	getViewer().add(getViewerType());
 	getViewer().add(getViewerDesc());
 
 	if (getView().getCitationLibraryLink() != null) {

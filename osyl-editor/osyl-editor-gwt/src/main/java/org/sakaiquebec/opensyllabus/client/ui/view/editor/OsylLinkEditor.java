@@ -208,8 +208,8 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	setViewerType(htmlViewerType);
 
 	HorizontalPanel hzPanel = new HorizontalPanel();
-	hzPanel.add(getViewerType());
 	hzPanel.add(getViewerLink());
+	hzPanel.add(getViewerType());
 	
 	setViewer(new VerticalPanel());
 	getViewer().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
@@ -469,10 +469,10 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 
 	    // We get the text to display from the model
 	    if (getView().getDocType() != null)
-		getViewerType().setHTML(
+		getViewerType().setHTML("["+
 			getView().getCoMessage(
 				RESS_TYPE_MESSAGE_PREFIX
-					+ getView().getDocType()));
+					+ getView().getDocType())+"]");
 	    getViewerLink().setHTML(getView().getTextFromModel());
 	    getViewerURI().setHTML("(" + getView().getRawURI() + ")");
 	    getViewerDesc().setHTML(getView().getCommentFromModel());

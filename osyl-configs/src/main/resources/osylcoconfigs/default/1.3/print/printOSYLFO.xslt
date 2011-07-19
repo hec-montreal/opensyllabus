@@ -804,13 +804,15 @@
 <xsl:template match="asmResource[@xsi:type='URL']">
 	<fo:block space-after="10px">
 		<fo:block font-size="10pt">
-			<fo:inline color="gray" font-weight="bold"><xsl:value-of select="asmResourceType"/><xsl:text> </xsl:text></fo:inline>
 			<fo:inline color="blue" text-decoration="underline">
 				<fo:basic-link>
 						<xsl:attribute name="external-destination"><xsl:value-of select="identifier"/></xsl:attribute>
 					<xsl:value-of select="../label"/>
 				</fo:basic-link>
 			</fo:inline>
+			<xsl:if test="asmResourceType!=''">
+				<fo:inline color="gray" font-weight="bold">[<xsl:value-of select="asmResourceType"/>]</fo:inline>
+			</xsl:if>
 		</fo:block>
 		<fo:block font-size="10pt" color="gray">
 			(<xsl:value-of select="identifier"/>)
@@ -854,16 +856,18 @@
 
 	<fo:block space-after="10px">
 		<fo:block font-size="10pt">
-			<fo:inline color="gray" font-weight="bold"><xsl:value-of select="asmResourceType"/><xsl:text> </xsl:text></fo:inline>
 			<fo:inline color="blue" text-decoration="underline">
 				<fo:basic-link>
 					<xsl:attribute name="external-destination"><xsl:value-of select="$serverUrl"/>/sdata/c<xsl:value-of select="identifier"/>?child=<xsl:value-of select="$siteId"/></xsl:attribute>
 					<xsl:value-of select="../label"/>
 				</fo:basic-link>
 			</fo:inline>
-			<fo:inline color="gray">
-				(<xsl:value-of select="$file"/>)
-			</fo:inline>
+			<xsl:if test="asmResourceType!=''">
+				<fo:inline color="gray" font-weight="bold">[<xsl:value-of select="asmResourceType"/>]</fo:inline>
+			</xsl:if>
+		</fo:block>
+		<fo:block font-size="10pt" color="gray">
+			(<xsl:value-of select="$file"/>)
 		</fo:block>
 		<xsl:if test="../comment!=''">
 			<fo:block font-size="10pt">
@@ -876,7 +880,6 @@
 <xsl:template match="asmResource[@xsi:type='BiblioResource']">
 	<fo:block space-after="10px">
 		<fo:block font-size="10pt">
-			<fo:inline color="gray" font-weight="bold"><xsl:value-of select="asmResourceType"/><xsl:text> </xsl:text></fo:inline>
 			<xsl:choose>
 				<xsl:when test="resourceType='article' or resourceType='proceed'">
 					<fo:inline><xsl:value-of select="author"/></fo:inline>
@@ -907,6 +910,11 @@
 
 			</xsl:choose>
 		</fo:block>
+		<xsl:if test="asmResourceType!=''">
+			<fo:block color="gray" font-weight="bold">
+				[<xsl:value-of select="asmResourceType"/>]
+			</fo:block>
+		</xsl:if>
 		<xsl:if test="../comment!=''">
 			<fo:block font-size="10pt">
 				<xsl:apply-templates select="../comment"/>
