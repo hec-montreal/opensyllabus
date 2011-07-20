@@ -393,7 +393,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	if (cr != null) {
 	    for (Entry<String, String> entry : cr.entrySet()) {
 		String id = entry.getKey();
-		if (!id.equals(getLink())) {
+		if (!id.equals(getView().getModel().getResource().getId())) {
 		    typage = entry.getValue();
 		    if (!typage.equals(resType)) {
 			resIncompatibility = true;

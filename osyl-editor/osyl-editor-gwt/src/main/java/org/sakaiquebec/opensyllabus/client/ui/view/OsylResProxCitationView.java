@@ -85,12 +85,16 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	getModel().addProperty(COPropertiesType.COMMENT,
 		getEditor().getDescription());
 
-	setModelPropertyWithEditorProperty(COPropertiesType.ASM_RESOURCE_TYPE,
-		getEditor().getSelectedCitationProperty(CitationSchema.CITATION_RESOURCE_TYPE));
+	setModelPropertyWithEditorProperty(
+		COPropertiesType.ASM_RESOURCE_TYPE,
+		getEditor().getSelectedCitationProperty(
+			CitationSchema.CITATION_RESOURCE_TYPE));
 
 	if (uri != null) {
-	    setProperty(COPropertiesType.IDENTIFIER,
-		    COPropertiesType.IDENTIFIER_TYPE_URI, uri
+	    setProperty(
+		    COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_URI,
+		    uri
 			    + "/"
 			    + getEditor().getSelectedCitationProperty(
 				    CitationSchema.CITATIONID));
@@ -101,7 +105,8 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	setModelPropertyWithEditorProperty(CitationSchema.LONGTEXT, getEditor()
 		.getSelectedCitationProperty(CitationSchema.LONGTEXT));
 
-	setModelPropertyWithEditorProperty(CitationSchema.SHORTTEXT,
+	setModelPropertyWithEditorProperty(
+		CitationSchema.SHORTTEXT,
 		getEditor().getSelectedCitationProperty(
 			CitationSchema.SHORTTEXT));
 	setModelPropertyWithEditorProperty(CitationSchema.NUMBER, getEditor()
@@ -113,7 +118,8 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	setModelPropertyWithEditorProperty(CitationSchema.TITLE, getEditor()
 		.getSelectedCitationProperty(CitationSchema.TITLE));
 
-	setModelPropertyWithEditorProperty(CitationSchema.PUBLISHER,
+	setModelPropertyWithEditorProperty(
+		CitationSchema.PUBLISHER,
 		getEditor().getSelectedCitationProperty(
 			CitationSchema.PUBLISHER));
 
@@ -143,11 +149,13 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 		COPropertiesType.IDENTIFIER_TYPE_DOI, getEditor()
 			.getSelectedCitationProperty(CitationSchema.DOI));
 
-	setModelPropertyWithEditorProperty(COPropertiesType.JOURNAL,
+	setModelPropertyWithEditorProperty(
+		COPropertiesType.JOURNAL,
 		getEditor().getSelectedCitationProperty(
 			CitationSchema.SOURCE_TITLE));
 
-	setModelPropertyWithEditorProperty(CitationSchema.PUBLICATION_LOCATION,
+	setModelPropertyWithEditorProperty(
+		CitationSchema.PUBLICATION_LOCATION,
 		getEditor().getSelectedCitationProperty(
 			CitationSchema.PUBLICATION_LOCATION));
 
@@ -160,33 +168,39 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 		    COPropertiesType.IDENTIFIER,
 		    COPropertiesType.IDENTIFIER_TYPE_LIBRARY);
 	} else {
-	    setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
-		    COPropertiesType.IDENTIFIER_TYPE_LIBRARY, getEditor()
-			    .getSelectedCitationProperty(
-				    COPropertiesType.IDENTIFIER,
-				    COPropertiesType.IDENTIFIER_TYPE_LIBRARY));
+	    setModelPropertyWithEditorProperty(
+		    COPropertiesType.IDENTIFIER,
+		    COPropertiesType.IDENTIFIER_TYPE_LIBRARY,
+		    getEditor().getSelectedCitationProperty(
+			    COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_LIBRARY));
 	}
 
-	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
-		COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE, getEditor()
-			.getSelectedCitationProperty(
-				COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE));
+	setModelPropertyWithEditorProperty(
+		COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE,
+		getEditor().getSelectedCitationProperty(
+			COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_BOOKSTORE));
 
-	setModelPropertyWithEditorProperty(CitationSchema.CITATION_RESOURCE_TYPE, getEditor()
-		.getSelectedCitationProperty(CitationSchema.CITATION_RESOURCE_TYPE));
+	setModelPropertyWithEditorProperty(
+		CitationSchema.CITATION_RESOURCE_TYPE,
+		getEditor().getSelectedCitationProperty(
+			CitationSchema.CITATION_RESOURCE_TYPE));
 
-	setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
-		COPropertiesType.IDENTIFIER_TYPE_OTHERLINK, getEditor()
-			.getSelectedCitationProperty(
-				COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_OTHERLINK));
+	setModelPropertyWithEditorProperty(
+		COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
+		getEditor().getSelectedCitationProperty(
+			COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK));
 
 	try {
-	    String otherLinkLbl = getEditor().getSelectedCitationPropertyAttr(
-		    COPropertiesType.IDENTIFIER,
-		    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
-		    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL);
+	    String otherLinkLbl =
+		    getEditor().getSelectedCitationPropertyAttr(
+			    COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
+			    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL);
 
 	    if (otherLinkLbl != null) {
 		addAttribute(COPropertiesType.IDENTIFIER,
@@ -196,7 +210,7 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	    }
 	} catch (Exception e) {
 	    // The property is probably null - See SAKAI-1560
-	    //getController().displayError("Erreur " + e.getMessage());
+	    // getController().displayError("Erreur " + e.getMessage());
 	}
 	// setModelPropertyWithEditorProperty(COPropertiesType.IDENTIFIER,
 	// COPropertiesType.IDENTIFIER_TYPE_NOLINK, getEditor()
@@ -204,22 +218,27 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	// COPropertiesType.IDENTIFIER,
 	// COPropertiesType.IDENTIFIER_TYPE_NOLINK));
 	// update resTypeContextVisibilitymap
-	    Map<String, String> cr =
-		    OsylEditorEntryPoint.getInstance()
-			.getResTypeContextVisibilityMap().get(uri
-				    + "/"
-				    + getEditor().getSelectedCitationProperty(
-					    CitationSchema.CITATIONID));
-	    if (cr == null) {
-		cr = new HashMap<String, String>();
-	    }
-	    cr.put(getModel().getId(),
-		    getModel().getResource().getProperty(COPropertiesType.ASM_RESOURCE_TYPE));
-	    OsylEditorEntryPoint.getInstance().getResTypeContextVisibilityMap()
-		    .put(uri
-			    + "/"
-			    + getEditor().getSelectedCitationProperty(
-				    CitationSchema.CITATIONID), cr);
+	Map<String, String> cr =
+		OsylEditorEntryPoint
+			.getInstance()
+			.getResTypeContextVisibilityMap()
+			.get(uri
+				+ "/"
+				+ getEditor().getSelectedCitationProperty(
+					CitationSchema.CITATIONID));
+	if (cr == null) {
+	    cr = new HashMap<String, String>();
+	}
+	cr.put(getModel().getResource().getId(),
+		getModel().getResource().getProperty(
+			COPropertiesType.ASM_RESOURCE_TYPE));
+	OsylEditorEntryPoint
+		.getInstance()
+		.getResTypeContextVisibilityMap()
+		.put(uri
+			+ "/"
+			+ getEditor().getSelectedCitationProperty(
+				CitationSchema.CITATIONID), cr);
     }
 
     /**
@@ -260,8 +279,8 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 			COPropertiesType.IDENTIFIER_TYPE_URI);
 	if (identifier_uri != null) {
 	    return identifier_uri.substring(
-		    identifier_uri.lastIndexOf("/") + 1, identifier_uri
-			    .length());
+		    identifier_uri.lastIndexOf("/") + 1,
+		    identifier_uri.length());
 	} else
 	    return null;
     }
@@ -297,8 +316,7 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
     }
 
     public String getCitationResourceType() {
-	String resourceType =
-		getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
+	String resourceType = getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
 
 	if (resourceType == null || resourceType.equals(""))
 	    return null;
@@ -306,7 +324,7 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	    return resourceType;
 
     }
-    
+
     public String getCitationOtherLink() {
 	String url =
 		getProperty(COPropertiesType.IDENTIFIER,
@@ -317,27 +335,30 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	    return url;
 
     }
-    
+
     public String getCitationOtherLinkLabel() {
 	String urlLabel = null;
-	
-	COProperty coProperty = getCOProperty(COPropertiesType.IDENTIFIER,
-		COPropertiesType.IDENTIFIER_TYPE_OTHERLINK);
-	
-	if(coProperty != null){
-	    urlLabel = coProperty.getAttribute(
-		    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL);
+
+	COProperty coProperty =
+		getCOProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK);
+
+	if (coProperty != null) {
+	    urlLabel =
+		    coProperty
+			    .getAttribute(COPropertiesType.IDENTIFIER_TYPE_OTHERLINK_LABEL);
 	}
 	return urlLabel;
     }
-  
+
     /**
      * Returns the type of resource text of current resource.
      */
     public String getResourceTypeFromModel() {
-	return getModel().getResource().getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
+	return getModel().getResource().getProperty(
+		COPropertiesType.ASM_RESOURCE_TYPE);
     }
-    
+
     /**
      * @return
      */

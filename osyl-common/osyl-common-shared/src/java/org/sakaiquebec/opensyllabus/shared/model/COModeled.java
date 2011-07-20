@@ -655,7 +655,7 @@ public class COModeled extends COSerialized {
 		if (contextVisibilityMap == null) {
 		    contextVisibilityMap = new HashMap<String, String>();
 		}
-		contextVisibilityMap.put(coContentResProxy.getId(),
+		contextVisibilityMap.put(coContentResProxy.getResource().getId(),
 			resourceTypeDoc);
 		resTypeContextVisibilityMap.put(uri, contextVisibilityMap);
 	    }
