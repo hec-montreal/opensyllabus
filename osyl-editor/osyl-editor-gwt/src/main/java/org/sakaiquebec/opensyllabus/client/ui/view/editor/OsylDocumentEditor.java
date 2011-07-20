@@ -423,7 +423,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 				.getUiMessage(
 					"DocumentEditor.document.resTypeIncompatibility", 
 					msgParameter);
-		message += " : " + typage;		
+		message += " : " + getView().getCoMessage(
+			RESS_TYPE_MESSAGE_PREFIX + typage);		
 	    }
 	}
 	if (message.equals("")) {
@@ -679,7 +680,8 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 					.getUiMessage(
 						"DocumentEditor.document.resTypeIncompatibility", 
 						msgParameter);
-		    message += " : " + typage;		    
+		    message += " : " + getView().getCoMessage(
+				RESS_TYPE_MESSAGE_PREFIX + typage);		    
 		}
 		if (!message.equals("")) {
 		    OsylAlertDialog oad =

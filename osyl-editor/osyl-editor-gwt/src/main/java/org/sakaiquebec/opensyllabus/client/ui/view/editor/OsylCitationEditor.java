@@ -129,10 +129,10 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
     private DisclosurePanel metaInfoDiscPanel;
 
-    //List of type of resources    
+    // List of type of resources
     private ListBox typeResourceListBox;
-    
-    //Type of resource for hyperlink
+
+    // Type of resource for hyperlink
     private String typeResource;
 
     private KeyPressHandler kph = new KeyPressHandler() {
@@ -201,17 +201,16 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	setViewerDesc(htmlViewerDesc);
 
 	HTML htmlViewerType =
-		new HTML((getView().getDocType() == null) ? "" : "["+getView()
-			.getCoMessage(
+		new HTML((getView().getDocType() == null) ? "" : "["
+			+ getView().getCoMessage(
 				RESS_TYPE_MESSAGE_PREFIX
-					+ getView().getDocType())+"]");
+					+ getView().getDocType()) + "]");
 	htmlViewerType.setStylePrimaryName("type");
 	setViewerType(htmlViewerType);
 
 	setViewer(new VerticalPanel());
 	getViewer().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewer().add(getViewerLink());
-	
 
 	String isn =
 		getView()
@@ -391,16 +390,17 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		    getUiMessage("CitationEditor.save.error.citationUndefined");
 	} else if (saveButton.isEnabled()) {
 	    message += getUiMessage("CitationEditor.ChangeUrl.Save");
-	
+
 	    // -----------------------------------------------------------------------
 	    // Check resource type incompatibility
 	    // -----------------------------------------------------------------------
 	    Map<String, String> cr =
-		    OsylEditorEntryPoint.getInstance()
-			    .getResTypeContextVisibilityMap().get(
-				    getResourceURI()+ "/"
-				    + getSelectedCitationProperty(
-					    CitationSchema.CITATIONID));
+		    OsylEditorEntryPoint
+			    .getInstance()
+			    .getResTypeContextVisibilityMap()
+			    .get(getResourceURI()
+				    + "/"
+				    + getSelectedCitationProperty(CitationSchema.CITATIONID));
 	    boolean resIncompatibility = false;
 	    String resType =
 		    typeResourceListBox.getValue(typeResourceListBox
@@ -434,14 +434,18 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		    sb.append(s + ", 0");
 		}
 		String msgParameter = sb.substring(0, sb.length() - 2);
-		message += " " +
-			getView()
-				.getUiMessage(
-					"DocumentEditor.document.resTypeIncompatibility", 
-					msgParameter);
-		message += " : " + typage;		
+		message +=
+			" "
+				+ getView()
+					.getUiMessage(
+						"DocumentEditor.document.resTypeIncompatibility",
+						msgParameter);
+		message +=
+			" : "
+				+ getView().getCoMessage(
+					RESS_TYPE_MESSAGE_PREFIX + typage);
 	    }
-	}    
+	}
 	if (message.equals("")) {
 	    return true;
 	} else {
@@ -493,8 +497,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
     public String getTypeResourceSelected() {
 	if (typeResourceListBox.getSelectedIndex() != -1)
-	    return typeResourceListBox
-		    .getValue(typeResourceListBox.getSelectedIndex());
+	    return typeResourceListBox.getValue(typeResourceListBox
+		    .getSelectedIndex());
 	else
 	    return "";
     }
@@ -591,23 +595,22 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	disableLibraryLinkCheckBox.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
-		    final OsylCitationItem selectedFile =
-			    (OsylCitationItem) browser
-				    .getSelectedAbstractBrowserItem();
+		final OsylCitationItem selectedFile =
+			(OsylCitationItem) browser
+				.getSelectedAbstractBrowserItem();
 
-		    // If the citation is of type unknow we tell the user he can
-		    // not
-		    // change the url type
-		    if (selectedFile.getProperty(CitationSchema.TYPE)
-			    .equalsIgnoreCase(CitationSchema.TYPE_UNKNOWN)) {
-			Window
-				.alert(getUiMessage("CitationEditor.ChangeUrl.InvalidChange"));
-			disableLibraryLinkCheckBox.setValue(true);
+		// If the citation is of type unknow we tell the user he can
+		// not
+		// change the url type
+		if (selectedFile.getProperty(CitationSchema.TYPE)
+			.equalsIgnoreCase(CitationSchema.TYPE_UNKNOWN)) {
+		    Window.alert(getUiMessage("CitationEditor.ChangeUrl.InvalidChange"));
+		    disableLibraryLinkCheckBox.setValue(true);
 
-		    } else {
-			saveButton.setEnabled(true);
-		    }
+		} else {
+		    saveButton.setEnabled(true);
 		}
+	    }
 	});
 	linksPanel.setWidget(0, 1, disableLibraryLinkCheckBox);
 	libraryLink = new HTML(getUiMessage("ResProxCitationView.link.label"));
@@ -692,7 +695,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			.getUiMessage("DocumentEditor.document.type")));
 	linksPanel.setWidget(4, 3, typeResourceListBox);
 	typeResourceListBox.setWidth("90%");
-	
+
 	typeResourceListBox.addChangeHandler(new ChangeHandler() {
 
 	    public void onChange(ChangeEvent event) {
@@ -700,15 +703,15 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		    saveButton.setEnabled(true);
 		} else {
 		    saveButton.setEnabled(false);
-		}		
-		setTypeResource(typeResourceListBox.getValue(typeResourceListBox
-			.getSelectedIndex()));
+		}
+		setTypeResource(typeResourceListBox
+			.getValue(typeResourceListBox.getSelectedIndex()));
 	    }
 	});
-	//-----------------------------------------------------------------------
+	// -----------------------------------------------------------------------
 
-	AbstractImagePrototype imgSaveButton = 
-	    AbstractImagePrototype.create(getOsylImageBundle().save());
+	AbstractImagePrototype imgSaveButton =
+		AbstractImagePrototype.create(getOsylImageBundle().save());
 	saveButton =
 		new ImageAndTextButton(imgSaveButton, getView().getUiMessage(
 			"DocumentEditor.save.name"));
@@ -719,37 +722,43 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	saveButton.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
-		
+
 		String message = "";
 		String typage = "";
-		//-----------------------------------------------------------------------
-		// Check resource type incompatibility 
-		//-----------------------------------------------------------------------
-		Map<String, String> cr = OsylEditorEntryPoint.getInstance()
-				    .getResTypeContextVisibilityMap()
-				    .get(getResourceURI()+ "/"
-					    + getSelectedCitationProperty(
-						    CitationSchema.CITATIONID));
+		// -----------------------------------------------------------------------
+		// Check resource type incompatibility
+		// -----------------------------------------------------------------------
+		Map<String, String> cr =
+			OsylEditorEntryPoint
+				.getInstance()
+				.getResTypeContextVisibilityMap()
+				.get(getResourceURI()
+					+ "/"
+					+ getSelectedCitationProperty(CitationSchema.CITATIONID));
 		boolean resIncompatibility = false;
-		String resType =   typeResourceListBox.getValue(typeResourceListBox.getSelectedIndex());
+		String resType =
+			typeResourceListBox.getValue(typeResourceListBox
+				.getSelectedIndex());
 		Set<String> parentTitles = new HashSet<String>();
 		if (cr != null) {
 		    for (Entry<String, String> entry : cr.entrySet()) {
 			String id = entry.getKey();
-			if (!id.equals(getView().getModel().getResource().getId())) {
+			if (!id.equals(getView().getModel().getResource()
+				.getId())) {
 			    typage = entry.getValue();
 			    if (!typage.equals(resType)) {
-	        		resIncompatibility = true;
-	        		COModelInterface comi = OsylEditorEntryPoint.getInstance()
-	                		.getCoModelInterfaceWithId(id);
-	        		if (comi instanceof COElementAbstract) {
-	        		    COElementAbstract coe =
-	                			(COElementAbstract) comi;
-	        		    while (!coe.isCOUnit()) {
-	        			coe = coe.getParent();
-	        		    }
-	        		    parentTitles.add(coe.getLabel());
-	        		}
+				resIncompatibility = true;
+				COModelInterface comi =
+					OsylEditorEntryPoint.getInstance()
+						.getCoModelInterfaceWithId(id);
+				if (comi instanceof COElementAbstract) {
+				    COElementAbstract coe =
+					    (COElementAbstract) comi;
+				    while (!coe.isCOUnit()) {
+					coe = coe.getParent();
+				    }
+				    parentTitles.add(coe.getLabel());
+				}
 			    }
 			}
 		    }
@@ -760,11 +769,14 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			sb.append(s + ", 0");
 		    }
 		    String msgParameter = sb.substring(0, sb.length() - 2);
-		    message +=	" " + getView()
-					.getUiMessage(
-						"DocumentEditor.document.resTypeIncompatibility",
-						msgParameter);
-		    message += " : " + typage;		    
+		    message +=
+			    " "
+				    + getView()
+					    .getUiMessage(
+						    "DocumentEditor.document.resTypeIncompatibility",
+						    msgParameter);
+		    message += " : " + getView().getCoMessage(
+				RESS_TYPE_MESSAGE_PREFIX + typage);
 		}
 
 		if (!message.equals("")) {
@@ -914,8 +926,9 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	typeResourceListBox.addItem(getView().getUiMessage(
 		"DocumentEditor.documentType.choose"));
 	for (String typeResource : typesResourceList) {
-	    typeResourceListBox.addItem(getView().getCoMessage(
-		    "Resource.Type." + typeResource), typeResource);
+	    typeResourceListBox.addItem(
+		    getView().getCoMessage("Resource.Type." + typeResource),
+		    typeResource);
 	}
 	String typeResCitation = getTypeResource();
 	if (getTypeResource() == null || getTypeResource().equals("")) {
@@ -924,13 +937,13 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 	if (typeResCitation != null) {
 	    for (int i = 0; i < typeResourceListBox.getItemCount(); i++) {
-        	String item = typeResourceListBox.getValue(i);
-        	if (item.equals(typeResCitation)) {
-        	    typeResourceListBox.setItemSelected(i, true);
-        	}
+		String item = typeResourceListBox.getValue(i);
+		if (item.equals(typeResCitation)) {
+		    typeResourceListBox.setItemSelected(i, true);
+		}
 	    }
 	}
-	//refreshBrowsingComponents();
+	// refreshBrowsingComponents();
     }
 
     protected String getResourcesPath() {
@@ -1066,17 +1079,19 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		    bookStoreLink.setText("");
 		    bookStoreLink.setEnabled(false);
 		}
-		//Type of resource
-		String resourceTypeCitation = selectedFile.getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
+		// Type of resource
+		String resourceTypeCitation =
+			selectedFile
+				.getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
 		setTypeResource(resourceTypeCitation);
 
 		for (int i = 0; i < typeResourceListBox.getItemCount(); i++) {
 		    String item = typeResourceListBox.getValue(i);
 		    if (item.equals(resourceTypeCitation)) {
-	        	typeResourceListBox.setItemSelected(i, true);
+			typeResourceListBox.setItemSelected(i, true);
 		    }
 		}
-		//--------------------------------------------------------------------
+		// --------------------------------------------------------------------
 
 		if (hasIdentifierType(selectedFile,
 			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK)) {
@@ -1132,13 +1147,13 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     }
 
     public void setTypeResource(String typeResource) {
-        this.typeResource = typeResource;
+	this.typeResource = typeResource;
     }
-    
+
     public String getTypeResource() {
 	return typeResource;
     }
-    
+
     private String getEditBoxTitle() {
 	if (getView().isDocumentDefined()) {
 	    return getView().getUiMessage("CitationEditor.title.edit");

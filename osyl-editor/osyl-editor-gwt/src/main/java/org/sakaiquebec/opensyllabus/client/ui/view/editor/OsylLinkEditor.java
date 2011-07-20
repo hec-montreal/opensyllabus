@@ -424,7 +424,8 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 				.getUiMessage(
 					"DocumentEditor.document.resTypeIncompatibility", 
 					msgParameter);
-		messages += " : " + typage;
+		messages += " : " + getView().getCoMessage(
+			RESS_TYPE_MESSAGE_PREFIX + typage);
 	}
 
 	if (!ok) {

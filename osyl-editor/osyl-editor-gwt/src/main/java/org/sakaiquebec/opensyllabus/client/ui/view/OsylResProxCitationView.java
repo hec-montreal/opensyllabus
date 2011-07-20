@@ -206,14 +206,14 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	// update resTypeContextVisibilitymap
 	    Map<String, String> cr =
 		    OsylEditorEntryPoint.getInstance()
-			    .getResTypeContextVisibilityMap().get(uri
+			.getResTypeContextVisibilityMap().get(uri
 				    + "/"
 				    + getEditor().getSelectedCitationProperty(
 					    CitationSchema.CITATIONID));
 	    if (cr == null) {
 		cr = new HashMap<String, String>();
 	    }
-	    cr.put(getModel().getResource().getId(),
+	    cr.put(getModel().getId(),
 		    getModel().getResource().getProperty(COPropertiesType.ASM_RESOURCE_TYPE));
 	    OsylEditorEntryPoint.getInstance().getResTypeContextVisibilityMap()
 		    .put(uri

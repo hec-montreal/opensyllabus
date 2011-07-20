@@ -65,24 +65,26 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
 	getModel().setLabel(getEditor().getText());
 	getModel().addProperty(COPropertiesType.COMMENT,
 		((OsylLinkEditor) getEditor()).getDescription());
-	//Type of link resource
-	getModel().getResource().addProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+	// Type of link resource
+	getModel().getResource().addProperty(
+		COPropertiesType.ASM_RESOURCE_TYPE,
 		((OsylLinkEditor) getEditor()).getTypeLinkSelected());
 
-	getModel().getResource().addProperty(
-		COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_URI,
+	getModel().getResource().addProperty(COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_URI,
 		((OsylLinkEditor) getEditor()).getLink());
 	// update resTypeContextVisibilitymap
-	    Map<String, String> cr =
-		    OsylEditorEntryPoint.getInstance()
-			    .getResTypeContextVisibilityMap().get(((OsylLinkEditor) getEditor()).getLink());
-	    if (cr == null) {
-		cr = new HashMap<String, String>();
-	    }
-	    cr.put(getModel().getResource().getId(),
-		    getModel().getResource().getProperty(COPropertiesType.ASM_RESOURCE_TYPE));
-	    OsylEditorEntryPoint.getInstance().getResTypeContextVisibilityMap()
-		    .put(((OsylLinkEditor) getEditor()).getLink(), cr);
+	Map<String, String> cr =
+		OsylEditorEntryPoint.getInstance()
+			.getResTypeContextVisibilityMap()
+			.get(((OsylLinkEditor) getEditor()).getLink());
+	if (cr == null) {
+	    cr = new HashMap<String, String>();
+	}
+	cr.put(getModel().getId(), getModel().getResource()
+		.getProperty(COPropertiesType.ASM_RESOURCE_TYPE));
+	OsylEditorEntryPoint.getInstance().getResTypeContextVisibilityMap()
+		.put(((OsylLinkEditor) getEditor()).getLink(), cr);
     }
 
     /**
@@ -112,9 +114,10 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
      * Returns the type of resource text of current resource.
      */
     public String getResourceTypeFromModel() {
-	return getModel().getResource().getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
+	return getModel().getResource().getProperty(
+		COPropertiesType.ASM_RESOURCE_TYPE);
     }
-    
+
     /**
      * Returns the URI of current resource
      */
@@ -134,7 +137,7 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
 	    String docFolder = controller.getDocFolderName();
 
 	    return serverId + "/access/content/group/" + siteId + "/"
-		    + (docFolder.equals("")? "": docFolder + "/") + uri;
+		    + (docFolder.equals("") ? "" : docFolder + "/") + uri;
 	}
     } // getLinkURI
 
@@ -143,7 +146,8 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
      */
     public String getRawURI() {
 	return getModel().getResource().getProperty(
-		COPropertiesType.IDENTIFIER, COPropertiesType.IDENTIFIER_TYPE_URI);
+		COPropertiesType.IDENTIFIER,
+		COPropertiesType.IDENTIFIER_TYPE_URI);
     }
 
     @Override

@@ -141,32 +141,32 @@ public class COModeled extends COSerialized {
     protected final static String DATEEND_ATTRIBUTE_NAME = "date-end";
 
     /**
-     *Name of result attribute
+     * Name of result attribute
      */
     protected final static String RESULT_ATTRIBUTE_NAME = "result";
 
     /**
-     *Name of scope attribute
+     * Name of scope attribute
      */
     protected final static String SCOPE_ATTRIBUTE_NAME = "scope";
 
     /**
-     *Name of uuid attribute
+     * Name of uuid attribute
      */
     protected final static String ID_ATTRIBUTE_NAME = "id";
 
     /**
-     *Name of uuid parent attribute
+     * Name of uuid parent attribute
      */
     protected final static String ID_PARENT_ATTRIBUTE_NAME = "id_parent";
 
     /**
-     *Name of editable attribute
+     * Name of editable attribute
      */
     protected final static String EDITABLE_ATTRIBUTE_NAME = "editable";
 
     /**
-     *Name of person node
+     * Name of person node
      */
     protected final static String PERSON_NODE_NAME = "Person";
 
@@ -180,7 +180,7 @@ public class COModeled extends COSerialized {
     private String schemaVersion;
 
     private Map<String, Map<String, String>> documentContextVisibilityMap;
-    
+
     private Map<String, Map<String, String>> resTypeContextVisibilityMap;
 
     /**
@@ -252,7 +252,7 @@ public class COModeled extends COSerialized {
 	documentContextVisibilityMap =
 		new HashMap<String, Map<String, String>>();
 	resTypeContextVisibilityMap =
-		new HashMap<String, Map<String, String>>();	
+		new HashMap<String, Map<String, String>>();
 
 	try {
 	    // XMLtoDOM
@@ -282,15 +282,12 @@ public class COModeled extends COSerialized {
 		    .getNodeValue().equals("") ? UUID.uuid() : map
 		    .getNamedItem(ID_ATTRIBUTE_NAME).getNodeValue());
 
-	    elem
-		    .setEditable(map.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? true
-			    : Boolean.valueOf(map.getNamedItem(
-				    EDITABLE_ATTRIBUTE_NAME).getNodeValue()));
+	    elem.setEditable(map.getNamedItem(EDITABLE_ATTRIBUTE_NAME) == null ? true
+		    : Boolean.valueOf(map.getNamedItem(EDITABLE_ATTRIBUTE_NAME)
+			    .getNodeValue()));
 
-	    elem
-		    .setType(map.getNamedItem(XSI_TYPE_ATTRIBUTE_NAME) == null ? null
-			    : map.getNamedItem(XSI_TYPE_ATTRIBUTE_NAME)
-				    .getNodeValue());
+	    elem.setType(map.getNamedItem(XSI_TYPE_ATTRIBUTE_NAME) == null ? null
+		    : map.getNamedItem(XSI_TYPE_ATTRIBUTE_NAME).getNodeValue());
 
 	    if (elem instanceof COElementAbstract) {
 		COElementAbstract coElementAbstract = (COElementAbstract) elem;
@@ -350,9 +347,8 @@ public class COModeled extends COSerialized {
 		    addProperty(coContent.getProperties(), myNode);
 		}
 	    } catch (Exception e) {
-		Window
-			.alert("An error has been detected in createCOContentPOJO "
-				+ e);
+		Window.alert("An error has been detected in createCOContentPOJO "
+			+ e);
 
 	    }
 	}
@@ -435,9 +431,8 @@ public class COModeled extends COSerialized {
 		    addProperty(coUnitStructure.getProperties(), sNode);
 		}
 	    } catch (Exception e) {
-		Window
-			.alert("An error has been detected in createCOUnitStructurePOJO "
-				+ e);
+		Window.alert("An error has been detected in createCOUnitStructurePOJO "
+			+ e);
 	    }
 
 	}
@@ -524,9 +519,8 @@ public class COModeled extends COSerialized {
 		}
 
 	    } catch (Exception e) {
-		Window
-			.alert("An error has been detected in createCOStructureElementPOJO "
-				+ e.toString());
+		Window.alert("An error has been detected in createCOStructureElementPOJO "
+			+ e.toString());
 	    }
 	}
 	return coStructElt;
@@ -563,9 +557,8 @@ public class COModeled extends COSerialized {
 		}
 	    }
 	} catch (Exception e) {
-	    Window
-		    .alert("An error has been detected in createCOContentUnitPOJO "
-			    + e);
+	    Window.alert("An error has been detected in createCOContentUnitPOJO "
+		    + e);
 	}
 	return coContentUnit;
     }
@@ -617,18 +610,19 @@ public class COModeled extends COSerialized {
 		}
 
 	    } catch (Exception e) {
-		Window
-			.alert("An error has been detected in createCOContentResourceProxyPOJO "
-				+ e.toString());
+		Window.alert("An error has been detected in createCOContentResourceProxyPOJO "
+			+ e.toString());
 	    }
 	}
 	// build documentcontextvisibilitymap
 	if (COContentResourceType.DOCUMENT.equals(coContentResProxy
 		.getResource().getType())) {
 	    String uri =
-		    coContentResProxy.getResource().getProperty(
-			    COPropertiesType.IDENTIFIER,
-			    COPropertiesType.IDENTIFIER_TYPE_URI).trim();
+		    coContentResProxy
+			    .getResource()
+			    .getProperty(COPropertiesType.IDENTIFIER,
+				    COPropertiesType.IDENTIFIER_TYPE_URI)
+			    .trim();
 	    String visibility =
 		    coContentResProxy.getProperty(COPropertiesType.VISIBILITY);
 	    Map<String, String> contextVisibilityMap =
@@ -641,22 +635,30 @@ public class COModeled extends COSerialized {
 	}
 	// build resTypeContextVisibilityMap
 	if (COContentResourceType.DOCUMENT.equals(coContentResProxy
-		.getResource().getType()) || COContentResourceType.BIBLIO_RESOURCE.equals(coContentResProxy
-			.getResource().getType()) || COContentResourceType.URL.equals(coContentResProxy
-				.getResource().getType())) {
+		.getResource().getType())
+		|| COContentResourceType.BIBLIO_RESOURCE
+			.equals(coContentResProxy.getResource().getType())
+		|| COContentResourceType.URL.equals(coContentResProxy
+			.getResource().getType())) {
 	    String uri =
-		    coContentResProxy.getResource().getProperty(
-			    COPropertiesType.IDENTIFIER,
-			    COPropertiesType.IDENTIFIER_TYPE_URI).trim();
+		    coContentResProxy
+			    .getResource()
+			    .getProperty(COPropertiesType.IDENTIFIER,
+				    COPropertiesType.IDENTIFIER_TYPE_URI)
+			    .trim();
 	    String resourceTypeDoc =
-		    coContentResProxy.getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
-	    Map<String, String> contextVisibilityMap =
-		resTypeContextVisibilityMap.get(uri);	    
-	    if (contextVisibilityMap == null) {
-		contextVisibilityMap = new HashMap<String, String>();
+		    coContentResProxy.getResource()
+			    .getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
+	    if (resourceTypeDoc != null) {
+		Map<String, String> contextVisibilityMap =
+			resTypeContextVisibilityMap.get(uri);
+		if (contextVisibilityMap == null) {
+		    contextVisibilityMap = new HashMap<String, String>();
+		}
+		contextVisibilityMap.put(coContentResProxy.getId(),
+			resourceTypeDoc);
+		resTypeContextVisibilityMap.put(uri, contextVisibilityMap);
 	    }
-	    contextVisibilityMap.put(coContentResProxy.getId(), resourceTypeDoc);
-	    resTypeContextVisibilityMap.put(uri, contextVisibilityMap);	    
 	}
 	return coContentResProxy;
     }
@@ -681,9 +683,8 @@ public class COModeled extends COSerialized {
 		addProperty(coContentRes.getProperties(), rNode);
 	    }
 	} catch (Exception e) {
-	    Window
-		    .alert("An error has been detected in createCOContentResourcePOJO "
-			    + e);
+	    Window.alert("An error has been detected in createCOContentResourcePOJO "
+		    + e);
 	}
 	return coContentRes;
     }
@@ -710,9 +711,8 @@ public class COModeled extends COSerialized {
 		addProperty(coContentRes.getProperties(), rNode);
 	    }
 	} catch (Exception e) {
-	    Window
-		    .alert("An error has been detected in createCOContentResourcePersonPOJO "
-			    + e);
+	    Window.alert("An error has been detected in createCOContentResourcePersonPOJO "
+		    + e);
 	}
 	return coContentRes;
     }
@@ -755,9 +755,8 @@ public class COModeled extends COSerialized {
 	    coContentRubric.setKey(type);
 
 	} catch (Exception e) {
-	    Window
-		    .alert("An error has been detected in createCOContentRubricPOJO "
-			    + e);
+	    Window.alert("An error has been detected in createCOContentRubricPOJO "
+		    + e);
 	}
 	return coContentRubric;
     }
@@ -773,13 +772,13 @@ public class COModeled extends COSerialized {
 	    COModelInterface modelInterface, Document document) {
 
 	try {
-	    element.setAttribute(ACCESS_ATTRIBUTE_NAME, modelInterface
-		    .getAccess());
+	    element.setAttribute(ACCESS_ATTRIBUTE_NAME,
+		    modelInterface.getAccess());
 	    element.setAttribute(ID_ATTRIBUTE_NAME, modelInterface.getId());
 
 	    if (modelInterface.getType() != null) {
-		element.setAttribute(XSI_TYPE_ATTRIBUTE_NAME, modelInterface
-			.getType());
+		element.setAttribute(XSI_TYPE_ATTRIBUTE_NAME,
+			modelInterface.getType());
 	    }
 	    if (modelInterface instanceof COElementAbstract) {
 		COElementAbstract coElementAbstract =
@@ -791,14 +790,13 @@ public class COModeled extends COSerialized {
 	    // Properties
 	    if (modelInterface.getProperties() != null
 		    && !modelInterface.getProperties().isEmpty()) {
-		createPropertiesElem(document, element, modelInterface
-			.getProperties());
+		createPropertiesElem(document, element,
+			modelInterface.getProperties());
 	    }
 
 	} catch (Exception e) {
-	    Window
-		    .alert("An error has been detected in setCommonAttributesAndProperties "
-			    + e);
+	    Window.alert("An error has been detected in setCommonAttributesAndProperties "
+		    + e);
 	}
     }
 
@@ -811,8 +809,9 @@ public class COModeled extends COSerialized {
     private void createRootElement(Document document, COContent coContent,
 	    boolean saveParentInfos) {
 	Element osylElement = document.createElement("OSYL");
-	//If (ACCESS_ATTRIBUTE_NAME is different of ACCESS_PUBLIC)
-	//there is an error An error has been detected in xmlToModel com.google.gwt.xml.client.impl.DOMParseException: 
+	// If (ACCESS_ATTRIBUTE_NAME is different of ACCESS_PUBLIC)
+	// there is an error An error has been detected in xmlToModel
+	// com.google.gwt.xml.client.impl.DOMParseException:
 	osylElement.setAttribute(ACCESS_ATTRIBUTE_NAME,
 		SecurityInterface.ACCESS_PUBLIC);
 	osylElement.setAttribute("schemaVersion", schemaVersion);
@@ -970,8 +969,8 @@ public class COModeled extends COSerialized {
 		}
 		for (String rubricKey : child.getRubrics().keySet()) {
 		    createCOCOntentRubricChild(document,
-			    coContentResourceProxyElem, child
-				    .getRubric(rubricKey));
+			    coContentResourceProxyElem,
+			    child.getRubric(rubricKey));
 		}
 		parent.appendChild(coContentResourceProxyElem);
 		if (child.getResource() instanceof COContentResource) {
@@ -985,9 +984,8 @@ public class COModeled extends COSerialized {
 			    coUnit, saveParentInfos);
 		}
 	    } catch (Exception e) {
-		Window
-			.alert("An error has been detected in createChildElement "
-				+ e);
+		Window.alert("An error has been detected in createChildElement "
+			+ e);
 	    }
 	}
     }
@@ -1016,21 +1014,20 @@ public class COModeled extends COSerialized {
 			resource.getType());
 
 	    }
-	    coContentResourceElem.setAttribute(ACCESS_ATTRIBUTE_NAME, resource
-		    .getAccess());
-	    coContentResourceElem.setAttribute(ID_ATTRIBUTE_NAME, resource
-		    .getId());
+	    coContentResourceElem.setAttribute(ACCESS_ATTRIBUTE_NAME,
+		    resource.getAccess());
+	    coContentResourceElem.setAttribute(ID_ATTRIBUTE_NAME,
+		    resource.getId());
 	    if (resource.getProperties() != null
 		    && !resource.getProperties().isEmpty()) {
-		createPropertiesElem(document, coContentResourceElem, resource
-			.getProperties());
+		createPropertiesElem(document, coContentResourceElem,
+			resource.getProperties());
 	    }
 	    coContentResourceProxyElem.appendChild(coContentResourceElem);
 
 	} catch (Exception e) {
-	    Window
-		    .alert("An error has been detected in createCOContentResourceChild "
-			    + e);
+	    Window.alert("An error has been detected in createCOContentResourceChild "
+		    + e);
 	}
     }
 
@@ -1048,13 +1045,13 @@ public class COModeled extends COSerialized {
 	Element coContentRubricElem =
 		document.createElement(COPropertiesType.SEMANTIC_TAG);
 	try {
-	    coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME, rubric
-		    .getKey());
+	    coContentRubricElem.setAttribute(TYPE_ATTRIBUTE_NAME,
+		    rubric.getKey());
 	    if (rubric.getUserDefLabel() != null
 		    && rubric.getUserDefLabel().length() > 0) {
 		coContentRubricElem.setAttribute(
-			COPropertiesType.SEMANTIC_TAG_USERDEFLABEL, rubric
-				.getUserDefLabel());
+			COPropertiesType.SEMANTIC_TAG_USERDEFLABEL,
+			rubric.getUserDefLabel());
 	    }
 
 	    Text elemValue = document.createTextNode(rubric.getType());
@@ -1063,9 +1060,8 @@ public class COModeled extends COSerialized {
 	    coContentResourceProxyElem.appendChild(coContentRubricElem);
 
 	} catch (Exception e) {
-	    Window
-		    .alert("An error has been detected in createCOContentRubricChild "
-			    + e);
+	    Window.alert("An error has been detected in createCOContentRubricChild "
+		    + e);
 	}
     }
 
@@ -1077,13 +1073,13 @@ public class COModeled extends COSerialized {
 	    Map<String, Map<String, String>> documentContextVisibilityMap) {
 	this.documentContextVisibilityMap = documentContextVisibilityMap;
     }
-    
+
     public Map<String, Map<String, String>> getResTypeContextVisibilityMap() {
-        return resTypeContextVisibilityMap;
+	return resTypeContextVisibilityMap;
     }
 
     public void setResTypeContextVisibilityMap(
-    	Map<String, Map<String, String>> resTypeContextVisibilityMap) {
-        this.resTypeContextVisibilityMap = resTypeContextVisibilityMap;
+	    Map<String, Map<String, String>> resTypeContextVisibilityMap) {
+	this.resTypeContextVisibilityMap = resTypeContextVisibilityMap;
     }
 }
