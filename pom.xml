@@ -42,7 +42,7 @@
     <module>osyl-editor</module>
     <module>osyl-manager</module><!-- HEC ONLY SAKAI-2723 -->
     <module>osyl-admin</module><!-- HEC ONLY SAKAI-2723 -->
-    <!-- <module>osyl-portal</module> --><!-- HEC ONLY SAKAI-2723 -->
+    <module>osyl-portal</module><!-- HEC ONLY SAKAI-2723 -->
   </modules>
 
   <pluginRepositories>
@@ -129,7 +129,7 @@
         <version>${sakai.version}</version>
       </dependency>
       <!-- BEGIN HEC ONLY SAKAI-2723 --> 
-      <!-- <dependency>
+      <dependency>
       	<groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-portal-sakai-impl</artifactId>
        <version>${sakai.version}</version>
@@ -138,7 +138,7 @@
       	<groupId>org.sakaiquebec.opensyllabus</groupId>
         <artifactId>osyl-portal-server-api</artifactId>
         <version>${sakai.version}</version>
-     </dependency>-->
+     </dependency>
      <!-- END HEC ONLY SAKAI-2723 --> 
       <dependency>
         <groupId>org.sakaiquebec.opensyllabus.managergwt</groupId>
@@ -156,11 +156,11 @@
         <version>${sakai.version}</version>
       </dependency>
       <!-- BEGIN HEC ONLY SAKAI-2723 -->
-      <!--<dependency>
+      <dependency>
       	<groupId>org.sakaiquebec.opensyllabus.portalgwt</groupId>
         <artifactId>osyl-portal-gwt</artifactId>
        <version>${sakai.version}</version>
-     </dependency>-->
+     </dependency>
 	<!-- END HEC ONLY SAKAI-2723 -->
       <!--  sakai -->
       <dependency>
