@@ -25,10 +25,9 @@ import java.util.HashMap;
 /**
  * This is where to put all the properties of an object of the model. The
  * properties are stored in the object as a value associated to a key. It
- * extends the <code>HashMap</code> class. A property is associated with a key AND a type.
- *
- * HashMap<propertyName,<Hashmap<type,value>>
- *
+ * extends the <code>HashMap</code> class. A property is associated with a key
+ * AND a type. HashMap<propertyName,<Hashmap<type,value>>
+ * 
  * @author <a href="mailto:mathieu.cantin@hec.ca">Mathieu Cantin</a>
  * @author <a href="mailto:yvette.lapadessap@hec.ca">Yvette Lapa Dessap</a>
  */
@@ -56,7 +55,7 @@ public class COProperties extends HashMap<String, HashMap<String, COProperty>> {
 
     /**
      * Adds a property in the properties object.
-     *
+     * 
      * @param key the key used to retrieve the property
      * @param value the property value
      */
@@ -66,21 +65,21 @@ public class COProperties extends HashMap<String, HashMap<String, COProperty>> {
 
     /**
      * Adds a property in the properties object.
-     *
+     * 
      * @param key the key used to retrieve the property
      * @param value the property value
      */
     public void addProperty(String key, String type, String value) {
 	HashMap<String, COProperty> map = get(key);
-	if(map==null){
+	if (map == null) {
 	    map = new HashMap<String, COProperty>();
 	}
 	COProperty coProperty = map.get(type);
-	
-	if(coProperty == null){
+
+	if (coProperty == null) {
 	    coProperty = new COProperty();
 	}
-	
+
 	coProperty.setValue(value);
 	map.put(type, coProperty);
 	put(key, map);
@@ -91,7 +90,7 @@ public class COProperties extends HashMap<String, HashMap<String, COProperty>> {
 
     /**
      * Removes a property from the properties object.
-     *
+     * 
      * @param key the key used to remove its associated property.
      */
     public void removeProperty(String key) {
@@ -100,23 +99,24 @@ public class COProperties extends HashMap<String, HashMap<String, COProperty>> {
 
     /**
      * Removes the specified type
+     * 
      * @param key
      * @param type
      */
-    public void removeProperty(String key, String type){
-    	HashMap<String, COProperty> map = get(key);
-    	if(map!=null){
-    	    map.remove(type);
-    	}
-    	if (TRACE)
-    	    System.out.println("*** TRACE *** UPDATE THE MODEL COProperties "
-    		    + key + " = " + type);
+    public void removeProperty(String key, String type) {
+	HashMap<String, COProperty> map = get(key);
+	if (map != null) {
+	    map.remove(type);
+	}
+	if (TRACE)
+	    System.out.println("*** TRACE *** UPDATE THE MODEL COProperties "
+		    + key + " = " + type);
 
     }
-    
+
     /**
      * Retrieves a property from the properties object.
-     *
+     * 
      * @param key the key used to retrieve the property form the properties
      *            object.
      * @return the property associated to the key and the default type.
@@ -127,7 +127,7 @@ public class COProperties extends HashMap<String, HashMap<String, COProperty>> {
 
     /**
      * Retrieves a property from the properties object.
-     *
+     * 
      * @param key the key used to retrieve the property form the properties
      *            object.
      * @param type the type used to retrieve the property form the properties
@@ -147,9 +147,12 @@ public class COProperties extends HashMap<String, HashMap<String, COProperty>> {
 	}
 	return value;
     }
-    
-    public COProperty getCOProperty(String key, String type){
+
+    public COProperty getCOProperty(String key, String type) {
 	HashMap<String, COProperty> map = get(key);
-	return map.get(type);
+	if (map != null)
+	    return map.get(type);
+	else
+	    return null;
     }
 }

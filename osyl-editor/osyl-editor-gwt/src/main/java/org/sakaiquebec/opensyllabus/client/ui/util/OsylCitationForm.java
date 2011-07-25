@@ -14,8 +14,12 @@
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.WindowPanel;
@@ -31,6 +35,8 @@ import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractResProxEditor;
+import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
+import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
@@ -170,8 +176,6 @@ public class OsylCitationForm extends WindowPanel implements
      */
     public OsylCitationForm(OsylController osylController,
 	    final String currentDirectory, final OsylCitationItem citationItem) {
-	if (citationItem != null)
-	    System.out.println("resource id : " + citationItem.getResourceId());
 
 	// set some properties for WindowPanel
 	setResizable(true); // but is not maximizable
@@ -183,14 +187,16 @@ public class OsylCitationForm extends WindowPanel implements
 	uiMessages = osylController.getUiMessages();
 	coMessages = osylController.getCoMessages();
 	initCitationTypes();
-	this.typeResourceList = osylController.getOsylConfig().getResourceTypeList();
-	
-	if (citation.getProperty(CitationSchema.CITATION_RESOURCE_TYPE)!= null) {
-	    setTypeResource(citation.getProperty(CitationSchema.CITATION_RESOURCE_TYPE));
-	} else {
-	    setTypeResource(osylController.getViewContext().getContextModel().getProperty(CitationSchema.CITATION_RESOURCE_TYPE));
-	}
+	this.typeResourceList =
+		osylController.getOsylConfig().getResourceTypeList();
 
+	if (citation.getProperty(CitationSchema.CITATION_RESOURCE_TYPE) != null) {
+	    setTypeResource(citation
+		    .getProperty(CitationSchema.CITATION_RESOURCE_TYPE));
+	} else {
+	    setTypeResource(osylController.getViewContext().getContextModel()
+		    .getProperty(CitationSchema.CITATION_RESOURCE_TYPE));
+	}
 
 	mainPanel = new VerticalPanel();
 	mainPanel.setWidth(FORM_WIDTH + "px");
@@ -342,10 +348,12 @@ public class OsylCitationForm extends WindowPanel implements
 	mainPanel.add(publicationLocationPanel);
 
 	String typeCitationRes = "";
-	if (citation == null || citation.getProperty(CitationSchema.CITATION_RESOURCE_TYPE) == null) {
+	if (citation == null
+		|| citation.getProperty(CitationSchema.CITATION_RESOURCE_TYPE) == null) {
 	    typeCitationRes = "";
 	} else {
-	    typeCitationRes = citation.getProperty(CitationSchema.CITATION_RESOURCE_TYPE);
+	    typeCitationRes =
+		    citation.getProperty(CitationSchema.CITATION_RESOURCE_TYPE);
 	}
 
 	// Create a textbox for the journal.
@@ -472,25 +480,28 @@ public class OsylCitationForm extends WindowPanel implements
 				"Osyl-CitationForm-longTextBox");
 	urlPanel.add(urlTextBox);
 	mainPanel.add(urlPanel);
-	//-------------------------------------------------------------------
-	//Type of resource
-	//-------------------------------------------------------------------
+	// -------------------------------------------------------------------
+	// Type of resource
+	// -------------------------------------------------------------------
 	typeResourceListBox = new ListBox();
-	if (typeCitationRes=="") {
-	    //typeCitationRes = citation.getProperty(COPropertiesType.ASM_RESOURCE_TYPE, COPropertiesType.ASM_RESOURCE_TYPE);
-		typeCitationRes = citation.getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
+	if (typeCitationRes == "") {
+	    // typeCitationRes =
+	    // citation.getProperty(COPropertiesType.ASM_RESOURCE_TYPE,
+	    // COPropertiesType.ASM_RESOURCE_TYPE);
+	    typeCitationRes =
+		    citation.getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
 	}
 	setTypeResource(typeCitationRes);
-	typeResourceListBox.addItem(osylController.getUiMessage(
-		"DocumentEditor.documentType.choose"));
+	typeResourceListBox.addItem(osylController
+		.getUiMessage("DocumentEditor.documentType.choose"));
 	for (String typeResource : this.typeResourceList) {
-	    typeResourceListBox.addItem(coMessages.getMessage(
-		    "Resource.Type." + typeResource), typeResource);
+	    typeResourceListBox.addItem(
+		    coMessages.getMessage("Resource.Type." + typeResource),
+		    typeResource);
 	}
 
 	HTML typeResourcelabel =
-		createNewLabel(osylController
-			.getUiMessage("ResProxCitationView.resourceType.label")
+		createNewLabel(uiMessages.getMessage("ResProxCitationView.resourceType.label")
 			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + ":");
 
 	typeResourceListBox
@@ -509,13 +520,13 @@ public class OsylCitationForm extends WindowPanel implements
 	typeResourceListBox.addChangeHandler(new ChangeHandler() {
 
 	    public void onChange(ChangeEvent event) {
-		setTypeResource(typeResourceListBox.getValue(typeResourceListBox
-			.getSelectedIndex()));
+		setTypeResource(typeResourceListBox
+			.getValue(typeResourceListBox.getSelectedIndex()));
 	    }
 	});
-	
-	buildTypeResourceListBox();	
-	//-------------------------------------------------------------------	
+
+	buildTypeResourceListBox();
+	// -------------------------------------------------------------------
 	// Add a 'save' button.
 	AbstractImagePrototype imgSaveButton =
 		AbstractImagePrototype.create(osylImageBundle.save());
@@ -527,43 +538,89 @@ public class OsylCitationForm extends WindowPanel implements
 	saveButton.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
-
+		
 		final String title =
 			getCurrentCitationType().equals(
 				CitationSchema.TYPE_UNKNOWN) ? citationField
 				.getText() : titleField.getText();
 
-		String message = "";
-		if (typeResourceListBox.getSelectedIndex() == 0) {
-		    message =
-			    uiMessages
-				    .getMessage("fileUpload.chooseTypesResourceStatus");
-		}
-		
-		if (!message.equals("")) {
-		    final OsylAlertDialog alertBox =
-			    new OsylAlertDialog(uiMessages
-				    .getMessage("Global.error"), message);
-		    alertBox.center();
-		    alertBox.show();
-		} else {
-
 		// Data validation
 		String author = authorField.getText();
 		// Title is always required, author is required when type is
 		// book
+		String message = "";
 		if (title.length() == 0
 			|| ((getCurrentCitationType().equals(
 				CitationSchema.TYPE_BOOK) || getCurrentCitationType()
 				.equals(CitationSchema.TYPE_REPORT)) && author
 				.length() == 0)) {
+
+		    message =
+			    uiMessages
+				    .getMessage("CitationForm.fillRequiredFields");
+		} else if (typeResourceListBox.getSelectedIndex() == 0) {
+		    message =
+			    uiMessages
+				    .getMessage("fileUpload.chooseTypesResourceStatus");
+		} else if(null!=citation.getId()){
+		    String typage="";
+		    Map<String, String> cr =
+			    OsylEditorEntryPoint
+				    .getInstance()
+				    .getResTypeContextVisibilityMap()
+				    .get(citation.getFilePath()+ "/"+citation.getId());
+		    boolean resIncompatibility = false;
+		    String resType =
+			    typeResourceListBox.getValue(typeResourceListBox
+				    .getSelectedIndex());
+		    Set<String> parentTitles = new HashSet<String>();
+		    if (cr != null) {
+			for (Entry<String, String> entry : cr.entrySet()) {
+			    String id = entry.getKey();
+			    if (!id.equals(citation.getResourceId())) {//citation id
+				typage = entry.getValue();
+				if (!typage.equals(resType)) {
+				    resIncompatibility = true;
+				    COModelInterface comi =
+					    OsylEditorEntryPoint.getInstance()
+						    .getCoModelInterfaceWithId(id);
+				    if (comi instanceof COElementAbstract) {
+					COElementAbstract coe =
+						(COElementAbstract) comi;
+					while (!coe.isCOUnit()) {
+					    coe = coe.getParent();
+					}
+					parentTitles.add(coe.getLabel());
+				    }
+				}
+			    }
+			}
+		    }
+		    if (resIncompatibility) {
+			StringBuilder sb = new StringBuilder();
+			for (String s : parentTitles) {
+			    sb.append(s + ", 0");
+			}
+			String msgParameter = sb.substring(0, sb.length() - 2);
+			message +=
+				" "
+					+ uiMessages.getMessage(
+							"DocumentEditor.document.resTypeIncompatibility",
+							msgParameter);
+			message +=
+				" : "
+					+ coMessages.getMessage(
+						OsylAbstractResProxEditor.RESS_TYPE_MESSAGE_PREFIX + typage);
+		    }
+		}
+		if (!message.equals("")) {
 		    final OsylAlertDialog alertBox =
 			    new OsylAlertDialog(
 				    false,
 				    true,
-				    uiMessages
-					    .getMessage("CitationForm.fillRequiredFields"));
-		    // get index of citation form to set z-index of alert window
+				    message);
+		    // get index of citation form to set z-index of alert
+		    // window
 		    int index =
 			    new Integer(DOM.getStyleAttribute(
 				    OsylCitationForm.this.getElement(),
@@ -616,10 +673,12 @@ public class OsylCitationForm extends WindowPanel implements
 		citation.setProperty(CitationSchema.PUBLICATION_LOCATION,
 			publicationLocationTextBox.getText());
 
-		// citation.setResourceName(listname == null ? "" : listname);
+		// citation.setResourceName(listname == null ? "" :
+		// listname);
 
 		// We add the corresponding identifier
-		// If it a citation of type unknown, we save the identifier from
+		// If it a citation of type unknown, we save the identifier
+		// from
 		// here
 		String tempCitationType =
 			citationType.getValue(citationType.getSelectedIndex());
@@ -691,7 +750,7 @@ public class OsylCitationForm extends WindowPanel implements
 				    }
 				});
 	    }
-		}
+
 	});
 
 	saveButton.setStylePrimaryName("Osyl-FileUpload-genericButton");
@@ -905,10 +964,11 @@ public class OsylCitationForm extends WindowPanel implements
     private void buildTypeResourceListBox() {
 	for (int i = 0; i < typeResourceListBox.getItemCount(); i++) {
 	    String item = typeResourceListBox.getValue(i);
-	    if (item.equals(citation.getProperty(CitationSchema.CITATION_RESOURCE_TYPE))) {
+	    if (item.equals(citation
+		    .getProperty(CitationSchema.CITATION_RESOURCE_TYPE))) {
 		typeResourceListBox.setItemSelected(i, true);
 	    }
-	}	
+	}
     }
 
     private void setTypeResource(String typeResource) {

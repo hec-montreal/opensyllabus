@@ -536,7 +536,8 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 			+ getController().getDocFolderName() : basePath;
 	browser =
 		new OsylCitationBrowser(basePath, getView().getCitationId(),
-			getView().getDocPath() + "/" + getView().getDocName());
+			getView().getDocPath() + "/" + getView().getDocName(),
+			getView().getModel().getResource().getId());
 
 	browser.addEventHandler((RFBItemSelectionEventHandler) this);
 	browser.addEventHandler((RFBAddFolderEventHandler) this);
@@ -775,8 +776,10 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 					    .getUiMessage(
 						    "DocumentEditor.document.resTypeIncompatibility",
 						    msgParameter);
-		    message += " : " + getView().getCoMessage(
-				RESS_TYPE_MESSAGE_PREFIX + typage);
+		    message +=
+			    " : "
+				    + getView().getCoMessage(
+					    RESS_TYPE_MESSAGE_PREFIX + typage);
 		}
 
 		if (!message.equals("")) {

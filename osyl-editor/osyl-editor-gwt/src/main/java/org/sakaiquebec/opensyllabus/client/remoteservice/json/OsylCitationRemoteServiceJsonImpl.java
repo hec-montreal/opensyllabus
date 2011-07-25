@@ -99,7 +99,7 @@ public class OsylCitationRemoteServiceJsonImpl extends
 	String listname;
 	if (p_citation.getId() != null) {
 	    // update case
-	    action = remoteUri + p_citation.getResourceId();
+	    action = remoteUri + p_citation.getFilePath();
 
 	    // create hidden field to define put(update) method
 	    panel.add(FormHelper.createHiddenField("method", "put"));

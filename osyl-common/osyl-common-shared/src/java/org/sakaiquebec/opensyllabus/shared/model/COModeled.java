@@ -608,7 +608,6 @@ public class COModeled extends COSerialized {
 		} else {
 		    addProperty(coContentResProxy.getProperties(), prNode);
 		}
-
 	    } catch (Exception e) {
 		Window.alert("An error has been detected in createCOContentResourceProxyPOJO "
 			+ e.toString());
@@ -618,20 +617,22 @@ public class COModeled extends COSerialized {
 	if (COContentResourceType.DOCUMENT.equals(coContentResProxy
 		.getResource().getType())) {
 	    String uri =
-		    coContentResProxy
-			    .getResource()
-			    .getProperty(COPropertiesType.IDENTIFIER,
-				    COPropertiesType.IDENTIFIER_TYPE_URI)
-			    .trim();
-	    String visibility =
-		    coContentResProxy.getProperty(COPropertiesType.VISIBILITY);
-	    Map<String, String> contextVisibilityMap =
-		    documentContextVisibilityMap.get(uri);
-	    if (contextVisibilityMap == null) {
-		contextVisibilityMap = new HashMap<String, String>();
+		    coContentResProxy.getResource().getProperty(
+			    COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_URI);
+	    if (uri != null) {
+		uri = uri.trim();
+		String visibility =
+			coContentResProxy
+				.getProperty(COPropertiesType.VISIBILITY);
+		Map<String, String> contextVisibilityMap =
+			documentContextVisibilityMap.get(uri);
+		if (contextVisibilityMap == null) {
+		    contextVisibilityMap = new HashMap<String, String>();
+		}
+		contextVisibilityMap.put(coContentResProxy.getId(), visibility);
+		documentContextVisibilityMap.put(uri, contextVisibilityMap);
 	    }
-	    contextVisibilityMap.put(coContentResProxy.getId(), visibility);
-	    documentContextVisibilityMap.put(uri, contextVisibilityMap);
 	}
 	// build resTypeContextVisibilityMap
 	if (COContentResourceType.DOCUMENT.equals(coContentResProxy
@@ -641,22 +642,21 @@ public class COModeled extends COSerialized {
 		|| COContentResourceType.URL.equals(coContentResProxy
 			.getResource().getType())) {
 	    String uri =
-		    coContentResProxy
-			    .getResource()
-			    .getProperty(COPropertiesType.IDENTIFIER,
-				    COPropertiesType.IDENTIFIER_TYPE_URI)
-			    .trim();
+		    coContentResProxy.getResource().getProperty(
+			    COPropertiesType.IDENTIFIER,
+			    COPropertiesType.IDENTIFIER_TYPE_URI);
 	    String resourceTypeDoc =
-		    coContentResProxy.getResource()
-			    .getProperty(COPropertiesType.ASM_RESOURCE_TYPE);
-	    if (resourceTypeDoc != null) {
+		    coContentResProxy.getResource().getProperty(
+			    COPropertiesType.ASM_RESOURCE_TYPE);
+	    if (resourceTypeDoc != null && uri != null) {
+		uri = uri.trim();
 		Map<String, String> contextVisibilityMap =
 			resTypeContextVisibilityMap.get(uri);
 		if (contextVisibilityMap == null) {
 		    contextVisibilityMap = new HashMap<String, String>();
 		}
-		contextVisibilityMap.put(coContentResProxy.getResource().getId(),
-			resourceTypeDoc);
+		contextVisibilityMap.put(coContentResProxy.getResource()
+			.getId(), resourceTypeDoc);
 		resTypeContextVisibilityMap.put(uri, contextVisibilityMap);
 	    }
 	}

@@ -46,7 +46,7 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
     /**
      * the resource full path id
      */
-    private String resourceId;
+    private String resourceID;
 
     /**
      * Name of the resource (citationList name)
@@ -92,14 +92,14 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
      * @return the resourceId
      */
     public String getResourceId() {
-	return resourceId;
+	return resourceID;
     }
 
     /**
      * @param resourceId the resourceId to set
      */
     public void setResourceId(String resourceId) {
-	this.resourceId = resourceId;
+	this.resourceID = resourceId;
     }
 
     /**
@@ -253,10 +253,10 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
      */
     public String getResourceDir() {
 	String resourceDir = null;
-	if (getResourceId() != null && getId() != null) {
-	    int pathLength = getResourceId().length();
+	if (getFilePath() != null && getId() != null) {
+	    int pathLength = getFilePath().length();
 	    resourceDir =
-		    getResourceId().substring(pathLength - getId().length());
+		getFilePath().substring(pathLength - getId().length());
 	}
 	return resourceDir;
     }
