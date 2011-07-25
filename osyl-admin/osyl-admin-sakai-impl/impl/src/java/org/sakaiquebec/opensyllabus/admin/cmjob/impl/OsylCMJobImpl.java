@@ -1394,7 +1394,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	if (!siteExists(siteTitle)) {
 	    try {
-		exists = osylDirectoryService.createSite(siteTitle, canCourse);
+		//SAKAI-2856 : uncomment when ready
+		//exists = osylDirectoryService.createSite(siteTitle, canCourse);
 
 	    } catch (Exception e) {
 		log.error("The directory site for " + siteTitle
