@@ -8,6 +8,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
+import org.sakaiproject.user.api.User;
 import org.sakaiquebec.opensyllabus.admin.cmjob.api.DeleteAllMyWorkspaceJob;
 
 /**
@@ -39,7 +40,9 @@ public class DeleteAllMyWorkspaceJobImpl extends OsylAbstractQuartzJobImpl
 	log.info("filtering " + allSites.size() + " sites");
 
 	Site site = null;
+	StringBuffer sb = new StringBuffer();
 	int count = 0;
+
 	for (int i = 0; i < allSites.size(); i++) {
 
 	    site = allSites.get(i);
@@ -48,6 +51,15 @@ public class DeleteAllMyWorkspaceJobImpl extends OsylAbstractQuartzJobImpl
 		continue;
 	    }
 	    try {
+		if (!site.getTools("sakai.opensyllabus.manager.tool").isEmpty()) {
+		    User user =
+			    userDirectoryService.getUser(site.getId()
+				    .substring(1));
+		    if ("student".equals(user.getType())
+			    || "guest".equals(user.getType())) {
+			sb.append(user.getFirstName()+" "+user.getLastName()+"("+user.getEid()+") id:"+user.getId() + "\n");
+		    }
+		}
 		log.debug("remove " + site.getId());
 		count++;
 		siteService.removeSite(site);
@@ -55,6 +67,10 @@ public class DeleteAllMyWorkspaceJobImpl extends OsylAbstractQuartzJobImpl
 		log.error(e.getMessage());
 	    }
 	}
+	// send GDSC users
+	emailService.send("zonecours2@hec.ca", "zonecours2@hec.ca",
+		"Liste des utilisateurs du GDSC", sb.toString(), null, null,
+		null);
 
 	log.info("deleted " + count + " workspace sites");
 	log.info("completed in " + (System.currentTimeMillis() - start) + " ms");
