@@ -189,7 +189,12 @@
 						</xsl:call-template>
 						<xsl:for-each select="//asmUnit[@xsi:type='Lecture' or @xsi:type='WorkSession']">
 							<xsl:apply-templates select='.'>
-								<xsl:with-param name="pos"><xsl:value-of select="position()"/></xsl:with-param>
+								<xsl:with-param name="pos">
+									<xsl:choose>
+										<xsl:when test="prefix"><xsl:value-of select="prefix"/></xsl:when>
+										<xsl:otherwise><xsl:value-of select="position()"/></xsl:otherwise>
+									</xsl:choose>
+								</xsl:with-param>
 								<xsl:with-param name="preceding-sibling-parentId"><xsl:value-of select="preceding-sibling::asmUnit[1]/@id"/></xsl:with-param>
 							</xsl:apply-templates>
 						</xsl:for-each>
