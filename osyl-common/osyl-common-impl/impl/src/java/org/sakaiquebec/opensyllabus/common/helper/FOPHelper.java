@@ -90,9 +90,6 @@ public class FOPHelper {
 		transformer.setParameter("currentDateTime",
 			OsylDateUtils.getCurrentDateAsXmlString());
 		transformer.setParameter("siteId", siteId);
-		if (access == null) {
-		    access = "";
-		}
 		transformer.setParameter("access", access);
 
 		// Setup input for XSLT transformation

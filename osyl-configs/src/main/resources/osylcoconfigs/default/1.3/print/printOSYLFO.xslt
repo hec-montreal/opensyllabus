@@ -229,22 +229,7 @@
 		<fo:block font-size="14pt" font-weight="bold" space-before="16pt" text-align='center'>
 			<fo:inline><xsl:value-of select="/OSYL/CO/title[@type='HEC']"/> - </fo:inline>
 			<fo:inline><xsl:value-of select="$courseCode"/></fo:inline>
-			<fo:inline>
-				<xsl:choose>
-					<xsl:when test="$access =''">
-						<xsl:if test="$lang ='FR'">
-							<xsl:text> (édition)</xsl:text>
-						</xsl:if>
-						<xsl:if test="$lang ='EN'">
-							<xsl:text> (edition)</xsl:text>
-						</xsl:if>
-						<xsl:if test="$lang ='ES'">
-							<xsl:text> (edición)</xsl:text>
-						</xsl:if>
-					</xsl:when>
-					<xsl:otherwise> (<xsl:value-of select="$access"/>)</xsl:otherwise>
-				</xsl:choose>
-			</fo:inline>
+			<fo:inline>(<xsl:value-of select="$access"/>)</fo:inline>
 		</fo:block>
 
 		<fo:table width="100%" table-layout="fixed" space-before="10pt">

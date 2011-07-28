@@ -14,6 +14,7 @@
 	<xsl:param name="serverUrl"></xsl:param>
 	<xsl:param name="currentDateTime"></xsl:param>
 	<xsl:param name="siteId"></xsl:param>
+	<xsl:param name="access"></xsl:param>
 
 	<xsl:variable name='lang'>
 		<xsl:value-of select="substring(/OSYL/CO/language,1,2)"/>
@@ -228,6 +229,7 @@
 		<fo:block font-size="14pt" font-weight="bold" space-before="16pt" text-align='center'>
 			<fo:inline><xsl:value-of select="/OSYL/CO/title[@type='universityName']"/> - </fo:inline>
 			<fo:inline><xsl:value-of select="$courseCode"/></fo:inline>
+			<fo:inline>(<xsl:value-of select="$access"/>)</fo:inline>
 		</fo:block>
 
 		<fo:table width="100%" table-layout="fixed" space-before="10pt">

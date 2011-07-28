@@ -193,7 +193,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
     Map<String, String> documentSecurityMap;
 
     protected Vector<String> publishedSiteIds;
-    
+
     /**
      * Init method called at initialization of the bean.
      */
@@ -222,9 +222,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		log.error("Unable to fill course outline", e);
 	    }
 	}
-	try{
+	try {
 	    osylSiteService.getSiteInfo(thisCo, siteId);
-	} catch(Exception e){
+	} catch (Exception e) {
 	    log.error("Unable to get site info", e);
 	}
 	log.debug("getSerializedPublishedCourseOutlineForAccessType"
@@ -530,7 +530,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	updateCourseInformations(cos, webappdir);
 	String transformXml =
 		transformXmlForGroup(cos.getContent(),
-			SecurityInterface.ACCESS_ATTENDEE,webappdir);
+			SecurityInterface.ACCESS_ATTENDEE, webappdir);
 	cos.setContent(transformXml);
 	File f = createPrintVersion(cos, webappdir);
 	String siteId = cos.getSiteId();
@@ -554,13 +554,13 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    securityService.pushAdvisor(advisor);
 	    Site site = osylSiteService.getSite(siteId);
 	    String siteTitle = osylSiteService.getCoSiteTitle(site);
-	    
+
 	    // BEGIN HEC ONLY SAKAI-2758
 	    StringTokenizer strTok = new StringTokenizer(siteTitle, " ");
-	    
+
 	    siteTitle = strTok.nextToken();
 	    // END HEC ONLY SAKAI-2758
-	    
+
 	    try {
 		contentHostingService.getResource(directory + siteTitle
 			+ ("".equals(access) ? "" : "_" + access) + ".pdf");
@@ -586,7 +586,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		newResource.setContentType(MimeConstants.MIME_PDF);
 		contentHostingService.commitResource(newResource,
 			NotificationService.NOTI_NONE);
-		osylSecurityService.applyPermissions(newResource.getId(), access);
+		osylSecurityService.applyPermissions(newResource.getId(),
+			access);
 		f.delete();
 	    } catch (PermissionException e) {
 		e.printStackTrace();
@@ -610,7 +611,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	} catch (IdUnusedException e) {
 	    log.warn("This is not a valid siteId: " + siteId, e);
 	} catch (Exception e1) {
-		e1.printStackTrace();
+	    e1.printStackTrace();
 	} finally {
 	    securityService.popAdvisor();
 	}
@@ -657,15 +658,30 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    + OsylConfigService.PRINT_DIRECTORY
 			    + File.separator
 			    + OsylConfigService.PRINT_XSLFO_FILENAME);
+
+	    String access;
+	    if(!coSerialized.getAccess().equals("")){
+		access = coSerialized.getMessages()
+		    .get("Print.version."
+			    + coSerialized.getAccess());
+	    }else{
+		access = coSerialized.getMessages()
+		    .get("Print.version.edition");
+	    }
+	    
 	    f =
-		    FOPHelper.convertXml2Pdf(d, xsltXmltoPdf, webappdir
-			    + OsylConfigService.CONFIG_DIR + File.separator
-			    + configRef + File.separator + configVersion
-			    + File.separator
-			    + OsylConfigService.PRINT_DIRECTORY
-			    + File.separator,
+		    FOPHelper.convertXml2Pdf(
+			    d,
+			    xsltXmltoPdf,
+			    webappdir + OsylConfigService.CONFIG_DIR
+				    + File.separator + configRef
+				    + File.separator + configVersion
+				    + File.separator
+				    + OsylConfigService.PRINT_DIRECTORY
+				    + File.separator,
 			    ServerConfigurationService.getServerUrl(),
-			    coSerialized.getSiteId(), coSerialized.getAccess());
+			    coSerialized.getSiteId(),
+			    access);
 
 	    return f;
 	} catch (Exception e) {
@@ -741,16 +757,16 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    messages.get(node.getTextContent()));
 		}
 	    }
-	    
-	    expr = xpath.compile("//"+COPropertiesType.ASM_RESOURCE_TYPE);
-	    nodes =
-		    (NodeList) expr.evaluate(d, XPathConstants.NODESET);
+
+	    expr = xpath.compile("//" + COPropertiesType.ASM_RESOURCE_TYPE);
+	    nodes = (NodeList) expr.evaluate(d, XPathConstants.NODESET);
 	    for (int i = 0; i < nodes.getLength(); i++) {
 		Node node = nodes.item(i);
 		Element e = (Element) node;
-		e.setTextContent(messages.get("Resource.Type."+node.getTextContent()));
+		e.setTextContent(messages.get("Resource.Type."
+			+ node.getTextContent()));
 	    }
-	    
+
 	} catch (XPathExpressionException e) {
 	    e.printStackTrace();
 	}
