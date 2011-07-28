@@ -200,7 +200,7 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	hzSiteSelectionPanel2.add(acadSessionListBox);
 	hzSiteSelectionPanel2.add(showFrozenLbl);
 	hzSiteSelectionPanel2.add(showFrozenCheckBox);
-	hzSiteSelectionPanel2.add(showDirectoryLbl);
+//	hzSiteSelectionPanel2.add(showDirectoryLbl);
 //	hzSiteSelectionPanel2.add(showDirectoryCheckBox);
 	
 	hzSiteSelectionPanel2.setCellVerticalAlignment(showFrozenCheckBox,
