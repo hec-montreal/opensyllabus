@@ -691,11 +691,12 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 
 	// -----------------------------------------------------------------------
 	typeResourceListBox = new ListBox();
-	linksPanel.setWidget(4, 2,
-		new Label(getView()
-			.getUiMessage("DocumentEditor.document.type")));
-	linksPanel.setWidget(4, 3, typeResourceListBox);
-	typeResourceListBox.setWidth("90%");
+	HorizontalPanel listBoxPanel = new HorizontalPanel();
+	listBoxPanel.add(new HTML(getView()
+		.getUiMessage("DocumentEditor.document.type")+"&nbsp;"));
+	listBoxPanel.add(typeResourceListBox);
+	metaInfoPanel.add(listBoxPanel);
+	
 
 	typeResourceListBox.addChangeHandler(new ChangeHandler() {
 
