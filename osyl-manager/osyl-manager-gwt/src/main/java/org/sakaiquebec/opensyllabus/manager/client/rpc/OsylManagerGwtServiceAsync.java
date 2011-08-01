@@ -87,7 +87,7 @@ public interface OsylManagerGwtServiceAsync {
 	    AsyncCallback<List<COSite>> callback);
 
     public void getAllCoAndSiteInfo(String searchTerm, String academicSession, boolean withFrozenSites,
-    	    boolean withDirectorySites, AsyncCallback<List<COSite>> callback);
+    	    AsyncCallback<List<COSite>> callback);
 
     public void publish(String siteId,
 	    AsyncCallback<Vector<Map<String, String>>> callback);

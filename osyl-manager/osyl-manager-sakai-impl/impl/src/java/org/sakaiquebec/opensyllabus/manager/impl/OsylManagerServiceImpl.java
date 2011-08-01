@@ -1567,7 +1567,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /** {@inheritDoc} */
     public COSite getCoAndSiteInfo(String siteId, String searchTerm,
-	    String academicSession, boolean withDirectorySites) {
+	    String academicSession, String siteType) {
 	long start = System.currentTimeMillis();
 	Site site = null;
 	COSite info = new COSite();
@@ -1579,8 +1579,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	}
 
 	if (site != null
-		&& (COURSE_TYPE_SITE.equals(site.getType()) || DIRECTORY_TYPE_SITE
-			.equals(site.getType()))
+		&& siteType.equals(site.getType())
 		&& searchTerm != null
 		&& site.getTitle().toLowerCase().contains(
 			searchTerm.toLowerCase())
@@ -1731,7 +1730,7 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
     /** {@inheritDoc} */
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
-	    String academicSession, boolean withFrozenSites,boolean withDirectorySites) {
+	    String academicSession, boolean withFrozenSites) {
 	long start = System.currentTimeMillis();
 	List<COSite> allSitesInfo = null;
 	COSite info = null;
@@ -1752,12 +1751,9 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	    for (int i = 0; i < accessedSitesSize; i++) {
 		info =
 			getCoAndSiteInfo(accessedSites.get(i), searchTerm,
-				academicSession, withDirectorySites);
+				academicSession, COURSE_TYPE_SITE);
 		if (info != null) {		    
 		    if (info.isCoIsFrozen() && withFrozenSites) {
-			allSitesInfo.add(info);
-			siteCount++;
-		    } else if (info.getType().equalsIgnoreCase(DIRECTORY_TYPE_SITE) && withDirectorySites) {
 			allSitesInfo.add(info);
 			siteCount++;
 		    } else if (!info.isCoIsFrozen() && info.getType().equalsIgnoreCase(COURSE_TYPE_SITE)) {

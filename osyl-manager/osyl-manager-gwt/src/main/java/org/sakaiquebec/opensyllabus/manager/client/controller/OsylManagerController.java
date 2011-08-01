@@ -385,12 +385,11 @@ public class OsylManagerController implements FireOsylManagerEvents {
      * @param searchTerm the search term entered by the user
      * @param callback container of the server response
      * @param withFrozenSites true or false
-     * @param withDirectorySites true or false  
      */
     public void getAllCoAndSiteInfo(String searchTerm, String academicSession,
-	    boolean withFrozenSites, boolean withDirectorySites, AsyncCallback<List<COSite>> callback) {
+	    boolean withFrozenSites, AsyncCallback<List<COSite>> callback) {
 	OsylManagerRPCController.getInstance().getAllCoAndSiteInfo(searchTerm,
-		academicSession, withFrozenSites, withDirectorySites, callback);
+		academicSession, withFrozenSites, callback);
     }
     
     /**

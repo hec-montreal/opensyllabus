@@ -86,8 +86,6 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 
     private boolean withFrozenSites;
 
-    private boolean withDirectorySites;
-
     private ScrollTable scSiteList;
 
     private CheckBox selectAll;
@@ -372,7 +370,7 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 	    setShowMessage(showMessage);
 	    getController().getAllCoAndSiteInfo(getSearchTerm(),
 		    getSelectedAcadSession(), isWithFrozenSites(),
-		    isWithDirectorySites(), asyncCallback);
+		    asyncCallback);
 	}
     }
 
@@ -413,14 +411,6 @@ public class CourseListAdvancedView extends OsylManagerAbstractView implements
 
     public void setWithFrozenSites(boolean withFrozenSites) {
 	this.withFrozenSites = withFrozenSites;
-    }
-
-    public boolean isWithDirectorySites() {
-	return withDirectorySites;
-    }
-
-    public void setWithDirectorySites(boolean withDirectorySites) {
-	this.withDirectorySites = withDirectorySites;
     }
 
     private FixedWidthFlexTable createHeaderTable() {

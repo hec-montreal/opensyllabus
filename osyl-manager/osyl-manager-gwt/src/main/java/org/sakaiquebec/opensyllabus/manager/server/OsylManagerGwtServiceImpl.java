@@ -194,11 +194,9 @@ public class OsylManagerGwtServiceImpl extends RemoteServiceServlet implements
     }
 
     public List<COSite> getAllCoAndSiteInfo(String searchTerm,
-	    String academicSession, boolean withFrozenSites,
-	    boolean withDirectorySites) {
+	    String academicSession, boolean withFrozenSites) {
 	return osylManagerServices.getOsylManagerService().getAllCoAndSiteInfo(
-		searchTerm, academicSession, withFrozenSites,
-		withDirectorySites);
+		searchTerm, academicSession, withFrozenSites);
     }
 
     public Vector<Map<String, String>> publish(String siteId) throws Exception,

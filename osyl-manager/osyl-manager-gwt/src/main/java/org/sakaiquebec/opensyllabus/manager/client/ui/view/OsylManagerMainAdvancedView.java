@@ -61,8 +61,6 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
     
     private CheckBox showFrozenCheckBox;
     
-//    private CheckBox showDirectoryCheckBox;
-
     public OsylManagerMainAdvancedView(OsylManagerController controller) {
 	super(controller);
 	mainPanel = new VerticalPanel();
@@ -148,9 +146,6 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 			.getValue(acadSessionListBox.getSelectedIndex()));
 		courseListView
 			.setWithFrozenSites(showFrozenCheckBox.getValue());
-//		courseListView.setWithDirectorySites(showDirectoryCheckBox
-//			.getValue());
-		courseListView.setWithDirectorySites(false);
 		courseListView.refresh(true);
 	    }
 	});
@@ -161,10 +156,8 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 
 	acadSessionListBox = new ListBox();
 	showFrozenCheckBox = new CheckBox();
-//	showDirectoryCheckBox = new CheckBox();
 	
 	showFrozenCheckBox.setStylePrimaryName("Osyl-CheckBox");
-//	showDirectoryCheckBox.setStylePrimaryName("Osyl-CheckBox");
 	
 	if (getController().isInHostedMode()) {
 	    acadSessionListBox.addItem("Not specified");
@@ -188,11 +181,6 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 				.showFrozenSites());
 	showFrozenLbl.setStylePrimaryName("OsylManager-mainView-label");
 
-	Label showDirectoryLbl = new Label(getController().getMessages()
-		.showDirectorySites());
-	showDirectoryLbl.setStylePrimaryName("OsylManager-mainView-label");
-	
-	
 	acadSessionListBox.setVisibleItemCount(1);
 	hzSiteSelectionPanel2.add(selectSiteInput);
 	hzSiteSelectionPanel2.add(selectSiteActionBtn);
@@ -200,13 +188,9 @@ public class OsylManagerMainAdvancedView extends OsylManagerAbstractView {
 	hzSiteSelectionPanel2.add(acadSessionListBox);
 	hzSiteSelectionPanel2.add(showFrozenLbl);
 	hzSiteSelectionPanel2.add(showFrozenCheckBox);
-//	hzSiteSelectionPanel2.add(showDirectoryLbl);
-//	hzSiteSelectionPanel2.add(showDirectoryCheckBox);
 	
 	hzSiteSelectionPanel2.setCellVerticalAlignment(showFrozenCheckBox,
 		HasVerticalAlignment.ALIGN_MIDDLE);
-//	hzSiteSelectionPanel2.setCellVerticalAlignment(showDirectoryCheckBox,
-//		HasVerticalAlignment.ALIGN_MIDDLE);
 	
 	vSiteSelectionPanel.add(hzSiteSelectionPanel2);
 
