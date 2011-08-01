@@ -660,7 +660,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 			    + OsylConfigService.PRINT_XSLFO_FILENAME);
 
 	    String access;
-	    if(!coSerialized.getAccess().equals("")){
+	    if(coSerialized.getAccess()!=null && !coSerialized.getAccess().equals("")){
 		access = coSerialized.getMessages()
 		    .get("Print.version."
 			    + coSerialized.getAccess());
