@@ -643,7 +643,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	bookStoreLink
 		.setStylePrimaryName("Osyl-ResProxCitationView-linkTextbox");
 	linksPanel.setWidget(1, 3, bookStoreLink);
-	bookStoreLink.setWidth("90%");
 
 	HTML iOther = new HTML();
 	iOther.setStylePrimaryName("Osyl-ResProxCitationView-otherImage");
@@ -676,7 +675,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	editorOtherLinkLabel
 		.setStylePrimaryName("Osyl-ResProxCitationView-linkTextbox");
 	linksPanel.setWidget(2, 3, editorOtherLinkLabel);
-	editorOtherLinkLabel.setWidth("90%");
 
 	linksPanel.setWidget(
 		3,
@@ -687,7 +685,6 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	editorOtherLink
 		.setStylePrimaryName("Osyl-ResProxCitationView-linkTextbox");
 	linksPanel.setWidget(3, 3, editorOtherLink);
-	editorOtherLink.setWidth("90%");
 
 	// -----------------------------------------------------------------------
 	typeResourceListBox = new ListBox();
