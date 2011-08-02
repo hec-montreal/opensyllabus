@@ -80,6 +80,11 @@ public interface OsylSecurityService {
      */
     public static final String SECURITY_ROLE_COURSE_TEACHING_ASSISTANT =
 	    "Teaching Assistant";
+    
+    /**
+     * Reference to the site helper.
+     */
+    public static final String SITE_HELPER = "!site.helper";
 
     /**
      * Takes an XML file and strips tags based on a user role

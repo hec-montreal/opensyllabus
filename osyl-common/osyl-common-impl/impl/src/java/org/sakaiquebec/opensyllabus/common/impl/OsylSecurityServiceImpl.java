@@ -262,6 +262,15 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 			.getCurrentSessionUserId());
 	try {
 	    Site s = siteService.getSite(userSiteId);
+	    
+	    //Allow access if super user
+	    if (securityService.isSuperUser())
+		return true;
+	    
+	    //Allow access if user have the associated permission in site helper
+	    if (securityService.unlock(userSiteId, permission, SITE_HELPER))
+		return true;
+	    
 	    if (securityService.unlock(permission, s.getReference()))
 		return true;
 	    return false;
@@ -272,6 +281,18 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
     }
 
     public boolean isActionAllowedInSite(String siteRef, String permission) {
+	    
+	String userSiteId =
+		siteService.getUserSiteId(sessionManager
+			.getCurrentSessionUserId());
+	    //Allow access if super user
+	    if (securityService.isSuperUser())
+		return true;
+	    
+	    //Allow access if user have the associated permission in site helper
+	    if (securityService.unlock(userSiteId, permission, SITE_HELPER))
+		return true;
+	    
 	if (securityService.unlock(permission, siteRef)) {
 	    return true;
 	} else {
@@ -279,7 +300,6 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 	}
     }
 
-    @Override
     public boolean isCurrentUserASuperUser() {
 	return securityService.isSuperUser();
     }
