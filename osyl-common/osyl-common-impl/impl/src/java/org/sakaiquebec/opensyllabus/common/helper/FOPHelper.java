@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
+import java.text.Normalizer;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -104,6 +105,7 @@ public class FOPHelper {
 		escapeString = escapeString.replaceAll("&#38;nbsp;", " ");
 		escapeString = escapeString.replaceAll("&#13;", "");
 		escapeString = escapeString.replaceAll("&#0;", "");
+		escapeString = Normalizer.normalize(escapeString, Normalizer.Form.NFC);
 		Source src =
 			new StreamSource(new ByteArrayInputStream(
 				escapeString.getBytes("UTF-8")));
