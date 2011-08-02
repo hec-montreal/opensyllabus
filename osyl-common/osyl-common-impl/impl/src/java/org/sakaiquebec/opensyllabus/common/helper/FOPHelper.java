@@ -94,6 +94,7 @@ public class FOPHelper {
 		transformer.setParameter("access", access);
 
 		// Setup input for XSLT transformation
+		log.debug(xml);
 		String escapeString = xml.replaceAll("&amp;", "&#38;");
 		escapeString = escapeString.replaceAll("\\s{2,}", "");
 		escapeString = escapeString.replaceAll("&#38;amp;", "&#38;");
