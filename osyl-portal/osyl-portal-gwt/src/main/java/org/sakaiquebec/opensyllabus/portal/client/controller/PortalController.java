@@ -48,7 +48,7 @@ public class PortalController {
     public static String RESPONSIBLE_PREFIX = "responsible.";
 
     public static String ACAD_CAREER_PREFIX = "acad_career.";
-    
+
     public static String ABBREVIATION_SUFFIX = "_abb";
 
     public static PortalController getInstance() {
@@ -86,14 +86,14 @@ public class PortalController {
 		    }
 
 		    public void onSuccess(List<CODirectorySite> result) {
-			setView(new CoursesPage(ACAD_CAREER_PREFIX
-				+ acadCareer, result));
+			setView(new CoursesPage(
+				ACAD_CAREER_PREFIX + acadCareer, result));
 
 		    }
 		};
 	getCoursesForAcadCareer(acadCareer, callback);
     }
-    
+
     public void createCourseViewForResponsible(final String responsible) {
 	AsyncCallback<List<CODirectorySite>> callback =
 		new AsyncCallback<List<CODirectorySite>>() {
@@ -126,9 +126,14 @@ public class PortalController {
     public void getDescription(String siteId, AsyncCallback<String> callback) {
 	PortalRpcController.getInstance().getDescription(siteId, callback);
     }
-    
-    public void getCODirectorySite(String siteId, AsyncCallback<CODirectorySite> callback) {
+
+    public void getCODirectorySite(String siteId,
+	    AsyncCallback<CODirectorySite> callback) {
 	PortalRpcController.getInstance().getCODirectorySite(siteId, callback);
+    }
+
+    public void getAccessForSiteId(String siteId, AsyncCallback<String> callback) {
+	PortalRpcController.getInstance().getAccessForSiteId(siteId, callback);
     }
     /************************** END RPC CALLS *******************************/
 

@@ -47,11 +47,14 @@ public class CODirectorySite implements java.io.Serializable {
     
     private String instructor;
 
-    private Map<String, String> sections;
+    private Map<String, String> currentSections;
+    
+    private Map<String,String> archivedSections;
 
     public CODirectorySite() {
 	super();
-	sections = new HashMap<String, String>();
+	currentSections = new HashMap<String, String>();
+	archivedSections = new HashMap<String, String>();
     }
 
     public String getCourseNumber() {
@@ -94,17 +97,30 @@ public class CODirectorySite implements java.io.Serializable {
 	this.requirements = requirements;
     }
 
-    public Map<String, String> getSections() {
-	return sections;
+    public Map<String, String> getCurrentSections() {
+	return currentSections;
     }
 
-    public void setSections(Map<String, String> sections) {
-	this.sections = sections;
+    public void setCurrentSections(Map<String, String> sections) {
+	this.currentSections = sections;
     }
 
-    public void putSection(String key, String value) {
-	sections.put(key, value);
+    public void putCurrentSection(String key, String value) {
+	currentSections.put(key, value);
     }
+    
+    public Map<String, String> getArchivedSections() {
+	return archivedSections;
+    }
+
+    public void setArchivedSections(Map<String, String> sections) {
+	this.archivedSections = sections;
+    }
+
+    public void putArchivedSection(String key, String value) {
+	archivedSections.put(key, value);
+    }
+
 
     public void setProgram(String program) {
 	this.program = program;

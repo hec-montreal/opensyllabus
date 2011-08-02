@@ -315,7 +315,7 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
      */
     public void init() {
 	log.info("INIT from OsylSite service");
-	// BEGIN HEC ONLY SAKAI-2723 
+	// BEGIN HEC ONLY SAKAI-2723
 	eventTrackingService.addObserver(new Observer() {
 
 	    // private class for register AnnoucementEvent (resource, priority)
@@ -565,50 +565,62 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 				    cor.getChild(), e.getResource());
 			}
 		    }
-		}
-		else if(e.getEvent().equals(AssignmentConstants.EVENT_SUBMIT_ASSIGNMENT_SUBMISSION)){
-		    //ASSIGNMENT SUBMISSION
-		    try{
-			AssignmentSubmission as = assignmentService.getSubmission(e.getResource());
+		} else if (e.getEvent().equals(
+			AssignmentConstants.EVENT_SUBMIT_ASSIGNMENT_SUBMISSION)) {
+		    // ASSIGNMENT SUBMISSION
+		    try {
+			AssignmentSubmission as =
+				assignmentService.getSubmission(e.getResource());
 			log.info("user ["
-				    + sessionManager.getCurrentSession().getUserEid()
-				    + "] submit an assignement submission : " + as.getId());
-		    }catch(Exception e1){
+				+ sessionManager.getCurrentSession()
+					.getUserEid()
+				+ "] submit an assignement submission : "
+				+ as.getId());
+		    } catch (Exception e1) {
 			log.info("user ["
-				    + sessionManager.getCurrentSession().getUserEid()
-				    + "] submit an assignement submission : no assignemtn submission id");
-		    }  
-		}
-		else if(e.getEvent().equals(AssignmentConstants.EVENT_SAVE_ASSIGNMENT_SUBMISSION)){
-		    //ASSIGNMENT SUBMISSION SAVING
-		    try{
-			AssignmentSubmission as = assignmentService.getSubmission(e.getResource());
+				+ sessionManager.getCurrentSession()
+					.getUserEid()
+				+ "] submit an assignement submission : no assignemtn submission id");
+		    }
+		} else if (e.getEvent().equals(
+			AssignmentConstants.EVENT_SAVE_ASSIGNMENT_SUBMISSION)) {
+		    // ASSIGNMENT SUBMISSION SAVING
+		    try {
+			AssignmentSubmission as =
+				assignmentService.getSubmission(e.getResource());
 			log.info("user ["
-				    + sessionManager.getCurrentSession().getUserEid()
-				    + "] save an assignement submission : " + as.getId());
-		    }catch(Exception e1){
+				+ sessionManager.getCurrentSession()
+					.getUserEid()
+				+ "] save an assignement submission : "
+				+ as.getId());
+		    } catch (Exception e1) {
 			log.info("user ["
-				    + sessionManager.getCurrentSession().getUserEid()
-				    + "] save an assignement submission : no assignemtn submission id");
-		    }  
-		}
-		else if(e.getEvent().equals(AssignmentConstants.EVENT_UPDATE_ASSIGNMENT_SUBMISSION)){
-		    //ASSIGNMENT SUBMISSION UPDATE
-		    try{
-			AssignmentSubmission as = assignmentService.getSubmission(e.getResource());
+				+ sessionManager.getCurrentSession()
+					.getUserEid()
+				+ "] save an assignement submission : no assignemtn submission id");
+		    }
+		} else if (e.getEvent().equals(
+			AssignmentConstants.EVENT_UPDATE_ASSIGNMENT_SUBMISSION)) {
+		    // ASSIGNMENT SUBMISSION UPDATE
+		    try {
+			AssignmentSubmission as =
+				assignmentService.getSubmission(e.getResource());
 			log.info("user ["
-				    + sessionManager.getCurrentSession().getUserEid()
-				    + "] update an assignement submission : " + as.getId());
-		    }catch(Exception e1){
+				+ sessionManager.getCurrentSession()
+					.getUserEid()
+				+ "] update an assignement submission : "
+				+ as.getId());
+		    } catch (Exception e1) {
 			log.info("user ["
-				    + sessionManager.getCurrentSession().getUserEid()
-				    + "] update an assignement submission : no assignemtn submission id !");
-		    }  
+				+ sessionManager.getCurrentSession()
+					.getUserEid()
+				+ "] update an assignement submission : no assignemtn submission id !");
+		    }
 		}
 	    }
 	});
 
-	// END HEC ONLY SAKAI-2723 
+	// END HEC ONLY SAKAI-2723
 	// We register the entity manager
 	entityManager.registerEntityProducer(this, REFERENCE_ROOT);
 
@@ -1003,9 +1015,9 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	}
     }
 
-    public String getCoSiteTitle(Site site) throws Exception{
-	String coSiteTitle ="";
-	
+    public String getCoSiteTitle(Site site) throws Exception {
+	String coSiteTitle = "";
+
 	if (isCOLinkedToCourseManagement(site.getId())) {
 	    String cmTitle = getCourseManagementTitle(site.getId());
 	    String cmCourseNo = getCourseManagementCourseNo(site.getId());
@@ -2278,5 +2290,30 @@ public class OsylSiteServiceImpl implements OsylSiteService, EntityTransferrer {
 	} catch (Exception e) {
 	}
 	return type;
+    }
+
+    public String getAccessForSiteAndCurrentUser(String siteId) {
+	if (!osylSecurityService.isActionAllowedInSite(
+		getSiteReference(siteId), SecurityInterface.OSYL_FUNCTION_EDIT)) {
+	    if (osylSecurityService.isActionAllowedInSite(
+		    getSiteReference(siteId),
+		    SecurityInterface.OSYL_FUNCTION_VIEW_STUDENT)) {
+		return SecurityInterface.ACCESS_ATTENDEE;
+
+	    } else if (osylSecurityService.isActionAllowedInSite(
+		    getSiteReference(siteId),
+		    SecurityInterface.OSYL_FUNCTION_VIEW_COMMUNITY)) {
+		return SecurityInterface.ACCESS_COMMUNITY;
+
+	    } else if (osylSecurityService.isActionAllowedInSite(
+		    getSiteReference(siteId),
+		    SecurityInterface.OSYL_FUNCTION_VIEW_PUBLIC)) {
+		return SecurityInterface.ACCESS_PUBLIC;
+	    } else {
+		return null;
+	    }
+	} else {
+	    return SecurityInterface.ACCESS_ATTENDEE;
+	}
     }
 }

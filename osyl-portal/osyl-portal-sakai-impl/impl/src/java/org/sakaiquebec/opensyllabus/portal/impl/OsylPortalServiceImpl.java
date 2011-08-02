@@ -47,6 +47,7 @@ import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.user.api.User;
 import org.sakaiproject.user.api.UserDirectoryService;
 import org.sakaiquebec.opensyllabus.common.api.OsylPublishService;
+import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.helper.XmlHelper;
 import org.sakaiquebec.opensyllabus.portal.api.OsylPortalService;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
@@ -97,6 +98,12 @@ public class OsylPortalServiceImpl implements OsylPortalService {
     public void setUserDirectoryService(
 	    UserDirectoryService userDirectoryService) {
 	this.userDirectoryService = userDirectoryService;
+    }
+    
+    private OsylSecurityService osylSecurityService;
+    
+    public void setOsylSecurityService(OsylSecurityService osylSecurityService) {
+	this.osylSecurityService = osylSecurityService;
     }
 
     // END SPRING INJECTIONS
@@ -201,13 +208,15 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    }
 	    if (currentSessions.contains(courseOffering.getAcademicSession()
 		    .getEid())) {
-		fillSectionsForCODirectorySite(coDirectorySite, courseOffering);
+		fillCurrentSectionsForCODirectorySite(coDirectorySite, courseOffering);
+	    }else{
+		fillArchivedSectionsForCODirectorySite(coDirectorySite, courseOffering);
 	    }
 	}
 	return coDirectorySite;
     }
 
-    private void fillSectionsForCODirectorySite(
+    private void fillCurrentSectionsForCODirectorySite(
 	    CODirectorySite coDirectorySite, CourseOffering courseOffering) {
 	Set<Section> sections =
 		courseManagementService.getSections(courseOffering.getEid());
@@ -233,7 +242,42 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		    } catch (Exception e) {
 		    }
 		}
-		coDirectorySite.putSection(getSectionName(section), userName);
+		coDirectorySite.putCurrentSection(getSectionName(section), userName);
+	    }
+	    if (section.getCategory() != null
+		    && !section.getCategory().equals("")) {
+		coDirectorySite.setResponsible(section.getCategory());
+	    }
+	}
+    }
+    
+    private void fillArchivedSectionsForCODirectorySite(
+	    CODirectorySite coDirectorySite, CourseOffering courseOffering) {
+	Set<Section> sections =
+		courseManagementService.getSections(courseOffering.getEid());
+	for (Section section : sections) {
+	    if (!section.getEid().endsWith("00")) {
+		Set<String> instructors =
+			section.getEnrollmentSet().getOfficialInstructors();
+		String userName = "";
+		if (!instructors.isEmpty()) {
+		    try {
+			User user =
+				userDirectoryService
+					.getUserByEid((String) instructors
+						.toArray()[0]);
+			userName =
+				user.getFirstName().substring(0, 1)
+					.toUpperCase()
+					+ user.getFirstName().substring(1)
+					+ " "
+					+ user.getLastName().substring(0, 1)
+						.toUpperCase()
+					+ user.getLastName().substring(1);
+		    } catch (Exception e) {
+		    }
+		}
+		coDirectorySite.putArchivedSection(getSectionName(section), userName);
 	    }
 	    if (section.getCategory() != null
 		    && !section.getCategory().equals("")) {

@@ -10,9 +10,8 @@ import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.site.api.Site;
 import org.sakaiquebec.opensyllabus.common.model.COModeledServer;
 import org.sakaiquebec.opensyllabus.shared.exception.CompatibilityException;
-import org.sakaiquebec.opensyllabus.shared.exception.VersionCompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.exception.FusionException;
-import org.sakaiquebec.opensyllabus.shared.exception.OsylPermissionException;
+import org.sakaiquebec.opensyllabus.shared.exception.VersionCompatibilityException;
 import org.sakaiquebec.opensyllabus.shared.model.COConfigSerialized;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 
@@ -103,18 +102,16 @@ public interface OsylSiteService extends EntityProducer {
      */
     public static final String HEC_MONTREAL_RULES_TITLE_EN =
 	    "HEC Montréal Regulations";
-    
+
     /**
      * Title of iFrame presenting rules and regulations (French Canadian).
      */
-    public static final String HEC_WELCOME_FR_CA =
-	    "Bienvenue dans ce cours!";
+    public static final String HEC_WELCOME_FR_CA = "Bienvenue dans ce cours!";
     /**
      * Title of iFrame presenting rules and regulations (English).
      */
-    public static final String HEC_WELCOME_EN =
-	    "Welcome in this course";
-    
+    public static final String HEC_WELCOME_EN = "Welcome in this course";
+
     /**
      * Base name of files containing a summary and links of rules and
      * regulations.
@@ -132,10 +129,11 @@ public interface OsylSiteService extends EntityProducer {
      * @return a String of the base URL
      */
     public String getCurrentSiteReference();
-    
+
     /**
      * Get a valid resource reference base site URL to be used in later calls.
-     * @param siteId the id of the site to get its reference. 
+     * 
+     * @param siteId the id of the site to get its reference.
      * @return a String of the base URL
      */
     public String getSiteReference(String siteId);
@@ -274,7 +272,8 @@ public interface OsylSiteService extends EntityProducer {
     public List<String> getChildren(String siteId) throws Exception;
 
     public void associate(String siteId, String parentId) throws Exception,
-	    CompatibilityException, FusionException, VersionCompatibilityException;
+	    CompatibilityException, FusionException,
+	    VersionCompatibilityException;
 
     public void dissociate(String siteId, String parentId) throws Exception;
 
@@ -296,7 +295,8 @@ public interface OsylSiteService extends EntityProducer {
      * @param siteId
      * @return
      */
-    public COConfigSerialized getOsylConfigForSiteId(String siteId, String webappDir);
+    public COConfigSerialized getOsylConfigForSiteId(String siteId,
+	    String webappDir);
 
     /**
      * @return list of all Course outlines of the system
@@ -370,19 +370,22 @@ public interface OsylSiteService extends EntityProducer {
      * @param body
      */
     public void addAnnounce(String siteId, String subject, String body);
-    
-    //for proof of concept
+
+    // for proof of concept
     public List<String> getPublishCOSiteIds();
 
     /**
      * Send an event
+     * 
      * @param eventType
      * @param resource
      */
     public void sendEvent(String eventType, String resource, String context);
-    
+
     public String getSiteType(String siteId);
-    
+
     public String getCoSiteTitle(Site site) throws Exception;
+
+    public String getAccessForSiteAndCurrentUser(String siteId);
 
 }

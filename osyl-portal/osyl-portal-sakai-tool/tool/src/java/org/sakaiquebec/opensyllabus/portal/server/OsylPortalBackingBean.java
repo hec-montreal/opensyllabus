@@ -21,6 +21,7 @@
 
 package org.sakaiquebec.opensyllabus.portal.server;
 
+import org.sakaiquebec.opensyllabus.common.api.OsylSiteService;
 import org.sakaiquebec.opensyllabus.portal.api.OsylPortalService;
 
 /**
@@ -33,6 +34,8 @@ import org.sakaiquebec.opensyllabus.portal.api.OsylPortalService;
 public class OsylPortalBackingBean {
 
     private OsylPortalService osylPortalService;
+    
+    private OsylSiteService osylSiteService;
 
     /**
      * Gets the {@link OsylAdminService}.
@@ -52,9 +55,18 @@ public class OsylPortalBackingBean {
 	this.osylPortalService = osylPortalService;
     }
 
+    public void setOsylSiteService(OsylSiteService osylSiteService) {
+	this.osylSiteService = osylSiteService;
+    }
+
+    public OsylSiteService getOsylSiteService() {
+	return osylSiteService;
+    }
+    
     /**
      * Init method called at initialization of the bean.
      */
     public void init() {
     }
+
 }

@@ -89,5 +89,7 @@ public class OsylPortalGwtServiceImpl extends RemoteServiceServlet implements
 	return osylPortalServices.getOsylPortalService().getCODirectorySite(courseNumber);
     }
     
-    
+    public String getAccessForSiteAndCurrentUser(String siteId){
+	return osylPortalServices.getOsylSiteService().getAccessForSiteAndCurrentUser(siteId);
+    }    
 }

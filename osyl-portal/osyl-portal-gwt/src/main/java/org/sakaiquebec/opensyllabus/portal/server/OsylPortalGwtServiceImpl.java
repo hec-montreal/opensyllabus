@@ -30,4 +30,8 @@ public class OsylPortalGwtServiceImpl extends RemoteServiceServlet implements
     public CODirectorySite getCODirectorySite(String courseNumber) {
 	return null;
     }
+    
+    public String getAccessForSiteAndCurrentUser(String siteId) {
+	return null;
+    }
 }

@@ -182,6 +182,8 @@ public interface OsylPortalMessages extends ConstantsWithLookup {
     
     String directoryCoursePage_requirements();
     
+    String directoryCoursePage_archives();
+    
     String session_E();
     
     String session_A();

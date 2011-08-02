@@ -59,21 +59,27 @@ public class PortalRpcController {
 	pointService.setServiceEntryPoint(cleanUrl + "OsylPortalGwtService");
     }
 
-    public void getCoursesForAcadCareer(String acadCareer, AsyncCallback<List<CODirectorySite>> callback) {
-	serviceProxy.getCoursesForAcadCareer(acadCareer,callback);
+    public void getCoursesForAcadCareer(String acadCareer,
+	    AsyncCallback<List<CODirectorySite>> callback) {
+	serviceProxy.getCoursesForAcadCareer(acadCareer, callback);
     }
 
     public void getCoursesForResponsible(String responsible,
 	    AsyncCallback<List<CODirectorySite>> callback) {
-	serviceProxy.getCoursesForResponsible(responsible,callback);
+	serviceProxy.getCoursesForResponsible(responsible, callback);
     }
-    
-    public void getDescription(String siteId, AsyncCallback<String> callback){
+
+    public void getDescription(String siteId, AsyncCallback<String> callback) {
 	serviceProxy.getDescription(siteId, callback);
     }
-    
-    public void getCODirectorySite(String siteId, AsyncCallback<CODirectorySite> callback){
+
+    public void getCODirectorySite(String siteId,
+	    AsyncCallback<CODirectorySite> callback) {
 	serviceProxy.getCODirectorySite(siteId, callback);
     }
-    
+
+    public void getAccessForSiteId(String siteId, AsyncCallback<String> callback) {
+	serviceProxy.getAccessForSiteAndCurrentUser(siteId, callback);
+    }
+
 }

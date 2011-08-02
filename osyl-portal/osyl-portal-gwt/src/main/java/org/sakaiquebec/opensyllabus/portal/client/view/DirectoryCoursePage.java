@@ -26,6 +26,8 @@ import java.util.List;
 import org.sakaiquebec.opensyllabus.portal.client.controller.PortalController;
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -113,6 +115,19 @@ public class DirectoryCoursePage extends AbstractPortalView {
 	list.add(site);
 	courseTable = new CoursesTable(list);
 	mainPanel.add(courseTable);
+	
+	Label archives = new Label(getMessage("directoryCoursePage_archives"));
+	archives.addClickHandler(new ClickHandler() {
+	    
+	    @Override
+	    public void onClick(ClickEvent event) {
+		  getController().setView(
+			    new ArchivesPage(site));
+	    }
+	});
+	archives.setStylePrimaryName("Portal_link");
+	mainPanel.add(archives);
+	
     }
 
     public static String getViewKeyPrefix() {

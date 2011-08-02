@@ -83,7 +83,8 @@ public class CoursesTable extends AbstractPortalView {
 	int rowNum;
 	for (final CODirectorySite coSite : courses) {
 
-	    for (Entry<String, String> entry : coSite.getSections().entrySet()) {
+	    for (Entry<String, String> entry : coSite.getCurrentSections()
+		    .entrySet()) {
 		rowNum = coursesTable.getDataTable().insertRow(i);
 		final String sectionSiteId = entry.getKey();
 		coursesTable.getDataTable().getRowFormatter()
@@ -120,8 +121,8 @@ public class CoursesTable extends AbstractPortalView {
 				};
 			if (descriptionView != null
 				&& descriptionView.isShowing()
-				&& descriptionView.getViewKey()
-					.equals(coSite.getCourseNumber()))
+				&& descriptionView.getViewKey().equals(
+					coSite.getCourseNumber()))
 			    return;
 			else
 			    getController().getDescription(
@@ -133,7 +134,8 @@ public class CoursesTable extends AbstractPortalView {
 			if (descriptionView != null
 				&& descriptionView.isShowing())
 			    descriptionView.hide();
-			descriptionView = new DescriptionView(coSite,sectionSiteId);
+			descriptionView =
+				new DescriptionView(coSite, sectionSiteId);
 			descriptionView.setPopupPosition(
 				descImage.getAbsoluteLeft()
 					+ descImage.getWidth(),
@@ -164,9 +166,24 @@ public class CoursesTable extends AbstractPortalView {
 		pdfImage.addClickHandler(new ClickHandler() {
 
 		    public void onClick(ClickEvent event) {
-			Window.open("/sdata/c/attachment/" + sectionSiteId
-				+ "/OpenSyllabus/" + sectionSiteId
-				+ "_public.pdf", "_blank", "");
+			AsyncCallback<String> asyncCallback =
+				new AsyncCallback<String>() {
+
+				    @Override
+				    public void onFailure(Throwable caught) {
+				    }
+
+				    @Override
+				    public void onSuccess(String result) {
+					Window.open("/sdata/c/attachment/"
+						+ sectionSiteId
+						+ "/OpenSyllabus/"
+						+ sectionSiteId + "_" + result
+						+ ".pdf", "_blank", "");
+				    }
+				};
+			getController().getAccessForSiteId(sectionSiteId,
+				asyncCallback);
 		    }
 		});
 		coursesTable.getDataTable().setWidget(rowNum, 6, pdfImage);

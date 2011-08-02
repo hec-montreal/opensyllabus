@@ -28,6 +28,7 @@ import java.util.Map;
 
 import org.sakaiquebec.opensyllabus.portal.client.controller.PortalController;
 import org.sakaiquebec.opensyllabus.portal.client.view.AbstractPortalView;
+import org.sakaiquebec.opensyllabus.portal.client.view.ArchivesPage;
 import org.sakaiquebec.opensyllabus.portal.client.view.CoursesPage;
 import org.sakaiquebec.opensyllabus.portal.client.view.DirectoryCoursePage;
 import org.sakaiquebec.opensyllabus.portal.client.view.NavigationHomePage;
@@ -126,6 +127,25 @@ public class OsylPortalEntryPoint implements EntryPoint,
 			};
 		PortalController.getInstance().getCODirectorySite(
 			siteIdRequested, callback);
+	    } else if (requestedView
+		    .startsWith(ArchivesPage.getViewKeyPrefix())) {
+		String siteIdRequested =
+			requestedView.substring(requestedView
+				.indexOf(ArchivesPage.getViewKeyPrefix())
+				+ ArchivesPage.getViewKeyPrefix().length());
+		AsyncCallback<CODirectorySite> callback =
+			new AsyncCallback<CODirectorySite>() {
+
+			    public void onFailure(Throwable caught) {
+			    }
+
+			    public void onSuccess(CODirectorySite result) {
+				setView(new ArchivesPage(result));
+
+			    }
+			};
+		PortalController.getInstance().getCODirectorySite(
+			siteIdRequested, callback);
 	    }
 	}
 	setSakaiIFrameHeight(690);
@@ -155,7 +175,7 @@ public class OsylPortalEntryPoint implements EntryPoint,
 		}
 
 	    });
-	    l.setStylePrimaryName("NHP_locale");
+	    l.setStylePrimaryName("Portal_link");
 	    localePanel.add(l);
 	}
 	localePanel.setStylePrimaryName("NHP_localePanel");

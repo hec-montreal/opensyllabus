@@ -44,4 +44,7 @@ public interface OsylPortalGwtServiceAsync {
     public void getCODirectorySite(String courseNumber,
 	    AsyncCallback<CODirectorySite> callback);
 
+    public void getAccessForSiteAndCurrentUser(String siteId,
+	    AsyncCallback<String> callback);
+
 }

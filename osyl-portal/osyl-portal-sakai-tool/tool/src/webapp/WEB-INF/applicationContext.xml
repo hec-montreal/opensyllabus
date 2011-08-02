@@ -9,5 +9,6 @@
 			class="org.sakaiquebec.opensyllabus.portal.server.OsylPortalBackingBean"
 			init-method="init">
 			<property name="osylPortalService" ref="org.sakaiquebec.opensyllabus.portal.api.OsylPortalService"/>
+			<property name="osylSiteService" ref="org.sakaiquebec.opensyllabus.common.api.OsylSiteService" />
 		</bean>
 </beans>
