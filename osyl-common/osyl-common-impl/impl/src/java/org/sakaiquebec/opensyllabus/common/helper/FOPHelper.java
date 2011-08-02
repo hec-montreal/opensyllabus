@@ -106,6 +106,7 @@ public class FOPHelper {
 		escapeString = escapeString.replaceAll("&#13;", "");
 		escapeString = escapeString.replaceAll("&#0;", "");
 		escapeString = Normalizer.normalize(escapeString, Normalizer.Form.NFC);
+		log.debug(escapeString);
 		Source src =
 			new StreamSource(new ByteArrayInputStream(
 				escapeString.getBytes("UTF-8")));
