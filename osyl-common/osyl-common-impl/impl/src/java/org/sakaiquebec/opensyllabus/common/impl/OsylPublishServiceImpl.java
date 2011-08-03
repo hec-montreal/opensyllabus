@@ -708,6 +708,8 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    t.setMakeBare(true);
 	    t.setIndentContent(false);
 	    t.setIndentAttributes(false);
+	    t.setIndentCdata(false);
+	    t.setLiteralAttribs(false);
 
 	    expr =
 		    xpath.compile("//text | //comment | //description | //availability | //label | //identifier");
