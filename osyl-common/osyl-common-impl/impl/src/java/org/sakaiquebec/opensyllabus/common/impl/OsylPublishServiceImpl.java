@@ -705,6 +705,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    t.setShowWarnings(false);
 	    t.setShowErrors(1);
 	    t.setMakeClean(true);
+	    t.setMakeBare(true);
+	    t.setIndentContent(false);
+	    t.setIndentAttributes(false);
 
 	    expr =
 		    xpath.compile("//text | //comment | //description | //availability | //label | //identifier");
