@@ -94,7 +94,6 @@ public class FOPHelper {
 		transformer.setParameter("access", access);
 
 		// Setup input for XSLT transformation
-		log.debug(xml);
 		String escapeString = xml.replaceAll("&amp;", "&#38;");
 		escapeString = escapeString.replaceAll("\\s{2,}", "");
 		escapeString = escapeString.replaceAll("&#38;amp;", "&#38;");
@@ -107,7 +106,6 @@ public class FOPHelper {
 		escapeString = escapeString.replaceAll("&#13;", "");
 		escapeString = escapeString.replaceAll("&#0;", "");
 		escapeString = Normalizer.normalize(escapeString, Normalizer.Form.NFC);
-		log.debug(escapeString);
 		Source src =
 			new StreamSource(new ByteArrayInputStream(
 				escapeString.getBytes("UTF-8")));
