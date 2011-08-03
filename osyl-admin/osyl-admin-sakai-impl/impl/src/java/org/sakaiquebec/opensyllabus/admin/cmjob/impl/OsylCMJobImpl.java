@@ -463,8 +463,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		// section de cours annulée
 		courseOfferingId = getCourseOfferingId(coursEntry);
 		courseSectionId = getCourseSectionId(coursEntry);
-		Section section = cmService.getSection(courseSectionId);
 		try {
+		    Section section = cmService.getSection(courseSectionId);
 		    String siteId = getSiteName(section);
 		    boolean siteExist = osylSiteService.siteExists(siteId);
 		    if (siteExist) {
