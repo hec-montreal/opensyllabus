@@ -712,7 +712,7 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 	    t.setLiteralAttribs(false);
 
 	    expr =
-		    xpath.compile("//text | //comment | //description | //availability | //label | //identifier");
+		    xpath.compile("//text | //comment | //description | //availability | //label");
 
 	    NodeList nodes =
 		    (NodeList) expr.evaluate(d, XPathConstants.NODESET);
