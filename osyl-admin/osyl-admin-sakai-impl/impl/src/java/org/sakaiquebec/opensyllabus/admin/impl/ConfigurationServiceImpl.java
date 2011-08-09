@@ -103,7 +103,8 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private HashMap<String, List<String>> frozenFunctionsToAllow;
 
     private String description;
-
+    private boolean courseManagement;
+    
     private boolean includingFrozenSites;
 
     private boolean includingDirSites;
@@ -111,6 +112,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
     private List<String> functions;
     private List<String> addedUsers;
     private List<String> removedUsers;
+    private List<String> replacedUsers;
 
     private Map<String, String> printVersionJobParams = null;
 
@@ -581,6 +583,7 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 		Map<String, Object> values = new HashMap<String, Object>();
 		String role = retrieveParameter(document, ROLE);
 		String description = retrieveParameter(document, DESCRIPTION);
+		String courseManagement = retrieveParameter(document, COURSEMANAGEMENT);
 		boolean includingFrozenSites =
 			Boolean.parseBoolean(retrieveParameter(document,
 				INCLUDING_FROZEN_SITES));
@@ -589,19 +592,26 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 				INCLUDING_DIR_SITES));
 		String addedUsers = retrieveParameter(document, ADDEDUSERS);
 		String removedUsers = retrieveParameter(document, REMOVEDUSERS);
+		String replacedUsers = retrieveParameter(document, REPLACEDUSERS);
 		String functions = retrieveParameter(document, FUNCTIONS);
 
 		setDescription(description);
+		setCourseManagement(courseManagement);
 		setIncludingFrozenSites(includingFrozenSites);
 		setIncludingDirSites(includingDirSites);
 		setAddedUsers(addedUsers);
 		setRemovedUsers(removedUsers);
+		setReplacedUsers(replacedUsers);
 		setFunctions(functions);
 
 		values.put(ADDEDUSERS, this.addedUsers);
 		values.put(REMOVEDUSERS, this.removedUsers);
 		values.put(FUNCTIONS, this.functions);
 		values.put(DESCRIPTION, this.description);
+		values.put(REPLACEDUSERS, this.replacedUsers);
+		values.put(COURSEMANAGEMENT, this.courseManagement);
+		values.put(INCLUDING_DIR_SITES, includingDirSites);
+		values.put(INCLUDING_FROZEN_SITES, includingFrozenSites);
 
 		if (role != null) {
 		    if (updatedRoles == null)
@@ -720,6 +730,14 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	return description;
     }
 
+    public boolean isCourseManagement() {
+        return courseManagement;
+    }
+
+    public void setCourseManagement(String courseManagement) {
+        this.courseManagement = Boolean.parseBoolean(courseManagement);
+    }
+
     /**
      * @return the includingFrozenSites value.
      */
@@ -777,6 +795,17 @@ public class ConfigurationServiceImpl implements ConfigurationService, Observer 
 	    }
 	}
     }
+    
+    private void setReplacedUsers(String replacedUsers) {
+	this.replacedUsers = new ArrayList<String>();
+	if (replacedUsers != null && replacedUsers.length() > 0) {
+	    String[] replacedUsersTable = replacedUsers.split(LIST_DELIMITER);
+	    for (int i = 0; i < replacedUsersTable.length; i++) {
+		this.replacedUsers.add(replacedUsersTable[i].trim());
+	    }
+	}
+    }
+    
 
     /**
      * Lookup and rerieve one dynamic configuration parameter

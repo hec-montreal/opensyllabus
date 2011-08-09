@@ -175,9 +175,14 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
     private Set<Section> actualCoursesSection;
 
     /**
-     * Any person currently registed as member of a site in the system.
+     * Any coordinator currently registered as member of a site in the system.
      */
-    private HashMap<String, Membership> actualCourseMembers;
+    private HashMap<String, Membership> actualCoordinatorMemberships;
+
+    /**
+     * Any secretary currently registered as member of a site in the system.
+     */
+    private HashMap<String, Membership> actualSecretaryMembership;
 
     /**
      * Our logger
@@ -209,7 +214,6 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		Set<String> instructors = new HashSet<String>();
 		String coordinator = null;
 
-		// On a un enseignant
 		// Add instructor to section
 		String enrollmentSetId =
 			getCourseSectionEnrollmentSetId(detailsCours);
@@ -247,7 +251,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 			cmAdmin.addOrUpdateCourseOfferingMembership(
 				coordinator, COORDONNATEUR_ROLE,
 				courseOfferingId, ACTIVE_STATUS);
-			actualCourseMembers.remove(coordinator
+			actualCoordinatorMemberships.remove(coordinator
 				+ courseOfferingId);
 			log.info("Coordinators for "
 				+ detailsCours.getUniqueKey() + ": "
@@ -260,7 +264,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 			cmAdmin.addOrUpdateSectionMembership(coordinator,
 				COORDONNATEUR_ROLE, enrollmentSetId,
 				ACTIVE_STATUS);
-			actualCourseMembers.remove(coordinator
+			actualCoordinatorMemberships.remove(coordinator
 				+ enrollmentSetId);
 			log.info("Coordinators for "
 				+ detailsCours.getUniqueKey() + ": "
@@ -292,7 +296,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		courseOfferingId = getCourseOfferingId(detailsCours);
 		cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
 			CHARGE_FORMATION_ROLE, courseOfferingId, ACTIVE_STATUS);
-		actualCourseMembers.remove(matricule + courseOfferingId);
+		actualCoordinatorMemberships.remove(matricule + courseOfferingId);
 		log.info("Charge de Formation for "
 			+ detailsCours.getUniqueKey() + ": " + matricule);
 
@@ -968,18 +972,10 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	actualStudents = new HashMap<String, Enrollment>();
 	actualEnrollmentSets = new HashSet<EnrollmentSet>();
-	actualCourseMembers = new HashMap<String, Membership>();
+	actualCoordinatorMemberships = new HashMap<String, Membership>();
+	actualSecretaryMembership = new HashMap<String, Membership>();
 	actualCoursesSection = new HashSet<Section>();
 	Set<Enrollment> enrollments = null;
-
-	FileWriter outFile = null;
-	PrintWriter out = null;
-	try {
-	    outFile = new FileWriter("out.txt");
-	    out = new PrintWriter(outFile);
-	} catch (IOException e1) {
-	    e1.printStackTrace();
-	}
 
 	for (CourseSet courseSet : courseSets) {
 	    courseSetId = courseSet.getEid();
@@ -991,6 +987,24 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
 		for (CourseOffering course : courseOff) {
 		    courseOfferingId = course.getEid();
+
+		    // We retrieve memberships to the course offerings
+		    memberships =
+			    cmService
+				    .getCourseOfferingMemberships(courseOfferingId);
+		    for (Membership member : memberships) {
+			//Retrieve secretaries
+			if (member.getRole().equals(SECRETARY_ROLE))
+			    actualSecretaryMembership.put(member.getUserId()
+				    + sectionId, member);
+			
+			//Retrieve coordinators
+			if (member.getRole().equals(COORDONNATEUR_ROLE))
+			    actualCoordinatorMemberships.put(member.getUserId()
+				    + sectionId, member);
+			
+		    }
+
 		    // We retrieve the sections and the memberships in the
 		    // sections
 		    sections = cmService.getSections(courseOfferingId);
@@ -1001,11 +1015,11 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 			memberships =
 				cmService.getSectionMemberships(sectionId);
 			for (Membership member : memberships) {
-			    actualCourseMembers.put(member.getUserId()
-				    + sectionId, member);
-			    if (out != null)
-				out.println(member.getUserId() + "   "
-					+ sectionId);
+			    
+			    if (member.getRole().equals(COORDONNATEUR_ROLE)
+				    && sectionId.equals(SHARABLE_SECTION))
+				actualCoordinatorMemberships.put(member.getUserId()
+					+ sectionId, member);
 			}
 		    }
 		    // We retrieve the enrollments sets and enrollments
@@ -1254,8 +1268,6 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	}
     }
 
-    int i = 0;
-
     // Add secretary directly to the course offering
     private void addSecretariesToMembership(List<String> secretaries,
 	    List<DetailCoursMapEntry> courses) {
@@ -1270,7 +1282,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	    for (String secretary : secretaries) {
 		cmAdmin.addOrUpdateCourseOfferingMembership(secretary,
 			SECRETARY_ROLE, courseOfferingId, ACTIVE_STATUS);
-		actualCourseMembers.remove(secretary + courseOfferingId);
+		actualCoordinatorMemberships.remove(secretary + courseOfferingId);
 
 	    }
 	}
@@ -1282,7 +1294,6 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
      * SE.
      */
     private void syncSecretaries() {
-	i = 0;
 	SecretairesMapEntry entry = null;
 	String deptId = null;
 	String acadOrg = null;
@@ -1313,18 +1324,24 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 	    addSecretariesToMembership(secretaries, cours);
 	}
 	// ////////////////////////////////////////
-
-	Set<String> acmKeys = actualCourseMembers.keySet();
+	// Mise a jour des acces des secretaires
+	Set<String> acmKeys = actualSecretaryMembership.keySet();
 	Membership member = null;
-	String sectionId = null;
+	String courseId = null;
 	String userId = null;
 	for (String key : acmKeys) {
-	    member = actualCourseMembers.get(key);
+	    member = actualSecretaryMembership.get(key);
 	    userId = member.getUserId();
-	    sectionId = key.substring(member.getUserId().length());
-	    cmAdmin.removeSectionMembership(userId, sectionId);
+	    courseId = key.substring(member.getUserId().length());
+	    if (cmService.isSectionDefined(courseId)) {
+		cmAdmin.removeSectionMembership(userId, courseId);
+	    }
+	    if (cmService.isCourseOfferingDefined(courseId)) {
+		cmAdmin.removeCourseOfferingMembership(userId, courseId);
+	    }
 	    log.info("L'utilisateur " + userId + " n'est plus membre du cours "
-		    + sectionId);
+		    + courseId);
+
 	}
     }
 
@@ -1332,52 +1349,63 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	Map<String, Map<String, String>> exceptions =
 		adminConfigService.getCmExceptions();
-	for (Entry<String, Map<String, String>> entry : exceptions.entrySet()) {
-	    log.info("Start processing exceptions from "+entry.getKey());
-	    Map<String, String> props = entry.getValue();
-	    String users = props.get(ConfigurationService.CM_EXCEPTIONS_USERS);
-	    String courses =
-		    props.get(ConfigurationService.CM_EXCEPTIONS_COURSES);
-	    String category =
-		    props.get(ConfigurationService.CM_EXCEPTIONS_CATEGORY);
-	    String program =
-		    props.get(ConfigurationService.CM_EXCEPTIONS_PROGRAM);
-	    String role = props.get(ConfigurationService.CM_EXCEPTIONS_ROLE);
-	    List<String> matricules = Arrays.asList(users.split(","));
-	    if (courses != null && !"".equals(courses)) {
-		for (String course : Arrays.asList(courses.split(","))) {
-		    course = course.replaceAll("-", "");
-		    for (DetailCoursMapEntry dcme : detailCoursMap
-			    .getAllGroupeCours(course)) {
+	if (exceptions != null && !exceptions.isEmpty())
+	    for (Entry<String, Map<String, String>> entry : exceptions
+		    .entrySet()) {
+		log.info("Start processing exceptions from " + entry.getKey());
+		Map<String, String> props = entry.getValue();
+		String users =
+			props.get(ConfigurationService.CM_EXCEPTIONS_USERS);
+		String courses =
+			props.get(ConfigurationService.CM_EXCEPTIONS_COURSES);
+		String category =
+			props.get(ConfigurationService.CM_EXCEPTIONS_CATEGORY);
+		String program =
+			props.get(ConfigurationService.CM_EXCEPTIONS_PROGRAM);
+		String role =
+			props.get(ConfigurationService.CM_EXCEPTIONS_ROLE);
+		List<String> matricules = Arrays.asList(users.split(","));
+		if (courses != null && !"".equals(courses)) {
+		    for (String course : Arrays.asList(courses.split(","))) {
+			course = course.replaceAll("-", "");
+			for (DetailCoursMapEntry dcme : detailCoursMap
+				.getAllGroupeCours(course)) {
+			    String courseOfferingId = getCourseOfferingId(dcme);
+			    for (String matricule : matricules) {
+				log.info("Adding " + matricule
+					+ " to courseOffering "
+					+ courseOfferingId + " with " + role
+					+ " role");
+				cmAdmin.addOrUpdateCourseOfferingMembership(
+					matricule, role, courseOfferingId,
+					ACTIVE_STATUS);
+			    }
+			}
+		    }
+		} else if (category != null && !"".equals(category)) {
+		    List<DetailCoursMapEntry> coursesList = null;
+		    if (program != null && !"".equals(program)) {
+			coursesList =
+				detailCoursMap.getCoursByAcadOrgAndProg(
+					category, program);
+		    } else {
+			coursesList =
+				detailCoursMap.getCoursByAcadOrg(category);
+		    }
+		    for (DetailCoursMapEntry dcme : coursesList) {
 			String courseOfferingId = getCourseOfferingId(dcme);
 			for (String matricule : matricules) {
-			    log.info("Adding "+matricule+ " to courseOffering "+courseOfferingId+ " with "+role +" role");
+			    log.info("Adding " + matricule
+				    + " to courseOffering " + courseOfferingId
+				    + " with " + role + " role");
 			    cmAdmin.addOrUpdateCourseOfferingMembership(
 				    matricule, role, courseOfferingId,
 				    ACTIVE_STATUS);
 			}
 		    }
 		}
-	    } else if (category != null && !"".equals(category)) {
-		List<DetailCoursMapEntry> coursesList = null;
-		if (program != null && !"".equals(program)) {
-		    coursesList =
-			    detailCoursMap.getCoursByAcadOrgAndProg(category,
-				    program);
-		} else {
-		    coursesList = detailCoursMap.getCoursByAcadOrg(category);
-		}
-		for (DetailCoursMapEntry dcme : coursesList) {
-		    String courseOfferingId = getCourseOfferingId(dcme);
-		    for (String matricule : matricules) {
-			log.info("Adding "+matricule+ " to courseOffering "+courseOfferingId+ " with "+role +" role");
-			cmAdmin.addOrUpdateCourseOfferingMembership(matricule,
-				role, courseOfferingId, ACTIVE_STATUS);
-		    }
-		}
+		log.info("End processing exceptions from " + entry.getKey());
 	    }
-	    log.info("End processing exceptions from "+entry.getKey());
-	}
 
     }
 
@@ -1394,8 +1422,9 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	if (!siteExists(siteTitle)) {
 	    try {
-		//SAKAI-2856 : uncomment when ready
-		//exists = osylDirectoryService.createSite(siteTitle, canCourse);
+		// SAKAI-2856 : uncomment when ready
+		// exists = osylDirectoryService.createSite(siteTitle,
+		// canCourse);
 
 	    } catch (Exception e) {
 		log.error("The directory site for " + siteTitle

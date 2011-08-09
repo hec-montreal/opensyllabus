@@ -67,6 +67,10 @@ public interface ConfigurationService {
     public final static String ADDEDUSERS = "addedUsers";
 
     public final static String REMOVEDUSERS = "removedUsers";
+    
+    public final static String COURSEMANAGEMENT = "coursemanagement";
+    
+    public final static String REPLACEDUSERS = "replacedusers";
 
     public final static String FUNCTIONS = "functions";
 

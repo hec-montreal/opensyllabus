@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,6 +15,8 @@ import org.sakaiproject.authz.api.AuthzPermissionException;
 import org.sakaiproject.authz.api.GroupNotDefinedException;
 import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.RoleAlreadyDefinedException;
+import org.sakaiproject.coursemanagement.api.CourseOffering;
+import org.sakaiproject.coursemanagement.api.Section;
 import org.sakaiproject.site.api.Site;
 import org.sakaiproject.site.api.SiteService;
 import org.sakaiproject.user.api.UserNotDefinedException;
@@ -23,8 +26,9 @@ import org.sakaiquebec.opensyllabus.admin.cmjob.api.RolesSynchronizationJob;
 public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 	implements RolesSynchronizationJob {
 
-    private static Log log = LogFactory.getLog(RolesSynchronizationJobImpl.class);
-    
+    private static Log log = LogFactory
+	    .getLog(RolesSynchronizationJobImpl.class);
+
     private List<Site> allSites;
 
     private List<ConfigRole> rolesToConfig = null;
@@ -50,6 +54,10 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 		log.info("addedUsers: " + addedUsers);
 		List<String> removedUsers = configRole.getRemovedUsers();
 		log.info("removedUsers: " + removedUsers);
+		List<String> replacedUsers = configRole.getReplacedUsers();
+		log.info("replacedUsers: " + replacedUsers);
+		boolean courseManagement = configRole.getCourseManagement();
+		log.info("Course Management: " + courseManagement);
 		List<String> functions = configRole.getFunctions();
 		log.info("functions: " + functions);
 		boolean includingFrozenSites =
@@ -80,6 +88,12 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 		Site site = null;
 		AuthzGroup siteRealm = null;
 
+		// remove users in course management
+		if (courseManagement){
+		    removeUsersInCM(removedUsers, replacedUsers);
+		}
+		
+		
 		for (int i = 0; i < allSites.size(); i++) {
 		    site = allSites.get(i);
 
@@ -123,9 +137,12 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 	    addUsers(siteRealm, configRole.getConfigRole(),
 		    configRole.getAddedUsers());
 
-	    // We remove the specified users
-	    removeUsers(siteRealm, configRole.getConfigRole(),
-		    configRole.getRemovedUsers());
+	   
+	    // We remove the specified users and replace them with new users
+	    removeOrRemoveUsers(siteRealm, configRole.getConfigRole(),
+		    configRole.getRemovedUsers(),
+		    configRole.getReplacedUsers(),
+		    configRole.getCourseManagement());
 
 	}
     }
@@ -143,8 +160,10 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 	List<String> removedUsers;
 	List<String> addedUsers;
 	List<String> functions;
+	List<String> replacedUsers;
 	boolean includingFrozenSites;
 	boolean includingDirSites;
+	boolean courseManagement;
 	ConfigRole configRole;
 	Map<String, Object> values;
 
@@ -159,6 +178,12 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 	    functions =
 		    (List<String>) values.get(ConfigurationService.FUNCTIONS);
 	    description = (String) values.get(ConfigurationService.DESCRIPTION);
+	    replacedUsers =
+		    (List<String>) values
+			    .get(ConfigurationService.REPLACEDUSERS);
+	    courseManagement =
+		((Boolean) values.get(ConfigurationService.COURSEMANAGEMENT))
+			.booleanValue();
 	    includingFrozenSites =
 		    ((Boolean) values
 			    .get(ConfigurationService.INCLUDING_FROZEN_SITES))
@@ -176,6 +201,8 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 	    configRole.setFunctions(functions);
 	    configRole.setIncludingFrozenSites(includingFrozenSites);
 	    configRole.setIncludingDirSites(includingDirSites);
+	    configRole.setReplacedUsers(replacedUsers);
+	    configRole.setCourseManagement(courseManagement);
 
 	    rolesToConfig.add(configRole);
 	}
@@ -246,16 +273,22 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
      * 
      * @param realm
      */
-    private void removeUsers(AuthzGroup realm, String configRole,
-	    List<String> removedUsers) {
+    private void removeOrRemoveUsers(AuthzGroup realm, String configRole,
+	    List<String> removedUsers, List<String> replacedUsers,
+	    boolean courseManagement) {
+	
+	String providerId = realm.getProviderGroupId();
+	
 	if (removedUsers.size() > 0) {
 	    String userId = null;
-	    for (String user : removedUsers) {
+	    	    for (String user : removedUsers) {
 		try {
 		    userId = userDirectoryService.getUserId(user);
+		    //Remove user in the site
 		    if (realm.hasRole(userId, configRole)) {
 			realm.removeMember(userId);
 		    }
+		    
 		    authzGroupService.save(realm);
 
 		} catch (UserNotDefinedException e) {
@@ -267,6 +300,38 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 		    log.error(e.getMessage());
 		}
 	    }
+	}
+    }
+    /*
+     * Used only on secretaries.
+     */
+    private void removeUsersInCM (List<String> removedUsers, List<String> replacedUsers){
+	Map<String, String> courseOffMembers = null;
+	Map<String, String> sectionMembers = null;
+	CourseOffering courseOff = null;
+	Section section = null;
+	Set<String> ids = null;
+	boolean removed = false;
+	
+	for (String matricule: removedUsers){
+	    //Remove users from course offerings
+	    courseOffMembers = cmService.findCourseOfferingRoles(matricule);
+	    ids = courseOffMembers.keySet();
+	    for (String id: ids){
+		removed = cmAdmin.removeCourseOfferingMembership(matricule, id);
+		if (removed)
+		    log.info("The user " + matricule + " has been removed from the course offering " + id);
+	    }
+	    
+	    //Remove users from sections
+	    sectionMembers = cmService.findSectionRoles(matricule);
+	    ids = sectionMembers.keySet();
+	    for (String id: ids){
+		removed = cmAdmin.removeSectionMembership(matricule, id);
+		if (removed)
+		    log.info("The user " + matricule + " has been removed from the section " + id);
+	    }
+
 	}
     }
 
@@ -322,6 +387,10 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 
 	private List<String> functions;
 
+	private boolean courseManagement;
+
+	private List<String> replacedUsers;
+
 	private boolean includingFrozenSites;
 
 	private boolean includingDirSites;
@@ -352,6 +421,22 @@ public class RolesSynchronizationJobImpl extends OsylAbstractQuartzJobImpl
 
 	public List<String> getAddedUsers() {
 	    return addedUsers;
+	}
+
+	public boolean getCourseManagement() {
+	    return courseManagement;
+	}
+
+	public void setCourseManagement(boolean courseManagement) {
+	    this.courseManagement = courseManagement;
+	}
+
+	public List<String> getReplacedUsers() {
+	    return replacedUsers;
+	}
+
+	public void setReplacedUsers(List<String> replacedUsers) {
+	    this.replacedUsers = replacedUsers;
 	}
 
 	public void setAddedUsers(List<String> addedUsers) {
