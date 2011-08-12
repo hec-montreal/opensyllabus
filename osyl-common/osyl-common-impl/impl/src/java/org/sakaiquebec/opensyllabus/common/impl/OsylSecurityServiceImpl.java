@@ -22,7 +22,10 @@ package org.sakaiquebec.opensyllabus.common.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzGroupService;
+import org.sakaiproject.authz.api.GroupNotDefinedException;
+import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.content.api.ContentCollectionEdit;
 import org.sakaiproject.content.api.ContentHostingService;
@@ -262,19 +265,24 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 			.getCurrentSessionUserId());
 	try {
 	    Site s = siteService.getSite(userSiteId);
+	    AuthzGroup siteHelperRealm = authzService.getAuthzGroup(SITE_HELPER);
+	    Role userRole = siteHelperRealm.getRole(userSiteId);
 	    
 	    //Allow access if super user
 	    if (securityService.isSuperUser())
 		return true;
 	    
 	    //Allow access if user have the associated permission in site helper
-	    if (securityService.unlock(userSiteId, permission, SITE_HELPER))
+	    if (userRole != null && userRole.isAllowed(permission))
 		return true;
 	    
 	    if (securityService.unlock(permission, s.getReference()))
 		return true;
 	    return false;
 	} catch (IdUnusedException e) {
+	    e.printStackTrace();
+	    return false;
+	} catch (GroupNotDefinedException e) {
 	    e.printStackTrace();
 	    return false;
 	}
@@ -285,14 +293,27 @@ public class OsylSecurityServiceImpl implements OsylSecurityService {
 	String userSiteId =
 		siteService.getUserSiteId(sessionManager
 			.getCurrentSessionUserId());
+	    try {
+		Site s = siteService.getSite(userSiteId);
+	    AuthzGroup siteHelperRealm = authzService.getAuthzGroup(SITE_HELPER);
+	    Role userRole = siteHelperRealm.getRole(userSiteId);
+	    
 	    //Allow access if super user
 	    if (securityService.isSuperUser())
 		return true;
 	    
 	    //Allow access if user have the associated permission in site helper
-	    if (securityService.unlock(userSiteId, permission, SITE_HELPER))
+	    if (userRole != null && userRole.isAllowed(permission))
 		return true;
 	    
+	    } catch (IdUnusedException e) {
+		e.printStackTrace();
+		return false;
+	    } catch (GroupNotDefinedException e) {
+		e.printStackTrace();
+		return false;
+	    }
+
 	if (securityService.unlock(permission, siteRef)) {
 	    return true;
 	} else {

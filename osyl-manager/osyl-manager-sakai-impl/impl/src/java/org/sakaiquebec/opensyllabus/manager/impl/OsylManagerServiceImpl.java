@@ -53,8 +53,11 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
+import org.sakaiproject.authz.api.AuthzGroup;
 import org.sakaiproject.authz.api.AuthzGroupService;
 import org.sakaiproject.authz.api.FunctionManager;
+import org.sakaiproject.authz.api.GroupNotDefinedException;
+import org.sakaiproject.authz.api.Role;
 import org.sakaiproject.authz.api.SecurityAdvisor;
 import org.sakaiproject.authz.api.SecurityService;
 import org.sakaiproject.citation.api.Citation;
@@ -1778,25 +1781,58 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 
 	List<String> l = new ArrayList<String>();
 
-	// get the groups from Sakai
-	Set<String> authzGroupIds =
-		authzGroupService.getAuthzGroupsIsAllowed(userId, permission,
-			null);
-	Iterator<String> it = authzGroupIds.iterator();
-	while (it.hasNext()) {
-	    String authzGroupId = it.next();
-	    Reference r = entityManager.newReference(authzGroupId);
-	    if (r.isKnownType()) {
-		// check if this is a Sakai Site or Group
-		if (r.getType().equals(SiteService.APPLICATION_ID)) {
-		    String type = r.getSubType();
-		    if (SAKAI_SITE_TYPE.equals(type)) {
-			// this is a Site
-			String siteId = r.getId();
-			l.add(siteId);
+	// Is super user
+	boolean superUser = securityService.isSuperUser();
+	// Has access from !site.helper
+	AuthzGroup siteHelperRealm;
+	try {
+	    siteHelperRealm = authzGroupService.getAuthzGroup("!site.helper");
+	    Role userRole = siteHelperRealm.getUserRole(userId);
+	    boolean helperAccess = userRole.isAllowed(permission) // Has
+									       // the
+									       // right
+									       // to
+									       // open
+									       // the
+									       // site
+	    ;
+
+	    if (helperAccess || superUser) {
+		List<Site> allSites =
+			siteService.getSites(SiteService.SelectionType.ANY,
+				"course", null, null,
+				SiteService.SortType.NONE, null);
+
+		for (Site site : allSites) {
+		    l.add(site.getId());
+		}
+
+	    } else {
+		// get the groups from Sakai
+		Set<String> authzGroupIds =
+			authzGroupService.getAuthzGroupsIsAllowed(userId,
+				permission, null);
+
+		Iterator<String> it = authzGroupIds.iterator();
+		while (it.hasNext()) {
+		    String authzGroupId = it.next();
+		    Reference r = entityManager.newReference(authzGroupId);
+		    if (r.isKnownType()) {
+			// check if this is a Sakai Site or Group
+			if (r.getType().equals(SiteService.APPLICATION_ID)) {
+			    String type = r.getSubType();
+			    if (SAKAI_SITE_TYPE.equals(type)) {
+				// this is a Site
+				String siteId = r.getId();
+				l.add(siteId);
+			    }
+			}
 		    }
 		}
 	    }
+
+	} catch (GroupNotDefinedException e) {
+	    e.printStackTrace();
 	}
 
 	if (l.isEmpty()) {
