@@ -22,6 +22,7 @@ package org.sakaiquebec.opensyllabus.admin.cmjob.impl;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,8 +56,18 @@ public class CreatePrintVersionJobImpl extends OsylAbstractQuartzJobImpl
 			COURSE_SITE, null, null, SiteService.SortType.NONE,
 			null);
 
-	if (TRUE.equals(adminConfigService.getPrintVersionJobParams().get(
-		ConfigurationService.INCLUDING_DIR_SITES))) {
+	// Getting configuration (and defaulting to safe value if needed)
+	Map<String, String> configMap = adminConfigService.getPrintVersionJobParams();
+	boolean includeDirSites;
+	try {
+	    includeDirSites = TRUE.equals(configMap.get(
+			ConfigurationService.INCLUDING_DIR_SITES));
+	} catch (Exception e) {
+	    log.warn("Unable to get configuration, using default: directory" +
+	    		" sites are not included");
+	    includeDirSites = false;
+	}
+	if (includeDirSites) {
 	    allSites.addAll(siteService
 		    .getSites(SiteService.SelectionType.ANY, DIRECTORY_SITE,
 			    null, null, SiteService.SortType.NONE, null));
@@ -71,14 +82,20 @@ public class CreatePrintVersionJobImpl extends OsylAbstractQuartzJobImpl
 			    + "osyl-admin-sakai-tool";// Ugly but don't know
 						      // cleaner method.
 
+	boolean includeFrozenSites;
+	try {
+	    includeFrozenSites = TRUE.equals(configMap.get(
+			ConfigurationService.INCLUDING_FROZEN_SITES));
+	} catch (Exception e) {
+	    log.warn("Unable to get configuration, using default: frozen" +
+	    		" sites are not included");
+	    includeFrozenSites = false;
+	}
+	
 	for (Site site : allSites) {
 
-	    if (TRUE.equals(adminConfigService.getPrintVersionJobParams().get(
-		    ConfigurationService.INCLUDING_FROZEN_SITES))
-		    || (FALSE.equals(adminConfigService
-			    .getPrintVersionJobParams()
-			    .get(ConfigurationService.INCLUDING_FROZEN_SITES))
-			    && !getFrozenValue(site))) {
+	    if (includeFrozenSites
+		    || (!includeFrozenSites && !getFrozenValue(site))) {
 
 		String directory =
 			ContentHostingService.ATTACHMENTS_COLLECTION
