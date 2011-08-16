@@ -1788,7 +1788,10 @@ public class OsylManagerServiceImpl implements OsylManagerService {
 	try {
 	    siteHelperRealm = authzGroupService.getAuthzGroup("!site.helper");
 	    Role userRole = siteHelperRealm.getUserRole(userId);
-	    boolean helperAccess = userRole.isAllowed(permission) // Has
+	    boolean helperAccess = false;
+	    
+	    if (userRole != null)
+		helperAccess = userRole.isAllowed(permission) // Has
 									       // the
 									       // right
 									       // to
