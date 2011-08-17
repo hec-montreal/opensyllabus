@@ -125,7 +125,7 @@ public class CreatePrintVersionJobImpl extends OsylAbstractQuartzJobImpl
 	    }
 	}
 	logoutFromSakai();
-	log.info("Finished converting Course Outlines in "
+	log.info("Finished generating print versions in "
 		+ (System.currentTimeMillis() - start) + " ms");
     }
 

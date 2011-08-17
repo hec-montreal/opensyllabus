@@ -370,6 +370,12 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 			    programmeEtudesMap.get(coursEntry.getAcadCareer());
 		    RequirementsCoursMapEntry requirementsCoursMapEntry =
 			    requirementsCoursMap.get(coursEntry.getCourseId());
+		    try {
+			requirements = requirementsCoursMapEntry.getDescription(lang);
+		    } catch (NullPointerException e) {
+			log.warn("requirementsCoursMapEntry is null");
+			requirements = null;
+		    }
 		    career = programmeEtudesMapEntry.getAcadCareer();
 
 		    if (!cmService.isCourseOfferingDefined(courseOfferingId)) {
@@ -379,8 +385,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 					session.getEid(), canonicalCourseId,
 					session.getStartDate(), session
 						.getEndDate(), lang, career,
-					credits, requirementsCoursMapEntry
-						.getDescription(lang));
+					credits, requirements);
 			courseOfferingSet.add(courseOff);
 		    } else {
 			// We update
@@ -396,8 +401,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 			courseOff.setLang(lang);
 			courseOff.setAcademicCareer(career);
 			courseOff.setCredits(credits);
-			courseOff.setRequirements(requirementsCoursMapEntry
-				.getDescription(lang));
+			courseOff.setRequirements(requirements);
 			cmAdmin.updateCourseOffering(courseOff);
 		    }
 
