@@ -606,6 +606,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 
 	if (!cmService.isSectionDefined(courseSectionId)) {
 
+	    log.info("Info: " + courseSectionId + ", " + title + ", " + description
+		    + ", " + category + ", " + courseOfferingId + ", " + lang);
 	    newSection =
 		    cmAdmin.createSection(courseSectionId, title, description,
 			    category, null, courseOfferingId, null, lang);
