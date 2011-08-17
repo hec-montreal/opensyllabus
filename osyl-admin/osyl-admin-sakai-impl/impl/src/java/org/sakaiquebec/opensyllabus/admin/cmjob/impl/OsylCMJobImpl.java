@@ -351,7 +351,7 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		}
 
 		// Check wether there is a directory site
-		hasDirectorySite(canCourse);
+		//hasDirectorySite(canCourse);
 
 		if (cmService.isCourseSetDefined(courseSetId)) {
 		    cmAdmin.removeCanonicalCourseFromCourseSet(courseSetId,
