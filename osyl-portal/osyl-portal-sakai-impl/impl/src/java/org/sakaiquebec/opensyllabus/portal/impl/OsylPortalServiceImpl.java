@@ -117,7 +117,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 
 	    @Override
 	    public void run() {
-		buildCoursesMaps();
+		//buildCoursesMaps();
 	    }
 	};
 	timer.schedule(timerTask, 0, 86400000);
