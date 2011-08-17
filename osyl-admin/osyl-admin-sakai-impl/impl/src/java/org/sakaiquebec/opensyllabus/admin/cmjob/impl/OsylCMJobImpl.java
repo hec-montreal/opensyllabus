@@ -373,7 +373,8 @@ public class OsylCMJobImpl extends OsylAbstractQuartzJobImpl implements
 		    try {
 			requirements = requirementsCoursMapEntry.getDescription(lang);
 		    } catch (NullPointerException e) {
-			log.warn("requirementsCoursMapEntry is null");
+			log.warn("requirementsCoursMapEntry is null for course"
+				+ canonicalCourseId);
 			requirements = null;
 		    }
 		    career = programmeEtudesMapEntry.getAcadCareer();
