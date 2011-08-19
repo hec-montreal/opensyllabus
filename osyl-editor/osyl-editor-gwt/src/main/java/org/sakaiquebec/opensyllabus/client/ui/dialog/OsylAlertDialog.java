@@ -19,6 +19,7 @@ import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -115,9 +116,9 @@ public class OsylAlertDialog extends OsylAbstractLightBox {
 	// Set the title
 	this.setHTML(dialogTitle);
 	// Set the Content
-	Label contentLabel = new Label();
+	HTML contentLabel = new HTML();
 	contentLabel.setStylePrimaryName("Osyl-DialogBox-ContentLabel");
-	contentLabel.setText(dialogContent);
+	contentLabel.setHTML(dialogContent);
 	dialogVPanel.add(contentLabel);
 	// Create & add an option panel
 	HorizontalPanel optionPanel = new HorizontalPanel();
