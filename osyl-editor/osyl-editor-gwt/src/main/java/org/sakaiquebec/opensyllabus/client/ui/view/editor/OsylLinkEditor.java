@@ -375,11 +375,11 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	    ok = false;
 	    messages = getView().getUiMessage("LinkEditor.unvalidLink");
 	}
-	if (getTypeLinkSelected().equals(typeResourceListBox.getItemText(0))) {
-	    ok = false;
-	    messages =
-		    getUiMessage("DocumentEditor.document.WrongTypeResStatus");
-	}
+//	if (getTypeLinkSelected().equals(typeResourceListBox.getItemText(0))) {
+//	    ok = false;
+//	    messages =
+//		    getUiMessage("DocumentEditor.document.WrongTypeResStatus");
+//	}
 	//-----------------------------------------------------------------------
 	// Check resource type incompatibility 
 	//-----------------------------------------------------------------------

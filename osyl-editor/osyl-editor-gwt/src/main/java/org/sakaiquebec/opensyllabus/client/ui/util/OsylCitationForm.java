@@ -558,10 +558,10 @@ public class OsylCitationForm extends WindowPanel implements
 		    message =
 			    uiMessages
 				    .getMessage("CitationForm.fillRequiredFields");
-		} else if (typeResourceListBox.getSelectedIndex() == 0) {
-		    message =
-			    uiMessages
-				    .getMessage("fileUpload.chooseTypesResourceStatus");
+//		} else if (typeResourceListBox.getSelectedIndex() == 0) {
+//		    message =
+//			    uiMessages
+//				    .getMessage("fileUpload.chooseTypesResourceStatus");
 		} else if(null!=citation.getId()){
 		    String typage="";
 		    Map<String, String> cr =
