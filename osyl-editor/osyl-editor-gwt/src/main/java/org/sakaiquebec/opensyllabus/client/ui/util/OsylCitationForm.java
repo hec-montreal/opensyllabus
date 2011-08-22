@@ -493,7 +493,7 @@ public class OsylCitationForm extends WindowPanel implements
 	}
 	setTypeResource(typeCitationRes);
 	typeResourceListBox.addItem(osylController
-		.getUiMessage("DocumentEditor.documentType.choose"));
+		.getUiMessage("DocumentEditor.documentType.choose"),"");
 	for (String typeResource : this.typeResourceList) {
 	    typeResourceListBox.addItem(
 		    coMessages.getMessage("Resource.Type." + typeResource),
@@ -502,7 +502,7 @@ public class OsylCitationForm extends WindowPanel implements
 
 	HTML typeResourcelabel =
 		createNewLabel(uiMessages.getMessage("ResProxCitationView.resourceType.label")
-			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + ":");
+			 +":");
 
 	typeResourceListBox
 		.setStylePrimaryName("Osyl-CitationForm-genericPanel");
@@ -646,10 +646,6 @@ public class OsylCitationForm extends WindowPanel implements
 		// Type of resource for citation
 		citation.setResourceType(typeResourceListBox
 			.getValue(typeResourceListBox.getSelectedIndex()));
-
-		citation.setProperty(CitationSchema.CITATION_RESOURCE_TYPE,
-			typeResourceListBox.getValue(typeResourceListBox
-				.getSelectedIndex()));
 
 		citation.setProperty(CitationSchema.TYPE,
 			citationType.getValue(citationType.getSelectedIndex()));

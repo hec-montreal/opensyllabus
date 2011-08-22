@@ -925,7 +925,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
     private void buildTypeResourceListBox(List<String> typesResourceList) {
 	typeResourceListBox.clear();
 	typeResourceListBox.addItem(getView().getUiMessage(
-		"DocumentEditor.documentType.choose"));
+		"DocumentEditor.documentType.choose"),"");
 	for (String typeResource : typesResourceList) {
 	    typeResourceListBox.addItem(
 		    getView().getCoMessage("Resource.Type." + typeResource),

@@ -152,7 +152,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	typeResourceListBox.setStylePrimaryName("Osyl-LabelEditor-TextBox");
 	typeResourceListBox.setWidth("30%");
 	flexTable.setWidget(2, 0, new HTML(getUiMessage("Link.urlType")
-		+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + " : "));
+		+ " : "));
 	flexTable.setWidget(2, 1, typeResourceListBox);
 	// --------------------------------------------------------
 
@@ -469,7 +469,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	    initViewer();
 
 	    // We get the text to display from the model
-	    if (getView().getDocType() != null)
+	    if (getView().getDocType() != null && !"".equals(getView().getDocType()))
 		getViewerType().setHTML("["+
 			getView().getCoMessage(
 				RESS_TYPE_MESSAGE_PREFIX
@@ -545,7 +545,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     private void buildTypeResourceListBox(List<String> typesResourceList) {
 	typeResourceListBox.clear();
 	typeResourceListBox.addItem(getView().getUiMessage(
-		"DocumentEditor.documentType.choose"));
+		"DocumentEditor.documentType.choose"),"");
 	for (String typeResource : typesResourceList) {
 	    typeResourceListBox.addItem(getView().getCoMessage(
 		    RESS_TYPE_MESSAGE_PREFIX + typeResource), typeResource);
