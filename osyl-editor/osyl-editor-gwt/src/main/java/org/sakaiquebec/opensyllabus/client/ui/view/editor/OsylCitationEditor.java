@@ -431,7 +431,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	    if (resIncompatibility) {
 		StringBuilder sb = new StringBuilder();
 		for (String s : parentTitles) {
-		    sb.append(s + ", 0");
+		    sb.append(s + ", ");
 		}
 		String msgParameter = sb.substring(0, sb.length() - 2);
 		message +=
@@ -765,7 +765,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		if (resIncompatibility) {
 		    StringBuilder sb = new StringBuilder();
 		    for (String s : parentTitles) {
-			sb.append(s + ", 0");
+			sb.append(s + ", ");
 		    }
 		    String msgParameter = sb.substring(0, sb.length() - 2);
 		    message +=
