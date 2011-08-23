@@ -229,7 +229,7 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	if (cr == null) {
 	    cr = new HashMap<String, String>();
 	}
-	cr.put(getModel().getResource().getId(),
+	cr.put(getModel().getId(),
 		getModel().getResource().getProperty(
 			COPropertiesType.ASM_RESOURCE_TYPE));
 	OsylEditorEntryPoint

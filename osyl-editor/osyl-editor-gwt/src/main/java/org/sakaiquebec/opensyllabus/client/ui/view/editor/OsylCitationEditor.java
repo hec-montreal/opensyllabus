@@ -409,7 +409,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	    if (cr != null) {
 		for (Entry<String, String> entry : cr.entrySet()) {
 		    String id = entry.getKey();
-		    if (!id.equals(getView().getModel().getResource().getId())) {
+		    if (!id.equals(getView().getModel().getId())) {
 			typage = entry.getValue();
 			if (!typage.equals(resType)) {
 			    resIncompatibility = true;
@@ -537,7 +537,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 	browser =
 		new OsylCitationBrowser(basePath, getView().getCitationId(),
 			getView().getDocPath() + "/" + getView().getDocName(),
-			getView().getModel().getResource().getId());
+			getView().getModel().getId());
 
 	browser.addEventHandler((RFBItemSelectionEventHandler) this);
 	browser.addEventHandler((RFBAddFolderEventHandler) this);
@@ -742,7 +742,7 @@ public class OsylCitationEditor extends OsylAbstractBrowserEditor {
 		if (cr != null) {
 		    for (Entry<String, String> entry : cr.entrySet()) {
 			String id = entry.getKey();
-			if (!id.equals(getView().getModel().getResource()
+			if (!id.equals(getView().getModel()
 				.getId())) {
 			    typage = entry.getValue();
 			    if (!typage.equals(resType)) {

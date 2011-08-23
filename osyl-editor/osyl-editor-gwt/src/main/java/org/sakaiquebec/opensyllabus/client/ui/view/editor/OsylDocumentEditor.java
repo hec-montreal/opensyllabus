@@ -370,7 +370,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    if (incompatibility) {
 		StringBuilder sb = new StringBuilder();
 		for (String s : parentTitles) {
-		    sb.append(s + ", 0");
+		    sb.append(s + ", ");
 		}
 		String msgParameter = sb.substring(0, sb.length() - 2);
 		message +=
@@ -393,7 +393,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    if (cr != null) {
 		for (Entry<String, String> entry : cr.entrySet()) {
 		    String id = entry.getKey();
-		    if (!id.equals(getView().getModel().getResource().getId())) {
+		    if (!id.equals(getView().getModel().getId())) {
 			typage = entry.getValue();
 			if (!typage.equals(resType)) {
 			    resIncompatibility = true;
@@ -415,7 +415,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    if (resIncompatibility) {
 		StringBuilder sb = new StringBuilder();
 		for (String s : parentTitles) {
-		    sb.append(s + ", 0");
+		    sb.append(s + ", ");
 		}
 		String msgParameter = sb.substring(0, sb.length() - 2);
 		message += " " +
@@ -651,7 +651,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		if (cr != null) {
         		for (Entry<String, String> entry : cr.entrySet()) {
         		    String id = entry.getKey();
-        		    if (!id.equals(getView().getModel().getResource().getId())) {
+        		    if (!id.equals(getView().getModel().getId())) {
         			typage = entry.getValue();
         			if (!typage.equals(resType)) {
         			    resIncompatibility = true;

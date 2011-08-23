@@ -81,7 +81,7 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
 	if (cr == null) {
 	    cr = new HashMap<String, String>();
 	}
-	cr.put(getModel().getResource().getId(), getModel().getResource()
+	cr.put(getModel().getId(), getModel().getResource()
 		.getProperty(COPropertiesType.ASM_RESOURCE_TYPE));
 	OsylEditorEntryPoint.getInstance().getResTypeContextVisibilityMap()
 		.put(((OsylLinkEditor) getEditor()).getLink(), cr);

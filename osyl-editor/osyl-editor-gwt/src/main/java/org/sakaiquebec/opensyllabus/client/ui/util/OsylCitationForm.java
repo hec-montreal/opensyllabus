@@ -577,7 +577,7 @@ public class OsylCitationForm extends WindowPanel implements
 		    if (cr != null) {
 			for (Entry<String, String> entry : cr.entrySet()) {
 			    String id = entry.getKey();
-			    if (!id.equals(citation.getResourceId())) {//citation id
+			    if (!id.equals(citation.getResourceProxyId())) {//citation id
 				typage = entry.getValue();
 				if (!typage.equals(resType)) {
 				    resIncompatibility = true;
@@ -599,7 +599,7 @@ public class OsylCitationForm extends WindowPanel implements
 		    if (resIncompatibility) {
 			StringBuilder sb = new StringBuilder();
 			for (String s : parentTitles) {
-			    sb.append(s + ", 0");
+			    sb.append(s + ", ");
 			}
 			String msgParameter = sb.substring(0, sb.length() - 2);
 			message +=

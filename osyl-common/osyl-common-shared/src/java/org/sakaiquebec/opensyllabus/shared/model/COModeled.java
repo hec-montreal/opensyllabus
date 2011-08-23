@@ -512,8 +512,8 @@ public class COModeled extends COSerialized {
 				    coChildStructElt, coStructElt));
 		} else if (sNodeName.equalsIgnoreCase(CO_UNIT_NODE_NAME)) {
 		    COUnit coUnit = new COUnit();
-		    coStructElt.addChild(createCOUnitPOJO(sNode, coUnit,
-			    coStructElt));
+		    coStructElt.getChildrens().add(
+			    createCOUnitPOJO(sNode, coUnit, coStructElt));
 		} else {
 		    addProperty(coStructElt.getProperties(), sNode);
 		}
@@ -655,8 +655,7 @@ public class COModeled extends COSerialized {
 		if (contextVisibilityMap == null) {
 		    contextVisibilityMap = new HashMap<String, String>();
 		}
-		contextVisibilityMap.put(coContentResProxy.getResource()
-			.getId(), resourceTypeDoc);
+		contextVisibilityMap.put(coContentResProxy.getId(), resourceTypeDoc);
 		resTypeContextVisibilityMap.put(uri, contextVisibilityMap);
 	    }
 	}

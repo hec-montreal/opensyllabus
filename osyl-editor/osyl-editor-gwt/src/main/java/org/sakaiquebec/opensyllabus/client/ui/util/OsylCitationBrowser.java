@@ -45,7 +45,7 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
     
     private List<String> typesResourceList;
     
-    private String resourceId;
+    private String resourceProxyId;
 
     // CONSTRUUCTORS
     public OsylCitationBrowser() {
@@ -66,7 +66,7 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
     public OsylCitationBrowser(String newResDirName, String citationId,
 	    String citationListPath, String resourceId) {
 	super(newResDirName, new OsylCitationItem(citationId, citationListPath));
-	this.resourceId=resourceId;
+	this.resourceProxyId=resourceId;
     }
 
     // INHERITED METHODS
@@ -158,7 +158,7 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 	} else {
 	    OsylCitationItem citation =
 		    (OsylCitationItem) getSelectedAbstractBrowserItem();
-	    citation.setResourceId(resourceId);
+	    citation.setResourceProxyId(resourceProxyId);
 	    openEditor(citation);
 	}
     }
@@ -273,7 +273,7 @@ public class OsylCitationBrowser extends OsylAbstractBrowserComposite {
 	    } else {
 		OsylCitationItem citation =
 			(OsylCitationItem) getSelectedAbstractBrowserItem();
-		citation.setResourceId(resourceId);
+		citation.setResourceProxyId(resourceProxyId);
 		openEditor(citation);
 	    }
 	}

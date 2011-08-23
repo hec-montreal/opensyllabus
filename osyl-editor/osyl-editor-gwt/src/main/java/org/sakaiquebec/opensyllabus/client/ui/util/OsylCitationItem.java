@@ -62,6 +62,11 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
      * Map of citation properties
      */
     private COProperties properties = new COProperties();
+    
+    /**
+     * 
+     */
+    private String resourceProxyId;
 
     /**
      * empty constructor
@@ -312,5 +317,13 @@ public class OsylCitationItem extends OsylAbstractBrowserItem implements
 	} else {
 	    return false;
 	}
+    }
+
+    public void setResourceProxyId(String resourceProxyId) {
+	this.resourceProxyId = resourceProxyId;
+    }
+
+    public String getResourceProxyId() {
+	return resourceProxyId;
     }
 }
