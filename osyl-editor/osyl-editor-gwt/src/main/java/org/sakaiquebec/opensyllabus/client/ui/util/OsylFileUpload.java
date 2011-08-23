@@ -30,7 +30,7 @@ import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewControllable;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
-import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractResProxEditor;
+import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
 
 import com.google.gwt.core.client.GWT;
@@ -47,6 +47,7 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -106,7 +107,8 @@ public class OsylFileUpload extends WindowPanel implements
      * @param osylController
      */
     public OsylFileUpload(String title, OsylController osylController,
-	    String currentDirectory, List<String> rightsList, List<String> typesResourceList) {
+	    String currentDirectory, List<String> rightsList,
+	    List<String> typesResourceList) {
 	super(title);
 	// set some properties for WindowPanel
 	setResizable(false);
@@ -137,6 +139,18 @@ public class OsylFileUpload extends WindowPanel implements
 
 	// display file size limit
 	int row = 0;
+	final HTML mandatoryLabel =
+		new HTML(
+			OsylAbstractEditor.MANDATORY_FIELD_INDICATOR
+				+ osylController
+					.getUiMessage("Global.fields.mandatory"));
+	table.setWidget(row, 0, mandatoryLabel);
+	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
+	mandatoryLabel.setStylePrimaryName("Osyl-FileUpload-information");
+	((FlexCellFormatter) table.getCellFormatter()).setVerticalAlignment(
+		row, 0, HasVerticalAlignment.ALIGN_BOTTOM);
+
+	row++;
 	final Label sizeLabel =
 		new Label(uiMessages.getMessage("fileUpload.size.limit"));
 	table.setWidget(row, 0, sizeLabel);
@@ -152,10 +166,11 @@ public class OsylFileUpload extends WindowPanel implements
 	table.setWidget(row, 0, upload);
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
 
-	//-----------------------------------------------------------------------
+	// -----------------------------------------------------------------------
 	row++;
-	final Label rightsLabel =
-		new Label(uiMessages.getMessage("fileUpload.rights"));
+	final HTML rightsLabel =
+		new HTML(uiMessages.getMessage("fileUpload.rights")
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + ":");
 	table.setWidget(row, 0, rightsLabel);
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
 	rightsLabel.setStylePrimaryName("Osyl-FileUpload-information");
@@ -181,36 +196,38 @@ public class OsylFileUpload extends WindowPanel implements
 	table.setWidget(row, 0, rightsListBox);
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
 
-	//-----------------------------------------------------------------------
-	row++;	
-	final Label typeResourceLabel =
-		new Label(uiMessages.getMessage("fileUpload.typesResource"));
+	// -----------------------------------------------------------------------
+	row++;
+	final HTML typeResourceLabel =
+		new HTML(uiMessages.getMessage("fileUpload.typesResource")
+			+ OsylAbstractEditor.MANDATORY_FIELD_INDICATOR + ":");
 	table.setWidget(row, 0, typeResourceLabel);
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
 	typeResourceLabel.setStylePrimaryName("Osyl-FileUpload-information");
 	((FlexCellFormatter) table.getCellFormatter()).setVerticalAlignment(
 		row, 0, HasVerticalAlignment.ALIGN_BOTTOM);
-	
+
 	// Add a "type Resources" listbox
 	typesResourceListBox = new ListBox();
-	typesResourceListBox.addItem(uiMessages.getMessage(
-	"DocumentEditor.documentType.choose"));	
+	typesResourceListBox.addItem(uiMessages
+		.getMessage("DocumentEditor.documentType.choose"));
 	for (String typeDocument : this.typesResourceList) {
-	    typesResourceListBox.addItem(coMessages.getMessage(
-		    "Resource.Type." + typeDocument), typeDocument);
+	    typesResourceListBox.addItem(
+		    coMessages.getMessage("Resource.Type." + typeDocument),
+		    typeDocument);
 	}
 	typesResourceListBox.setItemSelected(0, true);
 	typesResourceListBox.addChangeHandler(new ChangeHandler() {
 	    public void onChange(ChangeEvent event) {
-		setTypeResource(typesResourceListBox.getValue(typesResourceListBox
-			.getSelectedIndex()));
+		setTypeResource(typesResourceListBox
+			.getValue(typesResourceListBox.getSelectedIndex()));
 	    }
 	});
 
 	row++;
 	table.setWidget(row, 0, typesResourceListBox);
 	((FlexCellFormatter) table.getCellFormatter()).setColSpan(row, 0, 2);
-	//-----------------------------------------------------------------------
+	// -----------------------------------------------------------------------
 	// Add a 'save' button.
 	AbstractImagePrototype imgSaveButton =
 		AbstractImagePrototype.create(osylImageBundle.save());
