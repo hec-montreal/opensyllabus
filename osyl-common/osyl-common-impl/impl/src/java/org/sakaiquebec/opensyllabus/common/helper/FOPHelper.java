@@ -103,7 +103,7 @@ public class FOPHelper {
 		escapeString = escapeString.replaceAll("&gt;", ">");
 		escapeString = escapeString.replaceAll("&nbsp;", " ");
 		escapeString = escapeString.replaceAll("&#38;nbsp;", " ");
-		escapeString = escapeString.replaceAll("&#13;", "");
+		escapeString = escapeString.replaceAll("&#13;", " ");
 		escapeString = escapeString.replaceAll("&#0;", "");
 		escapeString = Normalizer.normalize(escapeString, Normalizer.Form.NFC);
 		Source src =
