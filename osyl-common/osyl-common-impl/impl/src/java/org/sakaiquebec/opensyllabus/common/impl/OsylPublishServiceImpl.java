@@ -15,6 +15,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -721,6 +723,9 @@ public class OsylPublishServiceImpl implements OsylPublishService {
 		String textContent = node.getTextContent();
 		textContent = textContent.replaceAll("<o:p>", "");
 		textContent = textContent.replaceAll("</o:p>", "");
+		Pattern pattern = Pattern.compile("<!--.*-->", Pattern.DOTALL);
+		Matcher m = pattern.matcher(textContent);
+		textContent = m.replaceAll("");
 		StringReader reader = new StringReader(textContent);
 		StringWriter writer = new StringWriter();
 		t.parseDOM(reader, writer);
