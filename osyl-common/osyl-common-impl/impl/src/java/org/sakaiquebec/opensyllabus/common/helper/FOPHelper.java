@@ -95,7 +95,7 @@ public class FOPHelper {
 
 		// Setup input for XSLT transformation
 		String escapeString = xml.replaceAll("&amp;", "&#38;");
-		escapeString = escapeString.replaceAll("\\s{2,}", "");
+		escapeString = escapeString.replaceAll("\\s{2,}", " ");
 		escapeString = escapeString.replaceAll("&#38;amp;", "&#38;");
 		escapeString = escapeString.replaceAll("\n", " ");
 		escapeString = escapeString.replaceAll("\r", " ");
