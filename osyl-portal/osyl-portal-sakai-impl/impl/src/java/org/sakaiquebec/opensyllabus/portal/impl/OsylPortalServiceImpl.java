@@ -207,22 +207,24 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 			    createCODirectorySite(canonicalCourse);
 		    if (coDirectorySite != null) {
 			boolean accepted = false;
-			Map<String, String> aArchivedSections =
-				coDirectorySite.getArchivedSections();
-			Map<String, String> aCurrentSections =
-				coDirectorySite.getCurrentSections();
-			String aProgram = coDirectorySite.getProgram();
-			String aResponsible = coDirectorySite.getResponsible();
-			String aCourseNumber =
-				coDirectorySite.getCourseNumber();
-			String aCourseName = coDirectorySite.getCourseName();
-			String aInstructor = coDirectorySite.getInstructor();
-
 			if ((!isNull(program)
 				&& !isNull(responsible)
 				&& (program.equals("ALL") || isFoundField(
-					program, aProgram)) && isFoundField(
-				responsible, aResponsible))) {
+					program, coDirectorySite.getProgram())) && isFoundField(
+				responsible, coDirectorySite.getResponsible()))) {
+			    Map<String, String> aArchivedSections =
+				    coDirectorySite.getArchivedSections();
+			    Map<String, String> aCurrentSections =
+				    coDirectorySite.getCurrentSections();
+			    String aProgram = coDirectorySite.getProgram();
+			    String aResponsible =
+				    coDirectorySite.getResponsible();
+			    String aCourseNumber =
+				    coDirectorySite.getCourseNumber();
+			    String aCourseName =
+				    coDirectorySite.getCourseName();
+			    String aInstructor =
+				    coDirectorySite.getInstructor();
 			    // 0 0 0 0
 			    if (isNull(courseNumber) && isNull(courseTitle)
 				    && isNull(instructor) && isNull(trimester)) {
