@@ -43,6 +43,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -179,7 +180,23 @@ public class OsylPortalEntryPoint implements EntryPoint,
 	    localePanel.add(l);
 	}
 	localePanel.setStylePrimaryName("NHP_localePanel");
-
+	
+	//Search link
+	Label lblVoid = new HTML("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+	localePanel.add(lblVoid);
+	Label lblSearch = new Label(PortalController.getInstance().getMessage("button_search"));
+	lblSearch.addClickHandler(new ClickHandler() {
+    
+	public void onClick(ClickEvent event) {
+	    	CODirectorySite site;
+	    	site = new CODirectorySite();
+		setView(new ArchivesPage(site));
+	    }
+	});
+	
+	lblSearch.setStylePrimaryName("Portal_link");
+	localePanel.add(lblSearch);
+	
 	VerticalPanel vp = new VerticalPanel();
 	vp.add(localePanel);
 	vp.add(view);
@@ -204,6 +221,7 @@ public class OsylPortalEntryPoint implements EntryPoint,
 								   $wnd.location.href = locArray[0]+"?locale="+locale+"#"+history; 
 								   }-*/;
 
+   
     public void onValueChange(ValueChangeEvent<String> event) {
 	String newView = event.getValue();
 	AbstractPortalView view = views.get(newView);
