@@ -3,6 +3,7 @@ package org.sakaiquebec.opensyllabus.portal.server;
 import java.util.List;
 
 import org.sakaiquebec.opensyllabus.portal.client.rpc.OsylPortalGwtService;
+import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 import org.sakaiquebec.opensyllabus.shared.model.COSite;
 
@@ -23,6 +24,12 @@ public class OsylPortalGwtServiceImpl extends RemoteServiceServlet implements
 	return null;
     }
 
+    public List<CODirectorySite> getCoursesForFields(String courseNumber,
+	    String courseTitle, String instructor, String program,
+	    String responsible, String trimester) {
+	return null;
+    }
+
     public String getDescription(String siteId) {
 	return null;
     }
@@ -34,4 +41,5 @@ public class OsylPortalGwtServiceImpl extends RemoteServiceServlet implements
     public String getAccessForSiteAndCurrentUser(String siteId) {
 	return null;
     }
+    
 }
