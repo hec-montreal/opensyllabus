@@ -77,13 +77,13 @@ public class NavigationHomePage extends AbstractPortalView {
 		    ACAD_CAREER_MSCP, ACAD_CAREER_DESS, ACAD_CAREER_PHD,
 		    ACAD_CAREER_PHDP });
 
-    private static final List<String> responsible_part1 = Arrays
+    public static final List<String> responsible_part1 = Arrays
 	    .asList(new String[] { RESPONSIBLE_IEA, RESPONSIBLE_FINANCE,
 		    RESPONSIBLE_GOL, RESPONSIBLE_GRH, RESPONSIBLE_INTERNAT,
 		    RESPONSIBLE_MQG, RESPONSIBLE_SC_COMPT, RESPONSIBLE_TI,
 		    RESPONSIBLE_MARKETING, RESPONSIBLE_MNGT });
 
-    private static final List<String> responsible_part2 = Arrays
+    public static final List<String> responsible_part2 = Arrays
 	    .asList(new String[] { RESPONSIBLE_BUR_REGIST,
 		    RESPONSIBLE_QUAL_COMM, RESPONSIBLE_BAA,
 		    RESPONSIBLE_CERTIFICAT, RESPONSIBLE_DIPLOMES,
