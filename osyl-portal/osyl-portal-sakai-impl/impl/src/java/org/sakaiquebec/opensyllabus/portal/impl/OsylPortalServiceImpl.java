@@ -23,13 +23,18 @@ package org.sakaiquebec.opensyllabus.portal.impl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Map.Entry;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -51,10 +56,12 @@ import org.sakaiquebec.opensyllabus.common.api.OsylSecurityService;
 import org.sakaiquebec.opensyllabus.common.helper.XmlHelper;
 import org.sakaiquebec.opensyllabus.portal.api.OsylPortalService;
 import org.sakaiquebec.opensyllabus.shared.api.SecurityInterface;
+import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 import org.sakaiquebec.opensyllabus.shared.model.COSerialized;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 
 /**
  * @author <a href="mailto:mame-awa.diop@hec.ca">Mame Awa Diop</a>
@@ -70,9 +77,11 @@ public class OsylPortalServiceImpl implements OsylPortalService {
     private Map<String, List<CODirectorySite>> courseListByAcadCareerMap;
 
     private Map<String, List<CODirectorySite>> courseListByResponsibleMap;
+   
+    private List<CODirectorySite> courseListByFields;
 
     private List<String> currentSessions;
-
+    
     private String webappDir = System.getProperty("catalina.home")
 	    + File.separator + "webapps" + File.separator
 	    + "osyl-portal-sakai-tool" + File.separator;// Ugly but don't know
@@ -159,6 +168,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 			createCODirectorySite(canonicalCourse);
 		String acadCareer = coDirectorySite.getProgram();
 		String responsible = coDirectorySite.getResponsible();
+
 		if (acadCareer != null) {
 		    List<CODirectorySite> list =
 			    temp_courseListByAcadCareerMap.get(acadCareer);
@@ -179,10 +189,296 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		}
 	    }
 	}
-	courseListByAcadCareerMap = temp_courseListByAcadCareerMap;
+	courseListByAcadCareerMap = temp_courseListByAcadCareerMap;	
 	courseListByResponsibleMap = temp_courseListByResponsibleMap;
     }
 
+    private void buildFilteredCoursesFromCM(String courseNumber,
+	    String courseTitle, String instructor, String program,
+	    String responsible, String trimester) {
+
+	List<CODirectorySite> courseList = new ArrayList<CODirectorySite>();
+
+	for (CourseSet courseSet : courseManagementService.getCourseSets()) {
+	    for (CanonicalCourse canonicalCourse : courseManagementService
+		    .getCanonicalCourses(courseSet.getEid())) {
+		if (canonicalCourse.getEid() != null) {
+		    CODirectorySite coDirectorySite =
+			    createCODirectorySite(canonicalCourse);
+		    if (coDirectorySite != null) {
+			boolean accepted = false;
+			Map<String, String> aArchivedSections =
+				coDirectorySite.getArchivedSections();
+			Map<String, String> aCurrentSections =
+				coDirectorySite.getCurrentSections();
+			String aProgram = coDirectorySite.getProgram();
+			String aResponsible = coDirectorySite.getResponsible();
+			String aCourseNumber =
+				coDirectorySite.getCourseNumber();
+			String aCourseName = coDirectorySite.getCourseName();
+			String aInstructor = coDirectorySite.getInstructor();
+
+			if ((!isNull(program)
+				&& !isNull(responsible)
+				&& (program.equals("ALL") || isFoundField(
+					program, aProgram)) && isFoundField(
+				responsible, aResponsible))) {
+			    // 0 0 0 0
+			    if (isNull(courseNumber) && isNull(courseTitle)
+				    && isNull(instructor) && isNull(trimester)) {
+				accepted = true;
+			    // 0 0 0 1
+			    } else if (isNull(courseNumber) && isNull(courseTitle)
+				    && isNull(instructor) && !isNull(trimester)) {
+				if (isFoundField(trimester, aArchivedSections,
+					aCurrentSections)) {
+				    accepted = true;
+				}
+			    // 0 0 1 0				
+			    } else if (isNull(courseNumber) && isNull(courseTitle)
+				    && !isNull(instructor) && isNull(trimester)) {
+				if (isFoundField(instructor, aInstructor)) {
+				    accepted = true;
+				}
+			    // 0 0 1 1				
+			    } else if (isNull(courseNumber) && isNull(courseTitle)
+				    && !isNull(instructor)
+				    && !isNull(trimester)) {
+				if (isFoundField(instructor, aInstructor)
+					&& isFoundField(trimester,
+						aArchivedSections,
+						aCurrentSections)) {
+				    accepted = true;
+				}
+			    // 0 1 0 0
+			    } else if (isNull(courseNumber) && !isNull(courseTitle)
+				    && isNull(instructor) && isNull(trimester)) {
+				if (isFoundField(courseTitle, aCourseName)) {
+				    accepted = true;
+				}
+			    // 0 1 0 1				
+			    } else if (isNull(courseNumber) && !isNull(courseTitle)
+				    && isNull(instructor) && !isNull(trimester)) {
+				if (isFoundField(courseTitle, aCourseName)
+					&& isFoundField(trimester,
+						aArchivedSections,
+						aCurrentSections)) {
+				    accepted = true;
+				}
+			    // 0 1 1 0				
+			    } else if (isNull(courseNumber) && !isNull(courseTitle)
+				    && !isNull(instructor) && isNull(trimester)) {
+				if (isFoundField(courseTitle, aCourseName)
+					&& isFoundField(instructor, aInstructor)) {
+				    accepted = true;
+				}
+			    // 0 1 1 1				
+			    } else if (isNull(courseNumber) && !isNull(courseTitle)
+				    && !isNull(instructor)
+				    && !isNull(trimester)) {
+				if (isFoundField(courseTitle, aCourseName)
+					&& isFoundField(instructor, aInstructor)
+					&& isFoundField(trimester,
+						aArchivedSections,
+						aCurrentSections)) {
+				    accepted = true;
+				}
+			    // 1 0 0 0				
+			    } else if (!isNull(courseNumber) && isNull(courseTitle)
+				    && isNull(instructor) && isNull(trimester)) {
+				if (isFoundField(courseNumber, aCourseNumber)) {
+				    accepted = true;
+				}
+
+			    // 1 0 0 1				
+			    } else if (!isNull(courseNumber) && isNull(courseTitle)
+				    && isNull(instructor) && !isNull(trimester)) {
+				if (isFoundField(courseNumber, aCourseNumber)
+					&& isFoundField(trimester,
+						aArchivedSections,
+						aCurrentSections)) {
+				    accepted = true;
+				}
+			    // 1 0 1 0				
+			    } else if (!isNull(courseNumber) && isNull(courseTitle)
+				    && !isNull(instructor) && isNull(trimester)) {
+				if (isFoundField(courseNumber, aCourseNumber)
+					&& isFoundField(instructor, aInstructor)) {
+				    accepted = true;
+				}
+			    // 1 0 1 1				
+			    } else if (!isNull(courseNumber) && isNull(courseTitle)
+				    && !isNull(instructor)
+				    && !isNull(trimester)) {
+				if (isFoundField(courseNumber, aCourseNumber)
+					&& isFoundField(instructor, aInstructor)
+					&& isFoundField(trimester,
+						aArchivedSections,
+						aCurrentSections)) {
+				    accepted = true;
+				}
+			    // 1 1 0 0				
+			    } else if (!isNull(courseNumber) && !isNull(courseTitle)
+				    && isNull(instructor) && isNull(trimester)) {
+				if (isFoundField(courseNumber, aCourseNumber)
+					&& isFoundField(courseTitle,
+						aCourseName)) {
+				    accepted = true;
+				}
+			    // 1 1 0 1				
+			    } else if (!isNull(courseNumber) && !isNull(courseTitle)
+				    && isNull(instructor) && !isNull(trimester)) {
+				if (isFoundField(courseNumber, aCourseNumber)
+					&& isFoundField(courseTitle,
+						aCourseName)
+					&& isFoundField(trimester,
+						aArchivedSections,
+						aCurrentSections)) {
+				    accepted = true;
+				}
+			    // 1 1 1 0				
+			    } else if (!isNull(courseNumber) && !isNull(courseTitle)
+				    && !isNull(instructor) && isNull(trimester)) {
+				if (isFoundField(courseNumber, aCourseNumber)
+					&& isFoundField(courseTitle,
+						aCourseName)
+					&& isFoundField(instructor, aInstructor)) {
+				    accepted = true;
+				}
+			    // 1 1 1 1
+			    } else if (!isNull(courseNumber) && !isNull(courseTitle)
+				    && !isNull(instructor)
+				    && !isNull(trimester)) {
+				if (isFoundField(courseNumber, aCourseNumber)
+					&& isFoundField(courseTitle,
+						aCourseName)
+					&& isFoundField(instructor, aInstructor)
+					&& isFoundField(trimester,
+						aArchivedSections,
+						aCurrentSections)) {
+				    accepted = true;
+				}
+			    }
+			}
+			if (accepted) {
+			    List<String> allSections =
+				    buildAllSections(coDirectorySite);
+			    coDirectorySite.setAllSections(allSections);
+			    courseList.add(coDirectorySite);
+			}
+		    }// coDirectorySite is null
+		}
+	    }// for
+	}// for
+	if (!courseList.isEmpty()) {
+	    courseList.get(0).setSessionNamesList(getRightSessions(courseList));
+	}
+	courseListByFields = courseList;
+    }
+
+    private List<String> buildAllSections(CODirectorySite coSite) {
+	List<String> allSections = new ArrayList<String>();
+
+	if (coSite.getArchivedSections() != null) {
+	    List<String> archivedSections =
+		    new ArrayList<String>(coSite.getArchivedSections().keySet());
+	    for (String section1 : archivedSections) {
+		if (!isNull(section1)) {
+		    allSections.add(section1);
+		}
+	    }
+	}
+
+	if (coSite.getCurrentSections() != null) {
+	    List<String> currentSections =
+		    new ArrayList<String>(coSite.getCurrentSections().keySet());
+	    for (String section2 : currentSections) {
+		if (!isNull(section2)) {
+		    allSections.add(section2);
+		}
+	    }
+	}
+	return allSections;
+    }
+    
+    private List<String> getRightSessions(List<CODirectorySite> courses) {
+	List<String> rigthSessions = new ArrayList<String>();
+	List<String> sessions = new ArrayList<String>();
+	sessions = getAcademicNamesSessions();
+	if (courses != null) {
+	    for (String session : sessions) {
+		for (final CODirectorySite coSite : courses) {
+		    String trimesters = coSite.getSearchedTrimesters();
+		    if (isSessionInSite(session, trimesters)) {
+			if (!rigthSessions.contains(session)) {
+				rigthSessions.add(session);			    
+			}
+		    }
+		}
+	    }
+	}
+	return rigthSessions;
+    }
+    
+    private boolean isSessionInSite(String element, String sessions) {
+	if (!isNull(element) && !isNull(sessions)) {
+	    if (sessions.matches("(?i)." + element + "*")
+		    || sessions.toLowerCase().indexOf(element.toLowerCase()) >= 0
+		    || element.equals(sessions)) {
+		return true;
+	    } else {
+		return false;
+	    }
+	} else {
+	    return false;
+	}
+
+    }
+	    
+    private boolean isFoundField(String field, Map<String, String> achivedSections, Map<String, String> currentSections) {
+	if (!isNull(field)) {
+	    if (isFieldInCollection(field,achivedSections) || isFieldInCollection(field, currentSections)) {
+		return true;
+	    } else {
+		return false;
+	    }
+	}
+	return true;
+    }  
+    
+    private boolean isFieldInCollection (String field, Map<String, String> map) {
+	for (Iterator<Entry<String, String>> sortedSIterator =
+	    map.entrySet().iterator(); sortedSIterator.hasNext();) {
+	    Entry<String, String> entry =  sortedSIterator.next();
+	    if (entry.getKey().matches("(?i)." + field+"*") || entry.getKey().toLowerCase().indexOf(field.toLowerCase()) > 0){
+		return true;
+	    } else {
+		return false;
+	    }
+	}
+	return false;
+    }
+   
+    private boolean isFoundField(String field, String attribut) {
+	if (!isNull(field) && !isNull(attribut)) {
+	    if (attribut.toLowerCase().contains(field.toLowerCase())) {
+		return true;
+	    } else {
+		return false;
+	    }
+	} else {
+	    return false;
+	}
+    }
+
+    private boolean isNull(String field) {
+	if (field!=null && !field.equals("")) {
+	    return false;
+	} else {
+	    return true;
+	}
+    }
+    
     public CODirectorySite getCODirectorySite(String siteId) {
 	CODirectorySite coDirectorySite =
 		createCODirectorySite(courseManagementService
@@ -199,6 +495,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	coDirectorySite.setCourseName(canonicalCourse.getTitle());
 	for (CourseOffering courseOffering : courseManagementService
 		.getCourseOfferingsInCanonicalCourse(canonicalCourse.getEid())) {
+
 	    if (coDirectorySite.getProgram() == null) {
 		coDirectorySite.setProgram(courseOffering.getAcademicCareer());
 		coDirectorySite.setCredits(courseOffering.getCredits());
@@ -206,11 +503,14 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 			.getRequirements());
 		coDirectorySite.setProgram(courseOffering.getAcademicCareer());
 	    }
-	    if (currentSessions.contains(courseOffering.getAcademicSession()
-		    .getEid())) {
-		fillCurrentSectionsForCODirectorySite(coDirectorySite, courseOffering);
-	    }else{
-		fillArchivedSectionsForCODirectorySite(coDirectorySite, courseOffering);
+	    if (currentSessions != null
+		    && currentSessions.contains(courseOffering
+			    .getAcademicSession().getEid())) {
+		fillCurrentSectionsForCODirectorySite(coDirectorySite,
+			courseOffering);
+	    } else {
+		fillArchivedSectionsForCODirectorySite(coDirectorySite,
+			courseOffering);
 	    }
 	}
 	return coDirectorySite;
@@ -243,7 +543,17 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		    }
 		}
 		coDirectorySite.putCurrentSection(getSectionName(section), userName);
+		String trimesters = coDirectorySite.getSearchedTrimesters();
+		if (trimesters != null) {
+		    if (trimesters.indexOf(searchedTrimesters(section)) > 0){
+			trimesters = trimesters + "," + searchedTrimesters(section);    
+		    }
+		} else {
+		    trimesters = searchedTrimesters(section);
+		}
+		coDirectorySite.setSearchedTrimesters(trimesters);
 	    }
+	    
 	    if (section.getCategory() != null
 		    && !section.getCategory().equals("")) {
 		coDirectorySite.setResponsible(section.getCategory());
@@ -278,6 +588,15 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		    }
 		}
 		coDirectorySite.putArchivedSection(getSectionName(section), userName);
+		String trimesters = coDirectorySite.getSearchedTrimesters();
+		if (trimesters != null) {
+		    if (trimesters.indexOf(searchedTrimesters(section)) > 0){
+			trimesters = trimesters + "," + searchedTrimesters(section);    
+		    }
+		} else {
+		    trimesters = searchedTrimesters(section);
+		}
+		coDirectorySite.setSearchedTrimesters(trimesters);
 	    }
 	    if (section.getCategory() != null
 		    && !section.getCategory().equals("")) {
@@ -333,6 +652,17 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 		courseId = canCourseId;
 	}
 	return courseId;
+    }
+    
+    
+    private String searchedTrimesters(Section section) {
+	String sessionTitle = null;
+	String courseOffId = section.getCourseOfferingEid();
+	CourseOffering courseOff =
+		courseManagementService.getCourseOffering(courseOffId);
+	AcademicSession session = courseOff.getAcademicSession();
+	sessionTitle = getSessionName(session);
+	return sessionTitle;
     }
 
     private String getSectionName(Section section) {
@@ -428,7 +758,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	return sessionName;
     }
 
-    @Override
+
     public List<CODirectorySite> getCoursesForAcadCareer(String acadCareer) {
 	return courseListByAcadCareerMap.get(acadCareer);
     }
@@ -437,6 +767,16 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	return courseListByResponsibleMap.get(responsible);
     }
 
+    public List<CODirectorySite> getCoursesForFields(String courseNumber,
+	    String courseTitle, String instructor, String program,
+	    String responsible, String trimester) {
+
+	buildFilteredCoursesFromCM(courseNumber, courseTitle, instructor, program, responsible, trimester);
+	
+	return  courseListByFields;
+    }
+    
+	    
     public String getDescription(String siteId) {
 	String description = "";
 	try {
@@ -462,5 +802,22 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	}
 	return description;
     }
+
+    public List<String> getAcademicNamesSessions() {
+	List<AcademicSession> acadSessionsList =
+		courseManagementService.getAcademicSessions();
+	List<String> sessionsList = new ArrayList<String>();
+	for (AcademicSession acadSession : acadSessionsList) {
+	    CMAcademicSession cmAcadSession = new CMAcademicSession();
+	    cmAcadSession.setId(acadSession.getEid());
+	    cmAcadSession.setTitle(acadSession.getTitle());
+	    cmAcadSession.setDescription(acadSession.getDescription());
+	    cmAcadSession.setStartDate(acadSession.getStartDate());
+	    cmAcadSession.setEndDate(acadSession.getEndDate());
+	    sessionsList.add(cmAcadSession.getSessionName());
+	}
+	Collections.sort(sessionsList);
+	return sessionsList;
+    }     
 
 }
