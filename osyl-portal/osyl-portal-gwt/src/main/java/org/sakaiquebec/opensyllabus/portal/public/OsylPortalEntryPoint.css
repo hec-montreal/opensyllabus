@@ -35,6 +35,29 @@ body {
 	margin-left: 30px;
 }
 
+.NHP_titre4 {
+	color: #063871;
+	font-size: 85%;
+	margin-left: 30px;
+}
+
+.Portal_button {
+	font:bold 10px Arial, Verdana, sans-serif;
+	white-space:nowrap;
+	color:#444;
+	background-color:#F7F7F7;
+	border:1px solid #999;
+	margin:0 4px;
+	margin-left: 20px;
+	padding:3px;
+	cursor:pointer;
+	overflow:visible;/* removes extra side padding in IE */
+	border-radius:7px;
+	-moz-border-radius:7px;
+	-webkit-border-radius:7px;
+}
+
+
 .NHP_link {
 	color: #063871;
 	margin-left: 30px;
@@ -93,4 +116,16 @@ body {
 
 .CP-Description .dragdrop-handle {
 	cursor: pointer;
+}
+
+.CP_titre {
+	color: #063871;
+	font-weight: bold;	
+	margin-left: 0px;
+}
+
+.CP_data {
+	color: #063871;
+	font-size: 85%;
+	margin-left: 0px;
 }
