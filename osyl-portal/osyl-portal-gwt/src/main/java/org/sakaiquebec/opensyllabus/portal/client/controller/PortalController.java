@@ -27,6 +27,7 @@ import org.sakaiquebec.opensyllabus.portal.client.OsylPortalEntryPoint;
 import org.sakaiquebec.opensyllabus.portal.client.message.OsylPortalMessages;
 import org.sakaiquebec.opensyllabus.portal.client.view.AbstractPortalView;
 import org.sakaiquebec.opensyllabus.portal.client.view.CoursesPage;
+import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.core.client.GWT;
@@ -48,6 +49,8 @@ public class PortalController {
     public static String RESPONSIBLE_PREFIX = "responsible.";
 
     public static String ACAD_CAREER_PREFIX = "acad_career.";
+    
+    public static String FIELDS_NAME = "searchByFields";    
 
     public static String ABBREVIATION_SUFFIX = "_abb";
 
@@ -110,6 +113,25 @@ public class PortalController {
 	getCoursesForResponsible(responsible, callback);
     }
 
+    public void createCourseViewForFields(final String courseNumber,
+	    final String courseTitle, final String instructor,
+	    final String program, final String responsible,
+	    final String trimester) {
+	AsyncCallback<List<CODirectorySite>> callback =
+		new AsyncCallback<List<CODirectorySite>>() {
+
+		    public void onFailure(Throwable caught) {
+		    }
+
+		    public void onSuccess(List<CODirectorySite> result) {
+			setView(new CoursesPage(FIELDS_NAME, result));
+		    }
+		};
+	getCoursesForFields(courseNumber, courseTitle,
+		    instructor, program, responsible,
+		    trimester, callback);
+    }
+    
     /***************************** RPC CALLS *********************************/
     public void getCoursesForAcadCareer(String acadCareer,
 	    AsyncCallback<List<CODirectorySite>> callback) {
@@ -123,6 +145,14 @@ public class PortalController {
 		callback);
     }
 
+    public void getCoursesForFields(String courseNumber, String courseTitle,
+	    String instructor, String program, String responsible,
+	    String trimester, AsyncCallback<List<CODirectorySite>> callback) {
+	PortalRpcController.getInstance().getCoursesForFields(courseNumber,
+		courseTitle, instructor, program, responsible, trimester,
+		callback);
+    }
+    
     public void getDescription(String siteId, AsyncCallback<String> callback) {
 	PortalRpcController.getInstance().getDescription(siteId, callback);
     }
@@ -135,6 +165,7 @@ public class PortalController {
     public void getAccessForSiteId(String siteId, AsyncCallback<String> callback) {
 	PortalRpcController.getInstance().getAccessForSiteId(siteId, callback);
     }
+    
     /************************** END RPC CALLS *******************************/
 
 }

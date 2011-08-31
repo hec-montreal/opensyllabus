@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.sakaiquebec.opensyllabus.portal.client.rpc.OsylPortalGwtService;
 import org.sakaiquebec.opensyllabus.portal.client.rpc.OsylPortalGwtServiceAsync;
+import org.sakaiquebec.opensyllabus.shared.model.CMAcademicSession;
 import org.sakaiquebec.opensyllabus.shared.model.CODirectorySite;
 
 import com.google.gwt.core.client.GWT;
@@ -69,6 +70,13 @@ public class PortalRpcController {
 	serviceProxy.getCoursesForResponsible(responsible, callback);
     }
 
+    public void getCoursesForFields(String courseNumber, String courseTitle,
+	    String instructor, String program, String responsible,
+	    String trimester, AsyncCallback<List<CODirectorySite>> callback) {
+	serviceProxy.getCoursesForFields(courseNumber, courseTitle, instructor,
+		program, responsible, trimester, callback);
+    }
+    
     public void getDescription(String siteId, AsyncCallback<String> callback) {
 	serviceProxy.getDescription(siteId, callback);
     }
@@ -81,5 +89,5 @@ public class PortalRpcController {
     public void getAccessForSiteId(String siteId, AsyncCallback<String> callback) {
 	serviceProxy.getAccessForSiteAndCurrentUser(siteId, callback);
     }
-
+    
 }
