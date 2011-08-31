@@ -65,7 +65,11 @@ public interface OsylPortalMessages extends ConstantsWithLookup {
     String acad_career_PHD_abb();
     
     String acad_career_PHDP_abb();
+    
+    String acad_career_allPrograms();
 
+    String button_search();
+    
     String courseList();
 
     String courseListByAcadCareer();
@@ -168,6 +172,8 @@ public interface OsylPortalMessages extends ConstantsWithLookup {
     
     String coursesPage_Pdf();
     
+    String empty_searching();
+    
     String directoryCoursePage_description();
     
     String directoryCoursePage_features();
@@ -183,6 +189,22 @@ public interface OsylPortalMessages extends ConstantsWithLookup {
     String directoryCoursePage_requirements();
     
     String directoryCoursePage_archives();
+    
+    String searchByFields();
+    
+    String searchCoursePage_courseNumber();
+
+    String searchCoursePage_courseTitle();
+
+    String searchCoursePage_instructor();
+
+    String searchCoursePage_program(); 
+
+    String searchCoursePage_responsible();
+
+    String searchCoursePage_trimester();
+    
+    String searchCoursePage_title();
     
     String session_E();
     
