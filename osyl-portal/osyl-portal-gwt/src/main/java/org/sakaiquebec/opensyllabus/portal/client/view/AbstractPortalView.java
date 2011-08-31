@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.portal.client.view;
 
 import java.util.Comparator;
+import java.util.List;
 
 import org.sakaiquebec.opensyllabus.portal.client.controller.PortalController;
 import org.sakaiquebec.opensyllabus.portal.client.image.PortalImages;
@@ -148,6 +149,49 @@ public abstract class AbstractPortalView extends Composite {
 
     protected String getNumber(String title) {
 	return title.substring(0, title.indexOf("."));
+    }
+
+    public String getNameSession(String session) {
+	if (session != null && !"".equals(session)) {
+	    if (session.startsWith("A")) {
+		return getMessage("session_A") + " " + session.substring(1);
+	    } else if (session.startsWith("E")) {
+		return getMessage("session_E") + " " + session.substring(1);
+	    } else if (session.startsWith("H")) {
+		return getMessage("session_H") + " " + session.substring(1);
+	    }
+	}
+	return "";
+    }
+    
+    public boolean existsSectionInCourse(String field, List<String> achivedSections, List<String> currentSections) {
+	if (!isNull(field)) {
+	    if (isFieldInCollection(field,achivedSections) || isFieldInCollection(field, currentSections)) {
+		return true;
+	    } else {
+		return false;
+	    }
+	}
+	return true;
+    }  
+    
+    public boolean isFieldInCollection(String field, List<String> list) {
+	for (String item : list) {
+	    if (item.indexOf(field) > 0){
+		return true;
+	    } else {
+		return false;
+	    }
+	}
+	return false;
+    }
+
+    public boolean isNull(String field) {
+	if (field!=null && !field.equals("")) {
+	    return false;
+	} else {
+	    return true;
+	}
     }
     
     public static String getViewKeyPrefix(){
