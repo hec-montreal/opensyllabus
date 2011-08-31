@@ -21,6 +21,7 @@
 package org.sakaiquebec.opensyllabus.shared.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,11 +47,18 @@ public class CODirectorySite implements java.io.Serializable {
     private String requirements;
     
     private String instructor;
+    
+    private String searchedTrimesters;
 
     private Map<String, String> currentSections;
     
     private Map<String,String> archivedSections;
 
+    private List<String> allSections;
+
+    //it's filled once
+    private List<String> sessionNamesList;
+    
     public CODirectorySite() {
 	super();
 	currentSections = new HashMap<String, String>();
@@ -146,4 +154,27 @@ public class CODirectorySite implements java.io.Serializable {
 	return instructor;
     }
 
+    public String getSearchedTrimesters() {
+        return searchedTrimesters;
+    }
+
+    public void setSearchedTrimesters(String searchedTrimesters) {
+        this.searchedTrimesters = searchedTrimesters;
+    }
+
+    public List<String> getAllSections() {
+        return allSections;
+    }
+
+    public void setAllSections(List<String> allSections) {
+        this.allSections = allSections;
+    }
+    
+    public List<String> getSessionNamesList() {
+        return sessionNamesList;
+    }
+
+    public void setSessionNamesList(List<String> sessionNamesList) {
+        this.sessionNamesList = sessionNamesList;
+    }    
 }
