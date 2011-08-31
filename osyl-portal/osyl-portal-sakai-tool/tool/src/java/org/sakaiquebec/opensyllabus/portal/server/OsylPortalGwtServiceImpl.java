@@ -80,6 +80,16 @@ public class OsylPortalGwtServiceImpl extends RemoteServiceServlet implements
     }
 
     @Override
+    public List<CODirectorySite> getCoursesForFields(String courseNumber,
+	    String courseTitle, String instructor, String program,
+	    String responsible, String trimester) {
+	return osylPortalServices.getOsylPortalService()
+		.getCoursesForFields(courseNumber,
+			    courseTitle, instructor, program,
+			    responsible, trimester);
+    }
+    
+    @Override
     public String getDescription(String siteId) {
 	return osylPortalServices.getOsylPortalService().getDescription(siteId);
     }
