@@ -21,11 +21,9 @@
 package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
@@ -37,14 +35,13 @@ import org.sakaiquebec.opensyllabus.client.ui.OsylRichTextArea;
 import org.sakaiquebec.opensyllabus.client.ui.base.Dimension;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylDisclosureListener;
 import org.sakaiquebec.opensyllabus.client.ui.listener.OsylLinkClickListener;
 import org.sakaiquebec.opensyllabus.client.ui.util.OsylFileBrowser;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxDocumentView;
-import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
-import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.ResourcesLicencingInfo;
 import org.sakaiquebec.opensyllabus.shared.model.file.OsylFileItem;
@@ -55,6 +52,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.DisclosurePanel;
@@ -335,96 +333,169 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 		message +=
 			getUiMessage("DocumentEditor.document.WrongTypeResStatus");
 	    }
-	    //-----------------------------------------------------------------------
-	    // Check visibility incompatibility 
-	    //-----------------------------------------------------------------------
-
-	    Map<String, String> cv =
-		    OsylEditorEntryPoint.getInstance()
-			    .getDocumentContextVisibilityMap()
-			    .get(getResourceURI());
+	    // -----------------------------------------------------------------------
+	    // Check visibility incompatibility
+	    // -----------------------------------------------------------------------
+	    String visibility = "";
 	    boolean incompatibility = false;
-	    Set<String> parentTitles = new HashSet<String>();
-	    if (cv != null) {
-		for (Entry<String, String> entry : cv.entrySet()) {
+	    final boolean contextVisible = !isContextHidden();
+	    final Map<String, String> cr =
+		    OsylEditorEntryPoint.getInstance()
+			    .getResourceContextVisibilityMap()
+			    .get(getResourceURI());
+
+	    if (cr != null) {
+		for (Entry<String, String> entry : cr.entrySet()) {
 		    String id = entry.getKey();
 		    if (!id.equals(getView().getModel().getId())) {
-			String visibility = entry.getValue();
-			if (!visibility.equals("" + !isContextHidden())) {
+			visibility = entry.getValue();
+			if (!visibility.equals("" + contextVisible)) {
 			    incompatibility = true;
-			    COModelInterface comi =
-				    OsylEditorEntryPoint.getInstance()
-					    .getCoModelInterfaceWithId(id);
-			    if (comi instanceof COElementAbstract) {
-				COElementAbstract coe =
-					(COElementAbstract) comi;
-				while (!coe.isCOUnit()) {
-				    coe = coe.getParent();
-				}
-				parentTitles.add(coe.getLabel());
-			    }
+			    break;
 			}
 		    }
 		}
 	    }
 	    if (incompatibility) {
-		StringBuilder sb = new StringBuilder();
-		for (String s : parentTitles) {
-		    sb.append(s + ", ");
-		}
-		String msgParameter = sb.substring(0, sb.length() - 2);
-		message +=
-			getView()
-				.getUiMessage(
-					"DocumentEditor.document.visibilityIncompatibility",
-					msgParameter);
+		OsylOkCancelDialog osylOkCancelDialog =
+			new OsylOkCancelDialog(
+				getView().getUiMessage("Global.warning"),
+				getView()
+					.getUiMessage(
+						"DocumentEditor.document.visibilityIncompatibility"));
+
+		osylOkCancelDialog.addOkButtonCLickHandler(new ClickHandler() {
+		    public void onClick(ClickEvent event) {
+			try {
+			    OsylEditorEntryPoint.getInstance()
+				    .changePropertyForResourceProxy(cr,
+					    COPropertiesType.VISIBILITY,
+					    "" + contextVisible);
+			    OsylEditorEntryPoint.getInstance()
+			    .changePropertyInMap(cr, "" + contextVisible);
+			    getView().closeAndSaveEdit(true);
+			} catch (Exception e) {
+			    com.google.gwt.user.client.Window
+				    .alert("Unable to delete object. Error="
+					    + e);
+			    e.printStackTrace();
+			}
+		    }
+		});
+		osylOkCancelDialog.show();
+		osylOkCancelDialog.centerAndFocus();
+		return false;
 	    }
 
-	    //-----------------------------------------------------------------------
-	    // Check resource type incompatibility 
-	    //-----------------------------------------------------------------------
-		String typage = "";
-	    Map<String, String> cr = OsylEditorEntryPoint.getInstance()
-			    .getResTypeContextVisibilityMap()
+	    // -----------------------------------------------------------------------
+	    // Check resource type incompatibility
+	    // -----------------------------------------------------------------------
+	    String typage = "";
+	    boolean resourceIncompatibility = false;
+	    final Map<String, String> cr2 =
+		    OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
 			    .get(getResourceURI());
-	    boolean resIncompatibility = false;
-	    String resType =   typeResourceListBox.getValue(typeResourceListBox.getSelectedIndex());
-	    parentTitles = new HashSet<String>();
-	    if (cr != null) {
-		for (Entry<String, String> entry : cr.entrySet()) {
+
+	    final String resType =
+		    typeResourceListBox.getValue(typeResourceListBox
+			    .getSelectedIndex());
+	    if (cr2 != null) {
+		for (Entry<String, String> entry : cr2.entrySet()) {
 		    String id = entry.getKey();
 		    if (!id.equals(getView().getModel().getId())) {
 			typage = entry.getValue();
 			if (!typage.equals(resType)) {
-			    resIncompatibility = true;
-			    COModelInterface comi =
-				    OsylEditorEntryPoint.getInstance()
-					    .getCoModelInterfaceWithId(id);
-			    if (comi instanceof COElementAbstract) {
-				COElementAbstract coe =
-					(COElementAbstract) comi;
-				while (!coe.isCOUnit()) {
-				    coe = coe.getParent();
-				}
-				parentTitles.add(coe.getLabel());
-			    }
+			    resourceIncompatibility = true;
+			    break;
 			}
 		    }
 		}
 	    }
-	    if (resIncompatibility) {
-		StringBuilder sb = new StringBuilder();
-		for (String s : parentTitles) {
-		    sb.append(s + ", ");
+	    if (resourceIncompatibility) {
+		OsylOkCancelDialog osylOkCancelDialog =
+			new OsylOkCancelDialog(
+				getView().getUiMessage("Global.warning"),
+				getView()
+					.getUiMessage(
+						"DocumentEditor.document.resTypeIncompatibility",
+						getView().getCoMessage(
+							RES_TYPE_MESSAGE_PREFIX
+								+ typage)));
+
+		osylOkCancelDialog.addOkButtonCLickHandler(new ClickHandler() {
+		    public void onClick(ClickEvent event) {
+			try {
+			    OsylEditorEntryPoint.getInstance()
+				    .changePropertyForResource(cr2,
+					    COPropertiesType.ASM_RESOURCE_TYPE,
+					    resType);
+			    OsylEditorEntryPoint.getInstance()
+			    .changePropertyInMap(cr2, resType);
+			    getView().closeAndSaveEdit(true);
+			} catch (Exception e) {
+			    com.google.gwt.user.client.Window
+				    .alert("Unable to delete object. Error="
+					    + e);
+			    e.printStackTrace();
+			}
+		    }
+		});
+		osylOkCancelDialog.show();
+		osylOkCancelDialog.centerAndFocus();
+		return false;
+	    }
+	    // -----------------------------------------------------------------------
+	    // Check licence incompatibility
+	    // -----------------------------------------------------------------------
+	    String licence = "";
+	    boolean licenceIncompatibility = false;
+	    final String contextLicence = getLicence();
+	    final Map<String, String> lcr =
+		    OsylEditorEntryPoint.getInstance()
+			    .getDocumentContextLicenceMap()
+			    .get(getResourceURI());
+
+	    if (lcr != null) {
+		for (Entry<String, String> entry : lcr.entrySet()) {
+		    String id = entry.getKey();
+		    if (!id.equals(getView().getModel().getId())) {
+			licence = entry.getValue();
+			if (!licence.equals(contextLicence)) {
+			    licenceIncompatibility = true;
+			    break;
+			}
+		    }
 		}
-		String msgParameter = sb.substring(0, sb.length() - 2);
-		message += " " +
-			getView()
-				.getUiMessage(
-					"DocumentEditor.document.resTypeIncompatibility", 
-					msgParameter);
-		message += " : " + getView().getCoMessage(
-			RESS_TYPE_MESSAGE_PREFIX + typage);		
+	    }
+	    if (licenceIncompatibility) {
+		OsylOkCancelDialog osylOkCancelDialog =
+			new OsylOkCancelDialog(
+				getView().getUiMessage("Global.warning"),
+				getView()
+					.getUiMessage(
+						"DocumentEditor.document.licenceIncompatibility"));
+
+		osylOkCancelDialog.addOkButtonCLickHandler(new ClickHandler() {
+		    public void onClick(ClickEvent event) {
+			try {
+			    OsylEditorEntryPoint.getInstance()
+				    .changePropertyForResource(lcr,
+					    COPropertiesType.LICENSE,
+					    contextLicence);
+			    OsylEditorEntryPoint.getInstance()
+			    .changePropertyInMap(lcr, contextLicence);
+			    getView().closeAndSaveEdit(true);
+			} catch (Exception e) {
+			    com.google.gwt.user.client.Window
+				    .alert("Unable to delete object. Error="
+					    + e);
+			    e.printStackTrace();
+			}
+		    }
+		});
+		osylOkCancelDialog.show();
+		osylOkCancelDialog.centerAndFocus();
+		return false;
 	    }
 	}
 	if (message.equals("")) {
@@ -484,10 +555,14 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	    getModel().getProperties().addProperty(COPropertiesType.LABEL,
 		    getView().validateLinkLabel(getModel().getLabel()));
 	    if (getView().getDocType() != null)
-		getViewerType().setHTML("["+
-			getView().getCoMessage(
-				RESS_TYPE_MESSAGE_PREFIX
-					+ getView().getDocType())+"]");
+		getViewerType()
+			.setHTML(
+				"["
+					+ getView().getCoMessage(
+						RES_TYPE_MESSAGE_PREFIX
+							+ getView()
+								.getDocType())
+					+ "]");
 	    getViewerLink().setHTML(getView().getTextFromSdataModel());
 	    getViewerLink().addClickHandler(
 		    new OsylLinkClickListener(getView(), getView()
@@ -635,82 +710,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	saveButton.addClickHandler(new ClickHandler() {
 
 	    public void onClick(ClickEvent event) {
-		saveButton.setEnabled(false);
-		
-		String message = "";
-		String typage = "";
-		//-----------------------------------------------------------------------
-		// Check resource type incompatibility 
-		//-----------------------------------------------------------------------
-		Map<String, String> cr = OsylEditorEntryPoint.getInstance()
-				    .getResTypeContextVisibilityMap()
-				    .get(getResourceURI());
-		boolean resIncompatibility = false;
-		String resType =   typeResourceListBox.getValue(typeResourceListBox.getSelectedIndex());
-		Set<String> parentTitles = new HashSet<String>();
-		if (cr != null) {
-        		for (Entry<String, String> entry : cr.entrySet()) {
-        		    String id = entry.getKey();
-        		    if (!id.equals(getView().getModel().getId())) {
-        			typage = entry.getValue();
-        			if (!typage.equals(resType)) {
-        			    resIncompatibility = true;
-        			    COModelInterface comi =
-        				    OsylEditorEntryPoint.getInstance()
-        					    .getCoModelInterfaceWithId(id);
-        			    if (comi instanceof COElementAbstract) {
-        				COElementAbstract coe =
-        					(COElementAbstract) comi;
-        				while (!coe.isCOUnit()) {
-        				    coe = coe.getParent();
-        				}
-        				parentTitles.add(coe.getLabel());
-        			    }
-        			}
-        		    }
-        		}
-		}
-		if (resIncompatibility) {
-		    StringBuilder sb = new StringBuilder();
-		    for (String s : parentTitles) {
-			sb.append(s + ", ");
-		    }
-		    String msgParameter = sb.substring(0, sb.length() - 2);
-		    message +=	" " + getView()
-					.getUiMessage(
-						"DocumentEditor.document.resTypeIncompatibility", 
-						msgParameter);
-		    message += " : " + getView().getCoMessage(
-				RESS_TYPE_MESSAGE_PREFIX + typage);		    
-		}
-		if (!message.equals("")) {
-		    OsylAlertDialog oad =
-			    new OsylAlertDialog(getUiMessage("Global.error"), message);
-		    oad.center();
-		    oad.show();
-		} else {
-		    if (browser.getSelectedAbstractBrowserItem() != null
-        		&& !browser.getSelectedAbstractBrowserItem().isFolder()) {
-        		OsylFileItem selectedFile =
-        		    (OsylFileItem) browser
-        			    .getSelectedAbstractBrowserItem();
-        
-        		selectedFile.setDescription(descriptionTextArea.getText());
-        		selectedFile.setCopyrightChoice(licenseListBox
-        		    .getItemText(licenseListBox.getSelectedIndex()));
-        		selectedFile.setTypeResource(typeResourceListBox
-        		    .getValue(typeResourceListBox.getSelectedIndex()));
-        		OsylRemoteServiceLocator
-        		    .getDirectoryRemoteService()
-        		    .updateRemoteFileInfo(
-        			    selectedFile.getFilePath(),
-        			    selectedFile.getDescription(),
-        			    selectedFile.getCopyrightChoice(),
-        			    selectedFile.getTypeResource(),
-        			    OsylDocumentEditor.this.fileUpdateRequestHandler);
-		    }
-		}
-
+		onSave();
 	    }
 	});
 
@@ -754,6 +754,130 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 
 	updateResourceLicenseInfo();
 
+    }
+
+    private void onSave() {
+	// -----------------------------------------------------------------------
+	// Check resource type incompatibility
+	// -----------------------------------------------------------------------
+	String typage = "";
+	final Map<String, String> cr =
+		OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
+			.get(getResourceURI());
+	boolean resourceIncompatibility = false;
+	final String resType =
+		typeResourceListBox.getValue(typeResourceListBox
+			.getSelectedIndex());
+	if (cr != null) {
+	    for (Entry<String, String> entry : cr.entrySet()) {
+		String id = entry.getKey();
+		if (!id.equals(getView().getModel().getId())) {
+		    typage = entry.getValue();
+		    if (!typage.equals(resType)) {
+			resourceIncompatibility = true;
+		    }
+		}
+	    }
+	}
+	if (resourceIncompatibility) {
+	    OsylOkCancelDialog osylOkCancelDialog =
+		    new OsylOkCancelDialog(getView().getUiMessage(
+			    "Global.warning"), getView().getUiMessage(
+			    "DocumentEditor.document.resTypeIncompatibility",
+			    getView().getCoMessage(
+				    RES_TYPE_MESSAGE_PREFIX + typage)));
+
+	    osylOkCancelDialog.addOkButtonCLickHandler(new ClickHandler() {
+		public void onClick(ClickEvent event) {
+		    try {
+			OsylEditorEntryPoint
+				.getInstance()
+				.changePropertyForResource(cr,
+					COPropertiesType.ASM_RESOURCE_TYPE, resType);
+			OsylEditorEntryPoint.getInstance()
+			    .changePropertyInMap(cr, resType);
+			onSave();
+		    } catch (Exception e) {
+			com.google.gwt.user.client.Window
+				.alert("Unable to delete object. Error=" + e);
+			e.printStackTrace();
+		    }
+		}
+	    });
+	    osylOkCancelDialog.show();
+	    osylOkCancelDialog.centerAndFocus();
+	}
+	// -----------------------------------------------------------------------
+	// Check licence incompatibility
+	// -----------------------------------------------------------------------
+	String licence = "";
+	boolean licenceIncompatibility = false;
+	final String contextLicence = getLicence();
+	final Map<String, String> lcr =
+		OsylEditorEntryPoint.getInstance()
+			.getDocumentContextLicenceMap().get(getResourceURI());
+
+	if (lcr != null) {
+	    for (Entry<String, String> entry : lcr.entrySet()) {
+		String id = entry.getKey();
+		if (!id.equals(getView().getModel().getId())) {
+		    licence = entry.getValue();
+		    if (!licence.equals(contextLicence)) {
+			licenceIncompatibility = true;
+			break;
+		    }
+		}
+	    }
+	}
+	if (licenceIncompatibility) {
+	    OsylOkCancelDialog osylOkCancelDialog =
+		    new OsylOkCancelDialog(getView().getUiMessage(
+			    "Global.warning"), getView().getUiMessage(
+			    "DocumentEditor.document.licenceIncompatibility"));
+
+	    osylOkCancelDialog.addOkButtonCLickHandler(new ClickHandler() {
+		public void onClick(ClickEvent event) {
+		    try {
+			OsylEditorEntryPoint.getInstance()
+				.changePropertyForResource(lcr,
+					COPropertiesType.LICENSE,
+					contextLicence);
+			OsylEditorEntryPoint.getInstance()
+			    .changePropertyInMap(lcr, contextLicence);
+			onSave();
+		    } catch (Exception e) {
+			com.google.gwt.user.client.Window
+				.alert("Unable to delete object. Error=" + e);
+			e.printStackTrace();
+		    }
+		}
+	    });
+	    osylOkCancelDialog.show();
+	    osylOkCancelDialog.centerAndFocus();
+	}
+
+	if (!resourceIncompatibility && !licenceIncompatibility) {
+	    if (browser.getSelectedAbstractBrowserItem() != null
+		    && !browser.getSelectedAbstractBrowserItem().isFolder()) {
+		OsylFileItem selectedFile =
+			(OsylFileItem) browser.getSelectedAbstractBrowserItem();
+
+		selectedFile.setDescription(descriptionTextArea.getText());
+		selectedFile.setCopyrightChoice(licenseListBox
+			.getItemText(licenseListBox.getSelectedIndex()));
+		selectedFile.setTypeResource(typeResourceListBox
+			.getValue(typeResourceListBox.getSelectedIndex()));
+		OsylRemoteServiceLocator
+			.getDirectoryRemoteService()
+			.updateRemoteFileInfo(
+				selectedFile.getFilePath(),
+				selectedFile.getDescription(),
+				selectedFile.getCopyrightChoice(),
+				selectedFile.getTypeResource(),
+				OsylDocumentEditor.this.fileUpdateRequestHandler);
+	    }
+	    saveButton.setEnabled(false);
+	}
     }
 
     @Override
@@ -920,7 +1044,7 @@ public class OsylDocumentEditor extends OsylAbstractBrowserEditor {
 	for (String typeResource : typesResourceList) {
 	    typeResourceListBox.addItem(
 		    getView().getCoMessage(
-			    RESS_TYPE_MESSAGE_PREFIX + typeResource),
+			    RES_TYPE_MESSAGE_PREFIX + typeResource),
 		    typeResource);
 	}
 	refreshBrowsingComponents();

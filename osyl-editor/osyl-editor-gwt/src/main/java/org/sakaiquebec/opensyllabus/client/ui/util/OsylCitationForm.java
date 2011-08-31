@@ -14,12 +14,10 @@
 package org.sakaiquebec.opensyllabus.client.ui.util;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.gwt.mosaic.core.client.DOM;
 import org.gwt.mosaic.ui.client.WindowPanel;
@@ -32,11 +30,10 @@ import org.sakaiquebec.opensyllabus.client.remoteservice.OsylRemoteServiceLocato
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewControllable;
 import org.sakaiquebec.opensyllabus.client.ui.base.ImageAndTextButton;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractEditor;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylAbstractResProxEditor;
-import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
-import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.model.CitationSchema;
 import org.sakaiquebec.opensyllabus.shared.model.OsylConfigMessages;
@@ -75,8 +72,6 @@ public class OsylCitationForm extends WindowPanel implements
 	OsylViewControllable {
 
     private static final int FORM_WIDTH = 450;
-    private static final String RECOMMENDED_FIELD_INDICATOR =
-	    "&nbsp;<sup>+</sup>";
 
     /**
      * Information about citation which is updated
@@ -146,12 +141,36 @@ public class OsylCitationForm extends WindowPanel implements
 
     private List<String> typeResourceList;
 
+    private TextBox volumeTextBox;
+
+    private TextBox issueTextBox;
+
+    private TextBox isnTextBox;
+
+    private TextBox pagesTextBox;
+
+    private TextBox doiTextBox;
+
+    private TextBox yearTextBox;
+
+    private TextBox publicationLocationTextBox;
+
+    private TextBox sourceTitle;
+
+    private TextBox publisherBox;
+
+    private TextBox proceedingSourceTitle;
+
+    private TextBox proceedVolumeTextBox;
+
     private ListBox typeResourceListBox;
 
     private String typeResource;
 
     private VerticalPanel urlPanel;
     private TextBox urlTextBox;
+
+    private String currentDirectory;
 
     // keys of the different citation types
     private List<String> citationTypeKeys;
@@ -182,7 +201,14 @@ public class OsylCitationForm extends WindowPanel implements
 	setAnimationEnabled(true);
 	setCaptionAction(null);
 
-	citation = citationItem;
+	this.currentDirectory = currentDirectory;
+
+	// create the data pojo
+	if (citationItem != null) {
+	    citation = citationItem;
+	} else {
+	    citation = new OsylCitationItem();
+	}
 	setController(osylController);
 	uiMessages = osylController.getUiMessages();
 	coMessages = osylController.getCoMessages();
@@ -308,7 +334,7 @@ public class OsylCitationForm extends WindowPanel implements
 	mainPanel.add(authorPanel);
 
 	// Create a textbox for the year.
-	final TextBox yearTextBox =
+	yearTextBox =
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.YEAR) == null) ? ""
 			: citation.getProperty(CitationSchema.YEAR),
@@ -320,7 +346,7 @@ public class OsylCitationForm extends WindowPanel implements
 	mainPanel.add(yearPanel);
 
 	// Create a textbox for the year.
-	final TextBox publisherBox =
+	publisherBox =
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.PUBLISHER) == null) ? ""
 			: citation.getProperty(CitationSchema.PUBLISHER),
@@ -332,7 +358,7 @@ public class OsylCitationForm extends WindowPanel implements
 	mainPanel.add(publisherPanel);
 
 	// Create a textbox for the publisher.
-	final TextBox publicationLocationTextBox =
+	publicationLocationTextBox =
 		FormHelper
 			.createTextBox(
 				(citation == null || citation
@@ -357,7 +383,7 @@ public class OsylCitationForm extends WindowPanel implements
 	}
 
 	// Create a textbox for the journal.
-	final TextBox sourceTitle =
+	sourceTitle =
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.SOURCE_TITLE) == null) ? ""
 			: citation.getProperty(CitationSchema.SOURCE_TITLE),
@@ -368,7 +394,7 @@ public class OsylCitationForm extends WindowPanel implements
 				+ ":", sourceTitle, CitationSchema.SOURCE_TITLE);
 	mainPanel.add(journalPanel);
 
-	final TextBox proceedingSourceTitle =
+	proceedingSourceTitle =
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.SOURCE_TITLE) == null) ? ""
 			: citation.getProperty(CitationSchema.SOURCE_TITLE),
@@ -382,12 +408,12 @@ public class OsylCitationForm extends WindowPanel implements
 	mainPanel.add(proceedingPanel);
 
 	// Create two textboxes for the volume and issue.
-	final TextBox volumeTextBox =
+	volumeTextBox =
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.VOLUME) == null) ? ""
 			: citation.getProperty(CitationSchema.VOLUME),
 			"Osyl-CitationForm-doubleTextBox");
-	final TextBox issueTextBox =
+	issueTextBox =
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.ISSUE) == null) ? ""
 			: citation.getProperty(CitationSchema.ISSUE),
@@ -406,7 +432,7 @@ public class OsylCitationForm extends WindowPanel implements
 	// Textbox used for the property volume in a proceeding
 	// Different from volume textbox because the layout is different
 	// If mixed layout in article will not be correct
-	final TextBox proceedVolumeTextBox =
+	proceedVolumeTextBox =
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.VOLUME) == null) ? ""
 			: citation.getProperty(CitationSchema.VOLUME),
@@ -420,7 +446,7 @@ public class OsylCitationForm extends WindowPanel implements
 	mainPanel.add(volumePanel);
 
 	// Create a textbox for the pages.
-	final TextBox pagesTextBox =
+	pagesTextBox =
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.PAGES) == null) ? ""
 			: citation.getProperty(CitationSchema.PAGES),
@@ -436,7 +462,7 @@ public class OsylCitationForm extends WindowPanel implements
 	isnLabel =
 		createNewLabel(osylController
 			.getUiMessage("ResProxCitationView.isbn.label") + ":");
-	final TextBox isnTextBox =
+	isnTextBox =
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.ISN) == null) ? ""
 			: citation.getProperty(CitationSchema.ISN),
@@ -447,7 +473,7 @@ public class OsylCitationForm extends WindowPanel implements
 	mainPanel.add(isnPanel);
 
 	// Create a textbox for DOI.
-	final TextBox doiTextBox =
+	doiTextBox =
 		FormHelper.createTextBox((citation == null || citation
 			.getProperty(CitationSchema.DOI) == null) ? ""
 			: citation.getProperty(CitationSchema.DOI),
@@ -493,7 +519,7 @@ public class OsylCitationForm extends WindowPanel implements
 	}
 	setTypeResource(typeCitationRes);
 	typeResourceListBox.addItem(osylController
-		.getUiMessage("DocumentEditor.documentType.choose"),"");
+		.getUiMessage("DocumentEditor.documentType.choose"), "");
 	for (String typeResource : this.typeResourceList) {
 	    typeResourceListBox.addItem(
 		    coMessages.getMessage("Resource.Type." + typeResource),
@@ -501,8 +527,9 @@ public class OsylCitationForm extends WindowPanel implements
 	}
 
 	HTML typeResourcelabel =
-		createNewLabel(uiMessages.getMessage("ResProxCitationView.resourceType.label")
-			 +":");
+		createNewLabel(uiMessages
+			.getMessage("ResProxCitationView.resourceType.label")
+			+ ":");
 
 	typeResourceListBox
 		.setStylePrimaryName("Osyl-CitationForm-genericPanel");
@@ -536,217 +563,9 @@ public class OsylCitationForm extends WindowPanel implements
 		imgSaveButton, uiMessages.getMessage("save"));
 
 	saveButton.addClickHandler(new ClickHandler() {
-
 	    public void onClick(ClickEvent event) {
-		
-		final String title =
-			getCurrentCitationType().equals(
-				CitationSchema.TYPE_UNKNOWN) ? citationField
-				.getText() : titleField.getText();
-
-		// Data validation
-		String author = authorField.getText();
-		// Title is always required, author is required when type is
-		// book
-		String message = "";
-		if (title.length() == 0
-			|| ((getCurrentCitationType().equals(
-				CitationSchema.TYPE_BOOK) || getCurrentCitationType()
-				.equals(CitationSchema.TYPE_REPORT)) && author
-				.length() == 0)) {
-
-		    message =
-			    uiMessages
-				    .getMessage("CitationForm.fillRequiredFields");
-//		} else if (typeResourceListBox.getSelectedIndex() == 0) {
-//		    message =
-//			    uiMessages
-//				    .getMessage("fileUpload.chooseTypesResourceStatus");
-		} else if(null!=citation.getId()){
-		    String typage="";
-		    Map<String, String> cr =
-			    OsylEditorEntryPoint
-				    .getInstance()
-				    .getResTypeContextVisibilityMap()
-				    .get(citation.getFilePath()+ "/"+citation.getId());
-		    boolean resIncompatibility = false;
-		    String resType =
-			    typeResourceListBox.getValue(typeResourceListBox
-				    .getSelectedIndex());
-		    Set<String> parentTitles = new HashSet<String>();
-		    if (cr != null) {
-			for (Entry<String, String> entry : cr.entrySet()) {
-			    String id = entry.getKey();
-			    if (!id.equals(citation.getResourceProxyId())) {//citation id
-				typage = entry.getValue();
-				if (!typage.equals(resType)) {
-				    resIncompatibility = true;
-				    COModelInterface comi =
-					    OsylEditorEntryPoint.getInstance()
-						    .getCoModelInterfaceWithId(id);
-				    if (comi instanceof COElementAbstract) {
-					COElementAbstract coe =
-						(COElementAbstract) comi;
-					while (!coe.isCOUnit()) {
-					    coe = coe.getParent();
-					}
-					parentTitles.add(coe.getLabel());
-				    }
-				}
-			    }
-			}
-		    }
-		    if (resIncompatibility) {
-			StringBuilder sb = new StringBuilder();
-			for (String s : parentTitles) {
-			    sb.append(s + ", ");
-			}
-			String msgParameter = sb.substring(0, sb.length() - 2);
-			message +=
-				" "
-					+ uiMessages.getMessage(
-							"DocumentEditor.document.resTypeIncompatibility",
-							msgParameter);
-			message +=
-				" : "
-					+ coMessages.getMessage(
-						OsylAbstractResProxEditor.RESS_TYPE_MESSAGE_PREFIX + typage);
-		    }
-		}
-		if (!message.equals("")) {
-		    final OsylAlertDialog alertBox =
-			    new OsylAlertDialog(
-				    false,
-				    true,
-				    message);
-		    // get index of citation form to set z-index of alert
-		    // window
-		    int index =
-			    new Integer(DOM.getStyleAttribute(
-				    OsylCitationForm.this.getElement(),
-				    "zIndex"));
-		    alertBox.setZIndex(index + 1);
-		    alertBox.center();
-		    alertBox.show();
-		    return;
-		} else {
-		    hiddenDisplayName.setValue(title);
-		    cancelButton.setEnabled(false);
-		    saveButton.setEnabled(false);
-		}
-
-		// create the data pojo
-		OsylCitationItem citation;
-		if (citationItem != null) {
-		    citation = citationItem;
-		} else {
-		    citation = new OsylCitationItem();
-		}
-
-		// Type of resource for citation
-		citation.setResourceType(typeResourceListBox
-			.getValue(typeResourceListBox.getSelectedIndex()));
-
-		citation.setProperty(CitationSchema.TYPE,
-			citationType.getValue(citationType.getSelectedIndex()));
-		citation.setProperty(CitationSchema.TITLE, title);
-		citation.setProperty(CitationSchema.ISN, isnTextBox.getText());
-		citation.setProperty(CitationSchema.CREATOR,
-			authorField.getText());
-		citation.setProperty(CitationSchema.VOLUME,
-			volumeTextBox.getText());
-		citation.setProperty(CitationSchema.ISSUE,
-			issueTextBox.getText());
-		citation.setProperty(CitationSchema.PAGES,
-			pagesTextBox.getText());
-		citation.setProperty(CitationSchema.YEAR, yearTextBox.getText());
-		citation.setProperty(CitationSchema.DOI, doiTextBox.getText());
-		// citation.setProperty(CitationSchema.URL, );
-		citation.setProperty(CitationSchema.SOURCE_TITLE,
-			sourceTitle.getText());
-		citation.setProperty(CitationSchema.PUBLISHER,
-			publisherBox.getText());
-		citation.setProperty(CitationSchema.PUBLICATION_LOCATION,
-			publicationLocationTextBox.getText());
-
-		// citation.setResourceName(listname == null ? "" :
-		// listname);
-
-		// We add the corresponding identifier
-		// If it a citation of type unknown, we save the identifier
-		// from
-		// here
-		String tempCitationType =
-			citationType.getValue(citationType.getSelectedIndex());
-
-		if (tempCitationType.equals(CitationSchema.TYPE_PROCEED)) {
-		    citation.setProperty(CitationSchema.VOLUME,
-			    proceedVolumeTextBox.getText());
-		    citation.setProperty(CitationSchema.SOURCE_TITLE,
-			    proceedingSourceTitle.getText());
-		}
-
-		if (CitationSchema.TYPE_UNKNOWN
-			.equalsIgnoreCase(tempCitationType)) {
-		    citation.setProperty(COPropertiesType.IDENTIFIER,
-			    COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
-			    LinkValidator.parseLink(urlTextBox.getText()));
-		    citation.setProperty(COPropertiesType.IDENTIFIER,
-			    COPropertiesType.IDENTIFIER_TYPE_NOLINK, "noLink");
-		}
-		citation.setFileName(titleField.getText());
-
-		OsylRemoteServiceLocator.getCitationRemoteService()
-			.createOrUpdateCitation(currentDirectory, citation,
-				new AsyncCallback<String>() {
-				    public void onFailure(Throwable caught) {
-					Window.alert(uiMessages
-						.getMessage("fileUpload.resNotSaved"));
-					final OsylAlertDialog alertBox =
-						new OsylAlertDialog(
-							false,
-							true,
-							"Alert - Citation Error",
-							uiMessages
-								.getMessage("fileUpload.resNotSaved"));
-					// get index of citation form to set
-					// z-index of alert window
-					int index =
-						new Integer(
-							DOM.getStyleAttribute(
-								OsylCitationForm.this
-									.getElement(),
-								"zIndex"));
-					alertBox.setZIndex(index + 1);
-					alertBox.center();
-					alertBox.show();
-					cancelButton.setEnabled(true);
-					saveButton.setEnabled(true);
-				    }
-
-				    public void onSuccess(String result) {
-
-					hide();
-					OsylUnobtrusiveAlert alert =
-						new OsylUnobtrusiveAlert(
-							uiMessages
-								.getMessage("fileUpload.resSaved"));
-					OsylEditorEntryPoint
-						.showWidgetOnTop(alert);
-					// parse the handler list
-					for (Iterator<UploadFileEventHandler> it =
-						citationEvtHandlerList
-							.iterator(); it
-						.hasNext();) {
-					    it.next()
-						    .onUploadFile(
-							    new UploadFileEventHandler.UploadFileEvent(
-								    result));
-					}
-				    }
-				});
+		onSave();
 	    }
-
 	});
 
 	saveButton.setStylePrimaryName("Osyl-FileUpload-genericButton");
@@ -782,6 +601,196 @@ public class OsylCitationForm extends WindowPanel implements
 	updateForm(getCurrentCitationType());
 	setStylePrimaryName("Osyl-CitationForm-form");
     } // Constructor
+
+    public void onSave() {
+	boolean resourceIncompatibility = false;
+	final String title =
+		getCurrentCitationType().equals(CitationSchema.TYPE_UNKNOWN) ? citationField
+			.getText() : titleField.getText();
+
+	// Data validation
+	String author = authorField.getText();
+	// Title is always required, author is required when type is
+	// book
+	String message = "";
+	if (title.length() == 0
+		|| ((getCurrentCitationType().equals(CitationSchema.TYPE_BOOK) || getCurrentCitationType()
+			.equals(CitationSchema.TYPE_REPORT)) && author.length() == 0)) {
+
+	    message = uiMessages.getMessage("CitationForm.fillRequiredFields");
+	    // } else if (typeResourceListBox.getSelectedIndex() == 0) {
+	    // message =
+	    // uiMessages
+	    // .getMessage("fileUpload.chooseTypesResourceStatus");
+	} else if (null != citation.getId()) {
+	    // -----------------------------------------------------------------------
+	    // Check resource type incompatibility
+	    // -----------------------------------------------------------------------
+	    String typage = "";
+	    final Map<String, String> cr =
+		    OsylEditorEntryPoint
+			    .getInstance()
+			    .getResourceContextTypeMap()
+			    .get(citation.getFilePath() + "/"
+				    + citation.getId());
+
+	    final String resType =
+		    typeResourceListBox.getValue(typeResourceListBox
+			    .getSelectedIndex());
+	    if (cr != null) {
+		for (Entry<String, String> entry : cr.entrySet()) {
+		    String id = entry.getKey();
+		    if (!id.equals(citation.getResourceProxyId())) {
+			typage = entry.getValue();
+			if (!typage.equals(resType)) {
+			    resourceIncompatibility = true;
+			    break;
+			}
+		    }
+		}
+	    }
+	    if (resourceIncompatibility) {
+		OsylOkCancelDialog osylOkCancelDialog =
+			new OsylOkCancelDialog(
+				uiMessages.getMessage("Global.warning"),
+				uiMessages
+					.getMessage(
+						"DocumentEditor.document.resTypeIncompatibility",
+						coMessages
+							.getMessage(OsylAbstractResProxEditor.RES_TYPE_MESSAGE_PREFIX
+								+ typage)));
+
+		osylOkCancelDialog.addOkButtonCLickHandler(new ClickHandler() {
+		    public void onClick(ClickEvent event) {
+			try {
+			    OsylEditorEntryPoint.getInstance()
+				    .changePropertyForResource(cr,
+					    COPropertiesType.ASM_RESOURCE_TYPE,
+					    resType);
+			    OsylEditorEntryPoint.getInstance()
+			    .changePropertyInMap(cr, resType);
+			    onSave();
+			} catch (Exception e) {
+			    com.google.gwt.user.client.Window
+				    .alert("Unable to delete object. Error="
+					    + e);
+			    e.printStackTrace();
+			}
+		    }
+		});
+		osylOkCancelDialog.show();
+		osylOkCancelDialog.centerAndFocus();
+	    }
+	}
+	if (!message.equals("")) {
+	    final OsylAlertDialog alertBox =
+		    new OsylAlertDialog(false, true, message);
+	    // get index of citation form to set z-index of alert
+	    // window
+	    int index =
+		    new Integer(DOM.getStyleAttribute(
+			    OsylCitationForm.this.getElement(), "zIndex"));
+	    alertBox.setZIndex(index + 1);
+	    alertBox.center();
+	    alertBox.show();
+	    return;
+	} else if (!resourceIncompatibility) {
+	    hiddenDisplayName.setValue(title);
+	    cancelButton.setEnabled(false);
+	    saveButton.setEnabled(false);
+	    // Type of resource for citation
+	    citation.setResourceType(typeResourceListBox
+		    .getValue(typeResourceListBox.getSelectedIndex()));
+	    citation.setProperty(CitationSchema.TYPE,
+		    citationType.getValue(citationType.getSelectedIndex()));
+	    citation.setProperty(CitationSchema.TITLE, title);
+	    citation.setProperty(CitationSchema.ISN, isnTextBox.getText());
+	    citation.setProperty(CitationSchema.CREATOR, authorField.getText());
+	    citation.setProperty(CitationSchema.VOLUME, volumeTextBox.getText());
+	    citation.setProperty(CitationSchema.ISSUE, issueTextBox.getText());
+	    citation.setProperty(CitationSchema.PAGES, pagesTextBox.getText());
+	    citation.setProperty(CitationSchema.YEAR, yearTextBox.getText());
+	    citation.setProperty(CitationSchema.DOI, doiTextBox.getText());
+	    // citation.setProperty(CitationSchema.URL, );
+	    citation.setProperty(CitationSchema.SOURCE_TITLE,
+		    sourceTitle.getText());
+	    citation.setProperty(CitationSchema.PUBLISHER,
+		    publisherBox.getText());
+	    citation.setProperty(CitationSchema.PUBLICATION_LOCATION,
+		    publicationLocationTextBox.getText());
+
+	    // citation.setResourceName(listname == null ? "" :
+	    // listname);
+
+	    // We add the corresponding identifier
+	    // If it a citation of type unknown, we save the identifier
+	    // from
+	    // here
+	    String tempCitationType =
+		    citationType.getValue(citationType.getSelectedIndex());
+
+	    if (tempCitationType.equals(CitationSchema.TYPE_PROCEED)) {
+		citation.setProperty(CitationSchema.VOLUME,
+			proceedVolumeTextBox.getText());
+		citation.setProperty(CitationSchema.SOURCE_TITLE,
+			proceedingSourceTitle.getText());
+	    }
+	    if (CitationSchema.TYPE_UNKNOWN.equalsIgnoreCase(tempCitationType)) {
+		citation.setProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_OTHERLINK,
+			LinkValidator.parseLink(urlTextBox.getText()));
+		citation.setProperty(COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_NOLINK, "noLink");
+	    }
+	    citation.setFileName(titleField.getText());
+	    OsylRemoteServiceLocator.getCitationRemoteService()
+		    .createOrUpdateCitation(currentDirectory, citation,
+			    new AsyncCallback<String>() {
+				public void onFailure(Throwable caught) {
+				    Window.alert(uiMessages
+					    .getMessage("fileUpload.resNotSaved"));
+				    final OsylAlertDialog alertBox =
+					    new OsylAlertDialog(
+						    false,
+						    true,
+						    "Alert - Citation Error",
+						    uiMessages
+							    .getMessage("fileUpload.resNotSaved"));
+				    // get index of citation form to set
+				    // z-index of alert window
+				    int index =
+					    new Integer(DOM.getStyleAttribute(
+						    OsylCitationForm.this
+							    .getElement(),
+						    "zIndex"));
+				    alertBox.setZIndex(index + 1);
+				    alertBox.center();
+				    alertBox.show();
+				    cancelButton.setEnabled(true);
+				    saveButton.setEnabled(true);
+				}
+
+				public void onSuccess(String result) {
+
+				    hide();
+				    OsylUnobtrusiveAlert alert =
+					    new OsylUnobtrusiveAlert(
+						    uiMessages
+							    .getMessage("fileUpload.resSaved"));
+				    OsylEditorEntryPoint.showWidgetOnTop(alert);
+				    // parse the handler list
+				    for (Iterator<UploadFileEventHandler> it =
+					    citationEvtHandlerList.iterator(); it
+					    .hasNext();) {
+					it.next()
+						.onUploadFile(
+							new UploadFileEventHandler.UploadFileEvent(
+								result));
+				    }
+				}
+			    });
+	}
+    }
 
     /**
      * Gets the resource name

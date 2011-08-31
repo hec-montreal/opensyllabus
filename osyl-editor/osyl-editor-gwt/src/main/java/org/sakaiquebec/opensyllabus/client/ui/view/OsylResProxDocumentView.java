@@ -79,26 +79,39 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 	    // update documentContextVisibilitymap
 	    Map<String, String> cv =
 		    OsylEditorEntryPoint.getInstance()
-			    .getDocumentContextVisibilityMap().get(uri);
+			    .getResourceContextVisibilityMap().get(uri);
 	    if (cv == null) {
 		cv = new HashMap<String, String>();
 	    }
 	    cv.put(getModel().getId(),
 		    getModel().getProperty(COPropertiesType.VISIBILITY));
 	    OsylEditorEntryPoint.getInstance()
-		    .getDocumentContextVisibilityMap().put(uri, cv);
+		    .getResourceContextVisibilityMap().put(uri, cv);
 
 	    // update resTypeContextVisibilitymap
 	    Map<String, String> cr =
 		    OsylEditorEntryPoint.getInstance()
-			    .getResTypeContextVisibilityMap().get(uri);
+			    .getResourceContextTypeMap().get(uri);
 	    if (cr == null) {
 		cr = new HashMap<String, String>();
 	    }
 	    cr.put(getModel().getId(),
 		    getModel().getResource().getProperty(COPropertiesType.ASM_RESOURCE_TYPE));
-	    OsylEditorEntryPoint.getInstance().getResTypeContextVisibilityMap()
+	    OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
 		    .put(uri, cr);
+	    
+	    //update documentContextLicenceMAp
+	    Map<String, String> cl =
+		    OsylEditorEntryPoint.getInstance()
+			    .getDocumentContextLicenceMap().get(uri);
+	    if (cl == null) {
+		cl = new HashMap<String, String>();
+	    }
+	    cl.put(getModel().getId(),
+		    getModel().getProperty(COPropertiesType.LICENSE));
+	    OsylEditorEntryPoint.getInstance()
+		    .getDocumentContextLicenceMap().put(uri, cv);
+	    
 	}
     }
 

@@ -28,6 +28,7 @@ import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
 import org.sakaiquebec.opensyllabus.client.ui.util.CitationFormatter;
 import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylCitationEditor;
+import org.sakaiquebec.opensyllabus.client.ui.view.editor.OsylLinkEditor;
 import org.sakaiquebec.opensyllabus.shared.model.COContentResource;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COProperties;
@@ -217,11 +218,12 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 	// .getSelectedCitationProperty(
 	// COPropertiesType.IDENTIFIER,
 	// COPropertiesType.IDENTIFIER_TYPE_NOLINK));
+	
 	// update resTypeContextVisibilitymap
 	Map<String, String> cr =
 		OsylEditorEntryPoint
 			.getInstance()
-			.getResTypeContextVisibilityMap()
+			.getResourceContextTypeMap()
 			.get(uri
 				+ "/"
 				+ getEditor().getSelectedCitationProperty(
@@ -234,11 +236,30 @@ public class OsylResProxCitationView extends OsylAbstractResProxBrowserView {
 			COPropertiesType.ASM_RESOURCE_TYPE));
 	OsylEditorEntryPoint
 		.getInstance()
-		.getResTypeContextVisibilityMap()
+		.getResourceContextTypeMap()
 		.put(uri
 			+ "/"
 			+ getEditor().getSelectedCitationProperty(
 				CitationSchema.CITATIONID), cr);
+	
+	// update resContextVisibilitymap
+	Map<String, String> cv =
+		OsylEditorEntryPoint.getInstance()
+			.getResourceContextVisibilityMap()
+			.get(uri
+				+ "/"
+				+ getEditor().getSelectedCitationProperty(
+					CitationSchema.CITATIONID));
+	if (cv == null) {
+	    cv = new HashMap<String, String>();
+	}
+	cv.put(getModel().getId(),
+		getModel().getProperty(COPropertiesType.VISIBILITY));
+	OsylEditorEntryPoint.getInstance().getResourceContextVisibilityMap()
+		.put(uri
+			+ "/"
+			+ getEditor().getSelectedCitationProperty(
+				CitationSchema.CITATIONID), cv);
     }
 
     /**

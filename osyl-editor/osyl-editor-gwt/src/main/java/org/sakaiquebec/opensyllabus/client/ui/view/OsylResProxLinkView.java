@@ -73,17 +73,31 @@ public class OsylResProxLinkView extends OsylAbstractResProxView {
 	getModel().getResource().addProperty(COPropertiesType.IDENTIFIER,
 		COPropertiesType.IDENTIFIER_TYPE_URI,
 		((OsylLinkEditor) getEditor()).getLink());
+
+	// update resContextVisibilitymap
+	Map<String, String> cv =
+		OsylEditorEntryPoint.getInstance()
+			.getResourceContextVisibilityMap()
+			.get(((OsylLinkEditor) getEditor()).getLink());
+	if (cv == null) {
+	    cv = new HashMap<String, String>();
+	}
+	cv.put(getModel().getId(),
+		getModel().getProperty(COPropertiesType.VISIBILITY));
+	OsylEditorEntryPoint.getInstance().getResourceContextVisibilityMap()
+		.put(((OsylLinkEditor) getEditor()).getLink(), cv);
+
 	// update resTypeContextVisibilitymap
 	Map<String, String> cr =
-		OsylEditorEntryPoint.getInstance()
-			.getResTypeContextVisibilityMap()
+		OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
 			.get(((OsylLinkEditor) getEditor()).getLink());
 	if (cr == null) {
 	    cr = new HashMap<String, String>();
 	}
-	cr.put(getModel().getId(), getModel().getResource()
-		.getProperty(COPropertiesType.ASM_RESOURCE_TYPE));
-	OsylEditorEntryPoint.getInstance().getResTypeContextVisibilityMap()
+	cr.put(getModel().getId(),
+		getModel().getResource().getProperty(
+			COPropertiesType.ASM_RESOURCE_TYPE));
+	OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
 		.put(((OsylLinkEditor) getEditor()).getLink(), cr);
     }
 

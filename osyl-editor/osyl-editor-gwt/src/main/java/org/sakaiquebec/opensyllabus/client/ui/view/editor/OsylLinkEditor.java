@@ -22,24 +22,23 @@ package org.sakaiquebec.opensyllabus.client.ui.view.editor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.sakaiquebec.opensyllabus.client.OsylEditorEntryPoint;
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.OsylRichTextArea;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylAlertDialog;
+import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylOkCancelDialog;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylAbstractView;
 import org.sakaiquebec.opensyllabus.client.ui.view.OsylResProxLinkView;
-import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
-import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
+import org.sakaiquebec.opensyllabus.shared.model.COPropertiesType;
 import org.sakaiquebec.opensyllabus.shared.util.LinkValidator;
 
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HTML;
@@ -83,10 +82,10 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 
     // remember editor description height for maximizing popup
     private int originalEditorDescHeight;
-    
-    //Type of resource for hyperlink
+
+    // Type of resource for hyperlink
     private String typeResource;
-    
+
     /**
      * Constructor specifying the {@link OsylAbstractView} this editor is
      * working for.
@@ -151,8 +150,8 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	typeResourceListBox = new ListBox();
 	typeResourceListBox.setStylePrimaryName("Osyl-LabelEditor-TextBox");
 	typeResourceListBox.setWidth("30%");
-	flexTable.setWidget(2, 0, new HTML(getUiMessage("Link.urlType")
-		+ " : "));
+	flexTable.setWidget(2, 0,
+		new HTML(getUiMessage("Link.urlType") + " : "));
 	flexTable.setWidget(2, 1, typeResourceListBox);
 	// --------------------------------------------------------
 
@@ -171,8 +170,8 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	typeResourceListBox.addChangeHandler(new ChangeHandler() {
 
 	    public void onChange(ChangeEvent event) {
-		setTypeResource(typeResourceListBox.getValue(typeResourceListBox
-			.getSelectedIndex()));
+		setTypeResource(typeResourceListBox
+			.getValue(typeResourceListBox.getSelectedIndex()));
 	    }
 	});
 
@@ -202,7 +201,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	if (isReadOnly()) {
 	    getViewerURI().setVisible(false);
 	}
-	
+
 	HTML htmlViewerType = new HTML();
 	htmlViewerType.setStylePrimaryName("type");
 	setViewerType(htmlViewerType);
@@ -210,7 +209,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	HorizontalPanel hzPanel = new HorizontalPanel();
 	hzPanel.add(getViewerLink());
 	hzPanel.add(getViewerType());
-	
+
 	setViewer(new VerticalPanel());
 	getViewer().setStylePrimaryName("Osyl-UnitView-HtmlViewer");
 	getViewer().add(hzPanel);
@@ -233,9 +232,9 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	if (getView().isContextImportant()) {
 	    getViewerPanel().addStyleName("Osyl-UnitView-Important");
 	    getViewerPanel().setWidget(0, 1,
-		new HTML(getView().getCoMessage("MetaInfo.important")));
+		    new HTML(getView().getCoMessage("MetaInfo.important")));
 	    getViewerPanel().getFlexCellFormatter().setStylePrimaryName(0, 1,
-		"Osyl-UnitView-TextImportant");
+		    "Osyl-UnitView-TextImportant");
 	    column = 1;
 	}
 
@@ -297,7 +296,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     protected OsylResProxLinkView getView() {
 	return (OsylResProxLinkView) super.getView();
     }
-   
+
     public void setText(String text) {
 	if (isInEditionMode()) {
 	    editorName.setText(text);
@@ -375,59 +374,111 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	    ok = false;
 	    messages = getView().getUiMessage("LinkEditor.unvalidLink");
 	}
-//	if (getTypeLinkSelected().equals(typeResourceListBox.getItemText(0))) {
-//	    ok = false;
-//	    messages =
-//		    getUiMessage("DocumentEditor.document.WrongTypeResStatus");
-//	}
-	//-----------------------------------------------------------------------
-	// Check resource type incompatibility 
-	//-----------------------------------------------------------------------
+
+	// -----------------------------------------------------------------------
+	// Check resource type incompatibility
+	// -----------------------------------------------------------------------
 	String typage = "";
-	Map<String, String> cr = OsylEditorEntryPoint.getInstance()
-			    .getResTypeContextVisibilityMap()
-			    .get(getLink());
-	boolean resIncompatibility = false;
-	String resType = typeResourceListBox.getValue(typeResourceListBox.getSelectedIndex());
-	Set<String> parentTitles = new HashSet<String>();
+	final Map<String, String> cr =
+		OsylEditorEntryPoint.getInstance().getResourceContextTypeMap()
+			.get(getLink());
+	boolean resourceIncompatibility = false;
+	final String resType =
+		typeResourceListBox.getValue(typeResourceListBox
+			.getSelectedIndex());
 	if (cr != null) {
 	    for (Entry<String, String> entry : cr.entrySet()) {
 		String id = entry.getKey();
 		if (!id.equals(getView().getModel().getId())) {
 		    typage = entry.getValue();
 		    if (!typage.equals(resType)) {
-			resIncompatibility = true;
-			ok = false;
-			COModelInterface comi =
-			    OsylEditorEntryPoint.getInstance()
-			    .getCoModelInterfaceWithId(id);
-			if (comi instanceof COElementAbstract) {
-			    COElementAbstract coe =
-				(COElementAbstract) comi;
-			    while (!coe.isCOUnit()) {
-				coe = coe.getParent();
-			    }
-			    parentTitles.add(coe.getLabel());
-			}
+			resourceIncompatibility = true;
+			break;
 		    }
 		}
 	    }
 	}
-	if (resIncompatibility) {
-		StringBuilder sb = new StringBuilder();
-		for (String s : parentTitles) {
-		sb.append(s + ", ");
-		}
-		String msgParameter = sb.substring(0, sb.length() - 2);
-		messages += " " +
-			getView()
-				.getUiMessage(
-					"DocumentEditor.document.resTypeIncompatibility", 
-					msgParameter);
-		messages += " : " + getView().getCoMessage(
-			RESS_TYPE_MESSAGE_PREFIX + typage);
-	}
+	if (resourceIncompatibility) {
+	    OsylOkCancelDialog osylOkCancelDialog =
+		    new OsylOkCancelDialog(getView().getUiMessage(
+			    "Global.warning"), getView().getUiMessage(
+			    "DocumentEditor.document.resTypeIncompatibility",
+			    getView().getCoMessage(
+				    RES_TYPE_MESSAGE_PREFIX + typage)));
 
+	    osylOkCancelDialog.addOkButtonCLickHandler(new ClickHandler() {
+		public void onClick(ClickEvent event) {
+		    try {
+			OsylEditorEntryPoint
+				.getInstance()
+				.changePropertyForResource(cr,
+					COPropertiesType.ASM_RESOURCE_TYPE, resType);
+			OsylEditorEntryPoint.getInstance()
+			    .changePropertyInMap(cr, resType);
+			getView().closeAndSaveEdit(true);
+		    } catch (Exception e) {
+			com.google.gwt.user.client.Window
+				.alert("Unable to delete object. Error=" + e);
+			e.printStackTrace();
+		    }
+		}
+	    });
+	    osylOkCancelDialog.show();
+	    osylOkCancelDialog.centerAndFocus();
+	    return false;
+	}
+	// -----------------------------------------------------------------------
+	// Check visibility incompatibility
+	// -----------------------------------------------------------------------
+	String visibility = "";
+	boolean incompatibility = false;
+	final boolean contextVisible = !isContextHidden();
+	final Map<String, String> cv =
+		OsylEditorEntryPoint.getInstance()
+			.getResourceContextVisibilityMap()
+			.get(getLink());
+
+	if (cv != null) {
+	    for (Entry<String, String> entry : cv.entrySet()) {
+		String id = entry.getKey();
+		if (!id.equals(getView().getModel().getId())) {
+		    visibility = entry.getValue();
+		    if (!visibility.equals("" + contextVisible)) {
+			incompatibility = true;
+			break;
+		    }
+		}
+	    }
+	}
+	if (incompatibility) {
+	    OsylOkCancelDialog osylOkCancelDialog =
+		    new OsylOkCancelDialog(
+			    getView().getUiMessage("Global.warning"),
+			    getView()
+				    .getUiMessage(
+					    "DocumentEditor.document.visibilityIncompatibility"));
+
+	    osylOkCancelDialog.addOkButtonCLickHandler(new ClickHandler() {
+		public void onClick(ClickEvent event) {
+		    try {
+			OsylEditorEntryPoint.getInstance()
+				.changePropertyForResourceProxy(cv,
+					COPropertiesType.VISIBILITY,
+					"" + contextVisible);
+			OsylEditorEntryPoint.getInstance()
+			    .changePropertyInMap(cv, "" + contextVisible);
+			getView().closeAndSaveEdit(true);
+		    } catch (Exception e) {
+			com.google.gwt.user.client.Window
+				.alert("Unable to delete object. Error=" + e);
+			e.printStackTrace();
+		    }
+		}
+	    });
+	    osylOkCancelDialog.show();
+	    osylOkCancelDialog.centerAndFocus();
+	    return false;
+	}
 	if (!ok) {
 	    OsylAlertDialog osylAlertDialog =
 		    new OsylAlertDialog(getView().getUiMessage("Global.error"),
@@ -437,7 +488,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	} else {
 	    setLink(LinkValidator.parseLink(getLink()));
 	}
-	return ok;
+	return (ok);
     }
 
     public void enterEdit() {
@@ -458,7 +509,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	// We get the description text to edit from the model
 	editorDesc.setHTML(getView().getCommentFromModel());
 	// We get the type of resource value to edit from the model
-	setTypeResource(getView().getResourceTypeFromModel());	
+	setTypeResource(getView().getResourceTypeFromModel());
     } // enterEdit
 
     public void enterView() {
@@ -469,11 +520,16 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	    initViewer();
 
 	    // We get the text to display from the model
-	    if (getView().getDocType() != null && !"".equals(getView().getDocType()))
-		getViewerType().setHTML("["+
-			getView().getCoMessage(
-				RESS_TYPE_MESSAGE_PREFIX
-					+ getView().getDocType())+"]");
+	    if (getView().getDocType() != null
+		    && !"".equals(getView().getDocType()))
+		getViewerType()
+			.setHTML(
+				"["
+					+ getView().getCoMessage(
+						RES_TYPE_MESSAGE_PREFIX
+							+ getView()
+								.getDocType())
+					+ "]");
 	    getViewerLink().setHTML(getView().getTextFromModel());
 	    getViewerURI().setHTML("(" + getView().getRawURI() + ")");
 	    getViewerDesc().setHTML(getView().getCommentFromModel());
@@ -489,7 +545,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	    getMainPanel().setVisible(false);
 	}
     } // enterView
-    
+
     @Override
     public Widget getConfigurationWidget() {
 	return null;
@@ -544,11 +600,14 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 
     private void buildTypeResourceListBox(List<String> typesResourceList) {
 	typeResourceListBox.clear();
-	typeResourceListBox.addItem(getView().getUiMessage(
-		"DocumentEditor.documentType.choose"),"");
+	typeResourceListBox.addItem(
+		getView().getUiMessage("DocumentEditor.documentType.choose"),
+		"");
 	for (String typeResource : typesResourceList) {
-	    typeResourceListBox.addItem(getView().getCoMessage(
-		    RESS_TYPE_MESSAGE_PREFIX + typeResource), typeResource);
+	    typeResourceListBox.addItem(
+		    getView().getCoMessage(
+			    RES_TYPE_MESSAGE_PREFIX + typeResource),
+		    typeResource);
 	}
 	for (int i = 0; i < typeResourceListBox.getItemCount(); i++) {
 	    String item = typeResourceListBox.getValue(i);
@@ -565,7 +624,7 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
 	else
 	    return "";
     }
-    
+
     private void setTypeResource(String typeResource) {
 	this.typeResource = typeResource;
     }
@@ -573,13 +632,13 @@ public class OsylLinkEditor extends OsylAbstractResProxEditor {
     public String getTypeResource() {
 	return typeResource;
     }
-    
-    private HTML getViewerType(){
+
+    private HTML getViewerType() {
 	return viewerType;
     }
-    
-    private void setViewerType(HTML viewer){
+
+    private void setViewerType(HTML viewer) {
 	this.viewerType = viewer;
     }
-    
+
 }

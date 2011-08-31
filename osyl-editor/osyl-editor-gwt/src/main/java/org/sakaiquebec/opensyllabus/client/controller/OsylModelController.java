@@ -39,6 +39,8 @@ import org.sakaiquebec.opensyllabus.shared.model.COUnit;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitContent;
 import org.sakaiquebec.opensyllabus.shared.model.COUnitStructure;
 
+import com.google.gwt.user.client.Window;
+
 /**
  * OsylModelController is the controller related to the model (i.e.: course
  * outline) being edited.
@@ -110,28 +112,45 @@ public class OsylModelController implements
 		    (COContentResourceProxy) event.getSource();
 	    if (COContentResourceType.DOCUMENT.equals(cocrp.getResource()
 		    .getType())) {
-		// Incompatibility in DocumentContextVisibilityMap
-		Map<String, Map<String, String>> dcv =
-			OsylEditorEntryPoint.getInstance()
-				.getDocumentContextVisibilityMap();
 		String uri =
 			cocrp.getResource().getProperty(
 				COPropertiesType.IDENTIFIER,
 				COPropertiesType.IDENTIFIER_TYPE_URI).trim();
-		dcv.get(uri).remove(cocrp.getId());
+
+		
+		//DocumentContextLicenceMap
+		Map<String, Map<String, String>> dcl =
+			OsylEditorEntryPoint.getInstance()
+				.getDocumentContextLicenceMap();
+		
+		dcl.get(uri).remove(cocrp.getId());
 		OsylEditorEntryPoint.getInstance()
-			.setDocumentContextVisibilityMap(dcv);
-		// Incompatibility in DocumentContextVisibilityMap
+			.setDocumentContextLicenceMap(dcl);
+		
+	    }
+	    if(COContentResourceType.URL.equals(cocrp.getResource()
+		    .getType()) || COContentResourceType.DOCUMENT.equals(cocrp.getResource()
+			    .getType()) || COContentResourceType.BIBLIO_RESOURCE.equals(cocrp.getResource()
+				    .getType())){
+		//DocumentContextTypeMap
 		Map<String, Map<String, String>> dcr =
 			OsylEditorEntryPoint.getInstance()
-				.getResTypeContextVisibilityMap();
-		uri =
-			cocrp.getResource().getProperty(
-				COPropertiesType.IDENTIFIER,
-				COPropertiesType.IDENTIFIER_TYPE_URI).trim();
+				.getResourceContextTypeMap();
+		String uri = cocrp.getResource().getProperty(
+			COPropertiesType.IDENTIFIER,
+			COPropertiesType.IDENTIFIER_TYPE_URI).trim();
 		dcr.get(uri).remove(cocrp.getId());
 		OsylEditorEntryPoint.getInstance()
-			.setResTypeContextVisibilityMap(dcr);
+			.setResourceContextTypeMap(dcr);
+		
+		//DocumentContextVisibilityMap
+		Map<String, Map<String, String>> dcv =
+			OsylEditorEntryPoint.getInstance()
+				.getResourceContextVisibilityMap();
+		
+		dcv.get(uri).remove(cocrp.getId());
+		OsylEditorEntryPoint.getInstance()
+			.setResourceContextVisibilityMap(dcv);
 	    }
 	}
 	setModelDirty(true);

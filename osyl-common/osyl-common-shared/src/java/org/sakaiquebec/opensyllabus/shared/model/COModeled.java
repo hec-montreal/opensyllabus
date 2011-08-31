@@ -179,9 +179,11 @@ public class COModeled extends COSerialized {
 
     private String schemaVersion;
 
-    private Map<String, Map<String, String>> documentContextVisibilityMap;
+    private Map<String, Map<String, String>> resContextVisibilityMap;
 
-    private Map<String, Map<String, String>> resTypeContextVisibilityMap;
+    private Map<String, Map<String, String>> resContextTypeMap;
+
+    private Map<String, Map<String, String>> documentContextLicenceMap;
 
     /**
      * Default Constructor
@@ -249,10 +251,9 @@ public class COModeled extends COSerialized {
 
 	COContent coContent = new COContent();
 	Document messageDom = null;
-	documentContextVisibilityMap =
-		new HashMap<String, Map<String, String>>();
-	resTypeContextVisibilityMap =
-		new HashMap<String, Map<String, String>>();
+	resContextVisibilityMap = new HashMap<String, Map<String, String>>();
+	resContextTypeMap = new HashMap<String, Map<String, String>>();
+	documentContextLicenceMap = new HashMap<String, Map<String, String>>();
 
 	try {
 	    // XMLtoDOM
@@ -622,16 +623,17 @@ public class COModeled extends COSerialized {
 			    COPropertiesType.IDENTIFIER_TYPE_URI);
 	    if (uri != null) {
 		uri = uri.trim();
-		String visibility =
-			coContentResProxy
-				.getProperty(COPropertiesType.VISIBILITY);
-		Map<String, String> contextVisibilityMap =
-			documentContextVisibilityMap.get(uri);
-		if (contextVisibilityMap == null) {
-		    contextVisibilityMap = new HashMap<String, String>();
+
+		String licence =
+			coContentResProxy.getResource().getProperty(
+				COPropertiesType.LICENSE);
+		Map<String, String> contextLicenceMap =
+			documentContextLicenceMap.get(uri);
+		if (contextLicenceMap == null) {
+		    contextLicenceMap = new HashMap<String, String>();
 		}
-		contextVisibilityMap.put(coContentResProxy.getId(), visibility);
-		documentContextVisibilityMap.put(uri, contextVisibilityMap);
+		contextLicenceMap.put(coContentResProxy.getId(), licence);
+		documentContextLicenceMap.put(uri, contextLicenceMap);
 	    }
 	}
 	// build resTypeContextVisibilityMap
@@ -648,16 +650,28 @@ public class COModeled extends COSerialized {
 	    String resourceTypeDoc =
 		    coContentResProxy.getResource().getProperty(
 			    COPropertiesType.ASM_RESOURCE_TYPE);
+	    // build resTypeContextVisibilityMap
 	    if (resourceTypeDoc != null && uri != null) {
 		uri = uri.trim();
 		Map<String, String> contextVisibilityMap =
-			resTypeContextVisibilityMap.get(uri);
+			resContextTypeMap.get(uri);
 		if (contextVisibilityMap == null) {
 		    contextVisibilityMap = new HashMap<String, String>();
 		}
-		contextVisibilityMap.put(coContentResProxy.getId(), resourceTypeDoc);
-		resTypeContextVisibilityMap.put(uri, contextVisibilityMap);
+		contextVisibilityMap.put(coContentResProxy.getId(),
+			resourceTypeDoc);
+		resContextTypeMap.put(uri, contextVisibilityMap);
 	    }
+
+	    String visibility =
+		    coContentResProxy.getProperty(COPropertiesType.VISIBILITY);
+	    Map<String, String> contextVisibilityMap =
+		    resContextVisibilityMap.get(uri);
+	    if (contextVisibilityMap == null) {
+		contextVisibilityMap = new HashMap<String, String>();
+	    }
+	    contextVisibilityMap.put(coContentResProxy.getId(), visibility);
+	    resContextVisibilityMap.put(uri, contextVisibilityMap);
 	}
 	return coContentResProxy;
     }
@@ -1064,21 +1078,30 @@ public class COModeled extends COSerialized {
 	}
     }
 
-    public Map<String, Map<String, String>> getDocumentContextVisibilityMap() {
-	return documentContextVisibilityMap;
+    public Map<String, Map<String, String>> getResourceContextVisibilityMap() {
+	return resContextVisibilityMap;
     }
 
-    public void setDocumentContextVisibilityMap(
+    public void setResourceContextVisibilityMap(
 	    Map<String, Map<String, String>> documentContextVisibilityMap) {
-	this.documentContextVisibilityMap = documentContextVisibilityMap;
+	this.resContextVisibilityMap = documentContextVisibilityMap;
     }
 
-    public Map<String, Map<String, String>> getResTypeContextVisibilityMap() {
-	return resTypeContextVisibilityMap;
+    public Map<String, Map<String, String>> getResourceContextTypeMap() {
+	return resContextTypeMap;
     }
 
-    public void setResTypeContextVisibilityMap(
+    public void setResourceContextTypeMap(
 	    Map<String, Map<String, String>> resTypeContextVisibilityMap) {
-	this.resTypeContextVisibilityMap = resTypeContextVisibilityMap;
+	this.resContextTypeMap = resTypeContextVisibilityMap;
+    }
+
+    public void setDocumentContextLicenceMap(
+	    Map<String, Map<String, String>> resContextLicenceMap) {
+	this.documentContextLicenceMap = resContextLicenceMap;
+    }
+
+    public Map<String, Map<String, String>> getDocumentContextLicenceMap() {
+	return documentContextLicenceMap;
     }
 }

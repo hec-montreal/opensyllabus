@@ -33,6 +33,8 @@ import org.sakaiquebec.opensyllabus.shared.events.FiresUpdateCOContentResourcePr
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEventHandler;
 import org.sakaiquebec.opensyllabus.shared.events.UpdateCOContentResourceProxyEventHandler.UpdateCOContentResourceProxyEvent;
 
+import com.google.gwt.user.client.Window;
+
 /**
  * Represents the resource proxies of the model. Each resource can have many
  * resources in attachment.

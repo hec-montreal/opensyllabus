@@ -23,6 +23,7 @@ package org.sakaiquebec.opensyllabus.client;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.sakaiquebec.opensyllabus.client.controller.OsylController;
 import org.sakaiquebec.opensyllabus.client.ui.OsylMainView;
@@ -30,6 +31,7 @@ import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewable;
 import org.sakaiquebec.opensyllabus.client.ui.api.OsylViewableComposite;
 import org.sakaiquebec.opensyllabus.client.ui.dialog.OsylUnobtrusiveAlert;
 import org.sakaiquebec.opensyllabus.shared.model.COContent;
+import org.sakaiquebec.opensyllabus.shared.model.COContentResourceProxy;
 import org.sakaiquebec.opensyllabus.shared.model.COElementAbstract;
 import org.sakaiquebec.opensyllabus.shared.model.COModelInterface;
 import org.sakaiquebec.opensyllabus.shared.model.COModeled;
@@ -121,9 +123,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 		if (!osylController.isModelDirty()) {
 		    return;
 		}
-		event
-			.setMessage(osylController
-				.getUiMessage("save.reallyQuit"));
+		event.setMessage(osylController.getUiMessage("save.reallyQuit"));
 	    }
 	}); // addWindowClosingHandler
 
@@ -160,26 +160,36 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	this.modeledCo.setContent(co.getContent());
 	this.modeledCo.XML2Model();
 	setModel(this.modeledCo.getModeledContent());
-	editorMainView = new OsylMainView(getModel(), OsylController.getInstance());
+	editorMainView =
+		new OsylMainView(getModel(), OsylController.getInstance());
 	editorMainView.initView();
 	this.setView(editorMainView);
 	refreshView();
     }
-    
-    public Map<String,Map<String,String>> getDocumentContextVisibilityMap(){
-	return this.modeledCo.getDocumentContextVisibilityMap();
-    }
-    
-    public void setDocumentContextVisibilityMap(Map<String,Map<String,String>> m){
-	this.modeledCo.setDocumentContextVisibilityMap(m);
-    }
-    
-    public Map<String,Map<String, String>> getResTypeContextVisibilityMap(){
-        return this.modeledCo.getResTypeContextVisibilityMap();
+
+    public Map<String, Map<String, String>> getResourceContextVisibilityMap() {
+	return this.modeledCo.getResourceContextVisibilityMap();
     }
 
-    public void setResTypeContextVisibilityMap(Map<String,Map<String,String>> m) {
-        this.modeledCo.setResTypeContextVisibilityMap(m);
+    public void setResourceContextVisibilityMap(
+	    Map<String, Map<String, String>> m) {
+	this.modeledCo.setResourceContextVisibilityMap(m);
+    }
+
+    public Map<String, Map<String, String>> getResourceContextTypeMap() {
+	return this.modeledCo.getResourceContextTypeMap();
+    }
+
+    public void setResourceContextTypeMap(Map<String, Map<String, String>> m) {
+	this.modeledCo.setResourceContextTypeMap(m);
+    }
+
+    public Map<String, Map<String, String>> getDocumentContextLicenceMap() {
+	return this.modeledCo.getDocumentContextLicenceMap();
+    }
+
+    public void setDocumentContextLicenceMap(Map<String, Map<String, String>> m) {
+	this.modeledCo.setDocumentContextLicenceMap(m);
     }
 
     /**
@@ -192,7 +202,7 @@ public class OsylEditorEntryPoint implements EntryPoint {
 	// itself (that is we do not specify an element ID):
 	rootPanel = RootPanel.get();
 	osylController.setCOSerialized(getSerializedCourseOutline());
-	
+
 	// We create our main view
 	editorMainView = new OsylMainView(getModel(), osylController);
 	editorMainView.setAccess(osylController.getCOSerialized().getAccess());
@@ -768,38 +778,39 @@ public class OsylEditorEntryPoint implements EntryPoint {
     public static String getExecMode() {
 	return execmode;
     }
-    
-    public COModelInterface getCoModelInterfaceWithId(String id){
+
+    public COModelInterface getCoModelInterfaceWithId(String id) {
 	return getCoModelInterfaceWithId(getModel(), id);
     }
-    
+
     @SuppressWarnings("unchecked")
-    private COModelInterface getCoModelInterfaceWithId(COElementAbstract coe,String id){
+    private COModelInterface getCoModelInterfaceWithId(COElementAbstract coe,
+	    String id) {
 	COModelInterface comi = null;
 	List<COElementAbstract> childrenList = coe.getChildrens();
 	boolean find = false;
 	Iterator<COElementAbstract> iter = childrenList.iterator();
 	while (iter.hasNext()) {
 	    comi = (COModelInterface) iter.next();
-	    if(id.equals(comi.getId())){
-		find=true;
+	    if (id.equals(comi.getId())) {
+		find = true;
 		break;
-	    }else{
-		if(comi instanceof COElementAbstract){
-		    COElementAbstract coea = (COElementAbstract)comi;
-		    comi=getCoModelInterfaceWithId(coea, id);
-		    if(comi!=null){
-			find=true;
+	    } else {
+		if (comi instanceof COElementAbstract) {
+		    COElementAbstract coea = (COElementAbstract) comi;
+		    comi = getCoModelInterfaceWithId(coea, id);
+		    if (comi != null) {
+			find = true;
 			break;
 		    }
 		}
 	    }
 	}
-	if (!find) 
+	if (!find)
 	    return null;
 	return comi;
     }
-    
+
     // TODO: Move function used by the browser in the file BrowserUtil.java
     public static int parsePixels(String value) {
 	int pos = value.indexOf("px");
@@ -857,6 +868,89 @@ public class OsylEditorEntryPoint implements EntryPoint {
 				      }
 				      return newElements;
 				      }-*/;
+
+    public void changePropertyInMap(Map<String, String> map, String value) {
+	if (map != null) {
+	    for (Entry<String, String> entry : map.entrySet()) {
+		entry.setValue(value);
+	    }
+	}
+    }
+
+    public void changePropertyForResourceProxy(Map<String, String> map,
+	    String propertyName, String propertyValue) {
+	if (map != null) {
+	    for (Entry<String, String> entry : map.entrySet()) {
+		COModelInterface comi =
+			OsylEditorEntryPoint.getInstance()
+				.getCoModelInterfaceWithId(entry.getKey());
+		COContentResourceProxy coContentResourceProxy =
+			(COContentResourceProxy) comi;
+		coContentResourceProxy.addProperty(propertyName, propertyValue);
+	    }
+	}
+    }
+
+    public void changePropertyForResource(Map<String, String> map,
+	    String propertyName, String propertyValue) {
+	if (map != null) {
+	    for (Entry<String, String> entry : map.entrySet()) {
+		COModelInterface comi =
+			OsylEditorEntryPoint.getInstance()
+				.getCoModelInterfaceWithId(entry.getKey());
+		COContentResourceProxy coContentResourceProxy =
+			(COContentResourceProxy) comi;
+		coContentResourceProxy.getResource().addProperty(propertyName,
+			propertyValue);
+	    }
+	}
+    }
+
+    public void changePropertyForResource(Map<String, String> map,
+	    String propertyName, String propertyType, String propertyValue) {
+	if (map != null) {
+	    for (Entry<String, String> entry : map.entrySet()) {
+		COModelInterface comi =
+			OsylEditorEntryPoint.getInstance()
+				.getCoModelInterfaceWithId(entry.getKey());
+		COContentResourceProxy coContentResourceProxy =
+			(COContentResourceProxy) comi;
+		coContentResourceProxy.getResource().addProperty(propertyName,
+			propertyType, propertyValue);
+	    }
+	}
+    }
+
+    public void addAttributeToProperty(Map<String, String> map,
+	    String propertyName, String propertyType, String attributeName,
+	    String value) {
+	if (map != null) {
+	    for (Entry<String, String> entry : map.entrySet()) {
+		COModelInterface comi =
+			OsylEditorEntryPoint.getInstance()
+				.getCoModelInterfaceWithId(entry.getKey());
+		COContentResourceProxy coContentResourceProxy =
+			(COContentResourceProxy) comi;
+		coContentResourceProxy.getResource()
+			.getCOProperty(propertyName, propertyType)
+			.addAttribute(attributeName, value);
+	    }
+	}
+    }
+
+    public void removePropertyForResource(Map<String, String> map,
+	    String propertyName, String propertyType) {
+	if (map != null) {
+	    for (Entry<String, String> entry : map.entrySet()) {
+		COModelInterface comi =
+			OsylEditorEntryPoint.getInstance()
+				.getCoModelInterfaceWithId(entry.getKey());
+		COContentResourceProxy coContentResourceProxy =
+			(COContentResourceProxy) comi;
+		coContentResourceProxy.getResource().removeProperty(
+			propertyName, propertyType);
+	    }
+	}
+    }
+
 }
-
-
