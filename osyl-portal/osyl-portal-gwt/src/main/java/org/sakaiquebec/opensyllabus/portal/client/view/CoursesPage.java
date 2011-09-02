@@ -64,8 +64,6 @@ public class CoursesPage extends AbstractPortalView {
 
     private static String VIEW_PREFIX = "CoursesPage_";
     
-    private List<String> acadSessionList = new ArrayList<String>();
-
     private class CourseClickHandler implements ClickHandler {
 
 	private CODirectorySite coDirectorySite;
@@ -373,7 +371,7 @@ public class CoursesPage extends AbstractPortalView {
 		coursesTable
 			.setColumnResizePolicy(ColumnResizePolicy.MULTI_CELL);
 		coursesTable.getDataTable().clearAll();
-		coursesTable.getDataTable().resize(10, 7);
+		coursesTable.getDataTable().resize(8, 7);
 		coursesTable.setColumnWidth(0, 120);
 		coursesTable.setColumnWidth(1, 290);
 		coursesTable.setColumnWidth(2, 150);
@@ -385,7 +383,7 @@ public class CoursesPage extends AbstractPortalView {
 		int rowNum;
 		for (final CODirectorySite coSite : courses) {
 
-		    for (String currentSection : coSite.getAllSections()) {
+		    for (String currentSection : coSite.getAllSessions()) {
 
 			final String sectionSiteId = currentSection;
 
@@ -553,8 +551,11 @@ public class CoursesPage extends AbstractPortalView {
 		}
 		mainPanel.add(coursesTable);
 	    }
-	} else {
-		mainPanel.add(new HTML(getMessage("empty_searching")));
+	} else  if (courses != null && courses.size() >= 0){
+		Label nothingPeriod = new Label(getMessage("empty_searching"));
+		nothingPeriod.setStylePrimaryName("CP_titre");
+		mainPanel.add(new HTML("&nbsp;"));		
+		mainPanel.add(nothingPeriod);
 	}
     }
 
