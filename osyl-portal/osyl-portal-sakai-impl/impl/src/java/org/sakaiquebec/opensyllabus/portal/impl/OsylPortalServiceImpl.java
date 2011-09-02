@@ -203,177 +203,200 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    for (CanonicalCourse canonicalCourse : courseManagementService
 		    .getCanonicalCourses(courseSet.getEid())) {
 		if (canonicalCourse.getEid() != null) {
-		    CODirectorySite coDirectorySite =
+		    CODirectorySite coSite =
 			    createCODirectorySite(canonicalCourse);
-		    if (coDirectorySite != null) {
+		    if (coSite != null) {
 			boolean accepted = false;
 			if ((!isNull(program)
 				&& !isNull(responsible)
 				&& (program.equals("ALL") || isFoundField(
-					program, coDirectorySite.getProgram())) && isFoundField(
-				responsible, coDirectorySite.getResponsible()))) {
-			    Map<String, String> aArchivedSections =
-				    coDirectorySite.getArchivedSections();
-			    Map<String, String> aCurrentSections =
-				    coDirectorySite.getCurrentSections();
-			    String aProgram = coDirectorySite.getProgram();
-			    String aResponsible =
-				    coDirectorySite.getResponsible();
-			    String aCourseNumber =
-				    coDirectorySite.getCourseNumber();
-			    String aCourseName =
-				    coDirectorySite.getCourseName();
-			    String aInstructor =
-				    coDirectorySite.getInstructor();
+					program, coSite.getProgram())) && isFoundField(
+				responsible, coSite.getResponsible()))) {
 			    // 0 0 0 0
 			    if (isNull(courseNumber) && isNull(courseTitle)
 				    && isNull(instructor) && isNull(trimester)) {
 				accepted = true;
-			    // 0 0 0 1
-			    } else if (isNull(courseNumber) && isNull(courseTitle)
+				// 0 0 0 1
+			    } else if (isNull(courseNumber)
+				    && isNull(courseTitle)
 				    && isNull(instructor) && !isNull(trimester)) {
-				if (isFoundField(trimester, aArchivedSections,
-					aCurrentSections)) {
+				if (isFoundField(trimester, coSite
+					.getArchivedSections(), coSite
+					.getCurrentSections())) {
 				    accepted = true;
 				}
-			    // 0 0 1 0				
-			    } else if (isNull(courseNumber) && isNull(courseTitle)
+				// 0 0 1 0
+			    } else if (isNull(courseNumber)
+				    && isNull(courseTitle)
 				    && !isNull(instructor) && isNull(trimester)) {
-				if (isFoundField(instructor, aInstructor)) {
+				if (isFoundField(instructor, coSite
+					.getInstructor())) {
 				    accepted = true;
 				}
-			    // 0 0 1 1				
-			    } else if (isNull(courseNumber) && isNull(courseTitle)
+				// 0 0 1 1
+			    } else if (isNull(courseNumber)
+				    && isNull(courseTitle)
 				    && !isNull(instructor)
 				    && !isNull(trimester)) {
-				if (isFoundField(instructor, aInstructor)
-					&& isFoundField(trimester,
-						aArchivedSections,
-						aCurrentSections)) {
+				if (isFoundField(instructor, coSite
+					.getInstructor())
+					&& isFoundField(trimester, coSite
+						.getArchivedSections(), coSite
+						.getCurrentSections())) {
 				    accepted = true;
 				}
-			    // 0 1 0 0
-			    } else if (isNull(courseNumber) && !isNull(courseTitle)
+				// 0 1 0 0
+			    } else if (isNull(courseNumber)
+				    && !isNull(courseTitle)
 				    && isNull(instructor) && isNull(trimester)) {
-				if (isFoundField(courseTitle, aCourseName)) {
+				if (isFoundField(courseTitle, coSite
+					.getCourseName())) {
 				    accepted = true;
 				}
-			    // 0 1 0 1				
-			    } else if (isNull(courseNumber) && !isNull(courseTitle)
+				// 0 1 0 1
+			    } else if (isNull(courseNumber)
+				    && !isNull(courseTitle)
 				    && isNull(instructor) && !isNull(trimester)) {
-				if (isFoundField(courseTitle, aCourseName)
-					&& isFoundField(trimester,
-						aArchivedSections,
-						aCurrentSections)) {
+				if (isFoundField(courseTitle, coSite
+					.getCourseName())
+					&& isFoundField(trimester, coSite
+						.getArchivedSections(), coSite
+						.getCurrentSections())) {
 				    accepted = true;
 				}
-			    // 0 1 1 0				
-			    } else if (isNull(courseNumber) && !isNull(courseTitle)
+				// 0 1 1 0
+			    } else if (isNull(courseNumber)
+				    && !isNull(courseTitle)
 				    && !isNull(instructor) && isNull(trimester)) {
-				if (isFoundField(courseTitle, aCourseName)
-					&& isFoundField(instructor, aInstructor)) {
+				if (isFoundField(courseTitle, coSite
+					.getCourseName())
+					&& isFoundField(instructor, coSite
+						.getInstructor())) {
 				    accepted = true;
 				}
-			    // 0 1 1 1				
-			    } else if (isNull(courseNumber) && !isNull(courseTitle)
+				// 0 1 1 1
+			    } else if (isNull(courseNumber)
+				    && !isNull(courseTitle)
 				    && !isNull(instructor)
 				    && !isNull(trimester)) {
-				if (isFoundField(courseTitle, aCourseName)
-					&& isFoundField(instructor, aInstructor)
-					&& isFoundField(trimester,
-						aArchivedSections,
-						aCurrentSections)) {
+				if (isFoundField(courseTitle, coSite
+					.getCourseName())
+					&& isFoundField(instructor, coSite
+						.getInstructor())
+					&& isFoundField(trimester, coSite
+						.getArchivedSections(), coSite
+						.getCurrentSections())) {
 				    accepted = true;
 				}
-			    // 1 0 0 0				
-			    } else if (!isNull(courseNumber) && isNull(courseTitle)
+				// 1 0 0 0
+			    } else if (!isNull(courseNumber)
+				    && isNull(courseTitle)
 				    && isNull(instructor) && isNull(trimester)) {
-				if (isFoundField(courseNumber, aCourseNumber)) {
+				if (isFoundField(courseNumber, coSite
+					.getCourseNumber())) {
 				    accepted = true;
 				}
 
-			    // 1 0 0 1				
-			    } else if (!isNull(courseNumber) && isNull(courseTitle)
+				// 1 0 0 1
+			    } else if (!isNull(courseNumber)
+				    && isNull(courseTitle)
 				    && isNull(instructor) && !isNull(trimester)) {
-				if (isFoundField(courseNumber, aCourseNumber)
-					&& isFoundField(trimester,
-						aArchivedSections,
-						aCurrentSections)) {
+				if (isFoundField(courseNumber, coSite
+					.getCourseNumber())
+					&& isFoundField(trimester, coSite
+						.getArchivedSections(), coSite
+						.getCurrentSections())) {
 				    accepted = true;
 				}
-			    // 1 0 1 0				
-			    } else if (!isNull(courseNumber) && isNull(courseTitle)
+				// 1 0 1 0
+			    } else if (!isNull(courseNumber)
+				    && isNull(courseTitle)
 				    && !isNull(instructor) && isNull(trimester)) {
-				if (isFoundField(courseNumber, aCourseNumber)
-					&& isFoundField(instructor, aInstructor)) {
+				if (isFoundField(courseNumber, coSite
+					.getCourseNumber())
+					&& isFoundField(instructor, coSite
+						.getInstructor())) {
 				    accepted = true;
 				}
-			    // 1 0 1 1				
-			    } else if (!isNull(courseNumber) && isNull(courseTitle)
+				// 1 0 1 1
+			    } else if (!isNull(courseNumber)
+				    && isNull(courseTitle)
 				    && !isNull(instructor)
 				    && !isNull(trimester)) {
-				if (isFoundField(courseNumber, aCourseNumber)
-					&& isFoundField(instructor, aInstructor)
-					&& isFoundField(trimester,
-						aArchivedSections,
-						aCurrentSections)) {
+				if (isFoundField(courseNumber, coSite
+					.getCourseNumber())
+					&& isFoundField(instructor, coSite
+						.getInstructor())
+					&& isFoundField(trimester, coSite
+						.getArchivedSections(), coSite
+						.getCurrentSections())) {
 				    accepted = true;
 				}
-			    // 1 1 0 0				
-			    } else if (!isNull(courseNumber) && !isNull(courseTitle)
+				// 1 1 0 0
+			    } else if (!isNull(courseNumber)
+				    && !isNull(courseTitle)
 				    && isNull(instructor) && isNull(trimester)) {
-				if (isFoundField(courseNumber, aCourseNumber)
-					&& isFoundField(courseTitle,
-						aCourseName)) {
+				if (isFoundField(courseNumber, coSite
+					.getCourseNumber())
+					&& isFoundField(courseTitle, coSite
+						.getCourseName())) {
 				    accepted = true;
 				}
-			    // 1 1 0 1				
-			    } else if (!isNull(courseNumber) && !isNull(courseTitle)
+				// 1 1 0 1
+			    } else if (!isNull(courseNumber)
+				    && !isNull(courseTitle)
 				    && isNull(instructor) && !isNull(trimester)) {
-				if (isFoundField(courseNumber, aCourseNumber)
-					&& isFoundField(courseTitle,
-						aCourseName)
-					&& isFoundField(trimester,
-						aArchivedSections,
-						aCurrentSections)) {
+				if (isFoundField(courseNumber, coSite
+					.getCourseNumber())
+					&& isFoundField(courseTitle, coSite
+						.getCourseName())
+					&& isFoundField(trimester, coSite
+						.getArchivedSections(), coSite
+						.getCurrentSections())) {
 				    accepted = true;
 				}
-			    // 1 1 1 0				
-			    } else if (!isNull(courseNumber) && !isNull(courseTitle)
+				// 1 1 1 0
+			    } else if (!isNull(courseNumber)
+				    && !isNull(courseTitle)
 				    && !isNull(instructor) && isNull(trimester)) {
-				if (isFoundField(courseNumber, aCourseNumber)
-					&& isFoundField(courseTitle,
-						aCourseName)
-					&& isFoundField(instructor, aInstructor)) {
+				if (isFoundField(courseNumber, coSite
+					.getCourseNumber())
+					&& isFoundField(courseTitle, coSite
+						.getCourseName())
+					&& isFoundField(instructor, coSite
+						.getInstructor())) {
 				    accepted = true;
 				}
-			    // 1 1 1 1
-			    } else if (!isNull(courseNumber) && !isNull(courseTitle)
+				// 1 1 1 1
+			    } else if (!isNull(courseNumber)
+				    && !isNull(courseTitle)
 				    && !isNull(instructor)
 				    && !isNull(trimester)) {
-				if (isFoundField(courseNumber, aCourseNumber)
-					&& isFoundField(courseTitle,
-						aCourseName)
-					&& isFoundField(instructor, aInstructor)
-					&& isFoundField(trimester,
-						aArchivedSections,
-						aCurrentSections)) {
+				if (isFoundField(courseNumber, coSite
+					.getCourseNumber())
+					&& isFoundField(courseTitle, coSite
+						.getCourseName())
+					&& isFoundField(instructor, coSite
+						.getInstructor())
+					&& isFoundField(trimester, coSite
+						.getArchivedSections(), coSite
+						.getCurrentSections())) {
 				    accepted = true;
 				}
 			    }
 			}
 			if (accepted) {
-			    List<String> allSections =
-				    buildAllSections(coDirectorySite);
-			    coDirectorySite.setAllSections(allSections);
-			    courseList.add(coDirectorySite);
+			    List<String> allSessions = buildAllSections(coSite);
+			    coSite.setAllSessions(allSessions);
+			    courseList.add(coSite);
 			}
 		    }// coDirectorySite is null
 		}
 	    }// for
 	}// for
 	if (!courseList.isEmpty()) {
-	    courseList.get(0).setSessionNamesList(getRightSessions(courseList));
+	    courseList.get(0).setSessionNamesList(
+		    getRightSessions(courseList, trimester));
 	}
 	courseListByFields = courseList;
     }
@@ -403,17 +426,31 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	return allSections;
     }
     
-    private List<String> getRightSessions(List<CODirectorySite> courses) {
+    private List<String> getRightSessions(List<CODirectorySite> courses,
+	    String trimester) {
 	List<String> rigthSessions = new ArrayList<String>();
 	List<String> sessions = new ArrayList<String>();
-	sessions = getAcademicNamesSessions();
+
 	if (courses != null) {
-	    for (String session : sessions) {
+	    if (!isNull(trimester)) {
 		for (final CODirectorySite coSite : courses) {
-		    String trimesters = coSite.getSearchedTrimesters();
-		    if (isSessionInSite(session, trimesters)) {
-			if (!rigthSessions.contains(session)) {
-				rigthSessions.add(session);			    
+		    for (String s : coSite.getAllSessions()) {
+			if (isSessionInSite(trimester, s)
+				&& !rigthSessions.contains(trimester)) {
+			    rigthSessions.add(trimester);
+			    return rigthSessions;			    
+			}
+		    }
+		}
+	    } else {
+		sessions = getAcademicNamesSessions();
+		for (String session : sessions) {
+		    for (final CODirectorySite coSite : courses) {
+			for (String s : coSite.getAllSessions()) {
+			    if (isSessionInSite(session, s)
+				    && !rigthSessions.contains(session)) {
+				rigthSessions.add(session);
+			    }
 			}
 		    }
 		}
@@ -421,7 +458,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	}
 	return rigthSessions;
     }
-    
+
     private boolean isSessionInSite(String element, String sessions) {
 	if (!isNull(element) && !isNull(sessions)) {
 	    if (sessions.matches("(?i)." + element + "*")
@@ -436,7 +473,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	}
 
     }
-	    
+
     private boolean isFoundField(String field, Map<String, String> achivedSections, Map<String, String> currentSections) {
 	if (!isNull(field)) {
 	    if (isFieldInCollection(field,achivedSections) || isFieldInCollection(field, currentSections)) {
@@ -454,9 +491,7 @@ public class OsylPortalServiceImpl implements OsylPortalService {
 	    Entry<String, String> entry =  sortedSIterator.next();
 	    if (entry.getKey().matches("(?i)." + field+"*") || entry.getKey().toLowerCase().indexOf(field.toLowerCase()) > 0){
 		return true;
-	    } else {
-		return false;
-	    }
+	    } 
 	}
 	return false;
     }
