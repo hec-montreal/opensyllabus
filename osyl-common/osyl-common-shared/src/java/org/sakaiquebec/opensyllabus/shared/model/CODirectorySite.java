@@ -54,7 +54,7 @@ public class CODirectorySite implements java.io.Serializable {
     
     private Map<String,String> archivedSections;
 
-    private List<String> allSections;
+    private List<String> allSessions;
 
     //it's filled once
     private List<String> sessionNamesList;
@@ -162,12 +162,12 @@ public class CODirectorySite implements java.io.Serializable {
         this.searchedTrimesters = searchedTrimesters;
     }
 
-    public List<String> getAllSections() {
-        return allSections;
+    public List<String> getAllSessions() {
+        return allSessions;
     }
 
-    public void setAllSections(List<String> allSections) {
-        this.allSections = allSections;
+    public void setAllSessions(List<String> allSessions) {
+        this.allSessions = allSessions;
     }
     
     public List<String> getSessionNamesList() {
