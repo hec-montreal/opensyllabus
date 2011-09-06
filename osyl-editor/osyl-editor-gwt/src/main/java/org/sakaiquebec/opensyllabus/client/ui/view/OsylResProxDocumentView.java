@@ -108,9 +108,9 @@ public class OsylResProxDocumentView extends OsylAbstractResProxBrowserView {
 		cl = new HashMap<String, String>();
 	    }
 	    cl.put(getModel().getId(),
-		    getModel().getProperty(COPropertiesType.LICENSE));
+		    getModel().getResource().getProperty(COPropertiesType.LICENSE));
 	    OsylEditorEntryPoint.getInstance()
-		    .getDocumentContextLicenceMap().put(uri, cv);
+		    .getDocumentContextLicenceMap().put(uri, cl);
 	    
 	}
     }
