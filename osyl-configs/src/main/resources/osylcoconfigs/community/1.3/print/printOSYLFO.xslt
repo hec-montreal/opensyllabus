@@ -15,6 +15,7 @@
 	<xsl:param name="currentDateTime"></xsl:param>
 	<xsl:param name="siteId"></xsl:param>
 	<xsl:param name="access"></xsl:param>
+	<xsl:param name="currentYear"></xsl:param>
 
 	<xsl:variable name='lang'>
 		<xsl:value-of select="substring(/OSYL/CO/language,1,2)"/>
@@ -157,13 +158,13 @@
 					<fo:block>
 						<xsl:choose>
 							<xsl:when test="$lang = 'FR'">
-								<xsl:text>©UniversityName, Tous droits réservés</xsl:text>
+								<xsl:text>©UniversityName </xsl:text><xsl:value-of select="$currentYear"/><xsl:text>, Tous droits réservés</xsl:text>
 							</xsl:when>
 							<xsl:when test="$lang = 'EN'">
-								<xsl:text>©UniversityName 2010, All rights reserved</xsl:text>
+								<xsl:text>©UniversityName </xsl:text><xsl:value-of select="$currentYear"/><xsl:text>, All rights reserved</xsl:text>
 							</xsl:when>
 							<xsl:when test="$lang = 'ES'">
-								<xsl:text>©UniversityName 2010, Reservados todos los derechos</xsl:text>
+								<xsl:text>©UniversityName </xsl:text><xsl:value-of select="$currentYear"/><xsl:text>, Reservados todos los derechos</xsl:text>
 							</xsl:when>
 							<xsl:otherwise>
 							</xsl:otherwise>

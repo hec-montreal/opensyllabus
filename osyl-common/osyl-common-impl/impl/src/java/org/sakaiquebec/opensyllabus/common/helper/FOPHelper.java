@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.text.Normalizer;
+import java.util.Calendar;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -92,6 +93,7 @@ public class FOPHelper {
 			OsylDateUtils.getCurrentDateAsXmlString());
 		transformer.setParameter("siteId", siteId);
 		transformer.setParameter("access", access);
+		transformer.setParameter("currentYear", Calendar.getInstance().get(Calendar.YEAR));
 
 		// Setup input for XSLT transformation
 		String escapeString = xml.replaceAll("&amp;", "&#38;");
