@@ -67,6 +67,8 @@ public interface OsylPortalMessages extends ConstantsWithLookup {
     String acad_career_PHDP_abb();
     
     String acad_career_allPrograms();
+    
+    String acad_career_allResponsibles();
 
     String button_search();
     
