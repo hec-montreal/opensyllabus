@@ -432,11 +432,9 @@ public class CoursesPage extends AbstractPortalView {
 				    new Image(getImages().description());
 			    descImage
 				    .setTitle(getMessage("coursesPage_Description"));
-			    descImage
-				    .addMouseOverHandler(new MouseOverHandler() {
+			    descImage.addClickHandler(new ClickHandler() {
 
-					public void onMouseOver(
-						MouseOverEvent event) {
+					public void onClick(ClickEvent event)  {
 					    AsyncCallback<String> callback =
 						    new AsyncCallback<String>() {
 
@@ -551,7 +549,8 @@ public class CoursesPage extends AbstractPortalView {
 		}
 		mainPanel.add(coursesTable);
 	    }
-	} else  if (courses != null && courses.size() >= 0){
+	} 
+	if (courses == null){
 		Label nothingPeriod = new Label(getMessage("empty_searching"));
 		nothingPeriod.setStylePrimaryName("CP_titre");
 		mainPanel.add(new HTML("&nbsp;"));		

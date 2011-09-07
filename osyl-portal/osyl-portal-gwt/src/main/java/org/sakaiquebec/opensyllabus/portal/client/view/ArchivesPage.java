@@ -52,7 +52,11 @@ public class ArchivesPage extends AbstractPortalView{
     
     private static String LIST_ALL_PROGRAMS = "acad_career_allPrograms";
     
+    private static String LIST_ALL_SERVICES = "acad_career_allResponsibles"; 
+    
     private static String ALL_PROGRAMS = "ALL";
+    
+    private static String ALL_SERVICES = "ALL";
     
     private CODirectorySite site;
 
@@ -246,6 +250,7 @@ public class ArchivesPage extends AbstractPortalView{
 
     public static ListBox getResponsiblesListBox() {
 	ListBox lb = new ListBox();
+	lb.addItem(PortalController.getInstance().getMessage(LIST_ALL_SERVICES), ALL_SERVICES);
 	for (final String responsible1 : NavigationHomePage.responsible_part1) {
 	    lb.addItem(PortalController.getInstance().getMessage(
 		    PortalController.RESPONSIBLE_PREFIX + responsible1), responsible1);
